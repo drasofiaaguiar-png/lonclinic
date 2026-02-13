@@ -1,0 +1,579 @@
+/* ========================================
+   Patient Dashboard — Styles
+======================================== */
+
+.dash-page {
+    min-height: 100vh;
+    padding: 100px 24px 60px;
+}
+
+/* ========================================
+   LOGIN GATE
+======================================== */
+.dash-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 200px);
+}
+
+.dash-login-card {
+    width: 100%;
+    max-width: 440px;
+    text-align: center;
+    padding: 48px 40px;
+    background: var(--bg-glass-strong);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--glass-shadow);
+}
+
+.dash-login-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(197, 199, 44, 0.08);
+    border-radius: 50%;
+    color: var(--accent);
+}
+
+.dash-login-title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+}
+
+.dash-login-desc {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+    line-height: 1.55;
+    margin-bottom: 28px;
+}
+
+.dash-login-form {
+    text-align: left;
+}
+
+.dash-form-group {
+    margin-bottom: 16px;
+}
+
+.dash-form-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    letter-spacing: 0.01em;
+}
+
+.dash-form-hint {
+    font-weight: 400;
+    color: var(--text-muted);
+}
+
+.dash-form-group input {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 0.875rem;
+    font-family: var(--font);
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dash-form-group input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(197, 199, 44, 0.1);
+}
+
+.dash-form-group input::placeholder {
+    color: var(--text-muted);
+}
+
+.dash-login-btn {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.dash-login-note {
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    margin-top: 16px;
+    font-weight: 400;
+    text-align: center;
+}
+
+/* ========================================
+   DASHBOARD CONTENT
+======================================== */
+.dash-content {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+/* Header */
+.dash-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+}
+
+.dash-greeting {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+.dash-email {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-top: 2px;
+}
+
+.dash-header-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.dash-logout-btn {
+    font-size: 0.8125rem;
+    padding: 8px 16px;
+}
+
+/* ========================================
+   UPCOMING APPOINTMENT
+======================================== */
+.dash-upcoming {
+    margin-bottom: 32px;
+}
+
+.dash-upcoming-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin-bottom: 12px;
+}
+
+.dash-upcoming-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+.dash-upcoming-card {
+    display: flex;
+    gap: 32px;
+    padding: 28px 32px;
+    background: var(--bg-glass-strong);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--glass-shadow);
+    align-items: center;
+}
+
+.dash-upcoming-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.dash-upcoming-service {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.dash-upcoming-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.dash-upcoming-detail {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+.dash-upcoming-detail svg {
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.dash-upcoming-ref {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-top: 4px;
+}
+
+.dash-upcoming-ref strong {
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    letter-spacing: 0.03em;
+}
+
+.dash-upcoming-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.dash-join-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.dash-join-hint {
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    text-align: right;
+    max-width: 220px;
+}
+
+/* ========================================
+   QUICK ACTIONS
+======================================== */
+.dash-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 36px;
+}
+
+.dash-action-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.dash-action-card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.dash-action-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.dash-action-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.dash-action-text strong {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.dash-action-text span {
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+/* ========================================
+   CONSULTATIONS TABLE
+======================================== */
+.dash-section {
+    margin-bottom: 32px;
+}
+
+.dash-section-header {
+    margin-bottom: 16px;
+}
+
+.dash-section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+}
+
+.dash-table-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.dash-empty {
+    padding: 48px 24px;
+    text-align: center;
+    color: var(--text-muted);
+}
+
+.dash-empty svg {
+    margin-bottom: 16px;
+    opacity: 0.3;
+}
+
+.dash-empty p {
+    font-size: 0.875rem;
+    margin-bottom: 20px;
+}
+
+.dash-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+}
+
+.dash-table thead th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    background: rgba(0, 0, 0, 0.015);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.dash-table tbody td {
+    padding: 14px 16px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    vertical-align: middle;
+}
+
+.dash-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.dash-table tbody tr:hover {
+    background: rgba(0, 0, 0, 0.01);
+}
+
+.dash-table .ref-cell {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+}
+
+.dash-table .service-cell {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.dash-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    text-transform: capitalize;
+}
+
+.dash-status.upcoming {
+    background: rgba(91, 156, 246, 0.1);
+    color: #3b82f6;
+}
+
+.dash-status.completed {
+    background: rgba(34, 197, 94, 0.1);
+    color: #16a34a;
+}
+
+.dash-status.cancelled {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+}
+
+.dash-table .join-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--accent-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.dash-table .join-link:hover {
+    color: var(--text-primary);
+}
+
+.dash-table .join-link svg {
+    flex-shrink: 0;
+}
+
+/* ========================================
+   DOXY INFO STEPS
+======================================== */
+.dash-doxy-info {
+    padding-bottom: 48px;
+}
+
+.dash-doxy-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.dash-doxy-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.dash-doxy-step:last-child {
+    border-bottom: none;
+}
+
+.dash-doxy-step-num {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(197, 199, 44, 0.08);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.dash-doxy-step-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.dash-doxy-step-text strong {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.dash-doxy-step-text span {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+@media (max-width: 768px) {
+    .dash-page {
+        padding: 80px 16px 40px;
+    }
+
+    .dash-header {
+        flex-direction: column;
+    }
+
+    .dash-header-right {
+        width: 100%;
+    }
+
+    .dash-header-right .btn {
+        flex: 1;
+    }
+
+    .dash-upcoming-card {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+        align-items: stretch;
+    }
+
+    .dash-upcoming-actions {
+        align-items: stretch;
+    }
+
+    .dash-join-hint {
+        text-align: center;
+        max-width: none;
+    }
+
+    .dash-actions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dash-table-wrap {
+        overflow-x: auto;
+    }
+
+    .dash-table {
+        min-width: 640px;
+    }
+
+    .dash-login-card {
+        padding: 32px 24px;
+    }
+}

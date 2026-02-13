@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Medicine Clinic — Travel Globally. Stay Medically Prepared.</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✈️</text></svg>">
+    <meta name="description" content="Private Travel Medicine Clinic — personalized travel health consultations with experienced physicians, tailored to your destination and medical profile.">
+    <meta name="theme-color" content="#dce8f8">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span class="nav-logo-text">longevity</span>
+            </a>
+            <div class="nav-links">
+                <a href="#why-travel" class="nav-link active">Why Travel Medicine</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#travel-style" class="nav-link">Travel Styles</a>
+                <a href="#faq" class="nav-link">FAQ</a>
+            </div>
+            <div class="nav-actions">
+                <a href="dashboard.html" class="nav-member">Patient login</a>
+                <a href="book.html?service=travel" class="btn btn-primary nav-btn">Book Consultation</a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <a href="#why-travel" class="mobile-link">Why Travel Medicine</a>
+            <a href="#how-it-works" class="mobile-link">How It Works</a>
+            <a href="#travel-style" class="mobile-link">Travel Styles</a>
+            <a href="#faq" class="mobile-link">FAQ</a>
+            <a href="index.html" class="mobile-link">Longevity Clinic</a>
+            <a href="dashboard.html" class="mobile-link">Patient login</a>
+            <a href="book.html?service=travel" class="btn btn-primary mobile-btn">Book Consultation</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero hero-video" id="hero">
+        <div class="hero-video-bg">
+            <video autoplay muted loop playsinline poster="image/image2.webp">
+                <source src="image/video1.mp4" type="video/mp4">
+            </video>
+            <div class="hero-video-overlay"></div>
+        </div>
+        <div class="hero-container">
+            <div class="hero-badge">Private Travel Medicine Clinic</div>
+            <h1 class="hero-title">Travel globally.<br>Stay medically prepared.</h1>
+            <p class="hero-subtitle">Personalized travel health consultations with experienced physicians — discreet, evidence-based, and tailored to your destination and medical profile.</p>
+            <div class="hero-actions">
+                <a href="book.html?service=travel" class="btn btn-primary btn-lg">Book private travel consultation</a>
+                <a href="#how-it-works" class="btn btn-outline btn-lg">How it works</a>
+            </div>
+            <div class="hero-rating">
+                <div class="trust-icons">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
+                <span class="rating-text">Destination-specific medical guidance for discerning international travelers</span>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-glow"></div>
+            <div class="hero-scan-lines">
+                <div class="scan-line"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Body Scan Visualization -->
+    <section class="body-scan-section" id="scan">
+        <div class="scan-section-header">
+            <h2 class="scan-section-title">Travel-ready health insights.</h2>
+            <p class="scan-section-subtitle">Before you even board.</p>
+        </div>
+        <div class="scan-canvas-wrap">
+            <canvas id="particleWave"></canvas>
+            <div class="scan-labels" id="scanLabels">
+                <!-- Labels are injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Travel Medicine -->
+    <section class="included" id="why-travel">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Why travel medicine</span>
+                <h2 class="section-title">Because every destination carries<br>different health risks.</h2>
+                <p class="section-desc">International travel exposes you to health risks that vary significantly by region, climate, infrastructure, and type of travel. Careful preparation reduces the likelihood of preventable illness and medical disruption abroad.</p>
+                <p class="section-desc" style="margin-top: 16px;">Our travel consultations focus on proactive risk reduction so you can travel with confidence and peace of mind.</p>
+            </div>
+            <div class="section-image section-image-wide">
+                <img src="image/image1_files/Ostermalmstorg_Large_Desktop.jpg" alt="Modern clinical consultation space" loading="lazy">
+            </div>
+            <div class="included-grid travel-risk-grid">
+                <div class="included-card">
+                    <div class="included-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                    </div>
+                    <h3>Food- & Water-Borne Infections</h3>
+                    <p>Traveler's diarrhea, typhoid, hepatitis A, and other ingestion-related illnesses that vary by destination hygiene standards.</p>
+                </div>
+                <div class="included-card">
+                    <div class="included-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </div>
+                    <h3>Mosquito-Borne Illnesses</h3>
+                    <p>Malaria, dengue, Zika, and other vector-borne diseases requiring destination-specific prevention strategies.</p>
+                </div>
+                <div class="included-card">
+                    <div class="included-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h3>Vaccine-Preventable Diseases</h3>
+                    <p>Ensuring you're protected against region-specific infectious diseases through proper immunization planning.</p>
+                </div>
+                <div class="included-card">
+                    <div class="included-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+                    </div>
+                    <h3>Altitude-Related Conditions</h3>
+                    <p>Altitude sickness prevention and management for travel to high-elevation destinations and mountainous regions.</p>
+                </div>
+                <div class="included-card">
+                    <div class="included-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                    </div>
+                    <h3>Region-Specific Environmental Risks</h3>
+                    <p>Climate extremes, sun exposure, wildlife hazards, and other environmental factors unique to your travel destinations.</p>
+                </div>
+                <div class="included-card">
+                    <div class="included-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                    </div>
+                    <h3>Travel-Related Medication Planning</h3>
+                    <p>Ensuring you have appropriate medications, standby treatments, and an organized travel medical kit for your journey.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What We Provide -->
+    <section class="detect" id="what-we-provide">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">What we provide</span>
+                <h2 class="section-title">Comprehensive, physician-led<br>travel health planning.</h2>
+            </div>
+            <div class="detect-grid">
+                <div class="detect-card" data-animate>
+                    <div class="detect-number">01</div>
+                    <h3>Vaccination Strategy</h3>
+                    <p>Personalized review of your immunization history with clear recommendations based on your itinerary and risk level.</p>
+                </div>
+                <div class="detect-card" data-animate>
+                    <div class="detect-number">02</div>
+                    <h3>Malaria Risk Assessment</h3>
+                    <p>Destination-based evaluation and preventive prescriptions when appropriate, tailored to your specific travel plans.</p>
+                </div>
+                <div class="detect-card" data-animate>
+                    <div class="detect-number">03</div>
+                    <h3>Travel Illness Preparedness</h3>
+                    <p>Guidance and, when indicated, standby treatment options for common travel-related conditions such as traveler's diarrhea.</p>
+                </div>
+                <div class="detect-card" data-animate>
+                    <div class="detect-number">04</div>
+                    <h3>Altitude & Environmental Medicine</h3>
+                    <p>Prevention and management strategies for high-altitude or extreme-climate travel, including acclimatization guidance.</p>
+                </div>
+                <div class="detect-card" data-animate>
+                    <div class="detect-number">05</div>
+                    <h3>Chronic Condition Planning</h3>
+                    <p>Tailored advice for travelers managing cardiovascular, respiratory, metabolic, or other ongoing medical conditions abroad.</p>
+                </div>
+                <div class="detect-card" data-animate>
+                    <div class="detect-number">06</div>
+                    <h3>Medical Travel Kit Guidance</h3>
+                    <p>Curated recommendations on essential medications and supplies based on your destination and travel style.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How Your Consultation Works -->
+    <section class="process" id="how-it-works">
+        <div class="container">
+            <div class="process-layout">
+                <div class="process-content">
+                    <span class="section-label">How it works</span>
+                    <h2 class="section-title">Discreet, efficient,<br>and fully online.</h2>
+                    <p class="section-desc">Our travel health consultations are designed for convenience without compromising on thoroughness or medical quality.</p>
+                    <div class="process-steps">
+                        <div class="process-step">
+                            <div class="step-time">Step 1</div>
+                            <div class="step-info">
+                                <h4>Share your itinerary</h4>
+                                <p>Destinations, timing, style of travel, and planned activities.</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-time">Step 2</div>
+                            <div class="step-info">
+                                <h4>Provide your medical background</h4>
+                                <p>Relevant medical history, medications, allergies, and vaccination records where available.</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-time">Step 3</div>
+                            <div class="step-info">
+                                <h4>Private video consultation</h4>
+                                <p>A focused discussion with a physician trained in travel and preventive medicine.</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-time">Step 4</div>
+                            <div class="step-info">
+                                <h4>Your personalized travel health plan</h4>
+                                <p>Clear written guidance, vaccine recommendations, and prescriptions when appropriate and permitted.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="process-note">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        <span>Whenever possible, consultations should take place 4–8 weeks prior to departure to allow time for vaccinations and preventive measures.</span>
+                    </div>
+                </div>
+                <div class="process-visual">
+                    <div class="process-image">
+                        <img src="image/image1_files/Marylebone_Large_Desktop.jpg" alt="Modern consultation room" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Travel Vaccination Guidance -->
+    <section class="tracking" id="vaccines">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Vaccination guidance</span>
+                <h2 class="section-title">Clear, evidence-based<br>vaccine recommendations.</h2>
+                <p class="section-desc">Vaccine decisions are individualized and based on destination-specific risk, duration of stay, planned activities, and your personal medical profile.</p>
+            </div>
+            <div class="vaccine-grid">
+                <div class="vaccine-card">
+                    <div class="vaccine-card-inner">
+                        <div class="vaccine-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="vaccine-info">
+                            <h3>Routine Adult Protection</h3>
+                            <p>Which immunizations are part of standard adult health maintenance and may need updating.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-card">
+                    <div class="vaccine-card-inner">
+                        <div class="vaccine-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="vaccine-info">
+                            <h3>Itinerary-Specific Vaccines</h3>
+                            <p>Which immunizations are recommended for your specific destinations and travel activities.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-card">
+                    <div class="vaccine-card-inner">
+                        <div class="vaccine-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </div>
+                        <div class="vaccine-info">
+                            <h3>Entry Requirements</h3>
+                            <p>Which immunizations may be required for entry into certain countries, including documentation guidance.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-card vaccine-card-note">
+                    <div class="vaccine-card-inner">
+                        <div class="vaccine-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                        </div>
+                        <div class="vaccine-info">
+                            <h3>Local Vaccination Arrangement</h3>
+                            <p>If in-person vaccination is indicated, we guide you on arranging this safely and efficiently in your location.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tailored to Your Travel Style -->
+    <section class="build" id="travel-style">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Tailored to you</span>
+                <h2 class="section-title">Travel medicine for every type<br>of international traveler.</h2>
+            </div>
+            <div class="travel-style-grid">
+                <div class="travel-style-card">
+                    <div class="travel-style-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                    </div>
+                    <h3>Leisure & Luxury Travel</h3>
+                    <p>Resort stays, cruises, and urban destinations with tailored health preparation for relaxed travel.</p>
+                </div>
+                <div class="travel-style-card">
+                    <div class="travel-style-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/><line x1="12" y1="22" x2="12" y2="15.5"/><polyline points="22 8.5 12 15.5 2 8.5"/><polyline points="2 15.5 12 8.5 22 15.5"/><line x1="12" y1="2" x2="12" y2="8.5"/></svg>
+                    </div>
+                    <h3>Adventure & Remote Travel</h3>
+                    <p>Trekking, safari, rural regions, and expedition-style trips requiring thorough medical preparation.</p>
+                </div>
+                <div class="travel-style-card">
+                    <div class="travel-style-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+                    </div>
+                    <h3>Frequent Business Travel</h3>
+                    <p>Ongoing support for professionals traveling across multiple regions with efficient, repeated consultation options.</p>
+                </div>
+                <div class="travel-style-card">
+                    <div class="travel-style-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    </div>
+                    <h3>Extended Stays & Relocation</h3>
+                    <p>Planning for long-term travel, second residences, or temporary relocation with comprehensive health strategy.</p>
+                </div>
+                <div class="travel-style-card">
+                    <div class="travel-style-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+                    </div>
+                    <h3>Travel with Medical Conditions</h3>
+                    <p>Specialized preparation for travelers with existing health concerns requiring careful medical planning.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Your Medical Team -->
+    <section class="doctor" id="team">
+        <div class="container">
+            <div class="doctor-layout">
+                <div class="doctor-content">
+                    <span class="section-label">Your medical team</span>
+                    <h2 class="section-title">Experienced physicians in travel and preventive medicine.</h2>
+                    <p class="section-desc">Our doctors provide careful, up-to-date guidance grounded in international travel health standards. Every consultation is personalized, thorough, and designed to support safe travel without unnecessary interventions.</p>
+                    <ul class="doctor-list">
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Licensed physicians</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Evidence-based international travel guidance</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Personalized risk assessment</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Clear documentation for your records</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="doctor-visual">
+                    <div class="doctor-image-placeholder doctor-has-image">
+                        <img src="image/image1_files/LincolnSquare_Large_Desktop.jpg" alt="Medical professional at reception" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Support</span>
+                <h2 class="section-title">Frequently asked questions.</h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Are consultations conducted online?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes. All travel consultations take place via secure video. You can connect from anywhere in the world, making it easy to prepare for your trip regardless of your current location.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Can prescriptions be provided?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>When medically appropriate and legally permitted, we can provide prescriptions related to travel health prevention or treatment, including malaria prophylaxis and standby treatments.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Do you administer vaccines directly?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We provide medical recommendations and documentation. If vaccines are indicated, we guide you in arranging them locally through trusted providers in your area.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>How far in advance should I book?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Ideally 4–8 weeks before departure to allow adequate time for vaccinations and preventive measures. However, we can still assist with shorter timelines and provide valuable guidance even close to your departure date.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Can you advise travelers with existing medical conditions?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes. We provide tailored planning to help reduce risk while traveling with ongoing health concerns, including cardiovascular, respiratory, metabolic, and other chronic conditions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bridge to Longevity -->
+    <section class="travel" id="longevity-bridge">
+        <div class="container">
+            <div class="travel-content">
+                <div class="travel-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h2 class="travel-title">Thinking beyond this trip?</h2>
+                <p class="travel-desc">Our clinic also provides in-depth longevity and preventive health assessments focused on long-term wellbeing and healthy aging.</p>
+                <a href="index.html" class="btn btn-primary btn-lg">Explore our Longevity Clinic →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA / Book Section -->
+    <section class="cta" id="book">
+        <div class="cta-bg-image">
+            <img src="image/image 3.webp" alt="" aria-hidden="true" loading="lazy">
+        </div>
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Travel with clarity<br>and confidence.</h2>
+                <p class="cta-desc">Receive personalized, physician-led travel health guidance tailored to your journey and medical profile.</p>
+                <a href="book.html?service=travel" class="btn btn-primary btn-lg">Book your private travel consultation</a>
+                <p class="cta-note"><a href="index.html" class="cta-travel-link">Looking for long-term preventive care? Visit our Longevity Clinic →</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-main">
+            <div class="footer-content">
+                <div class="footer-bg-pattern">
+                    <img src="image/image1_files/Neko_NewFooter.png" alt="" aria-hidden="true" loading="lazy">
+                </div>
+                <div class="footer-content-inner">
+                    <div class="footer-brand">
+                        <span class="footer-logo">LONGEVITY</span>
+                    </div>
+                    <div class="footer-columns">
+                        <div class="footer-links">
+                            <h4>Company</h4>
+                            <a href="index.html">About</a>
+                            <a href="index.html#team">Medical Team</a>
+                            <a href="#">Careers</a>
+                            <a href="#">Press Room</a>
+                        </div>
+                        <div class="footer-links">
+                            <h4>Members</h4>
+                            <a href="#">Log In</a>
+                            <a href="#faq">FAQ</a>
+                        </div>
+                        <div class="footer-links">
+                            <h4>Follow</h4>
+                            <a href="#">Instagram</a>
+                            <a href="#">LinkedIn</a>
+                        </div>
+                        <div class="footer-links">
+                            <h4>Services</h4>
+                            <a href="index.html">Longevity Clinic</a>
+                            <a href="#book">Travel Consultation</a>
+                            <a href="#how-it-works">How It Works</a>
+                            <a href="#vaccines">Vaccinations</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-support">
+                <h3 class="footer-support-title">Get Support</h3>
+                <a href="mailto:hello@longevityclinic.com" class="footer-support-link">hello@longevityclinic.com</a>
+                <a href="tel:+442012345678" class="footer-support-link">+44 20 1234 5678</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-bottom-left">
+                <p>&copy; 2026 Longevity Clinic</p>
+                <span class="footer-bottom-sep">&mdash;</span>
+                <a href="#">Cookie Notice</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <div class="footer-bottom-right">
+                <div class="footer-locale">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <span>United Kingdom</span>
+                    <span class="footer-lang-switch">
+                        <a href="#" class="lang-opt" data-lang="pt">Português</a>
+                        <a href="#" class="lang-opt active" data-lang="en">English</a>
+                    </span>
+                </div>
+                <span class="footer-address">London, United Kingdom</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="i18n.js"></script>
+    <script src="script.js"></script>
+    <script src="particle-wave.js"></script>
+</body>
+</html>

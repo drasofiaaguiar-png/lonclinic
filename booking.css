@@ -1,0 +1,1523 @@
+/* ========================================
+   Booking Flow — Styles
+======================================== */
+
+/* --- Page Layout --- */
+.booking-page {
+    min-height: 100vh;
+    padding: 100px 24px 60px;
+    display: flex;
+    justify-content: center;
+}
+
+.booking-container {
+    width: 100%;
+    max-width: 860px;
+}
+
+.booking-footer {
+    padding: 32px 0 24px;
+}
+
+/* ========================================
+   PROGRESS BAR
+======================================== */
+.booking-progress {
+    margin-bottom: 48px;
+}
+
+.progress-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+}
+
+.progress-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.progress-step.active .progress-dot {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+}
+
+.progress-step.completed .progress-dot {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+}
+
+.progress-label {
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    transition: var(--transition);
+}
+
+.progress-step.active .progress-label,
+.progress-step.completed .progress-label {
+    color: var(--text-primary);
+}
+
+.progress-line {
+    width: 60px;
+    height: 2px;
+    background: var(--border);
+    margin: 0 8px;
+    margin-bottom: 24px;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-line-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-line.filled .progress-line-fill {
+    width: 100%;
+}
+
+/* ========================================
+   BOOKING STEPS
+======================================== */
+.booking-step {
+    display: none;
+    animation: stepFadeIn 0.4s ease-out;
+}
+
+.booking-step.active {
+    display: block;
+}
+
+@keyframes stepFadeIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.step-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.step-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    margin-bottom: 10px;
+}
+
+.step-desc {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+.step-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 40px;
+    gap: 16px;
+}
+
+.step-next:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ========================================
+   STEP 1 — SERVICE SELECTION
+======================================== */
+.service-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.service-option {
+    cursor: pointer;
+}
+
+.service-option input[type="radio"] {
+    display: none;
+}
+
+.service-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 24px 28px;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: var(--transition);
+    position: relative;
+}
+
+.service-card:hover {
+    border-color: var(--border-light);
+    background: var(--bg-card-hover);
+}
+
+.service-option input:checked + .service-card {
+    border-color: var(--accent);
+    background: rgba(109, 155, 31, 0.04);
+}
+
+.service-icon {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(109, 155, 31, 0.08);
+    border-radius: var(--radius-md);
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.service-info {
+    flex: 1;
+}
+
+.service-info h3 {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.service-info p {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    font-weight: 300;
+    margin-bottom: 10px;
+}
+
+.service-details {
+    display: flex;
+    gap: 16px;
+}
+
+.service-duration,
+.service-mode {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.service-check {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: transparent;
+    transition: var(--transition);
+}
+
+.service-option input:checked + .service-card .service-check {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #ffffff;
+}
+
+/* ========================================
+   TRAVELLER COUNT PICKER (Step 1 — Travel)
+======================================== */
+.traveller-count-section {
+    margin-top: 32px;
+    animation: stepFadeIn 0.35s ease-out;
+}
+
+.tc-header {
+    margin-bottom: 20px;
+}
+
+.tc-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    letter-spacing: 0.01em;
+}
+
+.tc-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* ─── Row-based option list ─── */
+.tc-list {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.tc-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    background: var(--bg-card);
+    border: none;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.2s ease;
+    font-family: var(--font);
+    text-align: left;
+}
+
+.tc-card:last-child {
+    border-bottom: none;
+}
+
+.tc-card:hover {
+    background: var(--bg-card-hover);
+}
+
+.tc-card.selected {
+    background: rgba(197, 199, 44, 0.04);
+}
+
+/* Radio indicator */
+.tc-card-radio {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border-light);
+    flex-shrink: 0;
+    position: relative;
+    transition: border-color 0.2s ease;
+}
+
+.tc-card-radio::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    transform: scale(0);
+    transition: transform 0.2s ease;
+}
+
+.tc-card.selected .tc-card-radio {
+    border-color: var(--accent);
+}
+
+.tc-card.selected .tc-card-radio::after {
+    transform: scale(1);
+}
+
+/* People label */
+.tc-card-people {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    flex: 1;
+    min-width: 0;
+}
+
+/* Duration */
+.tc-card-duration {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+/* Price — right-aligned, restrained */
+.tc-card-price {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    min-width: 48px;
+    text-align: right;
+    letter-spacing: -0.01em;
+    transition: color 0.2s ease;
+}
+
+.tc-card.selected .tc-card-price {
+    color: var(--accent);
+}
+
+/* ─── Insurance Row ─── */
+.insurance-row {
+    margin-top: 16px;
+}
+
+.insurance-pill {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.insurance-pill:hover {
+    background: var(--bg-card-hover);
+}
+
+.insurance-pill input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.insurance-pill-slider {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    background: var(--border);
+    border-radius: 20px;
+    transition: background 0.25s ease;
+    flex-shrink: 0;
+}
+
+.insurance-pill-slider::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.insurance-pill input:checked ~ .insurance-pill-slider {
+    background: var(--accent);
+}
+
+.insurance-pill input:checked ~ .insurance-pill-slider::before {
+    transform: translateX(16px);
+}
+
+.insurance-pill-label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.insurance-pill-badge {
+    font-size: 0.625rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 10px;
+    border-radius: 4px;
+    background: rgba(197, 199, 44, 0.08);
+    color: var(--accent);
+    white-space: nowrap;
+    transition: background 0.2s ease;
+}
+
+.insurance-pill input:checked ~ .insurance-pill-badge {
+    background: rgba(197, 199, 44, 0.14);
+}
+
+/* ─── Summary line ─── */
+.tc-summary {
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+    padding: 14px 20px;
+    border-top: 1px solid var(--border);
+}
+
+.tc-summary-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+}
+
+.tc-summary-spacer {
+    flex: 1;
+}
+
+.tc-summary-breakdown {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-right: 16px;
+}
+
+.tc-summary-total {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+/* Change Service Button */
+.change-service-btn {
+    margin-top: 20px;
+    padding: 8px 18px;
+    font-size: 0.8125rem;
+    gap: 6px;
+    color: var(--text-secondary);
+    border-color: var(--border);
+    background: transparent;
+    transition: var(--transition);
+}
+
+.change-service-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--text-muted);
+    background: var(--bg-card);
+}
+
+/* ========================================
+   PASSENGER TABS & PANELS (Step 3)
+======================================== */
+.passenger-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    padding: 4px;
+    background: var(--bg-elevated);
+    border-radius: var(--radius-md);
+    flex-wrap: wrap;
+}
+
+.passenger-tab {
+    flex: 1;
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 16px;
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: var(--font);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: var(--transition);
+}
+
+.passenger-tab:hover {
+    background: rgba(255, 255, 255, 0.5);
+    color: var(--text-primary);
+}
+
+.passenger-tab.active {
+    background: #ffffff;
+    border-color: var(--accent);
+    color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.passenger-tab-icon {
+    display: flex;
+    align-items: center;
+    color: var(--text-muted);
+}
+
+.passenger-tab.active .passenger-tab-icon {
+    color: var(--accent);
+}
+
+.passenger-panel {
+    display: none;
+    animation: stepFadeIn 0.3s ease-out;
+}
+
+.passenger-panel.active {
+    display: block;
+}
+
+.passenger-panel-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.form-section-badge {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--accent);
+    background: rgba(197, 199, 44, 0.1);
+    padding: 2px 10px;
+    border-radius: var(--radius-full);
+    vertical-align: middle;
+    margin-left: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.form-subsection-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    margin-top: 8px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--border);
+}
+
+/* Summary subtotal row */
+.summary-subtotal .summary-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 300;
+}
+
+.summary-subtotal .summary-value {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* ========================================
+   STEP 2 — SCHEDULE / CALENDAR
+======================================== */
+.schedule-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+}
+
+.calendar-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+}
+
+.calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.calendar-month {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.calendar-nav {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.calendar-nav:hover {
+    border-color: var(--border-light);
+    color: var(--text-primary);
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.calendar-weekdays span {
+    text-align: center;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 4px 0;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    border: none;
+    background: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: var(--font);
+}
+
+.cal-day:hover:not(.cal-disabled):not(.cal-empty) {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.cal-day.cal-today {
+    border: 1px solid var(--accent);
+}
+
+.cal-day.cal-selected {
+    background: var(--accent);
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.cal-day.cal-disabled {
+    color: rgba(0, 0, 0, 0.2);
+    cursor: default;
+}
+
+.cal-day.cal-empty {
+    cursor: default;
+}
+
+/* Timeslots */
+.timeslot-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.timeslot-heading {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.timeslot-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    flex: 1;
+    max-height: 340px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.timeslot-grid::-webkit-scrollbar {
+    width: 4px;
+}
+
+.timeslot-grid::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 2px;
+}
+
+.timeslot-empty {
+    grid-column: span 2;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    text-align: center;
+    padding: 40px 0;
+}
+
+.timeslot-btn {
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.timeslot-btn:hover {
+    border-color: var(--border-light);
+    background: var(--bg-card-hover);
+}
+
+.timeslot-btn.selected {
+    border-color: var(--accent);
+    background: rgba(109, 155, 31, 0.08);
+    color: var(--accent);
+}
+
+.timezone-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* ========================================
+   STEP 3 — FORM DETAILS
+======================================== */
+.details-form {
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font);
+    font-size: 0.9375rem;
+    transition: var(--transition);
+    outline: none;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--text-muted);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(109, 155, 31, 0.1);
+}
+
+.form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2' xmlns='http://www.w3.org/2000/svg'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+}
+
+.form-group select option {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.form-error {
+    display: none;
+    font-size: 0.75rem;
+    color: #ef4444;
+    margin-top: 6px;
+}
+
+.form-group.invalid .form-error {
+    display: block;
+}
+
+.form-group.invalid input,
+.form-group.invalid select,
+.form-group.invalid textarea {
+    border-color: #ef4444;
+}
+
+.form-hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 6px;
+}
+
+.form-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 32px 0 24px;
+}
+
+.form-section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* Checkbox */
+.form-checkbox-group {
+    position: relative;
+}
+
+.form-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    font-weight: 300;
+}
+
+.form-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-mark {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    margin-top: 1px;
+}
+
+.form-checkbox input:checked + .checkbox-mark {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.form-checkbox input:checked + .checkbox-mark::after {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 9px;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    margin-top: -2px;
+}
+
+.form-checkbox-group.invalid .checkbox-mark {
+    border-color: #ef4444;
+}
+
+/* ========================================
+   STEP 4 — PAYMENT
+======================================== */
+.payment-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 32px;
+    align-items: start;
+}
+
+.payment-method-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.payment-tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.payment-tab:hover {
+    border-color: var(--border-light);
+}
+
+.payment-tab.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(109, 155, 31, 0.06);
+}
+
+.payment-panel {
+    display: none;
+}
+
+.payment-panel.active {
+    display: block;
+}
+
+.paypal-info {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.paypal-info svg {
+    margin: 0 auto 16px;
+}
+
+.paypal-info p {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+}
+
+.card-input-wrapper {
+    position: relative;
+}
+
+.card-input-wrapper input {
+    padding-right: 90px;
+}
+
+.card-brands {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 4px;
+    opacity: 0.6;
+}
+
+.payment-secure {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.pay-btn {
+    background: var(--accent);
+    color: #ffffff;
+}
+
+.pay-btn:hover {
+    background: #5a8a10;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(109, 155, 31, 0.25);
+}
+
+/* Order Summary */
+.order-summary {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    position: sticky;
+    top: 100px;
+}
+
+.summary-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.summary-service {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.summary-service-name {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    max-width: 180px;
+}
+
+.summary-service-price {
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.summary-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary-label {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    font-weight: 300;
+}
+
+.summary-value {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-align: right;
+}
+
+.summary-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 16px 0;
+}
+
+.summary-total .summary-label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.summary-total .summary-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #7cb518, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.summary-note {
+    margin-top: 16px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.5;
+}
+
+/* ========================================
+   STEP 5 — CONFIRMATION
+======================================== */
+.confirmation-content {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.confirmation-icon {
+    margin-bottom: 24px;
+    animation: confirmPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes confirmPop {
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.confirmation-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    margin: 32px 0;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.confirmation-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.confirmation-label {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    font-weight: 300;
+}
+
+.confirmation-value {
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: right;
+}
+
+.confirmation-ref {
+    font-family: monospace;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+}
+
+.confirmation-next-steps {
+    text-align: left;
+    margin: 32px 0;
+}
+
+.confirmation-next-steps h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.next-step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.next-step-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+}
+
+.next-step-num {
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    border-radius: 50%;
+    background: rgba(109, 155, 31, 0.1);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-top: 2px;
+}
+
+.next-step-item strong {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.next-step-item p {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    font-weight: 300;
+    line-height: 1.5;
+}
+
+.confirmation-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+/* ========================================
+   STEP 4 — REVIEW & STRIPE
+======================================== */
+.review-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px 28px;
+    margin-bottom: 16px;
+}
+
+.review-card-title {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 16px;
+}
+
+.review-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+}
+
+.review-row + .review-row {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.review-label {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    font-weight: 300;
+}
+
+.review-value {
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: right;
+}
+
+.stripe-info {
+    display: flex;
+    gap: 16px;
+    padding: 20px 24px;
+    background: rgba(109, 155, 31, 0.04);
+    border: 1px solid rgba(109, 155, 31, 0.1);
+    border-radius: var(--radius-md);
+    margin-top: 16px;
+}
+
+.stripe-info-icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(109, 155, 31, 0.1);
+    border-radius: var(--radius-sm);
+    color: var(--accent);
+    margin-top: 2px;
+}
+
+.stripe-info-text {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-weight: 300;
+    margin-bottom: 6px;
+}
+
+.stripe-info-text strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.stripe-info-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 300;
+}
+
+.stripe-error {
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: var(--radius-sm);
+    color: #ef4444;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* ========================================
+   PROCESSING OVERLAY
+======================================== */
+.processing-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(234, 242, 251, 0.9);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.processing-spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.processing-text {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+@media (max-width: 768px) {
+    .booking-page {
+        padding: 80px 16px 40px;
+    }
+
+    .progress-line {
+        width: 24px;
+    }
+
+    .progress-label {
+        display: none;
+    }
+
+    .progress-line {
+        margin-bottom: 0;
+    }
+
+    .service-card {
+        flex-wrap: wrap;
+        gap: 16px;
+    }
+
+    .service-check {
+        position: absolute;
+        bottom: 24px;
+        right: 24px;
+    }
+
+    .schedule-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .payment-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .order-summary {
+        position: static;
+    }
+
+    .step-actions {
+        flex-direction: column-reverse;
+    }
+
+    .step-actions .btn {
+        width: 100%;
+    }
+
+    .confirmation-actions {
+        flex-direction: column;
+    }
+
+    .confirmation-actions .btn {
+        width: 100%;
+    }
+
+    .tc-card {
+        padding: 12px 16px;
+    }
+
+    .insurance-pill {
+        padding: 10px 16px;
+    }
+
+    .insurance-pill-badge {
+        display: none;
+    }
+
+    .tc-summary {
+        flex-wrap: wrap;
+        gap: 4px;
+        padding: 12px 16px;
+    }
+
+    .tc-summary-breakdown {
+        margin-right: 0;
+        width: 100%;
+        order: 3;
+    }
+
+    .passenger-tabs {
+        gap: 4px;
+    }
+
+    .passenger-tab {
+        min-width: 0;
+        padding: 8px 10px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .timeslot-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .service-card {
+        padding: 20px;
+    }
+}

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Longevity Clinic — Add Life to Your Years</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
+    <meta name="description" content="Private online longevity clinic — personalized longevity assessments with physicians specialized in preventive and long-term health, delivered entirely online.">
+    <meta name="theme-color" content="#dce8f8">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <span class="nav-logo-text">longevity</span>
+            </a>
+            <div class="nav-links">
+                <a href="#approach" class="nav-link active">Our Approach</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#insights" class="nav-link">Insights</a>
+                <a href="#faq" class="nav-link">FAQ</a>
+            </div>
+            <div class="nav-actions">
+                <a href="dashboard.html" class="nav-member">Patient login</a>
+                <a href="book.html?service=longevity" class="btn btn-primary nav-btn">Book Assessment</a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <a href="#approach" class="mobile-link">Our Approach</a>
+            <a href="#how-it-works" class="mobile-link">How It Works</a>
+            <a href="#insights" class="mobile-link">Insights</a>
+            <a href="#faq" class="mobile-link">FAQ</a>
+            <a href="dashboard.html" class="mobile-link">Patient login</a>
+            <a href="book.html?service=longevity" class="btn btn-primary mobile-btn">Book Assessment</a>
+        </div>
+    </div>
+
+    <!-- Hero Section — Neko-inspired editorial layout -->
+    <section class="neko-hero" id="hero">
+        <div class="neko-hero-bg"></div>
+        <div class="neko-hero-inner">
+            <!-- Left: Headline -->
+            <div class="neko-hero-left">
+                <h1 class="neko-hero-title">
+                    A better<br>approach to<br>health.
+                </h1>
+                <p class="neko-hero-title-accent">Finally.</p>
+            </div>
+
+            <!-- Center: Image + particle scan overlay -->
+            <div class="neko-hero-center">
+                <div class="neko-hero-image-wrap">
+                    <img src="image/image2.webp" alt="Advanced health scanning" class="neko-hero-img">
+                    <canvas id="heroParticles" class="neko-hero-particles"></canvas>
+                    <div class="neko-hero-scan-line"></div>
+                </div>
+            </div>
+
+            <!-- Right: Description + CTA -->
+            <div class="neko-hero-right">
+                <p class="neko-hero-desc">Get a thorough longevity assessment, like you've never experienced before. Receive personalized insights and have unrushed time with a physician, all from <strong>€195</strong>.</p>
+                <a href="book.html?service=longevity" class="neko-hero-cta">
+                    Book Assessment
+                </a>
+                <a href="travel.html" class="neko-hero-travel">Traveling soon? Visit Travel Medicine →</a>
+            </div>
+        </div>
+
+        <!-- Bottom sticky bar -->
+        <div class="neko-hero-bottom">
+            <div class="neko-hero-bottom-inner">
+                <span class="neko-hero-bottom-text">Longevity Clinic is now available online worldwide.</span>
+                <a href="book.html?service=longevity" class="neko-hero-bottom-cta">
+                    Book Assessment
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Body Scan Visualization -->
+    <section class="body-scan-section" id="scan">
+        <div class="scan-section-header">
+            <h2 class="scan-section-title">Track millions of data points.</h2>
+            <p class="scan-section-subtitle">In just a few minutes.</p>
+        </div>
+        <div class="scan-canvas-wrap">
+            <canvas id="particleWave"></canvas>
+            <div class="scan-labels" id="scanLabels">
+                <!-- Labels are injected by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Approach to Longevity -->
+    <section class="included" id="approach">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Longevity care</span>
+                <h2 class="section-title">Proactive medicine for a longer,<br>healthier life.</h2>
+                <p class="section-desc">We focus on early risk detection, prevention, and long-term optimization — not just treating illness once it appears.</p>
+            </div>
+            <div class="section-image section-image-wide">
+                <img src="image/image1_files/CoventGarden_Large_Desktop.jpg" alt="Modern clinic waiting area" loading="lazy">
+            </div>
+            <div class="included-grid">
+                <div class="included-card">
+                    <div class="included-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 14l2 2 4-4"/></svg>
+                    </div>
+                    <h3>Deep Health Review</h3>
+                    <p>Comprehensive evaluation of your medical history, lifestyle, family risks, and current concerns.</p>
+                </div>
+                <div class="included-card">
+                    <div class="included-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    </div>
+                    <h3>Biomarker Interpretation</h3>
+                    <p>We analyze your blood work and key health markers to uncover early signals of disease risk.</p>
+                </div>
+                <div class="included-card">
+                    <div class="included-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h3>Risk Reduction Strategy</h3>
+                    <p>Clear medical guidance to reduce cardiovascular, metabolic, and age-related disease risks.</p>
+                </div>
+                <div class="included-card">
+                    <div class="included-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M12 18v-6"/><path d="M9 15l3 3 3-3"/></svg>
+                    </div>
+                    <h3>Personalized Action Plan</h3>
+                    <p>A practical roadmap covering lifestyle, screenings, and preventive steps tailored to your goals.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Full-width Video Section -->
+    <section class="showcase-video-section">
+        <video autoplay muted loop playsinline poster="image/image2.webp">
+            <source src="image/video1.mp4" type="video/mp4">
+        </video>
+    </section>
+
+    <!-- Why Longevity Medicine Matters -->
+    <section class="detect" id="why-it-matters">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Why it matters</span>
+                <h2 class="section-title">Most chronic disease is preventable<br>— if you act early.</h2>
+                <p class="section-desc">Longevity medicine focuses on identifying and addressing risk factors years before symptoms begin.</p>
+            </div>
+            <div class="detect-grid">
+                <div class="detect-card" data-animate>
+                    <div class="detect-number">01</div>
+                    <h3>Cardiovascular Disease Prevention</h3>
+                    <p>Heart disease remains the leading cause of death worldwide. Early intervention in blood pressure, lipids, and lifestyle can dramatically reduce your risk.</p>
+                </div>
+                <div class="detect-card" data-animate>
+                    <div class="detect-number">02</div>
+                    <h3>Metabolic Health & Diabetes Risk</h3>
+                    <p>Insulin resistance and metabolic dysfunction often develop silently over years. We identify early metabolic shifts before they become disease.</p>
+                </div>
+                <div class="detect-card" data-animate>
+                    <div class="detect-number">03</div>
+                    <h3>Cognitive Health & Aging Brain</h3>
+                    <p>Protecting brain health starts decades before cognitive decline. We assess modifiable risk factors that influence long-term cognitive function.</p>
+                </div>
+                <div class="detect-card" data-animate>
+                    <div class="detect-number">04</div>
+                    <h3>Cancer Screening Strategy</h3>
+                    <p>A personalized screening timeline based on your family history, genetics, and risk profile — so you know when and what to test for.</p>
+                </div>
+                <div class="detect-card" data-animate>
+                    <div class="detect-number">05</div>
+                    <h3>Hormonal & Energy Health</h3>
+                    <p>Hormonal balance affects energy, mood, body composition, and aging. We evaluate key hormonal markers and provide evidence-based guidance.</p>
+                </div>
+                <div class="detect-card" data-animate>
+                    <div class="detect-number">06</div>
+                    <h3>Lifestyle Factors That Influence Lifespan</h3>
+                    <p>Sleep, nutrition, exercise, and stress management are pillars of longevity. We help you optimize each one based on your unique health data.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Full-width Image Section -->
+    <section class="showcase-image-section">
+        <img src="image/image2.webp" alt="Advanced body scanning technology" loading="lazy">
+    </section>
+
+    <!-- How Your Online Assessment Works -->
+    <section class="process" id="how-it-works">
+        <div class="container">
+            <div class="process-layout">
+                <div class="process-content">
+                    <span class="section-label">How it works</span>
+                    <h2 class="section-title">Expert preventive care.<br>Fully online.</h2>
+                    <p class="section-desc">Our longevity assessments are designed for depth and convenience — conducted entirely via secure video with thorough digital follow-up.</p>
+                    <div class="process-steps">
+                        <div class="process-step">
+                            <div class="step-time">Step 1</div>
+                            <div class="step-info">
+                                <h4>Complete your health profile</h4>
+                                <p>Tell us about your history, lifestyle, family risks, and any recent test results.</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-time">Step 2</div>
+                            <div class="step-info">
+                                <h4>Video consultation with a physician</h4>
+                                <p>A dedicated, in-depth discussion focused on long-term health, not rushed symptom care.</p>
+                            </div>
+                        </div>
+                        <div class="process-step">
+                            <div class="step-time">Step 3</div>
+                            <div class="step-info">
+                                <h4>Your longevity roadmap</h4>
+                                <p>You receive a clear prevention strategy, screening plan, and guidance on next medical steps.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="process-visual">
+                    <div class="process-image">
+                        <img src="image/image1_files/4a33a784e27bfb3d73c257c81ec6baa23a037e34-1024x731.jpg" alt="Futuristic clinic scanning room" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clear, Actionable Insights -->
+    <section class="tracking" id="insights">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Your insights</span>
+                <h2 class="section-title">We turn data into decisions.</h2>
+                <p class="section-desc">Every consultation delivers clear, prioritized guidance you can act on — not just numbers on a page.</p>
+            </div>
+            <div class="tracking-grid">
+                <div class="tracking-card tracking-card-large tracking-card-image">
+                    <div class="tracking-card-inner">
+                        <div class="tracking-visual body-visual">
+                            <img src="image/image2.webp" alt="Advanced body scanning technology" loading="lazy">
+                        </div>
+                        <div class="tracking-info">
+                            <h3>Risk Overview</h3>
+                            <p>Your most important long-term health risks, clearly explained and prioritized by clinical relevance.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="tracking-card">
+                    <div class="tracking-card-inner">
+                        <div class="tracking-mini-visual">
+                            <div class="pulse-line">
+                                <svg viewBox="0 0 200 60" preserveAspectRatio="none">
+                                    <polyline points="0,30 30,30 40,10 50,50 60,20 70,40 80,30 200,30" fill="none" stroke="#c5c72c" stroke-width="2"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <h3>Biomarkers That Matter</h3>
+                        <p>Understand which lab values are relevant — and which are not.</p>
+                    </div>
+                </div>
+                <div class="tracking-card">
+                    <div class="tracking-card-inner">
+                        <div class="tracking-mini-visual">
+                            <div class="vessel-visual">
+                                <div class="vessel-bar" style="--width: 85%"></div>
+                                <div class="vessel-bar" style="--width: 72%"></div>
+                                <div class="vessel-bar" style="--width: 91%"></div>
+                            </div>
+                        </div>
+                        <h3>Screening Timeline</h3>
+                        <p>Know when to test, scan, or follow up based on your personal profile.</p>
+                    </div>
+                </div>
+                <div class="tracking-card">
+                    <div class="tracking-card-inner">
+                        <div class="tracking-mini-visual">
+                            <div class="diabetes-visual">
+                                <div class="d-ring">
+                                    <svg viewBox="0 0 80 80">
+                                        <circle cx="40" cy="40" r="35" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="4"/>
+                                        <circle cx="40" cy="40" r="35" fill="none" stroke="#c5c72c" stroke-width="4" stroke-dasharray="220" stroke-dashoffset="55" stroke-linecap="round" transform="rotate(-90 40 40)"/>
+                                    </svg>
+                                    <span>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>Lifestyle Medicine</h3>
+                        <p>Evidence-based changes that meaningfully influence long-term health.</p>
+                    </div>
+                </div>
+                <div class="tracking-card">
+                    <div class="tracking-card-inner">
+                        <div class="tracking-mini-visual">
+                            <div class="skin-visual">
+                                <div class="skin-dot" style="--x: 20%; --y: 30%"></div>
+                                <div class="skin-dot" style="--x: 60%; --y: 20%"></div>
+                                <div class="skin-dot" style="--x: 45%; --y: 65%"></div>
+                                <div class="skin-dot" style="--x: 75%; --y: 50%"></div>
+                                <div class="skin-dot" style="--x: 30%; --y: 80%"></div>
+                            </div>
+                        </div>
+                        <h3>Medical Referrals</h3>
+                        <p>Guidance on when specialist input or imaging may be appropriate.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Long-Term Partnership -->
+    <section class="build" id="partnership">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Long-term partnership</span>
+                <h2 class="section-title">Longevity is a journey —<br>not a one-time visit.</h2>
+                <p class="section-desc">We build lasting relationships focused on your evolving health over the years.</p>
+            </div>
+            <div class="build-grid">
+                <div class="build-card">
+                    <div class="build-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    </div>
+                    <h3>Ongoing Reviews</h3>
+                    <p>Track changes in your health markers over time with regular reassessments and updated recommendations.</p>
+                </div>
+                <div class="build-card">
+                    <div class="build-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    </div>
+                    <h3>Prevention-Focused Care</h3>
+                    <p>Stay ahead of disease rather than reacting to it. Our approach is proactive by design, not reactive.</p>
+                </div>
+                <div class="build-card">
+                    <div class="build-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <h3>Continuity with Your Doctor</h3>
+                    <p>Build a long-term relationship with a physician who understands your evolving health profile.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Your Medical Team -->
+    <section class="doctor" id="team">
+        <div class="container">
+            <div class="doctor-layout">
+                <div class="doctor-content">
+                    <span class="section-label">Your medical team</span>
+                    <h2 class="section-title">Doctors focused on prevention and healthy aging.</h2>
+                    <p class="section-desc">Our physicians specialize in preventive medicine, risk assessment, and evidence-based longevity strategies. Consultations are thorough, personalized, and centered on long-term wellbeing.</p>
+                    <ul class="doctor-list">
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Licensed physicians with preventive care expertise</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Evidence-based longevity approach</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Clear, practical medical guidance</span>
+                        </li>
+                        <li>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            <span>Personalized, unrushed consultations</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="doctor-visual">
+                    <div class="doctor-image-placeholder doctor-has-image">
+                        <img src="image/image1_files/Spitalfields_Large_Desktop.jpg" alt="Medical professional in clinic" loading="lazy">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Traveling Soon? -->
+    <section class="travel" id="travel">
+        <div class="container">
+            <div class="travel-content">
+                <div class="travel-icon">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </div>
+                <h2 class="travel-title">Traveling internationally?<br>We also run a Travel Medicine Clinic.</h2>
+                <p class="travel-desc">In addition to longevity care, our physicians provide destination-specific travel health consultations — including vaccines, malaria prevention, altitude advice, and travel prescriptions.</p>
+                <a href="travel.html" class="btn btn-primary btn-lg">Visit Travel Medicine Clinic →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Support</span>
+                <h2 class="section-title">Frequently asked questions.</h2>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>What is a longevity assessment?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>A preventive medical consultation focused on identifying long-term disease risks and creating a personalized strategy to support healthy aging. It goes beyond routine checkups to address the root causes of chronic disease before symptoms appear.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Is this service online?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes. All consultations are conducted via secure video with digital follow-up and planning. You can access expert longevity care from anywhere in the world.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Do I need lab tests beforehand?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Not necessarily. We can review existing results or advise you on which tests would be useful before or after your consultation. We'll guide you either way.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Is this a replacement for my GP?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>No. We provide specialized preventive consultations that complement your regular healthcare. Think of us as an additional layer of expertise focused specifically on longevity and disease prevention.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Do you also provide travel consultations?</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes. We operate a dedicated <a href="travel.html" style="color: #c5c72c; text-decoration: underline;">Travel Medicine Clinic</a> for destination-specific medical advice, vaccinations, malaria prevention, and travel prescriptions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA / Book Section -->
+    <section class="cta" id="book">
+        <div class="cta-bg-image">
+            <img src="image/image 3.webp" alt="" aria-hidden="true" loading="lazy">
+        </div>
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Start planning for a longer,<br>healthier future.</h2>
+                <p class="cta-desc">Book your online longevity assessment today and take a proactive step toward healthier aging.</p>
+                <a href="book.html?service=longevity" class="btn btn-primary btn-lg">Book your longevity consultation</a>
+                <p class="cta-note"><a href="travel.html" class="cta-travel-link">Need travel health advice instead? Visit our Travel Medicine Clinic →</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-main">
+            <div class="footer-content">
+                <div class="footer-bg-pattern">
+                    <img src="image/image1_files/Neko_NewFooter.png" alt="" aria-hidden="true" loading="lazy">
+                </div>
+                <div class="footer-content-inner">
+                    <div class="footer-brand">
+                        <span class="footer-logo">LONGEVITY</span>
+                    </div>
+                    <div class="footer-columns">
+                        <div class="footer-links">
+                            <h4>Company</h4>
+                            <a href="#approach">About</a>
+                            <a href="#team">Medical Team</a>
+                            <a href="#">Careers</a>
+                            <a href="#">Press Room</a>
+                        </div>
+                        <div class="footer-links">
+                            <h4>Members</h4>
+                            <a href="#">Log In</a>
+                            <a href="#faq">FAQ</a>
+                        </div>
+                        <div class="footer-links">
+                            <h4>Follow</h4>
+                            <a href="#">Instagram</a>
+                            <a href="#">LinkedIn</a>
+                        </div>
+                        <div class="footer-links">
+                            <h4>Services</h4>
+                            <a href="#book">Longevity Assessment</a>
+                            <a href="travel.html">Travel Medicine</a>
+                            <a href="#how-it-works">How It Works</a>
+                            <a href="#insights">Insights</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-support">
+                <h3 class="footer-support-title">Get Support</h3>
+                <a href="mailto:hello@longevityclinic.com" class="footer-support-link">hello@longevityclinic.com</a>
+                <a href="tel:+442012345678" class="footer-support-link">+44 20 1234 5678</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-bottom-left">
+                <p>&copy; 2026 Longevity Clinic</p>
+                <span class="footer-bottom-sep">&mdash;</span>
+                <a href="#">Cookie Notice</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+            </div>
+            <div class="footer-bottom-right">
+                <div class="footer-locale">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    <span>United Kingdom</span>
+                    <span class="footer-lang-switch">
+                        <a href="#" class="lang-opt" data-lang="pt">Português</a>
+                        <a href="#" class="lang-opt active" data-lang="en">English</a>
+                    </span>
+                </div>
+                <span class="footer-address">London, United Kingdom</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="i18n.js"></script>
+    <script src="script.js"></script>
+    <script src="particle-wave.js"></script>
+</body>
+</html>

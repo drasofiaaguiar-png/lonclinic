@@ -1,0 +1,16 @@
+{
+  "name": "longevity-clinic",
+  "version": "1.0.0",
+  "description": "Longevity Clinic — Booking with Stripe payments",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "nodemailer": "^8.0.1",
+    "stripe": "^17.5.0"
+  }
+}

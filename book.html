@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Consultation — Longevity Clinic</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="booking.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
+    <meta name="description" content="Book your private consultation — longevity assessment or travel medicine, fully online.">
+    <meta name="theme-color" content="#eaf2fb">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span class="nav-logo-text">longevity</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Longevity Clinic</a>
+                <a href="travel.html" class="nav-link">Travel Medicine</a>
+            </div>
+            <div class="nav-actions">
+                <a href="dashboard.html" class="nav-member">Patient login</a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <a href="index.html" class="mobile-link">Longevity Clinic</a>
+            <a href="travel.html" class="mobile-link">Travel Medicine</a>
+            <a href="dashboard.html" class="mobile-link">Patient login</a>
+        </div>
+    </div>
+
+    <!-- Booking Flow -->
+    <main class="booking-page">
+        <div class="booking-container">
+
+            <!-- Progress Bar -->
+            <div class="booking-progress">
+                <div class="progress-steps">
+                    <div class="progress-step active" data-step="1">
+                        <div class="progress-dot">
+                            <span>1</span>
+                        </div>
+                        <span class="progress-label">Service</span>
+                    </div>
+                    <div class="progress-line"><div class="progress-line-fill"></div></div>
+                    <div class="progress-step" data-step="2">
+                        <div class="progress-dot">
+                            <span>2</span>
+                        </div>
+                        <span class="progress-label">Schedule</span>
+                    </div>
+                    <div class="progress-line"><div class="progress-line-fill"></div></div>
+                    <div class="progress-step" data-step="3">
+                        <div class="progress-dot">
+                            <span>3</span>
+                        </div>
+                        <span class="progress-label">Details</span>
+                    </div>
+                    <div class="progress-line"><div class="progress-line-fill"></div></div>
+                    <div class="progress-step" data-step="4">
+                        <div class="progress-dot">
+                            <span>4</span>
+                        </div>
+                        <span class="progress-label">Payment</span>
+                    </div>
+                    <div class="progress-line"><div class="progress-line-fill"></div></div>
+                    <div class="progress-step" data-step="5">
+                        <div class="progress-dot">
+                            <span>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </span>
+                        </div>
+                        <span class="progress-label">Confirmed</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 1: Select Service -->
+            <div class="booking-step active" id="step-1">
+                <div class="step-header">
+                    <h1 class="step-title">Choose your consultation</h1>
+                    <p class="step-desc">Select the service that best fits your needs.</p>
+                </div>
+                <div class="service-grid">
+                    <label class="service-option" data-service="longevity">
+                        <input type="radio" name="service" value="longevity">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                            </div>
+                            <div class="service-info">
+                                <h3>Longevity Assessment</h3>
+                                <p>Comprehensive preventive health consultation focused on long-term wellbeing, risk detection, and personalized longevity planning.</p>
+                                <div class="service-details">
+                                    <span class="service-duration">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                        45–60 min
+                                    </span>
+                                    <span class="service-mode">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                        Video call
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="service-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="service-option" data-service="travel">
+                        <input type="radio" name="service" value="travel">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                            </div>
+                            <div class="service-info">
+                                <h3>Travel Medicine Consultation</h3>
+                                <p>Destination-specific travel health planning including vaccinations, malaria prevention, travel prescriptions, and medical travel kit guidance.</p>
+                                <div class="service-details">
+                                    <span class="service-mode">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                        Video call
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="service-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </div>
+                    </label>
+                    <label class="service-option" data-service="followup">
+                        <input type="radio" name="service" value="followup">
+                        <div class="service-card">
+                            <div class="service-icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                            </div>
+                            <div class="service-info">
+                                <h3>Follow-Up Consultation</h3>
+                                <p>Continuing care session to review progress, update your plan, discuss new results, or address follow-up questions with your physician.</p>
+                                <div class="service-details">
+                                    <span class="service-duration">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                                        20–30 min
+                                    </span>
+                                    <span class="service-mode">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                        Video call
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="service-check">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Traveller count — visible only for travel service -->
+                <div class="traveller-count-section" id="travellerCountSection" style="display:none;">
+                    <div class="tc-header">
+                        <h3 class="tc-title">Number of travellers</h3>
+                        <p class="tc-desc">Same destination and travel dates. Individual medical history collected for each person.</p>
+                    </div>
+
+                    <div class="tc-list">
+                        <button class="tc-card selected" data-count="1">
+                            <span class="tc-card-radio"></span>
+                            <span class="tc-card-people">1 person</span>
+                            <span class="tc-card-duration">20 min</span>
+                            <span class="tc-card-price" id="travelPrice1">€39</span>
+                        </button>
+                        <button class="tc-card" data-count="2">
+                            <span class="tc-card-radio"></span>
+                            <span class="tc-card-people">2 persons</span>
+                            <span class="tc-card-duration">30 min</span>
+                            <span class="tc-card-price" id="travelPrice2">€69</span>
+                        </button>
+                        <button class="tc-card" data-count="3">
+                            <span class="tc-card-radio"></span>
+                            <span class="tc-card-people">3 persons</span>
+                            <span class="tc-card-duration">40 min</span>
+                            <span class="tc-card-price" id="travelPrice3">€107</span>
+                        </button>
+                        <button class="tc-card" data-count="4">
+                            <span class="tc-card-radio"></span>
+                            <span class="tc-card-people">4 persons</span>
+                            <span class="tc-card-duration">40 min</span>
+                            <span class="tc-card-price" id="travelPrice4">€136</span>
+                        </button>
+                    </div>
+
+                    <!-- Health Insurance -->
+                    <div class="insurance-row" id="insuranceSection">
+                        <label class="insurance-pill" for="insuranceToggle">
+                            <input type="checkbox" id="insuranceToggle">
+                            <span class="insurance-pill-slider"></span>
+                            <span class="insurance-pill-label">I have Medicare health insurance</span>
+                            <span class="insurance-pill-badge">Reduced rate</span>
+                        </label>
+                    </div>
+
+                    <!-- Summary -->
+                    <div class="tc-summary" id="travellerPriceNote">
+                        <span class="tc-summary-label">Total</span>
+                        <span class="tc-summary-spacer"></span>
+                        <span class="tc-summary-breakdown" id="travellerPriceBreakdown">1 person · 20 min · Video call</span>
+                        <span class="tc-summary-total" id="travellerPriceTotal">€39</span>
+                    </div>
+                </div>
+
+                <button class="btn btn-outline btn-sm change-service-btn" id="changeServiceBtn" style="display:none;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                    Change service
+                </button>
+
+                <div class="step-actions">
+                    <div></div>
+                    <button class="btn btn-primary btn-lg step-next" id="next-1" disabled>Continue to scheduling</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Schedule -->
+            <div class="booking-step" id="step-2">
+                <div class="step-header">
+                    <h1 class="step-title">Choose date & time</h1>
+                    <p class="step-desc">Select a convenient time for your video consultation.</p>
+                </div>
+                <div class="schedule-layout">
+                    <div class="calendar-section">
+                        <div class="calendar-header">
+                            <button class="calendar-nav" id="calPrev" aria-label="Previous month">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                            <span class="calendar-month" id="calMonth"></span>
+                            <button class="calendar-nav" id="calNext" aria-label="Next month">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                            </button>
+                        </div>
+                        <div class="calendar-weekdays">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                        <div class="calendar-grid" id="calGrid"></div>
+                    </div>
+                    <div class="timeslot-section">
+                        <h3 class="timeslot-heading" id="timeslotHeading">Select a date first</h3>
+                        <div class="timeslot-grid" id="timeslotGrid">
+                            <p class="timeslot-empty">Please pick a date from the calendar.</p>
+                        </div>
+                        <div class="timezone-info">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                            <span>Times shown in your local timezone</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-actions">
+                    <button class="btn btn-outline btn-lg step-back" id="back-2">Back</button>
+                    <button class="btn btn-primary btn-lg step-next" id="next-2" disabled>Continue to details</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Patient Details -->
+            <div class="booking-step" id="step-3">
+                <div class="step-header">
+                    <h1 class="step-title">Your details</h1>
+                    <p class="step-desc">Please provide your information so we can prepare for your consultation.</p>
+                </div>
+                <form class="details-form" id="detailsForm" novalidate>
+
+                    <!-- Contact person (always shown) -->
+                    <h3 class="form-section-title">Contact person</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="email">Email address *</label>
+                            <input type="email" id="email" name="email" required placeholder="john@example.com" autocomplete="email">
+                            <span class="form-error">Please enter a valid email address</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone number *</label>
+                            <input type="tel" id="phone" name="phone" required placeholder="+44 7700 900000" autocomplete="tel">
+                            <span class="form-error">Please enter your phone number</span>
+                        </div>
+                    </div>
+
+                    <!-- Shared travel info (travel only) -->
+                    <div id="sharedTravelSection" style="display:none;">
+                        <div class="form-divider"></div>
+                        <h3 class="form-section-title">Trip details <span class="form-section-badge">Shared for all travellers</span></h3>
+                        <div class="form-group">
+                            <label for="travelDest">Travel destination(s) *</label>
+                            <input type="text" id="travelDest" name="travelDest" placeholder="e.g. Thailand, Kenya, Peru">
+                            <span class="form-hint">List all planned destinations for this trip</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="travelDates">Travel dates *</label>
+                            <input type="text" id="travelDates" name="travelDates" placeholder="e.g. March 15 – April 2, 2026">
+                        </div>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <!-- Passenger tabs (travel multi-passenger) -->
+                    <div id="passengerTabs" class="passenger-tabs" style="display:none;">
+                        <!-- Tabs generated by JS -->
+                    </div>
+
+                    <!-- Passenger panels container — JS will inject panels here -->
+                    <div id="passengerPanels">
+                        <!-- Panel 1 (default / single patient) -->
+                        <div class="passenger-panel active" data-passenger="1">
+                            <h3 class="form-section-title passenger-panel-title">Patient details</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>First name *</label>
+                                    <input type="text" class="p-firstName" required placeholder="John" autocomplete="given-name">
+                                    <span class="form-error">Please enter first name</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>Last name *</label>
+                                    <input type="text" class="p-lastName" required placeholder="Doe" autocomplete="family-name">
+                                    <span class="form-error">Please enter last name</span>
+                                </div>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Date of birth *</label>
+                                    <input type="date" class="p-dob" required autocomplete="bday">
+                                    <span class="form-error">Please enter date of birth</span>
+                                </div>
+                                <div class="form-group">
+                                    <label>NHS number</label>
+                                    <input type="text" class="p-nhs" placeholder="e.g. 485 777 3456">
+                                    <span class="form-hint">10-digit NHS number (optional)</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Country of residence *</label>
+                                <select class="p-country" required>
+                                    <option value="" disabled selected>Select country</option>
+                                    <option value="GB">United Kingdom</option>
+                                    <option value="US">United States</option>
+                                    <option value="SE">Sweden</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="FR">France</option>
+                                    <option value="NL">Netherlands</option>
+                                    <option value="NO">Norway</option>
+                                    <option value="DK">Denmark</option>
+                                    <option value="FI">Finland</option>
+                                    <option value="CH">Switzerland</option>
+                                    <option value="AT">Austria</option>
+                                    <option value="BE">Belgium</option>
+                                    <option value="ES">Spain</option>
+                                    <option value="IT">Italy</option>
+                                    <option value="PT">Portugal</option>
+                                    <option value="IE">Ireland</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="AU">Australia</option>
+                                    <option value="NZ">New Zealand</option>
+                                    <option value="AE">United Arab Emirates</option>
+                                    <option value="SG">Singapore</option>
+                                    <option value="HK">Hong Kong</option>
+                                    <option value="JP">Japan</option>
+                                    <option value="OTHER">Other</option>
+                                </select>
+                                <span class="form-error">Please select country</span>
+                            </div>
+
+                            <h4 class="form-subsection-title">Medical background</h4>
+                            <div class="form-group">
+                                <label>Health concerns or goals</label>
+                                <textarea class="p-concerns" rows="3" placeholder="Describe any specific concerns, conditions, or health goals..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Current medications</label>
+                                <textarea class="p-medications" rows="2" placeholder="List any current medications, supplements, or treatments..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Known allergies</label>
+                                <input type="text" class="p-allergies" placeholder="e.g. Penicillin, latex, none">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-divider"></div>
+
+                    <div class="form-group form-checkbox-group">
+                        <label class="form-checkbox">
+                            <input type="checkbox" id="consent" name="consent" required>
+                            <span class="checkbox-mark"></span>
+                            <span class="checkbox-text">I consent to the health information of all listed patients being securely processed for the purpose of this consultation. <a href="#" style="color: var(--accent);">Privacy Policy</a></span>
+                        </label>
+                        <span class="form-error">You must consent to proceed</span>
+                    </div>
+                    <div class="form-group form-checkbox-group">
+                        <label class="form-checkbox">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <span class="checkbox-mark"></span>
+                            <span class="checkbox-text">I agree to the <a href="#" style="color: var(--accent);">Terms of Service</a> and understand this is a private medical consultation.</span>
+                        </label>
+                        <span class="form-error">You must agree to the terms</span>
+                    </div>
+                </form>
+                <div class="step-actions">
+                    <button class="btn btn-outline btn-lg step-back" id="back-3">Back</button>
+                    <button class="btn btn-primary btn-lg step-next" id="next-3">Continue to payment</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Review & Pay -->
+            <div class="booking-step" id="step-4">
+                <div class="step-header">
+                    <h1 class="step-title">Review & pay</h1>
+                    <p class="step-desc">Review your booking details, then proceed to secure payment via Stripe.</p>
+                </div>
+                <div class="payment-layout">
+                    <div class="payment-form-section">
+                        <div class="review-card">
+                            <h3 class="review-card-title">Appointment details</h3>
+                            <div class="review-row">
+                                <span class="review-label">Service</span>
+                                <span class="review-value" id="reviewService">—</span>
+                            </div>
+                            <div class="review-row">
+                                <span class="review-label">Date</span>
+                                <span class="review-value" id="reviewDate">—</span>
+                            </div>
+                            <div class="review-row">
+                                <span class="review-label">Time</span>
+                                <span class="review-value" id="reviewTime">—</span>
+                            </div>
+                            <div class="review-row">
+                                <span class="review-label">Format</span>
+                                <span class="review-value">Secure video call</span>
+                            </div>
+                        </div>
+
+                        <!-- Shared travel info (shown for travel bookings) -->
+                        <div class="review-card" id="reviewTravelCard" style="display:none;">
+                            <h3 class="review-card-title">Trip details</h3>
+                            <div class="review-row">
+                                <span class="review-label">Destination</span>
+                                <span class="review-value" id="reviewDest">—</span>
+                            </div>
+                            <div class="review-row">
+                                <span class="review-label">Travel dates</span>
+                                <span class="review-value" id="reviewTravelDates">—</span>
+                            </div>
+                        </div>
+
+                        <!-- Patient(s) — JS will populate for multi-passenger -->
+                        <div id="reviewPatientsContainer">
+                            <div class="review-card">
+                                <h3 class="review-card-title">Patient</h3>
+                                <div class="review-row">
+                                    <span class="review-label">Name</span>
+                                    <span class="review-value" id="reviewName">—</span>
+                                </div>
+                                <div class="review-row">
+                                    <span class="review-label">Email</span>
+                                    <span class="review-value" id="reviewEmail">—</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="stripe-info">
+                            <div class="stripe-info-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                            </div>
+                            <div>
+                                <p class="stripe-info-text">You'll be redirected to <strong>Stripe</strong> to enter your payment details securely. Card, Apple Pay, and Google Pay accepted.</p>
+                                <p class="stripe-info-sub">Stripe is PCI Level 1 certified — the highest level of security in the payments industry.</p>
+                            </div>
+                        </div>
+
+                        <div id="stripeError" class="stripe-error" style="display: none;"></div>
+                    </div>
+
+                    <!-- Order Summary -->
+                    <div class="order-summary">
+                        <h3 class="summary-title">Booking summary</h3>
+                        <div class="summary-service">
+                            <span class="summary-service-name" id="summaryService">—</span>
+                            <span class="summary-service-price" id="summaryPrice">—</span>
+                        </div>
+                        <div class="summary-details">
+                            <div class="summary-row">
+                                <span class="summary-label">Date</span>
+                                <span class="summary-value" id="summaryDate">—</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Time</span>
+                                <span class="summary-value" id="summaryTime">—</span>
+                            </div>
+                            <div class="summary-row">
+                                <span class="summary-label">Format</span>
+                                <span class="summary-value">Secure video call</span>
+                            </div>
+                            <div class="summary-row" id="summaryPatientRow">
+                                <span class="summary-label">Patient</span>
+                                <span class="summary-value" id="summaryPatient">—</span>
+                            </div>
+                            <div class="summary-row" id="summaryTravellersRow" style="display:none;">
+                                <span class="summary-label">Travellers</span>
+                                <span class="summary-value" id="summaryTravellers">—</span>
+                            </div>
+                        </div>
+                        <div class="summary-divider"></div>
+                        <div class="summary-row summary-subtotal" id="summarySubtotalRow" style="display:none;">
+                            <span class="summary-label" id="summarySubtotalLabel">€145 × 2 travellers</span>
+                            <span class="summary-value" id="summarySubtotal">€290</span>
+                        </div>
+                        <div class="summary-row summary-total">
+                            <span class="summary-label">Total</span>
+                            <span class="summary-value" id="summaryTotal">—</span>
+                        </div>
+                        <p class="summary-note">Free rescheduling up to 24 hours before your appointment.</p>
+                    </div>
+                </div>
+                <div class="step-actions">
+                    <button class="btn btn-outline btn-lg step-back" id="back-4">Back</button>
+                    <button class="btn btn-primary btn-lg step-next pay-btn" id="next-4">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                        Proceed to secure payment
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 5: Confirmation -->
+            <div class="booking-step" id="step-5">
+                <div class="confirmation-content">
+                    <div class="confirmation-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    </div>
+                    <h1 class="step-title">Booking confirmed!</h1>
+                    <p class="step-desc">Your consultation has been successfully scheduled. A confirmation email has been sent to <strong id="confirmEmail">your email</strong>.</p>
+
+                    <div class="confirmation-card">
+                        <div class="confirmation-row">
+                            <span class="confirmation-label">Service</span>
+                            <span class="confirmation-value" id="confirmService">—</span>
+                        </div>
+                        <div class="confirmation-row">
+                            <span class="confirmation-label">Date & Time</span>
+                            <span class="confirmation-value" id="confirmDateTime">—</span>
+                        </div>
+                        <div class="confirmation-row">
+                            <span class="confirmation-label">Format</span>
+                            <span class="confirmation-value">Secure video call</span>
+                        </div>
+                        <div class="confirmation-row">
+                            <span class="confirmation-label">Amount paid</span>
+                            <span class="confirmation-value" id="confirmAmount">—</span>
+                        </div>
+                        <div class="confirmation-row">
+                            <span class="confirmation-label">Booking reference</span>
+                            <span class="confirmation-value confirmation-ref" id="confirmRef">—</span>
+                        </div>
+                    </div>
+
+                    <div class="confirmation-next-steps">
+                        <h3>What happens next</h3>
+                        <div class="next-step-list">
+                            <div class="next-step-item">
+                                <div class="next-step-num">1</div>
+                                <div>
+                                    <strong>Check your email</strong>
+                                    <p>You'll receive a confirmation with your video link and preparation instructions.</p>
+                                </div>
+                            </div>
+                            <div class="next-step-item">
+                                <div class="next-step-num">2</div>
+                                <div>
+                                    <strong>Prepare for your consultation</strong>
+                                    <p>Have any relevant medical records, test results, or questions ready.</p>
+                                </div>
+                            </div>
+                            <div class="next-step-item">
+                                <div class="next-step-num">3</div>
+                                <div>
+                                    <strong>Join your video call</strong>
+                                    <p>Click the link in your email at your scheduled time. No software download needed.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="confirmation-actions">
+                        <a href="index.html" class="btn btn-outline btn-lg">Back to homepage</a>
+                        <button class="btn btn-primary btn-lg" onclick="window.print()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                            Print confirmation
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Minimal Footer -->
+    <footer class="footer booking-footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2026 Longevity Clinic. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="index.html">Back to site</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="i18n.js"></script>
+    <script src="booking.js"></script>
+</body>
+</html>
