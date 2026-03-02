@@ -1,0 +1,22 @@
+# Environment Variables Needed for Deployment
+# Copy these to your hosting platform's environment variables section
+
+# Stripe Configuration
+# Get your keys from: https://dashboard.stripe.com/apikeys
+STRIPE_SECRET_KEY=sk_test_your_secret_key_here
+STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key_here
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
+
+# Email Configuration (SMTP)
+# For Gmail, use an App Password: https://myaccount.google.com/apppasswords
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_password_here
+EMAIL_FROM=Longevity Clinic <noreply@longevityclinic.com>
+
+# Doxy.me Video Consultation
+DOXY_ROOM_URL=https://doxy.me/your-room-name
+
+# Server Port (usually set automatically by hosting platform)
+PORT=3000
