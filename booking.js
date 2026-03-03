@@ -722,7 +722,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (discount !== null) {
             state.discountCode = code.toUpperCase();
             state.discountPercent = discount;
-            messageEl.textContent = `Discount code "${state.discountCode}" applied: ${discount}% off`;
+            // Calculate actual discount considering Stripe minimum
+            const subtotalCents = state.service === 'travel' ? state.servicePriceCents : state.servicePriceCents * state.travellerCount;
+            const maxDiscountCents = Math.round(subtotalCents * (discount / 100));
+            const finalCents = Math.max(50, subtotalCents - maxDiscountCents);
+            const actualDiscountPercent = Math.round(((subtotalCents - finalCents) / subtotalCents) * 100);
+            messageEl.textContent = `Discount code "${state.discountCode}" applied: ${actualDiscountPercent}% off (minimum €0.50)`;
             messageEl.className = 'discount-message discount-success';
             messageEl.style.display = 'block';
             updateReviewAndSummary();
@@ -767,7 +772,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (state.discountPercent > 0) {
             discountCents = Math.round(subtotalCents * (state.discountPercent / 100));
         }
-        const totalCents = subtotalCents - discountCents;
+        let totalCents = subtotalCents - discountCents;
+        // Ensure minimum of 50 cents (Stripe minimum for EUR)
+        const STRIPE_MINIMUM = 50;
+        if (totalCents < STRIPE_MINIMUM) {
+            discountCents = subtotalCents - STRIPE_MINIMUM;
+            totalCents = STRIPE_MINIMUM;
+        }
         const totalFormatted = `€${(totalCents / 100).toFixed(0)}`;
         const subtotalFormatted = `€${(subtotalCents / 100).toFixed(0)}`;
         const discountFormatted = discountCents > 0 ? `-€${(discountCents / 100).toFixed(0)}` : '';
@@ -887,7 +898,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (state.discountPercent > 0) {
             discountCents = Math.round(subtotalCents * (state.discountPercent / 100));
         }
-        const totalCents = Math.max(0, subtotalCents - discountCents); // Ensure non-negative
+        let totalCents = subtotalCents - discountCents;
+        // Ensure minimum of 50 cents (Stripe minimum for EUR)
+        const STRIPE_MINIMUM = 50;
+        if (totalCents < STRIPE_MINIMUM) {
+            discountCents = subtotalCents - STRIPE_MINIMUM;
+            totalCents = STRIPE_MINIMUM;
+        }
 
         try {
             const response = await fetch('/api/create-checkout-session', {
