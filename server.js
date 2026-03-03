@@ -453,6 +453,11 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
+// ─── Serve index.html for root route ───
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 // ─── API: Get publishable key ───
 app.get('/api/config', (req, res) => {
     res.json({
