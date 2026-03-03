@@ -475,6 +475,25 @@ app.get('/api/config', (req, res) => {
     });
 });
 
+// ─── API: Debug Stripe configuration (remove in production) ───
+app.get('/api/debug-stripe', (req, res) => {
+    const hasSecret = !!process.env.STRIPE_SECRET_KEY;
+    const secretValue = process.env.STRIPE_SECRET_KEY || '';
+    const secretPreview = secretValue ? `${secretValue.substring(0, 10)}...` : 'MISSING';
+    const startsWithSk = secretValue.startsWith('sk_');
+    const isConfigured = isStripeConfigured;
+    
+    res.json({
+        hasSecretKey: hasSecret,
+        secretKeyPreview: secretPreview,
+        secretKeyLength: secretValue.length,
+        startsWithSk: startsWithSk,
+        isStripeConfigured: isConfigured,
+        publishableKeyExists: !!process.env.STRIPE_PUBLISHABLE_KEY,
+        publishableKeyPreview: process.env.STRIPE_PUBLISHABLE_KEY ? `${process.env.STRIPE_PUBLISHABLE_KEY.substring(0, 10)}...` : 'MISSING'
+    });
+});
+
 // ─── API: Create Checkout Session ───
 app.post('/api/create-checkout-session', async (req, res) => {
     if (!isStripeConfigured) {
@@ -504,6 +523,12 @@ app.post('/api/create-checkout-session', async (req, res) => {
         // Validate required fields
         if (!service || !priceAmount || !patientEmail || !patientName) {
             return res.status(400).json({ error: 'Missing required fields' });
+        }
+
+        // Validate price amount (Stripe minimum is 50 cents for EUR)
+        if (priceAmount < 50) {
+            console.warn('⚠️  Price too low, setting minimum to 50 cents');
+            priceAmount = 50; // Stripe minimum for EUR
         }
 
         const count = travellerCount || 1;
@@ -549,6 +574,11 @@ app.post('/api/create-checkout-session', async (req, res) => {
         }
 
         // Create Stripe Checkout Session
+        console.log('Creating Stripe checkout session...');
+        console.log('   Service:', service);
+        console.log('   Amount:', priceAmount, 'cents');
+        console.log('   Email:', patientEmail);
+        
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             mode: 'payment',
@@ -576,11 +606,19 @@ app.post('/api/create-checkout-session', async (req, res) => {
             expires_at: Math.floor(Date.now() / 1000) + (30 * 60),
         });
 
+        console.log('✅ Checkout session created:', session.id);
         res.json({ sessionId: session.id, url: session.url });
 
     } catch (err) {
-        console.error('Error creating checkout session:', err.message);
-        res.status(500).json({ error: 'Failed to create checkout session' });
+        console.error('❌ Error creating checkout session:');
+        console.error('   Error type:', err.type);
+        console.error('   Error message:', err.message);
+        console.error('   Error code:', err.code);
+        console.error('   Full error:', JSON.stringify(err, null, 2));
+        res.status(500).json({ 
+            error: 'Failed to create checkout session',
+            details: err.message || 'Unknown error'
+        });
     }
 });
 
