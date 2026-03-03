@@ -24,6 +24,11 @@ const PORT = process.env.PORT || 3000;
 const DOXY_ROOM_URL = process.env.DOXY_ROOM_URL || ''; // e.g. https://doxy.me/longevityclinic
 
 /* ========================================
+   CONTACT EMAIL CONFIGURATION
+======================================== */
+const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'info@lonclinic.com';
+
+/* ========================================
    IN-MEMORY BOOKINGS STORE
    (Replace with a database in production)
 ======================================== */
@@ -262,7 +267,7 @@ function buildConfirmationEmail(data) {
                         <td style="padding: 32px 20px; text-align: center;">
                             <p style="margin: 0 0 8px; font-size: 13px; color: #94a3b8;">
                                 If you have any questions, contact us at
-                                <a href="mailto:hello@longevityclinic.com" style="color: #3b82f6; text-decoration: none;">hello@longevityclinic.com</a>
+                                <a href="mailto:info@lonclinic.com" style="color: #3b82f6; text-decoration: none;">info@lonclinic.com</a>
                             </p>
                             <p style="margin: 0 0 16px; font-size: 13px; color: #94a3b8;">
                                 or call <a href="tel:+442012345678" style="color: #3b82f6; text-decoration: none;">+44 20 1234 5678</a>
@@ -303,7 +308,7 @@ WHAT HAPPENS NEXT
 
 Need to reschedule? Free rescheduling up to 24 hours before. Reply to this email or contact us.
 
-hello@longevityclinic.com | +44 20 1234 5678
+info@lonclinic.com | +44 20 1234 5678
 © 2026 Longevity Clinic
 `;
 

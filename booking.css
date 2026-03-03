@@ -1090,6 +1090,62 @@
     margin-bottom: 20px;
 }
 
+/* Discount Code Section */
+.discount-section {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.discount-input-group {
+    display: flex;
+    gap: 8px;
+}
+
+.discount-input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: border-color 0.2s;
+}
+
+.discount-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.discount-message {
+    margin-top: 8px;
+    font-size: 0.8125rem;
+    padding: 8px 12px;
+    border-radius: var(--radius);
+}
+
+.discount-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
+
+.discount-error {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+
+.summary-discount {
+    color: #2e7d32;
+}
+
+.summary-discount-value {
+    color: #2e7d32;
+    font-weight: 600;
+}
+
 .summary-service {
     display: flex;
     justify-content: space-between;

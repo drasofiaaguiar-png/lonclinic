@@ -18,5 +18,8 @@ EMAIL_FROM=Longevity Clinic <noreply@longevityclinic.com>
 # Doxy.me Video Consultation
 DOXY_ROOM_URL=https://doxy.me/your-room-name
 
+# Contact Email (shown on website footer)
+CONTACT_EMAIL=info@lonclinic.com
+
 # Server Port (usually set automatically by hosting platform)
 PORT=3000

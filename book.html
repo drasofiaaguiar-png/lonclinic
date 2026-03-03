@@ -494,6 +494,16 @@
                     <!-- Order Summary -->
                     <div class="order-summary">
                         <h3 class="summary-title">Booking summary</h3>
+                        
+                        <!-- Discount Code -->
+                        <div class="discount-section">
+                            <div class="discount-input-group">
+                                <input type="text" id="discountCode" class="discount-input" placeholder="Discount code" autocomplete="off">
+                                <button type="button" id="applyDiscountBtn" class="btn btn-outline btn-sm">Apply</button>
+                            </div>
+                            <div id="discountMessage" class="discount-message" style="display:none;"></div>
+                        </div>
+                        
                         <div class="summary-service">
                             <span class="summary-service-name" id="summaryService">—</span>
                             <span class="summary-service-price" id="summaryPrice">—</span>
@@ -524,6 +534,10 @@
                         <div class="summary-row summary-subtotal" id="summarySubtotalRow" style="display:none;">
                             <span class="summary-label" id="summarySubtotalLabel">€145 × 2 travellers</span>
                             <span class="summary-value" id="summarySubtotal">€290</span>
+                        </div>
+                        <div class="summary-row summary-discount" id="summaryDiscountRow" style="display:none;">
+                            <span class="summary-label">Discount</span>
+                            <span class="summary-value summary-discount-value" id="summaryDiscount">—</span>
                         </div>
                         <div class="summary-row summary-total">
                             <span class="summary-label">Total</span>

@@ -18,7 +18,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         dateLabel: '',
         time: null,
         calMonth: new Date().getMonth(),
-        calYear: new Date().getFullYear()
+        calYear: new Date().getFullYear(),
+        discountCode: '',
+        discountPercent: 0
     };
 
     const services = {
@@ -301,7 +303,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             dateObj.setHours(0, 0, 0, 0);
             const dayOfWeek = dateObj.getDay();
 
-            if (dateObj < today || dayOfWeek === 0 || dayOfWeek === 6) {
+            // Disable today and past dates, weekends
+            if (dateObj <= today || dayOfWeek === 0 || dayOfWeek === 6) {
                 btn.classList.add('cal-disabled');
             } else {
                 btn.addEventListener('click', () => selectDate(year, month, d, btn));
@@ -338,9 +341,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             slots.push(`${h.toString().padStart(2, '0')}:30`);
         }
 
+        // Filter out past hours if selected date is today
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const selectedDate = new Date(state.date);
+        selectedDate.setHours(0, 0, 0, 0);
+        const isToday = selectedDate.getTime() === today.getTime();
+        const currentHour = new Date().getHours();
+        const currentMinute = new Date().getMinutes();
+
+        let filteredSlots = slots;
+        if (isToday) {
+            filteredSlots = slots.filter(slot => {
+                const [hour, minute] = slot.split(':').map(Number);
+                const slotTime = hour * 60 + minute;
+                const currentTime = currentHour * 60 + currentMinute;
+                return slotTime > currentTime;
+            });
+        }
+
         const seed = state.date.getDate() * 7 + state.date.getMonth() * 31;
-        const available = slots.filter((_, i) => {
-            const pseudo = Math.sin(seed + i * 2.5) * 10000;
+        const available = filteredSlots.filter((_, i) => {
+            const originalIndex = slots.indexOf(filteredSlots[i]);
+            const pseudo = Math.sin(seed + originalIndex * 2.5) * 10000;
             return (pseudo - Math.floor(pseudo)) > 0.3;
         });
 
@@ -668,6 +691,68 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ═══════════════════════════════════════
     //  STEP 4 — Review & Pay (Stripe)
     // ═══════════════════════════════════════
+    
+    // Discount codes
+    const discountCodes = {
+        'ME2026': 99  // 99% discount
+    };
+
+    function validateDiscountCode(code) {
+        const upperCode = code.toUpperCase().trim();
+        if (discountCodes[upperCode]) {
+            return discountCodes[upperCode];
+        }
+        return null;
+    }
+
+    function applyDiscount() {
+        const codeInput = document.getElementById('discountCode');
+        const messageEl = document.getElementById('discountMessage');
+        const code = codeInput.value.trim();
+        
+        if (!code) {
+            messageEl.style.display = 'none';
+            state.discountCode = '';
+            state.discountPercent = 0;
+            updateReviewAndSummary();
+            return;
+        }
+
+        const discount = validateDiscountCode(code);
+        if (discount !== null) {
+            state.discountCode = code.toUpperCase();
+            state.discountPercent = discount;
+            messageEl.textContent = `Discount code "${state.discountCode}" applied: ${discount}% off`;
+            messageEl.className = 'discount-message discount-success';
+            messageEl.style.display = 'block';
+            updateReviewAndSummary();
+        } else {
+            state.discountCode = '';
+            state.discountPercent = 0;
+            messageEl.textContent = 'Invalid discount code';
+            messageEl.className = 'discount-message discount-error';
+            messageEl.style.display = 'block';
+            updateReviewAndSummary();
+        }
+    }
+
+    // Discount code event listeners
+    const discountInput = document.getElementById('discountCode');
+    const applyDiscountBtn = document.getElementById('applyDiscountBtn');
+    
+    if (applyDiscountBtn) {
+        applyDiscountBtn.addEventListener('click', applyDiscount);
+    }
+    
+    if (discountInput) {
+        discountInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                applyDiscount();
+            }
+        });
+    }
+
     function updateReviewAndSummary() {
         const emailVal = document.getElementById('email').value;
         const passengers = getPassengersData();
@@ -675,8 +760,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         const isTravel = state.service === 'travel';
         // For travel: flat tiered price already set in state.servicePriceCents
         // For others: price × count
-        const totalCents = isTravel ? state.servicePriceCents : state.servicePriceCents * count;
+        let subtotalCents = isTravel ? state.servicePriceCents : state.servicePriceCents * count;
+        
+        // Apply discount
+        let discountCents = 0;
+        if (state.discountPercent > 0) {
+            discountCents = Math.round(subtotalCents * (state.discountPercent / 100));
+        }
+        const totalCents = subtotalCents - discountCents;
         const totalFormatted = `€${(totalCents / 100).toFixed(0)}`;
+        const subtotalFormatted = `€${(subtotalCents / 100).toFixed(0)}`;
+        const discountFormatted = discountCents > 0 ? `-€${(discountCents / 100).toFixed(0)}` : '';
 
         // Appointment review card
         document.getElementById('reviewService').textContent = state.serviceLabel;
@@ -757,6 +851,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('summaryPatient').textContent = `${passengers[0].firstName} ${passengers[0].lastName}`;
         }
 
+        // Show/hide discount row
+        const discountRow = document.getElementById('summaryDiscountRow');
+        if (discountCents > 0) {
+            discountRow.style.display = 'flex';
+            document.getElementById('summaryDiscount').textContent = discountFormatted;
+        } else {
+            discountRow.style.display = 'none';
+        }
+
         document.getElementById('summaryTotal').textContent = totalFormatted;
     }
 
@@ -777,7 +880,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const passengers = getPassengersData();
         const isTravel = state.service === 'travel';
         // Travel uses flat tiered pricing; others use per-person
-        const totalCents = isTravel ? state.servicePriceCents : state.servicePriceCents * passengers.length;
+        let subtotalCents = isTravel ? state.servicePriceCents : state.servicePriceCents * passengers.length;
+        
+        // Apply discount
+        let discountCents = 0;
+        if (state.discountPercent > 0) {
+            discountCents = Math.round(subtotalCents * (state.discountPercent / 100));
+        }
+        const totalCents = Math.max(0, subtotalCents - discountCents); // Ensure non-negative
 
         try {
             const response = await fetch('/api/create-checkout-session', {
@@ -787,6 +897,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     service: state.service,
                     serviceLabel: state.serviceLabel,
                     priceAmount: totalCents,
+                    discountCode: state.discountCode || null,
+                    discountPercent: state.discountPercent || 0,
                     travellerCount: passengers.length,
                     hasInsurance: state.hasInsurance,
                     date: state.dateLabel,
