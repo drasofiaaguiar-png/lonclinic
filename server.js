@@ -8,10 +8,15 @@ const path = require('path');
 const nodemailer = require('nodemailer');
 
 const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY || '';
-const isStripeConfigured = STRIPE_SECRET && !STRIPE_SECRET.includes('your_secret_key_here');
+const isStripeConfigured = STRIPE_SECRET && 
+    !STRIPE_SECRET.includes('your_secret_key_here') &&
+    (STRIPE_SECRET.startsWith('sk_live_') || STRIPE_SECRET.startsWith('sk_test_'));
 let stripe;
 if (isStripeConfigured) {
     stripe = require('stripe')(STRIPE_SECRET);
+} else if (STRIPE_SECRET) {
+    console.log('   ⚠️  Stripe key found but invalid format. Should start with sk_live_ or sk_test_');
+    console.log('   ⚠️  Current key starts with:', STRIPE_SECRET.substring(0, 7) || 'EMPTY');
 }
 
 const app = express();
@@ -473,6 +478,10 @@ app.get('/api/config', (req, res) => {
 // ─── API: Create Checkout Session ───
 app.post('/api/create-checkout-session', async (req, res) => {
     if (!isStripeConfigured) {
+        console.error('❌ Stripe configuration check failed:');
+        console.error('   STRIPE_SECRET_KEY exists:', !!process.env.STRIPE_SECRET_KEY);
+        console.error('   STRIPE_SECRET_KEY value:', process.env.STRIPE_SECRET_KEY ? `${process.env.STRIPE_SECRET_KEY.substring(0, 10)}...` : 'MISSING');
+        console.error('   isStripeConfigured:', isStripeConfigured);
         return res.status(500).json({ error: 'Stripe is not configured. Add your STRIPE_SECRET_KEY to the .env file.' });
     }
     try {
