@@ -18,16 +18,16 @@
     <!-- Navigation -->
     <nav class="navbar scrolled" id="navbar">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo">
+            <a href="/" class="nav-logo">
                 <span class="nav-logo-text">longevity</span>
             </a>
             <div class="nav-links">
-                <a href="index.html" class="nav-link">Longevity Clinic</a>
-                <a href="travel.html" class="nav-link">Travel Medicine</a>
-                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                <a href="/" class="nav-link">LON Clinic</a>
+                <a href="/travel-clinic" class="nav-link">Travel Medicine</a>
+                <a href="/patient-portal" class="nav-link active">Dashboard</a>
             </div>
             <div class="nav-actions">
-                <a href="book.html" class="nav-cta-btn">Book consultation</a>
+                <a href="/book-consultation" class="nav-cta-btn">Book consultation</a>
             </div>
             <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
                 <span></span>
@@ -40,10 +40,10 @@
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-content">
-            <a href="index.html" class="mobile-link">Longevity Clinic</a>
-            <a href="travel.html" class="mobile-link">Travel Medicine</a>
-            <a href="dashboard.html" class="mobile-link">Dashboard</a>
-            <a href="book.html" class="mobile-link">Book consultation</a>
+            <a href="/" class="mobile-link">LON Clinic</a>
+            <a href="/travel-clinic" class="mobile-link">Travel Medicine</a>
+            <a href="/patient-portal" class="mobile-link">Dashboard</a>
+            <a href="/book-consultation" class="mobile-link">Book consultation</a>
         </div>
     </div>
 
@@ -81,7 +81,7 @@
                     <p class="dash-email" id="dashEmail">patient@example.com</p>
                 </div>
                 <div class="dash-header-right">
-                    <a href="book.html" class="btn btn-primary">New booking</a>
+                    <a href="/book-consultation" class="btn btn-primary">New booking</a>
                     <button class="btn btn-outline dash-logout-btn" id="logoutBtn">Sign out</button>
                 </div>
             </div>
@@ -125,7 +125,7 @@
 
             <!-- Quick Actions -->
             <div class="dash-actions-grid">
-                <a href="book.html?service=longevity" class="dash-action-card">
+                <a href="/book-consultation?service=longevity" class="dash-action-card">
                     <div class="dash-action-icon" style="background: rgba(91, 156, 246, 0.1); color: var(--accent-secondary);">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
                     </div>
@@ -134,7 +134,7 @@
                         <span>Book a preventive health consultation</span>
                     </div>
                 </a>
-                <a href="book.html?service=travel" class="dash-action-card">
+                <a href="/book-consultation?service=travel" class="dash-action-card">
                     <div class="dash-action-icon" style="background: rgba(197, 199, 44, 0.1); color: var(--accent);">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
                     </div>
@@ -143,7 +143,7 @@
                         <span>Prepare for your next trip</span>
                     </div>
                 </a>
-                <a href="book.html?service=followup" class="dash-action-card">
+                <a href="/book-consultation?service=followup" class="dash-action-card">
                     <div class="dash-action-icon" style="background: rgba(140, 210, 190, 0.15); color: #3dab8e;">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
                     </div>
@@ -163,7 +163,7 @@
                     <div class="dash-empty" id="dashEmpty">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                         <p>No consultations found for this account.</p>
-                        <a href="book.html" class="btn btn-primary">Book your first consultation</a>
+                        <a href="/book-consultation" class="btn btn-primary">Book your first consultation</a>
                     </div>
                     <table class="dash-table" id="dashTable" style="display:none;">
                         <thead>
@@ -216,6 +216,21 @@
         </section>
     </main>
 
+    <!-- Footer -->
+    <footer class="footer booking-footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2026 Longevity Clinic. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="/">Back to site</a>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 12px;">Atividade registada na Entidade Reguladora da Saúde</p>
+            </div>
+        </div>
+    </footer>
+
     <script src="dashboard.js"></script>
     <script>
         // Mobile menu
@@ -229,5 +244,10 @@
             });
         }
     </script>
+    
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">
+        <span>💬</span>
+    </a>
 </body>
 </html>

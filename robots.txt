@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://lonclinic.com/sitemap.xml
+
+# Disallow admin/dashboard areas if needed
+# Disallow: /dashboard.html
+
+# Allow all search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /

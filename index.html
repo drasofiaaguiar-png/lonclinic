@@ -1,16 +1,94 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Longevity Clinic — Add Life to Your Years</title>
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>LON Clinic — Clínica Online de Longevidade e Medicina de Viagem | Portugal</title>
+    <meta name="title" content="LON Clinic — Clínica Online de Longevidade e Medicina de Viagem | Portugal">
+    <meta name="description" content="LON Clinic: Clínica privada online especializada em longevidade e medicina de viagem. Consultas personalizadas com médicos experientes. Serviço 100% online para Portugal. Marque sua consulta hoje.">
+    <meta name="keywords" content="clínica online portugal, medicina de viagem portugal, consulta do viajante portugal, clínica longevidade portugal, consulta médica online portugal, medicina preventiva portugal, saúde online portugal">
+    <meta name="author" content="LON Clinic">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Portuguese">
+    <meta name="revisit-after" content="7 days">
+    <meta name="geo.region" content="PT">
+    <meta name="geo.placename" content="Portugal">
+    <meta name="geo.position" content="38.7223;-9.1393">
+    <meta name="ICBM" content="38.7223, -9.1393">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://lonclinic.com/">
+    
+    <!-- Sitemap -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+    
+    <!-- Hreflang Tags -->
+    <link rel="alternate" hreflang="pt-PT" href="https://lonclinic.com/">
+    <link rel="alternate" hreflang="pt" href="https://lonclinic.com/">
+    <link rel="alternate" hreflang="x-default" href="https://lonclinic.com/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lonclinic.com/">
+    <meta property="og:title" content="LON Clinic — Clínica Online de Longevidade e Medicina de Viagem">
+    <meta property="og:description" content="Clínica privada online especializada em longevidade e medicina de viagem. Consultas personalizadas com médicos experientes. Serviço 100% online para Portugal.">
+    <meta property="og:image" content="https://lonclinic.com/image/image2.webp">
+    <meta property="og:locale" content="pt_PT">
+    <meta property="og:site_name" content="LON Clinic">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://lonclinic.com/">
+    <meta property="twitter:title" content="LON Clinic — Clínica Online de Longevidade e Medicina de Viagem">
+    <meta property="twitter:description" content="Clínica privada online especializada em longevidade e medicina de viagem. Consultas personalizadas com médicos experientes.">
+    <meta property="twitter:image" content="https://lonclinic.com/image/image2.webp">
+    
+    <!-- Additional Meta Tags -->
+    <meta name="theme-color" content="#dce8f8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
-    <meta name="description" content="Private online longevity clinic — personalized longevity assessments with physicians specialized in preventive and long-term health, delivered entirely online.">
-    <meta name="theme-color" content="#dce8f8">
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MedicalClinic",
+      "name": "LON Clinic",
+      "alternateName": ["LON Clinic Portugal", "Clínica LON"],
+      "url": "https://lonclinic.com",
+      "logo": "https://lonclinic.com/image/image2.webp",
+      "image": "https://lonclinic.com/image/image2.webp",
+      "description": "Clínica privada online especializada em longevidade e medicina de viagem. Consultas personalizadas com médicos experientes. Serviço 100% online para Portugal.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "PT",
+        "addressLocality": "Lisbon",
+        "addressRegion": "Lisboa"
+      },
+      "telephone": "+351 928 372 775",
+      "email": "info@lonclinic.com",
+      "priceRange": "€€",
+      "medicalSpecialty": ["Longevity Medicine", "Travel Medicine", "Medicina de Viagem", "Medicina do Viajante"],
+      "areaServed": {
+        "@type": "Country",
+        "name": "Portugal",
+        "identifier": "PT"
+      },
+      "sameAs": [
+        "https://lonclinic.com/travel-clinic"
+      ]
+    }
+    </script>
 </head>
 <body>
 
@@ -27,8 +105,8 @@
                 <a href="#faq" class="nav-link">FAQ</a>
             </div>
             <div class="nav-actions">
-                <a href="dashboard.html" class="nav-member">Patient login</a>
-                <a href="book.html?service=longevity" class="btn btn-primary nav-btn">Book Assessment</a>
+                <a href="/patient-portal" class="nav-member">Patient login</a>
+                <a href="/book-consultation?service=longevity" class="btn btn-primary nav-btn">Book Assessment</a>
             </div>
             <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
                 <span></span>
@@ -45,8 +123,8 @@
             <a href="#how-it-works" class="mobile-link">How It Works</a>
             <a href="#insights" class="mobile-link">Insights</a>
             <a href="#faq" class="mobile-link">FAQ</a>
-            <a href="dashboard.html" class="mobile-link">Patient login</a>
-            <a href="book.html?service=longevity" class="btn btn-primary mobile-btn">Book Assessment</a>
+            <a href="/patient-portal" class="mobile-link">Patient login</a>
+            <a href="/book-consultation?service=longevity" class="btn btn-primary mobile-btn">Book Assessment</a>
         </div>
     </div>
 
@@ -74,10 +152,10 @@
             <!-- Right: Description + CTA -->
             <div class="neko-hero-right">
                 <p class="neko-hero-desc">Get a thorough longevity assessment, like you've never experienced before. Receive personalized insights and have unrushed time with a physician, all from <strong>€195</strong>.</p>
-                <a href="book.html?service=longevity" class="neko-hero-cta">
+                <a href="/book-consultation?service=longevity" class="neko-hero-cta">
                     Book Assessment
                 </a>
-                <a href="travel.html" class="neko-hero-travel">Traveling soon? Visit Travel Medicine →</a>
+                <a href="/travel-clinic" class="neko-hero-travel">Traveling soon? Visit Travel Medicine →</a>
             </div>
         </div>
 
@@ -85,7 +163,7 @@
         <div class="neko-hero-bottom">
             <div class="neko-hero-bottom-inner">
                 <span class="neko-hero-bottom-text">Longevity Clinic is now available online worldwide.</span>
-                <a href="book.html?service=longevity" class="neko-hero-bottom-cta">
+                <a href="/book-consultation?service=longevity" class="neko-hero-bottom-cta">
                     Book Assessment
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                 </a>
@@ -411,7 +489,7 @@
                 </div>
                 <h2 class="travel-title">Traveling internationally?<br>We also run a Travel Medicine Clinic.</h2>
                 <p class="travel-desc">In addition to longevity care, our physicians provide destination-specific travel health consultations — including vaccines, malaria prevention, altitude advice, and travel prescriptions.</p>
-                <a href="travel.html" class="btn btn-primary btn-lg">Visit Travel Medicine Clinic →</a>
+                <a href="/travel-clinic" class="btn btn-primary btn-lg">Visit Travel Medicine Clinic →</a>
             </div>
         </div>
     </section>
@@ -466,7 +544,7 @@
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                     </button>
                     <div class="faq-answer">
-                        <p>Yes. We operate a dedicated <a href="travel.html" style="color: #c5c72c; text-decoration: underline;">Travel Medicine Clinic</a> for destination-specific medical advice, vaccinations, malaria prevention, and travel prescriptions.</p>
+                        <p>Yes. We operate a dedicated <a href="/travel-clinic" style="color: #c5c72c; text-decoration: underline;">Travel Medicine Clinic</a> for destination-specific medical advice, vaccinations, malaria prevention, and travel prescriptions.</p>
                     </div>
                 </div>
             </div>
@@ -482,8 +560,8 @@
             <div class="cta-content">
                 <h2 class="cta-title">Start planning for a longer,<br>healthier future.</h2>
                 <p class="cta-desc">Book your online longevity assessment today and take a proactive step toward healthier aging.</p>
-                <a href="book.html?service=longevity" class="btn btn-primary btn-lg">Book your longevity consultation</a>
-                <p class="cta-note"><a href="travel.html" class="cta-travel-link">Need travel health advice instead? Visit our Travel Medicine Clinic →</a></p>
+                <a href="/book-consultation?service=longevity" class="btn btn-primary btn-lg">Book your longevity consultation</a>
+                <p class="cta-note"><a href="/travel-clinic" class="cta-travel-link">Need travel health advice instead? Visit our Travel Medicine Clinic →</a></p>
             </div>
         </div>
     </section>
@@ -497,32 +575,34 @@
                 </div>
                 <div class="footer-content-inner">
                     <div class="footer-brand">
-                        <span class="footer-logo">LONGEVITY</span>
+                        <span class="footer-logo">LON</span>
+                        <span style="font-size: 0.75rem; letter-spacing: 0.2em; margin-top: 4px; display: block;">CLINIC</span>
                     </div>
                     <div class="footer-columns">
                         <div class="footer-links">
                             <h4>Company</h4>
                             <a href="#approach">About</a>
                             <a href="#team">Medical Team</a>
-                            <a href="#">Careers</a>
-                            <a href="#">Press Room</a>
+                            <a href="/travel-clinic">Travel Medicine</a>
+                            <a href="#how-it-works">How It Works</a>
                         </div>
                         <div class="footer-links">
-                            <h4>Members</h4>
-                            <a href="#">Log In</a>
+                            <h4>Services</h4>
+                            <a href="/book-consultation?service=longevity">Longevity Assessment</a>
+                            <a href="/book-consultation?service=travel">Travel Consultation</a>
+                            <a href="/book-consultation?service=followup">Follow-Up Consultation</a>
+                            <a href="/travel-clinic">Travel Medicine Clinic</a>
+                        </div>
+                        <div class="footer-links">
+                            <h4>Patient Portal</h4>
+                            <a href="/patient-portal">Log In</a>
+                            <a href="/book-consultation">Book Consultation</a>
                             <a href="#faq">FAQ</a>
                         </div>
                         <div class="footer-links">
                             <h4>Follow</h4>
-                            <a href="#">Instagram</a>
-                            <a href="#">LinkedIn</a>
-                        </div>
-                        <div class="footer-links">
-                            <h4>Services</h4>
-                            <a href="#book">Longevity Assessment</a>
-                            <a href="travel.html">Travel Medicine</a>
-                            <a href="#how-it-works">How It Works</a>
-                            <a href="#insights">Insights</a>
+                            <a href="#" target="_blank" rel="noopener noreferrer">Instagram</a>
+                            <a href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                         </div>
                     </div>
                 </div>
@@ -530,30 +610,41 @@
             <div class="footer-support">
                 <h3 class="footer-support-title">Get Support</h3>
                 <a href="mailto:info@lonclinic.com" class="footer-support-link">info@lonclinic.com</a>
-                <a href="tel:+442012345678" class="footer-support-link">+44 20 1234 5678</a>
+                <a href="tel:+351928372775" class="footer-support-link">+351 928 372 775</a>
+                <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="footer-support-link whatsapp-link">
+                    <span style="font-size: 1.2em;">💬</span>
+                    <span>WhatsApp</span>
+                </a>
             </div>
         </div>
         <div class="footer-bottom">
             <div class="footer-bottom-left">
-                <p>&copy; 2026 Longevity Clinic</p>
+                <p>&copy; 2026 LON Clinic</p>
                 <span class="footer-bottom-sep">&mdash;</span>
                 <a href="#">Cookie Notice</a>
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms of Service</a>
+                <span class="footer-bottom-sep">&mdash;</span>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0;">Atividade registada na Entidade Reguladora da Saúde</p>
             </div>
             <div class="footer-bottom-right">
                 <div class="footer-locale">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                    <span>United Kingdom</span>
+                    <span>Portugal</span>
                     <span class="footer-lang-switch">
                         <a href="#" class="lang-opt" data-lang="pt">Português</a>
                         <a href="#" class="lang-opt active" data-lang="en">English</a>
                     </span>
                 </div>
-                <span class="footer-address">London, United Kingdom</span>
+                <span class="footer-address">Lisbon, Portugal</span>
             </div>
         </div>
     </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">
+        <span>💬</span>
+    </a>
 
     <script src="i18n.js"></script>
     <script src="script.js"></script>

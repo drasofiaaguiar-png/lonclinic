@@ -20,8 +20,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         calMonth: new Date().getMonth(),
         calYear: new Date().getFullYear(),
         discountCode: '',
-        discountPercent: 0
+        discountPercent: 0,
+        scheduleData: null // Admin schedule configuration
     };
+
+    // ─── Load schedule data ───
+    async function loadSchedule() {
+        try {
+            const res = await fetch('/api/schedule');
+            if (res.ok) {
+                state.scheduleData = await res.json();
+            }
+        } catch (err) {
+            console.log('Schedule API not available, using defaults');
+        }
+    }
+
+    // Load schedule on page load
+    await loadSchedule();
 
     const services = {
         longevity: { label: 'Longevity Assessment', price: '€195', cents: 19500 },
@@ -274,7 +290,48 @@ document.addEventListener('DOMContentLoaded', async () => {
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'];
 
-    function renderCalendar() {
+    async function loadSchedule() {
+        try {
+            const res = await fetch('/api/schedule');
+            if (res.ok) {
+                state.scheduleData = await res.json();
+            }
+        } catch (err) {
+            console.log('Schedule API not available, using defaults');
+        }
+    }
+
+    function isDateAvailable(dateObj) {
+        // Check if date is in the past
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (dateObj <= today) return false;
+
+        // Check if date is blocked
+        const dateStr = dateObj.toISOString().split('T')[0];
+        if (state.scheduleData && state.scheduleData.blockedDates && state.scheduleData.blockedDates.includes(dateStr)) {
+            return false;
+        }
+
+        // Check if day of week is enabled
+        const dayOfWeek = dateObj.getDay();
+        const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        const dayName = dayNames[dayOfWeek];
+
+        if (state.scheduleData && state.scheduleData.workingHours) {
+            const daySchedule = state.scheduleData.workingHours[dayName];
+            if (!daySchedule || !daySchedule.enabled) {
+                return false;
+            }
+        } else {
+            // Default: disable weekends if no schedule data
+            if (dayOfWeek === 0 || dayOfWeek === 6) return false;
+        }
+
+        return true;
+    }
+
+    async function renderCalendar() {
         const year = state.calYear;
         const month = state.calMonth;
         const mNames = i18nMonths();
@@ -285,6 +342,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const startDay = (firstDay + 6) % 7;
+
+        // Schedule data should already be loaded on page init
 
         calGrid.innerHTML = '';
 
@@ -303,8 +362,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             dateObj.setHours(0, 0, 0, 0);
             const dayOfWeek = dateObj.getDay();
 
-            // Disable today and past dates, weekends
-            if (dateObj <= today || dayOfWeek === 0 || dayOfWeek === 6) {
+            // Check availability based on schedule
+            if (!isDateAvailable(dateObj)) {
                 btn.classList.add('cal-disabled');
             } else {
                 btn.addEventListener('click', () => selectDate(year, month, d, btn));
@@ -331,59 +390,106 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderTimeslots();
     }
 
-    function renderTimeslots() {
+    async function renderTimeslots() {
         timeslotHeading.textContent = state.dateLabel;
-        timeslotGrid.innerHTML = '';
+        timeslotGrid.innerHTML = '<p class="timeslot-empty">Loading available slots...</p>';
 
-        const slots = [];
-        for (let h = 9; h < 17; h++) {
-            slots.push(`${h.toString().padStart(2, '0')}:00`);
-            slots.push(`${h.toString().padStart(2, '0')}:30`);
-        }
+        // Format date as YYYY-MM-DD
+        const dateStr = state.date.toISOString().split('T')[0];
 
-        // Filter out past hours if selected date is today
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const selectedDate = new Date(state.date);
-        selectedDate.setHours(0, 0, 0, 0);
-        const isToday = selectedDate.getTime() === today.getTime();
-        const currentHour = new Date().getHours();
-        const currentMinute = new Date().getMinutes();
+        try {
+            // Fetch available slots from admin schedule
+            const res = await fetch(`/api/admin/available-slots?date=${dateStr}`);
+            const data = await res.json();
 
-        let filteredSlots = slots;
-        if (isToday) {
-            filteredSlots = slots.filter(slot => {
-                const [hour, minute] = slot.split(':').map(Number);
-                const slotTime = hour * 60 + minute;
-                const currentTime = currentHour * 60 + currentMinute;
-                return slotTime > currentTime;
+            timeslotGrid.innerHTML = '';
+
+            if (!data.available || data.available.length === 0) {
+                timeslotGrid.innerHTML = '<p class="timeslot-empty">No available slots on this date. Please try another day.</p>';
+                return;
+            }
+
+            // Filter out past hours if selected date is today
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const selectedDate = new Date(state.date);
+            selectedDate.setHours(0, 0, 0, 0);
+            const isToday = selectedDate.getTime() === today.getTime();
+            const currentHour = new Date().getHours();
+            const currentMinute = new Date().getMinutes();
+
+            let availableSlots = data.available;
+            if (isToday) {
+                availableSlots = data.available.filter(slot => {
+                    const [hour, minute] = slot.split(':').map(Number);
+                    const slotTime = hour * 60 + minute;
+                    const currentTime = currentHour * 60 + currentMinute;
+                    return slotTime > currentTime;
+                });
+            }
+
+            if (availableSlots.length === 0) {
+                timeslotGrid.innerHTML = '<p class="timeslot-empty">No available slots on this date. Please try another day.</p>';
+                return;
+            }
+
+            availableSlots.forEach(slot => {
+                const btn = document.createElement('button');
+                btn.className = 'timeslot-btn';
+                btn.textContent = slot;
+                btn.addEventListener('click', () => {
+                    state.time = slot;
+                    timeslotGrid.querySelectorAll('.timeslot-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    document.getElementById('next-2').disabled = false;
+                });
+                timeslotGrid.appendChild(btn);
+            });
+        } catch (err) {
+            console.error('Failed to load schedule:', err);
+            // Fallback to default behavior if schedule API fails
+            const slots = [];
+            for (let h = 9; h < 17; h++) {
+                slots.push(`${h.toString().padStart(2, '0')}:00`);
+                slots.push(`${h.toString().padStart(2, '0')}:30`);
+            }
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const selectedDate = new Date(state.date);
+            selectedDate.setHours(0, 0, 0, 0);
+            const isToday = selectedDate.getTime() === today.getTime();
+            const currentHour = new Date().getHours();
+            const currentMinute = new Date().getMinutes();
+
+            let filteredSlots = slots;
+            if (isToday) {
+                filteredSlots = slots.filter(slot => {
+                    const [hour, minute] = slot.split(':').map(Number);
+                    const slotTime = hour * 60 + minute;
+                    const currentTime = currentHour * 60 + currentMinute;
+                    return slotTime > currentTime;
+                });
+            }
+
+            if (filteredSlots.length === 0) {
+                timeslotGrid.innerHTML = '<p class="timeslot-empty">No available slots on this date. Please try another day.</p>';
+                return;
+            }
+
+            filteredSlots.forEach(slot => {
+                const btn = document.createElement('button');
+                btn.className = 'timeslot-btn';
+                btn.textContent = slot;
+                btn.addEventListener('click', () => {
+                    state.time = slot;
+                    timeslotGrid.querySelectorAll('.timeslot-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    document.getElementById('next-2').disabled = false;
+                });
+                timeslotGrid.appendChild(btn);
             });
         }
-
-        const seed = state.date.getDate() * 7 + state.date.getMonth() * 31;
-        const available = filteredSlots.filter((_, i) => {
-            const originalIndex = slots.indexOf(filteredSlots[i]);
-            const pseudo = Math.sin(seed + originalIndex * 2.5) * 10000;
-            return (pseudo - Math.floor(pseudo)) > 0.3;
-        });
-
-        if (available.length === 0) {
-            timeslotGrid.innerHTML = '<p class="timeslot-empty">No available slots on this date. Please try another day.</p>';
-            return;
-        }
-
-        available.forEach(slot => {
-            const btn = document.createElement('button');
-            btn.className = 'timeslot-btn';
-            btn.textContent = slot;
-            btn.addEventListener('click', () => {
-                state.time = slot;
-                timeslotGrid.querySelectorAll('.timeslot-btn').forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-                document.getElementById('next-2').disabled = false;
-            });
-            timeslotGrid.appendChild(btn);
-        });
     }
 
     document.getElementById('calPrev').addEventListener('click', () => {
@@ -959,6 +1065,135 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ═══════════════════════════════════════
     //  STRIPE RETURN HANDLERS
     // ═══════════════════════════════════════
+    
+    // Generate Google Calendar URL
+    function generateGoogleCalendarUrl(data) {
+        try {
+            // Parse date and time
+            // Date format: "Wednesday, 18 February 2026" or similar locale-specific format
+            // Time format: "14:30" or "09:00"
+            const dateStr = data.date || '';
+            const timeStr = data.time || '';
+            
+            if (!dateStr || !timeStr) {
+                return null;
+            }
+
+            // Try multiple parsing strategies
+            let appointmentDate = null;
+            
+            // Strategy 1: Try parsing the date string directly
+            appointmentDate = new Date(dateStr);
+            
+            // Strategy 2: If that fails, try combining date and time
+            if (isNaN(appointmentDate.getTime())) {
+                appointmentDate = new Date(`${dateStr} ${timeStr}`);
+            }
+            
+            // Strategy 3: Try parsing with common date formats
+            if (isNaN(appointmentDate.getTime())) {
+                // Try to extract date parts from common formats
+                // Format: "Wednesday, 18 February 2026" or "Wednesday, February 18, 2026"
+                const dateMatch = dateStr.match(/(\d{1,2})[\s,]+(\w+)[\s,]+(\d{4})/);
+                if (dateMatch) {
+                    const day = parseInt(dateMatch[1]);
+                    const monthName = dateMatch[2];
+                    const year = parseInt(dateMatch[3]);
+                    
+                    const monthMap = {
+                        'january': 0, 'february': 1, 'march': 2, 'april': 3,
+                        'may': 4, 'june': 5, 'july': 6, 'august': 7,
+                        'september': 8, 'october': 9, 'november': 10, 'december': 11
+                    };
+                    const month = monthMap[monthName.toLowerCase()];
+                    if (month !== undefined) {
+                        appointmentDate = new Date(year, month, day);
+                    }
+                }
+            }
+            
+            if (!appointmentDate || isNaN(appointmentDate.getTime())) {
+                console.warn('Could not parse date:', dateStr);
+                return null;
+            }
+
+            // Extract hour and minute from time string (format: "HH:MM")
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            if (isNaN(hours) || isNaN(minutes)) {
+                console.warn('Could not parse time:', timeStr);
+                return null;
+            }
+            
+            appointmentDate.setHours(hours, minutes, 0, 0);
+
+            // Calculate end time based on service type
+            let durationMinutes = 45; // Default
+            if (data.service === 'travel') {
+                // Travel duration depends on traveller count
+                const count = data.travellerCount || 1;
+                if (count === 1) durationMinutes = 20;
+                else if (count === 2) durationMinutes = 30;
+                else durationMinutes = 40;
+            } else if (data.service === 'followup') {
+                durationMinutes = 30;
+            } else if (data.service === 'longevity') {
+                durationMinutes = 60;
+            }
+
+            const endDate = new Date(appointmentDate);
+            endDate.setMinutes(endDate.getMinutes() + durationMinutes);
+
+            // Format dates for Google Calendar (YYYYMMDDTHHMMSS format, local time)
+            // Google Calendar will handle timezone conversion
+            function formatGoogleDate(date) {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                const seconds = String(date.getSeconds()).padStart(2, '0');
+                return `${year}${month}${day}T${hours}${minutes}${seconds}`;
+            }
+
+            const startDateStr = formatGoogleDate(appointmentDate);
+            const endDateStr = formatGoogleDate(endDate);
+
+            // Build event details
+            const serviceLabels = {
+                longevity: i18nServiceLabel('longevity'),
+                travel: i18nServiceLabel('travel'),
+                followup: i18nServiceLabel('followup'),
+            };
+            
+            const eventTitle = encodeURIComponent(serviceLabels[data.service] || data.service || 'Medical Consultation');
+            
+            let description = `Booking Reference: ${data.bookingRef || 'N/A'}\n`;
+            description += `Service: ${serviceLabels[data.service] || data.service}\n`;
+            if (data.patientName) {
+                description += `Patient: ${data.patientName}\n`;
+            }
+            description += `\nThis is a secure video consultation. You will receive a video call link via email.\n`;
+            description += `\nFor any questions, please contact us.`;
+            
+            const encodedDescription = encodeURIComponent(description);
+            const location = encodeURIComponent('Video Consultation - Link will be sent via email');
+
+            // Build Google Calendar URL
+            const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE` +
+                `&text=${eventTitle}` +
+                `&dates=${startDateStr}/${endDateStr}` +
+                `&details=${encodedDescription}` +
+                `&location=${location}` +
+                `&sf=true` +
+                `&output=xml`;
+
+            return calendarUrl;
+        } catch (err) {
+            console.error('Error generating Google Calendar URL:', err);
+            return null;
+        }
+    }
+
     async function handleStripeReturn(sessionId) {
         // Show loading state
         document.querySelectorAll('.booking-step').forEach(s => s.classList.remove('active'));
@@ -994,6 +1229,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('confirmAmount').textContent = `€${(data.amount / 100).toFixed(0)}`;
             document.getElementById('confirmRef').textContent = data.bookingRef || '—';
 
+            // Generate and set Google Calendar URL
+            const calendarBtn = document.getElementById('addToCalendarBtn');
+            if (calendarBtn) {
+                const calendarUrl = generateGoogleCalendarUrl(data);
+                if (calendarUrl) {
+                    calendarBtn.href = calendarUrl;
+                    // Button is visible by default, no need to set display
+                } else {
+                    // Hide button if we can't generate the URL
+                    calendarBtn.style.display = 'none';
+                }
+            }
+
         } catch (err) {
             console.error('Error loading confirmation:', err);
             document.getElementById('confirmEmail').textContent = '—';
@@ -1001,6 +1249,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('confirmDateTime').textContent = 'Check your email for details';
             document.getElementById('confirmAmount').textContent = '—';
             document.getElementById('confirmRef').textContent = 'See confirmation email';
+            
+            // Hide calendar button on error
+            const calendarBtn = document.getElementById('addToCalendarBtn');
+            if (calendarBtn) {
+                calendarBtn.style.display = 'none';
+            }
         }
     }
 

@@ -8,12 +8,21 @@ STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key_here
 STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
 
 # Email Configuration (SMTP)
-# For Gmail, use an App Password: https://myaccount.google.com/apppasswords
+# Option 1: Use info@lonclinic.com (if created with Namecheap/Google Workspace)
+# EMAIL_HOST=mail.privateemail.com  (for Namecheap)
+# EMAIL_HOST=smtp.gmail.com  (for Google Workspace)
+# EMAIL_PORT=587
+# EMAIL_USER=info@lonclinic.com
+# EMAIL_PASS=your_email_password_here
+# EMAIL_FROM=Longevity Clinic <info@lonclinic.com>
+
+# Option 2: Use Gmail personal account
+# For Gmail, create App Password: https://myaccount.google.com/apppasswords
 EMAIL_HOST=smtp.gmail.com
 EMAIL_PORT=587
 EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_app_password_here
-EMAIL_FROM=Longevity Clinic <noreply@longevityclinic.com>
+EMAIL_FROM=Longevity Clinic <your_email@gmail.com>
 
 # Doxy.me Video Consultation
 DOXY_ROOM_URL=https://doxy.me/your-room-name

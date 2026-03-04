@@ -2769,6 +2769,23 @@ body.loaded .hero-container {
     opacity: 0.7;
 }
 
+.footer-support-link.whatsapp-link {
+    margin-top: 12px;
+    padding: 8px 12px;
+    background: rgba(37, 211, 102, 0.1);
+    border-radius: 6px;
+    transition: background 0.2s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.footer-support-link.whatsapp-link:hover {
+    background: rgba(37, 211, 102, 0.2);
+    transform: translateY(-1px);
+    opacity: 1;
+}
+
 /* Bottom bar — full width */
 .footer-bottom {
     display: flex;
@@ -2856,6 +2873,80 @@ body.loaded .hero-container {
     font-size: 0.8125rem;
     color: #5c5c5c;
     font-weight: 400;
+}
+
+/* ========================================
+   WHATSAPP FLOATING BUTTON
+======================================== */
+.whatsapp-float {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 64px;
+    height: 64px;
+    background: #25D366;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.whatsapp-float:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 24px rgba(37, 211, 102, 0.5);
+}
+
+.whatsapp-float:active {
+    transform: scale(0.95);
+}
+
+.whatsapp-float span {
+    font-size: 36px;
+    line-height: 1;
+}
+
+.whatsapp-float::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #25D366;
+    opacity: 0;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.3;
+    }
+    100% {
+        transform: scale(1.4);
+        opacity: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .whatsapp-float {
+        width: 56px;
+        height: 56px;
+        bottom: 20px;
+        right: 20px;
+    }
+    
+    .whatsapp-float span {
+        font-size: 32px;
+    }
 }
 
 /* ========================================

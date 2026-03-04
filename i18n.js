@@ -42,8 +42,8 @@
         { s: '.footer-bottom-left a:nth-child(3)', en: 'Cookie Notice', pt: 'Aviso de Cookies' },
         { s: '.footer-bottom-left a:nth-child(4)', en: 'Privacy Policy', pt: 'Política de Privacidade' },
         { s: '.footer-bottom-left a:nth-child(5)', en: 'Terms of Service', pt: 'Termos de Serviço' },
-        { s: '.footer-locale > span:first-of-type', en: 'United Kingdom', pt: 'Reino Unido' },
-        { s: '.footer-address', en: 'London, United Kingdom', pt: 'Londres, Reino Unido' },
+        { s: '.footer-locale > span:first-of-type', en: 'Portugal', pt: 'Portugal' },
+        { s: '.footer-address', en: 'Lisbon, Portugal', pt: 'Lisboa, Portugal' },
     ];
 
     /* ═══════════════════════════
@@ -58,7 +58,7 @@
         { s: '.nav-link[href="#how-it-works"], .mobile-link[href="#how-it-works"]', en: 'How It Works', pt: 'Como Funciona' },
         { s: '.nav-link[href="#insights"], .mobile-link[href="#insights"]', en: 'Insights', pt: 'Resultados' },
         { s: '.nav-link[href="#faq"], .mobile-link[href="#faq"]', en: 'FAQ', pt: 'FAQ' },
-        { s: '.nav-member, .mobile-link[href="dashboard.html"]', en: 'Patient login', pt: 'Área do Paciente' },
+        { s: '.nav-member, .mobile-link[href="/patient-portal"]', en: 'Patient login', pt: 'Área do Paciente' },
         { s: '.nav-btn, .mobile-btn', en: 'Book Assessment', pt: 'Marcar Avaliação' },
 
         /* ── Hero ── */
@@ -167,7 +167,7 @@
         { s: '#faq .faq-item:nth-child(4) .faq-question span', en: 'Is this a replacement for my GP?', pt: 'Isto substitui o meu médico de família?' },
         { s: '#faq .faq-item:nth-child(4) .faq-answer p', en: 'No. We provide specialized preventive consultations that complement your regular healthcare. Think of us as an additional layer of expertise focused specifically on longevity and disease prevention.', pt: 'Não. Fornecemos consultas preventivas especializadas que complementam os seus cuidados de saúde regulares. Pense em nós como uma camada adicional de especialização focada especificamente na longevidade e prevenção de doenças.' },
         { s: '#faq .faq-item:nth-child(5) .faq-question span', en: 'Do you also provide travel consultations?', pt: 'Também fazem consultas de viagem?' },
-        { s: '#faq .faq-item:nth-child(5) .faq-answer p', en: 'Yes. We operate a dedicated <a href="travel.html" style="color: #c5c72c; text-decoration: underline;">Travel Medicine Clinic</a> for destination-specific medical advice, vaccinations, malaria prevention, and travel prescriptions.', pt: 'Sim. Temos uma <a href="travel.html" style="color: #c5c72c; text-decoration: underline;">Clínica de Medicina de Viagem</a> dedicada para aconselhamento médico específico por destino, vacinações, prevenção de malária e prescrições de viagem.', h: true },
+        { s: '#faq .faq-item:nth-child(5) .faq-answer p', en: 'Yes. We operate a dedicated <a href="/travel-clinic" style="color: #c5c72c; text-decoration: underline;">Travel Medicine Clinic</a> for destination-specific medical advice, vaccinations, malaria prevention, and travel prescriptions.', pt: 'Sim. Temos uma <a href="/travel-clinic" style="color: #c5c72c; text-decoration: underline;">Clínica de Medicina de Viagem</a> dedicada para aconselhamento médico específico por destino, vacinações, prevenção de malária e prescrições de viagem.', h: true },
 
         /* ── CTA (#book) ── */
         { s: '#book .cta-title', en: 'Start planning for a longer,<br>healthier future.', pt: 'Comece a planear um futuro<br>mais longo e saudável.', h: true },
@@ -179,7 +179,7 @@
         { s: '.footer-columns .footer-links:nth-child(1) a:nth-child(2)', en: 'About', pt: 'Sobre' },
         { s: '.footer-columns .footer-links:nth-child(1) a[href="#team"]', en: 'Medical Team', pt: 'Equipa Médica' },
         { s: '.footer-links a[href="#book"]', en: 'Longevity Assessment', pt: 'Avaliação de Longevidade' },
-        { s: '.footer-links a[href="travel.html"]', en: 'Travel Medicine', pt: 'Medicina de Viagem' },
+        { s: '.footer-links a[href="/travel-clinic"]', en: 'Travel Medicine', pt: 'Medicina de Viagem' },
         { s: '.footer-links a[href="#how-it-works"]', en: 'How It Works', pt: 'Como Funciona' },
         { s: '.footer-links a[href="#insights"]', en: 'Insights', pt: 'Resultados' },
     ];
@@ -196,7 +196,7 @@
         { s: '.nav-link[href="#how-it-works"], .mobile-link[href="#how-it-works"]', en: 'How It Works', pt: 'Como Funciona' },
         { s: '.nav-link[href="#travel-style"], .mobile-link[href="#travel-style"]', en: 'Travel Styles', pt: 'Estilos de Viagem' },
         { s: '.nav-link[href="#faq"], .mobile-link[href="#faq"]', en: 'FAQ', pt: 'FAQ' },
-        { s: '.nav-member, .mobile-menu-content a[href="index.html"]', en: 'Longevity Clinic', pt: 'Clínica de Longevidade' },
+        { s: '.nav-member, .mobile-menu-content a[href="/"]', en: 'Longevity Clinic', pt: 'Clínica de Longevidade' },
         { s: '.nav-btn, .mobile-btn', en: 'Book Consultation', pt: 'Marcar Consulta' },
 
         /* ── Hero ── */
@@ -322,8 +322,8 @@
 
         /* ── Footer (travel-specific) ── */
         { s: '.footer-columns .footer-links:nth-child(1) a:nth-child(2)', en: 'About', pt: 'Sobre' },
-        { s: '.footer-columns .footer-links:nth-child(1) a[href="index.html#team"]', en: 'Medical Team', pt: 'Equipa Médica' },
-        { s: '.footer-links a[href="index.html"]', en: 'Longevity Clinic', pt: 'Clínica de Longevidade' },
+        { s: '.footer-columns .footer-links:nth-child(1) a[href="/#team"]', en: 'Medical Team', pt: 'Equipa Médica' },
+        { s: '.footer-links a[href="/"]', en: 'Longevity Clinic', pt: 'Clínica de Longevidade' },
         { s: '.footer-links a[href="#book"]', en: 'Travel Consultation', pt: 'Consulta de Viagem' },
         { s: '.footer-links a[href="#how-it-works"]', en: 'How It Works', pt: 'Como Funciona' },
         { s: '.footer-links a[href="#vaccines"]', en: 'Vaccinations', pt: 'Vacinações' },
@@ -337,9 +337,9 @@
         { s: 'title', en: 'Book Your Consultation — Longevity Clinic', pt: 'Marcar Consulta — Clínica de Longevidade', special: 'title' },
 
         /* ── Nav ── */
-        { s: '.nav-link[href="index.html"], .mobile-link[href="index.html"]', en: 'Longevity Clinic', pt: 'Clínica de Longevidade' },
-        { s: '.nav-link[href="travel.html"], .mobile-link[href="travel.html"]', en: 'Travel Medicine', pt: 'Medicina de Viagem' },
-        { s: '.nav-member, .mobile-link[href="dashboard.html"]', en: 'Patient login', pt: 'Área do Paciente' },
+        { s: '.nav-link[href="/"], .mobile-link[href="/"]', en: 'Longevity Clinic', pt: 'Clínica de Longevidade' },
+        { s: '.nav-link[href="/travel-clinic"], .mobile-link[href="/travel-clinic"]', en: 'Travel Medicine', pt: 'Medicina de Viagem' },
+        { s: '.nav-member, .mobile-link[href="/patient-portal"]', en: 'Patient login', pt: 'Área do Paciente' },
 
         /* ── Progress Steps ── */
         { s: '.progress-step[data-step="1"] .progress-label', en: 'Service', pt: 'Serviço' },
@@ -384,7 +384,7 @@
         { s: '#email', a: 'placeholder', en: 'john@example.com', pt: 'joao@exemplo.com' },
         { s: '#email ~ .form-error', en: 'Please enter a valid email address', pt: 'Por favor introduza um endereço de email válido' },
         { s: 'label[for="phone"]', en: 'Phone number *', pt: 'Número de telefone *' },
-        { s: '#phone', a: 'placeholder', en: '+1 (555) 000-0000', pt: '+351 912 345 678' },
+        { s: '#phone', a: 'placeholder', en: '+351 928 372 775', pt: '+351 928 372 775' },
         { s: '#phone ~ .form-error', en: 'Please enter your phone number', pt: 'Por favor introduza o seu número de telefone' },
         { s: 'label[for="dob"]', en: 'Date of birth *', pt: 'Data de nascimento *' },
         { s: '#dob ~ .form-error', en: 'Please enter your date of birth', pt: 'Por favor introduza a sua data de nascimento' },
@@ -454,7 +454,7 @@
         { s: '.footer-bottom > p', en: '\u00A9 2026 Longevity Clinic. All rights reserved.', pt: '\u00A9 2026 Clínica de Longevidade. Todos os direitos reservados.' },
         { s: '.footer-legal a:nth-child(1)', en: 'Privacy Policy', pt: 'Política de Privacidade' },
         { s: '.footer-legal a:nth-child(2)', en: 'Terms of Service', pt: 'Termos de Serviço' },
-        { s: '.footer-legal a[href="index.html"]', en: 'Back to site', pt: 'Voltar ao site' },
+        { s: '.footer-legal a[href="/"]', en: 'Back to site', pt: 'Voltar ao site' },
     ];
 
     /* ═══════════════════════════

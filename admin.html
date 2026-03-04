@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal — Schedule Management | LON Clinic</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
+    <meta name="description" content="Admin portal — manage schedule and availability.">
+    <meta name="theme-color" content="#eaf2fb">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-text">LON</span>
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">LON Clinic</a>
+                <a href="/travel-clinic" class="nav-link">Travel Medicine</a>
+                <a href="/clinic-portal" class="nav-link">Clinic Portal</a>
+                <a href="/admin" class="nav-link active">Admin</a>
+            </div>
+            <div class="nav-actions">
+                <a href="/clinic-portal" class="nav-cta-btn">Clinic Portal</a>
+            </div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-content">
+            <a href="/" class="mobile-link">LON Clinic</a>
+            <a href="/travel-clinic" class="mobile-link">Travel Medicine</a>
+            <a href="/clinic-portal" class="mobile-link">Clinic Portal</a>
+            <a href="/admin" class="mobile-link">Admin</a>
+        </div>
+    </div>
+
+    <main class="dash-page">
+        <!-- Login Gate (shown when not logged in) -->
+        <section class="dash-login" id="adminLogin" style="display:none;">
+            <div class="dash-login-card">
+                <div class="dash-login-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                </div>
+                <h1 class="dash-login-title">Admin Portal</h1>
+                <p class="dash-login-desc">Access the admin portal to manage your schedule and availability.</p>
+                <form class="dash-login-form" id="adminLoginForm">
+                    <div class="dash-form-group">
+                        <label for="adminUsername">Username</label>
+                        <input type="text" id="adminUsername" placeholder="Enter username" required autocomplete="username">
+                    </div>
+                    <div class="dash-form-group">
+                        <label for="adminPassword">Password</label>
+                        <input type="password" id="adminPassword" placeholder="Enter password" required autocomplete="current-password">
+                    </div>
+                    <div id="adminLoginError" class="dash-login-error" style="display:none;"></div>
+                    <button type="submit" class="btn btn-primary btn-lg dash-login-btn">Sign in</button>
+                </form>
+                <p class="dash-login-note">Authorized administrators only. All access is logged.</p>
+            </div>
+        </section>
+
+        <!-- Admin Content (shown after login) -->
+        <section class="dash-content" id="adminContent" style="display:none;">
+            <!-- Header -->
+            <div class="dash-header">
+                <div class="dash-header-left">
+                    <h1 class="dash-greeting" id="adminGreeting">Schedule Management</h1>
+                    <p class="dash-email" id="adminUserInfo">Manage your working hours and availability</p>
+                </div>
+                <div class="dash-header-right">
+                    <button class="btn btn-primary" id="saveScheduleBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                        Save Schedule
+                    </button>
+                    <button class="btn btn-outline dash-logout-btn" id="adminLogoutBtn">Sign out</button>
+                </div>
+            </div>
+
+            <!-- Working Hours Section -->
+            <div class="dash-section">
+                <div class="dash-section-header">
+                    <h2 class="dash-section-title">Working Hours</h2>
+                    <p class="dash-section-subtitle">Set your availability for each day of the week</p>
+                </div>
+                <div class="admin-schedule-grid" id="workingHoursGrid">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+
+            <!-- Slot Duration -->
+            <div class="dash-section">
+                <div class="dash-section-header">
+                    <h2 class="dash-section-title">Appointment Duration</h2>
+                    <p class="dash-section-subtitle">Set the duration for each appointment slot</p>
+                </div>
+                <div class="admin-form-group">
+                    <label for="slotDuration">Slot Duration (minutes)</label>
+                    <select id="slotDuration" class="admin-select">
+                        <option value="15">15 minutes</option>
+                        <option value="30" selected>30 minutes</option>
+                        <option value="45">45 minutes</option>
+                        <option value="60">60 minutes</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Blocked Dates -->
+            <div class="dash-section">
+                <div class="dash-section-header">
+                    <h2 class="dash-section-title">Blocked Dates</h2>
+                    <p class="dash-section-subtitle">Block specific dates when you're not available</p>
+                </div>
+                <div class="admin-form-group">
+                    <div class="admin-input-group">
+                        <input type="date" id="blockDateInput" class="admin-input">
+                        <button type="button" class="btn btn-outline btn-sm" id="addBlockDateBtn">Add Date</button>
+                    </div>
+                </div>
+                <div class="admin-blocked-list" id="blockedDatesList">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+
+            <!-- Blocked Time Slots -->
+            <div class="dash-section">
+                <div class="dash-section-header">
+                    <h2 class="dash-section-title">Blocked Time Slots</h2>
+                    <p class="dash-section-subtitle">Block specific time slots on specific dates</p>
+                </div>
+                <div class="admin-form-group">
+                    <div class="admin-input-group">
+                        <input type="date" id="blockSlotDateInput" class="admin-input">
+                        <input type="time" id="blockSlotTimeInput" class="admin-input">
+                        <button type="button" class="btn btn-outline btn-sm" id="addBlockSlotBtn">Add Time Slot</button>
+                    </div>
+                </div>
+                <div class="admin-blocked-list" id="blockedSlotsList">
+                    <!-- Generated by JS -->
+                </div>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="dash-section">
+                <div class="dash-section-header">
+                    <h2 class="dash-section-title">Preview Available Slots</h2>
+                    <p class="dash-section-subtitle">Test how your schedule looks for a specific date</p>
+                </div>
+                <div class="admin-form-group">
+                    <div class="admin-input-group">
+                        <input type="date" id="previewDateInput" class="admin-input">
+                        <button type="button" class="btn btn-outline btn-sm" id="previewSlotsBtn">Preview</button>
+                    </div>
+                </div>
+                <div class="admin-preview-slots" id="previewSlotsContainer">
+                    <p class="admin-preview-empty">Select a date and click Preview to see available slots</p>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer booking-footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2026 LON Clinic. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="/">Back to site</a>
+                </div>
+                <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 12px;">Atividade registada na Entidade Reguladora da Saúde</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="admin.js"></script>
+    <script>
+        // Mobile menu
+        const mobileToggle = document.getElementById('mobileMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileToggle && mobileMenu) {
+            mobileToggle.addEventListener('click', () => {
+                mobileToggle.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+                document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
+            });
+        }
+    </script>
+    
+    <!-- WhatsApp Floating Button -->
+    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">
+        <span>💬</span>
+    </a>
+</body>
+</html>
