@@ -230,13 +230,24 @@
 }
 
 .service-duration,
-.service-mode {
+.service-mode,
+.service-price-tag {
     display: inline-flex;
     align-items: center;
     gap: 5px;
     font-size: 0.75rem;
     color: var(--text-muted);
     font-weight: 400;
+}
+
+.service-price-tag {
+    font-weight: 600;
+    color: var(--accent, #c5c72c);
+    font-size: 0.85rem;
+    margin-left: auto;
+    background: rgba(197, 199, 44, 0.1);
+    padding: 2px 10px;
+    border-radius: 12px;
 }
 
 .service-check {

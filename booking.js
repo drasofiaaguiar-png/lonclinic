@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         servicePriceCents: 0,
         travellerCount: 1,   // 1–4 for travel
         hasInsurance: false,  // Medicare toggle
+        policyNumber: '',     // Medicare policy number
         date: null,
         dateLabel: '',
         time: null,
@@ -40,9 +41,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadSchedule();
 
     const services = {
-        longevity: { label: 'Longevity Assessment', price: '€195', cents: 19500 },
-        travel:    { label: 'Travel Medicine Consultation', price: '€39', cents: 3900 },
-        followup:  { label: 'Follow-Up Consultation', price: '€95', cents: 9500 }
+        longevity:  { label: 'Longevity Assessment',           price: '€195', cents: 19500, medicareCents: null,  medicarePrice: null },
+        travel:     { label: 'Travel Medicine Consultation',    price: '€39',  cents: 3900,  medicareCents: 3200,  medicarePrice: '€32' },
+        lifestyle:  { label: 'Medicina de Estilo de Vida',      price: '€50',  cents: 5000,  medicareCents: 3900,  medicarePrice: '€39' },
+        cessation:  { label: 'Cessação Tabágica',               price: '€50',  cents: 5000,  medicareCents: 3900,  medicarePrice: '€39' },
+        renewal:    { label: 'Renovação de Receituário Crónico', price: '€18', cents: 1800,  medicareCents: 1200,  medicarePrice: '€12' },
+        followup:   { label: 'Follow-Up Consultation',          price: '€95',  cents: 9500,  medicareCents: null,  medicarePrice: null }
     };
 
     // Travel tiered pricing: [count] → { cents, price, duration }
@@ -162,34 +166,96 @@ document.addEventListener('DOMContentLoaded', async () => {
     //  STEP 1 — Service Selection
     // ═══════════════════════════════════════
     function updateTravellerCountVisibility() {
-        const section = document.getElementById('travellerCountSection');
+        const travelSection = document.getElementById('travellerCountSection');
+        const insuranceSection = document.getElementById('insuranceSection');
         const serviceOptions = document.querySelectorAll('.service-option');
         const changeServiceBtn = document.getElementById('changeServiceBtn');
 
-        if (state.service === 'travel') {
-            // Hide other service cards, keep only travel
+        if (state.service) {
+            // Hide other service cards, keep only selected
             serviceOptions.forEach(opt => {
-                if (opt.dataset.service !== 'travel') {
+                if (opt.dataset.service !== state.service) {
                     opt.style.display = 'none';
                 }
             });
-            // Show traveller count section
-            section.style.display = 'block';
             if (changeServiceBtn) changeServiceBtn.style.display = 'inline-flex';
-            updateTravellerPriceLabels();
-            updateTravellerPriceNote();
+
+            // Show insurance section for all services
+            insuranceSection.style.display = 'block';
+
+            if (state.service === 'travel') {
+                // Show traveller count section for travel
+                travelSection.style.display = 'block';
+                updateTravellerPriceLabels();
+                updateTravellerPriceNote();
+            } else {
+                travelSection.style.display = 'none';
+                state.travellerCount = 1;
+                updateNonTravelMedicareDisplay();
+            }
         } else {
             // Show all service cards
             serviceOptions.forEach(opt => {
                 opt.style.display = '';
             });
-            section.style.display = 'none';
+            travelSection.style.display = 'none';
+            insuranceSection.style.display = 'none';
             if (changeServiceBtn) changeServiceBtn.style.display = 'none';
             state.travellerCount = 1;
             state.hasInsurance = false;
+            state.policyNumber = '';
             const toggle = document.getElementById('insuranceToggle');
             if (toggle) toggle.checked = false;
+            const policySection = document.getElementById('policyNumberSection');
+            if (policySection) policySection.style.display = 'none';
+            const priceNote = document.getElementById('medicarePriceNote');
+            if (priceNote) priceNote.style.display = 'none';
         }
+    }
+
+    /* Show Medicare price for non-travel services */
+    function updateNonTravelMedicareDisplay() {
+        const priceNote = document.getElementById('medicarePriceNote');
+        const priceDisplay = document.getElementById('medicarePriceDisplay');
+        const svc = services[state.service];
+        if (!svc) return;
+
+        if (state.hasInsurance && svc.medicareCents) {
+            // Update state prices to Medicare
+            state.servicePrice = svc.medicarePrice;
+            state.servicePriceCents = svc.medicareCents;
+            if (priceNote) priceNote.style.display = 'block';
+            if (priceDisplay) priceDisplay.textContent = svc.medicarePrice;
+            // Update price tag on service card
+            updateServicePriceTags();
+        } else {
+            // Use standard prices
+            state.servicePrice = svc.price;
+            state.servicePriceCents = svc.cents;
+            if (priceNote) priceNote.style.display = 'none';
+            updateServicePriceTags();
+        }
+    }
+
+    /* Update price tags shown on service cards */
+    function updateServicePriceTags() {
+        const priceTagIds = {
+            lifestyle: 'lifestylePrice',
+            cessation: 'cessationPrice',
+            renewal: 'renewalPrice'
+        };
+        Object.keys(priceTagIds).forEach(key => {
+            const el = document.getElementById(priceTagIds[key]);
+            if (!el) return;
+            const svc = services[key];
+            if (state.hasInsurance && svc.medicareCents) {
+                el.textContent = svc.medicarePrice;
+                el.style.color = '#c5c72c';
+            } else {
+                el.textContent = svc.price;
+                el.style.color = '';
+            }
+        });
     }
 
     function resetServiceSelection() {
@@ -199,22 +265,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelectorAll('.service-option').forEach(opt => {
             opt.style.display = '';
         });
-        // Hide traveller section
+        // Hide traveller section and insurance
         document.getElementById('travellerCountSection').style.display = 'none';
+        document.getElementById('insuranceSection').style.display = 'none';
         const changeServiceBtn = document.getElementById('changeServiceBtn');
         if (changeServiceBtn) changeServiceBtn.style.display = 'none';
         // Reset state
         state.service = null;
         state.travellerCount = 1;
         state.hasInsurance = false;
+        state.policyNumber = '';
         document.getElementById('next-1').disabled = true;
         // Reset traveller count buttons
         document.querySelectorAll('.tc-card').forEach(b => b.classList.remove('selected'));
         const firstBtn = document.querySelector('.tc-card[data-count="1"]');
         if (firstBtn) firstBtn.classList.add('selected');
-        // Reset insurance toggle
+        // Reset insurance toggle and policy number
         const toggle = document.getElementById('insuranceToggle');
         if (toggle) toggle.checked = false;
+        const policySection = document.getElementById('policyNumberSection');
+        if (policySection) policySection.style.display = 'none';
+        const policyInput = document.getElementById('policyNumber');
+        if (policyInput) policyInput.value = '';
+        const priceNote = document.getElementById('medicarePriceNote');
+        if (priceNote) priceNote.style.display = 'none';
+        // Reset price tags
+        updateServicePriceTags();
     }
 
     // "Change service" button
@@ -246,10 +322,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.querySelectorAll('input[name="service"]').forEach(radio => {
         radio.addEventListener('change', () => {
+            const svc = services[radio.value];
             state.service = radio.value;
-            state.serviceLabel = services[radio.value].label;
-            state.servicePrice = services[radio.value].price;
-            state.servicePriceCents = services[radio.value].cents;
+            state.serviceLabel = svc.label;
+            // If Medicare is already toggled, use Medicare price
+            if (state.hasInsurance && svc.medicareCents) {
+                state.servicePrice = svc.medicarePrice;
+                state.servicePriceCents = svc.medicareCents;
+            } else {
+                state.servicePrice = svc.price;
+                state.servicePriceCents = svc.cents;
+            }
             document.getElementById('next-1').disabled = false;
             updateTravellerCountVisibility();
         });
@@ -270,8 +353,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (insuranceToggle) {
         insuranceToggle.addEventListener('change', () => {
             state.hasInsurance = insuranceToggle.checked;
-            updateTravellerPriceLabels();
-            updateTravellerPriceNote();
+            const policySection = document.getElementById('policyNumberSection');
+            if (policySection) {
+                policySection.style.display = state.hasInsurance ? 'block' : 'none';
+            }
+            if (!state.hasInsurance) {
+                state.policyNumber = '';
+                const policyInput = document.getElementById('policyNumber');
+                if (policyInput) policyInput.value = '';
+            }
+            if (state.service === 'travel') {
+                updateTravellerPriceLabels();
+                updateTravellerPriceNote();
+            } else {
+                updateNonTravelMedicareDisplay();
+            }
+        });
+    }
+
+    // Policy number input
+    const policyInput = document.getElementById('policyNumber');
+    if (policyInput) {
+        policyInput.addEventListener('input', () => {
+            state.policyNumber = policyInput.value.trim();
         });
     }
 
@@ -890,9 +994,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         const discountFormatted = discountCents > 0 ? `-€${(discountCents / 100).toFixed(0)}` : '';
 
         // Appointment review card
-        document.getElementById('reviewService').textContent = state.serviceLabel;
+        const serviceText = state.hasInsurance ? `${state.serviceLabel} (Medicare)` : state.serviceLabel;
+        document.getElementById('reviewService').textContent = serviceText;
         document.getElementById('reviewDate').textContent = state.dateLabel;
         document.getElementById('reviewTime').textContent = state.time;
+
+        // Medicare card
+        const medicareCard = document.getElementById('reviewMedicareCard');
+        if (medicareCard) {
+            if (state.hasInsurance) {
+                medicareCard.style.display = 'block';
+                document.getElementById('reviewPolicyNumber').textContent = state.policyNumber || '—';
+            } else {
+                medicareCard.style.display = 'none';
+            }
+        }
 
         // Travel card
         const travelCard = document.getElementById('reviewTravelCard');
@@ -1024,6 +1140,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     discountPercent: state.discountPercent || 0,
                     travellerCount: passengers.length,
                     hasInsurance: state.hasInsurance,
+                    policyNumber: state.policyNumber || '',
                     date: state.dateLabel,
                     time: state.time,
                     patientName: `${passengers[0].firstName} ${passengers[0].lastName}`,
@@ -1138,6 +1255,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 durationMinutes = 30;
             } else if (data.service === 'longevity') {
                 durationMinutes = 60;
+            } else if (data.service === 'lifestyle' || data.service === 'cessation') {
+                durationMinutes = 30;
+            } else if (data.service === 'renewal') {
+                durationMinutes = 15;
             }
 
             const endDate = new Date(appointmentDate);
@@ -1162,6 +1283,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             const serviceLabels = {
                 longevity: i18nServiceLabel('longevity'),
                 travel: i18nServiceLabel('travel'),
+                lifestyle: i18nServiceLabel('lifestyle'),
+                cessation: i18nServiceLabel('cessation'),
+                renewal: i18nServiceLabel('renewal'),
                 followup: i18nServiceLabel('followup'),
             };
             
@@ -1220,6 +1344,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             const serviceLabels = {
                 longevity: i18nServiceLabel('longevity'),
                 travel: i18nServiceLabel('travel'),
+                lifestyle: i18nServiceLabel('lifestyle'),
+                cessation: i18nServiceLabel('cessation'),
+                renewal: i18nServiceLabel('renewal'),
                 followup: i18nServiceLabel('followup'),
             };
 

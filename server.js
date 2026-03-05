@@ -905,6 +905,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
             priceAmount,  // total in cents (flat tiered price for travel, per-person × count for others)
             travellerCount,
             hasInsurance,
+            policyNumber, // Medicare policy number
             date,
             time,
             patientName,
@@ -950,6 +951,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
             contact_phone: patientPhone || '',
             traveller_count: String(count),
             has_insurance: hasInsurance ? 'medicare' : 'none',
+            policy_number: (policyNumber || '').substring(0, 500),
             travel_destinations: (travelDest || '').substring(0, 500),
             travel_dates: travelDates || ''
         };

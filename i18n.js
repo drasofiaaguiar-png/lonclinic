@@ -569,6 +569,9 @@
             services: {
                 longevity: 'Longevity Assessment',
                 travel: 'Travel Medicine Consultation',
+                lifestyle: 'Lifestyle Medicine Consultation',
+                cessation: 'Smoking Cessation Consultation',
+                renewal: 'Chronic Prescription Renewal',
                 followup: 'Follow-Up Consultation',
             },
         },
@@ -584,6 +587,9 @@
             services: {
                 longevity: 'Avaliação de Longevidade',
                 travel: 'Consulta de Medicina de Viagem',
+                lifestyle: 'Consulta de Medicina de Estilo de Vida',
+                cessation: 'Consulta de Cessação Tabágica',
+                renewal: 'Renovação de Receituário Crónico',
                 followup: 'Consulta de Seguimento',
             },
         },
