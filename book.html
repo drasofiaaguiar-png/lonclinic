@@ -252,22 +252,33 @@
 
                 <!-- Health Insurance — visible after selecting any service -->
                 <div id="insuranceSection" style="display:none;">
-                    <div class="insurance-row">
-                        <label class="insurance-pill" for="insuranceToggle">
-                            <input type="checkbox" id="insuranceToggle">
-                            <span class="insurance-pill-slider"></span>
-                            <span class="insurance-pill-label">Tenho seguro de saúde Medicare</span>
-                            <span class="insurance-pill-badge">Valor convencionado</span>
-                        </label>
-                    </div>
-                    <div id="policyNumberSection" style="display:none; margin-top: 12px;">
-                        <div class="form-group" style="max-width: 400px;">
-                            <label for="policyNumber" style="color: var(--text-secondary); font-size: 0.9rem; font-weight: 500;">Número da apólice / Nº de segurado *</label>
-                            <input type="text" id="policyNumber" placeholder="Introduza o número da apólice" style="margin-top: 4px;">
+                    <button type="button" class="insurance-add-btn" id="insuranceAddBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        <span id="insuranceAddLabel">Adicionar seguro</span>
+                        <svg class="insurance-chevron" id="insuranceChevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    <div class="insurance-dropdown" id="insuranceDropdown" style="display:none;">
+                        <div class="insurance-select-group">
+                            <label for="insuranceSelect" class="insurance-select-label">Seguradora</label>
+                            <select id="insuranceSelect" class="insurance-select">
+                                <option value="">Selecionar seguradora...</option>
+                                <option value="medicare">Medicare</option>
+                            </select>
                         </div>
-                    </div>
-                    <div id="medicarePriceNote" style="display:none; margin-top: 8px; padding: 10px 16px; background: rgba(197, 199, 44, 0.1); border-radius: 8px; border: 1px solid rgba(197, 199, 44, 0.2);">
-                        <span style="font-size: 0.85rem; color: var(--text-secondary);">💛 Preço Medicare aplicado: <strong id="medicarePriceDisplay">—</strong></span>
+                        <div id="policyNumberSection" style="display:none;">
+                            <div class="insurance-select-group">
+                                <label for="policyNumber" class="insurance-select-label">Número da apólice / Nº de segurado *</label>
+                                <input type="text" id="policyNumber" class="insurance-input" placeholder="Introduza o número da apólice">
+                            </div>
+                        </div>
+                        <div id="medicarePriceNote" style="display:none;" class="insurance-price-note">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <span>Valor convencionado aplicado: <strong id="medicarePriceDisplay">—</strong></span>
+                        </div>
+                        <button type="button" class="insurance-remove-btn" id="insuranceRemoveBtn" style="display:none;">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                            Remover seguro
+                        </button>
                     </div>
                 </div>
 

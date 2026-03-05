@@ -396,88 +396,165 @@
     color: var(--accent);
 }
 
-/* ─── Insurance Row ─── */
-.insurance-row {
-    margin-top: 16px;
-}
-
-.insurance-pill {
-    display: flex;
+/* ─── Insurance "Adicionar seguro" ─── */
+.insurance-add-btn {
+    display: inline-flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 20px;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    gap: 8px;
+    margin-top: 16px;
+    padding: 10px 18px;
+    background: transparent;
+    border: 1px dashed var(--border);
     border-radius: var(--radius-md);
     cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
     transition: all 0.2s ease;
-    position: relative;
+    font-family: inherit;
 }
 
-.insurance-pill:hover {
-    background: var(--bg-card-hover);
+.insurance-add-btn:hover {
+    border-color: var(--accent);
+    color: var(--text-primary);
+    background: rgba(197, 199, 44, 0.04);
 }
 
-.insurance-pill input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-    position: absolute;
+.insurance-add-btn.open {
+    border-style: solid;
+    border-color: var(--border);
+    background: var(--bg-card);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    border-bottom-color: transparent;
 }
 
-.insurance-pill-slider {
-    position: relative;
-    width: 36px;
-    height: 20px;
-    background: var(--border);
-    border-radius: 20px;
-    transition: background 0.25s ease;
+.insurance-add-btn.active-insurance {
+    border-color: var(--accent);
+    color: var(--accent);
+    border-style: solid;
+}
+
+.insurance-add-btn.active-insurance.open {
+    border-bottom-color: transparent;
+}
+
+.insurance-chevron {
+    transition: transform 0.25s ease;
     flex-shrink: 0;
 }
 
-.insurance-pill-slider::before {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+.insurance-dropdown {
+    padding: 16px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
+    animation: insuranceSlideDown 0.2s ease;
 }
 
-.insurance-pill input:checked ~ .insurance-pill-slider {
-    background: var(--accent);
+.insurance-add-btn.active-insurance + .insurance-dropdown {
+    border-color: var(--accent);
+    border-top: 1px solid rgba(197, 199, 44, 0.2);
 }
 
-.insurance-pill input:checked ~ .insurance-pill-slider::before {
-    transform: translateX(16px);
+@keyframes insuranceSlideDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.insurance-pill-label {
-    font-size: 0.8125rem;
+.insurance-select-group {
+    margin-bottom: 12px;
+}
+
+.insurance-select-group:last-child {
+    margin-bottom: 0;
+}
+
+.insurance-select-label {
+    display: block;
+    font-size: 0.8rem;
     font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.insurance-select {
+    width: 100%;
+    max-width: 320px;
+    padding: 10px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
     color: var(--text-primary);
-    flex: 1;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+    appearance: auto;
 }
 
-.insurance-pill-badge {
-    font-size: 0.625rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 3px 10px;
-    border-radius: 4px;
-    background: rgba(197, 199, 44, 0.08);
+.insurance-select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.insurance-input {
+    width: 100%;
+    max-width: 320px;
+    padding: 10px 14px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+
+.insurance-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.insurance-input::placeholder {
+    color: var(--text-muted);
+}
+
+.insurance-price-note {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding: 10px 14px;
+    background: rgba(197, 199, 44, 0.06);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(197, 199, 44, 0.15);
+    font-size: 0.825rem;
+    color: var(--text-secondary);
+}
+
+.insurance-price-note strong {
     color: var(--accent);
-    white-space: nowrap;
-    transition: background 0.2s ease;
 }
 
-.insurance-pill input:checked ~ .insurance-pill-badge {
-    background: rgba(197, 199, 44, 0.14);
+.insurance-remove-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 6px 12px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: inherit;
+    transition: color 0.2s ease;
+}
+
+.insurance-remove-btn:hover {
+    color: #e74c3c;
 }
 
 /* ─── Summary line ─── */
@@ -1548,12 +1625,14 @@
         padding: 12px 16px;
     }
 
-    .insurance-pill {
-        padding: 10px 16px;
+    .insurance-add-btn {
+        font-size: 0.8rem;
+        padding: 8px 14px;
     }
 
-    .insurance-pill-badge {
-        display: none;
+    .insurance-select,
+    .insurance-input {
+        max-width: 100%;
     }
 
     .tc-summary {
