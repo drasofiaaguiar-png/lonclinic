@@ -396,65 +396,72 @@
     color: var(--accent);
 }
 
-/* ─── Insurance "Adicionar seguro" ─── */
-.insurance-add-btn {
+/* ─── Insurance "Tenho seguro de saúde" ─── */
+.insurance-check {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     margin-top: 16px;
-    padding: 10px 18px;
-    background: transparent;
-    border: 1px dashed var(--border);
+    padding: 12px 18px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
     border-radius: var(--radius-md);
     cursor: pointer;
     font-size: 0.85rem;
     font-weight: 500;
     color: var(--text-secondary);
     transition: all 0.2s ease;
-    font-family: inherit;
+    user-select: none;
 }
 
-.insurance-add-btn:hover {
+.insurance-check:hover {
     border-color: var(--accent);
     color: var(--text-primary);
-    background: rgba(197, 199, 44, 0.04);
 }
 
-.insurance-add-btn.open {
-    border-style: solid;
-    border-color: var(--border);
-    background: var(--bg-card);
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
-    border-bottom-color: transparent;
+.insurance-check input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
-.insurance-add-btn.active-insurance {
-    border-color: var(--accent);
-    color: var(--accent);
-    border-style: solid;
-}
-
-.insurance-add-btn.active-insurance.open {
-    border-bottom-color: transparent;
-}
-
-.insurance-chevron {
-    transition: transform 0.25s ease;
+.insurance-check-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
     flex-shrink: 0;
+    transition: all 0.2s ease;
 }
 
-.insurance-dropdown {
+.insurance-check-box svg {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.15s ease;
+    color: #fff;
+}
+
+.insurance-check input:checked ~ .insurance-check-box {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.insurance-check input:checked ~ .insurance-check-box svg {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.insurance-details {
+    margin-top: 12px;
     padding: 16px 18px;
     background: var(--bg-card);
     border: 1px solid var(--border);
-    border-top: none;
-    border-radius: 0 var(--radius-md) var(--radius-md) var(--radius-md);
+    border-radius: var(--radius-md);
     animation: insuranceSlideDown 0.2s ease;
-}
-
-.insurance-add-btn.active-insurance + .insurance-dropdown {
-    border-color: var(--accent);
-    border-top: 1px solid rgba(197, 199, 44, 0.2);
 }
 
 @keyframes insuranceSlideDown {
@@ -538,24 +545,6 @@
     color: var(--accent);
 }
 
-.insurance-remove-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 8px;
-    padding: 6px 12px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    font-family: inherit;
-    transition: color 0.2s ease;
-}
-
-.insurance-remove-btn:hover {
-    color: #e74c3c;
-}
 
 /* ─── Summary line ─── */
 .tc-summary {
@@ -1625,9 +1614,9 @@
         padding: 12px 16px;
     }
 
-    .insurance-add-btn {
+    .insurance-check {
         font-size: 0.8rem;
-        padding: 8px 14px;
+        padding: 10px 14px;
     }
 
     .insurance-select,

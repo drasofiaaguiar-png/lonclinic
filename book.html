@@ -252,12 +252,15 @@
 
                 <!-- Health Insurance — visible after selecting any service -->
                 <div id="insuranceSection" style="display:none;">
-                    <button type="button" class="insurance-add-btn" id="insuranceAddBtn">
+                    <label class="insurance-check" for="insuranceToggle">
+                        <input type="checkbox" id="insuranceToggle">
+                        <span class="insurance-check-box">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        </span>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        <span id="insuranceAddLabel">Adicionar seguro</span>
-                        <svg class="insurance-chevron" id="insuranceChevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-                    </button>
-                    <div class="insurance-dropdown" id="insuranceDropdown" style="display:none;">
+                        <span>Tenho seguro de saúde</span>
+                    </label>
+                    <div class="insurance-details" id="insuranceDetails" style="display:none;">
                         <div class="insurance-select-group">
                             <label for="insuranceSelect" class="insurance-select-label">Seguradora</label>
                             <select id="insuranceSelect" class="insurance-select">
@@ -275,10 +278,6 @@
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                             <span>Valor convencionado aplicado: <strong id="medicarePriceDisplay">—</strong></span>
                         </div>
-                        <button type="button" class="insurance-remove-btn" id="insuranceRemoveBtn" style="display:none;">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                            Remover seguro
-                        </button>
                     </div>
                 </div>
 

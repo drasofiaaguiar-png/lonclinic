@@ -204,16 +204,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             state.travellerCount = 1;
             state.hasInsurance = false;
             state.policyNumber = '';
+            const insToggle2 = document.getElementById('insuranceToggle');
+            if (insToggle2) insToggle2.checked = false;
+            const insDetails2 = document.getElementById('insuranceDetails');
+            if (insDetails2) insDetails2.style.display = 'none';
             const insSelect2 = document.getElementById('insuranceSelect');
             if (insSelect2) insSelect2.value = '';
-            const insDropdown2 = document.getElementById('insuranceDropdown');
-            if (insDropdown2) insDropdown2.style.display = 'none';
-            const insChevron2 = document.getElementById('insuranceChevron');
-            if (insChevron2) insChevron2.style.transform = '';
-            const insAddBtn2 = document.getElementById('insuranceAddBtn');
-            if (insAddBtn2) { insAddBtn2.classList.remove('open', 'active-insurance'); }
-            const insAddLabel2 = document.getElementById('insuranceAddLabel');
-            if (insAddLabel2) insAddLabel2.textContent = 'Adicionar seguro';
             const policySection2 = document.getElementById('policyNumberSection');
             if (policySection2) policySection2.style.display = 'none';
             const priceNote = document.getElementById('medicarePriceNote');
@@ -288,19 +284,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.querySelectorAll('.tc-card').forEach(b => b.classList.remove('selected'));
         const firstBtn = document.querySelector('.tc-card[data-count="1"]');
         if (firstBtn) firstBtn.classList.add('selected');
-        // Reset insurance dropdown
+        // Reset insurance
+        const insToggle = document.getElementById('insuranceToggle');
+        if (insToggle) insToggle.checked = false;
+        const insDetails = document.getElementById('insuranceDetails');
+        if (insDetails) insDetails.style.display = 'none';
         const insSelect = document.getElementById('insuranceSelect');
         if (insSelect) insSelect.value = '';
-        const insDropdown = document.getElementById('insuranceDropdown');
-        if (insDropdown) insDropdown.style.display = 'none';
-        const insChevron = document.getElementById('insuranceChevron');
-        if (insChevron) insChevron.style.transform = '';
-        const insAddBtn = document.getElementById('insuranceAddBtn');
-        if (insAddBtn) { insAddBtn.classList.remove('open', 'active-insurance'); }
-        const insAddLabel = document.getElementById('insuranceAddLabel');
-        if (insAddLabel) insAddLabel.textContent = 'Adicionar seguro';
-        const insRemoveBtn = document.getElementById('insuranceRemoveBtn');
-        if (insRemoveBtn) insRemoveBtn.style.display = 'none';
         const policySection = document.getElementById('policyNumberSection');
         if (policySection) policySection.style.display = 'none';
         const policyInput = document.getElementById('policyNumber');
@@ -366,20 +356,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // Insurance "Adicionar seguro" expand/collapse
-    const insuranceAddBtn = document.getElementById('insuranceAddBtn');
-    const insuranceDropdown = document.getElementById('insuranceDropdown');
-    const insuranceChevron = document.getElementById('insuranceChevron');
-    const insuranceAddLabel = document.getElementById('insuranceAddLabel');
+    // Insurance checkbox "Tenho seguro de saúde"
+    const insuranceToggle = document.getElementById('insuranceToggle');
+    const insuranceDetails = document.getElementById('insuranceDetails');
     const insuranceSelect = document.getElementById('insuranceSelect');
-    const insuranceRemoveBtn = document.getElementById('insuranceRemoveBtn');
 
-    if (insuranceAddBtn) {
-        insuranceAddBtn.addEventListener('click', () => {
-            const isOpen = insuranceDropdown.style.display !== 'none';
-            insuranceDropdown.style.display = isOpen ? 'none' : 'block';
-            insuranceChevron.style.transform = isOpen ? '' : 'rotate(180deg)';
-            insuranceAddBtn.classList.toggle('open', !isOpen);
+    if (insuranceToggle) {
+        insuranceToggle.addEventListener('change', () => {
+            if (insuranceToggle.checked) {
+                // Show dropdown to select insurer
+                if (insuranceDetails) insuranceDetails.style.display = 'block';
+            } else {
+                // Hide and reset everything
+                if (insuranceDetails) insuranceDetails.style.display = 'none';
+                if (insuranceSelect) insuranceSelect.value = '';
+                state.hasInsurance = false;
+                state.policyNumber = '';
+                const pi = document.getElementById('policyNumber');
+                if (pi) pi.value = '';
+                const ps = document.getElementById('policyNumberSection');
+                if (ps) ps.style.display = 'none';
+                const pn = document.getElementById('medicarePriceNote');
+                if (pn) pn.style.display = 'none';
+
+                if (state.service === 'travel') {
+                    updateTravellerPriceLabels();
+                    updateTravellerPriceNote();
+                } else {
+                    updateNonTravelMedicareDisplay();
+                }
+            }
         });
     }
 
@@ -391,18 +397,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (value === 'medicare') {
                 state.hasInsurance = true;
                 if (policySection) policySection.style.display = 'block';
-                if (insuranceRemoveBtn) insuranceRemoveBtn.style.display = 'inline-flex';
-                insuranceAddLabel.textContent = 'Seguro Medicare';
-                insuranceAddBtn.classList.add('active-insurance');
             } else {
                 state.hasInsurance = false;
                 state.policyNumber = '';
-                const policyInput = document.getElementById('policyNumber');
-                if (policyInput) policyInput.value = '';
+                const pi = document.getElementById('policyNumber');
+                if (pi) pi.value = '';
                 if (policySection) policySection.style.display = 'none';
-                if (insuranceRemoveBtn) insuranceRemoveBtn.style.display = 'none';
-                insuranceAddLabel.textContent = 'Adicionar seguro';
-                insuranceAddBtn.classList.remove('active-insurance');
             }
 
             if (state.service === 'travel') {
@@ -411,16 +411,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else {
                 updateNonTravelMedicareDisplay();
             }
-        });
-    }
-
-    if (insuranceRemoveBtn) {
-        insuranceRemoveBtn.addEventListener('click', () => {
-            insuranceSelect.value = '';
-            insuranceSelect.dispatchEvent(new Event('change'));
-            insuranceDropdown.style.display = 'none';
-            insuranceChevron.style.transform = '';
-            insuranceAddBtn.classList.remove('open');
         });
     }
 
