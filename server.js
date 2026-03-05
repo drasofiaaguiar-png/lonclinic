@@ -790,15 +790,6 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 // ─── Middleware ───
 app.use(express.json());
 
-// ─── Redirect www to non-www (SEO best practice) ───
-app.use((req, res, next) => {
-    if (req.headers.host && req.headers.host.startsWith('www.') && !req.headers.host.includes('localhost')) {
-        const protocol = req.secure || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
-        return res.redirect(301, `${protocol}://${req.headers.host.replace('www.', '')}${req.url}`);
-    }
-    next();
-});
-
 // ─── IMPORTANT: Routes must come BEFORE express.static ───
 // ─── Friendly URLs (without .html) ───
 app.get('/travel-clinic', (req, res) => {
