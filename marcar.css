@@ -1,0 +1,294 @@
+/* Marcação — calendário (tema Lon Clinic) */
+.marcar-main {
+    padding-top: calc(var(--lon-nav-h) + 32px);
+    padding-bottom: 64px;
+}
+
+.marcar-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--lon-muted);
+    margin-bottom: 20px;
+}
+
+.marcar-back:hover {
+    color: var(--lon-primary);
+}
+
+.marcar-layout {
+    display: grid;
+    gap: 28px;
+}
+
+@media (min-width: 960px) {
+    .marcar-layout {
+        grid-template-columns: minmax(280px, 380px) 1fr;
+        align-items: start;
+    }
+}
+
+.marcar-info {
+    background: var(--lon-white);
+    border: 1px solid var(--lon-border);
+    border-radius: var(--lon-radius-lg);
+    padding: 28px;
+    box-shadow: var(--lon-shadow);
+}
+
+.marcar-info h1 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+    line-height: 1.25;
+}
+
+.marcar-price {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--lon-primary);
+    margin-bottom: 16px;
+}
+
+.marcar-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.marcar-meta span {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--lon-primary-soft);
+    color: var(--lon-primary-dark);
+}
+
+.marcar-desc {
+    font-size: 0.9375rem;
+    color: var(--lon-muted);
+    line-height: 1.55;
+}
+
+.marcar-desc ul {
+    margin: 12px 0 0 1.1em;
+}
+
+.marcar-desc li {
+    margin-bottom: 6px;
+}
+
+.marcar-schedule-wrap {
+    background: var(--lon-white);
+    border: 1px solid var(--lon-border);
+    border-radius: var(--lon-radius-lg);
+    padding: 24px;
+}
+
+.marcar-schedule-wrap h2 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.marcar-schedule-wrap .marcar-sub {
+    font-size: 0.875rem;
+    color: var(--lon-muted);
+    margin-bottom: 20px;
+}
+
+.marcar-schedule-layout {
+    display: grid;
+    gap: 24px;
+}
+
+@media (min-width: 700px) {
+    .marcar-schedule-layout {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.marcar-cal-section {
+    background: var(--lon-bg);
+    border: 1px solid var(--lon-border);
+    border-radius: var(--lon-radius);
+    padding: 20px;
+}
+
+.marcar-cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.marcar-cal-month {
+    font-size: 0.9375rem;
+    font-weight: 600;
+}
+
+.marcar-cal-nav {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--lon-border);
+    background: var(--lon-white);
+    color: var(--lon-text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.marcar-cal-nav:hover {
+    border-color: var(--lon-primary);
+    color: var(--lon-primary);
+}
+
+.marcar-cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 6px;
+}
+
+.marcar-cal-weekdays span {
+    text-align: center;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--lon-muted);
+    text-transform: uppercase;
+}
+
+.marcar-cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.marcar-cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    border-radius: 8px;
+    border: none;
+    background: none;
+    color: var(--lon-text);
+    cursor: pointer;
+    font-family: var(--lon-font);
+}
+
+.marcar-cal-day:hover:not(.marcar-cal-disabled):not(.marcar-cal-empty) {
+    background: var(--lon-primary-soft);
+}
+
+.marcar-cal-day.marcar-cal-today {
+    border: 1px solid var(--lon-primary);
+}
+
+.marcar-cal-day.marcar-cal-selected {
+    background: var(--lon-primary);
+    color: #fff;
+    font-weight: 700;
+}
+
+.marcar-cal-day.marcar-cal-disabled {
+    color: #ccc;
+    cursor: default;
+}
+
+.marcar-cal-day.marcar-cal-empty {
+    cursor: default;
+}
+
+.marcar-times {
+    display: flex;
+    flex-direction: column;
+}
+
+.marcar-times h3 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    min-height: 1.4em;
+}
+
+.marcar-times-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.marcar-slot-btn {
+    padding: 10px 12px;
+    border: 1px solid var(--lon-border);
+    border-radius: 8px;
+    background: var(--lon-bg);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    font-family: var(--lon-font);
+    cursor: pointer;
+    color: var(--lon-text);
+}
+
+.marcar-slot-btn:hover {
+    border-color: var(--lon-primary);
+}
+
+.marcar-slot-btn.selected {
+    border-color: var(--lon-primary);
+    background: var(--lon-primary-soft);
+    color: var(--lon-primary-dark);
+}
+
+.marcar-times-empty {
+    font-size: 0.875rem;
+    color: var(--lon-muted);
+    text-align: center;
+    padding: 28px 8px;
+    grid-column: span 2;
+}
+
+.marcar-tz {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    font-size: 0.75rem;
+    color: var(--lon-muted);
+}
+
+.marcar-actions {
+    margin-top: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.marcar-actions .lon-btn-primary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.marcar-error {
+    padding: 16px;
+    background: #fff5f5;
+    border: 1px solid #f5c2c2;
+    border-radius: var(--lon-radius);
+    color: #b42318;
+    font-size: 0.875rem;
+    margin-bottom: 20px;
+}

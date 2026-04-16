@@ -790,10 +790,75 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 // ─── Middleware ───
 app.use(express.json());
 
+// ─── Debug middleware (log all requests) ───
+app.use((req, res, next) => {
+    if (req.path === '/travel-clinic') {
+        console.log('🔍 [MIDDLEWARE] Request to /travel-clinic detected');
+        console.log('🔍 [MIDDLEWARE] Method:', req.method);
+        console.log('🔍 [MIDDLEWARE] Path:', req.path);
+        console.log('🔍 [MIDDLEWARE] URL:', req.url);
+    }
+    next();
+});
+
+// ─── Redirect www to non-www (SEO best practice) ───
+// Only redirect in production (not localhost)
+app.use((req, res, next) => {
+    if (req.headers.host && req.headers.host.startsWith('www.') && !req.headers.host.includes('localhost')) {
+        const protocol = req.secure || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
+        return res.redirect(301, `${protocol}://${req.headers.host.replace('www.', '')}${req.url}`);
+    }
+    next();
+});
+
 // ─── IMPORTANT: Routes must come BEFORE express.static ───
-// ─── Friendly URLs (without .html) ───
+// ─── Test route ───
+app.get('/test-travel', (req, res) => {
+    res.send('TEST: This route works!');
+});
+
+// ─── Friendly URLs (without .html) - MUST come before root route ───
 app.get('/travel-clinic', (req, res) => {
-    res.sendFile(path.join(__dirname, 'travel.html'));
+    console.log('✅ [ROUTE HANDLER] /travel-clinic route handler called!');
+    const filePath = path.join(__dirname, 'travel.html');
+    console.log('✅ [ROUTE HANDLER] File path:', filePath);
+    console.log('✅ [ROUTE HANDLER] File exists:', fs.existsSync(filePath));
+    
+    if (!fs.existsSync(filePath)) {
+        console.error('❌ [ERROR] travel.html not found!');
+        return res.status(404).send('travel.html not found');
+    }
+    
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            console.error('❌ [ERROR] Error sending file:', err);
+            return res.status(500).send('Error: ' + err.message);
+        }
+        console.log('✅ [SUCCESS] File sent successfully!');
+    });
+});
+
+// Friendly URL /marcar → static file marcar.html (more reliable than sendFile in some hosts)
+function redirectToMarcarHtml(req, res) {
+    const qs = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+    res.redirect(301, '/marcar.html' + qs);
+}
+app.get('/marcar', redirectToMarcarHtml);
+app.get('/marcar/', redirectToMarcarHtml);
+
+// Explicit handler so /marcar.html always works (do not rely on express.static alone)
+app.get('/marcar.html', (req, res) => {
+    const filePath = path.join(__dirname, 'marcar.html');
+    if (!fs.existsSync(filePath)) {
+        console.error('❌ marcar.html missing at:', filePath);
+        return res.status(500).send('marcar.html not found on server');
+    }
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            console.error('❌ Error sending marcar.html:', err.message);
+            res.status(500).send('Error loading marcar page');
+        }
+    });
 });
 
 app.get('/book-consultation', (req, res) => {
@@ -905,7 +970,6 @@ app.post('/api/create-checkout-session', async (req, res) => {
             priceAmount,  // total in cents (flat tiered price for travel, per-person × count for others)
             travellerCount,
             hasInsurance,
-            policyNumber, // Medicare policy number
             date,
             time,
             patientName,
@@ -951,7 +1015,6 @@ app.post('/api/create-checkout-session', async (req, res) => {
             contact_phone: patientPhone || '',
             traveller_count: String(count),
             has_insurance: hasInsurance ? 'medicare' : 'none',
-            policy_number: (policyNumber || '').substring(0, 500),
             travel_destinations: (travelDest || '').substring(0, 500),
             travel_dates: travelDates || ''
         };
@@ -1402,5 +1465,10 @@ app.listen(PORT, () => {
     }
     console.log(`\n   Open http://localhost:${PORT} to view the site`);
     console.log(`   Open http://localhost:${PORT}/book-consultation to test booking`);
-    console.log(`   Open http://localhost:${PORT}/patient-portal for patient portal\n`);
+    console.log(`   Open http://localhost:${PORT}/patient-portal for patient portal`);
+    if (fs.existsSync(path.join(__dirname, 'marcar.html'))) {
+        console.log(`   Marcação: http://localhost:${PORT}/marcar.html?tipo=clinica_geral\n`);
+    } else {
+        console.log(`   ⚠️  marcar.html NOT FOUND — /marcar.html will fail until the file is deployed\n`);
+    }
 });

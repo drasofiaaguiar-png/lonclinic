@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcar consulta — Lon Clinic</title>
+    <meta name="robots" content="noindex, follow">
+    <meta name="theme-color" content="#4A7C6F">
+    <link rel="stylesheet" href="/landing.css">
+    <link rel="stylesheet" href="/marcar.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+</head>
+<body class="lon-landing">
+
+    <header class="lon-nav" id="lonNav">
+        <div class="lon-container lon-nav-inner">
+            <a href="/" class="lon-logo">
+                <span class="lon-logo-name">Lon Clinic</span>
+                <span class="lon-logo-tag">Medicina para uma vida mais longa e melhor.</span>
+            </a>
+            <div class="lon-nav-actions">
+                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
+                <a href="/" class="lon-btn lon-btn-primary lon-btn-sm">Início</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="lon-container marcar-main" id="marcarError" style="display:none;padding-top:calc(var(--lon-nav-h) + 48px);">
+        <p class="marcar-error">Tipo de consulta não encontrado. Escolha um serviço na <a href="/#servicos">página inicial</a>.</p>
+    </div>
+
+    <main class="lon-container marcar-main" id="marcarMain">
+        <a href="/#servicos" class="marcar-back">← Voltar aos serviços</a>
+
+        <div class="marcar-layout">
+            <aside class="marcar-info" aria-labelledby="marcarTitle">
+                <h1 id="marcarTitle">—</h1>
+                <p class="marcar-price" id="marcarPrice">—</p>
+                <div class="marcar-meta">
+                    <span id="marcarDuration">—</span>
+                    <span>Videochamada</span>
+                </div>
+                <div class="marcar-desc">
+                    <p>O que inclui:</p>
+                    <ul id="marcarBullets"></ul>
+                </div>
+            </aside>
+
+            <section class="marcar-schedule-wrap" aria-labelledby="marcarScheduleTitle">
+                <h2 id="marcarScheduleTitle">Data e hora</h2>
+                <p class="marcar-sub">Escolha o dia e o horário da sua consulta online.</p>
+
+                <div class="marcar-schedule-layout">
+                    <div class="marcar-cal-section">
+                        <div class="marcar-cal-header">
+                            <button type="button" class="marcar-cal-nav" id="marcarCalPrev" aria-label="Mês anterior">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                            <span class="marcar-cal-month" id="marcarCalMonth"></span>
+                            <button type="button" class="marcar-cal-nav" id="marcarCalNext" aria-label="Mês seguinte">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                            </button>
+                        </div>
+                        <div class="marcar-cal-weekdays">
+                            <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span>
+                        </div>
+                        <div class="marcar-cal-grid" id="marcarCalGrid"></div>
+                    </div>
+                    <div class="marcar-times">
+                        <h3 id="marcarTimesHeading">Escolha primeiro um dia no calendário</h3>
+                        <div class="marcar-times-grid" id="marcarTimesGrid">
+                            <p class="marcar-times-empty">Selecione uma data à esquerda.</p>
+                        </div>
+                        <p class="marcar-tz">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                            Horários no fuso local do seu dispositivo
+                        </p>
+                    </div>
+                </div>
+
+                <div class="marcar-actions">
+                    <a href="/#servicos" class="lon-btn lon-btn-ghost">Cancelar</a>
+                    <button type="button" class="lon-btn lon-btn-primary" id="marcarContinue" disabled>Continuar para dados e pagamento</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        (function () {
+            var p = new URLSearchParams(window.location.search);
+            if (!p.get('tipo')) {
+                document.getElementById('marcarError').style.display = 'block';
+                document.getElementById('marcarMain').style.display = 'none';
+            }
+        })();
+    </script>
+    <script src="/marcar.js" defer></script>
+</body>
+</html>
