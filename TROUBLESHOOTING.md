@@ -142,7 +142,28 @@ Se funcionar localmente, o problema é no deploy ou DNS.
 
 ---
 
-### 10. Verificar Arquivo index.html
+### 10. Deploy não dispara depois do `git push` (GitHub → Railway)
+
+O código pode estar atualizado no GitHub e mesmo assim o Railway não criar um deployment novo. Confirme o seguinte:
+
+1. **Repositório e branch corretos**  
+   No Railway: serviço → **Settings** → **Source** (ou **Connect**). Deve apontar para `drasofiaaguiar-png/lonclinic` (ou o repo certo) e branch **`main`**.
+
+2. **Integração GitHub ativa**  
+   Em [GitHub → Settings → Applications](https://github.com/settings/installations), verifique se a aplicação **Railway** está instalada e com acesso a este repositório. Se tiver dúvida, remova e volte a ligar o repo a partir do wizard do Railway (**New Project** → **Deploy from GitHub repo**).
+
+3. **“Wait for CI” / checks obrigatórios**  
+   Se no Railway estiver ativa a opção de esperar por CI do GitHub, é preciso haver um workflow que conclua com sucesso. Este projeto inclui `.github/workflows/ci.yml` para o GitHub Actions validar `npm ci` e a sintaxe do `server.js` em cada push à `main`.
+
+4. **Forçar um deploy**  
+   No Railway: aba **Deployments** → **Redeploy** no último deployment (ou **Deploy** / **Trigger deploy** conforme a interface).
+
+5. **Confirme que o push chegou ao GitHub**  
+   Na página do repositório, o último commit na branch `main` deve ser o que acabou de enviar. Se não for, o `git push` foi para outro remoto ou outra branch.
+
+---
+
+### 11. Verificar Arquivo index.html
 
 **Problema:** O arquivo pode não estar sendo servido
 
