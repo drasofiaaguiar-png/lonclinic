@@ -257,6 +257,15 @@ img {
     padding-bottom: 68px;
 }
 
+.dr-hero .lon-container.dr-hero-grid {
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+}
+
 .dr-hero-grid {
     border-radius: 32px;
     background: linear-gradient(135deg, #faf5ff 0%, #f8efff 35%, #f4e7fb 100%);
