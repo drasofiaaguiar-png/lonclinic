@@ -327,7 +327,7 @@ img {
     font-size: clamp(2.2rem, 5vw, 4rem);
     line-height: 1.03;
     letter-spacing: -0.045em;
-    max-width: 11ch;
+    max-width: min(22ch, 100%);
     margin-bottom: 14px;
 }
 
@@ -378,6 +378,34 @@ img {
     align-items: center;
     justify-content: center;
     font-weight: 700;
+}
+
+.dr-hero .dr-trust-list li {
+    padding: 10px 14px 10px 38px;
+}
+
+.dr-hero .dr-trust-list li::before {
+    content: "—";
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    background: transparent;
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1;
+    color: #3d5c46;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.dr-hero-manifesto {
+    margin: 22px 0 0;
+    max-width: 48ch;
+    font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+    font-weight: 600;
+    line-height: 1.42;
+    letter-spacing: -0.025em;
+    color: var(--lon-muted);
 }
 
 .dr-hero-media {
@@ -508,6 +536,12 @@ img {
     align-items: stretch;
 }
 
+#como-funciona-home ol.lon-how-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
 #como-funciona-home .lon-service-card {
     height: 100%;
     min-height: 100%;
@@ -519,6 +553,26 @@ img {
     text-align: left;
     box-shadow: 0 12px 28px rgba(53, 24, 74, 0.08);
     justify-content: flex-start;
+    display: flex;
+    flex-direction: column;
+}
+
+#como-funciona-home .lon-how-step-num {
+    flex-shrink: 0;
+    width: 2.35rem;
+    height: 2.35rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 0 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    background: linear-gradient(145deg, #6e5088 0%, #5d3f74 100%);
+    border: 1px solid rgba(93, 63, 116, 0.35);
+    box-shadow: 0 6px 14px rgba(53, 24, 74, 0.18);
 }
 
 #como-funciona-home .lon-service-card h3 {
@@ -1135,6 +1189,12 @@ img {
         max-width: none;
     }
 
+    .dr-hero-manifesto {
+        max-width: none;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     .dr-hero-media {
         min-height: 340px;
     }
@@ -1328,6 +1388,16 @@ body.lon-landing {
     color: #255235;
 }
 
+.dr-hero .dr-trust-list li::before {
+    background: transparent;
+    color: #e8f4ec;
+}
+
+.dr-hero-manifesto {
+    color: #f4faf6;
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.18);
+}
+
 .dr-hero-media,
 .dr-float-card,
 .dr-float-mini {
@@ -1368,6 +1438,12 @@ body.lon-landing {
 .lon-tab.is-active {
     border-color: var(--lon-border);
     color: #1f2a22;
+}
+
+body.lon-landing #como-funciona-home .lon-how-step-num {
+    background: linear-gradient(145deg, #2f6342 0%, #255235 100%);
+    border-color: rgba(37, 82, 53, 0.4);
+    box-shadow: 0 6px 14px rgba(27, 63, 41, 0.22);
 }
 
 .lon-service-image-wrap {
