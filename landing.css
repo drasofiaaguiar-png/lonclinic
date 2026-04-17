@@ -852,6 +852,42 @@ body.lon-landing {
     padding: 12px 14px;
 }
 
+.dr-trust-list {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+    max-width: 40ch;
+}
+
+.dr-trust-list li {
+    position: relative;
+    font-size: 0.92rem;
+    color: #4e5a4d;
+    background: #ffffff;
+    border: 1px solid #e0e6db;
+    border-radius: 12px;
+    padding: 10px 12px 10px 34px;
+    line-height: 1.35;
+}
+
+.dr-trust-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #e4edd6;
+    color: #4a7c6f;
+    font-size: 0.72rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .dr-avatars {
     display: inline-flex;
 }
