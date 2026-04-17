@@ -804,6 +804,68 @@ ${data.message}
     return { html, text };
 }
 
+function buildComplaintEmail(data) {
+    const name = escapeHtml(data.name);
+    const citizenCard = escapeHtml(data.citizenCard);
+    const email = escapeHtml(data.email);
+    const phone = escapeHtml(data.phone);
+    const message = escapeHtml(data.message).replace(/\n/g, '<br>');
+    const submittedAt = new Date().toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon' });
+
+    const html = `
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova Reclamação</title>
+</head>
+<body style="margin: 0; padding: 24px; background: #f6f8fb; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    <div style="max-width: 620px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px;">
+        <h1 style="margin: 0 0 18px; font-size: 22px; color: #111827;">Nova reclamação recebida</h1>
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #6b7280; width: 160px;">Nome</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #111827; font-weight: 600;">${name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #6b7280;">CC</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #111827;">${citizenCard}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #6b7280;">Telefone</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4;"><a href="tel:${phone}" style="color: #2563eb; text-decoration: none;">${phone}</a></td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #6b7280;">Email</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4;"><a href="mailto:${email}" style="color: #2563eb; text-decoration: none;">${email}</a></td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; color: #6b7280; vertical-align: top;">Texto</td>
+                <td style="padding: 10px 0; color: #111827; line-height: 1.6;">${message}</td>
+            </tr>
+        </table>
+        <p style="margin: 18px 0 0; color: #9ca3af; font-size: 12px;">Submetido em ${submittedAt} (hora de Lisboa)</p>
+    </div>
+</body>
+</html>`;
+
+    const text = `
+NOVA RECLAMAÇÃO
+
+Nome: ${data.name}
+CC: ${data.citizenCard}
+Telefone: ${data.phone}
+Email: ${data.email}
+Submetido em: ${submittedAt} (hora de Lisboa)
+
+Texto:
+${data.message}
+`.trim();
+
+    return { html, text };
+}
+
 async function sendContactInquiryEmail(data) {
     if (!isEmailConfigured) {
         console.log('   ⚠️  Email not configured — cannot send contact inquiry');
@@ -825,6 +887,31 @@ async function sendContactInquiryEmail(data) {
         return true;
     } catch (err) {
         console.error('   ❌ Failed to send contact inquiry:', err.message);
+        return false;
+    }
+}
+
+async function sendComplaintEmail(data) {
+    if (!isEmailConfigured) {
+        console.log('   ⚠️  Email not configured — cannot send complaint');
+        return false;
+    }
+
+    try {
+        const { html, text } = buildComplaintEmail(data);
+        const info = await transporter.sendMail({
+            from: EMAIL_FROM,
+            to: 'info@lonclinic.com',
+            replyTo: data.email,
+            subject: `Reclamação: ${data.name}`,
+            text,
+            html
+        });
+
+        console.log('   📩 Complaint sent to info@lonclinic.com | Message ID:', info.messageId);
+        return true;
+    } catch (err) {
+        console.error('   ❌ Failed to send complaint email:', err.message);
         return false;
     }
 }
@@ -973,6 +1060,25 @@ app.use((req, res, next) => {
     next();
 });
 
+// Technical SEO: prevent private/utility areas from being indexed.
+app.use((req, res, next) => {
+    const noIndexPrefixes = [
+        '/admin',
+        '/doctors',
+        '/clinic-portal',
+        '/patient-portal',
+        '/api/clinic',
+        '/api/admin',
+        '/api/debug-stripe',
+        '/api/test-email'
+    ];
+    const shouldNoIndex = noIndexPrefixes.some((prefix) => req.path.startsWith(prefix));
+    if (shouldNoIndex) {
+        res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    }
+    next();
+});
+
 // ─── IMPORTANT: Routes must come BEFORE express.static ───
 // ─── Test route ───
 app.get('/test-travel', (req, res) => {
@@ -1032,6 +1138,22 @@ app.get('/clinic-portal', (req, res) => {
 
 app.get('/admin', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'admin.html'), 'Error loading admin page');
+});
+
+app.get('/info.html', (req, res) => {
+    const noIndexPages = new Set([
+        'termos-condicoes',
+        'politica-privacidade',
+        'cookies',
+        'politica-nao-discriminacao',
+        'livro-reclamacoes',
+        'reclamacoes'
+    ]);
+    const page = String(req.query.page || '').toLowerCase();
+    if (noIndexPages.has(page)) {
+        res.setHeader('X-Robots-Tag', 'noindex, follow, noarchive');
+    }
+    sendHtmlNoCache(res, path.join(__dirname, 'info.html'), 'Error loading info page');
 });
 
 // ─── Doctors portal aliases ───
@@ -1166,6 +1288,41 @@ app.post('/api/contact', async (req, res) => {
     }
 
     return res.json({ success: true, message: 'Message sent successfully.' });
+});
+
+// ─── API: Complaint form submission ───
+app.post('/api/reclamacoes', async (req, res) => {
+    const name = (req.body?.name || '').trim();
+    const citizenCard = (req.body?.citizenCard || '').trim();
+    const phone = (req.body?.phone || '').trim();
+    const email = (req.body?.email || '').trim();
+    const message = (req.body?.message || '').trim();
+
+    if (!name || !citizenCard || !phone || !email || !message) {
+        return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({ error: 'Indique um email válido.' });
+    }
+
+    const payload = {
+        name: name.slice(0, 120),
+        citizenCard: citizenCard.slice(0, 40),
+        phone: phone.slice(0, 40),
+        email: email.slice(0, 160),
+        message: message.slice(0, 4000)
+    };
+
+    const sent = await sendComplaintEmail(payload);
+    if (!sent) {
+        return res.status(503).json({ error: 'Não foi possível enviar a sua reclamação de momento. Tente novamente.' });
+    }
+
+    return res.json({
+        success: true,
+        message: 'Reclamação enviada com sucesso. Responderemos no prazo máximo de 5 dias úteis.'
+    });
 });
 
 // ─── API: Create Checkout Session ───

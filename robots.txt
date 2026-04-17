@@ -4,8 +4,12 @@ Allow: /
 # Sitemap
 Sitemap: https://lonclinic.com/sitemap.xml
 
-# Disallow admin/dashboard areas if needed
-# Disallow: /dashboard.html
+# Keep private areas out of search results
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
 
 # Allow all search engines
 User-agent: Googlebot

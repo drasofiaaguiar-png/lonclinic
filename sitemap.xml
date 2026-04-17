@@ -7,7 +7,7 @@
     <!-- Homepage -->
     <url>
         <loc>https://lonclinic.com/</loc>
-        <lastmod>2025-01-27</lastmod>
+        <lastmod>2026-04-17</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
@@ -15,7 +15,7 @@
     <!-- Travel Medicine Page - Consulta do Viajante - Highest Priority for SEO -->
     <url>
         <loc>https://lonclinic.com/travel-clinic</loc>
-        <lastmod>2025-01-27</lastmod>
+        <lastmod>2026-04-17</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
@@ -23,17 +23,17 @@
     <!-- Booking Page -->
     <url>
         <loc>https://lonclinic.com/book-consultation</loc>
-        <lastmod>2025-01-27</lastmod>
+        <lastmod>2026-04-17</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     
-    <!-- Dashboard -->
+    <!-- Information hub -->
     <url>
-        <loc>https://lonclinic.com/patient-portal</loc>
-        <lastmod>2025-01-27</lastmod>
+        <loc>https://lonclinic.com/info.html</loc>
+        <lastmod>2026-04-17</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.5</priority>
+        <priority>0.7</priority>
     </url>
     
 </urlset>

@@ -1,16 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Your Consultation — Longevity Clinic</title>
+    <title>Marcar Consulta Online | Lon Clinic</title>
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="https://lonclinic.com/book-consultation">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Lon Clinic">
+    <meta property="og:url" content="https://lonclinic.com/book-consultation">
+    <meta property="og:title" content="Marcar Consulta Online | Lon Clinic">
+    <meta property="og:description" content="Marque a sua consulta médica online em minutos. Escolha serviço, data e hora com pagamento seguro.">
+    <meta property="og:image" content="https://lonclinic.com/image/image2.webp">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Marcar Consulta Online | Lon Clinic">
+    <meta name="twitter:description" content="Marcação rápida de consulta médica online com pagamento seguro.">
+    <meta name="twitter:image" content="https://lonclinic.com/image/image2.webp">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="booking.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c5c72c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4'/><path d='M5 19.5C5.5 18 6 15 6 12c0-3.5 2.5-6 6-6 3.5 0 6 2.5 6 6 0 2-.5 4-1 6'/><path d='M9 12c0-1.7 1.3-3 3-3s3 1.3 3 3-1 6-1 6'/><path d='M12 12v6'/></svg>">
-    <meta name="description" content="Book your private consultation — longevity assessment or travel medicine, fully online.">
+    <meta name="description" content="Marcar consulta online na Lon Clinic: escolha o tipo de consulta, horário e finalize com pagamento seguro em poucos passos.">
     <meta name="theme-color" content="#eaf2fb">
     <script src="https://js.stripe.com/v3/"></script>
 </head>
@@ -57,28 +69,28 @@
                         <div class="progress-dot">
                             <span>1</span>
                         </div>
-                        <span class="progress-label">Service</span>
+                        <span class="progress-label">Serviço</span>
                     </div>
                     <div class="progress-line"><div class="progress-line-fill"></div></div>
                     <div class="progress-step" data-step="2">
                         <div class="progress-dot">
                             <span>2</span>
                         </div>
-                        <span class="progress-label">Schedule</span>
+                        <span class="progress-label">Agenda</span>
                     </div>
                     <div class="progress-line"><div class="progress-line-fill"></div></div>
                     <div class="progress-step" data-step="3">
                         <div class="progress-dot">
                             <span>3</span>
                         </div>
-                        <span class="progress-label">Details</span>
+                        <span class="progress-label">Dados</span>
                     </div>
                     <div class="progress-line"><div class="progress-line-fill"></div></div>
                     <div class="progress-step" data-step="4">
                         <div class="progress-dot">
                             <span>4</span>
                         </div>
-                        <span class="progress-label">Payment</span>
+                        <span class="progress-label">Pagamento</span>
                     </div>
                     <div class="progress-line"><div class="progress-line-fill"></div></div>
                     <div class="progress-step" data-step="5">
@@ -87,7 +99,7 @@
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                             </span>
                         </div>
-                        <span class="progress-label">Confirmed</span>
+                        <span class="progress-label">Confirmado</span>
                     </div>
                 </div>
             </div>
@@ -95,8 +107,8 @@
             <!-- Step 1: Select Service -->
             <div class="booking-step active" id="step-1">
                 <div class="step-header">
-                    <h1 class="step-title">Choose your consultation</h1>
-                    <p class="step-desc">Select the service that best fits your needs.</p>
+                    <h1 class="step-title">Escolha a sua consulta</h1>
+                    <p class="step-desc">Selecione o serviço mais adequado às suas necessidades.</p>
                 </div>
                 <div class="service-grid">
                     <label class="service-option" data-service="longevity">
@@ -331,15 +343,15 @@
 
                 <div class="step-actions">
                     <div></div>
-                    <button class="btn btn-primary btn-lg step-next" id="next-1" disabled>Continue to scheduling</button>
+                    <button class="btn btn-primary btn-lg step-next" id="next-1" disabled>Continuar para agenda</button>
                 </div>
             </div>
 
             <!-- Step 2: Schedule -->
             <div class="booking-step" id="step-2">
                 <div class="step-header">
-                    <h1 class="step-title">Choose date & time</h1>
-                    <p class="step-desc">Select a convenient time for your video consultation.</p>
+                    <h1 class="step-title">Escolha data e hora</h1>
+                    <p class="step-desc">Selecione um horário conveniente para a sua consulta por videochamada.</p>
                 </div>
                 <div class="schedule-layout">
                     <div class="calendar-section">
@@ -369,16 +381,16 @@
                     </div>
                 </div>
                 <div class="step-actions">
-                    <button class="btn btn-outline btn-lg step-back" id="back-2">Back</button>
-                    <button class="btn btn-primary btn-lg step-next" id="next-2" disabled>Continue to details</button>
+                    <button class="btn btn-outline btn-lg step-back" id="back-2">Voltar</button>
+                    <button class="btn btn-primary btn-lg step-next" id="next-2" disabled>Continuar para dados</button>
                 </div>
             </div>
 
             <!-- Step 3: Patient Details -->
             <div class="booking-step" id="step-3">
                 <div class="step-header">
-                    <h1 class="step-title">Your details</h1>
-                    <p class="step-desc">Please provide your information so we can prepare for your consultation.</p>
+                    <h1 class="step-title">Os seus dados</h1>
+                    <p class="step-desc">Indique as suas informações para prepararmos a consulta.</p>
                 </div>
                 <form class="details-form" id="detailsForm" novalidate>
 
@@ -502,7 +514,7 @@
                         <label class="form-checkbox">
                             <input type="checkbox" id="consent" name="consent" required>
                             <span class="checkbox-mark"></span>
-                            <span class="checkbox-text">I consent to the health information of all listed patients being securely processed for the purpose of this consultation. <a href="#" style="color: var(--accent);">Privacy Policy</a></span>
+                            <span class="checkbox-text">I consent to the health information of all listed patients being securely processed for the purpose of this consultation. <a href="/info.html?page=politica-privacidade" style="color: var(--accent);">Privacy Policy</a></span>
                         </label>
                         <span class="form-error">You must consent to proceed</span>
                     </div>
@@ -510,22 +522,22 @@
                         <label class="form-checkbox">
                             <input type="checkbox" id="terms" name="terms" required>
                             <span class="checkbox-mark"></span>
-                            <span class="checkbox-text">I agree to the <a href="#" style="color: var(--accent);">Terms of Service</a> and understand this is a private medical consultation.</span>
+                            <span class="checkbox-text">I agree to the <a href="/info.html?page=termos-condicoes" style="color: var(--accent);">Terms of Service</a> and understand this is a private medical consultation.</span>
                         </label>
                         <span class="form-error">You must agree to the terms</span>
                     </div>
                 </form>
                 <div class="step-actions">
-                    <button class="btn btn-outline btn-lg step-back" id="back-3">Back</button>
-                    <button class="btn btn-primary btn-lg step-next" id="next-3">Continue to payment</button>
+                    <button class="btn btn-outline btn-lg step-back" id="back-3">Voltar</button>
+                    <button class="btn btn-primary btn-lg step-next" id="next-3">Continuar para pagamento</button>
                 </div>
             </div>
 
             <!-- Step 4: Review & Pay -->
             <div class="booking-step" id="step-4">
                 <div class="step-header">
-                    <h1 class="step-title">Review & pay</h1>
-                    <p class="step-desc">Review your booking details, then proceed to secure payment via Stripe.</p>
+                    <h1 class="step-title">Rever e pagar</h1>
+                    <p class="step-desc">Confirme os dados da marcação e prossiga para pagamento seguro via Stripe.</p>
                 </div>
                 <div class="payment-layout">
                     <div class="payment-form-section">
@@ -663,7 +675,7 @@
                     </div>
                 </div>
                 <div class="step-actions">
-                    <button class="btn btn-outline btn-lg step-back" id="back-4">Back</button>
+                    <button class="btn btn-outline btn-lg step-back" id="back-4">Voltar</button>
                     <button class="btn btn-primary btn-lg step-next pay-btn" id="next-4">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                         Proceed to secure payment
@@ -758,8 +770,8 @@
             <div class="footer-bottom" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
                 <p>&copy; 2026 LON Clinic. All rights reserved.</p>
                 <div class="footer-legal">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
+                    <a href="/info.html?page=politica-privacidade">Privacy Policy</a>
+                    <a href="/info.html?page=termos-condicoes">Terms of Service</a>
                     <a href="/">Back to site</a>
                 </div>
                 <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 12px;">Atividade registada na Entidade Reguladora da Saúde · Lisbon, Portugal</p>

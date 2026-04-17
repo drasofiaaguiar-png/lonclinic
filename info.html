@@ -3,11 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lon Clinic — Informação</title>
+    <title>Informação | Lon Clinic</title>
     <meta name="description" content="Informações institucionais, apoio, legal e serviços da Lon Clinic.">
+    <meta name="robots" content="index,follow,max-image-preview:large" id="metaRobots">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Lon Clinic">
+    <meta property="og:title" content="Informação | Lon Clinic" id="ogTitle">
+    <meta property="og:description" content="Informações institucionais, apoio, legal e serviços da Lon Clinic." id="ogDescription">
+    <meta property="og:url" content="https://lonclinic.com/info.html" id="ogUrl">
+    <meta property="og:locale" content="pt_PT">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Informação | Lon Clinic" id="twitterTitle">
+    <meta name="twitter:description" content="Informações institucionais, apoio, legal e serviços da Lon Clinic." id="twitterDescription">
+    <link rel="canonical" href="https://lonclinic.com/info.html" id="canonicalUrl">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json" id="structuredData">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Informação | Lon Clinic",
+  "description": "Informações institucionais, apoio, legal e serviços da Lon Clinic.",
+  "url": "https://lonclinic.com/info.html",
+  "inLanguage": "pt-PT"
+}
+    </script>
     <style>
         :root {
             --primary: #4A7C6F;
@@ -114,6 +135,49 @@
             color: #7a8278;
             font-size: 0.84rem;
         }
+        .complaints-form {
+            margin-top: 18px;
+            display: grid;
+            gap: 12px;
+        }
+        .complaints-form label {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #2f352f;
+        }
+        .complaints-form input,
+        .complaints-form textarea {
+            width: 100%;
+            margin-top: 6px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font: inherit;
+            color: var(--text);
+            background: #fff;
+        }
+        .complaints-form textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+        .complaints-form input:focus,
+        .complaints-form textarea:focus {
+            outline: 2px solid rgba(74, 124, 111, 0.2);
+            border-color: var(--primary);
+        }
+        .complaints-note {
+            margin-top: 8px;
+            color: #4b5563;
+            font-size: 0.86rem;
+        }
+        .complaints-status {
+            min-height: 1.2em;
+            margin-top: 2px;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+        .complaints-status.is-success { color: #166534; }
+        .complaints-status.is-error { color: #b91c1c; }
     </style>
 </head>
 <body>
@@ -236,8 +300,30 @@
                     section: "APOIO",
                     title: "Reclamações",
                     subtitle: "Processo transparente de gestão de reclamações",
-                    body: "Analisamos todas as reclamações com seriedade e respondemos em prazo razoável, conforme a legislação aplicável.",
-                    actions: [{ label: "Submeter reclamação", href: "mailto:info@lonclinic.com?subject=Reclama%C3%A7%C3%B5es", primary: true }]
+                    bodyHtml: `
+<p>Analisamos todas as reclamações com seriedade e confidencialidade, conforme a legislação aplicável.</p>
+<p class="complaints-note"><strong>Prazo de resposta:</strong> respondemos no prazo máximo de 5 dias úteis.</p>
+<form id="complaintsForm" class="complaints-form" novalidate>
+    <label for="complaint-name">Nome
+        <input id="complaint-name" name="name" type="text" required maxlength="120" autocomplete="name">
+    </label>
+    <label for="complaint-cc">CC
+        <input id="complaint-cc" name="citizenCard" type="text" required maxlength="40" autocomplete="off">
+    </label>
+    <label for="complaint-phone">Número de telefone
+        <input id="complaint-phone" name="phone" type="tel" required maxlength="40" autocomplete="tel">
+    </label>
+    <label for="complaint-email">Email
+        <input id="complaint-email" name="email" type="email" required maxlength="160" autocomplete="email">
+    </label>
+    <label for="complaint-message">Texto da reclamação
+        <textarea id="complaint-message" name="message" required maxlength="4000"></textarea>
+    </label>
+    <button type="submit" class="btn btn-primary">Enviar reclamação</button>
+    <p id="complaintsStatus" class="complaints-status" role="status" aria-live="polite"></p>
+</form>
+`,
+                    actions: []
                 },
                 "termos-condicoes": {
                     section: "LEGAL",
@@ -516,6 +602,14 @@
             };
 
             const page = new URLSearchParams(window.location.search).get("page") || "";
+            const noIndexPages = new Set([
+                "termos-condicoes",
+                "politica-privacidade",
+                "cookies",
+                "politica-nao-discriminacao",
+                "livro-reclamacoes",
+                "reclamacoes"
+            ]);
             const data = content[page] || {
                 section: "INFORMAÇÃO",
                 title: "Página não encontrada",
@@ -523,7 +617,41 @@
                 body: "Volte ao início e escolha uma opção válida do rodapé."
             };
 
-            document.title = data.title + " — Lon Clinic";
+            const isKnownPage = Boolean(content[page]);
+            const pageTitle = data.title + " | Lon Clinic";
+            const canonicalBase = window.location.origin + window.location.pathname;
+            const canonicalUrl = isKnownPage && page ? (canonicalBase + "?page=" + encodeURIComponent(page)) : canonicalBase;
+            const bodyText = String(data.body || "").trim();
+            const bodyHtmlText = String(data.bodyHtml || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+            const fallbackDescription = "Informações institucionais, apoio, legal e serviços da Lon Clinic.";
+            const metaDescription = (data.subtitle || bodyText || bodyHtmlText || fallbackDescription).slice(0, 160);
+
+            document.title = pageTitle;
+            document.querySelector('meta[name="description"]').setAttribute("content", metaDescription);
+            document.getElementById("metaRobots").setAttribute(
+                "content",
+                (!isKnownPage || noIndexPages.has(page)) ? "noindex,follow" : "index,follow,max-image-preview:large"
+            );
+            document.getElementById("canonicalUrl").setAttribute("href", canonicalUrl);
+            document.getElementById("ogTitle").setAttribute("content", pageTitle);
+            document.getElementById("ogDescription").setAttribute("content", metaDescription);
+            document.getElementById("ogUrl").setAttribute("content", canonicalUrl);
+            document.getElementById("twitterTitle").setAttribute("content", pageTitle);
+            document.getElementById("twitterDescription").setAttribute("content", metaDescription);
+            document.getElementById("structuredData").textContent = JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "MedicalWebPage",
+                name: pageTitle,
+                description: metaDescription,
+                url: canonicalUrl,
+                inLanguage: "pt-PT",
+                isPartOf: {
+                    "@type": "WebSite",
+                    name: "Lon Clinic",
+                    url: window.location.origin
+                }
+            });
+
             document.getElementById("pill").textContent = data.section;
             document.getElementById("title").textContent = data.title;
             document.getElementById("subtitle").textContent = data.subtitle;
@@ -546,6 +674,65 @@
                 }
                 actions.appendChild(a);
             });
+
+            if (page === "reclamacoes") {
+                const form = document.getElementById("complaintsForm");
+                const statusEl = document.getElementById("complaintsStatus");
+
+                if (form) {
+                    form.addEventListener("submit", async function (event) {
+                        event.preventDefault();
+                        const button = form.querySelector('button[type="submit"]');
+                        const formData = new FormData(form);
+                        const payload = {
+                            name: String(formData.get("name") || "").trim(),
+                            citizenCard: String(formData.get("citizenCard") || "").trim(),
+                            phone: String(formData.get("phone") || "").trim(),
+                            email: String(formData.get("email") || "").trim(),
+                            message: String(formData.get("message") || "").trim()
+                        };
+
+                        if (statusEl) {
+                            statusEl.textContent = "";
+                            statusEl.classList.remove("is-success", "is-error");
+                        }
+
+                        if (button) {
+                            button.disabled = true;
+                            button.textContent = "A enviar...";
+                        }
+
+                        try {
+                            const response = await fetch("/api/reclamacoes", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(payload)
+                            });
+
+                            const result = await response.json();
+                            if (!response.ok) {
+                                throw new Error(result.error || "Não foi possível enviar a reclamação.");
+                            }
+
+                            form.reset();
+                            if (statusEl) {
+                                statusEl.textContent = "Reclamação enviada com sucesso. Responderemos em até 5 dias úteis.";
+                                statusEl.classList.add("is-success");
+                            }
+                        } catch (err) {
+                            if (statusEl) {
+                                statusEl.textContent = (err && err.message) || "Erro ao enviar reclamação.";
+                                statusEl.classList.add("is-error");
+                            }
+                        } finally {
+                            if (button) {
+                                button.disabled = false;
+                                button.textContent = "Enviar reclamação";
+                            }
+                        }
+                    });
+                }
+            }
         })();
     </script>
 </body>
