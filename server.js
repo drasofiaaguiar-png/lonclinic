@@ -801,15 +801,10 @@ app.use((req, res, next) => {
     next();
 });
 
-// ─── Redirect www to non-www (SEO best practice) ───
-// Only redirect in production (not localhost)
-app.use((req, res, next) => {
-    if (req.headers.host && req.headers.host.startsWith('www.') && !req.headers.host.includes('localhost')) {
-        const protocol = req.secure || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
-        return res.redirect(301, `${protocol}://${req.headers.host.replace('www.', '')}${req.url}`);
-    }
-    next();
-});
+// NOTE:
+// We intentionally avoid host-based canonical redirects here.
+// On some Railway/custom-domain setups this can cause redirect loops
+// (ERR_TOO_MANY_REDIRECTS), especially when another layer already redirects.
 
 // ─── IMPORTANT: Routes must come BEFORE express.static ───
 // ─── Test route ───
