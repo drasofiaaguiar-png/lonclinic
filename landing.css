@@ -1,7 +1,7 @@
 /* Lon Clinic homepage redesign */
 :root {
     --lon-font: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    --lon-nav-h: 78px;
+    --lon-nav-h: 72px;
     --lon-bg: #f2e4f9;
     --lon-surface: #ffffff;
     --lon-surface-soft: #f8f1fc;
@@ -71,18 +71,19 @@ img {
 
 /* Nav */
 .lon-nav {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
-    padding: 20px 0 0;
+    padding: 10px 0 0;
     background: transparent;
-    transition: transform 0.25s ease;
+    transition: transform 0.25s ease, padding 0.25s ease;
 }
 
 .lon-nav.is-scrolled {
-    transform: translateY(-2px);
+    transform: translateY(0);
+    padding-top: 6px;
 }
 
 .lon-nav-inner {
@@ -94,7 +95,17 @@ img {
     border: 1px solid rgba(230, 216, 239, 0.8);
     background: rgba(255, 255, 255, 0.78);
     border-radius: 999px;
-    padding: 10px 14px 10px 20px;
+    padding: 8px 12px 8px 18px;
+    backdrop-filter: blur(14px) saturate(1.25);
+    -webkit-backdrop-filter: blur(14px) saturate(1.25);
+    box-shadow: 0 12px 26px rgba(22, 33, 25, 0.1);
+    transition: background 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.lon-nav.is-scrolled .lon-nav-inner {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 16px 34px rgba(17, 28, 21, 0.14);
 }
 
 .lon-logo {
@@ -121,17 +132,19 @@ img {
 }
 
 .lon-nav-links a {
-    color: #5e5468;
-    font-size: 0.9rem;
-    font-weight: 500;
-    padding: 10px 14px;
+    color: #4a5d4f;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    padding: 9px 13px;
     border-radius: 999px;
-    transition: color 0.2s ease, background 0.2s ease;
+    transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .lon-nav-links a:hover {
-    color: var(--lon-primary);
-    background: #f6effa;
+    color: #18251c;
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: inset 0 0 0 1px rgba(53, 80, 60, 0.16);
 }
 
 .lon-nav-actions {
@@ -150,8 +163,14 @@ img {
     justify-content: center;
     font-weight: 600;
     font-size: 0.92rem;
+    letter-spacing: 0.01em;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.lon-btn:focus-visible {
+    outline: 2px solid rgba(53, 80, 60, 0.4);
+    outline-offset: 2px;
 }
 
 .lon-btn:hover {
@@ -159,13 +178,14 @@ img {
 }
 
 .lon-btn-sm {
-    padding: 10px 16px;
-    font-size: 0.82rem;
+    padding: 9px 14px;
+    font-size: 0.8rem;
 }
 
 .lon-btn-primary,
 .lon-btn-dark {
     background: var(--lon-accent);
+    border-color: var(--lon-accent);
     color: #fff;
     box-shadow: 0 10px 24px rgba(255, 112, 40, 0.28);
 }
@@ -173,6 +193,7 @@ img {
 .lon-btn-primary:hover,
 .lon-btn-dark:hover {
     background: var(--lon-accent-dark);
+    border-color: var(--lon-accent-dark);
 }
 
 .lon-btn-ghost {
@@ -424,7 +445,7 @@ img {
 
 /* Mid sections */
 .dr-platform {
-    padding: 66px 0 44px;
+    padding: 84px 0 58px;
     text-align: center;
     position: relative;
 }
@@ -479,7 +500,7 @@ img {
 
 /* Services */
 .lon-services {
-    padding: 8px 0 52px;
+    padding: 20px 0 72px;
     background: transparent;
 }
 
@@ -652,11 +673,11 @@ img {
 
 /* Contact */
 .lon-newsletter {
-    padding: 28px 0 54px;
+    padding: 0 0 76px;
 }
 
 .lon-consult-cta {
-    padding: 0 0 52px;
+    padding: 8px 0 68px;
 }
 
 .lon-consult-cta-card {
@@ -819,7 +840,7 @@ img {
 .lon-footer {
     border-top: 1px solid #e8d9f2;
     background: #f7eefc;
-    padding: 38px 0 24px;
+    padding: 42px 0 28px;
 }
 
 .lon-footer-grid {
@@ -952,8 +973,51 @@ img {
 }
 
 @media (max-width: 740px) {
+    .lon-nav {
+        padding-top: 8px;
+    }
+
+    .lon-nav-inner {
+        min-height: 64px;
+        padding: 7px 10px 7px 14px;
+    }
+
+    .lon-nav-actions .lon-btn {
+        width: auto;
+    }
+
+    .dr-hero {
+        padding-top: calc(var(--lon-nav-h) + 64px);
+        padding-bottom: 64px;
+    }
+
+    .dr-hero .lon-container.dr-hero-grid {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .dr-hero-content {
+        text-align: center;
+        padding: 4px 0;
+    }
+
+    .dr-hero h1 {
+        max-width: none;
+        font-size: clamp(1.9rem, 9vw, 2.8rem);
+    }
+
+    .dr-lead {
+        max-width: none;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .dr-trust-list {
+        max-width: none;
+    }
+
     .dr-hero-media {
-        min-height: 370px;
+        min-height: 340px;
     }
 
     .dr-trust-list li {
@@ -994,54 +1058,63 @@ body.lon-landing {
 }
 
 .lon-nav-inner {
-    border-color: #35503c;
-    background: #3F5D46;
-    box-shadow: 0 10px 24px rgba(26, 26, 26, 0.14);
+    border-color: rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.78);
+    backdrop-filter: blur(18px) saturate(1.25);
+    -webkit-backdrop-filter: blur(18px) saturate(1.25);
+    box-shadow: 0 16px 34px rgba(20, 34, 24, 0.16);
+}
+
+.lon-nav.is-scrolled .lon-nav-inner {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(255, 255, 255, 0.88);
+    box-shadow: 0 18px 40px rgba(20, 34, 24, 0.2);
 }
 
 .lon-logo-name {
-    color: #ffffff;
+    color: #223127;
 }
 
 .lon-nav-links a {
-    color: rgba(255, 255, 255, 0.9);
+    color: #2f4136;
 }
 
 .lon-nav-links a:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.16);
+    color: #162119;
+    background: rgba(255, 255, 255, 0.7);
 }
 
 .lon-nav .lon-btn-ghost {
-    border-color: rgba(255, 255, 255, 0.45);
-    color: #ffffff;
-    background: transparent;
+    border-color: rgba(53, 80, 60, 0.22);
+    color: #1b281f;
+    background: rgba(255, 255, 255, 0.55);
 }
 
 .lon-nav .lon-btn-ghost:hover {
-    border-color: rgba(255, 255, 255, 0.68);
-    background: rgba(255, 255, 255, 0.14);
-    color: #ffffff;
+    border-color: rgba(53, 80, 60, 0.4);
+    background: rgba(255, 255, 255, 0.88);
+    color: #142017;
 }
 
 .lon-nav .lon-btn-primary {
-    background: #ffffff;
-    border-color: #ffffff;
-    color: #2f4635;
-    box-shadow: none;
+    background: #35503c;
+    border-color: #35503c;
+    color: #ffffff;
+    box-shadow: 0 8px 18px rgba(53, 80, 60, 0.22);
 }
 
 .lon-nav .lon-btn-primary:hover {
-    background: #f2f6f3;
+    background: #2c4432;
+    box-shadow: 0 10px 22px rgba(44, 68, 50, 0.28);
 }
 
 .lon-nav-toggle {
-    background: rgba(0, 0, 0, 0.18);
-    border-color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.8);
+    border-color: rgba(53, 80, 60, 0.28);
 }
 
 .lon-nav-toggle span {
-    background: #ffffff;
+    background: #2b3d32;
 }
 
 .lon-btn-primary,
@@ -1075,20 +1148,44 @@ body.lon-landing {
 }
 
 .lon-mobile-menu a {
-    border-color: #e0e7e2;
-    background: #f8fbf9;
-    color: #364339;
+    border-color: rgba(53, 80, 60, 0.18);
+    background: rgba(255, 255, 255, 0.9);
+    color: #2d3d33;
+}
+
+.dr-hero {
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(145deg, #517560 0%, #3f5d46 48%, #35503c 100%);
+    padding-top: calc(var(--lon-nav-h) + 86px);
+    padding-bottom: 84px;
+}
+
+.dr-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 44%);
+    pointer-events: none;
+    z-index: -1;
 }
 
 .dr-hero-grid {
-    background: linear-gradient(135deg, #ffffff 0%, #f6f8f5 40%, #eef3ef 100%);
-    border-color: var(--lon-border);
-    box-shadow: 0 16px 40px rgba(26, 26, 26, 0.08);
+    border-radius: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+}
+
+.dr-hero h1 {
+    color: #ffffff;
 }
 
 .dr-badge {
-    border-color: var(--lon-border);
-    color: #35503c;
+    border-color: rgba(255, 255, 255, 0.42);
+    background: rgba(255, 255, 255, 0.14);
+    color: #f6fff9;
 }
 
 .dr-lead,
@@ -1101,20 +1198,31 @@ body.lon-landing {
 }
 
 .dr-trust-list li {
-    border-color: #dde5df;
-    color: #2f3b32;
-    background: rgba(255, 255, 255, 0.82);
+    border-color: rgba(255, 255, 255, 0.34);
+    color: #f1f8f3;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(3px);
 }
 
 .dr-trust-list li::before {
-    background: #e6efe8;
+    background: #ffffff;
     color: #35503c;
 }
 
 .dr-hero-media,
 .dr-float-card,
 .dr-float-mini {
-    border-color: var(--lon-border);
+    border-color: rgba(255, 255, 255, 0.34);
+}
+
+.dr-hero-media {
+    box-shadow: 0 18px 40px rgba(16, 30, 20, 0.3);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.dr-float-card,
+.dr-float-mini {
+    background: rgba(255, 255, 255, 0.88);
 }
 
 .dr-float-mini {
