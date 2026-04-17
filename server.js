@@ -63,6 +63,21 @@ function requireAuth(req, res, next) {
     return res.status(401).json({ error: 'Authentication required' });
 }
 
+function sendHtmlNoCache(res, filePath, onErrorMessage) {
+    res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Surrogate-Control': 'no-store'
+    });
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            console.error(`❌ Error sending ${path.basename(filePath)}:`, err.message);
+            res.status(500).send(onErrorMessage);
+        }
+    });
+}
+
 /* ========================================
    IN-MEMORY BOOKINGS STORE
    (Replace with a database in production)
@@ -848,33 +863,28 @@ app.get('/marcar.html', (req, res) => {
         console.error('❌ marcar.html missing at:', filePath);
         return res.status(500).send('marcar.html not found on server');
     }
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            console.error('❌ Error sending marcar.html:', err.message);
-            res.status(500).send('Error loading marcar page');
-        }
-    });
+    sendHtmlNoCache(res, filePath, 'Error loading marcar page');
 });
 
 app.get('/book-consultation', (req, res) => {
-    res.sendFile(path.join(__dirname, 'book.html'));
+    sendHtmlNoCache(res, path.join(__dirname, 'book.html'), 'Error loading booking page');
 });
 
 app.get('/patient-portal', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dashboard.html'));
+    sendHtmlNoCache(res, path.join(__dirname, 'dashboard.html'), 'Error loading patient portal');
 });
 
 app.get('/clinic-portal', (req, res) => {
-    res.sendFile(path.join(__dirname, 'clinic.html'));
+    sendHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
 });
 
 app.get('/admin', (req, res) => {
-    res.sendFile(path.join(__dirname, 'admin.html'));
+    sendHtmlNoCache(res, path.join(__dirname, 'admin.html'), 'Error loading admin page');
 });
 
 // ─── Serve index.html for root route ───
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+    sendHtmlNoCache(res, path.join(__dirname, 'index.html'), 'Error loading home page');
 });
 
 // ─── Redirect old .html URLs to friendly URLs (301 Permanent Redirect) ───
@@ -921,7 +931,17 @@ app.get('/robots.txt', (req, res) => {
 });
 
 // ─── Static files (CSS, JS, images, etc.) ───
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname), {
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.js')) {
+            res.setHeader('Cache-Control', 'public, max-age=300, must-revalidate');
+            return;
+        }
+        if (filePath.endsWith('.css')) {
+            res.setHeader('Cache-Control', 'public, max-age=300, must-revalidate');
+        }
+    }
+}));
 
 // ─── API: Get publishable key ───
 app.get('/api/config', (req, res) => {
