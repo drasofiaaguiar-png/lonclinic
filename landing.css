@@ -1213,3 +1213,26 @@ body.lon-landing {
     padding-top: 0;
     border-top: none;
 }
+
+.lon-footer-legal-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+}
+
+.lon-footer-legal-links a {
+    font-size: 0.82rem;
+    color: #5e675d;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.lon-footer-legal-links a:hover {
+    color: #4A7C6F;
+}
+
+.lon-footer-bottom p {
+    margin: 0;
+    font-size: 0.82rem;
+    color: #5e675d;
+}

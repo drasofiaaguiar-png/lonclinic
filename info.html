@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lon Clinic — Informação</title>
+    <meta name="description" content="Informações institucionais, apoio, legal e serviços da Lon Clinic.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4A7C6F;
+            --bg: #f5f6f4;
+            --card: #ffffff;
+            --text: #1a1a1a;
+            --muted: #606660;
+            --border: #dfe4da;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: "DM Sans", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.55;
+        }
+        .wrap {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 36px 20px 56px;
+        }
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            gap: 16px;
+        }
+        .brand {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: -0.02em;
+        }
+        .back {
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 9px 14px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 0.9rem;
+            background: var(--card);
+        }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 28px;
+        }
+        .pill {
+            display: inline-block;
+            background: rgba(74, 124, 111, 0.12);
+            color: var(--primary);
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            margin-bottom: 14px;
+        }
+        h1 {
+            font-size: clamp(1.7rem, 4.2vw, 2.55rem);
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: var(--muted);
+            margin-bottom: 18px;
+        }
+        .body {
+            color: #2f352f;
+            margin-bottom: 24px;
+        }
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .btn {
+            border-radius: 999px;
+            padding: 10px 16px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--text);
+        }
+        .btn-primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+        }
+        .foot {
+            margin-top: 24px;
+            color: #7a8278;
+            font-size: 0.84rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="top">
+            <div class="brand">Lon Clinic</div>
+            <a href="/" class="back">Voltar ao início</a>
+        </div>
+
+        <article class="card">
+            <span class="pill" id="pill">INFORMAÇÃO</span>
+            <h1 id="title">Conteúdo</h1>
+            <p class="subtitle" id="subtitle">Detalhes da página</p>
+            <p class="body" id="body">Estamos a preparar mais informação para esta secção.</p>
+            <div class="actions" id="actions"></div>
+            <p class="foot">Se precisar de ajuda imediata, contacte <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> ou +351 928 372 775.</p>
+        </article>
+    </div>
+
+    <script>
+        (function () {
+            const content = {
+                "servico-urgencia": {
+                    section: "SERVIÇOS",
+                    title: "Consulta de Urgência",
+                    subtitle: "Resposta médica rápida por videochamada",
+                    body: "Indicada para situações clínicas agudas que não exigem urgência hospitalar imediata. A equipa médica avalia o quadro e orienta o tratamento ou próximos passos.",
+                    actions: [{ label: "Marcar consulta", href: "/marcar.html?tipo=urgente", primary: true }]
+                },
+                "servico-clinica-geral": {
+                    section: "SERVIÇOS",
+                    title: "Clínica Geral",
+                    subtitle: "Acompanhamento médico para sintomas e prevenção",
+                    body: "Consulta orientada para avaliação global de sintomas, revisão de exames, prevenção e definição de plano terapêutico adequado.",
+                    actions: [{ label: "Marcar consulta", href: "/marcar.html?tipo=clinica_geral", primary: true }]
+                },
+                "servico-viajante": {
+                    section: "SERVIÇOS",
+                    title: "Consulta do Viajante",
+                    subtitle: "Planeamento clínico antes da viagem",
+                    body: "Aconselhamento personalizado para destino, vacinação, profilaxia e medicação de viagem, com enfoque em segurança e prevenção.",
+                    actions: [{ label: "Marcar consulta", href: "/marcar.html?tipo=travel", primary: true }]
+                },
+                "servico-saude-mental": {
+                    section: "SERVIÇOS",
+                    title: "Saúde Mental",
+                    subtitle: "Cuidado contínuo, humano e confidencial",
+                    body: "Avaliação inicial e seguimento de sintomas emocionais e psicológicos, com abordagem clínica estruturada e foco na continuidade.",
+                    actions: [{ label: "Marcar consulta", href: "/marcar.html?tipo=saude_mental", primary: true }]
+                },
+                "servico-longevidade": {
+                    section: "SERVIÇOS",
+                    title: "Longevidade",
+                    subtitle: "Prevenção e saúde a longo prazo",
+                    body: "Consulta orientada para risco cardiovascular-metabólico, hábitos de vida e estratégia preventiva personalizada para envelhecer com qualidade.",
+                    actions: [{ label: "Marcar consulta", href: "/marcar.html?tipo=longevidade", primary: true }]
+                },
+                "sobre-nos": {
+                    section: "CLÍNICA",
+                    title: "Sobre nós",
+                    subtitle: "Clínica online portuguesa focada em confiança e acessibilidade",
+                    body: "A Lon Clinic foi criada para facilitar o acesso a cuidados médicos de qualidade, com consultas online rápidas, acompanhamento contínuo e foco no longo prazo."
+                },
+                "parcerias": {
+                    section: "CLÍNICA",
+                    title: "Parcerias",
+                    subtitle: "Parcerias clínicas e institucionais",
+                    body: "Colaboramos com empresas, seguradoras e entidades de saúde para desenvolver soluções de telemedicina seguras e eficientes.",
+                    actions: [{ label: "Falar com a equipa", href: "mailto:parcerias@lonclinic.com", primary: true }]
+                },
+                "registo-medico": {
+                    section: "CLÍNICA",
+                    title: "Registo médico",
+                    subtitle: "Informação regulatória e enquadramento clínico",
+                    body: "A atividade clínica é realizada por profissionais habilitados e enquadrada pelas normas aplicáveis em Portugal.",
+                    actions: [{ label: "Solicitar informação", href: "mailto:info@lonclinic.com?subject=Registo%20m%C3%A9dico", primary: true }]
+                },
+                "contato": {
+                    section: "CLÍNICA",
+                    title: "Contato",
+                    subtitle: "Estamos disponíveis para ajudar",
+                    body: "Pode contactar a Lon Clinic por email, telefone ou WhatsApp para dúvidas sobre consultas, horários e serviços.",
+                    actions: [
+                        { label: "Enviar email", href: "mailto:info@lonclinic.com", primary: true },
+                        { label: "WhatsApp", href: "https://wa.me/351928372775" }
+                    ]
+                },
+                "trabalhe-connosco": {
+                    section: "CLÍNICA",
+                    title: "Trabalhe connosco",
+                    subtitle: "Junte-se à equipa Lon Clinic",
+                    body: "Procuramos profissionais com orientação clínica, empatia e excelência. Envie candidatura espontânea e área de interesse.",
+                    actions: [{ label: "Enviar candidatura", href: "mailto:info@lonclinic.com?subject=Trabalhar%20na%20Lon%20Clinic", primary: true }]
+                },
+                "perguntas-frequentes": {
+                    section: "APOIO",
+                    title: "Perguntas frequentes",
+                    subtitle: "Respostas rápidas às dúvidas mais comuns",
+                    body: "Se ainda não encontrou resposta, contacte-nos diretamente para esclarecimento personalizado."
+                },
+                "como-funciona": {
+                    section: "APOIO",
+                    title: "Como funciona",
+                    subtitle: "Marcação simples em poucos passos",
+                    body: "Escolha o tipo de consulta, selecione data e hora, efetue pagamento seguro e participe por telemóvel, tablet ou computador."
+                },
+                "seguranca-dados": {
+                    section: "APOIO",
+                    title: "Segurança dos dados",
+                    subtitle: "Privacidade e proteção da informação clínica",
+                    body: "Aplicamos práticas técnicas e organizativas para proteger os dados pessoais e clínicos dos pacientes."
+                },
+                "acessibilidade": {
+                    section: "APOIO",
+                    title: "Acessibilidade",
+                    subtitle: "Compromisso com acesso inclusivo",
+                    body: "A Lon Clinic procura melhorar continuamente a acessibilidade digital para todos os utilizadores."
+                },
+                "reclamacoes": {
+                    section: "APOIO",
+                    title: "Reclamações",
+                    subtitle: "Processo transparente de gestão de reclamações",
+                    body: "Analisamos todas as reclamações com seriedade e respondemos em prazo razoável, conforme a legislação aplicável.",
+                    actions: [{ label: "Submeter reclamação", href: "mailto:info@lonclinic.com?subject=Reclama%C3%A7%C3%B5es", primary: true }]
+                },
+                "termos-condicoes": {
+                    section: "LEGAL",
+                    title: "Termos e condições",
+                    subtitle: "Condições de utilização dos serviços Lon Clinic",
+                    body: "Esta página define regras de acesso, marcação, pagamentos e responsabilidades associadas ao uso da plataforma."
+                },
+                "politica-privacidade": {
+                    section: "LEGAL",
+                    title: "Política de privacidade",
+                    subtitle: "Tratamento de dados pessoais",
+                    body: "Descreve finalidades de tratamento, base legal, prazos de conservação e direitos dos titulares dos dados."
+                },
+                "cookies": {
+                    section: "LEGAL",
+                    title: "Cookies",
+                    subtitle: "Gestão de cookies e preferências",
+                    body: "Explica os tipos de cookies usados, finalidade e como pode gerir consentimento e preferências."
+                },
+                "politica-nao-discriminacao": {
+                    section: "LEGAL",
+                    title: "Política de não discriminação",
+                    subtitle: "Compromisso com igualdade e respeito",
+                    body: "A Lon Clinic promove atendimento inclusivo e sem discriminação com base em qualquer característica pessoal protegida."
+                },
+                "livro-reclamacoes": {
+                    section: "LEGAL",
+                    title: "Livro de reclamações",
+                    subtitle: "Canal oficial para apresentação de reclamações",
+                    body: "Pode apresentar reclamações através dos canais oficiais previstos em Portugal."
+                }
+            };
+
+            const page = new URLSearchParams(window.location.search).get("page") || "";
+            const data = content[page] || {
+                section: "INFORMAÇÃO",
+                title: "Página não encontrada",
+                subtitle: "Este conteúdo não existe",
+                body: "Volte ao início e escolha uma opção válida do rodapé."
+            };
+
+            document.title = data.title + " — Lon Clinic";
+            document.getElementById("pill").textContent = data.section;
+            document.getElementById("title").textContent = data.title;
+            document.getElementById("subtitle").textContent = data.subtitle;
+            document.getElementById("body").textContent = data.body;
+
+            const actions = document.getElementById("actions");
+            (data.actions || [{ label: "Ir para início", href: "/" }]).forEach(function (action) {
+                const a = document.createElement("a");
+                a.className = "btn" + (action.primary ? " btn-primary" : "");
+                a.href = action.href;
+                a.textContent = action.label;
+                if (action.href.indexOf("http") === 0) {
+                    a.target = "_blank";
+                    a.rel = "noopener noreferrer";
+                }
+                actions.appendChild(a);
+            });
+        })();
+    </script>
+</body>
+</html>
