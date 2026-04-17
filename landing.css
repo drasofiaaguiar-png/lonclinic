@@ -484,15 +484,7 @@ img {
     text-align: center;
     padding: clamp(72px, 12vw, 120px) 0 clamp(80px, 11vw, 128px);
     overflow: hidden;
-    background-color: #eef3ee;
-    background-image:
-        radial-gradient(
-            ellipse 95% 75% at 50% 38%,
-            rgba(255, 255, 255, 0.72) 0%,
-            rgba(241, 246, 242, 0.35) 45%,
-            transparent 68%
-        ),
-        linear-gradient(180deg, #f6faf7 0%, #e8f0ea 52%, #eef4f0 100%);
+    background: var(--lon-bg);
 }
 
 .dr-clinic-manifesto-inner {
@@ -585,19 +577,17 @@ img {
     color: #fff;
     background: linear-gradient(
         155deg,
-        rgba(47, 99, 66, 0.72) 0%,
-        rgba(37, 82, 53, 0.58) 48%,
-        rgba(27, 63, 41, 0.52) 100%
+        #141c17 0%,
+        #0c100d 46%,
+        #050807 100%
     );
-    border: 1px solid rgba(255, 255, 255, 0.32);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 20px;
     padding: 22px 20px 24px;
     text-align: left;
     box-shadow:
-        0 12px 36px rgba(20, 42, 28, 0.28),
-        inset 0 1px 0 rgba(255, 255, 255, 0.22);
-    backdrop-filter: blur(14px) saturate(1.35);
-    -webkit-backdrop-filter: blur(14px) saturate(1.35);
+        0 18px 44px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
     justify-content: flex-start;
     display: flex;
     flex-direction: column;
@@ -640,7 +630,7 @@ img {
 
 /* Services */
 .lon-services {
-    padding: 20px 0 72px;
+    padding: clamp(56px, 10vw, 112px) 0 clamp(80px, 12vw, 140px);
     background: transparent;
 }
 
@@ -979,6 +969,10 @@ img {
     box-sizing: border-box;
 }
 
+.lon-contact-copy {
+    text-align: center;
+}
+
 @media (min-width: 940px) {
     .lon-newsletter-inner {
         grid-template-columns: 1fr 1.15fr;
@@ -988,8 +982,8 @@ img {
     .lon-contact-copy {
         display: flex;
         flex-direction: column;
-        justify-content: flex-end;
-        align-items: flex-start;
+        justify-content: center;
+        align-items: center;
         min-height: 0;
     }
 }
@@ -1008,6 +1002,7 @@ img {
     margin-top: 16px;
     display: grid;
     gap: 7px;
+    justify-items: center;
 }
 
 .lon-contact-links a {
@@ -1469,23 +1464,6 @@ body.lon-landing {
 
 .dr-platform::before {
     background: radial-gradient(ellipse at center, rgba(241, 246, 242, 0.9) 0%, rgba(241, 246, 242, 0.22) 72%, rgba(241, 246, 242, 0) 100%);
-}
-
-.dr-clinic-manifesto {
-    background-color: #1a2e22;
-    background-image:
-        radial-gradient(
-            ellipse 90% 70% at 50% 35%,
-            rgba(255, 255, 255, 0.1) 0%,
-            rgba(45, 85, 62, 0.25) 50%,
-            transparent 70%
-        ),
-        linear-gradient(180deg, #203828 0%, #1a2e22 42%, #152a1d 100%);
-}
-
-.dr-clinic-manifesto__text {
-    color: #f0faf3;
-    text-shadow: 0 2px 28px rgba(0, 0, 0, 0.2);
 }
 
 .lon-tabs {
