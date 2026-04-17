@@ -1,4 +1,14 @@
 /* Marcação — calendário (tema Lon Clinic) */
+:root {
+    --marcar-surface: #ffffff;
+    --marcar-surface-soft: #f2f6f3;
+    --marcar-border: #b9c8be;
+    --marcar-text: #162119;
+    --marcar-muted: #3f5146;
+    --marcar-accent-soft: #d9e6dc;
+    --marcar-accent-strong: #255235;
+}
+
 .marcar-main {
     padding-top: calc(var(--lon-nav-h) + 32px);
     padding-bottom: 64px;
@@ -10,12 +20,12 @@
     gap: 8px;
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--lon-muted);
+    color: var(--marcar-muted);
     margin-bottom: 20px;
 }
 
 .marcar-back:hover {
-    color: var(--lon-primary);
+    color: var(--marcar-text);
 }
 
 .marcar-layout {
@@ -31,8 +41,8 @@
 }
 
 .marcar-info {
-    background: var(--lon-white);
-    border: 1px solid var(--lon-border);
+    background: var(--marcar-surface);
+    border: 1px solid var(--marcar-border);
     border-radius: var(--lon-radius-lg);
     padding: 28px;
     box-shadow: var(--lon-shadow);
@@ -71,7 +81,7 @@
 
 .marcar-desc {
     font-size: 0.9375rem;
-    color: var(--lon-muted);
+    color: var(--marcar-muted);
     line-height: 1.55;
 }
 
@@ -84,8 +94,8 @@
 }
 
 .marcar-schedule-wrap {
-    background: var(--lon-white);
-    border: 1px solid var(--lon-border);
+    background: var(--marcar-surface);
+    border: 1px solid var(--marcar-border);
     border-radius: var(--lon-radius-lg);
     padding: 24px;
 }
@@ -98,7 +108,7 @@
 
 .marcar-schedule-wrap .marcar-sub {
     font-size: 0.875rem;
-    color: var(--lon-muted);
+    color: var(--marcar-muted);
     margin-bottom: 20px;
 }
 
@@ -114,8 +124,8 @@
 }
 
 .marcar-cal-section {
-    background: var(--lon-bg);
-    border: 1px solid var(--lon-border);
+    background: var(--marcar-surface-soft);
+    border: 1px solid var(--marcar-border);
     border-radius: var(--lon-radius);
     padding: 20px;
 }
@@ -130,15 +140,16 @@
 .marcar-cal-month {
     font-size: 0.9375rem;
     font-weight: 600;
+    color: var(--marcar-text);
 }
 
 .marcar-cal-nav {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 1px solid var(--lon-border);
-    background: var(--lon-white);
-    color: var(--lon-text);
+    border: 1px solid var(--marcar-border);
+    background: var(--marcar-surface);
+    color: var(--marcar-text);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -146,8 +157,8 @@
 }
 
 .marcar-cal-nav:hover {
-    border-color: var(--lon-primary);
-    color: var(--lon-primary);
+    border-color: var(--marcar-accent-strong);
+    color: var(--marcar-accent-strong);
 }
 
 .marcar-cal-weekdays {
@@ -161,7 +172,7 @@
     text-align: center;
     font-size: 0.65rem;
     font-weight: 600;
-    color: var(--lon-muted);
+    color: var(--marcar-muted);
     text-transform: uppercase;
 }
 
@@ -181,27 +192,27 @@
     border-radius: 8px;
     border: none;
     background: none;
-    color: var(--lon-text);
+    color: var(--marcar-text);
     cursor: pointer;
     font-family: var(--lon-font);
 }
 
 .marcar-cal-day:hover:not(.marcar-cal-disabled):not(.marcar-cal-empty) {
-    background: var(--lon-primary-soft);
+    background: var(--marcar-accent-soft);
 }
 
 .marcar-cal-day.marcar-cal-today {
-    border: 1px solid var(--lon-primary);
+    border: 1px solid var(--marcar-accent-strong);
 }
 
 .marcar-cal-day.marcar-cal-selected {
-    background: var(--lon-primary);
+    background: var(--marcar-accent-strong);
     color: #fff;
     font-weight: 700;
 }
 
 .marcar-cal-day.marcar-cal-disabled {
-    color: #ccc;
+    color: #8fa195;
     cursor: default;
 }
 
@@ -215,6 +226,7 @@
 }
 
 .marcar-times h3 {
+    color: var(--marcar-text);
     font-size: 0.9375rem;
     font-weight: 600;
     margin-bottom: 12px;
@@ -232,29 +244,29 @@
 
 .marcar-slot-btn {
     padding: 10px 12px;
-    border: 1px solid var(--lon-border);
+    border: 1px solid var(--marcar-border);
     border-radius: 8px;
-    background: var(--lon-bg);
+    background: var(--marcar-surface-soft);
     font-size: 0.8125rem;
     font-weight: 600;
     font-family: var(--lon-font);
     cursor: pointer;
-    color: var(--lon-text);
+    color: var(--marcar-text);
 }
 
 .marcar-slot-btn:hover {
-    border-color: var(--lon-primary);
+    border-color: var(--marcar-accent-strong);
 }
 
 .marcar-slot-btn.selected {
-    border-color: var(--lon-primary);
-    background: var(--lon-primary-soft);
-    color: var(--lon-primary-dark);
+    border-color: var(--marcar-accent-strong);
+    background: var(--marcar-accent-soft);
+    color: #153624;
 }
 
 .marcar-times-empty {
     font-size: 0.875rem;
-    color: var(--lon-muted);
+    color: var(--marcar-muted);
     text-align: center;
     padding: 28px 8px;
     grid-column: span 2;
@@ -266,7 +278,7 @@
     gap: 6px;
     margin-top: 12px;
     font-size: 0.75rem;
-    color: var(--lon-muted);
+    color: var(--marcar-muted);
 }
 
 .marcar-actions {

@@ -1106,13 +1106,43 @@ app.get('/travel-clinic', (req, res) => {
     });
 });
 
-// Friendly URL /marcar → static file marcar.html (more reliable than sendFile in some hosts)
+const MARCAR_TIPO_TO_SLUG = {
+    urgente: 'urgente',
+    infeccao_urinaria: 'infeccao-urinaria',
+    clinica_geral: 'clinica-geral',
+    renovacao: 'renovacao',
+    travel: 'travel',
+    saude_mental: 'saude-mental',
+    longevidade: 'longevidade'
+};
+
 function redirectToMarcarHtml(req, res) {
-    const qs = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
-    res.redirect(301, '/marcar.html' + qs);
+    const params = new URLSearchParams(req.query || {});
+    const tipo = String(params.get('tipo') || '').toLowerCase();
+    const slug = MARCAR_TIPO_TO_SLUG[tipo];
+
+    // Professional URL for known consultation types.
+    if (slug) {
+        params.delete('tipo');
+        const suffix = params.toString() ? `?${params.toString()}` : '';
+        return res.redirect(301, `/marcar/${slug}${suffix}`);
+    }
+
+    const suffix = params.toString() ? `?${params.toString()}` : '';
+    return res.redirect(301, '/marcar.html' + suffix);
 }
 app.get('/marcar', redirectToMarcarHtml);
 app.get('/marcar/', redirectToMarcarHtml);
+
+// Professional consultation booking URLs, e.g. /marcar/clinica-geral
+app.get('/marcar/:tipoSlug', (req, res) => {
+    const filePath = path.join(__dirname, 'marcar.html');
+    if (!fs.existsSync(filePath)) {
+        console.error('❌ marcar.html missing at:', filePath);
+        return res.status(500).send('marcar.html not found on server');
+    }
+    sendHtmlNoCache(res, filePath, 'Error loading marcar page');
+});
 
 // Explicit handler so /marcar.html always works (do not rely on express.static alone)
 app.get('/marcar.html', (req, res) => {
@@ -1856,7 +1886,7 @@ app.listen(PORT, () => {
     console.log(`   Open http://localhost:${PORT}/book-consultation to test booking`);
     console.log(`   Open http://localhost:${PORT}/patient-portal for patient portal`);
     if (fs.existsSync(path.join(__dirname, 'marcar.html'))) {
-        console.log(`   Marcação: http://localhost:${PORT}/marcar.html?tipo=clinica_geral\n`);
+        console.log(`   Marcação: http://localhost:${PORT}/marcar/clinica-geral\n`);
     } else {
         console.log(`   ⚠️  marcar.html NOT FOUND — /marcar.html will fail until the file is deployed\n`);
     }

@@ -92,7 +92,9 @@
     <script>
         (function () {
             var p = new URLSearchParams(window.location.search);
-            if (!p.get('tipo')) {
+            var hasQueryTipo = !!p.get('tipo');
+            var hasPathTipo = /^\/marcar\/[^/?#]+/.test(window.location.pathname);
+            if (!hasQueryTipo && !hasPathTipo) {
                 document.getElementById('marcarError').style.display = 'block';
                 document.getElementById('marcarMain').style.display = 'none';
             }

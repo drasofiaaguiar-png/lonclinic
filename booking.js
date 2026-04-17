@@ -535,7 +535,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('back-2').addEventListener('click', () => {
         if (state.fromMarcar && state.marcarTipo) {
-            window.location.href = '/marcar.html?tipo=' + encodeURIComponent(state.marcarTipo);
+            var tipoSlugMap = {
+                urgente: 'urgente',
+                infeccao_urinaria: 'infeccao-urinaria',
+                clinica_geral: 'clinica-geral',
+                renovacao: 'renovacao',
+                travel: 'travel',
+                saude_mental: 'saude-mental',
+                longevidade: 'longevidade'
+            };
+            var slug = tipoSlugMap[state.marcarTipo] || encodeURIComponent(state.marcarTipo);
+            window.location.href = '/marcar/' + slug;
             return;
         }
         goToStep(1);

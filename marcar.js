@@ -3,6 +3,27 @@
 
     var PT_MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
         'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    var TYPE_TO_SLUG = {
+        urgente: 'urgente',
+        infeccao_urinaria: 'infeccao-urinaria',
+        clinica_geral: 'clinica-geral',
+        renovacao: 'renovacao',
+        travel: 'travel',
+        saude_mental: 'saude-mental',
+        longevidade: 'longevidade'
+    };
+    var SLUG_TO_TYPE = {
+        urgente: 'urgente',
+        'infeccao-urinaria': 'infeccao_urinaria',
+        infeccao_urinaria: 'infeccao_urinaria',
+        'clinica-geral': 'clinica_geral',
+        clinica_geral: 'clinica_geral',
+        renovacao: 'renovacao',
+        travel: 'travel',
+        'saude-mental': 'saude_mental',
+        saude_mental: 'saude_mental',
+        longevidade: 'longevidade'
+    };
 
     var CONSULTATION_TYPES = {
         urgente: {
@@ -91,8 +112,36 @@
         }
     };
 
-    var params = new URLSearchParams(window.location.search);
-    var tipo = params.get('tipo');
+    function resolveTipoFromUrl() {
+        var params = new URLSearchParams(window.location.search);
+        var queryTipo = params.get('tipo');
+        if (queryTipo) {
+            return queryTipo;
+        }
+        var m = window.location.pathname.match(/^\/marcar\/([^/?#]+)/);
+        if (!m || !m[1]) return null;
+        var slug = decodeURIComponent(m[1]).toLowerCase();
+        return SLUG_TO_TYPE[slug] || null;
+    }
+
+    function getPrettyMarcarUrl(tipoKey) {
+        var slug = TYPE_TO_SLUG[tipoKey] || tipoKey;
+        var params = new URLSearchParams(window.location.search);
+        params.delete('tipo');
+        var rest = params.toString();
+        return '/marcar/' + slug + (rest ? '?' + rest : '');
+    }
+
+    function applyPrettyUrlIfNeeded(tipoKey) {
+        if (!window.history || typeof window.history.replaceState !== 'function') return;
+        var pretty = getPrettyMarcarUrl(tipoKey);
+        var current = window.location.pathname + window.location.search;
+        if (current !== pretty) {
+            window.history.replaceState(null, '', pretty);
+        }
+    }
+
+    var tipo = resolveTipoFromUrl();
     var consulta = tipo && CONSULTATION_TYPES[tipo] ? CONSULTATION_TYPES[tipo] : null;
 
     if (!consulta) {
@@ -105,6 +154,7 @@
 
     var errHide = document.getElementById('marcarError');
     if (errHide) errHide.style.display = 'none';
+    applyPrettyUrlIfNeeded(tipo);
 
     var state = {
         scheduleData: null,

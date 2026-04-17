@@ -111,12 +111,14 @@ img {
 .lon-logo {
     display: inline-flex;
     align-items: center;
+    padding-left: 2px;
 }
 
 .lon-logo-name {
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: 0.035em;
+    line-height: 1;
 }
 
 .lon-nav-links {
@@ -651,10 +653,17 @@ img {
 
 .lon-service-glass h3 {
     color: #fff;
-    font-size: 0.95rem;
-    line-height: 1.28;
+    font-size: 1rem;
+    line-height: 1.35;
+    font-weight: 700;
     margin-bottom: 8px;
     min-height: 0;
+}
+
+@media (min-width: 960px) {
+    .lon-service-glass h3 {
+        font-size: 1.12rem;
+    }
 }
 
 .lon-service-price {
@@ -973,6 +982,11 @@ img {
 }
 
 @media (max-width: 740px) {
+    .lon-logo-name {
+        font-size: 0.98rem;
+        letter-spacing: 0.03em;
+    }
+
     .lon-nav {
         padding-top: 8px;
     }
@@ -1072,7 +1086,7 @@ body.lon-landing {
 }
 
 .lon-logo-name {
-    color: #223127;
+    color: #000000;
 }
 
 .lon-nav-links a {
