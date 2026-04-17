@@ -38,6 +38,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    function formatDateLocal(dateObj) {
+        const year = dateObj.getFullYear();
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function parseStoredDate(dateValue) {
+        if (!dateValue) return null;
+        const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateValue));
+        if (match) {
+            return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+        }
+        const parsed = new Date(dateValue);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
     // Load schedule on page load
     await loadSchedule();
 
@@ -316,7 +333,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (dateObj <= today) return false;
 
         // Check if date is blocked
-        const dateStr = dateObj.toISOString().split('T')[0];
+        const dateStr = formatDateLocal(dateObj);
         if (state.scheduleData && state.scheduleData.blockedDates && state.scheduleData.blockedDates.includes(dateStr)) {
             return false;
         }
@@ -403,7 +420,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         timeslotGrid.innerHTML = '<p class="timeslot-empty">Loading available slots...</p>';
 
         // Format date as YYYY-MM-DD
-        const dateStr = state.date.toISOString().split('T')[0];
+        const dateStr = formatDateLocal(state.date);
 
         try {
             // Fetch available slots from admin schedule
@@ -1327,7 +1344,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         state.servicePriceCents = typeof prefill.servicePriceCents === 'number'
             ? prefill.servicePriceCents
             : services[prefill.service].cents;
-        state.date = new Date(prefill.dateISO);
+        state.date = parseStoredDate(prefill.dateISO);
+        if (!state.date) {
+            return;
+        }
         state.dateLabel = prefill.dateLabel;
         state.time = prefill.time;
         state.calMonth = state.date.getMonth();

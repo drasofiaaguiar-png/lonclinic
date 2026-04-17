@@ -81,12 +81,12 @@ const clinicalNotesStore = []; // { bookingRef, consultationDate, notes, diagnos
 ======================================== */
 const scheduleStore = {
     workingHours: {
-        monday: { enabled: false, start: '09:00', end: '17:00' },
-        tuesday: { enabled: false, start: '09:00', end: '17:00' },
-        wednesday: { enabled: false, start: '09:00', end: '17:00' },
-        thursday: { enabled: false, start: '09:00', end: '17:00' },
-        friday: { enabled: false, start: '09:00', end: '17:00' },
-        saturday: { enabled: true, start: '08:00', end: '13:00' },
+        monday: { enabled: true, start: '09:00', end: '17:00' },
+        tuesday: { enabled: true, start: '09:00', end: '17:00' },
+        wednesday: { enabled: true, start: '09:00', end: '17:00' },
+        thursday: { enabled: true, start: '09:00', end: '17:00' },
+        friday: { enabled: true, start: '09:00', end: '17:00' },
+        saturday: { enabled: false, start: '08:00', end: '13:00' },
         sunday: { enabled: false, start: '09:00', end: '17:00' }
     },
     slotDuration: 30, // minutes
@@ -1387,7 +1387,17 @@ app.get('/api/admin/available-slots', (req, res) => {
         return res.status(400).json({ error: 'Date is required' });
     }
 
-    const dateObj = new Date(date);
+    const dateMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(date));
+    if (!dateMatch) {
+        return res.status(400).json({ error: 'Invalid date format. Expected YYYY-MM-DD' });
+    }
+    const year = Number(dateMatch[1]);
+    const month = Number(dateMatch[2]);
+    const day = Number(dateMatch[3]);
+    const dateObj = new Date(year, month - 1, day);
+    if (Number.isNaN(dateObj.getTime())) {
+        return res.status(400).json({ error: 'Invalid date value' });
+    }
     const dayOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][dateObj.getDay()];
     const daySchedule = scheduleStore.workingHours[dayOfWeek];
 

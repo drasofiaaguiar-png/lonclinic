@@ -134,12 +134,19 @@
             .catch(function () { state.scheduleData = null; });
     }
 
+    function formatDateLocal(dateObj) {
+        var year = dateObj.getFullYear();
+        var month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        var day = String(dateObj.getDate()).padStart(2, '0');
+        return year + '-' + month + '-' + day;
+    }
+
     function isDateAvailable(dateObj) {
         var today = new Date();
         today.setHours(0, 0, 0, 0);
         if (dateObj <= today) return false;
 
-        var dateStr = dateObj.toISOString().split('T')[0];
+        var dateStr = formatDateLocal(dateObj);
         if (state.scheduleData && state.scheduleData.blockedDates && state.scheduleData.blockedDates.indexOf(dateStr) >= 0) {
             return false;
         }
@@ -240,7 +247,7 @@
         timeslotHeading.textContent = state.dateLabel;
         timeslotGrid.innerHTML = '<p class="marcar-times-empty">A carregar horários…</p>';
 
-        var dateStr = state.date.toISOString().split('T')[0];
+        var dateStr = formatDateLocal(state.date);
 
         fetch('/api/admin/available-slots?date=' + encodeURIComponent(dateStr))
             .then(function (r) { return r.json(); })
@@ -355,7 +362,7 @@
             serviceLabel: consulta.label,
             servicePrice: consulta.price,
             servicePriceCents: consulta.cents,
-            dateISO: state.date.toISOString(),
+            dateISO: formatDateLocal(state.date),
             dateLabel: state.dateLabel,
             time: state.time,
             travellerCount: 1,
