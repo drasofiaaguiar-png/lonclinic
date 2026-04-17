@@ -82,6 +82,13 @@
             color: #2f352f;
             margin-bottom: 24px;
         }
+        .body p { margin-bottom: 12px; }
+        .body p:last-child { margin-bottom: 0; }
+        .body h2 {
+            font-size: 1.12rem;
+            margin: 18px 0 8px;
+            letter-spacing: -0.01em;
+        }
         .actions {
             display: flex;
             flex-wrap: wrap;
@@ -120,7 +127,7 @@
             <span class="pill" id="pill">INFORMAÇÃO</span>
             <h1 id="title">Conteúdo</h1>
             <p class="subtitle" id="subtitle">Detalhes da página</p>
-            <p class="body" id="body">Estamos a preparar mais informação para esta secção.</p>
+            <div class="body" id="body">Estamos a preparar mais informação para esta secção.</div>
             <div class="actions" id="actions"></div>
             <p class="foot">Se precisar de ajuda imediata, contacte <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> ou +351 928 372 775.</p>
         </article>
@@ -236,7 +243,95 @@
                     section: "LEGAL",
                     title: "Termos e condições",
                     subtitle: "Condições de utilização dos serviços Lon Clinic",
-                    body: "Esta página define regras de acesso, marcação, pagamentos e responsabilidades associadas ao uso da plataforma."
+                    bodyHtml: `
+<p>O utilizador manifesta aceitar e agir em conformidade com os Termos e Condições de utilização aqui descritos, assim como com todas as suas futuras modificações, pelo facto de utilizar o serviço disponibilizado pela plataforma lonclinic.pt neste site.</p>
+<p>Nos termos e condições aqui mencionados, sempre que forem utilizados os termos "nós" ou "nosso", referimo-nos à lonclinic.pt. Sempre que utilizarmos "você" ou "seu", referimo-nos a qualquer pessoa que utiliza a lonclinic.com</p>
+<h2>A. Geral</h2>
+<p>Este website é operado sob o NIF 224026127, inscrito na ERS sob o n.º 45475, contactável através de info@lonclinic.com.</p>
+<p>O website e o seu conteúdo foram concebidos em conformidade com a legislação em vigor.</p>
+<p>No nosso website - lonclinic.com (doravante, plataforma ou apenas Lon Clinic) -, poderá ter acesso a uma médica credenciada, dedicada a prestar cuidados de saúde online em Portugal.</p>
+<p>O acesso e utilização deste website estão sujeitos aos Termos e Condições seguintes.</p>
+<p>Ao navegar neste website e adquirir os nossos serviços através dele, o utilizador concorda em agir de acordo com estes Termos e Condições.</p>
+<p>Na eventualidade de, por alguma razão, não concordar com o seu conteúdo, o utilizador deve terminar o acesso e/ou a utilização deste website imediatamente.</p>
+<p>Saiba que, se violar qualquer um dos termos aqui incluídos, o seu direito de aceder e utilizar este website será terminado imediatamente e, caso se aplique, avançaremos para os meios judiciais.</p>
+<p>Reservamo-nos ao direito de realizar alterações aos Termos e Condições de tempos a tempos sem providenciar anteriormente qualquer notificação. Os Termos e Condições alterados têm efeito a partir da data em que são publicados neste website. Assim, deve conferi-los sempre que visitar este website sendo que, o acesso continuado e utilização do website devem representar a sua aceitação dos Termos e Condições alterados.</p>
+<p>A Lon Clinic reserva-se o direito de utilizar os dados pessoais que introduziu neste website para o contactar diretamente e enviar comunicação pertinente dentro do âmbito dos serviços prestados, em conformidade com a nossa Política de Privacidade.</p>
+<h2>B. Os nossos serviços</h2>
+<p>Oferecemos um serviço online de videoconsultas médicas e de outras áreas da saúde de forma a que possa ter acesso a profissionais de saúde através de videoconferência. Nas consultas é feita a avaliação personalizada da sua história clínica e dos seus dados de saúde, e incluído aconselhamento médico, prescrição medicamentosa e/ou aconselhamento de consulta presencial ou mesmo a recorrer a um serviço de urgência.</p>
+<p>Fornecemos informação no nosso website, nas nossas redes sociais e através da nossa newsletter, e damos apoio personalizado através das nossas consultas com marcação prévia.</p>
+<p>O serviço de Consultas Online tem como objetivo tornar os cuidados de saúde mais acessíveis, mais confortáveis e mais próximos do paciente.</p>
+<p>Todos os profissionais de saúde a colaborar com a Lon Clinic apresentam as qualificações necessárias para trabalhar em Portugal e estão registados nas respetivas Ordens Profissionais e Entidades Reguladoras.</p>
+<p>NOTA: A Lon Clinic é, por definição, uma consulta de aconselhamento e que não deve ser usada em casos de emergência médica, situações que o(a) coloquem em risco de vida e em situações médicas que exijam exame físico e contacto presencial com o profissional de saúde, correndo o risco de atrasar a assistência médica necessária. Este serviço não substitui os normais cuidados de saúde prestados pelas Unidades de Saúde Familiar ou pelos Hospitais e não pretende responder a situações de emergência médica ou psicológica.</p>
+<p>Em situações de emergência, deve idealmente consultar um profissional de saúde presencialmente, recorrer ao serviço de urgência hospitalar mais próximo ou ligar ao número nacional de emergências (112).</p>
+<p>É importante que esteja ciente de que a informação contida neste website sobre os vários temas, como dicas médicas, é fornecida com o único intuito de o ajudar. No entanto, por não ser informação personalizada, é somente da sua responsabilidade verificar a adequabilidade da informação ao seu caso concreto assim como a decisão de aplicar ou não as dicas fornecidas. Por isso, não nos responsabilizamos por qualquer consequência que advenha da aplicação da informação fornecida.</p>
+<h2>C. ACESSO</h2>
+<p>O serviço de consultas online funciona de acordo com um agendamento prévio e pressupõe o pagamento do valor integral da consulta para a sua realização. Se durante o agendamento prévio sentir dificuldades técnicas na marcação das mesmas, entre em contacto connosco através do nosso chat ou do nosso e-mail info@lonclinic.com e auxiliaremos em tudo o que nos for possível.</p>
+<p>O serviço de consultas online da Lon Clinic destina-se exclusivamente a maiores de 18 anos, com exceção das consultas de Medicina do Viajante, para as quais é obrigatória a presença e consentimento do representante legal durante toda a consulta.</p>
+<p>O utilizador é responsável pela veracidade, exatidão e autenticidade dos dados fornecidos.</p>
+<p>O utilizador que marque consulta para outrem é responsável por garantir que os dados fornecidos estão atualizados e são verdadeiros e que a pessoa que usufruirá da consulta online, concorda com o agendamento da mesma e com os Termos e Condições e Política de Privacidade.</p>
+<p>Após recebimento da quantia e emissão da respetiva fatura, será enviada uma notificação ao utilizador a confirmar o agendamento da consulta pretendida.</p>
+<p>Conservamo-nos o direito de suspender, limitar ou terminar o seu acesso ao presente website em qualquer momento assim como alterar a forma de acesso e até o formato das consultas, ou outros produtos ou serviços que tenha adquirido, disponibilizando-os através de outras plataformas ou mesmo em forma de ficheiro, para garantir o acesso pelo tempo acordado à data de compra.</p>
+<p>De igual forma, reservamo-nos o direito de apresentar, apagar, editar, retirar ou modificar quaisquer dados, conteúdos, materiais ou informações exibidas em https://lonclinic.com ou em qualquer produto associado à LON Clinic a qualquer momento. O mesmo se aplica às redes sociais.</p>
+<p>Atenção, ainda, ao seguinte:</p>
+<p>O utilizador é responsável por garantir as condições necessárias para a realização da consulta como acesso à internet, bateria, um computador ou dispositivo móvel com câmara e microfone, atualizações de software e um local com a privacidade necessária. A LON Clinic não se responsabiliza caso essas condições não sejam garantidas pelo utilizador, não havendo, via de regra, lugar a reembolso ou remarcação da consulta caso a consulta não se realize ou não se conclua.</p>
+<p>O profissional de saúde dará início à consulta na data e hora agendada, podendo ter a sala de consulta aberta até 5 minutos antes. O paciente deve aceder à sala e pedir para entrar à hora agendada. É dada uma tolerância de 15 minutos. Em caso de atraso sem aviso prévio e após o período de tolerância é dada por terminada a consulta sem lugar a reembolso, por isso, é muito importante que seja pontual.</p>
+<h2>D. VIDEOCONSULTAS ONLINE</h2>
+<p>As consultas online consistem em consultas feitas por videochamada na plataforma DOXY. Esta plataforma foi avaliada pelo nosso Encarregado de Proteção de Dados (EPD/DPO), do ponto de vista do cumprimento do Regulamento Geral de Proteção de Dados (RGPD) e do direito à privacidade das partes envolvidas, como sendo adequada.</p>
+<p>A única coisa que o utilizador precisa é de ativar um link que será enviado assim que esteja definida a data e hora. Em alternativa, a consulta também pode ser realizada por telefone caso o paciente assim venha a solicitar, salvo para emissão de atestados médicos.</p>
+<p>A identidade do paciente é confirmada pelo profissional de saúde no início de todas as consultas.</p>
+<p>As consultas serão realizadas em língua portuguesa, inglesa, ou espanhola, consoante a preferência do utilizador.</p>
+<p>Durante a consulta serão fornecidas todas as informações relevantes na área da saúde relativamente à sua situação clínica, assim como esclarecimentos relativamente à possível medicação prescrita. As receitas serão imediatamente enviadas para o seu email ou por SMS.</p>
+<p>É muito importante que explique todo o seu historial clínico e não omita nenhum dado, sob pena de atrasar ou alterar o diagnóstico.</p>
+<p>A decisão clínica do profissional de saúde baseia-se nas informações prestadas pelo paciente, pelo que a veracidade e exatidão das mesmas são condição essencial para uma prestação de cuidados adequada. A LON Clinic não se responsabiliza por situações que decorram de informações falsas, imprecisas ou desatualizadas por parte do paciente.</p>
+<p>NOTA: O acompanhamento é individual (salvo exceções como consulta de psicologia em grupo ou quando houver um pedido do paciente autorizado pelo profissional de saúde ou, ainda, quando sugerido pelo profissional de saúde com a devida autorização do paciente.</p>
+<p>Sem prejuízo, o profissional de saúde poderá recusar a continuidade da consulta caso o paciente não cumpra com as regras estabelecidas, se tentar obter medicação para venda ou uso inadequado, insulte ou ameace o profissional de saúde, não tenha as condições mínimas necessárias à realização da consulta, não providencie um ambiente calmo, silencioso e de alto grau de confidencialidade, ou por outros motivos que deixem o profissional de saúde desconfortável. Caso o paciente não tenha uma boa ligação de internet e a consulta online não seja viável, o profissional reserva-se ao direito de terminar a consulta e reagendar ou terminar a consulta por chamada telefónica.</p>
+<p>Depois de cada Serviço terá a oportunidade de deixar comentários ao outro profissional com quem realizou a consulta online. O seu comentário deve ser breve e não pode conter linguagem discriminatória, ofensiva ou difamatória. Os comentários não são verificados pela DrOnline quanto à precisão e poderão ser incorretos ou enganosos.</p>
+<h2>E. Pagamento e respetivos meios</h2>
+<p>O pagamento da consulta deve ser efetuado com uma antecedência igual ou superior a 48 horas à sua realização, o que garante o agendamento da consulta..</p>
+<p>Com efeito, saiba que a LON Clinic não salvaguarda a realização de consultas:</p>
+<p>1) com agendamentos com menos de 72 horas de antecedência;<br>2) a pacientes com menos de 18 anos, à exceção de consultas do viajante;<br>3) caso considere haver um uso abusivo da plataforma e/ou esteja a ter um comportamento abusivo, nomeadamente utilização da LON clinic para outras finalidades que não as aqui descritas;<br>4) em caso de problemas informáticos do lado do paciente.</p>
+<p>O pagamento da consulta deve ser feito por Mbway ou por Referência de Multibanco, podendo o paciente escolher o método e avisar qual o escolhido através de email ou por mensagem no chat do site. O pagamento deverá ser no momento da marcação, por forma a validar o agendamento. No caso do pagamento não ter sido realizado nesse momento, a consulta não fica agendada, ficando a vaga disponível para outros pacientes.</p>
+<h2>F. Cancelamento de consultas online</h2>
+<p>No caso do profissional de saúde se vir impossibilitado de comparecer à sessão na hora agendada, o paciente será avisado pela LON Clinic com a maior antecedência possível. Nesse caso, o paciente pode pedir o reembolso da consulta se o atraso for superior a 1h face à hora agendada ou reagendar nova consulta paciente.</p>
+<p>Se o agendamento da consulta for cancelado pelo próprio paciente, ou quem por si tenha efetuado o pedido de agendamento, o reembolso da totalidade do valor da consulta só será possível se tal cancelamento for efetuado até 48h antes da data da consulta. Se o cancelamento ocorrer para além das 48h, a LON Clinic não reembolsa o valor da consulta.</p>
+<p>Saiba que a não comparência na consulta online, pelo paciente, conforme anteriormente indicado, configura uma situação de cancelamento sem direito a reembolso do valor já pago.</p>
+<p>Nas situações em que se verifica reembolso, os mesmos serão feitos pelo método de pagamento utilizado. Caso o pagamento tenha sido realizado por transferência bancária será da responsabilidade do paciente fornecer o IBAN da conta bancária na qual pretende receber o valor. O paciente será contactado através de email no sentido de recolher esses dados. Caso não responda ao email num prazo de 5 dias úteis será contactado por telefone.</p>
+<h2>G. Política de reembolso</h2>
+<p>As consultas são serviços que começam imediatamente após a sua compra, seja com ações administrativas ou trabalho de campo com o paciente. Como tal, ao adquirir este serviço, o paciente confirma que abdica do seu direito à livre resolução do contrato celebrado, salvo nas situações ante mencionadas.</p>
+<h2>H. Reagendamentos de consultas online</h2>
+<p>Nas consultas individuais, após um agendamento, o paciente poderá reagendar as consultas com uma antecedência de, pelo menos, 48 horas (2 dias). Para tal, deverá entrar em contacto com o nosso apoio via CHAT ou enviar email para info@lonclinic.com identificando no assunto “Reagendamento” e no corpo do email consulta pretendida; médico, dia, hora e o número da marcação</p>
+<p>Saiba, contudo, que o reagendamento está sempre dependente da disponibilidade de agenda do profissional em causa.</p>
+<h2>I. Resposta a dúvidas e horário de funcionamento</h2>
+<p>Todos os contactos devem ser feitos exclusivamente por email (info@lonclinic.com) ou pelo chat disponível no nosso website. Não serão respondidas questões por outras vias (redes sociais, designadamente), assim como, questões colocadas em dias não úteis (feriados, fins de semana ou férias) ou a sê-lo, as respostas poderão ser enviadas com atraso de, pelo menos 10 dias úteis.</p>
+<p>Para efeitos de respostas a emails e mensagens na plataforma, o nosso serviço de atendimento ao cliente funciona nos dias úteis de segunda a sexta-feira, das 9h às 18h (hora de Portugal Continental).</p>
+<h2>J. Receitas</h2>
+<p>As receitas emitidas durante a consulta têm a validade constante do documento. A sua re-emissão ou emissão de novas receitas (situações em que é possível: passou a validade, rutura de stock na farmácia, pedido de mais embalagens e/ou troca da medicação acordada na consulta por opção do cliente) implica marcação de novo pedido de receita.</p>
+<p>As consultas com vista à emissão de receita médica são destinadas a pacientes com patologias crónicas ou de medicação continuada, sendo que, no caso de ser agendada consulta para receita médica e depois se verificar que afinal o paciente necessita mesmo de consulta de clínica geral ou de outra especialidade, a receita só será emitida depois de o paciente fazer o acerto do respetivo valor com o serviço de atendimento ao cliente.</p>
+<h2>K. Uso permitido do nosso website</h2>
+<p>Apenas é permitido aceder e utilizar este website para funções pessoais e não comerciais, o que significa que este website deve somente ser acedido e utilizado diretamente por indivíduos privados. O acesso e uso deste website fora do contexto de funções pessoais e não comerciais estão estritamente proibidos.</p>
+<p>Não pode utilizar este website:</p>
+<p>De qualquer forma ilegal, fraudulenta ou comercial;<br>Para obter informações privilegiadas sobre o mercado, marcas ou influenciadores digitais específicos;<br>Para magoar, abusar, embaraçar, difamar, caluniar, ameaçar ou assediar outra pessoa ou empresa, ou de forma que invada a privacidade de outrem ou que seja obscena, ofensiva, odiosa, indecente, inapropriada, censurável, inaceitável, discriminatória ou prejudicial, assim determinado por nós;<br>Para utilizar os nossos conteúdos ou dos nossos serviços e produtos para fins comerciais, nomeadamente para exercer atividade comercial relacionada com marketing e comunicação ou outra diretamente relacionada;<br>Para modificar ou reverter engenharia de qualquer parte do website;<br>De forma que interfira, perturbe ou imponha um encargo adicional insensato ou desproporcional nas nossas comunicações e sistemas técnicos, assim determinado por nós;<br>Utilizando qualquer código automático computorizado, processo, programa, robot, internet crawler, spider, processador de dados, arrasto ou alternativas de screen scraping a códigos de computador, processo, programa ou sistema.</p>
+<h2>L. Direitos de Propriedade Intelectual</h2>
+<p>Os direitos de informação, conteúdo e material expostos neste website, no Instagram e no Facebook pertencentes à LON Clinic pertencem à própria marca e ao eu proprietário.</p>
+<p>Pode imprimir, copiar, transferir ou armazenar excertos de conteúdo, material ou informação apresentados nestas plataformas para uso pessoal.</p>
+<p>Não pode reproduzir, em todo ou em parte, o conteúdo deste website ou de qualquer material das plataformas acima indicadas, nem utilizar o conteúdo, em todo ou em parte, para fins comerciais, ainda que com os devidos créditos atribuídos.</p>
+<h2>M. Exclusão de responsabilidade</h2>
+<p>Fazemos todos os esforços para assegurar que a informação transmitida via website e redes sociais da LON Clinic estão corretos e retificar quaisquer erros ou omissões logo que seja possível quando notificados dos mesmos. Assim, agradecemos que, caso detete algum lapso de comunicação, entre de imediato em contacto connosco para que possamos, de imediato, atualizar e/ou retificar, se for caso disso, a informação.</p>
+<p>No entanto, não nos responsabilizamos se a informação, o material e conhecimento provenientes de terceiros no website são imprecisos ou existem quaisquer erros ou omissões nos dados, materiais e informações.</p>
+<p>Também, não providenciamos qualquer garantia de que o website ou qualquer informação nele contido ou qualquer website de terceiros é livre de vírus ou qualquer agente que possa ter um impacto prejudicial em qualquer tecnologia.</p>
+<p>Não possuímos qualquer responsabilidade por perdas ou danos decorrentes da incapacidade de aceder ao website e por qualquer uso do mesmo que está além do nosso controlo.</p>
+<p>Não somos responsáveis ou culpados por quaisquer perdas ou danos indiretos sofridos ou incorridos por si ou que não seriam previsíveis quando acedeu ou utilizou este website. Isto inclui quaisquer serviços, oportunidades de negócio, lucros ou receitas ou qualquer perda ou dano que pode sofrer ou incorrer relacionados com a sua utilização deste website.</p>
+<p>Alguns dos nossos canais podem dar-lhe acesso a websites de terceiros que podem conter revisões a respeito de vários produtos e serviços. É totalmente responsável por qualquer uso desses websites e por qualquer tentativa de obter ou abster-se de adquirir quaisquer produtos ou serviços presentes nesses websites. Quaisquer links com destino a websites de terceiros são proporcionados para seu interesse e conveniência. Não nos responsabilizamos por qualquer perda ou prejuízo que possa sofrer ou incorrer como resultado da utilização de websites de terceiros ou por quaisquer atos, omissões, erros ou negligências mencionados neste website.</p>
+<p>A utilização de qualquer website de terceiros é regulada pelos termos e condições e política de privacidade desse mesmo website. É da sua responsabilidade procurar os termos e condições e política de privacidade do respetivo website antes de o utilizar. Não nos responsabilizamos ou culpabilizamos por qualquer perda ou prejuízo que possa sofrer ou incorrer devido aos termos e condições ou à política de privacidade que qualquer website de terceiros ou por quaisquer atos, omissões, erros ou negligências de qualquer terceiro como resultado dos seus termos e condições e/ou política de privacidade.</p>
+<h2>QUEIXAS E RECLAMAÇÕES</h2>
+<p>É nossa intenção proporcionar a todos os nossos utilizadores um nível elevado de serviço e satisfação, porém, se desejar efetuar alguma reclamação sobre qualquer aspeto dos nossos serviços, por favor contacte-nos através do email: info@lonclinic.com</p>
+<p>Com a finalidade de se tratarem quaisquer queixas, os nossos dias de trabalho estão estabelecidos das 9h às 18h de Segunda-feira a Sexta-feira, excepto feriados.</p>
+<h2>RESPONSABILIDADE DO UTILIZADOR</h2>
+<p>O utilizador deve completar o registo como parte da sua utilização deste website. O seu nome de utilizador e palavra passe devem ser confidenciais e não serem revelados ou partilhados com ninguém. Se decidir partilhar tais informações com alguém, é totalmente responsável por todas as atividades efetuadas neste website através do seu nome de utilizador e palavra passe.</p>
+<p>O utilizador é totalmente responsável pela sua conduta neste website e pelo seu Conteúdo do Utilizador. Deve garantir que o seu Conteúdo do Utilizador não viola quaisquer direitos de privacidade, titularidade de direitos (tais como direitos de autor, direitos de informação e marcas registadas) ou direitos alternativos de quaisquer terceiros (incluindo qualquer direito de confidencialidade).</p>
+<p>Além disso, o seu Conteúdo do Utilizador não deve violar qualquer lei. Não deve ser prejudicial, fraudulento, ameaçador, difamatório, embaraçoso, angustiante, transgressor, abusivo, inflamatório, assustador, hostil, calunioso, perseguidor, profano, obsceno, indecente, inapropriado, odioso, discriminatório ou racial, ética e sexualmente ou de qualquer outra forma questionável.</p>
+<p>O utilizador concorda que será responsabilizado por quaisquer danos, perdas, requerimentos, exigências, responsabilizações ou despesas (incluindo pequenas taxas legais) que possamos sofrer como resultado da sua conduta neste website e/ou devido ao seu Conteúdo do Utilizador.</p>
+`
                 },
                 "politica-privacidade": {
                     section: "LEGAL",
@@ -276,7 +371,12 @@
             document.getElementById("pill").textContent = data.section;
             document.getElementById("title").textContent = data.title;
             document.getElementById("subtitle").textContent = data.subtitle;
-            document.getElementById("body").textContent = data.body;
+            const bodyEl = document.getElementById("body");
+            if (data.bodyHtml) {
+                bodyEl.innerHTML = data.bodyHtml;
+            } else {
+                bodyEl.textContent = data.body;
+            }
 
             const actions = document.getElementById("actions");
             (data.actions || [{ label: "Ir para início", href: "/" }]).forEach(function (action) {
