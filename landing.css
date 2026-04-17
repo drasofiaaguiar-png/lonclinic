@@ -989,22 +989,59 @@ body.lon-landing {
 }
 
 .lon-nav.is-scrolled {
-    background: rgba(248, 248, 246, 0.96);
-    box-shadow: 0 8px 24px rgba(26, 26, 26, 0.08);
+    background: transparent;
+    box-shadow: none;
 }
 
 .lon-nav-inner {
-    border-color: var(--lon-border);
-    background: rgba(255, 255, 255, 0.9);
+    border-color: #35503c;
+    background: #3F5D46;
+    box-shadow: 0 10px 24px rgba(26, 26, 26, 0.14);
+}
+
+.lon-logo-name {
+    color: #ffffff;
 }
 
 .lon-nav-links a {
-    color: #3f4c42;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .lon-nav-links a:hover {
-    color: var(--lon-primary);
-    background: #edf2ee;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.lon-nav .lon-btn-ghost {
+    border-color: rgba(255, 255, 255, 0.45);
+    color: #ffffff;
+    background: transparent;
+}
+
+.lon-nav .lon-btn-ghost:hover {
+    border-color: rgba(255, 255, 255, 0.68);
+    background: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+}
+
+.lon-nav .lon-btn-primary {
+    background: #ffffff;
+    border-color: #ffffff;
+    color: #2f4635;
+    box-shadow: none;
+}
+
+.lon-nav .lon-btn-primary:hover {
+    background: #f2f6f3;
+}
+
+.lon-nav-toggle {
+    background: rgba(0, 0, 0, 0.18);
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.lon-nav-toggle span {
+    background: #ffffff;
 }
 
 .lon-btn-primary,
