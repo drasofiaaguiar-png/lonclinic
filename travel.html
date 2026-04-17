@@ -20,10 +20,11 @@
     <meta name="twitter:description" content="Marque consulta do viajante online com orientação médica personalizada para o seu destino.">
     <meta name="twitter:image" content="https://lonclinic.com/image/image2.webp">
     <link rel="preload" as="image" href="/image/image2.webp">
+    <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c5c72c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4'/><path d='M5 19.5C5.5 18 6 15 6 12c0-3.5 2.5-6 6-6 3.5 0 6 2.5 6 6 0 2-.5 4-1 6'/><path d='M9 12c0-1.7 1.3-3 3-3s3 1.3 3 3-1 6-1 6'/><path d='M12 12v6'/></svg>">
     <meta name="theme-color" content="#dce8f8">
     <script type="application/ld+json">
@@ -92,45 +93,37 @@
 </head>
 <body>
 
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-        <div class="nav-container">
-            <a href="/" class="nav-logo">
-                <span class="nav-logo-text">LON clinic</span>
+    <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
+    <header class="lon-nav" id="lonNav">
+        <div class="lon-container lon-nav-inner">
+            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
+                <span class="lon-logo-name">LON Clinic</span>
             </a>
-            <div class="nav-links">
-                <a href="#why-travel" class="nav-link active">Porquê Consulta do Viajante</a>
-                <a href="#how-it-works" class="nav-link">Como Funciona</a>
-                <a href="#travel-style" class="nav-link">Perfis de Viagem</a>
-                <a href="#faq" class="nav-link">FAQ</a>
+            <nav class="lon-nav-links" aria-label="Navegação principal">
+                <a href="/#inicio">Início</a>
+                <a href="/#platform">Plataforma</a>
+                <a href="/#servicos">Serviços</a>
+                <a href="/#contacto">Contato</a>
+            </nav>
+            <div class="lon-nav-actions">
+                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
+                <a href="/#servicos" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Menu" aria-expanded="false" aria-controls="lonMobileMenu">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
-            <div class="nav-actions">
-                <a href="/patient-portal" class="nav-member">Patient login</a>
-                <a href="/book-consultation?service=travel" class="btn btn-primary nav-btn">Marcar consulta</a>
-            </div>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
         </div>
-    </nav>
-
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-content">
-            <a href="#why-travel" class="mobile-link">Porquê Consulta do Viajante</a>
-            <a href="#how-it-works" class="mobile-link">Como Funciona</a>
-            <a href="#travel-style" class="mobile-link">Perfis de Viagem</a>
-            <a href="#faq" class="mobile-link">FAQ</a>
-            <a href="/" class="mobile-link">Longevity Clinic</a>
-            <a href="/patient-portal" class="mobile-link">Patient login</a>
-            <a href="/book-consultation?service=travel" class="btn btn-primary mobile-btn">Marcar consulta</a>
+        <div class="lon-mobile-menu" id="lonMobileMenu">
+            <a href="/#inicio">Início</a>
+            <a href="/#platform">Plataforma</a>
+            <a href="/#servicos">Serviços</a>
+            <a href="/#contacto">Contato</a>
+            <a href="/patient-portal">Login</a>
         </div>
-    </div>
+    </header>
 
     <!-- Hero Section -->
-    <section class="hero hero-video" id="hero">
+    <section class="hero hero-video" id="conteudo-principal">
         <div class="hero-video-bg">
             <video autoplay muted loop playsinline poster="image/image2.webp">
                 <source src="image/video1.mp4" type="video/mp4">
@@ -625,6 +618,7 @@
     </footer>
 
     <script src="i18n.js"></script>
+    <script src="lon-nav.js"></script>
     <script src="script.js"></script>
     <script src="particle-wave.js"></script>
 </body>

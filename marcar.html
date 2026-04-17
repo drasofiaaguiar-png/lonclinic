@@ -15,16 +15,32 @@
 </head>
 <body class="lon-landing">
 
+    <a class="lon-skip" href="#marcarMain">Saltar para o conteúdo</a>
     <header class="lon-nav" id="lonNav">
         <div class="lon-container lon-nav-inner">
-            <a href="/" class="lon-logo">
-                <span class="lon-logo-name">Lon Clinic</span>
-                <span class="lon-logo-tag">Medicina para uma vida mais longa e melhor.</span>
+            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
+                <span class="lon-logo-name">LON Clinic</span>
             </a>
+            <nav class="lon-nav-links" aria-label="Navegação principal">
+                <a href="/#inicio">Início</a>
+                <a href="/#platform">Plataforma</a>
+                <a href="/#servicos">Serviços</a>
+                <a href="/#contacto">Contato</a>
+            </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/" class="lon-btn lon-btn-primary lon-btn-sm">Início</a>
+                <a href="/#servicos" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Menu" aria-expanded="false" aria-controls="lonMobileMenu">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
+        </div>
+        <div class="lon-mobile-menu" id="lonMobileMenu">
+            <a href="/#inicio">Início</a>
+            <a href="/#platform">Plataforma</a>
+            <a href="/#servicos">Serviços</a>
+            <a href="/#contacto">Contato</a>
+            <a href="/patient-portal">Login</a>
         </div>
     </header>
 
@@ -100,6 +116,7 @@
             }
         })();
     </script>
+    <script src="/lon-nav.js" defer></script>
     <script src="/marcar.js" defer></script>
 </body>
 </html>

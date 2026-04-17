@@ -393,8 +393,9 @@ img {
     content: "";
     position: absolute;
     inset: auto 0 0;
-    height: 42%;
-    background: linear-gradient(0deg, rgba(34, 23, 43, 0.42) 0%, rgba(34, 23, 43, 0) 82%);
+    height: 50%;
+    z-index: 1;
+    background: linear-gradient(0deg, rgba(24, 14, 38, 0.58) 0%, rgba(24, 14, 38, 0.12) 55%, rgba(24, 14, 38, 0) 92%);
     pointer-events: none;
 }
 
@@ -402,6 +403,8 @@ img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center 24%;
+    filter: brightness(0.9) contrast(1.08) saturate(1.1);
 }
 
 .dr-float-card {
@@ -500,6 +503,39 @@ img {
     color: #4a3260;
 }
 
+/* “Como começar” — text-only cards: equal height rows */
+#como-funciona-home .lon-service-grid {
+    align-items: stretch;
+}
+
+#como-funciona-home .lon-service-card {
+    height: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid #e8d9f2;
+    border-radius: 20px;
+    padding: 22px 20px 24px;
+    text-align: left;
+    box-shadow: 0 12px 28px rgba(53, 24, 74, 0.08);
+    justify-content: flex-start;
+}
+
+#como-funciona-home .lon-service-card h3 {
+    font-size: 1.06rem;
+    font-weight: 700;
+    color: #2d2237;
+    margin: 0 0 10px;
+    line-height: 1.3;
+}
+
+#como-funciona-home .lon-service-card p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #5c5068;
+}
+
 /* Services */
 .lon-services {
     padding: 20px 0 72px;
@@ -547,6 +583,7 @@ img {
     display: grid;
     gap: 12px;
     grid-template-columns: 1fr;
+    align-items: stretch;
 }
 
 @media (min-width: 680px) {
@@ -588,6 +625,7 @@ img {
     border-radius: 18px;
     padding: 0;
     transition: transform 0.2s ease;
+    min-height: 0;
 }
 
 .lon-service-card.is-visible {
@@ -596,6 +634,20 @@ img {
 
 .lon-service-card:hover {
     transform: translateY(-3px);
+}
+
+/* Image service cards (#servicos): fill row height evenly */
+.lon-services .lon-service-card {
+    height: 100%;
+    align-self: stretch;
+}
+
+.lon-services .lon-service-card .lon-service-image-wrap {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: clamp(260px, 32vw, 360px);
+    height: 100%;
 }
 
 .lon-service-image-wrap {
@@ -607,12 +659,23 @@ img {
     box-shadow: 0 14px 30px rgba(53, 24, 74, 0.12);
 }
 
+.lon-service-image-wrap::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(165deg, rgba(45, 28, 62, 0.18) 0%, rgba(45, 28, 62, 0) 42%, rgba(30, 18, 48, 0.25) 100%);
+    mix-blend-mode: multiply;
+}
+
 .lon-service-image-wrap::after {
     content: "";
     position: absolute;
     inset: auto 0 0;
-    height: 58%;
-    background: linear-gradient(0deg, rgba(30, 14, 43, 0.62) 0%, rgba(30, 14, 43, 0) 82%);
+    height: 62%;
+    z-index: 1;
+    background: linear-gradient(0deg, rgba(22, 12, 36, 0.78) 0%, rgba(22, 12, 36, 0.28) 48%, rgba(22, 12, 36, 0) 100%);
     pointer-events: none;
 }
 
@@ -620,7 +683,10 @@ img {
     width: 100%;
     height: 100%;
     min-height: 320px;
+    flex: 1 1 auto;
     object-fit: cover;
+    object-position: center 28%;
+    filter: brightness(0.88) contrast(1.1) saturate(1.14);
 }
 
 .lon-service-chip {
@@ -744,6 +810,8 @@ img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center 30%;
+    filter: brightness(0.88) contrast(1.08) saturate(1.12);
 }
 
 .lon-consult-cta-badge {

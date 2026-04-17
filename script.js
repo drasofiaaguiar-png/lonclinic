@@ -4,11 +4,12 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ─── Navbar Scroll Effect ───
+    // ─── Navbar Scroll Effect (legacy .navbar only; homepage uses lon-nav.js) ───
     const navbar = document.getElementById('navbar');
     let lastScroll = 0;
 
     const handleNavScroll = () => {
+        if (!navbar) return;
         const currentScroll = window.scrollY;
         if (currentScroll > 60) {
             navbar.classList.add('scrolled');
@@ -18,10 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
         lastScroll = currentScroll;
     };
 
-    window.addEventListener('scroll', handleNavScroll, { passive: true });
-    handleNavScroll();
+    if (navbar) {
+        window.addEventListener('scroll', handleNavScroll, { passive: true });
+        handleNavScroll();
+    }
 
-    // ─── Mobile Menu ───
+    // ─── Mobile Menu (legacy) ───
     const mobileToggle = document.getElementById('mobileMenuToggle');
     const mobileMenu = document.getElementById('mobileMenu');
 
@@ -51,7 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const target = document.querySelector(href);
             if (target) {
                 e.preventDefault();
-                const navHeight = navbar.offsetHeight;
+                const navEl = document.getElementById('lonNav') || navbar;
+                const navHeight = navEl ? navEl.offsetHeight : 80;
                 const targetPos = target.getBoundingClientRect().top + window.scrollY - navHeight - 20;
 
                 window.scrollTo({

@@ -16,6 +16,7 @@
     <meta name="twitter:title" content="Marcar Consulta Online | Lon Clinic">
     <meta name="twitter:description" content="Marcação rápida de consulta médica online com pagamento seguro.">
     <meta name="twitter:image" content="https://lonclinic.com/image/image2.webp">
+    <link rel="stylesheet" href="landing.css?v=20260417e">
     <link rel="stylesheet" href="styles.css?v=20260417e">
     <link rel="stylesheet" href="booking.css?v=20260417e">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,38 +29,37 @@
 </head>
 <body>
 
-    <!-- Navigation -->
-    <nav class="navbar scrolled" id="navbar">
-        <div class="nav-container">
-            <a href="/" class="nav-logo">
-                <span class="nav-logo-text">LON Clinic</span>
+    <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
+    <header class="lon-nav" id="lonNav">
+        <div class="lon-container lon-nav-inner">
+            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
+                <span class="lon-logo-name">LON Clinic</span>
             </a>
-            <div class="nav-links">
-                <a href="/" class="nav-link">LON Clinic</a>
-                <a href="/travel-clinic" class="nav-link">Travel Medicine</a>
+            <nav class="lon-nav-links" aria-label="Navegação principal">
+                <a href="/#inicio">Início</a>
+                <a href="/#platform">Plataforma</a>
+                <a href="/#servicos">Serviços</a>
+                <a href="/#contacto">Contato</a>
+            </nav>
+            <div class="lon-nav-actions">
+                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
+                <a href="/#servicos" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Menu" aria-expanded="false" aria-controls="lonMobileMenu">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
-            <div class="nav-actions">
-                <a href="/patient-portal" class="nav-member">Patient login</a>
-            </div>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
         </div>
-    </nav>
-
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-content">
-            <a href="/" class="mobile-link">LON Clinic</a>
-            <a href="/travel-clinic" class="mobile-link">Travel Medicine</a>
-            <a href="/patient-portal" class="mobile-link">Patient login</a>
+        <div class="lon-mobile-menu" id="lonMobileMenu">
+            <a href="/#inicio">Início</a>
+            <a href="/#platform">Plataforma</a>
+            <a href="/#servicos">Serviços</a>
+            <a href="/#contacto">Contato</a>
+            <a href="/patient-portal">Login</a>
         </div>
-    </div>
+    </header>
 
     <!-- Booking Flow -->
-    <main class="booking-page">
+    <main class="booking-page" id="conteudo-principal">
         <div class="booking-container">
 
             <!-- Progress Bar -->
@@ -643,6 +643,7 @@
     </footer>
 
     <script src="i18n.js?v=20260417e"></script>
+    <script src="lon-nav.js?v=20260417e" defer></script>
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contact us on WhatsApp">
         <span>💬</span>

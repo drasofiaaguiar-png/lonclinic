@@ -18,6 +18,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="landing.css">
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -70,29 +71,7 @@
         .wrap {
             max-width: 920px;
             margin: 0 auto;
-            padding: 36px 20px 56px;
-        }
-        .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            gap: 16px;
-        }
-        .brand {
-            font-weight: 700;
-            font-size: 1.2rem;
-            letter-spacing: -0.02em;
-        }
-        .back {
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            padding: 9px 14px;
-            text-decoration: none;
-            color: var(--text);
-            font-weight: 600;
-            font-size: 0.9rem;
-            background: var(--card);
+            padding: calc(var(--lon-nav-h, 72px) + 28px) 20px 56px;
         }
         .card {
             background: var(--card);
@@ -141,12 +120,36 @@
     </style>
 </head>
 <body>
-    <div class="wrap">
-        <div class="top">
-            <div class="brand">Lon Clinic</div>
-            <a href="/" class="back">Voltar ao início</a>
+    <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
+    <header class="lon-nav" id="lonNav">
+        <div class="lon-container lon-nav-inner">
+            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
+                <span class="lon-logo-name">LON Clinic</span>
+            </a>
+            <nav class="lon-nav-links" aria-label="Navegação principal">
+                <a href="/#inicio">Início</a>
+                <a href="/#platform">Plataforma</a>
+                <a href="/#servicos">Serviços</a>
+                <a href="/#contacto">Contato</a>
+            </nav>
+            <div class="lon-nav-actions">
+                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
+                <a href="/#servicos" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Menu" aria-expanded="false" aria-controls="lonMobileMenu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
         </div>
-        <article class="card">
+        <div class="lon-mobile-menu" id="lonMobileMenu">
+            <a href="/#inicio">Início</a>
+            <a href="/#platform">Plataforma</a>
+            <a href="/#servicos">Serviços</a>
+            <a href="/#contacto">Contato</a>
+            <a href="/patient-portal">Login</a>
+        </div>
+    </header>
+    <div class="wrap">
+        <article class="card" id="conteudo-principal">
             <h1>Perguntas frequentes</h1>
             <p class="lead">Respostas às dúvidas mais comuns sobre as nossas consultas online.</p>
 
@@ -231,5 +234,6 @@
             </section>
         </article>
     </div>
+    <script src="lon-nav.js"></script>
 </body>
 </html>

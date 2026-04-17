@@ -4,51 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Portal — Schedule Management | LON Clinic</title>
+    <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="dashboard.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c5c72c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4'/><path d='M5 19.5C5.5 18 6 15 6 12c0-3.5 2.5-6 6-6 3.5 0 6 2.5 6 6 0 2-.5 4-1 6'/><path d='M9 12c0-1.7 1.3-3 3-3s3 1.3 3 3-1 6-1 6'/><path d='M12 12v6'/></svg>">
     <meta name="description" content="Admin portal — manage schedule and availability.">
     <meta name="theme-color" content="#eaf2fb">
 </head>
 <body>
 
-    <!-- Navigation -->
-    <nav class="navbar scrolled" id="navbar">
-        <div class="nav-container">
-            <a href="/" class="nav-logo">
-                <span class="nav-logo-text">LON clinic</span>
+    <a class="lon-skip" href="#conteudo-principal">Skip to content</a>
+    <header class="lon-nav" id="lonNav">
+        <div class="lon-container lon-nav-inner">
+            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
+                <span class="lon-logo-name">LON Clinic</span>
             </a>
-            <div class="nav-links">
-                <a href="/" class="nav-link">LON Clinic</a>
-                <a href="/travel-clinic" class="nav-link">Travel Medicine</a>
-                <a href="/clinic-portal" class="nav-link">Clinic Portal</a>
-                <a href="/admin" class="nav-link active">Admin</a>
+            <nav class="lon-nav-links" aria-label="Main navigation">
+                <a href="/#inicio">Início</a>
+                <a href="/#platform">Plataforma</a>
+                <a href="/#servicos">Serviços</a>
+                <a href="/#contacto">Contato</a>
+            </nav>
+            <div class="lon-nav-actions">
+                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
+                <a href="/#servicos" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Menu" aria-expanded="false" aria-controls="lonMobileMenu">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
-            <div class="nav-actions">
-                <a href="/clinic-portal" class="nav-cta-btn">Clinic Portal</a>
-            </div>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
         </div>
-    </nav>
-
-    <!-- Mobile Menu -->
-    <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-content">
-            <a href="/" class="mobile-link">LON Clinic</a>
-            <a href="/travel-clinic" class="mobile-link">Travel Medicine</a>
-            <a href="/clinic-portal" class="mobile-link">Clinic Portal</a>
-            <a href="/admin" class="mobile-link">Admin</a>
+        <div class="lon-mobile-menu" id="lonMobileMenu">
+            <a href="/#inicio">Início</a>
+            <a href="/#platform">Plataforma</a>
+            <a href="/#servicos">Serviços</a>
+            <a href="/#contacto">Contato</a>
+            <a href="/patient-portal">Login</a>
         </div>
-    </div>
+    </header>
 
-    <main class="dash-page">
+    <main class="dash-page" id="conteudo-principal">
         <!-- Login Gate (shown when not logged in) -->
         <section class="dash-login" id="adminLogin" style="display:none;">
             <div class="dash-login-card">
@@ -193,19 +190,8 @@
         </div>
     </footer>
 
+    <script src="lon-nav.js"></script>
     <script src="admin.js"></script>
-    <script>
-        // Mobile menu
-        const mobileToggle = document.getElementById('mobileMenuToggle');
-        const mobileMenu = document.getElementById('mobileMenu');
-        if (mobileToggle && mobileMenu) {
-            mobileToggle.addEventListener('click', () => {
-                mobileToggle.classList.toggle('active');
-                mobileMenu.classList.toggle('active');
-                document.body.style.overflow = mobileMenu.classList.contains('active') ? 'hidden' : '';
-            });
-        }
-    </script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

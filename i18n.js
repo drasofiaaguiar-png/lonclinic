@@ -46,6 +46,17 @@
         { s: '.footer-address', en: 'Lisbon, Portugal', pt: 'Lisboa, Portugal' },
     ];
 
+    /* Homepage-style header (lon-nav) on book, travel, etc. */
+    const LON_NAV = [
+        { s: '.lon-nav-links a[href="/#inicio"], .lon-mobile-menu a[href="/#inicio"]', en: 'Home', pt: 'Início' },
+        { s: '.lon-nav-links a[href="/#platform"], .lon-mobile-menu a[href="/#platform"]', en: 'Platform', pt: 'Plataforma' },
+        { s: '.lon-nav-links a[href="/#servicos"], .lon-mobile-menu a[href="/#servicos"]', en: 'Services', pt: 'Serviços' },
+        { s: '.lon-nav-links a[href="/#contacto"], .lon-mobile-menu a[href="/#contacto"]', en: 'Contact', pt: 'Contato' },
+        { s: '.lon-nav-actions > a.lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login' },
+        { s: '.lon-nav-actions > a.lon-btn-primary[href="/#servicos"]', en: 'Book consultation', pt: 'Marcar consulta' },
+        { s: '.lon-mobile-menu a[href="/patient-portal"]', en: 'Login', pt: 'Login' },
+    ];
+
     /* ═══════════════════════════
        INDEX PAGE
     ═══════════════════════════ */
@@ -191,14 +202,6 @@
         /* ── Title ── */
         { s: 'title', en: 'Travel Medicine Clinic — Travel Globally. Stay Medically Prepared.', pt: 'Clínica de Medicina de Viagem — Viaje Globalmente. Mantenha-se Preparado.', special: 'title' },
 
-        /* ── Nav ── */
-        { s: '.nav-link[href="#why-travel"], .mobile-link[href="#why-travel"]', en: 'Why Travel Medicine', pt: 'Porquê Medicina de Viagem' },
-        { s: '.nav-link[href="#how-it-works"], .mobile-link[href="#how-it-works"]', en: 'How It Works', pt: 'Como Funciona' },
-        { s: '.nav-link[href="#travel-style"], .mobile-link[href="#travel-style"]', en: 'Travel Styles', pt: 'Estilos de Viagem' },
-        { s: '.nav-link[href="#faq"], .mobile-link[href="#faq"]', en: 'FAQ', pt: 'FAQ' },
-        { s: '.nav-member, .mobile-menu-content a[href="/"]', en: 'Longevity Clinic', pt: 'Clínica de Longevidade' },
-        { s: '.nav-btn, .mobile-btn', en: 'Book Consultation', pt: 'Marcar Consulta' },
-
         /* ── Hero ── */
         { s: '.hero-badge', en: 'Private Travel Medicine Clinic', pt: 'Clínica Privada de Medicina de Viagem' },
         { s: '.hero-title', en: 'Travel globally.<br>Stay medically prepared.', pt: 'Viaje globalmente.<br>Mantenha-se medicamente preparado.', h: true },
@@ -335,11 +338,6 @@
     const BOOK = [
         /* ── Title ── */
         { s: 'title', en: 'Book Your Consultation — Longevity Clinic', pt: 'Marcar Consulta — Clínica de Longevidade', special: 'title' },
-
-        /* ── Nav ── */
-        { s: '.nav-link[href="/"], .mobile-link[href="/"]', en: 'Longevity Clinic', pt: 'Clínica de Longevidade' },
-        { s: '.nav-link[href="/travel-clinic"], .mobile-link[href="/travel-clinic"]', en: 'Travel Medicine', pt: 'Medicina de Viagem' },
-        { s: '.nav-member, .mobile-link[href="/patient-portal"]', en: 'Patient login', pt: 'Área do Paciente' },
 
         /* ── Progress Steps ── */
         { s: '.progress-step[data-step="1"] .progress-label', en: 'Schedule', pt: 'Agendar' },
@@ -589,7 +587,8 @@
         const pageEntries = map[PAGE] || [];
         // Common footer entries (skip on book page which has its own footer)
         const commonEntries = (PAGE !== 'book') ? COMMON : [];
-        return [...pageEntries, ...commonEntries];
+        const lonNav = document.getElementById('lonNav') ? LON_NAV : [];
+        return [...lonNav, ...pageEntries, ...commonEntries];
     }
 
     /** Apply a single translation entry */
