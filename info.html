@@ -178,6 +178,55 @@
         }
         .complaints-status.is-success { color: #166534; }
         .complaints-status.is-error { color: #b91c1c; }
+        .info-form {
+            margin-top: 18px;
+            display: grid;
+            gap: 12px;
+        }
+        .info-form label {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #2f352f;
+        }
+        .info-form input,
+        .info-form textarea,
+        .info-form select {
+            width: 100%;
+            margin-top: 6px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font: inherit;
+            color: var(--text);
+            background: #fff;
+        }
+        .info-form textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+        .info-form input[type="file"] {
+            padding: 10px;
+        }
+        .info-form input:focus,
+        .info-form textarea:focus,
+        .info-form select:focus {
+            outline: 2px solid rgba(74, 124, 111, 0.2);
+            border-color: var(--primary);
+        }
+        .form-help {
+            margin-top: 2px;
+            color: #4b5563;
+            font-size: 0.83rem;
+            line-height: 1.4;
+        }
+        .info-form-status {
+            min-height: 1.2em;
+            margin-top: 2px;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+        .info-form-status.is-success { color: #166534; }
+        .info-form-status.is-error { color: #b91c1c; }
     </style>
 </head>
 <body>
@@ -204,7 +253,12 @@
                     section: "SERVIÇOS",
                     title: "Consulta de Urgência",
                     subtitle: "Resposta médica rápida por videochamada",
-                    body: "Indicada para situações clínicas agudas que não exigem urgência hospitalar imediata. A equipa médica avalia o quadro e orienta o tratamento ou próximos passos.",
+                    bodyHtml: `
+<p>Quando não pode esperar dias por uma consulta presencial, a LON Clinic está disponível para si. Fazemos avaliação clínica por vídeo com orientação imediata e plano de tratamento.</p>
+<p><strong>Exemplos de situações agudas:</strong><br>Infeção urinária ligeira; infeção respiratória ligeira; sinusite aguda; alergias; febre; dores musculares; gastroenterite aguda ligeira; baixa médica; renovação de receita urgente.</p>
+<p>Sempre que necessário, podem ser solicitados exames complementares ou a consulta pode resultar no encaminhamento para avaliação presencial, caso a situação clínica assim o justifique.</p>
+<p><strong>Esta consulta não substitui o serviço de urgência hospitalar em situações de emergência graves. Em caso de emergência, ligue 112.</strong></p>
+`,
                     actions: [{ label: "Marcar consulta", href: "/marcar/urgente", primary: true }]
                 },
                 "servico-clinica-geral": {
@@ -259,7 +313,25 @@
                     section: "CLÍNICA",
                     title: "Contato",
                     subtitle: "Estamos disponíveis para ajudar",
-                    body: "Pode contactar a Lon Clinic por email, telefone ou WhatsApp para dúvidas sobre consultas, horários e serviços.",
+                    bodyHtml: `
+<p>Fale com a nossa equipa para apoio sobre consultas, horários, pagamentos e informações gerais da clínica.</p>
+<form id="contactInfoForm" class="info-form" novalidate>
+    <label for="contact-info-name">Nome
+        <input id="contact-info-name" name="name" type="text" required maxlength="120" autocomplete="name">
+    </label>
+    <label for="contact-info-email">Email
+        <input id="contact-info-email" name="email" type="email" required maxlength="160" autocomplete="email">
+    </label>
+    <label for="contact-info-phone">Número de telefone
+        <input id="contact-info-phone" name="phone" type="tel" required maxlength="40" autocomplete="tel">
+    </label>
+    <label for="contact-info-message">Mensagem
+        <textarea id="contact-info-message" name="message" required maxlength="4000"></textarea>
+    </label>
+    <button type="submit" class="btn btn-primary">Enviar mensagem</button>
+    <p id="contactInfoStatus" class="info-form-status" role="status" aria-live="polite"></p>
+</form>
+`,
                     actions: [
                         { label: "Enviar email", href: "mailto:info@lonclinic.com", primary: true },
                         { label: "WhatsApp", href: "https://wa.me/351928372775" }
@@ -269,8 +341,41 @@
                     section: "CLÍNICA",
                     title: "Trabalhe connosco",
                     subtitle: "Junte-se à equipa Lon Clinic",
-                    body: "Procuramos profissionais com orientação clínica, empatia e excelência. Envie candidatura espontânea e área de interesse.",
-                    actions: [{ label: "Enviar candidatura", href: "mailto:info@lonclinic.com?subject=Trabalhar%20na%20Lon%20Clinic", primary: true }]
+                    bodyHtml: `
+<p>Estamos a reforçar a nossa equipa com profissionais de saúde e perfis operacionais orientados para qualidade clínica e empatia.</p>
+<form id="careersForm" class="info-form" novalidate>
+    <label for="careers-name">Nome completo
+        <input id="careers-name" name="name" type="text" required maxlength="120" autocomplete="name">
+    </label>
+    <label for="careers-email">Email
+        <input id="careers-email" name="email" type="email" required maxlength="160" autocomplete="email">
+    </label>
+    <label for="careers-phone">Telefone
+        <input id="careers-phone" name="phone" type="tel" required maxlength="40" autocomplete="tel">
+    </label>
+    <label for="careers-role">Área de interesse
+        <select id="careers-role" name="role" required>
+            <option value="">Selecione uma opção</option>
+            <option value="medicina-geral">Medicina Geral</option>
+            <option value="saude-mental">Saúde Mental</option>
+            <option value="medicina-viajante">Medicina do Viajante</option>
+            <option value="longevidade">Medicina da Longevidade</option>
+            <option value="operacoes-e-suporte">Operações e Suporte</option>
+            <option value="outros">Outros</option>
+        </select>
+    </label>
+    <label for="careers-message">Mensagem
+        <textarea id="careers-message" name="message" required maxlength="4000"></textarea>
+    </label>
+    <label for="careers-attachment">Anexar CV (PDF, DOC, DOCX, até 5MB)
+        <input id="careers-attachment" name="attachment" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+    </label>
+    <p class="form-help">Pode enviar a candidatura sem anexo, mas recomendamos incluir o seu CV.</p>
+    <button type="submit" class="btn btn-primary">Enviar candidatura</button>
+    <p id="careersStatus" class="info-form-status" role="status" aria-live="polite"></p>
+</form>
+`,
+                    actions: [{ label: "Ver consultas disponíveis", href: "/marcar/clinica-geral", primary: true }]
                 },
                 "perguntas-frequentes": {
                     section: "APOIO",
@@ -728,6 +833,113 @@
                             if (button) {
                                 button.disabled = false;
                                 button.textContent = "Enviar reclamação";
+                            }
+                        }
+                    });
+                }
+            }
+
+            if (page === "contato") {
+                const form = document.getElementById("contactInfoForm");
+                const statusEl = document.getElementById("contactInfoStatus");
+
+                if (form) {
+                    form.addEventListener("submit", async function (event) {
+                        event.preventDefault();
+                        const button = form.querySelector('button[type="submit"]');
+                        const formData = new FormData(form);
+                        const payload = {
+                            name: String(formData.get("name") || "").trim(),
+                            email: String(formData.get("email") || "").trim(),
+                            phone: String(formData.get("phone") || "").trim(),
+                            message: String(formData.get("message") || "").trim()
+                        };
+
+                        if (statusEl) {
+                            statusEl.textContent = "";
+                            statusEl.classList.remove("is-success", "is-error");
+                        }
+
+                        if (button) {
+                            button.disabled = true;
+                            button.textContent = "A enviar...";
+                        }
+
+                        try {
+                            const response = await fetch("/api/contact", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(payload)
+                            });
+                            const result = await response.json();
+                            if (!response.ok) {
+                                throw new Error(result.error || "Não foi possível enviar a mensagem.");
+                            }
+
+                            form.reset();
+                            if (statusEl) {
+                                statusEl.textContent = "Mensagem enviada com sucesso. Responderemos com brevidade.";
+                                statusEl.classList.add("is-success");
+                            }
+                        } catch (err) {
+                            if (statusEl) {
+                                statusEl.textContent = (err && err.message) || "Erro ao enviar mensagem.";
+                                statusEl.classList.add("is-error");
+                            }
+                        } finally {
+                            if (button) {
+                                button.disabled = false;
+                                button.textContent = "Enviar mensagem";
+                            }
+                        }
+                    });
+                }
+            }
+
+            if (page === "trabalhe-connosco") {
+                const form = document.getElementById("careersForm");
+                const statusEl = document.getElementById("careersStatus");
+
+                if (form) {
+                    form.addEventListener("submit", async function (event) {
+                        event.preventDefault();
+                        const button = form.querySelector('button[type="submit"]');
+                        const formData = new FormData(form);
+
+                        if (statusEl) {
+                            statusEl.textContent = "";
+                            statusEl.classList.remove("is-success", "is-error");
+                        }
+
+                        if (button) {
+                            button.disabled = true;
+                            button.textContent = "A enviar...";
+                        }
+
+                        try {
+                            const response = await fetch("/api/careers", {
+                                method: "POST",
+                                body: formData
+                            });
+                            const result = await response.json();
+                            if (!response.ok) {
+                                throw new Error(result.error || "Não foi possível enviar a candidatura.");
+                            }
+
+                            form.reset();
+                            if (statusEl) {
+                                statusEl.textContent = "Candidatura enviada com sucesso. Obrigado pelo interesse!";
+                                statusEl.classList.add("is-success");
+                            }
+                        } catch (err) {
+                            if (statusEl) {
+                                statusEl.textContent = (err && err.message) || "Erro ao enviar candidatura.";
+                                statusEl.classList.add("is-error");
+                            }
+                        } finally {
+                            if (button) {
+                                button.disabled = false;
+                                button.textContent = "Enviar candidatura";
                             }
                         }
                     });

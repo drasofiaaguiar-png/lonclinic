@@ -180,7 +180,7 @@ img {
     top: 12px;
     left: 50%;
     transform: translateX(-50%);
-    width: calc(100% - 48px);
+    width: calc(100% - 44px);
     max-width: 1240px;
     z-index: 1000;
     padding: 12px 28px;

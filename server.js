@@ -7,6 +7,7 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const nodemailer = require('nodemailer');
+const multer = require('multer');
 const session = require('express-session');
 
 const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY || '';
@@ -191,6 +192,27 @@ if (isEmailConfigured) {
         .then(() => console.log('   ✉️  Email transport verified and ready'))
         .catch(err => console.error('   ⚠️  Email transport error:', err.message));
 }
+
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB max
+    },
+    fileFilter: (req, file, cb) => {
+        const allowedMimeTypes = new Set([
+            'application/pdf',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ]);
+        const allowedExtensions = ['.pdf', '.doc', '.docx'];
+        const fileExt = path.extname(file.originalname || '').toLowerCase();
+        const isAllowed = allowedMimeTypes.has(file.mimetype) || allowedExtensions.includes(fileExt);
+        if (!isAllowed) {
+            return cb(new Error('Unsupported file type. Allowed: PDF, DOC, DOCX.'));
+        }
+        return cb(null, true);
+    }
+});
 
 /* ========================================
    EMAIL TEMPLATE
@@ -804,6 +826,74 @@ ${data.message}
     return { html, text };
 }
 
+function buildCareersApplicationEmail(data) {
+    const name = escapeHtml(data.name);
+    const email = escapeHtml(data.email);
+    const phone = escapeHtml(data.phone);
+    const role = escapeHtml(data.role);
+    const message = escapeHtml(data.message).replace(/\n/g, '<br>');
+    const attachmentName = data.attachmentName ? escapeHtml(data.attachmentName) : 'No attachment';
+    const submittedAt = new Date().toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon' });
+
+    const html = `
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova candidatura</title>
+</head>
+<body style="margin: 0; padding: 24px; background: #f6f8fb; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    <div style="max-width: 620px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px;">
+        <h1 style="margin: 0 0 18px; font-size: 22px; color: #111827;">Nova candidatura recebida</h1>
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #6b7280; width: 180px;">Nome</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #111827; font-weight: 600;">${name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #6b7280;">Email</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4;"><a href="mailto:${email}" style="color: #2563eb; text-decoration: none;">${email}</a></td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #6b7280;">Telefone</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4;"><a href="tel:${phone}" style="color: #2563eb; text-decoration: none;">${phone}</a></td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #6b7280;">Área de interesse</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #111827;">${role}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #6b7280;">Anexo</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #111827;">${attachmentName}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; color: #6b7280; vertical-align: top;">Mensagem</td>
+                <td style="padding: 10px 0; color: #111827; line-height: 1.6;">${message}</td>
+            </tr>
+        </table>
+        <p style="margin: 18px 0 0; color: #9ca3af; font-size: 12px;">Submetido em ${submittedAt} (hora de Lisboa)</p>
+    </div>
+</body>
+</html>`;
+
+    const text = `
+NOVA CANDIDATURA
+
+Nome: ${data.name}
+Email: ${data.email}
+Telefone: ${data.phone}
+Área de interesse: ${data.role}
+Anexo: ${data.attachmentName || 'Sem anexo'}
+Submetido em: ${submittedAt} (hora de Lisboa)
+
+Mensagem:
+${data.message}
+`.trim();
+
+    return { html, text };
+}
+
 function buildComplaintEmail(data) {
     const name = escapeHtml(data.name);
     const citizenCard = escapeHtml(data.citizenCard);
@@ -887,6 +977,40 @@ async function sendContactInquiryEmail(data) {
         return true;
     } catch (err) {
         console.error('   ❌ Failed to send contact inquiry:', err.message);
+        return false;
+    }
+}
+
+async function sendCareersApplicationEmail(data) {
+    if (!isEmailConfigured) {
+        console.log('   ⚠️  Email not configured — cannot send careers application');
+        return false;
+    }
+
+    try {
+        const { html, text } = buildCareersApplicationEmail(data);
+        const mailOptions = {
+            from: EMAIL_FROM,
+            to: CONTACT_EMAIL,
+            replyTo: data.email,
+            subject: `Candidatura: ${data.name} (${data.role})`,
+            text,
+            html
+        };
+
+        if (data.attachmentBuffer && data.attachmentName) {
+            mailOptions.attachments = [{
+                filename: data.attachmentName,
+                content: data.attachmentBuffer,
+                contentType: data.attachmentType || 'application/octet-stream'
+            }];
+        }
+
+        const info = await transporter.sendMail(mailOptions);
+        console.log('   📩 Careers application sent to:', CONTACT_EMAIL, '| Message ID:', info.messageId);
+        return true;
+    } catch (err) {
+        console.error('   ❌ Failed to send careers application:', err.message);
         return false;
     }
 }
@@ -1294,6 +1418,67 @@ app.get('/api/debug-stripe', (req, res) => {
         isStripeConfigured: isConfigured,
         publishableKeyExists: !!process.env.STRIPE_PUBLISHABLE_KEY,
         publishableKeyPreview: process.env.STRIPE_PUBLISHABLE_KEY ? `${process.env.STRIPE_PUBLISHABLE_KEY.substring(0, 10)}...` : 'MISSING'
+    });
+});
+
+const CAREER_ROLE_LABELS = {
+    'medicina-geral': 'Medicina Geral',
+    'saude-mental': 'Saúde Mental',
+    'medicina-viajante': 'Medicina do Viajante',
+    longevidade: 'Medicina da Longevidade',
+    'operacoes-e-suporte': 'Operações e Suporte',
+    outros: 'Outros'
+};
+
+// ─── API: Careers form submission ───
+app.post('/api/careers', (req, res) => {
+    upload.single('attachment')(req, res, async (uploadErr) => {
+        if (uploadErr instanceof multer.MulterError) {
+            if (uploadErr.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({ error: 'O anexo excede o tamanho máximo de 5MB.' });
+            }
+            return res.status(400).json({ error: 'Erro ao processar o anexo enviado.' });
+        }
+        if (uploadErr) {
+            return res.status(400).json({ error: uploadErr.message || 'Erro no ficheiro anexado.' });
+        }
+
+        const name = String(req.body?.name || '').trim();
+        const email = String(req.body?.email || '').trim();
+        const phone = String(req.body?.phone || '').trim();
+        const roleRaw = String(req.body?.role || '').trim();
+        const message = String(req.body?.message || '').trim();
+
+        if (!name || !email || !phone || !roleRaw || !message) {
+            return res.status(400).json({ error: 'Todos os campos obrigatórios devem ser preenchidos.' });
+        }
+
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return res.status(400).json({ error: 'Indique um email válido.' });
+        }
+
+        const role = CAREER_ROLE_LABELS[roleRaw] || roleRaw;
+        const attachment = req.file || null;
+        const payload = {
+            name: name.slice(0, 120),
+            email: email.slice(0, 160),
+            phone: phone.slice(0, 40),
+            role: String(role).slice(0, 100),
+            message: message.slice(0, 4000),
+            attachmentName: attachment ? String(attachment.originalname || 'anexo').slice(0, 180) : '',
+            attachmentType: attachment ? attachment.mimetype : '',
+            attachmentBuffer: attachment ? attachment.buffer : null
+        };
+
+        const sent = await sendCareersApplicationEmail(payload);
+        if (!sent) {
+            return res.status(503).json({ error: 'Não foi possível enviar a candidatura de momento. Tente novamente.' });
+        }
+
+        return res.json({
+            success: true,
+            message: 'Candidatura enviada com sucesso.'
+        });
     });
 });
 

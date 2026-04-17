@@ -59,14 +59,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadSchedule();
 
     const services = {
-        longevity: { label: 'Longevity Assessment', price: '€195', cents: 19500 },
-        travel:    { label: 'Travel Medicine Consultation', price: '€39', cents: 3900 },
-        followup:  { label: 'Follow-Up Consultation', price: '€95', cents: 9500 },
+        clinica_geral: { label: 'Consulta Clínica Geral / Check Up', price: '€39', cents: 3900 },
         urgente: { label: 'Consulta Médica Urgente (Adultos)', price: '€35', cents: 3500 },
-        infeccao_urinaria: { label: 'Consulta de Infeção Urinária', price: '€35', cents: 3500 },
-        clinica_geral: { label: 'Consulta Clínica Geral / Check Up (Adultos)', price: '€35', cents: 3500 },
-        renovacao: { label: 'Renovação de Tratamento Médico', price: '€19', cents: 1900 },
+        travel: { label: 'Consulta do Viajante', price: '€39', cents: 3900 },
         saude_mental: { label: 'Consulta de Saúde Mental Adultos', price: '€49', cents: 4900 },
+        renovacao: { label: 'Renovação de Tratamento Médico', price: '€19', cents: 1900 },
         longevidade: { label: 'Consulta de Longevidade e Saúde Preventiva', price: '€79', cents: 7900 }
     };
 
@@ -1168,17 +1165,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             appointmentDate.setHours(hours, minutes, 0, 0);
 
             // Calculate end time based on service type
-            let durationMinutes = 45; // Default
+            let durationMinutes = 30; // Default
             if (data.service === 'travel') {
                 // Travel duration depends on traveller count
                 const count = data.travellerCount || 1;
                 if (count === 1) durationMinutes = 20;
                 else if (count === 2) durationMinutes = 30;
                 else durationMinutes = 40;
-            } else if (data.service === 'followup') {
-                durationMinutes = 30;
-            } else if (data.service === 'longevity') {
-                durationMinutes = 60;
+            } else if (data.service === 'urgente' || data.service === 'renovacao') {
+                durationMinutes = 15;
+            } else if (data.service === 'saude_mental') {
+                durationMinutes = 45;
             }
 
             const endDate = new Date(appointmentDate);
@@ -1200,16 +1197,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             const endDateStr = formatGoogleDate(endDate);
 
             // Build event details
-            const serviceLabels = {
-                longevity: i18nServiceLabel('longevity'),
-                travel: i18nServiceLabel('travel'),
-                followup: i18nServiceLabel('followup'),
-            };
-            
-            const eventTitle = encodeURIComponent(serviceLabels[data.service] || data.service || 'Medical Consultation');
+            const serviceLabel = i18nServiceLabel(data.service) || (services[data.service] && services[data.service].label);
+            const eventTitle = encodeURIComponent(serviceLabel || data.service || 'Medical Consultation');
             
             let description = `Booking Reference: ${data.bookingRef || 'N/A'}\n`;
-            description += `Service: ${serviceLabels[data.service] || data.service}\n`;
+            description += `Service: ${serviceLabel || data.service}\n`;
             if (data.patientName) {
                 description += `Patient: ${data.patientName}\n`;
             }
@@ -1257,16 +1249,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 throw new Error(data.error || 'Failed to load booking details');
             }
 
-            // Map service key to label (i18n-aware)
-            const serviceLabels = {
-                longevity: i18nServiceLabel('longevity'),
-                travel: i18nServiceLabel('travel'),
-                followup: i18nServiceLabel('followup'),
-            };
-
             document.getElementById('confirmEmail').textContent = data.email || '—';
             document.getElementById('confirmService').textContent =
-                (services[data.service] && services[data.service].label) || serviceLabels[data.service] || data.service;
+                (services[data.service] && services[data.service].label) || i18nServiceLabel(data.service) || data.service;
             document.getElementById('confirmDateTime').textContent = `${data.date} at ${data.time}`;
             document.getElementById('confirmAmount').textContent = `€${(data.amount / 100).toFixed(0)}`;
             document.getElementById('confirmRef').textContent = data.bookingRef || '—';

@@ -33,15 +33,18 @@ body {
 .navbar {
     position: fixed;
     top: 10px;
-    left: 0;
-    right: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 44px);
+    max-width: 1240px;
     z-index: 1000;
-    padding: 0 22px;
+    padding: 0;
     background: transparent;
 }
 
 .nav-container {
-    max-width: 1240px;
+    width: 100%;
+    max-width: none;
     margin: 0 auto;
     min-height: 72px;
     border: 1px solid rgba(255, 255, 255, 0.88);
