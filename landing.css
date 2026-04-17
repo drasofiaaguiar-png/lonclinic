@@ -1041,10 +1041,10 @@ img {
 :root {
     --lon-bg: #F8F8F6;
     --lon-primary: #1A1A1A;
-    --lon-accent: #3F5D46;
-    --lon-accent-dark: #35503C;
-    --lon-muted: #4D5A50;
-    --lon-border: #D4DDD6;
+    --lon-accent: #2f4a36;
+    --lon-accent-dark: #23382a;
+    --lon-muted: #425045;
+    --lon-border: #c9d4cc;
 }
 
 body.lon-landing {
@@ -1097,15 +1097,15 @@ body.lon-landing {
 }
 
 .lon-nav .lon-btn-primary {
-    background: #35503c;
-    border-color: #35503c;
+    background: #2b4532;
+    border-color: #2b4532;
     color: #ffffff;
-    box-shadow: 0 8px 18px rgba(53, 80, 60, 0.22);
+    box-shadow: 0 8px 18px rgba(35, 56, 42, 0.26);
 }
 
 .lon-nav .lon-btn-primary:hover {
-    background: #2c4432;
-    box-shadow: 0 10px 22px rgba(44, 68, 50, 0.28);
+    background: #213526;
+    box-shadow: 0 10px 22px rgba(33, 53, 38, 0.34);
 }
 
 .lon-nav-toggle {
@@ -1156,7 +1156,7 @@ body.lon-landing {
 .dr-hero {
     position: relative;
     isolation: isolate;
-    background: linear-gradient(145deg, #517560 0%, #3f5d46 48%, #35503c 100%);
+    background: linear-gradient(145deg, #355641 0%, #2b4533 48%, #203328 100%);
     padding-top: calc(var(--lon-nav-h) + 86px);
     padding-bottom: 84px;
 }
@@ -1206,7 +1206,7 @@ body.lon-landing {
 
 .dr-trust-list li::before {
     background: #ffffff;
-    color: #35503c;
+    color: #2b4532;
 }
 
 .dr-hero-media,
@@ -1265,9 +1265,9 @@ body.lon-landing {
 }
 
 .lon-consult-cta-card {
-    border-color: #5b7a61;
-    background: linear-gradient(135deg, #3f5d46 0%, #35503c 100%);
-    box-shadow: 0 14px 28px rgba(63, 93, 70, 0.28);
+    border-color: #46624c;
+    background: linear-gradient(135deg, #2e4a36 0%, #22382a 100%);
+    box-shadow: 0 14px 28px rgba(34, 56, 42, 0.34);
 }
 
 .lon-consult-cta-copy .lon-btn {
@@ -1291,7 +1291,7 @@ body.lon-landing {
 .dr-platform a,
 .lon-footer-col a:hover,
 .lon-footer-legal-links a:hover {
-    color: #35503c;
+    color: #2f4a36;
 }
 
 .lon-contact-form input,
