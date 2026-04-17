@@ -2,6 +2,261 @@
    Patient Dashboard — Styles
 ======================================== */
 
+/* Dark olive theme (patient portal only) */
+body.dash-portal {
+    --bg-primary: #101a14;
+    --bg-secondary: #0d160f;
+    --bg-card: rgba(255, 255, 255, 0.07);
+    --bg-card-hover: rgba(255, 255, 255, 0.11);
+    --bg-elevated: #1a2a20;
+    --bg-glass: rgba(255, 255, 255, 0.06);
+    --bg-glass-strong: rgba(22, 38, 28, 0.82);
+    --text-primary: #e8f1ea;
+    --text-secondary: #b8c9be;
+    --text-muted: #7d9488;
+    --accent: #8fbc9a;
+    --accent-secondary: #9fd4ff;
+    --accent-glow: rgba(143, 188, 154, 0.2);
+    --border: rgba(255, 255, 255, 0.14);
+    --border-light: rgba(255, 255, 255, 0.22);
+    --border-subtle: rgba(255, 255, 255, 0.1);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.14);
+    --glass-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    background: linear-gradient(165deg, #152a1d 0%, #101a14 42%, #0a120e 100%);
+    color: var(--text-primary);
+}
+
+body.dash-portal::before,
+body.dash-portal::after {
+    opacity: 0.5;
+    filter: blur(100px);
+}
+
+body.dash-portal::before {
+    background:
+        radial-gradient(ellipse at 25% 15%, rgba(60, 120, 82, 0.45) 0%, transparent 58%),
+        radial-gradient(ellipse at 70% 40%, rgba(35, 70, 52, 0.35) 0%, transparent 55%);
+}
+
+body.dash-portal::after {
+    background:
+        radial-gradient(ellipse at 85% 85%, rgba(45, 95, 68, 0.38) 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 75%, rgba(30, 55, 42, 0.4) 0%, transparent 50%);
+}
+
+body.dash-portal .btn-primary {
+    background: linear-gradient(145deg, #3d6b4f 0%, #2d523c 100%);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+body.dash-portal .btn-primary:hover {
+    background: linear-gradient(145deg, #4a7d5f 0%, #355f46 100%);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+body.dash-portal .btn-outline {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--text-primary);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dash-portal .btn-outline:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.28);
+}
+
+body.dash-portal .lon-nav-inner {
+    background: rgba(18, 32, 24, 0.88);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+body.dash-portal .lon-nav.is-scrolled .lon-nav-inner {
+    background: rgba(16, 28, 21, 0.94);
+    border-color: rgba(255, 255, 255, 0.14);
+}
+
+body.dash-portal .lon-logo-name {
+    color: #e8f1ea;
+}
+
+body.dash-portal .lon-nav-links a {
+    color: #c5d4cc;
+}
+
+body.dash-portal .lon-nav-links a:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+body.dash-portal .lon-nav .lon-btn-ghost {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #e8f1ea;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+body.dash-portal .lon-nav .lon-btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.28);
+}
+
+body.dash-portal .lon-nav .lon-btn-primary {
+    background: linear-gradient(145deg, #3d6b4f 0%, #2d523c 100%);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.28);
+}
+
+body.dash-portal .lon-nav-toggle {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.dash-portal .lon-nav-toggle span {
+    background: #dce8df;
+}
+
+body.dash-portal .lon-mobile-menu {
+    background: rgba(18, 32, 24, 0.96);
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+body.dash-portal .lon-mobile-menu a {
+    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: #dce8df;
+}
+
+body.dash-portal .lon-skip:focus {
+    background: #3d6b4f;
+    color: #fff;
+}
+
+body.dash-portal .dash-login-icon {
+    background: rgba(143, 188, 154, 0.15);
+    color: #a8d4b4;
+}
+
+body.dash-portal .dash-form-group input:focus {
+    border-color: #6a9e7a;
+    box-shadow: 0 0 0 3px rgba(106, 158, 122, 0.2);
+}
+
+body.dash-portal .dash-action-card:hover {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* Quick action icons — olive palette */
+body.dash-portal .dash-action-icon--longevity {
+    background: rgba(130, 185, 240, 0.14);
+    color: #bfe0ff;
+    border: 1px solid rgba(159, 212, 255, 0.22);
+}
+
+body.dash-portal .dash-action-icon--travel {
+    background: rgba(195, 215, 140, 0.12);
+    color: #dce8b0;
+    border: 1px solid rgba(210, 225, 160, 0.2);
+}
+
+body.dash-portal .dash-action-icon--followup {
+    background: rgba(120, 175, 145, 0.16);
+    color: #b8e8cf;
+    border: 1px solid rgba(143, 188, 154, 0.28);
+}
+
+/* WhatsApp float — readable on dark olive, still recognisably WhatsApp */
+body.dash-portal .whatsapp-float {
+    background: linear-gradient(155deg, #2fe078 0%, #1ea55a 100%);
+    box-shadow:
+        0 6px 22px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.14),
+        0 4px 18px rgba(32, 189, 95, 0.35);
+}
+
+body.dash-portal .whatsapp-float:hover {
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.2),
+        0 6px 26px rgba(32, 189, 95, 0.45);
+}
+
+body.dash-portal .whatsapp-float::after {
+    background: #25d366;
+    opacity: 0.35;
+}
+
+body.dash-portal .dash-table thead th {
+    background: rgba(255, 255, 255, 0.04);
+    border-bottom-color: var(--border-subtle);
+}
+
+body.dash-portal .dash-table tbody td {
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+}
+
+body.dash-portal .dash-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+body.dash-portal .dash-status.upcoming {
+    background: rgba(96, 165, 250, 0.15);
+    color: #93c5fd;
+}
+
+body.dash-portal .dash-status.completed {
+    background: rgba(74, 222, 128, 0.12);
+    color: #86efac;
+}
+
+body.dash-portal .dash-status.cancelled {
+    background: rgba(248, 113, 113, 0.12);
+    color: #fca5a5;
+}
+
+body.dash-portal .dash-doxy-step {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+body.dash-portal .dash-doxy-step-num {
+    background: rgba(143, 188, 154, 0.18);
+    color: #b8e0c4;
+}
+
+body.dash-portal .footer.booking-footer .footer-bottom p,
+body.dash-portal .footer.booking-footer a {
+    color: var(--text-muted) !important;
+}
+
+body.dash-portal .footer.booking-footer a:hover {
+    color: var(--text-secondary) !important;
+}
+
+body.dash-portal .footer.booking-footer .footer-bottom {
+    border-top-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dash-portal .clinic-form-group input:focus,
+body.dash-portal .clinic-form-group textarea:focus {
+    border-color: #6a9e7a;
+    box-shadow: 0 0 0 3px rgba(106, 158, 122, 0.2);
+}
+
+body.dash-portal .clinic-modal-content {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+}
+
+body.dash-portal .clinic-modal-header {
+    border-bottom-color: var(--border-subtle);
+}
+
+body.dash-portal .clinic-notes-section {
+    border-top-color: var(--border-subtle);
+}
+
 .dash-page {
     min-height: 100vh;
     padding: 100px 24px 60px;
