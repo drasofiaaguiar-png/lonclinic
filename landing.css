@@ -614,6 +614,15 @@ img {
     .lon-services .lon-service-grid[data-visible-count="3"] {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
+
+    /* Three wide columns on desktop only — taller image area; phones/tablets keep default clamp */
+    .lon-services .lon-service-grid[data-visible-count="3"] .lon-service-card .lon-service-image-wrap {
+        min-height: clamp(300px, 42vw, 460px);
+    }
+
+    .lon-services .lon-service-grid[data-visible-count="3"] .lon-service-image-wrap img {
+        min-height: clamp(300px, 42vw, 460px);
+    }
 }
 
 .lon-service-card {
@@ -764,12 +773,34 @@ img {
     color: #fff;
     padding: 20px;
     box-shadow: 0 16px 32px rgba(198, 83, 19, 0.3);
+    min-height: clamp(360px, 58vh, 520px);
+}
+
+/* Stacked: image fills upper area, headline + CTA sit at bottom of card */
+@media (max-width: 939px) {
+    .lon-consult-cta-card {
+        grid-template-rows: minmax(180px, 1fr) auto;
+    }
+
+    .lon-consult-cta-media {
+        order: -1;
+        min-height: clamp(200px, 40vh, 360px);
+    }
 }
 
 @media (min-width: 940px) {
     .lon-consult-cta-card {
         grid-template-columns: 1.1fr 1fr;
         align-items: stretch;
+        min-height: clamp(480px, 52vh, 720px);
+    }
+
+    .lon-consult-cta-copy {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-start;
+        min-height: 0;
     }
 }
 
@@ -804,6 +835,12 @@ img {
     border-radius: 18px;
     border: 1px solid rgba(255, 255, 255, 0.45);
     min-height: 240px;
+}
+
+@media (min-width: 940px) {
+    .lon-consult-cta-media {
+        min-height: 480px;
+    }
 }
 
 .lon-consult-cta-media img {
