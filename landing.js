@@ -72,12 +72,60 @@
         else nav.classList.remove('is-scrolled');
     });
 
-    var form = document.getElementById('lonNewsForm');
+    var form = document.getElementById('lonContactForm');
+    var statusEl = document.getElementById('lonContactStatus');
     if (form) {
-        form.addEventListener('submit', function (e) {
+        form.addEventListener('submit', async function (e) {
             e.preventDefault();
-            form.reset();
-            alert('Obrigado! Em breve receberá o nosso newsletter.');
+            var button = form.querySelector('button[type="submit"]');
+            var formData = new FormData(form);
+            var payload = {
+                name: String(formData.get('name') || '').trim(),
+                email: String(formData.get('email') || '').trim(),
+                phone: String(formData.get('phone') || '').trim(),
+                message: String(formData.get('message') || '').trim()
+            };
+
+            if (statusEl) {
+                statusEl.textContent = '';
+                statusEl.classList.remove('is-success', 'is-error');
+            }
+
+            if (button) {
+                button.disabled = true;
+                button.textContent = 'Sending...';
+            }
+
+            try {
+                var response = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                var result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'Failed to send message.');
+                }
+
+                form.reset();
+                if (statusEl) {
+                    statusEl.textContent = 'Thank you! Your message has been sent.';
+                    statusEl.classList.add('is-success');
+                }
+            } catch (err) {
+                if (statusEl) {
+                    statusEl.textContent = err.message || 'Unable to send your message right now.';
+                    statusEl.classList.add('is-error');
+                }
+            } finally {
+                if (button) {
+                    button.disabled = false;
+                    button.textContent = 'Send message';
+                }
+            }
         });
     }
 })();

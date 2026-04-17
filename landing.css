@@ -577,6 +577,30 @@ img {
     max-width: 36em;
 }
 
+.lon-contact-copy h2 {
+    margin-bottom: 8px;
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    letter-spacing: -0.02em;
+}
+
+.lon-contact-links {
+    margin-top: 16px;
+    display: grid;
+    gap: 8px;
+}
+
+.lon-contact-links a {
+    width: fit-content;
+    font-size: 0.95rem;
+    color: var(--lon-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.lon-contact-links a:hover {
+    color: var(--lon-primary-dark);
+}
+
 .lon-news-form {
     display: flex;
     flex-wrap: wrap;
@@ -597,6 +621,52 @@ img {
 .lon-news-form input:focus {
     outline: 2px solid var(--lon-primary);
     outline-offset: 1px;
+}
+
+.lon-contact-form {
+    display: grid;
+    gap: 10px;
+}
+
+.lon-contact-form input,
+.lon-contact-form textarea {
+    width: 100%;
+}
+
+.lon-contact-form textarea {
+    font-family: var(--lon-font);
+    font-size: 0.9375rem;
+    padding: 12px 16px;
+    border: 1px solid var(--lon-border);
+    border-radius: 10px;
+    background: var(--lon-bg);
+    resize: vertical;
+    min-height: 110px;
+}
+
+.lon-contact-form textarea:focus {
+    outline: 2px solid var(--lon-primary);
+    outline-offset: 1px;
+}
+
+.lon-contact-form .lon-btn {
+    justify-self: start;
+}
+
+.lon-contact-status {
+    margin: 2px 0 0;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #5c5c5c;
+    min-height: 1.25em;
+}
+
+.lon-contact-status.is-success {
+    color: #1d7a43;
+}
+
+.lon-contact-status.is-error {
+    color: #b42318;
 }
 
 /* --- Footer --- */
