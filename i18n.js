@@ -342,43 +342,21 @@
         { s: '.nav-member, .mobile-link[href="/patient-portal"]', en: 'Patient login', pt: 'Área do Paciente' },
 
         /* ── Progress Steps ── */
-        { s: '.progress-step[data-step="1"] .progress-label', en: 'Service', pt: 'Serviço' },
-        { s: '.progress-step[data-step="2"] .progress-label', en: 'Schedule', pt: 'Agendar' },
-        { s: '.progress-step[data-step="3"] .progress-label', en: 'Details', pt: 'Dados' },
-        { s: '.progress-step[data-step="4"] .progress-label', en: 'Payment', pt: 'Pagamento' },
-        { s: '.progress-step[data-step="5"] .progress-label', en: 'Confirmed', pt: 'Confirmado' },
+        { s: '.progress-step[data-step="1"] .progress-label', en: 'Schedule', pt: 'Agendar' },
+        { s: '.progress-step[data-step="2"] .progress-label', en: 'Details', pt: 'Dados' },
+        { s: '.progress-step[data-step="3"] .progress-label', en: 'Payment', pt: 'Pagamento' },
+        { s: '.progress-step[data-step="4"] .progress-label', en: 'Confirmed', pt: 'Confirmado' },
 
-        /* ── Step 1: Service Selection ── */
-        { s: '#step-1 .step-title', en: 'Choose your consultation', pt: 'Escolha a sua consulta' },
-        { s: '#step-1 .step-desc', en: 'Select the service that best fits your needs.', pt: 'Selecione o serviço que melhor se adequa às suas necessidades.' },
-        { s: '[data-service="clinica_geral"] h3', en: 'General Medicine / Check-Up', pt: 'Consulta Clínica Geral / Check Up' },
-        { s: '[data-service="urgente"] h3', en: 'Urgent Medical Consultation (Adults)', pt: 'Consulta Médica Urgente (Adultos)' },
-        { s: '[data-service="travel"] h3', en: 'Travel Medicine Consultation', pt: 'Consulta do Viajante' },
-        { s: '[data-service="travel"] .service-info > p', en: 'Travel consultation with destination-specific guidance, recommended vaccines, malaria prevention, and a personalized health plan for your trip.', pt: 'Consulta médica de viagem com orientação por destino, vacinas recomendadas, prevenção da malária e plano de saúde personalizado para a viagem.' },
-        { s: '[data-service="travel"] .service-mode-label', en: 'Video call', pt: 'Videochamada' },
-        { s: '[data-service="saude_mental"] h3', en: 'Adult Mental Health Consultation', pt: 'Consulta de Saúde Mental Adultos' },
-        { s: '[data-service="renovacao"] h3', en: 'Medical Treatment Renewal', pt: 'Renovação de Tratamento Médico' },
-        { s: '[data-service="longevidade"] h3', en: 'Longevity & Preventive Health Consultation', pt: 'Consulta de Longevidade e Saúde Preventiva' },
-        { s: '#next-1', en: 'Continue to scheduling', pt: 'Continuar para agendamento' },
-
-        /* ── Service details labels ── */
-        { s: '[data-service="clinica_geral"] .service-duration', en: ' 30 min', pt: ' 30 min', h: true },
-        { s: '[data-service="urgente"] .service-duration', en: ' 15 min', pt: ' 15 min', h: true },
-        { s: '[data-service="travel"] .service-duration', en: ' 20 min', pt: ' 20 min', h: true },
-        { s: '[data-service="saude_mental"] .service-duration', en: ' 45 min', pt: ' 45 min', h: true },
-        { s: '[data-service="renovacao"] .service-duration', en: ' 15 min', pt: ' 15 min', h: true },
-        { s: '[data-service="longevidade"] .service-duration', en: ' 30 min', pt: ' 30 min', h: true },
-
-        /* ── Step 2: Schedule ── */
-        { s: '#step-2 .step-title', en: 'Choose date & time', pt: 'Escolha data e hora' },
-        { s: '#step-2 .step-desc', en: 'Select a convenient time for your video consultation.', pt: 'Selecione um horário conveniente para a sua consulta por vídeo.' },
+        /* ── Step 1: Schedule ── */
+        { s: '#step-1 .step-title', en: 'Choose date & time', pt: 'Escolha data e hora' },
+        { s: '#step-1 .step-desc', en: 'Select a convenient time for your video consultation.', pt: 'Selecione um horário conveniente para a sua consulta por vídeo.' },
         { s: '.timezone-info span', en: 'Times shown in your local timezone', pt: 'Horários apresentados no seu fuso horário local' },
-        { s: '#back-2', en: 'Back', pt: 'Voltar' },
-        { s: '#next-2', en: 'Continue to details', pt: 'Continuar para dados' },
+        { s: '#back-1', en: 'Back', pt: 'Voltar' },
+        { s: '#next-1', en: 'Continue to details', pt: 'Continuar para dados' },
 
-        /* ── Step 3: Details ── */
-        { s: '#step-3 .step-title', en: 'Your details', pt: 'Os seus dados' },
-        { s: '#step-3 .step-desc', en: 'Please provide your information so we can prepare for your consultation.', pt: 'Por favor forneça as suas informações para que possamos preparar a sua consulta.' },
+        /* ── Step 2: Details ── */
+        { s: '#step-2 .step-title', en: 'Your details', pt: 'Os seus dados' },
+        { s: '#step-2 .step-desc', en: 'Please provide your information so we can prepare for your consultation.', pt: 'Por favor forneça as suas informações para que possamos preparar a sua consulta.' },
         { s: 'label[for="firstName"]', en: 'First name *', pt: 'Primeiro nome *' },
         { s: '#firstName', a: 'placeholder', en: 'John', pt: 'João' },
         { s: '#firstName ~ .form-error', en: 'Please enter your first name', pt: 'Por favor introduza o seu primeiro nome' },
@@ -412,12 +390,12 @@
         { s: '#terms ~ .checkbox-text', en: 'I agree to the <a href="#" style="color: var(--accent);">Terms of Service</a> and understand this is a private medical consultation.', pt: 'Concordo com os <a href="#" style="color: var(--accent);">Termos de Serviço</a> e compreendo que esta é uma consulta médica privada.', h: true },
         { s: '.form-checkbox-group:nth-child(12) .form-error', en: 'You must consent to proceed', pt: 'Deve consentir para prosseguir' },
         { s: '.form-checkbox-group:nth-child(13) .form-error', en: 'You must agree to the terms', pt: 'Deve concordar com os termos' },
-        { s: '#back-3', en: 'Back', pt: 'Voltar' },
-        { s: '#next-3', en: 'Continue to payment', pt: 'Continuar para pagamento' },
+        { s: '#back-2', en: 'Back', pt: 'Voltar' },
+        { s: '#next-2', en: 'Continue to payment', pt: 'Continuar para pagamento' },
 
-        /* ── Step 4: Review & Pay ── */
-        { s: '#step-4 .step-title', en: 'Review & pay', pt: 'Revisão e pagamento' },
-        { s: '#step-4 .step-desc', en: 'Review your booking details, then proceed to secure payment via Stripe.', pt: 'Reveja os detalhes da sua marcação e prossiga para pagamento seguro via Stripe.' },
+        /* ── Step 3: Review & Pay ── */
+        { s: '#step-3 .step-title', en: 'Review & pay', pt: 'Revisão e pagamento' },
+        { s: '#step-3 .step-desc', en: 'Review your booking details, then proceed to secure payment via Stripe.', pt: 'Reveja os detalhes da sua marcação e prossiga para pagamento seguro via Stripe.' },
         { s: '.review-card:nth-child(1) .review-card-title', en: 'Appointment details', pt: 'Detalhes da consulta' },
         { s: '.review-row:nth-child(2) .review-label', en: 'Service', pt: 'Serviço' },
         { s: '.review-row:nth-child(3) .review-label', en: 'Date', pt: 'Data' },
@@ -429,7 +407,8 @@
         { s: '.stripe-info-sub', en: 'Stripe is PCI Level 1 certified — the highest level of security in the payments industry.', pt: 'O Stripe tem certificação PCI Nível 1 — o nível mais elevado de segurança na indústria de pagamentos.' },
         { s: '.summary-title', en: 'Booking summary', pt: 'Resumo da marcação' },
         { s: '.summary-note', en: 'Free rescheduling up to 24 hours before your appointment.', pt: 'Reagendamento gratuito até 24 horas antes da consulta.' },
-        { s: '#back-4', en: 'Back', pt: 'Voltar' },
+        { s: '#back-3', en: 'Back', pt: 'Voltar' },
+        { s: '#next-3', en: 'Proceed to secure payment', pt: 'Prosseguir para pagamento seguro' },
         { s: '.summary-details .summary-row:nth-child(1) .summary-label', en: 'Date', pt: 'Data' },
         { s: '.summary-details .summary-row:nth-child(2) .summary-label', en: 'Time', pt: 'Hora' },
         { s: '.summary-details .summary-row:nth-child(3) .summary-label', en: 'Format', pt: 'Formato' },
@@ -437,9 +416,9 @@
         { s: '.summary-details .summary-row:nth-child(4) .summary-label', en: 'Patient', pt: 'Paciente' },
         { s: '.summary-total .summary-label', en: 'Total', pt: 'Total' },
 
-        /* ── Step 5: Confirmation ── */
-        { s: '#step-5 .step-title', en: 'Booking confirmed!', pt: 'Marcação confirmada!' },
-        { s: '#step-5 .step-desc', en: 'Your consultation has been successfully scheduled. A confirmation email has been sent to <strong id="confirmEmail">your email</strong>.', pt: 'A sua consulta foi agendada com sucesso. Um email de confirmação foi enviado para <strong id="confirmEmail">o seu email</strong>.', h: true },
+        /* ── Step 4: Confirmation ── */
+        { s: '#step-4 .step-title', en: 'Booking confirmed!', pt: 'Marcação confirmada!' },
+        { s: '#step-4 .step-desc', en: 'Your consultation has been successfully scheduled. A confirmation email has been sent to <strong id="confirmEmail">your email</strong>.', pt: 'A sua consulta foi agendada com sucesso. Um email de confirmação foi enviado para <strong id="confirmEmail">o seu email</strong>.', h: true },
         { s: '.confirmation-card .confirmation-row:nth-child(1) .confirmation-label', en: 'Service', pt: 'Serviço' },
         { s: '.confirmation-card .confirmation-row:nth-child(2) .confirmation-label', en: 'Date & Time', pt: 'Data e Hora' },
         { s: '.confirmation-card .confirmation-row:nth-child(3) .confirmation-label', en: 'Format', pt: 'Formato' },

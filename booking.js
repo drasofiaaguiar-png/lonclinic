@@ -118,19 +118,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         showCancelledMessage();
     }
 
-    // Auto-select service from URL param
+    const serviceAlias = { longevity: 'longevidade', followup: 'clinica_geral' };
+
+    function applyServiceKey(key) {
+        const resolved = services[key] ? key : serviceAlias[key];
+        if (!resolved || !services[resolved]) return;
+        state.service = resolved;
+        state.serviceLabel = services[resolved].label;
+        state.servicePrice = services[resolved].price;
+        state.servicePriceCents = services[resolved].cents;
+        updateTravellerCountVisibility();
+    }
+
     const preselect = urlParams.get('service');
-    if (preselect && services[preselect]) {
-        const radio = document.querySelector(`input[name="service"][value="${preselect}"]`);
-        if (radio) {
-            radio.checked = true;
-            state.service = preselect;
-            state.serviceLabel = services[preselect].label;
-            state.servicePrice = services[preselect].price;
-            state.servicePriceCents = services[preselect].cents;
-            document.getElementById('next-1').disabled = false;
-            updateTravellerCountVisibility();
-        }
+    if (preselect) {
+        applyServiceKey(preselect);
+    }
+    if (!state.service) {
+        applyServiceKey('clinica_geral');
     }
 
     // ─── Mobile Menu ───
@@ -175,74 +180,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         state.currentStep = step;
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        if (step === 2) renderCalendar();
-        if (step === 3) initDetailsForm();
-        if (step === 4) updateReviewAndSummary();
+        if (step === 1) renderCalendar();
+        if (step === 2) initDetailsForm();
+        if (step === 3) updateReviewAndSummary();
     }
 
     // ═══════════════════════════════════════
-    //  STEP 1 — Service Selection
+    //  Travel pricing & insurance (shown on schedule step when service is travel)
     // ═══════════════════════════════════════
     function updateTravellerCountVisibility() {
         const section = document.getElementById('travellerCountSection');
-        const serviceOptions = document.querySelectorAll('.service-option');
-        const changeServiceBtn = document.getElementById('changeServiceBtn');
+        const insuranceSection = document.getElementById('insuranceSection');
 
         if (state.service === 'travel') {
-            // Hide other service cards, keep only travel
-            serviceOptions.forEach(opt => {
-                if (opt.dataset.service !== 'travel') {
-                    opt.style.display = 'none';
-                }
-            });
-            // Show traveller count section
-            section.style.display = 'block';
-            if (changeServiceBtn) changeServiceBtn.style.display = 'inline-flex';
+            if (section) section.style.display = 'block';
+            if (insuranceSection) insuranceSection.style.display = 'block';
             updateTravellerPriceLabels();
             updateTravellerPriceNote();
         } else {
-            // Show all service cards
-            serviceOptions.forEach(opt => {
-                opt.style.display = '';
-            });
-            section.style.display = 'none';
-            if (changeServiceBtn) changeServiceBtn.style.display = 'none';
+            if (section) section.style.display = 'none';
+            if (insuranceSection) insuranceSection.style.display = 'none';
             state.travellerCount = 1;
             state.hasInsurance = false;
             const toggle = document.getElementById('insuranceToggle');
             if (toggle) toggle.checked = false;
         }
-    }
-
-    function resetServiceSelection() {
-        // Deselect all radios
-        document.querySelectorAll('input[name="service"]').forEach(r => r.checked = false);
-        // Show all options again
-        document.querySelectorAll('.service-option').forEach(opt => {
-            opt.style.display = '';
-        });
-        // Hide traveller section
-        document.getElementById('travellerCountSection').style.display = 'none';
-        const changeServiceBtn = document.getElementById('changeServiceBtn');
-        if (changeServiceBtn) changeServiceBtn.style.display = 'none';
-        // Reset state
-        state.service = null;
-        state.travellerCount = 1;
-        state.hasInsurance = false;
-        document.getElementById('next-1').disabled = true;
-        // Reset traveller count buttons
-        document.querySelectorAll('.tc-card').forEach(b => b.classList.remove('selected'));
-        const firstBtn = document.querySelector('.tc-card[data-count="1"]');
-        if (firstBtn) firstBtn.classList.add('selected');
-        // Reset insurance toggle
-        const toggle = document.getElementById('insuranceToggle');
-        if (toggle) toggle.checked = false;
-    }
-
-    // "Change service" button
-    const changeServiceBtn = document.getElementById('changeServiceBtn');
-    if (changeServiceBtn) {
-        changeServiceBtn.addEventListener('click', resetServiceSelection);
     }
 
     /* Update price labels on each traveller count button */
@@ -266,17 +228,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             `${personLabel} · ${tp.duration} · Video call${insuranceTag}`;
     }
 
-    document.querySelectorAll('input[name="service"]').forEach(radio => {
-        radio.addEventListener('change', () => {
-            state.service = radio.value;
-            state.serviceLabel = services[radio.value].label;
-            state.servicePrice = services[radio.value].price;
-            state.servicePriceCents = services[radio.value].cents;
-            document.getElementById('next-1').disabled = false;
-            updateTravellerCountVisibility();
-        });
-    });
-
     // Traveller count buttons
     document.querySelectorAll('.tc-card').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -297,12 +248,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    document.getElementById('next-1').addEventListener('click', () => {
-        if (state.service) goToStep(2);
-    });
-
     // ═══════════════════════════════════════
-    //  STEP 2 — Calendar
+    //  STEP 1 — Calendar
     // ═══════════════════════════════════════
     const calGrid = document.getElementById('calGrid');
     const calMonth = document.getElementById('calMonth');
@@ -408,7 +355,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         btn.classList.add('cal-selected');
 
         state.time = null;
-        document.getElementById('next-2').disabled = true;
+        document.getElementById('next-1').disabled = true;
         renderTimeslots();
     }
 
@@ -463,7 +410,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     state.time = slot;
                     timeslotGrid.querySelectorAll('.timeslot-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
-                    document.getElementById('next-2').disabled = false;
+                    document.getElementById('next-1').disabled = false;
                 });
                 timeslotGrid.appendChild(btn);
             });
@@ -507,7 +454,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     state.time = slot;
                     timeslotGrid.querySelectorAll('.timeslot-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
-                    document.getElementById('next-2').disabled = false;
+                    document.getElementById('next-1').disabled = false;
                 });
                 timeslotGrid.appendChild(btn);
             });
@@ -526,11 +473,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderCalendar();
     });
 
-    document.getElementById('next-2').addEventListener('click', () => {
-        if (state.date && state.time) goToStep(3);
+    document.getElementById('next-1').addEventListener('click', () => {
+        if (state.date && state.time) goToStep(2);
     });
 
-    document.getElementById('back-2').addEventListener('click', () => {
+    document.getElementById('back-1').addEventListener('click', () => {
         if (state.fromMarcar && state.marcarTipo) {
             var tipoSlugMap = {
                 urgente: 'urgente',
@@ -545,11 +492,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.location.href = '/marcar/' + slug;
             return;
         }
-        goToStep(1);
+        window.location.href = '/';
     });
 
+    document.getElementById('next-2').addEventListener('click', () => {
+        if (validateForm()) goToStep(3);
+    });
+
+    document.getElementById('back-2').addEventListener('click', () => goToStep(1));
+
     // ═══════════════════════════════════════
-    //  STEP 3 — Details Form (Multi-Passenger)
+    //  STEP 2 — Details Form (Multi-Passenger)
     // ═══════════════════════════════════════
 
     // Passenger panel HTML template
@@ -826,14 +779,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     bindLiveValidation();
 
-    document.getElementById('next-3').addEventListener('click', () => {
-        if (validateForm()) goToStep(4);
-    });
-
-    document.getElementById('back-3').addEventListener('click', () => goToStep(2));
-
     // ═══════════════════════════════════════
-    //  STEP 4 — Review & Pay (Stripe)
+    //  STEP 3 — Review & Pay (Stripe)
     // ═══════════════════════════════════════
     
     // Discount codes
@@ -1018,10 +965,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('summaryTotal').textContent = totalFormatted;
     }
 
-    document.getElementById('back-4').addEventListener('click', () => goToStep(3));
+    document.getElementById('back-3').addEventListener('click', () => goToStep(2));
 
     // ─── Pay Button → Create Stripe Checkout Session ───
-    const payBtn = document.getElementById('next-4');
+    const payBtn = document.getElementById('next-3');
     const stripeError = document.getElementById('stripeError');
 
     payBtn.addEventListener('click', async () => {
@@ -1230,15 +1177,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function handleStripeReturn(sessionId) {
         // Show loading state
         document.querySelectorAll('.booking-step').forEach(s => s.classList.remove('active'));
-        document.getElementById('step-5').classList.add('active');
+        document.getElementById('step-4').classList.add('active');
 
         // Update progress bar to completed
         document.querySelectorAll('.progress-step').forEach(ps => {
             ps.classList.remove('active');
             ps.classList.add('completed');
         });
-        document.querySelector('.progress-step[data-step="5"]').classList.remove('completed');
-        document.querySelector('.progress-step[data-step="5"]').classList.add('active');
+        document.querySelector('.progress-step[data-step="4"]').classList.remove('completed');
+        document.querySelector('.progress-step[data-step="4"]').classList.add('active');
         document.querySelectorAll('.progress-line').forEach(l => l.classList.add('filled'));
 
         try {
@@ -1293,7 +1240,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ─── i18n language change callback ───
     window.BOOKING_LANG_CHANGED = function (lang) {
         // Re-render calendar with new month names
-        if (state.currentStep === 2) renderCalendar();
+        if (state.currentStep === 1) renderCalendar();
 
         // Update weekday headers
         const wdays = window.CLINIC_I18N ? window.CLINIC_I18N.getWeekdayNames() : null;
@@ -1308,8 +1255,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             state.serviceLabel = i18nServiceLabel(state.service);
         }
 
-        // Re-render review if on step 4
-        if (state.currentStep === 4) updateReviewAndSummary();
+        // Re-render review if on payment step
+        if (state.currentStep === 3) updateReviewAndSummary();
     };
 
     function applyMarcarPrefill() {
@@ -1352,16 +1299,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         state.fromMarcar = true;
         state.marcarTipo = prefill.tipo || null;
 
-        const radio = document.querySelector(`input[name="service"][value="${prefill.service}"]`);
-        if (radio) {
-            radio.checked = true;
-            document.getElementById('next-1').disabled = false;
-        }
         updateTravellerCountVisibility();
-        goToStep(3);
+        goToStep(2);
     }
 
     applyMarcarPrefill();
+
+    if (state.currentStep === 1) {
+        renderCalendar();
+    }
 
     // ─── Preload ───
     setTimeout(() => {

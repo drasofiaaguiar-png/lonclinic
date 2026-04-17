@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perguntas Frequentes sobre Telemedicina | Lon Clinic</title>
-    <meta name="description" content="Perguntas frequentes sobre telemedicina na Lon Clinic. Saiba como marcar, como funciona a videochamada e que consultas online estão disponíveis.">
+    <title>Perguntas frequentes | Lon Clinic</title>
+    <meta name="description" content="Respostas sobre consultas online, pagamento, videoconsulta, receitas e documentos na Lon Clinic.">
     <meta name="robots" content="index,follow,max-image-preview:large">
     <link rel="canonical" href="https://lonclinic.com/faq">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="Lon Clinic">
     <meta property="og:url" content="https://lonclinic.com/faq">
-    <meta property="og:title" content="Perguntas Frequentes sobre Telemedicina | Lon Clinic">
-    <meta property="og:description" content="Tire as suas dúvidas sobre marcação, videochamada e consultas online na Lon Clinic.">
+    <meta property="og:title" content="Perguntas frequentes | Lon Clinic">
+    <meta property="og:description" content="Consultas, pagamento, videoconsulta, receitas e mais — Lon Clinic.">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Perguntas Frequentes sobre Telemedicina | Lon Clinic">
-    <meta name="twitter:description" content="Perguntas frequentes sobre telemedicina na Lon Clinic.">
+    <meta name="twitter:title" content="Perguntas frequentes | Lon Clinic">
+    <meta name="twitter:description" content="Consultas, pagamento, videoconsulta e documentos na Lon Clinic.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -22,23 +25,28 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Como marcar uma consulta online na Lon Clinic?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Pode marcar online em poucos minutos escolhendo o tipo de consulta, a data e a hora em /book-consultation." }
+      "name": "As consultas são com médicos certificados?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sim. Todas as consultas são realizadas por médicos devidamente credenciados e registados na Ordem dos Médicos." }
     },
     {
       "@type": "Question",
-      "name": "As consultas são por videochamada?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Sim. As consultas são realizadas por videochamada segura através de telemóvel, tablet ou computador." }
+      "name": "Posso usar a Lon Clinic em caso de emergência?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Não. Em situações de emergência deve ligar imediatamente para o 112, ou dirigir-se ao serviço de urgência hospitalar mais próximo." }
     },
     {
       "@type": "Question",
-      "name": "Que consultas online estão disponíveis?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Estão disponíveis consulta médica urgente, clínica geral, consulta do viajante, saúde mental e longevidade." }
+      "name": "Como posso pagar?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Aceitamos MB Way e Referência Multibanco. O pagamento deve ser efetuado no momento da marcação para confirmar o agendamento." }
     },
     {
       "@type": "Question",
-      "name": "Posso ser atendido fora de Lisboa?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Sim. O serviço de telemedicina está disponível para pacientes em todo o território nacional." }
+      "name": "Preciso de instalar alguma aplicação para a videoconsulta?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Não. A consulta funciona diretamente no browser, sem necessidade de downloads ou instalações." }
+    },
+    {
+      "@type": "Question",
+      "name": "Posso obter receita médica na consulta?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sim. Sempre que clinicamente indicado, a receita é emitida durante a consulta e enviada imediatamente por email ou SMS." }
     }
   ]
 }
@@ -54,7 +62,7 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
-            font-family: "DM Sans", Arial, sans-serif;
+            font-family: "DM Sans", system-ui, sans-serif;
             background: var(--bg);
             color: var(--text);
             line-height: 1.55;
@@ -95,16 +103,40 @@
         h1 {
             font-size: clamp(1.6rem, 4vw, 2.3rem);
             letter-spacing: -0.02em;
-            margin-bottom: 18px;
+            margin-bottom: 10px;
         }
-        ul {
-            padding-left: 18px;
-            display: grid;
-            gap: 12px;
-        }
-        li {
-            color: #2f352f;
+        .lead {
+            color: var(--muted);
+            margin-bottom: 28px;
             font-size: 1rem;
+        }
+        .faq-section {
+            margin-bottom: 28px;
+        }
+        .faq-section:last-of-type { margin-bottom: 0; }
+        .faq-section h2 {
+            font-size: 1.12rem;
+            color: var(--primary);
+            margin-bottom: 14px;
+            letter-spacing: -0.01em;
+        }
+        .faq-item {
+            margin-bottom: 16px;
+        }
+        .faq-item:last-child { margin-bottom: 0; }
+        .faq-q {
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 6px;
+            font-size: 0.98rem;
+        }
+        .faq-a {
+            color: #2f352f;
+            font-size: 0.95rem;
+        }
+        .faq-a a {
+            color: var(--primary);
+            font-weight: 600;
         }
     </style>
 </head>
@@ -115,13 +147,88 @@
             <a href="/" class="back">Voltar ao início</a>
         </div>
         <article class="card">
-            <h1>Perguntas frequentes sobre telemedicina</h1>
-            <ul>
-                <li>Como marcar uma consulta online na Lon Clinic?</li>
-                <li>As consultas são por videochamada?</li>
-                <li>Que consultas online estão disponíveis?</li>
-                <li>Posso ser atendido fora de Lisboa?</li>
-            </ul>
+            <h1>Perguntas frequentes</h1>
+            <p class="lead">Respostas às dúvidas mais comuns sobre as nossas consultas online.</p>
+
+            <section class="faq-section" aria-labelledby="faq-consultas">
+                <h2 id="faq-consultas">Sobre as consultas</h2>
+
+                <div class="faq-item">
+                    <p class="faq-q">As consultas são com médicos certificados?</p>
+                    <p class="faq-a">Sim. Todas as consultas são realizadas por médicos devidamente credenciados e registados na Ordem dos Médicos.</p>
+                </div>
+                <div class="faq-item">
+                    <p class="faq-q">Posso usar a Lon Clinic em caso de emergência?</p>
+                    <p class="faq-a">Não. Em situações de emergência deve ligar imediatamente para o <strong>112</strong>, ou dirigir-se ao serviço de urgência hospitalar mais próximo. A Lon Clinic destina-se a situações que não requerem assistência presencial.</p>
+                </div>
+                <div class="faq-item">
+                    <p class="faq-q">A consulta é adequada para crianças?</p>
+                    <p class="faq-a">As consultas destinam-se exclusivamente a maiores de 18 anos, com exceção das consultas de Medicina do Viajante, para as quais é necessária a presença e consentimento do representante legal.</p>
+                </div>
+                <div class="faq-item">
+                    <p class="faq-q">Posso marcar consulta para outra pessoa?</p>
+                    <p class="faq-a">Sim, pode marcar em nome de outra pessoa desde que seja maior de 18 anos e que os dados fornecidos sejam verdadeiros e atualizados.</p>
+                </div>
+                <div class="faq-item">
+                    <p class="faq-q">Em que línguas são realizadas as consultas?</p>
+                    <p class="faq-a">As consultas podem ser realizadas em português, inglês, espanhol ou francês.</p>
+                </div>
+            </section>
+
+            <section class="faq-section" aria-labelledby="faq-pagamento">
+                <h2 id="faq-pagamento">Sobre o pagamento</h2>
+
+                <div class="faq-item">
+                    <p class="faq-q">Como posso pagar?</p>
+                    <p class="faq-a">Aceitamos MB Way e Referência Multibanco. O pagamento deve ser efetuado no momento da marcação para confirmar o agendamento.</p>
+                </div>
+                <div class="faq-item">
+                    <p class="faq-q">E se precisar de cancelar?</p>
+                    <p class="faq-a">Pode cancelar e receber reembolso total até 48 horas antes da consulta. Cancelamentos após esse prazo não têm direito a reembolso. Consulte os nossos <a href="/info.html?page=termos-condicoes">Termos e Condições</a> para mais detalhes.</p>
+                </div>
+                <div class="faq-item">
+                    <p class="faq-q">Emitem fatura?</p>
+                    <p class="faq-a">Sim. A fatura é emitida automaticamente após o pagamento.</p>
+                </div>
+            </section>
+
+            <section class="faq-section" aria-labelledby="faq-video">
+                <h2 id="faq-video">Sobre a videoconsulta</h2>
+
+                <div class="faq-item">
+                    <p class="faq-q">O que preciso para fazer a consulta?</p>
+                    <p class="faq-a">Um dispositivo com câmara e microfone (computador, tablet ou telemóvel), ligação à internet estável e um local calmo e privado.</p>
+                </div>
+                <div class="faq-item">
+                    <p class="faq-q">Preciso de instalar alguma aplicação?</p>
+                    <p class="faq-a">Não. A consulta funciona diretamente no browser, sem necessidade de downloads ou instalações.</p>
+                </div>
+                <div class="faq-item">
+                    <p class="faq-q">O que acontece se tiver problemas técnicos?</p>
+                    <p class="faq-a">Se os problemas técnicos forem do lado do paciente, a Lon Clinic não pode garantir a realização da consulta nem o reembolso. Recomendamos que teste a câmara e o microfone antes da hora marcada.</p>
+                </div>
+                <div class="faq-item">
+                    <p class="faq-q">Posso fazer a consulta por telefone?</p>
+                    <p class="faq-a">Sim, mediante pedido prévio, a consulta pode ser realizada por telefone, exceto para emissão de atestados médicos.</p>
+                </div>
+            </section>
+
+            <section class="faq-section" aria-labelledby="faq-docs">
+                <h2 id="faq-docs">Sobre receitas e documentos</h2>
+
+                <div class="faq-item">
+                    <p class="faq-q">Posso obter receita médica na consulta?</p>
+                    <p class="faq-a">Sim. Sempre que clinicamente indicado, a receita é emitida durante a consulta e enviada imediatamente por email ou SMS.</p>
+                </div>
+                <div class="faq-item">
+                    <p class="faq-q">E se a receita expirar?</p>
+                    <p class="faq-a">A reemissão de receitas implica a marcação de um novo pedido de receita.</p>
+                </div>
+                <div class="faq-item">
+                    <p class="faq-q">Emitem atestados médicos?</p>
+                    <p class="faq-a">Sim. Consulte as opções de marcação no <a href="/">nosso site</a> ou contacte <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> para mais informações.</p>
+                </div>
+            </section>
         </article>
     </div>
 </body>

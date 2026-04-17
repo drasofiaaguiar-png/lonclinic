@@ -110,6 +110,16 @@
             margin: 18px 0 8px;
             letter-spacing: -0.01em;
         }
+        .body ol.steps-list {
+            padding-left: 1.25rem;
+            margin: 10px 0 18px;
+        }
+        .body ol.steps-list li { margin-bottom: 14px; }
+        .body ul.bullet-list {
+            padding-left: 1.25rem;
+            margin: 8px 0 14px;
+        }
+        .body ul.bullet-list li { margin-bottom: 8px; }
         .actions {
             display: flex;
             flex-wrap: wrap;
@@ -292,29 +302,83 @@
                 "sobre-nos": {
                     section: "CLÍNICA",
                     title: "Sobre nós",
-                    subtitle: "Clínica online portuguesa focada em confiança e acessibilidade",
-                    body: "A Lon Clinic foi criada para facilitar o acesso a cuidados médicos de qualidade, com consultas online rápidas, acompanhamento contínuo e foco no longo prazo."
+                    subtitle: "Medicina online com proximidade e rigor",
+                    bodyHtml: `
+<p>A Lon Clinic nasceu da convicção de que o acesso a cuidados de saúde de qualidade não deve depender de listas de espera ou horários rígidos.</p>
+<p>Somos uma clínica médica online que preza por manter uma qualidade premium nos cuidados que presta, registada na ERS sob o n.º 45475, com médicos credenciados pela Ordem dos Médicos, dedicada a prestar cuidados de saúde acessíveis, próximos e de confiança — onde e quando precisar.</p>
+<p>Acreditamos numa medicina centrada na pessoa: com tempo para ouvir, explicar e acompanhar. Porque uma boa consulta não precisa de ser presencial para ser boa.</p>
+`
                 },
                 "parcerias": {
                     section: "CLÍNICA",
                     title: "Parcerias",
-                    subtitle: "Parcerias clínicas e institucionais",
-                    body: "Colaboramos com empresas, seguradoras e entidades de saúde para desenvolver soluções de telemedicina seguras e eficientes.",
-                    actions: [{ label: "Falar com a equipa", href: "mailto:parcerias@lonclinic.com", primary: true }]
+                    subtitle: "Colaborações à medida da sua organização",
+                    bodyHtml: `
+<p>Está interessado em estabelecer uma parceria com a Lon Clinic?</p>
+<p>Trabalhamos com empresas, seguradoras, startups e outras organizações que partilham o nosso compromisso com a saúde acessível. Se pretende oferecer acesso a consultas médicas online aos seus colaboradores, clientes ou membros, podemos encontrar uma solução à medida.</p>
+<h2>Tipos de parcerias</h2>
+<ul class="bullet-list">
+<li>Saúde corporativa — acesso a consultas para colaboradores</li>
+<li>Seguradoras e sistemas de saúde</li>
+<li>Startups e plataformas digitais</li>
+<li>Clínicas e profissionais de saúde complementares</li>
+</ul>
+<h2>Entre em contacto</h2>
+<p>Para explorar uma parceria, contacte-nos através de <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> com uma breve descrição da sua organização e do tipo de colaboração que tem em mente. Responderemos em 2 dias úteis.</p>
+<p>Ou envie o pedido diretamente pelo formulário abaixo.</p>
+<form id="partnershipsForm" class="info-form" novalidate>
+    <label for="partnerships-org">Organização
+        <input id="partnerships-org" name="organization" type="text" required maxlength="200" autocomplete="organization">
+    </label>
+    <label for="partnerships-name">Nome do contacto
+        <input id="partnerships-name" name="name" type="text" required maxlength="120" autocomplete="name">
+    </label>
+    <label for="partnerships-email">Email
+        <input id="partnerships-email" name="email" type="email" required maxlength="160" autocomplete="email">
+    </label>
+    <label for="partnerships-phone">Telefone
+        <input id="partnerships-phone" name="phone" type="tel" required maxlength="40" autocomplete="tel">
+    </label>
+    <label for="partnerships-message">Tipo de colaboração e mensagem
+        <textarea id="partnerships-message" name="message" required maxlength="4000"></textarea>
+    </label>
+    <button type="submit" class="btn btn-primary">Enviar pedido de parceria</button>
+    <p id="partnershipsStatus" class="info-form-status" role="status" aria-live="polite"></p>
+</form>
+`,
+                    actions: [{ label: "Email direto", href: "mailto:info@lonclinic.com", primary: false }]
                 },
                 "registo-medico": {
                     section: "CLÍNICA",
                     title: "Registo médico",
-                    subtitle: "Informação regulatória e enquadramento clínico",
-                    body: "A atividade clínica é realizada por profissionais habilitados e enquadrada pelas normas aplicáveis em Portugal.",
+                    subtitle: "Confidencialidade e enquadramento legal",
+                    bodyHtml: `
+<p>Na Lon Clinic, o seu historial clínico é tratado com a máxima confidencialidade e segurança.</p>
+<p>Após cada consulta, é criado um registo clínico que inclui os dados partilhados durante a consulta, a avaliação médica, o plano de tratamento e os documentos emitidos (receitas, pedidos de exames, atestados).</p>
+<h2>Acesso ao seu registo</h2>
+<p>Pode solicitar o acesso ao seu registo clínico a qualquer momento através de <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>. Responderemos no prazo legalmente previsto.</p>
+<h2>Retenção</h2>
+<p>Os registos clínicos são conservados pelo período mínimo obrigatório por lei, em conformidade com a legislação portuguesa de saúde e o RGPD.</p>
+<h2>Dúvidas</h2>
+<p>Para qualquer questão relacionada com o seu registo médico, contacte-nos através de <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>.</p>
+`,
                     actions: [{ label: "Solicitar informação", href: "mailto:info@lonclinic.com?subject=Registo%20m%C3%A9dico", primary: true }]
                 },
                 "contato": {
                     section: "CLÍNICA",
                     title: "Contato",
-                    subtitle: "Estamos disponíveis para ajudar",
+                    subtitle: "Estamos disponíveis para responder a todas as suas questões",
                     bodyHtml: `
-<p>Fale com a nossa equipa para apoio sobre consultas, horários, pagamentos e informações gerais da clínica.</p>
+<h2>Email</h2>
+<p><a href="mailto:info@lonclinic.com">info@lonclinic.com</a></p>
+<h2>Chat</h2>
+<p>Disponível diretamente no nosso website.</p>
+<h2>Horário de atendimento</h2>
+<p>Segunda a sexta-feira, das 9h às 18h (hora de Portugal Continental).</p>
+<p>Não respondemos a questões colocadas em fins de semana, feriados ou férias. As respostas poderão ter um atraso mínimo de 10 dias úteis nesses casos.</p>
+<h2>Em caso de emergência médica</h2>
+<p>Ligue imediatamente para o <strong>112</strong> ou dirija-se ao serviço de urgência hospitalar mais próximo. Não utilize este canal para situações de emergência.</p>
+<h2>Envie-nos uma mensagem</h2>
 <form id="contactInfoForm" class="info-form" novalidate>
     <label for="contact-info-name">Nome
         <input id="contact-info-name" name="name" type="text" required maxlength="120" autocomplete="name">
@@ -340,9 +404,21 @@
                 "trabalhe-connosco": {
                     section: "CLÍNICA",
                     title: "Trabalhe connosco",
-                    subtitle: "Junte-se à equipa Lon Clinic",
+                    subtitle: "Faça parte de um projeto de saúde online em Portugal",
                     bodyHtml: `
-<p>Estamos a reforçar a nossa equipa com profissionais de saúde e perfis operacionais orientados para qualidade clínica e empatia.</p>
+<p>A Lon Clinic está a crescer e procura profissionais de saúde que partilhem a nossa visão de uma medicina acessível, próxima e de qualidade.</p>
+<h2>O que procuramos</h2>
+<p>Médicos e outros profissionais de saúde credenciados, com interesse em teleconsulta, que valorizem uma relação próxima com o paciente e queiram fazer parte de um projeto diferente no panorama da saúde online em Portugal.</p>
+<h2>O que oferecemos</h2>
+<ul class="bullet-list">
+<li>Flexibilidade de horários</li>
+<li>Plataforma simples e intuitiva</li>
+<li>Projeto com identidade e visão clara</li>
+<li>Ambiente de trabalho colaborativo e respeitoso</li>
+</ul>
+<h2>Candidate-se</h2>
+<p>Envie o seu CV e uma breve apresentação para <a href="mailto:info@lonclinic.com?subject=Candidatura">info@lonclinic.com</a> com o assunto <strong>«Candidatura — [a sua especialidade]»</strong>. Analisamos todas as candidaturas e respondemos em 5 dias úteis.</p>
+<p>Ou utilize o formulário abaixo (pode anexar o CV em PDF ou Word).</p>
 <form id="careersForm" class="info-form" novalidate>
     <label for="careers-name">Nome completo
         <input id="careers-name" name="name" type="text" required maxlength="120" autocomplete="name">
@@ -386,28 +462,68 @@
                 "como-funciona": {
                     section: "APOIO",
                     title: "Como funciona",
-                    subtitle: "Marcação simples em poucos passos",
-                    body: "Escolha o tipo de consulta, selecione data e hora, efetue pagamento seguro e participe por telemóvel, tablet ou computador."
+                    subtitle: "Simples, rápido e com elevada qualidade",
+                    bodyHtml: `
+<p>A Lon Clinic foi criada para tornar o acesso a cuidados de saúde simples, rápido, sem complicações, mas ainda assim mantendo elevada qualidade.</p>
+<p><strong>Veja como funciona em 4 passos:</strong></p>
+<ol class="steps-list">
+<li><strong>1. Escolha a sua consulta</strong><br>Selecione o tipo de consulta que precisa — urgente, especialidade, saúde mental, medicina do viajante ou atestado. Cada consulta tem duração, preço e indicações claramente descritos.</li>
+<li><strong>2. Marque e pague</strong><br>Escolha o dia e hora disponíveis e efetue o pagamento por MB Way ou Referência Multibanco. O agendamento só fica confirmado após o pagamento.</li>
+<li><strong>3. Receba a confirmação</strong><br>Após o pagamento, receberá um email de confirmação com o link de acesso à videoconsulta. Não precisa de instalar nada — funciona diretamente no browser.</li>
+<li><strong>4. Faça a sua consulta</strong><br>Na hora marcada, aceda ao link e entre na sala de espera virtual. A médica irá recebê-la e realizar a consulta por videochamada. No final, receberá por email ou SMS a receita, pedido de exames ou orientação clínica, conforme necessário.</li>
+</ol>
+<p>Tem dúvidas? Contacte-nos pelo chat ou por email antes de marcar.</p>
+`
                 },
                 "seguranca-dados": {
                     section: "APOIO",
                     title: "Segurança dos dados",
-                    subtitle: "Privacidade e proteção da informação clínica",
-                    body: "Aplicamos práticas técnicas e organizativas para proteger os dados pessoais e clínicos dos pacientes."
+                    subtitle: "Proteção dos seus dados pessoais e de saúde",
+                    bodyHtml: `
+<p>Na Lon Clinic, a proteção dos seus dados pessoais e de saúde é uma prioridade absoluta.</p>
+<h2>Como protegemos os seus dados</h2>
+<p>Todos os dados recolhidos na plataforma são tratados em conformidade com o Regulamento Geral de Proteção de Dados (RGPD) e a legislação portuguesa aplicável. As videoconsultas são realizadas numa plataforma avaliada e aprovada pelo nosso Encarregado de Proteção de Dados (DPO) como adequada do ponto de vista da privacidade e segurança.</p>
+<h2>O que recolhemos e porquê</h2>
+<p>Recolhemos apenas os dados necessários para a prestação do serviço: dados de identificação, contacto e informação clínica partilhada durante a consulta. Estes dados são utilizados exclusivamente para fins clínicos e administrativos relacionados com a sua consulta.</p>
+<h2>Os seus direitos</h2>
+<p>Tem direito a aceder, corrigir, eliminar ou solicitar a portabilidade dos seus dados a qualquer momento. Para exercer estes direitos, contacte-nos através de <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>.</p>
+<h2>Retenção de dados</h2>
+<p>Os registos clínicos são conservados pelo período mínimo legalmente obrigatório, de acordo com a legislação portuguesa de saúde.</p>
+<h2>Contacto do DPO</h2>
+<p>Para questões relacionadas com a proteção de dados, pode contactar o nosso Encarregado de Proteção de Dados através de <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>.</p>
+`
                 },
                 "acessibilidade": {
                     section: "APOIO",
                     title: "Acessibilidade",
-                    subtitle: "Compromisso com acesso inclusivo",
-                    body: "A Lon Clinic procura melhorar continuamente a acessibilidade digital para todos os utilizadores."
+                    subtitle: "Cuidados de saúde acessíveis a todos",
+                    bodyHtml: `
+<p>A Lon Clinic acredita que os cuidados de saúde devem ser acessíveis a todos.</p>
+<h2>Acessibilidade digital</h2>
+<p>O nosso website foi desenvolvido tendo em conta as boas práticas de acessibilidade digital, incluindo compatibilidade com leitores de ecrã, contraste adequado e navegação por teclado.</p>
+<h2>Consultas em múltiplos idiomas</h2>
+<p>As consultas estão disponíveis em português, inglês, espanhol e francês, para que a barreira linguística nunca seja um obstáculo ao acesso a cuidados de saúde.</p>
+<h2>Consulta por telefone</h2>
+<p>Para pacientes com dificuldades de acesso a videochamada, as consultas podem ser realizadas por telefone mediante pedido prévio, exceto para emissão de atestados médicos.</p>
+<h2>Encontrou uma barreira de acessibilidade?</h2>
+<p>Se encontrou alguma dificuldade no acesso ao nosso website ou serviços, agradecemos que nos informe através de <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> para que possamos melhorar continuamente.</p>
+`
                 },
                 "reclamacoes": {
                     section: "APOIO",
                     title: "Reclamações",
-                    subtitle: "Processo transparente de gestão de reclamações",
+                    subtitle: "Queremos resolver a sua situação da melhor forma possível",
                     bodyHtml: `
-<p>Analisamos todas as reclamações com seriedade e confidencialidade, conforme a legislação aplicável.</p>
-<p class="complaints-note"><strong>Prazo de resposta:</strong> respondemos no prazo máximo de 5 dias úteis.</p>
+<p>A sua satisfação é importante para nós. Se algo não correu como esperado, queremos saber.</p>
+<h2>Como apresentar uma reclamação</h2>
+<p>Pode contactar-nos diretamente através de <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>.</p>
+<p>Comprometemo-nos a responder a todas as reclamações nos dias úteis, das 9h às 18h, de segunda a sexta-feira, num espaço temporal respeitoso. Tentaremos resolver a situação da melhor forma possível.</p>
+<h2>Livro de Reclamações Eletrónico</h2>
+<p>Pode também apresentar a sua reclamação através do Livro de Reclamações Eletrónico, disponível em <a href="https://www.livroreclamacoes.pt" target="_blank" rel="noopener noreferrer">livroreclamacoes.pt</a>.</p>
+<h2>Entidade Reguladora da Saúde</h2>
+<p>Tem ainda o direito de apresentar reclamação diretamente à Entidade Reguladora da Saúde (ERS), disponível em <a href="https://www.ers.pt" target="_blank" rel="noopener noreferrer">ers.pt</a>.</p>
+<h2>Formulário de reclamação</h2>
+<p class="complaints-note">Preencha os campos abaixo. Tratamos todas as reclamações com confidencialidade.</p>
 <form id="complaintsForm" class="complaints-form" novalidate>
     <label for="complaint-name">Nome
         <input id="complaint-name" name="name" type="text" required maxlength="120" autocomplete="name">
@@ -821,7 +937,7 @@
 
                             form.reset();
                             if (statusEl) {
-                                statusEl.textContent = "Reclamação enviada com sucesso. Responderemos em até 5 dias úteis.";
+                                statusEl.textContent = "Reclamação enviada com sucesso. Responderemos nos dias úteis (9h–18h), salvo períodos de maior volume.";
                                 statusEl.classList.add("is-success");
                             }
                         } catch (err) {
@@ -890,6 +1006,65 @@
                             if (button) {
                                 button.disabled = false;
                                 button.textContent = "Enviar mensagem";
+                            }
+                        }
+                    });
+                }
+            }
+
+            if (page === "parcerias") {
+                const form = document.getElementById("partnershipsForm");
+                const statusEl = document.getElementById("partnershipsStatus");
+
+                if (form) {
+                    form.addEventListener("submit", async function (event) {
+                        event.preventDefault();
+                        const button = form.querySelector('button[type="submit"]');
+                        const formData = new FormData(form);
+                        const org = String(formData.get("organization") || "").trim();
+                        const baseMsg = String(formData.get("message") || "").trim();
+                        const payload = {
+                            name: String(formData.get("name") || "").trim(),
+                            email: String(formData.get("email") || "").trim(),
+                            phone: String(formData.get("phone") || "").trim(),
+                            message: ("[Pedido de parceria] Organização: " + org + "\n\n" + baseMsg).slice(0, 4000)
+                        };
+
+                        if (statusEl) {
+                            statusEl.textContent = "";
+                            statusEl.classList.remove("is-success", "is-error");
+                        }
+
+                        if (button) {
+                            button.disabled = true;
+                            button.textContent = "A enviar...";
+                        }
+
+                        try {
+                            const response = await fetch("/api/contact", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(payload)
+                            });
+                            const result = await response.json();
+                            if (!response.ok) {
+                                throw new Error(result.error || "Não foi possível enviar o pedido.");
+                            }
+
+                            form.reset();
+                            if (statusEl) {
+                                statusEl.textContent = "Pedido enviado com sucesso. Responderemos em 2 dias úteis.";
+                                statusEl.classList.add("is-success");
+                            }
+                        } catch (err) {
+                            if (statusEl) {
+                                statusEl.textContent = (err && err.message) || "Erro ao enviar.";
+                                statusEl.classList.add("is-error");
+                            }
+                        } finally {
+                            if (button) {
+                                button.disabled = false;
+                                button.textContent = "Enviar pedido de parceria";
                             }
                         }
                     });

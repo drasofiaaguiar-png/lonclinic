@@ -10,7 +10,7 @@
     <meta property="og:site_name" content="Lon Clinic">
     <meta property="og:url" content="https://lonclinic.com/book-consultation">
     <meta property="og:title" content="Marcar Consulta Online | Lon Clinic">
-    <meta property="og:description" content="Marque a sua consulta médica online em minutos. Escolha serviço, data e hora com pagamento seguro.">
+    <meta property="og:description" content="Marque a sua consulta médica online em minutos. Escolha data e hora com pagamento seguro.">
     <meta property="og:image" content="https://lonclinic.com/image/image2.webp">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Marcar Consulta Online | Lon Clinic">
@@ -22,7 +22,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c5c72c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4'/><path d='M5 19.5C5.5 18 6 15 6 12c0-3.5 2.5-6 6-6 3.5 0 6 2.5 6 6 0 2-.5 4-1 6'/><path d='M9 12c0-1.7 1.3-3 3-3s3 1.3 3 3-1 6-1 6'/><path d='M12 12v6'/></svg>">
-    <meta name="description" content="Marcar consulta online na Lon Clinic: escolha o tipo de consulta, horário e finalize com pagamento seguro em poucos passos.">
+    <meta name="description" content="Marcar consulta online na Lon Clinic: escolha horário e finalize com pagamento seguro em poucos passos.">
     <meta name="theme-color" content="#eaf2fb">
     <script src="https://js.stripe.com/v3/"></script>
 </head>
@@ -69,31 +69,24 @@
                         <div class="progress-dot">
                             <span>1</span>
                         </div>
-                        <span class="progress-label">Serviço</span>
+                        <span class="progress-label">Agenda</span>
                     </div>
                     <div class="progress-line"><div class="progress-line-fill"></div></div>
                     <div class="progress-step" data-step="2">
                         <div class="progress-dot">
                             <span>2</span>
                         </div>
-                        <span class="progress-label">Agenda</span>
+                        <span class="progress-label">Dados</span>
                     </div>
                     <div class="progress-line"><div class="progress-line-fill"></div></div>
                     <div class="progress-step" data-step="3">
                         <div class="progress-dot">
                             <span>3</span>
                         </div>
-                        <span class="progress-label">Dados</span>
-                    </div>
-                    <div class="progress-line"><div class="progress-line-fill"></div></div>
-                    <div class="progress-step" data-step="4">
-                        <div class="progress-dot">
-                            <span>4</span>
-                        </div>
                         <span class="progress-label">Pagamento</span>
                     </div>
                     <div class="progress-line"><div class="progress-line-fill"></div></div>
-                    <div class="progress-step" data-step="5">
+                    <div class="progress-step" data-step="4">
                         <div class="progress-dot">
                             <span>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -104,167 +97,14 @@
                 </div>
             </div>
 
-            <!-- Step 1: Select Service -->
+            <!-- Step 1: Schedule -->
             <div class="booking-step active" id="step-1">
                 <div class="step-header">
-                    <h1 class="step-title">Escolha a sua consulta</h1>
-                    <p class="step-desc">Selecione o serviço mais adequado às suas necessidades.</p>
-                </div>
-                <div class="service-grid">
-                    <label class="service-option" data-service="clinica_geral">
-                        <input type="radio" name="service" value="clinica_geral">
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                            </div>
-                            <div class="service-info">
-                                <h3>Consulta Clínica Geral / Check Up</h3>
-                                <p>Consulta médica online para avaliação clínica geral, orientação de sintomas e seguimento personalizado.</p>
-                                <div class="service-details">
-                                    <span class="service-duration">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                                        30 min
-                                    </span>
-                                    <span class="service-mode">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                        Teleconsulta
-                                    </span>
-                                    <span class="service-price-tag">€39</span>
-                                </div>
-                            </div>
-                            <div class="service-check">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                        </div>
-                    </label>
-                    <label class="service-option" data-service="urgente">
-                        <input type="radio" name="service" value="urgente">
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                            </div>
-                            <div class="service-info">
-                                <h3>Consulta Médica Urgente (Adultos)</h3>
-                                <p>Consulta rápida para situações agudas não emergentes com avaliação médica e orientação imediata.</p>
-                                <div class="service-details">
-                                    <span class="service-duration">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                                        15 min
-                                    </span>
-                                    <span class="service-mode">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                        Teleconsulta
-                                    </span>
-                                    <span class="service-price-tag">€35</span>
-                                </div>
-                            </div>
-                            <div class="service-check">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                        </div>
-                    </label>
-                    <label class="service-option" data-service="travel">
-                        <input type="radio" name="service" value="travel">
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-                            </div>
-                            <div class="service-info">
-                                <h3>Consulta do Viajante</h3>
-                                <p>Consulta médica de viagem com orientação por destino, vacinas recomendadas, prevenção da malária e plano de saúde personalizado para a viagem.</p>
-                                <div class="service-details">
-                                    <span class="service-mode">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                        <span class="service-mode-label">Videochamada</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="service-check">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                        </div>
-                    </label>
-                    <label class="service-option" data-service="saude_mental">
-                        <input type="radio" name="service" value="saude_mental">
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
-                            </div>
-                            <div class="service-info">
-                                <h3>Consulta de Saúde Mental Adultos</h3>
-                                <p>Acompanhamento clínico para ansiedade, stress, humor e bem-estar emocional com plano terapêutico personalizado.</p>
-                                <div class="service-details">
-                                    <span class="service-duration">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                                        45 min
-                                    </span>
-                                    <span class="service-mode">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                        Teleconsulta
-                                    </span>
-                                    <span class="service-price-tag">€49</span>
-                                </div>
-                            </div>
-                            <div class="service-check">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                        </div>
-                    </label>
-                    <label class="service-option" data-service="renovacao">
-                        <input type="radio" name="service" value="renovacao">
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-                            </div>
-                            <div class="service-info">
-                                <h3>Renovação de Tratamento Médico</h3>
-                                <p>Renovação rápida de terapêutica habitual com revisão clínica e validação médica.</p>
-                                <div class="service-details">
-                                    <span class="service-duration">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                                        15 min
-                                    </span>
-                                    <span class="service-mode">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                        Teleconsulta
-                                    </span>
-                                    <span class="service-price-tag">€19</span>
-                                </div>
-                            </div>
-                            <div class="service-check">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                        </div>
-                    </label>
-                    <label class="service-option" data-service="longevidade">
-                        <input type="radio" name="service" value="longevidade">
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-                            </div>
-                            <div class="service-info">
-                                <h3>Consulta de Longevidade e Saúde Preventiva</h3>
-                                <p>Consulta preventiva orientada para otimização de saúde, rastreio de risco e plano de longevidade personalizado.</p>
-                                <div class="service-details">
-                                    <span class="service-duration">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-                                        30 min
-                                    </span>
-                                    <span class="service-mode">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                                        Teleconsulta
-                                    </span>
-                                    <span class="service-price-tag">€79</span>
-                                </div>
-                            </div>
-                            <div class="service-check">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                            </div>
-                        </div>
-                    </label>
+                    <h1 class="step-title">Escolha data e hora</h1>
+                    <p class="step-desc">Selecione um horário conveniente para a sua consulta por videochamada.</p>
                 </div>
 
-                <!-- Health Insurance — visible after selecting any service -->
+                <!-- Health Insurance — shown for travel (Medicare pricing) -->
                 <div id="insuranceSection" style="display:none;">
                     <label class="insurance-check" for="insuranceToggle">
                         <input type="checkbox" id="insuranceToggle">
@@ -338,23 +178,6 @@
                     </div>
                 </div>
 
-                <button class="btn btn-outline btn-sm change-service-btn" id="changeServiceBtn" style="display:none;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                    Change service
-                </button>
-
-                <div class="step-actions">
-                    <div></div>
-                    <button class="btn btn-primary btn-lg step-next" id="next-1" disabled>Continuar para agenda</button>
-                </div>
-            </div>
-
-            <!-- Step 2: Schedule -->
-            <div class="booking-step" id="step-2">
-                <div class="step-header">
-                    <h1 class="step-title">Escolha data e hora</h1>
-                    <p class="step-desc">Selecione um horário conveniente para a sua consulta por videochamada.</p>
-                </div>
                 <div class="schedule-layout">
                     <div class="calendar-section">
                         <div class="calendar-header">
@@ -383,13 +206,13 @@
                     </div>
                 </div>
                 <div class="step-actions">
-                    <button class="btn btn-outline btn-lg step-back" id="back-2">Voltar</button>
-                    <button class="btn btn-primary btn-lg step-next" id="next-2" disabled>Continuar para dados</button>
+                    <button class="btn btn-outline btn-lg step-back" id="back-1">Voltar</button>
+                    <button class="btn btn-primary btn-lg step-next" id="next-1" disabled>Continuar para dados</button>
                 </div>
             </div>
 
-            <!-- Step 3: Patient Details -->
-            <div class="booking-step" id="step-3">
+            <!-- Step 2: Patient Details -->
+            <div class="booking-step" id="step-2">
                 <div class="step-header">
                     <h1 class="step-title">Os seus dados</h1>
                     <p class="step-desc">Indique as suas informações para prepararmos a consulta.</p>
@@ -530,13 +353,13 @@
                     </div>
                 </form>
                 <div class="step-actions">
-                    <button class="btn btn-outline btn-lg step-back" id="back-3">Voltar</button>
-                    <button class="btn btn-primary btn-lg step-next" id="next-3">Continuar para pagamento</button>
+                    <button class="btn btn-outline btn-lg step-back" id="back-2">Voltar</button>
+                    <button class="btn btn-primary btn-lg step-next" id="next-2">Continuar para pagamento</button>
                 </div>
             </div>
 
-            <!-- Step 4: Review & Pay -->
-            <div class="booking-step" id="step-4">
+            <!-- Step 3: Review & Pay -->
+            <div class="booking-step" id="step-3">
                 <div class="step-header">
                     <h1 class="step-title">Rever e pagar</h1>
                     <p class="step-desc">Confirme os dados da marcação e prossiga para pagamento seguro via Stripe.</p>
@@ -677,16 +500,16 @@
                     </div>
                 </div>
                 <div class="step-actions">
-                    <button class="btn btn-outline btn-lg step-back" id="back-4">Voltar</button>
-                    <button class="btn btn-primary btn-lg step-next pay-btn" id="next-4">
+                    <button class="btn btn-outline btn-lg step-back" id="back-3">Voltar</button>
+                    <button class="btn btn-primary btn-lg step-next pay-btn" id="next-3">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                         Proceed to secure payment
                     </button>
                 </div>
             </div>
 
-            <!-- Step 5: Confirmation -->
-            <div class="booking-step" id="step-5">
+            <!-- Step 4: Confirmation -->
+            <div class="booking-step" id="step-4">
                 <div class="confirmation-content">
                     <div class="confirmation-icon">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
