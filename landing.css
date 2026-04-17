@@ -400,11 +400,11 @@ img {
 
 .dr-hero-manifesto {
     margin: 22px 0 0;
-    max-width: 48ch;
-    font-size: clamp(1.2rem, 2.5vw, 1.65rem);
-    font-weight: 600;
-    line-height: 1.42;
-    letter-spacing: -0.025em;
+    max-width: min(52ch, 100%);
+    font-size: clamp(1.45rem, 3.5vw, 2.05rem);
+    font-weight: 700;
+    line-height: 1.38;
+    letter-spacing: -0.03em;
     color: var(--lon-muted);
 }
 
