@@ -1128,6 +1128,10 @@ app.get('/book-consultation', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'book.html'), 'Error loading booking page');
 });
 
+app.get('/faq', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'faq.html'), 'Error loading FAQ page');
+});
+
 app.get('/patient-portal', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'dashboard.html'), 'Error loading patient portal');
 });
@@ -1150,6 +1154,9 @@ app.get('/info.html', (req, res) => {
         'reclamacoes'
     ]);
     const page = String(req.query.page || '').toLowerCase();
+    if (page === 'perguntas-frequentes') {
+        return res.redirect(301, '/faq');
+    }
     if (noIndexPages.has(page)) {
         res.setHeader('X-Robots-Tag', 'noindex, follow, noarchive');
     }
