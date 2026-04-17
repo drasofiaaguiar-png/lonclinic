@@ -530,11 +530,29 @@ img {
     .lon-service-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .lon-services .lon-service-grid[data-visible-count="1"] {
+        grid-template-columns: minmax(280px, 52%);
+        justify-content: center;
+    }
 }
 
 @media (min-width: 1060px) {
     .lon-service-grid {
         grid-template-columns: repeat(4, 1fr);
+    }
+
+    .lon-services .lon-service-grid[data-visible-count="1"] {
+        grid-template-columns: minmax(320px, 50%);
+        justify-content: center;
+    }
+
+    .lon-services .lon-service-grid[data-visible-count="2"] {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .lon-services .lon-service-grid[data-visible-count="3"] {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 

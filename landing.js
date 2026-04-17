@@ -6,8 +6,10 @@
     var mobileMenu = document.getElementById('lonMobileMenu');
     var tabButtons = document.querySelectorAll('.lon-tab');
     var cards = document.querySelectorAll('.lon-service-card');
+    var servicesGrid = document.querySelector('.lon-services .lon-service-grid');
 
     function setActiveTab(tabId) {
+        var visibleCount = 0;
         tabButtons.forEach(function (btn) {
             var on = btn.getAttribute('data-tab') === tabId;
             btn.classList.toggle('is-active', on);
@@ -17,7 +19,11 @@
             var cat = card.getAttribute('data-category');
             var show = cat === tabId;
             card.classList.toggle('is-visible', show);
+            if (show) visibleCount += 1;
         });
+        if (servicesGrid) {
+            servicesGrid.setAttribute('data-visible-count', String(visibleCount));
+        }
     }
 
     tabButtons.forEach(function (btn) {
