@@ -71,20 +71,18 @@ img {
 
 /* Nav */
 .lon-nav {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
     z-index: 1000;
-    padding: 12px 0;
+    padding: 20px 0 0;
     background: transparent;
-    transition: background 0.25s ease, box-shadow 0.25s ease;
+    transition: transform 0.25s ease;
 }
 
 .lon-nav.is-scrolled {
-    background: rgba(243, 227, 250, 0.93);
-    backdrop-filter: blur(14px);
-    box-shadow: 0 8px 30px rgba(63, 35, 83, 0.12);
+    transform: translateY(-2px);
 }
 
 .lon-nav-inner {
@@ -253,17 +251,16 @@ img {
 
 /* Hero */
 .dr-hero {
-    padding-top: calc(var(--lon-nav-h) + 48px);
+    padding-top: calc(var(--lon-nav-h) + 64px);
     padding-bottom: 68px;
 }
 
 .dr-hero .lon-container.dr-hero-grid {
-    max-width: 100%;
-    padding-left: 0;
-    padding-right: 0;
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
+    max-width: min(1360px, calc(100% - 44px));
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 24px;
+    padding-right: 24px;
 }
 
 .dr-hero-grid {
