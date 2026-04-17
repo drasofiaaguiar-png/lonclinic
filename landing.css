@@ -410,16 +410,6 @@ img {
     transform: translateY(-50%);
 }
 
-.dr-hero-manifesto {
-    margin: 22px 0 0;
-    max-width: min(52ch, 100%);
-    font-size: clamp(1.45rem, 3.5vw, 2.05rem);
-    font-weight: 700;
-    line-height: 1.38;
-    letter-spacing: -0.03em;
-    color: var(--lon-muted);
-}
-
 .dr-hero-media {
     position: relative;
     border-radius: 24px;
@@ -488,6 +478,40 @@ img {
     z-index: 2;
 }
 
+/* Clinic manifesto — full band, hero statement */
+.dr-clinic-manifesto {
+    position: relative;
+    text-align: center;
+    padding: clamp(72px, 12vw, 120px) 0 clamp(80px, 11vw, 128px);
+    overflow: hidden;
+    background-color: #eef3ee;
+    background-image:
+        radial-gradient(
+            ellipse 95% 75% at 50% 38%,
+            rgba(255, 255, 255, 0.72) 0%,
+            rgba(241, 246, 242, 0.35) 45%,
+            transparent 68%
+        ),
+        linear-gradient(180deg, #f6faf7 0%, #e8f0ea 52%, #eef4f0 100%);
+}
+
+.dr-clinic-manifesto-inner {
+    position: relative;
+    z-index: 1;
+    max-width: min(48rem, 100%);
+    margin: 0 auto;
+}
+
+.dr-clinic-manifesto__text {
+    margin: 0;
+    font-size: clamp(1.65rem, 4.2vw, 2.85rem);
+    font-weight: 700;
+    line-height: 1.28;
+    letter-spacing: -0.035em;
+    text-align: center;
+    color: #1f2a22;
+}
+
 /* Mid sections */
 .dr-platform {
     padding: 84px 0 58px;
@@ -511,16 +535,6 @@ img {
 .dr-platform .lon-container {
     position: relative;
     z-index: 1;
-}
-
-.dr-platform-manifesto {
-    margin: 0 auto;
-    max-width: min(52ch, 100%);
-    font-size: clamp(1.35rem, 2.8vw, 1.95rem);
-    font-weight: 600;
-    line-height: 1.4;
-    letter-spacing: -0.03em;
-    text-align: center;
 }
 
 .dr-platform h2 {
@@ -1234,12 +1248,6 @@ img {
         max-width: none;
     }
 
-    .dr-hero-manifesto {
-        max-width: none;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
     .dr-hero-media {
         min-height: 340px;
     }
@@ -1414,7 +1422,7 @@ body.lon-landing {
 
 .dr-lead,
 .dr-platform p,
-.dr-platform-manifesto,
+.dr-clinic-manifesto__text,
 .lon-contact-copy p,
 .lon-footer-brand p,
 .lon-footer-legal-links a,
@@ -1439,11 +1447,6 @@ body.lon-landing {
     color: #e8f4ec;
 }
 
-.dr-hero-manifesto {
-    color: #f4faf6;
-    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.18);
-}
-
 .dr-hero-media,
 .dr-float-card,
 .dr-float-mini {
@@ -1466,6 +1469,23 @@ body.lon-landing {
 
 .dr-platform::before {
     background: radial-gradient(ellipse at center, rgba(241, 246, 242, 0.9) 0%, rgba(241, 246, 242, 0.22) 72%, rgba(241, 246, 242, 0) 100%);
+}
+
+.dr-clinic-manifesto {
+    background-color: #1a2e22;
+    background-image:
+        radial-gradient(
+            ellipse 90% 70% at 50% 35%,
+            rgba(255, 255, 255, 0.1) 0%,
+            rgba(45, 85, 62, 0.25) 50%,
+            transparent 70%
+        ),
+        linear-gradient(180deg, #203828 0%, #1a2e22 42%, #152a1d 100%);
+}
+
+.dr-clinic-manifesto__text {
+    color: #f0faf3;
+    text-shadow: 0 2px 28px rgba(0, 0, 0, 0.2);
 }
 
 .lon-tabs {
