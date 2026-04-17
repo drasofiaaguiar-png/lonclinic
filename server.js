@@ -94,7 +94,7 @@ const clinicalNotesStore = []; // { bookingRef, consultationDate, notes, diagnos
    SCHEDULE/AVAILABILITY STORE
    (Replace with a database in production)
 ======================================== */
-const scheduleStore = {
+const defaultScheduleStore = {
     workingHours: {
         monday: { enabled: true, start: '09:00', end: '17:00' },
         tuesday: { enabled: true, start: '09:00', end: '17:00' },
@@ -110,6 +110,55 @@ const scheduleStore = {
     timezone: 'Europe/Lisbon',
     updatedAt: new Date().toISOString()
 };
+
+const scheduleFilePath = path.join(__dirname, 'data', 'schedule.json');
+
+function cloneDefaultSchedule() {
+    return JSON.parse(JSON.stringify(defaultScheduleStore));
+}
+
+function ensureScheduleStoreShape(raw) {
+    const base = cloneDefaultSchedule();
+    const input = raw && typeof raw === 'object' ? raw : {};
+    return {
+        ...base,
+        ...input,
+        workingHours: { ...base.workingHours, ...(input.workingHours || {}) },
+        blockedDates: Array.isArray(input.blockedDates) ? input.blockedDates : base.blockedDates,
+        blockedTimeSlots: Array.isArray(input.blockedTimeSlots) ? input.blockedTimeSlots : base.blockedTimeSlots,
+        slotDuration: Number.isFinite(input.slotDuration) ? input.slotDuration : base.slotDuration,
+        timezone: typeof input.timezone === 'string' && input.timezone ? input.timezone : base.timezone,
+        updatedAt: input.updatedAt || new Date().toISOString()
+    };
+}
+
+function loadScheduleStore() {
+    try {
+        if (!fs.existsSync(scheduleFilePath)) {
+            return cloneDefaultSchedule();
+        }
+        const parsed = JSON.parse(fs.readFileSync(scheduleFilePath, 'utf8'));
+        return ensureScheduleStoreShape(parsed);
+    } catch (err) {
+        console.error('⚠️ Failed to load persisted schedule, using defaults:', err.message);
+        return cloneDefaultSchedule();
+    }
+}
+
+function persistScheduleStore() {
+    try {
+        const dir = path.dirname(scheduleFilePath);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        fs.writeFileSync(scheduleFilePath, JSON.stringify(scheduleStore, null, 2), 'utf8');
+    } catch (err) {
+        console.error('⚠️ Failed to persist schedule settings:', err.message);
+    }
+}
+
+const scheduleStore = loadScheduleStore();
+persistScheduleStore();
 
 /* ========================================
    EMAIL CONFIGURATION
@@ -1383,6 +1432,7 @@ app.post('/api/admin/schedule', requireAuth, express.json(), (req, res) => {
     }
 
     scheduleStore.updatedAt = new Date().toISOString();
+    persistScheduleStore();
     console.log('   📅 Schedule settings updated');
 
     res.json({ success: true, schedule: scheduleStore });
