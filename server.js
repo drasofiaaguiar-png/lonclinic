@@ -737,6 +737,99 @@ async function sendAdminNotificationEmail(data) {
 }
 
 /* ========================================
+   BUILD CONTACT INQUIRY EMAIL
+======================================== */
+function escapeHtml(input) {
+    return String(input || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+function buildContactInquiryEmail(data) {
+    const name = escapeHtml(data.name);
+    const email = escapeHtml(data.email);
+    const phone = escapeHtml(data.phone);
+    const message = escapeHtml(data.message).replace(/\n/g, '<br>');
+    const submittedAt = new Date().toLocaleString('en-GB', { timeZone: 'Europe/Lisbon' });
+
+    const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Contact Message</title>
+</head>
+<body style="margin: 0; padding: 24px; background: #f6f8fb; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+    <div style="max-width: 620px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px;">
+        <h1 style="margin: 0 0 18px; font-size: 22px; color: #111827;">New Contact Form Submission</h1>
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #6b7280; width: 140px;">Name</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #111827; font-weight: 600;">${name}</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #6b7280;">Email</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4;"><a href="mailto:${email}" style="color: #2563eb; text-decoration: none;">${email}</a></td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4; color: #6b7280;">Phone</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #eef1f4;"><a href="tel:${phone}" style="color: #2563eb; text-decoration: none;">${phone}</a></td>
+            </tr>
+            <tr>
+                <td style="padding: 10px 0; color: #6b7280; vertical-align: top;">Message</td>
+                <td style="padding: 10px 0; color: #111827; line-height: 1.6;">${message}</td>
+            </tr>
+        </table>
+        <p style="margin: 18px 0 0; color: #9ca3af; font-size: 12px;">Submitted at ${submittedAt} (Lisbon time)</p>
+    </div>
+</body>
+</html>`;
+
+    const text = `
+NEW CONTACT FORM SUBMISSION
+
+Name: ${data.name}
+Email: ${data.email}
+Phone: ${data.phone}
+Submitted at: ${submittedAt} (Lisbon time)
+
+Message:
+${data.message}
+`.trim();
+
+    return { html, text };
+}
+
+async function sendContactInquiryEmail(data) {
+    if (!isEmailConfigured) {
+        console.log('   ⚠️  Email not configured — cannot send contact inquiry');
+        return false;
+    }
+
+    try {
+        const { html, text } = buildContactInquiryEmail(data);
+        const info = await transporter.sendMail({
+            from: EMAIL_FROM,
+            to: CONTACT_EMAIL,
+            replyTo: data.email,
+            subject: `Contact form: ${data.name}`,
+            text,
+            html
+        });
+
+        console.log('   📩 Contact inquiry sent to:', CONTACT_EMAIL, '| Message ID:', info.messageId);
+        return true;
+    } catch (err) {
+        console.error('   ❌ Failed to send contact inquiry:', err.message);
+        return false;
+    }
+}
+
+/* ========================================
    SERVICE LABELS MAP
 ======================================== */
 
@@ -869,6 +962,16 @@ app.use((req, res, next) => {
 // We intentionally avoid host-based canonical redirects here.
 // On some Railway/custom-domain setups this can cause redirect loops
 // (ERR_TOO_MANY_REDIRECTS), especially when another layer already redirects.
+// We only do a targeted subdomain redirect for doctors.lonclinic.com root.
+app.use((req, res, next) => {
+    const forwardedHost = req.headers['x-forwarded-host'];
+    const rawHost = (Array.isArray(forwardedHost) ? forwardedHost[0] : forwardedHost) || req.get('host') || '';
+    const host = rawHost.split(':')[0].toLowerCase();
+    if (host === 'doctors.lonclinic.com' && (req.path === '/' || req.path === '/index.html')) {
+        return res.redirect(302, '/admin');
+    }
+    next();
+});
 
 // ─── IMPORTANT: Routes must come BEFORE express.static ───
 // ─── Test route ───
@@ -931,6 +1034,19 @@ app.get('/admin', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'admin.html'), 'Error loading admin page');
 });
 
+// ─── Doctors portal aliases ───
+app.get('/doctors', (req, res) => {
+    const query = req.url.split('?')[1];
+    const redirectUrl = query ? `/admin?${query}` : '/admin';
+    res.redirect(301, redirectUrl);
+});
+
+app.get('/doctors/', (req, res) => {
+    const query = req.url.split('?')[1];
+    const redirectUrl = query ? `/admin?${query}` : '/admin';
+    res.redirect(301, redirectUrl);
+});
+
 // ─── Serve index.html for root route ───
 app.get('/', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'index.html'), 'Error loading home page');
@@ -960,6 +1076,10 @@ app.get('/clinic.html', (req, res) => {
 
 app.get('/admin.html', (req, res) => {
     res.redirect(301, '/admin');
+});
+
+app.get('/doctors.html', (req, res) => {
+    res.redirect(301, '/doctors');
 });
 
 // ─── Sitemap and Robots ───
@@ -1016,6 +1136,36 @@ app.get('/api/debug-stripe', (req, res) => {
         publishableKeyExists: !!process.env.STRIPE_PUBLISHABLE_KEY,
         publishableKeyPreview: process.env.STRIPE_PUBLISHABLE_KEY ? `${process.env.STRIPE_PUBLISHABLE_KEY.substring(0, 10)}...` : 'MISSING'
     });
+});
+
+// ─── API: Contact form submission ───
+app.post('/api/contact', async (req, res) => {
+    const name = (req.body?.name || '').trim();
+    const email = (req.body?.email || '').trim();
+    const phone = (req.body?.phone || '').trim();
+    const message = (req.body?.message || '').trim();
+
+    if (!name || !email || !phone || !message) {
+        return res.status(400).json({ error: 'All fields are required.' });
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({ error: 'Please provide a valid email address.' });
+    }
+
+    const payload = {
+        name: name.slice(0, 120),
+        email: email.slice(0, 160),
+        phone: phone.slice(0, 40),
+        message: message.slice(0, 4000)
+    };
+
+    const sent = await sendContactInquiryEmail(payload);
+    if (!sent) {
+        return res.status(503).json({ error: 'Unable to send your message right now. Please try again shortly.' });
+    }
+
+    return res.json({ success: true, message: 'Message sent successfully.' });
 });
 
 // ─── API: Create Checkout Session ───
