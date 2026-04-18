@@ -575,6 +575,24 @@
                 longevidade: 'Consulta de Longevidade e Saúde Preventiva',
             },
         },
+        es: {
+            months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+            weekdays: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+            selectDateFirst: 'Seleccione primero una fecha',
+            pickDate: 'Elija una fecha en el calendario.',
+            noSlots: 'No hay horarios disponibles en esta fecha. Pruebe otro día.',
+            videoCall: 'Videollamada',
+            secureVideoCall: 'Videollamada segura',
+            services: {
+                clinica_geral: 'Consulta de medicina general / chequeo',
+                urgente: 'Consulta médica urgente (adultos)',
+                travel: 'Consulta de medicina del viajero',
+                saude_mental: 'Consulta de salud mental (adultos)',
+                renovacao: 'Renovación de tratamiento médico',
+                longevidade: 'Consulta de longevidad y salud preventiva',
+            },
+        },
     };
 
     /* ══════════════════════════════════════════
@@ -628,32 +646,38 @@
             if (countrySelect) {
                 Object.entries(COUNTRIES).forEach(([code, names]) => {
                     const opt = countrySelect.querySelector(`option[value="${code}"]`);
-                    if (opt) opt.textContent = names[lang] || names.en;
+                    if (opt) opt.textContent = names[lang] || names.pt || names.en;
                 });
             }
 
             // Calendar weekday headers
             const weekdaySpans = document.querySelectorAll('.calendar-weekdays span');
-            const wdays = BOOKING_STRINGS[lang].weekdays;
+            const wdays = (BOOKING_STRINGS[lang] || BOOKING_STRINGS.en).weekdays;
             weekdaySpans.forEach((span, i) => {
                 if (wdays[i]) span.textContent = wdays[i];
             });
 
-            // Timeslot heading
+            // Timeslot heading — reset label when switching language if still on placeholder
             const timeslotHeading = document.getElementById('timeslotHeading');
-            if (timeslotHeading && timeslotHeading.textContent === BOOKING_STRINGS[lang === 'pt' ? 'en' : 'pt'].selectDateFirst) {
-                timeslotHeading.textContent = BOOKING_STRINGS[lang].selectDateFirst;
+            if (timeslotHeading) {
+                const placeholderTexts = ['en', 'pt', 'es'].map((k) => BOOKING_STRINGS[k].selectDateFirst);
+                if (placeholderTexts.includes(timeslotHeading.textContent.trim())) {
+                    timeslotHeading.textContent = (BOOKING_STRINGS[lang] || BOOKING_STRINGS.en).selectDateFirst;
+                }
             }
 
             // Timeslot empty message
             const timeslotEmpty = document.querySelector('.timeslot-empty');
             if (timeslotEmpty) {
-                timeslotEmpty.textContent = BOOKING_STRINGS[lang].pickDate;
+                timeslotEmpty.textContent = (BOOKING_STRINGS[lang] || BOOKING_STRINGS.en).pickDate;
             }
         }
 
         // Update <html lang>
-        document.documentElement.lang = lang;
+        document.documentElement.lang = lang === 'pt' ? 'pt-PT' : lang === 'es' ? 'es' : 'en';
+
+        const bookingLocaleInput = document.getElementById('bookingLocale');
+        if (bookingLocaleInput) bookingLocaleInput.value = lang;
     }
 
     /** Set language and persist */
@@ -681,40 +705,53 @@
     /* ══════════════════════════════════════════
        TOGGLE UI  — injected into the DOM
     ══════════════════════════════════════════ */
-    function createToggle() {
-        const toggle = document.createElement('div');
-        toggle.className = 'lang-toggle';
-        toggle.innerHTML = `
-            <button class="lang-btn${currentLang === 'en' ? ' active' : ''}" data-lang="en">EN</button>
-            <span class="lang-sep">|</span>
-            <button class="lang-btn${currentLang === 'pt' ? ' active' : ''}" data-lang="pt">PT</button>
-        `;
-
-        toggle.addEventListener('click', (e) => {
+    function bindLangToggleClick(el) {
+        el.addEventListener('click', (e) => {
             const btn = e.target.closest('.lang-btn');
             if (!btn) return;
             const lang = btn.dataset.lang;
             if (lang && lang !== currentLang) setLang(lang);
         });
+    }
 
-        // Desktop nav — insert before nav-member or at start of nav-actions
+    function createToggle() {
+        const toggle = document.createElement('div');
+        toggle.className = 'lang-toggle';
+        toggle.innerHTML = `
+            <button type="button" class="lang-btn${currentLang === 'en' ? ' active' : ''}" data-lang="en">EN</button>
+            <span class="lang-sep">|</span>
+            <button type="button" class="lang-btn${currentLang === 'pt' ? ' active' : ''}" data-lang="pt">PT</button>
+            <span class="lang-sep">|</span>
+            <button type="button" class="lang-btn${currentLang === 'es' ? ' active' : ''}" data-lang="es">ES</button>
+        `;
+
+        bindLangToggleClick(toggle);
+
+        // Desktop: classic navbar or Lon header (book, index, travel, …)
         const navActions = document.querySelector('.nav-actions');
+        const lonNavActions = document.querySelector('.lon-nav-actions');
         if (navActions) {
             navActions.insertBefore(toggle, navActions.firstChild);
+        } else if (lonNavActions) {
+            lonNavActions.insertBefore(toggle, lonNavActions.firstChild);
         }
 
-        // Mobile menu
+        // Mobile menu (classic site)
         const mobileContent = document.querySelector('.mobile-menu-content');
         if (mobileContent) {
             const mobileToggle = toggle.cloneNode(true);
             mobileToggle.className = 'lang-toggle lang-toggle-mobile';
-            mobileToggle.addEventListener('click', (e) => {
-                const btn = e.target.closest('.lang-btn');
-                if (!btn) return;
-                const lang = btn.dataset.lang;
-                if (lang && lang !== currentLang) setLang(lang);
-            });
+            bindLangToggleClick(mobileToggle);
             mobileContent.insertBefore(mobileToggle, mobileContent.firstChild);
+        }
+
+        // Lon mobile drawer (book, index, travel, …)
+        const lonMobileMenu = document.getElementById('lonMobileMenu');
+        if (lonMobileMenu && !mobileContent) {
+            const lonMobileToggle = toggle.cloneNode(true);
+            lonMobileToggle.className = 'lang-toggle lang-toggle-mobile';
+            bindLangToggleClick(lonMobileToggle);
+            lonMobileMenu.insertBefore(lonMobileToggle, lonMobileMenu.firstChild);
         }
     }
 
@@ -729,10 +766,10 @@
     ══════════════════════════════════════════ */
     window.CLINIC_I18N = {
         getLang: () => currentLang,
-        getMonthNames: () => BOOKING_STRINGS[currentLang].months,
-        getWeekdayNames: () => BOOKING_STRINGS[currentLang].weekdays,
-        getBookingString: (key) => BOOKING_STRINGS[currentLang][key],
-        getServiceLabel: (key) => BOOKING_STRINGS[currentLang].services[key],
+        getMonthNames: () => (BOOKING_STRINGS[currentLang] || BOOKING_STRINGS.en).months,
+        getWeekdayNames: () => (BOOKING_STRINGS[currentLang] || BOOKING_STRINGS.en).weekdays,
+        getBookingString: (key) => (BOOKING_STRINGS[currentLang] || BOOKING_STRINGS.en)[key],
+        getServiceLabel: (key) => (BOOKING_STRINGS[currentLang] || BOOKING_STRINGS.en).services[key],
         getWaveLabels: () => {
             const labels = WAVE_LABELS[PAGE];
             return labels ? (labels[currentLang] || labels.en) : null;

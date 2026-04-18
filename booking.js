@@ -104,6 +104,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         return monthNames;
     }
 
+    /** Locale for confirmation email: en (default), pt, es — matches i18n + hidden #bookingLocale */
+    function getBookingLocale() {
+        const hidden = document.getElementById('bookingLocale');
+        if (hidden && hidden.value) return hidden.value;
+        if (window.CLINIC_I18N && typeof window.CLINIC_I18N.getLang === 'function') {
+            return window.CLINIC_I18N.getLang();
+        }
+        try {
+            const s = localStorage.getItem('clinic_lang');
+            if (s === 'pt' || s === 'es') return s;
+        } catch (e) { /* ignore */ }
+        return 'en';
+    }
+
     // ─── Check for Stripe return ───
     const urlParams = new URLSearchParams(window.location.search);
 
@@ -1016,7 +1030,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     patientPhone: document.getElementById('phone').value,
                     passengers: passengers,
                     travelDest: document.getElementById('travelDest')?.value || '',
-                    travelDates: document.getElementById('travelDates')?.value || ''
+                    travelDates: document.getElementById('travelDates')?.value || '',
+                    locale: getBookingLocale()
                 })
             });
 

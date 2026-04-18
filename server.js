@@ -3,6 +3,7 @@
 ======================================== */
 
 require('dotenv').config();
+const db = require('./db');
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -80,16 +81,12 @@ function sendHtmlNoCache(res, filePath, onErrorMessage) {
 }
 
 /* ========================================
-   IN-MEMORY BOOKINGS STORE
-   (Replace with a database in production)
+   BOOKINGS + CLINICAL NOTES
+   PostgreSQL (Supabase) when DATABASE_URL is set; otherwise in-memory.
 ======================================== */
-const bookingsStore = []; // { bookingRef, email, service, date, time, patientName, travellerCount, amount, currency, createdAt }
-
-/* ========================================
-   CLINICAL NOTES STORE
-   (Replace with a database in production)
-======================================== */
-const clinicalNotesStore = []; // { bookingRef, consultationDate, notes, diagnosis, prescriptions, followUp, createdBy, createdAt, updatedAt }
+const usePersistentDb = db.isDatabaseEnabled();
+const bookingsStore = []; // memory fallback only
+const clinicalNotesStore = []; // memory fallback only
 
 /* ========================================
    SCHEDULE/AVAILABILITY STORE
@@ -146,7 +143,7 @@ function loadScheduleStore() {
     }
 }
 
-function persistScheduleStore() {
+function persistScheduleStoreToFile() {
     try {
         const dir = path.dirname(scheduleFilePath);
         if (!fs.existsSync(dir)) {
@@ -158,8 +155,39 @@ function persistScheduleStore() {
     }
 }
 
-const scheduleStore = loadScheduleStore();
-persistScheduleStore();
+async function persistScheduleStore() {
+    if (usePersistentDb) {
+        try {
+            await db.saveSchedulePayload(scheduleStore);
+        } catch (err) {
+            console.error('⚠️ Failed to persist schedule to database:', err.message);
+        }
+        return;
+    }
+    persistScheduleStoreToFile();
+}
+
+let scheduleStore = cloneDefaultSchedule();
+
+async function bootstrapPersistence() {
+    if (usePersistentDb) {
+        const init = await db.initDatabase();
+        if (!init.ok) {
+            console.error('   ⚠️  DATABASE_URL set but database init failed');
+            return;
+        }
+        const payload = await db.getSchedulePayload();
+        if (payload && typeof payload === 'object' && Object.keys(payload).length > 0) {
+            scheduleStore = ensureScheduleStoreShape(payload);
+        } else {
+            scheduleStore = loadScheduleStore();
+            await db.saveSchedulePayload(scheduleStore);
+        }
+        return;
+    }
+    scheduleStore = loadScheduleStore();
+    persistScheduleStoreToFile();
+}
 
 /* ========================================
    EMAIL CONFIGURATION
@@ -215,8 +243,201 @@ const upload = multer({
 });
 
 /* ========================================
-   EMAIL TEMPLATE
+   EMAIL TEMPLATE — patient locale (en / pt / es)
 ======================================== */
+
+function normalizePatientLocale(raw) {
+    const s = String(raw || '').trim().toLowerCase();
+    if (s === 'pt' || s.startsWith('pt')) return 'pt';
+    if (s === 'es' || s.startsWith('es')) return 'es';
+    return 'en';
+}
+
+/** Strings for booking confirmation email (HTML + plain text + subject) */
+const CONFIRMATION_EMAIL_I18N = {
+    en: {
+        htmlLang: 'en',
+        emailTitle: 'Booking Confirmation',
+        h2Confirmed: 'Booking Confirmed',
+        thankYou: (name) => `Thank you, ${name}. Your consultation has been booked and payment received.`,
+        refLabel: 'Booking Reference',
+        colService: 'Service',
+        colDate: 'Date',
+        colTime: 'Time',
+        colFormat: 'Format',
+        formatVideo: 'Secure video call',
+        travellers: 'Travellers',
+        travellerRow: (n) => `Traveller ${n}`,
+        destLabel: 'Destination(s)',
+        travelDatesLabel: 'Travel Dates',
+        totalPaid: 'Total Paid',
+        whatsNext: 'What happens next?',
+        step1Title: 'Pre-consultation questionnaire',
+        step1Body: "You'll receive a separate email with a health questionnaire to complete before your appointment.",
+        step2Title: 'Video call link',
+        step2NoDoxy: "We'll send you a secure video call link 24 hours before your appointment.",
+        doxyBefore: 'Join your consultation via our secure video room:',
+        doxyAfter: 'Open this link at your scheduled time — no download required.',
+        joinVideoButton: 'Join Video Consultation',
+        step3Title: 'Your consultation',
+        step3Travel: 'Meet your physician for an unhurried, comprehensive travel health consultation.',
+        step3Longevity: 'Meet your physician for an unhurried, comprehensive longevity consultation.',
+        step4ReportTitle: 'Personalised report',
+        step4ReportBody: "Within 48 hours, you'll receive a detailed report with actionable insights and a personalised health plan.",
+        step4TravelTitle: 'Prescriptions & vaccines',
+        step4TravelBody: 'Any required prescriptions or vaccine recommendations will be provided during or shortly after your consultation.',
+        rescheduleStrong: 'Need to reschedule?',
+        rescheduleRest: 'Free rescheduling is available up to 24 hours before your appointment. Simply reply to this email or contact us.',
+        footerContact: 'If you have any questions, contact us at',
+        footerOrCall: 'or call',
+        footerCopy: '© 2026 Longevity Clinic. All rights reserved.',
+        footerAuto: 'This is an automated confirmation email. Please do not reply directly to this address.',
+        subject: (service, date, ref) => `Booking Confirmed — ${service} on ${date} | Ref: ${ref}`,
+        textHead: 'BOOKING CONFIRMED',
+        textThanks: (name) => `Thank you, ${name}. Your consultation has been booked and payment received.`,
+        textDetails: 'BOOKING DETAILS',
+        textService: 'Service',
+        textDate: 'Date',
+        textTime: 'Time',
+        textFormat: 'Format',
+        textTravellers: 'Travellers',
+        textDest: 'Destination',
+        textTravelDates: 'Travel dates',
+        textTotalPaid: 'Total Paid',
+        textWhatsNext: 'WHAT HAPPENS NEXT',
+        textStep1: 'Pre-consultation questionnaire — check your inbox.',
+        textStep2Doxy: (url) => `Video call link — join your secure video room at your scheduled time (no download required):\n   ${url}`,
+        textStep2NoDoxy: 'Video call link — we will send a secure link 24 hours before your appointment.',
+        textStep3: 'Your consultation — meet your physician online.',
+        textStep4Report: 'Personalised report — within 48 hours.',
+        textStep4Travel: 'Prescriptions & vaccines — provided during or after consultation.',
+        textReschedule: 'Need to reschedule? Free rescheduling up to 24 hours before. Reply to this email or contact us.',
+        textFooterCopy: '© 2026 Longevity Clinic'
+    },
+    pt: {
+        htmlLang: 'pt',
+        emailTitle: 'Confirmação de marcação',
+        h2Confirmed: 'Marcação confirmada',
+        thankYou: (name) => `Obrigado, ${name}. A sua consulta foi marcada e o pagamento foi recebido.`,
+        refLabel: 'Referência da marcação',
+        colService: 'Serviço',
+        colDate: 'Data',
+        colTime: 'Hora',
+        colFormat: 'Formato',
+        formatVideo: 'Videochamada segura',
+        travellers: 'Viajantes',
+        travellerRow: (n) => `Viajante ${n}`,
+        destLabel: 'Destino(s)',
+        travelDatesLabel: 'Datas da viagem',
+        totalPaid: 'Total pago',
+        whatsNext: 'Próximos passos',
+        step1Title: 'Questionário pré-consulta',
+        step1Body: 'Receberá um email separado com um questionário de saúde a preencher antes da consulta.',
+        step2Title: 'Ligação por vídeo',
+        step2NoDoxy: 'Enviaremos uma ligação segura por vídeo 24 horas antes da sua consulta.',
+        doxyBefore: 'Aceda à consulta através da nossa sala de vídeo segura:',
+        doxyAfter: 'Abra esta ligação à hora marcada — não é necessária qualquer instalação.',
+        joinVideoButton: 'Entrar na consulta por vídeo',
+        step3Title: 'A sua consulta',
+        step3Travel: 'Reúna-se com o seu médico numa consulta de medicina de viagem completa e sem pressa.',
+        step3Longevity: 'Reúna-se com o seu médico numa consulta de longevidade completa e sem pressa.',
+        step4ReportTitle: 'Relatório personalizado',
+        step4ReportBody: 'No prazo de 48 horas, receberá um relatório detalhado com recomendações práticas e um plano de saúde personalizado.',
+        step4TravelTitle: 'Receitas e vacinas',
+        step4TravelBody: 'Quaisquer receitas ou recomendações de vacinas necessárias serão fornecidas durante ou pouco depois da consulta.',
+        rescheduleStrong: 'Precisa de reagendar?',
+        rescheduleRest: 'O reagendamento é gratuito até 24 horas antes da consulta. Responda a este email ou contacte-nos.',
+        footerContact: 'Em caso de dúvidas, contacte-nos em',
+        footerOrCall: 'ou ligue para',
+        footerCopy: '© 2026 Longevity Clinic. Todos os direitos reservados.',
+        footerAuto: 'Este é um email de confirmação automático. Por favor não responda diretamente a este endereço.',
+        subject: (service, date, ref) => `Marcação confirmada — ${service} · ${date} | Ref.: ${ref}`,
+        textHead: 'MARCAÇÃO CONFIRMADA',
+        textThanks: (name) => `Obrigado, ${name}. A sua consulta foi marcada e o pagamento foi recebido.`,
+        textDetails: 'DETALHES DA MARCAÇÃO',
+        textService: 'Serviço',
+        textDate: 'Data',
+        textTime: 'Hora',
+        textFormat: 'Formato',
+        textTravellers: 'Viajantes',
+        textDest: 'Destino',
+        textTravelDates: 'Datas da viagem',
+        textTotalPaid: 'Total pago',
+        textWhatsNext: 'PRÓXIMOS PASSOS',
+        textStep1: 'Questionário pré-consulta — verifique a sua caixa de entrada.',
+        textStep2Doxy: (url) => `Ligação por vídeo — aceda à sala segura à hora marcada (sem instalação):\n   ${url}`,
+        textStep2NoDoxy: 'Ligação por vídeo — enviaremos uma ligação segura 24 horas antes da consulta.',
+        textStep3: 'A sua consulta — encontre-se com o seu médico online.',
+        textStep4Report: 'Relatório personalizado — no prazo de 48 horas.',
+        textStep4Travel: 'Receitas e vacinas — fornecidas durante ou após a consulta.',
+        textReschedule: 'Precisa de reagendar? Reagendamento gratuito até 24 horas antes. Responda a este email ou contacte-nos.',
+        textFooterCopy: '© 2026 Longevity Clinic'
+    },
+    es: {
+        htmlLang: 'es',
+        emailTitle: 'Confirmación de cita',
+        h2Confirmed: 'Cita confirmada',
+        thankYou: (name) => `Gracias, ${name}. Su consulta ha sido reservada y hemos recibido el pago.`,
+        refLabel: 'Referencia de la reserva',
+        colService: 'Servicio',
+        colDate: 'Fecha',
+        colTime: 'Hora',
+        colFormat: 'Formato',
+        formatVideo: 'Videollamada segura',
+        travellers: 'Viajeros',
+        travellerRow: (n) => `Viajero/a ${n}`,
+        destLabel: 'Destino(s)',
+        travelDatesLabel: 'Fechas del viaje',
+        totalPaid: 'Total pagado',
+        whatsNext: 'Próximos pasos',
+        step1Title: 'Cuestionario previo a la consulta',
+        step1Body: 'Recibirá un correo aparte con un cuestionario de salud que deberá completar antes de la cita.',
+        step2Title: 'Enlace de videollamada',
+        step2NoDoxy: 'Le enviaremos un enlace seguro para la videollamada 24 horas antes de su cita.',
+        doxyBefore: 'Acceda a la consulta a través de nuestra sala de vídeo segura:',
+        doxyAfter: 'Abra este enlace a la hora acordada; no necesita instalar ningún programa.',
+        joinVideoButton: 'Unirse a la videoconsulta',
+        step3Title: 'Su consulta',
+        step3Travel: 'Conéctese con su médico para una consulta de medicina de viaje completa y sin prisas.',
+        step3Longevity: 'Conéctese con su médico para una consulta de longevidad completa y sin prisas.',
+        step4ReportTitle: 'Informe personalizado',
+        step4ReportBody: 'En un plazo de 48 horas recibirá un informe detallado con recomendaciones prácticas y un plan de salud personalizado.',
+        step4TravelTitle: 'Recetas y vacunas',
+        step4TravelBody: 'Las recetas necesarias o recomendaciones de vacunas se facilitarán durante o poco después de la consulta.',
+        rescheduleStrong: '¿Necesita cambiar la fecha?',
+        rescheduleRest: 'Puede reprogramar sin coste hasta 24 horas antes de la cita. Responda a este correo o contáctenos.',
+        footerContact: 'Si tiene alguna pregunta, escríbanos a',
+        footerOrCall: 'o llame al',
+        footerCopy: '© 2026 Longevity Clinic. Todos los derechos reservados.',
+        footerAuto: 'Este es un correo de confirmación automático. No responda directamente a esta dirección.',
+        subject: (service, date, ref) => `Cita confirmada — ${service} · ${date} | Ref.: ${ref}`,
+        textHead: 'CITA CONFIRMADA',
+        textThanks: (name) => `Gracias, ${name}. Su consulta ha sido reservada y hemos recibido el pago.`,
+        textDetails: 'DETALLES DE LA RESERVA',
+        textService: 'Servicio',
+        textDate: 'Fecha',
+        textTime: 'Hora',
+        textFormat: 'Formato',
+        textTravellers: 'Viajeros',
+        textDest: 'Destino',
+        textTravelDates: 'Fechas del viaje',
+        textTotalPaid: 'Total pagado',
+        textWhatsNext: 'PRÓXIMOS PASOS',
+        textStep1: 'Cuestionario previo — revise su bandeja de entrada.',
+        textStep2Doxy: (url) => `Enlace de videollamada — acceda a la sala segura a la hora acordada (sin descargas):\n   ${url}`,
+        textStep2NoDoxy: 'Enlace de videollamada — le enviaremos un enlace seguro 24 horas antes de la cita.',
+        textStep3: 'Su consulta — conéctese con su médico en línea.',
+        textStep4Report: 'Informe personalizado — en un plazo de 48 horas.',
+        textStep4Travel: 'Recetas y vacunas — facilitadas durante o después de la consulta.',
+        textReschedule: '¿Necesita cambiar la fecha? Reprogramación gratuita hasta 24 horas antes. Responda a este correo o contáctenos.',
+        textFooterCopy: '© 2026 Longevity Clinic'
+    }
+};
+
+function confirmationEmailStrings(locale) {
+    const k = normalizePatientLocale(locale);
+    return CONFIRMATION_EMAIL_I18N[k] || CONFIRMATION_EMAIL_I18N.en;
+}
 
 function buildConfirmationEmail(data) {
     const {
@@ -232,49 +453,66 @@ function buildConfirmationEmail(data) {
         travellerCount,
         passengers,
         travelDest,
-        travelDates
+        travelDates,
+        locale: rawLocale
     } = data;
+
+    const t = confirmationEmailStrings(rawLocale);
 
     const currencySymbol = currency === 'eur' ? '€' : currency === 'gbp' ? '£' : '$';
     const formattedAmount = `${currencySymbol}${(amount / 100).toFixed(0)}`;
     const isTravel = service === 'travel';
     const isMulti = travellerCount > 1;
 
-    // Build passenger rows for multi-traveller
     let passengerRows = '';
     if (isMulti && passengers && passengers.length > 0) {
         passengerRows = passengers.map((name, i) => `
             <tr>
-                <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">Traveller ${i + 1}</td>
+                <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.travellerRow(i + 1)}</td>
                 <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${name}</td>
             </tr>
         `).join('');
     }
 
-    // Build travel details rows
     let travelRows = '';
     if (isTravel && (travelDest || travelDates)) {
         travelRows = `
             ${travelDest ? `
             <tr>
-                <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">Destination(s)</td>
+                <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.destLabel}</td>
                 <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${travelDest}</td>
             </tr>` : ''}
             ${travelDates ? `
             <tr>
-                <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">Travel Dates</td>
+                <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.travelDatesLabel}</td>
                 <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${travelDates}</td>
             </tr>` : ''}
         `;
     }
 
+    const doxyCtaButton = DOXY_ROOM_URL
+        ? `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:16px 0 20px;">
+    <tr>
+        <td align="center" style="padding:0;">
+            <a href="${DOXY_ROOM_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;padding:14px 32px;border-radius:10px;">${t.joinVideoButton}</a>
+        </td>
+    </tr>
+</table>`
+        : '';
+
+    const step2Html = DOXY_ROOM_URL
+        ? `${t.doxyBefore}<br><br>${doxyCtaButton}<p style="margin:8px 0 0; font-size:14px; color:#475569; line-height:1.5;">${t.doxyAfter}</p>`
+        : t.step2NoDoxy;
+
+    const step3Body = isTravel ? t.step3Travel : t.step3Longevity;
+
     const html = `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="${t.htmlLang}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking Confirmation</title>
+    <title>${t.emailTitle}</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #f0f4fa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f0f4fa; padding: 40px 20px;">
@@ -282,7 +520,6 @@ function buildConfirmationEmail(data) {
             <td align="center">
                 <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width: 600px; width: 100%;">
 
-                    <!-- Header -->
                     <tr>
                         <td style="text-align: center; padding: 0 0 32px;">
                             <h1 style="margin: 0; font-size: 22px; font-weight: 700; color: #0f172a; letter-spacing: -0.02em;">longevity</h1>
@@ -290,64 +527,58 @@ function buildConfirmationEmail(data) {
                         </td>
                     </tr>
 
-                    <!-- Main Card -->
                     <tr>
                         <td style="background: #ffffff; border-radius: 16px; padding: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.06);">
 
-                            <!-- Confirmation Icon -->
                             <div style="text-align: center; margin-bottom: 24px;">
                                 <div style="display: inline-block; width: 56px; height: 56px; background: #e8f5e9; border-radius: 50%; line-height: 56px; text-align: center;">
                                     <span style="font-size: 28px;">&#10003;</span>
                                 </div>
                             </div>
 
-                            <h2 style="margin: 0 0 8px; font-size: 24px; font-weight: 700; color: #0f172a; text-align: center;">Booking Confirmed</h2>
+                            <h2 style="margin: 0 0 8px; font-size: 24px; font-weight: 700; color: #0f172a; text-align: center;">${t.h2Confirmed}</h2>
                             <p style="margin: 0 0 32px; font-size: 15px; color: #64748b; text-align: center; line-height: 1.5;">
-                                Thank you, ${patientName}. Your consultation has been booked and payment received.
+                                ${t.thankYou(patientName)}
                             </p>
 
-                            <!-- Booking Reference -->
                             <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 20px; text-align: center; margin-bottom: 28px;">
-                                <p style="margin: 0 0 4px; font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em;">Booking Reference</p>
+                                <p style="margin: 0 0 4px; font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em;">${t.refLabel}</p>
                                 <p style="margin: 0; font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: 0.05em;">${bookingRef}</p>
                             </div>
 
-                            <!-- Booking Details Table -->
                             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 28px;">
                                 <tr>
-                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">Service</td>
+                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.colService}</td>
                                     <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${serviceLabel}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">Date</td>
+                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.colDate}</td>
                                     <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${date}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">Time</td>
+                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.colTime}</td>
                                     <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${time}</td>
                                 </tr>
                                 <tr>
-                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">Format</td>
-                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">Secure video call</td>
+                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.colFormat}</td>
+                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${t.formatVideo}</td>
                                 </tr>
                                 ${isMulti ? `
                                 <tr>
-                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">Travellers</td>
+                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.travellers}</td>
                                     <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${travellerCount}</td>
                                 </tr>` : ''}
                                 ${passengerRows}
                                 ${travelRows}
                                 <tr>
-                                    <td style="padding: 12px 0 8px; color: #64748b; font-size: 14px; font-weight: 600;">Total Paid</td>
+                                    <td style="padding: 12px 0 8px; color: #64748b; font-size: 14px; font-weight: 600;">${t.totalPaid}</td>
                                     <td style="padding: 12px 0 8px; color: #0f172a; font-size: 18px; font-weight: 700; text-align: right;">${formattedAmount}</td>
                                 </tr>
                             </table>
 
-                            <!-- Divider -->
                             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 0 0 28px;">
 
-                            <!-- What's Next -->
-                            <h3 style="margin: 0 0 16px; font-size: 16px; font-weight: 600; color: #0f172a;">What happens next?</h3>
+                            <h3 style="margin: 0 0 16px; font-size: 16px; font-weight: 600; color: #0f172a;">${t.whatsNext}</h3>
 
                             <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                                 <tr>
@@ -355,8 +586,8 @@ function buildConfirmationEmail(data) {
                                         <div style="width: 24px; height: 24px; background: #eef4fb; border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; font-weight: 700; color: #3b82f6;">1</div>
                                     </td>
                                     <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #475569; line-height: 1.5;">
-                                        <strong style="color: #0f172a;">Pre-consultation questionnaire</strong><br>
-                                        You'll receive a separate email with a health questionnaire to complete before your appointment.
+                                        <strong style="color: #0f172a;">${t.step1Title}</strong><br>
+                                        ${t.step1Body}
                                     </td>
                                 </tr>
                                 <tr>
@@ -364,10 +595,8 @@ function buildConfirmationEmail(data) {
                                         <div style="width: 24px; height: 24px; background: #eef4fb; border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; font-weight: 700; color: #3b82f6;">2</div>
                                     </td>
                                     <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #475569; line-height: 1.5;">
-                                        <strong style="color: #0f172a;">Video call link</strong><br>
-                                        ${DOXY_ROOM_URL
-                                            ? `Join your consultation via our secure video room: <a href="${DOXY_ROOM_URL}" style="color: #3b82f6; text-decoration: none; font-weight: 500;">${DOXY_ROOM_URL}</a>. Open this link at your scheduled time — no download required.`
-                                            : `24 hours before your appointment, we'll send you a secure video call link.`}
+                                        <strong style="color: #0f172a;">${t.step2Title}</strong><br>
+                                        ${step2Html}
                                     </td>
                                 </tr>
                                 <tr>
@@ -375,8 +604,8 @@ function buildConfirmationEmail(data) {
                                         <div style="width: 24px; height: 24px; background: #eef4fb; border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; font-weight: 700; color: #3b82f6;">3</div>
                                     </td>
                                     <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #475569; line-height: 1.5;">
-                                        <strong style="color: #0f172a;">Your consultation</strong><br>
-                                        Meet your physician for an unhurried, comprehensive ${isTravel ? 'travel health' : 'longevity'} consultation.
+                                        <strong style="color: #0f172a;">${t.step3Title}</strong><br>
+                                        ${step3Body}
                                     </td>
                                 </tr>
                                 ${!isTravel ? `
@@ -385,8 +614,8 @@ function buildConfirmationEmail(data) {
                                         <div style="width: 24px; height: 24px; background: #eef4fb; border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; font-weight: 700; color: #3b82f6;">4</div>
                                     </td>
                                     <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #475569; line-height: 1.5;">
-                                        <strong style="color: #0f172a;">Personalised report</strong><br>
-                                        Within 48 hours, you'll receive a detailed report with actionable insights and a personalised health plan.
+                                        <strong style="color: #0f172a;">${t.step4ReportTitle}</strong><br>
+                                        ${t.step4ReportBody}
                                     </td>
                                 </tr>` : `
                                 <tr>
@@ -394,35 +623,33 @@ function buildConfirmationEmail(data) {
                                         <div style="width: 24px; height: 24px; background: #eef4fb; border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; font-weight: 700; color: #3b82f6;">4</div>
                                     </td>
                                     <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #475569; line-height: 1.5;">
-                                        <strong style="color: #0f172a;">Prescriptions &amp; vaccines</strong><br>
-                                        Any required prescriptions or vaccine recommendations will be provided during or shortly after your consultation.
+                                        <strong style="color: #0f172a;">${t.step4TravelTitle}</strong><br>
+                                        ${t.step4TravelBody}
                                     </td>
                                 </tr>`}
                             </table>
 
-                            <!-- Reschedule Note -->
                             <div style="background: #fefce8; border: 1px solid #fde68a; border-radius: 10px; padding: 14px 18px; margin-top: 28px;">
                                 <p style="margin: 0; font-size: 13px; color: #92400e; line-height: 1.5;">
-                                    <strong>Need to reschedule?</strong> Free rescheduling is available up to 24 hours before your appointment. Simply reply to this email or contact us.
+                                    <strong>${t.rescheduleStrong}</strong> ${t.rescheduleRest}
                                 </p>
                             </div>
 
                         </td>
                     </tr>
 
-                    <!-- Footer -->
                     <tr>
                         <td style="padding: 32px 20px; text-align: center;">
                             <p style="margin: 0 0 8px; font-size: 13px; color: #94a3b8;">
-                                If you have any questions, contact us at
+                                ${t.footerContact}
                                 <a href="mailto:info@lonclinic.com" style="color: #3b82f6; text-decoration: none;">info@lonclinic.com</a>
                             </p>
                             <p style="margin: 0 0 16px; font-size: 13px; color: #94a3b8;">
-                                or call <a href="tel:+351928372775" style="color: #3b82f6; text-decoration: none;">+351 928 372 775</a>
+                                ${t.footerOrCall} <a href="tel:+351928372775" style="color: #3b82f6; text-decoration: none;">+351 928 372 775</a>
                             </p>
                             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;">
-                            <p style="margin: 0; font-size: 11px; color: #cbd5e1;">&copy; 2026 Longevity Clinic. All rights reserved.</p>
-                            <p style="margin: 4px 0 0; font-size: 11px; color: #cbd5e1;">This is an automated confirmation email. Please do not reply directly to this address.</p>
+                            <p style="margin: 0; font-size: 11px; color: #cbd5e1;">${t.footerCopy}</p>
+                            <p style="margin: 4px 0 0; font-size: 11px; color: #cbd5e1;">${t.footerAuto}</p>
                         </td>
                     </tr>
 
@@ -433,34 +660,36 @@ function buildConfirmationEmail(data) {
 </body>
 </html>`;
 
-    // Plain text fallback
+    const textStep2 = DOXY_ROOM_URL ? t.textStep2Doxy(DOXY_ROOM_URL) : t.textStep2NoDoxy;
+    const textStep4 = isTravel ? t.textStep4Travel : t.textStep4Report;
+
     const text = `
-BOOKING CONFIRMED — ${bookingRef}
+${t.textHead} — ${bookingRef}
 
-Thank you, ${patientName}. Your consultation has been booked and payment received.
+${t.textThanks(patientName)}
 
-BOOKING DETAILS
+${t.textDetails}
 ───────────────
-Service:     ${serviceLabel}
-Date:        ${date}
-Time:        ${time}
-Format:      Secure video call
-${isMulti ? `Travellers:  ${travellerCount}\n` : ''}${isTravel && travelDest ? `Destination: ${travelDest}\n` : ''}${isTravel && travelDates ? `Travel dates: ${travelDates}\n` : ''}Total Paid:  ${formattedAmount}
+${t.textService}:     ${serviceLabel}
+${t.textDate}:        ${date}
+${t.textTime}:        ${time}
+${t.textFormat}:      ${t.formatVideo}
+${isMulti ? `${t.textTravellers}:  ${travellerCount}\n` : ''}${isTravel && travelDest ? `${t.textDest}: ${travelDest}\n` : ''}${isTravel && travelDates ? `${t.textTravelDates}: ${travelDates}\n` : ''}${t.textTotalPaid}:  ${formattedAmount}
 
-WHAT HAPPENS NEXT
+${t.textWhatsNext}
 ─────────────────
-1. Pre-consultation questionnaire — check your inbox.
-2. Video call link — sent 24 hours before your appointment.
-3. Your consultation — meet your physician online.
-4. ${isTravel ? 'Prescriptions & vaccines — provided during/after consultation.' : 'Personalised report — within 48 hours.'}
+1. ${t.textStep1}
+2. ${textStep2}
+3. ${t.textStep3}
+4. ${textStep4}
 
-Need to reschedule? Free rescheduling up to 24 hours before. Reply to this email or contact us.
+${t.textReschedule}
 
 info@lonclinic.com | +351 928 372 775
-© 2026 Longevity Clinic
+${t.textFooterCopy}
 `;
 
-    return { html, text };
+    return { html, text, subject: t.subject(serviceLabel, date, bookingRef) };
 }
 
 /* ========================================
@@ -474,13 +703,19 @@ async function sendConfirmationEmail(data) {
         return false;
     }
 
+    const to = (data.email || '').trim();
+    if (!to || !to.includes('@')) {
+        console.error('   ⚠️  Confirmation email skipped — missing or invalid recipient:', data.email);
+        return false;
+    }
+
     try {
-        const { html, text } = buildConfirmationEmail(data);
+        const { html, text, subject } = buildConfirmationEmail(data);
 
         const info = await transporter.sendMail({
             from: EMAIL_FROM,
-            to: data.email,
-            subject: `Booking Confirmed — ${data.serviceLabel} on ${data.date} | Ref: ${data.bookingRef}`,
+            to,
+            subject,
             text: text,
             html: html,
         });
@@ -1051,6 +1286,131 @@ const SERVICE_LABELS = {
     followup: 'Follow-up Consultation'
 };
 
+/** Avoid duplicate finalize when webhook and success-page API run together */
+const checkoutFinalizeInFlight = new Set();
+
+function paymentIntentIdFromSession(session) {
+    const pi = session && session.payment_intent;
+    if (!pi) return '';
+    return typeof pi === 'string' ? pi : (pi.id || '');
+}
+
+/**
+ * Sends patient + admin emails and persists the booking once per Stripe payment.
+ * Used by the Stripe webhook and by GET /api/session/:id so confirmations still go out
+ * if the webhook is misconfigured, delayed, or unreachable.
+ */
+async function bookingRecordedByPaymentId(paymentId) {
+    if (usePersistentDb) {
+        return db.bookingExistsByPaymentId(paymentId);
+    }
+    return bookingsStore.some((b) => b.paymentId === paymentId);
+}
+
+async function finalizePaidCheckoutSession(session, logPrefix = '') {
+    if (!session || session.payment_status !== 'paid') {
+        return { ok: false, reason: 'not_paid' };
+    }
+
+    const paymentId = paymentIntentIdFromSession(session);
+    if (!paymentId) {
+        console.warn(`${logPrefix}finalizePaidCheckoutSession: missing payment_intent on session ${session.id}`);
+        return { ok: false, reason: 'no_payment_intent' };
+    }
+
+    if (await bookingRecordedByPaymentId(paymentId)) {
+        return { ok: true, reason: 'already_recorded' };
+    }
+
+    if (checkoutFinalizeInFlight.has(paymentId)) {
+        for (let i = 0; i < 50; i++) {
+            await new Promise((r) => setTimeout(r, 100));
+            if (await bookingRecordedByPaymentId(paymentId)) {
+                return { ok: true, reason: 'awaited_peer' };
+            }
+        }
+        console.warn(`${logPrefix}finalizePaidCheckoutSession: timeout waiting for in-flight finalize for ${paymentId}`);
+        return { ok: false, reason: 'finalize_wait_timeout' };
+    }
+
+    checkoutFinalizeInFlight.add(paymentId);
+    try {
+        if (await bookingRecordedByPaymentId(paymentId)) {
+            return { ok: true, reason: 'already_recorded' };
+        }
+
+        const meta = session.metadata || {};
+        const travellerCount = parseInt(meta.traveller_count, 10) || 1;
+        const passengerNames = [];
+        for (let i = 1; i <= travellerCount; i++) {
+            if (meta[`p${i}_name`]) {
+                passengerNames.push(meta[`p${i}_name`]);
+            }
+        }
+
+        const shortId = paymentId.length >= 8 ? paymentId.slice(-8) : paymentId;
+        const bookingRef = 'LC-' + shortId.toUpperCase();
+
+        const bookingData = {
+            bookingRef,
+            patientName: passengerNames[0] || meta.contact_email?.split('@')[0] || 'Patient',
+            email: session.customer_details?.email || session.customer_email || meta.contact_email,
+            service: meta.service,
+            serviceLabel: (meta.service_label && String(meta.service_label).trim())
+                || SERVICE_LABELS[meta.service]
+                || meta.service,
+            date: meta.date,
+            time: meta.time,
+            amount: session.amount_total,
+            currency: session.currency,
+            travellerCount,
+            hasInsurance: meta.has_insurance === 'medicare',
+            passengers: passengerNames,
+            travelDest: meta.travel_destinations,
+            travelDates: meta.travel_dates,
+            contactPhone: meta.contact_phone || '',
+            locale: meta.locale || 'en'
+        };
+
+        await sendConfirmationEmail(bookingData);
+        await sendAdminNotificationEmail(bookingData);
+
+        const emailNorm = (
+            session.customer_details?.email ||
+            session.customer_email ||
+            meta.contact_email ||
+            ''
+        ).toLowerCase();
+        const record = {
+            bookingRef,
+            email: emailNorm,
+            service: meta.service,
+            date: meta.date,
+            time: meta.time,
+            patientName: passengerNames[0] || 'Patient',
+            travellerCount,
+            amount: session.amount_total,
+            currency: session.currency,
+            paymentId,
+            createdAt: new Date().toISOString()
+        };
+
+        if (usePersistentDb) {
+            const inserted = await db.insertBooking(record);
+            if (!inserted) {
+                return { ok: true, reason: 'already_recorded' };
+            }
+            console.log(`${logPrefix}📋 Booking ${bookingRef} saved (database)`);
+        } else {
+            bookingsStore.push(record);
+            console.log(`${logPrefix}📋 Booking ${bookingRef} saved (${bookingsStore.length} total in memory)`);
+        }
+        return { ok: true, reason: 'recorded', bookingRef };
+    } finally {
+        checkoutFinalizeInFlight.delete(paymentId);
+    }
+}
+
 /* ========================================
    STRIPE WEBHOOK (raw body needed BEFORE json parser)
 ======================================== */
@@ -1080,10 +1440,10 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
     // Handle events
     switch (event.type) {
-        case 'checkout.session.completed':
+        case 'checkout.session.completed': {
             const session = event.data.object;
             const meta = session.metadata || {};
-            const travellerCount = parseInt(meta.traveller_count) || 1;
+            const travellerCount = parseInt(meta.traveller_count, 10) || 1;
 
             console.log('✅ Payment successful!');
             console.log('   Session ID:', session.id);
@@ -1092,57 +1452,18 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             console.log('   Service:', meta.service);
             console.log('   Travellers:', travellerCount);
 
-            // Collect passenger names
-            const passengerNames = [];
             for (let i = 1; i <= travellerCount; i++) {
                 if (meta[`p${i}_name`]) {
-                    passengerNames.push(meta[`p${i}_name`]);
                     console.log(`   Traveller ${i}: ${meta[`p${i}_name`]} (NHS: ${meta[`p${i}_nhs`] || 'N/A'})`);
                 }
             }
 
-            const bookingRef = 'LC-' + (session.payment_intent?.slice(-8) || Date.now().toString(36)).toUpperCase();
-
-            const bookingData = {
-                bookingRef,
-                patientName: passengerNames[0] || meta.contact_email?.split('@')[0] || 'Patient',
-                email: session.customer_details?.email || session.customer_email || meta.contact_email,
-                service: meta.service,
-                serviceLabel: SERVICE_LABELS[meta.service] || meta.service,
-                date: meta.date,
-                time: meta.time,
-                amount: session.amount_total,
-                currency: session.currency,
-                travellerCount,
-                hasInsurance: meta.has_insurance === 'medicare',
-                passengers: passengerNames,
-                travelDest: meta.travel_destinations,
-                travelDates: meta.travel_dates,
-                contactPhone: meta.contact_phone || ''
-            };
-
-            // Send confirmation email to patient
-            await sendConfirmationEmail(bookingData);
-
-            // Send notification email to clinic
-            await sendAdminNotificationEmail(bookingData);
-
-            // Save booking to in-memory store
-            bookingsStore.push({
-                bookingRef,
-                email: (session.customer_details?.email || session.customer_email || meta.contact_email || '').toLowerCase(),
-                service: meta.service,
-                date: meta.date,
-                time: meta.time,
-                patientName: passengerNames[0] || 'Patient',
-                travellerCount,
-                amount: session.amount_total,
-                currency: session.currency,
-                paymentId: session.payment_intent,
-                createdAt: new Date().toISOString()
-            });
-            console.log(`   📋 Booking ${bookingRef} saved (${bookingsStore.length} total in memory)`);
+            const fin = await finalizePaidCheckoutSession(session, '   ');
+            if (fin.reason === 'already_recorded' || fin.reason === 'awaited_peer') {
+                console.log('   ℹ️  Checkout already finalized (idempotent skip)');
+            }
             break;
+        }
 
         case 'checkout.session.expired':
             console.log('⏰ Checkout session expired:', event.data.object.id);
@@ -1557,7 +1878,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
         return res.status(500).json({ error: 'Stripe is not configured. Add your STRIPE_SECRET_KEY to the .env file.' });
     }
     try {
-        const {
+        let {
             service,
             serviceLabel,
             priceAmount,  // total in cents (flat tiered price for travel, per-person × count for others)
@@ -1570,7 +1891,8 @@ app.post('/api/create-checkout-session', async (req, res) => {
             patientPhone,
             passengers,   // array of { firstName, lastName, dob, nhs, country, concerns, medications, allergies }
             travelDest,
-            travelDates
+            travelDates,
+            locale
         } = req.body;
 
         // Validate required fields
@@ -1609,7 +1931,9 @@ app.post('/api/create-checkout-session', async (req, res) => {
             traveller_count: String(count),
             has_insurance: hasInsurance ? 'medicare' : 'none',
             travel_destinations: (travelDest || '').substring(0, 500),
-            travel_dates: travelDates || ''
+            travel_dates: travelDates || '',
+            locale: normalizePatientLocale(locale),
+            service_label: (serviceLabel || '').substring(0, 500)
         };
 
         // Store each passenger's core details in metadata (up to 4)
@@ -1687,14 +2011,19 @@ app.get('/api/session/:sessionId', async (req, res) => {
             return res.status(400).json({ error: 'Payment not completed' });
         }
 
-        const travellerCount = parseInt(session.metadata?.traveller_count) || 1;
+        await finalizePaidCheckoutSession(session, '[session-api] ');
+
+        const travellerCount = parseInt(session.metadata?.traveller_count, 10) || 1;
         const passengerNames = [];
         for (let i = 1; i <= travellerCount; i++) {
             if (session.metadata[`p${i}_name`]) passengerNames.push(session.metadata[`p${i}_name`]);
         }
 
+        const piId = paymentIntentIdFromSession(session);
+        const bookingRefShort = piId.length >= 8 ? piId.slice(-8).toUpperCase() : (piId || Date.now().toString(36)).toUpperCase();
+
         res.json({
-            email: session.customer_details?.email || session.customer_email,
+            email: session.customer_details?.email || session.customer_email || session.metadata?.contact_email,
             service: session.metadata.service,
             date: session.metadata.date,
             time: session.metadata.time,
@@ -1703,8 +2032,8 @@ app.get('/api/session/:sessionId', async (req, res) => {
             passengers: passengerNames,
             amount: session.amount_total,
             currency: session.currency,
-            paymentId: session.payment_intent,
-            bookingRef: 'LC-' + session.payment_intent?.slice(-8)?.toUpperCase()
+            paymentId: piId,
+            bookingRef: 'LC-' + bookingRefShort
         });
 
     } catch (err) {
@@ -1714,7 +2043,7 @@ app.get('/api/session/:sessionId', async (req, res) => {
 });
 
 // ─── API: Patient Dashboard — Fetch bookings by email ───
-app.get('/api/bookings', (req, res) => {
+app.get('/api/bookings', async (req, res) => {
     const email = (req.query.email || '').toLowerCase().trim();
     const ref = (req.query.ref || '').trim();
 
@@ -1722,24 +2051,30 @@ app.get('/api/bookings', (req, res) => {
         return res.status(400).json({ error: 'Email is required' });
     }
 
-    // Filter bookings by email (and optionally by reference)
-    let results = bookingsStore.filter(b => b.email === email);
-
-    // If a reference is provided, also include that specific booking even if email differs
-    if (ref) {
-        const refBooking = bookingsStore.find(b => b.bookingRef === ref);
-        if (refBooking && !results.find(b => b.bookingRef === ref)) {
-            results.push(refBooking);
+    try {
+        let results;
+        if (usePersistentDb) {
+            results = await db.findBookingsByEmail(email, ref);
+        } else {
+            results = bookingsStore.filter((b) => b.email === email);
+            if (ref) {
+                const refBooking = bookingsStore.find((b) => b.bookingRef === ref);
+                if (refBooking && !results.find((b) => b.bookingRef === ref)) {
+                    results.push(refBooking);
+                }
+            }
         }
+
+        results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        res.json({
+            bookings: results,
+            doxyUrl: DOXY_ROOM_URL || null
+        });
+    } catch (err) {
+        console.error('GET /api/bookings:', err.message);
+        res.status(500).json({ error: 'Failed to load bookings' });
     }
-
-    // Sort: upcoming first, then by creation date (newest first)
-    results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-    res.json({
-        bookings: results,
-        doxyUrl: DOXY_ROOM_URL || null
-    });
 });
 
 // ─── API: Doxy.me config (for client) ───
@@ -1752,7 +2087,7 @@ app.get('/api/doxy-config', (req, res) => {
 
 // ─── API: Send test email (for debugging) ───
 app.post('/api/test-email', async (req, res) => {
-    const { to } = req.body;
+    const { to, locale } = req.body;
     if (!to) return res.status(400).json({ error: 'Missing "to" email address' });
 
     const result = await sendConfirmationEmail({
@@ -1768,7 +2103,8 @@ app.post('/api/test-email', async (req, res) => {
         travellerCount: 1,
         passengers: ['Test Patient'],
         travelDest: '',
-        travelDates: ''
+        travelDates: '',
+        locale: normalizePatientLocale(locale)
     });
 
     if (result) {
@@ -1826,52 +2162,69 @@ app.get('/api/clinic/auth-status', (req, res) => {
 });
 
 // ─── API: Clinic — Get all bookings ───
-app.get('/api/clinic/bookings', requireAuth, (req, res) => {
-    // Sort by date (upcoming first, then by creation date)
-    const sorted = [...bookingsStore].sort((a, b) => {
-        // Try to parse dates for sorting
-        try {
-            const dateA = new Date(a.date);
-            const dateB = new Date(b.date);
-            if (!isNaN(dateA.getTime()) && !isNaN(dateB.getTime())) {
-                return dateA - dateB;
-            }
-        } catch {}
-        return new Date(b.createdAt) - new Date(a.createdAt);
-    });
-
-    // Attach clinical notes to each booking
-    const bookingsWithNotes = sorted.map(booking => {
-        const notes = clinicalNotesStore.find(n => n.bookingRef === booking.bookingRef);
-        return {
-            ...booking,
-            hasClinicalNotes: !!notes,
-            clinicalNotes: notes || null
+app.get('/api/clinic/bookings', requireAuth, async (req, res) => {
+    try {
+        const sortFn = (a, b) => {
+            try {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                if (!isNaN(dateA.getTime()) && !isNaN(dateB.getTime())) {
+                    return dateA - dateB;
+                }
+            } catch {}
+            return new Date(b.createdAt) - new Date(a.createdAt);
         };
-    });
 
-    res.json({ bookings: bookingsWithNotes });
+        let bookingsWithNotes;
+        if (usePersistentDb) {
+            bookingsWithNotes = (await db.findAllBookingsWithClinicalNotes()).sort(sortFn);
+        } else {
+            const sorted = [...bookingsStore].sort(sortFn);
+            bookingsWithNotes = sorted.map((booking) => {
+                const notes = clinicalNotesStore.find((n) => n.bookingRef === booking.bookingRef);
+                return {
+                    ...booking,
+                    hasClinicalNotes: !!notes,
+                    clinicalNotes: notes || null
+                };
+            });
+        }
+
+        res.json({ bookings: bookingsWithNotes });
+    } catch (err) {
+        console.error('GET /api/clinic/bookings:', err.message);
+        res.status(500).json({ error: 'Failed to load clinic bookings' });
+    }
 });
 
 // ─── API: Clinic — Get booking by reference ───
-app.get('/api/clinic/booking/:bookingRef', requireAuth, (req, res) => {
+app.get('/api/clinic/booking/:bookingRef', requireAuth, async (req, res) => {
     const bookingRef = req.params.bookingRef.toUpperCase();
-    const booking = bookingsStore.find(b => b.bookingRef === bookingRef);
-    
-    if (!booking) {
-        return res.status(404).json({ error: 'Booking not found' });
-    }
+    try {
+        const booking = usePersistentDb
+            ? await db.findBookingByRef(bookingRef)
+            : bookingsStore.find((b) => b.bookingRef === bookingRef);
 
-    const notes = clinicalNotesStore.find(n => n.bookingRef === bookingRef);
-    
-    res.json({
-        ...booking,
-        clinicalNotes: notes || null
-    });
+        if (!booking) {
+            return res.status(404).json({ error: 'Booking not found' });
+        }
+
+        const notes = usePersistentDb
+            ? await db.getClinicalNoteByRef(bookingRef)
+            : clinicalNotesStore.find((n) => n.bookingRef === bookingRef);
+
+        res.json({
+            ...booking,
+            clinicalNotes: notes || null
+        });
+    } catch (err) {
+        console.error('GET /api/clinic/booking:', err.message);
+        res.status(500).json({ error: 'Failed to load booking' });
+    }
 });
 
 // ─── API: Clinic — Save/Update clinical notes ───
-app.post('/api/clinic/notes', requireAuth, express.json(), (req, res) => {
+app.post('/api/clinic/notes', requireAuth, express.json(), async (req, res) => {
     const {
         bookingRef,
         consultationDate,
@@ -1886,53 +2239,83 @@ app.post('/api/clinic/notes', requireAuth, express.json(), (req, res) => {
         return res.status(400).json({ error: 'Booking reference is required' });
     }
 
-    // Verify booking exists
-    const booking = bookingsStore.find(b => b.bookingRef === bookingRef.toUpperCase());
-    if (!booking) {
-        return res.status(404).json({ error: 'Booking not found' });
+    const refUpper = bookingRef.toUpperCase();
+
+    try {
+        const booking = usePersistentDb
+            ? await db.findBookingByRef(refUpper)
+            : bookingsStore.find((b) => b.bookingRef === refUpper);
+        if (!booking) {
+            return res.status(404).json({ error: 'Booking not found' });
+        }
+
+        const now = new Date().toISOString();
+        let priorCreated = now;
+        if (usePersistentDb) {
+            const existing = await db.getClinicalNoteByRef(refUpper);
+            if (existing && existing.createdAt) {
+                priorCreated = existing.createdAt;
+            }
+        } else {
+            const existingIndex = clinicalNotesStore.findIndex((n) => n.bookingRef === refUpper);
+            if (existingIndex >= 0) {
+                priorCreated = clinicalNotesStore[existingIndex].createdAt;
+            }
+        }
+
+        const clinicalNote = {
+            bookingRef: refUpper,
+            consultationDate: consultationDate || booking.date,
+            notes: notes || '',
+            diagnosis: diagnosis || '',
+            prescriptions: prescriptions || '',
+            followUp: followUp || '',
+            createdBy: createdBy || 'Doctor',
+            createdAt: priorCreated,
+            updatedAt: now
+        };
+
+        if (usePersistentDb) {
+            await db.upsertClinicalNote(clinicalNote);
+            console.log(`   📝 Clinical notes saved for booking ${bookingRef} (database)`);
+        } else {
+            const existingIndex = clinicalNotesStore.findIndex((n) => n.bookingRef === refUpper);
+            if (existingIndex >= 0) {
+                clinicalNotesStore[existingIndex] = clinicalNote;
+                console.log(`   📝 Clinical notes updated for booking ${bookingRef}`);
+            } else {
+                clinicalNotesStore.push(clinicalNote);
+                console.log(`   📝 Clinical notes created for booking ${bookingRef}`);
+            }
+        }
+
+        res.json({
+            success: true,
+            clinicalNote
+        });
+    } catch (err) {
+        console.error('POST /api/clinic/notes:', err.message);
+        res.status(500).json({ error: 'Failed to save clinical notes' });
     }
-
-    const now = new Date().toISOString();
-    const existingIndex = clinicalNotesStore.findIndex(n => n.bookingRef === bookingRef.toUpperCase());
-
-    const clinicalNote = {
-        bookingRef: bookingRef.toUpperCase(),
-        consultationDate: consultationDate || booking.date,
-        notes: notes || '',
-        diagnosis: diagnosis || '',
-        prescriptions: prescriptions || '',
-        followUp: followUp || '',
-        createdBy: createdBy || 'Doctor',
-        createdAt: existingIndex >= 0 ? clinicalNotesStore[existingIndex].createdAt : now,
-        updatedAt: now
-    };
-
-    if (existingIndex >= 0) {
-        // Update existing
-        clinicalNotesStore[existingIndex] = clinicalNote;
-        console.log(`   📝 Clinical notes updated for booking ${bookingRef}`);
-    } else {
-        // Create new
-        clinicalNotesStore.push(clinicalNote);
-        console.log(`   📝 Clinical notes created for booking ${bookingRef}`);
-    }
-
-    res.json({
-        success: true,
-        clinicalNote
-    });
 });
 
 // ─── API: Clinic — Get clinical notes by booking reference ───
-app.get('/api/clinic/notes/:bookingRef', requireAuth, (req, res) => {
+app.get('/api/clinic/notes/:bookingRef', requireAuth, async (req, res) => {
     const bookingRef = req.params.bookingRef.toUpperCase();
-    const notes = clinicalNotesStore.find(n => n.bookingRef === bookingRef);
-    
-    if (!notes) {
-        return res.status(404).json({ error: 'Clinical notes not found' });
-    }
+    try {
+        const notes = usePersistentDb
+            ? await db.getClinicalNoteByRef(bookingRef)
+            : clinicalNotesStore.find((n) => n.bookingRef === bookingRef);
 
-    res.json(notes);
+        if (!notes) {
+            return res.status(404).json({ error: 'Clinical notes not found' });
+        }
+
+        res.json(notes);
+    } catch (err) {
+        console.error('GET /api/clinic/notes:', err.message);
+        res.status(500).json({ error: 'Failed to load clinical notes' });
+    }
 });
 
 // ─── API: Admin — Get schedule settings ───
@@ -1941,7 +2324,7 @@ app.get('/api/admin/schedule', requireAuth, (req, res) => {
 });
 
 // ─── API: Admin — Update schedule settings ───
-app.post('/api/admin/schedule', requireAuth, express.json(), (req, res) => {
+app.post('/api/admin/schedule', requireAuth, express.json(), async (req, res) => {
     const { workingHours, slotDuration, blockedDates, blockedTimeSlots, timezone } = req.body;
 
     if (workingHours) {
@@ -1961,10 +2344,14 @@ app.post('/api/admin/schedule', requireAuth, express.json(), (req, res) => {
     }
 
     scheduleStore.updatedAt = new Date().toISOString();
-    persistScheduleStore();
-    console.log('   📅 Schedule settings updated');
-
-    res.json({ success: true, schedule: scheduleStore });
+    try {
+        await persistScheduleStore();
+        console.log('   📅 Schedule settings updated');
+        res.json({ success: true, schedule: scheduleStore });
+    } catch (err) {
+        console.error('POST /api/admin/schedule:', err.message);
+        res.status(500).json({ error: 'Failed to persist schedule' });
+    }
 });
 
 // ─── API: Public — Get schedule structure (for calendar rendering) ───
@@ -2047,32 +2434,47 @@ function getBaseUrl(req) {
 }
 
 // ─── Start Server ───
-app.listen(PORT, () => {
-    console.log(`\n🏥 Longevity Clinic server running on http://localhost:${PORT}`);
-    if (isStripeConfigured) {
-        console.log(`   Stripe mode: ${STRIPE_SECRET.startsWith('sk_live') ? '🔴 LIVE' : '🟡 TEST'}`);
-    } else {
-        console.log(`   ⚠️  Stripe NOT configured — add your keys to .env`);
-        console.log(`   Get keys at: https://dashboard.stripe.com/test/apikeys`);
+(async () => {
+    try {
+        await bootstrapPersistence();
+        if (usePersistentDb) {
+            console.log('   💾 Persistence: PostgreSQL (DATABASE_URL)');
+        } else {
+            console.log('   💾 Persistence: in-memory bookings/notes; schedule file under data/');
+            console.log('   ℹ️  Set DATABASE_URL (Supabase) to persist bookings and notes in production');
+        }
+    } catch (err) {
+        console.error('   ❌ Failed to initialize persistence:', err.message);
+        process.exit(1);
     }
-    if (isEmailConfigured) {
-        console.log(`   ✉️  Email configured: ${EMAIL_USER}`);
-    } else {
-        console.log(`   ⚠️  Email NOT configured — add SMTP credentials to .env`);
-        console.log(`   For Gmail: use an App Password (https://myaccount.google.com/apppasswords)`);
-    }
-    if (DOXY_ROOM_URL) {
-        console.log(`   📹 Doxy.me room: ${DOXY_ROOM_URL}`);
-    } else {
-        console.log(`   ⚠️  Doxy.me NOT configured — add DOXY_ROOM_URL to .env`);
-        console.log(`   Example: DOXY_ROOM_URL=https://doxy.me/your-room-name`);
-    }
-    console.log(`\n   Open http://localhost:${PORT} to view the site`);
-    console.log(`   Open http://localhost:${PORT}/book-consultation to test booking`);
-    console.log(`   Open http://localhost:${PORT}/patient-portal for patient portal`);
-    if (fs.existsSync(path.join(__dirname, 'marcar.html'))) {
-        console.log(`   Marcação: http://localhost:${PORT}/marcar/clinica-geral\n`);
-    } else {
-        console.log(`   ⚠️  marcar.html NOT FOUND — /marcar.html will fail until the file is deployed\n`);
-    }
-});
+
+    app.listen(PORT, () => {
+        console.log(`\n🏥 Longevity Clinic server running on http://localhost:${PORT}`);
+        if (isStripeConfigured) {
+            console.log(`   Stripe mode: ${STRIPE_SECRET.startsWith('sk_live') ? '🔴 LIVE' : '🟡 TEST'}`);
+        } else {
+            console.log(`   ⚠️  Stripe NOT configured — add your keys to .env`);
+            console.log(`   Get keys at: https://dashboard.stripe.com/test/apikeys`);
+        }
+        if (isEmailConfigured) {
+            console.log(`   ✉️  Email configured: ${EMAIL_USER}`);
+        } else {
+            console.log(`   ⚠️  Email NOT configured — add SMTP credentials to .env`);
+            console.log(`   For Gmail: use an App Password (https://myaccount.google.com/apppasswords)`);
+        }
+        if (DOXY_ROOM_URL) {
+            console.log(`   📹 Doxy.me room: ${DOXY_ROOM_URL}`);
+        } else {
+            console.log(`   ⚠️  Doxy.me NOT configured — add DOXY_ROOM_URL to .env`);
+            console.log(`   Example: DOXY_ROOM_URL=https://doxy.me/your-room-name`);
+        }
+        console.log(`\n   Open http://localhost:${PORT} to view the site`);
+        console.log(`   Open http://localhost:${PORT}/book-consultation to test booking`);
+        console.log(`   Open http://localhost:${PORT}/patient-portal for patient portal`);
+        if (fs.existsSync(path.join(__dirname, 'marcar.html'))) {
+            console.log(`   Marcação: http://localhost:${PORT}/marcar/clinica-geral\n`);
+        } else {
+            console.log(`   ⚠️  marcar.html NOT FOUND — /marcar.html will fail until the file is deployed\n`);
+        }
+    });
+})();
