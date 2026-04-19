@@ -274,6 +274,17 @@
     var timeslotGrid = document.getElementById('marcarTimesGrid');
     var timeslotHeading = document.getElementById('marcarTimesHeading');
     var btnNext = document.getElementById('marcarContinue');
+    var marcarUrgentHint = document.getElementById('marcarUrgentHint');
+    var marcarUrgentHintText =
+        'Precisa com urgência ou de um horário que não está listado? Contacte-nos em info@lonclinic.com ou (+351) 928 372 775.';
+
+    function setMarcarUrgentHint(visible) {
+        if (!marcarUrgentHint) return;
+        if (visible) {
+            marcarUrgentHint.textContent = marcarUrgentHintText;
+        }
+        marcarUrgentHint.hidden = !visible;
+    }
 
     function selectDate(year, month, day, btn) {
         state.date = new Date(year, month, day);
@@ -296,11 +307,13 @@
 
     function renderTimeslots() {
         if (!state.date) {
+            setMarcarUrgentHint(false);
             timeslotHeading.textContent = 'Escolha primeiro um dia no calendário';
             timeslotGrid.innerHTML = '<p class="marcar-times-empty">Selecione uma data à esquerda.</p>';
             return;
         }
 
+        setMarcarUrgentHint(true);
         timeslotHeading.textContent = state.dateLabel;
         timeslotGrid.innerHTML = '<p class="marcar-times-empty">A carregar horários…</p>';
 

@@ -270,6 +270,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     const timeslotGrid = document.getElementById('timeslotGrid');
     const timeslotHeading = document.getElementById('timeslotHeading');
 
+    function applyUrgentContactHint() {
+        const el = document.getElementById('timeslotUrgentHint');
+        if (!el) return;
+        if (!state.date) {
+            el.hidden = true;
+            return;
+        }
+        el.hidden = false;
+        const fallback =
+            'Urgent or need a time that is not listed? Contact us at info@lonclinic.com or (+351) 928 372 775.';
+        el.textContent =
+            window.CLINIC_I18N && typeof window.CLINIC_I18N.getBookingString === 'function'
+                ? window.CLINIC_I18N.getBookingString('urgentContactHint') || fallback
+                : fallback;
+    }
+
     const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -381,6 +397,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function renderTimeslots() {
         timeslotHeading.textContent = state.dateLabel;
+        applyUrgentContactHint();
         timeslotGrid.innerHTML = '<p class="timeslot-empty">Loading available slots...</p>';
 
         // Format date as YYYY-MM-DD
@@ -1275,6 +1292,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Update service label in state
         if (state.service && services[state.service]) {
             state.serviceLabel = i18nServiceLabel(state.service);
+        }
+
+        if (state.date && state.currentStep === 1) {
+            applyUrgentContactHint();
         }
 
         // Re-render review if on payment step

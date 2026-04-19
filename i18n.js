@@ -546,6 +546,8 @@
             selectDateFirst: 'Select a date first',
             pickDate: 'Please pick a date from the calendar.',
             noSlots: 'No available slots on this date. Please try another day.',
+            urgentContactHint:
+                'Urgent or need a time that is not listed? Contact us at info@lonclinic.com or (+351) 928 372 775.',
             videoCall: 'Video call',
             secureVideoCall: 'Secure video call',
             services: {
@@ -564,6 +566,8 @@
             selectDateFirst: 'Selecione uma data primeiro',
             pickDate: 'Por favor escolha uma data no calendário.',
             noSlots: 'Sem horários disponíveis nesta data. Tente outro dia.',
+            urgentContactHint:
+                'Precisa com urgência ou de um horário que não está listado? Contacte-nos em info@lonclinic.com ou (+351) 928 372 775.',
             videoCall: 'Videochamada',
             secureVideoCall: 'Videochamada segura',
             services: {
@@ -582,6 +586,8 @@
             selectDateFirst: 'Seleccione primero una fecha',
             pickDate: 'Elija una fecha en el calendario.',
             noSlots: 'No hay horarios disponibles en esta fecha. Pruebe otro día.',
+            urgentContactHint:
+                '¿Urgente o necesita un horario que no aparece? Escríbanos a info@lonclinic.com o llame al (+351) 928 372 775.',
             videoCall: 'Videollamada',
             secureVideoCall: 'Videollamada segura',
             services: {
@@ -670,6 +676,12 @@
             const timeslotEmpty = document.querySelector('.timeslot-empty');
             if (timeslotEmpty) {
                 timeslotEmpty.textContent = (BOOKING_STRINGS[lang] || BOOKING_STRINGS.en).pickDate;
+            }
+
+            const urgentHint = document.getElementById('timeslotUrgentHint');
+            if (urgentHint && !urgentHint.hidden) {
+                urgentHint.textContent =
+                    (BOOKING_STRINGS[lang] || BOOKING_STRINGS.en).urgentContactHint;
             }
         }
 
