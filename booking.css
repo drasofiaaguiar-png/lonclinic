@@ -174,6 +174,50 @@ body {
     line-height: 1.6;
 }
 
+/* Step 1 — consultation visual (same asset as homepage hero) */
+.booking-step1-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 28px;
+}
+
+.booking-consult-figure {
+    margin: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 10px 28px rgba(20, 34, 24, 0.1);
+}
+
+.booking-consult-figure img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+@media (min-width: 769px) {
+    .booking-step1-intro {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        align-items: center;
+        margin-bottom: 32px;
+    }
+
+    .booking-step1-intro .step-header {
+        grid-column: 2;
+        grid-row: 1;
+        text-align: left;
+        margin-bottom: 0;
+    }
+
+    .booking-consult-figure {
+        grid-column: 1;
+        grid-row: 1;
+    }
+}
+
 .step-actions {
     display: flex;
     justify-content: space-between;

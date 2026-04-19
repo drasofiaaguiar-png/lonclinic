@@ -41,5 +41,6 @@
   "blockedTimeSlots": [],
   "dayOverrides": [],
   "timezone": "Europe/Lisbon",
+  "smartSlotGrouping": true,
   "updatedAt": "2026-04-18T21:59:38.223Z"
 }

@@ -1255,6 +1255,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
 
+            // Google Ads — Purchase conversion; new_customer from server (prior paid bookings by email)
+            if (typeof gtag === 'function') {
+                const value =
+                    typeof data.amount === 'number' && data.amount > 0 ? data.amount / 100 : 1.0;
+                const conv = {
+                    send_to: 'AW-18103198169/bLl8COjQ6J4cENnDo7hD',
+                    value,
+                    currency: (data.currency || 'eur').toUpperCase(),
+                    transaction_id: sessionId
+                };
+                if (typeof data.isNewCustomer === 'boolean') {
+                    conv.new_customer = data.isNewCustomer;
+                }
+                gtag('event', 'conversion', conv);
+            }
+
         } catch (err) {
             console.error('Error loading confirmation:', err);
             document.getElementById('confirmEmail').textContent = '—';

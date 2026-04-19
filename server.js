@@ -109,7 +109,7 @@ const defaultScheduleStore = {
     dayOverrides: [],
     timezone: 'Europe/Lisbon',
     /** When true, public booking only shows anchor slots until bookings exist, then expands outward. */
-    smartSlotGrouping: false,
+    smartSlotGrouping: true,
     updatedAt: new Date().toISOString()
 };
 
@@ -2486,6 +2486,13 @@ function paymentIntentIdFromSession(session) {
     return typeof pi === 'string' ? pi : (pi.id || '');
 }
 
+/** Stripe Customer id on completed Checkout (links repeat purchases even when email changes). */
+function stripeCustomerIdFromSession(session) {
+    if (!session || !session.customer) return '';
+    const c = session.customer;
+    return typeof c === 'string' ? c : (c && c.id ? String(c.id) : '');
+}
+
 /**
  * Sends patient + admin emails and persists the booking once per Stripe payment.
  * Used by the Stripe webhook and by GET /api/session/:id so confirmations still go out
@@ -2496,6 +2503,22 @@ async function bookingRecordedByPaymentId(paymentId) {
         return db.bookingExistsByPaymentId(paymentId);
     }
     return bookingsStore.some((b) => b.paymentId === paymentId);
+}
+
+async function countPriorBookingsExcludingPayment(paymentId, email, stripeCustomerId) {
+    const e = (email || '').toLowerCase().trim();
+    const sc = (stripeCustomerId || '').trim();
+    if (!paymentId) return 0;
+    if (!e && !sc) return 0;
+    if (usePersistentDb) {
+        return db.countPriorBookingsExcludingPayment(paymentId, e, sc);
+    }
+    return bookingsStore.filter((b) => {
+        if (b.paymentId === paymentId) return false;
+        const emailMatch = Boolean(e && b.email === e);
+        const custMatch = Boolean(sc && b.stripeCustomerId && b.stripeCustomerId === sc);
+        return emailMatch || custMatch;
+    }).length;
 }
 
 async function finalizePaidCheckoutSession(session, logPrefix = '') {
@@ -2595,10 +2618,12 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
             session.customer_email ||
             meta.contact_email ||
             ''
-        ).toLowerCase();
+        ).toLowerCase().trim();
+        const stripeCustomerId = stripeCustomerIdFromSession(session);
         const record = {
             bookingRef,
             email: emailNorm,
+            stripeCustomerId: stripeCustomerId || undefined,
             service: meta.service,
             date: meta.date,
             time: meta.time,
@@ -3202,6 +3227,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ['card'],
             mode: 'payment',
+            customer_creation: 'always',
             customer_email: patientEmail,
             // Enable Stripe automatic receipt
             payment_intent_data: {
@@ -3265,6 +3291,23 @@ app.get('/api/session/:sessionId', async (req, res) => {
         const piId = paymentIntentIdFromSession(session);
         const bookingRefShort = piId.length >= 8 ? piId.slice(-8).toUpperCase() : (piId || Date.now().toString(36)).toUpperCase();
 
+        const emailNorm = (
+            session.customer_details?.email ||
+            session.customer_email ||
+            session.metadata?.contact_email ||
+            ''
+        ).toLowerCase().trim();
+        const stripeCustId = stripeCustomerIdFromSession(session);
+        let isNewCustomer = false;
+        if (piId && (emailNorm || stripeCustId)) {
+            const priorOtherBookings = await countPriorBookingsExcludingPayment(
+                piId,
+                emailNorm,
+                stripeCustId
+            );
+            isNewCustomer = priorOtherBookings === 0;
+        }
+
         res.json({
             email: session.customer_details?.email || session.customer_email || session.metadata?.contact_email,
             service: session.metadata.service,
@@ -3276,7 +3319,8 @@ app.get('/api/session/:sessionId', async (req, res) => {
             amount: session.amount_total,
             currency: session.currency,
             paymentId: piId,
-            bookingRef: 'LC-' + bookingRefShort
+            bookingRef: 'LC-' + bookingRefShort,
+            isNewCustomer
         });
 
     } catch (err) {

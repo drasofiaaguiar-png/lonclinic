@@ -103,12 +103,13 @@
                     <p class="dash-section-subtitle">How time slots appear when patients book online</p>
                 </div>
                 <label class="clinic-toggle-label" for="smartSlotGroupingToggle">
-                    <input type="checkbox" id="smartSlotGroupingToggle" />
+                    <input type="checkbox" id="smartSlotGroupingToggle" checked />
                     <span>Smart slot grouping</span>
                 </label>
                 <p class="dash-section-subtitle" style="margin-top: 0.75rem; max-width: 42rem;">
-                    When on, an empty day shows only the first and last slot; after bookings exist, only the slot
-                    before and after the booked block is offered, keeping the schedule contiguous.
+                    <strong>On (default):</strong> an empty day shows only the first and last slot; after bookings exist, only the slot
+                    immediately before and after the booked block is offered, keeping the schedule contiguous.
+                    <strong>Off:</strong> patients see every free slot for the day.
                 </p>
             </div>
 

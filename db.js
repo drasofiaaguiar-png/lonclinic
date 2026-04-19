@@ -102,6 +102,7 @@ function rowToBooking(row) {
         currency: row.currency,
         paymentId: row.payment_id,
         patientLocale: row.patient_locale || 'en',
+        stripeCustomerId: row.stripe_customer_id || null,
         cancelled: row.cancelled === true,
         rescheduleCount: row.reschedule_count != null ? Number(row.reschedule_count) : 0,
         reminderSent: row.reminder_sent === true,
@@ -176,6 +177,10 @@ async function initSchema(p) {
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS followup_sent BOOLEAN NOT NULL DEFAULT FALSE`);
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS date_iso TEXT`);
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS patient_locale VARCHAR(8) DEFAULT 'en'`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS stripe_customer_id VARCHAR(255)`);
+    await p.query(
+        `CREATE INDEX IF NOT EXISTS idx_bookings_stripe_customer_id ON bookings (stripe_customer_id) WHERE stripe_customer_id IS NOT NULL`
+    );
 }
 
 /** IANA name for PostgreSQL AT TIME ZONE (schedule timezone). */
@@ -353,15 +358,37 @@ async function bookingExistsByPaymentId(paymentId) {
     return r.rowCount > 0;
 }
 
+/**
+ * Prior paid bookings for the same person (normalized email OR Stripe Customer id), excluding this payment.
+ * Used for Google Ads new_customer when Stripe links repeat purchases to cus_* even if email differs.
+ */
+async function countPriorBookingsExcludingPayment(paymentId, email, stripeCustomerId) {
+    const p = getPool();
+    const e = (email || '').toLowerCase().trim();
+    const sc = (stripeCustomerId || '').trim();
+    if (!paymentId) return 0;
+    if (!e && !sc) return 0;
+    const r = await p.query(
+        `SELECT COUNT(*)::int AS c FROM bookings
+         WHERE payment_id <> $1
+         AND (
+           ($2::text <> '' AND LOWER(TRIM(email)) = $2)
+           OR ($3::text <> '' AND stripe_customer_id IS NOT NULL AND stripe_customer_id = $3)
+         )`,
+        [paymentId, e, sc]
+    );
+    return r.rows[0] ? r.rows[0].c : 0;
+}
+
 async function insertBooking(booking) {
     const p = getPool();
     const r = await p.query(
         `INSERT INTO bookings (
             booking_ref, email, service, date, time, patient_name, traveller_count,
-            amount, currency, payment_id,
+            amount, currency, payment_id, stripe_customer_id,
             date_iso, patient_locale,
             cancelled, reschedule_count, reminder_sent, reminder_1h_sent, followup_sent
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
         ON CONFLICT (payment_id) DO NOTHING
         RETURNING *`,
         [
@@ -375,6 +402,7 @@ async function insertBooking(booking) {
             booking.amount,
             booking.currency,
             booking.paymentId,
+            booking.stripeCustomerId || null,
             booking.dateIso || null,
             booking.patientLocale || 'en',
             booking.cancelled === true,
@@ -527,6 +555,7 @@ module.exports = {
     isDatabaseEnabled,
     initDatabase,
     bookingExistsByPaymentId,
+    countPriorBookingsExcludingPayment,
     insertBooking,
     findBookingsByEmailAndRef,
     findAllBookings,
