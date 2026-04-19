@@ -18,6 +18,11 @@ const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
+const bcrypt = require('bcrypt');
+// Hash the plaintext password from env at startup for constant-time comparison at login.
+let clinicPasswordHash = null;
+bcrypt.hash(CLINIC_PASSWORD, 12).then(h => { clinicPasswordHash = h; });
+
 const db = require('./db');
 const { computeCheckoutTotalCents } = require('./pricing');
 const express = require('express');
@@ -3365,10 +3370,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         console.error('   Error message:', err.message);
         console.error('   Error code:', err.code);
         console.error('   Full error:', JSON.stringify(err, null, 2));
-        res.status(500).json({ 
-            error: 'Failed to create checkout session',
-            details: err.message || 'Unknown error'
-        });
+        res.status(500).json({ error: 'Failed to create checkout session. Please try again.' });
     }
 });
 
@@ -3413,16 +3415,12 @@ app.get('/api/session/:sessionId', rateLimitSessionRetrieve, async (req, res) =>
         }
 
         res.json({
-            email: session.customer_details?.email || session.customer_email || session.metadata?.contact_email,
             service: session.metadata.service,
             date: session.metadata.date,
             time: session.metadata.time,
-            patientName: passengerNames[0] || session.metadata.patient_name,
             travellerCount,
-            passengers: passengerNames,
             amount: session.amount_total,
             currency: session.currency,
-            paymentId: piId,
             bookingRef: 'LC-' + bookingRefShort,
             isNewCustomer
         });
@@ -3719,15 +3717,19 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // ─── API: Clinic — Login ───
-app.post('/api/clinic/login', rateLimitClinicLogin, (req, res) => {
+app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
         return res.status(400).json({ error: 'Username and password are required' });
     }
 
-    // Simple authentication (in production, use bcrypt for password hashing)
-    if (username === CLINIC_USERNAME && password === CLINIC_PASSWORD) {
+    const usernameMatch = username === CLINIC_USERNAME;
+    const passwordMatch = clinicPasswordHash
+        ? await bcrypt.compare(password, clinicPasswordHash)
+        : false;
+
+    if (usernameMatch && passwordMatch) {
         req.session.clinicAuthenticated = true;
         req.session.clinicUsername = username;
         req.session.clinicLoginTime = new Date().toISOString();
