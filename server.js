@@ -26,6 +26,7 @@ const fs = require('fs');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 const session = require('express-session');
+const helmet = require('helmet');
 
 const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY || '';
 const isStripeConfigured = STRIPE_SECRET && 
@@ -44,6 +45,58 @@ app.set('trust proxy', 1); // Trust first proxy (Railway, Render, etc.)
 const PORT = process.env.PORT || 3000;
 
 /* ========================================
+   SECURITY HEADERS (CSP, HSTS, etc.)
+======================================== */
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: [
+                    "'self'",
+                    "'unsafe-inline'",
+                    'https://www.googletagmanager.com',
+                    'https://www.google-analytics.com',
+                    'https://ssl.google-analytics.com',
+                    'https://js.stripe.com',
+                    'https://cdnjs.cloudflare.com'
+                ],
+                scriptSrcAttr: ["'unsafe-inline'"],
+                styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+                fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
+                imgSrc: ["'self'", 'data:', 'https:'],
+                connectSrc: [
+                    "'self'",
+                    'https://api.stripe.com',
+                    'https://m.stripe.network',
+                    'https://www.google-analytics.com',
+                    'https://region1.google-analytics.com',
+                    'https://www.googletagmanager.com',
+                    'https://analytics.google.com',
+                    'https://stats.g.doubleclick.net'
+                ],
+                frameSrc: [
+                    "'self'",
+                    'https://js.stripe.com',
+                    'https://hooks.stripe.com',
+                    'https://checkout.stripe.com'
+                ],
+                objectSrc: ["'none'"],
+                baseUri: ["'self'"],
+                formAction: ["'self'"],
+                frameAncestors: ["'self'"],
+                upgradeInsecureRequests: []
+            }
+        },
+        strictTransportSecurity: {
+            maxAge: 31536000,
+            includeSubDomains: true,
+            preload: false
+        }
+    })
+);
+
+/* ========================================
    SESSION CONFIGURATION
 ======================================== */
 app.use(session({
@@ -51,8 +104,9 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === 'production', // HTTPS only in production
-        httpOnly: true, // Prevent XSS attacks
+        secure: true,
+        sameSite: 'lax',
+        httpOnly: true,
         maxAge: 8 * 60 * 60 * 1000 // 8 hours
     }
 }));
