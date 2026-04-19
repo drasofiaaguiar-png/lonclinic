@@ -3,7 +3,23 @@
 ======================================== */
 
 require('dotenv').config();
+
+function requireEnv(name) {
+    const raw = process.env[name];
+    if (raw === undefined || String(raw).trim() === '') {
+        console.error(`\n❌ FATAL: Required environment variable "${name}" is not set or is empty.`);
+        console.error(`   Set ${name} in your environment or .env file before starting the server.\n`);
+        process.exit(1);
+    }
+    return String(raw).trim();
+}
+
+const SESSION_SECRET = requireEnv('SESSION_SECRET');
+const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
+const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
+
 const db = require('./db');
+const { computeCheckoutTotalCents } = require('./pricing');
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -31,7 +47,7 @@ const PORT = process.env.PORT || 3000;
    SESSION CONFIGURATION
 ======================================== */
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'longevity-clinic-secret-key-change-in-production',
+    secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -54,8 +70,6 @@ const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'info@lonclinic.com';
 /* ========================================
    CLINIC PORTAL AUTHENTICATION
 ======================================== */
-const CLINIC_USERNAME = process.env.CLINIC_USERNAME || 'admin';
-const CLINIC_PASSWORD = process.env.CLINIC_PASSWORD || 'admin123'; // CHANGE IN PRODUCTION!
 
 // Middleware to check if user is authenticated
 function requireAuth(req, res, next) {
@@ -2664,25 +2678,28 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
 
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
     const sig = req.headers['stripe-signature'];
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    const webhookSecretRaw = process.env.STRIPE_WEBHOOK_SECRET;
+    const webhookSecret = webhookSecretRaw ? String(webhookSecretRaw).trim() : '';
+    const placeholderSecrets = new Set(['whsec_placeholder', 'whsec_your_webhook_secret_here']);
+
+    if (!webhookSecret || placeholderSecrets.has(webhookSecret)) {
+        console.error('❌ Webhook rejected: STRIPE_WEBHOOK_SECRET must be set to a real signing secret (signature verification is mandatory).');
+        return res.status(500).send('Webhook not configured');
+    }
+    if (!stripe) {
+        console.error('❌ Webhook rejected: Stripe is not configured.');
+        return res.status(500).send('Stripe not configured');
+    }
+    if (!sig) {
+        return res.status(400).send('Missing stripe-signature header');
+    }
 
     let event;
-
-    // If no webhook secret configured, skip signature verification (dev only)
-    if (!webhookSecret || webhookSecret === 'whsec_placeholder' || webhookSecret === 'whsec_your_webhook_secret_here') {
-        try {
-            event = JSON.parse(req.body);
-            console.log('⚠️  Webhook received WITHOUT signature verification (no secret configured)');
-        } catch (err) {
-            return res.status(400).send('Invalid JSON');
-        }
-    } else {
-        try {
-            event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
-        } catch (err) {
-            console.error('⚠️  Webhook signature verification failed:', err.message);
-            return res.status(400).send(`Webhook Error: ${err.message}`);
-        }
+    try {
+        event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
+    } catch (err) {
+        console.error('⚠️  Webhook signature verification failed:', err.message);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
     // Handle events
@@ -2980,24 +2997,26 @@ app.get('/api/config', (req, res) => {
     });
 });
 
-// ─── API: Debug Stripe configuration (remove in production) ───
-app.get('/api/debug-stripe', (req, res) => {
-    const hasSecret = !!process.env.STRIPE_SECRET_KEY;
-    const secretValue = process.env.STRIPE_SECRET_KEY || '';
-    const secretPreview = secretValue ? `${secretValue.substring(0, 10)}...` : 'MISSING';
-    const startsWithSk = secretValue.startsWith('sk_');
-    const isConfigured = isStripeConfigured;
-    
-    res.json({
-        hasSecretKey: hasSecret,
-        secretKeyPreview: secretPreview,
-        secretKeyLength: secretValue.length,
-        startsWithSk: startsWithSk,
-        isStripeConfigured: isConfigured,
-        publishableKeyExists: !!process.env.STRIPE_PUBLISHABLE_KEY,
-        publishableKeyPreview: process.env.STRIPE_PUBLISHABLE_KEY ? `${process.env.STRIPE_PUBLISHABLE_KEY.substring(0, 10)}...` : 'MISSING'
+// ─── API: Debug Stripe configuration (non-production only) ───
+if (process.env.NODE_ENV !== 'production') {
+    app.get('/api/debug-stripe', (req, res) => {
+        const hasSecret = !!process.env.STRIPE_SECRET_KEY;
+        const secretValue = process.env.STRIPE_SECRET_KEY || '';
+        const secretPreview = secretValue ? `${secretValue.substring(0, 10)}...` : 'MISSING';
+        const startsWithSk = secretValue.startsWith('sk_');
+        const isConfigured = isStripeConfigured;
+
+        res.json({
+            hasSecretKey: hasSecret,
+            secretKeyPreview: secretPreview,
+            secretKeyLength: secretValue.length,
+            startsWithSk: startsWithSk,
+            isStripeConfigured: isConfigured,
+            publishableKeyExists: !!process.env.STRIPE_PUBLISHABLE_KEY,
+            publishableKeyPreview: process.env.STRIPE_PUBLISHABLE_KEY ? `${process.env.STRIPE_PUBLISHABLE_KEY.substring(0, 10)}...` : 'MISSING'
+        });
     });
-});
+}
 
 const CAREER_ROLE_LABELS = {
     'medicina-geral': 'Medicina Geral',
@@ -3138,8 +3157,6 @@ app.post('/api/create-checkout-session', async (req, res) => {
         let {
             service,
             serviceLabel,
-            priceAmount,  // total in cents (flat tiered price for travel, per-person × count for others)
-            travellerCount,
             hasInsurance,
             date,
             time,
@@ -3150,21 +3167,26 @@ app.post('/api/create-checkout-session', async (req, res) => {
             travelDest,
             travelDates,
             locale,
-            dateIso
+            dateIso,
+            discountCode
         } = req.body;
 
-        // Validate required fields
-        if (!service || !priceAmount || !patientEmail || !patientName) {
+        // Validate required fields (amount is computed server-side; never trust client price)
+        if (!service || !patientEmail || !patientName) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
 
-        // Validate price amount (Stripe minimum is 50 cents for EUR)
-        if (priceAmount < 50) {
-            console.warn('⚠️  Price too low, setting minimum to 50 cents');
-            priceAmount = 50; // Stripe minimum for EUR
+        const pricing = computeCheckoutTotalCents({
+            service,
+            passengers,
+            hasInsurance: !!hasInsurance,
+            discountCode: discountCode || null
+        });
+        if (!pricing.ok) {
+            return res.status(400).json({ error: pricing.error });
         }
-
-        const count = travellerCount || 1;
+        const priceAmount = pricing.totalCents;
+        const count = Array.isArray(passengers) ? passengers.length : 0;
         const isMultiPassenger = count > 1;
 
         // Build description
@@ -3583,34 +3605,36 @@ app.get('/api/doxy-config', (req, res) => {
     });
 });
 
-// ─── API: Send test email (for debugging) ───
-app.post('/api/test-email', async (req, res) => {
-    const { to, locale } = req.body;
-    if (!to) return res.status(400).json({ error: 'Missing "to" email address' });
+// ─── API: Send test email (non-production only) ───
+if (process.env.NODE_ENV !== 'production') {
+    app.post('/api/test-email', async (req, res) => {
+        const { to, locale } = req.body;
+        if (!to) return res.status(400).json({ error: 'Missing "to" email address' });
 
-    const result = await sendConfirmationEmail({
-        bookingRef: 'LC-TEST1234',
-        patientName: 'Test Patient',
-        email: to,
-        service: 'longevity',
-        serviceLabel: 'Longevity Assessment',
-        date: 'Wednesday, 18 February 2026',
-        time: '10:00 AM',
-        amount: 19500,
-        currency: 'eur',
-        travellerCount: 1,
-        passengers: ['Test Patient'],
-        travelDest: '',
-        travelDates: '',
-        locale: normalizePatientLocale(locale)
+        const result = await sendConfirmationEmail({
+            bookingRef: 'LC-TEST1234',
+            patientName: 'Test Patient',
+            email: to,
+            service: 'longevity',
+            serviceLabel: 'Longevity Assessment',
+            date: 'Wednesday, 18 February 2026',
+            time: '10:00 AM',
+            amount: 19500,
+            currency: 'eur',
+            travellerCount: 1,
+            passengers: ['Test Patient'],
+            travelDest: '',
+            travelDates: '',
+            locale: normalizePatientLocale(locale)
+        });
+
+        if (result) {
+            res.json({ success: true, message: `Test email sent to ${to}` });
+        } else {
+            res.status(500).json({ error: 'Failed to send test email. Check server logs and .env configuration.' });
+        }
     });
-
-    if (result) {
-        res.json({ success: true, message: `Test email sent to ${to}` });
-    } else {
-        res.status(500).json({ error: 'Failed to send test email. Check server logs and .env configuration.' });
-    }
-});
+}
 
 // ─── API: Clinic — Login ───
 app.post('/api/clinic/login', (req, res) => {

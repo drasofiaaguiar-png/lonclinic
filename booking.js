@@ -1041,10 +1041,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 body: JSON.stringify({
                     service: state.service,
                     serviceLabel: state.serviceLabel,
-                    priceAmount: totalCents,
                     discountCode: state.discountCode || null,
-                    discountPercent: state.discountPercent || 0,
-                    travellerCount: passengers.length,
                     hasInsurance: state.hasInsurance,
                     date: state.dateLabel,
                     dateIso: formatDateLocal(state.date),
