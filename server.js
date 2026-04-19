@@ -105,6 +105,8 @@ const defaultScheduleStore = {
     slotDuration: 30, // minutes
     blockedDates: [], // Array of date strings (YYYY-MM-DD)
     blockedTimeSlots: [], // Array of { date: 'YYYY-MM-DD', time: 'HH:MM' }
+    /** Per-calendar-day hours; override weekly template for that date (YYYY-MM-DD). */
+    dayOverrides: [],
     timezone: 'Europe/Lisbon',
     updatedAt: new Date().toISOString()
 };
@@ -115,18 +117,82 @@ function cloneDefaultSchedule() {
     return JSON.parse(JSON.stringify(defaultScheduleStore));
 }
 
+function normalizeDayOverrides(raw) {
+    if (!Array.isArray(raw)) return [];
+    const timeOk = (t) => typeof t === 'string' && /^\d{2}:\d{2}$/.test(t);
+    const byDate = new Map();
+    for (const item of raw) {
+        if (!item || typeof item !== 'object') continue;
+        const date = String(item.date || '').trim();
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) continue;
+        let start = String(item.start || '09:00').slice(0, 5);
+        let end = String(item.end || '17:00').slice(0, 5);
+        if (!timeOk(start)) start = '09:00';
+        if (!timeOk(end)) end = '17:00';
+        byDate.set(date, {
+            date,
+            enabled: Boolean(item.enabled),
+            start,
+            end
+        });
+    }
+    return Array.from(byDate.values()).sort((a, b) => a.date.localeCompare(b.date));
+}
+
 function ensureScheduleStoreShape(raw) {
     const base = cloneDefaultSchedule();
     const input = raw && typeof raw === 'object' ? raw : {};
+    const mergedOverrides =
+        input.dayOverrides !== undefined
+            ? normalizeDayOverrides(input.dayOverrides)
+            : normalizeDayOverrides(base.dayOverrides);
     return {
         ...base,
         ...input,
         workingHours: { ...base.workingHours, ...(input.workingHours || {}) },
         blockedDates: Array.isArray(input.blockedDates) ? input.blockedDates : base.blockedDates,
         blockedTimeSlots: Array.isArray(input.blockedTimeSlots) ? input.blockedTimeSlots : base.blockedTimeSlots,
+        dayOverrides: mergedOverrides,
         slotDuration: Number.isFinite(input.slotDuration) ? input.slotDuration : base.slotDuration,
         timezone: typeof input.timezone === 'string' && input.timezone ? input.timezone : base.timezone,
         updatedAt: input.updatedAt || new Date().toISOString()
+    };
+}
+
+/** Effective schedule for slot generation: blocked date → closed; else day override; else weekly hours. */
+function getEffectiveDaySchedule(dateStr) {
+    if (scheduleStore.blockedDates.includes(dateStr)) {
+        return { enabled: false, start: '09:00', end: '17:00', source: 'blocked' };
+    }
+    const ov = (scheduleStore.dayOverrides || []).find((o) => o.date === dateStr);
+    if (ov) {
+        return {
+            enabled: ov.enabled,
+            start: ov.start,
+            end: ov.end,
+            source: 'override'
+        };
+    }
+    const dateMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateStr));
+    if (!dateMatch) {
+        return { enabled: false, start: '09:00', end: '17:00', source: 'invalid' };
+    }
+    const y = Number(dateMatch[1]);
+    const m = Number(dateMatch[2]);
+    const d = Number(dateMatch[3]);
+    const dateObj = new Date(y, m - 1, d);
+    const dayOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][
+        dateObj.getDay()
+    ];
+    const daySchedule = scheduleStore.workingHours[dayOfWeek];
+    if (!daySchedule) {
+        return { enabled: false, start: '09:00', end: '17:00', source: 'weekly' };
+    }
+    return {
+        enabled: daySchedule.enabled,
+        start: daySchedule.start,
+        end: daySchedule.end,
+        source: 'weekly'
     };
 }
 
@@ -2325,7 +2391,8 @@ app.get('/api/admin/schedule', requireAuth, (req, res) => {
 
 // ─── API: Admin — Update schedule settings ───
 app.post('/api/admin/schedule', requireAuth, express.json(), async (req, res) => {
-    const { workingHours, slotDuration, blockedDates, blockedTimeSlots, timezone } = req.body;
+    const { workingHours, slotDuration, blockedDates, blockedTimeSlots, dayOverrides, timezone } =
+        req.body;
 
     if (workingHours) {
         scheduleStore.workingHours = { ...scheduleStore.workingHours, ...workingHours };
@@ -2338,6 +2405,9 @@ app.post('/api/admin/schedule', requireAuth, express.json(), async (req, res) =>
     }
     if (blockedTimeSlots !== undefined) {
         scheduleStore.blockedTimeSlots = blockedTimeSlots;
+    }
+    if (dayOverrides !== undefined) {
+        scheduleStore.dayOverrides = normalizeDayOverrides(dayOverrides);
     }
     if (timezone) {
         scheduleStore.timezone = timezone;
@@ -2361,6 +2431,7 @@ app.get('/api/schedule', (req, res) => {
         workingHours: scheduleStore.workingHours,
         slotDuration: scheduleStore.slotDuration,
         blockedDates: scheduleStore.blockedDates,
+        dayOverrides: scheduleStore.dayOverrides,
         timezone: scheduleStore.timezone
     });
 });
@@ -2384,14 +2455,20 @@ app.get('/api/admin/available-slots', (req, res) => {
     if (Number.isNaN(dateObj.getTime())) {
         return res.status(400).json({ error: 'Invalid date value' });
     }
-    const dayOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][dateObj.getDay()];
-    const daySchedule = scheduleStore.workingHours[dayOfWeek];
+    const dateStr = date;
+    const daySchedule = getEffectiveDaySchedule(dateStr);
 
-    if (!daySchedule || !daySchedule.enabled) {
-        return res.json({ available: [], date, reason: 'Day not enabled' });
+    if (!daySchedule.enabled) {
+        const reason =
+            daySchedule.source === 'blocked'
+                ? 'Date blocked'
+                : daySchedule.source === 'override'
+                  ? 'Day closed (custom)'
+                  : 'Day not enabled';
+        return res.json({ available: [], date, reason, effective: daySchedule });
     }
 
-    // Generate slots based on working hours
+    // Generate slots based on effective hours
     const [startHour, startMin] = daySchedule.start.split(':').map(Number);
     const [endHour, endMin] = daySchedule.end.split(':').map(Number);
     const slotDuration = scheduleStore.slotDuration || 30;
@@ -2402,11 +2479,10 @@ app.get('/api/admin/available-slots', (req, res) => {
 
     while (currentHour < endHour || (currentHour === endHour && currentMin < endMin)) {
         const slotTime = `${String(currentHour).padStart(2, '0')}:${String(currentMin).padStart(2, '0')}`;
-        const dateStr = date; // YYYY-MM-DD format
-        
+
         // Check if this slot is blocked
         const isBlocked = scheduleStore.blockedTimeSlots.some(
-            blocked => blocked.date === dateStr && blocked.time === slotTime
+            (blocked) => blocked.date === dateStr && blocked.time === slotTime
         );
 
         // Check if date is blocked
@@ -2424,7 +2500,16 @@ app.get('/api/admin/available-slots', (req, res) => {
         }
     }
 
-    res.json({ available: slots, date, workingHours: daySchedule });
+    res.json({
+        available: slots,
+        date,
+        workingHours: {
+            enabled: daySchedule.enabled,
+            start: daySchedule.start,
+            end: daySchedule.end
+        },
+        effective: daySchedule
+    });
 });
 
 // ─── Helper ───

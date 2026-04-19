@@ -98,6 +98,47 @@
                 </div>
             </div>
 
+            <!-- Per-day hours (bulk selection) -->
+            <div class="dash-section">
+                <div class="dash-section-header">
+                    <h2 class="dash-section-title">Daily hours (exceptions)</h2>
+                    <p class="dash-section-subtitle">Choose specific dates in the month and set different hours in bulk. Each date overrides the usual weekday schedule. Blocked dates still take priority.</p>
+                </div>
+                <div class="admin-override-cal-header">
+                    <button type="button" class="btn btn-outline btn-sm" id="overrideCalPrev" aria-label="Previous month">←</button>
+                    <span class="admin-override-cal-title" id="overrideCalMonthLabel"></span>
+                    <button type="button" class="btn btn-outline btn-sm" id="overrideCalNext" aria-label="Next month">→</button>
+                </div>
+                <div class="admin-override-weekdays" aria-hidden="true">
+                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                </div>
+                <div class="admin-override-cal-grid" id="overrideCalGrid"></div>
+                <div class="admin-override-bulk">
+                    <div class="admin-override-bulk-row">
+                        <div class="admin-time-group admin-override-time">
+                            <label for="bulkOverrideStart">Start</label>
+                            <input type="time" id="bulkOverrideStart" class="admin-time-input" value="09:00">
+                        </div>
+                        <div class="admin-time-group admin-override-time">
+                            <label for="bulkOverrideEnd">End</label>
+                            <input type="time" id="bulkOverrideEnd" class="admin-time-input" value="17:00">
+                        </div>
+                        <label class="admin-override-open-label">
+                            <input type="checkbox" id="bulkOverrideEnabled" checked>
+                            <span>Open for bookings</span>
+                        </label>
+                    </div>
+                    <div class="admin-override-bulk-actions">
+                        <button type="button" class="btn btn-primary btn-sm" id="bulkOverrideApply">Apply to selected days</button>
+                        <button type="button" class="btn btn-outline btn-sm" id="bulkOverrideRemove">Remove override on selected</button>
+                        <button type="button" class="btn btn-outline btn-sm" id="bulkOverrideSelectWeekdays">Weekdays this month</button>
+                        <button type="button" class="btn btn-outline btn-sm" id="bulkOverrideClearSelection">Clear selection</button>
+                    </div>
+                </div>
+                <p class="admin-override-hint"><strong>Tip:</strong> click days to multi-select. Orange dot = already has a custom schedule.</p>
+                <div class="admin-blocked-list" id="dayOverridesList"></div>
+            </div>
+
             <!-- Slot Duration -->
             <div class="dash-section">
                 <div class="dash-section-header">

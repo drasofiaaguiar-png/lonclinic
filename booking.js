@@ -296,6 +296,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             return false;
         }
 
+        const overrides = state.scheduleData && state.scheduleData.dayOverrides;
+        if (overrides && overrides.length > 0) {
+            const ov = overrides.find((o) => o.date === dateStr);
+            if (ov) return ov.enabled;
+        }
+
         // Check if day of week is enabled
         const dayOfWeek = dateObj.getDay();
         const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];

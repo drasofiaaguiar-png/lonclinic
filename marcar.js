@@ -201,6 +201,13 @@
             return false;
         }
 
+        var overrides = state.scheduleData && state.scheduleData.dayOverrides;
+        if (overrides && overrides.length > 0) {
+            for (var i = 0; i < overrides.length; i++) {
+                if (overrides[i].date === dateStr) return overrides[i].enabled;
+            }
+        }
+
         var dayOfWeek = dateObj.getDay();
         var dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
         var dayName = dayNames[dayOfWeek];

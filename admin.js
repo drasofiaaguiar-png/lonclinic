@@ -5,6 +5,9 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // ─── State ───
     let scheduleData = null;
+    let overrideCalYear = null;
+    let overrideCalMonth = null;
+    const selectedOverrideDates = new Set();
 
     // ─── Elements ───
     const adminLogin = document.getElementById('adminLogin');
@@ -25,6 +28,130 @@ document.addEventListener('DOMContentLoaded', async () => {
     const previewDateInput = document.getElementById('previewDateInput');
     const previewSlotsBtn = document.getElementById('previewSlotsBtn');
     const previewSlotsContainer = document.getElementById('previewSlotsContainer');
+    const overrideCalPrev = document.getElementById('overrideCalPrev');
+    const overrideCalNext = document.getElementById('overrideCalNext');
+    const overrideCalMonthLabel = document.getElementById('overrideCalMonthLabel');
+    const overrideCalGrid = document.getElementById('overrideCalGrid');
+    const dayOverridesList = document.getElementById('dayOverridesList');
+    const bulkOverrideStart = document.getElementById('bulkOverrideStart');
+    const bulkOverrideEnd = document.getElementById('bulkOverrideEnd');
+    const bulkOverrideEnabled = document.getElementById('bulkOverrideEnabled');
+    const bulkOverrideApply = document.getElementById('bulkOverrideApply');
+    const bulkOverrideRemove = document.getElementById('bulkOverrideRemove');
+    const bulkOverrideSelectWeekdays = document.getElementById('bulkOverrideSelectWeekdays');
+    const bulkOverrideClearSelection = document.getElementById('bulkOverrideClearSelection');
+
+    function formatOverrideDateKey(y, m0, d) {
+        return `${y}-${String(m0 + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    }
+
+    function startOfToday() {
+        const t = new Date();
+        t.setHours(0, 0, 0, 0);
+        return t;
+    }
+
+    function ensureOverrideCalInitialized() {
+        if (overrideCalYear === null || overrideCalMonth === null) {
+            const t = new Date();
+            overrideCalYear = t.getFullYear();
+            overrideCalMonth = t.getMonth();
+        }
+    }
+
+    function renderDayOverridesList() {
+        if (!dayOverridesList || !scheduleData) return;
+        dayOverridesList.innerHTML = '';
+        const list = scheduleData.dayOverrides || [];
+        if (list.length === 0) {
+            dayOverridesList.innerHTML = '<p class="admin-empty-list">No per-day overrides yet</p>';
+            return;
+        }
+        list.forEach((entry) => {
+            const item = document.createElement('div');
+            item.className = 'admin-blocked-item';
+            const dateObj = new Date(`${entry.date}T12:00:00`);
+            const formatted = dateObj.toLocaleDateString('en-US', {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+            const hoursLabel = entry.enabled
+                ? `${entry.start} – ${entry.end}`
+                : 'Closed (no bookings)';
+            item.innerHTML = `
+                <span>${formatted}: ${hoursLabel}</span>
+                <button type="button" class="admin-remove-btn" data-od="${entry.date}" aria-label="Remove">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            `;
+            dayOverridesList.appendChild(item);
+            item.querySelector('.admin-remove-btn').addEventListener('click', () => {
+                scheduleData.dayOverrides = scheduleData.dayOverrides.filter((o) => o.date !== entry.date);
+                selectedOverrideDates.delete(entry.date);
+                renderDayOverridesList();
+                renderOverrideCalendar();
+            });
+        });
+    }
+
+    function renderOverrideCalendar() {
+        if (!overrideCalGrid || !overrideCalMonthLabel || !scheduleData) return;
+        ensureOverrideCalInitialized();
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        overrideCalMonthLabel.textContent = `${monthNames[overrideCalMonth]} ${overrideCalYear}`;
+
+        const firstDay = new Date(overrideCalYear, overrideCalMonth, 1).getDay();
+        const daysInMonth = new Date(overrideCalYear, overrideCalMonth + 1, 0).getDate();
+        const startDay = (firstDay + 6) % 7;
+        const today0 = startOfToday();
+
+        overrideCalGrid.innerHTML = '';
+        const overrideMap = new Map((scheduleData.dayOverrides || []).map((o) => [o.date, o]));
+
+        for (let i = 0; i < startDay; i++) {
+            const empty = document.createElement('div');
+            empty.className = 'admin-override-cal-empty';
+            overrideCalGrid.appendChild(empty);
+        }
+
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateKey = formatOverrideDateKey(overrideCalYear, overrideCalMonth, d);
+            const dateObj = new Date(overrideCalYear, overrideCalMonth, d);
+            dateObj.setHours(0, 0, 0, 0);
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'admin-override-day';
+            btn.textContent = String(d);
+
+            if (dateObj < today0) {
+                btn.disabled = true;
+            } else {
+                btn.addEventListener('click', () => {
+                    if (selectedOverrideDates.has(dateKey)) {
+                        selectedOverrideDates.delete(dateKey);
+                    } else {
+                        selectedOverrideDates.add(dateKey);
+                    }
+                    renderOverrideCalendar();
+                });
+            }
+
+            if (overrideMap.has(dateKey)) {
+                btn.classList.add('admin-override-has-rule');
+            }
+            if (selectedOverrideDates.has(dateKey)) {
+                btn.classList.add('admin-override-selected');
+            }
+
+            overrideCalGrid.appendChild(btn);
+        }
+    }
 
     // ─── Check authentication status ───
     async function checkAuth() {
@@ -174,6 +301,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderBlockedDates();
         renderBlockedSlots();
 
+        if (!scheduleData.dayOverrides) {
+            scheduleData.dayOverrides = [];
+        }
+        ensureOverrideCalInitialized();
+        renderOverrideCalendar();
+        renderDayOverridesList();
+
         // Set minimum date to today
         const today = new Date().toISOString().split('T')[0];
         if (blockDateInput) blockDateInput.min = today;
@@ -241,6 +375,96 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             blockedSlotsList.innerHTML = '<p class="admin-empty-list">No blocked time slots</p>';
         }
+    }
+
+    if (overrideCalPrev) {
+        overrideCalPrev.addEventListener('click', () => {
+            ensureOverrideCalInitialized();
+            overrideCalMonth -= 1;
+            if (overrideCalMonth < 0) {
+                overrideCalMonth = 11;
+                overrideCalYear -= 1;
+            }
+            renderOverrideCalendar();
+        });
+    }
+    if (overrideCalNext) {
+        overrideCalNext.addEventListener('click', () => {
+            ensureOverrideCalInitialized();
+            overrideCalMonth += 1;
+            if (overrideCalMonth > 11) {
+                overrideCalMonth = 0;
+                overrideCalYear += 1;
+            }
+            renderOverrideCalendar();
+        });
+    }
+
+    if (bulkOverrideApply) {
+        bulkOverrideApply.addEventListener('click', () => {
+            if (!scheduleData) return;
+            if (selectedOverrideDates.size === 0) {
+                alert('Select at least one future day in the calendar.');
+                return;
+            }
+            const start = bulkOverrideStart && bulkOverrideStart.value ? bulkOverrideStart.value : '09:00';
+            const end = bulkOverrideEnd && bulkOverrideEnd.value ? bulkOverrideEnd.value : '17:00';
+            const enabled = bulkOverrideEnabled ? bulkOverrideEnabled.checked : true;
+            const map = new Map((scheduleData.dayOverrides || []).map((o) => [o.date, { ...o }]));
+            for (const dateStr of selectedOverrideDates) {
+                map.set(dateStr, { date: dateStr, enabled, start, end });
+            }
+            scheduleData.dayOverrides = Array.from(map.values()).sort((a, b) =>
+                a.date.localeCompare(b.date)
+            );
+            selectedOverrideDates.clear();
+            renderOverrideCalendar();
+            renderDayOverridesList();
+        });
+    }
+
+    if (bulkOverrideRemove) {
+        bulkOverrideRemove.addEventListener('click', () => {
+            if (!scheduleData) return;
+            if (selectedOverrideDates.size === 0) {
+                alert('Select days to remove overrides from.');
+                return;
+            }
+            for (const dateStr of selectedOverrideDates) {
+                scheduleData.dayOverrides = (scheduleData.dayOverrides || []).filter(
+                    (o) => o.date !== dateStr
+                );
+            }
+            selectedOverrideDates.clear();
+            renderOverrideCalendar();
+            renderDayOverridesList();
+        });
+    }
+
+    if (bulkOverrideSelectWeekdays) {
+        bulkOverrideSelectWeekdays.addEventListener('click', () => {
+            ensureOverrideCalInitialized();
+            const y = overrideCalYear;
+            const m = overrideCalMonth;
+            const dim = new Date(y, m + 1, 0).getDate();
+            const today0 = startOfToday();
+            for (let d = 1; d <= dim; d++) {
+                const dateObj = new Date(y, m, d);
+                dateObj.setHours(0, 0, 0, 0);
+                const dow = dateObj.getDay();
+                if (dow >= 1 && dow <= 5 && dateObj >= today0) {
+                    selectedOverrideDates.add(formatOverrideDateKey(y, m, d));
+                }
+            }
+            renderOverrideCalendar();
+        });
+    }
+
+    if (bulkOverrideClearSelection) {
+        bulkOverrideClearSelection.addEventListener('click', () => {
+            selectedOverrideDates.clear();
+            renderOverrideCalendar();
+        });
     }
 
     // ─── Add blocked date ───
@@ -363,7 +587,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 workingHours,
                 slotDuration: parseInt(slotDurationSelect.value),
                 blockedDates: scheduleData.blockedDates || [],
-                blockedTimeSlots: scheduleData.blockedTimeSlots || []
+                blockedTimeSlots: scheduleData.blockedTimeSlots || [],
+                dayOverrides: scheduleData.dayOverrides || []
             };
 
             try {
