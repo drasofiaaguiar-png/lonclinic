@@ -808,16 +808,18 @@
         });
     }
 
+    function createToggleHTML() {
+        return `<div class="lang-toggle" role="group" aria-label="Language selector">
+            <button type="button" class="lang-btn${currentLang === 'en' ? ' active' : ''}" data-lang="en" aria-pressed="${currentLang === 'en'}">EN</button>
+            <button type="button" class="lang-btn${currentLang === 'pt' ? ' active' : ''}" data-lang="pt" aria-pressed="${currentLang === 'pt'}">PT</button>
+            <button type="button" class="lang-btn${currentLang === 'es' ? ' active' : ''}" data-lang="es" aria-pressed="${currentLang === 'es'}">ES</button>
+        </div>`;
+    }
+
     function createToggle() {
-        const toggle = document.createElement('div');
-        toggle.className = 'lang-toggle';
-        toggle.innerHTML = `
-            <button type="button" class="lang-btn${currentLang === 'en' ? ' active' : ''}" data-lang="en">EN</button>
-            <span class="lang-sep">|</span>
-            <button type="button" class="lang-btn${currentLang === 'pt' ? ' active' : ''}" data-lang="pt">PT</button>
-            <span class="lang-sep">|</span>
-            <button type="button" class="lang-btn${currentLang === 'es' ? ' active' : ''}" data-lang="es">ES</button>
-        `;
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = createToggleHTML();
+        const toggle = wrapper.firstElementChild;
 
         bindLangToggleClick(toggle);
 
@@ -833,8 +835,10 @@
         // Mobile menu (classic site)
         const mobileContent = document.querySelector('.mobile-menu-content');
         if (mobileContent) {
-            const mobileToggle = toggle.cloneNode(true);
-            mobileToggle.className = 'lang-toggle lang-toggle-mobile';
+            const mobileWrapper = document.createElement('div');
+            mobileWrapper.innerHTML = createToggleHTML();
+            const mobileToggle = mobileWrapper.firstElementChild;
+            mobileToggle.classList.add('lang-toggle-mobile');
             bindLangToggleClick(mobileToggle);
             mobileContent.insertBefore(mobileToggle, mobileContent.firstChild);
         }
@@ -842,8 +846,10 @@
         // Lon mobile drawer
         const lonMobileMenu = document.getElementById('lonMobileMenu');
         if (lonMobileMenu && !mobileContent) {
-            const lonMobileToggle = toggle.cloneNode(true);
-            lonMobileToggle.className = 'lang-toggle lang-toggle-mobile';
+            const lonWrapper = document.createElement('div');
+            lonWrapper.innerHTML = createToggleHTML();
+            const lonMobileToggle = lonWrapper.firstElementChild;
+            lonMobileToggle.classList.add('lang-toggle-mobile');
             bindLangToggleClick(lonMobileToggle);
             lonMobileMenu.insertBefore(lonMobileToggle, lonMobileMenu.firstChild);
         }
@@ -851,7 +857,9 @@
 
     function updateToggleUI(lang) {
         document.querySelectorAll('.lang-toggle .lang-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.lang === lang);
+            const active = btn.dataset.lang === lang;
+            btn.classList.toggle('active', active);
+            btn.setAttribute('aria-pressed', active);
         });
     }
 
