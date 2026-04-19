@@ -77,7 +77,7 @@
         { s: '.dr-cta-row .lon-btn-soft', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
 
         /* ── Trust bullets ── */
-        { s: '.dr-trust-list li:nth-child(1)', en: 'Doctor accredited by the Medical Association', pt: 'Médica credenciada pela Ordem dos Médicos', es: 'Médica acreditada por el Colegio de Médicos' },
+        { s: '.dr-trust-list li:nth-child(1)', en: 'Doctors accredited by the Portuguese Medical Association', pt: 'Médicos acreditados pela Ordem dos Médicos Português', es: 'Médicos acreditados por el Colegio de Médicos Português' },
         { s: '.dr-trust-list li:nth-child(2)', en: 'Consultations in Portuguese, English and Spanish', pt: 'Consultas em português, inglês e espanhol', es: 'Consultas en portugués, inglés y español' },
         { s: '.dr-trust-list li:nth-child(3)', en: 'Prescriptions and exam requests after the consultation', pt: 'Receitas e pedidos de exames no final da consulta', es: 'Recetas y solicitudes de exámenes al final de la consulta' },
         { s: '.dr-trust-list li:nth-child(4)', en: 'No waiting room. No travel.', pt: 'Sem sala de espera. Sem deslocação.', es: 'Sin sala de espera. Sin desplazamiento.' },
