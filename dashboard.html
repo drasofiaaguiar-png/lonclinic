@@ -55,13 +55,14 @@
                 <h1 class="dash-login-title">Patient Portal</h1>
                 <p class="dash-login-desc">Access your appointments, join video consultations, and manage your health journey.</p>
                 <form class="dash-login-form" id="loginForm">
+                    <div id="dashLoginApiError" class="dash-login-error" style="display:none" role="alert"></div>
                     <div class="dash-form-group">
                         <label for="loginEmail">Email address</label>
                         <input type="email" id="loginEmail" placeholder="you@example.com" required autocomplete="email">
                     </div>
                     <div class="dash-form-group">
-                        <label for="loginRef">Booking reference <span class="dash-form-hint">(optional)</span></label>
-                        <input type="text" id="loginRef" placeholder="e.g. LC-A1B2C3D4" autocomplete="off">
+                        <label for="loginRef">Booking reference</label>
+                        <input type="text" id="loginRef" placeholder="e.g. LC-A1B2C3D4" required autocomplete="off">
                     </div>
                     <button type="submit" class="btn btn-primary btn-lg dash-login-btn">Access my dashboard</button>
                 </form>

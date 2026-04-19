@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const loginEmail = document.getElementById('loginEmail');
     const loginRef = document.getElementById('loginRef');
+    const loginApiError = document.getElementById('dashLoginApiError');
     const logoutBtn = document.getElementById('logoutBtn');
 
     // Dashboard elements
@@ -51,18 +52,35 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionStorage.removeItem('dash_session');
     }
 
+    function hideLoginApiError() {
+        if (loginApiError) {
+            loginApiError.style.display = 'none';
+            loginApiError.textContent = '';
+        }
+    }
+
+    function showLoginApiError(message) {
+        if (loginApiError) {
+            loginApiError.textContent = message;
+            loginApiError.style.display = 'block';
+        }
+    }
+
     // ─── Check existing session ───
     const existing = getSession();
-    if (existing && existing.email) {
-        showDashboard(existing.email);
+    if (existing && existing.email && existing.ref) {
+        showDashboard(existing.email, existing.ref);
+    } else if (existing && existing.email && !existing.ref) {
+        clearSession();
     }
 
     // ─── Login Form ───
     loginForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        hideLoginApiError();
         const email = loginEmail.value.trim();
-        if (!email) return;
         const ref = loginRef.value.trim();
+        if (!email || !ref) return;
         setSession({ email, ref });
         showDashboard(email, ref);
     });
@@ -70,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ─── Logout ───
     logoutBtn.addEventListener('click', () => {
         clearSession();
+        hideLoginApiError();
         loginSection.style.display = '';
         contentSection.style.display = 'none';
         loginEmail.value = '';
@@ -78,6 +97,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ─── Show Dashboard ───
     async function showDashboard(email, ref) {
+        if (!email || !String(ref || '').trim()) {
+            clearSession();
+            loginSection.style.display = '';
+            contentSection.style.display = 'none';
+            return;
+        }
+
         loginSection.style.display = 'none';
         contentSection.style.display = 'block';
 
@@ -87,12 +113,19 @@ document.addEventListener('DOMContentLoaded', () => {
         dashGreeting.textContent = `Welcome, ${capitalized}`;
         dashEmail.textContent = email;
 
-        // Fetch bookings
+        // Fetch bookings (API requires email + booking reference)
         try {
-            const params = new URLSearchParams({ email });
-            if (ref) params.append('ref', ref);
+            const params = new URLSearchParams({ email, ref: ref.trim() });
             const res = await fetch(`/api/bookings?${params.toString()}`);
-            const data = await res.json();
+            const data = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+                clearSession();
+                loginSection.style.display = '';
+                contentSection.style.display = 'none';
+                showLoginApiError(data.error || 'Could not verify your booking. Please try again.');
+                return;
+            }
 
             if (data.bookings && data.bookings.length > 0) {
                 renderBookings(data.bookings, data.doxyUrl);
@@ -103,9 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (err) {
             console.error('Failed to load bookings:', err);
-            dashEmpty.style.display = '';
-            dashTable.style.display = 'none';
-            upcomingSection.style.display = 'none';
+            clearSession();
+            loginSection.style.display = '';
+            contentSection.style.display = 'none';
+            showLoginApiError('Could not connect to the server. Please try again.');
         }
     }
 

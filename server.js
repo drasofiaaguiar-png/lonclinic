@@ -2042,7 +2042,7 @@ app.get('/api/session/:sessionId', async (req, res) => {
     }
 });
 
-// ─── API: Patient Dashboard — Fetch bookings by email ───
+// ─── API: Patient Dashboard — Fetch bookings by email + booking reference only ───
 app.get('/api/bookings', async (req, res) => {
     const email = (req.query.email || '').toLowerCase().trim();
     const ref = (req.query.ref || '').trim();
@@ -2050,19 +2050,19 @@ app.get('/api/bookings', async (req, res) => {
     if (!email) {
         return res.status(400).json({ error: 'Email is required' });
     }
+    if (!ref) {
+        return res.status(400).json({ error: 'Booking reference is required' });
+    }
 
     try {
         let results;
+        const refNorm = ref.toUpperCase();
         if (usePersistentDb) {
-            results = await db.findBookingsByEmail(email, ref);
+            results = await db.findBookingsByEmailAndRef(email, ref);
         } else {
-            results = bookingsStore.filter((b) => b.email === email);
-            if (ref) {
-                const refBooking = bookingsStore.find((b) => b.bookingRef === ref);
-                if (refBooking && !results.find((b) => b.bookingRef === ref)) {
-                    results.push(refBooking);
-                }
-            }
+            results = bookingsStore.filter(
+                (b) => b.email === email && String(b.bookingRef || '').toUpperCase() === refNorm
+            );
         }
 
         results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));

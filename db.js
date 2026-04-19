@@ -236,25 +236,19 @@ async function insertBooking(booking) {
     return r.rowCount > 0;
 }
 
-async function findBookingsByEmail(email, optionalRef) {
+/** Patient portal: only return a booking when email and booking reference both match. */
+async function findBookingsByEmailAndRef(email, bookingRef) {
     const p = getPool();
     const e = email.toLowerCase().trim();
+    const ref = bookingRef.trim().toUpperCase();
     const r = await p.query(
-        `SELECT * FROM bookings WHERE LOWER(email) = $1 ORDER BY created_at DESC`,
-        [e]
+        `SELECT * FROM bookings
+         WHERE LOWER(TRIM(email)) = $1 AND UPPER(TRIM(booking_ref)) = $2
+         ORDER BY created_at DESC
+         LIMIT 1`,
+        [e, ref]
     );
-    let rows = r.rows.map(rowToBooking);
-    if (optionalRef) {
-        const ref = optionalRef.trim().toUpperCase();
-        const has = rows.some((b) => b.bookingRef === ref);
-        if (!has) {
-            const extra = await p.query('SELECT * FROM bookings WHERE booking_ref = $1 LIMIT 1', [ref]);
-            if (extra.rows[0]) {
-                rows = [...rows, rowToBooking(extra.rows[0])];
-            }
-        }
-    }
-    return rows;
+    return r.rows.map(rowToBooking);
 }
 
 async function findAllBookings() {
@@ -383,7 +377,7 @@ module.exports = {
     initDatabase,
     bookingExistsByPaymentId,
     insertBooking,
-    findBookingsByEmail,
+    findBookingsByEmailAndRef,
     findAllBookings,
     findAllBookingsWithClinicalNotes,
     findBookingByRef,
