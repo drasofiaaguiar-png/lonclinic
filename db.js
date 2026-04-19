@@ -85,30 +85,14 @@ function isLocalPostgresHost(hostname) {
 }
 
 /**
- * TLS for remote Postgres (e.g. Supabase): verify the server certificate (rejectUnauthorized: true).
- * For verify-full–style trust, download prod-ca-2021.crt from Supabase Dashboard → Database →
- * SSL Configuration and set PGSSLROOTCERT or DATABASE_SSL_CA to that file path.
- * If unset, Node uses its built-in CA store (often sufficient for Supabase/RDS chains).
+ * TLS for remote Postgres (e.g. Supabase): verify the server certificate using the Supabase
+ * root CA bundled at prod-ca-2021.crt (same file as Dashboard → Database → SSL Configuration).
  */
 function getPostgresSslOptions() {
-    const ssl = { rejectUnauthorized: true };
-    const caPath =
-        process.env.PGSSLROOTCERT ||
-        process.env.DATABASE_SSL_CA ||
-        process.env.DATABASE_SSL_ROOT_CERT;
-    if (caPath && String(caPath).trim()) {
-        const resolved = path.resolve(String(caPath).trim());
-        if (!fs.existsSync(resolved)) {
-            console.error(`\n❌ FATAL: PostgreSQL SSL CA file not found: ${resolved}`);
-            console.error(
-                '   Download prod-ca-2021.crt from Supabase Dashboard → Database → SSL Configuration,'
-            );
-            console.error('   save it on the server, and set PGSSLROOTCERT or DATABASE_SSL_CA to that path.\n');
-            process.exit(1);
-        }
-        ssl.ca = fs.readFileSync(resolved, 'utf8');
-    }
-    return ssl;
+    return {
+        rejectUnauthorized: true,
+        ca: fs.readFileSync(path.join(__dirname, 'prod-ca-2021.crt')).toString()
+    };
 }
 
 function getPool() {
