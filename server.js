@@ -1352,6 +1352,392 @@ const SERVICE_LABELS = {
     followup: 'Follow-up Consultation'
 };
 
+function serviceLabelFromCode(service) {
+    const s = String(service || '').trim();
+    return SERVICE_LABELS[s] || s || 'Consultation';
+}
+
+/** Strings for 24h appointment reminder email */
+const REMINDER_EMAIL_I18N = {
+    en: {
+        htmlLang: 'en',
+        emailTitle: 'Appointment reminder',
+        h2: 'Your appointment is coming up',
+        lead: (name) =>
+            `Hello ${name}, this is a friendly reminder that you have an online consultation with Longevity Clinic within the next 24 hours.`,
+        refLabel: 'Booking reference',
+        colService: 'Service',
+        colDate: 'Date',
+        colTime: 'Time',
+        colFormat: 'Format',
+        formatVideo: 'Secure video call',
+        videoTitle: 'Join your video consultation',
+        doxyBefore: 'Use our secure video room at your scheduled time:',
+        doxyAfter: 'No download required — open the link in a modern browser.',
+        joinVideoButton: 'Join Video Consultation',
+        noDoxy: 'Video link details were included in your confirmation email. If you need help, reply to this message or contact us.',
+        subject: (serviceLabel, date, ref) => `Reminder: ${serviceLabel} on ${date} | ${ref}`,
+        textHead: 'APPOINTMENT REMINDER',
+        textLead: (name) =>
+            `Hello ${name}, you have an online consultation with Longevity Clinic within the next 24 hours.`,
+        textDetails: 'APPOINTMENT DETAILS',
+        textService: 'Service',
+        textDate: 'Date',
+        textTime: 'Time',
+        textFormat: 'Format',
+        textVideo: 'Video',
+        textDoxy: (url) => `Join: ${url}`,
+        textNoDoxy: 'See your confirmation email for the video link.',
+        textFooterCopy: '© 2026 Longevity Clinic',
+        rescheduleStrong: 'Need to reschedule?',
+        rescheduleRest: 'Free rescheduling up to 24 hours before your appointment. Reply to this email or contact us.'
+    },
+    pt: {
+        htmlLang: 'pt',
+        emailTitle: 'Lembrete de consulta',
+        h2: 'A sua consulta está a aproximar-se',
+        lead: (name) =>
+            `Olá ${name}, este é um lembrete amigável de que tem uma consulta online com a Longevity Clinic nas próximas 24 horas.`,
+        refLabel: 'Referência',
+        colService: 'Serviço',
+        colDate: 'Data',
+        colTime: 'Hora',
+        colFormat: 'Formato',
+        formatVideo: 'Videochamada segura',
+        videoTitle: 'Entrar na videoconsulta',
+        doxyBefore: 'Utilize a nossa sala de vídeo segura à hora marcada:',
+        doxyAfter: 'Não é necessária qualquer instalação — abra a ligação num browser atualizado.',
+        joinVideoButton: 'Entrar na consulta por vídeo',
+        noDoxy: 'Os detalhes da ligação foram enviados no email de confirmação. Precisa de ajuda? Responda a este email ou contacte-nos.',
+        subject: (serviceLabel, date, ref) => `Lembrete: ${serviceLabel} · ${date} | ${ref}`,
+        textHead: 'LEMBRETE DE CONSULTA',
+        textLead: (name) =>
+            `Olá ${name}, tem uma consulta online com a Longevity Clinic nas próximas 24 horas.`,
+        textDetails: 'DETALHES DA CONSULTA',
+        textService: 'Serviço',
+        textDate: 'Data',
+        textTime: 'Hora',
+        textFormat: 'Formato',
+        textVideo: 'Vídeo',
+        textDoxy: (url) => `Ligação: ${url}`,
+        textNoDoxy: 'Consulte o email de confirmação para a ligação por vídeo.',
+        textFooterCopy: '© 2026 Longevity Clinic',
+        rescheduleStrong: 'Precisa de reagendar?',
+        rescheduleRest: 'Reagendamento gratuito até 24 horas antes. Responda a este email ou contacte-nos.'
+    },
+    es: {
+        htmlLang: 'es',
+        emailTitle: 'Recordatorio de cita',
+        h2: 'Su consulta se acerca',
+        lead: (name) =>
+            `Hola ${name}, le recordamos que tiene una consulta online con Longevity Clinic en las próximas 24 horas.`,
+        refLabel: 'Referencia',
+        colService: 'Servicio',
+        colDate: 'Fecha',
+        colTime: 'Hora',
+        colFormat: 'Formato',
+        formatVideo: 'Videollamada segura',
+        videoTitle: 'Unirse a la videoconsulta',
+        doxyBefore: 'Use nuestra sala de vídeo segura a la hora acordada:',
+        doxyAfter: 'No necesita instalar nada: abra el enlace en un navegador actualizado.',
+        joinVideoButton: 'Unirse a la videoconsulta',
+        noDoxy: 'Los detalles del enlace figuran en su correo de confirmación. Si necesita ayuda, responda a este mensaje o contáctenos.',
+        subject: (serviceLabel, date, ref) => `Recordatorio: ${serviceLabel} · ${date} | ${ref}`,
+        textHead: 'RECORDATORIO DE CITA',
+        textLead: (name) =>
+            `Hola ${name}, tiene una consulta online con Longevity Clinic en las próximas 24 horas.`,
+        textDetails: 'DETALLES DE LA CITA',
+        textService: 'Servicio',
+        textDate: 'Fecha',
+        textTime: 'Hora',
+        textFormat: 'Formato',
+        textVideo: 'Vídeo',
+        textDoxy: (url) => `Enlace: ${url}`,
+        textNoDoxy: 'Consulte su correo de confirmación para el enlace de videollamada.',
+        textFooterCopy: '© 2026 Longevity Clinic',
+        rescheduleStrong: '¿Necesita cambiar la fecha?',
+        rescheduleRest: 'Puede reprogramar sin coste hasta 24 horas antes. Responda a este correo o contáctenos.'
+    }
+};
+
+function reminderEmailStrings(locale) {
+    const k = normalizePatientLocale(locale);
+    return REMINDER_EMAIL_I18N[k] || REMINDER_EMAIL_I18N.en;
+}
+
+function buildReminderEmail(data) {
+    const { patientName, serviceLabel, date, time, bookingRef, locale: rawLocale } = data;
+    const t = reminderEmailStrings(rawLocale);
+    const name = (patientName || 'Patient').trim();
+
+    const doxyCtaButton = DOXY_ROOM_URL
+        ? `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:16px 0 20px;">
+    <tr>
+        <td align="center" style="padding:0;">
+            <a href="${DOXY_ROOM_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;padding:14px 32px;border-radius:10px;">${t.joinVideoButton}</a>
+        </td>
+    </tr>
+</table>`
+        : '';
+
+    const videoBlock = DOXY_ROOM_URL
+        ? `<h3 style="margin: 0 0 12px; font-size: 16px; font-weight: 600; color: #0f172a;">${t.videoTitle}</h3>
+            <p style="margin: 0 0 8px; font-size: 14px; color: #475569; line-height: 1.5;">${t.doxyBefore}</p>
+            ${doxyCtaButton}
+            <p style="margin: 0 0 0; font-size: 14px; color: #475569; line-height: 1.5;">${t.doxyAfter}</p>`
+        : `<p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.5;">${t.noDoxy}</p>`;
+
+    const html = `
+<!DOCTYPE html>
+<html lang="${t.htmlLang}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${t.emailTitle}</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f0f4fa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f0f4fa; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width: 600px; width: 100%;">
+                    <tr>
+                        <td style="text-align: center; padding: 0 0 32px;">
+                            <h1 style="margin: 0; font-size: 22px; font-weight: 700; color: #0f172a; letter-spacing: -0.02em;">longevity</h1>
+                            <p style="margin: 4px 0 0; font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.15em;">clinic</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="background: #ffffff; border-radius: 16px; padding: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.06);">
+                            <h2 style="margin: 0 0 16px; font-size: 22px; font-weight: 700; color: #0f172a; text-align: center;">${t.h2}</h2>
+                            <p style="margin: 0 0 28px; font-size: 15px; color: #64748b; text-align: center; line-height: 1.5;">${t.lead(name)}</p>
+
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 20px; text-align: center; margin-bottom: 24px;">
+                                <p style="margin: 0 0 4px; font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em;">${t.refLabel}</p>
+                                <p style="margin: 0; font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: 0.05em;">${bookingRef}</p>
+                            </div>
+
+                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 28px;">
+                                <tr>
+                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.colService}</td>
+                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${serviceLabel}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.colDate}</td>
+                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${date}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.colTime}</td>
+                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${time}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px;">${t.colFormat}</td>
+                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right;">${t.formatVideo}</td>
+                                </tr>
+                            </table>
+
+                            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 0 0 24px;">
+
+                            ${videoBlock}
+
+                            <div style="background: #fefce8; border: 1px solid #fde68a; border-radius: 10px; padding: 14px 18px; margin-top: 28px;">
+                                <p style="margin: 0; font-size: 13px; color: #92400e; line-height: 1.5;">
+                                    <strong>${t.rescheduleStrong}</strong> ${t.rescheduleRest}
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 32px 20px; text-align: center;">
+                            <p style="margin: 0 0 8px; font-size: 13px; color: #94a3b8;">
+                                <a href="mailto:info@lonclinic.com" style="color: #3b82f6; text-decoration: none;">info@lonclinic.com</a>
+                                · <a href="tel:+351928372775" style="color: #3b82f6; text-decoration: none;">+351 928 372 775</a>
+                            </p>
+                            <p style="margin: 0; font-size: 11px; color: #cbd5e1;">${t.textFooterCopy}</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>`;
+
+    const textVideo = DOXY_ROOM_URL ? t.textDoxy(DOXY_ROOM_URL) : t.textNoDoxy;
+    const text = `
+${t.textHead} — ${bookingRef}
+
+${t.textLead(name)}
+
+${t.textDetails}
+───────────────
+${t.textService}:  ${serviceLabel}
+${t.textDate}:     ${date}
+${t.textTime}:     ${time}
+${t.textFormat}:   ${t.formatVideo}
+${t.textVideo}:    ${textVideo}
+
+${t.rescheduleStrong} ${t.rescheduleRest}
+
+info@lonclinic.com | +351 928 372 775
+${t.textFooterCopy}
+`;
+
+    return { html, text, subject: t.subject(serviceLabel, date, bookingRef) };
+}
+
+async function sendReminderEmail(data) {
+    if (!isEmailConfigured) {
+        return false;
+    }
+    const to = (data.email || '').trim();
+    if (!to || !to.includes('@')) {
+        console.error('   ⚠️  Reminder email skipped — invalid recipient:', data.email);
+        return false;
+    }
+    try {
+        const { html, text, subject } = buildReminderEmail(data);
+        const info = await transporter.sendMail({
+            from: EMAIL_FROM,
+            to,
+            subject,
+            text,
+            html
+        });
+        console.log('   ✉️  Reminder email sent to:', data.email, '| Message ID:', info.messageId);
+        return true;
+    } catch (err) {
+        console.error('   ❌ Failed to send reminder email:', err.message);
+        return false;
+    }
+}
+
+function sanitizeScheduleTimeZone(raw) {
+    const s = String(raw || '').trim();
+    if (/^[A-Za-z0-9_+\/-]+$/.test(s) && s.length <= 64) return s;
+    return 'Europe/Lisbon';
+}
+
+function partsInTimeZone(utcMs, timeZone) {
+    const f = new Intl.DateTimeFormat('en-CA', {
+        timeZone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hourCycle: 'h23'
+    });
+    const parts = {};
+    f.formatToParts(new Date(utcMs)).forEach((p) => {
+        if (p.type !== 'literal') parts[p.type] = p.value;
+    });
+    return {
+        y: +parts.year,
+        mo: +parts.month,
+        d: +parts.day,
+        h: +parts.hour,
+        mi: +parts.minute
+    };
+}
+
+/** Wall clock date+time in IANA zone → UTC epoch ms (minute resolution). */
+function localWallTimeToUtcMs(dateStr, timeStr, timeZone) {
+    const [y, mo, d] = dateStr.split('-').map(Number);
+    const [h, mi] = timeStr.split(':').map(Number);
+    if (!y || !mo || !d || h === undefined || mi === undefined) return NaN;
+
+    const pad = (n) => String(n).padStart(2, '0');
+    const target = `${y}-${pad(mo)}-${pad(d)} ${pad(h)}:${pad(mi)}`;
+
+    function key(utcMs) {
+        const p = partsInTimeZone(utcMs, timeZone);
+        return `${p.y}-${pad(p.mo)}-${pad(p.d)} ${pad(p.h)}:${pad(p.mi)}`;
+    }
+
+    const start = Date.UTC(y, mo - 1, d, 0, 0, 0) - 48 * 60 * 60 * 1000;
+    const end = Date.UTC(y, mo - 1, d, 23, 59, 0) + 48 * 60 * 60 * 1000;
+    for (let ms = start; ms <= end; ms += 60 * 1000) {
+        if (key(ms) === target) return ms;
+    }
+    return NaN;
+}
+
+function findBookingsNeedingReminderInMemory(ianaTimeZone) {
+    const tz = sanitizeScheduleTimeZone(ianaTimeZone);
+    const now = Date.now();
+    const horizon = now + 24 * 60 * 60 * 1000;
+    return bookingsStore.filter((b) => {
+        if (b.reminderSent) return false;
+        if (!b.date || !b.time) return false;
+        const ds = String(b.date).trim();
+        const ts = String(b.time).trim();
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(ds) || !/^\d{2}:\d{2}$/.test(ts)) return false;
+        const ms = localWallTimeToUtcMs(ds, ts, tz);
+        if (!Number.isFinite(ms)) return false;
+        return ms > now && ms <= horizon;
+    });
+}
+
+const REMINDER_JOB_INTERVAL_MS = 60 * 60 * 1000;
+let reminderJobStarted = false;
+
+async function runAppointmentReminderJob() {
+    if (!isEmailConfigured) {
+        return;
+    }
+    const tz = scheduleStore.timezone || 'Europe/Lisbon';
+    let list = [];
+    try {
+        if (usePersistentDb) {
+            list = await db.findBookingsNeedingReminder(tz);
+        } else {
+            list = findBookingsNeedingReminderInMemory(tz);
+        }
+    } catch (err) {
+        console.error('   ❌ Reminder job: failed to list bookings:', err.message);
+        return;
+    }
+    if (list.length === 0) {
+        return;
+    }
+    console.log(`   ⏰ Reminder job: ${list.length} booking(s) in next 24h (unsent)`);
+    for (const b of list) {
+        const payload = {
+            email: b.email,
+            patientName: b.patientName,
+            serviceLabel: serviceLabelFromCode(b.service),
+            date: b.date,
+            time: b.time,
+            bookingRef: b.bookingRef,
+            locale: 'en'
+        };
+        const sent = await sendReminderEmail(payload);
+        if (!sent) continue;
+        try {
+            if (usePersistentDb) {
+                await db.markReminderSent(b.bookingRef);
+            } else {
+                const row = bookingsStore.find((x) => x.bookingRef === b.bookingRef);
+                if (row) row.reminderSent = true;
+            }
+        } catch (err) {
+            console.error('   ❌ Reminder job: could not mark reminder_sent for', b.bookingRef, err.message);
+        }
+    }
+}
+
+function startAppointmentReminderScheduler() {
+    if (reminderJobStarted) return;
+    reminderJobStarted = true;
+    setInterval(() => {
+        void runAppointmentReminderJob();
+    }, REMINDER_JOB_INTERVAL_MS);
+    setTimeout(() => {
+        void runAppointmentReminderJob();
+    }, 15_000);
+    console.log('   ⏰ Appointment reminders: every 1h (first run ~15s after startup)');
+}
+
 /** Avoid duplicate finalize when webhook and success-page API run together */
 const checkoutFinalizeInFlight = new Set();
 
@@ -1458,6 +1844,7 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
             amount: session.amount_total,
             currency: session.currency,
             paymentId,
+            reminderSent: false,
             createdAt: new Date().toISOString()
         };
 
@@ -2563,6 +2950,9 @@ function getBaseUrl(req) {
             console.log(`   Marcação: http://localhost:${PORT}/marcar/clinica-geral\n`);
         } else {
             console.log(`   ⚠️  marcar.html NOT FOUND — /marcar.html will fail until the file is deployed\n`);
+        }
+        if (isEmailConfigured) {
+            startAppointmentReminderScheduler();
         }
     });
 })();

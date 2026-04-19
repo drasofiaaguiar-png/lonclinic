@@ -100,6 +100,7 @@ function rowToBooking(row) {
         amount: row.amount,
         currency: row.currency,
         paymentId: row.payment_id,
+        reminderSent: row.reminder_sent === true,
         createdAt: createdAt instanceof Date ? createdAt.toISOString() : createdAt
     };
 }
@@ -157,6 +158,49 @@ async function initSchema(p) {
             CONSTRAINT clinic_schedule_singleton CHECK (id = 1)
         )
     `);
+    await p.query(
+        `ALTER TABLE bookings ADD COLUMN IF NOT EXISTS reminder_sent BOOLEAN NOT NULL DEFAULT FALSE`
+    );
+    await p.query(
+        `CREATE INDEX IF NOT EXISTS idx_bookings_reminder_pending ON bookings (reminder_sent) WHERE reminder_sent = FALSE`
+    );
+}
+
+/** IANA name for PostgreSQL AT TIME ZONE (schedule timezone). */
+function sanitizeTimeZoneName(raw) {
+    const s = String(raw || '').trim();
+    if (/^[A-Za-z0-9_+\/-]+$/.test(s) && s.length <= 64) return s;
+    return 'Europe/Lisbon';
+}
+
+/**
+ * Appointments in (now, now+24h] in the given zone, confirmation email not yet reminded.
+ */
+async function findBookingsNeedingReminder(ianaTimeZone) {
+    const p = getPool();
+    const tz = sanitizeTimeZoneName(ianaTimeZone);
+    const r = await p.query(
+        `SELECT * FROM bookings
+         WHERE reminder_sent = FALSE
+           AND date IS NOT NULL AND TRIM(date) <> ''
+           AND time IS NOT NULL AND TRIM(time) <> ''
+           AND date ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+           AND time ~ '^[0-9]{2}:[0-9]{2}$'
+           AND ((date::date + time::time) AT TIME ZONE $1)::timestamptz > NOW()
+           AND ((date::date + time::time) AT TIME ZONE $1)::timestamptz <= NOW() + INTERVAL '24 hours'
+         ORDER BY date, time`,
+        [tz]
+    );
+    return r.rows.map(rowToBooking);
+}
+
+async function markReminderSent(bookingRef) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE bookings SET reminder_sent = TRUE WHERE booking_ref = $1 AND reminder_sent = FALSE`,
+        [bookingRef]
+    );
+    return r.rowCount > 0;
 }
 
 async function initDatabase() {
@@ -385,5 +429,7 @@ module.exports = {
     upsertClinicalNote,
     getSchedulePayload,
     saveSchedulePayload,
+    findBookingsNeedingReminder,
+    markReminderSent,
     closePool
 };
