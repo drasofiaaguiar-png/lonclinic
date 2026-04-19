@@ -1395,7 +1395,7 @@
                 }
             };
 
-            const page = new URLSearchParams(window.location.search).get("page") || "";
+            const page = String(new URLSearchParams(window.location.search).get("page") || "").trim().toLowerCase();
             const noIndexPages = new Set([
                 "termos-condicoes",
                 "politica-privacidade",
@@ -1464,13 +1464,24 @@
                         form.addEventListener("submit", async function (event) {
                             event.preventDefault();
                             const button = form.querySelector('button[type="submit"]');
-                            const formData = new FormData(form);
-                            const payload = { name: String(formData.get("name") || "").trim(), email: String(formData.get("email") || "").trim(), phone: String(formData.get("phone") || "").trim(), message: String(formData.get("message") || "").trim(), locale: getActiveLang() };
+                            const nameEl = form.querySelector('[name="name"]');
+                            const emailEl = form.querySelector('[name="email"]');
+                            const phoneEl = form.querySelector('[name="phone"]');
+                            const messageEl = form.querySelector('[name="message"]');
+                            const payload = {
+                                name: String((nameEl && nameEl.value) || "").trim(),
+                                email: String((emailEl && emailEl.value) || "").trim(),
+                                phone: String((phoneEl && phoneEl.value) || "").trim(),
+                                message: String((messageEl && messageEl.value) || "").trim(),
+                                locale: getActiveLang()
+                            };
                             if (statusEl) { statusEl.textContent = ""; statusEl.classList.remove("is-success", "is-error"); }
                             if (button) { button.disabled = true; button.textContent = getFS(getActiveLang()).sending; }
                             try {
-                                const response = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-                                const result = await response.json();
+                                const response = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json; charset=utf-8" }, body: JSON.stringify(payload) });
+                                const raw = await response.text();
+                                let result = {};
+                                try { if (raw) result = JSON.parse(raw); } catch (e) { throw new Error(getFS(getActiveLang()).errorContact); }
                                 if (!response.ok) throw new Error(result.error || getFS(getActiveLang()).errorContact);
                                 form.reset();
                                 if (statusEl) { statusEl.textContent = getFS(getActiveLang()).successContact; statusEl.classList.add("is-success"); }
@@ -1490,21 +1501,27 @@
                         form.addEventListener("submit", async function (event) {
                             event.preventDefault();
                             const button = form.querySelector('button[type="submit"]');
-                            const formData = new FormData(form);
-                            const org = String(formData.get("organization") || "").trim();
-                            const baseMsg = String(formData.get("message") || "").trim();
+                            const orgEl = form.querySelector('[name="organization"]');
+                            const msgEl = form.querySelector('[name="message"]');
+                            const nameEl = form.querySelector('[name="name"]');
+                            const emailEl = form.querySelector('[name="email"]');
+                            const phoneEl = form.querySelector('[name="phone"]');
+                            const org = String((orgEl && orgEl.value) || "").trim();
+                            const baseMsg = String((msgEl && msgEl.value) || "").trim();
                             const payload = {
-                                name: String(formData.get("name") || "").trim(),
-                                email: String(formData.get("email") || "").trim(),
-                                phone: String(formData.get("phone") || "").trim(),
+                                name: String((nameEl && nameEl.value) || "").trim(),
+                                email: String((emailEl && emailEl.value) || "").trim(),
+                                phone: String((phoneEl && phoneEl.value) || "").trim(),
                                 message: ("[Partnership request] Organisation: " + org + "\n\n" + baseMsg).slice(0, 4000),
                                 locale: getActiveLang()
                             };
                             if (statusEl) { statusEl.textContent = ""; statusEl.classList.remove("is-success", "is-error"); }
                             if (button) { button.disabled = true; button.textContent = getFS(getActiveLang()).sending; }
                             try {
-                                const response = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
-                                const result = await response.json();
+                                const response = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json; charset=utf-8" }, body: JSON.stringify(payload) });
+                                const raw = await response.text();
+                                let result = {};
+                                try { if (raw) result = JSON.parse(raw); } catch (e) { throw new Error(getFS(getActiveLang()).errorPartnerships); }
                                 if (!response.ok) throw new Error(result.error || getFS(getActiveLang()).errorPartnerships);
                                 form.reset();
                                 if (statusEl) { statusEl.textContent = getFS(getActiveLang()).successPartnerships; statusEl.classList.add("is-success"); }

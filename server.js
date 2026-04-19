@@ -1489,11 +1489,15 @@ async function sendContactInquiryEmail(data) {
 
     try {
         const { html, text } = buildContactInquiryEmail(data);
+        const msgOneLine = String(data.message || '').replace(/\s+/g, ' ').trim();
+        const msgPreview = msgOneLine
+            ? (msgOneLine.length > 55 ? `${msgOneLine.slice(0, 55)}…` : msgOneLine)
+            : '(empty message)';
         const info = await transporter.sendMail({
             from: EMAIL_FROM,
             to: CONTACT_EMAIL,
             replyTo: data.email,
-            subject: `Contact form: ${data.name}`,
+            subject: `Contact form: ${data.name} — ${msgPreview}`,
             text,
             html
         });

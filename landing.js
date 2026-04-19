@@ -97,12 +97,15 @@
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
             var button = form.querySelector('button[type="submit"]');
-            var formData = new FormData(form);
+            var nameEl = form.querySelector('[name="name"]');
+            var emailEl = form.querySelector('[name="email"]');
+            var phoneEl = form.querySelector('[name="phone"]');
+            var messageEl = form.querySelector('[name="message"]');
             var payload = {
-                name: String(formData.get('name') || '').trim(),
-                email: String(formData.get('email') || '').trim(),
-                phone: String(formData.get('phone') || '').trim(),
-                message: String(formData.get('message') || '').trim(),
+                name: String((nameEl && nameEl.value) || '').trim(),
+                email: String((emailEl && emailEl.value) || '').trim(),
+                phone: String((phoneEl && phoneEl.value) || '').trim(),
+                message: String((messageEl && messageEl.value) || '').trim(),
                 locale: getContactLang()
             };
 
@@ -119,10 +122,16 @@
             try {
                 var response = await fetch('/api/contact', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json; charset=utf-8' },
                     body: JSON.stringify(payload)
                 });
-                var result = await response.json();
+                var raw = await response.text();
+                var result = {};
+                try {
+                    if (raw) result = JSON.parse(raw);
+                } catch (parseErr) {
+                    throw new Error(getCS().error);
+                }
 
                 if (!response.ok) {
                     throw new Error(result.error || getCS().error);
