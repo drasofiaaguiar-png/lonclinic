@@ -8,11 +8,37 @@ const { Pool } = require('pg');
 
 let pool = null;
 
+/** Remove sslmode from DATABASE_URL so libpq does not override Pool.ssl (e.g. sslmode=require). */
+function stripSslModeFromConnectionString(connectionString) {
+    const s = String(connectionString).trim();
+    if (!s) return s;
+    try {
+        const u = new URL(s);
+        for (const key of [...u.searchParams.keys()]) {
+            if (key.toLowerCase() === 'sslmode') {
+                u.searchParams.delete(key);
+            }
+        }
+        return u.toString();
+    } catch {
+        const q = s.indexOf('?');
+        if (q === -1) return s;
+        const base = s.slice(0, q);
+        const rest = s.slice(q + 1);
+        const kept = rest.split('&').filter((pair) => {
+            const name = pair.split('=')[0];
+            return name && name.toLowerCase() !== 'sslmode';
+        });
+        return kept.length ? `${base}?${kept.join('&')}` : base;
+    }
+}
+
 function getPool() {
     if (!process.env.DATABASE_URL) return null;
     if (!pool) {
+        const connectionString = stripSslModeFromConnectionString(process.env.DATABASE_URL);
         pool = new Pool({
-            connectionString: process.env.DATABASE_URL,
+            connectionString,
             ssl: { rejectUnauthorized: false },
             max: 10,
             idleTimeoutMillis: 30000,
