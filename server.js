@@ -108,6 +108,8 @@ const defaultScheduleStore = {
     /** Per-calendar-day hours; override weekly template for that date (YYYY-MM-DD). */
     dayOverrides: [],
     timezone: 'Europe/Lisbon',
+    /** When true, public booking only shows anchor slots until bookings exist, then expands outward. */
+    smartSlotGrouping: false,
     updatedAt: new Date().toISOString()
 };
 
@@ -155,6 +157,8 @@ function ensureScheduleStoreShape(raw) {
         dayOverrides: mergedOverrides,
         slotDuration: Number.isFinite(input.slotDuration) ? input.slotDuration : base.slotDuration,
         timezone: typeof input.timezone === 'string' && input.timezone ? input.timezone : base.timezone,
+        smartSlotGrouping:
+            typeof input.smartSlotGrouping === 'boolean' ? input.smartSlotGrouping : base.smartSlotGrouping,
         updatedAt: input.updatedAt || new Date().toISOString()
     };
 }
@@ -2253,6 +2257,93 @@ function slotsForDateIso(dateIso) {
     return slots;
 }
 
+function computeOccupiedSlotIndices(allSlots, booking, slotDurationMinutes) {
+    const t = normalizeTimeString(booking);
+    if (!t) return [];
+    const startIdx = allSlots.indexOf(t);
+    if (startIdx < 0) return [];
+    const dur = appointmentDurationMinutes(booking);
+    const span = Math.max(1, Math.ceil(dur / slotDurationMinutes));
+    const out = [];
+    for (let i = 0; i < span && startIdx + i < allSlots.length; i++) {
+        out.push(startIdx + i);
+    }
+    return out;
+}
+
+/**
+ * Progressive slot grouping: empty day → first/last anchor slots only; then
+ * slot immediately before and after the contiguous occupied block.
+ */
+function computeSmartGroupedSlotTimes(allSlots, bookingsForDate, slotDurationMinutes) {
+    if (!allSlots.length) return [];
+    const occupied = new Set();
+    for (const b of bookingsForDate) {
+        if (b.cancelled) continue;
+        for (const idx of computeOccupiedSlotIndices(allSlots, b, slotDurationMinutes)) {
+            occupied.add(idx);
+        }
+    }
+    if (occupied.size === 0) {
+        if (allSlots.length === 1) return [allSlots[0]];
+        return [allSlots[0], allSlots[allSlots.length - 1]];
+    }
+    let minOcc = Infinity;
+    let maxOcc = -Infinity;
+    occupied.forEach((i) => {
+        if (i < minOcc) minOcc = i;
+        if (i > maxOcc) maxOcc = i;
+    });
+    const before = minOcc - 1;
+    const after = maxOcc + 1;
+    const result = [];
+    if (before >= 0 && !occupied.has(before)) result.push(allSlots[before]);
+    if (after < allSlots.length && !occupied.has(after)) result.push(allSlots[after]);
+    // Preserve order along the day (not lexicographic string sort)
+    return [...new Set(result)].sort((a, b) => allSlots.indexOf(a) - allSlots.indexOf(b));
+}
+
+async function fetchBookingsForDateIso(dateIso) {
+    if (usePersistentDb) {
+        try {
+            return await db.listBookingsForDateIso(dateIso);
+        } catch (err) {
+            console.error('fetchBookingsForDateIso:', err.message);
+            return [];
+        }
+    }
+    return bookingsStore.filter((b) => !b.cancelled && inferDateIsoFromBooking(b) === dateIso);
+}
+
+/**
+ * Slots patients may book for a date: schedule + optional smart grouping + not already taken.
+ */
+async function getBookableSlotsForDateIso(dateIso, excludeBookingRef) {
+    const base = slotsForDateIso(dateIso);
+    if (!base.length) return [];
+    const slotDuration = scheduleStore.slotDuration || 30;
+    let bookings = await fetchBookingsForDateIso(dateIso);
+    if (excludeBookingRef) {
+        bookings = bookings.filter((b) => b.bookingRef !== excludeBookingRef);
+    }
+    let slots;
+    if (scheduleStore.smartSlotGrouping) {
+        slots = computeSmartGroupedSlotTimes(base, bookings, slotDuration);
+    } else {
+        slots = base.slice();
+    }
+    const free = [];
+    for (const t of slots) {
+        if (usePersistentDb) {
+            const taken = await db.isSlotTakenByOther(dateIso, t, excludeBookingRef);
+            if (!taken) free.push(t);
+        } else if (isSlotFreeInMemory(dateIso, t, excludeBookingRef)) {
+            free.push(t);
+        }
+    }
+    return free;
+}
+
 const AUTOMATION_JOB_INTERVAL_MS = 15 * 60 * 1000;
 let automationJobStarted = false;
 
@@ -2440,6 +2531,30 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
         }
 
         const meta = session.metadata || {};
+        const isoRaw = meta.date_iso && String(meta.date_iso).trim();
+        const normTimeFinal = normalizeTimeString({ time: meta.time || '' });
+        if (isoRaw && /^\d{4}-\d{2}-\d{2}$/.test(isoRaw) && normTimeFinal) {
+            const allowed = await getBookableSlotsForDateIso(isoRaw, null);
+            if (!allowed.includes(normTimeFinal)) {
+                console.warn(
+                    `${logPrefix}finalizePaidCheckoutSession: slot not bookable ${isoRaw} ${normTimeFinal}`
+                );
+                return { ok: false, reason: 'invalid_slot' };
+            }
+            if (usePersistentDb) {
+                const taken = await db.isSlotTakenByOther(isoRaw, normTimeFinal, null);
+                if (taken) {
+                    console.warn(
+                        `${logPrefix}finalizePaidCheckoutSession: slot already taken ${isoRaw} ${normTimeFinal}`
+                    );
+                    return { ok: false, reason: 'slot_taken' };
+                }
+            } else if (!isSlotFreeInMemory(isoRaw, normTimeFinal, null)) {
+                console.warn(`${logPrefix}finalizePaidCheckoutSession: slot not free in memory`);
+                return { ok: false, reason: 'slot_taken' };
+            }
+        }
+
         const travellerCount = parseInt(meta.traveller_count, 10) || 1;
         const passengerNames = [];
         for (let i = 1; i <= travellerCount; i++) {
@@ -3069,6 +3184,15 @@ app.post('/api/create-checkout-session', async (req, res) => {
             });
         }
 
+        const isoCheckout = (dateIso && String(dateIso).trim()) || '';
+        const normTimeCheckout = normalizeTimeString({ time: time || '' });
+        if (isoCheckout && /^\d{4}-\d{2}-\d{2}$/.test(isoCheckout) && normTimeCheckout) {
+            const allowed = await getBookableSlotsForDateIso(isoCheckout, null);
+            if (!allowed.includes(normTimeCheckout)) {
+                return res.status(400).json({ error: 'That time slot is not available' });
+            }
+        }
+
         // Create Stripe Checkout Session
         console.log('Creating Stripe checkout session...');
         console.log('   Service:', service);
@@ -3324,7 +3448,7 @@ app.post('/api/patient/booking/reschedule', async (req, res) => {
         if (!normTime) {
             return res.status(400).json({ error: 'Invalid time format' });
         }
-        const allowed = slotsForDateIso(newIso);
+        const allowed = await getBookableSlotsForDateIso(newIso, booking.bookingRef);
         if (!allowed.includes(normTime)) {
             return res.status(400).json({ error: 'That time slot is not available' });
         }
@@ -3655,8 +3779,15 @@ app.get('/api/admin/schedule', requireAuth, (req, res) => {
 
 // ─── API: Admin — Update schedule settings ───
 app.post('/api/admin/schedule', requireAuth, express.json(), async (req, res) => {
-    const { workingHours, slotDuration, blockedDates, blockedTimeSlots, dayOverrides, timezone } =
-        req.body;
+    const {
+        workingHours,
+        slotDuration,
+        blockedDates,
+        blockedTimeSlots,
+        dayOverrides,
+        timezone,
+        smartSlotGrouping
+    } = req.body;
 
     if (workingHours) {
         scheduleStore.workingHours = { ...scheduleStore.workingHours, ...workingHours };
@@ -3675,6 +3806,9 @@ app.post('/api/admin/schedule', requireAuth, express.json(), async (req, res) =>
     }
     if (timezone) {
         scheduleStore.timezone = timezone;
+    }
+    if (typeof smartSlotGrouping === 'boolean') {
+        scheduleStore.smartSlotGrouping = smartSlotGrouping;
     }
 
     scheduleStore.updatedAt = new Date().toISOString();
@@ -3696,14 +3830,15 @@ app.get('/api/schedule', (req, res) => {
         slotDuration: scheduleStore.slotDuration,
         blockedDates: scheduleStore.blockedDates,
         dayOverrides: scheduleStore.dayOverrides,
-        timezone: scheduleStore.timezone
+        timezone: scheduleStore.timezone,
+        smartSlotGrouping: !!scheduleStore.smartSlotGrouping
     });
 });
 
-// ─── API: Admin — Get available time slots for a date ───
-app.get('/api/admin/available-slots', (req, res) => {
+// ─── API: Admin — Get available time slots for a date (public + clinic; respects smart grouping) ───
+app.get('/api/admin/available-slots', async (req, res) => {
     const { date } = req.query; // Format: YYYY-MM-DD
-    
+
     if (!date) {
         return res.status(400).json({ error: 'Date is required' });
     }
@@ -3732,48 +3867,23 @@ app.get('/api/admin/available-slots', (req, res) => {
         return res.json({ available: [], date, reason, effective: daySchedule });
     }
 
-    // Generate slots based on effective hours
-    const [startHour, startMin] = daySchedule.start.split(':').map(Number);
-    const [endHour, endMin] = daySchedule.end.split(':').map(Number);
-    const slotDuration = scheduleStore.slotDuration || 30;
-
-    const slots = [];
-    let currentHour = startHour;
-    let currentMin = startMin;
-
-    while (currentHour < endHour || (currentHour === endHour && currentMin < endMin)) {
-        const slotTime = `${String(currentHour).padStart(2, '0')}:${String(currentMin).padStart(2, '0')}`;
-
-        // Check if this slot is blocked
-        const isBlocked = scheduleStore.blockedTimeSlots.some(
-            (blocked) => blocked.date === dateStr && blocked.time === slotTime
-        );
-
-        // Check if date is blocked
-        const isDateBlocked = scheduleStore.blockedDates.includes(dateStr);
-
-        if (!isBlocked && !isDateBlocked) {
-            slots.push(slotTime);
-        }
-
-        // Move to next slot
-        currentMin += slotDuration;
-        if (currentMin >= 60) {
-            currentMin = 0;
-            currentHour++;
-        }
+    try {
+        const available = await getBookableSlotsForDateIso(dateStr, null);
+        res.json({
+            available,
+            date,
+            workingHours: {
+                enabled: daySchedule.enabled,
+                start: daySchedule.start,
+                end: daySchedule.end
+            },
+            effective: daySchedule,
+            smartSlotGrouping: !!scheduleStore.smartSlotGrouping
+        });
+    } catch (err) {
+        console.error('GET /api/admin/available-slots:', err.message);
+        res.status(500).json({ error: 'Failed to load available slots' });
     }
-
-    res.json({
-        available: slots,
-        date,
-        workingHours: {
-            enabled: daySchedule.enabled,
-            start: daySchedule.start,
-            end: daySchedule.end
-        },
-        effective: daySchedule
-    });
 });
 
 // ─── Helper ───

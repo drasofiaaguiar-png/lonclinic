@@ -848,6 +848,24 @@ body.dash-portal .clinic-notes-section {
    CLINIC PORTAL STYLES
 ======================================== */
 
+.clinic-toggle-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text-primary, #0f172a);
+    max-width: 42rem;
+}
+
+.clinic-toggle-label input[type='checkbox'] {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    flex-shrink: 0;
+    accent-color: var(--accent, #c5c72c);
+}
+
 .dash-section-subtitle {
     font-size: 0.875rem;
     color: var(--text-muted);

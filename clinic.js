@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicTableBody = document.getElementById('clinicTableBody');
     const clinicEmpty = document.getElementById('clinicEmpty');
     const refreshBtn = document.getElementById('refreshBtn');
+    const smartSlotGroupingToggle = document.getElementById('smartSlotGroupingToggle');
     const consultationModal = document.getElementById('consultationModal');
     const modalOverlay = document.getElementById('modalOverlay');
     const modalClose = document.getElementById('modalClose');
@@ -66,6 +67,46 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         loadBookings();
+        loadBookingSettings();
+    }
+
+    async function loadBookingSettings() {
+        if (!smartSlotGroupingToggle) return;
+        try {
+            const res = await fetch('/api/admin/schedule');
+            if (res.status === 401) {
+                showLogin();
+                return;
+            }
+            if (!res.ok) return;
+            const schedule = await res.json();
+            smartSlotGroupingToggle.checked = !!schedule.smartSlotGrouping;
+        } catch (err) {
+            console.error('Failed to load booking settings:', err);
+        }
+    }
+
+    if (smartSlotGroupingToggle) {
+        smartSlotGroupingToggle.addEventListener('change', async () => {
+            const enabled = smartSlotGroupingToggle.checked;
+            try {
+                const res = await fetch('/api/admin/schedule', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ smartSlotGrouping: enabled })
+                });
+                if (res.status === 401) {
+                    showLogin();
+                    return;
+                }
+                if (!res.ok) {
+                    smartSlotGroupingToggle.checked = !enabled;
+                }
+            } catch (err) {
+                console.error('Failed to save booking settings:', err);
+                smartSlotGroupingToggle.checked = !enabled;
+            }
+        });
     }
 
     // ─── Login ───

@@ -290,6 +290,17 @@ async function isSlotTakenByOther(dateIso, time, excludeBookingRef) {
     return r.rowCount > 0;
 }
 
+/** Active bookings on a calendar day (for progressive slot grouping). */
+async function listBookingsForDateIso(dateIso) {
+    const p = getPool();
+    if (!p) return [];
+    const r = await p.query(
+        `SELECT * FROM bookings WHERE cancelled = FALSE AND date_iso = $1`,
+        [dateIso]
+    );
+    return r.rows.map(rowToBooking);
+}
+
 async function initDatabase() {
     const rawUrl = process.env.DATABASE_URL;
     const hasUrl = hasDatabaseUrl();
@@ -534,5 +545,6 @@ module.exports = {
     cancelBookingByRef,
     rescheduleBookingByRef,
     isSlotTakenByOther,
+    listBookingsForDateIso,
     closePool
 };
