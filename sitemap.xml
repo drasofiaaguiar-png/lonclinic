@@ -27,6 +27,14 @@
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
+
+    <!-- Google Ads landing — consulta online -->
+    <url>
+        <loc>https://lonclinic.com/consulta</loc>
+        <lastmod>2026-04-19</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
     
     <!-- Information hub -->
     <url>

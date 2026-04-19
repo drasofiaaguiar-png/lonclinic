@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZN8J4X12H3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZN8J4X12H3');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta médica online em Portugal | Lon Clinic</title>
+    <meta name="description" content="Marque a sua videoconsulta com médicos licenciados. Pagamento seguro, sem deslocações. Lon Clinic — telemedicina em Portugal.">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="https://lonclinic.com/consulta">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lonclinic.com/consulta">
+    <meta property="og:title" content="Consulta médica online em Portugal | Lon Clinic">
+    <meta property="og:description" content="Videoconsulta com médicos licenciados. Marque em minutos, pague online e fale com o médico por vídeo.">
+    <meta property="og:image" content="https://lonclinic.com/image/image2.webp">
+    <meta property="og:locale" content="pt_PT">
+    <meta property="og:site_name" content="Lon Clinic">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#4A7C6F">
+    <link rel="preload" as="image" href="/image/image2.webp" fetchpriority="high">
+    <link rel="stylesheet" href="/landing.css?v=20260418k">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MedicalWebPage",
+      "name": "Consulta médica online em Portugal",
+      "url": "https://lonclinic.com/consulta",
+      "isPartOf": { "@type": "WebSite", "name": "Lon Clinic", "url": "https://lonclinic.com" },
+      "inLanguage": "pt-PT"
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Como funciona a consulta médica online?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Escolha data e hora, efetue o pagamento seguro online e aceda à videoconsulta no horário marcado, através do browser — sem instalar aplicações." }
+        },
+        {
+          "@type": "Question",
+          "name": "Os médicos estão licenciados em Portugal?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Sim. As consultas são realizadas por médicos credenciados e registados na Ordem dos Médicos." }
+        },
+        {
+          "@type": "Question",
+          "name": "Que métodos de pagamento aceitam?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Aceitamos pagamento com cartão (Stripe), MB Way e referência Multibanco, de forma segura." }
+        }
+      ]
+    }
+    </script>
+    <style>
+        .consulta-landing .consulta-trust-bar {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 22px;
+            max-width: 46ch;
+        }
+        @media (min-width: 640px) {
+            .consulta-landing .consulta-trust-bar {
+                grid-template-columns: repeat(3, 1fr);
+                max-width: none;
+                gap: 12px;
+            }
+        }
+        .consulta-trust-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid #ebddf4;
+            border-radius: 14px;
+            padding: 12px 14px;
+            font-size: 0.88rem;
+            line-height: 1.35;
+            color: #4f425a;
+        }
+        .consulta-trust-item span[aria-hidden="true"] {
+            font-size: 1.25rem;
+            line-height: 1;
+            flex-shrink: 0;
+        }
+        .consulta-trust-item strong {
+            display: block;
+            color: var(--lon-primary);
+            font-size: 0.82rem;
+            margin-bottom: 2px;
+        }
+        .consulta-section {
+            padding: 72px 0;
+        }
+        .consulta-section h2 {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            letter-spacing: -0.03em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .consulta-section .consulta-sub {
+            text-align: center;
+            color: var(--lon-muted);
+            max-width: 42ch;
+            margin: 0 auto 36px;
+        }
+        .consulta-steps-3 {
+            display: grid;
+            gap: 16px;
+        }
+        @media (min-width: 768px) {
+            .consulta-steps-3 {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+        }
+        .consulta-step-card {
+            background: var(--lon-surface);
+            border: 1px solid var(--lon-border);
+            border-radius: var(--lon-radius);
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 8px 28px rgba(55, 25, 73, 0.06);
+        }
+        .consulta-step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fff5f0, #ffe8dc);
+            color: #c24a18;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+        }
+        .consulta-step-card h3 {
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        .consulta-step-card p {
+            font-size: 0.92rem;
+            color: var(--lon-muted);
+            line-height: 1.45;
+        }
+        .consulta-price-grid {
+            display: grid;
+            gap: 14px;
+        }
+        @media (min-width: 600px) {
+            .consulta-price-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (min-width: 1000px) {
+            .consulta-price-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        .consulta-price-card {
+            background: var(--lon-surface);
+            border: 1px solid var(--lon-border);
+            border-radius: var(--lon-radius);
+            padding: 20px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 100%;
+        }
+        .consulta-price-card h3 {
+            font-size: 1rem;
+            letter-spacing: -0.02em;
+            flex: 1;
+        }
+        .consulta-price-card .consulta-price {
+            font-weight: 700;
+            color: #3d3148;
+            font-size: 1.05rem;
+        }
+        .consulta-price-card .consulta-price-meta {
+            font-size: 0.85rem;
+            color: var(--lon-muted);
+        }
+        .consulta-testimonials {
+            display: grid;
+            gap: 16px;
+        }
+        @media (min-width: 700px) {
+            .consulta-testimonials {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        .consulta-testimonial {
+            background: var(--lon-surface-soft);
+            border: 1px dashed #dccae8;
+            border-radius: var(--lon-radius);
+            padding: 22px 18px;
+            text-align: center;
+        }
+        .consulta-testimonial .consulta-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            background: linear-gradient(145deg, #e8dff2, #f5eefb);
+            border: 1px solid var(--lon-border);
+        }
+        .consulta-testimonial p {
+            font-size: 0.92rem;
+            color: #5a5063;
+            line-height: 1.5;
+            font-style: italic;
+        }
+        .consulta-testimonial .consulta-placeholder-tag {
+            display: inline-block;
+            margin-top: 12px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #9a8aa8;
+        }
+        .consulta-faq details {
+            background: var(--lon-surface);
+            border: 1px solid var(--lon-border);
+            border-radius: 14px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .consulta-faq summary {
+            padding: 16px 18px;
+            font-weight: 600;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+        }
+        .consulta-faq summary::-webkit-details-marker { display: none; }
+        .consulta-faq summary::after {
+            content: "+";
+            font-weight: 700;
+            color: var(--lon-accent);
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        .consulta-faq details[open] summary::after { content: "−"; }
+        .consulta-faq .consulta-faq-a {
+            padding: 0 18px 16px;
+            font-size: 0.92rem;
+            color: var(--lon-muted);
+            line-height: 1.55;
+        }
+        .consulta-faq-wrap {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        .consulta-cta-band {
+            padding: 56px 0 80px;
+        }
+        .consulta-cta-band-inner {
+            border-radius: var(--lon-radius-lg);
+            background: linear-gradient(135deg, #faf5ff 0%, #f4e7fb 100%);
+            border: 1px solid #e8d9f2;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: var(--lon-shadow);
+        }
+        .consulta-cta-band-inner h2 {
+            font-size: clamp(1.4rem, 3.5vw, 1.85rem);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+        .consulta-cta-band-inner > p {
+            color: var(--lon-muted);
+            margin-bottom: 20px;
+            max-width: 40ch;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    </style>
+</head>
+<body class="lon-landing consulta-landing">
+    <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
+
+    <header class="lon-nav" id="lonNav">
+        <div class="lon-container lon-nav-inner">
+            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
+                <span class="lon-logo-name">LON Clinic</span>
+            </a>
+            <nav class="lon-nav-links" aria-label="Navegação principal">
+                <a href="#inicio">Início</a>
+                <a href="#como-funciona">Como funciona</a>
+                <a href="#servicos">Serviços</a>
+                <a href="#faq">FAQ</a>
+            </nav>
+            <div class="lon-nav-actions">
+                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
+                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm js-consulta-cta-nav" data-consulta-cta="nav">Marcar Consulta Agora</a>
+                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+        <div class="lon-mobile-menu" id="lonMobileMenu">
+            <a href="#inicio">Início</a>
+            <a href="#como-funciona">Como funciona</a>
+            <a href="#servicos">Serviços</a>
+            <a href="#faq">FAQ</a>
+            <a href="/patient-portal">Login</a>
+        </div>
+    </header>
+
+    <main id="conteudo-principal">
+        <section class="dr-hero" id="inicio">
+            <div class="lon-container dr-hero-grid">
+                <div class="dr-hero-content">
+                    <p class="dr-badge">Telemedicina em Portugal</p>
+                    <h1>Consulta Médica Online em Portugal</h1>
+                    <p class="dr-lead">Fale com um médico licenciado por videoconsulta — rápido, seguro e sem sair de casa. Ideal para quem procura uma consulta médica online com a mesma qualidade de uma clínica presencial.</p>
+                    <div class="dr-cta-row">
+                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark js-consulta-cta" id="consultaCtaHero" data-consulta-cta="hero" data-cta-location="hero_primary">Marcar Consulta Agora</a>
+                        <a href="#como-funciona" class="lon-btn lon-btn-soft">Ver como funciona</a>
+                    </div>
+                    <div class="consulta-trust-bar" role="list" aria-label="Sinais de confiança">
+                        <div class="consulta-trust-item" role="listitem">
+                            <span aria-hidden="true">🔒</span>
+                            <div>
+                                <strong>Pagamento seguro</strong>
+                                Cartão, MB Way e Multibanco com encriptação.
+                            </div>
+                        </div>
+                        <div class="consulta-trust-item" role="listitem">
+                            <span aria-hidden="true">🩺</span>
+                            <div>
+                                <strong>Médicos licenciados</strong>
+                                Credenciados pela Ordem dos Médicos.
+                            </div>
+                        </div>
+                        <div class="consulta-trust-item" role="listitem">
+                            <span aria-hidden="true">📹</span>
+                            <div>
+                                <strong>Videoconsulta simples</strong>
+                                No browser — sem instalar apps.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dr-hero-media">
+                    <img src="/image/image2.webp" alt="Consulta médica online por vídeo" width="800" height="600" loading="eager" decoding="async" fetchpriority="high">
+                    <div class="dr-float-card">
+                        <p><strong>Consulta por vídeo</strong></p>
+                        <small>Smartphone, tablet ou computador</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="consulta-section dr-platform" id="como-funciona" aria-labelledby="consulta-como-title">
+            <div class="lon-container">
+                <h2 id="consulta-como-title">Como funciona</h2>
+                <p class="consulta-sub">Três passos simples da marcação à videoconsulta.</p>
+                <div class="consulta-steps-3">
+                    <article class="consulta-step-card">
+                        <div class="consulta-step-num" aria-hidden="true">1</div>
+                        <h3>Marcar</h3>
+                        <p>Escolha o tipo de consulta, a data e a hora que lhe convêm no nosso calendário online.</p>
+                    </article>
+                    <article class="consulta-step-card">
+                        <div class="consulta-step-num" aria-hidden="true">2</div>
+                        <h3>Pagar</h3>
+                        <p>Efetue o pagamento de forma segura por cartão, MB Way ou referência Multibanco para confirmar o agendamento.</p>
+                    </article>
+                    <article class="consulta-step-card">
+                        <div class="consulta-step-num" aria-hidden="true">3</div>
+                        <h3>Consultar por vídeo</h3>
+                        <p>No horário marcado, aceda à sala de videoconsulta pelo browser e fale com o médico.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="consulta-section lon-services" id="servicos" style="padding-top:0;">
+            <div class="lon-container">
+                <h2 style="text-align:center; font-size: clamp(1.75rem, 4vw, 2.5rem); letter-spacing: -0.03em; margin-bottom: 10px;">Serviços e preços</h2>
+                <p class="consulta-sub">Valores transparentes — escolha o serviço adequado ao seu caso.</p>
+                <div class="consulta-price-grid">
+                    <article class="consulta-price-card">
+                        <h3>Consulta Clínica Geral / Check-up</h3>
+                        <p class="consulta-price">€39</p>
+                        <p class="consulta-price-meta">30 min · videoconsulta</p>
+                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;">Marcar</a>
+                    </article>
+                    <article class="consulta-price-card">
+                        <h3>Consulta Médica Urgente (adultos)</h3>
+                        <p class="consulta-price">€35</p>
+                        <p class="consulta-price-meta">15 min · videoconsulta</p>
+                        <a href="/marcar/urgente" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;">Marcar</a>
+                    </article>
+                    <article class="consulta-price-card">
+                        <h3>Consulta de Saúde Mental</h3>
+                        <p class="consulta-price">€49</p>
+                        <p class="consulta-price-meta">45 min · videoconsulta</p>
+                        <a href="/marcar/saude-mental" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;">Marcar</a>
+                    </article>
+                    <article class="consulta-price-card">
+                        <h3>Renovação de tratamento médico</h3>
+                        <p class="consulta-price">€19</p>
+                        <p class="consulta-price-meta">videoconsulta</p>
+                        <a href="/marcar/renovacao" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;">Marcar</a>
+                    </article>
+                    <article class="consulta-price-card">
+                        <h3>Consulta do Viajante</h3>
+                        <p class="consulta-price">€39</p>
+                        <p class="consulta-price-meta">20 min · videoconsulta</p>
+                        <a href="/marcar/travel" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;">Marcar</a>
+                    </article>
+                    <article class="consulta-price-card">
+                        <h3>Consulta do Viajante — 2 pessoas</h3>
+                        <p class="consulta-price">€75</p>
+                        <p class="consulta-price-meta">30 min · videoconsulta</p>
+                        <a href="/marcar/travel?pessoas=2" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;">Marcar</a>
+                    </article>
+                    <article class="consulta-price-card">
+                        <h3>Longevidade e saúde preventiva</h3>
+                        <p class="consulta-price">€79</p>
+                        <p class="consulta-price-meta">30 min · videoconsulta</p>
+                        <a href="/marcar/longevidade" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;">Marcar</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="consulta-section" id="depoimentos" aria-labelledby="consulta-depo-title">
+            <div class="lon-container">
+                <h2 id="consulta-depo-title">O que dizem os nossos pacientes</h2>
+                <p class="consulta-sub">Brevemente iremos publicar depoimentos reais. Por agora, estes são marcadores de conteúdo.</p>
+                <div class="consulta-testimonials">
+                    <figure class="consulta-testimonial">
+                        <div class="consulta-avatar" aria-hidden="true"></div>
+                        <blockquote>
+                            <p>«Texto de exemplo — espaço reservado para um depoimento de paciente sobre a experiência de videoconsulta.»</p>
+                        </blockquote>
+                        <figcaption class="consulta-placeholder-tag">Placeholder</figcaption>
+                    </figure>
+                    <figure class="consulta-testimonial">
+                        <div class="consulta-avatar" aria-hidden="true"></div>
+                        <blockquote>
+                            <p>«Texto de exemplo — espaço reservado para um segundo depoimento.»</p>
+                        </blockquote>
+                        <figcaption class="consulta-placeholder-tag">Placeholder</figcaption>
+                    </figure>
+                    <figure class="consulta-testimonial">
+                        <div class="consulta-avatar" aria-hidden="true"></div>
+                        <blockquote>
+                            <p>«Texto de exemplo — espaço reservado para um terceiro depoimento.»</p>
+                        </blockquote>
+                        <figcaption class="consulta-placeholder-tag">Placeholder</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <section class="consulta-section consulta-faq" id="faq" aria-labelledby="consulta-faq-title">
+            <div class="lon-container consulta-faq-wrap">
+                <h2 id="consulta-faq-title">Perguntas frequentes</h2>
+                <p class="consulta-sub">Respostas rápidas antes de marcar a sua consulta médica online.</p>
+                <details>
+                    <summary>Como funciona a consulta médica online?</summary>
+                    <div class="consulta-faq-a">
+                        <p>Escolha o serviço e um horário no calendário, pague de forma segura e, no dia marcado, aceda à videoconsulta através do link enviado — funciona no browser, sem instalar programas.</p>
+                    </div>
+                </details>
+                <details>
+                    <summary>Os médicos estão licenciados em Portugal?</summary>
+                    <div class="consulta-faq-a">
+                        <p>Sim. As consultas são realizadas por médicos devidamente credenciados e registados na Ordem dos Médicos.</p>
+                    </div>
+                </details>
+                <details>
+                    <summary>O pagamento é seguro?</summary>
+                    <div class="consulta-faq-a">
+                        <p>Sim. Utilizamos métodos de pagamento reconhecidos (cartão via Stripe, MB Way e Multibanco) com processamento seguro.</p>
+                    </div>
+                </details>
+                <details>
+                    <summary>Preciso de instalar alguma aplicação para a videoconsulta?</summary>
+                    <div class="consulta-faq-a">
+                        <p>Não. A videoconsulta realiza-se no seu browser, em computador, tablet ou telemóvel com câmara e microfone.</p>
+                    </div>
+                </details>
+                <details>
+                    <summary>Posso obter receita ou pedido de exames?</summary>
+                    <div class="consulta-faq-a">
+                        <p>Quando clinicamente indicado, o médico pode emitir receita e pedidos de exames, enviados por email ou SMS, conforme o caso.</p>
+                    </div>
+                </details>
+                <details>
+                    <summary>E em caso de emergência?</summary>
+                    <div class="consulta-faq-a">
+                        <p>A Lon Clinic não substitui o serviço de urgência. Em emergência, ligue <strong>112</strong> ou dirija-se ao hospital mais próximo.</p>
+                    </div>
+                </details>
+                <p style="text-align:center; margin-top: 24px;">
+                    <a href="/faq" class="lon-btn lon-btn-ghost lon-btn-sm">Ver todas as perguntas frequentes</a>
+                </p>
+            </div>
+        </section>
+
+        <section class="consulta-cta-band" aria-labelledby="consulta-final-cta-title">
+            <div class="lon-container">
+                <div class="consulta-cta-band-inner">
+                    <h2 id="consulta-final-cta-title">Pronto para a sua consulta médica online?</h2>
+                    <p>Marque agora e fale com um médico no horário que preferir.</p>
+                    <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="footer_band" data-cta-location="footer_primary">Marcar Consulta Agora</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="lon-footer">
+        <div class="lon-container">
+            <div class="lon-footer-grid">
+                <div class="lon-footer-brand">
+                    <h3>Lon Clinic</h3>
+                    <p>O seu médico. Online. Sempre.</p>
+                    <div class="lon-ers-badge">Nº de Registo ERS: 45475</div>
+                    <div class="lon-footer-payments" aria-label="Métodos de pagamento">
+                        <span>Visa</span>
+                        <span>Mastercard</span>
+                        <span>MB Way</span>
+                        <span>Multibanco</span>
+                    </div>
+                </div>
+                <div class="lon-footer-col">
+                    <h4>Serviços</h4>
+                    <a href="/marcar/urgente">Consulta de Urgência</a>
+                    <a href="/marcar/clinica-geral">Clínica Geral</a>
+                    <a href="/marcar/travel">Consulta do Viajante</a>
+                    <a href="/marcar/saude-mental">Saúde Mental</a>
+                    <a href="/marcar/longevidade">Longevidade</a>
+                </div>
+                <div class="lon-footer-col">
+                    <h4>Clínica</h4>
+                    <a href="/info.html?page=sobre-nos">Sobre nós</a>
+                    <a href="/info.html?page=contato">Contato</a>
+                </div>
+                <div class="lon-footer-col">
+                    <h4>Apoio</h4>
+                    <a href="/faq">Perguntas frequentes</a>
+                    <a href="/info.html?page=como-funciona">Como funciona</a>
+                </div>
+            </div>
+            <div class="lon-footer-bottom">
+                <div class="lon-footer-legal-links">
+                    <a href="/info.html?page=termos-condicoes">Termos e condições</a>
+                    <a href="/info.html?page=politica-privacidade">Política de privacidade</a>
+                </div>
+                <div>
+                    <p>© 2026 Lon Clinic · Portugal</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contactar por WhatsApp">💬</a>
+
+    <script src="/lon-nav.js" defer></script>
+    <script>
+    (function () {
+        function trackConsultaCta(location) {
+            if (typeof gtag !== 'function') return;
+            gtag('event', 'consulta_marcar_agora_click', {
+                event_category: 'consulta_landing',
+                event_label: location || 'cta',
+                page_location: window.location.href,
+                page_path: '/consulta'
+            });
+        }
+        document.querySelectorAll('.js-consulta-cta, .js-consulta-cta-nav').forEach(function (el) {
+            el.addEventListener('click', function () {
+                var loc = el.getAttribute('data-consulta-cta') || el.getAttribute('data-cta-location') || 'cta';
+                trackConsultaCta(loc);
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

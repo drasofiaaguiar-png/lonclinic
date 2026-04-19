@@ -2714,6 +2714,10 @@ app.get('/faq', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'faq.html'), 'Error loading FAQ page');
 });
 
+app.get('/consulta', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'consulta.html'), 'Error loading consulta landing page');
+});
+
 app.get('/patient-portal', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'dashboard.html'), 'Error loading patient portal');
 });
@@ -2772,6 +2776,12 @@ app.get('/book.html', (req, res) => {
     // Preserve query parameters
     const query = req.url.split('?')[1];
     const redirectUrl = query ? `/book-consultation?${query}` : '/book-consultation';
+    res.redirect(301, redirectUrl);
+});
+
+app.get('/consulta.html', (req, res) => {
+    const query = req.url.split('?')[1];
+    const redirectUrl = query ? `/consulta?${query}` : '/consulta';
     res.redirect(301, redirectUrl);
 });
 
