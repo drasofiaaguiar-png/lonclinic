@@ -1425,3 +1425,60 @@ body.dash-portal .clinic-notes-section {
         max-width: none;
     }
 }
+
+/* Patient reschedule modal */
+.dash-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+.dash-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+}
+.dash-modal-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 420px;
+    background: var(--bg-elevated);
+    border: var(--glass-border);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: var(--glass-shadow);
+}
+.dash-modal-title {
+    margin: 0 0 8px;
+    font-size: 1.25rem;
+}
+.dash-modal-desc {
+    margin: 0 0 20px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+.dash-modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+.dash-modal-error {
+    color: #f87171;
+    font-size: 0.875rem;
+    margin: 8px 0 0;
+}
+.dash-action-btns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+.dash-action-btns .btn-sm {
+    padding: 6px 12px;
+    font-size: 0.8125rem;
+}

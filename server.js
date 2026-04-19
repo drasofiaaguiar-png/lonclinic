@@ -1460,14 +1460,118 @@ const REMINDER_EMAIL_I18N = {
     }
 };
 
-function reminderEmailStrings(locale) {
+const REMINDER_1H_EMAIL_I18N = {
+    en: {
+        htmlLang: 'en',
+        emailTitle: 'Appointment starting soon',
+        h2: 'Your consultation is soon',
+        lead: (name) =>
+            `Hello ${name}, this is a reminder that your online consultation with Longevity Clinic starts within the next hour.`,
+        refLabel: 'Booking reference',
+        colService: 'Service',
+        colDate: 'Date',
+        colTime: 'Time',
+        colFormat: 'Format',
+        formatVideo: 'Secure video call',
+        videoTitle: 'Join your video consultation',
+        doxyBefore: 'Use our secure video room at your scheduled time:',
+        doxyAfter: 'No download required — open the link in a modern browser.',
+        joinVideoButton: 'Join Video Consultation',
+        noDoxy: 'Video link details were included in your confirmation email. If you need help, reply to this message or contact us.',
+        subject: (serviceLabel, date, ref) => `Starting soon: ${serviceLabel} on ${date} | ${ref}`,
+        textHead: 'APPOINTMENT REMINDER (1 HOUR)',
+        textLead: (name) =>
+            `Hello ${name}, your online consultation with Longevity Clinic starts within the next hour.`,
+        textDetails: 'APPOINTMENT DETAILS',
+        textService: 'Service',
+        textDate: 'Date',
+        textTime: 'Time',
+        textFormat: 'Format',
+        textVideo: 'Video',
+        textDoxy: (url) => `Join: ${url}`,
+        textNoDoxy: 'See your confirmation email for the video link.',
+        textFooterCopy: '© 2026 Longevity Clinic',
+        rescheduleStrong: 'Need to reschedule?',
+        rescheduleRest: 'If something changed, contact us as soon as possible.'
+    },
+    pt: {
+        htmlLang: 'pt',
+        emailTitle: 'A sua consulta começa em breve',
+        h2: 'A sua consulta é em breve',
+        lead: (name) =>
+            `Olá ${name}, este é um lembrete de que a sua consulta online com a Longevity Clinic começa na próxima hora.`,
+        refLabel: 'Referência',
+        colService: 'Serviço',
+        colDate: 'Data',
+        colTime: 'Hora',
+        colFormat: 'Formato',
+        formatVideo: 'Videochamada segura',
+        videoTitle: 'Entrar na videoconsulta',
+        doxyBefore: 'Utilize a nossa sala de vídeo segura à hora marcada:',
+        doxyAfter: 'Não é necessária qualquer instalação — abra a ligação num browser atualizado.',
+        joinVideoButton: 'Entrar na consulta por vídeo',
+        noDoxy: 'Os detalhes da ligação foram enviados no email de confirmação. Precisa de ajuda? Responda a este email ou contacte-nos.',
+        subject: (serviceLabel, date, ref) => `Em breve: ${serviceLabel} · ${date} | ${ref}`,
+        textHead: 'LEMBRETE (1 HORA)',
+        textLead: (name) =>
+            `Olá ${name}, a sua consulta online com a Longevity Clinic começa na próxima hora.`,
+        textDetails: 'DETALHES DA CONSULTA',
+        textService: 'Serviço',
+        textDate: 'Data',
+        textTime: 'Hora',
+        textFormat: 'Formato',
+        textVideo: 'Vídeo',
+        textDoxy: (url) => `Ligação: ${url}`,
+        textNoDoxy: 'Consulte o email de confirmação para a ligação por vídeo.',
+        textFooterCopy: '© 2026 Longevity Clinic',
+        rescheduleStrong: 'Precisa de ajuda?',
+        rescheduleRest: 'Se algo mudou, contacte-nos o mais rapidamente possível.'
+    },
+    es: {
+        htmlLang: 'es',
+        emailTitle: 'Su cita comienza pronto',
+        h2: 'Su consulta es pronto',
+        lead: (name) =>
+            `Hola ${name}, le recordamos que su consulta online con Longevity Clinic comienza en la próxima hora.`,
+        refLabel: 'Referencia',
+        colService: 'Servicio',
+        colDate: 'Fecha',
+        colTime: 'Hora',
+        colFormat: 'Formato',
+        formatVideo: 'Videollamada segura',
+        videoTitle: 'Unirse a la videoconsulta',
+        doxyBefore: 'Use nuestra sala de vídeo segura a la hora acordada:',
+        doxyAfter: 'No necesita instalar nada: abra el enlace en un navegador actualizado.',
+        joinVideoButton: 'Unirse a la videoconsulta',
+        noDoxy: 'Los detalles del enlace figuran en su correo de confirmación. Si necesita ayuda, responda a este mensaje o contáctenos.',
+        subject: (serviceLabel, date, ref) => `Pronto: ${serviceLabel} · ${date} | ${ref}`,
+        textHead: 'RECORDATORIO (1 HORA)',
+        textLead: (name) =>
+            `Hola ${name}, su consulta online con Longevity Clinic comienza en la próxima hora.`,
+        textDetails: 'DETALLES DE LA CITA',
+        textService: 'Servicio',
+        textDate: 'Fecha',
+        textTime: 'Hora',
+        textFormat: 'Formato',
+        textVideo: 'Vídeo',
+        textDoxy: (url) => `Enlace: ${url}`,
+        textNoDoxy: 'Consulte su correo de confirmación para el enlace de videollamada.',
+        textFooterCopy: '© 2026 Longevity Clinic',
+        rescheduleStrong: '¿Necesita ayuda?',
+        rescheduleRest: 'Si algo ha cambiado, contáctenos lo antes posible.'
+    }
+};
+
+function reminderEmailStrings(locale, variant) {
     const k = normalizePatientLocale(locale);
-    return REMINDER_EMAIL_I18N[k] || REMINDER_EMAIL_I18N.en;
+    const map = variant === '1h' ? REMINDER_1H_EMAIL_I18N : REMINDER_EMAIL_I18N;
+    return map[k] || map.en;
 }
 
 function buildReminderEmail(data) {
-    const { patientName, serviceLabel, date, time, bookingRef, locale: rawLocale } = data;
-    const t = reminderEmailStrings(rawLocale);
+    const { patientName, serviceLabel, date, time, bookingRef, locale: rawLocale, reminderVariant } = data;
+    const variant = reminderVariant === '1h' ? '1h' : '24h';
+    const t = reminderEmailStrings(rawLocale, variant);
     const name = (patientName || 'Patient').trim();
 
     const doxyCtaButton = DOXY_ROOM_URL
@@ -1611,6 +1715,347 @@ async function sendReminderEmail(data) {
     }
 }
 
+const PUBLIC_SITE_URL = process.env.PUBLIC_SITE_URL || 'https://www.lonclinic.com';
+
+const FOLLOWUP_EMAIL_I18N = {
+    en: {
+        htmlLang: 'en',
+        emailTitle: 'Thank you for your consultation',
+        h2: 'Thank you for visiting Longevity Clinic',
+        body: (name) =>
+            `Dear ${name}, thank you for attending your online consultation with us today. We hope the session was helpful and that you feel supported in your health journey.`,
+        feedbackTitle: 'We would love your feedback',
+        feedbackBody: `Your experience matters to us. If you have a moment, please reply to this email with any comments or suggestions. You can also reach us through our website: ${PUBLIC_SITE_URL}`,
+        subject: (ref) => `Thank you — we value your feedback | ${ref}`,
+        textHead: 'THANK YOU',
+        textBody: (name) =>
+            `Dear ${name}, thank you for attending your online consultation with Longevity Clinic. We hope it was helpful.`,
+        textFeedback: `We would love your feedback — reply to this email or visit ${PUBLIC_SITE_URL}`,
+        textFooterCopy: '© 2026 Longevity Clinic'
+    },
+    pt: {
+        htmlLang: 'pt',
+        emailTitle: 'Obrigado pela sua consulta',
+        h2: 'Obrigado por ter escolhido a Longevity Clinic',
+        body: (name) =>
+            `Exmo.(a) ${name}, obrigado por ter participado na sua consulta online connosco. Esperamos que tenha sido útil e que se sinta acompanhado na sua saúde.`,
+        feedbackTitle: 'Gostaríamos de saber a sua opinião',
+        feedbackBody: `A sua experiência é importante. Se tiver um momento, responda a este email com comentários ou sugestões. Também pode contactar-nos através do nosso site: ${PUBLIC_SITE_URL}`,
+        subject: (ref) => `Obrigado — a sua opinião conta | ${ref}`,
+        textHead: 'OBRIGADO',
+        textBody: (name) =>
+            `Exmo.(a) ${name}, obrigado pela sua consulta online na Longevity Clinic.`,
+        textFeedback: `Gostaríamos de feedback — responda a este email ou visite ${PUBLIC_SITE_URL}`,
+        textFooterCopy: '© 2026 Longevity Clinic'
+    },
+    es: {
+        htmlLang: 'es',
+        emailTitle: 'Gracias por su consulta',
+        h2: 'Gracias por confiar en Longevity Clinic',
+        body: (name) =>
+            `Estimado/a ${name}, gracias por asistir a su consulta online con nosotros. Esperamos que le haya resultado útil.`,
+        feedbackTitle: 'Nos gustaría conocer su opinión',
+        feedbackBody: `Su experiencia es importante. Si puede, responda a este correo con comentarios o sugerencias. También puede contactarnos en nuestro sitio web: ${PUBLIC_SITE_URL}`,
+        subject: (ref) => `Gracias — valoramos su opinión | ${ref}`,
+        textHead: 'GRACIAS',
+        textBody: (name) =>
+            `Estimado/a ${name}, gracias por su consulta online en Longevity Clinic.`,
+        textFeedback: `Nos gustaría su feedback — responda a este correo o visite ${PUBLIC_SITE_URL}`,
+        textFooterCopy: '© 2026 Longevity Clinic'
+    }
+};
+
+function followupEmailStrings(locale) {
+    const k = normalizePatientLocale(locale);
+    return FOLLOWUP_EMAIL_I18N[k] || FOLLOWUP_EMAIL_I18N.en;
+}
+
+function buildFollowupEmail(data) {
+    const { patientName, bookingRef, locale: rawLocale } = data;
+    const t = followupEmailStrings(rawLocale);
+    const name = (patientName || 'Patient').trim();
+    const html = `
+<!DOCTYPE html>
+<html lang="${t.htmlLang}">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${t.emailTitle}</title></head>
+<body style="margin:0;padding:0;background-color:#f0f4fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f0f4fa;padding:40px 20px;">
+<tr><td align="center">
+<table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;width:100%;">
+<tr><td style="text-align:center;padding:0 0 32px;">
+<h1 style="margin:0;font-size:22px;font-weight:700;color:#0f172a;">longevity</h1>
+<p style="margin:4px 0 0;font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.15em;">clinic</p>
+</td></tr>
+<tr><td style="background:#ffffff;border-radius:16px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
+<h2 style="margin:0 0 16px;font-size:22px;font-weight:700;color:#0f172a;text-align:center;">${t.h2}</h2>
+<p style="margin:0 0 24px;font-size:15px;color:#64748b;line-height:1.6;">${t.body(name)}</p>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;margin-bottom:20px;">
+<p style="margin:0 0 4px;font-size:12px;color:#94a3b8;text-transform:uppercase;">Ref.</p>
+<p style="margin:0;font-size:18px;font-weight:700;color:#0f172a;">${bookingRef}</p>
+</div>
+<h3 style="margin:0 0 8px;font-size:16px;font-weight:600;color:#0f172a;">${t.feedbackTitle}</h3>
+<p style="margin:0;font-size:14px;color:#475569;line-height:1.6;">${t.feedbackBody}</p>
+</td></tr>
+<tr><td style="padding:32px 20px;text-align:center;">
+<p style="margin:0;font-size:11px;color:#cbd5e1;">${t.textFooterCopy}</p>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body></html>`;
+    const text = `${t.textHead} — ${bookingRef}\n\n${t.textBody(name)}\n\n${t.textFeedback}`;
+    return { html, text, subject: t.subject(bookingRef) };
+}
+
+async function sendFollowupEmail(data) {
+    if (!isEmailConfigured) return false;
+    const to = (data.email || '').trim();
+    if (!to || !to.includes('@')) return false;
+    try {
+        const { html, text, subject } = buildFollowupEmail(data);
+        await transporter.sendMail({ from: EMAIL_FROM, to, subject, text, html });
+        console.log('   ✉️  Follow-up email sent to:', data.email);
+        return true;
+    } catch (err) {
+        console.error('   ❌ Follow-up email failed:', err.message);
+        return false;
+    }
+}
+
+const CANCEL_PATIENT_I18N = {
+    en: {
+        htmlLang: 'en',
+        h2: 'Booking cancelled',
+        lead: (name) => `Hello ${name}, your appointment has been cancelled as requested.`,
+        refLabel: 'Booking reference',
+        colService: 'Service',
+        colDate: 'Previous date',
+        colTime: 'Previous time',
+        bookAgain: 'To book again, visit our website or reply to this email.',
+        subject: (ref) => `Booking cancelled | ${ref}`,
+        textHead: 'BOOKING CANCELLED'
+    },
+    pt: {
+        htmlLang: 'pt',
+        h2: 'Marcação cancelada',
+        lead: (name) =>
+            `Olá ${name}, a sua marcação foi cancelada tal como solicitou.`,
+        refLabel: 'Referência',
+        colService: 'Serviço',
+        colDate: 'Data anterior',
+        colTime: 'Hora anterior',
+        bookAgain: 'Para marcar novamente, visite o nosso site ou responda a este email.',
+        subject: (ref) => `Marcação cancelada | ${ref}`,
+        textHead: 'MARCAÇÃO CANCELADA'
+    },
+    es: {
+        htmlLang: 'es',
+        h2: 'Cita cancelada',
+        lead: (name) =>
+            `Hola ${name}, su cita ha sido cancelada según su solicitud.`,
+        refLabel: 'Referencia',
+        colService: 'Servicio',
+        colDate: 'Fecha anterior',
+        colTime: 'Hora anterior',
+        bookAgain: 'Para reservar de nuevo, visite nuestro sitio web o responda a este correo.',
+        subject: (ref) => `Cita cancelada | ${ref}`,
+        textHead: 'CITA CANCELADA'
+    }
+};
+
+function cancelPatientStrings(locale) {
+    const k = normalizePatientLocale(locale);
+    return CANCEL_PATIENT_I18N[k] || CANCEL_PATIENT_I18N.en;
+}
+
+function buildCancellationPatientEmail(data) {
+    const { patientName, serviceLabel, date, time, bookingRef, locale: rawLocale } = data;
+    const t = cancelPatientStrings(rawLocale);
+    const name = (patientName || 'Patient').trim();
+    const html = `
+<!DOCTYPE html>
+<html lang="${t.htmlLang}">
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f0f4fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<table role="presentation" width="100%" style="background:#f0f4fa;padding:40px 20px;"><tr><td align="center">
+<table width="600" style="max-width:600px;background:#fff;border-radius:16px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
+<tr><td><h2 style="margin:0 0 16px;color:#0f172a;text-align:center;">${t.h2}</h2>
+<p style="color:#64748b;line-height:1.6;text-align:center;">${t.lead(name)}</p>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;text-align:center;margin:20px 0;">
+<p style="margin:0 0 4px;font-size:12px;color:#94a3b8;">${t.refLabel}</p>
+<p style="margin:0;font-size:18px;font-weight:700;">${bookingRef}</p></div>
+<table width="100%" style="margin-bottom:20px;">
+<tr><td style="padding:8px 0;color:#64748b;border-bottom:1px solid #f1f5f9;">${t.colService}</td>
+<td style="padding:8px 0;text-align:right;font-weight:500;">${serviceLabel}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;border-bottom:1px solid #f1f5f9;">${t.colDate}</td>
+<td style="padding:8px 0;text-align:right;">${date}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;">${t.colTime}</td>
+<td style="padding:8px 0;text-align:right;">${time}</td></tr>
+</table>
+<p style="color:#475569;font-size:14px;">${t.bookAgain}</p>
+</td></tr></table></td></tr></table></body></html>`;
+    const text = `${t.textHead} — ${bookingRef}\n${t.lead(name)}\n${t.colService}: ${serviceLabel}\n${t.colDate}: ${date}\n${t.colTime}: ${time}`;
+    return { html, text, subject: t.subject(bookingRef) };
+}
+
+function buildClinicCancellationEmail(data) {
+    const { patientName, serviceLabel, date, time, bookingRef, email } = data;
+    const html = `
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"></head>
+<body style="margin:0;font-family:sans-serif;background:#f0f4fa;padding:24px;">
+<div style="max-width:600px;margin:0 auto;background:#fff;padding:32px;border-radius:12px;">
+<h2 style="color:#0f172a;">Booking cancelled (patient)</h2>
+<p style="color:#475569;">A patient has cancelled their appointment.</p>
+<table style="width:100%;margin-top:16px;">
+<tr><td style="padding:8px 0;color:#64748b;">Reference</td><td style="text-align:right;font-weight:600;">${bookingRef}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;">Patient</td><td style="text-align:right;">${patientName}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;">Email</td><td style="text-align:right;">${email}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;">Service</td><td style="text-align:right;">${serviceLabel}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;">Was scheduled</td><td style="text-align:right;">${date} at ${time}</td></tr>
+</table></div></body></html>`;
+    const text = `Booking cancelled\nRef: ${bookingRef}\nPatient: ${patientName}\nEmail: ${email}\nService: ${serviceLabel}\nWas: ${date} at ${time}`;
+    return { html, text, subject: `Cancelled: ${bookingRef} — ${patientName}` };
+}
+
+const RESCHEDULE_PATIENT_I18N = {
+    en: {
+        htmlLang: 'en',
+        h2: 'Appointment rescheduled',
+        lead: (name) => `Hello ${name}, your consultation has been rescheduled. Here are your new details:`,
+        refLabel: 'Booking reference',
+        colService: 'Service',
+        colDate: 'New date',
+        colTime: 'New time',
+        videoTitle: 'Video consultation',
+        doxyBefore: 'Join via our secure video room at your new time:',
+        doxyAfter: 'No download required.',
+        joinVideoButton: 'Join Video Consultation',
+        noDoxy: 'You will receive the video link as before. Contact us if you need help.',
+        subject: (ref) => `Rescheduled appointment | ${ref}`,
+        textHead: 'APPOINTMENT RESCHEDULED'
+    },
+    pt: {
+        htmlLang: 'pt',
+        h2: 'Marcação reagendada',
+        lead: (name) =>
+            `Olá ${name}, a sua consulta foi reagendada. Seguem os novos detalhes:`,
+        refLabel: 'Referência',
+        colService: 'Serviço',
+        colDate: 'Nova data',
+        colTime: 'Nova hora',
+        videoTitle: 'Videoconsulta',
+        doxyBefore: 'Entre na nossa sala de vídeo segura à nova hora:',
+        doxyAfter: 'Não é necessária qualquer instalação.',
+        joinVideoButton: 'Entrar na consulta por vídeo',
+        noDoxy: 'Receberá a ligação como anteriormente. Contacte-nos se precisar de ajuda.',
+        subject: (ref) => `Consulta reagendada | ${ref}`,
+        textHead: 'MARCAÇÃO REAGENDADA'
+    },
+    es: {
+        htmlLang: 'es',
+        h2: 'Cita reprogramada',
+        lead: (name) =>
+            `Hola ${name}, su consulta ha sido reprogramada. Nuevos detalles:`,
+        refLabel: 'Referencia',
+        colService: 'Servicio',
+        colDate: 'Nueva fecha',
+        colTime: 'Nueva hora',
+        videoTitle: 'Videoconsulta',
+        doxyBefore: 'Acceda a nuestra sala de vídeo segura a la nueva hora:',
+        doxyAfter: 'No necesita instalar nada.',
+        joinVideoButton: 'Unirse a la videoconsulta',
+        noDoxy: 'Recibirá el enlace como antes. Contáctenos si necesita ayuda.',
+        subject: (ref) => `Cita reprogramada | ${ref}`,
+        textHead: 'CITA REPROGRAMADA'
+    }
+};
+
+function reschedulePatientStrings(locale) {
+    const k = normalizePatientLocale(locale);
+    return RESCHEDULE_PATIENT_I18N[k] || RESCHEDULE_PATIENT_I18N.en;
+}
+
+function buildReschedulePatientEmail(data) {
+    const { patientName, serviceLabel, date, time, bookingRef, locale: rawLocale } = data;
+    const t = reschedulePatientStrings(rawLocale);
+    const name = (patientName || 'Patient').trim();
+    const doxyBtn = DOXY_ROOM_URL
+        ? `<table role="presentation" width="100%" style="margin:16px 0;"><tr><td align="center">
+<a href="${DOXY_ROOM_URL}" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#fff!important;font-size:15px;font-weight:600;padding:14px 32px;border-radius:10px;text-decoration:none;">${t.joinVideoButton}</a>
+</td></tr></table><p style="color:#475569;font-size:14px;">${t.doxyAfter}</p>`
+        : `<p style="color:#475569;">${t.noDoxy}</p>`;
+    const html = `
+<!DOCTYPE html>
+<html lang="${t.htmlLang}">
+<head><meta charset="UTF-8"></head>
+<body style="margin:0;background:#f0f4fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<table width="100%" style="background:#f0f4fa;padding:40px 20px;"><tr><td align="center">
+<table width="600" style="max-width:600px;background:#fff;border-radius:16px;padding:40px;">
+<tr><td><h2 style="color:#0f172a;text-align:center;">${t.h2}</h2>
+<p style="color:#64748b;text-align:center;line-height:1.6;">${t.lead(name)}</p>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;text-align:center;margin:16px 0;">
+<p style="margin:0 0 4px;font-size:12px;color:#94a3b8;">${t.refLabel}</p>
+<p style="margin:0;font-size:18px;font-weight:700;">${bookingRef}</p></div>
+<table width="100%"><tr><td style="padding:8px 0;color:#64748b;">${t.colService}</td><td style="text-align:right;font-weight:500;">${serviceLabel}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;">${t.colDate}</td><td style="text-align:right;">${date}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;">${t.colTime}</td><td style="text-align:right;">${time}</td></tr></table>
+<h3 style="margin:24px 0 8px;font-size:16px;color:#0f172a;">${t.videoTitle}</h3>
+<p style="color:#475569;margin:0 0 8px;">${t.doxyBefore}</p>
+${doxyBtn}
+</td></tr></table></td></tr></table></body></html>`;
+    const text = `${t.textHead} — ${bookingRef}\n${t.lead(name)}\n${serviceLabel} — ${date} ${time}\nVideo: ${DOXY_ROOM_URL || 'see email'}`;
+    return { html, text, subject: t.subject(bookingRef) };
+}
+
+function buildClinicRescheduleEmail(data) {
+    const {
+        patientName,
+        serviceLabel,
+        oldDate,
+        oldTime,
+        newDate,
+        newTime,
+        bookingRef,
+        email,
+        rescheduleCount
+    } = data;
+    const html = `
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"></head>
+<body style="margin:0;font-family:sans-serif;background:#f0f4fa;padding:24px;">
+<div style="max-width:600px;margin:0 auto;background:#fff;padding:32px;border-radius:12px;">
+<h2 style="color:#0f172a;">Appointment rescheduled (patient)</h2>
+<p style="color:#475569;">A patient has rescheduled.</p>
+<table style="width:100%;">
+<tr><td style="padding:8px 0;color:#64748b;">Reference</td><td style="text-align:right;font-weight:600;">${bookingRef}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;">Patient</td><td style="text-align:right;">${patientName}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;">Email</td><td style="text-align:right;">${email}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;">Service</td><td style="text-align:right;">${serviceLabel}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;">Previous</td><td style="text-align:right;">${oldDate} at ${oldTime}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;">New</td><td style="text-align:right;">${newDate} at ${newTime}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;">Reschedule #</td><td style="text-align:right;">${rescheduleCount}</td></tr>
+</table></div></body></html>`;
+    const text = `Rescheduled\nRef: ${bookingRef}\nPatient: ${patientName}\n${oldDate} ${oldTime} → ${newDate} ${newTime}\nCount: ${rescheduleCount}`;
+    return { html, text, subject: `Rescheduled: ${bookingRef} — ${newDate}` };
+}
+
+async function sendClinicOpsEmail(subject, html, text) {
+    if (!isEmailConfigured) return false;
+    try {
+        await transporter.sendMail({
+            from: EMAIL_FROM,
+            to: CONTACT_EMAIL,
+            subject,
+            text,
+            html
+        });
+        console.log('   📧 Clinic notification:', subject);
+        return true;
+    } catch (err) {
+        console.error('   ❌ Clinic email failed:', err.message);
+        return false;
+    }
+}
+
 function sanitizeScheduleTimeZone(raw) {
     const s = String(raw || '').trim();
     if (/^[A-Za-z0-9_+\/-]+$/.test(s) && s.length <= 64) return s;
@@ -1662,80 +2107,283 @@ function localWallTimeToUtcMs(dateStr, timeStr, timeZone) {
     return NaN;
 }
 
-function findBookingsNeedingReminderInMemory(ianaTimeZone) {
-    const tz = sanitizeScheduleTimeZone(ianaTimeZone);
+function inferDateIsoFromBooking(booking) {
+    const raw = booking.dateIso || booking.date_iso;
+    if (raw && /^\d{4}-\d{2}-\d{2}$/.test(String(raw).trim())) return String(raw).trim();
+    const d = String(booking.date || '').trim();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
+    const parsed = Date.parse(d);
+    if (!Number.isNaN(parsed)) {
+        const dt = new Date(parsed);
+        return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+    }
+    return null;
+}
+
+function normalizeTimeString(booking) {
+    const t = String(booking.time || '').trim();
+    const m = /^(\d{1,2}):(\d{2})$/.exec(t);
+    if (!m) return null;
+    return `${String(parseInt(m[1], 10)).padStart(2, '0')}:${m[2]}`;
+}
+
+function getAppointmentStartUtcMs(booking, timeZone) {
+    const tz = sanitizeScheduleTimeZone(timeZone);
+    const dateIso = inferDateIsoFromBooking(booking);
+    const timeNorm = normalizeTimeString(booking);
+    if (!dateIso || !timeNorm) return NaN;
+    return localWallTimeToUtcMs(dateIso, timeNorm, tz);
+}
+
+function appointmentDurationMinutes(booking) {
+    const s = booking.service;
+    if (s === 'travel') {
+        const c = booking.travellerCount || 1;
+        if (c === 1) return 20;
+        if (c === 2) return 30;
+        return 40;
+    }
+    return scheduleStore.slotDuration || 30;
+}
+
+function getAppointmentEndUtcMs(booking, timeZone) {
+    const start = getAppointmentStartUtcMs(booking, timeZone);
+    if (!Number.isFinite(start)) return NaN;
+    return start + appointmentDurationMinutes(booking) * 60 * 1000;
+}
+
+function hoursUntilAppointment(booking, timeZone) {
+    const ms = getAppointmentStartUtcMs(booking, timeZone);
+    if (!Number.isFinite(ms)) return null;
+    return (ms - Date.now()) / (60 * 60 * 1000);
+}
+
+function enrichBookingForPatientApi(booking) {
+    const tz = scheduleStore.timezone || 'Europe/Lisbon';
+    const h = hoursUntilAppointment(booking, tz);
+    const canCancel =
+        !booking.cancelled &&
+        h != null &&
+        h >= 24 &&
+        h > 0;
+    const canReschedule =
+        !booking.cancelled &&
+        (booking.rescheduleCount || 0) < 2 &&
+        h != null &&
+        h >= 48 &&
+        h > 0;
+    return {
+        ...booking,
+        canCancel,
+        canReschedule,
+        rescheduleRemaining: Math.max(0, 2 - (booking.rescheduleCount || 0))
+    };
+}
+
+function memoryBookingsNeeding24h(tz) {
     const now = Date.now();
     const horizon = now + 24 * 60 * 60 * 1000;
     return bookingsStore.filter((b) => {
-        if (b.reminderSent) return false;
-        if (!b.date || !b.time) return false;
-        const ds = String(b.date).trim();
-        const ts = String(b.time).trim();
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(ds) || !/^\d{2}:\d{2}$/.test(ts)) return false;
-        const ms = localWallTimeToUtcMs(ds, ts, tz);
-        if (!Number.isFinite(ms)) return false;
-        return ms > now && ms <= horizon;
+        if (b.cancelled || b.reminderSent) return false;
+        const ms = getAppointmentStartUtcMs(b, tz);
+        return Number.isFinite(ms) && ms > now && ms <= horizon;
     });
 }
 
-const REMINDER_JOB_INTERVAL_MS = 60 * 60 * 1000;
-let reminderJobStarted = false;
+function memoryBookingsNeeding1h(tz) {
+    const now = Date.now();
+    const horizon = now + 60 * 60 * 1000;
+    return bookingsStore.filter((b) => {
+        if (b.cancelled || b.reminder1hSent) return false;
+        const ms = getAppointmentStartUtcMs(b, tz);
+        return Number.isFinite(ms) && ms > now && ms <= horizon;
+    });
+}
 
-async function runAppointmentReminderJob() {
+function memoryBookingsNeedingFollowup(tz) {
+    const now = Date.now();
+    return bookingsStore.filter((b) => {
+        if (b.cancelled || b.followupSent) return false;
+        const endMs = getAppointmentEndUtcMs(b, tz);
+        if (!Number.isFinite(endMs)) return false;
+        return now >= endMs + 60 * 60 * 1000;
+    });
+}
+
+function isSlotFreeInMemory(dateIso, timeSlot, excludeBookingRef) {
+    return !bookingsStore.some(
+        (b) =>
+            !b.cancelled &&
+            inferDateIsoFromBooking(b) === dateIso &&
+            normalizeTimeString(b) === timeSlot &&
+            b.bookingRef !== excludeBookingRef
+    );
+}
+
+function slotsForDateIso(dateIso) {
+    const dateMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateIso));
+    if (!dateMatch) return [];
+    const year = Number(dateMatch[1]);
+    const month = Number(dateMatch[2]);
+    const day = Number(dateMatch[3]);
+    const dateObj = new Date(year, month - 1, day);
+    if (Number.isNaN(dateObj.getTime())) return [];
+    const dateStr = dateIso;
+    const daySchedule = getEffectiveDaySchedule(dateStr);
+    if (!daySchedule.enabled) return [];
+    const [startHour, startMin] = daySchedule.start.split(':').map(Number);
+    const [endHour, endMin] = daySchedule.end.split(':').map(Number);
+    const slotDuration = scheduleStore.slotDuration || 30;
+    const slots = [];
+    let currentHour = startHour;
+    let currentMin = startMin;
+    while (currentHour < endHour || (currentHour === endHour && currentMin < endMin)) {
+        const slotTime = `${String(currentHour).padStart(2, '0')}:${String(currentMin).padStart(2, '0')}`;
+        const isBlocked = scheduleStore.blockedTimeSlots.some(
+            (blocked) => blocked.date === dateStr && blocked.time === slotTime
+        );
+        const isDateBlocked = scheduleStore.blockedDates.includes(dateStr);
+        if (!isBlocked && !isDateBlocked) slots.push(slotTime);
+        currentMin += slotDuration;
+        if (currentMin >= 60) {
+            currentMin = 0;
+            currentHour++;
+        }
+    }
+    return slots;
+}
+
+const AUTOMATION_JOB_INTERVAL_MS = 15 * 60 * 1000;
+let automationJobStarted = false;
+
+async function runAutomationJobs() {
     if (!isEmailConfigured) {
         return;
     }
     const tz = scheduleStore.timezone || 'Europe/Lisbon';
-    let list = [];
     try {
+        let list24 = [];
+        let list1h = [];
+        let listFu = [];
         if (usePersistentDb) {
-            list = await db.findBookingsNeedingReminder(tz);
+            list24 = await db.findBookingsNeeding24hReminder();
+            list1h = await db.findBookingsNeeding1hReminder();
+            listFu = await db.findBookingsNeedingFollowup();
         } else {
-            list = findBookingsNeedingReminderInMemory(tz);
+            list24 = memoryBookingsNeeding24h(tz);
+            list1h = memoryBookingsNeeding1h(tz);
+            listFu = memoryBookingsNeedingFollowup(tz);
+        }
+
+        const now = Date.now();
+        const h24 = now + 24 * 60 * 60 * 1000;
+        const h1 = now + 60 * 60 * 1000;
+
+        const win24 = list24.filter((b) => {
+            const ms = getAppointmentStartUtcMs(b, tz);
+            return Number.isFinite(ms) && ms > now && ms <= h24;
+        });
+        const win1 = list1h.filter((b) => {
+            const ms = getAppointmentStartUtcMs(b, tz);
+            return Number.isFinite(ms) && ms > now && ms <= h1;
+        });
+        const winFu = listFu.filter((b) => {
+            const endMs = getAppointmentEndUtcMs(b, tz);
+            return Number.isFinite(endMs) && now >= endMs + 60 * 60 * 1000;
+        });
+
+        if (win24.length > 0) {
+            console.log(`   ⏰ 24h reminders: ${win24.length} booking(s)`);
+        }
+        for (const b of win24) {
+            const locale = b.patientLocale || 'en';
+            const sent = await sendReminderEmail({
+                email: b.email,
+                patientName: b.patientName,
+                serviceLabel: serviceLabelFromCode(b.service),
+                date: b.date,
+                time: b.time,
+                bookingRef: b.bookingRef,
+                locale,
+                reminderVariant: '24h'
+            });
+            if (!sent) continue;
+            try {
+                if (usePersistentDb) await db.markReminderSent(b.bookingRef);
+                else {
+                    const row = bookingsStore.find((x) => x.bookingRef === b.bookingRef);
+                    if (row) row.reminderSent = true;
+                }
+            } catch (err) {
+                console.error('   ❌ mark reminder_sent:', b.bookingRef, err.message);
+            }
+        }
+
+        if (win1.length > 0) {
+            console.log(`   ⏰ 1h reminders: ${win1.length} booking(s)`);
+        }
+        for (const b of win1) {
+            const locale = b.patientLocale || 'en';
+            const sent = await sendReminderEmail({
+                email: b.email,
+                patientName: b.patientName,
+                serviceLabel: serviceLabelFromCode(b.service),
+                date: b.date,
+                time: b.time,
+                bookingRef: b.bookingRef,
+                locale,
+                reminderVariant: '1h'
+            });
+            if (!sent) continue;
+            try {
+                if (usePersistentDb) await db.markReminder1hSent(b.bookingRef);
+                else {
+                    const row = bookingsStore.find((x) => x.bookingRef === b.bookingRef);
+                    if (row) row.reminder1hSent = true;
+                }
+            } catch (err) {
+                console.error('   ❌ mark reminder_1h_sent:', b.bookingRef, err.message);
+            }
+        }
+
+        if (winFu.length > 0) {
+            console.log(`   ⏰ Post-consultation follow-ups: ${winFu.length} booking(s)`);
+        }
+        for (const b of winFu) {
+            const locale = b.patientLocale || 'en';
+            const sent = await sendFollowupEmail({
+                email: b.email,
+                patientName: b.patientName,
+                serviceLabel: serviceLabelFromCode(b.service),
+                bookingRef: b.bookingRef,
+                locale
+            });
+            if (!sent) continue;
+            try {
+                if (usePersistentDb) await db.markFollowupSent(b.bookingRef);
+                else {
+                    const row = bookingsStore.find((x) => x.bookingRef === b.bookingRef);
+                    if (row) row.followupSent = true;
+                }
+            } catch (err) {
+                console.error('   ❌ mark followup_sent:', b.bookingRef, err.message);
+            }
         }
     } catch (err) {
-        console.error('   ❌ Reminder job: failed to list bookings:', err.message);
-        return;
-    }
-    if (list.length === 0) {
-        return;
-    }
-    console.log(`   ⏰ Reminder job: ${list.length} booking(s) in next 24h (unsent)`);
-    for (const b of list) {
-        const payload = {
-            email: b.email,
-            patientName: b.patientName,
-            serviceLabel: serviceLabelFromCode(b.service),
-            date: b.date,
-            time: b.time,
-            bookingRef: b.bookingRef,
-            locale: 'en'
-        };
-        const sent = await sendReminderEmail(payload);
-        if (!sent) continue;
-        try {
-            if (usePersistentDb) {
-                await db.markReminderSent(b.bookingRef);
-            } else {
-                const row = bookingsStore.find((x) => x.bookingRef === b.bookingRef);
-                if (row) row.reminderSent = true;
-            }
-        } catch (err) {
-            console.error('   ❌ Reminder job: could not mark reminder_sent for', b.bookingRef, err.message);
-        }
+        console.error('   ❌ Automation job:', err.message);
     }
 }
 
 function startAppointmentReminderScheduler() {
-    if (reminderJobStarted) return;
-    reminderJobStarted = true;
+    if (automationJobStarted) return;
+    automationJobStarted = true;
     setInterval(() => {
-        void runAppointmentReminderJob();
-    }, REMINDER_JOB_INTERVAL_MS);
+        void runAutomationJobs();
+    }, AUTOMATION_JOB_INTERVAL_MS);
     setTimeout(() => {
-        void runAppointmentReminderJob();
+        void runAutomationJobs();
     }, 15_000);
-    console.log('   ⏰ Appointment reminders: every 1h (first run ~15s after startup)');
+    console.log('   ⏰ Automation (24h + 1h reminders, follow-up): every 15m (first run ~15s after startup)');
 }
 
 /** Avoid duplicate finalize when webhook and success-page API run together */
@@ -1839,12 +2487,18 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
             service: meta.service,
             date: meta.date,
             time: meta.time,
+            dateIso: meta.date_iso && String(meta.date_iso).trim() ? String(meta.date_iso).trim() : null,
             patientName: passengerNames[0] || 'Patient',
             travellerCount,
             amount: session.amount_total,
             currency: session.currency,
             paymentId,
+            patientLocale: normalizePatientLocale(meta.locale || 'en'),
+            cancelled: false,
+            rescheduleCount: 0,
             reminderSent: false,
+            reminder1hSent: false,
+            followupSent: false,
             createdAt: new Date().toISOString()
         };
 
@@ -2345,7 +2999,8 @@ app.post('/api/create-checkout-session', async (req, res) => {
             passengers,   // array of { firstName, lastName, dob, nhs, country, concerns, medications, allergies }
             travelDest,
             travelDates,
-            locale
+            locale,
+            dateIso
         } = req.body;
 
         // Validate required fields
@@ -2379,6 +3034,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
             service,
             date,
             time,
+            date_iso: (dateIso && String(dateIso).trim()) || '',
             contact_email: patientEmail,
             contact_phone: patientPhone || '',
             traveller_count: String(count),
@@ -2495,6 +3151,21 @@ app.get('/api/session/:sessionId', async (req, res) => {
     }
 });
 
+// ─── API: Patient — lookup booking by email + ref (same as portal login) ───
+async function getPatientBooking(email, ref) {
+    const e = String(email || '').toLowerCase().trim();
+    const refNorm = String(ref || '').trim().toUpperCase();
+    if (!e || !refNorm) return null;
+    if (usePersistentDb) {
+        const rows = await db.findBookingsByEmailAndRef(e, ref);
+        return rows[0] || null;
+    }
+    return (
+        bookingsStore.find((b) => b.email === e && String(b.bookingRef || '').toUpperCase() === refNorm) ||
+        null
+    );
+}
+
 // ─── API: Patient Dashboard — Fetch bookings by email + booking reference only ───
 app.get('/api/bookings', async (req, res) => {
     const email = (req.query.email || '').toLowerCase().trim();
@@ -2521,12 +3192,208 @@ app.get('/api/bookings', async (req, res) => {
         results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         res.json({
-            bookings: results,
+            bookings: results.map(enrichBookingForPatientApi),
             doxyUrl: DOXY_ROOM_URL || null
         });
     } catch (err) {
         console.error('GET /api/bookings:', err.message);
         res.status(500).json({ error: 'Failed to load bookings' });
+    }
+});
+
+// ─── API: Patient — Cancel booking (≥24h before start) ───
+app.post('/api/patient/booking/cancel', async (req, res) => {
+    const { email, ref, locale } = req.body || {};
+    const patientEmail = String(email || '').toLowerCase().trim();
+    const bookingRef = String(ref || '').trim();
+    if (!patientEmail || !bookingRef) {
+        return res.status(400).json({ error: 'Email and booking reference are required' });
+    }
+    try {
+        const booking = await getPatientBooking(patientEmail, bookingRef);
+        if (!booking) {
+            return res.status(404).json({ error: 'Booking not found' });
+        }
+        if (booking.cancelled) {
+            return res.status(400).json({ error: 'This booking is already cancelled' });
+        }
+        const tz = scheduleStore.timezone || 'Europe/Lisbon';
+        const h = hoursUntilAppointment(booking, tz);
+        if (h == null || h < 24 || h <= 0) {
+            return res.status(403).json({
+                error: 'Cancellation is only possible up to 24 hours before your appointment.'
+            });
+        }
+        let updated = null;
+        if (usePersistentDb) {
+            updated = await db.cancelBookingByRef(booking.bookingRef);
+        } else {
+            const b = bookingsStore.find((x) => x.bookingRef === booking.bookingRef);
+            if (b) {
+                b.cancelled = true;
+                updated = b;
+            }
+        }
+        if (!updated) {
+            return res.status(500).json({ error: 'Could not cancel booking' });
+        }
+        const loc = normalizePatientLocale(locale || booking.patientLocale);
+        const payload = {
+            patientName: booking.patientName,
+            serviceLabel: serviceLabelFromCode(booking.service),
+            date: booking.date,
+            time: booking.time,
+            bookingRef: booking.bookingRef,
+            locale: loc
+        };
+        if (isEmailConfigured) {
+            try {
+                const { html, text, subject } = buildCancellationPatientEmail({
+                    ...payload,
+                    email: booking.email
+                });
+                await transporter.sendMail({
+                    from: EMAIL_FROM,
+                    to: booking.email,
+                    subject,
+                    text,
+                    html
+                });
+            } catch (err) {
+                console.error('Cancel patient email:', err.message);
+            }
+            const { html: h2, text: t2, subject: s2 } = buildClinicCancellationEmail({
+                patientName: booking.patientName,
+                serviceLabel: serviceLabelFromCode(booking.service),
+                date: booking.date,
+                time: booking.time,
+                bookingRef: booking.bookingRef,
+                email: booking.email
+            });
+            await sendClinicOpsEmail(s2, h2, t2);
+        }
+        res.json({ success: true, cancelled: true });
+    } catch (err) {
+        console.error('POST /api/patient/booking/cancel:', err.message);
+        res.status(500).json({ error: 'Failed to cancel booking' });
+    }
+});
+
+// ─── API: Patient — Reschedule (max 2×, ≥48h before start) ───
+app.post('/api/patient/booking/reschedule', async (req, res) => {
+    const { email, ref, dateIso, time, dateLabel, locale } = req.body || {};
+    const patientEmail = String(email || '').toLowerCase().trim();
+    const bookingRef = String(ref || '').trim();
+    const newTime = String(time || '').trim();
+    const newIso = String(dateIso || '').trim();
+    if (!patientEmail || !bookingRef || !newIso || !newTime) {
+        return res.status(400).json({ error: 'Email, reference, dateIso, and time are required' });
+    }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(newIso)) {
+        return res.status(400).json({ error: 'Invalid dateIso format (use YYYY-MM-DD)' });
+    }
+    try {
+        const booking = await getPatientBooking(patientEmail, bookingRef);
+        if (!booking) {
+            return res.status(404).json({ error: 'Booking not found' });
+        }
+        if (booking.cancelled) {
+            return res.status(400).json({ error: 'Cancelled bookings cannot be rescheduled' });
+        }
+        if ((booking.rescheduleCount || 0) >= 2) {
+            return res.status(403).json({ error: 'You have reached the maximum number of reschedules (2).' });
+        }
+        const tz = scheduleStore.timezone || 'Europe/Lisbon';
+        const h = hoursUntilAppointment(booking, tz);
+        if (h == null || h < 48 || h <= 0) {
+            return res.status(403).json({
+                error: 'Rescheduling is only possible up to 48 hours before your appointment.'
+            });
+        }
+        const normTime = normalizeTimeString({ time: newTime });
+        if (!normTime) {
+            return res.status(400).json({ error: 'Invalid time format' });
+        }
+        const allowed = slotsForDateIso(newIso);
+        if (!allowed.includes(normTime)) {
+            return res.status(400).json({ error: 'That time slot is not available' });
+        }
+        if (usePersistentDb) {
+            const taken = await db.isSlotTakenByOther(newIso, normTime, booking.bookingRef);
+            if (taken) {
+                return res.status(409).json({ error: 'That slot was just taken. Please choose another.' });
+            }
+        } else if (!isSlotFreeInMemory(newIso, normTime, booking.bookingRef)) {
+            return res.status(409).json({ error: 'That slot was just taken. Please choose another.' });
+        }
+
+        const oldDate = booking.date;
+        const oldTime = booking.time;
+        const newDateDisplay = String(dateLabel || '').trim() || newIso;
+        const nextCount = (booking.rescheduleCount || 0) + 1;
+        let newBooking = null;
+        if (usePersistentDb) {
+            newBooking = await db.rescheduleBookingByRef(booking.bookingRef, {
+                date: newDateDisplay,
+                time: normTime,
+                dateIso: newIso,
+                rescheduleCount: nextCount
+            });
+        } else {
+            const b = bookingsStore.find((x) => x.bookingRef === booking.bookingRef);
+            if (b) {
+                b.date = newDateDisplay;
+                b.time = normTime;
+                b.dateIso = newIso;
+                b.rescheduleCount = nextCount;
+                newBooking = b;
+            }
+        }
+        if (!newBooking) {
+            return res.status(500).json({ error: 'Could not reschedule' });
+        }
+        const loc = normalizePatientLocale(locale || booking.patientLocale);
+        if (isEmailConfigured) {
+            try {
+                const { html, text, subject } = buildReschedulePatientEmail({
+                    patientName: booking.patientName,
+                    serviceLabel: serviceLabelFromCode(booking.service),
+                    date: newDateDisplay,
+                    time: normTime,
+                    bookingRef: booking.bookingRef,
+                    locale: loc,
+                    email: booking.email
+                });
+                await transporter.sendMail({
+                    from: EMAIL_FROM,
+                    to: booking.email,
+                    subject,
+                    text,
+                    html
+                });
+            } catch (err) {
+                console.error('Reschedule patient email:', err.message);
+            }
+            const { html: h2, text: t2, subject: s2 } = buildClinicRescheduleEmail({
+                patientName: booking.patientName,
+                serviceLabel: serviceLabelFromCode(booking.service),
+                oldDate,
+                oldTime,
+                newDate: newDateDisplay,
+                newTime: normTime,
+                bookingRef: booking.bookingRef,
+                email: booking.email,
+                rescheduleCount: nextCount
+            });
+            await sendClinicOpsEmail(s2, h2, t2);
+        }
+        res.json({
+            success: true,
+            booking: enrichBookingForPatientApi(newBooking)
+        });
+    } catch (err) {
+        console.error('POST /api/patient/booking/reschedule:', err.message);
+        res.status(500).json({ error: 'Failed to reschedule' });
     }
 });
 

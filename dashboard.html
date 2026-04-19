@@ -172,7 +172,7 @@
                                 <th>Date & Time</th>
                                 <th>Patient</th>
                                 <th>Status</th>
-                                <th>Consultation</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="dashTableBody">
@@ -213,6 +213,30 @@
             </div>
 
         </section>
+
+        <!-- Reschedule modal -->
+        <div class="dash-modal" id="rescheduleModal" style="display:none;" aria-hidden="true">
+            <div class="dash-modal-backdrop" id="rescheduleModalBackdrop"></div>
+            <div class="dash-modal-card" role="dialog" aria-labelledby="rescheduleModalTitle">
+                <h2 id="rescheduleModalTitle" class="dash-modal-title">Reschedule appointment</h2>
+                <p class="dash-modal-desc" id="rescheduleModalRef"></p>
+                <div class="dash-form-group">
+                    <label for="rescheduleDate">New date</label>
+                    <input type="date" id="rescheduleDate" required>
+                </div>
+                <div class="dash-form-group">
+                    <label for="rescheduleTime">New time</label>
+                    <select id="rescheduleTime" required disabled>
+                        <option value="">Choose a time…</option>
+                    </select>
+                </div>
+                <p class="dash-modal-error" id="rescheduleError" style="display:none;" role="alert"></p>
+                <div class="dash-modal-actions">
+                    <button type="button" class="btn btn-outline" id="rescheduleCancelBtn">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="rescheduleConfirmBtn" disabled>Confirm</button>
+                </div>
+            </div>
+        </div>
     </main>
 
     <!-- Footer -->

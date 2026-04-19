@@ -1030,6 +1030,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     travellerCount: passengers.length,
                     hasInsurance: state.hasInsurance,
                     date: state.dateLabel,
+                    dateIso: formatDateLocal(state.date),
                     time: state.time,
                     patientName: `${passengers[0].firstName} ${passengers[0].lastName}`,
                     patientEmail: document.getElementById('email').value,

@@ -95,12 +95,18 @@ function rowToBooking(row) {
         service: row.service,
         date: row.date,
         time: row.time,
+        dateIso: row.date_iso || null,
         patientName: row.patient_name,
         travellerCount: row.traveller_count,
         amount: row.amount,
         currency: row.currency,
         paymentId: row.payment_id,
+        patientLocale: row.patient_locale || 'en',
+        cancelled: row.cancelled === true,
+        rescheduleCount: row.reschedule_count != null ? Number(row.reschedule_count) : 0,
         reminderSent: row.reminder_sent === true,
+        reminder1hSent: row.reminder_1h_sent === true,
+        followupSent: row.followup_sent === true,
         createdAt: createdAt instanceof Date ? createdAt.toISOString() : createdAt
     };
 }
@@ -164,6 +170,12 @@ async function initSchema(p) {
     await p.query(
         `CREATE INDEX IF NOT EXISTS idx_bookings_reminder_pending ON bookings (reminder_sent) WHERE reminder_sent = FALSE`
     );
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS cancelled BOOLEAN NOT NULL DEFAULT FALSE`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS reschedule_count INTEGER NOT NULL DEFAULT 0`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS reminder_1h_sent BOOLEAN NOT NULL DEFAULT FALSE`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS followup_sent BOOLEAN NOT NULL DEFAULT FALSE`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS date_iso TEXT`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS patient_locale VARCHAR(8) DEFAULT 'en'`);
 }
 
 /** IANA name for PostgreSQL AT TIME ZONE (schedule timezone). */
@@ -173,23 +185,35 @@ function sanitizeTimeZoneName(raw) {
     return 'Europe/Lisbon';
 }
 
-/**
- * Appointments in (now, now+24h] in the given zone, confirmation email not yet reminded.
- */
-async function findBookingsNeedingReminder(ianaTimeZone) {
+/** Candidates for 24h reminder — server filters by appointment window. */
+async function findBookingsNeeding24hReminder() {
     const p = getPool();
-    const tz = sanitizeTimeZoneName(ianaTimeZone);
     const r = await p.query(
         `SELECT * FROM bookings
-         WHERE reminder_sent = FALSE
-           AND date IS NOT NULL AND TRIM(date) <> ''
-           AND time IS NOT NULL AND TRIM(time) <> ''
-           AND date ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
-           AND time ~ '^[0-9]{2}:[0-9]{2}$'
-           AND ((date::date + time::time) AT TIME ZONE $1)::timestamptz > NOW()
-           AND ((date::date + time::time) AT TIME ZONE $1)::timestamptz <= NOW() + INTERVAL '24 hours'
-         ORDER BY date, time`,
-        [tz]
+         WHERE cancelled = FALSE AND reminder_sent = FALSE
+         ORDER BY created_at DESC`
+    );
+    return r.rows.map(rowToBooking);
+}
+
+/** Candidates for 1h reminder — server filters by appointment window. */
+async function findBookingsNeeding1hReminder() {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT * FROM bookings
+         WHERE cancelled = FALSE AND reminder_1h_sent = FALSE
+         ORDER BY created_at DESC`
+    );
+    return r.rows.map(rowToBooking);
+}
+
+/** Post-consultation follow-up — server filters by end time + 1h. */
+async function findBookingsNeedingFollowup() {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT * FROM bookings
+         WHERE cancelled = FALSE AND followup_sent = FALSE
+         ORDER BY created_at DESC`
     );
     return r.rows.map(rowToBooking);
 }
@@ -199,6 +223,69 @@ async function markReminderSent(bookingRef) {
     const r = await p.query(
         `UPDATE bookings SET reminder_sent = TRUE WHERE booking_ref = $1 AND reminder_sent = FALSE`,
         [bookingRef]
+    );
+    return r.rowCount > 0;
+}
+
+async function markReminder1hSent(bookingRef) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE bookings SET reminder_1h_sent = TRUE WHERE booking_ref = $1 AND reminder_1h_sent = FALSE`,
+        [bookingRef]
+    );
+    return r.rowCount > 0;
+}
+
+async function markFollowupSent(bookingRef) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE bookings SET followup_sent = TRUE WHERE booking_ref = $1 AND followup_sent = FALSE`,
+        [bookingRef]
+    );
+    return r.rowCount > 0;
+}
+
+async function cancelBookingByRef(bookingRef) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE bookings SET cancelled = TRUE WHERE booking_ref = $1 AND cancelled = FALSE RETURNING *`,
+        [bookingRef]
+    );
+    return r.rows[0] ? rowToBooking(r.rows[0]) : null;
+}
+
+async function rescheduleBookingByRef(bookingRef, fields) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE bookings SET
+            date = $2,
+            time = $3,
+            date_iso = $4,
+            reschedule_count = $5
+         WHERE booking_ref = $1 AND cancelled = FALSE
+         RETURNING *`,
+        [
+            bookingRef,
+            fields.date,
+            fields.time,
+            fields.dateIso,
+            fields.rescheduleCount
+        ]
+    );
+    return r.rows[0] ? rowToBooking(r.rows[0]) : null;
+}
+
+/** True if another active booking uses the same slot (excluding optional bookingRef). */
+async function isSlotTakenByOther(dateIso, time, excludeBookingRef) {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT 1 FROM bookings
+         WHERE cancelled = FALSE
+           AND date_iso = $1
+           AND time = $2
+           AND ($3::text IS NULL OR booking_ref <> $3)
+         LIMIT 1`,
+        [dateIso, time, excludeBookingRef || null]
     );
     return r.rowCount > 0;
 }
@@ -260,8 +347,10 @@ async function insertBooking(booking) {
     const r = await p.query(
         `INSERT INTO bookings (
             booking_ref, email, service, date, time, patient_name, traveller_count,
-            amount, currency, payment_id
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            amount, currency, payment_id,
+            date_iso, patient_locale,
+            cancelled, reschedule_count, reminder_sent, reminder_1h_sent, followup_sent
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
         ON CONFLICT (payment_id) DO NOTHING
         RETURNING *`,
         [
@@ -274,7 +363,14 @@ async function insertBooking(booking) {
             booking.travellerCount,
             booking.amount,
             booking.currency,
-            booking.paymentId
+            booking.paymentId,
+            booking.dateIso || null,
+            booking.patientLocale || 'en',
+            booking.cancelled === true,
+            booking.rescheduleCount != null ? booking.rescheduleCount : 0,
+            booking.reminderSent === true,
+            booking.reminder1hSent === true,
+            booking.followupSent === true
         ]
     );
     return r.rowCount > 0;
@@ -429,7 +525,14 @@ module.exports = {
     upsertClinicalNote,
     getSchedulePayload,
     saveSchedulePayload,
-    findBookingsNeedingReminder,
+    findBookingsNeeding24hReminder,
+    findBookingsNeeding1hReminder,
+    findBookingsNeedingFollowup,
     markReminderSent,
+    markReminder1hSent,
+    markFollowupSent,
+    cancelBookingByRef,
+    rescheduleBookingByRef,
+    isSlotTakenByOther,
     closePool
 };
