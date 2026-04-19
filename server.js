@@ -28,17 +28,6 @@ app.set('trust proxy', 1); // Trust first proxy (Railway, Render, etc.)
 const PORT = process.env.PORT || 3000;
 
 /* ========================================
-   WWW → apex canonical host (301)
-======================================== */
-app.use((req, res, next) => {
-    const hostname = (req.get('host') || '').split(':')[0].toLowerCase();
-    if (hostname === 'www.lonclinic.com') {
-        return res.redirect(301, `${req.protocol}://lonclinic.com${req.originalUrl || '/'}`);
-    }
-    next();
-});
-
-/* ========================================
    SESSION CONFIGURATION
 ======================================== */
 app.use(session({
