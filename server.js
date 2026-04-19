@@ -1382,6 +1382,105 @@ ${data.message}
     return { html, text };
 }
 
+/* ── Auto-reply i18n strings ── */
+const AUTO_REPLY_I18N = {
+    contact: {
+        en: {
+            subject: 'We received your message — Lon Clinic',
+            heading: 'Thank you for contacting us',
+            body: (name) => `Hello ${name},<br><br>We have received your message and will get back to you as soon as possible during business hours (Mon–Fri, 9h–18h Lisbon time).<br><br>If your matter is urgent, please call us directly.`,
+            text: (name) => `Hello ${name},\n\nWe have received your message and will get back to you as soon as possible during business hours (Mon–Fri, 9h–18h Lisbon time).\n\nIf your matter is urgent, please call us directly.`,
+            footer: 'Lon Clinic — Online Medical Consultations'
+        },
+        pt: {
+            subject: 'Recebemos a sua mensagem — Lon Clinic',
+            heading: 'Obrigado por nos contactar',
+            body: (name) => `Olá ${name},<br><br>Recebemos a sua mensagem e responderemos com brevidade nos dias úteis (9h–18h, hora de Lisboa).<br><br>Se o assunto for urgente, por favor contacte-nos diretamente por telefone.`,
+            text: (name) => `Olá ${name},\n\nRecebemos a sua mensagem e responderemos com brevidade nos dias úteis (9h–18h, hora de Lisboa).\n\nSe o assunto for urgente, por favor contacte-nos diretamente por telefone.`,
+            footer: 'Lon Clinic — Consultas Médicas Online'
+        },
+        es: {
+            subject: 'Hemos recibido su mensaje — Lon Clinic',
+            heading: 'Gracias por contactarnos',
+            body: (name) => `Hola ${name},<br><br>Hemos recibido su mensaje y le responderemos lo antes posible en horario laboral (lun–vie, 9h–18h hora de Lisboa).<br><br>Si su consulta es urgente, por favor contáctenos directamente por teléfono.`,
+            text: (name) => `Hola ${name},\n\nHemos recibido su mensaje y le responderemos lo antes posible en horario laboral (lun–vie, 9h–18h hora de Lisboa).\n\nSi su consulta es urgente, por favor contáctenos directamente por teléfono.`,
+            footer: 'Lon Clinic — Consultas Médicas Online'
+        }
+    },
+    careers: {
+        en: {
+            subject: 'We received your application — Lon Clinic',
+            heading: 'Thank you for your interest',
+            body: (name) => `Hello ${name},<br><br>We have received your application and will review it carefully. If your profile matches our current needs, we will contact you within the next few weeks.`,
+            text: (name) => `Hello ${name},\n\nWe have received your application and will review it carefully. If your profile matches our current needs, we will contact you within the next few weeks.`,
+            footer: 'Lon Clinic — Online Medical Consultations'
+        },
+        pt: {
+            subject: 'Recebemos a sua candidatura — Lon Clinic',
+            heading: 'Obrigado pelo interesse',
+            body: (name) => `Olá ${name},<br><br>Recebemos a sua candidatura e iremos analisá-la com atenção. Caso o seu perfil corresponda às nossas necessidades, entraremos em contacto nas próximas semanas.`,
+            text: (name) => `Olá ${name},\n\nRecebemos a sua candidatura e iremos analisá-la com atenção. Caso o seu perfil corresponda às nossas necessidades, entraremos em contacto nas próximas semanas.`,
+            footer: 'Lon Clinic — Consultas Médicas Online'
+        },
+        es: {
+            subject: 'Hemos recibido su candidatura — Lon Clinic',
+            heading: 'Gracias por su interés',
+            body: (name) => `Hola ${name},<br><br>Hemos recibido su candidatura y la revisaremos con atención. Si su perfil se ajusta a nuestras necesidades actuales, nos pondremos en contacto en las próximas semanas.`,
+            text: (name) => `Hola ${name},\n\nHemos recibido su candidatura y la revisaremos con atención. Si su perfil se ajusta a nuestras necesidades actuales, nos pondremos en contacto en las próximas semanas.`,
+            footer: 'Lon Clinic — Consultas Médicas Online'
+        }
+    },
+    complaints: {
+        en: {
+            subject: 'We received your complaint — Lon Clinic',
+            heading: 'Your complaint has been received',
+            body: (name) => `Hello ${name},<br><br>We have received your complaint and will respond within 5 business days (Mon–Fri, 9h–18h Lisbon time). We take all complaints seriously and will investigate the matter thoroughly.`,
+            text: (name) => `Hello ${name},\n\nWe have received your complaint and will respond within 5 business days (Mon–Fri, 9h–18h Lisbon time). We take all complaints seriously and will investigate the matter thoroughly.`,
+            footer: 'Lon Clinic — Online Medical Consultations'
+        },
+        pt: {
+            subject: 'Recebemos a sua reclamação — Lon Clinic',
+            heading: 'A sua reclamação foi recebida',
+            body: (name) => `Olá ${name},<br><br>Recebemos a sua reclamação e responderemos no prazo máximo de 5 dias úteis (9h–18h, hora de Lisboa). Tomamos todas as reclamações a sério e iremos investigar a situação de forma diligente.`,
+            text: (name) => `Olá ${name},\n\nRecebemos a sua reclamação e responderemos no prazo máximo de 5 dias úteis (9h–18h, hora de Lisboa). Tomamos todas as reclamações a sério e iremos investigar a situação de forma diligente.`,
+            footer: 'Lon Clinic — Consultas Médicas Online'
+        },
+        es: {
+            subject: 'Hemos recibido su reclamación — Lon Clinic',
+            heading: 'Su reclamación ha sido recibida',
+            body: (name) => `Hola ${name},<br><br>Hemos recibido su reclamación y responderemos en un plazo máximo de 5 días hábiles (lun–vie, 9h–18h hora de Lisboa). Tomamos todas las reclamaciones muy en serio e investigaremos el asunto de forma exhaustiva.`,
+            text: (name) => `Hola ${name},\n\nHemos recibido su reclamación y responderemos en un plazo máximo de 5 días hábiles (lun–vie, 9h–18h hora de Lisboa). Tomamos todas las reclamaciones muy en serio e investigaremos el asunto de forma exhaustiva.`,
+            footer: 'Lon Clinic — Consultas Médicas Online'
+        }
+    }
+};
+
+function buildAutoReplyEmail(type, name, locale) {
+    const lang = ['en', 'pt', 'es'].includes(locale) ? locale : 'en';
+    const strings = AUTO_REPLY_I18N[type][lang];
+    const safeName = escapeHtml(name);
+
+    const html = `<!DOCTYPE html>
+<html lang="${lang}">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${strings.subject}</title></head>
+<body style="margin:0;padding:24px;background:#f6f8fb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <div style="max-width:620px;margin:0 auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
+    <div style="background:#4A7C6F;padding:24px 28px;">
+      <img src="https://lonclinic.com/logo.png" alt="Lon Clinic" height="32" style="display:block;height:32px;" onerror="this.style.display='none'">
+    </div>
+    <div style="padding:28px;">
+      <h2 style="margin:0 0 16px;font-size:20px;color:#111827;">${strings.heading}</h2>
+      <p style="margin:0 0 24px;color:#374151;line-height:1.7;">${strings.body(safeName)}</p>
+      <p style="margin:0;color:#6b7280;font-size:13px;">${strings.footer}</p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+    const text = strings.text(name);
+    return { html, text, subject: strings.subject };
+}
+
 async function sendContactInquiryEmail(data) {
     if (!isEmailConfigured) {
         console.log('   ⚠️  Email not configured — cannot send contact inquiry');
@@ -1398,8 +1497,20 @@ async function sendContactInquiryEmail(data) {
             text,
             html
         });
-
         console.log('   📩 Contact inquiry sent to:', CONTACT_EMAIL, '| Message ID:', info.messageId);
+
+        // Send auto-reply to user (non-critical — failure does not block success)
+        if (data.email) {
+            try {
+                const locale = data.locale || 'en';
+                const { html: rHtml, text: rText, subject: rSubject } = buildAutoReplyEmail('contact', data.name, locale);
+                await transporter.sendMail({ from: EMAIL_FROM, to: data.email, subject: rSubject, text: rText, html: rHtml });
+                console.log('   📩 Contact auto-reply sent to:', data.email);
+            } catch (replyErr) {
+                console.error('   ⚠️  Contact auto-reply failed (non-fatal):', replyErr.message);
+            }
+        }
+
         return true;
     } catch (err) {
         console.error('   ❌ Failed to send contact inquiry:', err.message);
@@ -1434,6 +1545,19 @@ async function sendCareersApplicationEmail(data) {
 
         const info = await transporter.sendMail(mailOptions);
         console.log('   📩 Careers application sent to:', CONTACT_EMAIL, '| Message ID:', info.messageId);
+
+        // Send auto-reply to applicant (non-critical)
+        if (data.email) {
+            try {
+                const locale = data.locale || 'pt';
+                const { html: rHtml, text: rText, subject: rSubject } = buildAutoReplyEmail('careers', data.name, locale);
+                await transporter.sendMail({ from: EMAIL_FROM, to: data.email, subject: rSubject, text: rText, html: rHtml });
+                console.log('   📩 Careers auto-reply sent to:', data.email);
+            } catch (replyErr) {
+                console.error('   ⚠️  Careers auto-reply failed (non-fatal):', replyErr.message);
+            }
+        }
+
         return true;
     } catch (err) {
         console.error('   ❌ Failed to send careers application:', err.message);
@@ -1457,8 +1581,20 @@ async function sendComplaintEmail(data) {
             text,
             html
         });
-
         console.log('   📩 Complaint sent to info@lonclinic.com | Message ID:', info.messageId);
+
+        // Send auto-reply to complainant (non-critical)
+        if (data.email) {
+            try {
+                const locale = data.locale || 'pt';
+                const { html: rHtml, text: rText, subject: rSubject } = buildAutoReplyEmail('complaints', data.name, locale);
+                await transporter.sendMail({ from: EMAIL_FROM, to: data.email, subject: rSubject, text: rText, html: rHtml });
+                console.log('   📩 Complaints auto-reply sent to:', data.email);
+            } catch (replyErr) {
+                console.error('   ⚠️  Complaints auto-reply failed (non-fatal):', replyErr.message);
+            }
+        }
+
         return true;
     } catch (err) {
         console.error('   ❌ Failed to send complaint email:', err.message);
@@ -3132,6 +3268,7 @@ app.post('/api/careers', (req, res) => {
         const phone = String(req.body?.phone || '').trim();
         const roleRaw = String(req.body?.role || '').trim();
         const message = String(req.body?.message || '').trim();
+        const locale = ['en', 'pt', 'es'].includes(req.body?.locale) ? req.body.locale : 'pt';
 
         if (!name || !email || !phone || !roleRaw || !message) {
             return res.status(400).json({ error: 'Todos os campos obrigatórios devem ser preenchidos.' });
@@ -3151,7 +3288,8 @@ app.post('/api/careers', (req, res) => {
             message: message.slice(0, 4000),
             attachmentName: attachment ? String(attachment.originalname || 'anexo').slice(0, 180) : '',
             attachmentType: attachment ? attachment.mimetype : '',
-            attachmentBuffer: attachment ? attachment.buffer : null
+            attachmentBuffer: attachment ? attachment.buffer : null,
+            locale
         };
 
         const sent = await sendCareersApplicationEmail(payload);
@@ -3172,6 +3310,7 @@ app.post('/api/contact', rateLimitContact, async (req, res) => {
     const email = (req.body?.email || '').trim();
     const phone = (req.body?.phone || '').trim();
     const message = (req.body?.message || '').trim();
+    const locale = ['en', 'pt', 'es'].includes(req.body?.locale) ? req.body.locale : 'en';
 
     if (!name || !email || !phone || !message) {
         return res.status(400).json({ error: 'All fields are required.' });
@@ -3185,7 +3324,8 @@ app.post('/api/contact', rateLimitContact, async (req, res) => {
         name: name.slice(0, 120),
         email: email.slice(0, 160),
         phone: phone.slice(0, 40),
-        message: message.slice(0, 4000)
+        message: message.slice(0, 4000),
+        locale
     };
 
     const sent = await sendContactInquiryEmail(payload);
@@ -3203,6 +3343,7 @@ app.post('/api/reclamacoes', async (req, res) => {
     const phone = (req.body?.phone || '').trim();
     const email = (req.body?.email || '').trim();
     const message = (req.body?.message || '').trim();
+    const locale = ['en', 'pt', 'es'].includes(req.body?.locale) ? req.body.locale : 'pt';
 
     if (!name || !citizenCard || !phone || !email || !message) {
         return res.status(400).json({ error: 'Todos os campos são obrigatórios.' });
@@ -3217,7 +3358,8 @@ app.post('/api/reclamacoes', async (req, res) => {
         citizenCard: citizenCard.slice(0, 40),
         phone: phone.slice(0, 40),
         email: email.slice(0, 160),
-        message: message.slice(0, 4000)
+        message: message.slice(0, 4000),
+        locale
     };
 
     const sent = await sendComplaintEmail(payload);

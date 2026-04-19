@@ -270,6 +270,567 @@
 
     <script>
         (function () {
+            /* ── Multilingual form strings ── */
+            const FORM_STRINGS = {
+                en: {
+                    sending: 'Sending…',
+                    successContact: 'Message sent successfully. We will reply shortly.',
+                    errorContact: 'Unable to send your message.',
+                    btnContact: 'Send message',
+                    successComplaints: 'Complaint submitted successfully. We will respond within 5 business days.',
+                    errorComplaints: 'Unable to send your complaint.',
+                    btnComplaints: 'Submit complaint',
+                    successPartnerships: 'Partnership request sent successfully. Our team will be in touch shortly.',
+                    errorPartnerships: 'Unable to send your request.',
+                    btnPartnerships: 'Send partnership request',
+                    successCareers: 'Application submitted successfully. Thank you for your interest!',
+                    errorCareers: 'Unable to send your application.',
+                    btnCareers: 'Submit application',
+                    requiredFields: 'Please complete all required fields.',
+                    invalidEmail: 'Please enter a valid email address.',
+                    fileTooLarge: 'The attachment exceeds the 5MB maximum size.',
+                    fileError: 'Error processing the attachment.',
+                },
+                pt: {
+                    sending: 'A enviar...',
+                    successContact: 'Mensagem enviada com sucesso. Responderemos com brevidade.',
+                    errorContact: 'Erro ao enviar mensagem.',
+                    btnContact: 'Enviar mensagem',
+                    successComplaints: 'Reclamação enviada com sucesso. Responderemos nos dias úteis (9h–18h), salvo períodos de maior volume.',
+                    errorComplaints: 'Erro ao enviar reclamação.',
+                    btnComplaints: 'Enviar reclamação',
+                    successPartnerships: 'Pedido enviado com sucesso. A equipa entrará em contacto brevemente.',
+                    errorPartnerships: 'Erro ao enviar pedido.',
+                    btnPartnerships: 'Enviar pedido de parceria',
+                    successCareers: 'Candidatura enviada com sucesso. Obrigado pelo interesse!',
+                    errorCareers: 'Erro ao enviar candidatura.',
+                    btnCareers: 'Enviar candidatura',
+                    requiredFields: 'Por favor, preencha todos os campos obrigatórios.',
+                    invalidEmail: 'Indique um email válido.',
+                    fileTooLarge: 'O anexo excede o tamanho máximo de 5MB.',
+                    fileError: 'Erro ao processar o anexo enviado.',
+                },
+                es: {
+                    sending: 'Enviando…',
+                    successContact: 'Mensaje enviado correctamente. Le responderemos en breve.',
+                    errorContact: 'No se pudo enviar el mensaje.',
+                    btnContact: 'Enviar mensaje',
+                    successComplaints: 'Reclamación enviada correctamente. Le responderemos en un plazo de 5 días hábiles.',
+                    errorComplaints: 'No se pudo enviar la reclamación.',
+                    btnComplaints: 'Enviar reclamación',
+                    successPartnerships: 'Solicitud de asociación enviada correctamente. Nuestro equipo se pondrá en contacto pronto.',
+                    errorPartnerships: 'No se pudo enviar la solicitud.',
+                    btnPartnerships: 'Enviar solicitud de asociación',
+                    successCareers: 'Candidatura enviada correctamente. ¡Gracias por su interés!',
+                    errorCareers: 'No se pudo enviar la candidatura.',
+                    btnCareers: 'Enviar candidatura',
+                    requiredFields: 'Por favor, complete todos los campos obligatorios.',
+                    invalidEmail: 'Por favor introduzca un correo electrónico válido.',
+                    fileTooLarge: 'El archivo adjunto supera el tamaño máximo de 5MB.',
+                    fileError: 'Error al procesar el archivo adjunto.',
+                },
+            };
+
+            function getFS(lang) {
+                return FORM_STRINGS[lang] || FORM_STRINGS.en;
+            }
+
+            /* ── English page content ── */
+            const content_en = {
+                "sobre-nos": {
+                    section: "CLINIC",
+                    title: "About us",
+                    subtitle: "Online medicine with closeness and rigour",
+                    bodyHtml: `
+<p>Lon Clinic was born from the conviction that access to quality healthcare should not depend on waiting lists or rigid schedules.</p>
+<p>We are an online medical clinic that values premium-quality care, registered with the ERS under no. 45475, with doctors accredited by the Medical Association, dedicated to providing accessible, close, and trusted healthcare — wherever and whenever you need it.</p>
+<p>We believe in person-centred medicine: with time to listen, explain, and follow up. Because a good consultation does not have to be in-person to be good.</p>
+`
+                },
+                "parcerias": {
+                    section: "CLINIC",
+                    title: "Partnerships",
+                    subtitle: "Collaborations tailored to your organisation",
+                    bodyHtml: `
+<p>Are you interested in partnering with Lon Clinic?</p>
+<p>We work with companies, insurers, start-ups and other organisations that share our commitment to accessible healthcare. If you want to offer access to online medical consultations to your employees, clients or members, we can find a solution tailored to you.</p>
+<h2>Types of partnerships</h2>
+<ul class="bullet-list">
+<li>Corporate health — consultation access for employees</li>
+<li>Insurers and health systems</li>
+<li>Start-ups and digital platforms</li>
+<li>Clinics and complementary health professionals</li>
+</ul>
+<h2>Get in touch</h2>
+<p>To explore a partnership, contact us at <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> with a brief description of your organisation and the type of collaboration you have in mind. We will reply within 2 business days.</p>
+<p>Or send your request directly via the form below.</p>
+<form id="partnershipsForm" class="info-form" novalidate>
+    <label for="partnerships-org">Organisation
+        <input id="partnerships-org" name="organization" type="text" required maxlength="200" autocomplete="organization">
+    </label>
+    <label for="partnerships-name">Contact name
+        <input id="partnerships-name" name="name" type="text" required maxlength="120" autocomplete="name">
+    </label>
+    <label for="partnerships-email">Email
+        <input id="partnerships-email" name="email" type="email" required maxlength="160" autocomplete="email">
+    </label>
+    <label for="partnerships-phone">Phone
+        <input id="partnerships-phone" name="phone" type="tel" required maxlength="40" autocomplete="tel">
+    </label>
+    <label for="partnerships-message">Type of collaboration and message
+        <textarea id="partnerships-message" name="message" required maxlength="4000"></textarea>
+    </label>
+    <button type="submit" class="btn btn-primary">Send partnership request</button>
+    <p id="partnershipsStatus" class="info-form-status" role="status" aria-live="polite"></p>
+</form>
+`,
+                    actions: [{ label: "Direct email", href: "mailto:info@lonclinic.com", primary: false }]
+                },
+                "registo-medico": {
+                    section: "CLINIC",
+                    title: "Medical records",
+                    subtitle: "Confidentiality and legal framework",
+                    bodyHtml: `
+<p>At Lon Clinic, your medical history is treated with the utmost confidentiality and security.</p>
+<p>After each consultation, a clinical record is created that includes the information shared during the consultation, the medical assessment, the treatment plan, and any documents issued (prescriptions, exam requests, medical certificates).</p>
+<h2>Access to your records</h2>
+<p>You can request access to your clinical records at any time by emailing <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>. We will respond within the legally required timeframe.</p>
+<h2>Retention</h2>
+<p>Clinical records are retained for the minimum legally required period, in accordance with Portuguese health legislation and the GDPR.</p>
+<h2>Questions</h2>
+<p>For any questions related to your medical records, please contact us at <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>.</p>
+`,
+                    actions: [{ label: "Request information", href: "mailto:info@lonclinic.com?subject=Medical%20records", primary: true }]
+                },
+                "contato": {
+                    section: "CLINIC",
+                    title: "Contact",
+                    subtitle: "We are available to answer all your questions",
+                    bodyHtml: `
+<h2>Email</h2>
+<p><a href="mailto:info@lonclinic.com">info@lonclinic.com</a></p>
+<h2>Chat</h2>
+<p>Available directly on our website.</p>
+<h2>Opening hours</h2>
+<p>Monday to Friday, 9am–6pm (Lisbon time).</p>
+<p>We do not respond to messages on weekends, public holidays, or during vacation periods. Replies may be delayed by at least 10 working days in those cases.</p>
+<h2>Medical emergency</h2>
+<p>Call <strong>112</strong> immediately or go to the nearest hospital emergency department. Do not use this channel for emergencies.</p>
+<h2>Send us a message</h2>
+<form id="contactInfoForm" class="info-form" novalidate>
+    <label for="contact-info-name">Name
+        <input id="contact-info-name" name="name" type="text" required maxlength="120" autocomplete="name">
+    </label>
+    <label for="contact-info-email">Email
+        <input id="contact-info-email" name="email" type="email" required maxlength="160" autocomplete="email">
+    </label>
+    <label for="contact-info-phone">Phone number
+        <input id="contact-info-phone" name="phone" type="tel" required maxlength="40" autocomplete="tel">
+    </label>
+    <label for="contact-info-message">Message
+        <textarea id="contact-info-message" name="message" required maxlength="4000"></textarea>
+    </label>
+    <button type="submit" class="btn btn-primary">Send message</button>
+    <p id="contactInfoStatus" class="info-form-status" role="status" aria-live="polite"></p>
+</form>
+`,
+                    actions: [
+                        { label: "Send email", href: "mailto:info@lonclinic.com", primary: true },
+                        { label: "WhatsApp", href: "https://wa.me/351928372775" }
+                    ]
+                },
+                "trabalhe-connosco": {
+                    section: "CLINIC",
+                    title: "Work with us",
+                    subtitle: "Join an online healthcare project",
+                    bodyHtml: `
+<p>Lon Clinic is growing and is looking for healthcare professionals who share our vision of accessible, close, and high-quality medicine.</p>
+<h2>What we are looking for</h2>
+<p>Licensed doctors and other healthcare professionals with an interest in teleconsultation, who value a close relationship with patients and want to be part of a different project in the Portuguese online healthcare landscape.</p>
+<h2>What we offer</h2>
+<ul class="bullet-list">
+<li>Flexible schedules</li>
+<li>Simple and intuitive platform</li>
+<li>Project with identity and a clear vision</li>
+<li>Collaborative and respectful work environment</li>
+</ul>
+<h2>Apply</h2>
+<p>Send your CV and a brief introduction to <a href="mailto:info@lonclinic.com?subject=Application">info@lonclinic.com</a> with the subject <strong>"Application — [your specialty]"</strong>. We review all applications and respond within 5 business days.</p>
+<p>Or use the form below (you can attach your CV in PDF or Word format).</p>
+<form id="careersForm" class="info-form" novalidate>
+    <label for="careers-name">Full name
+        <input id="careers-name" name="name" type="text" required maxlength="120" autocomplete="name">
+    </label>
+    <label for="careers-email">Email
+        <input id="careers-email" name="email" type="email" required maxlength="160" autocomplete="email">
+    </label>
+    <label for="careers-phone">Phone
+        <input id="careers-phone" name="phone" type="tel" required maxlength="40" autocomplete="tel">
+    </label>
+    <label for="careers-role">Area of interest
+        <select id="careers-role" name="role" required>
+            <option value="">Select an option</option>
+            <option value="medicina-geral">General Medicine</option>
+            <option value="saude-mental">Mental Health</option>
+            <option value="medicina-viajante">Travel Medicine</option>
+            <option value="longevidade">Longevity Medicine</option>
+            <option value="operacoes-e-suporte">Operations & Support</option>
+            <option value="outros">Other</option>
+        </select>
+    </label>
+    <label for="careers-message">Message
+        <textarea id="careers-message" name="message" required maxlength="4000"></textarea>
+    </label>
+    <label for="careers-attachment">Attach CV (PDF, DOC, DOCX, up to 5MB)
+        <input id="careers-attachment" name="attachment" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+    </label>
+    <p class="form-help">You can submit the application without an attachment, but we recommend including your CV.</p>
+    <button type="submit" class="btn btn-primary">Submit application</button>
+    <p id="careersStatus" class="info-form-status" role="status" aria-live="polite"></p>
+</form>
+`,
+                    actions: [{ label: "View available consultations", href: "/marcar/clinica-geral", primary: true }]
+                },
+                "como-funciona": {
+                    section: "SUPPORT",
+                    title: "How it works",
+                    subtitle: "Simple, fast, and high quality",
+                    bodyHtml: `
+<p>Lon Clinic was created to make access to healthcare simple, fast, hassle-free, yet maintaining high quality.</p>
+<p><strong>Here is how it works in 4 steps:</strong></p>
+<ol class="steps-list">
+<li><strong>1. Choose your consultation</strong><br>Select the type of consultation you need — urgent, specialty, mental health, travel medicine or certificate. Each consultation has its duration, price and indications clearly described.</li>
+<li><strong>2. Book and pay</strong><br>Choose an available day and time and make the payment by card or bank transfer. The booking is only confirmed after payment.</li>
+<li><strong>3. Receive confirmation</strong><br>After payment, you will receive a confirmation email with the link to access the video consultation. No installation needed — it works directly in your browser.</li>
+<li><strong>4. Have your consultation</strong><br>At the scheduled time, click the link and enter the virtual waiting room. The doctor will greet you and conduct the consultation by video call. At the end, you will receive by email or SMS the prescription, exam request or clinical guidance, as required.</li>
+</ol>
+<p>Have questions? Contact us via chat or email before booking.</p>
+`
+                },
+                "seguranca-dados": {
+                    section: "SUPPORT",
+                    title: "Data security",
+                    subtitle: "Protection of your personal and health data",
+                    bodyHtml: `
+<p>At Lon Clinic, the protection of your personal and health data is an absolute priority.</p>
+<h2>How we protect your data</h2>
+<p>All data collected on the platform is processed in accordance with the General Data Protection Regulation (GDPR) and applicable Portuguese legislation. Video consultations are conducted on a platform evaluated and approved by our Data Protection Officer (DPO) as adequate in terms of privacy and security.</p>
+<h2>What we collect and why</h2>
+<p>We collect only the data necessary to provide the service: identification data, contact information, and clinical information shared during the consultation. This data is used exclusively for clinical and administrative purposes related to your consultation.</p>
+<h2>Your rights</h2>
+<p>You have the right to access, correct, delete or request the portability of your data at any time. To exercise these rights, contact us at <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>.</p>
+<h2>Data retention</h2>
+<p>Clinical records are retained for the minimum legally required period, in accordance with Portuguese health legislation.</p>
+<h2>DPO contact</h2>
+<p>For data protection questions, you can contact our Data Protection Officer at <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>.</p>
+`
+                },
+                "acessibilidade": {
+                    section: "SUPPORT",
+                    title: "Accessibility",
+                    subtitle: "Healthcare accessible to everyone",
+                    bodyHtml: `
+<p>Lon Clinic believes that healthcare should be accessible to everyone.</p>
+<h2>Digital accessibility</h2>
+<p>Our website has been developed with digital accessibility best practices in mind, including screen reader compatibility, adequate contrast, and keyboard navigation.</p>
+<h2>Consultations in multiple languages</h2>
+<p>Consultations are available in Portuguese, English and Spanish, so that language is never a barrier to accessing healthcare.</p>
+<h2>Telephone consultations</h2>
+<p>For patients with difficulty accessing video calls, consultations can be conducted by telephone upon prior request, except for the issuance of medical certificates.</p>
+<h2>Found an accessibility barrier?</h2>
+<p>If you encountered any difficulty accessing our website or services, please let us know at <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> so we can continuously improve.</p>
+`
+                },
+                "reclamacoes": {
+                    section: "SUPPORT",
+                    title: "Complaints",
+                    subtitle: "We want to resolve your situation in the best possible way",
+                    bodyHtml: `
+<p>Your satisfaction is important to us. If something did not go as expected, we want to know.</p>
+<h2>How to submit a complaint</h2>
+<p>You can contact us directly at <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>.</p>
+<p>We are committed to responding to all complaints on working days, from 9am to 6pm, Monday to Friday, within a respectful timeframe. We will try to resolve the situation in the best possible way.</p>
+<h2>Electronic Complaints Book</h2>
+<p>You can also submit your complaint through the Electronic Complaints Book, available at <a href="https://www.livroreclamacoes.pt" target="_blank" rel="noopener noreferrer">livroreclamacoes.pt</a>.</p>
+<h2>Health Regulatory Authority</h2>
+<p>You also have the right to submit a complaint directly to the Health Regulatory Authority (ERS), available at <a href="https://www.ers.pt" target="_blank" rel="noopener noreferrer">ers.pt</a>.</p>
+<h2>Complaint form</h2>
+<p class="complaints-note">Fill in the fields below. We treat all complaints with confidentiality.</p>
+<form id="complaintsForm" class="complaints-form" novalidate>
+    <label for="complaint-name">Name
+        <input id="complaint-name" name="name" type="text" required maxlength="120" autocomplete="name">
+    </label>
+    <label for="complaint-cc">ID / Passport number
+        <input id="complaint-cc" name="citizenCard" type="text" required maxlength="40" autocomplete="off">
+    </label>
+    <label for="complaint-phone">Phone number
+        <input id="complaint-phone" name="phone" type="tel" required maxlength="40" autocomplete="tel">
+    </label>
+    <label for="complaint-email">Email
+        <input id="complaint-email" name="email" type="email" required maxlength="160" autocomplete="email">
+    </label>
+    <label for="complaint-message">Complaint text
+        <textarea id="complaint-message" name="message" required maxlength="4000"></textarea>
+    </label>
+    <button type="submit" class="btn btn-primary">Submit complaint</button>
+    <p id="complaintsStatus" class="complaints-status" role="status" aria-live="polite"></p>
+</form>
+`,
+                    actions: []
+                },
+            };
+
+            /* ── Spanish page content ── */
+            const content_es = {
+                "sobre-nos": {
+                    section: "CLÍNICA",
+                    title: "Sobre nosotros",
+                    subtitle: "Medicina online con cercanía y rigor",
+                    bodyHtml: `
+<p>Lon Clinic nació de la convicción de que el acceso a una atención sanitaria de calidad no debería depender de listas de espera ni de horarios rígidos.</p>
+<p>Somos una clínica médica online que valora la atención de calidad premium, registrada en el ERS con el n.º 45475, con médicos acreditados por el Colegio de Médicos, dedicada a ofrecer una atención sanitaria accesible, cercana y de confianza — donde y cuando la necesite.</p>
+<p>Creemos en una medicina centrada en la persona: con tiempo para escuchar, explicar y hacer seguimiento. Porque una buena consulta no tiene que ser presencial para ser buena.</p>
+`
+                },
+                "parcerias": {
+                    section: "CLÍNICA",
+                    title: "Asociaciones",
+                    subtitle: "Colaboraciones a medida de su organización",
+                    bodyHtml: `
+<p>¿Está interesado en establecer una asociación con Lon Clinic?</p>
+<p>Trabajamos con empresas, aseguradoras, start-ups y otras organizaciones que comparten nuestro compromiso con la salud accesible. Si desea ofrecer acceso a consultas médicas online a sus empleados, clientes o miembros, podemos encontrar una solución a medida.</p>
+<h2>Tipos de asociaciones</h2>
+<ul class="bullet-list">
+<li>Salud corporativa — acceso a consultas para empleados</li>
+<li>Aseguradoras y sistemas de salud</li>
+<li>Start-ups y plataformas digitales</li>
+<li>Clínicas y profesionales de salud complementarios</li>
+</ul>
+<h2>Contacte con nosotros</h2>
+<p>Para explorar una asociación, contáctenos en <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> con una breve descripción de su organización y del tipo de colaboración que tiene en mente. Le responderemos en 2 días hábiles.</p>
+<p>O envíe su solicitud directamente a través del formulario a continuación.</p>
+<form id="partnershipsForm" class="info-form" novalidate>
+    <label for="partnerships-org">Organización
+        <input id="partnerships-org" name="organization" type="text" required maxlength="200" autocomplete="organization">
+    </label>
+    <label for="partnerships-name">Nombre de contacto
+        <input id="partnerships-name" name="name" type="text" required maxlength="120" autocomplete="name">
+    </label>
+    <label for="partnerships-email">Email
+        <input id="partnerships-email" name="email" type="email" required maxlength="160" autocomplete="email">
+    </label>
+    <label for="partnerships-phone">Teléfono
+        <input id="partnerships-phone" name="phone" type="tel" required maxlength="40" autocomplete="tel">
+    </label>
+    <label for="partnerships-message">Tipo de colaboración y mensaje
+        <textarea id="partnerships-message" name="message" required maxlength="4000"></textarea>
+    </label>
+    <button type="submit" class="btn btn-primary">Enviar solicitud de asociación</button>
+    <p id="partnershipsStatus" class="info-form-status" role="status" aria-live="polite"></p>
+</form>
+`,
+                    actions: [{ label: "Email directo", href: "mailto:info@lonclinic.com", primary: false }]
+                },
+                "registo-medico": {
+                    section: "CLÍNICA",
+                    title: "Registro médico",
+                    subtitle: "Confidencialidad y marco legal",
+                    bodyHtml: `
+<p>En Lon Clinic, su historial clínico se trata con la máxima confidencialidad y seguridad.</p>
+<p>Tras cada consulta, se crea un registro clínico que incluye los datos compartidos durante la consulta, la evaluación médica, el plan de tratamiento y los documentos emitidos (recetas, solicitudes de pruebas, certificados médicos).</p>
+<h2>Acceso a sus registros</h2>
+<p>Puede solicitar acceso a su historial clínico en cualquier momento enviando un correo a <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>. Responderemos en el plazo legalmente establecido.</p>
+<h2>Conservación</h2>
+<p>Los registros clínicos se conservan durante el período mínimo legalmente obligatorio, de conformidad con la legislación sanitaria portuguesa y el RGPD.</p>
+<h2>Dudas</h2>
+<p>Para cualquier pregunta relacionada con su historial médico, contáctenos en <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>.</p>
+`,
+                    actions: [{ label: "Solicitar información", href: "mailto:info@lonclinic.com?subject=Registro%20médico", primary: true }]
+                },
+                "contato": {
+                    section: "CLÍNICA",
+                    title: "Contacto",
+                    subtitle: "Estamos disponibles para responder a todas sus preguntas",
+                    bodyHtml: `
+<h2>Email</h2>
+<p><a href="mailto:info@lonclinic.com">info@lonclinic.com</a></p>
+<h2>Chat</h2>
+<p>Disponible directamente en nuestro sitio web.</p>
+<h2>Horario de atención</h2>
+<p>De lunes a viernes, de 9h a 18h (hora de Lisboa).</p>
+<p>No respondemos a mensajes los fines de semana, festivos o durante las vacaciones. Las respuestas pueden demorarse al menos 10 días hábiles en esos casos.</p>
+<h2>Emergencia médica</h2>
+<p>Llame inmediatamente al <strong>112</strong> o diríjase al servicio de urgencias hospitalario más cercano. No utilice este canal para emergencias.</p>
+<h2>Envíenos un mensaje</h2>
+<form id="contactInfoForm" class="info-form" novalidate>
+    <label for="contact-info-name">Nombre
+        <input id="contact-info-name" name="name" type="text" required maxlength="120" autocomplete="name">
+    </label>
+    <label for="contact-info-email">Email
+        <input id="contact-info-email" name="email" type="email" required maxlength="160" autocomplete="email">
+    </label>
+    <label for="contact-info-phone">Número de teléfono
+        <input id="contact-info-phone" name="phone" type="tel" required maxlength="40" autocomplete="tel">
+    </label>
+    <label for="contact-info-message">Mensaje
+        <textarea id="contact-info-message" name="message" required maxlength="4000"></textarea>
+    </label>
+    <button type="submit" class="btn btn-primary">Enviar mensaje</button>
+    <p id="contactInfoStatus" class="info-form-status" role="status" aria-live="polite"></p>
+</form>
+`,
+                    actions: [
+                        { label: "Enviar email", href: "mailto:info@lonclinic.com", primary: true },
+                        { label: "WhatsApp", href: "https://wa.me/351928372775" }
+                    ]
+                },
+                "trabalhe-connosco": {
+                    section: "CLÍNICA",
+                    title: "Trabaje con nosotros",
+                    subtitle: "Forme parte de un proyecto de salud online",
+                    bodyHtml: `
+<p>Lon Clinic está creciendo y busca profesionales sanitarios que compartan nuestra visión de una medicina accesible, cercana y de calidad.</p>
+<h2>Lo que buscamos</h2>
+<p>Médicos y otros profesionales sanitarios acreditados, con interés en la teleconsulta, que valoren una relación cercana con el paciente y quieran formar parte de un proyecto diferente en el panorama de la salud online.</p>
+<h2>Lo que ofrecemos</h2>
+<ul class="bullet-list">
+<li>Flexibilidad horaria</li>
+<li>Plataforma simple e intuitiva</li>
+<li>Proyecto con identidad y visión clara</li>
+<li>Entorno de trabajo colaborativo y respetuoso</li>
+</ul>
+<h2>Candidatúrese</h2>
+<p>Envíe su CV y una breve presentación a <a href="mailto:info@lonclinic.com?subject=Candidatura">info@lonclinic.com</a> con el asunto <strong>"Candidatura — [su especialidad]"</strong>. Analizamos todas las candidaturas y respondemos en 5 días hábiles.</p>
+<p>O utilice el formulario a continuación (puede adjuntar su CV en PDF o Word).</p>
+<form id="careersForm" class="info-form" novalidate>
+    <label for="careers-name">Nombre completo
+        <input id="careers-name" name="name" type="text" required maxlength="120" autocomplete="name">
+    </label>
+    <label for="careers-email">Email
+        <input id="careers-email" name="email" type="email" required maxlength="160" autocomplete="email">
+    </label>
+    <label for="careers-phone">Teléfono
+        <input id="careers-phone" name="phone" type="tel" required maxlength="40" autocomplete="tel">
+    </label>
+    <label for="careers-role">Área de interés
+        <select id="careers-role" name="role" required>
+            <option value="">Seleccione una opción</option>
+            <option value="medicina-geral">Medicina General</option>
+            <option value="saude-mental">Salud Mental</option>
+            <option value="medicina-viajante">Medicina del Viajero</option>
+            <option value="longevidade">Medicina de la Longevidad</option>
+            <option value="operacoes-e-suporte">Operaciones y Soporte</option>
+            <option value="outros">Otros</option>
+        </select>
+    </label>
+    <label for="careers-message">Mensaje
+        <textarea id="careers-message" name="message" required maxlength="4000"></textarea>
+    </label>
+    <label for="careers-attachment">Adjuntar CV (PDF, DOC, DOCX, hasta 5MB)
+        <input id="careers-attachment" name="attachment" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+    </label>
+    <p class="form-help">Puede enviar la candidatura sin adjunto, pero le recomendamos incluir su CV.</p>
+    <button type="submit" class="btn btn-primary">Enviar candidatura</button>
+    <p id="careersStatus" class="info-form-status" role="status" aria-live="polite"></p>
+</form>
+`,
+                    actions: [{ label: "Ver consultas disponibles", href: "/marcar/clinica-geral", primary: true }]
+                },
+                "como-funciona": {
+                    section: "APOYO",
+                    title: "Cómo funciona",
+                    subtitle: "Simple, rápido y de alta calidad",
+                    bodyHtml: `
+<p>Lon Clinic fue creada para hacer el acceso a la atención sanitaria simple, rápido y sin complicaciones, manteniendo siempre una alta calidad.</p>
+<p><strong>Así funciona en 4 pasos:</strong></p>
+<ol class="steps-list">
+<li><strong>1. Elija su consulta</strong><br>Seleccione el tipo de consulta que necesita — urgente, especialidad, salud mental, medicina del viajero o certificado. Cada consulta tiene su duración, precio e indicaciones claramente descritos.</li>
+<li><strong>2. Reserve y pague</strong><br>Elija el día y la hora disponibles y realice el pago con tarjeta o transferencia. La reserva solo queda confirmada tras el pago.</li>
+<li><strong>3. Reciba la confirmación</strong><br>Tras el pago, recibirá un correo de confirmación con el enlace de acceso a la videoconsulta. No necesita instalar nada — funciona directamente en el navegador.</li>
+<li><strong>4. Realice su consulta</strong><br>A la hora acordada, acceda al enlace y entre en la sala de espera virtual. La médica le atenderá y realizará la consulta por videollamada. Al finalizar, recibirá por email o SMS la receta, solicitud de pruebas u orientación clínica, según corresponda.</li>
+</ol>
+<p>¿Tiene dudas? Contáctenos por chat o email antes de reservar.</p>
+`
+                },
+                "seguranca-dados": {
+                    section: "APOYO",
+                    title: "Seguridad de datos",
+                    subtitle: "Protección de sus datos personales y de salud",
+                    bodyHtml: `
+<p>En Lon Clinic, la protección de sus datos personales y de salud es una prioridad absoluta.</p>
+<h2>Cómo protegemos sus datos</h2>
+<p>Todos los datos recogidos en la plataforma se tratan de conformidad con el Reglamento General de Protección de Datos (RGPD) y la legislación portuguesa aplicable. Las videoconsultas se realizan en una plataforma evaluada y aprobada por nuestro Delegado de Protección de Datos (DPD) como adecuada en términos de privacidad y seguridad.</p>
+<h2>Qué recogemos y por qué</h2>
+<p>Solo recogemos los datos necesarios para la prestación del servicio: datos de identificación, contacto e información clínica compartida durante la consulta. Estos datos se utilizan exclusivamente con fines clínicos y administrativos relacionados con su consulta.</p>
+<h2>Sus derechos</h2>
+<p>Tiene derecho a acceder, corregir, eliminar o solicitar la portabilidad de sus datos en cualquier momento. Para ejercer estos derechos, contáctenos en <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>.</p>
+<h2>Conservación de datos</h2>
+<p>Los registros clínicos se conservan durante el período mínimo legalmente obligatorio, de conformidad con la legislación sanitaria portuguesa.</p>
+<h2>Contacto del DPD</h2>
+<p>Para preguntas relacionadas con la protección de datos, puede contactar a nuestro Delegado de Protección de Datos en <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>.</p>
+`
+                },
+                "acessibilidade": {
+                    section: "APOYO",
+                    title: "Accesibilidad",
+                    subtitle: "Atención sanitaria accesible para todos",
+                    bodyHtml: `
+<p>Lon Clinic cree que la atención sanitaria debe ser accesible para todos.</p>
+<h2>Accesibilidad digital</h2>
+<p>Nuestro sitio web ha sido desarrollado teniendo en cuenta las buenas prácticas de accesibilidad digital, incluida la compatibilidad con lectores de pantalla, contraste adecuado y navegación por teclado.</p>
+<h2>Consultas en múltiples idiomas</h2>
+<p>Las consultas están disponibles en portugués, inglés y español, para que el idioma nunca sea una barrera para acceder a la atención sanitaria.</p>
+<h2>Consultas telefónicas</h2>
+<p>Para pacientes con dificultades para acceder a videollamadas, las consultas pueden realizarse por teléfono previa solicitud, excepto para la emisión de certificados médicos.</p>
+<h2>¿Ha encontrado una barrera de accesibilidad?</h2>
+<p>Si ha encontrado alguna dificultad en el acceso a nuestro sitio web o servicios, le agradecemos que nos lo comunique en <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> para que podamos mejorar continuamente.</p>
+`
+                },
+                "reclamacoes": {
+                    section: "APOYO",
+                    title: "Reclamaciones",
+                    subtitle: "Queremos resolver su situación de la mejor manera posible",
+                    bodyHtml: `
+<p>Su satisfacción es importante para nosotros. Si algo no fue como esperaba, queremos saberlo.</p>
+<h2>Cómo presentar una reclamación</h2>
+<p>Puede contactarnos directamente en <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>.</p>
+<p>Nos comprometemos a responder a todas las reclamaciones en días hábiles, de 9h a 18h, de lunes a viernes, en un plazo razonable. Intentaremos resolver la situación de la mejor manera posible.</p>
+<h2>Libro de Reclamaciones Electrónico</h2>
+<p>También puede presentar su reclamación a través del Libro de Reclamaciones Electrónico, disponible en <a href="https://www.livroreclamacoes.pt" target="_blank" rel="noopener noreferrer">livroreclamacoes.pt</a>.</p>
+<h2>Entidad Reguladora de la Salud</h2>
+<p>También tiene derecho a presentar una reclamación directamente a la Entidad Reguladora de la Salud (ERS), disponible en <a href="https://www.ers.pt" target="_blank" rel="noopener noreferrer">ers.pt</a>.</p>
+<h2>Formulario de reclamación</h2>
+<p class="complaints-note">Complete los campos a continuación. Tratamos todas las reclamaciones con confidencialidad.</p>
+<form id="complaintsForm" class="complaints-form" novalidate>
+    <label for="complaint-name">Nombre
+        <input id="complaint-name" name="name" type="text" required maxlength="120" autocomplete="name">
+    </label>
+    <label for="complaint-cc">DNI / Pasaporte
+        <input id="complaint-cc" name="citizenCard" type="text" required maxlength="40" autocomplete="off">
+    </label>
+    <label for="complaint-phone">Número de teléfono
+        <input id="complaint-phone" name="phone" type="tel" required maxlength="40" autocomplete="tel">
+    </label>
+    <label for="complaint-email">Email
+        <input id="complaint-email" name="email" type="email" required maxlength="160" autocomplete="email">
+    </label>
+    <label for="complaint-message">Texto de la reclamación
+        <textarea id="complaint-message" name="message" required maxlength="4000"></textarea>
+    </label>
+    <button type="submit" class="btn btn-primary">Enviar reclamación</button>
+    <p id="complaintsStatus" class="complaints-status" role="status" aria-live="polite"></p>
+</form>
+`,
+                    actions: []
+                },
+            };
+
+            function getPageData(page, lang) {
+                if (lang === 'en' && content_en[page]) return content_en[page];
+                if (lang === 'es' && content_es[page]) return content_es[page];
+                return null; // fall back to PT content
+            }
+
             const content = {
                 "servico-urgencia": {
                     section: "SERVIÇOS",
@@ -843,297 +1404,216 @@
                 "livro-reclamacoes",
                 "reclamacoes"
             ]);
-            const data = content[page] || {
-                section: "INFORMAÇÃO",
-                title: "Página não encontrada",
-                subtitle: "Este conteúdo não existe",
-                body: "Volte ao início e escolha uma opção válida do rodapé."
+
+            function getNotFoundData(lang) {
+                if (lang === 'en') return { section: "INFORMATION", title: "Page not found", subtitle: "This content does not exist", body: "Go back to the homepage and choose a valid option from the footer." };
+                if (lang === 'es') return { section: "INFORMACIÓN", title: "Página no encontrada", subtitle: "Este contenido no existe", body: "Vuelva al inicio y elija una opción válida del pie de página." };
+                return { section: "INFORMAÇÃO", title: "Página não encontrada", subtitle: "Este conteúdo não existe", body: "Volte ao início e escolha uma opção válida do rodapé." };
+            }
+
+            function getActiveLang() {
+                return (window.CLINIC_I18N && window.CLINIC_I18N.getLang()) || localStorage.getItem('clinic_lang') || 'en';
+            }
+
+            let currentRenderLang = getActiveLang();
+
+            function getDefaultAction(lang) {
+                if (lang === 'en') return { label: "Go to homepage", href: "/" };
+                if (lang === 'es') return { label: "Ir al inicio", href: "/" };
+                return { label: "Ir para início", href: "/" };
+            }
+
+            function bindForms(pageKey) {
+                if (pageKey === "reclamacoes") {
+                    const form = document.getElementById("complaintsForm");
+                    const statusEl = document.getElementById("complaintsStatus");
+                    if (form) {
+                        form.addEventListener("submit", async function (event) {
+                            event.preventDefault();
+                            const button = form.querySelector('button[type="submit"]');
+                            const formData = new FormData(form);
+                            const payload = {
+                                name: String(formData.get("name") || "").trim(),
+                                citizenCard: String(formData.get("citizenCard") || "").trim(),
+                                phone: String(formData.get("phone") || "").trim(),
+                                email: String(formData.get("email") || "").trim(),
+                                message: String(formData.get("message") || "").trim(),
+                                locale: getActiveLang()
+                            };
+                            if (statusEl) { statusEl.textContent = ""; statusEl.classList.remove("is-success", "is-error"); }
+                            if (button) { button.disabled = true; button.textContent = getFS(getActiveLang()).sending; }
+                            try {
+                                const response = await fetch("/api/reclamacoes", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+                                const result = await response.json();
+                                if (!response.ok) throw new Error(result.error || getFS(getActiveLang()).errorComplaints);
+                                form.reset();
+                                if (statusEl) { statusEl.textContent = getFS(getActiveLang()).successComplaints; statusEl.classList.add("is-success"); }
+                            } catch (err) {
+                                if (statusEl) { statusEl.textContent = (err && err.message) || getFS(getActiveLang()).errorComplaints; statusEl.classList.add("is-error"); }
+                            } finally {
+                                if (button) { button.disabled = false; button.textContent = getFS(getActiveLang()).btnComplaints; }
+                            }
+                        });
+                    }
+                }
+
+                if (pageKey === "contato") {
+                    const form = document.getElementById("contactInfoForm");
+                    const statusEl = document.getElementById("contactInfoStatus");
+                    if (form) {
+                        form.addEventListener("submit", async function (event) {
+                            event.preventDefault();
+                            const button = form.querySelector('button[type="submit"]');
+                            const formData = new FormData(form);
+                            const payload = { name: String(formData.get("name") || "").trim(), email: String(formData.get("email") || "").trim(), phone: String(formData.get("phone") || "").trim(), message: String(formData.get("message") || "").trim(), locale: getActiveLang() };
+                            if (statusEl) { statusEl.textContent = ""; statusEl.classList.remove("is-success", "is-error"); }
+                            if (button) { button.disabled = true; button.textContent = getFS(getActiveLang()).sending; }
+                            try {
+                                const response = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+                                const result = await response.json();
+                                if (!response.ok) throw new Error(result.error || getFS(getActiveLang()).errorContact);
+                                form.reset();
+                                if (statusEl) { statusEl.textContent = getFS(getActiveLang()).successContact; statusEl.classList.add("is-success"); }
+                            } catch (err) {
+                                if (statusEl) { statusEl.textContent = (err && err.message) || getFS(getActiveLang()).errorContact; statusEl.classList.add("is-error"); }
+                            } finally {
+                                if (button) { button.disabled = false; button.textContent = getFS(getActiveLang()).btnContact; }
+                            }
+                        });
+                    }
+                }
+
+                if (pageKey === "parcerias") {
+                    const form = document.getElementById("partnershipsForm");
+                    const statusEl = document.getElementById("partnershipsStatus");
+                    if (form) {
+                        form.addEventListener("submit", async function (event) {
+                            event.preventDefault();
+                            const button = form.querySelector('button[type="submit"]');
+                            const formData = new FormData(form);
+                            const org = String(formData.get("organization") || "").trim();
+                            const baseMsg = String(formData.get("message") || "").trim();
+                            const payload = {
+                                name: String(formData.get("name") || "").trim(),
+                                email: String(formData.get("email") || "").trim(),
+                                phone: String(formData.get("phone") || "").trim(),
+                                message: ("[Partnership request] Organisation: " + org + "\n\n" + baseMsg).slice(0, 4000),
+                                locale: getActiveLang()
+                            };
+                            if (statusEl) { statusEl.textContent = ""; statusEl.classList.remove("is-success", "is-error"); }
+                            if (button) { button.disabled = true; button.textContent = getFS(getActiveLang()).sending; }
+                            try {
+                                const response = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+                                const result = await response.json();
+                                if (!response.ok) throw new Error(result.error || getFS(getActiveLang()).errorPartnerships);
+                                form.reset();
+                                if (statusEl) { statusEl.textContent = getFS(getActiveLang()).successPartnerships; statusEl.classList.add("is-success"); }
+                            } catch (err) {
+                                if (statusEl) { statusEl.textContent = (err && err.message) || getFS(getActiveLang()).errorPartnerships; statusEl.classList.add("is-error"); }
+                            } finally {
+                                if (button) { button.disabled = false; button.textContent = getFS(getActiveLang()).btnPartnerships; }
+                            }
+                        });
+                    }
+                }
+
+                if (pageKey === "trabalhe-connosco") {
+                    const form = document.getElementById("careersForm");
+                    const statusEl = document.getElementById("careersStatus");
+                    if (form) {
+                        form.addEventListener("submit", async function (event) {
+                            event.preventDefault();
+                            const button = form.querySelector('button[type="submit"]');
+                            const formData = new FormData(form);
+                            formData.append('locale', getActiveLang());
+                            if (statusEl) { statusEl.textContent = ""; statusEl.classList.remove("is-success", "is-error"); }
+                            if (button) { button.disabled = true; button.textContent = getFS(getActiveLang()).sending; }
+                            try {
+                                const response = await fetch("/api/careers", { method: "POST", body: formData });
+                                const result = await response.json();
+                                if (!response.ok) throw new Error(result.error || getFS(getActiveLang()).errorCareers);
+                                form.reset();
+                                if (statusEl) { statusEl.textContent = getFS(getActiveLang()).successCareers; statusEl.classList.add("is-success"); }
+                            } catch (err) {
+                                if (statusEl) { statusEl.textContent = (err && err.message) || getFS(getActiveLang()).errorCareers; statusEl.classList.add("is-error"); }
+                            } finally {
+                                if (button) { button.disabled = false; button.textContent = getFS(getActiveLang()).btnCareers; }
+                            }
+                        });
+                    }
+                }
+            }
+
+            function renderContent(lang) {
+                const data = getPageData(page, lang) || content[page] || getNotFoundData(lang);
+                const isKnownPage = Boolean(content[page]);
+                const pageTitle = data.title + " | Lon Clinic";
+                const canonicalBase = window.location.origin + window.location.pathname;
+                const canonicalUrl = isKnownPage && page ? (canonicalBase + "?page=" + encodeURIComponent(page)) : canonicalBase;
+                const bodyText = String(data.body || "").trim();
+                const bodyHtmlText = String(data.bodyHtml || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+                const fallbackDescription = "Informações institucionais, apoio, legal e serviços da Lon Clinic.";
+                const metaDescription = (data.subtitle || bodyText || bodyHtmlText || fallbackDescription).slice(0, 160);
+
+                document.title = pageTitle;
+                document.querySelector('meta[name="description"]').setAttribute("content", metaDescription);
+                document.getElementById("metaRobots").setAttribute(
+                    "content",
+                    (!isKnownPage || noIndexPages.has(page)) ? "noindex,follow" : "index,follow,max-image-preview:large"
+                );
+                document.getElementById("canonicalUrl").setAttribute("href", canonicalUrl);
+                document.getElementById("ogTitle").setAttribute("content", pageTitle);
+                document.getElementById("ogDescription").setAttribute("content", metaDescription);
+                document.getElementById("ogUrl").setAttribute("content", canonicalUrl);
+                document.getElementById("twitterTitle").setAttribute("content", pageTitle);
+                document.getElementById("twitterDescription").setAttribute("content", metaDescription);
+                document.getElementById("structuredData").textContent = JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "MedicalWebPage",
+                    name: pageTitle,
+                    description: metaDescription,
+                    url: canonicalUrl,
+                    inLanguage: lang === 'es' ? 'es' : lang === 'en' ? 'en' : 'pt-PT',
+                    isPartOf: { "@type": "WebSite", name: "Lon Clinic", url: window.location.origin }
+                });
+
+                document.getElementById("pill").textContent = data.section;
+                document.getElementById("title").textContent = data.title;
+                document.getElementById("subtitle").textContent = data.subtitle;
+                const bodyEl = document.getElementById("body");
+                if (data.bodyHtml) {
+                    bodyEl.innerHTML = data.bodyHtml;
+                } else {
+                    bodyEl.textContent = data.body;
+                }
+
+                const actions = document.getElementById("actions");
+                actions.innerHTML = "";
+                (data.actions || [getDefaultAction(lang)]).forEach(function (action) {
+                    const a = document.createElement("a");
+                    a.className = "btn" + (action.primary ? " btn-primary" : "");
+                    a.href = action.href;
+                    a.textContent = action.label;
+                    if (action.href.indexOf("http") === 0) {
+                        a.target = "_blank";
+                        a.rel = "noopener noreferrer";
+                    }
+                    actions.appendChild(a);
+                });
+
+                bindForms(page);
+            }
+
+            renderContent(currentRenderLang);
+
+            window.INFO_LANG_CHANGED = function (lang) {
+                currentRenderLang = lang;
+                renderContent(lang);
             };
 
-            const isKnownPage = Boolean(content[page]);
-            const pageTitle = data.title + " | Lon Clinic";
-            const canonicalBase = window.location.origin + window.location.pathname;
-            const canonicalUrl = isKnownPage && page ? (canonicalBase + "?page=" + encodeURIComponent(page)) : canonicalBase;
-            const bodyText = String(data.body || "").trim();
-            const bodyHtmlText = String(data.bodyHtml || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-            const fallbackDescription = "Informações institucionais, apoio, legal e serviços da Lon Clinic.";
-            const metaDescription = (data.subtitle || bodyText || bodyHtmlText || fallbackDescription).slice(0, 160);
-
-            document.title = pageTitle;
-            document.querySelector('meta[name="description"]').setAttribute("content", metaDescription);
-            document.getElementById("metaRobots").setAttribute(
-                "content",
-                (!isKnownPage || noIndexPages.has(page)) ? "noindex,follow" : "index,follow,max-image-preview:large"
-            );
-            document.getElementById("canonicalUrl").setAttribute("href", canonicalUrl);
-            document.getElementById("ogTitle").setAttribute("content", pageTitle);
-            document.getElementById("ogDescription").setAttribute("content", metaDescription);
-            document.getElementById("ogUrl").setAttribute("content", canonicalUrl);
-            document.getElementById("twitterTitle").setAttribute("content", pageTitle);
-            document.getElementById("twitterDescription").setAttribute("content", metaDescription);
-            document.getElementById("structuredData").textContent = JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "MedicalWebPage",
-                name: pageTitle,
-                description: metaDescription,
-                url: canonicalUrl,
-                inLanguage: "pt-PT",
-                isPartOf: {
-                    "@type": "WebSite",
-                    name: "Lon Clinic",
-                    url: window.location.origin
-                }
-            });
-
-            document.getElementById("pill").textContent = data.section;
-            document.getElementById("title").textContent = data.title;
-            document.getElementById("subtitle").textContent = data.subtitle;
-            const bodyEl = document.getElementById("body");
-            if (data.bodyHtml) {
-                bodyEl.innerHTML = data.bodyHtml;
-            } else {
-                bodyEl.textContent = data.body;
-            }
-
-            const actions = document.getElementById("actions");
-            (data.actions || [{ label: "Ir para início", href: "/" }]).forEach(function (action) {
-                const a = document.createElement("a");
-                a.className = "btn" + (action.primary ? " btn-primary" : "");
-                a.href = action.href;
-                a.textContent = action.label;
-                if (action.href.indexOf("http") === 0) {
-                    a.target = "_blank";
-                    a.rel = "noopener noreferrer";
-                }
-                actions.appendChild(a);
-            });
-
-            if (page === "reclamacoes") {
-                const form = document.getElementById("complaintsForm");
-                const statusEl = document.getElementById("complaintsStatus");
-
-                if (form) {
-                    form.addEventListener("submit", async function (event) {
-                        event.preventDefault();
-                        const button = form.querySelector('button[type="submit"]');
-                        const formData = new FormData(form);
-                        const payload = {
-                            name: String(formData.get("name") || "").trim(),
-                            citizenCard: String(formData.get("citizenCard") || "").trim(),
-                            phone: String(formData.get("phone") || "").trim(),
-                            email: String(formData.get("email") || "").trim(),
-                            message: String(formData.get("message") || "").trim()
-                        };
-
-                        if (statusEl) {
-                            statusEl.textContent = "";
-                            statusEl.classList.remove("is-success", "is-error");
-                        }
-
-                        if (button) {
-                            button.disabled = true;
-                            button.textContent = "A enviar...";
-                        }
-
-                        try {
-                            const response = await fetch("/api/reclamacoes", {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify(payload)
-                            });
-
-                            const result = await response.json();
-                            if (!response.ok) {
-                                throw new Error(result.error || "Não foi possível enviar a reclamação.");
-                            }
-
-                            form.reset();
-                            if (statusEl) {
-                                statusEl.textContent = "Reclamação enviada com sucesso. Responderemos nos dias úteis (9h–18h), salvo períodos de maior volume.";
-                                statusEl.classList.add("is-success");
-                            }
-                        } catch (err) {
-                            if (statusEl) {
-                                statusEl.textContent = (err && err.message) || "Erro ao enviar reclamação.";
-                                statusEl.classList.add("is-error");
-                            }
-                        } finally {
-                            if (button) {
-                                button.disabled = false;
-                                button.textContent = "Enviar reclamação";
-                            }
-                        }
-                    });
-                }
-            }
-
-            if (page === "contato") {
-                const form = document.getElementById("contactInfoForm");
-                const statusEl = document.getElementById("contactInfoStatus");
-
-                if (form) {
-                    form.addEventListener("submit", async function (event) {
-                        event.preventDefault();
-                        const button = form.querySelector('button[type="submit"]');
-                        const formData = new FormData(form);
-                        const payload = {
-                            name: String(formData.get("name") || "").trim(),
-                            email: String(formData.get("email") || "").trim(),
-                            phone: String(formData.get("phone") || "").trim(),
-                            message: String(formData.get("message") || "").trim()
-                        };
-
-                        if (statusEl) {
-                            statusEl.textContent = "";
-                            statusEl.classList.remove("is-success", "is-error");
-                        }
-
-                        if (button) {
-                            button.disabled = true;
-                            button.textContent = "A enviar...";
-                        }
-
-                        try {
-                            const response = await fetch("/api/contact", {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify(payload)
-                            });
-                            const result = await response.json();
-                            if (!response.ok) {
-                                throw new Error(result.error || "Não foi possível enviar a mensagem.");
-                            }
-
-                            form.reset();
-                            if (statusEl) {
-                                statusEl.textContent = "Mensagem enviada com sucesso. Responderemos com brevidade.";
-                                statusEl.classList.add("is-success");
-                            }
-                        } catch (err) {
-                            if (statusEl) {
-                                statusEl.textContent = (err && err.message) || "Erro ao enviar mensagem.";
-                                statusEl.classList.add("is-error");
-                            }
-                        } finally {
-                            if (button) {
-                                button.disabled = false;
-                                button.textContent = "Enviar mensagem";
-                            }
-                        }
-                    });
-                }
-            }
-
-            if (page === "parcerias") {
-                const form = document.getElementById("partnershipsForm");
-                const statusEl = document.getElementById("partnershipsStatus");
-
-                if (form) {
-                    form.addEventListener("submit", async function (event) {
-                        event.preventDefault();
-                        const button = form.querySelector('button[type="submit"]');
-                        const formData = new FormData(form);
-                        const org = String(formData.get("organization") || "").trim();
-                        const baseMsg = String(formData.get("message") || "").trim();
-                        const payload = {
-                            name: String(formData.get("name") || "").trim(),
-                            email: String(formData.get("email") || "").trim(),
-                            phone: String(formData.get("phone") || "").trim(),
-                            message: ("[Pedido de parceria] Organização: " + org + "\n\n" + baseMsg).slice(0, 4000)
-                        };
-
-                        if (statusEl) {
-                            statusEl.textContent = "";
-                            statusEl.classList.remove("is-success", "is-error");
-                        }
-
-                        if (button) {
-                            button.disabled = true;
-                            button.textContent = "A enviar...";
-                        }
-
-                        try {
-                            const response = await fetch("/api/contact", {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify(payload)
-                            });
-                            const result = await response.json();
-                            if (!response.ok) {
-                                throw new Error(result.error || "Não foi possível enviar o pedido.");
-                            }
-
-                            form.reset();
-                            if (statusEl) {
-                                statusEl.textContent = "Pedido enviado com sucesso. Responderemos em 2 dias úteis.";
-                                statusEl.classList.add("is-success");
-                            }
-                        } catch (err) {
-                            if (statusEl) {
-                                statusEl.textContent = (err && err.message) || "Erro ao enviar.";
-                                statusEl.classList.add("is-error");
-                            }
-                        } finally {
-                            if (button) {
-                                button.disabled = false;
-                                button.textContent = "Enviar pedido de parceria";
-                            }
-                        }
-                    });
-                }
-            }
-
-            if (page === "trabalhe-connosco") {
-                const form = document.getElementById("careersForm");
-                const statusEl = document.getElementById("careersStatus");
-
-                if (form) {
-                    form.addEventListener("submit", async function (event) {
-                        event.preventDefault();
-                        const button = form.querySelector('button[type="submit"]');
-                        const formData = new FormData(form);
-
-                        if (statusEl) {
-                            statusEl.textContent = "";
-                            statusEl.classList.remove("is-success", "is-error");
-                        }
-
-                        if (button) {
-                            button.disabled = true;
-                            button.textContent = "A enviar...";
-                        }
-
-                        try {
-                            const response = await fetch("/api/careers", {
-                                method: "POST",
-                                body: formData
-                            });
-                            const result = await response.json();
-                            if (!response.ok) {
-                                throw new Error(result.error || "Não foi possível enviar a candidatura.");
-                            }
-
-                            form.reset();
-                            if (statusEl) {
-                                statusEl.textContent = "Candidatura enviada com sucesso. Obrigado pelo interesse!";
-                                statusEl.classList.add("is-success");
-                            }
-                        } catch (err) {
-                            if (statusEl) {
-                                statusEl.textContent = (err && err.message) || "Erro ao enviar candidatura.";
-                                statusEl.classList.add("is-error");
-                            }
-                        } finally {
-                            if (button) {
-                                button.disabled = false;
-                                button.textContent = "Enviar candidatura";
-                            }
-                        }
-                    });
-                }
-            }
         })();
     </script>
+    <script src="/i18n.js"></script>
     <script src="lon-nav.js"></script>
 </body>
 </html>

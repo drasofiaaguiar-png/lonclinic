@@ -78,6 +78,19 @@
         else nav.classList.remove('is-scrolled');
     });
 
+    var CONTACT_STRINGS = {
+        en: { sending: 'Sending…', success: 'Thank you! Your message has been sent.', error: 'Unable to send your message right now.', btn: 'Send message' },
+        pt: { sending: 'A enviar...', success: 'Obrigado! A sua mensagem foi enviada.', error: 'Não foi possível enviar a sua mensagem.', btn: 'Enviar mensagem' },
+        es: { sending: 'Enviando…', success: '¡Gracias! Su mensaje ha sido enviado.', error: 'No se pudo enviar su mensaje.', btn: 'Enviar mensaje' }
+    };
+
+    function getContactLang() {
+        return (window.CLINIC_I18N && window.CLINIC_I18N.getLang()) || localStorage.getItem('clinic_lang') || 'en';
+    }
+    function getCS() {
+        return CONTACT_STRINGS[getContactLang()] || CONTACT_STRINGS.en;
+    }
+
     var form = document.getElementById('lonContactForm');
     var statusEl = document.getElementById('lonContactStatus');
     if (form) {
@@ -89,7 +102,8 @@
                 name: String(formData.get('name') || '').trim(),
                 email: String(formData.get('email') || '').trim(),
                 phone: String(formData.get('phone') || '').trim(),
-                message: String(formData.get('message') || '').trim()
+                message: String(formData.get('message') || '').trim(),
+                locale: getContactLang()
             };
 
             if (statusEl) {
@@ -99,37 +113,35 @@
 
             if (button) {
                 button.disabled = true;
-                button.textContent = 'Sending...';
+                button.textContent = getCS().sending;
             }
 
             try {
                 var response = await fetch('/api/contact', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
                 var result = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(result.error || 'Failed to send message.');
+                    throw new Error(result.error || getCS().error);
                 }
 
                 form.reset();
                 if (statusEl) {
-                    statusEl.textContent = 'Thank you! Your message has been sent.';
+                    statusEl.textContent = getCS().success;
                     statusEl.classList.add('is-success');
                 }
             } catch (err) {
                 if (statusEl) {
-                    statusEl.textContent = err.message || 'Unable to send your message right now.';
+                    statusEl.textContent = err.message || getCS().error;
                     statusEl.classList.add('is-error');
                 }
             } finally {
                 if (button) {
                     button.disabled = false;
-                    button.textContent = 'Send message';
+                    button.textContent = getCS().btn;
                 }
             }
         });
