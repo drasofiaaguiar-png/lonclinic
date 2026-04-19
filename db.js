@@ -1,6 +1,6 @@
 /**
- * PostgreSQL persistence (Supabase) via DATABASE_URL.
- * When DATABASE_URL is unset, the server uses in-memory arrays + file schedule (see dataLayer wiring in server.js).
+ * PostgreSQL persistence: DATABASE_URL, or DB_HOST + DB_USER + DB_PASSWORD (+ DB_PORT, DB_NAME).
+ * When no DB config is present, the server uses in-memory arrays + file schedule (see server.js).
  */
 
 const util = require('util');
@@ -33,10 +33,46 @@ function stripSslModeFromConnectionString(connectionString) {
     }
 }
 
+function hasDatabaseUrl() {
+    return Boolean(process.env.DATABASE_URL && String(process.env.DATABASE_URL).trim());
+}
+
+function hasDiscreteDbCredentials() {
+    const host = process.env.DB_HOST && String(process.env.DB_HOST).trim();
+    const user = process.env.DB_USER && String(process.env.DB_USER).trim();
+    const password = process.env.DB_PASSWORD && String(process.env.DB_PASSWORD).trim();
+    return Boolean(host && user && password);
+}
+
+function isDatabaseEnabled() {
+    return hasDatabaseUrl() || hasDiscreteDbCredentials();
+}
+
+/** Build postgresql:// URL from DB_* when DATABASE_URL is not used. DB_NAME defaults to postgres. */
+function buildDiscreteConnectionString() {
+    const host = String(process.env.DB_HOST).trim();
+    const user = String(process.env.DB_USER).trim();
+    const password = String(process.env.DB_PASSWORD);
+    const port = (process.env.DB_PORT && String(process.env.DB_PORT).trim()) || '5432';
+    const dbName = (process.env.DB_NAME && String(process.env.DB_NAME).trim()) || 'postgres';
+    const auth = `${encodeURIComponent(user)}:${encodeURIComponent(password)}`;
+    return `postgresql://${auth}@${host}:${port}/${encodeURIComponent(dbName)}`;
+}
+
+function getConnectionStringForPool() {
+    if (hasDatabaseUrl()) {
+        return stripSslModeFromConnectionString(process.env.DATABASE_URL);
+    }
+    if (hasDiscreteDbCredentials()) {
+        return buildDiscreteConnectionString();
+    }
+    return null;
+}
+
 function getPool() {
-    if (!process.env.DATABASE_URL) return null;
+    const connectionString = getConnectionStringForPool();
+    if (!connectionString) return null;
     if (!pool) {
-        const connectionString = stripSslModeFromConnectionString(process.env.DATABASE_URL);
         pool = new Pool({
             connectionString,
             ssl: { rejectUnauthorized: false },
@@ -49,10 +85,6 @@ function getPool() {
         });
     }
     return pool;
-}
-
-function isDatabaseEnabled() {
-    return Boolean(process.env.DATABASE_URL && String(process.env.DATABASE_URL).trim());
 }
 
 function rowToBooking(row) {
@@ -129,8 +161,12 @@ async function initSchema(p) {
 
 async function initDatabase() {
     const rawUrl = process.env.DATABASE_URL;
-    const hasUrl = Boolean(rawUrl && String(rawUrl).trim());
+    const hasUrl = hasDatabaseUrl();
+    const discrete = hasDiscreteDbCredentials();
     console.log(`   🗄️  initDatabase(): DATABASE_URL is ${hasUrl ? 'set' : 'NOT set'}`);
+    if (discrete && !hasUrl) {
+        console.log('   🗄️  initDatabase(): using DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME');
+    }
     if (hasUrl) {
         const trimmed = String(rawUrl).trim();
         console.log(
@@ -140,7 +176,7 @@ async function initDatabase() {
 
     const p = getPool();
     if (!p) {
-        return { ok: false, reason: 'no_database_url' };
+        return { ok: false, reason: 'no_db_config' };
     }
 
     try {
@@ -333,8 +369,12 @@ async function closePool() {
 }
 
 (() => {
-    const has = Boolean(process.env.DATABASE_URL && String(process.env.DATABASE_URL).trim());
-    console.log(`   🗄️  DATABASE_URL is ${has ? 'set' : 'NOT set'} (startup, db module)`);
+    const url = hasDatabaseUrl();
+    const discrete = hasDiscreteDbCredentials();
+    const on = isDatabaseEnabled();
+    console.log(
+        `   🗄️  PostgreSQL ${on ? 'enabled' : 'disabled'} — DATABASE_URL: ${url ? 'set' : 'not set'}; DB_HOST/USER/PASSWORD: ${discrete ? 'all set' : 'incomplete'} (startup, db module)`
+    );
 })();
 
 module.exports = {

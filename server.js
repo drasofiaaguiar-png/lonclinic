@@ -2436,7 +2436,10 @@ function getBaseUrl(req) {
 // ─── Start Server ───
 (async () => {
     try {
+        console.log('[bootstrap] usePersistentDb =', usePersistentDb, '(true if DATABASE_URL is set and non-whitespace; from db.isDatabaseEnabled())');
+        console.log('[bootstrap] About to run bootstrapPersistence()');
         await bootstrapPersistence();
+        console.log('[bootstrap] bootstrapPersistence() finished');
         if (usePersistentDb) {
             console.log('   💾 Persistence: PostgreSQL (DATABASE_URL)');
         } else {
