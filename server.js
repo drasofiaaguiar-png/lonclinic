@@ -389,13 +389,20 @@ const EMAIL_PORT = parseInt(process.env.EMAIL_PORT) || 587;
 const EMAIL_USER = process.env.EMAIL_USER || '';
 const EMAIL_PASS = process.env.EMAIL_PASS || '';
 const EMAIL_FROM = process.env.EMAIL_FROM || 'Longevity Clinic <noreply@longevityclinic.com>';
+const RESEND_API_KEY = String(process.env.RESEND_API_KEY || '').trim();
 
-const isEmailConfigured = EMAIL_USER && EMAIL_PASS &&
-    !EMAIL_USER.includes('your_email') &&
-    !EMAIL_PASS.includes('your_app_password');
+const isResendConfigured = Boolean(RESEND_API_KEY);
+const isSmtpConfigured = Boolean(
+    EMAIL_USER &&
+        EMAIL_PASS &&
+        !EMAIL_USER.includes('your_email') &&
+        !EMAIL_PASS.includes('your_app_password')
+);
+/** True when either Resend (HTTPS) or SMTP is usable. Railway often blocks outbound SMTP; use Resend on those plans. */
+const isEmailConfigured = isResendConfigured || isSmtpConfigured;
 
 let transporter;
-if (isEmailConfigured) {
+if (isSmtpConfigured) {
     transporter = nodemailer.createTransport({
         host: EMAIL_HOST,
         port: EMAIL_PORT,
@@ -406,10 +413,73 @@ if (isEmailConfigured) {
         },
     });
 
-    // Verify connection on startup
     transporter.verify()
-        .then(() => console.log('   ✉️  Email transport verified and ready'))
-        .catch(err => console.error('   ⚠️  Email transport error:', err.message));
+        .then(() => console.log('   ✉️  SMTP transport verified and ready'))
+        .catch(err => console.error('   ⚠️  SMTP transport error:', err.message));
+}
+
+/**
+ * Deliver email via Resend (HTTPS) when RESEND_API_KEY is set, otherwise Nodemailer SMTP.
+ * Same options shape as nodemailer sendMail for the fields we use.
+ */
+async function deliverEmail(mailOptions) {
+    if (isResendConfigured) {
+        const { from, to, subject, text, html, replyTo, attachments } = mailOptions;
+        const toList = (Array.isArray(to) ? to : String(to || '').split(','))
+            .map((s) => String(s).trim())
+            .filter(Boolean);
+        if (!toList.length) {
+            throw new Error('Resend: missing recipient');
+        }
+        const body = {
+            from: String(from || EMAIL_FROM),
+            to: toList.length === 1 ? toList[0] : toList,
+            subject: String(subject || ''),
+        };
+        if (html) body.html = html;
+        if (text) body.text = text;
+        if (replyTo) {
+            body.reply_to = Array.isArray(replyTo) ? replyTo : String(replyTo);
+        }
+        if (attachments && attachments.length > 0) {
+            body.attachments = attachments.map((a) => ({
+                filename: a.filename,
+                content: Buffer.isBuffer(a.content)
+                    ? a.content.toString('base64')
+                    : typeof a.content === 'string'
+                      ? a.content
+                      : Buffer.from(a.content).toString('base64'),
+            }));
+        }
+        const res = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${RESEND_API_KEY}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(body),
+        });
+        const raw = await res.text();
+        let json = {};
+        try {
+            if (raw) json = JSON.parse(raw);
+        } catch (_) {
+            /* ignore */
+        }
+        if (!res.ok) {
+            const msg =
+                json.message ||
+                (Array.isArray(json.errors) && json.errors[0] && json.errors[0].message) ||
+                raw ||
+                `Resend HTTP ${res.status}`;
+            throw new Error(msg);
+        }
+        return { messageId: json.id || 'resend' };
+    }
+    if (!transporter) {
+        throw new Error('Email transport not configured (set RESEND_API_KEY or SMTP credentials)');
+    }
+    return transporter.sendMail(mailOptions);
 }
 
 const upload = multer({
@@ -903,7 +973,7 @@ async function sendConfirmationEmail(data) {
     try {
         const { html, text, subject } = buildConfirmationEmail(data);
 
-        const info = await transporter.sendMail({
+        const info = await deliverEmail({
             from: EMAIL_FROM,
             to,
             subject,
@@ -1168,7 +1238,7 @@ async function sendAdminNotificationEmail(data) {
     try {
         const { html, text } = buildAdminNotificationEmail(data);
 
-        const info = await transporter.sendMail({
+        const info = await deliverEmail({
             from: EMAIL_FROM,
             to: CONTACT_EMAIL,
             subject: `New Booking: ${data.serviceLabel} — ${data.date} at ${data.time} | Ref: ${data.bookingRef}`,
@@ -1493,7 +1563,7 @@ async function sendContactInquiryEmail(data) {
         const msgPreview = msgOneLine
             ? (msgOneLine.length > 55 ? `${msgOneLine.slice(0, 55)}…` : msgOneLine)
             : '(empty message)';
-        const info = await transporter.sendMail({
+        const info = await deliverEmail({
             from: EMAIL_FROM,
             to: CONTACT_EMAIL,
             replyTo: data.email,
@@ -1508,7 +1578,7 @@ async function sendContactInquiryEmail(data) {
             try {
                 const locale = data.locale || 'en';
                 const { html: rHtml, text: rText, subject: rSubject } = buildAutoReplyEmail('contact', data.name, locale);
-                await transporter.sendMail({ from: EMAIL_FROM, to: data.email, subject: rSubject, text: rText, html: rHtml });
+                await deliverEmail({ from: EMAIL_FROM, to: data.email, subject: rSubject, text: rText, html: rHtml });
                 console.log('   📩 Contact auto-reply sent to:', data.email);
             } catch (replyErr) {
                 console.error('   ⚠️  Contact auto-reply failed (non-fatal):', replyErr.message);
@@ -1547,7 +1617,7 @@ async function sendCareersApplicationEmail(data) {
             }];
         }
 
-        const info = await transporter.sendMail(mailOptions);
+        const info = await deliverEmail(mailOptions);
         console.log('   📩 Careers application sent to:', CONTACT_EMAIL, '| Message ID:', info.messageId);
 
         // Send auto-reply to applicant (non-critical)
@@ -1555,7 +1625,7 @@ async function sendCareersApplicationEmail(data) {
             try {
                 const locale = data.locale || 'pt';
                 const { html: rHtml, text: rText, subject: rSubject } = buildAutoReplyEmail('careers', data.name, locale);
-                await transporter.sendMail({ from: EMAIL_FROM, to: data.email, subject: rSubject, text: rText, html: rHtml });
+                await deliverEmail({ from: EMAIL_FROM, to: data.email, subject: rSubject, text: rText, html: rHtml });
                 console.log('   📩 Careers auto-reply sent to:', data.email);
             } catch (replyErr) {
                 console.error('   ⚠️  Careers auto-reply failed (non-fatal):', replyErr.message);
@@ -1577,7 +1647,7 @@ async function sendComplaintEmail(data) {
 
     try {
         const { html, text } = buildComplaintEmail(data);
-        const info = await transporter.sendMail({
+        const info = await deliverEmail({
             from: EMAIL_FROM,
             to: 'info@lonclinic.com',
             replyTo: data.email,
@@ -1592,7 +1662,7 @@ async function sendComplaintEmail(data) {
             try {
                 const locale = data.locale || 'pt';
                 const { html: rHtml, text: rText, subject: rSubject } = buildAutoReplyEmail('complaints', data.name, locale);
-                await transporter.sendMail({ from: EMAIL_FROM, to: data.email, subject: rSubject, text: rText, html: rHtml });
+                await deliverEmail({ from: EMAIL_FROM, to: data.email, subject: rSubject, text: rText, html: rHtml });
                 console.log('   📩 Complaints auto-reply sent to:', data.email);
             } catch (replyErr) {
                 console.error('   ⚠️  Complaints auto-reply failed (non-fatal):', replyErr.message);
@@ -1965,7 +2035,7 @@ async function sendReminderEmail(data) {
     }
     try {
         const { html, text, subject } = buildReminderEmail(data);
-        const info = await transporter.sendMail({
+        const info = await deliverEmail({
             from: EMAIL_FROM,
             to,
             subject,
@@ -2078,7 +2148,7 @@ async function sendFollowupEmail(data) {
     if (!to || !to.includes('@')) return false;
     try {
         const { html, text, subject } = buildFollowupEmail(data);
-        await transporter.sendMail({ from: EMAIL_FROM, to, subject, text, html });
+        await deliverEmail({ from: EMAIL_FROM, to, subject, text, html });
         console.log('   ✉️  Follow-up email sent to:', data.email);
         return true;
     } catch (err) {
@@ -2306,7 +2376,7 @@ function buildClinicRescheduleEmail(data) {
 async function sendClinicOpsEmail(subject, html, text) {
     if (!isEmailConfigured) return false;
     try {
-        await transporter.sendMail({
+        await deliverEmail({
             from: EMAIL_FROM,
             to: CONTACT_EMAIL,
             subject,
@@ -3678,7 +3748,7 @@ app.post('/api/patient/booking/cancel', async (req, res) => {
                     ...payload,
                     email: booking.email
                 });
-                await transporter.sendMail({
+                await deliverEmail({
                     from: EMAIL_FROM,
                     to: booking.email,
                     subject,
@@ -3790,7 +3860,7 @@ app.post('/api/patient/booking/reschedule', async (req, res) => {
                     locale: loc,
                     email: booking.email
                 });
-                await transporter.sendMail({
+                await deliverEmail({
                     from: EMAIL_FROM,
                     to: booking.email,
                     subject,
@@ -4216,11 +4286,13 @@ function getBaseUrl(req) {
             console.log(`   ⚠️  Stripe NOT configured — add your keys to .env`);
             console.log(`   Get keys at: https://dashboard.stripe.com/test/apikeys`);
         }
-        if (isEmailConfigured) {
-            console.log(`   ✉️  Email configured: ${EMAIL_USER}`);
+        if (isResendConfigured) {
+            console.log('   ✉️  Email: Resend API (HTTPS) — outbound SMTP not required');
+        } else if (isSmtpConfigured) {
+            console.log(`   ✉️  Email: SMTP as ${EMAIL_USER}`);
         } else {
-            console.log(`   ⚠️  Email NOT configured — add SMTP credentials to .env`);
-            console.log(`   For Gmail: use an App Password (https://myaccount.google.com/apppasswords)`);
+            console.log('   ⚠️  Email NOT configured — add RESEND_API_KEY (recommended on Railway) or SMTP variables');
+            console.log('   Resend: https://resend.com — verify your domain and set RESEND_API_KEY + EMAIL_FROM');
         }
         if (DOXY_ROOM_URL) {
             console.log(`   📹 Doxy.me room: ${DOXY_ROOM_URL}`);

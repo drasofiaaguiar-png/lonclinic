@@ -7,7 +7,13 @@ STRIPE_SECRET_KEY=sk_test_your_secret_key_here
 STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key_here
 STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret_here
 
-# Email Configuration (SMTP)
+# Email — RECOMMENDED on Railway / Render (outbound SMTP is often blocked on hobby plans):
+# Sign up at https://resend.com — verify your domain (e.g. lonclinic.com), create an API key:
+# RESEND_API_KEY=re_xxxxxxxx
+# EMAIL_FROM must use your verified domain, e.g. Lon Clinic <info@lonclinic.com>
+# CONTACT_EMAIL=info@lonclinic.com
+
+# Email Configuration (SMTP) — works on VPS or Railway Pro where ports 465/587 are allowed
 # Option 1: Use info@lonclinic.com (if created with Namecheap/Google Workspace)
 # EMAIL_HOST=mail.privateemail.com  (for Namecheap)
 # EMAIL_HOST=smtp.gmail.com  (for Google Workspace)
