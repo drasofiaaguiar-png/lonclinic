@@ -27,6 +27,7 @@ const nodemailer = require('nodemailer');
 const multer = require('multer');
 const session = require('express-session');
 const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const STRIPE_SECRET = process.env.STRIPE_SECRET_KEY || '';
 const isStripeConfigured = STRIPE_SECRET && 
@@ -43,6 +44,53 @@ if (isStripeConfigured) {
 const app = express();
 app.set('trust proxy', 1); // Trust first proxy (Railway, Render, etc.)
 const PORT = process.env.PORT || 3000;
+
+/** Stripe checkout session IDs in logs — last 8 chars only (no PII). */
+function stripeSessionIdSuffixForLog(id) {
+    const s = String(id || '');
+    if (!s) return '(none)';
+    return s.length <= 8 ? '***' : s.slice(-8);
+}
+
+const rateLimitClinicLogin = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Too many login attempts. Try again in a few minutes.' });
+    }
+});
+
+const rateLimitContact = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Too many contact requests. Try again later.' });
+    }
+});
+
+const rateLimitCheckout = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Too many checkout attempts. Try again later.' });
+    }
+});
+
+const rateLimitSessionRetrieve = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 30,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Too many requests. Try again later.' });
+    }
+});
 
 /* ========================================
    SECURITY HEADERS (CSP, HSTS, etc.)
@@ -2763,18 +2811,18 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             const meta = session.metadata || {};
             const travellerCount = parseInt(meta.traveller_count, 10) || 1;
 
-            console.log('✅ Payment successful!');
-            console.log('   Session ID:', session.id);
-            console.log('   Customer email:', session.customer_details?.email);
-            console.log('   Amount:', session.amount_total / 100, session.currency?.toUpperCase());
-            console.log('   Service:', meta.service);
-            console.log('   Travellers:', travellerCount);
-
-            for (let i = 1; i <= travellerCount; i++) {
-                if (meta[`p${i}_name`]) {
-                    console.log(`   Traveller ${i}: ${meta[`p${i}_name`]} (NHS: ${meta[`p${i}_nhs`] || 'N/A'})`);
-                }
-            }
+            console.log(
+                '✅ Payment successful (checkout session …' +
+                    stripeSessionIdSuffixForLog(session.id) +
+                    ') amount ' +
+                    (session.amount_total != null ? session.amount_total / 100 : '?') +
+                    ' ' +
+                    String(session.currency || '').toUpperCase() +
+                    ' service ' +
+                    String(meta.service || '') +
+                    ' travellers ' +
+                    travellerCount
+            );
 
             const fin = await finalizePaidCheckoutSession(session, '   ');
             if (fin.reason === 'already_recorded' || fin.reason === 'awaited_peer') {
@@ -2784,7 +2832,9 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
         }
 
         case 'checkout.session.expired':
-            console.log('⏰ Checkout session expired:', event.data.object.id);
+            console.log(
+                '⏰ Checkout session expired (…' + stripeSessionIdSuffixForLog(event.data.object.id) + ')'
+            );
             break;
 
         default:
@@ -2796,17 +2846,6 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
 // ─── Middleware ───
 app.use(express.json());
-
-// ─── Debug middleware (log all requests) ───
-app.use((req, res, next) => {
-    if (req.path === '/travel-clinic') {
-        console.log('🔍 [MIDDLEWARE] Request to /travel-clinic detected');
-        console.log('🔍 [MIDDLEWARE] Method:', req.method);
-        console.log('🔍 [MIDDLEWARE] Path:', req.path);
-        console.log('🔍 [MIDDLEWARE] URL:', req.url);
-    }
-    next();
-});
 
 // NOTE:
 // We intentionally avoid host-based canonical redirects here.
@@ -2843,29 +2882,18 @@ app.use((req, res, next) => {
 });
 
 // ─── IMPORTANT: Routes must come BEFORE express.static ───
-// ─── Test route ───
-app.get('/test-travel', (req, res) => {
-    res.send('TEST: This route works!');
-});
-
 // ─── Friendly URLs (without .html) - MUST come before root route ───
 app.get('/travel-clinic', (req, res) => {
-    console.log('✅ [ROUTE HANDLER] /travel-clinic route handler called!');
     const filePath = path.join(__dirname, 'travel.html');
-    console.log('✅ [ROUTE HANDLER] File path:', filePath);
-    console.log('✅ [ROUTE HANDLER] File exists:', fs.existsSync(filePath));
-    
     if (!fs.existsSync(filePath)) {
-        console.error('❌ [ERROR] travel.html not found!');
+        console.error('❌ travel.html not found on server');
         return res.status(404).send('travel.html not found');
     }
-    
     res.sendFile(filePath, (err) => {
         if (err) {
-            console.error('❌ [ERROR] Error sending file:', err);
+            console.error('❌ Error sending travel.html:', err.message || err);
             return res.status(500).send('Error: ' + err.message);
         }
-        console.log('✅ [SUCCESS] File sent successfully!');
     });
 });
 
@@ -3134,7 +3162,7 @@ app.post('/api/careers', (req, res) => {
 });
 
 // ─── API: Contact form submission ───
-app.post('/api/contact', async (req, res) => {
+app.post('/api/contact', rateLimitContact, async (req, res) => {
     const name = (req.body?.name || '').trim();
     const email = (req.body?.email || '').trim();
     const phone = (req.body?.phone || '').trim();
@@ -3199,7 +3227,7 @@ app.post('/api/reclamacoes', async (req, res) => {
 });
 
 // ─── API: Create Checkout Session ───
-app.post('/api/create-checkout-session', async (req, res) => {
+app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => {
     if (!isStripeConfigured) {
         console.error('❌ Stripe configuration check failed:');
         console.error('   STRIPE_SECRET_KEY exists:', !!process.env.STRIPE_SECRET_KEY);
@@ -3345,7 +3373,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
 });
 
 // ─── API: Retrieve session details (for confirmation page) ───
-app.get('/api/session/:sessionId', async (req, res) => {
+app.get('/api/session/:sessionId', rateLimitSessionRetrieve, async (req, res) => {
     if (!isStripeConfigured) {
         return res.status(500).json({ error: 'Stripe is not configured.' });
     }
@@ -3691,7 +3719,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // ─── API: Clinic — Login ───
-app.post('/api/clinic/login', (req, res) => {
+app.post('/api/clinic/login', rateLimitClinicLogin, (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {

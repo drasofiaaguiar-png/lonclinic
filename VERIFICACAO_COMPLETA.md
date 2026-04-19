@@ -40,7 +40,7 @@
 ### Chaves da API
 - [ ] **STRIPE_SECRET_KEY** configurada (sk_live_ ou sk_test_)
 - [ ] **STRIPE_PUBLISHABLE_KEY** configurada (pk_live_ ou pk_test_)
-- [ ] **STRIPE_WEBHOOK_SECRET** (opcional, pode ficar vazio)
+- [ ] **STRIPE_WEBHOOK_SECRET** (obrigatório — ver `WEBHOOK_STRIPE.md`)
 
 ### Webhook
 - [ ] **Webhook endpoint criado** no Stripe: `https://lonclinic.com/webhook`

@@ -6,6 +6,18 @@ O sistema precisa de **Environment Variables** (Variáveis de Ambiente), não ar
 
 ---
 
+## Ambiente de execução (produção)
+
+No **Railway**, adiciona:
+
+| Key | Value |
+|-----|--------|
+| `NODE_ENV` | `production` |
+
+Isto garante que o Node e dependências (por exemplo `express`, rotas de debug condicionadas a `NODE_ENV !== 'production'`) comportam-se como em produção. No Railway: **Variables** → **+ New Variable** → `NODE_ENV` = `production` → guardar e voltar a fazer deploy se necessário.
+
+---
+
 ## 🚀 Railway — Onde Adicionar Variáveis
 
 ### Passo 1: Acessar Variables
@@ -109,10 +121,13 @@ sk_live_51AbCdEfGhIjKlMnOpQrStUvWxYz1234567890abcdefghijklmnopqrstuvwxyz
 
 Adicione estas variáveis no Railway/Render:
 
+### Ambiente
+- [ ] `NODE_ENV` = `production`
+
 ### Stripe (Obrigatório)
 - [ ] `STRIPE_SECRET_KEY` = `sk_live_...` ou `sk_test_...`
 - [ ] `STRIPE_PUBLISHABLE_KEY` = `pk_live_...` ou `pk_test_...`
-- [ ] `STRIPE_WEBHOOK_SECRET` = `whsec_...` (opcional)
+- [ ] `STRIPE_WEBHOOK_SECRET` = `whsec_...` (**obrigatório** — o servidor exige assinatura do webhook)
 
 ### Email SMTP (Obrigatório para envio)
 - [ ] `EMAIL_HOST` = `mail.privateemail.com` ou `smtp.gmail.com`
