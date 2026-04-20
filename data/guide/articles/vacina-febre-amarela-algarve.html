@@ -47,21 +47,28 @@
 .alg-article a { text-decoration: none; }
 .alg-breadcrumb { font-size: var(--alg-text-xs); letter-spacing: 0.02em; color: var(--ink-ghost); padding: 4px var(--alg-gutter) 6px; width: min(100%, var(--alg-max)); margin: 0 auto 4px; box-sizing: border-box; }
 .alg-breadcrumb a { color: var(--ink-soft); font-weight: 500; }
-.alg-hero { padding: 16px var(--alg-gutter) 36px; width: min(100%, var(--alg-max)); margin: 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; align-items: start; box-sizing: border-box; }
+/* ~60/40: mais espaço para título e subtítulo à esquerda */
+.alg-hero {
+  padding: 16px var(--alg-gutter) 36px;
+  width: min(100%, var(--alg-max));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 40px);
+  align-items: stretch;
+  box-sizing: border-box;
+}
 .alg-hero-content, .alg-hero-aside { min-width: 0; }
-/* Cartão à direita alinhado à base da coluna esquerda (altura do bloco de texto) */
-.alg-hero-aside { align-self: end; }
+.alg-hero-aside { display: flex; flex-direction: column; }
 .alg-hero-content .alg-hero-note { margin-top: 16px; }
 @media (max-width: 860px) {
-  .alg-hero { grid-template-columns: 1fr; gap: 32px; }
-  /* Ordem do DOM: texto primeiro, cartão à direita em baixo */
-  .alg-hero-aside { align-self: stretch; }
+  .alg-hero { grid-template-columns: 1fr; gap: 28px; }
 }
 .alg-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: var(--alg-font-sans); font-size: var(--alg-text-xs); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); background: var(--green-light); padding: 5px 14px; border-radius: 20px; margin-bottom: 12px; }
 .alg-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
 .alg-hero h2 { font-family: var(--alg-font-display); font-size: clamp(1.875rem, 4.8vw, 3.125rem); font-weight: 600; line-height: 1.12; letter-spacing: -0.03em; margin: 0 0 20px; border: none; color: var(--ink); }
 .alg-hero h2 em { font-style: italic; color: var(--green); }
-.alg-hero-desc { font-size: clamp(1rem, 2.5vw, 1.0625rem); color: var(--ink-mid); max-width: 480px; margin-bottom: 24px; line-height: var(--alg-leading); font-weight: 400; }
+.alg-hero-desc { font-size: clamp(1rem, 2.5vw, 1.0625rem); color: var(--ink-mid); max-width: min(560px, 100%); margin-bottom: 24px; line-height: var(--alg-leading); font-weight: 400; }
 .alg-trust-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
 .alg-trust-pill { font-size: var(--alg-text-xs); font-weight: 500; color: var(--ink-mid); background: var(--green-faint); border: 0.5px solid var(--border-mid); padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 5px; }
 .alg-trust-pill .dot { color: var(--green-vivid); font-size: 14px; }
@@ -71,16 +78,56 @@
 .alg-stat-l { font-size: 0.6875rem; font-weight: 500; color: var(--ink-soft); line-height: 1.35; letter-spacing: 0.02em; }
 .alg-hero-note { margin-top: 0; padding: 14px 16px; background: var(--green-faint); border: 0.5px solid var(--border-mid); border-left: 4px solid var(--green); border-radius: 10px; font-size: var(--alg-text-sm); color: var(--ink-mid); line-height: var(--alg-leading); }
 .alg-hero-note strong { color: var(--ink); }
-/* Hero: mesmo cartão de serviço da página inicial (Consulta do Viajante) */
-.alg-hero-aside .alg-hero-travel-booking.lon-service-card.is-visible { display: flex; width: 100%; }
-.alg-hero-aside .alg-hero-travel-booking .lon-service-image-wrap {
-  min-height: clamp(260px, 34vw, 380px);
+/* Hero: cartão em coluna — faixa de imagem baixa (decorativa), CTA fixo em baixo; cartão estica à altura da coluna esquerda */
+.alg-hero-aside .alg-hero-travel-booking.lon-service-card.is-visible {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  flex: 1 1 auto;
   border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid #ebddf4;
+  box-shadow: 0 14px 30px rgba(53, 24, 74, 0.12);
+  background: #fff;
 }
-.alg-hero-aside .alg-hero-travel-booking .lon-service-image-wrap img {
-  min-height: clamp(260px, 34vw, 380px);
+.alg-hero-aside .alg-hero-travel-booking .lon-service-image-wrap.alg-hero-card-photo {
+  position: relative;
+  flex: 0 0 auto;
+  height: clamp(118px, 14vw, 168px);
+  min-height: 0;
+  max-height: 190px;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  overflow: hidden;
 }
-/* .guide-prose força cor nos h3/p — repor branco no vidro do cartão (como na home) */
+.alg-hero-aside .alg-hero-card-photo img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: cover;
+  object-position: center 32%;
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass.alg-hero-card-glass {
+  position: relative;
+  left: auto;
+  right: auto;
+  top: auto;
+  bottom: auto;
+  flex: 0 0 auto;
+  margin: 0;
+  margin-top: auto;
+  border-radius: 0;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 14px 14px 16px;
+  background: linear-gradient(165deg, rgba(42, 32, 58, 0.95) 0%, rgba(22, 14, 34, 0.98) 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+/* .guide-prose força cor nos h3/p — repor branco no vidro do cartão */
 .alg-hero-aside .alg-hero-travel-booking .lon-service-glass h3 {
   color: #fff !important;
   margin-top: 0;
@@ -158,6 +205,11 @@
 }
 .alg-info-item h4 { font-family: var(--alg-font-sans); font-size: clamp(0.9375rem, 1.2vw, 1.125rem); font-weight: 600; margin: 0; color: #ffffff; line-height: 1.3; letter-spacing: -0.015em; }
 .alg-info-item p { font-size: var(--alg-text-xs); color: rgba(255, 255, 255, 0.92); line-height: var(--alg-leading); margin: 0; }
+@media (max-width: 768px) {
+  .alg-info-item { padding: 22px; gap: 12px; }
+  .alg-info-item h4 { font-size: clamp(1.0625rem, 3.8vw, 1.1875rem); line-height: 1.28; }
+  .alg-info-item p { font-size: var(--alg-text-sm); line-height: 1.55; }
+}
 .alg-locations-section {
   background: var(--green-faint);
   border-top: 0.5px solid var(--border);
@@ -169,7 +221,7 @@
   border-radius: var(--r-lg);
   box-sizing: border-box;
 }
-.alg-alert-marcacao { background: var(--gold-light); border: 1px solid rgba(200,150,26,0.3); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; padding: 14px 18px; font-size: var(--alg-text-sm); color: #6b4a08; margin-bottom: 30px; display: flex; gap: 10px; align-items: flex-start; line-height: var(--alg-leading); }
+.alg-alert-marcacao { background: var(--gold-light); border: 1px solid rgba(200,150,26,0.3); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; padding: 14px 18px; font-size: var(--alg-text-sm); color: #6b4a08; margin-top: 28px; margin-bottom: 0; display: flex; gap: 10px; align-items: flex-start; line-height: var(--alg-leading); }
 .alg-loc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
 .alg-loc-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 24px; display: flex; flex-direction: column; gap: 14px; }
 .alg-loc-card.featured { border-color: var(--green); border-width: 1.5px; }
@@ -297,14 +349,14 @@
       </div>
       <div class="alg-hero-aside" id="marcar">
         <article class="lon-service-card is-visible alg-hero-travel-booking" aria-label="Consulta do Viajante — marcar online">
-          <div class="lon-service-image-wrap">
+          <div class="lon-service-image-wrap alg-hero-card-photo">
             <img src="/image/image1_files/CoventGarden_Large_Desktop.jpg" alt="Consulta do viajante com médico online" width="800" height="600" loading="eager" decoding="async">
             <span class="lon-service-chip">Viajante</span>
-            <div class="lon-service-glass">
-              <h3>Consulta do Viajante</h3>
-              <p class="lon-service-price">€39 · 20 min</p>
-              <a href="/marcar/travel" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
-            </div>
+          </div>
+          <div class="lon-service-glass alg-hero-card-glass">
+            <h3>Consulta do Viajante</h3>
+            <p class="lon-service-price">€39 · 20 min</p>
+            <a href="/marcar/travel" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
           </div>
         </article>
       </div>
@@ -336,7 +388,6 @@
     <div class="alg-section-label">Pontos de vacinação — Algarve</div>
     <h3>Centros de Vacinação Internacional em Faro e Portimão</h3>
     <p class="alg-section-sub">Ambos exigem prescrição médica e marcação prévia antes da deslocação.</p>
-    <div class="alg-alert-marcacao"><span>⚠️</span><span><strong>Prescrição médica e marcação prévia obrigatórias.</strong> Contacte sempre o Centro de Vacinação Internacional para confirmar horários e disponibilidade atualizada.</span></div>
     <div class="alg-loc-grid">
       <div class="alg-loc-card featured">
         <div class="alg-loc-card-header">
@@ -361,6 +412,7 @@
         </div>
       </div>
     </div>
+    <div class="alg-alert-marcacao"><span>⚠️</span><span><strong>Prescrição médica e marcação prévia obrigatórias.</strong> Contacte sempre o Centro de Vacinação Internacional para confirmar horários e disponibilidade atualizada.</span></div>
   </section>
 
   <section class="alg-section" style="background:white;">
