@@ -1,0 +1,20 @@
+{
+  "articles": [
+    {
+      "slug": "telemedicina-em-casa",
+      "title": "Telemedicina em casa: o que pode esperar",
+      "description": "Como funcionam as consultas online na Lon Clinic e que vantagens traz para o seu dia a dia.",
+      "datePublished": "2026-04-20",
+      "dateModified": "2026-04-20",
+      "format": "markdown"
+    },
+    {
+      "slug": "marcacao-guia-rapido",
+      "title": "Guia rápido de marcação",
+      "description": "Passos para marcar a sua consulta em poucos minutos.",
+      "datePublished": "2026-04-15",
+      "dateModified": "2026-04-15",
+      "format": "html"
+    }
+  ]
+}

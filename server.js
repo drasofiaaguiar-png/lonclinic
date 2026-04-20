@@ -28,6 +28,7 @@ const { computeCheckoutTotalCents } = require('./pricing');
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const guide = require('./guide');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 const session = require('express-session');
@@ -199,6 +200,16 @@ function sendHtmlNoCache(res, filePath, onErrorMessage) {
             res.status(500).send(onErrorMessage);
         }
     });
+}
+
+function sendHtmlNoCacheString(res, html, statusCode) {
+    res.status(statusCode || 200).set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Surrogate-Control': 'no-store'
+    });
+    res.type('html').send(html);
 }
 
 /* ========================================
@@ -3168,6 +3179,49 @@ app.get('/faq', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'faq.html'), 'Error loading FAQ page');
 });
 
+app.get('/blog', (req, res) => {
+    try {
+        const html = guide.renderBlogIndex(PUBLIC_SITE_URL);
+        sendHtmlNoCacheString(res, html);
+    } catch (err) {
+        console.error('❌ Guide index error:', err.message || err);
+        res.status(500).type('html').send('Error loading Guide.');
+    }
+});
+
+app.get('/blog/:slug', (req, res) => {
+    const slug = String(req.params.slug || '').toLowerCase();
+    if (!guide.isValidSlug(slug)) {
+        return sendHtmlNoCacheString(res, guide.renderNotFound(PUBLIC_SITE_URL), 404);
+    }
+    try {
+        const result = guide.renderBlogArticle(PUBLIC_SITE_URL, slug);
+        if (!result) {
+            return sendHtmlNoCacheString(res, guide.renderNotFound(PUBLIC_SITE_URL), 404);
+        }
+        sendHtmlNoCacheString(res, result.html);
+    } catch (err) {
+        console.error('❌ Guide article error:', err.message || err);
+        res.status(500).type('html').send('Error loading article.');
+    }
+});
+
+app.get('/guide', (req, res) => {
+    res.redirect(301, '/blog');
+});
+
+app.get('/guide/', (req, res) => {
+    res.redirect(301, '/blog');
+});
+
+app.get('/guide/:slug', (req, res) => {
+    const slug = String(req.params.slug || '').toLowerCase();
+    if (!guide.isValidSlug(slug)) {
+        return res.status(404).type('html').send('Not found');
+    }
+    res.redirect(301, `/blog/${encodeURIComponent(slug)}`);
+});
+
 app.get('/consulta', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'consulta.html'), 'Error loading consulta landing page');
 });
@@ -3272,6 +3326,15 @@ app.get('/robots.txt', (req, res) => {
             'Content-Type': 'text/plain'
         }
     });
+});
+
+// Block raw file access to Guide source files (content is server-rendered at /blog).
+app.use((req, res, next) => {
+    const p = (req.path || '').split('?')[0];
+    if (p === '/data/guide' || p.startsWith('/data/guide/')) {
+        return res.status(404).end();
+    }
+    next();
 });
 
 // ─── Static files (CSS, JS, images, etc.) ───
