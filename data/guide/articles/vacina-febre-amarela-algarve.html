@@ -35,15 +35,11 @@
 .alg-breadcrumb a { color: var(--ink-soft); }
 .alg-hero { padding: 28px 22px 36px; width: min(100%, 1240px); margin: 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; align-items: start; }
 .alg-hero-content, .alg-hero-card { min-width: 0; }
-.alg-hero-right { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-.alg-hero-right .alg-tourist-alert { max-width: none; margin: 0; border-radius: var(--r-lg); }
+.alg-hero-content .alg-tourist-alert { max-width: none; margin: 20px 0 0; border-radius: var(--r-lg); }
+.alg-hero-content .alg-hero-note { margin-top: 16px; }
 @media (max-width: 860px) {
   .alg-hero { grid-template-columns: 1fr; gap: 32px; }
-  .alg-hero-right { display: contents; }
-  .alg-hero-card { order: 1; padding: 28px 24px; }
-  .alg-hero-content { order: 2; }
-  .alg-tourist-alert { order: 3; }
-  .alg-hero-note { order: 4; }
+  .alg-hero-card { order: -1; padding: 28px 24px; }
 }
 .alg-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: var(--green); background: var(--green-light); padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
 .alg-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
@@ -57,7 +53,7 @@
 .alg-stat { background: white; padding: 14px 16px; text-align: center; }
 .alg-stat-n { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--green); line-height: 1; margin-bottom: 4px; }
 .alg-stat-l { font-size: 11px; color: var(--ink-soft); line-height: 1.3; }
-.alg-hero-note { margin-top: 2px; padding: 14px 16px; background: var(--green-faint); border: 0.5px solid var(--border-mid); border-left: 4px solid var(--green); border-radius: 10px; font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+.alg-hero-note { margin-top: 0; padding: 14px 16px; background: var(--green-faint); border: 0.5px solid var(--border-mid); border-left: 4px solid var(--green); border-radius: 10px; font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
 .alg-hero-note strong { color: var(--ink); }
 .alg-hero-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 44px 24px 28px; box-shadow: 0 2px 24px rgba(15,26,20,0.07); }
 .alg-card-header { background: var(--green); color: white; border-radius: 10px; padding: 18px 20px; margin-bottom: 22px; }
@@ -94,9 +90,9 @@
 .alg-info-item {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: stretch;
-  gap: 0;
+  gap: 10px;
   padding: 20px;
   aspect-ratio: 1;
   min-height: 0;
@@ -170,14 +166,13 @@
           <span class="alg-trust-pill"><span class="dot">●</span> Consulta online 7 dias/semana</span>
           <span class="alg-trust-pill"><span class="dot">●</span> Prescrição digital no próprio dia</span>
         </div>
-      </div>
-      <div class="alg-hero-right">
         <div class="alg-tourist-alert">
           <div class="alg-tourist-alert-title">✈️ A planear uma viagem a partir do Algarve?</div>
           <p>Muitos residentes e turistas no Algarve viajam para destinos tropicais onde a vacina é obrigatória. Se vai viajar nos próximos meses, marque a consulta com antecedência: o certificado só é válido 10 dias após a vacinação.</p>
         </div>
         <div class="alg-hero-note"><strong>Informação de carácter geral:</strong> não substitui consulta médica individualizada. Horários e contactos dos Centros de Vacinação Internacional sujeitos a alteração. Confirme sempre junto da instituição antes de se deslocar.</div>
-        <div class="alg-hero-card" id="marcar">
+      </div>
+      <div class="alg-hero-card" id="marcar">
         <div class="alg-card-header">
           <div class="alg-card-header-title">Marcar Consulta Online</div>
           <div class="alg-card-header-sub">Vacina febre amarela no Algarve — simples e rápido</div>
@@ -190,7 +185,6 @@
         <a class="alg-btn-primary" href="/marcar/travel">Marcar Consulta Online →</a>
         <p class="alg-card-note">Disponível hoje · Resposta em menos de 24h</p>
         <div class="alg-card-guarantee"><span>⚠️</span><span>Marque com pelo menos <strong>10 dias de antecedência</strong> — o certificado só é válido após esse período.</span></div>
-        </div>
       </div>
     </div>
   </section>
