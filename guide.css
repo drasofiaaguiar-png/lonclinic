@@ -220,8 +220,52 @@
 }
 
 /* Article page */
+.guide-article-main {
+    padding-top: calc(var(--lon-nav-h) + 20px);
+}
+
 .guide-article-wrap {
-    padding-bottom: 72px;
+    padding: 0 2.5vw 72px;
+}
+
+.guide-article-shell {
+    display: grid;
+    grid-template-columns: minmax(300px, 34vw) minmax(0, 1fr);
+    gap: 42px;
+    align-items: start;
+    width: 100%;
+}
+
+.guide-article-left {
+    position: sticky;
+    top: calc(var(--lon-nav-h) + 22px);
+    align-self: start;
+    max-height: calc(100vh - var(--lon-nav-h) - 34px);
+    overflow: auto;
+    padding-right: 14px;
+}
+
+.guide-article-right {
+    max-height: calc(100vh - var(--lon-nav-h) - 34px);
+    overflow: auto;
+    padding-right: 10px;
+}
+
+.guide-article-right::-webkit-scrollbar,
+.guide-article-left::-webkit-scrollbar {
+    width: 8px;
+}
+
+.guide-article-right::-webkit-scrollbar-thumb,
+.guide-article-left::-webkit-scrollbar-thumb {
+    background: rgba(15, 26, 20, 0.18);
+    border-radius: 999px;
+}
+
+.guide-article-right::-webkit-scrollbar-track,
+.guide-article-left::-webkit-scrollbar-track {
+    background: rgba(15, 26, 20, 0.06);
+    border-radius: 999px;
 }
 
 .guide-article-header {
@@ -262,13 +306,13 @@
     font-size: 1.05rem;
     color: var(--lon-muted);
     line-height: 1.5;
-    max-width: 62ch;
+    max-width: 78ch;
 }
 
 /* Prose */
 .guide-prose {
-    padding: 8px 0 48px;
-    max-width: 720px;
+    padding: 0 0 48px;
+    max-width: none;
 }
 
 .guide-prose > *:first-child {
@@ -293,7 +337,8 @@
 .guide-prose p {
     margin: 0 0 1rem;
     color: var(--lon-primary);
-    line-height: 1.65;
+    line-height: 1.75;
+    font-size: 1.02rem;
 }
 
 .guide-prose ul,
@@ -301,7 +346,8 @@
     margin: 0 0 1rem 1.2rem;
     padding: 0;
     color: var(--lon-primary);
-    line-height: 1.6;
+    line-height: 1.72;
+    font-size: 1.01rem;
 }
 
 .guide-prose li {
@@ -377,4 +423,23 @@
 .guide-not-found p {
     color: var(--lon-muted);
     margin-bottom: 20px;
+}
+
+@media (max-width: 980px) {
+    .guide-article-wrap {
+        padding: 0 16px 64px;
+    }
+
+    .guide-article-shell {
+        grid-template-columns: 1fr;
+        gap: 22px;
+    }
+
+    .guide-article-left,
+    .guide-article-right {
+        position: static;
+        max-height: none;
+        overflow: visible;
+        padding-right: 0;
+    }
 }

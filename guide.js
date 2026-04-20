@@ -371,10 +371,10 @@ function renderBlogArticle(origin, slug) {
     };
 
     const mainHtml = `
-    <main id="conteudo-principal">
+    <main id="conteudo-principal" class="guide-article-main">
         <article class="guide-article-wrap">
-            <header class="guide-article-header">
-                <div class="lon-container">
+            <div class="guide-article-shell">
+                <aside class="guide-article-left">
                     <nav class="guide-breadcrumb" aria-label="Caminho de navegação">
                         <a href="/blog">Guide</a>
                         <span aria-hidden="true"> / </span>
@@ -384,10 +384,12 @@ function renderBlogArticle(origin, slug) {
                     <p class="guide-article-date">${escapeHtml(datePub)}</p>
                     <h1 class="guide-article-title">${escapeHtml(title)}</h1>
                     <p class="guide-article-summary">${escapeHtml(description)}</p>
-                </div>
-            </header>
-            <div class="lon-container guide-prose" lang="pt-PT">
-                ${articleHtml}
+                </aside>
+                <section class="guide-article-right" aria-label="Conteúdo do artigo">
+                    <div class="guide-prose" lang="pt-PT">
+                        ${articleHtml}
+                    </div>
+                </section>
             </div>
         </article>
     </main>`;
