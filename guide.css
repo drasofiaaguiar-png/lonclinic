@@ -8,60 +8,7 @@
     background: #ffffff;
 }
 
-.guide-body:not(.guide-index) .lon-nav-inner {
-    border-color: rgba(255, 255, 255, 0.2);
-    background: rgba(15, 47, 36, 0.94);
-    box-shadow: 0 16px 34px rgba(9, 28, 21, 0.35);
-}
-
-.guide-body:not(.guide-index) .lon-nav.is-scrolled .lon-nav-inner {
-    background: rgba(15, 47, 36, 0.98);
-    border-color: rgba(255, 255, 255, 0.24);
-}
-
-.guide-body:not(.guide-index) .lon-logo-name,
-.guide-body:not(.guide-index) .lon-nav-links a,
-.guide-body:not(.guide-index) .lon-nav-links a[aria-current="page"] {
-    color: #ffffff;
-}
-
-.guide-body:not(.guide-index) .lon-nav-links a:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.14);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-}
-
-.guide-body:not(.guide-index) .lon-nav .lon-btn-ghost {
-    border-color: rgba(255, 255, 255, 0.34);
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.guide-body:not(.guide-index) .lon-nav .lon-btn-ghost:hover {
-    border-color: rgba(255, 255, 255, 0.55);
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.16);
-}
-
-.guide-body:not(.guide-index) .lon-nav-toggle {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.34);
-}
-
-.guide-body:not(.guide-index) .lon-nav-toggle span {
-    background: #ffffff;
-}
-
-.guide-body:not(.guide-index) .lon-mobile-menu {
-    background: #0f2f24;
-    border-color: rgba(255, 255, 255, 0.22);
-}
-
-.guide-body:not(.guide-index) .lon-mobile-menu a {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
-}
+/* Nav: same as homepage (landing.css) — no dark-theme overrides */
 
 .guide-body.guide-index {
     background: #0f2f24 !important;
@@ -86,15 +33,12 @@
     color: rgba(239, 244, 250, 0.78);
 }
 
-.guide-hero-inner {
-    max-width: 760px;
-}
-
 .guide-hero .dr-badge {
     margin-bottom: 14px;
 }
 
 .guide-hero-title {
+    font-family: var(--lon-font);
     font-size: clamp(1.75rem, 4.2vw, 2.45rem);
     font-weight: 800;
     letter-spacing: -0.03em;
@@ -106,7 +50,6 @@
 .guide-hero-lead {
     font-size: 1.08rem;
     color: var(--lon-muted);
-    max-width: 54ch;
     line-height: 1.55;
 }
 
@@ -123,13 +66,13 @@
 
 .guide-list-section .guide-card.lon-service-card {
     box-sizing: border-box;
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.24);
+    background: #ffffff !important;
+    border: 1px solid var(--lon-border);
     border-radius: 20px;
     padding: 0;
-    box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 14px 40px rgba(15, 26, 20, 0.1);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     justify-content: flex-start;
 }
 
@@ -157,7 +100,7 @@
 .guide-card-media {
     position: relative;
     display: block;
-    height: 210px;
+    height: clamp(260px, 34vw, 320px);
     width: 100%;
     margin-bottom: 0;
     background-size: cover;
@@ -194,12 +137,10 @@
 }
 
 .guide-card-content {
-    border-top: 1px solid rgba(255, 255, 255, 0.22);
+    border-top: 1px solid var(--lon-border);
     border-radius: 0 0 20px 20px;
     padding: 14px 14px 16px;
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.12));
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: #ffffff;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -207,36 +148,34 @@
 
 .guide-card-date {
     font-size: 0.72rem;
-    color: rgba(232, 244, 237, 0.9);
+    color: var(--lon-muted);
     margin-bottom: 8px;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    text-shadow: none;
 }
 
 .guide-card-title {
-    font-family: "Fraunces", serif;
+    font-family: var(--lon-font);
     font-size: 1.16rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
+    font-weight: 700;
+    letter-spacing: -0.02em;
     margin-bottom: 8px;
     line-height: 1.32;
-    color: #f2fbf6;
-    text-shadow: none;
+    color: var(--lon-primary);
 }
 
 .guide-card-title a {
-    color: #f2fbf6;
+    color: var(--lon-primary);
     transition: color 0.2s ease;
 }
 
 .guide-card-title a:hover {
-    color: #b9ffda;
+    color: var(--lon-accent);
 }
 
 .guide-card-desc {
     font-size: 0.9rem;
-    color: rgba(226, 240, 232, 0.9);
+    color: var(--lon-muted);
     line-height: 1.45;
     flex: 1;
     margin-bottom: 10px;
@@ -244,16 +183,15 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-shadow: none;
 }
 
 .guide-card .lon-btn {
     align-self: flex-start;
-    background: rgba(255, 255, 255, 0.22);
-    color: #f3fff8;
-    border: 1px solid rgba(255, 255, 255, 0.42);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: #ffffff;
+    color: #2f3b32;
+    border: 1px solid var(--lon-border);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
     font-size: 0.76rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -261,7 +199,7 @@
 }
 
 .guide-card .lon-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: #f0f4f1;
 }
 
 .guide-empty {
@@ -316,6 +254,27 @@
     border-bottom-right-radius: 0;
 }
 
+/* CVI cards: row + wrap (overrides inline article .alg-loc-grid grid) so centres sit side-by-side */
+.guide-prose .alg-article .alg-loc-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: stretch;
+}
+
+.guide-prose .alg-article .alg-loc-grid > .alg-region-divider {
+    flex: 0 0 100%;
+    width: 100%;
+    grid-column: unset;
+}
+
+.guide-prose .alg-article .alg-loc-grid > .alg-loc-card {
+    flex: 1 1 300px;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
 .guide-top-disclaimer {
     width: min(100%, 1060px);
     margin: 0 auto 16px;
@@ -367,6 +326,7 @@
 }
 
 .guide-article-title {
+    font-family: var(--lon-font);
     font-size: clamp(1.65rem, 4vw, 2.25rem);
     font-weight: 800;
     letter-spacing: -0.03em;

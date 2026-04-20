@@ -139,7 +139,7 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260418k">
-    <link rel="stylesheet" href="/guide.css?v=20260422a">
+    <link rel="stylesheet" href="/guide.css?v=20260422d">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     ${ldJson}</head>
 <body class="lon-landing guide-body${pageClass ? ` ${escapeHtml(pageClass)}` : ''}">
@@ -159,7 +159,7 @@ function layoutGuidePage(opts) {
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
                 <a href="/#servicos" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
-                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Menu" aria-expanded="false" aria-controls="lonMobileMenu">
+                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Open menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
             </div>
@@ -274,8 +274,8 @@ function renderBlogIndex(origin) {
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'Blog',
-        name: 'Guide | Lon Clinic',
-        description: 'Artigos sobre saúde, telemedicina e como tirar o máximo partido da Lon Clinic.',
+        name: 'Guias Médicos Profissionais | Lon Clinic',
+        description: 'Descubra as melhores informações médicas para o seu bem-estar',
         url: `${o}/blog`,
         blogPost: articles.map((a) => ({
             '@type': 'BlogPosting',
@@ -289,11 +289,11 @@ function renderBlogIndex(origin) {
 
     const mainHtml = `
     <main id="conteudo-principal">
-        <section class="guide-hero" aria-label="Guide">
+        <section class="guide-hero" aria-label="Guias">
             <div class="lon-container guide-hero-inner">
-                <p class="dr-badge">Guide</p>
-                <h1 class="guide-hero-title">Artigos e recursos</h1>
-                <p class="guide-hero-lead">Conteúdos sobre telemedicina, bem-estar e como usar a Lon Clinic com confiança.</p>
+                <p class="dr-badge">Guias</p>
+                <h1 class="guide-hero-title">Guias Médicos Profissionais</h1>
+                <p class="guide-hero-lead">Descubra as melhores informações médicas para o seu bem-estar</p>
             </div>
         </section>
         <section class="guide-list-section" aria-label="Lista de artigos">
@@ -308,8 +308,8 @@ function renderBlogIndex(origin) {
 
     return layoutGuidePage({
         origin: o,
-        title: 'Guide | Lon Clinic',
-        description: 'Artigos sobre saúde, telemedicina e como usar os serviços da Lon Clinic.',
+        title: 'Guias Médicos Profissionais | Lon Clinic',
+        description: 'Descubra as melhores informações médicas para o seu bem-estar',
         canonicalPath: '/blog',
         ogImage: defaultOg,
         jsonLd,
