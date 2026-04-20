@@ -59,7 +59,7 @@
   box-sizing: border-box;
 }
 .alg-hero-content, .alg-hero-aside { min-width: 0; }
-.alg-hero-aside { display: flex; flex-direction: column; }
+.alg-hero-aside { display: flex; flex-direction: column; min-height: 0; }
 .alg-hero-content .alg-hero-note { margin-top: 16px; }
 @media (max-width: 860px) {
   .alg-hero { grid-template-columns: 1fr; gap: 28px; }
@@ -78,7 +78,7 @@
 .alg-stat-l { font-size: 0.6875rem; font-weight: 500; color: var(--ink-soft); line-height: 1.35; letter-spacing: 0.02em; }
 .alg-hero-note { margin-top: 0; padding: 14px 16px; background: var(--green-faint); border: 0.5px solid var(--border-mid); border-left: 4px solid var(--green); border-radius: 10px; font-size: var(--alg-text-sm); color: var(--ink-mid); line-height: var(--alg-leading); }
 .alg-hero-note strong { color: var(--ink); }
-/* Hero: cartão em coluna — faixa de imagem baixa (decorativa), CTA fixo em baixo; cartão estica à altura da coluna esquerda */
+/* Hero: imagem cobre todo o cartão; CTA em vidro sobreposto em baixo; altura = coluna esquerda */
 .alg-hero-aside .alg-hero-travel-booking.lon-service-card.is-visible {
   display: flex;
   flex-direction: column;
@@ -90,40 +90,39 @@
   overflow: hidden;
   border: 1px solid #ebddf4;
   box-shadow: 0 14px 30px rgba(53, 24, 74, 0.12);
-  background: #fff;
+  background: #1a1420;
 }
-.alg-hero-aside .alg-hero-travel-booking .lon-service-image-wrap.alg-hero-card-photo {
+.alg-hero-aside .alg-hero-travel-booking .lon-service-image-wrap.alg-hero-card-cover {
   position: relative;
-  flex: 0 0 auto;
-  height: clamp(118px, 14vw, 168px);
+  flex: 1 1 auto;
+  width: 100%;
   min-height: 0;
-  max-height: 190px;
+  height: 100%;
   border-radius: 0;
   border: none;
   box-shadow: none;
   overflow: hidden;
 }
-.alg-hero-aside .alg-hero-card-photo img {
+.alg-hero-aside .alg-hero-card-cover img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  min-height: 0;
+  min-height: 100%;
   object-fit: cover;
-  object-position: center 32%;
+  object-position: center 30%;
 }
 .alg-hero-aside .alg-hero-travel-booking .lon-service-glass.alg-hero-card-glass {
-  position: relative;
-  left: auto;
-  right: auto;
-  top: auto;
-  bottom: auto;
-  flex: 0 0 auto;
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 3;
   margin: 0;
-  margin-top: auto;
-  border-radius: 0;
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
   padding: 14px 14px 16px;
-  background: linear-gradient(165deg, rgba(42, 32, 58, 0.95) 0%, rgba(22, 14, 34, 0.98) 100%);
+  background: rgba(255, 255, 255, 0.34);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -137,6 +136,7 @@
   margin-bottom: 10px;
 }
 .alg-hero-aside .alg-hero-travel-booking .lon-service-chip {
+  z-index: 4;
   color: #fff;
   background: rgba(255, 255, 255, 0.22);
   border-color: rgba(255, 255, 255, 0.45);
@@ -349,14 +349,14 @@
       </div>
       <div class="alg-hero-aside" id="marcar">
         <article class="lon-service-card is-visible alg-hero-travel-booking" aria-label="Consulta do Viajante — marcar online">
-          <div class="lon-service-image-wrap alg-hero-card-photo">
+          <div class="lon-service-image-wrap alg-hero-card-cover">
             <img src="/image/image1_files/CoventGarden_Large_Desktop.jpg" alt="Consulta do viajante com médico online" width="800" height="600" loading="eager" decoding="async">
             <span class="lon-service-chip">Viajante</span>
-          </div>
-          <div class="lon-service-glass alg-hero-card-glass">
-            <h3>Consulta do Viajante</h3>
-            <p class="lon-service-price">€39 · 20 min</p>
-            <a href="/marcar/travel" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
+            <div class="lon-service-glass alg-hero-card-glass">
+              <h3>Consulta do Viajante</h3>
+              <p class="lon-service-price">€39 · 20 min</p>
+              <a href="/marcar/travel" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
+            </div>
           </div>
         </article>
       </div>
