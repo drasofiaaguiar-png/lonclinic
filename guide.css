@@ -228,6 +228,19 @@
     padding: 0 2.5vw 72px;
 }
 
+.guide-top-disclaimer {
+    width: 100%;
+    margin: 0 0 16px;
+    padding: 12px 14px;
+    border: 1px solid rgba(15, 26, 20, 0.14);
+    border-left: 4px solid rgba(15, 26, 20, 0.34);
+    border-radius: 10px;
+    background: #f7faf8;
+    color: rgba(15, 26, 20, 0.76);
+    font-size: 0.82rem;
+    line-height: 1.55;
+}
+
 .guide-article-shell {
     display: grid;
     grid-template-columns: minmax(300px, 34vw) minmax(0, 1fr);
@@ -406,6 +419,30 @@
     border: none;
     border-top: 1px solid var(--lon-border);
     margin: 2rem 0;
+}
+
+/* Full-width CTA/disclaimer strips for custom HTML guide articles */
+.guide-prose .final-cta,
+.guide-prose .alg-final-cta,
+.guide-prose .br-final-cta,
+.guide-prose .co-final-cta,
+.guide-prose .cuf-article .final-cta {
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    border-radius: 0;
+}
+
+.guide-prose .disclaimer,
+.guide-prose .alg-disclaimer,
+.guide-prose .br-disclaimer,
+.guide-prose .co-disclaimer,
+.guide-prose .cuf-article .disclaimer {
+    width: 100vw;
+    max-width: none;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    border-radius: 0;
 }
 
 /* 404 */
