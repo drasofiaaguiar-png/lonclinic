@@ -20,6 +20,7 @@
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&display=swap');
 .alg-article, .alg-article * { box-sizing: border-box; }
 .alg-article {
   --ink: #0f1a14; --ink-mid: #3a4a3f; --ink-soft: #6b7d70; --ink-ghost: #a8b8ad;
@@ -30,12 +31,23 @@
   --r: 10px; --r-lg: 16px;
   --alg-gutter: 22px;
   --alg-max: 1240px;
-  font-family: 'DM Sans', sans-serif;
+  --alg-font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --alg-font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --alg-text: 1rem;
+  --alg-text-sm: 0.9375rem;
+  --alg-text-xs: 0.8125rem;
+  --alg-leading: 1.65;
+  --alg-leading-snug: 1.35;
+  font-family: var(--alg-font-sans);
+  font-size: var(--alg-text);
+  line-height: var(--alg-leading);
+  color: var(--ink-mid);
+  -webkit-font-smoothing: antialiased;
 }
 .alg-article a { text-decoration: none; }
-.alg-breadcrumb { font-size: 12px; color: var(--ink-ghost); padding: 8px var(--alg-gutter) 4px; width: min(100%, var(--alg-max)); margin: 0 auto; box-sizing: border-box; }
-.alg-breadcrumb a { color: var(--ink-soft); }
-.alg-hero { padding: 28px var(--alg-gutter) 36px; width: min(100%, var(--alg-max)); margin: 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; align-items: start; box-sizing: border-box; }
+.alg-breadcrumb { font-size: var(--alg-text-xs); letter-spacing: 0.02em; color: var(--ink-ghost); padding: 4px var(--alg-gutter) 6px; width: min(100%, var(--alg-max)); margin: 0 auto 4px; box-sizing: border-box; }
+.alg-breadcrumb a { color: var(--ink-soft); font-weight: 500; }
+.alg-hero { padding: 16px var(--alg-gutter) 36px; width: min(100%, var(--alg-max)); margin: 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; align-items: start; box-sizing: border-box; }
 .alg-hero-content, .alg-hero-aside { min-width: 0; }
 /* Cartão à direita alinhado à base da coluna esquerda (altura do bloco de texto) */
 .alg-hero-aside { align-self: end; }
@@ -43,21 +55,22 @@
 .alg-hero-content .alg-hero-note { margin-top: 16px; }
 @media (max-width: 860px) {
   .alg-hero { grid-template-columns: 1fr; gap: 32px; }
-  .alg-hero-aside { order: -1; padding: 0 0 8px; align-self: stretch; }
+  /* Ordem do DOM: texto primeiro, cartão à direita em baixo */
+  .alg-hero-aside { align-self: stretch; }
 }
-.alg-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: var(--green); background: var(--green-light); padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
+.alg-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: var(--alg-font-sans); font-size: var(--alg-text-xs); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); background: var(--green-light); padding: 5px 14px; border-radius: 20px; margin-bottom: 12px; }
 .alg-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
-.alg-hero h2 { font-family: 'Fraunces', serif; font-size: clamp(30px, 5vw, 50px); font-weight: 600; line-height: 1.15; letter-spacing: -1px; margin: 42px 0 20px; border: none; color: var(--ink); }
+.alg-hero h2 { font-family: var(--alg-font-display); font-size: clamp(1.875rem, 4.8vw, 3.125rem); font-weight: 600; line-height: 1.12; letter-spacing: -0.03em; margin: 0 0 20px; border: none; color: var(--ink); }
 .alg-hero h2 em { font-style: italic; color: var(--green); }
-.alg-hero-desc { font-size: 17px; color: var(--ink-mid); max-width: 480px; margin-bottom: 24px; line-height: 1.65; }
+.alg-hero-desc { font-size: clamp(1rem, 2.5vw, 1.0625rem); color: var(--ink-mid); max-width: 480px; margin-bottom: 24px; line-height: var(--alg-leading); font-weight: 400; }
 .alg-trust-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
-.alg-trust-pill { font-size: 12px; color: var(--ink-mid); background: var(--green-faint); border: 0.5px solid var(--border-mid); padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 5px; }
+.alg-trust-pill { font-size: var(--alg-text-xs); font-weight: 500; color: var(--ink-mid); background: var(--green-faint); border: 0.5px solid var(--border-mid); padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 5px; }
 .alg-trust-pill .dot { color: var(--green-vivid); font-size: 14px; }
 .alg-hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r); overflow: hidden; }
 .alg-stat { background: white; padding: 14px 16px; text-align: center; }
-.alg-stat-n { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--green); line-height: 1; margin-bottom: 4px; }
-.alg-stat-l { font-size: 11px; color: var(--ink-soft); line-height: 1.3; }
-.alg-hero-note { margin-top: 0; padding: 14px 16px; background: var(--green-faint); border: 0.5px solid var(--border-mid); border-left: 4px solid var(--green); border-radius: 10px; font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+.alg-stat-n { font-family: var(--alg-font-display); font-size: 1.5rem; font-weight: 600; color: var(--green); line-height: 1; margin-bottom: 4px; }
+.alg-stat-l { font-size: 0.6875rem; font-weight: 500; color: var(--ink-soft); line-height: 1.35; letter-spacing: 0.02em; }
+.alg-hero-note { margin-top: 0; padding: 14px 16px; background: var(--green-faint); border: 0.5px solid var(--border-mid); border-left: 4px solid var(--green); border-radius: 10px; font-size: var(--alg-text-sm); color: var(--ink-mid); line-height: var(--alg-leading); }
 .alg-hero-note strong { color: var(--ink); }
 /* Hero: mesmo cartão de serviço da página inicial (Consulta do Viajante) */
 .alg-hero-aside .alg-hero-travel-booking.lon-service-card.is-visible { display: flex; width: 100%; }
@@ -86,8 +99,8 @@
   text-decoration: none;
 }
 .alg-tourist-alert { background: var(--blue-faint); border: 1px solid var(--blue-border); border-left: 4px solid #3b82f6; border-radius: 0 var(--r-lg) var(--r-lg) 0; padding: 20px 24px; max-width: 860px; margin: 0 auto; }
-.alg-tourist-alert-title { font-size: 14px; font-weight: 600; color: var(--blue-text); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
-.alg-tourist-alert p { font-size: 14px; color: #1e3a5f; line-height: 1.6; margin: 0; }
+.alg-tourist-alert-title { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--blue-text); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; line-height: var(--alg-leading-snug); }
+.alg-tourist-alert p { font-size: var(--alg-text-sm); color: #1e3a5f; line-height: var(--alg-leading); margin: 0; }
 /* Mesmas margens laterais e largura máxima que .alg-hero */
 .alg-section {
   padding: 52px var(--alg-gutter);
@@ -96,14 +109,25 @@
   margin-right: auto;
   box-sizing: border-box;
 }
-.alg-section-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; color: var(--green); margin-bottom: 10px; }
-.alg-section h3 { font-family: 'Fraunces', serif; font-size: clamp(22px, 4vw, 34px); font-weight: 600; letter-spacing: -0.5px; color: var(--ink); margin: 0 0 12px; line-height: 1.2; }
-.alg-section-sub { font-size: 15px; color: var(--ink-soft); max-width: 620px; margin-bottom: 28px; }
+.alg-section-label { font-family: var(--alg-font-sans); font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--green); margin-bottom: 10px; }
+/* Títulos de secção (mesma hierarquia em todo o artigo) */
+.alg-section h3,
+.alg-locations-section > h3,
+.alg-related-pages > h3 {
+  font-family: var(--alg-font-display);
+  font-size: clamp(1.375rem, 3.2vw, 2.125rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 12px;
+  line-height: 1.2;
+}
+.alg-section-sub { font-size: var(--alg-text-sm); color: var(--ink-soft); max-width: 620px; margin-bottom: 28px; line-height: var(--alg-leading); font-weight: 400; }
 .alg-steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 2px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); overflow: hidden; }
 .alg-step-block { background: white; padding: 24px 20px; }
-.alg-step-block-num { font-family: 'Fraunces', serif; font-size: 38px; font-weight: 300; color: var(--green-light); line-height: 1; margin-bottom: 12px; letter-spacing: -2px; }
-.alg-step-block h4 { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
-.alg-step-block p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
+.alg-step-block-num { font-family: var(--alg-font-display); font-size: clamp(2rem, 4vw, 2.375rem); font-weight: 300; color: var(--green-light); line-height: 1; margin-bottom: 12px; letter-spacing: -0.06em; }
+.alg-step-block h4 { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); margin-bottom: 6px; line-height: var(--alg-leading-snug); }
+.alg-step-block p { font-size: var(--alg-text-xs); color: var(--ink-soft); line-height: var(--alg-leading); margin: 0; }
 /* Largura igual à secção anterior (alg-section / grelha de passos): bloco a 100% do artigo */
 .alg-info-band {
   background: transparent;
@@ -130,14 +154,14 @@
   aspect-ratio: 1;
   min-height: 0;
   border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  background: linear-gradient(155deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.06) 42%, rgba(15, 26, 20, 0.12) 100%), rgba(26, 102, 65, 0.82);
-  backdrop-filter: blur(14px) saturate(1.15);
-  -webkit-backdrop-filter: blur(14px) saturate(1.15);
-  box-shadow: 0 10px 36px rgba(15, 26, 20, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(8, 22, 14, 0.35) 100%), rgba(10, 56, 34, 0.96);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  box-shadow: 0 10px 36px rgba(8, 20, 14, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
-.alg-info-item h4 { font-size: clamp(15px, 1.35vw, 18px); font-weight: 700; margin: 0; color: #ffffff; line-height: 1.25; letter-spacing: -0.02em; }
-.alg-info-item p { font-size: 13px; color: rgba(255, 255, 255, 0.9); line-height: 1.5; margin: 0; }
+.alg-info-item h4 { font-family: var(--alg-font-sans); font-size: clamp(0.9375rem, 1.2vw, 1.125rem); font-weight: 600; margin: 0; color: #ffffff; line-height: 1.3; letter-spacing: -0.015em; }
+.alg-info-item p { font-size: var(--alg-text-xs); color: rgba(255, 255, 255, 0.92); line-height: var(--alg-leading); margin: 0; }
 .alg-locations-section {
   background: var(--green-faint);
   border-top: 0.5px solid var(--border);
@@ -149,31 +173,31 @@
   border-radius: var(--r-lg);
   box-sizing: border-box;
 }
-.alg-alert-marcacao { background: var(--gold-light); border: 1px solid rgba(200,150,26,0.3); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; padding: 14px 18px; font-size: 13px; color: #6b4a08; margin-bottom: 30px; display: flex; gap: 10px; align-items: flex-start; }
+.alg-alert-marcacao { background: var(--gold-light); border: 1px solid rgba(200,150,26,0.3); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; padding: 14px 18px; font-size: var(--alg-text-sm); color: #6b4a08; margin-bottom: 30px; display: flex; gap: 10px; align-items: flex-start; line-height: var(--alg-leading); }
 .alg-loc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
 .alg-loc-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 24px; display: flex; flex-direction: column; gap: 14px; }
 .alg-loc-card.featured { border-color: var(--green); border-width: 1.5px; }
 .alg-loc-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
-.alg-loc-name { font-size: 15px; font-weight: 600; color: var(--ink); line-height: 1.3; }
+.alg-loc-name { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); line-height: var(--alg-leading-snug); }
 .alg-loc-badges { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
 .alg-badge-cv, .alg-badge-vac { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; }
 .alg-badge-cv { background: var(--green-light); color: var(--green); }
 .alg-badge-vac { background: #e8f0fe; color: #1a4fbd; }
-.alg-loc-address { font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
-.alg-loc-hours { font-size: 13px; color: var(--ink-mid); line-height: 1.7; background: var(--green-faint); border-radius: 6px; padding: 10px 12px; }
+.alg-loc-address { font-size: var(--alg-text-xs); color: var(--ink-soft); line-height: var(--alg-leading); }
+.alg-loc-hours { font-size: var(--alg-text-xs); color: var(--ink-mid); line-height: var(--alg-leading); background: var(--green-faint); border-radius: 6px; padding: 10px 12px; }
 .alg-loc-hours strong { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-ghost); margin-bottom: 6px; font-weight: 500; }
-.alg-loc-email-note { font-size: 12px; color: var(--ink-soft); background: var(--blue-faint); border: 0.5px solid var(--blue-border); border-radius: 6px; padding: 8px 12px; }
+.alg-loc-email-note { font-size: var(--alg-text-xs); color: var(--ink-soft); background: var(--blue-faint); border: 0.5px solid var(--blue-border); border-radius: 6px; padding: 8px 12px; line-height: var(--alg-leading); }
 .alg-loc-email-note strong { color: var(--blue-text); }
 .alg-loc-contacts { display: flex; flex-direction: column; gap: 6px; }
-.alg-loc-contact { font-size: 13px; color: var(--ink-soft); display: flex; align-items: flex-start; gap: 6px; }
+.alg-loc-contact { font-size: var(--alg-text-xs); color: var(--ink-soft); display: flex; align-items: flex-start; gap: 6px; line-height: var(--alg-leading); }
 .alg-loc-contact a { color: var(--green); }
 .alg-loc-contact a:hover { text-decoration: underline; }
 .alg-faq-list { margin-top: 28px; }
 .alg-faq-item { border-bottom: 0.5px solid var(--border); padding: 18px 0; }
 .alg-faq-item:first-child { border-top: 0.5px solid var(--border); }
-.alg-faq-q { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px; }
-.alg-faq-q::after { content: '+'; color: var(--green); font-size: 20px; font-weight: 300; flex-shrink: 0; margin-top: -2px; }
-.alg-faq-a { font-size: 14px; color: var(--ink-soft); line-height: 1.65; }
+.alg-faq-q { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px; line-height: var(--alg-leading-snug); }
+.alg-faq-q::after { content: '+'; font-family: var(--alg-font-display); color: var(--green); font-size: 1.25rem; font-weight: 400; flex-shrink: 0; margin-top: -2px; }
+.alg-faq-a { font-size: var(--alg-text-sm); color: var(--ink-soft); line-height: var(--alg-leading); }
 .alg-related-pages {
   background: white;
   border-top: 0.5px solid var(--border);
@@ -186,8 +210,8 @@
 .alg-related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
 .alg-related-card { border: 0.5px solid var(--border-mid); border-radius: var(--r); padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: border-color 0.15s, background 0.15s; }
 .alg-related-card:hover { border-color: var(--green); background: var(--green-faint); }
-.alg-related-card-text { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.3; }
-.alg-related-card-sub { font-size: 12px; color: var(--ink-ghost); margin-top: 3px; }
+.alg-related-card-text { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); line-height: var(--alg-leading-snug); }
+.alg-related-card-sub { font-size: var(--alg-text-xs); color: var(--ink-ghost); margin-top: 4px; line-height: var(--alg-leading); }
 .alg-related-arrow { color: var(--green); font-size: 18px; flex-shrink: 0; }
 .alg-final-cta {
   background: var(--ink);
@@ -201,18 +225,28 @@
   box-sizing: border-box;
 }
 .alg-final-cta-inner { max-width: 520px; margin: 0 auto; }
-.alg-final-cta h3 { font-family: 'Fraunces', serif; font-size: clamp(26px, 5vw, 42px); font-weight: 600; letter-spacing: -0.8px; line-height: 1.15; margin: 0 0 14px; color: #fff; }
+.alg-final-cta h3 {
+  font-family: var(--alg-font-display);
+  font-size: clamp(1.625rem, 4vw, 2.625rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin: 0 0 14px;
+  color: #fff;
+}
 .alg-final-cta h3 em { color: #7fd4a8; font-style: italic; }
-.alg-final-cta p { font-size: 15px; color: rgba(255,255,255,0.65); margin-bottom: 32px; }
-.alg-btn-cta-large { display: inline-block; background: #22865a; color: white; font-size: 16px; font-weight: 500; padding: 17px 40px; border-radius: 10px; margin-bottom: 12px; transition: background 0.18s; }
+.alg-final-cta p { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); color: rgba(255,255,255,0.72); margin-bottom: 32px; line-height: var(--alg-leading); font-weight: 400; }
+.alg-btn-cta-large { display: inline-block; background: #22865a; color: white; font-family: var(--alg-font-sans); font-size: var(--alg-text); font-weight: 600; padding: 17px 40px; border-radius: 10px; margin-bottom: 12px; transition: background 0.18s; letter-spacing: 0.01em; }
 .alg-btn-cta-large:hover { background: #1a6641; }
-.alg-final-note { font-size: 13px; color: rgba(255,255,255,0.4); }
+.alg-final-note { font-family: var(--alg-font-sans); font-size: var(--alg-text-xs); color: rgba(255,255,255,0.45); line-height: var(--alg-leading); letter-spacing: 0.02em; }
 .alg-disclaimer {
   background: var(--green-faint);
   border-top: 0.5px solid var(--border);
   text-align: center;
-  font-size: 12px;
+  font-family: var(--alg-font-sans);
+  font-size: var(--alg-text-xs);
   color: var(--ink-ghost);
+  line-height: var(--alg-leading);
   max-width: 680px;
   width: 100%;
   margin: 18px auto 0;
@@ -220,6 +254,30 @@
   border-radius: var(--r-lg);
   box-sizing: border-box;
 }
+/* Sobreposição a .guide-prose para corpo e títulos coerentes */
+.guide-prose .alg-article { color: var(--ink-mid); }
+.guide-prose .alg-article p:not(.lon-service-price) { font-family: var(--alg-font-sans); font-size: var(--alg-text); line-height: var(--alg-leading); }
+.guide-prose .alg-article .alg-final-cta p {
+  font-size: var(--alg-text-sm);
+  color: rgba(255, 255, 255, 0.72);
+}
+.guide-prose .alg-article .alg-final-note {
+  color: rgba(255, 255, 255, 0.45);
+}
+.guide-prose .alg-article .alg-section h3,
+.guide-prose .alg-article .alg-locations-section > h3,
+.guide-prose .alg-article .alg-related-pages > h3,
+.guide-prose .alg-article .alg-final-cta h3 {
+  font-family: var(--alg-font-display);
+  color: inherit;
+}
+.guide-prose .alg-article .alg-section h3,
+.guide-prose .alg-article .alg-locations-section > h3,
+.guide-prose .alg-article .alg-related-pages > h3 { color: var(--ink); }
+.guide-prose .alg-article .alg-final-cta h3 { color: #fff; }
+.guide-prose .alg-article .alg-step-block h4,
+.guide-prose .alg-article .alg-faq-q { font-family: var(--alg-font-sans); }
+.guide-prose .alg-article .alg-hero h2 { font-family: var(--alg-font-display); color: var(--ink); margin-top: 0; }
 </style>
 
 <div class="alg-article">
@@ -326,7 +384,7 @@
 
   <section class="alg-related-pages">
     <div class="alg-section-label">Outras páginas úteis</div>
-    <h3 style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--ink);margin-bottom:4px;">Mais informação sobre a vacina febre amarela</h3>
+    <h3>Mais informação sobre a vacina febre amarela</h3>
     <p class="alg-section-sub">Guias de outras cidades e artigo completo.</p>
     <div class="alg-related-grid">
       <a class="alg-related-card" href="/blog/vacina-febre-amarela-guia-completo"><div><div class="alg-related-card-text">Guia Completo</div><div class="alg-related-card-sub">Tudo sobre a vacina febre amarela</div></div><span class="alg-related-arrow">→</span></a>

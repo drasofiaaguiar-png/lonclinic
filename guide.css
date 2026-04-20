@@ -275,7 +275,8 @@
 }
 
 /* Article page */
-.guide-article-main {
+.guide-article-main,
+.guide-article-main-html {
     padding-top: calc(var(--lon-nav-h) + 20px);
 }
 
