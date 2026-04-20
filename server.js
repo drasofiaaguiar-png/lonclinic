@@ -3340,6 +3340,11 @@ app.use((req, res, next) => {
 // ─── Static files (CSS, JS, images, etc.) ───
 app.use(express.static(path.join(__dirname), {
     setHeaders: (res, filePath) => {
+        const base = path.basename(filePath);
+        if (base === 'guide.css') {
+            res.setHeader('Cache-Control', 'no-store');
+            return;
+        }
         if (filePath.endsWith('.js')) {
             res.setHeader('Cache-Control', 'public, max-age=300, must-revalidate');
             return;

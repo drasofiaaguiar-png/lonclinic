@@ -299,6 +299,22 @@
     padding-bottom: 0;
 }
 
+/* HTML guide articles (custom layouts): flush bottom spacing without relying on main class */
+.guide-body:not(.guide-index) .guide-article-wrap:has(.alg-article) {
+    padding-bottom: 0;
+}
+
+.guide-body:not(.guide-index) .guide-prose:has(.alg-article) {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.guide-body:not(.guide-index) .guide-prose .alg-final-cta {
+    margin-bottom: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
 .guide-top-disclaimer {
     width: min(100%, 1060px);
     margin: 0 auto 16px;
