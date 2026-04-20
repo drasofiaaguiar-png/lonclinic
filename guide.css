@@ -8,6 +8,61 @@
     background: #ffffff;
 }
 
+.guide-body:not(.guide-index) .lon-nav-inner {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(15, 47, 36, 0.94);
+    box-shadow: 0 16px 34px rgba(9, 28, 21, 0.35);
+}
+
+.guide-body:not(.guide-index) .lon-nav.is-scrolled .lon-nav-inner {
+    background: rgba(15, 47, 36, 0.98);
+    border-color: rgba(255, 255, 255, 0.24);
+}
+
+.guide-body:not(.guide-index) .lon-logo-name,
+.guide-body:not(.guide-index) .lon-nav-links a,
+.guide-body:not(.guide-index) .lon-nav-links a[aria-current="page"] {
+    color: #ffffff;
+}
+
+.guide-body:not(.guide-index) .lon-nav-links a:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.14);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.guide-body:not(.guide-index) .lon-nav .lon-btn-ghost {
+    border-color: rgba(255, 255, 255, 0.34);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.guide-body:not(.guide-index) .lon-nav .lon-btn-ghost:hover {
+    border-color: rgba(255, 255, 255, 0.55);
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.16);
+}
+
+.guide-body:not(.guide-index) .lon-nav-toggle {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.34);
+}
+
+.guide-body:not(.guide-index) .lon-nav-toggle span {
+    background: #ffffff;
+}
+
+.guide-body:not(.guide-index) .lon-mobile-menu {
+    background: #0f2f24;
+    border-color: rgba(255, 255, 255, 0.22);
+}
+
+.guide-body:not(.guide-index) .lon-mobile-menu a {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
 .guide-body.guide-index {
     background: #0f2f24 !important;
     color: #f2f4f6;
@@ -237,8 +292,8 @@
 }
 
 .guide-top-disclaimer {
-    width: 100%;
-    margin: 0 0 16px;
+    width: min(100%, 1060px);
+    margin: 0 auto 16px;
     padding: 12px 14px;
     border: 1px solid rgba(15, 26, 20, 0.14);
     border-left: 4px solid rgba(15, 26, 20, 0.34);
