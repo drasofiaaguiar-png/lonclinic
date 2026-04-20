@@ -291,6 +291,14 @@
     padding-top: 0;
 }
 
+.guide-article-main-html .guide-article-wrap {
+    padding-bottom: 0;
+}
+
+.guide-article-main-html .guide-prose {
+    padding-bottom: 0;
+}
+
 .guide-top-disclaimer {
     width: min(100%, 1060px);
     margin: 0 auto 16px;
