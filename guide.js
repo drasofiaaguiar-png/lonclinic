@@ -370,7 +370,8 @@ function renderBlogArticle(origin, slug) {
         image: og
     };
 
-    const mainHtml = `
+    const mainHtml = format === 'markdown'
+        ? `
     <main id="conteudo-principal" class="guide-article-main">
         <article class="guide-article-wrap">
             <div class="guide-article-shell">
@@ -390,6 +391,27 @@ function renderBlogArticle(origin, slug) {
                         ${articleHtml}
                     </div>
                 </section>
+            </div>
+        </article>
+    </main>`
+        : `
+    <main id="conteudo-principal">
+        <article class="guide-article-wrap">
+            <header class="guide-article-header">
+                <div class="lon-container">
+                    <nav class="guide-breadcrumb" aria-label="Caminho de navegação">
+                        <a href="/blog">Guide</a>
+                        <span aria-hidden="true"> / </span>
+                        <span class="visually-hidden">Artigo atual: </span>
+                        <span>${escapeHtml(title)}</span>
+                    </nav>
+                    <p class="guide-article-date">${escapeHtml(datePub)}</p>
+                    <h1 class="guide-article-title">${escapeHtml(title)}</h1>
+                    <p class="guide-article-summary">${escapeHtml(description)}</p>
+                </div>
+            </header>
+            <div class="lon-container guide-prose" lang="pt-PT">
+                ${articleHtml}
             </div>
         </article>
     </main>`;
