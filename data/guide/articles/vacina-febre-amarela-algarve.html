@@ -35,10 +35,19 @@
 .alg-breadcrumb a { color: var(--ink-soft); }
 .alg-hero { padding: 28px 22px 36px; width: min(100%, 1240px); margin: 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; align-items: start; }
 .alg-hero-content, .alg-hero-card { min-width: 0; }
-@media (max-width: 860px) { .alg-hero { grid-template-columns: 1fr; gap: 32px; } .alg-hero-card { order: -1; padding: 28px 24px; } }
+.alg-hero-right { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.alg-hero-right .alg-tourist-alert { max-width: none; margin: 0; border-radius: var(--r-lg); }
+@media (max-width: 860px) {
+  .alg-hero { grid-template-columns: 1fr; gap: 32px; }
+  .alg-hero-right { display: contents; }
+  .alg-hero-card { order: 1; padding: 28px 24px; }
+  .alg-hero-content { order: 2; }
+  .alg-tourist-alert { order: 3; }
+  .alg-hero-note { order: 4; }
+}
 .alg-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: var(--green); background: var(--green-light); padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
 .alg-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
-.alg-hero h2 { font-family: 'Fraunces', serif; font-size: clamp(30px, 5vw, 50px); font-weight: 600; line-height: 1.15; letter-spacing: -1px; margin: 18px 0 20px; border: none; color: var(--ink); }
+.alg-hero h2 { font-family: 'Fraunces', serif; font-size: clamp(30px, 5vw, 50px); font-weight: 600; line-height: 1.15; letter-spacing: -1px; margin: 42px 0 20px; border: none; color: var(--ink); }
 .alg-hero h2 em { font-style: italic; color: var(--green); }
 .alg-hero-desc { font-size: 17px; color: var(--ink-mid); max-width: 480px; margin-bottom: 24px; line-height: 1.65; }
 .alg-trust-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
@@ -63,7 +72,6 @@
 .alg-btn-primary:hover { background: var(--green-vivid); }
 .alg-card-note { text-align: center; font-size: 12px; color: var(--ink-ghost); }
 .alg-card-guarantee { display: flex; align-items: center; gap: 8px; background: var(--gold-light); border: 0.5px solid rgba(200,150,26,0.25); border-radius: 8px; padding: 10px 14px; margin-top: 14px; font-size: 12px; color: #7a5a0a; }
-.alg-tourist-wrap { padding: 6px 0 24px; }
 .alg-tourist-alert { background: var(--blue-faint); border: 1px solid var(--blue-border); border-left: 4px solid #3b82f6; border-radius: 0 var(--r-lg) var(--r-lg) 0; padding: 20px 24px; max-width: 860px; margin: 0 auto; }
 .alg-tourist-alert-title { font-size: 14px; font-weight: 600; color: var(--blue-text); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 .alg-tourist-alert p { font-size: 14px; color: #1e3a5f; line-height: 1.6; margin: 0; }
@@ -83,9 +91,24 @@
   .alg-info-band-inner { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 12px; padding-bottom: 6px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
   .alg-info-item { flex: 0 0 min(240px, 78vw); }
 }
-.alg-info-item { display: flex; flex-direction: column; justify-content: center; gap: 10px; background: var(--green); border: none; border-radius: 0; padding: 18px; box-shadow: 0 2px 12px rgba(15, 26, 20, 0.12); aspect-ratio: 1; min-height: 0; }
-.alg-info-item h4 { font-size: 14px; font-weight: 500; margin: 0; color: #ffffff; }
-.alg-info-item p { font-size: 13px; color: rgba(255, 255, 255, 0.88); line-height: 1.5; margin: 0; }
+.alg-info-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 0;
+  padding: 20px;
+  aspect-ratio: 1;
+  min-height: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.06) 42%, rgba(15, 26, 20, 0.12) 100%), rgba(26, 102, 65, 0.82);
+  backdrop-filter: blur(14px) saturate(1.15);
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  box-shadow: 0 10px 36px rgba(15, 26, 20, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+.alg-info-item h4 { font-size: clamp(15px, 1.35vw, 18px); font-weight: 700; margin: 0; color: #ffffff; line-height: 1.25; letter-spacing: -0.02em; }
+.alg-info-item p { font-size: 13px; color: rgba(255, 255, 255, 0.9); line-height: 1.5; margin: 0; }
 .alg-locations-section { background: var(--green-faint); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); padding: 54px 18px; border-radius: var(--r-lg); }
 .alg-alert-marcacao { background: var(--gold-light); border: 1px solid rgba(200,150,26,0.3); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; padding: 14px 18px; font-size: 13px; color: #6b4a08; margin-bottom: 30px; display: flex; gap: 10px; align-items: flex-start; }
 .alg-loc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
@@ -147,9 +170,14 @@
           <span class="alg-trust-pill"><span class="dot">●</span> Consulta online 7 dias/semana</span>
           <span class="alg-trust-pill"><span class="dot">●</span> Prescrição digital no próprio dia</span>
         </div>
-        <div class="alg-hero-note"><strong>Informação de carácter geral:</strong> não substitui consulta médica individualizada. Horários e contactos dos Centros de Vacinação Internacional sujeitos a alteração. Confirme sempre junto da instituição antes de se deslocar.</div>
       </div>
-      <div class="alg-hero-card" id="marcar">
+      <div class="alg-hero-right">
+        <div class="alg-tourist-alert">
+          <div class="alg-tourist-alert-title">✈️ A planear uma viagem a partir do Algarve?</div>
+          <p>Muitos residentes e turistas no Algarve viajam para destinos tropicais onde a vacina é obrigatória. Se vai viajar nos próximos meses, marque a consulta com antecedência: o certificado só é válido 10 dias após a vacinação.</p>
+        </div>
+        <div class="alg-hero-note"><strong>Informação de carácter geral:</strong> não substitui consulta médica individualizada. Horários e contactos dos Centros de Vacinação Internacional sujeitos a alteração. Confirme sempre junto da instituição antes de se deslocar.</div>
+        <div class="alg-hero-card" id="marcar">
         <div class="alg-card-header">
           <div class="alg-card-header-title">Marcar Consulta Online</div>
           <div class="alg-card-header-sub">Vacina febre amarela no Algarve — simples e rápido</div>
@@ -162,16 +190,10 @@
         <a class="alg-btn-primary" href="/marcar/travel">Marcar Consulta Online →</a>
         <p class="alg-card-note">Disponível hoje · Resposta em menos de 24h</p>
         <div class="alg-card-guarantee"><span>⚠️</span><span>Marque com pelo menos <strong>10 dias de antecedência</strong> — o certificado só é válido após esse período.</span></div>
+        </div>
       </div>
     </div>
   </section>
-
-  <div class="alg-tourist-wrap">
-    <div class="alg-tourist-alert">
-      <div class="alg-tourist-alert-title">✈️ A planear uma viagem a partir do Algarve?</div>
-      <p>Muitos residentes e turistas no Algarve viajam para destinos tropicais onde a vacina é obrigatória. Se vai viajar nos próximos meses, marque a consulta com antecedência: o certificado só é válido 10 dias após a vacinação.</p>
-    </div>
-  </div>
 
   <section class="alg-section">
     <div class="alg-section-label">Como funciona</div>
