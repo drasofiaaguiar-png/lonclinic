@@ -372,51 +372,32 @@ function renderBlogArticle(origin, slug) {
 
     const topMedicalNotice = `<div class="guide-top-disclaimer">Informação de carácter geral — não substitui consulta médica individualizada. Horários e contactos dos CVIs sujeitos a alteração. Confirme sempre junto da instituição antes de se deslocar.</div>`;
 
-    const mainHtml = format === 'markdown'
-        ? `
+    const mainHtml = `
     <main id="conteudo-principal" class="guide-article-main">
         <article class="guide-article-wrap">
             ${topMedicalNotice}
-            <div class="guide-article-shell">
-                <aside class="guide-article-left">
-                    <nav class="guide-breadcrumb" aria-label="Caminho de navegação">
-                        <a href="/blog">Guide</a>
-                        <span aria-hidden="true"> / </span>
-                        <span class="visually-hidden">Artigo atual: </span>
-                        <span>${escapeHtml(title)}</span>
-                    </nav>
-                    <p class="guide-article-date">${escapeHtml(datePub)}</p>
-                    <h1 class="guide-article-title">${escapeHtml(title)}</h1>
-                    <p class="guide-article-summary">${escapeHtml(description)}</p>
-                </aside>
-                <section class="guide-article-right" aria-label="Conteúdo do artigo">
-                    <div class="guide-prose" lang="pt-PT">
-                        ${articleHtml}
-                    </div>
-                </section>
-            </div>
-        </article>
-    </main>`
-        : `
-    <main id="conteudo-principal">
-        <article class="guide-article-wrap">
-            ${topMedicalNotice}
             <header class="guide-article-header">
-                <div class="lon-container">
-                    <nav class="guide-breadcrumb" aria-label="Caminho de navegação">
-                        <a href="/blog">Guide</a>
-                        <span aria-hidden="true"> / </span>
-                        <span class="visually-hidden">Artigo atual: </span>
-                        <span>${escapeHtml(title)}</span>
-                    </nav>
-                    <p class="guide-article-date">${escapeHtml(datePub)}</p>
-                    <h1 class="guide-article-title">${escapeHtml(title)}</h1>
-                    <p class="guide-article-summary">${escapeHtml(description)}</p>
+                <div class="guide-article-intro">
+                    <div class="guide-article-intro-left">
+                        <h1 class="guide-article-title">${escapeHtml(title)}</h1>
+                        <p class="guide-article-summary">${escapeHtml(description)}</p>
+                    </div>
+                    <div class="guide-article-intro-right">
+                        <nav class="guide-breadcrumb" aria-label="Caminho de navegação">
+                            <a href="/blog">Guide</a>
+                            <span aria-hidden="true"> / </span>
+                            <span class="visually-hidden">Artigo atual: </span>
+                            <span>${escapeHtml(title)}</span>
+                        </nav>
+                        <p class="guide-article-date">${escapeHtml(datePub)}</p>
+                    </div>
                 </div>
             </header>
-            <div class="lon-container guide-prose" lang="pt-PT">
-                ${articleHtml}
-            </div>
+            <section class="guide-article-content" aria-label="Conteúdo do artigo">
+                <div class="guide-prose" lang="pt-PT">
+                    ${articleHtml}
+                </div>
+            </section>
         </article>
     </main>`;
 
