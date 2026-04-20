@@ -255,6 +255,7 @@ function renderBlogIndex(origin) {
                 <article class="lon-service-card is-visible guide-card" role="listitem">
                     <div class="guide-card-inner">
                         <a class="guide-card-media" href="${href}" aria-label="${t}" style="background-image:url('${img}')">
+                            <span class="guide-card-cover-title">${t}</span>
                             <span class="guide-card-free">FREE</span>
                         </a>
                         <p class="guide-card-date">${date}</p>
