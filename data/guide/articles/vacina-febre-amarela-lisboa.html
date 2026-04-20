@@ -1,543 +1,3 @@
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --ink: #0f1a14;
-  --ink-mid: #3a4a3f;
-  --ink-soft: #6b7d70;
-  --ink-ghost: #a8b8ad;
-  --green: #1a6641;
-  --green-vivid: #22865a;
-  --green-light: #eaf4ee;
-  --green-faint: #f4faf6;
-  --gold: #c8961a;
-  --gold-light: #fdf5e0;
-  --white: #ffffff;
-  --border: rgba(15,26,20,0.10);
-  --border-mid: rgba(15,26,20,0.18);
-  --r: 10px;
-  --r-lg: 16px;
-}
-
-html { scroll-behavior: smooth; }
-
-.yf-wrap {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--white);
-  color: var(--ink);
-  font-size: 16px;
-  line-height: 1.7;
-}
-
-.hero {
-  padding: 72px 24px 64px;
-  max-width: 1060px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 48px;
-  align-items: center;
-}
-
-@media (max-width: 800px) {
-  .hero { grid-template-columns: 1fr; gap: 36px; padding: 48px 20px 40px; }
-  .hero-card { order: -1; }
-}
-
-.hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: var(--green);
-  background: var(--green-light);
-  padding: 5px 14px;
-  border-radius: 20px;
-  margin-bottom: 20px;
-}
-
-.hero-eyebrow::before {
-  content: '';
-  width: 6px; height: 6px;
-  background: var(--green);
-  border-radius: 50%;
-}
-
-.hero h1 {
-  font-family: 'Fraunces', serif;
-  font-size: clamp(32px, 5vw, 52px);
-  font-weight: 600;
-  line-height: 1.15;
-  letter-spacing: -1px;
-  color: var(--ink);
-  margin-bottom: 20px;
-}
-
-.hero h1 em {
-  font-style: italic;
-  color: var(--green);
-}
-
-.hero-desc {
-  font-size: 17px;
-  color: var(--ink-mid);
-  max-width: 480px;
-  margin-bottom: 28px;
-  line-height: 1.65;
-}
-
-.trust-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 32px;
-}
-
-.trust-pill {
-  font-size: 12px;
-  color: var(--ink-mid);
-  background: var(--green-faint);
-  border: 0.5px solid var(--border-mid);
-  padding: 4px 12px;
-  border-radius: 20px;
-  display: flex; align-items: center; gap: 5px;
-}
-
-.trust-pill .dot { color: var(--green-vivid); font-size: 14px; }
-
-.hero-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1px;
-  background: var(--border);
-  border: 0.5px solid var(--border-mid);
-  border-radius: var(--r);
-  overflow: hidden;
-  margin-top: 12px;
-}
-
-.stat {
-  background: white;
-  padding: 14px 16px;
-  text-align: center;
-}
-
-.stat-n {
-  font-family: 'Fraunces', serif;
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--green);
-  line-height: 1;
-  margin-bottom: 4px;
-}
-
-.stat-l {
-  font-size: 11px;
-  color: var(--ink-soft);
-  line-height: 1.3;
-}
-
-.hero-card {
-  background: white;
-  border: 0.5px solid var(--border-mid);
-  border-radius: var(--r-lg);
-  padding: 28px 24px;
-  box-shadow: 0 2px 24px rgba(15,26,20,0.07);
-}
-
-.card-header {
-  background: var(--green);
-  color: white;
-  border-radius: 10px;
-  padding: 18px 20px;
-  margin-bottom: 22px;
-}
-
-.card-header-title {
-  font-family: 'Fraunces', serif;
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 4px;
-  line-height: 1.2;
-}
-
-.card-header-sub {
-  font-size: 13px;
-  color: rgba(255,255,255,0.78);
-}
-
-.card-steps { list-style: none; margin-bottom: 22px; }
-
-.card-step {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  padding: 10px 0;
-  border-bottom: 0.5px solid var(--border);
-  font-size: 14px;
-  color: var(--ink-mid);
-}
-
-.card-step:last-child { border-bottom: none; }
-
-.step-num {
-  width: 24px; height: 24px;
-  background: var(--green-light);
-  color: var(--green);
-  border-radius: 50%;
-  font-size: 12px;
-  font-weight: 600;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-.card-step strong { color: var(--ink); font-weight: 500; display: block; margin-bottom: 1px; }
-
-.btn-primary {
-  display: block;
-  width: 100%;
-  background: var(--green);
-  color: white;
-  text-align: center;
-  font-size: 15px;
-  font-weight: 500;
-  padding: 15px 20px;
-  border-radius: 9px;
-  text-decoration: none;
-  transition: background 0.18s, transform 0.1s;
-  margin-bottom: 10px;
-}
-
-.btn-primary:hover { background: var(--green-vivid); transform: translateY(-1px); }
-.btn-primary:active { transform: translateY(0); }
-
-.card-note { text-align: center; font-size: 12px; color: var(--ink-ghost); }
-
-.card-guarantee {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--gold-light);
-  border: 0.5px solid rgba(200,150,26,0.25);
-  border-radius: 8px;
-  padding: 10px 14px;
-  margin-top: 14px;
-  font-size: 12px;
-  color: #7a5a0a;
-}
-
-.section { padding: 72px 24px; }
-.section-inner { max-width: 860px; margin: 0 auto; }
-
-.section-label {
-  font-size: 11px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  font-weight: 500;
-  color: var(--green);
-  margin-bottom: 10px;
-}
-
-.section h2 {
-  font-family: 'Fraunces', serif;
-  font-size: clamp(24px, 4vw, 36px);
-  font-weight: 600;
-  letter-spacing: -0.5px;
-  color: var(--ink);
-  margin-bottom: 12px;
-  line-height: 1.2;
-  border: none;
-}
-
-.section-sub {
-  font-size: 16px;
-  color: var(--ink-soft);
-  max-width: 520px;
-  margin-bottom: 48px;
-}
-
-.steps-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2px;
-  background: var(--border);
-  border: 0.5px solid var(--border-mid);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-}
-
-.step-block { background: white; padding: 28px 24px; }
-
-.step-block-num {
-  font-family: 'Fraunces', serif;
-  font-size: 40px;
-  font-weight: 300;
-  color: var(--green-light);
-  line-height: 1;
-  margin-bottom: 14px;
-  letter-spacing: -2px;
-}
-
-.step-block h3 { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 8px; }
-.step-block p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
-
-.info-band {
-  background: var(--green-faint);
-  border-top: 0.5px solid var(--border);
-  border-bottom: 0.5px solid var(--border);
-  padding: 48px 24px;
-}
-
-.info-band-inner {
-  max-width: 860px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 24px;
-}
-
-.info-item { display: flex; gap: 14px; align-items: flex-start; }
-
-.info-icon {
-  width: 40px; height: 40px;
-  background: var(--green-light);
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-  flex-shrink: 0;
-}
-
-.info-item h4 { font-size: 14px; font-weight: 500; margin-bottom: 4px; color: var(--ink); }
-.info-item p { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin: 0; }
-
-.faq-list { margin-top: 36px; }
-.faq-item { border-bottom: 0.5px solid var(--border); padding: 20px 0; }
-.faq-item:first-child { border-top: 0.5px solid var(--border); }
-
-.faq-q {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--ink);
-  margin-bottom: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.faq-q::after {
-  content: '+';
-  color: var(--green);
-  font-size: 20px;
-  font-weight: 300;
-  flex-shrink: 0;
-  margin-top: -2px;
-}
-
-.faq-a { font-size: 14px; color: var(--ink-soft); line-height: 1.65; }
-
-.locations-section {
-  background: var(--green-faint);
-  border-top: 0.5px solid var(--border);
-  border-bottom: 0.5px solid var(--border);
-  padding: 72px 24px;
-}
-
-.locations-inner { max-width: 960px; margin: 0 auto; }
-
-.alert-marcacao {
-  background: var(--gold-light);
-  border: 1px solid rgba(200,150,26,0.3);
-  border-left: 3px solid var(--gold);
-  border-radius: 0 var(--r) var(--r) 0;
-  padding: 14px 18px;
-  font-size: 13px;
-  color: #6b4a08;
-  margin-bottom: 36px;
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-
-.loc-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
-}
-
-.loc-card {
-  background: white;
-  border: 0.5px solid var(--border-mid);
-  border-radius: var(--r-lg);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.loc-card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.loc-name { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.3; }
-
-.loc-badges {
-  display: flex;
-  gap: 4px;
-  flex-shrink: 0;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.badge-cv,
-.badge-vac {
-  font-size: 10px;
-  font-weight: 500;
-  padding: 2px 7px;
-  border-radius: 4px;
-  white-space: nowrap;
-}
-
-.badge-cv { background: var(--green-light); color: var(--green); }
-.badge-vac { background: #e8f0fe; color: #1a4fbd; }
-
-.loc-address { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
-
-.loc-hours {
-  font-size: 12px;
-  color: var(--ink-mid);
-  line-height: 1.6;
-  background: var(--green-faint);
-  border-radius: 6px;
-  padding: 8px 10px;
-}
-
-.loc-hours strong {
-  display: block;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--ink-ghost);
-  margin-bottom: 4px;
-  font-weight: 500;
-}
-
-.loc-contacts { display: flex; flex-direction: column; gap: 4px; }
-
-.loc-contact {
-  font-size: 12px;
-  color: var(--ink-soft);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.loc-contact a { color: var(--green); text-decoration: none; }
-.loc-contact a:hover { text-decoration: underline; }
-
-.related-pages {
-  background: white;
-  border-top: 0.5px solid var(--border);
-  padding: 48px 24px;
-}
-
-.related-inner { max-width: 860px; margin: 0 auto; }
-
-.related-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.related-card {
-  border: 0.5px solid var(--border-mid);
-  border-radius: var(--r);
-  padding: 16px 18px;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  transition: border-color 0.15s, background 0.15s;
-}
-
-.related-card:hover { border-color: var(--green); background: var(--green-faint); }
-.related-card-text { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.3; }
-.related-card-sub { font-size: 12px; color: var(--ink-ghost); margin-top: 3px; }
-.related-arrow { color: var(--green); font-size: 18px; flex-shrink: 0; }
-
-.final-cta {
-  background: var(--ink);
-  color: white;
-  padding: 80px 24px;
-  text-align: center;
-}
-
-.final-cta-inner { max-width: 560px; margin: 0 auto; }
-
-.final-cta h2 {
-  font-family: 'Fraunces', serif;
-  font-size: clamp(28px, 5vw, 44px);
-  font-weight: 600;
-  letter-spacing: -0.8px;
-  line-height: 1.15;
-  margin-bottom: 16px;
-  color: #fff;
-  border: none;
-}
-
-.final-cta h2 em { color: #7fd4a8; font-style: italic; }
-
-.final-cta p {
-  font-size: 16px;
-  color: rgba(255,255,255,0.65);
-  margin-bottom: 36px;
-}
-
-.btn-cta-large {
-  display: inline-block;
-  background: #22865a;
-  color: white;
-  font-size: 16px;
-  font-weight: 500;
-  padding: 18px 44px;
-  border-radius: 10px;
-  text-decoration: none;
-  transition: background 0.18s, transform 0.12s;
-  margin-bottom: 14px;
-}
-
-.btn-cta-large:hover { background: #1a6641; transform: translateY(-2px); }
-
-.final-note {
-  font-size: 13px;
-  color: rgba(255,255,255,0.4);
-  margin-top: 4px;
-}
-
-.disclaimer {
-  background: var(--green-faint);
-  border-top: 0.5px solid var(--border);
-  font-size: 12px;
-  color: var(--ink-ghost);
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 28px 24px;
-  text-align: center;
-}
-
-.links-inline { font-size: 12px; color: var(--ink-ghost); margin-top: 24px; text-align: center; }
-
-</style>
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -552,121 +12,481 @@ html { scroll-behavior: smooth; }
   }
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Onde é feita a vacinação em Lisboa?", "acceptedAnswer": { "@type": "Answer", "text": "A vacinação é realizada num dos parceiros presenciais na área metropolitana de Lisboa — Centros de Vacinação Internacional ou clínicas parceiras autorizadas. Após a consulta online, indicamos o local mais conveniente para si." } },
+    { "@type": "Question", "name": "Qual é o preço da vacina febre amarela em Lisboa?", "acceptedAnswer": { "@type": "Answer", "text": "O custo varia consoante o local. Os Centros de Vacinação Internacional oferecem habitualmente preços mais acessíveis (entre €30 e €60). Clínicas privadas parceiras têm preços entre €60 e €90. A consulta de medicina de viagem online é cobrada separadamente." } },
+    { "@type": "Question", "name": "Com que antecedência devo marcar em Lisboa?", "acceptedAnswer": { "@type": "Answer", "text": "Recomendamos marcar consulta com pelo menos 2 a 3 semanas de antecedência, pois o certificado só é válido 10 dias após a vacinação." } },
+    { "@type": "Question", "name": "A vacina febre amarela tem contraindicações?", "acceptedAnswer": { "@type": "Answer", "text": "Sim. É uma vacina de vírus vivo atenuado e não é adequada para bebés com menos de 6 meses, pessoas com imunodeficiência grave, doenças do timo, alergia grave ao ovo ou gravidez (relativa). A consulta médica serve para avaliar a sua situação individual." } }
+  ]
+}
+</script>
 
-<div class="yf-wrap">
-  <section style="background: white; border-bottom: 0.5px solid var(--border);">
-    <div class="hero">
-      <div class="hero-content">
-        <div class="hero-eyebrow">Lisboa &amp; Área Metropolitana</div>
-        <h1>Vacina Febre Amarela<br>em <em>Lisboa</em></h1>
-        <p class="hero-desc">Consulta de medicina de viagem online com vacinação presencial nos nossos parceiros em Lisboa. Certificado Internacional emitido no próprio dia.</p>
-        <div class="trust-row">
-          <span class="trust-pill"><span class="dot">●</span> Certificado Internacional válido</span>
-          <span class="trust-pill"><span class="dot">●</span> Consulta em 24-48h</span>
-          <span class="trust-pill"><span class="dot">●</span> Médico especialista em viagem</span>
-          <span class="trust-pill"><span class="dot">●</span> Parceiros em Lisboa</span>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&display=swap');
+.alg-article, .alg-article * { box-sizing: border-box; }
+.alg-article {
+  --ink: #0f1a14; --ink-mid: #3a4a3f; --ink-soft: #6b7d70; --ink-ghost: #a8b8ad;
+  --green: #1a6641; --green-vivid: #22865a; --green-light: #eaf4ee; --green-faint: #f4faf6;
+  --gold: #c8961a; --gold-light: #fdf5e0; --white: #ffffff;
+  --blue-faint: #f0f7ff; --blue-border: #bfdbfe; --blue-text: #1e40af;
+  --border: rgba(15,26,20,0.10); --border-mid: rgba(15,26,20,0.18);
+  --r: 10px; --r-lg: 16px;
+  --alg-gutter: 22px;
+  --alg-max: 1240px;
+  --alg-font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --alg-font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --alg-text: 1rem;
+  --alg-text-sm: 0.9375rem;
+  --alg-text-xs: 0.8125rem;
+  --alg-leading: 1.65;
+  --alg-leading-snug: 1.35;
+  font-family: var(--alg-font-sans);
+  font-size: var(--alg-text);
+  line-height: var(--alg-leading);
+  color: var(--ink-mid);
+  -webkit-font-smoothing: antialiased;
+}
+.alg-article a { text-decoration: none; }
+.alg-breadcrumb { font-size: var(--alg-text-xs); letter-spacing: 0.02em; color: var(--ink-ghost); padding: 4px var(--alg-gutter) 6px; width: min(100%, var(--alg-max)); margin: 0 auto 4px; box-sizing: border-box; }
+.alg-breadcrumb a { color: var(--ink-soft); font-weight: 500; }
+/* ~60/40: mais espaço para título e subtítulo à esquerda */
+.alg-hero {
+  padding: 16px var(--alg-gutter) 36px;
+  width: min(100%, var(--alg-max));
+  margin: 4px auto 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 40px);
+  align-items: stretch;
+  box-sizing: border-box;
+}
+.alg-hero-content, .alg-hero-aside { min-width: 0; }
+.alg-hero-aside { display: flex; flex-direction: column; min-height: 0; }
+.alg-hero-content .alg-hero-note { margin-top: 16px; }
+@media (max-width: 860px) {
+  .alg-hero { grid-template-columns: 1fr; gap: 28px; }
+}
+.alg-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: var(--alg-font-sans); font-size: var(--alg-text-xs); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); background: var(--green-light); padding: 5px 14px; border-radius: 20px; margin-bottom: 12px; }
+.alg-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+.alg-hero h2 { font-family: var(--alg-font-display); font-size: clamp(1.875rem, 4.8vw, 3.125rem); font-weight: 600; line-height: 1.12; letter-spacing: -0.03em; margin: 0 0 20px; border: none; color: var(--ink); }
+.alg-hero h2 em { font-style: italic; color: var(--green); }
+.alg-hero-desc { font-size: clamp(1rem, 2.5vw, 1.0625rem); color: var(--ink-mid); max-width: min(560px, 100%); margin-bottom: 24px; line-height: var(--alg-leading); font-weight: 400; }
+.alg-trust-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
+.alg-trust-pill { font-size: var(--alg-text-xs); font-weight: 500; color: var(--ink-mid); background: var(--green-faint); border: 0.5px solid var(--border-mid); padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 5px; }
+.alg-trust-pill .dot { color: var(--green-vivid); font-size: 14px; }
+.alg-hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r); overflow: hidden; }
+.alg-stat { background: white; padding: 14px 16px; text-align: center; }
+.alg-stat-n { font-family: var(--alg-font-display); font-size: 1.5rem; font-weight: 600; color: var(--green); line-height: 1; margin-bottom: 4px; }
+.alg-stat-l { font-size: 0.6875rem; font-weight: 500; color: var(--ink-soft); line-height: 1.35; letter-spacing: 0.02em; }
+.alg-hero-note { margin-top: 0; padding: 14px 16px; background: #eceef0; border: 0.5px solid rgba(15, 26, 20, 0.08); border-left: 4px solid var(--green); border-radius: 10px; font-size: calc(var(--alg-text-sm) - 4px); color: var(--ink-mid); line-height: var(--alg-leading); }
+.alg-hero-note strong { color: var(--ink); }
+/* Hero: imagem cobre todo o cartão; CTA em vidro sobreposto em baixo; altura = coluna esquerda */
+.alg-hero-aside .alg-hero-travel-booking.lon-service-card.is-visible {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  flex: 1 1 auto;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid #ebddf4;
+  box-shadow: 0 14px 30px rgba(53, 24, 74, 0.12);
+  background: #1a1420;
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-image-wrap.alg-hero-card-cover {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  overflow: hidden;
+}
+.alg-hero-aside .alg-hero-card-cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass.alg-hero-card-glass {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 3;
+  margin: 0;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 14px 14px 16px;
+  background: rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+/* .guide-prose força cor nos h3/p — repor branco no vidro do cartão */
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass h3 {
+  color: #fff !important;
+  margin-top: 0;
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass .lon-service-price {
+  color: #fff !important;
+  margin-bottom: 10px;
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-chip {
+  z-index: 4;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass a.lon-btn {
+  text-decoration: none;
+}
+/* Mesmas margens laterais e largura máxima que .alg-hero */
+.alg-section {
+  padding: 52px var(--alg-gutter);
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+.alg-section-label { font-family: var(--alg-font-sans); font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--green); margin-bottom: 10px; }
+/* Títulos de secção (mesma hierarquia em todo o artigo) */
+.alg-section h3,
+.alg-locations-section > h3,
+.alg-related-pages > h3 {
+  font-family: var(--alg-font-display);
+  font-size: clamp(1.375rem, 3.2vw, 2.125rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 12px;
+  line-height: 1.2;
+}
+.alg-section-sub { font-size: var(--alg-text-sm); color: var(--ink-soft); max-width: 620px; margin-bottom: 28px; line-height: var(--alg-leading); font-weight: 400; }
+.alg-steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 2px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); overflow: hidden; }
+.alg-step-block { background: white; padding: 24px 20px; }
+.alg-step-block-num { font-family: var(--alg-font-display); font-size: clamp(2rem, 4vw, 2.375rem); font-weight: 300; color: var(--green-light); line-height: 1; margin-bottom: 12px; letter-spacing: -0.06em; }
+.alg-step-block h4 { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); margin-bottom: 6px; line-height: var(--alg-leading-snug); }
+.alg-step-block p { font-size: var(--alg-text-xs); color: var(--ink-soft); line-height: var(--alg-leading); margin: 0; }
+/* Largura igual à secção anterior (alg-section / grelha de passos): bloco a 100% do artigo */
+.alg-info-band {
+  background: transparent;
+  border: none;
+  padding: 52px var(--alg-gutter) 84px;
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+.alg-info-band-inner { width: 100%; max-width: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 1100px) {
+  .alg-info-band-inner { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 12px; padding-bottom: 6px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+  .alg-info-item { flex: 0 0 min(240px, 78vw); }
+}
+.alg-info-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  gap: 10px;
+  padding: 20px;
+  aspect-ratio: 1;
+  min-height: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(8, 22, 14, 0.35) 100%), rgba(10, 56, 34, 0.96);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  box-shadow: 0 10px 36px rgba(8, 20, 14, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.alg-info-item h4 { font-family: var(--alg-font-sans); font-size: clamp(0.9375rem, 1.2vw, 1.125rem); font-weight: 600; margin: 0; color: #ffffff; line-height: 1.3; letter-spacing: -0.015em; }
+.alg-info-item p { font-size: var(--alg-text-xs); color: rgba(255, 255, 255, 0.92); line-height: var(--alg-leading); margin: 0; }
+@media (max-width: 768px) {
+  .alg-info-item { padding: 22px; gap: 12px; }
+  .alg-info-item h4 { font-size: clamp(1.0625rem, 3.8vw, 1.1875rem); line-height: 1.28; }
+  .alg-info-item p { font-size: var(--alg-text-sm); line-height: 1.55; }
+}
+.alg-locations-section {
+  background: var(--green-faint);
+  border-top: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+  padding: 54px var(--alg-gutter);
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: var(--r-lg);
+  box-sizing: border-box;
+}
+.alg-alert-marcacao { background: var(--gold-light); border: 1px solid rgba(200,150,26,0.3); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; padding: 14px 18px; font-size: var(--alg-text-sm); color: #6b4a08; margin-top: 28px; margin-bottom: 0; display: flex; gap: 10px; align-items: flex-start; line-height: var(--alg-leading); }
+.alg-loc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.alg-loc-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.alg-loc-card.featured { border-color: var(--green); border-width: 1.5px; }
+.alg-loc-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.alg-loc-name { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); line-height: var(--alg-leading-snug); }
+.alg-loc-badges { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+.alg-badge-cv, .alg-badge-vac, .alg-badge-priv { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; }
+.alg-badge-cv { background: var(--green-light); color: var(--green); }
+.alg-badge-vac { background: #e8f0fe; color: #1a4fbd; }
+.alg-badge-priv { background: #fef3cd; color: #856404; }
+.alg-region-divider { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-ghost); padding: 18px 0 8px; grid-column: 1 / -1; border-top: 0.5px solid var(--border); margin-top: 4px; }
+.alg-region-divider:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+.alg-loc-address { font-size: var(--alg-text-xs); color: var(--ink-soft); line-height: var(--alg-leading); }
+.alg-loc-hours { font-size: var(--alg-text-xs); color: var(--ink-mid); line-height: var(--alg-leading); background: var(--green-faint); border-radius: 6px; padding: 10px 12px; }
+.alg-loc-hours strong { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-ghost); margin-bottom: 6px; font-weight: 500; }
+.alg-loc-email-note { font-size: var(--alg-text-xs); color: var(--ink-soft); background: var(--blue-faint); border: 0.5px solid var(--blue-border); border-radius: 6px; padding: 8px 12px; line-height: var(--alg-leading); }
+.alg-loc-email-note strong { color: var(--blue-text); }
+.alg-loc-contacts { display: flex; flex-direction: column; gap: 6px; }
+.alg-loc-contact { font-size: var(--alg-text-xs); color: var(--ink-soft); display: flex; align-items: flex-start; gap: 6px; line-height: var(--alg-leading); }
+.alg-loc-contact a { color: var(--green); }
+.alg-loc-contact a:hover { text-decoration: underline; }
+.alg-faq-list { margin-top: 28px; }
+.alg-faq-item { border-bottom: 0.5px solid var(--border); padding: 18px 0; }
+.alg-faq-item:first-child { border-top: 0.5px solid var(--border); }
+.alg-faq-q { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px; line-height: var(--alg-leading-snug); }
+.alg-faq-q::after { content: '+'; font-family: var(--alg-font-display); color: var(--green); font-size: 1.25rem; font-weight: 400; flex-shrink: 0; margin-top: -2px; }
+.alg-faq-a { font-size: var(--alg-text-sm); color: var(--ink-soft); line-height: var(--alg-leading); }
+.alg-related-pages {
+  background: white;
+  border-top: 0.5px solid var(--border);
+  padding: 48px var(--alg-gutter);
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+.alg-related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+.alg-related-card { border: 0.5px solid var(--border-mid); border-radius: var(--r); padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: border-color 0.15s, background 0.15s; }
+.alg-related-card:hover { border-color: var(--green); background: var(--green-faint); }
+.alg-related-card-text { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); line-height: var(--alg-leading-snug); }
+.alg-related-card-sub { font-size: var(--alg-text-xs); color: var(--ink-ghost); margin-top: 4px; line-height: var(--alg-leading); }
+.alg-related-arrow { color: var(--green); font-size: 18px; flex-shrink: 0; }
+.alg-final-cta {
+  background: var(--ink);
+  color: white;
+  padding: 66px var(--alg-gutter);
+  text-align: center;
+  border-radius: var(--r-lg);
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+.alg-final-cta-inner { max-width: 520px; margin: 0 auto; }
+.alg-final-cta h3 {
+  font-family: var(--alg-font-display);
+  font-size: clamp(1.625rem, 4vw, 2.625rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin: 0 0 14px;
+  color: #fff;
+}
+.alg-final-cta h3 em { color: #7fd4a8; font-style: italic; }
+.alg-final-cta p { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); color: rgba(255,255,255,0.72); margin-bottom: 32px; line-height: var(--alg-leading); font-weight: 400; }
+.alg-btn-cta-large { display: inline-block; background: #22865a; color: white; font-family: var(--alg-font-sans); font-size: var(--alg-text); font-weight: 600; padding: 17px 40px; border-radius: 10px; margin-bottom: 12px; transition: background 0.18s; letter-spacing: 0.01em; }
+.alg-btn-cta-large:hover { background: #1a6641; }
+.alg-final-note { font-family: var(--alg-font-sans); font-size: var(--alg-text-xs); color: rgba(255,255,255,0.45); line-height: var(--alg-leading); letter-spacing: 0.02em; }
+.alg-disclaimer {
+  background: var(--green-faint);
+  border-top: 0.5px solid var(--border);
+  text-align: center;
+  font-family: var(--alg-font-sans);
+  font-size: var(--alg-text-xs);
+  color: var(--ink-ghost);
+  line-height: var(--alg-leading);
+  max-width: 680px;
+  width: 100%;
+  margin: 18px auto 0;
+  padding: 24px var(--alg-gutter);
+  border-radius: var(--r-lg);
+  box-sizing: border-box;
+}
+/* Sobreposição a .guide-prose para corpo e títulos coerentes */
+.guide-prose .alg-article { color: var(--ink-mid); }
+.guide-prose .alg-article p:not(.lon-service-price) { font-family: var(--alg-font-sans); font-size: var(--alg-text); line-height: var(--alg-leading); }
+.guide-prose .alg-article .alg-final-cta p {
+  font-size: var(--alg-text-sm);
+  color: rgba(255, 255, 255, 0.72);
+}
+.guide-prose .alg-article .alg-final-note {
+  color: rgba(255, 255, 255, 0.45);
+}
+.guide-prose .alg-article .alg-section h3,
+.guide-prose .alg-article .alg-locations-section > h3,
+.guide-prose .alg-article .alg-related-pages > h3,
+.guide-prose .alg-article .alg-final-cta h3 {
+  font-family: var(--alg-font-display);
+  color: inherit;
+}
+.guide-prose .alg-article .alg-section h3,
+.guide-prose .alg-article .alg-locations-section > h3,
+.guide-prose .alg-article .alg-related-pages > h3 { color: var(--ink); }
+.guide-prose .alg-article .alg-final-cta h3 { color: #fff; }
+.guide-prose .alg-article .alg-step-block h4,
+.guide-prose .alg-article .alg-faq-q { font-family: var(--alg-font-sans); }
+.guide-prose .alg-article .alg-hero h2 { font-family: var(--alg-font-display); color: var(--ink); margin-top: 0; }
+</style>
+
+<div class="alg-article">
+  <div class="alg-breadcrumb">
+    <a href="/">Início</a> › <a href="/blog">Guias</a> › <a href="/blog/vacina-febre-amarela-guia-completo">Vacina Febre Amarela</a> › Lisboa
+  </div>
+
+  <section style="background:white; border-bottom:0.5px solid var(--border);">
+    <div class="alg-hero">
+      <div class="alg-hero-content">
+        <div class="alg-eyebrow">Lisboa · Área Metropolitana</div>
+        <h2>Vacina Febre Amarela<br>em <em>Lisboa em 2026</em></h2>
+        <p class="alg-hero-desc">Consulta de medicina de viagem online com vacinação presencial nos nossos parceiros em Lisboa. Certificado Internacional emitido no próprio dia.</p>
+        <div class="alg-trust-row">
+          <span class="alg-trust-pill"><span class="dot">●</span> Certificado Internacional válido</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Consulta em 24–48h</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Médico especialista em viagem</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Parceiros em Lisboa</span>
         </div>
-        <div class="hero-stats">
-          <div class="stat"><div class="stat-n">1</div><div class="stat-l">dose para a vida toda</div></div>
-          <div class="stat"><div class="stat-n">10</div><div class="stat-l">dias até certificado ser válido</div></div>
-          <div class="stat"><div class="stat-n">99%</div><div class="stat-l">eficácia da vacina</div></div>
-        </div>
+        <div class="alg-hero-note"><strong>Informação de carácter geral:</strong> não substitui consulta médica individualizada. Horários e contactos dos Centros de Vacinação Internacional sujeitos a alteração. Confirme sempre junto da instituição antes de se deslocar.</div>
       </div>
-      <div class="hero-card" id="marcar">
-        <div class="card-header">
-          <div class="card-header-title">Marcar Consulta Online</div>
-          <div class="card-header-sub">Vacina febre amarela em Lisboa — processo simples e rápido</div>
-        </div>
-        <ul class="card-steps">
-          <li class="card-step"><span class="step-num">1</span><div><strong>Consulta online com médico</strong>Avaliação clínica e indicação personalizada. Disponível 7 dias/semana.</div></li>
-          <li class="card-step"><span class="step-num">2</span><div><strong>Vacinação presencial em Lisboa</strong>Encaminhamento para o parceiro mais próximo de si na área de Lisboa.</div></li>
-          <li class="card-step"><span class="step-num">3</span><div><strong>Certificado Internacional</strong>Emitido no dia da vacinação. Válido em todo o mundo 10 dias depois.</div></li>
-        </ul>
-        <a class="btn-primary" href="/marcar/travel">Marcar Consulta Online →</a>
-        <p class="card-note">Consulta disponível hoje · Resposta em menos de 24h</p>
-        <div class="card-guarantee"><span>📋</span><span>Planeie com antecedência — o certificado só é válido <strong>10 dias após a vacinação</strong>.</span></div>
+      <div class="alg-hero-aside" id="marcar">
+        <article class="lon-service-card is-visible alg-hero-travel-booking" aria-label="Consulta do Viajante — marcar online">
+          <div class="lon-service-image-wrap alg-hero-card-cover">
+            <img src="/image/guide/travel-cover-hq-6.webp" alt="Consulta do viajante e vacinação em Lisboa" width="800" height="600" loading="eager" decoding="async">
+            <span class="lon-service-chip">Viajante</span>
+            <div class="lon-service-glass alg-hero-card-glass">
+              <h3>Consulta do Viajante</h3>
+              <p class="lon-service-price">€39 · 20 min</p>
+              <a href="/marcar/travel" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
+            </div>
+          </div>
+        </article>
       </div>
     </div>
   </section>
 
-  <section class="section">
-    <div class="section-inner">
-      <div class="section-label">Como funciona</div>
-      <h2>Do primeiro clique à vacina</h2>
-      <p class="section-sub">Um processo pensado para ser simples — sem filas, sem deslocações desnecessárias, sem burocracia.</p>
-      <div class="steps-grid">
-        <div class="step-block"><div class="step-block-num">01</div><h3>Marque online</h3><p>Escolha data e hora para a sua consulta de medicina de viagem. Disponível 7 dias por semana, incluindo fins de semana.</p></div>
-        <div class="step-block"><div class="step-block-num">02</div><h3>Consulta com médico</h3><p>O nosso médico avalia o seu historial clínico, destino e datas de viagem. Confirma a indicação e eventuais contraindicações.</p></div>
-        <div class="step-block"><div class="step-block-num">03</div><h3>Vacinação em Lisboa</h3><p>É encaminhado para o parceiro presencial mais conveniente na área de Lisboa. A administração é rápida — poucos minutos.</p></div>
-        <div class="step-block"><div class="step-block-num">04</div><h3>Certificado em mãos</h3><p>Recebe o Certificado Internacional de Vacinação no próprio dia. Válido em todo o mundo 10 dias após a vacinação.</p></div>
-      </div>
+  <section class="alg-section">
+    <div class="alg-section-label">Como funciona</div>
+    <h3>Do primeiro clique à vacina em Lisboa</h3>
+    <p class="alg-section-sub">Consulta online, prescrição digital e vacinação com parceiros na área de Lisboa — sem filas desnecessárias.</p>
+    <div class="alg-steps-grid">
+      <div class="alg-step-block"><div class="alg-step-block-num">01</div><h4>Marque online</h4><p>Escolha data e hora para a consulta de medicina de viagem. Disponível 7 dias por semana.</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">02</div><h4>Consulta com médico</h4><p>O médico avalia historial, destino e datas. Confirma indicação e contraindicações.</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">03</div><h4>Vacinação em Lisboa</h4><p>Encaminhamento para o parceiro presencial mais conveniente na área metropolitana.</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">04</div><h4>Certificado em mãos</h4><p>CIVP no próprio dia. Válido em todo o mundo 10 dias após a vacinação.</p></div>
     </div>
   </section>
 
-  <div class="info-band">
-    <div class="info-band-inner">
-      <div class="info-item"><div class="info-icon">🎯</div><div><h4>Validade para a vida toda</h4><p>Desde 2016, a OMS reconhece que uma única dose da vacina febre amarela confere proteção vitalícia. O certificado não expira.</p></div></div>
-      <div class="info-item"><div class="info-icon">🌍</div><div><h4>Exigida em dezenas de países</h4><p>Brasil, Angola, Quénia, Tanzânia, Ruanda, Peru e muitos outros exigem o certificado internacional na fronteira.</p></div></div>
-      <div class="info-item"><div class="info-icon">⏳</div><div><h4>Não espere pela última semana</h4><p>O certificado só é válido 10 dias após a vacinação. Marque consulta com pelo menos 2–3 semanas de antecedência.</p></div></div>
-      <div class="info-item"><div class="info-icon">📄</div><div><h4>Certificado reconhecido mundialmente</h4><p>O Certificado Internacional emitido em Portugal é aceite em todos os países que o exigem, ao abrigo do Regulamento Sanitário Internacional.</p></div></div>
+  <div class="alg-info-band">
+    <div class="alg-info-band-inner">
+      <div class="alg-info-item"><h4>Validade para a vida toda</h4><p>Desde 2016, a OMS reconhece proteção vitalícia com dose única. O certificado não expira.</p></div>
+      <div class="alg-info-item"><h4>Exigida em dezenas de países</h4><p>Brasil, Angola, Quénia, Tanzânia, Ruanda, Peru e muitos outros exigem o certificado na fronteira.</p></div>
+      <div class="alg-info-item"><h4>Não espere pela última semana</h4><p>O certificado só é válido 10 dias após a vacinação. Marque com 2–3 semanas de antecedência.</p></div>
+      <div class="alg-info-item"><h4>Certificado reconhecido mundialmente</h4><p>O CIVP emitido em Portugal é aceite nos países que o exigem, ao abrigo do RSI.</p></div>
     </div>
   </div>
 
-  <section class="section faq-bg">
-    <div class="section-inner">
-      <div class="section-label">Perguntas frequentes</div>
-      <h2>O que precisa saber antes de marcar</h2>
-      <div class="faq-list">
-        <div class="faq-item"><div class="faq-q">Onde é feita a vacinação em Lisboa?</div><div class="faq-a">A vacinação é realizada num dos nossos parceiros presenciais na área metropolitana de Lisboa — Centros de Vacinação Internacional ou clínicas parceiras autorizadas. Após a consulta online, indicamos o local mais conveniente para si e confirmamos a disponibilidade.</div></div>
-        <div class="faq-item"><div class="faq-q">Qual é o preço da vacina febre amarela em Lisboa?</div><div class="faq-a">O custo da vacina febre amarela varia consoante o local de administração. Os Centros de Vacinação Internacional oferecem habitualmente preços mais acessíveis (entre €30 e €60). Clínicas privadas parceiras têm preços entre €60 e €90. A consulta de medicina de viagem online é cobrada separadamente.</div></div>
-        <div class="faq-item"><div class="faq-q">Com que antecedência devo marcar?</div><div class="faq-a">Recomendamos marcar consulta com pelo menos 2 a 3 semanas de antecedência, pois o certificado só é válido 10 dias após a vacinação.</div></div>
-        <div class="faq-item"><div class="faq-q">A vacina tem contraindicações?</div><div class="faq-a">Sim. A vacina febre amarela é uma vacina de vírus vivo atenuado e não é adequada para bebés com menos de 6 meses, pessoas com imunodeficiência grave, doenças do timo, alergia grave ao ovo ou gravidez (relativa). A consulta médica serve precisamente para avaliar a sua situação individual.</div></div>
+  <section class="alg-locations-section">
+    <div class="alg-section-label">Pontos de vacinação — ARSLVT</div>
+    <h3>Centros de Vacinação Internacional na Área de Lisboa e Vale do Tejo</h3>
+    <p class="alg-section-sub">Locais públicos da ARSLVT onde pode tomar a vacina febre amarela e realizar consulta do viajante. Confirme antes de se deslocar.</p>
+    <div class="alg-alert-marcacao" style="margin-top:0;margin-bottom:0;"><span>⚠️</span><span><strong>Marcação obrigatória antes de se deslocar.</strong> Contacte o local por telefone ou e-mail para agendar a sua visita.</span></div>
+    <div class="alg-loc-grid" style="margin-top:28px;">
+      <div class="alg-loc-card featured">
+        <div class="alg-loc-card-header">
+          <div class="alg-loc-name">ACES Almada-Seixal</div>
+          <div class="alg-loc-badges"><span class="alg-badge-cv">Consulta</span><span class="alg-badge-vac">Vacinação</span></div>
+        </div>
+        <div class="alg-loc-address">📍 Av. Rainha D. Leonor, 2<br>2809-010 Almada</div>
+        <div class="alg-loc-hours"><strong>Horário</strong>2ª e 3ª: 14h00–17h00<br>5ª e 6ª: 09h00–12h00</div>
+        <div class="alg-loc-contacts">
+          <div class="alg-loc-contact">📞 <a href="tel:212728820">212 728 820</a></div>
+          <div class="alg-loc-contact">✉️ <a href="mailto:usp.almadaseixal@arslvt.min-saude.pt">usp.almadaseixal@arslvt.min-saude.pt</a></div>
+        </div>
+      </div>
+      <div class="alg-loc-card">
+        <div class="alg-loc-card-header">
+          <div class="alg-loc-name">ACES Amadora</div>
+          <div class="alg-loc-badges"><span class="alg-badge-cv">Consulta</span><span class="alg-badge-vac">Vacinação</span></div>
+        </div>
+        <div class="alg-loc-address">📍 Praça Conde da Lousã, Damaia<br>2720-122 Amadora</div>
+        <div class="alg-loc-hours"><strong>Horário</strong>4ª feira: 09h30–12h30</div>
+        <div class="alg-loc-contacts">
+          <div class="alg-loc-contact">📞 <a href="tel:214906230">214 906 230</a></div>
+          <div class="alg-loc-contact">✉️ <a href="mailto:vacint12@arslvt.min-saude.pt">vacint12@arslvt.min-saude.pt</a></div>
+        </div>
+      </div>
+      <div class="alg-loc-card">
+        <div class="alg-loc-card-header">
+          <div class="alg-loc-name">ACES Cascais</div>
+          <div class="alg-loc-badges"><span class="alg-badge-cv">Consulta</span><span class="alg-badge-vac">Vacinação</span></div>
+        </div>
+        <div class="alg-loc-address">📍 Rua Prof. Dr. Egas Moniz, 9010<br>2765-618 Estoril</div>
+        <div class="alg-loc-hours"><strong>Horário</strong>2ª: 09h00–19h00<br>4ª: 14h00–19h00<br>6ª: 09h00–16h00</div>
+        <div class="alg-loc-contacts">
+          <div class="alg-loc-contact">📞 <a href="tel:214643722">214 643 722</a></div>
+          <div class="alg-loc-contact">✉️ <a href="mailto:consultadoviajante.cascais@arslvt.min-saude.pt">consultadoviajante.cascais@arslvt.min-saude.pt</a></div>
+        </div>
+      </div>
+      <div class="alg-loc-card">
+        <div class="alg-loc-card-header">
+          <div class="alg-loc-name">ACES Lisboa Norte</div>
+          <div class="alg-loc-badges"><span class="alg-badge-cv">Consulta</span><span class="alg-badge-vac">Vacinação</span></div>
+        </div>
+        <div class="alg-loc-address">📍 Largo Prof. Arnaldo Sampaio<br>1549-010 Lisboa</div>
+        <div class="alg-loc-hours"><strong>Horário</strong>Vacinação: dias úteis 09h00–15h30<br>Consultas: 3ª feira 09h00–13h00</div>
+        <div class="alg-loc-contacts">
+          <div class="alg-loc-contact">📞 <a href="tel:217211862">217 211 862</a></div>
+          <div class="alg-loc-contact">✉️ <a href="mailto:consulta.viajante.lxnorte@arslvt.min-saude.pt">consulta.viajante.lxnorte@arslvt.min-saude.pt</a></div>
+        </div>
       </div>
     </div>
+    <p class="alg-section-sub" style="margin-top:20px;margin-bottom:0;font-size:var(--alg-text-xs);">Fonte: ARSLVT. Horários sujeitos a alteração sem aviso prévio.</p>
   </section>
 
-  <section class="locations-section">
-    <div class="locations-inner">
-      <div class="section-label">Pontos de vacinação — ARSLVT</div>
-      <h2 style="font-family:'Fraunces',serif;font-size:clamp(24px,4vw,34px);font-weight:600;letter-spacing:-0.5px;color:var(--ink);margin-bottom:12px;line-height:1.2;">Centros de Vacinação Internacional<br>na Área de Lisboa e Vale do Tejo</h2>
-      <p style="font-size:15px;color:var(--ink-soft);margin-bottom:28px;max-width:580px;">Locais públicos da ARSLVT onde pode tomar a vacina febre amarela e realizar consulta do viajante. Os horários podem sofrer alterações — confirme antes de se deslocar.</p>
-      <div class="alert-marcacao"><span>⚠️</span><span><strong>Marcação obrigatória antes de se deslocar.</strong> Contacte o local pretendido por telefone ou e-mail para agendar a sua visita.</span></div>
-      <div class="loc-grid">
-        <div class="loc-card"><div class="loc-card-header"><div class="loc-name">ACES Almada-Seixal</div><div class="loc-badges"><span class="badge-cv">Consulta</span><span class="badge-vac">Vacinação</span></div></div><div class="loc-address">📍 Av. Rainha D. Leonor, 2<br>2809-010 Almada</div><div class="loc-hours"><strong>Horário</strong>2ª e 3ª: 14h00–17h00<br>5ª e 6ª: 09h00–12h00</div><div class="loc-contacts"><div class="loc-contact">📞 <a href="tel:212728820">212 728 820</a></div><div class="loc-contact">✉️ <a href="mailto:usp.almadaseixal@arslvt.min-saude.pt">usp.almadaseixal@arslvt.min-saude.pt</a></div></div></div>
-        <div class="loc-card"><div class="loc-card-header"><div class="loc-name">ACES Amadora</div><div class="loc-badges"><span class="badge-cv">Consulta</span><span class="badge-vac">Vacinação</span></div></div><div class="loc-address">📍 Praça Conde da Lousã, Damaia<br>2720-122 Amadora</div><div class="loc-hours"><strong>Horário</strong>4ª feira: 09h30–12h30</div><div class="loc-contacts"><div class="loc-contact">📞 <a href="tel:214906230">214 906 230</a></div><div class="loc-contact">✉️ <a href="mailto:vacint12@arslvt.min-saude.pt">vacint12@arslvt.min-saude.pt</a></div></div></div>
-        <div class="loc-card"><div class="loc-card-header"><div class="loc-name">ACES Cascais</div><div class="loc-badges"><span class="badge-cv">Consulta</span><span class="badge-vac">Vacinação</span></div></div><div class="loc-address">📍 Rua Prof. Dr. Egas Moniz, 9010<br>2765-618 Estoril</div><div class="loc-hours"><strong>Horário</strong>2ª: 09h00–19h00<br>4ª: 14h00–19h00<br>6ª: 09h00–16h00</div><div class="loc-contacts"><div class="loc-contact">📞 <a href="tel:214643722">214 643 722</a></div><div class="loc-contact">✉️ <a href="mailto:consultadoviajante.cascais@arslvt.min-saude.pt">consultadoviajante.cascais@arslvt.min-saude.pt</a></div></div></div>
-        <div class="loc-card"><div class="loc-card-header"><div class="loc-name">ACES Lisboa Norte</div><div class="loc-badges"><span class="badge-cv">Consulta</span><span class="badge-vac">Vacinação</span></div></div><div class="loc-address">📍 Largo Prof. Arnaldo Sampaio<br>1549-010 Lisboa</div><div class="loc-hours"><strong>Horário</strong>Vacinação: dias úteis 09h00–15h30<br>Consultas: 3ª feira 09h00–13h00</div><div class="loc-contacts"><div class="loc-contact">📞 <a href="tel:217211862">217 211 862</a></div><div class="loc-contact">✉️ <a href="mailto:consulta.viajante.lxnorte@arslvt.min-saude.pt">consulta.viajante.lxnorte@arslvt.min-saude.pt</a></div></div></div>
-      </div>
-      <p class="links-inline">Fonte: ARSLVT. Horários sujeitos a alteração sem aviso prévio.</p>
+  <section class="alg-section" style="background:white;">
+    <div class="alg-section-label">Perguntas frequentes</div>
+    <h3>Vacina febre amarela em Lisboa — dúvidas comuns</h3>
+    <div class="alg-faq-list">
+      <div class="alg-faq-item"><div class="alg-faq-q">Onde é feita a vacinação em Lisboa?</div><div class="alg-faq-a">Num dos nossos parceiros presenciais na área metropolitana — Centros de Vacinação Internacional ou clínicas parceiras autorizadas. Após a consulta online, indicamos o local mais conveniente.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">Qual é o preço da vacina febre amarela em Lisboa?</div><div class="alg-faq-a">Varia consoante o local. Os Centros de Vacinação Internacional costumam ter preços entre €30 e €60; clínicas privadas entre €60 e €90. A consulta online é cobrada separadamente.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">Com que antecedência devo marcar?</div><div class="alg-faq-a">Recomendamos 2 a 3 semanas de antecedência, pois o certificado só é válido 10 dias após a vacinação.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">A vacina tem contraindicações?</div><div class="alg-faq-a">Sim. Não é adequada para bebés com menos de 6 meses, imunodeficiência grave, doenças do timo, alergia grave ao ovo ou gravidez (relativa). A consulta serve para avaliar o seu caso.</div></div>
     </div>
   </section>
 
-  <section class="related-pages">
-    <div class="related-inner">
-      <div class="section-label">Outras páginas úteis</div>
-      <h2 style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--ink);margin-bottom:4px;">Mais guias de vacina febre amarela</h2>
-      <p style="font-size:14px;color:var(--ink-soft);">Compare locais, horários e processos noutras regiões.</p>
-      <div class="related-grid">
-        <a class="related-card" href="/blog/vacina-febre-amarela-guia-completo"><div><div class="related-card-text">Guia Completo</div><div class="related-card-sub">Validade, reações, certificado e países</div></div><span class="related-arrow">→</span></a>
-        <a class="related-card" href="/blog/vacina-febre-amarela-porto"><div><div class="related-card-text">Porto</div><div class="related-card-sub">Centros de Vacinação Internacional no Porto e região Norte</div></div><span class="related-arrow">→</span></a>
-        <a class="related-card" href="/blog/vacina-febre-amarela-coimbra"><div><div class="related-card-text">Coimbra</div><div class="related-card-sub">Centros de Vacinação Internacional em Coimbra e Centro</div></div><span class="related-arrow">→</span></a>
-        <a class="related-card" href="/blog/vacina-febre-amarela-braga"><div><div class="related-card-text">Braga</div><div class="related-card-sub">Centros de Vacinação Internacional em Braga e Minho</div></div><span class="related-arrow">→</span></a>
-        <a class="related-card" href="/blog/vacina-febre-amarela-algarve"><div><div class="related-card-text">Algarve</div><div class="related-card-sub">Faro e Portimão</div></div><span class="related-arrow">→</span></a>
-        <a class="related-card" href="/blog/vacina-febre-amarela-cuf"><div><div class="related-card-text">CUF</div><div class="related-card-sub">Alternativas e Centros de Vacinação Internacional em Portugal</div></div><span class="related-arrow">→</span></a>
-      </div>
+  <section class="alg-related-pages">
+    <div class="alg-section-label">Outras páginas úteis</div>
+    <h3>Mais informação sobre a vacina febre amarela</h3>
+    <p class="alg-section-sub">Guias de outras cidades e artigo completo.</p>
+    <div class="alg-related-grid">
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-guia-completo"><div><div class="alg-related-card-text">Guia Completo</div><div class="alg-related-card-sub">Validade, reações, certificado e países</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-porto"><div><div class="alg-related-card-text">Porto</div><div class="alg-related-card-sub">Centros de Vacinação Internacional do Porto e região Norte</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-coimbra"><div><div class="alg-related-card-text">Coimbra</div><div class="alg-related-card-sub">Centros de Vacinação Internacional em Coimbra e região Centro</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-braga"><div><div class="alg-related-card-text">Braga</div><div class="alg-related-card-sub">Braga, Minho e alternativas</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-algarve"><div><div class="alg-related-card-text">Algarve</div><div class="alg-related-card-sub">Faro e Portimão</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-cuf"><div><div class="alg-related-card-text">CUF</div><div class="alg-related-card-sub">Alternativas e Centros de Vacinação Internacional em Portugal</div></div><span class="alg-related-arrow">→</span></a>
     </div>
   </section>
 
-  <section class="final-cta">
-    <div class="final-cta-inner">
-      <h2>Pronto para viajar<br><em>com segurança?</em></h2>
-      <p>Marque a sua consulta de medicina de viagem online hoje. Em menos de 48 horas fica com tudo tratado.</p>
-      <a class="btn-cta-large" href="/marcar/travel">Marcar Consulta Online →</a>
-      <p class="final-note">Disponível 7 dias por semana · Certificado Internacional emitido no dia da vacinação</p>
+  <section class="alg-final-cta">
+    <div class="alg-final-cta-inner">
+      <h3>Pronto para viajar<br><em>com segurança?</em></h3>
+      <p>Marque a consulta online hoje. Em menos de 48 horas fica com tudo tratado.</p>
+      <a class="alg-btn-cta-large" href="/marcar/travel">Marcar Consulta Online →</a>
+      <p class="alg-final-note">Disponível 7 dias por semana · Certificado Internacional emitido no dia da vacinação</p>
     </div>
   </section>
 
-  <div class="disclaimer">
+  <div class="alg-disclaimer">
     <p>Esta página contém informação geral e não substitui consulta médica individualizada. As exigências de vacinação por país podem mudar — confirme sempre com o consulado do país de destino ou com o seu médico antes de viajar.</p>
   </div>
+
 </div>

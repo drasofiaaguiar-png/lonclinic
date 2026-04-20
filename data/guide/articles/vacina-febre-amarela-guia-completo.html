@@ -1,125 +1,509 @@
-﻿<style>
-.fa-callout { border: 1px solid #dce9e1; background: #f4fbf7; border-radius: 12px; padding: 14px 16px; margin: 14px 0; }
-.fa-alert { border-left: 4px solid #d97706; background: #fff7ed; border: 1px solid #fed7aa; border-left-width: 4px; border-radius: 8px; padding: 12px 14px; margin: 14px 0; }
-.fa-danger { border-left: 4px solid #dc2626; background: #fef2f2; border: 1px solid #fecaca; border-left-width: 4px; border-radius: 8px; padding: 12px 14px; margin: 14px 0; }
-.fa-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(170px,1fr)); gap: 10px; margin: 14px 0; }
-.fa-card { border: 1px solid #e5e7eb; border-radius: 10px; background: #fff; padding: 12px; }
-.fa-card strong { display:block; font-size: .84rem; color:#6b7280; text-transform: uppercase; letter-spacing: .03em; }
-.fa-card span { display:block; margin-top: 6px; font-weight: 700; }
-.fa-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: .95rem; }
-.fa-table th,.fa-table td { border: 1px solid #e5e7eb; padding: 8px 10px; text-align: left; vertical-align: top; }
-.fa-table th { background: #0f5132; color:#fff; }
-.fa-country { display:grid; grid-template-columns: repeat(auto-fit,minmax(170px,1fr)); gap:8px; margin: 14px 0; }
-.fa-pill { background:#ecfdf3; border:1px solid #bbf7d0; border-radius:8px; padding:8px 10px; font-size:.92rem; }
+﻿<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalWebPage",
+  "name": "Vacina Febre Amarela — Guia Completo 2026",
+  "description": "Certificado internacional, validade, dose, reações, contraindicações e países que exigem a vacina febre amarela em Portugal."
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "A vacina é obrigatória para o Brasil?", "acceptedAnswer": { "@type": "Answer", "text": "Depende da rota e origem da viagem. Em muitos casos, é altamente recomendada para zonas de risco no Brasil." } },
+    { "@type": "Question", "name": "Posso tomar em cima da data da viagem?", "acceptedAnswer": { "@type": "Answer", "text": "Pode, mas o certificado internacional só fica válido após 10 dias." } },
+    { "@type": "Question", "name": "Tenho vacina de há mais de 10 anos, preciso repetir?", "acceptedAnswer": { "@type": "Answer", "text": "Na maioria dos casos, não. Considera-se proteção vitalícia com dose única." } }
+  ]
+}
+</script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&display=swap');
+.alg-article, .alg-article * { box-sizing: border-box; }
+.alg-article {
+  --ink: #0f1a14; --ink-mid: #3a4a3f; --ink-soft: #6b7d70; --ink-ghost: #a8b8ad;
+  --green: #1a6641; --green-vivid: #22865a; --green-light: #eaf4ee; --green-faint: #f4faf6;
+  --gold: #c8961a; --gold-light: #fdf5e0; --white: #ffffff;
+  --blue-faint: #f0f7ff; --blue-border: #bfdbfe; --blue-text: #1e40af;
+  --border: rgba(15,26,20,0.10); --border-mid: rgba(15,26,20,0.18);
+  --r: 10px; --r-lg: 16px;
+  --alg-gutter: 22px;
+  --alg-max: 1240px;
+  --alg-font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --alg-font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --alg-text: 1rem;
+  --alg-text-sm: 0.9375rem;
+  --alg-text-xs: 0.8125rem;
+  --alg-leading: 1.65;
+  --alg-leading-snug: 1.35;
+  font-family: var(--alg-font-sans);
+  font-size: var(--alg-text);
+  line-height: var(--alg-leading);
+  color: var(--ink-mid);
+  -webkit-font-smoothing: antialiased;
+}
+.alg-article a { text-decoration: none; }
+.alg-breadcrumb { font-size: var(--alg-text-xs); letter-spacing: 0.02em; color: var(--ink-ghost); padding: 4px var(--alg-gutter) 6px; width: min(100%, var(--alg-max)); margin: 0 auto 4px; box-sizing: border-box; }
+.alg-breadcrumb a { color: var(--ink-soft); font-weight: 500; }
+/* ~60/40: mais espaço para título e subtítulo à esquerda */
+.alg-hero {
+  padding: 16px var(--alg-gutter) 36px;
+  width: min(100%, var(--alg-max));
+  margin: 4px auto 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 40px);
+  align-items: stretch;
+  box-sizing: border-box;
+}
+.alg-hero-content, .alg-hero-aside { min-width: 0; }
+.alg-hero-aside { display: flex; flex-direction: column; min-height: 0; }
+.alg-hero-content .alg-hero-note { margin-top: 16px; }
+@media (max-width: 860px) {
+  .alg-hero { grid-template-columns: 1fr; gap: 28px; }
+}
+.alg-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: var(--alg-font-sans); font-size: var(--alg-text-xs); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); background: var(--green-light); padding: 5px 14px; border-radius: 20px; margin-bottom: 12px; }
+.alg-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+.alg-hero h2 { font-family: var(--alg-font-display); font-size: clamp(1.875rem, 4.8vw, 3.125rem); font-weight: 600; line-height: 1.12; letter-spacing: -0.03em; margin: 0 0 20px; border: none; color: var(--ink); }
+.alg-hero h2 em { font-style: italic; color: var(--green); }
+.alg-hero-desc { font-size: clamp(1rem, 2.5vw, 1.0625rem); color: var(--ink-mid); max-width: min(560px, 100%); margin-bottom: 24px; line-height: var(--alg-leading); font-weight: 400; }
+.alg-trust-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
+.alg-trust-pill { font-size: var(--alg-text-xs); font-weight: 500; color: var(--ink-mid); background: var(--green-faint); border: 0.5px solid var(--border-mid); padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 5px; }
+.alg-trust-pill .dot { color: var(--green-vivid); font-size: 14px; }
+.alg-hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r); overflow: hidden; }
+.alg-stat { background: white; padding: 14px 16px; text-align: center; }
+.alg-stat-n { font-family: var(--alg-font-display); font-size: 1.5rem; font-weight: 600; color: var(--green); line-height: 1; margin-bottom: 4px; }
+.alg-stat-l { font-size: 0.6875rem; font-weight: 500; color: var(--ink-soft); line-height: 1.35; letter-spacing: 0.02em; }
+.alg-hero-note { margin-top: 0; padding: 14px 16px; background: #eceef0; border: 0.5px solid rgba(15, 26, 20, 0.08); border-left: 4px solid var(--green); border-radius: 10px; font-size: calc(var(--alg-text-sm) - 4px); color: var(--ink-mid); line-height: var(--alg-leading); }
+.alg-hero-note strong { color: var(--ink); }
+/* Hero: imagem cobre todo o cartão; CTA em vidro sobreposto em baixo; altura = coluna esquerda */
+.alg-hero-aside .alg-hero-travel-booking.lon-service-card.is-visible {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  flex: 1 1 auto;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid #ebddf4;
+  box-shadow: 0 14px 30px rgba(53, 24, 74, 0.12);
+  background: #1a1420;
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-image-wrap.alg-hero-card-cover {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  overflow: hidden;
+}
+.alg-hero-aside .alg-hero-card-cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass.alg-hero-card-glass {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 3;
+  margin: 0;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 14px 14px 16px;
+  background: rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+/* .guide-prose força cor nos h3/p — repor branco no vidro do cartão */
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass h3 {
+  color: #fff !important;
+  margin-top: 0;
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass .lon-service-price {
+  color: #fff !important;
+  margin-bottom: 10px;
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-chip {
+  z-index: 4;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass a.lon-btn {
+  text-decoration: none;
+}
+/* Mesmas margens laterais e largura máxima que .alg-hero */
+.alg-section {
+  padding: 52px var(--alg-gutter);
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+.alg-section-label { font-family: var(--alg-font-sans); font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--green); margin-bottom: 10px; }
+/* Títulos de secção (mesma hierarquia em todo o artigo) */
+.alg-section h3,
+.alg-locations-section > h3,
+.alg-related-pages > h3 {
+  font-family: var(--alg-font-display);
+  font-size: clamp(1.375rem, 3.2vw, 2.125rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 12px;
+  line-height: 1.2;
+}
+.alg-section-sub { font-size: var(--alg-text-sm); color: var(--ink-soft); max-width: 620px; margin-bottom: 28px; line-height: var(--alg-leading); font-weight: 400; }
+.alg-steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 2px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); overflow: hidden; }
+.alg-step-block { background: white; padding: 24px 20px; }
+.alg-step-block-num { font-family: var(--alg-font-display); font-size: clamp(2rem, 4vw, 2.375rem); font-weight: 300; color: var(--green-light); line-height: 1; margin-bottom: 12px; letter-spacing: -0.06em; }
+.alg-step-block h4 { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); margin-bottom: 6px; line-height: var(--alg-leading-snug); }
+.alg-step-block p { font-size: var(--alg-text-xs); color: var(--ink-soft); line-height: var(--alg-leading); margin: 0; }
+/* Largura igual à secção anterior (alg-section / grelha de passos): bloco a 100% do artigo */
+.alg-info-band {
+  background: transparent;
+  border: none;
+  padding: 52px var(--alg-gutter) 84px;
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+.alg-info-band-inner { width: 100%; max-width: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 1100px) {
+  .alg-info-band-inner { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 12px; padding-bottom: 6px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+  .alg-info-item { flex: 0 0 min(240px, 78vw); }
+}
+.alg-info-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  gap: 10px;
+  padding: 20px;
+  aspect-ratio: 1;
+  min-height: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(8, 22, 14, 0.35) 100%), rgba(10, 56, 34, 0.96);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  box-shadow: 0 10px 36px rgba(8, 20, 14, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.alg-info-item h4 { font-family: var(--alg-font-sans); font-size: clamp(0.9375rem, 1.2vw, 1.125rem); font-weight: 600; margin: 0; color: #ffffff; line-height: 1.3; letter-spacing: -0.015em; }
+.alg-info-item p { font-size: var(--alg-text-xs); color: rgba(255, 255, 255, 0.92); line-height: var(--alg-leading); margin: 0; }
+@media (max-width: 768px) {
+  .alg-info-item { padding: 22px; gap: 12px; }
+  .alg-info-item h4 { font-size: clamp(1.0625rem, 3.8vw, 1.1875rem); line-height: 1.28; }
+  .alg-info-item p { font-size: var(--alg-text-sm); line-height: 1.55; }
+}
+.alg-locations-section {
+  background: var(--green-faint);
+  border-top: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+  padding: 54px var(--alg-gutter);
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: var(--r-lg);
+  box-sizing: border-box;
+}
+.alg-alert-marcacao { background: var(--gold-light); border: 1px solid rgba(200,150,26,0.3); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; padding: 14px 18px; font-size: var(--alg-text-sm); color: #6b4a08; margin-top: 28px; margin-bottom: 0; display: flex; gap: 10px; align-items: flex-start; line-height: var(--alg-leading); }
+.alg-loc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.alg-loc-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.alg-loc-card.featured { border-color: var(--green); border-width: 1.5px; }
+.alg-loc-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.alg-loc-name { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); line-height: var(--alg-leading-snug); }
+.alg-loc-badges { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+.alg-badge-cv, .alg-badge-vac, .alg-badge-priv { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; }
+.alg-badge-cv { background: var(--green-light); color: var(--green); }
+.alg-badge-vac { background: #e8f0fe; color: #1a4fbd; }
+.alg-badge-priv { background: #fef3cd; color: #856404; }
+.alg-region-divider { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-ghost); padding: 18px 0 8px; grid-column: 1 / -1; border-top: 0.5px solid var(--border); margin-top: 4px; }
+.alg-region-divider:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+.alg-loc-address { font-size: var(--alg-text-xs); color: var(--ink-soft); line-height: var(--alg-leading); }
+.alg-loc-hours { font-size: var(--alg-text-xs); color: var(--ink-mid); line-height: var(--alg-leading); background: var(--green-faint); border-radius: 6px; padding: 10px 12px; }
+.alg-loc-hours strong { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-ghost); margin-bottom: 6px; font-weight: 500; }
+.alg-loc-email-note { font-size: var(--alg-text-xs); color: var(--ink-soft); background: var(--blue-faint); border: 0.5px solid var(--blue-border); border-radius: 6px; padding: 8px 12px; line-height: var(--alg-leading); }
+.alg-loc-email-note strong { color: var(--blue-text); }
+.alg-loc-contacts { display: flex; flex-direction: column; gap: 6px; }
+.alg-loc-contact { font-size: var(--alg-text-xs); color: var(--ink-soft); display: flex; align-items: flex-start; gap: 6px; line-height: var(--alg-leading); }
+.alg-loc-contact a { color: var(--green); }
+.alg-loc-contact a:hover { text-decoration: underline; }
+.alg-faq-list { margin-top: 28px; }
+.alg-faq-item { border-bottom: 0.5px solid var(--border); padding: 18px 0; }
+.alg-faq-item:first-child { border-top: 0.5px solid var(--border); }
+.alg-faq-q { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px; line-height: var(--alg-leading-snug); }
+.alg-faq-q::after { content: '+'; font-family: var(--alg-font-display); color: var(--green); font-size: 1.25rem; font-weight: 400; flex-shrink: 0; margin-top: -2px; }
+.alg-faq-a { font-size: var(--alg-text-sm); color: var(--ink-soft); line-height: var(--alg-leading); }
+.alg-related-pages {
+  background: white;
+  border-top: 0.5px solid var(--border);
+  padding: 48px var(--alg-gutter);
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+.alg-related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+.alg-related-card { border: 0.5px solid var(--border-mid); border-radius: var(--r); padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: border-color 0.15s, background 0.15s; }
+.alg-related-card:hover { border-color: var(--green); background: var(--green-faint); }
+.alg-related-card-text { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); line-height: var(--alg-leading-snug); }
+.alg-related-card-sub { font-size: var(--alg-text-xs); color: var(--ink-ghost); margin-top: 4px; line-height: var(--alg-leading); }
+.alg-related-arrow { color: var(--green); font-size: 18px; flex-shrink: 0; }
+.alg-final-cta {
+  background: var(--ink);
+  color: white;
+  padding: 66px var(--alg-gutter);
+  text-align: center;
+  border-radius: var(--r-lg);
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+.alg-final-cta-inner { max-width: 520px; margin: 0 auto; }
+.alg-final-cta h3 {
+  font-family: var(--alg-font-display);
+  font-size: clamp(1.625rem, 4vw, 2.625rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin: 0 0 14px;
+  color: #fff;
+}
+.alg-final-cta h3 em { color: #7fd4a8; font-style: italic; }
+.alg-final-cta p { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); color: rgba(255,255,255,0.72); margin-bottom: 32px; line-height: var(--alg-leading); font-weight: 400; }
+.alg-btn-cta-large { display: inline-block; background: #22865a; color: white; font-family: var(--alg-font-sans); font-size: var(--alg-text); font-weight: 600; padding: 17px 40px; border-radius: 10px; margin-bottom: 12px; transition: background 0.18s; letter-spacing: 0.01em; }
+.alg-btn-cta-large:hover { background: #1a6641; }
+.alg-final-note { font-family: var(--alg-font-sans); font-size: var(--alg-text-xs); color: rgba(255,255,255,0.45); line-height: var(--alg-leading); letter-spacing: 0.02em; }
+.alg-disclaimer {
+  background: var(--green-faint);
+  border-top: 0.5px solid var(--border);
+  text-align: center;
+  font-family: var(--alg-font-sans);
+  font-size: var(--alg-text-xs);
+  color: var(--ink-ghost);
+  line-height: var(--alg-leading);
+  max-width: 680px;
+  width: 100%;
+  margin: 18px auto 0;
+  padding: 24px var(--alg-gutter);
+  border-radius: var(--r-lg);
+  box-sizing: border-box;
+}
+.alg-prose-block { margin: 0 0 1.1em; font-size: var(--alg-text); color: var(--ink-mid); line-height: var(--alg-leading); }
+.alg-prose-block:last-child { margin-bottom: 0; }
+.alg-callout { border: 0.5px solid var(--border-mid); background: var(--green-faint); border-radius: var(--r); padding: 14px 16px; margin: 16px 0; font-size: var(--alg-text-sm); color: var(--ink-mid); line-height: var(--alg-leading); }
+.alg-callout strong { color: var(--ink); }
+.alg-warn { border-left: 4px solid #d97706; background: #fff7ed; border: 1px solid #fed7aa; border-left-width: 4px; border-radius: var(--r); padding: 12px 14px; margin: 16px 0; font-size: var(--alg-text-sm); color: #7c2d12; }
+.alg-danger-box { border-left: 4px solid #dc2626; background: #fef2f2; border: 1px solid #fecaca; border-left-width: 4px; border-radius: var(--r); padding: 12px 14px; margin: 16px 0; font-size: var(--alg-text-sm); color: #7f1d1d; }
+.alg-simple-table { width: 100%; border-collapse: collapse; font-size: var(--alg-text-sm); margin: 16px 0; }
+.alg-simple-table th, .alg-simple-table td { border: 0.5px solid var(--border-mid); padding: 8px 10px; text-align: left; vertical-align: top; }
+.alg-simple-table th { background: var(--ink); color: #fff; font-size: var(--alg-text-xs); }
+.alg-cgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 16px 0; }
+.alg-ccard { border: 0.5px solid var(--border-mid); border-radius: var(--r); background: #fff; padding: 12px; font-size: var(--alg-text-xs); }
+.alg-ccard strong { display: block; font-size: 0.6875rem; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.alg-ccard span { display: block; margin-top: 6px; font-weight: 700; color: var(--ink); }
+.alg-pill-grid { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+.alg-pill { background: var(--green-light); border: 0.5px solid var(--border-mid); border-radius: 8px; padding: 8px 10px; font-size: var(--alg-text-xs); color: var(--ink-mid); }
+/* Sobreposição a .guide-prose para corpo e títulos coerentes */
+.guide-prose .alg-article { color: var(--ink-mid); }
+.guide-prose .alg-article p:not(.lon-service-price) { font-family: var(--alg-font-sans); font-size: var(--alg-text); line-height: var(--alg-leading); }
+.guide-prose .alg-article .alg-final-cta p {
+  font-size: var(--alg-text-sm);
+  color: rgba(255, 255, 255, 0.72);
+}
+.guide-prose .alg-article .alg-final-note {
+  color: rgba(255, 255, 255, 0.45);
+}
+.guide-prose .alg-article .alg-section h3,
+.guide-prose .alg-article .alg-locations-section > h3,
+.guide-prose .alg-article .alg-related-pages > h3,
+.guide-prose .alg-article .alg-final-cta h3 {
+  font-family: var(--alg-font-display);
+  color: inherit;
+}
+.guide-prose .alg-article .alg-section h3,
+.guide-prose .alg-article .alg-locations-section > h3,
+.guide-prose .alg-article .alg-related-pages > h3 { color: var(--ink); }
+.guide-prose .alg-article .alg-final-cta h3 { color: #fff; }
+.guide-prose .alg-article .alg-step-block h4,
+.guide-prose .alg-article .alg-faq-q { font-family: var(--alg-font-sans); }
+.guide-prose .alg-article .alg-hero h2 { font-family: var(--alg-font-display); color: var(--ink); margin-top: 0; }
 </style>
 
-<p><strong>Guia médico atualizado:</strong> tudo sobre a vacina da febre amarela em Portugal — certificado internacional, validade, dose, reações, contraindicações e países que exigem a vacina.</p>
+<div class="alg-article">
+  <div class="alg-breadcrumb">
+    <a href="/">Início</a> › <a href="/blog">Guias</a> › Vacina Febre Amarela › Guia Completo
+  </div>
 
-<h2>O que é a febre amarela?</h2>
-<p>A febre amarela é uma doença viral transmitida por mosquitos infetados (principalmente <em>Aedes aegypti</em>). É endémica em zonas de África e América do Sul e, em casos graves, pode causar icterícia, hemorragia e falência multiorgânica.</p>
-<p>A vacinação é a principal medida de prevenção e é também obrigatória para entrada em vários países.</p>
+  <section style="background:white; border-bottom:0.5px solid var(--border);">
+    <div class="alg-hero">
+      <div class="alg-hero-content">
+        <div class="alg-eyebrow">Medicina de viagem · 2026</div>
+        <h2>Vacina Febre Amarela<br><em>Guia completo</em></h2>
+        <p class="alg-hero-desc">Tudo o que precisa de saber sobre o certificado internacional (CIVP), validade, doses, reações e onde vacinar em Portugal — com consulta de medicina de viagem online quando precisar de prescrição.</p>
+        <div class="alg-trust-row">
+          <span class="alg-trust-pill"><span class="dot">●</span> Certificado internacional (CIVP)</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Dose única · proteção duradoura</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> 10 dias até o certificado fazer efeito</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Consulta online 7 dias/semana</span>
+        </div>
+        <div class="alg-hero-note"><strong>Informação de carácter geral:</strong> não substitui consulta médica individualizada. As regras por país mudam — confirme sempre fontes oficiais antes de viajar.</div>
+      </div>
+      <div class="alg-hero-aside" id="marcar">
+        <article class="lon-service-card is-visible alg-hero-travel-booking" aria-label="Consulta do Viajante — marcar online">
+          <div class="lon-service-image-wrap alg-hero-card-cover">
+            <img src="/image/guide/travel-cover-hq-7.webp" alt="Guia da vacina febre amarela e viagem segura" width="800" height="600" loading="eager" decoding="async">
+            <span class="lon-service-chip">Viajante</span>
+            <div class="lon-service-glass alg-hero-card-glass">
+              <h3>Consulta do Viajante</h3>
+              <p class="lon-service-price">€39 · 20 min</p>
+              <a href="/marcar/travel" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
 
-<div class="fa-grid">
-  <div class="fa-card"><strong>Transmissão</strong><span>Picada de mosquito</span></div>
-  <div class="fa-card"><strong>Regiões de risco</strong><span>África + América do Sul</span></div>
-  <div class="fa-card"><strong>Proteção</strong><span>1 dose para toda a vida</span></div>
-  <div class="fa-card"><strong>Validade inicial</strong><span>10 dias após vacina</span></div>
+  <section class="alg-section">
+    <div class="alg-section-label">Visão geral</div>
+    <h3>Guia médico atualizado para viajantes</h3>
+    <p class="alg-section-sub">Informação geral sobre a vacina da febre amarela em Portugal — certificado internacional, validade, dose, reações, contraindicações e países que exigem ou recomendam a vacina.</p>
+    <p class="alg-prose-block"><strong>Guia médico atualizado:</strong> não substitui avaliação clínica individual. Confirme sempre requisitos do destino com consulado ou fontes oficiais.</p>
+    <div class="alg-cgrid">
+      <div class="alg-ccard"><strong>Transmissão</strong><span>Picada de mosquito</span></div>
+      <div class="alg-ccard"><strong>Regiões de risco</strong><span>África e América do Sul</span></div>
+      <div class="alg-ccard"><strong>Proteção</strong><span>1 dose (regra geral)</span></div>
+      <div class="alg-ccard"><strong>CIVP válido após</strong><span>10 dias da vacinação</span></div>
+    </div>
+  </section>
+
+  <div class="alg-info-band">
+    <div class="alg-info-band-inner">
+      <div class="alg-info-item"><h4>O que é a febre amarela?</h4><p>Doença viral transmitida por mosquitos; a vacina é a principal medida de prevenção.</p></div>
+      <div class="alg-info-item"><h4>Certificado internacional</h4><p>O CIVP («cartão amarelo») é o documento para fronteiras que exigem comprovação.</p></div>
+      <div class="alg-info-item"><h4>Validade da proteção</h4><p>Na maioria dos cenários, uma dose é considerada suficiente a longo prazo; o certificado reflete isso.</p></div>
+      <div class="alg-info-item"><h4>Planeamento</h4><p>Marque com antecedência — o certificado só conta 10 dias depois da vacina.</p></div>
+    </div>
+  </div>
+
+  <section class="alg-section" style="background:white;">
+    <div class="alg-section-label">Conteúdo do guia</div>
+    <h3>Sobre a vacina e o certificado</h3>
+    <p class="alg-prose-block">A vacina é de vírus vivo atenuado e tem eficácia muito elevada na maioria dos adultos saudáveis. É administrada por via subcutânea, habitualmente no braço.</p>
+    <p class="alg-prose-block">O <strong>Certificado Internacional de Vacinação ou Profilaxia (CIVP)</strong> é o documento aceite nas fronteiras dos países que exigem comprovação.</p>
+    <div class="alg-callout"><strong>Importante:</strong> o certificado torna-se válido 10 dias após a vacinação. Planeie com antecedência.</div>
+    <p class="alg-prose-block">Para viagens com ligação ao Brasil, confirme regras atualizadas (ex.: ANVISA) antes da partida.</p>
+  </section>
+
+  <section class="alg-locations-section">
+    <div class="alg-section-label">Onde vacinar em Portugal</div>
+    <h3>Guias por cidade e região</h3>
+    <p class="alg-section-sub">A vacina é feita em Centros de Vacinação Internacional e unidades autorizadas. Escolha o guia da sua zona para horários e contactos.</p>
+    <div class="alg-related-grid" style="margin-top:8px;">
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-lisboa"><div><div class="alg-related-card-text">Lisboa</div><div class="alg-related-card-sub">ARSLVT e área metropolitana</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-porto"><div><div class="alg-related-card-text">Porto</div><div class="alg-related-card-sub">Norte e Grande Porto</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-coimbra"><div><div class="alg-related-card-text">Coimbra</div><div class="alg-related-card-sub">Região Centro</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-braga"><div><div class="alg-related-card-text">Braga</div><div class="alg-related-card-sub">Minho</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-algarve"><div><div class="alg-related-card-text">Algarve</div><div class="alg-related-card-sub">Faro e Portimão</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-cuf"><div><div class="alg-related-card-text">CUF</div><div class="alg-related-card-sub">O que a rede administra e alternativas</div></div><span class="alg-related-arrow">→</span></a>
+    </div>
+    <div class="alg-warn" style="margin-top:24px;"><strong>Nota:</strong> horários, disponibilidade e emissão de certificado podem variar. Confirme sempre antes de se deslocar.</div>
+  </section>
+
+  <section class="alg-section">
+    <div class="alg-section-label">Processo típico</div>
+    <h3>Passo a passo</h3>
+    <div class="alg-steps-grid">
+      <div class="alg-step-block"><div class="alg-step-block-num">01</div><h4>Consulta do viajante</h4><p>Idealmente 4–6 semanas antes da viagem, ou logo que souber do destino.</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">02</div><h4>Avaliação médica</h4><p>Risco por destino, calendário vacinal e estado clínico.</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">03</div><h4>Administração</h4><p>Vacina num Centro de Vacinação Internacional ou local autorizado.</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">04</div><h4>Certificado</h4><p>Emissão do CIVP e arquivo junto dos documentos de viagem.</p></div>
+    </div>
+  </section>
+
+  <section class="alg-section" style="background:white;">
+    <div class="alg-section-label">Segurança</div>
+    <h3>Reações e efeitos secundários</h3>
+    <p class="alg-prose-block">As reações mais comuns são leves (dor local, febre baixa, mal-estar). Reações graves são muito raras.</p>
+    <table class="alg-simple-table">
+      <thead><tr><th>Reação</th><th>Frequência</th><th>Duração típica</th></tr></thead>
+      <tbody>
+        <tr><td>Dor no local</td><td>Comum</td><td>1–3 dias</td></tr>
+        <tr><td>Febre ligeira / mialgias</td><td>Comum</td><td>1–5 dias</td></tr>
+        <tr><td>Dor de cabeça</td><td>Comum</td><td>1–3 dias</td></tr>
+        <tr><td>Reação alérgica relevante</td><td>Rara</td><td>Horas a dias</td></tr>
+      </tbody>
+    </table>
+    <div class="alg-danger-box"><strong>Atenção:</strong> pessoas com mais de 60 anos ou com doenças graves / imunossupressão devem ter avaliação individual de risco-benefício antes da vacina.</div>
+  </section>
+
+  <section class="alg-section">
+    <h3>Quem pode e quem não pode tomar</h3>
+    <ul class="alg-prose-block" style="padding-left:1.2em;margin:0;">
+      <li><strong>Bebés &lt; 6 meses:</strong> contraindicação.</li>
+      <li><strong>6–9 meses:</strong> apenas em situações especiais e com avaliação médica.</li>
+      <li><strong>Gravidez e amamentação:</strong> avaliação individual.</li>
+      <li><strong>Imunodeprimidos / alergia grave a componentes:</strong> podem ter contraindicação.</li>
+    </ul>
+  </section>
+
+  <section class="alg-section" style="background:white;">
+    <h3>Países que exigem ou recomendam</h3>
+    <p class="alg-prose-block">As exigências variam por país, nacionalidade e histórico de viagem. Exemplos frequentemente citados:</p>
+    <div class="alg-pill-grid">
+      <span class="alg-pill">Angola</span><span class="alg-pill">Gana</span><span class="alg-pill">Quénia</span><span class="alg-pill">Brasil (regras por origem)</span><span class="alg-pill">Uganda</span><span class="alg-pill">Bolívia</span>
+    </div>
+    <p class="alg-prose-block"><strong>Importante:</strong> consulte consulado, companhia aérea e fontes oficiais antes da viagem.</p>
+  </section>
+
+  <section class="alg-section">
+    <div class="alg-section-label">Perguntas frequentes</div>
+    <h3>Dúvidas rápidas</h3>
+    <div class="alg-faq-list">
+      <div class="alg-faq-item"><div class="alg-faq-q">A vacina é obrigatória para o Brasil?</div><div class="alg-faq-a">Depende da rota e origem. Em muitos casos é fortemente recomendada para zonas de risco.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">Posso vacinar em cima da data da viagem?</div><div class="alg-faq-a">Pode, mas o certificado só fica válido após 10 dias.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">Vacina de há mais de 10 anos — preciso de reforço?</div><div class="alg-faq-a">Na maioria dos casos, não. Atualmente considera-se proteção duradoura com dose única.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">Preço em Portugal</div><div class="alg-faq-a">Como referência, costuma variar entre cerca de €30 e €90 conforme local e tipo de consulta associada.</div></div>
+    </div>
+  </section>
+
+  <section class="alg-related-pages">
+    <div class="alg-section-label">Também útil</div>
+    <h3>Outros guias Lon Clinic</h3>
+    <p class="alg-section-sub">Marcação e medicina do viajante.</p>
+    <div class="alg-related-grid">
+      <a class="alg-related-card" href="/blog/marcacao-guia-rapido"><div><div class="alg-related-card-text">Guia rápido de marcação</div><div class="alg-related-card-sub">Passos para marcar consulta</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/faq"><div><div class="alg-related-card-text">Perguntas frequentes</div><div class="alg-related-card-sub">Ajuda geral sobre a plataforma</div></div><span class="alg-related-arrow">→</span></a>
+    </div>
+  </section>
+
+  <section class="alg-final-cta">
+    <div class="alg-final-cta-inner">
+      <h3>Próximo passo:<br><em>consulta de viagem</em></h3>
+      <p>Confirme vacinas indicadas para o seu destino, profilaxia e tempo útil para o certificado internacional.</p>
+      <a class="alg-btn-cta-large" href="/marcar/travel">Marcar Consulta de Viagem →</a>
+      <p class="alg-final-note">Disponível 7 dias por semana · Prescrição digital quando indicado clinicamente</p>
+    </div>
+  </section>
+
+  <div class="alg-disclaimer">
+    <p>Esta página contém informação geral e não substitui consulta médica individualizada. As exigências por país podem mudar — confirme sempre com o consulado ou com o seu médico antes de viajar.</p>
+  </div>
+
 </div>
-
-<h2>Sobre a vacina febre amarela</h2>
-<p>A vacina é de vírus vivo atenuado e tem eficácia muito elevada. Na maioria dos adultos saudáveis, uma dose única é suficiente.</p>
-<h3>Administração</h3>
-<p>É administrada por via subcutânea, geralmente no braço.</p>
-<h3>Vacina fracionada</h3>
-<p>A dose fracionada já foi usada em contextos de escassez. Para fins de viagem internacional e certificado, recomenda-se seguir o esquema e local oficialmente reconhecidos.</p>
-
-<h2>Certificado Internacional de Vacinação (CIVP)</h2>
-<p>O CIVP ("cartão amarelo") é o documento oficial para fronteiras internacionais.</p>
-<div class="fa-callout"><strong>Importante:</strong> o certificado torna-se válido 10 dias após a vacinação. Planeie com antecedência.</div>
-<p>Para viajantes com ligação ao Brasil, as exigências e validações associadas à ANVISA devem ser confirmadas antes de viajar. Certificados emitidos em Portugal são geralmente reconhecidos internacionalmente.</p>
-
-<h2>Validade e doses</h2>
-<p>Segundo orientações internacionais atuais, uma única dose confere proteção duradoura, com certificado de validade vitalícia na maioria dos cenários.</p>
-<div class="fa-callout"><strong>Regra geral:</strong> 1 dose. Em casos especiais (ex.: imunossupressão prévia, situações clínicas específicas), o médico pode recomendar avaliação adicional.</div>
-
-<h2>Onde tomar em Lisboa e Portugal</h2>
-<p>Em Portugal, a vacina é habitualmente feita em Centros de Vacinação Internacional e em unidades privadas autorizadas (incluindo hospitais e clínicas de medicina do viajante).</p>
-<p>Se preferir um guia por localização, veja também:
-  <a href="/blog/vacina-febre-amarela-lisboa">Lisboa</a>,
-  <a href="/blog/vacina-febre-amarela-porto">Porto</a>,
-  <a href="/blog/vacina-febre-amarela-coimbra">Coimbra</a>,
-  <a href="/blog/vacina-febre-amarela-braga">Braga</a> e
-  <a href="/blog/vacina-febre-amarela-algarve">Algarve</a>.
-</p>
-<div class="fa-alert"><strong>Nota:</strong> horários, disponibilidade e capacidade de emissão de certificado podem variar. Confirme sempre antes de se deslocar.</div>
-
-<h3>Passo a passo</h3>
-<ol>
-  <li>Marcar consulta de medicina do viajante (idealmente 4-6 semanas antes da partida).</li>
-  <li>Avaliação de risco por destino e estado clínico.</li>
-  <li>Administração da vacina.</li>
-  <li>Emissão do certificado internacional.</li>
-  <li>Guardar o certificado junto do passaporte.</li>
-</ol>
-
-<h2>Reações e efeitos secundários</h2>
-<p>As reações mais comuns são leves (dor local, febre baixa, mal-estar transitório). Reações graves são muito raras.</p>
-<table class="fa-table">
-  <thead>
-    <tr><th>Reação</th><th>Frequência</th><th>Duração típica</th></tr>
-  </thead>
-  <tbody>
-    <tr><td>Dor no local da injeção</td><td>Comum</td><td>1-3 dias</td></tr>
-    <tr><td>Febre ligeira / mialgias</td><td>Comum</td><td>1-5 dias</td></tr>
-    <tr><td>Dor de cabeça</td><td>Comum</td><td>1-3 dias</td></tr>
-    <tr><td>Reação alérgica relevante</td><td>Rara</td><td>Horas a dias</td></tr>
-  </tbody>
-</table>
-<div class="fa-danger"><strong>Atenção:</strong> pessoas com mais de 60 anos ou com doenças/imunossupressão devem ter avaliação individual de risco-benefício antes da vacina.</div>
-
-<h2>Quem pode e quem não pode tomar</h2>
-<ul>
-  <li><strong>Bebés &lt; 6 meses:</strong> contraindicação.</li>
-  <li><strong>6-9 meses:</strong> apenas em situações especiais e com avaliação médica.</li>
-  <li><strong>Gravidez e amamentação:</strong> avaliação individual.</li>
-  <li><strong>Imunodeprimidos / alergia grave a componentes:</strong> podem ter contraindicação.</li>
-</ul>
-
-<h2>Países que exigem a vacina</h2>
-<p>As exigências variam por país e podem depender de origem/escala em zonas de risco.</p>
-<div class="fa-country">
-  <div class="fa-pill">🇦🇴 Angola</div>
-  <div class="fa-pill">🇬🇭 Gana</div>
-  <div class="fa-pill">🇰🇪 Quénia</div>
-  <div class="fa-pill">🇧🇷 Brasil (regras por origem e zona)</div>
-  <div class="fa-pill">🇺🇬 Uganda</div>
-  <div class="fa-pill">🇧🇴 Bolívia</div>
-</div>
-<p><strong>Importante:</strong> consulte sempre consulado/companhia aérea e fontes oficiais antes da viagem.</p>
-
-<h2>Destinos e dúvidas comuns</h2>
-<p>Para países como África do Sul, Tailândia, Japão ou EUA, a exigência pode depender de trânsito prévio por país endémico. Para Peru/Colômbia/Brasil, pode ser recomendada mesmo quando não exigida formalmente em certas rotas.</p>
-
-<h2>Preço da vacina febre amarela em Portugal</h2>
-<p>O valor varia por local e tipo de consulta associada. Como referência prática, costuma variar entre <strong>€30 e €90</strong> entre Centro de Vacinação Internacional e setor privado.</p>
-
-<h2>Perguntas frequentes</h2>
-<h3>A vacina é obrigatória para o Brasil?</h3>
-<p>Depende da rota e origem da viagem. Em muitos casos, é altamente recomendada para zonas de risco no Brasil.</p>
-<h3>Posso tomar em cima da data da viagem?</h3>
-<p>Pode, mas o certificado só fica válido após 10 dias.</p>
-<h3>Tenho vacina de há mais de 10 anos, preciso repetir?</h3>
-<p>Na maioria dos casos, não. Atualmente considera-se proteção vitalícia com dose única.</p>
-
-<h2>Próximo passo</h2>
-<p>Se vai viajar, marque uma consulta de medicina do viajante para confirmar vacinas obrigatórias/recomendadas, profilaxia e emissão do certificado internacional em tempo útil.</p>
-<p><a href="/marcar/travel">Marcar Consulta de Viagem</a> · <a href="/faq">Ver FAQ</a></p>
-<h3>Guias relacionados</h3>
-<p>
-  <a href="/blog/vacina-febre-amarela-lisboa">Vacina Febre Amarela em Lisboa</a> ·
-  <a href="/blog/vacina-febre-amarela-porto">Vacina Febre Amarela no Porto</a> ·
-  <a href="/blog/vacina-febre-amarela-coimbra">Vacina Febre Amarela em Coimbra</a> ·
-  <a href="/blog/vacina-febre-amarela-braga">Vacina Febre Amarela em Braga</a> ·
-  <a href="/blog/vacina-febre-amarela-algarve">Vacina Febre Amarela no Algarve</a> ·
-  <a href="/blog/vacina-febre-amarela-cuf">Vacina Febre Amarela na CUF</a>
-</p>

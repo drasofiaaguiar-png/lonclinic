@@ -1,13 +1,411 @@
-<h2>1. Escolha o tipo de consulta</h2>
-<p>Na página inicial, selecione a especialidade ou o serviço que melhor corresponde às suas necessidades (por exemplo, Clínica Geral ou Saúde Mental).</p>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Guia rápido de marcação — Lon Clinic",
+  "description": "Passos para marcar a sua consulta online em poucos minutos."
+}
+</script>
 
-<h2>2. Escolha data e hora</h2>
-<p>Indique o momento que lhe for mais conveniente. Verá as opções disponíveis em tempo real.</p>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&display=swap');
+.alg-article, .alg-article * { box-sizing: border-box; }
+.alg-article {
+  --ink: #0f1a14; --ink-mid: #3a4a3f; --ink-soft: #6b7d70; --ink-ghost: #a8b8ad;
+  --green: #1a6641; --green-vivid: #22865a; --green-light: #eaf4ee; --green-faint: #f4faf6;
+  --gold: #c8961a; --gold-light: #fdf5e0; --white: #ffffff;
+  --blue-faint: #f0f7ff; --blue-border: #bfdbfe; --blue-text: #1e40af;
+  --border: rgba(15,26,20,0.10); --border-mid: rgba(15,26,20,0.18);
+  --r: 10px; --r-lg: 16px;
+  --alg-gutter: 22px;
+  --alg-max: 1240px;
+  --alg-font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --alg-font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --alg-text: 1rem;
+  --alg-text-sm: 0.9375rem;
+  --alg-text-xs: 0.8125rem;
+  --alg-leading: 1.65;
+  --alg-leading-snug: 1.35;
+  font-family: var(--alg-font-sans);
+  font-size: var(--alg-text);
+  line-height: var(--alg-leading);
+  color: var(--ink-mid);
+  -webkit-font-smoothing: antialiased;
+}
+.alg-article a { text-decoration: none; }
+.alg-breadcrumb { font-size: var(--alg-text-xs); letter-spacing: 0.02em; color: var(--ink-ghost); padding: 4px var(--alg-gutter) 6px; width: min(100%, var(--alg-max)); margin: 0 auto 4px; box-sizing: border-box; }
+.alg-breadcrumb a { color: var(--ink-soft); font-weight: 500; }
+/* ~60/40: mais espaço para título e subtítulo à esquerda */
+.alg-hero {
+  padding: 16px var(--alg-gutter) 36px;
+  width: min(100%, var(--alg-max));
+  margin: 4px auto 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 40px);
+  align-items: stretch;
+  box-sizing: border-box;
+}
+.alg-hero-content, .alg-hero-aside { min-width: 0; }
+.alg-hero-aside { display: flex; flex-direction: column; min-height: 0; }
+.alg-hero-content .alg-hero-note { margin-top: 16px; }
+@media (max-width: 860px) {
+  .alg-hero { grid-template-columns: 1fr; gap: 28px; }
+}
+.alg-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: var(--alg-font-sans); font-size: var(--alg-text-xs); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); background: var(--green-light); padding: 5px 14px; border-radius: 20px; margin-bottom: 12px; }
+.alg-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+.alg-hero h2 { font-family: var(--alg-font-display); font-size: clamp(1.875rem, 4.8vw, 3.125rem); font-weight: 600; line-height: 1.12; letter-spacing: -0.03em; margin: 0 0 20px; border: none; color: var(--ink); }
+.alg-hero h2 em { font-style: italic; color: var(--green); }
+.alg-hero-desc { font-size: clamp(1rem, 2.5vw, 1.0625rem); color: var(--ink-mid); max-width: min(560px, 100%); margin-bottom: 24px; line-height: var(--alg-leading); font-weight: 400; }
+.alg-trust-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
+.alg-trust-pill { font-size: var(--alg-text-xs); font-weight: 500; color: var(--ink-mid); background: var(--green-faint); border: 0.5px solid var(--border-mid); padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 5px; }
+.alg-trust-pill .dot { color: var(--green-vivid); font-size: 14px; }
+.alg-hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r); overflow: hidden; }
+.alg-stat { background: white; padding: 14px 16px; text-align: center; }
+.alg-stat-n { font-family: var(--alg-font-display); font-size: 1.5rem; font-weight: 600; color: var(--green); line-height: 1; margin-bottom: 4px; }
+.alg-stat-l { font-size: 0.6875rem; font-weight: 500; color: var(--ink-soft); line-height: 1.35; letter-spacing: 0.02em; }
+.alg-hero-note { margin-top: 0; padding: 14px 16px; background: #eceef0; border: 0.5px solid rgba(15, 26, 20, 0.08); border-left: 4px solid var(--green); border-radius: 10px; font-size: calc(var(--alg-text-sm) - 4px); color: var(--ink-mid); line-height: var(--alg-leading); }
+.alg-hero-note strong { color: var(--ink); }
+/* Hero: imagem cobre todo o cartão; CTA em vidro sobreposto em baixo; altura = coluna esquerda */
+.alg-hero-aside .alg-hero-travel-booking.lon-service-card.is-visible {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  flex: 1 1 auto;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid #ebddf4;
+  box-shadow: 0 14px 30px rgba(53, 24, 74, 0.12);
+  background: #1a1420;
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-image-wrap.alg-hero-card-cover {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  overflow: hidden;
+}
+.alg-hero-aside .alg-hero-card-cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass.alg-hero-card-glass {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 3;
+  margin: 0;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 14px 14px 16px;
+  background: rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+/* .guide-prose força cor nos h3/p — repor branco no vidro do cartão */
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass h3 {
+  color: #fff !important;
+  margin-top: 0;
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass .lon-service-price {
+  color: #fff !important;
+  margin-bottom: 10px;
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-chip {
+  z-index: 4;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass a.lon-btn {
+  text-decoration: none;
+}
+/* Mesmas margens laterais e largura máxima que .alg-hero */
+.alg-section {
+  padding: 52px var(--alg-gutter);
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+.alg-section-label { font-family: var(--alg-font-sans); font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--green); margin-bottom: 10px; }
+/* Títulos de secção (mesma hierarquia em todo o artigo) */
+.alg-section h3,
+.alg-locations-section > h3,
+.alg-related-pages > h3 {
+  font-family: var(--alg-font-display);
+  font-size: clamp(1.375rem, 3.2vw, 2.125rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 12px;
+  line-height: 1.2;
+}
+.alg-section-sub { font-size: var(--alg-text-sm); color: var(--ink-soft); max-width: 620px; margin-bottom: 28px; line-height: var(--alg-leading); font-weight: 400; }
+.alg-steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 2px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); overflow: hidden; }
+.alg-step-block { background: white; padding: 24px 20px; }
+.alg-step-block-num { font-family: var(--alg-font-display); font-size: clamp(2rem, 4vw, 2.375rem); font-weight: 300; color: var(--green-light); line-height: 1; margin-bottom: 12px; letter-spacing: -0.06em; }
+.alg-step-block h4 { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); margin-bottom: 6px; line-height: var(--alg-leading-snug); }
+.alg-step-block p { font-size: var(--alg-text-xs); color: var(--ink-soft); line-height: var(--alg-leading); margin: 0; }
+/* Largura igual à secção anterior (alg-section / grelha de passos): bloco a 100% do artigo */
+.alg-info-band {
+  background: transparent;
+  border: none;
+  padding: 52px var(--alg-gutter) 84px;
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+.alg-info-band-inner { width: 100%; max-width: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 1100px) {
+  .alg-info-band-inner { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 12px; padding-bottom: 6px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+  .alg-info-item { flex: 0 0 min(240px, 78vw); }
+}
+.alg-info-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  gap: 10px;
+  padding: 20px;
+  aspect-ratio: 1;
+  min-height: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(8, 22, 14, 0.35) 100%), rgba(10, 56, 34, 0.96);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  box-shadow: 0 10px 36px rgba(8, 20, 14, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.alg-info-item h4 { font-family: var(--alg-font-sans); font-size: clamp(0.9375rem, 1.2vw, 1.125rem); font-weight: 600; margin: 0; color: #ffffff; line-height: 1.3; letter-spacing: -0.015em; }
+.alg-info-item p { font-size: var(--alg-text-xs); color: rgba(255, 255, 255, 0.92); line-height: var(--alg-leading); margin: 0; }
+@media (max-width: 768px) {
+  .alg-info-item { padding: 22px; gap: 12px; }
+  .alg-info-item h4 { font-size: clamp(1.0625rem, 3.8vw, 1.1875rem); line-height: 1.28; }
+  .alg-info-item p { font-size: var(--alg-text-sm); line-height: 1.55; }
+}
+.alg-locations-section {
+  background: var(--green-faint);
+  border-top: 0.5px solid var(--border);
+  border-bottom: 0.5px solid var(--border);
+  padding: 54px var(--alg-gutter);
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: var(--r-lg);
+  box-sizing: border-box;
+}
+.alg-alert-marcacao { background: var(--gold-light); border: 1px solid rgba(200,150,26,0.3); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; padding: 14px 18px; font-size: var(--alg-text-sm); color: #6b4a08; margin-top: 28px; margin-bottom: 0; display: flex; gap: 10px; align-items: flex-start; line-height: var(--alg-leading); }
+.alg-loc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.alg-loc-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.alg-loc-card.featured { border-color: var(--green); border-width: 1.5px; }
+.alg-loc-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.alg-loc-name { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); line-height: var(--alg-leading-snug); }
+.alg-loc-badges { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+.alg-badge-cv, .alg-badge-vac, .alg-badge-priv { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; }
+.alg-badge-cv { background: var(--green-light); color: var(--green); }
+.alg-badge-vac { background: #e8f0fe; color: #1a4fbd; }
+.alg-badge-priv { background: #fef3cd; color: #856404; }
+.alg-region-divider { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-ghost); padding: 18px 0 8px; grid-column: 1 / -1; border-top: 0.5px solid var(--border); margin-top: 4px; }
+.alg-region-divider:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+.alg-loc-address { font-size: var(--alg-text-xs); color: var(--ink-soft); line-height: var(--alg-leading); }
+.alg-loc-hours { font-size: var(--alg-text-xs); color: var(--ink-mid); line-height: var(--alg-leading); background: var(--green-faint); border-radius: 6px; padding: 10px 12px; }
+.alg-loc-hours strong { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-ghost); margin-bottom: 6px; font-weight: 500; }
+.alg-loc-email-note { font-size: var(--alg-text-xs); color: var(--ink-soft); background: var(--blue-faint); border: 0.5px solid var(--blue-border); border-radius: 6px; padding: 8px 12px; line-height: var(--alg-leading); }
+.alg-loc-email-note strong { color: var(--blue-text); }
+.alg-loc-contacts { display: flex; flex-direction: column; gap: 6px; }
+.alg-loc-contact { font-size: var(--alg-text-xs); color: var(--ink-soft); display: flex; align-items: flex-start; gap: 6px; line-height: var(--alg-leading); }
+.alg-loc-contact a { color: var(--green); }
+.alg-loc-contact a:hover { text-decoration: underline; }
+.alg-faq-list { margin-top: 28px; }
+.alg-faq-item { border-bottom: 0.5px solid var(--border); padding: 18px 0; }
+.alg-faq-item:first-child { border-top: 0.5px solid var(--border); }
+.alg-faq-q { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px; line-height: var(--alg-leading-snug); }
+.alg-faq-q::after { content: '+'; font-family: var(--alg-font-display); color: var(--green); font-size: 1.25rem; font-weight: 400; flex-shrink: 0; margin-top: -2px; }
+.alg-faq-a { font-size: var(--alg-text-sm); color: var(--ink-soft); line-height: var(--alg-leading); }
+.alg-related-pages {
+  background: white;
+  border-top: 0.5px solid var(--border);
+  padding: 48px var(--alg-gutter);
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+.alg-related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+.alg-related-card { border: 0.5px solid var(--border-mid); border-radius: var(--r); padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: border-color 0.15s, background 0.15s; }
+.alg-related-card:hover { border-color: var(--green); background: var(--green-faint); }
+.alg-related-card-text { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); line-height: var(--alg-leading-snug); }
+.alg-related-card-sub { font-size: var(--alg-text-xs); color: var(--ink-ghost); margin-top: 4px; line-height: var(--alg-leading); }
+.alg-related-arrow { color: var(--green); font-size: 18px; flex-shrink: 0; }
+.alg-final-cta {
+  background: var(--ink);
+  color: white;
+  padding: 66px var(--alg-gutter);
+  text-align: center;
+  border-radius: var(--r-lg);
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+.alg-final-cta-inner { max-width: 520px; margin: 0 auto; }
+.alg-final-cta h3 {
+  font-family: var(--alg-font-display);
+  font-size: clamp(1.625rem, 4vw, 2.625rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin: 0 0 14px;
+  color: #fff;
+}
+.alg-final-cta h3 em { color: #7fd4a8; font-style: italic; }
+.alg-final-cta p { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); color: rgba(255,255,255,0.72); margin-bottom: 32px; line-height: var(--alg-leading); font-weight: 400; }
+.alg-btn-cta-large { display: inline-block; background: #22865a; color: white; font-family: var(--alg-font-sans); font-size: var(--alg-text); font-weight: 600; padding: 17px 40px; border-radius: 10px; margin-bottom: 12px; transition: background 0.18s; letter-spacing: 0.01em; }
+.alg-btn-cta-large:hover { background: #1a6641; }
+.alg-final-note { font-family: var(--alg-font-sans); font-size: var(--alg-text-xs); color: rgba(255,255,255,0.45); line-height: var(--alg-leading); letter-spacing: 0.02em; }
+.alg-disclaimer {
+  background: var(--green-faint);
+  border-top: 0.5px solid var(--border);
+  text-align: center;
+  font-family: var(--alg-font-sans);
+  font-size: var(--alg-text-xs);
+  color: var(--ink-ghost);
+  line-height: var(--alg-leading);
+  max-width: 680px;
+  width: 100%;
+  margin: 18px auto 0;
+  padding: 24px var(--alg-gutter);
+  border-radius: var(--r-lg);
+  box-sizing: border-box;
+}
+/* Sobreposição a .guide-prose para corpo e títulos coerentes */
+.guide-prose .alg-article { color: var(--ink-mid); }
+.guide-prose .alg-article p:not(.lon-service-price) { font-family: var(--alg-font-sans); font-size: var(--alg-text); line-height: var(--alg-leading); }
+.guide-prose .alg-article .alg-final-cta p {
+  font-size: var(--alg-text-sm);
+  color: rgba(255, 255, 255, 0.72);
+}
+.guide-prose .alg-article .alg-final-note {
+  color: rgba(255, 255, 255, 0.45);
+}
+.guide-prose .alg-article .alg-section h3,
+.guide-prose .alg-article .alg-locations-section > h3,
+.guide-prose .alg-article .alg-related-pages > h3,
+.guide-prose .alg-article .alg-final-cta h3 {
+  font-family: var(--alg-font-display);
+  color: inherit;
+}
+.guide-prose .alg-article .alg-section h3,
+.guide-prose .alg-article .alg-locations-section > h3,
+.guide-prose .alg-article .alg-related-pages > h3 { color: var(--ink); }
+.guide-prose .alg-article .alg-final-cta h3 { color: #fff; }
+.guide-prose .alg-article .alg-step-block h4,
+.guide-prose .alg-article .alg-faq-q { font-family: var(--alg-font-sans); }
+.guide-prose .alg-article .alg-hero h2 { font-family: var(--alg-font-display); color: var(--ink); margin-top: 0; }
+</style>
 
-<h2>3. Pague de forma segura</h2>
-<p>O pagamento confirma o agendamento. Aceitamos método de pagamento habitual indicados no processo de marcação.</p>
+<div class="alg-article">
+  <div class="alg-breadcrumb">
+    <a href="/">Início</a> › <a href="/blog">Guias</a> › <a href="/blog/marcacao-guia-rapido">Guia rápido de marcação</a>
+  </div>
 
-<h2>4. Receba o acesso à videoconsulta</h2>
-<p>Receberá as instruções por email para aceder à consulta no dia e hora marcados — diretamente no browser, sem instalar aplicações.</p>
+  <section style="background:white; border-bottom:0.5px solid var(--border);">
+    <div class="alg-hero">
+      <div class="alg-hero-content">
+        <div class="alg-eyebrow">Plataforma · Marcação</div>
+        <h2>Guia rápido<br>de <em>marcação</em></h2>
+        <p class="alg-hero-desc">Quatro passos simples para marcar a sua consulta online na Lon Clinic — escolha o serviço, data e hora, pague e receba o acesso à videoconsulta.</p>
+        <div class="alg-trust-row">
+          <span class="alg-trust-pill"><span class="dot">●</span> Horários em tempo real</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Pagamento seguro</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Videoconsulta no browser</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Sem instalar app</span>
+        </div>
+        <div class="alg-hero-note"><strong>Informação geral:</strong> o fluxo de marcação pode variar ligeiramente por especialidade. Em caso de dúvida, veja a <a href="/faq" style="color:var(--green);text-decoration:underline;">FAQ</a> ou contacte-nos.</div>
+      </div>
+      <div class="alg-hero-aside" id="marcar">
+        <article class="lon-service-card is-visible alg-hero-travel-booking" aria-label="Marcar consulta online">
+          <div class="lon-service-image-wrap alg-hero-card-cover">
+            <img src="/image/guide/travel-cover-3.png" alt="Marcação de consulta online na Lon Clinic" width="800" height="600" loading="eager" decoding="async">
+            <span class="lon-service-chip">Marcação</span>
+            <div class="lon-service-glass alg-hero-card-glass">
+              <h3>Marcar consulta</h3>
+              <p class="lon-service-price">Online · em minutos</p>
+              <a href="/marcar" class="lon-btn lon-btn-soft lon-btn-sm">Começar</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
 
-<p><strong>Dúvidas?</strong> Consulte as <a href="/faq">perguntas frequentes</a> ou contacte-nos através dos canais na <a href="/#contacto">página inicial</a>.</p>
+  <section class="alg-section">
+    <div class="alg-section-label">Passo a passo</div>
+    <h3>Do primeiro clique à videoconsulta</h3>
+    <p class="alg-section-sub">Processo típico para marcar qualquer serviço disponível na plataforma.</p>
+    <div class="alg-steps-grid">
+      <div class="alg-step-block"><div class="alg-step-block-num">01</div><h4>Escolha o tipo de consulta</h4><p>Na página de marcação, selecione a especialidade ou serviço que melhor corresponde às suas necessidades.</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">02</div><h4>Escolha data e hora</h4><p>Indique o momento que lhe for mais conveniente. Verá as opções disponíveis em tempo real.</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">03</div><h4>Pague de forma segura</h4><p>O pagamento confirma o agendamento. Aceitamos os métodos indicados no processo de marcação.</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">04</div><h4>Receba o acesso</h4><p>Receberá instruções por email para aceder à videoconsulta no dia e hora marcados — diretamente no browser.</p></div>
+    </div>
+  </section>
+
+  <div class="alg-info-band">
+    <div class="alg-info-band-inner">
+      <div class="alg-info-item"><h4>Confirmação imediata</h4><p>Após o pagamento, o seu lugar fica reservado para o horário escolhido.</p></div>
+      <div class="alg-info-item"><h4>Lembrete por email</h4><p>Recebe os detalhes de acesso e o link para a sessão no dia da consulta.</p></div>
+      <div class="alg-info-item"><h4>Privacidade</h4><p>A consulta decorre em canal seguro, adequado a telemedicina.</p></div>
+      <div class="alg-info-item"><h4>Precisa de ajuda?</h4><p>Consulte a FAQ ou utilize os contactos na página inicial.</p></div>
+    </div>
+  </div>
+
+  <section class="alg-section" style="background:white;">
+    <div class="alg-section-label">Dúvidas</div>
+    <h3>Perguntas frequentes sobre a marcação</h3>
+    <div class="alg-faq-list">
+      <div class="alg-faq-item"><div class="alg-faq-q">Posso alterar ou cancelar depois de marcar?</div><div class="alg-faq-a">As regras de alteração e cancelamento dependem do serviço e do prazo — consulte a página de marcação ou a FAQ para o seu caso.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">Preciso de instalar uma aplicação?</div><div class="alg-faq-a">Não. A videoconsulta é acedida no browser, com o link que enviamos por email.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">E se tiver problemas técnicos no dia?</div><div class="alg-faq-a">Use os contactos de apoio indicados no email de confirmação ou na página inicial.</div></div>
+    </div>
+  </section>
+
+  <section class="alg-related-pages">
+    <div class="alg-section-label">Outros guias</div>
+    <h3>Leia também</h3>
+    <p class="alg-section-sub">Medicina de viagem e informação geral.</p>
+    <div class="alg-related-grid">
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-guia-completo"><div><div class="alg-related-card-text">Vacina febre amarela</div><div class="alg-related-card-sub">Guia completo 2026</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/faq"><div><div class="alg-related-card-text">FAQ</div><div class="alg-related-card-sub">Perguntas frequentes da plataforma</div></div><span class="alg-related-arrow">→</span></a>
+    </div>
+  </section>
+
+  <section class="alg-final-cta">
+    <div class="alg-final-cta-inner">
+      <h3>Pronto para<br><em>marcar?</em></h3>
+      <p>Avance para o agendamento e escolha o melhor horário para si.</p>
+      <a class="alg-btn-cta-large" href="/marcar">Marcar consulta →</a>
+      <p class="alg-final-note">Disponível conforme serviços ativos na plataforma</p>
+    </div>
+  </section>
+
+  <div class="alg-disclaimer">
+    <p>Esta página descreve o fluxo geral de marcação. Detalhes específicos podem variar por serviço ou atualização da plataforma.</p>
+  </div>
+
+</div>
