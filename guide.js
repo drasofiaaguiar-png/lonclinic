@@ -152,7 +152,7 @@ function layoutGuidePage(opts) {
                 <a href="/#inicio">Início</a>
                 <a href="/#platform">Plataforma</a>
                 <a href="/#servicos">Serviços</a>
-                <a${guideNavAttrs}>Guide</a>
+                <a${guideNavAttrs}>Guides</a>
                 <a href="/#contacto">Contato</a>
             </nav>
             <div class="lon-nav-actions">
@@ -167,7 +167,7 @@ function layoutGuidePage(opts) {
             <a href="/#inicio">Início</a>
             <a href="/#platform">Plataforma</a>
             <a href="/#servicos">Serviços</a>
-            <a href="/blog">Guide</a>
+            <a href="/blog">Guides</a>
             <a href="/#contacto">Contato</a>
             <a href="/patient-portal">Login</a>
         </div>
@@ -206,7 +206,7 @@ function layoutGuidePage(opts) {
                 <div class="lon-footer-col">
                     <h4>Apoio</h4>
                     <a href="/faq">Perguntas frequentes</a>
-                    <a href="/blog">Guide</a>
+                    <a href="/blog">Guides</a>
                     <a href="/info.html?page=como-funciona">Como funciona</a>
                     <a href="/info.html?page=seguranca-dados">Segurança dos dados</a>
                     <a href="/info.html?page=acessibilidade">Acessibilidade</a>
