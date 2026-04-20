@@ -372,7 +372,8 @@ function renderBlogArticle(origin, slug) {
 
     const topMedicalNotice = `<div class="guide-top-disclaimer">Informação de carácter geral — não substitui consulta médica individualizada. Horários e contactos dos CVIs sujeitos a alteração. Confirme sempre junto da instituição antes de se deslocar.</div>`;
 
-    const mainHtml = `
+    const mainHtml = format === 'markdown'
+        ? `
     <main id="conteudo-principal" class="guide-article-main">
         <article class="guide-article-wrap">
             ${topMedicalNotice}
@@ -398,6 +399,15 @@ function renderBlogArticle(origin, slug) {
                     ${articleHtml}
                 </div>
             </section>
+        </article>
+    </main>`
+        : `
+    <main id="conteudo-principal">
+        <article class="guide-article-wrap">
+            ${topMedicalNotice}
+            <div class="guide-prose" lang="pt-PT">
+                ${articleHtml}
+            </div>
         </article>
     </main>`;
 

@@ -229,7 +229,24 @@
 }
 
 .guide-article-header {
-    padding: 0 0 28px;
+    padding: calc(var(--lon-nav-h) + 28px) 0 28px;
+}
+
+.guide-article-main .guide-article-header {
+    padding-top: 0;
+}
+
+.guide-top-disclaimer {
+    width: 100%;
+    margin: 0 0 16px;
+    padding: 12px 14px;
+    border: 1px solid rgba(15, 26, 20, 0.14);
+    border-left: 4px solid rgba(15, 26, 20, 0.34);
+    border-radius: 10px;
+    background: #f7faf8;
+    color: rgba(15, 26, 20, 0.76);
+    font-size: 0.82rem;
+    line-height: 1.55;
 }
 
 .guide-article-intro {
