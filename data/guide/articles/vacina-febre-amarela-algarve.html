@@ -34,12 +34,12 @@
 .alg-breadcrumb { font-size: 12px; color: var(--ink-ghost); padding: 8px 22px 4px; width: min(100%, 1240px); margin: 0 auto; }
 .alg-breadcrumb a { color: var(--ink-soft); }
 .alg-hero { padding: 28px 22px 36px; width: min(100%, 1240px); margin: 0 auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 48px; align-items: start; }
-.alg-hero-content, .alg-hero-card { min-width: 0; }
+.alg-hero-content, .alg-hero-aside { min-width: 0; }
 .alg-hero-content .alg-tourist-alert { max-width: none; margin: 20px 0 0; border-radius: var(--r-lg); }
 .alg-hero-content .alg-hero-note { margin-top: 16px; }
 @media (max-width: 860px) {
   .alg-hero { grid-template-columns: 1fr; gap: 32px; }
-  .alg-hero-card { order: -1; padding: 28px 24px; }
+  .alg-hero-aside { order: -1; padding: 0 0 8px; }
 }
 .alg-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: var(--green); background: var(--green-light); padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
 .alg-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
@@ -55,19 +55,15 @@
 .alg-stat-l { font-size: 11px; color: var(--ink-soft); line-height: 1.3; }
 .alg-hero-note { margin-top: 0; padding: 14px 16px; background: var(--green-faint); border: 0.5px solid var(--border-mid); border-left: 4px solid var(--green); border-radius: 10px; font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
 .alg-hero-note strong { color: var(--ink); }
-.alg-hero-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 44px 24px 28px; box-shadow: 0 2px 24px rgba(15,26,20,0.07); }
-.alg-card-header { background: var(--green); color: white; border-radius: 10px; padding: 18px 20px; margin-bottom: 22px; }
-.alg-card-header-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; margin-bottom: 4px; }
-.alg-card-header-sub { font-size: 13px; color: rgba(255,255,255,0.78); }
-.alg-card-steps { list-style: none; margin-bottom: 22px; padding: 0; }
-.alg-card-step { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; color: var(--ink-mid); }
-.alg-card-step:last-child { border-bottom: none; }
-.alg-step-num { width: 24px; height: 24px; background: var(--green-light); color: var(--green); border-radius: 50%; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
-.alg-card-step strong { color: var(--ink); font-weight: 500; display: block; margin-bottom: 1px; }
-.alg-btn-primary { display: block; width: 100%; background: var(--green); color: white; text-align: center; font-size: 15px; font-weight: 500; padding: 15px 20px; border-radius: 9px; margin-bottom: 10px; transition: background 0.18s; }
-.alg-btn-primary:hover { background: var(--green-vivid); }
-.alg-card-note { text-align: center; font-size: 12px; color: var(--ink-ghost); }
-.alg-card-guarantee { display: flex; align-items: center; gap: 8px; background: var(--gold-light); border: 0.5px solid rgba(200,150,26,0.25); border-radius: 8px; padding: 10px 14px; margin-top: 14px; font-size: 12px; color: #7a5a0a; }
+/* Hero: mesmo cartão de serviço da página inicial (Consulta do Viajante) */
+.alg-hero-aside .alg-hero-travel-booking.lon-service-card.is-visible { display: flex; width: 100%; }
+.alg-hero-aside .alg-hero-travel-booking .lon-service-image-wrap {
+  min-height: clamp(260px, 34vw, 380px);
+  border-radius: var(--r-lg);
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-image-wrap img {
+  min-height: clamp(260px, 34vw, 380px);
+}
 .alg-tourist-alert { background: var(--blue-faint); border: 1px solid var(--blue-border); border-left: 4px solid #3b82f6; border-radius: 0 var(--r-lg) var(--r-lg) 0; padding: 20px 24px; max-width: 860px; margin: 0 auto; }
 .alg-tourist-alert-title { font-size: 14px; font-weight: 600; color: var(--blue-text); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 .alg-tourist-alert p { font-size: 14px; color: #1e3a5f; line-height: 1.6; margin: 0; }
@@ -172,19 +168,18 @@
         </div>
         <div class="alg-hero-note"><strong>Informação de carácter geral:</strong> não substitui consulta médica individualizada. Horários e contactos dos Centros de Vacinação Internacional sujeitos a alteração. Confirme sempre junto da instituição antes de se deslocar.</div>
       </div>
-      <div class="alg-hero-card" id="marcar">
-        <div class="alg-card-header">
-          <div class="alg-card-header-title">Marcar Consulta Online</div>
-          <div class="alg-card-header-sub">Vacina febre amarela no Algarve — simples e rápido</div>
-        </div>
-        <ul class="alg-card-steps">
-          <li class="alg-card-step"><span class="alg-step-num">1</span><div><strong>Consulta online com médico</strong>Avaliação clínica e prescrição digital. Disponível 7 dias/semana.</div></li>
-          <li class="alg-card-step"><span class="alg-step-num">2</span><div><strong>Vacinação no Centro de Vacinação Internacional do Algarve</strong>Apresenta a prescrição no Centro de Vacinação Internacional de Faro ou Portimão.</div></li>
-          <li class="alg-card-step"><span class="alg-step-num">3</span><div><strong>Certificado Internacional</strong>Emitido no próprio dia. Válido globalmente 10 dias depois.</div></li>
-        </ul>
-        <a class="alg-btn-primary" href="/marcar/travel">Marcar Consulta Online →</a>
-        <p class="alg-card-note">Disponível hoje · Resposta em menos de 24h</p>
-        <div class="alg-card-guarantee"><span>⚠️</span><span>Marque com pelo menos <strong>10 dias de antecedência</strong> — o certificado só é válido após esse período.</span></div>
+      <div class="alg-hero-aside" id="marcar">
+        <article class="lon-service-card is-visible alg-hero-travel-booking" aria-label="Consulta do Viajante — marcar online">
+          <div class="lon-service-image-wrap">
+            <img src="/image/image1_files/CoventGarden_Large_Desktop.jpg" alt="Consulta do viajante com médico online" width="800" height="600" loading="eager" decoding="async">
+            <span class="lon-service-chip">Viajante</span>
+            <div class="lon-service-glass">
+              <h3>Consulta do Viajante</h3>
+              <p class="lon-service-price">€39 · 20 min</p>
+              <a href="/marcar/travel" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
+            </div>
+          </div>
+        </article>
       </div>
     </div>
   </section>
