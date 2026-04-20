@@ -4,6 +4,10 @@
     min-height: 100vh;
 }
 
+.guide-body:not(.guide-index) {
+    background: #ffffff;
+}
+
 .guide-body.guide-index {
     background: #0f2f24 !important;
     color: #f2f4f6;
