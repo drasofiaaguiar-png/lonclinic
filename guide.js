@@ -404,7 +404,6 @@ function renderBlogArticle(origin, slug) {
         : `
     <main id="conteudo-principal">
         <article class="guide-article-wrap">
-            ${topMedicalNotice}
             <div class="guide-prose" lang="pt-PT">
                 ${articleHtml}
             </div>

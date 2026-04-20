@@ -8,6 +8,11 @@
     background: #ffffff;
 }
 
+.guide-body:not(.guide-index) .lon-nav,
+.guide-body:not(.guide-index) .lon-nav.is-scrolled {
+    background: #0f2f24;
+}
+
 .guide-body:not(.guide-index) .lon-nav-inner {
     border-color: rgba(255, 255, 255, 0.2);
     background: rgba(15, 47, 36, 0.94);
