@@ -139,7 +139,7 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260418k">
-    <link rel="stylesheet" href="/guide.css?v=20260421a">
+    <link rel="stylesheet" href="/guide.css?v=20260421b">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     ${ldJson}</head>
 <body class="lon-landing guide-body${pageClass ? ` ${escapeHtml(pageClass)}` : ''}">
@@ -258,10 +258,12 @@ function renderBlogIndex(origin) {
                             <span class="guide-card-cover-title">${t}</span>
                             <span class="guide-card-free">FREE</span>
                         </a>
-                        <p class="guide-card-date">${date}</p>
-                        <h2 class="guide-card-title"><a href="${href}">${t}</a></h2>
-                        <p class="guide-card-desc">${d}</p>
-                        <a class="lon-btn lon-btn-soft lon-btn-sm" href="${href}">Ler artigo</a>
+                        <div class="guide-card-content">
+                            <p class="guide-card-date">${date}</p>
+                            <h2 class="guide-card-title"><a href="${href}">${t}</a></h2>
+                            <p class="guide-card-desc">${d}</p>
+                            <a class="lon-btn lon-btn-soft lon-btn-sm" href="${href}">Ler artigo</a>
+                        </div>
                     </div>
                 </article>`;
     }).join('');
