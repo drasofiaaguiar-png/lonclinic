@@ -1,0 +1,205 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "A CUF faz a vacina febre amarela?", "acceptedAnswer": { "@type": "Answer", "text": "Não. A CUF não administra a vacina febre amarela em nenhuma das suas unidades. A vacina febre amarela só pode ser administrada nos Centros de Vacinação Internacional (CVIs) autorizados. A CUF dispõe de Consulta do Viajante mas não tem autorização para administrar esta vacina específica." } },
+    { "@type": "Question", "name": "Onde tomar a vacina febre amarela em alternativa à CUF?", "acceptedAnswer": { "@type": "Answer", "text": "A vacina febre amarela pode ser tomada nos Centros de Vacinação Internacional (CVIs) públicos distribuídos por todo o Portugal, mediante prescrição médica. Em Lisboa, Porto, Coimbra, Braga e outras cidades existem CVIs autorizados. A nossa clínica online emite a prescrição médica no próprio dia para que possa depois se deslocar ao CVI mais próximo." } },
+    { "@type": "Question", "name": "A CUF pode passar a prescrição para a vacina febre amarela?", "acceptedAnswer": { "@type": "Answer", "text": "Sim. A CUF pode realizar a Consulta do Viajante e emitir a prescrição para a vacina febre amarela, mas não a administra. Com a prescrição, terá de se deslocar a um Centro de Vacinação Internacional para receber a vacina e o Certificado Internacional." } }
+  ]
+}
+</script>
+
+<style>
+.cuf-article, .cuf-article * { box-sizing: border-box; }
+.cuf-article {
+  --ink: #0f1a14; --ink-mid: #3a4a3f; --ink-soft: #6b7d70; --ink-ghost: #a8b8ad;
+  --green: #1a6641; --green-vivid: #22865a; --green-light: #eaf4ee; --green-faint: #f4faf6;
+  --gold: #c8961a; --gold-light: #fdf5e0;
+  --red-soft: #fef2f2; --red-border: #fecaca; --red-text: #991b1b;
+  --white: #ffffff; --border: rgba(15,26,20,0.10); --border-mid: rgba(15,26,20,0.18);
+  --r: 10px; --r-lg: 16px;
+  font-family: 'DM Sans', sans-serif;
+}
+.cuf-article a { text-decoration: none; }
+.cuf-article .breadcrumb { font-size: 12px; color: var(--ink-ghost); padding: 6px 0 12px; max-width: 900px; margin: 0 auto; }
+.cuf-article .breadcrumb a { color: var(--ink-soft); }
+.cuf-article .answer-hero { max-width: 900px; margin: 0 auto; padding: 20px 0 0; }
+.cuf-article .answer-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: var(--ink-soft); background: #f3f4f6; padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
+.cuf-article .answer-hero h2 { font-family: 'Fraunces', serif; font-size: clamp(28px, 5vw, 46px); font-weight: 600; line-height: 1.15; letter-spacing: -1px; margin: 0 0 24px; color: var(--ink); border: none; }
+.cuf-article .answer-hero h2 em { font-style: italic; color: var(--red-text); }
+.cuf-article .answer-box { background: var(--red-soft); border: 1px solid var(--red-border); border-left: 4px solid #dc2626; border-radius: 0 var(--r-lg) var(--r-lg) 0; padding: 24px 28px; margin-bottom: 32px; }
+.cuf-article .answer-box-title { font-size: 17px; font-weight: 600; color: var(--red-text); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+.cuf-article .answer-box p { font-size: 15px; color: #7f1d1d; line-height: 1.65; margin-bottom: 10px; }
+.cuf-article .answer-box p:last-child { margin-bottom: 0; }
+.cuf-article .next-steps { max-width: 900px; margin: 0 auto; padding: 0 0 48px; }
+.cuf-article .next-steps h3 { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 600; color: var(--ink); margin-bottom: 8px; letter-spacing: -0.5px; }
+.cuf-article .next-steps-sub { font-size: 15px; color: var(--ink-soft); margin-bottom: 28px; }
+.cuf-article .path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 40px; }
+.cuf-article .path-card { border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 24px; display: flex; flex-direction: column; gap: 12px; background: white; }
+.cuf-article .path-card.recommended { border-color: var(--green); border-width: 1.5px; position: relative; }
+.cuf-article .path-card.recommended::before { content: 'Recomendado'; position: absolute; top: -10px; left: 20px; background: var(--green); color: white; font-size: 10px; font-weight: 600; padding: 2px 10px; border-radius: 10px; letter-spacing: 0.5px; }
+.cuf-article .path-num { width: 32px; height: 32px; background: var(--green-light); color: var(--green); border-radius: 50%; font-size: 14px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.cuf-article .path-title { font-size: 15px; font-weight: 500; color: var(--ink); }
+.cuf-article .path-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
+.cuf-article .path-time { font-size: 12px; color: var(--green); font-weight: 500; display: flex; align-items: center; gap: 5px; }
+.cuf-article .cta-card { background: var(--green); color: white; border-radius: var(--r-lg); padding: 32px 28px; margin-bottom: 48px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: center; }
+@media (max-width: 600px) { .cuf-article .cta-card { grid-template-columns: 1fr; } }
+.cuf-article .cta-card h3 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; margin: 0 0 6px; line-height: 1.2; color: #fff; }
+.cuf-article .cta-card p { font-size: 14px; color: rgba(255,255,255,0.78); margin: 0; }
+.cuf-article .btn-cta-white { display: inline-block; background: white; color: var(--green); font-size: 14px; font-weight: 600; padding: 13px 28px; border-radius: 8px; white-space: nowrap; transition: opacity 0.15s; }
+.cuf-article .btn-cta-white:hover { opacity: 0.92; }
+.cuf-article .cvi-section { max-width: 900px; margin: 0 auto; padding: 0 0 64px; }
+.cuf-article .section-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; color: var(--green); margin-bottom: 10px; }
+.cuf-article .cvi-section h3 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: 8px; letter-spacing: -0.5px; }
+.cuf-article .cvi-section-sub { font-size: 15px; color: var(--ink-soft); margin-bottom: 28px; }
+.cuf-article .cvi-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.cuf-article .cvi-table th { background: var(--ink); color: white; padding: 11px 14px; text-align: left; font-weight: 500; font-size: 12px; letter-spacing: 0.3px; }
+.cuf-article .cvi-table td { padding: 11px 14px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
+.cuf-article .cvi-table tr:nth-child(even) td { background: var(--green-faint); }
+.cuf-article .cvi-table tr:hover td { background: var(--green-light); }
+.cuf-article .cvi-city { font-weight: 500; color: var(--ink); }
+.cuf-article .cvi-phone a { color: var(--green); font-size: 13px; }
+.cuf-article .cvi-phone a:hover { text-decoration: underline; }
+.cuf-article .cvi-hours { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+@media (max-width: 640px) {
+  .cuf-article .cvi-table thead { display: none; }
+  .cuf-article .cvi-table td { display: block; padding: 6px 14px; }
+  .cuf-article .cvi-table tr { display: block; border-bottom: 1px solid var(--border); padding: 10px 0; }
+  .cuf-article .cvi-table tr:nth-child(even) td { background: none; }
+}
+.cuf-article .faq-section { background: var(--green-faint); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); padding: 56px 24px; border-radius: var(--r-lg); }
+.cuf-article .faq-inner { max-width: 860px; margin: 0 auto; }
+.cuf-article .faq-list { margin-top: 28px; }
+.cuf-article .faq-item { border-bottom: 0.5px solid var(--border); padding: 18px 0; }
+.cuf-article .faq-item:first-child { border-top: 0.5px solid var(--border); }
+.cuf-article .faq-q { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px; }
+.cuf-article .faq-q::after { content: '+'; color: var(--green); font-size: 20px; font-weight: 300; flex-shrink: 0; margin-top: -2px; }
+.cuf-article .faq-a { font-size: 14px; color: var(--ink-soft); line-height: 1.65; }
+.cuf-article .related-pages { background: white; padding: 56px 0; }
+.cuf-article .related-inner { max-width: 860px; margin: 0 auto; }
+.cuf-article .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+.cuf-article .related-card { border: 0.5px solid var(--border-mid); border-radius: var(--r); padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: border-color 0.15s, background 0.15s; }
+.cuf-article .related-card:hover { border-color: var(--green); background: var(--green-faint); }
+.cuf-article .related-card-text { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.cuf-article .related-card-sub { font-size: 12px; color: var(--ink-ghost); margin-top: 3px; }
+.cuf-article .related-arrow { color: var(--green); font-size: 18px; flex-shrink: 0; }
+.cuf-article .final-cta { background: var(--ink); color: white; padding: 72px 24px; text-align: center; border-radius: var(--r-lg); }
+.cuf-article .final-cta-inner { max-width: 500px; margin: 0 auto; }
+.cuf-article .final-cta h3 { font-family: 'Fraunces', serif; font-size: clamp(26px, 5vw, 40px); font-weight: 600; letter-spacing: -0.8px; line-height: 1.15; margin: 0 0 14px; color: #fff; }
+.cuf-article .final-cta h3 em { color: #7fd4a8; font-style: italic; }
+.cuf-article .final-cta p { font-size: 15px; color: rgba(255,255,255,0.65); margin-bottom: 32px; }
+.cuf-article .btn-cta-large { display: inline-block; background: #22865a; color: white; font-size: 16px; font-weight: 500; padding: 17px 40px; border-radius: 10px; margin-bottom: 12px; transition: background 0.18s; }
+.cuf-article .btn-cta-large:hover { background: #1a6641; }
+.cuf-article .final-note { font-size: 13px; color: rgba(255,255,255,0.4); }
+.cuf-article .disclaimer { text-align: center; font-size: 12px; color: var(--ink-ghost); max-width: 680px; margin: 0 auto; padding: 28px 24px 0; }
+</style>
+
+<div class="cuf-article">
+  <div class="breadcrumb">
+    <a href="/">Início</a> › <a href="/blog">Guias</a> › <a href="/blog/vacina-febre-amarela-guia-completo">Vacina Febre Amarela</a> › CUF
+  </div>
+
+  <div class="answer-hero">
+    <div class="answer-eyebrow">Resposta direta</div>
+    <h2>Vacina Febre Amarela<br>na <em>CUF</em> — O que saber</h2>
+    <div class="answer-box">
+      <div class="answer-box-title">❌ A CUF não administra a vacina febre amarela</div>
+      <p>Em nenhuma das suas unidades — hospitais, clínicas ou postos de enfermagem — a CUF administra a vacina contra a febre amarela. Esta é a informação oficial presente no próprio site da CUF.</p>
+      <p>A CUF dispõe de <strong>Consulta do Viajante</strong> onde pode obter aconselhamento médico e prescrição, mas para receber a vacina e o Certificado Internacional de Vacinação terá de se deslocar a um <strong>Centro de Vacinação Internacional (CVI) autorizado</strong>.</p>
+    </div>
+  </div>
+
+  <div class="next-steps">
+    <h3>O que fazer em vez disso</h3>
+    <p class="next-steps-sub">Tem duas opções para obter a vacina febre amarela e o Certificado Internacional em Portugal.</p>
+    <div class="path-grid">
+      <div class="path-card recommended">
+        <div class="path-num">1</div>
+        <div class="path-title">Consulta online + CVI presencial</div>
+        <div class="path-desc">Marque uma consulta de medicina de viagem online. O médico avalia o seu caso e emite a prescrição digital no próprio dia. Depois desloca-se ao CVI mais próximo de si para receber a vacina e o certificado.</div>
+        <div class="path-time">● Prescrição no próprio dia · Sem esperas</div>
+      </div>
+      <div class="path-card">
+        <div class="path-num">2</div>
+        <div class="path-title">Ir diretamente ao CVI público</div>
+        <div class="path-desc">Contacte um Centro de Vacinação Internacional da sua zona por telefone ou email, marque a consulta do viajante presencialmente e tome a vacina no mesmo local. Mais demorado, mas custo mais baixo.</div>
+        <div class="path-time">● Gratuito (taxa moderadora) · Pode ter espera de dias</div>
+      </div>
+    </div>
+    <div class="cta-card" id="marcar">
+      <div>
+        <h3>Marque a consulta online agora</h3>
+        <p>Consulta de medicina de viagem disponível 7 dias/semana · Prescrição digital emitida no próprio dia · Válida em qualquer CVI de Portugal</p>
+      </div>
+      <a class="btn-cta-white" href="/marcar/travel">Marcar Consulta →</a>
+    </div>
+  </div>
+
+  <div class="cvi-section">
+    <div class="section-label">Onde tomar a vacina</div>
+    <h3>CVIs autorizados em Portugal — principais locais</h3>
+    <p class="cvi-section-sub">Centros de Vacinação Internacional onde pode receber a vacina febre amarela mediante prescrição médica. <strong>Marcação obrigatória antes de se deslocar.</strong></p>
+    <table class="cvi-table">
+      <thead>
+        <tr><th>Cidade</th><th>Local</th><th>Horário</th><th>Contacto</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="cvi-city">Lisboa</td><td>ACES Lisboa Norte — Largo Prof. Arnaldo Sampaio</td><td class="cvi-hours">Vacinação: dias úteis 09h-15h30<br>Consultas: 3ª feira 09h-13h</td><td class="cvi-phone"><a href="tel:217211862">217 211 862</a></td></tr>
+        <tr><td class="cvi-city">Lisboa</td><td>Hospital Curry Cabral (CHULC) — Rua da Beneficência, 8</td><td class="cvi-hours">2ª, 3ª, 4ª e 5ª feira: 14h-16h30</td><td class="cvi-phone"><a href="tel:217924322">217 924 322</a></td></tr>
+        <tr><td class="cvi-city">Lisboa</td><td>Hospital Santa Maria (CHULN) — Av. Prof. Egas Moniz</td><td class="cvi-hours">2ª, 3ª e 5ª: 14h-17h · 4ª: 14h-18h · 6ª: 14h-16h</td><td class="cvi-phone"><a href="tel:217805000">217 805 000</a></td></tr>
+        <tr><td class="cvi-city">Porto</td><td>CVI ULS Santo António — Rua da Alegria, 1057</td><td class="cvi-hours">2ª a 6ª feira: 09h-13h e 14h-17h</td><td class="cvi-phone"><a href="tel:222002540">222 002 540</a></td></tr>
+        <tr><td class="cvi-city">Porto</td><td>Hospital de S. João — Al. Prof. Hernâni Monteiro</td><td class="cvi-hours">3ª, 4ª e 5ª feira: 14h-17h</td><td class="cvi-phone"><a href="tel:225512375">225 512 375</a></td></tr>
+        <tr><td class="cvi-city">Coimbra</td><td>Centro de Saúde Santa Clara — Rua Cap. Salgueiro Maia</td><td class="cvi-hours">2ª a 6ª feira: 09h-12h e 14h-16h (4ª só manhã)</td><td class="cvi-phone"><a href="tel:239802112">239 802 112</a></td></tr>
+        <tr><td class="cvi-city">Braga</td><td>ULS de Braga — Praceta de Vilar, s/n</td><td class="cvi-hours">2ª, 5ª e 6ª: 09h-13h · 3ª e 4ª: 09h-13h e 14h-17h</td><td class="cvi-phone"><a href="tel:253208260">253 208 260</a></td></tr>
+        <tr><td class="cvi-city">Almada</td><td>Hospital Garcia de Orta — Av. Torrado da Silva</td><td class="cvi-hours">2ª, 4ª e 6ª feira: 13h-18h30</td><td class="cvi-phone"><a href="tel:212726808">212 726 808</a></td></tr>
+        <tr><td class="cvi-city">Setúbal</td><td>Centro Hospitalar de Setúbal — R. Camilo Castelo Branco</td><td class="cvi-hours">Dias úteis: 09h-12h e 15h-17h</td><td class="cvi-phone"><a href="tel:265549558">265 549 558</a></td></tr>
+        <tr><td class="cvi-city">Aveiro</td><td>Centro de Saúde de Aveiro — Praça Rainha D. Leonor</td><td class="cvi-hours">2ª a 6ª feira: 09h30-12h30 e 14h30-16h</td><td class="cvi-phone"><a href="tel:234891191">234 891 191</a></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;color:var(--ink-ghost);margin-top:14px;">Fontes: ARSLVT, ARS Norte, ARS Centro, Ordem dos Médicos 2025. Horários sujeitos a alteração — confirme sempre antes de se deslocar. Lista não exaustiva.</p>
+  </div>
+
+  <section class="faq-section">
+    <div class="faq-inner">
+      <div class="section-label">Perguntas frequentes</div>
+      <h3 style="font-family:'Fraunces',serif;font-size:24px;font-weight:600;color:var(--ink);margin-bottom:4px;">Dúvidas sobre a CUF e a vacina febre amarela</h3>
+      <div class="faq-list">
+        <div class="faq-item"><div class="faq-q">A CUF faz a vacina febre amarela?</div><div class="faq-a">Não. A CUF não administra a vacina febre amarela em nenhuma das suas unidades. A informação consta no próprio site da CUF que indica explicitamente: <em>"Não administramos a vacina da febre amarela."</em> Para receber esta vacina, tem de se deslocar a um Centro de Vacinação Internacional (CVI) autorizado.</div></div>
+        <div class="faq-item"><div class="faq-q">A CUF pode fazer a Consulta do Viajante e emitir a prescrição?</div><div class="faq-a">Sim. A CUF dispõe de Consulta do Viajante onde um médico pode avaliar o seu caso, aconselhar sobre as vacinas necessárias para o seu destino e emitir a prescrição para a vacina febre amarela. Com essa prescrição, desloca-se depois a um CVI para receber a vacina e o Certificado Internacional. A nossa consulta online oferece exatamente o mesmo serviço, com resposta em menos de 24 horas.</div></div>
+        <div class="faq-item"><div class="faq-q">Posso comprar a vacina febre amarela na farmácia e levá-la à CUF?</div><div class="faq-a">Não é possível. A vacina febre amarela não está disponível em farmácias portuguesas para compra direta ao público. É uma vacina de vírus vivo atenuado que exige condições especiais de armazenamento e só pode ser administrada em CVIs autorizados pela DGS, mediante prescrição médica.</div></div>
+        <div class="faq-item"><div class="faq-q">Qual é a diferença entre a CUF e um Centro de Vacinação Internacional?</div><div class="faq-a">A CUF é uma rede de saúde privada que oferece consulta do viajante mas não tem autorização para administrar a vacina febre amarela. Os CVIs são unidades certificadas pelo SNS e pela DGS especificamente para vacinas internacionais e emissão de CIVP.</div></div>
+        <div class="faq-item"><div class="faq-q">O certificado emitido no CVI é aceite internacionalmente?</div><div class="faq-a">Sim. O Certificado Internacional de Vacinação ou Profilaxia (CIVP) emitido nos CVIs portugueses é aceite internacionalmente e tem validade vitalícia desde 2016.</div></div>
+        <div class="faq-item"><div class="faq-q">Quanto tempo demora o processo completo?</div><div class="faq-a">Com consulta online, recebe a prescrição no próprio dia. Depois basta marcar com o CVI mais próximo. O certificado é emitido no dia da vacinação mas só é <strong>válido 10 dias depois</strong>.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="related-pages">
+    <div class="related-inner">
+      <div class="section-label">Guias por cidade</div>
+      <h3 style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--ink);margin-bottom:4px;">Onde tomar a vacina na sua cidade</h3>
+      <p style="font-size:14px;color:var(--ink-soft);">Guias com locais, horários e contactos dos CVIs em cada região.</p>
+      <div class="related-grid">
+        <a class="related-card" href="/blog/vacina-febre-amarela-lisboa"><div><div class="related-card-text">Lisboa</div><div class="related-card-sub">CVIs e horários em Lisboa</div></div><span class="related-arrow">→</span></a>
+        <a class="related-card" href="/blog/vacina-febre-amarela-porto"><div><div class="related-card-text">Porto</div><div class="related-card-sub">CVIs e horários no Porto</div></div><span class="related-arrow">→</span></a>
+        <a class="related-card" href="/blog/vacina-febre-amarela-coimbra"><div><div class="related-card-text">Coimbra</div><div class="related-card-sub">CVIs em Coimbra e região Centro</div></div><span class="related-arrow">→</span></a>
+        <a class="related-card" href="/blog/vacina-febre-amarela-braga"><div><div class="related-card-text">Braga</div><div class="related-card-sub">CVIs em Braga e Minho</div></div><span class="related-arrow">→</span></a>
+        <a class="related-card" href="/blog/vacina-febre-amarela-guia-completo"><div><div class="related-card-text">Guia Completo</div><div class="related-card-sub">Tudo sobre a vacina febre amarela</div></div><span class="related-arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="final-cta-inner">
+      <h3>Precisa da vacina<br><em>com urgência?</em></h3>
+      <p>Marque a consulta online agora. Emitimos a prescrição no próprio dia para que possa ir ao CVI o mais depressa possível.</p>
+      <a class="btn-cta-large" href="/marcar/travel">Marcar Consulta Online →</a>
+      <p class="final-note">Disponível 7 dias por semana · Prescrição digital no próprio dia</p>
+    </div>
+  </section>
+
+  <div class="disclaimer">
+    <p>Informação de carácter geral. As políticas da CUF podem mudar — consulte sempre o site oficial da CUF para confirmação atualizada. Horários dos CVIs sujeitos a alteração.</p>
+  </div>
+</div>

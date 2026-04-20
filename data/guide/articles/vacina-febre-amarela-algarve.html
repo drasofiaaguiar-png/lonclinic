@@ -1,0 +1,260 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalClinic",
+  "name": "Clínica Médica Online — Vacina Febre Amarela Algarve",
+  "areaServed": "Algarve, Portugal",
+  "availableService": { "@type": "MedicalProcedure", "name": "Vacinação contra a Febre Amarela" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Onde tomar a vacina febre amarela no Algarve?", "acceptedAnswer": { "@type": "Answer", "text": "No Algarve, a vacina pode ser tomada no CVI de Faro e no CVI de Portimão, mediante prescrição médica e marcação prévia." } },
+    { "@type": "Question", "name": "Preciso de prescrição médica para vacinar no Algarve?", "acceptedAnswer": { "@type": "Answer", "text": "Sim. Ambos os CVIs do Algarve exigem prescrição médica válida para administrar a vacina febre amarela." } },
+    { "@type": "Question", "name": "O certificado emitido no Algarve é aceite internacionalmente?", "acceptedAnswer": { "@type": "Answer", "text": "Sim. O Certificado Internacional emitido num CVI português é aceite nos países signatários do Regulamento Sanitário Internacional." } }
+  ]
+}
+</script>
+
+<style>
+.alg-article, .alg-article * { box-sizing: border-box; }
+.alg-article {
+  --ink: #0f1a14; --ink-mid: #3a4a3f; --ink-soft: #6b7d70; --ink-ghost: #a8b8ad;
+  --green: #1a6641; --green-vivid: #22865a; --green-light: #eaf4ee; --green-faint: #f4faf6;
+  --gold: #c8961a; --gold-light: #fdf5e0; --white: #ffffff;
+  --blue-faint: #f0f7ff; --blue-border: #bfdbfe; --blue-text: #1e40af;
+  --border: rgba(15,26,20,0.10); --border-mid: rgba(15,26,20,0.18);
+  --r: 10px; --r-lg: 16px;
+  font-family: 'DM Sans', sans-serif;
+}
+.alg-article a { text-decoration: none; }
+.alg-breadcrumb { font-size: 12px; color: var(--ink-ghost); padding: 8px 0 4px; max-width: 1060px; margin: 0 auto; }
+.alg-breadcrumb a { color: var(--ink-soft); }
+.alg-hero { padding: 28px 0 36px; max-width: 1060px; margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 48px; align-items: center; }
+@media (max-width: 860px) { .alg-hero { grid-template-columns: 1fr; gap: 32px; } .alg-hero-card { order: -1; } }
+.alg-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: var(--green); background: var(--green-light); padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
+.alg-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+.alg-hero h2 { font-family: 'Fraunces', serif; font-size: clamp(30px, 5vw, 50px); font-weight: 600; line-height: 1.15; letter-spacing: -1px; margin: 0 0 20px; border: none; color: var(--ink); }
+.alg-hero h2 em { font-style: italic; color: var(--green); }
+.alg-hero-desc { font-size: 17px; color: var(--ink-mid); max-width: 480px; margin-bottom: 24px; line-height: 1.65; }
+.alg-trust-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
+.alg-trust-pill { font-size: 12px; color: var(--ink-mid); background: var(--green-faint); border: 0.5px solid var(--border-mid); padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 5px; }
+.alg-trust-pill .dot { color: var(--green-vivid); font-size: 14px; }
+.alg-hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r); overflow: hidden; }
+.alg-stat { background: white; padding: 14px 16px; text-align: center; }
+.alg-stat-n { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--green); line-height: 1; margin-bottom: 4px; }
+.alg-stat-l { font-size: 11px; color: var(--ink-soft); line-height: 1.3; }
+.alg-hero-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 28px 24px; box-shadow: 0 2px 24px rgba(15,26,20,0.07); }
+.alg-card-header { background: var(--green); color: white; border-radius: 10px; padding: 18px 20px; margin-bottom: 22px; }
+.alg-card-header-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+.alg-card-header-sub { font-size: 13px; color: rgba(255,255,255,0.78); }
+.alg-card-steps { list-style: none; margin-bottom: 22px; padding: 0; }
+.alg-card-step { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; color: var(--ink-mid); }
+.alg-card-step:last-child { border-bottom: none; }
+.alg-step-num { width: 24px; height: 24px; background: var(--green-light); color: var(--green); border-radius: 50%; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.alg-card-step strong { color: var(--ink); font-weight: 500; display: block; margin-bottom: 1px; }
+.alg-btn-primary { display: block; width: 100%; background: var(--green); color: white; text-align: center; font-size: 15px; font-weight: 500; padding: 15px 20px; border-radius: 9px; margin-bottom: 10px; transition: background 0.18s; }
+.alg-btn-primary:hover { background: var(--green-vivid); }
+.alg-card-note { text-align: center; font-size: 12px; color: var(--ink-ghost); }
+.alg-card-guarantee { display: flex; align-items: center; gap: 8px; background: var(--gold-light); border: 0.5px solid rgba(200,150,26,0.25); border-radius: 8px; padding: 10px 14px; margin-top: 14px; font-size: 12px; color: #7a5a0a; }
+.alg-tourist-wrap { padding: 6px 0 24px; }
+.alg-tourist-alert { background: var(--blue-faint); border: 1px solid var(--blue-border); border-left: 4px solid #3b82f6; border-radius: 0 var(--r-lg) var(--r-lg) 0; padding: 20px 24px; max-width: 860px; margin: 0 auto; }
+.alg-tourist-alert-title { font-size: 14px; font-weight: 600; color: var(--blue-text); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.alg-tourist-alert p { font-size: 14px; color: #1e3a5f; line-height: 1.6; margin: 0; }
+.alg-section { padding: 52px 0; }
+.alg-section-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; color: var(--green); margin-bottom: 10px; }
+.alg-section h3 { font-family: 'Fraunces', serif; font-size: clamp(22px, 4vw, 34px); font-weight: 600; letter-spacing: -0.5px; color: var(--ink); margin: 0 0 12px; line-height: 1.2; }
+.alg-section-sub { font-size: 15px; color: var(--ink-soft); max-width: 620px; margin-bottom: 28px; }
+.alg-steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 2px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); overflow: hidden; }
+.alg-step-block { background: white; padding: 24px 20px; }
+.alg-step-block-num { font-family: 'Fraunces', serif; font-size: 38px; font-weight: 300; color: var(--green-light); line-height: 1; margin-bottom: 12px; letter-spacing: -2px; }
+.alg-step-block h4 { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+.alg-step-block p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
+.alg-info-band { background: var(--green-faint); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); padding: 42px 18px; border-radius: var(--r-lg); }
+.alg-info-band-inner { max-width: 860px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
+.alg-info-item { display: flex; gap: 14px; align-items: flex-start; }
+.alg-info-icon { width: 40px; height: 40px; background: var(--green-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.alg-info-item h4 { font-size: 14px; font-weight: 500; margin-bottom: 4px; color: var(--ink); }
+.alg-info-item p { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin: 0; }
+.alg-locations-section { background: var(--green-faint); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); padding: 54px 18px; border-radius: var(--r-lg); }
+.alg-alert-marcacao { background: var(--gold-light); border: 1px solid rgba(200,150,26,0.3); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; padding: 14px 18px; font-size: 13px; color: #6b4a08; margin-bottom: 30px; display: flex; gap: 10px; align-items: flex-start; }
+.alg-loc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+.alg-loc-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.alg-loc-card.featured { border-color: var(--green); border-width: 1.5px; }
+.alg-loc-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.alg-loc-name { font-size: 15px; font-weight: 600; color: var(--ink); line-height: 1.3; }
+.alg-loc-badges { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+.alg-badge-cv, .alg-badge-vac { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; }
+.alg-badge-cv { background: var(--green-light); color: var(--green); }
+.alg-badge-vac { background: #e8f0fe; color: #1a4fbd; }
+.alg-loc-address { font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
+.alg-loc-hours { font-size: 13px; color: var(--ink-mid); line-height: 1.7; background: var(--green-faint); border-radius: 6px; padding: 10px 12px; }
+.alg-loc-hours strong { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-ghost); margin-bottom: 6px; font-weight: 500; }
+.alg-loc-email-note { font-size: 12px; color: var(--ink-soft); background: var(--blue-faint); border: 0.5px solid var(--blue-border); border-radius: 6px; padding: 8px 12px; }
+.alg-loc-email-note strong { color: var(--blue-text); }
+.alg-loc-contacts { display: flex; flex-direction: column; gap: 6px; }
+.alg-loc-contact { font-size: 13px; color: var(--ink-soft); display: flex; align-items: flex-start; gap: 6px; }
+.alg-loc-contact a { color: var(--green); }
+.alg-loc-contact a:hover { text-decoration: underline; }
+.alg-faq-list { margin-top: 28px; }
+.alg-faq-item { border-bottom: 0.5px solid var(--border); padding: 18px 0; }
+.alg-faq-item:first-child { border-top: 0.5px solid var(--border); }
+.alg-faq-q { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px; }
+.alg-faq-q::after { content: '+'; color: var(--green); font-size: 20px; font-weight: 300; flex-shrink: 0; margin-top: -2px; }
+.alg-faq-a { font-size: 14px; color: var(--ink-soft); line-height: 1.65; }
+.alg-related-pages { background: white; border-top: 0.5px solid var(--border); padding: 48px 0; }
+.alg-related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+.alg-related-card { border: 0.5px solid var(--border-mid); border-radius: var(--r); padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: border-color 0.15s, background 0.15s; }
+.alg-related-card:hover { border-color: var(--green); background: var(--green-faint); }
+.alg-related-card-text { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.alg-related-card-sub { font-size: 12px; color: var(--ink-ghost); margin-top: 3px; }
+.alg-related-arrow { color: var(--green); font-size: 18px; flex-shrink: 0; }
+.alg-final-cta { background: var(--ink); color: white; padding: 66px 24px; text-align: center; border-radius: var(--r-lg); }
+.alg-final-cta-inner { max-width: 520px; margin: 0 auto; }
+.alg-final-cta h3 { font-family: 'Fraunces', serif; font-size: clamp(26px, 5vw, 42px); font-weight: 600; letter-spacing: -0.8px; line-height: 1.15; margin: 0 0 14px; color: #fff; }
+.alg-final-cta h3 em { color: #7fd4a8; font-style: italic; }
+.alg-final-cta p { font-size: 15px; color: rgba(255,255,255,0.65); margin-bottom: 32px; }
+.alg-btn-cta-large { display: inline-block; background: #22865a; color: white; font-size: 16px; font-weight: 500; padding: 17px 40px; border-radius: 10px; margin-bottom: 12px; transition: background 0.18s; }
+.alg-btn-cta-large:hover { background: #1a6641; }
+.alg-final-note { font-size: 13px; color: rgba(255,255,255,0.4); }
+.alg-disclaimer { background: var(--green-faint); border-top: 0.5px solid var(--border); text-align: center; font-size: 12px; color: var(--ink-ghost); max-width: 680px; margin: 18px auto 0; padding: 24px 22px; border-radius: var(--r-lg); }
+</style>
+
+<div class="alg-article">
+  <div class="alg-breadcrumb">
+    <a href="/">Início</a> › <a href="/blog">Guias</a> › <a href="/blog/vacina-febre-amarela-guia-completo">Vacina Febre Amarela</a> › Algarve
+  </div>
+
+  <section style="background:white; border-bottom:0.5px solid var(--border);">
+    <div class="alg-hero">
+      <div class="alg-hero-content">
+        <div class="alg-eyebrow">Faro · Portimão · Algarve</div>
+        <h2>Vacina Febre Amarela<br>no <em>Algarve</em></h2>
+        <p class="alg-hero-desc">Consulta de medicina de viagem online com vacinação presencial nos Centros de Vacinação Internacional de Faro e Portimão. Certificado Internacional emitido no próprio dia.</p>
+        <div class="alg-trust-row">
+          <span class="alg-trust-pill"><span class="dot">●</span> CVIs em Faro e Portimão</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Certificado Internacional válido</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Consulta online 7 dias/semana</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Prescrição digital no próprio dia</span>
+        </div>
+        <div class="alg-hero-stats">
+          <div class="alg-stat"><div class="alg-stat-n">1</div><div class="alg-stat-l">dose para a vida toda</div></div>
+          <div class="alg-stat"><div class="alg-stat-n">10</div><div class="alg-stat-l">dias até certificado válido</div></div>
+          <div class="alg-stat"><div class="alg-stat-n">99%</div><div class="alg-stat-l">eficácia da vacina</div></div>
+        </div>
+      </div>
+      <div class="alg-hero-card" id="marcar">
+        <div class="alg-card-header">
+          <div class="alg-card-header-title">Marcar Consulta Online</div>
+          <div class="alg-card-header-sub">Vacina febre amarela no Algarve — simples e rápido</div>
+        </div>
+        <ul class="alg-card-steps">
+          <li class="alg-card-step"><span class="alg-step-num">1</span><div><strong>Consulta online com médico</strong>Avaliação clínica e prescrição digital. Disponível 7 dias/semana.</div></li>
+          <li class="alg-card-step"><span class="alg-step-num">2</span><div><strong>Vacinação no CVI do Algarve</strong>Apresenta a prescrição no CVI de Faro ou Portimão.</div></li>
+          <li class="alg-card-step"><span class="alg-step-num">3</span><div><strong>Certificado Internacional</strong>Emitido no próprio dia. Válido globalmente 10 dias depois.</div></li>
+        </ul>
+        <a class="alg-btn-primary" href="/marcar/travel">Marcar Consulta Online →</a>
+        <p class="alg-card-note">Disponível hoje · Resposta em menos de 24h</p>
+        <div class="alg-card-guarantee"><span>⚠️</span><span>Marque com pelo menos <strong>10 dias de antecedência</strong> — o certificado só é válido após esse período.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="alg-tourist-wrap">
+    <div class="alg-tourist-alert">
+      <div class="alg-tourist-alert-title">✈️ A planear uma viagem a partir do Algarve?</div>
+      <p>Muitos residentes e turistas no Algarve viajam para destinos tropicais onde a vacina é obrigatória. Se vai viajar nos próximos meses, marque a consulta com antecedência: o certificado só é válido 10 dias após a vacinação.</p>
+    </div>
+  </div>
+
+  <section class="alg-section">
+    <div class="alg-section-label">Como funciona</div>
+    <h3>Do primeiro clique à vacina no Algarve</h3>
+    <p class="alg-section-sub">Consulta online, prescrição digital e vacinação no CVI em dia útil.</p>
+    <div class="alg-steps-grid">
+      <div class="alg-step-block"><div class="alg-step-block-num">01</div><h4>Marque online</h4><p>Consulta disponível 7 dias por semana.</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">02</div><h4>Consulta com médico</h4><p>Prescrição digital emitida no mesmo dia.</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">03</div><h4>Vacinação em Faro ou Portimão</h4><p>Com a prescrição, toma a vacina no CVI mais conveniente.</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">04</div><h4>Certificado em mãos</h4><p>O CIVP é emitido no dia da vacinação.</p></div>
+    </div>
+  </section>
+
+  <div class="alg-info-band">
+    <div class="alg-info-band-inner">
+      <div class="alg-info-item"><div class="alg-info-icon">📋</div><div><h4>Prescrição obrigatória no CVI</h4><p>Os CVIs do Algarve exigem prescrição médica válida.</p></div></div>
+      <div class="alg-info-item"><div class="alg-info-icon">🎯</div><div><h4>Uma dose para a vida toda</h4><p>A OMS considera proteção vitalícia com dose única.</p></div></div>
+      <div class="alg-info-item"><div class="alg-info-icon">🌍</div><div><h4>Exigida em dezenas de países</h4><p>Vários destinos exigem o certificado internacional.</p></div></div>
+      <div class="alg-info-item"><div class="alg-info-icon">⏳</div><div><h4>Planeie com antecedência</h4><p>Os horários dos CVIs no Algarve são mais limitados.</p></div></div>
+    </div>
+  </div>
+
+  <section class="alg-locations-section">
+    <div class="alg-section-label">Pontos de vacinação — Algarve</div>
+    <h3>Centros de Vacinação Internacional em Faro e Portimão</h3>
+    <p class="alg-section-sub">Ambos exigem prescrição médica e marcação prévia antes da deslocação.</p>
+    <div class="alg-alert-marcacao"><span>⚠️</span><span><strong>Prescrição médica e marcação prévia obrigatórias.</strong> Contacte sempre o CVI para confirmar horários e disponibilidade atualizada.</span></div>
+    <div class="alg-loc-grid">
+      <div class="alg-loc-card featured">
+        <div class="alg-loc-card-header">
+          <div class="alg-loc-name">CVI de Faro — Centro de Saúde de Faro</div>
+          <div class="alg-loc-badges"><span class="alg-badge-cv">Consulta</span><span class="alg-badge-vac">Vacinação</span></div>
+        </div>
+        <div class="alg-loc-address">📍 Urbanização Graça Mira — Lejana de Cima<br>8009-003 Faro</div>
+        <div class="alg-loc-hours"><strong>Horário</strong>2ª, 3ª e 6ª: 09h30-12h00<br>4ª e 5ª: 14h00-16h30</div>
+        <div class="alg-loc-email-note"><strong>Marcação preferencial por email:</strong><br><a href="mailto:consultaviajante-central@arsalgarve.min-saude.pt">consultaviajante-central@arsalgarve.min-saude.pt</a></div>
+        <div class="alg-loc-contacts"><div class="alg-loc-contact">📞 <a href="tel:289830300">289 830 300</a> ext. 379</div></div>
+      </div>
+      <div class="alg-loc-card">
+        <div class="alg-loc-card-header">
+          <div class="alg-loc-name">CVI de Portimão — Unidade de Saúde Pública</div>
+          <div class="alg-loc-badges"><span class="alg-badge-cv">Consulta</span><span class="alg-badge-vac">Vacinação</span></div>
+        </div>
+        <div class="alg-loc-address">📍 Rua Manuel Dias Barão<br>8500-510 Portimão</div>
+        <div class="alg-loc-hours"><strong>Horário</strong>2ª: 14h00-17h00<br>6ª: 15h00-17h00</div>
+        <div class="alg-loc-contacts">
+          <div class="alg-loc-contact">📞 <a href="tel:282420165">282 420 165</a></div>
+          <div class="alg-loc-contact">✉️ <a href="mailto:acesbarlavento@acesbarlavento.min-saude.pt">acesbarlavento@acesbarlavento.min-saude.pt</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alg-section" style="background:white;">
+    <div class="alg-section-label">Perguntas frequentes</div>
+    <h3>Vacina febre amarela no Algarve — dúvidas comuns</h3>
+    <div class="alg-faq-list">
+      <div class="alg-faq-item"><div class="alg-faq-q">Preciso de prescrição médica para me vacinar em Faro ou Portimão?</div><div class="alg-faq-a">Sim. Ambos os CVIs do Algarve exigem prescrição médica válida.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">E se não conseguir vaga no Algarve?</div><div class="alg-faq-a">A prescrição é válida em qualquer CVI de Portugal, incluindo Lisboa e Porto.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">Sou turista e preciso da vacina urgente. O que faço?</div><div class="alg-faq-a">Marque consulta online no próprio dia e tente a marcação no CVI mais próximo logo no dia útil seguinte.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">O certificado emitido no Algarve é aceite internacionalmente?</div><div class="alg-faq-a">Sim. O CIVP emitido em CVIs portugueses é reconhecido internacionalmente.</div></div>
+    </div>
+  </section>
+
+  <section class="alg-related-pages">
+    <div class="alg-section-label">Outras páginas úteis</div>
+    <h3 style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--ink);margin-bottom:4px;">Mais informação sobre a vacina febre amarela</h3>
+    <p class="alg-section-sub">Guias de outras cidades e artigo completo.</p>
+    <div class="alg-related-grid">
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-guia-completo"><div><div class="alg-related-card-text">Guia Completo</div><div class="alg-related-card-sub">Tudo sobre a vacina febre amarela</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-lisboa"><div><div class="alg-related-card-text">Lisboa</div><div class="alg-related-card-sub">CVIs com horário alargado</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-porto"><div><div class="alg-related-card-text">Porto</div><div class="alg-related-card-sub">CVIs do Porto e região Norte</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacina-febre-amarela-coimbra"><div><div class="alg-related-card-text">Coimbra</div><div class="alg-related-card-sub">CVIs em Coimbra e região Centro</div></div><span class="alg-related-arrow">→</span></a>
+    </div>
+  </section>
+
+  <section class="alg-final-cta">
+    <div class="alg-final-cta-inner">
+      <h3>Pronto para viajar<br><em>com segurança?</em></h3>
+      <p>Marque a consulta online hoje. Recebe a prescrição no próprio dia e desloca-se ao CVI quando lhe for mais conveniente.</p>
+      <a class="alg-btn-cta-large" href="/marcar/travel">Marcar Consulta Online →</a>
+      <p class="alg-final-note">Disponível 7 dias por semana · Prescrição digital no próprio dia</p>
+    </div>
+  </section>
+
+  <div class="alg-disclaimer">
+    <p>Informação de carácter geral — não substitui consulta médica individualizada. Horários e contactos dos CVIs sujeitos a alteração. Confirme sempre junto da instituição antes de se deslocar.</p>
+  </div>
+</div>

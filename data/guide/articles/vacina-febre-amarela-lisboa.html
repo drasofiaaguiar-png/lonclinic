@@ -442,6 +442,38 @@ html { scroll-behavior: smooth; }
 .loc-contact a { color: var(--green); text-decoration: none; }
 .loc-contact a:hover { text-decoration: underline; }
 
+.related-pages {
+  background: white;
+  border-top: 0.5px solid var(--border);
+  padding: 48px 24px;
+}
+
+.related-inner { max-width: 860px; margin: 0 auto; }
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.related-card {
+  border: 0.5px solid var(--border-mid);
+  border-radius: var(--r);
+  padding: 16px 18px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.related-card:hover { border-color: var(--green); background: var(--green-faint); }
+.related-card-text { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.related-card-sub { font-size: 12px; color: var(--ink-ghost); margin-top: 3px; }
+.related-arrow { color: var(--green); font-size: 18px; flex-shrink: 0; }
+
 .final-cta {
   background: var(--ink);
   color: white;
@@ -606,6 +638,22 @@ html { scroll-behavior: smooth; }
         <div class="loc-card"><div class="loc-card-header"><div class="loc-name">ACES Lisboa Norte</div><div class="loc-badges"><span class="badge-cv">Consulta</span><span class="badge-vac">Vacinação</span></div></div><div class="loc-address">📍 Largo Prof. Arnaldo Sampaio<br>1549-010 Lisboa</div><div class="loc-hours"><strong>Horário</strong>Vacinação: dias úteis 09h00–15h30<br>Consultas: 3ª feira 09h00–13h00</div><div class="loc-contacts"><div class="loc-contact">📞 <a href="tel:217211862">217 211 862</a></div><div class="loc-contact">✉️ <a href="mailto:consulta.viajante.lxnorte@arslvt.min-saude.pt">consulta.viajante.lxnorte@arslvt.min-saude.pt</a></div></div></div>
       </div>
       <p class="links-inline">Fonte: ARSLVT. Horários sujeitos a alteração sem aviso prévio.</p>
+    </div>
+  </section>
+
+  <section class="related-pages">
+    <div class="related-inner">
+      <div class="section-label">Outras páginas úteis</div>
+      <h2 style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--ink);margin-bottom:4px;">Mais guias de vacina febre amarela</h2>
+      <p style="font-size:14px;color:var(--ink-soft);">Compare locais, horários e processos noutras regiões.</p>
+      <div class="related-grid">
+        <a class="related-card" href="/blog/vacina-febre-amarela-guia-completo"><div><div class="related-card-text">Guia Completo</div><div class="related-card-sub">Validade, reações, certificado e países</div></div><span class="related-arrow">→</span></a>
+        <a class="related-card" href="/blog/vacina-febre-amarela-porto"><div><div class="related-card-text">Porto</div><div class="related-card-sub">CVIs no Porto e região Norte</div></div><span class="related-arrow">→</span></a>
+        <a class="related-card" href="/blog/vacina-febre-amarela-coimbra"><div><div class="related-card-text">Coimbra</div><div class="related-card-sub">CVIs em Coimbra e Centro</div></div><span class="related-arrow">→</span></a>
+        <a class="related-card" href="/blog/vacina-febre-amarela-braga"><div><div class="related-card-text">Braga</div><div class="related-card-sub">CVIs em Braga e Minho</div></div><span class="related-arrow">→</span></a>
+        <a class="related-card" href="/blog/vacina-febre-amarela-algarve"><div><div class="related-card-text">Algarve</div><div class="related-card-sub">Faro e Portimão</div></div><span class="related-arrow">→</span></a>
+        <a class="related-card" href="/blog/vacina-febre-amarela-cuf"><div><div class="related-card-text">CUF</div><div class="related-card-sub">Alternativas e CVIs em Portugal</div></div><span class="related-arrow">→</span></a>
+      </div>
     </div>
   </section>
 

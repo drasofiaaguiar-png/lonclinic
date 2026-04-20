@@ -1,12 +1,31 @@
 {
   "articles": [
     {
+      "slug": "vacina-febre-amarela-algarve",
+      "title": "Vacina Febre Amarela Algarve — Faro e Portimão",
+      "description": "Vacina febre amarela no Algarve com certificado internacional: CVIs em Faro e Portimão, horários, contactos e consulta online com prescrição no próprio dia.",
+      "datePublished": "2026-04-20",
+      "dateModified": "2026-04-20",
+      "format": "html",
+      "image": "/image/guide/travel-cover-2.png"
+    },
+    {
+      "slug": "vacina-febre-amarela-cuf",
+      "title": "Vacina Febre Amarela na CUF em 2026 — O que Precisa de Saber",
+      "description": "A CUF não administra vacina febre amarela. Veja alternativas em Portugal, CVIs autorizados e como obter prescrição médica no próprio dia.",
+      "datePublished": "2026-04-20",
+      "dateModified": "2026-04-20",
+      "format": "html",
+      "image": "/image/guide/travel-cover-1.png"
+    },
+    {
       "slug": "vacina-febre-amarela-braga",
       "title": "Vacina Febre Amarela Braga em 2026 — Onde Tomar e Horários",
       "description": "Vacina febre amarela em Braga com certificado internacional: CVI de Braga, contactos, horários, alternativas no Minho e consulta online com prescrição.",
       "datePublished": "2026-04-20",
       "dateModified": "2026-04-20",
-      "format": "html"
+      "format": "html",
+      "image": "/image/guide/travel-cover-2.png"
     },
     {
       "slug": "vacina-febre-amarela-coimbra",
@@ -14,7 +33,8 @@
       "description": "Vacina febre amarela em Coimbra com certificado internacional: CVIs de Coimbra, Aveiro, Leiria e Castelo Branco, com orientação e prescrição médica.",
       "datePublished": "2026-04-20",
       "dateModified": "2026-04-20",
-      "format": "html"
+      "format": "html",
+      "image": "/image/guide/travel-cover-3.png"
     },
     {
       "slug": "vacina-febre-amarela-porto",
@@ -22,7 +42,8 @@
       "description": "Vacina febre amarela no Porto com certificado internacional: centros de vacinação, contactos, horários e como marcar consulta do viajante.",
       "datePublished": "2026-04-20",
       "dateModified": "2026-04-20",
-      "format": "html"
+      "format": "html",
+      "image": "/image/guide/travel-cover-4.png"
     },
     {
       "slug": "vacina-febre-amarela-lisboa",
@@ -30,7 +51,8 @@
       "description": "Vacina febre amarela em Lisboa com certificado internacional: consulta online rápida, vacinação em parceiros presenciais e orientação médica completa.",
       "datePublished": "2026-04-20",
       "dateModified": "2026-04-20",
-      "format": "html"
+      "format": "html",
+      "image": "/image/guide/travel-cover-5.png"
     },
     {
       "slug": "vacina-febre-amarela-guia-completo",
@@ -38,7 +60,8 @@
       "description": "Tudo sobre a vacina febre amarela: certificado internacional, validade, onde tomar em Lisboa e Portugal, reações, doses e países que exigem.",
       "datePublished": "2026-04-20",
       "dateModified": "2026-04-20",
-      "format": "html"
+      "format": "html",
+      "image": "/image/guide/travel-cover-6.png"
     },
     {
       "slug": "telemedicina-em-casa",
@@ -46,7 +69,8 @@
       "description": "Como funcionam as consultas online na Lon Clinic e que vantagens traz para o seu dia a dia.",
       "datePublished": "2026-04-20",
       "dateModified": "2026-04-20",
-      "format": "markdown"
+      "format": "markdown",
+      "image": "/image/guide/travel-cover-7.png"
     },
     {
       "slug": "marcacao-guia-rapido",
@@ -54,7 +78,8 @@
       "description": "Passos para marcar a sua consulta em poucos minutos.",
       "datePublished": "2026-04-15",
       "dateModified": "2026-04-15",
-      "format": "html"
+      "format": "html",
+      "image": "/image/guide/travel-cover-8.png"
     }
   ]
 }
