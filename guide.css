@@ -330,7 +330,7 @@
 
 .guide-article-intro {
     display: grid;
-    grid-template-columns: minmax(320px, 1.25fr) minmax(220px, 0.75fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 28px;
     align-items: start;
 }
@@ -341,7 +341,7 @@
 
 .guide-article-intro-right {
     min-width: 0;
-    padding-top: 8px;
+    padding-top: 28px;
 }
 
 .guide-breadcrumb {
@@ -439,6 +439,34 @@
 
 .guide-prose a:hover {
     color: var(--lon-accent-dark);
+}
+
+/* CTAs com fundo verde escuro: o .guide-prose a acima ganhava à cor dos botões */
+.guide-prose a.lon-btn-primary,
+.guide-prose a.lon-btn-dark,
+.guide-prose a.alg-btn-primary,
+.guide-prose a.alg-btn-cta-large,
+.guide-prose a.btn-primary,
+.guide-prose a.btn-cta-large,
+.guide-prose a.br-btn-primary,
+.guide-prose a.br-btn-cta-large,
+.guide-prose a.co-btn-primary,
+.guide-prose a.co-btn-cta-large {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.guide-prose a.lon-btn-primary:hover,
+.guide-prose a.lon-btn-dark:hover,
+.guide-prose a.alg-btn-primary:hover,
+.guide-prose a.alg-btn-cta-large:hover,
+.guide-prose a.btn-primary:hover,
+.guide-prose a.btn-cta-large:hover,
+.guide-prose a.br-btn-primary:hover,
+.guide-prose a.br-btn-cta-large:hover,
+.guide-prose a.co-btn-primary:hover,
+.guide-prose a.co-btn-cta-large:hover {
+    color: #ffffff;
 }
 
 .guide-prose strong {
