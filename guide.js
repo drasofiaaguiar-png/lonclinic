@@ -94,7 +94,8 @@ function layoutGuidePage(opts) {
         mainHtml,
         navCurrent,
         ogType,
-        robots
+        robots,
+        pageClass
     } = opts;
 
     const canonicalUrl = `${origin}${canonicalPath}`;
@@ -141,7 +142,7 @@ function layoutGuidePage(opts) {
     <link rel="stylesheet" href="/guide.css?v=20260420">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     ${ldJson}</head>
-<body class="lon-landing guide-body">
+<body class="lon-landing guide-body${pageClass ? ` ${escapeHtml(pageClass)}` : ''}">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
     <header class="lon-nav" id="lonNav">
         <div class="lon-container lon-nav-inner">
@@ -246,9 +247,16 @@ function renderBlogIndex(origin) {
         const t = escapeHtml(String(a.title || slug));
         const d = escapeHtml(String(a.description || ''));
         const date = escapeHtml(String(a.datePublished || ''));
+        const imagePath = a.image
+            ? `${String(a.image).startsWith('/') ? '' : '/'}${String(a.image)}`
+            : '/image/image2.webp';
+        const img = escapeHtml(imagePath);
         return `
                 <article class="lon-service-card is-visible guide-card" role="listitem">
                     <div class="guide-card-inner">
+                        <a class="guide-card-media" href="${href}" aria-label="${t}" style="background-image:url('${img}')">
+                            <span class="guide-card-free">FREE</span>
+                        </a>
                         <p class="guide-card-date">${date}</p>
                         <h2 class="guide-card-title"><a href="${href}">${t}</a></h2>
                         <p class="guide-card-desc">${d}</p>
@@ -305,7 +313,8 @@ function renderBlogIndex(origin) {
         jsonLd,
         mainHtml,
         navCurrent: 'guide',
-        ogType: 'website'
+        ogType: 'website',
+        pageClass: 'guide-index'
     });
 }
 

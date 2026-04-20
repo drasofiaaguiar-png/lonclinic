@@ -1,0 +1,268 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalClinic",
+  "name": "Clínica Médica Online — Vacina Febre Amarela Coimbra",
+  "areaServed": "Coimbra, Portugal",
+  "availableService": { "@type": "MedicalProcedure", "name": "Vacinação contra a Febre Amarela" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Onde tomar a vacina febre amarela em Coimbra?", "acceptedAnswer": { "@type": "Answer", "text": "Em Coimbra, o Centro de Vacinação Internacional está no Centro de Saúde Santa Clara, Rua Capitão Salgueiro Maia, Topo Norte, 3040-006 Coimbra. Telefone: 239 802 112. Marcação obrigatória antes de se deslocar." } },
+    { "@type": "Question", "name": "Qual o horário do CVI de Coimbra?", "acceptedAnswer": { "@type": "Answer", "text": "O CVI de Coimbra tem vacinação de 2ª a 6ª feira das 09h00 às 12h00 e das 14h00 às 16h00 (4ª feira apenas manhã). Consultas com marcação prévia às 2ª e 6ª feira e 4ª feira manhã." } },
+    { "@type": "Question", "name": "Preciso de prescrição para vacinar em Coimbra?", "acceptedAnswer": { "@type": "Answer", "text": "Sim. Todos os CVIs exigem prescrição médica válida. A consulta online emite a prescrição no próprio dia, podendo depois deslocar-se ao CVI de Coimbra ou qualquer outro CVI da região Centro." } }
+  ]
+}
+</script>
+
+<style>
+.coimbra-article, .coimbra-article * { box-sizing: border-box; }
+.coimbra-article {
+  --ink: #0f1a14; --ink-mid: #3a4a3f; --ink-soft: #6b7d70; --ink-ghost: #a8b8ad;
+  --green: #1a6641; --green-vivid: #22865a; --green-light: #eaf4ee; --green-faint: #f4faf6;
+  --gold: #c8961a; --gold-light: #fdf5e0; --white: #ffffff;
+  --border: rgba(15,26,20,0.10); --border-mid: rgba(15,26,20,0.18);
+  --r: 10px; --r-lg: 16px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+}
+.coimbra-article a { color: inherit; }
+.co-breadcrumb { font-size: 12px; color: var(--ink-ghost); padding: 10px 0 2px; max-width: 1060px; margin: 0 auto; }
+.co-breadcrumb a { color: var(--ink-soft); text-decoration: none; }
+.co-hero { padding: 34px 0 28px; max-width: 1060px; margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 38px; align-items: center; }
+@media (max-width: 860px) { .co-hero { grid-template-columns: 1fr; } .co-hero-card { order: -1; } }
+.co-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: var(--green); background: var(--green-light); padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
+.co-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+.co-hero h2 { font-family: 'Fraunces', serif; font-size: clamp(30px, 5vw, 50px); font-weight: 600; line-height: 1.15; letter-spacing: -1px; margin: 0 0 20px; border: none; color: var(--ink); }
+.co-hero h2 em { font-style: italic; color: var(--green); }
+.co-hero-desc { font-size: 17px; color: var(--ink-mid); max-width: 480px; margin-bottom: 24px; line-height: 1.65; }
+.co-trust-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
+.co-trust-pill { font-size: 12px; color: var(--ink-mid); background: var(--green-faint); border: 0.5px solid var(--border-mid); padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 5px; }
+.co-trust-pill .dot { color: var(--green-vivid); font-size: 14px; }
+.co-hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r); overflow: hidden; }
+.co-stat { background: white; padding: 14px 16px; text-align: center; }
+.co-stat-n { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--green); line-height: 1; margin-bottom: 4px; }
+.co-stat-l { font-size: 11px; color: var(--ink-soft); line-height: 1.3; }
+.co-hero-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 26px 22px; box-shadow: 0 2px 24px rgba(15,26,20,0.07); }
+.co-card-header { background: var(--green); color: white; border-radius: 10px; padding: 18px 20px; margin-bottom: 22px; }
+.co-card-header-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+.co-card-header-sub { font-size: 13px; color: rgba(255,255,255,0.78); }
+.co-card-steps { list-style: none; margin: 0 0 22px; padding: 0; }
+.co-card-step { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; color: var(--ink-mid); }
+.co-card-step:last-child { border-bottom: none; }
+.co-step-num { width: 24px; height: 24px; background: var(--green-light); color: var(--green); border-radius: 50%; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.co-card-step strong { color: var(--ink); font-weight: 500; display: block; margin-bottom: 1px; }
+.co-btn-primary { display: block; width: 100%; background: var(--green); color: white; text-align: center; font-size: 15px; font-weight: 500; padding: 15px 20px; border-radius: 9px; text-decoration: none; margin-bottom: 10px; transition: background 0.18s; }
+.co-btn-primary:hover { background: var(--green-vivid); }
+.co-card-note { text-align: center; font-size: 12px; color: var(--ink-ghost); }
+.co-card-guarantee { display: flex; align-items: center; gap: 8px; background: var(--gold-light); border: 0.5px solid rgba(200,150,26,0.25); border-radius: 8px; padding: 10px 14px; margin-top: 14px; font-size: 12px; color: #7a5a0a; }
+.co-section { padding: 56px 0; }
+.co-section-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; color: var(--green); margin-bottom: 10px; }
+.co-section h3 { font-family: 'Fraunces', serif; font-size: clamp(22px, 4vw, 34px); font-weight: 600; letter-spacing: -0.5px; color: var(--ink); margin: 0 0 12px; line-height: 1.2; }
+.co-section-sub { font-size: 15px; color: var(--ink-soft); max-width: 620px; margin-bottom: 28px; }
+.co-steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 2px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); overflow: hidden; }
+.co-step-block { background: white; padding: 24px 20px; }
+.co-step-block-num { font-family: 'Fraunces', serif; font-size: 38px; font-weight: 300; color: var(--green-light); line-height: 1; margin-bottom: 12px; letter-spacing: -2px; }
+.co-step-block h4 { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+.co-step-block p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
+.co-info-band { background: var(--green-faint); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); padding: 38px 18px; border-radius: var(--r-lg); }
+.co-info-band-inner { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+.co-info-item { display: flex; gap: 14px; align-items: flex-start; }
+.co-info-icon { width: 40px; height: 40px; background: var(--green-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.co-info-item h4 { font-size: 14px; font-weight: 500; margin-bottom: 4px; color: var(--ink); }
+.co-info-item p { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin: 0; }
+.co-locations-section { background: var(--green-faint); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); padding: 52px 18px; border-radius: var(--r-lg); }
+.co-alert-marcacao { background: var(--gold-light); border: 1px solid rgba(200,150,26,0.3); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; padding: 14px 18px; font-size: 13px; color: #6b4a08; margin-bottom: 28px; display: flex; gap: 10px; align-items: flex-start; }
+.co-loc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.co-loc-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.co-loc-card.featured { border-color: var(--green); border-width: 1.5px; }
+.co-loc-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.co-loc-name { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.co-loc-badges { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+.co-badge-cv, .co-badge-vac, .co-badge-priv { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; }
+.co-badge-cv { background: var(--green-light); color: var(--green); }
+.co-badge-vac { background: #e8f0fe; color: #1a4fbd; }
+.co-badge-priv { background: #fef3cd; color: #856404; }
+.co-loc-address { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+.co-loc-hours { font-size: 12px; color: var(--ink-mid); line-height: 1.6; background: var(--green-faint); border-radius: 6px; padding: 8px 10px; }
+.co-loc-hours strong { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-ghost); margin-bottom: 4px; font-weight: 500; }
+.co-loc-contacts { display: flex; flex-direction: column; gap: 4px; }
+.co-loc-contact { font-size: 12px; color: var(--ink-soft); display: flex; align-items: center; gap: 6px; }
+.co-loc-contact a { color: var(--green); text-decoration: none; }
+.co-loc-contact a:hover { text-decoration: underline; }
+.co-region-divider { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-ghost); padding: 18px 0 8px; grid-column: 1 / -1; border-top: 0.5px solid var(--border); margin-top: 4px; }
+.co-region-divider:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+.co-faq-list { margin-top: 30px; }
+.co-faq-item { border-bottom: 0.5px solid var(--border); padding: 18px 0; }
+.co-faq-item:first-child { border-top: 0.5px solid var(--border); }
+.co-faq-q { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px; }
+.co-faq-q::after { content: '+'; color: var(--green); font-size: 20px; font-weight: 300; flex-shrink: 0; margin-top: -2px; }
+.co-faq-a { font-size: 14px; color: var(--ink-soft); line-height: 1.65; }
+.co-related-pages { background: white; border-top: 0.5px solid var(--border); padding: 48px 0; }
+.co-related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 24px; }
+.co-related-card { border: 0.5px solid var(--border-mid); border-radius: var(--r); padding: 16px 18px; text-decoration: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: border-color 0.15s, background 0.15s; }
+.co-related-card:hover { border-color: var(--green); background: var(--green-faint); }
+.co-related-card-text { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.co-related-card-sub { font-size: 12px; color: var(--ink-ghost); margin-top: 3px; }
+.co-related-arrow { color: var(--green); font-size: 18px; flex-shrink: 0; }
+.co-final-cta { background: var(--ink); color: white; padding: 62px 24px; text-align: center; border-radius: var(--r-lg); }
+.co-final-cta-inner { max-width: 520px; margin: 0 auto; }
+.co-final-cta h3 { font-family: 'Fraunces', serif; font-size: clamp(26px, 5vw, 42px); font-weight: 600; letter-spacing: -0.8px; line-height: 1.15; margin-bottom: 14px; }
+.co-final-cta h3 em { color: #7fd4a8; font-style: italic; }
+.co-final-cta p { font-size: 15px; color: rgba(255,255,255,0.65); margin-bottom: 32px; }
+.co-btn-cta-large { display: inline-block; background: #22865a; color: white; font-size: 16px; font-weight: 500; padding: 17px 40px; border-radius: 10px; text-decoration: none; margin-bottom: 12px; transition: background 0.18s; }
+.co-btn-cta-large:hover { background: #1a6641; }
+.co-final-note { font-size: 13px; color: rgba(255,255,255,0.4); }
+.co-disclaimer { background: var(--green-faint); border-top: 0.5px solid var(--border); text-align: center; font-size: 12px; color: var(--ink-ghost); max-width: 680px; margin: 0 auto; padding: 28px 24px; border-radius: var(--r-lg); }
+</style>
+
+<div class="coimbra-article">
+  <div class="co-breadcrumb">
+    <a href="/">Início</a> › <a href="/blog">Guias</a> › <a href="/blog/vacina-febre-amarela-guia-completo">Vacina Febre Amarela</a> › Coimbra
+  </div>
+
+  <section style="background:white; border-bottom:0.5px solid var(--border);">
+    <div class="co-hero">
+      <div class="co-hero-content">
+        <div class="co-eyebrow">Coimbra e Região Centro</div>
+        <h2>Vacina Febre Amarela<br>em <em>Coimbra</em></h2>
+        <p class="co-hero-desc">Consulta de medicina de viagem online com vacinação presencial no Centro de Vacinação Internacional de Coimbra. Certificado Internacional emitido no próprio dia da vacinação.</p>
+        <div class="co-trust-row">
+          <span class="co-trust-pill"><span class="dot">●</span> CVI em Coimbra, Aveiro e Leiria</span>
+          <span class="co-trust-pill"><span class="dot">●</span> Certificado Internacional válido</span>
+          <span class="co-trust-pill"><span class="dot">●</span> Consulta online em 24-48h</span>
+          <span class="co-trust-pill"><span class="dot">●</span> Prescrição digital no próprio dia</span>
+        </div>
+        <div class="co-hero-stats">
+          <div class="co-stat"><div class="co-stat-n">1</div><div class="co-stat-l">dose para a vida toda</div></div>
+          <div class="co-stat"><div class="co-stat-n">10</div><div class="co-stat-l">dias até certificado válido</div></div>
+          <div class="co-stat"><div class="co-stat-n">99%</div><div class="co-stat-l">eficácia da vacina</div></div>
+        </div>
+      </div>
+
+      <div class="co-hero-card" id="marcar">
+        <div class="co-card-header">
+          <div class="co-card-header-title">Marcar Consulta Online</div>
+          <div class="co-card-header-sub">Vacina febre amarela em Coimbra — simples e rápido</div>
+        </div>
+        <ul class="co-card-steps">
+          <li class="co-card-step"><span class="co-step-num">1</span><div><strong>Consulta online com médico</strong>Avaliação clínica e prescrição digital. Disponível 7 dias/semana.</div></li>
+          <li class="co-card-step"><span class="co-step-num">2</span><div><strong>Vacinação no CVI de Coimbra</strong>Apresenta a prescrição no Centro de Vacinação Internacional à sua escolha.</div></li>
+          <li class="co-card-step"><span class="co-step-num">3</span><div><strong>Certificado Internacional</strong>Emitido no próprio dia. Válido globalmente 10 dias depois.</div></li>
+        </ul>
+        <a class="co-btn-primary" href="/marcar/travel">Marcar Consulta Online →</a>
+        <p class="co-card-note">Disponível hoje · Resposta em menos de 24h</p>
+        <div class="co-card-guarantee"><span>⚠️</span><span>Marque com pelo menos <strong>10 dias de antecedência</strong> — o certificado só é válido após esse período.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="co-section">
+    <div class="co-section-label">Como funciona</div>
+    <h3>Do primeiro clique à vacina em Coimbra</h3>
+    <p class="co-section-sub">Consulta online, prescrição digital, vacinação no CVI. Sem esperas desnecessárias.</p>
+    <div class="co-steps-grid">
+      <div class="co-step-block"><div class="co-step-block-num">01</div><h4>Marque online</h4><p>Consulta de medicina de viagem disponível 7 dias por semana, incluindo fins de semana.</p></div>
+      <div class="co-step-block"><div class="co-step-block-num">02</div><h4>Consulta com médico</h4><p>O médico avalia destino, historial e datas. Prescrição digital emitida no mesmo dia.</p></div>
+      <div class="co-step-block"><div class="co-step-block-num">03</div><h4>Vacinação em Coimbra</h4><p>Com a prescrição, dirige-se ao CVI de Coimbra ou ao centro mais próximo na região Centro.</p></div>
+      <div class="co-step-block"><div class="co-step-block-num">04</div><h4>Certificado em mãos</h4><p>O CVI emite o Certificado Internacional no próprio dia. Válido 10 dias após a vacinação.</p></div>
+    </div>
+  </section>
+
+  <div class="co-info-band">
+    <div class="co-info-band-inner">
+      <div class="co-info-item"><div class="co-info-icon">📋</div><div><h4>Prescrição obrigatória no CVI</h4><p>Os CVIs da região Centro só administram a vacina febre amarela com prescrição médica. A consulta online emite-a no próprio dia.</p></div></div>
+      <div class="co-info-item"><div class="co-info-icon">🎯</div><div><h4>Uma dose para a vida toda</h4><p>Desde 2016, a OMS confirma que uma única dose confere proteção vitalícia. O certificado emitido não expira.</p></div></div>
+      <div class="co-info-item"><div class="co-info-icon">🌍</div><div><h4>Exigida em dezenas de países</h4><p>Brasil, Angola, Quénia, Tanzânia, Ruanda, Peru e muitos outros exigem o certificado na fronteira.</p></div></div>
+      <div class="co-info-item"><div class="co-info-icon">⏳</div><div><h4>Planeie com antecedência</h4><p>O certificado só é válido 10 dias após a vacinação. Marque a consulta com 2 a 3 semanas de antecedência.</p></div></div>
+    </div>
+  </div>
+
+  <section class="co-locations-section">
+    <div class="co-section-label">Pontos de vacinação — Região Centro</div>
+    <h3>Centros de Vacinação Internacional em Coimbra e Região Centro</h3>
+    <p class="co-section-sub">Locais onde pode tomar a vacina febre amarela na região Centro, mediante prescrição médica. Confirme sempre antes de se deslocar pois os horários podem sofrer alterações.</p>
+    <div class="co-alert-marcacao"><span>⚠️</span><span><strong>Prescrição médica e marcação prévia obrigatórias.</strong> Nenhum CVI administra a vacina sem prescrição válida. A nossa consulta online emite-a no próprio dia.</span></div>
+    <div class="co-loc-grid">
+      <div class="co-region-divider">Coimbra</div>
+      <div class="co-loc-card featured">
+        <div class="co-loc-card-header"><div class="co-loc-name">CVI Coimbra — Centro de Saúde Santa Clara</div><div class="co-loc-badges"><span class="co-badge-cv">Consulta</span><span class="co-badge-vac">Vacinação</span></div></div>
+        <div class="co-loc-address">📍 Rua Capitão Salgueiro Maia, Topo Norte<br>Edifício Centro de Saúde Santa Clara<br>3040-006 Coimbra</div>
+        <div class="co-loc-hours"><strong>Horário de Vacinação</strong>2ª e 3ª: 09h00–12h00 e 14h00–16h00<br>4ª: 09h00–12h00<br>5ª e 6ª: 09h00–12h00 e 14h00–16h00</div>
+        <div class="co-loc-contacts"><div class="co-loc-contact">📞 <a href="tel:239802112">239 802 112</a> / <a href="tel:239802110">239 802 110</a></div><div class="co-loc-contact">✉️ <a href="mailto:usp.bm@arscentro.min-saude.pt">usp.bm@arscentro.min-saude.pt</a></div></div>
+      </div>
+      <div class="co-loc-card">
+        <div class="co-loc-card-header"><div class="co-loc-name">Hospital da Luz — Coimbra</div><div class="co-loc-badges"><span class="co-badge-cv">Consulta</span><span class="co-badge-priv">Privado</span></div></div>
+        <div class="co-loc-address">📍 Praceta Professor Robalo Cordeiro<br>Circular Externa, 3020-479 Coimbra</div>
+        <div class="co-loc-hours"><strong>Nota</strong>Consulta do Viajante privada disponível. Confirmar previamente disponibilidade da vacina febre amarela.</div>
+        <div class="co-loc-contacts"><div class="co-loc-contact">📞 <a href="tel:239096900">239 096 900</a></div></div>
+      </div>
+
+      <div class="co-region-divider">Aveiro</div>
+      <div class="co-loc-card">
+        <div class="co-loc-card-header"><div class="co-loc-name">CVI Aveiro — Centro de Saúde</div><div class="co-loc-badges"><span class="co-badge-cv">Consulta</span><span class="co-badge-vac">Vacinação</span></div></div>
+        <div class="co-loc-address">📍 Praça Rainha D. Leonor, R/C Laboratório<br>3810-042 Aveiro</div>
+        <div class="co-loc-hours"><strong>Horário</strong>2ª a 6ª: 09h30–12h30 e 14h30–16h00</div>
+        <div class="co-loc-contacts"><div class="co-loc-contact">📞 <a href="tel:234891191">234 891 191</a></div><div class="co-loc-contact">✉️ <a href="mailto:usp.bv@arscentro.min-saude.pt">usp.bv@arscentro.min-saude.pt</a></div></div>
+      </div>
+
+      <div class="co-region-divider">Leiria</div>
+      <div class="co-loc-card">
+        <div class="co-loc-card-header"><div class="co-loc-name">CVI Leiria — Centro de Saúde Dr. Arnaldo Sampaio</div><div class="co-loc-badges"><span class="co-badge-cv">Consulta</span><span class="co-badge-vac">Vacinação</span></div></div>
+        <div class="co-loc-address">📍 Estrada da Mata, n.º 56 — Marrazes<br>2419-014 Leiria</div>
+        <div class="co-loc-hours"><strong>Horário de Vacinação</strong>2ª: 09h00–12h30 e 14h00–16h30<br>3ª: 14h00–16h30<br>4ª: 09h00–13h00 e 14h00–16h30<br>6ª: 09h00–13h00</div>
+        <div class="co-loc-contacts"><div class="co-loc-contact">📞 <a href="tel:244849010">244 849 010</a></div><div class="co-loc-contact">✉️ <a href="mailto:usp.pl@arscentro.min-saude.pt">usp.pl@arscentro.min-saude.pt</a></div></div>
+      </div>
+
+      <div class="co-region-divider">Castelo Branco</div>
+      <div class="co-loc-card">
+        <div class="co-loc-card-header"><div class="co-loc-name">CVI Castelo Branco — Centro de Saúde S. Miguel</div><div class="co-loc-badges"><span class="co-badge-cv">Consulta</span><span class="co-badge-vac">Vacinação</span></div></div>
+        <div class="co-loc-address">📍 Av. da Europa, S/N<br>6000-491 Castelo Branco</div>
+        <div class="co-loc-hours"><strong>Horário</strong>Consulta: 4ª 10h00–12h00<br>Vacinação: diariamente 09h15–12h30 e 14h00–17h50</div>
+        <div class="co-loc-contacts"><div class="co-loc-contact">📞 <a href="tel:272340150">272 340 150</a></div><div class="co-loc-contact">✉️ <a href="mailto:usp@ulscb.min-saude.pt">usp@ulscb.min-saude.pt</a></div></div>
+      </div>
+    </div>
+    <p class="co-section-sub" style="margin-top:16px;">Fontes: ARS Centro, SPMV, Ordem dos Médicos 2025. Horários sujeitos a alteração — confirme sempre antes de se deslocar.</p>
+  </section>
+
+  <section class="co-section" style="background:white;">
+    <div class="co-section-label">Perguntas frequentes</div>
+    <h3>Vacina febre amarela em Coimbra — dúvidas comuns</h3>
+    <div class="co-faq-list">
+      <div class="co-faq-item"><div class="co-faq-q">Preciso de prescrição médica para me vacinar em Coimbra?</div><div class="co-faq-a">Sim. O CVI de Coimbra e todos os centros da região Centro só administram a vacina febre amarela com prescrição médica válida.</div></div>
+      <div class="co-faq-item"><div class="co-faq-q">Sou estudante universitário em Coimbra — como tomo a vacina?</div><div class="co-faq-a">Faça consulta online com antecedência e receba prescrição digital no próprio dia. Depois agenda no CVI mais conveniente.</div></div>
+      <div class="co-faq-item"><div class="co-faq-q">Posso vacinar-me em Aveiro ou Leiria com a mesma prescrição?</div><div class="co-faq-a">Sim. A prescrição emitida é válida em qualquer CVI de Portugal.</div></div>
+      <div class="co-faq-item"><div class="co-faq-q">Quanto custa a vacina febre amarela em Coimbra?</div><div class="co-faq-a">No CVI público, costuma variar entre €20 e €40 (sujeito a atualização). A consulta médica é cobrada separadamente.</div></div>
+      <div class="co-faq-item"><div class="co-faq-q">O certificado emitido em Coimbra é aceite internacionalmente?</div><div class="co-faq-a">Sim. O CIVP emitido em CVIs portugueses é reconhecido internacionalmente nos países que exigem certificado.</div></div>
+    </div>
+  </section>
+
+  <section class="co-related-pages">
+    <div class="co-section-label">Outras páginas úteis</div>
+    <h3 style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--ink);margin-bottom:4px;">Mais informação sobre a vacina febre amarela</h3>
+    <p class="co-section-sub">Guias completos, outros locais em Portugal e informação por destino de viagem.</p>
+    <div class="co-related-grid">
+      <a class="co-related-card" href="/blog/vacina-febre-amarela-guia-completo"><div><div class="co-related-card-text">Guia Completo — Vacina Febre Amarela</div><div class="co-related-card-sub">Validade, reações, certificado, países</div></div><span class="co-related-arrow">→</span></a>
+      <a class="co-related-card" href="/blog/vacina-febre-amarela-lisboa"><div><div class="co-related-card-text">Vacina Febre Amarela em Lisboa</div><div class="co-related-card-sub">Locais, horários e como marcar em Lisboa</div></div><span class="co-related-arrow">→</span></a>
+      <a class="co-related-card" href="/blog/vacina-febre-amarela-porto"><div><div class="co-related-card-text">Vacina Febre Amarela no Porto</div><div class="co-related-card-sub">CVIs do Porto e região Norte</div></div><span class="co-related-arrow">→</span></a>
+      <a class="co-related-card" href="/blog/vacina-febre-amarela-guia-completo"><div><div class="co-related-card-text">Reações e efeitos secundários</div><div class="co-related-card-sub">O que esperar após a vacinação</div></div><span class="co-related-arrow">→</span></a>
+    </div>
+  </section>
+
+  <section class="co-final-cta">
+    <div class="co-final-cta-inner">
+      <h3>Pronto para viajar<br><em>com segurança?</em></h3>
+      <p>Marque a consulta online hoje. Recebe a prescrição no próprio dia e escolhe o CVI da região Centro que lhe é mais conveniente.</p>
+      <a class="co-btn-cta-large" href="/marcar/travel">Marcar Consulta Online →</a>
+      <p class="co-final-note">Disponível 7 dias por semana · Prescrição digital no próprio dia</p>
+    </div>
+  </section>
+
+  <div class="co-disclaimer">
+    <p>Informação de carácter geral — não substitui consulta médica individualizada. Horários e contactos dos CVIs sujeitos a alteração. Confirme sempre junto da instituição antes de se deslocar.</p>
+  </div>
+</div>

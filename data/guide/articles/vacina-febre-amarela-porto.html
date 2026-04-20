@@ -1,0 +1,321 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalClinic",
+  "name": "Clínica Médica Online — Vacina Febre Amarela Porto",
+  "description": "Consulta de medicina de viagem online com vacinação febre amarela em parceiros presenciais no Porto. Certificado Internacional emitido.",
+  "areaServed": "Porto, Portugal",
+  "availableService": {
+    "@type": "MedicalProcedure",
+    "name": "Vacinação contra a Febre Amarela",
+    "description": "Consulta online de medicina de viagem + administração da vacina febre amarela em parceiros presenciais no Porto. Emissão do Certificado Internacional de Vacinação."
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Onde tomar a vacina febre amarela no Porto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No Porto existem vários Centros de Vacinação Internacional: o CVI da ULS de Santo António (Rua da Alegria, 1057), o CVI do Hospital de Santo António (Rua D. Manuel II) e o CVI do Hospital de S. João (Al. Prof. Hernâni Monteiro). Marcação obrigatória por telefone ou email antes de se deslocar."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Qual o horário do Centro de Vacinação Internacional do Porto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "O CVI principal do Porto (Rua da Alegria) funciona de 2ª a 6ª feira das 09h00 às 13h00 e das 14h00 às 17h00. Marcação prévia obrigatória por telefone (222 002 540) ou email (cvi@arsnorte.min-saude.pt)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Como marcar consulta do viajante no Porto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Pode marcar online através da nossa clínica — a consulta médica é feita por videochamada e depois é encaminhado para o CVI mais conveniente no Porto para vacinação. Em alternativa, contacte diretamente um dos CVIs do Porto por telefone ou email."
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #0f1a14;
+  --ink-mid: #3a4a3f;
+  --ink-soft: #6b7d70;
+  --ink-ghost: #a8b8ad;
+  --green: #1a6641;
+  --green-vivid: #22865a;
+  --green-light: #eaf4ee;
+  --green-faint: #f4faf6;
+  --gold: #c8961a;
+  --gold-light: #fdf5e0;
+  --white: #ffffff;
+  --border: rgba(15,26,20,0.10);
+  --border-mid: rgba(15,26,20,0.18);
+  --r: 10px;
+  --r-lg: 16px;
+}
+
+.porto-article {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--white);
+  color: var(--ink);
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.breadcrumb { font-size: 12px; color: var(--ink-ghost); padding: 12px 0; margin-bottom: 8px; }
+.breadcrumb a { color: var(--ink-soft); text-decoration: none; }
+
+.hero { padding: 24px 0 28px; display: grid; grid-template-columns: 1fr 360px; gap: 34px; align-items: center; }
+@media (max-width: 860px) { .hero { grid-template-columns: 1fr; } .hero-card { order: -1; } }
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--green);
+  background: var(--green-light);
+  padding: 5px 14px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+.hero-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+
+.hero h2 {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(30px, 5vw, 50px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  margin-bottom: 20px;
+  border: none;
+}
+.hero h2 em { font-style: italic; color: var(--green); }
+.hero-desc { font-size: 17px; color: var(--ink-mid); max-width: 480px; margin-bottom: 24px; line-height: 1.65; }
+
+.trust-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
+.trust-pill {
+  font-size: 12px;
+  color: var(--ink-mid);
+  background: var(--green-faint);
+  border: 0.5px solid var(--border-mid);
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.trust-pill .dot { color: var(--green-vivid); font-size: 14px; }
+
+.hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r); overflow: hidden; }
+.stat { background: white; padding: 14px 16px; text-align: center; }
+.stat-n { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--green); line-height: 1; margin-bottom: 4px; }
+.stat-l { font-size: 11px; color: var(--ink-soft); line-height: 1.3; }
+
+.hero-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 24px 20px; box-shadow: 0 2px 24px rgba(15,26,20,0.07); }
+.card-header { background: var(--green); color: white; border-radius: 10px; padding: 18px 20px; margin-bottom: 20px; }
+.card-header-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; margin-bottom: 4px; line-height: 1.2; }
+.card-header-sub { font-size: 13px; color: rgba(255,255,255,0.78); }
+.card-steps { list-style: none; margin-bottom: 18px; }
+.card-step { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; color: var(--ink-mid); }
+.card-step:last-child { border-bottom: none; }
+.step-num { width: 24px; height: 24px; background: var(--green-light); color: var(--green); border-radius: 50%; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.card-step strong { color: var(--ink); font-weight: 500; display: block; margin-bottom: 1px; }
+.btn-primary { display: block; width: 100%; background: var(--green); color: white; text-align: center; font-size: 15px; font-weight: 500; padding: 15px 20px; border-radius: 9px; text-decoration: none; margin-bottom: 10px; }
+.btn-primary:hover { background: var(--green-vivid); }
+.card-note { text-align: center; font-size: 12px; color: var(--ink-ghost); }
+.card-guarantee { display: flex; align-items: center; gap: 8px; background: var(--gold-light); border: 0.5px solid rgba(200,150,26,0.25); border-radius: 8px; padding: 10px 14px; margin-top: 14px; font-size: 12px; color: #7a5a0a; }
+
+.section { padding: 56px 0; }
+.section-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; color: var(--green); margin-bottom: 10px; }
+.section h3 { font-family: 'Fraunces', serif; font-size: clamp(22px, 4vw, 34px); font-weight: 600; letter-spacing: -0.5px; color: var(--ink); margin-bottom: 12px; line-height: 1.2; }
+.section-sub { font-size: 15px; color: var(--ink-soft); max-width: 520px; margin-bottom: 36px; }
+
+.steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 2px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); overflow: hidden; }
+.step-block { background: white; padding: 24px 20px; }
+.step-block-num { font-family: 'Fraunces', serif; font-size: 38px; font-weight: 300; color: var(--green-light); line-height: 1; margin-bottom: 12px; letter-spacing: -2px; }
+.step-block h4 { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+.step-block p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
+
+.info-band { background: var(--green-faint); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); padding: 48px 18px; border-radius: var(--r-lg); }
+.info-band-inner { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; }
+.info-item { display: flex; gap: 14px; align-items: flex-start; }
+.info-icon { width: 40px; height: 40px; background: var(--green-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.info-item h4 { font-size: 14px; font-weight: 500; margin-bottom: 4px; color: var(--ink); }
+.info-item p { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin: 0; }
+
+.locations-section { background: var(--green-faint); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); padding: 56px 18px; border-radius: var(--r-lg); }
+.alert-marcacao { background: var(--gold-light); border: 1px solid rgba(200,150,26,0.3); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; padding: 14px 18px; font-size: 13px; color: #6b4a08; margin-bottom: 32px; display: flex; gap: 10px; align-items: flex-start; }
+.loc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.loc-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.loc-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.loc-name { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.loc-badges { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+.badge-cv { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; background: var(--green-light); color: var(--green); white-space: nowrap; }
+.badge-vac { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; background: #e8f0fe; color: #1a4fbd; white-space: nowrap; }
+.loc-address { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+.loc-hours { font-size: 12px; color: var(--ink-mid); line-height: 1.6; background: var(--green-faint); border-radius: 6px; padding: 8px 10px; }
+.loc-hours strong { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-ghost); margin-bottom: 4px; font-weight: 500; }
+.loc-contacts { display: flex; flex-direction: column; gap: 4px; }
+.loc-contact { font-size: 12px; color: var(--ink-soft); display: flex; align-items: center; gap: 6px; }
+.loc-contact a { color: var(--green); text-decoration: none; }
+.loc-contact a:hover { text-decoration: underline; }
+
+.faq-list { margin-top: 32px; }
+.faq-item { border-bottom: 0.5px solid var(--border); padding: 18px 0; }
+.faq-item:first-child { border-top: 0.5px solid var(--border); }
+.faq-q { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px; }
+.faq-q::after { content: '+'; color: var(--green); font-size: 20px; font-weight: 300; flex-shrink: 0; margin-top: -2px; }
+.faq-a { font-size: 14px; color: var(--ink-soft); line-height: 1.65; }
+
+.related-pages { background: white; border-top: 0.5px solid var(--border); padding: 48px 0; }
+.related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 24px; }
+.related-card { border: 0.5px solid var(--border-mid); border-radius: var(--r); padding: 16px 18px; text-decoration: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: border-color 0.15s, background 0.15s; }
+.related-card:hover { border-color: var(--green); background: var(--green-faint); }
+.related-card-text { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.related-card-sub { font-size: 12px; color: var(--ink-ghost); margin-top: 3px; }
+.related-arrow { color: var(--green); font-size: 18px; flex-shrink: 0; }
+
+.final-cta { background: var(--ink); color: white; padding: 72px 24px; text-align: center; border-radius: var(--r-lg); }
+.final-cta-inner { max-width: 520px; margin: 0 auto; }
+.final-cta h3 { font-family: 'Fraunces', serif; font-size: clamp(26px, 5vw, 42px); font-weight: 600; letter-spacing: -0.8px; line-height: 1.15; margin-bottom: 14px; color: #fff; }
+.final-cta h3 em { color: #7fd4a8; font-style: italic; }
+.final-cta p { font-size: 15px; color: rgba(255,255,255,0.65); margin-bottom: 32px; }
+.btn-cta-large { display: inline-block; background: #22865a; color: white; font-size: 16px; font-weight: 500; padding: 17px 40px; border-radius: 10px; text-decoration: none; transition: background 0.18s, transform 0.12s; margin-bottom: 12px; }
+.btn-cta-large:hover { background: #1a6641; transform: translateY(-2px); }
+.final-note { font-size: 13px; color: rgba(255,255,255,0.4); }
+
+.disclaimer { background: var(--green-faint); border-top: 0.5px solid var(--border); text-align: center; font-size: 12px; color: var(--ink-ghost); max-width: 680px; margin: 0 auto; padding: 28px 24px; border-radius: var(--r-lg); }
+
+</style>
+
+<div class="porto-article">
+  <div class="breadcrumb">
+    <a href="/">Início</a> › <a href="/blog">Guias</a> › <a href="/blog/vacina-febre-amarela-guia-completo">Vacina Febre Amarela</a> › Porto
+  </div>
+
+  <section style="background:white; border-bottom:0.5px solid var(--border);">
+    <div class="hero">
+      <div class="hero-content">
+        <div class="hero-eyebrow">Porto e Grande Porto</div>
+        <h2>Vacina Febre Amarela<br>no <em>Porto</em></h2>
+        <p class="hero-desc">Consulta de medicina de viagem online com vacinação presencial nos Centros de Vacinação Internacional do Porto. Certificado Internacional emitido no próprio dia.</p>
+        <div class="trust-row">
+          <span class="trust-pill"><span class="dot">●</span> 3 CVIs no Porto</span>
+          <span class="trust-pill"><span class="dot">●</span> Certificado Internacional válido</span>
+          <span class="trust-pill"><span class="dot">●</span> Consulta online em 24-48h</span>
+          <span class="trust-pill"><span class="dot">●</span> Prescrição digital imediata</span>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><div class="stat-n">1</div><div class="stat-l">dose para a vida toda</div></div>
+          <div class="stat"><div class="stat-n">10</div><div class="stat-l">dias até certificado válido</div></div>
+          <div class="stat"><div class="stat-n">99%</div><div class="stat-l">eficácia da vacina</div></div>
+        </div>
+      </div>
+      <div class="hero-card" id="marcar">
+        <div class="card-header">
+          <div class="card-header-title">Marcar Consulta Online</div>
+          <div class="card-header-sub">Vacina febre amarela no Porto — rápido e simples</div>
+        </div>
+        <ul class="card-steps">
+          <li class="card-step"><span class="step-num">1</span><div><strong>Consulta online com médico</strong>Avaliação clínica e prescrição digital. Disponível 7 dias/semana.</div></li>
+          <li class="card-step"><span class="step-num">2</span><div><strong>Vacinação no CVI do Porto</strong>Apresenta a prescrição no Centro de Vacinação Internacional mais conveniente.</div></li>
+          <li class="card-step"><span class="step-num">3</span><div><strong>Certificado Internacional</strong>Emitido no próprio dia. Válido em todo o mundo 10 dias depois.</div></li>
+        </ul>
+        <a class="btn-primary" href="/marcar/travel">Marcar Consulta Online →</a>
+        <p class="card-note">Disponível hoje · Resposta em menos de 24h</p>
+        <div class="card-guarantee"><span>⚠️</span><span>Marque com pelo menos <strong>10 dias de antecedência</strong> — o certificado só é válido após esse período.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-inner">
+      <div class="section-label">Como funciona</div>
+      <h3>Do primeiro clique à vacina no Porto</h3>
+      <p class="section-sub">Consulta online, prescrição digital, vacinação no CVI. Sem filas desnecessárias.</p>
+      <div class="steps-grid">
+        <div class="step-block"><div class="step-block-num">01</div><h4>Marque online</h4><p>Escolha data e hora para a consulta de medicina de viagem. Disponível 7 dias por semana.</p></div>
+        <div class="step-block"><div class="step-block-num">02</div><h4>Consulta com médico</h4><p>O médico avalia o seu destino, historial clínico e datas. Emite prescrição digital no mesmo dia.</p></div>
+        <div class="step-block"><div class="step-block-num">03</div><h4>Vacinação no Porto</h4><p>Com a prescrição, dirige-se ao CVI do Porto à sua escolha. A administração demora poucos minutos.</p></div>
+        <div class="step-block"><div class="step-block-num">04</div><h4>Certificado em mãos</h4><p>O CVI emite o Certificado Internacional no próprio dia. Válido globalmente 10 dias após a vacinação.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="info-band">
+    <div class="info-band-inner">
+      <div class="info-item"><div class="info-icon">🎯</div><div><h4>Validade para a vida toda</h4><p>Uma única dose confere proteção vitalícia desde 2016, segundo a OMS. O certificado não expira.</p></div></div>
+      <div class="info-item"><div class="info-icon">🌍</div><div><h4>Exigida em dezenas de países</h4><p>Brasil, Angola, Quénia, Tanzânia, Ruanda, Peru e muitos outros exigem o certificado na fronteira.</p></div></div>
+      <div class="info-item"><div class="info-icon">📋</div><div><h4>Prescrição obrigatória</h4><p>Os CVIs só administram a vacina com prescrição médica válida. A nossa consulta online garante a prescrição no mesmo dia.</p></div></div>
+      <div class="info-item"><div class="info-icon">⏳</div><div><h4>Planeie com antecedência</h4><p>O certificado só é válido 10 dias após a vacinação. Marque com pelo menos 2–3 semanas de antecedência.</p></div></div>
+    </div>
+  </div>
+
+  <section class="locations-section">
+    <div class="section-label">Centros de vacinação — Porto e Norte</div>
+    <h3 style="font-family:'Fraunces',serif;font-size:clamp(22px,4vw,32px);font-weight:600;letter-spacing:-0.5px;color:var(--ink);margin-bottom:12px;line-height:1.2;">Centros de Vacinação Internacional<br>no Porto e Região Norte</h3>
+    <p class="section-sub">Locais públicos onde pode tomar a vacina febre amarela no Porto e arredores, mediante prescrição médica. Marcação obrigatória antes de se deslocar.</p>
+    <div class="alert-marcacao"><span>⚠️</span><span><strong>Prescrição médica obrigatória.</strong> Para ser vacinado nos CVIs, precisa de prescrição médica válida. Contacte sempre o CVI previamente para confirmar horários.</span></div>
+    <div class="loc-grid">
+      <div class="loc-card"><div class="loc-card-header"><div class="loc-name">CVI ULS Santo António — Porto (Principal)</div><div class="loc-badges"><span class="badge-cv">Consulta</span><span class="badge-vac">Vacinação</span></div></div><div class="loc-address">📍 Rua da Alegria, n.º 1057<br>Porto</div><div class="loc-hours"><strong>Horário</strong>2ª a 6ª: 09h00–13h00 e 14h00–17h00</div><div class="loc-contacts"><div class="loc-contact">📞 <a href="tel:222002540">222 002 540</a></div><div class="loc-contact">✉️ <a href="mailto:cvi@arsnorte.min-saude.pt">cvi@arsnorte.min-saude.pt</a></div></div></div>
+      <div class="loc-card"><div class="loc-card-header"><div class="loc-name">CVI Hospital de Santo António — Porto</div><div class="loc-badges"><span class="badge-cv">Consulta</span><span class="badge-vac">Vacinação</span></div></div><div class="loc-address">📍 Rua D. Manuel II, Pavilhão 8<br>4050-346 Porto</div><div class="loc-hours"><strong>Horário</strong>2ª e 6ª: manhã · 4ª: manhã e tarde · 5ª: tarde</div><div class="loc-contacts"><div class="loc-contact">📞 <a href="tel:222077500">222 077 500</a></div><div class="loc-contact">✉️ <a href="mailto:Secretariado.ce.infecciologia@chporto.min-saude.pt">Secretariado.ce.infecciologia@chporto.min-saude.pt</a></div></div></div>
+      <div class="loc-card"><div class="loc-card-header"><div class="loc-name">CVI Hospital de S. João — Porto</div><div class="loc-badges"><span class="badge-cv">Consulta</span><span class="badge-vac">Vacinação</span></div></div><div class="loc-address">📍 Al. Prof. Hernâni Monteiro<br>4200-319 Porto</div><div class="loc-hours"><strong>Horário</strong>3ª, 4ª e 5ª: 14h00–17h00</div><div class="loc-contacts"><div class="loc-contact">📞 <a href="tel:225512375">225 512 375</a></div><div class="loc-contact">✉️ <a href="mailto:sec.hdambulatorio@hsjoao.min-saude.pt">sec.hdambulatorio@hsjoao.min-saude.pt</a></div></div></div>
+      <div class="loc-card"><div class="loc-card-header"><div class="loc-name">CVI Matosinhos — Leça da Palmeira</div><div class="loc-badges"><span class="badge-cv">Consulta</span><span class="badge-vac">Vacinação</span></div></div><div class="loc-address">📍 Largo da Fonte Seca, n.º 15<br>4450-718 Leça da Palmeira</div><div class="loc-hours"><strong>Horário</strong>2ª a 6ª: 08h30–12h30 e 14h00–17h00</div><div class="loc-contacts"><div class="loc-contact">📞 <a href="tel:918174606">918 174 606</a></div><div class="loc-contact">✉️ <a href="mailto:s.fronteiras@ulsm.min-saude.pt">s.fronteiras@ulsm.min-saude.pt</a></div></div></div>
+    </div>
+    <p class="section-sub" style="margin-top:16px;">Fonte: ARS Norte / Ordem dos Médicos 2025. Horários sujeitos a alteração — confirme antes de se deslocar.</p>
+  </section>
+
+  <section class="section" style="background:white;">
+    <div class="section-label">Perguntas frequentes</div>
+    <h3>Vacina febre amarela no Porto — dúvidas comuns</h3>
+    <div class="faq-list">
+      <div class="faq-item"><div class="faq-q">Preciso de prescrição médica para me vacinar no Porto?</div><div class="faq-a">Sim. Os Centros de Vacinação Internacional só administram a vacina febre amarela mediante prescrição médica válida. A nossa consulta online garante-lhe a prescrição no próprio dia.</div></div>
+      <div class="faq-item"><div class="faq-q">Qual o CVI do Porto com mais horários?</div><div class="faq-a">O CVI principal da Rua da Alegria (ULS Santo António) tem horário alargado e localização central.</div></div>
+      <div class="faq-item"><div class="faq-q">Quanto custa a vacina febre amarela no Porto?</div><div class="faq-a">Nos CVIs públicos, a vacina costuma variar entre €20 e €40. A consulta médica é cobrada separadamente.</div></div>
+      <div class="faq-item"><div class="faq-q">Com que antecedência devo marcar?</div><div class="faq-a">Recomendamos pelo menos 2 a 3 semanas antes da viagem, pois o certificado só é válido 10 dias após a vacinação.</div></div>
+      <div class="faq-item"><div class="faq-q">O certificado emitido no Porto é aceite internacionalmente?</div><div class="faq-a">Sim. O CIVP emitido nos CVIs portugueses é aceite internacionalmente nos países que exigem o certificado.</div></div>
+    </div>
+  </section>
+
+  <section class="related-pages">
+    <div class="section-label">Outras páginas úteis</div>
+    <h3 style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--ink);margin-bottom:4px;">Mais informação sobre a vacina febre amarela</h3>
+    <p class="section-sub">Guias completos, outros locais e informação por destino.</p>
+    <div class="related-grid">
+      <a class="related-card" href="/blog/vacina-febre-amarela-guia-completo"><div><div class="related-card-text">Guia Completo — Vacina Febre Amarela</div><div class="related-card-sub">Validade, reações, certificado, países</div></div><span class="related-arrow">→</span></a>
+      <a class="related-card" href="/blog/vacina-febre-amarela-lisboa"><div><div class="related-card-text">Vacina Febre Amarela em Lisboa</div><div class="related-card-sub">Locais, horários e como marcar em Lisboa</div></div><span class="related-arrow">→</span></a>
+      <a class="related-card" href="/blog/vacina-febre-amarela-guia-completo"><div><div class="related-card-text">Países que exigem o certificado</div><div class="related-card-sub">Brasil, África, Ásia e América Latina</div></div><span class="related-arrow">→</span></a>
+      <a class="related-card" href="/blog/vacina-febre-amarela-guia-completo"><div><div class="related-card-text">Reações e efeitos secundários</div><div class="related-card-sub">O que esperar após a vacinação</div></div><span class="related-arrow">→</span></a>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <div class="final-cta-inner">
+      <h3>Pronto para viajar<br><em>com segurança?</em></h3>
+      <p>Marque a consulta online hoje. Recebe a prescrição no próprio dia e escolhe o CVI do Porto que lhe é mais conveniente.</p>
+      <a class="btn-cta-large" href="/marcar/travel">Marcar Consulta Online →</a>
+      <p class="final-note">Disponível 7 dias por semana · Prescrição digital no próprio dia</p>
+    </div>
+  </section>
+
+  <div class="disclaimer">
+    <p>Informação de carácter geral — não substitui consulta médica individualizada. Horários e contactos dos CVIs sujeitos a alteração. Confirme sempre junto da instituição antes de se deslocar.</p>
+  </div>
+</div>

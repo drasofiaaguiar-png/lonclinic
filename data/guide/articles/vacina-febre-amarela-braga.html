@@ -1,0 +1,249 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "MedicalClinic",
+  "name": "Clínica Médica Online — Vacina Febre Amarela Braga",
+  "areaServed": "Braga, Portugal",
+  "availableService": { "@type": "MedicalProcedure", "name": "Vacinação contra a Febre Amarela" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Onde tomar a vacina febre amarela em Braga?", "acceptedAnswer": { "@type": "Answer", "text": "Em Braga, o Centro de Vacinação Internacional está na Praceta de Vilar s/n, 4710-453 Braga. Telefone: 253 208 260. Horário: 2ª, 5ª e 6ª feira das 09h às 13h; 3ª e 4ª feira das 09h às 13h e 14h às 17h. Marcação obrigatória antes de se deslocar." } },
+    { "@type": "Question", "name": "Qual o horário do CVI de Braga?", "acceptedAnswer": { "@type": "Answer", "text": "O CVI de Braga funciona 2ª, 5ª e 6ª feira das 09h00 às 13h00 e 3ª e 4ª feira das 09h00 às 13h00 e das 14h00 às 17h00. Marcação prévia obrigatória por telefone (253 208 260) ou email." } },
+    { "@type": "Question", "name": "Preciso de prescrição para vacinar em Braga?", "acceptedAnswer": { "@type": "Answer", "text": "Sim. O CVI de Braga só administra a vacina febre amarela com prescrição médica válida. A consulta online emite a prescrição digital no próprio dia, podendo depois deslocar-se ao CVI." } }
+  ]
+}
+</script>
+
+<style>
+.braga-article, .braga-article * { box-sizing: border-box; }
+.braga-article {
+  --ink: #0f1a14; --ink-mid: #3a4a3f; --ink-soft: #6b7d70; --ink-ghost: #a8b8ad;
+  --green: #1a6641; --green-vivid: #22865a; --green-light: #eaf4ee; --green-faint: #f4faf6;
+  --gold: #c8961a; --gold-light: #fdf5e0; --white: #ffffff;
+  --border: rgba(15,26,20,0.10); --border-mid: rgba(15,26,20,0.18);
+  --r: 10px; --r-lg: 16px;
+  font-family: 'DM Sans', sans-serif;
+  color: var(--ink);
+}
+.br-breadcrumb { font-size: 12px; color: var(--ink-ghost); padding: 10px 0 2px; max-width: 1060px; margin: 0 auto; }
+.br-breadcrumb a { color: var(--ink-soft); text-decoration: none; }
+.br-hero { padding: 34px 0 28px; max-width: 1060px; margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 42px; align-items: center; }
+@media (max-width: 860px) { .br-hero { grid-template-columns: 1fr; } .br-hero-card { order: -1; } }
+.br-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: var(--green); background: var(--green-light); padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
+.br-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+.br-hero h2 { font-family: 'Fraunces', serif; font-size: clamp(30px, 5vw, 50px); font-weight: 600; line-height: 1.15; letter-spacing: -1px; margin: 0 0 20px; border: none; color: var(--ink); }
+.br-hero h2 em { font-style: italic; color: var(--green); }
+.br-hero-desc { font-size: 17px; color: var(--ink-mid); max-width: 480px; margin-bottom: 24px; line-height: 1.65; }
+.br-trust-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
+.br-trust-pill { font-size: 12px; color: var(--ink-mid); background: var(--green-faint); border: 0.5px solid var(--border-mid); padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 5px; }
+.br-trust-pill .dot { color: var(--green-vivid); font-size: 14px; }
+.br-hero-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r); overflow: hidden; }
+.br-stat { background: white; padding: 14px 16px; text-align: center; }
+.br-stat-n { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--green); line-height: 1; margin-bottom: 4px; }
+.br-stat-l { font-size: 11px; color: var(--ink-soft); line-height: 1.3; }
+.br-hero-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 28px 24px; box-shadow: 0 2px 24px rgba(15,26,20,0.07); }
+.br-card-header { background: var(--green); color: white; border-radius: 10px; padding: 18px 20px; margin-bottom: 22px; }
+.br-card-header-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; margin-bottom: 4px; }
+.br-card-header-sub { font-size: 13px; color: rgba(255,255,255,0.78); }
+.br-card-steps { list-style: none; margin-bottom: 22px; padding: 0; }
+.br-card-step { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; color: var(--ink-mid); }
+.br-card-step:last-child { border-bottom: none; }
+.br-step-num { width: 24px; height: 24px; background: var(--green-light); color: var(--green); border-radius: 50%; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.br-card-step strong { color: var(--ink); font-weight: 500; display: block; margin-bottom: 1px; }
+.br-btn-primary { display: block; width: 100%; background: var(--green); color: white; text-align: center; font-size: 15px; font-weight: 500; padding: 15px 20px; border-radius: 9px; text-decoration: none; margin-bottom: 10px; transition: background 0.18s; }
+.br-btn-primary:hover { background: var(--green-vivid); }
+.br-card-note { text-align: center; font-size: 12px; color: var(--ink-ghost); }
+.br-card-guarantee { display: flex; align-items: center; gap: 8px; background: var(--gold-light); border: 0.5px solid rgba(200,150,26,0.25); border-radius: 8px; padding: 10px 14px; margin-top: 14px; font-size: 12px; color: #7a5a0a; }
+.br-section { padding: 56px 0; }
+.br-section-label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500; color: var(--green); margin-bottom: 10px; }
+.br-section h3 { font-family: 'Fraunces', serif; font-size: clamp(22px, 4vw, 34px); font-weight: 600; letter-spacing: -0.5px; color: var(--ink); margin: 0 0 12px; line-height: 1.2; }
+.br-section-sub { font-size: 15px; color: var(--ink-soft); max-width: 620px; margin-bottom: 28px; }
+.br-steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 2px; background: var(--border); border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); overflow: hidden; }
+.br-step-block { background: white; padding: 24px 20px; }
+.br-step-block-num { font-family: 'Fraunces', serif; font-size: 38px; font-weight: 300; color: var(--green-light); line-height: 1; margin-bottom: 12px; letter-spacing: -2px; }
+.br-step-block h4 { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+.br-step-block p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
+.br-info-band { background: var(--green-faint); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); padding: 38px 18px; border-radius: var(--r-lg); }
+.br-info-band-inner { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+.br-info-item { display: flex; gap: 14px; align-items: flex-start; }
+.br-info-icon { width: 40px; height: 40px; background: var(--green-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.br-info-item h4 { font-size: 14px; font-weight: 500; margin-bottom: 4px; color: var(--ink); }
+.br-info-item p { font-size: 13px; color: var(--ink-soft); line-height: 1.5; margin: 0; }
+.br-locations-section { background: var(--green-faint); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); padding: 52px 18px; border-radius: var(--r-lg); }
+.br-alert-marcacao { background: var(--gold-light); border: 1px solid rgba(200,150,26,0.3); border-left: 3px solid var(--gold); border-radius: 0 var(--r) var(--r) 0; padding: 14px 18px; font-size: 13px; color: #6b4a08; margin-bottom: 28px; display: flex; gap: 10px; align-items: flex-start; }
+.br-loc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.br-loc-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.br-loc-card.featured { border-color: var(--green); border-width: 1.5px; }
+.br-loc-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.br-loc-name { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.br-loc-badges { display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
+.br-badge-cv, .br-badge-vac { font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 4px; }
+.br-badge-cv { background: var(--green-light); color: var(--green); }
+.br-badge-vac { background: #e8f0fe; color: #1a4fbd; }
+.br-loc-address { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+.br-loc-hours { font-size: 12px; color: var(--ink-mid); line-height: 1.6; background: var(--green-faint); border-radius: 6px; padding: 8px 10px; }
+.br-loc-hours strong { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-ghost); margin-bottom: 4px; font-weight: 500; }
+.br-loc-contacts { display: flex; flex-direction: column; gap: 4px; }
+.br-loc-contact { font-size: 12px; color: var(--ink-soft); display: flex; align-items: center; gap: 6px; }
+.br-loc-contact a { color: var(--green); text-decoration: none; }
+.br-loc-contact a:hover { text-decoration: underline; }
+.br-region-divider { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-ghost); padding: 18px 0 8px; grid-column: 1 / -1; border-top: 0.5px solid var(--border); margin-top: 4px; }
+.br-region-divider:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+.br-faq-list { margin-top: 30px; }
+.br-faq-item { border-bottom: 0.5px solid var(--border); padding: 18px 0; }
+.br-faq-item:first-child { border-top: 0.5px solid var(--border); }
+.br-faq-q { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px; }
+.br-faq-q::after { content: '+'; color: var(--green); font-size: 20px; font-weight: 300; flex-shrink: 0; margin-top: -2px; }
+.br-faq-a { font-size: 14px; color: var(--ink-soft); line-height: 1.65; }
+.br-related-pages { background: white; border-top: 0.5px solid var(--border); padding: 48px 0; }
+.br-related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 24px; }
+.br-related-card { border: 0.5px solid var(--border-mid); border-radius: var(--r); padding: 16px 18px; text-decoration: none; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: border-color 0.15s, background 0.15s; }
+.br-related-card:hover { border-color: var(--green); background: var(--green-faint); }
+.br-related-card-text { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.br-related-card-sub { font-size: 12px; color: var(--ink-ghost); margin-top: 3px; }
+.br-related-arrow { color: var(--green); font-size: 18px; flex-shrink: 0; }
+.br-final-cta { background: var(--ink); color: white; padding: 62px 24px; text-align: center; border-radius: var(--r-lg); }
+.br-final-cta-inner { max-width: 520px; margin: 0 auto; }
+.br-final-cta h3 { font-family: 'Fraunces', serif; font-size: clamp(26px, 5vw, 42px); font-weight: 600; letter-spacing: -0.8px; line-height: 1.15; margin-bottom: 14px; }
+.br-final-cta h3 em { color: #7fd4a8; font-style: italic; }
+.br-final-cta p { font-size: 15px; color: rgba(255,255,255,0.65); margin-bottom: 32px; }
+.br-btn-cta-large { display: inline-block; background: #22865a; color: white; font-size: 16px; font-weight: 500; padding: 17px 40px; border-radius: 10px; text-decoration: none; margin-bottom: 12px; transition: background 0.18s; }
+.br-btn-cta-large:hover { background: #1a6641; }
+.br-final-note { font-size: 13px; color: rgba(255,255,255,0.4); }
+.br-disclaimer { background: var(--green-faint); border-top: 0.5px solid var(--border); text-align: center; font-size: 12px; color: var(--ink-ghost); max-width: 680px; margin: 0 auto; padding: 28px 24px; border-radius: var(--r-lg); }
+</style>
+
+<div class="braga-article">
+  <div class="br-breadcrumb">
+    <a href="/">Início</a> › <a href="/blog">Guias</a> › <a href="/blog/vacina-febre-amarela-guia-completo">Vacina Febre Amarela</a> › Braga
+  </div>
+
+  <section style="background:white; border-bottom:0.5px solid var(--border);">
+    <div class="br-hero">
+      <div class="br-hero-content">
+        <div class="br-eyebrow">Braga e Minho</div>
+        <h2>Vacina Febre Amarela<br>em <em>Braga</em></h2>
+        <p class="br-hero-desc">Consulta de medicina de viagem online com vacinação presencial no Centro de Vacinação Internacional de Braga. Prescrição digital emitida no próprio dia da consulta.</p>
+        <div class="br-trust-row">
+          <span class="br-trust-pill"><span class="dot">●</span> CVI em Braga e Viana do Castelo</span>
+          <span class="br-trust-pill"><span class="dot">●</span> Certificado Internacional válido</span>
+          <span class="br-trust-pill"><span class="dot">●</span> Consulta online em 24-48h</span>
+          <span class="br-trust-pill"><span class="dot">●</span> Prescrição digital no próprio dia</span>
+        </div>
+        <div class="br-hero-stats">
+          <div class="br-stat"><div class="br-stat-n">1</div><div class="br-stat-l">dose para a vida toda</div></div>
+          <div class="br-stat"><div class="br-stat-n">10</div><div class="br-stat-l">dias até certificado válido</div></div>
+          <div class="br-stat"><div class="br-stat-n">99%</div><div class="br-stat-l">eficácia da vacina</div></div>
+        </div>
+      </div>
+
+      <div class="br-hero-card" id="marcar">
+        <div class="br-card-header">
+          <div class="br-card-header-title">Marcar Consulta Online</div>
+          <div class="br-card-header-sub">Vacina febre amarela em Braga — simples e rápido</div>
+        </div>
+        <ul class="br-card-steps">
+          <li class="br-card-step"><span class="br-step-num">1</span><div><strong>Consulta online com médico</strong>Avaliação clínica e prescrição digital. Disponível 7 dias/semana.</div></li>
+          <li class="br-card-step"><span class="br-step-num">2</span><div><strong>Vacinação no CVI de Braga</strong>Apresenta a prescrição no Centro de Vacinação Internacional de Braga ou Viana do Castelo.</div></li>
+          <li class="br-card-step"><span class="br-step-num">3</span><div><strong>Certificado Internacional</strong>Emitido no próprio dia. Válido globalmente 10 dias depois.</div></li>
+        </ul>
+        <a class="br-btn-primary" href="/marcar/travel">Marcar Consulta Online →</a>
+        <p class="br-card-note">Disponível hoje · Resposta em menos de 24h</p>
+        <div class="br-card-guarantee"><span>⚠️</span><span>Marque com pelo menos <strong>10 dias de antecedência</strong> — o certificado só é válido após esse período.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="br-section">
+    <div class="br-section-label">Como funciona</div>
+    <h3>Do primeiro clique à vacina em Braga</h3>
+    <p class="br-section-sub">Consulta online, prescrição digital, vacinação no CVI. Sem deslocações desnecessárias.</p>
+    <div class="br-steps-grid">
+      <div class="br-step-block"><div class="br-step-block-num">01</div><h4>Marque online</h4><p>Consulta de medicina de viagem disponível 7 dias por semana, incluindo fins de semana e feriados.</p></div>
+      <div class="br-step-block"><div class="br-step-block-num">02</div><h4>Consulta com médico</h4><p>O médico avalia o seu destino, historial clínico e datas de viagem. Emite prescrição digital no mesmo dia.</p></div>
+      <div class="br-step-block"><div class="br-step-block-num">03</div><h4>Vacinação em Braga</h4><p>Com a prescrição, dirige-se ao CVI de Braga. A administração da vacina demora apenas alguns minutos.</p></div>
+      <div class="br-step-block"><div class="br-step-block-num">04</div><h4>Certificado em mãos</h4><p>O CVI emite o Certificado Internacional no próprio dia. Válido globalmente 10 dias após a vacinação.</p></div>
+    </div>
+  </section>
+
+  <div class="br-info-band">
+    <div class="br-info-band-inner">
+      <div class="br-info-item"><div class="br-info-icon">📋</div><div><h4>Prescrição obrigatória no CVI</h4><p>O CVI de Braga só administra a vacina febre amarela com prescrição médica válida. A consulta online emite-a no próprio dia.</p></div></div>
+      <div class="br-info-item"><div class="br-info-icon">🎯</div><div><h4>Uma dose para a vida toda</h4><p>Desde 2016, a OMS confirma que uma única dose confere proteção vitalícia. O certificado emitido não expira.</p></div></div>
+      <div class="br-info-item"><div class="br-info-icon">🌍</div><div><h4>Exigida em dezenas de países</h4><p>Brasil, Angola, Quénia, Tanzânia, Ruanda, Peru e muitos outros exigem o certificado internacional na fronteira.</p></div></div>
+      <div class="br-info-item"><div class="br-info-icon">⏳</div><div><h4>Planeie com antecedência</h4><p>O certificado só é válido 10 dias após a vacinação. Marque a consulta com 2 a 3 semanas de antecedência.</p></div></div>
+    </div>
+  </div>
+
+  <section class="br-locations-section">
+    <div class="br-section-label">Pontos de vacinação — Braga e Minho</div>
+    <h3>Centros de Vacinação Internacional em Braga e região do Minho</h3>
+    <p class="br-section-sub">Locais públicos onde pode tomar a vacina febre amarela em Braga e na região do Minho, com prescrição médica. Marcação obrigatória antes de se deslocar.</p>
+    <div class="br-alert-marcacao"><span>⚠️</span><span><strong>Prescrição médica e marcação prévia obrigatórias.</strong> Nenhum CVI administra a vacina sem prescrição válida. Contacte sempre o CVI previamente para confirmar disponibilidade e horários atualizados.</span></div>
+    <div class="br-loc-grid">
+      <div class="br-region-divider">Braga</div>
+      <div class="br-loc-card featured">
+        <div class="br-loc-card-header"><div class="br-loc-name">CVI de Braga — ULS de Braga</div><div class="br-loc-badges"><span class="br-badge-cv">Consulta</span><span class="br-badge-vac">Vacinação</span></div></div>
+        <div class="br-loc-address">📍 Praceta de Vilar, s/n<br>4710-453 Braga</div>
+        <div class="br-loc-hours"><strong>Horário</strong>2ª, 5ª e 6ª: 09h00–13h00<br>3ª e 4ª: 09h00–13h00 e 14h00–17h00</div>
+        <div class="br-loc-contacts"><div class="br-loc-contact">📞 <a href="tel:253208260">253 208 260</a></div><div class="br-loc-contact">✉️ <a href="mailto:usp.braga@ulsb.min-saude.pt">usp.braga@ulsb.min-saude.pt</a></div></div>
+      </div>
+      <div class="br-region-divider">Viana do Castelo e Alto Minho</div>
+      <div class="br-loc-card">
+        <div class="br-loc-card-header"><div class="br-loc-name">CVI Viana do Castelo</div><div class="br-loc-badges"><span class="br-badge-cv">Consulta</span><span class="br-badge-vac">Vacinação</span></div></div>
+        <div class="br-loc-address">📍 Rua José Espregueira, n.º 96<br>4904-871 Viana do Castelo</div>
+        <div class="br-loc-hours"><strong>Horário</strong>2ª e 5ª: 09h00–12h30</div>
+        <div class="br-loc-contacts"><div class="br-loc-contact">📞 <a href="tel:258809470">258 809 470</a></div><div class="br-loc-contact">✉️ <a href="mailto:consulta.viajante@ulsam.min-saude.pt">consulta.viajante@ulsam.min-saude.pt</a></div></div>
+      </div>
+      <div class="br-region-divider">Porto — alternativa próxima</div>
+      <div class="br-loc-card">
+        <div class="br-loc-card-header"><div class="br-loc-name">CVI Porto — Rua da Alegria (principal)</div><div class="br-loc-badges"><span class="br-badge-cv">Consulta</span><span class="br-badge-vac">Vacinação</span></div></div>
+        <div class="br-loc-address">📍 Rua da Alegria, n.º 1057<br>Porto</div>
+        <div class="br-loc-hours"><strong>Horário</strong>2ª a 6ª: 09h00–13h00 e 14h00–17h00</div>
+        <div class="br-loc-contacts"><div class="br-loc-contact">📞 <a href="tel:222002540">222 002 540</a></div><div class="br-loc-contact">✉️ <a href="mailto:cvi@arsnorte.min-saude.pt">cvi@arsnorte.min-saude.pt</a></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="br-section" style="background:white;">
+    <div class="br-section-label">Perguntas frequentes</div>
+    <h3>Vacina febre amarela em Braga — dúvidas comuns</h3>
+    <div class="br-faq-list">
+      <div class="br-faq-item"><div class="br-faq-q">Preciso de prescrição médica para me vacinar em Braga?</div><div class="br-faq-a">Sim. O CVI de Braga só administra a vacina febre amarela com prescrição médica válida.</div></div>
+      <div class="br-faq-item"><div class="br-faq-q">E se não conseguir marcação em Braga?</div><div class="br-faq-a">Pode usar o CVI do Porto, com horário mais alargado. A prescrição é válida em qualquer CVI de Portugal.</div></div>
+      <div class="br-faq-item"><div class="br-faq-q">Posso tomar em Viana do Castelo?</div><div class="br-faq-a">Sim. É uma opção útil para quem vive no Alto Minho.</div></div>
+      <div class="br-faq-item"><div class="br-faq-q">Quanto custa a vacina?</div><div class="br-faq-a">No CVI público, o valor costuma variar entre €20 e €40 (sujeito a atualização). Consulta médica cobrada separadamente.</div></div>
+      <div class="br-faq-item"><div class="br-faq-q">O certificado emitido em Braga é aceite internacionalmente?</div><div class="br-faq-a">Sim. O CIVP emitido nos CVIs portugueses é reconhecido internacionalmente.</div></div>
+    </div>
+  </section>
+
+  <section class="br-related-pages">
+    <div class="br-section-label">Outras páginas úteis</div>
+    <h3 style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--ink);margin-bottom:4px;">Mais informação sobre a vacina febre amarela</h3>
+    <p class="br-section-sub">Guias completos e outros locais em Portugal.</p>
+    <div class="br-related-grid">
+      <a class="br-related-card" href="/blog/vacina-febre-amarela-guia-completo"><div><div class="br-related-card-text">Guia Completo — Vacina Febre Amarela</div><div class="br-related-card-sub">Validade, reações, certificado, países</div></div><span class="br-related-arrow">→</span></a>
+      <a class="br-related-card" href="/blog/vacina-febre-amarela-porto"><div><div class="br-related-card-text">Vacina Febre Amarela no Porto</div><div class="br-related-card-sub">CVIs do Porto — alternativa próxima de Braga</div></div><span class="br-related-arrow">→</span></a>
+      <a class="br-related-card" href="/blog/vacina-febre-amarela-lisboa"><div><div class="br-related-card-text">Vacina Febre Amarela em Lisboa</div><div class="br-related-card-sub">Locais, horários e como marcar em Lisboa</div></div><span class="br-related-arrow">→</span></a>
+      <a class="br-related-card" href="/blog/vacina-febre-amarela-coimbra"><div><div class="br-related-card-text">Vacina Febre Amarela em Coimbra</div><div class="br-related-card-sub">Região Centro e CVIs próximos</div></div><span class="br-related-arrow">→</span></a>
+    </div>
+  </section>
+
+  <section class="br-final-cta">
+    <div class="br-final-cta-inner">
+      <h3>Pronto para viajar<br><em>com segurança?</em></h3>
+      <p>Marque a consulta online hoje. Recebe a prescrição no próprio dia e apresenta-a no CVI de Braga ou no mais conveniente para si.</p>
+      <a class="br-btn-cta-large" href="/marcar/travel">Marcar Consulta Online →</a>
+      <p class="br-final-note">Disponível 7 dias por semana · Prescrição digital no próprio dia</p>
+    </div>
+  </section>
+
+  <div class="br-disclaimer">
+    <p>Informação de carácter geral — não substitui consulta médica individualizada. Horários e contactos dos CVIs sujeitos a alteração. Confirme sempre junto da instituição antes de se deslocar.</p>
+  </div>
+</div>
