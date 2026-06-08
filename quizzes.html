@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Quizzes — Lon Clinic</title>
+    <meta name="description" content="Free health readiness quizzes. Take an assessment now and sign in to see your personalised results on your dashboard.">
+    <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="quiz.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+</head>
+<body class="quiz-page">
+
+    <header class="lon-nav" id="lonNav">
+        <div class="lon-container lon-nav-inner">
+            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
+                <span class="lon-logo-name">LON Clinic</span>
+            </a>
+            <nav class="lon-nav-links" aria-label="Main navigation">
+                <a href="/#servicos">Services</a>
+                <a href="/quizzes">Quizzes</a>
+                <a href="/#contacto">Contact</a>
+            </nav>
+            <div class="lon-nav-actions">
+                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">My dashboard</a>
+                <a href="/book-consultation" class="lon-btn lon-btn-primary lon-btn-sm">Book</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="quiz-main">
+        <div class="quiz-hero">
+            <h1>Health quizzes</h1>
+            <p>Take a short self-assessment in minutes. Your personalised evaluation appears after you sign in — saved on your patient dashboard.</p>
+        </div>
+        <div id="quizListError" class="quiz-error" style="display:none;" role="alert"></div>
+        <div class="quiz-grid" id="quizList">
+            <p style="text-align:center;color:#6b7f72;">Loading quizzes…</p>
+        </div>
+    </main>
+
+    <script src="lon-nav.js"></script>
+    <script src="quizzes.js"></script>
+</body>
+</html>

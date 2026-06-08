@@ -212,6 +212,83 @@ async function initSchema(p) {
     await p.query(
         `CREATE INDEX IF NOT EXISTS idx_bookings_stripe_customer_id ON bookings (stripe_customer_id) WHERE stripe_customer_id IS NOT NULL`
     );
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS quiz_attempts (
+            id UUID PRIMARY KEY,
+            claim_token VARCHAR(128) NOT NULL,
+            quiz_id VARCHAR(64) NOT NULL,
+            email VARCHAR(320),
+            answers JSONB NOT NULL,
+            result JSONB NOT NULL,
+            score INTEGER NOT NULL,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            claimed_at TIMESTAMPTZ
+        )
+    `);
+    await p.query(
+        `CREATE INDEX IF NOT EXISTS idx_quiz_attempts_email_lower ON quiz_attempts (LOWER(email)) WHERE email IS NOT NULL`
+    );
+    await p.query(
+        `CREATE INDEX IF NOT EXISTS idx_quiz_attempts_unclaimed ON quiz_attempts (created_at) WHERE email IS NULL`
+    );
+}
+
+function rowToQuizAttempt(row) {
+    return {
+        id: row.id,
+        claimToken: row.claim_token,
+        quizId: row.quiz_id,
+        email: row.email || null,
+        answers: row.answers,
+        result: row.result,
+        score: row.score,
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
+        claimedAt: row.claimed_at instanceof Date ? row.claimed_at.toISOString() : row.claimed_at || null
+    };
+}
+
+async function insertQuizAttempt(record) {
+    const p = getPool();
+    const r = await p.query(
+        `INSERT INTO quiz_attempts (id, claim_token, quiz_id, email, answers, result, score)
+         VALUES ($1, $2, $3, NULL, $4, $5, $6)
+         RETURNING *`,
+        [record.id, record.claimToken, record.quizId, JSON.stringify(record.answers), JSON.stringify(record.result), record.score]
+    );
+    return rowToQuizAttempt(r.rows[0]);
+}
+
+async function findQuizAttemptById(id) {
+    const p = getPool();
+    const r = await p.query(`SELECT * FROM quiz_attempts WHERE id = $1`, [id]);
+    return r.rows[0] ? rowToQuizAttempt(r.rows[0]) : null;
+}
+
+async function claimQuizAttempt(id, claimToken, email) {
+    const p = getPool();
+    const e = email.toLowerCase().trim();
+    const r = await p.query(
+        `UPDATE quiz_attempts
+         SET email = $3, claimed_at = NOW()
+         WHERE id = $1 AND claim_token = $2 AND email IS NULL
+         RETURNING *`,
+        [id, claimToken, e]
+    );
+    return r.rows[0] ? rowToQuizAttempt(r.rows[0]) : null;
+}
+
+async function findQuizAttemptsByEmail(email, limit = 50) {
+    const p = getPool();
+    const e = email.toLowerCase().trim();
+    const cap = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 100);
+    const r = await p.query(
+        `SELECT * FROM quiz_attempts
+         WHERE LOWER(TRIM(email)) = $1
+         ORDER BY COALESCE(claimed_at, created_at) DESC
+         LIMIT $2`,
+        [e, cap]
+    );
+    return r.rows.map(rowToQuizAttempt);
 }
 
 /** IANA name for PostgreSQL AT TIME ZONE (schedule timezone). */
@@ -461,6 +538,21 @@ async function findBookingsByEmailAndRef(email, bookingRef) {
     return r.rows.map(rowToBooking);
 }
 
+/** Patient portal: all bookings for an email (most recent first). */
+async function findBookingsByEmail(email, limit = 50) {
+    const p = getPool();
+    const e = email.toLowerCase().trim();
+    const cap = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 100);
+    const r = await p.query(
+        `SELECT * FROM bookings
+         WHERE LOWER(TRIM(email)) = $1
+         ORDER BY created_at DESC
+         LIMIT $2`,
+        [e, cap]
+    );
+    return r.rows.map(rowToBooking);
+}
+
 async function findAllBookings() {
     const p = getPool();
     const r = await p.query('SELECT * FROM bookings');
@@ -589,6 +681,11 @@ module.exports = {
     countPriorBookingsExcludingPayment,
     insertBooking,
     findBookingsByEmailAndRef,
+    findBookingsByEmail,
+    insertQuizAttempt,
+    findQuizAttemptById,
+    claimQuizAttempt,
+    findQuizAttemptsByEmail,
     findAllBookings,
     findAllBookingsWithClinicalNotes,
     findBookingByRef,

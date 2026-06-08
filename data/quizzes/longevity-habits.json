@@ -1,0 +1,99 @@
+{
+  "id": "longevity-habits",
+  "title": "Preventive Health & Longevity Habits",
+  "description": "Reflect on sleep, movement, nutrition, and stress — a quick snapshot of habits that support long-term health.",
+  "estimatedMinutes": 3,
+  "ctaBooking": "/book-consultation?service=longevity",
+  "questions": [
+    {
+      "id": "sleep",
+      "text": "How would you rate your typical sleep (7 nights)?",
+      "type": "single",
+      "options": [
+        { "id": "good", "label": "7–8+ hours, feel rested", "score": 0 },
+        { "id": "ok", "label": "Variable — sometimes tired", "score": 1 },
+        { "id": "poor", "label": "Often under 6 hours or poor quality", "score": 3 }
+      ]
+    },
+    {
+      "id": "movement",
+      "text": "How much intentional movement do you get per week?",
+      "type": "single",
+      "options": [
+        { "id": "high", "label": "150+ minutes moderate activity or equivalent", "score": 0 },
+        { "id": "some", "label": "Some, but inconsistent", "score": 2 },
+        { "id": "low", "label": "Mostly sedentary", "score": 3 }
+      ]
+    },
+    {
+      "id": "nutrition",
+      "text": "How would you describe your day-to-day eating pattern?",
+      "type": "single",
+      "options": [
+        { "id": "balanced", "label": "Mostly whole foods, regular meals", "score": 0 },
+        { "id": "mixed", "label": "Mix of healthy and processed / irregular meals", "score": 2 },
+        { "id": "poor", "label": "Frequent ultra-processed food or skipped meals", "score": 3 }
+      ]
+    },
+    {
+      "id": "stress",
+      "text": "How is your stress level most days?",
+      "type": "single",
+      "options": [
+        { "id": "low", "label": "Manageable — I recover well", "score": 0 },
+        { "id": "moderate", "label": "Noticeable but coping", "score": 1 },
+        { "id": "high", "label": "Often overwhelmed or burned out", "score": 3 }
+      ]
+    },
+    {
+      "id": "screening",
+      "text": "When did you last have preventive check-ups (e.g. blood pressure, labs, age-appropriate screening)?",
+      "type": "single",
+      "options": [
+        { "id": "recent", "label": "Within the last 12 months", "score": 0 },
+        { "id": "while", "label": "1–3 years ago", "score": 2 },
+        { "id": "long", "label": "More than 3 years / not sure", "score": 3 }
+      ]
+    }
+  ],
+  "scoring": {
+    "bands": [
+      {
+        "min": 0,
+        "max": 3,
+        "level": "strong-foundation",
+        "title": "Strong foundation",
+        "summary": "Your habits support long-term health. A longevity-focused consultation can personalise screening and optimisation based on your goals and history.",
+        "recommendations": [
+          "Keep a consistent sleep schedule where possible",
+          "Maintain movement you enjoy — consistency matters more than intensity",
+          "Discuss age-appropriate labs and screening with your doctor"
+        ]
+      },
+      {
+        "min": 4,
+        "max": 7,
+        "level": "room-to-grow",
+        "title": "Room to grow",
+        "summary": "Several lifestyle areas could benefit from small, sustainable changes. Structured support often helps turn intention into lasting habits.",
+        "recommendations": [
+          "Pick one habit to improve first (sleep, movement, or meals)",
+          "Track progress for 2–3 weeks before adding another change",
+          "Consider a preventive health consultation to set priorities"
+        ]
+      },
+      {
+        "min": 8,
+        "max": 15,
+        "level": "priority-focus",
+        "title": "Priority focus",
+        "summary": "Your answers suggest multiple areas where targeted lifestyle and medical support could meaningfully improve wellbeing and long-term risk.",
+        "recommendations": [
+          "Book a longevity or general preventive consultation",
+          "Address sleep and stress with realistic, gradual goals",
+          "Screen for cardiometabolic risk with your clinician"
+        ]
+      }
+    ]
+  }
+}

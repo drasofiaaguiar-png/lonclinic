@@ -1,0 +1,110 @@
+{
+  "id": "travel-readiness",
+  "title": "Travel Health Readiness",
+  "description": "A short self-check before your trip — see how prepared you are for destination health risks, vaccines, and preventive care.",
+  "estimatedMinutes": 4,
+  "ctaBooking": "/book-consultation?service=travel",
+  "questions": [
+    {
+      "id": "dest_type",
+      "text": "What best describes your main destination?",
+      "type": "single",
+      "options": [
+        { "id": "low", "label": "Western Europe / North America (routine care)", "score": 0 },
+        { "id": "med", "label": "Urban areas in Asia, Africa, or Latin America", "score": 2 },
+        { "id": "high", "label": "Rural, remote, or high-risk regions", "score": 4 }
+      ]
+    },
+    {
+      "id": "duration",
+      "text": "How long will you be away?",
+      "type": "single",
+      "options": [
+        { "id": "short", "label": "Less than 2 weeks", "score": 0 },
+        { "id": "medium", "label": "2–4 weeks", "score": 1 },
+        { "id": "long", "label": "More than 4 weeks", "score": 2 }
+      ]
+    },
+    {
+      "id": "vaccines",
+      "text": "Have you checked recommended vaccines for your destination?",
+      "type": "single",
+      "options": [
+        { "id": "yes", "label": "Yes — I know what I need or have had them", "score": 0 },
+        { "id": "partial", "label": "I looked but I'm not sure what's required", "score": 2 },
+        { "id": "no", "label": "Not yet", "score": 3 }
+      ]
+    },
+    {
+      "id": "malaria",
+      "text": "Will you visit malaria-risk areas?",
+      "type": "single",
+      "options": [
+        { "id": "no", "label": "No / not applicable", "score": 0 },
+        { "id": "unsure", "label": "I'm not sure", "score": 2 },
+        { "id": "yes", "label": "Yes — I have prophylaxis or a plan", "score": 0 },
+        { "id": "yes_none", "label": "Yes — but I don't have a plan yet", "score": 4 }
+      ]
+    },
+    {
+      "id": "meds",
+      "text": "Do you take regular medication or have a chronic condition?",
+      "type": "single",
+      "options": [
+        { "id": "no", "label": "No", "score": 0 },
+        { "id": "yes_plan", "label": "Yes — I have enough supply and travel guidance", "score": 0 },
+        { "id": "yes_no_plan", "label": "Yes — I haven't planned for the trip yet", "score": 2 }
+      ]
+    },
+    {
+      "id": "activities",
+      "text": "Will your trip include adventure or high-exposure activities?",
+      "type": "single",
+      "options": [
+        { "id": "no", "label": "Mostly cities / standard tourism", "score": 0 },
+        { "id": "some", "label": "Some hiking, diving, or rural travel", "score": 1 },
+        { "id": "high", "label": "Extended outdoor / remote / humanitarian work", "score": 3 }
+      ]
+    }
+  ],
+  "scoring": {
+    "bands": [
+      {
+        "min": 0,
+        "max": 4,
+        "level": "well-prepared",
+        "title": "Well prepared",
+        "summary": "You're in good shape for travel health planning. A quick review with a travel medicine specialist can still fine-tune vaccines and medications for your exact itinerary.",
+        "recommendations": [
+          "Pack a basic travel first-aid kit",
+          "Save your clinic's contact and travel insurance details",
+          "Book a travel consult if your itinerary changes"
+        ]
+      },
+      {
+        "min": 5,
+        "max": 9,
+        "level": "needs-attention",
+        "title": "Needs attention",
+        "summary": "There are gaps in your travel health preparation. Addressing vaccines, malaria prevention, and medication planning before departure reduces avoidable risk.",
+        "recommendations": [
+          "Book a travel medicine consultation at least 4–6 weeks before departure when possible",
+          "Check official vaccine requirements for each country you enter",
+          "Confirm malaria risk and prophylaxis options for your route"
+        ]
+      },
+      {
+        "min": 10,
+        "max": 20,
+        "level": "high-priority",
+        "title": "High priority",
+        "summary": "Your answers suggest significant travel health risks that should be addressed before you travel. Professional guidance is strongly recommended.",
+        "recommendations": [
+          "Schedule a travel medicine consultation as soon as possible",
+          "Do not rely on online advice alone for vaccines or malaria prevention",
+          "Bring a full medication list and itinerary to your appointment"
+        ]
+      }
+    ]
+  }
+}

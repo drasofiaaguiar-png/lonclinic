@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz — Lon Clinic</title>
+    <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="quiz.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+</head>
+<body class="quiz-page">
+
+    <header class="lon-nav" id="lonNav">
+        <motion class="lon-container lon-nav-inner">
+            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
+                <span class="lon-logo-name">LON Clinic</span>
+            </a>
+            <nav class="lon-nav-links" aria-label="Main navigation">
+                <a href="/quizzes">All quizzes</a>
+                <a href="/patient-portal">My dashboard</a>
+            </nav>
+            <div class="lon-nav-actions">
+                <a href="/book-consultation" class="lon-btn lon-btn-primary lon-btn-sm">Book</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="quiz-main">
+        <div class="quiz-hero" id="quizHero">
+            <h1 id="quizTitle">Loading…</h1>
+            <p id="quizDesc"></p>
+            <div class="quiz-meta" id="quizMeta"></div>
+        </div>
+
+        <div id="quizError" class="quiz-error" style="display:none;" role="alert"></div>
+
+        <div class="quiz-card" id="quizCard" style="display:none;">
+            <div class="quiz-progress" aria-hidden="true">
+                <div class="quiz-progress-bar" id="quizProgressBar" style="width:0%"></div>
+            </div>
+            <form id="quizForm">
+                <div id="quizQuestionHost"></motion>
+                <div class="quiz-actions">
+                    <button type="button" class="btn btn-outline" id="quizPrevBtn" disabled>Back</button>
+                    <button type="button" class="btn btn-primary" id="quizNextBtn">Next</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="lon-nav.js"></script>
+    <script src="quiz-storage.js"></script>
+    <script src="quiz-player.js"></script>
+</body>
+</html>
