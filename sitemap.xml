@@ -44,6 +44,14 @@
         <priority>0.7</priority>
     </url>
 
+    <!-- Consultancy (digital transformation for professionals) -->
+    <url>
+        <loc>https://lonclinic.com/consultancy</loc>
+        <lastmod>2026-06-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
     <!-- FAQ -->
     <url>
         <loc>https://lonclinic.com/faq</loc>
