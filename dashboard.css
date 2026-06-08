@@ -389,6 +389,46 @@ body.dash-portal .clinic-notes-section {
     margin: 0 auto;
 }
 
+/* Overview stats */
+.dash-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+}
+
+.dash-stat-card {
+    padding: 20px 22px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.dash-stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+}
+
+.dash-stat-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+body.dash-portal .dash-stat-card {
+    background: var(--bg-glass-strong);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+}
+
 /* Header */
 .dash-header {
     display: flex;
@@ -825,6 +865,10 @@ body.dash-portal .clinic-notes-section {
     .dash-join-hint {
         text-align: center;
         max-width: none;
+    }
+
+    .dash-stats {
+        grid-template-columns: 1fr;
     }
 
     .dash-actions-grid {

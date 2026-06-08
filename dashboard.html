@@ -13,10 +13,10 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient Dashboard — Longevity Clinic</title>
+    <title>My Dashboard — Lon Clinic</title>
     <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css?v=20260418b">
+    <link rel="stylesheet" href="dashboard.css?v=20260517">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -62,8 +62,8 @@
                 <div class="dash-login-icon">
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>
-                <h1 class="dash-login-title">Patient Portal</h1>
-                <p class="dash-login-desc">Access your appointments, join video consultations, and manage your health journey.</p>
+                <h1 class="dash-login-title">My Dashboard</h1>
+                <p class="dash-login-desc">View your appointments, join video consultations, and manage your bookings in one place.</p>
                 <form class="dash-login-form" id="loginForm">
                     <div id="dashLoginApiError" class="dash-login-error" style="display:none" role="alert"></div>
                     <div class="dash-form-group">
@@ -71,12 +71,12 @@
                         <input type="email" id="loginEmail" placeholder="you@example.com" required autocomplete="email">
                     </div>
                     <div class="dash-form-group">
-                        <label for="loginRef">Booking reference</label>
-                        <input type="text" id="loginRef" placeholder="e.g. LC-A1B2C3D4" required autocomplete="off">
+                        <label for="loginRef">Booking reference <span class="dash-form-hint">(optional)</span></label>
+                        <input type="text" id="loginRef" placeholder="e.g. LC-A1B2C3D4" autocomplete="off">
                     </div>
                     <button type="submit" class="btn btn-primary btn-lg dash-login-btn">Access my dashboard</button>
                 </form>
-                <p class="dash-login-note">Your booking reference was included in your confirmation email.</p>
+                <p class="dash-login-note">Use the email from your booking. Add a reference to open a single appointment, or leave it blank to see all consultations on this email.</p>
             </div>
         </section>
 
@@ -92,6 +92,22 @@
                 <div class="dash-header-right">
                     <a href="/book-consultation" class="btn btn-primary">New booking</a>
                     <button class="btn btn-outline dash-logout-btn" id="logoutBtn">Sign out</button>
+                </div>
+            </div>
+
+            <!-- Overview stats -->
+            <div class="dash-stats" id="dashStats" style="display:none;">
+                <div class="dash-stat-card">
+                    <span class="dash-stat-value" id="statUpcoming">0</span>
+                    <span class="dash-stat-label">Upcoming</span>
+                </div>
+                <div class="dash-stat-card">
+                    <span class="dash-stat-value" id="statCompleted">0</span>
+                    <span class="dash-stat-label">Completed</span>
+                </div>
+                <div class="dash-stat-card">
+                    <span class="dash-stat-value" id="statTotal">0</span>
+                    <span class="dash-stat-label">Total bookings</span>
                 </div>
             </div>
 

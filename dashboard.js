@@ -20,7 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginApiError = document.getElementById('dashLoginApiError');
     const logoutBtn = document.getElementById('logoutBtn');
 
-    // Dashboard elements
+    const dashStats = document.getElementById('dashStats');
+    const statUpcoming = document.getElementById('statUpcoming');
+    const statCompleted = document.getElementById('statCompleted');
+    const statTotal = document.getElementById('statTotal');
+
     const dashGreeting = document.getElementById('dashGreeting');
     const dashEmail = document.getElementById('dashEmail');
     const upcomingSection = document.getElementById('dashUpcoming');
@@ -28,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const dashTable = document.getElementById('dashTable');
     const dashEmpty = document.getElementById('dashEmpty');
 
-    // Upcoming elements
     const upcomingService = document.getElementById('upcomingService');
     const upcomingDate = document.getElementById('upcomingDate');
     const upcomingTime = document.getElementById('upcomingTime');
@@ -84,12 +87,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ─── Check existing session ───
-    const existing = getSession();
-    if (existing && existing.email && existing.ref) {
-        showDashboard(existing.email, existing.ref);
-    } else if (existing && existing.email && !existing.ref) {
-        clearSession();
+    function parseUrlLoginParams() {
+        const params = new URLSearchParams(window.location.search);
+        const email = (params.get('email') || '').trim();
+        const ref = (params.get('ref') || '').trim();
+        return { email, ref };
+    }
+
+    function displayNameFromEmail(email) {
+        const local = (email || '').split('@')[0] || 'there';
+        return local.charAt(0).toUpperCase() + local.slice(1);
+    }
+
+    // ─── Check existing session or URL params ───
+    const urlParams = parseUrlLoginParams();
+    if (urlParams.email) {
+        loginEmail.value = urlParams.email;
+        if (urlParams.ref) loginRef.value = urlParams.ref;
+        setSession({ email: urlParams.email, ref: urlParams.ref || null });
+        showDashboard(urlParams.email, urlParams.ref || null);
+    } else {
+        const existing = getSession();
+        if (existing && existing.email) {
+            showDashboard(existing.email, existing.ref || null);
+        }
     }
 
     // ─── Login Form ───
@@ -98,9 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
         hideLoginApiError();
         const email = loginEmail.value.trim();
         const ref = loginRef.value.trim();
-        if (!email || !ref) return;
-        setSession({ email, ref });
-        showDashboard(email, ref);
+        if (!email) return;
+        setSession({ email, ref: ref || null });
+        showDashboard(email, ref || null);
     });
 
     // ─── Logout ───
@@ -111,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         contentSection.style.display = 'none';
         loginEmail.value = '';
         loginRef.value = '';
+        if (dashStats) dashStats.style.display = 'none';
     });
 
     function closeRescheduleModal() {
@@ -196,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         email: sess.email,
-                        ref: sess.ref,
+                        ref: pendingRescheduleRef,
                         dateIso,
                         time,
                         dateLabel,
@@ -213,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 closeRescheduleModal();
-                await showDashboard(sess.email, sess.ref);
+                await showDashboard(sess.email, sess.ref || null);
             } catch {
                 if (rescheduleError) {
                     rescheduleError.textContent = 'Network error. Please try again.';
@@ -228,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cancelBtn = e.target.closest('.dash-cancel-btn');
         const resBtn = e.target.closest('.dash-reschedule-btn');
         const sess = getSession();
-        if (!sess || !sess.email || !sess.ref) return;
+        if (!sess || !sess.email) return;
 
         if (cancelBtn) {
             const ref = cancelBtn.getAttribute('data-ref');
@@ -248,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert(data.error || 'Could not cancel.');
                     return;
                 }
-                await showDashboard(sess.email, sess.ref);
+                await showDashboard(sess.email, sess.ref || null);
             } catch {
                 alert('Could not connect. Please try again.');
             }
@@ -272,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ─── Show Dashboard ───
     async function showDashboard(email, ref) {
-        if (!email || !String(ref || '').trim()) {
+        if (!email) {
             clearSession();
             loginSection.style.display = '';
             contentSection.style.display = 'none';
@@ -282,15 +304,14 @@ document.addEventListener('DOMContentLoaded', () => {
         loginSection.style.display = 'none';
         contentSection.style.display = 'block';
 
-        // Set greeting
-        const name = email.split('@')[0];
-        const capitalized = name.charAt(0).toUpperCase() + name.slice(1);
-        dashGreeting.textContent = `Welcome, ${capitalized}`;
+        dashGreeting.textContent = `Welcome, ${displayNameFromEmail(email)}`;
         dashEmail.textContent = email;
 
-        // Fetch bookings (API requires email + booking reference)
+        const params = new URLSearchParams({ email });
+        const refTrim = ref ? String(ref).trim() : '';
+        if (refTrim) params.set('ref', refTrim);
+
         try {
-            const params = new URLSearchParams({ email, ref: ref.trim() });
             const res = await fetch(`/api/bookings?${params.toString()}`);
             const data = await res.json().catch(() => ({}));
 
@@ -298,9 +319,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearSession();
                 loginSection.style.display = '';
                 contentSection.style.display = 'none';
-                showLoginApiError(data.error || 'Could not verify your booking. Please try again.');
+                showLoginApiError(data.error || 'Could not load your bookings. Please try again.');
                 return;
             }
+
+            setSession({ email, ref: refTrim || null });
 
             if (data.bookings && data.bookings.length > 0) {
                 renderBookings(data.bookings, data.doxyUrl);
@@ -308,6 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 dashEmpty.style.display = '';
                 dashTable.style.display = 'none';
                 upcomingSection.style.display = 'none';
+                if (dashStats) dashStats.style.display = 'none';
             }
         } catch (err) {
             console.error('Failed to load bookings:', err);
@@ -318,6 +342,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function updateStats(bookings, now) {
+        if (!dashStats || !statUpcoming || !statCompleted || !statTotal) return;
+        let upcoming = 0;
+        let completed = 0;
+        bookings.forEach((b) => {
+            const status = getStatus(b, now);
+            if (status === 'upcoming') upcoming += 1;
+            else if (status === 'completed') completed += 1;
+        });
+        statUpcoming.textContent = String(upcoming);
+        statCompleted.textContent = String(completed);
+        statTotal.textContent = String(bookings.length);
+        dashStats.style.display = bookings.length > 0 ? 'grid' : 'none';
+    }
+
     // ─── Render Bookings ───
     function renderBookings(bookings, doxyUrl) {
         dashTableBody.innerHTML = '';
@@ -325,6 +364,8 @@ document.addEventListener('DOMContentLoaded', () => {
         dashTable.style.display = 'table';
 
         const now = new Date();
+        updateStats(bookings, now);
+
         let nextUpcoming = null;
 
         bookings.forEach((b) => {

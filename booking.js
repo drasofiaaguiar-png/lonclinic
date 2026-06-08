@@ -1239,6 +1239,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('confirmAmount').textContent = `€${(data.amount / 100).toFixed(0)}`;
             document.getElementById('confirmRef').textContent = data.bookingRef || '—';
 
+            const dashboardBtn = document.getElementById('goToDashboardBtn');
+            if (dashboardBtn && data.email) {
+                const portalParams = new URLSearchParams({ email: data.email });
+                if (data.bookingRef) portalParams.set('ref', data.bookingRef);
+                dashboardBtn.href = `/patient-portal?${portalParams.toString()}`;
+                dashboardBtn.style.display = '';
+            }
+
             // Generate and set Google Calendar URL
             const calendarBtn = document.getElementById('addToCalendarBtn');
             if (calendarBtn) {
