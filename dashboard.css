@@ -1392,8 +1392,8 @@ body.dash-portal .dash-stat-card {
 }
 
 .admin-override-day {
-    aspect-ratio: 1;
-    min-height: 44px;
+    min-height: 58px;
+    padding: 6px 4px 4px;
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
     background: var(--bg-card);
@@ -1402,7 +1402,35 @@ body.dash-portal .dash-stat-card {
     font-weight: 500;
     cursor: pointer;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2px;
     transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.admin-override-day-num {
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.admin-override-day-hours {
+    font-size: 0.625rem;
+    font-weight: 600;
+    line-height: 1.1;
+    color: #ea580c;
+    background: rgba(234, 88, 12, 0.10);
+    border-radius: 4px;
+    padding: 1px 4px;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+}
+
+.admin-override-day-hours.is-closed {
+    color: #b91c1c;
+    background: rgba(185, 28, 28, 0.10);
 }
 
 .admin-override-day:hover:not(:disabled) {
@@ -1420,17 +1448,28 @@ body.dash-portal .dash-stat-card {
     box-shadow: inset 0 0 0 2px var(--accent);
 }
 
-.admin-override-day.admin-override-has-rule::after {
-    content: '';
-    position: absolute;
-    bottom: 6px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: #ea580c;
+/* Dirty-save indicator on the top "Save Schedule" button */
+.btn.admin-save-dirty {
+    box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.65), 0 6px 18px rgba(234, 88, 12, 0.25) !important;
+    animation: adminSavePulse 1.8s ease-in-out infinite;
 }
+@keyframes adminSavePulse {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.65), 0 6px 18px rgba(234, 88, 12, 0.25); }
+    50% { box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.45), 0 6px 22px rgba(234, 88, 12, 0.40); }
+}
+
+/* Preview "effective schedule" banner */
+.admin-preview-effective {
+    margin-bottom: 12px;
+    padding: 10px 14px;
+    border-radius: var(--radius-md);
+    background: rgba(197, 199, 44, 0.08);
+    border: 1px solid rgba(197, 199, 44, 0.30);
+    font-size: 0.85rem;
+    color: var(--text-primary);
+}
+.admin-preview-effective strong { color: var(--text-primary); }
+.admin-preview-note { color: var(--text-muted); font-weight: 400; }
 
 .admin-override-bulk {
     margin-top: 8px;

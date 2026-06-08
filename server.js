@@ -2659,6 +2659,8 @@ async function fetchBookingsForDateIso(dateIso) {
 
 /**
  * Slots patients may book for a date: schedule + optional smart grouping + not already taken.
+ * Smart grouping is intentionally skipped when an explicit per-day override is in place,
+ * so the admin's custom hours are surfaced as the full set of bookable slots.
  */
 async function getBookableSlotsForDateIso(dateIso, excludeBookingRef) {
     const base = slotsForDateIso(dateIso);
@@ -2668,8 +2670,10 @@ async function getBookableSlotsForDateIso(dateIso, excludeBookingRef) {
     if (excludeBookingRef) {
         bookings = bookings.filter((b) => b.bookingRef !== excludeBookingRef);
     }
+    const effective = getEffectiveDaySchedule(dateIso);
+    const hasExplicitOverride = effective && effective.source === 'override';
     let slots;
-    if (scheduleStore.smartSlotGrouping) {
+    if (scheduleStore.smartSlotGrouping && !hasExplicitOverride) {
         slots = computeSmartGroupedSlotTimes(base, bookings, slotDuration);
     } else {
         slots = base.slice();

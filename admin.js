@@ -59,6 +59,45 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    let scheduleDirty = false;
+    function markScheduleDirty() {
+        scheduleDirty = true;
+        updateSaveButtonState();
+    }
+    function updateSaveButtonState() {
+        if (!saveScheduleBtn) return;
+        if (scheduleDirty) {
+            saveScheduleBtn.classList.add('admin-save-dirty');
+            saveScheduleBtn.textContent = 'Save Schedule •';
+        } else {
+            saveScheduleBtn.classList.remove('admin-save-dirty');
+            if (saveScheduleBtn.textContent !== '✓ Saved') {
+                saveScheduleBtn.textContent = 'Save Schedule';
+            }
+        }
+    }
+
+    function weekdayDefaultsForDate(dateStr) {
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr || '');
+        if (!m || !scheduleData || !scheduleData.workingHours) return { enabled: true, start: '09:00', end: '17:00' };
+        const dateObj = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+        const dayNames = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+        const wh = scheduleData.workingHours[dayNames[dateObj.getDay()]];
+        if (!wh) return { enabled: true, start: '09:00', end: '17:00' };
+        return { enabled: !!wh.enabled, start: wh.start || '09:00', end: wh.end || '17:00' };
+    }
+
+    function syncBulkInputsToSelection() {
+        if (!scheduleData) return;
+        if (selectedOverrideDates.size !== 1) return; // only auto-fill when exactly one day is selected
+        const [dateStr] = Array.from(selectedOverrideDates);
+        const existing = (scheduleData.dayOverrides || []).find((o) => o.date === dateStr);
+        const source = existing || weekdayDefaultsForDate(dateStr);
+        if (bulkOverrideStart) bulkOverrideStart.value = source.start || '09:00';
+        if (bulkOverrideEnd) bulkOverrideEnd.value = source.end || '17:00';
+        if (bulkOverrideEnabled) bulkOverrideEnabled.checked = source.enabled !== false;
+    }
+
     function renderDayOverridesList() {
         if (!dayOverridesList || !scheduleData) return;
         dayOverridesList.innerHTML = '';
@@ -92,6 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 selectedOverrideDates.delete(entry.date);
                 renderDayOverridesList();
                 renderOverrideCalendar();
+                markScheduleDirty();
             });
         });
     }
@@ -127,7 +167,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'admin-override-day';
-            btn.textContent = String(d);
+
+            const num = document.createElement('span');
+            num.className = 'admin-override-day-num';
+            num.textContent = String(d);
+            btn.appendChild(num);
+
+            const ov = overrideMap.get(dateKey);
+            if (ov) {
+                const label = document.createElement('span');
+                label.className = 'admin-override-day-hours' + (ov.enabled ? '' : ' is-closed');
+                label.textContent = ov.enabled ? `${ov.start.slice(0,5)}–${ov.end.slice(0,5)}` : 'Closed';
+                btn.appendChild(label);
+                btn.classList.add('admin-override-has-rule');
+            }
 
             if (dateObj < today0) {
                 btn.disabled = true;
@@ -139,12 +192,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                         selectedOverrideDates.add(dateKey);
                     }
                     renderOverrideCalendar();
+                    syncBulkInputsToSelection();
                 });
             }
 
-            if (overrideMap.has(dateKey)) {
-                btn.classList.add('admin-override-has-rule');
-            }
             if (selectedOverrideDates.has(dateKey)) {
                 btn.classList.add('admin-override-selected');
             }
@@ -289,6 +340,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     timesDiv.style.opacity = '0.5';
                     timesDiv.style.pointerEvents = 'none';
                 }
+                markScheduleDirty();
+            });
+            dayCard.querySelectorAll('input[type="time"]').forEach((inp) => {
+                inp.addEventListener('change', markScheduleDirty);
             });
         });
 
@@ -338,6 +393,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 item.querySelector('.admin-remove-btn').addEventListener('click', () => {
                     scheduleData.blockedDates = scheduleData.blockedDates.filter(d => d !== date);
                     renderBlockedDates();
+                    markScheduleDirty();
                 });
             });
         } else {
@@ -370,6 +426,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         s => !(s.date === slot.date && s.time === slot.time)
                     );
                     renderBlockedSlots();
+                    markScheduleDirty();
                 });
             });
         } else {
@@ -420,6 +477,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             selectedOverrideDates.clear();
             renderOverrideCalendar();
             renderDayOverridesList();
+            markScheduleDirty();
         });
     }
 
@@ -438,6 +496,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             selectedOverrideDates.clear();
             renderOverrideCalendar();
             renderDayOverridesList();
+            markScheduleDirty();
         });
     }
 
@@ -489,6 +548,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             scheduleData.blockedDates.sort();
             blockDateInput.value = '';
             renderBlockedDates();
+            markScheduleDirty();
         });
     }
 
@@ -520,8 +580,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             blockSlotDateInput.value = '';
             blockSlotTimeInput.value = '';
             renderBlockedSlots();
+            markScheduleDirty();
         });
     }
+
+    if (slotDurationSelect) {
+        slotDurationSelect.addEventListener('change', markScheduleDirty);
+    }
+    if (bulkOverrideStart) bulkOverrideStart.addEventListener('change', () => { /* user-driven; no dirty until Apply */ });
+    if (bulkOverrideEnd) bulkOverrideEnd.addEventListener('change', () => { /* same */ });
 
     // ─── Preview slots ───
     if (previewSlotsBtn) {
@@ -538,6 +605,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 previewSlotsContainer.innerHTML = '';
 
+                const eff = data.effective || data.workingHours || null;
+                if (eff) {
+                    const banner = document.createElement('div');
+                    banner.className = 'admin-preview-effective';
+                    const source = eff.source === 'override'
+                        ? 'Per-day override'
+                        : eff.source === 'blocked'
+                            ? 'Blocked date'
+                            : 'Weekly default';
+                    const hours = eff.enabled === false
+                        ? 'Closed (no bookings)'
+                        : `${(eff.start || '').slice(0,5)} – ${(eff.end || '').slice(0,5)}`;
+                    banner.innerHTML = `<strong>${source}:</strong> ${hours}`;
+                    if (scheduleData && scheduleData.smartSlotGrouping && eff.source !== 'override' && eff.enabled !== false) {
+                        banner.innerHTML += ' <span class="admin-preview-note">· smart grouping ON — first &amp; last slot only until bookings exist</span>';
+                    }
+                    previewSlotsContainer.appendChild(banner);
+                }
+
                 if (data.available && data.available.length > 0) {
                     const slotsGrid = document.createElement('div');
                     slotsGrid.className = 'admin-preview-grid';
@@ -549,7 +635,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     });
                     previewSlotsContainer.appendChild(slotsGrid);
                 } else {
-                    previewSlotsContainer.innerHTML = `<p class="admin-preview-empty">No available slots on ${new Date(date).toLocaleDateString()}. ${data.reason || 'This day may be disabled or fully blocked.'}</p>`;
+                    const empty = document.createElement('p');
+                    empty.className = 'admin-preview-empty';
+                    empty.textContent = `No available slots on ${new Date(date).toLocaleDateString()}. ${data.reason || 'This day may be disabled or fully blocked.'}`;
+                    previewSlotsContainer.appendChild(empty);
                 }
             } catch (err) {
                 console.error('Preview error:', err);
@@ -605,10 +694,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 const data = await res.json();
                 scheduleData = data.schedule;
+                scheduleDirty = false;
 
+                saveScheduleBtn.classList.remove('admin-save-dirty');
                 saveScheduleBtn.textContent = '✓ Saved';
                 setTimeout(() => {
-                    saveScheduleBtn.textContent = 'Save Schedule';
+                    if (!scheduleDirty) saveScheduleBtn.textContent = 'Save Schedule';
                     saveScheduleBtn.disabled = false;
                 }, 2000);
             } catch (err) {
