@@ -745,7 +745,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         inviteTime.innerHTML = '<option value="">Loading…</option>';
         try {
-            const res = await fetch(`/api/admin/available-slots?date=${encodeURIComponent(date)}`);
+            const res = await fetch(`/api/admin/available-slots?date=${encodeURIComponent(date)}&allSlots=1`);
             const data = await res.json();
             inviteTime.innerHTML = '';
             if (data.available && data.available.length > 0) {

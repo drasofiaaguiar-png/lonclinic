@@ -2674,8 +2674,9 @@ async function fetchInvitationLockedTimesForDateIso(dateIso) {
  * Slots patients may book for a date: schedule + optional smart grouping + not already taken.
  * Smart grouping is intentionally skipped when an explicit per-day override is in place,
  * so the admin's custom hours are surfaced as the full set of bookable slots.
+ * Pass `bypassSmartGrouping=true` (admin tools) to return the full grid regardless of grouping.
  */
-async function getBookableSlotsForDateIso(dateIso, excludeBookingRef, excludeInvitationId) {
+async function getBookableSlotsForDateIso(dateIso, excludeBookingRef, excludeInvitationId, bypassSmartGrouping) {
     const base = slotsForDateIso(dateIso);
     if (!base.length) return [];
     const slotDuration = scheduleStore.slotDuration || 30;
@@ -2693,7 +2694,7 @@ async function getBookableSlotsForDateIso(dateIso, excludeBookingRef, excludeInv
     const effective = getEffectiveDaySchedule(dateIso);
     const hasExplicitOverride = effective && effective.source === 'override';
     let slots;
-    if (scheduleStore.smartSlotGrouping && !hasExplicitOverride) {
+    if (scheduleStore.smartSlotGrouping && !hasExplicitOverride && !bypassSmartGrouping) {
         slots = computeSmartGroupedSlotTimes(base, bookings, slotDuration);
     } else {
         slots = base.slice();
@@ -2926,7 +2927,15 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
         const isoRaw = meta.date_iso && String(meta.date_iso).trim();
         const normTimeFinal = normalizeTimeString({ time: meta.time || '' });
         if (isoRaw && /^\d{4}-\d{2}-\d{2}$/.test(isoRaw) && normTimeFinal) {
-            const allowed = await getBookableSlotsForDateIso(isoRaw, null, meta.invitation_id || null);
+            // If this came from an admin-issued invitation, allow any slot in the grid
+            // (the admin already picked it, regardless of smart grouping).
+            const allowAdminSlot = !!meta.invitation_id;
+            const allowed = await getBookableSlotsForDateIso(
+                isoRaw,
+                null,
+                meta.invitation_id || null,
+                allowAdminSlot
+            );
             if (!allowed.includes(normTimeFinal)) {
                 console.warn(
                     `${logPrefix}finalizePaidCheckoutSession: slot not bookable ${isoRaw} ${normTimeFinal}`
@@ -4316,7 +4325,9 @@ app.get('/api/schedule', (req, res) => {
     });
 });
 
-// ─── API: Admin — Get available time slots for a date (public + clinic; respects smart grouping) ───
+// ─── API: Admin — Get available time slots for a date ───
+// Public (booking flow) respects smart grouping.
+// Admin tools pass ?allSlots=1 to receive the full grid (admin sees every free time).
 app.get('/api/admin/available-slots', async (req, res) => {
     const { date } = req.query; // Format: YYYY-MM-DD
 
@@ -4352,7 +4363,8 @@ app.get('/api/admin/available-slots', async (req, res) => {
         const excludeInvitationId = req.query.excludeInvitation
             ? String(req.query.excludeInvitation)
             : null;
-        const available = await getBookableSlotsForDateIso(dateStr, null, excludeInvitationId);
+        const allSlots = req.query.allSlots === '1' || req.query.allSlots === 'true';
+        const available = await getBookableSlotsForDateIso(dateStr, null, excludeInvitationId, allSlots);
         res.json({
             available,
             date,
@@ -4362,7 +4374,8 @@ app.get('/api/admin/available-slots', async (req, res) => {
                 end: daySchedule.end
             },
             effective: daySchedule,
-            smartSlotGrouping: !!scheduleStore.smartSlotGrouping
+            smartSlotGrouping: !!scheduleStore.smartSlotGrouping,
+            bypassedSmartGrouping: allSlots
         });
     } catch (err) {
         console.error('GET /api/admin/available-slots:', err.message);
@@ -4612,7 +4625,8 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
             return res.status(400).json({ error: pricing.error });
         }
 
-        const available = await getBookableSlotsForDateIso(dateIso, null, null);
+        // Admin can book any free slot regardless of smart grouping.
+        const available = await getBookableSlotsForDateIso(dateIso, null, null, true);
         if (!available.includes(normTime)) {
             return res.status(409).json({ error: 'That time slot is no longer available.' });
         }
