@@ -4743,8 +4743,8 @@ function getBaseUrl(req) {
         process.exit(1);
     }
 
-    app.listen(PORT, () => {
-        console.log(`\n🏥 Longevity Clinic server running on http://localhost:${PORT}`);
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`\n🏥 Longevity Clinic server running on http://0.0.0.0:${PORT}`);
         if (isStripeConfigured) {
             console.log(`   Stripe mode: ${STRIPE_SECRET.startsWith('sk_live') ? '🔴 LIVE' : '🟡 TEST'}`);
         } else {
