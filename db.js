@@ -231,6 +231,171 @@ async function initSchema(p) {
     await p.query(
         `CREATE INDEX IF NOT EXISTS idx_quiz_attempts_unclaimed ON quiz_attempts (created_at) WHERE email IS NULL`
     );
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS booking_invitations (
+            id UUID PRIMARY KEY,
+            invitation_token VARCHAR(128) UNIQUE NOT NULL,
+            patient_name TEXT NOT NULL,
+            patient_email VARCHAR(320) NOT NULL,
+            patient_phone TEXT,
+            service VARCHAR(64) NOT NULL,
+            service_label TEXT,
+            date_iso TEXT NOT NULL,
+            time TEXT NOT NULL,
+            locale VARCHAR(8) NOT NULL DEFAULT 'pt',
+            amount_cents INTEGER NOT NULL,
+            currency VARCHAR(8) NOT NULL DEFAULT 'eur',
+            stripe_session_id VARCHAR(255),
+            stripe_session_url TEXT,
+            stripe_session_expires_at TIMESTAMPTZ,
+            status VARCHAR(24) NOT NULL DEFAULT 'pending',
+            booking_ref VARCHAR(64),
+            created_by TEXT,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            paid_at TIMESTAMPTZ,
+            cancelled_at TIMESTAMPTZ
+        )
+    `);
+    await p.query(
+        `CREATE INDEX IF NOT EXISTS idx_invitations_slot ON booking_invitations (date_iso, time) WHERE status = 'pending'`
+    );
+    await p.query(
+        `CREATE INDEX IF NOT EXISTS idx_invitations_stripe_session ON booking_invitations (stripe_session_id) WHERE stripe_session_id IS NOT NULL`
+    );
+    await p.query(
+        `CREATE INDEX IF NOT EXISTS idx_invitations_email_lower ON booking_invitations (LOWER(patient_email))`
+    );
+}
+
+function rowToInvitation(row) {
+    return {
+        id: row.id,
+        invitationToken: row.invitation_token,
+        patientName: row.patient_name,
+        patientEmail: row.patient_email,
+        patientPhone: row.patient_phone || '',
+        service: row.service,
+        serviceLabel: row.service_label || row.service,
+        dateIso: row.date_iso,
+        time: row.time,
+        locale: row.locale || 'pt',
+        amountCents: row.amount_cents,
+        currency: row.currency || 'eur',
+        stripeSessionId: row.stripe_session_id || null,
+        stripeSessionUrl: row.stripe_session_url || null,
+        stripeSessionExpiresAt:
+            row.stripe_session_expires_at instanceof Date
+                ? row.stripe_session_expires_at.toISOString()
+                : row.stripe_session_expires_at,
+        status: row.status,
+        bookingRef: row.booking_ref || null,
+        createdBy: row.created_by || null,
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
+        paidAt: row.paid_at instanceof Date ? row.paid_at.toISOString() : row.paid_at,
+        cancelledAt:
+            row.cancelled_at instanceof Date ? row.cancelled_at.toISOString() : row.cancelled_at
+    };
+}
+
+async function insertInvitation(record) {
+    const p = getPool();
+    const r = await p.query(
+        `INSERT INTO booking_invitations (
+            id, invitation_token, patient_name, patient_email, patient_phone,
+            service, service_label, date_iso, time, locale,
+            amount_cents, currency, stripe_session_id, stripe_session_url, stripe_session_expires_at,
+            status, booking_ref, created_by
+         ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18)
+         RETURNING *`,
+        [
+            record.id,
+            record.invitationToken,
+            record.patientName,
+            record.patientEmail,
+            record.patientPhone || null,
+            record.service,
+            record.serviceLabel || null,
+            record.dateIso,
+            record.time,
+            record.locale || 'pt',
+            record.amountCents,
+            record.currency || 'eur',
+            record.stripeSessionId || null,
+            record.stripeSessionUrl || null,
+            record.stripeSessionExpiresAt || null,
+            record.status || 'pending',
+            record.bookingRef || null,
+            record.createdBy || null
+        ]
+    );
+    return rowToInvitation(r.rows[0]);
+}
+
+async function updateInvitationStripeSession(id, session) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE booking_invitations
+         SET stripe_session_id = $2, stripe_session_url = $3, stripe_session_expires_at = $4
+         WHERE id = $1
+         RETURNING *`,
+        [id, session.id, session.url, session.expiresAt || null]
+    );
+    return r.rows[0] ? rowToInvitation(r.rows[0]) : null;
+}
+
+async function findInvitationById(id) {
+    const p = getPool();
+    const r = await p.query(`SELECT * FROM booking_invitations WHERE id = $1`, [id]);
+    return r.rows[0] ? rowToInvitation(r.rows[0]) : null;
+}
+
+async function findInvitationByStripeSessionId(sessionId) {
+    const p = getPool();
+    const r = await p.query(`SELECT * FROM booking_invitations WHERE stripe_session_id = $1`, [sessionId]);
+    return r.rows[0] ? rowToInvitation(r.rows[0]) : null;
+}
+
+async function listInvitations(limit = 100) {
+    const p = getPool();
+    const cap = Math.min(Math.max(parseInt(limit, 10) || 100, 1), 500);
+    const r = await p.query(
+        `SELECT * FROM booking_invitations ORDER BY created_at DESC LIMIT $1`,
+        [cap]
+    );
+    return r.rows.map(rowToInvitation);
+}
+
+async function listPendingInvitationsForDateIso(dateIso) {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT * FROM booking_invitations WHERE date_iso = $1 AND status = 'pending'`,
+        [dateIso]
+    );
+    return r.rows.map(rowToInvitation);
+}
+
+async function markInvitationPaid(id, bookingRef) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE booking_invitations
+         SET status = 'paid', paid_at = NOW(), booking_ref = $2
+         WHERE id = $1 AND status = 'pending'
+         RETURNING *`,
+        [id, bookingRef || null]
+    );
+    return r.rows[0] ? rowToInvitation(r.rows[0]) : null;
+}
+
+async function cancelInvitation(id) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE booking_invitations
+         SET status = 'cancelled', cancelled_at = NOW()
+         WHERE id = $1 AND status = 'pending'
+         RETURNING *`,
+        [id]
+    );
+    return r.rows[0] ? rowToInvitation(r.rows[0]) : null;
 }
 
 function rowToQuizAttempt(row) {
@@ -686,6 +851,14 @@ module.exports = {
     findQuizAttemptById,
     claimQuizAttempt,
     findQuizAttemptsByEmail,
+    insertInvitation,
+    updateInvitationStripeSession,
+    findInvitationById,
+    findInvitationByStripeSessionId,
+    listInvitations,
+    listPendingInvitationsForDateIso,
+    markInvitationPaid,
+    cancelInvitation,
     findAllBookings,
     findAllBookingsWithClinicalNotes,
     findBookingByRef,

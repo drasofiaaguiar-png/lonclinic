@@ -28,6 +28,7 @@ const { computeCheckoutTotalCents } = require('./pricing');
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto');
 const guide = require('./guide');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
@@ -2657,18 +2658,37 @@ async function fetchBookingsForDateIso(dateIso) {
     return bookingsStore.filter((b) => !b.cancelled && inferDateIsoFromBooking(b) === dateIso);
 }
 
+/** Times already locked by an admin-issued invitation that is still awaiting payment. */
+async function fetchInvitationLockedTimesForDateIso(dateIso) {
+    if (!usePersistentDb) return new Set();
+    try {
+        const list = await db.listPendingInvitationsForDateIso(dateIso);
+        return new Set(list.map((inv) => normalizeTimeString({ time: inv.time }) || inv.time));
+    } catch (err) {
+        console.error('fetchInvitationLockedTimesForDateIso:', err.message);
+        return new Set();
+    }
+}
+
 /**
  * Slots patients may book for a date: schedule + optional smart grouping + not already taken.
  * Smart grouping is intentionally skipped when an explicit per-day override is in place,
  * so the admin's custom hours are surfaced as the full set of bookable slots.
  */
-async function getBookableSlotsForDateIso(dateIso, excludeBookingRef) {
+async function getBookableSlotsForDateIso(dateIso, excludeBookingRef, excludeInvitationId) {
     const base = slotsForDateIso(dateIso);
     if (!base.length) return [];
     const slotDuration = scheduleStore.slotDuration || 30;
     let bookings = await fetchBookingsForDateIso(dateIso);
     if (excludeBookingRef) {
         bookings = bookings.filter((b) => b.bookingRef !== excludeBookingRef);
+    }
+    const invitationLocked = await fetchInvitationLockedTimesForDateIso(dateIso);
+    if (excludeInvitationId && usePersistentDb) {
+        try {
+            const inv = await db.findInvitationById(excludeInvitationId);
+            if (inv && inv.time) invitationLocked.delete(normalizeTimeString({ time: inv.time }) || inv.time);
+        } catch (e) { /* ignore */ }
     }
     const effective = getEffectiveDaySchedule(dateIso);
     const hasExplicitOverride = effective && effective.source === 'override';
@@ -2677,6 +2697,9 @@ async function getBookableSlotsForDateIso(dateIso, excludeBookingRef) {
         slots = computeSmartGroupedSlotTimes(base, bookings, slotDuration);
     } else {
         slots = base.slice();
+    }
+    if (invitationLocked.size > 0) {
+        slots = slots.filter((t) => !invitationLocked.has(t));
     }
     const free = [];
     for (const t of slots) {
@@ -2903,7 +2926,7 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
         const isoRaw = meta.date_iso && String(meta.date_iso).trim();
         const normTimeFinal = normalizeTimeString({ time: meta.time || '' });
         if (isoRaw && /^\d{4}-\d{2}-\d{2}$/.test(isoRaw) && normTimeFinal) {
-            const allowed = await getBookableSlotsForDateIso(isoRaw, null);
+            const allowed = await getBookableSlotsForDateIso(isoRaw, null, meta.invitation_id || null);
             if (!allowed.includes(normTimeFinal)) {
                 console.warn(
                     `${logPrefix}finalizePaidCheckoutSession: slot not bookable ${isoRaw} ${normTimeFinal}`
@@ -3058,14 +3081,32 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             if (fin.reason === 'already_recorded' || fin.reason === 'awaited_peer') {
                 console.log('   ℹ️  Checkout already finalized (idempotent skip)');
             }
+            // If this Checkout came from an admin-issued invitation, mark it paid.
+            if (usePersistentDb && meta.invitation_id) {
+                try {
+                    const updated = await db.markInvitationPaid(meta.invitation_id, fin.bookingRef || null);
+                    if (updated) console.log(`   ✅ Invitation ${meta.invitation_id} marked paid`);
+                } catch (e) {
+                    console.error('   ⚠️  Failed to mark invitation paid:', e.message);
+                }
+            }
             break;
         }
 
-        case 'checkout.session.expired':
+        case 'checkout.session.expired': {
+            const expiredSession = event.data.object;
             console.log(
-                '⏰ Checkout session expired (…' + stripeSessionIdSuffixForLog(event.data.object.id) + ')'
+                '⏰ Checkout session expired (…' + stripeSessionIdSuffixForLog(expiredSession.id) + ')'
             );
+            // If this was an invitation, release the slot by cancelling the invitation.
+            if (usePersistentDb && expiredSession.metadata && expiredSession.metadata.invitation_id) {
+                try {
+                    await db.cancelInvitation(expiredSession.metadata.invitation_id);
+                    console.log(`   ↩️  Invitation ${expiredSession.metadata.invitation_id} released (expired)`);
+                } catch (e) { /* ignore */ }
+            }
             break;
+        }
 
         default:
             console.log(`Unhandled event type: ${event.type}`);
@@ -4308,7 +4349,10 @@ app.get('/api/admin/available-slots', async (req, res) => {
     }
 
     try {
-        const available = await getBookableSlotsForDateIso(dateStr, null);
+        const excludeInvitationId = req.query.excludeInvitation
+            ? String(req.query.excludeInvitation)
+            : null;
+        const available = await getBookableSlotsForDateIso(dateStr, null, excludeInvitationId);
         res.json({
             available,
             date,
@@ -4323,6 +4367,355 @@ app.get('/api/admin/available-slots', async (req, res) => {
     } catch (err) {
         console.error('GET /api/admin/available-slots:', err.message);
         res.status(500).json({ error: 'Failed to load available slots' });
+    }
+});
+
+/* ========================================
+   BOOKING INVITATIONS (admin pre-books for patient, patient pays via emailed link)
+======================================== */
+
+const INVITATION_EMAIL_I18N = {
+    pt: {
+        subject: (label) => `A sua consulta na Lon Clinic — ${label}`,
+        greeting: (name) => `Olá ${name},`,
+        intro: 'A sua marcação foi criada pela equipa da Lon Clinic. Está reservada e à sua espera — basta concluir o pagamento para confirmar.',
+        slotLabel: 'Data e hora',
+        serviceLabel: 'Tipo de consulta',
+        amountLabel: 'Valor',
+        payNow: 'Pagar e confirmar consulta',
+        payNote: 'O pagamento é processado em segurança pela Stripe. A consulta só fica confirmada após o pagamento.',
+        accessTitle: 'Como aceder à consulta',
+        accessBody: 'À hora marcada, abra o link abaixo para entrar na sala de vídeo. Não precisa de instalar nada.',
+        joinVideoButton: 'Abrir sala de vídeo',
+        portalLine: (url) => `Pode também consultar e gerir a sua marcação aqui: <a href="${url}">${url}</a>`,
+        footer: 'Se tiver qualquer dúvida, responda a este email.'
+    },
+    en: {
+        subject: (label) => `Your Lon Clinic appointment — ${label}`,
+        greeting: (name) => `Hi ${name},`,
+        intro: 'Your appointment has been pre-booked by the Lon Clinic team and is reserved for you — simply complete payment to confirm.',
+        slotLabel: 'Date & time',
+        serviceLabel: 'Consultation',
+        amountLabel: 'Amount',
+        payNow: 'Pay & confirm appointment',
+        payNote: 'Payment is processed securely by Stripe. The appointment is confirmed only once payment is complete.',
+        accessTitle: 'How to access the consultation',
+        accessBody: 'At your scheduled time, open the link below to join the video room. No software required.',
+        joinVideoButton: 'Open video room',
+        portalLine: (url) => `You can also view and manage your booking here: <a href="${url}">${url}</a>`,
+        footer: 'If you have any questions, just reply to this email.'
+    },
+    es: {
+        subject: (label) => `Su consulta en Lon Clinic — ${label}`,
+        greeting: (name) => `Hola ${name},`,
+        intro: 'Su cita ha sido creada por el equipo de Lon Clinic y está reservada para usted — sólo falta completar el pago para confirmarla.',
+        slotLabel: 'Fecha y hora',
+        serviceLabel: 'Tipo de consulta',
+        amountLabel: 'Importe',
+        payNow: 'Pagar y confirmar cita',
+        payNote: 'El pago se procesa de forma segura mediante Stripe. La cita queda confirmada tras el pago.',
+        accessTitle: 'Cómo acceder a la consulta',
+        accessBody: 'A la hora acordada, abra el enlace para entrar en la sala de vídeo. No necesita instalar nada.',
+        joinVideoButton: 'Abrir sala de vídeo',
+        portalLine: (url) => `También puede consultar y gestionar su cita aquí: <a href="${url}">${url}</a>`,
+        footer: 'Si tiene cualquier duda, responda a este correo.'
+    }
+};
+
+function formatInvitationDateLabel(dateIso, locale) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateIso || ''));
+    if (!m) return dateIso || '';
+    const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    const localeTag = locale === 'pt' ? 'pt-PT' : locale === 'es' ? 'es-ES' : 'en-GB';
+    try {
+        return d.toLocaleDateString(localeTag, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    } catch (e) {
+        return dateIso;
+    }
+}
+
+function buildInvitationEmail(invitation, paymentUrl, baseUrl) {
+    const localeKey = (invitation.locale || 'pt').toLowerCase();
+    const t = INVITATION_EMAIL_I18N[localeKey] || INVITATION_EMAIL_I18N.pt;
+    const dateLabel = formatInvitationDateLabel(invitation.dateIso, localeKey);
+    const time = (invitation.time || '').slice(0, 5);
+    const priceLabel = `€${(invitation.amountCents / 100).toFixed(2)}`;
+    const serviceLabel = invitation.serviceLabel || invitation.service;
+    const subject = t.subject(serviceLabel);
+    const portalUrl = `${baseUrl}/patient-portal?email=${encodeURIComponent(invitation.patientEmail)}`;
+    const doxyHtml = DOXY_ROOM_URL
+        ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 16px 0 0;"><tr><td>
+             <a href="${DOXY_ROOM_URL}" target="_blank" rel="noopener" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;text-align:center;text-decoration:none;padding:14px 28px;border-radius:10px;">${t.joinVideoButton}</a>
+           </td></tr></table>`
+        : '';
+    const html = `<!DOCTYPE html><html lang="${localeKey}"><head><meta charset="UTF-8"><title>${subject}</title></head>
+<body style="margin:0;padding:0;background-color:#f5f7fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0f172a;">
+  <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f5f7fa;padding:24px 12px;">
+    <tr><td align="center">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" style="max-width:600px;background-color:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #e2e8f0;">
+        <tr><td style="padding:32px 28px 8px;">
+          <h1 style="margin:0;font-size:22px;font-weight:700;color:#0f172a;letter-spacing:-0.3px;">Lon Clinic</h1>
+          <p style="margin:18px 0 0;font-size:16px;line-height:1.55;color:#0f172a;">${t.greeting(invitation.patientName)}</p>
+          <p style="margin:10px 0 0;font-size:15px;line-height:1.6;color:#334155;">${t.intro}</p>
+        </td></tr>
+        <tr><td style="padding:20px 28px 0;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;">
+            <tr><td style="padding:14px 16px;border-bottom:1px solid #e2e8f0;">
+              <span style="font-size:12px;color:#64748b;display:block;text-transform:uppercase;letter-spacing:0.06em;">${t.slotLabel}</span>
+              <strong style="font-size:15px;color:#0f172a;display:block;margin-top:4px;">${dateLabel} · ${time}</strong>
+            </td></tr>
+            <tr><td style="padding:14px 16px;border-bottom:1px solid #e2e8f0;">
+              <span style="font-size:12px;color:#64748b;display:block;text-transform:uppercase;letter-spacing:0.06em;">${t.serviceLabel}</span>
+              <strong style="font-size:15px;color:#0f172a;display:block;margin-top:4px;">${serviceLabel}</strong>
+            </td></tr>
+            <tr><td style="padding:14px 16px;">
+              <span style="font-size:12px;color:#64748b;display:block;text-transform:uppercase;letter-spacing:0.06em;">${t.amountLabel}</span>
+              <strong style="font-size:15px;color:#0f172a;display:block;margin-top:4px;">${priceLabel}</strong>
+            </td></tr>
+          </table>
+        </td></tr>
+        <tr><td style="padding:24px 28px 8px;" align="center">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td>
+            <a href="${paymentUrl}" target="_blank" rel="noopener" style="display:inline-block;background-color:#1a6641;border:1px solid #14512f;color:#ffffff !important;font-family:inherit;font-size:16px;font-weight:600;text-align:center;text-decoration:none;padding:16px 36px;border-radius:10px;">${t.payNow}</a>
+          </td></tr></table>
+          <p style="margin:14px 0 0;font-size:12px;color:#64748b;line-height:1.5;">${t.payNote}</p>
+        </td></tr>
+        ${DOXY_ROOM_URL ? `
+        <tr><td style="padding:24px 28px 8px;border-top:1px solid #e2e8f0;">
+          <h2 style="margin:0;font-size:16px;font-weight:700;color:#0f172a;">${t.accessTitle}</h2>
+          <p style="margin:8px 0 0;font-size:14px;line-height:1.6;color:#334155;">${t.accessBody}</p>
+          ${doxyHtml}
+        </td></tr>` : ''}
+        <tr><td style="padding:16px 28px 28px;border-top:1px solid #e2e8f0;">
+          <p style="margin:0;font-size:13px;color:#64748b;line-height:1.6;">${t.portalLine(portalUrl)}</p>
+          <p style="margin:14px 0 0;font-size:13px;color:#64748b;line-height:1.6;">${t.footer}</p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body></html>`;
+    const text = `${t.greeting(invitation.patientName)}\n\n${t.intro}\n\n${t.slotLabel}: ${dateLabel} · ${time}\n${t.serviceLabel}: ${serviceLabel}\n${t.amountLabel}: ${priceLabel}\n\n${t.payNow}: ${paymentUrl}\n\n${DOXY_ROOM_URL ? `${t.accessTitle}\n${t.accessBody}\n${DOXY_ROOM_URL}\n\n` : ''}${t.portalLine(portalUrl).replace(/<[^>]+>/g, '')}\n\n${t.footer}\n`;
+    return { subject, html, text };
+}
+
+async function sendInvitationEmail(invitation, paymentUrl, baseUrl) {
+    const { subject, html, text } = buildInvitationEmail(invitation, paymentUrl, baseUrl);
+    return deliverEmail({
+        from: process.env.EMAIL_FROM || 'Lon Clinic <info@lonclinic.com>',
+        to: invitation.patientEmail,
+        subject,
+        html,
+        text
+    });
+}
+
+const INVITATION_SERVICE_LABEL = {
+    clinica_geral: { pt: 'Consulta de Clínica Geral', en: 'General Practice Consultation', es: 'Consulta de Medicina General' },
+    urgente: { pt: 'Consulta Médica Urgente', en: 'Urgent Medical Consultation', es: 'Consulta Médica Urgente' },
+    infeccao_urinaria: { pt: 'Consulta de Infeção Urinária', en: 'Urinary Tract Infection Consultation', es: 'Consulta de Infección Urinaria' },
+    travel: { pt: 'Consulta do Viajante', en: 'Travel Medicine Consultation', es: 'Consulta del Viajero' },
+    saude_mental: { pt: 'Consulta de Saúde Mental', en: 'Mental Health Consultation', es: 'Consulta de Salud Mental' },
+    longevidade: { pt: 'Consulta de Longevidade', en: 'Longevity Consultation', es: 'Consulta de Longevidad' },
+    renovacao: { pt: 'Renovação de Receita', en: 'Prescription Renewal', es: 'Renovación de Receta' }
+};
+function invitationServiceLabel(service, locale) {
+    const k = String(service || '').toLowerCase();
+    const loc = (locale || 'pt').toLowerCase();
+    if (INVITATION_SERVICE_LABEL[k] && INVITATION_SERVICE_LABEL[k][loc]) {
+        return INVITATION_SERVICE_LABEL[k][loc];
+    }
+    if (INVITATION_SERVICE_LABEL[k]) return INVITATION_SERVICE_LABEL[k].pt;
+    return SERVICE_LABELS[k] || k || 'Consultation';
+}
+
+async function createInvitationStripeSession(invitation, baseUrl) {
+    if (!stripe) throw new Error('Stripe is not configured');
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        mode: 'payment',
+        customer_creation: 'always',
+        customer_email: invitation.patientEmail,
+        payment_intent_data: { receipt_email: invitation.patientEmail },
+        line_items: [{
+            price_data: {
+                currency: invitation.currency || 'eur',
+                product_data: {
+                    name: invitation.serviceLabel || invitation.service,
+                    description: `Online consultation — ${invitation.dateIso} at ${invitation.time}`
+                },
+                unit_amount: invitation.amountCents
+            },
+            quantity: 1
+        }],
+        metadata: {
+            service: invitation.service,
+            service_label: (invitation.serviceLabel || '').substring(0, 500),
+            date: invitation.dateIso,
+            time: invitation.time,
+            date_iso: invitation.dateIso,
+            contact_email: invitation.patientEmail,
+            contact_phone: invitation.patientPhone || '',
+            traveller_count: '1',
+            has_insurance: 'none',
+            locale: normalizePatientLocale(invitation.locale || 'pt'),
+            invitation_id: invitation.id,
+            p1_name: invitation.patientName.substring(0, 500)
+        },
+        success_url: `${baseUrl}/book-consultation?success=true&session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${baseUrl}/book-consultation?cancelled=true&invitation=${invitation.id}`,
+        // Patient has 72h to pay before the link expires
+        expires_at: Math.floor(Date.now() / 1000) + (72 * 60 * 60)
+    });
+    return session;
+}
+
+// ─── API: Admin — Create booking invitation ───
+app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res) => {
+    if (!usePersistentDb) {
+        return res.status(503).json({ error: 'Booking invitations require a database (DATABASE_URL).' });
+    }
+    if (!isStripeConfigured) {
+        return res.status(503).json({ error: 'Stripe is not configured.' });
+    }
+    try {
+        const {
+            patientName,
+            patientEmail,
+            patientPhone,
+            service,
+            dateIso,
+            time,
+            locale
+        } = req.body || {};
+
+        if (!patientName || !patientEmail || !service || !dateIso || !time) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(patientEmail))) {
+            return res.status(400).json({ error: 'Invalid email' });
+        }
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(String(dateIso))) {
+            return res.status(400).json({ error: 'Invalid date (expected YYYY-MM-DD)' });
+        }
+        const normTime = normalizeTimeString({ time: String(time) });
+        if (!normTime) {
+            return res.status(400).json({ error: 'Invalid time' });
+        }
+
+        const pricing = computeCheckoutTotalCents({
+            service,
+            passengers: [{ firstName: patientName, lastName: '' }],
+            hasInsurance: false,
+            discountCode: null
+        });
+        if (!pricing.ok) {
+            return res.status(400).json({ error: pricing.error });
+        }
+
+        const available = await getBookableSlotsForDateIso(dateIso, null, null);
+        if (!available.includes(normTime)) {
+            return res.status(409).json({ error: 'That time slot is no longer available.' });
+        }
+
+        const id = crypto.randomUUID();
+        const token = crypto.randomBytes(24).toString('hex');
+        const normalizedLocale = normalizePatientLocale(locale || 'pt');
+        const serviceLabel = invitationServiceLabel(service, normalizedLocale);
+
+        let invitation = await db.insertInvitation({
+            id,
+            invitationToken: token,
+            patientName: String(patientName).trim().slice(0, 200),
+            patientEmail: String(patientEmail).trim().toLowerCase(),
+            patientPhone: patientPhone ? String(patientPhone).trim().slice(0, 60) : '',
+            service,
+            serviceLabel,
+            dateIso,
+            time: normTime,
+            locale: normalizedLocale,
+            amountCents: pricing.totalCents,
+            currency: 'eur',
+            status: 'pending',
+            createdBy: (req.session && req.session.clinicUsername) || 'admin'
+        });
+
+        const baseUrl = getBaseUrl(req);
+        const session = await createInvitationStripeSession(invitation, baseUrl);
+
+        invitation = await db.updateInvitationStripeSession(id, {
+            id: session.id,
+            url: session.url,
+            expiresAt: session.expires_at ? new Date(session.expires_at * 1000) : null
+        });
+
+        let emailDelivered = true;
+        let emailError = null;
+        try {
+            await sendInvitationEmail(invitation, session.url, baseUrl);
+            console.log(`   ✉️  Invitation sent to ${invitation.patientEmail} for ${invitation.dateIso} ${invitation.time}`);
+        } catch (e) {
+            emailDelivered = false;
+            emailError = e.message || 'Email failed';
+            console.error('   ⚠️  Invitation email failed:', emailError);
+        }
+
+        res.json({ ok: true, invitation, emailDelivered, emailError });
+    } catch (err) {
+        console.error('POST /api/admin/invitations:', err.message);
+        res.status(500).json({ error: 'Failed to create invitation' });
+    }
+});
+
+// ─── API: Admin — List invitations ───
+app.get('/api/admin/invitations', requireAuth, async (req, res) => {
+    if (!usePersistentDb) return res.json({ invitations: [] });
+    try {
+        const invitations = await db.listInvitations(100);
+        res.json({ invitations });
+    } catch (err) {
+        console.error('GET /api/admin/invitations:', err.message);
+        res.status(500).json({ error: 'Failed to load invitations' });
+    }
+});
+
+// ─── API: Admin — Resend invitation email ───
+app.post('/api/admin/invitations/:id/resend', requireAuth, async (req, res) => {
+    if (!usePersistentDb) return res.status(503).json({ error: 'Database required' });
+    try {
+        const invitation = await db.findInvitationById(req.params.id);
+        if (!invitation) return res.status(404).json({ error: 'Invitation not found' });
+        if (invitation.status !== 'pending') {
+            return res.status(409).json({ error: `Cannot resend (status: ${invitation.status})` });
+        }
+        if (!invitation.stripeSessionUrl) {
+            return res.status(409).json({ error: 'Missing payment link' });
+        }
+        await sendInvitationEmail(invitation, invitation.stripeSessionUrl, getBaseUrl(req));
+        res.json({ ok: true });
+    } catch (err) {
+        console.error('POST /api/admin/invitations/:id/resend:', err.message);
+        res.status(500).json({ error: 'Failed to resend' });
+    }
+});
+
+// ─── API: Admin — Cancel invitation ───
+app.post('/api/admin/invitations/:id/cancel', requireAuth, async (req, res) => {
+    if (!usePersistentDb) return res.status(503).json({ error: 'Database required' });
+    try {
+        const invitation = await db.findInvitationById(req.params.id);
+        if (!invitation) return res.status(404).json({ error: 'Invitation not found' });
+        if (invitation.status !== 'pending') {
+            return res.status(409).json({ error: `Cannot cancel (status: ${invitation.status})` });
+        }
+        // Best-effort expire the Stripe session so the patient's link stops working.
+        if (stripe && invitation.stripeSessionId) {
+            try { await stripe.checkout.sessions.expire(invitation.stripeSessionId); } catch (e) { /* ignore */ }
+        }
+        const updated = await db.cancelInvitation(invitation.id);
+        res.json({ ok: true, invitation: updated });
+    } catch (err) {
+        console.error('POST /api/admin/invitations/:id/cancel:', err.message);
+        res.status(500).json({ error: 'Failed to cancel' });
     }
 });
 

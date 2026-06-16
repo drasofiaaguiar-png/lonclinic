@@ -1458,6 +1458,114 @@ body.dash-portal .dash-stat-card {
     50% { box-shadow: 0 0 0 4px rgba(234, 88, 12, 0.45), 0 6px 22px rgba(234, 88, 12, 0.40); }
 }
 
+/* ── Booking invitations (admin pre-books for patient) ── */
+.admin-invite-form {
+    margin-top: 8px;
+}
+.admin-invite-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 16px;
+}
+.admin-invite-submit {
+    margin-top: 4px;
+}
+.admin-invite-list-header {
+    margin-top: 28px;
+    margin-bottom: 10px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-subtle);
+}
+.admin-invite-list-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+}
+.admin-invite-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.admin-invite-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    flex-wrap: wrap;
+}
+.admin-invite-item-main { flex: 1 1 260px; min-width: 0; }
+.admin-invite-item-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+.admin-invite-item-email {
+    font-weight: 400;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+.admin-invite-item-meta {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.admin-invite-item-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+.admin-invite-item-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+.admin-invite-status-badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+}
+.admin-invite-status-badge.admin-invite-status-pending {
+    background: rgba(234, 88, 12, 0.12);
+    color: #ea580c;
+    border-color: rgba(234, 88, 12, 0.30);
+}
+.admin-invite-status-badge.admin-invite-status-paid {
+    background: rgba(26, 102, 65, 0.12);
+    color: #1a6641;
+    border-color: rgba(26, 102, 65, 0.30);
+}
+.admin-invite-status-badge.admin-invite-status-cancelled,
+.admin-invite-status-badge.admin-invite-status-expired {
+    background: rgba(15, 23, 42, 0.06);
+    color: var(--text-muted);
+    border-color: var(--border-subtle);
+}
+.admin-invite-item.admin-invite-status-paid { opacity: 0.85; }
+.admin-invite-item.admin-invite-status-cancelled,
+.admin-invite-item.admin-invite-status-expired { opacity: 0.6; }
+.admin-invite-cancel {
+    color: #b91c1c !important;
+    border-color: rgba(185, 28, 28, 0.35) !important;
+}
+.admin-invite-cancel:hover {
+    background: rgba(185, 28, 28, 0.06) !important;
+}
+
 /* Preview "effective schedule" banner */
 .admin-preview-effective {
     margin-bottom: 12px;

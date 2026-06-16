@@ -711,6 +711,230 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // ─── Booking invitations ───
+    const inviteForm = document.getElementById('inviteForm');
+    const inviteName = document.getElementById('inviteName');
+    const inviteEmail = document.getElementById('inviteEmail');
+    const invitePhone = document.getElementById('invitePhone');
+    const inviteService = document.getElementById('inviteService');
+    const inviteDate = document.getElementById('inviteDate');
+    const inviteTime = document.getElementById('inviteTime');
+    const inviteLocale = document.getElementById('inviteLocale');
+    const inviteSubmitBtn = document.getElementById('inviteSubmitBtn');
+    const inviteFormError = document.getElementById('inviteFormError');
+    const inviteList = document.getElementById('inviteList');
+
+    function setInviteError(msg) {
+        if (!inviteFormError) return;
+        if (!msg) {
+            inviteFormError.style.display = 'none';
+            inviteFormError.textContent = '';
+        } else {
+            inviteFormError.textContent = msg;
+            inviteFormError.style.display = '';
+        }
+    }
+
+    async function loadInviteTimes() {
+        if (!inviteTime || !inviteDate) return;
+        const date = inviteDate.value;
+        inviteTime.innerHTML = '';
+        if (!date) {
+            inviteTime.innerHTML = '<option value="">Pick a date first…</option>';
+            return;
+        }
+        inviteTime.innerHTML = '<option value="">Loading…</option>';
+        try {
+            const res = await fetch(`/api/admin/available-slots?date=${encodeURIComponent(date)}`);
+            const data = await res.json();
+            inviteTime.innerHTML = '';
+            if (data.available && data.available.length > 0) {
+                data.available.forEach((t) => {
+                    const opt = document.createElement('option');
+                    opt.value = t;
+                    opt.textContent = t;
+                    inviteTime.appendChild(opt);
+                });
+            } else {
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = data.reason ? `No slots — ${data.reason}` : 'No slots available';
+                inviteTime.appendChild(opt);
+            }
+        } catch (err) {
+            console.error('Load invite times error:', err);
+            inviteTime.innerHTML = '<option value="">Error loading slots</option>';
+        }
+    }
+
+    function renderInvitationList(invitations) {
+        if (!inviteList) return;
+        inviteList.innerHTML = '';
+        if (!invitations || invitations.length === 0) {
+            inviteList.innerHTML = '<p class="admin-empty-list">No invitations yet.</p>';
+            return;
+        }
+        invitations.forEach((inv) => {
+            const item = document.createElement('div');
+            item.className = `admin-invite-item admin-invite-status-${inv.status}`;
+            const dateLabel = (() => {
+                const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(inv.dateIso || '');
+                if (!m) return inv.dateIso || '';
+                return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])).toLocaleDateString(undefined, {
+                    weekday: 'short',
+                    day: 'numeric',
+                    month: 'short'
+                });
+            })();
+            const amount = `€${(Number(inv.amountCents || 0) / 100).toFixed(2)}`;
+            const statusLabel = {
+                pending: 'Awaiting payment',
+                paid: 'Paid',
+                cancelled: 'Cancelled',
+                expired: 'Expired'
+            }[inv.status] || inv.status;
+            const actions = inv.status === 'pending'
+                ? `
+                    <button type="button" class="btn btn-outline btn-sm" data-invite-action="copy" data-invite-url="${inv.stripeSessionUrl || ''}">Copy link</button>
+                    <button type="button" class="btn btn-outline btn-sm" data-invite-action="resend" data-invite-id="${inv.id}">Resend email</button>
+                    <button type="button" class="btn btn-outline btn-sm admin-invite-cancel" data-invite-action="cancel" data-invite-id="${inv.id}">Cancel</button>
+                `
+                : '';
+            item.innerHTML = `
+                <div class="admin-invite-item-main">
+                    <div class="admin-invite-item-name">${escapeHtml(inv.patientName)} <span class="admin-invite-item-email">· ${escapeHtml(inv.patientEmail)}</span></div>
+                    <div class="admin-invite-item-meta">
+                        <span>${escapeHtml(inv.serviceLabel || inv.service)}</span>
+                        <span>·</span>
+                        <span>${dateLabel} ${escapeHtml((inv.time || '').slice(0, 5))}</span>
+                        <span>·</span>
+                        <span>${amount}</span>
+                    </div>
+                </div>
+                <div class="admin-invite-item-side">
+                    <span class="admin-invite-status-badge admin-invite-status-${inv.status}">${statusLabel}</span>
+                    <div class="admin-invite-item-actions">${actions}</div>
+                </div>
+            `;
+            inviteList.appendChild(item);
+        });
+
+        inviteList.querySelectorAll('[data-invite-action]').forEach((btn) => {
+            btn.addEventListener('click', async () => {
+                const action = btn.getAttribute('data-invite-action');
+                const id = btn.getAttribute('data-invite-id');
+                if (action === 'copy') {
+                    const url = btn.getAttribute('data-invite-url');
+                    if (!url) return;
+                    try {
+                        await navigator.clipboard.writeText(url);
+                        const original = btn.textContent;
+                        btn.textContent = '✓ Copied';
+                        setTimeout(() => { btn.textContent = original; }, 1500);
+                    } catch (e) {
+                        alert('Copy failed. Link: ' + url);
+                    }
+                    return;
+                }
+                if (action === 'resend' || action === 'cancel') {
+                    const verb = action === 'resend' ? 'resend the invitation email' : 'cancel this invitation (releases the slot)';
+                    if (!confirm(`Are you sure you want to ${verb}?`)) return;
+                    btn.disabled = true;
+                    try {
+                        const res = await fetch(`/api/admin/invitations/${id}/${action}`, { method: 'POST' });
+                        if (!res.ok) {
+                            const e = await res.json().catch(() => ({}));
+                            throw new Error(e.error || `HTTP ${res.status}`);
+                        }
+                        await loadInvitations();
+                    } catch (err) {
+                        alert(`Failed: ${err.message}`);
+                        btn.disabled = false;
+                    }
+                }
+            });
+        });
+    }
+
+    function escapeHtml(str) {
+        return String(str || '').replace(/[&<>"']/g, (c) => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+    }
+
+    async function loadInvitations() {
+        if (!inviteList) return;
+        try {
+            const res = await fetch('/api/admin/invitations');
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            renderInvitationList(data.invitations || []);
+        } catch (err) {
+            console.error('Load invitations error:', err);
+            inviteList.innerHTML = '<p class="admin-empty-list">Could not load invitations.</p>';
+        }
+    }
+
+    if (inviteDate) {
+        inviteDate.addEventListener('change', loadInviteTimes);
+        const today = new Date().toISOString().split('T')[0];
+        inviteDate.min = today;
+    }
+
+    if (inviteForm) {
+        inviteForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            setInviteError('');
+            const payload = {
+                patientName: inviteName.value.trim(),
+                patientEmail: inviteEmail.value.trim(),
+                patientPhone: invitePhone.value.trim(),
+                service: inviteService.value,
+                dateIso: inviteDate.value,
+                time: inviteTime.value,
+                locale: inviteLocale.value
+            };
+            if (!payload.patientName || !payload.patientEmail || !payload.service || !payload.dateIso || !payload.time) {
+                setInviteError('Please fill all required fields.');
+                return;
+            }
+            inviteSubmitBtn.disabled = true;
+            inviteSubmitBtn.textContent = 'Sending…';
+            try {
+                const res = await fetch('/api/admin/invitations', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.error || `HTTP ${res.status}`);
+                }
+                inviteSubmitBtn.textContent = data.emailDelivered === false ? '⚠ Created (email failed)' : '✓ Sent';
+                if (data.emailDelivered === false) {
+                    setInviteError(`Invitation created but email could not be delivered (${data.emailError || 'unknown'}). Use “Resend email” below.`);
+                }
+                inviteForm.reset();
+                inviteTime.innerHTML = '<option value="">Pick a date first…</option>';
+                await loadInvitations();
+                setTimeout(() => { inviteSubmitBtn.textContent = 'Create & send invitation'; inviteSubmitBtn.disabled = false; }, 2500);
+            } catch (err) {
+                console.error('Create invitation error:', err);
+                setInviteError(err.message || 'Failed to send invitation');
+                inviteSubmitBtn.textContent = 'Create & send invitation';
+                inviteSubmitBtn.disabled = false;
+            }
+        });
+    }
+
+    if (inviteList) {
+        // Initial load happens after auth check; also refresh on tab focus
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') loadInvitations();
+        });
+    }
+
     // ─── Initialize ───
     await checkAuth();
+    if (inviteList) loadInvitations();
 });

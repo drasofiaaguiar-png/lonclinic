@@ -201,6 +201,68 @@
                 </div>
             </div>
 
+            <!-- Send booking invitation -->
+            <div class="dash-section">
+                <div class="dash-section-header">
+                    <h2 class="dash-section-title">Send booking invitation</h2>
+                    <p class="dash-section-subtitle">Pre-book a consultation for a patient and email them a payment link + the video-room access. The slot is reserved until they pay (or the invitation is cancelled).</p>
+                </div>
+                <form class="admin-invite-form" id="inviteForm">
+                    <div class="admin-invite-grid">
+                        <div class="admin-form-group">
+                            <label for="inviteName">Patient name</label>
+                            <input type="text" id="inviteName" class="admin-input" required placeholder="Maria Silva">
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="inviteEmail">Patient email</label>
+                            <input type="email" id="inviteEmail" class="admin-input" required placeholder="maria@example.com">
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="invitePhone">Phone (optional)</label>
+                            <input type="tel" id="invitePhone" class="admin-input" placeholder="+351 …">
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="inviteService">Consultation type</label>
+                            <select id="inviteService" class="admin-select" required>
+                                <option value="clinica_geral">Clínica geral · €39</option>
+                                <option value="urgente">Urgente · €35</option>
+                                <option value="infeccao_urinaria">Infeção urinária · €35</option>
+                                <option value="travel">Travel · €39</option>
+                                <option value="saude_mental">Saúde mental · €49</option>
+                                <option value="longevidade">Longevidade · €79</option>
+                                <option value="renovacao">Renovação receita · €19</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="inviteDate">Date</label>
+                            <input type="date" id="inviteDate" class="admin-input" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="inviteTime">Time</label>
+                            <select id="inviteTime" class="admin-select" required>
+                                <option value="">Pick a date first…</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="inviteLocale">Email language</label>
+                            <select id="inviteLocale" class="admin-select">
+                                <option value="pt">Português</option>
+                                <option value="en">English</option>
+                                <option value="es">Español</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="inviteFormError" class="dash-login-error" style="display:none;" role="alert"></div>
+                    <button type="submit" class="btn btn-primary admin-invite-submit" id="inviteSubmitBtn">Create &amp; send invitation</button>
+                </form>
+                <div class="admin-invite-list-header">
+                    <h3 class="admin-invite-list-title">Recent invitations</h3>
+                </div>
+                <div id="inviteList" class="admin-invite-list">
+                    <p class="admin-empty-list">No invitations yet.</p>
+                </div>
+            </div>
+
             <!-- Preview Section -->
             <div class="dash-section">
                 <div class="dash-section-header">
