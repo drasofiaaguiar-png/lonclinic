@@ -3399,6 +3399,15 @@ app.use(express.static(path.join(__dirname), {
             res.setHeader('Cache-Control', 'no-store');
             return;
         }
+        // Admin / dashboard assets change often and are tiny — never cache them
+        // (also bypasses Cloudflare's default 4h edge cache for static JS/CSS).
+        const adminAssets = new Set(['admin.js', 'admin.html', 'dashboard.css', 'admin.css']);
+        if (adminAssets.has(base)) {
+            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+            res.setHeader('CDN-Cache-Control', 'no-store');
+            res.setHeader('Cloudflare-CDN-Cache-Control', 'no-store');
+            return;
+        }
         if (filePath.endsWith('.js')) {
             res.setHeader('Cache-Control', 'public, max-age=300, must-revalidate');
             return;
