@@ -4543,6 +4543,25 @@ function invitationServiceLabel(service, locale) {
 
 async function createInvitationStripeSession(invitation, baseUrl) {
     if (!stripe) throw new Error('Stripe is not configured');
+    const travellerCount = Math.max(1, Math.min(4, parseInt(invitation.travellerCount, 10) || 1));
+    const metadata = {
+        service: invitation.service,
+        service_label: (invitation.serviceLabel || '').substring(0, 500),
+        date: invitation.dateIso,
+        time: invitation.time,
+        date_iso: invitation.dateIso,
+        contact_email: invitation.patientEmail,
+        contact_phone: invitation.patientPhone || '',
+        traveller_count: String(travellerCount),
+        has_insurance: invitation.hasInsurance ? 'medicare' : 'none',
+        locale: normalizePatientLocale(invitation.locale || 'pt'),
+        invitation_id: invitation.id,
+        p1_name: invitation.patientName.substring(0, 500)
+    };
+    // Mirror the same shape as the regular checkout for downstream finalisation.
+    for (let i = 2; i <= travellerCount; i++) {
+        metadata[`p${i}_name`] = `Traveller ${i}`;
+    }
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         mode: 'payment',
@@ -4560,20 +4579,7 @@ async function createInvitationStripeSession(invitation, baseUrl) {
             },
             quantity: 1
         }],
-        metadata: {
-            service: invitation.service,
-            service_label: (invitation.serviceLabel || '').substring(0, 500),
-            date: invitation.dateIso,
-            time: invitation.time,
-            date_iso: invitation.dateIso,
-            contact_email: invitation.patientEmail,
-            contact_phone: invitation.patientPhone || '',
-            traveller_count: '1',
-            has_insurance: 'none',
-            locale: normalizePatientLocale(invitation.locale || 'pt'),
-            invitation_id: invitation.id,
-            p1_name: invitation.patientName.substring(0, 500)
-        },
+        metadata,
         success_url: `${baseUrl}/book-consultation?success=true&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${baseUrl}/book-consultation?cancelled=true&invitation=${invitation.id}`,
         // Patient has up to 23h to pay before the link expires (Stripe max is 24h).
@@ -4598,7 +4604,9 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
             service,
             dateIso,
             time,
-            locale
+            locale,
+            travellers,
+            hasInsurance
         } = req.body || {};
 
         if (!patientName || !patientEmail || !service || !dateIso || !time) {
@@ -4615,10 +4623,21 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
             return res.status(400).json({ error: 'Invalid time' });
         }
 
+        const travellerCount = (() => {
+            if (service !== 'travel') return 1;
+            const n = parseInt(travellers, 10);
+            if (!Number.isFinite(n) || n < 1) return 1;
+            return Math.min(4, n);
+        })();
+        const passengers = Array.from({ length: travellerCount }, (_, i) => ({
+            firstName: i === 0 ? patientName : `Traveller ${i + 1}`,
+            lastName: ''
+        }));
+
         const pricing = computeCheckoutTotalCents({
             service,
-            passengers: [{ firstName: patientName, lastName: '' }],
-            hasInsurance: false,
+            passengers,
+            hasInsurance: !!hasInsurance,
             discountCode: null
         });
         if (!pricing.ok) {
@@ -4634,7 +4653,12 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
         const id = crypto.randomUUID();
         const token = crypto.randomBytes(24).toString('hex');
         const normalizedLocale = normalizePatientLocale(locale || 'pt');
-        const serviceLabel = invitationServiceLabel(service, normalizedLocale);
+        let serviceLabel = invitationServiceLabel(service, normalizedLocale);
+        if (service === 'travel') {
+            const suffix = travellerCount > 1 ? ` (${travellerCount} travellers)` : '';
+            const insuranceTag = hasInsurance ? ' · Medicare' : '';
+            serviceLabel = `${serviceLabel}${suffix}${insuranceTag}`;
+        }
 
         let invitation = await db.insertInvitation({
             id,
@@ -4650,6 +4674,8 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
             amountCents: pricing.totalCents,
             currency: 'eur',
             status: 'pending',
+            travellerCount,
+            hasInsurance: !!hasInsurance,
             createdBy: (req.session && req.session.clinicUsername) || 'admin'
         });
 

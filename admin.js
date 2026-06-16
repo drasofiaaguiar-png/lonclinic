@@ -774,6 +774,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     const inviteSubmitBtn = document.getElementById('inviteSubmitBtn');
     const inviteFormError = document.getElementById('inviteFormError');
     const inviteList = document.getElementById('inviteList');
+    const inviteTravellers = document.getElementById('inviteTravellers');
+    const inviteTravellersWrap = document.getElementById('inviteTravellersWrap');
+    const inviteMedicare = document.getElementById('inviteMedicare');
+    const inviteMedicareWrap = document.getElementById('inviteMedicareWrap');
+    const inviteComputedPrice = document.getElementById('inviteComputedPrice');
+
+    const SERVICE_BASE_CENTS = {
+        clinica_geral: 3900,
+        urgente: 3500,
+        infeccao_urinaria: 3500,
+        saude_mental: 4900,
+        longevidade: 7900,
+        renovacao: 1900
+    };
+    const TRAVEL_TIER_CENTS = {
+        standard: { 1: 3900, 2: 6900, 3: 10700, 4: 13600 },
+        medicare: { 1: 3200, 2: 4200, 3: 4900, 4: 5500 }
+    };
+
+    function computeInvitePriceCents() {
+        const svc = inviteService ? inviteService.value : '';
+        if (svc === 'travel') {
+            const n = Math.max(1, Math.min(4, parseInt((inviteTravellers && inviteTravellers.value) || '1', 10)));
+            const tier = inviteMedicare && inviteMedicare.checked ? 'medicare' : 'standard';
+            return TRAVEL_TIER_CENTS[tier][n];
+        }
+        return SERVICE_BASE_CENTS[svc] || 0;
+    }
+
+    function refreshInvitePriceUI() {
+        if (!inviteService) return;
+        const isTravel = inviteService.value === 'travel';
+        if (inviteTravellersWrap) inviteTravellersWrap.style.display = isTravel ? '' : 'none';
+        if (inviteMedicareWrap) inviteMedicareWrap.style.display = isTravel ? '' : 'none';
+        if (inviteComputedPrice) {
+            const cents = computeInvitePriceCents();
+            if (cents > 0) {
+                inviteComputedPrice.textContent = `Total: €${(cents / 100).toFixed(2)}`;
+            } else {
+                inviteComputedPrice.textContent = '';
+            }
+        }
+    }
+    if (inviteService) inviteService.addEventListener('change', refreshInvitePriceUI);
+    if (inviteTravellers) inviteTravellers.addEventListener('change', refreshInvitePriceUI);
+    if (inviteMedicare) inviteMedicare.addEventListener('change', refreshInvitePriceUI);
+    refreshInvitePriceUI();
 
     function setInviteError(msg) {
         if (!inviteFormError) return;
@@ -851,6 +898,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <button type="button" class="btn btn-outline btn-sm admin-invite-cancel" data-invite-action="cancel" data-invite-id="${inv.id}">Cancel</button>
                 `
                 : '';
+            const travellerSuffix = inv.travellerCount && inv.travellerCount > 1
+                ? `<span>·</span><span>${inv.travellerCount} travellers${inv.hasInsurance ? ' · Medicare' : ''}</span>`
+                : (inv.hasInsurance ? `<span>·</span><span>Medicare</span>` : '');
             item.innerHTML = `
                 <div class="admin-invite-item-main">
                     <div class="admin-invite-item-name">${escapeHtml(inv.patientName)} <span class="admin-invite-item-email">· ${escapeHtml(inv.patientEmail)}</span></div>
@@ -860,6 +910,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <span>${dateLabel} ${escapeHtml((inv.time || '').slice(0, 5))}</span>
                         <span>·</span>
                         <span>${amount}</span>
+                        ${travellerSuffix}
                     </div>
                 </div>
                 <div class="admin-invite-item-side">
@@ -943,7 +994,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 service: inviteService.value,
                 dateIso: inviteDate.value,
                 time: inviteTime.value,
-                locale: inviteLocale.value
+                locale: inviteLocale.value,
+                travellers: inviteService.value === 'travel'
+                    ? parseInt((inviteTravellers && inviteTravellers.value) || '1', 10)
+                    : 1,
+                hasInsurance: inviteService.value === 'travel' && !!(inviteMedicare && inviteMedicare.checked)
             };
             if (!payload.patientName || !payload.patientEmail || !payload.service || !payload.dateIso || !payload.time) {
                 setInviteError('Please fill all required fields.');
@@ -967,6 +1022,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 inviteForm.reset();
                 inviteTime.innerHTML = '<option value="">Pick a date first…</option>';
+                refreshInvitePriceUI();
                 await loadInvitations();
                 setTimeout(() => { inviteSubmitBtn.textContent = 'Create & send invitation'; inviteSubmitBtn.disabled = false; }, 2500);
             } catch (err) {

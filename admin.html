@@ -227,11 +227,26 @@
                                 <option value="clinica_geral">Clínica geral · €39</option>
                                 <option value="urgente">Urgente · €35</option>
                                 <option value="infeccao_urinaria">Infeção urinária · €35</option>
-                                <option value="travel">Travel · €39</option>
+                                <option value="travel">Travel · from €32</option>
                                 <option value="saude_mental">Saúde mental · €49</option>
                                 <option value="longevidade">Longevidade · €79</option>
                                 <option value="renovacao">Renovação receita · €19</option>
                             </select>
+                        </div>
+                        <div class="admin-form-group admin-travel-only" id="inviteTravellersWrap" style="display:none;">
+                            <label for="inviteTravellers">Travellers</label>
+                            <select id="inviteTravellers" class="admin-select">
+                                <option value="1">1 traveller</option>
+                                <option value="2">2 travellers</option>
+                                <option value="3">3 travellers</option>
+                                <option value="4">4 travellers</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group admin-travel-only" id="inviteMedicareWrap" style="display:none;">
+                            <label class="admin-override-open-label" for="inviteMedicare" style="margin-top:24px;">
+                                <input type="checkbox" id="inviteMedicare">
+                                <span>Medicare / Insurance discount</span>
+                            </label>
                         </div>
                         <div class="admin-form-group">
                             <label for="inviteDate">Date</label>
@@ -253,7 +268,10 @@
                         </div>
                     </div>
                     <div id="inviteFormError" class="dash-login-error" style="display:none;" role="alert"></div>
-                    <button type="submit" class="btn btn-primary admin-invite-submit" id="inviteSubmitBtn">Create &amp; send invitation</button>
+                    <div class="admin-invite-actions">
+                        <button type="submit" class="btn btn-primary admin-invite-submit" id="inviteSubmitBtn">Create &amp; send invitation</button>
+                        <span class="admin-invite-price" id="inviteComputedPrice" aria-live="polite"></span>
+                    </div>
                 </form>
                 <div class="admin-invite-list-header">
                     <h3 class="admin-invite-list-title">Recent invitations</h3>

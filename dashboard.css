@@ -1471,6 +1471,25 @@ body.dash-portal .dash-stat-card {
 .admin-invite-submit {
     margin-top: 4px;
 }
+.admin-invite-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+.admin-invite-price {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    background: rgba(26, 102, 65, 0.10);
+    border: 1px solid rgba(26, 102, 65, 0.25);
+    padding: 8px 14px;
+    border-radius: 8px;
+}
+.admin-invite-price:empty {
+    display: none;
+}
 .admin-invite-list-header {
     margin-top: 28px;
     margin-bottom: 10px;
