@@ -341,9 +341,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                     timesDiv.style.pointerEvents = 'none';
                 }
                 markScheduleDirty();
+                if (typeof updateWorkingHoursInModel === 'function') updateWorkingHoursInModel();
+                renderOverrideCalendar();
             });
             dayCard.querySelectorAll('input[type="time"]').forEach((inp) => {
-                inp.addEventListener('change', markScheduleDirty);
+                inp.addEventListener('change', () => {
+                    markScheduleDirty();
+                    if (typeof updateWorkingHoursInModel === 'function') updateWorkingHoursInModel();
+                    renderOverrideCalendar();
+                });
             });
         });
 
@@ -457,6 +463,42 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    function updateWorkingHoursInModel() {
+        if (!scheduleData) return;
+        const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        if (!scheduleData.workingHours) scheduleData.workingHours = {};
+        days.forEach((day) => {
+            const toggle = document.querySelector(`input[type="checkbox"][data-day="${day}"]`);
+            const startInput = document.querySelector(`input[data-day="${day}"][data-type="start"]`);
+            const endInput = document.querySelector(`input[data-day="${day}"][data-type="end"]`);
+            if (toggle && startInput && endInput) {
+                scheduleData.workingHours[day] = {
+                    enabled: toggle.checked,
+                    start: startInput.value,
+                    end: endInput.value
+                };
+            }
+        });
+    }
+
+    function applyOverrideToDates(dates, { clearSelection = true } = {}) {
+        if (!scheduleData || !dates || dates.length === 0) return;
+        const start = bulkOverrideStart && bulkOverrideStart.value ? bulkOverrideStart.value : '09:00';
+        const end = bulkOverrideEnd && bulkOverrideEnd.value ? bulkOverrideEnd.value : '17:00';
+        const enabled = bulkOverrideEnabled ? bulkOverrideEnabled.checked : true;
+        const map = new Map((scheduleData.dayOverrides || []).map((o) => [o.date, { ...o }]));
+        for (const dateStr of dates) {
+            map.set(dateStr, { date: dateStr, enabled, start, end });
+        }
+        scheduleData.dayOverrides = Array.from(map.values()).sort((a, b) =>
+            a.date.localeCompare(b.date)
+        );
+        if (clearSelection) selectedOverrideDates.clear();
+        renderOverrideCalendar();
+        renderDayOverridesList();
+        markScheduleDirty();
+    }
+
     if (bulkOverrideApply) {
         bulkOverrideApply.addEventListener('click', () => {
             if (!scheduleData) return;
@@ -464,22 +506,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 alert('Select at least one future day in the calendar.');
                 return;
             }
-            const start = bulkOverrideStart && bulkOverrideStart.value ? bulkOverrideStart.value : '09:00';
-            const end = bulkOverrideEnd && bulkOverrideEnd.value ? bulkOverrideEnd.value : '17:00';
-            const enabled = bulkOverrideEnabled ? bulkOverrideEnabled.checked : true;
-            const map = new Map((scheduleData.dayOverrides || []).map((o) => [o.date, { ...o }]));
-            for (const dateStr of selectedOverrideDates) {
-                map.set(dateStr, { date: dateStr, enabled, start, end });
-            }
-            scheduleData.dayOverrides = Array.from(map.values()).sort((a, b) =>
-                a.date.localeCompare(b.date)
-            );
-            selectedOverrideDates.clear();
-            renderOverrideCalendar();
-            renderDayOverridesList();
-            markScheduleDirty();
+            applyOverrideToDates(Array.from(selectedOverrideDates));
         });
     }
+
+    // Auto-apply when a single day is selected and the user tweaks the time inputs.
+    // Multi-day selection still requires explicit "Apply to selected days" (avoids surprises).
+    [bulkOverrideStart, bulkOverrideEnd, bulkOverrideEnabled].forEach((el) => {
+        if (!el) return;
+        el.addEventListener('change', () => {
+            if (selectedOverrideDates.size === 1) {
+                const onlyDate = Array.from(selectedOverrideDates)[0];
+                applyOverrideToDates([onlyDate], { clearSelection: false });
+            }
+        });
+    });
 
     if (bulkOverrideRemove) {
         bulkOverrideRemove.addEventListener('click', () => {
@@ -702,6 +743,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (!scheduleDirty) saveScheduleBtn.textContent = 'Save Schedule';
                     saveScheduleBtn.disabled = false;
                 }, 2000);
+
+                renderOverrideCalendar();
+                renderDayOverridesList();
+                if (previewDateInput && previewDateInput.value && previewSlotsBtn) {
+                    previewSlotsBtn.click();
+                }
+                const inviteDateEl = document.getElementById('inviteDate');
+                if (inviteDateEl && inviteDateEl.value && typeof loadInviteTimes === 'function') {
+                    loadInviteTimes();
+                }
             } catch (err) {
                 console.error('Save error:', err);
                 alert('Failed to save schedule. Please try again.');
