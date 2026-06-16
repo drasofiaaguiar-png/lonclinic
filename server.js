@@ -18,18 +18,6 @@ const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
-// ─── TEMP DEBUG: env shape for admin login diagnosis (does not log secrets) ───
-function _hintChar(str, idx) {
-    if (!str || idx >= str.length || idx < -str.length) return '';
-    const ch = str[(idx + str.length) % str.length];
-    if (ch === ' ') return '[space]';
-    if (ch === '"' || ch === "'") return ch;
-    if (/[a-zA-Z0-9]/.test(ch)) return ch;
-    return '?';
-}
-console.log(`[debug:auth-env] CLINIC_USERNAME length=${CLINIC_USERNAME.length} first=${_hintChar(CLINIC_USERNAME, 0)} last=${_hintChar(CLINIC_USERNAME, -1)}`);
-console.log(`[debug:auth-env] CLINIC_PASSWORD length=${CLINIC_PASSWORD.length} (quotes detected at edges: ${(CLINIC_PASSWORD[0] === '"' || CLINIC_PASSWORD[0] === "'") || (CLINIC_PASSWORD.slice(-1) === '"' || CLINIC_PASSWORD.slice(-1) === "'")})`);
-
 const bcrypt = require('bcrypt');
 // Hash the plaintext password from env at startup for constant-time comparison at login.
 let clinicPasswordHash = null;
@@ -4079,8 +4067,6 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
         res.json({ success: true, message: 'Login successful' });
     } else {
         console.log(`   ⚠️  Failed clinic login attempt: ${username}`);
-        console.log(`   [debug:auth] typed username length=${(username || '').length} first=${_hintChar(username || '', 0)} last=${_hintChar(username || '', -1)} matches=${usernameMatch}`);
-        console.log(`   [debug:auth] typed password length=${(password || '').length} matches=${passwordMatch} hashReady=${!!clinicPasswordHash}`);
         res.status(401).json({ error: 'Invalid username or password' });
     }
 });
@@ -4577,8 +4563,8 @@ async function createInvitationStripeSession(invitation, baseUrl) {
         },
         success_url: `${baseUrl}/book-consultation?success=true&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${baseUrl}/book-consultation?cancelled=true&invitation=${invitation.id}`,
-        // Patient has 72h to pay before the link expires
-        expires_at: Math.floor(Date.now() / 1000) + (72 * 60 * 60)
+        // Patient has up to 23h to pay before the link expires (Stripe max is 24h).
+        expires_at: Math.floor(Date.now() / 1000) + (23 * 60 * 60)
     });
     return session;
 }
