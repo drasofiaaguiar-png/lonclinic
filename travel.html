@@ -271,6 +271,19 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .testimonial-quote { font-size: 15px; line-height: 1.75; color: var(--ink); margin: 0 0 20px; position: relative; z-index: 1; }
 .testimonial-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 16px; border-top: 0.5px solid var(--border); font-size: 12px; color: var(--ink-ghost); }
 .testimonial-author { font-weight: 600; color: var(--green); }
+.testimonial-translation-note,
+.lon-testimonial-translation-note {
+    margin: -8px 0 16px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--ink-ghost);
+    font-style: italic;
+}
+.testimonial-translation-note:empty,
+.lon-testimonial-translation-note:empty,
+html[lang="pt-PT"] .lon-testimonial-translation-note {
+    display: none;
+}
 
 /* ── TEAM ── */
 .team-section { background: var(--off-white); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); }
@@ -283,7 +296,10 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .team-credentials { margin: 0; padding-left: 1.1rem; color: var(--ink-soft); font-size: 13px; line-height: 1.6; }
 .team-credentials li { margin-bottom: 10px; }
 
-.review-form-wrap { max-width: 560px; margin: 36px auto 0; padding: 26px; background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); box-shadow: 0 8px 24px rgba(26,102,65,0.06); }
+.review-form-wrap { max-width: 560px; margin: 0 auto; padding: 26px; background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); box-shadow: 0 8px 24px rgba(26,102,65,0.06); }
+.testimonials-actions { text-align: center; margin-top: 28px; }
+.leave-review { background: #fff; border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); padding: 48px 0; }
+.leave-review[hidden] { display: none !important; }
 .review-form-title { font-size: 18px; font-weight: 600; color: var(--ink); margin: 0 0 8px; }
 .review-form-desc { font-size: 13px; color: var(--ink-soft); margin: 0 0 18px; line-height: 1.55; }
 .review-form-row { margin-bottom: 14px; }
@@ -624,8 +640,16 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
       </footer>
     </blockquote>
     </div>
-    <div class="review-form-wrap">
-      <h3 class="review-form-title">Deixe a sua opinião</h3>
+    <div class="testimonials-actions">
+      <button type="button" class="btn-secondary-hero lon-review-toggle" aria-expanded="false" aria-controls="travelReviewPanelPt" data-review-panel="travelReviewPanelPt">Deixe a sua opinião</button>
+    </div>
+  </div>
+</section>
+
+<section class="section leave-review" id="deixar-opiniao" hidden aria-labelledby="review-form-title-pt">
+  <div class="section-inner">
+    <div class="review-form-wrap" id="travelReviewPanelPt">
+      <h3 class="review-form-title" id="review-form-title-pt">Deixe a sua opinião</h3>
       <p class="review-form-desc">Partilhe a sua experiência. Pode optar por torná-la visível para outros visitantes.</p>
       <form class="lon-review-form" data-reviews-grid="travelReviewsPt" data-locale="pt">
         <div class="review-form-row"><label>Nome <span class="review-optional">(opcional)</span></label><input type="text" name="authorName" maxlength="80" placeholder="Ex.: Maria S."></div>
@@ -794,14 +818,23 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
     <blockquote class="testimonial-card lon-testimonial-seed">
       <div class="testimonial-stars" aria-hidden="true">★★★★★</div>
       <p class="testimonial-quote">I loved the consultation! The doctor who saw me was very friendly, very clear in her approach and answered all my questions! I will definitely contact you again for my upcoming trips! Thank you so much.</p>
+      <p class="testimonial-translation-note">Translated from Portuguese (not the original text)</p>
       <footer class="testimonial-meta">
         <span class="testimonial-author">Verified patient</span>
         <time datetime="2026-06">June 2026</time>
       </footer>
     </blockquote>
     </div>
-    <div class="review-form-wrap">
-      <h3 class="review-form-title">Leave your review</h3>
+    <div class="testimonials-actions">
+      <button type="button" class="btn-secondary-hero lon-review-toggle" aria-expanded="false" aria-controls="travelReviewPanelEn" data-review-panel="travelReviewPanelEn">Leave your review</button>
+    </div>
+  </div>
+</section>
+
+<section class="section leave-review" id="leave-review-en" hidden aria-labelledby="review-form-title-en">
+  <div class="section-inner">
+    <div class="review-form-wrap" id="travelReviewPanelEn">
+      <h3 class="review-form-title" id="review-form-title-en">Leave your review</h3>
       <p class="review-form-desc">Share your experience. You can choose to make it visible to other visitors.</p>
       <form class="lon-review-form" data-reviews-grid="travelReviewsEn" data-locale="en">
         <div class="review-form-row"><label>Name <span class="review-optional">(optional)</span></label><input type="text" name="authorName" maxlength="80" placeholder="e.g. Maria S."></div>
@@ -971,14 +1004,23 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
     <blockquote class="testimonial-card lon-testimonial-seed">
       <div class="testimonial-stars" aria-hidden="true">★★★★★</div>
       <p class="testimonial-quote">¡Me encantó la consulta! La doctora que me atendió fue muy amable, muy clara en su enfoque y resolvió todas mis dudas. Sin duda volveré a contactaros en mis próximos viajes. Muchas gracias.</p>
+      <p class="testimonial-translation-note">Traducción del portugués (no es el texto original)</p>
       <footer class="testimonial-meta">
         <span class="testimonial-author">Paciente verificada</span>
         <time datetime="2026-06">Junio de 2026</time>
       </footer>
     </blockquote>
     </div>
-    <div class="review-form-wrap">
-      <h3 class="review-form-title">Deje su opinión</h3>
+    <div class="testimonials-actions">
+      <button type="button" class="btn-secondary-hero lon-review-toggle" aria-expanded="false" aria-controls="travelReviewPanelEs" data-review-panel="travelReviewPanelEs">Deje su opinión</button>
+    </div>
+  </div>
+</section>
+
+<section class="section leave-review" id="dejar-opinion-es" hidden aria-labelledby="review-form-title-es">
+  <div class="section-inner">
+    <div class="review-form-wrap" id="travelReviewPanelEs">
+      <h3 class="review-form-title" id="review-form-title-es">Deje su opinión</h3>
       <p class="review-form-desc">Comparta su experiencia. Puede elegir hacerla visible para otros visitantes.</p>
       <form class="lon-review-form" data-reviews-grid="travelReviewsEs" data-locale="es">
         <div class="review-form-row"><label>Nombre <span class="review-optional">(opcional)</span></label><input type="text" name="authorName" maxlength="80" placeholder="Ej.: María S."></div>
@@ -1109,6 +1151,6 @@ function syncHeroVideos() {
 
 document.addEventListener('DOMContentLoaded', syncHeroVideos);
 </script>
-<script src="/reviews.js" defer></script>
+<script src="/reviews.js?v=20260621b" defer></script>
 </body>
 </html>

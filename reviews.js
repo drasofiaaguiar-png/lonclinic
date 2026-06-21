@@ -2,6 +2,29 @@
  * Patient reviews — load public opinions + submit form with optional public visibility.
  */
 (function () {
+    var SEED_PT =
+        'Eu adorei a consulta! A doutora que me atendeu era super simpática, muito clara na abordagem do tema e esclareceu-me todas as dúvidas! Sem dúvida voltarei a contactar-vos nas minhas próximas viagens! Muito obrigada.';
+
+    var STRINGS = {
+        pt: {
+            verifiedPatient: 'Paciente verificada',
+            translationNote: '',
+            originalNote: ''
+        },
+        en: {
+            verifiedPatient: 'Verified patient',
+            translationNote: 'Translated from Portuguese (not the original text)',
+            originalNote: 'Original text in Portuguese (not translated)',
+            seedQuote: 'I loved the consultation! The doctor who saw me was very friendly, very clear in her approach and answered all my questions! I will definitely contact you again for my upcoming trips! Thank you so much.'
+        },
+        es: {
+            verifiedPatient: 'Paciente verificada',
+            translationNote: 'Traducción del portugués (no es el texto original)',
+            originalNote: 'Texto original en portugués (sin traducción)',
+            seedQuote: '¡Me encantó la consulta! La doctora que me atendió fue muy amable, muy clara en su enfoque y resolvió todas mis dudas. Sin duda volveré a contactaros en mis próximos viajes. Muchas gracias.'
+        }
+    };
+
     function detectLocale() {
         if (window.CLINIC_I18N && typeof window.CLINIC_I18N.getLang === 'function') {
             return window.CLINIC_I18N.getLang();
@@ -12,6 +35,47 @@
             if (m) return m[1];
         }
         return document.documentElement.lang === 'en' ? 'en' : document.documentElement.lang === 'es' ? 'es' : 'pt';
+    }
+
+    function normalizeBody(str) {
+        return String(str || '')
+            .replace(/[«»""]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toLowerCase();
+    }
+
+    function isSeedReview(review) {
+        return normalizeBody(review.body) === normalizeBody(SEED_PT);
+    }
+
+    function getStrings(locale) {
+        return STRINGS[locale] || STRINGS.pt;
+    }
+
+    function getDisplayContent(review, pageLocale) {
+        const reviewLocale = review.locale || 'pt';
+        const strings = getStrings(pageLocale);
+        let body = review.body;
+        let showTranslationNote = false;
+
+        if (pageLocale === 'pt') {
+            return { body: body, note: '' };
+        }
+
+        if (reviewLocale === pageLocale) {
+            return { body: body, note: '' };
+        }
+
+        if (isSeedReview(review) && strings.seedQuote) {
+            return { body: strings.seedQuote, note: strings.translationNote };
+        }
+
+        if (reviewLocale === 'pt') {
+            return { body: body, note: strings.originalNote };
+        }
+
+        return { body: body, note: strings.originalNote };
     }
 
     function starsHtml(rating) {
@@ -37,9 +101,25 @@
         }[c]));
     }
 
-    function buildCard(review, cardClass) {
+    function buildCard(review, cardClass, pageLocale) {
+        const locale = pageLocale || detectLocale();
         const cls = cardClass || 'lon-testimonial-card';
-        const dateLabel = formatReviewDate(review.createdAt, review.locale || detectLocale());
+        const strings = getStrings(locale);
+        const display = getDisplayContent(review, locale);
+        const dateLabel = formatReviewDate(review.createdAt, locale);
+        const author = review.authorName || strings.verifiedPatient;
+        const noteClass = cls.indexOf('lon-') === 0
+            ? 'lon-testimonial-translation-note testimonial-translation-note'
+            : 'testimonial-translation-note';
+
+        let noteHtml = '';
+        if (display.note) {
+            noteHtml =
+                '<p class="' + noteClass + '">' +
+                escapeHtml(display.note) +
+                '</p>';
+        }
+
         const block = document.createElement('blockquote');
         block.className = cls;
         block.dataset.reviewId = review.id || '';
@@ -48,11 +128,12 @@
             starsHtml(review.rating) +
             '</div>' +
             '<p class="lon-testimonial-quote testimonial-quote">' +
-            escapeHtml(review.body) +
+            escapeHtml(display.body) +
             '</p>' +
+            noteHtml +
             '<footer class="lon-testimonial-meta testimonial-meta">' +
             '<span class="lon-testimonial-author testimonial-author">' +
-            escapeHtml(review.authorName || 'Paciente verificada') +
+            escapeHtml(author) +
             '</span>' +
             (dateLabel ? '<time datetime="' + escapeHtml((review.createdAt || '').slice(0, 10)) + '">' + escapeHtml(dateLabel) + '</time>' : '') +
             '</footer>';
@@ -67,13 +148,23 @@
             const data = await res.json();
             const list = data.reviews || [];
             const cardClass = container.dataset.cardClass || 'lon-testimonial-card';
+            const locale = detectLocale();
             list.forEach(function (review) {
                 if (review.id && container.querySelector('[data-review-id="' + review.id + '"]')) return;
-                container.appendChild(buildCard(review, cardClass));
+                container.appendChild(buildCard(review, cardClass, locale));
             });
         } catch (e) {
             console.error('Load reviews:', e);
         }
+    }
+
+    function refreshDynamicReviews() {
+        document.querySelectorAll('[data-reviews-list]').forEach(function (container) {
+            container.querySelectorAll('[data-review-id]').forEach(function (el) {
+                el.remove();
+            });
+            loadPublicReviews(container);
+        });
     }
 
     function bindForm(form) {
@@ -128,7 +219,7 @@
                     statusEl.classList.add('is-success');
                 }
                 if (grid && data.review && data.isPublic) {
-                    grid.insertBefore(buildCard(data.review, cardClass), grid.firstChild);
+                    grid.insertBefore(buildCard(data.review, cardClass, locale), grid.firstChild);
                 }
             } catch (err) {
                 if (statusEl) {
@@ -144,8 +235,44 @@
         });
     }
 
+    function bindReviewToggles() {
+        document.querySelectorAll('.lon-review-toggle').forEach(function (btn) {
+            if (btn.dataset.reviewToggleBound) return;
+            btn.dataset.reviewToggleBound = '1';
+
+            btn.addEventListener('click', function () {
+                const panelId = btn.getAttribute('data-review-panel') || btn.getAttribute('aria-controls');
+                const panel = panelId ? document.getElementById(panelId) : null;
+                const section = panel ? panel.closest('.lon-leave-review, .leave-review') : null;
+                const target = section || panel;
+                if (!target) return;
+
+                const isOpen = !target.hidden;
+                if (isOpen) {
+                    target.hidden = true;
+                    btn.setAttribute('aria-expanded', 'false');
+                    return;
+                }
+
+                target.hidden = false;
+                btn.setAttribute('aria-expanded', 'true');
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                const focusEl = panel && panel.querySelector('input, textarea, select, button');
+                if (focusEl) {
+                    window.setTimeout(function () { focusEl.focus(); }, 350);
+                }
+            });
+        });
+    }
+
+    window.REVIEWS_LANG_CHANGED = function () {
+        refreshDynamicReviews();
+    };
+
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('[data-reviews-list]').forEach(loadPublicReviews);
         document.querySelectorAll('.lon-review-form').forEach(bindForm);
+        bindReviewToggles();
     });
 })();

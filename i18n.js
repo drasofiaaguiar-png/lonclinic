@@ -137,6 +137,25 @@
         { s: '.lon-team-credentials li:nth-child(3)', en: 'Consultancy with the World Health Organization, Mobile Populations section (2023)', pt: 'Consultadoria na Organização Mundial de Saúde, secção de Populações Móveis (2023)', es: 'Consultoría en la Organización Mundial de la Salud, sección de Poblaciones Móviles (2023)' },
         { s: '.lon-team-more', en: 'Meet the team', pt: 'Conhecer a equipa', es: 'Conocer el equipo' },
 
+        /* ── Testimonials ── */
+        { s: '.lon-testimonials-kicker', en: 'Testimonials', pt: 'Testemunhos', es: 'Testimonios' },
+        { s: '#lon-testimonials-title', en: 'What our patients say', pt: 'O que dizem os nossos pacientes', es: 'Lo que dicen nuestros pacientes' },
+        { s: '.lon-testimonial-seed .lon-testimonial-quote', en: 'I loved the consultation! The doctor who saw me was very friendly, very clear in her approach and answered all my questions! I will definitely contact you again for my upcoming trips! Thank you so much.', pt: '«Eu adorei a consulta! A doutora que me atendeu era super simpática, muito clara na abordagem do tema e esclareceu-me todas as dúvidas! Sem dúvida voltarei a contactar-vos nas minhas próximas viagens! Muito obrigada.»', es: '¡Me encantó la consulta! La doctora que me atendió fue muy amable, muy clara en su enfoque y resolvió todas mis dudas. Sin duda volveré a contactaros en mis próximos viajes. Muchas gracias.' },
+        { s: '.lon-testimonial-seed .lon-testimonial-author', en: 'Verified patient', pt: 'Paciente verificada', es: 'Paciente verificada' },
+        { s: '.lon-testimonial-seed .lon-testimonial-date', en: 'June 2026', pt: 'Junho de 2026', es: 'Junio de 2026' },
+        { s: '.lon-testimonial-seed .lon-testimonial-translation-note', en: 'Translated from Portuguese (not the original text)', pt: '', es: 'Traducción del portugués (no es el texto original)' },
+        { s: '.lon-testimonials-actions .lon-review-toggle', en: 'Leave your review', pt: 'Deixe a sua opinião', es: 'Deje su opinión' },
+        { s: '#lon-review-form-title', en: 'Leave your review', pt: 'Deixe a sua opinião', es: 'Deje su opinión' },
+        { s: '.lon-leave-review .lon-review-form-desc', en: 'Share your experience with us. You can choose to make it visible to other visitors.', pt: 'Partilhe a sua experiência connosco. Pode optar por torná-la visível para outros visitantes.', es: 'Comparta su experiencia con nosotros. Puede optar por hacerla visible para otros visitantes.' },
+        { s: '#lonReviewForm label[for="review-author"]', en: 'Name <span class="lon-review-optional">(optional)</span>', pt: 'Nome <span class="lon-review-optional">(opcional)</span>', es: 'Nombre <span class="lon-review-optional">(opcional)</span>', h: true },
+        { s: '#lonReviewForm label[for="review-email"]', en: 'Email <span class="lon-review-optional">(optional, not published)</span>', pt: 'Email <span class="lon-review-optional">(opcional, não é publicado)</span>', es: 'Email <span class="lon-review-optional">(opcional, no se publica)</span>', h: true },
+        { s: '#lonReviewForm .lon-review-label', en: 'Rating', pt: 'Avaliação', es: 'Valoración' },
+        { s: '#lonReviewForm label[for="review-body"]', en: 'Your review', pt: 'A sua opinião', es: 'Su opinión' },
+        { s: '#lonReviewForm .lon-review-public-check span', en: 'I authorise publishing this review on the website so other visitors can read it', pt: 'Autorizo a publicação desta opinião no site para que outros visitantes a possam ler', es: 'Autorizo la publicación de esta opinión en el sitio web para que otros visitantes puedan leerla' },
+        { s: '#lonReviewForm button[type="submit"]', en: 'Submit review', pt: 'Enviar opinião', es: 'Enviar opinión' },
+        { s: '#review-author', a: 'placeholder', en: 'e.g. Maria S.', pt: 'Ex.: Maria S.', es: 'Ej.: María S.' },
+        { s: '#review-body', a: 'placeholder', en: 'Tell us about your consultation…', pt: 'Conte-nos como correu a consulta…', es: 'Cuéntenos cómo fue la consulta…' },
+
         /* ── CTA card ── */
         { s: '.lon-consult-cta-copy h2', en: 'Not sure which consultation to choose?', pt: 'Não sabe qual consulta deve escolher?', es: '¿No sabe qué consulta elegir?' },
         { s: '.lon-consult-cta-copy p', en: 'Our team helps identify the right option for your case and schedules everything in a few minutes.', pt: 'A nossa equipa ajuda a identificar a opção certa para o seu caso e agenda tudo consigo em poucos minutos.', es: 'Nuestro equipo le ayuda a identificar la opción correcta para su caso y lo programa todo en pocos minutos.' },
@@ -808,6 +827,23 @@
         // Notify info.html
         if (window.INFO_LANG_CHANGED) {
             window.INFO_LANG_CHANGED(lang);
+        }
+
+        if (window.REVIEWS_LANG_CHANGED) {
+            window.REVIEWS_LANG_CHANGED(lang);
+        }
+
+        document.querySelectorAll('.lon-testimonial-translation-note').forEach(function (el) {
+            el.setAttribute('aria-hidden', lang === 'pt' ? 'true' : 'false');
+        });
+
+        const reviewForm = document.getElementById('lonReviewForm');
+        if (reviewForm) reviewForm.setAttribute('data-locale', lang);
+
+        const reviewSubmit = document.querySelector('#lonReviewForm button[type="submit"]');
+        if (reviewSubmit) {
+            const sending = { en: 'Sending…', pt: 'A enviar…', es: 'Enviando…' };
+            reviewSubmit.setAttribute('data-sending', sending[lang] || sending.en);
         }
     }
 

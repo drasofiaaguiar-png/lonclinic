@@ -44,7 +44,7 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="preload" as="image" href="/image/image2.webp" fetchpriority="high">
 
-    <link rel="stylesheet" href="landing.css?v=20260616c">
+    <link rel="stylesheet" href="landing.css?v=20260621b">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
@@ -325,16 +325,26 @@
                 <div class="lon-testimonials-grid" id="lonPublicReviews" data-reviews-list data-card-class="lon-testimonial-card">
                     <blockquote class="lon-testimonial-card lon-testimonial-seed">
                         <div class="lon-testimonial-stars" aria-hidden="true">★★★★★</div>
-                        <p class="lon-testimonial-quote">«Eu adorei a consulta! A doutora que me atendeu era super simpática, muito clara na abordagem do tema e esclareceu-me todas as dúvidas! Sem dúvida voltarei a contactar-vos nas minhas próximas viagens! Muito obrigada.»</p>
+                        <p class="lon-testimonial-quote">«Eu adorei a consulta! A doutora que me atendeu era super simpática, muito clara na abordagem do tema e esclareceu-me todas as dúvidas! Sem dúdida voltarei a contactar-vos nas minhas próximas viagens! Muito obrigada.»</p>
+                        <p class="lon-testimonial-translation-note" aria-hidden="true"></p>
                         <footer class="lon-testimonial-meta">
                             <span class="lon-testimonial-author">Paciente verificada</span>
                             <time class="lon-testimonial-date" datetime="2026-06">Junho de 2026</time>
                         </footer>
                     </blockquote>
                 </div>
+                <div class="lon-testimonials-actions">
+                    <button type="button" class="lon-btn lon-btn-soft lon-review-toggle" aria-expanded="false" aria-controls="lonReviewPanel" data-review-panel="lonReviewPanel">
+                        Deixe a sua opinião
+                    </button>
+                </div>
+            </div>
+        </section>
 
-                <div class="lon-review-form-wrap">
-                    <h3 class="lon-review-form-title">Deixe a sua opinião</h3>
+        <section class="lon-leave-review" id="deixar-opiniao" hidden aria-labelledby="lon-review-form-title">
+            <div class="lon-container">
+                <div class="lon-review-form-wrap" id="lonReviewPanel">
+                    <h3 class="lon-review-form-title" id="lon-review-form-title">Deixe a sua opinião</h3>
                     <p class="lon-review-form-desc">Partilhe a sua experiência connosco. Pode optar por torná-la visível para outros visitantes.</p>
                     <form class="lon-review-form" id="lonReviewForm" data-reviews-grid="lonPublicReviews" data-locale="pt">
                         <div class="lon-review-form-row">
@@ -475,7 +485,7 @@
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contact on WhatsApp">💬</a>
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="i18n.js" defer></script>
-    <script src="reviews.js" defer></script>
+    <script src="reviews.js?v=20260621b" defer></script>
     <script src="landing.js?v=20260419a" defer></script>
 </body>
 </html>
