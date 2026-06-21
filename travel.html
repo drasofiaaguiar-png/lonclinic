@@ -261,6 +261,17 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .faq-a { font-size: 13px; color: var(--ink-soft); line-height: 1.65; }
 .faq-a a { color: var(--green); text-decoration: none; }
 
+/* ── TESTIMONIALS ── */
+.testimonials { background: linear-gradient(160deg, #f8fcf9 0%, #eef8f2 55%, #e8f4ed 100%); border-top: 0.5px solid var(--border); border-bottom: 0.5px solid var(--border); position: relative; overflow: hidden; }
+.testimonials::before { content: ''; position: absolute; top: -60px; right: -40px; width: 280px; height: 280px; background: radial-gradient(circle, rgba(20,184,166,0.14) 0%, transparent 70%); pointer-events: none; }
+.testimonials .section-inner { position: relative; z-index: 1; }
+.testimonial-card { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); padding: 28px 26px 22px; max-width: 680px; margin: 0 auto; box-shadow: 0 8px 28px rgba(26,102,65,0.07); position: relative; }
+.testimonial-card::before { content: '“'; position: absolute; top: 8px; left: 18px; font-size: 56px; line-height: 1; color: rgba(26,102,65,0.12); font-family: Georgia, serif; pointer-events: none; }
+.testimonial-stars { color: #f59e0b; font-size: 14px; letter-spacing: 2px; margin-bottom: 14px; }
+.testimonial-quote { font-size: 15px; line-height: 1.75; color: var(--ink); margin: 0 0 20px; position: relative; z-index: 1; }
+.testimonial-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 16px; border-top: 0.5px solid var(--border); font-size: 12px; color: var(--ink-ghost); }
+.testimonial-author { font-weight: 600; color: var(--green); }
+
 /* ── FINAL CTA ── */
 .final-cta { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 38%, #fef3c7 100%); padding: 88px 28px; text-align: center; position: relative; overflow: hidden; }
 .final-cta::before { content: ''; position: absolute; top: -120px; left: 50%; transform: translateX(-50%); width: 620px; height: 460px; background: radial-gradient(ellipse, rgba(20,184,166,0.28) 0%, transparent 70%); pointer-events: none; }
@@ -547,6 +558,22 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
   </div>
 </section>
 
+<section class="section testimonials" id="testemunhos">
+  <div class="section-inner">
+    <div class="section-kicker">Testemunhos</div>
+    <h2 class="section-h2">O que dizem os nossos <em>pacientes</em></h2>
+    <p class="section-sub" style="margin-bottom:28px;">Experiências reais de quem já marcou connosco.</p>
+    <blockquote class="testimonial-card">
+      <div class="testimonial-stars" aria-hidden="true">★★★★★</div>
+      <p class="testimonial-quote">Eu adorei a consulta! A doutora que me atendeu era super simpática, muito clara na abordagem do tema e esclareceu-me todas as dúvidas! Sem dúvida voltarei a contactar-vos nas minhas próximas viagens! Muito obrigada.</p>
+      <footer class="testimonial-meta">
+        <span class="testimonial-author">Paciente verificada</span>
+        <time datetime="2026-06">Junho de 2026</time>
+      </footer>
+    </blockquote>
+  </div>
+</section>
+
 <section class="final-cta">
   <div class="final-cta-inner">
     <h2>Viaje com clareza clínica<br>e <em>tranquilidade.</em></h2>
@@ -668,6 +695,22 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
       <div class="dest-pill"><span class="dest-flag">🇯🇵</span>Japan</div>
     </div>
     <p class="dest-note">Available for any international destination</p>
+  </div>
+</section>
+
+<section class="section testimonials" id="testimonials-en">
+  <div class="section-inner">
+    <div class="section-kicker">Testimonials</div>
+    <h2 class="section-h2">What our <em>patients</em> say</h2>
+    <p class="section-sub" style="margin-bottom:28px;">Real experiences from people who booked with us.</p>
+    <blockquote class="testimonial-card">
+      <div class="testimonial-stars" aria-hidden="true">★★★★★</div>
+      <p class="testimonial-quote">I loved the consultation! The doctor who saw me was very friendly, very clear in her approach and answered all my questions! I will definitely contact you again for my upcoming trips! Thank you so much.</p>
+      <footer class="testimonial-meta">
+        <span class="testimonial-author">Verified patient</span>
+        <time datetime="2026-06">June 2026</time>
+      </footer>
+    </blockquote>
   </div>
 </section>
 
@@ -793,6 +836,22 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
       <div class="dest-pill"><span class="dest-flag">🇯🇵</span>Japón</div>
     </div>
     <p class="dest-note">Disponible para cualquier destino internacional</p>
+  </div>
+</section>
+
+<section class="section testimonials" id="testimonials-es">
+  <div class="section-inner">
+    <div class="section-kicker">Testimonios</div>
+    <h2 class="section-h2">Lo que dicen nuestros <em>pacientes</em></h2>
+    <p class="section-sub" style="margin-bottom:28px;">Experiencias reales de quienes ya reservaron con nosotros.</p>
+    <blockquote class="testimonial-card">
+      <div class="testimonial-stars" aria-hidden="true">★★★★★</div>
+      <p class="testimonial-quote">¡Me encantó la consulta! La doctora que me atendió fue muy amable, muy clara en su enfoque y resolvió todas mis dudas. Sin duda volveré a contactaros en mis próximos viajes. Muchas gracias.</p>
+      <footer class="testimonial-meta">
+        <span class="testimonial-author">Paciente verificada</span>
+        <time datetime="2026-06">Junio de 2026</time>
+      </footer>
+    </blockquote>
   </div>
 </section>
 
