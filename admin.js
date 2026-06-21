@@ -1035,13 +1035,60 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (inviteList) {
-        // Initial load happens after auth check; also refresh on tab focus
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') loadInvitations();
         });
     }
 
+    // ─── Patient reviews (admin) ───
+    const adminReviewsList = document.getElementById('adminReviewsList');
+
+    function renderAdminReviews(reviews) {
+        if (!adminReviewsList) return;
+        adminReviewsList.innerHTML = '';
+        if (!reviews || reviews.length === 0) {
+            adminReviewsList.innerHTML = '<p class="admin-empty-list">No reviews yet.</p>';
+            return;
+        }
+        reviews.forEach((r) => {
+            const item = document.createElement('div');
+            item.className = 'admin-review-item' + (r.isPublic ? ' is-public' : ' is-private');
+            const dateLabel = (() => {
+                const d = new Date(r.createdAt);
+                return Number.isNaN(d.getTime()) ? '' : d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+            })();
+            const excerpt = String(r.body || '').slice(0, 160) + (r.body && r.body.length > 160 ? '…' : '');
+            item.innerHTML = `
+                <div class="admin-review-main">
+                    <div class="admin-review-meta-top">
+                        <span class="admin-review-badge ${r.isPublic ? 'is-public' : 'is-private'}">${r.isPublic ? 'Public on site' : 'Private'}</span>
+                        <span class="admin-review-rating">${'★'.repeat(Math.min(5, r.rating || 5))}</span>
+                        <span class="admin-review-date">${escapeHtml(dateLabel)}</span>
+                    </div>
+                    <p class="admin-review-body">${escapeHtml(excerpt)}</p>
+                    <div class="admin-review-author">${escapeHtml(r.authorName || 'Anonymous')} · ${escapeHtml(r.locale || 'pt')}${r.email ? ` · ${escapeHtml(r.email)}` : ''}</div>
+                </div>
+            `;
+            adminReviewsList.appendChild(item);
+        });
+    }
+
+    async function loadAdminReviews() {
+        if (!adminReviewsList) return;
+        try {
+            const res = await fetch('/api/admin/reviews');
+            if (res.status === 401) return;
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            renderAdminReviews(data.reviews || []);
+        } catch (err) {
+            console.error('Load admin reviews:', err);
+            adminReviewsList.innerHTML = '<p class="admin-empty-list">Could not load reviews.</p>';
+        }
+    }
+
     // ─── Initialize ───
     await checkAuth();
     if (inviteList) loadInvitations();
+    loadAdminReviews();
 });

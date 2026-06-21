@@ -1585,6 +1585,65 @@ body.dash-portal .dash-stat-card {
     background: rgba(185, 28, 28, 0.06) !important;
 }
 
+/* Admin patient reviews list */
+.admin-reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.admin-review-item {
+    padding: 14px 16px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+}
+.admin-review-item.is-private {
+    opacity: 0.88;
+    border-style: dashed;
+}
+.admin-review-meta-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.admin-review-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 3px 8px;
+    border-radius: 999px;
+}
+.admin-review-badge.is-public {
+    background: rgba(26, 102, 65, 0.12);
+    color: #1a6641;
+}
+.admin-review-badge.is-private {
+    background: rgba(100, 116, 139, 0.12);
+    color: var(--text-muted);
+}
+.admin-review-rating {
+    color: #f59e0b;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+.admin-review-date {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+.admin-review-body {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--text-primary);
+    margin: 0 0 8px;
+}
+.admin-review-author {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
 /* Preview "effective schedule" banner */
 .admin-preview-effective {
     margin-bottom: 12px;

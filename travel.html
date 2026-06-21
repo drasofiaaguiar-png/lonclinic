@@ -271,6 +271,22 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .testimonial-quote { font-size: 15px; line-height: 1.75; color: var(--ink); margin: 0 0 20px; position: relative; z-index: 1; }
 .testimonial-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 16px; border-top: 0.5px solid var(--border); font-size: 12px; color: var(--ink-ghost); }
 .testimonial-author { font-weight: 600; color: var(--green); }
+.review-form-wrap { max-width: 560px; margin: 36px auto 0; padding: 26px; background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r-lg); box-shadow: 0 8px 24px rgba(26,102,65,0.06); }
+.review-form-title { font-size: 18px; font-weight: 600; color: var(--ink); margin: 0 0 8px; }
+.review-form-desc { font-size: 13px; color: var(--ink-soft); margin: 0 0 18px; line-height: 1.55; }
+.review-form-row { margin-bottom: 14px; }
+.review-form-row label, .review-label { display: block; font-size: 12px; font-weight: 600; color: var(--ink-soft); margin-bottom: 6px; }
+.review-optional { font-weight: 400; color: var(--ink-ghost); }
+.lon-review-form input[type="text"], .lon-review-form input[type="email"], .lon-review-form textarea { width: 100%; padding: 11px 14px; border: 0.5px solid var(--border-mid); border-radius: 8px; font: inherit; font-size: 14px; box-sizing: border-box; background: var(--off-white); }
+.lon-review-form textarea { min-height: 96px; resize: vertical; }
+.lon-review-stars-input { display: flex; gap: 10px; flex-wrap: wrap; }
+.lon-review-stars-input label { display: inline-flex; gap: 4px; font-size: 13px; cursor: pointer; margin: 0; font-weight: 500; }
+.lon-review-public-check { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; line-height: 1.55; color: var(--ink-soft); margin: 14px 0 16px; cursor: pointer; }
+.lon-review-public-check input { margin-top: 3px; accent-color: var(--green); }
+.lon-review-form .btn-cta-final { width: 100%; margin-bottom: 0; box-shadow: none; }
+.lon-review-status { font-size: 13px; margin-top: 12px; min-height: 1.2em; }
+.lon-review-status.is-success { color: var(--green); }
+.lon-review-status.is-error { color: #b91c1c; }
 
 /* ── FINAL CTA ── */
 .final-cta { background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 38%, #fef3c7 100%); padding: 88px 28px; text-align: center; position: relative; overflow: hidden; }
@@ -563,7 +579,8 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
     <div class="section-kicker">Testemunhos</div>
     <h2 class="section-h2">O que dizem os nossos <em>pacientes</em></h2>
     <p class="section-sub" style="margin-bottom:28px;">Experiências reais de quem já marcou connosco.</p>
-    <blockquote class="testimonial-card">
+    <div id="travelReviewsPt" data-reviews-list data-card-class="testimonial-card">
+    <blockquote class="testimonial-card lon-testimonial-seed">
       <div class="testimonial-stars" aria-hidden="true">★★★★★</div>
       <p class="testimonial-quote">Eu adorei a consulta! A doutora que me atendeu era super simpática, muito clara na abordagem do tema e esclareceu-me todas as dúvidas! Sem dúvida voltarei a contactar-vos nas minhas próximas viagens! Muito obrigada.</p>
       <footer class="testimonial-meta">
@@ -571,6 +588,20 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
         <time datetime="2026-06">Junho de 2026</time>
       </footer>
     </blockquote>
+    </div>
+    <div class="review-form-wrap">
+      <h3 class="review-form-title">Deixe a sua opinião</h3>
+      <p class="review-form-desc">Partilhe a sua experiência. Pode optar por torná-la visível para outros visitantes.</p>
+      <form class="lon-review-form" data-reviews-grid="travelReviewsPt" data-locale="pt">
+        <div class="review-form-row"><label>Nome <span class="review-optional">(opcional)</span></label><input type="text" name="authorName" maxlength="80" placeholder="Ex.: Maria S."></div>
+        <div class="review-form-row"><label>Email <span class="review-optional">(opcional, não é publicado)</span></label><input type="email" name="email" maxlength="160" placeholder="maria@example.com"></div>
+        <div class="review-form-row"><span class="review-label">Avaliação</span><div class="lon-review-stars-input"><label><input type="radio" name="rating" value="5" checked> 5</label><label><input type="radio" name="rating" value="4"> 4</label><label><input type="radio" name="rating" value="3"> 3</label><label><input type="radio" name="rating" value="2"> 2</label><label><input type="radio" name="rating" value="1"> 1</label></div></div>
+        <div class="review-form-row"><label for="review-body-pt">A sua opinião</label><textarea id="review-body-pt" name="body" required minlength="10" maxlength="2000" placeholder="Conte-nos como correu a consulta…"></textarea></div>
+        <label class="lon-review-public-check"><input type="checkbox" name="isPublic" value="1"><span>Autorizo a publicação desta opinião no site para que outros visitantes a possam ler</span></label>
+        <button type="submit" class="btn-cta-final" data-sending="A enviar…">Enviar opinião</button>
+        <p class="lon-review-status" aria-live="polite"></p>
+      </form>
+    </div>
   </div>
 </section>
 
@@ -703,7 +734,8 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
     <div class="section-kicker">Testimonials</div>
     <h2 class="section-h2">What our <em>patients</em> say</h2>
     <p class="section-sub" style="margin-bottom:28px;">Real experiences from people who booked with us.</p>
-    <blockquote class="testimonial-card">
+    <div id="travelReviewsEn" data-reviews-list data-card-class="testimonial-card">
+    <blockquote class="testimonial-card lon-testimonial-seed">
       <div class="testimonial-stars" aria-hidden="true">★★★★★</div>
       <p class="testimonial-quote">I loved the consultation! The doctor who saw me was very friendly, very clear in her approach and answered all my questions! I will definitely contact you again for my upcoming trips! Thank you so much.</p>
       <footer class="testimonial-meta">
@@ -711,6 +743,20 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
         <time datetime="2026-06">June 2026</time>
       </footer>
     </blockquote>
+    </div>
+    <div class="review-form-wrap">
+      <h3 class="review-form-title">Leave your review</h3>
+      <p class="review-form-desc">Share your experience. You can choose to make it visible to other visitors.</p>
+      <form class="lon-review-form" data-reviews-grid="travelReviewsEn" data-locale="en">
+        <div class="review-form-row"><label>Name <span class="review-optional">(optional)</span></label><input type="text" name="authorName" maxlength="80" placeholder="e.g. Maria S."></div>
+        <div class="review-form-row"><label>Email <span class="review-optional">(optional, not published)</span></label><input type="email" name="email" maxlength="160"></div>
+        <div class="review-form-row"><span class="review-label">Rating</span><div class="lon-review-stars-input"><label><input type="radio" name="rating" value="5" checked> 5</label><label><input type="radio" name="rating" value="4"> 4</label><label><input type="radio" name="rating" value="3"> 3</label><label><input type="radio" name="rating" value="2"> 2</label><label><input type="radio" name="rating" value="1"> 1</label></div></div>
+        <div class="review-form-row"><label for="review-body-en">Your review</label><textarea id="review-body-en" name="body" required minlength="10" maxlength="2000" placeholder="Tell us about your consultation…"></textarea></div>
+        <label class="lon-review-public-check"><input type="checkbox" name="isPublic" value="1"><span>I authorise publishing this review on the website so other visitors can read it</span></label>
+        <button type="submit" class="btn-cta-final" data-sending="Sending…">Submit review</button>
+        <p class="lon-review-status" aria-live="polite"></p>
+      </form>
+    </div>
   </div>
 </section>
 
@@ -844,7 +890,8 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
     <div class="section-kicker">Testimonios</div>
     <h2 class="section-h2">Lo que dicen nuestros <em>pacientes</em></h2>
     <p class="section-sub" style="margin-bottom:28px;">Experiencias reales de quienes ya reservaron con nosotros.</p>
-    <blockquote class="testimonial-card">
+    <div id="travelReviewsEs" data-reviews-list data-card-class="testimonial-card">
+    <blockquote class="testimonial-card lon-testimonial-seed">
       <div class="testimonial-stars" aria-hidden="true">★★★★★</div>
       <p class="testimonial-quote">¡Me encantó la consulta! La doctora que me atendió fue muy amable, muy clara en su enfoque y resolvió todas mis dudas. Sin duda volveré a contactaros en mis próximos viajes. Muchas gracias.</p>
       <footer class="testimonial-meta">
@@ -852,6 +899,20 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
         <time datetime="2026-06">Junio de 2026</time>
       </footer>
     </blockquote>
+    </div>
+    <div class="review-form-wrap">
+      <h3 class="review-form-title">Deje su opinión</h3>
+      <p class="review-form-desc">Comparta su experiencia. Puede elegir hacerla visible para otros visitantes.</p>
+      <form class="lon-review-form" data-reviews-grid="travelReviewsEs" data-locale="es">
+        <div class="review-form-row"><label>Nombre <span class="review-optional">(opcional)</span></label><input type="text" name="authorName" maxlength="80" placeholder="Ej.: María S."></div>
+        <div class="review-form-row"><label>Email <span class="review-optional">(opcional, no se publica)</span></label><input type="email" name="email" maxlength="160"></div>
+        <div class="review-form-row"><span class="review-label">Valoración</span><div class="lon-review-stars-input"><label><input type="radio" name="rating" value="5" checked> 5</label><label><input type="radio" name="rating" value="4"> 4</label><label><input type="radio" name="rating" value="3"> 3</label><label><input type="radio" name="rating" value="2"> 2</label><label><input type="radio" name="rating" value="1"> 1</label></div></div>
+        <div class="review-form-row"><label for="review-body-es">Su opinión</label><textarea id="review-body-es" name="body" required minlength="10" maxlength="2000" placeholder="Cuéntenos cómo fue la consulta…"></textarea></div>
+        <label class="lon-review-public-check"><input type="checkbox" name="isPublic" value="1"><span>Autorizo la publicación de esta opinión en el sitio web para que otros visitantes puedan leerla</span></label>
+        <button type="submit" class="btn-cta-final" data-sending="Enviando…">Enviar opinión</button>
+        <p class="lon-review-status" aria-live="polite"></p>
+      </form>
+    </div>
   </div>
 </section>
 
@@ -970,5 +1031,6 @@ function syncHeroVideos() {
 
 document.addEventListener('DOMContentLoaded', syncHeroVideos);
 </script>
+<script src="/reviews.js" defer></script>
 </body>
 </html>

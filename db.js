@@ -267,6 +267,85 @@ async function initSchema(p) {
     );
     await p.query(`ALTER TABLE booking_invitations ADD COLUMN IF NOT EXISTS traveller_count INTEGER NOT NULL DEFAULT 1`);
     await p.query(`ALTER TABLE booking_invitations ADD COLUMN IF NOT EXISTS has_insurance BOOLEAN NOT NULL DEFAULT FALSE`);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS patient_reviews (
+            id UUID PRIMARY KEY,
+            author_name TEXT,
+            email VARCHAR(320),
+            rating SMALLINT NOT NULL DEFAULT 5,
+            body TEXT NOT NULL,
+            is_public BOOLEAN NOT NULL DEFAULT FALSE,
+            locale VARCHAR(8) NOT NULL DEFAULT 'pt',
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+    await p.query(
+        `CREATE INDEX IF NOT EXISTS idx_patient_reviews_public ON patient_reviews (created_at DESC) WHERE is_public = TRUE`
+    );
+}
+
+function rowToReview(row) {
+    return {
+        id: row.id,
+        authorName: row.author_name || '',
+        email: row.email || '',
+        rating: row.rating != null ? row.rating : 5,
+        body: row.body,
+        isPublic: row.is_public === true,
+        locale: row.locale || 'pt',
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at
+    };
+}
+
+async function insertReview(record) {
+    const p = getPool();
+    const rating = Math.min(5, Math.max(1, parseInt(record.rating, 10) || 5));
+    const r = await p.query(
+        `INSERT INTO patient_reviews (id, author_name, email, rating, body, is_public, locale)
+         VALUES ($1, $2, $3, $4, $5, $6, $7)
+         RETURNING *`,
+        [
+            record.id,
+            record.authorName || null,
+            record.email || null,
+            rating,
+            record.body,
+            record.isPublic === true,
+            record.locale || 'pt'
+        ]
+    );
+    return rowToReview(r.rows[0]);
+}
+
+async function listPublicReviews(limit = 50) {
+    const p = getPool();
+    const cap = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 100);
+    const r = await p.query(
+        `SELECT id, author_name, rating, body, locale, created_at
+         FROM patient_reviews
+         WHERE is_public = TRUE
+         ORDER BY created_at DESC
+         LIMIT $1`,
+        [cap]
+    );
+    return r.rows.map((row) => ({
+        id: row.id,
+        authorName: row.author_name || '',
+        rating: row.rating,
+        body: row.body,
+        locale: row.locale || 'pt',
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at
+    }));
+}
+
+async function listAllReviews(limit = 100) {
+    const p = getPool();
+    const cap = Math.min(Math.max(parseInt(limit, 10) || 100, 1), 200);
+    const r = await p.query(
+        `SELECT * FROM patient_reviews ORDER BY created_at DESC LIMIT $1`,
+        [cap]
+    );
+    return r.rows.map(rowToReview);
 }
 
 function rowToInvitation(row) {
@@ -865,6 +944,9 @@ module.exports = {
     listPendingInvitationsForDateIso,
     markInvitationPaid,
     cancelInvitation,
+    insertReview,
+    listPublicReviews,
+    listAllReviews,
     findAllBookings,
     findAllBookingsWithClinicalNotes,
     findBookingByRef,

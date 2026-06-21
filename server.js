@@ -79,6 +79,16 @@ const rateLimitContact = rateLimit({
     }
 });
 
+const rateLimitReviews = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 8,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Too many review submissions. Try again later.' });
+    }
+});
+
 const rateLimitCheckout = rateLimit({
     windowMs: 60 * 60 * 1000,
     max: 20,
@@ -219,6 +229,7 @@ function sendHtmlNoCacheString(res, html, statusCode) {
 ======================================== */
 const usePersistentDb = db.isDatabaseEnabled();
 const bookingsStore = []; // memory fallback only
+const reviewsStore = []; // memory fallback for patient reviews
 const clinicalNotesStore = []; // memory fallback only
 
 /* ========================================
@@ -3401,7 +3412,7 @@ app.use(express.static(path.join(__dirname), {
         }
         // Admin / dashboard assets change often and are tiny — never cache them
         // (also bypasses Cloudflare's default 4h edge cache for static JS/CSS).
-        const adminAssets = new Set(['admin.js', 'admin.html', 'dashboard.css', 'admin.css']);
+        const adminAssets = new Set(['admin.js', 'admin.html', 'dashboard.css', 'admin.css', 'reviews.js']);
         if (adminAssets.has(base)) {
             res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
             res.setHeader('CDN-Cache-Control', 'no-store');
@@ -3576,6 +3587,149 @@ app.post('/api/reclamacoes', async (req, res) => {
         success: true,
         message: 'Reclamação enviada com sucesso. Responderemos no prazo máximo de 5 dias úteis.'
     });
+});
+
+function normalizeReviewLocale(raw) {
+    const l = String(raw || 'pt').toLowerCase().slice(0, 2);
+    return l === 'en' || l === 'es' ? l : 'pt';
+}
+
+function publicAuthorLabel(authorName, locale) {
+    const name = String(authorName || '').trim();
+    if (name) return name.slice(0, 80);
+    if (locale === 'en') return 'Verified patient';
+    if (locale === 'es') return 'Paciente verificada';
+    return 'Paciente verificada';
+}
+
+async function listPublicReviewsPayload(limit) {
+    if (usePersistentDb) {
+        const rows = await db.listPublicReviews(limit);
+        return rows.map((r) => ({
+            ...r,
+            authorName: publicAuthorLabel(r.authorName, r.locale)
+        }));
+    }
+    return reviewsStore
+        .filter((r) => r.isPublic)
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, limit)
+        .map((r) => ({
+            id: r.id,
+            authorName: publicAuthorLabel(r.authorName, r.locale),
+            rating: r.rating,
+            body: r.body,
+            locale: r.locale,
+            createdAt: r.createdAt
+        }));
+}
+
+// ─── API: Public patient reviews ───
+app.get('/api/reviews/public', async (req, res) => {
+    try {
+        const reviews = await listPublicReviewsPayload(50);
+        res.json({ reviews });
+    } catch (err) {
+        console.error('GET /api/reviews/public:', err.message);
+        res.status(500).json({ error: 'Failed to load reviews' });
+    }
+});
+
+app.post('/api/reviews', rateLimitReviews, express.json(), async (req, res) => {
+    try {
+        const body = String(req.body?.body || req.body?.message || '').trim();
+        const authorName = String(req.body?.authorName || req.body?.name || '').trim();
+        const email = String(req.body?.email || '').trim();
+        const isPublic = req.body?.isPublic === true || req.body?.isPublic === 'true';
+        const locale = normalizeReviewLocale(req.body?.locale);
+        const rating = Math.min(5, Math.max(1, parseInt(req.body?.rating, 10) || 5));
+
+        if (!body || body.length < 10) {
+            return res.status(400).json({
+                error: locale === 'en'
+                    ? 'Please write at least 10 characters in your review.'
+                    : locale === 'es'
+                      ? 'Escriba al menos 10 caracteres en su opinión.'
+                      : 'Escreva pelo menos 10 caracteres na sua opinião.'
+            });
+        }
+        if (body.length > 2000) {
+            return res.status(400).json({ error: 'Review is too long (max 2000 characters).' });
+        }
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return res.status(400).json({ error: 'Invalid email address.' });
+        }
+
+        const record = {
+            id: crypto.randomUUID(),
+            authorName: authorName.slice(0, 80) || null,
+            email: email.slice(0, 160) || null,
+            rating,
+            body: body.slice(0, 2000),
+            isPublic,
+            locale
+        };
+
+        let saved;
+        if (usePersistentDb) {
+            saved = await db.insertReview(record);
+        } else {
+            saved = {
+                ...record,
+                authorName: record.authorName || '',
+                email: record.email || '',
+                createdAt: new Date().toISOString()
+            };
+            reviewsStore.unshift(saved);
+        }
+
+        const publicReview = saved.isPublic
+            ? {
+                id: saved.id,
+                authorName: publicAuthorLabel(saved.authorName, saved.locale),
+                rating: saved.rating,
+                body: saved.body,
+                locale: saved.locale,
+                createdAt: saved.createdAt
+            }
+            : null;
+
+        const messages = {
+            pt: isPublic
+                ? 'Obrigada! A sua opinião foi publicada e já está visível para outros visitantes.'
+                : 'Obrigada! A sua opinião foi recebida de forma privada — só a equipa clínica a verá.',
+            en: isPublic
+                ? 'Thank you! Your review is now visible to other visitors.'
+                : 'Thank you! Your review was received privately — only our clinical team will see it.',
+            es: isPublic
+                ? '¡Gracias! Su opinión ya es visible para otros visitantes.'
+                : '¡Gracias! Su opinión se recibió de forma privada — solo la verá nuestro equipo clínico.'
+        };
+
+        res.json({
+            success: true,
+            message: messages[locale] || messages.pt,
+            isPublic: saved.isPublic,
+            review: publicReview
+        });
+    } catch (err) {
+        console.error('POST /api/reviews:', err.message);
+        res.status(500).json({ error: 'Failed to submit review' });
+    }
+});
+
+// ─── API: Admin — list all reviews (public + private) ───
+app.get('/api/admin/reviews', requireAuth, async (req, res) => {
+    try {
+        if (usePersistentDb) {
+            const reviews = await db.listAllReviews(100);
+            return res.json({ reviews });
+        }
+        res.json({ reviews: reviewsStore.slice(0, 100) });
+    } catch (err) {
+        console.error('GET /api/admin/reviews:', err.message);
+        res.status(500).json({ error: 'Failed to load reviews' });
+    }
 });
 
 // ─── API: Create Checkout Session ───
