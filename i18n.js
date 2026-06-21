@@ -126,6 +126,17 @@
         /* ── Book buttons ── */
         { s: '.lon-service-card .lon-btn-soft', en: 'Book', pt: 'Marcar', es: 'Reservar' },
 
+        /* ── Team section ── */
+        { s: '.lon-team-kicker', en: 'Our team', pt: 'A nossa equipa', es: 'Nuestro equipo' },
+        { s: '#lon-team-title', en: 'Experienced physicians in travel and preventive medicine', pt: 'Médicos experientes em medicina de viagem e preventiva', es: 'Médicos con experiencia en medicina del viajero y preventiva' },
+        { s: '.lon-team-lead', en: 'Careful, up-to-date clinical guidance with personalised, thorough consultations.', pt: 'Orientação clínica cuidadosa e atualizada, com consultas personalizadas e rigorosas.', es: 'Orientación clínica cuidadosa y actualizada, con consultas personalizadas y rigurosas.' },
+        { s: '.lon-team-name', en: 'Dr Rita Aguiar', pt: 'Drª Rita Aguiar', es: 'Dra. Rita Aguiar' },
+        { s: '.lon-team-role', en: 'Physician', pt: 'Médica', es: 'Médica' },
+        { s: '.lon-team-credentials li:nth-child(1)', en: 'Professional registration with the Portuguese Medical Association', pt: 'Cédula Profissional da Ordem dos Médicos em Portugal', es: 'Cédula profesional del Colegio de Médicos de Portugal' },
+        { s: '.lon-team-credentials li:nth-child(2)', en: 'Postgraduate degree in Travel Medicine and Mobile Populations (2021), Faculty of Medicine, University of Porto', pt: 'Pós-graduação em Medicina do Viajante e das Populações Móveis (2021), Faculdade de Medicina da Universidade do Porto', es: 'Posgrado en Medicina del Viajero y Poblaciones Móviles (2021), Facultad de Medicina de la Universidad de Oporto' },
+        { s: '.lon-team-credentials li:nth-child(3)', en: 'Consultancy with the World Health Organization, Mobile Populations section (2023)', pt: 'Consultadoria na Organização Mundial de Saúde, secção de Populações Móveis (2023)', es: 'Consultoría en la Organización Mundial de la Salud, sección de Poblaciones Móviles (2023)' },
+        { s: '.lon-team-more', en: 'Meet the team', pt: 'Conhecer a equipa', es: 'Conocer el equipo' },
+
         /* ── CTA card ── */
         { s: '.lon-consult-cta-copy h2', en: 'Not sure which consultation to choose?', pt: 'Não sabe qual consulta deve escolher?', es: '¿No sabe qué consulta elegir?' },
         { s: '.lon-consult-cta-copy p', en: 'Our team helps identify the right option for your case and schedules everything in a few minutes.', pt: 'A nossa equipa ajuda a identificar a opção certa para o seu caso e agenda tudo consigo em poucos minutos.', es: 'Nuestro equipo le ayuda a identificar la opción correcta para su caso y lo programa todo en pocos minutos.' },
@@ -151,6 +162,7 @@
         { s: '.lon-footer-col:nth-child(2) a[href="/marcar/saude-mental"]', en: 'Mental Health', pt: 'Saúde Mental', es: 'Salud Mental' },
         { s: '.lon-footer-col:nth-child(2) a[href="/marcar/longevidade"]', en: 'Longevity', pt: 'Longevidade', es: 'Longevidad' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=sobre-nos"]', en: 'About us', pt: 'Sobre nós', es: 'Sobre nosotros' },
+        { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=equipa"]', en: 'Our team', pt: 'A equipa', es: 'Nuestro equipo' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=parcerias"]', en: 'Partnerships', pt: 'Parcerias', es: 'Asociaciones' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=registo-medico"]', en: 'Medical records', pt: 'Registo médico', es: 'Registro médico' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=contato"]', en: 'Contact', pt: 'Contato', es: 'Contacto' },

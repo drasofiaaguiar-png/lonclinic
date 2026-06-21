@@ -3188,6 +3188,10 @@ app.get('/travel-clinic', (req, res) => {
     });
 });
 
+app.get('/equipa', (req, res) => {
+    res.redirect(301, '/info.html?page=equipa');
+});
+
 const MARCAR_TIPO_TO_SLUG = {
     urgente: 'urgente',
     infeccao_urinaria: 'infeccao-urinaria',

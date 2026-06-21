@@ -109,6 +109,55 @@
             margin: 8px 0 14px;
         }
         .body ul.bullet-list li { margin-bottom: 8px; }
+        .team-profile {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 24px;
+            align-items: start;
+            padding: 22px;
+            margin: 8px 0 20px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: linear-gradient(135deg, #f8fbf9 0%, #ffffff 100%);
+        }
+        @media (max-width: 560px) {
+            .team-profile { grid-template-columns: 1fr; text-align: center; }
+            .team-profile-media { display: flex; justify-content: center; }
+        }
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #4A7C6F 0%, #2d5a4e 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            box-shadow: 0 8px 24px rgba(74, 124, 111, 0.25);
+        }
+        .team-name {
+            font-size: 1.35rem;
+            margin: 0 0 4px;
+            letter-spacing: -0.02em;
+        }
+        .team-role {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.92rem;
+            margin: 0 0 14px;
+        }
+        .team-credentials {
+            margin: 0;
+            padding-left: 1.1rem;
+        }
+        .team-credentials li {
+            margin-bottom: 10px;
+            font-size: 0.92rem;
+            line-height: 1.55;
+        }
         .actions {
             display: flex;
             flex-wrap: wrap;
@@ -346,6 +395,29 @@
 <p>We are an online medical clinic that values premium-quality care, registered with the ERS under no. 45475, with doctors accredited by the Medical Association, dedicated to providing accessible, close, and trusted healthcare — wherever and whenever you need it.</p>
 <p>We believe in person-centred medicine: with time to listen, explain, and follow up. Because a good consultation does not have to be in-person to be good.</p>
 `
+                },
+                "equipa": {
+                    section: "CLINIC",
+                    title: "Our team",
+                    subtitle: "Experienced physicians in travel and preventive medicine",
+                    bodyHtml: `
+<div class="team-profile">
+  <div class="team-profile-media">
+    <div class="team-avatar" aria-hidden="true">RA</div>
+  </div>
+  <div class="team-profile-body">
+    <h2 class="team-name">Dr Rita Aguiar</h2>
+    <p class="team-role">Physician</p>
+    <ul class="team-credentials bullet-list">
+      <li>Professional registration with the Portuguese Medical Association (Ordem dos Médicos)</li>
+      <li>Postgraduate degree in Travel Medicine and Mobile Populations (2021), Faculty of Medicine, University of Porto</li>
+      <li>Consultancy with the World Health Organization, Mobile Populations section (2023)</li>
+    </ul>
+  </div>
+</div>
+<p>Our doctors provide careful, up-to-date guidance grounded in international travel health standards. Every consultation is personalised, thorough, and designed to support safe travel without unnecessary interventions.</p>
+`,
+                    actions: [{ label: "Book consultation", href: "/marcar/travel", primary: true }]
                 },
                 "parcerias": {
                     section: "CLINIC",
@@ -591,6 +663,29 @@
 <p>Somos una clínica médica online que valora la atención de calidad premium, registrada en el ERS con el n.º 45475, con médicos acreditados por el Colegio de Médicos, dedicada a ofrecer una atención sanitaria accesible, cercana y de confianza — donde y cuando la necesite.</p>
 <p>Creemos en una medicina centrada en la persona: con tiempo para escuchar, explicar y hacer seguimiento. Porque una buena consulta no tiene que ser presencial para ser buena.</p>
 `
+                },
+                "equipa": {
+                    section: "CLÍNICA",
+                    title: "Nuestro equipo",
+                    subtitle: "Médicos con experiencia en medicina del viajero y preventiva",
+                    bodyHtml: `
+<div class="team-profile">
+  <div class="team-profile-media">
+    <div class="team-avatar" aria-hidden="true">RA</div>
+  </div>
+  <div class="team-profile-body">
+    <h2 class="team-name">Dra. Rita Aguiar</h2>
+    <p class="team-role">Médica</p>
+    <ul class="team-credentials bullet-list">
+      <li>Cédula profesional del Colegio de Médicos de Portugal</li>
+      <li>Posgrado en Medicina del Viajero y Poblaciones Móviles (2021), Facultad de Medicina de la Universidad de Oporto</li>
+      <li>Consultoría en la Organización Mundial de la Salud, sección de Poblaciones Móviles (2023)</li>
+    </ul>
+  </div>
+</div>
+<p>Nuestros médicos ofrecen orientación cuidadosa y actualizada basada en los estándares internacionales de salud del viajero. Cada consulta es personalizada, rigurosa y diseñada para apoyar viajes seguros sin intervenciones innecesarias.</p>
+`,
+                    actions: [{ label: "Reservar consulta", href: "/marcar/travel", primary: true }]
                 },
                 "parcerias": {
                     section: "CLÍNICA",
@@ -881,6 +976,29 @@
 <p>Somos uma clínica médica online que preza por manter uma qualidade premium nos cuidados que presta, registada na ERS sob o n.º 45475, com médicos credenciados pela Ordem dos Médicos, dedicada a prestar cuidados de saúde acessíveis, próximos e de confiança — onde e quando precisar.</p>
 <p>Acreditamos numa medicina centrada na pessoa: com tempo para ouvir, explicar e acompanhar. Porque uma boa consulta não precisa de ser presencial para ser boa.</p>
 `
+                },
+                "equipa": {
+                    section: "CLÍNICA",
+                    title: "A nossa equipa",
+                    subtitle: "Médicos experientes em medicina de viagem e preventiva",
+                    bodyHtml: `
+<div class="team-profile">
+  <div class="team-profile-media">
+    <div class="team-avatar" aria-hidden="true">RA</div>
+  </div>
+  <div class="team-profile-body">
+    <h2 class="team-name">Drª Rita Aguiar</h2>
+    <p class="team-role">Médica</p>
+    <ul class="team-credentials bullet-list">
+      <li>Cédula Profissional da Ordem dos Médicos em Portugal</li>
+      <li>Pós-graduação em Medicina do Viajante e das Populações Móveis (2021), Faculdade de Medicina da Universidade do Porto</li>
+      <li>Consultadoria na Organização Mundial de Saúde, secção de Populações Móveis (2023)</li>
+    </ul>
+  </div>
+</div>
+<p>Os nossos médicos fornecem orientação cuidadosa e atualizada, fundamentada nos padrões internacionais de saúde de viagem. Cada consulta é personalizada, rigorosa e concebida para apoiar viagens seguras sem intervenções desnecessárias.</p>
+`,
+                    actions: [{ label: "Marcar consulta", href: "/marcar/travel", primary: true }]
                 },
                 "parcerias": {
                     section: "CLÍNICA",

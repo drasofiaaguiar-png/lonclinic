@@ -199,6 +199,7 @@ function layoutGuidePage(opts) {
                 <div class="lon-footer-col">
                     <h4>Clínica</h4>
                     <a href="/info.html?page=sobre-nos">Sobre nós</a>
+                    <a href="/info.html?page=equipa">A equipa</a>
                     <a href="/info.html?page=parcerias">Parcerias</a>
                     <a href="/info.html?page=registo-medico">Registo médico</a>
                     <a href="/info.html?page=contato">Contato</a>
