@@ -35,7 +35,8 @@ const TRAVEL_TIER_CENTS = {
 
 /** Uppercase codes → percent off (integer). Same as booking.js discountCodes. */
 const DISCOUNT_CODES = {
-    ME2026: 99
+    ME2026: 99,
+    VERAO082026: 10
 };
 
 const STRIPE_MIN_CENTS = 50;

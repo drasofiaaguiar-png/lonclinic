@@ -822,7 +822,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Discount codes
     const discountCodes = {
-        'ME2026': 99  // 99% discount
+        'ME2026': 99,  // 99% discount
+        'VERAO082026': 10  // 10% discount — summer 2026
     };
 
     function validateDiscountCode(code) {
