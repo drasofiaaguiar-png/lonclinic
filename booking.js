@@ -63,6 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         urgente: { label: 'Consulta Médica Urgente (Adultos)', price: '€35', cents: 3500 },
         travel: { label: 'Consulta do Viajante', price: '€39', cents: 3900 },
         saude_mental: { label: 'Consulta de Saúde Mental Adultos', price: '€49', cents: 4900 },
+        burnout: { label: 'Consulta Médica de Burn Out', price: '€60', cents: 6000 },
         renovacao: { label: 'Renovação de Tratamento Médico', price: '€19', cents: 1900 },
         longevidade: { label: 'Consulta de Longevidade e Saúde Preventiva', price: '€79', cents: 7900 }
     };
@@ -523,6 +524,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 renovacao: 'renovacao',
                 travel: 'travel',
                 saude_mental: 'saude-mental',
+                burnout: 'burnout',
                 longevidade: 'longevidade'
             };
             var slug = tipoSlugMap[state.marcarTipo] || encodeURIComponent(state.marcarTipo);
@@ -1160,6 +1162,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 durationMinutes = 15;
             } else if (data.service === 'saude_mental') {
                 durationMinutes = 45;
+            } else if (data.service === 'burnout') {
+                durationMinutes = 60;
             }
 
             const endDate = new Date(appointmentDate);

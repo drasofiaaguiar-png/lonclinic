@@ -1632,7 +1632,7 @@ function buildBurnoutQuizEmails(data) {
     const personal = Number.isFinite(scores.personal) ? scores.personal : '—';
     const work = Number.isFinite(scores.work) ? scores.work : '—';
     const body = Number.isFinite(scores.body) ? scores.body : '—';
-    const bookUrl = `${PUBLIC_SITE_URL}/marcar/saude-mental?ref=burnout-quiz-email`;
+    const bookUrl = `${PUBLIC_SITE_URL}/marcar/burnout?ref=burnout-quiz-email`;
 
     const clinicSubject = `Teste burnout: ${band} (${global}/100) — ${data.email}`;
     const clinicText = [
@@ -3307,6 +3307,7 @@ const MARCAR_TIPO_TO_SLUG = {
     renovacao: 'renovacao',
     travel: 'travel',
     saude_mental: 'saude-mental',
+    burnout: 'burnout',
     longevidade: 'longevidade'
 };
 
@@ -3688,7 +3689,7 @@ app.post('/api/burnout-quiz', rateLimitBurnoutQuiz, async (req, res) => {
     return res.json({
         success: true,
         emailed,
-        bookUrl: '/marcar/saude-mental?ref=burnout-quiz'
+        bookUrl: '/marcar/burnout?ref=burnout-quiz'
     });
 });
 
@@ -4863,6 +4864,7 @@ const INVITATION_SERVICE_LABEL = {
     infeccao_urinaria: { pt: 'Consulta de Infeção Urinária', en: 'Urinary Tract Infection Consultation', es: 'Consulta de Infección Urinaria' },
     travel: { pt: 'Consulta do Viajante', en: 'Travel Medicine Consultation', es: 'Consulta del Viajero' },
     saude_mental: { pt: 'Consulta de Saúde Mental', en: 'Mental Health Consultation', es: 'Consulta de Salud Mental' },
+    burnout: { pt: 'Consulta Médica de Burn Out', en: 'Burnout Medical Consultation', es: 'Consulta Médica de Burn Out' },
     longevidade: { pt: 'Consulta de Longevidade', en: 'Longevity Consultation', es: 'Consulta de Longevidad' },
     renovacao: { pt: 'Renovação de Receita', en: 'Prescription Renewal', es: 'Renovación de Receta' }
 };

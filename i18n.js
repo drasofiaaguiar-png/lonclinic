@@ -93,6 +93,9 @@
         { s: '.dr-burnout-promo__lead', en: 'Free 4-minute test based on the Copenhagen Burnout Inventory. Instant results with practical recommendations.', pt: 'Teste gratuito em 4 minutos, baseado no Copenhagen Burnout Inventory. Resultado imediato com recomendações práticas.', es: 'Test gratuito en 4 minutos, basado en el Copenhagen Burnout Inventory. Resultado inmediato con recomendaciones prácticas.' },
         { s: '.dr-burnout-promo__cta', en: 'Take the test', pt: 'Fazer o teste', es: 'Hacer el test' },
         { s: '.lon-service-card[data-category="mental"] .lon-service-extra a', en: 'Take the burnout test →', pt: 'Fazer teste de burnout →', es: 'Hacer test de burnout →' },
+        { s: '#lon-service-burnout .lon-service-chip', en: 'Burn Out', pt: 'Burn Out', es: 'Burn Out' },
+        { s: '#lon-service-burnout h3', en: 'Burnout Medical Consultation', pt: 'Consulta Médica de Burn Out', es: 'Consulta Médica de Burn Out' },
+        { s: '#lon-service-burnout .lon-service-extra a', en: 'Take the burnout test →', pt: 'Fazer teste de burnout →', es: 'Hacer test de burnout →' },
 
         /* ── How it works ── */
         { s: '#como-funciona-title', en: 'How to get started', pt: 'Como começar', es: 'Cómo comenzar' },
@@ -132,6 +135,7 @@
 
         /* ── Book buttons ── */
         { s: '.lon-service-card .lon-btn-soft', en: 'Book', pt: 'Marcar', es: 'Reservar' },
+        { s: '#lon-service-burnout .lon-btn-soft', en: 'Book', pt: 'Marcar', es: 'Reservar' },
 
         /* ── Team section ── */
         { s: '.lon-team-kicker', en: 'Our team', pt: 'A nossa equipa', es: 'Nuestro equipo' },
@@ -187,6 +191,7 @@
         { s: '.lon-footer-col:nth-child(2) a[href="/marcar/travel"]', en: "Traveler's Consultation", pt: 'Consulta do Viajante', es: 'Consulta del Viajero' },
         { s: '.lon-footer-col:nth-child(2) a[href="/marcar/saude-mental"]', en: 'Mental Health', pt: 'Saúde Mental', es: 'Salud Mental' },
         { s: '.lon-footer-col:nth-child(2) a[href="/teste-burnout"]', en: 'Burnout Test', pt: 'Teste de Burnout', es: 'Test de Burnout' },
+        { s: '.lon-footer-col:nth-child(2) a[href="/marcar/burnout"]', en: 'Burnout Consultation', pt: 'Consulta de Burn Out', es: 'Consulta de Burn Out' },
         { s: '.lon-footer-col:nth-child(2) a[href="/marcar/longevidade"]', en: 'Longevity', pt: 'Longevidade', es: 'Longevidad' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=sobre-nos"]', en: 'About us', pt: 'Sobre nós', es: 'Sobre nosotros' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=equipa"]', en: 'Our team', pt: 'A equipa', es: 'Nuestro equipo' },
@@ -473,6 +478,7 @@
         /* ── Service meta ── */
         { s: '.marcar-meta span:nth-child(2)', en: 'Video call', pt: 'Videochamada', es: 'Videollamada' },
         { s: '.marcar-desc p', en: 'What is included:', pt: 'O que inclui:', es: 'Qué incluye:' },
+        { s: '#marcarBurnoutLink', en: 'Haven\'t taken the test yet? <a href="/teste-burnout?ref=marcar-burnout">Take the free burnout test</a> — 4 min.', pt: 'Ainda não fez o teste? <a href="/teste-burnout?ref=marcar-burnout">Faça o teste de burnout</a> — 4 min, gratuito.', es: '¿Aún no ha hecho el test? <a href="/teste-burnout?ref=marcar-burnout">Haga el test de burnout</a> — 4 min, gratuito.', h: true },
 
         /* ── Schedule section ── */
         { s: '#marcarScheduleTitle', en: 'Date and time', pt: 'Data e hora', es: 'Fecha y hora' },
@@ -647,6 +653,7 @@
                 urgente: 'Urgent Medical Consultation (Adults)',
                 travel: 'Travel Medicine Consultation',
                 saude_mental: 'Adult Mental Health Consultation',
+                burnout: 'Burnout Medical Consultation',
                 renovacao: 'Medical Treatment Renewal',
                 longevidade: 'Longevity & Preventive Health Consultation',
             },
@@ -668,6 +675,7 @@
                 urgente: 'Consulta Médica Urgente (Adultos)',
                 travel: 'Consulta do Viajante',
                 saude_mental: 'Consulta de Saúde Mental Adultos',
+                burnout: 'Consulta Médica de Burn Out',
                 renovacao: 'Renovação de Tratamento Médico',
                 longevidade: 'Consulta de Longevidade e Saúde Preventiva',
             },
@@ -689,6 +697,7 @@
                 urgente: 'Consulta médica urgente (adultos)',
                 travel: 'Consulta de medicina del viajero',
                 saude_mental: 'Consulta de salud mental (adultos)',
+                burnout: 'Consulta médica de burn out',
                 renovacao: 'Renovación de tratamiento médico',
                 longevidade: 'Consulta de longevidad y salud preventiva',
             },

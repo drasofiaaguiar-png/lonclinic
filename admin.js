@@ -785,6 +785,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         urgente: 3500,
         infeccao_urinaria: 3500,
         saude_mental: 4900,
+        burnout: 6000,
         longevidade: 7900,
         renovacao: 1900
     };

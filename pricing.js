@@ -14,6 +14,7 @@ const SERVICE_CENTS = {
     urgente: 3500,
     travel: 3900,
     saude_mental: 4900,
+    burnout: 6000,
     renovacao: 1900,
     longevidade: 7900
 };

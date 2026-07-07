@@ -61,6 +61,15 @@
                     'Privacy and adequate time for clinical conversation.'
                 ]
             },
+            burnout: {
+                label: 'Burnout Medical Consultation',
+                duration: '60 min',
+                bullets: [
+                    'In-depth assessment of exhaustion, work stress and recovery.',
+                    'Review of sleep, energy, body signals and a personalised recovery plan.',
+                    'Ideal after the burnout index test or when burnout is already affecting your daily life.'
+                ]
+            },
             longevidade: {
                 label: 'Longevity & Preventive Health Consultation',
                 duration: '45–60 min',
@@ -126,6 +135,15 @@
                     'Privacidad y tiempo adecuado para la conversación clínica.'
                 ]
             },
+            burnout: {
+                label: 'Consulta Médica de Burn Out',
+                duration: '60 min',
+                bullets: [
+                    'Evaluación aprofundada de exaustão, stress laboral e recuperação.',
+                    'Revisão de sono, energia, sinais no corpo e plano personalizado.',
+                    'Ideal após o teste de burnout ou quando o esgotamento já afeta o dia a dia.'
+                ]
+            },
             longevidade: {
                 label: 'Consulta de Longevidad y Salud Preventiva',
                 duration: '45–60 min',
@@ -144,6 +162,7 @@
         renovacao: 'renovacao',
         travel: 'travel',
         saude_mental: 'saude-mental',
+        burnout: 'burnout',
         longevidade: 'longevidade'
     };
     var SLUG_TO_TYPE = {
@@ -156,6 +175,7 @@
         travel: 'travel',
         'saude-mental': 'saude_mental',
         saude_mental: 'saude_mental',
+        burnout: 'burnout',
         longevidade: 'longevidade'
     };
 
@@ -232,6 +252,18 @@
                 'Privacidade e tempo adequado à conversa clínica.'
             ]
         },
+        burnout: {
+            label: 'Consulta Médica de Burn Out',
+            price: '€60',
+            cents: 6000,
+            duration: '60 min',
+            serviceKey: 'burnout',
+            bullets: [
+                'Avaliação aprofundada de exaustão, stress laboral e recuperação.',
+                'Revisão de sono, energia, sinais no corpo e plano personalizado.',
+                'Ideal após o teste de burnout ou quando o esgotamento já afeta o dia a dia.'
+            ]
+        },
         longevidade: {
             label: 'Consulta de Longevidade e Saúde Preventiva',
             price: '€79',
@@ -290,7 +322,7 @@
     if (errHide) errHide.style.display = 'none';
     applyPrettyUrlIfNeeded(tipo);
 
-    if (tipo === 'saude_mental') {
+    if (tipo === 'burnout') {
         var burnoutLink = document.getElementById('marcarBurnoutLink');
         if (burnoutLink) burnoutLink.hidden = false;
     }

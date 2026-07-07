@@ -69,7 +69,7 @@
         tensao: 'Nota clínica: tensão muscular persistente é das formas mais comuns de o corpo armazenar stress — e das que melhor respondem a intervenção.'
     };
 
-    const BOOKING_URL = '/marcar/saude-mental?ref=burnout-quiz';
+    const BOOKING_URL = '/marcar/burnout?ref=burnout-quiz';
 
     let current = 0;
     let lastEmail = '';
