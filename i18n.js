@@ -87,6 +87,13 @@
         /* ── Manifesto ── */
         { s: '.dr-clinic-manifesto__text', en: 'We are not a platform with hundreds of anonymous doctors. We are a clinic where each patient has a story and the doctor listens, follows up, and thinks about your long-term health.', pt: 'Não somos uma plataforma com centenas de médicos anónimos. Somos uma clínica onde cada paciente tem uma história e o médico ouve-te, acompanha-te, e pensa na tua saúde a longo prazo.', es: 'No somos una plataforma con cientos de médicos anónimos. Somos una clínica donde cada paciente tiene una historia y el médico te escucha, te acompaña y piensa en tu salud a largo plazo.' },
 
+        /* ── Burnout quiz promo ── */
+        { s: '.dr-burnout-promo__eyebrow', en: 'Occupational mental health', pt: 'Saúde mental ocupacional', es: 'Salud mental ocupacional' },
+        { s: '#burnout-promo-title', en: 'How much of your tiredness is already burnout?', pt: 'Quanto do teu cansaço já é burnout?', es: '¿Cuánto de tu cansancio ya es burnout?' },
+        { s: '.dr-burnout-promo__lead', en: 'Free 4-minute test based on the Copenhagen Burnout Inventory. Instant results with practical recommendations.', pt: 'Teste gratuito em 4 minutos, baseado no Copenhagen Burnout Inventory. Resultado imediato com recomendações práticas.', es: 'Test gratuito en 4 minutos, basado en el Copenhagen Burnout Inventory. Resultado inmediato con recomendaciones prácticas.' },
+        { s: '.dr-burnout-promo__cta', en: 'Take the test', pt: 'Fazer o teste', es: 'Hacer el test' },
+        { s: '.lon-service-card[data-category="mental"] .lon-service-extra a', en: 'Take the burnout test →', pt: 'Fazer teste de burnout →', es: 'Hacer test de burnout →' },
+
         /* ── How it works ── */
         { s: '#como-funciona-title', en: 'How to get started', pt: 'Como começar', es: 'Cómo comenzar' },
         { s: '#como-funciona-home > .lon-container > p > strong', en: 'How does it work?', pt: 'Como funciona?', es: '¿Cómo funciona?' },
@@ -179,6 +186,7 @@
         { s: '.lon-footer-col:nth-child(2) a[href="/marcar/clinica-geral"]', en: 'General Medicine', pt: 'Clínica Geral', es: 'Medicina General' },
         { s: '.lon-footer-col:nth-child(2) a[href="/marcar/travel"]', en: "Traveler's Consultation", pt: 'Consulta do Viajante', es: 'Consulta del Viajero' },
         { s: '.lon-footer-col:nth-child(2) a[href="/marcar/saude-mental"]', en: 'Mental Health', pt: 'Saúde Mental', es: 'Salud Mental' },
+        { s: '.lon-footer-col:nth-child(2) a[href="/teste-burnout"]', en: 'Burnout Test', pt: 'Teste de Burnout', es: 'Test de Burnout' },
         { s: '.lon-footer-col:nth-child(2) a[href="/marcar/longevidade"]', en: 'Longevity', pt: 'Longevidade', es: 'Longevidad' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=sobre-nos"]', en: 'About us', pt: 'Sobre nós', es: 'Sobre nosotros' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=equipa"]', en: 'Our team', pt: 'A equipa', es: 'Nuestro equipo' },

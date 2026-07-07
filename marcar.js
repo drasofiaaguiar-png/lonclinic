@@ -290,6 +290,11 @@
     if (errHide) errHide.style.display = 'none';
     applyPrettyUrlIfNeeded(tipo);
 
+    if (tipo === 'saude_mental') {
+        var burnoutLink = document.getElementById('marcarBurnoutLink');
+        if (burnoutLink) burnoutLink.hidden = false;
+    }
+
     var state = {
         scheduleData: null,
         calMonth: new Date().getMonth(),

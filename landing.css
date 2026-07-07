@@ -600,6 +600,65 @@ img {
     color: #1f2a22;
 }
 
+/* Burnout quiz promo — homepage */
+.dr-burnout-promo {
+    background: linear-gradient(135deg, #f6f1e8 0%, #ebe4d8 100%);
+    border-block: 1px solid rgba(34, 56, 47, 0.08);
+    padding: clamp(40px, 7vw, 64px) 0;
+}
+
+.dr-burnout-promo-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px 32px;
+    flex-wrap: wrap;
+}
+
+.dr-burnout-promo__eyebrow {
+    margin: 0 0 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c4744a;
+}
+
+.dr-burnout-promo h2 {
+    margin: 0 0 10px;
+    font-size: clamp(1.35rem, 3.2vw, 1.85rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #22382f;
+}
+
+.dr-burnout-promo__lead {
+    margin: 0;
+    max-width: 42ch;
+    font-size: 0.98rem;
+    line-height: 1.55;
+    color: #3d554a;
+}
+
+.dr-burnout-promo__cta {
+    flex-shrink: 0;
+}
+
+.lon-service-extra {
+    margin: 10px 0 0;
+    font-size: 0.82rem;
+}
+
+.lon-service-extra a {
+    color: rgba(255, 255, 255, 0.92);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.lon-service-extra a:hover {
+    color: #fff;
+}
+
 /* Mid sections */
 .dr-platform {
     padding: 84px 0 58px;

@@ -315,3 +315,19 @@
     font-size: 0.875rem;
     margin-bottom: 20px;
 }
+
+.marcar-burnout-link {
+    margin: 18px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--marcar-border);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--marcar-muted);
+}
+
+.marcar-burnout-link a {
+    color: var(--marcar-accent-strong);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}

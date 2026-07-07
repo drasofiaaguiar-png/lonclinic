@@ -35,6 +35,14 @@
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
+
+    <!-- Burnout quiz — lead to mental health booking -->
+    <url>
+        <loc>https://lonclinic.com/teste-burnout</loc>
+        <lastmod>2026-07-06</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.85</priority>
+    </url>
     
     <!-- Information hub -->
     <url>

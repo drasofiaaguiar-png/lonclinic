@@ -79,6 +79,16 @@ const rateLimitContact = rateLimit({
     }
 });
 
+const rateLimitBurnoutQuiz = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 8,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Demasiados pedidos. Tenta novamente mais tarde.' });
+    }
+});
+
 const rateLimitReviews = rateLimit({
     windowMs: 60 * 60 * 1000,
     max: 8,
@@ -1611,6 +1621,104 @@ async function sendContactInquiryEmail(data) {
         return true;
     } catch (err) {
         console.error('   ❌ Failed to send contact inquiry:', err.message);
+        return false;
+    }
+}
+
+function buildBurnoutQuizEmails(data) {
+    const scores = data.scores || {};
+    const band = String(data.band || '').trim() || '—';
+    const global = Number.isFinite(scores.global) ? scores.global : '—';
+    const personal = Number.isFinite(scores.personal) ? scores.personal : '—';
+    const work = Number.isFinite(scores.work) ? scores.work : '—';
+    const body = Number.isFinite(scores.body) ? scores.body : '—';
+    const bookUrl = `${PUBLIC_SITE_URL}/marcar/saude-mental?ref=burnout-quiz-email`;
+
+    const clinicSubject = `Teste burnout: ${band} (${global}/100) — ${data.email}`;
+    const clinicText = [
+        'Novo resultado — Índice de Burnout (Lon Clinic)',
+        '',
+        `Email: ${data.email}`,
+        `Índice global: ${global}/100 (${band})`,
+        `Pessoal: ${personal} · Trabalho: ${work} · Corpo: ${body}`,
+        '',
+        `Marcar consulta: ${bookUrl}`
+    ].join('\n');
+
+    const clinicHtml = `<!DOCTYPE html><html lang="pt"><body style="font-family:system-ui,sans-serif;line-height:1.5;color:#22382f">
+<h2 style="margin:0 0 12px">Teste burnout — novo resultado</h2>
+<p><strong>Email:</strong> ${escapeHtml(data.email)}</p>
+<p><strong>Índice global:</strong> ${global}/100 · <strong>${escapeHtml(band)}</strong></p>
+<ul style="margin:8px 0 16px;padding-left:20px">
+<li>Burnout pessoal: ${personal}</li>
+<li>Burnout no trabalho: ${work}</li>
+<li>Sinais no corpo: ${body}</li>
+</ul>
+<p><a href="${bookUrl}">Link de marcação (saúde mental)</a></p>
+</body></html>`;
+
+    const userSubject = 'O teu resultado — Índice de Burnout | Lon Clinic';
+    const userText = [
+        'Obrigada por completares o Índice de Burnout da Lon Clinic.',
+        '',
+        `Índice global: ${global}/100 (${band})`,
+        `Burnout pessoal: ${personal}`,
+        `Burnout no trabalho: ${work}`,
+        `Sinais no corpo: ${body}`,
+        '',
+        'Este teste é informativo e não substitui avaliação clínica.',
+        '',
+        `Marcar consulta de saúde mental: ${bookUrl}`,
+        '',
+        'Lon Clinic — lonclinic.com'
+    ].join('\n');
+
+    const userHtml = `<!DOCTYPE html><html lang="pt"><body style="font-family:system-ui,sans-serif;line-height:1.55;color:#22382f;max-width:520px">
+<p style="margin:0 0 16px">Obrigada por completares o <strong>Índice de Burnout</strong>.</p>
+<p style="margin:0 0 8px;font-size:28px;font-weight:600">${global}<span style="font-size:14px;color:#6e7b72"> /100</span></p>
+<p style="margin:0 0 20px;color:#c4744a;font-weight:600;letter-spacing:.08em">${escapeHtml(band)}</p>
+<table style="width:100%;border-collapse:collapse;margin:0 0 24px;font-size:14px">
+<tr><td style="padding:6px 0;color:#6e7b72">Burnout pessoal</td><td style="text-align:right">${personal}</td></tr>
+<tr><td style="padding:6px 0;color:#6e7b72">Burnout no trabalho</td><td style="text-align:right">${work}</td></tr>
+<tr><td style="padding:6px 0;color:#6e7b72">Sinais no corpo</td><td style="text-align:right">${body}</td></tr>
+</table>
+<p style="font-size:13px;color:#6e7b72;margin:0 0 24px">Este teste é informativo e não substitui avaliação por um profissional de saúde.</p>
+<p style="margin:0"><a href="${bookUrl}" style="display:inline-block;background:#c4744a;color:#fff;text-decoration:none;padding:12px 22px;border-radius:999px;font-weight:600">Marcar consulta</a></p>
+<p style="margin:24px 0 0;font-size:12px;color:#6e7b72">Lon Clinic · lonclinic.com</p>
+</body></html>`;
+
+    return {
+        clinic: { subject: clinicSubject, text: clinicText, html: clinicHtml },
+        user: { subject: userSubject, text: userText, html: userHtml }
+    };
+}
+
+async function sendBurnoutQuizEmails(data) {
+    if (!isEmailConfigured) {
+        console.log('   ⚠️  Email not configured — burnout quiz result not emailed');
+        return false;
+    }
+    try {
+        const { clinic, user } = buildBurnoutQuizEmails(data);
+        await deliverEmail({
+            from: EMAIL_FROM,
+            to: CONTACT_EMAIL,
+            replyTo: data.email,
+            subject: clinic.subject,
+            text: clinic.text,
+            html: clinic.html
+        });
+        await deliverEmail({
+            from: EMAIL_FROM,
+            to: data.email,
+            subject: user.subject,
+            text: user.text,
+            html: user.html
+        });
+        console.log('   📩 Burnout quiz emails sent:', data.email);
+        return true;
+    } catch (err) {
+        console.error('   ❌ Failed to send burnout quiz emails:', err.message);
         return false;
     }
 }
@@ -3295,6 +3403,10 @@ app.get('/consulta', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'consulta.html'), 'Error loading consulta landing page');
 });
 
+app.get('/teste-burnout', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'burnout-quiz.html'), 'Error loading burnout quiz page');
+});
+
 app.get('/patient-portal', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'dashboard.html'), 'Error loading patient portal');
 });
@@ -3521,6 +3633,62 @@ app.post('/api/careers', (req, res) => {
             success: true,
             message: 'Candidatura enviada com sucesso.'
         });
+    });
+});
+
+// ─── API: Burnout quiz (CBI) — save result + email ───
+app.post('/api/burnout-quiz', rateLimitBurnoutQuiz, async (req, res) => {
+    const email = String(req.body?.email || '').trim().toLowerCase();
+    const answers = req.body?.answers;
+    const scores = req.body?.scores;
+    const band = String(req.body?.band || '').trim().slice(0, 24);
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        return res.status(400).json({ error: 'Email inválido.' });
+    }
+    if (!Array.isArray(answers) || answers.length !== 18) {
+        return res.status(400).json({ error: 'Respostas incompletas.' });
+    }
+    if (!scores || typeof scores !== 'object') {
+        return res.status(400).json({ error: 'Pontuação em falta.' });
+    }
+
+    const payload = {
+        email,
+        answers,
+        scores: {
+            personal: Number(scores.personal) || 0,
+            work: Number(scores.work) || 0,
+            body: Number(scores.body) || 0,
+            global: Number(scores.global) || 0,
+            bodyItems: scores.bodyItems && typeof scores.bodyItems === 'object' ? scores.bodyItems : {}
+        },
+        band
+    };
+
+    if (usePersistentDb) {
+        try {
+            const id = crypto.randomUUID();
+            const claimToken = crypto.randomBytes(24).toString('hex');
+            await db.insertQuizAttempt({
+                id,
+                claimToken,
+                quizId: 'burnout-cbi',
+                answers: payload.answers,
+                result: { scores: payload.scores, band: payload.band },
+                score: payload.scores.global
+            });
+            await db.claimQuizAttempt(id, claimToken, email);
+        } catch (dbErr) {
+            console.error('POST /api/burnout-quiz DB:', dbErr.message);
+        }
+    }
+
+    const emailed = await sendBurnoutQuizEmails(payload);
+    return res.json({
+        success: true,
+        emailed,
+        bookUrl: '/marcar/saude-mental?ref=burnout-quiz'
     });
 });
 
