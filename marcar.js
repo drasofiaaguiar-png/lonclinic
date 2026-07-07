@@ -251,7 +251,7 @@
             tipo: 'burnout_programa',
             badge: 'Programa',
             title: 'Programa completo',
-            price: '€490',
+            price: '€450',
             unit: '8 sessões',
             note: 'CBI + relatório final escrito',
             featured: false
@@ -359,8 +359,8 @@
         },
         burnout_programa: {
             label: 'Programa Anti-Burnout',
-            price: '€490',
-            cents: 49000,
+            price: '€450',
+            cents: 45000,
             duration: '8 sessões · 60 min',
             serviceKey: 'burnout_programa',
             bullets: [

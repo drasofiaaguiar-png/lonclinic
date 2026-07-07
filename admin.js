@@ -787,7 +787,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         saude_mental: 4900,
         burnout: 6000,
         burnout_mensal: 21600,
-        burnout_programa: 49000,
+        burnout_programa: 45000,
         longevidade: 7900,
         renovacao: 1900
     };

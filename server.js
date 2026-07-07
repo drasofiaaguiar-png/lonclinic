@@ -3415,6 +3415,14 @@ app.get('/teste-burnout', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'burnout-quiz.html'), 'Error loading burnout quiz page');
 });
 
+app.get('/clinica-anti-burnout', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'anti-burnout.html'), 'Error loading anti-burnout landing page');
+});
+
+app.get('/anti-burnout', (req, res) => {
+    res.redirect(301, '/clinica-anti-burnout');
+});
+
 app.get('/patient-portal', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'dashboard.html'), 'Error loading patient portal');
 });
