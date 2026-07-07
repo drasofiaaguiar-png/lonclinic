@@ -15,6 +15,8 @@ const SERVICE_CENTS = {
     travel: 3900,
     saude_mental: 4900,
     burnout: 6000,
+    burnout_mensal: 21600,
+    burnout_programa: 49000,
     renovacao: 1900,
     longevidade: 7900
 };
@@ -41,6 +43,12 @@ const DISCOUNT_CODES = {
 };
 
 const STRIPE_MIN_CENTS = 50;
+
+const STRIPE_SUBSCRIPTION_SERVICES = new Set(['burnout_mensal']);
+
+function isStripeSubscriptionService(serviceKey) {
+    return STRIPE_SUBSCRIPTION_SERVICES.has(serviceKey);
+}
 
 function normalizeServiceKey(service) {
     const raw = String(service || '')
@@ -96,7 +104,8 @@ function computeCheckoutTotalCents(opts) {
     }
 
     let discountPercent = 0;
-    if (discountCode) {
+    const noDiscountServices = new Set(['burnout_mensal', 'burnout_programa']);
+    if (discountCode && !noDiscountServices.has(key)) {
         const code = String(discountCode).toUpperCase().trim();
         if (Object.prototype.hasOwnProperty.call(DISCOUNT_CODES, code)) {
             discountPercent = DISCOUNT_CODES[code];
@@ -119,5 +128,6 @@ function computeCheckoutTotalCents(opts) {
 module.exports = {
     computeCheckoutTotalCents,
     normalizeServiceKey,
+    isStripeSubscriptionService,
     STRIPE_MIN_CENTS
 };

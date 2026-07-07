@@ -62,12 +62,33 @@
                 ]
             },
             burnout: {
-                label: 'Burnout Medical Consultation',
+                label: 'Single Anti-Burnout Consultation',
                 duration: '60 min',
                 bullets: [
                     'In-depth assessment of exhaustion, work stress and recovery.',
-                    'Review of sleep, energy, body signals and a personalised recovery plan.',
-                    'Ideal after the burnout index test or when burnout is already affecting your daily life.'
+                    'Review of sleep, energy and body signals with a personalised plan.',
+                    'Ideal as a first step or after the burnout index test.'
+                ]
+            },
+            burnout_mensal: {
+                label: 'Anti-Burnout · Monthly subscription',
+                duration: '60 min · 4 sessions/month',
+                bullets: [
+                    '4 anti-burnout consultations per month (€54/session — 10% off single price).',
+                    'Cancelable monthly subscription.',
+                    'Same 60-minute clinical protocol as the single consultation.',
+                    'Ideal for gradual recovery with regular follow-up.'
+                ]
+            },
+            burnout_programa: {
+                label: 'Anti-Burnout Program',
+                duration: '8 sessions · 60 min',
+                bullets: [
+                    '8 structured anti-burnout consultations with a dedicated protocol.',
+                    'Burnout Index (CBI) before and after — objective progress tracking.',
+                    'Written final report: clinical assessment, CBI evolution and maintenance plan.',
+                    'Lab test requisitions when clinically indicated.',
+                    'Dedicated support throughout the 8-session program.'
                 ]
             },
             longevidade: {
@@ -136,12 +157,33 @@
                 ]
             },
             burnout: {
-                label: 'Consulta Médica de Burn Out',
+                label: 'Consulta médica anti-burnout suelta',
                 duration: '60 min',
                 bullets: [
-                    'Evaluación aprofundada de exaustão, stress laboral e recuperação.',
-                    'Revisão de sono, energia, sinais no corpo e plano personalizado.',
-                    'Ideal após o teste de burnout ou quando o esgotamento já afeta o dia a dia.'
+                    'Evaluación profunda del agotamiento, estrés laboral y recuperación.',
+                    'Revisión del sueño, energía y señales corporales con plan personalizado.',
+                    'Ideal como primer paso o tras el test de burnout.'
+                ]
+            },
+            burnout_mensal: {
+                label: 'Anti-burnout · Suscripción mensual',
+                duration: '60 min · 4 consultas/mes',
+                bullets: [
+                    '4 consultas anti-burnout al mes (54 €/sesión — 10% menos que suelta).',
+                    'Suscripción mensual cancelable en cualquier momento.',
+                    'Consultas de 60 min con el mismo protocolo clínico.',
+                    'Ideal para recuperación gradual con seguimiento regular.'
+                ]
+            },
+            burnout_programa: {
+                label: 'Programa anti-burnout',
+                duration: '8 sesiones · 60 min',
+                bullets: [
+                    '8 consultas con protocolo estructurado anti-burnout.',
+                    'Índice de Burnout (CBI) antes y después — evolución objetiva.',
+                    'Informe final escrito: evaluación, evolución CBI y plan de mantenimiento.',
+                    'Petición de análisis cuando esté clínicamente indicado.',
+                    'Acompañamiento dedicado a lo largo de las 8 sesiones.'
                 ]
             },
             longevidade: {
@@ -163,6 +205,8 @@
         travel: 'travel',
         saude_mental: 'saude-mental',
         burnout: 'burnout',
+        burnout_mensal: 'burnout-mensal',
+        burnout_programa: 'burnout-programa',
         longevidade: 'longevidade'
     };
     var SLUG_TO_TYPE = {
@@ -176,8 +220,43 @@
         'saude-mental': 'saude_mental',
         saude_mental: 'saude_mental',
         burnout: 'burnout',
+        'burnout-mensal': 'burnout_mensal',
+        burnout_mensal: 'burnout_mensal',
+        'burnout-programa': 'burnout_programa',
+        burnout_programa: 'burnout_programa',
         longevidade: 'longevidade'
     };
+
+    var BURNOUT_FAMILY = ['burnout', 'burnout_mensal', 'burnout_programa'];
+    var BURNOUT_PLAN_CARDS = [
+        {
+            tipo: 'burnout',
+            badge: 'Avulsa',
+            title: 'Consulta avulsa',
+            price: '€60',
+            unit: 'por sessão',
+            note: '60 min · primeira avaliação',
+            featured: false
+        },
+        {
+            tipo: 'burnout_mensal',
+            badge: 'Mensal',
+            title: 'Subscrição mensal',
+            price: '€216',
+            unit: '/mês',
+            note: '4× €54 (−10%) · cancelável',
+            featured: true
+        },
+        {
+            tipo: 'burnout_programa',
+            badge: 'Programa',
+            title: 'Programa completo',
+            price: '€490',
+            unit: '8 sessões',
+            note: 'CBI + relatório final escrito',
+            featured: false
+        }
+    ];
 
     var CONSULTATION_TYPES = {
         urgente: {
@@ -253,15 +332,43 @@
             ]
         },
         burnout: {
-            label: 'Consulta Médica de Burn Out',
+            label: 'Consulta Médica Anti-Burnout avulsa',
             price: '€60',
             cents: 6000,
             duration: '60 min',
             serviceKey: 'burnout',
             bullets: [
                 'Avaliação aprofundada de exaustão, stress laboral e recuperação.',
-                'Revisão de sono, energia, sinais no corpo e plano personalizado.',
-                'Ideal após o teste de burnout ou quando o esgotamento já afeta o dia a dia.'
+                'Revisão de sono, energia e sinais no corpo com plano personalizado.',
+                'Ideal como primeiro passo ou após o teste de burnout.'
+            ]
+        },
+        burnout_mensal: {
+            label: 'Consulta Médica Anti-Burnout · Subscrição mensal',
+            price: '€216',
+            priceNote: '/mês',
+            cents: 21600,
+            duration: '60 min · 4 consultas/mês',
+            serviceKey: 'burnout_mensal',
+            bullets: [
+                '4 consultas anti-burnout por mês (€54/sessão — 10% menos que avulsa).',
+                'Subscrição mensal cancelável a qualquer momento.',
+                'Consultas de 60 min com o mesmo protocolo clínico.',
+                'Ideal para recuperação gradual com acompanhamento regular.'
+            ]
+        },
+        burnout_programa: {
+            label: 'Programa Anti-Burnout',
+            price: '€490',
+            cents: 49000,
+            duration: '8 sessões · 60 min',
+            serviceKey: 'burnout_programa',
+            bullets: [
+                '8 consultas com protocolo estruturado anti-burnout.',
+                'Índice de Burnout (CBI) antes e depois — evolução objetiva.',
+                'Relatório final escrito: avaliação, evolução CBI e plano de manutenção.',
+                'Requisição de análises quando clinicamente indicado.',
+                'Acompanhamento dedicado ao longo das 8 sessões.'
             ]
         },
         longevidade: {
@@ -322,7 +429,32 @@
     if (errHide) errHide.style.display = 'none';
     applyPrettyUrlIfNeeded(tipo);
 
-    if (tipo === 'burnout') {
+    function isBurnoutFamily(t) {
+        return BURNOUT_FAMILY.indexOf(t) >= 0;
+    }
+
+    function renderBurnoutPlanPicker(activeTipo) {
+        var section = document.getElementById('marcarPlanSection');
+        var grid = document.getElementById('marcarPlans');
+        if (!section || !grid) return;
+        section.hidden = false;
+        grid.innerHTML = '';
+        BURNOUT_PLAN_CARDS.forEach(function (card) {
+            var btn = document.createElement('a');
+            btn.href = getPrettyMarcarUrl(card.tipo);
+            btn.className = 'marcar-plan-card' + (card.tipo === activeTipo ? ' is-active' : '') + (card.featured ? ' is-featured' : '');
+            btn.setAttribute('aria-current', card.tipo === activeTipo ? 'true' : 'false');
+            btn.innerHTML =
+                '<span class="marcar-plan-badge">' + card.badge + '</span>' +
+                '<span class="marcar-plan-title">' + card.title + '</span>' +
+                '<span class="marcar-plan-price">' + card.price + '<small>' + card.unit + '</small></span>' +
+                '<span class="marcar-plan-note">' + card.note + '</span>';
+            grid.appendChild(btn);
+        });
+    }
+
+    if (isBurnoutFamily(tipo)) {
+        renderBurnoutPlanPicker(tipo);
         var burnoutLink = document.getElementById('marcarBurnoutLink');
         if (burnoutLink) burnoutLink.hidden = false;
     }
@@ -337,7 +469,7 @@
     };
 
     document.getElementById('marcarTitle').textContent = consulta.label;
-    document.getElementById('marcarPrice').textContent = consulta.price;
+    document.getElementById('marcarPrice').textContent = consulta.price + (consulta.priceNote || '');
     document.getElementById('marcarDuration').textContent = consulta.duration;
 
     var ul = document.getElementById('marcarBullets');

@@ -24,7 +24,7 @@ let clinicPasswordHash = null;
 bcrypt.hash(CLINIC_PASSWORD, 12).then(h => { clinicPasswordHash = h; });
 
 const db = require('./db');
-const { computeCheckoutTotalCents } = require('./pricing');
+const { computeCheckoutTotalCents, isStripeSubscriptionService } = require('./pricing');
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -2971,8 +2971,13 @@ const checkoutFinalizeInFlight = new Set();
 
 function paymentIntentIdFromSession(session) {
     const pi = session && session.payment_intent;
-    if (!pi) return '';
-    return typeof pi === 'string' ? pi : (pi.id || '');
+    if (pi) {
+        return typeof pi === 'string' ? pi : (pi.id || '');
+    }
+    if (session && session.mode === 'subscription' && session.id) {
+        return 'sub_cs_' + session.id;
+    }
+    return '';
 }
 
 /** Stripe Customer id on completed Checkout (links repeat purchases even when email changes). */
@@ -3308,6 +3313,8 @@ const MARCAR_TIPO_TO_SLUG = {
     travel: 'travel',
     saude_mental: 'saude-mental',
     burnout: 'burnout',
+    burnout_mensal: 'burnout-mensal',
+    burnout_programa: 'burnout-programa',
     longevidade: 'longevidade'
 };
 
@@ -4006,34 +4013,47 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         console.log('   Service:', service);
         console.log('   Amount:', priceAmount, 'cents');
         console.log('   Email:', patientEmail);
-        
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            mode: 'payment',
-            customer_creation: 'always',
-            customer_email: patientEmail,
-            // Enable Stripe automatic receipt
-            payment_intent_data: {
-                receipt_email: patientEmail,
-            },
-            line_items: [{
-                price_data: {
-                    currency: 'eur',
-                    product_data: {
-                        name: itemName,
-                        description: description,
-                        images: [],
-                    },
-                    unit_amount: priceAmount,
+
+        const isSubscription = isStripeSubscriptionService(service);
+        const productDescription = isSubscription
+            ? `${description} · Subscrição mensal cancelável (4 consultas/mês)`
+            : service === 'burnout_programa'
+              ? `${description} · Programa 8 sessões com relatório final e CBI antes/depois`
+              : description;
+
+        const lineItem = {
+            price_data: {
+                currency: 'eur',
+                product_data: {
+                    name: itemName,
+                    description: productDescription,
+                    images: []
                 },
-                quantity: 1,
-            }],
+                unit_amount: priceAmount,
+                ...(isSubscription ? { recurring: { interval: 'month' } } : {})
+            },
+            quantity: 1
+        };
+
+        const sessionParams = {
+            payment_method_types: ['card'],
+            mode: isSubscription ? 'subscription' : 'payment',
+            customer_email: patientEmail,
+            line_items: [lineItem],
             metadata,
             success_url: `${getBaseUrl(req)}/book-consultation?success=true&session_id={CHECKOUT_SESSION_ID}`,
             cancel_url: `${getBaseUrl(req)}/book-consultation?cancelled=true`,
-            // Auto-expire after 30 minutes
-            expires_at: Math.floor(Date.now() / 1000) + (30 * 60),
-        });
+            expires_at: Math.floor(Date.now() / 1000) + (30 * 60)
+        };
+
+        if (isSubscription) {
+            sessionParams.subscription_data = { metadata: { service, service_label: (serviceLabel || '').substring(0, 500) } };
+        } else {
+            sessionParams.customer_creation = 'always';
+            sessionParams.payment_intent_data = { receipt_email: patientEmail };
+        }
+
+        const session = await stripe.checkout.sessions.create(sessionParams);
 
         console.log('✅ Checkout session created:', session.id);
         res.json({ sessionId: session.id, url: session.url });
@@ -4864,7 +4884,9 @@ const INVITATION_SERVICE_LABEL = {
     infeccao_urinaria: { pt: 'Consulta de Infeção Urinária', en: 'Urinary Tract Infection Consultation', es: 'Consulta de Infección Urinaria' },
     travel: { pt: 'Consulta do Viajante', en: 'Travel Medicine Consultation', es: 'Consulta del Viajero' },
     saude_mental: { pt: 'Consulta de Saúde Mental', en: 'Mental Health Consultation', es: 'Consulta de Salud Mental' },
-    burnout: { pt: 'Consulta Médica de Burn Out', en: 'Burnout Medical Consultation', es: 'Consulta Médica de Burn Out' },
+    burnout: { pt: 'Consulta Médica Anti-Burnout avulsa', en: 'Single Anti-Burnout Consultation', es: 'Consulta médica anti-burnout suelta' },
+    burnout_mensal: { pt: 'Anti-Burnout · Subscrição mensal', en: 'Anti-Burnout Monthly Subscription', es: 'Anti-burnout · Suscripción mensual' },
+    burnout_programa: { pt: 'Programa Anti-Burnout (8 sessões)', en: 'Anti-Burnout Program (8 sessions)', es: 'Programa anti-burnout (8 sesiones)' },
     longevidade: { pt: 'Consulta de Longevidade', en: 'Longevity Consultation', es: 'Consulta de Longevidad' },
     renovacao: { pt: 'Renovação de Receita', en: 'Prescription Renewal', es: 'Renovación de Receta' }
 };

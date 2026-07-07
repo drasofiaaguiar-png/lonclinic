@@ -63,7 +63,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         urgente: { label: 'Consulta Médica Urgente (Adultos)', price: '€35', cents: 3500 },
         travel: { label: 'Consulta do Viajante', price: '€39', cents: 3900 },
         saude_mental: { label: 'Consulta de Saúde Mental Adultos', price: '€49', cents: 4900 },
-        burnout: { label: 'Consulta Médica de Burn Out', price: '€60', cents: 6000 },
+        burnout: { label: 'Consulta Médica Anti-Burnout avulsa', price: '€60', cents: 6000 },
+        burnout_mensal: { label: 'Anti-Burnout · Subscrição mensal', price: '€216/mês', cents: 21600 },
+        burnout_programa: { label: 'Programa Anti-Burnout (8 sessões)', price: '€490', cents: 49000 },
         renovacao: { label: 'Renovação de Tratamento Médico', price: '€19', cents: 1900 },
         longevidade: { label: 'Consulta de Longevidade e Saúde Preventiva', price: '€79', cents: 7900 }
     };
@@ -525,6 +527,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 travel: 'travel',
                 saude_mental: 'saude-mental',
                 burnout: 'burnout',
+                burnout_mensal: 'burnout-mensal',
+                burnout_programa: 'burnout-programa',
                 longevidade: 'longevidade'
             };
             var slug = tipoSlugMap[state.marcarTipo] || encodeURIComponent(state.marcarTipo);
@@ -1162,7 +1166,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 durationMinutes = 15;
             } else if (data.service === 'saude_mental') {
                 durationMinutes = 45;
-            } else if (data.service === 'burnout') {
+            } else if (data.service === 'burnout' || data.service === 'burnout_mensal' || data.service === 'burnout_programa') {
                 durationMinutes = 60;
             }
 
