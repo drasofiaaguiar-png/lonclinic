@@ -71,6 +71,26 @@
 
     const BOOKING_URL = '/marcar/burnout?ref=burnout-quiz';
 
+    const DIM_META = {
+        personal: {
+            short: 'Como te sentes',
+            cls: 'dim-badge--personal',
+            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>'
+        },
+        work: {
+            short: 'O teu trabalho',
+            cls: 'dim-badge--work',
+            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>'
+        },
+        body: {
+            short: 'O corpo',
+            cls: 'dim-badge--body',
+            icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 014 4v1a4 4 0 01-8 0V6a4 4 0 014-4z"/><path d="M6 21v-2a6 6 0 0112 0v2"/></svg>'
+        }
+    };
+
+    const PILL_CLASS = { BAIXO: 'pill--low', LIGEIRO: 'pill--light', MODERADO: 'pill--mid', ELEVADO: 'pill--high' };
+
     let current = 0;
     let lastEmail = '';
     let lastScores = null;
@@ -89,23 +109,36 @@
 
     function renderQuestion() {
         const q = QUESTIONS[current];
-        $('dimLabel').textContent = q.label;
+        const dim = DIM_META[q.scale] || DIM_META.personal;
+        const badge = $('dimBadge');
+        const dimIcon = $('dimIcon');
+        const dimLabel = $('dimLabel');
+        const dimLabelShort = $('dimLabelShort');
+
+        badge.hidden = false;
+        badge.className = 'dim-badge ' + dim.cls;
+        dimIcon.innerHTML = dim.icon;
+        dimLabel.textContent = q.label;
+        if (dimLabelShort) dimLabelShort.textContent = dim.short;
+
         $('questionText').textContent = q.text;
-        $('stepLabel').textContent = 'Pergunta ' + (current + 1) + ' de ' + QUESTIONS.length;
-        $('progressBar').style.width = ((current / QUESTIONS.length) * 100) + '%';
+        $('stepLabel').textContent = (current + 1) + ' / ' + QUESTIONS.length;
+        $('progressBar').style.width = (((current + 1) / QUESTIONS.length) * 100) + '%';
         $('backBtn').style.visibility = current === 0 ? 'hidden' : 'visible';
 
         const box = $('options');
         box.innerHTML = '';
-        q.type.forEach(function (opt) {
+        q.type.forEach(function (opt, idx) {
             const score = q.reversed ? (100 - opt.v) : opt.v;
             const b = document.createElement('button');
             b.className = 'opt' + (answers[current] === score ? ' selected' : '');
+            b.style.animationDelay = (idx * 45) + 'ms';
             b.setAttribute('role', 'radio');
             b.setAttribute('aria-checked', answers[current] === score ? 'true' : 'false');
-            b.innerHTML = '<span class="dot"></span>' + opt.label;
+            b.innerHTML = '<span class="opt-num">' + (idx + 1) + '</span><span class="opt-label">' + opt.label + '</span>';
             b.addEventListener('click', function () {
                 answers[current] = score;
+                box.querySelectorAll('.opt').forEach(function (el) { el.classList.remove('selected'); });
                 b.classList.add('selected');
                 setTimeout(function () {
                     if (current < QUESTIONS.length - 1) {
@@ -115,7 +148,7 @@
                         show('gate');
                         $('email').focus();
                     }
-                }, 180);
+                }, 220);
             });
             box.appendChild(b);
         });
@@ -163,6 +196,7 @@
         lastScores = s;
 
         $('bandPill').textContent = band.pill;
+        $('bandPill').className = 'pill ' + (PILL_CLASS[band.pill] || 'pill--mid');
         $('bandTitle').textContent = band.title;
         $('bandText').textContent = band.text;
         $('ctaText').textContent = band.cta;
@@ -177,7 +211,7 @@
             .filter(function (pair) { return pair[1] >= 50; })
             .sort(function (a, b) { return b[1] - a[1]; })
             .slice(0, 2);
-        ranked.forEach(function (pair) {
+        ranked.forEach(function (pair, i) {
             const k = pair[0];
             const ins = SCALE_INSIGHTS[k];
             let extra = '';
@@ -187,6 +221,7 @@
             }
             const div = document.createElement('div');
             div.className = 'insight';
+            div.style.animationDelay = (i * 80) + 'ms';
             div.innerHTML = '<h3>' + ins.title + '</h3><p>' + ins.text + '</p>' + extra;
             box.appendChild(div);
         });
@@ -284,6 +319,7 @@
         $('email').value = '';
         $('gaugeArc').style.strokeDashoffset = 314.16;
         $('scoreNum').textContent = '0';
+        $('bandPill').className = 'pill';
         ['barPersonal', 'barWork', 'barBody'].forEach(function (id) { $(id).style.width = '0%'; });
         show('intro');
     });
