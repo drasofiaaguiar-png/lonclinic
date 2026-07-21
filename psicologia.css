@@ -163,7 +163,7 @@ body.psi-landing {
     top: var(--lon-nav-h);
 }
 
-/* ── Hero centrado, full-bleed ── */
+/* ── Hero centrado, fundo laranja tijolo ── */
 .psi-hero {
     position: relative;
     min-height: min(100vh, 900px);
@@ -172,15 +172,20 @@ body.psi-landing {
     justify-content: flex-end;
     align-items: stretch;
     padding: calc(var(--lon-nav-h) + 48px) 0 0;
-    color: #f4f7f8;
+    color: #fff8f4;
     overflow: hidden;
     isolation: isolate;
+    background:
+        radial-gradient(ellipse 80% 60% at 85% 15%, rgba(255, 196, 160, 0.22) 0%, transparent 55%),
+        radial-gradient(ellipse 55% 45% at 10% 80%, rgba(90, 28, 12, 0.35) 0%, transparent 50%),
+        linear-gradient(165deg, #d4683a 0%, #c24f28 42%, #a33d1c 100%);
 }
 
 .psi-hero-bg {
     position: absolute;
     inset: 0;
     z-index: 0;
+    opacity: 0.22;
 }
 
 .psi-hero-bg img {
@@ -189,7 +194,8 @@ body.psi-landing {
     object-fit: cover;
     object-position: center 30%;
     display: block;
-    filter: saturate(1.06) contrast(1.06);
+    filter: saturate(0.7) contrast(1.05) grayscale(0.15);
+    mix-blend-mode: multiply;
     will-change: transform;
     animation: psi-hero-drift 22s ease-in-out infinite alternate;
 }
@@ -199,8 +205,7 @@ body.psi-landing {
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(180deg, rgba(10, 16, 20, 0.35) 0%, rgba(10, 16, 20, 0.55) 40%, rgba(10, 16, 20, 0.92) 100%),
-        linear-gradient(115deg, rgba(226, 61, 47, 0.22) 0%, transparent 45%);
+        linear-gradient(180deg, rgba(163, 61, 28, 0.25) 0%, rgba(122, 40, 16, 0.55) 100%);
 }
 
 .psi-hero-inner {
@@ -222,7 +227,7 @@ body.psi-landing {
     font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 0.95;
-    color: #f4f7f8;
+    color: #fff8f4;
     animation: psi-fade-up 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -239,7 +244,7 @@ body.psi-landing {
     margin: 0 0 28px;
     font-size: clamp(1.05rem, 1.5vw, 1.2rem);
     line-height: 1.5;
-    color: rgba(244, 247, 248, 0.9);
+    color: rgba(255, 248, 244, 0.92);
     font-weight: 500;
     animation: psi-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.16s both;
 }
@@ -258,9 +263,9 @@ body.psi-landing {
     text-align: left;
     padding: 22px 20px;
     border-radius: 16px;
-    background: rgba(247, 249, 250, 0.12);
-    border: 1px solid rgba(244, 247, 248, 0.28);
-    color: #f4f7f8;
+    background: rgba(255, 248, 244, 0.14);
+    border: 1px solid rgba(255, 248, 244, 0.35);
+    color: #fff8f4;
     text-decoration: none;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -268,8 +273,8 @@ body.psi-landing {
 }
 
 .psi-select-card:hover {
-    background: rgba(247, 249, 250, 0.2);
-    border-color: rgba(244, 247, 248, 0.55);
+    background: rgba(255, 248, 244, 0.24);
+    border-color: rgba(255, 248, 244, 0.65);
     transform: translateY(-2px);
 }
 
@@ -283,7 +288,7 @@ body.psi-landing {
 .psi-select-desc {
     font-size: 0.92rem;
     line-height: 1.4;
-    color: rgba(244, 247, 248, 0.78);
+    color: rgba(255, 248, 244, 0.82);
 }
 
 .psi-cta-row {
