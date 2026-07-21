@@ -89,6 +89,26 @@ const rateLimitBurnoutQuiz = rateLimit({
     }
 });
 
+const rateLimitTriagem = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 8,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Demasiados pedidos. Tenta novamente mais tarde.' });
+    }
+});
+
+const rateLimitTriagemAlert = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Too many requests.' });
+    }
+});
+
 const rateLimitReviews = rateLimit({
     windowMs: 60 * 60 * 1000,
     max: 8,
@@ -3431,6 +3451,14 @@ app.get('/psicologia.html', (req, res) => {
     res.redirect(301, '/psicologia');
 });
 
+app.get('/triagem', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'triagem.html'), 'Error loading triagem page');
+});
+
+app.get('/triagem.html', (req, res) => {
+    res.redirect(301, '/triagem');
+});
+
 app.get('/patient-portal', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'dashboard.html'), 'Error loading patient portal');
 });
@@ -3658,6 +3686,211 @@ app.post('/api/careers', (req, res) => {
             message: 'Candidatura enviada com sucesso.'
         });
     });
+});
+
+// ─── API: Psicologia triagem (PHQ-9 + matching) ───
+async function sendTriagemPriorityAlert(data) {
+    const lines = [
+        '⚠️ PRIORIDADE CLÍNICA — PHQ-9 pergunta 9 ≥ 1',
+        '',
+        `Nome: ${data.nome || '(ainda não preenchido)'}`,
+        `Email: ${data.email || '(ainda não preenchido)'}`,
+        `Telefone: ${data.telefone || '(ainda não preenchido)'}`,
+        `PHQ-9 Q9: ${data.score}`,
+        data.partial ? 'Estado: alerta parcial (durante o questionário)' : 'Estado: triagem completa',
+        '',
+        'Protocolo: contacto prioritário da equipa clínica. Se o contacto indicar risco imediato, orientar para 112 / SNS 24 / SOS Voz Amiga.'
+    ];
+    const text = lines.join('\n');
+    console.log('   🚨 Triagem priority alert:', text.replace(/\n/g, ' | '));
+
+    if (!isEmailConfigured) return false;
+    try {
+        await deliverEmail({
+            from: EMAIL_FROM,
+            to: CONTACT_EMAIL,
+            subject: `🚨 PRIORIDADE — Triagem Psicologia PHQ-9 Q9=${data.score} — ${data.nome || data.email || 'sem nome'}`,
+            text,
+            html: `<pre style="font-family:system-ui,sans-serif;white-space:pre-wrap">${text.replace(/</g, '&lt;')}</pre>`
+        });
+        return true;
+    } catch (err) {
+        console.error('   ❌ Triagem priority alert email failed:', err.message);
+        return false;
+    }
+}
+
+function formatTriagemEmail(data) {
+    const phq = data.phq || {};
+    const motivos = Array.isArray(data.motivos) ? data.motivos.join(', ') : '';
+    const risk = data.riskFlagged || Number(data.phq9) >= 1;
+    const lines = [
+        risk ? '⚠️ SINALIZAÇÃO PRIORITÁRIA — PHQ-9 pergunta 9 ≥ 1' : 'Questionário de Triagem — Psicologia',
+        '',
+        '── Dados básicos ──',
+        `Nome: ${data.nome}`,
+        `Idade: ${data.idade}`,
+        `Género: ${data.genero}`,
+        `Localização: ${data.localizacao}`,
+        `Email: ${data.email}`,
+        `Telefone: ${data.telefone}`,
+        '',
+        '── Motivo ──',
+        `Motivos: ${motivos}`,
+        `Duração: ${data.duracao}`,
+        '',
+        '── PHQ-9 ──',
+        `Q1–Q9: ${[1,2,3,4,5,6,7,8,9].map((n) => phq['q' + n]).join(', ')}`,
+        `Total: ${data.phqTotal}`,
+        `Q9 (risco): ${data.phq9}`,
+        `Flag prioridade: ${risk ? 'SIM' : 'não'}`,
+        '',
+        '── Histórico ──',
+        `Terapia antes: ${data.terapiaAntes}${data.terapiaUtil ? ` (útil: ${data.terapiaUtil})` : ''}`,
+        `Medicação: ${data.medicacao}`,
+        `Diagnóstico: ${data.diagnostico}${data.diagnosticoQual ? ` — ${data.diagnosticoQual}` : ''}`,
+        '',
+        '── Preferências ──',
+        `Psicóloga: ${data.prefPsicologa}`,
+        `Comunicação: ${data.comunicacao}`,
+        `Horário vídeo: ${data.horario}`,
+        `Encaminhamento médico/nutri: ${data.encaminhamento || '—'}`,
+        '',
+        '── Consentimentos ──',
+        `Sem risco imediato (auto-declaração): ${data.consentimentos?.semRiscoImediato ? 'sim' : 'não'}`,
+        `Termos: ${data.consentimentos?.termos ? 'sim' : 'não'}`,
+        `Comunicações: ${data.consentimentos?.comunicacoes ? 'sim' : 'não'}`
+    ];
+    return lines.join('\n');
+}
+
+async function sendTriagemSubmission(data) {
+    const text = formatTriagemEmail(data);
+    const risk = data.riskFlagged || Number(data.phq9) >= 1;
+    console.log('   📋 Triagem submission:', data.email, risk ? 'PRIORITY' : 'normal');
+
+    if (!isEmailConfigured) {
+        console.log('   ⚠️  Email not configured — triagem logged only');
+        return true; // accept submission even without SMTP so UX isn't blocked in dev
+    }
+
+    try {
+        await deliverEmail({
+            from: EMAIL_FROM,
+            to: CONTACT_EMAIL,
+            replyTo: data.email,
+            subject: `${risk ? '🚨 PRIORIDADE — ' : ''}Triagem Psicologia — ${data.nome}`,
+            text,
+            html: `<pre style="font-family:system-ui,sans-serif;font-size:14px;line-height:1.5;white-space:pre-wrap">${text.replace(/</g, '&lt;')}</pre>`
+        });
+
+        if (data.email) {
+            try {
+                await deliverEmail({
+                    from: EMAIL_FROM,
+                    to: data.email,
+                    subject: 'Recebemos a tua triagem — LON Clinic',
+                    text: `Olá ${data.nome},\n\nRecebemos o teu questionário de triagem. A equipa clínica vai rever as respostas e contactar-te em breve.\n\nSe estiveres em risco imediato: 112 · SNS 24 808 24 24 24 · SOS Voz Amiga 213 544 545.\n\nLON Clinic`,
+                    html: `<p>Olá ${String(data.nome).replace(/</g, '&lt;')},</p><p>Recebemos o teu questionário de triagem. A equipa clínica vai rever as respostas e contactar-te em breve.</p><p>Se estiveres em risco imediato: <strong>112</strong> · SNS 24 <strong>808 24 24 24</strong> · SOS Voz Amiga <strong>213 544 545</strong>.</p><p>LON Clinic</p>`
+                });
+            } catch (replyErr) {
+                console.error('   ⚠️  Triagem auto-reply failed:', replyErr.message);
+            }
+        }
+        return true;
+    } catch (err) {
+        console.error('   ❌ Triagem email failed:', err.message);
+        return false;
+    }
+}
+
+app.post('/api/triagem-alert', rateLimitTriagemAlert, async (req, res) => {
+    const score = Number(req.body?.score);
+    if (!Number.isFinite(score) || score < 1 || score > 3) {
+        return res.status(400).json({ error: 'Invalid score.' });
+    }
+    await sendTriagemPriorityAlert({
+        score,
+        nome: String(req.body?.nome || '').trim().slice(0, 120),
+        email: String(req.body?.email || '').trim().slice(0, 160),
+        telefone: String(req.body?.telefone || '').trim().slice(0, 40),
+        partial: Boolean(req.body?.partial)
+    });
+    return res.json({ success: true });
+});
+
+app.post('/api/triagem', rateLimitTriagem, async (req, res) => {
+    const body = req.body || {};
+    const nome = String(body.nome || '').trim().slice(0, 120);
+    const email = String(body.email || '').trim().toLowerCase().slice(0, 160);
+    const telefone = String(body.telefone || '').trim().slice(0, 40);
+    const idade = Number(body.idade);
+    const phq = body.phq && typeof body.phq === 'object' ? body.phq : {};
+    const phq9 = Number(phq.q9 ?? body.phq9);
+    const riskFlagged = Boolean(body.riskFlagged) || (Number.isFinite(phq9) && phq9 >= 1);
+
+    if (!nome || !email || !telefone) {
+        return res.status(400).json({ error: 'Nome, email e telefone são obrigatórios.' });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        return res.status(400).json({ error: 'Email inválido.' });
+    }
+    if (!Number.isFinite(idade) || idade < 16 || idade > 120) {
+        return res.status(400).json({ error: 'Idade inválida.' });
+    }
+    if (!body.consentimentos?.termos || !body.consentimentos?.semRiscoImediato) {
+        return res.status(400).json({ error: 'Consentimentos obrigatórios em falta.' });
+    }
+
+    let phqTotal = 0;
+    const phqNorm = {};
+    for (let i = 1; i <= 9; i++) {
+        const v = Number(phq['q' + i]);
+        if (!Number.isFinite(v) || v < 0 || v > 3) {
+            return res.status(400).json({ error: 'PHQ-9 incompleto.' });
+        }
+        phqNorm['q' + i] = v;
+        phqTotal += v;
+    }
+
+    const payload = {
+        nome,
+        email,
+        telefone,
+        idade,
+        genero: String(body.genero || '').slice(0, 40),
+        localizacao: String(body.localizacao || '').slice(0, 120),
+        motivos: Array.isArray(body.motivos) ? body.motivos.map((m) => String(m).slice(0, 200)).slice(0, 12) : [],
+        duracao: String(body.duracao || '').slice(0, 40),
+        phq: phqNorm,
+        phqTotal,
+        phq9: phqNorm.q9,
+        riskFlagged,
+        terapiaAntes: String(body.terapiaAntes || '').slice(0, 20),
+        terapiaUtil: body.terapiaUtil ? String(body.terapiaUtil).slice(0, 20) : null,
+        medicacao: String(body.medicacao || '').slice(0, 40),
+        diagnostico: String(body.diagnostico || '').slice(0, 40),
+        diagnosticoQual: body.diagnosticoQual ? String(body.diagnosticoQual).slice(0, 200) : null,
+        prefPsicologa: String(body.prefPsicologa || '').slice(0, 200),
+        comunicacao: String(body.comunicacao || '').slice(0, 80),
+        horario: String(body.horario || '').slice(0, 40),
+        encaminhamento: body.encaminhamento ? String(body.encaminhamento).slice(0, 40) : null,
+        consentimentos: {
+            semRiscoImediato: Boolean(body.consentimentos?.semRiscoImediato),
+            termos: Boolean(body.consentimentos?.termos),
+            comunicacoes: Boolean(body.consentimentos?.comunicacoes)
+        }
+    };
+
+    // Full submission email already carries PRIORIDADE in the subject when riskFlagged.
+    // Mid-form /api/triagem-alert handles immediate notification during the PHQ-9 step.
+
+    const sent = await sendTriagemSubmission(payload);
+    if (!sent) {
+        return res.status(503).json({ error: 'Não foi possível enviar de momento. Tenta novamente.' });
+    }
+
+    return res.json({ success: true, riskFlagged });
 });
 
 // ─── API: Burnout quiz (CBI) — save result + email ───

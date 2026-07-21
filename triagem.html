@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZN8J4X12H3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZN8J4X12H3');
+      gtag('config', 'GT-TXHQ9ZVX');
+      gtag('config', 'AW-18103198169');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionário de Triagem · Psicologia | Lon Clinic</title>
+    <meta name="description" content="Triagem clínica inicial da LON Clinic. Ajuda-nos a fazer o matching com a psicóloga certa — inclui PHQ-9 adaptado e preferências de acompanhamento.">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="https://lonclinic.com/triagem">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://lonclinic.com/triagem">
+    <meta property="og:title" content="Questionário de Triagem · Lon Clinic">
+    <meta property="og:description" content="Ajuda-nos a fazer o matching com a psicóloga certa para ti.">
+    <meta property="og:locale" content="pt_PT">
+    <meta property="og:site_name" content="Lon Clinic">
+    <meta name="theme-color" content="#e23d2f">
+    <link rel="stylesheet" href="/landing.css?v=20260621b">
+    <link rel="stylesheet" href="/psicologia.css?v=20260721h">
+    <link rel="stylesheet" href="/triagem.css?v=20260721a">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+</head>
+<body class="lon-landing psi-landing triagem-page">
+    <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
+
+    <header class="triagem-top">
+        <a href="/psicologia" class="triagem-brand" aria-label="LON Clinic — Psicologia">LON Clinic</a>
+        <a href="/patient-portal" class="triagem-login">Login</a>
+    </header>
+
+    <div class="triagem-progress" id="progressWrap" hidden>
+        <div class="triagem-progress-inner" role="progressbar" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1" aria-label="Progresso do questionário" id="progressBar">
+            <span class="triagem-seg is-active" data-seg="1"></span>
+            <span class="triagem-seg" data-seg="2"></span>
+            <span class="triagem-seg" data-seg="3"></span>
+            <span class="triagem-seg" data-seg="4"></span>
+            <span class="triagem-seg" data-seg="5"></span>
+            <span class="triagem-seg" data-seg="6"></span>
+        </div>
+    </div>
+
+    <main id="conteudo-principal" class="triagem-main">
+        <!-- Intro -->
+        <section class="triagem-screen is-active" id="screen-intro" data-screen="intro">
+            <div class="triagem-intro">
+                <h1>Ajuda-nos a fazer o matching com a psicóloga certa.</h1>
+                <p>É importante teres alguém com quem consigas estabelecer uma ligação pessoal. As perguntas seguintes ajudam-nos a atribuir uma psicóloga com base nas tuas necessidades e preferências.</p>
+                <button type="button" class="lon-btn lon-btn-primary lon-btn-lg" id="startBtn">Começar</button>
+            </div>
+        </section>
+
+        <!-- Form steps -->
+        <form id="triagemForm" novalidate>
+            <!-- 1. Dados básicos -->
+            <section class="triagem-screen" id="screen-1" data-screen="1" hidden>
+                <div class="triagem-card">
+                    <p class="triagem-step-label">Passo 1 de 6</p>
+                    <h2>Dados básicos</h2>
+                    <div class="triagem-fields">
+                        <div class="triagem-field">
+                            <label for="nome">Nome</label>
+                            <input type="text" id="nome" name="nome" autocomplete="name" required maxlength="120">
+                        </div>
+                        <div class="triagem-field">
+                            <label for="idade">Idade</label>
+                            <input type="number" id="idade" name="idade" inputmode="numeric" min="16" max="120" required>
+                        </div>
+                        <fieldset class="triagem-fieldset">
+                            <legend>Género</legend>
+                            <div class="triagem-choices" role="radiogroup" aria-label="Género">
+                                <label class="triagem-choice"><input type="radio" name="genero" value="Feminino" required><span>Feminino</span></label>
+                                <label class="triagem-choice"><input type="radio" name="genero" value="Masculino"><span>Masculino</span></label>
+                                <label class="triagem-choice"><input type="radio" name="genero" value="Prefiro não dizer"><span>Prefiro não dizer</span></label>
+                                <label class="triagem-choice"><input type="radio" name="genero" value="Outro"><span>Outro</span></label>
+                            </div>
+                        </fieldset>
+                        <div class="triagem-field">
+                            <label for="localizacao">Localização <span class="triagem-hint">(distrito / país — para fuso horário)</span></label>
+                            <input type="text" id="localizacao" name="localizacao" placeholder="Ex.: Lisboa, Portugal" required maxlength="120">
+                        </div>
+                        <div class="triagem-field">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" autocomplete="email" inputmode="email" required maxlength="160">
+                        </div>
+                        <div class="triagem-field">
+                            <label for="telefone">Telefone / WhatsApp</label>
+                            <input type="tel" id="telefone" name="telefone" autocomplete="tel" inputmode="tel" required maxlength="40" placeholder="+351 …">
+                        </div>
+                    </div>
+                    <div class="triagem-actions">
+                        <button type="button" class="triagem-back" data-prev>← Voltar</button>
+                        <button type="button" class="lon-btn lon-btn-primary" data-next>Seguinte</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Motivo -->
+            <section class="triagem-screen" id="screen-2" data-screen="2" hidden>
+                <div class="triagem-card">
+                    <p class="triagem-step-label">Passo 2 de 6</p>
+                    <h2>Motivo da procura</h2>
+                    <fieldset class="triagem-fieldset">
+                        <legend>O que te traz à LON Clinic neste momento? <span class="triagem-hint">(seleção múltipla)</span></legend>
+                        <div class="triagem-choices triagem-choices--stack" id="motivosGroup">
+                            <label class="triagem-choice"><input type="checkbox" name="motivos" value="Ansiedade"><span>Ansiedade</span></label>
+                            <label class="triagem-choice"><input type="checkbox" name="motivos" value="Baixa de humor / tristeza persistente"><span>Baixa de humor / tristeza persistente</span></label>
+                            <label class="triagem-choice"><input type="checkbox" name="motivos" value="Stress relacionado com trabalho / burnout"><span>Stress relacionado com trabalho / burnout</span></label>
+                            <label class="triagem-choice"><input type="checkbox" name="motivos" value="Dificuldades de sono"><span>Dificuldades de sono</span></label>
+                            <label class="triagem-choice"><input type="checkbox" name="motivos" value="Relações pessoais ou familiares"><span>Relações pessoais ou familiares</span></label>
+                            <label class="triagem-choice"><input type="checkbox" name="motivos" value="Autoestima / autoconfiança"><span>Autoestima / autoconfiança</span></label>
+                            <label class="triagem-choice"><input type="checkbox" name="motivos" value="Luto ou perda"><span>Luto ou perda</span></label>
+                            <label class="triagem-choice"><input type="checkbox" name="motivos" value="Trauma ou eventos passados"><span>Trauma ou eventos passados</span></label>
+                            <label class="triagem-choice"><input type="checkbox" name="motivos" value="Transições de vida (mudança, carreira, maternidade/paternidade)"><span>Transições de vida (mudança, carreira, maternidade/paternidade)</span></label>
+                            <label class="triagem-choice"><input type="checkbox" name="motivos" value="Outro" id="motivoOutroCheck"><span>Outro</span></label>
+                        </div>
+                        <div class="triagem-field triagem-conditional" id="motivoOutroWrap" hidden>
+                            <label for="motivoOutro">Conta-nos um pouco mais</label>
+                            <input type="text" id="motivoOutro" name="motivoOutro" maxlength="240">
+                        </div>
+                    </fieldset>
+                    <fieldset class="triagem-fieldset">
+                        <legend>Há quanto tempo sentes isto?</legend>
+                        <div class="triagem-choices" role="radiogroup">
+                            <label class="triagem-choice"><input type="radio" name="duracao" value="Menos de 1 mês" required><span>Menos de 1 mês</span></label>
+                            <label class="triagem-choice"><input type="radio" name="duracao" value="1–6 meses"><span>1–6 meses</span></label>
+                            <label class="triagem-choice"><input type="radio" name="duracao" value="6 meses – 1 ano"><span>6 meses – 1 ano</span></label>
+                            <label class="triagem-choice"><input type="radio" name="duracao" value="Mais de 1 ano"><span>Mais de 1 ano</span></label>
+                        </div>
+                    </fieldset>
+                    <div class="triagem-actions">
+                        <button type="button" class="triagem-back" data-prev>← Voltar</button>
+                        <button type="button" class="lon-btn lon-btn-primary" data-next>Seguinte</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. PHQ-9 -->
+            <section class="triagem-screen" id="screen-3" data-screen="3" hidden>
+                <div class="triagem-card">
+                    <p class="triagem-step-label">Passo 3 de 6 · Triagem clínica</p>
+                    <h2>Nas últimas 2 semanas</h2>
+                    <p class="triagem-lead">Com que frequência foste incomodada por cada uma destas situações?</p>
+                    <p class="triagem-scale" aria-hidden="true">0 = Nunca · 1 = Vários dias · 2 = Mais de metade dos dias · 3 = Quase todos os dias</p>
+
+                    <div class="triagem-phq" id="phqList">
+                        <!-- filled by JS -->
+                    </div>
+
+                    <div class="triagem-risk" id="riskPanel" hidden role="alert" aria-live="assertive">
+                        <h3>Contactos de emergência — prioridade clínica</h3>
+                        <p>A tua resposta indica que podes estar a passar por um momento de risco. <strong>Não esperes pelo fim deste questionário</strong> — usa já estes contactos se precisares de ajuda imediata:</p>
+                        <ul class="triagem-emergency-list">
+                            <li><a href="tel:112"><strong>112</strong> — Emergência</a></li>
+                            <li><a href="tel:808242424"><strong>808 24 24 24</strong> — SNS 24</a></li>
+                            <li><a href="tel:213544545"><strong>213 544 545</strong> — SOS Voz Amiga</a></li>
+                        </ul>
+                        <p class="triagem-risk-note">A equipa clínica da LON Clinic será sinalizada para contacto prioritário com base nesta resposta. Se estiveres em perigo imediato, liga primeiro para o 112.</p>
+                    </div>
+
+                    <div class="triagem-actions">
+                        <button type="button" class="triagem-back" data-prev>← Voltar</button>
+                        <button type="button" class="lon-btn lon-btn-primary" data-next>Seguinte</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Histórico -->
+            <section class="triagem-screen" id="screen-4" data-screen="4" hidden>
+                <div class="triagem-card">
+                    <p class="triagem-step-label">Passo 4 de 6</p>
+                    <h2>Histórico</h2>
+                    <fieldset class="triagem-fieldset">
+                        <legend>Já fizeste terapia ou acompanhamento psicológico antes?</legend>
+                        <div class="triagem-choices" role="radiogroup">
+                            <label class="triagem-choice"><input type="radio" name="terapiaAntes" value="Sim" required id="terapiaSim"><span>Sim</span></label>
+                            <label class="triagem-choice"><input type="radio" name="terapiaAntes" value="Não"><span>Não</span></label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="triagem-fieldset triagem-conditional" id="terapiaUtilWrap" hidden>
+                        <legend>Se sim, foi útil?</legend>
+                        <div class="triagem-choices" role="radiogroup">
+                            <label class="triagem-choice"><input type="radio" name="terapiaUtil" value="Sim"><span>Sim</span></label>
+                            <label class="triagem-choice"><input type="radio" name="terapiaUtil" value="Parcialmente"><span>Parcialmente</span></label>
+                            <label class="triagem-choice"><input type="radio" name="terapiaUtil" value="Não"><span>Não</span></label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="triagem-fieldset">
+                        <legend>Estás atualmente a tomar medicação psiquiátrica?</legend>
+                        <div class="triagem-choices" role="radiogroup">
+                            <label class="triagem-choice"><input type="radio" name="medicacao" value="Sim" required><span>Sim</span></label>
+                            <label class="triagem-choice"><input type="radio" name="medicacao" value="Não"><span>Não</span></label>
+                            <label class="triagem-choice"><input type="radio" name="medicacao" value="Prefiro não dizer"><span>Prefiro não dizer</span></label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="triagem-fieldset">
+                        <legend>Já tiveste algum diagnóstico de saúde mental?</legend>
+                        <div class="triagem-choices" role="radiogroup">
+                            <label class="triagem-choice"><input type="radio" name="diagnostico" value="Sim" required id="diagSim"><span>Sim</span></label>
+                            <label class="triagem-choice"><input type="radio" name="diagnostico" value="Não"><span>Não</span></label>
+                            <label class="triagem-choice"><input type="radio" name="diagnostico" value="Prefiro não dizer"><span>Prefiro não dizer</span></label>
+                        </div>
+                        <div class="triagem-field triagem-conditional" id="diagQualWrap" hidden>
+                            <label for="diagnosticoQual">Qual?</label>
+                            <input type="text" id="diagnosticoQual" name="diagnosticoQual" maxlength="200">
+                        </div>
+                    </fieldset>
+                    <div class="triagem-actions">
+                        <button type="button" class="triagem-back" data-prev>← Voltar</button>
+                        <button type="button" class="lon-btn lon-btn-primary" data-next>Seguinte</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Preferências -->
+            <section class="triagem-screen" id="screen-5" data-screen="5" hidden>
+                <div class="triagem-card">
+                    <p class="triagem-step-label">Passo 5 de 6</p>
+                    <h2>Preferências de acompanhamento</h2>
+                    <fieldset class="triagem-fieldset">
+                        <legend>Preferes que a tua psicóloga seja:</legend>
+                        <div class="triagem-choices triagem-choices--stack" role="radiogroup" id="prefPsicologaGroup">
+                            <label class="triagem-choice"><input type="radio" name="prefPsicologa" value="Sem preferência" required><span>Sem preferência</span></label>
+                            <label class="triagem-choice"><input type="radio" name="prefPsicologa" value="Do mesmo género"><span>Do mesmo género</span></label>
+                            <label class="triagem-choice" id="prefTemaChoice"><input type="radio" name="prefPsicologa" value="experiencia" id="prefExperiencia"><span id="prefTemaLabel">Com experiência específica no tema que selecionei</span></label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="triagem-fieldset">
+                        <legend>Como preferes comunicar habitualmente?</legend>
+                        <div class="triagem-choices triagem-choices--stack" role="radiogroup">
+                            <label class="triagem-choice"><input type="radio" name="comunicacao" value="Mensagens de texto" required><span>Mensagens de texto</span></label>
+                            <label class="triagem-choice"><input type="radio" name="comunicacao" value="Chamada de vídeo"><span>Chamada de vídeo</span></label>
+                            <label class="triagem-choice"><input type="radio" name="comunicacao" value="Ambos, conforme a semana"><span>Ambos, conforme a semana</span></label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="triagem-fieldset">
+                        <legend>Melhor horário para a sessão de vídeo semanal</legend>
+                        <div class="triagem-choices" role="radiogroup">
+                            <label class="triagem-choice"><input type="radio" name="horario" value="Manhã (9h–12h)" required><span>Manhã (9h–12h)</span></label>
+                            <label class="triagem-choice"><input type="radio" name="horario" value="Tarde (12h–17h)"><span>Tarde (12h–17h)</span></label>
+                            <label class="triagem-choice"><input type="radio" name="horario" value="Sem preferência"><span>Sem preferência</span></label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="triagem-fieldset">
+                        <legend>Tens interesse em avaliação médica / nutricional complementar? <span class="triagem-hint">(opcional)</span></legend>
+                        <div class="triagem-choices" role="radiogroup">
+                            <label class="triagem-choice"><input type="radio" name="encaminhamento" value="Sim"><span>Sim</span></label>
+                            <label class="triagem-choice"><input type="radio" name="encaminhamento" value="Não"><span>Não</span></label>
+                            <label class="triagem-choice"><input type="radio" name="encaminhamento" value="Quero saber mais"><span>Quero saber mais</span></label>
+                        </div>
+                    </fieldset>
+                    <div class="triagem-actions">
+                        <button type="button" class="triagem-back" data-prev>← Voltar</button>
+                        <button type="button" class="lon-btn lon-btn-primary" data-next>Seguinte</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Consentimento -->
+            <section class="triagem-screen" id="screen-6" data-screen="6" hidden>
+                <div class="triagem-card">
+                    <p class="triagem-step-label">Passo 6 de 6</p>
+                    <h2>Consentimento e confirmação</h2>
+                    <div class="triagem-checks">
+                        <label class="triagem-check">
+                            <input type="checkbox" name="semRisco" id="semRisco" required>
+                            <span>Confirmo que <strong>não estou em risco imediato</strong> para mim ou para terceiros neste momento. <em>(obrigatório)</em></span>
+                        </label>
+                        <label class="triagem-check">
+                            <input type="checkbox" name="termos" id="termos" required>
+                            <span>Li e aceito os <a href="/info.html?page=termos-condicoes" target="_blank" rel="noopener">Termos e Condições</a> e a <a href="/info.html?page=politica-privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.</span>
+                        </label>
+                        <label class="triagem-check">
+                            <input type="checkbox" name="comunicacoes" id="comunicacoes">
+                            <span>Aceito receber comunicações da LON Clinic sobre o meu acompanhamento.</span>
+                        </label>
+                    </div>
+                    <p class="triagem-consent-note" id="consentRiskNote" hidden>
+                        Indicaste respostas de risco no PHQ-9. Podes continuar o questionário — a equipa já foi sinalizada — mas se estás em perigo imediato, contacta primeiro o <a href="tel:112">112</a>. A confirmação acima refere-se ao momento presente; se a situação mudar, usa as linhas de emergência.
+                    </p>
+                    <p class="triagem-form-error" id="formError" hidden role="alert"></p>
+                    <div class="triagem-actions">
+                        <button type="button" class="triagem-back" data-prev>← Voltar</button>
+                        <button type="submit" class="lon-btn lon-btn-primary" id="submitBtn">Enviar triagem</button>
+                    </div>
+                </div>
+            </section>
+        </form>
+
+        <!-- Done -->
+        <section class="triagem-screen" id="screen-done" data-screen="done" hidden>
+            <div class="triagem-card triagem-card--done">
+                <h2>Triagem recebida</h2>
+                <p id="doneMessage">Obrigada. A equipa clínica vai rever as tuas respostas e contactar-te em breve para o matching com a psicóloga.</p>
+                <div class="triagem-done-actions">
+                    <a href="/psicologia" class="lon-btn lon-btn-primary">Voltar à Psicologia</a>
+                    <a href="https://wa.me/351928372775?text=Ol%C3%A1%2C%20acabei%20de%20enviar%20a%20triagem%20de%20Psicologia." class="lon-btn lon-btn-soft" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </div>
+            </div>
+        </section>
+
+        <aside class="triagem-crisis-foot" aria-label="Aviso de crise">
+            <p>Se estás em crise ou outra pessoa possa estar em perigo — <strong>não uses este site</strong>. <a href="#emergency-resources" id="crisisResourcesLink">Estes recursos</a> podem dar-te ajuda imediata.</p>
+            <p class="triagem-ssl" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Ligação segura
+            </p>
+        </aside>
+
+        <div class="triagem-emergency-modal" id="emergencyResources" hidden>
+            <div class="triagem-emergency-modal-inner" role="dialog" aria-labelledby="emTitle" aria-modal="true">
+                <h2 id="emTitle">Ajuda imediata</h2>
+                <ul class="triagem-emergency-list">
+                    <li><a href="tel:112"><strong>112</strong> — Emergência</a></li>
+                    <li><a href="tel:808242424"><strong>808 24 24 24</strong> — SNS 24</a></li>
+                    <li><a href="tel:213544545"><strong>213 544 545</strong> — SOS Voz Amiga</a></li>
+                </ul>
+                <button type="button" class="lon-btn lon-btn-primary" id="closeEmergency">Fechar</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="triagem-footer">
+        <nav aria-label="Rodapé">
+            <a href="/">Início</a>
+            <a href="/psicologia">Psicologia</a>
+            <a href="/faq">FAQ</a>
+            <a href="/info.html?page=contato">Contacto</a>
+            <a href="/info.html?page=politica-privacidade">Privacidade</a>
+        </nav>
+        <p>© 2026 Lon Clinic · ERS 45475</p>
+    </footer>
+
+    <script src="/triagem.js?v=20260721a" defer></script>
+</body>
+</html>

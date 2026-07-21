@@ -59,6 +59,14 @@
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
+
+    <!-- Psychology clinical intake questionnaire -->
+    <url>
+        <loc>https://lonclinic.com/triagem</loc>
+        <lastmod>2026-07-21</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
     
     <!-- Information hub -->
     <url>
