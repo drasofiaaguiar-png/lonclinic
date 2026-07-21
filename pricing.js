@@ -15,7 +15,7 @@ const SERVICE_CENTS = {
     travel: 3900,
     saude_mental: 4900,
     burnout: 6000,
-    burnout_mensal: 21600,
+    burnout_mensal: 19900,
     burnout_programa: 45000,
     renovacao: 1900,
     longevidade: 7900

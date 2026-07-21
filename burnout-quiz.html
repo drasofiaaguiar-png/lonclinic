@@ -23,7 +23,7 @@
     <meta property="og:site_name" content="Lon Clinic">
     <meta name="theme-color" content="#1f4a3e">
     <link rel="stylesheet" href="/landing.css?v=20260621b">
-    <link rel="stylesheet" href="/burnout-quiz.css?v=20260721b">
+    <link rel="stylesheet" href="/burnout-quiz.css?v=20260722c">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -147,11 +147,18 @@
                     <div class="bq-cta">
                         <h3>O próximo passo</h3>
                         <p id="ctaText"></p>
-                        <div class="bq-cta-row">
-                            <a class="bq-btn bq-btn-primary" href="/marcar/burnout-mensal?ref=burnout-quiz" id="subBtn">Subscrever · €216/mês</a>
-                            <a class="bq-btn bq-btn-ghost" href="/marcar/burnout?ref=burnout-quiz" id="bookBtn">Consulta avulsa · €60</a>
+                        <div class="bq-plan-grid">
+                            <a class="bq-plan-card" href="/marcar/burnout?ref=burnout-quiz" id="bookBtn">
+                                <span class="bq-plan-name">Consulta Médica de Avaliação</span>
+                                <span class="bq-plan-price">60<span class="bq-plan-currency">€</span></span>
+                                <span class="bq-plan-meta">Sessão única · 60 minutos</span>
+                            </a>
+                            <a class="bq-plan-card" href="/marcar/burnout-mensal?ref=burnout-quiz" id="subBtn">
+                                <span class="bq-plan-name">Subscrição mensal</span>
+                                <span class="bq-plan-price">199<span class="bq-plan-currency">€</span></span>
+                                <span class="bq-plan-meta">1 consulta / semana</span>
+                            </a>
                         </div>
-                        <p class="bq-cta-note">A subscrição inclui 1 consulta médica por semana, com o mesmo médico — o formato mais eficaz para recuperar do burnout.</p>
                     </div>
 
                     <p class="bq-disclaimer">
@@ -187,6 +194,6 @@
         <p>© 2026 Lon Clinic · ERS 45475</p>
     </footer>
 
-    <script src="/burnout-quiz.js?v=20260721b" defer></script>
+    <script src="/burnout-quiz.js?v=20260722c" defer></script>
 </body>
 </html>

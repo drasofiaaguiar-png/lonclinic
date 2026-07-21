@@ -242,9 +242,9 @@
             tipo: 'burnout_mensal',
             badge: 'Mensal',
             title: 'Subscrição mensal',
-            price: '€216',
+            price: '€199',
             unit: '/mês',
-            note: '4× €54 (−10%) · cancelável',
+            note: '1 consulta/semana · cancelável',
             featured: true
         },
         {
@@ -345,13 +345,13 @@
         },
         burnout_mensal: {
             label: 'Consulta Médica Anti-Burnout · Subscrição mensal',
-            price: '€216',
+            price: '€199',
             priceNote: '/mês',
-            cents: 21600,
+            cents: 19900,
             duration: '60 min · 4 consultas/mês',
             serviceKey: 'burnout_mensal',
             bullets: [
-                '4 consultas anti-burnout por mês (€54/sessão — 10% menos que avulsa).',
+                '1 consulta anti-burnout por semana (4/mês).',
                 'Subscrição mensal cancelável a qualquer momento.',
                 'Consultas de 60 min com o mesmo protocolo clínico.',
                 'Ideal para recuperação gradual com acompanhamento regular.'

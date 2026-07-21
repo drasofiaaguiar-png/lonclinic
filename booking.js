@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         travel: { label: 'Consulta do Viajante', price: '€39', cents: 3900 },
         saude_mental: { label: 'Consulta de Saúde Mental Adultos', price: '€49', cents: 4900 },
         burnout: { label: 'Consulta Médica Anti-Burnout avulsa', price: '€60', cents: 6000 },
-        burnout_mensal: { label: 'Anti-Burnout · Subscrição mensal', price: '€216/mês', cents: 21600 },
+        burnout_mensal: { label: 'Anti-Burnout · Subscrição mensal', price: '€199/mês', cents: 19900 },
         burnout_programa: { label: 'Programa Anti-Burnout (8 sessões)', price: '€450', cents: 45000 },
         renovacao: { label: 'Renovação de Tratamento Médico', price: '€19', cents: 1900 },
         longevidade: { label: 'Consulta de Longevidade e Saúde Preventiva', price: '€79', cents: 7900 }

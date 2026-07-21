@@ -643,36 +643,77 @@
     margin: 0 0 18px;
 }
 
-.bq-cta-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+.bq-plan-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
 }
 
-.bq-cta .bq-btn-primary {
+.bq-plan-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    min-height: 168px;
+    padding: 22px 18px;
+    border-radius: 14px;
+    text-decoration: none;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1.5px solid rgba(255, 255, 255, 0.22);
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.bq-plan-card:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.55);
+    transform: translateY(-2px);
+}
+
+.bq-plan-card:first-child {
     background: #fff;
     color: var(--bq-ink);
-    box-shadow: none;
-}
-
-.bq-cta .bq-btn-primary:hover {
-    background: #f0f3f5;
-}
-
-.bq-cta .bq-btn-ghost {
-    color: rgba(255, 255, 255, 0.88);
-    border-color: rgba(255, 255, 255, 0.28);
-}
-
-.bq-cta .bq-btn-ghost:hover {
     border-color: #fff;
-    color: #fff;
 }
 
-.bq-cta-note {
-    margin: 14px 0 0 !important;
-    font-size: 0.75rem !important;
-    color: rgba(255, 255, 255, 0.5) !important;
+.bq-plan-card:first-child:hover {
+    background: #f3f6f5;
+    border-color: #fff;
+}
+
+.bq-plan-name {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+.bq-plan-price {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 2.6rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.03em;
+}
+
+.bq-plan-currency {
+    font-size: 1.15rem;
+    margin-left: 2px;
+    font-weight: 600;
+}
+
+.bq-plan-meta {
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.7;
+    line-height: 1.35;
+}
+
+.bq-plan-card:first-child .bq-plan-meta {
+    opacity: 0.65;
+    color: var(--bq-muted);
 }
 
 .bq-disclaimer {
@@ -755,8 +796,12 @@
         padding: 22px 18px 20px;
     }
 
-    .bq-cta-row .bq-btn {
-        width: 100%;
+    .bq-plan-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .bq-plan-card {
+        min-height: 148px;
     }
 
     .bq-crisis-foot {

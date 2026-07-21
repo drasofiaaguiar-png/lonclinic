@@ -25,7 +25,7 @@
     <meta name="theme-color" content="#e23d2f">
     <link rel="stylesheet" href="/landing.css?v=20260621b">
     <link rel="stylesheet" href="/psicologia.css?v=20260721h">
-    <link rel="stylesheet" href="/triagem.css?v=20260721a">
+    <link rel="stylesheet" href="/triagem.css?v=20260722a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -228,11 +228,11 @@
                     <p class="triagem-step-label">Passo 5 de 6</p>
                     <h2>Preferências de acompanhamento</h2>
                     <fieldset class="triagem-fieldset">
-                        <legend>Preferes que a tua psicóloga seja:</legend>
-                        <div class="triagem-choices triagem-choices--stack" role="radiogroup" id="prefPsicologaGroup">
-                            <label class="triagem-choice"><input type="radio" name="prefPsicologa" value="Sem preferência" required><span>Sem preferência</span></label>
-                            <label class="triagem-choice"><input type="radio" name="prefPsicologa" value="Do mesmo género"><span>Do mesmo género</span></label>
-                            <label class="triagem-choice" id="prefTemaChoice"><input type="radio" name="prefPsicologa" value="experiencia" id="prefExperiencia"><span id="prefTemaLabel">Com experiência específica no tema que selecionei</span></label>
+                        <legend>Preferes que a tua psicóloga seja: <span class="triagem-hint">(podes escolher mais do que uma)</span></legend>
+                        <div class="triagem-choices triagem-choices--stack" id="prefPsicologaGroup">
+                            <label class="triagem-choice"><input type="checkbox" name="prefPsicologa" value="Sem preferência" id="prefSemPreferencia"><span>Sem preferência</span></label>
+                            <label class="triagem-choice"><input type="checkbox" name="prefPsicologa" value="Do mesmo género"><span>Do mesmo género</span></label>
+                            <label class="triagem-choice" id="prefTemaChoice"><input type="checkbox" name="prefPsicologa" value="experiencia" id="prefExperiencia"><span id="prefTemaLabel">Com experiência específica no tema que selecionei</span></label>
                         </div>
                     </fieldset>
                     <fieldset class="triagem-fieldset">
@@ -341,6 +341,6 @@
         <p>© 2026 Lon Clinic · ERS 45475</p>
     </footer>
 
-    <script src="/triagem.js?v=20260721a" defer></script>
+    <script src="/triagem.js?v=20260722b" defer></script>
 </body>
 </html>

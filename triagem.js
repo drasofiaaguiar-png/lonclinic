@@ -17,7 +17,12 @@
         'Pensamentos de que estaria melhor morta, ou de se magoar de alguma forma'
     ];
 
-    var SCORE_LABELS = ['0', '1', '2', '3'];
+    var SCORE_OPTIONS = [
+        { value: '0', label: 'Nunca' },
+        { value: '1', label: 'Vários dias' },
+        { value: '2', label: 'Mais de metade dos dias' },
+        { value: '3', label: 'Quase todos os dias' }
+    ];
     var TOTAL_STEPS = 6;
 
     var state = {
@@ -53,11 +58,12 @@
             html += '<div class="triagem-phq-item' + (isQ9 ? ' is-risk-q' : '') + '" data-phq="' + n + '">';
             html += '<p class="triagem-phq-q" id="phq-q-' + n + '">' + n + '. ' + text + '</p>';
             html += '<div class="triagem-phq-scores" role="radiogroup" aria-labelledby="phq-q-' + n + '">';
-            SCORE_LABELS.forEach(function (lab) {
-                html += '<label class="triagem-choice">';
-                html += '<input type="radio" name="phq' + n + '" value="' + lab + '" required' +
+            SCORE_OPTIONS.forEach(function (opt) {
+                html += '<label class="triagem-choice triagem-choice--phq">';
+                html += '<input type="radio" name="phq' + n + '" value="' + opt.value + '" required' +
                     (isQ9 ? ' data-phq9' : '') + '>';
-                html += '<span>' + lab + '</span></label>';
+                html += '<span><strong class="triagem-phq-num">' + opt.value + '</strong>' +
+                    '<small class="triagem-phq-meaning">' + opt.label + '</small></span></label>';
             });
             html += '</div></div>';
         });
@@ -331,7 +337,12 @@
         }
 
         if (step === 5) {
-            ['prefPsicologa', 'comunicacao', 'horario'].forEach(function (name) {
+            if (!selectedValues('prefPsicologa').length) {
+                ok = false;
+                stepEl.querySelectorAll('input[name="prefPsicologa"]').forEach(markInvalid);
+                if (!firstBad) firstBad = stepEl.querySelector('input[name="prefPsicologa"]');
+            }
+            ['comunicacao', 'horario'].forEach(function (name) {
                 if (!selectedValue(name)) {
                     ok = false;
                     stepEl.querySelectorAll('input[name="' + name + '"]').forEach(markInvalid);
@@ -407,7 +418,7 @@
             medicacao: selectedValue('medicacao'),
             diagnostico: selectedValue('diagnostico'),
             diagnosticoQual: document.getElementById('diagnosticoQual').value.trim() || null,
-            prefPsicologa: selectedValue('prefPsicologa'),
+            prefPsicologa: selectedValues('prefPsicologa'),
             comunicacao: selectedValue('comunicacao'),
             horario: selectedValue('horario'),
             encaminhamento: selectedValue('encaminhamento') || null,
@@ -494,6 +505,19 @@
         });
         form.querySelectorAll('input[name="diagnostico"]').forEach(function (r) {
             r.addEventListener('change', syncDiagnostico);
+        });
+
+        form.querySelectorAll('input[name="prefPsicologa"]').forEach(function (box) {
+            box.addEventListener('change', function () {
+                var none = document.getElementById('prefSemPreferencia');
+                if (box === none && none.checked) {
+                    form.querySelectorAll('input[name="prefPsicologa"]').forEach(function (el) {
+                        if (el !== none) el.checked = false;
+                    });
+                } else if (box !== none && box.checked && none) {
+                    none.checked = false;
+                }
+            });
         });
 
         document.getElementById('crisisResourcesLink').addEventListener('click', function (e) {

@@ -786,7 +786,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         infeccao_urinaria: 3500,
         saude_mental: 4900,
         burnout: 6000,
-        burnout_mensal: 21600,
+        burnout_mensal: 19900,
         burnout_programa: 45000,
         longevidade: 7900,
         renovacao: 1900

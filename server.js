@@ -1690,11 +1690,13 @@ function buildBurnoutQuizEmails(data) {
         '',
         'Este teste é informativo e não substitui avaliação clínica.',
         '',
-        'Próximo passo recomendado — Subscrição de acompanhamento anti-burnout (€216/mês, 1 consulta médica por semana):',
-        subUrl,
+        'Próximo passo recomendado:',
         '',
-        'Ou marcar uma consulta avulsa (€60):',
+        'Consulta Médica de Avaliação — 60€:',
         bookUrl,
+        '',
+        'Subscrição mensal (1 consulta/semana) — 199€:',
+        subUrl,
         '',
         'Lon Clinic — lonclinic.com'
     ].join('\n');
@@ -1709,10 +1711,9 @@ function buildBurnoutQuizEmails(data) {
 <tr><td style="padding:6px 0;color:#6e7b72">Sinais no corpo</td><td style="text-align:right">${body}</td></tr>
 </table>
 <p style="font-size:13px;color:#6e7b72;margin:0 0 20px">Este teste é informativo e não substitui avaliação por um profissional de saúde.</p>
-<p style="margin:0 0 8px;font-size:14px;font-weight:600;color:#22382f">Próximo passo recomendado</p>
-<p style="margin:0 0 16px;font-size:13px;color:#3d554a;line-height:1.5">Subscrição de acompanhamento anti-burnout — €216/mês, 1 consulta médica por semana com o mesmo médico.</p>
-<p style="margin:0 0 12px"><a href="${subUrl}" style="display:inline-block;background:#c4744a;color:#fff;text-decoration:none;padding:12px 22px;border-radius:999px;font-weight:600">Subscrever · €216/mês</a></p>
-<p style="margin:0 0 24px"><a href="${bookUrl}" style="color:#c4744a;font-size:13px;font-weight:600">Ou marcar consulta avulsa · €60</a></p>
+<p style="margin:0 0 8px;font-size:14px;font-weight:600;color:#22382f">Próximo passo</p>
+<p style="margin:0 0 12px"><a href="${bookUrl}" style="display:inline-block;background:#1f4a3e;color:#fff;text-decoration:none;padding:14px 20px;border-radius:12px;font-weight:600;min-width:200px">Consulta Médica de Avaliação · 60€</a></p>
+<p style="margin:0 0 24px"><a href="${subUrl}" style="display:inline-block;border:1.5px solid #1f4a3e;color:#1f4a3e;text-decoration:none;padding:14px 20px;border-radius:12px;font-weight:600;min-width:200px">Subscrição mensal · 199€</a></p>
 <p style="margin:24px 0 0;font-size:12px;color:#6e7b72">Lon Clinic · lonclinic.com</p>
 </body></html>`;
 
@@ -3760,7 +3761,7 @@ function formatTriagemEmail(data) {
         `Diagnóstico: ${data.diagnostico}${data.diagnosticoQual ? ` — ${data.diagnosticoQual}` : ''}`,
         '',
         '── Preferências ──',
-        `Psicóloga: ${data.prefPsicologa}`,
+        `Psicóloga: ${Array.isArray(data.prefPsicologa) ? data.prefPsicologa.join('; ') : data.prefPsicologa}`,
         `Comunicação: ${data.comunicacao}`,
         `Horário vídeo: ${data.horario}`,
         `Encaminhamento médico/nutri: ${data.encaminhamento || '—'}`,
@@ -3880,7 +3881,9 @@ app.post('/api/triagem', rateLimitTriagem, async (req, res) => {
         medicacao: String(body.medicacao || '').slice(0, 40),
         diagnostico: String(body.diagnostico || '').slice(0, 40),
         diagnosticoQual: body.diagnosticoQual ? String(body.diagnosticoQual).slice(0, 200) : null,
-        prefPsicologa: String(body.prefPsicologa || '').slice(0, 200),
+        prefPsicologa: Array.isArray(body.prefPsicologa)
+            ? body.prefPsicologa.map((p) => String(p).slice(0, 200)).slice(0, 6)
+            : [String(body.prefPsicologa || '').slice(0, 200)].filter(Boolean),
         comunicacao: String(body.comunicacao || '').slice(0, 80),
         horario: String(body.horario || '').slice(0, 40),
         encaminhamento: body.encaminhamento ? String(body.encaminhamento).slice(0, 40) : null,

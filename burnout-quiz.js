@@ -40,16 +40,16 @@
     const BANDS = [
         { max: 24, pill: 'BAIXO', title: 'Energia sob controlo',
             text: 'Os teus níveis estão dentro do esperado. O melhor momento para proteger a energia é exatamente este — antes de precisares de a recuperar.',
-            cta: 'Prevenir é mais fácil do que tratar. A subscrição de acompanhamento anti-burnout dá-te ritmo semanal para manter o que está a funcionar — e corrigir cedo o que ainda é pequeno.' },
+            cta: 'Prevenir é mais fácil do que tratar. Começa com uma Consulta Médica de Avaliação — ou escolhe a subscrição mensal para acompanhamento semanal contínuo.' },
         { max: 49, pill: 'LIGEIRO', title: 'Sinais de alerta iniciais',
             text: 'Ainda não é burnout instalado, mas há dimensões da tua energia a pedir atenção. Nesta fase, mudanças relativamente simples têm um efeito enorme.',
-            cta: 'Agir agora vale por dez mais tarde. Com a subscrição (€216/mês) tens 1 consulta médica por semana — sono, energia e limites, com continuidade.' },
+            cta: 'Agir agora vale por dez mais tarde. Uma Consulta Médica de Avaliação avalia sono, energia e limites — e a subscrição mensal mantém o acompanhamento semana a semana.' },
         { max: 74, pill: 'MODERADO', title: 'O teu corpo já está a pagar a conta',
             text: 'O teu resultado sugere um nível de esgotamento significativo, que provavelmente já sentes no corpo, no sono e na cabeça. Não se resolve com um fim de semana — mas resolve-se.',
-            cta: 'Este é o momento de acompanhamento contínuo. A subscrição anti-burnout inclui 1 consulta por semana com o mesmo médico — o formato mais eficaz para recuperar.' },
+            cta: 'Este é o momento de agir. Começa pela Consulta Médica de Avaliação ou pela subscrição mensal (1 consulta por semana) para recuperar com continuidade.' },
         { max: 100, pill: 'ELEVADO', title: 'É altura de parar e pedir apoio',
             text: 'O teu resultado indica sinais sérios de esgotamento. Não estás a exagerar e não é fraqueza — é um estado fisiológico real que merece acompanhamento profissional, e quanto mais cedo, melhor a recuperação.',
-            cta: 'Recomendamos vivamente a subscrição de acompanhamento médico (€216/mês, 1 consulta/semana). Se estiveres em sofrimento intenso, procura também apoio médico urgente.' }
+            cta: 'Recomendamos vivamente uma Consulta Médica de Avaliação ou a subscrição mensal de acompanhamento. Se estiveres em sofrimento intenso, procura também apoio médico urgente.' }
     ];
 
     const SCALE_INSIGHTS = {
