@@ -25,12 +25,12 @@
     <meta property="og:locale" content="pt_PT">
     <meta property="og:site_name" content="Lon Clinic">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="theme-color" content="#1c2e2a">
+    <meta name="theme-color" content="#0a1014">
     <link rel="stylesheet" href="/landing.css?v=20260621b">
-    <link rel="stylesheet" href="/psicologia.css?v=20260721a">
+    <link rel="stylesheet" href="/psicologia.css?v=20260721d">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <script type="application/ld+json">
     {
@@ -69,6 +69,7 @@
 </head>
 <body class="lon-landing psi-landing">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
+    <div class="psi-grain" aria-hidden="true"></div>
 
     <header class="lon-nav" id="lonNav">
         <div class="lon-container lon-nav-inner">
@@ -77,14 +78,14 @@
             </a>
             <nav class="lon-nav-links" aria-label="Navegação principal">
                 <a href="#inicio">Início</a>
-                <a href="#inclui">O que inclui</a>
+                <a href="#inclui">Inclui</a>
                 <a href="#preco">Preço</a>
-                <a href="#como-funciona">Como funciona</a>
+                <a href="#como-funciona">Como</a>
                 <a href="#faq">FAQ</a>
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="#preco" class="lon-btn lon-btn-primary lon-btn-sm js-psi-cta" data-psi-cta="nav">Ver preço</a>
+                <a href="#preco" class="lon-btn lon-btn-primary lon-btn-sm js-psi-cta" data-psi-cta="nav">40€/semana</a>
                 <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
@@ -92,12 +93,12 @@
         </div>
         <div class="lon-mobile-menu" id="lonMobileMenu">
             <a href="#inicio">Início</a>
-            <a href="#inclui">O que inclui</a>
+            <a href="#inclui">Inclui</a>
             <a href="#preco">Preço</a>
-            <a href="#como-funciona">Como funciona</a>
+            <a href="#como-funciona">Como</a>
             <a href="#faq">FAQ</a>
             <a href="/patient-portal">Login</a>
-            <a href="#preco" class="js-psi-cta" data-psi-cta="nav-mobile">Ver preço</a>
+            <a href="#preco" class="js-psi-cta" data-psi-cta="nav-mobile">40€/semana</a>
         </div>
     </header>
 
@@ -107,90 +108,118 @@
                 <img src="/image/image3.webp" alt="" width="1600" height="1000" loading="eager" decoding="async" fetchpriority="high">
             </div>
             <div class="lon-container psi-hero-inner">
-                <p class="psi-brand" id="psi-brand">LON Clinic · Psicologia</p>
-                <h1>Para quem já cuida do corpo, da carreira e da pele — mas ainda não tratou a cabeça com a mesma seriedade.</h1>
-                <p class="psi-lead">Subscrição semanal com mensagens ilimitadas e uma sessão de vídeo — apoio contínuo, não só pontual.</p>
+                <p class="psi-brand" id="psi-brand">LON Clinic</p>
+                <h1>Para quem já cuida do corpo, da carreira e da pele — mas ainda não tratou a <em>cabeça</em> com a mesma seriedade.</h1>
+                <p class="psi-lead">Mensagens ilimitadas + 1 vídeo por semana. Apoio contínuo — não uma sessão e adeus.</p>
                 <div class="psi-cta-row">
-                    <a href="https://wa.me/351928372775?text=Ol%C3%A1%2C%20quero%20come%C3%A7ar%20a%20subscri%C3%A7%C3%A3o%20de%20Psicologia%20da%20Lon%20Clinic." class="lon-btn lon-btn-primary js-psi-cta" data-psi-cta="hero-whatsapp" target="_blank" rel="noopener noreferrer">Começar</a>
-                    <a href="#preco" class="lon-btn lon-btn-soft js-psi-cta" data-psi-cta="hero-price">Ver preço de lançamento</a>
+                    <a href="https://wa.me/351928372775?text=Ol%C3%A1%2C%20quero%20come%C3%A7ar%20a%20subscri%C3%A7%C3%A3o%20de%20Psicologia%20da%20Lon%20Clinic." class="lon-btn lon-btn-primary js-psi-cta" data-psi-cta="hero-whatsapp" target="_blank" rel="noopener noreferrer">Começar agora</a>
+                    <a href="#preco" class="lon-btn lon-btn-soft js-psi-cta" data-psi-cta="hero-price">Ver lançamento</a>
+                </div>
+            </div>
+            <div class="psi-hero-ticker" aria-hidden="true">
+                <div class="psi-ticker-track">
+                    <span>mensagens ilimitadas</span><span>·</span>
+                    <span>1 vídeo / semana</span><span>·</span>
+                    <span>mesma psicóloga</span><span>·</span>
+                    <span>triagem PHQ-9</span><span>·</span>
+                    <span>cancelamento livre após 1 mês</span><span>·</span>
+                    <span>mensagens ilimitadas</span><span>·</span>
+                    <span>1 vídeo / semana</span><span>·</span>
+                    <span>mesma psicóloga</span><span>·</span>
+                    <span>triagem PHQ-9</span><span>·</span>
+                    <span>cancelamento livre após 1 mês</span><span>·</span>
                 </div>
             </div>
         </section>
 
-        <section class="psi-section" id="diferenca" aria-labelledby="psi-diff-title">
-            <div class="lon-container psi-narrow">
-                <h2 id="psi-diff-title">Não é uma sessão avulsa. É continuidade.</h2>
-                <p class="psi-sub">A maioria das plataformas em Portugal vende por sessão ou pacote pré-pago. A Lon Clinic vende acompanhamento semanal: podes escrever quando precisas, e tens vídeo todas as semanas com a mesma psicóloga.</p>
+        <section class="psi-section psi-contrast" id="diferenca" aria-labelledby="psi-diff-title">
+            <div class="lon-container">
+                <p class="psi-kicker">vs. o resto do mercado</p>
+                <h2 id="psi-diff-title" class="psi-split-title">
+                    <span class="psi-split-they">Eles vendem sessões.</span>
+                    <span class="psi-split-we">Nós vendemos <em>continuidade.</em></span>
+                </h2>
+                <p class="psi-sub psi-sub-wide">Mindfirst, PsicologosOnline, DaTerapia, PsiMed: pacote ou avulso. Lon Clinic: escreves quando precisas, falas todas as semanas — a mesma psicóloga, o mesmo fio.</p>
             </div>
         </section>
 
-        <section class="psi-section psi-section-soft" id="inclui" aria-labelledby="psi-inclui-title">
+        <section class="psi-section" id="inclui" aria-labelledby="psi-inclui-title">
             <div class="lon-container">
-                <h2 id="psi-inclui-title">O que inclui</h2>
-                <p class="psi-sub">No preço de lançamento e no preço normal.</p>
+                <h2 id="psi-inclui-title">O que fica dentro</h2>
+                <p class="psi-sub">No lançamento e no preço normal — plano único.</p>
                 <ul class="psi-includes">
-                    <li>
-                        <strong>Mensagens ilimitadas</strong>
-                        <span>Com a psicóloga atribuída. Resposta em dias úteis, 9h–17h.</span>
+                    <li class="psi-reveal">
+                        <span class="psi-inc-index" aria-hidden="true">01</span>
+                        <div>
+                            <strong>Mensagens ilimitadas</strong>
+                            <span>Resposta em dias úteis, 9h–17h. Fora de horas, a fila espera — as emergências não.</span>
+                        </div>
                     </li>
-                    <li>
-                        <strong>1 sessão de vídeo por semana</strong>
-                        <span>Acompanhamento regular, sem marcar cada vez do zero.</span>
+                    <li class="psi-reveal">
+                        <span class="psi-inc-index" aria-hidden="true">02</span>
+                        <div>
+                            <strong>1 sessão de vídeo / semana</strong>
+                            <span>Ritmo fixo. Sem remarcar o caos todas as semanas.</span>
+                        </div>
                     </li>
-                    <li>
-                        <strong>Triagem clínica inicial</strong>
-                        <span>PHQ-9 adaptado para perceber o teu ponto de partida.</span>
+                    <li class="psi-reveal">
+                        <span class="psi-inc-index" aria-hidden="true">03</span>
+                        <div>
+                            <strong>Triagem clínica inicial</strong>
+                            <span>PHQ-9 adaptado — um ponto de partida honesto, não um formulário decorativo.</span>
+                        </div>
                     </li>
-                    <li>
-                        <strong>Encaminhamento médico, se fizer sentido</strong>
-                        <span>Sugestão opcional — não é obrigatório para todas.</span>
+                    <li class="psi-reveal">
+                        <span class="psi-inc-index" aria-hidden="true">04</span>
+                        <div>
+                            <strong>Encaminhamento médico, se fizer sentido</strong>
+                            <span>Sugestão opcional. Não é obrigatório para todas.</span>
+                        </div>
                     </li>
                 </ul>
             </div>
         </section>
 
-        <section class="psi-section" id="preco" aria-labelledby="psi-preco-title">
-            <div class="lon-container psi-narrow">
-                <h2 id="psi-preco-title">Preço</h2>
-                <p class="psi-sub">Plano único. Sem tiers.</p>
-                <div class="psi-price-block">
-                    <p class="psi-price-launch"><span>40€</span>/semana</p>
-                    <p class="psi-price-was">Normalmente 60€/semana</p>
-                    <p class="psi-price-copy">Preço de lançamento: 40€/semana (normalmente 60€/semana). Os teus primeiros 2 meses ficam a 40€/semana; depois passa a 60€/semana. Válido para quem subscreve durante o período de lançamento — sobe para o preço normal a partir de 15 de outubro de 2026.</p>
-                    <ul class="psi-price-terms">
-                        <li>Cobrança semanal</li>
-                        <li>Compromisso mínimo de 1 mês</li>
-                        <li>Cancelamento livre depois disso</li>
-                    </ul>
-                    <a href="https://wa.me/351928372775?text=Ol%C3%A1%2C%20quero%20subscrever%20Psicologia%20a%2040%E2%82%AC%2Fsemana." class="lon-btn lon-btn-primary js-psi-cta" data-psi-cta="price-whatsapp" target="_blank" rel="noopener noreferrer">Subscrever a 40€/semana</a>
-                </div>
+        <section class="psi-section psi-price-section" id="preco" aria-labelledby="psi-preco-title">
+            <div class="lon-container">
+                <p class="psi-kicker psi-kicker-dark">Lançamento · até 15 out 2026</p>
+                <h2 id="psi-preco-title" class="visually-hidden">Preço</h2>
+                <p class="psi-price-launch psi-reveal"><span>40€</span><small>/semana</small></p>
+                <p class="psi-price-was">Normalmente 60€/semana</p>
+                <p class="psi-price-copy">Os teus primeiros <strong>2 meses</strong> ficam a 40€/semana; depois passa a 60€. Quem entra no período de lançamento tranca esta condição.</p>
+                <ul class="psi-price-terms">
+                    <li>Cobrança semanal</li>
+                    <li>Mínimo 1 mês</li>
+                    <li>Depois, sais quando quiseres</li>
+                </ul>
+                <a href="https://wa.me/351928372775?text=Ol%C3%A1%2C%20quero%20subscrever%20Psicologia%20a%2040%E2%82%AC%2Fsemana." class="lon-btn lon-btn-primary lon-btn-lg js-psi-cta" data-psi-cta="price-whatsapp" target="_blank" rel="noopener noreferrer">Quero os 40€/semana</a>
             </div>
         </section>
 
-        <section class="psi-section psi-section-soft" id="como-funciona" aria-labelledby="psi-como-title">
+        <section class="psi-section psi-section-ink" id="como-funciona" aria-labelledby="psi-como-title">
             <div class="lon-container">
-                <h2 id="psi-como-title">Como funciona</h2>
-                <p class="psi-sub">Do primeiro contacto à psicóloga atribuída.</p>
+                <h2 id="psi-como-title">Três passos. Zero lista de terapeutas.</h2>
+                <p class="psi-sub">Matching pela equipa — tu focas-te no que te trouxe aqui.</p>
                 <ol class="psi-steps">
-                    <li>
+                    <li class="psi-reveal">
                         <span class="psi-step-num" aria-hidden="true">1</span>
                         <div>
                             <h3>Triagem</h3>
-                            <p>Questionário curto (motivos, PHQ-9 adaptado, preferências de apoio).</p>
+                            <p>Motivos, PHQ-9, como preferes ser apoiada.</p>
                         </div>
                     </li>
-                    <li>
+                    <li class="psi-reveal">
                         <span class="psi-step-num" aria-hidden="true">2</span>
                         <div>
                             <h3>Matching</h3>
-                            <p>A equipa atribui a psicóloga com base nas tuas respostas — sem lista para escolher no início.</p>
+                            <p>Atribuímos a psicóloga. Trocas a pedido, mais tarde.</p>
                         </div>
                     </li>
-                    <li>
+                    <li class="psi-reveal">
                         <span class="psi-step-num" aria-hidden="true">3</span>
                         <div>
                             <h3>Acompanhamento</h3>
-                            <p>Mensagens ilimitadas + 1 vídeo por semana. Podes pedir troca de psicóloga mais tarde.</p>
+                            <p>Chat contínuo + vídeo semanal. O fio não parte.</p>
                         </div>
                     </li>
                 </ol>
@@ -199,30 +228,30 @@
 
         <section class="psi-section" id="mensagens" aria-labelledby="psi-msg-title">
             <div class="lon-container psi-narrow">
-                <h2 id="psi-msg-title">Sobre as mensagens</h2>
-                <p class="psi-msg-policy">As mensagens têm resposta da tua psicóloga entre as 9h e as 17h, dias úteis. Fora deste horário, se estiveres numa situação de emergência, contacta: <strong>112</strong> / SNS 24 (<strong>808 24 24 24</strong>) / SOS Voz Amiga (<strong>213 544 545</strong>).</p>
+                <h2 id="psi-msg-title">Horário humano. Emergência sempre.</h2>
+                <p class="psi-msg-policy">Resposta da psicóloga <strong>9h–17h, dias úteis</strong>. Fora disso, se for emergência: <a href="tel:112">112</a> · SNS 24 <a href="tel:808242424">808 24 24 24</a> · SOS Voz Amiga <a href="tel:213544545">213 544 545</a>.</p>
             </div>
         </section>
 
-        <section class="psi-section psi-section-soft" id="faq" aria-labelledby="psi-faq-title">
+        <section class="psi-section psi-faq-section" id="faq" aria-labelledby="psi-faq-title">
             <div class="lon-container psi-narrow">
-                <h2 id="psi-faq-title">Perguntas frequentes</h2>
+                <h2 id="psi-faq-title">Antes de começares</h2>
                 <div class="psi-faq">
                     <details>
                         <summary>Em que horários responde a psicóloga?</summary>
-                        <div class="psi-faq-a">Dias úteis, 9h–17h. Mensagens fora de horário ficam em fila para o próximo dia útil. Em emergência, usa sempre as linhas nacionais acima.</div>
+                        <div class="psi-faq-a">Dias úteis, 9h–17h. Fora de horário fica em fila. Emergência = linhas nacionais, sempre.</div>
                     </details>
                     <details>
                         <summary>Posso cancelar quando quiser?</summary>
-                        <div class="psi-faq-a">Há um compromisso mínimo de 1 mês. Depois disso, cancelamento livre, sem fidelização longa.</div>
+                        <div class="psi-faq-a">Compromisso mínimo de 1 mês. Depois, cancelamento livre.</div>
                     </details>
                     <details>
                         <summary>Escolho a psicóloga?</summary>
-                        <div class="psi-faq-a">No lançamento a atribuição é feita pela equipa. Se quiseres trocar mais tarde, podes pedir.</div>
+                        <div class="psi-faq-a">No lançamento, atribuição pela equipa. Pedido de troca disponível depois.</div>
                     </details>
                     <details>
-                        <summary>Isto inclui nutrição ou avaliação médica para todas?</summary>
-                        <div class="psi-faq-a">Não neste MVP. Nutrição e avaliação médica universal ficam para uma fase seguinte. Encaminhamos para avaliação médica quando o quadro o sugere.</div>
+                        <summary>Inclui nutrição ou avaliação médica para todas?</summary>
+                        <div class="psi-faq-a">Não neste MVP. Encaminhamos quando o quadro o pede.</div>
                     </details>
                 </div>
             </div>
@@ -230,7 +259,7 @@
 
         <aside class="psi-emergency" aria-label="Contactos de emergência">
             <div class="lon-container">
-                <p>Se estiveres em risco imediato: <strong>112</strong> · SNS 24 <strong>808 24 24 24</strong> · SOS Voz Amiga <strong>213 544 545</strong> / <strong>912 802 669</strong></p>
+                <p>Risco imediato: <strong>112</strong> · SNS 24 <strong>808 24 24 24</strong> · SOS Voz Amiga <strong>213 544 545</strong> / <strong>912 802 669</strong></p>
             </div>
         </aside>
     </main>
@@ -292,6 +321,25 @@
                 trackPsiCta(el.getAttribute('data-psi-cta') || 'cta');
             });
         });
+
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            var nodes = document.querySelectorAll('.psi-reveal');
+            if ('IntersectionObserver' in window && nodes.length) {
+                var io = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-in');
+                            io.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+                nodes.forEach(function (n) { io.observe(n); });
+            } else {
+                nodes.forEach(function (n) { n.classList.add('is-in'); });
+            }
+        } else {
+            document.querySelectorAll('.psi-reveal').forEach(function (n) { n.classList.add('is-in'); });
+        }
     })();
     </script>
 </body>
