@@ -27,7 +27,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="theme-color" content="#0a1014">
     <link rel="stylesheet" href="/landing.css?v=20260621b">
-    <link rel="stylesheet" href="/psicologia.css?v=20260721d">
+    <link rel="stylesheet" href="/psicologia.css?v=20260721e">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -69,9 +69,8 @@
 </head>
 <body class="lon-landing psi-landing">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
-    <div class="psi-grain" aria-hidden="true"></div>
 
-    <header class="lon-nav" id="lonNav">
+    <header class="lon-nav psi-nav" id="lonNav">
         <div class="lon-container lon-nav-inner">
             <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
                 <span class="lon-logo-name">LON Clinic</span>
@@ -132,6 +131,17 @@
             </div>
         </section>
 
+        <aside class="psi-emergency psi-emergency-top" aria-label="Contactos de emergência">
+            <div class="lon-container psi-emergency-inner">
+                <p class="psi-emergency-label">Se estiveres em risco imediato</p>
+                <p class="psi-emergency-nums">
+                    <a href="tel:112"><strong>112</strong> emergência</a>
+                    <a href="tel:808242424"><strong>808 24 24 24</strong> SNS 24</a>
+                    <a href="tel:213544545"><strong>213 544 545</strong> SOS Voz Amiga</a>
+                </p>
+            </div>
+        </aside>
+
         <section class="psi-section psi-contrast" id="diferenca" aria-labelledby="psi-diff-title">
             <div class="lon-container">
                 <p class="psi-kicker">vs. o resto do mercado</p>
@@ -143,34 +153,42 @@
             </div>
         </section>
 
-        <section class="psi-section" id="inclui" aria-labelledby="psi-inclui-title">
+        <section class="psi-section psi-section-mist" id="inclui" aria-labelledby="psi-inclui-title">
             <div class="lon-container">
                 <h2 id="psi-inclui-title">O que fica dentro</h2>
                 <p class="psi-sub">No lançamento e no preço normal — plano único.</p>
                 <ul class="psi-includes">
                     <li class="psi-reveal">
-                        <span class="psi-inc-index" aria-hidden="true">01</span>
+                        <span class="psi-inc-icon" aria-hidden="true">
+                            <svg viewBox="0 0 40 40" fill="none"><path d="M8 28V12c0-1.1.9-2 2-2h14l8 8v10c0 1.1-.9 2-2 2H10c-1.1 0-2-.9-2-2z" stroke="currentColor" stroke-width="1.6"/><path d="M24 10v6h6M12 18h10M12 23h14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                        </span>
                         <div>
                             <strong>Mensagens ilimitadas</strong>
                             <span>Resposta em dias úteis, 9h–17h. Fora de horas, a fila espera — as emergências não.</span>
                         </div>
                     </li>
                     <li class="psi-reveal">
-                        <span class="psi-inc-index" aria-hidden="true">02</span>
+                        <span class="psi-inc-icon" aria-hidden="true">
+                            <svg viewBox="0 0 40 40" fill="none"><rect x="7" y="11" width="26" height="18" rx="3" stroke="currentColor" stroke-width="1.6"/><circle cx="20" cy="20" r="4.5" stroke="currentColor" stroke-width="1.6"/><path d="M14 11V9a2 2 0 012-2h8a2 2 0 012 2v2" stroke="currentColor" stroke-width="1.6"/></svg>
+                        </span>
                         <div>
                             <strong>1 sessão de vídeo / semana</strong>
                             <span>Ritmo fixo. Sem remarcar o caos todas as semanas.</span>
                         </div>
                     </li>
                     <li class="psi-reveal">
-                        <span class="psi-inc-index" aria-hidden="true">03</span>
+                        <span class="psi-inc-icon" aria-hidden="true">
+                            <svg viewBox="0 0 40 40" fill="none"><path d="M20 8v24M12 14h10a6 6 0 010 12H12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
                         <div>
                             <strong>Triagem clínica inicial</strong>
                             <span>PHQ-9 adaptado — um ponto de partida honesto, não um formulário decorativo.</span>
                         </div>
                     </li>
                     <li class="psi-reveal">
-                        <span class="psi-inc-index" aria-hidden="true">04</span>
+                        <span class="psi-inc-icon" aria-hidden="true">
+                            <svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="11" stroke="currentColor" stroke-width="1.6"/><path d="M20 14v7l4 2.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                        </span>
                         <div>
                             <strong>Encaminhamento médico, se fizer sentido</strong>
                             <span>Sugestão opcional. Não é obrigatório para todas.</span>
@@ -182,17 +200,19 @@
 
         <section class="psi-section psi-price-section" id="preco" aria-labelledby="psi-preco-title">
             <div class="lon-container">
-                <p class="psi-kicker psi-kicker-dark">Lançamento · até 15 out 2026</p>
-                <h2 id="psi-preco-title" class="visually-hidden">Preço</h2>
-                <p class="psi-price-launch psi-reveal"><span>40€</span><small>/semana</small></p>
-                <p class="psi-price-was">Normalmente 60€/semana</p>
-                <p class="psi-price-copy">Os teus primeiros <strong>2 meses</strong> ficam a 40€/semana; depois passa a 60€. Quem entra no período de lançamento tranca esta condição.</p>
-                <ul class="psi-price-terms">
-                    <li>Cobrança semanal</li>
-                    <li>Mínimo 1 mês</li>
-                    <li>Depois, sais quando quiseres</li>
-                </ul>
-                <a href="https://wa.me/351928372775?text=Ol%C3%A1%2C%20quero%20subscrever%20Psicologia%20a%2040%E2%82%AC%2Fsemana." class="lon-btn lon-btn-primary lon-btn-lg js-psi-cta" data-psi-cta="price-whatsapp" target="_blank" rel="noopener noreferrer">Quero os 40€/semana</a>
+                <div class="psi-price-card psi-reveal">
+                    <p class="psi-kicker psi-kicker-dark">Lançamento · até 15 out 2026</p>
+                    <h2 id="psi-preco-title" class="visually-hidden">Preço</h2>
+                    <p class="psi-price-launch"><span>40€</span><small>/semana</small></p>
+                    <p class="psi-price-was">Normalmente 60€/semana</p>
+                    <p class="psi-price-copy">Os teus primeiros <strong>2 meses</strong> ficam a 40€/semana; depois passa a 60€. Quem entra no período de lançamento tranca esta condição.</p>
+                    <ul class="psi-price-terms">
+                        <li>Cobrança semanal</li>
+                        <li>Mínimo 1 mês</li>
+                        <li>Depois, sais quando quiseres</li>
+                    </ul>
+                    <a href="https://wa.me/351928372775?text=Ol%C3%A1%2C%20quero%20subscrever%20Psicologia%20a%2040%E2%82%AC%2Fsemana." class="lon-btn lon-btn-primary lon-btn-lg js-psi-cta" data-psi-cta="price-whatsapp" target="_blank" rel="noopener noreferrer">Quero os 40€/semana</a>
+                </div>
             </div>
         </section>
 
@@ -226,10 +246,15 @@
             </div>
         </section>
 
-        <section class="psi-section" id="mensagens" aria-labelledby="psi-msg-title">
+        <section class="psi-section psi-section-paper" id="mensagens" aria-labelledby="psi-msg-title">
             <div class="lon-container psi-narrow">
                 <h2 id="psi-msg-title">Horário humano. Emergência sempre.</h2>
-                <p class="psi-msg-policy">Resposta da psicóloga <strong>9h–17h, dias úteis</strong>. Fora disso, se for emergência: <a href="tel:112">112</a> · SNS 24 <a href="tel:808242424">808 24 24 24</a> · SOS Voz Amiga <a href="tel:213544545">213 544 545</a>.</p>
+                <p class="psi-msg-policy">Resposta da psicóloga <strong>9h–17h, dias úteis</strong>. Fora disso, usa os números abaixo — estão sempre acessíveis.</p>
+                <div class="psi-msg-emergency">
+                    <a href="tel:112"><strong>112</strong><span>Emergência</span></a>
+                    <a href="tel:808242424"><strong>808 24 24 24</strong><span>SNS 24</span></a>
+                    <a href="tel:213544545"><strong>213 544 545</strong><span>SOS Voz Amiga</span></a>
+                </div>
             </div>
         </section>
 
@@ -256,13 +281,18 @@
                 </div>
             </div>
         </section>
-
-        <aside class="psi-emergency" aria-label="Contactos de emergência">
-            <div class="lon-container">
-                <p>Risco imediato: <strong>112</strong> · SNS 24 <strong>808 24 24 24</strong> · SOS Voz Amiga <strong>213 544 545</strong> / <strong>912 802 669</strong></p>
-            </div>
-        </aside>
     </main>
+
+    <aside class="psi-emergency psi-emergency-sticky" aria-label="Linhas de emergência sempre visíveis">
+        <div class="lon-container psi-emergency-inner">
+            <span class="psi-emergency-label">Emergência</span>
+            <p class="psi-emergency-nums">
+                <a href="tel:112"><strong>112</strong></a>
+                <a href="tel:808242424"><strong>SNS 24</strong> 808 24 24 24</a>
+                <a href="tel:213544545"><strong>SOS</strong> 213 544 545</a>
+            </p>
+        </div>
+    </aside>
 
     <footer class="lon-footer">
         <div class="lon-container">
