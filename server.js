@@ -1653,6 +1653,7 @@ function buildBurnoutQuizEmails(data) {
     const work = Number.isFinite(scores.work) ? scores.work : '—';
     const body = Number.isFinite(scores.body) ? scores.body : '—';
     const bookUrl = `${PUBLIC_SITE_URL}/marcar/burnout?ref=burnout-quiz-email`;
+    const subUrl = `${PUBLIC_SITE_URL}/marcar/burnout-mensal?ref=burnout-quiz-email`;
 
     const clinicSubject = `Teste burnout: ${band} (${global}/100) — ${data.email}`;
     const clinicText = [
@@ -1662,7 +1663,8 @@ function buildBurnoutQuizEmails(data) {
         `Índice global: ${global}/100 (${band})`,
         `Pessoal: ${personal} · Trabalho: ${work} · Corpo: ${body}`,
         '',
-        `Marcar consulta: ${bookUrl}`
+        `Subscrição mensal: ${subUrl}`,
+        `Consulta avulsa: ${bookUrl}`
     ].join('\n');
 
     const clinicHtml = `<!DOCTYPE html><html lang="pt"><body style="font-family:system-ui,sans-serif;line-height:1.5;color:#22382f">
@@ -1674,7 +1676,7 @@ function buildBurnoutQuizEmails(data) {
 <li>Burnout no trabalho: ${work}</li>
 <li>Sinais no corpo: ${body}</li>
 </ul>
-<p><a href="${bookUrl}">Link de marcação (saúde mental)</a></p>
+<p><a href="${subUrl}">Subscrição mensal anti-burnout</a> · <a href="${bookUrl}">Consulta avulsa</a></p>
 </body></html>`;
 
     const userSubject = 'O teu resultado — Índice de Burnout | Lon Clinic';
@@ -1688,7 +1690,11 @@ function buildBurnoutQuizEmails(data) {
         '',
         'Este teste é informativo e não substitui avaliação clínica.',
         '',
-        `Marcar consulta de saúde mental: ${bookUrl}`,
+        'Próximo passo recomendado — Subscrição de acompanhamento anti-burnout (€216/mês, 1 consulta médica por semana):',
+        subUrl,
+        '',
+        'Ou marcar uma consulta avulsa (€60):',
+        bookUrl,
         '',
         'Lon Clinic — lonclinic.com'
     ].join('\n');
@@ -1702,8 +1708,11 @@ function buildBurnoutQuizEmails(data) {
 <tr><td style="padding:6px 0;color:#6e7b72">Burnout no trabalho</td><td style="text-align:right">${work}</td></tr>
 <tr><td style="padding:6px 0;color:#6e7b72">Sinais no corpo</td><td style="text-align:right">${body}</td></tr>
 </table>
-<p style="font-size:13px;color:#6e7b72;margin:0 0 24px">Este teste é informativo e não substitui avaliação por um profissional de saúde.</p>
-<p style="margin:0"><a href="${bookUrl}" style="display:inline-block;background:#c4744a;color:#fff;text-decoration:none;padding:12px 22px;border-radius:999px;font-weight:600">Marcar consulta</a></p>
+<p style="font-size:13px;color:#6e7b72;margin:0 0 20px">Este teste é informativo e não substitui avaliação por um profissional de saúde.</p>
+<p style="margin:0 0 8px;font-size:14px;font-weight:600;color:#22382f">Próximo passo recomendado</p>
+<p style="margin:0 0 16px;font-size:13px;color:#3d554a;line-height:1.5">Subscrição de acompanhamento anti-burnout — €216/mês, 1 consulta médica por semana com o mesmo médico.</p>
+<p style="margin:0 0 12px"><a href="${subUrl}" style="display:inline-block;background:#c4744a;color:#fff;text-decoration:none;padding:12px 22px;border-radius:999px;font-weight:600">Subscrever · €216/mês</a></p>
+<p style="margin:0 0 24px"><a href="${bookUrl}" style="color:#c4744a;font-size:13px;font-weight:600">Ou marcar consulta avulsa · €60</a></p>
 <p style="margin:24px 0 0;font-size:12px;color:#6e7b72">Lon Clinic · lonclinic.com</p>
 </body></html>`;
 

@@ -40,16 +40,16 @@
     const BANDS = [
         { max: 24, pill: 'BAIXO', title: 'Energia sob controlo',
             text: 'Os teus níveis estão dentro do esperado. O melhor momento para proteger a energia é exatamente este — antes de precisares de a recuperar.',
-            cta: 'Prevenir é mais fácil do que tratar. Uma consulta de avaliação ajuda a manter o que está a funcionar — e a corrigir cedo o que ainda é pequeno.' },
+            cta: 'Prevenir é mais fácil do que tratar. A subscrição de acompanhamento anti-burnout dá-te ritmo semanal para manter o que está a funcionar — e corrigir cedo o que ainda é pequeno.' },
         { max: 49, pill: 'LIGEIRO', title: 'Sinais de alerta iniciais',
             text: 'Ainda não é burnout instalado, mas há dimensões da tua energia a pedir atenção. Nesta fase, mudanças relativamente simples têm um efeito enorme.',
-            cta: 'Uma consulta agora vale por dez mais tarde: avaliamos as tuas dimensões críticas e sais com um plano concreto de sono, energia e limites.' },
+            cta: 'Agir agora vale por dez mais tarde. Com a subscrição (€216/mês) tens 1 consulta médica por semana — sono, energia e limites, com continuidade.' },
         { max: 74, pill: 'MODERADO', title: 'O teu corpo já está a pagar a conta',
             text: 'O teu resultado sugere um nível de esgotamento significativo, que provavelmente já sentes no corpo, no sono e na cabeça. Não se resolve com um fim de semana — mas resolve-se.',
-            cta: 'Este é o momento de falar com uma médica. Na consulta de burnout avaliamos o quadro completo — energia, sono, corpo — e construímos um plano de recuperação realista.' },
+            cta: 'Este é o momento de acompanhamento contínuo. A subscrição anti-burnout inclui 1 consulta por semana com o mesmo médico — o formato mais eficaz para recuperar.' },
         { max: 100, pill: 'ELEVADO', title: 'É altura de parar e pedir apoio',
             text: 'O teu resultado indica sinais sérios de esgotamento. Não estás a exagerar e não é fraqueza — é um estado fisiológico real que merece acompanhamento profissional, e quanto mais cedo, melhor a recuperação.',
-            cta: 'Recomendamos vivamente uma avaliação com um profissional de saúde. Podes marcar uma consulta connosco — e se estiveres em sofrimento intenso, procura apoio médico o quanto antes.' }
+            cta: 'Recomendamos vivamente a subscrição de acompanhamento médico (€216/mês, 1 consulta/semana). Se estiveres em sofrimento intenso, procura também apoio médico urgente.' }
     ];
 
     const SCALE_INSIGHTS = {
@@ -70,24 +70,24 @@
     };
 
     const BOOKING_URL = '/marcar/burnout?ref=burnout-quiz';
+    const SUB_URL = '/marcar/burnout-mensal?ref=burnout-quiz';
 
     const DIM_META = {
         personal: {
             short: 'Como te sentes',
-            cls: 'dim-badge--personal',
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>'
         },
         work: {
             short: 'O teu trabalho',
-            cls: 'dim-badge--work',
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>'
         },
         body: {
             short: 'O corpo',
-            cls: 'dim-badge--body',
             icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4 4 0 014 4v1a4 4 0 01-8 0V6a4 4 0 014-4z"/><path d="M6 21v-2a6 6 0 0112 0v2"/></svg>'
         }
     };
+
+    const SEG_ORDER = ['personal', 'work', 'body'];
 
     const PILL_CLASS = { BAIXO: 'pill--low', LIGEIRO: 'pill--light', MODERADO: 'pill--mid', ELEVADO: 'pill--high' };
 
@@ -100,26 +100,40 @@
     const screens = { intro: $('intro'), quiz: $('quiz'), gate: $('gate'), results: $('results') };
 
     function show(name) {
-        Object.keys(screens).forEach(function (k) { screens[k].classList.remove('active'); });
-        void screens[name].offsetWidth;
-        screens[name].classList.add('active');
+        Object.keys(screens).forEach(function (k) {
+            var el = screens[k];
+            var active = k === name;
+            el.classList.toggle('is-active', active);
+            el.hidden = !active;
+        });
         $('progressWrap').hidden = (name !== 'quiz');
-        window.scrollTo({ top: 0 });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function updateSegments(scale) {
+        var host = $('progressBarHost');
+        if (!host) return;
+        var idx = SEG_ORDER.indexOf(scale);
+        host.querySelectorAll('.bq-seg').forEach(function (seg) {
+            var key = seg.getAttribute('data-seg');
+            var i = SEG_ORDER.indexOf(key);
+            seg.classList.toggle('is-active', i === idx);
+            seg.classList.toggle('is-done', i < idx);
+        });
+        host.setAttribute('aria-valuenow', String(current + 1));
     }
 
     function renderQuestion() {
         const q = QUESTIONS[current];
         const dim = DIM_META[q.scale] || DIM_META.personal;
-        const badge = $('dimBadge');
         const dimIcon = $('dimIcon');
         const dimLabel = $('dimLabel');
         const dimLabelShort = $('dimLabelShort');
 
-        badge.hidden = false;
-        badge.className = 'dim-badge ' + dim.cls;
         dimIcon.innerHTML = dim.icon;
         dimLabel.textContent = q.label;
         if (dimLabelShort) dimLabelShort.textContent = dim.short;
+        updateSegments(q.scale);
 
         $('questionText').textContent = q.text;
         $('stepLabel').textContent = (current + 1) + ' / ' + QUESTIONS.length;
@@ -131,15 +145,20 @@
         q.type.forEach(function (opt, idx) {
             const score = q.reversed ? (100 - opt.v) : opt.v;
             const b = document.createElement('button');
-            b.className = 'opt' + (answers[current] === score ? ' selected' : '');
+            b.type = 'button';
+            b.className = 'bq-opt' + (answers[current] === score ? ' is-selected' : '');
             b.style.animationDelay = (idx * 45) + 'ms';
             b.setAttribute('role', 'radio');
             b.setAttribute('aria-checked', answers[current] === score ? 'true' : 'false');
-            b.innerHTML = '<span class="opt-num">' + (idx + 1) + '</span><span class="opt-label">' + opt.label + '</span>';
+            b.innerHTML = '<span class="bq-opt-num">' + (idx + 1) + '</span><span class="bq-opt-label">' + opt.label + '</span>';
             b.addEventListener('click', function () {
                 answers[current] = score;
-                box.querySelectorAll('.opt').forEach(function (el) { el.classList.remove('selected'); });
-                b.classList.add('selected');
+                box.querySelectorAll('.bq-opt').forEach(function (el) {
+                    el.classList.remove('is-selected');
+                    el.setAttribute('aria-checked', 'false');
+                });
+                b.classList.add('is-selected');
+                b.setAttribute('aria-checked', 'true');
                 setTimeout(function () {
                     if (current < QUESTIONS.length - 1) {
                         current++;
@@ -196,7 +215,7 @@
         lastScores = s;
 
         $('bandPill').textContent = band.pill;
-        $('bandPill').className = 'pill ' + (PILL_CLASS[band.pill] || 'pill--mid');
+        $('bandPill').className = 'bq-pill ' + (PILL_CLASS[band.pill] || 'pill--mid');
         $('bandTitle').textContent = band.title;
         $('bandText').textContent = band.text;
         $('ctaText').textContent = band.cta;
@@ -220,7 +239,7 @@
                 if (top && top[1] >= 75) extra = '<p style="margin-top:8px">' + BODY_DETAIL[top[0]] + '</p>';
             }
             const div = document.createElement('div');
-            div.className = 'insight';
+            div.className = 'bq-insight';
             div.style.animationDelay = (i * 80) + 'ms';
             div.innerHTML = '<h3>' + ins.title + '</h3><p>' + ins.text + '</p>' + extra;
             box.appendChild(div);
@@ -282,11 +301,11 @@
         const email = $('email').value.trim();
         const valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
         if (!valid) {
-            $('emailError').style.display = 'block';
+            $('emailError').hidden = false;
             $('email').focus();
             return;
         }
-        $('emailError').style.display = 'none';
+        $('emailError').hidden = true;
         lastEmail = email;
 
         const btn = $('revealBtn');
@@ -311,15 +330,25 @@
         }
     });
 
+    var subBtn = $('subBtn');
+    if (subBtn) {
+        subBtn.addEventListener('click', function () {
+            if (lastScores) {
+                storeQuizForBooking(lastScores, bandFor(lastScores.global));
+            }
+        });
+    }
+
     $('restartBtn').addEventListener('click', function () {
         current = 0;
         lastEmail = '';
         lastScores = null;
         answers.fill(null);
         $('email').value = '';
+        $('emailError').hidden = true;
         $('gaugeArc').style.strokeDashoffset = 314.16;
         $('scoreNum').textContent = '0';
-        $('bandPill').className = 'pill';
+        $('bandPill').className = 'bq-pill';
         ['barPersonal', 'barWork', 'barBody'].forEach(function (id) { $(id).style.width = '0%'; });
         show('intro');
     });

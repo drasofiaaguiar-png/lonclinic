@@ -166,35 +166,36 @@ body.psi-landing {
 /* ── Hero centrado, fundo laranja tijolo ── */
 .psi-hero {
     position: relative;
-    min-height: min(100vh, 900px);
+    min-height: 100svh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: stretch;
-    padding: calc(var(--lon-nav-h) + 48px) 0 0;
+    padding: calc(var(--lon-nav-h) + 32px) 0 48px;
     color: #fff8f4;
     overflow: hidden;
     isolation: isolate;
     background:
-        radial-gradient(ellipse 80% 60% at 85% 15%, rgba(255, 196, 160, 0.22) 0%, transparent 55%),
-        radial-gradient(ellipse 55% 45% at 10% 80%, rgba(90, 28, 12, 0.35) 0%, transparent 50%),
-        linear-gradient(165deg, #d4683a 0%, #c24f28 42%, #a33d1c 100%);
+        radial-gradient(ellipse 70% 55% at 88% 8%, rgba(255, 210, 180, 0.28) 0%, transparent 52%),
+        radial-gradient(ellipse 50% 40% at 8% 90%, rgba(60, 16, 8, 0.45) 0%, transparent 48%),
+        linear-gradient(160deg, #e07848 0%, #c24f28 38%, #8f2f14 100%);
 }
 
 .psi-hero-bg {
     position: absolute;
     inset: 0;
     z-index: 0;
-    opacity: 0.22;
+    opacity: 0.38;
 }
 
 .psi-hero-bg img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 30%;
+    object-position: center 28%;
     display: block;
-    filter: saturate(0.7) contrast(1.05) grayscale(0.15);
+    filter: saturate(0.65) contrast(1.08) grayscale(0.2);
     mix-blend-mode: multiply;
     will-change: transform;
     animation: psi-hero-drift 22s ease-in-out infinite alternate;
@@ -205,94 +206,105 @@ body.psi-landing {
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(180deg, rgba(163, 61, 28, 0.25) 0%, rgba(122, 40, 16, 0.55) 100%);
+        linear-gradient(180deg, rgba(140, 42, 16, 0.15) 0%, rgba(90, 24, 10, 0.55) 55%, rgba(50, 12, 6, 0.72) 100%);
 }
 
 .psi-hero-inner {
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 780px;
+    max-width: 920px;
     margin: 0 auto;
     text-align: center;
-    padding-bottom: 64px;
+    padding: 24px 0 8px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .psi-brand {
-    margin: 0 0 18px;
-    font-size: clamp(2.2rem, 6vw, 3.8rem);
+    margin: 0 0 28px;
+    font-size: clamp(3.4rem, 12vw, 7.5rem);
     font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 0.95;
+    letter-spacing: -0.035em;
+    line-height: 0.88;
     color: #fff8f4;
-    animation: psi-fade-up 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+    text-shadow: 0 12px 40px rgba(40, 10, 4, 0.35);
+    animation: psi-brand-in 1.05s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .psi-hero h1 {
-    margin: 0 0 18px;
-    font-size: clamp(1.45rem, 3.2vw, 2.25rem);
-    line-height: 1.2;
+    margin: 0 0 22px;
+    font-size: clamp(1.55rem, 3.6vw, 2.65rem);
+    line-height: 1.18;
     font-weight: 500;
-    max-width: 22ch;
-    animation: psi-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+    max-width: 18ch;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    animation: psi-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
 }
 
-.psi-hero h1 br {
+.psi-hero-line {
     display: block;
+    margin-top: 0.12em;
+    font-style: italic;
+    font-weight: 500;
+    color: rgba(255, 248, 244, 0.92);
 }
 
 .psi-lead {
-    margin: 0 0 28px;
-    font-size: clamp(1.05rem, 1.5vw, 1.2rem);
-    line-height: 1.5;
-    color: rgba(255, 248, 244, 0.92);
+    margin: 0 0 36px;
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    line-height: 1.45;
+    color: rgba(255, 248, 244, 0.78);
     font-weight: 500;
-    animation: psi-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.16s both;
+    letter-spacing: 0.01em;
+    animation: psi-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both;
 }
 
 .psi-selector {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 14px;
-    width: min(100%, 560px);
-    animation: psi-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.24s both;
+    width: min(100%, 580px);
+    animation: psi-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) 0.32s both;
 }
 
 .psi-select-card {
     display: grid;
-    gap: 6px;
+    gap: 8px;
     text-align: left;
-    padding: 22px 20px;
-    border-radius: 16px;
-    background: rgba(255, 248, 244, 0.14);
-    border: 1px solid rgba(255, 248, 244, 0.35);
+    padding: 26px 22px;
+    border-radius: 14px;
+    background: rgba(255, 248, 244, 0.12);
+    border: 1px solid rgba(255, 248, 244, 0.4);
     color: #fff8f4;
     text-decoration: none;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 16px 40px rgba(40, 10, 4, 0.18);
+    transition: background 0.25s ease, border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .psi-select-card:hover {
-    background: rgba(255, 248, 244, 0.24);
-    border-color: rgba(255, 248, 244, 0.65);
-    transform: translateY(-2px);
+    background: rgba(255, 248, 244, 0.22);
+    border-color: rgba(255, 248, 244, 0.75);
+    transform: translateY(-3px);
+    box-shadow: 0 22px 48px rgba(40, 10, 4, 0.28);
 }
 
 .psi-select-label {
     font-family: "Cormorant Garamond", Georgia, serif;
-    font-size: 1.55rem;
+    font-size: clamp(1.55rem, 2.5vw, 1.85rem);
     font-weight: 600;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
+    line-height: 1.1;
 }
 
 .psi-select-desc {
-    font-size: 0.92rem;
+    font-size: 0.9rem;
     line-height: 1.4;
-    color: rgba(255, 248, 244, 0.82);
+    color: rgba(255, 248, 244, 0.78);
 }
 
 .psi-cta-row {
@@ -960,13 +972,18 @@ body.psi-landing {
 .psi-steps .psi-reveal:nth-child(3) { transition-delay: 0.16s; }
 
 @keyframes psi-fade-up {
-    from { opacity: 0; transform: translateY(18px); }
+    from { opacity: 0; transform: translateY(22px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes psi-brand-in {
+    from { opacity: 0; transform: translateY(28px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 @keyframes psi-hero-drift {
-    from { transform: scale(1.04); }
-    to { transform: scale(1.09) translate3d(0, -1.5%, 0); }
+    from { transform: scale(1.05); }
+    to { transform: scale(1.12) translate3d(0, -2%, 0); }
 }
 
 @keyframes psi-marquee {
@@ -979,6 +996,7 @@ body.psi-landing {
     .psi-brand,
     .psi-hero h1,
     .psi-lead,
+    .psi-selector,
     .psi-cta-row,
     .psi-ticker-track {
         animation: none !important;
@@ -1009,10 +1027,17 @@ body.psi-landing {
 @media (max-width: 720px) {
     .psi-hero {
         min-height: 100svh;
+        justify-content: flex-end;
+        padding-bottom: 36px;
+    }
+
+    .psi-brand {
+        margin-bottom: 20px;
     }
 
     .psi-hero h1 {
-        max-width: none;
+        max-width: 16ch;
+        font-size: clamp(1.4rem, 6.2vw, 1.85rem);
     }
 
     .psi-selector {

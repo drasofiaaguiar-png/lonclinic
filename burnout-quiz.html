@@ -21,399 +21,172 @@
     <meta property="og:description" content="18 perguntas · 4 minutos · Resultado imediato. Instrumento CBI com secção complementar sobre sinais no corpo.">
     <meta property="og:locale" content="pt_PT">
     <meta property="og:site_name" content="Lon Clinic">
-    <meta name="theme-color" content="#1a2e27">
+    <meta name="theme-color" content="#1f4a3e">
+    <link rel="stylesheet" href="/landing.css?v=20260621b">
+    <link rel="stylesheet" href="/burnout-quiz.css?v=20260721b">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-  :root{
-    --ink:#1a2e27; --ink-soft:#3d554a; --sand:#f4efe6; --paper:#fffdf9;
-    --terra:#c4744a; --terra-soft:rgba(196,116,74,.14); --line:rgba(34,56,47,.12);
-    --muted:#6e7b72; --gold:#cbb89a; --sage:#5a7d6a; --shadow:0 24px 60px rgba(26,46,39,.09);
-    --shadow-sm:0 8px 28px rgba(26,46,39,.06);
-  }
-  *{margin:0;padding:0;box-sizing:border-box}
-  html{-webkit-text-size-adjust:100%}
-  body{
-    font-family:'Instrument Sans',system-ui,sans-serif;background:var(--sand);color:var(--ink);
-    min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;position:relative;overflow-x:hidden;
-  }
-  body::before,body::after{
-    content:'';position:fixed;border-radius:50%;pointer-events:none;z-index:0;
-    filter:blur(80px);opacity:.55;
-  }
-  body::before{width:min(520px,90vw);height:min(520px,90vw);background:#e8c4a8;top:-120px;right:-80px}
-  body::after{width:min(440px,80vw);height:min(440px,80vw);background:#c8d9ce;bottom:-100px;left:-100px}
-  .serif{font-family:'Fraunces',Georgia,serif}
-
-  header,.progress-wrap,main,footer{position:relative;z-index:1}
-  header{
-    display:flex;justify-content:space-between;align-items:center;padding:18px 24px;
-    backdrop-filter:blur(12px);background:rgba(244,239,230,.72);
-    border-bottom:1px solid var(--line);
-  }
-  header .brand{font-size:11px;letter-spacing:.32em;font-weight:600;text-decoration:none;color:var(--ink)}
-  header .tag{
-    font-size:10px;letter-spacing:.16em;color:var(--muted);
-    background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:6px 12px;
-  }
-  main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 20px 48px}
-  .stage{width:100%;max-width:580px}
-  footer{padding:16px 24px 24px;text-align:center;font-size:11px;color:var(--muted);line-height:1.5}
-  footer a{color:var(--ink-soft)}
-
-  .progress-wrap{padding:0 20px 8px;width:100%;display:flex;justify-content:center}
-  .progress-track{width:100%;max-width:580px}
-  .progress-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-  .progress-meta span{font-size:11px;letter-spacing:.1em;font-weight:600;color:var(--muted);text-transform:uppercase}
-  .progress-meta b{font-size:12px;color:var(--terra);font-weight:600;letter-spacing:.04em}
-  .progress{height:6px;background:rgba(34,56,47,.08);border-radius:99px;overflow:hidden}
-  .progress b{
-    display:block;height:100%;width:0%;border-radius:99px;
-    background:linear-gradient(90deg,#c4744a,#d4926e);
-    transition:width .45s cubic-bezier(.4,0,.2,1);
-    box-shadow:0 0 12px rgba(196,116,74,.35);
-  }
-
-  .screen{display:none}
-  .screen.active{display:block;animation:screenIn .5s cubic-bezier(.22,1,.36,1) both}
-  @keyframes screenIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-  @keyframes optIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  @media (prefers-reduced-motion:reduce){
-    .screen{animation:none}.progress b{transition:none}
-    .bar-fill,.gauge-arc{transition:none !important}.opt{animation:none !important}
-  }
-
-  .panel{
-    background:rgba(255,253,249,.88);backdrop-filter:blur(16px);
-    border:1px solid rgba(255,255,255,.7);border-radius:24px;
-    padding:clamp(24px,5vw,36px);box-shadow:var(--shadow-sm);
-  }
-  .panel--hero{
-    padding:clamp(28px,6vw,40px);
-    background:linear-gradient(145deg,rgba(255,253,249,.95),rgba(255,248,240,.88));
-    box-shadow:var(--shadow);
-  }
-  .panel--quiz{padding-top:28px}
-  .panel--gate,.panel--results{box-shadow:var(--shadow)}
-
-  .eyebrow{
-    display:inline-flex;align-items:center;gap:8px;
-    font-size:10px;letter-spacing:.24em;font-weight:600;color:var(--terra);
-    background:var(--terra-soft);border-radius:999px;padding:7px 14px;margin-bottom:20px;
-  }
-  .eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--terra)}
-  h1{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:clamp(32px,6.5vw,44px);line-height:1.08;margin-bottom:16px;letter-spacing:-.02em}
-  h1 em{font-style:normal;color:var(--terra)}
-  .lead{font-size:16px;line-height:1.65;color:var(--ink-soft);margin-bottom:28px;max-width:48ch}
-  .meta-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px}
-  .chip{
-    font-size:12px;font-weight:500;color:var(--ink-soft);
-    background:var(--paper);border:1px solid var(--line);border-radius:999px;
-    padding:9px 14px;display:inline-flex;align-items:center;gap:7px;
-    box-shadow:0 2px 8px rgba(26,46,39,.04);
-  }
-  .chip svg{width:14px;height:14px;opacity:.7;flex:none}
-
-  .btn{
-    display:inline-flex;align-items:center;justify-content:center;gap:10px;
-    font-family:inherit;font-size:15px;font-weight:600;
-    background:var(--ink);color:var(--paper);border:none;border-radius:999px;
-    padding:16px 32px;cursor:pointer;text-decoration:none;
-    transition:transform .18s ease,box-shadow .18s ease,background .18s ease;
-    box-shadow:0 10px 24px rgba(26,46,39,.18);
-  }
-  .btn:hover{background:#14241f;transform:translateY(-2px);box-shadow:0 14px 32px rgba(26,46,39,.22)}
-  .btn:focus-visible{outline:3px solid var(--terra);outline-offset:3px}
-  .btn:disabled{opacity:.65;cursor:wait;transform:none;box-shadow:none}
-  .btn.terra{background:linear-gradient(135deg,#c4744a,#b8653d);box-shadow:0 10px 28px rgba(196,116,74,.28)}
-  .btn.terra:hover{background:linear-gradient(135deg,#b8653d,#a85a34)}
-  .btn-arrow{font-size:18px;line-height:1;transition:transform .18s ease}
-  .btn:hover .btn-arrow{transform:translateX(3px)}
-
-  .dim-badge{
-    display:inline-flex;align-items:center;gap:8px;
-    font-size:11px;letter-spacing:.14em;font-weight:600;text-transform:uppercase;
-    border-radius:999px;padding:8px 14px;margin-bottom:18px;
-  }
-  .dim-badge--personal{color:#9a4f2e;background:rgba(196,116,74,.12)}
-  .dim-badge--work{color:#1a2e27;background:rgba(26,46,39,.08)}
-  .dim-badge--body{color:#3d5f4c;background:rgba(90,125,106,.14)}
-  .dim-badge svg{width:14px;height:14px;flex:none}
-
-  .question{
-    font-family:'Fraunces',Georgia,serif;font-weight:600;
-    font-size:clamp(23px,4.8vw,30px);line-height:1.22;margin-bottom:26px;
-    letter-spacing:-.015em;
-  }
-  .options{display:flex;flex-direction:column;gap:10px}
-  .opt{
-    font-family:inherit;font-size:15px;text-align:left;background:var(--paper);color:var(--ink);
-    border:1.5px solid var(--line);border-radius:16px;padding:15px 16px;cursor:pointer;
-    display:flex;align-items:center;gap:14px;width:100%;
-    transition:border-color .15s ease,background .15s ease,transform .15s ease,box-shadow .15s ease;
-    animation:optIn .4s cubic-bezier(.22,1,.36,1) both;
-    box-shadow:0 2px 8px rgba(26,46,39,.03);
-  }
-  .opt:hover{border-color:rgba(196,116,74,.45);transform:translateY(-1px);box-shadow:0 8px 20px rgba(26,46,39,.07)}
-  .opt:focus-visible{outline:3px solid var(--terra);outline-offset:2px}
-  .opt-num{
-    width:28px;height:28px;border-radius:9px;flex:none;
-    display:flex;align-items:center;justify-content:center;
-    font-size:12px;font-weight:700;color:var(--muted);
-    background:rgba(34,56,47,.05);transition:all .15s ease;
-  }
-  .opt-label{flex:1;line-height:1.35}
-  .opt.selected{border-color:var(--terra);background:linear-gradient(135deg,#fff9f3,#fffdf9);box-shadow:0 8px 24px rgba(196,116,74,.12)}
-  .opt.selected .opt-num{background:var(--terra);color:#fff}
-  .back-link{
-    background:none;border:none;font-family:inherit;font-size:13px;color:var(--muted);
-    cursor:pointer;margin-top:24px;padding:8px 4px;display:inline-flex;align-items:center;gap:6px;
-  }
-  .back-link:hover{color:var(--ink)}
-  .back-link:focus-visible{outline:2px solid var(--terra);outline-offset:2px;border-radius:6px}
-
-  .field{margin:28px 0 14px}
-  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:8px;color:var(--ink-soft)}
-  .field input{
-    width:100%;font-family:inherit;font-size:16px;padding:16px 18px;
-    border:1.5px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink);
-    transition:border-color .15s ease,box-shadow .15s ease;
-  }
-  .field input:focus{outline:none;border-color:var(--terra);box-shadow:0 0 0 4px rgba(196,116,74,.12)}
-  .privacy{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:24px;max-width:48ch}
-  .error{font-size:13px;color:#a4442a;margin-top:8px;display:none}
-
-  .gauge-wrap{display:flex;justify-content:center;margin:4px 0 12px}
-  .gauge{
-    position:relative;width:260px;height:160px;
-    background:radial-gradient(circle at 50% 80%,rgba(196,116,74,.08),transparent 70%);
-    border-radius:50%;
-  }
-  .gauge svg{width:100%;height:auto;overflow:visible;filter:drop-shadow(0 4px 12px rgba(196,116,74,.15))}
-  .gauge-num{
-    position:absolute;left:0;right:0;bottom:10px;text-align:center;
-    font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:56px;line-height:1;
-    letter-spacing:-.03em;
-  }
-  .gauge-sub{
-    position:absolute;left:0;right:0;bottom:-14px;text-align:center;
-    font-size:10px;letter-spacing:.2em;color:var(--muted);font-weight:600;
-  }
-
-  .band{text-align:center;margin:36px 0 12px}
-  .band .pill{
-    display:inline-block;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
-    color:#fff;border-radius:999px;padding:8px 18px;margin-bottom:16px;
-    box-shadow:0 6px 18px rgba(0,0,0,.12);
-  }
-  .pill--low{background:linear-gradient(135deg,#5a7d6a,#4a6b58)}
-  .pill--light{background:linear-gradient(135deg,#7d9a6a,#6a8558)}
-  .pill--mid{background:linear-gradient(135deg,#c4744a,#b0653a)}
-  .pill--high{background:linear-gradient(135deg,#a4442a,#8c3822)}
-  .band h2{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:clamp(24px,5vw,34px);line-height:1.15;margin-bottom:12px;letter-spacing:-.02em}
-  .band p{font-size:15px;line-height:1.65;color:var(--ink-soft);max-width:48ch;margin:0 auto}
-
-  .scales{margin:30px 0 8px;display:flex;flex-direction:column;gap:12px}
-  .scale{
-    background:var(--paper);border:1px solid var(--line);border-radius:18px;
-    padding:18px 20px;box-shadow:0 4px 16px rgba(26,46,39,.04);
-    transition:transform .2s ease;
-  }
-  .scale:hover{transform:translateY(-1px)}
-  .scale-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px}
-  .scale-head h3{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink);font-weight:600}
-  .scale-head span{font-size:12px;font-weight:600;color:var(--terra);white-space:nowrap}
-  .bar{height:10px;background:rgba(34,56,47,.07);border-radius:99px;overflow:hidden}
-  .bar-fill{
-    height:100%;width:0%;border-radius:99px;
-    background:linear-gradient(90deg,#c4744a,#d9a07a);
-    transition:width 1.1s cubic-bezier(.4,0,.2,1);
-    box-shadow:0 0 10px rgba(196,116,74,.25);
-  }
-  .scale-note{font-size:12px;color:var(--muted);margin-top:9px;line-height:1.5}
-
-  .insights{margin:20px 0 8px;display:flex;flex-direction:column;gap:12px}
-  .insight{
-    background:linear-gradient(135deg,#fffdf9,#faf6ef);
-    border:1px solid var(--line);border-radius:18px;padding:20px 22px;
-    border-left:3px solid var(--terra);
-  }
-  .insight h3{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--terra);margin-bottom:8px;font-weight:700}
-  .insight p{font-size:14.5px;line-height:1.65;color:var(--ink-soft)}
-
-  .cta-block{
-    margin-top:28px;border-radius:22px;padding:28px 26px;color:var(--paper);
-    background:linear-gradient(145deg,#1a2e27 0%,#243d34 55%,#1a2e27 100%);
-    box-shadow:var(--shadow);position:relative;overflow:hidden;
-  }
-  .cta-block::before{
-    content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;
-    border-radius:50%;background:rgba(196,116,74,.18);filter:blur(2px);
-  }
-  .cta-block h3,.cta-block p,.cta-row{position:relative;z-index:1}
-  .cta-block h3{font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:22px;margin-bottom:8px}
-  .cta-block p{font-size:14px;line-height:1.65;color:#d4cec0;margin-bottom:22px}
-  .cta-row{display:flex;gap:12px;flex-wrap:wrap}
-  .cta-row .btn{font-size:14px;padding:14px 24px}
-  .cta-row .btn.ghost{background:rgba(255,255,255,.06);border:1.5px solid rgba(203,184,154,.45);color:var(--gold);box-shadow:none}
-  .cta-row .btn.ghost:hover{background:rgba(255,255,255,.1);transform:translateY(-1px)}
-  .disclaimer{font-size:11.5px;color:var(--muted);line-height:1.65;margin-top:26px}
-  .restart{margin-top:20px;text-align:center}
-
-  @media (max-width:520px){
-    header .tag{display:none}
-    .cta-row .btn{width:100%}
-    .meta-row .chip{font-size:11px;padding:8px 12px}
-  }
-</style>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
 </head>
-<body>
+<body class="bq-page">
+    <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
 
-<header>
-  <a href="/" class="brand" aria-label="Lon Clinic — página inicial">L O N &nbsp;C L I N I C</a>
-  <div class="tag">SAÚDE MENTAL OCUPACIONAL</div>
-</header>
+    <header class="bq-top">
+        <a href="/psicologia" class="bq-brand" aria-label="LON Clinic — Psicologia">LON Clinic</a>
+        <a href="/patient-portal" class="bq-login">Login</a>
+    </header>
 
-<div class="progress-wrap" id="progressWrap" hidden>
-  <div class="progress-track">
-    <div class="progress-meta">
-      <span id="dimLabelShort">Secção</span>
-      <b id="stepLabel">1 / 18</b>
+    <div class="bq-progress" id="progressWrap" hidden>
+        <div class="bq-progress-meta">
+            <span id="dimLabelShort">Secção</span>
+            <b id="stepLabel">1 / 18</b>
+        </div>
+        <div class="bq-progress-inner" role="progressbar" aria-valuemin="1" aria-valuemax="18" aria-valuenow="1" aria-label="Progresso do teste" id="progressBarHost">
+            <span class="bq-seg" data-seg="personal"></span>
+            <span class="bq-seg" data-seg="work"></span>
+            <span class="bq-seg" data-seg="body"></span>
+        </div>
+        <div class="bq-progress-fine" aria-hidden="true">
+            <b id="progressBar"></b>
+        </div>
     </div>
-    <div class="progress"><b id="progressBar"></b></div>
-  </div>
-</div>
 
-<main>
-  <div class="stage" id="stage">
+    <main id="conteudo-principal" class="bq-main">
+        <div class="bq-stage" id="stage">
 
-    <section class="screen active" id="intro">
-      <div class="panel panel--hero">
-        <div class="eyebrow">ÍNDICE DE BURNOUT</div>
-        <h1>Quanto do teu cansaço já é <em>burnout</em>?</h1>
-        <p class="lead">Cansaço normal recupera com descanso. Burnout, não. Teste baseado no Copenhagen Burnout Inventory — com uma secção extra sobre o que o teu corpo já pode estar a dizer.</p>
-        <div class="meta-row">
-          <span class="chip">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
-            18 perguntas
-          </span>
-          <span class="chip">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-            4 minutos
-          </span>
-          <span class="chip">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            Gratuito
-          </span>
+            <!-- Intro -->
+            <section class="bq-screen is-active" id="intro">
+                <div class="bq-intro">
+                    <h1>Ajuda-nos a perceber o teu nível de esgotamento.</h1>
+                    <p>Cansaço normal recupera com descanso. Burnout, não. Este teste baseia-se no Copenhagen Burnout Inventory — com uma secção extra sobre o que o teu corpo já pode estar a dizer.</p>
+                    <button type="button" class="bq-btn bq-btn-primary bq-btn-lg" id="startBtn">Começar o teste</button>
+                </div>
+            </section>
+
+            <!-- Quiz -->
+            <section class="bq-screen" id="quiz" hidden>
+                <div class="bq-card">
+                    <p class="bq-step-label" id="dimBadge">
+                        <span id="dimIcon" aria-hidden="true"></span>
+                        <span id="dimLabel">Como te sentes</span>
+                    </p>
+                    <h2 class="bq-question" id="questionText"></h2>
+                    <div class="bq-options" id="options" role="radiogroup" aria-labelledby="questionText"></div>
+                    <div class="bq-actions">
+                        <button type="button" class="bq-back" id="backBtn">← Pergunta anterior</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Email gate -->
+            <section class="bq-screen" id="gate" hidden>
+                <div class="bq-card">
+                    <p class="bq-step-label">Quase lá</p>
+                    <h2>O teu resultado está pronto</h2>
+                    <p class="bq-lead">Mostramos os três índices já a seguir — e enviamos por email a análise detalhada com recomendações práticas.</p>
+                    <div class="bq-field">
+                        <label for="email">O teu email</label>
+                        <input type="email" id="email" inputmode="email" autocomplete="email" placeholder="nome@email.com">
+                        <p class="bq-error" id="emailError" hidden>Escreve um email válido para continuar.</p>
+                    </div>
+                    <p class="bq-privacy">Usamos o teu email apenas para enviar o resultado e conteúdo da Lon Clinic sobre burnout e saúde. Sem spam.</p>
+                    <div class="bq-actions bq-actions--end">
+                        <button type="button" class="bq-btn bq-btn-primary" id="revealBtn">Ver o meu resultado</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results -->
+            <section class="bq-screen" id="results" hidden>
+                <div class="bq-card bq-card--results">
+                    <div class="bq-gauge-wrap">
+                        <div class="bq-gauge">
+                            <svg viewBox="0 0 240 140" aria-hidden="true">
+                                <defs>
+                                    <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="#1f4a3e"/>
+                                        <stop offset="100%" stop-color="#3d7a68"/>
+                                    </linearGradient>
+                                </defs>
+                                <path d="M 20 130 A 100 100 0 0 1 220 130" fill="none" stroke="rgba(16,24,32,.08)" stroke-width="14" stroke-linecap="round"/>
+                                <path id="gaugeArc" class="bq-gauge-arc" d="M 20 130 A 100 100 0 0 1 220 130" fill="none" stroke="url(#gaugeGrad)"
+                                    stroke-width="14" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16"></path>
+                            </svg>
+                            <div class="bq-gauge-num" id="scoreNum">0</div>
+                            <div class="bq-gauge-sub">Índice global · 0–100</div>
+                        </div>
+                    </div>
+
+                    <div class="bq-band">
+                        <span class="bq-pill" id="bandPill"></span>
+                        <h2 id="bandTitle"></h2>
+                        <p id="bandText"></p>
+                    </div>
+
+                    <div class="bq-scales">
+                        <div class="bq-scale">
+                            <div class="bq-scale-head"><h3>Burnout pessoal</h3><span id="valPersonal"></span></div>
+                            <div class="bq-bar"><div class="bq-bar-fill" id="barPersonal"></div></div>
+                            <p class="bq-scale-note">Exaustão física e emocional geral (CBI).</p>
+                        </div>
+                        <div class="bq-scale">
+                            <div class="bq-scale-head"><h3>Burnout no trabalho</h3><span id="valWork"></span></div>
+                            <div class="bq-bar"><div class="bq-bar-fill" id="barWork"></div></div>
+                            <p class="bq-scale-note">Fadiga e exaustão que atribuis ao teu trabalho (CBI).</p>
+                        </div>
+                        <div class="bq-scale">
+                            <div class="bq-scale-head"><h3>Sinais no corpo</h3><span id="valBody"></span></div>
+                            <div class="bq-bar"><div class="bq-bar-fill" id="barBody"></div></div>
+                            <p class="bq-scale-note">Secção complementar Lon: sono, tensão, pele, digestão e peso.</p>
+                        </div>
+                    </div>
+
+                    <div class="bq-insights" id="insights"></div>
+
+                    <div class="bq-cta">
+                        <h3>O próximo passo</h3>
+                        <p id="ctaText"></p>
+                        <div class="bq-cta-row">
+                            <a class="bq-btn bq-btn-primary" href="/marcar/burnout-mensal?ref=burnout-quiz" id="subBtn">Subscrever · €216/mês</a>
+                            <a class="bq-btn bq-btn-ghost" href="/marcar/burnout?ref=burnout-quiz" id="bookBtn">Consulta avulsa · €60</a>
+                        </div>
+                        <p class="bq-cta-note">A subscrição inclui 1 consulta médica por semana, com o mesmo médico — o formato mais eficaz para recuperar do burnout.</p>
+                    </div>
+
+                    <p class="bq-disclaimer">
+                        As secções «Como te sentes» e «O teu trabalho» baseiam-se no Copenhagen Burnout Inventory (Kristensen et al., 2005),
+                        instrumento de utilização livre, com versão portuguesa validada (Fonte, 2011); adaptação Lon Clinic.
+                        A secção «O corpo» é complementar e não faz parte do CBI.
+                        Este teste é informativo: não é um diagnóstico nem substitui avaliação por um profissional de saúde.
+                    </p>
+                    <div class="bq-restart">
+                        <button type="button" class="bq-back" id="restartBtn">↺ Repetir o teste</button>
+                    </div>
+                </div>
+            </section>
         </div>
-        <button class="btn" id="startBtn" type="button">
-          Começar o teste <span class="btn-arrow" aria-hidden="true">→</span>
-        </button>
-      </div>
-    </section>
 
-    <section class="screen" id="quiz">
-      <div class="panel panel--quiz">
-        <div class="dim-badge dim-badge--personal" id="dimBadge" hidden>
-          <span id="dimIcon" aria-hidden="true"></span>
-          <span id="dimLabel"></span>
-        </div>
-        <div class="question serif" id="questionText"></div>
-        <div class="options" id="options" role="radiogroup" aria-labelledby="questionText"></div>
-        <button class="back-link" id="backBtn" type="button">← Pergunta anterior</button>
-      </div>
-    </section>
+        <aside class="bq-crisis-foot" aria-label="Aviso de crise">
+            <p>Se estás em crise ou outra pessoa possa estar em perigo — <strong>não uses este site</strong>. Contacta o <a href="tel:112">112</a>, <a href="tel:808242424">SNS 24</a> ou <a href="tel:213544545">SOS Voz Amiga</a>.</p>
+            <p class="bq-ssl" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Ligação segura
+            </p>
+        </aside>
+    </main>
 
-    <section class="screen" id="gate">
-      <div class="panel panel--gate">
-        <div class="eyebrow">QUASE LÁ</div>
-        <h1 style="font-size:clamp(28px,5vw,36px)">O teu resultado está pronto</h1>
-        <p class="lead" style="margin-bottom:0">Mostramos os três índices já a seguir — e enviamos por email a análise detalhada com recomendações práticas.</p>
-        <div class="field">
-          <label for="email">O teu email</label>
-          <input type="email" id="email" inputmode="email" autocomplete="email" placeholder="nome@email.com">
-          <div class="error" id="emailError">Escreve um email válido para continuar.</div>
-        </div>
-        <p class="privacy">Usamos o teu email apenas para enviar o resultado e conteúdo da Lon Clinic sobre burnout e saúde. Sem spam — podes sair quando quiseres.</p>
-        <button class="btn terra" id="revealBtn" type="button">
-          Ver o meu resultado <span class="btn-arrow" aria-hidden="true">→</span>
-        </button>
-      </div>
-    </section>
+    <footer class="bq-footer">
+        <nav aria-label="Rodapé">
+            <a href="/">Início</a>
+            <a href="/psicologia">Psicologia</a>
+            <a href="/clinica-anti-burnout">Anti-Burnout</a>
+            <a href="/faq">FAQ</a>
+            <a href="/info.html?page=politica-privacidade">Privacidade</a>
+        </nav>
+        <p>© 2026 Lon Clinic · ERS 45475</p>
+    </footer>
 
-    <section class="screen" id="results">
-      <div class="panel panel--results">
-        <div class="gauge-wrap">
-          <div class="gauge">
-            <svg viewBox="0 0 240 140" aria-hidden="true">
-              <defs>
-                <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#c4744a"/>
-                  <stop offset="100%" stop-color="#d9a07a"/>
-                </linearGradient>
-              </defs>
-              <path d="M 20 130 A 100 100 0 0 1 220 130" fill="none" stroke="rgba(34,56,47,.08)" stroke-width="14" stroke-linecap="round"/>
-              <path id="gaugeArc" class="gauge-arc" d="M 20 130 A 100 100 0 0 1 220 130" fill="none" stroke="url(#gaugeGrad)"
-                stroke-width="14" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16"
-                style="transition:stroke-dashoffset 1.1s cubic-bezier(.4,0,.2,1)"/>
-            </svg>
-            <div class="gauge-num" id="scoreNum">0</div>
-            <div class="gauge-sub">ÍNDICE GLOBAL · 0–100</div>
-          </div>
-        </div>
-
-        <div class="band">
-          <span class="pill" id="bandPill"></span>
-          <h2 class="serif" id="bandTitle"></h2>
-          <p id="bandText"></p>
-        </div>
-
-        <div class="scales">
-          <div class="scale">
-            <div class="scale-head"><h3>Burnout pessoal</h3><span id="valPersonal"></span></div>
-            <div class="bar"><div class="bar-fill" id="barPersonal"></div></div>
-            <p class="scale-note">Exaustão física e emocional geral (CBI).</p>
-          </div>
-          <div class="scale">
-            <div class="scale-head"><h3>Burnout no trabalho</h3><span id="valWork"></span></div>
-            <div class="bar"><div class="bar-fill" id="barWork"></div></div>
-            <p class="scale-note">Fadiga e exaustão que atribuis ao teu trabalho (CBI).</p>
-          </div>
-          <div class="scale">
-            <div class="scale-head"><h3>Sinais no corpo</h3><span id="valBody"></span></div>
-            <div class="bar"><div class="bar-fill" id="barBody"></div></div>
-            <p class="scale-note">Secção complementar Lon: sono, tensão, pele, digestão e peso.</p>
-          </div>
-        </div>
-
-        <div class="insights" id="insights"></div>
-
-        <div class="cta-block">
-          <h3 class="serif">O próximo passo</h3>
-          <p id="ctaText"></p>
-          <div class="cta-row">
-            <a class="btn terra" href="/marcar/burnout?ref=burnout-quiz" id="bookBtn">Marcar consulta</a>
-            <a class="btn ghost" href="mailto:info@lonclinic.com?subject=Workshop%20de%20Burnout%20para%20a%20minha%20empresa">Levar à minha empresa</a>
-          </div>
-        </div>
-
-        <p class="disclaimer">
-          As secções «Como te sentes» e «O teu trabalho» baseiam-se no Copenhagen Burnout Inventory (Kristensen et al., 2005),
-          instrumento de utilização livre, com versão portuguesa validada (Fonte, 2011); adaptação Lon Clinic.
-          A secção «O corpo» é complementar, desenvolvida pela Lon Clinic, e não faz parte do CBI.
-          Este teste é informativo: não é um diagnóstico nem substitui avaliação por um profissional de saúde.
-          Se te sentes em sofrimento significativo, procura apoio médico ou psicológico.
-        </p>
-        <div class="restart"><button class="back-link" id="restartBtn" type="button">↺ Repetir o teste</button></div>
-      </div>
-    </section>
-
-  </div>
-</main>
-
-<footer>Lon Clinic · Prestador de cuidados de saúde registado na ERS · <a href="https://lonclinic.com">lonclinic.com</a></footer>
-
-<script src="burnout-quiz.js?v=20260707"></script>
+    <script src="/burnout-quiz.js?v=20260721b" defer></script>
 </body>
 </html>
