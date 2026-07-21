@@ -207,10 +207,10 @@ body.psi-landing {
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 720px;
+    max-width: 780px;
     margin: 0 auto;
     text-align: center;
-    padding-bottom: 52px;
+    padding-bottom: 64px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -218,7 +218,7 @@ body.psi-landing {
 
 .psi-brand {
     margin: 0 0 18px;
-    font-size: clamp(2.6rem, 8vw, 4.8rem);
+    font-size: clamp(2.2rem, 6vw, 3.8rem);
     font-weight: 600;
     letter-spacing: -0.02em;
     line-height: 0.95;
@@ -227,27 +227,63 @@ body.psi-landing {
 }
 
 .psi-hero h1 {
-    margin: 0 0 20px;
-    font-size: clamp(1.45rem, 3vw, 2.15rem);
-    line-height: 1.22;
+    margin: 0 0 18px;
+    font-size: clamp(1.45rem, 3.2vw, 2.25rem);
+    line-height: 1.2;
     font-weight: 500;
-    max-width: 28ch;
+    max-width: 24ch;
     animation: psi-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
-}
-
-.psi-hero h1 em {
-    font-style: italic;
-    color: var(--psi-blush);
-    font-weight: 600;
 }
 
 .psi-lead {
     margin: 0 0 28px;
-    font-size: clamp(1.02rem, 1.5vw, 1.15rem);
-    line-height: 1.55;
-    color: rgba(244, 247, 248, 0.86);
-    max-width: 38ch;
+    font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+    line-height: 1.5;
+    color: rgba(244, 247, 248, 0.9);
+    font-weight: 500;
     animation: psi-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.16s both;
+}
+
+.psi-selector {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    width: min(100%, 560px);
+    animation: psi-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.24s both;
+}
+
+.psi-select-card {
+    display: grid;
+    gap: 6px;
+    text-align: left;
+    padding: 22px 20px;
+    border-radius: 16px;
+    background: rgba(247, 249, 250, 0.12);
+    border: 1px solid rgba(244, 247, 248, 0.28);
+    color: #f4f7f8;
+    text-decoration: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.psi-select-card:hover {
+    background: rgba(247, 249, 250, 0.2);
+    border-color: rgba(244, 247, 248, 0.55);
+    transform: translateY(-2px);
+}
+
+.psi-select-label {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 1.55rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.psi-select-desc {
+    font-size: 0.92rem;
+    line-height: 1.4;
+    color: rgba(244, 247, 248, 0.78);
 }
 
 .psi-cta-row {
@@ -255,7 +291,6 @@ body.psi-landing {
     flex-wrap: wrap;
     gap: 12px;
     justify-content: center;
-    animation: psi-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.24s both;
 }
 
 .psi-hero .lon-btn-soft {
@@ -267,31 +302,6 @@ body.psi-landing {
     background: rgba(244, 247, 248, 0.1);
     border-color: #f4f7f8;
     color: #fff;
-}
-
-.psi-hero-ticker {
-    position: relative;
-    z-index: 1;
-    border-top: 1px solid rgba(244, 247, 248, 0.14);
-    background: rgba(10, 16, 20, 0.55);
-    overflow: hidden;
-    padding: 14px 0;
-}
-
-.psi-ticker-track {
-    display: flex;
-    gap: 1.1rem;
-    width: max-content;
-    white-space: nowrap;
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(244, 247, 248, 0.7);
-    animation: psi-marquee 32s linear infinite;
-}
-
-.psi-ticker-track span:nth-child(odd) {
-    color: var(--psi-blush);
 }
 
 /* ── Emergency ── */
@@ -390,6 +400,168 @@ body.psi-landing {
 
 .psi-narrow {
     max-width: 680px;
+}
+
+.psi-center {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.psi-sub-center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.psi-trust {
+    padding: 72px 0;
+}
+
+.psi-trust h2 {
+    max-width: 18ch;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.psi-qualified .psi-sub {
+    color: rgba(244, 247, 248, 0.72);
+}
+
+.psi-qualified h2 {
+    color: #f4f7f8;
+}
+
+.psi-how {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0;
+    max-width: 760px;
+}
+
+.psi-how li {
+    display: grid;
+    grid-template-columns: 3.5rem 1fr;
+    gap: 18px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--psi-line);
+}
+
+.psi-how li:last-child {
+    border-bottom: 0;
+}
+
+.psi-how-num {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 2.4rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--psi-signal);
+}
+
+.psi-how h3 {
+    margin: 0 0 8px;
+    font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+    font-weight: 600;
+}
+
+.psi-how p {
+    margin: 0;
+    color: var(--psi-muted);
+    line-height: 1.6;
+}
+
+.psi-table-wrap {
+    overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid var(--psi-line);
+    background: #fff;
+    box-shadow: 0 16px 40px rgba(10, 16, 20, 0.06);
+}
+
+.psi-compare {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 520px;
+    font-size: 0.98rem;
+}
+
+.psi-compare th,
+.psi-compare td {
+    padding: 14px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--psi-line);
+}
+
+.psi-compare thead th {
+    background: var(--psi-ink);
+    color: #f4f7f8;
+    font-weight: 600;
+    font-size: 0.92rem;
+}
+
+.psi-compare thead th:first-child {
+    background: var(--psi-ink);
+}
+
+.psi-compare tbody th {
+    font-weight: 500;
+    color: var(--psi-ink-soft);
+    width: 46%;
+}
+
+.psi-compare td {
+    color: var(--psi-ink);
+    font-weight: 600;
+}
+
+.psi-compare tbody tr:last-child th,
+.psi-compare tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.psi-compare td:nth-child(2) {
+    color: var(--psi-signal);
+}
+
+.psi-crisis {
+    background: #160c0b;
+    color: #f4f7f8;
+    padding: 56px 0 72px;
+    border-top: 1px solid rgba(226, 61, 47, 0.35);
+}
+
+.psi-crisis h2 {
+    margin: 0 0 12px;
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    color: #f4f7f8;
+}
+
+.psi-crisis p {
+    margin: 0 0 18px;
+    line-height: 1.65;
+    color: rgba(244, 247, 248, 0.85);
+}
+
+.psi-crisis-nums {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 22px;
+    margin: 0 !important;
+}
+
+.psi-crisis-nums a {
+    color: #f4f7f8;
+    text-decoration: none;
+}
+
+.psi-crisis-nums a:hover {
+    color: var(--psi-blush);
+}
+
+.psi-crisis-nums strong {
+    color: #fff;
 }
 
 .psi-kicker {
@@ -854,6 +1026,11 @@ body.psi-landing {
 
     .psi-hero h1 {
         max-width: none;
+    }
+
+    .psi-selector {
+        grid-template-columns: 1fr;
+        width: 100%;
     }
 
     .psi-section,
