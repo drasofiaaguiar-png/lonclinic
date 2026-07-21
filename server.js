@@ -3423,6 +3423,14 @@ app.get('/anti-burnout', (req, res) => {
     res.redirect(301, '/clinica-anti-burnout');
 });
 
+app.get('/psicologia', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'psicologia.html'), 'Error loading psicologia landing page');
+});
+
+app.get('/psicologia.html', (req, res) => {
+    res.redirect(301, '/psicologia');
+});
+
 app.get('/patient-portal', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'dashboard.html'), 'Error loading patient portal');
 });

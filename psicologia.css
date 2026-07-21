@@ -1,0 +1,438 @@
+/* Psicologia Lon Clinic — ink + eucalyptus, distinto do anti-burnout */
+.psi-landing {
+    --psi-ink: #14221f;
+    --psi-ink-soft: #2a3d38;
+    --psi-muted: #5a6e68;
+    --psi-paper: #f3f6f4;
+    --psi-paper-2: #e7eeea;
+    --psi-leaf: #3d6b5e;
+    --psi-leaf-hover: #2f5449;
+    --psi-leaf-soft: rgba(61, 107, 94, 0.12);
+    --psi-glow: rgba(61, 107, 94, 0.28);
+
+    --lon-bg: var(--psi-paper);
+    --lon-surface: #fff;
+    --lon-surface-soft: var(--psi-paper-2);
+    --lon-accent: var(--psi-leaf);
+    --lon-accent-dark: var(--psi-leaf-hover);
+    --lon-primary: var(--psi-ink);
+    --lon-muted: var(--psi-muted);
+    --lon-border: #c9d6d0;
+    --lon-shadow: 0 18px 44px rgba(20, 34, 31, 0.1);
+
+    font-family: "Outfit", system-ui, sans-serif;
+}
+
+body.psi-landing {
+    background:
+        radial-gradient(ellipse 80% 50% at 80% -10%, rgba(61, 107, 94, 0.14) 0%, transparent 55%),
+        linear-gradient(180deg, #eef3f0 0%, var(--psi-paper) 40%, var(--psi-paper-2) 100%);
+    color: var(--psi-ink);
+}
+
+.psi-landing h1,
+.psi-landing h2,
+.psi-landing h3,
+.psi-landing .psi-brand {
+    font-family: "Fraunces", Georgia, serif;
+    font-optical-sizing: auto;
+}
+
+/* Nav */
+.psi-landing .lon-nav {
+    background: rgba(243, 246, 244, 0.9);
+    border-bottom: 1px solid var(--lon-border);
+}
+
+.psi-landing .lon-nav.is-scrolled {
+    background: rgba(243, 246, 244, 0.97);
+    box-shadow: 0 8px 28px rgba(20, 34, 31, 0.08);
+}
+
+.psi-landing .lon-nav-links a:hover {
+    color: var(--psi-leaf);
+    background: var(--psi-leaf-soft);
+}
+
+.psi-landing .lon-btn-primary {
+    background: var(--psi-leaf);
+    color: #fff;
+    border: 1px solid var(--psi-leaf);
+    box-shadow: 0 10px 24px var(--psi-glow);
+}
+
+.psi-landing .lon-btn-primary:hover {
+    background: var(--psi-leaf-hover);
+    border-color: var(--psi-leaf-hover);
+}
+
+.psi-landing .lon-btn-soft {
+    background: transparent;
+    color: var(--psi-ink);
+    border: 1px solid var(--lon-border);
+}
+
+.psi-landing .lon-btn-soft:hover {
+    border-color: var(--psi-leaf);
+    color: var(--psi-leaf);
+    background: var(--psi-leaf-soft);
+}
+
+.psi-landing .lon-btn-ghost {
+    color: var(--psi-muted);
+    border-color: var(--lon-border);
+}
+
+.psi-landing .lon-mobile-menu {
+    background: var(--psi-paper);
+    border-color: var(--lon-border);
+}
+
+/* Hero — full-bleed */
+.psi-hero {
+    position: relative;
+    min-height: min(92vh, 820px);
+    display: flex;
+    align-items: flex-end;
+    padding: 120px 0 72px;
+    color: #f7faf8;
+    overflow: hidden;
+}
+
+.psi-hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.psi-hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+    transform: scale(1.02);
+    animation: psi-hero-drift 18s ease-in-out infinite alternate;
+}
+
+.psi-hero-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, rgba(20, 34, 31, 0.35) 0%, rgba(20, 34, 31, 0.55) 42%, rgba(20, 34, 31, 0.88) 100%),
+        linear-gradient(90deg, rgba(20, 34, 31, 0.55) 0%, transparent 55%);
+}
+
+.psi-hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 820px;
+}
+
+.psi-brand {
+    margin: 0 0 18px;
+    font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: #e8f2ee;
+    animation: psi-fade-up 0.7s ease both;
+}
+
+.psi-hero h1 {
+    margin: 0 0 18px;
+    font-size: clamp(1.55rem, 3.6vw, 2.55rem);
+    line-height: 1.22;
+    font-weight: 600;
+    max-width: 18ch;
+    animation: psi-fade-up 0.8s ease 0.08s both;
+}
+
+.psi-lead {
+    margin: 0 0 28px;
+    font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+    line-height: 1.55;
+    color: rgba(247, 250, 248, 0.88);
+    max-width: 38ch;
+    animation: psi-fade-up 0.8s ease 0.16s both;
+}
+
+.psi-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    animation: psi-fade-up 0.8s ease 0.24s both;
+}
+
+.psi-hero .lon-btn-soft {
+    color: #f7faf8;
+    border-color: rgba(247, 250, 248, 0.35);
+}
+
+.psi-hero .lon-btn-soft:hover {
+    background: rgba(247, 250, 248, 0.1);
+    border-color: #f7faf8;
+    color: #fff;
+}
+
+/* Sections */
+.psi-section {
+    padding: 72px 0;
+}
+
+.psi-section-soft {
+    background: rgba(255, 255, 255, 0.55);
+    border-block: 1px solid rgba(201, 214, 208, 0.7);
+}
+
+.psi-narrow {
+    max-width: 720px;
+}
+
+.psi-section h2 {
+    margin: 0 0 12px;
+    font-size: clamp(1.6rem, 2.8vw, 2.15rem);
+    font-weight: 600;
+    color: var(--psi-ink);
+    line-height: 1.2;
+}
+
+.psi-sub {
+    margin: 0 0 36px;
+    font-size: 1.08rem;
+    line-height: 1.6;
+    color: var(--psi-muted);
+}
+
+.psi-narrow > .psi-sub {
+    margin-bottom: 0;
+}
+
+#diferenca .psi-sub {
+    margin-top: 8px;
+    font-size: 1.12rem;
+}
+
+/* Includes */
+.psi-includes {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 22px;
+}
+
+.psi-includes li {
+    display: grid;
+    gap: 6px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--lon-border);
+}
+
+.psi-includes li:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.psi-includes strong {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--psi-ink);
+}
+
+.psi-includes span {
+    color: var(--psi-muted);
+    line-height: 1.55;
+}
+
+/* Pricing */
+.psi-price-block {
+    margin-top: 28px;
+    padding-top: 8px;
+}
+
+.psi-price-launch {
+    margin: 0;
+    font-family: "Fraunces", Georgia, serif;
+    font-size: clamp(2.6rem, 6vw, 3.6rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--psi-ink);
+    line-height: 1;
+}
+
+.psi-price-launch span {
+    color: var(--psi-leaf);
+}
+
+.psi-price-was {
+    margin: 10px 0 20px;
+    color: var(--psi-muted);
+    text-decoration: line-through;
+    font-size: 1rem;
+}
+
+.psi-price-copy {
+    margin: 0 0 22px;
+    color: var(--psi-ink-soft);
+    line-height: 1.6;
+}
+
+.psi-price-terms {
+    margin: 0 0 28px;
+    padding-left: 1.15rem;
+    color: var(--psi-muted);
+    line-height: 1.7;
+}
+
+/* Steps */
+.psi-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 28px;
+}
+
+.psi-steps li {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 18px;
+    align-items: start;
+}
+
+.psi-step-num {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--psi-leaf);
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.psi-steps h3 {
+    margin: 2px 0 6px;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.psi-steps p {
+    margin: 0;
+    color: var(--psi-muted);
+    line-height: 1.55;
+}
+
+/* Messages policy */
+.psi-msg-policy {
+    margin: 0;
+    padding: 22px 0 0;
+    border-top: 1px solid var(--lon-border);
+    color: var(--psi-ink-soft);
+    line-height: 1.65;
+    font-size: 1.02rem;
+}
+
+/* FAQ */
+.psi-faq {
+    margin-top: 28px;
+    display: grid;
+    gap: 10px;
+}
+
+.psi-faq details {
+    border-bottom: 1px solid var(--lon-border);
+    padding: 4px 0 12px;
+}
+
+.psi-faq summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--psi-ink);
+    padding: 10px 0;
+    list-style: none;
+}
+
+.psi-faq summary::-webkit-details-marker {
+    display: none;
+}
+
+.psi-faq summary::after {
+    content: "+";
+    float: right;
+    color: var(--psi-leaf);
+    font-weight: 500;
+}
+
+.psi-faq details[open] summary::after {
+    content: "–";
+}
+
+.psi-faq-a {
+    padding: 0 0 8px;
+    color: var(--psi-muted);
+    line-height: 1.55;
+}
+
+/* Emergency strip */
+.psi-emergency {
+    background: var(--psi-ink);
+    color: rgba(247, 250, 248, 0.92);
+    padding: 18px 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.psi-emergency p {
+    margin: 0;
+}
+
+.psi-emergency strong {
+    color: #fff;
+}
+
+/* Motion */
+@keyframes psi-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes psi-hero-drift {
+    from { transform: scale(1.02) translate3d(0, 0, 0); }
+    to { transform: scale(1.06) translate3d(0, -1.5%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .psi-hero-bg img,
+    .psi-brand,
+    .psi-hero h1,
+    .psi-lead,
+    .psi-cta-row {
+        animation: none !important;
+    }
+}
+
+@media (max-width: 720px) {
+    .psi-hero {
+        min-height: 88vh;
+        padding: 108px 0 56px;
+        align-items: flex-end;
+    }
+
+    .psi-hero h1 {
+        max-width: none;
+    }
+
+    .psi-section {
+        padding: 56px 0;
+    }
+}

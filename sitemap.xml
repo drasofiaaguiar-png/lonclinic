@@ -51,6 +51,14 @@
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
     </url>
+
+    <!-- Psychology subscription landing -->
+    <url>
+        <loc>https://lonclinic.com/psicologia</loc>
+        <lastmod>2026-07-21</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
     
     <!-- Information hub -->
     <url>
