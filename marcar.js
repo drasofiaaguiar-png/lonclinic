@@ -53,7 +53,7 @@
                 ]
             },
             saude_mental: {
-                label: 'Adult Mental Health Consultation',
+                label: 'Medical Mental Health Consultation',
                 duration: '30–45 min',
                 bullets: [
                     'First approach or ongoing mental health care.',
@@ -62,21 +62,21 @@
                 ]
             },
             burnout: {
-                label: 'Single Anti-Burnout Consultation',
+                label: 'Specialized Burnout Consultation',
                 duration: '60 min',
                 bullets: [
-                    'In-depth assessment of exhaustion, work stress and recovery.',
+                    'Specialized medical assessment of exhaustion, work stress and recovery.',
                     'Review of sleep, energy and body signals with a personalised plan.',
                     'Ideal as a first step or after the burnout index test.'
                 ]
             },
             burnout_mensal: {
-                label: 'Anti-Burnout · Monthly subscription',
-                duration: '60 min · 4 sessions/month',
+                label: 'Anti-Burnout Subscription',
+                duration: 'Psychology + medical consultation',
                 bullets: [
-                    '4 anti-burnout consultations per month (€54/session — 10% off single price).',
-                    'Cancelable monthly subscription.',
-                    'Same 60-minute clinical protocol as the single consultation.',
+                    'Psychology and medical consultation included.',
+                    'Ongoing weekly follow-up.',
+                    'Weekly subscription — cancel anytime.',
                     'Ideal for gradual recovery with regular follow-up.'
                 ]
             },
@@ -148,7 +148,7 @@
                 ]
             },
             saude_mental: {
-                label: 'Consulta de Salud Mental Adultos',
+                label: 'Consulta médica de salud mental',
                 duration: '30–45 min',
                 bullets: [
                     'Primera aproximación o continuidad en salud mental.',
@@ -157,21 +157,21 @@
                 ]
             },
             burnout: {
-                label: 'Consulta médica anti-burnout suelta',
+                label: 'Consulta especializada en burnout',
                 duration: '60 min',
                 bullets: [
-                    'Evaluación profunda del agotamiento, estrés laboral y recuperación.',
+                    'Evaluación médica especializada del agotamiento, estrés laboral y recuperación.',
                     'Revisión del sueño, energía y señales corporales con plan personalizado.',
                     'Ideal como primer paso o tras el test de burnout.'
                 ]
             },
             burnout_mensal: {
-                label: 'Anti-burnout · Suscripción mensual',
-                duration: '60 min · 4 consultas/mes',
+                label: 'Suscripción Anti-Burnout',
+                duration: 'Psicología + consulta médica',
                 bullets: [
-                    '4 consultas anti-burnout al mes (54 €/sesión — 10% menos que suelta).',
-                    'Suscripción mensual cancelable en cualquier momento.',
-                    'Consultas de 60 min con el mismo protocolo clínico.',
+                    'Psicología y consulta médica incluidas.',
+                    'Seguimiento semanal continuo.',
+                    'Suscripción semanal cancelable en cualquier momento.',
                     'Ideal para recuperación gradual con seguimiento regular.'
                 ]
             },
@@ -232,19 +232,19 @@
         {
             tipo: 'burnout',
             badge: 'Avulsa',
-            title: 'Consulta avulsa',
-            price: '€60',
+            title: 'Consulta especializada',
+            price: '€75',
             unit: 'por sessão',
-            note: '60 min · primeira avaliação',
+            note: '60 min · consulta médica',
             featured: false
         },
         {
             tipo: 'burnout_mensal',
-            badge: 'Mensal',
-            title: 'Subscrição mensal',
-            price: '€199',
-            unit: '/mês',
-            note: '1 consulta/semana · cancelável',
+            badge: 'Semanal',
+            title: 'Subscrição Anti-Burnout',
+            price: '€50',
+            unit: '/semana',
+            note: 'Psicologia + consulta médica',
             featured: true
         },
         {
@@ -320,9 +320,9 @@
             ]
         },
         saude_mental: {
-            label: 'Consulta de Saúde Mental Adultos',
-            price: '€49',
-            cents: 4900,
+            label: 'Consulta Médica de Saúde Mental',
+            price: '€60',
+            cents: 6000,
             duration: '30–45 min',
             serviceKey: 'saude_mental',
             bullets: [
@@ -332,28 +332,28 @@
             ]
         },
         burnout: {
-            label: 'Consulta Médica Anti-Burnout avulsa',
-            price: '€60',
-            cents: 6000,
+            label: 'Consulta Especializada em Burnout',
+            price: '€75',
+            cents: 7500,
             duration: '60 min',
             serviceKey: 'burnout',
             bullets: [
-                'Avaliação aprofundada de exaustão, stress laboral e recuperação.',
+                'Consulta médica especializada em exaustão, stress laboral e recuperação.',
                 'Revisão de sono, energia e sinais no corpo com plano personalizado.',
                 'Ideal como primeiro passo ou após o teste de burnout.'
             ]
         },
         burnout_mensal: {
-            label: 'Consulta Médica Anti-Burnout · Subscrição mensal',
-            price: '€199',
-            priceNote: '/mês',
-            cents: 19900,
-            duration: '60 min · 4 consultas/mês',
+            label: 'Subscrição Anti-Burnout',
+            price: '€50',
+            priceNote: '/semana',
+            cents: 5000,
+            duration: 'Psicologia + consulta médica',
             serviceKey: 'burnout_mensal',
             bullets: [
-                '1 consulta anti-burnout por semana (4/mês).',
-                'Subscrição mensal cancelável a qualquer momento.',
-                'Consultas de 60 min com o mesmo protocolo clínico.',
+                'Psicologia e consulta médica incluídas.',
+                'Acompanhamento semanal contínuo.',
+                'Subscrição semanal cancelável a qualquer momento.',
                 'Ideal para recuperação gradual com acompanhamento regular.'
             ]
         },

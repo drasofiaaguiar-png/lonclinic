@@ -13,9 +13,9 @@ const SERVICE_CENTS = {
     clinica_geral: 3900,
     urgente: 3500,
     travel: 3900,
-    saude_mental: 4900,
-    burnout: 6000,
-    burnout_mensal: 19900,
+    saude_mental: 6000,
+    burnout: 7500,
+    burnout_mensal: 5000,
     burnout_programa: 45000,
     renovacao: 1900,
     longevidade: 7900

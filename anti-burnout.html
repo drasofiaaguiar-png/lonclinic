@@ -25,9 +25,9 @@
     <meta property="og:locale" content="pt_PT">
     <meta property="og:site_name" content="Lon Clinic">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="theme-color" content="#9a3f18">
+    <meta name="theme-color" content="#255235">
     <link rel="stylesheet" href="/landing.css?v=20260707a">
-    <link rel="stylesheet" href="/anti-burnout.css?v=20260707b">
+    <link rel="stylesheet" href="/anti-burnout.css?v=20260722a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
@@ -104,14 +104,19 @@
         <section class="dr-hero" id="inicio">
             <div class="lon-container dr-hero-grid">
                 <div class="dr-hero-content">
-                    <p class="dr-badge">Clínica Anti-Burnout · Lon Clinic</p>
-                    <h1>Não é só cansaço. <em>E não passa sozinho.</em></h1>
+                    <p class="dr-badge">Clínica Anti-Burnout</p>
+                    <h1><span class="dr-hero-title-line">Não é só cansaço.</span><span class="dr-hero-title-line dr-hero-title-line--secondary">E não passa sozinho.</span></h1>
                     <p class="dr-lead">Consultas médicas online para burnout — com avaliação por instrumento validado, acompanhamento semanal e um plano que trata o corpo inteiro, não só a cabeça.</p>
                     <div class="dr-cta-row">
-                        <a href="/teste-burnout?ref=clinica-anti-burnout" class="lon-btn lon-btn-terra js-ab-cta" data-ab-cta="hero-test">Fazer o teste gratuito</a>
+                        <a href="/teste-burnout?ref=clinica-anti-burnout" class="lon-btn lon-btn-dark js-ab-cta" data-ab-cta="hero-test">Fazer o teste gratuito</a>
                         <a href="#planos" class="lon-btn lon-btn-soft">Ver consultas e programa</a>
                     </div>
-                    <p class="ab-trust-line">Médicos acreditados pela Ordem dos Médicos · Consultas por vídeo · Português, inglês e espanhol</p>
+                    <ul class="dr-trust-list" aria-label="Destaques da clínica anti-burnout">
+                        <li>Médicos acreditados pela Ordem dos Médicos</li>
+                        <li>Consultas por vídeo · Português, inglês e espanhol</li>
+                        <li>Instrumento CBI validado · resultado imediato</li>
+                        <li>Acompanhamento estruturado, sem sala de espera</li>
+                    </ul>
                 </div>
                 <div class="dr-hero-media">
                     <img src="/image/image2.webp" alt="Consulta médica anti-burnout por vídeo" width="800" height="600" loading="eager" decoding="async" fetchpriority="high">
@@ -223,11 +228,11 @@
                 <div class="ab-plans">
                     <article class="ab-plan">
                         <p class="ab-plan-label">Primeiro passo</p>
-                        <h3>Consulta de Burnout</h3>
-                        <p class="ab-plan-price">€60</p>
+                        <h3>Consulta Especializada em Burnout</h3>
+                        <p class="ab-plan-price">€75</p>
                         <ul>
                             <li>60 minutos por vídeo</li>
-                            <li>Avaliação clínica completa</li>
+                            <li>Consulta médica especializada</li>
                             <li>Plano concreto no final</li>
                             <li>Receitas e pedidos de análises, se indicado</li>
                         </ul>
@@ -235,6 +240,18 @@
                     </article>
                     <article class="ab-plan is-featured">
                         <span class="ab-plan-badge">Recomendado</span>
+                        <p class="ab-plan-label">Acompanhamento contínuo</p>
+                        <h3>Subscrição Anti-Burnout</h3>
+                        <p class="ab-plan-price">€50<span style="font-size:0.55em;font-weight:500;color:var(--lon-muted)">/semana</span></p>
+                        <ul>
+                            <li>Psicologia + consulta médica incluídas</li>
+                            <li>Acompanhamento semanal</li>
+                            <li>Flexível — ajuste ou cancele</li>
+                            <li>Ideal para recuperação sustentada</li>
+                        </ul>
+                        <a href="/marcar/burnout-mensal?ref=clinica-anti-burnout" class="lon-btn lon-btn-dark js-ab-cta" data-ab-cta="plan-mensal">Subscrever</a>
+                    </article>
+                    <article class="ab-plan">
                         <p class="ab-plan-label">Programa · 8 semanas</p>
                         <h3>Programa Anti-Burnout</h3>
                         <p class="ab-plan-price">€450</p>
@@ -244,19 +261,7 @@
                             <li>Medição antes/depois (CBI)</li>
                             <li>Plano de manutenção no final</li>
                         </ul>
-                        <a href="/marcar/burnout-programa?ref=clinica-anti-burnout" class="lon-btn lon-btn-terra js-ab-cta" data-ab-cta="plan-programa">Começar o programa</a>
-                    </article>
-                    <article class="ab-plan">
-                        <p class="ab-plan-label">Acompanhamento contínuo</p>
-                        <h3>Subscrição Mensal</h3>
-                        <p class="ab-plan-price">€199<span style="font-size:0.55em;font-weight:500;color:var(--lon-muted)">/mês</span></p>
-                        <ul>
-                            <li>1 consulta por semana (4/mês)</li>
-                            <li>O mesmo médico, sempre</li>
-                            <li>Flexível — ajuste ou cancele</li>
-                            <li>Ideal após o programa</li>
-                        </ul>
-                        <a href="/marcar/burnout-mensal?ref=clinica-anti-burnout" class="lon-btn lon-btn-soft js-ab-cta" data-ab-cta="plan-mensal">Subscrever</a>
+                        <a href="/marcar/burnout-programa?ref=clinica-anti-burnout" class="lon-btn lon-btn-soft js-ab-cta" data-ab-cta="plan-programa">Começar o programa</a>
                     </article>
                 </div>
                 <p class="ab-disclaimer">As consultas são atos médicos realizados por telemedicina. Em situações de urgência ou risco imediato, contacte o 112 ou dirija-se ao serviço de urgência mais próximo.</p>
@@ -312,7 +317,7 @@
                     </details>
                     <details>
                         <summary>As consultas da subscrição acumulam se eu faltar?</summary>
-                        <div class="ab-faq-a">As consultas não utilizadas no mês não acumulam para o mês seguinte. A subscrição renova mensalmente e pode cancelar a qualquer momento.</div>
+                        <div class="ab-faq-a">As consultas não utilizadas na semana não acumulam para a seguinte. A subscrição renova semanalmente e pode cancelar a qualquer momento.</div>
                     </details>
                 </div>
             </div>
@@ -323,7 +328,7 @@
                 <div class="ab-b2b">
                     <h2 id="ab-empresas-title">Para empresas</h2>
                     <p>Quanto custa o burnout à sua equipa? Workshops de prevenção, rastreio com instrumento validado e acompanhamento médico para colaboradores — com relatório agregado e anónimo para RH.</p>
-                    <a href="mailto:info@lonclinic.com?subject=Proposta%20Anti-Burnout%20empresas" class="lon-btn lon-btn-terra js-ab-cta" data-ab-cta="empresas">Pedir proposta</a>
+                    <a href="mailto:info@lonclinic.com?subject=Proposta%20Anti-Burnout%20empresas" class="lon-btn lon-btn-dark js-ab-cta" data-ab-cta="empresas">Pedir proposta</a>
                 </div>
             </div>
         </section>
@@ -334,8 +339,8 @@
                     <h2 id="ab-cta-final-title">Comece pelo teste. São 4 minutos.</h2>
                     <p>Gratuito, com resultado imediato. Se o resultado pedir atenção, a consulta de avaliação é o passo seguinte — hoje, se quiser.</p>
                     <div class="ab-cta-row">
-                        <a href="/teste-burnout?ref=clinica-anti-burnout" class="lon-btn lon-btn-terra js-ab-cta" data-ab-cta="footer-test">Fazer o teste gratuito</a>
-                        <a href="/marcar/burnout?ref=clinica-anti-burnout" class="lon-btn lon-btn-soft js-ab-cta" data-ab-cta="footer-consulta">Marcar consulta · €60</a>
+                        <a href="/teste-burnout?ref=clinica-anti-burnout" class="lon-btn lon-btn-dark js-ab-cta" data-ab-cta="footer-test">Fazer o teste gratuito</a>
+                        <a href="/marcar/burnout?ref=clinica-anti-burnout" class="lon-btn lon-btn-soft js-ab-cta" data-ab-cta="footer-consulta">Marcar consulta · €75</a>
                     </div>
                 </div>
             </div>
@@ -357,7 +362,7 @@
                     <a href="/teste-burnout">Teste gratuito</a>
                     <a href="/marcar/burnout">Consulta avulsa</a>
                     <a href="/marcar/burnout-programa">Programa 8 semanas</a>
-                    <a href="/marcar/burnout-mensal">Subscrição mensal</a>
+                    <a href="/marcar/burnout-mensal">Subscrição semanal</a>
                 </div>
                 <div class="lon-footer-col">
                     <h4>Clínica</h4>

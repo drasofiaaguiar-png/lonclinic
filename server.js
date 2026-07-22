@@ -1663,8 +1663,8 @@ function buildBurnoutQuizEmails(data) {
         `Índice global: ${global}/100 (${band})`,
         `Pessoal: ${personal} · Trabalho: ${work} · Corpo: ${body}`,
         '',
-        `Subscrição mensal: ${subUrl}`,
-        `Consulta avulsa: ${bookUrl}`
+        `Subscrição Anti-Burnout: ${subUrl}`,
+        `Consulta especializada: ${bookUrl}`
     ].join('\n');
 
     const clinicHtml = `<!DOCTYPE html><html lang="pt"><body style="font-family:system-ui,sans-serif;line-height:1.5;color:#22382f">
@@ -1676,7 +1676,7 @@ function buildBurnoutQuizEmails(data) {
 <li>Burnout no trabalho: ${work}</li>
 <li>Sinais no corpo: ${body}</li>
 </ul>
-<p><a href="${subUrl}">Subscrição mensal anti-burnout</a> · <a href="${bookUrl}">Consulta avulsa</a></p>
+<p><a href="${subUrl}">Subscrição Anti-Burnout</a> · <a href="${bookUrl}">Consulta especializada</a></p>
 </body></html>`;
 
     const userSubject = 'O teu resultado — Índice de Burnout | Lon Clinic';
@@ -1692,10 +1692,10 @@ function buildBurnoutQuizEmails(data) {
         '',
         'Próximo passo recomendado:',
         '',
-        'Consulta Médica de Avaliação — 60€:',
+        'Consulta Especializada em Burnout — 75€:',
         bookUrl,
         '',
-        'Subscrição mensal (1 consulta/semana) — 199€:',
+        'Subscrição Anti-Burnout (psicologia + consulta médica) — 50€/semana:',
         subUrl,
         '',
         'Lon Clinic — lonclinic.com'
@@ -1712,8 +1712,8 @@ function buildBurnoutQuizEmails(data) {
 </table>
 <p style="font-size:13px;color:#6e7b72;margin:0 0 20px">Este teste é informativo e não substitui avaliação por um profissional de saúde.</p>
 <p style="margin:0 0 8px;font-size:14px;font-weight:600;color:#22382f">Próximo passo</p>
-<p style="margin:0 0 12px"><a href="${bookUrl}" style="display:inline-block;background:#1f4a3e;color:#fff;text-decoration:none;padding:14px 20px;border-radius:12px;font-weight:600;min-width:200px">Consulta Médica de Avaliação · 60€</a></p>
-<p style="margin:0 0 24px"><a href="${subUrl}" style="display:inline-block;border:1.5px solid #1f4a3e;color:#1f4a3e;text-decoration:none;padding:14px 20px;border-radius:12px;font-weight:600;min-width:200px">Subscrição mensal · 199€</a></p>
+<p style="margin:0 0 12px"><a href="${bookUrl}" style="display:inline-block;background:#1f4a3e;color:#fff;text-decoration:none;padding:14px 20px;border-radius:12px;font-weight:600;min-width:200px">Consulta Especializada em Burnout · 75€</a></p>
+<p style="margin:0 0 24px"><a href="${subUrl}" style="display:inline-block;border:1.5px solid #1f4a3e;color:#1f4a3e;text-decoration:none;padding:14px 20px;border-radius:12px;font-weight:600;min-width:200px">Subscrição Anti-Burnout · 50€/semana</a></p>
 <p style="margin:24px 0 0;font-size:12px;color:#6e7b72">Lon Clinic · lonclinic.com</p>
 </body></html>`;
 
@@ -4277,7 +4277,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
 
         const isSubscription = isStripeSubscriptionService(service);
         const productDescription = isSubscription
-            ? `${description} · Subscrição mensal cancelável (4 consultas/mês)`
+            ? `${description} · Subscrição semanal (psicologia + consulta médica) · cancelável`
             : service === 'burnout_programa'
               ? `${description} · Programa 8 sessões com relatório final e CBI antes/depois`
               : description;
@@ -4291,7 +4291,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
                     images: []
                 },
                 unit_amount: priceAmount,
-                ...(isSubscription ? { recurring: { interval: 'month' } } : {})
+                ...(isSubscription ? { recurring: { interval: 'week' } } : {})
             },
             quantity: 1
         };
@@ -5145,8 +5145,8 @@ const INVITATION_SERVICE_LABEL = {
     infeccao_urinaria: { pt: 'Consulta de Infeção Urinária', en: 'Urinary Tract Infection Consultation', es: 'Consulta de Infección Urinaria' },
     travel: { pt: 'Consulta do Viajante', en: 'Travel Medicine Consultation', es: 'Consulta del Viajero' },
     saude_mental: { pt: 'Consulta de Saúde Mental', en: 'Mental Health Consultation', es: 'Consulta de Salud Mental' },
-    burnout: { pt: 'Consulta Médica Anti-Burnout avulsa', en: 'Single Anti-Burnout Consultation', es: 'Consulta médica anti-burnout suelta' },
-    burnout_mensal: { pt: 'Anti-Burnout · Subscrição mensal', en: 'Anti-Burnout Monthly Subscription', es: 'Anti-burnout · Suscripción mensual' },
+    burnout: { pt: 'Consulta Especializada em Burnout', en: 'Specialized Burnout Consultation', es: 'Consulta especializada en burnout' },
+    burnout_mensal: { pt: 'Subscrição Anti-Burnout', en: 'Anti-Burnout Subscription', es: 'Suscripción Anti-Burnout' },
     burnout_programa: { pt: 'Programa Anti-Burnout (8 sessões)', en: 'Anti-Burnout Program (8 sessions)', es: 'Programa anti-burnout (8 sesiones)' },
     longevidade: { pt: 'Consulta de Longevidade', en: 'Longevity Consultation', es: 'Consulta de Longevidad' },
     renovacao: { pt: 'Renovação de Receita', en: 'Prescription Renewal', es: 'Renovación de Receta' }

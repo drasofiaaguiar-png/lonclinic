@@ -784,9 +784,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         clinica_geral: 3900,
         urgente: 3500,
         infeccao_urinaria: 3500,
-        saude_mental: 4900,
-        burnout: 6000,
-        burnout_mensal: 19900,
+        saude_mental: 6000,
+        burnout: 7500,
+        burnout_mensal: 5000,
         burnout_programa: 45000,
         longevidade: 7900,
         renovacao: 1900
