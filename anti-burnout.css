@@ -100,11 +100,28 @@
 /* Axes */
 .ab-landing #abordagem.dr-platform {
     background: var(--ab-band);
+    padding: clamp(40px, 6vw, 64px) 0;
+}
+
+.ab-landing #abordagem.dr-platform::before {
+    display: none;
+}
+
+.ab-landing #abordagem h2 {
+    font-size: clamp(1.65rem, 4vw, 2.35rem);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    max-width: none;
+    margin-bottom: 10px;
+}
+
+.ab-landing #abordagem .ab-sub {
+    margin: 0 auto 28px;
 }
 
 .ab-axes {
     display: grid;
-    gap: 14px;
+    gap: 16px;
 }
 
 @media (min-width: 768px) {
@@ -116,47 +133,50 @@
 @media (min-width: 1024px) {
     .ab-axes {
         grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
     }
 }
 
 .ab-axis {
-    background: var(--ab-surface);
-    border: 1px solid var(--lon-border);
-    border-top: 3px solid var(--lon-accent);
+    background: linear-gradient(160deg, #2f6342 0%, #255235 52%, #1b3f29 100%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
     border-radius: var(--lon-radius);
-    padding: 22px 18px;
+    padding: 26px 20px;
     text-align: center;
-    box-shadow: 0 8px 24px rgba(20, 34, 24, 0.05);
+    box-shadow: 0 14px 32px rgba(16, 30, 20, 0.22);
 }
 
 .ab-axis-icon {
     width: 44px;
     height: 44px;
-    margin: 0 auto 12px;
+    margin: 0 auto 14px;
     border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.35rem;
-    background: rgba(37, 82, 53, 0.1);
-    border: 1px solid rgba(37, 82, 53, 0.18);
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.22);
 }
 
 .ab-axis h3 {
-    font-size: 1rem;
-    margin-bottom: 8px;
-    color: var(--ab-ink);
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+    color: #f6fff9;
+    letter-spacing: -0.02em;
 }
 
-.ab-axis p {
+.ab-landing #abordagem .ab-axis p {
+    margin: 0;
+    max-width: none;
     font-size: 0.88rem;
-    color: var(--ab-ink-mid);
-    line-height: 1.45;
+    color: rgba(241, 248, 243, 0.86);
+    line-height: 1.5;
 }
 
 .ab-tagline {
     text-align: center;
-    margin-top: 28px;
+    margin-top: 24px;
     font-weight: 600;
     font-size: 1.05rem;
     color: var(--lon-accent);
