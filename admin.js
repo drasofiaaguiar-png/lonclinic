@@ -779,6 +779,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const inviteMedicare = document.getElementById('inviteMedicare');
     const inviteMedicareWrap = document.getElementById('inviteMedicareWrap');
     const inviteComputedPrice = document.getElementById('inviteComputedPrice');
+    const inviteCustomPrice = document.getElementById('inviteCustomPrice');
 
     const SERVICE_BASE_CENTS = {
         clinica_geral: 3900,
@@ -796,7 +797,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         medicare: { 1: 3200, 2: 4200, 3: 4900, 4: 5500 }
     };
 
+    function parseCustomPriceCents() {
+        if (!inviteCustomPrice) return null;
+        const raw = String(inviteCustomPrice.value || '').trim();
+        if (!raw) return null;
+        const euros = Number(raw.replace(',', '.'));
+        if (!Number.isFinite(euros)) return null;
+        return Math.round(euros * 100);
+    }
+
     function computeInvitePriceCents() {
+        const custom = parseCustomPriceCents();
+        if (custom != null) return custom;
         const svc = inviteService ? inviteService.value : '';
         if (svc === 'travel') {
             const n = Math.max(1, Math.min(4, parseInt((inviteTravellers && inviteTravellers.value) || '1', 10)));
@@ -812,9 +824,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (inviteTravellersWrap) inviteTravellersWrap.style.display = isTravel ? '' : 'none';
         if (inviteMedicareWrap) inviteMedicareWrap.style.display = isTravel ? '' : 'none';
         if (inviteComputedPrice) {
+            const custom = parseCustomPriceCents();
             const cents = computeInvitePriceCents();
             if (cents > 0) {
-                inviteComputedPrice.textContent = `Total: €${(cents / 100).toFixed(2)}`;
+                const label = custom != null ? 'Custom total' : 'Total';
+                inviteComputedPrice.textContent = `${label}: €${(cents / 100).toFixed(2)}`;
             } else {
                 inviteComputedPrice.textContent = '';
             }
@@ -823,6 +837,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (inviteService) inviteService.addEventListener('change', refreshInvitePriceUI);
     if (inviteTravellers) inviteTravellers.addEventListener('change', refreshInvitePriceUI);
     if (inviteMedicare) inviteMedicare.addEventListener('change', refreshInvitePriceUI);
+    if (inviteCustomPrice) inviteCustomPrice.addEventListener('input', refreshInvitePriceUI);
     refreshInvitePriceUI();
 
     function setInviteError(msg) {
@@ -1003,6 +1018,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     : 1,
                 hasInsurance: inviteService.value === 'travel' && !!(inviteMedicare && inviteMedicare.checked)
             };
+            const customCents = parseCustomPriceCents();
+            if (customCents != null) {
+                if (customCents < 50) {
+                    setInviteError('Custom price must be at least €0.50.');
+                    return;
+                }
+                payload.amountCents = customCents;
+            }
             if (!payload.patientName || !payload.patientEmail || !payload.service || !payload.dateIso || !payload.time) {
                 setInviteError('Please fill all required fields.');
                 return;

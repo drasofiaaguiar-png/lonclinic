@@ -5226,7 +5226,8 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
             time,
             locale,
             travellers,
-            hasInsurance
+            hasInsurance,
+            amountCents: customAmountCents
         } = req.body || {};
 
         if (!patientName || !patientEmail || !service || !dateIso || !time) {
@@ -5254,14 +5255,28 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
             lastName: ''
         }));
 
-        const pricing = computeCheckoutTotalCents({
-            service,
-            passengers,
-            hasInsurance: !!hasInsurance,
-            discountCode: null
-        });
-        if (!pricing.ok) {
-            return res.status(400).json({ error: pricing.error });
+        let amountCents;
+        const hasCustomAmount = customAmountCents != null && customAmountCents !== '';
+        if (hasCustomAmount) {
+            const n = Math.round(Number(customAmountCents));
+            if (!Number.isFinite(n) || n < 50) {
+                return res.status(400).json({ error: 'Custom price must be at least €0.50' });
+            }
+            if (n > 500000) {
+                return res.status(400).json({ error: 'Custom price is too high' });
+            }
+            amountCents = n;
+        } else {
+            const pricing = computeCheckoutTotalCents({
+                service,
+                passengers,
+                hasInsurance: !!hasInsurance,
+                discountCode: null
+            });
+            if (!pricing.ok) {
+                return res.status(400).json({ error: pricing.error });
+            }
+            amountCents = pricing.totalCents;
         }
 
         // Admin can book any free slot regardless of smart grouping.
@@ -5279,6 +5294,9 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
             const insuranceTag = hasInsurance ? ' · Medicare' : '';
             serviceLabel = `${serviceLabel}${suffix}${insuranceTag}`;
         }
+        if (hasCustomAmount) {
+            serviceLabel = `${serviceLabel} · preço especial`;
+        }
 
         let invitation = await db.insertInvitation({
             id,
@@ -5291,7 +5309,7 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
             dateIso,
             time: normTime,
             locale: normalizedLocale,
-            amountCents: pricing.totalCents,
+            amountCents,
             currency: 'eur',
             status: 'pending',
             travellerCount,
