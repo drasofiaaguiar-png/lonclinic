@@ -20,14 +20,14 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lonclinic.com/psicologia">
     <meta property="og:title" content="Psicologia online · Lon Clinic">
-    <meta property="og:description" content="Mereces cuidar da tua saúde mental com a mesma seriedade que do resto.">
+    <meta property="og:description" content="Mereces ser feliz. Acompanhamento psicológico 100% online.">
     <meta property="og:image" content="https://lonclinic.com/image/image3.webp">
     <meta property="og:locale" content="pt_PT">
     <meta property="og:site_name" content="Lon Clinic">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="theme-color" content="#c24f28">
+    <meta name="theme-color" content="#2f453a">
     <link rel="stylesheet" href="/landing.css?v=20260621b">
-    <link rel="stylesheet" href="/psicologia.css?v=20260724a">
+    <link rel="stylesheet" href="/psicologia.css?v=20260804d">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -90,29 +90,31 @@
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
 
     <header class="lon-nav psi-nav" id="lonNav">
-        <div class="lon-container lon-nav-inner">
-            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
-                <span class="lon-logo-name">LON Clinic</span>
+        <div class="lon-container lon-nav-inner psi-nav-inner">
+            <a href="/psicologia" class="lon-logo" aria-label="LON Clinic Psicologia">
+                <span class="lon-logo-name">lon clinic</span>
             </a>
-            <nav class="lon-nav-links" aria-label="Navegação principal">
-                <a href="#inicio">Início</a>
-                <a href="#como-funciona">Como funciona</a>
-                <a href="#comparativo">Comparativo</a>
+            <nav class="psi-nav-menu" aria-label="Navegação principal">
+                <a href="/clinica-anti-burnout#empresas">Empresas</a>
+                <a href="/info.html?page=sobre-nos">Sobre</a>
+                <a href="/blog">Guias</a>
                 <a href="#faq">FAQ</a>
+                <a href="/info.html?page=trabalhe-connosco">Trabalhe connosco</a>
+                <a href="/info.html?page=contato">Contacto</a>
+                <a href="/patient-portal" class="psi-nav-login">Login</a>
+                <a href="/triagem" class="psi-nav-start js-psi-cta" data-psi-cta="nav">Começar</a>
             </nav>
-            <div class="lon-nav-actions">
-                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/triagem" class="lon-btn lon-btn-primary lon-btn-sm js-psi-cta" data-psi-cta="nav">Começar</a>
-                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
-                    <span></span><span></span><span></span>
-                </button>
-            </div>
+            <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
         <div class="lon-mobile-menu" id="lonMobileMenu">
-            <a href="#inicio">Início</a>
-            <a href="#como-funciona">Como funciona</a>
-            <a href="#comparativo">Comparativo</a>
+            <a href="/clinica-anti-burnout#empresas">Empresas</a>
+            <a href="/info.html?page=sobre-nos">Sobre</a>
+            <a href="/blog">Guias</a>
             <a href="#faq">FAQ</a>
+            <a href="/info.html?page=trabalhe-connosco">Trabalhe connosco</a>
+            <a href="/info.html?page=contato">Contacto</a>
             <a href="/patient-portal">Login</a>
             <a href="/triagem" class="js-psi-cta" data-psi-cta="nav-mobile">Começar</a>
         </div>
@@ -120,54 +122,71 @@
 
     <main id="conteudo-principal">
         <section class="psi-hero" id="inicio" aria-labelledby="psi-hero-title">
-            <div class="psi-hero-bg" aria-hidden="true">
-                <img src="/image/image3.webp" alt="" width="1600" height="1000" loading="eager" decoding="async" fetchpriority="high">
-            </div>
             <div class="lon-container psi-hero-inner">
-                <p class="psi-brand">LON&nbsp;Clinic</p>
-                <h1 id="psi-hero-title">
-                    Mereces cuidar da tua saúde mental
-                    <span class="psi-hero-line">com a mesma seriedade que do resto.</span>
-                </h1>
+                <h1 id="psi-hero-title">Mereces ser feliz.</h1>
                 <p class="psi-lead">Que tipo de acompanhamento procuras?</p>
                 <div class="psi-selector" role="group" aria-label="Tipo de acompanhamento">
-                    <a href="/triagem" class="psi-select-card js-psi-cta" data-psi-cta="select-individual">
+                    <a href="/triagem" class="psi-select-card psi-select-card--individual js-psi-cta" data-psi-cta="select-individual">
                         <span class="psi-select-label">Individual</span>
-                        <span class="psi-select-desc">Para mim</span>
+                        <span class="psi-select-desc">Para mim <span class="psi-select-arrow" aria-hidden="true">→</span></span>
+                        <span class="psi-select-visual" aria-hidden="true">
+                            <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                                <ellipse cx="160" cy="168" rx="140" ry="28" fill="#2f453a" opacity="0.45"/>
+                                <rect x="52" y="98" width="92" height="58" rx="8" fill="#c9a227"/>
+                                <rect x="62" y="108" width="52" height="8" rx="2" fill="#f6f3ec" opacity="0.55"/>
+                                <circle cx="118" cy="78" r="18" fill="#e8d5b5"/>
+                                <path d="M98 118c4-22 14-34 36-34s32 12 36 34v38H98v-38z" fill="#5f7a6b"/>
+                                <rect x="168" y="72" width="78" height="84" rx="10" fill="#e8efe9"/>
+                                <circle cx="207" cy="108" r="16" fill="#a8bdb0"/>
+                                <path d="M188 148c6-18 12-26 38-26s32 8 38 26v18H188v-18z" fill="#2f6342"/>
+                                <circle cx="248" cy="58" r="14" fill="#7a9a86"/>
+                                <path d="M248 72c-10 8-14 22-12 36h24c2-14-2-28-12-36z" fill="#5f7a6b"/>
+                            </svg>
+                        </span>
                     </a>
-                    <a href="/teste-burnout?ref=psicologia" class="psi-select-card js-psi-cta" data-psi-cta="select-burnout">
+                    <a href="/teste-burnout?ref=psicologia" class="psi-select-card psi-select-card--burnout js-psi-cta" data-psi-cta="select-burnout">
                         <span class="psi-select-label">Anti-Burnout</span>
-                        <span class="psi-select-desc">Para desgaste profissional e esgotamento</span>
+                        <span class="psi-select-desc">Para desgaste profissional <span class="psi-select-arrow" aria-hidden="true">→</span></span>
+                        <span class="psi-select-visual" aria-hidden="true">
+                            <svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" focusable="false">
+                                <ellipse cx="160" cy="170" rx="130" ry="26" fill="#2a3a40" opacity="0.5"/>
+                                <rect x="40" y="88" width="70" height="50" rx="6" fill="#c9a227" opacity="0.85"/>
+                                <rect x="48" y="98" width="40" height="6" rx="2" fill="#f6f3ec" opacity="0.45"/>
+                                <rect x="48" y="110" width="28" height="6" rx="2" fill="#f6f3ec" opacity="0.3"/>
+                                <circle cx="150" cy="72" r="17" fill="#e8d5b5"/>
+                                <path d="M128 108c6-20 14-30 36-30s30 10 36 30v42h-72v-42z" fill="#5a7d88"/>
+                                <circle cx="210" cy="78" r="17" fill="#e8d5b5"/>
+                                <path d="M188 114c6-20 14-30 36-30s30 10 36 30v38h-72v-38z" fill="#2f6342"/>
+                                <path d="M168 118c8 10 22 14 34 8" stroke="#e8d5b5" stroke-width="6" fill="none" stroke-linecap="round"/>
+                                <circle cx="268" cy="48" r="18" fill="#a8bdb0" opacity="0.7"/>
+                                <path d="M70 48c8-18 28-18 36 0-10 4-18 4-36 0z" fill="#7a9a86"/>
+                            </svg>
+                        </span>
                     </a>
                 </div>
             </div>
-        </section>
-
-        <aside class="psi-emergency psi-emergency-top" aria-label="Aviso de segurança">
-            <div class="lon-container psi-emergency-inner">
-                <p class="psi-emergency-label">Se estiveres em risco imediato</p>
-                <p class="psi-emergency-nums">
-                    <a href="tel:112"><strong>112</strong> emergência</a>
-                    <a href="tel:808242424"><strong>808 24 24 24</strong> SNS 24</a>
-                    <a href="tel:213544545"><strong>213 544 545</strong> SOS Voz Amiga</a>
-                </p>
+            <div class="psi-hero-wave" aria-hidden="true">
+                <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                    <path class="psi-wave-mid" d="M0,48 C200,90 380,10 560,42 C780,82 980,92 1180,38 C1300,10 1380,28 1440,40 L1440,100 L0,100 Z"></path>
+                    <path class="psi-wave-top" d="M0,68 C240,100 420,28 680,58 C940,88 1180,96 1440,42 L1440,100 L0,100 Z"></path>
+                </svg>
             </div>
-        </aside>
+        </section>
 
         <section class="psi-section psi-section-mist psi-trust" aria-labelledby="psi-trust-title">
             <div class="lon-container psi-narrow psi-center">
-                <h2 id="psi-trust-title">Acompanhamento psicológico contínuo, 100% online.</h2>
+                <h2 id="psi-trust-title">Acompanhamento psicológico contínuo.<br><em>100% online.</em></h2>
                 <p class="psi-sub psi-sub-center">Mensagens ilimitadas e uma sessão de vídeo por semana — com o mesmo psicólogo, o mesmo fio.</p>
+                <a href="/triagem" class="lon-btn lon-btn-mint lon-btn-lg js-psi-cta" data-psi-cta="trust-cta">Encontrar psicólogo</a>
             </div>
         </section>
 
-        <section class="psi-section psi-section-ink psi-qualified" aria-labelledby="psi-qualified-title">
+        <section class="psi-section psi-qualified" aria-labelledby="psi-qualified-title">
             <div class="lon-container psi-media-grid">
                 <div class="psi-media-copy">
-                    <p class="psi-kicker">Seriedade clínica</p>
-                    <h2 id="psi-qualified-title">Psicólogos qualificados e de confiança</h2>
+                    <h2 id="psi-qualified-title">Psicólogos qualificados em quem podes confiar</h2>
                     <p class="psi-sub">Trabalha com um psicólogo qualificado, com a mesma seriedade clínica que esperarias de uma consulta presencial — mas com a flexibilidade de comunicar quando e como precisares.</p>
-                    <a href="/triagem" class="lon-btn lon-btn-primary js-psi-cta" data-psi-cta="qualified-cta">Começar acompanhamento</a>
+                    <a href="/triagem" class="lon-btn lon-btn-mint lon-btn-lg js-psi-cta" data-psi-cta="qualified-cta">Começar acompanhamento</a>
                 </div>
                 <figure class="psi-media-figure psi-reveal">
                     <img src="/image/image1_files/Marylebone_Large_Desktop.jpg" alt="Consulta de psicologia por videochamada" width="900" height="1100" loading="lazy" decoding="async">
@@ -177,38 +196,30 @@
 
         <section class="psi-section psi-section-paper" id="como-funciona" aria-labelledby="psi-como-title">
             <div class="lon-container">
-                <h2 id="psi-como-title">Como funciona</h2>
-                <p class="psi-sub">Do primeiro contacto ao acompanhamento contínuo.</p>
-                <ol class="psi-how">
-                    <li class="psi-reveal">
-                        <span class="psi-how-num" aria-hidden="true">1</span>
-                        <div>
-                            <h3>Encontra o psicólogo certo para ti</h3>
-                            <p>Respondes a uma <a href="/triagem">breve triagem clínica</a> (PHQ-9 adaptado) para identificarmos o acompanhamento mais adequado às tuas necessidades.</p>
-                        </div>
-                    </li>
-                    <li class="psi-reveal">
-                        <span class="psi-how-num" aria-hidden="true">2</span>
-                        <div>
-                            <h3>Comunica à tua maneira</h3>
-                            <p>Mensagens ilimitadas e sessão de vídeo semanal, com a mesma seriedade profissional de uma consulta presencial.</p>
-                        </div>
-                    </li>
-                    <li class="psi-reveal">
-                        <span class="psi-how-num" aria-hidden="true">3</span>
-                        <div>
-                            <h3>Apoio quando precisas</h3>
-                            <p>Escreve ao teu psicólogo em qualquer altura. As sessões de vídeo têm horário fixo semanal, sem necessidade de remarcações constantes.</p>
-                        </div>
-                    </li>
-                </ol>
+                <h2 id="psi-como-title" class="psi-center-title">Como funciona</h2>
+                <div class="psi-how-grid">
+                    <article class="psi-how-card psi-reveal">
+                        <div class="psi-how-icon" aria-hidden="true">1</div>
+                        <h3>Encontra o psicólogo certo</h3>
+                        <p>Responde a uma <a href="/triagem">breve triagem</a> para encontrarmos o profissional que melhor se adapta às tuas necessidades e preferências.</p>
+                    </article>
+                    <article class="psi-how-card psi-reveal">
+                        <div class="psi-how-icon" aria-hidden="true">2</div>
+                        <h3>Comunica à tua maneira</h3>
+                        <p>Mensagens ilimitadas e sessão de vídeo semanal — com a mesma seriedade profissional de uma consulta presencial.</p>
+                    </article>
+                    <article class="psi-how-card psi-reveal">
+                        <div class="psi-how-icon" aria-hidden="true">3</div>
+                        <h3>Apoio quando precisas</h3>
+                        <p>Escreve ao teu psicólogo a qualquer hora. As sessões de vídeo têm horário fixo semanal, sem remarcações constantes.</p>
+                    </article>
+                </div>
             </div>
         </section>
 
         <section class="psi-section psi-section-mist" id="comparativo" aria-labelledby="psi-cmp-title">
             <div class="lon-container">
-                <h2 id="psi-cmp-title">LON Clinic vs. acompanhamento presencial tradicional</h2>
-                <p class="psi-sub">O mesmo rigor clínico — com mais flexibilidade no dia a dia.</p>
+                <h2 id="psi-cmp-title" class="psi-center-title">LON Clinic vs. acompanhamento presencial</h2>
                 <div class="psi-table-wrap" role="region" aria-label="Tabela comparativa" tabindex="0">
                     <table class="psi-compare">
                         <thead>
@@ -245,7 +256,7 @@
                                 <td>Depende</td>
                             </tr>
                             <tr>
-                                <th scope="row">Triagem clínica inicial (PHQ-9)</th>
+                                <th scope="row">Triagem clínica inicial</th>
                                 <td>Sim</td>
                                 <td>Depende</td>
                             </tr>
@@ -266,11 +277,8 @@
         </section>
 
         <section class="psi-section psi-price-section" id="preco" aria-labelledby="psi-preco-title">
-            <div class="psi-price-backdrop" aria-hidden="true">
-                <img src="/image/guide/guide-coastal-sun.jpg" alt="" width="1600" height="1000" loading="lazy" decoding="async">
-            </div>
             <div class="lon-container">
-                <h2 id="psi-preco-title" class="visually-hidden">Preço</h2>
+                <h2 id="psi-preco-title" class="psi-center-title">Quanto custa?</h2>
                 <div class="psi-price-grid">
                     <div class="psi-price-card psi-reveal">
                         <p class="psi-kicker psi-kicker-dark">Sessão pontual</p>
@@ -283,7 +291,7 @@
                         <p class="psi-kicker psi-kicker-dark">Psicologia em Burnout</p>
                         <p class="psi-price-launch"><span>40€</span><small>/semana</small></p>
                         <p class="psi-price-copy">Subscrição com mensagens ilimitadas e 1 sessão de vídeo por semana. Compromisso mínimo de 1 mês.</p>
-                        <a href="/triagem" class="lon-btn lon-btn-primary lon-btn-lg js-psi-cta" data-psi-cta="price-whatsapp">Começar a 40€/semana</a>
+                        <a href="/triagem" class="lon-btn lon-btn-mint lon-btn-lg js-psi-cta" data-psi-cta="price-whatsapp">Começar a 40€/semana</a>
                     </div>
                 </div>
             </div>
@@ -291,7 +299,7 @@
 
         <section class="psi-section psi-faq-section" id="faq" aria-labelledby="psi-faq-title">
             <div class="lon-container psi-narrow">
-                <h2 id="psi-faq-title">Perguntas frequentes</h2>
+                <h2 id="psi-faq-title" class="psi-center-title">Perguntas frequentes</h2>
                 <div class="psi-faq">
                     <details>
                         <summary>Quem são os psicólogos?</summary>
@@ -322,34 +330,12 @@
                         <div class="psi-faq-a">Podes manter o acompanhamento durante o tempo que fizer sentido para ti. Existe um compromisso mínimo de 1 mês e, a partir daí, podes continuar ou cancelar a qualquer momento, sem fidelização.</div>
                     </details>
                 </div>
+                <p class="psi-crisis-inline">Se estiveres em risco imediato: <a href="tel:112">112</a> · <a href="tel:808242424">SNS 24</a> · <a href="tel:213544545">SOS Voz Amiga</a></p>
             </div>
         </section>
-
-        <aside class="psi-crisis" aria-label="Aviso de crise">
-            <div class="lon-container psi-narrow">
-                <h2>Se estiveres em risco imediato</h2>
-                <p>Se estiveres em risco imediato ou outra pessoa possa estar em perigo, <strong>não uses este serviço</strong>. Contacta de imediato:</p>
-                <p class="psi-crisis-nums">
-                    <a href="tel:112"><strong>112</strong> Emergência</a>
-                    <a href="tel:808242424"><strong>808 24 24 24</strong> SNS 24</a>
-                    <a href="tel:213544545"><strong>213 544 545</strong> SOS Voz Amiga</a>
-                </p>
-            </div>
-        </aside>
     </main>
 
-    <aside class="psi-emergency psi-emergency-sticky" aria-label="Linhas de emergência sempre visíveis">
-        <div class="lon-container psi-emergency-inner">
-            <span class="psi-emergency-label">Emergência</span>
-            <p class="psi-emergency-nums">
-                <a href="tel:112"><strong>112</strong></a>
-                <a href="tel:808242424"><strong>SNS 24</strong> 808 24 24 24</a>
-                <a href="tel:213544545"><strong>SOS</strong> 213 544 545</a>
-            </p>
-        </div>
-    </aside>
-
-    <footer class="lon-footer">
+    <footer class="lon-footer psi-footer">
         <div class="lon-container">
             <div class="lon-footer-grid">
                 <div class="lon-footer-brand">

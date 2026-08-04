@@ -1,20 +1,22 @@
-/* Questionário de Triagem — LON Clinic Psicologia */
+/* Questionário de Triagem — LON Clinic Psicologia (visual BetterHelp / verde) */
 .triagem-page {
-    --tri-ink: #101820;
-    --tri-muted: #5a6874;
-    --tri-paper: #eef1f3;
-    --tri-mist: #f7f9fa;
+    --tri-ink: #1c2a24;
+    --tri-muted: #5c6d64;
+    --tri-paper: #f3f1ec;
+    --tri-mist: #faf9f6;
     --tri-surface: #ffffff;
-    --tri-line: rgba(16, 24, 32, 0.12);
-    --tri-signal: #e23d2f;
-    --tri-signal-soft: rgba(226, 61, 47, 0.1);
+    --tri-line: rgba(28, 42, 36, 0.12);
+    --tri-signal: #2f6342;
+    --tri-signal-soft: rgba(47, 99, 66, 0.12);
     --tri-risk: #8b1e18;
     --tri-risk-bg: #fff5f4;
+    --lon-accent: var(--tri-signal);
+    --lon-accent-dark: #255235;
     min-height: 100vh;
     background:
-        radial-gradient(ellipse 80% 50% at 10% -10%, rgba(226, 61, 47, 0.06), transparent 50%),
-        radial-gradient(ellipse 60% 40% at 100% 0%, rgba(16, 24, 32, 0.04), transparent 45%),
-        linear-gradient(180deg, var(--tri-mist) 0%, var(--tri-paper) 48%, #e6ebef 100%);
+        radial-gradient(ellipse 80% 50% at 10% -10%, rgba(47, 99, 66, 0.07), transparent 50%),
+        radial-gradient(ellipse 60% 40% at 100% 0%, rgba(36, 54, 46, 0.04), transparent 45%),
+        linear-gradient(180deg, var(--tri-mist) 0%, var(--tri-paper) 48%, #e8ebe6 100%);
     color: var(--tri-ink);
     padding-bottom: 0 !important;
 }
@@ -32,7 +34,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px 24px;
-    background: rgba(247, 249, 250, 0.9);
+    background: rgba(250, 249, 246, 0.92);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--tri-line);
@@ -91,7 +93,7 @@
 }
 
 .triagem-seg.is-active {
-    box-shadow: 0 0 0 1px rgba(226, 61, 47, 0.2);
+    box-shadow: 0 0 0 1px rgba(47, 99, 66, 0.2);
 }
 
 /* ── Main ── */
@@ -502,6 +504,19 @@
 
 .triagem-back:hover {
     color: var(--tri-ink);
+}
+
+.triagem-page .lon-btn-primary {
+    background: var(--tri-signal);
+    color: #fff;
+    border-color: var(--tri-signal);
+    box-shadow: 0 10px 24px rgba(47, 99, 66, 0.22);
+}
+
+.triagem-page .lon-btn-primary:hover {
+    background: #255235;
+    border-color: #255235;
+    color: #fff;
 }
 
 .triagem-actions .lon-btn {
