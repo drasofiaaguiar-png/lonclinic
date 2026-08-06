@@ -1,0 +1,614 @@
+{
+  "pages": [
+    {
+      "slug": "o-que-e",
+      "navLabel": "O que é burnout",
+      "title": "Burnout: o síndrome de estar queimado",
+      "description": "O que é burnout (síndrome de estar queimado): definição, quem está mais exposto e as três dimensões — exaustão emocional, despersonalização e baixa realização pessoal.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O que é burnout?",
+          "a": "É a sensação de mal-estar por sobre-esforço sustentado relacionado com o trabalho — stress intenso e/ou prolongado que ultrapassa os recursos psicológicos da pessoa. Também chamado síndrome de estar queimado."
+        },
+        {
+          "q": "Quais são as três dimensões do burnout?",
+          "a": "Exaustão emocional (já não conseguir dar mais), despersonalização (indiferença e distanciamento) e baixa realização pessoal (sensação de que o esforço já não vale a pena)."
+        },
+        {
+          "q": "O burnout é só um problema individual?",
+          "a": "Não. É frequentemente estrutural: exigências constantes que ultrapassam a capacidade de resposta. A prevenção eficaz atua a nível individual e organizacional."
+        }
+      ]
+    },
+    {
+      "slug": "burnout-parental",
+      "navLabel": "Burnout parental",
+      "title": "Burnout parental",
+      "description": "Burnout parental: o desgaste de cuidar dos filhos, a diferença face ao cansaço normal, o papel do teletrabalho e porque as empresas não o devem tratar como stress genérico.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O que é burnout parental?",
+          "a": "É o esgotamento associado a criar e educar filhos, quando o cansaço passa a afetar a saúde física e psicológica e a relação com as crianças — distinto do simples cansaço habitual da parentalidade."
+        },
+        {
+          "q": "Burnout parental e burnout no trabalho são a mesma coisa?",
+          "a": "Não. Têm contextos diferentes, mas reforçam-se com frequência — sobretudo com teletrabalho e fronteiras casa/trabalho apagadas. Ambos merecem reconhecimento específico, não só 'stress genérico'."
+        }
+      ]
+    },
+    {
+      "slug": "trabalho-hibrido",
+      "navLabel": "Trabalho híbrido",
+      "title": "Trabalho híbrido e saúde mental",
+      "description": "Trabalho híbrido: benefícios (autonomia, equilíbrio, menos deslocações) e riscos (isolamento, limites difusos) — e o que as organizações devem fazer de propósito.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O trabalho híbrido é bom para a saúde mental?",
+          "a": "Pode ser — quando há autonomia real, horários claros e coesão de equipa. Mal gerido, aumenta isolamento e apaga a fronteira entre trabalhar e estar disponível."
+        },
+        {
+          "q": "O que faz o híbrido funcionar bem?",
+          "a": "Intencionalidade: horários combinados, rituais de equipa à distância, atenção ao isolamento e normas sobre comunicação fora de horas."
+        }
+      ]
+    },
+    {
+      "slug": "sociedade-do-rendimento",
+      "navLabel": "Sociedade do rendimento",
+      "title": "Sociedade do rendimento",
+      "description": "Sociedade do rendimento (Byung-Chul Han): autoexigência, culpa ao descansar e hiperprodutividade — e como esta cultura alimenta o burnout nas organizações.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O que é a sociedade do rendimento?",
+          "a": "Conceito de Byung-Chul Han: em vez de proibições externas, submetemo-nos nós próprios a uma exigência constante de produzir — em nome da liberdade e da autorrealização."
+        },
+        {
+          "q": "Como se liga ao burnout?",
+          "a": "A pressão vem de dentro (autoexigência, culpa ao descansar, dificuldade em desligar), o que a torna mais difícil de identificar — terreno fértil para esgotamento, sobretudo quando a cultura corporativa premia a hiperprodutividade."
+        }
+      ]
+    },
+    {
+      "slug": "sisifemia",
+      "navLabel": "Sisifemia",
+      "title": "Sisifemia",
+      "description": "Sisifemia: o desgaste que se instala mais depressa do que o burnout — objetivos inatingíveis, pressa constante, e porque distinguir os dois muda a intervenção.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O que é sisifemia?",
+          "a": "É um tipo de exaustão mental ligado ao esforço de trabalhar além do limite para um objetivo que, na prática, não é alcançável — como Sísifo a empurrar a pedra. Instala-se tipicamente mais depressa do que o burnout."
+        },
+        {
+          "q": "Qual a diferença entre sisifemia e burnout?",
+          "a": "A sisifemia surge em prazos mais curtos, com angústia e perda de prazer perante metas irrealistas. O burnout vem de stress crónico prolongado, com exaustão emocional, despersonalização e baixa realização — e costuma exigir recuperação mais longa."
+        }
+      ]
+    },
+    {
+      "slug": "meraki",
+      "navLabel": "Meraki",
+      "title": "Meraki: paixão no trabalho",
+      "description": "Meraki (grego): fazer com alma, criatividade e paixão. Como aplicar no trabalho, o papel do apoio percebido, e porque autonomia e propósito interessam às organizações.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O que significa meraki?",
+          "a": "É uma palavra grega que descreve fazer algo com criatividade, inspiração, paixão e alma — colocar a essência naquilo que se faz, incluindo o trabalho."
+        },
+        {
+          "q": "Meraki depende só da atitude individual?",
+          "a": "Não. A atitude importa, mas o apoio de equipa e chefias, o feedback e um ambiente que sustente autonomia e propósito são essenciais para a paixão não se esgotar em burnout."
+        }
+      ]
+    },
+    {
+      "slug": "urgencia-email",
+      "navLabel": "Urgência do e-mail",
+      "title": "Urgência em responder e-mails de trabalho",
+      "description": "Porque sentimos urgência em responder e-mails fora de horas: viés de urgência, teletrabalho, ansiedade — e o que fazer a nível individual e organizacional.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "Porque sinto urgência em responder e-mails de trabalho fora de horas?",
+          "a": "Muitas vezes não é só hábito: liga-se a stress, ansiedade e a uma cultura que valoriza imediatez — o 'viés de urgência do e-mail'. O medo de consequências negativas amplifica a compulsão, mesmo quando a mensagem não é urgente."
+        },
+        {
+          "q": "O que podem fazer as chefias?",
+          "a": "Agendar envios para horário laboral, indicar quando a resposta não é urgente, e modelar o direito a desligar — empatia digital que torna o descanso real, não só teórico."
+        }
+      ]
+    },
+    {
+      "slug": "emocoes-e-produtividade",
+      "navLabel": "Emoções e produtividade",
+      "title": "Emoções e produtividade no trabalho",
+      "description": "Como as emoções influenciam a produtividade: porque o mito do 'só racional' falha, o que as chefias devem observar, e práticas concretas para equipas mais saudáveis e eficazes.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "As emoções afetam a produtividade?",
+          "a": "Sim. Entusiasmo, ansiedade ou frustração moldam concentração, inovação e colaboração. Emoções negativas persistentes podem obstruir o desempenho mesmo com competências técnicas intactas."
+        },
+        {
+          "q": "O que devem fazer as lideranças?",
+          "a": "Criar segurança para nomear dificuldades cedo, formar chefias para sinais emocionais precoces, e fomentar propósito e reconhecimento genuínos — em vez de discurso motivacional vazio."
+        }
+      ]
+    },
+    {
+      "slug": "sintomas",
+      "navLabel": "Sintomas de burnout",
+      "title": "Sintomas de burnout",
+      "description": "Sinais de esgotamento profissional, exaustão emocional e stress laboral. Quando o cansaço deixa de passar com descanso.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "Quais são os sintomas mais comuns de burnout?",
+          "a": "Exaustão profunda, distanciamento do trabalho, queda de eficácia, irritabilidade, sono alterado, dores físicas sem causa clara e sensação de que o descanso já não recupera."
+        },
+        {
+          "q": "Burnout no trabalho é o mesmo que stress?",
+          "a": "Não. O stress laboral pode ser intenso mas transitório. No burnout, o esgotamento torna-se crónico e afecta corpo, emoções e desempenho — mesmo fora do horário."
+        }
+      ]
+    },
+    {
+      "slug": "tratamento",
+      "navLabel": "Tratamento burnout",
+      "title": "Tratamento de burnout",
+      "description": "Como se trata o burnout: avaliação médica, plano clínico, acompanhamento e quando marcar consulta online na Lon Clinic.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O burnout tem tratamento?",
+          "a": "Sim. O tratamento combina avaliação clínica, gestão de sintomas físicos e emocionais, ajustes de rotina e, quando indicado, encaminhamento para psicologia. Não passa só de 'descansar mais'."
+        },
+        {
+          "q": "Preciso de psicólogo para burnout?",
+          "a": "Muitas pessoas beneficiam de psicologia. Na Lon Clinic a consulta anti-burnout é médica e pode complementar-se com acompanhamento psicológico quando o quadro o exige."
+        }
+      ]
+    },
+    {
+      "slug": "recuperacao",
+      "navLabel": "Recuperação burnout",
+      "title": "Recuperação de burnout",
+      "description": "Como recuperar de burnout sem forçar o ritmo: fases, sinais de melhoria e acompanhamento clínico contínuo.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides"
+    },
+    {
+      "slug": "depressao-ou-burnout",
+      "navLabel": "Burnout ou depressão",
+      "title": "Burnout ou depressão — como distinguir",
+      "description": "Diferenças entre burnout e depressão, sobreposições frequentes e porque a avaliação clínica importa antes de se auto-diagnosticar.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "Burnout e depressão são a mesma coisa?",
+          "a": "Não. O burnout está ligado ao contexto laboral e ao esgotamento crónico. A depressão é um quadro clínico mais amplo. Podem coexistir e só uma avaliação profissional os distingue com rigor."
+        }
+      ]
+    },
+    {
+      "slug": "sindrome-do-executivo",
+      "navLabel": "Síndrome do executivo",
+      "title": "Síndrome do executivo",
+      "description": "Síndrome do executivo (workaholism / burnout do líder): incapacidade de desligar, culpa ao descansar e impacto na saúde — e como começar a inverter o padrão.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O que é a síndrome do executivo?",
+          "a": "É um perfil de desgaste marcado pela incapacidade persistente de desligar do trabalho — também chamado workaholism ou burnout do líder. Afecta sobretudo pessoas perfeccionistas, exigentes e ambiciosas."
+        },
+        {
+          "q": "Síndrome do executivo é o mesmo que burnout?",
+          "a": "Estão relacionados. A síndrome do executivo descreve o padrão de não conseguir parar; o burnout é o esgotamento crónico que desse padrão (e de outros) pode resultar. Muitas vezes coexistem."
+        },
+        {
+          "q": "Quando procurar ajuda profissional?",
+          "a": "Quando o autocuidado (sono, exercício, desconexão) não chega, quando há culpa intensa ao descansar, ou quando já há sintomas físicos — sono, dores, hipertensão, problemas digestivos. A avaliação clínica e o acompanhamento psicológico ajudam a romper o padrão."
+        }
+      ]
+    },
+    {
+      "slug": "avaliacao",
+      "navLabel": "Teste de burnout (avaliação)",
+      "title": "Como avaliar o esgotamento profissional",
+      "description": "O que mede o teste de burnout (Maslach / MBI), as três dimensões do esgotamento e como a Lon Clinic usa um teste gratuito (CBI) para objetivar o desgaste.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O que é o Maslach Burnout Inventory (MBI)?",
+          "a": "É o instrumento mais utilizado a nível mundial para medir o esgotamento profissional. Avalia 22 itens em três dimensões: exaustão emocional, despersonalização e realização pessoal reduzida."
+        },
+        {
+          "q": "O teste gratuito da Lon Clinic é o MBI?",
+          "a": "Não. O nosso teste gratuito baseia-se no Copenhagen Burnout Inventory (CBI), um instrumento validado para medir esgotamento. O MBI é a referência histórica que explicamos neste artigo; o CBI é o questionário que pode fazer online em minutos."
+        },
+        {
+          "q": "Para que serve um teste de burnout numa empresa?",
+          "a": "Permite objetivar o desgaste numa equipa, ver em que dimensão o problema é mais grave e acompanhar a evolução antes e depois de uma intervenção — em vez de decidir só com base em impressões."
+        }
+      ]
+    },
+    {
+      "slug": "boreout",
+      "navLabel": "Síndrome de boreout",
+      "title": "Síndrome de boreout",
+      "description": "Boreout: o lado oposto do burnout. Tédio crónico no trabalho, apatia e desmotivação — e porque sobrecarga e subcarga prejudicam igualmente a saúde mental.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O que é a síndrome de boreout?",
+          "a": "É o desgaste causado pelo tédio crónico no trabalho — falta de desafios, significado ou reconhecimento. Foi descrito em 2007 por Philippe Rothlin e Peter R. Werder e é o 'lado oposto' do burnout."
+        },
+        {
+          "q": "Boreout e burnout são opostos?",
+          "a": "Nas causas, sim: burnout nasce do excesso de exigências; boreout da falta de estímulo. Nos efeitos, ambos podem prejudicar saúde mental, autoestima e desempenho — e podem coexistir na mesma organização."
+        },
+        {
+          "q": "Porque o boreout é difícil de identificar?",
+          "a": "Não apresenta sinais externos óbvios de stress ou exaustão, e muitas pessoas sentem vergonha em admitir que estão aborrecidas no trabalho — o que atrasa o pedido de ajuda."
+        }
+      ]
+    },
+    {
+      "slug": "ambiente-de-trabalho-saudavel",
+      "navLabel": "Ambiente de trabalho saudável",
+      "title": "Ambiente de trabalho saudável",
+      "description": "Como reconhecer e construir um ambiente de trabalho saudável: pilares estruturais, clima psicossocial e porque interessa às empresas — não só aos trabalhadores.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O que torna um ambiente de trabalho saudável?",
+          "a": "Mais do que bom ambiente entre colegas: planos de saúde e bem-estar, condições físicas adequadas, ligação à comunidade e uma cultura organizacional que proteja direitos e bem-estar de forma consistente."
+        },
+        {
+          "q": "Porque importa às empresas investir nisto?",
+          "a": "Reduz absentismo e rotatividade e aumenta produtividade. Empatia e compreensão das circunstâncias individuais não são extras — são base para um espaço onde as pessoas querem contribuir."
+        }
+      ]
+    },
+    {
+      "slug": "fadiga-laboral",
+      "navLabel": "Fadiga laboral",
+      "title": "Fadiga laboral",
+      "description": "Fadiga laboral: o que é, como prevenir (sono, autocuidado, ergonomia) e quando o cansaço extremo se torna antecâmara do burnout.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O que é a fadiga laboral?",
+          "a": "É a sensação física, mental e emocional de cansaço extremo por exposição prolongada a stress, pressão e exigências de trabalho. Sem intervenção, funciona muitas vezes como antecâmara do burnout."
+        },
+        {
+          "q": "Como prevenir a fadiga laboral?",
+          "a": "Priorizar sono de qualidade, hábitos de autocuidado (incluindo alimentação) e condições físicas adequadas no trabalho — mobiliário, iluminação e pausas — além de reconhecer os sinais cedo."
+        }
+      ]
+    },
+    {
+      "slug": "apoio-percebido",
+      "navLabel": "Apoio percebido no trabalho",
+      "title": "Apoio percebido no trabalho",
+      "description": "Como o apoio percebido de chefias e colegas melhora a saúde mental no trabalho, reduz exaustão e funciona como fator protetor face ao stress e ao burnout.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O que é apoio percebido no trabalho?",
+          "a": "É a sensação de que chefias e colegas estão disponíveis e solidários. Está associado a melhor saúde mental, menor exaustão e maior rendimento — e é apontado pela OMS como fator relevante."
+        },
+        {
+          "q": "Como fomentar o apoio percebido na equipa?",
+          "a": "Escuta ativa das chefias, check-ins regulares, cultura de feedback e reconhecimento explícito do trabalho bem feito — gestos concretos, sem necessidade de grandes orçamentos."
+        }
+      ]
+    },
+    {
+      "slug": "direito-a-desligar",
+      "navLabel": "Direito a desligar",
+      "title": "Direito a desligar",
+      "description": "Chefias que não respeitam o direito a desligar: porque recuperar exige afastar a mente do trabalho, o risco no autoemprego, e o que fazer na prática.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O que é o direito a desligar?",
+          "a": "É a possibilidade de não receber nem responder a trabalho fora de horário — essencial para recuperar energia física e mental. Chamadas e e-mails constantes fora de horas tornam essa recuperação impossível."
+        },
+        {
+          "q": "Quem trabalha por conta própria também precisa de desligar?",
+          "a": "Sim. No autoemprego é frequente negar a si mesmo o descanso, exigindo-se mais do que a um colaborador. Definir horários e limites é tão importante como numa empresa."
+        }
+      ]
+    },
+    {
+      "slug": "capital-psicologico",
+      "navLabel": "Capital psicológico",
+      "title": "Capital psicológico",
+      "description": "Capital psicológico no trabalho: autoeficácia, otimismo, esperança e resiliência — como se fomenta e porque protege face ao stress e ao burnout.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O que é o capital psicológico?",
+          "a": "É um conjunto de características pessoais — autoeficácia, otimismo, esperança e resiliência — associadas a melhor bem-estar e desempenho no trabalho, e a maior proteção face ao stress."
+        },
+        {
+          "q": "O capital psicológico pode desenvolver-se?",
+          "a": "Sim. Não é um traço fixo. Reforça-se com conquistas em tarefas desafiantes, modelagem social (ver outros a superar desafios) e enfrentamento ativo dos problemas em partes mais pequenas."
+        }
+      ]
+    },
+    {
+      "slug": "programadores",
+      "navLabel": "Burnout em programadores",
+      "title": "Burnout em programadores",
+      "description": "Burnout em programadores e engenheiros de software: on-call, prazos, ecrãs e o que fazer quando o código deixa de render.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "profession"
+    },
+    {
+      "slug": "medicos",
+      "navLabel": "Burnout em médicos",
+      "title": "Burnout em médicos",
+      "description": "Burnout em médicos e profissionais de saúde: carga clínica, plantões e a dificuldade de pedir ajuda quando se está do outro lado.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "profession"
+    },
+    {
+      "slug": "profissionais-de-saude",
+      "navLabel": "Profissionais de saúde",
+      "title": "Burnout nos profissionais de saúde",
+      "description": "Burnout em médicos, enfermeiros e profissionais de saúde: fatores estruturais, risco silencioso e porque a prevenção não pode ficar só a cargo do indivíduo.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "profession",
+      "faq": [
+        {
+          "q": "Porque são os profissionais de saúde tão vulneráveis ao burnout?",
+          "a": "Pelo contacto constante com sofrimento, decisões de alto impacto, comunicação de más notícias, expectativas elevadas, urgência permanente, turnos exigentes e falta de recursos — um risco estrutural da profissão, reconhecido pela OMS."
+        },
+        {
+          "q": "Basta o profissional cuidar melhor de si?",
+          "a": "Não. Ferramentas individuais (sono, stress, psicologia) ajudam, mas a prevenção eficaz exige também mudanças organizacionais: escalas sustentáveis, apoio entre colegas e chefias capazes de reconhecer sinais precoces."
+        }
+      ]
+    },
+    {
+      "slug": "advogados",
+      "navLabel": "Burnout em advogados",
+      "title": "Burnout em advogados",
+      "description": "Burnout em advogados: prazos, litígio, faturação e a pressão constante de estar sempre disponível.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "profession"
+    },
+    {
+      "slug": "gestores",
+      "navLabel": "Burnout em gestores",
+      "title": "Burnout em gestores",
+      "description": "Burnout em gestores e líderes de equipa: responsabilidade sem margem, reuniões infinitas e decisão sob fadiga.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "profession"
+    },
+    {
+      "slug": "empreendedores",
+      "navLabel": "Burnout em empreendedores",
+      "title": "Burnout em empreendedores",
+      "description": "Burnout em empreendedores e founders: identidade fundida com o negócio, incerteza financeira e a ideia de que 'não se pode parar'.",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown",
+      "group": "profession"
+    },
+    {
+      "slug": "equipas-digitais",
+      "navLabel": "Burnout em equipas digitais",
+      "title": "Burnout em equipas digitais",
+      "description": "Como detetar burnout em equipas digitais: sinais de esgotamento, hiperconectividade e o papel da chefia na prevenção.",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "Como detetar burnout em equipas digitais?",
+          "a": "Atenção a fadiga persistente, cinismo, irritabilidade, silêncio na equipa, e-mails urgentes fora de horas e correções de última hora que se tornaram rotina."
+        },
+        {
+          "q": "Qual o papel da chefia?",
+          "a": "Reconhecer a ligação entre bem-estar e desempenho, ouvir sobrecargas e agir antes do desgaste se instalar — em vez de exigir esforço heróico permanente."
+        }
+      ],
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown"
+    },
+    {
+      "slug": "nao-valorizado",
+      "navLabel": "Não valorizado no trabalho",
+      "title": "Sinais de que não és valorizado no trabalho",
+      "description": "Sinais de falta de reconhecimento: ausência de crescimento e feedback, desalinhamento pessoa-função e não poder ser autêntico — e o custo para as organizações.",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "Quais são sinais de não ser valorizado no trabalho?",
+          "a": "Falta de oportunidades de crescimento, ausência de feedback, desalinhamento entre pessoa e função, e sentir que não se pode ser autêntico."
+        }
+      ],
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown"
+    },
+    {
+      "slug": "fika",
+      "navLabel": "Fika",
+      "title": "Fika: o segredo sueco no trabalho",
+      "description": "Fika: a pausa sueca para café e conversa — porque parar sem multitarefa reduz stress e sustenta produtividade nas equipas.",
+      "group": "guides",
+      "faq": [
+        {
+          "q": "O que é fika?",
+          "a": "É uma instituição social sueca: interromper a atividade para café, algo doce e conversa — muitas vezes integrada formalmente no local de trabalho."
+        }
+      ],
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown"
+    },
+    {
+      "slug": "fundadores",
+      "navLabel": "Burnout em fundadores",
+      "title": "Burnout em fundadores de startups",
+      "description": "Burnout em fundadores: dados, porque a função é estruturalmente diferente, e o custo para o negócio — 1.º de 8 artigos.",
+      "group": "founders",
+      "faq": [
+        {
+          "q": "O burnout é comum em fundadores?",
+          "a": "Sim. Inquéritos independentes mostram que mais de metade dos fundadores relata um episódio de burnout no último ano, e muitos escondem o desgaste de investidores e equipa."
+        }
+      ],
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown"
+    },
+    {
+      "slug": "fundadores-solidao",
+      "navLabel": "Solidão do fundador",
+      "title": "A solidão específica de quem funda",
+      "description": "Solidão do fundador: fusão de identidade com a empresa, porque a rede habitual não chega, e o que ajuda na prática. 2/8.",
+      "group": "founders",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown"
+    },
+    {
+      "slug": "fundadores-fadiga-decisao",
+      "navLabel": "Fadiga de decisão",
+      "title": "Fadiga de decisão no fundador",
+      "description": "Fadiga de decisão: a matemática invisível do esgotamento em fundadores — biologia, sinais e como reduzir decisões. 3/8.",
+      "group": "founders",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown"
+    },
+    {
+      "slug": "fundadores-impostor",
+      "navLabel": "Síndrome do impostor",
+      "title": "Síndrome do impostor em fundadores",
+      "description": "Síndrome do impostor em fundadores: porque não desaparece com o sucesso e como geri-lo sem o eliminar. 4/8.",
+      "group": "founders",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown"
+    },
+    {
+      "slug": "fundadores-stress-financeiro",
+      "navLabel": "Stress financeiro",
+      "title": "Stress financeiro e ansiedade do runway",
+      "description": "Stress financeiro em fundadores: ansiedade do runway, decisões sob medo e como trazer clareza aos números. 5/8.",
+      "group": "founders",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown"
+    },
+    {
+      "slug": "fundadores-cofundadores",
+      "navLabel": "Conflito entre cofundadores",
+      "title": "Conflito entre cofundadores",
+      "description": "Quando a relação entre cofundadores se torna fonte de desgaste: perseguição-e-afastamento, causas e como proteger a relação. 6/8.",
+      "group": "founders",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown"
+    },
+    {
+      "slug": "fundadores-sinais",
+      "navLabel": "Sinais de alerta (fundadores)",
+      "title": "Sinais de alerta de burnout em fundadores",
+      "description": "Como reconhecer burnout em fundadores antes que seja tarde: três eixos, burnout invisível e sinais concretos. 7/8.",
+      "group": "founders",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown"
+    },
+    {
+      "slug": "fundadores-prevencao",
+      "navLabel": "Prevenção (fundadores)",
+      "title": "Prevenção e recuperação para fundadores",
+      "description": "Prevenção e recuperação de burnout em fundadores: mudança estrutural, cinco frentes práticas e o papel de investidores. 8/8.",
+      "group": "founders",
+      "datePublished": "2026-08-06",
+      "dateModified": "2026-08-06",
+      "format": "markdown"
+    }
+  ]
+}

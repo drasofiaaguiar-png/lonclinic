@@ -1,0 +1,47 @@
+{
+  "id": "burnout-trabalho",
+  "title": "Burnout no Trabalho",
+  "description": "Coleção de 28 artigos sobre burnout, bem-estar organizacional e desgaste em fundadores de startups.",
+  "parts": [
+    {
+      "id": "bem-estar",
+      "title": "Parte I — Burnout e bem-estar organizacional",
+      "slugs": [
+        "equipas-digitais",
+        "avaliacao",
+        "profissionais-de-saude",
+        "boreout",
+        "ambiente-de-trabalho-saudavel",
+        "fadiga-laboral",
+        "apoio-percebido",
+        "direito-a-desligar",
+        "capital-psicologico",
+        "sindrome-do-executivo",
+        "o-que-e",
+        "burnout-parental",
+        "trabalho-hibrido",
+        "nao-valorizado",
+        "sociedade-do-rendimento",
+        "sisifemia",
+        "meraki",
+        "fika",
+        "urgencia-email",
+        "emocoes-e-produtividade"
+      ]
+    },
+    {
+      "id": "fundadores",
+      "title": "Parte II — Burnout em fundadores de startups",
+      "slugs": [
+        "fundadores",
+        "fundadores-solidao",
+        "fundadores-fadiga-decisao",
+        "fundadores-impostor",
+        "fundadores-stress-financeiro",
+        "fundadores-cofundadores",
+        "fundadores-sinais",
+        "fundadores-prevencao"
+      ]
+    }
+  ]
+}

@@ -207,6 +207,38 @@
     margin: 0 auto 28px;
 }
 
+.bq-intro-more {
+    margin: 22px auto 0 !important;
+    font-size: 0.9rem !important;
+}
+
+.bq-intro-more a {
+    color: var(--bq-accent, #2f453a);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.bq-intro-more a:hover {
+    text-decoration: underline;
+}
+
+.bq-cta-more {
+    margin: 18px 0 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--bq-muted);
+}
+
+.bq-cta-more a {
+    color: var(--bq-accent, #2f453a);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.bq-cta-more a:hover {
+    text-decoration: underline;
+}
+
 /* ── Card ── */
 .bq-card {
     background: var(--bq-surface);

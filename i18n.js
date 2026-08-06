@@ -202,7 +202,7 @@
         { s: '.lon-footer-col:nth-child(2) a[href="/marcar/clinica-geral"]', en: 'General Medicine', pt: 'Clínica Geral', es: 'Medicina General' },
         { s: '.lon-footer-col:nth-child(2) a[href="/marcar/travel"]', en: "Traveler's Consultation", pt: 'Consulta do Viajante', es: 'Consulta del Viajero' },
         { s: '.lon-footer-col:nth-child(2) a[href="/marcar/saude-mental"]', en: 'Mental Health', pt: 'Saúde Mental', es: 'Salud Mental' },
-        { s: '.lon-footer-col:nth-child(2) a[href="/teste-burnout"]', en: 'Burnout Test', pt: 'Teste de Burnout', es: 'Test de Burnout' },
+        { s: '.lon-footer-col:nth-child(2) a[href="/burnout/teste"]', en: 'Burnout Test', pt: 'Teste de Burnout', es: 'Test de Burnout' },
         { s: '.lon-footer-col:nth-child(2) a[href="/marcar/burnout"]', en: 'Burnout Consultation', pt: 'Consulta de Burn Out', es: 'Consulta de Burn Out' },
         { s: '.lon-footer-col:nth-child(2) a[href="/marcar/longevidade"]', en: 'Longevity', pt: 'Longevidade', es: 'Longevidad' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=sobre-nos"]', en: 'About us', pt: 'Sobre nós', es: 'Sobre nosotros' },
@@ -490,7 +490,7 @@
         /* ── Service meta ── */
         { s: '.marcar-meta span:nth-child(2)', en: 'Video call', pt: 'Videochamada', es: 'Videollamada' },
         { s: '.marcar-desc p', en: 'What is included:', pt: 'O que inclui:', es: 'Qué incluye:' },
-        { s: '#marcarBurnoutLink', en: 'Haven\'t taken the test yet? <a href="/teste-burnout?ref=marcar-burnout">Take the free burnout test</a> — 4 min.', pt: 'Ainda não fez o teste? <a href="/teste-burnout?ref=marcar-burnout">Faça o teste de burnout</a> — 4 min, gratuito.', es: '¿Aún no ha hecho el test? <a href="/teste-burnout?ref=marcar-burnout">Haga el test de burnout</a> — 4 min, gratuito.', h: true },
+        { s: '#marcarBurnoutLink', en: 'Haven\'t taken the test yet? <a href="/burnout/teste?ref=marcar-burnout">Take the free burnout test</a> — 4 min.', pt: 'Ainda não fez o teste? <a href="/burnout/teste?ref=marcar-burnout">Faça o teste de burnout</a> — 4 min, gratuito.', es: '¿Aún no ha hecho el test? <a href="/burnout/teste?ref=marcar-burnout">Haga el test de burnout</a> — 4 min, gratuito.', h: true },
 
         /* ── Schedule section ── */
         { s: '#marcarScheduleTitle', en: 'Date and time', pt: 'Data e hora', es: 'Fecha y hora' },

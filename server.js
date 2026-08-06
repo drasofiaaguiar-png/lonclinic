@@ -30,6 +30,7 @@ const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
 const guide = require('./guide');
+const burnoutPages = require('./burnout-pages');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 const session = require('express-session');
@@ -3441,8 +3442,39 @@ app.get('/consulta', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'consulta.html'), 'Error loading consulta landing page');
 });
 
-app.get('/teste-burnout', (req, res) => {
+app.get('/burnout', (req, res) => {
+    const html = burnoutPages.renderHub(PUBLIC_SITE_URL);
+    sendHtmlNoCacheString(res, html);
+});
+
+app.get('/burnout/colecao', (req, res) => {
+    const html = burnoutPages.renderCollection(PUBLIC_SITE_URL);
+    sendHtmlNoCacheString(res, html);
+});
+
+app.get('/burnout/teste', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'burnout-quiz.html'), 'Error loading burnout quiz page');
+});
+
+app.get('/burnout/consulta', (req, res) => {
+    res.redirect(301, '/clinica-anti-burnout');
+});
+
+app.get('/burnout/:slug', (req, res) => {
+    const slug = String(req.params.slug || '').toLowerCase();
+    if (!burnoutPages.isValidSlug(slug)) {
+        return sendHtmlNoCacheString(res, burnoutPages.renderNotFound(PUBLIC_SITE_URL), 404);
+    }
+    const result = burnoutPages.renderSpoke(PUBLIC_SITE_URL, slug);
+    if (!result) {
+        return sendHtmlNoCacheString(res, burnoutPages.renderNotFound(PUBLIC_SITE_URL), 404);
+    }
+    sendHtmlNoCacheString(res, result.html);
+});
+
+app.get('/teste-burnout', (req, res) => {
+    const qs = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+    res.redirect(301, `/burnout/teste${qs}`);
 });
 
 app.get('/clinica-anti-burnout', (req, res) => {
@@ -3574,6 +3606,9 @@ app.get('/robots.txt', (req, res) => {
 // Block raw file access to Guide source files (content is server-rendered at /blog).
 app.use((req, res, next) => {
     const p = (req.path || '').split('?')[0];
+    if (p === '/data/burnout' || p.startsWith('/data/burnout/')) {
+        return res.status(404).type('text').send('Not found');
+    }
     if (p === '/data/guide' || p.startsWith('/data/guide/')) {
         return res.status(404).end();
     }
@@ -3584,7 +3619,7 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname), {
     setHeaders: (res, filePath) => {
         const base = path.basename(filePath);
-        if (base === 'guide.css') {
+        if (base === 'guide.css' || base === 'burnout-pages.css') {
             res.setHeader('Cache-Control', 'no-store');
             return;
         }
