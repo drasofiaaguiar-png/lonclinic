@@ -333,7 +333,7 @@ body.lon-landing.psi-landing {
 .psi-hero-watermark {
     position: absolute;
     left: 50%;
-    top: 38%;
+    top: 36%;
     transform: translate(-50%, -50%);
     font-family: "Cormorant Garamond", Georgia, serif;
     font-size: clamp(10rem, 30vw, 20rem);
@@ -364,7 +364,7 @@ body.lon-landing.psi-landing {
     gap: 28px;
     align-content: start;
     align-items: start;
-    padding: 28px 20px 20px;
+    padding: 28px 20px 24px;
     max-width: 1240px;
     width: 100%;
     margin: 0 auto;
@@ -421,7 +421,7 @@ body.lon-landing.psi-landing {
 }
 
 .psi-brand-hero {
-    margin: 0 0 12px;
+    margin: 0 0 14px;
     font-size: clamp(1.5rem, 2.6vw, 1.95rem);
     font-weight: 600;
     letter-spacing: -0.02em;
@@ -430,7 +430,7 @@ body.lon-landing.psi-landing {
 }
 
 .psi-hero h1 {
-    margin: 0 0 24px;
+    margin: 0 0 28px;
     font-size: clamp(1.75rem, 3.2vw, 3.15rem);
     line-height: 1.18;
     font-weight: 500;
@@ -450,11 +450,10 @@ body.lon-landing.psi-landing {
 
 .psi-hero-aside {
     grid-area: aside;
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 22px;
+    gap: 24px;
     animation: psi-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) 0.24s both;
 }
 
@@ -484,8 +483,8 @@ body.lon-landing.psi-landing {
 .psi-hero-photo-wrap {
     position: relative;
     z-index: 1;
-    padding: 8px 16px 48px;
-    margin-top: 8px;
+    padding: 12px 16px 48px;
+    margin-top: 0;
     width: 100%;
     flex: 0 0 auto;
 }
@@ -513,14 +512,14 @@ body.lon-landing.psi-landing {
     }
 
     .psi-hero-stage {
-        grid-template-columns: 190px minmax(0, 1fr) 270px;
+        grid-template-columns: minmax(168px, 200px) minmax(0, 1fr) minmax(250px, 280px);
         grid-template-rows: 1fr;
         grid-template-areas: "features core aside";
-        gap: 0 40px;
+        gap: 0 56px;
         align-items: stretch;
         align-content: stretch;
-        padding: 20px 48px 148px;
-        min-height: clamp(420px, 52vh, 520px);
+        padding: 36px 48px 40px;
+        min-height: 0;
         flex: 1 1 auto;
         overflow: visible;
     }
@@ -529,15 +528,15 @@ body.lon-landing.psi-landing {
         flex-direction: column;
         justify-content: center;
         align-self: stretch;
-        gap: 36px;
-        padding: 12px 12px 12px 0;
-        border-right: 0;
+        gap: 42px;
+        padding: 8px 8px 8px 0;
         max-width: none;
     }
 
     .psi-hero-features li {
-        max-width: 14ch;
-        font-size: 0.9rem;
+        max-width: 15ch;
+        font-size: 0.92rem;
+        line-height: 1.4;
     }
 
     .psi-hero-core {
@@ -545,14 +544,19 @@ body.lon-landing.psi-landing {
         justify-self: start;
         align-items: flex-start;
         text-align: left;
-        max-width: 34rem;
+        max-width: 36rem;
         margin: 0;
-        padding: 0 8px;
+        padding: 0;
+        gap: 0;
+    }
+
+    .psi-brand-hero {
+        margin-bottom: 16px;
     }
 
     .psi-hero h1 {
-        font-size: clamp(2.1rem, 3.4vw, 3.25rem);
-        max-width: none;
+        margin: 0 0 32px;
+        font-size: clamp(2.05rem, 3.2vw, 3.15rem);
     }
 
     .psi-hero-line {
@@ -562,24 +566,25 @@ body.lon-landing.psi-landing {
     .psi-hero-aside {
         align-items: stretch;
         align-self: stretch;
-        justify-content: flex-end;
-        gap: 0;
-        padding: 0;
+        justify-content: space-between;
+        gap: 48px;
+        padding: 4px 0 8px;
         min-height: 0;
         height: 100%;
         overflow: visible;
     }
 
     .psi-plan-float {
-        position: absolute;
-        top: 12px;
+        position: relative;
+        top: auto;
         bottom: auto;
-        right: 0;
-        left: 0;
-        width: auto;
+        left: auto;
+        right: auto;
+        width: 100%;
         margin: 0;
         order: 0;
-        padding: 18px 16px 12px;
+        flex: 0 0 auto;
+        padding: 20px 18px 16px;
         z-index: 5;
     }
 
@@ -590,22 +595,23 @@ body.lon-landing.psi-landing {
 
     .psi-hero-copy {
         order: 0;
-        text-align: left;
-        max-width: 24ch;
-        font-size: 0.88rem;
-        line-height: 1.6;
-        position: absolute;
-        left: 0;
-        right: 0;
+        position: relative;
+        left: auto;
+        right: auto;
         top: auto;
-        bottom: 24px;
+        bottom: auto;
+        text-align: left;
+        max-width: 26ch;
+        font-size: 0.9rem;
+        line-height: 1.65;
         margin: 0;
-        z-index: 3;
+        margin-top: auto;
+        z-index: 1;
     }
 
     .psi-hero-photo-wrap {
         z-index: 2;
-        padding: 24px 28px 56px;
+        padding: 8px 28px 56px;
         margin-top: 0;
     }
 }
@@ -620,11 +626,11 @@ body.lon-landing.psi-landing {
     }
 
     .psi-plan-float {
-        margin-bottom: -40px;
+        margin-bottom: 0;
     }
 
     .psi-hero-photo-wrap {
-        padding: 24px 10px 40px;
+        padding: 8px 10px 40px;
         z-index: 2;
     }
 
