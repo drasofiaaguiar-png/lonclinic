@@ -594,7 +594,8 @@ body.lon-landing.psi-landing {
         position: absolute;
         left: 0;
         right: 0;
-        bottom: 132px;
+        top: auto;
+        bottom: 28px;
         margin: 0;
         z-index: 1;
     }
