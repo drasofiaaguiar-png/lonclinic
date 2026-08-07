@@ -598,9 +598,9 @@ body.lon-landing.psi-landing {
         left: 0;
         right: 0;
         top: auto;
-        bottom: 36px;
+        bottom: -56px;
         margin: 0;
-        z-index: 1;
+        z-index: 3;
     }
 
     .psi-hero-photo-wrap {
