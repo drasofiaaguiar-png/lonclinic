@@ -519,8 +519,8 @@ body.lon-landing.psi-landing {
         gap: 0 40px;
         align-items: stretch;
         align-content: stretch;
-        padding: 20px 48px 0;
-        min-height: clamp(360px, 48vh, 480px);
+        padding: 20px 48px 148px;
+        min-height: clamp(420px, 52vh, 520px);
         flex: 1 1 auto;
         overflow: visible;
     }
@@ -598,15 +598,15 @@ body.lon-landing.psi-landing {
         left: 0;
         right: 0;
         top: auto;
-        bottom: -64px;
+        bottom: 24px;
         margin: 0;
         z-index: 3;
     }
 
     .psi-hero-photo-wrap {
         z-index: 2;
-        padding: 0 28px 56px;
-        margin-top: -48px;
+        padding: 24px 28px 56px;
+        margin-top: 0;
     }
 }
 
