@@ -16,7 +16,7 @@ Na [consulta anti-burnout](/clinica-anti-burnout) online:
 - Fala com médico acreditado pela Ordem dos Médicos
 - Videochamada no browser, sem instalar apps
 - Foco em corpo e mente — não só em “gerir stress”
-- Encaminhamento para [psicologia](/psicologia) quando necessário
+- Encaminhamento para [psicologia](/saudemental) quando necessário
 
 Pode [marcar directamente](/marcar/burnout) ou começar pelo teste e decidir depois.
 
@@ -24,7 +24,7 @@ Pode [marcar directamente](/marcar/burnout) ou começar pelo teste e decidir dep
 
 Muita gente pesquisa **psicólogo burnout**. A psicologia é frequentemente essencial — especialmente em padrões de pensamento, limites e traumas de desempenho. A consulta médica não a substitui: avalia o organismo, exclui causas físicas e pode coordenar o percurso.
 
-Se já sabe que quer acompanhamento semanal contínuo, veja também [Psicologia Lon Clinic](/psicologia).
+Se já sabe que quer acompanhamento semanal contínuo, veja também [Psicologia Lon Clinic](/saudemental).
 
 ## O que o tratamento não é
 

@@ -16,7 +16,7 @@ Com a normalização do teletrabalho e do [trabalho híbrido](/burnout/trabalho-
 
 ## O que fazer
 
-**A nível individual**, se a urgência de responder persiste mesmo em contextos onde não é necessário, pode ser sinal de stress, ansiedade ou burnout instalado — e nesse caso, o [acompanhamento psicológico](/psicologia) ajuda a reestruturar esses padrões de pensamento e a recuperar os recursos necessários para os gerir. O [teste gratuito](/burnout/teste) dá um primeiro retrato objectivo.
+**A nível individual**, se a urgência de responder persiste mesmo em contextos onde não é necessário, pode ser sinal de stress, ansiedade ou burnout instalado — e nesse caso, o [acompanhamento psicológico](/saudemental) ajuda a reestruturar esses padrões de pensamento e a recuperar os recursos necessários para os gerir. O [teste gratuito](/burnout/teste) dá um primeiro retrato objectivo.
 
 **A nível organizacional**, o apelo é à empatia digital por parte de quem lidera equipas:
 

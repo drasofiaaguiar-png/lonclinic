@@ -22,7 +22,7 @@ Os [sintomas de burnout](/burnout/sintomas) neste meio misturam-se facilmente co
 
 Pedir a um profissional de saúde que «cuide melhor de si» sem alterar as condições organizacionais em que trabalha tem um alcance limitado. A prevenção eficaz exige uma abordagem em dois níveis:
 
-1. **Ferramentas individuais** — sono de qualidade, gestão do stress, [acompanhamento psicológico](/psicologia) quando necessário, e [avaliação clínica](/clinica-anti-burnout) quando o corpo já entrou no padrão.
+1. **Ferramentas individuais** — sono de qualidade, gestão do stress, [acompanhamento psicológico](/saudemental) quando necessário, e [avaliação clínica](/clinica-anti-burnout) quando o corpo já entrou no padrão.
 2. **Mudanças estruturais** — escalas mais sustentáveis, canais reais de apoio entre colegas e chefias preparadas para reconhecer os primeiros sinais de desgaste.
 
 Reconhecer esta dupla responsabilidade é o primeiro passo para desenhar programas de bem-estar que façam, de facto, diferença — tanto para quem cuida como, em última análise, para a qualidade dos cuidados prestados.

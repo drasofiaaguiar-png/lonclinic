@@ -30,7 +30,7 @@ Prevenir a fadiga laboral não é, no fundo, um exercício de força de vontade 
 
 ## Quando a fadiga já não chega
 
-Se o descanso deixou de recuperar, se há ansiedade persistente ou sintomas físicos intensos, a prevenção individual pode não bastar. Nesse ponto, faz sentido [avaliação clínica](/clinica-anti-burnout), eventual [psicologia](/psicologia) e um [plano de tratamento](/burnout/tratamento).
+Se o descanso deixou de recuperar, se há ansiedade persistente ou sintomas físicos intensos, a prevenção individual pode não bastar. Nesse ponto, faz sentido [avaliação clínica](/clinica-anti-burnout), eventual [psicologia](/saudemental) e um [plano de tratamento](/burnout/tratamento).
 
 - [Teste de burnout](/burnout/teste)  
 - [Marcar consulta](/marcar/burnout)  

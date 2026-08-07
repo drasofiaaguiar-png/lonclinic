@@ -21,7 +21,7 @@ Há um motivo estrutural, não apenas psicológico, para este síndrome ser part
 - **Nomeá-lo em voz alta**, pelo menos com pares de confiança. Grande parte do seu poder vem precisamente do silêncio à volta dele.
 - **Separar competência de certeza** — reconhecer que agir sem certeza total não é sinal de incompetência, é a natureza do próprio papel.
 - **Documentar decisões e os motivos por trás delas**, para ter provas concretas a que recorrer nos momentos em que a memória seletiva só regista os erros.
-- **Trabalhar isto com apoio profissional** ([psicologia](/psicologia)), quando o síndrome começa a paralisar decisões ou a minar de forma persistente a confiança necessária para liderar.
+- **Trabalhar isto com apoio profissional** ([psicologia](/saudemental)), quando o síndrome começa a paralisar decisões ou a minar de forma persistente a confiança necessária para liderar.
 
 O síndrome do impostor não é, por si só, sinal de fraqueza — é, muitas vezes, o preço colateral de operar de forma consistente fora da própria zona de certeza. O problema não é senti-lo; é geri-lo sozinho e em silêncio.
 

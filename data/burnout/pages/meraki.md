@@ -29,4 +29,4 @@ Se a paixão já deu lugar a esgotamento:
 
 - [Teste de burnout gratuito](/burnout/teste)  
 - [Consulta anti-burnout](/clinica-anti-burnout) · [Marcar](/marcar/burnout)  
-- [Psicologia](/psicologia) · Empresas: [programas para equipas](/clinica-anti-burnout#empresas)
+- [Psicologia](/saudemental) · Empresas: [programas para equipas](/clinica-anti-burnout#empresas)

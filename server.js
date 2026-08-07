@@ -3485,12 +3485,20 @@ app.get('/anti-burnout', (req, res) => {
     res.redirect(301, '/clinica-anti-burnout');
 });
 
+app.get('/saudemental', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'psicologia.html'), 'Error loading saude mental landing page');
+});
+
+app.get('/saudemental.html', (req, res) => {
+    res.redirect(301, '/saudemental');
+});
+
 app.get('/psicologia', (req, res) => {
-    sendHtmlNoCache(res, path.join(__dirname, 'psicologia.html'), 'Error loading psicologia landing page');
+    res.redirect(301, '/saudemental');
 });
 
 app.get('/psicologia.html', (req, res) => {
-    res.redirect(301, '/psicologia');
+    res.redirect(301, '/saudemental');
 });
 
 app.get('/triagem', (req, res) => {

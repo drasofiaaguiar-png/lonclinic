@@ -33,5 +33,5 @@ Mesmo em bons ambientes, o esgotamento individual pode já estar instalado. Ness
 
 - [Teste de burnout gratuito](/burnout/teste)  
 - [Consulta anti-burnout](/clinica-anti-burnout) · [Marcar](/marcar/burnout)  
-- [Psicologia](/psicologia) para acompanhamento contínuo  
+- [Psicologia](/saudemental) para acompanhamento contínuo  
 - Empresas: [programas anti-burnout](/clinica-anti-burnout#empresas)

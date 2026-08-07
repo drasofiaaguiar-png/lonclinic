@@ -30,7 +30,7 @@ Entre os efeitos mais comuns descritos por especialistas contam-se:
 - Problemas digestivos
 - Alterações dermatológicas associadas ao stress crónico
 
-Quando o corpo já entrou neste padrão, o autocuidado isolado raramente chega. A [avaliação clínica](/clinica-anti-burnout) ajuda a distinguir stress intenso de burnout estabelecido — e a decidir se há lugar a [acompanhamento psicológico](/psicologia).
+Quando o corpo já entrou neste padrão, o autocuidado isolado raramente chega. A [avaliação clínica](/clinica-anti-burnout) ajuda a distinguir stress intenso de burnout estabelecido — e a decidir se há lugar a [acompanhamento psicológico](/saudemental).
 
 ## Como começar a inverter o padrão
 

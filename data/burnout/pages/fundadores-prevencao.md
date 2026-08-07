@@ -16,7 +16,7 @@ Um erro comum é tratar o burnout como algo que umas férias resolvem. Ajudam, m
 
 **4. Trazer clareza financeira para fora da cabeça.** Uma revisão regular e estruturada dos números substitui a ansiedade difusa por informação concreta — e isso, por si só, já reduz uma parte significativa do desgaste mental ligado ao dinheiro.
 
-**5. Procurar apoio profissional antes de ser inevitável.** Coaching executivo, [psicoterapia](/psicologia) ou [consulta anti-burnout](/clinica-anti-burnout) não são recursos de última linha — são ferramentas estratégicas, tal como um CFO ou um mentor de produto. O maior obstáculo costuma ser o custo percebido em tempo e dinheiro; mas o custo de não o fazer — decisões piores, relações desgastadas, saúde comprometida — tende a ser bastante mais alto a médio prazo.
+**5. Procurar apoio profissional antes de ser inevitável.** Coaching executivo, [psicoterapia](/saudemental) ou [consulta anti-burnout](/clinica-anti-burnout) não são recursos de última linha — são ferramentas estratégicas, tal como um CFO ou um mentor de produto. O maior obstáculo costuma ser o custo percebido em tempo e dinheiro; mas o custo de não o fazer — decisões piores, relações desgastadas, saúde comprometida — tende a ser bastante mais alto a médio prazo.
 
 ## O papel dos investidores e das organizações de apoio a startups
 

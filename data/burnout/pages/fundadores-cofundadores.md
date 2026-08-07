@@ -23,7 +23,7 @@ Na maioria dos casos, a causa raiz não é incompatibilidade de personalidades, 
 - **Tornar explícito o que normalmente fica implícito** — visão de longo prazo, tempo que cada um está disposto a dedicar, tolerância ao risco — idealmente antes de surgirem tensões, não depois.
 - **Criar espaço regular para conversas difíceis**, em vez de esperar que surjam de forma reativa, já sob pressão.
 - **Reconhecer o padrão de perseguição-e-afastamento quando ele aparece**, nomeando-o abertamente em vez de o deixar repetir-se silenciosamente.
-- **Considerar apoio externo** (coaching para equipas fundadoras ou [psicologia](/psicologia)) quando a tensão já afeta consistentemente a capacidade de decidir em conjunto.
+- **Considerar apoio externo** (coaching para equipas fundadoras ou [psicologia](/saudemental)) quando a tensão já afeta consistentemente a capacidade de decidir em conjunto.
 
 Uma relação sólida entre cofundadores é, comprovadamente, um fator de proteção contra o esgotamento individual de cada um — mas só quando é cuidada de forma ativa, e não deixada a resolver-se sozinha.
 

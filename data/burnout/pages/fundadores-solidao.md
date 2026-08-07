@@ -22,7 +22,7 @@ Esta solidão específica não é apenas desconfortável — tem custo mensuráv
 
 - Construir relações com pares que estejam a viver desafios semelhantes — outros fundadores, não necessariamente da mesma área, mas na mesma fase de construção.
 - Separar conscientemente os espaços onde se é «fundador» dos espaços onde se é, simplesmente, a pessoa.
-- Considerar acompanhamento profissional ([psicologia](/psicologia) ou coaching) como um investimento estrutural no negócio, não como um luxo pessoal à parte.
+- Considerar acompanhamento profissional ([psicologia](/saudemental) ou coaching) como um investimento estrutural no negócio, não como um luxo pessoal à parte.
 
 Tratar a solidão do fundador como um risco de negócio — e não como uma fraqueza pessoal a esconder — é o primeiro passo para lhe dar a atenção que merece.
 

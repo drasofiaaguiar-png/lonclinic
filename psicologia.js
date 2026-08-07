@@ -8,7 +8,7 @@
             event_category: 'psicologia',
             event_label: location || 'cta',
             page_location: window.location.href,
-            page_path: '/psicologia'
+            page_path: '/saudemental'
         });
     }
 

@@ -228,7 +228,7 @@ function layoutBurnoutPage(opts) {
                 <a href="/burnout" aria-current="page">Burnout</a>
                 <a href="/burnout/teste">Teste</a>
                 <a href="/clinica-anti-burnout">Consulta</a>
-                <a href="/psicologia">Psicologia</a>
+                <a href="/saudemental">Psicologia</a>
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
@@ -244,7 +244,7 @@ function layoutBurnoutPage(opts) {
             <a href="/burnout/sintomas">Sintomas</a>
             <a href="/burnout/tratamento">Tratamento</a>
             <a href="/clinica-anti-burnout">Consulta anti-burnout</a>
-            <a href="/psicologia">Psicologia</a>
+            <a href="/saudemental">Psicologia</a>
             <a href="/patient-portal">Login</a>
             <a href="/marcar/burnout?ref=burnout-nav-mobile">Marcar consulta</a>
         </div>
@@ -295,7 +295,7 @@ function layoutBurnoutPage(opts) {
                 </div>
                 <div class="lon-footer-col">
                     <h4>Clínica</h4>
-                    <a href="/psicologia">Psicologia</a>
+                    <a href="/saudemental">Psicologia</a>
                     <a href="/faq">FAQ</a>
                     <a href="/info.html?page=contato">Contato</a>
                     <a href="/marcar/burnout">Marcar consulta</a>
