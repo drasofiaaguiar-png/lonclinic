@@ -1,29 +1,31 @@
 /* Psicologia — olive wellness layout (Lon Clinic) */
 .psi-landing {
-    --psi-olive: #5c6b3f;
-    --psi-olive-deep: #3f4a2c;
-    --psi-olive-mid: #6a7a4c;
-    --psi-olive-soft: #8a9a6e;
-    --psi-lime: #d4ef4a;
-    --psi-lime-deep: #c2dd3a;
-    --psi-cream: #f3efe4;
-    --psi-cream-2: #ebe6d8;
-    --psi-ink: #1f2418;
-    --psi-ink-soft: #3a4232;
-    --psi-muted: #5e6754;
-    --psi-line: rgba(31, 36, 24, 0.12);
-    --psi-line-strong: #c9cdb8;
-    --psi-paper: #f7f4ec;
-    --psi-mist: #faf8f2;
+    --psi-olive: #5f6642;
+    --psi-olive-deep: #4a5134;
+    --psi-olive-mid: #6f764f;
+    --psi-olive-soft: #8b926a;
+    --psi-lime: #d4f44c;
+    --psi-lime-deep: #c6e83a;
+    --psi-cream: #f3efe3;
+    --psi-cream-2: #e8e2d2;
+    --psi-ink: #2a2c1c;
+    --psi-ink-soft: #3f4230;
+    --psi-muted: #636650;
+    --psi-line: rgba(42, 44, 28, 0.12);
+    --psi-line-strong: #cdc9b4;
+    --psi-paper: #f7f4ea;
+    --psi-mist: #faf8f1;
     --psi-hero: var(--psi-olive);
     --psi-hero-deep: var(--psi-olive-deep);
     --psi-sage: var(--psi-olive-soft);
-    --psi-sage-soft: #b5c29a;
-    --psi-mint: #d8e0c8;
-    --psi-mint-hover: #c9d4b4;
+    --psi-sage-soft: #b5b98f;
+    --psi-mint: #dfe6c4;
+    --psi-mint-hover: #d0d9b2;
     --psi-signal: var(--psi-olive-deep);
-    --psi-signal-hover: #2e3620;
-    --psi-signal-soft: rgba(92, 107, 63, 0.14);
+    --psi-signal-hover: #3a4028;
+    --psi-signal-soft: rgba(95, 102, 66, 0.14);
+    --psi-radius: 28px;
+    --psi-radius-lg: 36px;
 
     --lon-bg: var(--psi-paper);
     --lon-surface: var(--psi-mist);
@@ -33,7 +35,8 @@
     --lon-primary: var(--psi-ink);
     --lon-muted: var(--psi-muted);
     --lon-border: var(--psi-line-strong);
-    --lon-shadow: 0 24px 60px rgba(40, 48, 28, 0.14);
+    --lon-shadow: 0 24px 60px rgba(40, 48, 28, 0.12);
+    --lon-font: "Sora", system-ui, sans-serif;
 
     font-family: "Sora", system-ui, sans-serif;
 }
@@ -46,9 +49,10 @@ body.psi-landing {
     contain: none;
 }
 
-body.psi-landing {
-    background: var(--psi-paper);
+body.lon-landing.psi-landing {
+    background: var(--psi-paper) !important;
     color: var(--psi-ink);
+    font-family: "Sora", system-ui, sans-serif !important;
     padding-bottom: 0;
 }
 
@@ -58,7 +62,12 @@ body.psi-landing {
 .psi-landing .psi-brand-hero,
 .psi-landing .psi-price-launch,
 .psi-landing .psi-plan-float-price,
-.psi-landing .lon-logo-name {
+.psi-landing .psi-plan-price,
+.psi-landing .lon-logo-name,
+.psi-landing .psi-quote p,
+.psi-landing .psi-stat strong,
+.psi-landing .psi-close-mark,
+.psi-landing .psi-hero-watermark {
     font-family: "Cormorant Garamond", Georgia, serif;
 }
 
@@ -83,24 +92,24 @@ body.psi-landing {
 }
 
 .psi-pill-light {
-    background: #fff;
+    background: #fffef9;
     color: var(--psi-ink);
     box-shadow: 0 10px 28px rgba(20, 28, 12, 0.12);
 }
 
 .psi-pill-light:hover {
-    background: #fff;
+    background: #fffef9;
     color: var(--psi-ink);
     box-shadow: 0 14px 36px rgba(20, 28, 12, 0.18);
 }
 
 .psi-pill-dark {
     background: var(--psi-ink);
-    color: #f4f1e8;
+    color: #f7f4ea;
 }
 
 .psi-pill-dark:hover {
-    background: #000;
+    background: #15160f;
     color: #fff;
 }
 
@@ -185,14 +194,9 @@ body.psi-landing {
     box-shadow: none;
 }
 
+.psi-nav.psi-nav.is-scrolled,
 .psi-landing .lon-nav.psi-nav.is-scrolled {
-    transform: none !important;
-    padding: 0 !important;
-    background: rgba(92, 107, 63, 0.94) !important;
-    border-bottom-color: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    box-shadow: 0 10px 28px rgba(30, 36, 18, 0.22);
+    background: rgba(95, 102, 66, 0.94) !important;
 }
 
 .psi-landing .psi-nav .lon-nav-inner,
@@ -315,26 +319,32 @@ body.psi-landing {
     min-height: 100dvh;
     display: flex;
     flex-direction: column;
-    padding: calc(var(--lon-nav-h) + 12px) 0 0;
-    color: #f4f1e8;
+    padding: calc(var(--lon-nav-h) + 8px) 0 0;
+    color: #f7f4ea;
     overflow: hidden;
     isolation: isolate;
     background:
-        radial-gradient(ellipse 80% 55% at 50% -10%, rgba(255, 255, 255, 0.12) 0%, transparent 55%),
-        linear-gradient(165deg, #6e7f4f 0%, var(--psi-olive) 45%, var(--psi-olive-deep) 100%);
+        linear-gradient(
+            180deg,
+            #6a714c 0%,
+            var(--psi-olive) 38%,
+            #7a8158 62%,
+            var(--psi-cream-2) 78%,
+            var(--psi-paper) 100%
+        );
 }
 
 .psi-hero-watermark {
     position: absolute;
     left: 50%;
-    top: 38%;
+    top: 34%;
     transform: translate(-50%, -50%);
     font-family: "Cormorant Garamond", Georgia, serif;
-    font-size: clamp(12rem, 38vw, 28rem);
+    font-size: clamp(11rem, 36vw, 26rem);
     font-weight: 600;
     line-height: 0.8;
-    letter-spacing: -0.04em;
-    color: rgba(255, 255, 255, 0.07);
+    letter-spacing: -0.05em;
+    color: rgba(255, 255, 255, 0.09);
     pointer-events: none;
     user-select: none;
     z-index: 0;
@@ -351,22 +361,31 @@ body.psi-landing {
         "core"
         "features"
         "copy";
-    gap: 28px 24px;
+    gap: 32px 24px;
     align-content: center;
-    padding: 28px 20px 48px;
+    padding: 36px 20px 56px;
     max-width: 1180px;
 }
 
 @media (min-width: 960px) {
     .psi-hero-stage {
-        grid-template-columns: minmax(180px, 0.85fr) minmax(0, 1.5fr) minmax(200px, 0.95fr);
+        grid-template-columns: minmax(200px, 1fr) minmax(0, 1.35fr) minmax(200px, 1fr);
         grid-template-areas:
-            "features core ."
-            "features copy .";
-        align-items: center;
-        gap: 20px 40px;
-        padding: 36px 20px 72px;
-        min-height: calc(100svh - var(--lon-nav-h) - 200px);
+            "features core copy"
+            ". core .";
+        align-items: start;
+        gap: 28px 48px;
+        padding: 48px 20px 64px;
+        min-height: calc(100svh - var(--lon-nav-h) - 280px);
+    }
+
+    .psi-hero-features {
+        padding-top: 28px;
+    }
+
+    .psi-hero-copy {
+        padding-top: 120px;
+        justify-self: start;
     }
 }
 
@@ -376,26 +395,26 @@ body.psi-landing {
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 18ch;
+    max-width: 16ch;
     margin: 0 auto;
 }
 
 .psi-brand-hero {
-    margin: 0 0 18px;
-    font-size: clamp(1.6rem, 3.2vw, 2.15rem);
+    margin: 0 0 20px;
+    font-size: clamp(1.75rem, 3.4vw, 2.35rem);
     font-weight: 600;
     letter-spacing: -0.02em;
-    color: #f4f1e8;
+    color: #f7f4ea;
     animation: psi-fade-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .psi-hero h1 {
-    margin: 0 0 28px;
-    font-size: clamp(2.15rem, 4.6vw, 3.55rem);
-    line-height: 1.12;
+    margin: 0 0 30px;
+    font-size: clamp(2.25rem, 4.8vw, 3.65rem);
+    line-height: 1.1;
     font-weight: 500;
-    letter-spacing: -0.02em;
-    color: #f7f4ec;
+    letter-spacing: -0.025em;
+    color: #fbf9f2;
     text-wrap: balance;
     animation: psi-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
 }
@@ -411,7 +430,7 @@ body.psi-landing {
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 22px;
+    gap: 26px;
     animation: psi-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both;
 }
 
@@ -433,17 +452,17 @@ body.psi-landing {
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    font-size: 0.9rem;
-    line-height: 1.35;
-    color: rgba(244, 241, 232, 0.88);
-    max-width: 18ch;
+    font-size: 0.92rem;
+    line-height: 1.4;
+    color: rgba(247, 244, 234, 0.9);
+    max-width: 17ch;
 }
 
 .psi-feat-icon {
     flex-shrink: 0;
     width: 28px;
     height: 28px;
-    color: rgba(244, 241, 232, 0.92);
+    color: rgba(247, 244, 234, 0.95);
 }
 
 .psi-feat-icon svg {
@@ -456,9 +475,9 @@ body.psi-landing {
     grid-area: copy;
     margin: 0;
     font-size: 0.95rem;
-    line-height: 1.65;
-    color: rgba(244, 241, 232, 0.72);
-    max-width: 34ch;
+    line-height: 1.7;
+    color: rgba(42, 44, 28, 0.72);
+    max-width: 32ch;
     justify-self: end;
     text-align: left;
     animation: psi-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) 0.24s both;
@@ -469,24 +488,26 @@ body.psi-landing {
         justify-self: center;
         text-align: center;
         max-width: 42ch;
+        color: rgba(42, 44, 28, 0.7);
     }
 }
 
 .psi-hero-photo-wrap {
     position: relative;
     z-index: 1;
-    padding: 0 16px 0;
+    padding: 0 20px 48px;
     margin-top: auto;
+    background: transparent;
 }
 
 .psi-hero-photo {
     margin: 0 auto;
-    border-radius: 40px 40px 0 0;
+    border-radius: var(--psi-radius-lg);
     overflow: hidden;
-    max-width: 1180px;
+    max-width: 1120px;
     aspect-ratio: 21 / 9;
-    min-height: 160px;
-    box-shadow: 0 -8px 40px rgba(20, 28, 12, 0.18);
+    min-height: 180px;
+    box-shadow: 0 24px 64px rgba(42, 44, 28, 0.16);
 }
 
 .psi-hero-photo img {
@@ -494,30 +515,30 @@ body.psi-landing {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 40%;
+    object-position: center 42%;
 }
 
 .psi-plan-float {
     position: relative;
     z-index: 3;
-    background: var(--psi-cream);
+    background: #fffef9;
     color: var(--psi-ink);
-    border-radius: 28px;
+    border-radius: var(--psi-radius);
     padding: 28px 26px 22px;
     max-width: 300px;
     width: calc(100% - 40px);
-    margin: -56px auto 28px;
-    box-shadow: 0 28px 60px rgba(20, 28, 12, 0.22);
+    margin: -72px auto 0;
+    box-shadow: 0 28px 60px rgba(42, 44, 28, 0.18);
     animation: psi-card-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both;
 }
 
 @media (min-width: 960px) {
     .psi-plan-float {
         position: absolute;
-        right: max(28px, calc((100% - 1180px) / 2 + 28px));
-        bottom: 12%;
+        right: max(36px, calc((100% - 1120px) / 2 + 36px));
+        bottom: 72px;
         margin: 0;
-        width: min(292px, 26vw);
+        width: min(280px, 24vw);
     }
 }
 
@@ -527,7 +548,7 @@ body.psi-landing {
     padding: 5px 11px;
     border-radius: 999px;
     background: var(--psi-ink);
-    color: #f4f1e8;
+    color: #f7f4ea;
     font-size: 0.68rem;
     font-weight: 650;
     letter-spacing: 0.06em;
@@ -536,7 +557,7 @@ body.psi-landing {
 
 .psi-plan-float h2 {
     margin: 0 0 8px;
-    font-size: 1.55rem;
+    font-size: 1.5rem;
     font-weight: 600;
     letter-spacing: -0.02em;
     color: var(--psi-ink);
@@ -545,7 +566,7 @@ body.psi-landing {
 
 .psi-plan-float-price {
     margin: 0 0 4px;
-    font-size: 2.2rem;
+    font-size: 2.15rem;
     font-weight: 600;
     letter-spacing: -0.03em;
     line-height: 1;
@@ -576,7 +597,7 @@ body.psi-landing {
 
 .psi-plan-float-art {
     margin-top: 14px;
-    opacity: 0.55;
+    opacity: 0.5;
 }
 
 .psi-plan-float-art svg {
@@ -587,8 +608,12 @@ body.psi-landing {
 
 @media (max-width: 720px) {
     .psi-hero-photo {
-        border-radius: 28px 28px 0 0;
         aspect-ratio: 16 / 10;
+        border-radius: 24px;
+    }
+
+    .psi-hero-photo-wrap {
+        padding-bottom: 36px;
     }
 }
 
@@ -955,7 +980,7 @@ body.psi-landing {
 .psi-landing .lon-footer.psi-footer {
     background: var(--psi-olive-deep);
     border-top: 0;
-    color: rgba(244, 241, 232, 0.78);
+    color: rgba(247, 244, 234, 0.78);
 }
 
 .psi-landing .psi-footer .lon-footer-brand h3,
@@ -1116,15 +1141,20 @@ html.lenis body {
 
 .psi-path-card {
     background: var(--psi-cream);
-    border-radius: 28px;
-    padding: 28px 24px 32px;
-    box-shadow: 0 16px 40px rgba(40, 48, 28, 0.06);
-    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    border-radius: var(--psi-radius-lg);
+    padding: 32px 28px 36px;
+    box-shadow: none;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, background 0.25s ease;
+}
+
+.psi-path-card:nth-child(2),
+.psi-path-card:nth-child(3) {
+    background: var(--psi-cream-2);
 }
 
 .psi-path-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 24px 52px rgba(40, 48, 28, 0.12);
+    box-shadow: 0 20px 48px rgba(42, 44, 28, 0.1);
 }
 
 .psi-path-illu {
@@ -1307,20 +1337,21 @@ html.lenis body {
 
 /* Plans — olive block */
 .psi-plans {
-    background: var(--psi-olive);
-    color: #f4f1e8;
-    padding: 110px 0;
+    background: var(--psi-olive-deep);
+    color: #f7f4ea;
+    padding: 120px 0;
 }
 
 .psi-plans .psi-center-title {
-    color: #f7f4ec;
+    color: #fbf9f2;
+    margin-bottom: 48px !important;
 }
 
 .psi-plans-grid {
     display: grid;
-    gap: 18px;
+    gap: 20px;
     grid-template-columns: 1fr;
-    max-width: 920px;
+    max-width: 880px;
     margin: 0 auto;
 }
 
@@ -1328,6 +1359,7 @@ html.lenis body {
     .psi-plans-grid {
         grid-template-columns: 1fr 1fr;
         align-items: stretch;
+        gap: 22px;
     }
 }
 
@@ -1335,12 +1367,12 @@ html.lenis body {
     position: relative;
     background: var(--psi-cream);
     color: var(--psi-ink);
-    border-radius: 28px;
-    padding: 32px 28px;
+    border-radius: var(--psi-radius-lg);
+    padding: 36px 30px;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    box-shadow: 0 24px 56px rgba(16, 24, 10, 0.18);
+    box-shadow: 0 24px 56px rgba(16, 24, 10, 0.16);
 }
 
 .psi-plan-card--hot {
@@ -1494,9 +1526,9 @@ html.lenis body {
 }
 
 .psi-stat {
-    border-radius: 22px;
-    padding: 22px 18px;
-    min-height: 132px;
+    border-radius: var(--psi-radius);
+    padding: 24px 20px;
+    min-height: 140px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -1504,8 +1536,8 @@ html.lenis body {
 }
 
 .psi-stat--olive {
-    background: var(--psi-olive);
-    color: #f4f1e8;
+    background: var(--psi-olive-deep);
+    color: #f7f4ea;
 }
 
 .psi-stat--lime {
