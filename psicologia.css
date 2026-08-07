@@ -775,10 +775,33 @@ body.psi-landing {
 }
 
 .psi-price-card-featured {
+    position: relative;
     border-color: rgba(47, 99, 66, 0.35);
     box-shadow:
         0 1px 0 rgba(255, 255, 255, 0.8) inset,
         0 24px 56px rgba(36, 54, 46, 0.14);
+}
+
+.psi-price-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--psi-ink, #2f453a);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.psi-price-save {
+    margin: 0 0 16px;
+    color: var(--psi-accent, #2f6342);
+    font-size: 0.98rem;
+    font-weight: 560;
 }
 
 .psi-price-launch {
