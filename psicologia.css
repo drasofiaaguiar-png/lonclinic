@@ -320,8 +320,7 @@ body.lon-landing.psi-landing {
 /* ── Hero ── */
 .psi-hero {
     position: relative;
-    min-height: 100svh;
-    min-height: 100dvh;
+    min-height: auto;
     display: flex;
     flex-direction: column;
     padding: calc(var(--lon-nav-h) + 8px) 0 0;
@@ -332,11 +331,34 @@ body.lon-landing.psi-landing {
         linear-gradient(
             180deg,
             #6a714c 0%,
-            var(--psi-olive) 38%,
-            #7a8158 62%,
-            var(--psi-cream-2) 78%,
+            var(--psi-olive) 42%,
+            #7a8158 68%,
+            var(--psi-cream-2) 86%,
             var(--psi-paper) 100%
         );
+}
+
+.psi-hero-photo-wrap {
+    position: relative;
+    z-index: 1;
+    padding: 8px 8px 36px;
+    margin-top: 8px;
+    background: transparent;
+    width: 100%;
+    flex: 0 0 auto;
+    min-height: 0;
+}
+
+.psi-hero-photo {
+    margin: 0 auto;
+    border-radius: var(--psi-radius-lg);
+    overflow: hidden;
+    max-width: none;
+    width: 100%;
+    height: clamp(300px, 46vh, 620px);
+    min-height: 300px;
+    aspect-ratio: auto;
+    box-shadow: 0 24px 64px rgba(42, 44, 28, 0.16);
 }
 
 .psi-hero-watermark {
@@ -358,30 +380,33 @@ body.lon-landing.psi-landing {
 
 .psi-hero-mark-beige {
     position: absolute;
-    top: clamp(56px, 8vh, 96px);
-    right: 3vw;
+    top: clamp(52px, 7vh, 88px);
+    right: 4vw;
     left: auto;
     font-family: "Cormorant Garamond", Georgia, serif;
-    font-size: clamp(2.8rem, 7.5vw, 6.5rem);
+    font-size: clamp(2.6rem, 6.5vw, 5.8rem);
     font-weight: 600;
-    line-height: 0.92;
+    line-height: 0.9;
     letter-spacing: -0.04em;
-    color: rgba(243, 239, 227, 0.52);
+    color: rgba(243, 239, 227, 0.55);
     pointer-events: none;
     user-select: none;
-    z-index: 0;
+    z-index: 1;
     white-space: normal;
     text-align: right;
-    max-width: 9ch;
+    max-width: none;
     animation: psi-mark-beige-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+}
+
+.psi-hero-mark-beige br {
+    display: block;
 }
 
 @media (max-width: 720px) {
     .psi-hero-mark-beige {
-        font-size: clamp(2.2rem, 11vw, 3.2rem);
-        max-width: 8ch;
+        font-size: clamp(2rem, 10vw, 2.8rem);
         top: calc(var(--lon-nav-h) + 4px);
-        right: 4vw;
+        right: 5vw;
     }
 }
 
@@ -394,7 +419,7 @@ body.lon-landing.psi-landing {
     max-width: 1180px;
     width: 100%;
     margin: 0 auto;
-    min-height: clamp(280px, 46vh, 480px);
+    min-height: 0;
 }
 
 .psi-hero-core {
@@ -421,19 +446,25 @@ body.lon-landing.psi-landing {
 
 .psi-hero h1 {
     margin: 0 0 28px;
-    font-size: clamp(1.9rem, 3.6vw, 3.1rem);
-    line-height: 1.2;
+    font-size: clamp(1.55rem, 2.8vw, 2.75rem);
+    line-height: 1.22;
     font-weight: 500;
     letter-spacing: -0.025em;
     color: #fbf9f2;
-    max-width: 20em;
-    width: 100%;
-    text-wrap: balance;
+    max-width: none;
+    width: auto;
     animation: psi-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
 }
 
-.psi-hero h1 br {
+.psi-hero-line {
     display: block;
+    white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+    .psi-hero h1 {
+        font-size: clamp(1.35rem, 5.2vw, 1.7rem);
+    }
 }
 
 .psi-hero-core .psi-pill {
@@ -511,33 +542,6 @@ body.lon-landing.psi-landing {
         max-width: 28ch;
         text-align: left;
     }
-}
-
-.psi-hero-photo-wrap {
-    position: relative;
-    z-index: 1;
-    padding: 0 8px 32px;
-    margin-top: 8px;
-    background: transparent;
-    width: 100%;
-    flex: 1 1 auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    min-height: clamp(280px, 42vh, 560px);
-}
-
-.psi-hero-photo {
-    margin: 0 auto;
-    border-radius: var(--psi-radius-lg);
-    overflow: hidden;
-    max-width: none;
-    width: 100%;
-    flex: 1 1 auto;
-    height: 100%;
-    min-height: clamp(280px, 42vh, 560px);
-    aspect-ratio: auto;
-    box-shadow: 0 24px 64px rgba(42, 44, 28, 0.16);
 }
 
 .psi-hero-photo img {
@@ -638,12 +642,12 @@ body.lon-landing.psi-landing {
 
 @media (max-width: 720px) {
     .psi-hero-photo {
+        height: 260px;
         min-height: 260px;
         border-radius: 24px;
     }
 
     .psi-hero-photo-wrap {
-        min-height: 260px;
         padding-bottom: 28px;
     }
 }
