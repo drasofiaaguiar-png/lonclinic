@@ -356,6 +356,24 @@ body.lon-landing.psi-landing {
     animation: psi-mark-in 1.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
+.psi-hero-mark-beige {
+    position: absolute;
+    top: clamp(64px, 9vh, 110px);
+    right: clamp(-2vw, 0px, 12px);
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(4.2rem, 13vw, 10.5rem);
+    font-weight: 600;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+    color: rgba(243, 239, 227, 0.48);
+    pointer-events: none;
+    user-select: none;
+    z-index: 0;
+    white-space: nowrap;
+    text-align: right;
+    animation: psi-mark-beige-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
+}
+
 .psi-hero-stage {
     position: relative;
     z-index: 2;
@@ -400,7 +418,7 @@ body.lon-landing.psi-landing {
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-width: 16ch;
+    max-width: min(22ch, 100%);
     margin: 0 auto;
 }
 
@@ -415,13 +433,18 @@ body.lon-landing.psi-landing {
 
 .psi-hero h1 {
     margin: 0 0 30px;
-    font-size: clamp(2.25rem, 4.8vw, 3.65rem);
-    line-height: 1.1;
+    font-size: clamp(2.1rem, 4.4vw, 3.4rem);
+    line-height: 1.12;
     font-weight: 500;
     letter-spacing: -0.025em;
     color: #fbf9f2;
+    max-width: 14em;
     text-wrap: balance;
     animation: psi-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
+}
+
+.psi-hero h1 br {
+    display: block;
 }
 
 .psi-hero-core .psi-pill {
@@ -500,18 +523,20 @@ body.lon-landing.psi-landing {
 .psi-hero-photo-wrap {
     position: relative;
     z-index: 1;
-    padding: 0 20px 48px;
+    padding: 0 8px 40px;
     margin-top: auto;
     background: transparent;
+    width: 100%;
 }
 
 .psi-hero-photo {
     margin: 0 auto;
     border-radius: var(--psi-radius-lg);
     overflow: hidden;
-    max-width: 1120px;
-    aspect-ratio: 21 / 9;
-    min-height: 180px;
+    max-width: none;
+    width: 100%;
+    aspect-ratio: 2.15 / 1;
+    min-height: clamp(260px, 38vh, 520px);
     box-shadow: 0 24px 64px rgba(42, 44, 28, 0.16);
 }
 
@@ -540,10 +565,10 @@ body.lon-landing.psi-landing {
 @media (min-width: 960px) {
     .psi-plan-float {
         position: absolute;
-        right: max(36px, calc((100% - 1120px) / 2 + 36px));
+        right: max(28px, 3vw);
         bottom: 72px;
         margin: 0;
-        width: min(280px, 24vw);
+        width: min(280px, 22vw);
     }
 }
 
@@ -613,12 +638,13 @@ body.lon-landing.psi-landing {
 
 @media (max-width: 720px) {
     .psi-hero-photo {
-        aspect-ratio: 16 / 10;
+        aspect-ratio: 16 / 11;
+        min-height: 240px;
         border-radius: 24px;
     }
 
     .psi-hero-photo-wrap {
-        padding-bottom: 36px;
+        padding-bottom: 32px;
     }
 }
 
@@ -1054,6 +1080,11 @@ body.lon-landing.psi-landing {
     to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
+@keyframes psi-mark-beige-in {
+    from { opacity: 0; transform: translate(18px, -10px); }
+    to { opacity: 1; transform: none; }
+}
+
 @keyframes psi-card-in {
     from { opacity: 0; transform: translateY(28px) scale(0.97); }
     to { opacity: 1; transform: none; }
@@ -1067,7 +1098,8 @@ body.lon-landing.psi-landing {
     .psi-hero-features,
     .psi-hero-copy,
     .psi-plan-float,
-    .psi-hero-watermark {
+    .psi-hero-watermark,
+    .psi-hero-mark-beige {
         animation: none !important;
         opacity: 1 !important;
         transform: none !important;
