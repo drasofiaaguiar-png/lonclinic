@@ -566,9 +566,9 @@ body.lon-landing.psi-landing {
     .psi-hero-aside {
         align-items: stretch;
         align-self: stretch;
-        justify-content: space-between;
-        gap: 48px;
-        padding: 4px 0 8px;
+        justify-content: flex-end;
+        gap: 28px;
+        padding: 4px 0 0;
         min-height: 0;
         height: 100%;
         overflow: visible;
@@ -581,8 +581,8 @@ body.lon-landing.psi-landing {
         left: auto;
         right: auto;
         width: 100%;
-        margin: 0;
-        order: 0;
+        margin: 0 0 -150px;
+        order: 2;
         flex: 0 0 auto;
         padding: 20px 18px 16px;
         z-index: 5;
@@ -594,7 +594,7 @@ body.lon-landing.psi-landing {
     }
 
     .psi-hero-copy {
-        order: 0;
+        order: 1;
         position: relative;
         left: auto;
         right: auto;
@@ -605,13 +605,12 @@ body.lon-landing.psi-landing {
         font-size: 0.9rem;
         line-height: 1.65;
         margin: 0;
-        margin-top: auto;
-        z-index: 1;
+        z-index: 3;
     }
 
     .psi-hero-photo-wrap {
         z-index: 2;
-        padding: 8px 28px 56px;
+        padding: 24px 28px 56px;
         margin-top: 0;
     }
 }
