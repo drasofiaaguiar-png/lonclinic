@@ -572,8 +572,8 @@ body.lon-landing.psi-landing {
 
     .psi-plan-float {
         position: absolute;
-        top: auto;
-        bottom: -170px;
+        top: 12px;
+        bottom: auto;
         right: 0;
         left: 0;
         width: auto;
@@ -598,7 +598,7 @@ body.lon-landing.psi-landing {
         left: 0;
         right: 0;
         top: auto;
-        bottom: -56px;
+        bottom: 28px;
         margin: 0;
         z-index: 3;
     }
@@ -606,7 +606,7 @@ body.lon-landing.psi-landing {
     .psi-hero-photo-wrap {
         z-index: 2;
         padding: 0 28px 56px;
-        margin-top: 0;
+        margin-top: -48px;
     }
 }
 
