@@ -320,15 +320,14 @@ body.lon-landing.psi-landing {
 /* ── Hero ── */
 .psi-hero {
     position: relative;
-    min-height: 100svh;
-    min-height: 100dvh;
+    min-height: auto;
     display: flex;
     flex-direction: column;
     padding: calc(var(--lon-nav-h) + 4px) 0 0;
     color: #f7f4ea;
-    overflow: hidden;
+    overflow: visible;
     isolation: isolate;
-    background: linear-gradient(180deg, #66704a 0%, var(--psi-olive) 55%, var(--psi-olive-deep) 100%);
+    background: linear-gradient(180deg, #66704a 0%, var(--psi-olive) 70%, var(--psi-cream-2) 100%);
 }
 
 .psi-hero-watermark {
@@ -372,7 +371,7 @@ body.lon-landing.psi-landing {
 .psi-hero-stage {
     position: relative;
     z-index: 2;
-    flex: 1 1 auto;
+    flex: 0 0 auto;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-areas:
@@ -382,7 +381,7 @@ body.lon-landing.psi-landing {
     gap: 28px;
     align-content: center;
     align-items: center;
-    padding: 24px 20px 32px;
+    padding: 24px 20px 28px;
     max-width: 1240px;
     width: 100%;
     margin: 0 auto;
@@ -484,25 +483,13 @@ body.lon-landing.psi-landing {
     text-align: center;
 }
 
-.psi-plan-float {
-    position: relative;
-    z-index: 3;
-    background: #fffef9;
-    color: var(--psi-ink);
-    border-radius: var(--psi-radius);
-    padding: 24px 22px 18px;
-    width: min(280px, 100%);
-    box-shadow: 0 28px 60px rgba(42, 44, 28, 0.2);
-    animation: psi-card-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both;
-}
-
 @media (min-width: 980px) {
     .psi-hero-stage {
-        grid-template-columns: minmax(170px, 0.85fr) minmax(0, 1.45fr) minmax(240px, 1fr);
+        grid-template-columns: minmax(170px, 0.85fr) minmax(0, 1.45fr) minmax(200px, 0.95fr);
         grid-template-areas: "features core aside";
         gap: 28px 32px;
-        padding: 20px 28px 28px;
-        min-height: clamp(360px, 52vh, 520px);
+        padding: 28px 28px 36px;
+        min-height: 0;
     }
 
     .psi-hero-features {
@@ -536,14 +523,9 @@ body.lon-landing.psi-landing {
         max-width: 28ch;
     }
 
-    .psi-plan-float {
-        width: 100%;
-        max-width: 270px;
-    }
-
     .psi-hero-mark-beige {
-        right: 18%;
-        top: 18%;
+        right: 6%;
+        top: 14%;
         z-index: 0;
         opacity: 0.85;
     }
@@ -563,21 +545,24 @@ body.lon-landing.psi-landing {
 
 .psi-hero-photo-wrap {
     position: relative;
-    z-index: 1;
-    padding: 0 16px 0;
-    margin-top: auto;
+    z-index: 2;
+    padding: 0 16px 48px;
+    margin-top: 8px;
     width: 100%;
     flex: 0 0 auto;
 }
 
 .psi-hero-photo {
     margin: 0 auto;
-    border-radius: 40px 40px 0 0;
+    border-radius: var(--psi-radius-lg);
     overflow: hidden;
     width: 100%;
     max-width: 1240px;
-    height: clamp(200px, 28vh, 320px);
-    box-shadow: 0 -8px 40px rgba(20, 28, 12, 0.18);
+    aspect-ratio: 16 / 9;
+    height: auto;
+    min-height: 280px;
+    max-height: none;
+    box-shadow: 0 24px 56px rgba(20, 28, 12, 0.2);
 }
 
 .psi-hero-photo img {
@@ -585,17 +570,46 @@ body.lon-landing.psi-landing {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 35%;
+    object-position: center 40%;
+}
+
+.psi-plan-float {
+    position: relative;
+    z-index: 3;
+    background: #fffef9;
+    color: var(--psi-ink);
+    border-radius: var(--psi-radius);
+    padding: 24px 22px 18px;
+    width: min(300px, calc(100% - 32px));
+    margin: -100px auto 0;
+    box-shadow: 0 28px 60px rgba(42, 44, 28, 0.22);
+    animation: psi-card-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both;
+}
+
+@media (min-width: 980px) {
+    .psi-plan-float {
+        position: absolute;
+        top: 28px;
+        right: max(36px, calc((100% - 1240px) / 2 + 36px));
+        bottom: auto;
+        margin: 0;
+        width: min(290px, 24vw);
+    }
 }
 
 @media (max-width: 720px) {
     .psi-hero-photo {
-        height: 180px;
-        border-radius: 28px 28px 0 0;
+        aspect-ratio: 4 / 3;
+        min-height: 220px;
+        border-radius: 24px;
     }
 
     .psi-hero-photo-wrap {
-        padding: 0 10px 0;
+        padding: 0 10px 40px;
+    }
+
+    .psi-plan-float {
+        margin-top: -72px;
     }
 }
 
