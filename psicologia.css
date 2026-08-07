@@ -194,9 +194,14 @@ body.lon-landing.psi-landing {
     box-shadow: none;
 }
 
-.psi-nav.psi-nav.is-scrolled,
 .psi-landing .lon-nav.psi-nav.is-scrolled {
+    transform: none !important;
+    padding: 0 !important;
     background: rgba(95, 102, 66, 0.94) !important;
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 10px 28px rgba(30, 36, 18, 0.22);
 }
 
 .psi-landing .psi-nav .lon-nav-inner,
