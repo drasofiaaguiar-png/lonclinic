@@ -433,13 +433,13 @@ body.lon-landing.psi-landing {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 36rem;
+    max-width: 40rem;
     margin: 0 auto;
 }
 
 .psi-brand-hero {
     margin: 0 0 14px;
-    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    font-size: clamp(1.55rem, 2.8vw, 2rem);
     font-weight: 600;
     letter-spacing: -0.02em;
     color: #f7f4ea;
@@ -448,8 +448,8 @@ body.lon-landing.psi-landing {
 
 .psi-hero h1 {
     margin: 0 0 26px;
-    font-size: clamp(1.45rem, 2.6vw, 2.55rem);
-    line-height: 1.2;
+    font-size: clamp(1.35rem, 2.2vw, 2.15rem);
+    line-height: 1.22;
     font-weight: 500;
     letter-spacing: -0.025em;
     color: #fbf9f2;
@@ -470,64 +470,88 @@ body.lon-landing.psi-landing {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 20px;
     animation: psi-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) 0.24s both;
 }
 
 .psi-hero-copy {
     margin: 0;
-    font-size: 0.92rem;
-    line-height: 1.65;
-    color: rgba(247, 244, 234, 0.78);
-    max-width: 32ch;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: rgba(247, 244, 234, 0.82);
+    max-width: 28ch;
     text-align: center;
 }
 
 @media (min-width: 980px) {
     .psi-hero-stage {
-        grid-template-columns: minmax(170px, 0.85fr) minmax(0, 1.45fr) minmax(200px, 0.95fr);
+        grid-template-columns: minmax(200px, 1fr) minmax(0, 1.35fr) minmax(200px, 1fr);
         grid-template-areas: "features core aside";
-        gap: 28px 32px;
-        padding: 28px 28px 36px;
+        gap: 0 0;
+        padding: 36px 32px 40px;
         min-height: 0;
+        align-items: center;
     }
 
     .psi-hero-features {
         flex-direction: column;
         justify-content: center;
-        align-self: center;
-        gap: 28px;
-        padding-right: 20px;
-        border-right: 1px solid rgba(247, 244, 234, 0.18);
+        align-self: stretch;
+        justify-self: stretch;
+        gap: 30px;
+        padding: 8px 28px 8px 8px;
+        border-right: 1px solid rgba(247, 244, 234, 0.2);
         max-width: none;
+        height: 100%;
     }
 
     .psi-hero-features li {
-        max-width: 15ch;
+        max-width: 16ch;
+        font-size: 0.92rem;
     }
 
     .psi-hero-core {
         align-self: center;
-        padding: 0 8px;
+        justify-self: center;
+        max-width: none;
+        padding: 8px 36px;
     }
 
     .psi-hero-aside {
         align-items: flex-start;
-        align-self: center;
-        gap: 22px;
-        padding-left: 8px;
+        align-self: stretch;
+        justify-self: stretch;
+        justify-content: center;
+        gap: 0;
+        padding: 8px 8px 8px 28px;
+        border-left: 1px solid rgba(247, 244, 234, 0.2);
+        height: 100%;
     }
 
     .psi-hero-copy {
         text-align: left;
-        max-width: 28ch;
+        max-width: 22ch;
+        font-size: 0.95rem;
+        line-height: 1.65;
     }
 
     .psi-hero-mark-beige {
-        right: 6%;
-        top: 14%;
+        right: 4%;
+        top: 10%;
         z-index: 0;
-        opacity: 0.85;
+        opacity: 0.42;
+        font-size: clamp(2.4rem, 5.5vw, 4.8rem);
+    }
+}
+
+@media (max-width: 1100px) and (min-width: 980px) {
+    .psi-hero-line {
+        white-space: normal;
+    }
+
+    .psi-hero h1 {
+        font-size: clamp(1.25rem, 2vw, 1.75rem);
     }
 }
 
@@ -584,11 +608,12 @@ body.lon-landing.psi-landing {
 @media (min-width: 980px) {
     .psi-plan-float {
         position: absolute;
-        top: 28px;
-        right: max(36px, calc((100% - 1240px) / 2 + 36px));
+        top: 24px;
+        right: max(40px, calc((100% - 1240px) / 2 + 40px));
         bottom: auto;
         margin: 0;
-        width: min(290px, 24vw);
+        width: min(260px, 22vw);
+        padding: 20px 18px 14px;
     }
 }
 
