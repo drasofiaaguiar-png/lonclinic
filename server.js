@@ -3619,7 +3619,7 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname), {
     setHeaders: (res, filePath) => {
         const base = path.basename(filePath);
-        if (base === 'guide.css' || base === 'burnout-pages.css') {
+        if (base === 'guide.css' || base === 'burnout-pages.css' || base === 'psicologia.css' || base === 'psicologia.js') {
             res.setHeader('Cache-Control', 'no-store');
             return;
         }
