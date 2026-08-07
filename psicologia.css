@@ -323,24 +323,24 @@ body.lon-landing.psi-landing {
     min-height: auto;
     display: flex;
     flex-direction: column;
-    padding: calc(var(--lon-nav-h) + 4px) 0 0;
+    padding: calc(var(--lon-nav-h) + 8px) 0 0;
     color: #f7f4ea;
     overflow: visible;
     isolation: isolate;
-    background: linear-gradient(180deg, #66704a 0%, var(--psi-olive) 70%, var(--psi-cream-2) 100%);
+    background: linear-gradient(180deg, #66704a 0%, var(--psi-olive) 62%, var(--psi-cream-2) 100%);
 }
 
 .psi-hero-watermark {
     position: absolute;
     left: 50%;
-    top: 42%;
+    top: 38%;
     transform: translate(-50%, -50%);
     font-family: "Cormorant Garamond", Georgia, serif;
-    font-size: clamp(10rem, 32vw, 22rem);
+    font-size: clamp(10rem, 30vw, 20rem);
     font-weight: 600;
     line-height: 0.8;
     letter-spacing: -0.05em;
-    color: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.07);
     pointer-events: none;
     user-select: none;
     z-index: 0;
@@ -348,40 +348,23 @@ body.lon-landing.psi-landing {
 }
 
 .psi-hero-mark-beige {
-    position: absolute;
-    top: clamp(56px, 8vh, 100px);
-    right: 4vw;
-    font-family: "Cormorant Garamond", Georgia, serif;
-    font-size: clamp(2.8rem, 7vw, 6rem);
-    font-weight: 600;
-    line-height: 0.88;
-    letter-spacing: -0.045em;
-    color: rgba(247, 244, 234, 0.55);
-    pointer-events: none;
-    user-select: none;
-    z-index: 1;
-    text-align: right;
-    animation: psi-mark-beige-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both;
-}
-
-.psi-hero-mark-beige br {
-    display: block;
+    display: none;
 }
 
 .psi-hero-stage {
     position: relative;
-    z-index: 2;
+    z-index: 3;
     flex: 0 0 auto;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-areas:
         "core"
-        "features"
-        "aside";
+        "aside"
+        "features";
     gap: 28px;
-    align-content: center;
-    align-items: center;
-    padding: 24px 20px 28px;
+    align-content: start;
+    align-items: start;
+    padding: 28px 20px 20px;
     max-width: 1240px;
     width: 100%;
     margin: 0 auto;
@@ -433,13 +416,13 @@ body.lon-landing.psi-landing {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 40rem;
+    max-width: 36rem;
     margin: 0 auto;
 }
 
 .psi-brand-hero {
-    margin: 0 0 14px;
-    font-size: clamp(1.55rem, 2.8vw, 2rem);
+    margin: 0 0 12px;
+    font-size: clamp(1.5rem, 2.6vw, 1.95rem);
     font-weight: 600;
     letter-spacing: -0.02em;
     color: #f7f4ea;
@@ -447,8 +430,8 @@ body.lon-landing.psi-landing {
 }
 
 .psi-hero h1 {
-    margin: 0 0 26px;
-    font-size: clamp(1.35rem, 2.2vw, 2.15rem);
+    margin: 0 0 24px;
+    font-size: clamp(1.4rem, 2.4vw, 2.35rem);
     line-height: 1.22;
     font-weight: 500;
     letter-spacing: -0.025em;
@@ -458,7 +441,6 @@ body.lon-landing.psi-landing {
 
 .psi-hero-line {
     display: block;
-    white-space: nowrap;
 }
 
 .psi-hero-core .psi-pill {
@@ -467,110 +449,41 @@ body.lon-landing.psi-landing {
 
 .psi-hero-aside {
     grid-area: aside;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 20px;
+    gap: 22px;
     animation: psi-fade-up 1s cubic-bezier(0.22, 1, 0.36, 1) 0.24s both;
 }
 
 .psi-hero-copy {
     margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.6;
+    font-size: 0.92rem;
+    line-height: 1.65;
     color: rgba(247, 244, 234, 0.82);
-    max-width: 28ch;
+    max-width: 32ch;
     text-align: center;
+    order: 2;
 }
 
-@media (min-width: 980px) {
-    .psi-hero-stage {
-        grid-template-columns: minmax(200px, 1fr) minmax(0, 1.35fr) minmax(200px, 1fr);
-        grid-template-areas: "features core aside";
-        gap: 0 0;
-        padding: 36px 32px 40px;
-        min-height: 0;
-        align-items: center;
-    }
-
-    .psi-hero-features {
-        flex-direction: column;
-        justify-content: center;
-        align-self: stretch;
-        justify-self: stretch;
-        gap: 30px;
-        padding: 8px 28px 8px 8px;
-        border-right: 1px solid rgba(247, 244, 234, 0.2);
-        max-width: none;
-        height: 100%;
-    }
-
-    .psi-hero-features li {
-        max-width: 16ch;
-        font-size: 0.92rem;
-    }
-
-    .psi-hero-core {
-        align-self: center;
-        justify-self: center;
-        max-width: none;
-        padding: 8px 36px;
-    }
-
-    .psi-hero-aside {
-        align-items: flex-start;
-        align-self: stretch;
-        justify-self: stretch;
-        justify-content: center;
-        gap: 0;
-        padding: 8px 8px 8px 28px;
-        border-left: 1px solid rgba(247, 244, 234, 0.2);
-        height: 100%;
-    }
-
-    .psi-hero-copy {
-        text-align: left;
-        max-width: 22ch;
-        font-size: 0.95rem;
-        line-height: 1.65;
-    }
-
-    .psi-hero-mark-beige {
-        right: 4%;
-        top: 10%;
-        z-index: 0;
-        opacity: 0.42;
-        font-size: clamp(2.4rem, 5.5vw, 4.8rem);
-    }
-}
-
-@media (max-width: 1100px) and (min-width: 980px) {
-    .psi-hero-line {
-        white-space: normal;
-    }
-
-    .psi-hero h1 {
-        font-size: clamp(1.25rem, 2vw, 1.75rem);
-    }
-}
-
-@media (max-width: 640px) {
-    .psi-hero h1 {
-        font-size: clamp(1.25rem, 4.8vw, 1.55rem);
-    }
-
-    .psi-hero-mark-beige {
-        font-size: clamp(2rem, 10vw, 2.8rem);
-        top: calc(var(--lon-nav-h) + 2px);
-        right: 4vw;
-    }
+.psi-plan-float {
+    position: relative;
+    z-index: 4;
+    order: 1;
+    background: #fffef9;
+    color: var(--psi-ink);
+    border-radius: var(--psi-radius);
+    padding: 20px 18px 14px;
+    width: min(280px, calc(100% - 24px));
+    box-shadow: 0 28px 60px rgba(42, 44, 28, 0.22);
+    animation: psi-card-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both;
 }
 
 .psi-hero-photo-wrap {
     position: relative;
-    z-index: 2;
-    padding: 0 16px 48px;
+    z-index: 1;
+    padding: 8px 16px 48px;
     margin-top: 8px;
     width: 100%;
     flex: 0 0 auto;
@@ -592,42 +505,118 @@ body.lon-landing.psi-landing {
     height: auto;
 }
 
-.psi-plan-float {
-    position: relative;
-    z-index: 3;
-    background: #fffef9;
-    color: var(--psi-ink);
-    border-radius: var(--psi-radius);
-    padding: 24px 22px 18px;
-    width: min(300px, calc(100% - 32px));
-    margin: -100px auto 0;
-    box-shadow: 0 28px 60px rgba(42, 44, 28, 0.22);
-    animation: psi-card-in 1.05s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both;
-}
-
 @media (min-width: 980px) {
+    .psi-hero {
+        min-height: 100svh;
+        min-height: 100dvh;
+    }
+
+    .psi-hero-stage {
+        grid-template-columns: 190px minmax(0, 1fr) 270px;
+        grid-template-areas: "features core aside";
+        gap: 0 40px;
+        align-items: stretch;
+        padding: 20px 48px 0;
+        min-height: clamp(360px, 48vh, 480px);
+        flex: 1 1 auto;
+        overflow: visible;
+    }
+
+    .psi-hero-features {
+        flex-direction: column;
+        justify-content: center;
+        align-self: stretch;
+        gap: 36px;
+        padding: 12px 28px 12px 0;
+        border-right: 1px solid rgba(247, 244, 234, 0.22);
+        max-width: none;
+    }
+
+    .psi-hero-features li {
+        max-width: 14ch;
+        font-size: 0.9rem;
+    }
+
+    .psi-hero-core {
+        align-self: center;
+        justify-self: start;
+        align-items: flex-start;
+        text-align: left;
+        max-width: 34rem;
+        margin: 0;
+        padding: 0 8px;
+    }
+
+    .psi-hero h1 {
+        font-size: clamp(1.7rem, 2.6vw, 2.5rem);
+        max-width: 15ch;
+    }
+
+    .psi-hero-line {
+        white-space: normal;
+    }
+
+    .psi-hero-aside {
+        align-items: stretch;
+        align-self: stretch;
+        justify-content: flex-end;
+        gap: 0;
+        padding: 0 0 210px;
+        min-height: 100%;
+        overflow: visible;
+    }
+
     .psi-plan-float {
         position: absolute;
-        top: 24px;
-        right: max(40px, calc((100% - 1240px) / 2 + 40px));
-        bottom: auto;
+        top: auto;
+        bottom: -100px;
+        right: 0;
+        left: 0;
+        width: auto;
         margin: 0;
-        width: min(260px, 22vw);
-        padding: 20px 18px 14px;
+        order: 0;
+        padding: 18px 16px 12px;
+        z-index: 5;
     }
-}
 
-@media (max-width: 720px) {
-    .psi-hero-photo {
-        border-radius: 24px;
+    .psi-plan-float-art,
+    .psi-plan-float-desc {
+        display: none;
+    }
+
+    .psi-hero-copy {
+        order: 0;
+        text-align: left;
+        max-width: 24ch;
+        font-size: 0.88rem;
+        line-height: 1.6;
+        position: relative;
+        z-index: 1;
     }
 
     .psi-hero-photo-wrap {
-        padding: 0 10px 40px;
+        z-index: 2;
+        padding: 0 28px 56px;
+        margin-top: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .psi-hero h1 {
+        font-size: clamp(1.3rem, 5vw, 1.6rem);
     }
 
     .psi-plan-float {
-        margin-top: -72px;
+        margin-bottom: -40px;
+    }
+
+    .psi-hero-photo-wrap {
+        padding: 24px 10px 40px;
+        z-index: 2;
+    }
+
+    .psi-hero-photo {
+        border-radius: 24px;
     }
 }
 
