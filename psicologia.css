@@ -514,9 +514,11 @@ body.lon-landing.psi-landing {
 
     .psi-hero-stage {
         grid-template-columns: 190px minmax(0, 1fr) 270px;
+        grid-template-rows: 1fr;
         grid-template-areas: "features core aside";
         gap: 0 40px;
         align-items: stretch;
+        align-content: stretch;
         padding: 20px 48px 0;
         min-height: clamp(360px, 48vh, 480px);
         flex: 1 1 auto;
@@ -563,7 +565,8 @@ body.lon-landing.psi-landing {
         justify-content: flex-end;
         gap: 0;
         padding: 0;
-        min-height: 100%;
+        min-height: 0;
+        height: 100%;
         overflow: visible;
     }
 
@@ -595,7 +598,7 @@ body.lon-landing.psi-landing {
         left: 0;
         right: 0;
         top: auto;
-        bottom: 28px;
+        bottom: 8px;
         margin: 0;
         z-index: 1;
     }
