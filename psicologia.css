@@ -323,7 +323,7 @@ body.lon-landing.psi-landing {
     min-height: auto;
     display: flex;
     flex-direction: column;
-    padding: calc(var(--lon-nav-h) + 8px) 0 0;
+    padding: calc(var(--lon-nav-h) + 36px) 0 0;
     color: #f7f4ea;
     overflow: visible;
     isolation: isolate;
@@ -518,7 +518,7 @@ body.lon-landing.psi-landing {
         gap: 0 56px;
         align-items: stretch;
         align-content: stretch;
-        padding: 36px 48px 40px;
+        padding: 48px 48px 40px;
         min-height: 0;
         flex: 1 1 auto;
         overflow: visible;
@@ -1166,7 +1166,7 @@ body.lon-landing.psi-landing {
 
 @media (max-width: 520px) {
     .psi-hero {
-        padding-top: calc(var(--lon-nav-h) + 8px);
+        padding-top: calc(var(--lon-nav-h) + 28px);
     }
 
     .psi-section {
