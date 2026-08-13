@@ -216,7 +216,7 @@
             <div class="dash-section">
                 <div class="dash-section-header">
                     <h2 class="dash-section-title">Send booking invitation</h2>
-                    <p class="dash-section-subtitle">Pre-book a consultation for a patient and email them a payment link + the video-room access. The slot is reserved until they pay (or the invitation is cancelled). You can set a custom price for this patient.</p>
+                    <p class="dash-section-subtitle">Pre-book a consultation for a patient. Paid invites email a Stripe payment link (slot reserved until they pay). Complimentary (€0) invites confirm the slot immediately and email the patient the confirmation + video-room link.</p>
                 </div>
                 <form class="admin-invite-form" id="inviteForm">
                     <div class="admin-invite-grid">
@@ -249,8 +249,14 @@
                         </div>
                         <div class="admin-form-group">
                             <label for="inviteCustomPrice">Custom price (€) <span style="font-weight:400;opacity:.7;">— optional</span></label>
-                            <input type="number" id="inviteCustomPrice" class="admin-input" min="0.50" step="0.01" placeholder="e.g. 45.00">
-                            <small style="display:block;margin-top:6px;opacity:.7;">Leave empty to use the catalogue price. Minimum €0.50.</small>
+                            <input type="number" id="inviteCustomPrice" class="admin-input" min="0" step="0.01" placeholder="e.g. 45.00">
+                            <small style="display:block;margin-top:6px;opacity:.7;">Leave empty for catalogue price. Use €0 or Complimentary for a free confirmed booking. Paid custom prices must be at least €0.50.</small>
+                        </div>
+                        <div class="admin-form-group">
+                            <label class="admin-override-open-label" for="inviteComplimentary" style="margin-top:24px;">
+                                <input type="checkbox" id="inviteComplimentary">
+                                <span>Complimentary (free — confirmed immediately)</span>
+                            </label>
                         </div>
                         <div class="admin-form-group admin-travel-only" id="inviteTravellersWrap" style="display:none;">
                             <label for="inviteTravellers">Travellers</label>

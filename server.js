@@ -5251,13 +5251,84 @@ async function createInvitationStripeSession(invitation, baseUrl) {
     return session;
 }
 
+function bookingDataFromComplimentaryInvitation(invitation, bookingRef) {
+    const travellerCount = Math.max(1, Math.min(4, parseInt(invitation.travellerCount, 10) || 1));
+    const passengers = [invitation.patientName];
+    for (let i = 2; i <= travellerCount; i++) {
+        passengers.push(`Traveller ${i}`);
+    }
+    return {
+        bookingRef,
+        patientName: invitation.patientName,
+        email: invitation.patientEmail,
+        service: invitation.service,
+        serviceLabel: invitation.serviceLabel || invitation.service,
+        date: invitation.dateIso,
+        time: invitation.time,
+        amount: 0,
+        currency: invitation.currency || 'eur',
+        travellerCount,
+        hasInsurance: !!invitation.hasInsurance,
+        passengers,
+        travelDest: '',
+        travelDates: '',
+        contactPhone: invitation.patientPhone || '',
+        locale: normalizePatientLocale(invitation.locale || 'pt')
+    };
+}
+
+async function confirmComplimentaryInvitation(invitation) {
+    const paymentId = `comp_${crypto.randomUUID().replace(/-/g, '')}`;
+    const shortId = paymentId.slice(-8).toUpperCase();
+    const bookingRef = `LC-${shortId}`;
+    const bookingData = bookingDataFromComplimentaryInvitation(invitation, bookingRef);
+
+    const record = {
+        bookingRef,
+        email: String(invitation.patientEmail || '').toLowerCase().trim(),
+        service: invitation.service,
+        date: invitation.dateIso,
+        time: invitation.time,
+        dateIso: invitation.dateIso,
+        patientName: invitation.patientName,
+        travellerCount: bookingData.travellerCount,
+        amount: 0,
+        currency: invitation.currency || 'eur',
+        paymentId,
+        patientLocale: normalizePatientLocale(invitation.locale || 'pt'),
+        cancelled: false,
+        rescheduleCount: 0,
+        reminderSent: false,
+        reminder1hSent: false,
+        followupSent: false,
+        createdAt: new Date().toISOString()
+    };
+
+    const inserted = await db.insertBooking(record);
+    if (!inserted) {
+        throw new Error('Booking already exists for this complimentary invitation');
+    }
+    const updated = await db.markInvitationPaid(invitation.id, bookingRef);
+
+    let emailDelivered = true;
+    let emailError = null;
+    try {
+        await sendConfirmationEmail(bookingData);
+        await sendAdminNotificationEmail(bookingData);
+    } catch (e) {
+        emailDelivered = false;
+        emailError = e.message || 'Email failed';
+        console.error('   ⚠️  Complimentary confirmation email failed:', emailError);
+    }
+
+    console.log(`   🎁 Complimentary booking ${bookingRef} confirmed for ${invitation.patientEmail}`);
+    return { bookingRef, invitation: updated || invitation, bookingData, emailDelivered, emailError };
+}
+
 // ─── API: Admin — Create booking invitation ───
 app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res) => {
     if (!usePersistentDb) {
         return res.status(503).json({ error: 'Booking invitations require a database (DATABASE_URL).' });
-    }
-    if (!isStripeConfigured) {
-        return res.status(503).json({ error: 'Stripe is not configured.' });
     }
     try {
         const {
@@ -5302,8 +5373,8 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
         const hasCustomAmount = customAmountCents != null && customAmountCents !== '';
         if (hasCustomAmount) {
             const n = Math.round(Number(customAmountCents));
-            if (!Number.isFinite(n) || n < 50) {
-                return res.status(400).json({ error: 'Custom price must be at least €0.50' });
+            if (!Number.isFinite(n) || (n !== 0 && n < 50)) {
+                return res.status(400).json({ error: 'Custom price must be €0 (complimentary) or at least €0.50' });
             }
             if (n > 500000) {
                 return res.status(400).json({ error: 'Custom price is too high' });
@@ -5322,6 +5393,11 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
             amountCents = pricing.totalCents;
         }
 
+        const isComplimentary = amountCents === 0;
+        if (!isComplimentary && !isStripeConfigured) {
+            return res.status(503).json({ error: 'Stripe is not configured.' });
+        }
+
         // Admin can book any free slot regardless of smart grouping.
         const available = await getBookableSlotsForDateIso(dateIso, null, null, true);
         if (!available.includes(normTime)) {
@@ -5337,7 +5413,9 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
             const insuranceTag = hasInsurance ? ' · Medicare' : '';
             serviceLabel = `${serviceLabel}${suffix}${insuranceTag}`;
         }
-        if (hasCustomAmount) {
+        if (isComplimentary) {
+            serviceLabel = `${serviceLabel} · cortesia`;
+        } else if (hasCustomAmount) {
             serviceLabel = `${serviceLabel} · preço especial`;
         }
 
@@ -5361,6 +5439,25 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
         });
 
         const baseUrl = getBaseUrl(req);
+        let emailDelivered = true;
+        let emailError = null;
+
+        if (isComplimentary) {
+            try {
+                const confirmed = await confirmComplimentaryInvitation(invitation);
+                invitation = confirmed.invitation;
+                emailDelivered = confirmed.emailDelivered !== false;
+                emailError = confirmed.emailError || null;
+                console.log(`   ✉️  Complimentary booking ready for ${invitation.patientEmail} (${invitation.dateIso} ${invitation.time})`);
+            } catch (e) {
+                emailError = e.message || 'Complimentary confirmation failed';
+                console.error('   ⚠️  Complimentary invitation failed:', emailError);
+                try { await db.cancelInvitation(id); } catch (cancelErr) { /* ignore */ }
+                return res.status(500).json({ error: emailError });
+            }
+            return res.json({ ok: true, complimentary: true, invitation, emailDelivered, emailError });
+        }
+
         const session = await createInvitationStripeSession(invitation, baseUrl);
 
         invitation = await db.updateInvitationStripeSession(id, {
@@ -5369,8 +5466,6 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
             expiresAt: session.expires_at ? new Date(session.expires_at * 1000) : null
         });
 
-        let emailDelivered = true;
-        let emailError = null;
         try {
             await sendInvitationEmail(invitation, session.url, baseUrl);
             console.log(`   ✉️  Invitation sent to ${invitation.patientEmail} for ${invitation.dateIso} ${invitation.time}`);
@@ -5405,6 +5500,31 @@ app.post('/api/admin/invitations/:id/resend', requireAuth, async (req, res) => {
     try {
         const invitation = await db.findInvitationById(req.params.id);
         if (!invitation) return res.status(404).json({ error: 'Invitation not found' });
+
+        const isComplimentary = Number(invitation.amountCents || 0) === 0;
+
+        if (invitation.status === 'paid' && isComplimentary) {
+            const bookingRef = invitation.bookingRef || `LC-COMP`;
+            let bookingData = bookingDataFromComplimentaryInvitation(invitation, bookingRef);
+            if (invitation.bookingRef) {
+                try {
+                    const existing = await db.findBookingByRef(invitation.bookingRef);
+                    if (existing) {
+                        bookingData = {
+                            ...bookingData,
+                            bookingRef: existing.bookingRef,
+                            date: existing.dateIso || existing.date || invitation.dateIso,
+                            time: existing.time || invitation.time,
+                            amount: existing.amount != null ? existing.amount : 0,
+                            currency: existing.currency || 'eur'
+                        };
+                    }
+                } catch (e) { /* use invitation-derived data */ }
+            }
+            await sendConfirmationEmail(bookingData);
+            return res.json({ ok: true, complimentary: true });
+        }
+
         if (invitation.status !== 'pending') {
             return res.status(409).json({ error: `Cannot resend (status: ${invitation.status})` });
         }

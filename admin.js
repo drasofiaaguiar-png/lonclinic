@@ -780,6 +780,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const inviteMedicareWrap = document.getElementById('inviteMedicareWrap');
     const inviteComputedPrice = document.getElementById('inviteComputedPrice');
     const inviteCustomPrice = document.getElementById('inviteCustomPrice');
+    const inviteComplimentary = document.getElementById('inviteComplimentary');
 
     const SERVICE_BASE_CENTS = {
         clinica_geral: 3900,
@@ -823,10 +824,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         const isTravel = inviteService.value === 'travel';
         if (inviteTravellersWrap) inviteTravellersWrap.style.display = isTravel ? '' : 'none';
         if (inviteMedicareWrap) inviteMedicareWrap.style.display = isTravel ? '' : 'none';
+        if (inviteComplimentary && inviteComplimentary.checked) {
+            if (inviteCustomPrice) {
+                inviteCustomPrice.value = '0';
+                inviteCustomPrice.disabled = true;
+            }
+            if (inviteComputedPrice) {
+                inviteComputedPrice.textContent = 'Complimentary — free, confirmed immediately';
+            }
+            return;
+        }
+        if (inviteCustomPrice) inviteCustomPrice.disabled = false;
         if (inviteComputedPrice) {
             const custom = parseCustomPriceCents();
             const cents = computeInvitePriceCents();
-            if (cents > 0) {
+            if (custom === 0) {
+                inviteComputedPrice.textContent = 'Complimentary — free, confirmed immediately';
+            } else if (cents > 0) {
                 const label = custom != null ? 'Custom total' : 'Total';
                 inviteComputedPrice.textContent = `${label}: €${(cents / 100).toFixed(2)}`;
             } else {
@@ -837,7 +851,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (inviteService) inviteService.addEventListener('change', refreshInvitePriceUI);
     if (inviteTravellers) inviteTravellers.addEventListener('change', refreshInvitePriceUI);
     if (inviteMedicare) inviteMedicare.addEventListener('change', refreshInvitePriceUI);
-    if (inviteCustomPrice) inviteCustomPrice.addEventListener('input', refreshInvitePriceUI);
+    if (inviteCustomPrice) inviteCustomPrice.addEventListener('input', () => {
+        if (inviteComplimentary && inviteCustomPrice.value !== '' && Number(inviteCustomPrice.value) === 0) {
+            inviteComplimentary.checked = true;
+        } else if (inviteComplimentary && inviteComplimentary.checked && Number(inviteCustomPrice.value) !== 0) {
+            inviteComplimentary.checked = false;
+        }
+        refreshInvitePriceUI();
+    });
+    if (inviteComplimentary) {
+        inviteComplimentary.addEventListener('change', () => {
+            if (inviteComplimentary.checked && inviteCustomPrice) {
+                inviteCustomPrice.value = '0';
+            } else if (!inviteComplimentary.checked && inviteCustomPrice && inviteCustomPrice.value === '0') {
+                inviteCustomPrice.value = '';
+            }
+            refreshInvitePriceUI();
+        });
+    }
     refreshInvitePriceUI();
 
     function setInviteError(msg) {
@@ -902,20 +933,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                     month: 'short'
                 });
             })();
-            const amount = `€${(Number(inv.amountCents || 0) / 100).toFixed(2)}`;
-            const statusLabel = {
-                pending: 'Awaiting payment',
-                paid: 'Paid',
-                cancelled: 'Cancelled',
-                expired: 'Expired'
-            }[inv.status] || inv.status;
-            const actions = inv.status === 'pending'
-                ? `
-                    <button type="button" class="btn btn-outline btn-sm" data-invite-action="copy" data-invite-url="${inv.stripeSessionUrl || ''}">Copy link</button>
+            const amountCents = Number(inv.amountCents || 0);
+            const isComplimentary = amountCents === 0;
+            const amount = isComplimentary ? 'Complimentary' : `€${(amountCents / 100).toFixed(2)}`;
+            const statusLabel = isComplimentary && inv.status === 'paid'
+                ? 'Confirmed (free)'
+                : ({
+                    pending: 'Awaiting payment',
+                    paid: 'Paid',
+                    cancelled: 'Cancelled',
+                    expired: 'Expired'
+                }[inv.status] || inv.status);
+            const paymentUrl = inv.stripeSessionUrl || '';
+            let actions = '';
+            if (inv.status === 'pending') {
+                actions = `
+                    ${paymentUrl ? `<button type="button" class="btn btn-outline btn-sm" data-invite-action="copy" data-invite-url="${paymentUrl}">Copy link</button>` : ''}
                     <button type="button" class="btn btn-outline btn-sm" data-invite-action="resend" data-invite-id="${inv.id}">Resend email</button>
                     <button type="button" class="btn btn-outline btn-sm admin-invite-cancel" data-invite-action="cancel" data-invite-id="${inv.id}">Cancel</button>
-                `
-                : '';
+                `;
+            } else if (inv.status === 'paid' && isComplimentary) {
+                actions = `
+                    <button type="button" class="btn btn-outline btn-sm" data-invite-action="resend" data-invite-id="${inv.id}">Resend email</button>
+                `;
+            }
             const travellerSuffix = inv.travellerCount && inv.travellerCount > 1
                 ? `<span>·</span><span>${inv.travellerCount} travellers${inv.hasInsurance ? ' · Medicare' : ''}</span>`
                 : (inv.hasInsurance ? `<span>·</span><span>Medicare</span>` : '');
@@ -945,7 +986,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const id = btn.getAttribute('data-invite-id');
                 if (action === 'copy') {
                     const url = btn.getAttribute('data-invite-url');
-                    if (!url) return;
+                    if (!url) {
+                        alert('No payment link for this invitation.');
+                        return;
+                    }
                     try {
                         await navigator.clipboard.writeText(url);
                         const original = btn.textContent;
@@ -957,7 +1001,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     return;
                 }
                 if (action === 'resend' || action === 'cancel') {
-                    const verb = action === 'resend' ? 'resend the invitation email' : 'cancel this invitation (releases the slot)';
+                    const verb = action === 'resend' ? 'resend the email' : 'cancel this invitation (releases the slot)';
                     if (!confirm(`Are you sure you want to ${verb}?`)) return;
                     btn.disabled = true;
                     try {
@@ -1019,9 +1063,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 hasInsurance: inviteService.value === 'travel' && !!(inviteMedicare && inviteMedicare.checked)
             };
             const customCents = parseCustomPriceCents();
-            if (customCents != null) {
-                if (customCents < 50) {
-                    setInviteError('Custom price must be at least €0.50.');
+            if (inviteComplimentary && inviteComplimentary.checked) {
+                payload.amountCents = 0;
+            } else if (customCents != null) {
+                if (customCents !== 0 && customCents < 50) {
+                    setInviteError('Custom price must be €0 (complimentary) or at least €0.50.');
                     return;
                 }
                 payload.amountCents = customCents;
@@ -1031,7 +1077,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
             inviteSubmitBtn.disabled = true;
-            inviteSubmitBtn.textContent = 'Sending…';
+            inviteSubmitBtn.textContent = payload.amountCents === 0 ? 'Confirming free booking…' : 'Sending…';
             try {
                 const res = await fetch('/api/admin/invitations', {
                     method: 'POST',
@@ -1042,11 +1088,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (!res.ok) {
                     throw new Error(data.error || `HTTP ${res.status}`);
                 }
-                inviteSubmitBtn.textContent = data.emailDelivered === false ? '⚠ Created (email failed)' : '✓ Sent';
+                const okLabel = payload.amountCents === 0 ? '✓ Free booking confirmed' : '✓ Sent';
+                inviteSubmitBtn.textContent = data.emailDelivered === false ? '⚠ Created (email failed)' : okLabel;
                 if (data.emailDelivered === false) {
                     setInviteError(`Invitation created but email could not be delivered (${data.emailError || 'unknown'}). Use “Resend email” below.`);
                 }
                 inviteForm.reset();
+                if (inviteComplimentary) inviteComplimentary.checked = false;
+                if (inviteCustomPrice) inviteCustomPrice.disabled = false;
                 inviteTime.innerHTML = '<option value="">Pick a date first…</option>';
                 refreshInvitePriceUI();
                 await loadInvitations();
