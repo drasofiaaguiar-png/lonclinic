@@ -4851,12 +4851,14 @@ async function enrichBookingsWithSource(bookings) {
         const ref = String(b.bookingRef || '').toUpperCase();
         const inv = inviteByRef.get(ref);
         const isComp = String(b.paymentId || '').startsWith('comp_');
-        const source = inv || isComp ? 'clinic' : 'patient';
+        const isManual = String(b.paymentId || '').startsWith('manual_');
+        const source = inv || isComp || isManual ? 'clinic' : 'patient';
         return {
             ...b,
             source,
             invitedBy: inv ? inv.createdBy || null : null,
-            complimentary: isComp || (inv && Number(inv.amountCents || 0) === 0)
+            complimentary: isComp || (inv && Number(inv.amountCents || 0) === 0),
+            withoutInvoice: isManual || (inv && inv.status === 'paid' && !inv.stripeSessionId && Number(inv.amountCents || 0) > 0)
         };
     });
 }
@@ -5351,12 +5353,13 @@ async function createInvitationStripeSession(invitation, baseUrl) {
     return session;
 }
 
-function bookingDataFromComplimentaryInvitation(invitation, bookingRef) {
+function bookingDataFromInvitation(invitation, bookingRef) {
     const travellerCount = Math.max(1, Math.min(4, parseInt(invitation.travellerCount, 10) || 1));
     const passengers = [invitation.patientName];
     for (let i = 2; i <= travellerCount; i++) {
         passengers.push(`Traveller ${i}`);
     }
+    const amountCents = Math.max(0, Math.round(Number(invitation.amountCents) || 0));
     return {
         bookingRef,
         patientName: invitation.patientName,
@@ -5365,7 +5368,7 @@ function bookingDataFromComplimentaryInvitation(invitation, bookingRef) {
         serviceLabel: invitation.serviceLabel || invitation.service,
         date: invitation.dateIso,
         time: invitation.time,
-        amount: 0,
+        amount: amountCents,
         currency: invitation.currency || 'eur',
         travellerCount,
         hasInsurance: !!invitation.hasInsurance,
@@ -5377,11 +5380,22 @@ function bookingDataFromComplimentaryInvitation(invitation, bookingRef) {
     };
 }
 
-async function confirmComplimentaryInvitation(invitation) {
-    const paymentId = `comp_${crypto.randomUUID().replace(/-/g, '')}`;
+/** @deprecated Use bookingDataFromInvitation */
+function bookingDataFromComplimentaryInvitation(invitation, bookingRef) {
+    return bookingDataFromInvitation(invitation, bookingRef);
+}
+
+/**
+ * Confirm an invitation immediately without Stripe (complimentary or "no invoice yet").
+ * paymentPrefix: 'comp' for free, 'manual' when price is recorded but not invoiced.
+ */
+async function confirmInvitationWithoutPayment(invitation, { paymentPrefix = 'manual' } = {}) {
+    const prefix = paymentPrefix === 'comp' ? 'comp' : 'manual';
+    const paymentId = `${prefix}_${crypto.randomUUID().replace(/-/g, '')}`;
     const shortId = paymentId.slice(-8).toUpperCase();
     const bookingRef = `LC-${shortId}`;
-    const bookingData = bookingDataFromComplimentaryInvitation(invitation, bookingRef);
+    const bookingData = bookingDataFromInvitation(invitation, bookingRef);
+    const amountCents = bookingData.amount;
 
     const record = {
         bookingRef,
@@ -5392,7 +5406,7 @@ async function confirmComplimentaryInvitation(invitation) {
         dateIso: invitation.dateIso,
         patientName: invitation.patientName,
         travellerCount: bookingData.travellerCount,
-        amount: 0,
+        amount: amountCents,
         currency: invitation.currency || 'eur',
         paymentId,
         patientLocale: normalizePatientLocale(invitation.locale || 'pt'),
@@ -5406,7 +5420,7 @@ async function confirmComplimentaryInvitation(invitation) {
 
     const inserted = await db.insertBooking(record);
     if (!inserted) {
-        throw new Error('Booking already exists for this complimentary invitation');
+        throw new Error('Booking already exists for this invitation');
     }
     const updated = await db.markInvitationPaid(invitation.id, bookingRef);
 
@@ -5418,11 +5432,16 @@ async function confirmComplimentaryInvitation(invitation) {
     } catch (e) {
         emailDelivered = false;
         emailError = e.message || 'Email failed';
-        console.error('   ⚠️  Complimentary confirmation email failed:', emailError);
+        console.error('   ⚠️  Direct confirmation email failed:', emailError);
     }
 
-    console.log(`   🎁 Complimentary booking ${bookingRef} confirmed for ${invitation.patientEmail}`);
+    const kind = amountCents === 0 ? 'Complimentary' : 'No-invoice';
+    console.log(`   ✅ ${kind} booking ${bookingRef} confirmed for ${invitation.patientEmail} (€${(amountCents / 100).toFixed(2)})`);
     return { bookingRef, invitation: updated || invitation, bookingData, emailDelivered, emailError };
+}
+
+async function confirmComplimentaryInvitation(invitation) {
+    return confirmInvitationWithoutPayment(invitation, { paymentPrefix: 'comp' });
 }
 
 // ─── API: Admin — Create booking invitation ───
@@ -5441,7 +5460,8 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
             locale,
             travellers,
             hasInsurance,
-            amountCents: customAmountCents
+            amountCents: customAmountCents,
+            confirmWithoutInvoice
         } = req.body || {};
 
         if (!patientName || !patientEmail || !service || !dateIso || !time) {
@@ -5494,7 +5514,8 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
         }
 
         const isComplimentary = amountCents === 0;
-        if (!isComplimentary && !isStripeConfigured) {
+        const skipInvoice = isComplimentary || !!confirmWithoutInvoice;
+        if (!skipInvoice && !isStripeConfigured) {
             return res.status(503).json({ error: 'Stripe is not configured.' });
         }
 
@@ -5515,6 +5536,8 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
         }
         if (isComplimentary) {
             serviceLabel = `${serviceLabel} · cortesia`;
+        } else if (confirmWithoutInvoice) {
+            serviceLabel = `${serviceLabel} · sem fatura`;
         } else if (hasCustomAmount) {
             serviceLabel = `${serviceLabel} · preço especial`;
         }
@@ -5542,20 +5565,29 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
         let emailDelivered = true;
         let emailError = null;
 
-        if (isComplimentary) {
+        if (skipInvoice) {
             try {
-                const confirmed = await confirmComplimentaryInvitation(invitation);
+                const confirmed = await confirmInvitationWithoutPayment(invitation, {
+                    paymentPrefix: isComplimentary ? 'comp' : 'manual'
+                });
                 invitation = confirmed.invitation;
                 emailDelivered = confirmed.emailDelivered !== false;
                 emailError = confirmed.emailError || null;
-                console.log(`   ✉️  Complimentary booking ready for ${invitation.patientEmail} (${invitation.dateIso} ${invitation.time})`);
+                console.log(`   ✉️  Direct booking ready for ${invitation.patientEmail} (${invitation.dateIso} ${invitation.time})`);
             } catch (e) {
-                emailError = e.message || 'Complimentary confirmation failed';
-                console.error('   ⚠️  Complimentary invitation failed:', emailError);
+                emailError = e.message || 'Direct confirmation failed';
+                console.error('   ⚠️  Direct invitation confirmation failed:', emailError);
                 try { await db.cancelInvitation(id); } catch (cancelErr) { /* ignore */ }
                 return res.status(500).json({ error: emailError });
             }
-            return res.json({ ok: true, complimentary: true, invitation, emailDelivered, emailError });
+            return res.json({
+                ok: true,
+                complimentary: isComplimentary,
+                withoutInvoice: true,
+                invitation,
+                emailDelivered,
+                emailError
+            });
         }
 
         const session = await createInvitationStripeSession(invitation, baseUrl);
@@ -5602,10 +5634,12 @@ app.post('/api/admin/invitations/:id/resend', requireAuth, async (req, res) => {
         if (!invitation) return res.status(404).json({ error: 'Invitation not found' });
 
         const isComplimentary = Number(invitation.amountCents || 0) === 0;
+        // Paid invites confirmed without Stripe (complimentary or no-invoice) — resend confirmation, not invoice.
+        const confirmedWithoutStripe = invitation.status === 'paid' && !invitation.stripeSessionId;
 
-        if (invitation.status === 'paid' && isComplimentary) {
+        if (confirmedWithoutStripe) {
             const bookingRef = invitation.bookingRef || `LC-COMP`;
-            let bookingData = bookingDataFromComplimentaryInvitation(invitation, bookingRef);
+            let bookingData = bookingDataFromInvitation(invitation, bookingRef);
             if (invitation.bookingRef) {
                 try {
                     const existing = await db.findBookingByRef(invitation.bookingRef);
@@ -5615,14 +5649,14 @@ app.post('/api/admin/invitations/:id/resend', requireAuth, async (req, res) => {
                             bookingRef: existing.bookingRef,
                             date: existing.dateIso || existing.date || invitation.dateIso,
                             time: existing.time || invitation.time,
-                            amount: existing.amount != null ? existing.amount : 0,
+                            amount: existing.amount != null ? existing.amount : bookingData.amount,
                             currency: existing.currency || 'eur'
                         };
                     }
                 } catch (e) { /* use invitation-derived data */ }
             }
             await sendConfirmationEmail(bookingData);
-            return res.json({ ok: true, complimentary: true });
+            return res.json({ ok: true, complimentary: isComplimentary, withoutInvoice: true });
         }
 
         if (invitation.status !== 'pending') {

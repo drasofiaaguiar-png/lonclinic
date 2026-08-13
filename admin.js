@@ -399,7 +399,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const badgeLabel = source === 'clinic' ? 'Clinic' : 'Patient';
                 const comp = c.complimentary
                     ? '<span class="admin-agenda-comp">Complimentary</span>'
-                    : '';
+                    : (c.withoutInvoice
+                        ? '<span class="admin-agenda-comp">No invoice</span>'
+                        : '');
                 item.innerHTML = `
                     <div class="admin-agenda-time">${escapeHtml(time)}</div>
                     <div class="admin-agenda-body">
@@ -1001,6 +1003,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const inviteComputedPrice = document.getElementById('inviteComputedPrice');
     const inviteCustomPrice = document.getElementById('inviteCustomPrice');
     const inviteComplimentary = document.getElementById('inviteComplimentary');
+    const inviteWithoutInvoice = document.getElementById('inviteWithoutInvoice');
 
     const SERVICE_BASE_CENTS = {
         clinica_geral: 3900,
@@ -1045,12 +1048,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (inviteTravellersWrap) inviteTravellersWrap.style.display = isTravel ? '' : 'none';
         if (inviteMedicareWrap) inviteMedicareWrap.style.display = isTravel ? '' : 'none';
         if (inviteComplimentary && inviteComplimentary.checked) {
+            if (inviteWithoutInvoice) inviteWithoutInvoice.checked = true;
             if (inviteCustomPrice) {
                 inviteCustomPrice.value = '0';
                 inviteCustomPrice.disabled = true;
             }
             if (inviteComputedPrice) {
-                inviteComputedPrice.textContent = 'Complimentary — free, confirmed immediately';
+                inviteComputedPrice.textContent = 'Complimentary — free, confirmed immediately (no invoice)';
             }
             return;
         }
@@ -1058,11 +1062,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (inviteComputedPrice) {
             const custom = parseCustomPriceCents();
             const cents = computeInvitePriceCents();
+            const noInvoice = inviteWithoutInvoice && inviteWithoutInvoice.checked;
             if (custom === 0) {
-                inviteComputedPrice.textContent = 'Complimentary — free, confirmed immediately';
+                inviteComputedPrice.textContent = 'Complimentary — free, confirmed immediately (no invoice)';
             } else if (cents > 0) {
                 const label = custom != null ? 'Custom total' : 'Total';
-                inviteComputedPrice.textContent = `${label}: €${(cents / 100).toFixed(2)}`;
+                const mode = noInvoice
+                    ? ' · confirm now, no payment invoice'
+                    : ' · Stripe payment link';
+                inviteComputedPrice.textContent = `${label}: €${(cents / 100).toFixed(2)}${mode}`;
             } else {
                 inviteComputedPrice.textContent = '';
             }
@@ -1083,8 +1091,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         inviteComplimentary.addEventListener('change', () => {
             if (inviteComplimentary.checked && inviteCustomPrice) {
                 inviteCustomPrice.value = '0';
+                if (inviteWithoutInvoice) inviteWithoutInvoice.checked = true;
             } else if (!inviteComplimentary.checked && inviteCustomPrice && inviteCustomPrice.value === '0') {
                 inviteCustomPrice.value = '';
+            }
+            refreshInvitePriceUI();
+        });
+    }
+    if (inviteWithoutInvoice) {
+        inviteWithoutInvoice.addEventListener('change', () => {
+            if (!inviteWithoutInvoice.checked && inviteComplimentary && inviteComplimentary.checked) {
+                inviteComplimentary.checked = false;
+                if (inviteCustomPrice && inviteCustomPrice.value === '0') inviteCustomPrice.value = '';
             }
             refreshInvitePriceUI();
         });
@@ -1155,15 +1173,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             })();
             const amountCents = Number(inv.amountCents || 0);
             const isComplimentary = amountCents === 0;
+            const withoutStripe = inv.status === 'paid' && !inv.stripeSessionId;
             const amount = isComplimentary ? 'Complimentary' : `€${(amountCents / 100).toFixed(2)}`;
-            const statusLabel = isComplimentary && inv.status === 'paid'
-                ? 'Confirmed (free)'
-                : ({
+            const statusLabel = (() => {
+                if (withoutStripe && isComplimentary) return 'Confirmed (free)';
+                if (withoutStripe) return 'Confirmed (no invoice)';
+                return ({
                     pending: 'Awaiting payment',
                     paid: 'Paid',
                     cancelled: 'Cancelled',
                     expired: 'Expired'
                 }[inv.status] || inv.status);
+            })();
             const paymentUrl = inv.stripeSessionUrl || '';
             let actions = '';
             if (inv.status === 'pending') {
@@ -1172,7 +1193,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <button type="button" class="btn btn-outline btn-sm" data-invite-action="resend" data-invite-id="${inv.id}">Resend email</button>
                     <button type="button" class="btn btn-outline btn-sm admin-invite-cancel" data-invite-action="cancel" data-invite-id="${inv.id}">Cancel</button>
                 `;
-            } else if (inv.status === 'paid' && isComplimentary) {
+            } else if (withoutStripe) {
                 actions = `
                     <button type="button" class="btn btn-outline btn-sm" data-invite-action="resend" data-invite-id="${inv.id}">Resend email</button>
                 `;
@@ -1292,12 +1313,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 payload.amountCents = customCents;
             }
+            if (inviteWithoutInvoice && inviteWithoutInvoice.checked) {
+                payload.confirmWithoutInvoice = true;
+            }
             if (!payload.patientName || !payload.patientEmail || !payload.service || !payload.dateIso || !payload.time) {
                 setInviteError('Please fill all required fields.');
                 return;
             }
+            const directConfirm = payload.amountCents === 0 || payload.confirmWithoutInvoice;
             inviteSubmitBtn.disabled = true;
-            inviteSubmitBtn.textContent = payload.amountCents === 0 ? 'Confirming free booking…' : 'Sending…';
+            inviteSubmitBtn.textContent = directConfirm
+                ? (payload.amountCents === 0 ? 'Confirming free booking…' : 'Confirming appointment…')
+                : 'Sending payment link…';
             try {
                 const res = await fetch('/api/admin/invitations', {
                     method: 'POST',
@@ -1308,13 +1335,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (!res.ok) {
                     throw new Error(data.error || `HTTP ${res.status}`);
                 }
-                const okLabel = payload.amountCents === 0 ? '✓ Free booking confirmed' : '✓ Sent';
+                const okLabel = payload.amountCents === 0
+                    ? '✓ Free booking confirmed'
+                    : (payload.confirmWithoutInvoice ? '✓ Appointment confirmed' : '✓ Invoice sent');
                 inviteSubmitBtn.textContent = data.emailDelivered === false ? '⚠ Created (email failed)' : okLabel;
                 if (data.emailDelivered === false) {
-                    setInviteError(`Invitation created but email could not be delivered (${data.emailError || 'unknown'}). Use “Resend email” below.`);
+                    setInviteError(`Created but email could not be delivered (${data.emailError || 'unknown'}). Use “Resend email” below.`);
                 }
                 inviteForm.reset();
                 if (inviteComplimentary) inviteComplimentary.checked = false;
+                if (inviteWithoutInvoice) inviteWithoutInvoice.checked = false;
                 if (inviteCustomPrice) inviteCustomPrice.disabled = false;
                 inviteTime.innerHTML = '<option value="">Pick a date first…</option>';
                 refreshInvitePriceUI();
