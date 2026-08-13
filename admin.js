@@ -231,7 +231,227 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ─── Show admin content ───
     function showAdminContent() {
         adminLogin.style.display = 'none';
-        adminContent.style.display = 'block';
+        adminContent.style.display = 'flex';
+        setAdminPanel('schedule');
+    }
+
+    // ─── Admin panels (sidebar) ───
+    const PANEL_META = {
+        schedule: { title: 'Schedule', subtitle: 'Upcoming consultations' },
+        invitations: { title: 'Invitations', subtitle: 'Send and manage booking invites' },
+        availability: { title: 'Availability', subtitle: 'Working hours, blocks & slot preview' },
+        reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' }
+    };
+    let activeAdminPanel = 'schedule';
+    let scheduleFilter = 'all';
+    let upcomingCache = { consultations: [], counts: { all: 0, clinic: 0, patient: 0 } };
+
+    const adminGreeting = document.getElementById('adminGreeting');
+    const adminUserInfo = document.getElementById('adminUserInfo');
+    const adminSidebarToggle = document.getElementById('adminSidebarToggle');
+    const adminSidebarBackdrop = document.getElementById('adminSidebarBackdrop');
+    const adminScheduleList = document.getElementById('adminScheduleList');
+    const scheduleRefreshBtn = document.getElementById('scheduleRefreshBtn');
+
+    const SERVICE_LABELS_ADMIN = {
+        clinica_geral: 'Clínica geral',
+        urgente: 'Urgente',
+        infeccao_urinaria: 'Infeção urinária',
+        travel: 'Travel medicine',
+        saude_mental: 'Saúde mental',
+        burnout: 'Burnout especializada',
+        burnout_mensal: 'Anti-burnout (semanal)',
+        burnout_programa: 'Programa anti-burnout',
+        longevidade: 'Longevidade',
+        renovacao: 'Renovação receita',
+        longevity: 'Longevity Assessment',
+        'longevity-plus': 'Longevity Plus',
+        followup: 'Follow-up'
+    };
+
+    function closeAdminSidebar() {
+        if (!adminContent) return;
+        adminContent.classList.remove('sidebar-open');
+        if (adminSidebarBackdrop) adminSidebarBackdrop.hidden = true;
+    }
+
+    function openAdminSidebar() {
+        if (!adminContent) return;
+        adminContent.classList.add('sidebar-open');
+        if (adminSidebarBackdrop) adminSidebarBackdrop.hidden = false;
+    }
+
+    function setAdminPanel(panelId) {
+        if (!PANEL_META[panelId]) panelId = 'schedule';
+        activeAdminPanel = panelId;
+
+        document.querySelectorAll('[data-admin-panel]').forEach((btn) => {
+            btn.classList.toggle('is-active', btn.getAttribute('data-admin-panel') === panelId);
+        });
+        document.querySelectorAll('[data-admin-panel-content]').forEach((el) => {
+            const match = el.getAttribute('data-admin-panel-content') === panelId;
+            el.hidden = !match;
+            el.classList.toggle('is-active', match);
+        });
+
+        const meta = PANEL_META[panelId];
+        if (adminGreeting) adminGreeting.textContent = meta.title;
+        if (adminUserInfo) adminUserInfo.textContent = meta.subtitle;
+        if (saveScheduleBtn) {
+            saveScheduleBtn.style.display = panelId === 'availability' ? '' : 'none';
+        }
+        closeAdminSidebar();
+
+        if (panelId === 'schedule') loadUpcomingConsultations();
+        if (panelId === 'invitations') loadInvitations();
+        if (panelId === 'reviews') loadAdminReviews();
+    }
+
+    document.querySelectorAll('[data-admin-panel]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            setAdminPanel(btn.getAttribute('data-admin-panel'));
+        });
+    });
+
+    if (adminSidebarToggle) {
+        adminSidebarToggle.addEventListener('click', () => {
+            if (adminContent.classList.contains('sidebar-open')) closeAdminSidebar();
+            else openAdminSidebar();
+        });
+    }
+    if (adminSidebarBackdrop) {
+        adminSidebarBackdrop.addEventListener('click', closeAdminSidebar);
+    }
+
+    function consultationDateKey(c) {
+        const iso = (c.dateIso && String(c.dateIso).trim()) || '';
+        if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
+        const fromDate = String(c.date || '');
+        const m = /^(\d{4}-\d{2}-\d{2})/.exec(fromDate);
+        return m ? m[1] : fromDate || 'unknown';
+    }
+
+    function formatAgendaDayHeading(dateKey) {
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateKey);
+        if (!m) return dateKey;
+        const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+        return d.toLocaleDateString(undefined, {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        });
+    }
+
+    function updateScheduleCounts(counts) {
+        const c = counts || { all: 0, clinic: 0, patient: 0 };
+        const elAll = document.getElementById('schedCountAll');
+        const elClinic = document.getElementById('schedCountClinic');
+        const elPatient = document.getElementById('schedCountPatient');
+        if (elAll) elAll.textContent = String(c.all || 0);
+        if (elClinic) elClinic.textContent = String(c.clinic || 0);
+        if (elPatient) elPatient.textContent = String(c.patient || 0);
+    }
+
+    function renderUpcomingConsultations(list, counts) {
+        if (!adminScheduleList) return;
+        updateScheduleCounts(counts);
+        const filtered = scheduleFilter === 'clinic' || scheduleFilter === 'patient'
+            ? (list || []).filter((c) => c.source === scheduleFilter)
+            : (list || []);
+
+        if (!filtered.length) {
+            const emptyMsg = scheduleFilter === 'clinic'
+                ? 'No clinic-scheduled consultations upcoming.'
+                : scheduleFilter === 'patient'
+                    ? 'No patient-booked consultations upcoming.'
+                    : 'No upcoming consultations.';
+            adminScheduleList.innerHTML = `<p class="admin-empty-list">${emptyMsg}</p>`;
+            return;
+        }
+
+        const byDay = new Map();
+        filtered.forEach((c) => {
+            const key = consultationDateKey(c);
+            if (!byDay.has(key)) byDay.set(key, []);
+            byDay.get(key).push(c);
+        });
+
+        const dayKeys = Array.from(byDay.keys()).sort();
+        adminScheduleList.innerHTML = '';
+        dayKeys.forEach((dayKey) => {
+            const section = document.createElement('section');
+            section.className = 'admin-agenda-day';
+            const heading = document.createElement('h3');
+            heading.className = 'admin-agenda-day-heading';
+            heading.textContent = formatAgendaDayHeading(dayKey);
+            section.appendChild(heading);
+
+            byDay.get(dayKey).forEach((c) => {
+                const item = document.createElement('article');
+                const source = c.source === 'clinic' ? 'clinic' : 'patient';
+                item.className = `admin-agenda-item is-${source}`;
+                const time = String(c.time || '').slice(0, 5) || '—';
+                const service = SERVICE_LABELS_ADMIN[c.service] || c.service || 'Consultation';
+                const name = c.patientName || '—';
+                const email = c.email || '';
+                const ref = c.bookingRef || '';
+                const badgeLabel = source === 'clinic' ? 'Clinic' : 'Patient';
+                const comp = c.complimentary
+                    ? '<span class="admin-agenda-comp">Complimentary</span>'
+                    : '';
+                item.innerHTML = `
+                    <div class="admin-agenda-time">${escapeHtml(time)}</div>
+                    <div class="admin-agenda-body">
+                        <p class="admin-agenda-name">${escapeHtml(name)}</p>
+                        <div class="admin-agenda-meta">
+                            <span>${escapeHtml(service)}</span>
+                            ${email ? `<span>${escapeHtml(email)}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="admin-agenda-side">
+                        <span class="admin-source-badge is-${source}">${badgeLabel}</span>
+                        ${comp}
+                        ${ref ? `<span class="admin-agenda-ref">${escapeHtml(ref)}</span>` : ''}
+                        ${ref ? `<a class="btn btn-outline btn-sm" href="/clinic-portal">Open notes</a>` : ''}
+                    </div>
+                `;
+                section.appendChild(item);
+            });
+            adminScheduleList.appendChild(section);
+        });
+    }
+
+    async function loadUpcomingConsultations() {
+        if (!adminScheduleList) return;
+        try {
+            const res = await fetch('/api/admin/upcoming-consultations');
+            if (res.status === 401) return;
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            upcomingCache = {
+                consultations: data.consultations || [],
+                counts: data.counts || { all: 0, clinic: 0, patient: 0 }
+            };
+            renderUpcomingConsultations(upcomingCache.consultations, upcomingCache.counts);
+        } catch (err) {
+            console.error('Load upcoming consultations:', err);
+            adminScheduleList.innerHTML = '<p class="admin-empty-list">Could not load schedule.</p>';
+        }
+    }
+
+    document.querySelectorAll('[data-schedule-filter]').forEach((chip) => {
+        chip.addEventListener('click', () => {
+            scheduleFilter = chip.getAttribute('data-schedule-filter') || 'all';
+            document.querySelectorAll('[data-schedule-filter]').forEach((c) => {
+                c.classList.toggle('is-active', c === chip);
+            });
+            renderUpcomingConsultations(upcomingCache.consultations, upcomingCache.counts);
+        });
+    });
+
+    if (scheduleRefreshBtn) {
+        scheduleRefreshBtn.addEventListener('click', () => loadUpcomingConsultations());
     }
 
     // ─── Login handler ───
@@ -1099,6 +1319,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 inviteTime.innerHTML = '<option value="">Pick a date first…</option>';
                 refreshInvitePriceUI();
                 await loadInvitations();
+                loadUpcomingConsultations();
                 setTimeout(() => { inviteSubmitBtn.textContent = 'Create & send invitation'; inviteSubmitBtn.disabled = false; }, 2500);
             } catch (err) {
                 console.error('Create invitation error:', err);

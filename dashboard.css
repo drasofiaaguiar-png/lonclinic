@@ -1769,3 +1769,359 @@ body.dash-portal .dash-stat-card {
     padding: 6px 12px;
     font-size: 0.8125rem;
 }
+
+/* ========================================
+   ADMIN SHELL — sidebar + schedule agenda
+======================================== */
+.dash-content.admin-shell {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    max-width: 1180px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    min-height: calc(100vh - 180px);
+}
+
+.admin-sidebar {
+    flex: 0 0 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px 16px;
+    background: rgba(15, 23, 42, 0.03);
+    border-right: 1px solid var(--border-subtle);
+}
+
+.admin-sidebar-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0 10px 16px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.admin-sidebar-brand-name {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+.admin-sidebar-brand-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.admin-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.admin-nav-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 12px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.admin-nav-item:hover {
+    background: rgba(197, 199, 44, 0.12);
+    color: var(--text-primary);
+}
+
+.admin-nav-item.is-active {
+    background: rgba(197, 199, 44, 0.22);
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+a.admin-nav-link {
+    margin-top: 8px;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 14px;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.admin-sidebar-foot {
+    padding: 12px 10px 0;
+    border-top: 1px solid var(--border-subtle);
+    margin-top: 8px;
+}
+
+.admin-main {
+    flex: 1;
+    min-width: 0;
+    padding: 28px 28px 40px;
+    overflow-x: hidden;
+}
+
+.admin-sidebar-toggle {
+    display: none;
+    margin-right: 8px;
+}
+
+.admin-panel[hidden] {
+    display: none !important;
+}
+
+.admin-shell .dash-header-left {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+}
+
+.admin-shell .dash-header-left .dash-greeting,
+.admin-shell .dash-header-left .dash-email {
+    width: 100%;
+}
+
+.admin-shell .dash-header-left .admin-sidebar-toggle {
+    width: auto;
+}
+
+.admin-schedule-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.admin-schedule-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-elevated, var(--bg-card));
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.admin-filter-chip span {
+    font-size: 0.75rem;
+    font-weight: 600;
+    opacity: 0.75;
+}
+
+.admin-filter-chip:hover {
+    border-color: var(--border-light);
+    color: var(--text-primary);
+}
+
+.admin-filter-chip.is-active {
+    border-color: rgba(197, 199, 44, 0.55);
+    background: rgba(197, 199, 44, 0.18);
+    color: var(--text-primary);
+}
+
+.admin-schedule-list {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.admin-agenda-day {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-agenda-day-heading {
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.admin-agenda-item {
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    gap: 12px 16px;
+    align-items: start;
+    padding: 14px 16px;
+    background: var(--bg-elevated, rgba(15, 23, 42, 0.02));
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+}
+
+.admin-agenda-item.is-clinic {
+    border-left: 3px solid rgba(197, 199, 44, 0.85);
+}
+
+.admin-agenda-item.is-patient {
+    border-left: 3px solid rgba(59, 130, 246, 0.65);
+}
+
+.admin-agenda-time {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.admin-agenda-body {
+    min-width: 0;
+}
+
+.admin-agenda-name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 4px;
+}
+
+.admin-agenda-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+
+.admin-agenda-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.admin-source-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.admin-source-badge.is-clinic {
+    background: rgba(197, 199, 44, 0.2);
+    color: #5a5c12;
+}
+
+.admin-source-badge.is-patient {
+    background: rgba(59, 130, 246, 0.15);
+    color: #1d4ed8;
+}
+
+.admin-agenda-ref {
+    font-size: 0.75rem;
+    font-family: ui-monospace, monospace;
+    color: var(--text-muted);
+}
+
+.admin-agenda-comp {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    opacity: 0.85;
+}
+
+.admin-sidebar-backdrop {
+    display: none;
+}
+
+@media (max-width: 900px) {
+    .dash-page:has(.admin-shell) {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .dash-content.admin-shell {
+        position: relative;
+        border-radius: var(--radius-lg);
+        min-height: calc(100vh - 140px);
+    }
+
+    .admin-sidebar-toggle {
+        display: inline-flex;
+    }
+
+    .admin-sidebar {
+        position: absolute;
+        z-index: 40;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: min(260px, 86vw);
+        transform: translateX(-105%);
+        transition: transform 0.2s ease;
+        box-shadow: none;
+        background: var(--bg-elevated, #fff);
+    }
+
+    .admin-shell.sidebar-open .admin-sidebar {
+        transform: translateX(0);
+        box-shadow: 8px 0 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .admin-sidebar-backdrop {
+        display: block;
+        position: absolute;
+        inset: 0;
+        z-index: 30;
+        background: rgba(0, 0, 0, 0.35);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+    }
+
+    .admin-shell.sidebar-open .admin-sidebar-backdrop {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .admin-main {
+        padding: 20px 16px 32px;
+    }
+
+    .admin-agenda-item {
+        grid-template-columns: 56px 1fr;
+    }
+
+    .admin-agenda-side {
+        grid-column: 1 / -1;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+}

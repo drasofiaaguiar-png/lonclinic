@@ -4801,6 +4801,106 @@ app.get('/api/clinic/bookings', requireAuth, async (req, res) => {
     }
 });
 
+function bookingSortKey(b) {
+    const iso = (b.dateIso && String(b.dateIso).trim()) || '';
+    const datePart = /^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso : String(b.date || '');
+    const timePart = String(b.time || '00:00').slice(0, 5);
+    return `${datePart}T${timePart}`;
+}
+
+function isBookingUpcoming(b, now = new Date()) {
+    if (b.cancelled) return false;
+    const key = bookingSortKey(b);
+    const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(key);
+    if (!m) {
+        try {
+            const end = new Date(b.date);
+            end.setHours(23, 59, 59, 999);
+            return end >= now;
+        } catch {
+            return false;
+        }
+    }
+    const when = new Date(
+        Number(m[1]),
+        Number(m[2]) - 1,
+        Number(m[3]),
+        Number(m[4]),
+        Number(m[5]),
+        0,
+        0
+    );
+    return when >= now;
+}
+
+async function enrichBookingsWithSource(bookings) {
+    const inviteByRef = new Map();
+    if (usePersistentDb) {
+        try {
+            const invitations = await db.listInvitations(500);
+            for (const inv of invitations) {
+                if (inv.bookingRef) {
+                    inviteByRef.set(String(inv.bookingRef).toUpperCase(), inv);
+                }
+            }
+        } catch (e) {
+            console.warn('enrichBookingsWithSource: invitations lookup failed:', e.message);
+        }
+    }
+    return bookings.map((b) => {
+        const ref = String(b.bookingRef || '').toUpperCase();
+        const inv = inviteByRef.get(ref);
+        const isComp = String(b.paymentId || '').startsWith('comp_');
+        const source = inv || isComp ? 'clinic' : 'patient';
+        return {
+            ...b,
+            source,
+            invitedBy: inv ? inv.createdBy || null : null,
+            complimentary: isComp || (inv && Number(inv.amountCents || 0) === 0)
+        };
+    });
+}
+
+// ─── API: Admin — Upcoming consultations schedule ───
+app.get('/api/admin/upcoming-consultations', requireAuth, async (req, res) => {
+    try {
+        const sortFn = (a, b) => bookingSortKey(a).localeCompare(bookingSortKey(b));
+        let bookings;
+        if (usePersistentDb) {
+            bookings = await db.findAllBookingsWithClinicalNotes();
+        } else {
+            bookings = bookingsStore.map((booking) => {
+                const notes = clinicalNotesStore.find((n) => n.bookingRef === booking.bookingRef);
+                return {
+                    ...booking,
+                    hasClinicalNotes: !!notes,
+                    clinicalNotes: notes || null
+                };
+            });
+        }
+
+        const now = new Date();
+        const enriched = await enrichBookingsWithSource(bookings);
+        const upcoming = enriched.filter((b) => isBookingUpcoming(b, now)).sort(sortFn);
+        const sourceFilter = String(req.query.source || 'all').toLowerCase();
+        const filtered = sourceFilter === 'clinic' || sourceFilter === 'patient'
+            ? upcoming.filter((b) => b.source === sourceFilter)
+            : upcoming;
+
+        res.json({
+            consultations: filtered,
+            counts: {
+                all: upcoming.length,
+                clinic: upcoming.filter((b) => b.source === 'clinic').length,
+                patient: upcoming.filter((b) => b.source === 'patient').length
+            }
+        });
+    } catch (err) {
+        console.error('GET /api/admin/upcoming-consultations:', err.message);
+        res.status(500).json({ error: 'Failed to load upcoming consultations' });
+    }
+});
+
 // ─── API: Clinic — Get booking by reference ───
 app.get('/api/clinic/booking/:bookingRef', requireAuth, async (req, res) => {
     const bookingRef = req.params.bookingRef.toUpperCase();
