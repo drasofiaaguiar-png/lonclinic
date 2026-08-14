@@ -998,6 +998,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const scheduleNextSubmit = document.getElementById('scheduleNextSubmit');
     const scheduleNextSendInvoice = document.getElementById('scheduleNextSendInvoice');
     const scheduleNextNote = document.getElementById('scheduleNextNote');
+    const scheduleNextPrice = document.getElementById('scheduleNextPrice');
     let scheduleNextContext = null;
 
     function refreshScheduleNextNote() {
@@ -1031,6 +1032,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         scheduleNextContext = null;
         if (scheduleNextForm) scheduleNextForm.reset();
         if (scheduleNextSendInvoice) scheduleNextSendInvoice.checked = false;
+        if (scheduleNextPrice) scheduleNextPrice.value = '';
         if (scheduleNextSuggestions) scheduleNextSuggestions.innerHTML = '';
         setScheduleNextError('');
         refreshScheduleNextNote();
@@ -1118,6 +1120,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (scheduleNextSuggestions) scheduleNextSuggestions.innerHTML = '';
         if (scheduleNextSourceRef) scheduleNextSourceRef.value = bookingRef;
         if (scheduleNextProfessional) scheduleNextProfessional.value = '';
+        if (scheduleNextPrice) scheduleNextPrice.value = '';
         if (scheduleNextDate) scheduleNextDate.value = '';
         if (scheduleNextTime) scheduleNextTime.innerHTML = '<option value="">Loading…</option>';
         try {
@@ -1177,6 +1180,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                 patientType: p.patientType || 'regular',
                 sendInvoice: !!(scheduleNextSendInvoice && scheduleNextSendInvoice.checked)
             };
+            if (scheduleNextPrice) {
+                const raw = String(scheduleNextPrice.value || '').trim();
+                if (raw !== '') {
+                    const euros = Number(raw.replace(',', '.'));
+                    if (!Number.isFinite(euros) || euros < 0) {
+                        setScheduleNextError('Enter a valid custom price (or leave empty).');
+                        return;
+                    }
+                    const cents = Math.round(euros * 100);
+                    if (cents !== 0 && cents < 50 && payload.sendInvoice) {
+                        setScheduleNextError('Invoiced custom price must be €0 or at least €0.50.');
+                        return;
+                    }
+                    payload.amountCents = cents;
+                }
+            }
             if (!payload.patientEmail || !payload.patientName) {
                 setScheduleNextError('Missing patient — close and open again from the patient row (+).');
                 return;

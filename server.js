@@ -5831,8 +5831,18 @@ app.post('/api/admin/patients/schedule-next', requireAuth, express.json(), async
         }
 
         let amountCents = 0;
-        if (body.amountCents != null && body.amountCents !== '') {
-            amountCents = Math.max(0, Math.round(Number(body.amountCents)));
+        const hasCustomAmount = body.amountCents != null && body.amountCents !== '';
+        if (hasCustomAmount) {
+            amountCents = Math.round(Number(body.amountCents));
+            if (!Number.isFinite(amountCents) || amountCents < 0) {
+                return res.status(400).json({ error: 'Invalid custom price' });
+            }
+            if (amountCents !== 0 && amountCents < 50) {
+                return res.status(400).json({ error: 'Custom price must be €0 or at least €0.50' });
+            }
+            if (amountCents > 500000) {
+                return res.status(400).json({ error: 'Custom price is too high' });
+            }
         } else {
             try {
                 const pricing = computeCheckoutTotalCents({
@@ -5853,10 +5863,12 @@ app.post('/api/admin/patients/schedule-next', requireAuth, express.json(), async
         const id = crypto.randomUUID();
         const token = crypto.randomBytes(24).toString('hex');
         let serviceLabel = invitationServiceLabel(service, locale);
-        if (!wantInvoice) {
-            serviceLabel = amountCents === 0
-                ? `${serviceLabel} · cortesia`
-                : `${serviceLabel} · sem fatura`;
+        if (amountCents === 0) {
+            serviceLabel = `${serviceLabel} · cortesia`;
+        } else if (!wantInvoice) {
+            serviceLabel = `${serviceLabel} · sem fatura`;
+        } else if (hasCustomAmount) {
+            serviceLabel = `${serviceLabel} · preço especial`;
         }
 
         let invitation = await db.insertInvitation({
