@@ -1723,6 +1723,9 @@ body.dash-portal .dash-stat-card {
     justify-content: center;
     padding: 24px;
 }
+.dash-modal[hidden] {
+    display: none !important;
+}
 .dash-modal-backdrop {
     position: absolute;
     inset: 0;

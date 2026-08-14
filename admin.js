@@ -1010,9 +1010,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function closeScheduleNextModal() {
-        if (scheduleNextModal) scheduleNextModal.hidden = true;
+        if (scheduleNextModal) {
+            scheduleNextModal.hidden = true;
+            scheduleNextModal.setAttribute('hidden', '');
+        }
         scheduleNextContext = null;
+        if (scheduleNextForm) scheduleNextForm.reset();
+        if (scheduleNextSuggestions) scheduleNextSuggestions.innerHTML = '';
+        setScheduleNextError('');
     }
+
+    // Never show on load (CSS display:flex was overriding the hidden attribute)
+    closeScheduleNextModal();
 
     async function loadScheduleNextTimes(preferredTime) {
         if (!scheduleNextTime || !scheduleNextDate) return;
@@ -1084,18 +1093,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function openScheduleNextModal(bookingRef) {
-        if (!scheduleNextModal) return;
+        if (!scheduleNextModal || !bookingRef) return;
         setScheduleNextError('');
+        scheduleNextContext = null;
         scheduleNextModal.hidden = false;
+        scheduleNextModal.removeAttribute('hidden');
         if (scheduleNextPatientLabel) scheduleNextPatientLabel.textContent = 'Loading suggestion…';
         if (scheduleNextSuggestions) scheduleNextSuggestions.innerHTML = '';
         if (scheduleNextSourceRef) scheduleNextSourceRef.value = bookingRef;
+        if (scheduleNextProfessional) scheduleNextProfessional.value = '';
+        if (scheduleNextDate) scheduleNextDate.value = '';
+        if (scheduleNextTime) scheduleNextTime.innerHTML = '<option value="">Loading…</option>';
         try {
             const res = await fetch(`/api/admin/patients/${encodeURIComponent(bookingRef)}/suggest-next`);
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
             scheduleNextContext = data;
             const p = data.patient || {};
+            if (!p.email) throw new Error('Missing patient');
             if (scheduleNextPatientLabel) {
                 scheduleNextPatientLabel.textContent = `${p.patientName || '—'} · ${p.email || ''}${
                     p.visitFrequency ? ` · ${freqLabel(p.visitFrequency)}` : ''
@@ -1145,6 +1160,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 visitFrequency: p.visitFrequency || '',
                 patientType: p.patientType || 'regular'
             };
+            if (!payload.patientEmail || !payload.patientName) {
+                setScheduleNextError('Missing patient — close and open again from the patient row (+).');
+                return;
+            }
             if (!payload.dateIso || !payload.time) {
                 setScheduleNextError('Pick a date and time.');
                 return;
