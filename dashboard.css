@@ -2750,7 +2750,7 @@ a.admin-nav-link {
     }
 }
 
-/* Psychologist applications */
+/* Psychologist applications — compact rows + dropdown */
 .admin-psych-filters {
     display: flex;
     flex-wrap: wrap;
@@ -2767,56 +2767,104 @@ a.admin-nav-link {
 .admin-psych-list {
     display: flex;
     flex-direction: column;
-    gap: 14px;
-}
-
-.admin-psych-card {
-    background: var(--surface, #fff);
+    gap: 0;
     border: 1px solid var(--border-subtle);
     border-radius: 12px;
-    padding: 16px 18px;
+    overflow: hidden;
+    background: var(--surface, #fff);
 }
 
-.admin-psych-card-top {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
+.admin-psych-row {
+    border-bottom: 1px solid var(--border-subtle);
 }
 
-.admin-psych-name {
-    margin: 0 0 4px;
-    font-size: 1.05rem;
+.admin-psych-row:last-child {
+    border-bottom: 0;
 }
 
-.admin-psych-meta {
-    margin: 0;
-    font-size: 0.8125rem;
-    color: var(--text-muted);
+.admin-psych-summary {
+    display: grid;
+    grid-template-columns: minmax(140px, 1.2fr) minmax(160px, 1.4fr) minmax(110px, 1fr) auto 28px;
+    gap: 10px 14px;
+    align-items: center;
+    padding: 12px 14px;
+    cursor: pointer;
+    list-style: none;
+    font-size: 0.875rem;
 }
 
-.admin-psych-badges {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: flex-start;
+.admin-psych-summary::-webkit-details-marker {
+    display: none;
 }
 
-.admin-psych-badge {
-    display: inline-block;
+.admin-psych-summary::marker {
+    content: '';
+}
+
+.admin-psych-row[open] .admin-psych-summary {
+    background: rgba(47, 99, 66, 0.05);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.admin-psych-col-name {
+    font-weight: 600;
+    color: var(--text-primary, #1c2a24);
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.admin-psych-col-email,
+.admin-psych-col-phone {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text-secondary, #445);
+}
+
+.admin-psych-col-email a,
+.admin-psych-col-phone a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.admin-psych-col-email a:hover,
+.admin-psych-col-phone a:hover {
+    color: #255235;
+    text-decoration: underline;
+}
+
+.admin-psych-col-status {
+    justify-self: end;
     font-size: 0.72rem;
     font-weight: 600;
-    padding: 4px 10px;
+    padding: 3px 9px;
     border-radius: 999px;
-    background: rgba(47, 99, 66, 0.1);
-    color: #255235;
-}
-
-.admin-psych-badge.is-status {
     background: rgba(28, 42, 36, 0.08);
     color: var(--text-secondary, #334);
     text-transform: lowercase;
+}
+
+.admin-psych-chevron {
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid #6b7280;
+    border-bottom: 2px solid #6b7280;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+    justify-self: end;
+}
+
+.admin-psych-row[open] .admin-psych-chevron {
+    transform: rotate(-135deg);
+    margin-top: 4px;
+}
+
+.admin-psych-body {
+    padding: 14px 16px 16px;
+    background: #fafaf8;
 }
 
 .admin-psych-grid {
@@ -2840,7 +2888,7 @@ a.admin-nav-link {
     grid-column: 1 / -1;
 }
 
-.admin-psych-details {
+.admin-psych-raw {
     margin: 8px 0 12px;
     font-size: 0.8125rem;
 }
@@ -2850,7 +2898,7 @@ a.admin-nav-link {
     max-height: 240px;
     overflow: auto;
     padding: 10px 12px;
-    background: #f7f7f5;
+    background: #f1f1ee;
     border-radius: 8px;
     font-size: 0.72rem;
     white-space: pre-wrap;
@@ -2876,6 +2924,22 @@ a.admin-nav-link {
 }
 
 @media (max-width: 800px) {
+    .admin-psych-summary {
+        grid-template-columns: 1fr 28px;
+        grid-template-rows: auto auto auto;
+    }
+    .admin-psych-col-name { grid-column: 1; }
+    .admin-psych-col-email,
+    .admin-psych-col-phone,
+    .admin-psych-col-status {
+        grid-column: 1;
+        justify-self: start;
+        white-space: normal;
+    }
+    .admin-psych-chevron {
+        grid-column: 2;
+        grid-row: 1;
+    }
     .admin-psych-grid {
         grid-template-columns: 1fr;
     }

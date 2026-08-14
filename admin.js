@@ -2380,54 +2380,57 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         adminPsychologistsList.innerHTML = '';
         list.forEach((a) => {
-            const item = document.createElement('article');
-            item.className = 'admin-psych-card';
+            const item = document.createElement('details');
+            item.className = 'admin-psych-row';
             item.dataset.id = a.id;
             const p = a.payload || {};
+            const email = a.email || '';
+            const phone = a.phone || p.telefone || '';
             item.innerHTML = `
-                <div class="admin-psych-card-top">
-                    <div>
-                        <h3 class="admin-psych-name">${escapeHtml(a.name || '—')}</h3>
-                        <p class="admin-psych-meta">
-                            <a href="mailto:${escapeHtml(a.email || '')}">${escapeHtml(a.email || '—')}</a>
-                            · ${escapeHtml(a.phone || '—')}
-                            · ${escapeHtml(a.localidade || p.localidade || '—')}
-                        </p>
+                <summary class="admin-psych-summary">
+                    <span class="admin-psych-col admin-psych-col-name">${escapeHtml(a.name || '—')}</span>
+                    <span class="admin-psych-col admin-psych-col-email">
+                        ${email ? `<a href="mailto:${escapeHtml(email)}" onclick="event.stopPropagation()">${escapeHtml(email)}</a>` : '—'}
+                    </span>
+                    <span class="admin-psych-col admin-psych-col-phone">
+                        ${phone ? `<a href="tel:${escapeHtml(phone)}" onclick="event.stopPropagation()">${escapeHtml(phone)}</a>` : '—'}
+                    </span>
+                    <span class="admin-psych-col admin-psych-col-status">${escapeHtml(a.status || 'novo')}</span>
+                    <span class="admin-psych-chevron" aria-hidden="true"></span>
+                </summary>
+                <div class="admin-psych-body">
+                    <div class="admin-psych-grid">
+                        <div><strong>Score</strong> ${escapeHtml(String(a.score ?? 0))} · ${escapeHtml(a.scoreBand || '—')}</div>
+                        <div><strong>Localidade</strong> ${escapeHtml(a.localidade || p.localidade || '—')}</div>
+                        <div><strong>OPP</strong> ${escapeHtml(a.cedulaOpp || p.cedula_opp || '—')}</div>
+                        <div><strong>Experiência</strong> ${escapeHtml(a.anosClinica || p.anos_clinica || '—')}</div>
+                        <div><strong>Online</strong> ${escapeHtml(a.experienciaOnline || p.experiencia_online || '—')}</div>
+                        <div><strong>Horas</strong> ${escapeHtml(a.horasIniciais || p.horas_iniciais || '—')}</div>
+                        <div><strong>Idiomas</strong> ${escapeHtml(joinList(a.idiomas || p.idiomas))}</div>
+                        <div><strong>Dias</strong> ${escapeHtml(joinList(a.diasSemana || p.dias_semana))}</div>
+                        <div class="admin-psych-span"><strong>Áreas</strong> ${escapeHtml(joinList(a.areasClinicas || p.areas_clinicas))}</div>
+                        <div class="admin-psych-span"><strong>Horários</strong> ${escapeHtml(a.horariosFixos || p.horarios_fixos || '—')}</div>
+                        <div class="admin-psych-span"><strong>Recebido</strong> ${escapeHtml(formatPsychDate(a.createdAt))}${a.cvFilename ? ` · CV: ${escapeHtml(a.cvFilename)}` : ''}</div>
                     </div>
-                    <div class="admin-psych-badges">
-                        <span class="admin-psych-badge">${escapeHtml(String(a.score ?? 0))} · ${escapeHtml(a.scoreBand || '—')}</span>
-                        <span class="admin-psych-badge is-status">${escapeHtml(a.status || 'novo')}</span>
+                    <details class="admin-psych-raw">
+                        <summary>Ver resposta completa (JSON)</summary>
+                        <pre class="admin-psych-payload">${escapeHtml(JSON.stringify(p, null, 2))}</pre>
+                    </details>
+                    <div class="admin-psych-actions">
+                        <label>
+                            Status
+                            <select class="admin-select admin-psych-status" data-psych-id="${escapeHtml(a.id)}">
+                                ${PSYCH_STATUS_OPTIONS.map((s) =>
+                                    `<option value="${s}" ${a.status === s ? 'selected' : ''}>${s}</option>`
+                                ).join('')}
+                            </select>
+                        </label>
+                        <label class="admin-psych-notes-label">
+                            Notas
+                            <textarea class="admin-input admin-psych-notes" data-psych-id="${escapeHtml(a.id)}" rows="2" maxlength="4000">${escapeHtml(a.adminNotes || '')}</textarea>
+                        </label>
+                        <button type="button" class="btn btn-primary btn-sm admin-psych-save" data-psych-id="${escapeHtml(a.id)}">Guardar</button>
                     </div>
-                </div>
-                <div class="admin-psych-grid">
-                    <div><strong>OPP</strong> ${escapeHtml(a.cedulaOpp || p.cedula_opp || '—')}</div>
-                    <div><strong>Experiência</strong> ${escapeHtml(a.anosClinica || p.anos_clinica || '—')}</div>
-                    <div><strong>Online</strong> ${escapeHtml(a.experienciaOnline || p.experiencia_online || '—')}</div>
-                    <div><strong>Horas</strong> ${escapeHtml(a.horasIniciais || p.horas_iniciais || '—')}</div>
-                    <div><strong>Idiomas</strong> ${escapeHtml(joinList(a.idiomas || p.idiomas))}</div>
-                    <div><strong>Dias</strong> ${escapeHtml(joinList(a.diasSemana || p.dias_semana))}</div>
-                    <div class="admin-psych-span"><strong>Áreas</strong> ${escapeHtml(joinList(a.areasClinicas || p.areas_clinicas))}</div>
-                    <div class="admin-psych-span"><strong>Horários</strong> ${escapeHtml(a.horariosFixos || p.horarios_fixos || '—')}</div>
-                    <div class="admin-psych-span"><strong>Recebido</strong> ${escapeHtml(formatPsychDate(a.createdAt))}${a.cvFilename ? ` · CV: ${escapeHtml(a.cvFilename)}` : ''}</div>
-                </div>
-                <details class="admin-psych-details">
-                    <summary>Ver candidatura completa</summary>
-                    <pre class="admin-psych-payload">${escapeHtml(JSON.stringify(p, null, 2))}</pre>
-                </details>
-                <div class="admin-psych-actions">
-                    <label>
-                        Status
-                        <select class="admin-select admin-psych-status" data-psych-id="${escapeHtml(a.id)}">
-                            ${PSYCH_STATUS_OPTIONS.map((s) =>
-                                `<option value="${s}" ${a.status === s ? 'selected' : ''}>${s}</option>`
-                            ).join('')}
-                        </select>
-                    </label>
-                    <label class="admin-psych-notes-label">
-                        Notas
-                        <textarea class="admin-input admin-psych-notes" data-psych-id="${escapeHtml(a.id)}" rows="2" maxlength="4000">${escapeHtml(a.adminNotes || '')}</textarea>
-                    </label>
-                    <button type="button" class="btn btn-primary btn-sm admin-psych-save" data-psych-id="${escapeHtml(a.id)}">Guardar</button>
                 </div>
             `;
             adminPsychologistsList.appendChild(item);
