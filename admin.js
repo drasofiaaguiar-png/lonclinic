@@ -242,7 +242,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         finances: { title: 'Finances', subtitle: 'Monthly revenue by patient' },
         invitations: { title: 'Invitations', subtitle: 'Send and manage booking invites' },
         availability: { title: 'Availability', subtitle: 'Working hours, blocks & slot preview' },
-        reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' }
+        reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' },
+        psychologists: { title: 'Psychologists', subtitle: 'Candidaturas e bolsa de psicólogos' }
     };
     let activeAdminPanel = 'schedule';
     let scheduleFilter = 'all';
@@ -309,6 +310,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (panelId === 'finances') loadFinancesPanel();
         if (panelId === 'invitations') loadInvitations();
         if (panelId === 'reviews') loadAdminReviews();
+        if (panelId === 'psychologists') loadAdminPsychologists();
     }
 
     document.querySelectorAll('[data-admin-panel]').forEach((btn) => {
@@ -1258,38 +1260,58 @@ document.addEventListener('DOMContentLoaded', async () => {
             ? {
                 paidCents: visible[0].paidCents,
                 unpaidCents: visible[0].unpaidCents,
-                complimentaryCount: visible[0].complimentaryCount
+                complimentaryCount: visible[0].complimentaryCount,
+                stripeFeeCents: visible[0].stripeFeeCents,
+                breakdown: visible[0].breakdown
             }
             : (financesCache.totals || { paidCents: 0, unpaidCents: 0, complimentaryCount: 0 });
+        const bd = totals.breakdown || {};
+        const stripePct = (bd.rates && bd.rates.stripePercent) != null ? bd.rates.stripePercent : 1.5;
+        const stripeFixed = (bd.rates && bd.rates.stripeFixedCents) != null ? bd.rates.stripeFixedCents : 25;
 
         financesSummary.innerHTML = `
             <div class="admin-finances-cards">
                 <div class="admin-finances-card is-paid">
-                    <span class="admin-finances-card-label">Paid revenue</span>
+                    <span class="admin-finances-card-label">Receita bruta</span>
                     <strong class="admin-finances-card-value">${formatEuroFromCents(totals.paidCents)}</strong>
                 </div>
+                <div class="admin-finances-card is-stripe">
+                    <span class="admin-finances-card-label">Stripe (~${stripePct}% + €${(stripeFixed / 100).toFixed(2)})</span>
+                    <strong class="admin-finances-card-value">${formatEuroFromCents(bd.stripeFeeCents || totals.stripeFeeCents || 0)}</strong>
+                </div>
+                <div class="admin-finances-card is-irs">
+                    <span class="admin-finances-card-label">IRS (25%)</span>
+                    <strong class="admin-finances-card-value">${formatEuroFromCents(bd.irsCents || 0)}</strong>
+                </div>
+                <div class="admin-finances-card is-ss">
+                    <span class="admin-finances-card-label">SS (15%)</span>
+                    <strong class="admin-finances-card-value">${formatEuroFromCents(bd.ssCents || 0)}</strong>
+                </div>
+                <div class="admin-finances-card is-net">
+                    <span class="admin-finances-card-label">Líquido</span>
+                    <strong class="admin-finances-card-value">${formatEuroFromCents(bd.netCents || 0)}</strong>
+                </div>
                 <div class="admin-finances-card is-unpaid">
-                    <span class="admin-finances-card-label">Unpaid (owed)</span>
+                    <span class="admin-finances-card-label">Por receber</span>
                     <strong class="admin-finances-card-value">${formatEuroFromCents(totals.unpaidCents)}</strong>
                 </div>
-                <div class="admin-finances-card is-free">
-                    <span class="admin-finances-card-label">Complimentary</span>
-                    <strong class="admin-finances-card-value">${totals.complimentaryCount || 0}</strong>
-                </div>
             </div>
+            <p class="admin-finances-footnote">IRS e SS calculados sobre a receita bruta paga. Stripe só em pagamentos online (não em marcações manuais sem fatura). Valores estimativos.</p>
         `;
 
         if (!visible.length) {
-            financesMonthsList.innerHTML = '<p class="admin-empty-list">No paid consultations yet.</p>';
+            financesMonthsList.innerHTML = '<p class="admin-empty-list">Ainda não há consultas pagas.</p>';
             return;
         }
 
         financesMonthsList.innerHTML = visible.map((m) => {
+            const mbd = m.breakdown || {};
             const patientsHtml = (m.patients || []).map((p) => {
+                const pbd = p.breakdown || {};
                 const consultLines = (p.consultations || []).map((c) => {
                     const svc = SERVICE_LABELS_ADMIN[c.service] || c.service || '—';
                     const when = c.dateIso || c.date || '—';
-                    const status = c.complimentary ? 'Free' : (c.paid ? 'Paid' : 'Unpaid');
+                    const status = c.complimentary ? 'Cortesia' : (c.paid ? 'Pago' : 'Por receber');
                     return `<li><span>${escapeHtml(when)}${c.time ? ` · ${escapeHtml(c.time)}` : ''} · ${escapeHtml(svc)}</span><span>${c.complimentary ? '—' : formatEuroFromCents(c.amountCents)} · ${status}</span></li>`;
                 }).join('');
                 return `
@@ -1300,9 +1322,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 <div class="admin-finances-patient-email">${escapeHtml(p.email || '')}</div>
                             </div>
                             <div class="admin-finances-patient-totals">
-                                <strong>${formatEuroFromCents(p.paidCents)}</strong>
-                                ${p.unpaidCents ? `<span class="is-unpaid">owed ${formatEuroFromCents(p.unpaidCents)}</span>` : ''}
+                                <strong>${formatEuroFromCents(p.paidCents)} bruto</strong>
+                                <span class="is-net">líq. ${formatEuroFromCents(pbd.netCents || 0)}</span>
+                                ${p.unpaidCents ? `<span class="is-unpaid">deve ${formatEuroFromCents(p.unpaidCents)}</span>` : ''}
                             </div>
+                        </div>
+                        <div class="admin-finances-patient-breakdown">
+                            <span>Stripe ${formatEuroFromCents(pbd.stripeFeeCents || 0)}</span>
+                            <span>IRS ${formatEuroFromCents(pbd.irsCents || 0)}</span>
+                            <span>SS ${formatEuroFromCents(pbd.ssCents || 0)}</span>
                         </div>
                         <ul class="admin-finances-patient-list">${consultLines}</ul>
                     </div>`;
@@ -1313,12 +1341,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="admin-finances-month-head">
                         <h3>${escapeHtml(m.label)}</h3>
                         <div class="admin-finances-month-totals">
-                            <span class="is-paid">${formatEuroFromCents(m.paidCents)} paid</span>
-                            ${m.unpaidCents ? `<span class="is-unpaid">${formatEuroFromCents(m.unpaidCents)} unpaid</span>` : ''}
-                            <span class="is-muted">${m.paidConsultations || 0} paid consults</span>
+                            <span class="is-paid">${formatEuroFromCents(m.paidCents)} bruto</span>
+                            <span class="is-stripe">Stripe ${formatEuroFromCents(mbd.stripeFeeCents || 0)}</span>
+                            <span class="is-irs">IRS ${formatEuroFromCents(mbd.irsCents || 0)}</span>
+                            <span class="is-ss">SS ${formatEuroFromCents(mbd.ssCents || 0)}</span>
+                            <span class="is-net">${formatEuroFromCents(mbd.netCents || 0)} líquido</span>
                         </div>
                     </div>
-                    ${patientsHtml || '<p class="admin-empty-list">No patients this month.</p>'}
+                    ${patientsHtml || '<p class="admin-empty-list">Sem pacientes neste mês.</p>'}
                 </section>`;
         }).join('');
     }
@@ -2308,6 +2338,171 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Load admin reviews:', err);
             adminReviewsList.innerHTML = '<p class="admin-empty-list">Could not load reviews.</p>';
         }
+    }
+
+    // ─── Psychologists (recrutamento) ───
+    const adminPsychologistsList = document.getElementById('adminPsychologistsList');
+    const psychologistsSearch = document.getElementById('psychologistsSearch');
+    const psychologistsStatusFilter = document.getElementById('psychologistsStatusFilter');
+    const psychologistsBandFilter = document.getElementById('psychologistsBandFilter');
+    const psychologistsRefreshBtn = document.getElementById('psychologistsRefreshBtn');
+    let psychologistsCache = [];
+
+    const PSYCH_STATUS_OPTIONS = [
+        'novo',
+        'prioritario',
+        'shortlist',
+        'entrevista',
+        'aceite',
+        'bolsa',
+        'rejeitado',
+        'eliminado'
+    ];
+
+    function formatPsychDate(iso) {
+        if (!iso) return '—';
+        try {
+            return new Date(iso).toLocaleString('pt-PT', { timeZone: 'Europe/Lisbon' });
+        } catch (e) {
+            return String(iso);
+        }
+    }
+
+    function joinList(arr) {
+        return Array.isArray(arr) && arr.length ? arr.join(', ') : '—';
+    }
+
+    function renderAdminPsychologists(list) {
+        if (!adminPsychologistsList) return;
+        if (!list.length) {
+            adminPsychologistsList.innerHTML = '<p class="admin-empty-list">No psychologist applications yet.</p>';
+            return;
+        }
+        adminPsychologistsList.innerHTML = '';
+        list.forEach((a) => {
+            const item = document.createElement('article');
+            item.className = 'admin-psych-card';
+            item.dataset.id = a.id;
+            const p = a.payload || {};
+            item.innerHTML = `
+                <div class="admin-psych-card-top">
+                    <div>
+                        <h3 class="admin-psych-name">${escapeHtml(a.name || '—')}</h3>
+                        <p class="admin-psych-meta">
+                            <a href="mailto:${escapeHtml(a.email || '')}">${escapeHtml(a.email || '—')}</a>
+                            · ${escapeHtml(a.phone || '—')}
+                            · ${escapeHtml(a.localidade || p.localidade || '—')}
+                        </p>
+                    </div>
+                    <div class="admin-psych-badges">
+                        <span class="admin-psych-badge">${escapeHtml(String(a.score ?? 0))} · ${escapeHtml(a.scoreBand || '—')}</span>
+                        <span class="admin-psych-badge is-status">${escapeHtml(a.status || 'novo')}</span>
+                    </div>
+                </div>
+                <div class="admin-psych-grid">
+                    <div><strong>OPP</strong> ${escapeHtml(a.cedulaOpp || p.cedula_opp || '—')}</div>
+                    <div><strong>Experiência</strong> ${escapeHtml(a.anosClinica || p.anos_clinica || '—')}</div>
+                    <div><strong>Online</strong> ${escapeHtml(a.experienciaOnline || p.experiencia_online || '—')}</div>
+                    <div><strong>Horas</strong> ${escapeHtml(a.horasIniciais || p.horas_iniciais || '—')}</div>
+                    <div><strong>Idiomas</strong> ${escapeHtml(joinList(a.idiomas || p.idiomas))}</div>
+                    <div><strong>Dias</strong> ${escapeHtml(joinList(a.diasSemana || p.dias_semana))}</div>
+                    <div class="admin-psych-span"><strong>Áreas</strong> ${escapeHtml(joinList(a.areasClinicas || p.areas_clinicas))}</div>
+                    <div class="admin-psych-span"><strong>Horários</strong> ${escapeHtml(a.horariosFixos || p.horarios_fixos || '—')}</div>
+                    <div class="admin-psych-span"><strong>Recebido</strong> ${escapeHtml(formatPsychDate(a.createdAt))}${a.cvFilename ? ` · CV: ${escapeHtml(a.cvFilename)}` : ''}</div>
+                </div>
+                <details class="admin-psych-details">
+                    <summary>Ver candidatura completa</summary>
+                    <pre class="admin-psych-payload">${escapeHtml(JSON.stringify(p, null, 2))}</pre>
+                </details>
+                <div class="admin-psych-actions">
+                    <label>
+                        Status
+                        <select class="admin-select admin-psych-status" data-psych-id="${escapeHtml(a.id)}">
+                            ${PSYCH_STATUS_OPTIONS.map((s) =>
+                                `<option value="${s}" ${a.status === s ? 'selected' : ''}>${s}</option>`
+                            ).join('')}
+                        </select>
+                    </label>
+                    <label class="admin-psych-notes-label">
+                        Notas
+                        <textarea class="admin-input admin-psych-notes" data-psych-id="${escapeHtml(a.id)}" rows="2" maxlength="4000">${escapeHtml(a.adminNotes || '')}</textarea>
+                    </label>
+                    <button type="button" class="btn btn-primary btn-sm admin-psych-save" data-psych-id="${escapeHtml(a.id)}">Guardar</button>
+                </div>
+            `;
+            adminPsychologistsList.appendChild(item);
+        });
+    }
+
+    async function loadAdminPsychologists() {
+        if (!adminPsychologistsList) return;
+        adminPsychologistsList.innerHTML = '<p class="admin-empty-list">Loading…</p>';
+        try {
+            const params = new URLSearchParams();
+            if (psychologistsStatusFilter && psychologistsStatusFilter.value) {
+                params.set('status', psychologistsStatusFilter.value);
+            }
+            if (psychologistsBandFilter && psychologistsBandFilter.value) {
+                params.set('band', psychologistsBandFilter.value);
+            }
+            if (psychologistsSearch && psychologistsSearch.value.trim()) {
+                params.set('q', psychologistsSearch.value.trim());
+            }
+            const qs = params.toString();
+            const res = await fetch('/api/admin/psychologists' + (qs ? `?${qs}` : ''));
+            if (res.status === 401) return;
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            psychologistsCache = data.applications || [];
+            renderAdminPsychologists(psychologistsCache);
+        } catch (err) {
+            console.error('Load admin psychologists:', err);
+            adminPsychologistsList.innerHTML = '<p class="admin-empty-list">Could not load applications. Is the database configured?</p>';
+        }
+    }
+
+    async function savePsychologistApplication(id) {
+        const statusEl = document.querySelector(`.admin-psych-status[data-psych-id="${id}"]`);
+        const notesEl = document.querySelector(`.admin-psych-notes[data-psych-id="${id}"]`);
+        try {
+            const res = await fetch(`/api/admin/psychologists/${encodeURIComponent(id)}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    status: statusEl ? statusEl.value : undefined,
+                    adminNotes: notesEl ? notesEl.value : undefined
+                })
+            });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            await loadAdminPsychologists();
+        } catch (err) {
+            console.error('Save psychologist:', err);
+            alert('Não foi possível guardar.');
+        }
+    }
+
+    if (psychologistsRefreshBtn) {
+        psychologistsRefreshBtn.addEventListener('click', () => loadAdminPsychologists());
+    }
+    if (psychologistsStatusFilter) {
+        psychologistsStatusFilter.addEventListener('change', () => loadAdminPsychologists());
+    }
+    if (psychologistsBandFilter) {
+        psychologistsBandFilter.addEventListener('change', () => loadAdminPsychologists());
+    }
+    let psychSearchTimer = null;
+    if (psychologistsSearch) {
+        psychologistsSearch.addEventListener('input', () => {
+            clearTimeout(psychSearchTimer);
+            psychSearchTimer = setTimeout(() => loadAdminPsychologists(), 280);
+        });
+    }
+    if (adminPsychologistsList) {
+        adminPsychologistsList.addEventListener('click', (e) => {
+            const btn = e.target.closest('.admin-psych-save');
+            if (!btn) return;
+            savePsychologistApplication(btn.getAttribute('data-psych-id'));
+        });
     }
 
     // ─── Initialize ───

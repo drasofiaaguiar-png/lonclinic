@@ -272,6 +272,7 @@ const usePersistentDb = db.isDatabaseEnabled();
 const bookingsStore = []; // memory fallback only
 const reviewsStore = []; // memory fallback for patient reviews
 const clinicalNotesStore = []; // memory fallback only
+const psychologistApplicationsStore = []; // memory fallback for recrutamento
 
 /* ========================================
    SCHEDULE/AVAILABILITY STORE
@@ -4122,24 +4123,70 @@ app.post('/api/recrutamento/psicologia', rateLimitRecrutamentoPsicologia, (req, 
 
         const scoring = scorePsychologistApplication(payload, hasCv);
         const cvFilename = String(cv.originalname || 'cv.pdf').slice(0, 180);
+        const applicationId = crypto.randomUUID();
+        const status = scoring.eligible === false
+            ? 'eliminado'
+            : scoring.band === 'prioritario'
+                ? 'prioritario'
+                : scoring.band === 'shortlist'
+                    ? 'shortlist'
+                    : 'novo';
+        const applicationRecord = {
+            id: applicationId,
+            name: payload.nome,
+            email: payload.email,
+            phone: payload.telefone,
+            score: scoring.score,
+            scoreBand: scoring.band,
+            scoreBreakdown: scoring.breakdown,
+            eligible: scoring.eligible,
+            eliminationReasons: scoring.elimination_reasons,
+            payload,
+            cvFilename,
+            status
+        };
 
         if (usePersistentDb) {
             try {
-                await db.insertPsychologistApplication({
-                    id: crypto.randomUUID(),
-                    name: payload.nome,
-                    email: payload.email,
-                    phone: payload.telefone,
-                    score: scoring.score,
-                    scoreBand: scoring.band,
-                    eligible: scoring.eligible,
-                    eliminationReasons: scoring.elimination_reasons,
-                    payload,
-                    cvFilename
-                });
+                await db.insertPsychologistApplication(applicationRecord);
             } catch (dbErr) {
                 console.error('POST /api/recrutamento/psicologia DB:', dbErr.message);
             }
+        } else {
+            psychologistApplicationsStore.unshift({
+                id: applicationId,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                name: applicationRecord.name,
+                email: applicationRecord.email,
+                phone: applicationRecord.phone || '',
+                localidade: payload.localidade || '',
+                pais: payload.pais || '',
+                cedulaOpp: payload.cedula_opp || '',
+                grauAcademico: payload.grau_academico || '',
+                anosClinica: payload.anos_clinica || '',
+                anosIndividuais: payload.anos_individuais || '',
+                experienciaOnline: payload.experiencia_online || '',
+                areasClinicas: Array.isArray(payload.areas_clinicas) ? payload.areas_clinicas : [],
+                populacoes: Array.isArray(payload.populacoes) ? payload.populacoes : [],
+                idiomas: Array.isArray(payload.idiomas) ? payload.idiomas : [],
+                modelos: Array.isArray(payload.modelos) ? payload.modelos : [],
+                diasSemana: Array.isArray(payload.dias_semana) ? payload.dias_semana : [],
+                horasIniciais: payload.horas_iniciais || '',
+                horariosFixos: payload.horarios_fixos || '',
+                disponibilidadeEstavel: payload.disponibilidade_estavel || '',
+                bolsaAutorizacao: payload.bolsa_autorizacao || '',
+                score: scoring.score,
+                scoreBand: scoring.band,
+                scoreBreakdown: scoring.breakdown || {},
+                eligible: scoring.eligible,
+                eliminationReasons: scoring.elimination_reasons || [],
+                status,
+                adminNotes: '',
+                cvFilename,
+                payload
+            });
+            if (psychologistApplicationsStore.length > 500) psychologistApplicationsStore.length = 500;
         }
 
         const sent = await sendRecrutamentoPsicologiaEmail({
@@ -4156,7 +4203,8 @@ app.post('/api/recrutamento/psicologia', rateLimitRecrutamentoPsicologia, (req, 
 
         return res.json({
             success: true,
-            message: 'Candidatura enviada com sucesso.'
+            message: 'Candidatura enviada com sucesso.',
+            id: applicationId
         });
     });
 });
@@ -4633,6 +4681,79 @@ app.get('/api/admin/reviews', requireAuth, async (req, res) => {
     } catch (err) {
         console.error('GET /api/admin/reviews:', err.message);
         res.status(500).json({ error: 'Failed to load reviews' });
+    }
+});
+
+// ─── API: Admin — psychologist applications (recrutamento) ───
+app.get('/api/admin/psychologists', requireAuth, async (req, res) => {
+    try {
+        const status = req.query.status ? String(req.query.status) : '';
+        const band = req.query.band ? String(req.query.band) : '';
+        const q = req.query.q ? String(req.query.q) : '';
+        if (usePersistentDb) {
+            const applications = await db.listPsychologistApplications({
+                status: status || undefined,
+                band: band || undefined,
+                q: q || undefined,
+                limit: 200
+            });
+            return res.json({ applications });
+        }
+        let list = psychologistApplicationsStore.slice();
+        if (status) list = list.filter((a) => a.status === status);
+        if (band) list = list.filter((a) => a.scoreBand === band);
+        if (q.trim()) {
+            const needle = q.trim().toLowerCase();
+            list = list.filter(
+                (a) =>
+                    String(a.name || '').toLowerCase().includes(needle) ||
+                    String(a.email || '').toLowerCase().includes(needle) ||
+                    String(a.cedulaOpp || '').toLowerCase().includes(needle)
+            );
+        }
+        res.json({ applications: list.slice(0, 200) });
+    } catch (err) {
+        console.error('GET /api/admin/psychologists:', err.message);
+        res.status(500).json({ error: 'Failed to load psychologist applications' });
+    }
+});
+
+app.get('/api/admin/psychologists/:id', requireAuth, async (req, res) => {
+    try {
+        const id = String(req.params.id || '');
+        if (usePersistentDb) {
+            const application = await db.findPsychologistApplicationById(id);
+            if (!application) return res.status(404).json({ error: 'Not found' });
+            return res.json({ application });
+        }
+        const application = psychologistApplicationsStore.find((a) => a.id === id);
+        if (!application) return res.status(404).json({ error: 'Not found' });
+        res.json({ application });
+    } catch (err) {
+        console.error('GET /api/admin/psychologists/:id:', err.message);
+        res.status(500).json({ error: 'Failed to load application' });
+    }
+});
+
+app.patch('/api/admin/psychologists/:id', requireAuth, express.json(), async (req, res) => {
+    try {
+        const id = String(req.params.id || '');
+        const status = req.body?.status != null ? String(req.body.status) : undefined;
+        const adminNotes = req.body?.adminNotes != null ? String(req.body.adminNotes) : undefined;
+        if (usePersistentDb) {
+            const application = await db.updatePsychologistApplication(id, { status, adminNotes });
+            if (!application) return res.status(404).json({ error: 'Not found' });
+            return res.json({ application });
+        }
+        const idx = psychologistApplicationsStore.findIndex((a) => a.id === id);
+        if (idx < 0) return res.status(404).json({ error: 'Not found' });
+        if (status !== undefined) psychologistApplicationsStore[idx].status = status;
+        if (adminNotes !== undefined) psychologistApplicationsStore[idx].adminNotes = adminNotes.slice(0, 4000);
+        psychologistApplicationsStore[idx].updatedAt = new Date().toISOString();
+        res.json({ application: psychologistApplicationsStore[idx] });
+    } catch (err) {
+        console.error('PATCH /api/admin/psychologists/:id:', err.message);
+        res.status(500).json({ error: 'Failed to update application' });
     }
 });
 
@@ -5399,7 +5520,41 @@ function formatMonthLabel(monthKey) {
     const m = /^(\d{4})-(\d{2})$/.exec(String(monthKey || ''));
     if (!m) return monthKey || 'Unknown';
     const d = new Date(Number(m[1]), Number(m[2]) - 1, 1);
-    return d.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+    return d.toLocaleDateString('pt-PT', { month: 'long', year: 'numeric' });
+}
+
+/** Estimate Stripe fee for a card payment (EU default: 1.5% + €0.25). Override via env. */
+function estimateStripeFeeCents(amountCents) {
+    const amount = Math.max(0, Math.round(Number(amountCents) || 0));
+    if (amount <= 0) return 0;
+    const pct = Number(process.env.STRIPE_FEE_PERCENT);
+    const fixed = Number(process.env.STRIPE_FEE_FIXED_CENTS);
+    const percent = Number.isFinite(pct) && pct >= 0 ? pct : 1.5;
+    const fixedCents = Number.isFinite(fixed) && fixed >= 0 ? Math.round(fixed) : 25;
+    return Math.round(amount * (percent / 100)) + fixedCents;
+}
+
+function buildGrossBreakdown(grossCents, stripeFeeCents) {
+    const gross = Math.max(0, Math.round(Number(grossCents) || 0));
+    const stripe = Math.max(0, Math.round(Number(stripeFeeCents) || 0));
+    const irsCents = Math.round(gross * 0.25);
+    const ssCents = Math.round(gross * 0.15);
+    const netCents = gross - stripe - irsCents - ssCents;
+    return {
+        grossCents: gross,
+        stripeFeeCents: stripe,
+        irsCents,
+        ssCents,
+        netCents,
+        rates: {
+            irsPercent: 25,
+            ssPercent: 15,
+            stripePercent: Number(process.env.STRIPE_FEE_PERCENT) || 1.5,
+            stripeFixedCents: Number(process.env.STRIPE_FEE_FIXED_CENTS) >= 0
+                ? Math.round(Number(process.env.STRIPE_FEE_FIXED_CENTS) || 0)
+                : 25
+        }
+    };
 }
 
 // ─── API: Admin — Finances (paid revenue by month / patient) ───
@@ -5423,7 +5578,10 @@ app.get('/api/admin/finances', requireAuth, async (req, res) => {
             const amountCents = Math.max(0, Math.round(Number(b.amount) || 0));
             const paymentId = String(b.paymentId || '');
             const isComp = paymentId.startsWith('comp_') || amountCents === 0;
+            const isManual = paymentId.startsWith('manual_');
             const isPaid = isComp || b.markedPaid === true;
+            const viaStripe = isPaid && !isComp && !isManual && amountCents > 0;
+            const stripeFee = viaStripe ? estimateStripeFeeCents(amountCents) : 0;
 
             if (!byMonth.has(month)) {
                 byMonth.set(month, {
@@ -5434,6 +5592,7 @@ app.get('/api/admin/finances', requireAuth, async (req, res) => {
                     complimentaryCount: 0,
                     paidConsultations: 0,
                     unpaidConsultations: 0,
+                    stripeFeeCents: 0,
                     patients: new Map()
                 });
             }
@@ -5446,6 +5605,7 @@ app.get('/api/admin/finances', requireAuth, async (req, res) => {
                     paidCents: 0,
                     unpaidCents: 0,
                     complimentaryCount: 0,
+                    stripeFeeCents: 0,
                     consultations: []
                 });
             }
@@ -5460,7 +5620,9 @@ app.get('/api/admin/finances', requireAuth, async (req, res) => {
                 service: b.service,
                 amountCents,
                 paid: isPaid,
-                complimentary: isComp
+                complimentary: isComp,
+                viaStripe,
+                stripeFeeCents: stripeFee
             };
 
             if (isComp) {
@@ -5469,7 +5631,9 @@ app.get('/api/admin/finances', requireAuth, async (req, res) => {
             } else if (isPaid) {
                 bucket.paidCents += amountCents;
                 bucket.paidConsultations += 1;
+                bucket.stripeFeeCents += stripeFee;
                 patient.paidCents += amountCents;
+                patient.stripeFeeCents += stripeFee;
             } else {
                 bucket.unpaidCents += amountCents;
                 bucket.unpaidConsultations += 1;
@@ -5479,31 +5643,43 @@ app.get('/api/admin/finances', requireAuth, async (req, res) => {
         }
 
         const months = Array.from(byMonth.values())
-            .map((m) => ({
-                month: m.month,
-                label: m.label,
-                paidCents: m.paidCents,
-                unpaidCents: m.unpaidCents,
-                complimentaryCount: m.complimentaryCount,
-                paidConsultations: m.paidConsultations,
-                unpaidConsultations: m.unpaidConsultations,
-                patients: Array.from(m.patients.values())
-                    .map((p) => ({
-                        ...p,
-                        consultations: p.consultations.sort((a, b) =>
-                            String(b.dateIso || b.date || '').localeCompare(String(a.dateIso || a.date || ''))
-                        )
-                    }))
-                    .sort((a, b) => b.paidCents - a.paidCents || a.patientName.localeCompare(b.patientName))
-            }))
+            .map((m) => {
+                const breakdown = buildGrossBreakdown(m.paidCents, m.stripeFeeCents);
+                return {
+                    month: m.month,
+                    label: m.label,
+                    paidCents: m.paidCents,
+                    unpaidCents: m.unpaidCents,
+                    complimentaryCount: m.complimentaryCount,
+                    paidConsultations: m.paidConsultations,
+                    unpaidConsultations: m.unpaidConsultations,
+                    stripeFeeCents: m.stripeFeeCents,
+                    breakdown,
+                    patients: Array.from(m.patients.values())
+                        .map((p) => ({
+                            ...p,
+                            breakdown: buildGrossBreakdown(p.paidCents, p.stripeFeeCents),
+                            consultations: p.consultations.sort((a, b) =>
+                                String(b.dateIso || b.date || '').localeCompare(String(a.dateIso || a.date || ''))
+                            )
+                        }))
+                        .sort((a, b) => b.paidCents - a.paidCents || a.patientName.localeCompare(b.patientName))
+                };
+            })
             .sort((a, b) => String(b.month).localeCompare(String(a.month)));
+
+        const totalsPaid = months.reduce((s, m) => s + m.paidCents, 0);
+        const totalsStripe = months.reduce((s, m) => s + m.stripeFeeCents, 0);
+        const totalsBreakdown = buildGrossBreakdown(totalsPaid, totalsStripe);
 
         res.json({
             currency: 'eur',
             totals: {
-                paidCents: months.reduce((s, m) => s + m.paidCents, 0),
+                paidCents: totalsPaid,
                 unpaidCents: months.reduce((s, m) => s + m.unpaidCents, 0),
-                complimentaryCount: months.reduce((s, m) => s + m.complimentaryCount, 0)
+                complimentaryCount: months.reduce((s, m) => s + m.complimentaryCount, 0),
+                stripeFeeCents: totalsStripe,
+                breakdown: totalsBreakdown
             },
             months
         });
