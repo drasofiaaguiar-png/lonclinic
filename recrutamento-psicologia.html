@@ -24,7 +24,7 @@
     <meta property="og:site_name" content="Lon Clinic">
     <meta name="theme-color" content="#2f6342">
     <link rel="stylesheet" href="/landing.css?v=20260621b">
-    <link rel="stylesheet" href="/recrutamento-psicologia.css?v=20260814c">
+    <link rel="stylesheet" href="/recrutamento-psicologia.css?v=20260814e">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -59,7 +59,7 @@
                 <div class="rec-intro-body">
                     <p>Estamos a criar uma rede de psicólogos para acompanhamento psicológico online.</p>
                     <p>Procuramos psicólogos que tenham disponibilidade para começar com 1–2 horas semanais, num horário fixo, com possibilidade de aumentar a disponibilidade à medida que a procura cresça.</p>
-                    <p>A remuneração é de 20 € brutos por consulta/hora realizada. Consultas canceladas pelo paciente com menos de 24 horas de antecedência são igualmente remuneradas.</p>
+                    <p>A remuneração é de 20 € brutos por consulta/hora realizada.</p>
                     <p>As consultas são agendadas pela nossa equipa de acordo com a disponibilidade, experiência e perfil do psicólogo e as necessidades dos pacientes.</p>
                     <p>Os candidatos selecionados nesta primeira fase serão posteriormente contactados para uma entrevista. Os restantes candidatos poderão ficar integrados na nossa bolsa de psicólogos e ser contactados à medida que surjam novas necessidades.</p>
                     <p class="rec-intro-meta">O preenchimento deste formulário demora aproximadamente 5–7 minutos.</p>
@@ -328,7 +328,6 @@
                         <p>Antes de avançar, pedimos que confirme que compreende as condições base desta colaboração:</p>
                         <ul>
                             <li>Remuneração de <strong>20 € brutos</strong> por consulta/hora realizada;</li>
-                            <li>Consultas canceladas pelo paciente com menos de 24 horas de antecedência são remuneradas;</li>
                             <li>As consultas são agendadas pela clínica de acordo com a disponibilidade, perfil profissional e necessidades dos pacientes;</li>
                             <li>Não existe garantia de um número mínimo de consultas;</li>
                             <li>O pagamento é efetuado no final do mês, dentro do prazo de pagamento definido pela clínica;</li>
@@ -350,36 +349,10 @@
                 </div>
             </section>
 
-            <!-- 6. Motivação -->
+            <!-- 6. Perfil -->
             <section class="rec-screen" id="screen-6" data-screen="6" hidden>
                 <div class="rec-card">
                     <p class="rec-step-label">Passo 6 de 8</p>
-                    <h2>Motivação</h2>
-                    <div class="rec-fields">
-                        <div class="rec-field">
-                            <label for="motivacao_interesse">Porque tem interesse em colaborar connosco?</label>
-                            <textarea id="motivacao_interesse" name="motivacao_interesse" maxlength="4000" required></textarea>
-                        </div>
-                        <div class="rec-field">
-                            <label for="motivacao_diferencial">O que considera ser o seu principal diferencial enquanto psicólogo/a?</label>
-                            <textarea id="motivacao_diferencial" name="motivacao_diferencial" maxlength="4000" required></textarea>
-                        </div>
-                        <div class="rec-field">
-                            <label for="motivacao_procura">O que procura numa colaboração com uma clínica online?</label>
-                            <textarea id="motivacao_procura" name="motivacao_procura" maxlength="4000" required></textarea>
-                        </div>
-                    </div>
-                    <div class="rec-actions">
-                        <button type="button" class="rec-back" data-prev>← Voltar</button>
-                        <button type="button" class="lon-btn lon-btn-primary" data-next>Seguinte</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 7. Perfil -->
-            <section class="rec-screen" id="screen-7" data-screen="7" hidden>
-                <div class="rec-card">
-                    <p class="rec-step-label">Passo 7 de 8</p>
                     <h2>Experiência prática / perfil</h2>
                     <div class="rec-fields">
                         <div class="rec-field">
@@ -430,6 +403,51 @@
                 </div>
             </section>
 
+            <!-- 7. Admin + entrevista -->
+            <section class="rec-screen" id="screen-7" data-screen="7" hidden>
+                <div class="rec-card">
+                    <p class="rec-step-label">Passo 7 de 8</p>
+                    <h2>Questões administrativas e entrevista</h2>
+                    <div class="rec-fields">
+                        <fieldset class="rec-fieldset">
+                            <legend>Tem atividade profissional aberta para prestação de serviços?</legend>
+                            <div class="rec-choices rec-choices--stack" role="radiogroup">
+                                <label class="rec-choice"><input type="radio" name="atividade_profissional" value="Sim" required><span>Sim</span></label>
+                                <label class="rec-choice"><input type="radio" name="atividade_profissional" value="Não"><span>Não</span></label>
+                                <label class="rec-choice"><input type="radio" name="atividade_profissional" value="Posso abrir caso seja necessário"><span>Posso abrir caso seja necessário</span></label>
+                            </div>
+                        </fieldset>
+                        <fieldset class="rec-fieldset">
+                            <legend>Possui seguro de responsabilidade civil profissional válido?</legend>
+                            <div class="rec-choices rec-choices--stack" role="radiogroup">
+                                <label class="rec-choice"><input type="radio" name="rc_profissional" value="Sim" required><span>Sim</span></label>
+                                <label class="rec-choice"><input type="radio" name="rc_profissional" value="Não"><span>Não</span></label>
+                                <label class="rec-choice"><input type="radio" name="rc_profissional" value="Em processo de obtenção"><span>Em processo de obtenção</span></label>
+                            </div>
+                        </fieldset>
+                        <div class="rec-field">
+                            <label for="limitacoes">Existe alguma limitação relevante à sua disponibilidade ou à realização de consultas online que devamos conhecer? <span class="rec-hint">(opcional)</span></label>
+                            <textarea id="limitacoes" name="limitacoes" maxlength="2000" placeholder="Ex.: restrições de horário, férias previstas, etc."></textarea>
+                        </div>
+                        <fieldset class="rec-fieldset">
+                            <legend>Caso seja selecionado/a, tem disponibilidade para realizar uma breve entrevista online?</legend>
+                            <div class="rec-choices" role="radiogroup">
+                                <label class="rec-choice"><input type="radio" name="entrevista_disponibilidade" value="Sim" required><span>Sim</span></label>
+                                <label class="rec-choice"><input type="radio" name="entrevista_disponibilidade" value="Não"><span>Não</span></label>
+                            </div>
+                        </fieldset>
+                        <div class="rec-field">
+                            <label for="periodos_entrevista">Indique os períodos em que normalmente teria disponibilidade para uma entrevista</label>
+                            <textarea id="periodos_entrevista" name="periodos_entrevista" maxlength="1000" required placeholder="Ex.: manhãs de segunda a quarta; finais de tarde"></textarea>
+                        </div>
+                    </div>
+                    <div class="rec-actions">
+                        <button type="button" class="rec-back" data-prev>← Voltar</button>
+                        <button type="button" class="lon-btn lon-btn-primary" data-next>Seguinte</button>
+                    </div>
+                </div>
+            </section>
+
             <!-- 8. CV + bolsa -->
             <section class="rec-screen" id="screen-8" data-screen="8" hidden>
                 <div class="rec-card">
@@ -445,17 +463,11 @@
                             <label for="linkedin">LinkedIn ou website profissional <span class="rec-hint">(opcional)</span></label>
                             <input type="url" id="linkedin" name="linkedin" maxlength="300" placeholder="https://…">
                         </div>
-                        <p class="rec-card-lead" style="margin-top:8px">Bolsa de psicólogos</p>
-                        <p class="rec-privacy">
-                            Devido à fase inicial da clínica, poderemos não conseguir integrar imediatamente todos os candidatos que consideramos adequados.
-                            Os profissionais que não forem selecionados numa primeira fase poderão, mediante o seu acordo, permanecer na nossa bolsa de psicólogos e ser contactados posteriormente.
-                        </p>
-                        <p class="rec-privacy">
-                            Os dados de candidatura serão conservados por um período máximo de 24 meses para efeitos de contacto relativo a futuras oportunidades, salvo se solicitar a eliminação antes. Pode exercer os seus direitos através de
-                            <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>.
-                            Consulte a nossa
-                            <a href="/info.html?page=politica-privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.
-                        </p>
+                        <div class="rec-info-box" role="note">
+                            <p class="rec-info-label">Informação</p>
+                            <p>Devido à fase inicial da clínica, poderemos não conseguir integrar imediatamente todos os candidatos que consideramos adequados. Os profissionais que não forem selecionados numa primeira fase poderão, mediante o seu acordo, permanecer na nossa bolsa de psicólogos e ser contactados posteriormente.</p>
+                            <p>Os dados de candidatura serão conservados por um período máximo de 24 meses para efeitos de contacto relativo a futuras oportunidades, salvo se solicitar a eliminação antes. Pode exercer os seus direitos através de <a href="mailto:info@lonclinic.com">info@lonclinic.com</a>. Consulte a nossa <a href="/info.html?page=politica-privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
+                        </div>
                         <fieldset class="rec-fieldset">
                             <legend>Caso não seja selecionado/a nesta fase, autoriza que os seus dados de candidatura sejam mantidos para contactos futuros?</legend>
                             <div class="rec-choices" role="radiogroup">
@@ -522,6 +534,6 @@
         <p>© 2026 Lon Clinic · ERS 45475</p>
     </footer>
 
-    <script src="/recrutamento-psicologia.js?v=20260814c" defer></script>
+    <script src="/recrutamento-psicologia.js?v=20260814e" defer></script>
 </body>
 </html>

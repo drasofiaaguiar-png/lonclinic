@@ -3869,9 +3869,10 @@ function scorePsychologistApplication(payload, hasCv) {
     const perfilClinico = clampScore(perfil, 25);
 
     const mot =
-        String(payload.motivacao_interesse || '') +
-        String(payload.motivacao_diferencial || '') +
-        String(payload.motivacao_procura || '');
+        String(payload.abordagem_terapeutica || '') +
+        String(payload.tipos_casos || '') +
+        String(payload.formacao_complementar || '') +
+        String(payload.periodos_entrevista || '');
     let qualidade = Math.min(12, mot.trim().length / 40);
     if (String(payload.linkedin || '').trim()) qualidade += 4;
     if (hasCv) qualidade += 4;
@@ -3937,18 +3938,18 @@ function formatRecrutamentoPsicologiaEmail(payload, scoring, cvName) {
         '── Condições ──',
         `Aceita condições: ${payload.aceita_condicoes}`,
         '',
-        '── Motivação ──',
-        `Interesse: ${payload.motivacao_interesse}`,
-        '',
-        `Diferencial: ${payload.motivacao_diferencial}`,
-        '',
-        `O que procura: ${payload.motivacao_procura}`,
-        '',
         '── Perfil ──',
         `Abordagem: ${payload.abordagem_terapeutica}`,
         `Modelos: ${(payload.modelos || []).join(', ') || '—'}`,
         `Idiomas: ${(payload.idiomas || []).join(', ') || '—'}`,
         `Videoconferência: ${payload.videoconferencia}`,
+        '',
+        '── Admin / entrevista ──',
+        `Atividade: ${payload.atividade_profissional}`,
+        `RC profissional: ${payload.rc_profissional}`,
+        `Limitações: ${payload.limitacoes || '—'}`,
+        `Entrevista: ${payload.entrevista_disponibilidade}`,
+        `Períodos: ${payload.periodos_entrevista}`,
         '',
         '── Bolsa ──',
         `Bolsa autorização: ${payload.bolsa_autorizacao}`,
@@ -4053,13 +4054,15 @@ function sanitizeRecrutamentoPayload(raw) {
         aumento_futuro: str(raw.aumento_futuro, 40),
         horas_aumento: str(raw.horas_aumento, 40),
         aceita_condicoes: str(raw.aceita_condicoes, 10),
-        motivacao_interesse: str(raw.motivacao_interesse, 4000),
-        motivacao_diferencial: str(raw.motivacao_diferencial, 4000),
-        motivacao_procura: str(raw.motivacao_procura, 4000),
         abordagem_terapeutica: str(raw.abordagem_terapeutica, 2000),
         modelos: arr(raw.modelos, 12, 120),
         idiomas: arr(raw.idiomas, 10, 80),
         videoconferencia: str(raw.videoconferencia, 10),
+        atividade_profissional: str(raw.atividade_profissional, 80),
+        rc_profissional: str(raw.rc_profissional, 40),
+        limitacoes: str(raw.limitacoes, 2000),
+        entrevista_disponibilidade: str(raw.entrevista_disponibilidade, 10),
+        periodos_entrevista: str(raw.periodos_entrevista, 1000),
         bolsa_autorizacao: str(raw.bolsa_autorizacao, 10),
         linkedin: str(raw.linkedin, 300)
     };
@@ -4110,8 +4113,8 @@ app.post('/api/recrutamento/psicologia', rateLimitRecrutamentoPsicologia, (req, 
         if (!payload.horarios_fixos) {
             return res.status(400).json({ error: 'Indique os horários fixos semanais.' });
         }
-        if (!payload.motivacao_interesse || !payload.motivacao_diferencial || !payload.motivacao_procura) {
-            return res.status(400).json({ error: 'Complete as respostas de motivação.' });
+        if (!payload.abordagem_terapeutica) {
+            return res.status(400).json({ error: 'Complete o perfil clínico.' });
         }
         if (!hasCv) {
             return res.status(400).json({ error: 'O CV em PDF é obrigatório.' });

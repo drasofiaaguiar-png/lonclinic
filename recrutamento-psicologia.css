@@ -173,7 +173,7 @@
 .rec-fields {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 28px;
 }
 
 .rec-field label,
@@ -181,8 +181,15 @@
     display: block;
     font-size: 0.875rem;
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     color: var(--rec-ink);
+}
+
+.rec-fieldset + .rec-fieldset,
+.rec-field + .rec-fieldset,
+.rec-fieldset + .rec-field,
+.rec-info-box + .rec-fieldset {
+    margin-top: 4px;
 }
 
 .rec-hint {
@@ -329,6 +336,34 @@
 }
 
 .rec-privacy a { color: var(--rec-signal); }
+
+.rec-info-box {
+    margin: 8px 0 0;
+    padding: 16px 18px;
+    background: #f7f6f2;
+    border: 1px solid var(--rec-line);
+    border-radius: 12px;
+}
+
+.rec-info-label {
+    margin: 0 0 10px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rec-signal);
+}
+
+.rec-info-box p {
+    margin: 0 0 10px;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--rec-muted);
+}
+
+.rec-info-box p:last-child { margin-bottom: 0; }
+
+.rec-info-box a { color: var(--rec-signal); }
 
 .rec-actions {
     display: flex;

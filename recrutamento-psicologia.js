@@ -5,10 +5,11 @@
 (function () {
     'use strict';
 
+    var STEP_FLOW = [1, 2, 3, 4, 5, 6, 7, 8];
     var TOTAL_STEPS = 8;
 
     var state = {
-        step: 0 // 0 intro, 1–9 form, 'exit-opp' | 'exit-condicoes' | 'done'
+        step: 0 // 0 intro, form steps in STEP_FLOW, 'exit-opp' | 'exit-condicoes' | 'done'
     };
 
     var form = document.getElementById('recForm');
@@ -47,7 +48,7 @@
     }
 
     function updateProgress(step) {
-        if (typeof step !== 'number' || step < 1 || step > TOTAL_STEPS) {
+        if (typeof step !== 'number' || STEP_FLOW.indexOf(step) === -1) {
             progressWrap.hidden = true;
             return;
         }
@@ -55,9 +56,25 @@
         progressBar.setAttribute('aria-valuenow', String(step));
         progressBar.querySelectorAll('.rec-seg').forEach(function (seg) {
             var n = Number(seg.getAttribute('data-seg'));
+            var idx = STEP_FLOW.indexOf(n);
+            var cur = STEP_FLOW.indexOf(step);
             seg.classList.toggle('is-active', n === step);
-            seg.classList.toggle('is-done', n < step);
+            seg.classList.toggle('is-done', idx > -1 && idx < cur);
         });
+    }
+
+    function stepIndex(step) {
+        return STEP_FLOW.indexOf(step);
+    }
+
+    function nextStep(step) {
+        var i = stepIndex(step);
+        return i >= 0 && i < STEP_FLOW.length - 1 ? STEP_FLOW[i + 1] : null;
+    }
+
+    function prevStep(step) {
+        var i = stepIndex(step);
+        return i > 0 ? STEP_FLOW[i - 1] : 0;
     }
 
     function goTo(step) {
@@ -231,18 +248,19 @@
         }
 
         if (step === 6) {
-            requireInput('motivacao_interesse', s);
-            requireInput('motivacao_diferencial', s);
-            requireInput('motivacao_procura', s);
-        }
-
-        if (step === 7) {
             requireInput('abordagem_terapeutica', s);
             requireChecks(stepEl, 'modelos', s);
             if (document.getElementById('modelosOutroCheck').checked) requireInput('modelos_outro', s);
             requireChecks(stepEl, 'idiomas', s);
             if (document.getElementById('idiomasOutroCheck').checked) requireInput('idiomas_outro', s);
             requireRadio(stepEl, 'videoconferencia', s);
+        }
+
+        if (step === 7) {
+            requireRadio(stepEl, 'atividade_profissional', s);
+            requireRadio(stepEl, 'rc_profissional', s);
+            requireRadio(stepEl, 'entrevista_disponibilidade', s);
+            requireInput('periodos_entrevista', s);
         }
 
         if (step === 8) {
@@ -326,13 +344,15 @@
             aumento_futuro: selectedValue('aumento_futuro'),
             horas_aumento: selectedValue('horas_aumento') || '',
             aceita_condicoes: selectedValue('aceita_condicoes'),
-            motivacao_interesse: document.getElementById('motivacao_interesse').value.trim(),
-            motivacao_diferencial: document.getElementById('motivacao_diferencial').value.trim(),
-            motivacao_procura: document.getElementById('motivacao_procura').value.trim(),
             abordagem_terapeutica: document.getElementById('abordagem_terapeutica').value.trim(),
             modelos: withOutro(selectedValues('modelos'), 'modelosOutroCheck', 'modelos_outro', 'Outra'),
             idiomas: withOutro(selectedValues('idiomas'), 'idiomasOutroCheck', 'idiomas_outro', 'Outro'),
             videoconferencia: selectedValue('videoconferencia'),
+            atividade_profissional: selectedValue('atividade_profissional'),
+            rc_profissional: selectedValue('rc_profissional'),
+            limitacoes: document.getElementById('limitacoes').value.trim(),
+            entrevista_disponibilidade: selectedValue('entrevista_disponibilidade'),
+            periodos_entrevista: document.getElementById('periodos_entrevista').value.trim(),
             bolsa_autorizacao: selectedValue('bolsa_autorizacao'),
             linkedin: document.getElementById('linkedin').value.trim()
         };
@@ -389,7 +409,8 @@
             goTo('exit-condicoes');
             return;
         }
-        goTo(step + 1);
+        var n = nextStep(step);
+        if (n != null) goTo(n);
     }
 
     function bind() {
@@ -404,8 +425,7 @@
 
         form.querySelectorAll('[data-prev]').forEach(function (btn) {
             btn.addEventListener('click', function () {
-                var prev = state.step - 1;
-                goTo(prev < 1 ? 0 : prev);
+                goTo(prevStep(state.step));
             });
         });
 
