@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css?v=psychologists-2">
+    <link rel="stylesheet" href="dashboard.css?v=bolsa-profissionais-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -95,7 +95,7 @@
                     <button type="button" class="admin-nav-item" data-admin-panel="invitations">Invitations</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="availability">Availability</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="reviews">Reviews</button>
-                    <button type="button" class="admin-nav-item" data-admin-panel="psychologists">Psychologists</button>
+                    <button type="button" class="admin-nav-item" data-admin-panel="psychologists">Bolsa de Profissionais</button>
                     <a class="admin-nav-item admin-nav-link" href="/clinic-portal">Consultations &amp; notes</a>
                 </nav>
                 <div class="admin-sidebar-foot">
@@ -505,15 +505,15 @@
             </div>
             </div>
 
-            <!-- Psychologists panel -->
+            <!-- Bolsa de Profissionais panel -->
             <div class="admin-panel" id="adminPanelPsychologists" data-admin-panel-content="psychologists" hidden>
                 <div class="dash-section">
                     <div class="dash-section-header admin-schedule-toolbar">
                         <div>
-                            <h2 class="dash-section-title">Psychologist applications</h2>
-                            <p class="dash-section-subtitle">Candidaturas de <code>/recrutamento/psicologia</code> — score interno e estado do pipeline</p>
+                            <h2 class="dash-section-title">Bolsa de Profissionais</h2>
+                            <p class="dash-section-subtitle">Candidaturas recebidas (ex.: <code>/recrutamento/psicologia</code>) — score interno e estado do pipeline</p>
                         </div>
-                        <div class="admin-schedule-filters" role="group" aria-label="Filter psychologists">
+                        <div class="admin-schedule-filters" role="group" aria-label="Filtrar profissionais">
                             <button type="button" class="btn btn-outline btn-sm" id="psychologistsRefreshBtn">Refresh</button>
                         </div>
                     </div>
@@ -569,7 +569,7 @@
     </footer>
 
     <script src="lon-nav.js"></script>
-    <script src="admin.js?v=psychologists-2"></script>
+    <script src="admin.js?v=bolsa-profissionais-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

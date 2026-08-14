@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         invitations: { title: 'Invitations', subtitle: 'Send and manage booking invites' },
         availability: { title: 'Availability', subtitle: 'Working hours, blocks & slot preview' },
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' },
-        psychologists: { title: 'Psychologists', subtitle: 'Candidaturas e bolsa de psicólogos' }
+        psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' }
     };
     let activeAdminPanel = 'schedule';
     let scheduleFilter = 'all';
@@ -2375,7 +2375,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderAdminPsychologists(list) {
         if (!adminPsychologistsList) return;
         if (!list.length) {
-            adminPsychologistsList.innerHTML = '<p class="admin-empty-list">No psychologist applications yet.</p>';
+            adminPsychologistsList.innerHTML = '<p class="admin-empty-list">Ainda não há profissionais na bolsa.</p>';
             return;
         }
         adminPsychologistsList.innerHTML = '';
@@ -2395,6 +2395,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <span class="admin-psych-col admin-psych-col-phone">
                         ${phone ? `<a href="tel:${escapeHtml(phone)}" onclick="event.stopPropagation()">${escapeHtml(phone)}</a>` : '—'}
                     </span>
+                    <span class="admin-psych-col admin-psych-col-role"><span class="admin-psych-role-tag">Psicólogo</span></span>
                     <span class="admin-psych-col admin-psych-col-status">${escapeHtml(a.status || 'novo')}</span>
                     <span class="admin-psych-chevron" aria-hidden="true"></span>
                 </summary>
@@ -2460,7 +2461,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderAdminPsychologists(psychologistsCache);
         } catch (err) {
             console.error('Load admin psychologists:', err);
-            adminPsychologistsList.innerHTML = '<p class="admin-empty-list">Could not load applications. Is the database configured?</p>';
+            adminPsychologistsList.innerHTML = '<p class="admin-empty-list">Não foi possível carregar a bolsa. A base de dados está configurada?</p>';
         }
     }
 
