@@ -462,6 +462,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let patientsCache = [];
     let patientsSearchQuery = '';
     const patientsExpanded = new Set();
+    const patientsEditing = new Set();
     const adminPatientsBody = document.getElementById('adminPatientsBody');
     const patientsSearch = document.getElementById('patientsSearch');
     const patientsRefreshBtn = document.getElementById('patientsRefreshBtn');
@@ -478,6 +479,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         { value: 'quarterly', label: 'Every 3 months' },
         { value: 'as_needed', label: 'As needed' }
     ];
+
+    const ICON_EDIT = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`;
+    const ICON_DELETE = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>`;
+    const ICON_DONE = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+    function freqLabel(value) {
+        const opt = PATIENT_FREQ_OPTIONS.find((o) => o.value === value);
+        return opt ? opt.label : (value || '—');
+    }
+
+    function freqClass(value) {
+        const v = String(value || '');
+        if (!v) return 'is-empty';
+        if (v === 'once' || v === 'occasional' || v === 'as_needed') return 'is-light';
+        if (v === 'weekly' || v === 'every_2_weeks') return 'is-frequent';
+        if (v === 'monthly' || v === 'every_6_weeks' || v === 'every_2_months' || v === 'quarterly') return 'is-periodic';
+        return 'is-light';
+    }
 
     function formatPatientConsultDate(p) {
         const iso = (p.dateIso && String(p.dateIso).trim()) || '';
@@ -679,7 +698,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!adminPatientsBody) return;
         const groups = filteredPatientGroups();
         if (!groups.length) {
-            adminPatientsBody.innerHTML = `<tr><td colspan="11" class="admin-empty-list">${
+            adminPatientsBody.innerHTML = `<tr><td colspan="12" class="admin-empty-list">${
                 patientsCache.length ? 'No matches.' : 'No patients yet.'
             }</td></tr>`;
             return;
@@ -688,6 +707,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         adminPatientsBody.innerHTML = '';
         groups.forEach((g) => {
             const expanded = patientsExpanded.has(g.emailKey);
+            const editing = patientsEditing.has(g.emailKey);
             const canExpand = g.consultations.length > 0;
             const phone = g.patientPhone || '';
             const reviewedHtml = g.hasReviewed
@@ -695,12 +715,31 @@ document.addEventListener('DOMContentLoaded', async () => {
                 : '<span class="admin-patients-no">No</span>';
             const latestService = SERVICE_LABELS_ADMIN[g.latest.service] || g.latest.service || '—';
             const moreCount = Math.max(0, g.consultations.length - 1);
-            const singleDelete = g.consultations.length === 1
-                ? `<button type="button" class="btn btn-outline btn-sm admin-patients-delete" data-delete-ref="${escapeHtml(g.primaryRef)}" title="Delete this consultation">Delete</button>`
-                : '';
+            const typeClass = g.patientType === 'Regular' ? 'regular' : 'onetime';
+
+            const typeCell = editing
+                ? `<select class="admin-select admin-patients-type-select" data-field="patientType" data-ref="${escapeHtml(g.primaryRef)}">
+                        <option value="one_time" ${g.patientType === 'One-time' ? 'selected' : ''}>One-time</option>
+                        <option value="regular" ${g.patientType === 'Regular' ? 'selected' : ''}>Regular</option>
+                   </select>`
+                : `<span class="admin-patients-type is-${typeClass}">${escapeHtml(g.patientType)}</span>`;
+
+            const freqCell = editing
+                ? `<select class="admin-select admin-patients-frequency" data-field="visitFrequency" data-ref="${escapeHtml(g.primaryRef)}">
+                        ${freqOptionsHtml(g.visitFrequency)}
+                   </select>`
+                : `<span class="admin-patients-freq ${freqClass(g.visitFrequency)}">${escapeHtml(freqLabel(g.visitFrequency))}</span>`;
+
+            const professionalCell = editing
+                ? `<input type="text" class="admin-input admin-patients-professional" list="adminProfessionalsList"
+                        data-field="professional" data-ref="${escapeHtml(g.primaryRef)}"
+                        value="${escapeHtml(g.professional || '')}" placeholder="Professional">`
+                : `<span class="admin-patients-pro-text">${escapeHtml(g.professional || '—')}</span>`;
 
             const summary = document.createElement('tr');
-            summary.className = 'admin-patients-summary' + (expanded ? ' is-expanded' : '');
+            summary.className = 'admin-patients-summary'
+                + (expanded ? ' is-expanded' : '')
+                + (editing ? ' is-editing' : '');
             summary.dataset.emailKey = g.emailKey;
             summary.innerHTML = `
                 <td class="admin-patients-expand-cell">
@@ -713,7 +752,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ${g.consultations.length > 1
                         ? `<div class="admin-patients-ref">${g.consultations.length} consultations</div>`
                         : `<div class="admin-patients-ref">${escapeHtml(g.primaryRef || '')}</div>`}
-                    ${singleDelete}
                 </td>
                 <td>
                     <div class="admin-patients-contact">
@@ -726,26 +764,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="admin-patients-service">${escapeHtml(latestService)}${moreCount ? ` · +${moreCount} more` : ''}</div>
                 </td>
                 <td>
-                    <select class="admin-select admin-patients-type-select" data-field="patientType" data-ref="${escapeHtml(g.primaryRef)}">
-                        <option value="one_time" ${g.patientType === 'One-time' ? 'selected' : ''}>One-time</option>
-                        <option value="regular" ${g.patientType === 'Regular' ? 'selected' : ''}>Regular</option>
-                    </select>
+                    ${typeCell}
                     ${g.consultationCount > 1 ? `<span class="admin-patients-count">${g.consultationCount} visits</span>` : ''}
                 </td>
-                <td>
-                    <select class="admin-select admin-patients-frequency" data-field="visitFrequency" data-ref="${escapeHtml(g.primaryRef)}">
-                        ${freqOptionsHtml(g.visitFrequency)}
-                    </select>
-                </td>
-                <td>
-                    <input type="text" class="admin-input admin-patients-professional" list="adminProfessionalsList"
-                        data-field="professional" data-ref="${escapeHtml(g.primaryRef)}"
-                        value="${escapeHtml(g.professional || '')}" placeholder="Professional">
-                </td>
+                <td>${freqCell}</td>
+                <td>${professionalCell}</td>
                 <td><span class="admin-patients-frac ${g.paidN >= g.activeCount ? 'is-all' : (g.paidN ? 'is-partial' : 'is-none')}">${fractionLabel(g.paidN, g.activeCount)}</span></td>
                 <td><span class="admin-patients-frac ${g.invoiceN >= g.activeCount ? 'is-all' : (g.invoiceN ? 'is-partial' : 'is-none')}">${fractionLabel(g.invoiceN, g.activeCount)}</span></td>
                 <td><span class="admin-patients-frac ${g.reviewAskN >= g.activeCount ? 'is-all' : (g.reviewAskN ? 'is-partial' : 'is-none')}">${fractionLabel(g.reviewAskN, g.activeCount)}</span></td>
                 <td>${reviewedHtml}</td>
+                <td class="admin-patients-actions-cell">
+                    <div class="admin-patients-actions">
+                        <button type="button" class="admin-patients-icon-btn is-edit" data-edit-key="${escapeHtml(g.emailKey)}" title="${editing ? 'Done' : 'Edit'}">
+                            ${editing ? ICON_DONE : ICON_EDIT}
+                        </button>
+                        <button type="button" class="admin-patients-icon-btn is-delete" data-delete-patient="${escapeHtml(g.emailKey)}" title="Delete">
+                            ${ICON_DELETE}
+                        </button>
+                    </div>
+                </td>
             `;
             adminPatientsBody.appendChild(summary);
 
@@ -764,35 +801,39 @@ document.addEventListener('DOMContentLoaded', async () => {
                             </td>
                             <td>${escapeHtml(serviceLabel)}</td>
                             <td>
-                                <input type="text" class="admin-input admin-patients-professional" list="adminProfessionalsList"
-                                    data-field="professional" data-ref="${escapeHtml(c.bookingRef)}"
-                                    value="${escapeHtml(c.professional || '')}" placeholder="Professional">
+                                ${editing
+                                    ? `<input type="text" class="admin-input admin-patients-professional" list="adminProfessionalsList"
+                                        data-field="professional" data-ref="${escapeHtml(c.bookingRef)}"
+                                        value="${escapeHtml(c.professional || '')}" placeholder="Professional">`
+                                    : `<span class="admin-patients-pro-text">${escapeHtml(c.professional || '—')}</span>`}
                             </td>
                             <td class="admin-patients-check-cell">
                                 <label class="admin-patients-check">
-                                    <input type="checkbox" data-field="markedPaid" data-ref="${escapeHtml(c.bookingRef)}" ${paidChecked ? 'checked' : ''}>
+                                    <input type="checkbox" data-field="markedPaid" data-ref="${escapeHtml(c.bookingRef)}" ${paidChecked ? 'checked' : ''} ${editing ? '' : 'disabled'}>
                                     <span>${complimentary && paidChecked ? 'Free' : (paidChecked ? 'Yes' : 'No')}</span>
                                 </label>
                             </td>
                             <td class="admin-patients-check-cell">
                                 <label class="admin-patients-check">
-                                    <input type="checkbox" data-field="invoiceSent" data-ref="${escapeHtml(c.bookingRef)}" ${c.invoiceSent ? 'checked' : ''}>
+                                    <input type="checkbox" data-field="invoiceSent" data-ref="${escapeHtml(c.bookingRef)}" ${c.invoiceSent ? 'checked' : ''} ${editing ? '' : 'disabled'}>
                                     <span>${c.invoiceSent ? 'Yes' : 'No'}</span>
                                 </label>
                             </td>
                             <td class="admin-patients-check-cell">
                                 <label class="admin-patients-check">
-                                    <input type="checkbox" data-field="reviewRequested" data-ref="${escapeHtml(c.bookingRef)}" ${c.reviewRequested ? 'checked' : ''}>
+                                    <input type="checkbox" data-field="reviewRequested" data-ref="${escapeHtml(c.bookingRef)}" ${c.reviewRequested ? 'checked' : ''} ${editing ? '' : 'disabled'}>
                                     <span>${c.reviewRequested ? 'Yes' : 'No'}</span>
                                 </label>
                             </td>
-                            <td>
-                                <button type="button" class="btn btn-outline btn-sm admin-patients-delete" data-delete-ref="${escapeHtml(c.bookingRef)}" title="Delete this consultation">Delete</button>
+                            <td class="admin-patients-actions-cell">
+                                <button type="button" class="admin-patients-icon-btn is-delete" data-delete-ref="${escapeHtml(c.bookingRef)}" title="Delete consultation">
+                                    ${ICON_DELETE}
+                                </button>
                             </td>
                         </tr>`;
                 }).join('');
                 detail.innerHTML = `
-                    <td colspan="11">
+                    <td colspan="12">
                         <div class="admin-patients-detail">
                             <table class="admin-patients-detail-table">
                                 <thead>
@@ -817,9 +858,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         adminPatientsBody.querySelectorAll('[data-expand]').forEach((btn) => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 const key = btn.getAttribute('data-expand');
                 if (patientsExpanded.has(key)) patientsExpanded.delete(key);
                 else patientsExpanded.add(key);
+                renderPatientsTable();
+            });
+        });
+
+        adminPatientsBody.querySelectorAll('[data-edit-key]').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const key = btn.getAttribute('data-edit-key');
+                if (!key) return;
+                if (patientsEditing.has(key)) patientsEditing.delete(key);
+                else {
+                    patientsEditing.add(key);
+                    patientsExpanded.add(key);
+                }
                 renderPatientsTable();
             });
         });
@@ -842,7 +899,34 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
 
-        // Clicking the summary row (except inputs) also toggles when multi-consult
+        adminPatientsBody.querySelectorAll('[data-delete-patient]').forEach((btn) => {
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const key = btn.getAttribute('data-delete-patient');
+                const group = groups.find((g) => g.emailKey === key);
+                if (!group) return;
+                const n = group.consultations.length;
+                const msg = n > 1
+                    ? `Delete all ${n} consultations for ${group.patientName || group.email}? This cannot be undone.`
+                    : `Delete consultation ${group.primaryRef}? This cannot be undone.`;
+                if (!confirm(msg)) return;
+                btn.disabled = true;
+                try {
+                    for (const c of group.consultations) {
+                        await deletePatientConsultation(c.bookingRef);
+                    }
+                    patientsEditing.delete(key);
+                    patientsExpanded.delete(key);
+                    renderPatientsTable();
+                } catch (err) {
+                    alert('Could not delete: ' + err.message);
+                    btn.disabled = false;
+                    renderPatientsTable();
+                }
+            });
+        });
+
         adminPatientsBody.querySelectorAll('tr.admin-patients-summary').forEach((tr) => {
             tr.addEventListener('click', (e) => {
                 if (e.target.closest('input, select, a, button, label')) return;
@@ -870,7 +954,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderPatientsTable();
         } catch (err) {
             console.error('Load patients:', err);
-            adminPatientsBody.innerHTML = '<tr><td colspan="11" class="admin-empty-list">Could not load patients.</td></tr>';
+            adminPatientsBody.innerHTML = '<tr><td colspan="12" class="admin-empty-list">Could not load patients.</td></tr>';
         }
     }
 

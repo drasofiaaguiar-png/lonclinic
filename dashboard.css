@@ -2309,8 +2309,43 @@ a.admin-nav-link {
 }
 
 .admin-patients-type.is-onetime {
-    background: rgba(15, 23, 42, 0.06);
+    background: rgba(100, 116, 139, 0.14);
+    color: #475569;
+}
+
+.admin-patients-freq {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+
+.admin-patients-freq.is-empty {
+    background: transparent;
+    color: var(--text-muted);
+    font-weight: 500;
+    padding-left: 0;
+}
+
+.admin-patients-freq.is-light {
+    background: rgba(59, 130, 246, 0.12);
+    color: #1d4ed8;
+}
+
+.admin-patients-freq.is-frequent {
+    background: rgba(16, 185, 129, 0.14);
+    color: #047857;
+}
+
+.admin-patients-freq.is-periodic {
+    background: rgba(168, 85, 247, 0.12);
+    color: #7e22ce;
+}
+
+.admin-patients-pro-text {
     color: var(--text-secondary);
+    font-size: 0.8125rem;
 }
 
 .admin-patients-type-select {
@@ -2318,6 +2353,50 @@ a.admin-nav-link {
     max-width: 130px;
     padding: 6px 8px;
     font-size: 0.8125rem;
+}
+
+.admin-patients-actions-cell {
+    white-space: nowrap;
+    vertical-align: middle !important;
+}
+
+.admin-patients-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.admin-patients-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    background: var(--bg-elevated, #fff);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.admin-patients-icon-btn:hover {
+    color: var(--text-primary);
+    border-color: var(--border-light, #cbd5e1);
+}
+
+.admin-patients-icon-btn.is-edit:hover,
+.admin-patients-summary.is-editing .admin-patients-icon-btn.is-edit {
+    color: #5a5c12;
+    border-color: rgba(197, 199, 44, 0.55);
+    background: rgba(197, 199, 44, 0.12);
+}
+
+.admin-patients-icon-btn.is-delete:hover {
+    color: #b91c1c;
+    border-color: rgba(185, 28, 28, 0.4);
+    background: rgba(185, 28, 28, 0.08);
 }
 
 .admin-patients-delete {
