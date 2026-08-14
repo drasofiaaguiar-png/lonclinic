@@ -3162,6 +3162,7 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
             time: meta.time,
             dateIso: meta.date_iso && String(meta.date_iso).trim() ? String(meta.date_iso).trim() : null,
             patientName: passengerNames[0] || 'Patient',
+            patientPhone: meta.contact_phone || '',
             travellerCount,
             amount: session.amount_total,
             currency: session.currency,
@@ -4903,6 +4904,118 @@ app.get('/api/admin/upcoming-consultations', requireAuth, async (req, res) => {
     }
 });
 
+function consultationUrgencyLabel(service) {
+    const s = String(service || '').toLowerCase();
+    return s === 'urgente' ? 'Urgent' : 'Regular';
+}
+
+function enrichPatientsWithReviews(bookings, reviews) {
+    const emailsWithReview = new Set();
+    const reviewByEmail = new Map();
+    for (const r of reviews || []) {
+        const e = String(r.email || '').toLowerCase().trim();
+        if (!e) continue;
+        emailsWithReview.add(e);
+        if (!reviewByEmail.has(e)) reviewByEmail.set(e, r);
+    }
+    return bookings.map((b) => {
+        const email = String(b.email || '').toLowerCase().trim();
+        const review = email ? reviewByEmail.get(email) : null;
+        const phone = b.patientPhone || (b._invitePhone || '') || '';
+        return {
+            ...b,
+            patientPhone: phone,
+            urgency: consultationUrgencyLabel(b.service),
+            hasReviewed: !!review,
+            reviewRating: review ? review.rating : null,
+            reviewId: review ? review.id : null
+        };
+    });
+}
+
+// ─── API: Admin — All patients / consultations table ───
+app.get('/api/admin/patients', requireAuth, async (req, res) => {
+    try {
+        let bookings;
+        if (usePersistentDb) {
+            bookings = await db.findAllBookingsWithClinicalNotes();
+        } else {
+            bookings = bookingsStore.map((booking) => {
+                const notes = clinicalNotesStore.find((n) => n.bookingRef === booking.bookingRef);
+                return {
+                    ...booking,
+                    hasClinicalNotes: !!notes,
+                    clinicalNotes: notes || null
+                };
+            });
+        }
+
+        const enriched = await enrichBookingsWithSource(bookings);
+        // Attach invite phone when booking has none
+        if (usePersistentDb) {
+            try {
+                const invitations = await db.listInvitations(500);
+                const phoneByRef = new Map();
+                for (const inv of invitations) {
+                    if (inv.bookingRef && inv.patientPhone) {
+                        phoneByRef.set(String(inv.bookingRef).toUpperCase(), inv.patientPhone);
+                    }
+                }
+                for (const b of enriched) {
+                    if (!b.patientPhone && phoneByRef.has(String(b.bookingRef || '').toUpperCase())) {
+                        b.patientPhone = phoneByRef.get(String(b.bookingRef).toUpperCase());
+                    }
+                }
+            } catch (e) { /* ignore */ }
+        }
+
+        let reviews = [];
+        if (usePersistentDb) {
+            try {
+                reviews = await db.listAllReviews(200);
+            } catch (e) {
+                console.warn('listAllReviews for patients failed:', e.message);
+            }
+        }
+
+        const patients = enrichPatientsWithReviews(enriched, reviews).sort((a, b) =>
+            bookingSortKey(b).localeCompare(bookingSortKey(a))
+        );
+
+        res.json({ patients, count: patients.length });
+    } catch (err) {
+        console.error('GET /api/admin/patients:', err.message);
+        res.status(500).json({ error: 'Failed to load patients' });
+    }
+});
+
+app.patch('/api/admin/patients/:bookingRef', requireAuth, express.json(), async (req, res) => {
+    if (!usePersistentDb) {
+        return res.status(503).json({ error: 'Database required' });
+    }
+    try {
+        const bookingRef = String(req.params.bookingRef || '').toUpperCase();
+        const body = req.body || {};
+        const fields = {};
+        if (Object.prototype.hasOwnProperty.call(body, 'professional')) fields.professional = body.professional;
+        if (Object.prototype.hasOwnProperty.call(body, 'markedPaid')) fields.markedPaid = body.markedPaid;
+        if (Object.prototype.hasOwnProperty.call(body, 'invoiceSent')) fields.invoiceSent = body.invoiceSent;
+        if (Object.prototype.hasOwnProperty.call(body, 'reviewRequested')) fields.reviewRequested = body.reviewRequested;
+        if (Object.prototype.hasOwnProperty.call(body, 'patientPhone')) fields.patientPhone = body.patientPhone;
+
+        if (!Object.keys(fields).length) {
+            return res.status(400).json({ error: 'No fields to update' });
+        }
+
+        const updated = await db.updateBookingAdminFields(bookingRef, fields);
+        if (!updated) return res.status(404).json({ error: 'Booking not found' });
+        res.json({ ok: true, patient: updated });
+    } catch (err) {
+        console.error('PATCH /api/admin/patients/:bookingRef:', err.message);
+        res.status(500).json({ error: 'Failed to update patient row' });
+    }
+});
+
 // ─── API: Clinic — Get booking by reference ───
 app.get('/api/clinic/booking/:bookingRef', requireAuth, async (req, res) => {
     const bookingRef = req.params.bookingRef.toUpperCase();
@@ -5405,6 +5518,7 @@ async function confirmInvitationWithoutPayment(invitation, { paymentPrefix = 'ma
         time: invitation.time,
         dateIso: invitation.dateIso,
         patientName: invitation.patientName,
+        patientPhone: invitation.patientPhone || '',
         travellerCount: bookingData.travellerCount,
         amount: amountCents,
         currency: invitation.currency || 'eur',

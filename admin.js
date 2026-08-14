@@ -238,6 +238,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ─── Admin panels (sidebar) ───
     const PANEL_META = {
         schedule: { title: 'Schedule', subtitle: 'Upcoming consultations' },
+        patients: { title: 'Patients', subtitle: 'All consultations & follow-up tracking' },
         invitations: { title: 'Invitations', subtitle: 'Send and manage booking invites' },
         availability: { title: 'Availability', subtitle: 'Working hours, blocks & slot preview' },
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' }
@@ -303,6 +304,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         closeAdminSidebar();
 
         if (panelId === 'schedule') loadUpcomingConsultations();
+        if (panelId === 'patients') loadPatientsTable();
         if (panelId === 'invitations') loadInvitations();
         if (panelId === 'reviews') loadAdminReviews();
     }
@@ -454,6 +456,180 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (scheduleRefreshBtn) {
         scheduleRefreshBtn.addEventListener('click', () => loadUpcomingConsultations());
+    }
+
+    // ─── Patients table ───
+    let patientsCache = [];
+    let patientsSearchQuery = '';
+    const adminPatientsBody = document.getElementById('adminPatientsBody');
+    const patientsSearch = document.getElementById('patientsSearch');
+    const patientsRefreshBtn = document.getElementById('patientsRefreshBtn');
+
+    function formatPatientConsultDate(p) {
+        const iso = (p.dateIso && String(p.dateIso).trim()) || '';
+        const time = String(p.time || '').slice(0, 5);
+        if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) {
+            const d = new Date(Number(iso.slice(0, 4)), Number(iso.slice(5, 7)) - 1, Number(iso.slice(8, 10)));
+            const label = d.toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' });
+            return time ? `${label} · ${time}` : label;
+        }
+        return [p.date || '—', time].filter(Boolean).join(' · ');
+    }
+
+    function filteredPatients() {
+        const q = patientsSearchQuery.trim().toLowerCase();
+        if (!q) return patientsCache;
+        return patientsCache.filter((p) => {
+            const hay = [
+                p.patientName, p.email, p.patientPhone, p.bookingRef, p.service, p.professional
+            ].map((x) => String(x || '').toLowerCase()).join(' ');
+            return hay.includes(q);
+        });
+    }
+
+    async function patchPatientField(bookingRef, patch) {
+        const res = await fetch(`/api/admin/patients/${encodeURIComponent(bookingRef)}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(patch)
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+        const idx = patientsCache.findIndex((p) => p.bookingRef === bookingRef);
+        if (idx >= 0) {
+            patientsCache[idx] = { ...patientsCache[idx], ...patch, ...(data.patient || {}) };
+        }
+        return data.patient;
+    }
+
+    function renderPatientsTable() {
+        if (!adminPatientsBody) return;
+        const list = filteredPatients();
+        if (!list.length) {
+            adminPatientsBody.innerHTML = `<tr><td colspan="9" class="admin-empty-list">${
+                patientsCache.length ? 'No matches.' : 'No patients yet.'
+            }</td></tr>`;
+            return;
+        }
+        adminPatientsBody.innerHTML = '';
+        list.forEach((p) => {
+            const tr = document.createElement('tr');
+            if (p.cancelled) tr.classList.add('is-cancelled');
+            const serviceLabel = SERVICE_LABELS_ADMIN[p.service] || p.service || '—';
+            const urgency = p.urgency || (String(p.service).toLowerCase() === 'urgente' ? 'Urgent' : 'Regular');
+            const paidChecked = p.markedPaid === true;
+            const complimentary = p.complimentary === true;
+            const phone = p.patientPhone || '';
+            const contactHtml = `
+                <div class="admin-patients-contact">
+                    <a href="mailto:${escapeHtml(p.email || '')}">${escapeHtml(p.email || '—')}</a>
+                    ${phone ? `<span>${escapeHtml(phone)}</span>` : ''}
+                </div>`;
+            const reviewedHtml = p.hasReviewed
+                ? `<span class="admin-patients-yes">Yes${p.reviewRating ? ` · ${p.reviewRating}★` : ''}</span>`
+                : '<span class="admin-patients-no">No</span>';
+            tr.innerHTML = `
+                <td>
+                    <div class="admin-patients-name">${escapeHtml(p.patientName || '—')}</div>
+                    <div class="admin-patients-ref">${escapeHtml(p.bookingRef || '')}${p.cancelled ? ' · cancelled' : ''}</div>
+                </td>
+                <td>${contactHtml}</td>
+                <td>
+                    <div>${escapeHtml(formatPatientConsultDate(p))}</div>
+                    <div class="admin-patients-service">${escapeHtml(serviceLabel)}</div>
+                </td>
+                <td><span class="admin-patients-urgency is-${urgency.toLowerCase()}">${escapeHtml(urgency)}</span></td>
+                <td>
+                    <input type="text" class="admin-input admin-patients-professional" list="adminProfessionalsList"
+                        data-field="professional" data-ref="${escapeHtml(p.bookingRef)}"
+                        value="${escapeHtml(p.professional || '')}" placeholder="Professional">
+                </td>
+                <td class="admin-patients-check-cell">
+                    <label class="admin-patients-check">
+                        <input type="checkbox" data-field="markedPaid" data-ref="${escapeHtml(p.bookingRef)}" ${paidChecked ? 'checked' : ''}>
+                        <span>${complimentary && paidChecked ? 'Free' : (paidChecked ? 'Yes' : 'No')}</span>
+                    </label>
+                </td>
+                <td class="admin-patients-check-cell">
+                    <label class="admin-patients-check">
+                        <input type="checkbox" data-field="invoiceSent" data-ref="${escapeHtml(p.bookingRef)}" ${p.invoiceSent ? 'checked' : ''}>
+                        <span>${p.invoiceSent ? 'Yes' : 'No'}</span>
+                    </label>
+                </td>
+                <td class="admin-patients-check-cell">
+                    <label class="admin-patients-check">
+                        <input type="checkbox" data-field="reviewRequested" data-ref="${escapeHtml(p.bookingRef)}" ${p.reviewRequested ? 'checked' : ''}>
+                        <span>${p.reviewRequested ? 'Yes' : 'No'}</span>
+                    </label>
+                </td>
+                <td>${reviewedHtml}</td>
+            `;
+            adminPatientsBody.appendChild(tr);
+        });
+
+        adminPatientsBody.querySelectorAll('input[data-field]').forEach((el) => {
+            const field = el.getAttribute('data-field');
+            const ref = el.getAttribute('data-ref');
+            const save = async () => {
+                const patch = {};
+                if (field === 'professional') patch.professional = el.value;
+                else patch[field] = el.checked;
+                try {
+                    el.disabled = true;
+                    await patchPatientField(ref, patch);
+                    if (field !== 'professional') {
+                        const span = el.parentElement && el.parentElement.querySelector('span');
+                        if (span) {
+                            if (field === 'markedPaid') {
+                                const row = patientsCache.find((x) => x.bookingRef === ref);
+                                span.textContent = row && row.complimentary && el.checked ? 'Free' : (el.checked ? 'Yes' : 'No');
+                            } else {
+                                span.textContent = el.checked ? 'Yes' : 'No';
+                            }
+                        }
+                    }
+                } catch (err) {
+                    alert('Could not save: ' + err.message);
+                    if (field !== 'professional') el.checked = !el.checked;
+                } finally {
+                    el.disabled = false;
+                }
+            };
+            if (el.type === 'checkbox') el.addEventListener('change', save);
+            else {
+                let t;
+                el.addEventListener('change', save);
+                el.addEventListener('input', () => {
+                    clearTimeout(t);
+                    t = setTimeout(save, 600);
+                });
+            }
+        });
+    }
+
+    async function loadPatientsTable() {
+        if (!adminPatientsBody) return;
+        try {
+            const res = await fetch('/api/admin/patients');
+            if (res.status === 401) return;
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            patientsCache = data.patients || [];
+            renderPatientsTable();
+        } catch (err) {
+            console.error('Load patients:', err);
+            adminPatientsBody.innerHTML = '<tr><td colspan="9" class="admin-empty-list">Could not load patients.</td></tr>';
+        }
+    }
+
+    if (patientsSearch) {
+        patientsSearch.addEventListener('input', () => {
+            patientsSearchQuery = patientsSearch.value || '';
+            renderPatientsTable();
+        });
+    }
+    if (patientsRefreshBtn) {
+        patientsRefreshBtn.addEventListener('click', () => loadPatientsTable());
     }
 
     // ─── Login handler ───

@@ -128,6 +128,7 @@ function rowToBooking(row) {
         time: row.time,
         dateIso: row.date_iso || null,
         patientName: row.patient_name,
+        patientPhone: row.patient_phone || '',
         travellerCount: row.traveller_count,
         amount: row.amount,
         currency: row.currency,
@@ -139,6 +140,10 @@ function rowToBooking(row) {
         reminderSent: row.reminder_sent === true,
         reminder1hSent: row.reminder_1h_sent === true,
         followupSent: row.followup_sent === true,
+        professional: row.professional || '',
+        markedPaid: row.marked_paid === true,
+        invoiceSent: row.invoice_sent === true,
+        reviewRequested: row.review_requested === true,
         createdAt: createdAt instanceof Date ? createdAt.toISOString() : createdAt
     };
 }
@@ -212,6 +217,31 @@ async function initSchema(p) {
     await p.query(
         `CREATE INDEX IF NOT EXISTS idx_bookings_stripe_customer_id ON bookings (stripe_customer_id) WHERE stripe_customer_id IS NOT NULL`
     );
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS patient_phone TEXT`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS professional TEXT`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS marked_paid BOOLEAN NOT NULL DEFAULT FALSE`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS invoice_sent BOOLEAN NOT NULL DEFAULT FALSE`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS review_requested BOOLEAN NOT NULL DEFAULT FALSE`);
+    // Backfill Stripe (and complimentary) rows that were never admin-edited for tracking fields.
+    await p.query(`
+        UPDATE bookings
+        SET marked_paid = TRUE, invoice_sent = TRUE
+        WHERE payment_id NOT LIKE 'manual_%'
+          AND payment_id NOT LIKE 'comp_%'
+          AND marked_paid = FALSE
+          AND invoice_sent = FALSE
+          AND review_requested = FALSE
+          AND (professional IS NULL OR TRIM(professional) = '')
+    `);
+    await p.query(`
+        UPDATE bookings
+        SET marked_paid = TRUE
+        WHERE payment_id LIKE 'comp_%'
+          AND marked_paid = FALSE
+          AND invoice_sent = FALSE
+          AND review_requested = FALSE
+          AND (professional IS NULL OR TRIM(professional) = '')
+    `);
     await p.query(`
         CREATE TABLE IF NOT EXISTS quiz_attempts (
             id UUID PRIMARY KEY,
@@ -740,13 +770,23 @@ async function countPriorBookingsExcludingPayment(paymentId, email, stripeCustom
 
 async function insertBooking(booking) {
     const p = getPool();
+    const paymentId = String(booking.paymentId || '');
+    const isManual = paymentId.startsWith('manual_');
+    const isComp = paymentId.startsWith('comp_');
+    const markedPaid = booking.markedPaid != null
+        ? booking.markedPaid === true
+        : !isManual;
+    const invoiceSent = booking.invoiceSent != null
+        ? booking.invoiceSent === true
+        : !(isManual || isComp);
     const r = await p.query(
         `INSERT INTO bookings (
             booking_ref, email, service, date, time, patient_name, traveller_count,
             amount, currency, payment_id, stripe_customer_id,
-            date_iso, patient_locale,
-            cancelled, reschedule_count, reminder_sent, reminder_1h_sent, followup_sent
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+            date_iso, patient_locale, patient_phone,
+            cancelled, reschedule_count, reminder_sent, reminder_1h_sent, followup_sent,
+            professional, marked_paid, invoice_sent, review_requested
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
         ON CONFLICT (payment_id) DO NOTHING
         RETURNING *`,
         [
@@ -763,14 +803,53 @@ async function insertBooking(booking) {
             booking.stripeCustomerId || null,
             booking.dateIso || null,
             booking.patientLocale || 'en',
+            booking.patientPhone || null,
             booking.cancelled === true,
             booking.rescheduleCount != null ? booking.rescheduleCount : 0,
             booking.reminderSent === true,
             booking.reminder1hSent === true,
-            booking.followupSent === true
+            booking.followupSent === true,
+            booking.professional || null,
+            markedPaid,
+            invoiceSent,
+            booking.reviewRequested === true
         ]
     );
     return r.rowCount > 0;
+}
+
+async function updateBookingAdminFields(bookingRef, fields) {
+    const p = getPool();
+    const ref = String(bookingRef || '').trim().toUpperCase();
+    const sets = [];
+    const vals = [];
+    let i = 1;
+    const map = {
+        professional: 'professional',
+        markedPaid: 'marked_paid',
+        invoiceSent: 'invoice_sent',
+        reviewRequested: 'review_requested',
+        patientPhone: 'patient_phone'
+    };
+    for (const [jsKey, col] of Object.entries(map)) {
+        if (!Object.prototype.hasOwnProperty.call(fields, jsKey)) continue;
+        let v = fields[jsKey];
+        if (jsKey === 'professional' || jsKey === 'patientPhone') {
+            v = v == null ? null : String(v).trim().slice(0, 200);
+            if (v === '') v = null;
+        } else {
+            v = v === true || v === 'true' || v === 1 || v === '1';
+        }
+        sets.push(`${col} = $${i++}`);
+        vals.push(v);
+    }
+    if (!sets.length) return findBookingByRef(ref);
+    vals.push(ref);
+    const r = await p.query(
+        `UPDATE bookings SET ${sets.join(', ')} WHERE UPPER(TRIM(booking_ref)) = $${i} RETURNING *`,
+        vals
+    );
+    return r.rows[0] ? rowToBooking(r.rows[0]) : null;
 }
 
 /** Patient portal: only return a booking when email and booking reference both match. */
@@ -930,6 +1009,7 @@ module.exports = {
     bookingExistsByPaymentId,
     countPriorBookingsExcludingPayment,
     insertBooking,
+    updateBookingAdminFields,
     findBookingsByEmailAndRef,
     findBookingsByEmail,
     insertQuizAttempt,

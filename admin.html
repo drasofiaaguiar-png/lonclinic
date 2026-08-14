@@ -90,6 +90,7 @@
                 </div>
                 <nav class="admin-sidebar-nav">
                     <button type="button" class="admin-nav-item is-active" data-admin-panel="schedule">Schedule</button>
+                    <button type="button" class="admin-nav-item" data-admin-panel="patients">Patients</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="invitations">Invitations</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="availability">Availability</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="reviews">Reviews</button>
@@ -134,6 +135,45 @@
                     <div id="adminScheduleList" class="admin-schedule-list">
                         <p class="admin-empty-list">Loading schedule…</p>
                     </div>
+                </div>
+            </div>
+
+            <!-- Patients panel -->
+            <div class="admin-panel" id="adminPanelPatients" data-admin-panel-content="patients" hidden>
+                <div class="dash-section">
+                    <div class="dash-section-header admin-schedule-toolbar">
+                        <div>
+                            <h2 class="dash-section-title">All patients</h2>
+                            <p class="dash-section-subtitle">Consultations, payment, invoice and review tracking. Tick invoice / review-request boxes manually as you complete them.</p>
+                        </div>
+                        <div class="admin-schedule-filters">
+                            <input type="search" id="patientsSearch" class="admin-input admin-patients-search" placeholder="Search name, email, ref…">
+                            <button type="button" class="btn btn-outline btn-sm" id="patientsRefreshBtn">Refresh</button>
+                        </div>
+                    </div>
+                    <div class="admin-patients-table-wrap">
+                        <table class="admin-patients-table" id="adminPatientsTable">
+                            <thead>
+                                <tr>
+                                    <th>Patient</th>
+                                    <th>Contact</th>
+                                    <th>Consultation</th>
+                                    <th>Type</th>
+                                    <th>Professional</th>
+                                    <th>Paid</th>
+                                    <th>Invoice sent</th>
+                                    <th>Review asked</th>
+                                    <th>Reviewed</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminPatientsBody">
+                                <tr><td colspan="9" class="admin-empty-list">Loading…</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <datalist id="adminProfessionalsList">
+                        <option value="Dra. Sofia Aguiar"></option>
+                    </datalist>
                 </div>
             </div>
 

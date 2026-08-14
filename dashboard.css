@@ -2125,3 +2125,142 @@ a.admin-nav-link {
         justify-content: space-between;
     }
 }
+
+/* ========================================
+   ADMIN PATIENTS TABLE
+======================================== */
+.dash-content.admin-shell {
+    max-width: 1280px;
+}
+
+.admin-patients-search {
+    min-width: 200px;
+    max-width: 280px;
+}
+
+.admin-patients-table-wrap {
+    overflow-x: auto;
+    margin-top: 8px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+}
+
+.admin-patients-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+    min-width: 920px;
+}
+
+.admin-patients-table th,
+.admin-patients-table td {
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.admin-patients-table th {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    background: rgba(15, 23, 42, 0.03);
+    white-space: nowrap;
+}
+
+.admin-patients-table tbody tr:hover {
+    background: rgba(197, 199, 44, 0.06);
+}
+
+.admin-patients-table tr.is-cancelled {
+    opacity: 0.55;
+}
+
+.admin-patients-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.admin-patients-ref {
+    font-size: 0.6875rem;
+    font-family: ui-monospace, monospace;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.admin-patients-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.admin-patients-contact a {
+    color: var(--text-secondary);
+    text-decoration: none;
+}
+
+.admin-patients-contact a:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
+}
+
+.admin-patients-service {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.admin-patients-urgency {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+
+.admin-patients-urgency.is-urgent {
+    background: rgba(239, 68, 68, 0.12);
+    color: #b91c1c;
+}
+
+.admin-patients-urgency.is-regular {
+    background: rgba(15, 23, 42, 0.06);
+    color: var(--text-secondary);
+}
+
+.admin-patients-professional {
+    min-width: 140px;
+    max-width: 180px;
+    padding: 6px 8px;
+    font-size: 0.8125rem;
+}
+
+.admin-patients-check-cell {
+    white-space: nowrap;
+}
+
+.admin-patients-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    user-select: none;
+    color: var(--text-secondary);
+}
+
+.admin-patients-check input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+}
+
+.admin-patients-yes {
+    color: #15803d;
+    font-weight: 600;
+}
+
+.admin-patients-no {
+    color: var(--text-muted);
+}
