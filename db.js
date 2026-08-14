@@ -337,6 +337,37 @@ async function initSchema(p) {
     await p.query(
         `CREATE INDEX IF NOT EXISTS idx_psychologist_applications_created ON psychologist_applications (created_at DESC)`
     );
+    // Denormalized form fields for filtering / matching
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS localidade TEXT`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS pais TEXT`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS cedula_opp TEXT`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS grau_academico TEXT`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS anos_clinica TEXT`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS anos_individuais TEXT`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS experiencia_online TEXT`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS areas_clinicas JSONB NOT NULL DEFAULT '[]'::jsonb`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS populacoes JSONB NOT NULL DEFAULT '[]'::jsonb`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS idiomas JSONB NOT NULL DEFAULT '[]'::jsonb`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS modelos JSONB NOT NULL DEFAULT '[]'::jsonb`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS dias_semana JSONB NOT NULL DEFAULT '[]'::jsonb`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS horas_iniciais TEXT`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS horarios_fixos TEXT`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS disponibilidade_estavel TEXT`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS bolsa_autorizacao TEXT`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS score_breakdown JSONB NOT NULL DEFAULT '{}'::jsonb`);
+    await p.query(
+        `ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS status VARCHAR(32) NOT NULL DEFAULT 'novo'`
+    );
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS admin_notes TEXT`);
+    await p.query(
+        `ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()`
+    );
+    await p.query(
+        `CREATE INDEX IF NOT EXISTS idx_psychologist_applications_status ON psychologist_applications (status)`
+    );
+    await p.query(
+        `CREATE INDEX IF NOT EXISTS idx_psychologist_applications_band ON psychologist_applications (score_band)`
+    );
 }
 
 function rowToReview(row) {
@@ -374,11 +405,23 @@ async function insertReview(record) {
 
 async function insertPsychologistApplication(record) {
     const p = getPool();
+    const payload = record.payload && typeof record.payload === 'object' ? record.payload : {};
+    const asArr = (v) => (Array.isArray(v) ? v : []);
     const r = await p.query(
         `INSERT INTO psychologist_applications
-            (id, name, email, phone, score, score_band, eligible, elimination_reasons, payload, cv_filename)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8::jsonb, $9::jsonb, $10)
-         RETURNING id, created_at, score, score_band, eligible`,
+            (id, name, email, phone, score, score_band, eligible, elimination_reasons, payload, cv_filename,
+             localidade, pais, cedula_opp, grau_academico, anos_clinica, anos_individuais, experiencia_online,
+             areas_clinicas, populacoes, idiomas, modelos, dias_semana,
+             horas_iniciais, horarios_fixos, disponibilidade_estavel, bolsa_autorizacao,
+             score_breakdown, status, admin_notes, updated_at)
+         VALUES (
+            $1, $2, $3, $4, $5, $6, $7, $8::jsonb, $9::jsonb, $10,
+            $11, $12, $13, $14, $15, $16, $17,
+            $18::jsonb, $19::jsonb, $20::jsonb, $21::jsonb, $22::jsonb,
+            $23, $24, $25, $26,
+            $27::jsonb, $28, $29, NOW()
+         )
+         RETURNING *`,
         [
             record.id,
             record.name,
@@ -388,11 +431,133 @@ async function insertPsychologistApplication(record) {
             record.scoreBand || 'nao_avanca',
             record.eligible === true,
             JSON.stringify(record.eliminationReasons || []),
-            JSON.stringify(record.payload || {}),
-            record.cvFilename || null
+            JSON.stringify(payload),
+            record.cvFilename || null,
+            payload.localidade || null,
+            payload.pais || null,
+            payload.cedula_opp || null,
+            payload.grau_academico || null,
+            payload.anos_clinica || null,
+            payload.anos_individuais || null,
+            payload.experiencia_online || null,
+            JSON.stringify(asArr(payload.areas_clinicas)),
+            JSON.stringify(asArr(payload.populacoes)),
+            JSON.stringify(asArr(payload.idiomas)),
+            JSON.stringify(asArr(payload.modelos)),
+            JSON.stringify(asArr(payload.dias_semana)),
+            payload.horas_iniciais || null,
+            payload.horarios_fixos || null,
+            payload.disponibilidade_estavel || null,
+            payload.bolsa_autorizacao || null,
+            JSON.stringify(record.scoreBreakdown || {}),
+            record.status || (record.eligible === false ? 'eliminado' : record.scoreBand || 'novo'),
+            record.adminNotes || null
         ]
     );
-    return r.rows[0] || null;
+    return rowToPsychologistApplication(r.rows[0]);
+}
+
+function rowToPsychologistApplication(row) {
+    if (!row) return null;
+    return {
+        id: row.id,
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
+        updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : row.updated_at,
+        name: row.name || '',
+        email: row.email || '',
+        phone: row.phone || '',
+        localidade: row.localidade || '',
+        pais: row.pais || '',
+        cedulaOpp: row.cedula_opp || '',
+        grauAcademico: row.grau_academico || '',
+        anosClinica: row.anos_clinica || '',
+        anosIndividuais: row.anos_individuais || '',
+        experienciaOnline: row.experiencia_online || '',
+        areasClinicas: Array.isArray(row.areas_clinicas) ? row.areas_clinicas : [],
+        populacoes: Array.isArray(row.populacoes) ? row.populacoes : [],
+        idiomas: Array.isArray(row.idiomas) ? row.idiomas : [],
+        modelos: Array.isArray(row.modelos) ? row.modelos : [],
+        diasSemana: Array.isArray(row.dias_semana) ? row.dias_semana : [],
+        horasIniciais: row.horas_iniciais || '',
+        horariosFixos: row.horarios_fixos || '',
+        disponibilidadeEstavel: row.disponibilidade_estavel || '',
+        bolsaAutorizacao: row.bolsa_autorizacao || '',
+        score: row.score != null ? Number(row.score) : 0,
+        scoreBand: row.score_band || '',
+        scoreBreakdown: row.score_breakdown && typeof row.score_breakdown === 'object' ? row.score_breakdown : {},
+        eligible: row.eligible === true,
+        eliminationReasons: Array.isArray(row.elimination_reasons) ? row.elimination_reasons : [],
+        status: row.status || 'novo',
+        adminNotes: row.admin_notes || '',
+        cvFilename: row.cv_filename || '',
+        payload: row.payload && typeof row.payload === 'object' ? row.payload : {}
+    };
+}
+
+async function listPsychologistApplications({ status, band, q, limit } = {}) {
+    const p = getPool();
+    const cap = Math.min(Math.max(parseInt(limit, 10) || 100, 1), 300);
+    const clauses = [];
+    const params = [];
+    if (status) {
+        params.push(String(status));
+        clauses.push(`status = $${params.length}`);
+    }
+    if (band) {
+        params.push(String(band));
+        clauses.push(`score_band = $${params.length}`);
+    }
+    if (q && String(q).trim()) {
+        params.push(`%${String(q).trim().toLowerCase()}%`);
+        clauses.push(
+            `(LOWER(name) LIKE $${params.length} OR LOWER(email) LIKE $${params.length} OR LOWER(COALESCE(cedula_opp, '')) LIKE $${params.length})`
+        );
+    }
+    params.push(cap);
+    const where = clauses.length ? `WHERE ${clauses.join(' AND ')}` : '';
+    const r = await p.query(
+        `SELECT * FROM psychologist_applications ${where}
+         ORDER BY score DESC NULLS LAST, created_at DESC
+         LIMIT $${params.length}`,
+        params
+    );
+    return r.rows.map(rowToPsychologistApplication);
+}
+
+async function findPsychologistApplicationById(id) {
+    const p = getPool();
+    const r = await p.query(`SELECT * FROM psychologist_applications WHERE id = $1 LIMIT 1`, [id]);
+    return rowToPsychologistApplication(r.rows[0]);
+}
+
+async function updatePsychologistApplication(id, patch) {
+    const p = getPool();
+    const allowedStatus = new Set([
+        'novo',
+        'prioritario',
+        'shortlist',
+        'entrevista',
+        'aceite',
+        'bolsa',
+        'rejeitado',
+        'eliminado'
+    ]);
+    const status =
+        patch.status && allowedStatus.has(String(patch.status)) ? String(patch.status) : null;
+    const adminNotes = patch.adminNotes !== undefined ? String(patch.adminNotes || '').slice(0, 4000) : null;
+    if (status == null && adminNotes == null) {
+        return findPsychologistApplicationById(id);
+    }
+    const r = await p.query(
+        `UPDATE psychologist_applications SET
+            status = COALESCE($2, status),
+            admin_notes = COALESCE($3, admin_notes),
+            updated_at = NOW()
+         WHERE id = $1
+         RETURNING *`,
+        [id, status, adminNotes]
+    );
+    return rowToPsychologistApplication(r.rows[0]);
 }
 
 async function listPublicReviews(limit = 50) {
@@ -1133,6 +1298,9 @@ module.exports = {
     cancelInvitation,
     insertReview,
     insertPsychologistApplication,
+    listPsychologistApplications,
+    findPsychologistApplicationById,
+    updatePsychologistApplication,
     listPublicReviews,
     listAllReviews,
     findAllBookings,
