@@ -316,6 +316,27 @@ async function initSchema(p) {
     await p.query(
         `CREATE INDEX IF NOT EXISTS idx_patient_reviews_public ON patient_reviews (created_at DESC) WHERE is_public = TRUE`
     );
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS psychologist_applications (
+            id UUID PRIMARY KEY,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            name TEXT NOT NULL,
+            email VARCHAR(320) NOT NULL,
+            phone TEXT,
+            score INTEGER NOT NULL DEFAULT 0,
+            score_band VARCHAR(32) NOT NULL,
+            eligible BOOLEAN NOT NULL DEFAULT FALSE,
+            elimination_reasons JSONB NOT NULL DEFAULT '[]'::jsonb,
+            payload JSONB NOT NULL,
+            cv_filename TEXT
+        )
+    `);
+    await p.query(
+        `CREATE INDEX IF NOT EXISTS idx_psychologist_applications_email_lower ON psychologist_applications (LOWER(email))`
+    );
+    await p.query(
+        `CREATE INDEX IF NOT EXISTS idx_psychologist_applications_created ON psychologist_applications (created_at DESC)`
+    );
 }
 
 function rowToReview(row) {
@@ -349,6 +370,29 @@ async function insertReview(record) {
         ]
     );
     return rowToReview(r.rows[0]);
+}
+
+async function insertPsychologistApplication(record) {
+    const p = getPool();
+    const r = await p.query(
+        `INSERT INTO psychologist_applications
+            (id, name, email, phone, score, score_band, eligible, elimination_reasons, payload, cv_filename)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8::jsonb, $9::jsonb, $10)
+         RETURNING id, created_at, score, score_band, eligible`,
+        [
+            record.id,
+            record.name,
+            record.email,
+            record.phone || null,
+            Number.isFinite(record.score) ? record.score : 0,
+            record.scoreBand || 'nao_avanca',
+            record.eligible === true,
+            JSON.stringify(record.eliminationReasons || []),
+            JSON.stringify(record.payload || {}),
+            record.cvFilename || null
+        ]
+    );
+    return r.rows[0] || null;
 }
 
 async function listPublicReviews(limit = 50) {
@@ -1088,6 +1132,7 @@ module.exports = {
     markInvitationPaid,
     cancelInvitation,
     insertReview,
+    insertPsychologistApplication,
     listPublicReviews,
     listAllReviews,
     findAllBookings,

@@ -302,6 +302,14 @@
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
+
+    <!-- Psychologist recruitment application -->
+    <url>
+        <loc>https://lonclinic.com/recrutamento/psicologia</loc>
+        <lastmod>2026-08-14</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
     
     <!-- Information hub -->
     <url>
