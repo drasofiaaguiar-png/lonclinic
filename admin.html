@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css?v=patients-schedule-4">
+    <link rel="stylesheet" href="dashboard.css?v=patients-finances-5">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -91,6 +91,7 @@
                 <nav class="admin-sidebar-nav">
                     <button type="button" class="admin-nav-item is-active" data-admin-panel="schedule">Schedule</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="patients">Patients</button>
+                    <button type="button" class="admin-nav-item" data-admin-panel="finances">Finances</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="invitations">Invitations</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="availability">Availability</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="reviews">Reviews</button>
@@ -457,6 +458,28 @@
                     <p class="admin-preview-empty">Select a date and click Preview to see available slots</p>
                 </div>
             </div>
+            </div>
+
+            <!-- Finances panel -->
+            <div class="admin-panel" id="adminPanelFinances" data-admin-panel-content="finances" hidden>
+                <div class="dash-section">
+                    <div class="dash-section-header admin-schedule-toolbar">
+                        <div>
+                            <h2 class="dash-section-title">Finances</h2>
+                            <p class="dash-section-subtitle">Paid revenue by month, with a per-patient breakdown. Based on consultations marked as paid.</p>
+                        </div>
+                        <div class="admin-schedule-filters">
+                            <select id="financesMonthSelect" class="admin-select admin-finances-month" aria-label="Month">
+                                <option value="">All months</option>
+                            </select>
+                            <button type="button" class="btn btn-outline btn-sm" id="financesRefreshBtn">Refresh</button>
+                        </div>
+                    </div>
+                    <div class="admin-finances-summary" id="financesSummary">
+                        <p class="admin-empty-list">Loading…</p>
+                    </div>
+                    <div class="admin-finances-months" id="financesMonthsList"></div>
+                </div>
             </div>
 
             <!-- Reviews panel -->

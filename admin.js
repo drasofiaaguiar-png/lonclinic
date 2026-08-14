@@ -239,6 +239,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const PANEL_META = {
         schedule: { title: 'Schedule', subtitle: 'Upcoming consultations' },
         patients: { title: 'Patients', subtitle: 'All consultations & follow-up tracking' },
+        finances: { title: 'Finances', subtitle: 'Monthly revenue by patient' },
         invitations: { title: 'Invitations', subtitle: 'Send and manage booking invites' },
         availability: { title: 'Availability', subtitle: 'Working hours, blocks & slot preview' },
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' }
@@ -305,6 +306,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (panelId === 'schedule') loadUpcomingConsultations();
         if (panelId === 'patients') loadPatientsTable();
+        if (panelId === 'finances') loadFinancesPanel();
         if (panelId === 'invitations') loadInvitations();
         if (panelId === 'reviews') loadAdminReviews();
     }
@@ -1174,6 +1176,122 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
         });
+    }
+
+    // ─── Finances panel ───
+    let financesCache = null;
+    const financesSummary = document.getElementById('financesSummary');
+    const financesMonthsList = document.getElementById('financesMonthsList');
+    const financesMonthSelect = document.getElementById('financesMonthSelect');
+    const financesRefreshBtn = document.getElementById('financesRefreshBtn');
+
+    function formatEuroFromCents(cents) {
+        const n = Number(cents) || 0;
+        return `€${(n / 100).toFixed(2)}`;
+    }
+
+    function renderFinancesPanel() {
+        if (!financesSummary || !financesMonthsList || !financesCache) return;
+        const months = financesCache.months || [];
+        const filter = financesMonthSelect ? financesMonthSelect.value : '';
+        const visible = filter ? months.filter((m) => m.month === filter) : months;
+        const totals = filter && visible[0]
+            ? {
+                paidCents: visible[0].paidCents,
+                unpaidCents: visible[0].unpaidCents,
+                complimentaryCount: visible[0].complimentaryCount
+            }
+            : (financesCache.totals || { paidCents: 0, unpaidCents: 0, complimentaryCount: 0 });
+
+        financesSummary.innerHTML = `
+            <div class="admin-finances-cards">
+                <div class="admin-finances-card is-paid">
+                    <span class="admin-finances-card-label">Paid revenue</span>
+                    <strong class="admin-finances-card-value">${formatEuroFromCents(totals.paidCents)}</strong>
+                </div>
+                <div class="admin-finances-card is-unpaid">
+                    <span class="admin-finances-card-label">Unpaid (owed)</span>
+                    <strong class="admin-finances-card-value">${formatEuroFromCents(totals.unpaidCents)}</strong>
+                </div>
+                <div class="admin-finances-card is-free">
+                    <span class="admin-finances-card-label">Complimentary</span>
+                    <strong class="admin-finances-card-value">${totals.complimentaryCount || 0}</strong>
+                </div>
+            </div>
+        `;
+
+        if (!visible.length) {
+            financesMonthsList.innerHTML = '<p class="admin-empty-list">No paid consultations yet.</p>';
+            return;
+        }
+
+        financesMonthsList.innerHTML = visible.map((m) => {
+            const patientsHtml = (m.patients || []).map((p) => {
+                const consultLines = (p.consultations || []).map((c) => {
+                    const svc = SERVICE_LABELS_ADMIN[c.service] || c.service || '—';
+                    const when = c.dateIso || c.date || '—';
+                    const status = c.complimentary ? 'Free' : (c.paid ? 'Paid' : 'Unpaid');
+                    return `<li><span>${escapeHtml(when)}${c.time ? ` · ${escapeHtml(c.time)}` : ''} · ${escapeHtml(svc)}</span><span>${c.complimentary ? '—' : formatEuroFromCents(c.amountCents)} · ${status}</span></li>`;
+                }).join('');
+                return `
+                    <div class="admin-finances-patient">
+                        <div class="admin-finances-patient-head">
+                            <div>
+                                <div class="admin-finances-patient-name">${escapeHtml(p.patientName || '—')}</div>
+                                <div class="admin-finances-patient-email">${escapeHtml(p.email || '')}</div>
+                            </div>
+                            <div class="admin-finances-patient-totals">
+                                <strong>${formatEuroFromCents(p.paidCents)}</strong>
+                                ${p.unpaidCents ? `<span class="is-unpaid">owed ${formatEuroFromCents(p.unpaidCents)}</span>` : ''}
+                            </div>
+                        </div>
+                        <ul class="admin-finances-patient-list">${consultLines}</ul>
+                    </div>`;
+            }).join('');
+
+            return `
+                <section class="admin-finances-month">
+                    <div class="admin-finances-month-head">
+                        <h3>${escapeHtml(m.label)}</h3>
+                        <div class="admin-finances-month-totals">
+                            <span class="is-paid">${formatEuroFromCents(m.paidCents)} paid</span>
+                            ${m.unpaidCents ? `<span class="is-unpaid">${formatEuroFromCents(m.unpaidCents)} unpaid</span>` : ''}
+                            <span class="is-muted">${m.paidConsultations || 0} paid consults</span>
+                        </div>
+                    </div>
+                    ${patientsHtml || '<p class="admin-empty-list">No patients this month.</p>'}
+                </section>`;
+        }).join('');
+    }
+
+    async function loadFinancesPanel() {
+        if (!financesSummary) return;
+        try {
+            const res = await fetch('/api/admin/finances');
+            if (res.status === 401) return;
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            financesCache = await res.json();
+            if (financesMonthSelect) {
+                const current = financesMonthSelect.value;
+                const months = financesCache.months || [];
+                financesMonthSelect.innerHTML = '<option value="">All months</option>' + months.map((m) =>
+                    `<option value="${escapeHtml(m.month)}">${escapeHtml(m.label)} — ${formatEuroFromCents(m.paidCents)}</option>`
+                ).join('');
+                if (current && months.some((m) => m.month === current)) financesMonthSelect.value = current;
+            }
+            renderFinancesPanel();
+        } catch (err) {
+            console.error('Load finances:', err);
+            financesSummary.innerHTML = '<p class="admin-empty-list">Could not load finances.</p>';
+            if (financesMonthsList) financesMonthsList.innerHTML = '';
+        }
+    }
+
+    if (financesMonthSelect) {
+        financesMonthSelect.addEventListener('change', renderFinancesPanel);
+    }
+    if (financesRefreshBtn) {
+        financesRefreshBtn.addEventListener('click', () => loadFinancesPanel());
     }
 
     // ─── Login handler ───

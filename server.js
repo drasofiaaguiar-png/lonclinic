@@ -5377,6 +5377,139 @@ function enrichPatientsWithReviews(bookings, reviews) {
     });
 }
 
+function bookingMonthKey(b) {
+    const iso = (b.dateIso && String(b.dateIso).trim()) || '';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso.slice(0, 7);
+    const key = bookingSortKey(b);
+    const m = /^(\d{4}-\d{2})/.exec(key);
+    if (m) return m[1];
+    if (b.createdAt) {
+        const d = new Date(b.createdAt);
+        if (!Number.isNaN(d.getTime())) {
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        }
+    }
+    return 'unknown';
+}
+
+function formatMonthLabel(monthKey) {
+    const m = /^(\d{4})-(\d{2})$/.exec(String(monthKey || ''));
+    if (!m) return monthKey || 'Unknown';
+    const d = new Date(Number(m[1]), Number(m[2]) - 1, 1);
+    return d.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' });
+}
+
+// ─── API: Admin — Finances (paid revenue by month / patient) ───
+app.get('/api/admin/finances', requireAuth, async (req, res) => {
+    try {
+        let bookings;
+        if (usePersistentDb) {
+            bookings = await db.findAllBookings();
+        } else {
+            bookings = [...bookingsStore];
+        }
+
+        const monthFilter = String(req.query.month || '').trim(); // YYYY-MM or empty
+        const byMonth = new Map();
+
+        for (const b of bookings || []) {
+            if (b.cancelled) continue;
+            const month = bookingMonthKey(b);
+            if (monthFilter && month !== monthFilter) continue;
+
+            const amountCents = Math.max(0, Math.round(Number(b.amount) || 0));
+            const paymentId = String(b.paymentId || '');
+            const isComp = paymentId.startsWith('comp_') || amountCents === 0;
+            const isPaid = isComp || b.markedPaid === true;
+
+            if (!byMonth.has(month)) {
+                byMonth.set(month, {
+                    month,
+                    label: formatMonthLabel(month),
+                    paidCents: 0,
+                    unpaidCents: 0,
+                    complimentaryCount: 0,
+                    paidConsultations: 0,
+                    unpaidConsultations: 0,
+                    patients: new Map()
+                });
+            }
+            const bucket = byMonth.get(month);
+            const email = String(b.email || '').toLowerCase().trim() || 'unknown';
+            if (!bucket.patients.has(email)) {
+                bucket.patients.set(email, {
+                    email: b.email || email,
+                    patientName: b.patientName || '—',
+                    paidCents: 0,
+                    unpaidCents: 0,
+                    complimentaryCount: 0,
+                    consultations: []
+                });
+            }
+            const patient = bucket.patients.get(email);
+            if (b.patientName) patient.patientName = b.patientName;
+
+            const entry = {
+                bookingRef: b.bookingRef,
+                dateIso: b.dateIso || null,
+                date: b.date || null,
+                time: String(b.time || '').slice(0, 5),
+                service: b.service,
+                amountCents,
+                paid: isPaid,
+                complimentary: isComp
+            };
+
+            if (isComp) {
+                bucket.complimentaryCount += 1;
+                patient.complimentaryCount += 1;
+            } else if (isPaid) {
+                bucket.paidCents += amountCents;
+                bucket.paidConsultations += 1;
+                patient.paidCents += amountCents;
+            } else {
+                bucket.unpaidCents += amountCents;
+                bucket.unpaidConsultations += 1;
+                patient.unpaidCents += amountCents;
+            }
+            patient.consultations.push(entry);
+        }
+
+        const months = Array.from(byMonth.values())
+            .map((m) => ({
+                month: m.month,
+                label: m.label,
+                paidCents: m.paidCents,
+                unpaidCents: m.unpaidCents,
+                complimentaryCount: m.complimentaryCount,
+                paidConsultations: m.paidConsultations,
+                unpaidConsultations: m.unpaidConsultations,
+                patients: Array.from(m.patients.values())
+                    .map((p) => ({
+                        ...p,
+                        consultations: p.consultations.sort((a, b) =>
+                            String(b.dateIso || b.date || '').localeCompare(String(a.dateIso || a.date || ''))
+                        )
+                    }))
+                    .sort((a, b) => b.paidCents - a.paidCents || a.patientName.localeCompare(b.patientName))
+            }))
+            .sort((a, b) => String(b.month).localeCompare(String(a.month)));
+
+        res.json({
+            currency: 'eur',
+            totals: {
+                paidCents: months.reduce((s, m) => s + m.paidCents, 0),
+                unpaidCents: months.reduce((s, m) => s + m.unpaidCents, 0),
+                complimentaryCount: months.reduce((s, m) => s + m.complimentaryCount, 0)
+            },
+            months
+        });
+    } catch (err) {
+        console.error('GET /api/admin/finances:', err.message);
+        res.status(500).json({ error: 'Failed to load finances' });
+    }
+});
+
 // ─── API: Admin — All patients / consultations table ───
 app.get('/api/admin/patients', requireAuth, async (req, res) => {
     try {

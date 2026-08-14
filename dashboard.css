@@ -2542,3 +2542,152 @@ a.admin-nav-link {
 .admin-patients-no {
     color: var(--text-muted);
 }
+
+/* ========================================
+   ADMIN FINANCES
+======================================== */
+.admin-finances-month {
+    min-width: 180px;
+}
+
+.admin-finances-cards {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 8px 0 20px;
+}
+
+.admin-finances-card {
+    padding: 16px 18px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: rgba(15, 23, 42, 0.02);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.admin-finances-card-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+}
+
+.admin-finances-card-value {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+}
+
+.admin-finances-card.is-paid {
+    border-color: rgba(21, 128, 61, 0.25);
+    background: rgba(21, 128, 61, 0.06);
+}
+
+.admin-finances-card.is-unpaid {
+    border-color: rgba(161, 98, 7, 0.25);
+    background: rgba(161, 98, 7, 0.06);
+}
+
+.admin-finances-months {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.admin-finances-month-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 12px;
+}
+
+.admin-finances-month-head h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.admin-finances-month-totals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.admin-finances-month-totals .is-paid { color: #15803d; }
+.admin-finances-month-totals .is-unpaid { color: #a16207; }
+.admin-finances-month-totals .is-muted { color: var(--text-muted); font-weight: 500; }
+
+.admin-finances-patient {
+    padding: 12px 14px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    margin-bottom: 10px;
+    background: var(--bg-elevated, rgba(255,255,255,0.5));
+}
+
+.admin-finances-patient-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.admin-finances-patient-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.admin-finances-patient-email {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.admin-finances-patient-totals {
+    text-align: right;
+    font-size: 0.9375rem;
+}
+
+.admin-finances-patient-totals .is-unpaid {
+    display: block;
+    font-size: 0.75rem;
+    color: #a16207;
+    font-weight: 600;
+    margin-top: 2px;
+}
+
+.admin-finances-patient-list {
+    list-style: none;
+    margin: 10px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.admin-finances-patient-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    padding-top: 6px;
+    border-top: 1px dashed var(--border-subtle);
+}
+
+@media (max-width: 700px) {
+    .admin-finances-cards {
+        grid-template-columns: 1fr;
+    }
+}
