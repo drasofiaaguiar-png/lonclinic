@@ -2372,6 +2372,120 @@ document.addEventListener('DOMContentLoaded', async () => {
         return Array.isArray(arr) && arr.length ? arr.join(', ') : '—';
     }
 
+    function psychAnswer(value) {
+        if (value == null || value === '') return '—';
+        if (Array.isArray(value)) return value.length ? value.join(', ') : '—';
+        return String(value);
+    }
+
+    function psychQa(label, value) {
+        const text = psychAnswer(value);
+        const multiline = text.includes('\n') || text.length > 120;
+        return `
+            <div class="admin-psych-qa${multiline ? ' is-long' : ''}">
+                <dt>${escapeHtml(label)}</dt>
+                <dd>${escapeHtml(text).replace(/\n/g, '<br>')}</dd>
+            </div>
+        `;
+    }
+
+    function renderPsychFullAnswers(a) {
+        const p = a.payload || {};
+        const pais =
+            p.pais === 'Outro' && p.pais_especificar
+                ? `Outro: ${p.pais_especificar}`
+                : p.pais || a.pais || '';
+        const scoreBits = a.scoreBreakdown || {};
+        return `
+            <div class="admin-psych-scoreline">
+                <strong>Score interno:</strong> ${escapeHtml(String(a.score ?? 0))} · ${escapeHtml(a.scoreBand || '—')}
+                ${a.eligible === false ? ' · não elegível' : ''}
+                ${Array.isArray(a.eliminationReasons) && a.eliminationReasons.length
+                    ? ` · eliminação: ${escapeHtml(a.eliminationReasons.join(', '))}`
+                    : ''}
+                ${scoreBits.experiencia != null
+                    ? `<span class="admin-psych-score-break">exp ${escapeHtml(String(scoreBits.experiencia))}/30 · disp ${escapeHtml(String(scoreBits.disponibilidade))}/25 · perfil ${escapeHtml(String(scoreBits.perfil))}/25 · qualidade ${escapeHtml(String(scoreBits.qualidade))}/20</span>`
+                    : ''}
+            </div>
+            <section class="admin-psych-section">
+                <h4>Dados pessoais</h4>
+                <dl class="admin-psych-qa-list">
+                    ${psychQa('Nome completo', p.nome || a.name)}
+                    ${psychQa('Email', p.email || a.email)}
+                    ${psychQa('Telefone', p.telefone || a.phone)}
+                    ${psychQa('Localidade onde reside', p.localidade || a.localidade)}
+                    ${psychQa('País onde exerce profissionalmente', pais)}
+                </dl>
+            </section>
+            <section class="admin-psych-section">
+                <h4>Formação e inscrição profissional</h4>
+                <dl class="admin-psych-qa-list">
+                    ${psychQa('Inscrito/a na OPP', p.opp_inscrito)}
+                    ${psychQa('Número de Cédula Profissional da OPP', p.cedula_opp || a.cedulaOpp)}
+                    ${psychQa('Grau académico', p.grau_academico || a.grauAcademico)}
+                    ${psychQa('Formação complementar', p.formacao_complementar)}
+                </dl>
+            </section>
+            <section class="admin-psych-section">
+                <h4>Experiência profissional</h4>
+                <dl class="admin-psych-qa-list">
+                    ${psychQa('Anos de experiência em Psicologia Clínica', p.anos_clinica || a.anosClinica)}
+                    ${psychQa('Anos em consultas psicológicas individuais', p.anos_individuais || a.anosIndividuais)}
+                    ${psychQa('Experiência em consultas online', p.experiencia_online || a.experienciaOnline)}
+                    ${psychQa('Nº aproximado de consultas online', p.n_consultas_online)}
+                    ${psychQa('Áreas de maior experiência clínica', p.areas_clinicas || a.areasClinicas)}
+                    ${psychQa('Populações', p.populacoes || a.populacoes)}
+                    ${psychQa('Tipos de casos que prefere acompanhar', p.tipos_casos)}
+                </dl>
+            </section>
+            <section class="admin-psych-section">
+                <h4>Disponibilidade</h4>
+                <dl class="admin-psych-qa-list">
+                    ${psychQa('Horas semanais iniciais', p.horas_iniciais || a.horasIniciais)}
+                    ${psychQa('Dias da semana', p.dias_semana || a.diasSemana)}
+                    ${psychQa('Horários fixos semanais', p.horarios_fixos || a.horariosFixos)}
+                    ${psychQa('Disponibilidade estável', p.disponibilidade_estavel || a.disponibilidadeEstavel)}
+                    ${psychQa('Disponibilidade para aumentar horas', p.aumento_futuro)}
+                    ${psychQa('Horas para as quais poderia aumentar', p.horas_aumento)}
+                </dl>
+            </section>
+            <section class="admin-psych-section">
+                <h4>Condições</h4>
+                <dl class="admin-psych-qa-list">
+                    ${psychQa('Aceita as condições da colaboração', p.aceita_condicoes)}
+                </dl>
+            </section>
+            <section class="admin-psych-section">
+                <h4>Experiência prática / perfil</h4>
+                <dl class="admin-psych-qa-list">
+                    ${psychQa('Abordagem terapêutica', p.abordagem_terapeutica)}
+                    ${psychQa('Modelos / abordagens', p.modelos || a.modelos)}
+                    ${psychQa('Idiomas', p.idiomas || a.idiomas)}
+                    ${psychQa('Experiência em videoconferência', p.videoconferencia)}
+                </dl>
+            </section>
+            <section class="admin-psych-section">
+                <h4>Questões administrativas e entrevista</h4>
+                <dl class="admin-psych-qa-list">
+                    ${psychQa('Atividade profissional aberta', p.atividade_profissional)}
+                    ${psychQa('Seguro de responsabilidade civil', p.rc_profissional)}
+                    ${psychQa('Limitações relevantes', p.limitacoes)}
+                    ${psychQa('Disponibilidade para entrevista online', p.entrevista_disponibilidade)}
+                    ${psychQa('Períodos para entrevista', p.periodos_entrevista)}
+                    ${psychQa('Autorização bolsa / contactos futuros', p.bolsa_autorizacao || a.bolsaAutorizacao)}
+                </dl>
+            </section>
+            <section class="admin-psych-section">
+                <h4>CV</h4>
+                <dl class="admin-psych-qa-list">
+                    ${psychQa('CV enviado', a.cvFilename || '—')}
+                    ${psychQa('LinkedIn / website', p.linkedin)}
+                    ${psychQa('Recebido em', formatPsychDate(a.createdAt))}
+                </dl>
+            </section>
+        `;
+    }
+
     function renderAdminPsychologists(list) {
         if (!adminPsychologistsList) return;
         if (!list.length) {
@@ -2400,23 +2514,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <span class="admin-psych-chevron" aria-hidden="true"></span>
                 </summary>
                 <div class="admin-psych-body">
-                    <div class="admin-psych-grid">
-                        <div><strong>Score</strong> ${escapeHtml(String(a.score ?? 0))} · ${escapeHtml(a.scoreBand || '—')}</div>
-                        <div><strong>Localidade</strong> ${escapeHtml(a.localidade || p.localidade || '—')}</div>
-                        <div><strong>OPP</strong> ${escapeHtml(a.cedulaOpp || p.cedula_opp || '—')}</div>
-                        <div><strong>Experiência</strong> ${escapeHtml(a.anosClinica || p.anos_clinica || '—')}</div>
-                        <div><strong>Online</strong> ${escapeHtml(a.experienciaOnline || p.experiencia_online || '—')}</div>
-                        <div><strong>Horas</strong> ${escapeHtml(a.horasIniciais || p.horas_iniciais || '—')}</div>
-                        <div><strong>Idiomas</strong> ${escapeHtml(joinList(a.idiomas || p.idiomas))}</div>
-                        <div><strong>Dias</strong> ${escapeHtml(joinList(a.diasSemana || p.dias_semana))}</div>
-                        <div class="admin-psych-span"><strong>Áreas</strong> ${escapeHtml(joinList(a.areasClinicas || p.areas_clinicas))}</div>
-                        <div class="admin-psych-span"><strong>Horários</strong> ${escapeHtml(a.horariosFixos || p.horarios_fixos || '—')}</div>
-                        <div class="admin-psych-span"><strong>Recebido</strong> ${escapeHtml(formatPsychDate(a.createdAt))}${a.cvFilename ? ` · CV: ${escapeHtml(a.cvFilename)}` : ''}</div>
-                    </div>
-                    <details class="admin-psych-raw">
-                        <summary>Ver resposta completa (JSON)</summary>
-                        <pre class="admin-psych-payload">${escapeHtml(JSON.stringify(p, null, 2))}</pre>
-                    </details>
+                    ${renderPsychFullAnswers(a)}
                     <div class="admin-psych-actions">
                         <label>
                             Status

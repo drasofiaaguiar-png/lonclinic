@@ -2878,41 +2878,69 @@ a.admin-nav-link {
     background: #fafaf8;
 }
 
-.admin-psych-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px 14px;
+.admin-psych-scoreline {
     font-size: 0.8125rem;
-    margin-bottom: 10px;
-}
-
-.admin-psych-grid strong {
-    display: block;
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-muted);
-    margin-bottom: 2px;
-}
-
-.admin-psych-span {
-    grid-column: 1 / -1;
-}
-
-.admin-psych-raw {
-    margin: 8px 0 12px;
-    font-size: 0.8125rem;
-}
-
-.admin-psych-payload {
-    margin: 8px 0 0;
-    max-height: 240px;
-    overflow: auto;
+    margin: 0 0 14px;
     padding: 10px 12px;
-    background: #f1f1ee;
     border-radius: 8px;
-    font-size: 0.72rem;
+    background: rgba(47, 99, 66, 0.08);
+    color: #1c2a24;
+}
+
+.admin-psych-score-break {
+    display: block;
+    margin-top: 4px;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.admin-psych-section {
+    margin: 0 0 14px;
+}
+
+.admin-psych-section h4 {
+    margin: 0 0 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #255235;
+}
+
+.admin-psych-qa-list {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.admin-psych-qa {
+    display: grid;
+    grid-template-columns: minmax(160px, 0.9fr) minmax(0, 1.4fr);
+    gap: 6px 14px;
+    padding: 8px 10px;
+    background: #fff;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    font-size: 0.8125rem;
+}
+
+.admin-psych-qa dt {
+    margin: 0;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.admin-psych-qa dd {
+    margin: 0;
+    color: var(--text-primary, #1c2a24);
     white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.admin-psych-qa.is-long {
+    grid-template-columns: 1fr;
 }
 
 .admin-psych-actions {
@@ -2920,6 +2948,7 @@ a.admin-nav-link {
     grid-template-columns: 160px 1fr auto;
     gap: 12px;
     align-items: end;
+    margin-top: 4px;
 }
 
 .admin-psych-actions label {
@@ -2952,7 +2981,7 @@ a.admin-nav-link {
         grid-column: 2;
         grid-row: 1;
     }
-    .admin-psych-grid {
+    .admin-psych-qa {
         grid-template-columns: 1fr;
     }
     .admin-psych-actions {
