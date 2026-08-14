@@ -517,6 +517,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 || latest.professional
                 || '';
             const visitFrequency = sorted.find((c) => c.visitFrequency)?.visitFrequency || '';
+            const storedType = sorted.find((c) => {
+                const t = String(c.patientType || '');
+                return t === 'Regular' || t === 'One-time' || t === 'regular' || t === 'one_time';
+            })?.patientType;
+            const normalizedStored = (() => {
+                const s = String(storedType || '').toLowerCase().replace(/[\s-]+/g, '_');
+                if (s === 'regular') return 'Regular';
+                if (s === 'one_time' || s === 'onetime') return 'One-time';
+                return '';
+            })();
             groups.push({
                 emailKey,
                 email: latest.email || '',
@@ -525,7 +535,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 consultations: sorted,
                 latest,
                 consultationCount: count,
-                patientType: count > 1 ? 'Regular' : 'One-time',
+                patientType: normalizedStored || (count > 1 ? 'Regular' : 'One-time'),
                 visitFrequency,
                 professional,
                 hasReviewed: sorted.some((c) => c.hasReviewed),
@@ -585,7 +595,31 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             }
         }
+        if (Object.prototype.hasOwnProperty.call(patch, 'patientType')) {
+            const row = patientsCache.find((p) => p.bookingRef === bookingRef);
+            const label = patch.patientType === 'regular' || patch.patientType === 'Regular'
+                ? 'Regular'
+                : 'One-time';
+            if (row && row.email) {
+                const email = String(row.email).toLowerCase();
+                patientsCache.forEach((x) => {
+                    if (String(x.email || '').toLowerCase() === email) {
+                        x.patientType = label;
+                    }
+                });
+            }
+        }
         return data.patient;
+    }
+
+    async function deletePatientConsultation(bookingRef) {
+        const res = await fetch(`/api/admin/patients/${encodeURIComponent(bookingRef)}`, {
+            method: 'DELETE'
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+        patientsCache = patientsCache.filter((p) => p.bookingRef !== bookingRef);
+        return data;
     }
 
     function freqOptionsHtml(selected) {
@@ -602,11 +636,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const patch = {};
                 if (field === 'professional') patch.professional = el.value;
                 else if (field === 'visitFrequency') patch.visitFrequency = el.value;
+                else if (field === 'patientType') patch.patientType = el.value;
                 else patch[field] = el.checked;
                 try {
                     el.disabled = true;
                     await patchPatientField(ref, patch);
-                    if (field === 'visitFrequency' || field === 'professional') {
+                    if (field === 'visitFrequency' || field === 'professional' || field === 'patientType') {
                         renderPatientsTable();
                         return;
                     }
@@ -654,13 +689,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         groups.forEach((g) => {
             const expanded = patientsExpanded.has(g.emailKey);
             const canExpand = g.consultations.length > 0;
-            const typeClass = g.patientType === 'Regular' ? 'regular' : 'onetime';
             const phone = g.patientPhone || '';
             const reviewedHtml = g.hasReviewed
                 ? `<span class="admin-patients-yes">Yes${g.reviewRating ? ` · ${g.reviewRating}★` : ''}</span>`
                 : '<span class="admin-patients-no">No</span>';
             const latestService = SERVICE_LABELS_ADMIN[g.latest.service] || g.latest.service || '—';
             const moreCount = Math.max(0, g.consultations.length - 1);
+            const singleDelete = g.consultations.length === 1
+                ? `<button type="button" class="btn btn-outline btn-sm admin-patients-delete" data-delete-ref="${escapeHtml(g.primaryRef)}" title="Delete this consultation">Delete</button>`
+                : '';
 
             const summary = document.createElement('tr');
             summary.className = 'admin-patients-summary' + (expanded ? ' is-expanded' : '');
@@ -676,6 +713,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ${g.consultations.length > 1
                         ? `<div class="admin-patients-ref">${g.consultations.length} consultations</div>`
                         : `<div class="admin-patients-ref">${escapeHtml(g.primaryRef || '')}</div>`}
+                    ${singleDelete}
                 </td>
                 <td>
                     <div class="admin-patients-contact">
@@ -688,7 +726,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="admin-patients-service">${escapeHtml(latestService)}${moreCount ? ` · +${moreCount} more` : ''}</div>
                 </td>
                 <td>
-                    <span class="admin-patients-type is-${typeClass}">${escapeHtml(g.patientType)}</span>
+                    <select class="admin-select admin-patients-type-select" data-field="patientType" data-ref="${escapeHtml(g.primaryRef)}">
+                        <option value="one_time" ${g.patientType === 'One-time' ? 'selected' : ''}>One-time</option>
+                        <option value="regular" ${g.patientType === 'Regular' ? 'selected' : ''}>Regular</option>
+                    </select>
                     ${g.consultationCount > 1 ? `<span class="admin-patients-count">${g.consultationCount} visits</span>` : ''}
                 </td>
                 <td>
@@ -745,6 +786,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     <span>${c.reviewRequested ? 'Yes' : 'No'}</span>
                                 </label>
                             </td>
+                            <td>
+                                <button type="button" class="btn btn-outline btn-sm admin-patients-delete" data-delete-ref="${escapeHtml(c.bookingRef)}" title="Delete this consultation">Delete</button>
+                            </td>
                         </tr>`;
                 }).join('');
                 detail.innerHTML = `
@@ -759,6 +803,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                         <th>Paid</th>
                                         <th>Invoice sent</th>
                                         <th>Review asked</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>${rowsHtml}</tbody>
@@ -776,6 +821,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (patientsExpanded.has(key)) patientsExpanded.delete(key);
                 else patientsExpanded.add(key);
                 renderPatientsTable();
+            });
+        });
+
+        adminPatientsBody.querySelectorAll('[data-delete-ref]').forEach((btn) => {
+            btn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const ref = btn.getAttribute('data-delete-ref');
+                if (!ref) return;
+                if (!confirm(`Delete consultation ${ref}? This cannot be undone.`)) return;
+                btn.disabled = true;
+                try {
+                    await deletePatientConsultation(ref);
+                    renderPatientsTable();
+                } catch (err) {
+                    alert('Could not delete: ' + err.message);
+                    btn.disabled = false;
+                }
             });
         });
 

@@ -4909,6 +4909,13 @@ function consultationPatientType(consultationCount) {
     return n > 1 ? 'Regular' : 'One-time';
 }
 
+function normalizeStoredPatientType(raw) {
+    const s = String(raw || '').trim().toLowerCase().replace(/[\s-]+/g, '_');
+    if (s === 'regular') return 'Regular';
+    if (s === 'one_time' || s === 'onetime') return 'One-time';
+    return '';
+}
+
 function enrichPatientsWithReviews(bookings, reviews) {
     const reviewByEmail = new Map();
     for (const r of reviews || []) {
@@ -4925,12 +4932,14 @@ function enrichPatientsWithReviews(bookings, reviews) {
         countByEmail.set(e, (countByEmail.get(e) || 0) + 1);
     }
 
-    // Prefer any set visitFrequency from the patient's bookings
     const frequencyByEmail = new Map();
+    const typeByEmail = new Map();
     for (const b of bookings || []) {
         const e = String(b.email || '').toLowerCase().trim();
-        if (!e || !b.visitFrequency) continue;
-        if (!frequencyByEmail.has(e)) frequencyByEmail.set(e, b.visitFrequency);
+        if (!e) continue;
+        if (b.visitFrequency && !frequencyByEmail.has(e)) frequencyByEmail.set(e, b.visitFrequency);
+        const typed = normalizeStoredPatientType(b.patientType);
+        if (typed && !typeByEmail.has(e)) typeByEmail.set(e, typed);
     }
 
     return bookings.map((b) => {
@@ -4938,11 +4947,12 @@ function enrichPatientsWithReviews(bookings, reviews) {
         const review = email ? reviewByEmail.get(email) : null;
         const phone = b.patientPhone || (b._invitePhone || '') || '';
         const consultationCount = email ? (countByEmail.get(email) || 0) : 1;
+        const storedType = normalizeStoredPatientType(b.patientType) || typeByEmail.get(email) || '';
         return {
             ...b,
             patientPhone: phone,
             consultationCount,
-            patientType: consultationPatientType(consultationCount),
+            patientType: storedType || consultationPatientType(consultationCount),
             visitFrequency: b.visitFrequency || frequencyByEmail.get(email) || '',
             hasReviewed: !!review,
             reviewRating: review ? review.rating : null,
@@ -5021,6 +5031,7 @@ app.patch('/api/admin/patients/:bookingRef', requireAuth, express.json(), async 
         if (Object.prototype.hasOwnProperty.call(body, 'reviewRequested')) fields.reviewRequested = body.reviewRequested;
         if (Object.prototype.hasOwnProperty.call(body, 'patientPhone')) fields.patientPhone = body.patientPhone;
         if (Object.prototype.hasOwnProperty.call(body, 'visitFrequency')) fields.visitFrequency = body.visitFrequency;
+        if (Object.prototype.hasOwnProperty.call(body, 'patientType')) fields.patientType = body.patientType;
 
         if (!Object.keys(fields).length) {
             return res.status(400).json({ error: 'No fields to update' });
@@ -5032,6 +5043,22 @@ app.patch('/api/admin/patients/:bookingRef', requireAuth, express.json(), async 
     } catch (err) {
         console.error('PATCH /api/admin/patients/:bookingRef:', err.message);
         res.status(500).json({ error: 'Failed to update patient row' });
+    }
+});
+
+app.delete('/api/admin/patients/:bookingRef', requireAuth, async (req, res) => {
+    if (!usePersistentDb) {
+        return res.status(503).json({ error: 'Database required' });
+    }
+    try {
+        const bookingRef = String(req.params.bookingRef || '').toUpperCase();
+        const deleted = await db.deleteBookingByRef(bookingRef);
+        if (!deleted) return res.status(404).json({ error: 'Booking not found' });
+        console.log(`   🗑️  Admin deleted booking ${bookingRef}`);
+        res.json({ ok: true, deleted: deleted.bookingRef });
+    } catch (err) {
+        console.error('DELETE /api/admin/patients/:bookingRef:', err.message);
+        res.status(500).json({ error: 'Failed to delete consultation' });
     }
 });
 

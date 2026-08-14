@@ -2313,6 +2313,23 @@ a.admin-nav-link {
     color: var(--text-secondary);
 }
 
+.admin-patients-type-select {
+    min-width: 110px;
+    max-width: 130px;
+    padding: 6px 8px;
+    font-size: 0.8125rem;
+}
+
+.admin-patients-delete {
+    margin-top: 6px;
+    color: #b91c1c;
+    border-color: rgba(185, 28, 28, 0.35);
+}
+
+.admin-patients-delete:hover {
+    background: rgba(185, 28, 28, 0.08);
+}
+
 .admin-patients-count {
     display: block;
     margin-top: 4px;
