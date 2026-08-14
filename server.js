@@ -140,6 +140,16 @@ const rateLimitSessionRetrieve = rateLimit({
     }
 });
 
+const rateLimitRecrutamentoPsicologia = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Demasiadas candidaturas. Tente novamente mais tarde.' });
+    }
+});
+
 /* ========================================
    SECURITY HEADERS (CSP, HSTS, etc.)
 ======================================== */
@@ -552,6 +562,21 @@ const upload = multer({
         const isAllowed = allowedMimeTypes.has(file.mimetype) || allowedExtensions.includes(fileExt);
         if (!isAllowed) {
             return cb(new Error('Unsupported file type. Allowed: PDF, DOC, DOCX.'));
+        }
+        return cb(null, true);
+    }
+});
+
+const uploadCvPdf = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB max
+    },
+    fileFilter: (req, file, cb) => {
+        const fileExt = path.extname(file.originalname || '').toLowerCase();
+        const isPdf = file.mimetype === 'application/pdf' || fileExt === '.pdf';
+        if (!isPdf) {
+            return cb(new Error('O CV deve ser um ficheiro PDF.'));
         }
         return cb(null, true);
     }
@@ -3510,6 +3535,18 @@ app.get('/triagem.html', (req, res) => {
     res.redirect(301, '/triagem');
 });
 
+app.get('/recrutamento/psicologia', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'recrutamento-psicologia.html'), 'Error loading recrutamento psicologia page');
+});
+
+app.get('/recrutamento/psicologia/', (req, res) => {
+    res.redirect(301, '/recrutamento/psicologia');
+});
+
+app.get('/recrutamento-psicologia.html', (req, res) => {
+    res.redirect(301, '/recrutamento/psicologia');
+});
+
 app.get('/patient-portal', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'dashboard.html'), 'Error loading patient portal');
 });
@@ -3628,7 +3665,14 @@ app.use((req, res, next) => {
 app.use(express.static(path.join(__dirname), {
     setHeaders: (res, filePath) => {
         const base = path.basename(filePath);
-        if (base === 'guide.css' || base === 'burnout-pages.css' || base === 'psicologia.css' || base === 'psicologia.js') {
+        if (
+            base === 'guide.css' ||
+            base === 'burnout-pages.css' ||
+            base === 'psicologia.css' ||
+            base === 'psicologia.js' ||
+            base === 'recrutamento-psicologia.css' ||
+            base === 'recrutamento-psicologia.js'
+        ) {
             res.setHeader('Cache-Control', 'no-store');
             return;
         }
@@ -3731,6 +3775,378 @@ app.post('/api/careers', (req, res) => {
         };
 
         const sent = await sendCareersApplicationEmail(payload);
+        if (!sent) {
+            return res.status(503).json({ error: 'Não foi possível enviar a candidatura de momento. Tente novamente.' });
+        }
+
+        return res.json({
+            success: true,
+            message: 'Candidatura enviada com sucesso.'
+        });
+    });
+});
+
+// ─── API: Recrutamento Psicologia (candidatura psicólogos clínicos) ───
+function clampScore(n, max) {
+    return Math.max(0, Math.min(max, Math.round(n)));
+}
+
+function yearsBandScore(label) {
+    const map = {
+        'Menos de 1 ano': 2,
+        '1–2 anos': 5,
+        '3–5 anos': 8,
+        '6–10 anos': 10,
+        'Mais de 10 anos': 12
+    };
+    return map[String(label || '')] || 0;
+}
+
+function onlineConsultasScore(label) {
+    const map = {
+        'Menos de 20': 2,
+        '20–50': 4,
+        '50–100': 6,
+        '100–300': 8,
+        'Mais de 300': 10
+    };
+    return map[String(label || '')] || 0;
+}
+
+function scorePsychologistApplication(payload, hasCv) {
+    const reasons = [];
+    if (payload.opp_inscrito !== 'Sim') reasons.push('opp_nao_inscrito');
+    if (payload.aceita_condicoes !== 'Sim') reasons.push('nao_aceita_condicoes');
+    if (payload.disponibilidade_estavel === 'Não') reasons.push('disponibilidade_nao_estavel');
+    if (!String(payload.horarios_fixos || '').trim()) reasons.push('sem_horarios_fixos');
+    if (!hasCv) reasons.push('cv_em_falta');
+
+    const eligible = reasons.length === 0;
+    if (!eligible) {
+        return {
+            eligible: false,
+            score: 0,
+            band: 'eliminado',
+            breakdown: { experiencia: 0, disponibilidade: 0, perfil: 0, qualidade: 0 },
+            elimination_reasons: reasons
+        };
+    }
+
+    const formLen = String(payload.formacao_complementar || '').trim().length;
+    let expOnline = 0;
+    if (payload.experiencia_online === 'Sim, atualmente') expOnline = 6;
+    else if (payload.experiencia_online === 'Sim, mas não atualmente') expOnline = 4;
+    expOnline += onlineConsultasScore(payload.n_consultas_online);
+    const experiencia = clampScore(
+        Math.min(12, yearsBandScore(payload.anos_clinica)) +
+            Math.min(8, yearsBandScore(payload.anos_individuais) * 0.7) +
+            Math.min(10, expOnline) +
+            Math.min(5, formLen / 80),
+        30
+    );
+
+    let disp = 0;
+    const horas = String(payload.horas_iniciais || '');
+    if (horas === '1 hora' || horas === '2 horas') disp += 10;
+    else if (horas === '3 horas' || horas === '4 horas') disp += 8;
+    else if (horas === 'Mais de 4 horas') disp += 6;
+    if (payload.disponibilidade_estavel === 'Sim') disp += 8;
+    else if (payload.disponibilidade_estavel === 'Na maioria das semanas') disp += 5;
+    if (payload.aumento_futuro === 'Sim, a curto prazo') disp += 5;
+    else if (payload.aumento_futuro === 'Sim, mas apenas futuramente') disp += 4;
+    else if (payload.aumento_futuro === 'Talvez') disp += 2;
+    if (Array.isArray(payload.dias_semana) && payload.dias_semana.length >= 2) disp += 2;
+    const disponibilidade = clampScore(disp, 25);
+
+    const areas = Array.isArray(payload.areas_clinicas) ? payload.areas_clinicas.length : 0;
+    const pops = Array.isArray(payload.populacoes) ? payload.populacoes.length : 0;
+    const modelos = Array.isArray(payload.modelos) ? payload.modelos.length : 0;
+    const idiomas = Array.isArray(payload.idiomas) ? payload.idiomas : [];
+    let perfil = Math.min(8, areas * 1.2) + Math.min(5, pops * 1.5) + Math.min(6, modelos * 1.5);
+    if (idiomas.some((i) => String(i).startsWith('Português'))) perfil += 4;
+    perfil += Math.min(2, idiomas.length);
+    if (String(payload.abordagem_terapeutica || '').trim().length > 40) perfil += 2;
+    const perfilClinico = clampScore(perfil, 25);
+
+    const mot =
+        String(payload.motivacao_interesse || '') +
+        String(payload.motivacao_diferencial || '') +
+        String(payload.motivacao_procura || '');
+    let qualidade = Math.min(12, mot.trim().length / 40);
+    if (String(payload.linkedin || '').trim()) qualidade += 4;
+    if (hasCv) qualidade += 4;
+    qualidade = clampScore(qualidade, 20);
+
+    const score = experiencia + disponibilidade + perfilClinico + qualidade;
+    let band = 'nao_avanca';
+    if (score >= 80) band = 'prioritario';
+    else if (score >= 65) band = 'shortlist';
+
+    return {
+        eligible: true,
+        score,
+        band,
+        breakdown: {
+            experiencia,
+            disponibilidade,
+            perfil: perfilClinico,
+            qualidade
+        },
+        elimination_reasons: []
+    };
+}
+
+function formatRecrutamentoPsicologiaEmail(payload, scoring, cvName) {
+    const lines = [
+        `Candidatura Psicologia — ${payload.nome}`,
+        `Score interno: ${scoring.score} · banda: ${scoring.band} · elegível: ${scoring.eligible ? 'sim' : 'não'}`,
+        `Breakdown: exp ${scoring.breakdown.experiencia}/30 · disp ${scoring.breakdown.disponibilidade}/25 · perfil ${scoring.breakdown.perfil}/25 · qualidade ${scoring.breakdown.qualidade}/20`,
+        scoring.elimination_reasons.length
+            ? `Eliminação: ${scoring.elimination_reasons.join(', ')}`
+            : '',
+        '',
+        '── Dados pessoais ──',
+        `Nome: ${payload.nome}`,
+        `Email: ${payload.email}`,
+        `Telefone: ${payload.telefone}`,
+        `Localidade: ${payload.localidade || '—'}`,
+        `País: ${payload.pais}${payload.pais_especificar ? ` (${payload.pais_especificar})` : ''}`,
+        '',
+        '── Formação ──',
+        `OPP inscrito: ${payload.opp_inscrito}`,
+        `Cédula OPP: ${payload.cedula_opp || '—'}`,
+        `Grau: ${payload.grau_academico || '—'}`,
+        `Formação complementar: ${payload.formacao_complementar || '—'}`,
+        '',
+        '── Experiência ──',
+        `Anos clínica: ${payload.anos_clinica}`,
+        `Anos individuais: ${payload.anos_individuais}`,
+        `Experiência online: ${payload.experiencia_online}`,
+        `Nº consultas online: ${payload.n_consultas_online != null ? payload.n_consultas_online : '—'}`,
+        `Áreas: ${(payload.areas_clinicas || []).join(', ') || '—'}`,
+        `Populações: ${(payload.populacoes || []).join(', ') || '—'}`,
+        `Tipos de casos: ${payload.tipos_casos || '—'}`,
+        '',
+        '── Disponibilidade ──',
+        `Horas iniciais: ${payload.horas_iniciais}`,
+        `Dias: ${(payload.dias_semana || []).join(', ') || '—'}`,
+        `Horários fixos: ${payload.horarios_fixos}`,
+        `Estável: ${payload.disponibilidade_estavel}`,
+        `Aumento futuro: ${payload.aumento_futuro}${payload.horas_aumento ? ` (até ${payload.horas_aumento})` : ''}`,
+        '',
+        '── Condições ──',
+        `Aceita condições: ${payload.aceita_condicoes}`,
+        '',
+        '── Motivação ──',
+        `Interesse: ${payload.motivacao_interesse}`,
+        '',
+        `Diferencial: ${payload.motivacao_diferencial}`,
+        '',
+        `O que procura: ${payload.motivacao_procura}`,
+        '',
+        '── Perfil ──',
+        `Abordagem: ${payload.abordagem_terapeutica}`,
+        `Modelos: ${(payload.modelos || []).join(', ') || '—'}`,
+        `Idiomas: ${(payload.idiomas || []).join(', ') || '—'}`,
+        `Videoconferência: ${payload.videoconferencia}`,
+        '',
+        '── Bolsa ──',
+        `Bolsa autorização: ${payload.bolsa_autorizacao}`,
+        '',
+        `LinkedIn: ${payload.linkedin || '—'}`,
+        `CV: ${cvName || '—'}`
+    ].filter((line, i, arr) => !(line === '' && arr[i - 1] === ''));
+    return lines.join('\n');
+}
+
+async function sendRecrutamentoPsicologiaEmail(data) {
+    const text = formatRecrutamentoPsicologiaEmail(data.payload, data.scoring, data.cvFilename);
+    const scoreLabel = data.scoring.eligible
+        ? `${data.scoring.score} · ${data.scoring.band}`
+        : `0 · eliminado`;
+    console.log(
+        '   📋 Recrutamento psicologia:',
+        data.payload.email,
+        scoreLabel,
+        data.scoring.elimination_reasons.join(',') || 'ok'
+    );
+
+    if (!isEmailConfigured) {
+        console.log('   ⚠️  Email not configured — cannot send recrutamento psicologia');
+        return false;
+    }
+
+    try {
+        const mailOptions = {
+            from: EMAIL_FROM,
+            to: CONTACT_EMAIL,
+            replyTo: data.payload.email,
+            subject: `Candidatura Psicologia [${scoreLabel}] ${data.payload.nome}`,
+            text,
+            html: `<pre style="font-family:system-ui,sans-serif;font-size:14px;line-height:1.5;white-space:pre-wrap">${text.replace(/</g, '&lt;')}</pre>`
+        };
+        if (data.cvBuffer && data.cvFilename) {
+            mailOptions.attachments = [{
+                filename: data.cvFilename,
+                content: data.cvBuffer,
+                contentType: data.cvMime || 'application/pdf'
+            }];
+        }
+        const info = await deliverEmail(mailOptions);
+        console.log('   📩 Recrutamento psicologia sent to:', CONTACT_EMAIL, '| Message ID:', info && info.messageId);
+
+        if (data.payload.email) {
+            try {
+                const { html: rHtml, text: rText, subject: rSubject } = buildAutoReplyEmail(
+                    'careers',
+                    data.payload.nome,
+                    'pt'
+                );
+                await deliverEmail({
+                    from: EMAIL_FROM,
+                    to: data.payload.email,
+                    subject: rSubject,
+                    text: rText,
+                    html: rHtml
+                });
+                console.log('   📩 Recrutamento auto-reply sent to:', data.payload.email);
+            } catch (replyErr) {
+                console.error('   ⚠️  Recrutamento auto-reply failed:', replyErr.message);
+            }
+        }
+        return true;
+    } catch (err) {
+        console.error('   ❌ Recrutamento psicologia email failed:', err.message);
+        return false;
+    }
+}
+
+function sanitizeRecrutamentoPayload(raw) {
+    const arr = (v, maxItems, maxLen) =>
+        Array.isArray(v)
+            ? v.map((x) => String(x).slice(0, maxLen)).filter(Boolean).slice(0, maxItems)
+            : [];
+    const str = (v, max) => String(v == null ? '' : v).trim().slice(0, max);
+
+    return {
+        nome: str(raw.nome, 120),
+        email: str(raw.email, 160).toLowerCase(),
+        telefone: str(raw.telefone, 40),
+        localidade: str(raw.localidade, 120),
+        pais: str(raw.pais, 40),
+        pais_especificar: str(raw.pais_especificar, 80),
+        opp_inscrito: str(raw.opp_inscrito, 10),
+        cedula_opp: str(raw.cedula_opp, 40),
+        grau_academico: str(raw.grau_academico, 80),
+        formacao_complementar: str(raw.formacao_complementar, 3000),
+        anos_clinica: str(raw.anos_clinica, 40),
+        anos_individuais: str(raw.anos_individuais, 40),
+        experiencia_online: str(raw.experiencia_online, 40),
+        n_consultas_online: str(raw.n_consultas_online, 40) || null,
+        areas_clinicas: arr(raw.areas_clinicas, 20, 120),
+        populacoes: arr(raw.populacoes, 12, 120),
+        tipos_casos: str(raw.tipos_casos, 3000),
+        horas_iniciais: str(raw.horas_iniciais, 40),
+        dias_semana: arr(raw.dias_semana, 7, 20),
+        horarios_fixos: str(raw.horarios_fixos, 2000),
+        disponibilidade_estavel: str(raw.disponibilidade_estavel, 40),
+        aumento_futuro: str(raw.aumento_futuro, 40),
+        horas_aumento: str(raw.horas_aumento, 40),
+        aceita_condicoes: str(raw.aceita_condicoes, 10),
+        motivacao_interesse: str(raw.motivacao_interesse, 4000),
+        motivacao_diferencial: str(raw.motivacao_diferencial, 4000),
+        motivacao_procura: str(raw.motivacao_procura, 4000),
+        abordagem_terapeutica: str(raw.abordagem_terapeutica, 2000),
+        modelos: arr(raw.modelos, 12, 120),
+        idiomas: arr(raw.idiomas, 10, 80),
+        videoconferencia: str(raw.videoconferencia, 10),
+        bolsa_autorizacao: str(raw.bolsa_autorizacao, 10),
+        linkedin: str(raw.linkedin, 300)
+    };
+}
+
+app.post('/api/recrutamento/psicologia', rateLimitRecrutamentoPsicologia, (req, res) => {
+    uploadCvPdf.single('cv')(req, res, async (uploadErr) => {
+        if (uploadErr instanceof multer.MulterError) {
+            if (uploadErr.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({ error: 'O CV excede o tamanho máximo de 5MB.' });
+            }
+            return res.status(400).json({ error: 'Erro ao processar o CV enviado.' });
+        }
+        if (uploadErr) {
+            return res.status(400).json({ error: uploadErr.message || 'Erro no ficheiro CV.' });
+        }
+
+        let raw = {};
+        try {
+            if (typeof req.body?.payload === 'string' && req.body.payload.trim()) {
+                raw = JSON.parse(req.body.payload);
+            } else if (req.body && typeof req.body === 'object') {
+                raw = req.body;
+            }
+        } catch (parseErr) {
+            return res.status(400).json({ error: 'Payload inválido.' });
+        }
+
+        const payload = sanitizeRecrutamentoPayload(raw);
+        const cv = req.file || null;
+        const hasCv = Boolean(cv && cv.buffer && cv.buffer.length);
+
+        if (!payload.nome || !payload.email || !payload.telefone) {
+            return res.status(400).json({ error: 'Nome, email e telefone são obrigatórios.' });
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(payload.email)) {
+            return res.status(400).json({ error: 'Indique um email válido.' });
+        }
+        if (payload.opp_inscrito !== 'Sim' && payload.opp_inscrito !== 'Não') {
+            return res.status(400).json({ error: 'Indique se está inscrito na OPP.' });
+        }
+        if (payload.opp_inscrito === 'Sim' && !payload.cedula_opp) {
+            return res.status(400).json({ error: 'Cédula OPP obrigatória.' });
+        }
+        if (payload.aceita_condicoes !== 'Sim' && payload.aceita_condicoes !== 'Não') {
+            return res.status(400).json({ error: 'Confirme se aceita as condições.' });
+        }
+        if (!payload.horarios_fixos) {
+            return res.status(400).json({ error: 'Indique os horários fixos semanais.' });
+        }
+        if (!payload.motivacao_interesse || !payload.motivacao_diferencial || !payload.motivacao_procura) {
+            return res.status(400).json({ error: 'Complete as respostas de motivação.' });
+        }
+        if (!hasCv) {
+            return res.status(400).json({ error: 'O CV em PDF é obrigatório.' });
+        }
+
+        const scoring = scorePsychologistApplication(payload, hasCv);
+        const cvFilename = String(cv.originalname || 'cv.pdf').slice(0, 180);
+
+        if (usePersistentDb) {
+            try {
+                await db.insertPsychologistApplication({
+                    id: crypto.randomUUID(),
+                    name: payload.nome,
+                    email: payload.email,
+                    phone: payload.telefone,
+                    score: scoring.score,
+                    scoreBand: scoring.band,
+                    eligible: scoring.eligible,
+                    eliminationReasons: scoring.elimination_reasons,
+                    payload,
+                    cvFilename
+                });
+            } catch (dbErr) {
+                console.error('POST /api/recrutamento/psicologia DB:', dbErr.message);
+            }
+        }
+
+        const sent = await sendRecrutamentoPsicologiaEmail({
+            payload,
+            scoring,
+            cvFilename,
+            cvBuffer: cv.buffer,
+            cvMime: cv.mimetype || 'application/pdf'
+        });
+
         if (!sent) {
             return res.status(503).json({ error: 'Não foi possível enviar a candidatura de momento. Tente novamente.' });
         }
@@ -5059,6 +5475,293 @@ app.delete('/api/admin/patients/:bookingRef', requireAuth, async (req, res) => {
     } catch (err) {
         console.error('DELETE /api/admin/patients/:bookingRef:', err.message);
         res.status(500).json({ error: 'Failed to delete consultation' });
+    }
+});
+
+function formatDateIsoLocal(d) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+}
+
+function parseBookingDateLocal(b) {
+    const iso = (b.dateIso && String(b.dateIso).trim()) || '';
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+    if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    const fallback = new Date(b.date);
+    return Number.isNaN(fallback.getTime()) ? null : fallback;
+}
+
+function addVisitFrequency(baseDate, frequency) {
+    const d = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate());
+    const f = String(frequency || '').toLowerCase();
+    if (f === 'weekly') {
+        d.setDate(d.getDate() + 7);
+    } else if (f === 'every_2_weeks' || f === 'biweekly') {
+        d.setDate(d.getDate() + 14);
+    } else if (f === 'every_6_weeks') {
+        d.setDate(d.getDate() + 42);
+    } else if (f === 'monthly') {
+        d.setMonth(d.getMonth() + 1);
+    } else if (f === 'every_2_months') {
+        d.setMonth(d.getMonth() + 2);
+    } else if (f === 'quarterly') {
+        d.setMonth(d.getMonth() + 3);
+    } else if (f === 'once' || f === 'occasional' || f === 'as_needed' || !f) {
+        d.setDate(d.getDate() + 7);
+    } else {
+        d.setDate(d.getDate() + 7);
+    }
+    return d;
+}
+
+function visitFrequencyReason(frequency) {
+    const map = {
+        weekly: 'Weekly recurrence',
+        every_2_weeks: 'Every 2 weeks',
+        every_6_weeks: 'Every 6 weeks',
+        monthly: 'Monthly recurrence',
+        every_2_months: 'Every 2 months',
+        quarterly: 'Every 3 months',
+        once: 'Default +1 week',
+        occasional: 'Default +1 week',
+        as_needed: 'Default +1 week'
+    };
+    return map[String(frequency || '')] || 'Same weekday next available week';
+}
+
+function pickClosestTime(preferred, available) {
+    if (!available || !available.length) return null;
+    const norm = String(preferred || '').slice(0, 5);
+    if (available.includes(norm)) return norm;
+    const toMins = (t) => {
+        const [h, m] = String(t).split(':').map(Number);
+        return (h || 0) * 60 + (m || 0);
+    };
+    const target = toMins(norm || '10:00');
+    let best = available[0];
+    let bestDiff = Math.abs(toMins(best) - target);
+    for (const t of available) {
+        const diff = Math.abs(toMins(t) - target);
+        if (diff < bestDiff) {
+            best = t;
+            bestDiff = diff;
+        }
+    }
+    return best;
+}
+
+async function findSuggestedSlotsForPatient(latest, visitFrequency) {
+    const base = parseBookingDateLocal(latest);
+    if (!base) return { suggestion: null, alternatives: [] };
+    const preferredTime = String(latest.time || '10:00').slice(0, 5);
+    const freq = visitFrequency || latest.visitFrequency || '';
+    let cursor = addVisitFrequency(base, freq);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    let guard = 0;
+    while (cursor < today && guard < 36) {
+        cursor = addVisitFrequency(cursor, freq || 'weekly');
+        guard += 1;
+    }
+
+    const candidates = [];
+    for (let i = 0; i < 10 && candidates.length < 4; i++) {
+        const dateIso = formatDateIsoLocal(cursor);
+        let available = [];
+        try {
+            available = await getBookableSlotsForDateIso(dateIso, null, null, true);
+        } catch (e) {
+            available = [];
+        }
+        if (available.length) {
+            const time = pickClosestTime(preferredTime, available);
+            if (time) {
+                candidates.push({
+                    dateIso,
+                    time,
+                    exactTime: time === preferredTime,
+                    weekday: cursor.toLocaleDateString('en-GB', { weekday: 'long' }),
+                    availableCount: available.length
+                });
+            }
+        }
+        cursor = addVisitFrequency(cursor, freq || 'weekly');
+    }
+
+    const suggestion = candidates[0]
+        ? {
+            ...candidates[0],
+            preferredTime,
+            reason: `${visitFrequencyReason(freq)} · prefer ${preferredTime}`
+        }
+        : null;
+
+    return {
+        suggestion,
+        alternatives: candidates.slice(1)
+    };
+}
+
+// Suggest next appointment from recurrence + last day/time
+app.get('/api/admin/patients/:bookingRef/suggest-next', requireAuth, async (req, res) => {
+    try {
+        const bookingRef = String(req.params.bookingRef || '').toUpperCase();
+        let latest = usePersistentDb
+            ? await db.findBookingByRef(bookingRef)
+            : bookingsStore.find((b) => b.bookingRef === bookingRef);
+        if (!latest) return res.status(404).json({ error: 'Booking not found' });
+
+        // Prefer the patient's most recent consultation by email
+        if (usePersistentDb && latest.email) {
+            try {
+                const all = await db.findBookingsByEmail(latest.email, 50);
+                const active = (all || []).filter((b) => !b.cancelled);
+                if (active.length) {
+                    active.sort((a, b) => bookingSortKey(b).localeCompare(bookingSortKey(a)));
+                    latest = active[0];
+                }
+            } catch (e) { /* keep latest */ }
+        }
+
+        const frequency = String(req.query.frequency || latest.visitFrequency || '').trim();
+        const { suggestion, alternatives } = await findSuggestedSlotsForPatient(latest, frequency);
+
+        res.json({
+            patient: {
+                patientName: latest.patientName,
+                email: latest.email,
+                patientPhone: latest.patientPhone || '',
+                service: latest.service,
+                locale: latest.patientLocale || 'pt',
+                professional: latest.professional || '',
+                visitFrequency: frequency || latest.visitFrequency || '',
+                patientType: latest.patientType || '',
+                lastDateIso: latest.dateIso || null,
+                lastTime: String(latest.time || '').slice(0, 5),
+                bookingRef: latest.bookingRef
+            },
+            suggestion,
+            alternatives
+        });
+    } catch (err) {
+        console.error('GET /api/admin/patients/:bookingRef/suggest-next:', err.message);
+        res.status(500).json({ error: 'Failed to suggest next appointment' });
+    }
+});
+
+// Schedule next appointment for an existing patient (no Stripe invoice)
+app.post('/api/admin/patients/schedule-next', requireAuth, express.json(), async (req, res) => {
+    if (!usePersistentDb) {
+        return res.status(503).json({ error: 'Database required' });
+    }
+    try {
+        const body = req.body || {};
+        const sourceRef = String(body.sourceBookingRef || '').toUpperCase();
+        const source = sourceRef ? await db.findBookingByRef(sourceRef) : null;
+        if (!source && !body.patientEmail) {
+            return res.status(400).json({ error: 'Missing patient' });
+        }
+
+        const patientName = String(body.patientName || (source && source.patientName) || '').trim();
+        const patientEmail = String(body.patientEmail || (source && source.email) || '').trim().toLowerCase();
+        const patientPhone = String(body.patientPhone || (source && source.patientPhone) || '').trim();
+        const service = String(body.service || (source && source.service) || 'clinica_geral').trim();
+        const dateIso = String(body.dateIso || '').trim();
+        const time = normalizeTimeString({ time: String(body.time || '') });
+        const locale = normalizePatientLocale(body.locale || (source && source.patientLocale) || 'pt');
+        const professional = body.professional != null
+            ? String(body.professional).trim()
+            : (source && source.professional) || '';
+        const visitFrequency = body.visitFrequency != null
+            ? String(body.visitFrequency).trim()
+            : (source && source.visitFrequency) || '';
+        const patientType = body.patientType != null
+            ? String(body.patientType).trim()
+            : (source && source.patientType) || '';
+
+        if (!patientName || !patientEmail || !service || !dateIso || !time) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(dateIso)) {
+            return res.status(400).json({ error: 'Invalid date' });
+        }
+
+        const available = await getBookableSlotsForDateIso(dateIso, null, null, true);
+        if (!available.includes(time)) {
+            return res.status(409).json({ error: 'That time slot is no longer available.' });
+        }
+
+        let amountCents = 0;
+        if (body.amountCents != null && body.amountCents !== '') {
+            amountCents = Math.max(0, Math.round(Number(body.amountCents)));
+        } else {
+            try {
+                const pricing = computeCheckoutTotalCents({
+                    service,
+                    passengers: [{ firstName: patientName, lastName: '' }],
+                    hasInsurance: false,
+                    discountCode: null
+                });
+                if (pricing.ok) amountCents = pricing.totalCents;
+            } catch (e) { /* keep 0 */ }
+        }
+
+        const id = crypto.randomUUID();
+        const token = crypto.randomBytes(24).toString('hex');
+        let serviceLabel = invitationServiceLabel(service, locale);
+        serviceLabel = `${serviceLabel} · sem fatura`;
+
+        let invitation = await db.insertInvitation({
+            id,
+            invitationToken: token,
+            patientName: patientName.slice(0, 200),
+            patientEmail,
+            patientPhone: patientPhone.slice(0, 60),
+            service,
+            serviceLabel,
+            dateIso,
+            time,
+            locale,
+            amountCents,
+            currency: 'eur',
+            status: 'pending',
+            travellerCount: 1,
+            hasInsurance: false,
+            createdBy: (req.session && req.session.clinicUsername) || 'admin'
+        });
+
+        const confirmed = await confirmInvitationWithoutPayment(invitation, {
+            paymentPrefix: amountCents === 0 ? 'comp' : 'manual'
+        });
+        invitation = confirmed.invitation;
+
+        const bookingRef = confirmed.bookingRef;
+        if (bookingRef) {
+            await db.updateBookingAdminFields(bookingRef, {
+                professional: professional || null,
+                visitFrequency: visitFrequency || null,
+                patientType: patientType || null,
+                patientPhone: patientPhone || null,
+                markedPaid: amountCents === 0,
+                invoiceSent: false
+            });
+        }
+
+        const booking = bookingRef ? await db.findBookingByRef(bookingRef) : null;
+        res.json({
+            ok: true,
+            withoutInvoice: true,
+            invitation,
+            booking,
+            bookingRef,
+            emailDelivered: confirmed.emailDelivered !== false,
+            emailError: confirmed.emailError || null
+        });
+    } catch (err) {
+        console.error('POST /api/admin/patients/schedule-next:', err.message);
+        res.status(500).json({ error: err.message || 'Failed to schedule next appointment' });
     }
 });
 

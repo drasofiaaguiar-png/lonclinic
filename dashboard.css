@@ -2393,10 +2393,95 @@ a.admin-nav-link {
     background: rgba(197, 199, 44, 0.12);
 }
 
+.admin-patients-icon-btn.is-add:hover {
+    color: #1d4ed8;
+    border-color: rgba(59, 130, 246, 0.45);
+    background: rgba(59, 130, 246, 0.1);
+}
+
 .admin-patients-icon-btn.is-delete:hover {
     color: #b91c1c;
     border-color: rgba(185, 28, 28, 0.4);
     background: rgba(185, 28, 28, 0.08);
+}
+
+.admin-schedule-next-card {
+    max-width: 560px;
+}
+
+.admin-schedule-next-patient {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.admin-schedule-next-note {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin: 12px 0 0;
+}
+
+.admin-schedule-suggestions {
+    margin-top: 14px;
+}
+
+.admin-schedule-suggest-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.admin-schedule-suggest-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.admin-schedule-suggest-chip {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    text-align: left;
+    padding: 10px 12px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated, #fff);
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--text-secondary);
+    min-width: 140px;
+}
+
+.admin-schedule-suggest-chip strong {
+    color: var(--text-primary);
+    font-size: 0.8125rem;
+}
+
+.admin-schedule-suggest-chip span {
+    font-size: 0.75rem;
+}
+
+.admin-schedule-suggest-chip em {
+    font-size: 0.6875rem;
+    font-style: normal;
+    color: var(--text-muted);
+}
+
+.admin-schedule-suggest-chip.is-primary,
+.admin-schedule-suggest-chip:hover {
+    border-color: rgba(197, 199, 44, 0.55);
+    background: rgba(197, 199, 44, 0.1);
+}
+
+.admin-schedule-suggest-reason,
+.admin-schedule-suggest-empty {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin: 8px 0 0;
 }
 
 .admin-patients-delete {

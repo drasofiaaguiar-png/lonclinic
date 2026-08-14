@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css?v=patients-edit-3">
+    <link rel="stylesheet" href="dashboard.css?v=patients-schedule-4">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -166,7 +166,7 @@
                                     <th>Invoice sent</th>
                                     <th>Review asked</th>
                                     <th>Reviewed</th>
-                                    <th style="width:4.5rem;"></th>
+                                    <th style="width:6.5rem;"></th>
                                 </tr>
                             </thead>
                             <tbody id="adminPatientsBody">
@@ -177,6 +177,59 @@
                     <datalist id="adminProfessionalsList">
                         <option value="Dra. Sofia Aguiar"></option>
                     </datalist>
+                </div>
+            </div>
+
+            <div class="dash-modal" id="scheduleNextModal" hidden>
+                <div class="dash-modal-backdrop" data-close-schedule-modal></div>
+                <div class="dash-modal-card admin-schedule-next-card" role="dialog" aria-modal="true" aria-labelledby="scheduleNextTitle">
+                    <h2 class="dash-modal-title" id="scheduleNextTitle">Schedule next appointment</h2>
+                    <p class="dash-modal-desc" id="scheduleNextDesc">Suggested from recurrence and last visit day/time.</p>
+                    <form id="scheduleNextForm" class="admin-schedule-next-form">
+                        <input type="hidden" id="scheduleNextSourceRef">
+                        <div class="admin-form-group">
+                            <label>Patient</label>
+                            <div class="admin-schedule-next-patient" id="scheduleNextPatientLabel"></div>
+                        </div>
+                        <div class="admin-invite-grid">
+                            <div class="admin-form-group">
+                                <label for="scheduleNextService">Service</label>
+                                <select id="scheduleNextService" class="admin-select" required>
+                                    <option value="clinica_geral">Clínica geral</option>
+                                    <option value="urgente">Urgente</option>
+                                    <option value="infeccao_urinaria">Infeção urinária</option>
+                                    <option value="travel">Travel</option>
+                                    <option value="saude_mental">Saúde mental</option>
+                                    <option value="burnout">Burnout especializada</option>
+                                    <option value="burnout_mensal">Anti-burnout</option>
+                                    <option value="burnout_programa">Programa anti-burnout</option>
+                                    <option value="longevidade">Longevidade</option>
+                                    <option value="renovacao">Renovação receita</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="scheduleNextProfessional">Professional</label>
+                                <input type="text" id="scheduleNextProfessional" class="admin-input" list="adminProfessionalsList" placeholder="Professional">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="scheduleNextDate">Date</label>
+                                <input type="date" id="scheduleNextDate" class="admin-input" required>
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="scheduleNextTime">Time</label>
+                                <select id="scheduleNextTime" class="admin-select" required>
+                                    <option value="">Loading…</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="admin-schedule-suggestions" id="scheduleNextSuggestions"></div>
+                        <p class="admin-schedule-next-note">Confirms the slot immediately without sending a payment invoice. Patient still gets the confirmation email.</p>
+                        <div id="scheduleNextError" class="dash-login-error" style="display:none;" role="alert"></div>
+                        <div class="dash-modal-actions">
+                            <button type="button" class="btn btn-outline" data-close-schedule-modal>Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="scheduleNextSubmit">Confirm appointment</button>
+                        </div>
+                    </form>
                 </div>
             </div>
 

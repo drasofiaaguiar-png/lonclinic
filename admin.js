@@ -483,6 +483,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const ICON_EDIT = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`;
     const ICON_DELETE = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>`;
     const ICON_DONE = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
+    const ICON_ADD = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>`;
 
     function freqLabel(value) {
         const opt = PATIENT_FREQ_OPTIONS.find((o) => o.value === value);
@@ -775,6 +776,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td>${reviewedHtml}</td>
                 <td class="admin-patients-actions-cell">
                     <div class="admin-patients-actions">
+                        <button type="button" class="admin-patients-icon-btn is-add" data-schedule-next="${escapeHtml(g.primaryRef)}" title="Schedule next appointment">
+                            ${ICON_ADD}
+                        </button>
                         <button type="button" class="admin-patients-icon-btn is-edit" data-edit-key="${escapeHtml(g.emailKey)}" title="${editing ? 'Done' : 'Edit'}">
                             ${editing ? ICON_DONE : ICON_EDIT}
                         </button>
@@ -881,6 +885,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
 
+        adminPatientsBody.querySelectorAll('[data-schedule-next]').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const ref = btn.getAttribute('data-schedule-next');
+                if (ref) openScheduleNextModal(ref);
+            });
+        });
+
         adminPatientsBody.querySelectorAll('[data-delete-ref]').forEach((btn) => {
             btn.addEventListener('click', async (e) => {
                 e.preventDefault();
@@ -966,6 +979,201 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (patientsRefreshBtn) {
         patientsRefreshBtn.addEventListener('click', () => loadPatientsTable());
+    }
+
+    // ─── Schedule next appointment modal ───
+    const scheduleNextModal = document.getElementById('scheduleNextModal');
+    const scheduleNextForm = document.getElementById('scheduleNextForm');
+    const scheduleNextSourceRef = document.getElementById('scheduleNextSourceRef');
+    const scheduleNextPatientLabel = document.getElementById('scheduleNextPatientLabel');
+    const scheduleNextDesc = document.getElementById('scheduleNextDesc');
+    const scheduleNextService = document.getElementById('scheduleNextService');
+    const scheduleNextProfessional = document.getElementById('scheduleNextProfessional');
+    const scheduleNextDate = document.getElementById('scheduleNextDate');
+    const scheduleNextTime = document.getElementById('scheduleNextTime');
+    const scheduleNextSuggestions = document.getElementById('scheduleNextSuggestions');
+    const scheduleNextError = document.getElementById('scheduleNextError');
+    const scheduleNextSubmit = document.getElementById('scheduleNextSubmit');
+    let scheduleNextContext = null;
+
+    function setScheduleNextError(msg) {
+        if (!scheduleNextError) return;
+        if (!msg) {
+            scheduleNextError.style.display = 'none';
+            scheduleNextError.textContent = '';
+        } else {
+            scheduleNextError.textContent = msg;
+            scheduleNextError.style.display = '';
+        }
+    }
+
+    function closeScheduleNextModal() {
+        if (scheduleNextModal) scheduleNextModal.hidden = true;
+        scheduleNextContext = null;
+    }
+
+    async function loadScheduleNextTimes(preferredTime) {
+        if (!scheduleNextTime || !scheduleNextDate) return;
+        const dateIso = scheduleNextDate.value;
+        scheduleNextTime.innerHTML = '<option value="">Loading…</option>';
+        if (!dateIso) {
+            scheduleNextTime.innerHTML = '<option value="">Pick a date first…</option>';
+            return;
+        }
+        try {
+            const res = await fetch(`/api/admin/available-slots?date=${encodeURIComponent(dateIso)}&allSlots=1`);
+            const data = await res.json();
+            const slots = data.available || [];
+            scheduleNextTime.innerHTML = '';
+            if (!slots.length) {
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = data.reason || 'No slots available';
+                scheduleNextTime.appendChild(opt);
+                return;
+            }
+            slots.forEach((t) => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                scheduleNextTime.appendChild(opt);
+            });
+            const prefer = preferredTime || (scheduleNextContext && scheduleNextContext.suggestion && scheduleNextContext.suggestion.time);
+            if (prefer && slots.includes(prefer)) scheduleNextTime.value = prefer;
+            else scheduleNextTime.value = slots[0];
+        } catch (err) {
+            scheduleNextTime.innerHTML = '<option value="">Error loading slots</option>';
+        }
+    }
+
+    function renderScheduleSuggestions(payload) {
+        if (!scheduleNextSuggestions) return;
+        const items = [];
+        if (payload.suggestion) items.push(payload.suggestion);
+        (payload.alternatives || []).forEach((a) => items.push(a));
+        if (!items.length) {
+            scheduleNextSuggestions.innerHTML = '<p class="admin-schedule-suggest-empty">No open slots found on the usual cadence — pick a date manually.</p>';
+            return;
+        }
+        scheduleNextSuggestions.innerHTML = `
+            <div class="admin-schedule-suggest-label">Suggestions</div>
+            <div class="admin-schedule-suggest-list">
+                ${items.map((s, idx) => `
+                    <button type="button" class="admin-schedule-suggest-chip${idx === 0 ? ' is-primary' : ''}"
+                        data-suggest-date="${escapeHtml(s.dateIso)}" data-suggest-time="${escapeHtml(s.time)}">
+                        <strong>${escapeHtml(s.weekday || s.dateIso)}</strong>
+                        <span>${escapeHtml(s.dateIso)} · ${escapeHtml(s.time)}</span>
+                        ${s.exactTime ? '<em>same time</em>' : '<em>nearest time</em>'}
+                    </button>
+                `).join('')}
+            </div>
+            ${payload.suggestion && payload.suggestion.reason
+                ? `<p class="admin-schedule-suggest-reason">${escapeHtml(payload.suggestion.reason)}</p>`
+                : ''}
+        `;
+        scheduleNextSuggestions.querySelectorAll('[data-suggest-date]').forEach((btn) => {
+            btn.addEventListener('click', async () => {
+                const d = btn.getAttribute('data-suggest-date');
+                const t = btn.getAttribute('data-suggest-time');
+                if (scheduleNextDate) scheduleNextDate.value = d;
+                await loadScheduleNextTimes(t);
+            });
+        });
+    }
+
+    async function openScheduleNextModal(bookingRef) {
+        if (!scheduleNextModal) return;
+        setScheduleNextError('');
+        scheduleNextModal.hidden = false;
+        if (scheduleNextPatientLabel) scheduleNextPatientLabel.textContent = 'Loading suggestion…';
+        if (scheduleNextSuggestions) scheduleNextSuggestions.innerHTML = '';
+        if (scheduleNextSourceRef) scheduleNextSourceRef.value = bookingRef;
+        try {
+            const res = await fetch(`/api/admin/patients/${encodeURIComponent(bookingRef)}/suggest-next`);
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+            scheduleNextContext = data;
+            const p = data.patient || {};
+            if (scheduleNextPatientLabel) {
+                scheduleNextPatientLabel.textContent = `${p.patientName || '—'} · ${p.email || ''}${
+                    p.visitFrequency ? ` · ${freqLabel(p.visitFrequency)}` : ''
+                }`;
+            }
+            if (scheduleNextDesc) {
+                scheduleNextDesc.textContent = p.lastDateIso
+                    ? `Last visit ${p.lastDateIso} at ${p.lastTime || '—'}. Suggested from recurrence and usual day/time.`
+                    : 'Suggested from recurrence and last visit day/time.';
+            }
+            if (scheduleNextService && p.service) scheduleNextService.value = p.service;
+            if (scheduleNextProfessional) scheduleNextProfessional.value = p.professional || '';
+            const suggest = data.suggestion;
+            if (scheduleNextDate) {
+                scheduleNextDate.min = new Date().toISOString().slice(0, 10);
+                scheduleNextDate.value = suggest ? suggest.dateIso : '';
+            }
+            renderScheduleSuggestions(data);
+            await loadScheduleNextTimes(suggest ? suggest.time : (p.lastTime || ''));
+        } catch (err) {
+            setScheduleNextError(err.message || 'Could not load suggestion');
+            if (scheduleNextPatientLabel) scheduleNextPatientLabel.textContent = '—';
+        }
+    }
+
+    if (scheduleNextDate) {
+        scheduleNextDate.addEventListener('change', () => loadScheduleNextTimes());
+    }
+    document.querySelectorAll('[data-close-schedule-modal]').forEach((el) => {
+        el.addEventListener('click', closeScheduleNextModal);
+    });
+    if (scheduleNextForm) {
+        scheduleNextForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            setScheduleNextError('');
+            const p = (scheduleNextContext && scheduleNextContext.patient) || {};
+            const payload = {
+                sourceBookingRef: scheduleNextSourceRef ? scheduleNextSourceRef.value : '',
+                patientName: p.patientName,
+                patientEmail: p.email,
+                patientPhone: p.patientPhone || '',
+                service: scheduleNextService ? scheduleNextService.value : p.service,
+                dateIso: scheduleNextDate ? scheduleNextDate.value : '',
+                time: scheduleNextTime ? scheduleNextTime.value : '',
+                locale: p.locale || 'pt',
+                professional: scheduleNextProfessional ? scheduleNextProfessional.value : '',
+                visitFrequency: p.visitFrequency || '',
+                patientType: p.patientType || 'regular'
+            };
+            if (!payload.dateIso || !payload.time) {
+                setScheduleNextError('Pick a date and time.');
+                return;
+            }
+            if (scheduleNextSubmit) {
+                scheduleNextSubmit.disabled = true;
+                scheduleNextSubmit.textContent = 'Confirming…';
+            }
+            try {
+                const res = await fetch('/api/admin/patients/schedule-next', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+                closeScheduleNextModal();
+                await loadPatientsTable();
+                loadUpcomingConsultations();
+                if (data.emailDelivered === false) {
+                    alert('Appointment created, but confirmation email failed: ' + (data.emailError || 'unknown'));
+                }
+            } catch (err) {
+                setScheduleNextError(err.message || 'Failed to schedule');
+            } finally {
+                if (scheduleNextSubmit) {
+                    scheduleNextSubmit.disabled = false;
+                    scheduleNextSubmit.textContent = 'Confirm appointment';
+                }
+            }
+        });
     }
 
     // ─── Login handler ───
