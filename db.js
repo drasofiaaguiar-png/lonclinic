@@ -144,6 +144,7 @@ function rowToBooking(row) {
         markedPaid: row.marked_paid === true,
         invoiceSent: row.invoice_sent === true,
         reviewRequested: row.review_requested === true,
+        visitFrequency: row.visit_frequency || '',
         createdAt: createdAt instanceof Date ? createdAt.toISOString() : createdAt
     };
 }
@@ -222,6 +223,7 @@ async function initSchema(p) {
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS marked_paid BOOLEAN NOT NULL DEFAULT FALSE`);
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS invoice_sent BOOLEAN NOT NULL DEFAULT FALSE`);
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS review_requested BOOLEAN NOT NULL DEFAULT FALSE`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS visit_frequency VARCHAR(64)`);
     // Backfill Stripe (and complimentary) rows that were never admin-edited for tracking fields.
     await p.query(`
         UPDATE bookings
@@ -785,8 +787,8 @@ async function insertBooking(booking) {
             amount, currency, payment_id, stripe_customer_id,
             date_iso, patient_locale, patient_phone,
             cancelled, reschedule_count, reminder_sent, reminder_1h_sent, followup_sent,
-            professional, marked_paid, invoice_sent, review_requested
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
+            professional, marked_paid, invoice_sent, review_requested, visit_frequency
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
         ON CONFLICT (payment_id) DO NOTHING
         RETURNING *`,
         [
@@ -812,7 +814,8 @@ async function insertBooking(booking) {
             booking.professional || null,
             markedPaid,
             invoiceSent,
-            booking.reviewRequested === true
+            booking.reviewRequested === true,
+            booking.visitFrequency || null
         ]
     );
     return r.rowCount > 0;
@@ -821,6 +824,9 @@ async function insertBooking(booking) {
 async function updateBookingAdminFields(bookingRef, fields) {
     const p = getPool();
     const ref = String(bookingRef || '').trim().toUpperCase();
+    const existing = await findBookingByRef(ref);
+    if (!existing) return null;
+
     const sets = [];
     const vals = [];
     let i = 1;
@@ -829,13 +835,14 @@ async function updateBookingAdminFields(bookingRef, fields) {
         markedPaid: 'marked_paid',
         invoiceSent: 'invoice_sent',
         reviewRequested: 'review_requested',
-        patientPhone: 'patient_phone'
+        patientPhone: 'patient_phone',
+        visitFrequency: 'visit_frequency'
     };
     for (const [jsKey, col] of Object.entries(map)) {
         if (!Object.prototype.hasOwnProperty.call(fields, jsKey)) continue;
         let v = fields[jsKey];
-        if (jsKey === 'professional' || jsKey === 'patientPhone') {
-            v = v == null ? null : String(v).trim().slice(0, 200);
+        if (jsKey === 'professional' || jsKey === 'patientPhone' || jsKey === 'visitFrequency') {
+            v = v == null ? null : String(v).trim().slice(0, 64);
             if (v === '') v = null;
         } else {
             v = v === true || v === 'true' || v === 1 || v === '1';
@@ -843,7 +850,44 @@ async function updateBookingAdminFields(bookingRef, fields) {
         sets.push(`${col} = $${i++}`);
         vals.push(v);
     }
-    if (!sets.length) return findBookingByRef(ref);
+    if (!sets.length) return existing;
+
+    // Frequency is patient-level: apply to all bookings with the same email.
+    if (Object.prototype.hasOwnProperty.call(fields, 'visitFrequency') && existing.email) {
+        const freqVal = fields.visitFrequency == null || String(fields.visitFrequency).trim() === ''
+            ? null
+            : String(fields.visitFrequency).trim().slice(0, 64);
+        await p.query(
+            `UPDATE bookings SET visit_frequency = $1 WHERE LOWER(TRIM(email)) = $2`,
+            [freqVal, String(existing.email).toLowerCase().trim()]
+        );
+        // Still update other fields on this booking if present
+        const otherSets = [];
+        const otherVals = [];
+        let j = 1;
+        for (const [jsKey, col] of Object.entries(map)) {
+            if (jsKey === 'visitFrequency') continue;
+            if (!Object.prototype.hasOwnProperty.call(fields, jsKey)) continue;
+            let v = fields[jsKey];
+            if (jsKey === 'professional' || jsKey === 'patientPhone') {
+                v = v == null ? null : String(v).trim().slice(0, 200);
+                if (v === '') v = null;
+            } else {
+                v = v === true || v === 'true' || v === 1 || v === '1';
+            }
+            otherSets.push(`${col} = $${j++}`);
+            otherVals.push(v);
+        }
+        if (otherSets.length) {
+            otherVals.push(ref);
+            await p.query(
+                `UPDATE bookings SET ${otherSets.join(', ')} WHERE UPPER(TRIM(booking_ref)) = $${j}`,
+                otherVals
+            );
+        }
+        return findBookingByRef(ref);
+    }
+
     vals.push(ref);
     const r = await p.query(
         `UPDATE bookings SET ${sets.join(', ')} WHERE UPPER(TRIM(booking_ref)) = $${i} RETURNING *`,

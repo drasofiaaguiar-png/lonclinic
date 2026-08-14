@@ -461,9 +461,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ─── Patients table ───
     let patientsCache = [];
     let patientsSearchQuery = '';
+    const patientsExpanded = new Set();
     const adminPatientsBody = document.getElementById('adminPatientsBody');
     const patientsSearch = document.getElementById('patientsSearch');
     const patientsRefreshBtn = document.getElementById('patientsRefreshBtn');
+
+    const PATIENT_FREQ_OPTIONS = [
+        { value: '', label: '—' },
+        { value: 'once', label: 'Once' },
+        { value: 'occasional', label: 'Once in a while' },
+        { value: 'weekly', label: 'Weekly' },
+        { value: 'every_2_weeks', label: 'Every 2 weeks' },
+        { value: 'monthly', label: 'Monthly' },
+        { value: 'every_6_weeks', label: 'Every 6 weeks' },
+        { value: 'every_2_months', label: 'Every 2 months' },
+        { value: 'quarterly', label: 'Every 3 months' },
+        { value: 'as_needed', label: 'As needed' }
+    ];
 
     function formatPatientConsultDate(p) {
         const iso = (p.dateIso && String(p.dateIso).trim()) || '';
@@ -476,15 +490,76 @@ document.addEventListener('DOMContentLoaded', async () => {
         return [p.date || '—', time].filter(Boolean).join(' · ');
     }
 
-    function filteredPatients() {
-        const q = patientsSearchQuery.trim().toLowerCase();
-        if (!q) return patientsCache;
-        return patientsCache.filter((p) => {
-            const hay = [
-                p.patientName, p.email, p.patientPhone, p.bookingRef, p.service, p.professional
-            ].map((x) => String(x || '').toLowerCase()).join(' ');
-            return hay.includes(q);
+    function patientSortKey(p) {
+        const iso = (p.dateIso && String(p.dateIso).trim()) || '';
+        const time = String(p.time || '00:00').slice(0, 5);
+        if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) return `${iso}T${time}`;
+        return String(p.date || '') + time;
+    }
+
+    function groupPatientsByEmail(list) {
+        const map = new Map();
+        (list || []).forEach((p) => {
+            const key = String(p.email || '').toLowerCase().trim() || `ref:${p.bookingRef}`;
+            if (!map.has(key)) map.set(key, []);
+            map.get(key).push(p);
         });
+        const groups = [];
+        map.forEach((consultations, emailKey) => {
+            const sorted = [...consultations].sort((a, b) => patientSortKey(b).localeCompare(patientSortKey(a)));
+            const active = sorted.filter((c) => !c.cancelled);
+            const latest = sorted[0];
+            const count = active.length || sorted.length;
+            const paidN = active.filter((c) => c.markedPaid).length;
+            const invoiceN = active.filter((c) => c.invoiceSent).length;
+            const reviewAskN = active.filter((c) => c.reviewRequested).length;
+            const professional = sorted.find((c) => c.professional)?.professional
+                || latest.professional
+                || '';
+            const visitFrequency = sorted.find((c) => c.visitFrequency)?.visitFrequency || '';
+            groups.push({
+                emailKey,
+                email: latest.email || '',
+                patientName: latest.patientName || '',
+                patientPhone: sorted.find((c) => c.patientPhone)?.patientPhone || '',
+                consultations: sorted,
+                latest,
+                consultationCount: count,
+                patientType: count > 1 ? 'Regular' : 'One-time',
+                visitFrequency,
+                professional,
+                hasReviewed: sorted.some((c) => c.hasReviewed),
+                reviewRating: sorted.find((c) => c.hasReviewed)?.reviewRating || null,
+                paidN,
+                invoiceN,
+                reviewAskN,
+                activeCount: active.length || sorted.length,
+                primaryRef: latest.bookingRef
+            });
+        });
+        groups.sort((a, b) => patientSortKey(b.latest).localeCompare(patientSortKey(a.latest)));
+        return groups;
+    }
+
+    function filteredPatientGroups() {
+        const q = patientsSearchQuery.trim().toLowerCase();
+        const base = patientsCache;
+        const filtered = !q
+            ? base
+            : base.filter((p) => {
+                const hay = [
+                    p.patientName, p.email, p.patientPhone, p.bookingRef, p.service, p.professional
+                ].map((x) => String(x || '').toLowerCase()).join(' ');
+                return hay.includes(q);
+            });
+        return groupPatientsByEmail(filtered);
+    }
+
+    function fractionLabel(n, total) {
+        if (!total) return '—';
+        if (n >= total) return 'All';
+        if (n <= 0) return 'None';
+        return `${n}/${total}`;
     }
 
     async function patchPatientField(bookingRef, patch) {
@@ -499,103 +574,61 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (idx >= 0) {
             patientsCache[idx] = { ...patientsCache[idx], ...patch, ...(data.patient || {}) };
         }
+        if (Object.prototype.hasOwnProperty.call(patch, 'visitFrequency')) {
+            const row = patientsCache.find((p) => p.bookingRef === bookingRef);
+            if (row && row.email) {
+                const email = String(row.email).toLowerCase();
+                patientsCache.forEach((x) => {
+                    if (String(x.email || '').toLowerCase() === email) {
+                        x.visitFrequency = patch.visitFrequency;
+                    }
+                });
+            }
+        }
         return data.patient;
     }
 
-    function renderPatientsTable() {
-        if (!adminPatientsBody) return;
-        const list = filteredPatients();
-        if (!list.length) {
-            adminPatientsBody.innerHTML = `<tr><td colspan="9" class="admin-empty-list">${
-                patientsCache.length ? 'No matches.' : 'No patients yet.'
-            }</td></tr>`;
-            return;
-        }
-        adminPatientsBody.innerHTML = '';
-        list.forEach((p) => {
-            const tr = document.createElement('tr');
-            if (p.cancelled) tr.classList.add('is-cancelled');
-            const serviceLabel = SERVICE_LABELS_ADMIN[p.service] || p.service || '—';
-            const urgency = p.urgency || (String(p.service).toLowerCase() === 'urgente' ? 'Urgent' : 'Regular');
-            const paidChecked = p.markedPaid === true;
-            const complimentary = p.complimentary === true;
-            const phone = p.patientPhone || '';
-            const contactHtml = `
-                <div class="admin-patients-contact">
-                    <a href="mailto:${escapeHtml(p.email || '')}">${escapeHtml(p.email || '—')}</a>
-                    ${phone ? `<span>${escapeHtml(phone)}</span>` : ''}
-                </div>`;
-            const reviewedHtml = p.hasReviewed
-                ? `<span class="admin-patients-yes">Yes${p.reviewRating ? ` · ${p.reviewRating}★` : ''}</span>`
-                : '<span class="admin-patients-no">No</span>';
-            tr.innerHTML = `
-                <td>
-                    <div class="admin-patients-name">${escapeHtml(p.patientName || '—')}</div>
-                    <div class="admin-patients-ref">${escapeHtml(p.bookingRef || '')}${p.cancelled ? ' · cancelled' : ''}</div>
-                </td>
-                <td>${contactHtml}</td>
-                <td>
-                    <div>${escapeHtml(formatPatientConsultDate(p))}</div>
-                    <div class="admin-patients-service">${escapeHtml(serviceLabel)}</div>
-                </td>
-                <td><span class="admin-patients-urgency is-${urgency.toLowerCase()}">${escapeHtml(urgency)}</span></td>
-                <td>
-                    <input type="text" class="admin-input admin-patients-professional" list="adminProfessionalsList"
-                        data-field="professional" data-ref="${escapeHtml(p.bookingRef)}"
-                        value="${escapeHtml(p.professional || '')}" placeholder="Professional">
-                </td>
-                <td class="admin-patients-check-cell">
-                    <label class="admin-patients-check">
-                        <input type="checkbox" data-field="markedPaid" data-ref="${escapeHtml(p.bookingRef)}" ${paidChecked ? 'checked' : ''}>
-                        <span>${complimentary && paidChecked ? 'Free' : (paidChecked ? 'Yes' : 'No')}</span>
-                    </label>
-                </td>
-                <td class="admin-patients-check-cell">
-                    <label class="admin-patients-check">
-                        <input type="checkbox" data-field="invoiceSent" data-ref="${escapeHtml(p.bookingRef)}" ${p.invoiceSent ? 'checked' : ''}>
-                        <span>${p.invoiceSent ? 'Yes' : 'No'}</span>
-                    </label>
-                </td>
-                <td class="admin-patients-check-cell">
-                    <label class="admin-patients-check">
-                        <input type="checkbox" data-field="reviewRequested" data-ref="${escapeHtml(p.bookingRef)}" ${p.reviewRequested ? 'checked' : ''}>
-                        <span>${p.reviewRequested ? 'Yes' : 'No'}</span>
-                    </label>
-                </td>
-                <td>${reviewedHtml}</td>
-            `;
-            adminPatientsBody.appendChild(tr);
-        });
+    function freqOptionsHtml(selected) {
+        return PATIENT_FREQ_OPTIONS.map((o) =>
+            `<option value="${o.value}" ${String(selected || '') === o.value ? 'selected' : ''}>${o.label}</option>`
+        ).join('');
+    }
 
-        adminPatientsBody.querySelectorAll('input[data-field]').forEach((el) => {
+    function bindPatientFieldEditors(root) {
+        root.querySelectorAll('[data-field]').forEach((el) => {
             const field = el.getAttribute('data-field');
             const ref = el.getAttribute('data-ref');
             const save = async () => {
                 const patch = {};
                 if (field === 'professional') patch.professional = el.value;
+                else if (field === 'visitFrequency') patch.visitFrequency = el.value;
                 else patch[field] = el.checked;
                 try {
                     el.disabled = true;
                     await patchPatientField(ref, patch);
-                    if (field !== 'professional') {
-                        const span = el.parentElement && el.parentElement.querySelector('span');
-                        if (span) {
-                            if (field === 'markedPaid') {
-                                const row = patientsCache.find((x) => x.bookingRef === ref);
-                                span.textContent = row && row.complimentary && el.checked ? 'Free' : (el.checked ? 'Yes' : 'No');
-                            } else {
-                                span.textContent = el.checked ? 'Yes' : 'No';
-                            }
+                    if (field === 'visitFrequency' || field === 'professional') {
+                        renderPatientsTable();
+                        return;
+                    }
+                    const span = el.parentElement && el.parentElement.querySelector('span');
+                    if (span) {
+                        if (field === 'markedPaid') {
+                            const row = patientsCache.find((x) => x.bookingRef === ref);
+                            span.textContent = row && row.complimentary && el.checked ? 'Free' : (el.checked ? 'Yes' : 'No');
+                        } else {
+                            span.textContent = el.checked ? 'Yes' : 'No';
                         }
                     }
+                    // Refresh summary fractions without losing expand state
+                    renderPatientsTable();
                 } catch (err) {
                     alert('Could not save: ' + err.message);
-                    if (field !== 'professional') el.checked = !el.checked;
+                    if (el.type === 'checkbox') el.checked = !el.checked;
                 } finally {
                     el.disabled = false;
                 }
             };
-            if (el.type === 'checkbox') el.addEventListener('change', save);
+            if (el.type === 'checkbox' || el.tagName === 'SELECT') el.addEventListener('change', save);
             else {
                 let t;
                 el.addEventListener('change', save);
@@ -605,6 +638,162 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             }
         });
+    }
+
+    function renderPatientsTable() {
+        if (!adminPatientsBody) return;
+        const groups = filteredPatientGroups();
+        if (!groups.length) {
+            adminPatientsBody.innerHTML = `<tr><td colspan="11" class="admin-empty-list">${
+                patientsCache.length ? 'No matches.' : 'No patients yet.'
+            }</td></tr>`;
+            return;
+        }
+
+        adminPatientsBody.innerHTML = '';
+        groups.forEach((g) => {
+            const expanded = patientsExpanded.has(g.emailKey);
+            const canExpand = g.consultations.length > 0;
+            const typeClass = g.patientType === 'Regular' ? 'regular' : 'onetime';
+            const phone = g.patientPhone || '';
+            const reviewedHtml = g.hasReviewed
+                ? `<span class="admin-patients-yes">Yes${g.reviewRating ? ` · ${g.reviewRating}★` : ''}</span>`
+                : '<span class="admin-patients-no">No</span>';
+            const latestService = SERVICE_LABELS_ADMIN[g.latest.service] || g.latest.service || '—';
+            const moreCount = Math.max(0, g.consultations.length - 1);
+
+            const summary = document.createElement('tr');
+            summary.className = 'admin-patients-summary' + (expanded ? ' is-expanded' : '');
+            summary.dataset.emailKey = g.emailKey;
+            summary.innerHTML = `
+                <td class="admin-patients-expand-cell">
+                    ${canExpand ? `<button type="button" class="admin-patients-expand-btn" data-expand="${escapeHtml(g.emailKey)}" aria-expanded="${expanded}" title="Show consultations">
+                        <span class="admin-patients-chevron">${expanded ? '▾' : '▸'}</span>
+                    </button>` : ''}
+                </td>
+                <td>
+                    <div class="admin-patients-name">${escapeHtml(g.patientName || '—')}</div>
+                    ${g.consultations.length > 1
+                        ? `<div class="admin-patients-ref">${g.consultations.length} consultations</div>`
+                        : `<div class="admin-patients-ref">${escapeHtml(g.primaryRef || '')}</div>`}
+                </td>
+                <td>
+                    <div class="admin-patients-contact">
+                        <a href="mailto:${escapeHtml(g.email || '')}">${escapeHtml(g.email || '—')}</a>
+                        ${phone ? `<span>${escapeHtml(phone)}</span>` : ''}
+                    </div>
+                </td>
+                <td>
+                    <div>${escapeHtml(formatPatientConsultDate(g.latest))}</div>
+                    <div class="admin-patients-service">${escapeHtml(latestService)}${moreCount ? ` · +${moreCount} more` : ''}</div>
+                </td>
+                <td>
+                    <span class="admin-patients-type is-${typeClass}">${escapeHtml(g.patientType)}</span>
+                    ${g.consultationCount > 1 ? `<span class="admin-patients-count">${g.consultationCount} visits</span>` : ''}
+                </td>
+                <td>
+                    <select class="admin-select admin-patients-frequency" data-field="visitFrequency" data-ref="${escapeHtml(g.primaryRef)}">
+                        ${freqOptionsHtml(g.visitFrequency)}
+                    </select>
+                </td>
+                <td>
+                    <input type="text" class="admin-input admin-patients-professional" list="adminProfessionalsList"
+                        data-field="professional" data-ref="${escapeHtml(g.primaryRef)}"
+                        value="${escapeHtml(g.professional || '')}" placeholder="Professional">
+                </td>
+                <td><span class="admin-patients-frac ${g.paidN >= g.activeCount ? 'is-all' : (g.paidN ? 'is-partial' : 'is-none')}">${fractionLabel(g.paidN, g.activeCount)}</span></td>
+                <td><span class="admin-patients-frac ${g.invoiceN >= g.activeCount ? 'is-all' : (g.invoiceN ? 'is-partial' : 'is-none')}">${fractionLabel(g.invoiceN, g.activeCount)}</span></td>
+                <td><span class="admin-patients-frac ${g.reviewAskN >= g.activeCount ? 'is-all' : (g.reviewAskN ? 'is-partial' : 'is-none')}">${fractionLabel(g.reviewAskN, g.activeCount)}</span></td>
+                <td>${reviewedHtml}</td>
+            `;
+            adminPatientsBody.appendChild(summary);
+
+            if (expanded) {
+                const detail = document.createElement('tr');
+                detail.className = 'admin-patients-detail-row';
+                const rowsHtml = g.consultations.map((c) => {
+                    const serviceLabel = SERVICE_LABELS_ADMIN[c.service] || c.service || '—';
+                    const paidChecked = c.markedPaid === true;
+                    const complimentary = c.complimentary === true;
+                    return `
+                        <tr class="${c.cancelled ? 'is-cancelled' : ''}">
+                            <td>
+                                <div>${escapeHtml(formatPatientConsultDate(c))}</div>
+                                <div class="admin-patients-ref">${escapeHtml(c.bookingRef || '')}${c.cancelled ? ' · cancelled' : ''}</div>
+                            </td>
+                            <td>${escapeHtml(serviceLabel)}</td>
+                            <td>
+                                <input type="text" class="admin-input admin-patients-professional" list="adminProfessionalsList"
+                                    data-field="professional" data-ref="${escapeHtml(c.bookingRef)}"
+                                    value="${escapeHtml(c.professional || '')}" placeholder="Professional">
+                            </td>
+                            <td class="admin-patients-check-cell">
+                                <label class="admin-patients-check">
+                                    <input type="checkbox" data-field="markedPaid" data-ref="${escapeHtml(c.bookingRef)}" ${paidChecked ? 'checked' : ''}>
+                                    <span>${complimentary && paidChecked ? 'Free' : (paidChecked ? 'Yes' : 'No')}</span>
+                                </label>
+                            </td>
+                            <td class="admin-patients-check-cell">
+                                <label class="admin-patients-check">
+                                    <input type="checkbox" data-field="invoiceSent" data-ref="${escapeHtml(c.bookingRef)}" ${c.invoiceSent ? 'checked' : ''}>
+                                    <span>${c.invoiceSent ? 'Yes' : 'No'}</span>
+                                </label>
+                            </td>
+                            <td class="admin-patients-check-cell">
+                                <label class="admin-patients-check">
+                                    <input type="checkbox" data-field="reviewRequested" data-ref="${escapeHtml(c.bookingRef)}" ${c.reviewRequested ? 'checked' : ''}>
+                                    <span>${c.reviewRequested ? 'Yes' : 'No'}</span>
+                                </label>
+                            </td>
+                        </tr>`;
+                }).join('');
+                detail.innerHTML = `
+                    <td colspan="11">
+                        <div class="admin-patients-detail">
+                            <table class="admin-patients-detail-table">
+                                <thead>
+                                    <tr>
+                                        <th>Consultation</th>
+                                        <th>Service</th>
+                                        <th>Professional</th>
+                                        <th>Paid</th>
+                                        <th>Invoice sent</th>
+                                        <th>Review asked</th>
+                                    </tr>
+                                </thead>
+                                <tbody>${rowsHtml}</tbody>
+                            </table>
+                        </div>
+                    </td>`;
+                adminPatientsBody.appendChild(detail);
+            }
+        });
+
+        adminPatientsBody.querySelectorAll('[data-expand]').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const key = btn.getAttribute('data-expand');
+                if (patientsExpanded.has(key)) patientsExpanded.delete(key);
+                else patientsExpanded.add(key);
+                renderPatientsTable();
+            });
+        });
+
+        // Clicking the summary row (except inputs) also toggles when multi-consult
+        adminPatientsBody.querySelectorAll('tr.admin-patients-summary').forEach((tr) => {
+            tr.addEventListener('click', (e) => {
+                if (e.target.closest('input, select, a, button, label')) return;
+                const key = tr.dataset.emailKey;
+                if (!key) return;
+                const group = groups.find((g) => g.emailKey === key);
+                if (!group || group.consultations.length < 1) return;
+                if (patientsExpanded.has(key)) patientsExpanded.delete(key);
+                else patientsExpanded.add(key);
+                renderPatientsTable();
+            });
+        });
+
+        bindPatientFieldEditors(adminPatientsBody);
     }
 
     async function loadPatientsTable() {
@@ -618,7 +807,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderPatientsTable();
         } catch (err) {
             console.error('Load patients:', err);
-            adminPatientsBody.innerHTML = '<tr><td colspan="9" class="admin-empty-list">Could not load patients.</td></tr>';
+            adminPatientsBody.innerHTML = '<tr><td colspan="11" class="admin-empty-list">Could not load patients.</td></tr>';
         }
     }
 

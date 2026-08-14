@@ -1777,8 +1777,9 @@ body.dash-portal .dash-stat-card {
     display: flex;
     align-items: stretch;
     gap: 0;
-    max-width: 1180px;
-    margin: 0 auto;
+    max-width: none;
+    width: 100%;
+    margin: 0;
     background: var(--bg-card);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-xl);
@@ -2129,8 +2130,16 @@ a.admin-nav-link {
 /* ========================================
    ADMIN PATIENTS TABLE
 ======================================== */
+.dash-page:has(.admin-shell) {
+    padding-left: 12px;
+    padding-right: 12px;
+    max-width: none;
+}
+
 .dash-content.admin-shell {
-    max-width: 1280px;
+    max-width: none !important;
+    width: 100%;
+    margin: 0;
 }
 
 .admin-patients-search {
@@ -2143,13 +2152,15 @@ a.admin-nav-link {
     margin-top: 8px;
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-md);
+    width: 100%;
 }
 
 .admin-patients-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.8125rem;
-    min-width: 920px;
+    min-width: 100%;
+    table-layout: auto;
 }
 
 .admin-patients-table th,
@@ -2212,7 +2223,79 @@ a.admin-nav-link {
     margin-top: 2px;
 }
 
-.admin-patients-urgency {
+.admin-patients-expand-cell {
+    width: 2.25rem;
+    padding-right: 0 !important;
+}
+
+.admin-patients-expand-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 4px 6px;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    line-height: 1;
+}
+
+.admin-patients-expand-btn:hover {
+    color: var(--text-primary);
+}
+
+.admin-patients-summary {
+    cursor: pointer;
+}
+
+.admin-patients-summary.is-expanded {
+    background: rgba(197, 199, 44, 0.08);
+}
+
+.admin-patients-detail-row > td {
+    padding: 0 12px 14px !important;
+    background: rgba(15, 23, 42, 0.02);
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.admin-patients-detail {
+    padding: 4px 8px 8px 28px;
+}
+
+.admin-patients-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+}
+
+.admin-patients-detail-table th,
+.admin-patients-detail-table td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-subtle);
+    vertical-align: top;
+}
+
+.admin-patients-detail-table th {
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.admin-patients-detail-table tr.is-cancelled {
+    opacity: 0.55;
+}
+
+.admin-patients-frac {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.admin-patients-frac.is-all { color: #15803d; }
+.admin-patients-frac.is-partial { color: #a16207; }
+.admin-patients-frac.is-none { color: var(--text-muted); }
+
+.admin-patients-type {
     display: inline-block;
     padding: 2px 8px;
     border-radius: 999px;
@@ -2220,19 +2303,33 @@ a.admin-nav-link {
     font-weight: 600;
 }
 
-.admin-patients-urgency.is-urgent {
-    background: rgba(239, 68, 68, 0.12);
-    color: #b91c1c;
+.admin-patients-type.is-regular {
+    background: rgba(197, 199, 44, 0.22);
+    color: #5a5c12;
 }
 
-.admin-patients-urgency.is-regular {
+.admin-patients-type.is-onetime {
     background: rgba(15, 23, 42, 0.06);
     color: var(--text-secondary);
 }
 
+.admin-patients-count {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.6875rem;
+    color: var(--text-muted);
+}
+
+.admin-patients-frequency {
+    min-width: 150px;
+    max-width: 200px;
+    padding: 6px 8px;
+    font-size: 0.8125rem;
+}
+
 .admin-patients-professional {
-    min-width: 140px;
-    max-width: 180px;
+    min-width: 160px;
+    max-width: 220px;
     padding: 6px 8px;
     font-size: 0.8125rem;
 }

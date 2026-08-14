@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="dashboard.css?v=patients-wide-2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -144,7 +144,7 @@
                     <div class="dash-section-header admin-schedule-toolbar">
                         <div>
                             <h2 class="dash-section-title">All patients</h2>
-                            <p class="dash-section-subtitle">Consultations, payment, invoice and review tracking. Tick invoice / review-request boxes manually as you complete them.</p>
+                            <p class="dash-section-subtitle">One row per patient (merged by email). Expand to see each consultation and tick paid / invoice / review per visit.</p>
                         </div>
                         <div class="admin-schedule-filters">
                             <input type="search" id="patientsSearch" class="admin-input admin-patients-search" placeholder="Search name, email, ref…">
@@ -155,10 +155,12 @@
                         <table class="admin-patients-table" id="adminPatientsTable">
                             <thead>
                                 <tr>
+                                    <th style="width:2.5rem;"></th>
                                     <th>Patient</th>
                                     <th>Contact</th>
-                                    <th>Consultation</th>
+                                    <th>Latest consultation</th>
                                     <th>Type</th>
+                                    <th>How regular</th>
                                     <th>Professional</th>
                                     <th>Paid</th>
                                     <th>Invoice sent</th>
@@ -167,7 +169,7 @@
                                 </tr>
                             </thead>
                             <tbody id="adminPatientsBody">
-                                <tr><td colspan="9" class="admin-empty-list">Loading…</td></tr>
+                                <tr><td colspan="11" class="admin-empty-list">Loading…</td></tr>
                             </tbody>
                         </table>
                     </div>

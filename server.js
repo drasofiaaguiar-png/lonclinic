@@ -4904,28 +4904,46 @@ app.get('/api/admin/upcoming-consultations', requireAuth, async (req, res) => {
     }
 });
 
-function consultationUrgencyLabel(service) {
-    const s = String(service || '').toLowerCase();
-    return s === 'urgente' ? 'Urgent' : 'Regular';
+function consultationPatientType(consultationCount) {
+    const n = Number(consultationCount) || 0;
+    return n > 1 ? 'Regular' : 'One-time';
 }
 
 function enrichPatientsWithReviews(bookings, reviews) {
-    const emailsWithReview = new Set();
     const reviewByEmail = new Map();
     for (const r of reviews || []) {
         const e = String(r.email || '').toLowerCase().trim();
         if (!e) continue;
-        emailsWithReview.add(e);
         if (!reviewByEmail.has(e)) reviewByEmail.set(e, r);
     }
+
+    const countByEmail = new Map();
+    for (const b of bookings || []) {
+        if (b.cancelled) continue;
+        const e = String(b.email || '').toLowerCase().trim();
+        if (!e) continue;
+        countByEmail.set(e, (countByEmail.get(e) || 0) + 1);
+    }
+
+    // Prefer any set visitFrequency from the patient's bookings
+    const frequencyByEmail = new Map();
+    for (const b of bookings || []) {
+        const e = String(b.email || '').toLowerCase().trim();
+        if (!e || !b.visitFrequency) continue;
+        if (!frequencyByEmail.has(e)) frequencyByEmail.set(e, b.visitFrequency);
+    }
+
     return bookings.map((b) => {
         const email = String(b.email || '').toLowerCase().trim();
         const review = email ? reviewByEmail.get(email) : null;
         const phone = b.patientPhone || (b._invitePhone || '') || '';
+        const consultationCount = email ? (countByEmail.get(email) || 0) : 1;
         return {
             ...b,
             patientPhone: phone,
-            urgency: consultationUrgencyLabel(b.service),
+            consultationCount,
+            patientType: consultationPatientType(consultationCount),
+            visitFrequency: b.visitFrequency || frequencyByEmail.get(email) || '',
             hasReviewed: !!review,
             reviewRating: review ? review.rating : null,
             reviewId: review ? review.id : null
@@ -5002,6 +5020,7 @@ app.patch('/api/admin/patients/:bookingRef', requireAuth, express.json(), async 
         if (Object.prototype.hasOwnProperty.call(body, 'invoiceSent')) fields.invoiceSent = body.invoiceSent;
         if (Object.prototype.hasOwnProperty.call(body, 'reviewRequested')) fields.reviewRequested = body.reviewRequested;
         if (Object.prototype.hasOwnProperty.call(body, 'patientPhone')) fields.patientPhone = body.patientPhone;
+        if (Object.prototype.hasOwnProperty.call(body, 'visitFrequency')) fields.visitFrequency = body.visitFrequency;
 
         if (!Object.keys(fields).length) {
             return res.status(400).json({ error: 'No fields to update' });
