@@ -5787,7 +5787,7 @@ app.get('/api/admin/patients/:bookingRef/suggest-next', requireAuth, async (req,
     }
 });
 
-// Schedule next appointment for an existing patient (no Stripe invoice)
+// Schedule next appointment for an existing patient
 app.post('/api/admin/patients/schedule-next', requireAuth, express.json(), async (req, res) => {
     if (!usePersistentDb) {
         return res.status(503).json({ error: 'Database required' });
@@ -5816,6 +5816,7 @@ app.post('/api/admin/patients/schedule-next', requireAuth, express.json(), async
         const patientType = body.patientType != null
             ? String(body.patientType).trim()
             : (source && source.patientType) || '';
+        const sendInvoice = body.sendInvoice === true || body.sendInvoice === 'true' || body.sendInvoice === 1;
 
         if (!patientName || !patientEmail || !service || !dateIso || !time) {
             return res.status(400).json({ error: 'Missing required fields' });
@@ -5844,10 +5845,19 @@ app.post('/api/admin/patients/schedule-next', requireAuth, express.json(), async
             } catch (e) { /* keep 0 */ }
         }
 
+        const wantInvoice = sendInvoice && amountCents > 0;
+        if (wantInvoice && !isStripeConfigured) {
+            return res.status(503).json({ error: 'Stripe is not configured — cannot send invoice.' });
+        }
+
         const id = crypto.randomUUID();
         const token = crypto.randomBytes(24).toString('hex');
         let serviceLabel = invitationServiceLabel(service, locale);
-        serviceLabel = `${serviceLabel} · sem fatura`;
+        if (!wantInvoice) {
+            serviceLabel = amountCents === 0
+                ? `${serviceLabel} · cortesia`
+                : `${serviceLabel} · sem fatura`;
+        }
 
         let invitation = await db.insertInvitation({
             id,
@@ -5868,6 +5878,35 @@ app.post('/api/admin/patients/schedule-next', requireAuth, express.json(), async
             createdBy: (req.session && req.session.clinicUsername) || 'admin'
         });
 
+        // Optional: email Stripe payment invoice and keep slot reserved until paid
+        if (wantInvoice) {
+            const baseUrl = getBaseUrl(req);
+            const session = await createInvitationStripeSession(invitation, baseUrl);
+            invitation = await db.updateInvitationStripeSession(id, {
+                id: session.id,
+                url: session.url,
+                expiresAt: session.expires_at ? new Date(session.expires_at * 1000) : null
+            });
+            let emailDelivered = true;
+            let emailError = null;
+            try {
+                await sendInvitationEmail(invitation, session.url, baseUrl);
+            } catch (e) {
+                emailDelivered = false;
+                emailError = e.message || 'Email failed';
+            }
+            return res.json({
+                ok: true,
+                withoutInvoice: false,
+                invoiceSent: true,
+                invitation,
+                bookingRef: null,
+                emailDelivered,
+                emailError
+            });
+        }
+
+        // Default: confirm now, no payment invoice
         const confirmed = await confirmInvitationWithoutPayment(invitation, {
             paymentPrefix: amountCents === 0 ? 'comp' : 'manual'
         });
@@ -5889,6 +5928,7 @@ app.post('/api/admin/patients/schedule-next', requireAuth, express.json(), async
         res.json({
             ok: true,
             withoutInvoice: true,
+            invoiceSent: false,
             invitation,
             booking,
             bookingRef,

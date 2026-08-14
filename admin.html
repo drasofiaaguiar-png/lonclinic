@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css?v=fix-modal-6">
+    <link rel="stylesheet" href="dashboard.css?v=schedule-invoice-7">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -224,7 +224,11 @@
                             </div>
                         </div>
                         <div class="admin-schedule-suggestions" id="scheduleNextSuggestions"></div>
-                        <p class="admin-schedule-next-note">Confirms the slot immediately without sending a payment invoice. Patient still gets the confirmation email.</p>
+                        <label class="admin-override-open-label" for="scheduleNextSendInvoice" style="margin-top:14px;">
+                            <input type="checkbox" id="scheduleNextSendInvoice">
+                            <span>Send payment invoice by email</span>
+                        </label>
+                        <p class="admin-schedule-next-note" id="scheduleNextNote">By default the slot is confirmed without a Stripe invoice. Tick the box above if you want to email a payment link instead.</p>
                         <div id="scheduleNextError" class="dash-login-error" style="display:none;" role="alert"></div>
                         <div class="dash-modal-actions">
                             <button type="button" class="btn btn-outline" data-close-schedule-modal>Cancel</button>

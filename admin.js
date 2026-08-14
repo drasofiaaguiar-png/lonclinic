@@ -996,7 +996,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     const scheduleNextSuggestions = document.getElementById('scheduleNextSuggestions');
     const scheduleNextError = document.getElementById('scheduleNextError');
     const scheduleNextSubmit = document.getElementById('scheduleNextSubmit');
+    const scheduleNextSendInvoice = document.getElementById('scheduleNextSendInvoice');
+    const scheduleNextNote = document.getElementById('scheduleNextNote');
     let scheduleNextContext = null;
+
+    function refreshScheduleNextNote() {
+        if (!scheduleNextNote) return;
+        if (scheduleNextSendInvoice && scheduleNextSendInvoice.checked) {
+            scheduleNextNote.textContent = 'Will email a Stripe payment link and reserve the slot until they pay. The booking is confirmed after payment.';
+        } else {
+            scheduleNextNote.textContent = 'Confirms the slot now without a payment invoice. Patient still gets the confirmation email. Tick the box above to send an invoice instead.';
+        }
+    }
+    if (scheduleNextSendInvoice) {
+        scheduleNextSendInvoice.addEventListener('change', refreshScheduleNextNote);
+    }
 
     function setScheduleNextError(msg) {
         if (!scheduleNextError) return;
@@ -1016,8 +1030,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         scheduleNextContext = null;
         if (scheduleNextForm) scheduleNextForm.reset();
+        if (scheduleNextSendInvoice) scheduleNextSendInvoice.checked = false;
         if (scheduleNextSuggestions) scheduleNextSuggestions.innerHTML = '';
         setScheduleNextError('');
+        refreshScheduleNextNote();
     }
 
     // Never show on load (CSS display:flex was overriding the hidden attribute)
@@ -1158,7 +1174,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 locale: p.locale || 'pt',
                 professional: scheduleNextProfessional ? scheduleNextProfessional.value : '',
                 visitFrequency: p.visitFrequency || '',
-                patientType: p.patientType || 'regular'
+                patientType: p.patientType || 'regular',
+                sendInvoice: !!(scheduleNextSendInvoice && scheduleNextSendInvoice.checked)
             };
             if (!payload.patientEmail || !payload.patientName) {
                 setScheduleNextError('Missing patient — close and open again from the patient row (+).');
@@ -1170,7 +1187,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             if (scheduleNextSubmit) {
                 scheduleNextSubmit.disabled = true;
-                scheduleNextSubmit.textContent = 'Confirming…';
+                scheduleNextSubmit.textContent = payload.sendInvoice ? 'Sending invoice…' : 'Confirming…';
             }
             try {
                 const res = await fetch('/api/admin/patients/schedule-next', {
@@ -1183,8 +1200,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 closeScheduleNextModal();
                 await loadPatientsTable();
                 loadUpcomingConsultations();
+                if (typeof loadInvitations === 'function') loadInvitations();
                 if (data.emailDelivered === false) {
-                    alert('Appointment created, but confirmation email failed: ' + (data.emailError || 'unknown'));
+                    alert(
+                        (data.invoiceSent ? 'Invoice created, but email failed: ' : 'Appointment created, but confirmation email failed: ')
+                        + (data.emailError || 'unknown')
+                    );
                 }
             } catch (err) {
                 setScheduleNextError(err.message || 'Failed to schedule');
