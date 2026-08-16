@@ -213,10 +213,13 @@ app.use(
     })
 );
 
-const ANALYTICS_SNIPPET = '\n<script src="/lon-analytics.js?v=20260816a" defer></script>\n';
+const ANALYTICS_SNIPPET =
+    '\n<script src="/lon-analytics.js?v=20260816b" defer></script>\n' +
+    '<noscript><img src="/api/a.gif?n=page_view" alt="" width="1" height="1"></noscript>\n';
 function injectAnalyticsHtml(html) {
     if (!html || typeof html !== 'string') return html;
     if (html.includes('lon-analytics.js')) return html;
+    if (/data-admin-panel-content|id="clinicPortal"|id="patientDashboard"/.test(html)) return html;
     const bodyAt = html.lastIndexOf('</body>');
     if (bodyAt !== -1) return html.slice(0, bodyAt) + ANALYTICS_SNIPPET + html.slice(bodyAt);
     const headAt = html.lastIndexOf('</head>');
@@ -329,20 +332,88 @@ function requestCountry(req) {
     return cf ? String(cf).slice(0, 8) : '';
 }
 
+function readCookie(req, name) {
+    const raw = String((req && req.headers && req.headers.cookie) || '');
+    for (const part of raw.split(';')) {
+        const i = part.indexOf('=');
+        if (i === -1) continue;
+        if (part.slice(0, i).trim() !== name) continue;
+        try {
+            return decodeURIComponent(part.slice(i + 1).trim());
+        } catch {
+            return part.slice(i + 1).trim();
+        }
+    }
+    return '';
+}
+
+function setAnalyticsCookie(res, name, value, maxAgeSec) {
+    res.append(
+        'Set-Cookie',
+        `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${maxAgeSec}; SameSite=Lax; Secure`
+    );
+}
+
+function anonymousIds(req) {
+    if (!req) return {};
+    const cookieVid = readCookie(req, 'lon_vid');
+    const cookieSid = readCookie(req, 'lon_sid');
+    const ip = String(
+        req.headers['cf-connecting-ip'] ||
+            String(req.headers['x-forwarded-for'] || '')
+                .split(',')[0]
+                .trim() ||
+            req.ip ||
+            ''
+    );
+    const ua = String((req.headers && req.headers['user-agent']) || '');
+    const slot = Math.floor(Date.now() / (30 * 60 * 1000));
+    const visitorId =
+        cookieVid && cookieVid.length >= 8
+            ? cookieVid.slice(0, 64)
+            : crypto.createHash('sha256').update(`v|${ip}|${ua}`).digest('hex').slice(0, 32);
+    const sessionId =
+        cookieSid && cookieSid.length >= 8
+            ? cookieSid.slice(0, 64)
+            : crypto.createHash('sha256').update(`s|${ip}|${ua}|${slot}`).digest('hex').slice(0, 32);
+    return { visitorId, sessionId };
+}
+
+function ensureAnalyticsCookies(req, res) {
+    const now = Date.now();
+    let visitorId = readCookie(req, 'lon_vid');
+    let sessionId = readCookie(req, 'lon_sid');
+    let sidAt = parseInt(readCookie(req, 'lon_sid_at') || '0', 10);
+    if (!visitorId || visitorId.length < 8) {
+        visitorId = crypto.randomUUID().replace(/-/g, '').slice(0, 32);
+        setAnalyticsCookie(res, 'lon_vid', visitorId, 400 * 86400);
+    }
+    if (!sessionId || sessionId.length < 8 || !sidAt || now - sidAt > 30 * 60 * 1000) {
+        sessionId = crypto.randomUUID().replace(/-/g, '').slice(0, 32);
+        sidAt = now;
+        setAnalyticsCookie(res, 'lon_sid', sessionId, 86400);
+        setAnalyticsCookie(res, 'lon_sid_at', String(sidAt), 86400);
+    }
+    return { visitorId, sessionId };
+}
+
 async function emitServerAnalytics(name, extra, req) {
     const x = extra || {};
+    const ids = anonymousIds(req);
     const row = analyticsNet.normalizeEvent(
         {
             event_id: crypto.randomUUID(),
             name,
             ts: Date.now(),
-            visitor_id: x.visitorId || null,
-            session_id: x.sessionId || null,
-            page_path: x.pagePath || null,
-            referrer: x.referrer || '',
+            visitor_id: x.visitorId || ids.visitorId || null,
+            session_id: x.sessionId || ids.sessionId || null,
+            page_path: x.pagePath || (req && req.path) || null,
+            referrer: x.referrer || (req && req.get && req.get('referer')) || '',
             utm_source: x.utmSource || '',
             utm_medium: x.utmMedium || '',
             utm_campaign: x.utmCampaign || '',
+            gclid: x.gclid || '',
+            fbclid: x.fbclid || '',
             props: x.props || {},
             revenue_cents: x.revenueCents,
             currency: x.currency || 'eur',
@@ -363,6 +434,24 @@ async function emitServerAnalytics(name, extra, req) {
             console.error('emitServerAnalytics:', err.message);
         }
     }
+}
+
+async function ingestClientEvents(req, events) {
+    if (!Array.isArray(events) || !events.length) return;
+    const ua = req.headers['user-agent'] || '';
+    const country = requestCountry(req);
+    const ids = anonymousIds(req);
+    const rows = [];
+    for (const ev of events.slice(0, 40)) {
+        const payload = ev && typeof ev === 'object' ? { ...ev } : {};
+        if (!payload.visitor_id) payload.visitor_id = ids.visitorId;
+        if (!payload.session_id) payload.session_id = ids.sessionId;
+        const row = analyticsNet.normalizeEvent(payload, { source: 'client', ua, country });
+        if (row) rows.push(row);
+    }
+    if (!rows.length) return;
+    rows.forEach((row) => analyticsNet.remember(row));
+    if (usePersistentDb) await db.insertAnalyticsEvents(rows);
 }
 
 /* ========================================
@@ -3446,37 +3535,69 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     res.json({ received: true });
 });
 
-// ─── Middleware ───
-app.use(express.json());
+function parseCollectPayload(body) {
+    if (!body) return [];
+    let payload = body;
+    if (Buffer.isBuffer(payload)) {
+        try {
+            payload = JSON.parse(payload.toString('utf8') || '{}');
+        } catch {
+            return [];
+        }
+    } else if (typeof payload === 'string') {
+        try {
+            payload = JSON.parse(payload || '{}');
+        } catch {
+            return [];
+        }
+    }
+    if (Array.isArray(payload)) return payload;
+    if (payload && Array.isArray(payload.events)) return payload.events;
+    return [];
+}
 
-app.post('/api/a/collect', rateLimitAnalytics, async (req, res) => {
+app.post('/api/a/collect', rateLimitAnalytics, express.raw({ type: '*/*', limit: '256kb' }), async (req, res) => {
     res.status(204).end();
     try {
-        let payload = req.body;
-        if (Buffer.isBuffer(payload)) payload = payload.toString('utf8');
-        if (typeof payload === 'string') {
-            try {
-                payload = JSON.parse(payload || '{}');
-            } catch {
-                return;
-            }
-        }
-        const list = payload && Array.isArray(payload.events) ? payload.events : [];
-        if (!list.length) return;
-        const ua = req.headers['user-agent'] || '';
-        const country = requestCountry(req);
-        const rows = [];
-        for (const ev of list.slice(0, 40)) {
-            const row = analyticsNet.normalizeEvent(ev, { source: 'client', ua, country });
-            if (row) rows.push(row);
-        }
-        if (!rows.length) return;
-        rows.forEach((row) => analyticsNet.remember(row));
-        if (usePersistentDb) await db.insertAnalyticsEvents(rows);
+        await ingestClientEvents(req, parseCollectPayload(req.body));
     } catch (err) {
         console.error('POST /api/a/collect:', err.message);
     }
 });
+
+const PIXEL_GIF = Buffer.from('R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==', 'base64');
+app.get('/api/a.gif', rateLimitAnalytics, async (req, res) => {
+    res.set({
+        'Content-Type': 'image/gif',
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+        'Access-Control-Allow-Origin': '*'
+    });
+    res.end(PIXEL_GIF);
+    try {
+        const name = String(req.query.n || 'page_view').slice(0, 64);
+        await ingestClientEvents(req, [
+            {
+                event_id: crypto.randomUUID(),
+                name,
+                ts: Date.now(),
+                visitor_id: String(req.query.v || '').slice(0, 64),
+                session_id: String(req.query.s || '').slice(0, 64),
+                page_path: String(req.query.p || req.get('referer') || '').slice(0, 240),
+                referrer: String(req.query.r || '').slice(0, 300),
+                utm_source: String(req.query.us || ''),
+                utm_medium: String(req.query.um || ''),
+                utm_campaign: String(req.query.uc || ''),
+                gclid: String(req.query.gclid || ''),
+                props: { via: 'pixel' }
+            }
+        ]);
+    } catch (err) {
+        console.error('GET /api/a.gif:', err.message);
+    }
+});
+
+// ─── Middleware ───
+app.use(express.json());
 
 app.get('/api/admin/analytics', requireAuth, async (req, res) => {
     const rangeKey = String(req.query.range || '7d');
@@ -3512,6 +3633,41 @@ app.use((req, res, next) => {
     if (host === 'doctors.lonclinic.com' && (req.path === '/' || req.path === '/index.html')) {
         return res.redirect(302, '/admin');
     }
+    next();
+});
+
+const ANALYTICS_SKIP_PATH = /^\/(api|admin|clinic-portal|doctors|webhook|patient-portal)(\/|$)/i;
+const ANALYTICS_SKIP_PAGE = /\/(admin|clinic|dashboard)(\.html)?$/i;
+const ANALYTICS_STATIC_EXT =
+    /\.(js|css|png|jpe?g|webp|gif|svg|ico|woff2?|ttf|map|xml|txt|json|webmanifest|mp4|pdf)$/i;
+
+app.use((req, res, next) => {
+    if (req.method !== 'GET') return next();
+    const p = req.path || '/';
+    if (ANALYTICS_SKIP_PATH.test(p) || ANALYTICS_SKIP_PAGE.test(p) || ANALYTICS_STATIC_EXT.test(p)) {
+        return next();
+    }
+    const accept = String(req.headers.accept || '');
+    if (accept && !accept.includes('text/html') && !accept.includes('*/*')) return next();
+    if (analyticsNet.isBot(req.headers['user-agent'])) return next();
+    const ids = ensureAnalyticsCookies(req, res);
+    const q = req.query || {};
+    emitServerAnalytics(
+        'page_view',
+        {
+            visitorId: ids.visitorId,
+            sessionId: ids.sessionId,
+            pagePath: String(p).slice(0, 240),
+            referrer: req.get('referer') || '',
+            utmSource: q.utm_source,
+            utmMedium: q.utm_medium,
+            utmCampaign: q.utm_campaign,
+            gclid: q.gclid,
+            fbclid: q.fbclid,
+            props: { via: 'server' }
+        },
+        req
+    ).catch(() => {});
     next();
 });
 

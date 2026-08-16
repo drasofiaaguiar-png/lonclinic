@@ -516,7 +516,8 @@ async function listLiveAnalyticsSessions(sinceIso) {
     const p = getPool();
     const r = await p.query(
         `SELECT DISTINCT session_id FROM analytics_events
-         WHERE name = 'heartbeat' AND occurred_at >= $1::timestamptz AND session_id IS NOT NULL`,
+         WHERE occurred_at >= $1::timestamptz AND session_id IS NOT NULL
+           AND name IN ('heartbeat', 'page_view')`,
         [sinceIso]
     );
     return r.rows.map((row) => ({ sessionId: row.session_id }));
@@ -531,7 +532,21 @@ async function analyticsBookingStats(fromIso, toIso) {
            AND created_at >= $1::timestamptz AND created_at <= $2::timestamptz`,
         [fromIso, toIso]
     );
-    return { count: r.rows[0] ? r.rows[0].c : 0, revenueCents: r.rows[0] ? r.rows[0].revenue : 0 };
+    const s = await p.query(
+        `SELECT COALESCE(NULLIF(TRIM(service), ''), 'consultation') AS service, COUNT(*)::int AS c
+         FROM bookings
+         WHERE cancelled = FALSE
+           AND created_at >= $1::timestamptz AND created_at <= $2::timestamptz
+         GROUP BY 1
+         ORDER BY c DESC
+         LIMIT 10`,
+        [fromIso, toIso]
+    );
+    return {
+        count: r.rows[0] ? r.rows[0].c : 0,
+        revenueCents: r.rows[0] ? r.rows[0].revenue : 0,
+        services: s.rows.map((row) => ({ service: row.service, count: row.c }))
+    };
 }
 
 function rowToReview(row) {

@@ -2663,6 +2663,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
             const k = data.kpis || {};
             if (live) live.innerHTML = `<span class="an-live-dot"></span> ${k.liveVisitors || 0} live now`;
+            const note = document.getElementById('analyticsTrackingNote');
+            if (note) {
+                if (data.trackingEmpty) {
+                    note.hidden = false;
+                    note.textContent = 'Visit metrics start as people browse the public site. Bookings and revenue already come from the payment ledger.';
+                } else {
+                    note.hidden = true;
+                    note.textContent = '';
+                }
+            }
             if (kpis) {
                 kpis.innerHTML = [
                     ['Visitors', k.visitors],

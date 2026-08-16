@@ -40,7 +40,9 @@ const memoryEvents = [];
 const MEMORY_CAP = 8000;
 
 function isBot(ua) {
-    return !ua || BOT_UA.test(ua);
+    const s = String(ua || '');
+    if (!s) return false;
+    return BOT_UA.test(s) || /healthcheck|kube-probe|googlehc|amazon-route53|statuscake|render\/|railway/i.test(s);
 }
 
 function parseUa(ua) {
@@ -174,6 +176,20 @@ function uniqueCount(rows, key) {
     return s.size;
 }
 
+function dedupePageviews(rows) {
+    const seen = new Set();
+    const out = [];
+    for (const r of rows) {
+        if (r.name !== 'page_view') continue;
+        const t = Math.floor(new Date(r.occurredAt).getTime() / 120000);
+        const k = `${r.sessionId || r.visitorId || ''}|${r.pagePath || ''}|${t}`;
+        if (seen.has(k)) continue;
+        seen.add(k);
+        out.push(r);
+    }
+    return out;
+}
+
 function groupCount(rows, key, limit) {
     const map = new Map();
     for (const r of rows) {
@@ -229,7 +245,7 @@ function hourlySeries(rows, fromIso, days) {
 }
 
 function buildOverview(rows, liveRows, bookingStats, range) {
-    const views = rows.filter((r) => r.name === 'page_view');
+    const views = dedupePageviews(rows);
     const purchases = rows.filter((r) => r.name === 'payment_succeeded' || r.name === 'booking_confirmed');
     const visitors = uniqueCount(views, 'visitorId');
     const sessions = uniqueCount(rows, 'sessionId');
@@ -239,11 +255,22 @@ function buildOverview(rows, liveRows, bookingStats, range) {
             ? bookingStats.revenueCents || 0
             : purchases.reduce((s, r) => s + (r.revenueCents || 0), 0);
     const bookingCount = (bookingStats && bookingStats.count) || purchases.length;
-    const conversion = visitors ? Math.round((uniqueCount(purchases, 'visitorId') / visitors) * 1000) / 10 : 0;
+    const conversion = visitors ? Math.round((bookingCount / visitors) * 1000) / 10 : 0;
     const cta = rows.filter((r) => r.name === 'cta_click');
+    const funnel = funnelFrom(rows).map((step) => {
+        if (step.id !== 'purchase' || !bookingCount) return step;
+        return { ...step, sessions: Math.max(step.sessions, bookingCount) };
+    });
+    const serviceFromEvents = groupCount(
+        purchases.map((r) => ({ key: (r.props && r.props.service) || 'consultation' })),
+        'key',
+        10
+    );
+    const serviceFromBookings = (bookingStats && bookingStats.services) || [];
     return {
         range: range.days === 1 ? '24h' : `${range.days}d`,
         generatedAt: new Date().toISOString(),
+        trackingEmpty: views.length === 0,
         kpis: {
             visitors,
             sessions,
@@ -254,7 +281,7 @@ function buildOverview(rows, liveRows, bookingStats, range) {
             conversionRate: conversion,
             liveVisitors: uniqueCount(liveRows, 'sessionId')
         },
-        funnel: funnelFrom(rows),
+        funnel,
         channels: groupCount(views, 'channel', 10),
         pages: groupCount(views, 'pagePath', 12),
         landings: groupCount(views, 'landingPath', 8),
@@ -271,12 +298,10 @@ function buildOverview(rows, liveRows, bookingStats, range) {
             'key',
             10
         ),
-        services: groupCount(
-            purchases.map((r) => ({ key: (r.props && r.props.service) || 'consultation' })),
-            'key',
-            10
-        ),
-        hourly: hourlySeries(rows, range.from, range.days),
+        services: serviceFromEvents.length
+            ? serviceFromEvents
+            : serviceFromBookings.map((s) => ({ key: s.service || 'consultation', count: s.count })),
+        hourly: hourlySeries(views, range.from, range.days),
         recent: rows
             .filter((r) => r.name !== 'heartbeat')
             .slice(-25)

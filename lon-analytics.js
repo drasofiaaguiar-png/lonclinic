@@ -6,9 +6,10 @@
 (function () {
     'use strict';
 
-    var SKIP = /^\/(admin|clinic-portal|clinic\.html|admin\.html|doctors)/i;
+    var SKIP = /^\/(admin|clinic-portal|doctors|patient-portal|clinic|dashboard)(\/|$|\.html)/i;
     var pathNow = (location.pathname || '/') + '';
     if (SKIP.test(pathNow)) return;
+    if (window.LonAnalytics) return;
 
     var VID_KEY = 'lon_vid';
     var SID_KEY = 'lon_sid';
@@ -179,14 +180,22 @@
         if (!queue.length) return;
         var batch = queue.splice(0, MAX_QUEUE);
         var body = JSON.stringify({ events: batch });
-        var ok = false;
         try {
-            if (navigator.sendBeacon) ok = navigator.sendBeacon(ENDPOINT, new Blob([body], { type: 'application/json' }));
-        } catch (e) { ok = false; }
-        if (!ok) {
+            fetch(ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: body,
+                keepalive: true,
+                credentials: 'same-origin'
+            }).catch(function () {
+                try {
+                    if (navigator.sendBeacon) navigator.sendBeacon(ENDPOINT, body);
+                } catch (e) { /* ignore */ }
+            });
+        } catch (e2) {
             try {
-                fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true, credentials: 'same-origin' }).catch(function () {});
-            } catch (e2) { /* ignore */ }
+                if (navigator.sendBeacon) navigator.sendBeacon(ENDPOINT, body);
+            } catch (e3) { /* ignore */ }
         }
     }
 

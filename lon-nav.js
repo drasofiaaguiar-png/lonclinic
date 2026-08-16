@@ -5,6 +5,15 @@
 (function () {
     'use strict';
 
+    if (!window.LonAnalytics && !/^\/(admin|clinic-portal|doctors|patient-portal|clinic|dashboard)(\/|$|\.html)/i.test(location.pathname || '/')) {
+        if (!document.querySelector('script[src*="lon-analytics.js"]')) {
+            var analyticsScript = document.createElement('script');
+            analyticsScript.src = '/lon-analytics.js?v=20260816b';
+            analyticsScript.defer = true;
+            (document.head || document.documentElement).appendChild(analyticsScript);
+        }
+    }
+
     var nav = document.getElementById('lonNav');
     var toggle = document.getElementById('lonNavToggle');
     var mobileMenu = document.getElementById('lonMobileMenu');
