@@ -24,6 +24,7 @@ let clinicPasswordHash = null;
 bcrypt.hash(CLINIC_PASSWORD, 12).then(h => { clinicPasswordHash = h; });
 
 const db = require('./db');
+const analyticsNet = require('./analytics-network');
 const { computeCheckoutTotalCents, isStripeSubscriptionService } = require('./pricing');
 const express = require('express');
 const path = require('path');
@@ -120,6 +121,16 @@ const rateLimitReviews = rateLimit({
     }
 });
 
+const rateLimitAnalytics = rateLimit({
+    windowMs: 60 * 1000,
+    max: 120,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(204).end();
+    }
+});
+
 const rateLimitCheckout = rateLimit({
     windowMs: 60 * 60 * 1000,
     max: 20,
@@ -202,6 +213,45 @@ app.use(
     })
 );
 
+const ANALYTICS_SNIPPET = '\n<script src="/lon-analytics.js?v=20260816a" defer></script>\n';
+function injectAnalyticsHtml(html) {
+    if (!html || typeof html !== 'string') return html;
+    if (html.includes('lon-analytics.js')) return html;
+    const bodyAt = html.lastIndexOf('</body>');
+    if (bodyAt !== -1) return html.slice(0, bodyAt) + ANALYTICS_SNIPPET + html.slice(bodyAt);
+    const headAt = html.lastIndexOf('</head>');
+    if (headAt !== -1) return html.slice(0, headAt) + ANALYTICS_SNIPPET + html.slice(headAt);
+    return html + ANALYTICS_SNIPPET;
+}
+
+app.use((req, res, next) => {
+    const origSend = res.send.bind(res);
+    res.send = function (body) {
+        if (typeof body === 'string' && /<html[\s>]/i.test(body)) {
+            body = injectAnalyticsHtml(body);
+        }
+        return origSend(body);
+    };
+    const origSendFile = res.sendFile.bind(res);
+    res.sendFile = function (filePath, options, cb) {
+        if (typeof options === 'function') {
+            cb = options;
+            options = undefined;
+        }
+        const fp = String(filePath || '');
+        if (!/\.html$/i.test(fp)) {
+            return origSendFile(filePath, options, cb);
+        }
+        fs.readFile(fp, 'utf8', (err, html) => {
+            if (err) return origSendFile(filePath, options, cb);
+            if (!res.getHeader('Content-Type')) res.setHeader('Content-Type', 'text/html; charset=utf-8');
+            origSend(injectAnalyticsHtml(html));
+            if (typeof cb === 'function') cb();
+        });
+    };
+    next();
+});
+
 /* ========================================
    SESSION CONFIGURATION
 ======================================== */
@@ -273,6 +323,47 @@ const bookingsStore = []; // memory fallback only
 const reviewsStore = []; // memory fallback for patient reviews
 const clinicalNotesStore = []; // memory fallback only
 const psychologistApplicationsStore = []; // memory fallback for recrutamento
+
+function requestCountry(req) {
+    const cf = req && (req.headers['cf-ipcountry'] || req.headers['x-vercel-ip-country']);
+    return cf ? String(cf).slice(0, 8) : '';
+}
+
+async function emitServerAnalytics(name, extra, req) {
+    const x = extra || {};
+    const row = analyticsNet.normalizeEvent(
+        {
+            event_id: crypto.randomUUID(),
+            name,
+            ts: Date.now(),
+            visitor_id: x.visitorId || null,
+            session_id: x.sessionId || null,
+            page_path: x.pagePath || null,
+            referrer: x.referrer || '',
+            utm_source: x.utmSource || '',
+            utm_medium: x.utmMedium || '',
+            utm_campaign: x.utmCampaign || '',
+            props: x.props || {},
+            revenue_cents: x.revenueCents,
+            currency: x.currency || 'eur',
+            booking_ref: x.bookingRef || null
+        },
+        {
+            source: 'server',
+            ua: req && req.headers ? req.headers['user-agent'] : 'server',
+            country: requestCountry(req)
+        }
+    );
+    if (!row) return;
+    analyticsNet.remember(row);
+    if (usePersistentDb) {
+        try {
+            await db.insertAnalyticsEvents([row]);
+        } catch (err) {
+            console.error('emitServerAnalytics:', err.message);
+        }
+    }
+}
 
 /* ========================================
    SCHEDULE/AVAILABILITY STORE
@@ -3321,6 +3412,15 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                     console.error('   ⚠️  Failed to mark invitation paid:', e.message);
                 }
             }
+            emitServerAnalytics(
+                meta.invitation_id ? 'invite_paid' : 'payment_succeeded',
+                {
+                    props: { service: String(meta.service || '') },
+                    revenueCents: session.amount_total || 0,
+                    currency: session.currency || 'eur',
+                    bookingRef: fin.bookingRef || null
+                }
+            ).catch(() => {});
             break;
         }
 
@@ -3348,6 +3448,57 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
 // ─── Middleware ───
 app.use(express.json());
+
+app.post('/api/a/collect', rateLimitAnalytics, async (req, res) => {
+    res.status(204).end();
+    try {
+        let payload = req.body;
+        if (Buffer.isBuffer(payload)) payload = payload.toString('utf8');
+        if (typeof payload === 'string') {
+            try {
+                payload = JSON.parse(payload || '{}');
+            } catch {
+                return;
+            }
+        }
+        const list = payload && Array.isArray(payload.events) ? payload.events : [];
+        if (!list.length) return;
+        const ua = req.headers['user-agent'] || '';
+        const country = requestCountry(req);
+        const rows = [];
+        for (const ev of list.slice(0, 40)) {
+            const row = analyticsNet.normalizeEvent(ev, { source: 'client', ua, country });
+            if (row) rows.push(row);
+        }
+        if (!rows.length) return;
+        rows.forEach((row) => analyticsNet.remember(row));
+        if (usePersistentDb) await db.insertAnalyticsEvents(rows);
+    } catch (err) {
+        console.error('POST /api/a/collect:', err.message);
+    }
+});
+
+app.get('/api/admin/analytics', requireAuth, async (req, res) => {
+    const rangeKey = String(req.query.range || '7d');
+    const allowed = new Set(['24h', '7d', '30d', '90d']);
+    const range = allowed.has(rangeKey) ? rangeKey : '7d';
+    try {
+        if (!usePersistentDb) {
+            return res.json(analyticsNet.overviewFromMemory(range));
+        }
+        const bounds = analyticsNet.rangeBounds(range);
+        const [rows, live, bookingStats] = await Promise.all([
+            db.listAnalyticsEventsBetween(bounds.from, bounds.to, { excludeHeartbeat: true }),
+            db.listLiveAnalyticsSessions(new Date(Date.now() - 120000).toISOString()),
+            db.analyticsBookingStats(bounds.from, bounds.to)
+        ]);
+        const liveRows = live.map((s) => ({ sessionId: s.sessionId, name: 'heartbeat' }));
+        res.json(analyticsNet.buildOverview(rows, liveRows, bookingStats, bounds));
+    } catch (err) {
+        console.error('GET /api/admin/analytics:', err.message);
+        res.status(500).json({ error: 'Failed to load analytics' });
+    }
+});
 
 // NOTE:
 // We intentionally avoid host-based canonical redirects here.
@@ -3702,6 +3853,26 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next) => {
+    if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+    let rawPath = req.path || '';
+    try {
+        rawPath = decodeURIComponent(rawPath);
+    } catch {
+        /* keep */
+    }
+    if (!rawPath.endsWith('.html')) return next();
+    const rel = path.normalize(rawPath.replace(/^\/+/, '')).replace(/^(\.\.(\/|\\|$))+/, '');
+    const fp = path.join(__dirname, rel);
+    if (path.relative(__dirname, fp).startsWith('..') || path.isAbsolute(path.relative(__dirname, fp))) return next();
+    if (!fs.existsSync(fp)) return next();
+    fs.readFile(fp, 'utf8', (err, html) => {
+        if (err) return next();
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.send(injectAnalyticsHtml(html));
+    });
+});
+
 // ─── Static files (CSS, JS, images, etc.) ───
 app.use(express.static(path.join(__dirname), {
     setHeaders: (res, filePath) => {
@@ -3719,7 +3890,7 @@ app.use(express.static(path.join(__dirname), {
         }
         // Admin / dashboard assets change often and are tiny — never cache them
         // (also bypasses Cloudflare's default 4h edge cache for static JS/CSS).
-        const adminAssets = new Set(['admin.js', 'admin.html', 'dashboard.css', 'admin.css', 'reviews.js']);
+        const adminAssets = new Set(['admin.js', 'admin.html', 'dashboard.css', 'admin.css', 'reviews.js', 'lon-analytics.js']);
         if (adminAssets.has(base)) {
             res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
             res.setHeader('CDN-Cache-Control', 'no-store');
@@ -4453,6 +4624,7 @@ app.post('/api/triagem', rateLimitTriagem, async (req, res) => {
         return res.status(503).json({ error: 'Não foi possível enviar de momento. Tenta novamente.' });
     }
 
+    emitServerAnalytics('triage_submitted', { props: { flagged: !!riskFlagged } }, req).catch(() => {});
     return res.json({ success: true, riskFlagged });
 });
 
@@ -4505,6 +4677,11 @@ app.post('/api/burnout-quiz', rateLimitBurnoutQuiz, async (req, res) => {
     }
 
     const emailed = await sendBurnoutQuizEmails(payload);
+    emitServerAnalytics(
+        'quiz_complete',
+        { props: { quiz: 'burnout-cbi', band: band || 'unknown' } },
+        req
+    ).catch(() => {});
     return res.json({
         success: true,
         emailed,
@@ -4541,6 +4718,7 @@ app.post('/api/contact', rateLimitContact, async (req, res) => {
         return res.status(503).json({ error: 'Unable to send your message right now. Please try again shortly.' });
     }
 
+    emitServerAnalytics('contact_submitted', { props: { locale } }, req).catch(() => {});
     return res.json({ success: true, message: 'Message sent successfully.' });
 });
 
@@ -4941,6 +5119,11 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         const session = await stripe.checkout.sessions.create(sessionParams);
 
         console.log('✅ Checkout session created:', session.id);
+        emitServerAnalytics(
+            'checkout_created',
+            { props: { service: String(service || '') }, revenueCents: priceAmount, currency: 'eur' },
+            req
+        ).catch(() => {});
         res.json({ sessionId: session.id, url: session.url });
 
     } catch (err) {
@@ -6860,6 +7043,15 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
                 try { await db.cancelInvitation(id); } catch (cancelErr) { /* ignore */ }
                 return res.status(500).json({ error: emailError });
             }
+            emitServerAnalytics(
+                isComplimentary ? 'booking_confirmed' : 'invite_sent',
+                {
+                    props: { service: String(service || ''), withoutInvoice: true },
+                    revenueCents: amountCents,
+                    bookingRef: invitation.bookingRef || null
+                },
+                req
+            ).catch(() => {});
             return res.json({
                 ok: true,
                 complimentary: isComplimentary,
@@ -6887,6 +7079,11 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
             console.error('   ⚠️  Invitation email failed:', emailError);
         }
 
+        emitServerAnalytics(
+            'invite_sent',
+            { props: { service: String(service || '') }, revenueCents: amountCents },
+            req
+        ).catch(() => {});
         res.json({ ok: true, invitation, emailDelivered, emailError });
     } catch (err) {
         console.error('POST /api/admin/invitations:', err.message);

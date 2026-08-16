@@ -368,6 +368,170 @@ async function initSchema(p) {
     await p.query(
         `CREATE INDEX IF NOT EXISTS idx_psychologist_applications_band ON psychologist_applications (score_band)`
     );
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS analytics_events (
+            id BIGSERIAL PRIMARY KEY,
+            event_id UUID NOT NULL UNIQUE,
+            occurred_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            received_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            name VARCHAR(64) NOT NULL,
+            source VARCHAR(16) NOT NULL DEFAULT 'client',
+            visitor_id VARCHAR(64),
+            session_id VARCHAR(64),
+            page_path TEXT,
+            page_title TEXT,
+            referrer TEXT,
+            landing_path TEXT,
+            utm_source TEXT,
+            utm_medium TEXT,
+            utm_campaign TEXT,
+            utm_content TEXT,
+            utm_term TEXT,
+            gclid TEXT,
+            fbclid TEXT,
+            channel VARCHAR(32),
+            device VARCHAR(16),
+            browser VARCHAR(32),
+            os VARCHAR(32),
+            country VARCHAR(8),
+            lang VARCHAR(16),
+            props JSONB NOT NULL DEFAULT '{}'::jsonb,
+            revenue_cents INTEGER,
+            currency VARCHAR(8),
+            booking_ref VARCHAR(64)
+        )
+    `);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_analytics_occurred ON analytics_events (occurred_at DESC)`);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_analytics_name_time ON analytics_events (name, occurred_at DESC)`);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_analytics_session ON analytics_events (session_id, occurred_at DESC)`);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_analytics_channel ON analytics_events (channel, occurred_at DESC)`);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_analytics_path ON analytics_events (page_path, occurred_at DESC)`);
+}
+
+function rowToAnalyticsEvent(row) {
+    if (!row) return null;
+    return {
+        eventId: row.event_id,
+        occurredAt: row.occurred_at instanceof Date ? row.occurred_at.toISOString() : row.occurred_at,
+        name: row.name,
+        source: row.source,
+        visitorId: row.visitor_id,
+        sessionId: row.session_id,
+        pagePath: row.page_path,
+        pageTitle: row.page_title,
+        referrer: row.referrer,
+        landingPath: row.landing_path,
+        utmSource: row.utm_source,
+        utmMedium: row.utm_medium,
+        utmCampaign: row.utm_campaign,
+        utmContent: row.utm_content,
+        utmTerm: row.utm_term,
+        gclid: row.gclid,
+        fbclid: row.fbclid,
+        channel: row.channel,
+        device: row.device,
+        browser: row.browser,
+        os: row.os,
+        country: row.country,
+        lang: row.lang,
+        props: row.props && typeof row.props === 'object' ? row.props : {},
+        revenueCents: row.revenue_cents,
+        currency: row.currency,
+        bookingRef: row.booking_ref
+    };
+}
+
+async function insertAnalyticsEvents(rows) {
+    const p = getPool();
+    if (!p || !Array.isArray(rows) || !rows.length) return 0;
+    let inserted = 0;
+    for (const row of rows) {
+        try {
+            const r = await p.query(
+                `INSERT INTO analytics_events (
+                    event_id, occurred_at, name, source, visitor_id, session_id,
+                    page_path, page_title, referrer, landing_path,
+                    utm_source, utm_medium, utm_campaign, utm_content, utm_term,
+                    gclid, fbclid, channel, device, browser, os, country, lang,
+                    props, revenue_cents, currency, booking_ref
+                ) VALUES (
+                    $1, $2, $3, $4, $5, $6,
+                    $7, $8, $9, $10,
+                    $11, $12, $13, $14, $15,
+                    $16, $17, $18, $19, $20, $21, $22, $23,
+                    $24::jsonb, $25, $26, $27
+                ) ON CONFLICT (event_id) DO NOTHING`,
+                [
+                    row.eventId,
+                    row.occurredAt,
+                    row.name,
+                    row.source,
+                    row.visitorId,
+                    row.sessionId,
+                    row.pagePath,
+                    row.pageTitle,
+                    row.referrer,
+                    row.landingPath,
+                    row.utmSource,
+                    row.utmMedium,
+                    row.utmCampaign,
+                    row.utmContent,
+                    row.utmTerm,
+                    row.gclid,
+                    row.fbclid,
+                    row.channel,
+                    row.device,
+                    row.browser,
+                    row.os,
+                    row.country,
+                    row.lang,
+                    JSON.stringify(row.props || {}),
+                    row.revenueCents,
+                    row.currency,
+                    row.bookingRef
+                ]
+            );
+            inserted += r.rowCount || 0;
+        } catch (err) {
+            console.error('insertAnalyticsEvents:', err.message);
+        }
+    }
+    return inserted;
+}
+
+async function listAnalyticsEventsBetween(fromIso, toIso, { excludeHeartbeat } = {}) {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT * FROM analytics_events
+         WHERE occurred_at >= $1::timestamptz AND occurred_at <= $2::timestamptz
+           AND ($3::boolean IS NOT TRUE OR name <> 'heartbeat')
+         ORDER BY occurred_at ASC
+         LIMIT 50000`,
+        [fromIso, toIso, !!excludeHeartbeat]
+    );
+    return r.rows.map(rowToAnalyticsEvent);
+}
+
+async function listLiveAnalyticsSessions(sinceIso) {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT DISTINCT session_id FROM analytics_events
+         WHERE name = 'heartbeat' AND occurred_at >= $1::timestamptz AND session_id IS NOT NULL`,
+        [sinceIso]
+    );
+    return r.rows.map((row) => ({ sessionId: row.session_id }));
+}
+
+async function analyticsBookingStats(fromIso, toIso) {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT COUNT(*)::int AS c, COALESCE(SUM(amount), 0)::int AS revenue
+         FROM bookings
+         WHERE cancelled = FALSE
+           AND created_at >= $1::timestamptz AND created_at <= $2::timestamptz`,
+        [fromIso, toIso]
+    );
+    return { count: r.rows[0] ? r.rows[0].c : 0, revenueCents: r.rows[0] ? r.rows[0].revenue : 0 };
 }
 
 function rowToReview(row) {
@@ -1320,5 +1484,9 @@ module.exports = {
     rescheduleBookingByRef,
     isSlotTakenByOther,
     listBookingsForDateIso,
+    insertAnalyticsEvents,
+    listAnalyticsEventsBetween,
+    listLiveAnalyticsSessions,
+    analyticsBookingStats,
     closePool
 };

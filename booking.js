@@ -395,6 +395,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         state.time = null;
         document.getElementById('next-1').disabled = true;
+        if (window.LonAnalytics) window.LonAnalytics.track('date_select', { surface: 'booking' });
         renderTimeslots();
     }
 
@@ -451,6 +452,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     timeslotGrid.querySelectorAll('.timeslot-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                     document.getElementById('next-1').disabled = false;
+                    if (window.LonAnalytics) window.LonAnalytics.track('slot_select', { surface: 'booking' });
                 });
                 timeslotGrid.appendChild(btn);
             });
@@ -495,6 +497,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     timeslotGrid.querySelectorAll('.timeslot-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                     document.getElementById('next-1').disabled = false;
+                    if (window.LonAnalytics) window.LonAnalytics.track('slot_select', { surface: 'booking' });
                 });
                 timeslotGrid.appendChild(btn);
             });
@@ -1042,6 +1045,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
+            if (window.LonAnalytics) window.LonAnalytics.track('checkout_start', { service: state.service, surface: 'booking' });
             const response = await fetch('/api/create-checkout-session', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },

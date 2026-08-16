@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css?v=bolsa-profissionais-2">
+    <link rel="stylesheet" href="dashboard.css?v=analytics-network-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -91,6 +91,7 @@
                 <nav class="admin-sidebar-nav">
                     <button type="button" class="admin-nav-item is-active" data-admin-panel="schedule">Schedule</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="patients">Patients</button>
+                    <button type="button" class="admin-nav-item" data-admin-panel="analytics">Analytics</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="finances">Finances</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="invitations">Invitations</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="availability">Availability</button>
@@ -469,6 +470,71 @@
             </div>
             </div>
 
+            <!-- Analytics panel -->
+            <div class="admin-panel" id="adminPanelAnalytics" data-admin-panel-content="analytics" hidden>
+                <div class="dash-section">
+                    <div class="dash-section-header admin-schedule-toolbar">
+                        <div>
+                            <h2 class="dash-section-title">Analytics network</h2>
+                            <p class="dash-section-subtitle">First-party graph: attribution, funnel, live sessions. No clinical answers or emails stored.</p>
+                        </div>
+                        <div class="admin-schedule-filters" role="group" aria-label="Analytics range">
+                            <select id="analyticsRange" class="admin-select" aria-label="Range">
+                                <option value="24h">24 hours</option>
+                                <option value="7d" selected>7 days</option>
+                                <option value="30d">30 days</option>
+                                <option value="90d">90 days</option>
+                            </select>
+                            <button type="button" class="btn btn-outline btn-sm" id="analyticsRefreshBtn">Refresh</button>
+                        </div>
+                    </div>
+                    <div class="an-live" id="analyticsLive">Live visitors: —</div>
+                    <div class="an-kpis" id="analyticsKpis"></div>
+                    <div class="an-chart-wrap">
+                        <p class="an-chart-label">Pageviews over time</p>
+                        <div id="analyticsChart" class="an-chart"></div>
+                    </div>
+                    <div class="an-grid">
+                        <div class="an-card">
+                            <h3>Acquisition → booking funnel</h3>
+                            <div id="analyticsFunnel"></div>
+                        </div>
+                        <div class="an-card">
+                            <h3>Channels</h3>
+                            <div id="analyticsChannels"></div>
+                        </div>
+                        <div class="an-card">
+                            <h3>Top pages</h3>
+                            <div id="analyticsPages"></div>
+                        </div>
+                        <div class="an-card">
+                            <h3>Landings</h3>
+                            <div id="analyticsLandings"></div>
+                        </div>
+                        <div class="an-card">
+                            <h3>Devices</h3>
+                            <div id="analyticsDevices"></div>
+                        </div>
+                        <div class="an-card">
+                            <h3>Campaigns</h3>
+                            <div id="analyticsCampaigns"></div>
+                        </div>
+                        <div class="an-card">
+                            <h3>CTAs</h3>
+                            <div id="analyticsCtas"></div>
+                        </div>
+                        <div class="an-card">
+                            <h3>Booked services</h3>
+                            <div id="analyticsServices"></div>
+                        </div>
+                    </div>
+                    <div class="an-card an-card-wide">
+                        <h3>Recent events</h3>
+                        <div id="analyticsRecent"></div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Finances panel -->
             <div class="admin-panel" id="adminPanelFinances" data-admin-panel-content="finances" hidden>
                 <div class="dash-section">
@@ -568,7 +634,7 @@
     </footer>
 
     <script src="lon-nav.js"></script>
-    <script src="admin.js?v=bolsa-profissionais-2"></script>
+    <script src="admin.js?v=analytics-network-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

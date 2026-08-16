@@ -1,0 +1,314 @@
+/**
+ * Lon Clinic first-party analytics: ingest, channel model, dashboard queries.
+ * Clinical payloads (answers, notes, emails, phones) are stripped before storage.
+ */
+const crypto = require('crypto');
+
+const ALLOWED_NAMES = new Set([
+    'page_view',
+    'page_engaged',
+    'scroll_depth',
+    'cta_click',
+    'outbound_click',
+    'whatsapp_click',
+    'form_start',
+    'form_submit',
+    'form_error',
+    'date_select',
+    'slot_select',
+    'checkout_start',
+    'checkout_created',
+    'payment_succeeded',
+    'booking_confirmed',
+    'invite_sent',
+    'invite_paid',
+    'contact_submitted',
+    'quiz_start',
+    'quiz_step',
+    'quiz_complete',
+    'triage_submitted',
+    'heartbeat',
+    'cancel',
+    'reschedule'
+]);
+
+const PII_KEY = /email|phone|tel|nhs|password|token|name|notes|answer|diagnos|prescription|dob|birth/i;
+const EMAIL_RE = /[^\s@]+@[^\s@]+\.[^\s@]+/g;
+const BOT_UA = /bot|crawl|spider|slurp|facebookexternalhit|preview|lighthouse|headless|pingdom|uptimerobot/i;
+
+const memoryEvents = [];
+const MEMORY_CAP = 8000;
+
+function isBot(ua) {
+    return !ua || BOT_UA.test(ua);
+}
+
+function parseUa(ua) {
+    const s = String(ua || '');
+    let device = 'desktop';
+    if (/iPad|Tablet/i.test(s)) device = 'tablet';
+    else if (/Mobi|Android.+Mobile|iPhone|iPod/i.test(s)) device = 'mobile';
+    let browser = 'other';
+    if (/Edg\//.test(s)) browser = 'edge';
+    else if (/Chrome\//.test(s) && !/Edg\//.test(s)) browser = 'chrome';
+    else if (/Firefox\//.test(s)) browser = 'firefox';
+    else if (/Safari\//.test(s) && !/Chrome\//.test(s)) browser = 'safari';
+    let os = 'other';
+    if (/Windows/i.test(s)) os = 'windows';
+    else if (/Mac OS X|Macintosh/i.test(s)) os = 'macos';
+    else if (/Android/i.test(s)) os = 'android';
+    else if (/iPhone|iPad|iOS/i.test(s)) os = 'ios';
+    else if (/Linux/i.test(s)) os = 'linux';
+    return { device, browser, os };
+}
+
+function channelOf(row) {
+    const src = String(row.utm_source || '').toLowerCase();
+    const med = String(row.utm_medium || '').toLowerCase();
+    const ref = String(row.referrer || '').toLowerCase();
+    if (row.gclid || med === 'cpc' || med === 'ppc' || med === 'paidsearch') return 'paid_search';
+    if (row.fbclid || /facebook|instagram|meta|ig/.test(src) || /facebook|instagram/.test(med)) return 'paid_social';
+    if (med === 'email' || src === 'email' || src === 'newsletter') return 'email';
+    if (med === 'sms' || src === 'sms' || src === 'whatsapp') return 'sms';
+    if (src === 'invite' || med === 'invite') return 'invite';
+    if (/google\./.test(ref) && !row.gclid) return 'organic_google';
+    if (/bing\.|yahoo\./.test(ref)) return 'organic_other';
+    if (ref && !ref.includes('lonclinic.com') && !ref.includes('localhost')) return 'referral';
+    if (!src && !ref) return 'direct';
+    if (src) return 'campaign';
+    return 'direct';
+}
+
+function cleanProps(input) {
+    const out = {};
+    if (!input || typeof input !== 'object' || Array.isArray(input)) return out;
+    for (const key of Object.keys(input).slice(0, 24)) {
+        if (PII_KEY.test(key)) continue;
+        let v = input[key];
+        if (v == null) continue;
+        if (typeof v === 'number' && Number.isFinite(v)) {
+            out[key] = Math.round(v * 1000) / 1000;
+            continue;
+        }
+        if (typeof v === 'boolean') {
+            out[key] = v;
+            continue;
+        }
+        const s = String(v).replace(EMAIL_RE, '[redacted]').slice(0, 180);
+        if (s) out[key] = s;
+    }
+    return out;
+}
+
+function normalizeEvent(raw, meta) {
+    if (!raw || typeof raw !== 'object') return null;
+    const name = String(raw.name || '').slice(0, 64);
+    if (!ALLOWED_NAMES.has(name)) return null;
+    let eventId = String(raw.event_id || '').slice(0, 64);
+    if (!/^[0-9a-f-]{16,36}$/i.test(eventId)) eventId = crypto.randomUUID();
+    const ts = Number(raw.ts);
+    const occurred = Number.isFinite(ts) && ts > 1e12 && ts < Date.now() + 60000 ? new Date(ts) : new Date();
+    const ua = meta.ua || '';
+    if (name !== 'payment_succeeded' && name !== 'booking_confirmed' && isBot(ua)) return null;
+    const parsed = parseUa(ua);
+    const row = {
+        eventId,
+        occurredAt: occurred.toISOString(),
+        name,
+        source: meta.source || 'client',
+        visitorId: String(raw.visitor_id || '').slice(0, 64) || null,
+        sessionId: String(raw.session_id || '').slice(0, 64) || null,
+        pagePath: String(raw.page_path || '').slice(0, 240) || null,
+        pageTitle: String(raw.page_title || '').slice(0, 160) || null,
+        referrer: String(raw.referrer || '').slice(0, 300) || null,
+        landingPath: String(raw.landing_path || '').slice(0, 240) || null,
+        utmSource: String(raw.utm_source || '').slice(0, 80) || null,
+        utmMedium: String(raw.utm_medium || '').slice(0, 80) || null,
+        utmCampaign: String(raw.utm_campaign || '').slice(0, 120) || null,
+        utmContent: String(raw.utm_content || '').slice(0, 80) || null,
+        utmTerm: String(raw.utm_term || '').slice(0, 80) || null,
+        gclid: String(raw.gclid || '').slice(0, 120) || null,
+        fbclid: String(raw.fbclid || '').slice(0, 120) || null,
+        device: parsed.device,
+        browser: parsed.browser,
+        os: parsed.os,
+        country: String(meta.country || '').slice(0, 8) || null,
+        lang: String(raw.lang || '').slice(0, 16) || null,
+        props: cleanProps(raw.props),
+        revenueCents: Number.isFinite(Number(raw.revenue_cents)) ? Math.round(Number(raw.revenue_cents)) : null,
+        currency: raw.currency ? String(raw.currency).slice(0, 8).toLowerCase() : null,
+        bookingRef: raw.booking_ref ? String(raw.booking_ref).slice(0, 64) : null
+    };
+    row.channel = channelOf({
+        utm_source: row.utmSource,
+        utm_medium: row.utmMedium,
+        referrer: row.referrer,
+        gclid: row.gclid,
+        fbclid: row.fbclid
+    });
+    return row;
+}
+
+function remember(row) {
+    memoryEvents.push(row);
+    if (memoryEvents.length > MEMORY_CAP) memoryEvents.splice(0, memoryEvents.length - MEMORY_CAP);
+}
+
+function rangeBounds(range) {
+    const days = range === '24h' ? 1 : range === '7d' ? 7 : range === '90d' ? 90 : 30;
+    const to = new Date();
+    const from = new Date(to.getTime() - days * 864e5);
+    return { from: from.toISOString(), to: to.toISOString(), days };
+}
+
+function inRange(iso, from, to) {
+    return iso >= from && iso <= to;
+}
+
+function uniqueCount(rows, key) {
+    const s = new Set();
+    for (const r of rows) {
+        const v = r[key];
+        if (v) s.add(v);
+    }
+    return s.size;
+}
+
+function groupCount(rows, key, limit) {
+    const map = new Map();
+    for (const r of rows) {
+        const k = r[key] || '(none)';
+        map.set(k, (map.get(k) || 0) + 1);
+    }
+    return [...map.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, limit || 12)
+        .map(([key, count]) => ({ key, count }));
+}
+
+function funnelFrom(rows) {
+    const steps = [
+        { id: 'visit', names: ['page_view'] },
+        { id: 'engage', names: ['page_engaged'] },
+        { id: 'intent', names: ['cta_click', 'whatsapp_click'] },
+        { id: 'schedule', names: ['date_select', 'slot_select'] },
+        { id: 'checkout', names: ['checkout_start', 'checkout_created'] },
+        { id: 'purchase', names: ['payment_succeeded', 'booking_confirmed'] }
+    ];
+    const bySession = new Map();
+    for (const r of rows) {
+        if (!r.sessionId) continue;
+        if (!bySession.has(r.sessionId)) bySession.set(r.sessionId, new Set());
+        bySession.get(r.sessionId).add(r.name);
+    }
+    let prev = bySession.size || 1;
+    return steps.map((step, i) => {
+        let count = 0;
+        for (const names of bySession.values()) {
+            if (step.names.some((n) => names.has(n))) count += 1;
+        }
+        const conv = i === 0 ? 100 : Math.round((count / prev) * 1000) / 10;
+        if (count > 0) prev = count;
+        return { id: step.id, label: step.id, sessions: count, stepConversion: conv };
+    });
+}
+
+function hourlySeries(rows, fromIso, days) {
+    const buckets = days <= 2 ? 24 : days <= 8 ? days * 4 : days;
+    const from = new Date(fromIso).getTime();
+    const span = Date.now() - from;
+    const size = Math.max(1, Math.floor(span / buckets));
+    const arr = new Array(buckets).fill(0);
+    for (const r of rows) {
+        if (r.name !== 'page_view') continue;
+        const t = new Date(r.occurredAt).getTime();
+        const i = Math.min(buckets - 1, Math.max(0, Math.floor((t - from) / size)));
+        arr[i] += 1;
+    }
+    return arr;
+}
+
+function buildOverview(rows, liveRows, bookingStats, range) {
+    const views = rows.filter((r) => r.name === 'page_view');
+    const purchases = rows.filter((r) => r.name === 'payment_succeeded' || r.name === 'booking_confirmed');
+    const visitors = uniqueCount(views, 'visitorId');
+    const sessions = uniqueCount(rows, 'sessionId');
+    const engaged = uniqueCount(rows.filter((r) => r.name === 'page_engaged'), 'sessionId');
+    const revenue =
+        bookingStats && bookingStats.count
+            ? bookingStats.revenueCents || 0
+            : purchases.reduce((s, r) => s + (r.revenueCents || 0), 0);
+    const bookingCount = (bookingStats && bookingStats.count) || purchases.length;
+    const conversion = visitors ? Math.round((uniqueCount(purchases, 'visitorId') / visitors) * 1000) / 10 : 0;
+    const cta = rows.filter((r) => r.name === 'cta_click');
+    return {
+        range: range.days === 1 ? '24h' : `${range.days}d`,
+        generatedAt: new Date().toISOString(),
+        kpis: {
+            visitors,
+            sessions,
+            pageviews: views.length,
+            engagedRate: sessions ? Math.round((engaged / sessions) * 1000) / 10 : 0,
+            bookings: bookingCount,
+            revenueCents: revenue,
+            conversionRate: conversion,
+            liveVisitors: uniqueCount(liveRows, 'sessionId')
+        },
+        funnel: funnelFrom(rows),
+        channels: groupCount(views, 'channel', 10),
+        pages: groupCount(views, 'pagePath', 12),
+        landings: groupCount(views, 'landingPath', 8),
+        devices: groupCount(views, 'device', 5),
+        browsers: groupCount(views, 'browser', 6),
+        countries: groupCount(views.filter((r) => r.country), 'country', 8),
+        campaigns: groupCount(
+            views.filter((r) => r.utmCampaign),
+            'utmCampaign',
+            8
+        ),
+        ctas: groupCount(
+            cta.map((r) => ({ key: (r.props && (r.props.text || r.props.id)) || 'cta' })),
+            'key',
+            10
+        ),
+        services: groupCount(
+            purchases.map((r) => ({ key: (r.props && r.props.service) || 'consultation' })),
+            'key',
+            10
+        ),
+        hourly: hourlySeries(rows, range.from, range.days),
+        recent: rows
+            .filter((r) => r.name !== 'heartbeat')
+            .slice(-25)
+            .reverse()
+            .map((r) => ({
+                at: r.occurredAt,
+                name: r.name,
+                path: r.pagePath,
+                channel: r.channel,
+                device: r.device
+            }))
+    };
+}
+
+function overviewFromMemory(rangeKey) {
+    const range = rangeBounds(rangeKey);
+    const rows = memoryEvents.filter((r) => inRange(r.occurredAt, range.from, range.to));
+    const liveFrom = new Date(Date.now() - 120000).toISOString();
+    const live = memoryEvents.filter((r) => r.name === 'heartbeat' && r.occurredAt >= liveFrom);
+    return buildOverview(rows, live, { count: 0, revenueCents: 0 }, range);
+}
+
+module.exports = {
+    ALLOWED_NAMES,
+    isBot,
+    parseUa,
+    channelOf,
+    cleanProps,
+    normalizeEvent,
+    remember,
+    rangeBounds,
+    buildOverview,
+    overviewFromMemory,
+    memoryEvents
+};

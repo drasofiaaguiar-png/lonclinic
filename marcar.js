@@ -655,6 +655,7 @@
 
         state.time = null;
         btnNext.disabled = true;
+        if (window.LonAnalytics) window.LonAnalytics.track('date_select', { surface: 'booking' });
         renderTimeslots();
     }
 
@@ -710,6 +711,7 @@
                         });
                         b.classList.add('selected');
                         btnNext.disabled = false;
+                        if (window.LonAnalytics) window.LonAnalytics.track('slot_select', { surface: 'booking' });
                     });
                     timeslotGrid.appendChild(b);
                 });
@@ -752,6 +754,7 @@
                         });
                         b.classList.add('selected');
                         btnNext.disabled = false;
+                        if (window.LonAnalytics) window.LonAnalytics.track('slot_select', { surface: 'booking' });
                     });
                     timeslotGrid.appendChild(b);
                 });

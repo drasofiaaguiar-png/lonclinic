@@ -240,6 +240,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         schedule: { title: 'Schedule', subtitle: 'Upcoming consultations' },
         patients: { title: 'Patients', subtitle: 'All consultations & follow-up tracking' },
         finances: { title: 'Finances', subtitle: 'Monthly revenue by patient' },
+        analytics: { title: 'Analytics', subtitle: 'First-party acquisition, funnel and live sessions' },
         invitations: { title: 'Invitations', subtitle: 'Send and manage booking invites' },
         availability: { title: 'Availability', subtitle: 'Working hours, blocks & slot preview' },
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' },
@@ -308,6 +309,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (panelId === 'schedule') loadUpcomingConsultations();
         if (panelId === 'patients') loadPatientsTable();
         if (panelId === 'finances') loadFinancesPanel();
+        if (panelId === 'analytics') loadAnalyticsPanel();
         if (panelId === 'invitations') loadInvitations();
         if (panelId === 'reviews') loadAdminReviews();
         if (panelId === 'psychologists') loadAdminPsychologists();
@@ -2600,6 +2602,120 @@ document.addEventListener('DOMContentLoaded', async () => {
             savePsychologistApplication(btn.getAttribute('data-psych-id'));
         });
     }
+
+    const FUNNEL_LABELS = {
+        visit: 'Visit',
+        engage: 'Engaged (10s)',
+        intent: 'Intent (CTA)',
+        schedule: 'Picked slot',
+        checkout: 'Checkout',
+        purchase: 'Paid / booked'
+    };
+    const CHANNEL_LABELS = {
+        paid_search: 'Paid search',
+        paid_social: 'Paid social',
+        organic_google: 'Google organic',
+        organic_other: 'Other organic',
+        email: 'Email',
+        sms: 'SMS / WhatsApp',
+        invite: 'Clinic invite',
+        referral: 'Referral',
+        campaign: 'Campaign',
+        direct: 'Direct'
+    };
+
+    function anEuro(cents) {
+        return new Intl.NumberFormat('pt-PT', { style: 'currency', currency: 'EUR' }).format((cents || 0) / 100);
+    }
+
+    function anBarList(items, labelFn) {
+        if (!items || !items.length) return '<p class="admin-empty-list">No data yet</p>';
+        const max = Math.max(1, ...items.map((i) => i.count));
+        return `<ul class="an-bars">${items.map((i) => {
+            const label = labelFn ? labelFn(i.key) : i.key;
+            const pct = Math.round((i.count / max) * 100);
+            return `<li><span class="an-bar-label" title="${escapeHtml(String(label))}">${escapeHtml(String(label))}</span>
+                <span class="an-bar-track"><span class="an-bar-fill" style="width:${pct}%"></span></span>
+                <span class="an-bar-n">${i.count}</span></li>`;
+        }).join('')}</ul>`;
+    }
+
+    function anSpark(values) {
+        if (!values || !values.length) return '';
+        const w = 640;
+        const h = 88;
+        const max = Math.max(1, ...values);
+        const step = w / Math.max(1, values.length - 1);
+        const pts = values.map((v, i) => `${(i * step).toFixed(1)},${(h - (v / max) * (h - 8) - 4).toFixed(1)}`).join(' ');
+        return `<svg class="an-spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" role="img" aria-label="Pageviews">
+            <polyline fill="none" stroke="currentColor" stroke-width="2.5" points="${pts}" /></svg>`;
+    }
+
+    async function loadAnalyticsPanel() {
+        const kpis = document.getElementById('analyticsKpis');
+        const live = document.getElementById('analyticsLive');
+        const rangeEl = document.getElementById('analyticsRange');
+        const range = rangeEl ? rangeEl.value : '7d';
+        if (kpis) kpis.innerHTML = '<p class="admin-empty-list">Loading analytics…</p>';
+        try {
+            const res = await fetch(`/api/admin/analytics?range=${encodeURIComponent(range)}`);
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+            const k = data.kpis || {};
+            if (live) live.innerHTML = `<span class="an-live-dot"></span> ${k.liveVisitors || 0} live now`;
+            if (kpis) {
+                kpis.innerHTML = [
+                    ['Visitors', k.visitors],
+                    ['Sessions', k.sessions],
+                    ['Pageviews', k.pageviews],
+                    ['Engaged', `${k.engagedRate || 0}%`],
+                    ['Bookings', k.bookings],
+                    ['Revenue', anEuro(k.revenueCents)],
+                    ['Conversion', `${k.conversionRate || 0}%`]
+                ].map(([label, val]) => `<div class="an-kpi"><span class="an-kpi-label">${label}</span><span class="an-kpi-val">${val}</span></div>`).join('');
+            }
+            const chart = document.getElementById('analyticsChart');
+            if (chart) chart.innerHTML = anSpark(data.hourly || []);
+            const funnel = document.getElementById('analyticsFunnel');
+            if (funnel) {
+                const steps = data.funnel || [];
+                const top = Math.max(1, ...(steps.map((s) => s.sessions)));
+                funnel.innerHTML = `<ol class="an-funnel">${steps.map((s) => `<li>
+                    <span>${FUNNEL_LABELS[s.id] || s.id}</span>
+                    <span class="an-funnel-track"><span style="width:${Math.round((s.sessions / top) * 100)}%"></span></span>
+                    <strong>${s.sessions}</strong>
+                    <em>${s.stepConversion}%</em>
+                </li>`).join('')}</ol>`;
+            }
+            const set = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+            set('analyticsChannels', anBarList(data.channels, (k) => CHANNEL_LABELS[k] || k));
+            set('analyticsPages', anBarList(data.pages));
+            set('analyticsLandings', anBarList(data.landings));
+            set('analyticsDevices', anBarList(data.devices));
+            set('analyticsCampaigns', anBarList(data.campaigns));
+            set('analyticsCtas', anBarList(data.ctas));
+            set('analyticsServices', anBarList(data.services));
+            const recent = document.getElementById('analyticsRecent');
+            if (recent) {
+                const rows = data.recent || [];
+                recent.innerHTML = rows.length
+                    ? `<table class="an-table"><thead><tr><th>When</th><th>Event</th><th>Path</th><th>Channel</th><th>Device</th></tr></thead><tbody>${
+                        rows.map((r) => `<tr><td>${escapeHtml(String(r.at || '').replace('T', ' ').slice(0, 19))}</td>
+                        <td>${escapeHtml(r.name || '')}</td><td>${escapeHtml(r.path || '')}</td>
+                        <td>${escapeHtml(CHANNEL_LABELS[r.channel] || r.channel || '')}</td>
+                        <td>${escapeHtml(r.device || '')}</td></tr>`).join('')
+                    }</tbody></table>`
+                    : '<p class="admin-empty-list">No events yet — browse the public site to seed the graph.</p>';
+            }
+        } catch (err) {
+            if (kpis) kpis.innerHTML = `<p class="admin-empty-list">${escapeHtml(err.message || 'Failed')}</p>`;
+        }
+    }
+
+    const analyticsRange = document.getElementById('analyticsRange');
+    const analyticsRefreshBtn = document.getElementById('analyticsRefreshBtn');
+    if (analyticsRange) analyticsRange.addEventListener('change', () => loadAnalyticsPanel());
+    if (analyticsRefreshBtn) analyticsRefreshBtn.addEventListener('click', () => loadAnalyticsPanel());
 
     // ─── Initialize ───
     await checkAuth();
