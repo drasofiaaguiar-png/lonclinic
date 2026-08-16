@@ -79,12 +79,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function weekdayDefaultsForDate(dateStr) {
         const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr || '');
-        if (!m || !scheduleData || !scheduleData.workingHours) return { enabled: true, start: '09:00', end: '17:00' };
+        if (!m || !scheduleData || !scheduleData.workingHours) return { enabled: true, start: '07:00', end: '17:00' };
         const dateObj = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
         const dayNames = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
         const wh = scheduleData.workingHours[dayNames[dateObj.getDay()]];
-        if (!wh) return { enabled: true, start: '09:00', end: '17:00' };
-        return { enabled: !!wh.enabled, start: wh.start || '09:00', end: wh.end || '17:00' };
+        if (!wh) return { enabled: true, start: '07:00', end: '17:00' };
+        return { enabled: !!wh.enabled, start: wh.start || '07:00', end: wh.end || '17:00' };
     }
 
     function syncBulkInputsToSelection() {
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const [dateStr] = Array.from(selectedOverrideDates);
         const existing = (scheduleData.dayOverrides || []).find((o) => o.date === dateStr);
         const source = existing || weekdayDefaultsForDate(dateStr);
-        if (bulkOverrideStart) bulkOverrideStart.value = source.start || '09:00';
+        if (bulkOverrideStart) bulkOverrideStart.value = source.start || '07:00';
         if (bulkOverrideEnd) bulkOverrideEnd.value = source.end || '17:00';
         if (bulkOverrideEnabled) bulkOverrideEnabled.checked = source.enabled !== false;
     }
@@ -1043,37 +1043,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Never show on load (CSS display:flex was overriding the hidden attribute)
     closeScheduleNextModal();
 
+    function fillTimeDatalist(datalistId, slots) {
+        const list = document.getElementById(datalistId);
+        if (!list) return;
+        const merged = [...new Set(['07:00', '08:00', ...(slots || [])])].sort((a, b) => a.localeCompare(b));
+        list.innerHTML = merged.map((t) => `<option value="${t}"></option>`).join('');
+    }
+
     async function loadScheduleNextTimes(preferredTime) {
         if (!scheduleNextTime || !scheduleNextDate) return;
         const dateIso = scheduleNextDate.value;
-        scheduleNextTime.innerHTML = '<option value="">Loading…</option>';
         if (!dateIso) {
-            scheduleNextTime.innerHTML = '<option value="">Pick a date first…</option>';
+            fillTimeDatalist('scheduleNextTimeSlots', []);
+            scheduleNextTime.value = '';
             return;
         }
         try {
             const res = await fetch(`/api/admin/available-slots?date=${encodeURIComponent(dateIso)}&allSlots=1`);
             const data = await res.json();
             const slots = data.available || [];
-            scheduleNextTime.innerHTML = '';
-            if (!slots.length) {
-                const opt = document.createElement('option');
-                opt.value = '';
-                opt.textContent = data.reason || 'No slots available';
-                scheduleNextTime.appendChild(opt);
-                return;
-            }
-            slots.forEach((t) => {
-                const opt = document.createElement('option');
-                opt.value = t;
-                opt.textContent = t;
-                scheduleNextTime.appendChild(opt);
-            });
+            fillTimeDatalist('scheduleNextTimeSlots', slots);
             const prefer = preferredTime || (scheduleNextContext && scheduleNextContext.suggestion && scheduleNextContext.suggestion.time);
-            if (prefer && slots.includes(prefer)) scheduleNextTime.value = prefer;
-            else scheduleNextTime.value = slots[0];
+            if (prefer) scheduleNextTime.value = prefer;
+            else if (slots.length) scheduleNextTime.value = slots[0];
+            else if (!scheduleNextTime.value) scheduleNextTime.value = '07:00';
         } catch (err) {
-            scheduleNextTime.innerHTML = '<option value="">Error loading slots</option>';
+            fillTimeDatalist('scheduleNextTimeSlots', []);
         }
     }
 
@@ -1124,7 +1119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (scheduleNextProfessional) scheduleNextProfessional.value = '';
         if (scheduleNextPrice) scheduleNextPrice.value = '';
         if (scheduleNextDate) scheduleNextDate.value = '';
-        if (scheduleNextTime) scheduleNextTime.innerHTML = '<option value="">Loading…</option>';
+        if (scheduleNextTime) scheduleNextTime.value = '';
         try {
             const res = await fetch(`/api/admin/patients/${encodeURIComponent(bookingRef)}/suggest-next`);
             const data = await res.json();
@@ -1454,7 +1449,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         workingHoursGrid.innerHTML = '';
 
         days.forEach((day, idx) => {
-            const dayData = scheduleData.workingHours[day] || { enabled: false, start: '09:00', end: '17:00' };
+            const dayData = scheduleData.workingHours[day] || { enabled: false, start: '07:00', end: '17:00' };
             
             const dayCard = document.createElement('div');
             dayCard.className = 'admin-day-card';
@@ -1632,7 +1627,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function applyOverrideToDates(dates, { clearSelection = true } = {}) {
         if (!scheduleData || !dates || dates.length === 0) return;
-        const start = bulkOverrideStart && bulkOverrideStart.value ? bulkOverrideStart.value : '09:00';
+        const start = bulkOverrideStart && bulkOverrideStart.value ? bulkOverrideStart.value : '07:00';
         const end = bulkOverrideEnd && bulkOverrideEnd.value ? bulkOverrideEnd.value : '17:00';
         const enabled = bulkOverrideEnabled ? bulkOverrideEnabled.checked : true;
         const map = new Map((scheduleData.dayOverrides || []).map((o) => [o.date, { ...o }]));
@@ -2050,32 +2045,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function loadInviteTimes() {
         if (!inviteTime || !inviteDate) return;
         const date = inviteDate.value;
-        inviteTime.innerHTML = '';
+        const hint = document.getElementById('inviteTimeHint');
         if (!date) {
-            inviteTime.innerHTML = '<option value="">Pick a date first…</option>';
+            fillTimeDatalist('inviteTimeSlots', []);
+            inviteTime.value = '';
+            if (hint) hint.textContent = '07:00 and 08:00 are available on open weekdays.';
             return;
         }
-        inviteTime.innerHTML = '<option value="">Loading…</option>';
         try {
             const res = await fetch(`/api/admin/available-slots?date=${encodeURIComponent(date)}&allSlots=1`);
             const data = await res.json();
-            inviteTime.innerHTML = '';
-            if (data.available && data.available.length > 0) {
-                data.available.forEach((t) => {
-                    const opt = document.createElement('option');
-                    opt.value = t;
-                    opt.textContent = t;
-                    inviteTime.appendChild(opt);
-                });
-            } else {
-                const opt = document.createElement('option');
-                opt.value = '';
-                opt.textContent = data.reason ? `No slots — ${data.reason}` : 'No slots available';
-                inviteTime.appendChild(opt);
+            const slots = data.available || [];
+            fillTimeDatalist('inviteTimeSlots', slots);
+            if (!inviteTime.value) {
+                inviteTime.value = slots.includes('07:00') ? '07:00' : (slots[0] || '07:00');
+            }
+            if (hint) {
+                hint.textContent = data.reason
+                    ? data.reason
+                    : '07:00 and 08:00 are available on open weekdays.';
             }
         } catch (err) {
             console.error('Load invite times error:', err);
-            inviteTime.innerHTML = '<option value="">Error loading slots</option>';
+            fillTimeDatalist('inviteTimeSlots', []);
+            if (hint) hint.textContent = 'Could not load slots — you can still type 07:00 or 08:00.';
         }
     }
 
@@ -2273,7 +2266,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (inviteComplimentary) inviteComplimentary.checked = false;
                 if (inviteWithoutInvoice) inviteWithoutInvoice.checked = false;
                 if (inviteCustomPrice) inviteCustomPrice.disabled = false;
-                inviteTime.innerHTML = '<option value="">Pick a date first…</option>';
+                inviteTime.value = '';
+                fillTimeDatalist('inviteTimeSlots', []);
                 refreshInvitePriceUI();
                 await loadInvitations();
                 loadUpcomingConsultations();

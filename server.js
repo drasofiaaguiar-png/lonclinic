@@ -280,13 +280,13 @@ const psychologistApplicationsStore = []; // memory fallback for recrutamento
 ======================================== */
 const defaultScheduleStore = {
     workingHours: {
-        monday: { enabled: true, start: '09:00', end: '17:00' },
-        tuesday: { enabled: true, start: '09:00', end: '17:00' },
-        wednesday: { enabled: true, start: '09:00', end: '17:00' },
-        thursday: { enabled: true, start: '09:00', end: '17:00' },
-        friday: { enabled: true, start: '09:00', end: '17:00' },
-        saturday: { enabled: false, start: '08:00', end: '13:00' },
-        sunday: { enabled: false, start: '09:00', end: '17:00' }
+        monday: { enabled: true, start: '07:00', end: '17:00' },
+        tuesday: { enabled: true, start: '07:00', end: '17:00' },
+        wednesday: { enabled: true, start: '07:00', end: '17:00' },
+        thursday: { enabled: true, start: '07:00', end: '17:00' },
+        friday: { enabled: true, start: '07:00', end: '17:00' },
+        saturday: { enabled: false, start: '07:00', end: '13:00' },
+        sunday: { enabled: false, start: '07:00', end: '17:00' }
     },
     slotDuration: 30, // minutes
     blockedDates: [], // Array of date strings (YYYY-MM-DD)
@@ -327,6 +327,35 @@ function normalizeDayOverrides(raw) {
     return Array.from(byDate.values()).sort((a, b) => a.date.localeCompare(b.date));
 }
 
+function timeToMinutes(hhmm) {
+    const m = /^(\d{1,2}):(\d{2})$/.exec(String(hhmm || '').trim());
+    if (!m) return null;
+    return Number(m[1]) * 60 + Number(m[2]);
+}
+
+/** Consultations can be booked from 07:00; stored 08:00/09:00 templates are opened earlier. */
+function startNoLaterThan7am(start) {
+    const mins = timeToMinutes(start);
+    if (mins == null || mins > 7 * 60) return '07:00';
+    const [h, min] = String(start).slice(0, 5).split(':');
+    return `${String(h).padStart(2, '0')}:${min}`;
+}
+
+function applySevenAmConsultationHours(store) {
+    if (!store || !store.workingHours) return false;
+    let changed = false;
+    for (const day of Object.keys(store.workingHours)) {
+        const wh = store.workingHours[day];
+        if (!wh || typeof wh !== 'object') continue;
+        const next = startNoLaterThan7am(wh.start);
+        if (wh.start !== next) {
+            wh.start = next;
+            changed = true;
+        }
+    }
+    return changed;
+}
+
 function ensureScheduleStoreShape(raw) {
     const base = cloneDefaultSchedule();
     const input = raw && typeof raw === 'object' ? raw : {};
@@ -334,7 +363,7 @@ function ensureScheduleStoreShape(raw) {
         input.dayOverrides !== undefined
             ? normalizeDayOverrides(input.dayOverrides)
             : normalizeDayOverrides(base.dayOverrides);
-    return {
+    const store = {
         ...base,
         ...input,
         workingHours: { ...base.workingHours, ...(input.workingHours || {}) },
@@ -347,6 +376,10 @@ function ensureScheduleStoreShape(raw) {
             typeof input.smartSlotGrouping === 'boolean' ? input.smartSlotGrouping : base.smartSlotGrouping,
         updatedAt: input.updatedAt || new Date().toISOString()
     };
+    if (applySevenAmConsultationHours(store)) {
+        store.updatedAt = new Date().toISOString();
+    }
+    return store;
 }
 
 /** Effective schedule for slot generation: blocked date → closed; else day override; else weekly hours. */
@@ -437,8 +470,8 @@ async function bootstrapPersistence() {
             scheduleStore = ensureScheduleStoreShape(payload);
         } else {
             scheduleStore = loadScheduleStore();
-            await db.saveSchedulePayload(scheduleStore);
         }
+        await persistScheduleStore();
         return;
     }
     scheduleStore = loadScheduleStore();
@@ -2754,7 +2787,9 @@ function slotsForDateIso(dateIso) {
     const dateStr = dateIso;
     const daySchedule = getEffectiveDaySchedule(dateStr);
     if (!daySchedule.enabled) return [];
-    const [startHour, startMin] = daySchedule.start.split(':').map(Number);
+    const start =
+        daySchedule.source === 'override' ? daySchedule.start : startNoLaterThan7am(daySchedule.start);
+    const [startHour, startMin] = start.split(':').map(Number);
     const [endHour, endMin] = daySchedule.end.split(':').map(Number);
     const slotDuration = scheduleStore.slotDuration || 30;
     const slots = [];
@@ -2791,8 +2826,8 @@ function computeOccupiedSlotIndices(allSlots, booking, slotDurationMinutes) {
 }
 
 /**
- * Progressive slot grouping: empty day → first/last anchor slots only; then
- * slot immediately before and after the contiguous occupied block.
+ * Progressive slot grouping: empty day → 07:00 and 08:00 (when in hours) plus
+ * the last slot; then slot immediately before and after the contiguous occupied block.
  */
 function computeSmartGroupedSlotTimes(allSlots, bookingsForDate, slotDurationMinutes) {
     if (!allSlots.length) return [];
@@ -2805,7 +2840,12 @@ function computeSmartGroupedSlotTimes(allSlots, bookingsForDate, slotDurationMin
     }
     if (occupied.size === 0) {
         if (allSlots.length === 1) return [allSlots[0]];
-        return [allSlots[0], allSlots[allSlots.length - 1]];
+        const morningAnchors = ['07:00', '08:00'].filter((t) => allSlots.includes(t));
+        const last = allSlots[allSlots.length - 1];
+        if (morningAnchors.length) {
+            return [...new Set([...morningAnchors, last])];
+        }
+        return [allSlots[0], last];
     }
     let minOcc = Infinity;
     let maxOcc = -Infinity;
@@ -6747,8 +6787,21 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
         }
 
         // Admin can book any free slot regardless of smart grouping.
+        // 07:00–08:30 are always offerable on an open day so morning invites
+        // work even if the stored weekly template still started at 09:00.
         const available = await getBookableSlotsForDateIso(dateIso, null, null, true);
-        if (!available.includes(normTime)) {
+        const mins = timeToMinutes(normTime);
+        const isEarlyMorning = mins != null && mins >= 7 * 60 && mins < 9 * 60 && mins % 30 === 0;
+        let allowed = available.includes(normTime);
+        if (!allowed && isEarlyMorning) {
+            const daySchedule = getEffectiveDaySchedule(dateIso);
+            const blocked = scheduleStore.blockedTimeSlots.some(
+                (b) => b.date === dateIso && b.time === normTime
+            );
+            const taken = await db.isSlotTakenByOther(dateIso, normTime, null);
+            allowed = !!(daySchedule.enabled && !blocked && !taken);
+        }
+        if (!allowed) {
             return res.status(409).json({ error: 'That time slot is no longer available.' });
         }
 

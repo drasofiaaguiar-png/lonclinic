@@ -219,9 +219,8 @@
                             </div>
                             <div class="admin-form-group">
                                 <label for="scheduleNextTime">Time</label>
-                                <select id="scheduleNextTime" class="admin-select" required>
-                                    <option value="">Loading…</option>
-                                </select>
+                                <input type="time" id="scheduleNextTime" class="admin-input" required min="07:00" max="17:00" step="1800" list="scheduleNextTimeSlots">
+                                <datalist id="scheduleNextTimeSlots"></datalist>
                             </div>
                             <div class="admin-form-group">
                                 <label for="scheduleNextPrice">Custom price (€) <span style="font-weight:400;opacity:.7;">— optional</span></label>
@@ -319,9 +318,9 @@
                         </div>
                         <div class="admin-form-group">
                             <label for="inviteTime">Time</label>
-                            <select id="inviteTime" class="admin-select" required>
-                                <option value="">Pick a date first…</option>
-                            </select>
+                            <input type="time" id="inviteTime" class="admin-input" required min="07:00" max="17:00" step="1800" list="inviteTimeSlots">
+                            <datalist id="inviteTimeSlots"></datalist>
+                            <small id="inviteTimeHint" style="display:block;margin-top:6px;opacity:.7;">07:00 and 08:00 are available on open weekdays.</small>
                         </div>
                         <div class="admin-form-group">
                             <label for="inviteLocale">Email language</label>
@@ -378,7 +377,7 @@
                     <div class="admin-override-bulk-row">
                         <div class="admin-time-group admin-override-time">
                             <label for="bulkOverrideStart">Start</label>
-                            <input type="time" id="bulkOverrideStart" class="admin-time-input" value="09:00">
+                            <input type="time" id="bulkOverrideStart" class="admin-time-input" value="07:00">
                         </div>
                         <div class="admin-time-group admin-override-time">
                             <label for="bulkOverrideEnd">End</label>
