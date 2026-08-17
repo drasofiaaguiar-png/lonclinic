@@ -804,6 +804,14 @@
         } catch (e) {
             console.error(e);
         }
+        if (window.LonAnalytics) {
+            window.LonAnalytics.track('checkout_start', {
+                surface: 'booking',
+                service: consulta.serviceKey,
+                step: 'details'
+            });
+            window.LonAnalytics.flush();
+        }
         window.location.href = '/book-consultation';
     });
 

@@ -39,6 +39,25 @@ const BOT_UA = /bot|crawl|spider|slurp|facebookexternalhit|preview|lighthouse|he
 const memoryEvents = [];
 const MEMORY_CAP = 8000;
 
+const PROBE_PATH =
+    /(?:^|\/)(?:wp-admin|wp-login|wp-content|wp-includes|wp-json|wp_mail|wordpress|xmlrpc|phpmyadmin|adminer|graphql|cgi-bin|vendor\/phpunit|phpunit|eval-stdin|actuator|server-status|debug\/pprof|boaform|manager\/html|solr|jenkins|telescope|horizon|_profiler|phpinfo|cgi-bin)(?:\/|$|\.)|\/(?:\.env(?:\.|$)|\.git(?:\/|$)|\.svn|\/\.hg|\/\.bzr|\/\.github(?:\/|$)|\.htaccess|\.htpasswd|\.aws|id_rsa|authorized_keys|web\.config|docker-compose|credentials\.json|config\.php|install\.php|setup\.php)|(?:^|\/)(?:etc\/passwd|var\/www|website\/)|\/\.well-known\/(?!acme-challenge(?:\/|$))|\.(?:php|asp|aspx|jsp|cgi|cfm|ini|sql|bak|old|swp)$/i;
+
+function isProbePath(pagePath) {
+    if (!pagePath) return false;
+    let s = String(pagePath).split('?')[0];
+    try {
+        s = decodeURIComponent(s);
+    } catch {
+        /* keep */
+    }
+    s = s.toLowerCase();
+    if (!s || s === '/') return false;
+    if (s.startsWith('/.well-known/acme-challenge')) return false;
+    if (PROBE_PATH.test(s)) return true;
+    if (/(?:^|\/)\.[^./]+/.test(s) && !s.startsWith('/.well-known/acme-challenge')) return true;
+    return false;
+}
+
 function isBot(ua) {
     const s = String(ua || '');
     if (!s) return false;
@@ -113,6 +132,7 @@ function normalizeEvent(raw, meta) {
     const occurred = Number.isFinite(ts) && ts > 1e12 && ts < Date.now() + 60000 ? new Date(ts) : new Date();
     const ua = meta.ua || '';
     if (name !== 'payment_succeeded' && name !== 'booking_confirmed' && isBot(ua)) return null;
+    if (isProbePath(raw.page_path)) return null;
     const parsed = parseUa(ua);
     const row = {
         eventId,
@@ -211,6 +231,17 @@ function groupCount(rows, key, limit) {
         .map(([key, count]) => ({ key, count }));
 }
 
+function countFunnelStep(rows, names) {
+    const sessions = new Set();
+    let orphans = 0;
+    for (const r of rows) {
+        if (!names.includes(r.name)) continue;
+        if (r.sessionId) sessions.add(r.sessionId);
+        else orphans += 1;
+    }
+    return sessions.size + orphans;
+}
+
 function funnelFrom(rows) {
     const steps = [
         { id: 'visit', names: ['page_view'] },
@@ -218,20 +249,11 @@ function funnelFrom(rows) {
         { id: 'intent', names: ['cta_click', 'whatsapp_click'] },
         { id: 'schedule', names: ['date_select', 'slot_select'] },
         { id: 'checkout', names: ['checkout_start', 'checkout_created'] },
-        { id: 'purchase', names: ['payment_succeeded', 'booking_confirmed'] }
+        { id: 'purchase', names: ['payment_succeeded', 'booking_confirmed', 'invite_paid'] }
     ];
-    const bySession = new Map();
-    for (const r of rows) {
-        if (!r.sessionId) continue;
-        if (!bySession.has(r.sessionId)) bySession.set(r.sessionId, new Set());
-        bySession.get(r.sessionId).add(r.name);
-    }
-    let prev = bySession.size || 1;
+    let prev = Math.max(1, countFunnelStep(rows, ['page_view']));
     return steps.map((step, i) => {
-        let count = 0;
-        for (const names of bySession.values()) {
-            if (step.names.some((n) => names.has(n))) count += 1;
-        }
+        const count = countFunnelStep(rows, step.names);
         const conv = i === 0 ? 100 : Math.round((count / prev) * 1000) / 10;
         if (count > 0) prev = count;
         return { id: step.id, label: step.id, sessions: count, stepConversion: conv };
@@ -270,11 +292,18 @@ function filterAudience(rows, audience) {
 function buildOverview(rows, liveRows, bookingStats, range, audience) {
     const view = ['public', 'staff', 'all'].includes(audience) ? audience : 'public';
     const tagged = (rows || []).map((r) => ({ ...r, staff: isStaffRow(r) }));
-    const used = filterAudience(tagged, view);
-    const liveTagged = (liveRows || []).map((r) => ({ ...r, staff: isStaffRow(r) }));
+    const probeRows = tagged.filter((r) => isProbePath(r.pagePath));
+    const human = tagged.filter((r) => !isProbePath(r.pagePath));
+    const used = filterAudience(human, view);
+    const humanSessions = new Set(human.map((r) => r.sessionId).filter(Boolean));
+    const liveTagged = (liveRows || [])
+        .map((r) => ({ ...r, staff: isStaffRow(r) }))
+        .filter((r) => r.sessionId && humanSessions.has(r.sessionId));
     const liveUsed = filterAudience(liveTagged, view);
     const views = dedupePageviews(used);
-    const purchases = used.filter((r) => r.name === 'payment_succeeded' || r.name === 'booking_confirmed');
+    const purchases = used.filter(
+        (r) => r.name === 'payment_succeeded' || r.name === 'booking_confirmed' || r.name === 'invite_paid'
+    );
     const visitors = uniqueCount(views, 'visitorId');
     const sessions = uniqueCount(used, 'sessionId');
     const engaged = uniqueCount(used.filter((r) => r.name === 'page_engaged'), 'sessionId');
@@ -298,8 +327,8 @@ function buildOverview(rows, liveRows, bookingStats, range, audience) {
         10
     );
     const serviceFromBookings = overlayBookings ? (bookingStats && bookingStats.services) || [] : [];
-    const staffRows = tagged.filter(isStaffRow);
-    const publicRows = tagged.filter((r) => !isStaffRow(r));
+    const staffRows = human.filter(isStaffRow);
+    const publicRows = human.filter((r) => !isStaffRow(r));
     return {
         range: range.days === 1 ? '24h' : `${range.days}d`,
         generatedAt: new Date().toISOString(),
@@ -317,7 +346,9 @@ function buildOverview(rows, liveRows, bookingStats, range, audience) {
             publicSessions: uniqueCount(publicRows, 'sessionId'),
             staffSessions: uniqueCount(staffRows, 'sessionId'),
             publicLive: uniqueCount(liveTagged.filter((r) => !isStaffRow(r)), 'sessionId'),
-            staffLive: uniqueCount(liveTagged.filter(isStaffRow), 'sessionId')
+            staffLive: uniqueCount(liveTagged.filter(isStaffRow), 'sessionId'),
+            scannerEvents: probeRows.length,
+            scannerSessions: uniqueCount(probeRows, 'sessionId')
         },
         funnel,
         channels: groupCount(views, 'channel', 10),
@@ -368,6 +399,7 @@ function overviewFromMemory(rangeKey, audience) {
 module.exports = {
     ALLOWED_NAMES,
     isBot,
+    isProbePath,
     parseUa,
     channelOf,
     cleanProps,

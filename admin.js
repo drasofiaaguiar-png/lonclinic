@@ -2678,7 +2678,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             const note = document.getElementById('analyticsTrackingNote');
             if (note) {
-                if (data.trackingEmpty) {
+                const scanner = k.scannerEvents || 0;
+                if (scanner) {
+                    note.hidden = false;
+                    note.textContent = `Excluded ${scanner} scanner hits (${k.scannerSessions || 0} probe sessions) — WordPress, .env, .git, GraphQL and similar. Figures below are human traffic.`;
+                } else if (data.trackingEmpty) {
                     note.hidden = false;
                     note.textContent = audience === 'staff'
                         ? 'No admin sessions in this range. Open the public site while logged in to tag a staff visit.'

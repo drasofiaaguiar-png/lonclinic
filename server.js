@@ -3514,7 +3514,9 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             emitServerAnalytics(
                 meta.invitation_id ? 'invite_paid' : 'payment_succeeded',
                 {
-                    props: { service: String(meta.service || '') },
+                    visitorId: meta.lon_vid || null,
+                    sessionId: meta.lon_sid || null,
+                    props: { service: String(meta.service || ''), via: meta.invitation_id ? 'invite' : 'checkout' },
                     revenueCents: session.amount_total || 0,
                     currency: session.currency || 'eur',
                     bookingRef: fin.bookingRef || null
@@ -3653,6 +3655,17 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next) => {
+    const p = req.path || '/';
+    if (!analyticsNet.isProbePath(p)) return next();
+    res.set({
+        'X-Robots-Tag': 'noindex, nofollow, noarchive',
+        'Cache-Control': 'no-store',
+        'X-Content-Type-Options': 'nosniff'
+    });
+    return res.status(404).type('text').send('Not found');
+});
+
 const ANALYTICS_SKIP_PATH = /^\/(api|admin|clinic-portal|doctors|webhook|patient-portal)(\/|$)/i;
 const ANALYTICS_SKIP_PAGE = /\/(admin|clinic|dashboard)(\.html)?$/i;
 const ANALYTICS_STATIC_EXT =
@@ -3664,8 +3677,9 @@ app.use((req, res, next) => {
     if (ANALYTICS_SKIP_PATH.test(p) || ANALYTICS_SKIP_PAGE.test(p) || ANALYTICS_STATIC_EXT.test(p)) {
         return next();
     }
-    const accept = String(req.headers.accept || '');
-    if (accept && !accept.includes('text/html') && !accept.includes('*/*')) return next();
+    if (analyticsNet.isProbePath(p)) return next();
+    if (/\.[a-z0-9]{1,12}$/i.test(p) && !/\.html$/i.test(p)) return next();
+    if (!/text\/html/i.test(String(req.headers.accept || ''))) return next();
     if (analyticsNet.isBot(req.headers['user-agent'])) return next();
     const ids = ensureAnalyticsCookies(req, res);
     const q = req.query || {};
@@ -4048,6 +4062,8 @@ app.use((req, res, next) => {
 
 // ─── Static files (CSS, JS, images, etc.) ───
 app.use(express.static(path.join(__dirname), {
+    dotfiles: 'ignore',
+    index: false,
     setHeaders: (res, filePath) => {
         const base = path.basename(filePath);
         if (
@@ -5220,6 +5236,9 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
             locale: normalizePatientLocale(locale),
             service_label: (serviceLabel || '').substring(0, 500)
         };
+        const analyticsIds = anonymousIds(req);
+        if (analyticsIds.visitorId) metadata.lon_vid = String(analyticsIds.visitorId).slice(0, 64);
+        if (analyticsIds.sessionId) metadata.lon_sid = String(analyticsIds.sessionId).slice(0, 64);
 
         // Store each passenger's core details in metadata (up to 4)
         if (Array.isArray(passengers)) {
