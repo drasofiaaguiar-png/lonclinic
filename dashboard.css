@@ -2995,7 +2995,57 @@ a.admin-nav-link {
     gap: 8px;
     font-size: 0.85rem;
     color: var(--text-muted);
+    margin: 0;
+}
+.an-live-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
     margin: 0 0 16px;
+}
+.an-live-split {
+    color: var(--text-muted);
+    opacity: 0.85;
+}
+.an-audience {
+    display: inline-flex;
+    border: 1px solid #e2e8e4;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #fff;
+}
+.an-audience-btn {
+    border: 0;
+    background: transparent;
+    padding: 6px 12px;
+    font: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+.an-audience-btn.is-active {
+    background: #1f3d36;
+    color: #fff;
+}
+.an-split-hint {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+.an-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    background: #eef2f0;
+    color: var(--text-muted);
+}
+.an-badge-staff {
+    background: rgba(197, 199, 44, 0.22);
+    color: #3f4a12;
 }
 .an-live-dot {
     width: 8px;

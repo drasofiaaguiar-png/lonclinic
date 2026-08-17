@@ -73,6 +73,7 @@ function channelOf(row) {
     if (med === 'email' || src === 'email' || src === 'newsletter') return 'email';
     if (med === 'sms' || src === 'sms' || src === 'whatsapp') return 'sms';
     if (src === 'invite' || med === 'invite') return 'invite';
+    if (src === 'internal' || med === 'internal') return 'internal';
     if (/google\./.test(ref) && !row.gclid) return 'organic_google';
     if (/bing\.|yahoo\./.test(ref)) return 'organic_other';
     if (ref && !ref.includes('lonclinic.com') && !ref.includes('localhost')) return 'referral';
@@ -139,15 +140,23 @@ function normalizeEvent(raw, meta) {
         props: cleanProps(raw.props),
         revenueCents: Number.isFinite(Number(raw.revenue_cents)) ? Math.round(Number(raw.revenue_cents)) : null,
         currency: raw.currency ? String(raw.currency).slice(0, 8).toLowerCase() : null,
-        bookingRef: raw.booking_ref ? String(raw.booking_ref).slice(0, 64) : null
+        bookingRef: raw.booking_ref ? String(raw.booking_ref).slice(0, 64) : null,
+        staff: false
     };
-    row.channel = channelOf({
-        utm_source: row.utmSource,
-        utm_medium: row.utmMedium,
-        referrer: row.referrer,
-        gclid: row.gclid,
-        fbclid: row.fbclid
-    });
+    if (row.props && row.props.audience) delete row.props.audience;
+    if (meta.staff) {
+        row.props = { ...row.props, audience: 'staff' };
+        row.channel = 'internal';
+        row.staff = true;
+    } else {
+        row.channel = channelOf({
+            utm_source: row.utmSource,
+            utm_medium: row.utmMedium,
+            referrer: row.referrer,
+            gclid: row.gclid,
+            fbclid: row.fbclid
+        });
+    }
     return row;
 }
 
@@ -244,21 +253,43 @@ function hourlySeries(rows, fromIso, days) {
     return arr;
 }
 
-function buildOverview(rows, liveRows, bookingStats, range) {
-    const views = dedupePageviews(rows);
-    const purchases = rows.filter((r) => r.name === 'payment_succeeded' || r.name === 'booking_confirmed');
+function isStaffRow(r) {
+    if (!r) return false;
+    if (r.staff === true) return true;
+    if (r.channel === 'internal') return true;
+    const aud = r.props && r.props.audience;
+    return aud === 'staff' || aud === 'admin';
+}
+
+function filterAudience(rows, audience) {
+    if (audience === 'staff') return rows.filter(isStaffRow);
+    if (audience === 'all') return rows;
+    return rows.filter((r) => !isStaffRow(r));
+}
+
+function buildOverview(rows, liveRows, bookingStats, range, audience) {
+    const view = ['public', 'staff', 'all'].includes(audience) ? audience : 'public';
+    const tagged = (rows || []).map((r) => ({ ...r, staff: isStaffRow(r) }));
+    const used = filterAudience(tagged, view);
+    const liveTagged = (liveRows || []).map((r) => ({ ...r, staff: isStaffRow(r) }));
+    const liveUsed = filterAudience(liveTagged, view);
+    const views = dedupePageviews(used);
+    const purchases = used.filter((r) => r.name === 'payment_succeeded' || r.name === 'booking_confirmed');
     const visitors = uniqueCount(views, 'visitorId');
-    const sessions = uniqueCount(rows, 'sessionId');
-    const engaged = uniqueCount(rows.filter((r) => r.name === 'page_engaged'), 'sessionId');
+    const sessions = uniqueCount(used, 'sessionId');
+    const engaged = uniqueCount(used.filter((r) => r.name === 'page_engaged'), 'sessionId');
+    const overlayBookings = view !== 'staff';
     const revenue =
-        bookingStats && bookingStats.count
+        overlayBookings && bookingStats && bookingStats.count
             ? bookingStats.revenueCents || 0
             : purchases.reduce((s, r) => s + (r.revenueCents || 0), 0);
-    const bookingCount = (bookingStats && bookingStats.count) || purchases.length;
+    const bookingCount = overlayBookings
+        ? (bookingStats && bookingStats.count) || purchases.length
+        : purchases.length;
     const conversion = visitors ? Math.round((bookingCount / visitors) * 1000) / 10 : 0;
-    const cta = rows.filter((r) => r.name === 'cta_click');
-    const funnel = funnelFrom(rows).map((step) => {
-        if (step.id !== 'purchase' || !bookingCount) return step;
+    const cta = used.filter((r) => r.name === 'cta_click');
+    const funnel = funnelFrom(used).map((step) => {
+        if (step.id !== 'purchase' || !bookingCount || !overlayBookings) return step;
         return { ...step, sessions: Math.max(step.sessions, bookingCount) };
     });
     const serviceFromEvents = groupCount(
@@ -266,10 +297,13 @@ function buildOverview(rows, liveRows, bookingStats, range) {
         'key',
         10
     );
-    const serviceFromBookings = (bookingStats && bookingStats.services) || [];
+    const serviceFromBookings = overlayBookings ? (bookingStats && bookingStats.services) || [] : [];
+    const staffRows = tagged.filter(isStaffRow);
+    const publicRows = tagged.filter((r) => !isStaffRow(r));
     return {
         range: range.days === 1 ? '24h' : `${range.days}d`,
         generatedAt: new Date().toISOString(),
+        audience: view,
         trackingEmpty: views.length === 0,
         kpis: {
             visitors,
@@ -279,7 +313,11 @@ function buildOverview(rows, liveRows, bookingStats, range) {
             bookings: bookingCount,
             revenueCents: revenue,
             conversionRate: conversion,
-            liveVisitors: uniqueCount(liveRows, 'sessionId')
+            liveVisitors: uniqueCount(liveUsed, 'sessionId'),
+            publicSessions: uniqueCount(publicRows, 'sessionId'),
+            staffSessions: uniqueCount(staffRows, 'sessionId'),
+            publicLive: uniqueCount(liveTagged.filter((r) => !isStaffRow(r)), 'sessionId'),
+            staffLive: uniqueCount(liveTagged.filter(isStaffRow), 'sessionId')
         },
         funnel,
         channels: groupCount(views, 'channel', 10),
@@ -302,7 +340,7 @@ function buildOverview(rows, liveRows, bookingStats, range) {
             ? serviceFromEvents
             : serviceFromBookings.map((s) => ({ key: s.service || 'consultation', count: s.count })),
         hourly: hourlySeries(views, range.from, range.days),
-        recent: rows
+        recent: used
             .filter((r) => r.name !== 'heartbeat')
             .slice(-25)
             .reverse()
@@ -311,17 +349,20 @@ function buildOverview(rows, liveRows, bookingStats, range) {
                 name: r.name,
                 path: r.pagePath,
                 channel: r.channel,
-                device: r.device
+                device: r.device,
+                staff: !!r.staff
             }))
     };
 }
 
-function overviewFromMemory(rangeKey) {
+function overviewFromMemory(rangeKey, audience) {
     const range = rangeBounds(rangeKey);
     const rows = memoryEvents.filter((r) => inRange(r.occurredAt, range.from, range.to));
     const liveFrom = new Date(Date.now() - 120000).toISOString();
-    const live = memoryEvents.filter((r) => r.name === 'heartbeat' && r.occurredAt >= liveFrom);
-    return buildOverview(rows, live, { count: 0, revenueCents: 0 }, range);
+    const live = memoryEvents.filter(
+        (r) => (r.name === 'heartbeat' || r.name === 'page_view') && r.occurredAt >= liveFrom
+    );
+    return buildOverview(rows, live, { count: 0, revenueCents: 0 }, range, audience);
 }
 
 module.exports = {
@@ -333,6 +374,7 @@ module.exports = {
     normalizeEvent,
     remember,
     rangeBounds,
+    isStaffRow,
     buildOverview,
     overviewFromMemory,
     memoryEvents

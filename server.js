@@ -292,6 +292,10 @@ function requireAuth(req, res, next) {
     return res.status(401).json({ error: 'Authentication required' });
 }
 
+function isStaffRequest(req) {
+    return !!(req && req.session && req.session.clinicAuthenticated);
+}
+
 function sendHtmlNoCache(res, filePath, onErrorMessage) {
     res.set({
         'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
@@ -422,7 +426,8 @@ async function emitServerAnalytics(name, extra, req) {
         {
             source: 'server',
             ua: req && req.headers ? req.headers['user-agent'] : 'server',
-            country: requestCountry(req)
+            country: requestCountry(req),
+            staff: isStaffRequest(req)
         }
     );
     if (!row) return;
@@ -446,7 +451,12 @@ async function ingestClientEvents(req, events) {
         const payload = ev && typeof ev === 'object' ? { ...ev } : {};
         if (!payload.visitor_id) payload.visitor_id = ids.visitorId;
         if (!payload.session_id) payload.session_id = ids.sessionId;
-        const row = analyticsNet.normalizeEvent(payload, { source: 'client', ua, country });
+        const row = analyticsNet.normalizeEvent(payload, {
+            source: 'client',
+            ua,
+            country,
+            staff: isStaffRequest(req)
+        });
         if (row) rows.push(row);
     }
     if (!rows.length) return;
@@ -3603,9 +3613,11 @@ app.get('/api/admin/analytics', requireAuth, async (req, res) => {
     const rangeKey = String(req.query.range || '7d');
     const allowed = new Set(['24h', '7d', '30d', '90d']);
     const range = allowed.has(rangeKey) ? rangeKey : '7d';
+    const audienceKey = String(req.query.audience || 'public');
+    const audience = ['public', 'staff', 'all'].includes(audienceKey) ? audienceKey : 'public';
     try {
         if (!usePersistentDb) {
-            return res.json(analyticsNet.overviewFromMemory(range));
+            return res.json(analyticsNet.overviewFromMemory(range, audience));
         }
         const bounds = analyticsNet.rangeBounds(range);
         const [rows, live, bookingStats] = await Promise.all([
@@ -3613,8 +3625,13 @@ app.get('/api/admin/analytics', requireAuth, async (req, res) => {
             db.listLiveAnalyticsSessions(new Date(Date.now() - 120000).toISOString()),
             db.analyticsBookingStats(bounds.from, bounds.to)
         ]);
-        const liveRows = live.map((s) => ({ sessionId: s.sessionId, name: 'heartbeat' }));
-        res.json(analyticsNet.buildOverview(rows, liveRows, bookingStats, bounds));
+        const liveRows = live.map((s) => ({
+            sessionId: s.sessionId,
+            name: 'heartbeat',
+            staff: !!s.staff,
+            channel: s.staff ? 'internal' : undefined
+        }));
+        res.json(analyticsNet.buildOverview(rows, liveRows, bookingStats, bounds, audience));
     } catch (err) {
         console.error('GET /api/admin/analytics:', err.message);
         res.status(500).json({ error: 'Failed to load analytics' });

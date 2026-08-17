@@ -2619,6 +2619,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         email: 'Email',
         sms: 'SMS / WhatsApp',
         invite: 'Clinic invite',
+        internal: 'Admin / staff',
         referral: 'Referral',
         campaign: 'Campaign',
         direct: 'Direct'
@@ -2656,24 +2657,43 @@ document.addEventListener('DOMContentLoaded', async () => {
         const live = document.getElementById('analyticsLive');
         const rangeEl = document.getElementById('analyticsRange');
         const range = rangeEl ? rangeEl.value : '7d';
+        const audienceBtn = document.querySelector('#analyticsAudience .an-audience-btn.is-active');
+        const audience = (audienceBtn && audienceBtn.getAttribute('data-audience')) || 'public';
         if (kpis) kpis.innerHTML = '<p class="admin-empty-list">Loading analytics…</p>';
         try {
-            const res = await fetch(`/api/admin/analytics?range=${encodeURIComponent(range)}`);
+            const res = await fetch(`/api/admin/analytics?range=${encodeURIComponent(range)}&audience=${encodeURIComponent(audience)}`);
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
             const k = data.kpis || {};
-            if (live) live.innerHTML = `<span class="an-live-dot"></span> ${k.liveVisitors || 0} live now`;
+            if (live) {
+                const publicLive = k.publicLive || 0;
+                const staffLive = k.staffLive || 0;
+                if (audience === 'staff') {
+                    live.innerHTML = `<span class="an-live-dot"></span> ${staffLive} admin live now`;
+                } else if (audience === 'all') {
+                    live.innerHTML = `<span class="an-live-dot"></span> ${k.liveVisitors || 0} live now <span class="an-live-split">${publicLive} visitors · ${staffLive} admin</span>`;
+                } else {
+                    live.innerHTML = `<span class="an-live-dot"></span> ${publicLive} live now${staffLive ? ` <span class="an-live-split">${staffLive} admin excluded</span>` : ''}`;
+                }
+            }
             const note = document.getElementById('analyticsTrackingNote');
             if (note) {
                 if (data.trackingEmpty) {
                     note.hidden = false;
-                    note.textContent = 'Visit metrics start as people browse the public site. Bookings and revenue already come from the payment ledger.';
+                    note.textContent = audience === 'staff'
+                        ? 'No admin sessions in this range. Open the public site while logged in to tag a staff visit.'
+                        : 'Visit metrics start as people browse the public site. Bookings and revenue already come from the payment ledger.';
                 } else {
                     note.hidden = true;
                     note.textContent = '';
                 }
             }
             if (kpis) {
+                const sessionHint = audience === 'all'
+                    ? `${k.publicSessions || 0} visitors · ${k.staffSessions || 0} admin`
+                    : audience === 'staff'
+                        ? 'Logged-in clinic team'
+                        : (k.staffSessions ? `${k.staffSessions} admin sessions excluded` : 'Public traffic');
                 kpis.innerHTML = [
                     ['Visitors', k.visitors],
                     ['Sessions', k.sessions],
@@ -2682,7 +2702,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ['Bookings', k.bookings],
                     ['Revenue', anEuro(k.revenueCents)],
                     ['Conversion', `${k.conversionRate || 0}%`]
-                ].map(([label, val]) => `<div class="an-kpi"><span class="an-kpi-label">${label}</span><span class="an-kpi-val">${val}</span></div>`).join('');
+                ].map(([label, val]) => `<div class="an-kpi"><span class="an-kpi-label">${label}</span><span class="an-kpi-val">${val}</span></div>`).join('') +
+                    `<p class="an-split-hint">${escapeHtml(sessionHint)}</p>`;
             }
             const chart = document.getElementById('analyticsChart');
             if (chart) chart.innerHTML = anSpark(data.hourly || []);
@@ -2709,8 +2730,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (recent) {
                 const rows = data.recent || [];
                 recent.innerHTML = rows.length
-                    ? `<table class="an-table"><thead><tr><th>When</th><th>Event</th><th>Path</th><th>Channel</th><th>Device</th></tr></thead><tbody>${
+                    ? `<table class="an-table"><thead><tr><th>When</th><th>Who</th><th>Event</th><th>Path</th><th>Channel</th><th>Device</th></tr></thead><tbody>${
                         rows.map((r) => `<tr><td>${escapeHtml(String(r.at || '').replace('T', ' ').slice(0, 19))}</td>
+                        <td>${r.staff ? '<span class="an-badge an-badge-staff">Admin</span>' : '<span class="an-badge">Visitor</span>'}</td>
                         <td>${escapeHtml(r.name || '')}</td><td>${escapeHtml(r.path || '')}</td>
                         <td>${escapeHtml(CHANNEL_LABELS[r.channel] || r.channel || '')}</td>
                         <td>${escapeHtml(r.device || '')}</td></tr>`).join('')
@@ -2724,8 +2746,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const analyticsRange = document.getElementById('analyticsRange');
     const analyticsRefreshBtn = document.getElementById('analyticsRefreshBtn');
+    const analyticsAudience = document.getElementById('analyticsAudience');
     if (analyticsRange) analyticsRange.addEventListener('change', () => loadAnalyticsPanel());
     if (analyticsRefreshBtn) analyticsRefreshBtn.addEventListener('click', () => loadAnalyticsPanel());
+    if (analyticsAudience) {
+        analyticsAudience.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-audience]');
+            if (!btn) return;
+            analyticsAudience.querySelectorAll('.an-audience-btn').forEach((b) => b.classList.toggle('is-active', b === btn));
+            loadAnalyticsPanel();
+        });
+    }
 
     // ─── Initialize ───
     await checkAuth();

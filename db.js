@@ -437,7 +437,10 @@ function rowToAnalyticsEvent(row) {
         props: row.props && typeof row.props === 'object' ? row.props : {},
         revenueCents: row.revenue_cents,
         currency: row.currency,
-        bookingRef: row.booking_ref
+        bookingRef: row.booking_ref,
+        staff:
+            row.channel === 'internal' ||
+            !!(row.props && typeof row.props === 'object' && (row.props.audience === 'staff' || row.props.audience === 'admin'))
     };
 }
 
@@ -515,12 +518,15 @@ async function listAnalyticsEventsBetween(fromIso, toIso, { excludeHeartbeat } =
 async function listLiveAnalyticsSessions(sinceIso) {
     const p = getPool();
     const r = await p.query(
-        `SELECT DISTINCT session_id FROM analytics_events
+        `SELECT session_id,
+                BOOL_OR(channel = 'internal' OR COALESCE(props->>'audience', '') IN ('staff', 'admin')) AS staff
+         FROM analytics_events
          WHERE occurred_at >= $1::timestamptz AND session_id IS NOT NULL
-           AND name IN ('heartbeat', 'page_view')`,
+           AND name IN ('heartbeat', 'page_view')
+         GROUP BY session_id`,
         [sinceIso]
     );
-    return r.rows.map((row) => ({ sessionId: row.session_id }));
+    return r.rows.map((row) => ({ sessionId: row.session_id, staff: row.staff === true }));
 }
 
 async function analyticsBookingStats(fromIso, toIso) {
