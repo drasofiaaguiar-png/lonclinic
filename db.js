@@ -862,6 +862,22 @@ async function findInvitationById(id) {
     return r.rows[0] ? rowToInvitation(r.rows[0]) : null;
 }
 
+async function findInvitationByToken(token) {
+    const p = getPool();
+    const r = await p.query(`SELECT * FROM booking_invitations WHERE invitation_token = $1`, [token]);
+    return r.rows[0] ? rowToInvitation(r.rows[0]) : null;
+}
+
+async function listPendingInvitations(limit = 500) {
+    const p = getPool();
+    const cap = Math.min(Math.max(parseInt(limit, 10) || 500, 1), 1000);
+    const r = await p.query(
+        `SELECT * FROM booking_invitations WHERE status = 'pending' ORDER BY date_iso ASC, time ASC LIMIT $1`,
+        [cap]
+    );
+    return r.rows.map(rowToInvitation);
+}
+
 async function findInvitationByStripeSessionId(sessionId) {
     const p = getPool();
     const r = await p.query(`SELECT * FROM booking_invitations WHERE stripe_session_id = $1`, [sessionId]);
@@ -1476,8 +1492,10 @@ module.exports = {
     insertInvitation,
     updateInvitationStripeSession,
     findInvitationById,
+    findInvitationByToken,
     findInvitationByStripeSessionId,
     listInvitations,
+    listPendingInvitations,
     listPendingInvitationsForDateIso,
     markInvitationPaid,
     cancelInvitation,

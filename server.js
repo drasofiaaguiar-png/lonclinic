@@ -523,6 +523,44 @@ function timeToMinutes(hhmm) {
     return Number(m[1]) * 60 + Number(m[2]);
 }
 
+/** Invitation-only times outside weekly hours: 07:00–08:30 and 21:00 (30-min grid). */
+function isInvitationExtendedTime(normTime) {
+    const mins = timeToMinutes(normTime);
+    if (mins == null || mins % 30 !== 0) return false;
+    if (mins >= 7 * 60 && mins < 9 * 60) return true;
+    return mins === 21 * 60;
+}
+
+async function invitationExtendedSlotIsFree(dateIso, normTime, excludeBookingRef, excludeInvitationId) {
+    const daySchedule = getEffectiveDaySchedule(dateIso);
+    if (!daySchedule.enabled) return false;
+    const blocked = scheduleStore.blockedTimeSlots.some(
+        (b) => b.date === dateIso && b.time === normTime
+    );
+    if (blocked) return false;
+    if (usePersistentDb) {
+        const taken = await db.isSlotTakenByOther(dateIso, normTime, excludeBookingRef || null);
+        if (taken) return false;
+        const locked = await fetchInvitationLockedTimesForDateIso(dateIso);
+        if (excludeInvitationId) {
+            try {
+                const inv = await db.findInvitationById(excludeInvitationId);
+                if (inv && inv.time) locked.delete(normalizeTimeString({ time: inv.time }) || inv.time);
+            } catch (e) { /* ignore */ }
+        }
+        if (locked.has(normTime)) return false;
+        return true;
+    }
+    return isSlotFreeInMemory(dateIso, normTime, excludeBookingRef || null);
+}
+
+async function isInvitationSlotAllowed(dateIso, normTime, excludeInvitationId) {
+    const available = await getBookableSlotsForDateIso(dateIso, null, excludeInvitationId || null, true);
+    if (available.includes(normTime)) return true;
+    if (!isInvitationExtendedTime(normTime)) return false;
+    return invitationExtendedSlotIsFree(dateIso, normTime, null, excludeInvitationId);
+}
+
 /** Consultations can be booked from 07:00; stored 08:00/09:00 templates are opened earlier. */
 function startNoLaterThan7am(start) {
     const mins = timeToMinutes(start);
@@ -3124,6 +3162,7 @@ const AUTOMATION_JOB_INTERVAL_MS = 15 * 60 * 1000;
 let automationJobStarted = false;
 
 async function runAutomationJobs() {
+    await expireStalePendingInvitations();
     if (!isEmailConfigured) {
         return;
     }
@@ -3250,7 +3289,7 @@ function startAppointmentReminderScheduler() {
     setTimeout(() => {
         void runAutomationJobs();
     }, 15_000);
-    console.log('   ⏰ Automation (24h + 1h reminders, follow-up): every 15m (first run ~15s after startup)');
+    console.log('   ⏰ Automation (reminders, follow-up, invite expiry): every 15m (first run ~15s after startup)');
 }
 
 /** Avoid duplicate finalize when webhook and success-page API run together */
@@ -3339,15 +3378,12 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
         const normTimeFinal = normalizeTimeString({ time: meta.time || '' });
         if (isoRaw && /^\d{4}-\d{2}-\d{2}$/.test(isoRaw) && normTimeFinal) {
             // If this came from an admin-issued invitation, allow any slot in the grid
-            // (the admin already picked it, regardless of smart grouping).
+            // plus invitation-only times (07:00–08:30, 21:00) outside weekly hours.
             const allowAdminSlot = !!meta.invitation_id;
-            const allowed = await getBookableSlotsForDateIso(
-                isoRaw,
-                null,
-                meta.invitation_id || null,
-                allowAdminSlot
-            );
-            if (!allowed.includes(normTimeFinal)) {
+            const allowed = allowAdminSlot
+                ? await isInvitationSlotAllowed(isoRaw, normTimeFinal, meta.invitation_id || null)
+                : (await getBookableSlotsForDateIso(isoRaw, null, null, false)).includes(normTimeFinal);
+            if (!allowed) {
                 console.warn(
                     `${logPrefix}finalizePaidCheckoutSession: slot not bookable ${isoRaw} ${normTimeFinal}`
                 );
@@ -3530,11 +3566,16 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             console.log(
                 '⏰ Checkout session expired (…' + stripeSessionIdSuffixForLog(expiredSession.id) + ')'
             );
-            // If this was an invitation, release the slot by cancelling the invitation.
+            // Stripe Checkout sessions last at most 24h. Invitation payment links
+            // stay valid until the consultation day, so do not cancel the invite
+            // unless that day has already passed.
             if (usePersistentDb && expiredSession.metadata && expiredSession.metadata.invitation_id) {
                 try {
-                    await db.cancelInvitation(expiredSession.metadata.invitation_id);
-                    console.log(`   ↩️  Invitation ${expiredSession.metadata.invitation_id} released (expired)`);
+                    const inv = await db.findInvitationById(expiredSession.metadata.invitation_id);
+                    if (inv && inv.status === 'pending' && isInvitationPaymentDeadlinePassed(inv)) {
+                        await db.cancelInvitation(inv.id);
+                        console.log(`   ↩️  Invitation ${inv.id} released (consultation day passed)`);
+                    }
                 } catch (e) { /* ignore */ }
             }
             break;
@@ -3794,6 +3835,47 @@ app.get('/marcar.html', (req, res) => {
 
 app.get('/book-consultation', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'book.html'), 'Error loading booking page');
+});
+
+app.get('/invite/:token', async (req, res) => {
+    const token = String(req.params.token || '').trim();
+    if (!/^[a-f0-9]{32,128}$/i.test(token) || !usePersistentDb) {
+        return sendHtmlNoCacheString(res, renderInviteStatusHtml({ kind: 'missing' }), 404);
+    }
+    try {
+        const invitation = await db.findInvitationByToken(token);
+        if (!invitation) {
+            return sendHtmlNoCacheString(res, renderInviteStatusHtml({ kind: 'missing' }), 404);
+        }
+        const locale = invitation.locale || 'pt';
+        if (invitation.status === 'paid') {
+            return res.redirect(302, `${getBaseUrl(req)}/patient-portal?email=${encodeURIComponent(invitation.patientEmail)}`);
+        }
+        if (invitation.status !== 'pending') {
+            return sendHtmlNoCacheString(res, renderInviteStatusHtml({ kind: 'cancelled', locale }), 410);
+        }
+        if (isInvitationPaymentDeadlinePassed(invitation)) {
+            if (stripe && invitation.stripeSessionId) {
+                try { await stripe.checkout.sessions.expire(invitation.stripeSessionId); } catch (e) { /* ignore */ }
+            }
+            try { await db.cancelInvitation(invitation.id); } catch (e) { /* ignore */ }
+            return sendHtmlNoCacheString(res, renderInviteStatusHtml({ kind: 'expired', locale }), 410);
+        }
+        if (!isStripeConfigured) {
+            return sendHtmlNoCacheString(res, renderInviteStatusHtml({ kind: 'error', locale }), 503);
+        }
+        const { session } = await getOrCreateInvitationCheckout(invitation, getBaseUrl(req));
+        if (session && session.status === 'complete') {
+            return res.redirect(302, `${getBaseUrl(req)}/book-consultation?success=true&session_id=${encodeURIComponent(session.id)}`);
+        }
+        if (!session || !session.url) {
+            return sendHtmlNoCacheString(res, renderInviteStatusHtml({ kind: 'error', locale }), 500);
+        }
+        return res.redirect(303, session.url);
+    } catch (err) {
+        console.error('GET /invite/:token:', err.message);
+        return sendHtmlNoCacheString(res, renderInviteStatusHtml({ kind: 'error' }), 500);
+    }
 });
 
 app.get('/faq', (req, res) => {
@@ -6493,7 +6575,7 @@ app.post('/api/admin/patients/schedule-next', requireAuth, express.json(), async
             let emailDelivered = true;
             let emailError = null;
             try {
-                await sendInvitationEmail(invitation, session.url, baseUrl);
+                await sendInvitationEmail(invitation, invitationPayUrl(invitation, baseUrl), baseUrl);
             } catch (e) {
                 emailDelivered = false;
                 emailError = e.message || 'Email failed';
@@ -6799,7 +6881,7 @@ const INVITATION_EMAIL_I18N = {
         serviceLabel: 'Tipo de consulta',
         amountLabel: 'Valor',
         payNow: 'Pagar e confirmar consulta',
-        payNote: 'O pagamento é processado em segurança pela Stripe. A consulta só fica confirmada após o pagamento.',
+        payNote: 'O pagamento é processado em segurança pela Stripe. Este link é válido até ao dia da consulta. A consulta só fica confirmada após o pagamento.',
         accessTitle: 'Como aceder à consulta',
         accessBody: 'À hora marcada, abra o link abaixo para entrar na sala de vídeo. Não precisa de instalar nada.',
         joinVideoButton: 'Abrir sala de vídeo',
@@ -6814,7 +6896,7 @@ const INVITATION_EMAIL_I18N = {
         serviceLabel: 'Consultation',
         amountLabel: 'Amount',
         payNow: 'Pay & confirm appointment',
-        payNote: 'Payment is processed securely by Stripe. The appointment is confirmed only once payment is complete.',
+        payNote: 'Payment is processed securely by Stripe. This link remains valid until the day of your consultation. The appointment is confirmed only once payment is complete.',
         accessTitle: 'How to access the consultation',
         accessBody: 'At your scheduled time, open the link below to join the video room. No software required.',
         joinVideoButton: 'Open video room',
@@ -6829,7 +6911,7 @@ const INVITATION_EMAIL_I18N = {
         serviceLabel: 'Tipo de consulta',
         amountLabel: 'Importe',
         payNow: 'Pagar y confirmar cita',
-        payNote: 'El pago se procesa de forma segura mediante Stripe. La cita queda confirmada tras el pago.',
+        payNote: 'El pago se procesa de forma segura mediante Stripe. Este enlace es válido hasta el día de la consulta. La cita queda confirmada tras el pago.',
         accessTitle: 'Cómo acceder a la consulta',
         accessBody: 'A la hora acordada, abra el enlace para entrar en la sala de vídeo. No necesita instalar nada.',
         joinVideoButton: 'Abrir sala de vídeo',
@@ -6947,6 +7029,138 @@ function invitationServiceLabel(service, locale) {
     return SERVICE_LABELS[k] || k || 'Consultation';
 }
 
+function addDaysToDateIso(dateIso, days) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateIso || ''));
+    if (!m) return null;
+    const utc = Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]) + Number(days || 0));
+    const d = new Date(utc);
+    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
+}
+
+/** Payment links stay valid through the end of the consultation calendar day (clinic timezone). */
+function invitationPaymentDeadlineUtcMs(invitation) {
+    const tz = scheduleStore.timezone || 'Europe/Lisbon';
+    const nextDay = addDaysToDateIso(invitation && invitation.dateIso, 1);
+    if (!nextDay) return NaN;
+    return localWallTimeToUtcMs(nextDay, '00:00', tz);
+}
+
+function isInvitationPaymentDeadlinePassed(invitation) {
+    const deadline = invitationPaymentDeadlineUtcMs(invitation);
+    return Number.isFinite(deadline) && Date.now() >= deadline;
+}
+
+function invitationPayUrl(invitation, baseUrl) {
+    return `${baseUrl}/invite/${encodeURIComponent(invitation.invitationToken)}`;
+}
+
+function renderInviteStatusHtml({ kind, locale }) {
+    const loc = (locale || 'pt').toLowerCase();
+    const lang = loc === 'en' || loc === 'es' ? loc : 'pt';
+    const copy = {
+        pt: {
+            missing: { title: 'Link inválido', body: 'Este link de pagamento não é válido. Se precisar de ajuda, contacte a Lon Clinic.' },
+            cancelled: { title: 'Convite cancelado', body: 'Este convite já não está activo. Contacte-nos se ainda pretender marcar a consulta.' },
+            expired: { title: 'Link expirado', body: 'O prazo de pagamento terminou no dia da consulta. Contacte a Lon Clinic para remarcar.' },
+            error: { title: 'Não foi possível abrir o pagamento', body: 'Tente novamente dentro de momentos. Se o problema continuar, contacte a Lon Clinic.' },
+            home: 'Voltar ao site'
+        },
+        en: {
+            missing: { title: 'Invalid link', body: 'This payment link is not valid. Please contact Lon Clinic if you need help.' },
+            cancelled: { title: 'Invitation cancelled', body: 'This invitation is no longer active. Contact us if you still wish to book.' },
+            expired: { title: 'Link expired', body: 'The payment window ended on the day of the consultation. Please contact Lon Clinic to reschedule.' },
+            error: { title: 'Could not open payment', body: 'Please try again in a moment. If this continues, contact Lon Clinic.' },
+            home: 'Back to the website'
+        },
+        es: {
+            missing: { title: 'Enlace no válido', body: 'Este enlace de pago no es válido. Contacte a Lon Clinic si necesita ayuda.' },
+            cancelled: { title: 'Invitación cancelada', body: 'Esta invitación ya no está activa. Contáctenos si aún desea reservar.' },
+            expired: { title: 'Enlace caducado', body: 'El plazo de pago terminó el día de la consulta. Contacte a Lon Clinic para reprogramar.' },
+            error: { title: 'No se pudo abrir el pago', body: 'Inténtelo de nuevo en unos momentos. Si continúa, contacte a Lon Clinic.' },
+            home: 'Volver al sitio'
+        }
+    }[lang];
+    const msg = copy[kind] || copy.error;
+    return `<!DOCTYPE html>
+<html lang="${lang}"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${msg.title} — Lon Clinic</title>
+<style>
+body{margin:0;font-family:Inter,system-ui,sans-serif;background:#eaf2fb;color:#0f172a;display:flex;min-height:100vh;align-items:center;justify-content:center;padding:24px}
+.card{max-width:440px;background:#fff;border-radius:16px;padding:32px 28px;box-shadow:0 12px 40px rgba(15,23,42,.08)}
+h1{margin:0 0 12px;font-size:22px}p{margin:0 0 22px;line-height:1.55;color:#334155}
+a{display:inline-block;background:#1a6641;color:#fff;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:10px}
+</style></head>
+<body><div class="card"><h1>${msg.title}</h1><p>${msg.body}</p><a href="/">${copy.home}</a></div></body></html>`;
+}
+
+function invitationStripeExpiresAtUnix(invitation) {
+    const nowSec = Math.floor(Date.now() / 1000);
+    const minExp = nowSec + 30 * 60;
+    const maxExp = nowSec + 23 * 60 * 60;
+    const deadlineMs = invitationPaymentDeadlineUtcMs(invitation);
+    const deadlineSec = Number.isFinite(deadlineMs) ? Math.floor(deadlineMs / 1000) : maxExp;
+    return Math.min(maxExp, Math.max(minExp, deadlineSec));
+}
+
+async function expireStalePendingInvitations() {
+    if (!usePersistentDb) return;
+    try {
+        const pending = await db.listPendingInvitations(500);
+        for (const inv of pending) {
+            if (!isInvitationPaymentDeadlinePassed(inv)) continue;
+            if (stripe && inv.stripeSessionId) {
+                try { await stripe.checkout.sessions.expire(inv.stripeSessionId); } catch (e) { /* ignore */ }
+            }
+            await db.cancelInvitation(inv.id);
+            console.log(`   ↩️  Invitation ${inv.id} released (consultation day passed)`);
+        }
+    } catch (err) {
+        console.error('expireStalePendingInvitations:', err.message);
+    }
+}
+
+const inviteCheckoutInFlight = new Map();
+
+async function ensureOpenInvitationStripeSession(invitation, baseUrl) {
+    if (!stripe) throw new Error('Stripe is not configured');
+    const existingId = invitation.stripeSessionId;
+    const expiresAtMs = invitation.stripeSessionExpiresAt
+        ? Date.parse(invitation.stripeSessionExpiresAt)
+        : NaN;
+    const stillFresh = Number.isFinite(expiresAtMs) && expiresAtMs - Date.now() > 2 * 60 * 1000;
+    if (existingId && stillFresh) {
+        try {
+            const existing = await stripe.checkout.sessions.retrieve(existingId);
+            if (existing && existing.status === 'complete') {
+                return { session: existing, invitation };
+            }
+            if (existing && existing.status === 'open' && existing.url) {
+                return { session: existing, invitation };
+            }
+        } catch (e) { /* mint a new session */ }
+    }
+    const session = await createInvitationStripeSession(invitation, baseUrl);
+    const updated = await db.updateInvitationStripeSession(invitation.id, {
+        id: session.id,
+        url: session.url,
+        expiresAt: session.expires_at ? new Date(session.expires_at * 1000) : null
+    });
+    return { session, invitation: updated || invitation };
+}
+
+async function getOrCreateInvitationCheckout(invitation, baseUrl) {
+    const id = invitation.id;
+    if (inviteCheckoutInFlight.has(id)) {
+        return inviteCheckoutInFlight.get(id);
+    }
+    const pending = ensureOpenInvitationStripeSession(invitation, baseUrl).finally(() => {
+        inviteCheckoutInFlight.delete(id);
+    });
+    inviteCheckoutInFlight.set(id, pending);
+    return pending;
+}
+
 async function createInvitationStripeSession(invitation, baseUrl) {
     if (!stripe) throw new Error('Stripe is not configured');
     const travellerCount = Math.max(1, Math.min(4, parseInt(invitation.travellerCount, 10) || 1));
@@ -6988,8 +7202,8 @@ async function createInvitationStripeSession(invitation, baseUrl) {
         metadata,
         success_url: `${baseUrl}/book-consultation?success=true&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${baseUrl}/book-consultation?cancelled=true&invitation=${invitation.id}`,
-        // Patient has up to 23h to pay before the link expires (Stripe max is 24h).
-        expires_at: Math.floor(Date.now() / 1000) + (23 * 60 * 60)
+        // Stripe Checkout max lifetime is 24h; our /invite/:token link is re-minted until the consultation day.
+        expires_at: invitationStripeExpiresAtUnix(invitation)
     });
     return session;
 }
@@ -7162,20 +7376,9 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
         }
 
         // Admin can book any free slot regardless of smart grouping.
-        // 07:00–08:30 are always offerable on an open day so morning invites
-        // work even if the stored weekly template still started at 09:00.
-        const available = await getBookableSlotsForDateIso(dateIso, null, null, true);
-        const mins = timeToMinutes(normTime);
-        const isEarlyMorning = mins != null && mins >= 7 * 60 && mins < 9 * 60 && mins % 30 === 0;
-        let allowed = available.includes(normTime);
-        if (!allowed && isEarlyMorning) {
-            const daySchedule = getEffectiveDaySchedule(dateIso);
-            const blocked = scheduleStore.blockedTimeSlots.some(
-                (b) => b.date === dateIso && b.time === normTime
-            );
-            const taken = await db.isSlotTakenByOther(dateIso, normTime, null);
-            allowed = !!(daySchedule.enabled && !blocked && !taken);
-        }
+        // 07:00–08:30 and 21:00 are always offerable on an open day so
+        // morning/evening invites work even if weekly hours end at 17:00.
+        const allowed = await isInvitationSlotAllowed(dateIso, normTime, null);
         if (!allowed) {
             return res.status(409).json({ error: 'That time slot is no longer available.' });
         }
@@ -7263,7 +7466,7 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
         });
 
         try {
-            await sendInvitationEmail(invitation, session.url, baseUrl);
+            await sendInvitationEmail(invitation, invitationPayUrl(invitation, baseUrl), baseUrl);
             console.log(`   ✉️  Invitation sent to ${invitation.patientEmail} for ${invitation.dateIso} ${invitation.time}`);
         } catch (e) {
             emailDelivered = false;
@@ -7331,10 +7534,11 @@ app.post('/api/admin/invitations/:id/resend', requireAuth, async (req, res) => {
         if (invitation.status !== 'pending') {
             return res.status(409).json({ error: `Cannot resend (status: ${invitation.status})` });
         }
-        if (!invitation.stripeSessionUrl) {
+        if (!invitation.invitationToken) {
             return res.status(409).json({ error: 'Missing payment link' });
         }
-        await sendInvitationEmail(invitation, invitation.stripeSessionUrl, getBaseUrl(req));
+        const baseUrl = getBaseUrl(req);
+        await sendInvitationEmail(invitation, invitationPayUrl(invitation, baseUrl), baseUrl);
         res.json({ ok: true });
     } catch (err) {
         console.error('POST /api/admin/invitations/:id/resend:', err.message);
@@ -7417,7 +7621,7 @@ function getBaseUrl(req) {
         } else {
             console.log(`   ⚠️  marcar.html NOT FOUND — /marcar.html will fail until the file is deployed\n`);
         }
-        if (isEmailConfigured) {
+        if (isEmailConfigured || usePersistentDb) {
             startAppointmentReminderScheduler();
         }
     });

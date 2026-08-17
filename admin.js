@@ -1045,10 +1045,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Never show on load (CSS display:flex was overriding the hidden attribute)
     closeScheduleNextModal();
 
-    function fillTimeDatalist(datalistId, slots) {
+    function fillTimeDatalist(datalistId, slots, extraSlots) {
         const list = document.getElementById(datalistId);
         if (!list) return;
-        const merged = [...new Set(['07:00', '08:00', ...(slots || [])])].sort((a, b) => a.localeCompare(b));
+        const merged = [...new Set(['07:00', '08:00', ...(extraSlots || []), ...(slots || [])])].sort((a, b) => a.localeCompare(b));
         list.innerHTML = merged.map((t) => `<option value="${t}"></option>`).join('');
     }
 
@@ -2049,28 +2049,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         const date = inviteDate.value;
         const hint = document.getElementById('inviteTimeHint');
         if (!date) {
-            fillTimeDatalist('inviteTimeSlots', []);
+            fillTimeDatalist('inviteTimeSlots', [], ['21:00']);
             inviteTime.value = '';
-            if (hint) hint.textContent = '07:00 and 08:00 are available on open weekdays.';
+            if (hint) hint.textContent = '07:00, 08:00 and 21:00 are available on open weekdays.';
             return;
         }
         try {
             const res = await fetch(`/api/admin/available-slots?date=${encodeURIComponent(date)}&allSlots=1`);
             const data = await res.json();
             const slots = data.available || [];
-            fillTimeDatalist('inviteTimeSlots', slots);
+            fillTimeDatalist('inviteTimeSlots', slots, ['21:00']);
             if (!inviteTime.value) {
                 inviteTime.value = slots.includes('07:00') ? '07:00' : (slots[0] || '07:00');
             }
             if (hint) {
                 hint.textContent = data.reason
                     ? data.reason
-                    : '07:00 and 08:00 are available on open weekdays.';
+                    : '07:00, 08:00 and 21:00 are available on open weekdays.';
             }
         } catch (err) {
             console.error('Load invite times error:', err);
-            fillTimeDatalist('inviteTimeSlots', []);
-            if (hint) hint.textContent = 'Could not load slots — you can still type 07:00 or 08:00.';
+            fillTimeDatalist('inviteTimeSlots', [], ['21:00']);
+            if (hint) hint.textContent = 'Could not load slots — you can still type 07:00, 08:00 or 21:00.';
         }
     }
 
@@ -2107,7 +2107,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     expired: 'Expired'
                 }[inv.status] || inv.status);
             })();
-            const paymentUrl = inv.stripeSessionUrl || '';
+            const paymentUrl = inv.invitationToken
+                ? `${window.location.origin}/invite/${inv.invitationToken}`
+                : (inv.stripeSessionUrl || '');
             let actions = '';
             if (inv.status === 'pending') {
                 actions = `
@@ -2269,7 +2271,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (inviteWithoutInvoice) inviteWithoutInvoice.checked = false;
                 if (inviteCustomPrice) inviteCustomPrice.disabled = false;
                 inviteTime.value = '';
-                fillTimeDatalist('inviteTimeSlots', []);
+                fillTimeDatalist('inviteTimeSlots', [], ['21:00']);
                 refreshInvitePriceUI();
                 await loadInvitations();
                 loadUpcomingConsultations();
