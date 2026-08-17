@@ -1151,6 +1151,16 @@ img {
     margin: 0;
 }
 
+.lon-trustpilot-box {
+    max-width: 240px;
+    margin: 20px auto 0;
+    min-height: 150px;
+}
+
+.lon-trustpilot-box .trustpilot-widget {
+    display: block;
+}
+
 .lon-testimonials-grid {
     display: grid;
     gap: 20px;
@@ -1226,8 +1236,66 @@ html[lang="pt-PT"] .lon-testimonial-translation-note {
 }
 
 .lon-testimonials-actions {
-    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
     margin-top: 32px;
+}
+
+.lon-trustpilot-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #191919;
+    color: #fff;
+    border: 1px solid #191919;
+    border-radius: 999px;
+    padding: 12px 22px;
+    text-decoration: none;
+    font-family: var(--lon-font);
+    font-weight: 600;
+    font-size: 0.92rem;
+    letter-spacing: 0.01em;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.lon-trustpilot-btn:hover {
+    background: #000;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+.lon-trustpilot-btn:focus-visible {
+    outline: 2px solid #00b67a;
+    outline-offset: 2px;
+}
+
+.lon-trustpilot-star {
+    width: 18px;
+    height: 18px;
+    color: #00b67a;
+    flex-shrink: 0;
+}
+
+.lon-review-trustpilot-alt {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin: -8px 0 18px;
+    line-height: 1.5;
+}
+
+.lon-review-trustpilot-alt a {
+    color: #00b67a;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.lon-review-trustpilot-alt a:hover {
+    text-decoration: underline;
 }
 
 .lon-leave-review {

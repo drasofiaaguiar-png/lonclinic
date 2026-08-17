@@ -25,6 +25,24 @@
         }
     };
 
+    var TRUSTPILOT_EVALUATE = {
+        pt: 'https://pt.trustpilot.com/evaluate/lonclinic.com',
+        en: 'https://www.trustpilot.com/evaluate/lonclinic.com',
+        es: 'https://es.trustpilot.com/evaluate/lonclinic.com'
+    };
+
+    var TRUSTPILOT_PROFILE = {
+        pt: 'https://pt.trustpilot.com/review/lonclinic.com',
+        en: 'https://www.trustpilot.com/review/lonclinic.com',
+        es: 'https://es.trustpilot.com/review/lonclinic.com'
+    };
+
+    var TRUSTPILOT_LOCALES = {
+        pt: 'pt-PT',
+        en: 'en-GB',
+        es: 'es-ES'
+    };
+
     function detectLocale() {
         if (window.CLINIC_I18N && typeof window.CLINIC_I18N.getLang === 'function') {
             return window.CLINIC_I18N.getLang();
@@ -266,13 +284,48 @@
         });
     }
 
-    window.REVIEWS_LANG_CHANGED = function () {
+    function syncTrustpilotLinks(locale) {
+        const loc = locale || detectLocale();
+        const href = TRUSTPILOT_EVALUATE[loc] || TRUSTPILOT_EVALUATE.en;
+        document.querySelectorAll('[data-trustpilot-evaluate]').forEach(function (el) {
+            if (el.closest('.lang-section')) return;
+            el.setAttribute('href', href);
+        });
+    }
+
+    function reloadVisibleTrustpilotWidgets() {
+        if (!window.Trustpilot || typeof window.Trustpilot.loadFromElement !== 'function') return;
+        document.querySelectorAll('.trustpilot-widget').forEach(function (el) {
+            const section = el.closest('.lang-section');
+            if (section && !section.classList.contains('active')) return;
+            window.Trustpilot.loadFromElement(el, true);
+        });
+    }
+
+    function syncTrustpilotWidgets(locale) {
+        const loc = locale || detectLocale();
+        const tpLocale = TRUSTPILOT_LOCALES[loc] || TRUSTPILOT_LOCALES.en;
+        const profileHref = TRUSTPILOT_PROFILE[loc] || TRUSTPILOT_PROFILE.en;
+        document.querySelectorAll('.trustpilot-widget').forEach(function (el) {
+            if (el.closest('.lang-section')) return;
+            el.setAttribute('data-locale', tpLocale);
+            const fallback = el.querySelector('a');
+            if (fallback) fallback.setAttribute('href', profileHref);
+        });
+        reloadVisibleTrustpilotWidgets();
+    }
+
+    window.REVIEWS_LANG_CHANGED = function (locale) {
         refreshDynamicReviews();
+        syncTrustpilotLinks(locale);
+        syncTrustpilotWidgets(locale);
     };
 
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('[data-reviews-list]').forEach(loadPublicReviews);
         document.querySelectorAll('.lon-review-form').forEach(bindForm);
         bindReviewToggles();
+        syncTrustpilotLinks();
+        syncTrustpilotWidgets();
     });
 })();

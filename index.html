@@ -44,11 +44,12 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="preload" as="image" href="/image/image2.webp" fetchpriority="high">
 
-    <link rel="stylesheet" href="landing.css?v=20260621b">
+    <link rel="stylesheet" href="landing.css?v=20260817b">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+    <script type="text/javascript" src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
 
     <script type="application/ld+json">
     {
@@ -64,7 +65,8 @@
       "email": "info@lonclinic.com",
       "priceRange": "€€",
       "medicalSpecialty": ["Telemedicina", "Medicina Geral", "Medicina de Família"],
-      "areaServed": { "@type": "Place", "name": "Europa" }
+      "areaServed": { "@type": "Place", "name": "Europa" },
+      "sameAs": ["https://www.trustpilot.com/review/lonclinic.com"]
     }
     </script>
     <script type="application/ld+json">
@@ -390,6 +392,11 @@
                 <div class="lon-testimonials-header">
                     <p class="lon-testimonials-kicker">Testemunhos</p>
                     <h2 id="lon-testimonials-title">O que dizem os nossos pacientes</h2>
+                    <div class="lon-trustpilot-box">
+                        <div class="trustpilot-widget" data-locale="pt-PT" data-template-id="53aa8807dec7e10d38f59f32" data-businessunit-id="6a82c9d6167853a114929304" data-style-height="150px" data-style-width="100%" data-theme="light">
+                            <a href="https://pt.trustpilot.com/review/lonclinic.com" target="_blank" rel="noopener">Trustpilot</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="lon-testimonials-grid" id="lonPublicReviews" data-reviews-list data-card-class="lon-testimonial-card">
                     <blockquote class="lon-testimonial-card lon-testimonial-seed">
@@ -403,6 +410,12 @@
                     </blockquote>
                 </div>
                 <div class="lon-testimonials-actions">
+                    <a class="lon-trustpilot-btn" href="https://pt.trustpilot.com/evaluate/lonclinic.com" target="_blank" rel="noopener noreferrer" data-trustpilot-evaluate>
+                        <svg class="lon-trustpilot-star" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path fill="currentColor" d="M12 1.7l2.83 8.7H24l-7.42 5.39 2.83 8.71L12 19.11l-7.41 5.39 2.83-8.71L0 10.4h9.17L12 1.7z"></path>
+                        </svg>
+                        <span class="lon-trustpilot-label">Avaliar no Trustpilot</span>
+                    </a>
                     <button type="button" class="lon-btn lon-btn-soft lon-review-toggle" aria-expanded="false" aria-controls="lonReviewPanel" data-review-panel="lonReviewPanel">
                         Deixe a sua opinião
                     </button>
@@ -415,6 +428,10 @@
                 <div class="lon-review-form-wrap" id="lonReviewPanel">
                     <h3 class="lon-review-form-title" id="lon-review-form-title">Deixe a sua opinião</h3>
                     <p class="lon-review-form-desc">Partilhe a sua experiência connosco. Pode optar por torná-la visível para outros visitantes.</p>
+                    <p class="lon-review-trustpilot-alt">
+                        <span class="lon-review-trustpilot-alt-text">Prefere uma avaliação independente?</span>
+                        <a href="https://pt.trustpilot.com/evaluate/lonclinic.com" target="_blank" rel="noopener noreferrer" data-trustpilot-evaluate><span class="lon-trustpilot-label">Avaliar no Trustpilot</span></a>
+                    </p>
                     <form class="lon-review-form" id="lonReviewForm" data-reviews-grid="lonPublicReviews" data-locale="pt">
                         <div class="lon-review-form-row">
                             <label for="review-author">Nome <span class="lon-review-optional">(opcional)</span></label>
@@ -538,6 +555,7 @@
                     <a href="/info.html?page=seguranca-dados">Segurança dos dados</a>
                     <a href="/info.html?page=acessibilidade">Acessibilidade</a>
                     <a href="/info.html?page=reclamacoes">Reclamações</a>
+                    <a href="https://pt.trustpilot.com/evaluate/lonclinic.com" target="_blank" rel="noopener noreferrer" data-trustpilot-evaluate><span class="lon-trustpilot-label">Avaliar no Trustpilot</span></a>
                 </div>
             </div>
 
@@ -558,9 +576,9 @@
 
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contact on WhatsApp">💬</a>
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
-    <script src="/lon-analytics.js?v=20260816b" defer></script>
+    <script src="/lon-analytics.js?v=20260817a" defer></script>
     <script src="i18n.js" defer></script>
-    <script src="reviews.js?v=20260621b" defer></script>
+    <script src="reviews.js?v=20260817b" defer></script>
     <script src="landing.js?v=20260816b" defer></script>
 </body>
 </html>
