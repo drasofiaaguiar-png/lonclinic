@@ -1,19 +1,234 @@
-User-agent: *
+# Lon Clinic — crawlers de pesquisa e de IA são bem-vindos.
+#
+# Se este ficheiro aparecer no browser com "# BEGIN Cloudflare Managed content"
+# e Disallow para GPTBot / ClaudeBot / Google-Extended, a Cloudflare está a
+# substituir o robots.txt da origem. Desligar no dashboard:
+#   Security → Bots → AI Crawl Control → Allow (não bloquear Search/Agent)
+#   Security → Bots → robots.txt → Disable managed robots.txt
+
+User-agent: GPTBot
 Allow: /
-
-# Sitemap
-Sitemap: https://lonclinic.com/sitemap.xml
-
-# Keep private areas out of search results
 Disallow: /admin
 Disallow: /doctors
 Disallow: /clinic-portal
 Disallow: /patient-portal
 Disallow: /api/
 
-# Allow all search engines
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: Claude-User
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: anthropic-ai
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: Claude-Web
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: GoogleOther
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: Applebot
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: Amazonbot
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: Bytespider
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: CCBot
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: meta-externalagent
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: Meta-ExternalAgent
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: FacebookBot
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: cohere-ai
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: YouBot
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: DuckAssistBot
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
 User-agent: Googlebot
 Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
 
 User-agent: Bingbot
 Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: DuckDuckBot
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: Slurp
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=yes, use=full
+Allow: /
+Disallow: /admin
+Disallow: /doctors
+Disallow: /clinic-portal
+Disallow: /patient-portal
+Disallow: /api/
+
+Sitemap: https://lonclinic.com/sitemap.xml

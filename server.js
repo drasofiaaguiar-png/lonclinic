@@ -32,6 +32,8 @@ const fs = require('fs');
 const crypto = require('crypto');
 const guide = require('./guide');
 const burnoutPages = require('./burnout-pages');
+const seo = require('./seo');
+const { hydrateInfoHtml, NOINDEX_PAGES: INFO_NOINDEX_PAGES } = require('./info-ssr');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 const session = require('express-session');
@@ -1934,81 +1936,363 @@ async function sendContactInquiryEmail(data) {
     }
 }
 
+const BURNOUT_INSTRUMENT_BLURB =
+    'O Índice de Burnout é um questionário de rastreio baseado no Copenhagen Burnout Inventory (CBI). Ajuda a identificar sinais de desgaste pessoal e relacionado com o trabalho; a dimensão de sinais no corpo é complementar e não faz parte do CBI original. Não é um diagnóstico e não substitui uma avaliação clínica.';
+
+const BURNOUT_SUB_BLURB =
+    'Se já procuras acompanhamento continuado, a Subscrição Anti-Burnout inclui 4 consultas por mês — 216€/mês (54€/sessão, 10% face à avulsa), cancelável.';
+
+function normalizeBurnoutBand(band, global) {
+    const raw = String(band || '').trim().toUpperCase();
+    if (raw === 'BAIXO' || raw === 'LIGEIRO' || raw === 'MODERADO' || raw === 'ELEVADO') return raw;
+    const n = Number(global);
+    if (!Number.isFinite(n)) return 'MODERADO';
+    if (n <= 24) return 'BAIXO';
+    if (n <= 49) return 'LIGEIRO';
+    if (n <= 74) return 'MODERADO';
+    return 'ELEVADO';
+}
+
+function burnoutDominantInsight(personal, work, body) {
+    const scores = [
+        { key: 'personal', n: Number(personal) || 0 },
+        { key: 'work', n: Number(work) || 0 },
+        { key: 'body', n: Number(body) || 0 }
+    ];
+    const max = Math.max(scores[0].n, scores[1].n, scores[2].n);
+    const min = Math.min(scores[0].n, scores[1].n, scores[2].n);
+    const leaders = scores.filter((s) => max - s.n <= 4);
+    if (max - min <= 8 || leaders.length >= 2) {
+        return {
+            key: 'balanced',
+            text: 'O que mais se destaca no teu resultado: os resultados das diferentes dimensões estão relativamente equilibrados, sugerindo que o desgaste não está concentrado numa única área.'
+        };
+    }
+    const leader = scores.reduce((a, b) => (b.n > a.n ? b : a));
+    if (leader.key === 'personal') {
+        return {
+            key: 'personal',
+            text: 'O que mais se destaca no teu resultado: a dimensão de burnout pessoal apresenta a pontuação mais elevada. Isto pode refletir um nível importante de desgaste geral e dificuldade de recuperação, independentemente de uma situação profissional específica.'
+        };
+    }
+    if (leader.key === 'work') {
+        return {
+            key: 'work',
+            text: 'O que mais se destaca no teu resultado: a dimensão relacionada com o trabalho apresenta a pontuação mais elevada. Isto pode indicar que as exigências, ritmo ou contexto profissional estão a ter um peso importante no teu nível atual de desgaste.'
+        };
+    }
+    return {
+        key: 'body',
+        text: 'O que mais se destaca no teu resultado: a dimensão relacionada com sinais no corpo apresenta a pontuação mais elevada. Isto significa que, além do desgaste emocional ou relacionado com o trabalho, existem mais sinais físicos associados ao teu estado atual.'
+    };
+}
+
+function burnoutQuizBandCopy(band) {
+    const copy = {
+        BAIXO: {
+            subject: 'O teu resultado no Índice de Burnout',
+            levelLabel: 'nível baixo de sinais de desgaste',
+            accent: '#1f4a3e',
+            showProgram: false,
+            interpret: [
+                'O teu resultado global apresenta poucos sinais de desgaste neste momento. Ainda assim, as diferentes dimensões podem revelar áreas que merecem atenção, sobretudo se tens sentido alterações recentes na tua energia, motivação, sono ou capacidade de desligar do trabalho.'
+            ],
+            nextTitle: 'Se te sentes bem',
+            next: [
+                'Não há necessariamente necessidade de procurar acompanhamento por causa deste resultado. Podes simplesmente usá-lo como um ponto de referência e repetir a avaliação no futuro se sentires alterações.',
+                'Se, apesar do resultado, tens sintomas que te preocupam ou que estão a interferir com o teu dia a dia, podes falar com um profissional.'
+            ],
+            ctaTitle: 'Queres perceber melhor o teu resultado?',
+            ctaLead: '',
+            emergency: ''
+        },
+        LIGEIRO: {
+            subject: 'O teu resultado mostra sinais ligeiros de desgaste',
+            levelLabel: 'nível ligeiro de sinais de desgaste',
+            accent: '#3d7a68',
+            showProgram: false,
+            interpret: [
+                'O teu resultado sugere sinais ligeiros de desgaste. Ainda não aponta para um quadro instalado, mas algumas dimensões da tua energia podem já estar a pedir atenção.',
+                'Isto não significa, por si só, que tenhas burnout. Nesta fase, mudanças relativamente simples — descanso, limites e recuperação — tendem a ter mais efeito.'
+            ],
+            nextTitle: 'O que podes fazer agora',
+            next: [
+                'Se te sentes bem, podes usar este resultado como um ponto de referência e observar como evolui nas próximas semanas.',
+                'Se estes sinais persistirem, aumentarem ou já te preocuparem, uma avaliação profissional pode ajudar a perceber o que está a acontecer.'
+            ],
+            ctaTitle: 'Queres perceber melhor o teu resultado?',
+            ctaLead: '',
+            emergency: ''
+        },
+        MODERADO: {
+            subject: 'O teu resultado sugere sinais de desgaste moderado',
+            levelLabel: 'nível moderado de sinais de desgaste',
+            accent: '#c4744a',
+            showProgram: true,
+            interpret: [
+                'O teu resultado sugere um nível moderado de desgaste. As dimensões com resultados mais elevados podem indicar áreas em que o teu corpo e a tua mente estão a ter mais dificuldade em recuperar das exigências do dia a dia.',
+                'Isto não significa, por si só, que tenhas burnout clínico. É importante considerar também há quanto tempo te sentes assim, a intensidade dos sintomas e o impacto que estão a ter no teu sono, trabalho, relações e vida pessoal.'
+            ],
+            nextTitle: 'O que podes fazer agora',
+            next: [
+                'Se estes sinais são recentes e ligeiros, pode ser útil observar como evoluem nas próximas semanas, dando atenção ao descanso, sono, recuperação e limites entre trabalho e vida pessoal.',
+                'Se o desgaste tem sido persistente, está a aumentar ou já está a interferir com o teu dia a dia, uma avaliação profissional pode ajudar a perceber o que está a acontecer e quais os próximos passos mais adequados.'
+            ],
+            ctaTitle: 'Queres perceber melhor o teu resultado?',
+            ctaLead: 'Uma Consulta Especializada em Burnout — 60€ permite explorar os teus sintomas, o teu contexto pessoal e profissional e definir contigo os próximos passos.',
+            emergency: ''
+        },
+        ELEVADO: {
+            subject: 'O teu resultado merece atenção',
+            levelLabel: 'nível elevado de sinais de desgaste',
+            accent: '#b4532a',
+            showProgram: true,
+            interpret: [
+                'O teu resultado apresenta um nível elevado de sinais de desgaste. As pontuações nas diferentes dimensões sugerem que pode estar a existir uma dificuldade significativa em recuperar das exigências do dia a dia.',
+                'Este resultado não permite diagnosticar burnout por si só. No entanto, quando estes sinais são persistentes ou estão a interferir com o sono, energia, concentração, trabalho, relações ou vida pessoal, é importante não os ignorar.'
+            ],
+            nextTitle: 'O próximo passo',
+            next: [
+                'Neste nível de resultado, recomendamos considerar uma avaliação profissional para perceber a origem e a intensidade destes sintomas e determinar que tipo de acompanhamento poderá ser mais adequado.'
+            ],
+            ctaTitle: 'Consulta Especializada em Burnout — 60€',
+            ctaLead: 'Na consulta, podemos explorar o teu resultado, os sintomas que tens sentido e o impacto que estão a ter na tua vida, ajudando a definir os próximos passos.',
+            emergency: 'Se estiveres a passar por sofrimento intenso ou sentires que não estás seguro/a, procura ajuda médica urgente: 112 · SNS 24 808 24 24 24 · SOS Voz Amiga 213 544 545.'
+        }
+    };
+    return copy[band] || copy.MODERADO;
+}
+
+function burnoutEmailParagraphs(texts) {
+    return texts
+        .filter(Boolean)
+        .map((t) => `<p style="margin:0 0 14px;font-size:15px;line-height:1.6;color:#3d4a44;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">${escapeHtml(t)}</p>`)
+        .join('');
+}
+
+function burnoutEmailButton(href, label, primary) {
+    const bg = primary ? '#255235' : '#ffffff';
+    const color = primary ? '#ffffff' : '#255235';
+    const border = primary ? '1px solid #1a3d22' : '1.5px solid #255235';
+    return `<table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 0 10px;">
+<tr>
+<td align="left" style="border-radius:10px;background:${bg};">
+<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background:${bg};border:${border};color:${color};font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;padding:14px 22px;border-radius:10px;">${escapeHtml(label)}</a>
+</td>
+</tr>
+</table>`;
+}
+
+function burnoutDimBar(label, value, fill) {
+    const n = Number(value);
+    const pct = Number.isFinite(n) ? Math.max(0, Math.min(100, Math.round(n))) : 0;
+    const display = Number.isFinite(n) ? String(Math.round(n)) : '—';
+    const barWidth = pct < 3 && pct > 0 ? 3 : pct;
+    return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0 0 14px;">
+<tr>
+<td style="font-size:13px;color:#5c6d64;padding:0 0 6px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">${escapeHtml(label)}</td>
+<td style="font-size:13px;font-weight:600;color:#1c2a24;text-align:right;padding:0 0 6px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">${display}</td>
+</tr>
+<tr>
+<td colspan="2" style="background:#e8eee9;border-radius:6px;padding:0;line-height:8px;font-size:0;">
+${barWidth > 0 ? `<table role="presentation" width="${barWidth}%" cellspacing="0" cellpadding="0"><tr><td style="background:${fill};height:8px;border-radius:6px;font-size:0;line-height:8px;">&nbsp;</td></tr></table>` : `&nbsp;`}
+</td>
+</tr>
+</table>`;
+}
+
+function burnoutBandVisual(band, copy) {
+    const map = {
+        BAIXO: { bg: '#e8f0ea', fg: '#255235' },
+        LIGEIRO: { bg: '#e7f0ec', fg: '#3d7a68' },
+        MODERADO: { bg: '#f8eee6', fg: '#c4744a' },
+        ELEVADO: { bg: '#f6e8e4', fg: '#a4442a' }
+    };
+    return map[band] || { bg: copy.accent, fg: copy.accent };
+}
+
 function buildBurnoutQuizEmails(data) {
     const scores = data.scores || {};
-    const band = String(data.band || '').trim() || '—';
-    const global = Number.isFinite(scores.global) ? scores.global : '—';
-    const personal = Number.isFinite(scores.personal) ? scores.personal : '—';
-    const work = Number.isFinite(scores.work) ? scores.work : '—';
-    const body = Number.isFinite(scores.body) ? scores.body : '—';
+    const globalNum = Number(scores.global);
+    const personalNum = Number(scores.personal);
+    const workNum = Number(scores.work);
+    const bodyNum = Number(scores.body);
+    const global = Number.isFinite(globalNum) ? Math.round(globalNum) : '—';
+    const personal = Number.isFinite(personalNum) ? Math.round(personalNum) : '—';
+    const work = Number.isFinite(workNum) ? Math.round(workNum) : '—';
+    const body = Number.isFinite(bodyNum) ? Math.round(bodyNum) : '—';
+    const band = normalizeBurnoutBand(data.band, globalNum);
+    const copy = burnoutQuizBandCopy(band);
+    const visual = burnoutBandVisual(band, copy);
+    const dominant = burnoutDominantInsight(personalNum, workNum, bodyNum);
     const bookUrl = `${PUBLIC_SITE_URL}/marcar/burnout?ref=burnout-quiz-email`;
-    const subUrl = `${PUBLIC_SITE_URL}/marcar/burnout-mensal?ref=burnout-quiz-email`;
+    const programUrl = `${PUBLIC_SITE_URL}/marcar/burnout-mensal?ref=burnout-quiz-email`;
+    const siteUrl = PUBLIC_SITE_URL;
+    const font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
+    const barFill = copy.accent;
 
     const clinicSubject = `Teste burnout: ${band} (${global}/100) — ${data.email}`;
     const clinicText = [
         'Novo resultado — Índice de Burnout (Lon Clinic)',
         '',
         `Email: ${data.email}`,
-        `Índice global: ${global}/100 (${band})`,
+        `Índice global: ${global}/100 (${band} — ${copy.levelLabel})`,
         `Pessoal: ${personal} · Trabalho: ${work} · Corpo: ${body}`,
+        `Dimensão dominante: ${dominant.key}`,
         '',
-        `Subscrição Anti-Burnout: ${subUrl}`,
-        `Consulta especializada: ${bookUrl}`
+        `Consulta especializada: ${bookUrl}`,
+        `Subscrição Anti-Burnout: ${programUrl}`
     ].join('\n');
 
-    const clinicHtml = `<!DOCTYPE html><html lang="pt"><body style="font-family:system-ui,sans-serif;line-height:1.5;color:#22382f">
-<h2 style="margin:0 0 12px">Teste burnout — novo resultado</h2>
-<p><strong>Email:</strong> ${escapeHtml(data.email)}</p>
-<p><strong>Índice global:</strong> ${global}/100 · <strong>${escapeHtml(band)}</strong></p>
-<ul style="margin:8px 0 16px;padding-left:20px">
-<li>Burnout pessoal: ${personal}</li>
-<li>Burnout no trabalho: ${work}</li>
-<li>Sinais no corpo: ${body}</li>
-</ul>
-<p><a href="${subUrl}">Subscrição Anti-Burnout</a> · <a href="${bookUrl}">Consulta especializada</a></p>
+    const clinicHtml = `<!DOCTYPE html><html lang="pt"><body style="font-family:${font};line-height:1.5;color:#1c2a24;background:#f3f1ec;padding:24px">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#ffffff;border-radius:16px;padding:28px">
+<tr><td>
+<p style="margin:0 0 4px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#5c6d64">Novo resultado</p>
+<h2 style="margin:0 0 16px;font-size:20px">Índice de Burnout</h2>
+<p style="margin:0 0 8px"><strong>Email:</strong> ${escapeHtml(data.email)}</p>
+<p style="margin:0 0 16px"><strong>Índice global:</strong> ${global}/100 · <span style="color:${visual.fg};font-weight:600">${escapeHtml(band)}</span></p>
+${burnoutDimBar('Burnout pessoal', personal, barFill)}
+${burnoutDimBar('Burnout no trabalho', work, barFill)}
+${burnoutDimBar('Sinais no corpo', body, barFill)}
+<p style="font-size:14px;color:#3d4a44">${escapeHtml(dominant.text)}</p>
+<p style="margin:20px 0 0"><a href="${escapeHtml(bookUrl)}" style="color:#255235">Consulta 60€</a> · <a href="${escapeHtml(programUrl)}" style="color:#255235">Subscrição 216€/mês</a></p>
+</td></tr></table>
 </body></html>`;
 
-    const userSubject = 'O teu resultado — Índice de Burnout | Lon Clinic';
-    const userText = [
+    const userTextParts = [
+        'Olá,',
+        '',
         'Obrigada por completares o Índice de Burnout da Lon Clinic.',
         '',
-        `Índice global: ${global}/100 (${band})`,
+        'O teu resultado',
+        '',
+        `Índice global: ${global}/100 — ${copy.levelLabel}`,
         `Burnout pessoal: ${personal}`,
         `Burnout no trabalho: ${work}`,
         `Sinais no corpo: ${body}`,
         '',
-        'Este teste é informativo e não substitui avaliação clínica.',
+        ...copy.interpret,
         '',
-        'Próximo passo recomendado:',
+        dominant.text,
         '',
-        'Consulta Especializada em Burnout — 75€:',
-        bookUrl,
+        'O que é este instrumento?',
         '',
-        'Subscrição Anti-Burnout (psicologia + consulta médica) — 50€/semana:',
-        subUrl,
+        BURNOUT_INSTRUMENT_BLURB,
         '',
-        'Lon Clinic — lonclinic.com'
-    ].join('\n');
+        copy.nextTitle,
+        '',
+        ...copy.next
+    ];
+    if (copy.ctaTitle) {
+        userTextParts.push('', copy.ctaTitle);
+    }
+    if (copy.ctaLead) {
+        userTextParts.push('', copy.ctaLead);
+    }
+    userTextParts.push('', 'Marcar Consulta Especializada — 60€:', bookUrl);
+    if (copy.showProgram) {
+        userTextParts.push(
+            '',
+            BURNOUT_SUB_BLURB,
+            '',
+            'Conhecer a Subscrição Anti-Burnout — 216€/mês:',
+            programUrl
+        );
+    }
+    if (copy.emergency) {
+        userTextParts.push('', copy.emergency);
+    }
+    userTextParts.push('', 'Lon Clinic', 'lonclinic.com');
+    const userText = userTextParts.join('\n');
 
-    const userHtml = `<!DOCTYPE html><html lang="pt"><body style="font-family:system-ui,sans-serif;line-height:1.55;color:#22382f;max-width:520px">
-<p style="margin:0 0 16px">Obrigada por completares o <strong>Índice de Burnout</strong>.</p>
-<p style="margin:0 0 8px;font-size:28px;font-weight:600">${global}<span style="font-size:14px;color:#6e7b72"> /100</span></p>
-<p style="margin:0 0 20px;color:#c4744a;font-weight:600;letter-spacing:.08em">${escapeHtml(band)}</p>
-<table style="width:100%;border-collapse:collapse;margin:0 0 24px;font-size:14px">
-<tr><td style="padding:6px 0;color:#6e7b72">Burnout pessoal</td><td style="text-align:right">${personal}</td></tr>
-<tr><td style="padding:6px 0;color:#6e7b72">Burnout no trabalho</td><td style="text-align:right">${work}</td></tr>
-<tr><td style="padding:6px 0;color:#6e7b72">Sinais no corpo</td><td style="text-align:right">${body}</td></tr>
+    const userHtml = `<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeHtml(copy.subject)}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f3f1ec;font-family:${font};">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f3f1ec;padding:32px 16px;">
+<tr>
+<td align="center">
+<table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;width:100%;">
+
+<tr>
+<td style="text-align:center;padding:0 0 28px;">
+<p style="margin:0;font-size:22px;font-weight:700;color:#1c2a24;letter-spacing:-0.02em;">LON Clinic</p>
+<p style="margin:6px 0 0;font-size:11px;color:#7a8a82;text-transform:uppercase;letter-spacing:0.16em;">Índice de Burnout</p>
+</td>
+</tr>
+
+<tr>
+<td style="background:#ffffff;border-radius:18px;padding:36px 32px 32px;box-shadow:0 8px 28px rgba(28,42,36,0.06);">
+
+<p style="margin:0 0 6px;font-size:15px;color:#1c2a24;">Olá,</p>
+<p style="margin:0 0 28px;font-size:15px;line-height:1.6;color:#3d4a44;">Obrigada por completares o <strong style="color:#1c2a24">Índice de Burnout</strong> da Lon Clinic.</p>
+
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:0 0 28px;">
+<tr>
+<td style="background:${visual.bg};border-radius:14px;padding:28px 24px;text-align:center;">
+<p style="margin:0 0 4px;font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:${visual.fg};">O teu resultado</p>
+<p style="margin:0 0 8px;font-size:48px;font-weight:700;letter-spacing:-0.04em;line-height:1;color:#1c2a24;">${global}<span style="font-size:16px;font-weight:500;color:#5c6d64;"> /100</span></p>
+<p style="margin:0;display:inline-block;background:#ffffff;color:${visual.fg};font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:6px 12px;border-radius:999px;">${escapeHtml(copy.levelLabel)}</p>
+</td>
+</tr>
 </table>
-<p style="font-size:13px;color:#6e7b72;margin:0 0 20px">Este teste é informativo e não substitui avaliação por um profissional de saúde.</p>
-<p style="margin:0 0 8px;font-size:14px;font-weight:600;color:#22382f">Próximo passo</p>
-<p style="margin:0 0 12px"><a href="${bookUrl}" style="display:inline-block;background:#1f4a3e;color:#fff;text-decoration:none;padding:14px 20px;border-radius:12px;font-weight:600;min-width:200px">Consulta Especializada em Burnout · 75€</a></p>
-<p style="margin:0 0 24px"><a href="${subUrl}" style="display:inline-block;border:1.5px solid #1f4a3e;color:#1f4a3e;text-decoration:none;padding:14px 20px;border-radius:12px;font-weight:600;min-width:200px">Subscrição Anti-Burnout · 50€/semana</a></p>
-<p style="margin:24px 0 0;font-size:12px;color:#6e7b72">Lon Clinic · lonclinic.com</p>
-</body></html>`;
+
+${burnoutDimBar('Burnout pessoal', personal, barFill)}
+${burnoutDimBar('Burnout no trabalho', work, barFill)}
+${burnoutDimBar('Sinais no corpo', body, barFill)}
+
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:8px 0 24px;">
+<tr>
+<td style="border-left:3px solid ${visual.fg};background:#f7f8f6;padding:14px 16px;border-radius:0 10px 10px 0;">
+<p style="margin:0;font-size:14px;line-height:1.6;color:#3d4a44;">${escapeHtml(dominant.text)}</p>
+</td>
+</tr>
+</table>
+
+${burnoutEmailParagraphs(copy.interpret)}
+
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:8px 0 24px;">
+<tr>
+<td style="background:#f7f8f6;border-radius:12px;padding:16px 18px;">
+<p style="margin:0 0 6px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#5c6d64;">O que é este instrumento?</p>
+<p style="margin:0;font-size:13px;line-height:1.55;color:#5c6d64;">${escapeHtml(BURNOUT_INSTRUMENT_BLURB)}</p>
+</td>
+</tr>
+</table>
+
+<p style="margin:0 0 10px;font-size:16px;font-weight:700;color:#1c2a24;">${escapeHtml(copy.nextTitle)}</p>
+${burnoutEmailParagraphs(copy.next)}
+
+<p style="margin:18px 0 8px;font-size:16px;font-weight:700;color:#1c2a24;">${escapeHtml(copy.ctaTitle)}</p>
+${copy.ctaLead ? `<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#3d4a44;">${escapeHtml(copy.ctaLead)}</p>` : ''}
+${burnoutEmailButton(bookUrl, 'Marcar Consulta Especializada — 60€', true)}
+${copy.showProgram ? `<p style="margin:16px 0 12px;font-size:14px;line-height:1.6;color:#3d4a44;">${escapeHtml(BURNOUT_SUB_BLURB)}</p>${burnoutEmailButton(programUrl, 'Conhecer a Subscrição Anti-Burnout — 216€/mês', false)}` : ''}
+${copy.emergency ? `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:20px 0 0;"><tr><td style="background:#f6e8e4;border-radius:10px;padding:14px 16px;"><p style="margin:0;font-size:13px;line-height:1.55;color:#6b3a2e;">${escapeHtml(copy.emergency)}</p></td></tr></table>` : ''}
+
+</td>
+</tr>
+
+<tr>
+<td style="padding:28px 8px 8px;text-align:center;">
+<p style="margin:0 0 4px;font-size:12px;color:#7a8a82;">Lon Clinic</p>
+<p style="margin:0;font-size:12px;"><a href="${escapeHtml(siteUrl)}" style="color:#7a8a82;text-decoration:none;">lonclinic.com</a></p>
+</td>
+</tr>
+
+</table>
+</td>
+</tr>
+</table>
+</body>
+</html>`;
 
     return {
         clinic: { subject: clinicSubject, text: clinicText, html: clinicHtml },
-        user: { subject: userSubject, text: userText, html: userHtml }
+        user: { subject: copy.subject, text: userText, html: userHtml }
     };
 }
 
@@ -2500,7 +2784,7 @@ async function sendReminderEmail(data) {
     }
 }
 
-const PUBLIC_SITE_URL = process.env.PUBLIC_SITE_URL || 'https://www.lonclinic.com';
+const PUBLIC_SITE_URL = process.env.PUBLIC_SITE_URL || seo.SITE_ORIGIN;
 
 function trustpilotEvaluateUrl(locale) {
     const k = normalizePatientLocale(locale);
@@ -4057,22 +4341,21 @@ app.get('/admin', (req, res) => {
 });
 
 app.get('/info.html', (req, res) => {
-    const noIndexPages = new Set([
-        'termos-condicoes',
-        'politica-privacidade',
-        'cookies',
-        'politica-nao-discriminacao',
-        'livro-reclamacoes',
-        'reclamacoes'
-    ]);
     const page = String(req.query.page || '').toLowerCase();
     if (page === 'perguntas-frequentes') {
         return res.redirect(301, '/faq');
     }
-    if (noIndexPages.has(page)) {
+    if (INFO_NOINDEX_PAGES.has(page)) {
         res.setHeader('X-Robots-Tag', 'noindex, follow, noarchive');
     }
-    sendHtmlNoCache(res, path.join(__dirname, 'info.html'), 'Error loading info page');
+    const filePath = path.join(__dirname, 'info.html');
+    fs.readFile(filePath, 'utf8', (err, html) => {
+        if (err) {
+            console.error('❌ Error reading info.html:', err.message);
+            return res.status(500).send('Error loading info page');
+        }
+        sendHtmlNoCacheString(res, hydrateInfoHtml(html, page, seo.originOf(PUBLIC_SITE_URL)));
+    });
 });
 
 // ─── Doctors portal aliases ───
@@ -4131,19 +4414,28 @@ app.get('/doctors.html', (req, res) => {
 
 // ─── Sitemap and Robots ───
 app.get('/sitemap.xml', (req, res) => {
-    res.sendFile(path.join(__dirname, 'sitemap.xml'), {
-        headers: {
-            'Content-Type': 'application/xml'
-        }
-    });
+    try {
+        const xml = seo.buildSitemapXml(PUBLIC_SITE_URL);
+        res.set({
+            'Content-Type': 'application/xml; charset=utf-8',
+            'Cache-Control': 'public, max-age=3600, must-revalidate',
+            'CDN-Cache-Control': 'public, max-age=600'
+        });
+        res.send(xml);
+    } catch (err) {
+        console.error('❌ sitemap.xml:', err.message || err);
+        res.status(500).type('text').send('Sitemap unavailable');
+    }
 });
 
 app.get('/robots.txt', (req, res) => {
-    res.sendFile(path.join(__dirname, 'robots.txt'), {
-        headers: {
-            'Content-Type': 'text/plain'
-        }
+    res.set({
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'public, max-age=300, must-revalidate',
+        'CDN-Cache-Control': 'no-store',
+        'Cloudflare-CDN-Cache-Control': 'no-store'
     });
+    res.send(seo.robotsTxt());
 });
 
 // Block raw file access to Guide source files (content is server-rendered at /blog).
@@ -5389,7 +5681,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
 
         const isSubscription = isStripeSubscriptionService(service);
         const productDescription = isSubscription
-            ? `${description} · Subscrição semanal (psicologia + consulta médica) · cancelável`
+            ? `${description} · Subscrição mensal · 4 consultas (54€/sessão, −10%) · cancelável`
             : service === 'burnout_programa'
               ? `${description} · Programa 8 sessões com relatório final e CBI antes/depois`
               : description;
@@ -5403,7 +5695,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
                     images: []
                 },
                 unit_amount: priceAmount,
-                ...(isSubscription ? { recurring: { interval: 'week' } } : {})
+                ...(isSubscription ? { recurring: { interval: 'month' } } : {})
             },
             quantity: 1
         };

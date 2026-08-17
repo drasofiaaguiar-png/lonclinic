@@ -72,11 +72,11 @@
             },
             burnout_mensal: {
                 label: 'Anti-Burnout Subscription',
-                duration: 'Psychology + medical consultation',
+                duration: '60 min · 4 sessions/month',
                 bullets: [
-                    'Psychology and medical consultation included.',
-                    'Ongoing weekly follow-up.',
-                    'Weekly subscription — cancel anytime.',
+                    '4 anti-burnout consultations per month (€54/session — 10% off single price).',
+                    'Cancelable monthly subscription.',
+                    'Same 60-minute clinical protocol as the single consultation.',
                     'Ideal for gradual recovery with regular follow-up.'
                 ]
             },
@@ -167,11 +167,11 @@
             },
             burnout_mensal: {
                 label: 'Suscripción Anti-Burnout',
-                duration: 'Psicología + consulta médica',
+                duration: '60 min · 4 consultas/mes',
                 bullets: [
-                    'Psicología y consulta médica incluidas.',
-                    'Seguimiento semanal continuo.',
-                    'Suscripción semanal cancelable en cualquier momento.',
+                    '4 consultas anti-burnout al mes (54 €/sesión — 10% menos que suelta).',
+                    'Suscripción mensual cancelable en cualquier momento.',
+                    'Consultas de 60 min con el mismo protocolo clínico que la suelta.',
                     'Ideal para recuperación gradual con seguimiento regular.'
                 ]
             },
@@ -233,7 +233,7 @@
             tipo: 'burnout',
             badge: 'Avulsa',
             title: 'Consulta especializada',
-            price: '€75',
+            price: '€60',
             unit: 'por sessão',
             note: '60 min · consulta médica',
             featured: false
@@ -242,16 +242,16 @@
             tipo: 'burnout_mensal',
             badge: 'Semanal',
             title: 'Subscrição Anti-Burnout',
-            price: '€50',
-            unit: '/semana',
-            note: 'Psicologia + consulta médica',
+            price: '€216',
+            unit: '/mês',
+            note: '4 consultas · 54€/sessão',
             featured: true
         },
         {
             tipo: 'burnout_programa',
             badge: 'Programa',
             title: 'Programa completo',
-            price: '€450',
+            price: '€490',
             unit: '8 sessões',
             note: 'CBI + relatório final escrito',
             featured: false
@@ -333,8 +333,8 @@
         },
         burnout: {
             label: 'Consulta Especializada em Burnout',
-            price: '€75',
-            cents: 7500,
+            price: '€60',
+            cents: 6000,
             duration: '60 min',
             serviceKey: 'burnout',
             bullets: [
@@ -345,22 +345,22 @@
         },
         burnout_mensal: {
             label: 'Subscrição Anti-Burnout',
-            price: '€50',
-            priceNote: '/semana',
-            cents: 5000,
-            duration: 'Psicologia + consulta médica',
+            price: '€216',
+            priceNote: '/mês',
+            cents: 21600,
+            duration: '4 consultas · 60 min',
             serviceKey: 'burnout_mensal',
             bullets: [
-                'Psicologia e consulta médica incluídas.',
-                'Acompanhamento semanal contínuo.',
-                'Subscrição semanal cancelável a qualquer momento.',
+                '4 consultas anti-burnout por mês (54€/sessão — 10% face à avulsa).',
+                'Subscrição mensal cancelável a qualquer momento.',
+                'Mesmo protocolo clínico de 60 minutos da consulta avulsa.',
                 'Ideal para recuperação gradual com acompanhamento regular.'
             ]
         },
         burnout_programa: {
             label: 'Programa Anti-Burnout',
-            price: '€450',
-            cents: 45000,
+            price: '€490',
+            cents: 49000,
             duration: '8 sessões · 60 min',
             serviceKey: 'burnout_programa',
             bullets: [

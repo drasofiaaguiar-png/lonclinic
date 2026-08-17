@@ -7,6 +7,7 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
+const { organizationJsonLd, jsonLdScript } = require('./seo');
 
 const GUIDE_DIR = path.join(__dirname, 'data', 'guide');
 const MANIFEST_PATH = path.join(GUIDE_DIR, 'manifest.json');
@@ -102,7 +103,11 @@ function layoutGuidePage(opts) {
     const safeTitle = escapeHtml(title);
     const safeDesc = escapeHtml(description);
     const guideNavAttrs = navCurrent === 'guide' ? ' href="/blog" aria-current="page"' : ' href="/blog"';
-    const ldJson = jsonLd ? `<script type="application/ld+json">\n${JSON.stringify(jsonLd, null, 2)}\n</script>\n` : '';
+    const graph = Array.isArray(jsonLd) ? jsonLd : (jsonLd ? [jsonLd] : []);
+    if (!robots || !/^noindex/i.test(robots)) {
+        graph.push(organizationJsonLd(origin));
+    }
+    const ldJson = jsonLdScript(graph);
 
     return `<!DOCTYPE html>
 <html lang="pt-PT">
@@ -141,7 +146,9 @@ function layoutGuidePage(opts) {
     <link rel="stylesheet" href="/landing.css?v=20260418k">
     <link rel="stylesheet" href="/guide.css?v=20260606a">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
-    ${ldJson}</head>
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+    ${ldJson}
+</head>
 <body class="lon-landing guide-body${pageClass ? ` ${escapeHtml(pageClass)}` : ''}">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
     <header class="lon-nav" id="lonNav">
@@ -347,27 +354,20 @@ function renderBlogArticle(origin, slug) {
 
     const jsonLd = {
         '@context': 'https://schema.org',
-        '@type': 'BlogPosting',
+        '@type': ['Article', 'MedicalWebPage'],
         headline: title,
+        name: title,
         description,
         datePublished: datePub || undefined,
         dateModified: dateMod || undefined,
+        inLanguage: 'pt-PT',
+        url: `${o}/blog/${encodeURIComponent(slug)}`,
         mainEntityOfPage: {
             '@type': 'WebPage',
             '@id': `${o}/blog/${encodeURIComponent(slug)}`
         },
-        author: {
-            '@type': 'Organization',
-            name: 'Lon Clinic'
-        },
-        publisher: {
-            '@type': 'Organization',
-            name: 'Lon Clinic',
-            logo: {
-                '@type': 'ImageObject',
-                url: `${o}/image/image2.webp`
-            }
-        },
+        author: { '@id': `${o}/#organization` },
+        publisher: { '@id': `${o}/#organization` },
         image: og
     };
 

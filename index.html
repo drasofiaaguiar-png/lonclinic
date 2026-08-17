@@ -51,10 +51,14 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <script type="text/javascript" src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
 
+    <noscript>
+      <style>.lon-service-card { display: flex !important; }</style>
+    </noscript>
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "MedicalClinic",
+      "@type": ["MedicalClinic", "MedicalOrganization", "Organization"],
+      "@id": "https://lonclinic.com/#organization",
       "name": "Lon Clinic",
       "url": "https://lonclinic.com",
       "logo": "https://lonclinic.com/image/image2.webp",
@@ -291,7 +295,7 @@
                             <span class="lon-service-chip">Burn Out</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta Especializada em Burnout</h3>
-                                <p class="lon-service-price">€75 · 60 min</p>
+                                <p class="lon-service-price">€60 · 60 min</p>
                                 <a href="/marcar/burnout" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
                                 <p class="lon-service-extra"><a href="/burnout/teste">Fazer teste de burnout →</a> · <a href="/burnout">Centro burnout →</a></p>
                             </div>
@@ -300,13 +304,13 @@
 
                     <article class="lon-service-card" data-category="mental" id="lon-service-burnout-sub">
                         <div class="lon-service-image-wrap">
-                            <img src="image/image1_files/Marylebone_Large_Desktop.jpg" alt="Subscrição anti-burnout com psicologia e consulta médica">
+                            <img src="image/image1_files/Marylebone_Large_Desktop.jpg" alt="Subscrição mensal anti-burnout">
                             <span class="lon-service-chip">Subscrição</span>
                             <div class="lon-service-glass">
                                 <h3>Subscrição Anti-Burnout</h3>
-                                <p class="lon-service-price">€50 /semana</p>
+                                <p class="lon-service-price">€216 /mês</p>
                                 <a href="/marcar/burnout-mensal" class="lon-btn lon-btn-soft lon-btn-sm">Subscrever</a>
-                                <p class="lon-service-extra"><a href="/clinica-anti-burnout">Psicologia + consulta médica →</a></p>
+                                <p class="lon-service-extra"><a href="/clinica-anti-burnout">4 consultas/mês · 54€/sessão →</a></p>
                             </div>
                         </div>
                     </article>

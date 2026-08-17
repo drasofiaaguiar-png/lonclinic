@@ -105,7 +105,7 @@
         { s: '#lon-service-burnout .lon-service-extra a', en: 'Take the burnout test →', pt: 'Fazer teste de burnout →', es: 'Hacer test de burnout →' },
         { s: '#lon-service-burnout-sub .lon-service-chip', en: 'Subscription', pt: 'Subscrição', es: 'Suscripción' },
         { s: '#lon-service-burnout-sub h3', en: 'Anti-Burnout Subscription', pt: 'Subscrição Anti-Burnout', es: 'Suscripción Anti-Burnout' },
-        { s: '#lon-service-burnout-sub .lon-service-extra a', en: 'Psychology + medical consultation →', pt: 'Psicologia + consulta médica →', es: 'Psicología + consulta médica →' },
+        { s: '#lon-service-burnout-sub .lon-service-extra a', en: '4 consultations/month · €54/session →', pt: '4 consultas/mês · 54€/sessão →', es: '4 consultas/mes · 54€/sesión →' },
 
         /* ── How it works ── */
         { s: '#como-funciona-title', en: 'How to get started', pt: 'Como começar', es: 'Cómo comenzar' },

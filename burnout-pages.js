@@ -9,6 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
+const { organizationJsonLd } = require('./seo');
 
 const BURNOUT_DIR = path.join(__dirname, 'data', 'burnout');
 const MANIFEST_PATH = path.join(BURNOUT_DIR, 'manifest.json');
@@ -174,6 +175,9 @@ function layoutBurnoutPage(opts) {
     const safeDesc = escapeHtml(description);
     const og = escapeHtml(ogImage || `${origin}/image/image2.webp`);
     const graph = Array.isArray(jsonLdExtra) ? jsonLdExtra : (jsonLdExtra ? [jsonLdExtra] : []);
+    if (!robots || !/^noindex/i.test(robots)) {
+        graph.push(organizationJsonLd(origin));
+    }
     const ldScripts = graph
         .map((block) => `<script type="application/ld+json">\n${JSON.stringify(block, null, 2)}\n</script>`)
         .join('\n');
@@ -453,7 +457,8 @@ function renderSpoke(origin, slug) {
     const jsonLd = [
         {
             '@context': 'https://schema.org',
-            '@type': 'MedicalWebPage',
+            '@type': ['Article', 'MedicalWebPage'],
+            headline: title,
             name: title,
             description,
             url: `${o}${canonicalPath}`,
@@ -461,7 +466,9 @@ function renderSpoke(origin, slug) {
             dateModified: dateMod || undefined,
             inLanguage: 'pt-PT',
             isPartOf: { '@type': 'WebSite', name: 'Lon Clinic', url: o },
-            about: { '@type': 'MedicalCondition', name: 'Burnout' }
+            about: { '@type': 'MedicalCondition', name: 'Burnout' },
+            author: { '@id': `${o}/#organization` },
+            publisher: { '@id': `${o}/#organization` }
         },
         {
             '@context': 'https://schema.org',
