@@ -39,23 +39,104 @@ const BOT_UA = /bot|crawl|spider|slurp|facebookexternalhit|preview|lighthouse|he
 const memoryEvents = [];
 const MEMORY_CAP = 8000;
 
-const PROBE_PATH =
-    /(?:^|\/)(?:wp-admin|wp-login|wp-content|wp-includes|wp-json|wp_mail|wordpress|xmlrpc|phpmyadmin|adminer|graphql|cgi-bin|vendor\/phpunit|phpunit|eval-stdin|actuator|server-status|debug\/pprof|boaform|manager\/html|solr|jenkins|telescope|horizon|_profiler|phpinfo|cgi-bin)(?:\/|$|\.)|\/(?:\.env(?:\.|$)|\.git(?:\/|$)|\.svn|\/\.hg|\/\.bzr|\/\.github(?:\/|$)|\.htaccess|\.htpasswd|\.aws|id_rsa|authorized_keys|web\.config|docker-compose|credentials\.json|config\.php|install\.php|setup\.php)|(?:^|\/)(?:etc\/passwd|var\/www|website\/)|\/\.well-known\/(?!acme-challenge(?:\/|$))|\.(?:php|asp|aspx|jsp|cgi|cfm|ini|sql|bak|old|swp)$/i;
+const PROBE_PREFIXES = [
+    '/wp-',
+    '/wordpress',
+    '/xmlrpc',
+    '/phpmyadmin',
+    '/adminer',
+    '/graphql',
+    '/cgi-bin',
+    '/vendor/phpunit',
+    '/phpunit',
+    '/actuator',
+    '/server-status',
+    '/.env',
+    '/.git',
+    '/.svn',
+    '/.github',
+    '/.htaccess',
+    '/.htpasswd',
+    '/.aws',
+    '/var/task',
+    '/var/www',
+    '/etc/',
+    '/proc/',
+    '/waku',
+    '/workspaces',
+    '/webhook-waiting',
+    '/webhook-test',
+    '/webhook-proxy',
+    '/node_modules',
+    '/_next',
+    '/__next',
+    '/debug/',
+    '/swagger',
+    '/api-docs',
+    '/telescope',
+    '/horizon',
+    '/phpinfo',
+    '/boaform',
+    '/manager/html',
+    '/solr',
+    '/jenkins',
+    '/website/',
+    '/login',
+    '/signin'
+];
 
-function isProbePath(pagePath) {
-    if (!pagePath) return false;
+const PROBE_FILE =
+    /\.(?:php|asp|aspx|jsp|cgi|cfm|ini|sql|bak|old|swp|toml|ya?ml|mjs|cjs)$/i;
+const PROBE_CONFIG =
+    /serverless|nuxt\.config|next\.config|netlify\.toml|vercel\.json|fly\.toml|render\.ya?ml|railway\.toml|wrangler\.toml|docker-compose|package\.json|tsconfig|vite\.config|webpack\.config|astro\.config|tailwind\.config|nuxt\.config/i;
+
+function normalizeAnalyticsPath(pagePath) {
+    if (!pagePath) return '';
     let s = String(pagePath).split('?')[0];
     try {
         s = decodeURIComponent(s);
     } catch {
         /* keep */
     }
-    s = s.toLowerCase();
+    return s.toLowerCase();
+}
+
+function isProbePath(pagePath) {
+    const s = normalizeAnalyticsPath(pagePath);
     if (!s || s === '/') return false;
     if (s.startsWith('/.well-known/acme-challenge')) return false;
-    if (PROBE_PATH.test(s)) return true;
-    if (/(?:^|\/)\.[^./]+/.test(s) && !s.startsWith('/.well-known/acme-challenge')) return true;
+    if (s.includes('*')) return true;
+    if (PROBE_PREFIXES.some((p) => s === p || s.startsWith(p))) return true;
+    if (PROBE_FILE.test(s) || PROBE_CONFIG.test(s)) return true;
+    if (/\.(?:ts|js)$/i.test(s) && /config/i.test(s)) return true;
+    if (/(?:^|\/)\.[^./]/.test(s) && !s.startsWith('/.well-known/acme-challenge')) return true;
     return false;
+}
+
+function burstSessionIds(rows, { minPaths = 4, windowMs = 1000 } = {}) {
+    const bySession = new Map();
+    for (const r of rows || []) {
+        if (!r.sessionId || r.name !== 'page_view') continue;
+        const t = new Date(r.occurredAt).getTime();
+        if (!Number.isFinite(t)) continue;
+        if (!bySession.has(r.sessionId)) bySession.set(r.sessionId, []);
+        bySession.get(r.sessionId).push({ t, path: r.pagePath || '' });
+    }
+    const bad = new Set();
+    for (const [sid, evs] of bySession) {
+        evs.sort((a, b) => a.t - b.t);
+        let i = 0;
+        for (let j = 0; j < evs.length; j++) {
+            while (evs[j].t - evs[i].t > windowMs) i += 1;
+            const paths = new Set();
+            for (let k = i; k <= j; k++) paths.add(evs[k].path);
+            if (paths.size >= minPaths) {
+                bad.add(sid);
+                break;
+            }
+        }
+    }
+    return bad;
 }
 
 function isBot(ua) {
@@ -292,8 +373,10 @@ function filterAudience(rows, audience) {
 function buildOverview(rows, liveRows, bookingStats, range, audience) {
     const view = ['public', 'staff', 'all'].includes(audience) ? audience : 'public';
     const tagged = (rows || []).map((r) => ({ ...r, staff: isStaffRow(r) }));
-    const probeRows = tagged.filter((r) => isProbePath(r.pagePath));
-    const human = tagged.filter((r) => !isProbePath(r.pagePath));
+    const burstIds = burstSessionIds(tagged);
+    const isNoise = (r) => isProbePath(r.pagePath) || (r.sessionId && burstIds.has(r.sessionId));
+    const probeRows = tagged.filter(isNoise);
+    const human = tagged.filter((r) => !isNoise(r));
     const used = filterAudience(human, view);
     const humanSessions = new Set(human.map((r) => r.sessionId).filter(Boolean));
     const liveTagged = (liveRows || [])
@@ -400,6 +483,7 @@ module.exports = {
     ALLOWED_NAMES,
     isBot,
     isProbePath,
+    burstSessionIds,
     parseUa,
     channelOf,
     cleanProps,

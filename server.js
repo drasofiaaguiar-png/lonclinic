@@ -214,7 +214,7 @@ app.use(
 );
 
 const ANALYTICS_SNIPPET =
-    '\n<script src="/lon-analytics.js?v=20260816b" defer></script>\n' +
+    '\n<script src="/lon-analytics.js?v=20260817a" defer></script>\n' +
     '<noscript><img src="/api/a.gif?n=page_view" alt="" width="1" height="1"></noscript>\n';
 function injectAnalyticsHtml(html) {
     if (!html || typeof html !== 'string') return html;
@@ -412,6 +412,7 @@ async function emitServerAnalytics(name, extra, req) {
             visitor_id: x.visitorId || ids.visitorId || null,
             session_id: x.sessionId || ids.sessionId || null,
             page_path: x.pagePath || (req && req.path) || null,
+            landing_path: x.landingPath || null,
             referrer: x.referrer || (req && req.get && req.get('referer')) || '',
             utm_source: x.utmSource || '',
             utm_medium: x.utmMedium || '',
@@ -3724,13 +3725,16 @@ app.use((req, res, next) => {
     if (analyticsNet.isBot(req.headers['user-agent'])) return next();
     const ids = ensureAnalyticsCookies(req, res);
     const q = req.query || {};
+    const referer = req.get('referer') || '';
+    const fromOwnSite = /lonclinic\.com|localhost/i.test(referer);
     emitServerAnalytics(
         'page_view',
         {
             visitorId: ids.visitorId,
             sessionId: ids.sessionId,
             pagePath: String(p).slice(0, 240),
-            referrer: req.get('referer') || '',
+            landingPath: fromOwnSite ? null : String(p).slice(0, 240),
+            referrer: referer,
             utmSource: q.utm_source,
             utmMedium: q.utm_medium,
             utmCampaign: q.utm_campaign,
@@ -6850,6 +6854,28 @@ app.get('/api/admin/available-slots', async (req, res) => {
             : null;
         const allSlots = req.query.allSlots === '1' || req.query.allSlots === 'true';
         const available = await getBookableSlotsForDateIso(dateStr, null, excludeInvitationId, allSlots);
+        const referer = req.get('referer') || '';
+        let bookingPath = '';
+        try {
+            bookingPath = new URL(referer, 'https://lonclinic.com').pathname || '';
+        } catch {
+            bookingPath = '';
+        }
+        if (
+            !allSlots &&
+            !isStaffRequest(req) &&
+            /^\/(marcar|book-consultation|book\.html)/i.test(bookingPath)
+        ) {
+            emitServerAnalytics(
+                'date_select',
+                {
+                    pagePath: bookingPath.slice(0, 240),
+                    referrer: referer,
+                    props: { via: 'slots-api', surface: 'booking' }
+                },
+                req
+            ).catch(() => {});
+        }
         res.json({
             available,
             date,

@@ -201,6 +201,9 @@
 
     function track(name, props) {
         enqueue(envelope(name, props));
+        if (/^(page_view|page_engaged|cta_click|date_select|slot_select|checkout_start|form_submit|whatsapp_click)$/.test(name)) {
+            flush();
+        }
         if (typeof gtag === 'function' && name !== 'page_view' && name !== 'heartbeat' && name !== 'scroll_depth') {
             try {
                 gtag('event', name, cleanProps(props));
