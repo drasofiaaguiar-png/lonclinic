@@ -140,6 +140,7 @@ function rowToBooking(row) {
         reminderSent: row.reminder_sent === true,
         reminder1hSent: row.reminder_1h_sent === true,
         followupSent: row.followup_sent === true,
+        consultationCompleted: row.consultation_completed === true,
         professional: row.professional || '',
         markedPaid: row.marked_paid === true,
         invoiceSent: row.invoice_sent === true,
@@ -224,6 +225,7 @@ async function initSchema(p) {
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS marked_paid BOOLEAN NOT NULL DEFAULT FALSE`);
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS invoice_sent BOOLEAN NOT NULL DEFAULT FALSE`);
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS review_requested BOOLEAN NOT NULL DEFAULT FALSE`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS consultation_completed BOOLEAN NOT NULL DEFAULT FALSE`);
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS visit_frequency VARCHAR(64)`);
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS patient_type VARCHAR(32)`);
     // Backfill Stripe (and complimentary) rows that were never admin-edited for tracking fields.
@@ -1014,12 +1016,14 @@ async function findBookingsNeeding1hReminder() {
     return r.rows.map(rowToBooking);
 }
 
-/** Post-consultation follow-up — server filters by end time + 1h. */
+/** Post-consultation review email — only after staff mark the visit completed. */
 async function findBookingsNeedingFollowup() {
     const p = getPool();
     const r = await p.query(
         `SELECT * FROM bookings
-         WHERE cancelled = FALSE AND followup_sent = FALSE
+         WHERE cancelled = FALSE
+           AND followup_sent = FALSE
+           AND consultation_completed = TRUE
          ORDER BY created_at DESC`
     );
     return r.rows.map(rowToBooking);
@@ -1047,6 +1051,15 @@ async function markFollowupSent(bookingRef) {
     const p = getPool();
     const r = await p.query(
         `UPDATE bookings SET followup_sent = TRUE WHERE booking_ref = $1 AND followup_sent = FALSE`,
+        [bookingRef]
+    );
+    return r.rowCount > 0;
+}
+
+async function markReviewRequested(bookingRef) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE bookings SET review_requested = TRUE WHERE booking_ref = $1 AND review_requested = FALSE`,
         [bookingRef]
     );
     return r.rowCount > 0;
@@ -1199,8 +1212,9 @@ async function insertBooking(booking) {
             amount, currency, payment_id, stripe_customer_id,
             date_iso, patient_locale, patient_phone,
             cancelled, reschedule_count, reminder_sent, reminder_1h_sent, followup_sent,
-            professional, marked_paid, invoice_sent, review_requested, visit_frequency, patient_type
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25)
+            professional, marked_paid, invoice_sent, review_requested, visit_frequency, patient_type,
+            consultation_completed
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26)
         ON CONFLICT (payment_id) DO NOTHING
         RETURNING *`,
         [
@@ -1228,7 +1242,8 @@ async function insertBooking(booking) {
             invoiceSent,
             booking.reviewRequested === true,
             booking.visitFrequency || null,
-            booking.patientType || null
+            booking.patientType || null,
+            booking.consultationCompleted === true
         ]
     );
     return r.rowCount > 0;
@@ -1253,6 +1268,7 @@ async function updateBookingAdminFields(bookingRef, fields) {
         markedPaid: 'marked_paid',
         invoiceSent: 'invoice_sent',
         reviewRequested: 'review_requested',
+        consultationCompleted: 'consultation_completed',
         patientPhone: 'patient_phone',
         visitFrequency: 'visit_frequency',
         patientType: 'patient_type'
@@ -1519,6 +1535,7 @@ module.exports = {
     markReminderSent,
     markReminder1hSent,
     markFollowupSent,
+    markReviewRequested,
     cancelBookingByRef,
     rescheduleBookingByRef,
     isSlotTakenByOther,

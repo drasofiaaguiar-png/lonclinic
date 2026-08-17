@@ -2502,6 +2502,13 @@ async function sendReminderEmail(data) {
 
 const PUBLIC_SITE_URL = process.env.PUBLIC_SITE_URL || 'https://www.lonclinic.com';
 
+function trustpilotEvaluateUrl(locale) {
+    const k = normalizePatientLocale(locale);
+    if (k === 'pt') return 'https://pt.trustpilot.com/evaluate/lonclinic.com';
+    if (k === 'es') return 'https://es.trustpilot.com/evaluate/lonclinic.com';
+    return 'https://www.trustpilot.com/evaluate/lonclinic.com';
+}
+
 const FOLLOWUP_EMAIL_I18N = {
     en: {
         htmlLang: 'en',
@@ -2510,12 +2517,16 @@ const FOLLOWUP_EMAIL_I18N = {
         body: (name) =>
             `Dear ${name}, thank you for attending your online consultation with us today. We hope the session was helpful and that you feel supported in your health journey.`,
         feedbackTitle: 'We would love your feedback',
-        feedbackBody: `Your experience matters to us. If you have a moment, please reply to this email with any comments or suggestions. You can also reach us through our website: ${PUBLIC_SITE_URL}`,
+        feedbackBody:
+            'Your experience matters to us. If you have a moment, please leave an independent review on Trustpilot — it helps other patients choose with confidence.',
+        ctaLabel: 'Review us on Trustpilot',
+        siteAlt: `You can also share your opinion on our website: ${PUBLIC_SITE_URL}/#testemunhos`,
         subject: (ref) => `Thank you — we value your feedback | ${ref}`,
         textHead: 'THANK YOU',
         textBody: (name) =>
             `Dear ${name}, thank you for attending your online consultation with Longevity Clinic. We hope it was helpful.`,
-        textFeedback: `We would love your feedback — reply to this email or visit ${PUBLIC_SITE_URL}`,
+        textFeedback: (url) =>
+            `We would love your feedback on Trustpilot:\n${url}\n\nOr on our website: ${PUBLIC_SITE_URL}/#testemunhos`,
         textFooterCopy: '© 2026 Longevity Clinic'
     },
     pt: {
@@ -2525,12 +2536,16 @@ const FOLLOWUP_EMAIL_I18N = {
         body: (name) =>
             `Exmo.(a) ${name}, obrigado por ter participado na sua consulta online connosco. Esperamos que tenha sido útil e que se sinta acompanhado na sua saúde.`,
         feedbackTitle: 'Gostaríamos de saber a sua opinião',
-        feedbackBody: `A sua experiência é importante. Se tiver um momento, responda a este email com comentários ou sugestões. Também pode contactar-nos através do nosso site: ${PUBLIC_SITE_URL}`,
+        feedbackBody:
+            'A sua experiência é importante. Se tiver um momento, deixe uma avaliação independente no Trustpilot — ajuda outros pacientes a escolherem com confiança.',
+        ctaLabel: 'Avaliar no Trustpilot',
+        siteAlt: `Também pode deixar a sua opinião no nosso site: ${PUBLIC_SITE_URL}/#testemunhos`,
         subject: (ref) => `Obrigado — a sua opinião conta | ${ref}`,
         textHead: 'OBRIGADO',
         textBody: (name) =>
             `Exmo.(a) ${name}, obrigado pela sua consulta online na Longevity Clinic.`,
-        textFeedback: `Gostaríamos de feedback — responda a este email ou visite ${PUBLIC_SITE_URL}`,
+        textFeedback: (url) =>
+            `Deixe a sua opinião no Trustpilot:\n${url}\n\nOu no nosso site: ${PUBLIC_SITE_URL}/#testemunhos`,
         textFooterCopy: '© 2026 Longevity Clinic'
     },
     es: {
@@ -2540,12 +2555,16 @@ const FOLLOWUP_EMAIL_I18N = {
         body: (name) =>
             `Estimado/a ${name}, gracias por asistir a su consulta online con nosotros. Esperamos que le haya resultado útil.`,
         feedbackTitle: 'Nos gustaría conocer su opinión',
-        feedbackBody: `Su experiencia es importante. Si puede, responda a este correo con comentarios o sugerencias. También puede contactarnos en nuestro sitio web: ${PUBLIC_SITE_URL}`,
+        feedbackBody:
+            'Su experiencia es importante. Si tiene un momento, deje una valoración independiente en Trustpilot: ayuda a otros pacientes a elegir con confianza.',
+        ctaLabel: 'Valóranos en Trustpilot',
+        siteAlt: `También puede dejar su opinión en nuestro sitio web: ${PUBLIC_SITE_URL}/#testemunhos`,
         subject: (ref) => `Gracias — valoramos su opinión | ${ref}`,
         textHead: 'GRACIAS',
         textBody: (name) =>
             `Estimado/a ${name}, gracias por su consulta online en Longevity Clinic.`,
-        textFeedback: `Nos gustaría su feedback — responda a este correo o visite ${PUBLIC_SITE_URL}`,
+        textFeedback: (url) =>
+            `Deje su opinión en Trustpilot:\n${url}\n\nO en nuestro sitio web: ${PUBLIC_SITE_URL}/#testemunhos`,
         textFooterCopy: '© 2026 Longevity Clinic'
     }
 };
@@ -2559,6 +2578,7 @@ function buildFollowupEmail(data) {
     const { patientName, bookingRef, locale: rawLocale } = data;
     const t = followupEmailStrings(rawLocale);
     const name = (patientName || 'Patient').trim();
+    const reviewUrl = trustpilotEvaluateUrl(rawLocale);
     const html = `
 <!DOCTYPE html>
 <html lang="${t.htmlLang}">
@@ -2579,7 +2599,13 @@ function buildFollowupEmail(data) {
 <p style="margin:0;font-size:18px;font-weight:700;color:#0f172a;">${bookingRef}</p>
 </div>
 <h3 style="margin:0 0 8px;font-size:16px;font-weight:600;color:#0f172a;">${t.feedbackTitle}</h3>
-<p style="margin:0;font-size:14px;color:#475569;line-height:1.6;">${t.feedbackBody}</p>
+<p style="margin:0 0 20px;font-size:14px;color:#475569;line-height:1.6;">${t.feedbackBody}</p>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:0 0 16px;">
+<tr><td align="center" style="padding:0;">
+<a href="${reviewUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background-color:#00b67a;border:1px solid #00a06c;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;padding:14px 32px;border-radius:10px;">${t.ctaLabel}</a>
+</td></tr>
+</table>
+<p style="margin:0;font-size:13px;color:#64748b;line-height:1.55;text-align:center;">${t.siteAlt}</p>
 </td></tr>
 <tr><td style="padding:32px 20px;text-align:center;">
 <p style="margin:0;font-size:11px;color:#cbd5e1;">${t.textFooterCopy}</p>
@@ -2588,7 +2614,7 @@ function buildFollowupEmail(data) {
 </td></tr>
 </table>
 </body></html>`;
-    const text = `${t.textHead} — ${bookingRef}\n\n${t.textBody(name)}\n\n${t.textFeedback}`;
+    const text = `${t.textHead} — ${bookingRef}\n\n${t.textBody(name)}\n\n${t.textFeedback(reviewUrl)}`;
     return { html, text, subject: t.subject(bookingRef) };
 }
 
@@ -2603,6 +2629,35 @@ async function sendFollowupEmail(data) {
         return true;
     } catch (err) {
         console.error('   ❌ Follow-up email failed:', err.message);
+        return false;
+    }
+}
+
+async function sendPostConsultationReviewEmail(booking) {
+    if (!booking || booking.cancelled || booking.followupSent) return false;
+    if (booking.consultationCompleted !== true) return false;
+    const sent = await sendFollowupEmail({
+        email: booking.email,
+        patientName: booking.patientName,
+        serviceLabel: serviceLabelFromCode(booking.service),
+        bookingRef: booking.bookingRef,
+        locale: booking.patientLocale || 'en'
+    });
+    if (!sent) return false;
+    try {
+        if (usePersistentDb) {
+            await db.markFollowupSent(booking.bookingRef);
+            await db.markReviewRequested(booking.bookingRef);
+        } else {
+            const row = bookingsStore.find((x) => x.bookingRef === booking.bookingRef);
+            if (row) {
+                row.followupSent = true;
+                row.reviewRequested = true;
+            }
+        }
+        return true;
+    } catch (err) {
+        console.error('   ❌ mark followup_sent:', booking.bookingRef, err.message);
         return false;
     }
 }
@@ -2985,13 +3040,10 @@ function memoryBookingsNeeding1h(tz) {
     });
 }
 
-function memoryBookingsNeedingFollowup(tz) {
-    const now = Date.now();
+function memoryBookingsNeedingFollowup() {
     return bookingsStore.filter((b) => {
         if (b.cancelled || b.followupSent) return false;
-        const endMs = getAppointmentEndUtcMs(b, tz);
-        if (!Number.isFinite(endMs)) return false;
-        return now >= endMs + 60 * 60 * 1000;
+        return b.consultationCompleted === true;
     });
 }
 
@@ -3179,7 +3231,7 @@ async function runAutomationJobs() {
         } else {
             list24 = memoryBookingsNeeding24h(tz);
             list1h = memoryBookingsNeeding1h(tz);
-            listFu = memoryBookingsNeedingFollowup(tz);
+            listFu = memoryBookingsNeedingFollowup();
         }
 
         const now = Date.now();
@@ -3194,10 +3246,7 @@ async function runAutomationJobs() {
             const ms = getAppointmentStartUtcMs(b, tz);
             return Number.isFinite(ms) && ms > now && ms <= h1;
         });
-        const winFu = listFu.filter((b) => {
-            const endMs = getAppointmentEndUtcMs(b, tz);
-            return Number.isFinite(endMs) && now >= endMs + 60 * 60 * 1000;
-        });
+        const winFu = listFu.filter((b) => b.consultationCompleted === true && !b.followupSent && !b.cancelled);
 
         if (win24.length > 0) {
             console.log(`   ⏰ 24h reminders: ${win24.length} booking(s)`);
@@ -3257,24 +3306,7 @@ async function runAutomationJobs() {
             console.log(`   ⏰ Post-consultation follow-ups: ${winFu.length} booking(s)`);
         }
         for (const b of winFu) {
-            const locale = b.patientLocale || 'en';
-            const sent = await sendFollowupEmail({
-                email: b.email,
-                patientName: b.patientName,
-                serviceLabel: serviceLabelFromCode(b.service),
-                bookingRef: b.bookingRef,
-                locale
-            });
-            if (!sent) continue;
-            try {
-                if (usePersistentDb) await db.markFollowupSent(b.bookingRef);
-                else {
-                    const row = bookingsStore.find((x) => x.bookingRef === b.bookingRef);
-                    if (row) row.followupSent = true;
-                }
-            } catch (err) {
-                console.error('   ❌ mark followup_sent:', b.bookingRef, err.message);
-            }
+            await sendPostConsultationReviewEmail(b);
         }
     } catch (err) {
         console.error('   ❌ Automation job:', err.message);
@@ -6258,6 +6290,7 @@ app.patch('/api/admin/patients/:bookingRef', requireAuth, express.json(), async 
         if (Object.prototype.hasOwnProperty.call(body, 'markedPaid')) fields.markedPaid = body.markedPaid;
         if (Object.prototype.hasOwnProperty.call(body, 'invoiceSent')) fields.invoiceSent = body.invoiceSent;
         if (Object.prototype.hasOwnProperty.call(body, 'reviewRequested')) fields.reviewRequested = body.reviewRequested;
+        if (Object.prototype.hasOwnProperty.call(body, 'consultationCompleted')) fields.consultationCompleted = body.consultationCompleted;
         if (Object.prototype.hasOwnProperty.call(body, 'patientPhone')) fields.patientPhone = body.patientPhone;
         if (Object.prototype.hasOwnProperty.call(body, 'visitFrequency')) fields.visitFrequency = body.visitFrequency;
         if (Object.prototype.hasOwnProperty.call(body, 'patientType')) fields.patientType = body.patientType;
@@ -6268,7 +6301,19 @@ app.patch('/api/admin/patients/:bookingRef', requireAuth, express.json(), async 
 
         const updated = await db.updateBookingAdminFields(bookingRef, fields);
         if (!updated) return res.status(404).json({ error: 'Booking not found' });
-        res.json({ ok: true, patient: updated });
+
+        let reviewEmailSent = false;
+        if (fields.consultationCompleted === true && !updated.followupSent) {
+            reviewEmailSent = await sendPostConsultationReviewEmail({
+                ...updated,
+                consultationCompleted: true
+            });
+        }
+
+        const patient = reviewEmailSent
+            ? { ...updated, followupSent: true, reviewRequested: true, consultationCompleted: true }
+            : updated;
+        res.json({ ok: true, patient, reviewEmailSent });
     } catch (err) {
         console.error('PATCH /api/admin/patients/:bookingRef:', err.message);
         res.status(500).json({ error: 'Failed to update patient row' });

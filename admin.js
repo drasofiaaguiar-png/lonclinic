@@ -538,6 +538,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const count = active.length || sorted.length;
             const paidN = active.filter((c) => c.markedPaid).length;
             const invoiceN = active.filter((c) => c.invoiceSent).length;
+            const completedN = active.filter((c) => c.consultationCompleted).length;
             const reviewAskN = active.filter((c) => c.reviewRequested).length;
             const professional = sorted.find((c) => c.professional)?.professional
                 || latest.professional
@@ -568,6 +569,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 reviewRating: sorted.find((c) => c.hasReviewed)?.reviewRating || null,
                 paidN,
                 invoiceN,
+                completedN,
                 reviewAskN,
                 activeCount: active.length || sorted.length,
                 primaryRef: latest.bookingRef
@@ -705,7 +707,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!adminPatientsBody) return;
         const groups = filteredPatientGroups();
         if (!groups.length) {
-            adminPatientsBody.innerHTML = `<tr><td colspan="12" class="admin-empty-list">${
+            adminPatientsBody.innerHTML = `<tr><td colspan="13" class="admin-empty-list">${
                 patientsCache.length ? 'No matches.' : 'No patients yet.'
             }</td></tr>`;
             return;
@@ -778,6 +780,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td>${professionalCell}</td>
                 <td><span class="admin-patients-frac ${g.paidN >= g.activeCount ? 'is-all' : (g.paidN ? 'is-partial' : 'is-none')}">${fractionLabel(g.paidN, g.activeCount)}</span></td>
                 <td><span class="admin-patients-frac ${g.invoiceN >= g.activeCount ? 'is-all' : (g.invoiceN ? 'is-partial' : 'is-none')}">${fractionLabel(g.invoiceN, g.activeCount)}</span></td>
+                <td><span class="admin-patients-frac ${g.completedN >= g.activeCount ? 'is-all' : (g.completedN ? 'is-partial' : 'is-none')}">${fractionLabel(g.completedN, g.activeCount)}</span></td>
                 <td><span class="admin-patients-frac ${g.reviewAskN >= g.activeCount ? 'is-all' : (g.reviewAskN ? 'is-partial' : 'is-none')}">${fractionLabel(g.reviewAskN, g.activeCount)}</span></td>
                 <td>${reviewedHtml}</td>
                 <td class="admin-patients-actions-cell">
@@ -831,6 +834,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                             </td>
                             <td class="admin-patients-check-cell">
                                 <label class="admin-patients-check">
+                                    <input type="checkbox" data-field="consultationCompleted" data-ref="${escapeHtml(c.bookingRef)}" ${c.consultationCompleted ? 'checked' : ''} ${editing ? '' : 'disabled'}>
+                                    <span>${c.consultationCompleted ? 'Yes' : 'No'}</span>
+                                </label>
+                            </td>
+                            <td class="admin-patients-check-cell">
+                                <label class="admin-patients-check">
                                     <input type="checkbox" data-field="reviewRequested" data-ref="${escapeHtml(c.bookingRef)}" ${c.reviewRequested ? 'checked' : ''} ${editing ? '' : 'disabled'}>
                                     <span>${c.reviewRequested ? 'Yes' : 'No'}</span>
                                 </label>
@@ -843,7 +852,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </tr>`;
                 }).join('');
                 detail.innerHTML = `
-                    <td colspan="12">
+                    <td colspan="13">
                         <div class="admin-patients-detail">
                             <table class="admin-patients-detail-table">
                                 <thead>
@@ -853,6 +862,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                         <th>Professional</th>
                                         <th>Paid</th>
                                         <th>Invoice sent</th>
+                                        <th>Completed</th>
                                         <th>Review asked</th>
                                         <th></th>
                                     </tr>

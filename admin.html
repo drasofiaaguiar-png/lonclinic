@@ -147,7 +147,7 @@
                     <div class="dash-section-header admin-schedule-toolbar">
                         <div>
                             <h2 class="dash-section-title">All patients</h2>
-                            <p class="dash-section-subtitle">One row per patient (merged by email). Expand to see each consultation and tick paid / invoice / review per visit.</p>
+                            <p class="dash-section-subtitle">One row per patient (merged by email). Expand a visit, tick <strong>Completed</strong> after the consultation — the Trustpilot review email is sent automatically.</p>
                         </div>
                         <div class="admin-schedule-filters">
                             <input type="search" id="patientsSearch" class="admin-input admin-patients-search" placeholder="Search name, email, ref…">
@@ -167,13 +167,14 @@
                                     <th>Professional</th>
                                     <th>Paid</th>
                                     <th>Invoice sent</th>
+                                    <th>Completed</th>
                                     <th>Review asked</th>
                                     <th>Reviewed</th>
                                     <th style="width:6.5rem;"></th>
                                 </tr>
                             </thead>
                             <tbody id="adminPatientsBody">
-                                <tr><td colspan="12" class="admin-empty-list">Loading…</td></tr>
+                                <tr><td colspan="13" class="admin-empty-list">Loading…</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -642,7 +643,7 @@
     </footer>
 
     <script src="lon-nav.js"></script>
-    <script src="admin.js?v=analytics-network-5"></script>
+    <script src="admin.js?v=consult-completed-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">
