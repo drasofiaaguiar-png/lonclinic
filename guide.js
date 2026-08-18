@@ -739,7 +739,6 @@ function magSidenavHtml() {
     const tree = magazineNavTree().map((node) => magNavNode(node, 0)).join('');
     return `<nav class="mag-sidenav" id="mag-sidenav" aria-label="Temas da revista">
         <a class="mag-sidenav-brand" href="/magazine">LON <em>Magazine</em></a>
-        <p class="mag-sidenav-kicker">Temas</p>
         <ul class="mag-nav">${tree}</ul>
     </nav>`;
 }
@@ -790,7 +789,7 @@ function layoutMagazinePage(opts) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/magazine.css?v=20260818d">
+    <link rel="stylesheet" href="/magazine.css?v=20260818e">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     ${jsonLdScript(graph)}
@@ -850,11 +849,11 @@ function renderMagazineIndex(origin) {
         ? `<section class="mag-cover" aria-label="Reportagem de capa">
         <div class="mag-cover-media" style="background-image:url('${coverImg}')" role="img" aria-label="${escapeHtml(cover.title)}"></div>
         <div class="mag-cover-copy">
-            <p class="mag-label">Capa · ${escapeHtml(magKicker(cover))}</p>
+            <p class="mag-label">${escapeHtml(magKicker(cover))}</p>
             <h1>${escapeHtml(cover.title)}</h1>
             <p class="mag-dek">${escapeHtml(cover.description || '')}</p>
-            <p class="mag-meta">${escapeHtml(magDate(cover.datePublished))} · Revisão clínica</p>
-            <a class="mag-read" href="${magHref(cover)}">Ler a reportagem</a>
+            <p class="mag-meta">${escapeHtml(magDate(cover.datePublished))}</p>
+            <a class="mag-read" href="${magHref(cover)}">Ler</a>
         </div>
     </section>`
         : '';
@@ -934,22 +933,13 @@ function renderMagazineIndex(origin) {
         <div class="mag-stage">
             <header class="mag-topbar">
                 <a href="/">LON Clinic</a>
-                <button type="button" class="mag-nav-toggle" aria-expanded="false" aria-controls="mag-sidenav">Temas</button>
+                <button type="button" class="mag-nav-toggle" aria-expanded="false" aria-controls="mag-sidenav">Menu</button>
                 <nav aria-label="Magazine">
                     <a href="/magazine" aria-current="page">Magazine</a>
                     <a href="/blog">Guides</a>
                     <a href="/marcar/saude-mental">Marcar</a>
                 </nav>
             </header>
-            <div class="mag-masthead">
-                <div class="mag-kicker-row">
-                    <span>Portugal</span>
-                    <span>Saúde · Mente · Vida</span>
-                    <span>Vol. 01</span>
-                </div>
-                <p class="mag-wordmark">LON <span>Magazine</span></p>
-                <p class="mag-issue">The Wellness Issue · Agosto 2026</p>
-            </div>
             <main id="conteudo-principal" class="mag-content">
                 ${coverHtml}
                 ${featureHtml}
@@ -978,10 +968,10 @@ function renderMagazineIndex(origin) {
                     </ol>
                     <aside class="mag-cta">
                         <p>LON Clinic</p>
-                        <h2>A revista lê-se. A consulta marca-se.</h2>
+                        <h2>Marcar consulta</h2>
                         <div class="mag-cta-actions">
-                            <a class="mag-cta-primary" href="/marcar/saude-mental">Consulta de saúde mental</a>
-                            <a class="mag-cta-ghost" href="/saudemental">Subscrição de psicologia</a>
+                            <a class="mag-cta-primary" href="/marcar/saude-mental">Saúde mental</a>
+                            <a class="mag-cta-ghost" href="/saudemental">Psicologia</a>
                         </div>
                     </aside>
                 </section>
