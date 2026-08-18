@@ -73,7 +73,7 @@ Add these in your hosting platform's environment variables section:
 - `EMAIL_FROM` - `Longevity Clinic <noreply@yourdomain.com>`
 
 **Other:**
-- `DOXY_ROOM_URL` - Your Doxy.me room URL (if using)
+- `DOXY_ROOM_URL` - `https://doxy.me/lonclinic/ritaaguiar`
 - `PORT` - Usually auto-set by platform
 
 **See `ENV_SETUP.txt` for all variables**

@@ -103,7 +103,7 @@ EMAIL_PORT=587
 EMAIL_USER=your_email@gmail.com
 EMAIL_PASS=your_app_password
 EMAIL_FROM=Longevity Clinic <noreply@yourdomain.com>
-DOXY_ROOM_URL=https://doxy.me/your-room
+DOXY_ROOM_URL=https://doxy.me/lonclinic/ritaaguiar
 ```
 
 ### 5. Add Custom Domain

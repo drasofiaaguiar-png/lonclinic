@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 clinicDoxyRoomUrl.textContent = 'Not configured yet';
                 if (clinicDoxyHint) {
                     clinicDoxyHint.textContent = clinicRole === 'admin'
-                        ? 'Set DOXY_ROOM_URL (e.g. https://doxy.me/lonclinic) or add a room for each professional in Admin → Professionals.'
+                        ? 'Set DOXY_ROOM_URL (e.g. https://doxy.me/lonclinic/ritaaguiar) or add a room for each professional in Admin → Professionals.'
                         : 'Ask an administrator to add your Doxy.me room URL to your professional account.';
                 }
                 if (clinicCopyDoxyBtn) clinicCopyDoxyBtn.disabled = true;

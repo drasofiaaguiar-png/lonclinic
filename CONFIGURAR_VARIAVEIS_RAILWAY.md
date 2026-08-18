@@ -137,7 +137,7 @@ Adicione estas variáveis no Railway/Render:
 - [ ] `EMAIL_FROM` = `Longevity Clinic <info@lonclinic.com>`
 
 ### Outras (Opcional)
-- [ ] `DOXY_ROOM_URL` = `https://doxy.me/your-room`
+- [ ] `DOXY_ROOM_URL` = `https://doxy.me/lonclinic/ritaaguiar`
 - [ ] `CONTACT_EMAIL` = `info@lonclinic.com`
 
 ---

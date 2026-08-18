@@ -275,7 +275,8 @@ app.use(session({
 /* ========================================
    DOXY.ME CONFIGURATION
 ======================================== */
-const DOXY_ROOM_URL = process.env.DOXY_ROOM_URL || 'https://doxy.me/lonclinic';
+const DOXY_DEFAULT_PATIENT_ROOM = 'https://doxy.me/lonclinic/ritaaguiar';
+const DOXY_ROOM_URL = process.env.DOXY_ROOM_URL || DOXY_DEFAULT_PATIENT_ROOM;
 const DOXY_PROVIDER_URL = 'https://doxy.me';
 
 function normalizeDoxyRoomUrl(raw) {
@@ -302,7 +303,17 @@ function normalizeDoxyRoomUrl(raw) {
     }
 }
 
-const DEFAULT_DOXY_ROOM_URL = normalizeDoxyRoomUrl(DOXY_ROOM_URL);
+function patientDoxyRoomUrl(raw) {
+    const normalized = normalizeDoxyRoomUrl(raw || DOXY_DEFAULT_PATIENT_ROOM);
+    // Clinic lobby without a provider — confirmation emails and the dashboard
+    // send patients to Rita's room.
+    if (!normalized || normalized === 'https://doxy.me/lonclinic') {
+        return DOXY_DEFAULT_PATIENT_ROOM;
+    }
+    return normalized;
+}
+
+const DEFAULT_DOXY_ROOM_URL = patientDoxyRoomUrl(DOXY_ROOM_URL);
 
 function publicProfessional(pro) {
     if (!pro) return null;
@@ -448,8 +459,9 @@ async function resolveDoxyRoomUrl(professionalName) {
     if (name) {
         try {
             const pro = await findProfessionalByDisplayNameInternal(name);
-            const room = normalizeDoxyRoomUrl(pro && pro.doxyRoomUrl);
-            if (room) return room;
+            if (pro && String(pro.doxyRoomUrl || '').trim()) {
+                return patientDoxyRoomUrl(pro.doxyRoomUrl);
+            }
         } catch (err) {
             console.error('   ⚠️  resolveDoxyRoomUrl:', err.message);
         }
@@ -458,8 +470,8 @@ async function resolveDoxyRoomUrl(professionalName) {
 }
 
 function doxyUrlFromEmailData(data) {
-    const explicit = normalizeDoxyRoomUrl(data && data.doxyUrl);
-    if (explicit) return explicit;
+    const explicit = String((data && data.doxyUrl) || '').trim();
+    if (explicit) return patientDoxyRoomUrl(explicit);
     return DEFAULT_DOXY_ROOM_URL || '';
 }
 

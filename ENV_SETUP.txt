@@ -31,7 +31,7 @@ EMAIL_PASS=your_app_password_here
 EMAIL_FROM=Longevity Clinic <your_email@gmail.com>
 
 # Doxy.me Video Consultation
-DOXY_ROOM_URL=https://doxy.me/lonclinic
+DOXY_ROOM_URL=https://doxy.me/lonclinic/ritaaguiar
 
 # Contact Email (shown on website footer)
 CONTACT_EMAIL=info@lonclinic.com
