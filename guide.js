@@ -555,9 +555,10 @@ function renderBlogArticle(origin, slug) {
         ? `<figure class="guide-figure guide-figure-lead"><img src="${escapeHtml(String(meta.image).startsWith('/') ? meta.image : `/${meta.image}`)}" alt="${escapeHtml(title)}" width="1600" height="900" decoding="async"></figure>`
         : '';
 
-    const mainHtml = format === 'markdown'
+    const articlePath = `/blog/${encodeURIComponent(slug)}`;
+    const articleInner = format === 'markdown'
         ? `
-    <main id="conteudo-principal" class="guide-article-main">
+    <main id="conteudo-principal" class="guide-article-main mag-article-main">
         <article class="guide-article-wrap" itemscope itemtype="https://schema.org/MedicalWebPage">
             ${topMedicalNotice}
             <header class="guide-article-header">
@@ -569,7 +570,7 @@ function renderBlogArticle(origin, slug) {
                     </div>
                     <div class="guide-article-intro-right">
                         <nav class="guide-breadcrumb" aria-label="Caminho de navegação">
-                            <a href="/blog">Guide</a>
+                            <a href="/magazine">Magazine</a>
                             <span aria-hidden="true"> / </span>
                             <span class="visually-hidden">Artigo atual: </span>
                             <span>${escapeHtml(title)}</span>
@@ -589,7 +590,7 @@ function renderBlogArticle(origin, slug) {
         </article>
     </main>`
         : `
-    <main id="conteudo-principal" class="guide-article-main-html">
+    <main id="conteudo-principal" class="guide-article-main-html mag-article-main">
         <article class="guide-article-wrap">
             ${byline}
             <div class="guide-prose" lang="pt-PT">
@@ -599,15 +600,20 @@ function renderBlogArticle(origin, slug) {
         </article>
     </main>`;
 
-    const html = layoutGuidePage({
+    const html = layoutMagazinePage({
         origin: o,
-        title: `${title} | Guide Lon Clinic`,
+        title: `${title} | LON Magazine`,
         description,
-        canonicalPath: `/blog/${encodeURIComponent(slug)}`,
+        canonicalPath: articlePath,
         ogImage: og,
         jsonLd,
-        mainHtml,
-        navCurrent: 'guide'
+        ogType: 'article',
+        extraCss: ['/landing.css?v=20260418k'],
+        extraCssAfter: ['/guide.css?v=20260818e', '/author.css?v=20260818a'],
+        mainHtml: magAppHtml(articlePath, `
+            ${magTopbarHtml({ magazineCurrent: true })}
+            ${articleInner}
+            ${magFootHtml()}`)
     });
 
     return { html };
@@ -637,13 +643,34 @@ function renderNotFound(origin) {
     });
 }
 
-function magKicker(article) {
+function magTheme(article) {
     const about = String((article && article.about) || '').toLowerCase();
     const slug = String((article && article.slug) || '');
-    if (/autismo|adhd/.test(about) || /autismo|adhd/.test(slug)) return 'Mente';
-    if (/vacina|viajante|travel|marcacao/.test(slug)) return 'Viagem';
-    if (/telemedicina/.test(slug)) return 'Clínica';
-    return 'Bem-estar';
+    if (/autismo|adhd/.test(about) || /autismo|adhd/.test(slug)) return 'mental';
+    if (/vacina|viajante|travel/.test(slug)) return 'travel';
+    return 'clinic';
+}
+
+function magCardHtml(article) {
+    const excerpt = article.description
+        ? `<p class="mag-excerpt">${escapeHtml(article.description)}</p>`
+        : '';
+    return `<a class="mag-card" href="${magHref(article)}">
+                <span class="mag-photo" style="background-image:url('${magImage(article)}')"></span>
+                <h3>${escapeHtml(article.title)}</h3>
+                ${excerpt}
+            </a>`;
+}
+
+function magThemeRowHtml(id, title, articles) {
+    if (!articles.length) return '';
+    return `<section class="mag-section mag-wrap" id="${escapeHtml(id)}" aria-labelledby="${escapeHtml(id)}-title">
+                <div class="mag-section-head">
+                    <h2 id="${escapeHtml(id)}-title">${escapeHtml(title)}</h2>
+                </div>
+                <div class="mag-row">${articles.map(magCardHtml).join('')}
+                </div>
+            </section>`;
 }
 
 function magDate(iso) {
@@ -727,20 +754,66 @@ function magazineNavTree() {
     ];
 }
 
-function magNavNode(node, depth) {
-    const kids = Array.isArray(node.children) ? node.children : [];
-    if (!kids.length) {
-        return `<li class="mag-nav-leaf mag-nav-d${depth}"><a href="${escapeHtml(node.href)}">${escapeHtml(node.label)}</a></li>`;
-    }
-    return `<li class="mag-nav-branch mag-nav-d${depth}"><details><summary>${escapeHtml(node.label)}</summary><ul>${kids.map((child) => magNavNode(child, depth + 1)).join('')}</ul></details></li>`;
+function magPath(href) {
+    return String(href || '').split('?')[0];
 }
 
-function magSidenavHtml() {
-    const tree = magazineNavTree().map((node) => magNavNode(node, 0)).join('');
+function magNavContains(node, currentPath) {
+    if (!currentPath) return false;
+    if (node.href && magPath(node.href) === currentPath) return true;
+    return (Array.isArray(node.children) ? node.children : []).some((child) => magNavContains(child, currentPath));
+}
+
+function magNavNode(node, depth, currentPath) {
+    const kids = Array.isArray(node.children) ? node.children : [];
+    if (!kids.length) {
+        const current = node.href && magPath(node.href) === currentPath ? ' aria-current="page"' : '';
+        return `<li class="mag-nav-leaf mag-nav-d${depth}"><a href="${escapeHtml(node.href)}"${current}>${escapeHtml(node.label)}</a></li>`;
+    }
+    const open = magNavContains(node, currentPath) ? ' open' : '';
+    return `<li class="mag-nav-branch mag-nav-d${depth}"><details${open}><summary>${escapeHtml(node.label)}</summary><ul>${kids.map((child) => magNavNode(child, depth + 1, currentPath)).join('')}</ul></details></li>`;
+}
+
+function magSidenavHtml(currentPath) {
+    const tree = magazineNavTree().map((node) => magNavNode(node, 0, currentPath || '')).join('');
     return `<nav class="mag-sidenav" id="mag-sidenav" aria-label="Temas da revista">
         <a class="mag-sidenav-brand" href="/magazine">LON <em>Magazine</em></a>
         <ul class="mag-nav">${tree}</ul>
     </nav>`;
+}
+
+function magTopbarHtml(opts) {
+    const magCurrent = opts && opts.magazineCurrent ? ' aria-current="page"' : '';
+    return `<header class="mag-topbar">
+                <a href="/">LON Clinic</a>
+                <button type="button" class="mag-nav-toggle" aria-expanded="false" aria-controls="mag-sidenav">Menu</button>
+                <nav aria-label="Magazine">
+                    <a href="/magazine"${magCurrent}>Magazine</a>
+                    <a href="/blog">Guides</a>
+                    <a href="/marcar/saude-mental">Marcar</a>
+                </nav>
+            </header>`;
+}
+
+function magFootHtml() {
+    return `<footer class="mag-foot">
+                <span>© 2026 Lon Clinic · ERS 45475</span>
+                <span>
+                    <a href="/">Início</a>
+                    <a href="/magazine">Magazine</a>
+                    <a href="/blog">Guides</a>
+                    <a href="/info.html?page=contato">Contato</a>
+                </span>
+            </footer>`;
+}
+
+function magAppHtml(currentPath, stageInner) {
+    return `<div class="mag-app">
+        ${magSidenavHtml(currentPath)}
+        <div class="mag-stage">
+            ${stageInner}
+        </div>
+    </div>`;
 }
 
 function layoutMagazinePage(opts) {
@@ -751,11 +824,20 @@ function layoutMagazinePage(opts) {
         canonicalPath,
         ogImage,
         jsonLd,
-        mainHtml
+        mainHtml,
+        extraCss,
+        extraCssAfter,
+        ogType
     } = opts;
     const canonicalUrl = `${origin}${canonicalPath}`;
     const graph = Array.isArray(jsonLd) ? jsonLd : (jsonLd ? [jsonLd] : []);
     graph.push(organizationJsonLd(origin));
+    const extraCssHtml = (Array.isArray(extraCss) ? extraCss : [])
+        .map((href) => `<link rel="stylesheet" href="${escapeHtml(href)}">`)
+        .join('\n    ');
+    const extraCssAfterHtml = (Array.isArray(extraCssAfter) ? extraCssAfter : [])
+        .map((href) => `<link rel="stylesheet" href="${escapeHtml(href)}">`)
+        .join('\n    ');
     return `<!DOCTYPE html>
 <html lang="pt-PT">
 <head>
@@ -774,7 +856,7 @@ function layoutMagazinePage(opts) {
     <meta name="description" content="${escapeHtml(description)}">
     <meta name="robots" content="index,follow,max-image-preview:large">
     <link rel="canonical" href="${escapeHtml(canonicalUrl)}">
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="${escapeHtml(ogType || 'website')}">
     <meta property="og:site_name" content="LON Magazine">
     <meta property="og:url" content="${escapeHtml(canonicalUrl)}">
     <meta property="og:title" content="${escapeHtml(title)}">
@@ -789,7 +871,9 @@ function layoutMagazinePage(opts) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/magazine.css?v=20260818e">
+    ${extraCssHtml}
+    <link rel="stylesheet" href="/magazine.css?v=20260818g">
+    ${extraCssAfterHtml}
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     ${jsonLdScript(graph)}
@@ -828,86 +912,18 @@ function layoutMagazinePage(opts) {
 function renderMagazineIndex(origin) {
     const o = normalizeOrigin(origin);
     const articles = sortArticles((loadManifest().articles || []).filter((a) => isValidSlug(a.slug)));
-    const mind = articles.filter((a) => magKicker(a) === 'Mente');
-    const travel = articles.filter((a) => magKicker(a) === 'Viagem');
-    const rest = articles.filter((a) => magKicker(a) !== 'Mente' && magKicker(a) !== 'Viagem');
-    const cover = mind[0] || articles[0];
-    const features = mind.slice(1).concat(rest);
-    const featureMain = features[0];
-    const featureStack = features.slice(1, 4);
-    const usedSlugs = new Set([cover, featureMain, ...featureStack].filter(Boolean).map((a) => a.slug));
-    const well = articles.filter((a) => !usedSlugs.has(a.slug)).slice(0, 3);
-    const wellSlugs = new Set(well.map((a) => a.slug));
-    const travelGrid = travel.filter((a) => !wellSlugs.has(a.slug)).slice(0, 6);
-    const toc = articles.slice(0, 8);
-    const coverImg = cover ? magImage(cover) : `${o}/image/image2.webp`;
+    const mental = articles.filter((a) => magTheme(a) === 'mental');
+    const travel = articles.filter((a) => magTheme(a) === 'travel');
+    const clinic = articles.filter((a) => magTheme(a) === 'clinic');
+    const cover = mental[0] || articles[0];
     const og = cover && cover.image
         ? `${o}${String(cover.image).startsWith('/') ? '' : '/'}${cover.image}`
         : `${o}/image/image2.webp`;
-
-    const coverHtml = cover
-        ? `<section class="mag-cover" aria-label="Reportagem de capa">
-        <div class="mag-cover-media" style="background-image:url('${coverImg}')" role="img" aria-label="${escapeHtml(cover.title)}"></div>
-        <div class="mag-cover-copy">
-            <p class="mag-label">${escapeHtml(magKicker(cover))}</p>
-            <h1>${escapeHtml(cover.title)}</h1>
-            <p class="mag-dek">${escapeHtml(cover.description || '')}</p>
-            <p class="mag-meta">${escapeHtml(magDate(cover.datePublished))}</p>
-            <a class="mag-read" href="${magHref(cover)}">Ler</a>
-        </div>
-    </section>`
-        : '';
-
-    const stackHtml = featureStack.map((a) => `
-            <a href="${magHref(a)}">
-                <span class="mag-photo" style="background-image:url('${magImage(a)}')"></span>
-                <span>
-                    <p class="mag-label">${escapeHtml(magKicker(a))}</p>
-                    <h3>${escapeHtml(a.title)}</h3>
-                </span>
-            </a>`).join('');
-
-    const featureHtml = featureMain
-        ? `<section class="mag-section mag-wrap" aria-labelledby="mag-features-title">
-        <div class="mag-section-head">
-            <h2 id="mag-features-title">Nesta edição</h2>
-            <p>Saúde da mulher · mente · clínica</p>
-        </div>
-        <div class="mag-features">
-            <a class="mag-feature-main" href="${magHref(featureMain)}">
-                <span class="mag-photo" style="background-image:url('${magImage(featureMain)}')"></span>
-                <p class="mag-label">${escapeHtml(magKicker(featureMain))}</p>
-                <h3>${escapeHtml(featureMain.title)}</h3>
-                <p class="mag-excerpt">${escapeHtml(featureMain.description || '')}</p>
-            </a>
-            <div class="mag-stack">${stackHtml}
-            </div>
-        </div>
-    </section>`
-        : '';
-
-    const wellCards = well.map((a) => `
-            <a class="mag-card" href="${magHref(a)}">
-                <span class="mag-photo" style="background-image:url('${magImage(a)}')"></span>
-                <p class="mag-label">${escapeHtml(magKicker(a))}</p>
-                <h3>${escapeHtml(a.title)}</h3>
-                <p class="mag-excerpt">${escapeHtml(a.description || '')}</p>
-            </a>`).join('');
-
-    const travelCards = travelGrid.map((a) => `
-            <a class="mag-card" href="${magHref(a)}">
-                <span class="mag-photo" style="background-image:url('${magImage(a)}')"></span>
-                <p class="mag-label">Viagem</p>
-                <h3>${escapeHtml(a.title)}</h3>
-            </a>`).join('');
-
-    const tocHtml = toc.map((a, i) => `
-            <li>
-                <span class="mag-toc-n">${String(i + 1).padStart(2, '0')}</span>
-                <span class="mag-toc-rubric">${escapeHtml(magKicker(a))}</span>
-                <a href="${magHref(a)}">${escapeHtml(a.title)}</a>
-                <span class="mag-toc-date">${escapeHtml(magDate(a.datePublished))}</span>
-            </li>`).join('');
+    const rowsHtml = [
+        magThemeRowHtml('saude-mental', 'Saúde mental', mental),
+        magThemeRowHtml('saude-do-viajante', 'Saúde do viajante', travel),
+        magThemeRowHtml('clinica', 'Clínica', clinic)
+    ].join('');
 
     const jsonLd = {
         '@context': 'https://schema.org',
@@ -927,45 +943,11 @@ function renderMagazineIndex(origin) {
         }
     };
 
-    const mainHtml = `
-    <div class="mag-app">
-        ${magSidenavHtml()}
-        <div class="mag-stage">
-            <header class="mag-topbar">
-                <a href="/">LON Clinic</a>
-                <button type="button" class="mag-nav-toggle" aria-expanded="false" aria-controls="mag-sidenav">Menu</button>
-                <nav aria-label="Magazine">
-                    <a href="/magazine" aria-current="page">Magazine</a>
-                    <a href="/blog">Guides</a>
-                    <a href="/marcar/saude-mental">Marcar</a>
-                </nav>
-            </header>
+    const mainHtml = magAppHtml('/magazine', `
+            ${magTopbarHtml({ magazineCurrent: true })}
             <main id="conteudo-principal" class="mag-content">
-                ${coverHtml}
-                ${featureHtml}
-                <section class="mag-section mag-wrap" aria-labelledby="mag-well-title">
-                    <div class="mag-section-head">
-                        <h2 id="mag-well-title">O consultório</h2>
-                        <p>Leituras para continuar</p>
-                    </div>
-                    <div class="mag-well">${wellCards}
-                    </div>
-                </section>
-                <section class="mag-section mag-wrap" aria-labelledby="mag-travel-title">
-                    <div class="mag-section-head">
-                        <h2 id="mag-travel-title">Destinos</h2>
-                        <p>Vacina febre amarela · consulta do viajante</p>
-                    </div>
-                    <div class="mag-well">${travelCards}
-                    </div>
-                </section>
-                <section class="mag-section mag-wrap" aria-labelledby="mag-toc-title">
-                    <div class="mag-section-head">
-                        <h2 id="mag-toc-title">Índice</h2>
-                        <p>Toda a edição</p>
-                    </div>
-                    <ol class="mag-toc">${tocHtml}
-                    </ol>
+                ${rowsHtml}
+                <section class="mag-section mag-wrap">
                     <aside class="mag-cta">
                         <p>LON Clinic</p>
                         <h2>Marcar consulta</h2>
@@ -976,16 +958,7 @@ function renderMagazineIndex(origin) {
                     </aside>
                 </section>
             </main>
-            <footer class="mag-foot">
-                <span>© 2026 Lon Clinic · ERS 45475</span>
-                <span>
-                    <a href="/">Início</a>
-                    <a href="/blog">Guides</a>
-                    <a href="/info.html?page=contato">Contato</a>
-                </span>
-            </footer>
-        </div>
-    </div>`;
+            ${magFootHtml()}`);
 
     return layoutMagazinePage({
         origin: o,

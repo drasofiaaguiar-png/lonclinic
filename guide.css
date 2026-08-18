@@ -704,3 +704,26 @@
         padding-top: 0;
     }
 }
+
+.mag-body .guide-article-main,
+.mag-body .guide-article-main-html {
+    padding-top: 8px;
+}
+
+.mag-body .guide-article-main .guide-article-wrap {
+    max-width: 820px;
+    padding-left: 32px;
+    padding-right: 32px;
+}
+
+.mag-body .guide-article-main-html .guide-article-wrap {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+@media (max-width: 860px) {
+    .mag-body .guide-article-main .guide-article-wrap {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
