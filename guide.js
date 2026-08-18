@@ -8,6 +8,7 @@ const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
 const { organizationJsonLd, jsonLdScript } = require('./seo');
+const authors = require('./authors');
 
 const GUIDE_DIR = path.join(__dirname, 'data', 'guide');
 const MANIFEST_PATH = path.join(GUIDE_DIR, 'manifest.json');
@@ -84,6 +85,159 @@ function bodyToHtml(body, format) {
     return marked.parse(body);
 }
 
+function articleCluster(meta) {
+    const slug = String((meta && meta.slug) || '');
+    const about = String((meta && meta.about) || '').toLowerCase();
+    if (/vacina|viajante|travel|marcacao/.test(slug)) return 'travel';
+    if (/autismo|adhd/.test(slug) || /autismo|adhd/.test(about)) return 'mental';
+    return 'general';
+}
+
+function defaultCtaKind(meta) {
+    const cluster = articleCluster(meta);
+    return cluster === 'travel' ? 'travel' : cluster === 'mental' ? 'mental' : 'general';
+}
+
+function relatedKicker(article) {
+    if (article && article.about) return String(article.about);
+    const slug = String((article && article.slug) || '');
+    if (/vacina/.test(slug)) return 'Vacina';
+    if (/telemedicina/.test(slug)) return 'Telemedicina';
+    if (/marcacao/.test(slug)) return 'Marcação';
+    return 'Guide';
+}
+
+function bookingCardsHtml(kind) {
+    const packs = {
+        mental: [
+            {
+                chip: 'Consulta',
+                title: 'Consulta Médica de Saúde Mental',
+                price: '€60 · 45 min',
+                href: '/marcar/saude-mental',
+                cta: 'Marcar',
+                note: 'Online · avaliação clínica'
+            },
+            {
+                chip: 'Subscrição',
+                title: 'Psicologia em Burnout',
+                price: '€54 /semana · poupa 10%',
+                href: '/saudemental',
+                cta: 'Subscrever',
+                note: '1 sessão de vídeo por semana'
+            }
+        ],
+        travel: [
+            {
+                chip: 'Viajante',
+                title: 'Consulta do Viajante',
+                price: '€39 · 20 min',
+                href: '/marcar/travel',
+                cta: 'Marcar',
+                note: 'Orientação e prescrição no próprio dia'
+            }
+        ],
+        general: [
+            {
+                chip: 'Clínica Geral',
+                title: 'Consulta de Clínica Geral',
+                price: 'Online',
+                href: '/marcar/clinica-geral',
+                cta: 'Marcar',
+                note: 'Médico no próprio dia'
+            },
+            {
+                chip: 'Consulta',
+                title: 'Consulta Médica de Saúde Mental',
+                price: '€60 · 45 min',
+                href: '/marcar/saude-mental',
+                cta: 'Marcar',
+                note: 'Online · 45 minutos'
+            }
+        ]
+    };
+    const cards = packs[kind] || packs.general;
+    const items = cards.map((card) => `
+        <article class="guide-book-card">
+            <p class="guide-book-chip">${escapeHtml(card.chip)}</p>
+            <h3 class="guide-book-title">${escapeHtml(card.title)}</h3>
+            <p class="guide-book-price">${escapeHtml(card.price)}</p>
+            <p class="guide-book-note">${escapeHtml(card.note)}</p>
+            <a class="lon-btn lon-btn-primary lon-btn-sm" href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
+        </article>`).join('');
+    return `
+<aside class="guide-book" aria-label="Marcar consulta">
+    <div class="guide-book-grid">${items}
+    </div>
+</aside>`;
+}
+
+function expandCtaTokens(html, kind) {
+    return String(html || '').replace(
+        /<p>\s*\{\{cta(?::([a-z-]+))?\}\}\s*<\/p>|\{\{cta(?::([a-z-]+))?\}\}/gi,
+        (_, a, b) => bookingCardsHtml(a || b || kind)
+    );
+}
+
+function injectBookingCards(html, kind) {
+    let out = expandCtaTokens(html, kind);
+    if (out.includes('guide-book-grid')) {
+        return out;
+    }
+    const cta = bookingCardsHtml(kind);
+    const faqRe = /<h2[^>]*>\s*Perguntas frequentes/i;
+    if (faqRe.test(out)) {
+        out = out.replace(faqRe, `${cta}$&`);
+    }
+    const matches = [...out.matchAll(/<h2\b[^>]*>[\s\S]*?<\/h2>/gi)];
+    if (matches.length >= 2 && matches[1].index != null) {
+        const idx = matches[1].index;
+        out = `${out.slice(0, idx)}${cta}${out.slice(idx)}`;
+    } else if (!faqRe.test(html)) {
+        out += cta;
+    }
+    return out;
+}
+
+function pickRelatedArticles(current, articles) {
+    const all = Array.isArray(articles) ? articles : [];
+    const bySlug = new Map(all.map((a) => [a.slug, a]));
+    const picked = [];
+    const seen = new Set([current.slug]);
+    const push = (article) => {
+        if (!article || seen.has(article.slug) || picked.length >= 3) return;
+        seen.add(article.slug);
+        picked.push(article);
+    };
+    (Array.isArray(current.related) ? current.related : []).forEach((slug) => push(bySlug.get(slug)));
+    const rest = all.filter((a) => !seen.has(a.slug));
+    rest.filter((a) => current.about && a.about === current.about).forEach(push);
+    const cluster = articleCluster(current);
+    rest.filter((a) => articleCluster(a) === cluster).forEach(push);
+    rest.forEach(push);
+    return picked;
+}
+
+function relatedArticlesHtml(current, articles) {
+    const related = pickRelatedArticles(current, articles);
+    if (!related.length) return '';
+    const cards = related.map((a) => {
+        const href = `/blog/${encodeURIComponent(a.slug)}`;
+        return `
+        <a class="guide-related-card" href="${href}">
+            <span class="guide-related-kicker">${escapeHtml(relatedKicker(a))}</span>
+            <strong class="guide-related-title">${escapeHtml(a.title || a.slug)}</strong>
+            <span class="guide-related-desc">${escapeHtml(a.description || '')}</span>
+        </a>`;
+    }).join('');
+    return `
+<nav class="guide-related" aria-label="Artigos relacionados">
+    <h2 class="guide-related-heading">Continuar a ler</h2>
+    <div class="guide-related-grid">${cards}
+    </div>
+</nav>`;
+}
+
 function layoutGuidePage(opts) {
     const {
         origin,
@@ -126,7 +280,7 @@ function layoutGuidePage(opts) {
     <title>${safeTitle}</title>
     <meta name="description" content="${safeDesc}">
     <meta name="robots" content="${escapeHtml(robots || 'index,follow,max-image-preview:large')}">
-    <meta name="author" content="Lon Clinic">
+    <meta name="author" content="${escapeHtml(authors.getAuthor().displayName)}">
     <link rel="canonical" href="${escapeHtml(canonicalUrl)}">
     <meta property="og:type" content="${escapeHtml(ogType || 'article')}">
     <meta property="og:site_name" content="Lon Clinic">
@@ -144,7 +298,8 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260418k">
-    <link rel="stylesheet" href="/guide.css?v=20260606a">
+    <link rel="stylesheet" href="/guide.css?v=20260818c">
+    <link rel="stylesheet" href="/author.css?v=20260818a">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     ${ldJson}
@@ -158,8 +313,7 @@ function layoutGuidePage(opts) {
             </a>
             <nav class="lon-nav-links" aria-label="Navegação principal">
                 <a href="/#inicio">Início</a>
-                <a href="/#platform">Plataforma</a>
-                <a href="/#servicos">Serviços</a>
+                <a href="/magazine">Magazine</a>
                 <a${guideNavAttrs}>Guides</a>
                 <a href="/#contacto">Contato</a>
             </nav>
@@ -173,8 +327,7 @@ function layoutGuidePage(opts) {
         </div>
         <div class="lon-mobile-menu" id="lonMobileMenu">
             <a href="/#inicio">Início</a>
-            <a href="/#platform">Plataforma</a>
-            <a href="/#servicos">Serviços</a>
+            <a href="/magazine">Magazine</a>
             <a href="/blog">Guides</a>
             <a href="/#contacto">Contato</a>
             <a href="/patient-portal">Login</a>
@@ -206,7 +359,7 @@ function layoutGuidePage(opts) {
                 <div class="lon-footer-col">
                     <h4>Clínica</h4>
                     <a href="/info.html?page=sobre-nos">Sobre nós</a>
-                    <a href="/info.html?page=equipa">A equipa</a>
+                    <a href="/equipa/rita-aguiar">A equipa</a>
                     <a href="/info.html?page=parcerias">Parcerias</a>
                     <a href="/info.html?page=registo-medico">Registo médico</a>
                     <a href="/info.html?page=contato">Contato</a>
@@ -215,6 +368,7 @@ function layoutGuidePage(opts) {
                 <div class="lon-footer-col">
                     <h4>Apoio</h4>
                     <a href="/faq">Perguntas frequentes</a>
+                    <a href="/magazine">Magazine</a>
                     <a href="/blog">Guides</a>
                     <a href="/info.html?page=como-funciona">Como funciona</a>
                     <a href="/info.html?page=seguranca-dados">Segurança dos dados</a>
@@ -267,6 +421,7 @@ function renderBlogIndex(origin) {
                         </a>
                         <div class="guide-card-content">
                             <p class="guide-card-date">${date}</p>
+                            <p class="eeat-byline guide-card-byline"><a rel="author" href="${authors.authorPath(authors.getAuthor())}">Médica · ${authors.getAuthor().yearsPractice} anos de prática clínica</a></p>
                             <h2 class="guide-card-title"><a href="${href}">${t}</a></h2>
                             <p class="guide-card-desc">${d}</p>
                             <a class="lon-btn lon-btn-soft lon-btn-sm" href="${href}">Ler artigo</a>
@@ -345,44 +500,72 @@ function renderBlogArticle(origin, slug) {
         return null;
     }
 
-    const articleHtml = bodyToHtml(raw, format === 'html' ? 'html' : 'markdown');
+    const ctaKind = defaultCtaKind(meta);
+    let articleHtml = bodyToHtml(raw, format === 'html' ? 'html' : 'markdown');
+    if (format !== 'html') {
+        articleHtml = injectBookingCards(articleHtml, ctaKind);
+    }
+    const relatedHtml = format === 'html' ? '' : relatedArticlesHtml(meta, manifest.articles);
     const title = String(meta.title || slug);
     const description = String(meta.description || '');
     const datePub = String(meta.datePublished || '');
     const dateMod = String(meta.dateModified || meta.datePublished || '');
     const og = meta.image ? `${o}${String(meta.image).startsWith('/') ? '' : '/'}${meta.image}` : `${o}/image/image2.webp`;
 
-    const jsonLd = {
-        '@context': 'https://schema.org',
-        '@type': ['Article', 'MedicalWebPage'],
-        headline: title,
-        name: title,
-        description,
-        datePublished: datePub || undefined,
-        dateModified: dateMod || undefined,
-        inLanguage: 'pt-PT',
-        url: `${o}/blog/${encodeURIComponent(slug)}`,
-        mainEntityOfPage: {
-            '@type': 'WebPage',
-            '@id': `${o}/blog/${encodeURIComponent(slug)}`
+    const jsonLd = [
+        {
+            '@context': 'https://schema.org',
+            '@type': ['Article', 'MedicalWebPage'],
+            headline: title,
+            name: title,
+            description,
+            datePublished: datePub || undefined,
+            dateModified: dateMod || undefined,
+            inLanguage: 'pt-PT',
+            url: `${o}/blog/${encodeURIComponent(slug)}`,
+            mainEntityOfPage: {
+                '@type': 'WebPage',
+                '@id': `${o}/blog/${encodeURIComponent(slug)}`
+            },
+            image: og,
+            ...(meta.about ? { about: { '@type': 'MedicalCondition', name: String(meta.about) } } : {}),
+            ...authors.articleAuthorSchema(o)
         },
-        author: { '@id': `${o}/#organization` },
-        publisher: { '@id': `${o}/#organization` },
-        image: og
-    };
+        authors.personJsonLd(o)
+    ];
+    if (Array.isArray(meta.faq) && meta.faq.length) {
+        jsonLd.push({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: meta.faq.map((item) => ({
+                '@type': 'Question',
+                name: item.q,
+                acceptedAnswer: { '@type': 'Answer', text: item.a }
+            }))
+        });
+    }
 
-    const topMedicalNotice = `<div class="guide-top-disclaimer">Informação de carácter geral — não substitui consulta médica individualizada. Horários e contactos dos Centros de Vacinação Internacional sujeitos a alteração. Confirme sempre junto da instituição antes de se deslocar.</div>`;
+    const isTravelGuide = /vacina|viajante|travel/i.test(slug);
+    const topMedicalNotice = isTravelGuide
+        ? `<div class="guide-top-disclaimer">Informação de carácter geral — não substitui consulta médica individualizada. Horários e contactos dos Centros de Vacinação Internacional sujeitos a alteração. Confirme sempre junto da instituição antes de se deslocar.</div>`
+        : `<div class="guide-top-disclaimer">Informação de carácter geral — não substitui consulta médica individualizada.</div>`;
+    const byline = authors.authorBylineHtml(o, meta.author, datePub);
+    const bio = authors.authorBioHtml(o, meta.author);
+    const leadFigure = meta.image
+        ? `<figure class="guide-figure guide-figure-lead"><img src="${escapeHtml(String(meta.image).startsWith('/') ? meta.image : `/${meta.image}`)}" alt="${escapeHtml(title)}" width="1600" height="900" decoding="async"></figure>`
+        : '';
 
     const mainHtml = format === 'markdown'
         ? `
     <main id="conteudo-principal" class="guide-article-main">
-        <article class="guide-article-wrap">
+        <article class="guide-article-wrap" itemscope itemtype="https://schema.org/MedicalWebPage">
             ${topMedicalNotice}
             <header class="guide-article-header">
                 <div class="guide-article-intro">
                     <div class="guide-article-intro-left">
-                        <h1 class="guide-article-title">${escapeHtml(title)}</h1>
+                        <h1 class="guide-article-title" itemprop="headline">${escapeHtml(title)}</h1>
                         <p class="guide-article-summary">${escapeHtml(description)}</p>
+                        ${byline}
                     </div>
                     <div class="guide-article-intro-right">
                         <nav class="guide-breadcrumb" aria-label="Caminho de navegação">
@@ -396,18 +579,23 @@ function renderBlogArticle(origin, slug) {
                 </div>
             </header>
             <section class="guide-article-content" aria-label="Conteúdo do artigo">
+                ${leadFigure}
                 <div class="guide-prose" lang="pt-PT">
                     ${articleHtml}
                 </div>
+                ${relatedHtml}
             </section>
+            ${bio}
         </article>
     </main>`
         : `
     <main id="conteudo-principal" class="guide-article-main-html">
         <article class="guide-article-wrap">
+            ${byline}
             <div class="guide-prose" lang="pt-PT">
                 ${articleHtml}
             </div>
+            ${bio}
         </article>
     </main>`;
 
@@ -449,10 +637,276 @@ function renderNotFound(origin) {
     });
 }
 
+function magKicker(article) {
+    const about = String((article && article.about) || '').toLowerCase();
+    const slug = String((article && article.slug) || '');
+    if (/autismo|adhd/.test(about) || /autismo|adhd/.test(slug)) return 'Mente';
+    if (/vacina|viajante|travel|marcacao/.test(slug)) return 'Viagem';
+    if (/telemedicina/.test(slug)) return 'Clínica';
+    return 'Bem-estar';
+}
+
+function magDate(iso) {
+    const raw = String(iso || '').slice(0, 10);
+    const m = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) return raw;
+    const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    const month = months[Number(m[2]) - 1] || m[2];
+    return `${Number(m[3])} ${month} ${m[1]}`;
+}
+
+function magImage(article) {
+    const image = article && article.image
+        ? `${String(article.image).startsWith('/') ? '' : '/'}${String(article.image)}`
+        : '/image/image2.webp';
+    return escapeHtml(image);
+}
+
+function magHref(article) {
+    return `/blog/${encodeURIComponent(article.slug)}`;
+}
+
+function layoutMagazinePage(opts) {
+    const {
+        origin,
+        title,
+        description,
+        canonicalPath,
+        ogImage,
+        jsonLd,
+        mainHtml
+    } = opts;
+    const canonicalUrl = `${origin}${canonicalPath}`;
+    const graph = Array.isArray(jsonLd) ? jsonLd : (jsonLd ? [jsonLd] : []);
+    graph.push(organizationJsonLd(origin));
+    return `<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZN8J4X12H3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZN8J4X12H3');
+      gtag('config', 'GT-TXHQ9ZVX');
+      gtag('config', 'AW-18103198169');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${escapeHtml(title)}</title>
+    <meta name="description" content="${escapeHtml(description)}">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="${escapeHtml(canonicalUrl)}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="LON Magazine">
+    <meta property="og:url" content="${escapeHtml(canonicalUrl)}">
+    <meta property="og:title" content="${escapeHtml(title)}">
+    <meta property="og:description" content="${escapeHtml(description)}">
+    <meta property="og:locale" content="pt_PT">
+    <meta property="og:image" content="${escapeHtml(ogImage)}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="${escapeHtml(title)}">
+    <meta name="twitter:description" content="${escapeHtml(description)}">
+    <meta name="twitter:image" content="${escapeHtml(ogImage)}">
+    <meta name="theme-color" content="#14110f">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/magazine.css?v=20260818a">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+    ${jsonLdScript(graph)}
+</head>
+<body class="mag-body">
+    <a class="lon-skip visually-hidden" href="#conteudo-principal">Saltar para o conteúdo</a>
+    ${mainHtml}
+    <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
+    <script src="/lon-analytics.js?v=20260817a" defer></script>
+</body>
+</html>`;
+}
+
+function renderMagazineIndex(origin) {
+    const o = normalizeOrigin(origin);
+    const articles = sortArticles((loadManifest().articles || []).filter((a) => isValidSlug(a.slug)));
+    const mind = articles.filter((a) => magKicker(a) === 'Mente');
+    const travel = articles.filter((a) => magKicker(a) === 'Viagem');
+    const rest = articles.filter((a) => magKicker(a) !== 'Mente' && magKicker(a) !== 'Viagem');
+    const cover = mind[0] || articles[0];
+    const features = mind.slice(1).concat(rest);
+    const featureMain = features[0];
+    const featureStack = features.slice(1, 4);
+    const usedSlugs = new Set([cover, featureMain, ...featureStack].filter(Boolean).map((a) => a.slug));
+    const well = articles.filter((a) => !usedSlugs.has(a.slug)).slice(0, 3);
+    const wellSlugs = new Set(well.map((a) => a.slug));
+    const travelGrid = travel.filter((a) => !wellSlugs.has(a.slug)).slice(0, 6);
+    const toc = articles.slice(0, 8);
+    const coverImg = cover ? magImage(cover) : `${o}/image/image2.webp`;
+    const og = cover && cover.image
+        ? `${o}${String(cover.image).startsWith('/') ? '' : '/'}${cover.image}`
+        : `${o}/image/image2.webp`;
+
+    const coverHtml = cover
+        ? `<section class="mag-cover" aria-label="Reportagem de capa">
+        <div class="mag-cover-media" style="background-image:url('${coverImg}')" role="img" aria-label="${escapeHtml(cover.title)}"></div>
+        <div class="mag-cover-copy">
+            <p class="mag-label">Capa · ${escapeHtml(magKicker(cover))}</p>
+            <h1>${escapeHtml(cover.title)}</h1>
+            <p class="mag-dek">${escapeHtml(cover.description || '')}</p>
+            <p class="mag-meta">${escapeHtml(magDate(cover.datePublished))} · Revisão clínica</p>
+            <a class="mag-read" href="${magHref(cover)}">Ler a reportagem</a>
+        </div>
+    </section>`
+        : '';
+
+    const stackHtml = featureStack.map((a) => `
+            <a href="${magHref(a)}">
+                <span class="mag-photo" style="background-image:url('${magImage(a)}')"></span>
+                <span>
+                    <p class="mag-label">${escapeHtml(magKicker(a))}</p>
+                    <h3>${escapeHtml(a.title)}</h3>
+                </span>
+            </a>`).join('');
+
+    const featureHtml = featureMain
+        ? `<section class="mag-section mag-wrap" aria-labelledby="mag-features-title">
+        <div class="mag-section-head">
+            <h2 id="mag-features-title">Nesta edição</h2>
+            <p>Saúde da mulher · mente · clínica</p>
+        </div>
+        <div class="mag-features">
+            <a class="mag-feature-main" href="${magHref(featureMain)}">
+                <span class="mag-photo" style="background-image:url('${magImage(featureMain)}')"></span>
+                <p class="mag-label">${escapeHtml(magKicker(featureMain))}</p>
+                <h3>${escapeHtml(featureMain.title)}</h3>
+                <p class="mag-excerpt">${escapeHtml(featureMain.description || '')}</p>
+            </a>
+            <div class="mag-stack">${stackHtml}
+            </div>
+        </div>
+    </section>`
+        : '';
+
+    const wellCards = well.map((a) => `
+            <a class="mag-card" href="${magHref(a)}">
+                <span class="mag-photo" style="background-image:url('${magImage(a)}')"></span>
+                <p class="mag-label">${escapeHtml(magKicker(a))}</p>
+                <h3>${escapeHtml(a.title)}</h3>
+                <p class="mag-excerpt">${escapeHtml(a.description || '')}</p>
+            </a>`).join('');
+
+    const travelCards = travelGrid.map((a) => `
+            <a class="mag-card" href="${magHref(a)}">
+                <span class="mag-photo" style="background-image:url('${magImage(a)}')"></span>
+                <p class="mag-label">Viagem</p>
+                <h3>${escapeHtml(a.title)}</h3>
+            </a>`).join('');
+
+    const tocHtml = toc.map((a, i) => `
+            <li>
+                <span class="mag-toc-n">${String(i + 1).padStart(2, '0')}</span>
+                <span class="mag-toc-rubric">${escapeHtml(magKicker(a))}</span>
+                <a href="${magHref(a)}">${escapeHtml(a.title)}</a>
+                <span class="mag-toc-date">${escapeHtml(magDate(a.datePublished))}</span>
+            </li>`).join('');
+
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: 'LON Magazine',
+        description: 'A revista da Lon Clinic: mente, saúde da mulher, clínica e viagem.',
+        url: `${o}/magazine`,
+        isPartOf: { '@type': 'WebSite', name: 'Lon Clinic', url: o },
+        mainEntity: {
+            '@type': 'ItemList',
+            itemListElement: articles.map((a, i) => ({
+                '@type': 'ListItem',
+                position: i + 1,
+                url: `${o}/blog/${encodeURIComponent(a.slug)}`,
+                name: String(a.title || a.slug)
+            }))
+        }
+    };
+
+    const mainHtml = `
+    <header class="mag-topbar">
+        <a href="/">LON Clinic</a>
+        <nav aria-label="Magazine">
+            <a href="/magazine" aria-current="page">Magazine</a>
+            <a href="/blog">Guides</a>
+            <a href="/marcar/saude-mental">Marcar</a>
+        </nav>
+    </header>
+    <div class="mag-masthead">
+        <div class="mag-kicker-row">
+            <span>Portugal</span>
+            <span>Saúde · Mente · Vida</span>
+            <span>Vol. 01</span>
+        </div>
+        <p class="mag-wordmark">LON <span>Magazine</span></p>
+        <p class="mag-issue">The Wellness Issue · Agosto 2026</p>
+    </div>
+    <main id="conteudo-principal">
+        ${coverHtml}
+        ${featureHtml}
+        <section class="mag-section mag-wrap" aria-labelledby="mag-well-title">
+            <div class="mag-section-head">
+                <h2 id="mag-well-title">O consultório</h2>
+                <p>Leituras para continuar</p>
+            </div>
+            <div class="mag-well">${wellCards}
+            </div>
+        </section>
+        <section class="mag-section mag-wrap" aria-labelledby="mag-travel-title">
+            <div class="mag-section-head">
+                <h2 id="mag-travel-title">Destinos</h2>
+                <p>Vacina febre amarela · consulta do viajante</p>
+            </div>
+            <div class="mag-well">${travelCards}
+            </div>
+        </section>
+        <section class="mag-section mag-wrap" aria-labelledby="mag-toc-title">
+            <div class="mag-section-head">
+                <h2 id="mag-toc-title">Índice</h2>
+                <p>Toda a edição</p>
+            </div>
+            <ol class="mag-toc">${tocHtml}
+            </ol>
+            <aside class="mag-cta">
+                <p>LON Clinic</p>
+                <h2>A revista lê-se. A consulta marca-se.</h2>
+                <div class="mag-cta-actions">
+                    <a class="mag-cta-primary" href="/marcar/saude-mental">Consulta de saúde mental</a>
+                    <a class="mag-cta-ghost" href="/saudemental">Subscrição de psicologia</a>
+                </div>
+            </aside>
+        </section>
+    </main>
+    <footer class="mag-foot">
+        <span>© 2026 Lon Clinic · ERS 45475</span>
+        <span>
+            <a href="/">Início</a>
+            <a href="/blog">Guides</a>
+            <a href="/info.html?page=contato">Contato</a>
+        </span>
+    </footer>`;
+
+    return layoutMagazinePage({
+        origin: o,
+        title: 'LON Magazine | Saúde, mente e vida',
+        description: 'A revista da Lon Clinic: autismo em mulheres, ADHD, saúde mental e medicina de viagem. Reportagens com revisão clínica.',
+        canonicalPath: '/magazine',
+        ogImage: og,
+        jsonLd,
+        mainHtml
+    });
+}
+
 module.exports = {
     escapeHtml,
     isValidSlug,
     renderBlogIndex,
+    renderMagazineIndex,
     renderBlogArticle,
     renderNotFound,
     loadManifest,

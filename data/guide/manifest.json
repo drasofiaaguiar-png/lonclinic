@@ -1,6 +1,101 @@
 {
   "articles": [
     {
+      "slug": "autismo-em-mulheres-diagnostico-tardio",
+      "title": "Porque o autismo é tão mal diagnosticado em mulheres",
+      "description": "O autismo em mulheres é frequentemente diagnosticado tarde ou nunca. Entenda porquê, e quais os sinais que costumam ser desvalorizados.",
+      "datePublished": "2026-08-18",
+      "dateModified": "2026-08-18",
+      "format": "markdown",
+      "image": "/image/guide/guide-sunset-lake.jpg",
+      "about": "Autismo",
+      "related": [
+        "autismo-nas-mulheres-interesse-especial",
+        "adhd-em-adultos-sintomas",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "É possível ter traços de autismo sem preencher critérios para diagnóstico formal?",
+          "a": "Sim. Muitas pessoas identificam-se com traços do espectro sem necessariamente cumprirem todos os critérios diagnósticos, o que ainda assim pode justificar acompanhamento e estratégias de adaptação."
+        },
+        {
+          "q": "Autismo em mulheres tem tratamento?",
+          "a": "O autismo não é tratado no sentido de cura, mas existe acompanhamento (terapêutico, ocupacional, psicoeducativo) que ajuda na gestão de dificuldades específicas e na redução do impacto do mascaramento crónico."
+        },
+        {
+          "q": "A que idade se pode ser diagnosticada?",
+          "a": "A qualquer idade. É cada vez mais comum o diagnóstico em mulheres depois dos 30, 40 ou mesmo 50 anos."
+        }
+      ]
+    },
+    {
+      "slug": "autismo-nas-mulheres-interesse-especial",
+      "title": "Autismo nas mulheres: como diferenciar um interesse comum de um interesse especial autista",
+      "description": "Não é o tema que distingue um hobby de um interesse especial autista — é a função e a intensidade. Como reconhecer este padrão nas mulheres.",
+      "datePublished": "2026-08-18",
+      "dateModified": "2026-08-18",
+      "format": "markdown",
+      "image": "/image/guide/guide-opera-coast.jpg",
+      "about": "Autismo",
+      "related": [
+        "autismo-em-mulheres-diagnostico-tardio",
+        "adhd-em-adultos-sintomas",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "O que distingue um interesse especial autista de um hobby?",
+          "a": "Não é o tema. É a função e a intensidade: o interesse especial serve muitas vezes de regulação emocional, envolve um conhecimento muito profundo e a interrupção pode gerar um desconforto desproporcional."
+        },
+        {
+          "q": "Porque o autismo em mulheres passa mais despercebido?",
+          "a": "Porque os interesses intensos em raparigas e mulheres (música, animais, moda, sagas) já têm uma categoria social aceite — «é fã», «é apaixonada» — e por isso a intensidade não é questionada da mesma forma que um interesse técnico visivelmente atípico."
+        },
+        {
+          "q": "Um interesse por K-pop ou moda pode ser um interesse especial?",
+          "a": "Sim. O tema pode ser socialmente comum. O que o torna um interesse especial é a profundidade, a função reguladora e o lugar que ocupa na vida da pessoa — não o facto de ser K-pop, moda ou animais."
+        },
+        {
+          "q": "Um artigo ou um teste online diagnostica autismo?",
+          "a": "Não. Pode ajudar a pôr palavras na experiência, mas o diagnóstico é clínico e deve ser feito por um profissional qualificado."
+        }
+      ]
+    },
+    {
+      "slug": "adhd-em-adultos-sintomas",
+      "title": "ADHD em adultos: sinais que passam despercebidos",
+      "description": "O ADHD em adultos nem sempre se manifesta como hiperatividade. Conheça os sinais mais discretos, como é feito o diagnóstico e quando procurar ajuda.",
+      "datePublished": "2026-08-18",
+      "dateModified": "2026-08-18",
+      "format": "markdown",
+      "image": "/image/image3.webp",
+      "about": "ADHD",
+      "related": [
+        "autismo-em-mulheres-diagnostico-tardio",
+        "autismo-nas-mulheres-interesse-especial",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "É possível ter ADHD e ser bem-sucedido profissionalmente?",
+          "a": "Sim. Muitos adultos com ADHD têm carreiras de sucesso, embora possam ter desenvolvido estratégias de compensação muito exigentes."
+        },
+        {
+          "q": "ADHD em adultos tem cura?",
+          "a": "Não existe uma cura no sentido tradicional, mas existem tratamentos e estratégias eficazes para reduzir significativamente o impacto dos sintomas."
+        },
+        {
+          "q": "ADHD e ansiedade podem coexistir?",
+          "a": "Sim. Podem partilhar alguns sintomas e também ocorrer simultaneamente, razão pela qual uma avaliação clínica adequada é importante."
+        },
+        {
+          "q": "Um teste online pode diagnosticar ADHD?",
+          "a": "Não. Pode servir como rastreio, mas o diagnóstico deve ser feito por um profissional qualificado."
+        }
+      ]
+    },
+    {
       "slug": "vacina-febre-amarela-algarve",
       "title": "Vacina Febre Amarela Algarve — Faro e Portimão",
       "description": "Vacina febre amarela no Algarve com certificado internacional: Centros de Vacinação Internacional em Faro e Portimão, horários, contactos e consulta online com prescrição no próprio dia.",
@@ -70,7 +165,12 @@
       "datePublished": "2026-04-20",
       "dateModified": "2026-04-20",
       "format": "markdown",
-      "image": "/image/guide/guide-group-walk.jpg"
+      "image": "/image/guide/guide-group-walk.jpg",
+      "related": [
+        "adhd-em-adultos-sintomas",
+        "autismo-em-mulheres-diagnostico-tardio",
+        "marcacao-guia-rapido"
+      ]
     },
     {
       "slug": "marcacao-guia-rapido",

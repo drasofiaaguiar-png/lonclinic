@@ -10,6 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
 const { organizationJsonLd } = require('./seo');
+const authors = require('./authors');
 
 const BURNOUT_DIR = path.join(__dirname, 'data', 'burnout');
 const MANIFEST_PATH = path.join(BURNOUT_DIR, 'manifest.json');
@@ -199,7 +200,7 @@ function layoutBurnoutPage(opts) {
     <title>${safeTitle}</title>
     <meta name="description" content="${safeDesc}">
     <meta name="robots" content="${escapeHtml(robots || 'index,follow,max-image-preview:large')}">
-    <meta name="author" content="Lon Clinic">
+    <meta name="author" content="${escapeHtml(authors.getAuthor().displayName)}">
     <link rel="canonical" href="${escapeHtml(canonicalUrl)}">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="Lon Clinic">
@@ -217,7 +218,8 @@ function layoutBurnoutPage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260621b">
-    <link rel="stylesheet" href="/burnout-pages.css?v=20260806b">
+    <link rel="stylesheet" href="/burnout-pages.css?v=20260818a">
+    <link rel="stylesheet" href="/author.css?v=20260818a">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     ${ldScripts}
 </head>
@@ -299,6 +301,7 @@ function layoutBurnoutPage(opts) {
                 </div>
                 <div class="lon-footer-col">
                     <h4>Clínica</h4>
+                    <a href="/equipa/rita-aguiar">A médica</a>
                     <a href="/saudemental">Psicologia</a>
                     <a href="/faq">FAQ</a>
                     <a href="/info.html?page=contato">Contato</a>
@@ -467,9 +470,9 @@ function renderSpoke(origin, slug) {
             inLanguage: 'pt-PT',
             isPartOf: { '@type': 'WebSite', name: 'Lon Clinic', url: o },
             about: { '@type': 'MedicalCondition', name: 'Burnout' },
-            author: { '@id': `${o}/#organization` },
-            publisher: { '@id': `${o}/#organization` }
+            ...authors.articleAuthorSchema(o)
         },
+        authors.personJsonLd(o),
         {
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
@@ -499,6 +502,7 @@ function renderSpoke(origin, slug) {
                 </nav>
                 <h1>${escapeHtml(title)}</h1>
                 <p class="bo-article-deck">${escapeHtml(description)}</p>
+                ${authors.authorBylineHtml(o, meta.author, datePub)}
                 <div class="bo-article-actions">
                     <a class="lon-btn lon-btn-dark lon-btn-sm" href="/burnout/teste?ref=${encodeURIComponent(ref)}">Teste gratuito</a>
                     <a class="lon-btn lon-btn-primary lon-btn-sm" href="/marcar/burnout?ref=${encodeURIComponent(ref)}">Marcar consulta</a>
@@ -507,6 +511,7 @@ function renderSpoke(origin, slug) {
             <div class="bo-prose" lang="pt-PT">
                 ${articleHtml}
             </div>
+            ${authors.authorBioHtml(o, meta.author)}
             <p class="bo-disclaimer">Informação de carácter geral — não substitui consulta médica individualizada. Em crise ou risco imediato, contacte os serviços de emergência.</p>
             ${seriesBlock}
             ${relatedNav(slug, pages)}

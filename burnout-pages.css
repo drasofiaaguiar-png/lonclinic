@@ -219,6 +219,21 @@
     margin: 0 0 20px;
 }
 
+.bo-article-byline {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--lon-muted, #3d554a);
+    margin: -8px 0 20px;
+}
+
+.bo-article-sign {
+    margin: 2rem 0 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--lon-muted, #3d554a);
+    font-style: italic;
+}
+
 .bo-prose {
     font-size: 1.02rem;
     line-height: 1.7;
@@ -259,6 +274,48 @@
 
 .bo-prose strong {
     color: var(--lon-primary, #142018);
+}
+
+.bo-sources {
+    display: grid;
+    gap: 12px;
+    margin: 0.25rem 0 1.75rem;
+}
+
+.bo-source {
+    background: #fff;
+    border: 1px solid rgba(20, 34, 24, 0.1);
+    border-left: 3px solid var(--lon-accent, #255235);
+    border-radius: 12px;
+    padding: 1rem 1.15rem 1.05rem;
+}
+
+.bo-source-org {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--lon-accent, #255235);
+    margin: 0 0 0.45rem !important;
+}
+
+.bo-source p {
+    margin: 0 0 0.55rem;
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.bo-source p:last-child {
+    margin-bottom: 0;
+}
+
+.bo-source-link {
+    margin: 0.15rem 0 0 !important;
+}
+
+.bo-source-link a {
+    font-size: 0.875rem;
+    font-weight: 600;
 }
 
 .bo-disclaimer {

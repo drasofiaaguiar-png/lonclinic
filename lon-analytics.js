@@ -11,6 +11,15 @@
     if (SKIP.test(pathNow)) return;
     if (window.LonAnalytics) return;
 
+    try {
+        var markUrl = new URL(location.href);
+        if (markUrl.searchParams.get('internal') === '1' || markUrl.searchParams.get('internal') === 'staff') {
+            markUrl.searchParams.delete('internal');
+            var cleaned = markUrl.pathname + (markUrl.search || '') + (markUrl.hash || '');
+            history.replaceState({}, '', cleaned);
+        }
+    } catch (e0) { /* ignore */ }
+
     var VID_KEY = 'lon_vid';
     var SID_KEY = 'lon_sid';
     var SID_AT = 'lon_sid_at';

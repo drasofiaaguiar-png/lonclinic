@@ -2,7 +2,7 @@ Trabalhar na área da saúde é, por natureza, uma tarefa exigente. O contacto d
 
 O **burnout nos profissionais de saúde** — médicos, enfermeiros e outras áreas clínicas — não é um problema pontual: é um risco estrutural da profissão, reconhecido pela Organização Mundial da Saúde como fenómeno ocupacional.
 
-Se é médico e quer um foco mais específico, veja também [burnout em médicos](/burnout/medicos). Para um retrato objectivo do seu nível de esgotamento, comece pelo [teste gratuito](/burnout/teste).
+Se é médico e quer um foco mais específico, veja também [burnout médico](/burnout/medicos). Para um retrato objectivo do seu nível de esgotamento, comece pelo [teste gratuito](/burnout/teste).
 
 ## Fatores específicos desta profissão
 

@@ -2719,7 +2719,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const sessionHint = audience === 'all'
                     ? `${k.publicSessions || 0} visitors · ${k.staffSessions || 0} admin`
                     : audience === 'staff'
-                        ? 'Logged-in clinic team'
+                        ? 'This browser and other marked admin devices'
                         : (k.staffSessions ? `${k.staffSessions} admin sessions excluded` : 'Public traffic');
                 kpis.innerHTML = [
                     ['Visitors', k.visitors],
@@ -2731,6 +2731,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ['Conversion', `${k.conversionRate || 0}%`]
                 ].map(([label, val]) => `<div class="an-kpi"><span class="an-kpi-label">${label}</span><span class="an-kpi-val">${val}</span></div>`).join('') +
                     `<p class="an-split-hint">${escapeHtml(sessionHint)}</p>`;
+            }
+            const deviceHint = document.getElementById('analyticsDeviceHint');
+            if (deviceHint) {
+                deviceHint.textContent = data.deviceMarked
+                    ? 'This browser is marked as admin. Past visits from it in this range are moved to Admin (not Direct).'
+                    : 'Your own visits look like Direct until this browser is marked. Use the button, or open any public page after logging in.';
             }
             const chart = document.getElementById('analyticsChart');
             if (chart) chart.innerHTML = anSpark(data.hourly || []);
@@ -2782,6 +2788,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!btn) return;
             analyticsAudience.querySelectorAll('.an-audience-btn').forEach((b) => b.classList.toggle('is-active', b === btn));
             loadAnalyticsPanel();
+        });
+    }
+    const analyticsMarkDeviceBtn = document.getElementById('analyticsMarkDeviceBtn');
+    if (analyticsMarkDeviceBtn) {
+        analyticsMarkDeviceBtn.addEventListener('click', async () => {
+            analyticsMarkDeviceBtn.disabled = true;
+            try {
+                const res = await fetch('/api/admin/analytics/mark-device', { method: 'POST' });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+                analyticsMarkDeviceBtn.textContent = 'Browser marked';
+                loadAnalyticsPanel();
+            } catch (err) {
+                analyticsMarkDeviceBtn.disabled = false;
+                analyticsMarkDeviceBtn.textContent = 'Mark this browser as admin';
+                alert(err.message || 'Could not mark this browser');
+            }
         });
     }
 

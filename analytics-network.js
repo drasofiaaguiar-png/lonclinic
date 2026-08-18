@@ -356,6 +356,34 @@ function hourlySeries(rows, fromIso, days) {
     return arr;
 }
 
+function applyKnownStaff(rows, extraVisitorIds) {
+    const vids = new Set();
+    for (const id of extraVisitorIds || []) {
+        if (id) vids.add(String(id));
+    }
+    const sids = new Set();
+    for (const r of rows || []) {
+        if (!isStaffRow(r)) continue;
+        if (r.visitorId) vids.add(String(r.visitorId));
+        if (r.sessionId) sids.add(String(r.sessionId));
+    }
+    if (!vids.size && !sids.size) return rows || [];
+    return (rows || []).map((r) => {
+        if (isStaffRow(r)) return { ...r, staff: true };
+        const vid = r.visitorId ? String(r.visitorId) : '';
+        const sid = r.sessionId ? String(r.sessionId) : '';
+        if ((vid && vids.has(vid)) || (sid && sids.has(sid))) {
+            return {
+                ...r,
+                staff: true,
+                channel: 'internal',
+                props: { ...(r.props || {}), audience: 'staff' }
+            };
+        }
+        return r;
+    });
+}
+
 function isStaffRow(r) {
     if (!r) return false;
     if (r.staff === true) return true;
@@ -370,17 +398,21 @@ function filterAudience(rows, audience) {
     return rows.filter((r) => !isStaffRow(r));
 }
 
-function buildOverview(rows, liveRows, bookingStats, range, audience) {
+function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaffVisitorIds) {
     const view = ['public', 'staff', 'all'].includes(audience) ? audience : 'public';
-    const tagged = (rows || []).map((r) => ({ ...r, staff: isStaffRow(r) }));
+    const tagged = applyKnownStaff(rows || [], knownStaffVisitorIds).map((r) => ({ ...r, staff: isStaffRow(r) }));
     const burstIds = burstSessionIds(tagged);
     const isNoise = (r) => isProbePath(r.pagePath) || (r.sessionId && burstIds.has(r.sessionId));
     const probeRows = tagged.filter(isNoise);
     const human = tagged.filter((r) => !isNoise(r));
     const used = filterAudience(human, view);
     const humanSessions = new Set(human.map((r) => r.sessionId).filter(Boolean));
-    const liveTagged = (liveRows || [])
-        .map((r) => ({ ...r, staff: isStaffRow(r) }))
+    const staffSids = new Set(human.filter(isStaffRow).map((r) => r.sessionId).filter(Boolean));
+    const liveTagged = applyKnownStaff(liveRows || [], knownStaffVisitorIds)
+        .map((r) => {
+            const staff = isStaffRow(r) || (r.sessionId && staffSids.has(r.sessionId));
+            return { ...r, staff, channel: staff ? 'internal' : r.channel };
+        })
         .filter((r) => r.sessionId && humanSessions.has(r.sessionId));
     const liveUsed = filterAudience(liveTagged, view);
     const views = dedupePageviews(used);
@@ -471,12 +503,13 @@ function buildOverview(rows, liveRows, bookingStats, range, audience) {
 
 function overviewFromMemory(rangeKey, audience) {
     const range = rangeBounds(rangeKey);
+    const known = memoryEvents.filter(isStaffRow).map((r) => r.visitorId).filter(Boolean);
     const rows = memoryEvents.filter((r) => inRange(r.occurredAt, range.from, range.to));
     const liveFrom = new Date(Date.now() - 120000).toISOString();
     const live = memoryEvents.filter(
         (r) => (r.name === 'heartbeat' || r.name === 'page_view') && r.occurredAt >= liveFrom
     );
-    return buildOverview(rows, live, { count: 0, revenueCents: 0 }, range, audience);
+    return buildOverview(rows, live, { count: 0, revenueCents: 0 }, range, audience, known);
 }
 
 module.exports = {

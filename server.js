@@ -34,6 +34,7 @@ const guide = require('./guide');
 const burnoutPages = require('./burnout-pages');
 const seo = require('./seo');
 const { hydrateInfoHtml, NOINDEX_PAGES: INFO_NOINDEX_PAGES } = require('./info-ssr');
+const authors = require('./authors');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 const session = require('express-session');
@@ -344,6 +345,44 @@ function isAdminSession(req) {
     return !role || role === 'admin';
 }
 
+const STAFF_DEVICE_COOKIE = 'lon_staff';
+const STAFF_DEVICE_TTL_SEC = 400 * 86400;
+const STAFF_DEVICE_TOKEN = crypto
+    .createHmac('sha256', SESSION_SECRET)
+    .update('lon-staff-device-v1')
+    .digest('hex')
+    .slice(0, 32);
+const STAFF_IPS = String(process.env.ANALYTICS_STAFF_IPS || '')
+    .split(/[,;\s]+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+function requestClientIp(req) {
+    return String(
+        (req && req.headers && (req.headers['cf-connecting-ip'] || String(req.headers['x-forwarded-for'] || '').split(',')[0])) ||
+            (req && req.ip) ||
+            ''
+    ).trim();
+}
+
+function hasStaffDeviceCookie(req) {
+    return readCookie(req, STAFF_DEVICE_COOKIE) === STAFF_DEVICE_TOKEN;
+}
+
+function ipIsStaff(req) {
+    return STAFF_IPS.length > 0 && STAFF_IPS.includes(requestClientIp(req));
+}
+
+function setStaffDeviceCookie(res) {
+    if (!res || typeof res.append !== 'function') return;
+    setAnalyticsCookie(res, STAFF_DEVICE_COOKIE, STAFF_DEVICE_TOKEN, STAFF_DEVICE_TTL_SEC);
+}
+
+function wantsStaffDeviceMark(req) {
+    const v = String((req && req.query && req.query.internal) || '').toLowerCase();
+    return v === '1' || v === 'staff';
+}
+
 // Middleware to check if user is authenticated
 function requireAuth(req, res, next) {
     if (req.session && req.session.clinicAuthenticated) {
@@ -363,7 +402,11 @@ function requireAdmin(req, res, next) {
 }
 
 function isStaffRequest(req) {
-    return !!(req && req.session && req.session.clinicAuthenticated);
+    if (!req) return false;
+    if (req.session && req.session.clinicAuthenticated) return true;
+    if (hasStaffDeviceCookie(req)) return true;
+    if (wantsStaffDeviceMark(req)) return true;
+    return ipIsStaff(req);
 }
 
 function staffAuthPayload(req) {
@@ -4148,13 +4191,16 @@ app.get('/api/admin/analytics', requireAdmin, async (req, res) => {
     const audience = ['public', 'staff', 'all'].includes(audienceKey) ? audienceKey : 'public';
     try {
         if (!usePersistentDb) {
-            return res.json(analyticsNet.overviewFromMemory(range, audience));
+            const overview = analyticsNet.overviewFromMemory(range, audience);
+            overview.deviceMarked = hasStaffDeviceCookie(req);
+            return res.json(overview);
         }
         const bounds = analyticsNet.rangeBounds(range);
-        const [rows, live, bookingStats] = await Promise.all([
+        const [rows, live, bookingStats, staffVisitorIds] = await Promise.all([
             db.listAnalyticsEventsBetween(bounds.from, bounds.to, { excludeHeartbeat: true }),
             db.listLiveAnalyticsSessions(new Date(Date.now() - 120000).toISOString()),
-            db.analyticsBookingStats(bounds.from, bounds.to)
+            db.analyticsBookingStats(bounds.from, bounds.to),
+            db.listStaffVisitorIds()
         ]);
         const liveRows = live.map((s) => ({
             sessionId: s.sessionId,
@@ -4162,11 +4208,32 @@ app.get('/api/admin/analytics', requireAdmin, async (req, res) => {
             staff: !!s.staff,
             channel: s.staff ? 'internal' : undefined
         }));
-        res.json(analyticsNet.buildOverview(rows, liveRows, bookingStats, bounds, audience));
+        const overview = analyticsNet.buildOverview(rows, liveRows, bookingStats, bounds, audience, staffVisitorIds);
+        overview.deviceMarked = hasStaffDeviceCookie(req);
+        res.json(overview);
     } catch (err) {
         console.error('GET /api/admin/analytics:', err.message);
         res.status(500).json({ error: 'Failed to load analytics' });
     }
+});
+
+app.post('/api/admin/analytics/mark-device', requireAdmin, async (req, res) => {
+    setStaffDeviceCookie(res);
+    try {
+        await emitServerAnalytics(
+            'page_view',
+            {
+                pagePath: '/admin',
+                landingPath: '/admin',
+                referrer: '',
+                props: { via: 'staff-device' }
+            },
+            req
+        );
+    } catch (err) {
+        console.error('POST /api/admin/analytics/mark-device:', err.message);
+    }
+    res.json({ success: true, deviceMarked: true });
 });
 
 // NOTE:
@@ -4199,6 +4266,13 @@ const ANALYTICS_SKIP_PATH = /^\/(api|admin|clinic-portal|doctors|webhook|patient
 const ANALYTICS_SKIP_PAGE = /\/(admin|clinic|dashboard)(\.html)?$/i;
 const ANALYTICS_STATIC_EXT =
     /\.(js|css|png|jpe?g|webp|gif|svg|ico|woff2?|ttf|map|xml|txt|json|webmanifest|mp4|pdf)$/i;
+
+app.use((req, res, next) => {
+    if (wantsStaffDeviceMark(req) || (req.session && req.session.clinicAuthenticated)) {
+        setStaffDeviceCookie(res);
+    }
+    next();
+});
 
 app.use((req, res, next) => {
     if (req.method !== 'GET') return next();
@@ -4270,7 +4344,21 @@ app.get('/travel-clinic', (req, res) => {
 });
 
 app.get('/equipa', (req, res) => {
-    res.redirect(301, '/info.html?page=equipa');
+    res.redirect(301, '/equipa/rita-aguiar');
+});
+
+app.get('/equipa/:slug', (req, res) => {
+    const slug = String(req.params.slug || '').toLowerCase();
+    try {
+        const result = authors.renderAuthorPage(PUBLIC_SITE_URL, slug);
+        if (!result) {
+            return res.redirect(302, '/equipa/rita-aguiar');
+        }
+        sendHtmlNoCacheString(res, result.html);
+    } catch (err) {
+        console.error('❌ Author page error:', err.message || err);
+        res.status(500).type('html').send('Error loading author page.');
+    }
 });
 
 const MARCAR_TIPO_TO_SLUG = {
@@ -4371,6 +4459,20 @@ app.get('/invite/:token', async (req, res) => {
 
 app.get('/faq', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'faq.html'), 'Error loading FAQ page');
+});
+
+app.get('/magazine', (req, res) => {
+    try {
+        const html = guide.renderMagazineIndex(PUBLIC_SITE_URL);
+        sendHtmlNoCacheString(res, html);
+    } catch (err) {
+        console.error('❌ Magazine index error:', err.message || err);
+        res.status(500).type('html').send('Error loading Magazine.');
+    }
+});
+
+app.get('/magazine/', (req, res) => {
+    res.redirect(301, '/magazine');
 });
 
 app.get('/blog', (req, res) => {
@@ -4516,6 +4618,9 @@ app.get('/info.html', (req, res) => {
     if (page === 'perguntas-frequentes') {
         return res.redirect(301, '/faq');
     }
+    if (page === 'equipa') {
+        return res.redirect(301, '/equipa/rita-aguiar');
+    }
     if (INFO_NOINDEX_PAGES.has(page)) {
         res.setHeader('X-Robots-Tag', 'noindex, follow, noarchive');
     }
@@ -4649,6 +4754,7 @@ app.use(express.static(path.join(__dirname), {
         const base = path.basename(filePath);
         if (
             base === 'guide.css' ||
+            base === 'magazine.css' ||
             base === 'burnout-pages.css' ||
             base === 'psicologia.css' ||
             base === 'psicologia.js' ||
@@ -6279,6 +6385,7 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
         req.session.clinicRole = 'admin';
         req.session.professionalId = null;
         req.session.clinicLoginTime = new Date().toISOString();
+        setStaffDeviceCookie(res);
 
         console.log(`   🔐 Clinic portal login (admin): ${username}`);
         return res.json({
@@ -6301,6 +6408,7 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
             req.session.clinicRole = 'clinician';
             req.session.professionalId = pro.id;
             req.session.clinicLoginTime = new Date().toISOString();
+            setStaffDeviceCookie(res);
 
             console.log(`   🔐 Clinic portal login (clinician): ${pro.username}`);
             return res.json({

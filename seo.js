@@ -69,7 +69,15 @@ function organizationNode(origin) {
         email: 'info@lonclinic.com',
         telephone: '+351 928 372 775',
         address: { '@type': 'PostalAddress', addressCountry: 'PT' },
-        sameAs: ['https://www.trustpilot.com/review/lonclinic.com']
+        sameAs: ['https://www.trustpilot.com/review/lonclinic.com'],
+        founder: {
+            '@type': 'Person',
+            '@id': `${o}/equipa/rita-aguiar#person`,
+            name: 'Rita Aguiar',
+            jobTitle: 'Médica',
+            url: `${o}/equipa/rita-aguiar`
+        },
+        employee: { '@id': `${o}/equipa/rita-aguiar#person` }
     };
 }
 
@@ -133,7 +141,6 @@ function urlEntry(loc, lastmod, changefreq, priority) {
 
 const INDEXABLE_INFO_PAGES = [
     'sobre-nos',
-    'equipa',
     'parcerias',
     'registo-medico',
     'contato',
@@ -166,6 +173,8 @@ function buildSitemapXml(origin) {
         ['/consultancy', today, 'monthly', '0.7'],
         ['/faq', today, 'monthly', '0.7'],
         ['/blog', today, 'weekly', '0.8'],
+        ['/magazine', today, 'weekly', '0.85'],
+        ['/equipa/rita-aguiar', today, 'monthly', '0.8'],
         ['/info.html', today, 'monthly', '0.6']
     ];
 

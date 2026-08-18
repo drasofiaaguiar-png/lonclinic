@@ -1,0 +1,456 @@
+/* LON Magazine — editorial front (Vogue / Women's Health register) */
+
+.mag-body {
+    --mag-paper: #f3eee6;
+    --mag-paper-2: #ebe4d8;
+    --mag-ink: #14110f;
+    --mag-ink-soft: #5c534c;
+    --mag-line: rgba(20, 17, 15, 0.14);
+    --mag-gold: #8a6a3b;
+    --mag-serif: "Playfair Display", "Times New Roman", serif;
+    --mag-sans: "DM Sans", system-ui, sans-serif;
+    margin: 0;
+    background: var(--mag-paper);
+    color: var(--mag-ink);
+    font-family: var(--mag-sans);
+    -webkit-font-smoothing: antialiased;
+}
+
+.mag-body a {
+    color: inherit;
+}
+
+.mag-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 4vw;
+    border-bottom: 1px solid var(--mag-line);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.mag-topbar a {
+    text-decoration: none;
+}
+
+.mag-topbar a:hover {
+    color: var(--mag-gold);
+}
+
+.mag-topbar nav {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+}
+
+.mag-topbar [aria-current="page"] {
+    box-shadow: inset 0 -1px 0 currentColor;
+}
+
+.mag-masthead {
+    text-align: center;
+    padding: 28px 4vw 22px;
+    border-bottom: 1px solid var(--mag-ink);
+}
+
+.mag-kicker-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--mag-ink-soft);
+    margin-bottom: 8px;
+}
+
+.mag-wordmark {
+    margin: 0;
+    font-family: var(--mag-serif);
+    font-size: clamp(3.4rem, 14vw, 9.2rem);
+    font-weight: 700;
+    letter-spacing: -0.045em;
+    line-height: 0.82;
+}
+
+.mag-wordmark span {
+    font-weight: 500;
+    font-style: italic;
+    letter-spacing: -0.03em;
+}
+
+.mag-issue {
+    margin: 14px 0 0;
+    font-size: 0.72rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--mag-ink-soft);
+}
+
+.mag-cover {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    min-height: min(88vh, 920px);
+    border-bottom: 1px solid var(--mag-ink);
+}
+
+.mag-cover-media {
+    position: relative;
+    min-height: 420px;
+    background: #2a2420 center / cover no-repeat;
+}
+
+.mag-cover-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(20, 17, 15, 0.05) 40%, rgba(20, 17, 15, 0.28) 100%);
+}
+
+.mag-cover-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: clamp(28px, 5vw, 64px);
+    background: var(--mag-paper);
+}
+
+.mag-label {
+    margin: 0 0 14px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--mag-gold);
+}
+
+.mag-cover-copy h1 {
+    margin: 0 0 18px;
+    font-family: var(--mag-serif);
+    font-size: clamp(2.1rem, 4.6vw, 3.85rem);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1.05;
+}
+
+.mag-cover-copy h1 em {
+    font-style: italic;
+    font-weight: 500;
+}
+
+.mag-dek {
+    margin: 0 0 22px;
+    max-width: 38ch;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    color: var(--mag-ink-soft);
+}
+
+.mag-meta {
+    margin: 0 0 28px;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mag-ink-soft);
+}
+
+.mag-read {
+    align-self: flex-start;
+    text-decoration: none;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--mag-ink);
+    padding-bottom: 4px;
+}
+
+.mag-read:hover {
+    color: var(--mag-gold);
+    border-color: var(--mag-gold);
+}
+
+.mag-wrap {
+    width: min(1240px, calc(100% - 8vw));
+    margin: 0 auto;
+}
+
+.mag-section {
+    padding: 56px 0 12px;
+}
+
+.mag-section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--mag-ink);
+}
+
+.mag-section-head h2 {
+    margin: 0;
+    font-family: var(--mag-serif);
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-weight: 600;
+    font-style: italic;
+    letter-spacing: -0.03em;
+}
+
+.mag-section-head p {
+    margin: 0;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mag-ink-soft);
+}
+
+.mag-features {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 28px 36px;
+    padding-bottom: 48px;
+}
+
+.mag-feature-main {
+    text-decoration: none;
+}
+
+.mag-feature-main .mag-photo {
+    display: block;
+    height: clamp(280px, 38vw, 460px);
+    margin-bottom: 18px;
+    background: #2a2420 center / cover no-repeat;
+}
+
+.mag-feature-main h3,
+.mag-stack h3,
+.mag-card h3 {
+    margin: 0 0 8px;
+    font-family: var(--mag-serif);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+}
+
+.mag-feature-main h3 {
+    font-size: clamp(1.55rem, 2.5vw, 2.15rem);
+}
+
+.mag-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid var(--mag-line);
+}
+
+.mag-stack a {
+    display: grid;
+    grid-template-columns: 118px 1fr;
+    gap: 16px;
+    padding: 18px 0;
+    text-decoration: none;
+    border-bottom: 1px solid var(--mag-line);
+}
+
+.mag-stack .mag-photo {
+    display: block;
+    height: 88px;
+    background: #2a2420 center / cover no-repeat;
+}
+
+.mag-stack h3 {
+    font-size: 1.12rem;
+}
+
+.mag-excerpt {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--mag-ink-soft);
+}
+
+.mag-well {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+    padding-bottom: 56px;
+}
+
+.mag-card {
+    text-decoration: none;
+}
+
+.mag-card .mag-photo {
+    display: block;
+    height: 220px;
+    margin-bottom: 14px;
+    background: #2a2420 center / cover no-repeat;
+}
+
+.mag-card h3 {
+    font-size: 1.28rem;
+}
+
+.mag-toc {
+    list-style: none;
+    margin: 0;
+    padding: 8px 0 40px;
+    border-top: 1px solid var(--mag-line);
+}
+
+.mag-toc li {
+    display: grid;
+    grid-template-columns: 2.4rem 7rem 1fr auto;
+    gap: 14px;
+    align-items: baseline;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--mag-line);
+    font-size: 0.95rem;
+}
+
+.mag-toc a {
+    text-decoration: none;
+    font-family: var(--mag-serif);
+    font-size: 1.15rem;
+    font-style: italic;
+}
+
+.mag-toc a:hover {
+    color: var(--mag-gold);
+}
+
+.mag-toc-n {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.08em;
+    color: var(--mag-gold);
+    font-size: 0.78rem;
+}
+
+.mag-toc-rubric {
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mag-ink-soft);
+}
+
+.mag-toc-date {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mag-ink-soft);
+}
+
+.mag-cta {
+    margin: 12px 0 72px;
+    padding: 42px 36px;
+    text-align: center;
+    background: var(--mag-ink);
+    color: var(--mag-paper);
+}
+
+.mag-cta p {
+    margin: 0 0 8px;
+    font-size: 0.7rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: rgba(243, 238, 230, 0.6);
+}
+
+.mag-cta h2 {
+    margin: 0 0 22px;
+    font-family: var(--mag-serif);
+    font-size: clamp(1.7rem, 3vw, 2.5rem);
+    font-weight: 500;
+    font-style: italic;
+}
+
+.mag-cta-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.mag-cta a {
+    text-decoration: none;
+    padding: 12px 22px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.mag-cta-primary {
+    background: var(--mag-paper);
+    color: var(--mag-ink);
+}
+
+.mag-cta-ghost {
+    border: 1px solid rgba(243, 238, 230, 0.35);
+}
+
+.mag-foot {
+    padding: 28px 4vw 40px;
+    border-top: 1px solid var(--mag-ink);
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mag-ink-soft);
+}
+
+.mag-foot a {
+    text-decoration: none;
+    margin-left: 14px;
+}
+
+@media (max-width: 860px) {
+    .mag-kicker-row {
+        justify-content: center;
+    }
+
+    .mag-kicker-row span:first-child,
+    .mag-kicker-row span:last-child {
+        display: none;
+    }
+
+    .mag-cover,
+    .mag-features,
+    .mag-well {
+        grid-template-columns: 1fr;
+    }
+
+    .mag-cover {
+        min-height: 0;
+    }
+
+    .mag-cover-media {
+        min-height: 52vh;
+    }
+
+    .mag-stack a {
+        grid-template-columns: 92px 1fr;
+    }
+
+    .mag-toc li {
+        grid-template-columns: 2rem 1fr;
+        grid-template-areas:
+            "n rubric"
+            "n title"
+            "n date";
+    }
+
+    .mag-toc-n { grid-area: n; }
+    .mag-toc-rubric { grid-area: rubric; }
+    .mag-toc a { grid-area: title; grid-column: 2; }
+    .mag-toc-date { grid-area: date; }
+}

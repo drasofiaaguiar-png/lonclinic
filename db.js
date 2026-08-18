@@ -545,6 +545,18 @@ async function listLiveAnalyticsSessions(sinceIso) {
     return r.rows.map((row) => ({ sessionId: row.session_id, staff: row.staff === true }));
 }
 
+async function listStaffVisitorIds() {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT DISTINCT visitor_id
+         FROM analytics_events
+         WHERE visitor_id IS NOT NULL
+           AND (channel = 'internal' OR COALESCE(props->>'audience', '') IN ('staff', 'admin'))
+         LIMIT 8000`
+    );
+    return r.rows.map((row) => row.visitor_id).filter(Boolean);
+}
+
 async function analyticsBookingStats(fromIso, toIso) {
     const p = getPool();
     const r = await p.query(
@@ -1677,6 +1689,7 @@ module.exports = {
     insertAnalyticsEvents,
     listAnalyticsEventsBetween,
     listLiveAnalyticsSessions,
+    listStaffVisitorIds,
     analyticsBookingStats,
     closePool
 };

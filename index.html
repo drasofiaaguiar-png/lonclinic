@@ -44,7 +44,7 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="preload" as="image" href="/image/image2.webp" fetchpriority="high">
 
-    <link rel="stylesheet" href="landing.css?v=20260817b">
+    <link rel="stylesheet" href="landing.css?v=20260818a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
@@ -70,7 +70,29 @@
       "priceRange": "€€",
       "medicalSpecialty": ["Telemedicina", "Medicina Geral", "Medicina de Família"],
       "areaServed": { "@type": "Place", "name": "Europa" },
-      "sameAs": ["https://www.trustpilot.com/review/lonclinic.com"]
+      "sameAs": ["https://www.trustpilot.com/review/lonclinic.com"],
+      "founder": {
+        "@type": "Person",
+        "@id": "https://lonclinic.com/equipa/rita-aguiar#person",
+        "name": "Rita Aguiar",
+        "jobTitle": "Médica",
+        "url": "https://lonclinic.com/equipa/rita-aguiar"
+      },
+      "employee": { "@id": "https://lonclinic.com/equipa/rita-aguiar#person" }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": ["Person", "Physician"],
+      "@id": "https://lonclinic.com/equipa/rita-aguiar#person",
+      "name": "Rita Aguiar",
+      "honorificPrefix": "Drª",
+      "jobTitle": "Médica",
+      "url": "https://lonclinic.com/equipa/rita-aguiar",
+      "description": "Médica com 9 anos de prática clínica. Autora e revisora clínica dos guias da Lon Clinic.",
+      "worksFor": { "@id": "https://lonclinic.com/#organization" },
+      "memberOf": { "@type": "Organization", "name": "Ordem dos Médicos", "url": "https://www.ordemdosmedicos.pt/" }
     }
     </script>
     <script type="application/ld+json">
@@ -118,6 +140,7 @@
                 <a href="#inicio">Início</a>
                 <a href="#platform">Plataforma</a>
                 <a href="#servicos">Serviços</a>
+                <a href="/magazine">Magazine</a>
                 <a href="/blog">Guides</a>
                 <a href="#contacto">Contato</a>
             </nav>
@@ -134,6 +157,7 @@
             <a href="#inicio">Início</a>
             <a href="#platform">Plataforma</a>
             <a href="#servicos">Serviços</a>
+            <a href="/magazine">Magazine</a>
             <a href="/blog">Guides</a>
             <a href="#contacto">Contato</a>
             <a href="/patient-portal">Login</a>
@@ -381,11 +405,17 @@
                         <h3 class="lon-team-name">Drª Rita Aguiar</h3>
                         <p class="lon-team-role">Médica</p>
                         <ul class="lon-team-credentials">
+                            <li class="lon-team-years">9 anos de prática clínica</li>
                             <li>Cédula Profissional da Ordem dos Médicos em Portugal</li>
                             <li>Pós-graduação em Medicina do Viajante e das Populações Móveis (2021), Faculdade de Medicina da Universidade do Porto</li>
                             <li>Consultadoria na Organização Mundial de Saúde, secção de Populações Móveis (2023)</li>
                         </ul>
-                        <a href="/info.html?page=equipa" class="lon-btn lon-btn-soft lon-team-more">Conhecer a equipa</a>
+                        <p class="lon-team-verify">
+                            <a href="/equipa/rita-aguiar">Perfil e credenciais</a>
+                            · <a href="https://www.ordemdosmedicos.pt/" target="_blank" rel="noopener noreferrer">Ordem dos Médicos</a>
+                            · <a href="https://www.ers.pt/" target="_blank" rel="noopener noreferrer">ERS 45475</a>
+                        </p>
+                        <a href="/equipa/rita-aguiar" class="lon-btn lon-btn-soft lon-team-more">Ver perfil da médica</a>
                     </div>
                 </article>
             </div>
@@ -544,7 +574,7 @@
                 <div class="lon-footer-col">
                     <h4>Clínica</h4>
                     <a href="/info.html?page=sobre-nos">Sobre nós</a>
-                    <a href="/info.html?page=equipa">A equipa</a>
+                    <a href="/equipa/rita-aguiar">A equipa</a>
                     <a href="/info.html?page=parcerias">Parcerias</a>
                     <a href="/info.html?page=registo-medico">Registo médico</a>
                     <a href="/info.html?page=contato">Contato</a>
@@ -554,6 +584,7 @@
                 <div class="lon-footer-col">
                     <h4>Apoio</h4>
                     <a href="/faq">Perguntas frequentes</a>
+                    <a href="/magazine">Magazine</a>
                     <a href="/blog">Guides</a>
                     <a href="/info.html?page=como-funciona">Como funciona</a>
                     <a href="/info.html?page=seguranca-dados">Segurança dos dados</a>

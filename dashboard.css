@@ -3145,6 +3145,20 @@ a.admin-nav-link {
     font-size: 0.8rem;
     color: var(--text-muted);
 }
+.an-device-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 16px;
+    margin: 0 0 16px;
+}
+.an-device-hint {
+    margin: 0;
+    flex: 1 1 240px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+}
 .an-badge {
     display: inline-block;
     padding: 2px 8px;

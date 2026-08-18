@@ -24,6 +24,6 @@ A recuperação exige triagem: o que é urgente de verdade, o que pode esperar, 
 
 Comece pelo [teste](/burnout/teste) ou [marque consulta](/marcar/burnout). A [consulta anti-burnout](/clinica-anti-burnout) é online e pensada para agendas irregulares.
 
-Série completa para founders: [burnout em fundadores de startups](/burnout/fundadores) (8 artigos) · [índice da coleção](/burnout/colecao#fundadores).
+Série completa para founders: [burnout de founder](/burnout/fundadores) (8 artigos) · [índice da coleção](/burnout/colecao#fundadores).
 
 [Hub burnout](/burnout) · [Recuperação](/burnout/recuperacao)

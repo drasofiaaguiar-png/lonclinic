@@ -202,6 +202,17 @@
     background: #f0f4f1;
 }
 
+.guide-card-byline {
+    margin: 0 0 6px;
+    font-size: 0.78rem;
+}
+
+.guide-card-byline a {
+    color: inherit;
+    font-weight: 650;
+    text-decoration: none;
+}
+
 .guide-empty {
     grid-column: 1 / -1;
     text-align: center;
@@ -353,6 +364,30 @@
     max-width: none;
 }
 
+.guide-figure,
+.guide-prose figure {
+    margin: 1.6rem 0 2rem;
+    border-radius: 18px;
+    overflow: hidden;
+    background: #eef3ef;
+}
+
+.guide-figure-lead {
+    width: min(100%, 1060px);
+    margin: 0 auto 28px;
+}
+
+.guide-figure img,
+.guide-prose figure img,
+.guide-prose p > img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 440px;
+    object-fit: cover;
+    border-radius: 18px;
+}
+
 .guide-prose > *:first-child {
     margin-top: 0;
 }
@@ -404,6 +439,140 @@
 }
 
 /* CTAs com fundo verde escuro: o .guide-prose a acima ganhava à cor dos botões */
+.guide-book {
+    margin: 1.85rem 0;
+}
+
+.guide-book-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.guide-book-card {
+    background: linear-gradient(160deg, #1b3f29 0%, #2f6342 58%, #255235 100%);
+    color: #f7f9fb;
+    border-radius: 18px;
+    padding: 20px 18px 18px;
+    box-shadow: 0 14px 32px rgba(27, 63, 41, 0.22);
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.guide-book-chip {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #b7ebc8;
+    margin: 0 0 10px;
+}
+
+.guide-book-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    color: #ffffff;
+    margin: 0 0 8px;
+}
+
+.guide-book-price {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #e8fff0;
+    margin: 0 0 6px;
+}
+
+.guide-book-note {
+    font-size: 0.82rem;
+    color: rgba(247, 249, 251, 0.72);
+    line-height: 1.45;
+    margin: 0 0 16px;
+    flex: 1;
+}
+
+.guide-book-card .lon-btn,
+.guide-prose .guide-book-card a.lon-btn,
+.guide-prose .guide-book-card a.lon-btn-primary {
+    align-self: flex-start;
+    background: #ffffff;
+    color: #1b3f29;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.guide-book-card .lon-btn:hover,
+.guide-prose .guide-book-card a.lon-btn-primary:hover {
+    background: #e8fff0;
+    color: #143224;
+}
+
+.guide-related {
+    width: min(100%, 720px);
+    margin: 2.4rem auto 0;
+}
+
+.guide-related-heading {
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--lon-primary);
+    margin: 0 0 14px;
+}
+
+.guide-related-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.guide-related-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 16px 16px 15px;
+    border: 1px solid var(--lon-border);
+    border-radius: 16px;
+    background: #ffffff;
+    text-decoration: none;
+    box-shadow: 0 10px 24px rgba(15, 26, 20, 0.06);
+    transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.guide-related-card:hover {
+    border-color: var(--lon-accent);
+    transform: translateY(-2px);
+}
+
+.guide-related-kicker {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lon-accent);
+}
+
+.guide-related-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--lon-primary);
+    line-height: 1.3;
+}
+
+.guide-related-desc {
+    font-size: 0.88rem;
+    color: var(--lon-muted);
+    line-height: 1.45;
+}
+
+@media (max-width: 700px) {
+    .guide-book-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .guide-prose a.lon-btn-primary,
 .guide-prose a.lon-btn-dark,
 .guide-prose a.alg-btn-primary,
@@ -429,6 +598,12 @@
 .guide-prose a.co-btn-primary:hover,
 .guide-prose a.co-btn-cta-large:hover {
     color: #ffffff;
+}
+
+.guide-prose .guide-book-card a.lon-btn-primary,
+.guide-prose .guide-book-card a.lon-btn-primary:hover {
+    color: #1b3f29;
+    text-decoration: none;
 }
 
 .guide-prose strong {

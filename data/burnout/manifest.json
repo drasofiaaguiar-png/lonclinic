@@ -3,24 +3,33 @@
     {
       "slug": "o-que-e",
       "navLabel": "O que é burnout",
-      "title": "Burnout: o síndrome de estar queimado",
-      "description": "O que é burnout (síndrome de estar queimado): definição, quem está mais exposto e as três dimensões — exaustão emocional, despersonalização e baixa realização pessoal.",
+      "title": "Burnout: o que é, sintomas e como perceber se está a acontecer consigo",
+      "description": "O que é burnout e como saber se aquilo que sente pode ser mais do que cansaço? Conheça os principais sintomas, causas e sinais de alerta do esgotamento profissional.",
       "datePublished": "2026-08-06",
-      "dateModified": "2026-08-06",
+      "dateModified": "2026-08-18",
+      "reviewedBy": "Validado pela equipa médica da LON Clinic a 18.08.2026",
       "format": "markdown",
       "group": "guides",
       "faq": [
         {
           "q": "O que é burnout?",
-          "a": "É a sensação de mal-estar por sobre-esforço sustentado relacionado com o trabalho — stress intenso e/ou prolongado que ultrapassa os recursos psicológicos da pessoa. Também chamado síndrome de estar queimado."
+          "a": "O burnout é um estado de esgotamento associado ao stress crónico no contexto profissional. A OMS classifica-o como um fenómeno ocupacional, caracterizado por exaustão emocional, despersonalização e baixa realização profissional."
         },
         {
-          "q": "Quais são as três dimensões do burnout?",
-          "a": "Exaustão emocional (já não conseguir dar mais), despersonalização (indiferença e distanciamento) e baixa realização pessoal (sensação de que o esforço já não vale a pena)."
+          "q": "O burnout é uma doença?",
+          "a": "A OMS classifica o burnout na CID-11 como um fenómeno ocupacional, e não como uma doença ou condição médica. Isso não significa que seja pouco importante. O esgotamento pode ter um impacto significativo no bem-estar e no funcionamento da pessoa."
         },
         {
-          "q": "O burnout é só um problema individual?",
-          "a": "Não. É frequentemente estrutural: exigências constantes que ultrapassam a capacidade de resposta. A prevenção eficaz atua a nível individual e organizacional."
+          "q": "O burnout tem cura?",
+          "a": "É possível recuperar de um burnout. A recuperação pode envolver mudanças nas condições de trabalho, descanso, acompanhamento psicológico e, quando necessário, apoio médico. O processo varia de pessoa para pessoa. Quanto mais se protelar a mudança, mais difícil é a recuperação."
+        },
+        {
+          "q": "Quanto tempo é preciso estar assim para ser burnout?",
+          "a": "Não existe um número simples de dias ou semanas que permita determinar, sozinho, que alguém tem burnout. A persistência dos sintomas, o contexto profissional e o impacto no funcionamento diário são importantes para a avaliação."
+        },
+        {
+          "q": "Quando devo procurar ajuda?",
+          "a": "Se o esgotamento está a persistir, interfere com a vida diária ou está a afetar significativamente o trabalho, o sono, as relações ou a capacidade de cuidar de si, é aconselhável procurar apoio profissional. Se existir desesperança intensa ou pensamentos de se magoar, procure ajuda com urgência."
         }
       ]
     },
@@ -414,13 +423,35 @@
     },
     {
       "slug": "medicos",
-      "navLabel": "Burnout em médicos",
-      "title": "Burnout em médicos",
-      "description": "Burnout em médicos e profissionais de saúde: carga clínica, plantões e a dificuldade de pedir ajuda quando se está do outro lado.",
+      "navLabel": "Burnout médico",
+      "title": "Burnout médico: por que a profissão mais vocacionada também é a que mais adoece",
+      "description": "O burnout médico atinge níveis elevados entre profissionais de saúde. Entenda porque a medicina é particularmente vulnerável, quais os sinais e o que pode realmente ajudar.",
       "datePublished": "2026-08-06",
-      "dateModified": "2026-08-06",
+      "dateModified": "2026-08-18",
       "format": "markdown",
-      "group": "profession"
+      "group": "profession",
+      "faq": [
+        {
+          "q": "O que é burnout médico?",
+          "a": "É o esgotamento associado ao stress crónico na prática da medicina. Não significa que o médico deixou de gostar da profissão ou perdeu a vocação: significa que as exigências ultrapassaram, durante demasiado tempo, os recursos físicos e emocionais disponíveis."
+        },
+        {
+          "q": "O burnout médico é frequente?",
+          "a": "Sim. Dados da American Medical Association indicam que 41,9% dos médicos nos Estados Unidos reportaram pelo menos um sintoma de burnout em 2025. Muitos continuam a trabalhar mesmo quando já estão profundamente esgotados, o que torna o problema fácil de subestimar."
+        },
+        {
+          "q": "Porque é que a medicina é tão vulnerável ao burnout?",
+          "a": "Pela combinação de responsabilidade constante, horários longos e pouco previsíveis, sobrecarga administrativa e uma cultura que normaliza aguentar. O estigma em torno da procura de apoio de saúde mental continua presente na profissão."
+        },
+        {
+          "q": "Como aparece o burnout num médico?",
+          "a": "Pode manifestar-se como exaustão persistente, distanciamento dos doentes, perda de empatia, irritabilidade, insegurança em decisões clínicas rotineiras, alterações do sono e dificuldade em desligar depois do turno. Nenhum sinal isolado chega para um diagnóstico."
+        },
+        {
+          "q": "O que ajuda no burnout médico?",
+          "a": "O autocuidado individual pode ajudar, mas raramente chega. A evidência aponta para intervenções organizacionais — menos burocracia, equipas adequadas, horários e recuperação — e, a nível pessoal, acompanhamento psicológico e avaliação clínica quando o esgotamento já se instalou."
+        }
+      ]
     },
     {
       "slug": "profissionais-de-saude",
@@ -526,18 +557,34 @@
     },
     {
       "slug": "fundadores",
-      "navLabel": "Burnout em fundadores",
-      "title": "Burnout em fundadores de startups",
-      "description": "Burnout em fundadores: dados, porque a função é estruturalmente diferente, e o custo para o negócio — 1.º de 8 artigos.",
+      "navLabel": "Burnout de founder",
+      "title": "Burnout de founder: o lado invisível de criar uma startup",
+      "description": "Criar uma empresa exige uma dedicação que raramente é falada abertamente. Conheça os sinais de burnout de founder, porque acontece e o que pode realmente ajudar a preveni-lo.",
       "group": "founders",
       "faq": [
         {
-          "q": "O burnout é comum em fundadores?",
-          "a": "Sim. Inquéritos independentes mostram que mais de metade dos fundadores relata um episódio de burnout no último ano, e muitos escondem o desgaste de investidores e equipa."
+          "q": "O burnout de founder é diferente do burnout comum?",
+          "a": "As dimensões centrais do burnout são semelhantes, mas o contexto pode ser muito diferente. Fundadores enfrentam frequentemente uma forte identificação entre a pessoa e a empresa, elevada incerteza, responsabilidade direta pela sobrevivência do negócio e menos separação entre trabalho e vida pessoal. Estes fatores podem tornar o esgotamento particularmente difícil de reconhecer e de interromper."
+        },
+        {
+          "q": "É possível prevenir o burnout enquanto se lidera uma startup?",
+          "a": "Sim, embora não seja possível eliminar todo o stress associado ao empreendedorismo. Criar apoio entre pares, delegar responsabilidades de forma real, estabelecer limites, proteger períodos de recuperação e procurar apoio profissional quando necessário pode reduzir o risco de esgotamento."
+        },
+        {
+          "q": "Trabalhar muitas horas significa que tenho burnout?",
+          "a": "Não necessariamente. Períodos de trabalho intenso podem acontecer numa startup sem que exista burnout. O sinal de alerta é sobretudo a combinação entre exaustão persistente, dificuldade em recuperar, alterações na forma como se relaciona com o trabalho e impacto no funcionamento pessoal ou profissional."
+        },
+        {
+          "q": "Quando é que a exaustão deixa de ser normal e passa a ser preocupante?",
+          "a": "Quando deixa de ser temporária e começa a tornar-se o estado habitual. Se continua exausto depois de descansar, já não consegue desligar, começa a perder entusiasmo pela empresa, toma decisões de forma mais reativa ou sente que a sua vida pessoal está a desaparecer, é importante procurar ajuda."
+        },
+        {
+          "q": "Devo falar com os meus investidores se estou em burnout?",
+          "a": "Depende da relação e do contexto. Nem todos os investidores têm a mesma abordagem à saúde mental. Pode ser útil partilhar o necessário para criar condições sustentáveis, mas não precisa de expor detalhes pessoais. Ter apoio independente — de um profissional de saúde mental ou de alguém fora da estrutura de investimento — pode ser particularmente importante."
         }
       ],
       "datePublished": "2026-08-06",
-      "dateModified": "2026-08-06",
+      "dateModified": "2026-08-18",
       "format": "markdown"
     },
     {
