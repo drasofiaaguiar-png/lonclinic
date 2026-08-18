@@ -678,16 +678,11 @@ function magazineNavTree() {
                         { label: 'Interesse especial', href: '/blog/autismo-nas-mulheres-interesse-especial' }
                     ]
                 },
-                {
-                    label: 'ADHD',
-                    children: [
-                        { label: 'Sinais em adultos', href: '/blog/adhd-em-adultos-sintomas' }
-                    ]
-                },
+                { label: 'ADHD em adultos', href: '/blog/adhd-em-adultos-sintomas' },
                 {
                     label: 'Burnout',
-                    href: '/burnout',
                     children: [
+                        { label: 'Centro burnout', href: '/burnout' },
                         { label: 'O que é', href: '/burnout/o-que-e' },
                         { label: 'Sintomas', href: '/burnout/sintomas' },
                         { label: 'Tratamento', href: '/burnout/tratamento' },
@@ -705,12 +700,12 @@ function magazineNavTree() {
         },
         {
             label: 'Saúde do viajante',
-            href: '/travel-clinic',
             children: [
+                { label: 'Clínica do viajante', href: '/travel-clinic' },
                 {
                     label: 'Vacina da febre amarela',
-                    href: '/blog/vacina-febre-amarela-guia-completo',
                     children: [
+                        { label: 'Guia completo', href: '/blog/vacina-febre-amarela-guia-completo' },
                         { label: 'Lisboa', href: '/blog/vacina-febre-amarela-lisboa' },
                         { label: 'Porto', href: '/blog/vacina-febre-amarela-porto' },
                         { label: 'Coimbra', href: '/blog/vacina-febre-amarela-coimbra' },
@@ -734,19 +729,17 @@ function magazineNavTree() {
 
 function magNavNode(node, depth) {
     const kids = Array.isArray(node.children) ? node.children : [];
-    const label = node.href
-        ? `<a href="${escapeHtml(node.href)}">${escapeHtml(node.label)}</a>`
-        : `<span>${escapeHtml(node.label)}</span>`;
     if (!kids.length) {
-        return `<li class="mag-nav-leaf mag-nav-d${depth}">${label}</li>`;
+        return `<li class="mag-nav-leaf mag-nav-d${depth}"><a href="${escapeHtml(node.href)}">${escapeHtml(node.label)}</a></li>`;
     }
-    return `<li class="mag-nav-branch mag-nav-d${depth}">${label}<ul>${kids.map((child) => magNavNode(child, depth + 1)).join('')}</ul></li>`;
+    return `<li class="mag-nav-branch mag-nav-d${depth}"><details><summary>${escapeHtml(node.label)}</summary><ul>${kids.map((child) => magNavNode(child, depth + 1)).join('')}</ul></details></li>`;
 }
 
 function magSidenavHtml() {
     const tree = magazineNavTree().map((node) => magNavNode(node, 0)).join('');
     return `<nav class="mag-sidenav" id="mag-sidenav" aria-label="Temas da revista">
-        <p class="mag-sidenav-kicker">Índice</p>
+        <a class="mag-sidenav-brand" href="/magazine">LON <em>Magazine</em></a>
+        <p class="mag-sidenav-kicker">Temas</p>
         <ul class="mag-nav">${tree}</ul>
     </nav>`;
 }
@@ -797,7 +790,7 @@ function layoutMagazinePage(opts) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/magazine.css?v=20260818c">
+    <link rel="stylesheet" href="/magazine.css?v=20260818d">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     ${jsonLdScript(graph)}
@@ -810,10 +803,21 @@ function layoutMagazinePage(opts) {
       (function () {
         var button = document.querySelector('.mag-nav-toggle');
         var nav = document.getElementById('mag-sidenav');
-        if (!button || !nav) return;
-        button.addEventListener('click', function () {
-          var open = nav.classList.toggle('is-open');
-          button.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (button && nav) {
+          button.addEventListener('click', function () {
+            var open = nav.classList.toggle('is-open');
+            button.setAttribute('aria-expanded', open ? 'true' : 'false');
+          });
+        }
+        if (!nav) return;
+        var roots = nav.querySelectorAll('.mag-nav > .mag-nav-branch > details');
+        roots.forEach(function (item) {
+          item.addEventListener('toggle', function () {
+            if (!item.open) return;
+            roots.forEach(function (other) {
+              if (other !== item) other.open = false;
+            });
+          });
         });
       })();
     </script>
@@ -925,71 +929,73 @@ function renderMagazineIndex(origin) {
     };
 
     const mainHtml = `
-    <header class="mag-topbar">
-        <a href="/">LON Clinic</a>
-        <nav aria-label="Magazine">
-            <a href="/magazine" aria-current="page">Magazine</a>
-            <a href="/blog">Guides</a>
-            <a href="/marcar/saude-mental">Marcar</a>
-        </nav>
-    </header>
-    <div class="mag-masthead">
-        <div class="mag-kicker-row">
-            <span>Portugal</span>
-            <span>Saúde · Mente · Vida</span>
-            <span>Vol. 01</span>
-        </div>
-        <p class="mag-wordmark">LON <span>Magazine</span></p>
-        <p class="mag-issue">The Wellness Issue · Agosto 2026</p>
-    </div>
-    <button type="button" class="mag-nav-toggle" aria-expanded="false" aria-controls="mag-sidenav">Temas</button>
-    <div class="mag-shell">
+    <div class="mag-app">
         ${magSidenavHtml()}
-        <main id="conteudo-principal" class="mag-content">
-            ${coverHtml}
-            ${featureHtml}
-            <section class="mag-section mag-wrap" aria-labelledby="mag-well-title">
-                <div class="mag-section-head">
-                    <h2 id="mag-well-title">O consultório</h2>
-                    <p>Leituras para continuar</p>
+        <div class="mag-stage">
+            <header class="mag-topbar">
+                <a href="/">LON Clinic</a>
+                <button type="button" class="mag-nav-toggle" aria-expanded="false" aria-controls="mag-sidenav">Temas</button>
+                <nav aria-label="Magazine">
+                    <a href="/magazine" aria-current="page">Magazine</a>
+                    <a href="/blog">Guides</a>
+                    <a href="/marcar/saude-mental">Marcar</a>
+                </nav>
+            </header>
+            <div class="mag-masthead">
+                <div class="mag-kicker-row">
+                    <span>Portugal</span>
+                    <span>Saúde · Mente · Vida</span>
+                    <span>Vol. 01</span>
                 </div>
-                <div class="mag-well">${wellCards}
-                </div>
-            </section>
-            <section class="mag-section mag-wrap" aria-labelledby="mag-travel-title">
-                <div class="mag-section-head">
-                    <h2 id="mag-travel-title">Destinos</h2>
-                    <p>Vacina febre amarela · consulta do viajante</p>
-                </div>
-                <div class="mag-well">${travelCards}
-                </div>
-            </section>
-            <section class="mag-section mag-wrap" aria-labelledby="mag-toc-title">
-                <div class="mag-section-head">
-                    <h2 id="mag-toc-title">Índice</h2>
-                    <p>Toda a edição</p>
-                </div>
-                <ol class="mag-toc">${tocHtml}
-                </ol>
-                <aside class="mag-cta">
-                    <p>LON Clinic</p>
-                    <h2>A revista lê-se. A consulta marca-se.</h2>
-                    <div class="mag-cta-actions">
-                        <a class="mag-cta-primary" href="/marcar/saude-mental">Consulta de saúde mental</a>
-                        <a class="mag-cta-ghost" href="/saudemental">Subscrição de psicologia</a>
+                <p class="mag-wordmark">LON <span>Magazine</span></p>
+                <p class="mag-issue">The Wellness Issue · Agosto 2026</p>
+            </div>
+            <main id="conteudo-principal" class="mag-content">
+                ${coverHtml}
+                ${featureHtml}
+                <section class="mag-section mag-wrap" aria-labelledby="mag-well-title">
+                    <div class="mag-section-head">
+                        <h2 id="mag-well-title">O consultório</h2>
+                        <p>Leituras para continuar</p>
                     </div>
-                </aside>
-            </section>
-        </main>
-    </div>
-    <footer class="mag-foot">
-        <span>© 2026 Lon Clinic · ERS 45475</span>
-        <span>
-            <a href="/">Início</a>
-            <a href="/blog">Guides</a>
-            <a href="/info.html?page=contato">Contato</a>
-        </span>
-    </footer>`;
+                    <div class="mag-well">${wellCards}
+                    </div>
+                </section>
+                <section class="mag-section mag-wrap" aria-labelledby="mag-travel-title">
+                    <div class="mag-section-head">
+                        <h2 id="mag-travel-title">Destinos</h2>
+                        <p>Vacina febre amarela · consulta do viajante</p>
+                    </div>
+                    <div class="mag-well">${travelCards}
+                    </div>
+                </section>
+                <section class="mag-section mag-wrap" aria-labelledby="mag-toc-title">
+                    <div class="mag-section-head">
+                        <h2 id="mag-toc-title">Índice</h2>
+                        <p>Toda a edição</p>
+                    </div>
+                    <ol class="mag-toc">${tocHtml}
+                    </ol>
+                    <aside class="mag-cta">
+                        <p>LON Clinic</p>
+                        <h2>A revista lê-se. A consulta marca-se.</h2>
+                        <div class="mag-cta-actions">
+                            <a class="mag-cta-primary" href="/marcar/saude-mental">Consulta de saúde mental</a>
+                            <a class="mag-cta-ghost" href="/saudemental">Subscrição de psicologia</a>
+                        </div>
+                    </aside>
+                </section>
+            </main>
+            <footer class="mag-foot">
+                <span>© 2026 Lon Clinic · ERS 45475</span>
+                <span>
+                    <a href="/">Início</a>
+                    <a href="/blog">Guides</a>
+                    <a href="/info.html?page=contato">Contato</a>
+                </span>
+            </footer>
+        </div>
+    </div>`;
 
     return layoutMagazinePage({
         origin: o,
