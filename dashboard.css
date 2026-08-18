@@ -910,6 +910,116 @@ body.dash-portal .dash-stat-card {
     accent-color: var(--accent, #c5c72c);
 }
 
+.clinic-doxy-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    background: var(--bg-card, #fff);
+    border: 1px solid var(--border-subtle, #e2e8f0);
+    border-radius: var(--radius-md, 14px);
+    padding: 22px 24px;
+}
+
+.clinic-doxy-card-main {
+    flex: 1 1 16rem;
+    min-width: 0;
+}
+
+.clinic-doxy-label {
+    margin: 0 0 4px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.clinic-doxy-url {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    word-break: break-all;
+}
+
+.clinic-doxy-hint {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+    max-width: 42rem;
+}
+
+.clinic-doxy-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+}
+
+.clinic-doxy-card-actions .btn {
+    white-space: nowrap;
+}
+
+.admin-professionals-form {
+    margin-bottom: 20px;
+}
+
+.admin-professionals-table-wrap {
+    overflow-x: auto;
+}
+
+.admin-professionals-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-professionals-table th,
+.admin-professionals-table td {
+    text-align: left;
+    padding: 10px 8px;
+    border-bottom: 1px solid var(--border-subtle, #e2e8f0);
+    font-size: 0.875rem;
+    vertical-align: middle;
+}
+
+.admin-professionals-table th {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.admin-pro-status {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(26, 102, 65, 0.1);
+    color: #1a6641;
+}
+
+.admin-pro-status.is-off {
+    background: rgba(15, 23, 42, 0.06);
+    color: var(--text-muted);
+}
+
+.admin-pro-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+@media (max-width: 768px) {
+    .clinic-doxy-card-actions {
+        width: 100%;
+    }
+}
+
 .dash-section-subtitle {
     font-size: 0.875rem;
     color: var(--text-muted);

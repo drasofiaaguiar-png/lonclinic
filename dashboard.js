@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const row = document.createElement('tr');
             const status = getStatus(b, now);
             const serviceLabel = SERVICE_LABELS[b.service] || b.service;
-            const doxyLink = doxyUrl ? doxyUrl : '#';
+            const doxyLink = (b.doxyUrl || doxyUrl) ? (b.doxyUrl || doxyUrl) : '#';
 
             const joinHtml =
                 status === 'upcoming' && !b.cancelled
@@ -434,8 +434,9 @@ document.addEventListener('DOMContentLoaded', () => {
             upcomingPatient.textContent = nextUpcoming.patientName || '—';
             upcomingRef.textContent = nextUpcoming.bookingRef || '—';
 
-            if (doxyUrl) {
-                joinDoxyBtn.href = doxyUrl;
+            const roomUrl = nextUpcoming.doxyUrl || doxyUrl;
+            if (roomUrl) {
+                joinDoxyBtn.href = roomUrl;
                 joinDoxyBtn.style.opacity = '1';
                 joinDoxyBtn.style.pointerEvents = 'auto';
                 joinHint.textContent = 'Click to enter the waiting room when your appointment is due.';

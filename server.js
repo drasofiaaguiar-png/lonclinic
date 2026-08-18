@@ -275,7 +275,47 @@ app.use(session({
 /* ========================================
    DOXY.ME CONFIGURATION
 ======================================== */
-const DOXY_ROOM_URL = process.env.DOXY_ROOM_URL || ''; // e.g. https://doxy.me/longevityclinic
+const DOXY_ROOM_URL = process.env.DOXY_ROOM_URL || 'https://doxy.me/lonclinic';
+const DOXY_PROVIDER_URL = 'https://doxy.me';
+
+function normalizeDoxyRoomUrl(raw) {
+    let s = String(raw || '').trim();
+    if (!s) return '';
+    if (!/^https?:\/\//i.test(s)) {
+        s = s.replace(/^https?:\/\//i, '');
+        s = s.replace(/^www\./i, '');
+        s = s.replace(/^doxy\.me\/?/i, '');
+        s = 'https://doxy.me/' + s.replace(/^\/+/, '');
+    }
+    try {
+        const u = new URL(s);
+        if (!/^(www\.)?doxy\.me$/i.test(u.hostname)) return '';
+        u.protocol = 'https:';
+        u.hostname = 'doxy.me';
+        u.hash = '';
+        u.search = '';
+        const path = u.pathname.replace(/\/+$/, '');
+        if (!path || path === '/') return '';
+        return `https://doxy.me${path}`;
+    } catch {
+        return '';
+    }
+}
+
+const DEFAULT_DOXY_ROOM_URL = normalizeDoxyRoomUrl(DOXY_ROOM_URL);
+
+function publicProfessional(pro) {
+    if (!pro) return null;
+    return {
+        id: pro.id,
+        username: pro.username,
+        displayName: pro.displayName,
+        doxyRoomUrl: pro.doxyRoomUrl || '',
+        active: pro.active !== false,
+        createdAt: pro.createdAt || null,
+        updatedAt: pro.updatedAt || null
+    };
+}
 
 /* ========================================
    CONTACT EMAIL CONFIGURATION
@@ -286,6 +326,13 @@ const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'info@lonclinic.com';
    CLINIC PORTAL AUTHENTICATION
 ======================================== */
 
+function isAdminSession(req) {
+    if (!req || !req.session || !req.session.clinicAuthenticated) return false;
+    const role = req.session.clinicRole;
+    // Legacy sessions (before per-professional logins) were always the env admin.
+    return !role || role === 'admin';
+}
+
 // Middleware to check if user is authenticated
 function requireAuth(req, res, next) {
     if (req.session && req.session.clinicAuthenticated) {
@@ -294,8 +341,31 @@ function requireAuth(req, res, next) {
     return res.status(401).json({ error: 'Authentication required' });
 }
 
+function requireAdmin(req, res, next) {
+    if (!req.session || !req.session.clinicAuthenticated) {
+        return res.status(401).json({ error: 'Authentication required' });
+    }
+    if (!isAdminSession(req)) {
+        return res.status(403).json({ error: 'Admin access required' });
+    }
+    return next();
+}
+
 function isStaffRequest(req) {
     return !!(req && req.session && req.session.clinicAuthenticated);
+}
+
+function staffAuthPayload(req) {
+    const authenticated = !!(req.session && req.session.clinicAuthenticated);
+    if (!authenticated) {
+        return { authenticated: false, username: null, displayName: null, role: null };
+    }
+    return {
+        authenticated: true,
+        username: req.session.clinicUsername || null,
+        displayName: req.session.clinicDisplayName || req.session.clinicUsername || null,
+        role: req.session.clinicRole || 'admin'
+    };
 }
 
 function sendHtmlNoCache(res, filePath, onErrorMessage) {
@@ -332,6 +402,81 @@ const bookingsStore = []; // memory fallback only
 const reviewsStore = []; // memory fallback for patient reviews
 const clinicalNotesStore = []; // memory fallback only
 const psychologistApplicationsStore = []; // memory fallback for recrutamento
+const professionalsStore = []; // memory fallback for clinician accounts + Doxy rooms
+let professionalIdSeq = 1;
+
+function normalizeProfessionalUsername(raw) {
+    return String(raw || '').trim().toLowerCase();
+}
+
+function isValidProfessionalUsername(raw) {
+    return /^[a-zA-Z0-9._-]{3,64}$/.test(String(raw || '').trim());
+}
+
+async function listProfessionalsInternal() {
+    if (usePersistentDb) return db.listProfessionals();
+    return [...professionalsStore];
+}
+
+async function findProfessionalByUsernameInternal(username) {
+    const u = String(username || '').trim();
+    if (!u) return null;
+    if (usePersistentDb) return db.findProfessionalByUsername(u);
+    const key = normalizeProfessionalUsername(u);
+    return professionalsStore.find((p) => normalizeProfessionalUsername(p.username) === key) || null;
+}
+
+async function findProfessionalByDisplayNameInternal(name) {
+    const n = String(name || '').trim();
+    if (!n) return null;
+    if (usePersistentDb) return db.findProfessionalByDisplayName(n);
+    const key = n.toLowerCase();
+    return professionalsStore.find(
+        (p) => p.active !== false && String(p.displayName || '').trim().toLowerCase() === key
+    ) || null;
+}
+
+async function findProfessionalByIdInternal(id) {
+    const n = Number(id);
+    if (!Number.isInteger(n) || n < 1) return null;
+    if (usePersistentDb) return db.findProfessionalById(n);
+    return professionalsStore.find((p) => p.id === n) || null;
+}
+
+async function resolveDoxyRoomUrl(professionalName) {
+    const name = String(professionalName || '').trim();
+    if (name) {
+        try {
+            const pro = await findProfessionalByDisplayNameInternal(name);
+            const room = normalizeDoxyRoomUrl(pro && pro.doxyRoomUrl);
+            if (room) return room;
+        } catch (err) {
+            console.error('   ⚠️  resolveDoxyRoomUrl:', err.message);
+        }
+    }
+    return DEFAULT_DOXY_ROOM_URL || '';
+}
+
+function doxyUrlFromEmailData(data) {
+    const explicit = normalizeDoxyRoomUrl(data && data.doxyUrl);
+    if (explicit) return explicit;
+    return DEFAULT_DOXY_ROOM_URL || '';
+}
+
+function filterBookingsForStaff(bookings, req) {
+    const list = Array.isArray(bookings) ? bookings : [];
+    if (isAdminSession(req)) return list;
+    const name = String((req.session && req.session.clinicDisplayName) || '').trim().toLowerCase();
+    if (!name) return [];
+    return list.filter((b) => String(b.professional || '').trim().toLowerCase() === name);
+}
+
+function staffCanAccessBooking(req, booking) {
+    if (!booking) return false;
+    if (isAdminSession(req)) return true;
+    const name = String((req.session && req.session.clinicDisplayName) || '').trim().toLowerCase();
+    return !!name && String(booking.professional || '').trim().toLowerCase() === name;
+}
 
 function requestCountry(req) {
     const cf = req && (req.headers['cf-ipcountry'] || req.headers['x-vercel-ip-country']);
@@ -1059,7 +1204,8 @@ function buildConfirmationEmail(data) {
         passengers,
         travelDest,
         travelDates,
-        locale: rawLocale
+        locale: rawLocale,
+        doxyUrl: dataDoxyUrl
     } = data;
 
     const t = confirmationEmailStrings(rawLocale);
@@ -1068,6 +1214,7 @@ function buildConfirmationEmail(data) {
     const formattedAmount = `${currencySymbol}${(amount / 100).toFixed(0)}`;
     const isTravel = service === 'travel';
     const isMulti = travellerCount > 1;
+    const doxyUrl = doxyUrlFromEmailData({ doxyUrl: dataDoxyUrl });
 
     let passengerRows = '';
     if (isMulti && passengers && passengers.length > 0) {
@@ -1095,17 +1242,17 @@ function buildConfirmationEmail(data) {
         `;
     }
 
-    const doxyCtaButton = DOXY_ROOM_URL
+    const doxyCtaButton = doxyUrl
         ? `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:16px 0 20px;">
     <tr>
         <td align="center" style="padding:0;">
-            <a href="${DOXY_ROOM_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;padding:14px 32px;border-radius:10px;">${t.joinVideoButton}</a>
+            <a href="${escapeHtml(doxyUrl)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;padding:14px 32px;border-radius:10px;">${t.joinVideoButton}</a>
         </td>
     </tr>
 </table>`
         : '';
 
-    const step2Html = DOXY_ROOM_URL
+    const step2Html = doxyUrl
         ? `${t.doxyBefore}<br><br>${doxyCtaButton}<p style="margin:8px 0 0; font-size:14px; color:#475569; line-height:1.5;">${t.doxyAfter}</p>`
         : t.step2NoDoxy;
 
@@ -1265,7 +1412,7 @@ function buildConfirmationEmail(data) {
 </body>
 </html>`;
 
-    const textStep2 = DOXY_ROOM_URL ? t.textStep2Doxy(DOXY_ROOM_URL) : t.textStep2NoDoxy;
+    const textStep2 = doxyUrl ? t.textStep2Doxy(doxyUrl) : t.textStep2NoDoxy;
     const textStep4 = isTravel ? t.textStep4Travel : t.textStep4Report;
 
     const text = `
@@ -1315,7 +1462,11 @@ async function sendConfirmationEmail(data) {
     }
 
     try {
-        const { html, text, subject } = buildConfirmationEmail(data);
+        const payload = {
+            ...data,
+            doxyUrl: data.doxyUrl || (await resolveDoxyRoomUrl(data.professional))
+        };
+        const { html, text, subject } = buildConfirmationEmail(payload);
 
         const info = await deliverEmail({
             from: EMAIL_FROM,
@@ -2642,18 +2793,19 @@ function buildReminderEmail(data) {
     const variant = reminderVariant === '1h' ? '1h' : '24h';
     const t = reminderEmailStrings(rawLocale, variant);
     const name = (patientName || 'Patient').trim();
+    const doxyUrl = doxyUrlFromEmailData(data);
 
-    const doxyCtaButton = DOXY_ROOM_URL
+    const doxyCtaButton = doxyUrl
         ? `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:16px 0 20px;">
     <tr>
         <td align="center" style="padding:0;">
-            <a href="${DOXY_ROOM_URL}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;padding:14px 32px;border-radius:10px;">${t.joinVideoButton}</a>
+            <a href="${escapeHtml(doxyUrl)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;padding:14px 32px;border-radius:10px;">${t.joinVideoButton}</a>
         </td>
     </tr>
 </table>`
         : '';
 
-    const videoBlock = DOXY_ROOM_URL
+    const videoBlock = doxyUrl
         ? `<h3 style="margin: 0 0 12px; font-size: 16px; font-weight: 600; color: #0f172a;">${t.videoTitle}</h3>
             <p style="margin: 0 0 8px; font-size: 14px; color: #475569; line-height: 1.5;">${t.doxyBefore}</p>
             ${doxyCtaButton}
@@ -2735,7 +2887,7 @@ function buildReminderEmail(data) {
 </body>
 </html>`;
 
-    const textVideo = DOXY_ROOM_URL ? t.textDoxy(DOXY_ROOM_URL) : t.textNoDoxy;
+    const textVideo = doxyUrl ? t.textDoxy(doxyUrl) : t.textNoDoxy;
     const text = `
 ${t.textHead} — ${bookingRef}
 
@@ -2768,7 +2920,11 @@ async function sendReminderEmail(data) {
         return false;
     }
     try {
-        const { html, text, subject } = buildReminderEmail(data);
+        const payload = {
+            ...data,
+            doxyUrl: data.doxyUrl || (await resolveDoxyRoomUrl(data.professional))
+        };
+        const { html, text, subject } = buildReminderEmail(payload);
         const info = await deliverEmail({
             from: EMAIL_FROM,
             to,
@@ -3103,9 +3259,10 @@ function buildReschedulePatientEmail(data) {
     const { patientName, serviceLabel, date, time, bookingRef, locale: rawLocale } = data;
     const t = reschedulePatientStrings(rawLocale);
     const name = (patientName || 'Patient').trim();
-    const doxyBtn = DOXY_ROOM_URL
+    const doxyUrl = doxyUrlFromEmailData(data);
+    const doxyBtn = doxyUrl
         ? `<table role="presentation" width="100%" style="margin:16px 0;"><tr><td align="center">
-<a href="${DOXY_ROOM_URL}" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#fff!important;font-size:15px;font-weight:600;padding:14px 32px;border-radius:10px;text-decoration:none;">${t.joinVideoButton}</a>
+<a href="${escapeHtml(doxyUrl)}" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#fff!important;font-size:15px;font-weight:600;padding:14px 32px;border-radius:10px;text-decoration:none;">${t.joinVideoButton}</a>
 </td></tr></table><p style="color:#475569;font-size:14px;">${t.doxyAfter}</p>`
         : `<p style="color:#475569;">${t.noDoxy}</p>`;
     const html = `
@@ -3127,7 +3284,7 @@ function buildReschedulePatientEmail(data) {
 <p style="color:#475569;margin:0 0 8px;">${t.doxyBefore}</p>
 ${doxyBtn}
 </td></tr></table></td></tr></table></body></html>`;
-    const text = `${t.textHead} — ${bookingRef}\n${t.lead(name)}\n${serviceLabel} — ${date} ${time}\nVideo: ${DOXY_ROOM_URL || 'see email'}`;
+    const text = `${t.textHead} — ${bookingRef}\n${t.lead(name)}\n${serviceLabel} — ${date} ${time}\nVideo: ${doxyUrl || 'see email'}`;
     return { html, text, subject: t.subject(bookingRef) };
 }
 
@@ -3545,7 +3702,8 @@ async function runAutomationJobs() {
                 time: b.time,
                 bookingRef: b.bookingRef,
                 locale,
-                reminderVariant: '24h'
+                reminderVariant: '24h',
+                professional: b.professional || ''
             });
             if (!sent) continue;
             try {
@@ -3572,7 +3730,8 @@ async function runAutomationJobs() {
                 time: b.time,
                 bookingRef: b.bookingRef,
                 locale,
-                reminderVariant: '1h'
+                reminderVariant: '1h',
+                professional: b.professional || ''
             });
             if (!sent) continue;
             try {
@@ -3969,7 +4128,7 @@ app.get('/api/a.gif', rateLimitAnalytics, async (req, res) => {
 // ─── Middleware ───
 app.use(express.json());
 
-app.get('/api/admin/analytics', requireAuth, async (req, res) => {
+app.get('/api/admin/analytics', requireAdmin, async (req, res) => {
     const rangeKey = String(req.query.range || '7d');
     const allowed = new Set(['24h', '7d', '30d', '90d']);
     const range = allowed.has(rangeKey) ? rangeKey : '7d';
@@ -5488,7 +5647,7 @@ app.post('/api/reviews', rateLimitReviews, express.json(), async (req, res) => {
 });
 
 // ─── API: Admin — list all reviews (public + private) ───
-app.get('/api/admin/reviews', requireAuth, async (req, res) => {
+app.get('/api/admin/reviews', requireAdmin, async (req, res) => {
     try {
         if (usePersistentDb) {
             const reviews = await db.listAllReviews(100);
@@ -5502,7 +5661,7 @@ app.get('/api/admin/reviews', requireAuth, async (req, res) => {
 });
 
 // ─── API: Admin — psychologist applications (recrutamento) ───
-app.get('/api/admin/psychologists', requireAuth, async (req, res) => {
+app.get('/api/admin/psychologists', requireAdmin, async (req, res) => {
     try {
         const status = req.query.status ? String(req.query.status) : '';
         const band = req.query.band ? String(req.query.band) : '';
@@ -5535,7 +5694,7 @@ app.get('/api/admin/psychologists', requireAuth, async (req, res) => {
     }
 });
 
-app.get('/api/admin/psychologists/:id', requireAuth, async (req, res) => {
+app.get('/api/admin/psychologists/:id', requireAdmin, async (req, res) => {
     try {
         const id = String(req.params.id || '');
         if (usePersistentDb) {
@@ -5552,7 +5711,7 @@ app.get('/api/admin/psychologists/:id', requireAuth, async (req, res) => {
     }
 });
 
-app.patch('/api/admin/psychologists/:id', requireAuth, express.json(), async (req, res) => {
+app.patch('/api/admin/psychologists/:id', requireAdmin, express.json(), async (req, res) => {
     try {
         const id = String(req.params.id || '');
         const status = req.body?.status != null ? String(req.body.status) : undefined;
@@ -5835,9 +5994,16 @@ app.get('/api/bookings', async (req, res) => {
 
         results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
+        const bookings = await Promise.all(results.map(async (b) => {
+            const enriched = enrichBookingForPatientApi(b);
+            const doxyUrl = (await resolveDoxyRoomUrl(b.professional)) || null;
+            return { ...enriched, doxyUrl };
+        }));
+        const nextWithRoom = bookings.find((b) => !b.cancelled && b.doxyUrl) || bookings[0];
+
         res.json({
-            bookings: results.map(enrichBookingForPatientApi),
-            doxyUrl: DOXY_ROOM_URL || null
+            bookings,
+            doxyUrl: (nextWithRoom && nextWithRoom.doxyUrl) || DEFAULT_DOXY_ROOM_URL || null
         });
     } catch (err) {
         console.error('GET /api/bookings:', err.message);
@@ -6006,7 +6172,8 @@ app.post('/api/patient/booking/reschedule', async (req, res) => {
                     time: normTime,
                     bookingRef: booking.bookingRef,
                     locale: loc,
-                    email: booking.email
+                    email: booking.email,
+                    doxyUrl: await resolveDoxyRoomUrl(booking.professional)
                 });
                 await deliverEmail({
                     from: EMAIL_FROM,
@@ -6044,8 +6211,8 @@ app.post('/api/patient/booking/reschedule', async (req, res) => {
 // ─── API: Doxy.me config (for client) ───
 app.get('/api/doxy-config', (req, res) => {
     res.json({
-        roomUrl: DOXY_ROOM_URL || null,
-        configured: !!DOXY_ROOM_URL
+        roomUrl: DEFAULT_DOXY_ROOM_URL || null,
+        configured: !!DEFAULT_DOXY_ROOM_URL
     });
 });
 
@@ -6096,14 +6263,47 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
     if (usernameMatch && passwordMatch) {
         req.session.clinicAuthenticated = true;
         req.session.clinicUsername = username;
+        req.session.clinicDisplayName = username;
+        req.session.clinicRole = 'admin';
+        req.session.professionalId = null;
         req.session.clinicLoginTime = new Date().toISOString();
-        
-        console.log(`   🔐 Clinic portal login: ${username}`);
-        res.json({ success: true, message: 'Login successful' });
-    } else {
-        console.log(`   ⚠️  Failed clinic login attempt: ${username}`);
-        res.status(401).json({ error: 'Invalid username or password' });
+
+        console.log(`   🔐 Clinic portal login (admin): ${username}`);
+        return res.json({
+            success: true,
+            message: 'Login successful',
+            role: 'admin',
+            displayName: username
+        });
     }
+
+    try {
+        const pro = await findProfessionalByUsernameInternal(username);
+        const passwordOk = pro && pro.passwordHash
+            ? await bcrypt.compare(password, pro.passwordHash)
+            : false;
+        if (pro && pro.active !== false && passwordOk) {
+            req.session.clinicAuthenticated = true;
+            req.session.clinicUsername = pro.username;
+            req.session.clinicDisplayName = pro.displayName || pro.username;
+            req.session.clinicRole = 'clinician';
+            req.session.professionalId = pro.id;
+            req.session.clinicLoginTime = new Date().toISOString();
+
+            console.log(`   🔐 Clinic portal login (clinician): ${pro.username}`);
+            return res.json({
+                success: true,
+                message: 'Login successful',
+                role: 'clinician',
+                displayName: pro.displayName || pro.username
+            });
+        }
+    } catch (err) {
+        console.error('   ⚠️  Professional login lookup failed:', err.message);
+    }
+
+    console.log(`   ⚠️  Failed clinic login attempt: ${username}`);
+    res.status(401).json({ error: 'Invalid username or password' });
 });
 
 // ─── API: Clinic — Logout ───
@@ -6125,10 +6325,171 @@ app.post('/api/clinic/logout', (req, res) => {
 
 // ─── API: Clinic — Check authentication status ───
 app.get('/api/clinic/auth-status', (req, res) => {
-    res.json({
-        authenticated: !!(req.session && req.session.clinicAuthenticated),
-        username: req.session?.clinicUsername || null
-    });
+    res.json(staffAuthPayload(req));
+});
+
+app.get('/api/clinic/doxy', requireAuth, async (req, res) => {
+    try {
+        const role = req.session.clinicRole || 'admin';
+        let displayName = req.session.clinicDisplayName || req.session.clinicUsername || '';
+        let patientRoomUrl = DEFAULT_DOXY_ROOM_URL || '';
+        if (role === 'clinician' && req.session.professionalId) {
+            const pro = await findProfessionalByIdInternal(req.session.professionalId);
+            if (pro) {
+                displayName = pro.displayName || displayName;
+                const room = normalizeDoxyRoomUrl(pro.doxyRoomUrl);
+                if (room) patientRoomUrl = room;
+            }
+        }
+        res.json({
+            role,
+            displayName,
+            patientRoomUrl: patientRoomUrl || null,
+            providerUrl: DOXY_PROVIDER_URL,
+            configured: !!patientRoomUrl
+        });
+    } catch (err) {
+        console.error('GET /api/clinic/doxy:', err.message);
+        res.status(500).json({ error: 'Failed to load Doxy room' });
+    }
+});
+
+function validateProfessionalDoxyUrl(raw, { required } = {}) {
+    const trimmed = String(raw || '').trim();
+    if (!trimmed) {
+        if (required) return { error: 'Doxy room URL is required' };
+        return { url: '' };
+    }
+    const url = normalizeDoxyRoomUrl(trimmed);
+    if (!url) {
+        return { error: 'Doxy room must be a doxy.me link, e.g. https://doxy.me/your-room' };
+    }
+    return { url };
+}
+
+app.get('/api/admin/professionals', requireAdmin, async (req, res) => {
+    try {
+        const list = await listProfessionalsInternal();
+        res.json({
+            professionals: list.map(publicProfessional),
+            defaultDoxyRoomUrl: DEFAULT_DOXY_ROOM_URL || null
+        });
+    } catch (err) {
+        console.error('GET /api/admin/professionals:', err.message);
+        res.status(500).json({ error: 'Failed to load professionals' });
+    }
+});
+
+app.post('/api/admin/professionals', requireAdmin, express.json(), async (req, res) => {
+    try {
+        const body = req.body || {};
+        const username = String(body.username || '').trim();
+        const displayName = String(body.displayName || '').trim().slice(0, 200);
+        const password = String(body.password || '');
+        if (!isValidProfessionalUsername(username)) {
+            return res.status(400).json({ error: 'Username must be 3–64 characters (letters, numbers, . _ -)' });
+        }
+        if (normalizeProfessionalUsername(username) === normalizeProfessionalUsername(CLINIC_USERNAME)) {
+            return res.status(409).json({ error: 'That username is reserved for the clinic admin account' });
+        }
+        if (!displayName) {
+            return res.status(400).json({ error: 'Display name is required' });
+        }
+        if (password.length < 8) {
+            return res.status(400).json({ error: 'Password must be at least 8 characters' });
+        }
+        const doxy = validateProfessionalDoxyUrl(body.doxyRoomUrl);
+        if (doxy.error) return res.status(400).json({ error: doxy.error });
+
+        const existing = await findProfessionalByUsernameInternal(username);
+        if (existing) {
+            return res.status(409).json({ error: 'That username is already in use' });
+        }
+        const passwordHash = await bcrypt.hash(password, 12);
+        const record = {
+            username,
+            passwordHash,
+            displayName,
+            doxyRoomUrl: doxy.url,
+            active: body.active !== false
+        };
+        let created;
+        if (usePersistentDb) {
+            created = await db.insertProfessional(record);
+        } else {
+            created = {
+                id: professionalIdSeq++,
+                ...record,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+            professionalsStore.push(created);
+        }
+        console.log(`   👤 Professional created: ${created.username}`);
+        res.status(201).json({ professional: publicProfessional(created) });
+    } catch (err) {
+        if (err && err.code === '23505') {
+            return res.status(409).json({ error: 'That username is already in use' });
+        }
+        console.error('POST /api/admin/professionals:', err.message);
+        res.status(500).json({ error: 'Failed to create professional' });
+    }
+});
+
+app.patch('/api/admin/professionals/:id', requireAdmin, express.json(), async (req, res) => {
+    try {
+        const existing = await findProfessionalByIdInternal(req.params.id);
+        if (!existing) return res.status(404).json({ error: 'Professional not found' });
+        const body = req.body || {};
+        const fields = {};
+        if (Object.prototype.hasOwnProperty.call(body, 'displayName')) {
+            const displayName = String(body.displayName || '').trim().slice(0, 200);
+            if (!displayName) return res.status(400).json({ error: 'Display name is required' });
+            fields.displayName = displayName;
+        }
+        if (Object.prototype.hasOwnProperty.call(body, 'doxyRoomUrl')) {
+            const doxy = validateProfessionalDoxyUrl(body.doxyRoomUrl);
+            if (doxy.error) return res.status(400).json({ error: doxy.error });
+            fields.doxyRoomUrl = doxy.url;
+        }
+        if (Object.prototype.hasOwnProperty.call(body, 'active')) {
+            fields.active = body.active === true || body.active === 'true' || body.active === 1;
+        }
+        if (body.password) {
+            if (String(body.password).length < 8) {
+                return res.status(400).json({ error: 'Password must be at least 8 characters' });
+            }
+            fields.passwordHash = await bcrypt.hash(String(body.password), 12);
+        }
+        let updated;
+        if (usePersistentDb) {
+            updated = await db.updateProfessional(existing.id, fields);
+        } else {
+            Object.assign(existing, fields, { updatedAt: new Date().toISOString() });
+            updated = existing;
+        }
+        res.json({ professional: publicProfessional(updated) });
+    } catch (err) {
+        console.error('PATCH /api/admin/professionals/:id:', err.message);
+        res.status(500).json({ error: 'Failed to update professional' });
+    }
+});
+
+app.delete('/api/admin/professionals/:id', requireAdmin, async (req, res) => {
+    try {
+        const existing = await findProfessionalByIdInternal(req.params.id);
+        if (!existing) return res.status(404).json({ error: 'Professional not found' });
+        if (usePersistentDb) {
+            await db.deleteProfessional(existing.id);
+        } else {
+            const idx = professionalsStore.findIndex((p) => p.id === existing.id);
+            if (idx >= 0) professionalsStore.splice(idx, 1);
+        }
+        res.json({ ok: true });
+    } catch (err) {
+        console.error('DELETE /api/admin/professionals/:id:', err.message);
+        res.status(500).json({ error: 'Failed to delete professional' });
+    }
 });
 
 // ─── API: Clinic — Get all bookings ───
@@ -6160,7 +6521,7 @@ app.get('/api/clinic/bookings', requireAuth, async (req, res) => {
             });
         }
 
-        res.json({ bookings: bookingsWithNotes });
+        res.json({ bookings: filterBookingsForStaff(bookingsWithNotes, req) });
     } catch (err) {
         console.error('GET /api/clinic/bookings:', err.message);
         res.status(500).json({ error: 'Failed to load clinic bookings' });
@@ -6230,7 +6591,7 @@ async function enrichBookingsWithSource(bookings) {
 }
 
 // ─── API: Admin — Upcoming consultations schedule ───
-app.get('/api/admin/upcoming-consultations', requireAuth, async (req, res) => {
+app.get('/api/admin/upcoming-consultations', requireAdmin, async (req, res) => {
     try {
         const sortFn = (a, b) => bookingSortKey(a).localeCompare(bookingSortKey(b));
         let bookings;
@@ -6383,7 +6744,7 @@ function buildGrossBreakdown(grossCents, stripeFeeCents) {
 }
 
 // ─── API: Admin — Finances (paid revenue by month / patient) ───
-app.get('/api/admin/finances', requireAuth, async (req, res) => {
+app.get('/api/admin/finances', requireAdmin, async (req, res) => {
     try {
         let bookings;
         if (usePersistentDb) {
@@ -6515,7 +6876,7 @@ app.get('/api/admin/finances', requireAuth, async (req, res) => {
 });
 
 // ─── API: Admin — All patients / consultations table ───
-app.get('/api/admin/patients', requireAuth, async (req, res) => {
+app.get('/api/admin/patients', requireAdmin, async (req, res) => {
     try {
         let bookings;
         if (usePersistentDb) {
@@ -6570,7 +6931,7 @@ app.get('/api/admin/patients', requireAuth, async (req, res) => {
     }
 });
 
-app.patch('/api/admin/patients/:bookingRef', requireAuth, express.json(), async (req, res) => {
+app.patch('/api/admin/patients/:bookingRef', requireAdmin, express.json(), async (req, res) => {
     if (!usePersistentDb) {
         return res.status(503).json({ error: 'Database required' });
     }
@@ -6612,7 +6973,7 @@ app.patch('/api/admin/patients/:bookingRef', requireAuth, express.json(), async 
     }
 });
 
-app.delete('/api/admin/patients/:bookingRef', requireAuth, async (req, res) => {
+app.delete('/api/admin/patients/:bookingRef', requireAdmin, async (req, res) => {
     if (!usePersistentDb) {
         return res.status(503).json({ error: 'Database required' });
     }
@@ -6755,7 +7116,7 @@ async function findSuggestedSlotsForPatient(latest, visitFrequency) {
 }
 
 // Suggest next appointment from recurrence + last day/time
-app.get('/api/admin/patients/:bookingRef/suggest-next', requireAuth, async (req, res) => {
+app.get('/api/admin/patients/:bookingRef/suggest-next', requireAdmin, async (req, res) => {
     try {
         const bookingRef = String(req.params.bookingRef || '').toUpperCase();
         let latest = usePersistentDb
@@ -6802,7 +7163,7 @@ app.get('/api/admin/patients/:bookingRef/suggest-next', requireAuth, async (req,
 });
 
 // Schedule next appointment for an existing patient
-app.post('/api/admin/patients/schedule-next', requireAuth, express.json(), async (req, res) => {
+app.post('/api/admin/patients/schedule-next', requireAdmin, express.json(), async (req, res) => {
     if (!usePersistentDb) {
         return res.status(503).json({ error: 'Database required' });
     }
@@ -6978,6 +7339,9 @@ app.get('/api/clinic/booking/:bookingRef', requireAuth, async (req, res) => {
         if (!booking) {
             return res.status(404).json({ error: 'Booking not found' });
         }
+        if (!staffCanAccessBooking(req, booking)) {
+            return res.status(403).json({ error: 'This consultation is assigned to another professional' });
+        }
 
         const notes = usePersistentDb
             ? await db.getClinicalNoteByRef(bookingRef)
@@ -7017,6 +7381,9 @@ app.post('/api/clinic/notes', requireAuth, express.json(), async (req, res) => {
             : bookingsStore.find((b) => b.bookingRef === refUpper);
         if (!booking) {
             return res.status(404).json({ error: 'Booking not found' });
+        }
+        if (!staffCanAccessBooking(req, booking)) {
+            return res.status(403).json({ error: 'This consultation is assigned to another professional' });
         }
 
         const now = new Date().toISOString();
@@ -7073,6 +7440,12 @@ app.post('/api/clinic/notes', requireAuth, express.json(), async (req, res) => {
 app.get('/api/clinic/notes/:bookingRef', requireAuth, async (req, res) => {
     const bookingRef = req.params.bookingRef.toUpperCase();
     try {
+        const booking = usePersistentDb
+            ? await db.findBookingByRef(bookingRef)
+            : bookingsStore.find((b) => b.bookingRef === bookingRef);
+        if (booking && !staffCanAccessBooking(req, booking)) {
+            return res.status(403).json({ error: 'This consultation is assigned to another professional' });
+        }
         const notes = usePersistentDb
             ? await db.getClinicalNoteByRef(bookingRef)
             : clinicalNotesStore.find((n) => n.bookingRef === bookingRef);
@@ -7089,12 +7462,12 @@ app.get('/api/clinic/notes/:bookingRef', requireAuth, async (req, res) => {
 });
 
 // ─── API: Admin — Get schedule settings ───
-app.get('/api/admin/schedule', requireAuth, (req, res) => {
+app.get('/api/admin/schedule', requireAdmin, (req, res) => {
     res.json(scheduleStore);
 });
 
 // ─── API: Admin — Update schedule settings ───
-app.post('/api/admin/schedule', requireAuth, express.json(), async (req, res) => {
+app.post('/api/admin/schedule', requireAdmin, express.json(), async (req, res) => {
     const {
         workingHours,
         slotDuration,
@@ -7304,9 +7677,10 @@ function buildInvitationEmail(invitation, paymentUrl, baseUrl) {
     const serviceLabel = invitation.serviceLabel || invitation.service;
     const subject = t.subject(serviceLabel);
     const portalUrl = `${baseUrl}/patient-portal?email=${encodeURIComponent(invitation.patientEmail)}`;
-    const doxyHtml = DOXY_ROOM_URL
+    const doxyUrl = doxyUrlFromEmailData({ doxyUrl: invitation.doxyUrl });
+    const doxyHtml = doxyUrl
         ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 16px 0 0;"><tr><td>
-             <a href="${DOXY_ROOM_URL}" target="_blank" rel="noopener" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;text-align:center;text-decoration:none;padding:14px 28px;border-radius:10px;">${t.joinVideoButton}</a>
+             <a href="${escapeHtml(doxyUrl)}" target="_blank" rel="noopener" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;text-align:center;text-decoration:none;padding:14px 28px;border-radius:10px;">${t.joinVideoButton}</a>
            </td></tr></table>`
         : '';
     const html = `<!DOCTYPE html><html lang="${localeKey}"><head><meta charset="UTF-8"><title>${subject}</title></head>
@@ -7341,7 +7715,7 @@ function buildInvitationEmail(invitation, paymentUrl, baseUrl) {
           </td></tr></table>
           <p style="margin:14px 0 0;font-size:12px;color:#64748b;line-height:1.5;">${t.payNote}</p>
         </td></tr>
-        ${DOXY_ROOM_URL ? `
+        ${doxyUrl ? `
         <tr><td style="padding:24px 28px 8px;border-top:1px solid #e2e8f0;">
           <h2 style="margin:0;font-size:16px;font-weight:700;color:#0f172a;">${t.accessTitle}</h2>
           <p style="margin:8px 0 0;font-size:14px;line-height:1.6;color:#334155;">${t.accessBody}</p>
@@ -7355,7 +7729,7 @@ function buildInvitationEmail(invitation, paymentUrl, baseUrl) {
     </td></tr>
   </table>
 </body></html>`;
-    const text = `${t.greeting(invitation.patientName)}\n\n${t.intro}\n\n${t.slotLabel}: ${dateLabel} · ${time}\n${t.serviceLabel}: ${serviceLabel}\n${t.amountLabel}: ${priceLabel}\n\n${t.payNow}: ${paymentUrl}\n\n${DOXY_ROOM_URL ? `${t.accessTitle}\n${t.accessBody}\n${DOXY_ROOM_URL}\n\n` : ''}${t.portalLine(portalUrl).replace(/<[^>]+>/g, '')}\n\n${t.footer}\n`;
+    const text = `${t.greeting(invitation.patientName)}\n\n${t.intro}\n\n${t.slotLabel}: ${dateLabel} · ${time}\n${t.serviceLabel}: ${serviceLabel}\n${t.amountLabel}: ${priceLabel}\n\n${t.payNow}: ${paymentUrl}\n\n${doxyUrl ? `${t.accessTitle}\n${t.accessBody}\n${doxyUrl}\n\n` : ''}${t.portalLine(portalUrl).replace(/<[^>]+>/g, '')}\n\n${t.footer}\n`;
     return { subject, html, text };
 }
 
@@ -7664,7 +8038,7 @@ async function confirmComplimentaryInvitation(invitation) {
 }
 
 // ─── API: Admin — Create booking invitation ───
-app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res) => {
+app.post('/api/admin/invitations', requireAdmin, express.json(), async (req, res) => {
     if (!usePersistentDb) {
         return res.status(503).json({ error: 'Booking invitations require a database (DATABASE_URL).' });
     }
@@ -7850,7 +8224,7 @@ app.post('/api/admin/invitations', requireAuth, express.json(), async (req, res)
 });
 
 // ─── API: Admin — List invitations ───
-app.get('/api/admin/invitations', requireAuth, async (req, res) => {
+app.get('/api/admin/invitations', requireAdmin, async (req, res) => {
     if (!usePersistentDb) return res.json({ invitations: [] });
     try {
         const invitations = await db.listInvitations(100);
@@ -7862,7 +8236,7 @@ app.get('/api/admin/invitations', requireAuth, async (req, res) => {
 });
 
 // ─── API: Admin — Resend invitation email ───
-app.post('/api/admin/invitations/:id/resend', requireAuth, async (req, res) => {
+app.post('/api/admin/invitations/:id/resend', requireAdmin, async (req, res) => {
     if (!usePersistentDb) return res.status(503).json({ error: 'Database required' });
     try {
         const invitation = await db.findInvitationById(req.params.id);
@@ -7910,7 +8284,7 @@ app.post('/api/admin/invitations/:id/resend', requireAuth, async (req, res) => {
 });
 
 // ─── API: Admin — Cancel invitation ───
-app.post('/api/admin/invitations/:id/cancel', requireAuth, async (req, res) => {
+app.post('/api/admin/invitations/:id/cancel', requireAdmin, async (req, res) => {
     if (!usePersistentDb) return res.status(503).json({ error: 'Database required' });
     try {
         const invitation = await db.findInvitationById(req.params.id);
@@ -7970,11 +8344,11 @@ function getBaseUrl(req) {
             console.log('   ⚠️  Email NOT configured — add RESEND_API_KEY (recommended on Railway) or SMTP variables');
             console.log('   Resend: https://resend.com — verify your domain and set RESEND_API_KEY + EMAIL_FROM');
         }
-        if (DOXY_ROOM_URL) {
-            console.log(`   📹 Doxy.me room: ${DOXY_ROOM_URL}`);
+        if (DEFAULT_DOXY_ROOM_URL) {
+            console.log(`   📹 Doxy.me room: ${DEFAULT_DOXY_ROOM_URL}`);
         } else {
-            console.log(`   ⚠️  Doxy.me NOT configured — add DOXY_ROOM_URL to .env`);
-            console.log(`   Example: DOXY_ROOM_URL=https://doxy.me/your-room-name`);
+            console.log(`   ⚠️  Doxy.me NOT configured — add DOXY_ROOM_URL to .env (https://doxy.me/your-room-name)`);
+            console.log(`   Extra professionals and rooms can be added in Admin → Professionals`);
         }
         console.log(`\n   Open http://localhost:${PORT} to view the site`);
         console.log(`   Open http://localhost:${PORT}/book-consultation to test booking`);

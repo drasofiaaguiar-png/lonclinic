@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css?v=analytics-network-1">
+    <link rel="stylesheet" href="dashboard.css?v=doxy-professionals-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -96,6 +96,7 @@
                     <button type="button" class="admin-nav-item" data-admin-panel="invitations">Invitations</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="availability">Availability</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="reviews">Reviews</button>
+                    <button type="button" class="admin-nav-item" data-admin-panel="professionals">Professionals &amp; Doxy</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="psychologists">Bolsa de Profissionais</button>
                     <a class="admin-nav-item admin-nav-link" href="/clinic-portal">Consultations &amp; notes</a>
                 </nav>
@@ -580,6 +581,64 @@
             </div>
 
             <!-- Bolsa de Profissionais panel -->
+            <div class="admin-panel" id="adminPanelProfessionals" data-admin-panel-content="professionals" hidden>
+                <div class="dash-section">
+                    <div class="dash-section-header">
+                        <div>
+                            <h2 class="dash-section-title">Professionals &amp; Doxy rooms</h2>
+                            <p class="dash-section-subtitle">Each clinician gets a Lon Clinic login and their own Doxy.me waiting room. Patients receive that room link in emails and on the dashboard. The clinic admin account (environment credentials) still uses the default <code>DOXY_ROOM_URL</code>.</p>
+                        </div>
+                    </div>
+                    <p class="dash-section-subtitle" id="adminDefaultDoxyUrl" style="margin-top:0;"></p>
+                    <form id="adminProfessionalForm" class="admin-professionals-form">
+                        <input type="hidden" id="proEditId" value="">
+                        <div class="admin-invite-grid">
+                            <div class="admin-form-group">
+                                <label for="proDisplayName">Display name</label>
+                                <input type="text" id="proDisplayName" class="admin-input" required placeholder="e.g. Dra. Sofia Aguiar" autocomplete="name">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="proUsername">Username</label>
+                                <input type="text" id="proUsername" class="admin-input" required placeholder="e.g. sofia" autocomplete="off">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="proPassword">Password</label>
+                                <input type="password" id="proPassword" class="admin-input" placeholder="Min. 8 characters" autocomplete="new-password">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="proDoxyUrl">Doxy room URL</label>
+                                <input type="text" id="proDoxyUrl" class="admin-input" placeholder="https://doxy.me/lonclinic">
+                            </div>
+                        </div>
+                        <label class="clinic-toggle-label" for="proActive" style="margin-bottom:14px;">
+                            <input type="checkbox" id="proActive" checked>
+                            <span>Account active (can sign in)</span>
+                        </label>
+                        <div id="adminProfessionalError" class="dash-login-error" style="display:none;" role="alert"></div>
+                        <div class="admin-invite-actions">
+                            <button type="submit" class="btn btn-primary" id="proSubmitBtn">Add professional</button>
+                            <button type="button" class="btn btn-outline" id="proCancelEditBtn" hidden>Cancel edit</button>
+                        </div>
+                    </form>
+                    <div class="admin-professionals-table-wrap">
+                        <table class="admin-professionals-table" id="adminProfessionalsTable">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Username</th>
+                                    <th>Doxy room</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminProfessionalsBody">
+                                <tr><td colspan="5" class="admin-empty-list">Loading…</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <div class="admin-panel" id="adminPanelPsychologists" data-admin-panel-content="psychologists" hidden>
                 <div class="dash-section">
                     <div class="dash-section-header admin-schedule-toolbar">
@@ -643,7 +702,7 @@
     </footer>
 
     <script src="lon-nav.js"></script>
-    <script src="admin.js?v=consult-completed-1"></script>
+    <script src="admin.js?v=doxy-professionals-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

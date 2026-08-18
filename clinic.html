@@ -16,7 +16,7 @@
     <title>Clinic Portal — Longevity Clinic</title>
     <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="dashboard.css?v=doxy-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -63,7 +63,7 @@
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                 </div>
                 <h1 class="dash-login-title">Clinic Portal</h1>
-                <p class="dash-login-desc">Access the clinic portal to manage consultations and clinical records.</p>
+                <p class="dash-login-desc">Access the clinic portal to manage consultations, clinical records, and your Doxy.me room.</p>
                 <form class="dash-login-form" id="clinicLoginForm">
                     <div class="dash-form-group">
                         <label for="clinicUsername">Username</label>
@@ -97,8 +97,29 @@
                 </div>
             </div>
 
+            <div class="dash-section clinic-doxy-section" id="clinicDoxySection">
+                <div class="dash-section-header">
+                    <h2 class="dash-section-title">Video consultation room</h2>
+                    <p class="dash-section-subtitle" id="clinicDoxySubtitle">Open Doxy.me to admit patients from the waiting room</p>
+                </div>
+                <div class="clinic-doxy-card" id="clinicDoxyCard">
+                    <div class="clinic-doxy-card-main">
+                        <p class="clinic-doxy-label">Patient waiting room</p>
+                        <p class="clinic-doxy-url" id="clinicDoxyRoomUrl">Loading…</p>
+                        <p class="clinic-doxy-hint" id="clinicDoxyHint">Sign in to Doxy.me with your Doxy account (separate from Lon Clinic) to see who is waiting and start the call.</p>
+                    </div>
+                    <div class="clinic-doxy-card-actions">
+                        <a class="btn btn-primary btn-lg" id="clinicOpenDoxyBtn" href="https://doxy.me" target="_blank" rel="noopener">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                            Open Doxy.me
+                        </a>
+                        <button type="button" class="btn btn-outline" id="clinicCopyDoxyBtn">Copy patient link</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Booking slot behaviour (same auth as schedule API) -->
-            <div class="dash-section">
+            <div class="dash-section" id="clinicAdminSettings">
                 <div class="dash-section-header">
                     <h2 class="dash-section-title">Booking availability</h2>
                     <p class="dash-section-subtitle">How time slots appear when patients book online</p>
@@ -187,7 +208,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="lon-nav.js"></script>
-    <script src="clinic.js"></script>
+    <script src="clinic.js?v=doxy-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

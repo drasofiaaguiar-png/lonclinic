@@ -408,6 +408,20 @@ async function initSchema(p) {
     await p.query(`CREATE INDEX IF NOT EXISTS idx_analytics_session ON analytics_events (session_id, occurred_at DESC)`);
     await p.query(`CREATE INDEX IF NOT EXISTS idx_analytics_channel ON analytics_events (channel, occurred_at DESC)`);
     await p.query(`CREATE INDEX IF NOT EXISTS idx_analytics_path ON analytics_events (page_path, occurred_at DESC)`);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS professionals (
+            id SERIAL PRIMARY KEY,
+            username VARCHAR(64) UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL,
+            display_name TEXT NOT NULL,
+            doxy_room_url TEXT,
+            active BOOLEAN NOT NULL DEFAULT TRUE,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+    await p.query(`CREATE UNIQUE INDEX IF NOT EXISTS idx_professionals_username_lower ON professionals (LOWER(username))`);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_professionals_display_lower ON professionals (LOWER(TRIM(display_name)))`);
 }
 
 function rowToAnalyticsEvent(row) {
@@ -1474,6 +1488,119 @@ async function saveSchedulePayload(payload) {
     );
 }
 
+function rowToProfessional(row) {
+    if (!row) return null;
+    return {
+        id: row.id,
+        username: row.username,
+        passwordHash: row.password_hash,
+        displayName: row.display_name || '',
+        doxyRoomUrl: row.doxy_room_url || '',
+        active: row.active !== false,
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
+        updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : row.updated_at
+    };
+}
+
+async function listProfessionals() {
+    const p = getPool();
+    const r = await p.query('SELECT * FROM professionals ORDER BY LOWER(display_name) ASC, id ASC');
+    return r.rows.map(rowToProfessional);
+}
+
+async function findProfessionalById(id) {
+    const p = getPool();
+    const n = Number(id);
+    if (!Number.isInteger(n) || n < 1) return null;
+    const r = await p.query('SELECT * FROM professionals WHERE id = $1 LIMIT 1', [n]);
+    return r.rows[0] ? rowToProfessional(r.rows[0]) : null;
+}
+
+async function findProfessionalByUsername(username) {
+    const p = getPool();
+    const u = String(username || '').trim();
+    if (!u) return null;
+    const r = await p.query(
+        'SELECT * FROM professionals WHERE LOWER(username) = LOWER($1) LIMIT 1',
+        [u]
+    );
+    return r.rows[0] ? rowToProfessional(r.rows[0]) : null;
+}
+
+async function findProfessionalByDisplayName(name) {
+    const p = getPool();
+    const n = String(name || '').trim();
+    if (!n) return null;
+    const r = await p.query(
+        `SELECT * FROM professionals
+         WHERE LOWER(TRIM(display_name)) = LOWER(TRIM($1))
+           AND active = TRUE
+         ORDER BY id ASC
+         LIMIT 1`,
+        [n]
+    );
+    return r.rows[0] ? rowToProfessional(r.rows[0]) : null;
+}
+
+async function insertProfessional(pro) {
+    const p = getPool();
+    const r = await p.query(
+        `INSERT INTO professionals (username, password_hash, display_name, doxy_room_url, active)
+         VALUES ($1, $2, $3, $4, $5)
+         RETURNING *`,
+        [
+            pro.username,
+            pro.passwordHash,
+            pro.displayName,
+            pro.doxyRoomUrl || null,
+            pro.active !== false
+        ]
+    );
+    return rowToProfessional(r.rows[0]);
+}
+
+async function updateProfessional(id, fields) {
+    const p = getPool();
+    const existing = await findProfessionalById(id);
+    if (!existing) return null;
+    const map = {
+        displayName: 'display_name',
+        doxyRoomUrl: 'doxy_room_url',
+        passwordHash: 'password_hash',
+        active: 'active'
+    };
+    const sets = ['updated_at = NOW()'];
+    const vals = [];
+    let i = 1;
+    for (const [jsKey, col] of Object.entries(map)) {
+        if (!Object.prototype.hasOwnProperty.call(fields, jsKey)) continue;
+        let v = fields[jsKey];
+        if (jsKey === 'displayName') v = String(v || '').trim().slice(0, 200);
+        if (jsKey === 'doxyRoomUrl') {
+            v = v == null || String(v).trim() === '' ? null : String(v).trim().slice(0, 300);
+        }
+        if (jsKey === 'active') v = v === true || v === 'true' || v === 1;
+        sets.push(`${col} = $${i}`);
+        vals.push(v);
+        i += 1;
+    }
+    if (vals.length === 0) return existing;
+    vals.push(existing.id);
+    const r = await p.query(
+        `UPDATE professionals SET ${sets.join(', ')} WHERE id = $${i} RETURNING *`,
+        vals
+    );
+    return r.rows[0] ? rowToProfessional(r.rows[0]) : existing;
+}
+
+async function deleteProfessional(id) {
+    const p = getPool();
+    const n = Number(id);
+    if (!Number.isInteger(n) || n < 1) return false;
+    const r = await p.query('DELETE FROM professionals WHERE id = $1', [n]);
+    return r.rowCount > 0;
+}
+
 async function closePool() {
     if (pool) {
         await pool.end();
@@ -1529,6 +1656,13 @@ module.exports = {
     upsertClinicalNote,
     getSchedulePayload,
     saveSchedulePayload,
+    listProfessionals,
+    findProfessionalById,
+    findProfessionalByUsername,
+    findProfessionalByDisplayName,
+    insertProfessional,
+    updateProfessional,
+    deleteProfessional,
     findBookingsNeeding24hReminder,
     findBookingsNeeding1hReminder,
     findBookingsNeedingFollowup,

@@ -32,6 +32,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalClose = document.getElementById('modalClose');
     const modalTitle = document.getElementById('modalTitle');
     const modalBody = document.getElementById('modalBody');
+    const clinicAdminSettings = document.getElementById('clinicAdminSettings');
+    const clinicDoxyRoomUrl = document.getElementById('clinicDoxyRoomUrl');
+    const clinicDoxyHint = document.getElementById('clinicDoxyHint');
+    const clinicOpenDoxyBtn = document.getElementById('clinicOpenDoxyBtn');
+    const clinicCopyDoxyBtn = document.getElementById('clinicCopyDoxyBtn');
+    const clinicDoxySubtitle = document.getElementById('clinicDoxySubtitle');
+
+    let clinicRole = 'admin';
+    let clinicDoxyPatientUrl = '';
 
     // ─── Check Authentication Status ───
     async function checkAuthStatus() {
@@ -40,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
             
             if (data.authenticated) {
-                showClinicPortal(data.username);
+                showClinicPortal(data.displayName || data.username, data.role);
             } else {
                 showLogin();
             }
@@ -57,17 +66,81 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ─── Show Clinic Portal ───
-    function showClinicPortal(username) {
+    function showClinicPortal(username, role) {
         clinicLogin.style.display = 'none';
         clinicContent.style.display = 'block';
-        
+        clinicRole = role || 'admin';
+
         if (username) {
             clinicGreeting.textContent = `Welcome, ${username}`;
-            clinicUserInfo.textContent = 'Manage consultations and clinical records';
+            clinicUserInfo.textContent = clinicRole === 'clinician'
+                ? 'Your consultations and Doxy.me room'
+                : 'Manage consultations and clinical records';
         }
-        
+
+        if (clinicAdminSettings) {
+            clinicAdminSettings.style.display = clinicRole === 'admin' ? '' : 'none';
+        }
+
+        loadDoxyRoom();
         loadBookings();
-        loadBookingSettings();
+        if (clinicRole === 'admin') {
+            loadBookingSettings();
+        }
+    }
+
+    async function loadDoxyRoom() {
+        if (!clinicDoxyRoomUrl || !clinicOpenDoxyBtn) return;
+        try {
+            const res = await fetch('/api/clinic/doxy');
+            if (res.status === 401) {
+                showLogin();
+                return;
+            }
+            if (!res.ok) throw new Error('Failed to load Doxy room');
+            const data = await res.json();
+            clinicDoxyPatientUrl = data.patientRoomUrl || '';
+            clinicOpenDoxyBtn.href = data.providerUrl || 'https://doxy.me';
+            if (clinicDoxySubtitle) {
+                clinicDoxySubtitle.textContent = data.displayName
+                    ? `Open Doxy.me to admit patients waiting for ${data.displayName}`
+                    : 'Open Doxy.me to admit patients from the waiting room';
+            }
+            if (clinicDoxyPatientUrl) {
+                clinicDoxyRoomUrl.textContent = clinicDoxyPatientUrl;
+                if (clinicDoxyHint) {
+                    clinicDoxyHint.textContent = 'This is the link patients receive. Sign in to Doxy.me with your Doxy account (separate from Lon Clinic) to see the waiting room and start the call.';
+                }
+                if (clinicCopyDoxyBtn) clinicCopyDoxyBtn.disabled = false;
+            } else {
+                clinicDoxyRoomUrl.textContent = 'Not configured yet';
+                if (clinicDoxyHint) {
+                    clinicDoxyHint.textContent = clinicRole === 'admin'
+                        ? 'Set DOXY_ROOM_URL (e.g. https://doxy.me/lonclinic) or add a room for each professional in Admin → Professionals.'
+                        : 'Ask an administrator to add your Doxy.me room URL to your professional account.';
+                }
+                if (clinicCopyDoxyBtn) clinicCopyDoxyBtn.disabled = true;
+            }
+        } catch (err) {
+            console.error('Failed to load Doxy room:', err);
+            clinicDoxyRoomUrl.textContent = 'Could not load room';
+        }
+    }
+
+    if (clinicCopyDoxyBtn) {
+        clinicCopyDoxyBtn.addEventListener('click', async () => {
+            if (!clinicDoxyPatientUrl) return;
+            try {
+                await navigator.clipboard.writeText(clinicDoxyPatientUrl);
+                const prev = clinicCopyDoxyBtn.textContent;
+                clinicCopyDoxyBtn.textContent = 'Copied';
+                setTimeout(() => {
+                    clinicCopyDoxyBtn.textContent = prev;
+                }, 1600);
+            } catch {
+                window.prompt('Copy patient Doxy link', clinicDoxyPatientUrl);
+            }
+        });
     }
 
     async function loadBookingSettings() {
@@ -133,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
 
             if (res.ok && data.success) {
-                showClinicPortal(username);
+                showClinicPortal(data.displayName || username, data.role);
                 clinicUsername.value = '';
                 clinicPassword.value = '';
             } else {

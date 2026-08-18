@@ -211,6 +211,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await res.json();
             
             if (data.authenticated) {
+                if (data.role && data.role !== 'admin') {
+                    window.location.href = '/clinic-portal';
+                    return;
+                }
                 showAdminContent();
                 await loadSchedule();
             } else {
@@ -244,6 +248,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         invitations: { title: 'Invitations', subtitle: 'Send and manage booking invites' },
         availability: { title: 'Availability', subtitle: 'Working hours, blocks & slot preview' },
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' },
+        professionals: { title: 'Professionals & Doxy', subtitle: 'Clinician logins and video rooms' },
         psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' }
     };
     let activeAdminPanel = 'schedule';
@@ -312,6 +317,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (panelId === 'analytics') loadAnalyticsPanel();
         if (panelId === 'invitations') loadInvitations();
         if (panelId === 'reviews') loadAdminReviews();
+        if (panelId === 'professionals') loadAdminProfessionals();
         if (panelId === 'psychologists') loadAdminPsychologists();
     }
 
@@ -981,6 +987,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await res.json();
             patientsCache = data.patients || [];
             renderPatientsTable();
+            loadAdminProfessionals();
         } catch (err) {
             console.error('Load patients:', err);
             adminPatientsBody.innerHTML = '<tr><td colspan="12" class="admin-empty-list">Could not load patients.</td></tr>';
@@ -1409,6 +1416,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const data = await res.json();
 
                 if (res.ok) {
+                    if (data.role && data.role !== 'admin') {
+                        window.location.href = '/clinic-portal';
+                        return;
+                    }
                     showAdminContent();
                     await loadSchedule();
                 } else {
@@ -2771,6 +2782,195 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!btn) return;
             analyticsAudience.querySelectorAll('.an-audience-btn').forEach((b) => b.classList.toggle('is-active', b === btn));
             loadAnalyticsPanel();
+        });
+    }
+
+    // ─── Professionals & Doxy rooms ───
+    const adminProfessionalsBody = document.getElementById('adminProfessionalsBody');
+    const adminProfessionalForm = document.getElementById('adminProfessionalForm');
+    const adminProfessionalError = document.getElementById('adminProfessionalError');
+    const adminDefaultDoxyUrl = document.getElementById('adminDefaultDoxyUrl');
+    const proEditId = document.getElementById('proEditId');
+    const proDisplayName = document.getElementById('proDisplayName');
+    const proUsername = document.getElementById('proUsername');
+    const proPassword = document.getElementById('proPassword');
+    const proDoxyUrl = document.getElementById('proDoxyUrl');
+    const proActive = document.getElementById('proActive');
+    const proSubmitBtn = document.getElementById('proSubmitBtn');
+    const proCancelEditBtn = document.getElementById('proCancelEditBtn');
+    let professionalsCache = [];
+
+    function showProfessionalError(message) {
+        if (!adminProfessionalError) return;
+        if (!message) {
+            adminProfessionalError.style.display = 'none';
+            adminProfessionalError.textContent = '';
+            return;
+        }
+        adminProfessionalError.textContent = message;
+        adminProfessionalError.style.display = 'block';
+    }
+
+    function fillProfessionalsDatalist(list) {
+        const dl = document.getElementById('adminProfessionalsList');
+        if (!dl) return;
+        const names = new Set();
+        (list || []).forEach((p) => {
+            if (p.displayName) names.add(p.displayName);
+        });
+        if (names.size === 0) names.add('Dra. Sofia Aguiar');
+        dl.innerHTML = [...names].map((n) => `<option value="${escapeHtml(n)}"></option>`).join('');
+    }
+
+    function resetProfessionalForm() {
+        if (adminProfessionalForm) adminProfessionalForm.reset();
+        if (proEditId) proEditId.value = '';
+        if (proActive) proActive.checked = true;
+        if (proUsername) proUsername.disabled = false;
+        if (proPassword) {
+            proPassword.required = true;
+            proPassword.placeholder = 'Min. 8 characters';
+        }
+        if (proSubmitBtn) proSubmitBtn.textContent = 'Add professional';
+        if (proCancelEditBtn) proCancelEditBtn.hidden = true;
+        showProfessionalError('');
+    }
+
+    function startEditProfessional(pro) {
+        if (!pro) return;
+        if (proEditId) proEditId.value = String(pro.id);
+        if (proDisplayName) proDisplayName.value = pro.displayName || '';
+        if (proUsername) {
+            proUsername.value = pro.username || '';
+            proUsername.disabled = true;
+        }
+        if (proPassword) {
+            proPassword.value = '';
+            proPassword.required = false;
+            proPassword.placeholder = 'Leave blank to keep current password';
+        }
+        if (proDoxyUrl) proDoxyUrl.value = pro.doxyRoomUrl || '';
+        if (proActive) proActive.checked = pro.active !== false;
+        if (proSubmitBtn) proSubmitBtn.textContent = 'Save changes';
+        if (proCancelEditBtn) proCancelEditBtn.hidden = false;
+        showProfessionalError('');
+        if (proDisplayName) proDisplayName.focus();
+    }
+
+    function renderAdminProfessionals(list) {
+        if (!adminProfessionalsBody) return;
+        if (!list.length) {
+            adminProfessionalsBody.innerHTML = '<tr><td colspan="5" class="admin-empty-list">No professionals yet. Add one above — they can then sign in at the clinic portal and open their Doxy room.</td></tr>';
+            return;
+        }
+        adminProfessionalsBody.innerHTML = list.map((p) => {
+            const statusClass = p.active !== false ? 'admin-pro-status' : 'admin-pro-status is-off';
+            const statusLabel = p.active !== false ? 'Active' : 'Disabled';
+            return `<tr>
+                <td>${escapeHtml(p.displayName || '')}</td>
+                <td>${escapeHtml(p.username || '')}</td>
+                <td>${p.doxyRoomUrl ? `<a href="${escapeHtml(p.doxyRoomUrl)}" target="_blank" rel="noopener">${escapeHtml(p.doxyRoomUrl)}</a>` : '—'}</td>
+                <td><span class="${statusClass}">${statusLabel}</span></td>
+                <td>
+                    <div class="admin-pro-actions">
+                        <button type="button" class="btn btn-outline btn-sm" data-pro-edit="${p.id}">Edit</button>
+                        <button type="button" class="btn btn-outline btn-sm" data-pro-delete="${p.id}">Remove</button>
+                    </div>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    async function loadAdminProfessionals() {
+        if (!adminProfessionalsBody) return;
+        try {
+            const res = await fetch('/api/admin/professionals');
+            if (res.status === 401 || res.status === 403) {
+                if (res.status === 403) window.location.href = '/clinic-portal';
+                else showLogin();
+                return;
+            }
+            if (!res.ok) throw new Error('Failed to load');
+            const data = await res.json();
+            professionalsCache = data.professionals || [];
+            if (adminDefaultDoxyUrl) {
+                adminDefaultDoxyUrl.textContent = data.defaultDoxyRoomUrl
+                    ? `Default clinic room (admin / unassigned bookings): ${data.defaultDoxyRoomUrl}`
+                    : 'Default clinic room is not set. Add DOXY_ROOM_URL to the server environment, or set a room on each professional.';
+            }
+            renderAdminProfessionals(professionalsCache);
+            fillProfessionalsDatalist(professionalsCache);
+        } catch (err) {
+            console.error('Load professionals:', err);
+            adminProfessionalsBody.innerHTML = '<tr><td colspan="5" class="admin-empty-list">Could not load professionals.</td></tr>';
+        }
+    }
+
+    if (proCancelEditBtn) {
+        proCancelEditBtn.addEventListener('click', () => resetProfessionalForm());
+    }
+
+    if (adminProfessionalForm) {
+        adminProfessionalForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showProfessionalError('');
+            const editingId = proEditId && proEditId.value ? proEditId.value : '';
+            const payload = {
+                displayName: proDisplayName ? proDisplayName.value.trim() : '',
+                username: proUsername ? proUsername.value.trim() : '',
+                doxyRoomUrl: proDoxyUrl ? proDoxyUrl.value.trim() : '',
+                active: proActive ? proActive.checked : true
+            };
+            if (proPassword && proPassword.value) payload.password = proPassword.value;
+            if (!editingId && !payload.password) {
+                showProfessionalError('Password is required for a new account.');
+                return;
+            }
+            try {
+                const res = await fetch(editingId ? `/api/admin/professionals/${encodeURIComponent(editingId)}` : '/api/admin/professionals', {
+                    method: editingId ? 'PATCH' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    showProfessionalError(data.error || 'Could not save professional.');
+                    return;
+                }
+                resetProfessionalForm();
+                await loadAdminProfessionals();
+            } catch (err) {
+                showProfessionalError('Network error. Please try again.');
+            }
+        });
+    }
+
+    if (adminProfessionalsBody) {
+        adminProfessionalsBody.addEventListener('click', async (e) => {
+            const editBtn = e.target.closest('[data-pro-edit]');
+            const delBtn = e.target.closest('[data-pro-delete]');
+            if (editBtn) {
+                const id = Number(editBtn.getAttribute('data-pro-edit'));
+                const pro = professionalsCache.find((p) => p.id === id);
+                startEditProfessional(pro);
+                return;
+            }
+            if (delBtn) {
+                const id = delBtn.getAttribute('data-pro-delete');
+                if (!id || !window.confirm('Remove this professional account? Existing bookings keep the name, but they will no longer be able to sign in.')) return;
+                try {
+                    const res = await fetch(`/api/admin/professionals/${encodeURIComponent(id)}`, { method: 'DELETE' });
+                    if (!res.ok) {
+                        const data = await res.json().catch(() => ({}));
+                        alert(data.error || 'Could not remove professional.');
+                        return;
+                    }
+                    if (proEditId && proEditId.value === String(id)) resetProfessionalForm();
+                    await loadAdminProfessionals();
+                } catch (err) {
+                    alert('Network error. Please try again.');
+                }
+            }
         });
     }
 
