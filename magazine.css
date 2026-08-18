@@ -1,8 +1,8 @@
 /* LON Magazine — editorial front (Vogue / Women's Health register) */
 
 .mag-body {
-    --mag-paper: #f3eee6;
-    --mag-paper-2: #ebe4d8;
+    --mag-paper: #ffffff;
+    --mag-paper-2: #f7f5f2;
     --mag-ink: #14110f;
     --mag-ink-soft: #5c534c;
     --mag-line: rgba(20, 17, 15, 0.14);
@@ -91,10 +91,114 @@
     color: var(--mag-ink-soft);
 }
 
+.mag-nav-toggle {
+    display: none;
+    width: 100%;
+    margin: 0;
+    padding: 14px 4vw;
+    border: 0;
+    border-bottom: 1px solid var(--mag-ink);
+    background: var(--mag-paper);
+    color: var(--mag-ink);
+    font-family: var(--mag-sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.mag-shell {
+    display: grid;
+    grid-template-columns: minmax(232px, 280px) minmax(0, 1fr);
+    align-items: start;
+}
+
+.mag-sidenav {
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    overflow: auto;
+    padding: 28px 22px 56px 4vw;
+    border-right: 1px solid var(--mag-line);
+    background: var(--mag-paper);
+}
+
+.mag-sidenav-kicker {
+    margin: 0 0 22px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--mag-gold);
+}
+
+.mag-nav,
+.mag-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mag-nav a {
+    text-decoration: none;
+}
+
+.mag-nav a:hover {
+    color: var(--mag-gold);
+}
+
+.mag-nav-d0 {
+    margin: 0 0 28px;
+}
+
+.mag-nav-d0 > span,
+.mag-nav-d0 > a {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.mag-nav-d0 > ul {
+    border-left: 1px solid var(--mag-line);
+    padding-left: 12px;
+}
+
+.mag-nav-d1 {
+    margin: 0 0 12px;
+    font-size: 0.92rem;
+    line-height: 1.35;
+}
+
+.mag-nav-d1 > a,
+.mag-nav-d1 > span {
+    display: block;
+    font-weight: 600;
+}
+
+.mag-nav-d1 > ul {
+    margin: 6px 0 4px 10px;
+}
+
+.mag-nav-d2 {
+    margin: 0 0 5px;
+    font-size: 0.82rem;
+    line-height: 1.35;
+    color: var(--mag-ink-soft);
+}
+
+.mag-nav-d2 a {
+    font-family: var(--mag-serif);
+    font-style: italic;
+}
+
 .mag-cover {
     display: grid;
     grid-template-columns: 1.15fr 0.85fr;
-    min-height: min(88vh, 920px);
+    min-height: min(78vh, 820px);
     border-bottom: 1px solid var(--mag-ink);
 }
 
@@ -172,6 +276,14 @@
 .mag-read:hover {
     color: var(--mag-gold);
     border-color: var(--mag-gold);
+}
+
+.mag-content .mag-wrap {
+    width: auto;
+    max-width: 1080px;
+    margin: 0;
+    padding-left: clamp(24px, 4vw, 56px);
+    padding-right: clamp(24px, 4vw, 56px);
 }
 
 .mag-wrap {
@@ -413,6 +525,40 @@
     margin-left: 14px;
 }
 
+@media (max-width: 1100px) {
+    .mag-cover {
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+
+    .mag-cover-media {
+        min-height: 46vh;
+    }
+}
+
+@media (max-width: 980px) {
+    .mag-nav-toggle {
+        display: block;
+    }
+
+    .mag-shell {
+        display: block;
+    }
+
+    .mag-sidenav {
+        display: none;
+        position: static;
+        max-height: none;
+        border-right: 0;
+        border-bottom: 1px solid var(--mag-ink);
+        padding: 22px 4vw 28px;
+    }
+
+    .mag-sidenav.is-open {
+        display: block;
+    }
+}
+
 @media (max-width: 860px) {
     .mag-kicker-row {
         justify-content: center;
@@ -439,6 +585,11 @@
 
     .mag-stack a {
         grid-template-columns: 92px 1fr;
+    }
+
+    .mag-content .mag-wrap {
+        padding-left: 4vw;
+        padding-right: 4vw;
     }
 
     .mag-toc li {

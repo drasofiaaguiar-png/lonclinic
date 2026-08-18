@@ -666,6 +666,91 @@ function magHref(article) {
     return `/blog/${encodeURIComponent(article.slug)}`;
 }
 
+function magazineNavTree() {
+    return [
+        {
+            label: 'Saúde mental',
+            children: [
+                {
+                    label: 'Autismo',
+                    children: [
+                        { label: 'Diagnóstico tardio em mulheres', href: '/blog/autismo-em-mulheres-diagnostico-tardio' },
+                        { label: 'Interesse especial', href: '/blog/autismo-nas-mulheres-interesse-especial' }
+                    ]
+                },
+                {
+                    label: 'ADHD',
+                    children: [
+                        { label: 'Sinais em adultos', href: '/blog/adhd-em-adultos-sintomas' }
+                    ]
+                },
+                {
+                    label: 'Burnout',
+                    href: '/burnout',
+                    children: [
+                        { label: 'O que é', href: '/burnout/o-que-e' },
+                        { label: 'Sintomas', href: '/burnout/sintomas' },
+                        { label: 'Tratamento', href: '/burnout/tratamento' },
+                        { label: 'Recuperação', href: '/burnout/recuperacao' },
+                        { label: 'Burnout ou depressão', href: '/burnout/depressao-ou-burnout' },
+                        { label: 'Parental', href: '/burnout/burnout-parental' },
+                        { label: 'Médicos', href: '/burnout/medicos' },
+                        { label: 'Founders', href: '/burnout/fundadores' },
+                        { label: 'Teste', href: '/burnout/teste' }
+                    ]
+                },
+                { label: 'Consulta de saúde mental', href: '/marcar/saude-mental' },
+                { label: 'Psicologia (subscrição)', href: '/saudemental' }
+            ]
+        },
+        {
+            label: 'Saúde do viajante',
+            href: '/travel-clinic',
+            children: [
+                {
+                    label: 'Vacina da febre amarela',
+                    href: '/blog/vacina-febre-amarela-guia-completo',
+                    children: [
+                        { label: 'Lisboa', href: '/blog/vacina-febre-amarela-lisboa' },
+                        { label: 'Porto', href: '/blog/vacina-febre-amarela-porto' },
+                        { label: 'Coimbra', href: '/blog/vacina-febre-amarela-coimbra' },
+                        { label: 'Braga', href: '/blog/vacina-febre-amarela-braga' },
+                        { label: 'Faro e Algarve', href: '/blog/vacina-febre-amarela-algarve' },
+                        { label: 'CUF', href: '/blog/vacina-febre-amarela-cuf' }
+                    ]
+                },
+                { label: 'Consulta do viajante', href: '/marcar/travel' }
+            ]
+        },
+        {
+            label: 'Clínica',
+            children: [
+                { label: 'Telemedicina em casa', href: '/blog/telemedicina-em-casa' },
+                { label: 'Como marcar', href: '/blog/marcacao-guia-rapido' }
+            ]
+        }
+    ];
+}
+
+function magNavNode(node, depth) {
+    const kids = Array.isArray(node.children) ? node.children : [];
+    const label = node.href
+        ? `<a href="${escapeHtml(node.href)}">${escapeHtml(node.label)}</a>`
+        : `<span>${escapeHtml(node.label)}</span>`;
+    if (!kids.length) {
+        return `<li class="mag-nav-leaf mag-nav-d${depth}">${label}</li>`;
+    }
+    return `<li class="mag-nav-branch mag-nav-d${depth}">${label}<ul>${kids.map((child) => magNavNode(child, depth + 1)).join('')}</ul></li>`;
+}
+
+function magSidenavHtml() {
+    const tree = magazineNavTree().map((node) => magNavNode(node, 0)).join('');
+    return `<nav class="mag-sidenav" id="mag-sidenav" aria-label="Temas da revista">
+        <p class="mag-sidenav-kicker">Índice</p>
+        <ul class="mag-nav">${tree}</ul>
+    </nav>`;
+}
+
 function layoutMagazinePage(opts) {
     const {
         origin,
@@ -712,7 +797,7 @@ function layoutMagazinePage(opts) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/magazine.css?v=20260818a">
+    <link rel="stylesheet" href="/magazine.css?v=20260818c">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     ${jsonLdScript(graph)}
@@ -721,6 +806,17 @@ function layoutMagazinePage(opts) {
     <a class="lon-skip visually-hidden" href="#conteudo-principal">Saltar para o conteúdo</a>
     ${mainHtml}
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
+    <script>
+      (function () {
+        var button = document.querySelector('.mag-nav-toggle');
+        var nav = document.getElementById('mag-sidenav');
+        if (!button || !nav) return;
+        button.addEventListener('click', function () {
+          var open = nav.classList.toggle('is-open');
+          button.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+      })();
+    </script>
     <script src="/lon-analytics.js?v=20260817a" defer></script>
 </body>
 </html>`;
@@ -846,42 +942,46 @@ function renderMagazineIndex(origin) {
         <p class="mag-wordmark">LON <span>Magazine</span></p>
         <p class="mag-issue">The Wellness Issue · Agosto 2026</p>
     </div>
-    <main id="conteudo-principal">
-        ${coverHtml}
-        ${featureHtml}
-        <section class="mag-section mag-wrap" aria-labelledby="mag-well-title">
-            <div class="mag-section-head">
-                <h2 id="mag-well-title">O consultório</h2>
-                <p>Leituras para continuar</p>
-            </div>
-            <div class="mag-well">${wellCards}
-            </div>
-        </section>
-        <section class="mag-section mag-wrap" aria-labelledby="mag-travel-title">
-            <div class="mag-section-head">
-                <h2 id="mag-travel-title">Destinos</h2>
-                <p>Vacina febre amarela · consulta do viajante</p>
-            </div>
-            <div class="mag-well">${travelCards}
-            </div>
-        </section>
-        <section class="mag-section mag-wrap" aria-labelledby="mag-toc-title">
-            <div class="mag-section-head">
-                <h2 id="mag-toc-title">Índice</h2>
-                <p>Toda a edição</p>
-            </div>
-            <ol class="mag-toc">${tocHtml}
-            </ol>
-            <aside class="mag-cta">
-                <p>LON Clinic</p>
-                <h2>A revista lê-se. A consulta marca-se.</h2>
-                <div class="mag-cta-actions">
-                    <a class="mag-cta-primary" href="/marcar/saude-mental">Consulta de saúde mental</a>
-                    <a class="mag-cta-ghost" href="/saudemental">Subscrição de psicologia</a>
+    <button type="button" class="mag-nav-toggle" aria-expanded="false" aria-controls="mag-sidenav">Temas</button>
+    <div class="mag-shell">
+        ${magSidenavHtml()}
+        <main id="conteudo-principal" class="mag-content">
+            ${coverHtml}
+            ${featureHtml}
+            <section class="mag-section mag-wrap" aria-labelledby="mag-well-title">
+                <div class="mag-section-head">
+                    <h2 id="mag-well-title">O consultório</h2>
+                    <p>Leituras para continuar</p>
                 </div>
-            </aside>
-        </section>
-    </main>
+                <div class="mag-well">${wellCards}
+                </div>
+            </section>
+            <section class="mag-section mag-wrap" aria-labelledby="mag-travel-title">
+                <div class="mag-section-head">
+                    <h2 id="mag-travel-title">Destinos</h2>
+                    <p>Vacina febre amarela · consulta do viajante</p>
+                </div>
+                <div class="mag-well">${travelCards}
+                </div>
+            </section>
+            <section class="mag-section mag-wrap" aria-labelledby="mag-toc-title">
+                <div class="mag-section-head">
+                    <h2 id="mag-toc-title">Índice</h2>
+                    <p>Toda a edição</p>
+                </div>
+                <ol class="mag-toc">${tocHtml}
+                </ol>
+                <aside class="mag-cta">
+                    <p>LON Clinic</p>
+                    <h2>A revista lê-se. A consulta marca-se.</h2>
+                    <div class="mag-cta-actions">
+                        <a class="mag-cta-primary" href="/marcar/saude-mental">Consulta de saúde mental</a>
+                        <a class="mag-cta-ghost" href="/saudemental">Subscrição de psicologia</a>
+                    </div>
+                </aside>
+            </section>
+        </main>
+    </div>
     <footer class="mag-foot">
         <span>© 2026 Lon Clinic · ERS 45475</span>
         <span>
