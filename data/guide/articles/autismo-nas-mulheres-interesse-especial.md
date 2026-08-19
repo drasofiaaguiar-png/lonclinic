@@ -3,7 +3,7 @@ O **autismo nas mulheres** é um dos territórios mais mal compreendidos da clí
 Não é o tema que define a diferença — é a **função** que o interesse desempenha e a **intensidade** com que é vivido. Este padrão faz parte de um fenómeno mais largo: o [diagnóstico tardio de autismo em mulheres](/blog/autismo-em-mulheres-diagnostico-tardio).
 
 <figure class="guide-figure">
-<img src="/image/guide/guide-opera-coast.jpg" alt="Ópera de Sydney ao entardecer — um interesse cultural intenso que socialmente passa por «paixão»" width="1600" height="900" loading="lazy" decoding="async">
+<img src="/image/image1_files/Ostermalmstorg_Large_Desktop.jpg" alt="Sala branca com duas poltronas e um ecrã — um interesse intenso que, de fora, já tem um nome aceite" width="1600" height="900" loading="lazy" decoding="async">
 </figure>
 
 ## O que distingue um interesse especial autista de um interesse normal
@@ -15,7 +15,7 @@ Alguns marcadores típicos:
 **Função reguladora, não apenas recreativa.** O interesse funciona como uma âncora emocional — um sítio «seguro» para onde a mente vai quando o dia foi sobrecarregado sensorial ou socialmente. Não é lazer no sentido convencional; é regulação.
 
 <figure class="guide-figure">
-<img src="/image/guide/guide-sunset-lake.jpg" alt="Lago imóvel ao pôr do sol — o sítio seguro para onde a mente vai quando o dia foi demais" width="1600" height="900" loading="lazy" decoding="async">
+<img src="/image/image1_files/Marylebone_Large_Desktop.jpg" alt="Sala de consulta em teal, duas poltronas e um copo de água — o sítio seguro para onde a mente vai quando o dia foi demais" width="1600" height="900" loading="lazy" decoding="async">
 </figure>
 
 **Desconforto real quando interrompido.** Ser tirada do interesse a meio (por uma tarefa, uma visita, uma interrupção) gera uma irritação ou angústia desproporcional face ao que, de fora, parece «só um hobby».
@@ -35,7 +35,7 @@ Isto significa que a mesma característica neurológica se manifesta de forma vi
 Quando o [ADHD em adultos](/blog/adhd-em-adultos-sintomas) também está presente (AuDHD), o hiperfoco e o interesse especial podem parecer a mesma coisa — e as duas condições ficam por reconhecer durante mais tempo.
 
 <figure class="guide-figure">
-<img src="/image/guide/guide-hiker-view.jpg" alt="Mulher concentrada a fotografar a paisagem — um interesse intenso que socialmente já tem um nome aceite" width="1600" height="900" loading="lazy" decoding="async">
+<img src="/image/image1_files/LincolnSquare_Large_Desktop.jpg" alt="Mulher concentrada num tablet — um interesse intenso que socialmente já tem um nome aceite" width="1600" height="900" loading="lazy" decoding="async">
 </figure>
 
 ## Isto significa que sou autista?

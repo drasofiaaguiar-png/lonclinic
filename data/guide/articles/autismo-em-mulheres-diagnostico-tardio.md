@@ -5,7 +5,7 @@ O resultado, décadas depois, é que muitas mulheres autistas chegam ao diagnós
 Estudos indicam que a proporção de diagnóstico entre homens e mulheres é significativamente mais desequilibrada do que a prevalência real da condição. Isto é um sinal forte de **subdiagnóstico feminino**, não de menor incidência.
 
 <figure class="guide-figure">
-<img src="/image/guide/guide-hiker-view.jpg" alt="Mulher a observar a paisagem, em silêncio, com uma câmara na mão" width="1600" height="900" loading="lazy" decoding="async">
+<img src="/image/image1_files/Ostermalmstorg_Large_Desktop.jpg" alt="Sala de consulta branca, duas poltronas e um ecrã com o nome da pessoa — o momento em que o que se sente passa a ter um nome" width="1600" height="900" loading="lazy" decoding="async">
 </figure>
 
 ## Porque o diagnóstico demora tanto em mulheres
@@ -15,7 +15,7 @@ Estudos indicam que a proporção de diagnóstico entre homens e mulheres é sig
 **2. Mascaramento (masking).** Muitas raparigas e mulheres autistas aprendem, desde muito cedo, a observar e imitar comportamentos sociais dos pares: sorrir no momento certo, manter contacto visual de forma forçada, ensaiar conversas antecipadamente. Este esforço é exaustivo e, de fora, fica invisível.
 
 <figure class="guide-figure">
-<img src="/image/guide/guide-group-walk.jpg" alt="Grupo de amigos a caminhar na praia, sorridentes — a aparente facilidade social que o mascaramento pode imitar" width="1600" height="900" loading="lazy" decoding="async">
+<img src="/image/image1_files/CoventGarden_Large_Desktop.jpg" alt="Homem sentado numa sala de espera clara, de lado — a aparente calma social que o mascaramento pode imitar" width="1600" height="900" loading="lazy" decoding="async">
 </figure>
 
 **3. Critérios de diagnóstico historicamente enviesados.** As ferramentas clínicas mais usadas foram validadas maioritariamente em populações masculinas, o que reduz a sua sensibilidade para captar apresentações mais típicas em mulheres.
@@ -41,7 +41,7 @@ Quando o mascaramento é mantido durante anos sem ser reconhecido, o resultado �
 Este distingue-se do [burnout profissional](/burnout) por resultar não apenas de sobrecarga de trabalho, mas do custo cumulativo de «encaixar» socialmente durante toda a vida. Os sintomas incluem perda temporária de competências antes adquiridas, aumento da sensibilidade sensorial e necessidade intensa de isolamento para recuperar.
 
 <figure class="guide-figure">
-<img src="/image/guide/guide-sunset-lake.jpg" alt="Lago de montanha ao entardecer, em silêncio — o retiro de que o burnout autista muitas vezes precisa" width="1600" height="900" loading="lazy" decoding="async">
+<img src="/image/image1_files/ColmoreRow_Large_Desktop.jpg" alt="Sala de espera em silêncio, com escadas para a luz — o retiro de que o burnout autista muitas vezes precisa" width="1600" height="900" loading="lazy" decoding="async">
 </figure>
 
 {{cta}}
@@ -64,7 +64,7 @@ Chegar ao diagnóstico na vida adulta muda, para muitas mulheres, décadas de au
 O diagnóstico não é um rótulo limitador: é, para a maioria, uma chave que permite finalmente compreender o próprio funcionamento e ajustar estratégias de forma mais eficaz.
 
 <figure class="guide-figure">
-<img src="/image/guide/guide-country-road.jpg" alt="Estrada sinuosa entre colinas ao pôr do sol — o percurso longo até um diagnóstico tardio" width="1600" height="900" loading="lazy" decoding="async">
+<img src="/image/image1_files/LincolnSquare_Large_Desktop.jpg" alt="Mulher concentrada num tablet, num corredor da clínica — o percurso longo até um diagnóstico tardio" width="1600" height="900" loading="lazy" decoding="async">
 </figure>
 
 ## O que dizem as comunidades online

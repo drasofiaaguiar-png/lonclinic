@@ -24,7 +24,7 @@ Isto não significa necessariamente falta de vontade.
 Pode significar dificuldade em regular a atenção. Em algumas pessoas, sobretudo mulheres, o hiperfoco pode coincidir com um [interesse especial autista](/blog/autismo-nas-mulheres-interesse-especial) — e o ADHD e o autismo podem coexistir (AuDHD) sem nenhum dos dois ser reconhecido.
 
 <figure class="guide-figure">
-<img src="/image/guide/guide-hiker-view.jpg" alt="Mulher em hiperfoco a fotografar uma paisagem de montanha" width="1600" height="900" loading="lazy" decoding="async">
+<img src="/image/image1_files/LincolnSquare_Large_Desktop.jpg" alt="Mulher em hiperfoco, concentrada num tablet num corredor da clínica" width="1600" height="900" loading="lazy" decoding="async">
 </figure>
 
 {{cta}}
@@ -40,7 +40,7 @@ Muitos adultos só procuram ajuda quando as estratégias que utilizavam para com
 De repente, aquilo que antes conseguiam «gerir» deixa de ser sustentável.
 
 <figure class="guide-figure">
-<img src="/image/guide/guide-country-road.jpg" alt="Estrada longa entre colinas — os sinais de ADHD vêm de longe, mesmo quando só agora se tornam visíveis" width="1600" height="900" loading="lazy" decoding="async">
+<img src="/image/image1_files/CoventGarden_Large_Desktop.jpg" alt="Homem sentado na sala de espera, a olhar para o lado — os sinais de ADHD vêm de longe, mesmo quando só agora se tornam visíveis" width="1600" height="900" loading="lazy" decoding="async">
 </figure>
 
 ## ADHD ou ansiedade?
@@ -50,7 +50,7 @@ Esta é uma das razões pelas quais o diagnóstico não deve ser feito através 
 Dificuldade de concentração, irritabilidade, esquecimento e problemas de organização também podem aparecer em ansiedade, depressão, [burnout](/burnout), privação de sono ou outras situações. O mesmo vale para o [autismo diagnosticado tarde em mulheres](/blog/autismo-em-mulheres-diagnostico-tardio): a ansiedade ou a depressão são muitas vezes o que primeiro chama a atenção.
 
 <figure class="guide-figure">
-<img src="/image/guide/guide-waterfall.jpg" alt="Queda de água sobre um vale — a sobrecarga que pode parecer ansiedade quando o ADHD não foi reconhecido" width="1600" height="900" loading="lazy" decoding="async">
+<img src="/image/image1_files/Marylebone_Large_Desktop.jpg" alt="Sala de consulta em silêncio — a sobrecarga que pode parecer ansiedade quando o ADHD não foi reconhecido" width="1600" height="900" loading="lazy" decoding="async">
 </figure>
 
 Por isso, o diagnóstico é clínico e deve considerar a história da pessoa, a evolução dos sintomas e o impacto que têm na vida diária.
@@ -72,7 +72,7 @@ E existe outra parte importante: compreender o próprio funcionamento.
 Para alguém que passou anos a ouvir «és preguiçoso», «tens de te organizar» ou «não te esforças o suficiente», perceber que existe uma explicação para determinadas dificuldades pode ser um enorme alívio.
 
 <figure class="guide-figure">
-<img src="/image/guide/guide-lake-boats.jpg" alt="Lago transparente com um barco — a clareza que muitas pessoas descrevem depois do diagnóstico" width="1600" height="900" loading="lazy" decoding="async">
+<img src="/image/image1_files/Ostermalmstorg_Large_Desktop.jpg" alt="Sala branca com o nome no ecrã — a clareza que muitas pessoas descrevem depois do diagnóstico" width="1600" height="900" loading="lazy" decoding="async">
 </figure>
 
 ## Então, será que tenho ADHD?
