@@ -546,53 +546,53 @@ function renderBlogArticle(origin, slug) {
     }
 
     const isTravelGuide = /vacina|viajante|travel/i.test(slug);
-    const topMedicalNotice = isTravelGuide
-        ? `<div class="guide-top-disclaimer">Informação de carácter geral — não substitui consulta médica individualizada. Horários e contactos dos Centros de Vacinação Internacional sujeitos a alteração. Confirme sempre junto da instituição antes de se deslocar.</div>`
-        : `<div class="guide-top-disclaimer">Informação de carácter geral — não substitui consulta médica individualizada.</div>`;
-    const byline = authors.authorBylineHtml(o, meta.author, datePub);
+    const byline = (() => {
+        const a = authors.getAuthor(meta.author);
+        const href = authors.authorPath(a);
+        const iso = String(datePub || '').slice(0, 10);
+        const time = iso
+            ? `<time datetime="${escapeHtml(iso)}">${escapeHtml(magDate(datePub))}</time><span aria-hidden="true"> · </span>`
+            : '';
+        return `<p class="eeat-byline mag-story-by">${time}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">Médica · ${a.yearsPractice} anos</a><span class="eeat-byline-review"> · Revisão clínica</span></p>`;
+    })();
     const bio = authors.authorBioHtml(o, meta.author);
     const leadFigure = meta.image
-        ? `<figure class="guide-figure guide-figure-lead"><img src="${escapeHtml(String(meta.image).startsWith('/') ? meta.image : `/${meta.image}`)}" alt="${escapeHtml(title)}" width="1600" height="900" decoding="async"></figure>`
+        ? `<figure class="guide-figure guide-figure-lead mag-story-hero"><img src="${escapeHtml(String(meta.image).startsWith('/') ? meta.image : `/${meta.image}`)}" alt="${escapeHtml(title)}" width="1600" height="900" decoding="async"></figure>`
         : '';
 
     const articlePath = `/blog/${encodeURIComponent(slug)}`;
+    const kicker = magThemeLabel(meta);
+    const note = isTravelGuide
+        ? 'Informação de carácter geral — não substitui consulta médica. Horários dos centros de vacinação podem alterar-se.'
+        : 'Informação de carácter geral — não substitui consulta médica individualizada.';
     const articleInner = format === 'markdown'
         ? `
     <main id="conteudo-principal" class="guide-article-main mag-article-main">
-        <article class="guide-article-wrap" itemscope itemtype="https://schema.org/MedicalWebPage">
-            ${topMedicalNotice}
-            <header class="guide-article-header">
-                <div class="guide-article-intro">
-                    <div class="guide-article-intro-left">
-                        <h1 class="guide-article-title" itemprop="headline">${escapeHtml(title)}</h1>
-                        <p class="guide-article-summary">${escapeHtml(description)}</p>
-                        ${byline}
-                    </div>
-                    <div class="guide-article-intro-right">
-                        <nav class="guide-breadcrumb" aria-label="Caminho de navegação">
-                            <a href="/magazine">Magazine</a>
-                            <span aria-hidden="true"> / </span>
-                            <span class="visually-hidden">Artigo atual: </span>
-                            <span>${escapeHtml(title)}</span>
-                        </nav>
-                        <p class="guide-article-date">${escapeHtml(datePub)}</p>
-                    </div>
-                </div>
+        <article class="mag-story" itemscope itemtype="https://schema.org/MedicalWebPage">
+            <header class="mag-story-head">
+                <p class="mag-story-kicker">${escapeHtml(kicker)}</p>
+                <h1 class="mag-story-title" itemprop="headline">${escapeHtml(title)}</h1>
+                <p class="mag-story-dek">${escapeHtml(description)}</p>
+                ${byline}
             </header>
-            <section class="guide-article-content" aria-label="Conteúdo do artigo">
-                ${leadFigure}
-                <div class="guide-prose" lang="pt-PT">
-                    ${articleHtml}
-                </div>
-                ${relatedHtml}
-            </section>
+            ${leadFigure}
+            <div class="mag-story-body">
+            <p class="mag-story-note">${escapeHtml(note)}</p>
+            <div class="guide-prose mag-story-prose" lang="pt-PT">
+                ${articleHtml}
+            </div>
+            ${relatedHtml}
             ${bio}
+            </div>
         </article>
     </main>`
         : `
     <main id="conteudo-principal" class="guide-article-main-html mag-article-main">
-        <article class="guide-article-wrap">
-            ${byline}
+        <article class="mag-story mag-story--html">
+            <header class="mag-story-head mag-story-head--html">
+                <p class="mag-story-kicker">${escapeHtml(kicker)}</p>
+                ${byline}
+            </header>
             <div class="guide-prose" lang="pt-PT">
                 ${articleHtml}
             </div>
@@ -609,7 +609,7 @@ function renderBlogArticle(origin, slug) {
         jsonLd,
         ogType: 'article',
         extraCss: ['/landing.css?v=20260418k'],
-        extraCssAfter: ['/guide.css?v=20260818e', '/author.css?v=20260818a'],
+        extraCssAfter: ['/guide.css?v=20260818e', '/author.css?v=20260818a', '/magazine.css?v=20260818i'],
         mainHtml: magAppHtml(articlePath, `
             ${magTopbarHtml({ magazineCurrent: true })}
             ${articleInner}
@@ -649,6 +649,13 @@ function magTheme(article) {
     if (/autismo|adhd/.test(about) || /autismo|adhd/.test(slug)) return 'mental';
     if (/vacina|viajante|travel/.test(slug)) return 'travel';
     return 'clinic';
+}
+
+function magThemeLabel(article) {
+    const theme = magTheme(article);
+    if (theme === 'mental') return 'Saúde mental';
+    if (theme === 'travel') return 'Saúde do viajante';
+    return 'Clínica';
 }
 
 function magCardHtml(article) {
@@ -872,7 +879,7 @@ function layoutMagazinePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     ${extraCssHtml}
-    <link rel="stylesheet" href="/magazine.css?v=20260818g">
+    <link rel="stylesheet" href="/magazine.css?v=20260818i">
     ${extraCssAfterHtml}
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
