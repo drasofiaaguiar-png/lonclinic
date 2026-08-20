@@ -298,7 +298,7 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260418k">
-    <link rel="stylesheet" href="/guide.css?v=20260820c">
+    <link rel="stylesheet" href="/guide.css?v=20260820d">
     <link rel="stylesheet" href="/author.css?v=20260818a">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -609,7 +609,7 @@ function renderBlogArticle(origin, slug) {
         jsonLd,
         ogType: 'article',
         extraCss: ['/landing.css?v=20260418k'],
-        extraCssAfter: ['/guide.css?v=20260820c', '/author.css?v=20260818a', '/magazine.css?v=20260820c'],
+        extraCssAfter: ['/guide.css?v=20260820d', '/author.css?v=20260818a', '/magazine.css?v=20260820d'],
         mainHtml: magAppHtml(articlePath, `
             ${magTopbarHtml({ magazineCurrent: true })}
             ${articleInner}
@@ -879,7 +879,7 @@ function layoutMagazinePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     ${extraCssHtml}
-    <link rel="stylesheet" href="/magazine.css?v=20260820c">
+    <link rel="stylesheet" href="/magazine.css?v=20260820d">
     ${extraCssAfterHtml}
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
