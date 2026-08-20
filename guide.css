@@ -440,21 +440,22 @@
 
 /* CTAs com fundo verde escuro: o .guide-prose a acima ganhava à cor dos botões */
 .guide-book {
-    margin: 1.85rem 0;
+    margin: 2rem 0;
 }
 
 .guide-book-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
+    gap: 16px;
 }
 
 .guide-book-card {
-    background: linear-gradient(160deg, #1b3f29 0%, #2f6342 58%, #255235 100%);
-    color: #f7f9fb;
-    border-radius: 18px;
-    padding: 20px 18px 18px;
-    box-shadow: 0 14px 32px rgba(27, 63, 41, 0.22);
+    background: #ffffff;
+    color: #14110f;
+    border: 1px solid #e8e8e8;
+    border-radius: 0;
+    padding: 22px 22px 20px;
+    box-shadow: none;
     display: flex;
     flex-direction: column;
     min-height: 100%;
@@ -462,51 +463,61 @@
 
 .guide-book-chip {
     font-size: 0.68rem;
-    font-weight: 800;
-    letter-spacing: 0.08em;
+    font-weight: 500;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #b7ebc8;
+    color: #6b6b6b;
     margin: 0 0 10px;
 }
 
 .guide-book-title {
-    font-size: 1.05rem;
-    font-weight: 800;
+    font-size: 1.12rem;
+    font-weight: 600;
     letter-spacing: -0.02em;
-    line-height: 1.25;
-    color: #ffffff;
-    margin: 0 0 8px;
+    line-height: 1.3;
+    color: #14110f;
+    margin: 0 0 10px;
 }
 
 .guide-book-price {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #e8fff0;
-    margin: 0 0 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #14110f;
+    margin: 0 0 4px;
 }
 
 .guide-book-note {
-    font-size: 0.82rem;
-    color: rgba(247, 249, 251, 0.72);
+    font-size: 0.86rem;
+    color: #6b6b6b;
     line-height: 1.45;
-    margin: 0 0 16px;
+    margin: 0 0 18px;
     flex: 1;
+}
+
+.guide-book-cta {
+    align-self: flex-start;
+    display: inline-block;
+    margin-top: auto;
+    padding: 10px 16px;
+    background: #14110f;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.guide-book-cta:hover {
+    opacity: 0.72;
 }
 
 .guide-book-card .lon-btn,
 .guide-prose .guide-book-card a.lon-btn,
-.guide-prose .guide-book-card a.lon-btn-primary {
-    align-self: flex-start;
-    background: #ffffff;
-    color: #1b3f29;
+.guide-prose .guide-book-card a.lon-btn-primary,
+.guide-prose .guide-book-cta,
+.guide-prose .guide-book-cta:hover {
     text-decoration: none;
-    font-weight: 700;
-}
-
-.guide-book-card .lon-btn:hover,
-.guide-prose .guide-book-card a.lon-btn-primary:hover {
-    background: #e8fff0;
-    color: #143224;
 }
 
 .guide-related {
@@ -600,9 +611,9 @@
     color: #ffffff;
 }
 
-.guide-prose .guide-book-card a.lon-btn-primary,
-.guide-prose .guide-book-card a.lon-btn-primary:hover {
-    color: #1b3f29;
+.guide-prose .guide-book-card a.guide-book-cta,
+.guide-prose .guide-book-card a.guide-book-cta:hover {
+    color: #ffffff;
     text-decoration: none;
 }
 
