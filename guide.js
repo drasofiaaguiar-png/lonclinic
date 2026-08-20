@@ -859,6 +859,16 @@ function magazineNavTree() {
             ]
         },
         {
+            label: 'Clínica turista',
+            children: [
+                { label: 'Tourist clinic', href: '/tourist-clinic' },
+                { label: 'See a doctor as a tourist', href: '/see-doctor-portugal-tourist' },
+                { label: 'UTI in Portugal', href: '/uti-portugal-what-to-do' },
+                { label: 'Renew a prescription', href: '/renew-prescription-holiday-portugal' },
+                { label: 'Médico siendo turista', href: '/ver-medico-portugal-turista' }
+            ]
+        },
+        {
             label: 'Saúde do viajante',
             children: [
                 { label: 'Clínica do viajante', href: '/travel-clinic' },

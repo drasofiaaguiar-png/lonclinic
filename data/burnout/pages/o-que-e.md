@@ -153,7 +153,7 @@ Depois, tente perceber o que está realmente a provocar o esgotamento. É o volu
 
 Esta distinção é importante porque descansar duas semanas pode ajudar, mas dificilmente resolve um problema que volta a aparecer assim que regressa às mesmas condições.
 
-Também pode ser importante falar com um profissional de saúde mental. Um [psicólogo](/saudemental) ou outro profissional qualificado pode ajudar a compreender o que está a acontecer e a distinguir burnout de outras situações que podem produzir sintomas semelhantes.
+Também pode ser importante falar com um profissional de saúde mental. Um [psicólogo para burnout](/psicologia-burnout) ou outro profissional qualificado pode ajudar a compreender o que está a acontecer e a distinguir burnout de outras situações que podem produzir sintomas semelhantes.
 
 E, quando necessário, um médico poderá também avaliar possíveis causas físicas. Na Lon Clinic, a [consulta anti-burnout](/clinica-anti-burnout) começa por essa avaliação clínica.
 

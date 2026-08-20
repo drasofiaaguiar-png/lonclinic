@@ -225,7 +225,26 @@
         if (p === '/' || p === '/index.html') return { surface: 'home' };
         if (p.indexOf('/marcar') === 0 || p === '/book.html' || p === '/book-consultation') return { surface: 'booking' };
         if (p.indexOf('/burnout') === 0 || p.indexOf('/anti-burnout') === 0) return { surface: 'burnout' };
-        if (p.indexOf('/psicologia') === 0 || p.indexOf('/saudemental') === 0 || p.indexOf('/teste-personalidade') === 0) return { surface: 'mental' };
+        if (p === '/consulta' || p.indexOf('/consulta/') === 0 || p === '/consulta.html') return { surface: 'medical' };
+        if (p.indexOf('/nutricao') === 0) return { surface: 'nutrition' };
+        if (p.indexOf('/psicologia') === 0 || p.indexOf('/saudemental') === 0 || p.indexOf('/teste-personalidade') === 0 || p.indexOf('/consultas') === 0) return { surface: 'mental' };
+        if (document.body && document.body.classList.contains('qx-body')) return { surface: 'mental' };
+        if ((document.body && document.body.classList.contains('tourist-body')) || p === '/tourist-clinic') return { surface: 'tourist' };
+        if (
+            p === '/see-doctor-portugal-tourist' ||
+            p === '/ver-medico-portugal-turista' ||
+            p === '/consulter-medecin-portugal-touriste' ||
+            p === '/arzt-portugal-tourist-finden' ||
+            p === '/uti-portugal-what-to-do' ||
+            p === '/infeccion-urinaria-portugal-que-hacer' ||
+            p === '/infection-urinaire-portugal-que-faire' ||
+            p === '/blasenentzuendung-portugal-was-tun' ||
+            p === '/renew-prescription-holiday-portugal' ||
+            p === '/renovar-receta-vacaciones-portugal' ||
+            p === '/renouveler-ordonnance-vacances-portugal' ||
+            p === '/rezept-verlaengern-urlaub-portugal'
+        ) return { surface: 'tourist' };
+        if (document.body && document.body.classList.contains('cq-body')) return { surface: 'medical' };
         if (p.indexOf('/travel') === 0) return { surface: 'travel' };
         if (p.indexOf('/triagem') === 0) return { surface: 'triage' };
         if (p.indexOf('/guide') === 0 || p.indexOf('/blog') === 0) return { surface: 'content' };

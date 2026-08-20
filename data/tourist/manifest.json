@@ -1,0 +1,1423 @@
+{
+  "updated": "2026-08-20",
+  "notes": "Tourist clinic — visitantes já em Portugal, sem SNS. Distinto da travel clinic (vacinas / pré-viagem). Uma URL por língua + hub /tourist-clinic.",
+  "hub": {
+    "titleTag": "Tourist Clinic Portugal — See a Doctor Online (2026)",
+    "description": "Already in Portugal without SNS or a family doctor? Video consultation €39 in English, Spanish or Portuguese. Not the travel clinic for vaccines.",
+    "h1": "Tourist Clinic Portugal",
+    "bookingHref": "/marcar/clinica-geral?ref=tourist-clinic&lang=en",
+    "bookingLabel": "Book online — €39",
+    "price": "€39",
+    "priceNote": "Video consultation with a licensed doctor, about 30 minutes. Electronic prescription included if indicated. No extra fee at checkout.",
+    "ctaTitle": "Need a doctor during your stay?",
+    "ctaLead": "Book a video consultation in English, Spanish or Portuguese — no clinic hunt, no ER wait for a minor issue.",
+    "datePublished": "2026-08-20",
+    "dateModified": "2026-08-20",
+    "lead": [
+      "You are visiting Portugal. You do not have a family doctor or SNS registration. For a non-emergency issue, the fastest option is often an online consultation — €39, video, prescription if indicated.",
+      "This is the tourist clinic: care for people already here. If you need vaccines or malaria advice before flying out, that is the travel clinic — a different page."
+    ],
+    "onlineTitle": "When tourist clinic makes sense",
+    "urgentTitle": "When to go to the ER",
+    "safeOnline": [
+      "Cystitis, reflux, constipation, a cold, a rash, traveller’s diarrhoea",
+      "Renewal of a stable long-term medicine you already take",
+      "You can join a video call from your phone or laptop",
+      "No chest pain, no trouble breathing, no collapse"
+    ],
+    "goToUrgent": [
+      "Chest pain, trouble breathing, stroke signs, heavy bleeding, collapse",
+      "High fever with severe pain, confusion, or vomiting you cannot keep down",
+      "Pregnancy with worrying symptoms",
+      "Anything where waiting for a booked slot would be unsafe — call 112"
+    ],
+    "sections": [
+      {
+        "h2": "How it works",
+        "items": [
+          {
+            "title": "Book a slot",
+            "text": "Same-day appointments are often available, seven days a week. The price is €39, shown before you pay."
+          },
+          {
+            "title": "Video consultation",
+            "text": "A doctor registered with the Portuguese Medical Association sees you on video — not a questionnaire that issues antibiotics on its own."
+          },
+          {
+            "title": "Prescription, if needed",
+            "text": "A Portuguese electronic prescription, valid at any pharmacy in the country, usually by SMS or email."
+          }
+        ]
+      }
+    ]
+  },
+  "pages": [
+    {
+      "slug": "see-doctor-portugal-tourist",
+      "group": "see-doctor-tourist",
+      "lang": "en",
+      "hreflang": "en",
+      "status": "live",
+      "navLabel": "See a doctor as a tourist",
+      "titleTag": "How to See a Doctor in Portugal as a Tourist (2026 Guide)",
+      "description": "No family doctor or SNS access in Portugal? Here's how tourists and visitors can see a doctor quickly — public, private, and online options compared.",
+      "h1": "Need a Doctor in Portugal? Here's How Tourists Can Get Care",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-see-doctor-en&lang=en",
+      "bookingLabel": "Book online — €39",
+      "price": "€39",
+      "priceNote": "Video consultation with a licensed doctor, about 30 minutes. Electronic prescription included if indicated. No extra prescribing fee at checkout.",
+      "ctaTitle": "Need to see a doctor today?",
+      "ctaLead": "Book a video consultation with Lon Clinic in English, Spanish or Portuguese — no clinic hunt, no ER wait for a minor issue.",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "As a visitor without SNS registration, your fastest options are a private clinic or an online consultation — both work without a Portuguese family doctor.",
+        "Online is usually faster and cheaper for non-emergency issues. Go to a public hospital emergency room (urgência) only for genuine emergencies — or call 112."
+      ],
+      "onlineTitle": "When an online consultation makes sense",
+      "urgentTitle": "When to go to the ER",
+      "safeOnline": [
+        "Common, non-emergency issues: cystitis, reflux, constipation, a cold, a skin rash, traveller’s diarrhoea",
+        "Prescription renewal for a stable long-term medicine you already take",
+        "You can join a video call from your phone or laptop",
+        "No fever with severe illness, no chest pain, no trouble breathing"
+      ],
+      "goToUrgent": [
+        "Chest pain, trouble breathing, stroke signs, heavy bleeding, collapse",
+        "High fever with severe pain, confusion, or vomiting you cannot keep down",
+        "Pregnancy with worrying symptoms",
+        "Any situation where waiting for a booked slot would be unsafe"
+      ],
+      "howTitle": "Booking an online consultation",
+      "howItWorks": [
+        {
+          "title": "Choose your language",
+          "text": "Lon Clinic consultations are in English, Spanish or Portuguese. Pick one when you book — there is no extra language filter to hunt for."
+        },
+        {
+          "title": "Pick a time",
+          "text": "Same-day slots are often available, seven days a week. The price (€39) is shown before you pay."
+        },
+        {
+          "title": "Join the video call",
+          "text": "A licensed doctor sees you on video — not a questionnaire that issues antibiotics on its own."
+        },
+        {
+          "title": "Advice and, if needed, a prescription",
+          "text": "If indicated, you receive a Portuguese electronic prescription, valid at any pharmacy in the country, usually by SMS or email."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Public (SNS) vs. private vs. online — which is right for you?",
+          "items": [
+            {
+              "title": "SNS (public system)",
+              "text": "Built around residents with a registered family doctor. As a tourist, your realistic public access point is the emergency room (urgência) — appropriate for genuine emergencies, but expect long waits for non-urgent issues."
+            },
+            {
+              "title": "Private clinic or hospital",
+              "text": "Fast and often English-friendly in Lisbon, Porto, the Algarve and other tourist areas, but can be costly without insurance, and you have to travel there."
+            },
+            {
+              "title": "Online consultation (Lon Clinic)",
+              "text": "Best for common, non-emergency issues. A doctor registered with the Portuguese Medical Association sees you by video. If needed, the prescription is electronic and works at any pharmacy in Portugal. Consultations: English, Spanish, Portuguese. €39, shown before checkout."
+            }
+          ]
+        },
+        {
+          "h2": "Do you need travel insurance or an EHIC/GHIC card?",
+          "paragraphs": [
+            "EU/EEA citizens with an EHIC (or a UK GHIC) can access public healthcare at resident rates for necessary care — this does not cover private or online consultations.",
+            "Non-EU visitors should have travel insurance. Lon Clinic can issue a receipt for reimbursement if your policy covers outpatient or telemedicine care.",
+            "For a quick, non-emergency issue, an online consultation is often simpler than navigating insurance paperwork for public care."
+          ]
+        },
+        {
+          "h2": "Finding an English-speaking doctor",
+          "paragraphs": [
+            "Major hospitals in Lisbon, Porto and the Algarve generally have English-speaking staff. Smaller towns and rural areas are less reliable.",
+            "You do not have to guess with Lon Clinic: say English, Spanish or Portuguese when you book. We do not currently offer French or German consultations — English covers most visitors who need one of those."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Can a tourist just walk into a Portuguese hospital?",
+          "a": "Yes, for emergencies — public hospital emergency rooms treat everyone regardless of nationality. Non-residents may be billed, and it is not designed for minor issues."
+        },
+        {
+          "q": "Is there a cost for using SNS as a tourist?",
+          "a": "Non-residents without an EHIC/GHIC or Portuguese registration are generally charged for care, including emergency visits."
+        },
+        {
+          "q": "How quickly can I get an online consultation?",
+          "a": "Same-day appointments are often available, seven days a week. You choose the slot when you book. The consultation is €39."
+        },
+        {
+          "q": "Will the prescription work at any pharmacy?",
+          "a": "When a prescription is issued, it is a Portuguese electronic prescription. You can collect it at any pharmacy in the country with the code sent by SMS or email."
+        }
+      ],
+      "related": [
+        { "href": "/tourist-clinic", "label": "Tourist clinic" },
+        { "href": "/uti-portugal-what-to-do", "label": "UTI in Portugal" },
+        { "href": "/renew-prescription-holiday-portugal", "label": "Renew a prescription" },
+        { "href": "/consulta", "label": "Medical consultations by complaint" },
+        { "href": "/equipa/rita-aguiar", "label": "The doctor" }
+      ]
+    },
+    {
+      "slug": "ver-medico-portugal-turista",
+      "group": "see-doctor-tourist",
+      "lang": "es",
+      "hreflang": "es",
+      "status": "live",
+      "navLabel": "Médico siendo turista",
+      "titleTag": "Cómo Ir al Médico en Portugal Siendo Turista (Guía 2026)",
+      "description": "¿Sin médico de familia ni acceso al SNS en Portugal? Así pueden los turistas ver a un médico rápido — comparamos opciones públicas, privadas y online.",
+      "h1": "¿Necesitas un Médico en Portugal? Así Pueden Atenderte los Turistas",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-see-doctor-es&lang=es",
+      "bookingLabel": "Reservar online — 39 €",
+      "price": "39 €",
+      "priceNote": "Videoconsulta con médica colegiada, unos 30 min. Receta electrónica incluida si está indicada. Sin tasas extra en el checkout.",
+      "ctaTitle": "¿Necesitas ver a un médico hoy?",
+      "ctaLead": "Reserva una videoconsulta con Lon Clinic en inglés, español o portugués — sin buscar clínica ni esperar en urgencias por un problema menor.",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "Como visitante sin registro en el SNS, tus opciones más rápidas son una clínica privada o una consulta online — ambas funcionan sin médico de familia portugués.",
+        "Lo online suele ser más rápido y económico para problemas no urgentes. Acude a urgencias del hospital público solo en emergencias reales — o llama al 112."
+      ],
+      "onlineTitle": "Cuándo tiene sentido la consulta online",
+      "urgentTitle": "Cuándo ir a urgencias",
+      "safeOnline": [
+        "Problemas comunes no urgentes: cistitis, reflujo, estreñimiento, un resfriado, un sarpullido, diarrea del viajero",
+        "Renovación de receta de un tratamiento crónico ya estable",
+        "Puedes hacer una videollamada desde el móvil o el ordenador",
+        "Sin fiebre grave, sin dolor de pecho, sin dificultad para respirar"
+      ],
+      "goToUrgent": [
+        "Dolor de pecho, dificultad para respirar, signos de ictus, hemorragia intensa, desmayo",
+        "Fiebre alta con dolor intenso, confusión o vómitos que no cesan",
+        "Embarazo con síntomas preocupantes",
+        "Cualquier situación en la que esperar a una cita no sea seguro"
+      ],
+      "howTitle": "Cómo reservar una consulta online",
+      "howItWorks": [
+        {
+          "title": "Elige el idioma",
+          "text": "Las consultas de Lon Clinic son en inglés, español o portugués. Lo indicas al reservar."
+        },
+        {
+          "title": "Elige hora",
+          "text": "A menudo hay huecos el mismo día, los 7 días de la semana. El precio (39 €) se ve antes de pagar."
+        },
+        {
+          "title": "Videollamada",
+          "text": "Una médica colegiada te atiende por vídeo — no un cuestionario que despacha antibióticos solo."
+        },
+        {
+          "title": "Consejo y, si procede, receta",
+          "text": "Si está indicada, recibes una receta electrónica portuguesa, válida en cualquier farmacia del país, por SMS o email."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "SNS público vs. privado vs. online — ¿cuál te conviene?",
+          "items": [
+            {
+              "title": "SNS (sistema público)",
+              "text": "Pensado para residentes con médico de familia. Como turista, tu vía realista de acceso público es urgencias — apropiado para emergencias reales, con esperas largas si el caso no es urgente."
+            },
+            {
+              "title": "Clínica u hospital privado",
+              "text": "Rápido y a menudo con inglés en Lisboa, Oporto, el Algarve y zonas turísticas, pero puede ser caro sin seguro, y hay que desplazarse."
+            },
+            {
+              "title": "Consulta online (Lon Clinic)",
+              "text": "Ideal para problemas comunes no urgentes. Una médica inscrita en la Ordem dos Médicos te atiende por vídeo. Si hace falta, la receta electrónica vale en cualquier farmacia de Portugal. Idiomas: inglés, español, portugués. 39 €, visible antes de pagar."
+            }
+          ]
+        },
+        {
+          "h2": "¿Necesitas seguro de viaje o Tarjeta Sanitaria Europea?",
+          "paragraphs": [
+            "Los ciudadanos de la UE/EEE con TSE (o GHIC británica) pueden acceder a la sanidad pública a precio de residente para la atención necesaria — esto no cubre consultas privadas u online.",
+            "Los visitantes de fuera de la UE deberían tener seguro de viaje. Lon Clinic puede emitir un recibo para el reembolso si la póliza cubre consulta ambulatoria o telemedicina.",
+            "Para un problema rápido y no urgente, una consulta online suele ser más sencilla que el papeleo del seguro para atención pública."
+          ]
+        },
+        {
+          "h2": "Encontrar un médico que hable tu idioma",
+          "paragraphs": [
+            "Los grandes hospitales de Lisboa, Oporto y el Algarve suelen tener personal en inglés. En pueblos pequeños y zonas rurales es menos fiable.",
+            "En Lon Clinic no hay que adivinar: inglés, español o portugués al reservar. No ofrecemos consultas en francés ni en alemán — el inglés cubre a la mayoría de quienes las necesitarían."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "¿Puede un turista simplemente ir a un hospital portugués?",
+          "a": "Sí, en caso de emergencia: las urgencias de los hospitales públicos atienden a cualquiera, sea cual sea la nacionalidad. A los no residentes se les puede facturar, y no está pensado para problemas menores."
+        },
+        {
+          "q": "¿Tiene coste usar el SNS siendo turista?",
+          "a": "Los no residentes sin TSE/GHIC o registro portugués generalmente pagan la atención, incluidas las visitas de urgencia."
+        },
+        {
+          "q": "¿Con qué rapidez puedo conseguir una consulta online?",
+          "a": "A menudo hay citas el mismo día, los 7 días de la semana. Eliges el hueco al reservar. La consulta cuesta 39 €."
+        },
+        {
+          "q": "¿La receta sirve en cualquier farmacia?",
+          "a": "Cuando se emite, es una receta electrónica portuguesa. Se recoge en cualquier farmacia del país con el código enviado por SMS o email."
+        }
+      ],
+      "related": [
+        { "href": "/tourist-clinic", "label": "Clínica turista" },
+        { "href": "/infeccion-urinaria-portugal-que-hacer", "label": "Infección urinaria en Portugal" },
+        { "href": "/consulta", "label": "Consultas médicas por queja" },
+        { "href": "/equipa/rita-aguiar", "label": "La médica" }
+      ]
+    },
+    {
+      "slug": "consulter-medecin-portugal-touriste",
+      "group": "see-doctor-tourist",
+      "lang": "fr",
+      "hreflang": "fr",
+      "status": "live",
+      "navLabel": "Médecin en tant que touriste",
+      "titleTag": "Comment Voir un Médecin au Portugal en tant que Touriste (Guide 2026)",
+      "description": "Pas de médecin traitant ni d'accès au SNS au Portugal ? Voici comment les touristes peuvent consulter rapidement — comparatif public, privé et en ligne.",
+      "h1": "Besoin d'un Médecin au Portugal ? Voici Comment les Touristes Peuvent se Faire Soigner",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-see-doctor-fr&lang=en",
+      "bookingLabel": "Réserver en ligne — 39 €",
+      "price": "39 €",
+      "priceNote": "Téléconsultation avec un médecin inscrit à l’ordre portugais, environ 30 min. Ordonnance électronique incluse si indiquée. Pas de frais cachés au paiement.",
+      "ctaTitle": "Besoin de voir un médecin aujourd’hui ?",
+      "ctaLead": "Réservez une téléconsultation Lon Clinic en anglais, espagnol ou portugais — sans chercher une clinique ni attendre aux urgences pour un problème mineur.",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "notice": "Les consultations Lon Clinic ont lieu en anglais, espagnol ou portugais. Nous ne proposons pas encore de consultations en français. Nos médecins parlent couramment anglais et espagnol — ce qui couvre la majorité des besoins des voyageurs francophones.",
+      "lead": [
+        "En tant que visiteur non inscrit au SNS, vos options les plus rapides sont une clinique privée ou une téléconsultation — les deux fonctionnent sans médecin traitant portugais.",
+        "Le en ligne est généralement plus rapide et moins cher pour les problèmes non urgents. Rendez-vous aux urgences d’un hôpital public uniquement en cas de véritable urgence — ou appelez le 112."
+      ],
+      "onlineTitle": "Quand la téléconsultation est adaptée",
+      "urgentTitle": "Quand aller aux urgences",
+      "safeOnline": [
+        "Problèmes courants non urgents : cystite, reflux, constipation, rhume, éruption, diarrhée du voyageur",
+        "Renouvellement d’ordonnance pour un traitement chronique déjà stable",
+        "Vous pouvez rejoindre un appel vidéo depuis le téléphone ou l’ordinateur",
+        "Pas de fièvre grave, pas de douleur thoracique, pas de gêne respiratoire"
+      ],
+      "goToUrgent": [
+        "Douleur thoracique, gêne respiratoire, signes d’AVC, saignement important, malaise",
+        "Forte fièvre avec douleur intense, confusion ou vomissements incoercibles",
+        "Grossesse avec symptômes inquiétants",
+        "Toute situation où attendre un créneau ne serait pas sûr"
+      ],
+      "howTitle": "Comment réserver une téléconsultation",
+      "howItWorks": [
+        {
+          "title": "Choisissez la langue",
+          "text": "Les consultations Lon Clinic sont en anglais, espagnol ou portugais — pas en français pour l’instant. Indiquez la langue en réservant (souvent l’anglais pour les francophones)."
+        },
+        {
+          "title": "Choisissez un créneau",
+          "text": "Des rendez-vous le jour même sont souvent disponibles, 7 jours sur 7. Le tarif (39 €) est affiché avant le paiement."
+        },
+        {
+          "title": "Rejoignez l’appel vidéo",
+          "text": "Un médecin agréé vous reçoit en visio — pas un questionnaire qui délivre des antibiotiques tout seul."
+        },
+        {
+          "title": "Avis et, si besoin, ordonnance",
+          "text": "Si elle est indiquée, vous recevez une ordonnance électronique portugaise, valable dans n’importe quelle pharmacie du pays, par SMS ou e-mail."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "SNS public vs. privé vs. en ligne — que choisir ?",
+          "items": [
+            {
+              "title": "SNS (système public)",
+              "text": "Conçu pour les résidents avec un médecin traitant inscrit. En tant que touriste, votre point d’accès public réaliste est les urgences — adapté aux vraies urgences, avec de longues attentes pour les cas non urgents."
+            },
+            {
+              "title": "Clinique ou hôpital privé",
+              "text": "Rapide et souvent anglophone à Lisbonne, Porto, en Algarve et dans les zones touristiques, mais peut être coûteux sans assurance, et il faut s’y rendre."
+            },
+            {
+              "title": "Téléconsultation (Lon Clinic)",
+              "text": "Idéale pour les problèmes courants non urgents. Un médecin inscrit à l’Ordem dos Médicos vous reçoit en visio. L’ordonnance, si indiquée, est électronique et valable dans toute pharmacie au Portugal. Langues : anglais, espagnol, portugais. 39 €, affiché avant le paiement."
+            }
+          ]
+        },
+        {
+          "h2": "Avez-vous besoin d’une assurance voyage ou d’une carte européenne d’assurance maladie ?",
+          "paragraphs": [
+            "Les citoyens UE/EEE munis d’une CEAM (ou GHIC pour les Britanniques) peuvent accéder au système public au tarif résident pour les soins nécessaires — cela ne couvre pas les consultations privées ou en ligne.",
+            "Les visiteurs hors UE devraient avoir une assurance voyage. Lon Clinic peut émettre un reçu pour remboursement si la police couvre une consultation ambulatoire ou la télémédecine.",
+            "Pour un problème rapide et non urgent, une téléconsultation est souvent plus simple que la paperasse d’assurance pour les soins publics."
+          ]
+        },
+        {
+          "h2": "Trouver un médecin qui parle votre langue",
+          "paragraphs": [
+            "Les grands hôpitaux de Lisbonne, Porto et de l’Algarve ont généralement du personnel anglophone. C’est moins fiable dans les petites villes et zones rurales.",
+            "Chez Lon Clinic, vous choisissez anglais, espagnol ou portugais à la réservation. Pas de consultation en français pour le moment : l’anglais ou l’espagnol couvrent la plupart des voyageurs francophones."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Un touriste peut-il simplement se rendre dans un hôpital portugais ?",
+          "a": "Oui, en cas d’urgence — les urgences des hôpitaux publics soignent tout le monde quelle que soit la nationalité. Les non-résidents peuvent être facturés, et ce n’est pas prévu pour les problèmes mineurs."
+        },
+        {
+          "q": "Utiliser le SNS en tant que touriste a-t-il un coût ?",
+          "a": "Les non-résidents sans CEAM/GHIC ni inscription portugaise sont généralement facturés pour les soins, y compris les visites aux urgences."
+        },
+        {
+          "q": "Quelle est la rapidité pour obtenir une téléconsultation ?",
+          "a": "Des rendez-vous le jour même sont souvent disponibles, 7 jours sur 7. Vous choisissez le créneau. La consultation est à 39 €."
+        },
+        {
+          "q": "L’ordonnance est-elle valable dans n’importe quelle pharmacie ?",
+          "a": "Lorsqu’elle est émise, c’est une ordonnance électronique portugaise. Vous la retirez dans n’importe quelle pharmacie du pays avec le code envoyé par SMS ou e-mail."
+        }
+      ],
+      "related": [
+        { "href": "/tourist-clinic", "label": "Clinique touriste" },
+        { "href": "/infection-urinaire-portugal-que-faire", "label": "Infection urinaire au Portugal" },
+        { "href": "/consulta", "label": "Consultations médicales" },
+        { "href": "/equipa/rita-aguiar", "label": "La médecin" }
+      ]
+    },
+    {
+      "slug": "arzt-portugal-tourist-finden",
+      "group": "see-doctor-tourist",
+      "lang": "de",
+      "hreflang": "de",
+      "status": "live",
+      "navLabel": "Arzt als Tourist",
+      "titleTag": "Als Tourist einen Arzt in Portugal Finden (Ratgeber 2026)",
+      "description": "Kein Hausarzt oder SNS-Zugang in Portugal? So kommen Touristen schnell an einen Arzt — öffentlich, privat und online im Vergleich.",
+      "h1": "Brauchst du einen Arzt in Portugal? So Kommen Touristen an Hilfe",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-see-doctor-de&lang=en",
+      "bookingLabel": "Online buchen — 39 €",
+      "price": "39 €",
+      "priceNote": "Videosprechstunde mit approbierter Ärztin, ca. 30 Min. Elektronisches Rezept inklusive, wenn indiziert. Keine versteckten Gebühren an der Kasse.",
+      "ctaTitle": "Musst du heute noch einen Arzt sehen?",
+      "ctaLead": "Buche eine Videosprechstunde bei Lon Clinic auf Englisch, Spanisch oder Portugiesisch — ohne Kliniksuche und ohne Notaufnahme-Wartezeit bei einem kleinen Anliegen.",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "notice": "Die Sprechstunden von Lon Clinic finden auf Englisch, Spanisch oder Portugiesisch statt. Aktuell bieten wir keine Beratung auf Deutsch an — unsere Ärztinnen sprechen jedoch fließend Englisch, was für die meisten deutschsprachigen Reisenden gut funktioniert.",
+      "lead": [
+        "Als Besucher ohne SNS-Registrierung sind eine private Klinik oder eine Online-Sprechstunde deine schnellsten Optionen — beide funktionieren ohne portugiesischen Hausarzt.",
+        "Online ist bei nicht-dringenden Anliegen meist schneller und günstiger. Die Notaufnahme eines öffentlichen Krankenhauses ist nur für echte Notfälle gedacht — oder ruf 112 an."
+      ],
+      "onlineTitle": "Wann eine Online-Sprechstunde sinnvoll ist",
+      "urgentTitle": "Wann in die Notaufnahme",
+      "safeOnline": [
+        "Häufige, nicht-dringende Anliegen: Blasenentzündung, Reflux, Verstopfung, Erkältung, Hautausschlag, Reisedurchfall",
+        "Rezeptverlängerung für ein bereits stabiles Dauermedikament",
+        "Du kannst den Videoanruf per Handy oder Laptop führen",
+        "Kein schweres Fieber, keine Brustschmerzen, keine Atemnot"
+      ],
+      "goToUrgent": [
+        "Brustschmerz, Atemnot, Schlaganfall-Zeichen, starke Blutung, Kreislaufkollaps",
+        "Hohes Fieber mit starken Schmerzen, Verwirrtheit oder unstillbarem Erbrechen",
+        "Schwangerschaft mit besorgniserregenden Symptomen",
+        "Jede Lage, in der Warten auf einen Termin unsicher wäre"
+      ],
+      "howTitle": "Eine Online-Sprechstunde buchen",
+      "howItWorks": [
+        {
+          "title": "Sprache wählen",
+          "text": "Lon-Clinic-Sprechstunden sind auf Englisch, Spanisch oder Portugiesisch — noch nicht auf Deutsch. Die Sprache gibst du bei der Buchung an (für die meisten deutschsprachigen Gäste: Englisch)."
+        },
+        {
+          "title": "Termin wählen",
+          "text": "Termine am selben Tag sind oft verfügbar, sieben Tage die Woche. Der Preis (39 €) steht vor der Zahlung."
+        },
+        {
+          "title": "Videoanruf",
+          "text": "Eine approbierte Ärztin sieht dich per Video — kein Fragebogen, der allein Antibiotika ausstellt."
+        },
+        {
+          "title": "Beratung und bei Bedarf Rezept",
+          "text": "Wenn indiziert, erhältst du ein portugiesisches E-Rezept, gültig in jeder Apotheke im Land, per SMS oder E-Mail."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "SNS öffentlich vs. privat vs. online — was passt zu dir?",
+          "items": [
+            {
+              "title": "SNS (staatliches System)",
+              "text": "Für Residenten mit registriertem Hausarzt konzipiert. Als Tourist ist dein realistischer öffentlicher Zugang die Notaufnahme — geeignet für echte Notfälle, mit langen Wartezeiten bei nicht-dringenden Anliegen."
+            },
+            {
+              "title": "Private Klinik oder Krankenhaus",
+              "text": "Schnell und in Lissabon, Porto, der Algarve und Touristengebieten oft englischsprachig, aber ohne Versicherung teuer, und du musst dorthin fahren."
+            },
+            {
+              "title": "Online-Sprechstunde (Lon Clinic)",
+              "text": "Am besten für häufige, nicht-dringende Anliegen. Eine bei der Ordem dos Médicos eingetragene Ärztin sieht dich per Video. Das Rezept, wenn indiziert, ist elektronisch und gilt in jeder Apotheke in Portugal. Sprachen: Englisch, Spanisch, Portugiesisch. 39 €, vor der Kasse sichtbar."
+            }
+          ]
+        },
+        {
+          "h2": "Brauchst du eine Reiseversicherung oder die europäische Krankenversicherungskarte?",
+          "paragraphs": [
+            "EU-/EWR-Bürger mit EHIC (oder GHIC für Briten) können für notwendige Behandlungen zum Residententarif auf das öffentliche System zugreifen — das deckt keine privaten oder Online-Sprechstunden ab.",
+            "Besucher außerhalb der EU sollten eine Reiseversicherung haben. Lon Clinic stellt eine Quittung zur Erstattung aus, wenn die Police ambulante Behandlung oder Telemedizin abdeckt.",
+            "Bei einem schnellen, nicht-dringenden Anliegen ist eine Online-Sprechstunde oft einfacher als der Papierkram für die öffentliche Versorgung."
+          ]
+        },
+        {
+          "h2": "Einen Arzt finden, der deine Sprache spricht",
+          "paragraphs": [
+            "Große Krankenhäuser in Lissabon, Porto und der Algarve haben in der Regel englischsprachiges Personal. In kleineren Städten und ländlichen Gebieten ist das weniger verlässlich.",
+            "Bei Lon Clinic wählst du Englisch, Spanisch oder Portugiesisch bei der Buchung. Keine Sprechstunde auf Deutsch: Englisch reicht für die meisten deutschsprachigen Reisenden."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Kann ein Tourist einfach in ein portugiesisches Krankenhaus gehen?",
+          "a": "Ja, im Notfall — die Notaufnahmen öffentlicher Krankenhäuser behandeln jeden unabhängig von der Nationalität. Nicht-Residenten wird die Behandlung meist in Rechnung gestellt, und es ist nicht für kleinere Anliegen gedacht."
+        },
+        {
+          "q": "Kostet die Nutzung des SNS als Tourist etwas?",
+          "a": "Nicht-Residenten ohne EHIC/GHIC oder portugiesische Registrierung wird die Behandlung in der Regel berechnet, auch bei Notaufnahme-Besuchen."
+        },
+        {
+          "q": "Wie schnell bekomme ich eine Online-Sprechstunde?",
+          "a": "Termine am selben Tag sind oft verfügbar, sieben Tage die Woche. Den Slot wählst du bei der Buchung. Die Sprechstunde kostet 39 €."
+        },
+        {
+          "q": "Gilt das Rezept in jeder Apotheke?",
+          "a": "Wenn ausgestellt, ist es ein portugiesisches E-Rezept. Du holst es in jeder Apotheke im Land mit dem Code per SMS oder E-Mail ab."
+        }
+      ],
+      "related": [
+        { "href": "/tourist-clinic", "label": "Tourist clinic" },
+        { "href": "/blasenentzuendung-portugal-was-tun", "label": "Blasenentzündung in Portugal" },
+        { "href": "/consulta", "label": "Ärztliche Sprechstunden" },
+        { "href": "/equipa/rita-aguiar", "label": "Die Ärztin" }
+      ]
+    },
+    {
+      "slug": "uti-portugal-what-to-do",
+      "group": "uti-tourist",
+      "lang": "en",
+      "hreflang": "en",
+      "status": "live",
+      "navLabel": "UTI in Portugal",
+      "hubBlurb": "Pharmacy, prescription, red flags — what to do with a UTI while travelling.",
+      "titleTag": "UTI in Portugal: What to Do (Quick Guide for Travelers)",
+      "description": "Got a UTI while in Portugal? Here's what to do — pharmacy advice, when you need a prescription, and how to get assessed online. €39 video consultation.",
+      "h1": "I Have a UTI in Portugal — What Should I Do?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-uti-en&lang=en",
+      "bookingLabel": "Book online — €39",
+      "price": "€39",
+      "priceNote": "Video consultation with a licensed doctor, about 30 minutes. Electronic prescription included if indicated. No extra fee at checkout.",
+      "ctaTitle": "Ready to get seen?",
+      "ctaLead": "Book a video consultation with Lon Clinic in English, Spanish or Portuguese — from wherever you are in Portugal.",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "Drink water, a pharmacy can help with symptom relief, and a doctor has to prescribe antibiotics in Portugal — pharmacists cannot.",
+        "For an uncomplicated UTI, the fastest route is often an online video consultation (€39). If you have high fever, loin or back pain, vomiting, pregnancy, or feel seriously unwell, go to an emergency room or call 112."
+      ],
+      "onlineTitle": "When an online consultation can help",
+      "urgentTitle": "Go to the ER now",
+      "safeOnline": [
+        "Woman, not pregnant, with typical cystitis (burning, urgency, frequency), no fever",
+        "No loin or flank pain, no vomiting, no severe malaise",
+        "You can join a video call from your phone or laptop",
+        "Symptoms for a few days, not weeks of unexplained blood in the urine"
+      ],
+      "goToUrgent": [
+        "Fever above 38.5°C, chills, or feeling very unwell",
+        "Pain in the lower back or side (possible kidney infection)",
+        "Nausea or vomiting with urinary symptoms",
+        "Pregnancy, or possible pregnancy",
+        "You are a man, a child, or have a urinary catheter",
+        "Heavy visible blood in the urine, confusion, or collapse"
+      ],
+      "howTitle": "How an online UTI consultation works",
+      "howItWorks": [
+        {
+          "title": "Book a slot",
+          "text": "Same-day appointments are often available, seven days a week. Price €39, shown before you pay. Consultations in English, Spanish or Portuguese."
+        },
+        {
+          "title": "Video assessment",
+          "text": "A licensed doctor sees you on video — not a questionnaire that issues antibiotics on its own."
+        },
+        {
+          "title": "Prescription, if indicated",
+          "text": "If it is an uncomplicated cystitis, you may receive a Portuguese electronic prescription, valid at any pharmacy, usually by SMS or email at the end of the call."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Can a Portuguese pharmacy help without a prescription?",
+          "paragraphs": [
+            "Portuguese pharmacies (farmácias) are well trained. They can advise on pain relief and over-the-counter options for mild symptoms.",
+            "They cannot prescribe antibiotics. In Portugal a UTI antibiotic always needs a doctor. If symptoms are mild, the pharmacist is still a good first stop for what to do next."
+          ]
+        },
+        {
+          "h2": "How to see a doctor as a tourist",
+          "items": [
+            {
+              "title": "SNS (public)",
+              "text": "Built for residents. As a visitor, the realistic public door is the emergency room — slow for a simple UTI, appropriate for red flags."
+            },
+            {
+              "title": "Private clinic",
+              "text": "Often fast in cities and tourist areas, but can be expensive without insurance, and you have to travel there."
+            },
+            {
+              "title": "Online (Lon Clinic)",
+              "text": "Video with a doctor registered with the Portuguese Medical Association. If indicated, an electronic prescription to any pharmacy in the country. €39. English, Spanish or Portuguese."
+            }
+          ]
+        },
+        {
+          "h2": "Getting antibiotics — SNS vs private vs online",
+          "table": {
+            "headers": ["Option", "Speed", "Cost", "Best for"],
+            "rows": [
+              ["SNS (public)", "Slow for visitors", "Often billed without EHIC/GHIC", "Emergencies, not a quick UTI"],
+              ["Private in-person", "Fast", "Often high without insurance", "Complex or red-flag cases"],
+              ["Lon Clinic online", "Same-day slots", "€39", "Uncomplicated cystitis, no fever"]
+            ]
+          }
+        },
+        {
+          "h2": "24-hour pharmacies",
+          "paragraphs": [
+            "Most Portuguese cities have a rotating 24h pharmacy (farmácia de serviço). The list is posted on pharmacy doors, or search “farmácia de serviço” plus your city."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Can I buy UTI antibiotics over the counter in Portugal?",
+          "a": "No. Antibiotics require a prescription, even for a common UTI. A pharmacist can help with pain relief and next steps, not with an antibiotic on their own."
+        },
+        {
+          "q": "How much does an online consultation cost?",
+          "a": "At Lon Clinic it is €39 for a video consultation. The prescription, if the doctor issues one, is included — no extra prescribing fee at checkout."
+        },
+        {
+          "q": "Will the prescription work at any pharmacy?",
+          "a": "Yes. A Portuguese electronic prescription can be collected at any pharmacy in the country with the code sent by SMS or email."
+        },
+        {
+          "q": "I am a man with these symptoms. Can I still book online?",
+          "a": "UTI in men is not treated as a simple cystitis. Do not use this page as a shortcut to antibiotics. If there is fever or loin pain, go to the ER. Otherwise book a general consultation and expect a more careful work-up, often in person."
+        }
+      ],
+      "related": [
+        { "href": "/tourist-clinic", "label": "Tourist clinic" },
+        { "href": "/see-doctor-portugal-tourist", "label": "How tourists see a doctor" },
+        { "href": "/consulta/infecao-urinaria", "label": "UTI consultation (Portuguese page)" },
+        { "href": "/equipa/rita-aguiar", "label": "The doctor" }
+      ]
+    },
+    {
+      "slug": "infeccion-urinaria-portugal-que-hacer",
+      "group": "uti-tourist",
+      "lang": "es",
+      "hreflang": "es",
+      "status": "live",
+      "navLabel": "Infección urinaria en Portugal",
+      "hubBlurb": "Farmacia, receta y señales de alarma — qué hacer con una ITU de viaje.",
+      "titleTag": "Infección Urinaria en Portugal: Qué Hacer (Guía Rápida)",
+      "description": "¿Infección urinaria de viaje en Portugal? Farmacia, receta y consulta online. 39 €, videoconsulta, receta electrónica si está indicada.",
+      "h1": "Tengo una Infección Urinaria en Portugal — ¿Qué Hago?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-uti-es&lang=es",
+      "bookingLabel": "Reservar online — 39 €",
+      "price": "39 €",
+      "priceNote": "Videoconsulta con médica colegiada, unos 30 min. Receta electrónica incluida si está indicada. Sin tasas extra en el checkout.",
+      "ctaTitle": "¿Lista para que te atiendan?",
+      "ctaLead": "Reserva una videoconsulta con Lon Clinic en inglés, español o portugués — estés donde estés en Portugal.",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "Bebe agua. En la farmacia pueden aliviar síntomas; el antibiótico en Portugal siempre lleva receta — el farmacéutico no lo prescribe.",
+        "Para una cistitis no complicada, lo más rápido suele ser una videoconsulta (39 €). Fiebre alta, dolor lumbar, vómitos, embarazo o malestar intenso: urgencias o 112."
+      ],
+      "onlineTitle": "Cuándo puede ayudar la consulta online",
+      "urgentTitle": "Ve a urgencias ahora",
+      "safeOnline": [
+        "Mujer, no embarazada, con cistitis típica (ardor, urgencia, frecuencia), sin fiebre",
+        "Sin dolor lumbar o en el flanco, sin vómitos, sin malestar grave",
+        "Puedes hacer una videollamada desde el móvil o el ordenador",
+        "Síntomas de pocos días, no semanas de sangre inexplicada en la orina"
+      ],
+      "goToUrgent": [
+        "Fiebre por encima de 38,5 °C, escalofríos o malestar intenso",
+        "Dolor lumbar o en el costado (posible infección renal)",
+        "Náuseas o vómitos con síntomas urinarios",
+        "Embarazo, o posible embarazo",
+        "Eres hombre, niño, o tienes sonda vesical",
+        "Sangre abundante en la orina, confusión o desmayo"
+      ],
+      "howTitle": "Cómo es la consulta online de ITU",
+      "howItWorks": [
+        {
+          "title": "Reserva un hueco",
+          "text": "A menudo hay citas el mismo día, los 7 días. 39 €, visibles antes de pagar. Consultas en inglés, español o portugués."
+        },
+        {
+          "title": "Evaluación por vídeo",
+          "text": "Una médica colegiada te atiende por vídeo — no un cuestionario que despacha antibióticos solo."
+        },
+        {
+          "title": "Receta, si está indicada",
+          "text": "Si es una cistitis no complicada, puedes recibir receta electrónica portuguesa, válida en cualquier farmacia, por SMS o email al final de la consulta."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "¿Puede la farmacia ayudarme sin receta?",
+          "paragraphs": [
+            "Las farmacias portuguesas (farmácias) asesoran bien y pueden orientar sobre alivio de síntomas sin receta.",
+            "No pueden prescribir antibiótico. En Portugal la ITU siempre pide médico. Si los síntomas son leves, la farmacia sigue siendo un buen primer paso."
+          ]
+        },
+        {
+          "h2": "Cómo ver a un médico siendo turista",
+          "items": [
+            {
+              "title": "SNS (público)",
+              "text": "Pensado para residentes. Como visitante, la vía pública realista es urgencias — lenta para una ITU simple, adecuada si hay señales de alarma."
+            },
+            {
+              "title": "Clínica privada",
+              "text": "Rápida en ciudades y zonas turísticas, cara sin seguro, y hay que desplazarse."
+            },
+            {
+              "title": "Online (Lon Clinic)",
+              "text": "Vídeo con médica inscrita en la Ordem dos Médicos. Receta electrónica a cualquier farmacia si procede. 39 €. Inglés, español o portugués."
+            }
+          ]
+        },
+        {
+          "h2": "Antibiótico — SNS vs. privado vs. online",
+          "table": {
+            "headers": ["Opción", "Rapidez", "Coste", "Ideal para"],
+            "rows": [
+              ["SNS (público)", "Lento para visitantes", "Suele facturarse sin TSE/GHIC", "Urgencias, no una ITU rápida"],
+              ["Privado presencial", "Rápido", "A menudo alto sin seguro", "Casos complejos o de alarma"],
+              ["Lon Clinic online", "Huecos el mismo día", "39 €", "Cistitis no complicada, sin fiebre"]
+            ]
+          }
+        },
+        {
+          "h2": "Farmacia de guardia",
+          "paragraphs": [
+            "Casi todas las ciudades tienen una farmácia de serviço (guardia). El cartel está en la puerta de cualquier farmacia, o busca “farmácia de serviço” + tu ciudad."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "¿Puedo comprar antibiótico para la ITU sin receta en Portugal?",
+          "a": "No. El antibiótico siempre requiere receta, incluso en una ITU común. El farmacéutico puede ayudar con el dolor y el siguiente paso, no con el antibiótico por su cuenta."
+        },
+        {
+          "q": "¿Cuánto cuesta la consulta online?",
+          "a": "En Lon Clinic, 39 € por videoconsulta. La receta, si el médico la emite, está incluida."
+        },
+        {
+          "q": "¿La receta sirve en cualquier farmacia?",
+          "a": "Sí. Receta electrónica portuguesa, recogen en cualquier farmacia del país con el código por SMS o email."
+        },
+        {
+          "q": "Soy hombre con estos síntomas. ¿Puedo reservar online?",
+          "a": "La ITU en el hombre no se trata como una cistitis simple. No uses esta página como atajo al antibiótico. Con fiebre o dolor lumbar, urgencias. Si no, una consulta general y, a menudo, evaluación presencial."
+        }
+      ],
+      "related": [
+        { "href": "/tourist-clinic", "label": "Clínica turista" },
+        { "href": "/ver-medico-portugal-turista", "label": "Cómo ver a un médico siendo turista" },
+        { "href": "/consulta/infecao-urinaria", "label": "Consulta de ITU (página en portugués)" },
+        { "href": "/equipa/rita-aguiar", "label": "La médica" }
+      ]
+    },
+    {
+      "slug": "infection-urinaire-portugal-que-faire",
+      "group": "uti-tourist",
+      "lang": "fr",
+      "hreflang": "fr",
+      "status": "live",
+      "navLabel": "Infection urinaire au Portugal",
+      "hubBlurb": "Pharmacie, ordonnance, signes d’alerte — que faire en voyage.",
+      "titleTag": "Infection Urinaire au Portugal : Que Faire (Guide Rapide)",
+      "description": "Infection urinaire en vacances au Portugal ? Pharmacie, ordonnance et téléconsultation. 39 €, visio, ordonnance électronique si indiquée.",
+      "h1": "J'ai une Infection Urinaire au Portugal — Que Faire ?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-uti-fr&lang=en",
+      "bookingLabel": "Réserver en ligne — 39 €",
+      "price": "39 €",
+      "priceNote": "Téléconsultation avec un médecin inscrit à l’ordre portugais, environ 30 min. Ordonnance électronique incluse si indiquée.",
+      "ctaTitle": "Prêt·e à consulter ?",
+      "ctaLead": "Réservez une téléconsultation Lon Clinic en anglais, espagnol ou portugais — où que vous soyez au Portugal.",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "notice": "Les consultations Lon Clinic ont lieu en anglais, espagnol ou portugais. Pas de consultation en français pour l’instant. L’anglais ou l’espagnol couvrent la plupart des voyageurs francophones.",
+      "lead": [
+        "Buvez de l’eau. La pharmacie peut soulager les symptômes ; l’antibiotique au Portugal exige une ordonnance — le pharmacien ne le prescrit pas.",
+        "Pour une cystite non compliquée, le plus rapide est souvent une téléconsultation (39 €). Forte fièvre, douleur lombaire, vomissements, grossesse : urgences ou 112."
+      ],
+      "onlineTitle": "Quand la téléconsultation peut aider",
+      "urgentTitle": "Allez aux urgences maintenant",
+      "safeOnline": [
+        "Femme, non enceinte, cystite typique (brûlures, urgenturie, pollakiurie), sans fièvre",
+        "Pas de douleur lombaire, pas de vomissements, pas de malaise grave",
+        "Vous pouvez rejoindre un appel vidéo",
+        "Symptômes depuis quelques jours, pas des semaines de sang inexpliqué dans les urines"
+      ],
+      "goToUrgent": [
+        "Fièvre au-dessus de 38,5 °C, frissons ou très mauvais état général",
+        "Douleur lombaire ou sur le flanc (possible pyélonéphrite)",
+        "Nausées ou vomissements avec symptômes urinaires",
+        "Grossesse, ou possible grossesse",
+        "Vous êtes un homme, un enfant, ou portez une sonde",
+        "Sang abondant dans les urines, confusion ou malaise"
+      ],
+      "howTitle": "Comment se passe la téléconsultation",
+      "howItWorks": [
+        {
+          "title": "Réservez un créneau",
+          "text": "Des rendez-vous le jour même sont souvent disponibles, 7 jours sur 7. 39 €, affiché avant paiement. Consultations en anglais, espagnol ou portugais."
+        },
+        {
+          "title": "Évaluation en visio",
+          "text": "Un médecin agréé vous reçoit en vidéo — pas un questionnaire qui délivre des antibiotiques tout seul."
+        },
+        {
+          "title": "Ordonnance, si indiquée",
+          "text": "Si c’est une cystite non compliquée, vous pouvez recevoir une ordonnance électronique portugaise, valable dans toute pharmacie, par SMS ou e-mail en fin de consultation."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "La pharmacie peut-elle m’aider sans ordonnance ?",
+          "paragraphs": [
+            "Les pharmacies portugaises (farmácias) conseillent bien et peuvent orienter vers un soulagement des symptômes sans ordonnance.",
+            "Elles ne prescrivent pas d’antibiotique. Au Portugal, une infection urinaire passe toujours par un médecin."
+          ]
+        },
+        {
+          "h2": "Consulter un médecin en tant que touriste",
+          "items": [
+            {
+              "title": "SNS (public)",
+              "text": "Conçu pour les résidents. Pour un visiteur, la porte publique réaliste est les urgences — lente pour une cystite simple, adaptée aux signes d’alerte."
+            },
+            {
+              "title": "Clinique privée",
+              "text": "Rapide en ville et zones touristiques, coûteuse sans assurance, et il faut s’y rendre."
+            },
+            {
+              "title": "En ligne (Lon Clinic)",
+              "text": "Visio avec un médecin inscrit à l’Ordem dos Médicos. Ordonnance électronique vers n’importe quelle pharmacie si indiquée. 39 €. Anglais, espagnol ou portugais."
+            }
+          ]
+        },
+        {
+          "h2": "Antibiotique — SNS vs. privé vs. en ligne",
+          "table": {
+            "headers": ["Option", "Rapidité", "Coût", "Idéal pour"],
+            "rows": [
+              ["SNS (public)", "Lent pour les visiteurs", "Souvent facturé sans CEAM/GHIC", "Urgences, pas une cystite simple"],
+              ["Privé en personne", "Rapide", "Souvent élevé sans assurance", "Cas complexes ou d’alerte"],
+              ["Lon Clinic en ligne", "Créneaux le jour même", "39 €", "Cystite non compliquée, sans fièvre"]
+            ]
+          }
+        },
+        {
+          "h2": "Pharmacie de garde",
+          "paragraphs": [
+            "La plupart des villes ont une farmácia de serviço (garde). La liste est sur la porte des pharmacies, ou cherchez « farmácia de serviço » + votre ville."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Puis-je acheter un antibiotique sans ordonnance au Portugal ?",
+          "a": "Non. L’antibiotique exige toujours une ordonnance, même pour une infection urinaire courante."
+        },
+        {
+          "q": "Combien coûte la téléconsultation ?",
+          "a": "Chez Lon Clinic : 39 €. L’ordonnance, si elle est émise, est incluse."
+        },
+        {
+          "q": "L’ordonnance est-elle valable dans n’importe quelle pharmacie ?",
+          "a": "Oui. Ordonnance électronique portugaise, à retirer dans n’importe quelle pharmacie du pays avec le code SMS ou e-mail."
+        },
+        {
+          "q": "Je suis un homme avec ces symptômes. Puis-je réserver en ligne ?",
+          "a": "L’infection urinaire chez l’homme n’est pas une cystite simple. Ne pas utiliser cette page comme raccourci vers l’antibiotique. Fièvre ou douleur lombaire : urgences. Sinon, consultation générale, souvent avec bilan en présentiel."
+        }
+      ],
+      "related": [
+        { "href": "/tourist-clinic", "label": "Clinique touriste" },
+        { "href": "/consulter-medecin-portugal-touriste", "label": "Voir un médecin en tant que touriste" },
+        { "href": "/consulta/infecao-urinaria", "label": "Consultation ITU (page en portugais)" },
+        { "href": "/equipa/rita-aguiar", "label": "La médecin" }
+      ]
+    },
+    {
+      "slug": "blasenentzuendung-portugal-was-tun",
+      "group": "uti-tourist",
+      "lang": "de",
+      "hreflang": "de",
+      "status": "live",
+      "navLabel": "Blasenentzündung in Portugal",
+      "hubBlurb": "Apotheke, Rezept, Warnzeichen — was tun im Urlaub.",
+      "titleTag": "Blasenentzündung in Portugal: Was Tun? (Schneller Ratgeber)",
+      "description": "Blasenentzündung im Portugal-Urlaub? Apotheke, Rezept und Online-Sprechstunde. 39 €, Video, E-Rezept wenn indiziert.",
+      "h1": "Ich Habe eine Blasenentzündung in Portugal — Was Tun?",
+      "bookingHref": "/marcar/clinica-geral?ref=tourist-uti-de&lang=en",
+      "bookingLabel": "Online buchen — 39 €",
+      "price": "39 €",
+      "priceNote": "Videosprechstunde mit approbierter Ärztin, ca. 30 Min. Elektronisches Rezept inklusive, wenn indiziert.",
+      "ctaTitle": "Bereit für eine Sprechstunde?",
+      "ctaLead": "Buche eine Videosprechstunde bei Lon Clinic auf Englisch, Spanisch oder Portugiesisch — egal wo in Portugal du bist.",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "notice": "Die Sprechstunden von Lon Clinic finden auf Englisch, Spanisch oder Portugiesisch statt. Keine Beratung auf Deutsch — Englisch reicht für die meisten deutschsprachigen Reisenden.",
+      "lead": [
+        "Viel trinken. Die Apotheke hilft bei der Linderung; ein Antibiotikum braucht in Portugal immer ein Rezept — der Apotheker darf es nicht ausstellen.",
+        "Bei unkomplizierter Blasenentzündung ist eine Videosprechstunde oft der schnellste Weg (39 €). Hohes Fieber, Flankenschmerz, Erbrechen, Schwangerschaft: Notaufnahme oder 112."
+      ],
+      "onlineTitle": "Wann die Online-Sprechstunde helfen kann",
+      "urgentTitle": "Jetzt in die Notaufnahme",
+      "safeOnline": [
+        "Frau, nicht schwanger, typische Zystitis (Brennen, Harndrang, häufiges Wasserlassen), kein Fieber",
+        "Kein Flanken- oder Rückenschmerz, kein Erbrechen, kein schweres Unwohlsein",
+        "Du kannst den Videoanruf führen",
+        "Symptome seit wenigen Tagen, nicht wochenlang unerklärtes Blut im Urin"
+      ],
+      "goToUrgent": [
+        "Fieber über 38,5 °C, Schüttelfrost oder schweres Krankheitsgefühl",
+        "Schmerzen im unteren Rücken oder in der Flanke (mögliche Nierenbeteiligung)",
+        "Übelkeit oder Erbrechen plus Harnwegssymptome",
+        "Schwangerschaft oder mögliche Schwangerschaft",
+        "Du bist Mann, Kind, oder hast einen Blasenkatheter",
+        "Viel sichtbares Blut im Urin, Verwirrtheit oder Kreislaufkollaps"
+      ],
+      "howTitle": "So läuft die Online-Sprechstunde",
+      "howItWorks": [
+        {
+          "title": "Termin buchen",
+          "text": "Termine am selben Tag sind oft verfügbar, sieben Tage die Woche. 39 €, vor der Zahlung sichtbar. Sprechstunden auf Englisch, Spanisch oder Portugiesisch."
+        },
+        {
+          "title": "Video-Beurteilung",
+          "text": "Eine approbierte Ärztin sieht dich per Video — kein Fragebogen, der allein Antibiotika ausstellt."
+        },
+        {
+          "title": "Rezept, wenn indiziert",
+          "text": "Bei unkomplizierter Zystitis kannst du ein portugiesisches E-Rezept erhalten, gültig in jeder Apotheke, per SMS oder E-Mail am Ende des Gesprächs."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Kann die Apotheke ohne Rezept helfen?",
+          "paragraphs": [
+            "Portugiesische Apotheken (farmácias) beraten gut und können rezeptfreie Linderung empfehlen.",
+            "Antibiotika dürfen sie nicht verschreiben. In Portugal braucht eine Blasenentzündung immer einen Arzt."
+          ]
+        },
+        {
+          "h2": "Als Tourist einen Arzt finden",
+          "items": [
+            {
+              "title": "SNS (staatlich)",
+              "text": "Für Residenten gedacht. Als Besucher ist die realistische öffentliche Tür die Notaufnahme — langsam bei einer einfachen Zystitis, richtig bei Warnzeichen."
+            },
+            {
+              "title": "Private Klinik",
+              "text": "Oft schnell in Städten und Touristengebieten, ohne Versicherung teuer, und du musst hinfahren."
+            },
+            {
+              "title": "Online (Lon Clinic)",
+              "text": "Video mit einer bei der Ordem dos Médicos eingetragenen Ärztin. E-Rezept an jede Apotheke, wenn indiziert. 39 €. Englisch, Spanisch oder Portugiesisch."
+            }
+          ]
+        },
+        {
+          "h2": "Antibiotikum — SNS vs. privat vs. online",
+          "table": {
+            "headers": ["Option", "Geschwindigkeit", "Kosten", "Am besten für"],
+            "rows": [
+              ["SNS (staatlich)", "Langsam für Besucher", "Ohne EHIC/GHIC oft Rechnung", "Notfälle, nicht die schnelle Zystitis"],
+              ["Privat vor Ort", "Schnell", "Ohne Versicherung oft hoch", "Komplexe oder Alarmfälle"],
+              ["Lon Clinic online", "Termine am selben Tag", "39 €", "Unkomplizierte Zystitis, kein Fieber"]
+            ]
+          }
+        },
+        {
+          "h2": "Notdienst-Apotheke",
+          "paragraphs": [
+            "Die meisten Städte haben eine farmácia de serviço (Notdienst). Die Liste hängt an der Apothekentür, oder suche „farmácia de serviço“ plus deine Stadt."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Kann ich in Portugal ein Antibiotikum ohne Rezept kaufen?",
+          "a": "Nein. Antibiotika brauchen immer ein Rezept, auch bei einer häufigen Blasenentzündung."
+        },
+        {
+          "q": "Was kostet die Online-Sprechstunde?",
+          "a": "Bei Lon Clinic 39 €. Das Rezept, wenn ausgestellt, ist inklusive."
+        },
+        {
+          "q": "Gilt das Rezept in jeder Apotheke?",
+          "a": "Ja. Portugiesisches E-Rezept, abholbar in jeder Apotheke im Land mit dem Code per SMS oder E-Mail."
+        },
+        {
+          "q": "Ich bin Mann mit diesen Symptomen. Kann ich trotzdem online buchen?",
+          "a": "Harnwegsinfekt beim Mann ist keine einfache Zystitis. Diese Seite ist kein Shortcut zum Antibiotikum. Bei Fieber oder Flankenschmerz: Notaufnahme. Sonst allgemeine Sprechstunde, oft mit Abklärung vor Ort."
+        }
+      ],
+      "related": [
+        { "href": "/tourist-clinic", "label": "Tourist clinic" },
+        { "href": "/arzt-portugal-tourist-finden", "label": "Arzt als Tourist finden" },
+        { "href": "/consulta/infecao-urinaria", "label": "Harnwegsinfekt (portugiesische Seite)" },
+        { "href": "/equipa/rita-aguiar", "label": "Die Ärztin" }
+      ]
+    },
+    {
+      "slug": "renew-prescription-holiday-portugal",
+      "group": "renew-prescription-tourist",
+      "lang": "en",
+      "hreflang": "en",
+      "status": "live",
+      "navLabel": "Renew a prescription",
+      "hubBlurb": "Stable chronic medication on holiday — 19 € video consult, not a form.",
+      "titleTag": "How to Renew a Prescription While on Holiday in Portugal",
+      "description": "Ran out of medication or lost your prescription in Portugal? How to renew it quickly — 19 € online video consultation, electronic prescription if appropriate.",
+      "h1": "Need to Renew Your Prescription in Portugal? Here's How",
+      "bookingHref": "/marcar/renovacao?ref=tourist-renew-en&lang=en",
+      "bookingLabel": "Renew prescription — €19",
+      "price": "€19",
+      "priceNote": "Short video consultation for a stable long-term medicine. Electronic prescription included if the doctor can renew it safely. No extra prescribing fee.",
+      "ctaTitle": "Need your prescription renewed today?",
+      "ctaLead": "Book a 19 € video consultation with Lon Clinic in English, Spanish or Portuguese. The code, if issued, goes to any pharmacy in Portugal.",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "If it is a common, non-controlled medicine you already take at a stable dose, a doctor can often renew it on video — €19 at Lon Clinic. Bring the box or a photo of the old prescription.",
+        "This is not a form that prints any drug. Antibiotics, weight-loss medicines, new sleeping pills or opioids are not renewed this way. New or severe symptoms: that is a full consultation or the ER — 112."
+      ],
+      "onlineTitle": "When renewal on video makes sense",
+      "urgentTitle": "Do not use renewal — go to the ER or a full consult",
+      "safeOnline": [
+        "A chronic medicine you already take (blood pressure, thyroid, cholesterol, inhaler, contraception, and similar)",
+        "Stable dose, no new symptoms that put the treatment in doubt",
+        "You can show the box, a photo, or the old prescription",
+        "Not an antibiotic, GLP-1 weight-loss drug, new benzodiazepine, or opioid"
+      ],
+      "goToUrgent": [
+        "Chest pain, trouble breathing, stroke signs, or heavy bleeding — 112",
+        "A severe drug reaction (widespread rash, swelling, collapse)",
+        "You have never taken this medicine before — that is a first prescription, not a renewal",
+        "You want an antibiotic, a sleeping pill, or a weight-loss injection without a full assessment"
+      ],
+      "howTitle": "Renewing with an online doctor",
+      "howItWorks": [
+        {
+          "title": "Book the renewal slot",
+          "text": "€19, shown before you pay. Consultations in English, Spanish or Portuguese. Same-day slots are often available."
+        },
+        {
+          "title": "Show the medicine",
+          "text": "Packaging, a photo, or the old prescription — name, dose, how many times a day. Passport or ID helps."
+        },
+        {
+          "title": "The doctor decides",
+          "text": "If the history is enough and the drug is appropriate to renew, you get a Portuguese electronic prescription by SMS or email, usually at the end of the call. If not, you are told — we do not renew in the dark."
+        },
+        {
+          "title": "Any pharmacy in Portugal",
+          "text": "Take the code to a farmácia. Most e-prescriptions can be dispensed the same day."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Can pharmacies renew prescriptions directly?",
+          "paragraphs": [
+            "In limited cases — mainly chronic medication already on a Portuguese electronic prescription — a pharmacy may dispense a small extra supply without a new script. It is not guaranteed and depends on the drug. Do not count on it as your plan."
+          ]
+        },
+        {
+          "h2": "SNS24",
+          "paragraphs": [
+            "SNS24 (808 24 24 24) is Portugal’s national health line. It can help residents, and in some cases EU visitors with an EHIC/GHIC, with public-system questions. Wait times and what they can actually renew vary. It is not built as a fast tourist desk.",
+            "An EHIC/GHIC does not pay for a private or Lon Clinic consultation. We can issue a receipt if your travel insurance covers outpatient or telemedicine care."
+          ]
+        },
+        {
+          "h2": "What to bring",
+          "items": [
+            { "title": "The box or a photo", "text": "Name (brand or generic), dose, how often you take it." },
+            { "title": "Old prescription, if you have it", "text": "Paper or a photo is enough." },
+            { "title": "ID or passport", "text": "Useful for the record. EHIC/GHIC only if you are using the public system, not this private consult." }
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Can I get any medication renewed this way?",
+          "a": "Most stable chronic medicines — blood pressure, thyroid, cholesterol, contraception, many inhalers — can be assessed this way. Antibiotics, GLP-1 weight-loss drugs, new psychiatric or sleep medicines, and opioids are not renewed on this pathway."
+        },
+        {
+          "q": "How fast is the new prescription?",
+          "a": "If the doctor issues it at the end of the video call, the code usually arrives by SMS or email immediately or within minutes — not as a promise that the whole booking happens in under an hour."
+        },
+        {
+          "q": "How much does it cost?",
+          "a": "€19 at Lon Clinic for the renewal video consultation. If the doctor decides this is a new problem, they will say so — that may need a full 39 € general consultation instead."
+        },
+        {
+          "q": "Does travel insurance cover this?",
+          "a": "Some policies cover outpatient or telemedicine. Check yours. Lon Clinic can issue a receipt. Many visitors just pay the 19 €."
+        }
+      ],
+      "related": [
+        { "href": "/tourist-clinic", "label": "Tourist clinic" },
+        { "href": "/see-doctor-portugal-tourist", "label": "How tourists see a doctor" },
+        { "href": "/consulta/renovacao-receita", "label": "Prescription renewal (Portuguese page)" },
+        { "href": "/equipa/rita-aguiar", "label": "The doctor" }
+      ]
+    },
+    {
+      "slug": "renovar-receta-vacaciones-portugal",
+      "group": "renew-prescription-tourist",
+      "lang": "es",
+      "hreflang": "es",
+      "status": "live",
+      "navLabel": "Renovar receta",
+      "hubBlurb": "Medicación crónica estable de vacaciones — 19 €, vídeo, no un formulario.",
+      "titleTag": "Cómo Renovar una Receta Médica de Vacaciones en Portugal",
+      "description": "¿Se te acabó la medicación o perdiste la receta en Portugal? Renovación por videoconsulta 19 €, receta electrónica si procede.",
+      "h1": "¿Necesitas Renovar tu Receta en Portugal? Así Puedes Hacerlo",
+      "bookingHref": "/marcar/renovacao?ref=tourist-renew-es&lang=es",
+      "bookingLabel": "Renovar receta — 19 €",
+      "price": "19 €",
+      "priceNote": "Videoconsulta breve de renovación. Receta electrónica incluida si el médico puede renovarla con seguridad. Sin tasa extra.",
+      "ctaTitle": "¿Necesitas renovar tu receta hoy?",
+      "ctaLead": "Reserva una videoconsulta de 19 € con Lon Clinic en inglés, español o portugués. El código, si se emite, vale en cualquier farmacia de Portugal.",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "Si es una medicación habitual, no controlada, en dosis estable, un médico puede renovarla por vídeo — 19 € en Lon Clinic. Lleva el envase o una foto de la receta anterior.",
+        "No es un formulario que imprime cualquier fármaco. Antibióticos, medicación para adelgazar, hipnóticos de inicio u opioides no se renuevan así. Síntomas nuevos graves: consulta completa o urgencias — 112."
+      ],
+      "onlineTitle": "Cuándo tiene sentido renovar por vídeo",
+      "urgentTitle": "No uses la renovación — urgencias o consulta completa",
+      "safeOnline": [
+        "Medicación crónica que ya tomas (tensión, tiroides, colesterol, inhalador, anticonceptivos y similares)",
+        "Dosis estable, sin síntomas nuevos que pongan en duda el tratamiento",
+        "Puedes mostrar el envase, una foto o la receta anterior",
+        "No es antibiótico, GLP-1 para adelgazar, benzodiacepina de inicio ni opioide"
+      ],
+      "goToUrgent": [
+        "Dolor de pecho, dificultad para respirar, signos de ictus o hemorragia — 112",
+        "Reacción grave al fármaco (erupción generalizada, hinchazón, desmayo)",
+        "Nunca has tomado esta medicación — eso es primera receta, no renovación",
+        "Quieres un antibiótico, un somnífero o una inyección para adelgazar sin evaluación completa"
+      ],
+      "howTitle": "Renovar con un médico online",
+      "howItWorks": [
+        {
+          "title": "Reserva la renovación",
+          "text": "19 €, visibles antes de pagar. Consultas en inglés, español o portugués. A menudo hay huecos el mismo día."
+        },
+        {
+          "title": "Muestra la medicación",
+          "text": "Envase, foto o receta anterior — nombre, dosis, cuántas veces al día. Pasaporte o DNI ayuda."
+        },
+        {
+          "title": "El médico decide",
+          "text": "Si hay información suficiente, recibes receta electrónica portuguesa por SMS o email, suele ser al final de la llamada. Si no, te lo dicen — no renovamos a ciegas."
+        },
+        {
+          "title": "Cualquier farmacia",
+          "text": "El código vale en cualquier farmácia de Portugal. La mayoría de recetas electrónicas se retiran el mismo día."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "¿Puede la farmacia renovar la receta directamente?",
+          "paragraphs": [
+            "En casos limitados —sobre todo medicación crónica ya en receta electrónica portuguesa— la farmacia puede dispensar una cantidad extra pequeña sin receta nueva. No está garantizado. No cuentes con ello como plan principal."
+          ]
+        },
+        {
+          "h2": "SNS24",
+          "paragraphs": [
+            "SNS24 (808 24 24 24) es la línea nacional. Puede orientar a residentes y, a veces, a ciudadanos de la UE con TSE/GHIC. Tiempos y qué pueden renovar varían. No es un mostrador rápido para turistas.",
+            "La TSE no paga una consulta privada de Lon Clinic. Podemos emitir recibo si tu seguro de viaje cubre ambulante o telemedicina."
+          ]
+        },
+        {
+          "h2": "Qué llevar",
+          "items": [
+            { "title": "El envase o una foto", "text": "Nombre, dosis y posología." },
+            { "title": "Receta anterior, si la tienes", "text": "Papel o foto vale." },
+            { "title": "DNI o pasaporte", "text": "Útil para el registro. La TSE es para el sistema público, no para esta consulta privada." }
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "¿Puedo renovar cualquier medicación así?",
+          "a": "La mayoría de crónicos estables — tensión, tiroides, colesterol, anticonceptivos, muchos inhaladores. Antibióticos, GLP-1 para adelgazar, psicotrópicos o hipnóticos de inicio, y opioides no van por esta vía."
+        },
+        {
+          "q": "¿Cuánto tarda la receta nueva?",
+          "a": "Si el médico la emite al final de la videollamada, el código suele llegar por SMS o email en el momento o en minutos. No prometemos que toda la reserva ocurra en menos de una hora."
+        },
+        {
+          "q": "¿Cuánto cuesta?",
+          "a": "19 € en Lon Clinic. Si el médico ve un problema nuevo, puede hacer falta una consulta general de 39 €."
+        },
+        {
+          "q": "¿Lo cubre el seguro de viaje?",
+          "a": "Algunas pólizas cubren consulta ambulatoria o telemedicina. Pregunta. Podemos emitir recibo. Muchos visitantes pagan los 19 €."
+        }
+      ],
+      "related": [
+        { "href": "/tourist-clinic", "label": "Clínica turista" },
+        { "href": "/ver-medico-portugal-turista", "label": "Cómo ver a un médico siendo turista" },
+        { "href": "/consulta/renovacao-receita", "label": "Renovación de receta (página en portugués)" },
+        { "href": "/equipa/rita-aguiar", "label": "La médica" }
+      ]
+    },
+    {
+      "slug": "renouveler-ordonnance-vacances-portugal",
+      "group": "renew-prescription-tourist",
+      "lang": "fr",
+      "hreflang": "fr",
+      "status": "live",
+      "navLabel": "Renouveler une ordonnance",
+      "hubBlurb": "Traitement chronique stable en vacances — 19 €, visio, pas un formulaire.",
+      "titleTag": "Comment Renouveler une Ordonnance en Vacances au Portugal",
+      "description": "Plus de médicaments ou ordonnance perdue au Portugal ? Renouvellement en visio 19 €, ordonnance électronique si appropriée.",
+      "h1": "Besoin de Renouveler Votre Ordonnance au Portugal ? Voici Comment",
+      "bookingHref": "/marcar/renovacao?ref=tourist-renew-fr&lang=en",
+      "bookingLabel": "Renouveler — 19 €",
+      "price": "19 €",
+      "priceNote": "Téléconsultation courte de renouvellement. Ordonnance électronique incluse si le médecin peut renouveler en sécurité.",
+      "ctaTitle": "Besoin de renouveler aujourd’hui ?",
+      "ctaLead": "Réservez une téléconsultation à 19 € avec Lon Clinic en anglais, espagnol ou portugais. Le code, s’il est émis, vaut dans toute pharmacie au Portugal.",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "notice": "Les consultations Lon Clinic ont lieu en anglais, espagnol ou portugais. Pas de consultation en français pour l’instant — l’anglais ou l’espagnol couvrent la plupart des voyageurs francophones.",
+      "lead": [
+        "S’il s’agit d’un médicament courant, non contrôlé, à dose stable, un médecin peut souvent le renouveler en visio — 19 € chez Lon Clinic. Apportez la boîte ou une photo de l’ancienne ordonnance.",
+        "Ce n’est pas un formulaire qui imprime n’importe quel médicament. Antibiotiques, traitements amaigrissants, hypnotiques de première prescription ou opioïdes ne se renouvellent pas ainsi. Symptômes nouveaux graves : consultation complète ou urgences — 112."
+      ],
+      "onlineTitle": "Quand le renouvellement en visio a du sens",
+      "urgentTitle": "Pas un renouvellement — urgences ou consultation complète",
+      "safeOnline": [
+        "Un traitement chronique que vous prenez déjà (tension, thyroïde, cholestérol, inhalateur, contraception…)",
+        "Dose stable, pas de symptômes nouveaux qui remettent le traitement en cause",
+        "Vous pouvez montrer la boîte, une photo ou l’ancienne ordonnance",
+        "Pas un antibiotique, un GLP-1 amaigrissant, une benzodiazépine de début, ni un opioïde"
+      ],
+      "goToUrgent": [
+        "Douleur thoracique, gêne respiratoire, signes d’AVC ou hémorragie — 112",
+        "Réaction grave au médicament (éruption généralisée, gonflement, malaise)",
+        "Vous n’avez jamais pris ce médicament — première prescription, pas un renouvellement",
+        "Vous voulez un antibiotique, un somnifère ou une injection amaigrissante sans bilan complet"
+      ],
+      "howTitle": "Renouveler avec un médecin en ligne",
+      "howItWorks": [
+        {
+          "title": "Réservez le créneau",
+          "text": "19 €, affiché avant paiement. Consultations en anglais, espagnol ou portugais. Créneaux le jour même souvent disponibles."
+        },
+        {
+          "title": "Montrez le médicament",
+          "text": "Boîte, photo ou ancienne ordonnance — nom, dose, posologie. Passeport ou pièce d’identité utile."
+        },
+        {
+          "title": "Le médecin décide",
+          "text": "S’il a assez d’information, ordonnance électronique portugaise par SMS ou e-mail, en général en fin d’appel. Sinon, on vous le dit — pas de renouvellement à l’aveugle."
+        },
+        {
+          "title": "N’importe quelle pharmacie",
+          "text": "Le code s’honore dans toute farmácia au Portugal, souvent le jour même."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Les pharmacies peuvent-elles renouveler directement ?",
+          "paragraphs": [
+            "Dans des cas limités — surtout un traitement chronique déjà en ordonnance électronique portugaise — la pharmacie peut délivrer une petite quantité supplémentaire. Ce n’est pas garanti. Ne pas en faire votre plan principal."
+          ]
+        },
+        {
+          "h2": "SNS24",
+          "paragraphs": [
+            "SNS24 (808 24 24 24) est la ligne nationale. Elle peut aider les résidents et, parfois, les citoyens UE avec CEAM/GHIC. Délais et ce qu’ils peuvent renouveler varient. Ce n’est pas un guichet express pour touristes.",
+            "La CEAM ne paie pas une consultation privée Lon Clinic. Nous pouvons émettre un reçu si votre assurance voyage couvre les soins ambulatoires ou la télémédecine."
+          ]
+        },
+        {
+          "h2": "Quoi apporter",
+          "items": [
+            { "title": "La boîte ou une photo", "text": "Nom, dose, posologie." },
+            { "title": "Ancienne ordonnance, si vous l’avez", "text": "Papier ou photo suffit." },
+            { "title": "Pièce d’identité ou passeport", "text": "Utile. La CEAM sert au système public, pas à cette consultation privée." }
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Puis-je renouveler n’importe quel médicament ainsi ?",
+          "a": "La plupart des traitements chroniques stables — tension, thyroïde, cholestérol, contraception, beaucoup d’inhalateurs. Antibiotiques, GLP-1 amaigrissants, psychotropes ou hypnotiques de début, et opioïdes : pas cette voie."
+        },
+        {
+          "q": "En combien de temps ai-je la nouvelle ordonnance ?",
+          "a": "Si elle est émise en fin d’appel, le code arrive en général par SMS ou e-mail tout de suite ou en quelques minutes. Nous ne promettons pas que toute la réservation tienne en moins d’une heure."
+        },
+        {
+          "q": "Combien ça coûte ?",
+          "a": "19 € chez Lon Clinic. Si le médecin voit un problème nouveau, une consultation générale à 39 € peut être nécessaire."
+        },
+        {
+          "q": "L’assurance voyage couvre-t-elle cela ?",
+          "a": "Certaines polices couvrent l’ambulatoire ou la télémédecine. Vérifiez. Nous pouvons émettre un reçu. Beaucoup de visiteurs paient les 19 €."
+        }
+      ],
+      "related": [
+        { "href": "/tourist-clinic", "label": "Clinique touriste" },
+        { "href": "/consulter-medecin-portugal-touriste", "label": "Voir un médecin en tant que touriste" },
+        { "href": "/consulta/renovacao-receita", "label": "Renouvellement (page en portugais)" },
+        { "href": "/equipa/rita-aguiar", "label": "La médecin" }
+      ]
+    },
+    {
+      "slug": "rezept-verlaengern-urlaub-portugal",
+      "group": "renew-prescription-tourist",
+      "lang": "de",
+      "hreflang": "de",
+      "status": "live",
+      "navLabel": "Rezept verlängern",
+      "hubBlurb": "Stabile Dauermedikation im Urlaub — 19 € Video, kein Formular.",
+      "titleTag": "Rezept im Portugal-Urlaub Verlängern — So Geht's",
+      "description": "Medikamente aufgebraucht oder Rezept verloren in Portugal? Verlängerung per Video 19 €, E-Rezept wenn vertretbar.",
+      "h1": "Musst du dein Rezept in Portugal Erneuern? So Funktioniert's",
+      "bookingHref": "/marcar/renovacao?ref=tourist-renew-de&lang=en",
+      "bookingLabel": "Rezept verlängern — 19 €",
+      "price": "19 €",
+      "priceNote": "Kurze Videosprechstunde zur Verlängerung. E-Rezept inklusive, wenn die Ärztin es sicher ausstellen kann.",
+      "ctaTitle": "Musst du dein Rezept heute erneuern?",
+      "ctaLead": "Buche eine Videosprechstunde für 19 € bei Lon Clinic auf Englisch, Spanisch oder Portugiesisch. Der Code gilt, wenn ausgestellt, in jeder Apotheke in Portugal.",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "notice": "Die Sprechstunden von Lon Clinic finden auf Englisch, Spanisch oder Portugiesisch statt. Keine Beratung auf Deutsch — Englisch reicht für die meisten deutschsprachigen Reisenden.",
+      "lead": [
+        "Bei einem gängigen, nicht kontrollierten Medikament in stabiler Dosis kann eine Ärztin es oft per Video verlängern — 19 € bei Lon Clinic. Packung oder Foto des alten Rezepts mitnehmen.",
+        "Kein Formular, das jedes Mittel ausdruckt. Antibiotika, Abnehmspritzen, neue Schlafmittel oder Opioide laufen so nicht. Neue schwere Symptome: volle Sprechstunde oder Notaufnahme — 112."
+      ],
+      "onlineTitle": "Wann die Video-Verlängerung Sinn hat",
+      "urgentTitle": "Keine Verlängerung — Notaufnahme oder volle Sprechstunde",
+      "safeOnline": [
+        "Dauermedikament, das du schon nimmst (Blutdruck, Schilddrüse, Cholesterin, Inhalator, Verhütung u. Ä.)",
+        "Stabile Dosis, keine neuen Symptome, die die Therapie infrage stellen",
+        "Du kannst Packung, Foto oder altes Rezept zeigen",
+        "Kein Antibiotikum, kein GLP-1 zum Abnehmen, kein neues Benzodiazepin, kein Opioid"
+      ],
+      "goToUrgent": [
+        "Brustschmerz, Atemnot, Schlaganfall-Zeichen oder starke Blutung — 112",
+        "Schwere Arzneimittelreaktion (ausgedehnter Ausschlag, Schwellung, Kollaps)",
+        "Du hast das Mittel noch nie genommen — Erstverordnung, keine Verlängerung",
+        "Du willst ein Antibiotikum, Schlafmittel oder eine Abnehmspritze ohne volle Beurteilung"
+      ],
+      "howTitle": "Verlängern mit einem Online-Arzt",
+      "howItWorks": [
+        {
+          "title": "Termin buchen",
+          "text": "19 €, vor der Zahlung sichtbar. Sprechstunden auf Englisch, Spanisch oder Portugiesisch. Termine am selben Tag oft verfügbar."
+        },
+        {
+          "title": "Medikament zeigen",
+          "text": "Packung, Foto oder altes Rezept — Name, Dosis, wie oft. Ausweis oder Reisepass hilft."
+        },
+        {
+          "title": "Die Ärztin entscheidet",
+          "text": "Wenn die Geschichte reicht, portugiesisches E-Rezept per SMS oder E-Mail, meist am Ende des Gesprächs. Wenn nicht, sagt sie es — keine Verlängerung im Dunkeln."
+        },
+        {
+          "title": "Jede Apotheke in Portugal",
+          "text": "Code in jeder farmácia einlösen. Die meisten E-Rezepte noch am selben Tag."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Können Apotheken das Rezept direkt erneuern?",
+          "paragraphs": [
+            "In begrenzten Fällen — vor allem Dauermedikation mit bereits portugiesischem E-Rezept — kann die Apotheke eine kleine Extra-Menge abgeben. Nicht garantiert. Nicht als Hauptplan einplanen."
+          ]
+        },
+        {
+          "h2": "SNS24",
+          "paragraphs": [
+            "SNS24 (808 24 24 24) ist die staatliche Hotline. Sie kann Residenten helfen und in manchen Fällen EU-Bürgern mit EHIC/GHIC. Wartezeiten und was verlängerbar ist, schwanken. Kein schnelles Touristen-Schalter.",
+            "EHIC/GHIC zahlt keine private Lon-Clinic-Sprechstunde. Wir stellen eine Quittung aus, wenn deine Reiseversicherung ambulante Behandlung oder Telemedizin abdeckt."
+          ]
+        },
+        {
+          "h2": "Was mitbringen",
+          "items": [
+            { "title": "Packung oder Foto", "text": "Name, Dosis, Einnahme." },
+            { "title": "Altes Rezept, falls vorhanden", "text": "Papier oder Foto reicht." },
+            { "title": "Ausweis oder Reisepass", "text": "Nützlich. EHIC gilt fürs öffentliche System, nicht für diese private Sprechstunde." }
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Kann ich damit jedes Medikament erneuern lassen?",
+          "a": "Die meisten stabilen Dauermedikamente — Blutdruck, Schilddrüse, Cholesterin, Verhütung, viele Inhalatoren. Antibiotika, GLP-1 zum Abnehmen, neue Psychopharmaka oder Schlafmittel und Opioide nicht auf diesem Weg."
+        },
+        {
+          "q": "Wie schnell kommt das neue Rezept?",
+          "a": "Wenn es am Ende des Videoanrufs ausgestellt wird, kommt der Code meist per SMS oder E-Mail sofort oder in Minuten. Wir versprechen nicht, dass die ganze Buchung unter einer Stunde liegt."
+        },
+        {
+          "q": "Was kostet das?",
+          "a": "19 € bei Lon Clinic. Sieht die Ärztin ein neues Problem, kann eine volle Sprechstunde für 39 € nötig sein."
+        },
+        {
+          "q": "Übernimmt die Reiseversicherung das?",
+          "a": "Manche Policen decken ambulant oder Telemedizin. Nachfragen. Wir stellen eine Quittung aus. Viele Gäste zahlen die 19 € selbst."
+        }
+      ],
+      "related": [
+        { "href": "/tourist-clinic", "label": "Tourist clinic" },
+        { "href": "/arzt-portugal-tourist-finden", "label": "Arzt als Tourist finden" },
+        { "href": "/consulta/renovacao-receita", "label": "Rezeptverlängerung (portugiesische Seite)" },
+        { "href": "/equipa/rita-aguiar", "label": "Die Ärztin" }
+      ]
+    }
+  ]
+}

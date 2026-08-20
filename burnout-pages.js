@@ -389,7 +389,7 @@ function renderHub(origin) {
                 <p class="bo-eyebrow">LON Clinic · Clínica Anti-Burnout</p>
                 <h1 id="bo-hub-title">Burnout</h1>
                 <p class="bo-lead">Não é só cansaço. Quando o esgotamento se instala, precisa de avaliação clínica — não de mais uma lista de dicas genéricas.</p>
-                <p class="bo-hero-link"><a href="/burnout/o-que-e">O que é burnout →</a> · <a href="/burnout/colecao">Coleção completa (28 artigos) →</a></p>
+                <p class="bo-hero-link"><a href="/burnout/o-que-e">O que é burnout →</a> · <a href="/psicologia-burnout">Psicólogo para burnout →</a> · <a href="/burnout/colecao">Coleção completa →</a></p>
                 <div class="bo-hero-actions">
                     <a class="lon-btn lon-btn-dark" href="/burnout/teste?ref=burnout-hub">Fazer o teste gratuito</a>
                     <a class="lon-btn lon-btn-soft" href="/marcar/burnout?ref=burnout-hub">Marcar consulta</a>

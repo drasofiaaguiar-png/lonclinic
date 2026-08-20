@@ -1,0 +1,604 @@
+{
+  "updated": "2026-08-20",
+  "notes": "Prioridade de execução: volume de procura + menor risco clínico. Fluxo actual da Lon Clinic: sempre videoconsulta. Antibióticos, GLP-1 e psicotrópicos não passam por questionário-só. Páginas com status planned ficam no mapa mas não são servidas.",
+  "pages": [
+    {
+      "slug": "infecao-urinaria",
+      "status": "live",
+      "category": "urinarias",
+      "priority": 1,
+      "navLabel": "Infeção urinária",
+      "h1": "Infeção Urinária: Consulta e Receita Online",
+      "description": "Cistite não complicada: consulta médica online em Portugal, 39 €. Saiba quando é seguro tratar à distância e quando ir à urgência. Receita eletrónica se clinicamente indicada.",
+      "hubBlurb": "Cistite não complicada — videoconsulta e receita, quando é seguro.",
+      "condition": "Cistite aguda não complicada",
+      "consultMode": "video",
+      "bookingHref": "/marcar/clinica-geral?ref=consulta-infecao-urinaria",
+      "bookingLabel": "Marcar consulta — 39 €",
+      "price": "39 €",
+      "priceAmount": "39.00",
+      "priceNote": "Videoconsulta de clínica geral, 30 min. Receita eletrónica incluída se o médico a indicar. Sem taxas escondidas no checkout.",
+      "ctaTitle": "Tratar a infeção urinária com avaliação médica",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "A cistite não complicada — ardor a urinar, vontade frequente, sem febre — pode ser avaliada por videoconsulta em Portugal.",
+        "O médico confirma se é seguro tratar à distância e, quando indicado, envia a receita eletrónica para qualquer farmácia.",
+        "Se houver febre, dor lombar, gravidez ou vómitos, não marque online: dirija-se a uma urgência ou ligue 112."
+      ],
+      "symptoms": [
+        "Ardor ou dor a urinar",
+        "Vontade frequente e urgente de ir à casa de banho",
+        "Desconforto no baixo ventre",
+        "Urina turva ou com cheiro mais intenso",
+        "Por vezes, vestígios de sangue visíveis na urina"
+      ],
+      "safeOnline": [
+        "Mulher adulta, não grávida, com sintomas típicos de cistite",
+        "Sem febre, sem arrepios, sem dor nos flancos ou nas costas",
+        "Sem vómitos, sem mal-estar intenso",
+        "Sem doença renal conhecida nem sonda vesical",
+        "Sintomas com poucos dias de evolução"
+      ],
+      "goToUrgent": [
+        "Febre, arrepios ou mal-estar acentuado",
+        "Dor lombar ou nos flancos (suspeita de pielonefrite)",
+        "Gravidez, ou possibilidade de gravidez",
+        "Homem, criança, ou pessoa com sonda vesical",
+        "Vómitos, desidratação, ou confusão",
+        "Imunossupressão, transplante, ou doença renal crónica"
+      ],
+      "howItWorks": [
+        {
+          "title": "Marca a videoconsulta",
+          "text": "Escolhe data e hora. O preço (39 €) está visível antes de pagar — não aparece só no checkout."
+        },
+        {
+          "title": "Fala com o médico por vídeo",
+          "text": "Não usamos questionário sozinho para antibióticos. A avaliação é clínica, em videoconsulta de 30 minutos."
+        },
+        {
+          "title": "Receita, se for indicada",
+          "text": "Quando o quadro for de cistite não complicada, o médico pode emitir receita eletrónica por SMS ou email, válida em qualquer farmácia em Portugal."
+        },
+        {
+          "title": "Se não melhorar",
+          "text": "Se os sintomas persistirem após 48–72 horas, ou se aparecer febre, o médico pode pedir urocultura ou encaminhar para avaliação presencial."
+        }
+      ],
+      "related": [
+        "cistite-recorrente",
+        "renovacao-receita",
+        { "href": "/uti-portugal-what-to-do", "label": "UTI in Portugal (tourists)" },
+        { "href": "/consulta", "label": "Consulta médica online" },
+        { "href": "/equipa/rita-aguiar", "label": "A médica" }
+      ],
+      "faq": [
+        {
+          "q": "Posso tratar uma infeção urinária só com um questionário?",
+          "a": "Na Lon Clinic, não. Os antibióticos exigem avaliação médica. A consulta é por vídeo, para distinguir uma cistite simples de um caso que precisa de urgência."
+        },
+        {
+          "q": "A receita eletrónica serve em qualquer farmácia?",
+          "a": "Sim. Quando emitida, a prescrição eletrónica portuguesa pode ser levantada em qualquer farmácia no país, com o código enviado por SMS ou email."
+        },
+        {
+          "q": "Quanto custa a consulta de infeção urinária?",
+          "a": "39 € pela videoconsulta de clínica geral (30 min). O valor inclui a receita, se o médico a considerar indicada. Não há taxa extra de prescrição."
+        },
+        {
+          "q": "Homens também podem tratar cistite online?",
+          "a": "A infeção urinária no homem é, por definição, um caso a investigar com mais cuidado e muitas vezes exige avaliação presencial. Se é homem e tem estes sintomas, não use esta página como atalho para antibiótico — marque uma consulta geral ou recorra a urgência se houver febre ou dor lombar."
+        },
+        {
+          "q": "E se estiver grávida?",
+          "a": "A cistite na gravidez não se trata por esta via. Contacte o seu médico assistente, a urgência obstétrica ou o SNS 24 (808 24 24 24)."
+        },
+        {
+          "q": "E se a cistite voltar sempre?",
+          "a": "Dois ou mais episódios em seis meses, ou três num ano, já são cistite recorrente — há uma página à parte, porque o plano não é só repetir o antibiótico."
+        }
+      ]
+    },
+    {
+      "slug": "cistite-recorrente",
+      "status": "live",
+      "category": "urinarias",
+      "priority": 1,
+      "navLabel": "Cistite recorrente",
+      "h1": "Cistite Recorrente: Consulta Online",
+      "description": "Cistite que volta: consulta médica online em Portugal, 39 €. Quando investigar, quando tratar o episódio, e o que não é profilaxia automática. Receita se clinicamente indicada.",
+      "hubBlurb": "Dois ou mais episódios — não é só repetir o antibiótico.",
+      "condition": "Cistite recorrente na mulher",
+      "consultMode": "video",
+      "bookingHref": "/marcar/clinica-geral?ref=consulta-cistite-recorrente",
+      "bookingLabel": "Marcar consulta — 39 €",
+      "price": "39 €",
+      "priceAmount": "39.00",
+      "priceNote": "Videoconsulta de clínica geral, 30 min. Receita eletrónica incluída se o médico a indicar. Sem taxas escondidas no checkout.",
+      "ctaTitle": "Avaliar a cistite recorrente com um médico",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "Cistite recorrente não é a mesma coisa que um episódio único: são dois ou mais em seis meses, ou três num ano — e o plano muda.",
+        "A videoconsulta serve para tratar o episódio actual, se for seguro, e para decidir se faz sentido urocultura ou prevenção. Não é um antibiótico de rotina.",
+        "Febre, dor lombar, gravidez ou vómitos: não marque online. Urgência ou 112."
+      ],
+      "symptoms": [
+        "Episódios repetidos de ardor a urinar, urgência e vontade frequente",
+        "Sintomas que voltam semanas ou meses depois do último tratamento",
+        "Recidiva pouco depois de acabar o antibiótico",
+        "Por vezes, relação clara com relações sexuais, menopausa ou obstipação"
+      ],
+      "safeOnline": [
+        "Mulher adulta, não grávida, com episódio actual típico de cistite",
+        "Sem febre, sem arrepios, sem dor nos flancos ou nas costas",
+        "Sem sonda vesical nem doença renal conhecida",
+        "História de vários episódios no último ano, já tratados",
+        "Disposta a discutir urocultura e factores de risco — não só «mais um comprimido»"
+      ],
+      "goToUrgent": [
+        "Febre, arrepios ou mal-estar acentuado",
+        "Dor lombar ou nos flancos (suspeita de pielonefrite)",
+        "Gravidez, ou possibilidade de gravidez",
+        "Homem, criança, ou pessoa com sonda vesical",
+        "Vómitos, desidratação, ou confusão",
+        "Sangue persistente na urina, cólica sugestiva de pedra, ou imunossupressão"
+      ],
+      "howItWorks": [
+        {
+          "title": "Marca a videoconsulta",
+          "text": "39 € visíveis antes de pagar. Anote quantos episódios teve no último ano, que antibióticos tomou, e se alguma vez fez urocultura."
+        },
+        {
+          "title": "Episódio actual e padrão",
+          "text": "O médico confirma se o quadro de agora é seguro à distância, e se isto é recidiva, um novo episódio, ou outra coisa (incluindo IST)."
+        },
+        {
+          "title": "Receita e, se fizer sentido, investigação",
+          "text": "Quando indicado, receita eletrónica para o episódio. Urocultura, ecografia ou prevenção só entram se a história o justificar — não por defeito."
+        },
+        {
+          "title": "Se não melhorar",
+          "text": "Sintomas após 48–72 horas, febre, ou episódios a empilhar sem causa: o médico pode encaminhar para avaliação presencial ou urologia."
+        }
+      ],
+      "related": [
+        "infecao-urinaria",
+        "renovacao-receita",
+        { "href": "/consulta", "label": "Consulta médica online" },
+        { "href": "/equipa/rita-aguiar", "label": "A médica" }
+      ],
+      "faq": [
+        {
+          "q": "Quantos episódios é cistite recorrente?",
+          "a": "Em geral, dois ou mais em seis meses, ou três ou mais num ano, na mulher. Um episódio isolado trata-se na página de infeção urinária. O número sozinho não define o antibiótico — a história e os sinais de alarme definem."
+        },
+        {
+          "q": "Posso ter um antibiótico em casa para o próximo episódio?",
+          "a": "Só se o médico o considerar adequado depois de avaliar o padrão — por exemplo, após confirmação prévia e sem red flags. Não é o serviço por defeito, nem um kit vendido nesta página."
+        },
+        {
+          "q": "Cranberry ou D-manose substituem a consulta?",
+          "a": "Não. Podem ser discutidos como adjuvantes em alguns casos; não tratam uma cistite aguda e não dispensam avaliação quando os episódios se repetem."
+        },
+        {
+          "q": "Tem a ver com relações sexuais?",
+          "a": "Pode. A cistite pós-coital é um padrão frequente. A consulta serve para perceber se o gatilho existe e o que fazer — não para prescrever um antibiótico «sempre depois de ter relações» sem história."
+        },
+        {
+          "q": "E na menopausa?",
+          "a": "A atrofia vulvovaginal aumenta o risco de cistite. Isso discute-se na consulta; não se resolve com ciclos repetidos de antibiótico sem olhar para a causa."
+        },
+        {
+          "q": "Quanto custa?",
+          "a": "39 € pela videoconsulta de clínica geral (30 min). A receita, se o médico a indicar, está incluída. Não há taxa extra de prescrição."
+        }
+      ]
+    },
+    {
+      "slug": "renovacao-receita",
+      "status": "live",
+      "category": "peso",
+      "priority": 2,
+      "navLabel": "Renovação de receita",
+      "h1": "Renovação de Receita Médica Online",
+      "description": "Renovar receita médica online em Portugal: 19 €, videoconsulta, preço visível. Medicação crónica estável — sem questionário escondido no checkout.",
+      "hubBlurb": "Medicação crónica estável — 19 €, preço à vista, sempre com médico.",
+      "condition": "Renovação de medicação crónica",
+      "consultMode": "video",
+      "bookingHref": "/marcar/renovacao?ref=consulta-renovacao-receita",
+      "bookingLabel": "Renovar receita — 19 €",
+      "price": "19 €",
+      "priceAmount": "19.00",
+      "priceNote": "Videoconsulta de renovação. Sem taxa extra de receita. Se o médico considerar que precisa de uma consulta completa, indica-o — não renovamos no escuro.",
+      "ctaTitle": "Renovar a receita com o médico à vista",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "Se já está em tratamento estável, pode renovar a receita por videoconsulta — 19 €, preço visível antes de marcar.",
+        "O médico confirma que a medicação continua adequada. Não renovamos antibióticos, medicação para emagrecer nem psicotrópicos só com um formulário.",
+        "Se houver sintomas novos, efeitos adversos ou exames em atraso, a renovação pode ser recusada e convertida numa consulta completa."
+      ],
+      "symptoms": [
+        "Tratamento crónico já iniciado por um médico (hipertensão, colesterol, tiróide, asma, entre outros)",
+        "Dose estável, sem alterações recentes não explicadas",
+        "Sem sintomas novos que ponham em causa o tratamento",
+        "Receita a caducar ou já caducada, com necessidade de continuidade"
+      ],
+      "safeOnline": [
+        "Medicação crónica habitual, em dose estável",
+        "Consegue identificar o nome, a dose e a posologia",
+        "Não há sintomas novos relevantes nem internamentos recentes",
+        "Não se trata de antibiótico, opioide, benzodiazepina de início, ou fármaco para perda de peso"
+      ],
+      "goToUrgent": [
+        "Dor no peito, falta de ar, sinais neurológicos ou hemorragia",
+        "Efeitos adversos graves (erupção generalizada, inchaço, tonturas intensas)",
+        "Primeira prescrição de um fármaco que nunca tomou",
+        "Pedido de antibiótico, ansiolítico, sonífero ou medicação para emagrecer sem avaliação",
+        "Descompensação da doença de base (por exemplo, tensão muito alta com sintomas)"
+      ],
+      "howItWorks": [
+        {
+          "title": "Marca a renovação",
+          "text": "19 €, visível na página e no calendário. Prepare o nome da medicação, a dose e, se tiver, a última receita ou embalagem."
+        },
+        {
+          "title": "Videoconsulta curta",
+          "text": "O médico confirma estabilidade, aderência e segurança. Se faltar informação, a renovação não é emitida só para 'não perder o cliente'."
+        },
+        {
+          "title": "Receita eletrónica",
+          "text": "Quando clinicamente adequada, recebe o código por SMS ou email, válido em qualquer farmácia portuguesa."
+        }
+      ],
+      "related": [
+        "cessacao-tabagica",
+        "refluxo",
+        "infecao-urinaria",
+        { "href": "/renew-prescription-holiday-portugal", "label": "Prescription renewal (tourists)" },
+        { "href": "/consulta", "label": "Consulta médica online" }
+      ],
+      "faq": [
+        {
+          "q": "A renovação é só um questionário?",
+          "a": "Não. Na Lon Clinic a renovação faz-se por videoconsulta a 19 €. É mais lenta do que um formulário automático — e é essa a garantia de que alguém assume a prescrição."
+        },
+        {
+          "q": "Renova qualquer medicamento?",
+          "a": "Não. Antibióticos, fármacos para perda de peso, psicotrópicos de início ou alteração, e medicação que exija monitorização apertada (por exemplo, alguns anticoagulantes) pedem consulta completa ou avaliação presencial."
+        },
+        {
+          "q": "E se a receita original não foi da Lon Clinic?",
+          "a": "Pode mesmo assim ser avaliada, desde que consiga identificar o tratamento. O médico decide se tem informação suficiente para renovar com segurança."
+        },
+        {
+          "q": "Quanto tempo demora a receita a chegar?",
+          "a": "Quando emitida no final da consulta, o código costuma chegar por SMS ou email de imediato, ou nos minutos seguintes."
+        }
+      ]
+    },
+    {
+      "slug": "refluxo",
+      "status": "live",
+      "category": "digestivo",
+      "priority": 3,
+      "navLabel": "Refluxo e azia",
+      "h1": "Refluxo e Azia: Consulta Online",
+      "description": "Refluxo gastroesofágico e azia: consulta médica online em Portugal, 39 €. Quando tratar à distância, quando ir à urgência, e preço visível.",
+      "hubBlurb": "Azia e refluxo ligeiros — orientação e medicação, com sinais de alarme claros.",
+      "condition": "Doença do refluxo gastroesofágico",
+      "consultMode": "video",
+      "bookingHref": "/marcar/clinica-geral?ref=consulta-refluxo",
+      "bookingLabel": "Marcar consulta — 39 €",
+      "price": "39 €",
+      "priceAmount": "39.00",
+      "priceNote": "Videoconsulta de clínica geral, 30 min. Sem preço escondido. A medicação só é prescrita se o quadro for compatível e sem sinais de alarme.",
+      "ctaTitle": "Avaliar o refluxo com um médico",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "Azia, regurgitação e desconforto depois das refeições são os sintomas mais comuns do refluxo gastroesofágico.",
+        "Em casos ligeiros, já conhecidos e sem sinais de alarme, a videoconsulta permite orientar medidas e, quando indicado, ajustar ou renovar a medicação.",
+        "Dor torácica intensa, dificuldade em engolir, vómitos com sangue ou perda de peso inexplicada exigem urgência ou avaliação presencial — não uma receita à distância."
+      ],
+      "symptoms": [
+        "Azia (queimor no peito ou na garganta)",
+        "Regurgitação de ácido ou de alimento",
+        "Sabor amargo na boca, sobretudo deitado",
+        "Tosse crónica ou pigarro associado às refeições",
+        "Desconforto no estômago depois de comer"
+      ],
+      "safeOnline": [
+        "Azia recorrente, já conhecida, sem pioria súbita",
+        "Sem dor torácica de esforço, sem falta de ar",
+        "Sem dificuldade ou dor a engolir",
+        "Sem vómitos com sangue, fezes negras ou anemia conhecida",
+        "Adulto sem perda de peso inexplicada"
+      ],
+      "goToUrgent": [
+        "Dor no peito intensa, a irradiar para o braço, ou com suores — trate como emergência (112)",
+        "Dificuldade em engolir (disfagia) ou engasgos frequentes",
+        "Vómitos com sangue ou fezes negras (melenas)",
+        "Perda de peso inexplicada, anemia, ou vómitos persistentes",
+        "Sintomas de refluxo a começar depois dos 55–60 anos, sem avaliação prévia"
+      ],
+      "howItWorks": [
+        {
+          "title": "Marca a consulta",
+          "text": "39 € visíveis. Traga a lista da medicação actual, incluindo antiácidos e inibidores da bomba de protões que já tenha tomado."
+        },
+        {
+          "title": "Videoconsulta",
+          "text": "O médico distingue refluxo típico de sinais que pedem endoscopia ou urgência, e discute medidas (refeições, decúbito, peso) antes de medicar."
+        },
+        {
+          "title": "Plano e receita, se indicados",
+          "text": "Pode incluir medidas não farmacológicas, um ciclo curto de medicação, ou pedido de exames. Não é um 'PPI automático'."
+        }
+      ],
+      "related": [
+        "obstipacao",
+        "renovacao-receita",
+        { "href": "/consulta", "label": "Consulta médica online" }
+      ],
+      "faq": [
+        {
+          "q": "Azia pode ser um ataque cardíaco?",
+          "a": "Sim — a dor no peito do refluxo e a da doença coronária confundem-se. Se a dor for intensa, com esforço, suores, falta de ar ou irradiação ao braço, ligue 112. Não use esta página para 'tirar a dúvida' nesse cenário."
+        },
+        {
+          "q": "Preciso de endoscopia?",
+          "a": "Nem sempre. Refluxo típico, em adulto jovem, sem sinais de alarme, pode começar com medidas e, se necessário, um ciclo de medicação. Sinais de alarme, idade mais avançada ou falha de tratamento justificam avaliação presencial e, muitas vezes, endoscopia."
+        },
+        {
+          "q": "Quanto custa?",
+          "a": "39 € pela videoconsulta de 30 minutos. A receita, se emitida, está incluída."
+        },
+        {
+          "q": "Posso renovar o omeprazol sem consulta?",
+          "a": "Não nesta clínica. A renovação de inibidores da bomba de protões em uso prolongado deve ser revista: dose, duração e se ainda faz sentido. Há um serviço de renovação a 19 € quando o tratamento já é estável — ver renovação de receita."
+        }
+      ]
+    },
+    {
+      "slug": "obstipacao",
+      "status": "live",
+      "category": "digestivo",
+      "priority": 4,
+      "navLabel": "Obstipação",
+      "h1": "Obstipação: Consulta Online",
+      "description": "Obstipação no adulto: consulta médica online em Portugal, 39 €. Quando é funcional e tratável à distância, e quais os sinais que pedem urgência ou exame presencial.",
+      "hubBlurb": "Obstipação no adulto — orientação inicial, com red flags explícitos.",
+      "condition": "Obstipação no adulto",
+      "consultMode": "video",
+      "bookingHref": "/marcar/clinica-geral?ref=consulta-obstipacao",
+      "bookingLabel": "Marcar consulta — 39 €",
+      "price": "39 €",
+      "priceAmount": "39.00",
+      "priceNote": "Videoconsulta de clínica geral, 30 min. Preço único, visível. Não vendemos laxantes sem avaliação dos sinais de alarme.",
+      "ctaTitle": "Avaliar a obstipação com um médico",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "Obstipação — evacuações infrequentes, fezes duras, esforço — é frequente e, na maioria dos adultos sem sinais de alarme, pode ser avaliada online.",
+        "O médico distingue obstipação funcional de causas que precisam de exame presencial, e só depois discute dieta, hábitos e, se necessário, medicação.",
+        "Sangue nas fezes, perda de peso inexplicada ou obstipação de início súbito depois dos 50 anos não devem ser tratados só à distância."
+      ],
+      "symptoms": [
+        "Menos de três evacuações por semana, de forma persistente",
+        "Fezes duras, esforço, ou sensação de evacuação incompleta",
+        "Inchaço abdominal associado",
+        "Uso frequente de laxantes por conta própria, sem plano"
+      ],
+      "safeOnline": [
+        "Adulto com obstipação de longa data, sem pioria súbita",
+        "Sem sangue visível nas fezes, sem fezes negras",
+        "Sem perda de peso inexplicada nem anemia",
+        "Sem vómitos persistentes nem distensão abdominal intensa",
+        "Sem história familiar próxima de cancro colorrectal em idade jovem"
+      ],
+      "goToUrgent": [
+        "Sangue nas fezes, fezes negras, ou anemia recente",
+        "Perda de peso inexplicada",
+        "Obstipação de início recente depois dos 50 anos",
+        "Vómitos, dor intensa, ou barriga muito distendida (possível oclusão)",
+        "Febre com dor abdominal"
+      ],
+      "howItWorks": [
+        {
+          "title": "Marca a videoconsulta",
+          "text": "39 €. Vale a pena anotar há quanto tempo está assim, a medicação que toma (incluindo ferro, opioides, antidepressivos) e o que já experimentou."
+        },
+        {
+          "title": "Avaliação dos sinais de alarme",
+          "text": "A primeira tarefa do médico não é receitar um laxante — é perceber se isto pode ser tratado online ou se precisa de exame presencial."
+        },
+        {
+          "title": "Plano concreto",
+          "text": "Hábitos, fibra, hidratação, e, se indicado, um laxante osmótico ou outro fármaco, com duração e o que fazer se não resultar."
+        }
+      ],
+      "related": [
+        "refluxo",
+        "renovacao-receita",
+        { "href": "/consulta", "label": "Consulta médica online" }
+      ],
+      "faq": [
+        {
+          "q": "Obstipação é o mesmo que 'prisão de ventre'?",
+          "a": "Sim. Em Portugal o termo clínico usual é obstipação. 'Prisão de ventre' é a expressão corrente para o mesmo problema."
+        },
+        {
+          "q": "Posso ficar dependente de laxantes?",
+          "a": "O uso crónico sem plano, sobretudo de laxantes estimulantes, pode piorar o problema. Por isso a consulta define tipo, dose e duração — não uma caixa 'para sempre'."
+        },
+        {
+          "q": "Quanto custa?",
+          "a": "39 € pela videoconsulta de 30 minutos, com receita incluída se for indicada."
+        },
+        {
+          "q": "A obstipação pode ser intestino irritável?",
+          "a": "Pode. A síndrome do intestino irritável inclui, em alguns doentes, obstipação predominante. Isso pede história clínica — não um rótulo automático. Esta página é a orientação inicial; se o quadro for misto (dor, diarreia e obstipação em ciclos), o médico discute-o na consulta."
+        }
+      ]
+    },
+    {
+      "slug": "cessacao-tabagica",
+      "status": "live",
+      "category": "peso",
+      "priority": 5,
+      "navLabel": "Deixar de fumar",
+      "h1": "Deixar de Fumar: Consulta Online",
+      "description": "Cessação tabágica online em Portugal: consulta médica 39 €, plano e receita quando indicada (substitutos de nicotina ou outros fármacos). Sem questionário automático.",
+      "hubBlurb": "Plano médico para deixar de fumar — não é um anúncio de pensos.",
+      "condition": "Cessação tabágica",
+      "consultMode": "video",
+      "bookingHref": "/marcar/clinica-geral?ref=consulta-cessacao-tabagica",
+      "bookingLabel": "Marcar consulta — 39 €",
+      "price": "39 €",
+      "priceAmount": "39.00",
+      "priceNote": "Videoconsulta de clínica geral, 30 min. Receita incluída se o médico indicar terapêutica. Sem pacotes escondidos.",
+      "ctaTitle": "Começar o plano para deixar de fumar",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "Deixar de fumar resulta mais quando há um plano médico — data, substitutos de nicotina ou outro fármaco quando indicado, e o que fazer nas recaídas.",
+        "A consulta é por vídeo, 39 €, com receita eletrónica se o médico considerar adequado. Não é um questionário que despacha pensos.",
+        "Se tem dor no peito, falta de ar súbita ou sinais de acidente vascular, isto não é o sítio: ligue 112."
+      ],
+      "symptoms": [
+        "Consumo diário de tabaco, com vontade de parar ou de reduzir a sério",
+        "Tentativas anteriores sem plano, ou com recaída precoce",
+        "Ansiedade, irritabilidade ou aumento de apetite quando tenta parar",
+        "Preocupação com peso, tosse crónica, ou pressão arterial"
+      ],
+      "safeOnline": [
+        "Adulto que quer parar ou reduzir, sem emergência médica",
+        "Sem crise de falta de ar, sem dor torácica aguda",
+        "Disposto a discutir história de depressão, convulsões e outra medicação — relevante para alguns fármacos"
+      ],
+      "goToUrgent": [
+        "Dor no peito, falta de ar súbita, ou sinais de AVC — 112",
+        "Descompensação psiquiátrica grave, ideação suicida",
+        "Convulsões recentes, se estiver a considerar certos fármacos (isso pede avaliação cuidada, por vezes presencial)"
+      ],
+      "howItWorks": [
+        {
+          "title": "Marca a consulta",
+          "text": "39 € visíveis. Anote quantos cigarros/dia, há quantos anos fuma, e o que já tentou (pensos, pastilhas, Champix, hipnose, 'parar a seco')."
+        },
+        {
+          "title": "Videoconsulta",
+          "text": "O médico avalia dependência, contraindicações e o que é realista. Define uma data de paragem e o fármaco, se houver indicação."
+        },
+        {
+          "title": "Receita e seguimento",
+          "text": "Quando indicado, recebe a prescrição eletrónica. A renovação posterior, se o tratamento estiver estável, pode fazer-se a 19 €."
+        }
+      ],
+      "related": [
+        "renovacao-receita",
+        { "href": "/consulta", "label": "Consulta médica online" },
+        { "href": "/clinica-anti-burnout", "label": "Consulta anti-burnout" }
+      ],
+      "faq": [
+        {
+          "q": "Os pensos de nicotina precisam de receita?",
+          "a": "Alguns substitutos de nicotina vendem-se nas farmácias sem receita. Mesmo assim, a consulta serve para escolher dose, duração e combinações — a maior parte das falhas vem de dose insuficiente ou de parar o substituto cedo demais."
+        },
+        {
+          "q": "Há comprimidos para deixar de fumar?",
+          "a": "Sim, em casos seleccionados (por exemplo bupropiona ou vareniclina, quando disponíveis e sem contraindicação). A escolha é clínica, não um anúncio. Alguns fármacos não combinam com história de convulsões ou com certa medicação psiquiátrica."
+        },
+        {
+          "q": "Quanto custa?",
+          "a": "A consulta é 39 €. O medicamento, se prescrito, paga-se na farmácia, com o regime de comparticipação que se aplicar."
+        },
+        {
+          "q": "Funciona mesmo online?",
+          "a": "A evidência da cessação tabágica está no plano e no acompanhamento, não no sítio físico. A videoconsulta permite fazer essa avaliação; o que não substitui é uma urgência."
+        }
+      ]
+    },
+    {
+      "slug": "rastreio-ist",
+      "status": "planned",
+      "category": "urinarias",
+      "navLabel": "Rastreio de IST"
+    },
+    {
+      "slug": "perda-de-peso",
+      "status": "planned",
+      "category": "peso",
+      "navLabel": "Perda de peso (Wegovy/Ozempic)"
+    },
+    {
+      "slug": "diabetes-tipo-2",
+      "status": "planned",
+      "category": "peso",
+      "navLabel": "Diabetes tipo 2"
+    },
+    {
+      "slug": "colesterol",
+      "status": "planned",
+      "category": "peso",
+      "navLabel": "Colesterol elevado"
+    },
+    {
+      "slug": "hipertensao",
+      "status": "planned",
+      "category": "peso",
+      "navLabel": "Hipertensão arterial"
+    },
+    {
+      "slug": "psiquiatria",
+      "status": "planned",
+      "category": "saude-mental",
+      "navLabel": "Consulta de psiquiatria"
+    },
+    {
+      "slug": "vacinas-viagem",
+      "status": "planned",
+      "category": "viagem",
+      "navLabel": "Vacinas de viagem"
+    },
+    {
+      "slug": "profilaxia-malaria",
+      "status": "planned",
+      "category": "viagem",
+      "navLabel": "Profilaxia de malária"
+    },
+    {
+      "slug": "diarreia-do-viajante",
+      "status": "planned",
+      "category": "viagem",
+      "navLabel": "Diarreia do viajante"
+    },
+    {
+      "slug": "diarreia-aguda",
+      "status": "planned",
+      "category": "digestivo",
+      "navLabel": "Diarreia aguda"
+    },
+    {
+      "slug": "diarreia-cronica",
+      "status": "planned",
+      "category": "digestivo",
+      "navLabel": "Diarreia crónica"
+    },
+    {
+      "slug": "intestino-irritavel",
+      "status": "planned",
+      "category": "digestivo",
+      "navLabel": "Síndrome do intestino irritável"
+    },
+    {
+      "slug": "gastroenterite",
+      "status": "planned",
+      "category": "digestivo",
+      "navLabel": "Gastroenterite"
+    }
+  ]
+}

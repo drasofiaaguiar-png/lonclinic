@@ -1,0 +1,214 @@
+/* Tourist / visitor guides — extras on top of consulta-pages.css */
+
+.tq-langs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 14px;
+}
+
+.tq-langs a {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    color: #4A7C6F;
+    border: 1px solid #cfe6d8;
+    border-radius: 999px;
+    padding: 4px 10px;
+}
+
+.tq-langs a[aria-current="page"] {
+    background: #4A7C6F;
+    color: #fff;
+    border-color: #4A7C6F;
+}
+
+.tq-langs-line {
+    margin: 0 0 4px;
+    font-size: 0.9rem;
+    color: var(--lon-muted, #6e6477);
+}
+
+.tq-notice {
+    margin-top: 1.6rem;
+    background: #f7f4ea;
+    border: 1px solid #e4d9b4;
+    border-radius: 14px;
+    padding: 14px 16px;
+}
+
+.tq-notice p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #4a3f28;
+}
+
+.tq-dl {
+    margin: 0;
+}
+
+.tq-dl dt {
+    font-weight: 700;
+    margin: 0.9rem 0 0.25rem;
+    color: var(--lon-primary, #15131b);
+}
+
+.tq-dl dt:first-child {
+    margin-top: 0;
+}
+
+.tq-split-note {
+    margin-top: 1.6rem;
+    background: #f3faf6;
+    border: 1px solid #cfe6d8;
+    border-radius: 14px;
+    padding: 16px 18px;
+}
+
+.tq-split-note p {
+    margin: 0 0 0.6rem;
+    line-height: 1.55;
+}
+
+.tq-split-note p:last-child {
+    margin-bottom: 0;
+}
+
+.tq-guide-grid {
+    margin-top: 1rem;
+}
+
+.tq-cluster-title {
+    font-size: 1.05rem;
+    margin: 1.4rem 0 0.35rem;
+}
+
+.tq-cluster-lead {
+    margin: 0 0 0.75rem;
+    color: var(--lon-muted, #6e6477);
+    font-size: 0.95rem;
+}
+
+.tq-table-wrap {
+    overflow-x: auto;
+    margin: 0.4rem 0 0;
+}
+
+.tq-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+}
+
+.tq-table th,
+.tq-table td {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--lon-border, #e6d8ef);
+    vertical-align: top;
+}
+
+.tq-table th {
+    font-size: 0.78rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--lon-muted, #6e6477);
+}
+
+.guide-book {
+    margin: 2rem 0;
+}
+
+.guide-book-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.guide-book-card,
+.guide-book-card--t0 {
+    background: #cfe8f7;
+    color: #14110f;
+    border: 1px solid #a8d4ee;
+    border-radius: 0;
+    padding: 22px 22px 20px;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+
+.guide-book-card--t1 {
+    background: #ffe3a8;
+    border-color: #f0c56a;
+}
+
+.guide-book-card--t2 {
+    background: #ffd4b0;
+    border-color: #f0b48a;
+}
+
+.guide-book-chip {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #6b6b6b;
+    margin: 0 0 10px;
+}
+
+.guide-book-title {
+    font-size: 1.12rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    color: #14110f;
+    margin: 0 0 10px;
+}
+
+.guide-book-price {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #14110f;
+    margin: 0 0 4px;
+}
+
+.guide-book-note {
+    font-size: 0.86rem;
+    color: #6b6b6b;
+    line-height: 1.45;
+    margin: 0 0 18px;
+    flex: 1;
+}
+
+.guide-book-cta {
+    align-self: flex-start;
+    display: inline-block;
+    margin-top: auto;
+    padding: 10px 16px;
+    background: #14110f;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.guide-book-cta:hover {
+    opacity: 0.72;
+}
+
+.cq-article .guide-book-card a.guide-book-cta,
+.cq-article .guide-book-card a.guide-book-cta:hover {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+@media (max-width: 700px) {
+    .guide-book-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,230 @@
+/* Nutrition cluster — sits on top of consulta-pages.css */
+
+.nu-hero {
+    padding: calc(var(--lon-nav-h, 72px) + 40px) 0 28px;
+}
+
+.nu-hero-inner {
+    max-width: 42rem;
+}
+
+.nu-hero h1 {
+    font-size: clamp(1.85rem, 4.4vw, 2.55rem);
+    letter-spacing: -0.035em;
+    line-height: 1.12;
+    margin: 0 0 16px;
+}
+
+.nu-lead {
+    font-size: 1.08rem;
+    line-height: 1.55;
+    color: var(--lon-muted, #3d3148);
+    margin: 0 0 16px;
+}
+
+.nu-hero-meta {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #4A7C6F;
+    margin: 0 0 22px;
+}
+
+.nu-hero .qx-hero-actions,
+.nu-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.nu-section {
+    padding: 8px 0 40px;
+}
+
+.nu-section h2 {
+    font-size: 1.2rem;
+    margin: 0 0 14px;
+}
+
+.nu-card-grid {
+    display: grid;
+    gap: 12px;
+}
+
+@media (min-width: 720px) {
+    .nu-card-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.nu-card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 20px 18px;
+    background: #fff;
+    border: 1px solid rgba(21, 19, 27, 0.1);
+    border-left: 3px solid #4A7C6F;
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.nu-card:hover {
+    border-color: #4A7C6F;
+}
+
+.nu-card-price {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #4A7C6F;
+}
+
+.nu-card-label {
+    font-weight: 700;
+}
+
+.nu-card-desc {
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: var(--lon-muted, #6e6477);
+}
+
+.nu-faq {
+    display: grid;
+    gap: 1rem;
+}
+
+.nu-qa {
+    background: #fff;
+    border: 1px solid rgba(21, 19, 27, 0.1);
+    border-radius: 12px;
+    padding: 1rem 1.15rem;
+}
+
+.nu-qa h3 {
+    font-size: 1.02rem;
+    margin: 0 0 0.4rem;
+    line-height: 1.35;
+}
+
+.nu-qa p {
+    margin: 0;
+    line-height: 1.55;
+}
+
+.nu-bridge {
+    margin: 0 0 1.75rem;
+    padding: 1.25rem 1.2rem;
+    background: #f7fbf8;
+    border: 1px solid rgba(74, 124, 111, 0.22);
+    border-radius: 14px;
+}
+
+.nu-bridge-kicker {
+    margin: 0 0 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #4A7C6F;
+}
+
+.nu-bridge h2 {
+    font-size: 1.15rem;
+    margin: 0 0 8px;
+}
+
+.nu-bridge p {
+    margin: 0 0 12px;
+    line-height: 1.55;
+}
+
+.nu-related {
+    margin-top: 2rem;
+}
+
+.nu-related h2 {
+    font-size: 1.1rem;
+    margin: 0 0 12px;
+}
+
+.nu-related ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+}
+
+@media (min-width: 640px) {
+    .nu-related ul {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.nu-related a {
+    display: block;
+    padding: 12px 14px;
+    background: #fff;
+    border: 1px solid rgba(21, 19, 27, 0.1);
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    font-weight: 600;
+    font-size: 0.92rem;
+}
+
+.nu-related a:hover {
+    border-color: #4A7C6F;
+}
+
+.nu-cedula-note {
+    margin: -8px 0 18px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--lon-muted, #6e6477);
+}
+
+.nu-cedula-note a {
+    color: #4A7C6F;
+    font-weight: 600;
+}
+
+.nu-format-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    background: #fff;
+    border: 1px solid rgba(21, 19, 27, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    margin: 0 0 16px;
+}
+
+.nu-format-table caption {
+    text-align: left;
+    font-weight: 700;
+    margin: 0 0 8px;
+}
+
+.nu-format-table th,
+.nu-format-table td {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(21, 19, 27, 0.08);
+    vertical-align: top;
+}
+
+.nu-format-table th {
+    background: #f3f7f5;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #4A7C6F;
+}
+
+.nu-format-table tr:last-child td {
+    border-bottom: 0;
+}

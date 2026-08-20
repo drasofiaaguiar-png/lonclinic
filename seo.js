@@ -132,12 +132,17 @@ Sitemap: ${SITE_ORIGIN}/sitemap.xml
 `;
 }
 
-function urlEntry(loc, lastmod, changefreq, priority) {
+function urlEntry(loc, lastmod, changefreq, priority, alternates) {
+    const extra = Array.isArray(alternates) && alternates.length
+        ? `\n${alternates
+            .map((a) => `        <xhtml:link rel="alternate" hreflang="${xmlEscape(a.hreflang)}" href="${xmlEscape(a.href)}"/>`)
+            .join('\n')}`
+        : '';
     return `    <url>
         <loc>${xmlEscape(loc)}</loc>
         <lastmod>${xmlEscape(lastmod)}</lastmod>
         <changefreq>${xmlEscape(changefreq)}</changefreq>
-        <priority>${xmlEscape(priority)}</priority>
+        <priority>${xmlEscape(priority)}</priority>${extra}
     </url>`;
 }
 
@@ -156,6 +161,10 @@ function buildSitemapXml(origin) {
     const o = originOf(origin);
     const guide = require('./guide');
     const burnoutPages = require('./burnout-pages');
+    const consultaPages = require('./consulta-pages');
+    const queixas = require('./queixas');
+    const nutricao = require('./nutricao');
+    const touristPages = require('./tourist-pages');
 
     const today = new Date().toISOString().slice(0, 10);
     const entries = [];
@@ -163,6 +172,7 @@ function buildSitemapXml(origin) {
     const staticPages = [
         ['/', today, 'weekly', '1.0'],
         ['/travel-clinic', today, 'weekly', '1.0'],
+        ['/tourist-clinic', today, 'weekly', '0.92'],
         ['/consulta', today, 'weekly', '0.9'],
         ['/book-consultation', today, 'monthly', '0.8'],
         ['/burnout', today, 'weekly', '0.95'],
@@ -170,6 +180,8 @@ function buildSitemapXml(origin) {
         ['/burnout/teste', today, 'monthly', '0.9'],
         ['/clinica-anti-burnout', today, 'weekly', '0.9'],
         ['/saudemental', today, 'weekly', '0.9'],
+        ['/consultas', today, 'weekly', '0.92'],
+        ['/nutricao', today, 'weekly', '0.9'],
         ['/teste-personalidade', today, 'monthly', '0.8'],
         ['/triagem', today, 'monthly', '0.7'],
         ['/recrutamento/psicologia', today, 'monthly', '0.6'],
@@ -212,8 +224,58 @@ function buildSitemapXml(origin) {
         console.error('sitemap: burnout pages', err.message);
     }
 
+    try {
+        const pages = consultaPages.livePages();
+        for (const p of pages) {
+            const lastmod = String(p.dateModified || p.datePublished || today).slice(0, 10);
+            entries.push(urlEntry(`${o}/consulta/${encodeURIComponent(p.slug)}`, lastmod, 'weekly', '0.85'));
+        }
+    } catch (err) {
+        console.error('sitemap: consulta pages', err.message);
+    }
+
+    try {
+        for (const p of queixas.publishedPages()) {
+            const lastmod = String(p.dateModified || p.datePublished || today).slice(0, 10);
+            entries.push(urlEntry(`${o}/${encodeURIComponent(p.slug)}`, lastmod, 'weekly', '0.88'));
+        }
+    } catch (err) {
+        console.error('sitemap: queixas', err.message);
+    }
+
+    try {
+        for (const p of nutricao.livePages()) {
+            const lastmod = String(p.dateModified || p.datePublished || today).slice(0, 10);
+            entries.push(urlEntry(`${o}/nutricao/${encodeURIComponent(p.slug)}`, lastmod, 'weekly', '0.86'));
+        }
+    } catch (err) {
+        console.error('sitemap: nutricao', err.message);
+    }
+
+    try {
+        const pages = touristPages.livePages();
+        for (const p of pages) {
+            const lastmod = String(p.dateModified || p.datePublished || today).slice(0, 10);
+            const siblings = touristPages.groupPages(p.group, pages);
+            const alternates = siblings.map((s) => ({
+                hreflang: s.hreflang || s.lang,
+                href: `${o}/${encodeURIComponent(s.slug)}`
+            }));
+            const def = siblings.find((s) => s.lang === 'en');
+            if (def) {
+                alternates.push({
+                    hreflang: 'x-default',
+                    href: `${o}/${encodeURIComponent(def.slug)}`
+                });
+            }
+            entries.push(urlEntry(`${o}/${encodeURIComponent(p.slug)}`, lastmod, 'weekly', '0.86', alternates));
+        }
+    } catch (err) {
+        console.error('sitemap: tourist pages', err.message);
+    }
+
     return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${entries.join('\n')}
 </urlset>
 `;

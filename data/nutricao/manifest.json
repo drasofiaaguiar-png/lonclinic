@@ -1,0 +1,849 @@
+{
+  "updated": "2026-08-20",
+  "notes": "Mapa completo por objetivo/queixa. Volume ainda não validado em Keyword Planner. Perda de peso genérica e nutrição na gravidez: saturação alta — não são a primeira vaga. Bioimpedância só se o serviço existir. Cédula da Ordem dos Nutricionistas: preencher clinic.nutritionistName + nutritionistCedula quando o profissional estiver na equipa — o template já a destaca. GLP-1: nutrição de suporte, NÃO prescrição (desde ago/2025 restrita a 4 especialidades médicas em PT).",
+  "clinic": {
+    "reviewer": "rita-aguiar",
+    "nutritionistName": "",
+    "nutritionistCedula": "",
+    "nutritionistHref": "https://www.ordemdosnutricionistas.pt/"
+  },
+  "pages": [
+    {
+      "slug": "pos-parto",
+      "status": "live",
+      "wave": 1,
+      "month": "1-2",
+      "priority": "alta",
+      "group": "mulher",
+      "navLabel": "Nutrição pós-parto",
+      "h1": "Nutrição pós-parto: consulta online",
+      "title": "Nutrição pós-parto: consulta online | Lon Clinic",
+      "description": "Orientação nutricional pós-parto em consulta médica online. Amamentação, ferro, recuperação e quando não fazer dieta restritiva. A partir de 39 €. Médica identificada.",
+      "hubBlurb": "Janela de 4–6 semanas: recuperação, amamentação e o que não cortar.",
+      "condition": "Puerpério — orientação nutricional",
+      "bookingHref": "/marcar/clinica-geral?ref=nutricao-pos-parto",
+      "bookingLabel": "Marcar consulta — 39 €",
+      "price": "39 €",
+      "priceAmount": "39.00",
+      "priceNote": "Videoconsulta de clínica geral, 30 min. Casos mais complexos (anemia grave, restrições, bariátrica prévia) podem seguir para consulta de longevidade a 79 €.",
+      "ctaTitle": "Marcar orientação nutricional pós-parto",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "A nutrição pós-parto não é uma dieta para «voltar ao peso». É repor ferro, proteína, hidratação e energia numa fase em que o corpo ainda está a recuperar e, muitas vezes, a produzir leite.",
+        "Na Lon Clinic a orientação faz-se em consulta médica online, com a Drª Rita Aguiar. A sessão avulsa de clínica geral custa 39 €.",
+        "Se houver hemorragia intensa, febre, dor no peito, falta de ar ou pensamentos de te magoares, isto não é uma consulta de nutrição: liga 112 ou SNS 24."
+      ],
+      "forWhom": [
+        "Mulheres nas primeiras semanas ou meses após o parto, com ou sem amamentação",
+        "Quem está exausta, com fome constante ou a restringir comida cedo demais",
+        "Quem tem anemia, tiróide desregulada, SOP ou cirurgia bariátrica prévia e precisa de um plano seguro",
+        "Portuguesas no estrangeiro que querem orientação em português, no fuso de Lisboa"
+      ],
+      "safeOnline": [
+        "Recuperação habitual, sem sinais de emergência obstétrica",
+        "Dúvidas sobre o que comer a amamentar, suplementos e ritmo de refeições",
+        "Cansaço, prisão de ventre, refluxo ou dificuldade em organizar refeições com um recém-nascido",
+        "Vontade de perder peso mais tarde — não nas primeiras semanas, salvo indicação clínica"
+      ],
+      "goToUrgent": [
+        "Hemorragia abundante, febre, cheiro intenso dos loquios, dor abdominal forte",
+        "Dor no peito, falta de ar, perna inchada e dolorosa (suspeita de trombose ou embolia)",
+        "Cefaleia intensa com alterações visuais, tensão muito alta",
+        "Ideação suicida, confusão ou suspeita de psicose pós-parto — 112",
+        "Incapacidade de beber ou urinar, desidratação grave"
+      ],
+      "howItWorks": [
+        { "title": "Marcas a videoconsulta", "text": "Clínica geral, 39 €, preço visível antes de pagar." },
+        { "title": "Falamos do parto, da amamentação e das análises", "text": "Hemograma, ferro, tiróide e o que já estiver feito. Não se começa uma restrição às cegas." },
+        { "title": "Sais com orientações concretas", "text": "O que priorizar nas refeições, o que não cortar, suplementos só se forem indicados." },
+        { "title": "Encaminhamento se fizer falta", "text": "Nutricionista para plano muito detalhado; psicologia se houver ansiedade ou depressão pós-parto." }
+      ],
+      "whatChanges": [
+        "Nas primeiras 2 semanas: refeições com proteína e ferro, sem cortar calorias à força — sobretudo se estás a amamentar",
+        "Até 4–6 semanas: ritmo de refeições que cabe numa mão, suplementos só se as análises o pedirem",
+        "Perda de peso, se for o caso, discute-se depois da recuperação — não é o objectivo desta fase"
+      ],
+      "whatToBring": [
+        "Boletim de análises do puerpério ou do último trimestre, se as tiveres",
+        "Lista de suplementos e medicação (incluindo ferro e vitamina D)",
+        "Se amamentas: como está o leite e o ganho de peso do bebé (o que souberes, sem ser consulta de pediatria)",
+        "O que tens comido nos últimos 3 dias — fotos do telemóvel chegam"
+      ],
+      "psychologyBridge": {
+        "title": "Nutrição e psicologia perinatal andam juntas",
+        "text": "A janela pós-parto não é só ferro e proteína. Ansiedade, ruminação com o bebé e humor baixo mudam o apetite e a capacidade de se alimentar. A consulta médica trata o corpo; a psicologia trata o que está a impedir o descanso e a refeição.",
+        "href": "/ansiedade-pos-parto",
+        "label": "Ansiedade pós-parto: consulta de psicologia"
+      },
+      "related": [
+        "sop",
+        "pos-bariatrica",
+        { "href": "/ansiedade-pos-parto", "label": "Ansiedade pós-parto" },
+        { "href": "/saudemental", "label": "Psicologia online" }
+      ],
+      "faq": [
+        {
+          "q": "Posso fazer dieta para perder peso nas primeiras semanas após o parto?",
+          "a": "Em regra, não. O puerpério pede reposição, não défice calórico agressivo — sobretudo se estás a amamentar. A perda de peso sustentável discute-se mais tarde, com análises e um plano que não corte o leite nem a recuperação."
+        },
+        {
+          "q": "A nutrição pós-parto é uma consulta de nutricionista?",
+          "a": "Na Lon Clinic a primeira avaliação é médica (39 €). A médica faz orientação alimentar e pede exames quando preciso. Um plano muito detalhado pode ser encaminhado para nutricionista inscrita na Ordem dos Nutricionistas."
+        },
+        {
+          "q": "Preciso de suplementos se estou a amamentar?",
+          "a": "Depende das análises e da dieta. Ferro, vitamina D, iodo e ómega-3 entram com frequência na conversa, mas não se receitam todos por rotina. A consulta evita a lista genérica da internet."
+        },
+        {
+          "q": "Quanto custa?",
+          "a": "Consulta de clínica geral: 39 €. Consulta de longevidade (casos mais complexos): 79 €. Psicologia, se precisares: 60 €/sessão ou 54 €/semana."
+        }
+      ]
+    },
+    {
+      "slug": "pos-bariatrica",
+      "status": "live",
+      "wave": 1,
+      "month": "1-2",
+      "priority": "alta",
+      "group": "cirurgico",
+      "navLabel": "Nutrição pós-bariátrica",
+      "h1": "Nutrição pós-cirurgia bariátrica: consulta online",
+      "title": "Nutrição pós-bariátrica: consulta online | Lon Clinic",
+      "description": "Acompanhamento nutricional após cirurgia bariátrica, em consulta médica online. Proteína, vitaminas, dumping e sinais de alarme. A partir de 39 €; casos complexos 79 €.",
+      "hubBlurb": "Proteína, vitaminas e dumping — acompanhamento que quase não existe como página dedicada em PT.",
+      "condition": "Acompanhamento nutricional pós-cirurgia bariátrica",
+      "bookingHref": "/marcar/longevidade?ref=nutricao-pos-bariatrica",
+      "bookingLabel": "Marcar consulta — 79 €",
+      "price": "79 €",
+      "priceAmount": "79.00",
+      "priceNote": "Consulta de longevidade (mais tempo para medicação, análises e défices). Avaliação inicial de clínica geral disponível a 39 € se o caso for simples.",
+      "ctaTitle": "Marcar acompanhamento pós-bariátrico",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "Depois de uma cirurgia bariátrica, a alimentação deixa de ser «comer menos» e passa a ser um plano clínico: proteína suficiente, vitaminas, texturas por fase e vigilância de défices.",
+        "Na Lon Clinic este acompanhamento faz-se em consulta médica online. A consulta de longevidade custa 79 € e destina-se a quem já operou ou está em follow-up e precisa de orientação sem lista de espera hospitalar.",
+        "Vómitos persistentes, incapacidade de beber, dor abdominal intensa, febre ou fezes negras não se resolvem por videochamada: urgência."
+      ],
+      "forWhom": [
+        "Pessoas submetidas a bypass, sleeve ou outra cirurgia bariátrica, em qualquer fase de follow-up",
+        "Quem perdeu o contacto com a equipa hospitalar e precisa de repor vitaminas e proteína",
+        "Quem tem dumping, intolerâncias novas, queda de cabelo ou cansaço desproporcional",
+        "Quem pondera gravidez após bariátrica e precisa de repor défices antes"
+      ],
+      "safeOnline": [
+        "Follow-up estável, sem sinais de obstrução ou hemorragia",
+        "Dúvidas sobre suplementação, análises e organização das refeições",
+        "Dumping ligeiro a moderado, refluxo, obstipação ou intolerância a lactose após a cirurgia",
+        "Planeamento de gravidez ou nutrição pós-parto com história bariátrica"
+      ],
+      "goToUrgent": [
+        "Vómitos incoercíveis, incapacidade de ingerir líquidos, desidratação",
+        "Dor abdominal intensa, febre, icterícia",
+        "Fezes negras, vómito com sangue, tonturas ao levantar",
+        "Confusão, formigueiros graves, visão alterada (défice neurológico possível)",
+        "Suspeita de úlcera, fístula ou obstrução — avaliação presencial"
+      ],
+      "howItWorks": [
+        { "title": "Marcas a consulta de longevidade", "text": "79 €, videoconsulta. Traz o relatório da cirurgia e as últimas análises, se as tiveres." },
+        { "title": "Revisão de défices e suplementos", "text": "Ferro, B12, vitamina D, cálcio, proteínas — o que falta e o que está a ser tomado sem critério." },
+        { "title": "Plano por fase", "text": "Texturas, prioridade proteica, líquidos separados das refeições, sinais de dumping." },
+        { "title": "Encaminhamento", "text": "Nutricionista com experiência bariátrica quando o plano alimentar exigir detalhe diário; psicologia se a relação com a comida ou a imagem corporal estiver a emperrar." }
+      ],
+      "whatChanges": [
+        "Nas primeiras 4 semanas: proteína em cada refeição, líquidos separados, suplementos alinhados com as análises — não «comer menos»",
+        "Dumping e intolerâncias novas mapeados com o que realmente comes, não com uma lista genérica pós-cirurgia",
+        "Défices (ferro, B12, vitamina D) têm prazo de reavaliação em meses, não em dias"
+      ],
+      "whatToBring": [
+        "Relatório da cirurgia (sleeve, bypass ou outra) e a data",
+        "Últimas análises e a lista actual de vitaminas",
+        "Sintomas de dumping, vómitos ou queda de cabelo, com frequência aproximada",
+        "O que consegues comer num dia típico — texturas incluídas"
+      ],
+      "psychologyBridge": {
+        "title": "A cirurgia muda o estômago — não apaga o padrão alimentar",
+        "text": "Muita gente chega ao follow-up com culpa, grazing, medo de «esticar» a bolsa ou tristeza com a pele e a identidade. O stress e a ansiedade pioram dumping e petiscos. A nutrição médica trata défices; a psicologia trata o padrão.",
+        "href": "/gestao-de-stress",
+        "label": "Gestão de stress: consulta de psicologia"
+      },
+      "related": [
+        "pos-parto",
+        "intolerancias-alimentares",
+        { "href": "/gestao-de-stress", "label": "Gestão de stress" },
+        { "href": "/marcar/longevidade", "label": "Consulta de longevidade" }
+      ],
+      "faq": [
+        {
+          "q": "Ainda preciso de nutricionista anos depois da bariátrica?",
+          "a": "Muitas pessoas sim. Os défices de ferro, B12, vitamina D e proteína podem aparecer anos depois, sobretudo com vómitos, gravidez ou má adesão aos suplementos. A consulta médica avalia análises e ajusta; o plano do dia-a-dia pode ser com nutricionista."
+        },
+        {
+          "q": "O que é dumping?",
+          "a": "É um conjunto de sintomas — palpitações, suor, tontura, diarreia, mal-estar — quando o açúcar ou um volume grande chega demasiado depressa ao intestino. Ajusta-se com composição das refeições, ritmo e, às vezes, revisão da medicação. Não se ignora se for intenso."
+        },
+        {
+          "q": "Quanto custa o acompanhamento pós-bariátrico na Lon Clinic?",
+          "a": "Consulta de longevidade: 79 €. Clínica geral: 39 €, para questões mais simples. Psicologia: 60 €/sessão ou 54 €/semana."
+        },
+        {
+          "q": "Posso engravidar depois da bariátrica?",
+          "a": "Muitas pessoas podem, mas o timing e os défices importam. Gravidez com ferro, B12 ou folato baixos é um risco evitável. A consulta serve para repor antes de engravidar, não para substituir a vigilância obstétrica."
+        }
+      ]
+    },
+    {
+      "slug": "hashimoto",
+      "status": "live",
+      "wave": 2,
+      "month": "2-3",
+      "priority": "alta",
+      "group": "autoimune",
+      "navLabel": "Nutrição na Hashimoto",
+      "h1": "Nutrição na tiroidite de Hashimoto: consulta online",
+      "title": "Nutrição na tiroidite de Hashimoto | Lon Clinic",
+      "description": "Orientação nutricional na tiroidite de Hashimoto, em consulta médica online. Selénio, iodo, glúten e o que a evidência não apoia. A partir de 39 €. Médica identificada.",
+      "hubBlurb": "A autoimune da tiróide mais pesquisada — sem milagres de «dieta anti-Hashimoto».",
+      "condition": "Tiroidite de Hashimoto",
+      "bookingHref": "/marcar/longevidade?ref=nutricao-hashimoto",
+      "bookingLabel": "Marcar consulta — 79 €",
+      "price": "79 €",
+      "priceAmount": "79.00",
+      "priceNote": "Consulta de longevidade para cruzar medicação da tiróide, análises e alimentação. Clínica geral a 39 € se a questão for pontual.",
+      "ctaTitle": "Marcar orientação nutricional na Hashimoto",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "A tiroidite de Hashimoto é uma doença autoimune da tiróide. A base do tratamento é a avaliação médica e, quando indicado, a levotiroxina — não uma dieta da internet.",
+        "A alimentação pode ajudar sintomas, défices e o peso. Não substitui a hormona. Na Lon Clinic a orientação nutricional faz-se em consulta médica online (79 € na consulta de longevidade).",
+        "Não pares a medicação da tiróide por conta própria. Se houver dor cervical intensa, febre e tiróide muito dolorosa, isso pede avaliação urgente, não um plano alimentar."
+      ],
+      "forWhom": [
+        "Pessoas com Hashimoto confirmada, com ou sem hipotiroidismo",
+        "Quem está cansada, com obstipação, queda de cabelo ou peso resistente apesar da medicação",
+        "Quem viu «dieta sem glúten / sem lacticínios / protocolo autoimune» e quer saber o que tem evidência",
+        "Quem tem Hashimoto e SOP, celíaca ou pós-parto no mesmo quadro"
+      ],
+      "safeOnline": [
+        "Doença estável, com ou sem medicação, sem sinais de emergência",
+        "Dúvidas sobre iodo, selénio, soja, glúten e suplementos",
+        "Cansaço, obstipação, dificuldade em perder peso com TSH já tratada",
+        "Planeamento de gravidez com Hashimoto"
+      ],
+      "goToUrgent": [
+        "Dor intensa no pescoço, febre, mal-estar (tireoidite aguda ou outra causa)",
+        "Palpitações graves, dor no peito, falta de ar",
+        "Sonolência extrema, confusão, hipotermia (hipotiroidismo descompensado)",
+        "Não pares a levotiroxina para «testar uma dieta»"
+      ],
+      "howItWorks": [
+        { "title": "Marcas a consulta de longevidade", "text": "79 €. Traz TSH, T4 livre, anticorpos e a dose actual da medicação." },
+        { "title": "Separamos evidência de moda", "text": "O que ajustar na alimentação; o que não cortar sem diagnóstico (por exemplo glúten sem doença celíaca)." },
+        { "title": "Alinhamos medicação e refeições", "text": "A levotiroxina tem regras de toma. Café, soja e alguns suplementos interferem." },
+        { "title": "Stress e sono entram na conversa", "text": "Não porque «curam» a autoimunidade, mas porque pioram sintomas. Há encaminhamento para psicologia quando fizer sentido." }
+      ],
+      "whatChanges": [
+        "Nas primeiras 4 semanas: toma da levotiroxina alinhada com o pequeno-almoço e o café; cortes alimentares só com critério",
+        "Sintomas (cansaço, obstipação, peso) relidos à luz da TSH — não só de mais uma dieta",
+        "Glúten só sai se houver indicação (sintomas digestivos, rastreio de celíaca) — não por protocolo da internet"
+      ],
+      "whatToBring": [
+        "TSH, T4 livre e anticorpos, com datas",
+        "Dose actual da levotiroxina e a hora a que a tomas",
+        "Lista de suplementos (selénio, iodo, algas)",
+        "O que já cortaste da dieta e há quanto tempo"
+      ],
+      "psychologyBridge": {
+        "title": "O stress não causa Hashimoto — mas agrava o dia-a-dia",
+        "text": "A literatura reconhece o stress como factor que piora sintomas e a adesão ao tratamento. Raramente é oferecido em conjunto com a nutrição. Se o cansaço, a ansiedade ou o medo da medicação estão a mandar na comida, a psicologia trata essa parte.",
+        "href": "/gestao-de-stress",
+        "label": "Gestão de stress: consulta de psicologia"
+      },
+      "related": [
+        "doenca-celiaca",
+        "sop",
+        "pos-parto",
+        { "href": "/gestao-de-stress", "label": "Gestão de stress" }
+      ],
+      "faq": [
+        {
+          "q": "A dieta sem glúten cura a Hashimoto?",
+          "a": "Não. Sem doença celíaca ou alergia ao trigo, cortar o glúten não é tratamento da Hashimoto. Se houver sintomas digestivos, a consulta avalia se vale rastreio de doença celíaca — não uma restrição às cegas."
+        },
+        {
+          "q": "Devo tomar selénio?",
+          "a": "O selénio aparece em estudos sobre anticorpos; a dose e a duração não são um suplemento livre. Excesso também faz mal. A decisão é clínica, com a tua dieta e as tuas análises."
+        },
+        {
+          "q": "Posso comer iodo à vontade?",
+          "a": "Não. Iodo a mais pode piorar a autoimunidade da tiróide. Algas concentradas e suplementos de iodo sem indicação são um erro frequente. Sal iodado na comida normal costuma ser outra conversa."
+        },
+        {
+          "q": "Quanto custa?",
+          "a": "Consulta de longevidade: 79 €. Clínica geral: 39 €. Psicologia para gestão de stress: 60 €/sessão ou 54 €/semana."
+        }
+      ]
+    },
+    {
+      "slug": "doenca-celiaca",
+      "status": "live",
+      "wave": 2,
+      "month": "2-3",
+      "priority": "alta",
+      "group": "autoimune",
+      "navLabel": "Nutrição na doença celíaca",
+      "h1": "Nutrição na doença celíaca: consulta online",
+      "title": "Nutrição na doença celíaca: consulta online | Lon Clinic",
+      "description": "Orientação nutricional na doença celíaca. Não comes sem glúten antes do diagnóstico. Consulta médica online a partir de 39 €; plano complexo 79 €.",
+      "hubBlurb": "Sem glúten para sempre — mas só depois do diagnóstico. A página que os genéricos não fazem.",
+      "condition": "Doença celíaca",
+      "bookingHref": "/marcar/longevidade?ref=nutricao-doenca-celiaca",
+      "bookingLabel": "Marcar consulta — 79 €",
+      "price": "79 €",
+      "priceAmount": "79.00",
+      "priceNote": "Consulta de longevidade para diagnóstico, défices e dieta. Se ainda não tens serologias, a clínica geral (39 €) pode iniciar o rastreio — sem tirar o glúten antes dos exames.",
+      "ctaTitle": "Marcar orientação na doença celíaca",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "A doença celíaca é uma doença autoimune desencadeada pelo glúten. O tratamento é a dieta sem glúten rigorosa e para a vida — não uma «redução».",
+        "O erro mais caro é tirar o glúten antes das análises e da biopsia, quando indicada. Isso falseia o diagnóstico. Na Lon Clinic a consulta médica online (79 €) ordena essa sequência.",
+        "Diarreia com sangue, desidratação, emagrecimento muito rápido ou vómitos incoercíveis pedem urgência, não um plano alimentar por vídeo."
+      ],
+      "forWhom": [
+        "Pessoas com doença celíaca confirmada que precisam de repor défices e rever contaminação cruzada",
+        "Quem tem sintomas e ainda não fez serologias — e não deve começar a dieta sozinha",
+        "Familiares de celíacos, ou pessoas com Hashimoto, que perguntam se devem rastrear",
+        "Quem já está «sem glúten» há meses sem diagnóstico e quer desfazer o nó"
+      ],
+      "safeOnline": [
+        "Diagnóstico já feito, dúvidas sobre aveia, etiquetas, restaurantes e vitaminas",
+        "Anemia, osteopenia, défice de ferro ou B12 no follow-up",
+        "Sintomas persistentes apesar da dieta — para rever adesão e outras causas",
+        "Início de rastreio, mantendo glúten na alimentação até o médico dizer o contrário"
+      ],
+      "goToUrgent": [
+        "Desidratação, sangue nas fezes, febre, dor abdominal aguda",
+        "Emagrecimento muito rápido com incapacidade de se alimentar",
+        "Reacção alérgica grave (anafilaxia) a um alimento — 112; isso não é celíaca típica"
+      ],
+      "howItWorks": [
+        { "title": "Não tires o glúten antes da consulta se ainda não tens diagnóstico", "text": "As serologias precisam de glúten na dieta. A médica explica a sequência." },
+        { "title": "Consulta de longevidade, 79 €", "text": "História, análises, défices, outras autoimunes (tiróide é frequente)." },
+        { "title": "Dieta sem glúten, se o diagnóstico estiver fechado", "text": "Não é «menos pão». É zero glúten, incluindo vestígios. Nutricionista com experiência em celíaca é muitas vezes o passo seguinte." },
+        { "title": "Stress e isolamento", "text": "Comer fora, viagens, medo de contaminar: a psicologia ajuda quando a dieta se tornou ansiedade." }
+      ],
+      "whatChanges": [
+        "Se ainda não tens diagnóstico: manténs glúten até às serologias — a primeira «mudança» é não começar a dieta cedo demais",
+        "Com diagnóstico fechado: zero glúten, incluindo vestígios, e reposição de ferro/B12/vitamina D se as análises o pedirem",
+        "Sintomas persistentes às 4–8 semanas de dieta rigorosa: rever contaminação e outras causas, não apertar mais restrições às cegas"
+      ],
+      "whatToBring": [
+        "Serologias de celíaca e, se existir, resultado da biopsia",
+        "Lista do que já está «sem glúten» em casa — incluindo aveia e molhos",
+        "Análises de ferro, B12, folato e vitamina D",
+        "Sintomas digestivos actuais, mesmo que te pareçam «normais»"
+      ],
+      "psychologyBridge": {
+        "title": "A dieta sem glúten também é carga mental",
+        "text": "Hipervigilância no prato, vergonha em jantares, stress em viagem: o factor psicológico é real e raramente entra na consulta de nutrição genérica. Se o medo de contaminar está a encolher a vida, há acompanhamento psicológico.",
+        "href": "/gestao-de-stress",
+        "label": "Gestão de stress: consulta de psicologia"
+      },
+      "related": [
+        "hashimoto",
+        "intolerancias-alimentares",
+        { "href": "/gestao-de-stress", "label": "Gestão de stress" },
+        { "href": "/consulta", "label": "Consulta médica" }
+      ],
+      "faq": [
+        {
+          "q": "Posso começar a dieta sem glúten e depois fazer as análises?",
+          "a": "Não, se ainda não tens diagnóstico. Sem glúten na dieta, as serologias e a biopsia podem ficar negativas e o diagnóstico perde-se. Mantém glúten até o médico orientar o contrário."
+        },
+        {
+          "q": "Intolerância ao glúten e doença celíaca são a mesma coisa?",
+          "a": "Não. A doença celíaca é autoimune e exige dieta rigorosa e follow-up. A sensibilidade ao glúten não celíaca é outro quadro, depois de se excluir celíaca e alergia ao trigo. A página de intolerâncias alimentares cobre essa distinção."
+        },
+        {
+          "q": "A aveia é permitida?",
+          "a": "Aveia pura, certificada sem glúten, é tolerada por muitas pessoas com celíaca. Aveia contaminada não. A decisão é individual e clínica."
+        },
+        {
+          "q": "Quanto custa?",
+          "a": "Consulta de longevidade: 79 €. Clínica geral para iniciar rastreio: 39 €. Psicologia: 60 €/sessão ou 54 €/semana."
+        }
+      ]
+    },
+    {
+      "slug": "intolerancias-alimentares",
+      "status": "live",
+      "wave": 3,
+      "month": "3-4",
+      "priority": "alta",
+      "group": "intolerancias",
+      "navLabel": "Intolerâncias alimentares",
+      "h1": "Nutrição em intolerâncias alimentares: consulta online",
+      "title": "Intolerâncias alimentares (lactose, glúten, histamina) | Lon Clinic",
+      "description": "Consulta médica online para intolerâncias alimentares: lactose, glúten e histamina. Distinguir alergia, celíaca e moda de testes IgG. A partir de 39 €.",
+      "hubBlurb": "Lactose, glúten, histamina — conteúdo disperso na concorrência; aqui é uma página só, com preço.",
+      "condition": "Intolerâncias alimentares",
+      "bookingHref": "/marcar/clinica-geral?ref=nutricao-intolerancias",
+      "bookingLabel": "Marcar consulta — 39 €",
+      "price": "39 €",
+      "priceAmount": "39.00",
+      "priceNote": "Clínica geral, 39 €. Se o quadro for complexo (várias restrições, perda de peso, suspeita de celíaca), a consulta de longevidade a 79 € dá mais tempo.",
+      "ctaTitle": "Marcar consulta para intolerâncias",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "Intolerância alimentar não é alergia. A alergia pode matar (anafilaxia). A intolerância — lactose, frutose, histamina — provoca sintomas, muitas vezes digestivos, sem o mesmo mecanismo imune imediato.",
+        "Na Lon Clinic a consulta médica online (39 €) serve para distinguir moda de diagnóstico: testes IgG a dezenas de alimentos não substituem uma história clínica e, quando indicado, testes validados.",
+        "Inchaço da língua, pieira, urticária generalizada ou queda de tensão depois de um alimento: 112. Isso não se trata por um plano de exclusão em casa."
+      ],
+      "forWhom": [
+        "Quem tem inchaço, gases, diarreia ou dor após lacticínios, pão ou refeições ricas em histamina",
+        "Quem fez um teste de «intolerâncias» pago e ficou com uma lista de 20 alimentos proibidos",
+        "Quem já cortou glúten sem diagnóstico de celíaca e quer saber se fez bem",
+        "Quem tem SOP, Hashimoto ou pós-bariátrica e acumulou restrições sem critério"
+      ],
+      "safeOnline": [
+        "Sintomas digestivos recorrentes sem sinais de alarme",
+        "Dúvidas sobre lactose, histamina, FODMAP e glúten",
+        "Rever uma lista de exclusão que está a empobrecer a dieta",
+        "Distinguir intolerância de ansiedade intestinal (o stress muda o intestino)"
+      ],
+      "goToUrgent": [
+        "Sinais de anafilaxia: dificuldade em respirar, inchaço da face, urticária generalizada, tontura — 112",
+        "Sangue nas fezes, febre, emagrecimento inexplicado, anemia grave",
+        "Vómitos incoercíveis, desidratação"
+      ],
+      "howItWorks": [
+        { "title": "Marcas clínica geral, 39 €", "text": "História do que comes, do que cortaste e do que acontece depois." },
+        { "title": "Não começamos por uma dieta de 20 exclusões", "text": "Lactose, glúten e histamina têm lógicas diferentes. Celíaca tira-se de cima da mesa antes de «intolerância ao glúten»." },
+        { "title": "Testes com critério", "text": "Serologias, hidrogénio expirado, ou nada — consoante o caso. Testes IgG comercializados raramente mudam decisões sérias." },
+        { "title": "Reintrodução", "text": "O objectivo é a dieta mais larga que toleras, não a mais curta." }
+      ],
+      "whatChanges": [
+        "Nas primeiras 2 semanas: uma hipótese de cada vez (lactose, glúten ou histamina) — não 20 exclusões no mesmo dia",
+        "Até 4 semanas: reintrodução guiada do que for tolerado; a dieta larga é o êxito, não a lista curta",
+        "Testes IgG comerciais não ditam o plano"
+      ],
+      "whatToBring": [
+        "A lista de alimentos que já cortaste e desde quando",
+        "PDFs de testes de intolerância, se os tiveres — para os pôr em contexto, não para os seguir à letra",
+        "Sintomas (inchaço, diarreia, urticária, cefaleia) e a relação temporal com as refeições",
+        "Análises recentes, se existirem"
+      ],
+      "psychologyBridge": {
+        "title": "O intestino também responde ao stress",
+        "text": "Restrição atrás de restrição, medo de comer fora, hipervigilância: o padrão parece «intolerância» e às vezes é ansiedade a mandar no tubo digestivo. Sem substituir o diagnóstico médico, a psicologia trata essa volta.",
+        "href": "/gestao-de-stress",
+        "label": "Gestão de stress: consulta de psicologia"
+      },
+      "related": [
+        "doenca-celiaca",
+        "hashimoto",
+        "sop",
+        { "href": "/gestao-de-stress", "label": "Gestão de stress" }
+      ],
+      "faq": [
+        {
+          "q": "Os testes de intolerância alimentar de sangue (IgG) servem?",
+          "a": "Na prática clínica séria, quase nunca. A IgG a alimentos costuma reflectir exposição, não doença. Decidir uma dieta com base nisso empobrece a alimentação sem evidência. A consulta parte da história, não do PDF do laboratório comercial."
+        },
+        {
+          "q": "Intolerância à lactose precisa de eliminar todos os laticínios?",
+          "a": "Muitas pessoas toleram iogurte, queijos curados ou lactase na refeição. A restrição total é o último passo, não o primeiro."
+        },
+        {
+          "q": "O que é intolerância à histamina?",
+          "a": "É um padrão de sintomas (rubor, urticária, dor de cabeça, mal-estar) ligado a alimentos fermentados, conservas, vinho ou queijos — sem ser alergia IgE clássica. O diagnóstico é clínico e de exclusão. Dietas muito restritivas sem orientação pioram o quadro."
+        },
+        {
+          "q": "Quanto custa?",
+          "a": "Clínica geral: 39 €. Longevidade, se o caso for complexo: 79 €. Psicologia: 60 €/sessão ou 54 €/semana."
+        }
+      ]
+    },
+    {
+      "slug": "sop",
+      "status": "live",
+      "wave": 3,
+      "month": "3-4",
+      "priority": "media-alta",
+      "group": "mulher",
+      "navLabel": "Nutrição no SOP",
+      "h1": "Nutrição no SOP (síndrome do ovário poliquístico): consulta online",
+      "title": "Nutrição no SOP: consulta online | Lon Clinic",
+      "description": "Orientação nutricional no SOP em consulta médica online. Insulina, ciclo, peso e o que as dietas milagrosas não fazem. A partir de 39 €. Ligação à psicologia.",
+      "hubBlurb": "Comunidade activa, pouco conteúdo dedicado em português — insulina, ciclo e autoestima.",
+      "condition": "Síndrome dos ovários poliquísticos (SOP)",
+      "bookingHref": "/marcar/clinica-geral?ref=nutricao-sop",
+      "bookingLabel": "Marcar consulta — 39 €",
+      "price": "39 €",
+      "priceAmount": "39.00",
+      "priceNote": "Clínica geral, 39 €. Se houver Hashimoto, bariátrica ou desejo de gravidez com várias frentes, a consulta de longevidade a 79 € é mais adequada.",
+      "ctaTitle": "Marcar orientação nutricional no SOP",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "O SOP é uma condição hormonal frequente. A alimentação não o «cura», mas a resistência à insulina, o peso e o padrão das refeições influenciam ciclo, acne e energia.",
+        "Na Lon Clinic a orientação nutricional no SOP faz-se em consulta médica online (39 €). Sem protocolo milagroso, sem cortar cinco grupos de alimentos no primeiro dia.",
+        "Dor pélvica aguda, hemorragia muito intensa ou gravidez possível com dor: urgência ginecológica, não nutrição."
+      ],
+      "forWhom": [
+        "Mulheres com SOP diagnosticado que querem um plano alimentar realista",
+        "Quem já tentou low carb extremo, jejum agressivo ou «anti-inflamatório» da internet",
+        "Quem tem SOP e Hashimoto, infertilidade em estudo, ou ansiedade com o corpo",
+        "Quem está no pós-parto com SOP e precisa de repor, não de restringir"
+      ],
+      "safeOnline": [
+        "SOP estável, sem emergência ginecológica",
+        "Dificuldade em perder peso, fome entre refeições, sono mau, craving de doce",
+        "Dúvidas sobre hidratos, laticínios, inositol e suplementos da moda",
+        "Querer alinhar comida com medicação (metformina, contracepção, etc.)"
+      ],
+      "goToUrgent": [
+        "Dor pélvica súbita e intensa, desmaio, hemorragia muito abundante",
+        "Suspeita de gravidez ectópica ou torção de quisto — 112 ou urgência",
+        "Depressão grave ou ideação suicida ligada à imagem corporal — 112 e psicologia de urgência"
+      ],
+      "howItWorks": [
+        { "title": "Marcas clínica geral, 39 €", "text": "Ciclo, análises (glicose, HbA1c, lípidos, tiróide), medicação e o que já experimentaste." },
+        { "title": "Prioridade: regularidade, não perfeição", "text": "Proteína, fibra, hidratos que toleras, menos caos entre refeições. Não um PDF de 1200 kcal." },
+        { "title": "Suplementos com critério", "text": "Inositol e outros só se fizerem sentido no teu caso. Não a caixa toda da farmácia." },
+        { "title": "Psicologia se o SOP estiver a comer a autoestima", "text": "Acne, pêlo, peso, infertilidade: a parte emocional é clínica, não vaidade." }
+      ],
+      "whatChanges": [
+        "Nas primeiras 4 semanas: refeições regulares com proteína e fibra — menos caos entre refeições, não um milagre de 4 kg",
+        "Inositol e outros suplementos só se fizerem sentido no teu caso, não a caixa toda da farmácia",
+        "Ciclo, acne e peso avaliam-se em meses; a consulta não promete ovulação na semana seguinte"
+      ],
+      "whatToBring": [
+        "Análises: glicose, HbA1c, lípidos, tiróide, se as tiveres",
+        "Como é o teu ciclo (ou a ausência dele) e a medicação actual",
+        "O que já experimentaste (low carb, jejum, inositol)",
+        "Um dia típico de refeições e de fome entre elas"
+      ],
+      "psychologyBridge": {
+        "title": "SOP não é só insulina — é também autoestima e ansiedade",
+        "text": "No mercado português quase ninguém cruza nutrição do SOP com psicologia. A consulta médica trata metabolismo e ciclo; a psicologia trata a vergonha, o controlo da comida e a ansiedade com o corpo.",
+        "href": "/saudemental",
+        "label": "Acompanhamento psicológico online"
+      },
+      "related": [
+        "pos-parto",
+        "hashimoto",
+        "diabetes-tipo-2",
+        { "href": "/saudemental", "label": "Psicologia online" }
+      ],
+      "faq": [
+        {
+          "q": "Qual é a melhor dieta para SOP?",
+          "a": "Não existe uma dieta única. Padrões com menos açúcar livre, mais proteína e fibra, e refeições regulares ajudam muita gente com resistência à insulina. Low carb extremo e jejuns longos não são obrigatórios e pioram algumas pessoas."
+        },
+        {
+          "q": "O inositol substitui a consulta?",
+          "a": "Não. Pode ser útil em casos seleccionados. Não substitui diagnóstico, rastreio de diabetes nem a conversa sobre contracepção, gravidez ou tiróide."
+        },
+        {
+          "q": "SOP dá para tratar só com nutrição?",
+          "a": "A nutrição é uma perna. Medicação, exercício, sono e, muitas vezes, psicologia são as outras. A consulta médica diz quais pesam no teu caso."
+        },
+        {
+          "q": "Quanto custa?",
+          "a": "Clínica geral: 39 €. Longevidade: 79 €. Psicologia: 60 €/sessão ou 54 €/semana."
+        }
+      ]
+    },
+    {
+      "slug": "diabetes-tipo-2",
+      "status": "live",
+      "wave": 2,
+      "month": "2-3",
+      "priority": "alta",
+      "group": "metabolico",
+      "navLabel": "Nutrição na diabetes tipo 2",
+      "h1": "Nutrição na diabetes tipo 2: consulta online",
+      "title": "Nutrição na Diabetes Tipo 2: Consulta Online | Lon Clinic",
+      "description": "Como estruturamos um plano alimentar para diabetes tipo 2 nas primeiras 4 semanas. Consulta médica online, 39 € ou 79 €. Sem PDF genérico. Médica identificada.",
+      "hubBlurb": "As primeiras 4 semanas, passo a passo — não «a nutrição é importante para a diabetes».",
+      "condition": "Diabetes mellitus tipo 2",
+      "bookingHref": "/marcar/clinica-geral?ref=nutricao-diabetes-tipo-2",
+      "bookingLabel": "Marcar consulta — 39 €",
+      "price": "39 €",
+      "priceAmount": "39.00",
+      "followUpPrice": "39 €",
+      "priceNote": "Consulta única de clínica geral, 39 €. Se houver várias medicações, hipoglicemias ou SOP/bariátrica em conjunto, a consulta de longevidade a 79 € dá mais tempo. Follow-up é nova consulta, sem pacote obrigatório.",
+      "ctaTitle": "Marcar orientação nutricional na diabetes tipo 2",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "A consulta de nutrição na diabetes tipo 2 na Lon Clinic não é um texto sobre «a importância da alimentação». É um plano para as primeiras 4 semanas: o que muda no prato, o que se mede, e o que não se promete.",
+        "A sessão é médica, online, a 39 € (clínica geral) ou 79 € (longevidade, se o caso for complexo). Não substitui o endocrinologista nem a prescrição de injectáveis.",
+        "Hipoglicemia grave, vómitos com cetose, confusão ou dor no peito: 112 — não uma videochamada de nutrição."
+      ],
+      "forWhom": [
+        "Pessoas com diabetes tipo 2 que querem um plano das primeiras semanas, não um folheto",
+        "Quem está em metformina ou outra medicação oral e não sabe o que fazer às refeições",
+        "Quem tem SOP, bariátrica ou está em GLP-1 e precisa de cruzar as frentes",
+        "Portugueses no estrangeiro que querem a conversa em português"
+      ],
+      "whatChanges": [
+        "Semana 1: mapa do que comes agora, medicação, hipoglicemias e análises (HbA1c, glicose, lípidos) — ainda sem uma dieta de 40 regras",
+        "Semanas 2–4: 2 a 4 mudanças concretas (horário das refeições, proteína, hidratos que já comes, álcool) com critério para a tua medicação",
+        "Aos 3 meses: o sítio certo para olhar de novo para a HbA1c — não à sétima noite de «dieta»"
+      ],
+      "whatToBring": [
+        "HbA1c, glicose em jejum e lípidos, se as tiveres",
+        "Lista de medicação para a diabetes (incluindo injectáveis) e doses",
+        "Registo de hipoglicemias, se acontecem",
+        "Um dia típico de refeições — fotos chegam"
+      ],
+      "safeOnline": [
+        "Diabetes tipo 2 estável, sem descompensação aguda",
+        "Dúvidas sobre hidratos, horários e o que beber",
+        "Cruzar alimentação com SOP, bariátrica ou Ozempic/Wegovy já prescritos por médico"
+      ],
+      "goToUrgent": [
+        "Hipoglicemia grave (confusão, convulsão, perda de conhecimento) — 112",
+        "Vómitos, desidratação, hálito a acetona, dor abdominal intensa",
+        "Dor no peito, falta de ar, défice neurológico súbito"
+      ],
+      "howItWorks": [
+        { "title": "Consulta única, preço visível", "text": "39 € ou 79 €. Não há pacote de 12 semanas escondido no checkout." },
+        { "title": "As primeiras 4 semanas ficam escritas", "text": "O que mudar, o que manter, o que medir. Não um PDF igual para toda a gente." },
+        { "title": "Follow-up se fizer sentido", "text": "Nova consulta, mesmo preço. Sem fidelização." },
+        { "title": "Encaminhamento", "text": "Endocrinologia se a medicação o pedir. Nutricionista se o plano diário exigir detalhe. Psicologia se a comida for o sítio do stress." }
+      ],
+      "psychologyBridge": {
+        "title": "A HbA1c também sofre com o stress",
+        "text": "Ruminação, turnos, emigração e burnout mudam o lanche das 23h. A nutrição trata o prato; a psicologia trata o padrão que o enche.",
+        "href": "/gestao-de-stress",
+        "label": "Gestão de stress: consulta de psicologia"
+      },
+      "related": [
+        "sop",
+        "ozempic-wegovy",
+        "pos-bariatrica",
+        { "href": "/gestao-de-stress", "label": "Gestão de stress" }
+      ],
+      "faq": [
+        {
+          "q": "Qual é o plano alimentar das primeiras 4 semanas?",
+          "a": "Não há um menu único. Na Lon Clinic a semana 1 serve para mapear o que já comes e a medicação. Nas semanas 2 a 4 mudam-se poucas coisas, concretas, alinhadas com o risco de hipoglicemia. Quem promete um plano igual para toda a gente na diabetes tipo 2 está a vender um PDF, não uma consulta."
+        },
+        {
+          "q": "A consulta de nutrição substitui o endocrinologista?",
+          "a": "Não. Também não prescreve Ozempic ou Wegovy. Desde agosto de 2025, em Portugal, esses injectáveis estão restritos a especialidades médicas definidas. A nutrição é o acompanhamento complementar."
+        },
+        {
+          "q": "Diabetes tipo 1 é a mesma página?",
+          "a": "Não. O tipo 1 tem lógica de insulina e hipoglicemia diferente. Esta página é tipo 2. Tipo 1 pede consulta médica individual — não um artigo genérico."
+        },
+        {
+          "q": "Quanto custa?",
+          "a": "Consulta única: 39 € (clínica geral) ou 79 € (longevidade). Follow-up: nova consulta, mesmo preço, sem pacote obrigatório. Psicologia: 60 € ou 54 €/semana."
+        }
+      ]
+    },
+    {
+      "slug": "fodmap",
+      "status": "live",
+      "wave": 3,
+      "month": "3-4",
+      "priority": "alta",
+      "group": "digestivo",
+      "navLabel": "Dieta FODMAP / SII",
+      "h1": "Síndrome do intestino irritável: dieta FODMAP em consulta online",
+      "title": "Dieta FODMAP e intestino irritável: consulta online | Lon Clinic",
+      "description": "Dieta FODMAP para síndrome do intestino irritável: eliminação e reintrodução, não uma restrição para a vida. Consulta médica online a partir de 39 €.",
+      "hubBlurb": "Eliminação curta, reintrodução guiada — FODMAP não é dieta para sempre.",
+      "condition": "Síndrome do intestino irritável",
+      "bookingHref": "/marcar/clinica-geral?ref=nutricao-fodmap",
+      "bookingLabel": "Marcar consulta — 39 €",
+      "price": "39 €",
+      "priceAmount": "39.00",
+      "priceNote": "Clínica geral, 39 €. Se houver várias restrições, perda de peso ou suspeita de celíaca, a consulta de longevidade a 79 € é mais adequada.",
+      "ctaTitle": "Marcar orientação FODMAP",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "A dieta FODMAP na síndrome do intestino irritável é um teste clínico em fases: redução temporária, depois reintrodução. Não é uma lista de alimentos proibidos para o resto da vida.",
+        "Na Lon Clinic a orientação faz-se em consulta médica online (39 €). Antes de restringir, exclui-se o que não é SII — incluindo doença celíaca, quando indicado.",
+        "Sangue nas fezes, febre, emagrecimento inexplicado ou anemia: isto sai do FODMAP e entra na investigação médica, por vezes presencial."
+      ],
+      "forWhom": [
+        "Quem tem diagnóstico de SII, ou sintomas compatíveis já vistos por um médico",
+        "Quem está «sem FODMAP» há meses e já não sabe o que pode comer",
+        "Quem misturou FODMAP com sem glúten e sem lactose sem critério",
+        "Quem tem ansiedade intestinal e precisa dos dois lados (médico e psicologia)"
+      ],
+      "whatChanges": [
+        "Fase 1 (cerca de 2–6 semanas, não eternamente): redução dos FODMAP principais, com um mínimo de alimentos ainda no prato",
+        "Fase 2: reintrodução grupo a grupo, para descobrir o que realmente te piora",
+        "Fase 3: a dieta mais larga possível — o êxito é recuperar alimentos, não coleccionar proibições"
+      ],
+      "whatToBring": [
+        "O que o médico já disse (SII, colonoscopia, análises)",
+        "A lista actual de cortes (glúten, lactose, FODMAP, histamina)",
+        "Sintomas: inchaço, dor, diarreia, obstipação — e a relação com as refeições",
+        "Peso recente: se estás a emagrecer sem querer, diz"
+      ],
+      "safeOnline": [
+        "Sintomas de SII sem sinais de alarme",
+        "Dúvidas sobre alho, cebola, trigo, lacticínios e polióis",
+        "Reintrodução depois de uma restrição demasiado longa"
+      ],
+      "goToUrgent": [
+        "Sangue nas fezes, febre, emagrecimento, anemia, início após os 50 anos sem investigação",
+        "Dor aguda intensa, vómitos, obstrução",
+        "Anafilaxia a um alimento — 112"
+      ],
+      "howItWorks": [
+        { "title": "Primeiro, o diagnóstico", "text": "FODMAP não trata celíaca, IBD ou cancro. Se faltar investigação, começa-se aí." },
+        { "title": "Depois, fases — não uma lista eterna", "text": "Eliminação curta, reintrodução, personalização." },
+        { "title": "Follow-up", "text": "Nova consulta na reintrodução, se precisares. Sem pacote de 12 semanas obrigatório." }
+      ],
+      "psychologyBridge": {
+        "title": "O intestino irritável também é alerta",
+        "text": "Medo de comer fora, mapa das casas de banho, restrição que vira ansiedade: a FODMAP mal feita piora o padrão. A psicologia trata essa volta, sem negar os sintomas físicos.",
+        "href": "/gestao-de-stress",
+        "label": "Gestão de stress: consulta de psicologia"
+      },
+      "related": [
+        "intolerancias-alimentares",
+        "doenca-celiaca",
+        { "href": "/consulta/refluxo", "label": "Consulta médica de refluxo" },
+        { "href": "/gestao-de-stress", "label": "Gestão de stress" }
+      ],
+      "faq": [
+        {
+          "q": "A dieta FODMAP é para sempre?",
+          "a": "Não. A fase restrita é curta e serve para identificar gatilhos. Ficar em FODMAP baixo para sempre empobrece a dieta e a flora. A consulta existe para a reintrodução, que a maior parte das páginas genéricas omite."
+        },
+        {
+          "q": "Posso fazer FODMAP e sem glúten ao mesmo tempo?",
+          "a": "Só com critério. Sem glúten para sempre pertence à doença celíaca, depois do diagnóstico. Empilhar restrições é o erro mais comum — e o mais difícil de desfazer."
+        },
+        {
+          "q": "Quanto custa?",
+          "a": "Consulta única: 39 €. Casos complexos: 79 €. Follow-up: nova consulta, sem pacote obrigatório."
+        }
+      ]
+    },
+    {
+      "slug": "ozempic-wegovy",
+      "status": "live",
+      "wave": 4,
+      "month": "3-4",
+      "priority": "media-alta",
+      "group": "nicho",
+      "navLabel": "Nutrição com Ozempic/Wegovy",
+      "h1": "Acompanhamento nutricional com Ozempic ou Wegovy: consulta online",
+      "title": "Nutrição com Ozempic/Wegovy: consulta online | Lon Clinic",
+      "description": "Nutrição de suporte a Ozempic e Wegovy: proteína, náusea, massa magra e manutenção. Não prescrevemos o injectável. Consulta online a partir de 39 €.",
+      "hubBlurb": "Suporte alimentar ao injectável — proteína, efeitos secundários, manutenção. Sem prescrição.",
+      "condition": "Acompanhamento nutricional sob agonistas do GLP-1",
+      "bookingHref": "/marcar/clinica-geral?ref=nutricao-ozempic-wegovy",
+      "bookingLabel": "Marcar consulta — 39 €",
+      "price": "39 €",
+      "priceAmount": "39.00",
+      "priceNote": "Consulta de suporte nutricional, 39 € (ou 79 € se o caso for complexo). A Lon Clinic não substitui a prescrição do injectável. Desde agosto de 2025, em Portugal, a prescrição de injectáveis para diabetes/perda de peso está restrita a especialidades médicas definidas.",
+      "ctaTitle": "Marcar nutrição de suporte a Ozempic/Wegovy",
+      "datePublished": "2026-08-20",
+      "dateModified": "2026-08-20",
+      "lead": [
+        "O acompanhamento nutricional com Ozempic ou Wegovy trata o que o injectável não trata sozinho: proteína suficiente, náusea, obstipação, perda de massa magra e o que acontece quando a dose pára.",
+        "Na Lon Clinic isto é consulta médica online de suporte (39 € ou 79 €). Não é prescrição do fármaco. Desde agosto de 2025, em Portugal, esses injectáveis estão restritos a quatro especialidades médicas — a nutrição não pode substituir isso.",
+        "Alergia grave, vómitos incoercíveis, dor abdominal intensa (suspeita de pancreatite) ou desidratação: urgência, não um ajuste de lanche."
+      ],
+      "forWhom": [
+        "Quem já tem Ozempic, Wegovy ou outro GLP-1 prescrito por médico e precisa de comer com náusea e porções pequenas",
+        "Quem perdeu peso depressa e está a perder músculo ou cabelo",
+        "Quem vai parar o fármaco e tem medo de recuperar tudo à mesma velocidade",
+        "Quem tem diabetes tipo 2 ou SOP no mesmo quadro"
+      ],
+      "whatChanges": [
+        "Nas primeiras 4 semanas: proteína em todas as refeições que ainda cabem, líquidos, e estratégias para náusea — não um défice calórico extra em cima do injectável",
+        "Força e massa magra entram na conversa cedo; o número da balança sozinho engana",
+        "Manutenção pós-tratamento: plano para quando o apetite volta — sem moralismo"
+      ],
+      "whatToBring": [
+        "Quem prescreveu o fármaco, a dose e a data de início",
+        "Efeitos secundários actuais (náusea, obstipação, refluxo, fadiga)",
+        "Peso de partida e peso actual, se os souberes",
+        "O que ainda consegues comer num dia típico"
+      ],
+      "safeOnline": [
+        "Fármaco já prescrito, efeitos secundários digestivos ligeiros a moderados",
+        "Dúvidas sobre proteína, vitaminas e treino de força",
+        "Planeamento da manutenção"
+      ],
+      "goToUrgent": [
+        "Dor abdominal intensa, vómitos persistentes, icterícia — avaliação presencial urgente",
+        "Desidratação, incapacidade de beber",
+        "Reacção alérgica grave — 112"
+      ],
+      "howItWorks": [
+        { "title": "Confirmamos o enquadramento legal", "text": "Não prescrevemos o injectável nesta consulta de nutrição. Se ainda não tens prescritor elegível, dizemos-to com clareza." },
+        { "title": "Trabalhamos o prato em cima da dose que já tens", "text": "Proteína, náusea, obstipação, refluxo." },
+        { "title": "Follow-up", "text": "Nova consulta se a dose mudar ou se começares a manutenção. Sem pacote obrigatório." }
+      ],
+      "psychologyBridge": {
+        "title": "O injectável muda o apetite — não a cabeça",
+        "text": "Culpa, medo de recuperar, grazing quando a náusea passa: a psicologia trata o padrão. A nutrição trata o que cabe no estômago agora.",
+        "href": "/gestao-de-stress",
+        "label": "Gestão de stress: consulta de psicologia"
+      },
+      "related": [
+        "diabetes-tipo-2",
+        "pos-bariatrica",
+        "sop",
+        { "href": "/gestao-de-stress", "label": "Gestão de stress" }
+      ],
+      "faq": [
+        {
+          "q": "A consulta de nutrição pode receitar Ozempic ou Wegovy?",
+          "a": "Não. Desde agosto de 2025, em Portugal, a prescrição destes injectáveis para diabetes ou perda de peso está restrita a especialidades médicas definidas. A Lon Clinic posiciona a nutrição como acompanhamento complementar: proteína, efeitos secundários e manutenção."
+        },
+        {
+          "q": "Vou perder músculo?",
+          "a": "Podes, se a comida descer demasiado e não houver proteína nem estímulo de força. A consulta existe para isso — não para empilhar mais défice em cima do fármaco."
+        },
+        {
+          "q": "O que acontece quando paro o medicamento?",
+          "a": "O apetite costuma voltar. Sem um plano de manutenção, parte do peso também. Não há garantia de manter tudo; há um plano explícito para o que podes controlar."
+        },
+        {
+          "q": "Quanto custa?",
+          "a": "Consulta única: 39 € ou 79 €. Follow-up: nova consulta, sem pacote. Psicologia: 60 € ou 54 €/semana."
+        }
+      ]
+    }
+  ],
+  "planned": [
+    { "slug": "perda-de-peso", "group": "peso", "navLabel": "Perda de peso / emagrecimento", "priority": "baixa", "intent": "transactional", "note": "Saturado (DrOnline, Multicare, DOCTA). Entrar só por nichos já no ar: SOP, bariátrica, GLP-1, diabetes tipo 2." },
+    { "slug": "ganho-massa-muscular", "group": "peso", "navLabel": "Ganho de massa muscular", "priority": "media", "intent": "mixed" },
+    { "slug": "obesidade", "group": "peso", "navLabel": "Consulta de obesidade", "priority": "media", "intent": "transactional", "note": "Não duplicar pós-bariátrica nem GLP-1. Só se o ângulo for avaliação médica da obesidade." },
+    { "slug": "bioimpedancia", "group": "peso", "navLabel": "Composição corporal / bioimpedância", "priority": "baixa", "intent": "informational", "note": "Só publicar se o serviço existir de facto." },
+    { "slug": "diabetes-tipo-1", "group": "metabolico", "navLabel": "Nutrição na diabetes tipo 1", "priority": "media", "intent": "transactional", "note": "Página tipo 2 já está live. Tipo 1 exige especificidade de insulina — não fundir." },
+    { "slug": "colesterol", "group": "metabolico", "navLabel": "Nutrição no colesterol / dislipidemia", "priority": "media", "intent": "transactional", "note": "Ligar internamente a diabetes-tipo-2 quando for live." },
+    { "slug": "hipertensao", "group": "metabolico", "navLabel": "Nutrição na hipertensão arterial", "priority": "media", "intent": "transactional" },
+    { "slug": "refluxo-nutricao", "group": "digestivo", "navLabel": "Nutrição no refluxo gastroesofágico", "priority": "media", "intent": "transactional", "note": "Ângulo alimentar. A consulta médica já existe em /consulta/refluxo — não canibalizar; cruzar." },
+    { "slug": "doenca-de-crohn", "group": "digestivo", "navLabel": "Nutrição na DII (Crohn/colite)", "priority": "media", "intent": "transactional" },
+    { "slug": "nutricao-gravidez", "group": "mulher", "navLabel": "Nutrição na gravidez", "priority": "baixa-media", "intent": "transactional", "note": "Saturado (CUF, Trofa, Wells). Só com ângulo diáspora, bariátrica ou Hashimoto." },
+    { "slug": "nutricao-infantil", "group": "mulher", "navLabel": "Nutrição infantil / introdução alimentar", "priority": "baixa", "intent": "transactional", "note": "Confirmar se a clínica atende pediatria nutricional antes de escrever." },
+    { "slug": "menopausa", "group": "mulher", "navLabel": "Nutrição na menopausa", "priority": "media-alta", "intent": "transactional", "note": "Encaixa no cluster mulher (SOP, pós-parto). Boa candidata à vaga seguinte." },
+    { "slug": "nutricao-geriatrica", "group": "mulher", "navLabel": "Nutrição no idoso", "priority": "media", "intent": "mixed" },
+    { "slug": "pre-concecional", "group": "mulher", "navLabel": "Nutrição pré-concecional", "priority": "media-alta", "intent": "transactional", "note": "Ligar SOP, pós-parto, bariátrica, Hashimoto." },
+    { "slug": "nutricao-desportiva", "group": "desporto", "navLabel": "Nutrição desportiva", "priority": "media", "intent": "mixed" },
+    { "slug": "nutricao-resistencia", "group": "desporto", "navLabel": "Nutrição para maratonas/resistência", "priority": "baixa", "intent": "mixed" },
+    { "slug": "vegetariana-vegan", "group": "estilo", "navLabel": "Nutrição vegetariana/vegan", "priority": "media", "intent": "mixed" },
+    { "slug": "transicao-vegetariana", "group": "estilo", "navLabel": "Transição vegetariana sem défices", "priority": "media", "intent": "transactional" }
+  ]
+}
+

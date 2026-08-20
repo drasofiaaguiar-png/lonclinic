@@ -1695,3 +1695,56 @@ html.lenis body {
     pointer-events: none;
     z-index: 0;
 }
+
+.psi-queixas-lead {
+    margin: -8px 0 28px;
+    max-width: 46ch;
+    color: var(--psi-muted);
+    line-height: 1.55;
+}
+
+.psi-queixas-grid {
+    display: grid;
+    gap: 12px;
+}
+
+@media (min-width: 720px) {
+    .psi-queixas-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1040px) {
+    .psi-queixas-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.psi-queixa-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 22px 20px;
+    background: #fff;
+    border: 1px solid var(--psi-line);
+    border-left: 3px solid var(--psi-olive);
+    border-radius: 16px;
+    text-decoration: none;
+    color: inherit;
+    min-height: 7.5rem;
+}
+
+.psi-queixa-card:hover {
+    border-color: var(--psi-olive);
+}
+
+.psi-queixa-card strong {
+    font-size: 1.05rem;
+    color: var(--psi-ink);
+}
+
+.psi-queixa-card span {
+    font-size: 0.92rem;
+    line-height: 1.45;
+    color: var(--psi-muted);
+}

@@ -6,7 +6,18 @@
     'use strict';
 
     const STORAGE_KEY = 'clinic_lang';
-    let currentLang = localStorage.getItem(STORAGE_KEY) || 'en';
+    function langFromUrl() {
+        try {
+            const q = new URLSearchParams(window.location.search).get('lang');
+            if (q && ['en', 'pt', 'es'].includes(q)) return q;
+        } catch (e) { /* ignore */ }
+        return null;
+    }
+    const urlLang = langFromUrl();
+    let currentLang = urlLang || localStorage.getItem(STORAGE_KEY) || 'en';
+    if (urlLang) {
+        try { localStorage.setItem(STORAGE_KEY, urlLang); } catch (e) { /* ignore */ }
+    }
 
     /* ── Page detection ── */
     function detectPage() {

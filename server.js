@@ -32,6 +32,10 @@ const fs = require('fs');
 const crypto = require('crypto');
 const guide = require('./guide');
 const burnoutPages = require('./burnout-pages');
+const consultaPages = require('./consulta-pages');
+const queixas = require('./queixas');
+const nutricao = require('./nutricao');
+const touristPages = require('./tourist-pages');
 const producers = require('./producers');
 const seo = require('./seo');
 const { hydrateInfoHtml, NOINDEX_PAGES: INFO_NOINDEX_PAGES } = require('./info-ssr');
@@ -4472,6 +4476,15 @@ app.use((req, res, next) => {
 
 // ─── IMPORTANT: Routes must come BEFORE express.static ───
 // ─── Friendly URLs (without .html) - MUST come before root route ───
+app.get('/tourist-clinic', (req, res) => {
+    try {
+        sendHtmlNoCacheString(res, touristPages.renderHub(PUBLIC_SITE_URL));
+    } catch (err) {
+        console.error('❌ Tourist clinic hub error:', err.message || err);
+        res.status(500).type('html').send('Error loading tourist clinic.');
+    }
+});
+
 app.get('/travel-clinic', (req, res) => {
     const filePath = path.join(__dirname, 'travel.html');
     if (!fs.existsSync(filePath)) {
@@ -4662,7 +4675,28 @@ app.get('/guide/:slug', (req, res) => {
 });
 
 app.get('/consulta', (req, res) => {
-    sendHtmlNoCache(res, path.join(__dirname, 'consulta.html'), 'Error loading consulta landing page');
+    const filePath = path.join(__dirname, 'consulta.html');
+    fs.readFile(filePath, 'utf8', (err, html) => {
+        if (err) {
+            console.error('❌ Error loading consulta landing page:', err.message);
+            return res.status(500).send('Error loading consulta landing page');
+        }
+        const cluster = consultaPages.renderHubClusterHtml();
+        const out = html.replace('<!-- CONSULTA_CLUSTER -->', cluster);
+        sendHtmlNoCacheString(res, out);
+    });
+});
+
+app.get('/consulta/:slug', (req, res) => {
+    const slug = String(req.params.slug || '').toLowerCase();
+    if (!consultaPages.isValidSlug(slug)) {
+        return sendHtmlNoCacheString(res, consultaPages.renderNotFound(PUBLIC_SITE_URL), 404);
+    }
+    const result = consultaPages.renderSpoke(PUBLIC_SITE_URL, slug);
+    if (!result) {
+        return sendHtmlNoCacheString(res, consultaPages.renderNotFound(PUBLIC_SITE_URL), 404);
+    }
+    sendHtmlNoCacheString(res, result.html);
 });
 
 app.get('/burnout', (req, res) => {
@@ -4722,6 +4756,49 @@ app.get('/psicologia', (req, res) => {
 
 app.get('/psicologia.html', (req, res) => {
     res.redirect(301, '/saudemental');
+});
+
+app.get('/consultas', (req, res) => {
+    try {
+        sendHtmlNoCacheString(res, queixas.renderHub(PUBLIC_SITE_URL));
+    } catch (err) {
+        console.error('❌ Consultas hub error:', err.message || err);
+        res.status(500).type('html').send('Error loading consultas.');
+    }
+});
+
+app.get('/consultas/', (req, res) => {
+    res.redirect(301, '/consultas');
+});
+
+app.get('/nutricao', (req, res) => {
+    try {
+        sendHtmlNoCacheString(res, nutricao.renderHub(PUBLIC_SITE_URL));
+    } catch (err) {
+        console.error('❌ Nutricao hub error:', err.message || err);
+        res.status(500).type('html').send('Error loading nutricao.');
+    }
+});
+
+app.get('/nutricao/', (req, res) => {
+    res.redirect(301, '/nutricao');
+});
+
+app.get('/nutricao/:slug', (req, res) => {
+    const slug = String(req.params.slug || '').toLowerCase();
+    if (!nutricao.isValidSlug(slug)) {
+        return sendHtmlNoCacheString(res, nutricao.renderNotFound(PUBLIC_SITE_URL), 404);
+    }
+    try {
+        const result = nutricao.renderSpoke(PUBLIC_SITE_URL, slug);
+        if (!result) {
+            return sendHtmlNoCacheString(res, nutricao.renderNotFound(PUBLIC_SITE_URL), 404);
+        }
+        return sendHtmlNoCacheString(res, result.html);
+    } catch (err) {
+        console.error('❌ Nutricao page error:', err.message || err);
+        return res.status(500).type('html').send('Error loading page.');
+    }
 });
 
 app.get('/teste-personalidade', (req, res) => {
@@ -4874,7 +4951,30 @@ app.get('/doctors.html', (req, res) => {
     res.redirect(301, '/doctors');
 });
 
-// ─── Sitemap and Robots ───
+// Symptom pages (/ansiedade-no-trabalho, …) and tourist guides — after named routes.
+app.get('/:slug', (req, res, next) => {
+    const slug = String(req.params.slug || '').toLowerCase();
+    if (touristPages.hasPublishedSlug(slug)) {
+        try {
+            const result = touristPages.renderPage(PUBLIC_SITE_URL, slug);
+            if (!result) return next();
+            return sendHtmlNoCacheString(res, result.html);
+        } catch (err) {
+            console.error('❌ Tourist page error:', err.message || err);
+            return res.status(500).type('html').send('Error loading page.');
+        }
+    }
+    if (!queixas.hasPublishedSlug(slug)) return next();
+    try {
+        const result = queixas.renderPage(PUBLIC_SITE_URL, slug);
+        if (!result) return next();
+        return sendHtmlNoCacheString(res, result.html);
+    } catch (err) {
+        console.error('❌ Queixa page error:', err.message || err);
+        return res.status(500).type('html').send('Error loading page.');
+    }
+});
+
 app.get('/sitemap.xml', (req, res) => {
     try {
         const xml = seo.buildSitemapXml(PUBLIC_SITE_URL);
@@ -4906,8 +5006,20 @@ app.use((req, res, next) => {
     if (p === '/data/burnout' || p.startsWith('/data/burnout/')) {
         return res.status(404).type('text').send('Not found');
     }
+    if (p === '/data/consulta' || p.startsWith('/data/consulta/')) {
+        return res.status(404).type('text').send('Not found');
+    }
     if (p === '/data/guide' || p.startsWith('/data/guide/')) {
         return res.status(404).end();
+    }
+    if (p === '/data/queixas' || p.startsWith('/data/queixas/')) {
+        return res.status(404).type('text').send('Not found');
+    }
+    if (p === '/data/nutricao' || p.startsWith('/data/nutricao/')) {
+        return res.status(404).type('text').send('Not found');
+    }
+    if (p === '/data/tourist' || p.startsWith('/data/tourist/')) {
+        return res.status(404).type('text').send('Not found');
     }
     next();
 });
@@ -4947,6 +5059,10 @@ app.use(express.static(path.join(__dirname), {
             base === 'guide.css' ||
             base === 'magazine.css' ||
             base === 'burnout-pages.css' ||
+            base === 'consulta-pages.css' ||
+            base === 'queixas.css' ||
+            base === 'nutricao.css' ||
+            base === 'tourist-pages.css' ||
             base === 'psicologia.css' ||
             base === 'psicologia.js' ||
             base === 'recrutamento-psicologia.css' ||
