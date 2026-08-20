@@ -26,6 +26,15 @@
     color: #5a6d63;
 }
 
+.eeat-reviewed {
+    margin: 40px 0 8px;
+    padding: 20px 0 0;
+    border-top: 1px solid rgba(26, 102, 65, 0.14);
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: var(--lon-muted, #3d554a);
+}
+
 .eeat-bio {
     display: grid;
     grid-template-columns: 72px 1fr;
@@ -170,7 +179,8 @@
 }
 
 .guide-article-wrap > .eeat-byline,
-.guide-article-wrap > .eeat-bio {
+.guide-article-wrap > .eeat-bio,
+.guide-article-wrap > .eeat-reviewed {
     width: min(100%, 760px);
     margin-left: auto;
     margin-right: auto;
@@ -181,12 +191,14 @@
     width: min(100%, 1240px);
 }
 
-.guide-article-main-html .guide-article-wrap > .eeat-bio {
+.guide-article-main-html .guide-article-wrap > .eeat-bio,
+.guide-article-main-html .guide-article-wrap > .eeat-reviewed {
     width: min(100% - 5vw, 1080px);
     margin: 0 auto 40px;
 }
 
-.bo-article .eeat-bio {
+.bo-article .eeat-bio,
+.bo-article .eeat-reviewed {
     margin-top: 36px;
 }
 

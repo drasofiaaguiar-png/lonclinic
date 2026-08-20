@@ -107,7 +107,7 @@ function relatedKicker(article) {
     return 'Guide';
 }
 
-function bookingCardsHtml(kind) {
+function bookingCardsHtml(kind, tone) {
     const packs = {
         mental: [
             {
@@ -157,8 +157,9 @@ function bookingCardsHtml(kind) {
         ]
     };
     const cards = packs[kind] || packs.general;
+    const t = Math.abs(Number(tone) || 0) % 3;
     const items = cards.map((card) => `
-        <article class="guide-book-card">
+        <article class="guide-book-card guide-book-card--t${t}">
             <p class="guide-book-chip">${escapeHtml(card.chip)}</p>
             <h3 class="guide-book-title">${escapeHtml(card.title)}</h3>
             <p class="guide-book-price">${escapeHtml(card.price)}</p>
@@ -173,9 +174,10 @@ function bookingCardsHtml(kind) {
 }
 
 function expandCtaTokens(html, kind) {
+    let n = 0;
     return String(html || '').replace(
         /<p>\s*\{\{cta(?::([a-z-]+))?\}\}\s*<\/p>|\{\{cta(?::([a-z-]+))?\}\}/gi,
-        (_, a, b) => bookingCardsHtml(a || b || kind)
+        (_, a, b) => bookingCardsHtml(a || b || kind, n++)
     );
 }
 
@@ -222,12 +224,15 @@ function relatedArticlesHtml(current, articles) {
     const related = pickRelatedArticles(current, articles);
     if (!related.length) return '';
     const cards = related.map((a) => {
-        const href = `/blog/${encodeURIComponent(a.slug)}`;
+        const excerpt = a.description
+            ? `<p class="mag-excerpt">${escapeHtml(a.description)}</p>`
+            : '';
         return `
-        <a class="guide-related-card" href="${href}">
+        <a class="mag-card guide-related-card" href="${magHref(a)}">
+            <span class="mag-photo" style="background-image:url('${magImage(a)}')"></span>
             <span class="guide-related-kicker">${escapeHtml(relatedKicker(a))}</span>
-            <strong class="guide-related-title">${escapeHtml(a.title || a.slug)}</strong>
-            <span class="guide-related-desc">${escapeHtml(a.description || '')}</span>
+            <h3 class="guide-related-title">${escapeHtml(a.title || a.slug)}</h3>
+            ${excerpt}
         </a>`;
     }).join('');
     return `
@@ -298,8 +303,8 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260418k">
-    <link rel="stylesheet" href="/guide.css?v=20260820d">
-    <link rel="stylesheet" href="/author.css?v=20260818a">
+    <link rel="stylesheet" href="/guide.css?v=20260820g">
+    <link rel="stylesheet" href="/author.css?v=20260820g">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     ${ldJson}
@@ -581,7 +586,9 @@ function renderBlogArticle(origin, slug) {
             <div class="guide-prose mag-story-prose" lang="pt-PT">
                 ${articleHtml}
             </div>
+            </div>
             ${relatedHtml}
+            <div class="mag-story-body mag-story-body--foot">
             ${bio}
             </div>
         </article>
@@ -609,7 +616,7 @@ function renderBlogArticle(origin, slug) {
         jsonLd,
         ogType: 'article',
         extraCss: ['/landing.css?v=20260418k'],
-        extraCssAfter: ['/guide.css?v=20260820d', '/author.css?v=20260818a', '/magazine.css?v=20260820d'],
+        extraCssAfter: ['/guide.css?v=20260820g', '/author.css?v=20260820g', '/magazine.css?v=20260820g'],
         mainHtml: magAppHtml(articlePath, `
             ${magTopbarHtml({ magazineCurrent: true })}
             ${articleInner}
@@ -879,7 +886,7 @@ function layoutMagazinePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     ${extraCssHtml}
-    <link rel="stylesheet" href="/magazine.css?v=20260820d">
+    <link rel="stylesheet" href="/magazine.css?v=20260820g">
     ${extraCssAfterHtml}
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">

@@ -449,7 +449,8 @@
     gap: 16px;
 }
 
-.guide-book-card {
+.guide-book-card,
+.guide-book-card--t0 {
     background: #cfe8f7;
     color: #14110f;
     border: 1px solid #a8d4ee;
@@ -459,6 +460,16 @@
     display: flex;
     flex-direction: column;
     min-height: 100%;
+}
+
+.guide-book-card--t1 {
+    background: #ffe3a8;
+    border-color: #f0c56a;
+}
+
+.guide-book-card--t2 {
+    background: #ffd4b0;
+    border-color: #f0b48a;
 }
 
 .guide-book-chip {
@@ -535,26 +546,32 @@
 
 .guide-related-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 12px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
 }
 
 .guide-related-card {
     display: flex;
     flex-direction: column;
     gap: 6px;
-    padding: 16px 16px 15px;
-    border: 1px solid var(--lon-border);
-    border-radius: 16px;
-    background: #ffffff;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
     text-decoration: none;
-    box-shadow: 0 10px 24px rgba(15, 26, 20, 0.06);
-    transition: border-color 0.15s ease, transform 0.15s ease;
+    box-shadow: none;
+    transition: opacity 0.15s ease;
+}
+
+.guide-related-card .mag-photo {
+    display: block;
+    height: 168px;
+    margin-bottom: 10px;
+    background: #ececec center / cover no-repeat;
 }
 
 .guide-related-card:hover {
-    border-color: var(--lon-accent);
-    transform: translateY(-2px);
+    opacity: 0.72;
 }
 
 .guide-related-kicker {
@@ -579,7 +596,8 @@
 }
 
 @media (max-width: 700px) {
-    .guide-book-grid {
+    .guide-book-grid,
+    .guide-related-grid {
         grid-template-columns: 1fr;
     }
 }

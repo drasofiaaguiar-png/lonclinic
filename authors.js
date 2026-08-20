@@ -165,25 +165,8 @@ function authorBylineHtml(origin, slug, dateLabel) {
         </p>`;
 }
 
-function authorBioHtml(origin, slug) {
-    const a = getAuthor(slug);
-    const href = authorPath(a);
-    const creds = a.credentials
-        .map((c) => `<li>${escapeHtml(c)}</li>`)
-        .join('');
-    const verify = profileLinksHtml(a, { includeSelf: false });
-    return `
-        <aside class="eeat-bio" aria-label="Autora do artigo">
-            <div class="eeat-bio-avatar" aria-hidden="true">${escapeHtml(a.initials)}</div>
-            <div class="eeat-bio-body">
-                <p class="eeat-bio-kicker">Autora e revisora clínica</p>
-                <h2 class="eeat-bio-name"><a rel="author" href="${escapeHtml(href)}">${escapeHtml(a.displayName)}</a></h2>
-                <p class="eeat-bio-role">${escapeHtml(a.jobTitle)} · ${a.yearsPractice} anos de prática clínica</p>
-                <p class="eeat-bio-text">${escapeHtml(a.shortBio)}</p>
-                <ul class="eeat-bio-creds">${creds}</ul>
-                <p class="eeat-bio-verify">${verify}<span aria-hidden="true"> · </span><a rel="author" href="${escapeHtml(href)}">Ver perfil completo</a></p>
-            </div>
-        </aside>`;
+function authorBioHtml() {
+    return `<p class="eeat-reviewed">Revisto pela equipa médica da Lon Clinic</p>`;
 }
 
 function renderAuthorPage(origin, slug) {
