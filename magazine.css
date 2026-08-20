@@ -583,9 +583,9 @@
 }
 
 .mag-body .guide-book-card {
-    background: var(--mag-paper);
+    background: #f3eee6;
     color: var(--mag-ink);
-    border: 1px solid var(--mag-line);
+    border: 1px solid #e4ddd2;
     box-shadow: none;
     border-radius: 0;
     padding: 24px 22px 22px;
