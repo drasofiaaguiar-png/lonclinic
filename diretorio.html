@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diretório de produtores · LON Clinic</title>
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta name="theme-color" content="#f6f4ef">
+    <link rel="stylesheet" href="/landing.css">
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/dashboard.css?v=diretorio-1">
+    <link rel="stylesheet" href="/diretorio.css?v=diretorio-1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+</head>
+<body class="dir-page" data-dir-page="list">
+    <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
+    <header class="lon-nav" id="lonNav">
+        <div class="lon-container lon-nav-inner">
+            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
+                <span class="lon-logo-name">LON Clinic</span>
+            </a>
+            <nav class="lon-nav-links" aria-label="Main navigation">
+                <a href="/admin">Admin</a>
+                <a href="/diretorio">Diretório</a>
+            </nav>
+            <div class="lon-nav-actions">
+                <a href="/diretorio/candidatar" class="lon-btn lon-btn-ghost lon-btn-sm">Candidatura</a>
+                <a href="/admin" class="lon-btn lon-btn-primary lon-btn-sm">Moderação</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="dir-main" id="conteudo-principal">
+        <div class="dir-hero">
+            <div>
+                <h1>Produtores biológicos</h1>
+                <p>Diretório interno — visível apenas a administradores. Candidaturas públicas entram como pendentes.</p>
+            </div>
+            <div class="dir-hero-actions">
+                <a class="lon-btn lon-btn-ghost lon-btn-sm" href="/diretorio/candidatar">Formulário de candidatura</a>
+                <a class="lon-btn lon-btn-primary lon-btn-sm" href="/admin">Painel admin</a>
+            </div>
+        </div>
+        <div class="dir-filters">
+            <input type="search" id="dirQ" placeholder="Pesquisar por nome…" autocomplete="off">
+            <select id="dirCategory" aria-label="Categoria"></select>
+            <select id="dirDistrict" aria-label="Distrito"></select>
+            <select id="dirSales" aria-label="Método de venda"></select>
+            <select id="dirStatus" aria-label="Estado">
+                <option value="">Todos os estados</option>
+                <option value="pendente">Pendente</option>
+                <option value="aprovado">Aprovado</option>
+                <option value="rejeitado">Rejeitado</option>
+            </select>
+        </div>
+        <div id="dirGrid" class="dir-grid">
+            <p class="dir-empty">A carregar…</p>
+        </div>
+    </main>
+    <script src="/diretorio.js?v=diretorio-1"></script>
+</body>
+</html>

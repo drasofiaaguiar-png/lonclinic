@@ -5,7 +5,7 @@
 (function () {
     'use strict';
 
-    if (!window.LonAnalytics && !/^\/(admin|clinic-portal|doctors|patient-portal|clinic|dashboard)(\/|$|\.html)/i.test(location.pathname || '/')) {
+    if (!window.LonAnalytics && !/^\/(admin|clinic-portal|doctors|patient-portal|clinic|dashboard|diretorio)(\/|$|\.html)/i.test(location.pathname || '/')) {
         if (!document.querySelector('script[src*="lon-analytics.js"]')) {
             var analyticsScript = document.createElement('script');
             analyticsScript.src = '/lon-analytics.js?v=20260817a';

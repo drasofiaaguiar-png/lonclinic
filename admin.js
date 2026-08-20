@@ -205,6 +205,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ─── Check authentication status ───
+    function safeDirectoryNext() {
+        try {
+            const next = new URLSearchParams(window.location.search).get('next') || '';
+            if (!next.startsWith('/diretorio')) return '';
+            if (next.startsWith('//') || next.includes('\\') || next.includes('://')) return '';
+            return next;
+        } catch (e) {
+            return '';
+        }
+    }
+
     async function checkAuth() {
         try {
             const res = await fetch('/api/clinic/auth-status');
@@ -213,6 +224,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (data.authenticated) {
                 if (data.role && data.role !== 'admin') {
                     window.location.href = '/clinic-portal';
+                    return;
+                }
+                const next = safeDirectoryNext();
+                if (next) {
+                    window.location.replace(next);
                     return;
                 }
                 showAdminContent();
@@ -249,7 +265,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         availability: { title: 'Availability', subtitle: 'Working hours, blocks & slot preview' },
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' },
         professionals: { title: 'Professionals & Doxy', subtitle: 'Clinician logins and video rooms' },
-        psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' }
+        psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' },
+        producers: { title: 'Diretório produtores', subtitle: 'Moderar candidaturas de produtores biológicos' }
     };
     let activeAdminPanel = 'schedule';
     let scheduleFilter = 'all';
@@ -319,6 +336,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (panelId === 'reviews') loadAdminReviews();
         if (panelId === 'professionals') loadAdminProfessionals();
         if (panelId === 'psychologists') loadAdminPsychologists();
+        if (panelId === 'producers') loadAdminProducers();
     }
 
     document.querySelectorAll('[data-admin-panel]').forEach((btn) => {
@@ -1418,6 +1436,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (res.ok) {
                     if (data.role && data.role !== 'admin') {
                         window.location.href = '/clinic-portal';
+                        return;
+                    }
+                    const next = safeDirectoryNext();
+                    if (next) {
+                        window.location.replace(next);
                         return;
                     }
                     showAdminContent();
@@ -2623,6 +2646,169 @@ document.addEventListener('DOMContentLoaded', async () => {
             const btn = e.target.closest('.admin-psych-save');
             if (!btn) return;
             savePsychologistApplication(btn.getAttribute('data-psych-id'));
+        });
+    }
+
+    const PRODUCER_CATEGORY_LABELS = {
+        hortofruticolas: 'Hortofrutícolas',
+        lacticinios: 'Laticínios',
+        mel: 'Mel',
+        vinho: 'Vinho',
+        azeite: 'Azeite',
+        padaria: 'Padaria',
+        cosmetica_natural: 'Cosmética natural'
+    };
+    const PRODUCER_SALES_LABELS = {
+        loja_fisica: 'Loja física',
+        entrega: 'Entrega',
+        mercado: 'Mercado',
+        encomenda_online: 'Encomenda online'
+    };
+    const PRODUCER_STATUS_OPTIONS = ['pendente', 'aprovado', 'rejeitado'];
+    const adminProducersList = document.getElementById('adminProducersList');
+    const producersSearch = document.getElementById('producersSearch');
+    const producersStatusFilter = document.getElementById('producersStatusFilter');
+    const producersRefreshBtn = document.getElementById('producersRefreshBtn');
+
+    function producerFileUrl(p, filename) {
+        if (!p || !filename) return '';
+        return `/api/admin/producers/${encodeURIComponent(p.id)}/files/${encodeURIComponent(filename)}`;
+    }
+
+    function labelList(ids, map) {
+        return (ids || []).map((id) => map[id] || id).join(', ') || '—';
+    }
+
+    function renderAdminProducers(list) {
+        if (!adminProducersList) return;
+        if (!list.length) {
+            adminProducersList.innerHTML = '<p class="admin-empty-list">Ainda não há candidaturas neste filtro.</p>';
+            return;
+        }
+        adminProducersList.innerHTML = '';
+        list.forEach((p) => {
+            const item = document.createElement('details');
+            item.className = 'admin-psych-row';
+            item.dataset.id = p.id;
+            const social = p.social || {};
+            const photos = (p.photos || [])
+                .map((ph) => `<img src="${escapeHtml(producerFileUrl(p, ph.filename))}" alt="" width="96" height="72" style="object-fit:cover;border-radius:8px;margin:4px 6px 0 0;">`)
+                .join('');
+            const cert = p.certImage
+                ? `<img src="${escapeHtml(producerFileUrl(p, p.certImage))}" alt="Certificado" width="120" style="border-radius:8px;margin-top:8px;">`
+                : '';
+            item.innerHTML = `
+                <summary class="admin-psych-summary">
+                    <span class="admin-psych-col admin-psych-col-name">${escapeHtml(p.name || '—')}</span>
+                    <span class="admin-psych-col admin-psych-col-email">${escapeHtml(p.district || '—')}</span>
+                    <span class="admin-psych-col admin-psych-col-phone">${escapeHtml(labelList(p.categories, PRODUCER_CATEGORY_LABELS))}</span>
+                    <span class="admin-psych-col admin-psych-col-status">${escapeHtml(p.status || 'pendente')}</span>
+                    <span class="admin-psych-chevron" aria-hidden="true"></span>
+                </summary>
+                <div class="admin-psych-body">
+                    <section class="admin-psych-section">
+                        <h4>Perfil</h4>
+                        <dl class="admin-psych-qa-list">
+                            ${psychQa('Descrição curta', p.shortDescription)}
+                            ${psychQa('Descrição longa', p.longDescription)}
+                            ${psychQa('Concelho / morada', [p.municipality, p.address].filter(Boolean).join(' — '))}
+                            ${psychQa('Coordenadas', p.lat != null && p.lng != null ? `${p.lat}, ${p.lng}` : '')}
+                            ${psychQa('Venda', labelList(p.salesMethods, PRODUCER_SALES_LABELS))}
+                            ${psychQa('Certificação', [p.certBody, p.certNumber].filter(Boolean).join(' · '))}
+                            ${psychQa('Website', p.website)}
+                            ${psychQa('Email', p.email)}
+                            ${psychQa('Telefone', p.phone)}
+                            ${psychQa('Instagram', social.instagram)}
+                            ${psychQa('Facebook', social.facebook)}
+                            ${psychQa('Outra rede', social.other)}
+                            ${psychQa('Recebido em', formatPsychDate(p.createdAt))}
+                        </dl>
+                        ${photos ? `<div style="margin-top:12px;">${photos}</div>` : ''}
+                        ${cert}
+                        <p style="margin:12px 0 0;"><a href="/diretorio/${encodeURIComponent(p.slug)}" target="_blank" rel="noopener">Abrir ficha</a></p>
+                    </section>
+                    <div class="admin-psych-actions">
+                        <label>
+                            Status
+                            <select class="admin-select admin-prod-status" data-prod-id="${escapeHtml(p.id)}">
+                                ${PRODUCER_STATUS_OPTIONS.map((s) =>
+                                    `<option value="${s}" ${p.status === s ? 'selected' : ''}>${s}</option>`
+                                ).join('')}
+                            </select>
+                        </label>
+                        <label class="admin-psych-notes-label">
+                            Notas
+                            <textarea class="admin-input admin-prod-notes" data-prod-id="${escapeHtml(p.id)}" rows="2" maxlength="4000">${escapeHtml(p.adminNotes || '')}</textarea>
+                        </label>
+                        <button type="button" class="btn btn-primary btn-sm admin-prod-save" data-prod-id="${escapeHtml(p.id)}">Guardar</button>
+                    </div>
+                </div>
+            `;
+            adminProducersList.appendChild(item);
+        });
+    }
+
+    async function loadAdminProducers() {
+        if (!adminProducersList) return;
+        adminProducersList.innerHTML = '<p class="admin-empty-list">Loading…</p>';
+        try {
+            const params = new URLSearchParams();
+            if (producersStatusFilter && producersStatusFilter.value) {
+                params.set('status', producersStatusFilter.value);
+            }
+            if (producersSearch && producersSearch.value.trim()) {
+                params.set('q', producersSearch.value.trim());
+            }
+            const qs = params.toString();
+            const res = await fetch('/api/admin/producers' + (qs ? `?${qs}` : ''));
+            if (res.status === 401) return;
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            renderAdminProducers(data.producers || []);
+        } catch (err) {
+            console.error('Load admin producers:', err);
+            adminProducersList.innerHTML = '<p class="admin-empty-list">Não foi possível carregar o diretório.</p>';
+        }
+    }
+
+    async function saveProducerApplication(id) {
+        const statusEl = document.querySelector(`.admin-prod-status[data-prod-id="${id}"]`);
+        const notesEl = document.querySelector(`.admin-prod-notes[data-prod-id="${id}"]`);
+        try {
+            const res = await fetch(`/api/admin/producers/${encodeURIComponent(id)}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    status: statusEl ? statusEl.value : undefined,
+                    adminNotes: notesEl ? notesEl.value : undefined
+                })
+            });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            await loadAdminProducers();
+        } catch (err) {
+            console.error('Save producer:', err);
+            alert('Não foi possível guardar.');
+        }
+    }
+
+    if (producersRefreshBtn) {
+        producersRefreshBtn.addEventListener('click', () => loadAdminProducers());
+    }
+    if (producersStatusFilter) {
+        producersStatusFilter.addEventListener('change', () => loadAdminProducers());
+    }
+    let prodSearchTimer = null;
+    if (producersSearch) {
+        producersSearch.addEventListener('input', () => {
+            clearTimeout(prodSearchTimer);
+            prodSearchTimer = setTimeout(() => loadAdminProducers(), 280);
+        });
+    }
+    if (adminProducersList) {
+        adminProducersList.addEventListener('click', (e) => {
+            const btn = e.target.closest('.admin-prod-save');
+            if (!btn) return;
+            saveProducerApplication(btn.getAttribute('data-prod-id'));
         });
     }
 

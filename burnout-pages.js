@@ -142,6 +142,24 @@ function ctaBand(ref) {
         </aside>`;
 }
 
+function neuroClusterNav(currentPath) {
+    const links = [
+        { href: '/blog/autismo-em-mulheres-diagnostico-tardio', label: 'Autismo em mulheres: diagnóstico tardio' },
+        { href: '/blog/adhd-em-adultos-sintomas', label: 'ADHD em adultos' },
+        { href: '/burnout/o-que-e', label: 'O que é burnout' },
+        { href: '/burnout/sintomas', label: 'Sintomas de burnout' },
+        { href: '/burnout/depressao-ou-burnout', label: 'Burnout ou depressão' }
+    ].filter((item) => item.href !== currentPath);
+    const items = links
+        .map((item) => `<li><a href="${escapeHtml(item.href)}">${escapeHtml(item.label)}</a></li>`)
+        .join('');
+    return `
+        <nav class="bo-related" aria-label="Autismo, ADHD e burnout">
+            <h2>Autismo, ADHD e burnout</h2>
+            <ul>${items}</ul>
+        </nav>`;
+}
+
 function relatedNav(currentSlug, pages) {
     const items = pages
         .filter((p) => p.slug !== currentSlug && p.group !== 'hidden')
@@ -511,9 +529,10 @@ function renderSpoke(origin, slug) {
             <div class="bo-prose" lang="pt-PT">
                 ${articleHtml}
             </div>
-            ${authors.authorBioHtml(o, meta.author)}
+            ${authors.authorBioHtml(o, meta.author, dateMod || datePub)}
             <p class="bo-disclaimer">Informação de carácter geral — não substitui consulta médica individualizada. Em crise ou risco imediato, contacte os serviços de emergência.</p>
             ${seriesBlock}
+            ${meta.group === 'guides' ? neuroClusterNav(canonicalPath) : ''}
             ${relatedNav(slug, pages)}
         </article>
         ${ctaBand(ref)}

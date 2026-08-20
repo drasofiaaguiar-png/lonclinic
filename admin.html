@@ -98,6 +98,7 @@
                     <button type="button" class="admin-nav-item" data-admin-panel="reviews">Reviews</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="professionals">Professionals &amp; Doxy</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="psychologists">Bolsa de Profissionais</button>
+                    <button type="button" class="admin-nav-item" data-admin-panel="producers">Diretório produtores</button>
                     <a class="admin-nav-item admin-nav-link" href="/clinic-portal">Consultations &amp; notes</a>
                 </nav>
                 <div class="admin-sidebar-foot">
@@ -681,6 +682,33 @@
                 </div>
             </div>
 
+            <div class="admin-panel" id="adminPanelProducers" data-admin-panel-content="producers" hidden>
+                <div class="dash-section">
+                    <div class="dash-section-header admin-schedule-toolbar">
+                        <div>
+                            <h2 class="dash-section-title">Diretório de produtores</h2>
+                            <p class="dash-section-subtitle">Candidaturas em <code>/diretorio/candidatar</code> — aprovar ou rejeitar para o diretório interno</p>
+                        </div>
+                        <div class="admin-schedule-filters" role="group" aria-label="Ações do diretório">
+                            <a class="btn btn-outline btn-sm" href="/diretorio">Abrir diretório</a>
+                            <button type="button" class="btn btn-outline btn-sm" id="producersRefreshBtn">Refresh</button>
+                        </div>
+                    </div>
+                    <div class="admin-psych-filters">
+                        <input type="search" id="producersSearch" class="admin-input" placeholder="Search name, concelho…" autocomplete="off">
+                        <select id="producersStatusFilter" class="admin-select">
+                            <option value="pendente">Pendentes</option>
+                            <option value="">All statuses</option>
+                            <option value="aprovado">Aprovado</option>
+                            <option value="rejeitado">Rejeitado</option>
+                        </select>
+                    </div>
+                    <div id="adminProducersList" class="admin-psych-list">
+                        <p class="admin-empty-list">Loading…</p>
+                    </div>
+                </div>
+            </div>
+
             </div><!-- /.admin-main -->
         </section>
     </main>
@@ -706,7 +734,7 @@
     </footer>
 
     <script src="lon-nav.js"></script>
-    <script src="admin.js?v=analytics-staff-1"></script>
+    <script src="admin.js?v=diretorio-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

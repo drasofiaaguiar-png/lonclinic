@@ -28,6 +28,8 @@ O descanso deixa de ser suficiente. O domingo à noite começa a trazer ansiedad
 
 Uma pessoa pode estar cansada depois de um período intenso e recuperar com alguns dias de descanso. No burnout, o esgotamento tende a persistir porque as exigências que o provocam continuam presentes — ou porque o organismo e a mente já estão profundamente sobrecarregados. Quando o cansaço extremo se instala sem recuperação, aproxima-se também da [fadiga laboral](/burnout/fadiga-laboral).
 
+O esgotamento também se sobrepõe a condições do neurodesenvolvimento. Em adultos com [ADHD](/blog/adhd-em-adultos-sintomas), as estratégias de compensação (listas, pressão, hiperfoco) podem colapsar numa fase de maior exigência e parecer «só burnout». Em [mulheres autistas diagnosticadas tarde](/blog/autismo-em-mulheres-diagnostico-tardio), o mascaramento crónico produz um burnout específico — o custo de «encaixar» — distinto do esgotamento só laboral, embora os [sintomas](/burnout/sintomas) se pareçam.
+
 ## As três vertentes que definem o burnout
 
 A definição da OMS ajuda a perceber que o burnout não é apenas «estar sem energia». Existem três dimensões que se relacionam entre si.

@@ -37,7 +37,7 @@ O ADHD é uma condição do neurodesenvolvimento, pelo que os sinais devem ter o
 
 Muitos adultos só procuram ajuda quando as estratégias que utilizavam para compensar deixam de funcionar — depois de uma promoção, do nascimento de um filho, de uma mudança profissional ou de outras fases de maior exigência.
 
-De repente, aquilo que antes conseguiam «gerir» deixa de ser sustentável.
+De repente, aquilo que antes conseguiam «gerir» deixa de ser sustentável. Nesse ponto o quadro parece [burnout](/burnout/o-que-e) ou [depressão](/burnout/depressao-ou-burnout): a bateria já não carrega, o descanso não chega, e o ADHD que estava a ser compensado fica por trás dos [sintomas de esgotamento](/burnout/sintomas).
 
 <figure class="guide-figure">
 <img src="/image/image1_files/CoventGarden_Large_Desktop.jpg" alt="Homem sentado na sala de espera, a olhar para o lado — os sinais de ADHD vêm de longe, mesmo quando só agora se tornam visíveis" width="1600" height="900" loading="lazy" decoding="async">
@@ -47,7 +47,7 @@ De repente, aquilo que antes conseguiam «gerir» deixa de ser sustentável.
 
 Esta é uma das razões pelas quais o diagnóstico não deve ser feito através de uma lista de sintomas.
 
-Dificuldade de concentração, irritabilidade, esquecimento e problemas de organização também podem aparecer em ansiedade, depressão, [burnout](/burnout), privação de sono ou outras situações. O mesmo vale para o [autismo diagnosticado tarde em mulheres](/blog/autismo-em-mulheres-diagnostico-tardio): a ansiedade ou a depressão são muitas vezes o que primeiro chama a atenção.
+Dificuldade de concentração, irritabilidade, esquecimento e problemas de organização também podem aparecer em ansiedade, depressão, [burnout](/burnout/o-que-e), privação de sono ou outras situações. O mesmo vale para o [autismo diagnosticado tarde em mulheres](/blog/autismo-em-mulheres-diagnostico-tardio): a ansiedade, a depressão ou o [esgotamento](/burnout/sintomas) são muitas vezes o que primeiro chama a atenção.
 
 <figure class="guide-figure">
 <img src="/image/image1_files/Marylebone_Large_Desktop.jpg" alt="Sala de consulta em silêncio — a sobrecarga que pode parecer ansiedade quando o ADHD não foi reconhecido" width="1600" height="900" loading="lazy" decoding="async">

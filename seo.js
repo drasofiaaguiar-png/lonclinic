@@ -11,6 +11,8 @@ const PRIVATE_DISALLOWS = [
     '/doctors',
     '/clinic-portal',
     '/patient-portal',
+    '/diretorio',
+    '/uploads',
     '/api/'
 ];
 
@@ -168,6 +170,7 @@ function buildSitemapXml(origin) {
         ['/burnout/teste', today, 'monthly', '0.9'],
         ['/clinica-anti-burnout', today, 'weekly', '0.9'],
         ['/saudemental', today, 'weekly', '0.9'],
+        ['/teste-personalidade', today, 'monthly', '0.8'],
         ['/triagem', today, 'monthly', '0.7'],
         ['/recrutamento/psicologia', today, 'monthly', '0.6'],
         ['/consultancy', today, 'monthly', '0.7'],

@@ -422,6 +422,37 @@ async function initSchema(p) {
     `);
     await p.query(`CREATE UNIQUE INDEX IF NOT EXISTS idx_professionals_username_lower ON professionals (LOWER(username))`);
     await p.query(`CREATE INDEX IF NOT EXISTS idx_professionals_display_lower ON professionals (LOWER(TRIM(display_name)))`);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS producers (
+            id UUID PRIMARY KEY,
+            slug VARCHAR(160) UNIQUE NOT NULL,
+            name TEXT NOT NULL,
+            short_description TEXT NOT NULL DEFAULT '',
+            long_description TEXT NOT NULL DEFAULT '',
+            categories JSONB NOT NULL DEFAULT '[]'::jsonb,
+            district VARCHAR(64) NOT NULL DEFAULT '',
+            municipality TEXT NOT NULL DEFAULT '',
+            address TEXT NOT NULL DEFAULT '',
+            lat DOUBLE PRECISION,
+            lng DOUBLE PRECISION,
+            cert_body TEXT NOT NULL DEFAULT '',
+            cert_number TEXT NOT NULL DEFAULT '',
+            cert_image TEXT,
+            website TEXT NOT NULL DEFAULT '',
+            email VARCHAR(320) NOT NULL DEFAULT '',
+            phone TEXT NOT NULL DEFAULT '',
+            social JSONB NOT NULL DEFAULT '{}'::jsonb,
+            photos JSONB NOT NULL DEFAULT '[]'::jsonb,
+            sales_methods JSONB NOT NULL DEFAULT '[]'::jsonb,
+            status VARCHAR(16) NOT NULL DEFAULT 'pendente',
+            admin_notes TEXT NOT NULL DEFAULT '',
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_producers_status ON producers (status)`);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_producers_district ON producers (district)`);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_producers_name_lower ON producers (LOWER(name))`);
 }
 
 function rowToAnalyticsEvent(row) {
@@ -1613,6 +1644,172 @@ async function deleteProfessional(id) {
     return r.rowCount > 0;
 }
 
+const PRODUCER_STATUSES = new Set(['pendente', 'aprovado', 'rejeitado']);
+
+function rowToProducer(row) {
+    if (!row) return null;
+    const social = row.social && typeof row.social === 'object' && !Array.isArray(row.social) ? row.social : {};
+    return {
+        id: row.id,
+        slug: row.slug || '',
+        name: row.name || '',
+        shortDescription: row.short_description || '',
+        longDescription: row.long_description || '',
+        categories: Array.isArray(row.categories) ? row.categories : [],
+        district: row.district || '',
+        municipality: row.municipality || '',
+        address: row.address || '',
+        lat: row.lat == null ? null : Number(row.lat),
+        lng: row.lng == null ? null : Number(row.lng),
+        certBody: row.cert_body || '',
+        certNumber: row.cert_number || '',
+        certImage: row.cert_image || null,
+        website: row.website || '',
+        email: row.email || '',
+        phone: row.phone || '',
+        social: {
+            instagram: social.instagram || '',
+            facebook: social.facebook || '',
+            other: social.other || ''
+        },
+        photos: Array.isArray(row.photos) ? row.photos : [],
+        salesMethods: Array.isArray(row.sales_methods) ? row.sales_methods : [],
+        status: row.status || 'pendente',
+        adminNotes: row.admin_notes || '',
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
+        updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : row.updated_at
+    };
+}
+
+async function insertProducer(record) {
+    const p = getPool();
+    const r = await p.query(
+        `INSERT INTO producers (
+            id, slug, name, short_description, long_description, categories,
+            district, municipality, address, lat, lng,
+            cert_body, cert_number, cert_image,
+            website, email, phone, social, photos, sales_methods,
+            status, admin_notes
+        ) VALUES (
+            $1, $2, $3, $4, $5, $6::jsonb,
+            $7, $8, $9, $10, $11,
+            $12, $13, $14,
+            $15, $16, $17, $18::jsonb, $19::jsonb, $20::jsonb,
+            $21, $22
+        ) RETURNING *`,
+        [
+            record.id,
+            record.slug,
+            record.name,
+            record.shortDescription || '',
+            record.longDescription || '',
+            JSON.stringify(record.categories || []),
+            record.district || '',
+            record.municipality || '',
+            record.address || '',
+            record.lat == null ? null : record.lat,
+            record.lng == null ? null : record.lng,
+            record.certBody || '',
+            record.certNumber || '',
+            record.certImage || null,
+            record.website || '',
+            record.email || '',
+            record.phone || '',
+            JSON.stringify(record.social || {}),
+            JSON.stringify(record.photos || []),
+            JSON.stringify(record.salesMethods || []),
+            record.status || 'pendente',
+            record.adminNotes || ''
+        ]
+    );
+    return rowToProducer(r.rows[0]);
+}
+
+async function listProducers({ status, category, district, salesMethod, q, limit } = {}) {
+    const p = getPool();
+    const cap = Math.min(Math.max(parseInt(limit, 10) || 200, 1), 400);
+    const clauses = [];
+    const params = [];
+    if (status && PRODUCER_STATUSES.has(String(status))) {
+        params.push(String(status));
+        clauses.push(`status = $${params.length}`);
+    }
+    if (category) {
+        params.push(String(category));
+        clauses.push(`categories ? $${params.length}`);
+    }
+    if (district) {
+        params.push(String(district));
+        clauses.push(`district = $${params.length}`);
+    }
+    if (salesMethod) {
+        params.push(String(salesMethod));
+        clauses.push(`sales_methods ? $${params.length}`);
+    }
+    if (q && String(q).trim()) {
+        params.push(`%${String(q).trim().toLowerCase()}%`);
+        clauses.push(
+            `(LOWER(name) LIKE $${params.length} OR LOWER(short_description) LIKE $${params.length} OR LOWER(COALESCE(municipality, '')) LIKE $${params.length})`
+        );
+    }
+    params.push(cap);
+    const where = clauses.length ? `WHERE ${clauses.join(' AND ')}` : '';
+    const r = await p.query(
+        `SELECT * FROM producers ${where}
+         ORDER BY
+            CASE status WHEN 'pendente' THEN 0 WHEN 'aprovado' THEN 1 ELSE 2 END,
+            name ASC
+         LIMIT $${params.length}`,
+        params
+    );
+    return r.rows.map(rowToProducer);
+}
+
+async function findProducerById(id) {
+    const p = getPool();
+    const r = await p.query(`SELECT * FROM producers WHERE id = $1 LIMIT 1`, [id]);
+    return rowToProducer(r.rows[0]);
+}
+
+async function findProducerBySlug(slug) {
+    const p = getPool();
+    const r = await p.query(`SELECT * FROM producers WHERE slug = $1 LIMIT 1`, [String(slug || '')]);
+    return rowToProducer(r.rows[0]);
+}
+
+async function producerSlugTaken(slug, excludeId) {
+    const p = getPool();
+    if (excludeId) {
+        const r = await p.query(
+            `SELECT 1 FROM producers WHERE slug = $1 AND id <> $2 LIMIT 1`,
+            [slug, excludeId]
+        );
+        return r.rows.length > 0;
+    }
+    const r = await p.query(`SELECT 1 FROM producers WHERE slug = $1 LIMIT 1`, [slug]);
+    return r.rows.length > 0;
+}
+
+async function updateProducer(id, patch) {
+    const p = getPool();
+    const status =
+        patch.status && PRODUCER_STATUSES.has(String(patch.status)) ? String(patch.status) : null;
+    const adminNotes = patch.adminNotes !== undefined ? String(patch.adminNotes || '').slice(0, 4000) : null;
+    if (status == null && adminNotes == null) {
+        return findProducerById(id);
+    }
+    const r = await p.query(
+        `UPDATE producers SET
+            status = COALESCE($2, status),
+            admin_notes = COALESCE($3, admin_notes),
+            updated_at = NOW()
+         WHERE id = $1
+         RETURNING *`,
+        [id, status, adminNotes]
+    );
+    return rowToProducer(r.rows[0]);
+}
+
 async function closePool() {
     if (pool) {
         await pool.end();
@@ -1675,6 +1872,12 @@ module.exports = {
     insertProfessional,
     updateProfessional,
     deleteProfessional,
+    insertProducer,
+    listProducers,
+    findProducerById,
+    findProducerBySlug,
+    producerSlugTaken,
+    updateProducer,
     findBookingsNeeding24hReminder,
     findBookingsNeeding1hReminder,
     findBookingsNeedingFollowup,

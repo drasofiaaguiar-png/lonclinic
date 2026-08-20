@@ -32,7 +32,7 @@ O estereótipo clássico de autismo (comboios, números, sistemas técnicos) é 
 
 Isto significa que a mesma característica neurológica se manifesta de forma visível num género e invisível no outro, não porque seja diferente na origem, mas porque a «cobertura social» do interesse é diferente.
 
-Quando o [ADHD em adultos](/blog/adhd-em-adultos-sintomas) também está presente (AuDHD), o hiperfoco e o interesse especial podem parecer a mesma coisa — e as duas condições ficam por reconhecer durante mais tempo.
+Quando o [ADHD em adultos](/blog/adhd-em-adultos-sintomas) também está presente (AuDHD), o hiperfoco e o interesse especial podem parecer a mesma coisa — e as duas condições ficam por reconhecer durante mais tempo. O mesmo acontece com o [burnout](/burnout/o-que-e): o interesse especial é muitas vezes o único sítio seguro depois de um dia de mascaramento, e o esgotamento passa por «só cansaço» até os [sintomas](/burnout/sintomas) já não darem para ignorar.
 
 <figure class="guide-figure">
 <img src="/image/image1_files/LincolnSquare_Large_Desktop.jpg" alt="Mulher concentrada num tablet — um interesse intenso que socialmente já tem um nome aceite" width="1600" height="900" loading="lazy" decoding="async">

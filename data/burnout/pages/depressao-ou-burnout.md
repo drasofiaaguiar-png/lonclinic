@@ -11,7 +11,7 @@ A pesquisa **burnout ou depressão** é uma das mais comuns — e com razão: os
 | Fim de semana / férias | Por vezes alivia parcialmente | Muitas vezes não alivia |
 | Autoestima | Ferida pelo desempenho | Frequentemente mais global |
 
-Na prática, **podem coexistir**. Alguém com burnout prolongado pode desenvolver depressão; alguém deprimido pode piorar no trabalho até parecer “só burnout”.
+Na prática, **podem coexistir**. Alguém com burnout prolongado pode desenvolver depressão; alguém deprimido pode piorar no trabalho até parecer “só burnout”. O mesmo vale para o [ADHD em adultos](/blog/adhd-em-adultos-sintomas) e para o [autismo diagnosticado tarde em mulheres](/blog/autismo-em-mulheres-diagnostico-tardio): a depressão ou o burnout podem ser o que primeiro chama a atenção, e o perfil de neurodesenvolvimento fica por reconhecer.
 
 ## Porque a auto-avaliação falha
 

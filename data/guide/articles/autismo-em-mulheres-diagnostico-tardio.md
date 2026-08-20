@@ -12,7 +12,7 @@ Estudos indicam que a proporção de diagnóstico entre homens e mulheres é sig
 
 **1. Apresentação clínica diferente.** Em vez dos padrões mais «visíveis» frequentemente descritos em rapazes (interesses restritos muito específicos, dificuldades sociais evidentes), muitas mulheres autistas desenvolvem interesses intensos que são socialmente mais aceites — por exemplo, sobre pessoas, animais ou ficção. Isso camufla o padrão subjacente. Sobre este ponto, ver também [como distinguir um interesse especial autista de um hobby](/blog/autismo-nas-mulheres-interesse-especial).
 
-**2. Mascaramento (masking).** Muitas raparigas e mulheres autistas aprendem, desde muito cedo, a observar e imitar comportamentos sociais dos pares: sorrir no momento certo, manter contacto visual de forma forçada, ensaiar conversas antecipadamente. Este esforço é exaustivo e, de fora, fica invisível.
+**2. Mascaramento (masking).** Muitas raparigas e mulheres autistas aprendem, desde muito cedo, a observar e imitar comportamentos sociais dos pares: sorrir no momento certo, manter contacto visual de forma forçada, ensaiar conversas antecipadamente. Este esforço é exaustivo e, de fora, fica invisível. Ao fim de anos, o custo acumula-se no mesmo terreno do [esgotamento](/burnout/sintomas) — mesmo quando o trabalho não é a causa principal.
 
 <figure class="guide-figure">
 <img src="/image/image1_files/CoventGarden_Large_Desktop.jpg" alt="Homem sentado numa sala de espera clara, de lado — a aparente calma social que o mascaramento pode imitar" width="1600" height="900" loading="lazy" decoding="async">
@@ -38,7 +38,7 @@ Estudos indicam que a proporção de diagnóstico entre homens e mulheres é sig
 
 Quando o mascaramento é mantido durante anos sem ser reconhecido, o resultado é frequentemente um esgotamento específico, conhecido como **burnout autista**.
 
-Este distingue-se do [burnout profissional](/burnout) por resultar não apenas de sobrecarga de trabalho, mas do custo cumulativo de «encaixar» socialmente durante toda a vida. Os sintomas incluem perda temporária de competências antes adquiridas, aumento da sensibilidade sensorial e necessidade intensa de isolamento para recuperar.
+Este distingue-se do [burnout profissional](/burnout/o-que-e) por resultar não apenas de sobrecarga de trabalho, mas do custo cumulativo de «encaixar» socialmente durante toda a vida. Os [sintomas de burnout](/burnout/sintomas) — exaustão que o descanso não resolve, isolamento, perda de competências — também aparecem aqui. A diferença está na causa: mascaramento crónico, não só o emprego. Quando o quadro se mistura com humor baixo, veja também [burnout ou depressão](/burnout/depressao-ou-burnout).
 
 <figure class="guide-figure">
 <img src="/image/image1_files/ColmoreRow_Large_Desktop.jpg" alt="Sala de espera em silêncio, com escadas para a luz — o retiro de que o burnout autista muitas vezes precisa" width="1600" height="900" loading="lazy" decoding="async">

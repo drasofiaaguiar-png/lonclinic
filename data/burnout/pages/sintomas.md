@@ -10,7 +10,7 @@ Se o problema parece ser o contrário — tédio crónico e falta de estímulo �
 
 - Sensação de esvaziamento, mesmo após dormir
 - Distanciamento do trabalho ou cinismo (“já não me importa”)
-- Dificuldade de concentração e memória de curto prazo
+- Dificuldade de concentração e memória de curto prazo — um padrão que também aparece no [ADHD em adultos](/blog/adhd-em-adultos-sintomas); se vem da infância, vale avaliar as duas coisas
 - Irritabilidade desproporcional com colegas ou família
 - Ansiedade antecipatória antes de abrir o email ou entrar na reunião
 
@@ -45,7 +45,7 @@ Marque consulta se:
 1. Os sintomas duram semanas a meses
 2. O descanso já não restaura
 3. Há impacto no sono, humor ou desempenho
-4. Suspeita de sobreposição com ansiedade ou depressão
+4. Suspeita de sobreposição com ansiedade, depressão, [ADHD](/blog/adhd-em-adultos-sintomas) ou [autismo em mulheres](/blog/autismo-em-mulheres-diagnostico-tardio)
 
 Comece pelo [teste gratuito de burnout](/burnout/teste) (baseado no Copenhagen Burnout Inventory) e, se quiser acompanhamento clínico, [marque consulta](/marcar/burnout) ou veja a [consulta anti-burnout](/clinica-anti-burnout).
 

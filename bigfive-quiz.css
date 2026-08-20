@@ -1,0 +1,42 @@
+/* Big Five quiz — extras on top of burnout-quiz.css */
+.bf-results-title {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(1.6rem, 4vw, 2.1rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+}
+
+.bf-level {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.bf-level--low { color: #3d7a68; }
+.bf-level--mid { color: #6b7358; }
+.bf-level--high { color: #2f6342; }
+
+.bf-scale-head-name {
+    font-size: 0.9375rem !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    font-weight: 600 !important;
+    font-family: inherit;
+}
+
+.bq-page.bf-page .bq-actions .bq-btn {
+    min-width: 148px;
+}
+
+@media (max-width: 420px) {
+    .bq-page.bf-page .bq-actions {
+        flex-wrap: wrap;
+    }
+    .bq-page.bf-page .bq-actions .bq-btn {
+        width: 100%;
+        min-width: 0;
+    }
+}

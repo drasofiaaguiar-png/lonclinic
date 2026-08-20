@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Candidatura ao diretório de produtores | LON Clinic</title>
+    <meta name="description" content="Candidate o seu produto biológico a constar no diretório de produtores da LON Clinic.">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta name="theme-color" content="#2f6342">
+    <link rel="stylesheet" href="/landing.css?v=20260621b">
+    <link rel="stylesheet" href="/recrutamento-psicologia.css?v=20260814e">
+    <link rel="stylesheet" href="/diretorio.css?v=diretorio-1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+</head>
+<body class="lon-landing rec-page dir-apply">
+    <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
+    <header class="rec-top">
+        <a href="/" class="rec-brand" aria-label="LON Clinic">LON Clinic</a>
+        <a href="/" class="rec-top-link">Início</a>
+    </header>
+
+    <main id="conteudo-principal" class="rec-main">
+        <section class="rec-done" id="dirApplyDone" hidden>
+            <h1>Candidatura enviada</h1>
+            <p>Recebemos os dados do produtor. A listagem fica pendente até a equipa da LON Clinic a aprovar.</p>
+            <div class="rec-done-actions">
+                <a href="/" class="lon-btn lon-btn-primary">Voltar ao início</a>
+            </div>
+        </section>
+
+        <div id="dirApplyWrap">
+            <section class="rec-intro">
+                <h1>Diretório de produtores biológicos</h1>
+                <div class="rec-intro-body">
+                    <p>Se produz alimentos ou cosmética biológica em Portugal e vende a particulares, pode candidatar-se a este diretório.</p>
+                    <p>A candidatura é revista pela LON Clinic. Só entra no diretório depois de aprovada.</p>
+                </div>
+            </section>
+
+            <form id="dirApplyForm" class="rec-card" novalidate enctype="multipart/form-data">
+                <div id="dirApplyError" class="dir-apply-error" role="alert"></div>
+                <div class="rec-fields">
+                    <div class="rec-field">
+                        <label for="prodName">Nome do produtor / marca</label>
+                        <input type="text" id="prodName" name="name" maxlength="160" required autocomplete="organization">
+                    </div>
+                    <div class="rec-field">
+                        <label for="prodShort">Descrição curta</label>
+                        <input type="text" id="prodShort" name="shortDescription" maxlength="280" required placeholder="Uma frase sobre o que produzem">
+                    </div>
+                    <div class="rec-field">
+                        <label for="prodLong">Descrição longa <span class="rec-hint">(opcional)</span></label>
+                        <textarea id="prodLong" name="longDescription" maxlength="8000" rows="5" placeholder="História, práticas, o que distingue a produção"></textarea>
+                    </div>
+
+                    <fieldset class="rec-fieldset">
+                        <legend>Categorias</legend>
+                        <div class="rec-choices">
+                            <label class="rec-choice"><input type="checkbox" name="categories" value="hortofruticolas"><span>Hortofrutícolas</span></label>
+                            <label class="rec-choice"><input type="checkbox" name="categories" value="lacticinios"><span>Laticínios</span></label>
+                            <label class="rec-choice"><input type="checkbox" name="categories" value="mel"><span>Mel</span></label>
+                            <label class="rec-choice"><input type="checkbox" name="categories" value="vinho"><span>Vinho</span></label>
+                            <label class="rec-choice"><input type="checkbox" name="categories" value="azeite"><span>Azeite</span></label>
+                            <label class="rec-choice"><input type="checkbox" name="categories" value="padaria"><span>Padaria</span></label>
+                            <label class="rec-choice"><input type="checkbox" name="categories" value="cosmetica_natural"><span>Cosmética natural</span></label>
+                        </div>
+                    </fieldset>
+
+                    <div class="rec-row">
+                        <div class="rec-field">
+                            <label for="prodDistrict">Distrito</label>
+                            <select id="prodDistrict" name="district" required>
+                                <option value="">Seleccione…</option>
+                                <option>Aveiro</option>
+                                <option>Beja</option>
+                                <option>Braga</option>
+                                <option>Bragança</option>
+                                <option>Castelo Branco</option>
+                                <option>Coimbra</option>
+                                <option>Évora</option>
+                                <option>Faro</option>
+                                <option>Guarda</option>
+                                <option>Leiria</option>
+                                <option>Lisboa</option>
+                                <option>Portalegre</option>
+                                <option>Porto</option>
+                                <option>Santarém</option>
+                                <option>Setúbal</option>
+                                <option>Viana do Castelo</option>
+                                <option>Vila Real</option>
+                                <option>Viseu</option>
+                                <option>Açores</option>
+                                <option>Madeira</option>
+                            </select>
+                        </div>
+                        <div class="rec-field">
+                            <label for="prodMunicipality">Concelho <span class="rec-hint">(opcional)</span></label>
+                            <input type="text" id="prodMunicipality" name="municipality" maxlength="128">
+                        </div>
+                    </div>
+                    <div class="rec-field">
+                        <label for="prodAddress">Morada <span class="rec-hint">(opcional)</span></label>
+                        <input type="text" id="prodAddress" name="address" maxlength="300" autocomplete="street-address">
+                    </div>
+                    <div class="rec-row">
+                        <div class="rec-field">
+                            <label for="prodLat">Latitude <span class="rec-hint">(opcional)</span></label>
+                            <input type="number" id="prodLat" name="lat" step="0.000001" min="-90" max="90" placeholder="38.7223">
+                        </div>
+                        <div class="rec-field">
+                            <label for="prodLng">Longitude <span class="rec-hint">(opcional)</span></label>
+                            <input type="number" id="prodLng" name="lng" step="0.000001" min="-180" max="180" placeholder="-9.1393">
+                        </div>
+                    </div>
+
+                    <div class="rec-field">
+                        <label for="prodCertBody">Entidade certificadora <span class="rec-hint">(ex. SATIVA, CERTIPLANET)</span></label>
+                        <input type="text" id="prodCertBody" name="certBody" maxlength="160">
+                    </div>
+                    <div class="rec-field">
+                        <label for="prodCertNumber">Número / selo do certificado</label>
+                        <input type="text" id="prodCertNumber" name="certNumber" maxlength="120">
+                    </div>
+                    <div class="rec-field">
+                        <label for="prodCertImage">Imagem do certificado <span class="rec-hint">(opcional, JPG/PNG/WebP, máx. 5MB)</span></label>
+                        <input type="file" id="prodCertImage" name="certImage" accept="image/jpeg,image/png,image/webp">
+                    </div>
+
+                    <div class="rec-field">
+                        <label for="prodWebsite">Website <span class="rec-hint">(opcional)</span></label>
+                        <input type="url" id="prodWebsite" name="website" maxlength="300" placeholder="https://">
+                    </div>
+                    <div class="rec-row">
+                        <div class="rec-field">
+                            <label for="prodEmail">Email</label>
+                            <input type="email" id="prodEmail" name="email" maxlength="320" required autocomplete="email">
+                        </div>
+                        <div class="rec-field">
+                            <label for="prodPhone">Telefone <span class="rec-hint">(opcional)</span></label>
+                            <input type="tel" id="prodPhone" name="phone" maxlength="40" autocomplete="tel">
+                        </div>
+                    </div>
+                    <div class="rec-row">
+                        <div class="rec-field">
+                            <label for="prodInstagram">Instagram <span class="rec-hint">(opcional)</span></label>
+                            <input type="text" id="prodInstagram" name="instagram" maxlength="120" placeholder="@marca">
+                        </div>
+                        <div class="rec-field">
+                            <label for="prodFacebook">Facebook <span class="rec-hint">(opcional)</span></label>
+                            <input type="text" id="prodFacebook" name="facebook" maxlength="200">
+                        </div>
+                    </div>
+                    <div class="rec-field">
+                        <label for="prodSocialOther">Outra rede / URL <span class="rec-hint">(opcional)</span></label>
+                        <input type="url" id="prodSocialOther" name="socialOther" maxlength="300" placeholder="https://">
+                    </div>
+
+                    <div class="rec-field">
+                        <label for="prodPhotos">Fotos <span class="rec-hint">(até 8, JPG/PNG/WebP, 5MB cada)</span></label>
+                        <input type="file" id="prodPhotos" name="photos" accept="image/jpeg,image/png,image/webp" multiple>
+                    </div>
+
+                    <fieldset class="rec-fieldset">
+                        <legend>Método de venda</legend>
+                        <div class="rec-choices">
+                            <label class="rec-choice"><input type="checkbox" name="salesMethods" value="loja_fisica"><span>Loja física</span></label>
+                            <label class="rec-choice"><input type="checkbox" name="salesMethods" value="entrega"><span>Entrega</span></label>
+                            <label class="rec-choice"><input type="checkbox" name="salesMethods" value="mercado"><span>Mercado</span></label>
+                            <label class="rec-choice"><input type="checkbox" name="salesMethods" value="encomenda_online"><span>Encomenda online</span></label>
+                        </div>
+                    </fieldset>
+                </div>
+                <p class="dir-apply-note">Ao enviar, a candidatura fica com estado pendente. Não publicamos o perfil sem revisão.</p>
+                <div class="rec-actions" style="margin-top:22px;">
+                    <span></span>
+                    <button type="submit" class="lon-btn lon-btn-primary" id="dirApplySubmit">Enviar candidatura</button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <footer class="rec-footer">
+        <nav>
+            <a href="/">Início</a>
+            <a href="/faq">FAQ</a>
+        </nav>
+        <p>LON Clinic · Lisboa</p>
+    </footer>
+    <script src="/diretorio-candidatar.js?v=diretorio-1"></script>
+</body>
+</html>

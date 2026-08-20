@@ -152,6 +152,11 @@ function profileLinksHtml(author, { includeSelf } = {}) {
         .join('<span aria-hidden="true"> · </span>');
 }
 
+function reviewerBylineSnippet(slug) {
+    const a = getAuthor(slug);
+    return `Revisto por ${a.displayName} · ${a.jobTitle} · ${a.memberOf}`;
+}
+
 function authorBylineHtml(origin, slug, dateLabel) {
     const a = getAuthor(slug);
     const href = authorPath(a);
@@ -165,8 +170,23 @@ function authorBylineHtml(origin, slug, dateLabel) {
         </p>`;
 }
 
-function authorBioHtml() {
-    return `<p class="eeat-reviewed">Revisto pela equipa médica da Lon Clinic</p>`;
+function formatReviewDate(iso) {
+    const raw = String(iso || '').slice(0, 10);
+    const m = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!m) return '';
+    const months = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+    const month = months[Number(m[2]) - 1];
+    if (!month) return '';
+    return `${Number(m[3])} de ${month} de ${m[1]}`;
+}
+
+function authorBioHtml(origin, slug, dateIso) {
+    const iso = String(dateIso || '').slice(0, 10);
+    const label = formatReviewDate(iso);
+    const dateBit = iso && label
+        ? ` · <time datetime="${escapeHtml(iso)}">${escapeHtml(label)}</time>`
+        : '';
+    return `<p class="eeat-reviewed">Revisto pela equipa médica da Lon Clinic${dateBit}</p>`;
 }
 
 function renderAuthorPage(origin, slug) {
@@ -304,6 +324,7 @@ module.exports = {
     personNode,
     personJsonLd,
     articleAuthorSchema,
+    reviewerBylineSnippet,
     authorBylineHtml,
     authorBioHtml,
     renderAuthorPage,

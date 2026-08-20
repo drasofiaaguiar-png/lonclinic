@@ -32,6 +32,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const guide = require('./guide');
 const burnoutPages = require('./burnout-pages');
+const producers = require('./producers');
 const seo = require('./seo');
 const { hydrateInfoHtml, NOINDEX_PAGES: INFO_NOINDEX_PAGES } = require('./info-ssr');
 const authors = require('./authors');
@@ -157,6 +158,16 @@ const rateLimitSessionRetrieve = rateLimit({
 const rateLimitRecrutamentoPsicologia = rateLimit({
     windowMs: 60 * 60 * 1000,
     max: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Demasiadas candidaturas. Tente novamente mais tarde.' });
+    }
+});
+
+const rateLimitProducerApply = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 8,
     standardHeaders: true,
     legacyHeaders: false,
     handler: (req, res) => {
@@ -401,6 +412,22 @@ function requireAdmin(req, res, next) {
     return next();
 }
 
+function safeInternalNextPath(raw) {
+    const s = String(raw || '');
+    if (!s.startsWith('/diretorio')) return '';
+    if (s.startsWith('//') || s.includes('\\') || s.includes('://') || s.length > 200) return '';
+    return s;
+}
+
+function requireAdminPage(req, res, next) {
+    if (isAdminSession(req)) return next();
+    if (req.session && req.session.clinicAuthenticated) {
+        return res.redirect(302, '/clinic-portal');
+    }
+    const nextPath = safeInternalNextPath(req.originalUrl || '/diretorio') || '/diretorio';
+    return res.redirect(302, `/admin?next=${encodeURIComponent(nextPath)}`);
+}
+
 function isStaffRequest(req) {
     if (!req) return false;
     if (req.session && req.session.clinicAuthenticated) return true;
@@ -457,6 +484,7 @@ const reviewsStore = []; // memory fallback for patient reviews
 const clinicalNotesStore = []; // memory fallback only
 const psychologistApplicationsStore = []; // memory fallback for recrutamento
 const professionalsStore = []; // memory fallback for clinician accounts + Doxy rooms
+const producersStore = []; // memory fallback for organic producers directory
 let professionalIdSeq = 1;
 
 function normalizeProfessionalUsername(raw) {
@@ -495,6 +523,98 @@ async function findProfessionalByIdInternal(id) {
     if (!Number.isInteger(n) || n < 1) return null;
     if (usePersistentDb) return db.findProfessionalById(n);
     return professionalsStore.find((p) => p.id === n) || null;
+}
+
+function producerImageExt(file) {
+    const ext = path.extname((file && file.originalname) || '').toLowerCase();
+    if (PRODUCER_IMAGE_EXTS.has(ext)) return ext === '.jpeg' ? '.jpg' : ext;
+    const mime = file && file.mimetype;
+    if (mime === 'image/jpeg') return '.jpg';
+    if (mime === 'image/png') return '.png';
+    if (mime === 'image/webp') return '.webp';
+    return '';
+}
+
+function producerFilePath(producerId, filename) {
+    const base = path.resolve(PRODUCER_UPLOAD_ROOT, String(producerId || ''));
+    const target = path.resolve(base, String(filename || ''));
+    const rel = path.relative(base, target);
+    if (!rel || rel.startsWith('..') || path.isAbsolute(rel)) return null;
+    if (!/^[A-Za-z0-9._-]+$/.test(String(filename || ''))) return null;
+    return target;
+}
+
+async function saveProducerUploads(producerId, files) {
+    const dir = path.join(PRODUCER_UPLOAD_ROOT, producerId);
+    await fs.promises.mkdir(dir, { recursive: true });
+    const photos = [];
+    for (const file of files.photos || []) {
+        const ext = producerImageExt(file);
+        if (!ext || !file.buffer) continue;
+        const filename = `${crypto.randomUUID()}${ext}`;
+        await fs.promises.writeFile(path.join(dir, filename), file.buffer);
+        photos.push({
+            filename,
+            originalName: String(file.originalname || '').slice(0, 180)
+        });
+    }
+    let certImage = null;
+    const cert = (files.certImage || [])[0];
+    if (cert && cert.buffer) {
+        const ext = producerImageExt(cert);
+        if (ext) {
+            certImage = `cert-${crypto.randomUUID()}${ext}`;
+            await fs.promises.writeFile(path.join(dir, certImage), cert.buffer);
+        }
+    }
+    return { photos, certImage };
+}
+
+async function allocateProducerSlug(name) {
+    const base = producers.slugifyName(name);
+    let slug = base;
+    let n = 2;
+    while (n < 80) {
+        const taken = usePersistentDb
+            ? await db.producerSlugTaken(slug)
+            : producersStore.some((p) => p.slug === slug);
+        if (!taken) return slug;
+        slug = `${base}-${n}`;
+        n += 1;
+    }
+    return `${base}-${crypto.randomUUID().slice(0, 8)}`;
+}
+
+function filterProducersMemory({ status, category, district, salesMethod, q }) {
+    let list = producersStore.slice();
+    if (status && producers.STATUSES.has(status)) list = list.filter((p) => p.status === status);
+    if (category) list = list.filter((p) => Array.isArray(p.categories) && p.categories.includes(category));
+    if (district) list = list.filter((p) => p.district === district);
+    if (salesMethod) {
+        list = list.filter((p) => Array.isArray(p.salesMethods) && p.salesMethods.includes(salesMethod));
+    }
+    if (q && q.trim()) {
+        const needle = q.trim().toLowerCase();
+        list = list.filter(
+            (p) =>
+                String(p.name || '').toLowerCase().includes(needle) ||
+                String(p.shortDescription || '').toLowerCase().includes(needle) ||
+                String(p.municipality || '').toLowerCase().includes(needle)
+        );
+    }
+    const rank = { pendente: 0, aprovado: 1, rejeitado: 2 };
+    list.sort((a, b) => (rank[a.status] ?? 9) - (rank[b.status] ?? 9) || String(a.name).localeCompare(String(b.name), 'pt'));
+    return list.slice(0, 400);
+}
+
+async function getProducerByIdInternal(id) {
+    if (usePersistentDb) return db.findProducerById(id);
+    return producersStore.find((p) => p.id === id) || null;
+}
+
+async function getProducerBySlugInternal(slug) {
+    if (usePersistentDb) return db.findProducerBySlug(slug);
+    return producersStore.find((p) => p.slug === slug) || null;
 }
 
 async function resolveDoxyRoomUrl(professionalName) {
@@ -1042,6 +1162,26 @@ const uploadCvPdf = multer({
         const isPdf = file.mimetype === 'application/pdf' || fileExt === '.pdf';
         if (!isPdf) {
             return cb(new Error('O CV deve ser um ficheiro PDF.'));
+        }
+        return cb(null, true);
+    }
+});
+
+const PRODUCER_IMAGE_EXTS = new Set(['.jpg', '.jpeg', '.png', '.webp']);
+const PRODUCER_IMAGE_MIMES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const PRODUCER_UPLOAD_ROOT = path.join(__dirname, 'uploads', 'producers');
+
+const uploadProducerImages = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 5 * 1024 * 1024,
+        files: 9
+    },
+    fileFilter: (req, file, cb) => {
+        const ext = path.extname(file.originalname || '').toLowerCase();
+        const ok = PRODUCER_IMAGE_MIMES.has(file.mimetype) || PRODUCER_IMAGE_EXTS.has(ext);
+        if (!ok) {
+            return cb(new Error('Imagens permitidas: JPG, PNG ou WebP.'));
         }
         return cb(null, true);
     }
@@ -4262,8 +4402,8 @@ app.use((req, res, next) => {
     return res.status(404).type('text').send('Not found');
 });
 
-const ANALYTICS_SKIP_PATH = /^\/(api|admin|clinic-portal|doctors|webhook|patient-portal)(\/|$)/i;
-const ANALYTICS_SKIP_PAGE = /\/(admin|clinic|dashboard)(\.html)?$/i;
+const ANALYTICS_SKIP_PATH = /^\/(api|admin|clinic-portal|doctors|webhook|patient-portal|diretorio)(\/|$)/i;
+const ANALYTICS_SKIP_PAGE = /\/(admin|clinic|dashboard|diretorio)(\.html)?$/i;
 const ANALYTICS_STATIC_EXT =
     /\.(js|css|png|jpe?g|webp|gif|svg|ico|woff2?|ttf|map|xml|txt|json|webmanifest|mp4|pdf)$/i;
 
@@ -4318,7 +4458,10 @@ app.use((req, res, next) => {
         '/api/clinic',
         '/api/admin',
         '/api/debug-stripe',
-        '/api/test-email'
+        '/api/test-email',
+        '/diretorio',
+        '/api/diretorio',
+        '/uploads'
     ];
     const shouldNoIndex = noIndexPrefixes.some((prefix) => req.path.startsWith(prefix));
     if (shouldNoIndex) {
@@ -4581,6 +4724,20 @@ app.get('/psicologia.html', (req, res) => {
     res.redirect(301, '/saudemental');
 });
 
+app.get('/teste-personalidade', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'bigfive-quiz.html'), 'Error loading personality quiz page');
+});
+
+app.get('/teste-big-five', (req, res) => {
+    const qs = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+    res.redirect(301, `/teste-personalidade${qs}`);
+});
+
+app.get('/psicologia/teste', (req, res) => {
+    const qs = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+    res.redirect(301, `/teste-personalidade${qs}`);
+});
+
 app.get('/triagem', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'triagem.html'), 'Error loading triagem page');
 });
@@ -4611,6 +4768,23 @@ app.get('/clinic-portal', (req, res) => {
 
 app.get('/admin', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'admin.html'), 'Error loading admin page');
+});
+
+app.get('/diretorio/candidatar', (req, res) => {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    sendHtmlNoCache(res, path.join(__dirname, 'diretorio-candidatar.html'), 'Error loading producer application');
+});
+
+app.get('/diretorio', requireAdminPage, (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'diretorio.html'), 'Error loading directory');
+});
+
+app.get('/diretorio/:slug', requireAdminPage, (req, res) => {
+    const slug = String(req.params.slug || '');
+    if (!slug || slug === 'candidatar') {
+        return res.redirect(302, '/diretorio');
+    }
+    sendHtmlNoCache(res, path.join(__dirname, 'diretorio-ficha.html'), 'Error loading producer page');
 });
 
 app.get('/info.html', (req, res) => {
@@ -4684,6 +4858,18 @@ app.get('/admin.html', (req, res) => {
     res.redirect(301, '/admin');
 });
 
+app.get('/diretorio.html', (req, res) => {
+    res.redirect(301, '/diretorio');
+});
+
+app.get('/diretorio-candidatar.html', (req, res) => {
+    res.redirect(301, '/diretorio/candidatar');
+});
+
+app.get('/diretorio-ficha.html', (req, res) => {
+    res.redirect(301, '/diretorio');
+});
+
 app.get('/doctors.html', (req, res) => {
     res.redirect(301, '/doctors');
 });
@@ -4746,6 +4932,11 @@ app.use((req, res, next) => {
     });
 });
 
+app.use('/uploads', (req, res) => {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    res.status(404).type('text').send('Not found');
+});
+
 // ─── Static files (CSS, JS, images, etc.) ───
 app.use(express.static(path.join(__dirname), {
     dotfiles: 'ignore',
@@ -4759,14 +4950,17 @@ app.use(express.static(path.join(__dirname), {
             base === 'psicologia.css' ||
             base === 'psicologia.js' ||
             base === 'recrutamento-psicologia.css' ||
-            base === 'recrutamento-psicologia.js'
+            base === 'recrutamento-psicologia.js' ||
+            base === 'diretorio.css' ||
+            base === 'diretorio.js' ||
+            base === 'diretorio-candidatar.js'
         ) {
             res.setHeader('Cache-Control', 'no-store');
             return;
         }
         // Admin / dashboard assets change often and are tiny — never cache them
         // (also bypasses Cloudflare's default 4h edge cache for static JS/CSS).
-        const adminAssets = new Set(['admin.js', 'admin.html', 'dashboard.css', 'admin.css', 'reviews.js', 'lon-analytics.js']);
+        const adminAssets = new Set(['admin.js', 'admin.html', 'dashboard.css', 'admin.css', 'reviews.js', 'lon-analytics.js', 'diretorio.js', 'diretorio.css']);
         if (adminAssets.has(base)) {
             res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
             res.setHeader('CDN-Cache-Control', 'no-store');
@@ -5848,6 +6042,225 @@ app.patch('/api/admin/psychologists/:id', requireAdmin, express.json(), async (r
     } catch (err) {
         console.error('PATCH /api/admin/psychologists/:id:', err.message);
         res.status(500).json({ error: 'Failed to update application' });
+    }
+});
+
+app.get('/api/diretorio/meta', (req, res) => {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    res.json(producers.meta());
+});
+
+app.post('/api/diretorio/candidatar', rateLimitProducerApply, (req, res) => {
+    uploadProducerImages.fields([
+        { name: 'photos', maxCount: 8 },
+        { name: 'certImage', maxCount: 1 }
+    ])(req, res, async (uploadErr) => {
+        if (uploadErr instanceof multer.MulterError) {
+            if (uploadErr.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({ error: 'Cada imagem pode ter no máximo 5MB.' });
+            }
+            if (uploadErr.code === 'LIMIT_FILE_COUNT' || uploadErr.code === 'LIMIT_UNEXPECTED_FILE') {
+                return res.status(400).json({ error: 'Demasiadas imagens. Máximo 8 fotos e 1 certificado.' });
+            }
+            return res.status(400).json({ error: 'Erro ao processar as imagens.' });
+        }
+        if (uploadErr) {
+            return res.status(400).json({ error: uploadErr.message || 'Erro no ficheiro enviado.' });
+        }
+
+        let raw = {};
+        try {
+            if (typeof req.body?.payload === 'string' && req.body.payload.trim()) {
+                raw = JSON.parse(req.body.payload);
+            } else if (req.body && typeof req.body === 'object') {
+                raw = req.body;
+            }
+        } catch (parseErr) {
+            return res.status(400).json({ error: 'Payload inválido.' });
+        }
+
+        const payload = producers.sanitizePayload(raw);
+        if (!payload.name) {
+            return res.status(400).json({ error: 'O nome do produtor é obrigatório.' });
+        }
+        if (!payload.shortDescription) {
+            return res.status(400).json({ error: 'Indique uma descrição curta.' });
+        }
+        if (!payload.categories.length) {
+            return res.status(400).json({ error: 'Escolha pelo menos uma categoria.' });
+        }
+        if (!payload.district) {
+            return res.status(400).json({ error: 'Indique o distrito.' });
+        }
+        if (!payload.email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(payload.email)) {
+            return res.status(400).json({ error: 'Indique um email válido.' });
+        }
+        if (!payload.salesMethods.length) {
+            return res.status(400).json({ error: 'Escolha pelo menos um método de venda.' });
+        }
+
+        const id = crypto.randomUUID();
+        let photos = [];
+        let certImage = null;
+        try {
+            const saved = await saveProducerUploads(id, req.files || {});
+            photos = saved.photos;
+            certImage = saved.certImage;
+        } catch (fileErr) {
+            console.error('POST /api/diretorio/candidatar files:', fileErr.message);
+            return res.status(500).json({ error: 'Não foi possível guardar as imagens.' });
+        }
+
+        const slug = await allocateProducerSlug(payload.name);
+        const record = {
+            id,
+            slug,
+            name: payload.name,
+            shortDescription: payload.shortDescription,
+            longDescription: payload.longDescription,
+            categories: payload.categories,
+            district: payload.district,
+            municipality: payload.municipality,
+            address: payload.address,
+            lat: payload.lat,
+            lng: payload.lng,
+            certBody: payload.certBody,
+            certNumber: payload.certNumber,
+            certImage,
+            website: payload.website,
+            email: payload.email,
+            phone: payload.phone,
+            social: payload.social,
+            photos,
+            salesMethods: payload.salesMethods,
+            status: 'pendente',
+            adminNotes: '',
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+        };
+
+        try {
+            if (usePersistentDb) {
+                await db.insertProducer(record);
+            } else {
+                producersStore.unshift(record);
+                if (producersStore.length > 500) producersStore.length = 500;
+            }
+        } catch (dbErr) {
+            console.error('POST /api/diretorio/candidatar DB:', dbErr.message);
+            return res.status(500).json({ error: 'Não foi possível guardar a candidatura.' });
+        }
+
+        if (isEmailConfigured) {
+            const cats = producers.categoryLabels(payload.categories).join(', ');
+            const sales = producers.salesLabels(payload.salesMethods).join(', ');
+            sendClinicOpsEmail(
+                `Diretório: nova candidatura — ${payload.name}`,
+                `<p>Nova candidatura de produtor biológico (pendente).</p>
+                 <p><strong>${escapeHtml(payload.name)}</strong><br>${escapeHtml(payload.district)}${payload.municipality ? ' · ' + escapeHtml(payload.municipality) : ''}</p>
+                 <p>Categorias: ${escapeHtml(cats)}<br>Venda: ${escapeHtml(sales)}<br>Email: ${escapeHtml(payload.email)}</p>
+                 <p><a href="${escapeHtml(getBaseUrl(req))}/admin">Abrir painel de moderação</a></p>`,
+                `Nova candidatura: ${payload.name}\n${payload.district}\n${payload.email}\nModerar em ${getBaseUrl(req)}/admin`
+            ).catch(() => {});
+        }
+
+        res.json({ success: true, message: 'Candidatura recebida. Entrará no diretório após aprovação.' });
+    });
+});
+
+app.get('/api/admin/producers', requireAdmin, async (req, res) => {
+    try {
+        const status = req.query.status ? String(req.query.status) : '';
+        const category = req.query.category ? String(req.query.category) : '';
+        const district = req.query.district ? String(req.query.district) : '';
+        const salesMethod = req.query.sales ? String(req.query.sales) : '';
+        const q = req.query.q ? String(req.query.q) : '';
+        const filters = {
+            status: status || undefined,
+            category: category && producers.CATEGORY_IDS.has(category) ? category : undefined,
+            district: district && producers.DISTRICT_SET.has(district) ? district : undefined,
+            salesMethod: salesMethod && producers.SALES_IDS.has(salesMethod) ? salesMethod : undefined,
+            q: q || undefined,
+            limit: 400
+        };
+        const list = usePersistentDb
+            ? await db.listProducers(filters)
+            : filterProducersMemory(filters);
+        res.json({ producers: list, meta: producers.meta() });
+    } catch (err) {
+        console.error('GET /api/admin/producers:', err.message);
+        res.status(500).json({ error: 'Failed to load producers' });
+    }
+});
+
+app.get('/api/admin/producers/slug/:slug', requireAdmin, async (req, res) => {
+    try {
+        const slug = String(req.params.slug || '').trim();
+        if (!slug) return res.status(400).json({ error: 'Slug required' });
+        const producer = await getProducerBySlugInternal(slug);
+        if (!producer) return res.status(404).json({ error: 'Not found' });
+        res.json({ producer });
+    } catch (err) {
+        console.error('GET /api/admin/producers/slug:', err.message);
+        res.status(500).json({ error: 'Failed to load producer' });
+    }
+});
+
+app.get('/api/admin/producers/:id/files/:filename', requireAdmin, async (req, res) => {
+    try {
+        const id = String(req.params.id || '');
+        const filename = String(req.params.filename || '');
+        const producer = await getProducerByIdInternal(id);
+        if (!producer) return res.status(404).json({ error: 'Not found' });
+        const allowed = new Set(
+            (producer.photos || []).map((p) => p.filename).concat(producer.certImage ? [producer.certImage] : [])
+        );
+        if (!allowed.has(filename)) return res.status(404).json({ error: 'Not found' });
+        const filePath = producerFilePath(id, filename);
+        if (!filePath || !fs.existsSync(filePath)) return res.status(404).json({ error: 'Not found' });
+        res.setHeader('Cache-Control', 'private, no-store');
+        res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+        res.sendFile(filePath);
+    } catch (err) {
+        console.error('GET /api/admin/producers/:id/files:', err.message);
+        res.status(500).json({ error: 'Failed to load file' });
+    }
+});
+
+app.get('/api/admin/producers/:id', requireAdmin, async (req, res) => {
+    try {
+        const id = String(req.params.id || '');
+        const producer = await getProducerByIdInternal(id);
+        if (!producer) return res.status(404).json({ error: 'Not found' });
+        res.json({ producer });
+    } catch (err) {
+        console.error('GET /api/admin/producers/:id:', err.message);
+        res.status(500).json({ error: 'Failed to load producer' });
+    }
+});
+
+app.patch('/api/admin/producers/:id', requireAdmin, express.json(), async (req, res) => {
+    try {
+        const id = String(req.params.id || '');
+        const status = req.body?.status != null ? String(req.body.status) : undefined;
+        const adminNotes = req.body?.adminNotes != null ? String(req.body.adminNotes) : undefined;
+        if (status && !producers.STATUSES.has(status)) {
+            return res.status(400).json({ error: 'Invalid status' });
+        }
+        if (usePersistentDb) {
+            const producer = await db.updateProducer(id, { status, adminNotes });
+            if (!producer) return res.status(404).json({ error: 'Not found' });
+            return res.json({ producer });
+        }
+        const idx = producersStore.findIndex((p) => p.id === id);
+        if (idx < 0) return res.status(404).json({ error: 'Not found' });
+        if (status !== undefined) producersStore[idx].status = status;
+        if (adminNotes !== undefined) producersStore[idx].adminNotes = String(adminNotes).slice(0, 4000);
+        producersStore[idx].updatedAt = new Date().toISOString();
+        res.json({ producer: producersStore[idx] });
+    } catch (err) {
+        console.error('PATCH /api/admin/producers/:id:', err.message);
+        res.status(500).json({ error: 'Failed to update producer' });
     }
 });
 
@@ -8473,6 +8886,8 @@ function getBaseUrl(req) {
         console.log(`\n   Open http://localhost:${PORT} to view the site`);
         console.log(`   Open http://localhost:${PORT}/book-consultation to test booking`);
         console.log(`   Open http://localhost:${PORT}/patient-portal for patient portal`);
+        console.log(`   Diretório (admin): http://localhost:${PORT}/diretorio`);
+        console.log(`   Candidatura pública: http://localhost:${PORT}/diretorio/candidatar`);
         if (fs.existsSync(path.join(__dirname, 'marcar.html'))) {
             console.log(`   Marcação: http://localhost:${PORT}/marcar/clinica-geral\n`);
         } else {

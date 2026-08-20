@@ -13,6 +13,7 @@ const authors = require('./authors');
 const GUIDE_DIR = path.join(__dirname, 'data', 'guide');
 const MANIFEST_PATH = path.join(GUIDE_DIR, 'manifest.json');
 const ARTICLES_DIR = path.join(GUIDE_DIR, 'articles');
+const BURNOUT_MANIFEST_PATH = path.join(__dirname, 'data', 'burnout', 'manifest.json');
 
 marked.use({
     mangle: false,
@@ -61,6 +62,42 @@ function loadManifest() {
     return parsed;
 }
 
+function loadBurnoutManifest() {
+    if (!fs.existsSync(BURNOUT_MANIFEST_PATH)) {
+        return { pages: [] };
+    }
+    try {
+        const parsed = JSON.parse(fs.readFileSync(BURNOUT_MANIFEST_PATH, 'utf8'));
+        return parsed && Array.isArray(parsed.pages) ? parsed : { pages: [] };
+    } catch {
+        return { pages: [] };
+    }
+}
+
+function burnoutAsCard(page) {
+    if (!page || !page.slug) return null;
+    const slug = String(page.slug);
+    return {
+        slug: `burnout-${slug}`,
+        href: slug === 'hub' ? '/burnout' : `/burnout/${encodeURIComponent(slug)}`,
+        title: page.title,
+        description: page.description,
+        about: 'Burnout',
+        datePublished: page.datePublished,
+        dateModified: page.dateModified || page.datePublished,
+        image: page.image || '/image/image1_files/ColmoreRow_Large_Desktop.jpg'
+    };
+}
+
+function resolveRelatedRef(ref, guideBySlug, burnoutBySlug) {
+    const key = String(ref || '');
+    if (key.startsWith('/burnout')) {
+        const rest = key.replace(/^\/burnout\/?/, '');
+        return burnoutAsCard(burnoutBySlug.get(rest || 'hub'));
+    }
+    return guideBySlug.get(key) || null;
+}
+
 function sortArticles(articles) {
     return [...articles].sort((a, b) => {
         const da = String(a.datePublished || '');
@@ -104,6 +141,9 @@ function relatedKicker(article) {
     if (/vacina/.test(slug)) return 'Vacina';
     if (/telemedicina/.test(slug)) return 'Telemedicina';
     if (/marcacao/.test(slug)) return 'Marcação';
+    if (/burnout/.test(slug) || (article && article.href && String(article.href).startsWith('/burnout'))) {
+        return 'Burnout';
+    }
     return 'Guide';
 }
 
@@ -204,6 +244,7 @@ function injectBookingCards(html, kind) {
 function pickRelatedArticles(current, articles) {
     const all = Array.isArray(articles) ? articles : [];
     const bySlug = new Map(all.map((a) => [a.slug, a]));
+    const burnoutBySlug = new Map((loadBurnoutManifest().pages || []).map((p) => [p.slug, p]));
     const picked = [];
     const seen = new Set([current.slug]);
     const push = (article) => {
@@ -211,7 +252,9 @@ function pickRelatedArticles(current, articles) {
         seen.add(article.slug);
         picked.push(article);
     };
-    (Array.isArray(current.related) ? current.related : []).forEach((slug) => push(bySlug.get(slug)));
+    (Array.isArray(current.related) ? current.related : []).forEach((ref) => {
+        push(resolveRelatedRef(ref, bySlug, burnoutBySlug));
+    });
     const rest = all.filter((a) => !seen.has(a.slug));
     rest.filter((a) => current.about && a.about === current.about).forEach(push);
     const cluster = articleCluster(current);
@@ -223,18 +266,7 @@ function pickRelatedArticles(current, articles) {
 function relatedArticlesHtml(current, articles) {
     const related = pickRelatedArticles(current, articles);
     if (!related.length) return '';
-    const cards = related.map((a) => {
-        const excerpt = a.description
-            ? `<p class="mag-excerpt">${escapeHtml(a.description)}</p>`
-            : '';
-        return `
-        <a class="mag-card guide-related-card" href="${magHref(a)}">
-            <span class="mag-photo" style="background-image:url('${magImage(a)}')"></span>
-            <span class="guide-related-kicker">${escapeHtml(relatedKicker(a))}</span>
-            <h3 class="guide-related-title">${escapeHtml(a.title || a.slug)}</h3>
-            ${excerpt}
-        </a>`;
-    }).join('');
+    const cards = related.map((a) => magCardHtml(a, { kicker: true, cardClass: 'guide-related-card' })).join('');
     return `
 <nav class="guide-related" aria-label="Artigos relacionados">
     <h2 class="guide-related-heading">Continuar a ler</h2>
@@ -303,8 +335,8 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260418k">
-    <link rel="stylesheet" href="/guide.css?v=20260820g">
-    <link rel="stylesheet" href="/author.css?v=20260820g">
+    <link rel="stylesheet" href="/guide.css?v=20260820l">
+    <link rel="stylesheet" href="/author.css?v=20260820l">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     ${ldJson}
@@ -413,7 +445,10 @@ function renderBlogIndex(origin) {
         const href = `/blog/${encodeURIComponent(slug)}`;
         const t = escapeHtml(String(a.title || slug));
         const d = escapeHtml(String(a.description || ''));
-        const date = escapeHtml(String(a.datePublished || ''));
+        const iso = String(a.dateModified || a.datePublished || '').slice(0, 10);
+        const date = iso
+            ? `<time datetime="${escapeHtml(iso)}">Atualizado em ${escapeHtml(magDate(iso))}</time>`
+            : '';
         const imagePath = a.image
             ? `${String(a.image).startsWith('/') ? '' : '/'}${String(a.image)}`
             : '/image/image2.webp';
@@ -550,31 +585,36 @@ function renderBlogArticle(origin, slug) {
         });
     }
 
+    jsonLd.push(magBreadcrumbJsonLd(o, magBreadcrumbCrumbs(`/blog/${encodeURIComponent(slug)}`, title)));
+
     const isTravelGuide = /vacina|viajante|travel/i.test(slug);
     const byline = (() => {
         const a = authors.getAuthor(meta.author);
         const href = authors.authorPath(a);
-        const iso = String(datePub || '').slice(0, 10);
+        const iso = String(dateMod || datePub || '').slice(0, 10);
         const time = iso
-            ? `<time datetime="${escapeHtml(iso)}">${escapeHtml(magDate(datePub))}</time><span aria-hidden="true"> · </span>`
+            ? `<time datetime="${escapeHtml(iso)}">Atualizado em ${escapeHtml(magDate(iso))}</time><span aria-hidden="true"> · </span>`
             : '';
         return `<p class="eeat-byline mag-story-by">${time}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">Médica · ${a.yearsPractice} anos</a><span class="eeat-byline-review"> · Revisão clínica</span></p>`;
     })();
-    const bio = authors.authorBioHtml(o, meta.author);
+    const bio = authors.authorBioHtml(o, meta.author, dateMod || datePub);
     const leadFigure = meta.image
         ? `<figure class="guide-figure guide-figure-lead mag-story-hero"><img src="${escapeHtml(String(meta.image).startsWith('/') ? meta.image : `/${meta.image}`)}" alt="${escapeHtml(title)}" width="1600" height="900" decoding="async"></figure>`
         : '';
 
     const articlePath = `/blog/${encodeURIComponent(slug)}`;
+    const crumbsHtml = magBreadcrumbHtml(magBreadcrumbCrumbs(articlePath, title));
     const kicker = magThemeLabel(meta);
     const note = isTravelGuide
         ? 'Informação de carácter geral — não substitui consulta médica. Horários dos centros de vacinação podem alterar-se.'
         : 'Informação de carácter geral — não substitui consulta médica individualizada.';
+    const closeCta = `<section class="mag-section mag-wrap mag-article-cta">${magCtaHtml(articleCluster(meta) === 'travel' ? 'travel' : articleCluster(meta) === 'mental' ? 'mental' : 'clinic')}</section>`;
     const articleInner = format === 'markdown'
         ? `
     <main id="conteudo-principal" class="guide-article-main mag-article-main">
         <article class="mag-story" itemscope itemtype="https://schema.org/MedicalWebPage">
             <header class="mag-story-head">
+                ${crumbsHtml}
                 <p class="mag-story-kicker">${escapeHtml(kicker)}</p>
                 <h1 class="mag-story-title" itemprop="headline">${escapeHtml(title)}</h1>
                 <p class="mag-story-dek">${escapeHtml(description)}</p>
@@ -588,6 +628,7 @@ function renderBlogArticle(origin, slug) {
             </div>
             </div>
             ${relatedHtml}
+            ${closeCta}
             <div class="mag-story-body mag-story-body--foot">
             ${bio}
             </div>
@@ -597,12 +638,14 @@ function renderBlogArticle(origin, slug) {
     <main id="conteudo-principal" class="guide-article-main-html mag-article-main">
         <article class="mag-story mag-story--html">
             <header class="mag-story-head mag-story-head--html">
+                ${crumbsHtml}
                 <p class="mag-story-kicker">${escapeHtml(kicker)}</p>
                 ${byline}
             </header>
             <div class="guide-prose" lang="pt-PT">
                 ${articleHtml}
             </div>
+            ${closeCta}
             ${bio}
         </article>
     </main>`;
@@ -616,7 +659,7 @@ function renderBlogArticle(origin, slug) {
         jsonLd,
         ogType: 'article',
         extraCss: ['/landing.css?v=20260418k'],
-        extraCssAfter: ['/guide.css?v=20260820g', '/author.css?v=20260820g', '/magazine.css?v=20260820g'],
+        extraCssAfter: ['/guide.css?v=20260820l', '/author.css?v=20260820l', '/magazine.css?v=20260820l'],
         mainHtml: magAppHtml(articlePath, `
             ${magTopbarHtml({ magazineCurrent: true })}
             ${articleInner}
@@ -665,25 +708,100 @@ function magThemeLabel(article) {
     return 'Clínica';
 }
 
-function magCardHtml(article) {
+function magCardDateHtml(article) {
+    const iso = String((article && (article.dateModified || article.datePublished)) || '').slice(0, 10);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return '';
+    return `<p class="mag-updated"><time datetime="${escapeHtml(iso)}">Atualizado em ${escapeHtml(magDate(iso))}</time></p>`;
+}
+
+function magCardBylineHtml(article) {
+    return `<p class="mag-byline">${escapeHtml(authors.reviewerBylineSnippet(article && article.author))}</p>`;
+}
+
+function magCardHtml(article, opts) {
+    const extraClass = opts && opts.cardClass ? ` ${opts.cardClass}` : '';
+    const kicker = opts && opts.kicker
+        ? `<span class="guide-related-kicker">${escapeHtml(relatedKicker(article))}</span>`
+        : '';
     const excerpt = article.description
         ? `<p class="mag-excerpt">${escapeHtml(article.description)}</p>`
         : '';
-    return `<a class="mag-card" href="${magHref(article)}">
+    const titleClass = extraClass.includes('guide-related-card') ? ' class="guide-related-title"' : '';
+    return `<a class="mag-card${extraClass}" href="${magHref(article)}">
                 <span class="mag-photo" style="background-image:url('${magImage(article)}')"></span>
-                <h3>${escapeHtml(article.title)}</h3>
+                ${kicker}
+                <h3${titleClass}>${escapeHtml(article.title)}</h3>
+                ${magCardDateHtml(article)}
+                ${magCardBylineHtml(article)}
                 ${excerpt}
             </a>`;
 }
 
-function magThemeRowHtml(id, title, articles) {
+function magCtaHtml(kind) {
+    const packs = {
+        mental: {
+            kicker: 'Saúde mental',
+            title: 'Psicologia e avaliação clínica',
+            actions: [
+                { href: '/saudemental', label: 'Psicologia' },
+                { href: '/teste-personalidade', label: 'Teste de personalidade' }
+            ]
+        },
+        travel: {
+            kicker: 'Saúde do viajante',
+            title: 'Consulta do viajante',
+            actions: [
+                { href: '/marcar/travel', label: 'Marcar consulta do viajante' },
+                { href: '/travel-clinic', label: 'Clínica do viajante' }
+            ]
+        },
+        burnout: {
+            kicker: 'Burnout',
+            title: 'Teste e consulta anti-burnout',
+            actions: [
+                { href: '/burnout/teste', label: 'Teste gratuito' },
+                { href: '/marcar/burnout', label: 'Consulta de burnout' }
+            ]
+        },
+        clinic: {
+            kicker: 'Clínica',
+            title: 'Consulta de clínica geral',
+            actions: [
+                { href: '/marcar/clinica-geral', label: 'Clínica geral' },
+                { href: '/blog/telemedicina-em-casa', label: 'Telemedicina em casa' }
+            ]
+        }
+    };
+    const pack = packs[kind] || packs.clinic;
+    const actions = pack.actions.map((action, i) => (
+        `<a class="${i === 0 ? 'mag-cta-primary' : 'mag-cta-ghost'}" href="${escapeHtml(action.href)}">${escapeHtml(action.label)}</a>`
+    )).join('');
+    return `<aside class="mag-cta" aria-label="${escapeHtml(pack.title)}">
+                <p>${escapeHtml(pack.kicker)}</p>
+                <h2>${escapeHtml(pack.title)}</h2>
+                <div class="mag-cta-actions">${actions}
+                </div>
+            </aside>`;
+}
+
+function magClusterHtml() {
+    return `<aside class="mag-cluster mag-wrap" aria-label="Autismo, ADHD e burnout">
+                <p class="mag-cluster-kicker">O mesmo cluster clínico</p>
+                <p class="mag-cluster-dek">Mascaramento, hiperfoco e esgotamento sobrepõem-se. Leia em conjunto o <a href="/blog/autismo-em-mulheres-diagnostico-tardio">diagnóstico tardio de autismo em mulheres</a>, os <a href="/blog/adhd-em-adultos-sintomas">sinais de ADHD em adultos</a> e <a href="/burnout/o-que-e">o que é burnout</a> — não como categorias isoladas.</p>
+                ${magCtaHtml('burnout')}
+            </aside>`;
+}
+
+function magThemeRowHtml(id, title, articles, ctaKind) {
     if (!articles.length) return '';
+    const cta = ctaKind ? magCtaHtml(ctaKind) : '';
     return `<section class="mag-section mag-wrap" id="${escapeHtml(id)}" aria-labelledby="${escapeHtml(id)}-title">
                 <div class="mag-section-head">
                     <h2 id="${escapeHtml(id)}-title">${escapeHtml(title)}</h2>
                 </div>
                 <div class="mag-row">${articles.map(magCardHtml).join('')}
                 </div>
+                ${cta}
             </section>`;
 }
 
@@ -704,6 +822,7 @@ function magImage(article) {
 }
 
 function magHref(article) {
+    if (article && article.href) return article.href;
     return `/blog/${encodeURIComponent(article.slug)}`;
 }
 
@@ -770,6 +889,99 @@ function magazineNavTree() {
 
 function magPath(href) {
     return String(href || '').split('?')[0];
+}
+
+function magAnchorId(label) {
+    return String(label || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+}
+
+function magFindNavPath(currentPath) {
+    function walk(nodes, trail) {
+        for (const node of nodes) {
+            const next = trail.concat(node);
+            if (node.href && magPath(node.href) === currentPath) return next;
+            const found = walk(Array.isArray(node.children) ? node.children : [], next);
+            if (found) return found;
+        }
+        return null;
+    }
+    return walk(magazineNavTree(), []);
+}
+
+function magCrumbHref(node) {
+    if (node && node.href) return magPath(node.href);
+    const id = magAnchorId(node && node.label);
+    return id ? `/magazine#${id}` : '/magazine';
+}
+
+function magBreadcrumbCrumbs(currentPath, pageTitle) {
+    const trail = magFindNavPath(currentPath) || [];
+    const items = [{ name: 'Magazine', href: '/magazine' }];
+    trail.forEach((node, i) => {
+        const isLast = i === trail.length - 1;
+        items.push({
+            name: node.label,
+            href: isLast ? currentPath : magCrumbHref(node),
+            current: isLast
+        });
+    });
+    if (!trail.length) {
+        items[0].current = true;
+        if (pageTitle && currentPath && currentPath !== '/magazine') {
+            items.push({ name: pageTitle, href: currentPath, current: true });
+            items[0].current = false;
+        }
+    }
+    return items;
+}
+
+function magBreadcrumbHtml(crumbs) {
+    const items = Array.isArray(crumbs) ? crumbs : [];
+    if (!items.length) return '';
+    const lis = items.map((crumb, i) => {
+        const last = Boolean(crumb.current) || i === items.length - 1;
+        if (last) {
+            return `<li><span aria-current="page">${escapeHtml(crumb.name)}</span></li>`;
+        }
+        return `<li><a href="${escapeHtml(crumb.href)}">${escapeHtml(crumb.name)}</a></li>`;
+    }).join('');
+    return `<nav class="mag-breadcrumb" aria-label="Caminho"><ol>${lis}</ol></nav>`;
+}
+
+function magBreadcrumbJsonLd(origin, crumbs) {
+    const o = normalizeOrigin(origin);
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: (Array.isArray(crumbs) ? crumbs : []).map((crumb, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: crumb.name,
+            item: `${o}${crumb.href}`
+        }))
+    };
+}
+
+function magTopicAnchorsHtml() {
+    const skip = new Set(['saude-mental', 'saude-do-viajante', 'clinica']);
+    const ids = [];
+    function walk(nodes) {
+        (Array.isArray(nodes) ? nodes : []).forEach((node) => {
+            const kids = Array.isArray(node.children) ? node.children : [];
+            if (kids.length) {
+                const id = magAnchorId(node.label);
+                if (id && !skip.has(id)) ids.push(id);
+                walk(kids);
+            }
+        });
+    }
+    walk(magazineNavTree());
+    return ids.map((id) => `<span id="${escapeHtml(id)}" class="visually-hidden"></span>`).join('');
 }
 
 function magNavContains(node, currentPath) {
@@ -886,7 +1098,7 @@ function layoutMagazinePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     ${extraCssHtml}
-    <link rel="stylesheet" href="/magazine.css?v=20260820g">
+    <link rel="stylesheet" href="/magazine.css?v=20260820l">
     ${extraCssAfterHtml}
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -934,43 +1146,52 @@ function renderMagazineIndex(origin) {
         ? `${o}${String(cover.image).startsWith('/') ? '' : '/'}${cover.image}`
         : `${o}/image/image2.webp`;
     const rowsHtml = [
-        magThemeRowHtml('saude-mental', 'Saúde mental', mental),
-        magThemeRowHtml('saude-do-viajante', 'Saúde do viajante', travel),
-        magThemeRowHtml('clinica', 'Clínica', clinic)
+        magThemeRowHtml('saude-mental', 'Saúde mental', mental, 'mental'),
+        magClusterHtml(),
+        magThemeRowHtml('saude-do-viajante', 'Saúde do viajante', travel, 'travel'),
+        magThemeRowHtml('clinica', 'Clínica', clinic, 'clinic')
     ].join('');
 
-    const jsonLd = {
-        '@context': 'https://schema.org',
-        '@type': 'CollectionPage',
-        name: 'LON Magazine',
-        description: 'A revista da Lon Clinic: mente, saúde da mulher, clínica e viagem.',
-        url: `${o}/magazine`,
-        isPartOf: { '@type': 'WebSite', name: 'Lon Clinic', url: o },
-        mainEntity: {
-            '@type': 'ItemList',
-            itemListElement: articles.map((a, i) => ({
-                '@type': 'ListItem',
-                position: i + 1,
-                url: `${o}/blog/${encodeURIComponent(a.slug)}`,
-                name: String(a.title || a.slug)
-            }))
-        }
-    };
+    const jsonLd = [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'LON Magazine',
+            description: 'A revista da Lon Clinic: autismo em mulheres, ADHD, saúde mental e medicina de viagem. Reportagens com revisão clínica.',
+            url: `${o}/magazine`,
+            isPartOf: { '@type': 'WebSite', name: 'Lon Clinic', url: o },
+            ...authors.articleAuthorSchema(o),
+            mainEntity: {
+                '@type': 'ItemList',
+                itemListElement: articles.map((a, i) => ({
+                    '@type': 'ListItem',
+                    position: i + 1,
+                    item: {
+                        '@type': ['Article', 'MedicalWebPage'],
+                        headline: String(a.title || a.slug),
+                        url: `${o}/blog/${encodeURIComponent(a.slug)}`,
+                        datePublished: a.datePublished || undefined,
+                        dateModified: a.dateModified || a.datePublished || undefined,
+                        ...authors.articleAuthorSchema(o, a.author)
+                    }
+                }))
+            }
+        },
+        authors.personJsonLd(o),
+        magBreadcrumbJsonLd(o, magBreadcrumbCrumbs('/magazine', 'Magazine'))
+    ];
 
+    const reviewer = authors.getAuthor();
     const mainHtml = magAppHtml('/magazine', `
             ${magTopbarHtml({ magazineCurrent: true })}
             <main id="conteudo-principal" class="mag-content">
+                ${magTopicAnchorsHtml()}
+                <header class="mag-masthead mag-wrap">
+                    ${magBreadcrumbHtml(magBreadcrumbCrumbs('/magazine', 'Magazine'))}
+                    <p class="mag-masthead-kicker">Reportagens com revisão clínica</p>
+                    <p class="mag-masthead-dek">Cada artigo é revisto por ${escapeHtml(reviewer.displayName)}, ${escapeHtml(reviewer.jobTitle).toLowerCase()} inscrita na ${escapeHtml(reviewer.memberOf)}.</p>
+                </header>
                 ${rowsHtml}
-                <section class="mag-section mag-wrap">
-                    <aside class="mag-cta">
-                        <p>LON Clinic</p>
-                        <h2>Marcar consulta</h2>
-                        <div class="mag-cta-actions">
-                            <a class="mag-cta-primary" href="/marcar/saude-mental">Saúde mental</a>
-                            <a class="mag-cta-ghost" href="/saudemental">Psicologia</a>
-                        </div>
-                    </aside>
-                </section>
             </main>
             ${magFootHtml()}`);
 

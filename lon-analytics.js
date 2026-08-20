@@ -6,7 +6,7 @@
 (function () {
     'use strict';
 
-    var SKIP = /^\/(admin|clinic-portal|doctors|patient-portal|clinic|dashboard)(\/|$|\.html)/i;
+    var SKIP = /^\/(admin|clinic-portal|doctors|patient-portal|clinic|dashboard|diretorio)(\/|$|\.html)/i;
     var pathNow = (location.pathname || '/') + '';
     if (SKIP.test(pathNow)) return;
     if (window.LonAnalytics) return;
@@ -225,7 +225,7 @@
         if (p === '/' || p === '/index.html') return { surface: 'home' };
         if (p.indexOf('/marcar') === 0 || p === '/book.html' || p === '/book-consultation') return { surface: 'booking' };
         if (p.indexOf('/burnout') === 0 || p.indexOf('/anti-burnout') === 0) return { surface: 'burnout' };
-        if (p.indexOf('/psicologia') === 0 || p.indexOf('/saudemental') === 0) return { surface: 'mental' };
+        if (p.indexOf('/psicologia') === 0 || p.indexOf('/saudemental') === 0 || p.indexOf('/teste-personalidade') === 0) return { surface: 'mental' };
         if (p.indexOf('/travel') === 0) return { surface: 'travel' };
         if (p.indexOf('/triagem') === 0) return { surface: 'triage' };
         if (p.indexOf('/guide') === 0 || p.indexOf('/blog') === 0) return { surface: 'content' };
