@@ -168,12 +168,25 @@ function channelOf(row) {
     const src = String(row.utm_source || '').toLowerCase();
     const med = String(row.utm_medium || '').toLowerCase();
     const ref = String(row.referrer || '').toLowerCase();
+    const paidSocial = med === 'paid_social' || med === 'cpm' || med === 'ppc_social' || med === 'paid';
     if (row.gclid || med === 'cpc' || med === 'ppc' || med === 'paidsearch') return 'paid_search';
-    if (row.fbclid || /facebook|instagram|meta|ig/.test(src) || /facebook|instagram/.test(med)) return 'paid_social';
+    if (paidSocial && (/facebook|instagram|meta|ig/.test(src) || /facebook|instagram/.test(med) || row.fbclid)) {
+        return 'paid_social';
+    }
     if (med === 'email' || src === 'email' || src === 'newsletter') return 'email';
-    if (med === 'sms' || src === 'sms' || src === 'whatsapp') return 'sms';
+    if (med === 'sms' || src === 'sms' || src === 'whatsapp' || med === 'chat') return 'sms';
     if (src === 'invite' || med === 'invite') return 'invite';
     if (src === 'internal' || med === 'internal') return 'internal';
+    if (med === 'owned' || med === 'quiz' || src === 'quiz') return 'owned';
+    if (
+        med === 'social' ||
+        med === 'organic_social' ||
+        /^(facebook|instagram|meta|ig|linkedin|tiktok|twitter|whatsapp)$/.test(src)
+    ) {
+        return 'organic_social';
+    }
+    if (/facebook|instagram|l\.instagram|linkedin|t\.co|twitter|tiktok|whatsapp/.test(ref)) return 'organic_social';
+    if (row.fbclid) return 'organic_social';
     if (/google\./.test(ref) && !row.gclid) return 'organic_google';
     if (/bing\.|yahoo\./.test(ref)) return 'organic_other';
     if (ref && !ref.includes('lonclinic.com') && !ref.includes('localhost')) return 'referral';

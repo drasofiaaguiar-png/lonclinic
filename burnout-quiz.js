@@ -40,16 +40,24 @@
     const BANDS = [
         { max: 24, pill: 'BAIXO', title: 'Energia sob controlo',
             text: 'O teu resultado apresenta poucos sinais de desgaste neste momento. Podes usá-lo como ponto de referência — e, se algo te preocupar, a porta está aberta.',
-            cta: 'Se te sentes bem, não há necessariamente necessidade de acompanhamento por causa deste resultado. Se quiseres perceber melhor o teu perfil, uma Consulta Especializada em Burnout pode ajudar.' },
+            cta: 'Não precisas de marcar por causa deste resultado. Se quiseres mesmo assim perceber o teu perfil com uma médica, a consulta está disponível.',
+            bookLabel: 'Marcar consulta — 60€',
+            bookNote: 'Opcional · só se quiseres perceber melhor o teu perfil' },
         { max: 49, pill: 'LIGEIRO', title: 'Sinais de alerta iniciais',
             text: 'Ainda não aponta para um quadro instalado, mas algumas dimensões da tua energia podem já estar a pedir atenção. Nesta fase, descanso, limites e recuperação tendem a ter mais efeito.',
-            cta: 'Se estes sinais persistirem ou te preocuparem, uma Consulta Especializada em Burnout ajuda a perceber o que está a acontecer — sem alarme, com um plano concreto.' },
+            cta: 'Se estes sinais persistirem, uma Consulta Especializada em Burnout ajuda a perceber o que está a acontecer — sem alarme, com um plano concreto.',
+            bookLabel: 'Marcar consulta — 60€',
+            bookNote: 'Videoconsulta · 60 min · o resultado do teste fica na marcação' },
         { max: 74, pill: 'MODERADO', title: 'O teu corpo já está a pagar a conta',
             text: 'O teu resultado sugere um nível moderado de desgaste. Isto não é, por si só, um diagnóstico de burnout — mas é um sinal de que a recuperação está mais difícil do que deveria.',
-            cta: 'Se o desgaste é persistente ou já interfere com o dia a dia, uma Consulta Especializada em Burnout é o próximo passo. Para acompanhamento semanal, há a Subscrição Anti-Burnout.' },
+            cta: 'Marca agora uma Consulta Especializada em Burnout. A médica vê este resultado e ajuda-te a decidir o próximo passo.',
+            bookLabel: 'Marcar consulta — 60€',
+            bookNote: 'Videoconsulta · 60 min · receita ou plano se indicado' },
         { max: 100, pill: 'ELEVADO', title: 'É altura de parar e pedir apoio',
             text: 'O teu resultado apresenta um nível elevado de sinais de desgaste. Não diagnostica burnout por si só — mas, quando estes sinais são persistentes, não devem ser ignorados.',
-            cta: 'Recomendamos uma Consulta Especializada em Burnout para perceber origem, intensidade e próximo passo. Se já precisas de regularidade, a Subscrição Anti-Burnout são 4 consultas/mês (216€). Em sofrimento intenso, procura ajuda médica urgente.' }
+            cta: 'Marca uma Consulta Especializada em Burnout hoje. Se já precisas de regularidade, a Subscrição Anti-Burnout são 4 consultas/mês (216€). Em sofrimento intenso, procura ajuda médica urgente.',
+            bookLabel: 'Marcar consulta agora — 60€',
+            bookNote: 'Videoconsulta · 60 min · o resultado do teste chega à consulta' }
     ];
 
     const SCALE_INSIGHTS = {
@@ -69,8 +77,8 @@
         tensao: 'Nota clínica: tensão muscular persistente é das formas mais comuns de o corpo armazenar stress — e das que melhor respondem a intervenção.'
     };
 
-    const BOOKING_URL = '/marcar/burnout?ref=burnout-quiz';
-    const SUB_URL = '/marcar/burnout-mensal?ref=burnout-quiz';
+    const BOOKING_URL = '/marcar/burnout?ref=burnout-quiz&utm_source=quiz&utm_medium=owned&utm_campaign=burnout-teste&utm_content=results-primary';
+    const SUB_URL = '/marcar/burnout-mensal?ref=burnout-quiz&utm_source=quiz&utm_medium=owned&utm_campaign=burnout-teste&utm_content=results-sub';
 
     const DIM_META = {
         personal: {
@@ -219,6 +227,12 @@
         $('bandTitle').textContent = band.title;
         $('bandText').textContent = band.text;
         $('ctaText').textContent = band.cta;
+        const bookPrimary = $('bookBtnPrimary');
+        const bookNote = $('bookNowNote');
+        const stickyBtn = $('stickyBookBtn');
+        if (bookPrimary) bookPrimary.textContent = band.bookLabel || 'Marcar consulta — 60€';
+        if (bookNote) bookNote.textContent = band.bookNote || '';
+        if (stickyBtn) stickyBtn.textContent = band.pill === 'ELEVADO' || band.pill === 'MODERADO' ? 'Marcar agora · 60€' : 'Marcar · 60€';
 
         const subBtn = $('subBtn');
         if (subBtn) {
@@ -252,6 +266,14 @@
 
         storeQuizForBooking(s, band);
         show('results');
+        const sticky = $('stickyBook');
+        if (sticky) {
+            sticky.hidden = false;
+            sticky.classList.add('is-away');
+        }
+        if (window.LonAnalytics && typeof window.LonAnalytics.track === 'function') {
+            window.LonAnalytics.track('quiz_complete', { surface: 'burnout', band: band.pill });
+        }
 
         const ARC = 314.16;
         requestAnimationFrame(function () {
@@ -293,6 +315,9 @@
     $('startBtn').addEventListener('click', function () {
         show('quiz');
         renderQuestion();
+        if (window.LonAnalytics && typeof window.LonAnalytics.track === 'function') {
+            window.LonAnalytics.track('quiz_start', { surface: 'burnout' });
+        }
     });
 
     $('backBtn').addEventListener('click', function () {
@@ -329,19 +354,24 @@
         if (e.key === 'Enter') $('revealBtn').click();
     });
 
-    $('bookBtn').addEventListener('click', function () {
+    function persistQuizThenGo() {
         if (lastScores) {
             storeQuizForBooking(lastScores, bandFor(lastScores.global));
         }
+    }
+
+    document.querySelectorAll('.js-quiz-book').forEach(function (el) {
+        el.addEventListener('click', persistQuizThenGo);
     });
 
-    var subBtn = $('subBtn');
-    if (subBtn) {
-        subBtn.addEventListener('click', function () {
-            if (lastScores) {
-                storeQuizForBooking(lastScores, bandFor(lastScores.global));
-            }
-        });
+    var bookNow = $('bookNow');
+    var sticky = $('stickyBook');
+    if (bookNow && sticky && 'IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+            var visible = entries[0] && entries[0].isIntersecting;
+            sticky.classList.toggle('is-away', !!visible);
+        }, { threshold: 0.4 });
+        io.observe(bookNow);
     }
 
     $('restartBtn').addEventListener('click', function () {
@@ -356,5 +386,7 @@
         $('bandPill').className = 'bq-pill';
         ['barPersonal', 'barWork', 'barBody'].forEach(function (id) { $(id).style.width = '0%'; });
         show('intro');
+        var stickyEl = $('stickyBook');
+        if (stickyEl) stickyEl.hidden = true;
     });
 })();

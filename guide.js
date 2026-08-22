@@ -9,6 +9,7 @@ const path = require('path');
 const { marked } = require('marked');
 const { organizationJsonLd, jsonLdScript } = require('./seo');
 const authors = require('./authors');
+const { socialLink } = require('./utm');
 
 const GUIDE_DIR = path.join(__dirname, 'data', 'guide');
 const MANIFEST_PATH = path.join(GUIDE_DIR, 'manifest.json');
@@ -34,11 +35,23 @@ renderer.link = function (href, title, text) {
 marked.use({ renderer });
 
 function escapeHtml(s) {
-    return String(s)
+    return String(s || '')
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
+}
+
+function shareBarHtml(canonicalUrl, title, campaign) {
+    const copyUrl = socialLink(canonicalUrl, 'share', campaign);
+    const waUrl = socialLink(canonicalUrl, 'whatsapp', campaign);
+    const waHref = `https://wa.me/?text=${encodeURIComponent(`${title} ${waUrl}`)}`;
+    return `
+        <div class="lon-share" role="group" aria-label="Partilhar este artigo">
+            <span class="lon-share-label">Partilhar</span>
+            <a href="${escapeHtml(waHref)}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <button type="button" class="lon-share-copy" data-copy="${escapeHtml(copyUrl)}">Copiar link</button>
+        </div>`;
 }
 
 function isValidSlug(slug) {
@@ -309,8 +322,8 @@ function layoutGuidePage(opts) {
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-ZN8J4X12H3');
-      gtag('config', 'GT-TXHQ9ZVX');
-      gtag('config', 'AW-18103198169');
+      gtag('config', 'GT-TXHQ9ZVX', { send_page_view: false });
+      gtag('config', 'AW-18103198169', { send_page_view: false });
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -619,6 +632,7 @@ function renderBlogArticle(origin, slug) {
                 <h1 class="mag-story-title" itemprop="headline">${escapeHtml(title)}</h1>
                 <p class="mag-story-dek">${escapeHtml(description)}</p>
                 ${byline}
+                ${shareBarHtml(`${o}/blog/${encodeURIComponent(slug)}`, title, `magazine-${slug}`)}
             </header>
             ${leadFigure}
             <div class="mag-story-body">
@@ -641,6 +655,7 @@ function renderBlogArticle(origin, slug) {
                 ${crumbsHtml}
                 <p class="mag-story-kicker">${escapeHtml(kicker)}</p>
                 ${byline}
+                ${shareBarHtml(`${o}/blog/${encodeURIComponent(slug)}`, title, `magazine-${slug}`)}
             </header>
             <div class="guide-prose" lang="pt-PT">
                 ${articleHtml}
@@ -659,7 +674,7 @@ function renderBlogArticle(origin, slug) {
         jsonLd,
         ogType: 'article',
         extraCss: ['/landing.css?v=20260418k'],
-        extraCssAfter: ['/guide.css?v=20260820l', '/author.css?v=20260820l', '/magazine.css?v=20260820l'],
+        extraCssAfter: ['/guide.css?v=20260820l', '/author.css?v=20260820l', '/magazine.css?v=20260822a'],
         mainHtml: magAppHtml(articlePath, `
             ${magTopbarHtml({ magazineCurrent: true })}
             ${articleInner}
@@ -1083,8 +1098,8 @@ function layoutMagazinePage(opts) {
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-ZN8J4X12H3');
-      gtag('config', 'GT-TXHQ9ZVX');
-      gtag('config', 'AW-18103198169');
+      gtag('config', 'GT-TXHQ9ZVX', { send_page_view: false });
+      gtag('config', 'AW-18103198169', { send_page_view: false });
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1108,7 +1123,7 @@ function layoutMagazinePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     ${extraCssHtml}
-    <link rel="stylesheet" href="/magazine.css?v=20260820l">
+    <link rel="stylesheet" href="/magazine.css?v=20260822a">
     ${extraCssAfterHtml}
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -1140,7 +1155,7 @@ function layoutMagazinePage(opts) {
         });
       })();
     </script>
-    <script src="/lon-analytics.js?v=20260817a" defer></script>
+    <script src="/lon-analytics.js?v=20260822a" defer></script>
 </body>
 </html>`;
 }

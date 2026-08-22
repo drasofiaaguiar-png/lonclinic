@@ -8,7 +8,7 @@
     if (!window.LonAnalytics && !/^\/(admin|clinic-portal|doctors|patient-portal|clinic|dashboard|diretorio)(\/|$|\.html)/i.test(location.pathname || '/')) {
         if (!document.querySelector('script[src*="lon-analytics.js"]')) {
             var analyticsScript = document.createElement('script');
-            analyticsScript.src = '/lon-analytics.js?v=20260820a';
+            analyticsScript.src = '/lon-analytics.js?v=20260822a';
             analyticsScript.defer = true;
             (document.head || document.documentElement).appendChild(analyticsScript);
         }

@@ -7,7 +7,7 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-ZN8J4X12H3');
-      gtag('config', 'GT-TXHQ9ZVX');
+      gtag('config', 'GT-TXHQ9ZVX', { send_page_view: false });
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -61,7 +61,7 @@
     }
     </script>
     <link rel="stylesheet" href="/landing.css?v=20260621b">
-    <link rel="stylesheet" href="/burnout-quiz.css?v=20260806c">
+    <link rel="stylesheet" href="/burnout-quiz.css?v=20260822a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -169,6 +169,11 @@
                         <p id="bandText"></p>
                     </div>
 
+                    <div class="bq-book-now" id="bookNow">
+                        <a class="bq-btn bq-btn-primary bq-btn-lg js-quiz-book" id="bookBtnPrimary" href="/marcar/burnout?ref=burnout-quiz&amp;utm_source=quiz&amp;utm_medium=owned&amp;utm_campaign=burnout-teste&amp;utm_content=results-primary">Marcar consulta — 60€</a>
+                        <p class="bq-book-now-note" id="bookNowNote">Videoconsulta · 60 minutos · o resultado do teste fica associado à marcação</p>
+                    </div>
+
                     <div class="bq-scales">
                         <div class="bq-scale">
                             <div class="bq-scale-head"><h3>Burnout pessoal</h3><span id="valPersonal"></span></div>
@@ -193,12 +198,12 @@
                         <h3>O próximo passo</h3>
                         <p id="ctaText"></p>
                         <div class="bq-plan-grid">
-                            <a class="bq-plan-card" href="/marcar/burnout?ref=burnout-quiz" id="bookBtn">
+                            <a class="bq-plan-card js-quiz-book" href="/marcar/burnout?ref=burnout-quiz&amp;utm_source=quiz&amp;utm_medium=owned&amp;utm_campaign=burnout-teste&amp;utm_content=results-card" id="bookBtn">
                                 <span class="bq-plan-name">Consulta Especializada em Burnout</span>
                                 <span class="bq-plan-price">60<span class="bq-plan-currency">€</span></span>
                                 <span class="bq-plan-meta">Sessão única · 60 minutos</span>
                             </a>
-                            <a class="bq-plan-card" href="/marcar/burnout-mensal?ref=burnout-quiz" id="subBtn">
+                            <a class="bq-plan-card js-quiz-book" href="/marcar/burnout-mensal?ref=burnout-quiz&amp;utm_source=quiz&amp;utm_medium=owned&amp;utm_campaign=burnout-teste&amp;utm_content=results-sub" id="subBtn">
                                 <span class="bq-plan-name">Subscrição Anti-Burnout</span>
                                 <span class="bq-plan-price">216<span class="bq-plan-currency">€</span></span>
                                 <span class="bq-plan-meta">/mês · 4 consultas · 54€/sessão</span>
@@ -211,6 +216,12 @@
                             <span aria-hidden="true"> · </span>
                             <a href="/burnout/tratamento">Tratamento</a>
                         </p>
+                    </div>
+
+                    <div class="lon-share" role="group" aria-label="Partilhar o teste">
+                        <span class="lon-share-label">Partilhar o teste</span>
+                        <a href="https://wa.me/?text=Teste%20de%20burnout%20gratuito%20https%3A%2F%2Flonclinic.com%2Fburnout%2Fteste%3Futm_source%3Dwhatsapp%26utm_medium%3Dsocial%26utm_campaign%3Dburnout-teste%26utm_content%3Dshare%26ref%3Dburnout-teste-share" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                        <button type="button" class="lon-share-copy" data-copy="https://lonclinic.com/burnout/teste?utm_source=share&amp;utm_medium=social&amp;utm_campaign=burnout-teste&amp;utm_content=copy&amp;ref=burnout-teste-share">Copiar link</button>
                     </div>
 
                     <p class="bq-disclaimer">
@@ -248,6 +259,12 @@
         <p>© 2026 Lon Clinic · ERS 45475</p>
     </footer>
 
-    <script src="/burnout-quiz.js?v=20260722c" defer></script>
+    <aside class="bq-sticky-book" id="stickyBook" hidden>
+        <p>Consulta Especializada em Burnout</p>
+        <a class="bq-btn bq-btn-primary js-quiz-book" id="stickyBookBtn" href="/marcar/burnout?ref=burnout-quiz&amp;utm_source=quiz&amp;utm_medium=owned&amp;utm_campaign=burnout-teste&amp;utm_content=results-sticky">Marcar · 60€</a>
+    </aside>
+
+    <script src="/lon-analytics.js?v=20260822a" defer></script>
+    <script src="/burnout-quiz.js?v=20260822a" defer></script>
 </body>
 </html>

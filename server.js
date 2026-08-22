@@ -38,6 +38,7 @@ const nutricao = require('./nutricao');
 const touristPages = require('./tourist-pages');
 const producers = require('./producers');
 const seo = require('./seo');
+const { emailLink } = require('./utm');
 const { hydrateInfoHtml, NOINDEX_PAGES: INFO_NOINDEX_PAGES } = require('./info-ssr');
 const authors = require('./authors');
 const nodemailer = require('nodemailer');
@@ -232,7 +233,7 @@ app.use(
 );
 
 const ANALYTICS_SNIPPET =
-    '\n<script src="/lon-analytics.js?v=20260817a" defer></script>\n' +
+    '\n<script src="/lon-analytics.js?v=20260822a" defer></script>\n' +
     '<noscript><img src="/api/a.gif?n=page_view" alt="" width="1" height="1"></noscript>\n';
 function injectAnalyticsHtml(html) {
     if (!html || typeof html !== 'string') return html;
@@ -2475,8 +2476,8 @@ function buildBurnoutQuizEmails(data) {
     const copy = burnoutQuizBandCopy(band);
     const visual = burnoutBandVisual(band, copy);
     const dominant = burnoutDominantInsight(personalNum, workNum, bodyNum);
-    const bookUrl = `${PUBLIC_SITE_URL}/marcar/burnout?ref=burnout-quiz-email`;
-    const programUrl = `${PUBLIC_SITE_URL}/marcar/burnout-mensal?ref=burnout-quiz-email`;
+    const bookUrl = emailLink(`${PUBLIC_SITE_URL}/marcar/burnout`, 'burnout-quiz-email', 'book-consult');
+    const programUrl = emailLink(`${PUBLIC_SITE_URL}/marcar/burnout-mensal`, 'burnout-quiz-email', 'book-subscription');
     const siteUrl = PUBLIC_SITE_URL;
     const font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
     const barFill = copy.accent;
@@ -3159,13 +3160,13 @@ const FOLLOWUP_EMAIL_I18N = {
         feedbackBody:
             'Your experience matters to us. If you have a moment, please leave an independent review on Trustpilot — it helps other patients choose with confidence.',
         ctaLabel: 'Review us on Trustpilot',
-        siteAlt: `You can also share your opinion on our website: ${PUBLIC_SITE_URL}/#testemunhos`,
+        siteAlt: (url) => `You can also share your opinion on our website: ${url}`,
         subject: (ref) => `Thank you — we value your feedback | ${ref}`,
         textHead: 'THANK YOU',
         textBody: (name) =>
             `Dear ${name}, thank you for attending your online consultation with Longevity Clinic. We hope it was helpful.`,
-        textFeedback: (url) =>
-            `We would love your feedback on Trustpilot:\n${url}\n\nOr on our website: ${PUBLIC_SITE_URL}/#testemunhos`,
+        textFeedback: (url, siteUrl) =>
+            `We would love your feedback on Trustpilot:\n${url}\n\nOr on our website: ${siteUrl}`,
         textFooterCopy: '© 2026 Longevity Clinic'
     },
     pt: {
@@ -3178,13 +3179,13 @@ const FOLLOWUP_EMAIL_I18N = {
         feedbackBody:
             'A sua experiência é importante. Se tiver um momento, deixe uma avaliação independente no Trustpilot — ajuda outros pacientes a escolherem com confiança.',
         ctaLabel: 'Avaliar no Trustpilot',
-        siteAlt: `Também pode deixar a sua opinião no nosso site: ${PUBLIC_SITE_URL}/#testemunhos`,
+        siteAlt: (url) => `Também pode deixar a sua opinião no nosso site: ${url}`,
         subject: (ref) => `Obrigado — a sua opinião conta | ${ref}`,
         textHead: 'OBRIGADO',
         textBody: (name) =>
             `Exmo.(a) ${name}, obrigado pela sua consulta online na Longevity Clinic.`,
-        textFeedback: (url) =>
-            `Deixe a sua opinião no Trustpilot:\n${url}\n\nOu no nosso site: ${PUBLIC_SITE_URL}/#testemunhos`,
+        textFeedback: (url, siteUrl) =>
+            `Deixe a sua opinião no Trustpilot:\n${url}\n\nOu no nosso site: ${siteUrl}`,
         textFooterCopy: '© 2026 Longevity Clinic'
     },
     es: {
@@ -3197,13 +3198,13 @@ const FOLLOWUP_EMAIL_I18N = {
         feedbackBody:
             'Su experiencia es importante. Si tiene un momento, deje una valoración independiente en Trustpilot: ayuda a otros pacientes a elegir con confianza.',
         ctaLabel: 'Valóranos en Trustpilot',
-        siteAlt: `También puede dejar su opinión en nuestro sitio web: ${PUBLIC_SITE_URL}/#testemunhos`,
+        siteAlt: (url) => `También puede dejar su opinión en nuestro sitio web: ${url}`,
         subject: (ref) => `Gracias — valoramos su opinión | ${ref}`,
         textHead: 'GRACIAS',
         textBody: (name) =>
             `Estimado/a ${name}, gracias por su consulta online en Longevity Clinic.`,
-        textFeedback: (url) =>
-            `Deje su opinión en Trustpilot:\n${url}\n\nO en nuestro sitio web: ${PUBLIC_SITE_URL}/#testemunhos`,
+        textFeedback: (url, siteUrl) =>
+            `Deje su opinión en Trustpilot:\n${url}\n\nO en nuestro sitio web: ${siteUrl}`,
         textFooterCopy: '© 2026 Longevity Clinic'
     }
 };
@@ -3218,6 +3219,7 @@ function buildFollowupEmail(data) {
     const t = followupEmailStrings(rawLocale);
     const name = (patientName || 'Patient').trim();
     const reviewUrl = trustpilotEvaluateUrl(rawLocale);
+    const siteReviewUrl = emailLink(`${PUBLIC_SITE_URL}/#deixar-opiniao`, 'post-consult-review', 'site-form');
     const html = `
 <!DOCTYPE html>
 <html lang="${t.htmlLang}">
@@ -3244,7 +3246,7 @@ function buildFollowupEmail(data) {
 <a href="${reviewUrl}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background-color:#00b67a;border:1px solid #00a06c;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;padding:14px 32px;border-radius:10px;">${t.ctaLabel}</a>
 </td></tr>
 </table>
-<p style="margin:0;font-size:13px;color:#64748b;line-height:1.55;text-align:center;">${t.siteAlt}</p>
+<p style="margin:0;font-size:13px;color:#64748b;line-height:1.55;text-align:center;">${t.siteAlt(siteReviewUrl)}</p>
 </td></tr>
 <tr><td style="padding:32px 20px;text-align:center;">
 <p style="margin:0;font-size:11px;color:#cbd5e1;">${t.textFooterCopy}</p>
@@ -3253,7 +3255,7 @@ function buildFollowupEmail(data) {
 </td></tr>
 </table>
 </body></html>`;
-    const text = `${t.textHead} — ${bookingRef}\n\n${t.textBody(name)}\n\n${t.textFeedback(reviewUrl)}`;
+    const text = `${t.textHead} — ${bookingRef}\n\n${t.textBody(name)}\n\n${t.textFeedback(reviewUrl, siteReviewUrl)}`;
     return { html, text, subject: t.subject(bookingRef) };
 }
 
@@ -8325,7 +8327,11 @@ function buildInvitationEmail(invitation, paymentUrl, baseUrl) {
     const priceLabel = `€${(invitation.amountCents / 100).toFixed(2)}`;
     const serviceLabel = invitation.serviceLabel || invitation.service;
     const subject = t.subject(serviceLabel);
-    const portalUrl = `${baseUrl}/patient-portal?email=${encodeURIComponent(invitation.patientEmail)}`;
+    const portalUrl = emailLink(
+        `${baseUrl}/patient-portal?email=${encodeURIComponent(invitation.patientEmail)}`,
+        'invite-pay',
+        'portal'
+    );
     const doxyUrl = doxyUrlFromEmailData({ doxyUrl: invitation.doxyUrl });
     const doxyHtml = doxyUrl
         ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 16px 0 0;"><tr><td>
@@ -8371,7 +8377,7 @@ function buildInvitationEmail(invitation, paymentUrl, baseUrl) {
           ${doxyHtml}
         </td></tr>` : ''}
         <tr><td style="padding:16px 28px 28px;border-top:1px solid #e2e8f0;">
-          <p style="margin:0;font-size:13px;color:#64748b;line-height:1.6;">${t.portalLine(portalUrl)}</p>
+          <p style="margin:0;font-size:13px;color:#64748b;line-height:1.6;">${t.portalLine(escapeHtml(portalUrl))}</p>
           <p style="margin:14px 0 0;font-size:13px;color:#64748b;line-height:1.6;">${t.footer}</p>
         </td></tr>
       </table>

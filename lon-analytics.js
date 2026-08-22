@@ -87,28 +87,41 @@
             utm_content: (q.get('utm_content') || '').slice(0, 80),
             utm_term: (q.get('utm_term') || '').slice(0, 80),
             gclid: (q.get('gclid') || '').slice(0, 120),
-            fbclid: (q.get('fbclid') || '').slice(0, 120)
+            fbclid: (q.get('fbclid') || '').slice(0, 120),
+            igshid: (q.get('igshid') || q.get('igsh') || '').slice(0, 120)
         };
-        var has = cur.utm_source || cur.gclid || cur.fbclid;
-        var last = cur;
-        try {
-            var stored = JSON.parse(sessionStorage.getItem('lon_lt') || 'null');
-            if (!has && stored) last = stored;
-            else sessionStorage.setItem('lon_lt', JSON.stringify(cur));
-        } catch (e) { /* ignore */ }
-        var first = null;
-        try { first = JSON.parse(storageGet(FT_KEY) || 'null'); } catch (e) { first = null; }
-        if (!first || typeof first !== 'object') {
-            first = {
-                utm_source: last.utm_source,
-                utm_medium: last.utm_medium,
-                utm_campaign: last.utm_campaign,
-                landing: location.pathname,
-                referrer: (document.referrer || '').slice(0, 300)
-            };
-            storageSet(FT_KEY, JSON.stringify(first));
+        var explicit = !!(cur.utm_source || cur.gclid);
+        var stored = null;
+        try { stored = JSON.parse(sessionStorage.getItem('lon_lt') || 'null'); } catch (e1) { stored = null; }
+        if (!explicit && stored && (stored.utm_source || stored.gclid)) {
+            return finishPick(stored, stored);
         }
-        return { last: last, first: first };
+        if (!cur.utm_source && cur.igshid) {
+            cur.utm_source = 'instagram';
+            cur.utm_medium = cur.utm_medium || 'social';
+        } else if (!cur.utm_source && cur.fbclid && !cur.gclid) {
+            cur.utm_source = 'facebook';
+            cur.utm_medium = cur.utm_medium || 'social';
+        }
+        try { sessionStorage.setItem('lon_lt', JSON.stringify(cur)); } catch (e2) { /* ignore */ }
+        return finishPick(cur, stored);
+
+        function finishPick(last, firstHint) {
+            var first = null;
+            try { first = JSON.parse(storageGet(FT_KEY) || 'null'); } catch (e3) { first = null; }
+            if (!first || typeof first !== 'object') {
+                first = firstHint && (firstHint.utm_source || firstHint.gclid) ? firstHint : last;
+                first = {
+                    utm_source: first.utm_source,
+                    utm_medium: first.utm_medium,
+                    utm_campaign: first.utm_campaign,
+                    landing: location.pathname,
+                    referrer: (document.referrer || '').slice(0, 300)
+                };
+                storageSet(FT_KEY, JSON.stringify(first));
+            }
+            return { last: last, first: first };
+        }
     }
 
     var PII = /email|phone|tel|nhs|password|token|name|notes|answer|diagnos|prescription|dob|birth/i;
@@ -165,6 +178,7 @@
             utm_term: attr.last.utm_term || '',
             gclid: attr.last.gclid || '',
             fbclid: attr.last.fbclid || '',
+            igshid: attr.last.igshid || '',
             ft_source: (attr.first && attr.first.utm_source) || '',
             ft_medium: (attr.first && attr.first.utm_medium) || '',
             ft_campaign: (attr.first && attr.first.utm_campaign) || '',
@@ -252,7 +266,20 @@
         return { surface: 'other' };
     }
 
-    track('page_view', pageContext());
+    function shouldSendPageView() {
+        try {
+            var key = 'lon_pv';
+            var now = Date.now();
+            var prev = JSON.parse(sessionStorage.getItem(key) || 'null');
+            if (prev && prev.path === location.pathname && now - prev.ts < 2500) return false;
+            sessionStorage.setItem(key, JSON.stringify({ path: location.pathname, ts: now }));
+        } catch (e) { /* ignore */ }
+        return true;
+    }
+
+    if (shouldSendPageView()) {
+        track('page_view', pageContext());
+    }
 
     var engaged = false;
     setTimeout(function () {
@@ -284,8 +311,21 @@
             .trim()
             .slice(0, 80);
         var id = (t.id || t.getAttribute('data-analytics-id') || '').slice(0, 64);
-        if (t.matches && t.matches('[data-analytics], .lon-btn, .btn-primary, .cn-btn-primary, a[href*="marcar"], a[href*="book"]')) {
+        if (t.matches && t.matches('[data-analytics], .lon-btn, .btn-primary, .cn-btn-primary, a[href*="marcar"], a[href*="book"], .bq-btn-primary, .bq-sticky-book a')) {
             track('cta_click', { text: text, href: href, id: id, surface: pageContext().surface });
+        }
+        if (t.classList && t.classList.contains('lon-share-copy')) {
+            var copyUrl = t.getAttribute('data-copy') || '';
+            if (copyUrl && copyUrl.indexOf('http') !== 0) copyUrl = location.origin + copyUrl;
+            if (copyUrl && navigator.clipboard && navigator.clipboard.writeText) {
+                e.preventDefault();
+                navigator.clipboard.writeText(copyUrl).then(function () {
+                    var prev = t.textContent;
+                    t.textContent = 'Copiado';
+                    setTimeout(function () { t.textContent = prev; }, 1600);
+                }).catch(function () { /* ignore */ });
+            }
+            track('outbound_click', { href: copyUrl.slice(0, 180), text: 'copy-share' });
         }
         if (href && /^(https?:)?\/\//i.test(href) && href.indexOf(location.host) === -1) {
             track('outbound_click', { href: href, text: text });
