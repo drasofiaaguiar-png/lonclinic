@@ -1600,6 +1600,29 @@ body.dash-portal .dash-stat-card {
 .admin-invite-price:empty {
     display: none;
 }
+.admin-travel-options {
+    grid-column: 1 / -1;
+    margin: 2px 0 4px;
+    padding: 14px 16px 16px;
+    border: 1px solid rgba(26, 102, 65, 0.28);
+    border-radius: 12px;
+    background: rgba(26, 102, 65, 0.07);
+}
+.admin-travel-options-title {
+    margin: 0 0 12px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.admin-travel-options-grid {
+    margin-bottom: 0;
+}
+.admin-travel-price-live {
+    margin: 12px 0 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
 .admin-invite-list-header {
     margin-top: 28px;
     margin-bottom: 10px;

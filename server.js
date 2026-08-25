@@ -7856,6 +7856,18 @@ app.post('/api/admin/patients/schedule-next', requireAdmin, express.json(), asyn
             return res.status(409).json({ error: 'That time slot is no longer available.' });
         }
 
+        const travellerCount = (() => {
+            if (service !== 'travel') return 1;
+            const n = parseInt(body.travellers, 10);
+            if (!Number.isFinite(n) || n < 1) return 1;
+            return Math.min(4, n);
+        })();
+        const hasInsurance = service === 'travel' && (body.hasInsurance === true || body.hasInsurance === 'true' || body.hasInsurance === 1 || body.hasInsurance === 'yes');
+        const passengers = Array.from({ length: travellerCount }, (_, i) => ({
+            firstName: i === 0 ? patientName : `Traveller ${i + 1}`,
+            lastName: ''
+        }));
+
         let amountCents = 0;
         const hasCustomAmount = body.amountCents != null && body.amountCents !== '';
         if (hasCustomAmount) {
@@ -7873,8 +7885,8 @@ app.post('/api/admin/patients/schedule-next', requireAdmin, express.json(), asyn
             try {
                 const pricing = computeCheckoutTotalCents({
                     service,
-                    passengers: [{ firstName: patientName, lastName: '' }],
-                    hasInsurance: false,
+                    passengers,
+                    hasInsurance,
                     discountCode: null
                 });
                 if (pricing.ok) amountCents = pricing.totalCents;
@@ -7911,8 +7923,8 @@ app.post('/api/admin/patients/schedule-next', requireAdmin, express.json(), asyn
             amountCents,
             currency: 'eur',
             status: 'pending',
-            travellerCount: 1,
-            hasInsurance: false,
+            travellerCount,
+            hasInsurance,
             createdBy: (req.session && req.session.clinicUsername) || 'admin'
         });
 

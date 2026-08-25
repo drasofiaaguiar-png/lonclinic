@@ -294,6 +294,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         'longevity-plus': 'Longevity Plus',
         followup: 'Follow-up'
     };
+    const TRAVEL_TIER_CENTS = {
+        standard: { 1: 3900, 2: 6900, 3: 10700, 4: 13600 },
+        medicare: { 1: 3200, 2: 4200, 3: 4900, 4: 5500 }
+    };
 
     function closeAdminSidebar() {
         if (!adminContent) return;
@@ -1038,7 +1042,48 @@ document.addEventListener('DOMContentLoaded', async () => {
     const scheduleNextSendInvoice = document.getElementById('scheduleNextSendInvoice');
     const scheduleNextNote = document.getElementById('scheduleNextNote');
     const scheduleNextPrice = document.getElementById('scheduleNextPrice');
+    const scheduleNextTravellers = document.getElementById('scheduleNextTravellers');
+    const scheduleNextInsurance = document.getElementById('scheduleNextInsurance');
+    const scheduleNextTravelOptions = document.getElementById('scheduleNextTravelOptions');
+    const scheduleNextTravelPrice = document.getElementById('scheduleNextTravelPrice');
     let scheduleNextContext = null;
+
+    function scheduleNextHasInsurance() {
+        return !!(scheduleNextInsurance && scheduleNextInsurance.value === 'yes');
+    }
+
+    function scheduleNextTravellerCount() {
+        return Math.max(1, Math.min(4, parseInt((scheduleNextTravellers && scheduleNextTravellers.value) || '1', 10) || 1));
+    }
+
+    function refreshScheduleNextTravelUI() {
+        const isTravel = scheduleNextService && scheduleNextService.value === 'travel';
+        if (scheduleNextTravelOptions) scheduleNextTravelOptions.hidden = !isTravel;
+        if (!isTravel) {
+            if (scheduleNextTravelPrice) scheduleNextTravelPrice.textContent = '';
+            return;
+        }
+        const insured = scheduleNextHasInsurance();
+        const n = scheduleNextTravellerCount();
+        const tier = insured ? TRAVEL_TIER_CENTS.medicare : TRAVEL_TIER_CENTS.standard;
+        if (scheduleNextTravellers) {
+            const current = String(n);
+            scheduleNextTravellers.innerHTML = [1, 2, 3, 4].map((count) => {
+                const label = count === 1 ? '1 pessoa' : `${count} pessoas`;
+                const euros = tier[count] / 100;
+                const price = Number.isInteger(euros) ? `€${euros}` : `€${euros.toFixed(2)}`;
+                return `<option value="${count}">${label} · ${price}</option>`;
+            }).join('');
+            scheduleNextTravellers.value = current;
+        }
+        if (scheduleNextTravelPrice) {
+            const euros = (tier[n] / 100).toFixed(2);
+            scheduleNextTravelPrice.textContent = `Total: €${euros} · ${n === 1 ? '1 pessoa' : n + ' pessoas'} · ${insured ? 'com seguro' : 'sem seguro'}`;
+        }
+    }
+    if (scheduleNextService) scheduleNextService.addEventListener('change', refreshScheduleNextTravelUI);
+    if (scheduleNextTravellers) scheduleNextTravellers.addEventListener('change', refreshScheduleNextTravelUI);
+    if (scheduleNextInsurance) scheduleNextInsurance.addEventListener('change', refreshScheduleNextTravelUI);
 
     function refreshScheduleNextNote() {
         if (!scheduleNextNote) return;
@@ -1176,6 +1221,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             if (scheduleNextService && p.service) scheduleNextService.value = p.service;
             if (scheduleNextProfessional) scheduleNextProfessional.value = p.professional || '';
+            refreshScheduleNextTravelUI();
             const suggest = data.suggestion;
             if (scheduleNextDate) {
                 scheduleNextDate.min = new Date().toISOString().slice(0, 10);
@@ -1212,7 +1258,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 professional: scheduleNextProfessional ? scheduleNextProfessional.value : '',
                 visitFrequency: p.visitFrequency || '',
                 patientType: p.patientType || 'regular',
-                sendInvoice: !!(scheduleNextSendInvoice && scheduleNextSendInvoice.checked)
+                sendInvoice: !!(scheduleNextSendInvoice && scheduleNextSendInvoice.checked),
+                travellers: (scheduleNextService && scheduleNextService.value === 'travel')
+                    ? scheduleNextTravellerCount()
+                    : 1,
+                hasInsurance: !!(scheduleNextService && scheduleNextService.value === 'travel' && scheduleNextHasInsurance())
             };
             if (scheduleNextPrice) {
                 const raw = String(scheduleNextPrice.value || '').trim();
@@ -1965,9 +2015,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const inviteFormError = document.getElementById('inviteFormError');
     const inviteList = document.getElementById('inviteList');
     const inviteTravellers = document.getElementById('inviteTravellers');
-    const inviteTravellersWrap = document.getElementById('inviteTravellersWrap');
-    const inviteMedicare = document.getElementById('inviteMedicare');
-    const inviteMedicareWrap = document.getElementById('inviteMedicareWrap');
+    const inviteTravelOptions = document.getElementById('inviteTravelOptions');
+    const inviteInsurance = document.getElementById('inviteInsurance');
     const inviteComputedPrice = document.getElementById('inviteComputedPrice');
     const inviteCustomPrice = document.getElementById('inviteCustomPrice');
     const inviteComplimentary = document.getElementById('inviteComplimentary');
@@ -1984,10 +2033,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         longevidade: 7900,
         renovacao: 1900
     };
-    const TRAVEL_TIER_CENTS = {
-        standard: { 1: 3900, 2: 6900, 3: 10700, 4: 13600 },
-        medicare: { 1: 3200, 2: 4200, 3: 4900, 4: 5500 }
-    };
 
     function parseCustomPriceCents() {
         if (!inviteCustomPrice) return null;
@@ -1998,13 +2043,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         return Math.round(euros * 100);
     }
 
+    function inviteHasInsurance() {
+        return !!(inviteInsurance && inviteInsurance.value === 'yes');
+    }
+
+    function inviteTravellerCount() {
+        return Math.max(1, Math.min(4, parseInt((inviteTravellers && inviteTravellers.value) || '1', 10) || 1));
+    }
+
+    function formatEuroFromTravelCents(cents) {
+        const n = Number(cents) / 100;
+        return Number.isInteger(n) ? `€${n}` : `€${n.toFixed(2)}`;
+    }
+
+    function fillTravelPersonOptions(selectEl, insured) {
+        if (!selectEl) return;
+        const tier = insured ? TRAVEL_TIER_CENTS.medicare : TRAVEL_TIER_CENTS.standard;
+        const current = selectEl.value || '1';
+        selectEl.innerHTML = [1, 2, 3, 4].map((n) => {
+            const label = n === 1 ? '1 pessoa' : `${n} pessoas`;
+            return `<option value="${n}">${label} · ${formatEuroFromTravelCents(tier[n])}</option>`;
+        }).join('');
+        selectEl.value = current;
+    }
+
     function computeInvitePriceCents() {
         const custom = parseCustomPriceCents();
         if (custom != null) return custom;
         const svc = inviteService ? inviteService.value : '';
         if (svc === 'travel') {
-            const n = Math.max(1, Math.min(4, parseInt((inviteTravellers && inviteTravellers.value) || '1', 10)));
-            const tier = inviteMedicare && inviteMedicare.checked ? 'medicare' : 'standard';
+            const n = inviteTravellerCount();
+            const tier = inviteHasInsurance() ? 'medicare' : 'standard';
             return TRAVEL_TIER_CENTS[tier][n];
         }
         return SERVICE_BASE_CENTS[svc] || 0;
@@ -2013,8 +2082,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     function refreshInvitePriceUI() {
         if (!inviteService) return;
         const isTravel = inviteService.value === 'travel';
-        if (inviteTravellersWrap) inviteTravellersWrap.style.display = isTravel ? '' : 'none';
-        if (inviteMedicareWrap) inviteMedicareWrap.style.display = isTravel ? '' : 'none';
+        if (inviteTravelOptions) inviteTravelOptions.hidden = !isTravel;
+        if (isTravel) fillTravelPersonOptions(inviteTravellers, inviteHasInsurance());
         if (inviteComplimentary && inviteComplimentary.checked) {
             if (inviteWithoutInvoice) inviteWithoutInvoice.checked = true;
             if (inviteCustomPrice) {
@@ -2034,11 +2103,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (custom === 0) {
                 inviteComputedPrice.textContent = 'Complimentary — free, confirmed immediately (no invoice)';
             } else if (cents > 0) {
+                const people = inviteTravellerCount();
+                const travelBit = isTravel && custom == null
+                    ? ` · ${people === 1 ? '1 pessoa' : people + ' pessoas'} · ${inviteHasInsurance() ? 'com seguro' : 'sem seguro'}`
+                    : '';
                 const label = custom != null ? 'Custom total' : 'Total';
                 const mode = noInvoice
                     ? ' · confirm now, no payment invoice'
                     : ' · Stripe payment link';
-                inviteComputedPrice.textContent = `${label}: €${(cents / 100).toFixed(2)}${mode}`;
+                inviteComputedPrice.textContent = `${label}: €${(cents / 100).toFixed(2)}${travelBit}${mode}`;
             } else {
                 inviteComputedPrice.textContent = '';
             }
@@ -2046,7 +2119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (inviteService) inviteService.addEventListener('change', refreshInvitePriceUI);
     if (inviteTravellers) inviteTravellers.addEventListener('change', refreshInvitePriceUI);
-    if (inviteMedicare) inviteMedicare.addEventListener('change', refreshInvitePriceUI);
+    if (inviteInsurance) inviteInsurance.addEventListener('change', refreshInvitePriceUI);
     if (inviteCustomPrice) inviteCustomPrice.addEventListener('input', () => {
         if (inviteComplimentary && inviteCustomPrice.value !== '' && Number(inviteCustomPrice.value) === 0) {
             inviteComplimentary.checked = true;
@@ -2266,10 +2339,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 dateIso: inviteDate.value,
                 time: inviteTime.value,
                 locale: inviteLocale.value,
-                travellers: inviteService.value === 'travel'
-                    ? parseInt((inviteTravellers && inviteTravellers.value) || '1', 10)
-                    : 1,
-                hasInsurance: inviteService.value === 'travel' && !!(inviteMedicare && inviteMedicare.checked)
+                travellers: inviteService.value === 'travel' ? inviteTravellerCount() : 1,
+                hasInsurance: inviteService.value === 'travel' && inviteHasInsurance()
             };
             const customCents = parseCustomPriceCents();
             if (inviteComplimentary && inviteComplimentary.checked) {
