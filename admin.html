@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css?v=travel-invite-1">
+    <link rel="stylesheet" href="dashboard.css?v=travel-invite-2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -233,25 +233,71 @@
                             </div>
                         </div>
                         <div class="admin-travel-options" id="scheduleNextTravelOptions" hidden>
-                            <p class="admin-travel-options-title">Consulta do viajante — pessoas e seguro definem o preço</p>
-                            <div class="admin-invite-grid admin-travel-options-grid">
-                                <div class="admin-form-group">
-                                    <label for="scheduleNextTravellers">Número de pessoas</label>
-                                    <select id="scheduleNextTravellers" class="admin-select">
-                                        <option value="1">1 pessoa · €39</option>
-                                        <option value="2">2 pessoas · €69</option>
-                                        <option value="3">3 pessoas · €107</option>
-                                        <option value="4">4 pessoas · €136</option>
-                                    </select>
+                            <p class="admin-travel-options-title">Consulta do viajante — o preço fica à frente de cada opção</p>
+                            <fieldset class="admin-travel-fieldset">
+                                <legend>Número de pessoas</legend>
+                                <div class="admin-travel-people" role="radiogroup">
+                                    <label class="admin-travel-person">
+                                        <input type="radio" name="scheduleNextTravellers" value="1" checked>
+                                        <span class="admin-travel-person-inner">
+                                            <strong>1 pessoa</strong>
+                                            <span class="admin-travel-person-prices">
+                                                <span data-tier="standard">€39 sem seguro</span>
+                                                <span data-tier="medicare">€32 com seguro</span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                    <label class="admin-travel-person">
+                                        <input type="radio" name="scheduleNextTravellers" value="2">
+                                        <span class="admin-travel-person-inner">
+                                            <strong>2 pessoas</strong>
+                                            <span class="admin-travel-person-prices">
+                                                <span data-tier="standard">€69 sem seguro</span>
+                                                <span data-tier="medicare">€42 com seguro</span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                    <label class="admin-travel-person">
+                                        <input type="radio" name="scheduleNextTravellers" value="3">
+                                        <span class="admin-travel-person-inner">
+                                            <strong>3 pessoas</strong>
+                                            <span class="admin-travel-person-prices">
+                                                <span data-tier="standard">€107 sem seguro</span>
+                                                <span data-tier="medicare">€49 com seguro</span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                    <label class="admin-travel-person">
+                                        <input type="radio" name="scheduleNextTravellers" value="4">
+                                        <span class="admin-travel-person-inner">
+                                            <strong>4 pessoas</strong>
+                                            <span class="admin-travel-person-prices">
+                                                <span data-tier="standard">€136 sem seguro</span>
+                                                <span data-tier="medicare">€55 com seguro</span>
+                                            </span>
+                                        </span>
+                                    </label>
                                 </div>
-                                <div class="admin-form-group">
-                                    <label for="scheduleNextInsurance">Seguro de saúde</label>
-                                    <select id="scheduleNextInsurance" class="admin-select">
-                                        <option value="no">Sem seguro</option>
-                                        <option value="yes">Com seguro</option>
-                                    </select>
+                            </fieldset>
+                            <fieldset class="admin-travel-fieldset">
+                                <legend>Seguro de saúde</legend>
+                                <div class="admin-travel-people admin-travel-people--insurance" role="radiogroup">
+                                    <label class="admin-travel-person">
+                                        <input type="radio" name="scheduleNextInsurance" value="no" checked>
+                                        <span class="admin-travel-person-inner">
+                                            <strong>Sem seguro</strong>
+                                            <span class="admin-travel-person-prices"><span>€39 / €69 / €107 / €136</span></span>
+                                        </span>
+                                    </label>
+                                    <label class="admin-travel-person">
+                                        <input type="radio" name="scheduleNextInsurance" value="yes">
+                                        <span class="admin-travel-person-inner">
+                                            <strong>Com seguro</strong>
+                                            <span class="admin-travel-person-prices"><span>€32 / €42 / €49 / €55</span></span>
+                                        </span>
+                                    </label>
                                 </div>
-                            </div>
+                            </fieldset>
                             <p class="admin-travel-price-live" id="scheduleNextTravelPrice" aria-live="polite"></p>
                         </div>
                         <div class="admin-schedule-suggestions" id="scheduleNextSuggestions"></div>
@@ -306,26 +352,71 @@
                             </select>
                         </div>
                         <div class="admin-travel-options" id="inviteTravelOptions" hidden>
-                            <p class="admin-travel-options-title">Consulta do viajante — escolha pessoas e seguro para definir o preço</p>
-                            <div class="admin-invite-grid admin-travel-options-grid">
-                                <div class="admin-form-group">
-                                    <label for="inviteTravellers">Número de pessoas</label>
-                                    <select id="inviteTravellers" class="admin-select">
-                                        <option value="1">1 pessoa · €39</option>
-                                        <option value="2">2 pessoas · €69</option>
-                                        <option value="3">3 pessoas · €107</option>
-                                        <option value="4">4 pessoas · €136</option>
-                                    </select>
+                            <p class="admin-travel-options-title">Consulta do viajante — escolha pessoas e seguro. O preço fica à frente de cada opção.</p>
+                            <fieldset class="admin-travel-fieldset">
+                                <legend>Número de pessoas</legend>
+                                <div class="admin-travel-people" role="radiogroup">
+                                    <label class="admin-travel-person">
+                                        <input type="radio" name="inviteTravellers" value="1" checked>
+                                        <span class="admin-travel-person-inner">
+                                            <strong>1 pessoa</strong>
+                                            <span class="admin-travel-person-prices">
+                                                <span data-tier="standard">€39 sem seguro</span>
+                                                <span data-tier="medicare">€32 com seguro</span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                    <label class="admin-travel-person">
+                                        <input type="radio" name="inviteTravellers" value="2">
+                                        <span class="admin-travel-person-inner">
+                                            <strong>2 pessoas</strong>
+                                            <span class="admin-travel-person-prices">
+                                                <span data-tier="standard">€69 sem seguro</span>
+                                                <span data-tier="medicare">€42 com seguro</span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                    <label class="admin-travel-person">
+                                        <input type="radio" name="inviteTravellers" value="3">
+                                        <span class="admin-travel-person-inner">
+                                            <strong>3 pessoas</strong>
+                                            <span class="admin-travel-person-prices">
+                                                <span data-tier="standard">€107 sem seguro</span>
+                                                <span data-tier="medicare">€49 com seguro</span>
+                                            </span>
+                                        </span>
+                                    </label>
+                                    <label class="admin-travel-person">
+                                        <input type="radio" name="inviteTravellers" value="4">
+                                        <span class="admin-travel-person-inner">
+                                            <strong>4 pessoas</strong>
+                                            <span class="admin-travel-person-prices">
+                                                <span data-tier="standard">€136 sem seguro</span>
+                                                <span data-tier="medicare">€55 com seguro</span>
+                                            </span>
+                                        </span>
+                                    </label>
                                 </div>
-                                <div class="admin-form-group">
-                                    <label for="inviteInsurance">Seguro de saúde</label>
-                                    <select id="inviteInsurance" class="admin-select">
-                                        <option value="no">Sem seguro</option>
-                                        <option value="yes">Com seguro</option>
-                                    </select>
-                                    <small style="display:block;margin-top:6px;opacity:.7;">Com seguro: €32 / €42 / €49 / €55. Sem seguro: €39 / €69 / €107 / €136.</small>
+                            </fieldset>
+                            <fieldset class="admin-travel-fieldset">
+                                <legend>Seguro de saúde</legend>
+                                <div class="admin-travel-people admin-travel-people--insurance" role="radiogroup">
+                                    <label class="admin-travel-person">
+                                        <input type="radio" name="inviteInsurance" value="no" checked>
+                                        <span class="admin-travel-person-inner">
+                                            <strong>Sem seguro</strong>
+                                            <span class="admin-travel-person-prices"><span>€39 / €69 / €107 / €136</span></span>
+                                        </span>
+                                    </label>
+                                    <label class="admin-travel-person">
+                                        <input type="radio" name="inviteInsurance" value="yes">
+                                        <span class="admin-travel-person-inner">
+                                            <strong>Com seguro</strong>
+                                            <span class="admin-travel-person-prices"><span>€32 / €42 / €49 / €55</span></span>
+                                        </span>
+                                    </label>
                                 </div>
-                            </div>
+                            </fieldset>
                         </div>
                         <div class="admin-form-group">
                             <label for="inviteCustomPrice">Custom price (€) <span style="font-weight:400;opacity:.7;">— optional</span></label>
@@ -763,7 +854,7 @@
     </footer>
 
     <script src="lon-nav.js"></script>
-    <script src="admin.js?v=travel-invite-1"></script>
+    <script src="admin.js?v=travel-invite-2"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

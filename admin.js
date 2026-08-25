@@ -299,6 +299,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         medicare: { 1: 3200, 2: 4200, 3: 4900, 4: 5500 }
     };
 
+    function radioValue(root, name, fallback) {
+        const el = root && root.querySelector(`input[name="${name}"]:checked`);
+        return el ? el.value : fallback;
+    }
+
     function closeAdminSidebar() {
         if (!adminContent) return;
         adminContent.classList.remove('sidebar-open');
@@ -1042,23 +1047,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     const scheduleNextSendInvoice = document.getElementById('scheduleNextSendInvoice');
     const scheduleNextNote = document.getElementById('scheduleNextNote');
     const scheduleNextPrice = document.getElementById('scheduleNextPrice');
-    const scheduleNextTravellers = document.getElementById('scheduleNextTravellers');
-    const scheduleNextInsurance = document.getElementById('scheduleNextInsurance');
     const scheduleNextTravelOptions = document.getElementById('scheduleNextTravelOptions');
     const scheduleNextTravelPrice = document.getElementById('scheduleNextTravelPrice');
     let scheduleNextContext = null;
 
     function scheduleNextHasInsurance() {
-        return !!(scheduleNextInsurance && scheduleNextInsurance.value === 'yes');
+        return radioValue(scheduleNextTravelOptions, 'scheduleNextInsurance', 'no') === 'yes';
     }
 
     function scheduleNextTravellerCount() {
-        return Math.max(1, Math.min(4, parseInt((scheduleNextTravellers && scheduleNextTravellers.value) || '1', 10) || 1));
+        return Math.max(1, Math.min(4, parseInt(radioValue(scheduleNextTravelOptions, 'scheduleNextTravellers', '1'), 10) || 1));
     }
 
     function refreshScheduleNextTravelUI() {
         const isTravel = scheduleNextService && scheduleNextService.value === 'travel';
-        if (scheduleNextTravelOptions) scheduleNextTravelOptions.hidden = !isTravel;
+        if (scheduleNextTravelOptions) {
+            scheduleNextTravelOptions.hidden = !isTravel;
+            scheduleNextTravelOptions.classList.toggle('is-insured', isTravel && scheduleNextHasInsurance());
+        }
         if (!isTravel) {
             if (scheduleNextTravelPrice) scheduleNextTravelPrice.textContent = '';
             return;
@@ -1066,24 +1072,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const insured = scheduleNextHasInsurance();
         const n = scheduleNextTravellerCount();
         const tier = insured ? TRAVEL_TIER_CENTS.medicare : TRAVEL_TIER_CENTS.standard;
-        if (scheduleNextTravellers) {
-            const current = String(n);
-            scheduleNextTravellers.innerHTML = [1, 2, 3, 4].map((count) => {
-                const label = count === 1 ? '1 pessoa' : `${count} pessoas`;
-                const euros = tier[count] / 100;
-                const price = Number.isInteger(euros) ? `€${euros}` : `€${euros.toFixed(2)}`;
-                return `<option value="${count}">${label} · ${price}</option>`;
-            }).join('');
-            scheduleNextTravellers.value = current;
-        }
         if (scheduleNextTravelPrice) {
             const euros = (tier[n] / 100).toFixed(2);
             scheduleNextTravelPrice.textContent = `Total: €${euros} · ${n === 1 ? '1 pessoa' : n + ' pessoas'} · ${insured ? 'com seguro' : 'sem seguro'}`;
         }
     }
     if (scheduleNextService) scheduleNextService.addEventListener('change', refreshScheduleNextTravelUI);
-    if (scheduleNextTravellers) scheduleNextTravellers.addEventListener('change', refreshScheduleNextTravelUI);
-    if (scheduleNextInsurance) scheduleNextInsurance.addEventListener('change', refreshScheduleNextTravelUI);
+    if (scheduleNextTravelOptions) scheduleNextTravelOptions.addEventListener('change', refreshScheduleNextTravelUI);
 
     function refreshScheduleNextNote() {
         if (!scheduleNextNote) return;
@@ -2014,9 +2009,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const inviteSubmitBtn = document.getElementById('inviteSubmitBtn');
     const inviteFormError = document.getElementById('inviteFormError');
     const inviteList = document.getElementById('inviteList');
-    const inviteTravellers = document.getElementById('inviteTravellers');
     const inviteTravelOptions = document.getElementById('inviteTravelOptions');
-    const inviteInsurance = document.getElementById('inviteInsurance');
     const inviteComputedPrice = document.getElementById('inviteComputedPrice');
     const inviteCustomPrice = document.getElementById('inviteCustomPrice');
     const inviteComplimentary = document.getElementById('inviteComplimentary');
@@ -2044,27 +2037,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function inviteHasInsurance() {
-        return !!(inviteInsurance && inviteInsurance.value === 'yes');
+        return radioValue(inviteTravelOptions, 'inviteInsurance', 'no') === 'yes';
     }
 
     function inviteTravellerCount() {
-        return Math.max(1, Math.min(4, parseInt((inviteTravellers && inviteTravellers.value) || '1', 10) || 1));
-    }
-
-    function formatEuroFromTravelCents(cents) {
-        const n = Number(cents) / 100;
-        return Number.isInteger(n) ? `€${n}` : `€${n.toFixed(2)}`;
-    }
-
-    function fillTravelPersonOptions(selectEl, insured) {
-        if (!selectEl) return;
-        const tier = insured ? TRAVEL_TIER_CENTS.medicare : TRAVEL_TIER_CENTS.standard;
-        const current = selectEl.value || '1';
-        selectEl.innerHTML = [1, 2, 3, 4].map((n) => {
-            const label = n === 1 ? '1 pessoa' : `${n} pessoas`;
-            return `<option value="${n}">${label} · ${formatEuroFromTravelCents(tier[n])}</option>`;
-        }).join('');
-        selectEl.value = current;
+        return Math.max(1, Math.min(4, parseInt(radioValue(inviteTravelOptions, 'inviteTravellers', '1'), 10) || 1));
     }
 
     function computeInvitePriceCents() {
@@ -2082,8 +2059,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     function refreshInvitePriceUI() {
         if (!inviteService) return;
         const isTravel = inviteService.value === 'travel';
-        if (inviteTravelOptions) inviteTravelOptions.hidden = !isTravel;
-        if (isTravel) fillTravelPersonOptions(inviteTravellers, inviteHasInsurance());
+        if (inviteTravelOptions) {
+            inviteTravelOptions.hidden = !isTravel;
+            inviteTravelOptions.classList.toggle('is-insured', isTravel && inviteHasInsurance());
+        }
         if (inviteComplimentary && inviteComplimentary.checked) {
             if (inviteWithoutInvoice) inviteWithoutInvoice.checked = true;
             if (inviteCustomPrice) {
@@ -2118,8 +2097,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
     if (inviteService) inviteService.addEventListener('change', refreshInvitePriceUI);
-    if (inviteTravellers) inviteTravellers.addEventListener('change', refreshInvitePriceUI);
-    if (inviteInsurance) inviteInsurance.addEventListener('change', refreshInvitePriceUI);
+    if (inviteTravelOptions) inviteTravelOptions.addEventListener('change', refreshInvitePriceUI);
     if (inviteCustomPrice) inviteCustomPrice.addEventListener('input', () => {
         if (inviteComplimentary && inviteCustomPrice.value !== '' && Number(inviteCustomPrice.value) === 0) {
             inviteComplimentary.checked = true;

@@ -1614,8 +1614,73 @@ body.dash-portal .dash-stat-card {
     font-weight: 700;
     color: var(--text-primary);
 }
-.admin-travel-options-grid {
+.admin-travel-fieldset {
+    border: 0;
+    margin: 0 0 14px;
+    padding: 0;
+}
+.admin-travel-fieldset:last-of-type {
     margin-bottom: 0;
+}
+.admin-travel-fieldset legend {
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+.admin-travel-people {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 8px;
+}
+.admin-travel-person {
+    display: block;
+    cursor: pointer;
+    margin: 0;
+}
+.admin-travel-person input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.admin-travel-person-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-subtle, #d5ddd8);
+    border-radius: 10px;
+    background: #fff;
+    min-height: 100%;
+}
+.admin-travel-person input:checked + .admin-travel-person-inner {
+    border-color: rgba(26, 102, 65, 0.7);
+    box-shadow: 0 0 0 2px rgba(26, 102, 65, 0.18);
+    background: rgba(26, 102, 65, 0.06);
+}
+.admin-travel-person-inner strong {
+    font-size: 0.92rem;
+}
+.admin-travel-person-prices {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 0.8rem;
+    color: var(--text-secondary, #445);
+    font-weight: 600;
+}
+.admin-travel-options .admin-travel-person-prices [data-tier="medicare"] {
+    opacity: 0.55;
+    font-weight: 500;
+}
+.admin-travel-options.is-insured .admin-travel-person-prices [data-tier="standard"] {
+    opacity: 0.55;
+    font-weight: 500;
+}
+.admin-travel-options.is-insured .admin-travel-person-prices [data-tier="medicare"] {
+    opacity: 1;
+    font-weight: 700;
+    color: var(--text-primary);
 }
 .admin-travel-price-live {
     margin: 12px 0 0;
