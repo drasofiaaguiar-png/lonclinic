@@ -287,9 +287,14 @@
     function syncTrustpilotLinks(locale) {
         const loc = locale || detectLocale();
         const href = TRUSTPILOT_EVALUATE[loc] || TRUSTPILOT_EVALUATE.en;
+        const profileHref = TRUSTPILOT_PROFILE[loc] || TRUSTPILOT_PROFILE.en;
         document.querySelectorAll('[data-trustpilot-evaluate]').forEach(function (el) {
             if (el.closest('.lang-section')) return;
             el.setAttribute('href', href);
+        });
+        document.querySelectorAll('[data-trustpilot-profile]').forEach(function (el) {
+            if (el.closest('.lang-section')) return;
+            el.setAttribute('href', profileHref);
         });
     }
 

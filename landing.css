@@ -1178,6 +1178,30 @@ img {
     display: block;
 }
 
+.lon-trustpilot-reviews {
+    max-width: 680px;
+    margin: 8px auto 28px;
+}
+
+.lon-trustpilot-reviews .trustpilot-widget {
+    display: block;
+    min-height: 640px;
+}
+
+.lon-trustpilot-profile-link {
+    display: block;
+    margin-top: 12px;
+    text-align: center;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #00b67a;
+    text-decoration: none;
+}
+
+.lon-trustpilot-profile-link:hover {
+    text-decoration: underline;
+}
+
 .lon-testimonials-grid {
     display: grid;
     gap: 20px;

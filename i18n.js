@@ -178,6 +178,8 @@
         /* ── Testimonials ── */
         { s: '.lon-testimonials-kicker', en: 'Testimonials', pt: 'Testemunhos', es: 'Testimonios' },
         { s: '#lon-testimonials-title', en: 'What our patients say', pt: 'O que dizem os nossos pacientes', es: 'Lo que dicen nuestros pacientes' },
+        { s: '.lon-trustpilot-profile-link', en: 'See all reviews on Trustpilot', pt: 'Ver todas as avaliações no Trustpilot', es: 'Ver todas las valoraciones en Trustpilot' },
+        { s: 'a[data-trustpilot-profile]', a: 'href', en: 'https://www.trustpilot.com/review/lonclinic.com', pt: 'https://pt.trustpilot.com/review/lonclinic.com', es: 'https://es.trustpilot.com/review/lonclinic.com' },
         { s: '.lon-testimonial-seed .lon-testimonial-quote', en: 'I loved the consultation! The doctor who saw me was very friendly, very clear in her approach and answered all my questions! I will definitely contact you again for my upcoming trips! Thank you so much.', pt: '«Eu adorei a consulta! A doutora que me atendeu era super simpática, muito clara na abordagem do tema e esclareceu-me todas as dúvidas! Sem dúvida voltarei a contactar-vos nas minhas próximas viagens! Muito obrigada.»', es: '¡Me encantó la consulta! La doctora que me atendió fue muy amable, muy clara en su enfoque y resolvió todas mis dudas. Sin duda volveré a contactaros en mis próximos viajes. Muchas gracias.' },
         { s: '.lon-testimonial-seed .lon-testimonial-author', en: 'Verified patient', pt: 'Paciente verificada', es: 'Paciente verificada' },
         { s: '.lon-testimonial-seed .lon-testimonial-date', en: 'June 2026', pt: 'Junho de 2026', es: 'Junio de 2026' },
