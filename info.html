@@ -109,6 +109,8 @@
             margin: 8px 0 14px;
         }
         .body ul.bullet-list li { margin-bottom: 8px; }
+        .body ul.bullet-list a { color: var(--primary); text-decoration: none; }
+        .body ul.bullet-list a:hover { text-decoration: underline; }
         .team-profile {
             display: grid;
             grid-template-columns: 140px 1fr;
@@ -1536,7 +1538,60 @@
             }
 
             function getActiveLang() {
-                return (window.CLINIC_I18N && window.CLINIC_I18N.getLang()) || localStorage.getItem('clinic_lang') || 'en';
+                return (window.CLINIC_I18N && window.CLINIC_I18N.getLang()) || localStorage.getItem('clinic_lang') || 'pt';
+            }
+
+            const DIRECTORY_PAGES = [
+                "sobre-nos",
+                "parcerias",
+                "registo-medico",
+                "contato",
+                "trabalhe-connosco",
+                "como-funciona",
+                "seguranca-dados",
+                "acessibilidade"
+            ];
+
+            function escapeDir(s) {
+                return String(s || "")
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;");
+            }
+
+            function getDirectoryData(lang) {
+                const items = DIRECTORY_PAGES.filter(function (k) { return content[k]; }).map(function (k) {
+                    const item = getPageData(k, lang) || content[k];
+                    const title = escapeDir(item.title || k);
+                    const sub = escapeDir(item.subtitle || "");
+                    return "<li><a href=\"/info.html?page=" + encodeURIComponent(k) + "\"><strong>" + title + "</strong>" + (sub ? " — " + sub : "") + "</a></li>";
+                }).join("");
+                if (lang === "en") {
+                    return {
+                        section: "CLINIC",
+                        title: "Information",
+                        subtitle: "Lon Clinic institutional pages",
+                        bodyHtml: "<p>Institutional, clinical and support pages.</p><ul class=\"bullet-list\">" + items + "</ul>",
+                        actions: [{ label: "Go to homepage", href: "/", primary: true }]
+                    };
+                }
+                if (lang === "es") {
+                    return {
+                        section: "CLÍNICA",
+                        title: "Información",
+                        subtitle: "Páginas institucionales de Lon Clinic",
+                        bodyHtml: "<p>Páginas institucionales, clínicas y de apoyo.</p><ul class=\"bullet-list\">" + items + "</ul>",
+                        actions: [{ label: "Ir al inicio", href: "/", primary: true }]
+                    };
+                }
+                return {
+                    section: "CLÍNICA",
+                    title: "Informação",
+                    subtitle: "Páginas institucionais da Lon Clinic",
+                    bodyHtml: "<p>Conteúdo institucional, clínico e de apoio.</p><ul class=\"bullet-list\">" + items + "</ul>",
+                    actions: [{ label: "Ir para o início", href: "/", primary: true }]
+                };
             }
 
             let currentRenderLang = getActiveLang();
@@ -1686,8 +1741,11 @@
             }
 
             function renderContent(lang) {
-                const data = getPageData(page, lang) || content[page] || getNotFoundData(lang);
-                const isKnownPage = Boolean(content[page]);
+                const isDirectory = !page;
+                const data = isDirectory
+                    ? getDirectoryData(lang)
+                    : (getPageData(page, lang) || content[page] || getNotFoundData(lang));
+                const isKnownPage = isDirectory || Boolean(content[page]);
                 const pageTitle = data.title + " | Lon Clinic";
                 const canonicalBase = window.location.origin + window.location.pathname;
                 const canonicalUrl = isKnownPage && page ? (canonicalBase + "?page=" + encodeURIComponent(page)) : canonicalBase;
