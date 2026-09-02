@@ -48,6 +48,7 @@ const queixas = require('./queixas');
 const nutricao = require('./nutricao');
 const touristPages = require('./tourist-pages');
 const producers = require('./producers');
+const wellness = require('./wellness');
 const seo = require('./seo');
 const { emailLink, withUtm, TRACKED_REDIRECTS, safeInternalPath, trackedLinksForAdmin } = require('./utm');
 const { hydrateInfoHtml, NOINDEX_PAGES: INFO_NOINDEX_PAGES } = require('./info-ssr');
@@ -4839,6 +4840,17 @@ app.get('/admin', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'admin.html'), 'Error loading admin page');
 });
 
+app.get('/wellness', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'wellness.html'), 'Error loading wellness directory');
+});
+
+app.get('/wellness/:slug', (req, res) => {
+    const slug = String(req.params.slug || '').toLowerCase();
+    if (!slug) return res.redirect(302, '/wellness');
+    if (!wellness.getBySlug(slug)) res.status(404);
+    sendHtmlNoCache(res, path.join(__dirname, 'wellness-ficha.html'), 'Error loading wellness page');
+});
+
 app.get('/diretorio/candidatar', (req, res) => {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
     sendHtmlNoCache(res, path.join(__dirname, 'diretorio-candidatar.html'), 'Error loading producer application');
@@ -4937,6 +4949,14 @@ app.get('/diretorio-candidatar.html', (req, res) => {
 
 app.get('/diretorio-ficha.html', (req, res) => {
     res.redirect(301, '/diretorio');
+});
+
+app.get('/wellness.html', (req, res) => {
+    res.redirect(301, '/wellness');
+});
+
+app.get('/wellness-ficha.html', (req, res) => {
+    res.redirect(301, '/wellness');
 });
 
 app.get('/doctors.html', (req, res) => {
@@ -5061,7 +5081,9 @@ app.use(express.static(path.join(__dirname), {
             base === 'recrutamento-psicologia.js' ||
             base === 'diretorio.css' ||
             base === 'diretorio.js' ||
-            base === 'diretorio-candidatar.js'
+            base === 'diretorio-candidatar.js' ||
+            base === 'wellness.css' ||
+            base === 'wellness-page.js'
         ) {
             res.setHeader('Cache-Control', 'no-store');
             return;
@@ -6151,6 +6173,24 @@ app.patch('/api/admin/psychologists/:id', requireAdmin, express.json(), async (r
         console.error('PATCH /api/admin/psychologists/:id:', err.message);
         res.status(500).json({ error: 'Failed to update application' });
     }
+});
+
+app.get('/api/wellness', (req, res) => {
+    const list = wellness.filterList({
+        q: req.query.q,
+        country: req.query.country,
+        city: req.query.city,
+        category: req.query.category,
+        duration: req.query.duration,
+        setting: req.query.setting
+    });
+    res.json({ experiences: list, meta: wellness.meta() });
+});
+
+app.get('/api/wellness/:slug', (req, res) => {
+    const item = wellness.getBySlug(req.params.slug);
+    if (!item) return res.status(404).json({ error: 'Not found' });
+    res.json({ experience: item, related: wellness.relatedFor(item.slug, 3) });
 });
 
 app.get('/api/diretorio/meta', (req, res) => {

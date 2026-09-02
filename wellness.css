@@ -1,0 +1,397 @@
+/* Wellness experiences directory */
+body.lon-landing.wx-page,
+.wx-page {
+    --wx-ink: #2a2c1c;
+    --wx-muted: #636650;
+    --wx-paper: #f7f4ea;
+    --wx-cream: #f3efe3;
+    --wx-line: rgba(42, 44, 28, 0.12);
+    --wx-olive: #5f6642;
+    --wx-olive-deep: #4a5134;
+    --wx-signal: #3a4028;
+    --lon-bg: var(--wx-paper);
+    --lon-primary: var(--wx-ink);
+    --lon-muted: var(--wx-muted);
+    --lon-accent: var(--wx-olive);
+    --lon-accent-dark: var(--wx-olive-deep);
+    min-height: 100vh;
+    background:
+        radial-gradient(ellipse 70% 40% at 8% -8%, rgba(95, 102, 66, 0.09), transparent 52%),
+        linear-gradient(180deg, #faf8f1 0%, var(--wx-paper) 100%);
+    color: var(--wx-ink);
+}
+
+.wx-page h1,
+.wx-page h2,
+.wx-page .wx-card-title {
+    font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+.wx-main {
+    width: min(1180px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: calc(var(--lon-nav-h, 72px) + 36px) 0 72px;
+}
+
+.wx-hero {
+    margin-bottom: 22px;
+}
+
+.wx-kicker {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--wx-olive);
+    margin: 0 0 8px;
+}
+
+.wx-hero h1 {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+    line-height: 1.15;
+}
+
+.wx-hero p {
+    margin: 0;
+    max-width: 42rem;
+    color: var(--wx-muted);
+    line-height: 1.55;
+}
+
+.wx-filters {
+    display: grid;
+    grid-template-columns: minmax(180px, 1.5fr) repeat(5, minmax(120px, 1fr));
+    gap: 10px;
+    margin-bottom: 14px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.86);
+    border: 1px solid var(--wx-line);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+}
+
+@media (min-width: 960px) {
+    .wx-filters {
+        position: sticky;
+        top: calc(var(--lon-nav-h, 72px) + 14px);
+        z-index: 20;
+        box-shadow: 0 10px 28px rgba(42, 44, 28, 0.06);
+    }
+}
+
+.wx-filters input,
+.wx-filters select {
+    width: 100%;
+    box-sizing: border-box;
+    font: inherit;
+    font-size: 0.9rem;
+    padding: 11px 12px;
+    border: 1px solid var(--wx-line);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--wx-ink);
+}
+
+.wx-filters input:focus,
+.wx-filters select:focus {
+    outline: 2px solid rgba(95, 102, 66, 0.35);
+    outline-offset: 1px;
+    border-color: var(--wx-olive);
+}
+
+.wx-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 16px;
+    margin-bottom: 18px;
+}
+
+.wx-count {
+    font-size: 0.88rem;
+    color: var(--wx-muted);
+}
+
+.wx-clear {
+    appearance: none;
+    border: 0;
+    background: none;
+    color: var(--wx-olive-deep);
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    padding: 0;
+}
+
+.wx-clear[hidden] {
+    display: none;
+}
+
+.wx-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 18px;
+}
+
+.wx-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid var(--wx-line);
+    border-radius: 18px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    min-height: 100%;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.wx-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px rgba(42, 44, 28, 0.1);
+}
+
+.wx-card-photo-wrap {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    background: #e4e2d4;
+}
+
+.wx-card-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.wx-card-photo.is-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--wx-muted);
+    font-size: 0.8rem;
+}
+
+.wx-chip {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: rgba(247, 244, 234, 0.92);
+    color: var(--wx-olive-deep);
+}
+
+.wx-price {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: rgba(42, 44, 28, 0.78);
+    color: #fff;
+}
+
+.wx-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 14px 16px 16px;
+    flex: 1;
+}
+
+.wx-card-loc {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--wx-olive);
+}
+
+.wx-card-title {
+    font-size: 1.22rem;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.25;
+}
+
+.wx-card-body p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--wx-muted);
+    line-height: 1.45;
+}
+
+.wx-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 6px;
+}
+
+.wx-tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(95, 102, 66, 0.1);
+    color: var(--wx-olive-deep);
+}
+
+.wx-empty,
+.wx-error {
+    grid-column: 1 / -1;
+    padding: 36px 16px;
+    text-align: center;
+    color: var(--wx-muted);
+}
+
+.wx-note {
+    margin: 28px 0 0;
+    font-size: 0.8rem;
+    color: var(--wx-muted);
+    line-height: 1.5;
+}
+
+/* Detail */
+.wx-ficha {
+    max-width: 860px;
+}
+
+.wx-back {
+    display: inline-block;
+    margin-bottom: 18px;
+    color: var(--wx-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.wx-back:hover {
+    color: var(--wx-olive-deep);
+}
+
+.wx-hero-img {
+    width: 100%;
+    aspect-ratio: 16 / 8;
+    object-fit: cover;
+    border-radius: 18px;
+    border: 1px solid var(--wx-line);
+    margin: 8px 0 20px;
+    background: #e4e2d4;
+}
+
+.wx-ficha-kicker {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--wx-olive);
+    margin: 0 0 6px;
+}
+
+.wx-ficha h1 {
+    font-size: clamp(1.9rem, 3.4vw, 2.6rem);
+    font-weight: 600;
+    margin: 0 0 10px;
+    line-height: 1.15;
+}
+
+.wx-lead {
+    font-size: 1.05rem;
+    color: var(--wx-muted);
+    line-height: 1.55;
+    margin: 0 0 18px;
+}
+
+.wx-dl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin: 0 0 24px;
+}
+
+.wx-dl div {
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--wx-line);
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+
+.wx-dl dt {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--wx-muted);
+    margin: 0 0 4px;
+}
+
+.wx-dl dd {
+    margin: 0;
+    font-weight: 600;
+}
+
+.wx-copy {
+    line-height: 1.65;
+    margin: 0 0 22px;
+}
+
+.wx-copy p {
+    margin: 0 0 12px;
+}
+
+.wx-highlights {
+    margin: 0 0 24px;
+    padding: 0 0 0 18px;
+    list-style: disc;
+}
+
+.wx-highlights li {
+    margin: 0 0 6px;
+    line-height: 1.45;
+}
+
+.wx-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 8px 0 28px;
+}
+
+.wx-related h2 {
+    font-size: 1.45rem;
+    margin: 0 0 14px;
+}
+
+.wx-related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+@media (max-width: 900px) {
+    .wx-filters {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .wx-filters {
+        grid-template-columns: 1fr;
+    }
+
+    .wx-hero-img {
+        aspect-ratio: 16 / 11;
+    }
+}

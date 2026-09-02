@@ -189,6 +189,7 @@ function buildSitemapXml(origin) {
         ['/faq', today, 'monthly', '0.7'],
         ['/blog', today, 'weekly', '0.8'],
         ['/magazine', today, 'weekly', '0.85'],
+        ['/wellness', today, 'weekly', '0.75'],
         ['/equipa/rita-aguiar', today, 'monthly', '0.8'],
         ['/info.html', today, 'monthly', '0.6']
     ];
@@ -272,6 +273,16 @@ function buildSitemapXml(origin) {
         }
     } catch (err) {
         console.error('sitemap: tourist pages', err.message);
+    }
+
+    try {
+        const wellness = require('./wellness');
+        for (const item of wellness.list()) {
+            if (!item || !item.slug) continue;
+            entries.push(urlEntry(`${o}/wellness/${encodeURIComponent(item.slug)}`, today, 'monthly', '0.62'));
+        }
+    } catch (err) {
+        console.error('sitemap: wellness', err.message);
     }
 
     return `<?xml version="1.0" encoding="UTF-8"?>
