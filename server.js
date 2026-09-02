@@ -25,7 +25,18 @@ bcrypt.hash(CLINIC_PASSWORD, 12).then(h => { clinicPasswordHash = h; });
 
 const db = require('./db');
 const analyticsNet = require('./analytics-network');
-const { computeCheckoutTotalCents, isStripeSubscriptionService } = require('./pricing');
+const { computeCheckoutTotalCents, isStripeSubscriptionService, normalizeServiceKey } = require('./pricing');
+
+function bookingServiceTag(raw) {
+    const key = normalizeServiceKey(raw);
+    if (key) return key;
+    const s = String(raw || '')
+        .trim()
+        .toLowerCase()
+        .replace(/[\s-]+/g, '_')
+        .slice(0, 80);
+    return s || 'unspecified';
+}
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -38,7 +49,7 @@ const nutricao = require('./nutricao');
 const touristPages = require('./tourist-pages');
 const producers = require('./producers');
 const seo = require('./seo');
-const { emailLink } = require('./utm');
+const { emailLink, withUtm, TRACKED_REDIRECTS, safeInternalPath, trackedLinksForAdmin } = require('./utm');
 const { hydrateInfoHtml, NOINDEX_PAGES: INFO_NOINDEX_PAGES } = require('./info-ssr');
 const authors = require('./authors');
 const nodemailer = require('nodemailer');
@@ -233,7 +244,7 @@ app.use(
 );
 
 const ANALYTICS_SNIPPET =
-    '\n<script src="/lon-analytics.js?v=20260822a" defer></script>\n' +
+    '\n<script src="/lon-analytics.js?v=20260902a" defer></script>\n' +
     '<noscript><img src="/api/a.gif?n=page_view" alt="" width="1" height="1"></noscript>\n';
 function injectAnalyticsHtml(html) {
     if (!html || typeof html !== 'string') return html;
@@ -4091,11 +4102,12 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
         const shortId = paymentId.length >= 8 ? paymentId.slice(-8) : paymentId;
         const bookingRef = 'LC-' + shortId.toUpperCase();
 
+        const bookingService = bookingServiceTag(meta.service);
         const bookingData = {
             bookingRef,
             patientName: passengerNames[0] || meta.contact_email?.split('@')[0] || 'Patient',
             email: session.customer_details?.email || session.customer_email || meta.contact_email,
-            service: meta.service,
+            service: bookingService,
             serviceLabel: (meta.service_label && String(meta.service_label).trim())
                 || SERVICE_LABELS[meta.service]
                 || meta.service,
@@ -4126,7 +4138,7 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
             bookingRef,
             email: emailNorm,
             stripeCustomerId: stripeCustomerId || undefined,
-            service: meta.service,
+            service: bookingService,
             date: meta.date,
             time: meta.time,
             dateIso: meta.date_iso && String(meta.date_iso).trim() ? String(meta.date_iso).trim() : null,
@@ -4229,7 +4241,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                 {
                     visitorId: meta.lon_vid || null,
                     sessionId: meta.lon_sid || null,
-                    props: { service: String(meta.service || ''), via: meta.invitation_id ? 'invite' : 'checkout' },
+                    props: { service: bookingServiceTag(meta.service), via: meta.invitation_id ? 'invite' : 'checkout' },
                     revenueCents: session.amount_total || 0,
                     currency: session.currency || 'eur',
                     bookingRef: fin.bookingRef || null
@@ -4326,6 +4338,21 @@ app.get('/api/a.gif', rateLimitAnalytics, async (req, res) => {
     }
 });
 
+app.get('/r/:slug', (req, res) => {
+    const spec = TRACKED_REDIRECTS[String(req.params.slug || '').toLowerCase()];
+    if (!spec) return res.status(404).type('text').send('Not found');
+    const destPath = safeInternalPath(req.query.to);
+    const dest = withUtm(
+        `${getBaseUrl(req)}${destPath === '/' ? '/' : destPath}`,
+        spec
+    );
+    res.set({
+        'X-Robots-Tag': 'noindex, nofollow, noarchive',
+        'Cache-Control': 'no-store'
+    });
+    res.redirect(302, dest);
+});
+
 // ─── Middleware ───
 app.use(express.json());
 
@@ -4339,6 +4366,7 @@ app.get('/api/admin/analytics', requireAdmin, async (req, res) => {
         if (!usePersistentDb) {
             const overview = analyticsNet.overviewFromMemory(range, audience);
             overview.deviceMarked = hasStaffDeviceCookie(req);
+            overview.trackedLinks = trackedLinksForAdmin(getBaseUrl(req));
             return res.json(overview);
         }
         const bounds = analyticsNet.rangeBounds(range);
@@ -4356,6 +4384,7 @@ app.get('/api/admin/analytics', requireAdmin, async (req, res) => {
         }));
         const overview = analyticsNet.buildOverview(rows, liveRows, bookingStats, bounds, audience, staffVisitorIds);
         overview.deviceMarked = hasStaffDeviceCookie(req);
+        overview.trackedLinks = trackedLinksForAdmin(getBaseUrl(req));
         res.json(overview);
     } catch (err) {
         console.error('GET /api/admin/analytics:', err.message);
@@ -4408,49 +4437,10 @@ app.use((req, res, next) => {
     return res.status(404).type('text').send('Not found');
 });
 
-const ANALYTICS_SKIP_PATH = /^\/(api|admin|clinic-portal|doctors|webhook|patient-portal|diretorio)(\/|$)/i;
-const ANALYTICS_SKIP_PAGE = /\/(admin|clinic|dashboard|diretorio)(\.html)?$/i;
-const ANALYTICS_STATIC_EXT =
-    /\.(js|css|png|jpe?g|webp|gif|svg|ico|woff2?|ttf|map|xml|txt|json|webmanifest|mp4|pdf)$/i;
-
 app.use((req, res, next) => {
     if (wantsStaffDeviceMark(req) || (req.session && req.session.clinicAuthenticated)) {
         setStaffDeviceCookie(res);
     }
-    next();
-});
-
-app.use((req, res, next) => {
-    if (req.method !== 'GET') return next();
-    const p = req.path || '/';
-    if (ANALYTICS_SKIP_PATH.test(p) || ANALYTICS_SKIP_PAGE.test(p) || ANALYTICS_STATIC_EXT.test(p)) {
-        return next();
-    }
-    if (analyticsNet.isProbePath(p)) return next();
-    if (/\.[a-z0-9]{1,12}$/i.test(p) && !/\.html$/i.test(p)) return next();
-    if (!/text\/html/i.test(String(req.headers.accept || ''))) return next();
-    if (analyticsNet.isBot(req.headers['user-agent'])) return next();
-    const ids = ensureAnalyticsCookies(req, res);
-    const q = req.query || {};
-    const referer = req.get('referer') || '';
-    const fromOwnSite = /lonclinic\.com|localhost/i.test(referer);
-    emitServerAnalytics(
-        'page_view',
-        {
-            visitorId: ids.visitorId,
-            sessionId: ids.sessionId,
-            pagePath: String(p).slice(0, 240),
-            landingPath: fromOwnSite ? null : String(p).slice(0, 240),
-            referrer: referer,
-            utmSource: q.utm_source,
-            utmMedium: q.utm_medium,
-            utmCampaign: q.utm_campaign,
-            gclid: q.gclid,
-            fbclid: q.fbclid,
-            props: { via: 'server' }
-        },
-        req
-    ).catch(() => {});
     next();
 });
 
@@ -6423,6 +6413,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         if (!pricing.ok) {
             return res.status(400).json({ error: pricing.error });
         }
+        service = bookingServiceTag(service);
         const priceAmount = pricing.totalCents;
         const count = Array.isArray(passengers) ? passengers.length : 0;
         const isMultiPassenger = count > 1;
@@ -6531,7 +6522,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         console.log('✅ Checkout session created:', session.id);
         emitServerAnalytics(
             'checkout_created',
-            { props: { service: String(service || '') }, revenueCents: priceAmount, currency: 'eur' },
+            { props: { service: bookingServiceTag(service) }, revenueCents: priceAmount, currency: 'eur' },
             req
         ).catch(() => {});
         res.json({ sessionId: session.id, url: session.url });
@@ -7829,7 +7820,7 @@ app.post('/api/admin/patients/schedule-next', requireAdmin, express.json(), asyn
         const patientName = String(body.patientName || (source && source.patientName) || '').trim();
         const patientEmail = String(body.patientEmail || (source && source.email) || '').trim().toLowerCase();
         const patientPhone = String(body.patientPhone || (source && source.patientPhone) || '').trim();
-        const service = String(body.service || (source && source.service) || 'clinica_geral').trim();
+        const service = bookingServiceTag(body.service || (source && source.service) || 'clinica_geral');
         const dateIso = String(body.dateIso || '').trim();
         const time = normalizeTimeString({ time: String(body.time || '') });
         const locale = normalizePatientLocale(body.locale || (source && source.patientLocale) || 'pt');
@@ -7915,7 +7906,7 @@ app.post('/api/admin/patients/schedule-next', requireAdmin, express.json(), asyn
             patientName: patientName.slice(0, 200),
             patientEmail,
             patientPhone: patientPhone.slice(0, 60),
-            service,
+            service: bookingServiceTag(service),
             serviceLabel,
             dateIso,
             time,
@@ -8569,7 +8560,7 @@ async function createInvitationStripeSession(invitation, baseUrl) {
     if (!stripe) throw new Error('Stripe is not configured');
     const travellerCount = Math.max(1, Math.min(4, parseInt(invitation.travellerCount, 10) || 1));
     const metadata = {
-        service: invitation.service,
+        service: bookingServiceTag(invitation.service),
         service_label: (invitation.serviceLabel || '').substring(0, 500),
         date: invitation.dateIso,
         time: invitation.time,
@@ -8659,7 +8650,7 @@ async function confirmInvitationWithoutPayment(invitation, { paymentPrefix = 'ma
     const record = {
         bookingRef,
         email: String(invitation.patientEmail || '').toLowerCase().trim(),
-        service: invitation.service,
+        service: bookingServiceTag(invitation.service),
         date: invitation.dateIso,
         time: invitation.time,
         dateIso: invitation.dateIso,
@@ -8810,7 +8801,7 @@ app.post('/api/admin/invitations', requireAdmin, express.json(), async (req, res
             patientName: String(patientName).trim().slice(0, 200),
             patientEmail: String(patientEmail).trim().toLowerCase(),
             patientPhone: patientPhone ? String(patientPhone).trim().slice(0, 60) : '',
-            service,
+            service: bookingServiceTag(service),
             serviceLabel,
             dateIso,
             time: normTime,
@@ -8845,7 +8836,7 @@ app.post('/api/admin/invitations', requireAdmin, express.json(), async (req, res
             emitServerAnalytics(
                 isComplimentary ? 'booking_confirmed' : 'invite_sent',
                 {
-                    props: { service: String(service || ''), withoutInvoice: true },
+                    props: { service: bookingServiceTag(service), withoutInvoice: true },
                     revenueCents: amountCents,
                     bookingRef: invitation.bookingRef || null
                 },
@@ -8880,7 +8871,7 @@ app.post('/api/admin/invitations', requireAdmin, express.json(), async (req, res
 
         emitServerAnalytics(
             'invite_sent',
-            { props: { service: String(service || '') }, revenueCents: amountCents },
+            { props: { service: bookingServiceTag(service) }, revenueCents: amountCents },
             req
         ).catch(() => {});
         res.json({ ok: true, invitation, emailDelivered, emailError });

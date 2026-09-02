@@ -1,13 +1,6 @@
 (function () {
     'use strict';
 
-    if (!window.LonAnalytics && !document.querySelector('script[src*="lon-analytics.js"]')) {
-        var analyticsScript = document.createElement('script');
-        analyticsScript.src = '/lon-analytics.js?v=20260822a';
-        analyticsScript.defer = true;
-        (document.head || document.documentElement).appendChild(analyticsScript);
-    }
-
     var nav = document.getElementById('lonNav');
     var toggle = document.getElementById('lonNavToggle');
     var mobileMenu = document.getElementById('lonMobileMenu');

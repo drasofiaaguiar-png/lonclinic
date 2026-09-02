@@ -6,6 +6,9 @@
 (function () {
     'use strict';
 
+    if (window.__lonAnalyticsBoot) return;
+    window.__lonAnalyticsBoot = true;
+
     var SKIP = /^\/(admin|clinic-portal|doctors|patient-portal|clinic|dashboard|diretorio)(\/|$|\.html)/i;
     var pathNow = (location.pathname || '/') + '';
     if (SKIP.test(pathNow)) return;
@@ -153,6 +156,20 @@
     var attr = pickUtm();
     var vid = visitorId();
     var sid = sessionId();
+
+    function sessionLanding(sessionKey) {
+        var key = 'lon_sl';
+        var stored = null;
+        try { stored = JSON.parse(sessionStorage.getItem(key) || 'null'); } catch (eSl) { stored = null; }
+        var path = (location.pathname || '/').slice(0, 240);
+        if (!stored || stored.sid !== sessionKey || !stored.path) {
+            stored = { sid: sessionKey, path: path };
+            try { sessionStorage.setItem(key, JSON.stringify(stored)); } catch (eSl2) { /* ignore */ }
+        }
+        return stored.path;
+    }
+
+    var landingNow = sessionLanding(sid);
     var queue = [];
     var flushTimer = null;
     var sentIds = {};
@@ -168,7 +185,7 @@
             page_path: (location.pathname + (location.hash || '')).slice(0, 240),
             page_title: String(document.title || '').slice(0, 160),
             referrer: String(document.referrer || '').slice(0, 300),
-            landing_path: (attr.first && attr.first.landing) || location.pathname,
+            landing_path: landingNow || (attr.first && attr.first.landing) || location.pathname,
             lang: String(document.documentElement.lang || navigator.language || '').slice(0, 16),
             viewport: window.innerWidth + 'x' + window.innerHeight,
             utm_source: attr.last.utm_source || '',
@@ -271,7 +288,7 @@
             var key = 'lon_pv';
             var now = Date.now();
             var prev = JSON.parse(sessionStorage.getItem(key) || 'null');
-            if (prev && prev.path === location.pathname && now - prev.ts < 2500) return false;
+            if (prev && prev.path === location.pathname && now - prev.ts < 4000) return false;
             sessionStorage.setItem(key, JSON.stringify({ path: location.pathname, ts: now }));
         } catch (e) { /* ignore */ }
         return true;

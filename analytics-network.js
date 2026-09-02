@@ -174,14 +174,14 @@ function channelOf(row) {
         return 'paid_social';
     }
     if (med === 'email' || src === 'email' || src === 'newsletter') return 'email';
-    if (med === 'sms' || src === 'sms' || src === 'whatsapp' || med === 'chat') return 'sms';
+    if (med === 'sms' || src === 'sms' || /whatsapp/.test(src) || med === 'chat') return 'sms';
     if (src === 'invite' || med === 'invite') return 'invite';
     if (src === 'internal' || med === 'internal') return 'internal';
     if (med === 'owned' || med === 'quiz' || src === 'quiz') return 'owned';
     if (
         med === 'social' ||
         med === 'organic_social' ||
-        /^(facebook|instagram|meta|ig|linkedin|tiktok|twitter|whatsapp)$/.test(src)
+        /^(facebook|instagram|meta|ig|linkedin|tiktok|twitter)([._-]|$)/.test(src)
     ) {
         return 'organic_social';
     }
@@ -325,6 +325,32 @@ function groupCount(rows, key, limit) {
         .map(([key, count]) => ({ key, count }));
 }
 
+function sessionLandings(views, limit) {
+    const sorted = [...(views || [])].sort(
+        (a, b) => new Date(a.occurredAt).getTime() - new Date(b.occurredAt).getTime()
+    );
+    const first = new Map();
+    for (const r of sorted) {
+        const sid = r.sessionId || r.visitorId;
+        if (!sid || first.has(sid)) continue;
+        first.set(sid, r.pagePath || r.landingPath || '(none)');
+    }
+    return groupCount(
+        [...first.values()].map((key) => ({ key })),
+        'key',
+        limit || 8
+    );
+}
+
+function recomputeFunnelConversions(funnel) {
+    let prev = Math.max(1, (funnel[0] && funnel[0].sessions) || 1);
+    return (funnel || []).map((step, i) => {
+        const conv = i === 0 ? 100 : Math.round((step.sessions / prev) * 1000) / 10;
+        if (step.sessions > 0) prev = step.sessions;
+        return { ...step, stepConversion: conv };
+    });
+}
+
 function countFunnelStep(rows, names) {
     const sessions = new Set();
     let orphans = 0;
@@ -418,7 +444,9 @@ function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaff
     const isNoise = (r) => isProbePath(r.pagePath) || (r.sessionId && burstIds.has(r.sessionId));
     const probeRows = tagged.filter(isNoise);
     const human = tagged.filter((r) => !isNoise(r));
-    const used = filterAudience(human, view);
+    const used = filterAudience(human, view).filter(
+        (r) => !(r.name === 'page_view' && r.props && r.props.via === 'server')
+    );
     const humanSessions = new Set(human.map((r) => r.sessionId).filter(Boolean));
     const staffSids = new Set(human.filter(isStaffRow).map((r) => r.sessionId).filter(Boolean));
     const liveTagged = applyKnownStaff(liveRows || [], knownStaffVisitorIds)
@@ -445,12 +473,14 @@ function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaff
         : purchases.length;
     const conversion = visitors ? Math.round((bookingCount / visitors) * 1000) / 10 : 0;
     const cta = used.filter((r) => r.name === 'cta_click');
-    const funnel = funnelFrom(used).map((step) => {
-        if (step.id !== 'purchase' || !bookingCount || !overlayBookings) return step;
-        return { ...step, sessions: Math.max(step.sessions, bookingCount) };
-    });
+    const funnel = recomputeFunnelConversions(
+        funnelFrom(used).map((step) => {
+            if (step.id !== 'purchase' || !bookingCount || !overlayBookings) return step;
+            return { ...step, sessions: Math.max(step.sessions, bookingCount) };
+        })
+    );
     const serviceFromEvents = groupCount(
-        purchases.map((r) => ({ key: (r.props && r.props.service) || 'consultation' })),
+        purchases.map((r) => ({ key: (r.props && r.props.service) || 'unspecified' })),
         'key',
         10
     );
@@ -481,7 +511,7 @@ function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaff
         funnel,
         channels: groupCount(views, 'channel', 10),
         pages: groupCount(views, 'pagePath', 12),
-        landings: groupCount(views, 'landingPath', 8),
+        landings: sessionLandings(views, 8),
         devices: groupCount(views, 'device', 5),
         browsers: groupCount(views, 'browser', 6),
         countries: groupCount(views.filter((r) => r.country), 'country', 8),
@@ -495,9 +525,9 @@ function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaff
             'key',
             10
         ),
-        services: serviceFromEvents.length
-            ? serviceFromEvents
-            : serviceFromBookings.map((s) => ({ key: s.service || 'consultation', count: s.count })),
+        services: serviceFromBookings.length
+            ? serviceFromBookings.map((s) => ({ key: s.service || 'unspecified', count: s.count }))
+            : serviceFromEvents,
         hourly: hourlySeries(views, range.from, range.days),
         recent: used
             .filter((r) => r.name !== 'heartbeat')

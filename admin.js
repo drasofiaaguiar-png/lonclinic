@@ -292,7 +292,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         renovacao: 'Renovação receita',
         longevity: 'Longevity Assessment',
         'longevity-plus': 'Longevity Plus',
-        followup: 'Follow-up'
+        followup: 'Follow-up',
+        unspecified: 'Untagged'
     };
     const TRAVEL_TIER_CENTS = {
         standard: { 1: 3900, 2: 6900, 3: 10700, 4: 13600 },
@@ -2876,6 +2877,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         organic_other: 'Other organic',
         email: 'Email',
         sms: 'SMS / WhatsApp',
+        organic_social: 'Organic social',
+        owned: 'Owned',
         invite: 'Clinic invite',
         internal: 'Admin / staff',
         referral: 'Referral',
@@ -2993,7 +2996,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             set('analyticsDevices', anBarList(data.devices));
             set('analyticsCampaigns', anBarList(data.campaigns));
             set('analyticsCtas', anBarList(data.ctas));
-            set('analyticsServices', anBarList(data.services));
+            set('analyticsServices', anBarList(data.services, (k) => SERVICE_LABELS_ADMIN[k] || k));
+            const tracked = document.getElementById('analyticsTrackedLinks');
+            if (tracked) {
+                const links = data.trackedLinks || [];
+                tracked.innerHTML = links.length
+                    ? `<p class="an-tracked-hint">Paste these in Instagram bio, WhatsApp broadcasts, and stories. In-app browsers strip referrers, so a bare lonclinic.com link always counts as Direct.</p>
+                    <ul class="an-tracked">${links.map((l) => `<li>
+                        <span class="an-tracked-label">${escapeHtml(l.label || '')}</span>
+                        <code class="an-tracked-url">${escapeHtml(l.url || '')}</code>
+                        <button type="button" class="btn btn-outline btn-sm an-copy-link" data-copy="${escapeHtml(l.url || '')}">Copy</button>
+                    </li>`).join('')}</ul>`
+                    : '<p class="admin-empty-list">Tracked links appear after the next deploy.</p>';
+            }
             const recent = document.getElementById('analyticsRecent');
             if (recent) {
                 const rows = data.recent || [];
@@ -3023,6 +3038,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!btn) return;
             analyticsAudience.querySelectorAll('.an-audience-btn').forEach((b) => b.classList.toggle('is-active', b === btn));
             loadAnalyticsPanel();
+        });
+    }
+    const analyticsTrackedLinks = document.getElementById('analyticsTrackedLinks');
+    if (analyticsTrackedLinks) {
+        analyticsTrackedLinks.addEventListener('click', (e) => {
+            const btn = e.target.closest('.an-copy-link');
+            if (!btn) return;
+            const url = btn.getAttribute('data-copy') || '';
+            if (!url || !navigator.clipboard) return;
+            navigator.clipboard.writeText(url).then(() => {
+                const prev = btn.textContent;
+                btn.textContent = 'Copied';
+                setTimeout(() => { btn.textContent = prev; }, 1400);
+            }).catch(() => {});
         });
     }
     const analyticsMarkDeviceBtn = document.getElementById('analyticsMarkDeviceBtn');

@@ -598,7 +598,7 @@ async function analyticsBookingStats(fromIso, toIso) {
         [fromIso, toIso]
     );
     const s = await p.query(
-        `SELECT COALESCE(NULLIF(TRIM(service), ''), 'consultation') AS service, COUNT(*)::int AS c
+        `SELECT COALESCE(NULLIF(TRIM(service), ''), 'unspecified') AS service, COUNT(*)::int AS c
          FROM bookings
          WHERE cancelled = FALSE
            AND created_at >= $1::timestamptz AND created_at <= $2::timestamptz
@@ -1277,7 +1277,7 @@ async function insertBooking(booking) {
         [
             booking.bookingRef,
             booking.email,
-            booking.service,
+            String(booking.service || '').trim() || 'unspecified',
             booking.date,
             booking.time,
             booking.patientName,

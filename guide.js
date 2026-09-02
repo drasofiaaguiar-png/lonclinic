@@ -1155,7 +1155,7 @@ function layoutMagazinePage(opts) {
         });
       })();
     </script>
-    <script src="/lon-analytics.js?v=20260822a" defer></script>
+    <script src="/lon-analytics.js?v=20260902a" defer></script>
 </body>
 </html>`;
 }

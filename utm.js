@@ -48,4 +48,39 @@ function socialLink(url, network, campaign) {
     });
 }
 
-module.exports = { withUtm, emailLink, socialLink };
+const TRACKED_REDIRECTS = {
+    ig: { source: 'instagram_bio', medium: 'social', campaign: 'bio', label: 'Instagram bio' },
+    'ig-bio': { source: 'instagram_bio', medium: 'social', campaign: 'bio', label: 'Instagram bio' },
+    'ig-story': { source: 'instagram', medium: 'social', campaign: 'story', label: 'Instagram story' },
+    'ig-post': { source: 'instagram', medium: 'social', campaign: 'post', label: 'Instagram post / reel' },
+    wa: { source: 'whatsapp', medium: 'social', campaign: 'broadcast', label: 'WhatsApp broadcast' },
+    'wa-status': { source: 'whatsapp', medium: 'social', campaign: 'status', label: 'WhatsApp status' },
+    fb: { source: 'facebook', medium: 'social', campaign: 'organic', label: 'Facebook' },
+    linkedin: { source: 'linkedin', medium: 'social', campaign: 'organic', label: 'LinkedIn' }
+};
+
+function safeInternalPath(raw) {
+    const s = String(raw || '').trim();
+    if (!s || s === '/') return '/';
+    if (!s.startsWith('/') || s.startsWith('//') || s.includes('://') || s.includes('\\')) return '/';
+    return s.slice(0, 240);
+}
+
+function trackedLinksForAdmin(origin) {
+    const o = String(origin || 'https://lonclinic.com').replace(/\/$/, '');
+    const seen = new Set();
+    return Object.entries(TRACKED_REDIRECTS)
+        .filter(([, spec]) => {
+            if (seen.has(spec.label)) return false;
+            seen.add(spec.label);
+            return true;
+        })
+        .map(([slug, spec]) => ({
+            id: slug,
+            label: spec.label,
+            url: `${o}/r/${slug}`,
+            utm: `utm_source=${spec.source}&utm_medium=${spec.medium}&utm_campaign=${spec.campaign}`
+        }));
+}
+
+module.exports = { withUtm, emailLink, socialLink, TRACKED_REDIRECTS, safeInternalPath, trackedLinksForAdmin };
