@@ -1149,6 +1149,9 @@ img {
     text-align: center;
     max-width: 560px;
     margin: 0 auto 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .lon-testimonials-kicker {
@@ -1168,45 +1171,49 @@ img {
     margin: 0;
 }
 
-.lon-trustpilot-box {
-    max-width: 240px;
-    margin: 20px auto 0;
-    min-height: 150px;
-}
-
-.lon-trustpilot-box .trustpilot-widget {
-    display: block;
-}
-
-.lon-trustpilot-reviews {
-    max-width: 680px;
-    margin: 8px auto 28px;
-}
-
-.lon-trustpilot-reviews .trustpilot-widget {
-    display: block;
-    min-height: 640px;
-}
-
-.lon-trustpilot-profile-link {
-    display: block;
-    margin-top: 12px;
-    text-align: center;
+.lon-tp-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 18px auto 0;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid rgba(0, 182, 122, 0.28);
+    color: #191919;
+    text-decoration: none;
     font-size: 0.88rem;
     font-weight: 600;
-    color: #00b67a;
-    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(26, 102, 65, 0.08);
 }
 
-.lon-trustpilot-profile-link:hover {
-    text-decoration: underline;
+.lon-tp-badge:hover {
+    border-color: #00b67a;
+}
+
+.lon-tp-badge .lon-trustpilot-star {
+    width: 16px;
+    height: 16px;
+}
+
+.lon-tp-badge-name {
+    color: #00b67a;
 }
 
 .lon-testimonials-grid {
     display: grid;
     gap: 20px;
-    max-width: 720px;
+    max-width: 680px;
     margin: 0 auto;
+}
+
+@media (min-width: 800px) {
+    .lon-testimonials-grid:has(> :nth-child(2)) {
+        grid-template-columns: 1fr 1fr;
+        max-width: 920px;
+        align-items: stretch;
+    }
 }
 
 .lon-testimonial-card {
