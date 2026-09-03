@@ -5074,6 +5074,7 @@ app.use(express.static(path.join(__dirname), {
         if (
             base === 'guide.css' ||
             base === 'magazine.css' ||
+            base === 'tailwind.css' ||
             base === 'burnout-pages.css' ||
             base === 'consulta-pages.css' ||
             base === 'queixas.css' ||

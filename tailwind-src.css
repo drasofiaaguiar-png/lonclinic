@@ -1,0 +1,25 @@
+/* Tailwind v4 — utilities only (no Preflight), prefixed tw: so existing CSS is untouched.
+   Usage: class="tw:flex tw:gap-4 tw:bg-lon-accent tw:text-white tw:rounded-lon"
+   Rebuild: npm run build:css
+*/
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme) prefix(tw);
+@import "tailwindcss/utilities.css" layer(utilities) prefix(tw);
+
+@theme {
+    --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+    --color-lon-bg: #f2e4f9;
+    --color-lon-surface: #ffffff;
+    --color-lon-surface-soft: #f8f1fc;
+    --color-lon-accent: #ff7028;
+    --color-lon-accent-dark: #e55f1f;
+    --color-lon-primary: #15131b;
+    --color-lon-muted: #6e6477;
+    --color-lon-border: #e6d8ef;
+
+    --radius-lon: 18px;
+    --radius-lon-lg: 28px;
+    --shadow-lon: 0 14px 45px rgba(55, 25, 73, 0.12);
+}
