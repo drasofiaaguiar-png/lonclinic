@@ -2,6 +2,7 @@
  * Lon Clinic — Burnout hub (/burnout): SEO cluster with hub + spoke pages.
  * Interactive quiz stays at /burnout/teste (burnout-quiz.html).
  * Conversion landing stays at /clinica-anti-burnout.
+ * Existing spokes stay; new editorial articles go to /blog/:slug, not /burnout/:slug.
  */
 
 'use strict';
@@ -9,7 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
-const { organizationJsonLd } = require('./seo');
+const { organizationJsonLd, originOf, canonicalHref } = require('./seo');
 const authors = require('./authors');
 
 const BURNOUT_DIR = path.join(__dirname, 'data', 'burnout');
@@ -48,8 +49,7 @@ function isValidSlug(slug) {
 }
 
 function normalizeOrigin(url) {
-    const u = String(url || 'https://lonclinic.com').replace(/\/+$/, '');
-    return u.startsWith('http') ? u : `https://${u}`;
+    return originOf(url);
 }
 
 function loadManifest() {
@@ -189,7 +189,7 @@ function layoutBurnoutPage(opts) {
         robots
     } = opts;
 
-    const canonicalUrl = `${origin}${canonicalPath}`;
+    const canonicalUrl = canonicalHref(canonicalPath);
     const safeTitle = escapeHtml(title);
     const safeDesc = escapeHtml(description);
     const og = escapeHtml(ogImage || `${origin}/image/image2.webp`);

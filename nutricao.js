@@ -1,5 +1,6 @@
 /**
  * Lon Clinic — nutrition cluster (/nutricao + /nutricao/:slug).
+ * Service/condition fichas only — not magazine articles (those go to /blog/:slug).
  * Same GEO template as psychology/medical queixas: H1, direct answer,
  * who it's for, red flags, how it works, price, psychology bridge, FAQ, CTA.
  */
@@ -9,7 +10,7 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
-const { organizationJsonLd } = require('./seo');
+const { organizationJsonLd, originOf, canonicalHref } = require('./seo');
 const authors = require('./authors');
 
 const NUTRICAO_DIR = path.join(__dirname, 'data', 'nutricao');
@@ -84,8 +85,7 @@ function isValidSlug(slug) {
 }
 
 function normalizeOrigin(url) {
-    const u = String(url || 'https://lonclinic.com').replace(/\/+$/, '');
-    return u.startsWith('http') ? u : `https://${u}`;
+    return originOf(url);
 }
 
 function loadManifest() {
@@ -274,7 +274,7 @@ function layoutPage(opts) {
     const {
         origin, title, description, canonicalPath, ogImage, jsonLdExtra, mainHtml, robots, dateModified
     } = opts;
-    const canonicalUrl = `${origin}${canonicalPath}`;
+    const canonicalUrl = canonicalHref(canonicalPath);
     const pages = livePages();
     const graph = Array.isArray(jsonLdExtra) ? jsonLdExtra : jsonLdExtra ? [jsonLdExtra] : [];
     if (!robots || !/^noindex/i.test(robots)) graph.push(organizationJsonLd(origin));
@@ -491,7 +491,7 @@ function renderSpoke(origin, slug) {
     const datePub = String(meta.datePublished || '');
     const dateMod = String(meta.dateModified || meta.datePublished || '');
     const canonicalPath = `/nutricao/${encodeURIComponent(slug)}`;
-    const canonicalUrl = `${o}${canonicalPath}`;
+    const canonicalUrl = canonicalHref(canonicalPath);
     const bookingHref = meta.bookingHref || '/marcar/clinica-geral';
     const pages = livePages();
     const lead = (Array.isArray(meta.lead) ? meta.lead : [meta.lead]).filter(Boolean)

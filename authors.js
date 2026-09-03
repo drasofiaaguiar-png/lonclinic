@@ -5,7 +5,7 @@
 
 'use strict';
 
-const { originOf, organizationJsonLd, jsonLdScript } = require('./seo');
+const { originOf, organizationJsonLd, jsonLdScript, canonicalHref } = require('./seo');
 
 const OM_SEARCH_URL = 'https://www.ordemdosmedicos.pt/';
 const ERS_URL = 'https://www.ers.pt/';
@@ -73,7 +73,7 @@ function authorPath(author) {
 }
 
 function authorUrl(origin, author) {
-    return `${originOf(origin)}${authorPath(author)}`;
+    return canonicalHref(authorPath(author));
 }
 
 function personId(origin, author) {

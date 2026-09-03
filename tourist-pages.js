@@ -1,13 +1,14 @@
 /**
- * Lon Clinic — visitor guides (tourists without SNS / family doctor).
+ * Lon Clinic — visitor GEO/conversion pages (tourists without SNS / family doctor).
  * Root URLs, one page per language, hreflang between siblings.
+ * These are product landings, not magazine articles (editorial goes to /blog/:slug).
  */
 
 'use strict';
 
 const fs = require('fs');
 const path = require('path');
-const { organizationJsonLd } = require('./seo');
+const { organizationJsonLd, originOf, canonicalHref } = require('./seo');
 const authors = require('./authors');
 
 const TOURIST_DIR = path.join(__dirname, 'data', 'tourist');
@@ -209,8 +210,7 @@ function isValidSlug(slug) {
 }
 
 function normalizeOrigin(url) {
-    const u = String(url || 'https://lonclinic.com').replace(/\/+$/, '');
-    return u.startsWith('http') ? u : `https://${u}`;
+    return originOf(url);
 }
 
 function loadManifest() {
@@ -491,7 +491,7 @@ function layoutPage(opts) {
         bookingHref
     } = opts;
 
-    const canonicalUrl = `${origin}${canonicalPath}`;
+    const canonicalUrl = canonicalHref(canonicalPath);
     const safeTitle = escapeHtml(title);
     const safeDesc = escapeHtml(description);
     const og = escapeHtml(ogImage || `${origin}/image/travel-clinic-mountain-bg-v2.png`);

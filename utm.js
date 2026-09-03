@@ -4,14 +4,21 @@
  */
 'use strict';
 
+const { SITE_ORIGIN, originOf } = require('./seo');
+
 function withUtm(url, spec) {
     const s = spec || {};
     const abs = /^https?:\/\//i.test(String(url || ''));
     let u;
     try {
-        u = new URL(String(url || ''), 'https://lonclinic.com');
+        u = new URL(String(url || ''), SITE_ORIGIN);
     } catch (e) {
         return String(url || '');
+    }
+    const host = u.hostname.toLowerCase();
+    if (host === 'lonclinic.com' || host === 'www.lonclinic.com') {
+        u.protocol = 'https:';
+        u.hostname = 'www.lonclinic.com';
     }
     const pairs = [
         ['utm_source', s.source],
@@ -67,7 +74,7 @@ function safeInternalPath(raw) {
 }
 
 function trackedLinksForAdmin(origin) {
-    const o = String(origin || 'https://lonclinic.com').replace(/\/$/, '');
+    const o = originOf(origin).replace(/\/$/, '');
     const seen = new Set();
     return Object.entries(TRACKED_REDIRECTS)
         .filter(([, spec]) => {

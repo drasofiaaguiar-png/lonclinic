@@ -1,6 +1,7 @@
 /**
  * Lon Clinic — symptom / complaint pages (SEO + GEO).
  * Hub: /consultas · spokes: /{slug} (one URL per queixa).
+ * Product/condition pages at the root — new editorial articles go to /blog/:slug.
  * Template is fixed: H1, direct answer, symptoms, when to seek help,
  * how online works, price, FAQ (FAQPage schema), CTA.
  */
@@ -10,7 +11,7 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
-const { organizationJsonLd } = require('./seo');
+const { organizationJsonLd, originOf, canonicalHref } = require('./seo');
 
 const QUEIXAS_DIR = path.join(__dirname, 'data', 'queixas');
 const MANIFEST_PATH = path.join(QUEIXAS_DIR, 'manifest.json');
@@ -78,8 +79,7 @@ function isValidSlug(slug) {
 }
 
 function normalizeOrigin(url) {
-    const u = String(url || 'https://lonclinic.com').replace(/\/+$/, '');
-    return u.startsWith('http') ? u : `https://${u}`;
+    return originOf(url);
 }
 
 function loadManifest() {
@@ -311,7 +311,7 @@ function layoutQueixaPage(opts) {
         dateModified
     } = opts;
 
-    const canonicalUrl = `${origin}${canonicalPath}`;
+    const canonicalUrl = canonicalHref(canonicalPath);
     const safeTitle = escapeHtml(title);
     const safeDesc = escapeHtml(description);
     const og = escapeHtml(ogImage || `${origin}/image/image3.webp`);
@@ -594,7 +594,7 @@ function renderPage(origin, slug) {
     const datePub = String(meta.datePublished || '');
     const dateMod = String(meta.dateModified || meta.datePublished || '');
     const canonicalPath = `/${encodeURIComponent(slug)}`;
-    const canonicalUrl = `${o}${canonicalPath}`;
+    const canonicalUrl = canonicalHref(canonicalPath);
     const ref = `queixa-${slug}`;
     const conditionName = meta.condition || meta.navLabel || h1;
 

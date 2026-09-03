@@ -1,6 +1,7 @@
 /**
  * Lon Clinic — consultas por queixa (/consulta/:slug).
  * Hub de conversão permanece em /consulta (consulta.html).
+ * Fichas de produto/queixa — artigos editoriais novos vão para /blog/:slug.
  *
  * Cada página segue o mesmo template: H1 da queixa, resposta directa,
  * sintomas, quando NÃO tratar online, como funciona, preço, FAQ, CTA.
@@ -11,7 +12,7 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
-const { organizationJsonLd } = require('./seo');
+const { organizationJsonLd, originOf, canonicalHref } = require('./seo');
 const authors = require('./authors');
 
 const CONSULTA_DIR = path.join(__dirname, 'data', 'consulta');
@@ -49,8 +50,7 @@ function isValidSlug(slug) {
 }
 
 function normalizeOrigin(url) {
-    const u = String(url || 'https://lonclinic.com').replace(/\/+$/, '');
-    return u.startsWith('http') ? u : `https://${u}`;
+    return originOf(url);
 }
 
 function loadManifest() {
@@ -235,7 +235,7 @@ function layoutConsultaPage(opts) {
         robots
     } = opts;
 
-    const canonicalUrl = `${origin}${canonicalPath}`;
+    const canonicalUrl = canonicalHref(canonicalPath);
     const safeTitle = escapeHtml(title);
     const safeDesc = escapeHtml(description);
     const og = escapeHtml(ogImage || `${origin}/image/image2.webp`);

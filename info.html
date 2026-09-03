@@ -20,12 +20,12 @@
     <meta property="og:site_name" content="Lon Clinic">
     <meta property="og:title" content="Informação | Lon Clinic" id="ogTitle">
     <meta property="og:description" content="Informações institucionais, apoio, legal e serviços da Lon Clinic." id="ogDescription">
-    <meta property="og:url" content="https://lonclinic.com/info.html" id="ogUrl">
+    <meta property="og:url" content="https://www.lonclinic.com/info.html" id="ogUrl">
     <meta property="og:locale" content="pt_PT">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Informação | Lon Clinic" id="twitterTitle">
     <meta name="twitter:description" content="Informações institucionais, apoio, legal e serviços da Lon Clinic." id="twitterDescription">
-    <link rel="canonical" href="https://lonclinic.com/info.html" id="canonicalUrl">
+    <link rel="canonical" href="https://www.lonclinic.com/info.html" id="canonicalUrl">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -36,7 +36,7 @@
   "@type": "WebPage",
   "name": "Informação | Lon Clinic",
   "description": "Informações institucionais, apoio, legal e serviços da Lon Clinic.",
-  "url": "https://lonclinic.com/info.html",
+  "url": "https://www.lonclinic.com/info.html",
   "inLanguage": "pt-PT"
 }
     </script>
@@ -1277,7 +1277,7 @@
 <p>O utilizador que marque consulta para outrem é responsável por garantir que os dados fornecidos estão atualizados e são verdadeiros e que a pessoa que usufruirá da consulta online, concorda com o agendamento da mesma e com os Termos e Condições e Política de Privacidade.</p>
 <p>Após recebimento da quantia e emissão da respetiva fatura, será enviada uma notificação ao utilizador a confirmar o agendamento da consulta pretendida.</p>
 <p>Conservamo-nos o direito de suspender, limitar ou terminar o seu acesso ao presente website em qualquer momento assim como alterar a forma de acesso e até o formato das consultas, ou outros produtos ou serviços que tenha adquirido, disponibilizando-os através de outras plataformas ou mesmo em forma de ficheiro, para garantir o acesso pelo tempo acordado à data de compra.</p>
-<p>De igual forma, reservamo-nos o direito de apresentar, apagar, editar, retirar ou modificar quaisquer dados, conteúdos, materiais ou informações exibidas em https://lonclinic.com ou em qualquer produto associado à LON Clinic a qualquer momento. O mesmo se aplica às redes sociais.</p>
+<p>De igual forma, reservamo-nos o direito de apresentar, apagar, editar, retirar ou modificar quaisquer dados, conteúdos, materiais ou informações exibidas em https://www.lonclinic.com ou em qualquer produto associado à LON Clinic a qualquer momento. O mesmo se aplica às redes sociais.</p>
 <p>Atenção, ainda, ao seguinte:</p>
 <p>O utilizador é responsável por garantir as condições necessárias para a realização da consulta como acesso à internet, bateria, um computador ou dispositivo móvel com câmara e microfone, atualizações de software e um local com a privacidade necessária. A LON Clinic não se responsabiliza caso essas condições não sejam garantidas pelo utilizador, não havendo, via de regra, lugar a reembolso ou remarcação da consulta caso a consulta não se realize ou não se conclua.</p>
 <p>O profissional de saúde dará início à consulta na data e hora agendada, podendo ter a sala de consulta aberta até 5 minutos antes. O paciente deve aceder à sala e pedir para entrar à hora agendada. É dada uma tolerância de 15 minutos. Em caso de atraso sem aviso prévio e após o período de tolerância é dada por terminada a consulta sem lugar a reembolso, por isso, é muito importante que seja pontual.</p>
@@ -1747,7 +1747,7 @@
                     : (getPageData(page, lang) || content[page] || getNotFoundData(lang));
                 const isKnownPage = isDirectory || Boolean(content[page]);
                 const pageTitle = data.title + " | Lon Clinic";
-                const canonicalBase = window.location.origin + window.location.pathname;
+                const canonicalBase = "https://www.lonclinic.com" + window.location.pathname;
                 const canonicalUrl = isKnownPage && page ? (canonicalBase + "?page=" + encodeURIComponent(page)) : canonicalBase;
                 const bodyText = String(data.body || "").trim();
                 const bodyHtmlText = String(data.bodyHtml || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -1773,7 +1773,7 @@
                     description: metaDescription,
                     url: canonicalUrl,
                     inLanguage: lang === 'es' ? 'es' : lang === 'en' ? 'en' : 'pt-PT',
-                    isPartOf: { "@type": "WebSite", name: "Lon Clinic", url: window.location.origin }
+                    isPartOf: { "@type": "WebSite", name: "Lon Clinic", url: "https://www.lonclinic.com" }
                 });
 
                 document.getElementById("pill").textContent = data.section;

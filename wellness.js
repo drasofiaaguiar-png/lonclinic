@@ -1,5 +1,7 @@
 'use strict';
 
+/** Experience directory: /wellness + /wellness/:slug fichas. Editorial articles go to /blog/:slug. */
+
 const CATEGORIES = [
     { id: 'termas', label: 'Termas & spa' },
     { id: 'yoga', label: 'Yoga & meditação' },

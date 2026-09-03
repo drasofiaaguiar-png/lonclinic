@@ -258,11 +258,15 @@ function injectAnalyticsHtml(html) {
     return html + ANALYTICS_SNIPPET;
 }
 
+function injectPublicHtml(html, req) {
+    return injectAnalyticsHtml(seo.applyHtmlSeo(html, req));
+}
+
 app.use((req, res, next) => {
     const origSend = res.send.bind(res);
     res.send = function (body) {
         if (typeof body === 'string' && /<html[\s>]/i.test(body)) {
-            body = injectAnalyticsHtml(body);
+            body = injectPublicHtml(body, req);
         }
         return origSend(body);
     };
@@ -279,7 +283,7 @@ app.use((req, res, next) => {
         fs.readFile(fp, 'utf8', (err, html) => {
             if (err) return origSendFile(filePath, options, cb);
             if (!res.getHeader('Content-Type')) res.setHeader('Content-Type', 'text/html; charset=utf-8');
-            origSend(injectAnalyticsHtml(html));
+            origSend(injectPublicHtml(html, req));
             if (typeof cb === 'function') cb();
         });
     };
@@ -2243,7 +2247,7 @@ function buildAutoReplyEmail(type, name, locale) {
 <body style="margin:0;padding:24px;background:#f6f8fb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
   <div style="max-width:620px;margin:0 auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;">
     <div style="background:#4A7C6F;padding:24px 28px;">
-      <img src="https://lonclinic.com/logo.png" alt="Lon Clinic" height="32" style="display:block;height:32px;" onerror="this.style.display='none'">
+      <img src="https://www.lonclinic.com/logo.png" alt="Lon Clinic" height="32" style="display:block;height:32px;" onerror="this.style.display='none'">
     </div>
     <div style="padding:28px;">
       <h2 style="margin:0 0 16px;font-size:20px;color:#111827;">${strings.heading}</h2>
@@ -2565,7 +2569,7 @@ ${burnoutDimBar('Sinais no corpo', body, barFill)}
     if (copy.emergency) {
         userTextParts.push('', copy.emergency);
     }
-    userTextParts.push('', 'Lon Clinic', 'lonclinic.com');
+    userTextParts.push('', 'Lon Clinic', 'www.lonclinic.com');
     const userText = userTextParts.join('\n');
 
     const userHtml = `<!DOCTYPE html>
@@ -2642,7 +2646,7 @@ ${copy.emergency ? `<table role="presentation" width="100%" cellspacing="0" cell
 <tr>
 <td style="padding:28px 8px 8px;text-align:center;">
 <p style="margin:0 0 4px;font-size:12px;color:#7a8a82;">Lon Clinic</p>
-<p style="margin:0;font-size:12px;"><a href="${escapeHtml(siteUrl)}" style="color:#7a8a82;text-decoration:none;">lonclinic.com</a></p>
+<p style="margin:0;font-size:12px;"><a href="${escapeHtml(siteUrl)}" style="color:#7a8a82;text-decoration:none;">www.lonclinic.com</a></p>
 </td>
 </tr>
 
@@ -3152,7 +3156,7 @@ async function sendReminderEmail(data) {
     }
 }
 
-const PUBLIC_SITE_URL = process.env.PUBLIC_SITE_URL || seo.SITE_ORIGIN;
+const PUBLIC_SITE_URL = seo.originOf(process.env.PUBLIC_SITE_URL || seo.SITE_ORIGIN);
 
 function trustpilotEvaluateUrl(locale) {
     const k = normalizePatientLocale(locale);
@@ -4471,7 +4475,7 @@ app.use((req, res, next) => {
 // ─── Friendly URLs (without .html) - MUST come before root route ───
 app.get('/tourist-clinic', (req, res) => {
     try {
-        sendHtmlNoCacheString(res, touristPages.renderHub(PUBLIC_SITE_URL));
+        sendHtmlNoCacheString(res, touristPages.renderHub(seo.SITE_ORIGIN));
     } catch (err) {
         console.error('❌ Tourist clinic hub error:', err.message || err);
         res.status(500).type('html').send('Error loading tourist clinic.');
@@ -4499,7 +4503,7 @@ app.get('/equipa', (req, res) => {
 app.get('/equipa/:slug', (req, res) => {
     const slug = String(req.params.slug || '').toLowerCase();
     try {
-        const result = authors.renderAuthorPage(PUBLIC_SITE_URL, slug);
+        const result = authors.renderAuthorPage(seo.SITE_ORIGIN, slug);
         if (!result) {
             return res.redirect(302, '/equipa/rita-aguiar');
         }
@@ -4612,7 +4616,7 @@ app.get('/faq', (req, res) => {
 
 app.get('/magazine', (req, res) => {
     try {
-        const html = guide.renderMagazineIndex(PUBLIC_SITE_URL);
+        const html = guide.renderMagazineIndex(seo.SITE_ORIGIN);
         sendHtmlNoCacheString(res, html);
     } catch (err) {
         console.error('❌ Magazine index error:', err.message || err);
@@ -4626,7 +4630,7 @@ app.get('/magazine/', (req, res) => {
 
 app.get('/blog', (req, res) => {
     try {
-        const html = guide.renderBlogIndex(PUBLIC_SITE_URL);
+        const html = guide.renderBlogIndex(seo.SITE_ORIGIN);
         sendHtmlNoCacheString(res, html);
     } catch (err) {
         console.error('❌ Guide index error:', err.message || err);
@@ -4637,12 +4641,12 @@ app.get('/blog', (req, res) => {
 app.get('/blog/:slug', (req, res) => {
     const slug = String(req.params.slug || '').toLowerCase();
     if (!guide.isValidSlug(slug)) {
-        return sendHtmlNoCacheString(res, guide.renderNotFound(PUBLIC_SITE_URL), 404);
+        return sendHtmlNoCacheString(res, guide.renderNotFound(seo.SITE_ORIGIN), 404);
     }
     try {
-        const result = guide.renderBlogArticle(PUBLIC_SITE_URL, slug);
+        const result = guide.renderBlogArticle(seo.SITE_ORIGIN, slug);
         if (!result) {
-            return sendHtmlNoCacheString(res, guide.renderNotFound(PUBLIC_SITE_URL), 404);
+            return sendHtmlNoCacheString(res, guide.renderNotFound(seo.SITE_ORIGIN), 404);
         }
         sendHtmlNoCacheString(res, result.html);
     } catch (err) {
@@ -4683,22 +4687,22 @@ app.get('/consulta', (req, res) => {
 app.get('/consulta/:slug', (req, res) => {
     const slug = String(req.params.slug || '').toLowerCase();
     if (!consultaPages.isValidSlug(slug)) {
-        return sendHtmlNoCacheString(res, consultaPages.renderNotFound(PUBLIC_SITE_URL), 404);
+        return sendHtmlNoCacheString(res, consultaPages.renderNotFound(seo.SITE_ORIGIN), 404);
     }
-    const result = consultaPages.renderSpoke(PUBLIC_SITE_URL, slug);
+    const result = consultaPages.renderSpoke(seo.SITE_ORIGIN, slug);
     if (!result) {
-        return sendHtmlNoCacheString(res, consultaPages.renderNotFound(PUBLIC_SITE_URL), 404);
+        return sendHtmlNoCacheString(res, consultaPages.renderNotFound(seo.SITE_ORIGIN), 404);
     }
     sendHtmlNoCacheString(res, result.html);
 });
 
 app.get('/burnout', (req, res) => {
-    const html = burnoutPages.renderHub(PUBLIC_SITE_URL);
+    const html = burnoutPages.renderHub(seo.SITE_ORIGIN);
     sendHtmlNoCacheString(res, html);
 });
 
 app.get('/burnout/colecao', (req, res) => {
-    const html = burnoutPages.renderCollection(PUBLIC_SITE_URL);
+    const html = burnoutPages.renderCollection(seo.SITE_ORIGIN);
     sendHtmlNoCacheString(res, html);
 });
 
@@ -4713,11 +4717,11 @@ app.get('/burnout/consulta', (req, res) => {
 app.get('/burnout/:slug', (req, res) => {
     const slug = String(req.params.slug || '').toLowerCase();
     if (!burnoutPages.isValidSlug(slug)) {
-        return sendHtmlNoCacheString(res, burnoutPages.renderNotFound(PUBLIC_SITE_URL), 404);
+        return sendHtmlNoCacheString(res, burnoutPages.renderNotFound(seo.SITE_ORIGIN), 404);
     }
-    const result = burnoutPages.renderSpoke(PUBLIC_SITE_URL, slug);
+    const result = burnoutPages.renderSpoke(seo.SITE_ORIGIN, slug);
     if (!result) {
-        return sendHtmlNoCacheString(res, burnoutPages.renderNotFound(PUBLIC_SITE_URL), 404);
+        return sendHtmlNoCacheString(res, burnoutPages.renderNotFound(seo.SITE_ORIGIN), 404);
     }
     sendHtmlNoCacheString(res, result.html);
 });
@@ -4753,7 +4757,7 @@ app.get('/psicologia.html', (req, res) => {
 
 app.get('/consultas', (req, res) => {
     try {
-        sendHtmlNoCacheString(res, queixas.renderHub(PUBLIC_SITE_URL));
+        sendHtmlNoCacheString(res, queixas.renderHub(seo.SITE_ORIGIN));
     } catch (err) {
         console.error('❌ Consultas hub error:', err.message || err);
         res.status(500).type('html').send('Error loading consultas.');
@@ -4766,7 +4770,7 @@ app.get('/consultas/', (req, res) => {
 
 app.get('/nutricao', (req, res) => {
     try {
-        sendHtmlNoCacheString(res, nutricao.renderHub(PUBLIC_SITE_URL));
+        sendHtmlNoCacheString(res, nutricao.renderHub(seo.SITE_ORIGIN));
     } catch (err) {
         console.error('❌ Nutricao hub error:', err.message || err);
         res.status(500).type('html').send('Error loading nutricao.');
@@ -4780,12 +4784,12 @@ app.get('/nutricao/', (req, res) => {
 app.get('/nutricao/:slug', (req, res) => {
     const slug = String(req.params.slug || '').toLowerCase();
     if (!nutricao.isValidSlug(slug)) {
-        return sendHtmlNoCacheString(res, nutricao.renderNotFound(PUBLIC_SITE_URL), 404);
+        return sendHtmlNoCacheString(res, nutricao.renderNotFound(seo.SITE_ORIGIN), 404);
     }
     try {
-        const result = nutricao.renderSpoke(PUBLIC_SITE_URL, slug);
+        const result = nutricao.renderSpoke(seo.SITE_ORIGIN, slug);
         if (!result) {
-            return sendHtmlNoCacheString(res, nutricao.renderNotFound(PUBLIC_SITE_URL), 404);
+            return sendHtmlNoCacheString(res, nutricao.renderNotFound(seo.SITE_ORIGIN), 404);
         }
         return sendHtmlNoCacheString(res, result.html);
     } catch (err) {
@@ -4885,7 +4889,7 @@ app.get('/info.html', (req, res) => {
             console.error('❌ Error reading info.html:', err.message);
             return res.status(500).send('Error loading info page');
         }
-        sendHtmlNoCacheString(res, hydrateInfoHtml(html, page, seo.originOf(PUBLIC_SITE_URL)));
+        sendHtmlNoCacheString(res, hydrateInfoHtml(html, page, seo.SITE_ORIGIN));
     });
 });
 
@@ -4968,7 +4972,7 @@ app.get('/:slug', (req, res, next) => {
     const slug = String(req.params.slug || '').toLowerCase();
     if (touristPages.hasPublishedSlug(slug)) {
         try {
-            const result = touristPages.renderPage(PUBLIC_SITE_URL, slug);
+            const result = touristPages.renderPage(seo.SITE_ORIGIN, slug);
             if (!result) return next();
             return sendHtmlNoCacheString(res, result.html);
         } catch (err) {
@@ -4978,7 +4982,7 @@ app.get('/:slug', (req, res, next) => {
     }
     if (!queixas.hasPublishedSlug(slug)) return next();
     try {
-        const result = queixas.renderPage(PUBLIC_SITE_URL, slug);
+        const result = queixas.renderPage(seo.SITE_ORIGIN, slug);
         if (!result) return next();
         return sendHtmlNoCacheString(res, result.html);
     } catch (err) {
@@ -4989,7 +4993,7 @@ app.get('/:slug', (req, res, next) => {
 
 app.get('/sitemap.xml', (req, res) => {
     try {
-        const xml = seo.buildSitemapXml(PUBLIC_SITE_URL);
+        const xml = seo.buildSitemapXml(seo.SITE_ORIGIN);
         res.set({
             'Content-Type': 'application/xml; charset=utf-8',
             'Cache-Control': 'public, max-age=3600, must-revalidate',
@@ -5052,7 +5056,7 @@ app.use((req, res, next) => {
     fs.readFile(fp, 'utf8', (err, html) => {
         if (err) return next();
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
-        res.send(injectAnalyticsHtml(html));
+        res.send(html);
     });
 });
 
@@ -8261,7 +8265,7 @@ app.get('/api/admin/available-slots', async (req, res) => {
         const referer = req.get('referer') || '';
         let bookingPath = '';
         try {
-            bookingPath = new URL(referer, 'https://lonclinic.com').pathname || '';
+            bookingPath = new URL(referer, seo.SITE_ORIGIN).pathname || '';
         } catch {
             bookingPath = '';
         }
@@ -9005,7 +9009,12 @@ app.post('/api/admin/invitations/:id/cancel', requireAdmin, async (req, res) => 
 // ─── Helper ───
 function getBaseUrl(req) {
     const protocol = req.headers['x-forwarded-proto'] || req.protocol;
-    return `${protocol}://${req.get('host')}`;
+    const rawHost = String(req.get('host') || '');
+    const host = rawHost.split(':')[0].toLowerCase();
+    if (host === 'lonclinic.com' || host === 'www.lonclinic.com') {
+        return seo.SITE_ORIGIN;
+    }
+    return `${protocol}://${rawHost}`;
 }
 
 // ─── Start Server ───

@@ -231,4 +231,4 @@ Disallow: /clinic-portal
 Disallow: /patient-portal
 Disallow: /api/
 
-Sitemap: https://lonclinic.com/sitemap.xml
+Sitemap: https://www.lonclinic.com/sitemap.xml

@@ -39,8 +39,15 @@
   "slotDuration": 30,
   "blockedDates": [],
   "blockedTimeSlots": [],
-  "dayOverrides": [],
+  "dayOverrides": [
+    {
+      "date": "2026-08-29",
+      "enabled": true,
+      "start": "07:00",
+      "end": "17:00"
+    }
+  ],
   "timezone": "Europe/Lisbon",
   "smartSlotGrouping": true,
-  "updatedAt": "2026-08-16T09:00:00.000Z"
+  "updatedAt": "2026-08-29T06:18:00.000Z"
 }

@@ -1,10 +1,12 @@
 /**
  * Technical SEO: robots.txt (AI crawlers allowed), sitemap, shared schema.
+ * Public HTML canonicals always use https://www.lonclinic.com + the request path
+ * (applyHtmlSeo on every HTML response). Never the apex host.
  */
 
 'use strict';
 
-const SITE_ORIGIN = 'https://lonclinic.com';
+const SITE_ORIGIN = 'https://www.lonclinic.com';
 
 const PRIVATE_DISALLOWS = [
     '/admin',
@@ -55,8 +57,120 @@ function xmlEscape(s) {
 
 function originOf(url) {
     const u = String(url || SITE_ORIGIN).replace(/\/+$/, '');
-    if (/^https?:\/\/www\.lonclinic\.com$/i.test(u)) return SITE_ORIGIN;
-    return u.startsWith('http') ? u : SITE_ORIGIN;
+    if (!u.startsWith('http')) return SITE_ORIGIN;
+    try {
+        const parsed = new URL(u);
+        const host = parsed.hostname.toLowerCase();
+        if (host === 'lonclinic.com' || host === 'www.lonclinic.com') return SITE_ORIGIN;
+        return `${parsed.protocol}//${parsed.host}`.replace(/\/+$/, '');
+    } catch {
+        return SITE_ORIGIN;
+    }
+}
+
+function keepInfoPageQuery(pathname, search, req) {
+    let page = '';
+    try {
+        page = new URLSearchParams(String(search || '').replace(/^\?/, '')).get('page') || '';
+    } catch {
+        page = '';
+    }
+    if (!page && req && req.query) {
+        const rawPage = req.query.page;
+        page = Array.isArray(rawPage) ? rawPage[0] : rawPage;
+    }
+    if (page && /^\/info(\.html)?$/i.test(pathname)) {
+        const infoPath = pathname === '/info' ? '/info.html' : pathname;
+        return `${infoPath}?page=${encodeURIComponent(String(page))}`;
+    }
+    return pathname || '/';
+}
+
+function canonicalPathFromRequest(req) {
+    let pathname = '/';
+    let search = '';
+    try {
+        const raw = String((req && (req.originalUrl || req.url || req.path)) || '/');
+        const u = new URL(raw, SITE_ORIGIN);
+        pathname = u.pathname || '/';
+        search = u.search || '';
+    } catch {
+        pathname = String((req && req.path) || '/');
+    }
+    if (pathname === '/index.html') pathname = '/';
+    if (pathname.length > 1) pathname = pathname.replace(/\/+$/, '');
+    return keepInfoPageQuery(pathname, search, req);
+}
+
+function rewriteApexSiteUrls(html) {
+    if (!html || typeof html !== 'string') return html;
+    return html
+        .replace(/https:\/\/lonclinic\.com(?=[\s"'<>/?#&]|$)/gi, 'https://www.lonclinic.com')
+        .replace(/https%3A%2F%2Flonclinic\.com/gi, 'https%3A%2F%2Fwww.lonclinic.com');
+}
+
+function canonicalHref(pathAndQuery) {
+    let p = String(pathAndQuery || '/').trim();
+    try {
+        if (/^https?:\/\//i.test(p)) {
+            const u = new URL(p);
+            p = `${u.pathname || '/'}${u.search || ''}`;
+        }
+    } catch {
+        /* keep p */
+    }
+    p = p.split('#')[0];
+    if (!p.startsWith('/')) p = `/${p}`;
+    const qAt = p.indexOf('?');
+    let pathPart = qAt === -1 ? p : p.slice(0, qAt);
+    const search = qAt === -1 ? '' : p.slice(qAt);
+    if (pathPart === '/index.html') pathPart = '/';
+    if (pathPart.length > 1) pathPart = pathPart.replace(/\/+$/, '');
+    return `${SITE_ORIGIN}${keepInfoPageQuery(pathPart || '/', search)}`;
+}
+
+function escapeHtmlAttr(s) {
+    return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;');
+}
+
+function insertBeforeHeadClose(html, insert) {
+    const lower = html.toLowerCase();
+    const headAt = lower.lastIndexOf('</head>');
+    if (headAt === -1) return html + insert;
+    return html.slice(0, headAt) + insert + html.slice(headAt);
+}
+
+function retagKeepId(existing, next) {
+    const idMatch = existing && existing.match(/\sid=["']([^"']+)["']/i);
+    const idAttr = idMatch ? ` id="${idMatch[1]}"` : '';
+    return next(idAttr);
+}
+
+function ensureCanonicalTag(html, href) {
+    if (!html || typeof html !== 'string') return html;
+    if (!/<html[\s>]/i.test(html)) return html;
+    const safeHref = escapeHtmlAttr(href || canonicalHref('/'));
+    if (/<link\s[^>]*rel=["']canonical["'][^>]*>/i.test(html)) {
+        html = html.replace(/<link\s[^>]*rel=["']canonical["'][^>]*>/gi, (m) =>
+            retagKeepId(m, (idAttr) => `<link rel="canonical" href="${safeHref}"${idAttr}>`)
+        );
+    } else {
+        html = insertBeforeHeadClose(html, `    <link rel="canonical" href="${safeHref}">\n`);
+    }
+    if (/<meta\s[^>]*property=["']og:url["'][^>]*>/i.test(html)) {
+        html = html.replace(/<meta\s[^>]*property=["']og:url["'][^>]*>/gi, (m) =>
+            retagKeepId(m, (idAttr) => `<meta property="og:url" content="${safeHref}"${idAttr}>`)
+        );
+    }
+    return html;
+}
+
+/** Rewrite apex hosts and force canonical + og:url to https://www.lonclinic.com{current path}. */
+function applyHtmlSeo(html, req) {
+    return ensureCanonicalTag(rewriteApexSiteUrls(html), canonicalHref(canonicalPathFromRequest(req)));
 }
 
 function organizationNode(origin) {
@@ -157,8 +271,8 @@ const INDEXABLE_INFO_PAGES = [
     'acessibilidade'
 ];
 
-function buildSitemapXml(origin) {
-    const o = originOf(origin);
+function buildSitemapXml(/* origin ignored: sitemap always uses the www host */) {
+    const o = SITE_ORIGIN;
     const guide = require('./guide');
     const burnoutPages = require('./burnout-pages');
     const consultaPages = require('./consulta-pages');
@@ -296,6 +410,11 @@ module.exports = {
     SITE_ORIGIN,
     INDEXABLE_INFO_PAGES,
     originOf,
+    canonicalHref,
+    canonicalPathFromRequest,
+    ensureCanonicalTag,
+    applyHtmlSeo,
+    rewriteApexSiteUrls,
     organizationNode,
     organizationJsonLd,
     jsonLdScript,

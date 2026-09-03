@@ -1,5 +1,6 @@
 /**
  * Lon Clinic — Guide (/blog): server-rendered listing and articles (Markdown or HTML fragments).
+ * New artigo/guia content always ships as /blog/:slug. /magazine is the index only.
  */
 
 'use strict';
@@ -7,7 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
-const { organizationJsonLd, jsonLdScript } = require('./seo');
+const { organizationJsonLd, jsonLdScript, originOf, canonicalHref } = require('./seo');
 const authors = require('./authors');
 const { socialLink } = require('./utm');
 
@@ -59,8 +60,7 @@ function isValidSlug(slug) {
 }
 
 function normalizeOrigin(url) {
-    const u = String(url || 'https://lonclinic.com').replace(/\/+$/, '');
-    return u.startsWith('http') ? u : `https://${u}`;
+    return originOf(url);
 }
 
 function loadManifest() {
@@ -303,7 +303,7 @@ function layoutGuidePage(opts) {
         pageClass
     } = opts;
 
-    const canonicalUrl = `${origin}${canonicalPath}`;
+    const canonicalUrl = canonicalHref(canonicalPath);
     const safeTitle = escapeHtml(title);
     const safeDesc = escapeHtml(description);
     const guideNavAttrs = navCurrent === 'guide' ? ' href="/blog" aria-current="page"' : ' href="/blog"';
@@ -1080,7 +1080,7 @@ function layoutMagazinePage(opts) {
         extraCssAfter,
         ogType
     } = opts;
-    const canonicalUrl = `${origin}${canonicalPath}`;
+    const canonicalUrl = canonicalHref(canonicalPath);
     const graph = Array.isArray(jsonLd) ? jsonLd : (jsonLd ? [jsonLd] : []);
     graph.push(organizationJsonLd(origin));
     const extraCssHtml = (Array.isArray(extraCss) ? extraCss : [])

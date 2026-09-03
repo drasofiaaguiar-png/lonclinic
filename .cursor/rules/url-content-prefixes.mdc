@@ -1,0 +1,36 @@
+---
+description: URL prefixes for new editorial vs product pages. Do not migrate existing paths.
+alwaysApply: true
+---
+
+# Content URL prefixes (new pages only)
+
+Do not invent a new top-level prefix. Do not move or 301 existing URLs unless the user explicitly asks.
+
+## New editorial (artigo / guia)
+
+Always `/blog/:slug` via `guide.js` + `data/guide/`. Listing: `/blog`. Magazine index: `/magazine` (not a per-article prefix). `/guide/:slug` only redirects to `/blog/:slug`.
+
+```
+# good — new guide
+/blog/sono-e-burnout-em-enfermeiros
+
+# bad — new article under a product prefix
+/burnout/sono-e-enfermeiros
+/nutricao/guia-proteina
+/wellness/artigo-termas
+```
+
+## Product / category prefixes (not magazine articles)
+
+Keep these for hubs, tools, and service/condition/directory fichas. Do not add new editorial slugs here.
+
+| Prefix | Role |
+|---|---|
+| `/burnout` | Hub + existing spokes. Quiz: `/burnout/teste`. No new article spokes. |
+| `/nutricao/:slug` | Nutrition service/condition pages |
+| `/wellness/:slug` | Experience fichas |
+| `/consulta/:slug` | Medical complaint conversion |
+| `/:slug` at root | Psychology queixas and tourist GEO landings (existing pattern) |
+
+New burnout writing that is an article goes to `/blog/` and links to `/burnout`. Existing `/burnout/:slug` pages stay as they are.

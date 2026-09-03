@@ -4,7 +4,7 @@
 
 'use strict';
 
-const { SITE_ORIGIN, INDEXABLE_INFO_PAGES, organizationJsonLd, organizationNode } = require('./seo');
+const { INDEXABLE_INFO_PAGES, organizationJsonLd, organizationNode, originOf, canonicalHref } = require('./seo');
 
 const NOINDEX_PAGES = new Set([
     'termos-condicoes',
@@ -74,7 +74,7 @@ function replaceOnce(html, pattern, replacement) {
 }
 
 function hydrateInfoHtml(html, page, origin) {
-    const o = String(origin || SITE_ORIGIN).replace(/\/+$/, '');
+    const o = originOf(origin);
     const content = extractPtContent(html);
     if (!content) return html;
 
@@ -94,8 +94,8 @@ function hydrateInfoHtml(html, page, origin) {
         ? 'noindex,follow'
         : 'index,follow,max-image-preview:large';
     const canonical = isDirectory
-        ? `${o}/info.html`
-        : (isKnown ? `${o}/info.html?page=${encodeURIComponent(key)}` : `${o}/info.html`);
+        ? canonicalHref('/info.html')
+        : (isKnown ? canonicalHref(`/info.html?page=${encodeURIComponent(key)}`) : canonicalHref('/info.html'));
     const title = `${data.title} | Lon Clinic`;
     const rawDesc = String(data.subtitle || data.body || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
     const description = (rawDesc || 'Informações institucionais da Lon Clinic.').slice(0, 160);

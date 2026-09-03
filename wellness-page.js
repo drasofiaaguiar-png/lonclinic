@@ -244,7 +244,7 @@
             const related = data.related || [];
             document.title = (item.name || 'Wellness') + ' · Lon Clinic';
             const canonical = document.querySelector('link[rel="canonical"]');
-            if (canonical) canonical.setAttribute('href', 'https://lonclinic.com/wellness/' + encodeURIComponent(item.slug));
+            if (canonical) canonical.setAttribute('href', 'https://www.lonclinic.com/wellness/' + encodeURIComponent(item.slug));
 
             const paras = String(item.longDescription || '')
                 .split(/\n\n+/)
