@@ -12,16 +12,16 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-decoration: none;
-    color: #4A7C6F;
+    color: var(--lon-accent, #255235);
     border: 1px solid #cfe6d8;
     border-radius: 999px;
     padding: 4px 10px;
 }
 
 .tq-langs a[aria-current="page"] {
-    background: #4A7C6F;
+    background: var(--lon-accent, #255235);
     color: #fff;
-    border-color: #4A7C6F;
+    border-color: var(--lon-accent, #255235);
 }
 
 .tq-langs-line {

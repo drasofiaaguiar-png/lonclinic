@@ -44,7 +44,7 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #4A7C6F;
+    color: var(--lon-accent, #255235);
     margin: 0 0 10px;
 }
 
@@ -423,14 +423,14 @@
     text-decoration: none;
     color: inherit;
     min-height: 100%;
-    box-shadow: 0 8px 24px rgba(55, 25, 73, 0.05);
+    box-shadow: 0 8px 24px rgba(20, 34, 24, 0.06);
     transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
 .cq-hub-card:hover {
     transform: translateY(-2px);
-    border-color: #d4bfe3;
-    box-shadow: 0 14px 32px rgba(55, 25, 73, 0.1);
+    border-color: #a8c2b0;
+    box-shadow: 0 14px 32px rgba(20, 34, 24, 0.1);
 }
 
 .cq-hub-price {
@@ -438,7 +438,7 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--lon-accent, #ff7028);
+    color: var(--lon-accent, #255235);
 }
 
 .cq-hub-label {

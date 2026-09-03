@@ -5,7 +5,7 @@
 }
 
 .guide-body:not(.guide-index) {
-    background: #ffffff;
+    background: transparent;
 }
 
 /* Nav: same as homepage (landing.css) — no dark-theme overrides */

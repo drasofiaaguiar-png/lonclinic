@@ -28,7 +28,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="landing.css?v=20260903b">
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -123,72 +123,28 @@
     </script>
     <style>
         :root {
-            --primary: #4A7C6F;
-            --bg: #f5f6f4;
-            --card: #ffffff;
-            --text: #1a1a1a;
-            --muted: #606660;
-            --border: #dfe4da;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: "DM Sans", system-ui, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.55;
-        }
-        .wrap {
-            max-width: 920px;
-            margin: 0 auto;
-            padding: calc(var(--lon-nav-h, 72px) + 28px) 20px 56px;
-        }
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 28px;
-        }
-        h1 {
-            font-size: clamp(1.6rem, 4vw, 2.3rem);
-            letter-spacing: -0.02em;
-            margin-bottom: 10px;
-        }
-        .lead {
-            color: var(--muted);
-            margin-bottom: 28px;
-            font-size: 1rem;
+            --primary: var(--lon-accent, #255235);
+            --bg: transparent;
+            --card: var(--lon-surface, #fff);
+            --text: var(--lon-primary, #1a1a1a);
+            --muted: var(--lon-muted, #425045);
+            --border: var(--lon-border, #c9d4cc);
         }
         .faq-section {
             margin-bottom: 28px;
         }
         .faq-section:last-of-type { margin-bottom: 0; }
         .faq-section h2 {
-            font-size: 1.12rem;
-            color: var(--primary);
-            margin-bottom: 14px;
-            letter-spacing: -0.01em;
-        }
-        .faq-item {
-            margin-bottom: 16px;
-        }
-        .faq-item:last-child { margin-bottom: 0; }
-        .faq-q {
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 6px;
-            font-size: 0.98rem;
-        }
-        .faq-a {
-            color: #2f352f;
-            font-size: 0.95rem;
-        }
-        .faq-a a {
-            color: var(--primary);
-            font-weight: 600;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--lon-accent);
+            margin: 8px 0 12px;
         }
     </style>
 </head>
-<body>
+<body class="lon-landing">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
     <header class="lon-nav" id="lonNav">
         <div class="lon-container lon-nav-inner">
@@ -225,81 +181,81 @@
             <section class="faq-section" aria-labelledby="faq-consultas">
                 <h2 id="faq-consultas">Sobre as consultas</h2>
 
-                <div class="faq-item">
-                    <p class="faq-q">As consultas são com médicos certificados?</p>
+                <details class="faq-item">
+                    <summary class="faq-q">As consultas são com médicos certificados?</summary>
                     <p class="faq-a">Sim. Todas as consultas são realizadas por médicos devidamente credenciados e registados na Ordem dos Médicos.</p>
-                </div>
-                <div class="faq-item">
-                    <p class="faq-q">Posso usar a Lon Clinic em caso de emergência?</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">Posso usar a Lon Clinic em caso de emergência?</summary>
                     <p class="faq-a">Não. Em situações de emergência deve ligar imediatamente para o <strong>112</strong>, ou dirigir-se ao serviço de urgência hospitalar mais próximo. A Lon Clinic destina-se a situações que não requerem assistência presencial.</p>
-                </div>
-                <div class="faq-item">
-                    <p class="faq-q">A consulta é adequada para crianças?</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">A consulta é adequada para crianças?</summary>
                     <p class="faq-a">As consultas destinam-se exclusivamente a maiores de 18 anos, com exceção das consultas de Medicina do Viajante, para as quais é necessária a presença e consentimento do representante legal.</p>
-                </div>
-                <div class="faq-item">
-                    <p class="faq-q">Posso marcar consulta para outra pessoa?</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">Posso marcar consulta para outra pessoa?</summary>
                     <p class="faq-a">Sim, pode marcar em nome de outra pessoa desde que seja maior de 18 anos e que os dados fornecidos sejam verdadeiros e atualizados.</p>
-                </div>
-                <div class="faq-item">
-                    <p class="faq-q">Em que línguas são realizadas as consultas?</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">Em que línguas são realizadas as consultas?</summary>
                     <p class="faq-a">As consultas podem ser realizadas em português, inglês, espanhol ou francês.</p>
-                </div>
+                </details>
             </section>
 
             <section class="faq-section" aria-labelledby="faq-pagamento">
                 <h2 id="faq-pagamento">Sobre o pagamento</h2>
 
-                <div class="faq-item">
-                    <p class="faq-q">Como posso pagar?</p>
+                <details class="faq-item">
+                    <summary class="faq-q">Como posso pagar?</summary>
                     <p class="faq-a">Aceitamos MB Way e Referência Multibanco. O pagamento deve ser efetuado no momento da marcação para confirmar o agendamento.</p>
-                </div>
-                <div class="faq-item">
-                    <p class="faq-q">E se precisar de cancelar?</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">E se precisar de cancelar?</summary>
                     <p class="faq-a">Pode cancelar e receber reembolso total até 48 horas antes da consulta. Cancelamentos após esse prazo não têm direito a reembolso. Consulte os nossos <a href="/info.html?page=termos-condicoes">Termos e Condições</a> para mais detalhes.</p>
-                </div>
-                <div class="faq-item">
-                    <p class="faq-q">Emitem fatura?</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">Emitem fatura?</summary>
                     <p class="faq-a">Sim. A fatura é emitida automaticamente após o pagamento.</p>
-                </div>
+                </details>
             </section>
 
             <section class="faq-section" aria-labelledby="faq-video">
                 <h2 id="faq-video">Sobre a videoconsulta</h2>
 
-                <div class="faq-item">
-                    <p class="faq-q">O que preciso para fazer a consulta?</p>
+                <details class="faq-item">
+                    <summary class="faq-q">O que preciso para fazer a consulta?</summary>
                     <p class="faq-a">Um dispositivo com câmara e microfone (computador, tablet ou telemóvel), ligação à internet estável e um local calmo e privado.</p>
-                </div>
-                <div class="faq-item">
-                    <p class="faq-q">Preciso de instalar alguma aplicação?</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">Preciso de instalar alguma aplicação?</summary>
                     <p class="faq-a">Não. A consulta funciona diretamente no browser, sem necessidade de downloads ou instalações.</p>
-                </div>
-                <div class="faq-item">
-                    <p class="faq-q">O que acontece se tiver problemas técnicos?</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">O que acontece se tiver problemas técnicos?</summary>
                     <p class="faq-a">Se os problemas técnicos forem do lado do paciente, a Lon Clinic não pode garantir a realização da consulta nem o reembolso. Recomendamos que teste a câmara e o microfone antes da hora marcada.</p>
-                </div>
-                <div class="faq-item">
-                    <p class="faq-q">Posso fazer a consulta por telefone?</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">Posso fazer a consulta por telefone?</summary>
                     <p class="faq-a">Sim, mediante pedido prévio, a consulta pode ser realizada por telefone, exceto para emissão de atestados médicos.</p>
-                </div>
+                </details>
             </section>
 
             <section class="faq-section" aria-labelledby="faq-docs">
                 <h2 id="faq-docs">Sobre receitas e documentos</h2>
 
-                <div class="faq-item">
-                    <p class="faq-q">Posso obter receita médica na consulta?</p>
+                <details class="faq-item">
+                    <summary class="faq-q">Posso obter receita médica na consulta?</summary>
                     <p class="faq-a">Sim. Sempre que clinicamente indicado, a receita é emitida durante a consulta e enviada imediatamente por email ou SMS.</p>
-                </div>
-                <div class="faq-item">
-                    <p class="faq-q">E se a receita expirar?</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">E se a receita expirar?</summary>
                     <p class="faq-a">A reemissão de receitas implica a marcação de um novo pedido de receita.</p>
-                </div>
-                <div class="faq-item">
-                    <p class="faq-q">Emitem atestados médicos?</p>
+                </details>
+                <details class="faq-item">
+                    <summary class="faq-q">Emitem atestados médicos?</summary>
                     <p class="faq-a">Sim. Consulte as opções de marcação no <a href="/">nosso site</a> ou contacte <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> para mais informações.</p>
-                </div>
+                </details>
             </section>
         </article>
     </div>

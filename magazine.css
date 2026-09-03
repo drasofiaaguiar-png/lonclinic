@@ -1,10 +1,10 @@
 /* LON Magazine — minimal editorial */
 
 .mag-body {
-    --mag-paper: #ffffff;
-    --mag-ink: #111111;
-    --mag-ink-soft: #6b6b6b;
-    --mag-line: #e8e8e8;
+    --mag-paper: #f8f8f6;
+    --mag-ink: #1a1a1a;
+    --mag-ink-soft: #5b675f;
+    --mag-line: #d8e0da;
     --mag-serif: "Playfair Display", "Times New Roman", serif;
     --mag-sans: "DM Sans", system-ui, sans-serif;
     margin: 0;

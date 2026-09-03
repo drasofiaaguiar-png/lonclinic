@@ -29,7 +29,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="landing.css?v=20260903b">
     <script type="application/ld+json" id="structuredData">
 {
   "@context": "https://schema.org",
@@ -42,17 +42,17 @@
     </script>
     <style>
         :root {
-            --primary: #4A7C6F;
-            --bg: #f5f6f4;
-            --card: #ffffff;
-            --text: #1a1a1a;
-            --muted: #606660;
-            --border: #dfe4da;
+            --primary: var(--lon-accent, #255235);
+            --bg: transparent;
+            --card: var(--lon-surface, #fff);
+            --text: var(--lon-primary, #1a1a1a);
+            --muted: var(--lon-muted, #425045);
+            --border: var(--lon-border, #c9d4cc);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: "DM Sans", sans-serif;
-            background: var(--bg);
+            background: transparent;
             color: var(--text);
             line-height: 1.55;
         }
@@ -130,7 +130,7 @@
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            background: linear-gradient(145deg, #4A7C6F 0%, #2d5a4e 100%);
+            background: linear-gradient(145deg, #2f6342 0%, #255235 100%);
             color: #fff;
             display: flex;
             align-items: center;
@@ -138,7 +138,7 @@
             font-size: 2rem;
             font-weight: 700;
             letter-spacing: 0.04em;
-            box-shadow: 0 8px 24px rgba(74, 124, 111, 0.25);
+            box-shadow: 0 8px 24px rgba(37, 82, 53, 0.25);
         }
         .team-name {
             font-size: 1.35rem;
@@ -279,7 +279,7 @@
         .info-form-status.is-error { color: #b91c1c; }
     </style>
 </head>
-<body>
+<body class="lon-landing">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
     <header class="lon-nav" id="lonNav">
         <div class="lon-container lon-nav-inner">

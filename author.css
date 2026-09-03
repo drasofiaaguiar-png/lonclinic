@@ -58,8 +58,8 @@
     font-weight: 700;
     letter-spacing: 0.04em;
     color: #fff;
-    background: linear-gradient(145deg, #4A7C6F 0%, #2d5a4e 100%);
-    box-shadow: 0 8px 20px rgba(74, 124, 111, 0.28);
+    background: linear-gradient(145deg, #2f6342 0%, #255235 100%);
+    box-shadow: 0 8px 20px rgba(37, 82, 53, 0.28);
 }
 
 .eeat-bio-kicker,
@@ -69,7 +69,7 @@
     font-weight: 650;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #1a6641;
+    color: var(--lon-accent, #255235);
 }
 
 .eeat-bio-name {
@@ -92,7 +92,7 @@
     margin: 0 0 10px;
     font-size: 0.92rem;
     font-weight: 600;
-    color: #1a6641;
+    color: var(--lon-accent, #255235);
 }
 
 .eeat-bio-text {
