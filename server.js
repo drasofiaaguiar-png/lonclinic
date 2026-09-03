@@ -2046,10 +2046,10 @@ function buildInterviewConfirmationEmail(data) {
 <td style="padding:8px 0;color:#0f172a;font-size:14px;font-weight:500;text-align:right;border-bottom:1px solid #f1f5f9;">${dateLabel}</td></tr>
 <tr><td style="padding:8px 0;color:#64748b;font-size:14px;border-bottom:1px solid #f1f5f9;">Hora (Lisboa)</td>
 <td style="padding:8px 0;color:#0f172a;font-size:14px;font-weight:500;text-align:right;border-bottom:1px solid #f1f5f9;">${time}</td></tr>
-<tr><td style="padding:8px 0;color:#64748b;font-size:14px;border-bottom:1px solid #f1f5f9;">Área</td>
-<td style="padding:8px 0;color:#0f172a;font-size:14px;font-weight:500;text-align:right;border-bottom:1px solid #f1f5f9;">${role}</td></tr>
+${role ? `<tr><td style="padding:8px 0;color:#64748b;font-size:14px;border-bottom:1px solid #f1f5f9;">Área</td>
+<td style="padding:8px 0;color:#0f172a;font-size:14px;font-weight:500;text-align:right;border-bottom:1px solid #f1f5f9;">${role}</td></tr>` : ''}
 <tr><td style="padding:8px 0;color:#64748b;font-size:14px;">Formato</td>
-<td style="padding:8px 0;color:#0f172a;font-size:14px;font-weight:500;text-align:right;">Videochamada · ~20–30 min</td></tr>
+<td style="padding:8px 0;color:#0f172a;font-size:14px;font-weight:500;text-align:right;">Videochamada · 30 min</td></tr>
 </table>
 <h3 style="margin:0 0 10px;font-size:16px;font-weight:600;color:#0f172a;">Sala de vídeo</h3>
 ${doxyBtn}
@@ -2071,8 +2071,8 @@ ${doxyBtn}
         `Referência: ${data.bookingRef}`,
         `Data: ${data.dateLabel || data.date}`,
         `Hora (Lisboa): ${data.time}`,
-        `Área: ${data.roleLabel || ''}`,
-        'Formato: Videochamada · ~20–30 min',
+        data.roleLabel ? `Área: ${data.roleLabel}` : '',
+        'Formato: Videochamada · 30 min',
         '',
         doxyUrl ? `Sala de vídeo (abra à hora marcada, sem instalação):\n${doxyUrl}` : 'O link da videochamada será enviado pela equipa.',
         '',
@@ -5821,61 +5821,129 @@ app.post('/api/recrutamento/psicologia', rateLimitRecrutamentoPsicologia, (req, 
     });
 });
 
-const INTERVIEW_MAX_DAYS_AHEAD = 60;
+const INTERVIEW_SLOT_MINUTES = 30;
+
+function pad2Interview(n) {
+    return String(n).padStart(2, '0');
+}
+
+function isoFromUtcMidnight(d) {
+    return `${d.getUTCFullYear()}-${pad2Interview(d.getUTCMonth() + 1)}-${pad2Interview(d.getUTCDate())}`;
+}
+
+function lisbonTodayUtcMidnight() {
+    const p = partsInTimeZone(Date.now(), 'Europe/Lisbon');
+    return new Date(Date.UTC(p.y, p.mo - 1, p.d));
+}
+
+function addUtcDays(d, n) {
+    return new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + n));
+}
+
+function interviewHoursForWeekday(weekday) {
+    if (weekday === 6) return { startMin: 9 * 60, endMin: 13 * 60 };
+    return { startMin: 9 * 60, endMin: 19 * 60 };
+}
+
+function interviewSlotTimesForDateIso(dateIso) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateIso || ''));
+    if (!m) return [];
+    const weekday = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]))).getUTCDay();
+    const { startMin, endMin } = interviewHoursForWeekday(weekday);
+    const out = [];
+    for (let min = startMin; min < endMin; min += INTERVIEW_SLOT_MINUTES) {
+        out.push(`${pad2Interview(Math.floor(min / 60))}:${pad2Interview(min % 60)}`);
+    }
+    return out;
+}
+
+function offeredInterviewDateIsos() {
+    const today = lisbonTodayUtcMidnight();
+    const tomorrow = addUtcDays(today, 1);
+    const untilSat = (6 - today.getUTCDay() + 7) % 7;
+    const saturday = addUtcDays(today, untilSat === 0 ? 7 : untilSat);
+    const out = [isoFromUtcMidnight(tomorrow)];
+    const satIso = isoFromUtcMidnight(saturday);
+    if (satIso !== out[0]) out.push(satIso);
+    return out;
+}
+
+function isOfferedInterviewSlot(dateIso, time) {
+    if (!offeredInterviewDateIsos().includes(dateIso)) return false;
+    return interviewSlotTimesForDateIso(dateIso).includes(time);
+}
+
+async function interviewSlotIsFree(dateIso, time) {
+    if (usePersistentDb) {
+        const taken = await db.isSlotTakenByOther(dateIso, time, null);
+        if (taken) return false;
+        const locked = await fetchInvitationLockedTimesForDateIso(dateIso);
+        if (locked.has(time)) return false;
+        return true;
+    }
+    return isSlotFreeInMemory(dateIso, time, null);
+}
+
+app.get('/api/recrutamento/entrevista/slots', async (req, res) => {
+    try {
+        const tz = 'Europe/Lisbon';
+        const offered = offeredInterviewDateIsos();
+        const tomorrowIso = offered[0];
+        const days = [];
+        for (const dateIso of offered) {
+            const times = interviewSlotTimesForDateIso(dateIso);
+            const free = [];
+            for (const time of times) {
+                const startMs = localWallTimeToUtcMs(dateIso, time, tz);
+                if (!Number.isFinite(startMs) || startMs <= Date.now()) continue;
+                if (!(await interviewSlotIsFree(dateIso, time))) continue;
+                free.push(time);
+            }
+            const pretty = formatInvitationDateLabel(dateIso, 'pt');
+            days.push({
+                dateIso,
+                label: dateIso === tomorrowIso ? `Amanhã · ${pretty}` : pretty,
+                slots: free
+            });
+        }
+        res.set({
+            'Cache-Control': 'no-store',
+            'CDN-Cache-Control': 'no-store',
+            'Cloudflare-CDN-Cache-Control': 'no-store'
+        });
+        res.json({ days });
+    } catch (err) {
+        console.error('GET /api/recrutamento/entrevista/slots:', err.message);
+        res.status(500).json({ error: 'Não foi possível carregar os horários.' });
+    }
+});
 
 app.post('/api/recrutamento/entrevista', rateLimitRecrutamentoEntrevista, express.json(), async (req, res) => {
     const body = req.body || {};
-    const name = String(body.name || '').trim().slice(0, 120);
     const email = String(body.email || '').trim().slice(0, 160).toLowerCase();
-    const phone = String(body.phone || '').trim().slice(0, 40);
-    const roleRaw = String(body.role || '').trim();
-    const notes = String(body.notes || '').trim().slice(0, 1000);
     const dateIso = String(body.dateIso || '').trim();
     const normTime = normalizeTimeString({ time: String(body.time || '') });
 
-    if (!name || name.length < 2) {
-        return res.status(400).json({ error: 'Indique o nome completo.' });
-    }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         return res.status(400).json({ error: 'Indique um email válido.' });
-    }
-    if (!phone || phone.length < 6) {
-        return res.status(400).json({ error: 'Indique um telefone válido.' });
-    }
-    const roleLabel = INTERVIEW_ROLE_LABELS[roleRaw];
-    if (!roleLabel) {
-        return res.status(400).json({ error: 'Selecione uma área.' });
     }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(dateIso) || !normTime) {
         return res.status(400).json({ error: 'Escolha uma data e hora disponíveis.' });
     }
+    if (!isOfferedInterviewSlot(dateIso, normTime)) {
+        return res.status(409).json({ error: 'Esse horário não está disponível. Escolha outro.' });
+    }
 
-    const tz = scheduleStore.timezone || 'Europe/Lisbon';
+    const tz = 'Europe/Lisbon';
     const startMs = localWallTimeToUtcMs(dateIso, normTime, tz);
     if (!Number.isFinite(startMs) || startMs <= Date.now()) {
         return res.status(400).json({ error: 'Esse horário já passou. Escolha outro.' });
     }
-    const maxMs = Date.now() + INTERVIEW_MAX_DAYS_AHEAD * 24 * 60 * 60 * 1000;
-    if (startMs > maxMs) {
-        return res.status(400).json({ error: 'Escolha uma data nos próximos 60 dias.' });
-    }
 
-    const grid = slotsForDateIso(dateIso);
-    if (!grid.includes(normTime)) {
-        return res.status(409).json({ error: 'Esse horário não está disponível. Escolha outro.' });
-    }
+    const name = (email.split('@')[0] || 'Candidato').slice(0, 120);
 
     try {
-        if (usePersistentDb) {
-            const taken = await db.isSlotTakenByOther(dateIso, normTime, null);
-            if (taken) {
-                return res.status(409).json({ error: 'Esse horário acabou de ser ocupado. Escolha outro.' });
-            }
-            const locked = await fetchInvitationLockedTimesForDateIso(dateIso);
-            if (locked.has(normTime)) {
-                return res.status(409).json({ error: 'Esse horário acabou de ser ocupado. Escolha outro.' });
-            }
-        } else if (!isSlotFreeInMemory(dateIso, normTime, null)) {
+        if (!(await interviewSlotIsFree(dateIso, normTime))) {
             return res.status(409).json({ error: 'Esse horário acabou de ser ocupado. Escolha outro.' });
         }
 
@@ -5892,7 +5960,7 @@ app.post('/api/recrutamento/entrevista', rateLimitRecrutamentoEntrevista, expres
             time: normTime,
             dateIso,
             patientName: name,
-            patientPhone: phone,
+            patientPhone: '',
             travellerCount: 1,
             amount: 0,
             currency: 'eur',
@@ -5919,9 +5987,9 @@ app.post('/api/recrutamento/entrevista', rateLimitRecrutamentoEntrevista, expres
             bookingRef,
             patientName: name,
             email,
-            patientPhone: phone,
-            roleLabel,
-            notes,
+            patientPhone: '',
+            roleLabel: '',
+            notes: '',
             date: dateLabel,
             dateLabel,
             time: normTime,

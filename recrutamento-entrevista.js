@@ -1,181 +1,15 @@
 (function () {
     'use strict';
 
-    var MONTHS = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-
     var form = document.getElementById('entForm');
     var submitBtn = document.getElementById('entSubmit');
     var errorEl = document.getElementById('entError');
-    var calGrid = document.getElementById('entCalGrid');
-    var calMonthEl = document.getElementById('entCalMonth');
-    var timesGrid = document.getElementById('entTimesGrid');
-    var timesHeading = document.getElementById('entTimesHeading');
+    var daysEl = document.getElementById('entDays');
     var screenForm = document.getElementById('screen-form');
     var screenDone = document.getElementById('screen-done');
+    var emailEl = document.getElementById('entEmail');
 
-    var state = {
-        scheduleData: null,
-        calMonth: new Date().getMonth(),
-        calYear: new Date().getFullYear(),
-        date: null,
-        dateIso: '',
-        dateLabel: '',
-        time: null
-    };
-
-    function formatDateLocal(dateObj) {
-        var year = dateObj.getFullYear();
-        var month = String(dateObj.getMonth() + 1).padStart(2, '0');
-        var day = String(dateObj.getDate()).padStart(2, '0');
-        return year + '-' + month + '-' + day;
-    }
-
-    function startOfDay(d) {
-        var x = new Date(d);
-        x.setHours(0, 0, 0, 0);
-        return x;
-    }
-
-    function isDateAvailable(dateObj) {
-        var today = startOfDay(new Date());
-        var max = startOfDay(new Date());
-        max.setDate(max.getDate() + 60);
-        if (dateObj < today || dateObj > max) return false;
-
-        var dateStr = formatDateLocal(dateObj);
-        var data = state.scheduleData;
-        if (data && data.blockedDates && data.blockedDates.indexOf(dateStr) >= 0) {
-            return false;
-        }
-        var overrides = data && data.dayOverrides;
-        if (overrides && overrides.length) {
-            for (var i = 0; i < overrides.length; i++) {
-                if (overrides[i].date === dateStr) return !!overrides[i].enabled;
-            }
-        }
-        var dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-        var dayName = dayNames[dateObj.getDay()];
-        if (data && data.workingHours) {
-            var daySchedule = data.workingHours[dayName];
-            if (!daySchedule || !daySchedule.enabled) return false;
-        } else if (dateObj.getDay() === 0 || dateObj.getDay() === 6) {
-            return false;
-        }
-        return true;
-    }
-
-    function renderCalendar() {
-        if (!calGrid || !calMonthEl) return;
-        calMonthEl.textContent = MONTHS[state.calMonth] + ' ' + state.calYear;
-        calGrid.innerHTML = '';
-
-        var first = new Date(state.calYear, state.calMonth, 1);
-        var startPad = (first.getDay() + 6) % 7;
-        var daysInMonth = new Date(state.calYear, state.calMonth + 1, 0).getDate();
-        var today = startOfDay(new Date());
-
-        for (var i = 0; i < startPad; i++) {
-            var empty = document.createElement('span');
-            empty.className = 'ent-cal-day is-empty';
-            empty.setAttribute('aria-hidden', 'true');
-            calGrid.appendChild(empty);
-        }
-
-        for (var d = 1; d <= daysInMonth; d++) {
-            (function (day) {
-                var btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'ent-cal-day';
-                btn.textContent = String(day);
-                var dateObj = new Date(state.calYear, state.calMonth, day);
-                dateObj.setHours(0, 0, 0, 0);
-                if (!isDateAvailable(dateObj)) {
-                    btn.classList.add('is-disabled');
-                    btn.disabled = true;
-                } else {
-                    btn.addEventListener('click', function () {
-                        selectDate(dateObj, btn);
-                    });
-                }
-                if (dateObj.getTime() === today.getTime()) btn.classList.add('is-today');
-                if (state.date && dateObj.getTime() === state.date.getTime()) {
-                    btn.classList.add('is-selected');
-                }
-                calGrid.appendChild(btn);
-            })(d);
-        }
-    }
-
-    function selectDate(dateObj, btn) {
-        state.date = dateObj;
-        state.dateIso = formatDateLocal(dateObj);
-        state.dateLabel = dateObj.toLocaleDateString('pt-PT', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        });
-        state.time = null;
-        calGrid.querySelectorAll('.ent-cal-day').forEach(function (el) {
-            el.classList.remove('is-selected');
-        });
-        btn.classList.add('is-selected');
-        updateSubmit();
-        renderTimeslots();
-    }
-
-    function filterPastSlots(slots) {
-        if (!state.date) return slots;
-        var today = startOfDay(new Date());
-        if (state.date.getTime() !== today.getTime()) return slots;
-        var now = new Date();
-        var nowMins = now.getHours() * 60 + now.getMinutes();
-        return slots.filter(function (slot) {
-            var parts = String(slot).split(':').map(Number);
-            return (parts[0] * 60 + parts[1]) > nowMins;
-        });
-    }
-
-    function renderTimeslots() {
-        if (!timesGrid || !timesHeading) return;
-        if (!state.date) {
-            timesHeading.textContent = 'Escolha primeiro um dia';
-            timesGrid.innerHTML = '<p class="ent-times-empty">Selecione uma data à esquerda.</p>';
-            return;
-        }
-        timesHeading.textContent = state.dateLabel;
-        timesGrid.innerHTML = '<p class="ent-times-empty">A carregar horários…</p>';
-
-        fetch('/api/admin/available-slots?date=' + encodeURIComponent(state.dateIso))
-            .then(function (r) { return r.json(); })
-            .then(function (data) {
-                var available = filterPastSlots((data && data.available) ? data.available.slice() : []);
-                timesGrid.innerHTML = '';
-                if (!available.length) {
-                    timesGrid.innerHTML = '<p class="ent-times-empty">Sem horários neste dia. Escolha outra data.</p>';
-                    return;
-                }
-                available.forEach(function (slot) {
-                    var b = document.createElement('button');
-                    b.type = 'button';
-                    b.className = 'ent-slot';
-                    b.textContent = slot;
-                    b.addEventListener('click', function () {
-                        state.time = slot;
-                        timesGrid.querySelectorAll('.ent-slot').forEach(function (x) {
-                            x.classList.remove('is-selected');
-                        });
-                        b.classList.add('is-selected');
-                        updateSubmit();
-                    });
-                    timesGrid.appendChild(b);
-                });
-            })
-            .catch(function () {
-                timesGrid.innerHTML = '<p class="ent-times-empty">Não foi possível carregar os horários. Tente novamente.</p>';
-            });
-    }
+    var state = { dateIso: '', dateLabel: '', time: null };
 
     function showError(msg) {
         if (!errorEl) return;
@@ -185,36 +19,58 @@
 
     function updateSubmit() {
         if (!submitBtn) return;
-        var name = document.getElementById('entName').value.trim();
-        var email = document.getElementById('entEmail').value.trim();
-        var phone = document.getElementById('entPhone').value.trim();
-        var role = document.getElementById('entRole').value;
-        submitBtn.disabled = !(name && email && phone && role && state.dateIso && state.time);
+        var email = emailEl && emailEl.value.trim();
+        submitBtn.disabled = !(email && state.dateIso && state.time);
     }
 
-    ['entName', 'entEmail', 'entPhone', 'entRole', 'entNotes'].forEach(function (id) {
-        var el = document.getElementById(id);
-        if (el) el.addEventListener('input', updateSubmit);
-        if (el) el.addEventListener('change', updateSubmit);
-    });
-
-    document.getElementById('entCalPrev').addEventListener('click', function () {
-        state.calMonth -= 1;
-        if (state.calMonth < 0) {
-            state.calMonth = 11;
-            state.calYear -= 1;
+    function renderDays(days) {
+        if (!daysEl) return;
+        daysEl.innerHTML = '';
+        if (!days || !days.length) {
+            daysEl.innerHTML = '<p class="ent-times-empty">Não há horários disponíveis de momento.</p>';
+            return;
         }
-        renderCalendar();
-    });
+        days.forEach(function (day) {
+            var wrap = document.createElement('div');
+            wrap.className = 'ent-day';
+            var h = document.createElement('h3');
+            h.textContent = day.label;
+            wrap.appendChild(h);
+            var grid = document.createElement('div');
+            grid.className = 'ent-times-grid';
+            if (!day.slots || !day.slots.length) {
+                var empty = document.createElement('p');
+                empty.className = 'ent-times-empty';
+                empty.textContent = 'Sem horários neste dia.';
+                wrap.appendChild(empty);
+            } else {
+                day.slots.forEach(function (slot) {
+                    var b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'ent-slot';
+                    b.textContent = slot;
+                    b.addEventListener('click', function () {
+                        state.dateIso = day.dateIso;
+                        state.dateLabel = day.label;
+                        state.time = slot;
+                        daysEl.querySelectorAll('.ent-slot').forEach(function (x) {
+                            x.classList.remove('is-selected');
+                        });
+                        b.classList.add('is-selected');
+                        updateSubmit();
+                    });
+                    grid.appendChild(b);
+                });
+                wrap.appendChild(grid);
+            }
+            daysEl.appendChild(wrap);
+        });
+    }
 
-    document.getElementById('entCalNext').addEventListener('click', function () {
-        state.calMonth += 1;
-        if (state.calMonth > 11) {
-            state.calMonth = 0;
-            state.calYear += 1;
-        }
-        renderCalendar();
-    });
+    if (emailEl) {
+        emailEl.addEventListener('input', updateSubmit);
+        emailEl.addEventListener('change', updateSubmit);
+    }
 
     form.addEventListener('submit', function (ev) {
         ev.preventDefault();
@@ -222,11 +78,7 @@
         if (submitBtn.disabled) return;
 
         var payload = {
-            name: document.getElementById('entName').value.trim(),
-            email: document.getElementById('entEmail').value.trim(),
-            phone: document.getElementById('entPhone').value.trim(),
-            role: document.getElementById('entRole').value,
-            notes: document.getElementById('entNotes').value.trim(),
+            email: emailEl.value.trim(),
             dateIso: state.dateIso,
             time: state.time
         };
@@ -241,7 +93,7 @@
         })
             .then(function (r) {
                 return r.json().then(function (data) {
-                    return { ok: r.ok, status: r.status, data: data };
+                    return { ok: r.ok, data: data };
                 });
             })
             .then(function (res) {
@@ -256,12 +108,9 @@
                     summary.textContent = 'A sua entrevista ficou reservada. Enviámos a confirmação para ' + payload.email + '.';
                 }
                 if (meta) {
-                    meta.textContent = (data.dateLabel || state.dateLabel) + ' · ' + (data.time || state.time) +
-                        (data.bookingRef ? ' · ' + data.bookingRef : '');
+                    meta.textContent = (data.dateLabel || state.dateLabel) + ' · ' + (data.time || state.time);
                 }
-                if (doxyBtn && data.doxyUrl) {
-                    doxyBtn.href = data.doxyUrl;
-                }
+                if (doxyBtn && data.doxyUrl) doxyBtn.href = data.doxyUrl;
                 screenForm.classList.remove('is-active');
                 screenForm.hidden = true;
                 screenDone.hidden = false;
@@ -276,14 +125,12 @@
             });
     });
 
-    fetch('/api/schedule')
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (d) {
-            state.scheduleData = d;
-            renderCalendar();
+    fetch('/api/recrutamento/entrevista/slots')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+            renderDays(data && data.days);
         })
         .catch(function () {
-            state.scheduleData = null;
-            renderCalendar();
+            daysEl.innerHTML = '<p class="ent-times-empty">Não foi possível carregar os horários. Tente novamente.</p>';
         });
 })();
