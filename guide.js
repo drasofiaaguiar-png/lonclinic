@@ -11,6 +11,7 @@ const { marked } = require('marked');
 const { organizationJsonLd, jsonLdScript, originOf, canonicalHref } = require('./seo');
 const authors = require('./authors');
 const { socialLink } = require('./utm');
+const cvi = require('./cvi');
 
 const GUIDE_DIR = path.join(__dirname, 'data', 'guide');
 const MANIFEST_PATH = path.join(GUIDE_DIR, 'manifest.json');
@@ -348,7 +349,7 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260418k">
-    <link rel="stylesheet" href="/guide.css?v=20260820l">
+    <link rel="stylesheet" href="/guide.css?v=20260903a">
     <link rel="stylesheet" href="/author.css?v=20260820l">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -555,6 +556,9 @@ function renderBlogArticle(origin, slug) {
 
     const ctaKind = defaultCtaKind(meta);
     let articleHtml = bodyToHtml(raw, format === 'html' ? 'html' : 'markdown');
+    if (format === 'html' && /vacina-febre-amarela/.test(slug)) {
+        articleHtml = cvi.annotatePublicArticle(articleHtml, slug);
+    }
     if (format !== 'html') {
         articleHtml = injectBookingCards(articleHtml, ctaKind);
     }
@@ -673,11 +677,8 @@ function renderBlogArticle(origin, slug) {
         ogImage: og,
         jsonLd,
         ogType: 'article',
-        extraCss: ['/landing.css?v=20260418k'],
-        extraCssAfter: ['/guide.css?v=20260820l', '/author.css?v=20260820l', '/magazine.css?v=20260903e'],
-        mainHtml: magAppHtml(articlePath, `
-            ${articleInner}
-            ${magFootHtml()}`)
+        extraCssAfter: ['/guide.css?v=20260820l', '/author.css?v=20260820l'],
+        mainHtml: magAppHtml(articlePath, articleInner)
     });
 
     return { html };
@@ -1070,46 +1071,77 @@ function magSidenavHtml(currentPath) {
     </nav>`;
 }
 
-function magTopbarHtml(opts) {
-    const magCurrent = opts && opts.magazineCurrent ? ' aria-current="page"' : '';
-    const toggle = opts && opts.hideSidenav
-        ? ''
-        : '<button type="button" class="mag-nav-toggle" aria-expanded="false" aria-controls="mag-sidenav">Menu</button>';
-    return `<header class="mag-topbar">
-                <a class="mag-wordmark" href="/magazine">Lon <em>Magazine</em></a>
-                ${toggle}
-                <nav aria-label="Magazine">
-                    <a href="/">Clínica</a>
-                    <a href="/magazine"${magCurrent}>Magazine</a>
-                    <a href="/blog">Guias</a>
-                </nav>
-                <a class="mag-topbar-cta" href="/marcar/clinica-geral">Marcar consulta</a>
-            </header>`;
+function magLonNavHtml(opts) {
+    const magCurrent = opts && opts.magazineCurrent === false ? '' : ' aria-current="page"';
+    return `<header class="lon-nav" id="lonNav">
+        <div class="lon-container lon-nav-inner">
+            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
+                <span class="lon-logo-name">LON Clinic</span>
+            </a>
+            <nav class="lon-nav-links" aria-label="Navegação principal">
+                <a href="/#inicio">Início</a>
+                <a href="/magazine"${magCurrent}>Magazine</a>
+                <a href="/blog">Guias</a>
+                <a href="/#contacto">Contato</a>
+            </nav>
+            <div class="lon-nav-actions">
+                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
+                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+        <div class="lon-mobile-menu" id="lonMobileMenu">
+            <a href="/#inicio">Início</a>
+            <a href="/magazine"${magCurrent}>Magazine</a>
+            <a href="/blog">Guias</a>
+            <a href="/#contacto">Contato</a>
+            <a href="/patient-portal">Login</a>
+        </div>
+    </header>`;
 }
 
-function magFootHtml() {
-    return `<footer class="mag-foot">
-                <span>Lon Magazine · © 2026 · ERS 45475</span>
-                <span>
-                    <a href="/">Clínica</a>
-                    <a href="/magazine">Magazine</a>
+function magLonFootHtml() {
+    return `<footer class="lon-footer mag-lon-foot">
+        <div class="lon-container">
+            <div class="lon-footer-grid">
+                <div class="lon-footer-brand">
+                    <h3>Lon Clinic</h3>
+                    <p>O seu médico. Online. Sempre.</p>
+                    <div class="lon-ers-badge">Nº de Registo ERS: 45475</div>
+                </div>
+                <div class="lon-footer-col">
+                    <h4>Magazine</h4>
+                    <a href="/magazine">Lon Magazine</a>
                     <a href="/blog">Guias</a>
+                    <a href="/burnout">Burnout</a>
+                    <a href="/saudemental">Psicologia</a>
+                </div>
+                <div class="lon-footer-col">
+                    <h4>Clínica</h4>
+                    <a href="/marcar/clinica-geral">Clínica geral</a>
+                    <a href="/marcar/travel">Consulta do viajante</a>
+                    <a href="/marcar/saude-mental">Saúde mental</a>
                     <a href="/info.html?page=contato">Contato</a>
-                </span>
-            </footer>`;
+                </div>
+            </div>
+            <div class="lon-footer-bottom">
+                <p>© 2026 Lon Clinic</p>
+            </div>
+        </div>
+    </footer>`;
 }
 
 function magAppHtml(currentPath, stageInner, opts) {
     const options = opts || { magazineCurrent: true };
-    const sidenav = options.hideSidenav ? '' : magSidenavHtml(currentPath);
-    const appClass = options.hideSidenav ? 'mag-app mag-app--cover' : 'mag-app';
-    return `${magTopbarHtml(options)}
-    <div class="${appClass}">
-        ${sidenav}
+    return `${magLonNavHtml(options)}
+    <div class="mag-app mag-app--cover">
         <div class="mag-stage">
             ${stageInner}
         </div>
-    </div>`;
+    </div>
+    ${magLonFootHtml()}`;
 }
 
 function layoutMagazinePage(opts) {
@@ -1163,13 +1195,14 @@ function layoutMagazinePage(opts) {
     <meta name="twitter:title" content="${escapeHtml(title)}">
     <meta name="twitter:description" content="${escapeHtml(description)}">
     <meta name="twitter:image" content="${escapeHtml(ogImage)}">
-    <meta name="theme-color" content="#f7f1f2">
+    <meta name="theme-color" content="#255235">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/landing.css?v=20260903b">
     ${extraCssHtml}
-    <link rel="stylesheet" href="/magazine.css?v=20260903e">
     ${extraCssAfterHtml}
+    <link rel="stylesheet" href="/magazine.css?v=20260903f">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='6' y='52' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%239c4a56'%3EL%3C/text%3E%3C/svg%3E">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     ${jsonLdScript(graph)}
@@ -1178,28 +1211,7 @@ function layoutMagazinePage(opts) {
     <a class="lon-skip visually-hidden" href="#conteudo-principal">Saltar para o conteúdo</a>
     ${mainHtml}
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
-    <script>
-      (function () {
-        var button = document.querySelector('.mag-nav-toggle');
-        var nav = document.getElementById('mag-sidenav');
-        if (button && nav) {
-          button.addEventListener('click', function () {
-            var open = nav.classList.toggle('is-open');
-            button.setAttribute('aria-expanded', open ? 'true' : 'false');
-          });
-        }
-        if (!nav) return;
-        var roots = nav.querySelectorAll('.mag-nav > .mag-nav-branch > details');
-        roots.forEach(function (item) {
-          item.addEventListener('toggle', function () {
-            if (!item.open) return;
-            roots.forEach(function (other) {
-              if (other !== item) other.open = false;
-            });
-          });
-        });
-      })();
-    </script>
+    <script src="/lon-nav.js"></script>
     <script src="/lon-analytics.js?v=20260902a" defer></script>
 </body>
 </html>`;
@@ -1269,8 +1281,7 @@ function renderMagazineIndex(origin) {
                 ${magFeaturedHtml(featured)}
                 ${magTocHtml()}
                 ${rowsHtml}
-            </main>
-            ${magFootHtml()}`, { magazineCurrent: true, hideSidenav: true });
+            </main>`, { magazineCurrent: true });
 
     return layoutMagazinePage({
         origin: o,

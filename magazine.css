@@ -13,7 +13,7 @@ html:has(body.mag-body) {
     --mag-rose-deep: #7a3843;
     --mag-blush: #f7f1f2;
     --mag-gold: #c4a484;
-    --mag-topbar-h: 62px;
+    --mag-topbar-h: 72px;
     --mag-serif: "Cormorant Garamond", "Palatino Linotype", Palatino, serif;
     --mag-sans: "Jost", "Gill Sans", "Trebuchet MS", sans-serif;
     margin: 0;
@@ -24,7 +24,7 @@ html:has(body.mag-body) {
     -webkit-font-smoothing: antialiased;
 }
 
-.mag-body a {
+.mag-stage a {
     color: inherit;
 }
 
@@ -350,7 +350,7 @@ html:has(body.mag-body) {
 
 .mag-cover-plate {
     position: absolute;
-    top: 28px;
+    top: 96px;
     left: 0;
     right: 0;
     z-index: 2;
@@ -399,7 +399,7 @@ html:has(body.mag-body) {
     gap: 10px;
     min-height: min(92vh, 860px);
     max-width: 40rem;
-    padding: 120px 48px 56px;
+    padding: 160px 48px 56px;
     box-sizing: border-box;
 }
 
@@ -1316,7 +1316,11 @@ html:has(body.mag-body) {
 
 .mag-body .guide-article-main,
 .mag-body .guide-article-main-html {
-    padding-top: 8px;
+    padding-top: 96px;
+}
+
+.mag-lon-foot {
+    margin-top: 0;
 }
 
 @media (max-width: 860px) {
