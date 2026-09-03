@@ -9367,6 +9367,23 @@ function getBaseUrl(req) {
     return `${protocol}://${rawHost}`;
 }
 
+// Express's default 404 has no Cache-Control, so Cloudflare caches "Cannot GET"
+// HTML for ~4h. Keep misses uncached so a later deploy is visible immediately.
+app.use((req, res) => {
+    res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Surrogate-Control': 'no-store',
+        'CDN-Cache-Control': 'no-store',
+        'Cloudflare-CDN-Cache-Control': 'no-store'
+    });
+    if (String(req.path || '').startsWith('/api/')) {
+        return res.status(404).json({ error: 'Not found' });
+    }
+    res.status(404).type('text').send('Not found');
+});
+
 // ─── Start Server ───
 (async () => {
     try {
