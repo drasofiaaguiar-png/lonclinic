@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const SERVICE_LABELS = {
         longevity: 'Longevity Assessment',
         travel: 'Travel Medicine Consultation',
-        followup: 'Follow-Up Consultation'
+        followup: 'Follow-Up Consultation',
+        entrevista: 'Entrevista de emprego'
     };
 
     // ─── DOM Elements ───
@@ -505,7 +506,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const SERVICE_LABELS = {
             longevity: 'Longevity Assessment',
             travel: 'Travel Medicine Consultation',
-            followup: 'Follow-Up Consultation'
+            followup: 'Follow-Up Consultation',
+            entrevista: 'Entrevista de emprego'
         };
 
         const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;

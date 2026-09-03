@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const SERVICE_LABELS = {
         longevity: 'Longevity Assessment',
         travel: 'Travel Medicine Consultation',
-        followup: 'Follow-Up Consultation'
+        followup: 'Follow-Up Consultation',
+        entrevista: 'Entrevista de emprego'
     };
 
     // ─── DOM Elements ───

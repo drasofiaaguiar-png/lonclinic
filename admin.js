@@ -293,7 +293,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         longevity: 'Longevity Assessment',
         'longevity-plus': 'Longevity Plus',
         followup: 'Follow-up',
-        unspecified: 'Untagged'
+        unspecified: 'Untagged',
+        entrevista: 'Entrevista de emprego'
     };
     const TRAVEL_TIER_CENTS = {
         standard: { 1: 3900, 2: 6900, 3: 10700, 4: 13600 },

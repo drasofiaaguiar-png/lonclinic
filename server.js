@@ -183,6 +183,16 @@ const rateLimitRecrutamentoPsicologia = rateLimit({
     }
 });
 
+const rateLimitRecrutamentoEntrevista = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 8,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Demasiadas marcações. Tente novamente mais tarde.' });
+    }
+});
+
 const rateLimitProducerApply = rateLimit({
     windowMs: 60 * 60 * 1000,
     max: 8,
@@ -1982,6 +1992,158 @@ function escapeHtml(input) {
         .replace(/'/g, '&#39;');
 }
 
+const INTERVIEW_ROLE_LABELS = {
+    psicologia: 'Psicologia',
+    'medicina-geral': 'Medicina geral',
+    'saude-mental': 'Saúde mental (medicina)',
+    'medicina-viajante': 'Medicina do viajante',
+    longevidade: 'Longevidade',
+    nutricao: 'Nutrição',
+    'operacoes-e-suporte': 'Operações e suporte',
+    outros: 'Outro'
+};
+
+function buildInterviewConfirmationEmail(data) {
+    const name = escapeHtml(data.patientName);
+    const dateLabel = escapeHtml(data.dateLabel || data.date);
+    const time = escapeHtml(data.time);
+    const ref = escapeHtml(data.bookingRef);
+    const role = escapeHtml(data.roleLabel || '');
+    const doxyUrl = doxyUrlFromEmailData(data);
+    const doxyHref = escapeHtml(doxyUrl);
+    const doxyBtn = doxyUrl
+        ? `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:16px 0 8px;">
+    <tr>
+        <td align="center" style="padding:0;">
+            <a href="${doxyHref}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;padding:14px 32px;border-radius:10px;">Abrir sala de vídeo</a>
+        </td>
+    </tr>
+</table>
+<p style="margin:8px 0 0;font-size:13px;color:#64748b;line-height:1.5;">Abra este link à hora marcada — não é necessária qualquer instalação. A equipa admite-o(a) na sala Doxy.me.</p>`
+        : '<p style="margin:0;font-size:14px;color:#475569;line-height:1.5;">O link da videochamada será enviado pela equipa antes da entrevista.</p>';
+
+    const subject = `Entrevista Lon Clinic — ${data.dateLabel || data.date} às ${data.time}`;
+    const html = `<!DOCTYPE html>
+<html lang="pt">
+<head><meta charset="UTF-8"><title>${escapeHtml(subject)}</title></head>
+<body style="margin:0;padding:0;background-color:#f0f4fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f0f4fa;padding:40px 20px;">
+<tr><td align="center">
+<table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;width:100%;">
+<tr><td style="text-align:center;padding:0 0 28px;">
+<h1 style="margin:0;font-size:22px;font-weight:700;color:#0f172a;letter-spacing:-0.02em;">Lon Clinic</h1>
+<p style="margin:4px 0 0;font-size:12px;color:#94a3b8;letter-spacing:0.08em;">Entrevista de emprego</p>
+</td></tr>
+<tr><td style="background:#ffffff;border-radius:16px;padding:36px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
+<h2 style="margin:0 0 8px;font-size:22px;font-weight:700;color:#0f172a;text-align:center;">Entrevista marcada</h2>
+<p style="margin:0 0 24px;font-size:15px;color:#64748b;text-align:center;line-height:1.5;">Olá ${name}, a sua entrevista ficou reservada.</p>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;text-align:center;margin-bottom:22px;">
+<p style="margin:0 0 4px;font-size:12px;color:#94a3b8;text-transform:uppercase;letter-spacing:0.1em;">Referência</p>
+<p style="margin:0;font-size:20px;font-weight:700;color:#0f172a;letter-spacing:0.05em;">${ref}</p>
+</div>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom:22px;">
+<tr><td style="padding:8px 0;color:#64748b;font-size:14px;border-bottom:1px solid #f1f5f9;">Data</td>
+<td style="padding:8px 0;color:#0f172a;font-size:14px;font-weight:500;text-align:right;border-bottom:1px solid #f1f5f9;">${dateLabel}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;font-size:14px;border-bottom:1px solid #f1f5f9;">Hora (Lisboa)</td>
+<td style="padding:8px 0;color:#0f172a;font-size:14px;font-weight:500;text-align:right;border-bottom:1px solid #f1f5f9;">${time}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;font-size:14px;border-bottom:1px solid #f1f5f9;">Área</td>
+<td style="padding:8px 0;color:#0f172a;font-size:14px;font-weight:500;text-align:right;border-bottom:1px solid #f1f5f9;">${role}</td></tr>
+<tr><td style="padding:8px 0;color:#64748b;font-size:14px;">Formato</td>
+<td style="padding:8px 0;color:#0f172a;font-size:14px;font-weight:500;text-align:right;">Videochamada · ~20–30 min</td></tr>
+</table>
+<h3 style="margin:0 0 10px;font-size:16px;font-weight:600;color:#0f172a;">Sala de vídeo</h3>
+${doxyBtn}
+<p style="margin:22px 0 0;font-size:13px;color:#64748b;line-height:1.55;">Se precisar de alterar o horário, responda a este email com pelo menos 24 horas de antecedência.</p>
+</td></tr>
+<tr><td style="padding:28px 16px;text-align:center;">
+<p style="margin:0;font-size:13px;color:#94a3b8;">Dúvidas? <a href="mailto:info@lonclinic.com" style="color:#255235;text-decoration:none;">info@lonclinic.com</a></p>
+</td></tr>
+</table>
+</td></tr>
+</table>
+</body></html>`;
+
+    const text = [
+        'ENTREVISTA MARCADA — Lon Clinic',
+        '',
+        `Olá ${data.patientName}, a sua entrevista ficou reservada.`,
+        '',
+        `Referência: ${data.bookingRef}`,
+        `Data: ${data.dateLabel || data.date}`,
+        `Hora (Lisboa): ${data.time}`,
+        `Área: ${data.roleLabel || ''}`,
+        'Formato: Videochamada · ~20–30 min',
+        '',
+        doxyUrl ? `Sala de vídeo (abra à hora marcada, sem instalação):\n${doxyUrl}` : 'O link da videochamada será enviado pela equipa.',
+        '',
+        'Para alterar o horário, responda a este email com pelo menos 24 horas de antecedência.',
+        '',
+        'Lon Clinic — info@lonclinic.com'
+    ].join('\n');
+
+    return { html, text, subject };
+}
+
+async function sendInterviewConfirmationEmail(data) {
+    if (!isEmailConfigured) {
+        console.log('   ⚠️  Email not configured — skipping interview confirmation');
+        return false;
+    }
+    const to = (data.email || '').trim();
+    if (!to || !to.includes('@')) return false;
+    try {
+        const payload = {
+            ...data,
+            doxyUrl: data.doxyUrl || (await resolveDoxyRoomUrl(data.professional))
+        };
+        const { html, text, subject } = buildInterviewConfirmationEmail(payload);
+        await deliverEmail({ from: EMAIL_FROM, to, subject, text, html });
+        console.log('   ✉️  Interview confirmation sent to:', to);
+        return true;
+    } catch (err) {
+        console.error('   ❌ Interview confirmation failed:', err.message);
+        return false;
+    }
+}
+
+async function sendInterviewAdminEmail(data) {
+    if (!isEmailConfigured) {
+        console.log('   ⚠️  Email not configured — skipping interview admin notice');
+        return false;
+    }
+    const dateLabel = data.dateLabel || data.date;
+    const notes = String(data.notes || '').trim();
+    const doxyUrl = doxyUrlFromEmailData(data);
+    const subject = `Entrevista: ${data.patientName} (${data.roleLabel}) — ${dateLabel} ${data.time}`;
+    const lines = [
+        'ENTREVISTA DE EMPREGO MARCADA',
+        '',
+        `Nome: ${data.patientName}`,
+        `Email: ${data.email}`,
+        `Telefone: ${data.patientPhone || ''}`,
+        `Área: ${data.roleLabel || ''}`,
+        `Data: ${dateLabel}`,
+        `Hora: ${data.time}`,
+        `Referência: ${data.bookingRef}`,
+        doxyUrl ? `Doxy: ${doxyUrl}` : '',
+        notes ? `Nota: ${notes}` : ''
+    ].filter(Boolean);
+    try {
+        await deliverEmail({
+            from: EMAIL_FROM,
+            to: CONTACT_EMAIL,
+            subject,
+            text: lines.join('\n'),
+            html: `<pre style="font-family:system-ui,sans-serif;white-space:pre-wrap">${escapeHtml(lines.join('\n'))}</pre>`
+        });
+        console.log('   📧 Interview admin notice sent to:', CONTACT_EMAIL);
+        return true;
+    } catch (err) {
+        console.error('   ❌ Interview admin notice failed:', err.message);
+        return false;
+    }
+}
+
 function buildContactInquiryEmail(data) {
     const name = escapeHtml(data.name);
     const email = escapeHtml(data.email);
@@ -2790,7 +2952,8 @@ const SERVICE_LABELS = {
     longevity: 'Longevity Assessment',
     'longevity-plus': 'Longevity Plus',
     travel: 'Travel Medicine Consultation',
-    followup: 'Follow-up Consultation'
+    followup: 'Follow-up Consultation',
+    entrevista: 'Entrevista de emprego'
 };
 
 function serviceLabelFromCode(service) {
@@ -3297,6 +3460,7 @@ async function sendFollowupEmail(data) {
 
 async function sendPostConsultationReviewEmail(booking) {
     if (!booking || booking.cancelled || booking.followupSent) return false;
+    if (booking.service === 'entrevista') return false;
     if (booking.consultationCompleted !== true) return false;
     const sent = await sendFollowupEmail({
         email: booking.email,
@@ -4838,6 +5002,19 @@ app.get('/recrutamento-psicologia.html', (req, res) => {
     res.redirect(301, '/recrutamento/psicologia');
 });
 
+app.get('/recrutamento/entrevista', (req, res) => {
+    res.setHeader('X-Robots-Tag', 'noindex, follow');
+    sendHtmlNoCache(res, path.join(__dirname, 'recrutamento-entrevista.html'), 'Error loading recrutamento entrevista page');
+});
+
+app.get('/recrutamento/entrevista/', (req, res) => {
+    res.redirect(301, '/recrutamento/entrevista');
+});
+
+app.get('/recrutamento-entrevista.html', (req, res) => {
+    res.redirect(301, '/recrutamento/entrevista');
+});
+
 app.get('/patient-portal', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'dashboard.html'), 'Error loading patient portal');
 });
@@ -5101,6 +5278,8 @@ app.use(express.static(path.join(__dirname), {
             base === 'psicologia.js' ||
             base === 'recrutamento-psicologia.css' ||
             base === 'recrutamento-psicologia.js' ||
+            base === 'recrutamento-entrevista.css' ||
+            base === 'recrutamento-entrevista.js' ||
             base === 'diretorio.css' ||
             base === 'diretorio.js' ||
             base === 'diretorio-candidatar.js' ||
@@ -5640,6 +5819,136 @@ app.post('/api/recrutamento/psicologia', rateLimitRecrutamentoPsicologia, (req, 
             id: applicationId
         });
     });
+});
+
+const INTERVIEW_MAX_DAYS_AHEAD = 60;
+
+app.post('/api/recrutamento/entrevista', rateLimitRecrutamentoEntrevista, express.json(), async (req, res) => {
+    const body = req.body || {};
+    const name = String(body.name || '').trim().slice(0, 120);
+    const email = String(body.email || '').trim().slice(0, 160).toLowerCase();
+    const phone = String(body.phone || '').trim().slice(0, 40);
+    const roleRaw = String(body.role || '').trim();
+    const notes = String(body.notes || '').trim().slice(0, 1000);
+    const dateIso = String(body.dateIso || '').trim();
+    const normTime = normalizeTimeString({ time: String(body.time || '') });
+
+    if (!name || name.length < 2) {
+        return res.status(400).json({ error: 'Indique o nome completo.' });
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({ error: 'Indique um email válido.' });
+    }
+    if (!phone || phone.length < 6) {
+        return res.status(400).json({ error: 'Indique um telefone válido.' });
+    }
+    const roleLabel = INTERVIEW_ROLE_LABELS[roleRaw];
+    if (!roleLabel) {
+        return res.status(400).json({ error: 'Selecione uma área.' });
+    }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateIso) || !normTime) {
+        return res.status(400).json({ error: 'Escolha uma data e hora disponíveis.' });
+    }
+
+    const tz = scheduleStore.timezone || 'Europe/Lisbon';
+    const startMs = localWallTimeToUtcMs(dateIso, normTime, tz);
+    if (!Number.isFinite(startMs) || startMs <= Date.now()) {
+        return res.status(400).json({ error: 'Esse horário já passou. Escolha outro.' });
+    }
+    const maxMs = Date.now() + INTERVIEW_MAX_DAYS_AHEAD * 24 * 60 * 60 * 1000;
+    if (startMs > maxMs) {
+        return res.status(400).json({ error: 'Escolha uma data nos próximos 60 dias.' });
+    }
+
+    const grid = slotsForDateIso(dateIso);
+    if (!grid.includes(normTime)) {
+        return res.status(409).json({ error: 'Esse horário não está disponível. Escolha outro.' });
+    }
+
+    try {
+        if (usePersistentDb) {
+            const taken = await db.isSlotTakenByOther(dateIso, normTime, null);
+            if (taken) {
+                return res.status(409).json({ error: 'Esse horário acabou de ser ocupado. Escolha outro.' });
+            }
+            const locked = await fetchInvitationLockedTimesForDateIso(dateIso);
+            if (locked.has(normTime)) {
+                return res.status(409).json({ error: 'Esse horário acabou de ser ocupado. Escolha outro.' });
+            }
+        } else if (!isSlotFreeInMemory(dateIso, normTime, null)) {
+            return res.status(409).json({ error: 'Esse horário acabou de ser ocupado. Escolha outro.' });
+        }
+
+        const paymentId = `comp_${crypto.randomUUID().replace(/-/g, '')}`;
+        const bookingRef = `LC-${paymentId.slice(-8).toUpperCase()}`;
+        const dateLabel = formatInvitationDateLabel(dateIso, 'pt');
+        const doxyUrl = await resolveDoxyRoomUrl(null);
+
+        const record = {
+            bookingRef,
+            email,
+            service: 'entrevista',
+            date: dateLabel,
+            time: normTime,
+            dateIso,
+            patientName: name,
+            patientPhone: phone,
+            travellerCount: 1,
+            amount: 0,
+            currency: 'eur',
+            paymentId,
+            patientLocale: 'pt',
+            cancelled: false,
+            rescheduleCount: 0,
+            reminderSent: false,
+            reminder1hSent: false,
+            followupSent: true,
+            createdAt: new Date().toISOString()
+        };
+
+        if (usePersistentDb) {
+            const inserted = await db.insertBooking(record);
+            if (!inserted) {
+                return res.status(409).json({ error: 'Não foi possível confirmar este horário. Tente outro.' });
+            }
+        } else {
+            bookingsStore.push(record);
+        }
+
+        const emailData = {
+            bookingRef,
+            patientName: name,
+            email,
+            patientPhone: phone,
+            roleLabel,
+            notes,
+            date: dateLabel,
+            dateLabel,
+            time: normTime,
+            doxyUrl,
+            professional: null
+        };
+
+        try {
+            await sendInterviewConfirmationEmail(emailData);
+            await sendInterviewAdminEmail(emailData);
+        } catch (mailErr) {
+            console.error('   ⚠️  Interview emails failed:', mailErr.message);
+        }
+
+        console.log(`   ✅ Interview ${bookingRef} booked for ${email} on ${dateIso} ${normTime}`);
+        return res.json({
+            success: true,
+            bookingRef,
+            dateIso,
+            dateLabel,
+            time: normTime,
+            doxyUrl: doxyUrl || ''
+        });
+    } catch (err) {
+        console.error('POST /api/recrutamento/entrevista:', err.message);
+        return res.status(500).json({ error: 'Não foi possível confirmar. Tente novamente.' });
+    }
 });
 
 // ─── API: Psicologia triagem (PHQ-9 + matching) ───
@@ -9103,6 +9412,7 @@ function getBaseUrl(req) {
         console.log(`   Open http://localhost:${PORT}/patient-portal for patient portal`);
         console.log(`   Diretório (admin): http://localhost:${PORT}/diretorio`);
         console.log(`   Candidatura pública: http://localhost:${PORT}/diretorio/candidatar`);
+        console.log(`   Entrevista: http://localhost:${PORT}/recrutamento/entrevista`);
         if (fs.existsSync(path.join(__dirname, 'marcar.html'))) {
             console.log(`   Marcação: http://localhost:${PORT}/marcar/clinica-geral\n`);
         } else {

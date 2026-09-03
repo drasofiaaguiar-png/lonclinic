@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZN8J4X12H3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZN8J4X12H3');
+      gtag('config', 'GT-TXHQ9ZVX', { send_page_view: false });
+      gtag('config', 'AW-18103198169', { send_page_view: false });
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar entrevista | Lon Clinic</title>
+    <meta name="description" content="Marque a sua entrevista de emprego na Lon Clinic. Videochamada segura de 20–30 minutos, sem instalação.">
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="https://www.lonclinic.com/recrutamento/entrevista">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.lonclinic.com/recrutamento/entrevista">
+    <meta property="og:title" content="Agendar entrevista | Lon Clinic">
+    <meta property="og:description" content="Escolha um horário para a entrevista de emprego na Lon Clinic, por videochamada segura.">
+    <meta property="og:locale" content="pt_PT">
+    <meta property="og:site_name" content="Lon Clinic">
+    <meta name="theme-color" content="#2f6342">
+    <link rel="stylesheet" href="/landing.css?v=20260621b">
+    <link rel="stylesheet" href="/recrutamento-psicologia.css?v=20260814e">
+    <link rel="stylesheet" href="/recrutamento-entrevista.css?v=20260903a">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+</head>
+<body class="lon-landing rec-page">
+    <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
+
+    <header class="rec-top">
+        <a href="/" class="rec-brand" aria-label="LON Clinic">LON Clinic</a>
+        <a href="/" class="rec-top-link">Início</a>
+    </header>
+
+    <main id="conteudo-principal" class="rec-main">
+        <section class="rec-screen is-active" id="screen-form">
+            <div class="rec-intro">
+                <p class="rec-step-label">Recrutamento</p>
+                <h1>Agendar entrevista</h1>
+                <div class="rec-intro-body">
+                    <p>Escolha um horário para uma conversa breve com a equipa da Lon Clinic. A entrevista dura cerca de 20–30 minutos, por videochamada segura na Doxy.me — não precisa de instalar nada.</p>
+                </div>
+            </div>
+
+            <form id="entForm" class="rec-card" novalidate>
+                <div class="rec-fields">
+                    <div class="rec-field">
+                        <label for="entName">Nome completo</label>
+                        <input id="entName" name="name" type="text" required maxlength="120" autocomplete="name">
+                    </div>
+                    <div class="rec-field">
+                        <label for="entEmail">Email</label>
+                        <input id="entEmail" name="email" type="email" required maxlength="160" autocomplete="email">
+                    </div>
+                    <div class="rec-field">
+                        <label for="entPhone">Telefone</label>
+                        <input id="entPhone" name="phone" type="tel" required maxlength="40" autocomplete="tel">
+                    </div>
+                    <div class="rec-field">
+                        <label for="entRole">Área</label>
+                        <select id="entRole" name="role" required>
+                            <option value="">Selecione…</option>
+                            <option value="psicologia">Psicologia</option>
+                            <option value="medicina-geral">Medicina geral</option>
+                            <option value="saude-mental">Saúde mental (medicina)</option>
+                            <option value="medicina-viajante">Medicina do viajante</option>
+                            <option value="longevidade">Longevidade</option>
+                            <option value="nutricao">Nutrição</option>
+                            <option value="operacoes-e-suporte">Operações e suporte</option>
+                            <option value="outros">Outro</option>
+                        </select>
+                    </div>
+                    <div class="rec-field">
+                        <label for="entNotes">Nota <span class="rec-hint">(opcional)</span></label>
+                        <textarea id="entNotes" name="notes" maxlength="1000" placeholder="Ex.: preferência de idioma, ou um contexto breve"></textarea>
+                    </div>
+                </div>
+
+                <div class="ent-schedule" aria-labelledby="entScheduleTitle">
+                    <h2 id="entScheduleTitle">Data e hora</h2>
+                    <p class="ent-schedule-sub">Horários no fuso de Lisboa. Recebe o link Doxy no email de confirmação.</p>
+                    <div class="ent-schedule-layout">
+                        <div class="ent-cal-section">
+                            <div class="ent-cal-header">
+                                <button type="button" class="ent-cal-nav" id="entCalPrev" aria-label="Mês anterior">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                                </button>
+                                <span class="ent-cal-month" id="entCalMonth"></span>
+                                <button type="button" class="ent-cal-nav" id="entCalNext" aria-label="Mês seguinte">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                                </button>
+                            </div>
+                            <div class="ent-cal-weekdays" aria-hidden="true">
+                                <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span>
+                            </div>
+                            <div class="ent-cal-grid" id="entCalGrid"></div>
+                        </div>
+                        <div class="ent-times">
+                            <h3 id="entTimesHeading">Escolha primeiro um dia</h3>
+                            <div class="ent-times-grid" id="entTimesGrid">
+                                <p class="ent-times-empty">Selecione uma data à esquerda.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rec-info-box">
+                    <p class="rec-info-label">Como funciona</p>
+                    <p>No horário marcado, abra o link Doxy.me no browser. A equipa admite-o(a) na sala. Guarde o email de confirmação — inclui o link e a referência da marcação.</p>
+                </div>
+
+                <p class="rec-error" id="entError" role="alert"></p>
+
+                <div class="rec-actions">
+                    <button type="submit" class="lon-btn lon-btn-primary lon-btn-lg" id="entSubmit" disabled>Confirmar entrevista</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="rec-screen" id="screen-done" hidden>
+            <div class="rec-done">
+                <h1>Entrevista marcada</h1>
+                <p id="entDoneSummary">A sua entrevista ficou reservada. Enviámos a confirmação por email, com o link da videochamada.</p>
+                <p class="ent-done-meta" id="entDoneMeta"></p>
+                <div class="rec-done-actions">
+                    <a class="lon-btn lon-btn-primary" id="entDoxyBtn" href="https://doxy.me" target="_blank" rel="noopener noreferrer">Abrir sala de vídeo</a>
+                    <a href="/" class="lon-btn lon-btn-soft">Início</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="rec-footer">
+        <nav aria-label="Rodapé">
+            <a href="/">Início</a>
+            <a href="/recrutamento/psicologia">Candidatura psicologia</a>
+            <a href="/faq">FAQ</a>
+            <a href="/info.html?page=contato">Contacto</a>
+            <a href="/info.html?page=politica-privacidade">Privacidade</a>
+        </nav>
+        <p>© 2026 Lon Clinic · ERS 45475</p>
+    </footer>
+
+    <script src="/recrutamento-entrevista.js?v=20260903a" defer></script>
+</body>
+</html>
