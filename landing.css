@@ -4,7 +4,7 @@
 :root {
     --lon-font: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     --lon-nav-h: 72px;
-    --lon-bg: #f8f8f6;
+    --lon-bg: #ffffff;
     --lon-surface: #ffffff;
     --lon-surface-soft: #f1f5f2;
     --lon-accent: #255235;
@@ -33,10 +33,7 @@ html {
 
 body {
     font-family: var(--lon-font);
-    background:
-        radial-gradient(ellipse 90% 50% at 8% -12%, rgba(47, 99, 66, 0.1), transparent 55%),
-        radial-gradient(ellipse 55% 40% at 100% 0%, rgba(255, 112, 40, 0.07), transparent 50%),
-        var(--lon-bg);
+    background: #ffffff;
     color: var(--lon-primary);
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;

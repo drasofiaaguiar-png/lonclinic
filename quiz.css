@@ -3,10 +3,7 @@
 body.quiz-page {
     --quiz-accent: var(--lon-accent, #255235);
     --quiz-accent-soft: rgba(37, 82, 53, 0.12);
-    background:
-        radial-gradient(ellipse 90% 50% at 8% -12%, rgba(47, 99, 66, 0.1), transparent 55%),
-        radial-gradient(ellipse 55% 40% at 100% 0%, rgba(255, 112, 40, 0.07), transparent 50%),
-        var(--lon-bg, #f8f8f6);
+    background: #ffffff;
     color: var(--lon-primary, #1a1a1a);
     min-height: 100vh;
 }

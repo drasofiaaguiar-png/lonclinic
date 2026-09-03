@@ -674,9 +674,8 @@ function renderBlogArticle(origin, slug) {
         jsonLd,
         ogType: 'article',
         extraCss: ['/landing.css?v=20260418k'],
-        extraCssAfter: ['/guide.css?v=20260820l', '/author.css?v=20260820l', '/magazine.css?v=20260822a'],
+        extraCssAfter: ['/guide.css?v=20260820l', '/author.css?v=20260820l', '/magazine.css?v=20260903e'],
         mainHtml: magAppHtml(articlePath, `
-            ${magTopbarHtml({ magazineCurrent: true })}
             ${articleInner}
             ${magFootHtml()}`)
     });
@@ -718,9 +717,13 @@ function magTheme(article) {
 
 function magThemeLabel(article) {
     const theme = magTheme(article);
-    if (theme === 'mental') return 'Saúde mental';
-    if (theme === 'travel') return 'Saúde do viajante';
+    if (theme === 'mental') return 'Mente';
+    if (theme === 'travel') return 'Viagem';
     return 'Clínica';
+}
+
+function magIssueLine() {
+    return 'Setembro 2026 · Porto';
 }
 
 function magCardDateHtml(article) {
@@ -730,14 +733,14 @@ function magCardDateHtml(article) {
 }
 
 function magCardBylineHtml(article) {
-    return `<p class="mag-byline">${escapeHtml(authors.reviewerBylineSnippet(article && article.author))}</p>`;
+    const a = authors.getAuthor(article && article.author);
+    return `<p class="mag-byline">Por ${escapeHtml(a.displayName)}</p>`;
 }
 
 function magCardHtml(article, opts) {
     const extraClass = opts && opts.cardClass ? ` ${opts.cardClass}` : '';
-    const kicker = opts && opts.kicker
-        ? `<span class="guide-related-kicker">${escapeHtml(relatedKicker(article))}</span>`
-        : '';
+    const kickerText = (opts && opts.kickerText) || magThemeLabel(article);
+    const kicker = `<span class="mag-card-kicker">${escapeHtml(kickerText)}</span>`;
     const excerpt = article.description
         ? `<p class="mag-excerpt">${escapeHtml(article.description)}</p>`
         : '';
@@ -746,43 +749,75 @@ function magCardHtml(article, opts) {
                 <span class="mag-photo" style="background-image:url('${magImage(article)}')"></span>
                 ${kicker}
                 <h3${titleClass}>${escapeHtml(article.title)}</h3>
-                ${magCardDateHtml(article)}
                 ${magCardBylineHtml(article)}
                 ${excerpt}
             </a>`;
 }
 
+function magFeaturedHtml(article) {
+    if (!article) return '';
+    const excerpt = article.description
+        ? `<p class="mag-cover-dek">${escapeHtml(article.description)}</p>`
+        : '';
+    return `<a class="mag-cover" href="${magHref(article)}">
+                <span class="mag-cover-photo" style="background-image:url('${magImage(article)}')"></span>
+                <span class="mag-cover-plate">
+                    <span class="mag-cover-issue">${escapeHtml(magIssueLine())}</span>
+                    <span class="mag-cover-name">Lon <em>Magazine</em></span>
+                </span>
+                <span class="mag-cover-copy">
+                    <span class="mag-cover-flag">Capa</span>
+                    <span class="mag-cover-kicker">${escapeHtml(magThemeLabel(article))}</span>
+                    <h2>${escapeHtml(article.title)}</h2>
+                    ${excerpt}
+                    ${magCardBylineHtml(article)}
+                    <span class="mag-cover-read">Ler a reportagem</span>
+                </span>
+            </a>`;
+}
+
+function magTocHtml() {
+    return `<nav class="mag-toc mag-wrap" aria-label="Nesta edição">
+                <p class="mag-toc-kicker">Nesta edição</p>
+                <ol>
+                    <li><a href="#saude-mental"><span>01</span> Mente</a></li>
+                    <li><a href="#saude-do-viajante"><span>02</span> Viagem</a></li>
+                    <li><a href="#clinica"><span>03</span> Clínica</a></li>
+                </ol>
+            </nav>`;
+}
+
 function magCtaHtml(kind) {
     const packs = {
         mental: {
-            kicker: 'Saúde mental',
-            title: 'Psicologia e avaliação clínica',
+            kicker: 'Cuidado',
+            title: 'A mente também se acompanha.',
             actions: [
                 { href: '/saudemental', label: 'Psicologia' },
                 { href: '/teste-personalidade', label: 'Teste de personalidade' }
             ]
         },
         travel: {
-            kicker: 'Saúde do viajante',
-            title: 'Consulta do viajante',
+            kicker: 'Viagem',
+            title: 'Partir com a saúde em dia.',
             actions: [
-                { href: '/marcar/travel', label: 'Marcar consulta do viajante' },
+                { href: '/marcar/travel', label: 'Consulta do viajante' },
                 { href: '/travel-clinic', label: 'Clínica do viajante' }
             ]
         },
         burnout: {
-            kicker: 'Burnout',
-            title: 'Teste e consulta anti-burnout',
+            kicker: 'Dossier',
+            title: 'Quando o esgotamento já não é só cansaço.',
             actions: [
-                { href: '/burnout/teste', label: 'Teste gratuito' },
+                { href: '/burnout/teste', label: 'Fazer o teste' },
                 { href: '/marcar/burnout', label: 'Consulta de burnout' }
             ]
         },
         clinic: {
             kicker: 'Clínica',
-            title: 'Consulta de clínica geral',
+            title: 'Uma consulta, com tempo.',
             actions: [
-                { href: '/marcar/clinica-geral', label: 'Clínica geral' },
+                { href: '/marcar/clinica-geral', label: 'Marcar consulta' },
                 { href: '/blog/telemedicina-em-casa', label: 'Telemedicina em casa' }
             ]
         }
@@ -801,7 +836,8 @@ function magCtaHtml(kind) {
 
 function magClusterHtml() {
     return `<aside class="mag-cluster mag-wrap" aria-label="Autismo, ADHD e burnout">
-                <p class="mag-cluster-kicker">O mesmo cluster clínico</p>
+                <p class="mag-cluster-kicker">Dossier</p>
+                <h2 class="mag-cluster-title">Autismo, ADHD e burnout</h2>
                 <p class="mag-cluster-dek">Mascaramento, hiperfoco e esgotamento sobrepõem-se. Leia em conjunto o <a href="/blog/autismo-em-mulheres-diagnostico-tardio">diagnóstico tardio de autismo em mulheres</a>, os <a href="/blog/adhd-em-adultos-sintomas">sinais de ADHD em adultos</a> e <a href="/burnout/o-que-e">o que é burnout</a> — não como categorias isoladas.</p>
                 ${magCtaHtml('burnout')}
             </aside>`;
@@ -812,6 +848,7 @@ function magThemeRowHtml(id, title, articles, ctaKind) {
     const cta = ctaKind ? magCtaHtml(ctaKind) : '';
     return `<section class="mag-section mag-wrap" id="${escapeHtml(id)}" aria-labelledby="${escapeHtml(id)}-title">
                 <div class="mag-section-head">
+                    <p class="mag-section-kicker">Nesta edição</p>
                     <h2 id="${escapeHtml(id)}-title">${escapeHtml(title)}</h2>
                 </div>
                 <div class="mag-row">${articles.map(magCardHtml).join('')}
@@ -1027,40 +1064,48 @@ function magNavNode(node, depth, currentPath) {
 
 function magSidenavHtml(currentPath) {
     const tree = magazineNavTree().map((node) => magNavNode(node, 0, currentPath || '')).join('');
-    return `<nav class="mag-sidenav" id="mag-sidenav" aria-label="Temas da revista">
-        <a class="mag-sidenav-brand" href="/magazine">LON <em>Magazine</em></a>
+    return `<nav class="mag-sidenav" id="mag-sidenav" aria-label="Sumário da revista">
+        <p class="mag-sidenav-kicker">Sumário</p>
         <ul class="mag-nav">${tree}</ul>
     </nav>`;
 }
 
 function magTopbarHtml(opts) {
     const magCurrent = opts && opts.magazineCurrent ? ' aria-current="page"' : '';
+    const toggle = opts && opts.hideSidenav
+        ? ''
+        : '<button type="button" class="mag-nav-toggle" aria-expanded="false" aria-controls="mag-sidenav">Menu</button>';
     return `<header class="mag-topbar">
-                <a href="/">LON Clinic</a>
-                <button type="button" class="mag-nav-toggle" aria-expanded="false" aria-controls="mag-sidenav">Menu</button>
+                <a class="mag-wordmark" href="/magazine">Lon <em>Magazine</em></a>
+                ${toggle}
                 <nav aria-label="Magazine">
+                    <a href="/">Clínica</a>
                     <a href="/magazine"${magCurrent}>Magazine</a>
-                    <a href="/blog">Guides</a>
-                    <a href="/marcar/saude-mental">Marcar</a>
+                    <a href="/blog">Guias</a>
                 </nav>
+                <a class="mag-topbar-cta" href="/marcar/clinica-geral">Marcar consulta</a>
             </header>`;
 }
 
 function magFootHtml() {
     return `<footer class="mag-foot">
-                <span>© 2026 Lon Clinic · ERS 45475</span>
+                <span>Lon Magazine · © 2026 · ERS 45475</span>
                 <span>
-                    <a href="/">Início</a>
+                    <a href="/">Clínica</a>
                     <a href="/magazine">Magazine</a>
-                    <a href="/blog">Guides</a>
+                    <a href="/blog">Guias</a>
                     <a href="/info.html?page=contato">Contato</a>
                 </span>
             </footer>`;
 }
 
-function magAppHtml(currentPath, stageInner) {
-    return `<div class="mag-app">
-        ${magSidenavHtml(currentPath)}
+function magAppHtml(currentPath, stageInner, opts) {
+    const options = opts || { magazineCurrent: true };
+    const sidenav = options.hideSidenav ? '' : magSidenavHtml(currentPath);
+    const appClass = options.hideSidenav ? 'mag-app mag-app--cover' : 'mag-app';
+    return `${magTopbarHtml(options)}
+    <div class="${appClass}">
+        ${sidenav}
         <div class="mag-stage">
             ${stageInner}
         </div>
@@ -1118,14 +1163,14 @@ function layoutMagazinePage(opts) {
     <meta name="twitter:title" content="${escapeHtml(title)}">
     <meta name="twitter:description" content="${escapeHtml(description)}">
     <meta name="twitter:image" content="${escapeHtml(ogImage)}">
-    <meta name="theme-color" content="#14110f">
+    <meta name="theme-color" content="#f7f1f2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
     ${extraCssHtml}
-    <link rel="stylesheet" href="/magazine.css?v=20260822a">
+    <link rel="stylesheet" href="/magazine.css?v=20260903e">
     ${extraCssAfterHtml}
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='6' y='52' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%239c4a56'%3EL%3C/text%3E%3C/svg%3E">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     ${jsonLdScript(graph)}
 </head>
@@ -1170,11 +1215,22 @@ function renderMagazineIndex(origin) {
     const og = cover && cover.image
         ? `${o}${String(cover.image).startsWith('/') ? '' : '/'}${cover.image}`
         : `${o}/image/image2.webp`;
+    const featured = mental[0] || articles[0];
+    const featuredHref = featured ? magHref(featured) : '';
+    const mentalRest = featured && magTheme(featured) === 'mental'
+        ? mental.filter((a) => magHref(a) !== featuredHref)
+        : mental;
+    const travelRest = featured && magTheme(featured) === 'travel'
+        ? travel.filter((a) => magHref(a) !== featuredHref)
+        : travel;
+    const clinicRest = featured && magTheme(featured) === 'clinic'
+        ? clinic.filter((a) => magHref(a) !== featuredHref)
+        : clinic;
     const rowsHtml = [
-        magThemeRowHtml('saude-mental', 'Saúde mental', mental, 'mental'),
+        magThemeRowHtml('saude-mental', 'Mente', mentalRest, 'mental'),
         magClusterHtml(),
-        magThemeRowHtml('saude-do-viajante', 'Saúde do viajante', travel, 'travel'),
-        magThemeRowHtml('clinica', 'Clínica', clinic, 'clinic')
+        magThemeRowHtml('saude-do-viajante', 'Viagem', travelRest, 'travel'),
+        magThemeRowHtml('clinica', 'Clínica', clinicRest, 'clinic')
     ].join('');
 
     const jsonLd = [
@@ -1206,19 +1262,15 @@ function renderMagazineIndex(origin) {
         magBreadcrumbJsonLd(o, magBreadcrumbCrumbs('/magazine', 'Magazine'))
     ];
 
-    const reviewer = authors.getAuthor();
     const mainHtml = magAppHtml('/magazine', `
-            ${magTopbarHtml({ magazineCurrent: true })}
             <main id="conteudo-principal" class="mag-content">
                 ${magTopicAnchorsHtml()}
-                <header class="mag-masthead mag-wrap">
-                    ${magBreadcrumbHtml(magBreadcrumbCrumbs('/magazine', 'Magazine'))}
-                    <p class="mag-masthead-kicker">Reportagens com revisão clínica</p>
-                    <p class="mag-masthead-dek">Cada artigo é revisto por ${escapeHtml(reviewer.displayName)}, ${escapeHtml(reviewer.jobTitle).toLowerCase()} inscrita na ${escapeHtml(reviewer.memberOf)}.</p>
-                </header>
+                <h1 class="visually-hidden">Lon Magazine</h1>
+                ${magFeaturedHtml(featured)}
+                ${magTocHtml()}
                 ${rowsHtml}
             </main>
-            ${magFootHtml()}`);
+            ${magFootHtml()}`, { magazineCurrent: true, hideSidenav: true });
 
     return layoutMagazinePage({
         origin: o,
