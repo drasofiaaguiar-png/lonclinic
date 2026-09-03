@@ -228,6 +228,17 @@ async function initSchema(p) {
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS consultation_completed BOOLEAN NOT NULL DEFAULT FALSE`);
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS visit_frequency VARCHAR(64)`);
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS patient_type VARCHAR(32)`);
+    try {
+        await p.query(`
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_bookings_active_slot
+            ON bookings (date_iso, (LEFT(TRIM(time), 5)))
+            WHERE cancelled = FALSE
+              AND date_iso IS NOT NULL
+              AND TRIM(COALESCE(time, '')) <> ''
+        `);
+    } catch (err) {
+        console.warn('   ⚠️  idx_bookings_active_slot skipped:', err.message);
+    }
     // Backfill Stripe (and complimentary) rows that were never admin-edited for tracking fields.
     await p.query(`
         UPDATE bookings
@@ -1155,14 +1166,15 @@ async function rescheduleBookingByRef(bookingRef, fields) {
 /** True if another active booking uses the same slot (excluding optional bookingRef). */
 async function isSlotTakenByOther(dateIso, time, excludeBookingRef) {
     const p = getPool();
+    const slotTime = String(time || '').trim().slice(0, 5);
     const r = await p.query(
         `SELECT 1 FROM bookings
          WHERE cancelled = FALSE
            AND date_iso = $1
-           AND time = $2
+           AND LEFT(TRIM(time), 5) = $2
            AND ($3::text IS NULL OR booking_ref <> $3)
          LIMIT 1`,
-        [dateIso, time, excludeBookingRef || null]
+        [dateIso, slotTime, excludeBookingRef || null]
     );
     return r.rowCount > 0;
 }
@@ -1304,6 +1316,17 @@ async function insertBooking(booking) {
         ]
     );
     return r.rowCount > 0;
+}
+
+async function insertBookingSafe(booking) {
+    try {
+        return await insertBooking(booking);
+    } catch (err) {
+        if (err && (err.code === '23505' || /idx_bookings_active_slot|duplicate key/i.test(String(err.message || '')))) {
+            return false;
+        }
+        throw err;
+    }
 }
 
 async function updateBookingAdminFields(bookingRef, fields) {
@@ -1833,6 +1856,7 @@ module.exports = {
     bookingExistsByPaymentId,
     countPriorBookingsExcludingPayment,
     insertBooking,
+    insertBookingSafe,
     updateBookingAdminFields,
     deleteBookingByRef,
     findBookingsByEmailAndRef,

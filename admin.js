@@ -387,13 +387,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function updateScheduleCounts(counts) {
-        const c = counts || { all: 0, clinic: 0, patient: 0 };
+        const c = counts || { all: 0, clinic: 0, patient: 0, interview: 0 };
         const elAll = document.getElementById('schedCountAll');
         const elClinic = document.getElementById('schedCountClinic');
         const elPatient = document.getElementById('schedCountPatient');
+        const elInterview = document.getElementById('schedCountInterview');
         if (elAll) elAll.textContent = String(c.all || 0);
         if (elClinic) elClinic.textContent = String(c.clinic || 0);
         if (elPatient) elPatient.textContent = String(c.patient || 0);
+        if (elInterview) elInterview.textContent = String(c.interview || 0);
     }
 
     function renderUpcomingConsultations(list, counts) {
@@ -401,14 +403,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateScheduleCounts(counts);
         const filtered = scheduleFilter === 'clinic' || scheduleFilter === 'patient'
             ? (list || []).filter((c) => c.source === scheduleFilter)
-            : (list || []);
+            : scheduleFilter === 'interview'
+                ? (list || []).filter((c) => c.service === 'entrevista')
+                : (list || []);
 
         if (!filtered.length) {
             const emptyMsg = scheduleFilter === 'clinic'
                 ? 'No clinic-scheduled consultations upcoming.'
                 : scheduleFilter === 'patient'
                     ? 'No patient-booked consultations upcoming.'
-                    : 'No upcoming consultations.';
+                    : scheduleFilter === 'interview'
+                        ? 'No interviews upcoming.'
+                        : 'No upcoming consultations.';
             adminScheduleList.innerHTML = `<p class="admin-empty-list">${emptyMsg}</p>`;
             return;
         }
@@ -432,19 +438,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             byDay.get(dayKey).forEach((c) => {
                 const item = document.createElement('article');
+                const isInterview = c.service === 'entrevista';
                 const source = c.source === 'clinic' ? 'clinic' : 'patient';
-                item.className = `admin-agenda-item is-${source}`;
+                item.className = `admin-agenda-item is-${source}${isInterview ? ' is-interview' : ''}`;
                 const time = String(c.time || '').slice(0, 5) || '—';
                 const service = SERVICE_LABELS_ADMIN[c.service] || c.service || 'Consultation';
-                const name = c.patientName || '—';
-                const email = c.email || '';
+                const name = isInterview ? (c.email || c.patientName || '—') : (c.patientName || '—');
+                const email = isInterview ? '' : (c.email || '');
                 const ref = c.bookingRef || '';
-                const badgeLabel = source === 'clinic' ? 'Clinic' : 'Patient';
-                const comp = c.complimentary
-                    ? '<span class="admin-agenda-comp">Complimentary</span>'
-                    : (c.withoutInvoice
-                        ? '<span class="admin-agenda-comp">No invoice</span>'
-                        : '');
+                const badgeLabel = isInterview ? 'Interview' : (source === 'clinic' ? 'Clinic' : 'Patient');
+                const comp = isInterview
+                    ? '<span class="admin-agenda-comp">Job interview</span>'
+                    : (c.complimentary
+                        ? '<span class="admin-agenda-comp">Complimentary</span>'
+                        : (c.withoutInvoice
+                            ? '<span class="admin-agenda-comp">No invoice</span>'
+                            : ''));
                 item.innerHTML = `
                     <div class="admin-agenda-time">${escapeHtml(time)}</div>
                     <div class="admin-agenda-body">
@@ -455,10 +464,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </div>
                     </div>
                     <div class="admin-agenda-side">
-                        <span class="admin-source-badge is-${source}">${badgeLabel}</span>
+                        <span class="admin-source-badge is-${isInterview ? 'interview' : source}">${badgeLabel}</span>
                         ${comp}
                         ${ref ? `<span class="admin-agenda-ref">${escapeHtml(ref)}</span>` : ''}
-                        ${ref ? `<a class="btn btn-outline btn-sm" href="/clinic-portal">Open notes</a>` : ''}
+                        ${ref && !isInterview ? `<a class="btn btn-outline btn-sm" href="/clinic-portal">Open notes</a>` : ''}
                     </div>
                 `;
                 section.appendChild(item);
@@ -476,7 +485,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await res.json();
             upcomingCache = {
                 consultations: data.consultations || [],
-                counts: data.counts || { all: 0, clinic: 0, patient: 0 }
+                counts: data.counts || { all: 0, clinic: 0, patient: 0, interview: 0 }
             };
             renderUpcomingConsultations(upcomingCache.consultations, upcomingCache.counts);
         } catch (err) {

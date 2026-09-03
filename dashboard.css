@@ -2190,6 +2190,15 @@ a.admin-nav-link {
     border-left: 3px solid rgba(59, 130, 246, 0.65);
 }
 
+.admin-agenda-item.is-interview {
+    border-left: 3px solid rgba(124, 58, 237, 0.75);
+}
+
+.admin-source-badge.is-interview {
+    background: rgba(124, 58, 237, 0.12);
+    color: #6d28d9;
+}
+
 .admin-agenda-time {
     font-size: 1rem;
     font-weight: 700;

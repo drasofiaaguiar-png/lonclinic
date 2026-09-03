@@ -3789,7 +3789,7 @@ function inferDateIsoFromBooking(booking) {
 
 function normalizeTimeString(booking) {
     const t = String(booking.time || '').trim();
-    const m = /^(\d{1,2}):(\d{2})$/.exec(t);
+    const m = /^(\d{1,2}):(\d{2})(?::\d{2})?$/.exec(t);
     if (!m) return null;
     return `${String(parseInt(m[1], 10)).padStart(2, '0')}:${m[2]}`;
 }
@@ -5907,7 +5907,9 @@ app.get('/api/recrutamento/entrevista/slots', async (req, res) => {
             });
         }
         res.set({
-            'Cache-Control': 'no-store',
+            'Cache-Control': 'private, no-store, no-cache, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
             'CDN-Cache-Control': 'no-store',
             'Cloudflare-CDN-Cache-Control': 'no-store'
         });
@@ -5956,7 +5958,7 @@ app.post('/api/recrutamento/entrevista', rateLimitRecrutamentoEntrevista, expres
             bookingRef,
             email,
             service: 'entrevista',
-            date: dateLabel,
+            date: dateIso,
             time: normTime,
             dateIso,
             patientName: name,
@@ -5975,9 +5977,9 @@ app.post('/api/recrutamento/entrevista', rateLimitRecrutamentoEntrevista, expres
         };
 
         if (usePersistentDb) {
-            const inserted = await db.insertBooking(record);
+            const inserted = await db.insertBookingSafe(record);
             if (!inserted) {
-                return res.status(409).json({ error: 'Não foi possível confirmar este horário. Tente outro.' });
+                return res.status(409).json({ error: 'Esse horário acabou de ser ocupado. Escolha outro.' });
             }
         } else {
             bookingsStore.push(record);
@@ -7644,6 +7646,7 @@ function isBookingUpcoming(b, now = new Date()) {
     const key = bookingSortKey(b);
     const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(key);
     if (!m) {
+        if (String(b.service || '') === 'entrevista') return true;
         try {
             const end = new Date(b.date);
             end.setHours(23, 59, 59, 999);
@@ -7716,16 +7719,20 @@ app.get('/api/admin/upcoming-consultations', requireAdmin, async (req, res) => {
         const enriched = await enrichBookingsWithSource(bookings);
         const upcoming = enriched.filter((b) => isBookingUpcoming(b, now)).sort(sortFn);
         const sourceFilter = String(req.query.source || 'all').toLowerCase();
+        const isInterview = (b) => String(b.service || '') === 'entrevista';
         const filtered = sourceFilter === 'clinic' || sourceFilter === 'patient'
             ? upcoming.filter((b) => b.source === sourceFilter)
-            : upcoming;
+            : sourceFilter === 'interview'
+                ? upcoming.filter(isInterview)
+                : upcoming;
 
         res.json({
             consultations: filtered,
             counts: {
                 all: upcoming.length,
                 clinic: upcoming.filter((b) => b.source === 'clinic').length,
-                patient: upcoming.filter((b) => b.source === 'patient').length
+                patient: upcoming.filter((b) => b.source === 'patient').length,
+                interview: upcoming.filter(isInterview).length
             }
         });
     } catch (err) {

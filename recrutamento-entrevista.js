@@ -125,7 +125,7 @@
             });
     });
 
-    fetch('/api/recrutamento/entrevista/slots')
+    fetch('/api/recrutamento/entrevista/slots?_=' + Date.now())
         .then(function (r) { return r.json(); })
         .then(function (data) {
             renderDays(data && data.days);
