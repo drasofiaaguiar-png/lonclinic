@@ -44,7 +44,7 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="preload" as="image" href="/image/image2.webp" fetchpriority="high">
 
-    <link rel="stylesheet" href="landing.css?v=20260903b">
+    <link rel="stylesheet" href="landing.css?v=20260903c">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
@@ -147,7 +147,7 @@
 
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="#servicos" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
                 <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Open menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
@@ -172,9 +172,14 @@
                     <h1><span class="dr-hero-title-line">Consultas médicas online.</span><span class="dr-hero-title-line dr-hero-title-line--secondary">Uma nova abordagem à sua saúde.<br>Finalmente.</span></h1>
                     <p class="dr-lead">Marque a sua consulta médica em minutos. Cuide da sua saúde a curto e a longo prazo.</p>
                     <div class="dr-cta-row">
-                        <a href="#servicos" class="lon-btn lon-btn-dark">Ver serviços</a>
-                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-soft">Marcar consulta</a>
+                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark" id="lonHeroBook">Marcar consulta</a>
                     </div>
+                    <p class="dr-next-slot" id="lonNextSlot" hidden>
+                        <span class="dr-next-slot-kicker">Próximo horário</span>
+                        <strong id="lonNextSlotWhen">—</strong>
+                        <span class="dr-next-slot-price">€39 · clínica geral</span>
+                        <a href="/marcar/clinica-geral" class="dr-next-slot-other" id="lonNextSlotOther">Outro horário</a>
+                    </p>
 
                     <ul class="dr-trust-list" aria-label="Destaques de confiança da clínica">
                         <li>Médicos acreditados pela Ordem dos Médicos Português</li>
@@ -369,7 +374,7 @@
                             <span class="lon-service-chip">Viajante 2 pessoas</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta do Viajante 2 pessoas</h3>
-                                <p class="lon-service-price">€75 · 30 min</p>
+                                <p class="lon-service-price">€69 · 30 min</p>
                                 <a href="/marcar/travel?pessoas=2" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
                             </div>
                         </div>
@@ -614,9 +619,9 @@
 
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contact on WhatsApp">💬</a>
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
-    <script src="/lon-analytics.js?v=20260902a" defer></script>
-    <script src="i18n.js?v=20260902a" defer></script>
+    <script src="/lon-analytics.js?v=20260903c" defer></script>
+    <script src="i18n.js?v=20260903c" defer></script>
     <script src="reviews.js?v=20260902a" defer></script>
-    <script src="landing.js?v=20260902a" defer></script>
+    <script src="landing.js?v=20260903c" defer></script>
 </body>
 </html>

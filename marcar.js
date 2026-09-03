@@ -283,10 +283,10 @@
                 'Consulta por vídeo em ambiente seguro e privado.'
             ]
         },
-        clinica_geral: {
+            clinica_geral: {
             label: 'Consulta Clínica Geral / Check Up (Adultos)',
-            price: '€35',
-            cents: 3500,
+            price: '€39',
+            cents: 3900,
             duration: '25–35 min',
             serviceKey: 'clinica_geral',
             bullets: [
@@ -796,7 +796,8 @@
             time: state.time,
             travellerCount: 1,
             hasInsurance: false,
-            locale: lang
+            locale: lang,
+            renew: new URLSearchParams(window.location.search).get('renew') || null
         };
 
         try {
@@ -830,5 +831,34 @@
 
     loadSchedule().then(function () {
         renderCalendar();
+        var params = new URLSearchParams(window.location.search);
+        var dateQ = params.get('date');
+        var timeQ = params.get('time');
+        if (dateQ && /^\d{4}-\d{2}-\d{2}$/.test(dateQ)) {
+            var bits = dateQ.split('-').map(Number);
+            var dateObj = new Date(bits[0], bits[1] - 1, bits[2]);
+            if (isDateAvailable(dateObj) || formatDateLocal(dateObj) === dateQ) {
+                state.calMonth = dateObj.getMonth();
+                state.calYear = dateObj.getFullYear();
+                renderCalendar();
+                var dayBtn = null;
+                calGrid.querySelectorAll('.marcar-cal-day').forEach(function (el) {
+                    if (el.textContent === String(bits[2]) && !el.classList.contains('marcar-cal-empty')) {
+                        dayBtn = el;
+                    }
+                });
+                if (dayBtn && !dayBtn.classList.contains('marcar-cal-disabled')) {
+                    selectDate(bits[0], bits[1] - 1, bits[2], dayBtn);
+                    if (timeQ) {
+                        var want = timeQ.length === 4 ? '0' + timeQ : timeQ;
+                        setTimeout(function () {
+                            timeslotGrid.querySelectorAll('.marcar-slot-btn').forEach(function (b) {
+                                if (b.textContent === want) b.click();
+                            });
+                        }, 400);
+                    }
+                }
+            }
+        }
     });
 })();

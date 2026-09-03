@@ -29,7 +29,7 @@
     <meta name="twitter:image" content="https://www.lonclinic.com/image/image2.webp">
     <link rel="stylesheet" href="landing.css?v=20260903b">
     <link rel="stylesheet" href="styles.css?v=20260903b">
-    <link rel="stylesheet" href="booking.css?v=20260903b">
+    <link rel="stylesheet" href="booking.css?v=20260903c">
     <link rel="preload" as="image" href="/image/image2.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,7 +75,7 @@
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/#servicos" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
                 <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
@@ -102,21 +102,14 @@
                         <div class="progress-dot">
                             <span>1</span>
                         </div>
-                        <span class="progress-label">Agenda</span>
+                        <span class="progress-label">Horário</span>
                     </div>
                     <div class="progress-line"><div class="progress-line-fill"></div></div>
                     <div class="progress-step" data-step="2">
                         <div class="progress-dot">
                             <span>2</span>
                         </div>
-                        <span class="progress-label">Dados</span>
-                    </div>
-                    <div class="progress-line"><div class="progress-line-fill"></div></div>
-                    <div class="progress-step" data-step="3">
-                        <div class="progress-dot">
-                            <span>3</span>
-                        </div>
-                        <span class="progress-label">Pagamento</span>
+                        <span class="progress-label">Dados e pagamento</span>
                     </div>
                     <div class="progress-line"><div class="progress-line-fill"></div></div>
                     <div class="progress-step" data-step="4">
@@ -250,11 +243,15 @@
                 </div>
             </div>
 
-            <!-- Step 2: Patient Details -->
+            <!-- Step 2: Patient Details + Pay -->
             <div class="booking-step" id="step-2">
                 <div class="step-header">
                     <h1 class="step-title">Os seus dados</h1>
                     <p class="step-desc">Indique as suas informações para prepararmos a consulta.</p>
+                    <p class="booking-slot-summary" id="bookingSlotSummary" hidden></p>
+                    <p class="booking-slot-change-wrap" id="bookingSlotChangeWrap" hidden>
+                        <a href="/marcar/clinica-geral" id="bookingSlotChange">Alterar horário</a>
+                    </p>
                 </div>
                 <form class="details-form" id="detailsForm" novalidate>
 
@@ -391,10 +388,21 @@
                         <span class="form-error">You must agree to the terms</span>
                     </div>
                 </form>
-                <div class="step-actions">
-                    <button class="btn btn-outline btn-lg step-back" id="back-2">Voltar</button>
-                    <button class="btn btn-primary btn-lg step-next" id="next-2">Continuar para pagamento</button>
+                <div class="discount-section booking-step2-discount">
+                    <div class="discount-input-group">
+                        <input type="text" id="discountCodeStep2" class="discount-input" placeholder="Código de desconto" autocomplete="off">
+                        <button type="button" id="applyDiscountBtnStep2" class="btn btn-outline btn-sm">Aplicar</button>
+                    </div>
+                    <div id="discountMessageStep2" class="discount-message" style="display:none;"></div>
                 </div>
+                <div class="step-actions">
+                    <button type="button" class="btn btn-outline btn-lg step-back" id="back-2">Voltar</button>
+                    <button type="button" class="btn btn-primary btn-lg step-next pay-btn" id="next-2">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                        Pagar com Stripe
+                    </button>
+                </div>
+                <p class="stripe-error" id="stripeErrorStep2" style="display:none;"></p>
             </div>
 
             <!-- Step 3: Review & Pay -->
@@ -690,6 +698,6 @@
         <span>💬</span>
     </a>
 
-    <script src="booking.js?v=20260705a"></script>
+    <script src="booking.js?v=20260903c"></script>
 </body>
 </html>

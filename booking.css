@@ -174,6 +174,37 @@ body {
     line-height: 1.6;
 }
 
+.booking-slot-summary {
+    margin: 14px auto 0;
+    max-width: 36rem;
+    padding: 10px 14px;
+    background: #f1f5f2;
+    border: 1px solid #c9d4cc;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    color: var(--text-primary, #1a1a1a);
+}
+
+.booking-slot-change-wrap {
+    margin: 8px 0 0;
+    font-size: 0.88rem;
+}
+
+.booking-slot-change-wrap a {
+    color: #255235;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 600;
+}
+
+.booking-step2-discount {
+    margin-top: 20px;
+}
+
+#step-3 {
+    display: none !important;
+}
+
 /* Step 1 — consultation visual (same asset as homepage hero) */
 .booking-step1-intro {
     display: flex;

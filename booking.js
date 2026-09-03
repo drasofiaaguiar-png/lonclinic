@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         discountPercent: 0,
         scheduleData: null, // Admin schedule configuration
         fromMarcar: false,
-        marcarTipo: null
+        marcarTipo: null,
+        renewToken: null
     };
 
     // ─── Load schedule data ───
@@ -198,8 +199,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
         if (step === 1) renderCalendar();
-        if (step === 2) initDetailsForm();
+        if (step === 2) {
+            initDetailsForm();
+            updateSlotSummary();
+        }
         if (step === 3) updateReviewAndSummary();
+    }
+
+    function updateSlotSummary() {
+        const el = document.getElementById('bookingSlotSummary');
+        const wrap = document.getElementById('bookingSlotChangeWrap');
+        const change = document.getElementById('bookingSlotChange');
+        if (!el) return;
+        if (state.date && state.time) {
+            el.hidden = false;
+            el.textContent = `${state.serviceLabel} · ${state.dateLabel} · ${state.time} · ${state.servicePrice}`;
+            if (wrap) wrap.hidden = false;
+            if (change) {
+                const slugMap = {
+                    urgente: 'urgente',
+                    clinica_geral: 'clinica-geral',
+                    renovacao: 'renovacao',
+                    travel: 'travel',
+                    saude_mental: 'saude-mental',
+                    burnout: 'burnout',
+                    burnout_mensal: 'burnout-mensal',
+                    burnout_programa: 'burnout-programa',
+                    longevidade: 'longevidade'
+                };
+                change.href = '/marcar/' + (slugMap[state.service] || 'clinica-geral');
+            }
+        } else {
+            el.hidden = true;
+            if (wrap) wrap.hidden = true;
+        }
     }
 
     // ═══════════════════════════════════════
@@ -541,10 +574,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = '/';
     });
 
-    document.getElementById('next-2').addEventListener('click', () => {
-        if (validateForm()) goToStep(3);
-    });
-
     document.getElementById('back-2').addEventListener('click', () => goToStep(1));
 
     // ═══════════════════════════════════════
@@ -844,8 +873,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function applyDiscount() {
-        const codeInput = document.getElementById('discountCode');
-        const messageEl = document.getElementById('discountMessage');
+        const codeInput = document.getElementById('discountCodeStep2') || document.getElementById('discountCode');
+        const messageEl = document.getElementById('discountMessageStep2') || document.getElementById('discountMessage');
+        if (!codeInput || !messageEl) return;
         const code = codeInput.value.trim();
         
         if (!code) {
@@ -880,8 +910,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Discount code event listeners
-    const discountInput = document.getElementById('discountCode');
-    const applyDiscountBtn = document.getElementById('applyDiscountBtn');
+    const discountInput = document.getElementById('discountCodeStep2') || document.getElementById('discountCode');
+    const applyDiscountBtn = document.getElementById('applyDiscountBtnStep2') || document.getElementById('applyDiscountBtn');
     
     if (applyDiscountBtn) {
         applyDiscountBtn.addEventListener('click', applyDiscount);
@@ -1015,10 +1045,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('back-3').addEventListener('click', () => goToStep(2));
 
     // ─── Pay Button → Create Stripe Checkout Session ───
-    const payBtn = document.getElementById('next-3');
-    const stripeError = document.getElementById('stripeError');
+    const payBtn = document.getElementById('next-2');
+    const stripeError = document.getElementById('stripeErrorStep2') || document.getElementById('stripeError');
 
-    payBtn.addEventListener('click', async () => {
+    if (payBtn) payBtn.addEventListener('click', async () => {
+        if (!validateForm()) return;
+        updateReviewAndSummary();
         payBtn.disabled = true;
         payBtn.innerHTML = `
             <div class="processing-spinner" style="width:18px;height:18px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:8px;"></div>
@@ -1092,7 +1124,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             payBtn.disabled = false;
             payBtn.innerHTML = `
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                Proceed to secure payment
+                Pagar com Stripe
             `;
         }
     });
@@ -1344,46 +1376,114 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             raw = sessionStorage.getItem('lonConsultaPrefill');
         } catch (e) {
-            return;
+            raw = null;
         }
-        if (!raw) return;
-        let prefill;
-        try {
-            prefill = JSON.parse(raw);
-        } catch (e) {
-            sessionStorage.removeItem('lonConsultaPrefill');
-            return;
+        let prefill = null;
+        if (raw) {
+            try {
+                prefill = JSON.parse(raw);
+            } catch (e) {
+                try { sessionStorage.removeItem('lonConsultaPrefill'); } catch (e2) { /* ignore */ }
+            }
         }
-        if (!prefill.service || !services[prefill.service]) {
-            sessionStorage.removeItem('lonConsultaPrefill');
-            return;
+        if (prefill && prefill.service && services[prefill.service]) {
+            try { sessionStorage.removeItem('lonConsultaPrefill'); } catch (e) { /* ignore */ }
+            state.service = prefill.service;
+            state.serviceLabel = prefill.serviceLabel || services[prefill.service].label;
+            state.servicePrice = prefill.servicePrice || services[prefill.service].price;
+            state.servicePriceCents = typeof prefill.servicePriceCents === 'number'
+                ? prefill.servicePriceCents
+                : services[prefill.service].cents;
+            state.date = parseStoredDate(prefill.dateISO);
+            state.dateLabel = prefill.dateLabel;
+            state.time = prefill.time;
+            state.calMonth = state.date ? state.date.getMonth() : state.calMonth;
+            state.calYear = state.date ? state.date.getFullYear() : state.calYear;
+            state.travellerCount = prefill.travellerCount || 1;
+            state.hasInsurance = !!prefill.hasInsurance;
+            state.fromMarcar = true;
+            state.marcarTipo = prefill.tipo || null;
+            if (prefill.renew) state.renewToken = prefill.renew;
+            if (prefill.locale) {
+                const loc = document.getElementById('bookingLocale');
+                if (loc) loc.value = prefill.locale;
+            }
         }
-        sessionStorage.removeItem('lonConsultaPrefill');
 
-        state.service = prefill.service;
-        state.serviceLabel = prefill.serviceLabel || services[prefill.service].label;
-        state.servicePrice = prefill.servicePrice || services[prefill.service].price;
-        state.servicePriceCents = typeof prefill.servicePriceCents === 'number'
-            ? prefill.servicePriceCents
-            : services[prefill.service].cents;
-        state.date = parseStoredDate(prefill.dateISO);
-        if (!state.date) {
-            return;
+        const dateQ = urlParams.get('date');
+        const timeQ = urlParams.get('time');
+        const serviceQ = urlParams.get('service');
+        const renewQ = urlParams.get('renew');
+        if (serviceQ) applyServiceKey(serviceQ);
+        if (renewQ) state.renewToken = renewQ;
+        if (dateQ && timeQ && /^\d{4}-\d{2}-\d{2}$/.test(dateQ) && /^\d{1,2}:\d{2}$/.test(timeQ)) {
+            const parsed = parseStoredDate(dateQ);
+            if (parsed) {
+                state.date = parsed;
+                state.time = timeQ.length === 4 ? '0' + timeQ : timeQ;
+                const locale = (window.CLINIC_I18N && window.CLINIC_I18N.getLang() === 'es') ? 'es-ES'
+                    : (window.CLINIC_I18N && window.CLINIC_I18N.getLang() === 'en') ? 'en-GB' : 'pt-PT';
+                state.dateLabel = state.date.toLocaleDateString(locale, {
+                    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+                });
+                state.calMonth = state.date.getMonth();
+                state.calYear = state.date.getFullYear();
+                state.fromMarcar = true;
+            }
         }
-        state.dateLabel = prefill.dateLabel;
-        state.time = prefill.time;
-        state.calMonth = state.date.getMonth();
-        state.calYear = state.date.getFullYear();
-        state.travellerCount = prefill.travellerCount || 1;
-        state.hasInsurance = !!prefill.hasInsurance;
-        state.fromMarcar = true;
-        state.marcarTipo = prefill.tipo || null;
 
         updateTravellerCountVisibility();
-        goToStep(2);
+        if (state.date && state.time) {
+            goToStep(2);
+        }
+    }
+
+    async function applyRenewalAndNextSlot() {
+        let renewal = null;
+        if (state.renewToken) {
+            try {
+                const res = await fetch('/api/renewal-prefill?t=' + encodeURIComponent(state.renewToken));
+                if (res.ok) renewal = await res.json();
+            } catch (e) { /* ignore */ }
+            if (renewal) applyServiceKey('renovacao');
+        }
+        if (!state.date || !state.time) {
+            if (state.renewToken || urlParams.get('service') === 'renovacao') {
+                try {
+                    const res = await fetch('/api/next-slots?limit=1');
+                    if (res.ok) {
+                        const data = await res.json();
+                        const slot = data && data.slots && data.slots[0];
+                        if (slot) {
+                            state.date = parseStoredDate(slot.date);
+                            if (state.date) {
+                                state.time = slot.time;
+                                state.dateLabel = state.date.toLocaleDateString('pt-PT', {
+                                    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+                                });
+                                state.fromMarcar = true;
+                                goToStep(2);
+                            }
+                        }
+                    }
+                } catch (e) { /* ignore */ }
+            }
+        }
+        if (renewal) {
+            const emailEl = document.getElementById('email');
+            if (emailEl && renewal.email) emailEl.value = renewal.email;
+            if (renewal.name) {
+                const parts = String(renewal.name).trim().split(/\s+/);
+                const first = document.querySelector('.p-firstName');
+                const last = document.querySelector('.p-lastName');
+                if (first && parts[0]) first.value = parts[0];
+                if (last && parts.length > 1) last.value = parts.slice(1).join(' ');
+            }
+        }
     }
 
     applyMarcarPrefill();
+    applyRenewalAndNextSlot();
 
     if (state.currentStep === 1) {
         renderCalendar();

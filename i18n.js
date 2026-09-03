@@ -45,7 +45,7 @@
         { s: '.lon-nav-links a[href="/blog"], .lon-mobile-menu a[href="/blog"]', en: 'Guides', pt: 'Guias', es: 'Guías' },
         { s: '.lon-nav-links a[href="/#contacto"], .lon-mobile-menu a[href="/#contacto"]', en: 'Contact', pt: 'Contato', es: 'Contacto' },
         { s: '.lon-nav-actions > a.lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
-        { s: '.lon-nav-actions > a.lon-btn-primary[href="/#servicos"]', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
+        { s: '.lon-nav-actions > a.lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
         { s: '.lon-mobile-menu a[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
     ];
 
@@ -81,15 +81,17 @@
         { s: '.lon-nav-links a[href="/blog"], .lon-mobile-menu a[href="/blog"]', en: 'Guides', pt: 'Guias', es: 'Guías' },
         { s: '.lon-nav-links a[href="#contacto"], .lon-mobile-menu a[href="#contacto"]', en: 'Contact', pt: 'Contato', es: 'Contacto' },
         { s: '.lon-nav-actions .lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
-        { s: '.lon-nav-actions .lon-btn-primary[href="#servicos"]', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
+        { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
 
         /* ── Hero ── */
         { s: '.dr-badge', en: 'Telemedicine Platform', pt: 'Plataforma de telemedicina', es: 'Plataforma de telemedicina' },
         { s: '.dr-hero-title-line:not(.dr-hero-title-line--secondary)', en: 'Online medical consultations.', pt: 'Consultas médicas online.', es: 'Consultas médicas online.' },
         { s: '.dr-hero-title-line--secondary', en: 'A new approach to your health.<br>Finally.', pt: 'Uma nova abordagem à sua saúde.<br>Finalmente.', es: 'Un nuevo enfoque para su salud.<br>Por fin.', h: true },
         { s: '.dr-lead', en: 'Book your medical consultation in minutes. Take care of your short and long-term health.', pt: 'Marque a sua consulta médica em minutos. Cuide da sua saúde a curto e a longo prazo.', es: 'Reserve su consulta médica en minutos. Cuide su salud a corto y largo plazo.' },
-        { s: '.dr-cta-row .lon-btn-dark', en: 'View services', pt: 'Ver serviços', es: 'Ver servicios' },
-        { s: '.dr-cta-row .lon-btn-soft', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
+        { s: '.dr-cta-row .lon-btn-dark', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
+        { s: '.dr-next-slot-kicker', en: 'Next available', pt: 'Próximo horário', es: 'Próximo horario' },
+        { s: '.dr-next-slot-price', en: '€39 · general medicine', pt: '€39 · clínica geral', es: '€39 · medicina general' },
+        { s: '.dr-next-slot-other', en: 'Another time', pt: 'Outro horário', es: 'Otro horario' },
 
         /* ── Trust bullets ── */
         { s: '.dr-trust-list li:nth-child(1)', en: 'Doctors accredited by the Portuguese Medical Association', pt: 'Médicos acreditados pela Ordem dos Médicos Português', es: 'Médicos acreditados por el Colegio de Médicos Português' },
@@ -389,9 +391,8 @@
         { s: 'title', en: 'Book Your Consultation — Lon Clinic', pt: 'Marcar Consulta — Lon Clinic', es: 'Reservar Consulta — Lon Clinic', special: 'title' },
 
         /* ── Progress Steps ── */
-        { s: '.progress-step[data-step="1"] .progress-label', en: 'Schedule', pt: 'Agendar', es: 'Horario' },
-        { s: '.progress-step[data-step="2"] .progress-label', en: 'Details', pt: 'Dados', es: 'Datos' },
-        { s: '.progress-step[data-step="3"] .progress-label', en: 'Payment', pt: 'Pagamento', es: 'Pago' },
+        { s: '.progress-step[data-step="1"] .progress-label', en: 'Time', pt: 'Horário', es: 'Horario' },
+        { s: '.progress-step[data-step="2"] .progress-label', en: 'Details & payment', pt: 'Dados e pagamento', es: 'Datos y pago' },
         { s: '.progress-step[data-step="4"] .progress-label', en: 'Confirmed', pt: 'Confirmado', es: 'Confirmado' },
 
         /* ── Step 1: Schedule ── */
@@ -438,7 +439,8 @@
         { s: '.form-checkbox-group:nth-child(12) .form-error', en: 'You must consent to proceed', pt: 'Deve consentir para prosseguir', es: 'Debe dar su consentimiento para continuar' },
         { s: '.form-checkbox-group:nth-child(13) .form-error', en: 'You must agree to the terms', pt: 'Deve concordar com os termos', es: 'Debe aceptar los términos' },
         { s: '#back-2', en: 'Back', pt: 'Voltar', es: 'Atrás' },
-        { s: '#next-2', en: 'Continue to payment', pt: 'Continuar para pagamento', es: 'Continuar al pago' },
+        { s: '#bookingSlotChange', en: 'Change time', pt: 'Alterar horário', es: 'Cambiar horario' },
+        { s: '#next-2', en: 'Pay with Stripe', pt: 'Pagar com Stripe', es: 'Pagar con Stripe' },
 
         /* ── Step 3: Review & Pay ── */
         { s: '#step-3 .step-title', en: 'Review & pay', pt: 'Revisão e pagamento', es: 'Revisar y pagar' },
@@ -500,7 +502,7 @@
         { s: '.lon-nav-links a[href="/#servicos"], .lon-mobile-menu a[href="/#servicos"]', en: 'Services', pt: 'Serviços', es: 'Servicios' },
         { s: '.lon-nav-links a[href="/#contacto"], .lon-mobile-menu a[href="/#contacto"]', en: 'Contact', pt: 'Contato', es: 'Contacto' },
         { s: '.lon-nav-actions .lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
-        { s: '.lon-nav-actions .lon-btn-primary[href="/#servicos"]', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
+        { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
 
         /* ── Error ── */
         { s: '#marcarError .marcar-error', en: 'Consultation type not found. Choose a service on the <a href="/#servicos">homepage</a>.', pt: 'Tipo de consulta não encontrado. Escolha um serviço na <a href="/#servicos">página inicial</a>.', es: 'Tipo de consulta no encontrado. Elija un servicio en la <a href="/#servicos">página de inicio</a>.', h: true },
@@ -537,7 +539,7 @@
         { s: '.lon-nav-links a[href="/#servicos"], .lon-mobile-menu a[href="/#servicos"]', en: 'Services', pt: 'Serviços', es: 'Servicios' },
         { s: '.lon-nav-links a[href="/#contacto"], .lon-mobile-menu a[href="/#contacto"]', en: 'Contact', pt: 'Contato', es: 'Contacto' },
         { s: '.lon-nav-actions .lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
-        { s: '.lon-nav-actions .lon-btn-primary[href="/#servicos"]', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
+        { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
         { s: '.foot', en: 'If you need immediate assistance, contact <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> or +351 928 372 775.', pt: 'Se precisar de ajuda imediata, contacte <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> ou +351 928 372 775.', es: 'Si necesita asistencia inmediata, contacte <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> o +351 928 372 775.', h: true },
     ];
 

@@ -1267,6 +1267,9 @@ const CONFIRMATION_EMAIL_I18N = {
         step4ReportBody: "Within 48 hours, you'll receive a detailed report with actionable insights and a personalised health plan.",
         step4TravelTitle: 'Prescriptions & vaccines',
         step4TravelBody: 'Any required prescriptions or vaccine recommendations will be provided during or shortly after your consultation.',
+        renewalTitle: 'Need a prescription renewal later?',
+        renewalBody: 'If your treatment is already stable, renew it online for €19 — no new full consultation.',
+        renewalCta: 'Renew treatment — €19',
         rescheduleStrong: 'Need to reschedule?',
         rescheduleRest: 'Free rescheduling is available up to 24 hours before your appointment. Simply reply to this email or contact us.',
         footerContact: 'If you have any questions, contact us at',
@@ -1293,6 +1296,7 @@ const CONFIRMATION_EMAIL_I18N = {
         textStep4Report: 'Personalised report — within 48 hours.',
         textStep4Travel: 'Prescriptions & vaccines — provided during or after consultation.',
         textReschedule: 'Need to reschedule? Free rescheduling up to 24 hours before. Reply to this email or contact us.',
+        textRenewal: 'Need a prescription renewal later? Book online for €19:',
         textFooterCopy: '© 2026 Longevity Clinic'
     },
     pt: {
@@ -1326,6 +1330,9 @@ const CONFIRMATION_EMAIL_I18N = {
         step4ReportBody: 'No prazo de 48 horas, receberá um relatório detalhado com recomendações práticas e um plano de saúde personalizado.',
         step4TravelTitle: 'Receitas e vacinas',
         step4TravelBody: 'Quaisquer receitas ou recomendações de vacinas necessárias serão fornecidas durante ou pouco depois da consulta.',
+        renewalTitle: 'Precisa de renovar a receita mais tarde?',
+        renewalBody: 'Se o tratamento já está estável, renove online por €19 — sem uma consulta completa nova.',
+        renewalCta: 'Renovar tratamento — €19',
         rescheduleStrong: 'Precisa de reagendar?',
         rescheduleRest: 'O reagendamento é gratuito até 24 horas antes da consulta. Responda a este email ou contacte-nos.',
         footerContact: 'Em caso de dúvidas, contacte-nos em',
@@ -1352,6 +1359,7 @@ const CONFIRMATION_EMAIL_I18N = {
         textStep4Report: 'Relatório personalizado — no prazo de 48 horas.',
         textStep4Travel: 'Receitas e vacinas — fornecidas durante ou após a consulta.',
         textReschedule: 'Precisa de reagendar? Reagendamento gratuito até 24 horas antes. Responda a este email ou contacte-nos.',
+        textRenewal: 'Precisa de renovar a receita mais tarde? Marque online por €19:',
         textFooterCopy: '© 2026 Longevity Clinic'
     },
     es: {
@@ -1385,6 +1393,9 @@ const CONFIRMATION_EMAIL_I18N = {
         step4ReportBody: 'En un plazo de 48 horas recibirá un informe detallado con recomendaciones prácticas y un plan de salud personalizado.',
         step4TravelTitle: 'Recetas y vacunas',
         step4TravelBody: 'Las recetas necesarias o recomendaciones de vacunas se facilitarán durante o poco después de la consulta.',
+        renewalTitle: '¿Necesita renovar la receta más adelante?',
+        renewalBody: 'Si el tratamiento ya es estable, renuévelo online por 19 € — sin una consulta completa nueva.',
+        renewalCta: 'Renovar tratamiento — 19 €',
         rescheduleStrong: '¿Necesita cambiar la fecha?',
         rescheduleRest: 'Puede reprogramar sin coste hasta 24 horas antes de la cita. Responda a este correo o contáctenos.',
         footerContact: 'Si tiene alguna pregunta, escríbanos a',
@@ -1411,6 +1422,7 @@ const CONFIRMATION_EMAIL_I18N = {
         textStep4Report: 'Informe personalizado — en un plazo de 48 horas.',
         textStep4Travel: 'Recetas y vacunas — facilitadas durante o después de la consulta.',
         textReschedule: '¿Necesita cambiar la fecha? Reprogramación gratuita hasta 24 horas antes. Responda a este correo o contáctenos.',
+        textRenewal: '¿Necesita renovar la receta más adelante? Reserve online por 19 €:',
         textFooterCopy: '© 2026 Longevity Clinic'
     }
 };
@@ -1446,6 +1458,10 @@ function buildConfirmationEmail(data) {
     const isTravel = service === 'travel';
     const isMulti = travellerCount > 1;
     const doxyUrl = doxyUrlFromEmailData({ doxyUrl: dataDoxyUrl });
+    const showRenewal = service !== 'renovacao' && service !== 'entrevista';
+    const renewalHref = showRenewal
+        ? renewalFollowupUrl({ email, patientName, bookingRef })
+        : '';
 
     let passengerRows = '';
     if (isMulti && passengers && passengers.length > 0) {
@@ -1618,6 +1634,13 @@ function buildConfirmationEmail(data) {
                                 </p>
                             </div>
 
+                            ${showRenewal ? `
+                            <div style="background:#f1f5f2;border:1px solid #c9d4cc;border-radius:10px;padding:18px 20px;margin-top:20px;text-align:center;">
+                                <p style="margin:0 0 6px;font-size:15px;font-weight:700;color:#0f172a;">${t.renewalTitle}</p>
+                                <p style="margin:0 0 14px;font-size:13px;color:#475569;line-height:1.5;">${t.renewalBody}</p>
+                                <a href="${escapeHtml(renewalHref)}" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:15px;font-weight:600;text-decoration:none;padding:12px 24px;border-radius:10px;">${t.renewalCta}</a>
+                            </div>` : ''}
+
                         </td>
                     </tr>
 
@@ -1667,7 +1690,7 @@ ${t.textWhatsNext}
 4. ${textStep4}
 
 ${t.textReschedule}
-
+${showRenewal ? `\n${t.textRenewal}\n${renewalHref}\n` : ''}
 info@lonclinic.com | +351 928 372 775
 ${t.textFooterCopy}
 `;
@@ -3344,6 +3367,9 @@ const FOLLOWUP_EMAIL_I18N = {
         feedbackBody:
             'Your experience matters to us. If you have a moment, please leave an independent review on Trustpilot — it helps other patients choose with confidence.',
         ctaLabel: 'Review us on Trustpilot',
+        renewalTitle: 'Need a prescription renewal?',
+        renewalBody: 'If your treatment is stable, renew it online for €19.',
+        renewalCta: 'Renew treatment — €19',
         siteAlt: (url) => `You can also share your opinion on our website: ${url}`,
         subject: (ref) => `Thank you — we value your feedback | ${ref}`,
         textHead: 'THANK YOU',
@@ -3351,6 +3377,7 @@ const FOLLOWUP_EMAIL_I18N = {
             `Dear ${name}, thank you for attending your online consultation with Longevity Clinic. We hope it was helpful.`,
         textFeedback: (url, siteUrl) =>
             `We would love your feedback on Trustpilot:\n${url}\n\nOr on our website: ${siteUrl}`,
+        textRenewal: (url) => `Need a prescription renewal? Book online for €19:\n${url}`,
         textFooterCopy: '© 2026 Longevity Clinic'
     },
     pt: {
@@ -3363,6 +3390,9 @@ const FOLLOWUP_EMAIL_I18N = {
         feedbackBody:
             'A sua experiência é importante. Se tiver um momento, deixe uma avaliação independente no Trustpilot — ajuda outros pacientes a escolherem com confiança.',
         ctaLabel: 'Avaliar no Trustpilot',
+        renewalTitle: 'Precisa de renovar a receita?',
+        renewalBody: 'Se o tratamento está estável, renove online por €19.',
+        renewalCta: 'Renovar tratamento — €19',
         siteAlt: (url) => `Também pode deixar a sua opinião no nosso site: ${url}`,
         subject: (ref) => `Obrigado — a sua opinião conta | ${ref}`,
         textHead: 'OBRIGADO',
@@ -3370,6 +3400,7 @@ const FOLLOWUP_EMAIL_I18N = {
             `Exmo.(a) ${name}, obrigado pela sua consulta online na Longevity Clinic.`,
         textFeedback: (url, siteUrl) =>
             `Deixe a sua opinião no Trustpilot:\n${url}\n\nOu no nosso site: ${siteUrl}`,
+        textRenewal: (url) => `Precisa de renovar a receita? Marque online por €19:\n${url}`,
         textFooterCopy: '© 2026 Longevity Clinic'
     },
     es: {
@@ -3382,6 +3413,9 @@ const FOLLOWUP_EMAIL_I18N = {
         feedbackBody:
             'Su experiencia es importante. Si tiene un momento, deje una valoración independiente en Trustpilot: ayuda a otros pacientes a elegir con confianza.',
         ctaLabel: 'Valóranos en Trustpilot',
+        renewalTitle: '¿Necesita renovar la receta?',
+        renewalBody: 'Si el tratamiento es estable, renuévelo online por 19 €.',
+        renewalCta: 'Renovar tratamiento — 19 €',
         siteAlt: (url) => `También puede dejar su opinión en nuestro sitio web: ${url}`,
         subject: (ref) => `Gracias — valoramos su opinión | ${ref}`,
         textHead: 'GRACIAS',
@@ -3389,6 +3423,7 @@ const FOLLOWUP_EMAIL_I18N = {
             `Estimado/a ${name}, gracias por su consulta online en Longevity Clinic.`,
         textFeedback: (url, siteUrl) =>
             `Deje su opinión en Trustpilot:\n${url}\n\nO en nuestro sitio web: ${siteUrl}`,
+        textRenewal: (url) => `¿Necesita renovar la receta? Reserve online por 19 €:\n${url}`,
         textFooterCopy: '© 2026 Longevity Clinic'
     }
 };
@@ -3399,11 +3434,22 @@ function followupEmailStrings(locale) {
 }
 
 function buildFollowupEmail(data) {
-    const { patientName, bookingRef, locale: rawLocale } = data;
+    const { patientName, bookingRef, locale: rawLocale, service, email } = data;
     const t = followupEmailStrings(rawLocale);
     const name = (patientName || 'Patient').trim();
     const reviewUrl = trustpilotEvaluateUrl(rawLocale);
     const siteReviewUrl = emailLink(`${PUBLIC_SITE_URL}/#deixar-opiniao`, 'post-consult-review', 'site-form');
+    const showRenewal = service !== 'renovacao' && service !== 'entrevista';
+    const renewalHref = showRenewal
+        ? renewalFollowupUrl({ email, patientName: name, bookingRef })
+        : '';
+    const renewalBlock = showRenewal
+        ? `<div style="background:#f1f5f2;border:1px solid #c9d4cc;border-radius:10px;padding:18px 20px;margin:0 0 24px;text-align:center;">
+<p style="margin:0 0 6px;font-size:15px;font-weight:700;color:#0f172a;">${t.renewalTitle}</p>
+<p style="margin:0 0 14px;font-size:13px;color:#475569;line-height:1.5;">${t.renewalBody}</p>
+<a href="${renewalHref}" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:15px;font-weight:600;text-decoration:none;padding:12px 24px;border-radius:10px;">${t.renewalCta}</a>
+</div>`
+        : '';
     const html = `
 <!DOCTYPE html>
 <html lang="${t.htmlLang}">
@@ -3419,6 +3465,7 @@ function buildFollowupEmail(data) {
 <tr><td style="background:#ffffff;border-radius:16px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
 <h2 style="margin:0 0 16px;font-size:22px;font-weight:700;color:#0f172a;text-align:center;">${t.h2}</h2>
 <p style="margin:0 0 24px;font-size:15px;color:#64748b;line-height:1.6;">${t.body(name)}</p>
+${renewalBlock}
 <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;margin-bottom:20px;">
 <p style="margin:0 0 4px;font-size:12px;color:#94a3b8;text-transform:uppercase;">Ref.</p>
 <p style="margin:0;font-size:18px;font-weight:700;color:#0f172a;">${bookingRef}</p>
@@ -3439,7 +3486,7 @@ function buildFollowupEmail(data) {
 </td></tr>
 </table>
 </body></html>`;
-    const text = `${t.textHead} — ${bookingRef}\n\n${t.textBody(name)}\n\n${t.textFeedback(reviewUrl, siteReviewUrl)}`;
+    const text = `${t.textHead} — ${bookingRef}\n\n${t.textBody(name)}\n\n${showRenewal && t.textRenewal ? t.textRenewal(renewalHref) + '\n\n' : ''}${t.textFeedback(reviewUrl, siteReviewUrl)}`;
     return { html, text, subject: t.subject(bookingRef) };
 }
 
@@ -3465,6 +3512,7 @@ async function sendPostConsultationReviewEmail(booking) {
     const sent = await sendFollowupEmail({
         email: booking.email,
         patientName: booking.patientName,
+        service: booking.service,
         serviceLabel: serviceLabelFromCode(booking.service),
         bookingRef: booking.bookingRef,
         locale: booking.patientLocale || 'en'
@@ -4036,6 +4084,111 @@ async function getBookableSlotsForDateIso(dateIso, excludeBookingRef, excludeInv
         }
     }
     return free;
+}
+
+function lisbonNowParts() {
+    const tz = scheduleStore.timezone || 'Europe/Lisbon';
+    const fmt = new Intl.DateTimeFormat('en-CA', {
+        timeZone: tz,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hourCycle: 'h23'
+    });
+    const parts = {};
+    for (const p of fmt.formatToParts(new Date())) {
+        if (p.type !== 'literal') parts[p.type] = p.value;
+    }
+    return {
+        dateIso: `${parts.year}-${parts.month}-${parts.day}`,
+        minutes: Number(parts.hour) * 60 + Number(parts.minute)
+    };
+}
+
+function addDaysIso(dateIso, n) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateIso || ''));
+    if (!m) return dateIso;
+    const dt = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]) + Number(n)));
+    return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-${String(dt.getUTCDate()).padStart(2, '0')}`;
+}
+
+/** Next free public slots across upcoming days (homepage + renewal deep-link). */
+async function getNextBookableSlots(limit, maxDays) {
+    const cap = Math.min(Math.max(parseInt(limit, 10) || 1, 1), 5);
+    const days = Math.min(Math.max(parseInt(maxDays, 10) || 14, 1), 21);
+    const now = lisbonNowParts();
+    const out = [];
+    for (let i = 0; i < days && out.length < cap; i++) {
+        const dateIso = addDaysIso(now.dateIso, i);
+        const daySchedule = getEffectiveDaySchedule(dateIso);
+        if (!daySchedule || !daySchedule.enabled) continue;
+        let available = await getBookableSlotsForDateIso(dateIso, null, null, false);
+        if (i === 0) {
+            const cutoff = now.minutes + 15;
+            available = available.filter((t) => {
+                const mins = timeToMinutes(t);
+                return mins != null && mins > cutoff;
+            });
+        }
+        for (const time of available) {
+            out.push({ date: dateIso, time });
+            if (out.length >= cap) break;
+        }
+    }
+    return out;
+}
+
+function makeRenewalFollowupToken(booking) {
+    const email = String((booking && booking.email) || '').trim().toLowerCase();
+    const name = String((booking && booking.patientName) || '').trim();
+    if (!email || !email.includes('@')) return '';
+    const payload = Buffer.from(
+        JSON.stringify({
+            e: email,
+            n: name.slice(0, 80),
+            r: String((booking && booking.bookingRef) || '').slice(0, 32),
+            exp: Date.now() + 90 * 864e5
+        }),
+        'utf8'
+    ).toString('base64url');
+    const sig = crypto.createHmac('sha256', SESSION_SECRET).update(payload).digest('base64url').slice(0, 24);
+    return `${payload}.${sig}`;
+}
+
+function verifyRenewalFollowupToken(raw) {
+    const token = String(raw || '').trim();
+    const dot = token.lastIndexOf('.');
+    if (dot < 8) return null;
+    const payload = token.slice(0, dot);
+    const sig = token.slice(dot + 1);
+    const expected = crypto.createHmac('sha256', SESSION_SECRET).update(payload).digest('base64url').slice(0, 24);
+    const a = Buffer.from(sig);
+    const b = Buffer.from(expected);
+    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
+    let data;
+    try {
+        data = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+    } catch {
+        return null;
+    }
+    if (!data || data.exp < Date.now()) return null;
+    const email = String(data.e || '').trim().toLowerCase();
+    if (!email || !email.includes('@')) return null;
+    return { email, name: String(data.n || '').trim(), bookingRef: String(data.r || '') };
+}
+
+function renewalFollowupUrl(booking, slot) {
+    const token = makeRenewalFollowupToken(booking);
+    const u = new URL(`${PUBLIC_SITE_URL}/book-consultation`);
+    u.searchParams.set('service', 'renovacao');
+    if (token) u.searchParams.set('renew', token);
+    if (slot && slot.date && slot.time) {
+        u.searchParams.set('date', slot.date);
+        u.searchParams.set('time', slot.time);
+    }
+    return emailLink(u.toString(), 'renewal-followup', 'renovacao-19');
 }
 
 const AUTOMATION_JOB_INTERVAL_MS = 15 * 60 * 1000;
@@ -8644,6 +8797,36 @@ app.get('/api/schedule', (req, res) => {
         dayOverrides: scheduleStore.dayOverrides,
         timezone: scheduleStore.timezone,
         smartSlotGrouping: !!scheduleStore.smartSlotGrouping
+    });
+});
+
+app.get('/api/next-slots', rateLimitAnalytics, async (req, res) => {
+    try {
+        const limit = req.query.limit;
+        const slots = await getNextBookableSlots(limit, 14);
+        res.set('Cache-Control', 'public, max-age=30');
+        res.json({
+            slots,
+            timezone: scheduleStore.timezone || 'Europe/Lisbon',
+            service: 'clinica_geral',
+            price: '€39'
+        });
+    } catch (err) {
+        console.error('GET /api/next-slots:', err.message);
+        res.status(500).json({ error: 'Failed to load next slots' });
+    }
+});
+
+app.get('/api/renewal-prefill', rateLimitAnalytics, (req, res) => {
+    const parsed = verifyRenewalFollowupToken(req.query.t || req.query.renew);
+    if (!parsed) {
+        return res.status(400).json({ error: 'Invalid or expired link' });
+    }
+    res.set('Cache-Control', 'no-store');
+    res.json({
+        email: parsed.email,
+        name: parsed.name,
+        service: 'renovacao'
     });
 });
 

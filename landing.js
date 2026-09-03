@@ -155,4 +155,70 @@
             }
         });
     }
+
+    function formatNextSlotWhen(dateIso, time) {
+        var htmlLang = (document.documentElement.lang || 'pt-PT').toLowerCase();
+        var localeStr = htmlLang.indexOf('es') === 0 ? 'es-ES' : htmlLang.indexOf('en') === 0 ? 'en-GB' : 'pt-PT';
+        var parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateIso || ''));
+        if (!parts) return String(dateIso || '') + ' · ' + String(time || '');
+        var d = new Date(Number(parts[1]), Number(parts[2]) - 1, Number(parts[3]));
+        var label = d.toLocaleDateString(localeStr, { weekday: 'long', day: 'numeric', month: 'short' });
+        return label + ' · ' + time;
+    }
+
+    function goClinicaGeralCheckout(slot) {
+        if (!slot || !slot.date || !slot.time) {
+            window.location.href = '/marcar/clinica-geral';
+            return;
+        }
+        var lang = getContactLang();
+        var payload = {
+            service: 'clinica_geral',
+            tipo: 'clinica_geral',
+            serviceLabel: lang === 'en'
+                ? 'General Medicine Consultation / Check-Up (Adults)'
+                : lang === 'es'
+                    ? 'Consulta de Medicina General / Chequeo (Adultos)'
+                    : 'Consulta Clínica Geral / Check Up (Adultos)',
+            servicePrice: '€39',
+            servicePriceCents: 3900,
+            dateISO: slot.date,
+            dateLabel: formatNextSlotWhen(slot.date, slot.time),
+            time: slot.time,
+            travellerCount: 1,
+            hasInsurance: false,
+            locale: lang
+        };
+        try {
+            sessionStorage.setItem('lonConsultaPrefill', JSON.stringify(payload));
+        } catch (e) { /* private mode */ }
+        var dest = '/book-consultation?service=clinica_geral&date=' +
+            encodeURIComponent(slot.date) + '&time=' + encodeURIComponent(slot.time);
+        if (window.LonAnalytics) {
+            window.LonAnalytics.track('cta_click', { surface: 'home', service: 'clinica_geral', step: 'next_slot' });
+            window.LonAnalytics.flush();
+        }
+        window.location.href = dest;
+    }
+
+    var heroBook = document.getElementById('lonHeroBook');
+    var nextSlotEl = document.getElementById('lonNextSlot');
+    var nextSlotWhen = document.getElementById('lonNextSlotWhen');
+    if (heroBook || nextSlotEl) {
+        fetch('/api/next-slots?limit=1')
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (data) {
+                var slot = data && data.slots && data.slots[0];
+                if (!slot) return;
+                if (nextSlotWhen) nextSlotWhen.textContent = formatNextSlotWhen(slot.date, slot.time);
+                if (nextSlotEl) nextSlotEl.hidden = false;
+                if (heroBook) {
+                    heroBook.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        goClinicaGeralCheckout(slot);
+                    });
+                }
+            })
+            .catch(function () { /* keep fallback /marcar/clinica-geral */ });
+    }
 })();

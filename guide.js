@@ -268,14 +268,6 @@ function bookingCardsHtml(kind, tone) {
                 href: '/marcar/saude-mental',
                 cta: 'Marcar',
                 note: 'Online · avaliação clínica'
-            },
-            {
-                chip: 'Subscrição',
-                title: 'Psicologia em Burnout',
-                price: '€54 /semana · poupa 10%',
-                href: '/saudemental',
-                cta: 'Subscrever',
-                note: '1 sessão de vídeo por semana'
             }
         ],
         travel: [
@@ -292,18 +284,10 @@ function bookingCardsHtml(kind, tone) {
             {
                 chip: 'Clínica Geral',
                 title: 'Consulta de Clínica Geral',
-                price: 'Online',
+                price: '€39 · 30 min',
                 href: '/marcar/clinica-geral',
                 cta: 'Marcar',
                 note: 'Médico no próprio dia'
-            },
-            {
-                chip: 'Consulta',
-                title: 'Consulta Médica de Saúde Mental',
-                price: '€60 · 45 min',
-                href: '/marcar/saude-mental',
-                cta: 'Marcar',
-                note: 'Online · 45 minutos'
             }
         ]
     };
@@ -1094,9 +1078,25 @@ function magCtaHtml(kind, lang) {
     };
     const byLang = packs[lang] || packs.pt;
     const pack = byLang[kind] || byLang.clinic;
-    const actions = pack.actions.map((action, i) => (
-        `<a class="${i === 0 ? 'mag-cta-primary' : 'mag-cta-ghost'}" href="${escapeHtml(action.href)}">${escapeHtml(action.label)}</a>`
-    )).join('');
+    const langQ = lang && lang !== 'pt' ? `?lang=${encodeURIComponent(lang)}` : '';
+    const bookingByKind = {
+        mental: `/marcar/saude-mental${langQ}`,
+        travel: `/marcar/travel${langQ}`,
+        burnout: `/marcar/burnout${langQ}`,
+        clinic: `/marcar/clinica-geral${langQ}`
+    };
+    const labelByLang = {
+        pt: 'Marcar consulta',
+        en: 'Book a consultation',
+        es: 'Reservar consulta',
+        fr: 'Prendre rendez-vous',
+        de: 'Termin buchen'
+    };
+    const bookingHref = bookingByKind[kind] || bookingByKind.clinic;
+    const bookingLabel = (pack.actions && pack.actions[0] && pack.actions[0].label) || labelByLang[lang] || labelByLang.pt;
+    const actions = `<a class="mag-cta-primary" href="${escapeHtml(bookingHref)}">${escapeHtml(
+        kind === 'clinic' || kind === 'travel' || kind === 'burnout' || kind === 'mental' ? (labelByLang[lang] || labelByLang.pt) : bookingLabel
+    )}</a>`;
     return `<aside class="mag-cta" aria-label="${escapeHtml(pack.title)}">
                 <p>${escapeHtml(pack.kicker)}</p>
                 <h2>${escapeHtml(pack.title)}</h2>
