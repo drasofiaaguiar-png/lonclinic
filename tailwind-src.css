@@ -10,14 +10,15 @@
 @theme {
     --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
 
-    --color-lon-bg: #f2e4f9;
+    --color-lon-bg: #f8f8f6;
     --color-lon-surface: #ffffff;
-    --color-lon-surface-soft: #f8f1fc;
-    --color-lon-accent: #ff7028;
-    --color-lon-accent-dark: #e55f1f;
-    --color-lon-primary: #15131b;
-    --color-lon-muted: #6e6477;
-    --color-lon-border: #e6d8ef;
+    --color-lon-surface-soft: #f1f5f2;
+    --color-lon-accent: #255235;
+    --color-lon-accent-dark: #1b3f29;
+    --color-lon-signal: #ff7028;
+    --color-lon-primary: #1a1a1a;
+    --color-lon-muted: #425045;
+    --color-lon-border: #c9d4cc;
 
     --radius-lon: 18px;
     --radius-lon-lg: 28px;

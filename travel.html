@@ -114,7 +114,7 @@
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
 
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -124,28 +124,28 @@
   --ink-mid: #1f2b23;
   --ink-soft: #4a5e52;
   --ink-ghost: #8a9e92;
-  --green: #1a6641;
-  --green-vivid: #1f7a4d;
+  --green: #255235;
+  --green-vivid: #2f6342;
   --green-light: #e8f4ed;
   --green-faint: #f3faf5;
   --white: #ffffff;
-  --off-white: #f7f9f7;
-  --border: rgba(10,15,12,0.09);
-  --border-mid: rgba(10,15,12,0.16);
+  --off-white: #f8f8f6;
+  --border: rgba(26,26,26,0.09);
+  --border-mid: rgba(26,26,26,0.16);
   --hero-bg: #0c1410;
   --hero-surface: rgba(255,255,255,0.06);
   --hero-border: rgba(255,255,255,0.10);
-  --r: 10px;
-  --r-lg: 14px;
-  --r-xl: 20px;
+  --r: 12px;
+  --r-lg: 18px;
+  --r-xl: 28px;
   --max: 1080px;
 }
 
 html { scroll-behavior: smooth; }
-body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--white); color: var(--ink); font-size: 15px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--off-white); color: var(--ink); font-size: 15px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
 
 /* ── NAV ── */
-.nav { position: sticky; top: 0; z-index: 200; background: linear-gradient(135deg, var(--green-vivid) 0%, var(--green) 100%); border-bottom: 0.5px solid rgba(255,255,255,0.18); height: 58px; display: flex; align-items: center; padding: 0 28px; box-shadow: 0 1px 0 rgba(0,0,0,0.06); }
+.nav { position: sticky; top: 0; z-index: 200; background: linear-gradient(135deg, #2f6342 0%, #255235 100%); border-bottom: 0.5px solid rgba(255,255,255,0.18); height: 64px; display: flex; align-items: center; padding: 0 28px; box-shadow: 0 12px 28px rgba(16, 30, 20, 0.18); }
 .nav-inner { width: 100%; max-width: var(--max); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .nav-logo { font-size: 17px; font-weight: 600; color: white; text-decoration: none; letter-spacing: -0.3px; display: flex; align-items: center; gap: 7px; }
 .nav-logo-dot { width: 6px; height: 6px; background: #fcd34d; border-radius: 50%; box-shadow: 0 0 8px rgba(252,211,77,0.7); }
@@ -156,7 +156,7 @@ body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; back
 .nav-lang { display: flex; gap: 2px; }
 .lang-btn { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.4); background: none; border: none; cursor: pointer; padding: 4px 7px; border-radius: 4px; transition: all 0.15s; }
 .lang-btn:hover, .lang-btn.active { background: rgba(255,255,255,0.1); color: white; }
-.nav-cta { background: white; color: var(--ink); font-size: 13px; font-weight: 600; padding: 8px 18px; border-radius: 7px; text-decoration: none; transition: opacity 0.15s; }
+.nav-cta { background: white; color: var(--ink); font-size: 13px; font-weight: 600; padding: 9px 18px; border-radius: 999px; text-decoration: none; transition: transform 0.15s, opacity 0.15s; }
 .nav-cta:hover { opacity: 0.9; }
 @media (max-width: 740px) { .nav-links { display: none; } }
 
