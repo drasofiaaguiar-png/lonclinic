@@ -612,7 +612,7 @@ function renderBlogArticle(origin, slug) {
         const time = iso
             ? `<time datetime="${escapeHtml(iso)}">Atualizado em ${escapeHtml(magDate(iso))}</time><span aria-hidden="true"> · </span>`
             : '';
-        return `<p class="eeat-byline mag-story-by">${time}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">Médica · ${a.yearsPractice} anos</a><span class="eeat-byline-review"> · Revisão clínica</span></p>`;
+        return `<p class="eeat-byline mag-story-by">${time}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">Médica · ${a.yearsPractice} anos de experiência clínica</a><span class="eeat-byline-review"> · Revisão clínica</span></p>`;
     })();
     const bio = authors.authorBioHtml(o, meta.author, dateMod || datePub);
     const leadFigure = meta.image
