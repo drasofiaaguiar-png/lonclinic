@@ -76,6 +76,63 @@ function loadManifest() {
     return parsed;
 }
 
+const ARTICLE_LANGS = {
+    pt: { htmlLang: 'pt-PT', ogLocale: 'pt_PT', inLanguage: 'pt-PT', hreflang: 'pt-PT', label: 'PT' },
+    en: { htmlLang: 'en', ogLocale: 'en_GB', inLanguage: 'en', hreflang: 'en', label: 'EN' },
+    es: { htmlLang: 'es', ogLocale: 'es_ES', inLanguage: 'es', hreflang: 'es', label: 'ES' }
+};
+
+function articleLangCode(meta) {
+    const lang = String((meta && meta.lang) || 'pt').toLowerCase();
+    return ARTICLE_LANGS[lang] ? lang : 'pt';
+}
+
+function articleLangMeta(meta) {
+    return ARTICLE_LANGS[articleLangCode(meta)];
+}
+
+function isListedArticle(article) {
+    return article && article.listed !== false;
+}
+
+function siblingArticles(current, articles) {
+    const group = current && current.group;
+    if (!group) return [];
+    return (Array.isArray(articles) ? articles : []).filter(
+        (a) => a && a.group === group && isValidSlug(a.slug) && isListedArticle(a)
+    );
+}
+
+function articleHreflangLinks(origin, current, articles) {
+    const siblings = siblingArticles(current, articles);
+    if (siblings.length < 2) return '';
+    const o = normalizeOrigin(origin);
+    const tags = siblings.map((a) => {
+        const href = `${o}/blog/${encodeURIComponent(a.slug)}`;
+        const hreflang = a.hreflang || articleLangMeta(a).hreflang;
+        return `<link rel="alternate" hreflang="${escapeHtml(hreflang)}" href="${escapeHtml(href)}">`;
+    });
+    const def = siblings.find((a) => articleLangCode(a) === 'pt') || siblings[0];
+    tags.push(`<link rel="alternate" hreflang="x-default" href="${escapeHtml(`${o}/blog/${encodeURIComponent(def.slug)}`)}">`);
+    const locTags = siblings
+        .filter((a) => a.slug !== current.slug)
+        .map((a) => `<meta property="og:locale:alternate" content="${escapeHtml(articleLangMeta(a).ogLocale)}">`);
+    return `${tags.join('\n    ')}\n    ${locTags.join('\n    ')}`;
+}
+
+function articleSitemapAlternates(origin, current, articles) {
+    const siblings = siblingArticles(current, articles);
+    if (siblings.length < 2) return [];
+    const o = normalizeOrigin(origin);
+    const list = siblings.map((a) => ({
+        hreflang: a.hreflang || articleLangMeta(a).hreflang,
+        href: `${o}/blog/${encodeURIComponent(a.slug)}`
+    }));
+    const def = siblings.find((a) => articleLangCode(a) === 'pt') || siblings[0];
+    list.push({ hreflang: 'x-default', href: `${o}/blog/${encodeURIComponent(def.slug)}` });
+    return list;
+}
+
 function loadBurnoutManifest() {
     if (!fs.existsSync(BURNOUT_MANIFEST_PATH)) {
         return { pages: [] };
@@ -349,7 +406,7 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260418k">
-    <link rel="stylesheet" href="/guide.css?v=20260903a">
+    <link rel="stylesheet" href="/guide.css?v=20260903c">
     <link rel="stylesheet" href="/author.css?v=20260820l">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -451,7 +508,7 @@ function layoutGuidePage(opts) {
 function renderBlogIndex(origin) {
     const o = normalizeOrigin(origin);
     const manifest = loadManifest();
-    const articles = sortArticles((manifest.articles || []).filter((a) => isValidSlug(a.slug)));
+    const articles = sortArticles((manifest.articles || []).filter((a) => isValidSlug(a.slug) && isListedArticle(a)));
     const defaultOg = `${o}/image/image2.webp`;
 
     const cards = articles.map((a) => {
@@ -461,7 +518,7 @@ function renderBlogIndex(origin) {
         const d = escapeHtml(String(a.description || ''));
         const iso = String(a.dateModified || a.datePublished || '').slice(0, 10);
         const date = iso
-            ? `<time datetime="${escapeHtml(iso)}">Atualizado em ${escapeHtml(magDate(iso))}</time>`
+            ? `<time datetime="${escapeHtml(iso)}">Atualizado em ${escapeHtml(magDate(iso, 'pt'))}</time>`
             : '';
         const imagePath = a.image
             ? `${String(a.image).startsWith('/') ? '' : '/'}${String(a.image)}`
@@ -555,19 +612,40 @@ function renderBlogArticle(origin, slug) {
     }
 
     const ctaKind = defaultCtaKind(meta);
+    const title = String(meta.title || slug);
+    const description = String(meta.description || '');
+    const datePub = String(meta.datePublished || '');
+    let dateMod = String(meta.dateModified || meta.datePublished || '');
+    const pageUrl = `${o}/blog/${encodeURIComponent(slug)}`;
     let articleHtml = bodyToHtml(raw, format === 'html' ? 'html' : 'markdown');
-    if (format === 'html' && /vacina-febre-amarela/.test(slug)) {
-        articleHtml = cvi.annotatePublicArticle(articleHtml, slug);
+    let cviParts = [];
+    if (format === 'html' && cvi.isCviPublicArticle(slug)) {
+        const dataDate = cvi.storeUpdatedAt();
+        articleHtml = cvi.annotatePublicArticle(articleHtml, slug, {
+            articleDate: datePub,
+            dataDate,
+            pageUrl
+        });
+        cviParts = cvi.jsonLdForArticle(slug, articleHtml, {
+            pageUrl,
+            articleDate: datePub,
+            dataDate
+        });
+        if (dataDate && (!dateMod || dataDate > dateMod)) dateMod = dataDate;
     }
     if (format !== 'html') {
         articleHtml = injectBookingCards(articleHtml, ctaKind);
     }
     const relatedHtml = format === 'html' ? '' : relatedArticlesHtml(meta, manifest.articles);
-    const title = String(meta.title || slug);
-    const description = String(meta.description || '');
-    const datePub = String(meta.datePublished || '');
-    const dateMod = String(meta.dateModified || meta.datePublished || '');
     const og = meta.image ? `${o}${String(meta.image).startsWith('/') ? '' : '/'}${meta.image}` : `${o}/image/image2.webp`;
+    const hasPart = cviParts[0] && Array.isArray(cviParts[0].itemListElement)
+        ? cviParts[0].itemListElement.map((el) => ({
+            '@type': 'WebPageElement',
+            '@id': el.item && el.item['@id'],
+            name: el.item && el.item.name,
+            dateModified: el.item && el.item.dateModified
+        }))
+        : undefined;
 
     const jsonLd = [
         {
@@ -578,13 +656,14 @@ function renderBlogArticle(origin, slug) {
             description,
             datePublished: datePub || undefined,
             dateModified: dateMod || undefined,
-            inLanguage: 'pt-PT',
-            url: `${o}/blog/${encodeURIComponent(slug)}`,
+            inLanguage: articleLangMeta(meta).inLanguage,
+            url: pageUrl,
             mainEntityOfPage: {
                 '@type': 'WebPage',
-                '@id': `${o}/blog/${encodeURIComponent(slug)}`
+                '@id': pageUrl
             },
             image: og,
+            ...(hasPart && hasPart.length ? { hasPart } : {}),
             ...(meta.about ? { about: { '@type': 'MedicalCondition', name: String(meta.about) } } : {}),
             ...authors.articleAuthorSchema(o)
         },
@@ -594,13 +673,19 @@ function renderBlogArticle(origin, slug) {
         jsonLd.push({
             '@context': 'https://schema.org',
             '@type': 'FAQPage',
-            mainEntity: meta.faq.map((item) => ({
-                '@type': 'Question',
-                name: item.q,
-                acceptedAnswer: { '@type': 'Answer', text: item.a }
-            }))
+            dateModified: dateMod || undefined,
+            mainEntity: meta.faq.map((item) => {
+                const day = item.dateModified || dateMod || undefined;
+                return {
+                    '@type': 'Question',
+                    name: item.q,
+                    dateModified: day,
+                    acceptedAnswer: { '@type': 'Answer', text: item.a, dateModified: day }
+                };
+            })
         });
     }
+    if (cviParts.length) jsonLd.push(...cviParts);
 
     jsonLd.push(magBreadcrumbJsonLd(o, magBreadcrumbCrumbs(`/blog/${encodeURIComponent(slug)}`, title)));
 
@@ -609,10 +694,18 @@ function renderBlogArticle(origin, slug) {
         const a = authors.getAuthor(meta.author);
         const href = authors.authorPath(a);
         const iso = String(dateMod || datePub || '').slice(0, 10);
+        const lang = articleLangCode(meta);
+        const updatedLabel = lang === 'en' ? 'Updated' : lang === 'es' ? 'Actualizado el' : 'Atualizado em';
         const time = iso
-            ? `<time datetime="${escapeHtml(iso)}">Atualizado em ${escapeHtml(magDate(iso))}</time><span aria-hidden="true"> · </span>`
+            ? `<time datetime="${escapeHtml(iso)}">${escapeHtml(updatedLabel)} ${escapeHtml(magDate(iso, lang))}</time><span aria-hidden="true"> · </span>`
             : '';
-        return `<p class="eeat-byline mag-story-by">${time}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">Médica · ${a.yearsPractice} anos de experiência clínica</a><span class="eeat-byline-review"> · Revisão clínica</span></p>`;
+        const clinician = lang === 'en'
+            ? `Physician · ${a.yearsPractice} years of clinical experience`
+            : lang === 'es'
+                ? `Médica · ${a.yearsPractice} años de experiencia clínica`
+                : `Médica · ${a.yearsPractice} anos de experiência clínica`;
+        const review = lang === 'en' ? ' · Clinical review' : lang === 'es' ? ' · Revisión clínica' : ' · Revisão clínica';
+        return `<p class="eeat-byline mag-story-by">${time}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">${escapeHtml(clinician)}</a><span class="eeat-byline-review">${escapeHtml(review)}</span></p>`;
     })();
     const bio = authors.authorBioHtml(o, meta.author, dateMod || datePub);
     const leadFigure = meta.image
@@ -622,10 +715,20 @@ function renderBlogArticle(origin, slug) {
     const articlePath = `/blog/${encodeURIComponent(slug)}`;
     const crumbsHtml = magBreadcrumbHtml(magBreadcrumbCrumbs(articlePath, title));
     const kicker = magThemeLabel(meta);
+    const lang = articleLangCode(meta);
+    const langMeta = articleLangMeta(meta);
     const note = isTravelGuide
-        ? 'Informação de carácter geral — não substitui consulta médica. Horários dos centros de vacinação podem alterar-se.'
-        : 'Informação de carácter geral — não substitui consulta médica individualizada.';
-    const closeCta = `<section class="mag-section mag-wrap mag-article-cta">${magCtaHtml(articleCluster(meta) === 'travel' ? 'travel' : articleCluster(meta) === 'mental' ? 'mental' : 'clinic')}</section>`;
+        ? (lang === 'en'
+            ? 'General information — it does not replace a medical consultation. Vaccination centre hours may change.'
+            : lang === 'es'
+                ? 'Información de carácter general — no sustituye una consulta médica. Los horarios de los centros de vacunación pueden cambiar.'
+                : 'Informação de carácter geral — não substitui consulta médica. Horários dos centros de vacinação podem alterar-se.')
+        : (lang === 'en'
+            ? 'General information — it does not replace an individual medical consultation.'
+            : lang === 'es'
+                ? 'Información de carácter general — no sustituye una consulta médica individualizada.'
+                : 'Informação de carácter geral — não substitui consulta médica individualizada.');
+    const closeCta = `<section class="mag-section mag-wrap mag-article-cta">${magCtaHtml(articleCluster(meta) === 'travel' ? 'travel' : articleCluster(meta) === 'mental' ? 'mental' : 'clinic', lang)}</section>`;
     const articleInner = format === 'markdown'
         ? `
     <main id="conteudo-principal" class="guide-article-main mag-article-main">
@@ -641,7 +744,7 @@ function renderBlogArticle(origin, slug) {
             ${leadFigure}
             <div class="mag-story-body">
             <p class="mag-story-note">${escapeHtml(note)}</p>
-            <div class="guide-prose mag-story-prose" lang="pt-PT">
+            <div class="guide-prose mag-story-prose" lang="${escapeHtml(langMeta.htmlLang)}">
                 ${articleHtml}
             </div>
             </div>
@@ -661,7 +764,7 @@ function renderBlogArticle(origin, slug) {
                 ${byline}
                 ${shareBarHtml(`${o}/blog/${encodeURIComponent(slug)}`, title, `magazine-${slug}`)}
             </header>
-            <div class="guide-prose" lang="pt-PT">
+            <div class="guide-prose" lang="${escapeHtml(langMeta.htmlLang)}">
                 ${articleHtml}
             </div>
             ${closeCta}
@@ -677,7 +780,10 @@ function renderBlogArticle(origin, slug) {
         ogImage: og,
         jsonLd,
         ogType: 'article',
-        extraCssAfter: ['/guide.css?v=20260820l', '/author.css?v=20260820l'],
+        htmlLang: langMeta.htmlLang,
+        ogLocale: langMeta.ogLocale,
+        extraHead: articleHreflangLinks(o, meta, manifest.articles),
+        extraCssAfter: ['/guide.css?v=20260903c', '/author.css?v=20260820l'],
         mainHtml: magAppHtml(articlePath, articleInner)
     });
 
@@ -788,42 +894,113 @@ function magTocHtml() {
             </nav>`;
 }
 
-function magCtaHtml(kind) {
+function magCtaHtml(kind, lang) {
     const packs = {
-        mental: {
-            kicker: 'Cuidado',
-            title: 'A mente também se acompanha.',
-            actions: [
-                { href: '/saudemental', label: 'Psicologia' },
-                { href: '/teste-personalidade', label: 'Teste de personalidade' }
-            ]
+        pt: {
+            mental: {
+                kicker: 'Cuidado',
+                title: 'A mente também se acompanha.',
+                actions: [
+                    { href: '/saudemental', label: 'Psicologia' },
+                    { href: '/teste-personalidade', label: 'Teste de personalidade' }
+                ]
+            },
+            travel: {
+                kicker: 'Viagem',
+                title: 'Partir com a saúde em dia.',
+                actions: [
+                    { href: '/marcar/travel', label: 'Consulta do viajante' },
+                    { href: '/travel-clinic', label: 'Clínica do viajante' }
+                ]
+            },
+            burnout: {
+                kicker: 'Dossier',
+                title: 'Quando o esgotamento já não é só cansaço.',
+                actions: [
+                    { href: '/burnout/teste', label: 'Fazer o teste' },
+                    { href: '/marcar/burnout', label: 'Consulta de burnout' }
+                ]
+            },
+            clinic: {
+                kicker: 'Clínica',
+                title: 'Uma consulta, com tempo.',
+                actions: [
+                    { href: '/marcar/clinica-geral', label: 'Marcar consulta' },
+                    { href: '/blog/telemedicina-em-casa', label: 'Telemedicina em casa' }
+                ]
+            }
         },
-        travel: {
-            kicker: 'Viagem',
-            title: 'Partir com a saúde em dia.',
-            actions: [
-                { href: '/marcar/travel', label: 'Consulta do viajante' },
-                { href: '/travel-clinic', label: 'Clínica do viajante' }
-            ]
+        en: {
+            mental: {
+                kicker: 'Care',
+                title: 'The mind also needs follow-up.',
+                actions: [
+                    { href: '/saudemental?lang=en', label: 'Psychology' },
+                    { href: '/teste-personalidade?lang=en', label: 'Personality test' }
+                ]
+            },
+            travel: {
+                kicker: 'Travel',
+                title: 'Leave with your health in order.',
+                actions: [
+                    { href: '/marcar/travel?lang=en', label: 'Travel consultation' },
+                    { href: '/travel-clinic', label: 'Travel clinic' }
+                ]
+            },
+            burnout: {
+                kicker: 'File',
+                title: 'When exhaustion is no longer just tiredness.',
+                actions: [
+                    { href: '/burnout/teste?lang=en', label: 'Take the test' },
+                    { href: '/marcar/burnout?lang=en', label: 'Burnout consultation' }
+                ]
+            },
+            clinic: {
+                kicker: 'Clinic',
+                title: 'A consultation, with time.',
+                actions: [
+                    { href: '/marcar/clinica-geral?lang=en', label: 'Book a consultation' },
+                    { href: '/blog/telemedicina-em-casa', label: 'Telemedicine at home' }
+                ]
+            }
         },
-        burnout: {
-            kicker: 'Dossier',
-            title: 'Quando o esgotamento já não é só cansaço.',
-            actions: [
-                { href: '/burnout/teste', label: 'Fazer o teste' },
-                { href: '/marcar/burnout', label: 'Consulta de burnout' }
-            ]
-        },
-        clinic: {
-            kicker: 'Clínica',
-            title: 'Uma consulta, com tempo.',
-            actions: [
-                { href: '/marcar/clinica-geral', label: 'Marcar consulta' },
-                { href: '/blog/telemedicina-em-casa', label: 'Telemedicina em casa' }
-            ]
+        es: {
+            mental: {
+                kicker: 'Cuidado',
+                title: 'La mente también se acompaña.',
+                actions: [
+                    { href: '/saudemental?lang=es', label: 'Psicología' },
+                    { href: '/teste-personalidade?lang=es', label: 'Test de personalidad' }
+                ]
+            },
+            travel: {
+                kicker: 'Viaje',
+                title: 'Salir con la salud al día.',
+                actions: [
+                    { href: '/marcar/travel?lang=es', label: 'Consulta del viajero' },
+                    { href: '/travel-clinic', label: 'Clínica del viajero' }
+                ]
+            },
+            burnout: {
+                kicker: 'Dossier',
+                title: 'Cuando el agotamiento ya no es solo cansancio.',
+                actions: [
+                    { href: '/burnout/teste?lang=es', label: 'Hacer el test' },
+                    { href: '/marcar/burnout?lang=es', label: 'Consulta de burnout' }
+                ]
+            },
+            clinic: {
+                kicker: 'Clínica',
+                title: 'Una consulta, con tiempo.',
+                actions: [
+                    { href: '/marcar/clinica-geral?lang=es', label: 'Reservar consulta' },
+                    { href: '/blog/telemedicina-em-casa', label: 'Telemedicina en casa' }
+                ]
+            }
         }
     };
-    const pack = packs[kind] || packs.clinic;
+    const byLang = packs[lang] || packs.pt;
+    const pack = byLang[kind] || byLang.clinic;
     const actions = pack.actions.map((action, i) => (
         `<a class="${i === 0 ? 'mag-cta-primary' : 'mag-cta-ghost'}" href="${escapeHtml(action.href)}">${escapeHtml(action.label)}</a>`
     )).join('');
@@ -858,12 +1035,18 @@ function magThemeRowHtml(id, title, articles, ctaKind) {
             </section>`;
 }
 
-function magDate(iso) {
+function magDate(iso, lang) {
     const raw = String(iso || '').slice(0, 10);
     const m = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if (!m) return raw;
-    const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-    const month = months[Number(m[2]) - 1] || m[2];
+    const months = {
+        en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+        es: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+        pt: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+    };
+    const list = months[lang] || months.pt;
+    const month = list[Number(m[2]) - 1] || m[2];
+    if (lang === 'en') return `${month} ${Number(m[3])}, ${m[1]}`;
     return `${Number(m[3])} ${month} ${m[1]}`;
 }
 
@@ -926,6 +1109,18 @@ function magazineNavTree() {
             children: [
                 { label: 'Clínica do viajante', href: '/travel-clinic' },
                 {
+                    label: 'Vacinas do viajante',
+                    children: [
+                        { label: 'Guia completo', href: '/blog/vacinas-viajante-guia-completo' },
+                        { label: 'Lisboa', href: '/blog/vacinas-viajante-lisboa' },
+                        { label: 'Porto', href: '/blog/vacinas-viajante-porto' },
+                        { label: 'Coimbra', href: '/blog/vacinas-viajante-coimbra' },
+                        { label: 'Braga', href: '/blog/vacinas-viajante-braga' },
+                        { label: 'Faro e Algarve', href: '/blog/vacinas-viajante-algarve' },
+                        { label: 'CUF', href: '/blog/vacinas-viajante-cuf' }
+                    ]
+                },
+                {
                     label: 'Vacina da febre amarela',
                     children: [
                         { label: 'Guia completo', href: '/blog/vacina-febre-amarela-guia-completo' },
@@ -943,6 +1138,9 @@ function magazineNavTree() {
         {
             label: 'Clínica',
             children: [
+                { label: 'SNS vs. privado', href: '/blog/sns-vs-privado-portugal' },
+                { label: 'Seguros de saúde', href: '/blog/seguros-saude-portugal-guia' },
+                { label: 'Seguro de saúde: compensa?', href: '/blog/seguro-saude-compensa' },
                 { label: 'Telemedicina em casa', href: '/blog/telemedicina-em-casa' },
                 { label: 'Como marcar', href: '/blog/marcacao-guia-rapido' }
             ]
@@ -1155,7 +1353,10 @@ function layoutMagazinePage(opts) {
         mainHtml,
         extraCss,
         extraCssAfter,
-        ogType
+        ogType,
+        htmlLang,
+        ogLocale,
+        extraHead
     } = opts;
     const canonicalUrl = canonicalHref(canonicalPath);
     const graph = Array.isArray(jsonLd) ? jsonLd : (jsonLd ? [jsonLd] : []);
@@ -1166,8 +1367,11 @@ function layoutMagazinePage(opts) {
     const extraCssAfterHtml = (Array.isArray(extraCssAfter) ? extraCssAfter : [])
         .map((href) => `<link rel="stylesheet" href="${escapeHtml(href)}">`)
         .join('\n    ');
+    const langAttr = htmlLang || 'pt-PT';
+    const locale = ogLocale || 'pt_PT';
+    const headExtra = extraHead ? `\n    ${extraHead}` : '';
     return `<!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="${escapeHtml(langAttr)}">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZN8J4X12H3"></script>
     <script>
@@ -1189,7 +1393,7 @@ function layoutMagazinePage(opts) {
     <meta property="og:url" content="${escapeHtml(canonicalUrl)}">
     <meta property="og:title" content="${escapeHtml(title)}">
     <meta property="og:description" content="${escapeHtml(description)}">
-    <meta property="og:locale" content="pt_PT">
+    <meta property="og:locale" content="${escapeHtml(locale)}">${headExtra}
     <meta property="og:image" content="${escapeHtml(ogImage)}">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${escapeHtml(title)}">
@@ -1219,7 +1423,7 @@ function layoutMagazinePage(opts) {
 
 function renderMagazineIndex(origin) {
     const o = normalizeOrigin(origin);
-    const articles = sortArticles((loadManifest().articles || []).filter((a) => isValidSlug(a.slug)));
+    const articles = sortArticles((loadManifest().articles || []).filter((a) => isValidSlug(a.slug) && isListedArticle(a)));
     const mental = articles.filter((a) => magTheme(a) === 'mental');
     const travel = articles.filter((a) => magTheme(a) === 'travel');
     const clinic = articles.filter((a) => magTheme(a) === 'clinic');
@@ -1302,5 +1506,6 @@ module.exports = {
     renderBlogArticle,
     renderNotFound,
     loadManifest,
-    sortArticles
+    sortArticles,
+    articleSitemapAlternates
 };

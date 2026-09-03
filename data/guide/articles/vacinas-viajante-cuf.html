@@ -1,9 +1,22 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": ["Article", "MedicalWebPage"],
-  "name": "Guia rápido de marcação — Lon Clinic",
-  "description": "Passos para marcar a sua consulta online em poucos minutos."
+  "@type": "MedicalClinic",
+  "name": "Clínica Médica Online — Vacinas do viajante e CUF",
+  "description": "Informação sobre as vacinas do viajante, Centros de Vacinação Internacional e alternativas à administração em rede CUF.",
+  "areaServed": "Portugal",
+  "availableService": { "@type": "MedicalProcedure", "name": "Vacinação do viajante" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "A CUF faz as vacinas do viajante?", "acceptedAnswer": { "@type": "Answer", "text": "A CUF não administra vacinas do circuito CVI, incluindo febre amarela. A vacinação internacional e o CIVP fazem-se nos Centros de Vacinação Internacional." } },
+    { "@type": "Question", "name": "Onde tomar as vacinas do viajante em alternativa à CUF?", "acceptedAnswer": { "@type": "Answer", "text": "Nos Centros de Vacinação Internacional públicos distribuídos por Portugal, mediante prescrição médica. A consulta online emite a prescrição no próprio dia." } },
+    { "@type": "Question", "name": "A CUF pode passar a prescrição para as vacinas do viajante?", "acceptedAnswer": { "@type": "Answer", "text": "Sim. A CUF pode realizar a Consulta do Viajante e emitir prescrição, mas as vacinas do circuito CVI administram-se num Centro de Vacinação Internacional." } }
+  ]
 }
 </script>
 
@@ -293,6 +306,16 @@
   border-radius: var(--r-lg);
   box-sizing: border-box;
 }
+.alg-cuf-answer { background: #fef2f2; border: 1px solid #fecaca; border-left: 4px solid #dc2626; border-radius: 0 var(--r-lg) var(--r-lg) 0; padding: 22px 24px; margin: 0; }
+.alg-cuf-answer-title { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: #991b1b; margin: 0 0 10px; }
+.alg-cuf-answer p { font-size: var(--alg-text-sm); color: #7f1d1d; line-height: var(--alg-leading); margin: 0 0 10px; }
+.alg-cuf-answer p:last-child { margin-bottom: 0; }
+.alg-cuf-table-wrap { width: min(100%, var(--alg-max)); margin: 0 auto; padding: 0 var(--alg-gutter) 52px; box-sizing: border-box; overflow-x: auto; }
+.alg-cuf-table { width: 100%; border-collapse: collapse; font-size: var(--alg-text-xs); }
+.alg-cuf-table th { background: var(--ink); color: #fff; padding: 10px 12px; text-align: left; font-weight: 600; font-size: 0.6875rem; letter-spacing: 0.03em; }
+.alg-cuf-table td { padding: 10px 12px; border-bottom: 0.5px solid var(--border); vertical-align: top; }
+.alg-cuf-table tr:nth-child(even) td { background: var(--green-faint); }
+.alg-cuf-table a { color: var(--green); text-decoration: underline; }
 /* Sobreposição a .guide-prose para corpo e títulos coerentes */
 .guide-prose .alg-article { color: var(--ink-mid); }
 .guide-prose .alg-article p:not(.lon-service-price) { font-family: var(--alg-font-sans); font-size: var(--alg-text); line-height: var(--alg-leading); }
@@ -321,32 +344,32 @@
 
 <div class="alg-article">
   <div class="alg-breadcrumb">
-    <a href="/">Início</a> › <a href="/blog">Guias</a> › <a href="/blog/marcacao-guia-rapido">Guia rápido de marcação</a>
+    <a href="/">Início</a> › <a href="/blog">Guias</a> › <a href="/blog/vacinas-viajante-guia-completo">Vacinas do viajante</a> › CUF
   </div>
 
   <section style="background:white; border-bottom:0.5px solid var(--border);">
     <div class="alg-hero">
       <div class="alg-hero-content">
-        <div class="alg-eyebrow">Plataforma · Marcação</div>
-        <h2>Guia rápido<br>de <em>marcação</em></h2>
-        <p class="alg-hero-desc">Quatro passos simples para marcar a sua consulta online na Lon Clinic — escolha o serviço, data e hora, pague e receba o acesso à videoconsulta.</p>
+        <div class="alg-eyebrow">CUF e Centros de Vacinação Internacional</div>
+        <h2>Vacinas do viajante<br>na <em>CUF — o que saber</em></h2>
+        <p class="alg-hero-desc">A CUF não administra vacinas do circuito CVI (febre amarela e outras reservadas a estes centros). Veja como obter prescrição médica e vacinar-se num Centro de Vacinação Internacional — com certificado, quando for preciso.</p>
         <div class="alg-trust-row">
-          <span class="alg-trust-pill"><span class="dot">●</span> Horários em tempo real</span>
-          <span class="alg-trust-pill"><span class="dot">●</span> Pagamento seguro</span>
-          <span class="alg-trust-pill"><span class="dot">●</span> Videoconsulta no browser</span>
-          <span class="alg-trust-pill"><span class="dot">●</span> Sem instalar app</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Vacinas CVI não se tomam na CUF</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Consulta online 7 dias/semana</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Prescrição no próprio dia</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Válida em qualquer CVI em Portugal</span>
         </div>
-        <div class="alg-hero-note"><strong>Informação geral:</strong> o fluxo de marcação pode variar ligeiramente por especialidade. Em caso de dúvida, veja a <a href="/faq" style="color:var(--green);text-decoration:underline;">FAQ</a> ou contacte-nos.</div>
+        <div class="alg-hero-note"><strong>Informação de carácter geral:</strong> políticas da rede CUF podem mudar — confirme sempre no site oficial. Horários dos Centros de Vacinação Internacional sujeitos a alteração.</div>
       </div>
       <div class="alg-hero-aside" id="marcar">
-        <article class="lon-service-card is-visible alg-hero-travel-booking" aria-label="Marcar consulta online">
+        <article class="lon-service-card is-visible alg-hero-travel-booking" aria-label="Consulta do Viajante — marcar online">
           <div class="lon-service-image-wrap alg-hero-card-cover">
-            <img src="/image/image1_files/LincolnSquare_Large_Desktop.jpg" alt="Marcação de consulta online na Lon Clinic" width="800" height="600" loading="eager" decoding="async">
-            <span class="lon-service-chip">Marcação</span>
+            <img src="/image/image1_files/ColmoreRow_Large_Desktop.jpg" alt="Consulta do viajante e Centros de Vacinação Internacional" width="800" height="600" loading="eager" decoding="async">
+            <span class="lon-service-chip">Viajante</span>
             <div class="lon-service-glass alg-hero-card-glass">
-              <h3>Marcar consulta</h3>
-              <p class="lon-service-price">Online · em minutos</p>
-              <a href="/marcar" class="lon-btn lon-btn-soft lon-btn-sm">Começar</a>
+              <h3>Consulta do Viajante</h3>
+              <p class="lon-service-price">€39 · 20 min</p>
+              <a href="/marcar/travel" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
             </div>
           </div>
         </article>
@@ -354,59 +377,99 @@
     </div>
   </section>
 
+  <section class="alg-section" style="padding-top:36px;">
+    <div class="alg-section-label">Resposta direta</div>
+    <div class="alg-cuf-answer">
+      <div class="alg-cuf-answer-title">❌ Vacinas do circuito CVI não se tomam na CUF</div>
+      <p>Em nenhuma das unidades CUF — hospitais, clínicas ou postos — é administrada a vacina contra a febre amarela, conforme informação pública da própria rede. O mesmo vale para outras vacinas reservadas aos Centros de Vacinação Internacional.</p>
+      <p>A CUF pode disponibilizar <strong>Consulta do Viajante</strong> e prescrição. A vacinação do circuito CVI e o Certificado Internacional (CIVP) fazem-se num <strong>Centro de Vacinação Internacional</strong> autorizado.</p>
+    </div>
+  </section>
+
   <section class="alg-section">
-    <div class="alg-section-label">Passo a passo</div>
-    <h3>Do primeiro clique à videoconsulta</h3>
-    <p class="alg-section-sub">Processo típico para marcar qualquer serviço disponível na plataforma.</p>
+    <div class="alg-section-label">Caminho recomendado</div>
+    <h3>Do primeiro clique ao Centro de Vacinação Internacional</h3>
+    <p class="alg-section-sub">Processo típico quando precisa de vacinas do circuito CVI e, se for o caso, do certificado — sem administração destas doses na CUF.</p>
     <div class="alg-steps-grid">
-      <div class="alg-step-block"><div class="alg-step-block-num">01</div><h4>Escolha o tipo de consulta</h4><p>Na página de marcação, selecione a especialidade ou serviço que melhor corresponde às suas necessidades.</p></div>
-      <div class="alg-step-block"><div class="alg-step-block-num">02</div><h4>Escolha data e hora</h4><p>Indique o momento que lhe for mais conveniente. Verá as opções disponíveis em tempo real.</p></div>
-      <div class="alg-step-block"><div class="alg-step-block-num">03</div><h4>Pague de forma segura</h4><p>O pagamento confirma o agendamento. Aceitamos os métodos indicados no processo de marcação.</p></div>
-      <div class="alg-step-block"><div class="alg-step-block-num">04</div><h4>Receba o acesso</h4><p>Receberá instruções por email para aceder à videoconsulta no dia e hora marcados — diretamente no browser.</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">01</div><h4>Marque consulta online</h4><p>Medicina de viagem disponível 7 dias por semana, com avaliação médica por videochamada.</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">02</div><h4>Receba a prescrição</h4><p>Prescrição digital válida no mesmo dia para qualquer Centro de Vacinação Internacional em Portugal.</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">03</div><h4>Agende no CVI</h4><p>Contacte o Centro de Vacinação Internacional mais próximo (marcação prévia quase sempre obrigatória).</p></div>
+      <div class="alg-step-block"><div class="alg-step-block-num">04</div><h4>Vacina e certificado</h4><p>Recebe as vacinas indicadas. Se precisar de febre amarela, o CIVP é emitido no dia e só é válido 10 dias depois.</p></div>
     </div>
   </section>
 
   <div class="alg-info-band">
     <div class="alg-info-band-inner">
-      <div class="alg-info-item"><h4>Confirmação imediata</h4><p>Após o pagamento, o seu lugar fica reservado para o horário escolhido.</p></div>
-      <div class="alg-info-item"><h4>Lembrete por email</h4><p>Recebe os detalhes de acesso e o link para a sessão no dia da consulta.</p></div>
-      <div class="alg-info-item"><h4>Privacidade</h4><p>A consulta decorre em canal seguro, adequado a telemedicina.</p></div>
-      <div class="alg-info-item"><h4>Precisa de ajuda?</h4><p>Consulte a FAQ ou utilize os contactos na página inicial.</p></div>
+      <div class="alg-info-item"><h4>As mesmas unidades CVI</h4><p>Hepatite A, febre tifóide, febre amarela, meningocócica e outras vacinas de viagem administram-se nos Centros de Vacinação Internacional.</p></div>
+      <div class="alg-info-item"><h4>Prescrição obrigatória</h4><p>Os CVI públicos só vacinam com prescrição médica. A consulta online emite-a no próprio dia, se houver indicação.</p></div>
+      <div class="alg-info-item"><h4>Planeie com antecedência</h4><p>Algumas vacinas pedem mais do que uma dose. Se precisar de febre amarela, o certificado só é válido 10 dias depois.</p></div>
+      <div class="alg-info-item"><h4>O destino define o plano</h4><p>Não há um esquema único. O médico avalia país, itinerário, datas e o seu historial vacinal.</p></div>
     </div>
-  </div>
+    </div>
+
+  <section class="alg-locations-section">
+    <div class="alg-section-label">Onde vacinar</div>
+    <h3>Centros de Vacinação Internacional autorizados — principais locais</h3>
+    <p class="alg-section-sub">Centros de Vacinação Internacional onde pode receber as vacinas do viajante mediante prescrição médica. <strong>Marcação obrigatória antes de se deslocar.</strong></p>
+    <div class="alg-cuf-table-wrap">
+      <table class="alg-cuf-table">
+        <thead>
+          <tr><th>Cidade</th><th>Local</th><th>Horário</th><th>Contacto</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Lisboa</td><td>ACES Lisboa Norte — Largo Prof. Arnaldo Sampaio</td><td>Vacinação: dias úteis 09h–15h30 · Consultas: 3ª 09h–13h</td><td><a href="tel:217211862">217 211 862</a></td></tr>
+          <tr><td>Lisboa</td><td>Hospital Curry Cabral (CHULC) — Rua da Beneficência, 8</td><td>2ª–5ª: 14h–16h30</td><td><a href="tel:217924322">217 924 322</a></td></tr>
+          <tr><td>Lisboa</td><td>Hospital Santa Maria (CHULN)</td><td>2ª, 3ª e 5ª: 14h–17h · 4ª: 14h–18h · 6ª: 14h–16h</td><td><a href="tel:217805000">217 805 000</a></td></tr>
+          <tr><td>Porto</td><td>Centro de Vacinação Internacional ULS Santo António — Rua da Alegria, 1057</td><td>2ª a 6ª: 09h–13h e 14h–17h</td><td><a href="tel:222002540">222 002 540</a></td></tr>
+          <tr><td>Porto</td><td>Hospital de S. João</td><td>3ª, 4ª e 5ª: 14h–17h</td><td><a href="tel:225512375">225 512 375</a></td></tr>
+          <tr><td>Coimbra</td><td>Centro de Saúde Santa Clara — Rua Cap. Salgueiro Maia</td><td>2ª a 6ª: 09h–12h e 14h–16h (4ª só manhã)</td><td><a href="tel:239802112">239 802 112</a></td></tr>
+          <tr><td>Braga</td><td>ULS de Braga — Praceta de Vilar, s/n</td><td>2ª, 5ª e 6ª: 09h–13h · 3ª e 4ª: 09h–13h e 14h–17h</td><td><a href="tel:253208260">253 208 260</a></td></tr>
+          <tr><td>Almada</td><td>Hospital Garcia de Orta</td><td>2ª, 4ª e 6ª: 13h–18h30</td><td><a href="tel:212726808">212 726 808</a></td></tr>
+          <tr><td>Setúbal</td><td>Centro Hospitalar de Setúbal</td><td>Dias úteis: 09h–12h e 15h–17h</td><td><a href="tel:265549558">265 549 558</a></td></tr>
+          <tr><td>Aveiro</td><td>Centro de Saúde de Aveiro — Praça Rainha D. Leonor</td><td>2ª a 6ª: 09h30–12h30 e 14h30–16h</td><td><a href="tel:234891191">234 891 191</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="alg-section-sub" style="margin-top:16px;margin-bottom:0;font-size:var(--alg-text-xs);">Fontes: ARSLVT, ARS Norte, ARS Centro, Ordem dos Médicos 2025. Horários sujeitos a alteração — confirme sempre antes de se deslocar. Lista não exaustiva.</p>
+  </section>
 
   <section class="alg-section" style="background:white;">
-    <div class="alg-section-label">Dúvidas</div>
-    <h3>Perguntas frequentes sobre a marcação</h3>
+    <div class="alg-section-label">Perguntas frequentes</div>
+    <h3>Dúvidas sobre a CUF e as vacinas do viajante</h3>
     <div class="alg-faq-list">
-      <div class="alg-faq-item"><div class="alg-faq-q">Posso alterar ou cancelar depois de marcar?</div><div class="alg-faq-a">As regras de alteração e cancelamento dependem do serviço e do prazo — consulte a página de marcação ou a FAQ para o seu caso.</div></div>
-      <div class="alg-faq-item"><div class="alg-faq-q">Preciso de instalar uma aplicação?</div><div class="alg-faq-a">Não. A videoconsulta é acedida no browser, com o link que enviamos por email.</div></div>
-      <div class="alg-faq-item"><div class="alg-faq-q">E se tiver problemas técnicos no dia?</div><div class="alg-faq-a">Use os contactos de apoio indicados no email de confirmação ou na página inicial.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">A CUF faz as vacinas do viajante?</div><div class="alg-faq-a">A CUF não administra vacinas do circuito CVI, incluindo febre amarela. Para essas doses, desloca-se a um Centro de Vacinação Internacional autorizado.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">A CUF pode fazer a Consulta do Viajante e emitir a prescrição?</div><div class="alg-faq-a">Sim. A CUF dispõe de Consulta do Viajante onde um médico pode emitir prescrição. Com essa prescrição, desloca-se a um Centro de Vacinação Internacional. A nossa consulta online oferece o mesmo tipo de serviço com resposta rápida.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">Posso comprar a vacina na farmácia e levá-la à CUF?</div><div class="alg-faq-a">As vacinas do circuito CVI (incluindo febre amarela) não se compram na farmácia para levar à CUF. Administram-se no CVI, com prescrição.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">Qual é a diferença entre a CUF e um Centro de Vacinação Internacional?</div><div class="alg-faq-a">A CUF é rede privada com consulta do viajante, mas sem autorização para vacinas do circuito CVI. Os Centros de Vacinação Internacional são as unidades que administram essas vacinas e emitem o CIVP.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">O certificado emitido no Centro de Vacinação Internacional é aceite internacionalmente?</div><div class="alg-faq-a">Sim. O CIVP emitido nos CVI portugueses é aceite internacionalmente. Para febre amarela, a validade é habitualmente considerada vitalícia após dose única desde 2016.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">Quanto tempo demora o processo completo?</div><div class="alg-faq-a">Com consulta online, recebe a prescrição no próprio dia. Depois marca no CVI mais próximo. Algumas vacinas pedem série de doses. Se precisar de febre amarela, o certificado só é válido 10 dias após a vacina.</div></div>
     </div>
   </section>
 
   <section class="alg-related-pages">
-    <div class="alg-section-label">Outros guias</div>
-    <h3>Leia também</h3>
-    <p class="alg-section-sub">Medicina de viagem e informação geral.</p>
+    <div class="alg-section-label">Guias por cidade</div>
+    <h3>Onde vacinar na sua região</h3>
+    <p class="alg-section-sub">Guias com locais, horários e contactos dos Centros de Vacinação Internacional. Procura só a febre amarela? <a href="/blog/vacina-febre-amarela-cuf">Abra o guia específico</a>.</p>
     <div class="alg-related-grid">
-      <a class="alg-related-card" href="/blog/vacinas-viajante-guia-completo"><div><div class="alg-related-card-text">Vacinas do viajante</div><div class="alg-related-card-sub">Centros CVI, prescrição e prazos</div></div><span class="alg-related-arrow">→</span></a>
-      <a class="alg-related-card" href="/blog/vacina-febre-amarela-guia-completo"><div><div class="alg-related-card-text">Vacina febre amarela</div><div class="alg-related-card-sub">Guia completo 2026</div></div><span class="alg-related-arrow">→</span></a>
-      <a class="alg-related-card" href="/faq"><div><div class="alg-related-card-text">FAQ</div><div class="alg-related-card-sub">Perguntas frequentes da plataforma</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacinas-viajante-lisboa"><div><div class="alg-related-card-text">Lisboa</div><div class="alg-related-card-sub">Centros de Vacinação Internacional na ARSLVT</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacinas-viajante-porto"><div><div class="alg-related-card-text">Porto</div><div class="alg-related-card-sub">Centros de Vacinação Internacional no Porto e Norte</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacinas-viajante-coimbra"><div><div class="alg-related-card-text">Coimbra</div><div class="alg-related-card-sub">Região Centro</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacinas-viajante-braga"><div><div class="alg-related-card-text">Braga</div><div class="alg-related-card-sub">Braga e Minho</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/vacinas-viajante-guia-completo"><div><div class="alg-related-card-text">Guia Completo</div><div class="alg-related-card-sub">Tudo sobre as vacinas do viajante</div></div><span class="alg-related-arrow">→</span></a>
     </div>
   </section>
 
   <section class="alg-final-cta">
     <div class="alg-final-cta-inner">
-      <h3>Pronto para<br><em>marcar?</em></h3>
-      <p>Avance para o agendamento e escolha o melhor horário para si.</p>
-      <a class="alg-btn-cta-large" href="/marcar">Marcar consulta →</a>
-      <p class="alg-final-note">Disponível conforme serviços ativos na plataforma</p>
+      <h3>Precisa das vacinas<br><em>com urgência?</em></h3>
+      <p>Marque a consulta online agora. Emitimos a prescrição no próprio dia para que possa ir ao Centro de Vacinação Internacional o mais depressa possível.</p>
+      <a class="alg-btn-cta-large" href="/marcar/travel">Marcar Consulta Online →</a>
+      <p class="alg-final-note">Disponível 7 dias por semana · Prescrição digital no próprio dia</p>
     </div>
   </section>
 
   <div class="alg-disclaimer">
-    <p>Esta página descreve o fluxo geral de marcação. Detalhes específicos podem variar por serviço ou atualização da plataforma.</p>
+    <p>Informação de carácter geral. As políticas da CUF podem mudar — consulte sempre o site oficial da CUF para confirmação atualizada. Horários dos Centros de Vacinação Internacional sujeitos a alteração.</p>
   </div>
 
 </div>

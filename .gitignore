@@ -5,3 +5,6 @@ uploads/
 Thumbs.db
 *.log
 prod-ca-2021.crt
+data/cvi/source.csv
+data/cvi/*.xlsx
+data/cvi/*.xls

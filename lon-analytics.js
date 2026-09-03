@@ -9,7 +9,7 @@
     if (window.__lonAnalyticsBoot) return;
     window.__lonAnalyticsBoot = true;
 
-    var SKIP = /^\/(admin|clinic-portal|doctors|patient-portal|clinic|dashboard|diretorio)(\/|$|\.html)/i;
+    var SKIP = /^\/(admin|clinic-portal|doctors|patient-portal|clinic|dashboard|diretorio|conta)(\/|$|\.html)/i;
     var pathNow = (location.pathname || '/') + '';
     if (SKIP.test(pathNow)) return;
     if (window.LonAnalytics) return;

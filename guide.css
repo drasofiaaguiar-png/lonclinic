@@ -285,6 +285,111 @@
     box-sizing: border-box;
 }
 
+.alg-loc-verify {
+    margin: -4px 0 0;
+    line-height: 1.3;
+}
+
+.alg-badge-ok,
+.alg-badge-pending {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 3px 8px;
+    border-radius: 999px;
+}
+
+.alg-badge-ok {
+    background: #eaf4ee;
+    color: #1a6641;
+}
+
+.alg-badge-pending {
+    background: #f4f1ea;
+    color: #6b5c3e;
+}
+
+.alg-prazo-section {
+    background: #fff;
+    border-top: 0.5px solid rgba(15, 26, 20, 0.10);
+}
+
+.alg-prazo-steps {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 22px;
+}
+
+.alg-prazo-step {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 16px 16px 18px;
+    border: 0.5px solid rgba(15, 26, 20, 0.14);
+    border-radius: 14px;
+    background: #f4faf6;
+}
+
+.alg-prazo-step span {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.35rem;
+    color: #1a6641;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.alg-prazo-step h4 {
+    margin: 0 0 6px;
+    font-size: 0.95rem;
+    color: #0f1a14;
+}
+
+.alg-prazo-step p {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: #3a4a3f;
+}
+
+.alg-prazo-step a {
+    color: #1a6641;
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    .alg-prazo-steps {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 560px) {
+    .alg-prazo-steps {
+        grid-template-columns: 1fr;
+    }
+}
+
+.alg-loc-prazo {
+    font-size: 0.8125rem;
+    color: #0f1a14;
+    line-height: 1.5;
+    background: #f0f7ff;
+    border: 0.5px solid #bfdbfe;
+    border-radius: 6px;
+    padding: 10px 12px;
+}
+
+.alg-loc-prazo strong {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #1e40af;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
 .guide-top-disclaimer {
     width: min(100%, 1060px);
     margin: 0 auto 16px;

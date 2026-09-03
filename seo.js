@@ -13,6 +13,7 @@ const PRIVATE_DISALLOWS = [
     '/doctors',
     '/clinic-portal',
     '/patient-portal',
+    '/conta',
     '/diretorio',
     '/uploads',
     '/api/'
@@ -319,9 +320,10 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
     try {
         const articles = guide.sortArticles(guide.loadManifest().articles || []);
         for (const a of articles) {
-            if (!a || !guide.isValidSlug(a.slug)) continue;
+            if (!a || !guide.isValidSlug(a.slug) || a.listed === false) continue;
             const lastmod = String(a.dateModified || a.datePublished || today).slice(0, 10);
-            entries.push(urlEntry(`${o}/blog/${encodeURIComponent(a.slug)}`, lastmod, 'monthly', '0.75'));
+            const alternates = guide.articleSitemapAlternates(o, a, articles);
+            entries.push(urlEntry(`${o}/blog/${encodeURIComponent(a.slug)}`, lastmod, 'monthly', '0.75', alternates));
         }
     } catch (err) {
         console.error('sitemap: guide articles', err.message);

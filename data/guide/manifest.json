@@ -1,6 +1,336 @@
 {
   "articles": [
     {
+      "slug": "sns-vs-privado-portugal",
+      "title": "SNS vs. Privado em Portugal: Como Funciona Cada Sistema",
+      "description": "Percebe as diferenças reais entre o SNS e a saúde privada em Portugal — acesso, tempos de espera, custos e quando cada opção faz mais sentido.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "lang": "pt",
+      "hreflang": "pt-PT",
+      "group": "sns-vs-privado-portugal",
+      "image": "/image/guide/guide-group-walk.jpg",
+      "about": "SNS",
+      "related": [
+        "seguros-saude-portugal-guia",
+        "seguro-saude-compensa",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "O Cartão Europeu de Seguro de Doença cobre vacinas?",
+          "a": "Não. O CESD cobre apenas cuidados considerados clinicamente necessários durante a estada — vacinação é tratada como cuidado preventivo, e fica excluída."
+        },
+        {
+          "q": "Posso usar o CESD numa clínica privada em Portugal?",
+          "a": "Não — só é aceite em hospitais públicos e centros de saúde do SNS. Também não cobre repatriamento nem substitui um seguro de viagem."
+        },
+        {
+          "q": "O CESD só serve para emergências?",
+          "a": "Na prática, sim: emergências e doenças súbitas durante a estada. Cobre continuidade de tratamento de doenças crónicas ou pré-existentes que já tinha antes de viajar, mas nunca tratamentos planeados ou eletivos — não pode usar o CESD para ir propositadamente a outro país fazer uma cirurgia ou tratamento agendado."
+        },
+        {
+          "q": "Devo ligar para o 112 ou para o SNS 24?",
+          "a": "112 é só para emergências reais com risco de vida. SNS 24 (808 24 24 24) é para aconselhamento e triagem em situações preocupantes mas não emergentes."
+        },
+        {
+          "q": "Um turista pode usar o SNS em Portugal?",
+          "a": "Turistas da UE/EEE podem usar o CESD nas urgências e centros de saúde públicos. Turistas de países terceiros geralmente não têm acesso gratuito e devem recorrer ao privado ou a um seguro de viagem."
+        },
+        {
+          "q": "Quanto tempo demora a ter médico de família no SNS?",
+          "a": "Depende da região. Em março de 2026, mais de 1,6 milhões de utentes estavam sem médico de família atribuído em Portugal."
+        },
+        {
+          "q": "Posso usar o SNS mesmo tendo seguro de saúde privado?",
+          "a": "Sim — o SNS é independente de estar inscrito noutro sistema (seguro privado, ADSE, etc.)."
+        }
+      ]
+    },
+    {
+      "slug": "seguros-saude-portugal-guia",
+      "title": "Seguros de Saúde em Portugal — Guia para Quem Está a Decidir",
+      "description": "Como funcionam os seguros de saúde em Portugal, o que costumam cobrir (e não cobrir), e como comparar propostas sem se perder nos termos técnicos.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "lang": "pt",
+      "hreflang": "pt-PT",
+      "group": "seguros-saude-portugal-guia",
+      "image": "/image/guide/guide-opera-coast.jpg",
+      "about": "Seguros",
+      "related": [
+        "sns-vs-privado-portugal",
+        "seguro-saude-compensa",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "Preciso de fazer exames médicos para contratar um seguro de saúde?",
+          "a": "Normalmente é pedido um Questionário Individual de Saúde ou entrevista médica por telefone — não exames físicos, salvo casos específicos."
+        },
+        {
+          "q": "Posso mudar de plano dentro da mesma seguradora?",
+          "a": "Sim, mas geralmente com antecedência mínima (frequentemente 90 dias antes da renovação)."
+        },
+        {
+          "q": "Um seguro de saúde cobre consultas de medicina do viajante?",
+          "a": "Depende do plano. Alguns seguros incluem medicina online e, nesses casos, a consulta do viajante pode estar coberta sem custo adicional — mas só para pessoas seguras. Se o plano não incluir, ou se ainda não tem seguro, pode marcar a consulta à parte."
+        }
+      ]
+    },
+    {
+      "slug": "seguro-saude-compensa",
+      "title": "Seguro de Saúde em Portugal — Compensa ou Não?",
+      "description": "Um seguro de saúde compensa? Compare o custo anual de um seguro com o custo de pagar consultas avulso e descubra qual o perfil que mais beneficia.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "lang": "pt",
+      "hreflang": "pt-PT",
+      "group": "seguro-saude-compensa",
+      "image": "/image/guide/guide-country-road.jpg",
+      "about": "Seguros",
+      "related": [
+        "seguros-saude-portugal-guia",
+        "sns-vs-privado-portugal",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "Vale mais a pena um seguro de saúde ou pagar tudo do próprio bolso?",
+          "a": "Depende do perfil de utilização — se usa o privado regularmente (mais de 2–3 vezes por ano), o seguro tende a compensar; se é uso raro e pontual, pagar avulso costuma ser mais barato."
+        },
+        {
+          "q": "Compensa ter seguro de saúde só para uma viagem?",
+          "a": "Normalmente não. Um seguro de saúde anual não é desenhado para uma necessidade pontual. Faz mais sentido uma consulta avulso de medicina do viajante ou um seguro de viagem específico para essa deslocação."
+        }
+      ]
+    },
+    {
+      "slug": "sns-vs-private-portugal",
+      "title": "SNS vs private healthcare in Portugal: how each system works",
+      "description": "The real differences between the SNS and private healthcare in Portugal — access, waiting times, costs, and when each option makes more sense.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "lang": "en",
+      "hreflang": "en",
+      "group": "sns-vs-privado-portugal",
+      "listed": false,
+      "image": "/image/guide/guide-group-walk.jpg",
+      "about": "SNS",
+      "related": [
+        "health-insurance-portugal-guide",
+        "is-health-insurance-worth-it-portugal",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "Does the European Health Insurance Card cover vaccines?",
+          "a": "No. The EHIC only covers care considered clinically necessary during your stay — vaccination is treated as preventive care and is excluded."
+        },
+        {
+          "q": "Can I use the EHIC at a private clinic in Portugal?",
+          "a": "No — it is only accepted in public hospitals and SNS health centres. It also does not cover repatriation and does not replace travel insurance."
+        },
+        {
+          "q": "Is the EHIC only for emergencies?",
+          "a": "In practice, yes: emergencies and sudden illness during your stay. It covers continuity of treatment for chronic or pre-existing conditions you already had before travelling, but never planned or elective treatment — you cannot use the EHIC to go to another country on purpose for scheduled surgery."
+        },
+        {
+          "q": "Should I call 112 or SNS 24?",
+          "a": "112 is only for real life-threatening emergencies. SNS 24 (808 24 24 24) is for advice and triage in worrying but non-emergency situations."
+        },
+        {
+          "q": "Can a tourist use the SNS in Portugal?",
+          "a": "EU/EEA tourists can use the EHIC in public emergency departments and health centres. Tourists from third countries generally do not have free access and should use private care or travel insurance."
+        },
+        {
+          "q": "How long does it take to get an SNS family doctor?",
+          "a": "It depends on the region. In March 2026, more than 1.6 million users in Portugal had no assigned family doctor."
+        },
+        {
+          "q": "Can I use the SNS even if I have private health insurance?",
+          "a": "Yes — the SNS is independent of being enrolled in another system (private insurance, ADSE, and so on)."
+        }
+      ]
+    },
+    {
+      "slug": "sns-vs-privado-sanidad-portugal",
+      "title": "SNS vs. privado en Portugal: cómo funciona cada sistema",
+      "description": "Las diferencias reales entre el SNS y la sanidad privada en Portugal: acceso, tiempos de espera, costes y cuándo tiene más sentido cada opción.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "lang": "es",
+      "hreflang": "es",
+      "group": "sns-vs-privado-portugal",
+      "listed": false,
+      "image": "/image/guide/guide-group-walk.jpg",
+      "about": "SNS",
+      "related": [
+        "seguros-salud-portugal-guia",
+        "seguro-salud-compensa-portugal",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "¿La Tarjeta Sanitaria Europea cubre vacunas?",
+          "a": "No. La TSE solo cubre la atención considerada clínicamente necesaria durante la estancia: la vacunación se trata como cuidado preventivo y queda excluida."
+        },
+        {
+          "q": "¿Puedo usar la TSE en una clínica privada en Portugal?",
+          "a": "No: solo se acepta en hospitales públicos y centros de salud del SNS. Tampoco cubre la repatriación ni sustituye un seguro de viaje."
+        },
+        {
+          "q": "¿La TSE solo sirve para emergencias?",
+          "a": "En la práctica, sí: emergencias y enfermedades súbitas durante la estancia. Cubre la continuidad del tratamiento de enfermedades crónicas o preexistentes que ya tenía antes de viajar, pero nunca tratamientos planificados o electivos: no puede usar la TSE para ir a propósito a otro país a hacerse una cirugía programada."
+        },
+        {
+          "q": "¿Debo llamar al 112 o al SNS 24?",
+          "a": "El 112 es solo para emergencias reales con riesgo vital. El SNS 24 (808 24 24 24) es para consejo y triaje en situaciones preocupantes pero no emergentes."
+        },
+        {
+          "q": "¿Un turista puede usar el SNS en Portugal?",
+          "a": "Los turistas de la UE/EEE pueden usar la TSE en urgencias y centros de salud públicos. Los turistas de terceros países generalmente no tienen acceso gratuito y deben recurrir a lo privado o a un seguro de viaje."
+        },
+        {
+          "q": "¿Cuánto tarda en tener médico de familia en el SNS?",
+          "a": "Depende de la región. En marzo de 2026, más de 1,6 millones de usuarios en Portugal no tenían médico de familia asignado."
+        },
+        {
+          "q": "¿Puedo usar el SNS aunque tenga seguro de salud privado?",
+          "a": "Sí: el SNS es independiente de estar inscrito en otro sistema (seguro privado, ADSE, etc.)."
+        }
+      ]
+    },
+    {
+      "slug": "health-insurance-portugal-guide",
+      "title": "Health insurance in Portugal — a guide for anyone deciding",
+      "description": "How health insurance works in Portugal, what plans usually cover (and exclude), and how to compare quotes without getting lost in the small print.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "lang": "en",
+      "hreflang": "en",
+      "group": "seguros-saude-portugal-guia",
+      "listed": false,
+      "image": "/image/guide/guide-opera-coast.jpg",
+      "about": "Seguros",
+      "related": [
+        "sns-vs-private-portugal",
+        "is-health-insurance-worth-it-portugal",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "Do I need medical exams to take out health insurance?",
+          "a": "Usually you are asked for an Individual Health Questionnaire or a telephone medical interview — not physical exams, except in specific cases."
+        },
+        {
+          "q": "Can I change plan with the same insurer?",
+          "a": "Yes, but generally with a minimum notice period (often 90 days before renewal)."
+        },
+        {
+          "q": "Does health insurance cover travel-medicine consultations?",
+          "a": "It depends on the plan. Some policies include online medicine and, in those cases, a travel consultation may be covered at no extra cost — but only for insured people. If the plan does not include it, or if you do not yet have insurance, you can book the consultation separately."
+        }
+      ]
+    },
+    {
+      "slug": "seguros-salud-portugal-guia",
+      "title": "Seguros de salud en Portugal — guía para quien está decidiendo",
+      "description": "Cómo funcionan los seguros de salud en Portugal, qué suelen cubrir (y no cubrir) y cómo comparar propuestas sin perderse en la letra pequeña.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "lang": "es",
+      "hreflang": "es",
+      "group": "seguros-saude-portugal-guia",
+      "listed": false,
+      "image": "/image/guide/guide-opera-coast.jpg",
+      "about": "Seguros",
+      "related": [
+        "sns-vs-privado-sanidad-portugal",
+        "seguro-salud-compensa-portugal",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "¿Necesito hacer exámenes médicos para contratar un seguro de salud?",
+          "a": "Normalmente se pide un Cuestionario Individual de Salud o una entrevista médica por teléfono: no exámenes físicos, salvo casos específicos."
+        },
+        {
+          "q": "¿Puedo cambiar de plan dentro de la misma aseguradora?",
+          "a": "Sí, pero generalmente con un preaviso mínimo (con frecuencia 90 días antes de la renovación)."
+        },
+        {
+          "q": "¿Un seguro de salud cubre consultas de medicina del viajero?",
+          "a": "Depende del plan. Algunos seguros incluyen medicina online y, en esos casos, la consulta del viajero puede estar cubierta sin coste adicional, pero solo para personas aseguradas. Si el plan no lo incluye, o si aún no tiene seguro, puede reservar la consulta por separado."
+        }
+      ]
+    },
+    {
+      "slug": "is-health-insurance-worth-it-portugal",
+      "title": "Health insurance in Portugal — is it worth it?",
+      "description": "Is health insurance worth it? Compare the annual cost of a policy with paying for consultations as you go, and see which profile benefits most.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "lang": "en",
+      "hreflang": "en",
+      "group": "seguro-saude-compensa",
+      "listed": false,
+      "image": "/image/guide/guide-country-road.jpg",
+      "about": "Seguros",
+      "related": [
+        "health-insurance-portugal-guide",
+        "sns-vs-private-portugal",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "Is health insurance better than paying out of pocket?",
+          "a": "It depends on how you use care — if you use the private sector regularly (more than two or three times a year), insurance tends to pay off; if use is rare and occasional, paying as you go is usually cheaper."
+        },
+        {
+          "q": "Is it worth having health insurance just for one trip?",
+          "a": "Usually not. An annual health policy is not designed for a one-off need. A pay-as-you-go travel-medicine consultation or trip-specific travel insurance is a better fit."
+        }
+      ]
+    },
+    {
+      "slug": "seguro-salud-compensa-portugal",
+      "title": "Seguro de salud en Portugal: ¿compensa o no?",
+      "description": "¿Un seguro de salud compensa? Compare el coste anual de un seguro con el de pagar consultas sueltas y vea qué perfil se beneficia más.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "lang": "es",
+      "hreflang": "es",
+      "group": "seguro-saude-compensa",
+      "listed": false,
+      "image": "/image/guide/guide-country-road.jpg",
+      "about": "Seguros",
+      "related": [
+        "seguros-salud-portugal-guia",
+        "sns-vs-privado-sanidad-portugal",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "¿Vale más la pena un seguro de salud o pagar todo de su bolsillo?",
+          "a": "Depende del perfil de uso: si usa lo privado con regularidad (más de 2–3 veces al año), el seguro tiende a compensar; si el uso es raro y puntual, pagar consulta a consulta suele ser más barato."
+        },
+        {
+          "q": "¿Compensa tener seguro de salud solo para un viaje?",
+          "a": "Normalmente no. Un seguro de salud anual no está pensado para una necesidad puntual. Tiene más sentido una consulta suelta de medicina del viajero o un seguro de viaje específico para ese desplazamiento."
+        }
+      ]
+    },
+    {
       "slug": "autismo-em-mulheres-diagnostico-tardio",
       "title": "Porque o autismo é tão mal diagnosticado em mulheres",
       "description": "O autismo em mulheres é frequentemente diagnosticado tarde ou nunca. Entenda porquê, e quais os sinais que costumam ser desvalorizados.",
@@ -100,7 +430,7 @@
       "title": "Vacina Febre Amarela Algarve — Faro e Portimão",
       "description": "Vacina febre amarela no Algarve com certificado internacional: Centros de Vacinação Internacional em Faro e Portimão, horários, contactos e consulta online com prescrição no próprio dia.",
       "datePublished": "2026-04-20",
-      "dateModified": "2026-04-20",
+      "dateModified": "2026-09-03",
       "format": "html",
       "image": "/image/guide/guide-coastal-sun.jpg"
     },
@@ -109,7 +439,7 @@
       "title": "Vacina Febre Amarela na CUF em 2026 — O que Precisa de Saber",
       "description": "A CUF não administra vacina febre amarela. Veja alternativas em Portugal, Centros de Vacinação Internacional autorizados e como obter prescrição médica no próprio dia.",
       "datePublished": "2026-04-20",
-      "dateModified": "2026-04-20",
+      "dateModified": "2026-09-03",
       "format": "html",
       "image": "/image/guide/guide-country-road.jpg"
     },
@@ -118,7 +448,7 @@
       "title": "Vacina Febre Amarela Braga em 2026 — Onde Tomar e Horários",
       "description": "Vacina febre amarela em Braga com certificado internacional: Centro de Vacinação Internacional de Braga, contactos, horários, alternativas no Minho e consulta online com prescrição.",
       "datePublished": "2026-04-20",
-      "dateModified": "2026-04-20",
+      "dateModified": "2026-09-03",
       "format": "html",
       "image": "/image/guide/guide-sunset-lake.jpg"
     },
@@ -127,7 +457,7 @@
       "title": "Vacina Febre Amarela Coimbra — Onde Tomar e Horários",
       "description": "Vacina febre amarela em Coimbra com certificado internacional: Centros de Vacinação Internacional de Coimbra, Aveiro, Leiria e Castelo Branco, com orientação e prescrição médica.",
       "datePublished": "2026-04-20",
-      "dateModified": "2026-04-20",
+      "dateModified": "2026-09-03",
       "format": "html",
       "image": "/image/guide/guide-hiker-view.jpg"
     },
@@ -136,7 +466,7 @@
       "title": "Vacina Febre Amarela Porto — Onde Tomar e Horários",
       "description": "Vacina febre amarela no Porto com certificado internacional: centros de vacinação, contactos, horários e como marcar consulta do viajante.",
       "datePublished": "2026-04-20",
-      "dateModified": "2026-04-20",
+      "dateModified": "2026-09-03",
       "format": "html",
       "image": "/image/guide/guide-lake-boats.jpg"
     },
@@ -145,7 +475,7 @@
       "title": "Vacina Febre Amarela Lisboa — Marque Consulta Online",
       "description": "Vacina febre amarela em Lisboa com certificado internacional: consulta online rápida, vacinação em parceiros presenciais e orientação médica completa.",
       "datePublished": "2026-04-20",
-      "dateModified": "2026-04-20",
+      "dateModified": "2026-09-03",
       "format": "html",
       "image": "/image/guide/guide-opera-coast.jpg"
     },
@@ -154,7 +484,70 @@
       "title": "Vacina Febre Amarela: Guia Completo 2026",
       "description": "Tudo sobre a vacina febre amarela: certificado internacional, validade, onde tomar em Lisboa e Portugal, reações, doses e países que exigem.",
       "datePublished": "2026-04-20",
-      "dateModified": "2026-04-20",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "image": "/image/guide/guide-waterfall.jpg"
+    },
+    {
+      "slug": "vacinas-viajante-algarve",
+      "title": "Vacinas do viajante no Algarve — Faro e Portimão",
+      "description": "Vacinas do viajante no Algarve: Centros de Vacinação Internacional em Faro e Portimão, horários, contactos e consulta online com prescrição no próprio dia.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "image": "/image/guide/guide-coastal-sun.jpg"
+    },
+    {
+      "slug": "vacinas-viajante-cuf",
+      "title": "Vacinas do viajante na CUF em 2026 — O que precisa de saber",
+      "description": "A CUF não administra vacinas do circuito CVI. Veja alternativas em Portugal, Centros de Vacinação Internacional autorizados e como obter prescrição médica no próprio dia.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "image": "/image/guide/guide-country-road.jpg"
+    },
+    {
+      "slug": "vacinas-viajante-braga",
+      "title": "Vacinas do viajante em Braga — Onde tomar e horários",
+      "description": "Vacinas do viajante em Braga: Centro de Vacinação Internacional de Braga, contactos, horários, alternativas no Minho e consulta online com prescrição.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "image": "/image/guide/guide-sunset-lake.jpg"
+    },
+    {
+      "slug": "vacinas-viajante-coimbra",
+      "title": "Vacinas do viajante em Coimbra — Onde tomar e horários",
+      "description": "Vacinas do viajante em Coimbra: Centros de Vacinação Internacional de Coimbra, Aveiro, Leiria e Castelo Branco, com orientação e prescrição médica.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "image": "/image/guide/guide-hiker-view.jpg"
+    },
+    {
+      "slug": "vacinas-viajante-porto",
+      "title": "Vacinas do viajante no Porto — Onde tomar e horários",
+      "description": "Vacinas do viajante no Porto: centros de vacinação internacional, contactos, horários e como marcar consulta do viajante.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "image": "/image/guide/guide-lake-boats.jpg"
+    },
+    {
+      "slug": "vacinas-viajante-lisboa",
+      "title": "Vacinas do viajante em Lisboa — Marque consulta online",
+      "description": "Vacinas do viajante em Lisboa: consulta online rápida, vacinação nos Centros de Vacinação Internacional da ARSLVT e orientação médica completa.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "image": "/image/guide/guide-opera-coast.jpg"
+    },
+    {
+      "slug": "vacinas-viajante-guia-completo",
+      "title": "Vacinas do viajante em Portugal: guia completo 2026",
+      "description": "Onde tomar vacinas do viajante em Portugal: hepatite A, febre tifóide, febre amarela e outras nos mesmos Centros de Vacinação Internacional, com consulta e prescrição.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
       "format": "html",
       "image": "/image/guide/guide-waterfall.jpg"
     },

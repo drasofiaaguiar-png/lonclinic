@@ -53,6 +53,7 @@ const seo = require('./seo');
 const { emailLink, withUtm, TRACKED_REDIRECTS, safeInternalPath, trackedLinksForAdmin } = require('./utm');
 const { hydrateInfoHtml, NOINDEX_PAGES: INFO_NOINDEX_PAGES } = require('./info-ssr');
 const authors = require('./authors');
+const cvi = require('./cvi');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 const session = require('express-session');
@@ -4460,6 +4461,7 @@ app.use((req, res, next) => {
         '/doctors',
         '/clinic-portal',
         '/patient-portal',
+        '/conta',
         '/api/clinic',
         '/api/admin',
         '/api/debug-stripe',
@@ -4840,6 +4842,11 @@ app.get('/patient-portal', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'dashboard.html'), 'Error loading patient portal');
 });
 
+app.get('/conta/vacina', (req, res) => {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    sendHtmlNoCacheString(res, cvi.renderRecommendPage(seo.SITE_ORIGIN));
+});
+
 app.get('/clinic-portal', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
 });
@@ -5038,6 +5045,12 @@ app.use((req, res, next) => {
     if (p === '/data/nutricao' || p.startsWith('/data/nutricao/')) {
         return res.status(404).type('text').send('Not found');
     }
+    if (p === '/data/cvi' || p.startsWith('/data/cvi/')) {
+        return res.status(404).type('text').send('Not found');
+    }
+    if (p === '/cvi.js' || p === '/scripts' || p.startsWith('/scripts/')) {
+        return res.status(404).type('text').send('Not found');
+    }
     if (p === '/data/tourist' || p.startsWith('/data/tourist/')) {
         return res.status(404).type('text').send('Not found');
     }
@@ -5099,7 +5112,7 @@ app.use(express.static(path.join(__dirname), {
         }
         // Admin / dashboard assets change often and are tiny — never cache them
         // (also bypasses Cloudflare's default 4h edge cache for static JS/CSS).
-        const adminAssets = new Set(['admin.js', 'admin.html', 'dashboard.css', 'admin.css', 'reviews.js', 'lon-analytics.js', 'diretorio.js', 'diretorio.css']);
+        const adminAssets = new Set(['admin.js', 'admin.html', 'dashboard.css', 'admin.css', 'reviews.js', 'lon-analytics.js', 'diretorio.js', 'diretorio.css', 'cvi-recommend.js', 'cvi-recommend.css']);
         if (adminAssets.has(base)) {
             res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
             res.setHeader('CDN-Cache-Control', 'no-store');
@@ -6697,6 +6710,29 @@ app.get('/api/bookings', async (req, res) => {
     } catch (err) {
         console.error('GET /api/bookings:', err.message);
         res.status(500).json({ error: 'Failed to load bookings' });
+    }
+});
+
+app.get('/api/conta/vacina/centros', async (req, res) => {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    res.setHeader('Cache-Control', 'no-store');
+    const email = String(req.query.email || '').toLowerCase().trim();
+    const ref = String(req.query.ref || '').trim();
+    const city = String(req.query.cidade || '').trim();
+    const lat = req.query.lat;
+    const lng = req.query.lng;
+    if (!email || !ref) {
+        return res.status(400).json({ error: 'Email e referência da marcação são obrigatórios.' });
+    }
+    try {
+        const booking = await getPatientBooking(email, ref);
+        if (!booking) {
+            return res.status(401).json({ error: 'Não encontrámos essa marcação.' });
+        }
+        res.json(cvi.recommendPayload({ city, lat, lng }));
+    } catch (err) {
+        console.error('GET /api/conta/vacina/centros:', err.message);
+        res.status(500).json({ error: 'Não foi possível carregar os centros.' });
     }
 });
 

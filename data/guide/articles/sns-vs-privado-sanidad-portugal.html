@@ -1,0 +1,660 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,600&display=swap');
+.alg-article, .alg-article * { box-sizing: border-box; }
+.alg-article {
+  --ink: #0f1a14; --ink-mid: #3a4a3f; --ink-soft: #6b7d70; --ink-ghost: #a8b8ad;
+  --green: #1a6641; --green-vivid: #22865a; --green-light: #eaf4ee; --green-faint: #f4faf6;
+  --gold: #c8961a; --gold-light: #fdf5e0; --white: #ffffff;
+  --blue-faint: #f0f7ff; --blue-border: #bfdbfe; --blue-text: #1e40af;
+  --border: rgba(15,26,20,0.10); --border-mid: rgba(15,26,20,0.18);
+  --r: 10px; --r-lg: 16px;
+  --alg-gutter: 22px;
+  --alg-max: 1240px;
+  --alg-font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+  --alg-font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --alg-text: 1rem;
+  --alg-text-sm: 0.9375rem;
+  --alg-text-xs: 0.8125rem;
+  --alg-leading: 1.65;
+  --alg-leading-snug: 1.35;
+  font-family: var(--alg-font-sans);
+  font-size: var(--alg-text);
+  line-height: var(--alg-leading);
+  color: var(--ink-mid);
+  -webkit-font-smoothing: antialiased;
+}
+.alg-article a { text-decoration: none; }
+.alg-article .alg-prose-block a,
+.alg-article .alg-faq-a a,
+.alg-article .alg-hero-note a,
+.alg-article .alg-callout a,
+.alg-article .alg-section-sub a {
+  color: var(--green);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.alg-breadcrumb { font-size: var(--alg-text-xs); letter-spacing: 0.02em; color: var(--ink-ghost); padding: 4px var(--alg-gutter) 6px; width: min(100%, var(--alg-max)); margin: 0 auto 4px; box-sizing: border-box; }
+.alg-breadcrumb a { color: var(--ink-soft); font-weight: 500; }
+.alg-hero {
+  padding: 16px var(--alg-gutter) 36px;
+  width: min(100%, var(--alg-max));
+  margin: 4px auto 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 40px);
+  align-items: stretch;
+  box-sizing: border-box;
+}
+.alg-hero-content, .alg-hero-aside { min-width: 0; }
+.alg-hero-aside { display: flex; flex-direction: column; min-height: 0; }
+.alg-hero-content .alg-hero-note { margin-top: 16px; }
+@media (max-width: 860px) {
+  .alg-hero { grid-template-columns: 1fr; gap: 28px; }
+}
+.alg-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-family: var(--alg-font-sans); font-size: var(--alg-text-xs); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); background: var(--green-light); padding: 5px 14px; border-radius: 20px; margin-bottom: 12px; }
+.alg-eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; }
+.alg-hero h2 { font-family: var(--alg-font-display); font-size: clamp(1.875rem, 4.8vw, 3.125rem); font-weight: 600; line-height: 1.12; letter-spacing: -0.03em; margin: 0 0 20px; border: none; color: var(--ink); }
+.alg-hero h2 em { font-style: italic; color: var(--green); }
+.alg-hero-desc { font-size: clamp(1rem, 2.5vw, 1.0625rem); color: var(--ink-mid); max-width: min(560px, 100%); margin-bottom: 24px; line-height: var(--alg-leading); font-weight: 400; }
+.alg-trust-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 28px; }
+.alg-trust-pill { font-size: var(--alg-text-xs); font-weight: 500; color: var(--ink-mid); background: var(--green-faint); border: 0.5px solid var(--border-mid); padding: 4px 12px; border-radius: 20px; display: flex; align-items: center; gap: 5px; }
+.alg-trust-pill .dot { color: var(--green-vivid); font-size: 14px; }
+.alg-hero-note { margin-top: 0; padding: 14px 16px; background: #eceef0; border: 0.5px solid rgba(15, 26, 20, 0.08); border-left: 4px solid var(--green); border-radius: 10px; font-size: calc(var(--alg-text-sm) - 4px); color: var(--ink-mid); line-height: var(--alg-leading); }
+.alg-hero-note strong { color: var(--ink); }
+.alg-hero-aside .alg-hero-travel-booking.lon-service-card.is-visible {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  flex: 1 1 auto;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid #ebddf4;
+  box-shadow: 0 14px 30px rgba(53, 24, 74, 0.12);
+  background: #1a1420;
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-image-wrap.alg-hero-card-cover {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  height: 100%;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  overflow: hidden;
+}
+.alg-hero-aside .alg-hero-card-cover img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass.alg-hero-card-glass {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 3;
+  margin: 0;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  padding: 14px 14px 16px;
+  background: rgba(255, 255, 255, 0.34);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass h3 { color: #fff !important; margin-top: 0; }
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass .lon-service-price { color: #fff !important; margin-bottom: 10px; }
+.alg-hero-aside .alg-hero-travel-booking .lon-service-chip {
+  z-index: 4;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+.alg-hero-aside .alg-hero-travel-booking .lon-service-glass a.lon-btn { text-decoration: none; }
+.alg-section {
+  padding: 52px var(--alg-gutter);
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+.alg-section-label { font-family: var(--alg-font-sans); font-size: 0.6875rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; color: var(--green); margin-bottom: 10px; }
+.alg-section h3,
+.alg-locations-section > h3,
+.alg-related-pages > h3 {
+  font-family: var(--alg-font-display);
+  font-size: clamp(1.375rem, 3.2vw, 2.125rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0 0 12px;
+  line-height: 1.2;
+}
+.alg-section h4 {
+  font-family: var(--alg-font-sans);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 28px 0 10px;
+  line-height: 1.3;
+}
+.alg-section-sub { font-size: var(--alg-text-sm); color: var(--ink-soft); max-width: 720px; margin-bottom: 28px; line-height: var(--alg-leading); font-weight: 400; }
+.alg-prose-block { margin: 0 0 1.1em; font-size: var(--alg-text); color: var(--ink-mid); line-height: var(--alg-leading); }
+.alg-prose-block:last-child { margin-bottom: 0; }
+.alg-list { padding-left: 1.2em; margin: 0 0 1.1em; }
+.alg-list li { margin-bottom: 0.4em; }
+.alg-callout { border: 0.5px solid var(--border-mid); background: var(--green-faint); border-radius: var(--r); padding: 14px 16px; margin: 16px 0 0; font-size: var(--alg-text-sm); color: var(--ink-mid); line-height: var(--alg-leading); }
+.alg-callout strong { color: var(--ink); }
+.alg-warn { border-left: 4px solid #d97706; background: #fff7ed; border: 1px solid #fed7aa; border-left-width: 4px; border-radius: var(--r); padding: 12px 14px; margin: 16px 0 0; font-size: var(--alg-text-sm); color: #7c2d12; }
+.alg-info-band {
+  background: transparent;
+  border: none;
+  padding: 12px var(--alg-gutter) 52px;
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+.alg-info-band-inner { width: 100%; max-width: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 1100px) {
+  .alg-info-band-inner { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 12px; padding-bottom: 6px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+  .alg-info-item { flex: 0 0 min(240px, 78vw); }
+}
+.alg-info-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  gap: 10px;
+  padding: 20px;
+  aspect-ratio: 1;
+  min-height: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(8, 22, 14, 0.35) 100%), rgba(10, 56, 34, 0.96);
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  box-shadow: 0 10px 36px rgba(8, 20, 14, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.alg-info-item h4 { font-family: var(--alg-font-sans); font-size: clamp(0.9375rem, 1.2vw, 1.125rem); font-weight: 600; margin: 0; color: #ffffff; line-height: 1.3; letter-spacing: -0.015em; }
+.alg-info-item p { font-size: var(--alg-text-xs); color: rgba(255, 255, 255, 0.92); line-height: var(--alg-leading); margin: 0; }
+.alg-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 16px 0 8px; border: 0.5px solid var(--border-mid); border-radius: var(--r); }
+.alg-simple-table { width: 100%; border-collapse: collapse; font-size: var(--alg-text-sm); margin: 0; min-width: 420px; }
+.alg-simple-table th, .alg-simple-table td { border: 0.5px solid var(--border-mid); padding: 8px 10px; text-align: left; vertical-align: top; }
+.alg-simple-table th { background: var(--ink); color: #fff; font-size: var(--alg-text-xs); }
+.alg-simple-table td:first-child { font-weight: 600; color: var(--ink); }
+.alg-manchester { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin: 16px 0 8px; }
+@media (max-width: 800px) {
+  .alg-manchester { grid-template-columns: 1fr 1fr; }
+}
+.alg-man { border-radius: 10px; padding: 12px 10px; font-size: var(--alg-text-xs); line-height: 1.4; color: #fff; }
+.alg-man strong { display: block; font-size: 0.8125rem; margin-bottom: 4px; }
+.alg-man--red { background: #9b1c1c; }
+.alg-man--orange { background: #c2410c; }
+.alg-man--yellow { background: #ca8a04; color: #1a1408; }
+.alg-man--green { background: #1a6641; }
+.alg-man--blue { background: #1d4ed8; }
+.alg-lon-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin: 24px 0 4px;
+}
+.alg-article .alg-lon-cards .lon-service-card.is-visible {
+  display: flex;
+  height: 100%;
+  margin: 0;
+}
+.alg-article .alg-lon-cards .lon-service-image-wrap { min-height: 280px; }
+.alg-faq-list { margin-top: 28px; }
+.alg-faq-item { border-bottom: 0.5px solid var(--border); padding: 18px 0; }
+.alg-faq-item:first-child { border-top: 0.5px solid var(--border); }
+.alg-faq-q { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); margin-bottom: 8px; display: flex; justify-content: space-between; gap: 12px; line-height: var(--alg-leading-snug); }
+.alg-faq-q::after { content: '+'; font-family: var(--alg-font-display); color: var(--green); font-size: 1.25rem; font-weight: 400; flex-shrink: 0; margin-top: -2px; }
+.alg-faq-a { font-size: var(--alg-text-sm); color: var(--ink-soft); line-height: var(--alg-leading); }
+.alg-related-pages {
+  background: white;
+  border-top: 0.5px solid var(--border);
+  padding: 48px var(--alg-gutter);
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+.alg-related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 20px; }
+.alg-related-card { border: 0.5px solid var(--border-mid); border-radius: var(--r); padding: 16px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; transition: border-color 0.15s, background 0.15s; }
+.alg-related-card:hover { border-color: var(--green); background: var(--green-faint); }
+.alg-related-card-text { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); font-weight: 600; color: var(--ink); line-height: var(--alg-leading-snug); }
+.alg-related-card-sub { font-size: var(--alg-text-xs); color: var(--ink-ghost); margin-top: 4px; line-height: var(--alg-leading); }
+.alg-langs { display:flex; flex-wrap:wrap; align-items:center; gap:6px; padding: 0 var(--alg-gutter) 8px; width: min(100%, var(--alg-max)); margin: 0 auto 4px; box-sizing: border-box; }
+.alg-langs-label { font-size: var(--alg-text-xs); color: var(--ink-ghost); margin-right: 4px; }
+.alg-langs a { font-size: var(--alg-text-xs); font-weight: 600; letter-spacing: 0.04em; color: var(--ink-soft); border: 0.5px solid var(--border-mid); padding: 4px 11px; border-radius: 20px; }
+.alg-langs a[aria-current="page"] { color: var(--green); border-color: var(--green); background: var(--green-light); }
+.alg-series-nav { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; margin: 8px 0 4px; }
+@media (max-width: 700px) { .alg-series-nav { grid-template-columns: 1fr; } }
+.alg-series-nav a { border: 0.5px solid var(--border-mid); border-radius: var(--r); padding: 12px 14px; display:block; color: inherit; }
+.alg-series-nav a:hover { border-color: var(--green); background: var(--green-faint); }
+.alg-series-nav a[aria-current="page"] { border-color: var(--green); background: var(--green-faint); }
+.alg-series-nav span { display:block; font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); margin-bottom: 4px; }
+.alg-series-nav strong { display:block; font-size: var(--alg-text-sm); color: var(--ink); font-weight: 600; line-height: 1.35; }
+.alg-related-arrow { color: var(--green); font-size: 18px; flex-shrink: 0; }
+.alg-final-cta {
+  background: var(--ink);
+  color: white;
+  padding: 66px var(--alg-gutter);
+  text-align: center;
+  border-radius: var(--r-lg);
+  width: min(100%, var(--alg-max));
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+.alg-final-cta-inner { max-width: 560px; margin: 0 auto; }
+.alg-final-cta h3 {
+  font-family: var(--alg-font-display);
+  font-size: clamp(1.625rem, 4vw, 2.625rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin: 0 0 14px;
+  color: #fff;
+}
+.alg-final-cta h3 em { color: #7fd4a8; font-style: italic; }
+.alg-final-cta p { font-family: var(--alg-font-sans); font-size: var(--alg-text-sm); color: rgba(255,255,255,0.72); margin-bottom: 32px; line-height: var(--alg-leading); font-weight: 400; }
+.alg-btn-cta-large { display: inline-block; background: #22865a; color: white; font-family: var(--alg-font-sans); font-size: var(--alg-text); font-weight: 600; padding: 17px 40px; border-radius: 10px; margin-bottom: 12px; transition: background 0.18s; letter-spacing: 0.01em; }
+.alg-btn-cta-large:hover { background: #1a6641; }
+.alg-final-note { font-family: var(--alg-font-sans); font-size: var(--alg-text-xs); color: rgba(255,255,255,0.45); line-height: var(--alg-leading); letter-spacing: 0.02em; }
+.alg-disclaimer {
+  background: var(--green-faint);
+  border-top: 0.5px solid var(--border);
+  text-align: center;
+  font-family: var(--alg-font-sans);
+  font-size: var(--alg-text-xs);
+  color: var(--ink-ghost);
+  line-height: var(--alg-leading);
+  max-width: 680px;
+  width: 100%;
+  margin: 18px auto 0;
+  padding: 24px var(--alg-gutter);
+  border-radius: var(--r-lg);
+  box-sizing: border-box;
+}
+.guide-prose .alg-article { color: var(--ink-mid); }
+.guide-prose .alg-article p:not(.lon-service-price) { font-family: var(--alg-font-sans); font-size: var(--alg-text); line-height: var(--alg-leading); }
+.guide-prose .alg-article .alg-final-cta p { font-size: var(--alg-text-sm); color: rgba(255, 255, 255, 0.72); }
+.guide-prose .alg-article .alg-final-note { color: rgba(255, 255, 255, 0.45); }
+.guide-prose .alg-article .alg-section h3,
+.guide-prose .alg-article .alg-related-pages > h3,
+.guide-prose .alg-article .alg-final-cta h3 { font-family: var(--alg-font-display); color: inherit; }
+.guide-prose .alg-article .alg-section h3,
+.guide-prose .alg-article .alg-related-pages > h3 { color: var(--ink); }
+.guide-prose .alg-article .alg-final-cta h3 { color: #fff; }
+.guide-prose .alg-article .alg-faq-q,
+.guide-prose .alg-article .alg-section h4 { font-family: var(--alg-font-sans); }
+.guide-prose .alg-article .alg-hero h2 { font-family: var(--alg-font-display); color: var(--ink); margin-top: 0; }
+.guide-prose .alg-article .alg-lon-cards .lon-service-glass h3,
+.guide-prose .alg-article .alg-hero-aside .lon-service-glass h3 { color: #fff !important; margin-top: 0; }
+.guide-prose .alg-article .alg-lon-cards .lon-service-price,
+.guide-prose .alg-article .alg-hero-aside .lon-service-price { color: #fff !important; }
+.guide-prose .alg-article .alg-lon-cards a.lon-btn,
+.guide-prose .alg-article .alg-hero-aside a.lon-btn,
+.guide-prose .alg-article a.alg-btn-cta-large { text-decoration: none; }
+.guide-prose .alg-article .alg-info-item h4 { color: #fff; margin: 0; }
+.guide-prose .alg-article .alg-info-item p { color: rgba(255, 255, 255, 0.92); font-size: var(--alg-text-xs); }
+</style>
+
+<div class="alg-article">
+  <div class="alg-breadcrumb">
+    <a href="/">Inicio</a> › <a href="/magazine">Magazine</a> › <a href="/blog/sns-vs-privado-sanidad-portugal">SNS vs. privado</a>
+  </div>
+  <nav class="alg-langs" aria-label="Este artículo en otras lenguas">
+    <span class="alg-langs-label">Leer en</span>
+    <a href="/blog/sns-vs-privado-portugal">PT</a>
+    <a href="/blog/sns-vs-private-portugal">EN</a>
+    <a href="/blog/sns-vs-privado-sanidad-portugal" aria-current="page">ES</a>
+  </nav>
+
+  <section style="background:white; border-bottom:0.5px solid var(--border);">
+    <div class="alg-hero">
+      <div class="alg-hero-content">
+        <div class="alg-eyebrow">Serie · Cómo funciona la medicina en Portugal · 1 de 4</div>
+        <h2>SNS vs. privado:<br>cómo funciona <em>cada sistema</em></h2>
+        <p class="alg-hero-desc">Acceso, tiempos de espera, costes y cuándo cada opción tiene más sentido — para residentes, expatriados y quien está de paso.</p>
+        <div class="alg-trust-row">
+          <span class="alg-trust-pill"><span class="dot">●</span> SNS y privado en paralelo</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Turistas y TSE</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Número de Utente</span>
+          <span class="alg-trust-pill"><span class="dot">●</span> Consulta online el mismo día</span>
+        </div>
+        <div class="alg-hero-note"><strong>Serie · 1 de 4.</strong> Continúa en <a href="/blog/seguros-salud-portugal-guia">Seguros de salud en Portugal</a> y en <a href="/blog/seguro-salud-compensa-portugal">Seguro de salud: ¿compensa?</a>. Sigue un artículo sobre lo que los planes de las operadoras ya incluyen. Información de carácter general: no sustituye una consulta médica ni asesoramiento jurídico sobre el acceso al SNS.</div>
+        <nav class="alg-series-nav" aria-label="Serie Cómo funciona la medicina en Portugal">
+          <a href="/blog/sns-vs-privado-sanidad-portugal" aria-current="page"><span>1 de 4</span><strong>SNS vs. privado</strong></a>
+          <a href="/blog/seguros-salud-portugal-guia"><span>2 de 4</span><strong>Seguros de salud</strong></a>
+          <a href="/blog/seguro-salud-compensa-portugal"><span>3 de 4</span><strong>¿Compensa?</strong></a>
+        </nav>
+      </div>
+      <div class="alg-hero-aside" id="marcar">
+        <article class="lon-service-card is-visible alg-hero-travel-booking" aria-label="Consulta de Medicina General — reservar online">
+          <div class="lon-service-image-wrap alg-hero-card-cover">
+            <img src="/image/image1_files/Ostermalmstorg_Large_Desktop.jpg" alt="Consulta de medicina general por telemedicina" width="800" height="600" loading="eager" decoding="async">
+            <span class="lon-service-chip">Medicina General</span>
+            <div class="lon-service-glass alg-hero-card-glass">
+              <h3>Consulta de Medicina General / Check-up</h3>
+              <p class="lon-service-price">€39 · 30 min</p>
+              <a href="/marcar/clinica-geral?lang=es" class="lon-btn lon-btn-soft lon-btn-sm">Reservar</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="alg-section">
+    <div class="alg-section-label">Dos sistemas</div>
+    <h3>No son competidores: puede usar los dos</h3>
+    <p class="alg-prose-block">En Portugal, la atención sanitaria se divide en dos sistemas que funcionan de forma independiente: el sistema privado y el sistema público (SNS). No son competidores en sentido estricto: puede usar los dos, a la vez o según la situación, pero tienen lógicas de acceso y financiación completamente distintas. Conviene entender bien cómo está organizado cada uno antes de decidir dónde tratarse.</p>
+    <div class="alg-lon-cards">
+      <article class="lon-service-card is-visible" aria-label="Consulta médica urgente">
+        <div class="lon-service-image-wrap">
+          <img src="/image/image1_files/LincolnSquare_Large_Desktop.jpg" alt="Consulta médica urgente online" width="800" height="600" loading="lazy" decoding="async">
+          <span class="lon-service-chip">Urgencia</span>
+          <div class="lon-service-glass">
+            <h3>Consulta Médica Urgente (Adultos)</h3>
+            <p class="lon-service-price">€35 · 15 min</p>
+            <a href="/marcar/urgente?lang=es" class="lon-btn lon-btn-soft lon-btn-sm">Reservar</a>
+          </div>
+        </div>
+      </article>
+      <article class="lon-service-card is-visible" aria-label="Renovación de tratamiento médico">
+        <div class="lon-service-image-wrap">
+          <img src="/image/image1_files/ColmoreRow_Large_Desktop.jpg" alt="Renovación de tratamiento médico online" width="800" height="600" loading="lazy" decoding="async">
+          <span class="lon-service-chip">Seguimiento</span>
+          <div class="lon-service-glass">
+            <h3>Renovación de Tratamiento Médico</h3>
+            <p class="lon-service-price">€19</p>
+            <a href="/marcar/renovacao?lang=es" class="lon-btn lon-btn-soft lon-btn-sm">Reservar</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <div class="alg-info-band">
+    <div class="alg-info-band-inner">
+      <div class="alg-info-item"><h4>Privado</h4><p>Acceso libre, de pago: suelto, por seguro o por plan. Residente o no.</p></div>
+      <div class="alg-info-item"><h4>SNS</h4><p>Universal y, por regla general, sin tasas en consultas, urgencias y pruebas desde 2022.</p></div>
+      <div class="alg-info-item"><h4>Turista UE</h4><p>TSE en urgencias y centros de salud públicos. No cubre lo privado ni la vacunación.</p></div>
+      <div class="alg-info-item"><h4>Expatriado</h4><p>Puede quedarse solo en lo privado hasta tener Número de Utente, y mantener los dos después.</p></div>
+    </div>
+  </div>
+
+  <section class="alg-section" style="background:white;">
+    <div class="alg-section-label">Sistema privado</div>
+    <h3>Tres tipos de respuesta</h3>
+    <p class="alg-section-sub">El sistema privado lo forman servicios independientes a los que cualquier persona puede acceder —residente o no, pague o no impuestos en Portugal— de forma libre, mediante el pago de un importe (suelto, por seguro o por plan de acceso).</p>
+
+    <h4>1. Consultas privadas online</h4>
+    <p class="alg-prose-block">Servicios de telemedicina, como LON Clinic, indicados para asuntos que pueden tratarse por videollamada, sin necesidad de evaluación presencial, por ejemplo:</p>
+    <ul class="alg-list">
+      <li>Consulta del viajero (asesoramiento antes de viajes, vacunación recomendada)</li>
+      <li>Consulta de salud mental (psicología, psiquiatría)</li>
+      <li>Consulta médica general, sin signos de alarma y sin necesidad de exploración física</li>
+    </ul>
+
+    <div class="alg-lon-cards">
+      <article class="lon-service-card is-visible" aria-label="Consulta de Medicina General">
+        <div class="lon-service-image-wrap">
+          <img src="/image/image1_files/Ostermalmstorg_Large_Desktop.jpg" alt="Consulta de medicina general por telemedicina" width="800" height="600" loading="lazy" decoding="async">
+          <span class="lon-service-chip">Medicina General</span>
+          <div class="lon-service-glass">
+            <h3>Consulta de Medicina General / Check-up</h3>
+            <p class="lon-service-price">€39 · 30 min</p>
+            <a href="/marcar/clinica-geral?lang=es" class="lon-btn lon-btn-soft lon-btn-sm">Reservar</a>
+          </div>
+        </div>
+      </article>
+      <article class="lon-service-card is-visible" aria-label="Consulta médica de salud mental">
+        <div class="lon-service-image-wrap">
+          <img src="/image/image1_files/Marylebone_Large_Desktop.jpg" alt="Consulta médica de salud mental por videollamada" width="800" height="600" loading="lazy" decoding="async">
+          <span class="lon-service-chip">Salud Mental</span>
+          <div class="lon-service-glass">
+            <h3>Consulta Médica de Salud Mental</h3>
+            <p class="lon-service-price">€60 · 45 min</p>
+            <a href="/marcar/saude-mental?lang=es" class="lon-btn lon-btn-soft lon-btn-sm">Reservar</a>
+          </div>
+        </div>
+      </article>
+      <article class="lon-service-card is-visible" aria-label="Consulta del Viajero">
+        <div class="lon-service-image-wrap">
+          <img src="/image/image1_files/CoventGarden_Large_Desktop.jpg" alt="Consulta del viajero con médico online" width="800" height="600" loading="lazy" decoding="async">
+          <span class="lon-service-chip">Viajero</span>
+          <div class="lon-service-glass">
+            <h3>Consulta del Viajero</h3>
+            <p class="lon-service-price">€39 · 20 min</p>
+            <a href="/marcar/travel?lang=es" class="lon-btn lon-btn-soft lon-btn-sm">Reservar</a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <h4>2. Consultas presenciales</h4>
+    <p class="alg-prose-block">En clínicas independientes u hospitales privados —los grupos más conocidos en Portugal son CUF, Hospital da Luz y Lusíadas Saúde— para situaciones que necesitan exploración física, pruebas diagnósticas presenciales o seguimiento continuado.</p>
+
+    <h4>3. Urgencias, hospitalización y cirugías privadas</h4>
+    <p class="alg-prose-block">Los mismos grupos hospitalarios (y otros más pequeños o regionales) ofrecen también urgencias privadas, hospitalización y cirugía: normalmente con tiempos de espera mucho más cortos que el sector público, pero siempre de pago (suelto o cubierto por un seguro de salud).</p>
+  </section>
+
+  <section class="alg-section">
+    <div class="alg-section-label">Sistema público</div>
+    <h3>Cómo está organizado el SNS</h3>
+    <p class="alg-prose-block">El Serviço Nacional de Saúde (SNS) es universalmente gratuito: gratuito para todos, no solo para quien contribuye a financiarlo. Lo sostienen las cotizaciones que los ciudadanos pagan en impuestos, pero eso no impide que personas que no cotizan (turistas, migrantes en situación irregular, etc.) puedan usar determinados servicios, como las urgencias.</p>
+    <p class="alg-prose-block">El SNS está organizado en tres grandes componentes:</p>
+    <ul class="alg-list">
+      <li><strong>Urgencia hospitalaria</strong> — atención por triaje de prioridad (Protocolo de Manchester, más abajo)</li>
+      <li><strong>Atención Primaria</strong> — médico de familia, enfermero, psicólogo, etc., disponibles en los centros de salud, normalmente el primer punto de contacto con el sistema</li>
+      <li><strong>Cuidados hospitalarios o continuados</strong> — consultas de especialidad, hospitalización, cirugías y cuidados de larga duración, generalmente por derivación desde atención primaria</li>
+    </ul>
+
+    <h4 id="manchester">Protocolo de Manchester</h4>
+    <p class="alg-prose-block">En las urgencias del SNS, el orden de atención no es el de la cola: es el de la gravedad. El Protocolo de Manchester asigna un color y un tiempo objetivo.</p>
+    <div class="alg-manchester" role="list">
+      <div class="alg-man alg-man--red" role="listitem"><strong>Rojo</strong>Inmediato · riesgo vital</div>
+      <div class="alg-man alg-man--orange" role="listitem"><strong>Naranja</strong>Hasta 10 minutos</div>
+      <div class="alg-man alg-man--yellow" role="listitem"><strong>Amarillo</strong>Hasta 60 minutos</div>
+      <div class="alg-man alg-man--green" role="listitem"><strong>Verde</strong>Hasta 120 minutos</div>
+      <div class="alg-man alg-man--blue" role="listitem"><strong>Azul</strong>Hasta 240 minutos</div>
+    </div>
+    <p class="alg-prose-block">Una queja «verde» puede esperar dos horas o más. Eso no significa que el servicio se haya negado a tratar: significa que hay casos más urgentes por delante. Si la queja no es una emergencia y no quiere esperar, puede reservar una consulta online el mismo día.</p>
+    <div class="alg-lon-cards">
+      <article class="lon-service-card is-visible" aria-label="Consulta de Medicina General">
+        <div class="lon-service-image-wrap">
+          <img src="/image/image1_files/Ostermalmstorg_Large_Desktop.jpg" alt="Consulta de medicina general por telemedicina" width="800" height="600" loading="lazy" decoding="async">
+          <span class="lon-service-chip">Medicina General</span>
+          <div class="lon-service-glass">
+            <h3>Consulta de Medicina General / Check-up</h3>
+            <p class="lon-service-price">€39 · 30 min</p>
+            <a href="/marcar/clinica-geral?lang=es" class="lon-btn lon-btn-soft lon-btn-sm">Reservar</a>
+          </div>
+        </div>
+      </article>
+      <article class="lon-service-card is-visible" aria-label="Consulta médica urgente">
+        <div class="lon-service-image-wrap">
+          <img src="/image/image1_files/LincolnSquare_Large_Desktop.jpg" alt="Consulta médica urgente online" width="800" height="600" loading="lazy" decoding="async">
+          <span class="lon-service-chip">Urgencia</span>
+          <div class="lon-service-glass">
+            <h3>Consulta Médica Urgente (Adultos)</h3>
+            <p class="lon-service-price">€35 · 15 min</p>
+            <a href="/marcar/urgente?lang=es" class="lon-btn lon-btn-soft lon-btn-sm">Reservar</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="alg-section" style="background:white;">
+    <div class="alg-section-label">Turistas</div>
+    <h3>Si es turista y necesita asistencia, ¿dónde puede ir?</h3>
+
+    <h4>Sistema público: urgencias</h4>
+    <p class="alg-prose-block">Es gratuita en el momento de la atención para ciudadanos de la UE/EEE/Suiza/Reino Unido que lleven la Tarjeta Sanitaria Europea (TSE): paga en las mismas condiciones que un residente portugués (es decir, sin coste, ya que las tasas moderadoras en urgencias se eliminaron en 2022). El coste del tratamiento se concilia después directamente entre el sistema de salud portugués y el del país de origen, mediante acuerdos europeos: no es el propio turista quien paga esa diferencia.</p>
+    <p class="alg-prose-block">Para turistas de fuera de la UE/EEE, el acceso a urgencias no se deniega por falta de documentos (una emergencia siempre se atiende), pero, sin TSE ni acuerdo bilateral con el país de origen, es habitual que se cobre el valor de la atención.</p>
+    <div class="alg-callout"><strong>Si es europeo, puede (y debe) usar la Tarjeta Sanitaria Europea.</strong> Llévela siempre en la cartera o en el teléfono, junto con el documento de identificación.</div>
+
+    <h4>¿SNS 24 o 112?</h4>
+    <p class="alg-prose-block">Antes de acudir a urgencias, lo más indicado es contactar primero con la Línea SNS 24 (<a href="tel:808242424">808 24 24 24</a>): el equipo hace un triaje telefónico y orienta hacia la respuesta más adecuada, incluida, si es necesario, la urgencia más cercana según los síntomas. Este contacto previo no es actualmente obligatorio para la generalidad de las urgencias: solo pasó a exigirse para las urgencias de obstetricia y ginecología, en todo el país, desde febrero de 2026. Fuera de ese caso concreto, sigue siendo una recomendación (para agilizar la atención), no un requisito de entrada. En cualquier situación con riesgo vital, el contacto directo sigue siendo siempre el <a href="tel:112">112</a>, sin pasar por el triaje telefónico.</p>
+
+    <h4>Sistema privado (pagado por usted)</h4>
+    <p class="alg-prose-block">Consulta online: para quejas leves, con atención el mismo día. Clínica, hospital privado o urgencias privadas: contacte o acuda directamente al centro.</p>
+    <div class="alg-lon-cards">
+      <article class="lon-service-card is-visible" aria-label="Consulta médica urgente">
+        <div class="lon-service-image-wrap">
+          <img src="/image/image1_files/LincolnSquare_Large_Desktop.jpg" alt="Consulta médica urgente online" width="800" height="600" loading="lazy" decoding="async">
+          <span class="lon-service-chip">Urgencia</span>
+          <div class="lon-service-glass">
+            <h3>Consulta Médica Urgente (Adultos)</h3>
+            <p class="lon-service-price">€35 · 15 min</p>
+            <a href="/marcar/urgente?lang=es" class="lon-btn lon-btn-soft lon-btn-sm">Reservar</a>
+          </div>
+        </div>
+      </article>
+      <article class="lon-service-card is-visible" aria-label="Consulta del Viajero para dos personas">
+        <div class="lon-service-image-wrap">
+          <img src="/image/image1_files/Spitalfields_Large_Desktop.jpg" alt="Consulta del viajero para dos personas" width="800" height="600" loading="lazy" decoding="async">
+          <span class="lon-service-chip">Viajero 2 personas</span>
+          <div class="lon-service-glass">
+            <h3>Consulta del Viajero 2 personas</h3>
+            <p class="lon-service-price">€75 · 30 min</p>
+            <a href="/marcar/travel?pessoas=2&lang=es" class="lon-btn lon-btn-soft lon-btn-sm">Reservar</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="alg-section">
+    <div class="alg-section-label">Estancia larga</div>
+    <h3>Es expatriado, nómada digital, etc.: pretende quedarse una temporada larga</h3>
+    <p class="alg-prose-block">Si planea quedarse en Portugal durante un periodo prolongado, tiene esencialmente dos opciones, que no se excluyen mutuamente:</p>
+    <ul class="alg-list">
+      <li><strong>Opción 1: permanecer en el sistema privado</strong> — mediante seguro de salud privado o pago consulta a consulta, sin depender del SNS. Suele ser la opción más rápida mientras aún no tiene la situación de residencia regularizada.</li>
+      <li><strong>Opción 2: obtener el Número de Utente (NNU)</strong> — en cuanto tenga autorización de residencia (o más de 90 días de estancia acreditada), puede inscribirse en el SNS y acceder en las mismas condiciones que un residente portugués, manteniendo en paralelo lo privado para lo que prefiera tratar más rápido.</li>
+    </ul>
+
+    <h4>Cómo obtener el Número de Utente (NNU)</h4>
+    <div class="alg-table-wrap">
+      <table class="alg-simple-table">
+        <thead><tr><th>Situación</th><th>Cómo obtenerlo</th></tr></thead>
+        <tbody>
+          <tr><td>Ciudadano portugués</td><td>Asignado automáticamente con el Cartão de Cidadão, impreso en el reverso</td></tr>
+          <tr><td>Ciudadano brasileño</td><td>Certificado PB4</td></tr>
+          <tr><td>Extranjero con autorización de residencia</td><td>Presentar la Autorización de Residencia en el centro de salud de la zona</td></tr>
+          <tr><td>Extranjero con más de 90 días en Portugal</td><td>Certificado de Residencia (obtenido en la Junta de Freguesia de la zona)</td></tr>
+          <tr><td>Recién nacidos</td><td>Asignado automáticamente en el hospital, mediante el proceso «Nascer Cidadão»</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="alg-prose-block">La solicitud es siempre gratuita. Desde 2022, las tasas moderadoras se eliminaron para consultas, urgencias y pruebas en el SNS: solo algunas situaciones específicas (como la fisioterapia) mantienen un coste residual.</p>
+    <div class="alg-warn"><strong>Nota importante:</strong> el Número de Utente no es lo mismo que el NIF o el NISS: son tres identificadores distintos, aunque estén agrupados en el Cartão de Cidadão. Tener Número de Utente tampoco garantiza automáticamente un médico de familia asignado ni la exención de tasas moderadoras: eso depende de la situación concreta de cada persona.</div>
+
+    <div class="alg-lon-cards">
+      <article class="lon-service-card is-visible" aria-label="Renovación de tratamiento médico">
+        <div class="lon-service-image-wrap">
+          <img src="/image/image1_files/ColmoreRow_Large_Desktop.jpg" alt="Renovación de tratamiento médico online" width="800" height="600" loading="lazy" decoding="async">
+          <span class="lon-service-chip">Seguimiento</span>
+          <div class="lon-service-glass">
+            <h3>Renovación de Tratamiento Médico</h3>
+            <p class="lon-service-price">€19</p>
+            <a href="/marcar/renovacao?lang=es" class="lon-btn lon-btn-soft lon-btn-sm">Reservar</a>
+          </div>
+        </div>
+      </article>
+      <article class="lon-service-card is-visible" aria-label="Consulta de longevidad">
+        <div class="lon-service-image-wrap">
+          <img src="/image/image1_files/4a33a784e27bfb3d73c257c81ec6baa23a037e34-1024x731.jpg" alt="Consulta de longevidad y salud preventiva" width="800" height="600" loading="lazy" decoding="async">
+          <span class="lon-service-chip">Longevidad</span>
+          <div class="lon-service-glass">
+            <h3>Consulta de Longevidad y Salud Preventiva</h3>
+            <p class="lon-service-price">€79 · 30 min</p>
+            <a href="/marcar/longevidade?lang=es" class="lon-btn lon-btn-soft lon-btn-sm">Reservar</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="alg-section" style="background:white;" id="faq">
+    <div class="alg-section-label">Dudas</div>
+    <h3>Preguntas frecuentes</h3>
+    <div class="alg-faq-list">
+      <div class="alg-faq-item"><div class="alg-faq-q">¿La Tarjeta Sanitaria Europea cubre vacunas?</div><div class="alg-faq-a">No. La TSE solo cubre la atención considerada clínicamente necesaria durante la estancia: la vacunación se trata como cuidado preventivo y queda excluida. Por eso sigue teniendo sentido un apoyo complementario para vacunarse antes de un viaje, aun teniendo TSE.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">¿Puedo usar la TSE en una clínica privada en Portugal?</div><div class="alg-faq-a">No: solo se acepta en hospitales públicos y centros de salud del SNS. Tampoco cubre la repatriación ni sustituye un seguro de viaje.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">¿La TSE solo sirve para emergencias?</div><div class="alg-faq-a">En la práctica, sí, sobre todo para eso: emergencias y enfermedades súbitas durante la estancia. Cubre también la continuidad del tratamiento de enfermedades crónicas o preexistentes que ya tenía antes de viajar, pero nunca cubre tratamientos planificados o electivos: no puede usar la TSE para ir a propósito a otro país a hacerse una cirugía o un tratamiento programado.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">¿Debo llamar al 112 o al SNS 24?</div><div class="alg-faq-a">El 112 es solo para emergencias reales con riesgo vital: contacto directo, sin pasar por triaje telefónico. El SNS 24 (808 24 24 24) es para consejo y triaje en situaciones preocupantes pero no emergentes.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">¿Un turista puede usar el SNS en Portugal?</div><div class="alg-faq-a">Los turistas de países de la UE/EEE pueden usar la Tarjeta Sanitaria Europea en urgencias y centros de salud públicos. Los turistas de terceros países generalmente no tienen acceso gratuito y deben recurrir a lo privado o a un seguro de viaje.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">¿Cuánto tarda en tener médico de familia en el SNS?</div><div class="alg-faq-a">Depende mucho de la región: en marzo de 2026, más de 1,6 millones de usuarios en Portugal no tenían médico de familia asignado, una cifra que ha ido creciendo.</div></div>
+      <div class="alg-faq-item"><div class="alg-faq-q">¿Puedo usar el SNS aunque tenga seguro de salud privado?</div><div class="alg-faq-a">Sí: el SNS es independiente de estar inscrito en otro sistema (seguro privado, ADSE, etc.).</div></div>
+    </div>
+  </section>
+
+  <section class="alg-section">
+    <div class="alg-section-label">Dónde entra LON Clinic</div>
+    <h3>Cuando lo público no llega, o no se aplica</h3>
+    <p class="alg-prose-block">Para quien está de vacaciones y necesita consejo médico rápido (sin los límites de la TSE, que no cubre ni lo privado ni la vacunación), para quien no tiene Número de Utente, o simplemente para quien prefiere no esperar meses al SNS: LON Clinic ofrece consulta por telemedicina en portugués, español, inglés y otras lenguas, y tiene un componente con foco especial en medicina del viajero.</p>
+    <div class="alg-lon-cards">
+      <article class="lon-service-card is-visible" aria-label="Sesión suelta de psicología">
+        <div class="lon-service-image-wrap">
+          <img src="/image/image1_files/Marylebone_Large_Desktop.jpg" alt="Sesión suelta de psicología por videollamada" width="800" height="600" loading="lazy" decoding="async">
+          <span class="lon-service-chip">Psicología</span>
+          <div class="lon-service-glass">
+            <h3>Sesión suelta de Psicología</h3>
+            <p class="lon-service-price">€60</p>
+            <a href="/saudemental?lang=es" class="lon-btn lon-btn-soft lon-btn-sm">Reservar</a>
+          </div>
+        </div>
+      </article>
+      <article class="lon-service-card is-visible" aria-label="Consulta especializada en burnout">
+        <div class="lon-service-image-wrap">
+          <img src="/image/image1_files/Marylebone_Large_Desktop.jpg" alt="Consulta especializada en burnout por videollamada" width="800" height="600" loading="lazy" decoding="async">
+          <span class="lon-service-chip">Burnout</span>
+          <div class="lon-service-glass">
+            <h3>Consulta Especializada en Burnout</h3>
+            <p class="lon-service-price">€60 · 60 min</p>
+            <a href="/marcar/burnout?lang=es" class="lon-btn lon-btn-soft lon-btn-sm">Reservar</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="alg-related-pages">
+    <div class="alg-section-label">En esta serie y en otras guías</div>
+    <h3>Seguir leyendo</h3>
+    <p class="alg-section-sub">Siga en la serie con la guía de seguros y con el cálculo de si el seguro compensa, o lea sobre telemedicina.</p>
+    <div class="alg-related-grid">
+      <a class="alg-related-card" href="/blog/seguros-salud-portugal-guia"><div><div class="alg-related-card-text">Seguros de salud en Portugal</div><div class="alg-related-card-sub">Serie · 2 de 4</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/seguro-salud-compensa-portugal"><div><div class="alg-related-card-text">Seguro de salud: ¿compensa?</div><div class="alg-related-card-sub">Serie · 3 de 4</div></div><span class="alg-related-arrow">→</span></a>
+      <a class="alg-related-card" href="/blog/telemedicina-em-casa"><div><div class="alg-related-card-text">Telemedicina en casa</div><div class="alg-related-card-sub">Qué esperar de la consulta online</div></div><span class="alg-related-arrow">→</span></a>
+    </div>
+  </section>
+
+  <section class="alg-final-cta">
+    <div class="alg-final-cta-inner">
+      <h3>¿Necesita una consulta<br><em>sin esperar al SNS?</em></h3>
+      <p>Reserve online, el mismo día, en portugués, español o inglés.</p>
+      <a class="alg-btn-cta-large" href="/marcar?lang=es">Ver consultas →</a>
+      <p class="alg-final-note">Telemedicina · sin desplazamiento · receta cuando esté clínicamente indicada</p>
+    </div>
+  </section>
+
+  <div class="alg-disclaimer">
+    <p>Compilación de información pública sobre el SNS y el sector privado en Portugal. Las normas de acceso, tasas y acuerdos internacionales pueden cambiar: confirme siempre en <a href="https://www.sns24.gov.pt/" target="_blank" rel="noopener noreferrer">sns24.gov.pt</a> o en el centro de salud de su zona.</p>
+  </div>
+</div>
