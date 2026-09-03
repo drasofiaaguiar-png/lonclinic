@@ -79,7 +79,47 @@ function loadManifest() {
 const ARTICLE_LANGS = {
     pt: { htmlLang: 'pt-PT', ogLocale: 'pt_PT', inLanguage: 'pt-PT', hreflang: 'pt-PT', label: 'PT' },
     en: { htmlLang: 'en', ogLocale: 'en_GB', inLanguage: 'en', hreflang: 'en', label: 'EN' },
-    es: { htmlLang: 'es', ogLocale: 'es_ES', inLanguage: 'es', hreflang: 'es', label: 'ES' }
+    es: { htmlLang: 'es', ogLocale: 'es_ES', inLanguage: 'es', hreflang: 'es', label: 'ES' },
+    fr: { htmlLang: 'fr', ogLocale: 'fr_FR', inLanguage: 'fr', hreflang: 'fr', label: 'FR' },
+    de: { htmlLang: 'de', ogLocale: 'de_DE', inLanguage: 'de', hreflang: 'de', label: 'DE' }
+};
+
+const ARTICLE_CHROME = {
+    pt: {
+        updated: 'Atualizado em',
+        clinician: (years) => `Médica · ${years} anos de experiência clínica`,
+        review: ' · Revisão clínica',
+        travelNote: 'Informação de carácter geral — não substitui consulta médica. Horários dos centros de vacinação podem alterar-se.',
+        generalNote: 'Informação de carácter geral — não substitui consulta médica individualizada.'
+    },
+    en: {
+        updated: 'Updated',
+        clinician: (years) => `Physician · ${years} years of clinical experience`,
+        review: ' · Clinical review',
+        travelNote: 'General information — it does not replace a medical consultation. Vaccination centre hours may change.',
+        generalNote: 'General information — it does not replace an individual medical consultation.'
+    },
+    es: {
+        updated: 'Actualizado el',
+        clinician: (years) => `Médica · ${years} años de experiencia clínica`,
+        review: ' · Revisión clínica',
+        travelNote: 'Información de carácter general — no sustituye una consulta médica. Los horarios de los centros de vacunación pueden cambiar.',
+        generalNote: 'Información de carácter general — no sustituye una consulta médica individualizada.'
+    },
+    fr: {
+        updated: 'Mis à jour le',
+        clinician: (years) => `Médecin · ${years} ans d’expérience clinique`,
+        review: ' · Relecture clinique',
+        travelNote: 'Information générale — elle ne remplace pas une consultation médicale. Les horaires des centres de vaccination peuvent changer.',
+        generalNote: 'Information générale — elle ne remplace pas une consultation médicale individualisée.'
+    },
+    de: {
+        updated: 'Aktualisiert am',
+        clinician: (years) => `Ärztin · ${years} Jahre klinische Erfahrung`,
+        review: ' · Klinische Prüfung',
+        travelNote: 'Allgemeine Information — sie ersetzt keine ärztliche Beratung. Öffnungszeiten der Impfzentren können sich ändern.',
+        generalNote: 'Allgemeine Information — sie ersetzt keine individuelle ärztliche Beratung.'
+    }
 };
 
 function articleLangCode(meta) {
@@ -99,7 +139,7 @@ function siblingArticles(current, articles) {
     const group = current && current.group;
     if (!group) return [];
     return (Array.isArray(articles) ? articles : []).filter(
-        (a) => a && a.group === group && isValidSlug(a.slug) && isListedArticle(a)
+        (a) => a && a.group === group && isValidSlug(a.slug)
     );
 }
 
@@ -695,17 +735,11 @@ function renderBlogArticle(origin, slug) {
         const href = authors.authorPath(a);
         const iso = String(dateMod || datePub || '').slice(0, 10);
         const lang = articleLangCode(meta);
-        const updatedLabel = lang === 'en' ? 'Updated' : lang === 'es' ? 'Actualizado el' : 'Atualizado em';
+        const chrome = ARTICLE_CHROME[lang] || ARTICLE_CHROME.pt;
         const time = iso
-            ? `<time datetime="${escapeHtml(iso)}">${escapeHtml(updatedLabel)} ${escapeHtml(magDate(iso, lang))}</time><span aria-hidden="true"> · </span>`
+            ? `<time datetime="${escapeHtml(iso)}">${escapeHtml(chrome.updated)} ${escapeHtml(magDate(iso, lang))}</time><span aria-hidden="true"> · </span>`
             : '';
-        const clinician = lang === 'en'
-            ? `Physician · ${a.yearsPractice} years of clinical experience`
-            : lang === 'es'
-                ? `Médica · ${a.yearsPractice} años de experiencia clínica`
-                : `Médica · ${a.yearsPractice} anos de experiência clínica`;
-        const review = lang === 'en' ? ' · Clinical review' : lang === 'es' ? ' · Revisión clínica' : ' · Revisão clínica';
-        return `<p class="eeat-byline mag-story-by">${time}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">${escapeHtml(clinician)}</a><span class="eeat-byline-review">${escapeHtml(review)}</span></p>`;
+        return `<p class="eeat-byline mag-story-by">${time}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">${escapeHtml(chrome.clinician(a.yearsPractice))}</a><span class="eeat-byline-review">${escapeHtml(chrome.review)}</span></p>`;
     })();
     const bio = authors.authorBioHtml(o, meta.author, dateMod || datePub);
     const leadFigure = meta.image
@@ -717,17 +751,8 @@ function renderBlogArticle(origin, slug) {
     const kicker = magThemeLabel(meta);
     const lang = articleLangCode(meta);
     const langMeta = articleLangMeta(meta);
-    const note = isTravelGuide
-        ? (lang === 'en'
-            ? 'General information — it does not replace a medical consultation. Vaccination centre hours may change.'
-            : lang === 'es'
-                ? 'Información de carácter general — no sustituye una consulta médica. Los horarios de los centros de vacunación pueden cambiar.'
-                : 'Informação de carácter geral — não substitui consulta médica. Horários dos centros de vacinação podem alterar-se.')
-        : (lang === 'en'
-            ? 'General information — it does not replace an individual medical consultation.'
-            : lang === 'es'
-                ? 'Información de carácter general — no sustituye una consulta médica individualizada.'
-                : 'Informação de carácter geral — não substitui consulta médica individualizada.');
+    const chrome = ARTICLE_CHROME[lang] || ARTICLE_CHROME.pt;
+    const note = isTravelGuide ? chrome.travelNote : chrome.generalNote;
     const closeCta = `<section class="mag-section mag-wrap mag-article-cta">${magCtaHtml(articleCluster(meta) === 'travel' ? 'travel' : articleCluster(meta) === 'mental' ? 'mental' : 'clinic', lang)}</section>`;
     const articleInner = format === 'markdown'
         ? `
@@ -997,6 +1022,74 @@ function magCtaHtml(kind, lang) {
                     { href: '/blog/telemedicina-em-casa', label: 'Telemedicina en casa' }
                 ]
             }
+        },
+        fr: {
+            mental: {
+                kicker: 'Soin',
+                title: 'L’esprit aussi s’accompagne.',
+                actions: [
+                    { href: '/saudemental?lang=fr', label: 'Psychologie' },
+                    { href: '/teste-personalidade?lang=fr', label: 'Test de personnalité' }
+                ]
+            },
+            travel: {
+                kicker: 'Voyage',
+                title: 'Partir avec la santé à jour.',
+                actions: [
+                    { href: '/marcar/travel?lang=fr', label: 'Consultation du voyageur' },
+                    { href: '/travel-clinic', label: 'Clinique du voyageur' }
+                ]
+            },
+            burnout: {
+                kicker: 'Dossier',
+                title: 'Quand l’épuisement n’est plus seulement de la fatigue.',
+                actions: [
+                    { href: '/burnout/teste?lang=fr', label: 'Faire le test' },
+                    { href: '/marcar/burnout?lang=fr', label: 'Consultation burnout' }
+                ]
+            },
+            clinic: {
+                kicker: 'Clinique',
+                title: 'Une consultation, avec du temps.',
+                actions: [
+                    { href: '/marcar/clinica-geral?lang=fr', label: 'Prendre rendez-vous' },
+                    { href: '/blog/telemedicina-em-casa', label: 'Télémédecine à domicile' }
+                ]
+            }
+        },
+        de: {
+            mental: {
+                kicker: 'Fürsorge',
+                title: 'Auch die Psyche braucht Begleitung.',
+                actions: [
+                    { href: '/saudemental?lang=de', label: 'Psychologie' },
+                    { href: '/teste-personalidade?lang=de', label: 'Persönlichkeitstest' }
+                ]
+            },
+            travel: {
+                kicker: 'Reise',
+                title: 'Mit geklärter Gesundheit reisen.',
+                actions: [
+                    { href: '/marcar/travel?lang=de', label: 'Reisemedizinische Beratung' },
+                    { href: '/travel-clinic', label: 'Reiseklinik' }
+                ]
+            },
+            burnout: {
+                kicker: 'Dossier',
+                title: 'Wenn Erschöpfung nicht mehr nur Müdigkeit ist.',
+                actions: [
+                    { href: '/burnout/teste?lang=de', label: 'Test machen' },
+                    { href: '/marcar/burnout?lang=de', label: 'Burnout-Sprechstunde' }
+                ]
+            },
+            clinic: {
+                kicker: 'Klinik',
+                title: 'Eine Sprechstunde, mit Zeit.',
+                actions: [
+                    { href: '/marcar/clinica-geral?lang=de', label: 'Termin buchen' },
+                    { href: '/blog/telemedicina-em-casa', label: 'Telemedizin zu Hause' }
+                ]
+            }
         }
     };
     const byLang = packs[lang] || packs.pt;
@@ -1042,11 +1135,14 @@ function magDate(iso, lang) {
     const months = {
         en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         es: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+        fr: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
+        de: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'],
         pt: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
     };
     const list = months[lang] || months.pt;
     const month = list[Number(m[2]) - 1] || m[2];
     if (lang === 'en') return `${month} ${Number(m[3])}, ${m[1]}`;
+    if (lang === 'de') return `${Number(m[3])}. ${month} ${m[1]}`;
     return `${Number(m[3])} ${month} ${m[1]}`;
 }
 

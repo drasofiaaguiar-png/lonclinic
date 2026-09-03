@@ -207,6 +207,55 @@
       ]
     },
     {
+      "slug": "sns-vs-privat-portugal",
+      "title": "SNS vs. privat in Portugal: so funktioniert jedes System",
+      "description": "Die tatsächlichen Unterschiede zwischen dem SNS und der privaten Gesundheitsversorgung in Portugal — Zugang, Wartezeiten, Kosten und wann welche Option mehr Sinn ergibt.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "lang": "de",
+      "hreflang": "de",
+      "group": "sns-vs-privado-portugal",
+      "listed": false,
+      "image": "/image/guide/guide-group-walk.jpg",
+      "about": "SNS",
+      "related": [
+        "krankenversicherung-portugal-leitfaden",
+        "lohnt-sich-krankenversicherung-portugal",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "Deckt die Europäische Krankenversicherungskarte Impfungen ab?",
+          "a": "Nein. Die EHIC deckt nur die Versorgung ab, die während des Aufenthalts als klinisch notwendig gilt — Impfung gilt als Prävention und ist ausgeschlossen."
+        },
+        {
+          "q": "Kann ich die EHIC in einer Privatklinik in Portugal nutzen?",
+          "a": "Nein — sie wird nur in öffentlichen Krankenhäusern und Gesundheitszentren des SNS akzeptiert. Sie deckt auch keine Rückführung ab und ersetzt keine Reiseversicherung."
+        },
+        {
+          "q": "Dient die EHIC nur für Notfälle?",
+          "a": "In der Praxis ja: Notfälle und plötzliche Erkrankungen während des Aufenthalts. Sie deckt die Fortsetzung der Behandlung chronischer oder vorbestehender Krankheiten ab, die Sie bereits vor der Reise hatten, aber niemals geplante oder elektive Behandlungen — Sie können die EHIC nicht nutzen, um absichtlich in ein anderes Land zu einer geplanten Operation zu fahren."
+        },
+        {
+          "q": "Soll ich die 112 oder SNS 24 anrufen?",
+          "a": "112 ist nur für echte lebensbedrohliche Notfälle. SNS 24 (808 24 24 24) ist für Beratung und Triage in besorgniserregenden, aber nicht notfallmäßigen Situationen."
+        },
+        {
+          "q": "Kann ein Tourist den SNS in Portugal nutzen?",
+          "a": "Touristen aus EU/EWR-Ländern können die Europäische Krankenversicherungskarte in öffentlichen Notaufnahmen und Gesundheitszentren nutzen. Touristen aus Drittstaaten haben in der Regel keinen kostenfreien Zugang und sollten die Privatversorgung oder eine Reiseversicherung in Anspruch nehmen."
+        },
+        {
+          "q": "Wie lange dauert es, bis man einen Hausarzt im SNS hat?",
+          "a": "Das hängt von der Region ab. Im März 2026 hatten mehr als 1,6 Millionen Nutzer in Portugal keinen zugewiesenen Hausarzt."
+        },
+        {
+          "q": "Kann ich den SNS nutzen, auch wenn ich eine private Krankenversicherung habe?",
+          "a": "Ja — der SNS ist unabhängig davon, ob Sie in einem anderen System eingeschrieben sind (private Versicherung, ADSE usw.)."
+        }
+      ]
+    },
+    {
       "slug": "health-insurance-portugal-guide",
       "title": "Health insurance in Portugal — a guide for anyone deciding",
       "description": "How health insurance works in Portugal, what plans usually cover (and exclude), and how to compare quotes without getting lost in the small print.",
@@ -273,6 +322,39 @@
       ]
     },
     {
+      "slug": "krankenversicherung-portugal-leitfaden",
+      "title": "Krankenversicherung in Portugal — Leitfaden für alle, die sich entscheiden",
+      "description": "Wie Krankenversicherungen in Portugal funktionieren, was Pläne üblicherweise abdecken (und nicht abdecken), und wie Sie Angebote vergleichen, ohne sich im Kleingedruckten zu verlieren.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "lang": "de",
+      "hreflang": "de",
+      "group": "seguros-saude-portugal-guia",
+      "listed": false,
+      "image": "/image/guide/guide-opera-coast.jpg",
+      "about": "Seguros",
+      "related": [
+        "sns-vs-privat-portugal",
+        "lohnt-sich-krankenversicherung-portugal",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "Muss ich medizinische Untersuchungen machen, um eine Krankenversicherung abzuschließen?",
+          "a": "In der Regel wird ein individueller Gesundheitsfragebogen oder ein ärztliches Telefoninterview verlangt — keine körperlichen Untersuchungen, außer in besonderen Fällen."
+        },
+        {
+          "q": "Kann ich den Plan innerhalb derselben Versicherungsgesellschaft wechseln?",
+          "a": "Ja, aber in der Regel mit einer Mindestfrist (häufig 90 Tage vor der Verlängerung)."
+        },
+        {
+          "q": "Deckt eine Krankenversicherung reisemedizinische Sprechstunden ab?",
+          "a": "Das hängt vom Plan ab. Manche Versicherungen enthalten Online-Medizin, und in diesen Fällen kann die reisemedizinische Beratung ohne Zusatzkosten abgedeckt sein — aber nur für versicherte Personen. Wenn der Plan sie nicht enthält, oder wenn Sie noch keine Versicherung haben, können Sie die Sprechstunde gesondert buchen."
+        }
+      ]
+    },
+    {
       "slug": "is-health-insurance-worth-it-portugal",
       "title": "Health insurance in Portugal — is it worth it?",
       "description": "Is health insurance worth it? Compare the annual cost of a policy with paying for consultations as you go, and see which profile benefits most.",
@@ -327,6 +409,146 @@
         {
           "q": "¿Compensa tener seguro de salud solo para un viaje?",
           "a": "Normalmente no. Un seguro de salud anual no está pensado para una necesidad puntual. Tiene más sentido una consulta suelta de medicina del viajero o un seguro de viaje específico para ese desplazamiento."
+        }
+      ]
+    },
+    {
+      "slug": "lohnt-sich-krankenversicherung-portugal",
+      "title": "Krankenversicherung in Portugal — lohnt sich das?",
+      "description": "Lohnt sich eine Krankenversicherung? Vergleichen Sie die Jahreskosten einer Police mit den Kosten, Sprechstunden einzeln zu zahlen, und sehen Sie, welches Profil am meisten profitiert.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "lang": "de",
+      "hreflang": "de",
+      "group": "seguro-saude-compensa",
+      "listed": false,
+      "image": "/image/guide/guide-country-road.jpg",
+      "about": "Seguros",
+      "related": [
+        "krankenversicherung-portugal-leitfaden",
+        "sns-vs-privat-portugal",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "Lohnt sich eine Krankenversicherung mehr als alles aus eigener Tasche zu zahlen?",
+          "a": "Das hängt vom Nutzungsprofil ab — wenn Sie das Private regelmäßig nutzen (mehr als 2–3 Mal pro Jahr), tendiert die Versicherung dazu, sich zu lohnen; bei seltener und punktueller Nutzung ist die Einzelzahlung in der Regel günstiger."
+        },
+        {
+          "q": "Lohnt sich eine Krankenversicherung nur für eine Reise?",
+          "a": "Normalerweise nicht. Eine Jahreskrankenversicherung ist nicht für einen punktuellen Bedarf gedacht. Sinnvoller ist eine einzelne reisemedizinische Beratung oder eine spezifische Reiseversicherung für diese Fahrt."
+        }
+      ]
+    },
+    {
+      "slug": "sns-vs-prive-portugal",
+      "title": "SNS vs. privé au Portugal : comment fonctionne chaque système",
+      "description": "Les différences réelles entre le SNS et le privé au Portugal — accès, délais d’attente, coûts et quand chaque option a le plus de sens.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "lang": "fr",
+      "hreflang": "fr",
+      "group": "sns-vs-privado-portugal",
+      "listed": false,
+      "image": "/image/guide/guide-group-walk.jpg",
+      "about": "SNS",
+      "related": [
+        "assurances-sante-portugal-guide",
+        "assurance-sante-vaut-le-coup-portugal",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "La Carte européenne d’assurance maladie couvre-t-elle les vaccins ?",
+          "a": "Non. La CEAM ne couvre que les soins considérés comme cliniquement nécessaires pendant le séjour — la vaccination est traitée comme un soin préventif et est exclue."
+        },
+        {
+          "q": "Puis-je utiliser la CEAM dans une clinique privée au Portugal ?",
+          "a": "Non — elle n’est acceptée que dans les hôpitaux publics et les centres de santé du SNS. Elle ne couvre pas non plus le rapatriement et ne remplace pas une assurance voyage."
+        },
+        {
+          "q": "La CEAM ne sert-elle qu’aux urgences ?",
+          "a": "Dans la pratique, oui : urgences et maladies soudaines pendant le séjour. Elle couvre la continuité du traitement des maladies chroniques ou préexistantes que vous aviez déjà avant de voyager, mais jamais les traitements planifiés ou électifs."
+        },
+        {
+          "q": "Dois-je appeler le 112 ou le SNS 24 ?",
+          "a": "Le 112 est réservé aux vraies urgences avec un risque vital. Le SNS 24 (808 24 24 24) sert au conseil et au triage dans les situations préoccupantes mais non émergentes."
+        },
+        {
+          "q": "Un touriste peut-il utiliser le SNS au Portugal ?",
+          "a": "Les touristes de l’UE/EEE peuvent utiliser la CEAM aux urgences et dans les centres de santé publics. Les touristes de pays tiers n’ont généralement pas d’accès gratuit et doivent recourir au privé ou à une assurance voyage."
+        },
+        {
+          "q": "Combien de temps faut-il pour avoir un médecin de famille au SNS ?",
+          "a": "Cela dépend de la région. En mars 2026, plus de 1,6 million d’usagers n’avaient pas de médecin de famille attribué au Portugal."
+        },
+        {
+          "q": "Puis-je utiliser le SNS même si j’ai une assurance santé privée ?",
+          "a": "Oui — le SNS est indépendant du fait d’être inscrit dans un autre système (assurance privée, ADSE, etc.)."
+        }
+      ]
+    },
+    {
+      "slug": "assurances-sante-portugal-guide",
+      "title": "Assurances santé au Portugal — guide pour ceux qui sont en train de décider",
+      "description": "Comment fonctionnent les assurances santé au Portugal, ce qu’elles couvrent généralement (et ne couvrent pas), et comment comparer les propositions sans se perdre dans les termes techniques.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "lang": "fr",
+      "hreflang": "fr",
+      "group": "seguros-saude-portugal-guia",
+      "listed": false,
+      "image": "/image/guide/guide-opera-coast.jpg",
+      "about": "Seguros",
+      "related": [
+        "sns-vs-prive-portugal",
+        "assurance-sante-vaut-le-coup-portugal",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "Faut-il passer des examens médicaux pour souscrire une assurance santé ?",
+          "a": "On demande généralement un questionnaire individuel de santé ou un entretien médical par téléphone — pas d’examens physiques, sauf cas spécifiques."
+        },
+        {
+          "q": "Puis-je changer de forfait auprès du même assureur ?",
+          "a": "Oui, mais généralement avec un préavis minimal (souvent 90 jours avant le renouvellement)."
+        },
+        {
+          "q": "Une assurance santé couvre-t-elle les consultations de médecine du voyageur ?",
+          "a": "Cela dépend du forfait. Certaines assurances incluent la médecine en ligne et, dans ces cas, la consultation du voyageur peut être couverte sans coût supplémentaire — mais seulement pour les personnes assurées. Si le forfait ne l’inclut pas, ou si vous n’avez pas encore d’assurance, vous pouvez prendre rendez-vous à part."
+        }
+      ]
+    },
+    {
+      "slug": "assurance-sante-vaut-le-coup-portugal",
+      "title": "Assurance santé au Portugal : est-ce que ça vaut le coup ?",
+      "description": "Une assurance santé vaut-elle le coup ? Comparez le coût annuel d’une police au coût de payer des consultations à l’acte et voyez quel profil en bénéficie le plus.",
+      "datePublished": "2026-09-03",
+      "dateModified": "2026-09-03",
+      "format": "html",
+      "lang": "fr",
+      "hreflang": "fr",
+      "group": "seguro-saude-compensa",
+      "listed": false,
+      "image": "/image/guide/guide-country-road.jpg",
+      "about": "Seguros",
+      "related": [
+        "assurances-sante-portugal-guide",
+        "sns-vs-prive-portugal",
+        "telemedicina-em-casa"
+      ],
+      "faq": [
+        {
+          "q": "Vaut-il mieux une assurance santé ou tout payer de votre poche ?",
+          "a": "Cela dépend du profil d’utilisation — si vous utilisez le privé régulièrement (plus de 2–3 fois par an), l’assurance a tendance à valoir le coup ; si l’usage est rare et ponctuel, payer à l’acte est généralement moins cher."
+        },
+        {
+          "q": "Cela vaut-il le coup d’avoir une assurance santé seulement pour un voyage ?",
+          "a": "En général non. Une assurance santé annuelle n’est pas conçue pour un besoin ponctuel. Une consultation à l’acte de médecine du voyageur ou une assurance voyage spécifique a plus de sens."
         }
       ]
     },
