@@ -260,7 +260,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         schedule: { title: 'Schedule', subtitle: 'Upcoming consultations' },
         patients: { title: 'Patients', subtitle: 'All consultations & follow-up tracking' },
         finances: { title: 'Finances', subtitle: 'Monthly revenue by patient' },
-        analytics: { title: 'Analytics', subtitle: 'First-party acquisition, funnel and live sessions' },
+        analytics: { title: 'Analytics', subtitle: 'Patient booking vs job application funnels' },
         invitations: { title: 'Invitations', subtitle: 'Send and manage booking invites' },
         availability: { title: 'Availability', subtitle: 'Working hours, blocks & slot preview' },
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' },
@@ -2878,7 +2878,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         intent: 'Intent (CTA)',
         schedule: 'Picked slot',
         checkout: 'Checkout',
-        purchase: 'Paid / booked'
+        purchase: 'Paid / booked',
+        apply: 'Application sent',
+        interview: 'Interview booked'
+    };
+    const FUNNEL_KIND_LABELS = {
+        patient_booking: {
+            title: 'Acquisition → booking funnel',
+            services: 'Booked services',
+            conversion: 'Conversion'
+        },
+        job_application: {
+            title: 'Acquisition → application funnel',
+            services: 'Interview bookings',
+            conversion: 'Apply rate'
+        }
     };
     const CHANNEL_LABELS = {
         paid_search: 'Paid search',
@@ -2930,9 +2944,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const range = rangeEl ? rangeEl.value : '7d';
         const audienceBtn = document.querySelector('#analyticsAudience .an-audience-btn.is-active');
         const audience = (audienceBtn && audienceBtn.getAttribute('data-audience')) || 'public';
+        const funnelBtn = document.querySelector('#analyticsFunnelKind .an-audience-btn.is-active');
+        const funnelKind = (funnelBtn && funnelBtn.getAttribute('data-funnel')) || 'patient_booking';
+        const isJobs = funnelKind === 'job_application';
         if (kpis) kpis.innerHTML = '<p class="admin-empty-list">Loading analytics…</p>';
         try {
-            const res = await fetch(`/api/admin/analytics?range=${encodeURIComponent(range)}&audience=${encodeURIComponent(audience)}`);
+            const res = await fetch(`/api/admin/analytics?range=${encodeURIComponent(range)}&audience=${encodeURIComponent(audience)}&funnel=${encodeURIComponent(funnelKind)}`);
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
             const k = data.kpis || {};
@@ -2957,7 +2974,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     note.hidden = false;
                     note.textContent = audience === 'staff'
                         ? 'No admin sessions in this range. Open the public site while logged in to tag a staff visit.'
-                        : 'Visit metrics start as people browse the public site. Bookings and revenue already come from the payment ledger.';
+                        : isJobs
+                            ? 'Recruitment metrics start as people visit /recrutamento. Applications and interviews also come from the jobs ledger.'
+                            : 'Visit metrics start as people browse the public site. Bookings and revenue already come from the payment ledger. Job applications are excluded.';
                 } else {
                     note.hidden = true;
                     note.textContent = '';
@@ -2968,16 +2987,27 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ? `${k.publicSessions || 0} visitors · ${k.staffSessions || 0} admin`
                     : audience === 'staff'
                         ? 'This browser and other marked admin devices'
-                        : (k.staffSessions ? `${k.staffSessions} admin sessions excluded` : 'Public traffic');
-                kpis.innerHTML = [
-                    ['Visitors', k.visitors],
-                    ['Sessions', k.sessions],
-                    ['Pageviews', k.pageviews],
-                    ['Engaged', `${k.engagedRate || 0}%`],
-                    ['Bookings', k.bookings],
-                    ['Revenue', anEuro(k.revenueCents)],
-                    ['Conversion', `${k.conversionRate || 0}%`]
-                ].map(([label, val]) => `<div class="an-kpi"><span class="an-kpi-label">${label}</span><span class="an-kpi-val">${val}</span></div>`).join('') +
+                        : (k.staffSessions ? `${k.staffSessions} admin sessions excluded` : (isJobs ? 'Recruitment traffic only' : 'Public clinical traffic'));
+                const kpiRows = isJobs
+                    ? [
+                        ['Visitors', k.visitors],
+                        ['Sessions', k.sessions],
+                        ['Pageviews', k.pageviews],
+                        ['Engaged', `${k.engagedRate || 0}%`],
+                        ['Applications', k.applications || 0],
+                        ['Interviews', k.interviews || 0],
+                        ['Apply rate', `${k.conversionRate || 0}%`]
+                    ]
+                    : [
+                        ['Visitors', k.visitors],
+                        ['Sessions', k.sessions],
+                        ['Pageviews', k.pageviews],
+                        ['Engaged', `${k.engagedRate || 0}%`],
+                        ['Bookings', k.bookings],
+                        ['Revenue', anEuro(k.revenueCents)],
+                        ['Conversion', `${k.conversionRate || 0}%`]
+                    ];
+                kpis.innerHTML = kpiRows.map(([label, val]) => `<div class="an-kpi"><span class="an-kpi-label">${label}</span><span class="an-kpi-val">${val}</span></div>`).join('') +
                     `<p class="an-split-hint">${escapeHtml(sessionHint)}</p>`;
             }
             const deviceHint = document.getElementById('analyticsDeviceHint');
@@ -2988,12 +3018,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             const chart = document.getElementById('analyticsChart');
             if (chart) chart.innerHTML = anSpark(data.hourly || []);
-            const funnel = document.getElementById('analyticsFunnel');
-            if (funnel) {
+            const funnelEl = document.getElementById('analyticsFunnel');
+            const funnelTitle = document.getElementById('analyticsFunnelTitle');
+            const servicesTitle = document.getElementById('analyticsServicesTitle');
+            const kindMeta = FUNNEL_KIND_LABELS[isJobs ? 'job_application' : 'patient_booking'];
+            if (funnelTitle) funnelTitle.textContent = kindMeta.title;
+            if (servicesTitle) servicesTitle.textContent = kindMeta.services;
+            if (funnelEl) {
                 const steps = data.funnel || [];
                 const top = Math.max(1, ...(steps.map((s) => s.sessions)));
-                funnel.innerHTML = `<ol class="an-funnel">${steps.map((s) => `<li>
-                    <span>${FUNNEL_LABELS[s.id] || s.id}</span>
+                const stepLabels = isJobs ? { ...FUNNEL_LABELS, intent: 'Started form' } : FUNNEL_LABELS;
+                funnelEl.innerHTML = `<ol class="an-funnel">${steps.map((s) => `<li>
+                    <span>${stepLabels[s.id] || s.id}</span>
                     <span class="an-funnel-track"><span style="width:${Math.round((s.sessions / top) * 100)}%"></span></span>
                     <strong>${s.sessions}</strong>
                     <em>${s.stepConversion}%</em>
@@ -3040,6 +3076,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const analyticsRange = document.getElementById('analyticsRange');
     const analyticsRefreshBtn = document.getElementById('analyticsRefreshBtn');
     const analyticsAudience = document.getElementById('analyticsAudience');
+    const analyticsFunnelKind = document.getElementById('analyticsFunnelKind');
     if (analyticsRange) analyticsRange.addEventListener('change', () => loadAnalyticsPanel());
     if (analyticsRefreshBtn) analyticsRefreshBtn.addEventListener('click', () => loadAnalyticsPanel());
     if (analyticsAudience) {
@@ -3047,6 +3084,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             const btn = e.target.closest('[data-audience]');
             if (!btn) return;
             analyticsAudience.querySelectorAll('.an-audience-btn').forEach((b) => b.classList.toggle('is-active', b === btn));
+            loadAnalyticsPanel();
+        });
+    }
+    if (analyticsFunnelKind) {
+        analyticsFunnelKind.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-funnel]');
+            if (!btn) return;
+            analyticsFunnelKind.querySelectorAll('.an-audience-btn').forEach((b) => b.classList.toggle('is-active', b === btn));
             loadAnalyticsPanel();
         });
     }

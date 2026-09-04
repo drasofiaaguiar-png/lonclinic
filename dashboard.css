@@ -3216,6 +3216,12 @@ a.admin-nav-link {
     color: var(--text-muted);
     opacity: 0.85;
 }
+.an-filter-groups {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
 .an-audience {
     display: inline-flex;
     border: 1px solid #e2e8e4;

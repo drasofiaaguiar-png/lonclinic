@@ -29,7 +29,9 @@ const ALLOWED_NAMES = new Set([
     'triage_submitted',
     'heartbeat',
     'cancel',
-    'reschedule'
+    'reschedule',
+    'job_application',
+    'interview_booked'
 ]);
 
 const PII_KEY = /email|phone|tel|nhs|password|token|name|notes|answer|diagnos|prescription|dob|birth/i;
@@ -99,6 +101,60 @@ function normalizeAnalyticsPath(pagePath) {
         /* keep */
     }
     return s.toLowerCase();
+}
+
+const FUNNEL_PATIENT = 'patient_booking';
+const FUNNEL_JOB = 'job_application';
+
+const RECRUITMENT_PATH =
+    /^\/recrutamento(\/|$|\.html)|\/recrutamento-(psicologia|entrevista)(\.html)?$/i;
+const CLINICAL_BOOKING_PATH =
+    /^\/(marcar|consulta)(\/|$)|\/book\.html$|^\/book-consultation(\/|$)/i;
+
+function pathFunnel(pagePath) {
+    const s = normalizeAnalyticsPath(pagePath).replace(/#.*$/, '');
+    if (!s) return null;
+    if (RECRUITMENT_PATH.test(s)) return FUNNEL_JOB;
+    if (CLINICAL_BOOKING_PATH.test(s)) return FUNNEL_PATIENT;
+    return null;
+}
+
+function classifyFunnel(row) {
+    if (!row) return FUNNEL_PATIENT;
+    const props = row.props && typeof row.props === 'object' ? row.props : {};
+    const explicit = String(props.funnel || props.intent || '').toLowerCase();
+    if (explicit === FUNNEL_JOB || explicit === 'recruitment' || explicit === 'job') return FUNNEL_JOB;
+    if (explicit === FUNNEL_PATIENT || explicit === 'clinical' || explicit === 'patient') return FUNNEL_PATIENT;
+    const name = String(row.name || '');
+    if (name === 'job_application' || name === 'interview_booked') return FUNNEL_JOB;
+    const service = String(props.service || '').toLowerCase();
+    if (service === 'entrevista') return FUNNEL_JOB;
+    if (
+        name === 'payment_succeeded' ||
+        name === 'booking_confirmed' ||
+        name === 'invite_paid' ||
+        name === 'invite_sent' ||
+        name === 'checkout_start' ||
+        name === 'checkout_created'
+    ) {
+        return FUNNEL_PATIENT;
+    }
+    const fromPage = pathFunnel(row.pagePath || row.page_path);
+    if (fromPage) return fromPage;
+    if (!(row.pagePath || row.page_path)) {
+        const fromLanding = pathFunnel(row.landingPath || row.landing_path);
+        if (fromLanding) return fromLanding;
+    }
+    return FUNNEL_PATIENT;
+}
+
+function normalizeFunnelKey(funnel) {
+    return funnel === FUNNEL_JOB ? FUNNEL_JOB : FUNNEL_PATIENT;
+}
+
+function filterFunnel(rows, funnel) {
+    const view = normalizeFunnelKey(funnel);
+    return (rows || []).filter((r) => classifyFunnel(r) === view);
 }
 
 function isProbePath(pagePath) {
@@ -271,6 +327,9 @@ function normalizeEvent(raw, meta) {
             fbclid: row.fbclid
         });
     }
+    const funnel = classifyFunnel(row);
+    row.props = { ...(row.props || {}), funnel };
+    row.funnel = funnel;
     return row;
 }
 
@@ -362,8 +421,17 @@ function countFunnelStep(rows, names) {
     return sessions.size + orphans;
 }
 
-function funnelFrom(rows) {
-    const steps = [
+function funnelStepsFor(funnel) {
+    if (normalizeFunnelKey(funnel) === FUNNEL_JOB) {
+        return [
+            { id: 'visit', names: ['page_view'] },
+            { id: 'engage', names: ['page_engaged'] },
+            { id: 'intent', names: ['cta_click', 'form_start'] },
+            { id: 'apply', names: ['job_application', 'form_submit'] },
+            { id: 'interview', names: ['interview_booked'] }
+        ];
+    }
+    return [
         { id: 'visit', names: ['page_view'] },
         { id: 'engage', names: ['page_engaged'] },
         { id: 'intent', names: ['cta_click', 'whatsapp_click'] },
@@ -371,6 +439,10 @@ function funnelFrom(rows) {
         { id: 'checkout', names: ['checkout_start', 'checkout_created'] },
         { id: 'purchase', names: ['payment_succeeded', 'booking_confirmed', 'invite_paid'] }
     ];
+}
+
+function funnelFrom(rows, funnel) {
+    const steps = funnelStepsFor(funnel);
     let prev = Math.max(1, countFunnelStep(rows, ['page_view']));
     return steps.map((step, i) => {
         const count = countFunnelStep(rows, step.names);
@@ -437,18 +509,25 @@ function filterAudience(rows, audience) {
     return rows.filter((r) => !isStaffRow(r));
 }
 
-function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaffVisitorIds) {
+function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaffVisitorIds, funnelKey) {
     const view = ['public', 'staff', 'all'].includes(audience) ? audience : 'public';
-    const tagged = applyKnownStaff(rows || [], knownStaffVisitorIds).map((r) => ({ ...r, staff: isStaffRow(r) }));
+    const funnelView = normalizeFunnelKey(funnelKey);
+    const isJobs = funnelView === FUNNEL_JOB;
+    const tagged = applyKnownStaff(rows || [], knownStaffVisitorIds).map((r) => ({
+        ...r,
+        staff: isStaffRow(r),
+        funnel: classifyFunnel(r)
+    }));
     const burstIds = burstSessionIds(tagged);
     const isNoise = (r) => isProbePath(r.pagePath) || (r.sessionId && burstIds.has(r.sessionId));
     const probeRows = tagged.filter(isNoise);
     const human = tagged.filter((r) => !isNoise(r));
-    const used = filterAudience(human, view).filter(
+    const funnelHuman = filterFunnel(human, funnelView);
+    const used = filterAudience(funnelHuman, view).filter(
         (r) => !(r.name === 'page_view' && r.props && r.props.via === 'server')
     );
-    const humanSessions = new Set(human.map((r) => r.sessionId).filter(Boolean));
-    const staffSids = new Set(human.filter(isStaffRow).map((r) => r.sessionId).filter(Boolean));
+    const humanSessions = new Set(funnelHuman.map((r) => r.sessionId).filter(Boolean));
+    const staffSids = new Set(funnelHuman.filter(isStaffRow).map((r) => r.sessionId).filter(Boolean));
     const liveTagged = applyKnownStaff(liveRows || [], knownStaffVisitorIds)
         .map((r) => {
             const staff = isStaffRow(r) || (r.sessionId && staffSids.has(r.sessionId));
@@ -460,37 +539,66 @@ function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaff
     const purchases = used.filter(
         (r) => r.name === 'payment_succeeded' || r.name === 'booking_confirmed' || r.name === 'invite_paid'
     );
+    const applyEvents = used.filter((r) => r.name === 'job_application');
+    const interviewEvents = used.filter((r) => r.name === 'interview_booked');
     const visitors = uniqueCount(views, 'visitorId');
     const sessions = uniqueCount(used, 'sessionId');
     const engaged = uniqueCount(used.filter((r) => r.name === 'page_engaged'), 'sessionId');
     const overlayBookings = view !== 'staff';
-    const revenue =
-        overlayBookings && bookingStats && bookingStats.count
+    const hasLedger = overlayBookings && bookingStats && Number.isFinite(Number(bookingStats.count));
+    const applications = isJobs
+        ? overlayBookings && bookingStats && Number.isFinite(Number(bookingStats.applications))
+            ? Number(bookingStats.applications)
+            : applyEvents.length
+        : 0;
+    const interviews = isJobs
+        ? hasLedger
+            ? Number(bookingStats.count)
+            : interviewEvents.length
+        : 0;
+    const revenue = isJobs
+        ? 0
+        : overlayBookings && bookingStats && bookingStats.count
             ? bookingStats.revenueCents || 0
             : purchases.reduce((s, r) => s + (r.revenueCents || 0), 0);
-    const bookingCount = overlayBookings
-        ? (bookingStats && bookingStats.count) || purchases.length
-        : purchases.length;
-    const conversion = visitors ? Math.round((bookingCount / visitors) * 1000) / 10 : 0;
+    const bookingCount = isJobs
+        ? interviews
+        : overlayBookings
+            ? (bookingStats && bookingStats.count) || purchases.length
+            : purchases.length;
+    const conversionBase = isJobs ? applications : bookingCount;
+    const conversion = visitors ? Math.round((conversionBase / visitors) * 1000) / 10 : 0;
     const cta = used.filter((r) => r.name === 'cta_click');
     const funnel = recomputeFunnelConversions(
-        funnelFrom(used).map((step) => {
-            if (step.id !== 'purchase' || !bookingCount || !overlayBookings) return step;
-            return { ...step, sessions: Math.max(step.sessions, bookingCount) };
+        funnelFrom(used, funnelView).map((step) => {
+            if (!overlayBookings) return step;
+            if (!isJobs && step.id === 'purchase' && bookingCount) {
+                return { ...step, sessions: Math.max(step.sessions, bookingCount) };
+            }
+            if (isJobs && step.id === 'apply' && applications) {
+                return { ...step, sessions: Math.max(step.sessions, applications) };
+            }
+            if (isJobs && step.id === 'interview' && interviews) {
+                return { ...step, sessions: Math.max(step.sessions, interviews) };
+            }
+            return step;
         })
     );
     const serviceFromEvents = groupCount(
-        purchases.map((r) => ({ key: (r.props && r.props.service) || 'unspecified' })),
+        (isJobs ? interviewEvents : purchases).map((r) => ({
+            key: (r.props && r.props.service) || (isJobs ? 'entrevista' : 'unspecified')
+        })),
         'key',
         10
     );
     const serviceFromBookings = overlayBookings ? (bookingStats && bookingStats.services) || [] : [];
-    const staffRows = human.filter(isStaffRow);
-    const publicRows = human.filter((r) => !isStaffRow(r));
+    const staffRows = funnelHuman.filter(isStaffRow);
+    const publicRows = funnelHuman.filter((r) => !isStaffRow(r));
     return {
         range: range.days === 1 ? '24h' : `${range.days}d`,
         generatedAt: new Date().toISOString(),
         audience: view,
+        funnelKind: funnelView,
         trackingEmpty: views.length === 0,
         kpis: {
             visitors,
@@ -498,6 +606,8 @@ function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaff
             pageviews: views.length,
             engagedRate: sessions ? Math.round((engaged / sessions) * 1000) / 10 : 0,
             bookings: bookingCount,
+            applications,
+            interviews,
             revenueCents: revenue,
             conversionRate: conversion,
             liveVisitors: uniqueCount(liveUsed, 'sessionId'),
@@ -539,12 +649,13 @@ function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaff
                 path: r.pagePath,
                 channel: r.channel,
                 device: r.device,
-                staff: !!r.staff
+                staff: !!r.staff,
+                funnel: r.funnel || classifyFunnel(r)
             }))
     };
 }
 
-function overviewFromMemory(rangeKey, audience) {
+function overviewFromMemory(rangeKey, audience, funnelKey) {
     const range = rangeBounds(rangeKey);
     const known = memoryEvents.filter(isStaffRow).map((r) => r.visitorId).filter(Boolean);
     const rows = memoryEvents.filter((r) => inRange(r.occurredAt, range.from, range.to));
@@ -552,16 +663,21 @@ function overviewFromMemory(rangeKey, audience) {
     const live = memoryEvents.filter(
         (r) => (r.name === 'heartbeat' || r.name === 'page_view') && r.occurredAt >= liveFrom
     );
-    return buildOverview(rows, live, { count: 0, revenueCents: 0 }, range, audience, known);
+    return buildOverview(rows, live, { count: 0, revenueCents: 0, applications: 0 }, range, audience, known, funnelKey);
 }
 
 module.exports = {
     ALLOWED_NAMES,
+    FUNNEL_PATIENT,
+    FUNNEL_JOB,
     isBot,
     isProbePath,
     burstSessionIds,
     parseUa,
     channelOf,
+    classifyFunnel,
+    normalizeFunnelKey,
+    filterFunnel,
     cleanProps,
     normalizeEvent,
     remember,

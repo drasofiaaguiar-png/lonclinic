@@ -19,11 +19,21 @@
     var submitBtn = document.getElementById('submitBtn');
 
     function track(eventName, params) {
-        if (typeof gtag !== 'function') return;
-        gtag('event', eventName, Object.assign({
+        var payload = Object.assign({
             event_category: 'recrutamento_psicologia',
+            funnel: 'job_application',
+            surface: 'recruitment',
             page_path: '/recrutamento/psicologia'
-        }, params || {}));
+        }, params || {});
+        if (window.LonAnalytics && typeof window.LonAnalytics.track === 'function') {
+            var lonName = eventName === 'recrutamento_submit' ? 'job_application' : eventName;
+            if (lonName === 'job_application') {
+                window.LonAnalytics.track('job_application', payload);
+                if (typeof window.LonAnalytics.flush === 'function') window.LonAnalytics.flush();
+            }
+        }
+        if (typeof gtag !== 'function') return;
+        gtag('event', eventName, payload);
     }
 
     function selectedValues(name) {

@@ -599,13 +599,18 @@ async function listStaffVisitorIds() {
     return r.rows.map((row) => row.visitor_id).filter(Boolean);
 }
 
-async function analyticsBookingStats(fromIso, toIso) {
+async function analyticsBookingStats(fromIso, toIso, { funnel } = {}) {
     const p = getPool();
+    const isJobs = funnel === 'job_application';
+    const serviceFilter = isJobs
+        ? `AND service = 'entrevista'`
+        : `AND service IS DISTINCT FROM 'entrevista'`;
     const r = await p.query(
         `SELECT COUNT(*)::int AS c, COALESCE(SUM(amount), 0)::int AS revenue
          FROM bookings
          WHERE cancelled = FALSE
-           AND created_at >= $1::timestamptz AND created_at <= $2::timestamptz`,
+           AND created_at >= $1::timestamptz AND created_at <= $2::timestamptz
+           ${serviceFilter}`,
         [fromIso, toIso]
     );
     const s = await p.query(
@@ -613,6 +618,7 @@ async function analyticsBookingStats(fromIso, toIso) {
          FROM bookings
          WHERE cancelled = FALSE
            AND created_at >= $1::timestamptz AND created_at <= $2::timestamptz
+           ${serviceFilter}
          GROUP BY 1
          ORDER BY c DESC
          LIMIT 10`,
@@ -620,9 +626,20 @@ async function analyticsBookingStats(fromIso, toIso) {
     );
     return {
         count: r.rows[0] ? r.rows[0].c : 0,
-        revenueCents: r.rows[0] ? r.rows[0].revenue : 0,
+        revenueCents: isJobs ? 0 : (r.rows[0] ? r.rows[0].revenue : 0),
         services: s.rows.map((row) => ({ service: row.service, count: row.c }))
     };
+}
+
+async function analyticsApplicationStats(fromIso, toIso) {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT COUNT(*)::int AS c
+         FROM psychologist_applications
+         WHERE created_at >= $1::timestamptz AND created_at <= $2::timestamptz`,
+        [fromIso, toIso]
+    );
+    return { count: r.rows[0] ? r.rows[0].c : 0 };
 }
 
 function rowToReview(row) {
@@ -1918,5 +1935,6 @@ module.exports = {
     listLiveAnalyticsSessions,
     listStaffVisitorIds,
     analyticsBookingStats,
+    analyticsApplicationStats,
     closePool
 };

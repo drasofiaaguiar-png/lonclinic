@@ -808,6 +808,7 @@
         if (window.LonAnalytics) {
             window.LonAnalytics.track('checkout_start', {
                 surface: 'booking',
+                funnel: 'patient_booking',
                 service: consulta.serviceKey,
                 step: 'details'
             });

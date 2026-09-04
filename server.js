@@ -256,7 +256,7 @@ app.use(
 );
 
 const ANALYTICS_SNIPPET =
-    '\n<script src="/lon-analytics.js?v=20260902a" defer></script>\n' +
+    '\n<script src="/lon-analytics.js?v=20260904a" defer></script>\n' +
     '<noscript><img src="/api/a.gif?n=page_view" alt="" width="1" height="1"></noscript>\n';
 function injectAnalyticsHtml(html) {
     if (!html || typeof html !== 'string') return html;
@@ -4568,7 +4568,11 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                 {
                     visitorId: meta.lon_vid || null,
                     sessionId: meta.lon_sid || null,
-                    props: { service: bookingServiceTag(meta.service), via: meta.invitation_id ? 'invite' : 'checkout' },
+                    props: {
+                        service: bookingServiceTag(meta.service),
+                        via: meta.invitation_id ? 'invite' : 'checkout',
+                        funnel: 'patient_booking'
+                    },
                     revenueCents: session.amount_total || 0,
                     currency: session.currency || 'eur',
                     bookingRef: fin.bookingRef || null
@@ -4689,19 +4693,23 @@ app.get('/api/admin/analytics', requireAdmin, async (req, res) => {
     const range = allowed.has(rangeKey) ? rangeKey : '7d';
     const audienceKey = String(req.query.audience || 'public');
     const audience = ['public', 'staff', 'all'].includes(audienceKey) ? audienceKey : 'public';
+    const funnel = analyticsNet.normalizeFunnelKey(req.query.funnel);
     try {
         if (!usePersistentDb) {
-            const overview = analyticsNet.overviewFromMemory(range, audience);
+            const overview = analyticsNet.overviewFromMemory(range, audience, funnel);
             overview.deviceMarked = hasStaffDeviceCookie(req);
             overview.trackedLinks = trackedLinksForAdmin(getBaseUrl(req));
             return res.json(overview);
         }
         const bounds = analyticsNet.rangeBounds(range);
-        const [rows, live, bookingStats, staffVisitorIds] = await Promise.all([
+        const [rows, live, bookingStats, staffVisitorIds, applicationStats] = await Promise.all([
             db.listAnalyticsEventsBetween(bounds.from, bounds.to, { excludeHeartbeat: true }),
             db.listLiveAnalyticsSessions(new Date(Date.now() - 120000).toISOString()),
-            db.analyticsBookingStats(bounds.from, bounds.to),
-            db.listStaffVisitorIds()
+            db.analyticsBookingStats(bounds.from, bounds.to, { funnel }),
+            db.listStaffVisitorIds(),
+            funnel === 'job_application'
+                ? db.analyticsApplicationStats(bounds.from, bounds.to)
+                : Promise.resolve({ count: 0 })
         ]);
         const liveRows = live.map((s) => ({
             sessionId: s.sessionId,
@@ -4709,7 +4717,15 @@ app.get('/api/admin/analytics', requireAdmin, async (req, res) => {
             staff: !!s.staff,
             channel: s.staff ? 'internal' : undefined
         }));
-        const overview = analyticsNet.buildOverview(rows, liveRows, bookingStats, bounds, audience, staffVisitorIds);
+        const overview = analyticsNet.buildOverview(
+            rows,
+            liveRows,
+            { ...bookingStats, applications: applicationStats.count || 0 },
+            bounds,
+            audience,
+            staffVisitorIds,
+            funnel
+        );
         overview.deviceMarked = hasStaffDeviceCookie(req);
         overview.trackedLinks = trackedLinksForAdmin(getBaseUrl(req));
         res.json(overview);
@@ -5966,6 +5982,15 @@ app.post('/api/recrutamento/psicologia', rateLimitRecrutamentoPsicologia, (req, 
             return res.status(503).json({ error: 'Não foi possível enviar a candidatura de momento. Tente novamente.' });
         }
 
+        emitServerAnalytics(
+            'job_application',
+            {
+                pagePath: '/recrutamento/psicologia',
+                props: { funnel: 'job_application', surface: 'recruitment' }
+            },
+            req
+        ).catch(() => {});
+
         return res.json({
             success: true,
             message: 'Candidatura enviada com sucesso.',
@@ -6160,6 +6185,15 @@ app.post('/api/recrutamento/entrevista', rateLimitRecrutamentoEntrevista, expres
         }
 
         console.log(`   ✅ Interview ${bookingRef} booked for ${email} on ${dateIso} ${normTime}`);
+        emitServerAnalytics(
+            'interview_booked',
+            {
+                pagePath: '/recrutamento/entrevista',
+                props: { funnel: 'job_application', surface: 'recruitment', service: 'entrevista' },
+                bookingRef
+            },
+            req
+        ).catch(() => {});
         return res.json({
             success: true,
             bookingRef,
@@ -7116,7 +7150,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         console.log('✅ Checkout session created:', session.id);
         emitServerAnalytics(
             'checkout_created',
-            { props: { service: bookingServiceTag(service) }, revenueCents: priceAmount, currency: 'eur' },
+            { props: { service: bookingServiceTag(service), funnel: 'patient_booking' }, revenueCents: priceAmount, currency: 'eur' },
             req
         ).catch(() => {});
         res.json({ sessionId: session.id, url: session.url });
@@ -8887,7 +8921,7 @@ app.get('/api/admin/available-slots', async (req, res) => {
                 {
                     pagePath: bookingPath.slice(0, 240),
                     referrer: referer,
-                    props: { via: 'slots-api', surface: 'booking' }
+                    props: { via: 'slots-api', surface: 'booking', funnel: 'patient_booking' }
                 },
                 req
             ).catch(() => {});
@@ -9488,7 +9522,7 @@ app.post('/api/admin/invitations', requireAdmin, express.json(), async (req, res
             emitServerAnalytics(
                 isComplimentary ? 'booking_confirmed' : 'invite_sent',
                 {
-                    props: { service: bookingServiceTag(service), withoutInvoice: true },
+                    props: { service: bookingServiceTag(service), withoutInvoice: true, funnel: 'patient_booking' },
                     revenueCents: amountCents,
                     bookingRef: invitation.bookingRef || null
                 },
@@ -9523,7 +9557,7 @@ app.post('/api/admin/invitations', requireAdmin, express.json(), async (req, res
 
         emitServerAnalytics(
             'invite_sent',
-            { props: { service: bookingServiceTag(service) }, revenueCents: amountCents },
+            { props: { service: bookingServiceTag(service), funnel: 'patient_booking' }, revenueCents: amountCents },
             req
         ).catch(() => {});
         res.json({ ok: true, invitation, emailDelivered, emailError });

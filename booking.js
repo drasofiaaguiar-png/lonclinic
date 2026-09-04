@@ -1078,7 +1078,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         try {
             if (window.LonAnalytics) {
-                window.LonAnalytics.track('checkout_start', { service: state.service, surface: 'booking', step: 'pay' });
+                window.LonAnalytics.track('checkout_start', { service: state.service, surface: 'booking', funnel: 'patient_booking', step: 'pay' });
                 window.LonAnalytics.flush();
             }
             const response = await fetch('/api/create-checkout-session', {

@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css?v=entrevista-board-1">
+    <link rel="stylesheet" href="dashboard.css?v=funnel-split-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -600,7 +600,7 @@
                     <div class="dash-section-header admin-schedule-toolbar">
                         <div>
                             <h2 class="dash-section-title">Analytics network</h2>
-                            <p class="dash-section-subtitle">First-party graph: attribution, funnel, live sessions. No clinical answers or emails stored.</p>
+                            <p class="dash-section-subtitle">First-party graph: attribution and live sessions. Patient booking and job application funnels are separate.</p>
                         </div>
                         <div class="admin-schedule-filters" role="group" aria-label="Analytics range">
                             <select id="analyticsRange" class="admin-select" aria-label="Range">
@@ -614,10 +614,16 @@
                     </div>
                     <div class="an-live-row">
                         <div class="an-live" id="analyticsLive">Live visitors: —</div>
-                        <div class="an-audience" id="analyticsAudience" role="group" aria-label="Audience">
-                            <button type="button" class="an-audience-btn is-active" data-audience="public">Visitors</button>
-                            <button type="button" class="an-audience-btn" data-audience="staff">Admin</button>
-                            <button type="button" class="an-audience-btn" data-audience="all">All</button>
+                        <div class="an-filter-groups">
+                            <div class="an-audience" id="analyticsFunnelKind" role="group" aria-label="Funil">
+                                <button type="button" class="an-audience-btn is-active" data-funnel="patient_booking">Pacientes</button>
+                                <button type="button" class="an-audience-btn" data-funnel="job_application">Recrutamento</button>
+                            </div>
+                            <div class="an-audience" id="analyticsAudience" role="group" aria-label="Audience">
+                                <button type="button" class="an-audience-btn is-active" data-audience="public">Visitors</button>
+                                <button type="button" class="an-audience-btn" data-audience="staff">Admin</button>
+                                <button type="button" class="an-audience-btn" data-audience="all">All</button>
+                            </div>
                         </div>
                     </div>
                     <div class="an-device-row">
@@ -632,7 +638,7 @@
                     </div>
                     <div class="an-grid">
                         <div class="an-card">
-                            <h3>Acquisition → booking funnel</h3>
+                            <h3 id="analyticsFunnelTitle">Acquisition → booking funnel</h3>
                             <div id="analyticsFunnel"></div>
                         </div>
                         <div class="an-card">
@@ -660,7 +666,7 @@
                             <div id="analyticsCtas"></div>
                         </div>
                         <div class="an-card">
-                            <h3>Booked services</h3>
+                            <h3 id="analyticsServicesTitle">Booked services</h3>
                             <div id="analyticsServices"></div>
                         </div>
                     </div>
@@ -859,7 +865,7 @@
     </footer>
 
     <script src="lon-nav.js"></script>
-    <script src="admin.js?v=entrevista-board-1"></script>
+    <script src="admin.js?v=funnel-split-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

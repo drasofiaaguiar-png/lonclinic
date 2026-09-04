@@ -199,7 +199,7 @@
             ft_source: (attr.first && attr.first.utm_source) || '',
             ft_medium: (attr.first && attr.first.utm_medium) || '',
             ft_campaign: (attr.first && attr.first.utm_campaign) || '',
-            props: cleanProps(props)
+            props: Object.assign({ funnel: pageContext().funnel }, cleanProps(props))
         };
     }
 
@@ -241,26 +241,38 @@
 
     function track(name, props) {
         enqueue(envelope(name, props));
-        if (/^(page_view|page_engaged|cta_click|date_select|slot_select|checkout_start|form_submit|whatsapp_click)$/.test(name)) {
+        if (/^(page_view|page_engaged|cta_click|date_select|slot_select|checkout_start|form_submit|whatsapp_click|job_application|interview_booked)$/.test(name)) {
             flush();
         }
         if (typeof gtag === 'function' && name !== 'page_view' && name !== 'heartbeat' && name !== 'scroll_depth') {
             try {
-                gtag('event', name, cleanProps(props));
+                var gprops = cleanProps(props);
+                if (!gprops.event_category) gprops.event_category = gprops.funnel || pageContext().funnel;
+                gtag('event', name, gprops);
             } catch (e) { /* ignore */ }
         }
     }
 
     function pageContext() {
         var p = location.pathname.toLowerCase();
-        if (p === '/' || p === '/index.html') return { surface: 'home' };
-        if (p.indexOf('/marcar') === 0 || p === '/book.html' || p === '/book-consultation') return { surface: 'booking' };
-        if (p.indexOf('/burnout') === 0 || p.indexOf('/anti-burnout') === 0) return { surface: 'burnout' };
-        if (p === '/consulta' || p.indexOf('/consulta/') === 0 || p === '/consulta.html') return { surface: 'medical' };
-        if (p.indexOf('/nutricao') === 0) return { surface: 'nutrition' };
-        if (p.indexOf('/psicologia') === 0 || p.indexOf('/saudemental') === 0 || p.indexOf('/teste-personalidade') === 0 || p.indexOf('/consultas') === 0) return { surface: 'mental' };
-        if (document.body && document.body.classList.contains('qx-body')) return { surface: 'mental' };
-        if ((document.body && document.body.classList.contains('tourist-body')) || p === '/tourist-clinic') return { surface: 'tourist' };
+        var funnel = p.indexOf('/recrutamento') === 0 ? 'job_application' : 'patient_booking';
+        if (p === '/' || p === '/index.html') return { surface: 'home', funnel: funnel };
+        if (p.indexOf('/marcar') === 0 || p === '/book.html' || p === '/book-consultation') {
+            return { surface: 'booking', funnel: 'patient_booking' };
+        }
+        if (p.indexOf('/recrutamento') === 0) return { surface: 'recruitment', funnel: 'job_application' };
+        if (p.indexOf('/burnout') === 0 || p.indexOf('/anti-burnout') === 0) return { surface: 'burnout', funnel: funnel };
+        if (p === '/consulta' || p.indexOf('/consulta/') === 0 || p === '/consulta.html') {
+            return { surface: 'medical', funnel: 'patient_booking' };
+        }
+        if (p.indexOf('/nutricao') === 0) return { surface: 'nutrition', funnel: funnel };
+        if (p.indexOf('/psicologia') === 0 || p.indexOf('/saudemental') === 0 || p.indexOf('/teste-personalidade') === 0 || p.indexOf('/consultas') === 0) {
+            return { surface: 'mental', funnel: funnel };
+        }
+        if (document.body && document.body.classList.contains('qx-body')) return { surface: 'mental', funnel: funnel };
+        if ((document.body && document.body.classList.contains('tourist-body')) || p === '/tourist-clinic') {
+            return { surface: 'tourist', funnel: funnel };
+        }
         if (
             p === '/see-doctor-portugal-tourist' ||
             p === '/ver-medico-portugal-turista' ||
@@ -274,13 +286,13 @@
             p === '/renovar-receta-vacaciones-portugal' ||
             p === '/renouveler-ordonnance-vacances-portugal' ||
             p === '/rezept-verlaengern-urlaub-portugal'
-        ) return { surface: 'tourist' };
-        if (document.body && document.body.classList.contains('cq-body')) return { surface: 'medical' };
-        if (p.indexOf('/travel') === 0) return { surface: 'travel' };
-        if (p.indexOf('/triagem') === 0) return { surface: 'triage' };
-        if (p.indexOf('/guide') === 0 || p.indexOf('/blog') === 0) return { surface: 'content' };
-        if (p.indexOf('/quiz') === 0) return { surface: 'quiz' };
-        return { surface: 'other' };
+        ) return { surface: 'tourist', funnel: funnel };
+        if (document.body && document.body.classList.contains('cq-body')) return { surface: 'medical', funnel: funnel };
+        if (p.indexOf('/travel') === 0) return { surface: 'travel', funnel: funnel };
+        if (p.indexOf('/triagem') === 0) return { surface: 'triage', funnel: funnel };
+        if (p.indexOf('/guide') === 0 || p.indexOf('/blog') === 0) return { surface: 'content', funnel: funnel };
+        if (p.indexOf('/quiz') === 0) return { surface: 'quiz', funnel: funnel };
+        return { surface: 'other', funnel: funnel };
     }
 
     function shouldSendPageView() {
@@ -329,7 +341,7 @@
             .slice(0, 80);
         var id = (t.id || t.getAttribute('data-analytics-id') || '').slice(0, 64);
         if (t.matches && t.matches('[data-analytics], .lon-btn, .btn-primary, .cn-btn-primary, a[href*="marcar"], a[href*="book"], .bq-btn-primary, .bq-sticky-book a')) {
-            track('cta_click', { text: text, href: href, id: id, surface: pageContext().surface });
+            track('cta_click', { text: text, href: href, id: id, surface: pageContext().surface, funnel: pageContext().funnel });
         }
         if (t.classList && t.classList.contains('lon-share-copy')) {
             var copyUrl = t.getAttribute('data-copy') || '';
@@ -361,7 +373,7 @@
         var formId = (form && (form.id || form.getAttribute('name'))) || 'unknown';
         if (form && !form.getAttribute('data-lon-form-started')) {
             form.setAttribute('data-lon-form-started', '1');
-            track('form_start', { form: String(formId).slice(0, 64), surface: pageContext().surface });
+            track('form_start', { form: String(formId).slice(0, 64), surface: pageContext().surface, funnel: pageContext().funnel });
         }
     }, true);
 
@@ -369,7 +381,7 @@
         var form = e.target;
         if (!form || form.tagName !== 'FORM') return;
         var formId = form.id || form.getAttribute('name') || 'unknown';
-        track('form_submit', { form: String(formId).slice(0, 64), surface: pageContext().surface });
+        track('form_submit', { form: String(formId).slice(0, 64), surface: pageContext().surface, funnel: pageContext().funnel });
     }, true);
 
     var lastBeat = 0;

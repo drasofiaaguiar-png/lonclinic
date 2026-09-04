@@ -58,6 +58,13 @@
                         });
                         b.classList.add('is-selected');
                         updateSubmit();
+                        if (window.LonAnalytics) {
+                            window.LonAnalytics.track('slot_select', {
+                                funnel: 'job_application',
+                                surface: 'recruitment',
+                                service: 'entrevista'
+                            });
+                        }
                     });
                     grid.appendChild(b);
                 });
@@ -116,6 +123,14 @@
                 screenDone.hidden = false;
                 screenDone.classList.add('is-active');
                 window.scrollTo(0, 0);
+                if (window.LonAnalytics) {
+                    window.LonAnalytics.track('interview_booked', {
+                        funnel: 'job_application',
+                        surface: 'recruitment',
+                        service: 'entrevista'
+                    });
+                    window.LonAnalytics.flush();
+                }
             })
             .catch(function (err) {
                 showError(err.message || 'Não foi possível confirmar. Tente novamente.');
