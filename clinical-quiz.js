@@ -129,7 +129,8 @@
                         renderQuestion();
                     } else {
                         show('gate');
-                        $('email').focus();
+                        if ($('leadName')) $('leadName').focus();
+                        else $('email').focus();
                     }
                 }, 220);
             });
@@ -149,7 +150,8 @@
             renderQuestion();
         } else {
             show('gate');
-            $('email').focus();
+            if ($('leadName')) $('leadName').focus();
+            else $('email').focus();
         }
     }
 
@@ -280,9 +282,10 @@
         if (subBtn && cfg.booking && Array.isArray(cfg.booking.hideSubOn)) {
             subBtn.hidden = cfg.booking.hideSubOn.indexOf(band.pill) !== -1;
         }
-        if (cfg.scoring === 'imc' && band.pill && /NORMAL|BAIXO PESO/.test(band.pill) && $('bookBtnPrimary')) {
-            $('bookBtnPrimary').setAttribute('href', '/marcar/clinica-geral?ref=imc-quiz');
-            if ($('stickyBookBtn')) $('stickyBookBtn').setAttribute('href', '/marcar/clinica-geral?ref=imc-quiz');
+        if (cfg.scoring === 'imc' && band.pill && /NORMAL|BAIXO PESO/.test(band.pill)) {
+            ['bookBtnPrimary', 'bookBtn', 'stickyBookBtn'].forEach(function (id) {
+                if ($(id)) $(id).setAttribute('href', '/marcar/clinica-geral?ref=imc-quiz');
+            });
         }
 
         var scalesBox = $('scales');

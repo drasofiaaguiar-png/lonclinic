@@ -840,6 +840,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         if (state.service === 'nutricao_programa' || state.service === 'nutricao_completo' || state.service === 'nutricao_completo_reforcado') {
             try {
+                const meta = JSON.parse(sessionStorage.getItem('lonNutricaoAvaliacao') || 'null');
+                if (meta && (meta.plan || meta.eating)) {
+                    const eatingMap = { rare: 'raras vezes', some: 'algumas vezes', frequent: 'fome emocional frequente' };
+                    const labsMap = { recent: 'análises < 6 meses', year: 'análises há mais de 1 ano', unknown: 'análises antigas ou desconhecidas' };
+                    const bits = ['Avaliação metabólica'];
+                    bits.push(meta.plan === 'completo' ? 'recomendado Completo' : 'recomendado Nutrição');
+                    if (meta.eating) bits.push('stress/comida: ' + (eatingMap[meta.eating] || meta.eating));
+                    if (meta.imc) bits.push('IMC ' + String(meta.imc).replace('.', ','));
+                    if (meta.weight && meta.desiredWeight) bits.push(meta.weight + ' → ' + meta.desiredWeight + ' kg');
+                    if (meta.age) bits.push(meta.age + ' anos');
+                    if (meta.labs && labsMap[meta.labs]) bits.push(labsMap[meta.labs]);
+                    return bits.join(' · ');
+                }
+            } catch (e) { /* ignore */ }
+            try {
                 const quiz = JSON.parse(sessionStorage.getItem('lonClinicalQuiz') || 'null');
                 if (quiz && quiz.instrument) {
                     return 'Objectivo: perda de peso / reeducação metabólica. Teste ' + quiz.instrument +
@@ -867,6 +882,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (note && ta && !ta.value.trim()) ta.value = note;
         try {
             const raw = sessionStorage.getItem('lonClinicalQuiz');
+            if (raw) {
+                const q = JSON.parse(raw);
+                const emailEl = document.getElementById('email');
+                const phoneEl = document.getElementById('phone');
+                const first = document.querySelector('.p-firstName');
+                if (emailEl && q.email && !emailEl.value) emailEl.value = q.email;
+                if (phoneEl && q.phone && !phoneEl.value) phoneEl.value = q.phone;
+                if (first && q.name && !first.value) first.value = q.name;
+            }
+        } catch (e) { /* ignore */ }
+        try {
+            const raw = sessionStorage.getItem('lonNutricaoAvaliacao');
             if (!raw) return;
             const q = JSON.parse(raw);
             const emailEl = document.getElementById('email');
@@ -875,7 +902,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (emailEl && q.email && !emailEl.value) emailEl.value = q.email;
             if (phoneEl && q.phone && !phoneEl.value) phoneEl.value = q.phone;
             if (first && q.name && !first.value) first.value = q.name;
-        } catch (e) { /* ignore */ }
+        } catch (e2) { /* ignore */ }
     }
 
     function getPassengersData() {

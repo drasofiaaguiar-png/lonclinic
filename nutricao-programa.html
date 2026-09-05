@@ -28,7 +28,7 @@
     <meta name="theme-color" content="#255235">
     <link rel="stylesheet" href="/landing.css?v=20260707a">
     <link rel="stylesheet" href="/anti-burnout.css?v=20260722b">
-    <link rel="stylesheet" href="/nutricao-programa.css?v=20260905j">
+    <link rel="stylesheet" href="/nutricao-programa.css?v=20260905k">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
@@ -368,7 +368,7 @@
                 <h2 id="mp-pay-title">Modalidades de pagamento — Programa Completo</h2>
                 <p class="ab-sub">O total é o mesmo: 1 162 € em 6 meses. Escolha se prefere equilibrar a entrada ou aliviar as mensalidades seguintes.</p>
                 <div class="mp-pay-grid">
-                    <article class="mp-pay-card is-featured">
+                    <article class="mp-pay-card is-featured" id="mpPayA">
                         <p class="mp-pay-label">Opção A · Mensalidade equilibrada</p>
                         <p class="mp-pay-price">227 €</p>
                         <p class="mp-pay-unit">no mês 1</p>
@@ -377,7 +377,7 @@
                         <a href="/marcar/nutricao-completo?ref=nutricao-programa" class="lon-btn lon-btn-dark js-mp-cta" data-mp-cta="pay-a" data-pay-badges>Começar com 227 €</a>
                         <p class="mp-buy-trust">🔒 Fidelização 3 meses · sem cláusulas abusivas<br>🥗 Consulta inicial de nutrição metabólica após o pagamento</p>
                     </article>
-                    <article class="mp-pay-card">
+                    <article class="mp-pay-card" id="mpPayB">
                         <p class="mp-pay-label">Opção B · Entrada reforçada</p>
                         <p class="mp-pay-price">322 €</p>
                         <p class="mp-pay-unit">no mês 1</p>
@@ -506,28 +506,33 @@
             });
         });
 
-        var plan = '';
-        try {
-            plan = new URLSearchParams(window.location.search).get('plano') || '';
-            if (!plan) {
+        var params = new URLSearchParams(window.location.search);
+        var plan = params.get('plano') || '';
+        var fromQuiz = params.get('ref') === 'avaliacao';
+        if (!plan && fromQuiz) {
+            try {
                 var stored = sessionStorage.getItem('lonNutricaoAvaliacao');
                 if (stored) plan = (JSON.parse(stored) || {}).plan || '';
-            }
-        } catch (e) { plan = ''; }
+            } catch (e) { plan = ''; }
+        }
         if (plan === 'nutricao' || plan === 'completo') {
             document.body.setAttribute('data-mp-plan', plan);
             var rec = document.getElementById('mpRecomendacao');
             var recTitle = document.getElementById('mpRecomendacaoTitle');
             var recText = document.getElementById('mpRecomendacaoText');
             var recKicker = document.getElementById('mpRecomendacaoKicker');
-            if (rec) rec.hidden = false;
             if (recKicker) recKicker.textContent = 'Com base na sua avaliação';
             if (plan === 'completo') {
                 if (recTitle) recTitle.textContent = 'Programa Completo — 1 162 €';
-                if (recText) recText.textContent = 'Identificámos que a ansiedade e o stress desempenham um papel crítico na gestão do seu peso. Para resultados sustentáveis, o acompanhamento emocional é indispensável. Entrada flexível pré-selecionada: 227 € no mês 1, depois 187 €/mês. Também pode escolher a entrada reforçada (322 € + 168 €/mês).';
+                if (recText) recText.textContent = 'Identificámos que a ansiedade e o stress desempenham um papel crítico na gestão do seu peso. Para resultados sustentáveis, o acompanhamento emocional é indispensável.';
             } else {
                 if (recTitle) recTitle.textContent = 'Programa Nutrição — 490 €';
-                if (recText) recText.textContent = 'Com base no seu perfil, o seu principal desafio é a otimização metabólica e a reeducação alimentar contínua. 115 € no 1.º mês + 75 €/mês.';
+                if (recText) recText.textContent = 'Com base no seu perfil, o seu principal desafio é a otimização metabólica e a reeducação alimentar contínua.';
+            }
+            if (rec) {
+                rec.hidden = false;
+                var dest = document.querySelector(plan === 'completo' ? '#pagamento .lon-container' : '#planos .lon-container');
+                if (dest && rec.parentElement !== dest) dest.insertBefore(rec, dest.firstChild);
             }
             var nuCta = document.querySelector('[data-mp-cta="plan-nutricao"]');
             var fullCta = document.querySelector('[data-mp-cta="plan-completo"]');
@@ -539,6 +544,13 @@
                     fullCta.classList.add('lon-btn-soft');
                 }
             }
+            document.querySelectorAll('#planos a[href^="/marcar/"], #pagamento a[href^="/marcar/"]').forEach(function (a) {
+                try {
+                    var u = new URL(a.getAttribute('href'), window.location.origin);
+                    u.searchParams.set('ref', 'avaliacao');
+                    a.setAttribute('href', u.pathname + u.search + u.hash);
+                } catch (err) { /* ignore */ }
+            });
         }
 
         var reel = document.querySelector('[data-mp-reel]');

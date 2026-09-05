@@ -11,7 +11,7 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
-const { organizationJsonLd, originOf, canonicalHref } = require('./seo');
+const { organizationJsonLd, originOf, canonicalHref, burnoutSpokeCanonicalPath } = require('./seo');
 
 const QUEIXAS_DIR = path.join(__dirname, 'data', 'queixas');
 const MANIFEST_PATH = path.join(QUEIXAS_DIR, 'manifest.json');
@@ -611,7 +611,7 @@ function renderPage(origin, slug) {
     const description = String(meta.description || answer);
     const datePub = String(meta.datePublished || '');
     const dateMod = String(meta.dateModified || meta.datePublished || '');
-    const canonicalPath = `/${encodeURIComponent(slug)}`;
+    const canonicalPath = burnoutSpokeCanonicalPath(`/${encodeURIComponent(slug)}`);
     const canonicalUrl = canonicalHref(canonicalPath);
     const ref = `queixa-${slug}`;
     const isBurnoutPsi = slug === 'psicologia-burnout';

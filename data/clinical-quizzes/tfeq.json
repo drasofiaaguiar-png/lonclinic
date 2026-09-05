@@ -66,25 +66,25 @@
   "insights": {
     "cr": { "title": "Restrição cognitiva a mandar", "text": "O teu travão é o controlo: porções, alimentos proibidos, «estar de dieta». Sem estrutura flexível, este padrão costuma rebentar em descontrolo. A consulta trabalha regras que durem — não mais uma lista curta." },
     "ue": { "title": "Alimentação descontrolada a mandar", "text": "O travão é a perda de controlo: começar e não parar, fome intensa, comida apetecível a ganhar. Aqui o plano dietético clássico falha; precisas de estrutura de refeições, sono e, se houver sinais de compulsão, o rastreio YFAS." },
-    "ee": { "title": "Alimentação emocional a mandar", "text": "Comes quando estás ansioso, triste ou sozinho. O obstáculo não é falta de informação nutricional — é o eixo stress/humor. A consulta médica trata o prato; a psicologia trata o gatilho. Os testes GAD-7 e PSS-10 afinam essa parte." }
+    "ee": { "title": "Alimentação emocional a mandar", "text": "Comes quando estás ansioso, triste ou sozinho. O obstáculo não é falta de informação nutricional — é o eixo stress/humor. A nutrição trata o prato; a psicologia trata o gatilho. Os testes GAD-7 e PSS-10 afinam essa parte." }
   },
   "booking": {
-    "consultHref": "/marcar/clinica-geral",
-    "consultName": "Consulta de clínica geral / nutrição",
-    "consultPrice": "39",
-    "consultMeta": "Sessão única · 25–35 min",
-    "subHref": "/marcar/longevidade",
-    "subName": "Consulta de longevidade",
-    "subPrice": "79",
-    "subMeta": "Mais tempo · 45–60 min",
-    "stickyLabel": "Consulta de nutrição",
+    "consultHref": "/marcar/nutricao-programa",
+    "consultName": "Consulta inicial de nutrição metabólica",
+    "consultPrice": "115",
+    "consultMeta": "Mês 1 do programa · depois 75 €/mês",
+    "subHref": "/marcar/nutricao-completo",
+    "subName": "Programa completo (com psicologia)",
+    "subPrice": "227",
+    "subMeta": "Nutrição + 12 sessões · mês 1",
+    "stickyLabel": "Consulta inicial de nutrição",
     "hideSubOn": ["BAIXO"]
   },
   "related": ["imc", "yfas", "who5", "ess"],
   "introLinks": [
     { "href": "/nutricao/teste-imc", "label": "IMC e quilos a perder" },
     { "href": "/nutricao/teste-yfas", "label": "Compulsão alimentar (YFAS)" },
-    { "href": "/nutricao/ozempic-wegovy", "label": "Apoio com GLP-1" },
+    { "href": "/nutricao/glp-1", "label": "aGLP-1 / desmame" },
     { "href": "/burnout/teste-gad7", "label": "Ansiedade (GAD-7)" }
   ],
   "disclaimer": "O TFEQ-R18 (Karlsson et al., 2000; baseado no Three-Factor Eating Questionnaire de Stunkard & Messick) avalia restrição cognitiva, alimentação descontrolada e alimentação emocional. Adaptação Lon Clinic em português europeu, com pontuação 0–100 por fator. Não diagnostica uma perturbação do comportamento alimentar nem substitui avaliação clínica.",

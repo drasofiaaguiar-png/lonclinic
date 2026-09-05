@@ -555,7 +555,7 @@ function renderHub(origin, cluster) {
         <div class="bq-intro bq-hub-intro">
             <h1>${escapeHtml(h1)}</h1>
             <p>${escapeHtml(lead)}</p>
-            ${isNu ? '<p><a href="/nutricao/avaliacao">Avaliação metabólica (2 min)</a> — o questionário do programa de 6 meses. Ou os testes clínicos abaixo.</p>' : ''}
+            ${isNu ? '<p><a href="/nutricao/avaliacao">Avaliação metabólica (2 min)</a> — o questionário do programa de reeducação (3 a 6 meses), sem prescrição de aGLP-1. Ou os testes clínicos abaixo.</p>' : ''}
         </div>
         <div class="bq-hub-grid">${cards}</div>
         <aside class="bq-crisis-foot">

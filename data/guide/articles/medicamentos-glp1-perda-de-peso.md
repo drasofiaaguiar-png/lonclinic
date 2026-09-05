@@ -20,7 +20,7 @@ A Mayo Clinic é clara: estes medicamentos são mais eficazes quando combinados 
 
 ## Em Portugal, a prescrição é restrita
 
-Desde agosto de 2025, em Portugal, a prescrição destes injectáveis para diabetes ou perda de peso está limitada a especialidades médicas definidas. A Lon Clinic **não prescreve** Ozempic, Wegovy ou equivalentes; o que existe é [acompanhamento nutricional de suporte](/nutricao/ozempic-wegovy) para quem já tem o fármaco prescrito — náusea, proteína, massa magra e o que acontece quando a dose pára.
+Desde agosto de 2025, em Portugal, a prescrição destes injectáveis para diabetes ou perda de peso está limitada a especialidades médicas definidas. A Lon Clinic **não prescreve** Ozempic, Wegovy ou equivalentes; o que existe é o [programa de reeducação e a página de transição aGLP-1](/nutricao/glp-1) — para quem já tem o fármaco prescrito noutro lado, ou está a desmamar. A Lon Clinic não passa a receita.
 
 ## Outros mecanismos além do apetite
 

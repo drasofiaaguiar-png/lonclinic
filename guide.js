@@ -8,7 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
-const { organizationJsonLd, jsonLdScript, originOf, canonicalHref } = require('./seo');
+const { organizationJsonLd, jsonLdScript, originOf, canonicalHref, burnoutSpokeCanonicalPath } = require('./seo');
 const authors = require('./authors');
 const { socialLink } = require('./utm');
 const cvi = require('./cvi');
@@ -196,16 +196,10 @@ function burnoutHubCard() {
     };
 }
 
-/** Generic “what is burnout” posts consolidate to the hub. Long-tail articles keep a self-canonical. */
-const BLOG_CANONICAL_TO_BURNOUT_HUB = new Set([
-    'burnout-o-que-e-sinais-cansaco',
-    '9-sinais-de-burnout-no-trabalho'
-]);
-
+/** Burnout magazine posts consolidate to the hub so Google has one transactional URL. */
 function blogCanonicalPath(meta) {
     const slug = String((meta && meta.slug) || '');
-    if (BLOG_CANONICAL_TO_BURNOUT_HUB.has(slug)) return '/burnout';
-    return `/blog/${encodeURIComponent(slug)}`;
+    return burnoutSpokeCanonicalPath(`/blog/${encodeURIComponent(slug)}`);
 }
 
 function burnoutHubStripHtml(lang) {
@@ -1048,7 +1042,9 @@ function renderBlogArticle(origin, slug) {
     const description = String(meta.description || '');
     const datePub = String(meta.datePublished || '');
     let dateMod = String(meta.dateModified || meta.datePublished || '');
-    const pageUrl = `${o}/blog/${encodeURIComponent(slug)}`;
+    const articlePath = `/blog/${encodeURIComponent(slug)}`;
+    const canonicalPath = blogCanonicalPath(meta);
+    const pageUrl = `${o}${canonicalPath}`;
     let articleHtml = bodyToHtml(raw, format === 'html' ? 'html' : 'markdown');
     let cviParts = [];
     if (format === 'html' && cvi.isCviPublicArticle(slug)) {
@@ -1155,8 +1151,6 @@ function renderBlogArticle(origin, slug) {
         ? `<figure class="guide-figure guide-figure-lead mag-story-hero"><img src="${escapeHtml(String(meta.image).startsWith('/') ? meta.image : `/${meta.image}`)}" alt="${escapeHtml(title)}" width="1600" height="900" decoding="async"></figure>`
         : '';
 
-    const articlePath = `/blog/${encodeURIComponent(slug)}`;
-    const canonicalPath = blogCanonicalPath(meta);
     const kicker = magThemeLabel(meta);
     const lang = articleLangCode(meta);
     const langMeta = articleLangMeta(meta);
@@ -2241,5 +2235,6 @@ module.exports = {
     renderNotFound,
     loadManifest,
     sortArticles,
-    articleSitemapAlternates
+    articleSitemapAlternates,
+    blogCanonicalPath
 };

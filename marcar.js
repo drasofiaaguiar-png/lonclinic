@@ -632,7 +632,10 @@
     }
 
     if (isNutricaoFamily(tipo)) {
-        renderPlanPicker(tipo, NUTRICAO_PLAN_CARDS, 'Reeducação metabólica', 'Escolha o plano — sem aGLP-1');
+        var nutricaoCards = NUTRICAO_PLAN_CARDS.map(function (card) {
+            return Object.assign({}, card, { featured: card.tipo === tipo });
+        });
+        renderPlanPicker(tipo, nutricaoCards, 'Reeducação metabólica', 'Escolha o plano — sem aGLP-1');
         var nutricaoLink = document.getElementById('marcarNutricaoLink');
         if (nutricaoLink) nutricaoLink.hidden = false;
         var nutricaoTrust = document.getElementById('marcarBuyTrust');

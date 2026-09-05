@@ -54,22 +54,22 @@
     "impairment": { "title": "Já está a custar a vida", "text": "O impacto em trabalho, relações ou sofrimento é o que torna este rastreio clinicamente relevante. Sem interferência, sintomas isolados não fazem um quadro; com interferência, adiamento custa." }
   },
   "booking": {
-    "consultHref": "/marcar/clinica-geral",
-    "consultName": "Consulta de clínica geral / nutrição",
-    "consultPrice": "39",
-    "consultMeta": "Sessão única · 25–35 min",
-    "subHref": "/marcar/longevidade",
-    "subName": "Consulta de longevidade",
-    "subPrice": "79",
-    "subMeta": "Mais tempo · 45–60 min",
-    "stickyLabel": "Consulta de nutrição",
+    "consultHref": "/marcar/nutricao-programa",
+    "consultName": "Consulta inicial de nutrição metabólica",
+    "consultPrice": "115",
+    "consultMeta": "Mês 1 do programa · depois 75 €/mês",
+    "subHref": "/marcar/nutricao-completo",
+    "subName": "Programa completo (com psicologia)",
+    "subPrice": "227",
+    "subMeta": "Nutrição + 12 sessões · mês 1",
+    "stickyLabel": "Consulta inicial de nutrição",
     "hideSubOn": ["SEM INDICADORES"]
   },
   "related": ["imc", "tfeq", "ess", "phq9"],
   "introLinks": [
     { "href": "/nutricao/teste-imc", "label": "IMC e cintura" },
     { "href": "/nutricao/teste-tfeq", "label": "TFEQ-R18 · três fatores" },
-    { "href": "/nutricao/ozempic-wegovy", "label": "Nutrição com GLP-1" },
+    { "href": "/nutricao/glp-1", "label": "aGLP-1 / desmame" },
     { "href": "/nutricao/teste-ess", "label": "Sonolência / apneia (ESS)" }
   ],
   "disclaimer": "Rastreio Lon Clinic baseado no YFAS 2.0 / mYFAS 2.0 (Gearhardt, Corbin & Brownell; versão breve de 13 itens). Não reproduz o instrumento oficial na íntegra; a pontuação (critérios 0–11 + impacto) é uma adaptação clínica para triagem. Não diagnostica «food addiction» nem indica, por si, fármacos. Em Portugal, a prescrição de análogos GLP-1 para diabetes/perda de peso está restrita a especialidades definidas.",

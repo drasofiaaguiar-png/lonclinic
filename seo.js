@@ -87,6 +87,48 @@ function keepInfoPageQuery(pathname, search, req) {
     return pathname || '/';
 }
 
+const BURNOUT_HUB_PATH = '/burnout';
+
+function pathnameOnly(pathAndQuery) {
+    let p = String(pathAndQuery || '/').split('?')[0].split('#')[0];
+    if (p === '/index.html') p = '/';
+    if (p.length > 1) p = p.replace(/\/+$/, '');
+    return p || '/';
+}
+
+/** CBI quiz and other clinical instruments keep a self-canonical. */
+function isBurnoutToolPath(pathname) {
+    const p = pathnameOnly(pathname);
+    if (p === '/burnout/teste' || p === '/burnout/testes') return true;
+    return /^\/burnout\/teste-[a-z0-9-]+$/.test(p);
+}
+
+/**
+ * Duplicate burnout URLs that must consolidate to the hub:
+ * /blog/* burnout articles, /burnout/* spokes, /psicologia-burnout, /clinica-anti-burnout.
+ */
+function isBurnoutAuthoritySpoke(pathname) {
+    const p = pathnameOnly(pathname);
+    if (p === '/clinica-anti-burnout' || p === '/psicologia-burnout') return true;
+    if (p === BURNOUT_HUB_PATH || isBurnoutToolPath(p)) return false;
+    if (p.startsWith('/burnout/')) return true;
+    if (p.startsWith('/blog/')) {
+        const slug = decodeURIComponent(p.slice('/blog/'.length).split('/')[0] || '');
+        return /burnout/i.test(slug);
+    }
+    return false;
+}
+
+function burnoutSpokeCanonicalPath(pathAndQuery) {
+    const raw = String(pathAndQuery || '/');
+    const qAt = raw.indexOf('?');
+    const pathPart = qAt === -1 ? raw : raw.slice(0, qAt);
+    const search = qAt === -1 ? '' : raw.slice(qAt);
+    if (isBurnoutAuthoritySpoke(pathPart)) return BURNOUT_HUB_PATH;
+    const cleaned = pathnameOnly(pathPart);
+    return cleaned + search;
+}
+
 function canonicalPathFromRequest(req) {
     let pathname = '/';
     let search = '';
@@ -100,7 +142,7 @@ function canonicalPathFromRequest(req) {
     }
     if (pathname === '/index.html') pathname = '/';
     if (pathname.length > 1) pathname = pathname.replace(/\/+$/, '');
-    return keepInfoPageQuery(pathname, search, req);
+    return burnoutSpokeCanonicalPath(keepInfoPageQuery(pathname, search, req));
 }
 
 function rewriteApexSiteUrls(html) {
@@ -127,6 +169,7 @@ function canonicalHref(pathAndQuery) {
     const search = qAt === -1 ? '' : p.slice(qAt);
     if (pathPart === '/index.html') pathPart = '/';
     if (pathPart.length > 1) pathPart = pathPart.replace(/\/+$/, '');
+    if (isBurnoutAuthoritySpoke(pathPart)) return `${SITE_ORIGIN}${BURNOUT_HUB_PATH}`;
     return `${SITE_ORIGIN}${keepInfoPageQuery(pathPart || '/', search)}`;
 }
 
@@ -169,7 +212,7 @@ function ensureCanonicalTag(html, href) {
     return html;
 }
 
-/** Rewrite apex hosts and force canonical + og:url to https://www.lonclinic.com{current path}. */
+/** Rewrite apex hosts and set canonical + og:url (burnout spokes collapse to /burnout). */
 function applyHtmlSeo(html, req) {
     return ensureCanonicalTag(rewriteApexSiteUrls(html), canonicalHref(canonicalPathFromRequest(req)));
 }
@@ -292,13 +335,11 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
         ['/consulta', today, 'weekly', '0.9'],
         ['/book-consultation', today, 'monthly', '0.8'],
         ['/burnout', today, 'weekly', '0.95'],
-        ['/burnout/colecao', today, 'weekly', '0.9'],
         ['/burnout/teste', today, 'monthly', '0.9'],
         ['/burnout/testes', today, 'monthly', '0.86'],
         ['/nutricao/testes', today, 'monthly', '0.84'],
         ['/nutricao/programa', today, 'weekly', '0.9'],
         ['/nutricao/avaliacao', today, 'monthly', '0.86'],
-        ['/clinica-anti-burnout', today, 'weekly', '0.9'],
         ['/saudemental', today, 'weekly', '0.9'],
         ['/consultas', today, 'weekly', '0.92'],
         ['/nutricao', today, 'weekly', '0.9'],
@@ -326,6 +367,7 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
         const articles = guide.sortArticles(guide.loadManifest().articles || []);
         for (const a of articles) {
             if (!a || !guide.isValidSlug(a.slug) || a.listed === false) continue;
+            if (isBurnoutAuthoritySpoke(`/blog/${a.slug}`)) continue;
             const lastmod = String(a.dateModified || a.datePublished || today).slice(0, 10);
             const alternates = guide.articleSitemapAlternates(o, a, articles);
             entries.push(urlEntry(`${o}/blog/${encodeURIComponent(a.slug)}`, lastmod, 'monthly', '0.75', alternates));
@@ -339,6 +381,7 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
             (p) => p && burnoutPages.isValidSlug(p.slug) && p.slug !== 'hub'
         );
         for (const p of pages) {
+            if (isBurnoutAuthoritySpoke(`/burnout/${p.slug}`)) continue;
             const lastmod = String(p.dateModified || p.datePublished || today).slice(0, 10);
             entries.push(urlEntry(`${o}/burnout/${encodeURIComponent(p.slug)}`, lastmod, 'monthly', '0.8'));
         }
@@ -358,6 +401,7 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
 
     try {
         for (const p of queixas.publishedPages()) {
+            if (isBurnoutAuthoritySpoke(`/${p.slug}`)) continue;
             const lastmod = String(p.dateModified || p.datePublished || today).slice(0, 10);
             entries.push(urlEntry(`${o}/${encodeURIComponent(p.slug)}`, lastmod, 'weekly', '0.88'));
         }
@@ -425,10 +469,13 @@ ${entries.join('\n')}
 
 module.exports = {
     SITE_ORIGIN,
+    BURNOUT_HUB_PATH,
     INDEXABLE_INFO_PAGES,
     originOf,
     canonicalHref,
     canonicalPathFromRequest,
+    burnoutSpokeCanonicalPath,
+    isBurnoutAuthoritySpoke,
     ensureCanonicalTag,
     applyHtmlSeo,
     rewriteApexSiteUrls,

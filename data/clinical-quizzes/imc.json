@@ -73,10 +73,10 @@
   "bands": [
     { "max": 18.49, "pill": "BAIXO PESO", "concern": "light", "title": "Abaixo do peso considerado normal", "bookLabel": "Marcar consulta — 39€", "bookNote": "Videoconsulta · avaliar se o baixo peso tem causa clínica" },
     { "max": 24.9, "pill": "NORMAL", "concern": "low", "title": "IMC na faixa considerada normal", "bookLabel": "Marcar consulta — 39€", "bookNote": "Opcional · se a cintura ou a composição corporal te preocuparem" },
-    { "max": 29.9, "pill": "EXCESSO DE PESO", "concern": "mid", "title": "Excesso de peso", "bookLabel": "Começar o programa — 115€", "bookNote": "1.ª consulta médica do programa de 6 meses" },
-    { "max": 34.9, "pill": "OBESIDADE I", "concern": "high", "title": "Obesidade grau I", "bookLabel": "Começar o programa — 115€", "bookNote": "1.ª consulta médica · exames e plano alimentar" },
-    { "max": 39.9, "pill": "OBESIDADE II", "concern": "high", "title": "Obesidade grau II", "bookLabel": "Começar o programa agora — 115€", "bookNote": "1.ª consulta médica do programa metabólico" },
-    { "max": 999, "pill": "OBESIDADE III", "concern": "high", "title": "Obesidade grau III", "bookLabel": "Começar o programa agora — 115€", "bookNote": "1.ª consulta médica · avaliação clínica e nutricional" }
+    { "max": 29.9, "pill": "EXCESSO DE PESO", "concern": "mid", "title": "Excesso de peso", "bookLabel": "Consulta inicial de nutrição — 115€", "bookNote": "Programa de reeducação · 2 consultas/mês · sem aGLP-1" },
+    { "max": 34.9, "pill": "OBESIDADE I", "concern": "high", "title": "Obesidade grau I", "bookLabel": "Consulta inicial de nutrição — 115€", "bookNote": "Reeducação metabólica e adesão — não uma receita" },
+    { "max": 39.9, "pill": "OBESIDADE II", "concern": "high", "title": "Obesidade grau II", "bookLabel": "Consulta inicial de nutrição — 115€", "bookNote": "Programa mensal · hábitos contra o ioiô" },
+    { "max": 999, "pill": "OBESIDADE III", "concern": "high", "title": "Obesidade grau III", "bookLabel": "Consulta inicial de nutrição — 115€", "bookNote": "Acompanhamento nutricional contínuo · sem prescrição de aGLP-1" }
   ],
   "insights": {
     "imc": { "title": "Quilos até ao peso normal", "text": "O peso-alvo usa o limite superior da faixa normal (IMC 24,9). Não é um objectivo estético — é o limiar clínico da OMS para deixar de classificar excesso de peso." },
@@ -84,19 +84,19 @@
   },
   "booking": {
     "consultHref": "/marcar/nutricao-programa",
-    "consultName": "Programa Nutrição · mês 1",
+    "consultName": "Consulta inicial de nutrição metabólica",
     "consultPrice": "115",
-    "consultMeta": "6 meses · 1.ª consulta médica incluída",
-    "subHref": "/marcar/clinica-geral",
-    "subName": "Consulta avulsa",
-    "subPrice": "39",
-    "subMeta": "Sessão única · 25–35 min",
-    "stickyLabel": "Programa metabólico",
+    "consultMeta": "Mês 1 · depois 75 €/mês · sem aGLP-1",
+    "subHref": "/marcar/nutricao-completo",
+    "subName": "Programa completo (com psicologia)",
+    "subPrice": "227",
+    "subMeta": "Nutrição + 12 sessões · mês 1",
+    "stickyLabel": "Consulta inicial de nutrição",
     "hideSubOn": ["NORMAL", "BAIXO PESO"]
   },
   "related": ["tfeq", "yfas", "ess", "who5"],
   "introLinks": [
-    { "href": "/nutricao/programa", "label": "Programa 6 meses" },
+    { "href": "/nutricao/programa", "label": "Programa de reeducação" },
     { "href": "/nutricao/teste-tfeq", "label": "TFEQ · o que trava o peso" },
     { "href": "/nutricao/teste-ess", "label": "Sonolência / apneia (ESS)" },
     { "href": "/nutricao/glp-1", "label": "aGLP-1 / desmame" }

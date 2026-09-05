@@ -12,7 +12,7 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
-const { organizationJsonLd, originOf, canonicalHref } = require('./seo');
+const { organizationJsonLd, originOf, canonicalHref, burnoutSpokeCanonicalPath } = require('./seo');
 const authors = require('./authors');
 
 const BURNOUT_DIR = path.join(__dirname, 'data', 'burnout');
@@ -495,7 +495,7 @@ function renderSpoke(origin, slug) {
     const datePub = String(meta.datePublished || '');
     const dateMod = String(meta.dateModified || meta.datePublished || '');
     const og = `${o}/image/image2.webp`;
-    const canonicalPath = `/burnout/${encodeURIComponent(slug)}`;
+    const canonicalPath = burnoutSpokeCanonicalPath(`/burnout/${encodeURIComponent(slug)}`);
     const ref = `burnout-${slug}`;
 
     const faqLd = Array.isArray(meta.faq) && meta.faq.length
@@ -673,7 +673,7 @@ function renderCollection(origin) {
         origin: o,
         title: `${series.title} — Coleção | Lon Clinic`,
         description: series.description,
-        canonicalPath: '/burnout/colecao',
+        canonicalPath: '/burnout',
         ogImage: `${o}/image/image2.webp`,
         jsonLdExtra: jsonLd,
         mainHtml

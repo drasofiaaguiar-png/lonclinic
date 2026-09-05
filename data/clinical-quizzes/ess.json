@@ -63,7 +63,7 @@
   "introLinks": [
     { "href": "/burnout/teste-isi", "label": "Insónia (ISI)" },
     { "href": "/nutricao/teste-tfeq", "label": "Comportamento alimentar" },
-    { "href": "/nutricao/ozempic-wegovy", "label": "Nutrição e GLP-1" }
+    { "href": "/nutricao/glp-1", "label": "aGLP-1 / desmame" }
   ],
   "disclaimer": "A Epworth Sleepiness Scale (Johns, 1991) é um instrumento clínico de 8 itens sobre a probabilidade de adormecer. Adaptação Lon Clinic em português europeu. Não diagnostica apneia do sono. Um score elevado, sobretudo com excesso de peso, ressonar ou pausas respiratórias, indica avaliação médica — não um plano alimentar isolado. Não conduzas se a sonolência te vence ao volante.",
   "utmCampaign": "ess-teste"
