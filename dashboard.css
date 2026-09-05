@@ -1174,6 +1174,14 @@ body.dash-portal .dash-stat-card {
     color: #1d4ed8;
 }
 
+.clinic-pay-empty-week {
+    margin: 0;
+    padding: 0 18px 14px;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--text-muted);
+}
+
 .clinic-pay-calc {
     padding: 0 18px 14px;
     border-top: 1px solid var(--border-subtle);
@@ -1331,6 +1339,223 @@ body.dash-portal .dash-stat-card {
 .clinic-bio-input {
     min-height: 8rem;
     resize: vertical;
+}
+
+.clinic-iban-form {
+    display: grid;
+    gap: 12px;
+    max-width: 36rem;
+    margin: 0 0 22px;
+}
+
+.clinic-avail-highlight {
+    margin: -8px 0 32px;
+    padding: 28px 32px;
+    border-radius: 18px;
+    background: #163024;
+    color: #f4f7f2;
+    box-shadow: 0 18px 40px rgba(22, 48, 36, 0.28);
+    border: 2px solid #c5c72c;
+}
+
+.clinic-avail-highlight-label {
+    margin: 0 0 18px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #c5c72c;
+}
+
+.clinic-avail-highlight-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 16px;
+}
+
+.clinic-avail-highlight-list li {
+    margin: 0;
+    font-size: 1.35rem;
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    line-height: 1.35;
+}
+
+.clinic-avail-highlight-date {
+    color: #f4f7f2;
+}
+
+.clinic-avail-highlight-hours {
+    color: #c5c72c;
+}
+
+.clinic-avail-highlight-empty {
+    font-size: 1rem;
+    font-weight: 500;
+    color: rgba(244, 247, 242, 0.72);
+}
+
+.clinic-avail-month-list {
+    display: grid;
+    gap: 8px;
+    max-width: 42rem;
+}
+
+.clinic-avail-month-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 14px;
+    padding: 12px 14px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+}
+
+.clinic-avail-month-row p {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.clinic-iban-form .admin-form-group {
+    margin: 0;
+}
+
+.clinic-payout-list {
+    display: grid;
+    gap: 8px;
+    max-width: 42rem;
+}
+
+.clinic-payout-item {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+}
+
+.clinic-payout-item > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.clinic-payout-item > summary::-webkit-details-marker {
+    display: none;
+}
+
+.clinic-payout-item > summary::after {
+    content: '';
+    float: right;
+    width: 0.45em;
+    height: 0.45em;
+    margin-top: 0.35em;
+    border-right: 2px solid var(--text-muted);
+    border-bottom: 2px solid var(--text-muted);
+    transform: rotate(45deg);
+}
+
+.clinic-payout-item[open] > summary::after {
+    transform: rotate(-135deg);
+    margin-top: 0.55em;
+}
+
+.clinic-payout-body {
+    display: grid;
+    gap: 12px;
+    padding: 0 16px 16px;
+}
+
+.clinic-payout-checks {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+}
+
+.clinic-payout-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.clinic-payout-check.is-on {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.clinic-payout-check::before {
+    content: '';
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: #fff;
+}
+
+.clinic-payout-check.is-on::before {
+    background: #1a6641;
+    border-color: #1a6641;
+    box-shadow: inset 0 0 0 2px #fff;
+}
+
+.admin-payouts-list {
+    display: grid;
+    gap: 18px;
+}
+
+.admin-payout-card {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    background: var(--bg-card);
+}
+
+.admin-payout-card h3 {
+    margin: 0 0 4px;
+    font-size: 0.95rem;
+}
+
+.admin-payout-iban {
+    margin: 0 0 12px;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    word-break: break-all;
+}
+
+.admin-payout-months {
+    display: grid;
+    gap: 10px;
+}
+
+.admin-payout-month {
+    display: grid;
+    gap: 8px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.admin-payout-month-line {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.admin-payout-month-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
 }
 
 .clinic-docs-table td {
@@ -2489,6 +2714,10 @@ a.admin-nav-link {
 }
 
 .admin-panel[hidden] {
+    display: none !important;
+}
+
+.clinic-avail-highlight[hidden] {
     display: none !important;
 }
 

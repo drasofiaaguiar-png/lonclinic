@@ -1337,6 +1337,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const financesMonthsList = document.getElementById('financesMonthsList');
     const financesMonthSelect = document.getElementById('financesMonthSelect');
     const financesRefreshBtn = document.getElementById('financesRefreshBtn');
+    const adminPayoutsList = document.getElementById('adminPayoutsList');
 
     function formatEuroFromCents(cents) {
         const n = Number(cents) || 0;
@@ -1461,6 +1462,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (current && months.some((m) => m.month === current)) financesMonthSelect.value = current;
             }
             renderFinancesPanel();
+            await loadAdminPayouts();
         } catch (err) {
             console.error('Load finances:', err);
             financesSummary.innerHTML = '<p class="admin-empty-list">Could not load finances.</p>';
@@ -1473,6 +1475,82 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (financesRefreshBtn) {
         financesRefreshBtn.addEventListener('click', () => loadFinancesPanel());
+    }
+
+    function payoutCheckLabel(on, label) {
+        return `<span class="clinic-payout-check${on ? ' is-on' : ''}">${escapeHtml(label)}</span>`;
+    }
+
+    async function loadAdminPayouts() {
+        if (!adminPayoutsList) return;
+        try {
+            const res = await fetch('/api/admin/payouts');
+            if (res.status === 401) return;
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            const staff = data.staff || [];
+            if (!staff.length) {
+                adminPayoutsList.innerHTML = '<p class="admin-empty-list">No clinicians yet.</p>';
+                return;
+            }
+            adminPayoutsList.innerHTML = staff.map((person) => {
+                const months = (person.months || []).map((m) => {
+                    const month = encodeURIComponent(m.month || '');
+                    const user = encodeURIComponent(person.username || '');
+                    const download = m.hasInvoice
+                        ? `<a class="btn btn-outline btn-sm" href="/api/admin/payouts/${user}/${month}/invoice">Download fatura</a>`
+                        : '<span class="dash-section-subtitle">No fatura</span>';
+                    const checked = m.paymentSent ? ' checked' : '';
+                    return `<div class="admin-payout-month">
+                        <p class="admin-payout-month-line">${escapeHtml(m.lineLabel || m.label || '')}</p>
+                        <div class="admin-payout-month-actions">
+                            ${payoutCheckLabel(!!m.hasInvoice, 'Fatura uploaded')}
+                            ${download}
+                            <label class="clinic-toggle-label">
+                                <input type="checkbox" class="admin-payout-sent" data-payout-user="${escapeHtml(person.username || '')}" data-payout-month="${escapeHtml(m.month || '')}"${checked}>
+                                <span>Payment sent</span>
+                            </label>
+                        </div>
+                    </div>`;
+                }).join('');
+                const iban = person.iban
+                    ? `IBAN: ${escapeHtml(person.iban)}`
+                    : 'No IBAN saved';
+                return `<article class="admin-payout-card">
+                    <h3>${escapeHtml(person.displayName || person.username || '')}</h3>
+                    <p class="admin-payout-iban">${iban}</p>
+                    <div class="admin-payout-months">${months}</div>
+                </article>`;
+            }).join('');
+        } catch (err) {
+            console.error('Load payouts:', err);
+            adminPayoutsList.innerHTML = '<p class="admin-empty-list">Could not load faturas.</p>';
+        }
+    }
+
+    if (adminPayoutsList) {
+        adminPayoutsList.addEventListener('change', async (e) => {
+            const box = e.target.closest('.admin-payout-sent');
+            if (!box) return;
+            const username = box.getAttribute('data-payout-user');
+            const month = box.getAttribute('data-payout-month');
+            if (!username || !month) return;
+            box.disabled = true;
+            try {
+                const res = await fetch(`/api/admin/payouts/${encodeURIComponent(username)}/${encodeURIComponent(month)}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ paymentSent: box.checked })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || 'Failed to update payment');
+            } catch (err) {
+                box.checked = !box.checked;
+                alert(err.message || 'Failed to update payment');
+            } finally {
+                box.disabled = false;
+            }
+        });
     }
 
     // ─── Login handler ───
@@ -3141,6 +3219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const proUsername = document.getElementById('proUsername');
     const proPassword = document.getElementById('proPassword');
     const proDoxyUrl = document.getElementById('proDoxyUrl');
+    const proEmail = document.getElementById('proEmail');
     const proActive = document.getElementById('proActive');
     const proSubmitBtn = document.getElementById('proSubmitBtn');
     const proCancelEditBtn = document.getElementById('proCancelEditBtn');
@@ -3196,6 +3275,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             proPassword.placeholder = 'Leave blank to keep current password';
         }
         if (proDoxyUrl) proDoxyUrl.value = pro.doxyRoomUrl || '';
+        if (proEmail) proEmail.value = pro.email || '';
         if (proActive) proActive.checked = pro.active !== false;
         if (proSubmitBtn) proSubmitBtn.textContent = 'Save changes';
         if (proCancelEditBtn) proCancelEditBtn.hidden = false;
@@ -3265,6 +3345,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 displayName: proDisplayName ? proDisplayName.value.trim() : '',
                 username: proUsername ? proUsername.value.trim() : '',
                 doxyRoomUrl: proDoxyUrl ? proDoxyUrl.value.trim() : '',
+                email: proEmail ? proEmail.value.trim() : '',
                 active: proActive ? proActive.checked : true
             };
             if (proPassword && proPassword.value) payload.password = proPassword.value;

@@ -60,6 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicSaveScheduleBtn = document.getElementById('clinicSaveScheduleBtn');
     const clinicAvailWeekly = document.getElementById('clinicAvailWeekly');
     const clinicAvailMonth = document.getElementById('clinicAvailMonth');
+    const clinicAvailMonths = document.getElementById('clinicAvailMonths');
+    const clinicAvailMonthsError = document.getElementById('clinicAvailMonthsError');
+    const clinicAvailHighlightList = document.getElementById('clinicAvailHighlightList');
     const clinicOverrideCalPrev = document.getElementById('clinicOverrideCalPrev');
     const clinicOverrideCalNext = document.getElementById('clinicOverrideCalNext');
     const clinicOverrideCalMonthLabel = document.getElementById('clinicOverrideCalMonthLabel');
@@ -80,12 +83,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicPatientsEmpty = document.getElementById('clinicPatientsEmpty');
     const clinicPatientsTable = document.getElementById('clinicPatientsTable');
     const clinicPatientsBody = document.getElementById('clinicPatientsBody');
-    const clinicManagementAdminLinks = document.getElementById('clinicManagementAdminLinks');
-    const clinicManagementClinicianNote = document.getElementById('clinicManagementClinicianNote');
+    const clinicIbanForm = document.getElementById('clinicIbanForm');
+    const clinicIban = document.getElementById('clinicIban');
+    const clinicIbanSaveBtn = document.getElementById('clinicIbanSaveBtn');
+    const clinicIbanError = document.getElementById('clinicIbanError');
+    const clinicPayoutMonths = document.getElementById('clinicPayoutMonths');
+    const clinicPayoutError = document.getElementById('clinicPayoutError');
     const clinicPayRange = document.getElementById('clinicPayRange');
     const clinicPayHours = document.getElementById('clinicPayHours');
     const clinicPayPatients = document.getElementById('clinicPayPatients');
     const clinicPayGross = document.getElementById('clinicPayGross');
+    const clinicPayEmptyWeek = document.getElementById('clinicPayEmptyWeek');
     const clinicPayIrs = document.getElementById('clinicPayIrs');
     const clinicPaySs = document.getElementById('clinicPaySs');
     const clinicPayNet = document.getElementById('clinicPayNet');
@@ -117,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bookings: { title: 'Bookings', subtitle: 'Upcoming confirmed appointments' },
         patients: { title: 'Patients', subtitle: 'People attached to your consultations' },
         resources: { title: 'Resources', subtitle: 'Video room and everyday clinic links' },
-        management: { title: 'Management', subtitle: 'Clinic-wide settings and admin tools' },
+        management: { title: 'Management', subtitle: 'IBAN, faturas mensais e pagamentos' },
         profile: { title: 'Profile', subtitle: 'Ordem, bio, credentials, clinical areas and documents' }
     };
 
@@ -202,10 +210,18 @@ document.addEventListener('DOMContentLoaded', () => {
         if (panelId === 'consultations' || panelId === 'bookings' || panelId === 'patients') {
             loadBookings();
         }
-        if (panelId === 'availabilities') loadScheduleView();
+        if (panelId === 'availabilities') {
+            const hasDayHours = !!(clinicScheduleData && (clinicScheduleData.dayOverrides || []).some((o) => o && o.enabled !== false));
+            if (hasDayHours) setClinicAvailMode('month');
+            loadScheduleView();
+            loadClinicAvailabilityMonths();
+        }
         if (panelId === 'resources' || panelId === 'profile') loadDoxyRoom();
         if (panelId === 'profile') loadClinicProfile();
-        if (panelId === 'management') loadClinicBillingSummary();
+        if (panelId === 'management') {
+            loadClinicBillingSummary();
+            loadClinicPayouts();
+        }
     }
 
     // ─── Show Login ───
@@ -228,12 +244,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (clinicSidebarUser) {
             clinicSidebarUser.textContent = staffDisplayName || 'Portal';
-        }
-        if (clinicManagementAdminLinks) {
-            clinicManagementAdminLinks.hidden = !isAdmin;
-        }
-        if (clinicManagementClinicianNote) {
-            clinicManagementClinicianNote.hidden = isAdmin;
         }
         if (clinicProfileName) clinicProfileName.textContent = staffDisplayName || '—';
         if (clinicProfileUsername) clinicProfileUsername.textContent = staffUsername || '—';
@@ -315,6 +325,44 @@ document.addEventListener('DOMContentLoaded', () => {
         return t;
     }
 
+    function formatClinicAvailDateLabel(dateStr) {
+        const dateObj = new Date(`${dateStr}T12:00:00`);
+        return dateObj.toLocaleDateString('en-US', {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        });
+    }
+
+    function formatClinicAvailHoursLabel(entry) {
+        if (!entry || entry.enabled === false) return 'Closed (no bookings)';
+        const start = String(entry.start || '').slice(0, 5);
+        const end = String(entry.end || '').slice(0, 5);
+        return `${start} – ${end}`;
+    }
+
+    function upcomingClinicDayHours() {
+        return (clinicScheduleData && clinicScheduleData.dayOverrides ? clinicScheduleData.dayOverrides : [])
+            .filter((entry) => entry && entry.enabled !== false && entry.date)
+            .slice()
+            .sort((a, b) => a.date.localeCompare(b.date));
+    }
+
+    function renderClinicAvailHighlight() {
+        if (!clinicAvailHighlightList) return;
+        const upcoming = upcomingClinicDayHours();
+        if (!upcoming.length) {
+            clinicAvailHighlightList.innerHTML = '<li class="clinic-avail-highlight-empty">No upcoming hours yet. Add days on the calendar below.</li>';
+            return;
+        }
+        clinicAvailHighlightList.innerHTML = upcoming.map((entry) => {
+            const dateLabel = formatClinicAvailDateLabel(entry.date);
+            const hoursLabel = formatClinicAvailHoursLabel(entry);
+            return `<li><span class="clinic-avail-highlight-date">${dateLabel}:</span> <span class="clinic-avail-highlight-hours">${hoursLabel}</span></li>`;
+        }).join('');
+    }
+
     function ensureClinicOverrideCalInitialized() {
         if (clinicOverrideCalYear === null || clinicOverrideCalMonth === null) {
             const t = new Date();
@@ -342,6 +390,75 @@ document.addEventListener('DOMContentLoaded', () => {
             renderClinicDayOverridesList();
             renderClinicBlockedDates();
         }
+    }
+
+    function renderClinicAvailabilityMonths(months) {
+        if (!clinicAvailMonths) return;
+        const list = Array.isArray(months) ? months : [];
+        if (!list.length) {
+            clinicAvailMonths.innerHTML = '<p class="admin-empty-list">No months yet.</p>';
+            return;
+        }
+        clinicAvailMonths.innerHTML = list.map((m) => {
+            const month = escapeHtml(m.month || '');
+            const line = escapeHtml(m.lineLabel || m.label || '');
+            const checkClass = m.confirmed ? ' is-on' : '';
+            const checkLabel = m.confirmed ? 'Availabilities defined' : 'Not defined yet';
+            const action = m.confirmed
+                ? ''
+                : `<button type="button" class="btn btn-outline btn-sm" data-avail-confirm="${month}">Tick month</button>`;
+            return `<div class="clinic-avail-month-row">
+                <p>${line}</p>
+                <span class="clinic-payout-check${checkClass}">${checkLabel}</span>
+                ${action}
+            </div>`;
+        }).join('');
+    }
+
+    async function loadClinicAvailabilityMonths() {
+        if (!clinicAvailMonths) return;
+        if (clinicAvailMonthsError) clinicAvailMonthsError.style.display = 'none';
+        try {
+            const res = await fetch('/api/clinic/availability-months');
+            if (res.status === 401) {
+                showLogin();
+                return;
+            }
+            if (!res.ok) throw new Error('Failed to load months');
+            const data = await res.json();
+            renderClinicAvailabilityMonths(data.months || []);
+        } catch (err) {
+            console.error('Failed to load availability months:', err);
+            clinicAvailMonths.innerHTML = '<p class="admin-empty-list">Could not load months.</p>';
+        }
+    }
+
+    if (clinicAvailMonths) {
+        clinicAvailMonths.addEventListener('click', async (e) => {
+            const btn = e.target.closest('[data-avail-confirm]');
+            if (!btn) return;
+            const month = btn.getAttribute('data-avail-confirm');
+            if (!month) return;
+            if (clinicAvailMonthsError) clinicAvailMonthsError.style.display = 'none';
+            btn.disabled = true;
+            try {
+                const res = await fetch(`/api/clinic/availability-months/${encodeURIComponent(month)}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ confirmed: true })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401) {
+                    showLogin();
+                    return;
+                }
+                if (!res.ok) throw new Error(data.error || 'Failed to confirm month');
+                renderClinicAvailabilityMonths(data.months || []);
+            } catch (err) {
+                showProfileError(clinicAvailMonthsError, err.message || 'Failed to confirm month');
+                btn.disabled = false;
+            }
+        });
     }
 
     function weekdayDefaultsForClinicDate(dateStr) {
@@ -427,6 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderClinicDayOverridesList() {
+        renderClinicAvailHighlight();
         if (!clinicDayOverridesList || !clinicScheduleData) return;
         const list = clinicScheduleData.dayOverrides || [];
         if (list.length === 0) {
@@ -437,14 +555,8 @@ document.addEventListener('DOMContentLoaded', () => {
         list.forEach((entry) => {
             const item = document.createElement('div');
             item.className = 'admin-blocked-item';
-            const dateObj = new Date(`${entry.date}T12:00:00`);
-            const formatted = dateObj.toLocaleDateString('en-US', {
-                weekday: 'short',
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            });
-            const hoursLabel = entry.enabled ? `${entry.start} – ${entry.end}` : 'Closed (no bookings)';
+            const formatted = formatClinicAvailDateLabel(entry.date);
+            const hoursLabel = formatClinicAvailHoursLabel(entry);
             item.innerHTML = `
                 <span>${formatted}: ${hoursLabel}</span>
                 <button type="button" class="admin-remove-btn" aria-label="Remove">
@@ -594,7 +706,11 @@ document.addEventListener('DOMContentLoaded', () => {
             renderClinicOverrideCalendar();
             renderClinicDayOverridesList();
             renderClinicBlockedDates();
-            setClinicAvailMode(clinicAvailMode);
+            if ((clinicScheduleData.dayOverrides || []).some((o) => o && o.enabled !== false)) {
+                setClinicAvailMode('month');
+            } else {
+                setClinicAvailMode(clinicAvailMode);
+            }
             if (clinicSaveScheduleBtn) {
                 clinicSaveScheduleBtn.classList.remove('admin-save-dirty');
                 clinicSaveScheduleBtn.textContent = 'Save availability';
@@ -876,6 +992,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (clinicPayHours) clinicPayHours.textContent = formatClinicPayHours(period.hours);
         if (clinicPayPatients) clinicPayPatients.textContent = String(period.patients || 0);
         if (clinicPayGross) clinicPayGross.textContent = formatClinicPayEuro(period.paidCents);
+        if (clinicPayEmptyWeek) {
+            const week = clinicBillingSummary.week || {};
+            clinicPayEmptyWeek.hidden = (Number(week.consultations) || 0) > 0;
+        }
         document.querySelectorAll('[data-pay-period]').forEach((btn) => {
             btn.classList.toggle('is-active', btn.getAttribute('data-pay-period') === clinicPayPeriod);
         });
@@ -925,6 +1045,124 @@ document.addEventListener('DOMContentLoaded', () => {
             updateClinicPayNet();
         });
     });
+
+    function renderClinicPayouts(data) {
+        if (clinicIban && data && data.iban != null) {
+            clinicIban.value = data.iban;
+        }
+        if (!clinicPayoutMonths) return;
+        const months = (data && data.months) || [];
+        if (!months.length) {
+            clinicPayoutMonths.innerHTML = '<p class="admin-empty-list">No months yet.</p>';
+            return;
+        }
+        clinicPayoutMonths.innerHTML = months.map((m) => {
+            const month = escapeHtml(m.month || '');
+            const line = escapeHtml(m.lineLabel || m.label || m.month || '');
+            const faturaOn = m.hasInvoice ? ' is-on' : '';
+            const paidOn = m.paymentSent ? ' is-on' : '';
+            const faturaText = m.hasInvoice
+                ? `Fatura uploaded${m.invoiceName ? ` (${escapeHtml(m.invoiceName)})` : ''}`
+                : 'Fatura uploaded';
+            const download = m.hasInvoice
+                ? `<a class="btn btn-outline btn-sm" href="/api/clinic/payouts/${month}/invoice">Download fatura</a>`
+                : '';
+            return `<details class="clinic-payout-item">
+                <summary>${line}</summary>
+                <div class="clinic-payout-body">
+                    <label class="btn btn-outline btn-sm">
+                        ${m.hasInvoice ? 'Replace fatura' : 'Upload fatura'}
+                        <input type="file" class="clinic-payout-file" data-payout-month="${month}" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx,application/pdf,image/jpeg,image/png,image/webp" hidden>
+                    </label>
+                    ${download}
+                    <div class="clinic-payout-checks">
+                        <p class="clinic-payout-check${faturaOn}">${faturaText}</p>
+                        <p class="clinic-payout-check${paidOn}">Payment sent</p>
+                    </div>
+                </div>
+            </details>`;
+        }).join('');
+    }
+
+    async function loadClinicPayouts() {
+        if (!clinicPayoutMonths && !clinicIban) return;
+        if (clinicPayoutError) clinicPayoutError.style.display = 'none';
+        try {
+            const res = await fetch('/api/clinic/payouts');
+            if (res.status === 401) {
+                showLogin();
+                return;
+            }
+            if (!res.ok) throw new Error('Failed to load payouts');
+            renderClinicPayouts(await res.json());
+        } catch (err) {
+            console.error('Failed to load payouts:', err);
+            if (clinicPayoutMonths) {
+                clinicPayoutMonths.innerHTML = '<p class="admin-empty-list">Could not load monthly payouts.</p>';
+            }
+        }
+    }
+
+    if (clinicIbanForm) {
+        clinicIbanForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (clinicIbanError) clinicIbanError.style.display = 'none';
+            if (clinicIbanSaveBtn) clinicIbanSaveBtn.disabled = true;
+            try {
+                const res = await fetch('/api/clinic/payouts/iban', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ iban: clinicIban ? clinicIban.value : '' })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401) {
+                    showLogin();
+                    return;
+                }
+                if (!res.ok) throw new Error(data.error || 'Failed to save IBAN');
+                if (clinicIban && data.iban != null) clinicIban.value = data.iban;
+                const prev = clinicIbanSaveBtn ? clinicIbanSaveBtn.textContent : '';
+                if (clinicIbanSaveBtn) clinicIbanSaveBtn.textContent = 'Saved';
+                setTimeout(() => {
+                    if (clinicIbanSaveBtn) clinicIbanSaveBtn.textContent = prev || 'Save IBAN';
+                }, 1600);
+            } catch (err) {
+                showProfileError(clinicIbanError, err.message || 'Failed to save IBAN');
+            } finally {
+                if (clinicIbanSaveBtn) clinicIbanSaveBtn.disabled = false;
+            }
+        });
+    }
+
+    if (clinicPayoutMonths) {
+        clinicPayoutMonths.addEventListener('change', async (e) => {
+            const input = e.target.closest('.clinic-payout-file');
+            if (!input) return;
+            const month = input.getAttribute('data-payout-month');
+            const file = input.files && input.files[0];
+            if (!month || !file) return;
+            if (clinicPayoutError) clinicPayoutError.style.display = 'none';
+            const form = new FormData();
+            form.append('file', file);
+            try {
+                const res = await fetch(`/api/clinic/payouts/${encodeURIComponent(month)}/invoice`, {
+                    method: 'POST',
+                    body: form
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401) {
+                    showLogin();
+                    return;
+                }
+                if (!res.ok) throw new Error(data.error || 'Failed to upload fatura');
+                await loadClinicPayouts();
+            } catch (err) {
+                showProfileError(clinicPayoutError, err.message || 'Failed to upload fatura');
+            } finally {
+                input.value = '';
+            }
+        });
+    }
 
     async function loadBookings() {
         try {

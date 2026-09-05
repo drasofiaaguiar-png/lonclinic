@@ -447,6 +447,32 @@ async function initSchema(p) {
     await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS photo_mime TEXT`);
     await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS photo_data BYTEA`);
     await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS credentials TEXT NOT NULL DEFAULT ''`);
+    await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS iban TEXT NOT NULL DEFAULT ''`);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS staff_invoices (
+            username VARCHAR(64) NOT NULL,
+            month VARCHAR(7) NOT NULL,
+            original_name TEXT NOT NULL DEFAULT '',
+            mime TEXT NOT NULL DEFAULT '',
+            file_data BYTEA,
+            uploaded_at TIMESTAMPTZ,
+            payment_sent BOOLEAN NOT NULL DEFAULT FALSE,
+            payment_sent_at TIMESTAMPTZ,
+            PRIMARY KEY (username, month)
+        )
+    `);
+    await p.query(`ALTER TABLE professionals ADD COLUMN IF NOT EXISTS email TEXT NOT NULL DEFAULT ''`);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS staff_month_availability (
+            username VARCHAR(64) NOT NULL,
+            month VARCHAR(7) NOT NULL,
+            confirmed BOOLEAN NOT NULL DEFAULT FALSE,
+            confirmed_at TIMESTAMPTZ,
+            reminder_10_sent BOOLEAN NOT NULL DEFAULT FALSE,
+            reminder_15_sent BOOLEAN NOT NULL DEFAULT FALSE,
+            PRIMARY KEY (username, month)
+        )
+    `);
     await p.query(`
         CREATE TABLE IF NOT EXISTS staff_documents (
             id SERIAL PRIMARY KEY,
@@ -1607,6 +1633,7 @@ function rowToProfessional(row) {
         passwordHash: row.password_hash,
         displayName: row.display_name || '',
         doxyRoomUrl: row.doxy_room_url || '',
+        email: row.email || '',
         active: row.active !== false,
         createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
         updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : row.updated_at
@@ -1656,14 +1683,15 @@ async function findProfessionalByDisplayName(name) {
 async function insertProfessional(pro) {
     const p = getPool();
     const r = await p.query(
-        `INSERT INTO professionals (username, password_hash, display_name, doxy_room_url, active)
-         VALUES ($1, $2, $3, $4, $5)
+        `INSERT INTO professionals (username, password_hash, display_name, doxy_room_url, email, active)
+         VALUES ($1, $2, $3, $4, $5, $6)
          RETURNING *`,
         [
             pro.username,
             pro.passwordHash,
             pro.displayName,
             pro.doxyRoomUrl || null,
+            String(pro.email || '').trim().toLowerCase().slice(0, 320),
             pro.active !== false
         ]
     );
@@ -1677,6 +1705,7 @@ async function updateProfessional(id, fields) {
     const map = {
         displayName: 'display_name',
         doxyRoomUrl: 'doxy_room_url',
+        email: 'email',
         passwordHash: 'password_hash',
         active: 'active'
     };
@@ -1690,6 +1719,7 @@ async function updateProfessional(id, fields) {
         if (jsKey === 'doxyRoomUrl') {
             v = v == null || String(v).trim() === '' ? null : String(v).trim().slice(0, 300);
         }
+        if (jsKey === 'email') v = String(v || '').trim().toLowerCase().slice(0, 320);
         if (jsKey === 'active') v = v === true || v === 'true' || v === 1;
         sets.push(`${col} = $${i}`);
         vals.push(v);
@@ -1729,6 +1759,7 @@ function rowToStaffProfile(row) {
         ordemNumber: row.ordem_number || '',
         bio: row.bio || '',
         credentials: row.credentials || '',
+        iban: row.iban || '',
         primaryArea: row.primary_area || '',
         secondaryArea: row.secondary_area || '',
         hasPhoto: !!(row.has_photo || row.photo_data),
@@ -1758,7 +1789,7 @@ async function getStaffProfile(username) {
     const u = String(username || '').trim().toLowerCase();
     if (!u) return null;
     const r = await p.query(
-        `SELECT username, profession, ordem_number, bio, credentials, primary_area, secondary_area, updated_at,
+        `SELECT username, profession, ordem_number, bio, credentials, iban, primary_area, secondary_area, updated_at,
                 (photo_data IS NOT NULL) AS has_photo
          FROM staff_profiles WHERE username = $1 LIMIT 1`,
         [u]
@@ -1787,7 +1818,7 @@ async function upsertStaffProfile(username, fields) {
             primary_area = EXCLUDED.primary_area,
             secondary_area = EXCLUDED.secondary_area,
             updated_at = NOW()
-         RETURNING username, profession, ordem_number, bio, credentials, primary_area, secondary_area, updated_at,
+         RETURNING username, profession, ordem_number, bio, credentials, iban, primary_area, secondary_area, updated_at,
                    (photo_data IS NOT NULL) AS has_photo`,
         [u, profession, ordemNumber, bio, credentials, primaryArea, secondaryArea]
     );
@@ -1806,7 +1837,7 @@ async function upsertStaffPhoto(username, { mime, data }) {
             photo_mime = EXCLUDED.photo_mime,
             photo_data = EXCLUDED.photo_data,
             updated_at = NOW()
-         RETURNING username, profession, ordem_number, bio, credentials, primary_area, secondary_area, updated_at,
+         RETURNING username, profession, ordem_number, bio, credentials, iban, primary_area, secondary_area, updated_at,
                    (photo_data IS NOT NULL) AS has_photo`,
         [u, photoMime, data]
     );
@@ -1827,6 +1858,207 @@ async function getStaffPhoto(username) {
         mime: row.photo_mime || 'image/jpeg',
         data: row.photo_data
     };
+}
+
+function rowToStaffInvoice(row, { includeData } = {}) {
+    if (!row) return null;
+    const inv = {
+        username: row.username,
+        month: row.month,
+        originalName: row.original_name || '',
+        mime: row.mime || '',
+        uploadedAt: row.uploaded_at instanceof Date ? row.uploaded_at.toISOString() : row.uploaded_at,
+        paymentSent: !!row.payment_sent,
+        paymentSentAt: row.payment_sent_at instanceof Date ? row.payment_sent_at.toISOString() : row.payment_sent_at,
+        hasInvoice: !!(row.has_invoice || row.file_data)
+    };
+    if (includeData) inv.fileData = row.file_data || null;
+    return inv;
+}
+
+async function upsertStaffIban(username, iban) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return null;
+    const value = String(iban || '').trim().slice(0, 42);
+    const r = await p.query(
+        `INSERT INTO staff_profiles (username, iban, updated_at)
+         VALUES ($1, $2, NOW())
+         ON CONFLICT (username) DO UPDATE SET
+            iban = EXCLUDED.iban,
+            updated_at = NOW()
+         RETURNING username, profession, ordem_number, bio, credentials, iban, primary_area, secondary_area, updated_at,
+                   (photo_data IS NOT NULL) AS has_photo`,
+        [u, value]
+    );
+    return rowToStaffProfile(r.rows[0]);
+}
+
+async function listStaffInvoices(username) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return [];
+    const r = await p.query(
+        `SELECT username, month, original_name, mime, uploaded_at, payment_sent, payment_sent_at,
+                (file_data IS NOT NULL) AS has_invoice
+         FROM staff_invoices WHERE username = $1
+         ORDER BY month DESC`,
+        [u]
+    );
+    return r.rows.map((row) => rowToStaffInvoice(row));
+}
+
+async function listAllStaffInvoices() {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT username, month, original_name, mime, uploaded_at, payment_sent, payment_sent_at,
+                (file_data IS NOT NULL) AS has_invoice
+         FROM staff_invoices
+         ORDER BY month DESC, username ASC`
+    );
+    return r.rows.map((row) => rowToStaffInvoice(row));
+}
+
+async function getStaffInvoice(username, month, { includeData } = {}) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    const m = String(month || '').trim();
+    if (!u || !/^\d{4}-(0[1-9]|1[0-2])$/.test(m)) return null;
+    const r = await p.query(
+        includeData
+            ? 'SELECT * FROM staff_invoices WHERE username = $1 AND month = $2 LIMIT 1'
+            : `SELECT username, month, original_name, mime, uploaded_at, payment_sent, payment_sent_at,
+                      (file_data IS NOT NULL) AS has_invoice
+               FROM staff_invoices WHERE username = $1 AND month = $2 LIMIT 1`,
+        [u, m]
+    );
+    return r.rows[0] ? rowToStaffInvoice(r.rows[0], { includeData }) : null;
+}
+
+async function upsertStaffInvoiceFile(username, month, { originalName, mime, fileData }) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    const m = String(month || '').trim();
+    if (!u || !/^\d{4}-(0[1-9]|1[0-2])$/.test(m) || !fileData) return null;
+    const r = await p.query(
+        `INSERT INTO staff_invoices (username, month, original_name, mime, file_data, uploaded_at)
+         VALUES ($1, $2, $3, $4, $5, NOW())
+         ON CONFLICT (username, month) DO UPDATE SET
+            original_name = EXCLUDED.original_name,
+            mime = EXCLUDED.mime,
+            file_data = EXCLUDED.file_data,
+            uploaded_at = NOW()
+         RETURNING username, month, original_name, mime, uploaded_at, payment_sent, payment_sent_at,
+                   (file_data IS NOT NULL) AS has_invoice`,
+        [
+            u,
+            m,
+            String(originalName || 'fatura').slice(0, 200),
+            String(mime || 'application/octet-stream').slice(0, 120),
+            fileData
+        ]
+    );
+    return rowToStaffInvoice(r.rows[0]);
+}
+
+async function setStaffInvoicePaymentSent(username, month, sent) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    const m = String(month || '').trim();
+    if (!u || !/^\d{4}-(0[1-9]|1[0-2])$/.test(m)) return null;
+    const on = !!sent;
+    const r = await p.query(
+        `INSERT INTO staff_invoices (username, month, payment_sent, payment_sent_at)
+         VALUES ($1, $2, $3, CASE WHEN $3 THEN NOW() ELSE NULL END)
+         ON CONFLICT (username, month) DO UPDATE SET
+            payment_sent = EXCLUDED.payment_sent,
+            payment_sent_at = CASE WHEN EXCLUDED.payment_sent THEN NOW() ELSE NULL END
+         RETURNING username, month, original_name, mime, uploaded_at, payment_sent, payment_sent_at,
+                   (file_data IS NOT NULL) AS has_invoice`,
+        [u, m, on]
+    );
+    return rowToStaffInvoice(r.rows[0]);
+}
+
+function rowToStaffMonthAvailability(row) {
+    if (!row) return null;
+    return {
+        username: row.username,
+        month: row.month,
+        confirmed: !!row.confirmed,
+        confirmedAt: row.confirmed_at instanceof Date ? row.confirmed_at.toISOString() : row.confirmed_at,
+        reminder10Sent: !!row.reminder_10_sent,
+        reminder15Sent: !!row.reminder_15_sent
+    };
+}
+
+async function listStaffMonthAvailability(username) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return [];
+    const r = await p.query(
+        `SELECT username, month, confirmed, confirmed_at, reminder_10_sent, reminder_15_sent
+         FROM staff_month_availability WHERE username = $1
+         ORDER BY month ASC`,
+        [u]
+    );
+    return r.rows.map(rowToStaffMonthAvailability);
+}
+
+async function listAllStaffMonthAvailability() {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT username, month, confirmed, confirmed_at, reminder_10_sent, reminder_15_sent
+         FROM staff_month_availability`
+    );
+    return r.rows.map(rowToStaffMonthAvailability);
+}
+
+async function getStaffMonthAvailability(username, month) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    const m = String(month || '').trim();
+    if (!u || !/^\d{4}-(0[1-9]|1[0-2])$/.test(m)) return null;
+    const r = await p.query(
+        `SELECT username, month, confirmed, confirmed_at, reminder_10_sent, reminder_15_sent
+         FROM staff_month_availability WHERE username = $1 AND month = $2 LIMIT 1`,
+        [u, m]
+    );
+    return r.rows[0] ? rowToStaffMonthAvailability(r.rows[0]) : null;
+}
+
+async function setStaffMonthAvailabilityConfirmed(username, month, confirmed) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    const m = String(month || '').trim();
+    if (!u || !/^\d{4}-(0[1-9]|1[0-2])$/.test(m)) return null;
+    const on = !!confirmed;
+    const r = await p.query(
+        `INSERT INTO staff_month_availability (username, month, confirmed, confirmed_at)
+         VALUES ($1, $2, $3, CASE WHEN $3 THEN NOW() ELSE NULL END)
+         ON CONFLICT (username, month) DO UPDATE SET
+            confirmed = EXCLUDED.confirmed,
+            confirmed_at = CASE WHEN EXCLUDED.confirmed THEN NOW() ELSE NULL END
+         RETURNING username, month, confirmed, confirmed_at, reminder_10_sent, reminder_15_sent`,
+        [u, m, on]
+    );
+    return rowToStaffMonthAvailability(r.rows[0]);
+}
+
+async function markStaffMonthAvailabilityReminder(username, month, which) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    const m = String(month || '').trim();
+    const col = which === 15 ? 'reminder_15_sent' : 'reminder_10_sent';
+    if (!u || !/^\d{4}-(0[1-9]|1[0-2])$/.test(m)) return null;
+    const r = await p.query(
+        `INSERT INTO staff_month_availability (username, month, ${col})
+         VALUES ($1, $2, TRUE)
+         ON CONFLICT (username, month) DO UPDATE SET ${col} = TRUE
+         RETURNING username, month, confirmed, confirmed_at, reminder_10_sent, reminder_15_sent`,
+        [u, m]
+    );
+    return rowToStaffMonthAvailability(r.rows[0]);
 }
 
 async function listStaffDocuments(username) {
@@ -2115,6 +2347,17 @@ module.exports = {
     upsertStaffProfile,
     upsertStaffPhoto,
     getStaffPhoto,
+    upsertStaffIban,
+    listStaffInvoices,
+    listAllStaffInvoices,
+    getStaffInvoice,
+    upsertStaffInvoiceFile,
+    setStaffInvoicePaymentSent,
+    listStaffMonthAvailability,
+    listAllStaffMonthAvailability,
+    getStaffMonthAvailability,
+    setStaffMonthAvailabilityConfirmed,
+    markStaffMonthAvailabilityReminder,
     listStaffDocuments,
     upsertStaffDocument,
     getStaffDocument,

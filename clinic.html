@@ -16,7 +16,7 @@
     <title>Clinic Portal — Longevity Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=clinic-creds-1">
+    <link rel="stylesheet" href="/dashboard.css?v=avail-top-2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -118,6 +118,13 @@
                     </div>
                 </div>
 
+                <div class="clinic-avail-highlight" id="clinicAvailHighlight" data-clinic-panel-content="availabilities" hidden>
+                    <p class="clinic-avail-highlight-label">Your availabilities</p>
+                    <ul class="clinic-avail-highlight-list" id="clinicAvailHighlightList">
+                        <li class="clinic-avail-highlight-empty">Loading…</li>
+                    </ul>
+                </div>
+
                 <div class="admin-panel is-active" id="clinicPanelConsultations" data-clinic-panel-content="consultations">
                     <div class="dash-section">
                         <div class="dash-section-header">
@@ -151,6 +158,16 @@
                 </div>
 
                 <div class="admin-panel" id="clinicPanelAvailabilities" data-clinic-panel-content="availabilities" hidden>
+                    <div class="dash-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">Months</h2>
+                            <p class="dash-section-subtitle">Give availabilities by the 15th of the month before. Tick when that month is defined.</p>
+                        </div>
+                        <div id="clinicAvailMonths" class="clinic-avail-month-list">
+                            <p class="admin-empty-list">Loading…</p>
+                        </div>
+                        <div id="clinicAvailMonthsError" class="dash-login-error" style="display:none;" role="alert"></div>
+                    </div>
                     <div class="dash-section">
                         <div class="dash-section-header">
                             <h2 class="dash-section-title">Set availability</h2>
@@ -357,7 +374,7 @@
                         <div class="clinic-billing-card">
                             <p class="clinic-billing-brand">LON CLINIC</p>
                             <p class="clinic-billing-label">Dados de Faturação</p>
-                            <p class="clinic-billing-name">Rita Sofia Cachulo Aguiar Fonseca</p>
+                            <p class="clinic-billing-name">Rita Aguiar Fonseca</p>
                             <ul class="clinic-billing-facts">
                                 <li>NIF: 224026127</li>
                                 <li>Isenção de IVA artigo 9º</li>
@@ -386,6 +403,7 @@
                                     <strong id="clinicPayGross">—</strong>
                                 </div>
                             </div>
+                            <p class="clinic-pay-empty-week" id="clinicPayEmptyWeek" hidden>Ainda sem sessões esta semana. A sua agenda está pronta para o primeiro paciente.</p>
                             <div class="clinic-pay-calc">
                                 <p class="clinic-pay-calc-title">Calcular líquido estimado</p>
                                 <div class="clinic-pay-calc-grid">
@@ -409,22 +427,21 @@
                     </div>
                     <div class="dash-section">
                         <div class="dash-section-header">
-                            <h2 class="dash-section-title">Clinic management</h2>
-                            <p class="dash-section-subtitle">Clinic-wide settings, invitations, and team accounts</p>
+                            <h2 class="dash-section-title">Pagamentos</h2>
+                            <p class="dash-section-subtitle">IBAN, fatura mensal e estado do pagamento</p>
                         </div>
-                        <div class="clinic-link-cards" id="clinicManagementAdminLinks">
-                            <a class="clinic-link-card" href="/admin">
-                                <strong>Admin dashboard</strong>
-                                <span>Schedule, invitations, finances, professionals</span>
-                            </a>
-                            <a class="clinic-link-card" href="/diretorio">
-                                <strong>Producer directory</strong>
-                                <span>Moderate directory applications</span>
-                            </a>
+                        <form id="clinicIbanForm" class="clinic-iban-form">
+                            <div class="admin-form-group">
+                                <label for="clinicIban">IBAN</label>
+                                <input type="text" id="clinicIban" class="admin-input" maxlength="42" spellcheck="false" autocomplete="off" placeholder="PT50 0000 0000 0000 0000 0000 0">
+                            </div>
+                            <div id="clinicIbanError" class="dash-login-error" style="display:none;" role="alert"></div>
+                            <button type="submit" class="btn btn-primary btn-sm" id="clinicIbanSaveBtn">Save IBAN</button>
+                        </form>
+                        <div id="clinicPayoutMonths" class="clinic-payout-list">
+                            <p class="admin-empty-list">Loading…</p>
                         </div>
-                        <p class="dash-section-subtitle" id="clinicManagementClinicianNote" hidden>
-                            Clinic-wide settings (invitations, team logins, finances) are managed by an administrator in the admin dashboard.
-                        </p>
+                        <div id="clinicPayoutError" class="dash-login-error" style="display:none;" role="alert"></div>
                     </div>
                 </div>
 
@@ -579,7 +596,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="/lon-nav.js"></script>
-    <script src="/clinic.js?v=clinic-creds-1"></script>
+    <script src="/clinic.js?v=avail-top-2"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

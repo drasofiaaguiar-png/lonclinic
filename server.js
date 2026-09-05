@@ -377,6 +377,7 @@ function publicProfessional(pro) {
         username: pro.username,
         displayName: pro.displayName,
         doxyRoomUrl: pro.doxyRoomUrl || '',
+        email: pro.email || '',
         active: pro.active !== false,
         createdAt: pro.createdAt || null,
         updatedAt: pro.updatedAt || null
@@ -546,6 +547,8 @@ const producersStore = []; // memory fallback for organic producers directory
 const staffProfilesStore = new Map();
 const staffPhotosStore = new Map();
 const staffDocumentsStore = [];
+const staffInvoicesStore = new Map();
+const staffMonthAvailStore = new Map();
 let professionalIdSeq = 1;
 let staffDocumentIdSeq = 1;
 
@@ -614,6 +617,7 @@ function emptyStaffProfile(username) {
         ordemNumber: '',
         bio: '',
         credentials: '',
+        iban: '',
         primaryArea: '',
         secondaryArea: '',
         hasPhoto: false,
@@ -653,6 +657,7 @@ async function saveStaffProfileInternal(username, fields) {
         ordemNumber: String(fields.ordemNumber || '').trim().slice(0, 80),
         bio: String(fields.bio || '').trim().slice(0, 4000),
         credentials: String(fields.credentials || '').trim().slice(0, 2000),
+        iban: String((staffProfilesStore.get(u) || {}).iban || '').trim().slice(0, 42),
         primaryArea: String(fields.primaryArea || '').trim().slice(0, 120),
         secondaryArea: String(fields.secondaryArea || '').trim().slice(0, 120),
         hasPhoto: staffPhotosStore.has(u),
@@ -685,6 +690,163 @@ async function getStaffPhotoInternal(username) {
     const photo = staffPhotosStore.get(u);
     if (!photo || !photo.data) return null;
     return { mime: photo.mime || 'image/jpeg', data: photo.data };
+}
+
+function invoiceStoreKey(username, month) {
+    return `${String(username || '').trim().toLowerCase()}|${String(month || '').trim()}`;
+}
+
+function publicStaffInvoice(inv) {
+    if (!inv) return null;
+    return {
+        month: inv.month,
+        originalName: inv.originalName || '',
+        uploadedAt: inv.uploadedAt || null,
+        paymentSent: !!inv.paymentSent,
+        paymentSentAt: inv.paymentSentAt || null,
+        hasInvoice: !!inv.hasInvoice
+    };
+}
+
+async function saveStaffIbanInternal(username, iban) {
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return emptyStaffProfile(u);
+    if (usePersistentDb) return db.upsertStaffIban(u, iban);
+    const profile = staffProfilesStore.get(u) || emptyStaffProfile(u);
+    profile.iban = String(iban || '').trim().slice(0, 42);
+    profile.updatedAt = new Date().toISOString();
+    staffProfilesStore.set(u, profile);
+    return profile;
+}
+
+async function listStaffInvoicesInternal(username) {
+    const u = String(username || '').trim().toLowerCase();
+    if (usePersistentDb) return db.listStaffInvoices(u);
+    const out = [];
+    for (const inv of staffInvoicesStore.values()) {
+        if (inv.username === u) out.push({ ...inv, fileData: undefined });
+    }
+    return out.sort((a, b) => String(b.month).localeCompare(String(a.month)));
+}
+
+async function listAllStaffInvoicesInternal() {
+    if (usePersistentDb) return db.listAllStaffInvoices();
+    return [...staffInvoicesStore.values()]
+        .map((inv) => ({ ...inv, fileData: undefined }))
+        .sort((a, b) => String(b.month).localeCompare(String(a.month)) || String(a.username).localeCompare(String(b.username)));
+}
+
+async function getStaffInvoiceInternal(username, month, { includeData } = {}) {
+    const u = String(username || '').trim().toLowerCase();
+    const m = String(month || '').trim();
+    if (usePersistentDb) return db.getStaffInvoice(u, m, { includeData });
+    const inv = staffInvoicesStore.get(invoiceStoreKey(u, m));
+    if (!inv) return null;
+    if (includeData) return inv;
+    return { ...inv, fileData: undefined };
+}
+
+async function saveStaffInvoiceFileInternal(username, month, file) {
+    const u = String(username || '').trim().toLowerCase();
+    const m = String(month || '').trim();
+    if (usePersistentDb) return db.upsertStaffInvoiceFile(u, m, file);
+    const key = invoiceStoreKey(u, m);
+    const prev = staffInvoicesStore.get(key) || {};
+    const next = {
+        username: u,
+        month: m,
+        originalName: String(file.originalName || 'fatura').slice(0, 200),
+        mime: String(file.mime || 'application/octet-stream').slice(0, 120),
+        fileData: file.fileData,
+        uploadedAt: new Date().toISOString(),
+        paymentSent: !!prev.paymentSent,
+        paymentSentAt: prev.paymentSentAt || null,
+        hasInvoice: true
+    };
+    staffInvoicesStore.set(key, next);
+    return { ...next, fileData: undefined };
+}
+
+async function setStaffInvoicePaymentSentInternal(username, month, sent) {
+    const u = String(username || '').trim().toLowerCase();
+    const m = String(month || '').trim();
+    if (usePersistentDb) return db.setStaffInvoicePaymentSent(u, m, sent);
+    const key = invoiceStoreKey(u, m);
+    const prev = staffInvoicesStore.get(key) || {
+        username: u,
+        month: m,
+        originalName: '',
+        mime: '',
+        fileData: null,
+        uploadedAt: null,
+        hasInvoice: false
+    };
+    prev.paymentSent = !!sent;
+    prev.paymentSentAt = sent ? new Date().toISOString() : null;
+    staffInvoicesStore.set(key, prev);
+    return { ...prev, fileData: undefined };
+}
+
+function monthAvailKey(username, month) {
+    return `${String(username || '').trim().toLowerCase()}|${String(month || '').trim()}`;
+}
+
+async function listStaffMonthAvailabilityInternal(username) {
+    const u = String(username || '').trim().toLowerCase();
+    if (usePersistentDb) return db.listStaffMonthAvailability(u);
+    const out = [];
+    for (const row of staffMonthAvailStore.values()) {
+        if (row.username === u) out.push({ ...row });
+    }
+    return out.sort((a, b) => String(a.month).localeCompare(String(b.month)));
+}
+
+async function listAllStaffMonthAvailabilityInternal() {
+    if (usePersistentDb) return db.listAllStaffMonthAvailability();
+    return [...staffMonthAvailStore.values()].map((row) => ({ ...row }));
+}
+
+async function getStaffMonthAvailabilityInternal(username, month) {
+    const u = String(username || '').trim().toLowerCase();
+    const m = String(month || '').trim();
+    if (usePersistentDb) return db.getStaffMonthAvailability(u, m);
+    return staffMonthAvailStore.get(monthAvailKey(u, m)) || null;
+}
+
+async function setStaffMonthAvailabilityConfirmedInternal(username, month, confirmed) {
+    const u = String(username || '').trim().toLowerCase();
+    const m = String(month || '').trim();
+    if (usePersistentDb) return db.setStaffMonthAvailabilityConfirmed(u, m, confirmed);
+    const key = monthAvailKey(u, m);
+    const prev = staffMonthAvailStore.get(key) || {
+        username: u,
+        month: m,
+        reminder10Sent: false,
+        reminder15Sent: false
+    };
+    prev.confirmed = !!confirmed;
+    prev.confirmedAt = confirmed ? new Date().toISOString() : null;
+    staffMonthAvailStore.set(key, prev);
+    return { ...prev };
+}
+
+async function markStaffMonthAvailabilityReminderInternal(username, month, which) {
+    const u = String(username || '').trim().toLowerCase();
+    const m = String(month || '').trim();
+    if (usePersistentDb) return db.markStaffMonthAvailabilityReminder(u, m, which);
+    const key = monthAvailKey(u, m);
+    const prev = staffMonthAvailStore.get(key) || {
+        username: u,
+        month: m,
+        confirmed: false,
+        confirmedAt: null,
+        reminder10Sent: false,
+        reminder15Sent: false
+    };
+    if (which === 15) prev.reminder15Sent = true;
+    else prev.reminder10Sent = true;
+    staffMonthAvailStore.set(key, prev);
+    return { ...prev };
 }
 
 async function listStaffDocumentsInternal(username) {
@@ -4470,6 +4632,99 @@ function renewalFollowupUrl(booking, slot) {
 const AUTOMATION_JOB_INTERVAL_MS = 15 * 60 * 1000;
 let automationJobStarted = false;
 
+async function staffAvailabilityNotifyEmail(username) {
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return '';
+    if (u === String(CLINIC_USERNAME || '').trim().toLowerCase()) {
+        return String(CONTACT_EMAIL || '').trim();
+    }
+    const pro = await findProfessionalByUsernameInternal(u);
+    return String((pro && pro.email) || '').trim();
+}
+
+async function peopleForAvailabilityReminders() {
+    const people = [];
+    const seen = new Set();
+    const add = (username, displayName, email) => {
+        const u = String(username || '').trim().toLowerCase();
+        if (!u || seen.has(u)) return;
+        seen.add(u);
+        people.push({
+            username: u,
+            displayName: displayName || u,
+            email: String(email || '').trim()
+        });
+    };
+    add(CLINIC_USERNAME, CLINIC_USERNAME, CONTACT_EMAIL);
+    const list = await listProfessionalsInternal();
+    for (const p of list || []) {
+        if (p.active === false) continue;
+        add(p.username, p.displayName, p.email);
+    }
+    return people;
+}
+
+async function sendAvailabilityReminderEmail({ to, name, monthLabel, deadlineLabel, kind }) {
+    const portalUrl = `${PUBLIC_SITE_URL}/clinic-portal`;
+    const isFinal = kind === 15;
+    const subject = isFinal
+        ? `Deadline: availabilities for ${monthLabel}`
+        : `Please give your availabilities for ${monthLabel}`;
+    const greeting = name ? `Olá ${name},` : 'Olá,';
+    const body = isFinal
+        ? `This is a reminder that today is the deadline to give your availabilities for ${monthLabel} (till ${deadlineLabel}).`
+        : `Please give your availabilities for ${monthLabel} till ${deadlineLabel}.`;
+    const text = [greeting, '', body, '', `Open the clinic portal: ${portalUrl}`, '', 'Lon Clinic'].join('\n');
+    const html = `<div style="font-family:system-ui,sans-serif;line-height:1.5;color:#111">
+<p>${escapeHtml(greeting)}</p>
+<p>${escapeHtml(body)}</p>
+<p><a href="${escapeHtml(portalUrl)}">Open the clinic portal</a></p>
+<p>Lon Clinic</p>
+</div>`;
+    await deliverEmail({ from: EMAIL_FROM, to, subject, text, html });
+}
+
+async function runAvailabilityMonthReminders() {
+    const today = lisbonTodayUtcMidnight();
+    const day = today.getUTCDate();
+    if (day < 10) return;
+    const target = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() + 1, 1));
+    const y = target.getUTCFullYear();
+    const mo = target.getUTCMonth();
+    const monthKey = `${y}-${pad2Interview(mo + 1)}`;
+    const monthName = PAYOUT_MONTH_NAMES_PT[mo];
+    const monthLabel = `${monthName} ${y}`;
+    const prior = new Date(Date.UTC(y, mo - 1, 1));
+    const priorName = PAYOUT_MONTH_NAMES_PT[prior.getUTCMonth()];
+    const deadlineLabel = `15 of ${priorName}`;
+    const kind = day >= 15 ? 15 : 10;
+    const people = await peopleForAvailabilityReminders();
+    for (const person of people) {
+        const row = await getStaffMonthAvailabilityInternal(person.username, monthKey);
+        if (row && row.confirmed) continue;
+        if (kind === 10 && row && row.reminder10Sent) continue;
+        if (kind === 15 && row && row.reminder15Sent) continue;
+        const to = person.email || (await staffAvailabilityNotifyEmail(person.username));
+        if (!to || !to.includes('@')) {
+            console.log(`   ⚠️  Availability reminder skipped (no email): ${person.username} ${monthKey}`);
+            continue;
+        }
+        try {
+            await sendAvailabilityReminderEmail({
+                to,
+                name: person.displayName,
+                monthLabel,
+                deadlineLabel,
+                kind
+            });
+            await markStaffMonthAvailabilityReminderInternal(person.username, monthKey, kind);
+            console.log(`   ✉️  Availability reminder (${kind}) sent to ${to} for ${monthKey}`);
+        } catch (err) {
+            console.error(`   ❌ Availability reminder failed (${person.username} ${monthKey}):`, err.message);
+        }
+    }
+}
+
 async function runAutomationJobs() {
     await expireStalePendingInvitations();
     if (!isEmailConfigured) {
@@ -4503,6 +4758,8 @@ async function runAutomationJobs() {
             return Number.isFinite(ms) && ms > now && ms <= h1;
         });
         const winFu = listFu.filter((b) => b.consultationCompleted === true && !b.followupSent && !b.cancelled);
+
+        await runAvailabilityMonthReminders();
 
         if (win24.length > 0) {
             console.log(`   ⏰ 24h reminders: ${win24.length} booking(s)`);
@@ -8176,8 +8433,16 @@ app.post('/api/admin/professionals', requireAdmin, express.json(), async (req, r
             passwordHash,
             displayName,
             doxyRoomUrl: doxy.url,
+            email: '',
             active: body.active !== false
         };
+        const emailRaw = String(body.email || '').trim().toLowerCase();
+        if (emailRaw) {
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRaw) || emailRaw.length > 320) {
+                return res.status(400).json({ error: 'Enter a valid email' });
+            }
+            record.email = emailRaw;
+        }
         let created;
         if (usePersistentDb) {
             created = await db.insertProfessional(record);
@@ -8216,6 +8481,13 @@ app.patch('/api/admin/professionals/:id', requireAdmin, express.json(), async (r
             const doxy = validateProfessionalDoxyUrl(body.doxyRoomUrl);
             if (doxy.error) return res.status(400).json({ error: doxy.error });
             fields.doxyRoomUrl = doxy.url;
+        }
+        if (Object.prototype.hasOwnProperty.call(body, 'email')) {
+            const emailRaw = String(body.email || '').trim().toLowerCase();
+            if (emailRaw && (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRaw) || emailRaw.length > 320)) {
+                return res.status(400).json({ error: 'Enter a valid email' });
+            }
+            fields.email = emailRaw;
         }
         if (Object.prototype.hasOwnProperty.call(body, 'active')) {
             fields.active = body.active === true || body.active === 'true' || body.active === 1;
@@ -8380,6 +8652,335 @@ app.get('/api/clinic/billing-summary', requireAuth, async (req, res) => {
     } catch (err) {
         console.error('GET /api/clinic/billing-summary:', err.message);
         res.status(500).json({ error: 'Failed to load billing summary' });
+    }
+});
+
+const PAYOUT_MONTH_NAMES_PT = [
+    'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+    'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+];
+
+function isPayoutMonthKey(raw) {
+    return /^\d{4}-(0[1-9]|1[0-2])$/.test(String(raw || ''));
+}
+
+function normalizeIbanInput(raw) {
+    const s = String(raw || '').toUpperCase().replace(/[\s-]+/g, '');
+    if (!s) return { iban: '' };
+    if (!/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/.test(s)) {
+        return { error: 'Enter a valid IBAN' };
+    }
+    return { iban: s.slice(0, 34) };
+}
+
+function payoutDueIso(year, monthIndex0) {
+    return isoFromUtcMidnight(new Date(Date.UTC(year, monthIndex0 + 2, 0)));
+}
+
+function formatPayoutDueLabel(dueIso, workYear) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dueIso || ''));
+    if (!m) return '—';
+    const y = Number(m[1]);
+    const monthName = PAYOUT_MONTH_NAMES_PT[Number(m[2]) - 1] || '';
+    const day = Number(m[3]);
+    if (y !== workYear) return `${day} de ${monthName} de ${y}`;
+    return `${day} de ${monthName}`;
+}
+
+function capitalizePtMonth(name) {
+    const s = String(name || '');
+    return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+}
+
+function formatPayoutEuroLabel(cents) {
+    const n = (Number(cents) || 0) / 100;
+    const formatted = n.toLocaleString('pt-PT', {
+        minimumFractionDigits: n % 1 === 0 ? 0 : 2,
+        maximumFractionDigits: 2
+    });
+    return `${formatted} €`;
+}
+
+function availabilityDeadlineIso(year, monthIndex0) {
+    return isoFromUtcMidnight(new Date(Date.UTC(year, monthIndex0 - 1, 15)));
+}
+
+function buildAvailabilityMonthRows(confirmations) {
+    const byMonth = new Map();
+    for (const row of confirmations || []) {
+        if (row && row.month) byMonth.set(row.month, row);
+    }
+    const today = lisbonTodayUtcMidnight();
+    const rows = [];
+    for (let i = 0; i < 6; i++) {
+        const start = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() + i, 1));
+        const y = start.getUTCFullYear();
+        const mo = start.getUTCMonth();
+        const key = `${y}-${pad2Interview(mo + 1)}`;
+        const name = PAYOUT_MONTH_NAMES_PT[mo];
+        const label = `${name} ${y}`;
+        const confirmed = !!(byMonth.get(key) && byMonth.get(key).confirmed);
+        const prior = new Date(Date.UTC(y, mo - 1, 1));
+        const priorName = PAYOUT_MONTH_NAMES_PT[prior.getUTCMonth()];
+        rows.push({
+            month: key,
+            label,
+            confirmed,
+            deadlineIso: availabilityDeadlineIso(y, mo),
+            lineLabel: confirmed
+                ? `${label}: availabilities defined`
+                : `${label}: give your availabilities till 15 of ${priorName}`
+        });
+    }
+    return rows;
+}
+
+function buildPayoutMonthRows(bookings, invoices) {
+    const byMonth = new Map();
+    for (const inv of invoices || []) {
+        if (inv && inv.month) byMonth.set(inv.month, inv);
+    }
+    const today = lisbonTodayUtcMidnight();
+    const slotMinutes = Number(scheduleStore.slotDuration) || 30;
+    const rows = [];
+    for (let i = 0; i < 12; i++) {
+        const start = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() - i, 1));
+        const y = start.getUTCFullYear();
+        const mo = start.getUTCMonth();
+        const key = `${y}-${pad2Interview(mo + 1)}`;
+        const end = new Date(Date.UTC(y, mo + 1, 0));
+        const summary = summarizeBillingPeriod(
+            bookings,
+            isoFromUtcMidnight(start),
+            isoFromUtcMidnight(end),
+            slotMinutes
+        );
+        const dueIso = payoutDueIso(y, mo);
+        const inv = byMonth.get(key);
+        const monthName = PAYOUT_MONTH_NAMES_PT[mo];
+        const totalLabel = formatPayoutEuroLabel(summary.paidCents);
+        const dueLabel = formatPayoutDueLabel(dueIso, y);
+        rows.push({
+            month: key,
+            label: capitalizePtMonth(monthName),
+            year: y,
+            totalCents: summary.paidCents,
+            dueIso,
+            dueLabel,
+            lineLabel: `${capitalizePtMonth(monthName)}: total ${totalLabel} — pagamento até ${dueLabel}`,
+            hasInvoice: !!(inv && inv.hasInvoice),
+            invoiceName: (inv && inv.originalName) || '',
+            invoiceUploadedAt: (inv && inv.uploadedAt) || null,
+            paymentSent: !!(inv && inv.paymentSent),
+            paymentSentAt: (inv && inv.paymentSentAt) || null
+        });
+    }
+    return rows;
+}
+
+async function bookingsForPayouts() {
+    if (usePersistentDb) return db.findAllBookings();
+    return [...bookingsStore];
+}
+
+function sendStaffInvoiceFile(res, inv) {
+    if (!inv || !inv.fileData) return false;
+    const filename = String(inv.originalName || 'fatura').replace(/[\r\n"]/g, '');
+    res.setHeader('Content-Type', inv.mime || 'application/octet-stream');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    res.send(Buffer.isBuffer(inv.fileData) ? inv.fileData : Buffer.from(inv.fileData));
+    return true;
+}
+
+app.get('/api/clinic/payouts', requireAuth, async (req, res) => {
+    try {
+        const username = staffSessionUsername(req);
+        const profile = await getStaffProfileInternal(username);
+        let bookings = await bookingsForPayouts();
+        bookings = filterBookingsForStaff(bookings, req);
+        const invoices = await listStaffInvoicesInternal(username);
+        res.json({
+            iban: profile.iban || '',
+            months: buildPayoutMonthRows(bookings, invoices)
+        });
+    } catch (err) {
+        console.error('GET /api/clinic/payouts:', err.message);
+        res.status(500).json({ error: 'Failed to load payouts' });
+    }
+});
+
+app.put('/api/clinic/payouts/iban', requireAuth, rateLimitStaffProfile, express.json(), async (req, res) => {
+    try {
+        const parsed = normalizeIbanInput((req.body || {}).iban);
+        if (parsed.error) return res.status(400).json({ error: parsed.error });
+        const username = staffSessionUsername(req);
+        const profile = await saveStaffIbanInternal(username, parsed.iban);
+        res.json({ ok: true, iban: (profile && profile.iban) || parsed.iban });
+    } catch (err) {
+        console.error('PUT /api/clinic/payouts/iban:', err.message);
+        res.status(500).json({ error: 'Failed to save IBAN' });
+    }
+});
+
+app.get('/api/clinic/payouts/:month/invoice', requireAuth, async (req, res) => {
+    try {
+        const month = String(req.params.month || '').trim();
+        if (!isPayoutMonthKey(month)) return res.status(400).json({ error: 'Invalid month' });
+        const username = staffSessionUsername(req);
+        const inv = await getStaffInvoiceInternal(username, month, { includeData: true });
+        if (!sendStaffInvoiceFile(res, inv)) {
+            return res.status(404).json({ error: 'No fatura uploaded' });
+        }
+    } catch (err) {
+        console.error('GET /api/clinic/payouts invoice:', err.message);
+        res.status(500).json({ error: 'Failed to download fatura' });
+    }
+});
+
+app.post('/api/clinic/payouts/:month/invoice', requireAuth, rateLimitStaffProfile, (req, res) => {
+    const month = String(req.params.month || '').trim();
+    if (!isPayoutMonthKey(month)) {
+        return res.status(400).json({ error: 'Invalid month' });
+    }
+    uploadStaffDocument.single('file')(req, res, async (uploadErr) => {
+        if (uploadErr instanceof multer.MulterError) {
+            if (uploadErr.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({ error: 'Fatura must be 8MB or smaller.' });
+            }
+            return res.status(400).json({ error: 'Could not process the file.' });
+        }
+        if (uploadErr) {
+            return res.status(400).json({ error: uploadErr.message || 'Could not process the file.' });
+        }
+        try {
+            if (!req.file || !req.file.buffer) {
+                return res.status(400).json({ error: 'Choose a fatura to upload' });
+            }
+            const username = staffSessionUsername(req);
+            const saved = await saveStaffInvoiceFileInternal(username, month, {
+                originalName: req.file.originalname || 'fatura',
+                mime: req.file.mimetype || 'application/octet-stream',
+                fileData: req.file.buffer
+            });
+            res.json({ ok: true, invoice: publicStaffInvoice(saved) });
+        } catch (err) {
+            console.error('POST /api/clinic/payouts invoice:', err.message);
+            res.status(500).json({ error: 'Failed to save fatura' });
+        }
+    });
+});
+
+app.get('/api/clinic/availability-months', requireAuth, async (req, res) => {
+    try {
+        const username = staffSessionUsername(req);
+        const rows = await listStaffMonthAvailabilityInternal(username);
+        res.json({ months: buildAvailabilityMonthRows(rows) });
+    } catch (err) {
+        console.error('GET /api/clinic/availability-months:', err.message);
+        res.status(500).json({ error: 'Failed to load availability months' });
+    }
+});
+
+app.put('/api/clinic/availability-months/:month', requireAuth, rateLimitStaffProfile, express.json(), async (req, res) => {
+    try {
+        const month = String(req.params.month || '').trim();
+        if (!isPayoutMonthKey(month)) return res.status(400).json({ error: 'Invalid month' });
+        const username = staffSessionUsername(req);
+        const confirmed = !!(req.body && req.body.confirmed);
+        const saved = await setStaffMonthAvailabilityConfirmedInternal(username, month, confirmed);
+        const rows = await listStaffMonthAvailabilityInternal(username);
+        res.json({ ok: true, month: saved && saved.month, confirmed: !!(saved && saved.confirmed), months: buildAvailabilityMonthRows(rows) });
+    } catch (err) {
+        console.error('PUT /api/clinic/availability-months:', err.message);
+        res.status(500).json({ error: 'Failed to save availability month' });
+    }
+});
+
+app.get('/api/admin/payouts', requireAdmin, async (req, res) => {
+    try {
+        const bookings = await bookingsForPayouts();
+        const invoices = await listAllStaffInvoicesInternal();
+        const byUser = new Map();
+        for (const inv of invoices) {
+            if (!inv || !inv.username) continue;
+            if (!byUser.has(inv.username)) byUser.set(inv.username, []);
+            byUser.get(inv.username).push(inv);
+        }
+        const people = [];
+        const seen = new Set();
+        const addPerson = (username, displayName) => {
+            const u = String(username || '').trim().toLowerCase();
+            if (!u || seen.has(u)) return;
+            seen.add(u);
+            people.push({ username: u, displayName: displayName || u });
+        };
+        addPerson(CLINIC_USERNAME, CLINIC_USERNAME);
+        const professionals = await listProfessionalsInternal();
+        for (const p of professionals || []) {
+            addPerson(p.username, p.displayName || p.username);
+        }
+        for (const u of byUser.keys()) addPerson(u, u);
+
+        const staff = [];
+        for (const person of people) {
+            const fakeReq = person.username === String(CLINIC_USERNAME || '').trim().toLowerCase()
+                ? req
+                : {
+                    session: {
+                        clinicAuthenticated: true,
+                        clinicRole: 'clinician',
+                        clinicUsername: person.username,
+                        clinicDisplayName: person.displayName
+                    }
+                };
+            const filtered = filterBookingsForStaff(bookings, fakeReq);
+            const profile = await getStaffProfileInternal(person.username);
+            staff.push({
+                username: person.username,
+                displayName: person.displayName,
+                iban: (profile && profile.iban) || '',
+                months: buildPayoutMonthRows(filtered, byUser.get(person.username) || [])
+            });
+        }
+        res.json({ staff });
+    } catch (err) {
+        console.error('GET /api/admin/payouts:', err.message);
+        res.status(500).json({ error: 'Failed to load payouts' });
+    }
+});
+
+app.get('/api/admin/payouts/:username/:month/invoice', requireAdmin, async (req, res) => {
+    try {
+        const username = String(req.params.username || '').trim().toLowerCase();
+        const month = String(req.params.month || '').trim();
+        if (!username || !isPayoutMonthKey(month)) {
+            return res.status(400).json({ error: 'Invalid staff or month' });
+        }
+        const inv = await getStaffInvoiceInternal(username, month, { includeData: true });
+        if (!sendStaffInvoiceFile(res, inv)) {
+            return res.status(404).json({ error: 'No fatura uploaded' });
+        }
+    } catch (err) {
+        console.error('GET /api/admin/payouts invoice:', err.message);
+        res.status(500).json({ error: 'Failed to download fatura' });
+    }
+});
+
+app.patch('/api/admin/payouts/:username/:month', requireAdmin, express.json(), async (req, res) => {
+    try {
+        const username = String(req.params.username || '').trim().toLowerCase();
+        const month = String(req.params.month || '').trim();
+        if (!username || !isPayoutMonthKey(month)) {
+            return res.status(400).json({ error: 'Invalid staff or month' });
+        }
+        const sent = !!(req.body && req.body.paymentSent);
+        const saved = await setStaffInvoicePaymentSentInternal(username, month, sent);
+        res.json({ ok: true, invoice: publicStaffInvoice(saved) });
+    } catch (err) {
+        console.error('PATCH /api/admin/payouts:', err.message);
+        res.status(500).json({ error: 'Failed to update payment' });
     }
 });
 
