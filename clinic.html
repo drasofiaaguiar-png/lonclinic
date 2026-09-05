@@ -16,7 +16,7 @@
     <title>Clinic Portal — Longevity Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=clinic-profile-4">
+    <link rel="stylesheet" href="/dashboard.css?v=clinic-avail-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -110,6 +110,7 @@
                         <p class="dash-email" id="clinicUserInfo">All consultations and clinical notes</p>
                     </div>
                     <div class="dash-header-right">
+                        <button class="btn btn-primary" id="clinicSaveScheduleBtn" style="display:none;">Save availability</button>
                         <button class="btn btn-primary" id="refreshBtn">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85 3.7L22 10M3.51 15a9 9 0 0114.85-3.7L22 14"/></svg>
                             Refresh
@@ -152,36 +153,103 @@
                 <div class="admin-panel" id="clinicPanelAvailabilities" data-clinic-panel-content="availabilities" hidden>
                     <div class="dash-section">
                         <div class="dash-section-header">
-                            <h2 class="dash-section-title">Weekly hours</h2>
-                            <p class="dash-section-subtitle" id="clinicTimezoneLabel">Clinic booking hours in Europe/Lisbon</p>
+                            <h2 class="dash-section-title">Set availability</h2>
+                            <p class="dash-section-subtitle" id="clinicTimezoneLabel">Choose weekly hours, or specific days of the month</p>
                         </div>
-                        <div class="clinic-hours-list" id="clinicHoursList">
-                            <p class="admin-empty-list">Loading hours…</p>
+                        <div class="admin-schedule-filters clinic-avail-modes" role="group" aria-label="Availability type">
+                            <button type="button" class="btn btn-outline btn-sm is-active" data-avail-mode="weekly">Weekly hours</button>
+                            <button type="button" class="btn btn-outline btn-sm" data-avail-mode="month">Day of the month</button>
                         </div>
                     </div>
-                    <div class="dash-section">
-                        <div class="dash-section-header">
-                            <h2 class="dash-section-title">Slot settings</h2>
-                            <p class="dash-section-subtitle">How online booking offers time slots</p>
+
+                    <div id="clinicAvailWeekly">
+                        <div class="dash-section">
+                            <div class="dash-section-header">
+                                <h2 class="dash-section-title">Weekly hours</h2>
+                                <p class="dash-section-subtitle">Repeats every week for online booking</p>
+                            </div>
+                            <div class="admin-schedule-grid" id="clinicWorkingHoursGrid"></div>
                         </div>
-                        <p class="clinic-meta-line">Appointment duration: <strong id="clinicSlotDurationLabel">—</strong></p>
-                        <label class="clinic-toggle-label" for="smartSlotGroupingToggle" id="clinicSmartSlotLabel">
-                            <input type="checkbox" id="smartSlotGroupingToggle" checked />
-                            <span>Smart slot grouping</span>
-                        </label>
-                        <p class="dash-section-subtitle" style="margin-top: 0.75rem; max-width: 42rem;">
-                            <strong>On (default):</strong> an empty day shows only the first and last slot; after bookings exist, only the slot
-                            immediately before and after the booked block is offered.
-                            <strong>Off:</strong> patients see every free slot for the day.
-                        </p>
+                        <div class="dash-section">
+                            <div class="dash-section-header">
+                                <h2 class="dash-section-title">Slot settings</h2>
+                                <p class="dash-section-subtitle">How online booking offers time slots</p>
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="clinicSlotDuration">Appointment duration</label>
+                                <select id="clinicSlotDuration" class="admin-select">
+                                    <option value="15">15 minutes</option>
+                                    <option value="30">30 minutes</option>
+                                    <option value="45">45 minutes</option>
+                                    <option value="60">60 minutes</option>
+                                </select>
+                            </div>
+                            <label class="clinic-toggle-label" for="smartSlotGroupingToggle" id="clinicSmartSlotLabel">
+                                <input type="checkbox" id="smartSlotGroupingToggle" checked />
+                                <span>Smart slot grouping</span>
+                            </label>
+                            <p class="dash-section-subtitle" style="margin-top: 0.75rem; max-width: 42rem;">
+                                <strong>On (default):</strong> an empty day shows only the first and last slot; after bookings exist, only the slot
+                                immediately before and after the booked block is offered.
+                                <strong>Off:</strong> patients see every free slot for the day.
+                            </p>
+                        </div>
                     </div>
-                    <div class="dash-section">
-                        <div class="dash-section-header">
-                            <h2 class="dash-section-title">Blocked dates</h2>
-                            <p class="dash-section-subtitle">Days closed for online booking</p>
+
+                    <div id="clinicAvailMonth" hidden>
+                        <div class="dash-section">
+                            <div class="dash-section-header">
+                                <h2 class="dash-section-title">Days of the month</h2>
+                                <p class="dash-section-subtitle">Select dates and set hours. These override the weekly schedule for that day. Blocked dates still take priority.</p>
+                            </div>
+                            <div class="admin-override-cal-header">
+                                <button type="button" class="btn btn-outline btn-sm" id="clinicOverrideCalPrev" aria-label="Previous month">←</button>
+                                <span class="admin-override-cal-title" id="clinicOverrideCalMonthLabel"></span>
+                                <button type="button" class="btn btn-outline btn-sm" id="clinicOverrideCalNext" aria-label="Next month">→</button>
+                            </div>
+                            <div class="admin-override-weekdays" aria-hidden="true">
+                                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                            </div>
+                            <div class="admin-override-cal-grid" id="clinicOverrideCalGrid"></div>
+                            <div class="admin-override-bulk">
+                                <div class="admin-override-bulk-row">
+                                    <div class="admin-time-group admin-override-time">
+                                        <label for="clinicBulkOverrideStart">Start</label>
+                                        <input type="time" id="clinicBulkOverrideStart" class="admin-time-input" value="07:00">
+                                    </div>
+                                    <div class="admin-time-group admin-override-time">
+                                        <label for="clinicBulkOverrideEnd">End</label>
+                                        <input type="time" id="clinicBulkOverrideEnd" class="admin-time-input" value="17:00">
+                                    </div>
+                                    <label class="admin-override-open-label">
+                                        <input type="checkbox" id="clinicBulkOverrideEnabled" checked>
+                                        <span>Open for bookings</span>
+                                    </label>
+                                </div>
+                                <div class="admin-override-bulk-actions">
+                                    <button type="button" class="btn btn-primary btn-sm" id="clinicBulkOverrideApply">Apply to selected days</button>
+                                    <button type="button" class="btn btn-outline btn-sm" id="clinicBulkOverrideRemove">Remove override on selected</button>
+                                    <button type="button" class="btn btn-outline btn-sm" id="clinicBulkOverrideSelectWeekdays">Weekdays this month</button>
+                                    <button type="button" class="btn btn-outline btn-sm" id="clinicBulkOverrideClearSelection">Clear selection</button>
+                                </div>
+                            </div>
+                            <p class="admin-override-hint"><strong>Tip:</strong> click days to multi-select. Orange mark = already has a custom schedule.</p>
+                            <div class="admin-blocked-list" id="clinicDayOverridesList"></div>
                         </div>
-                        <div class="admin-blocked-list" id="clinicBlockedDatesList">
-                            <p class="admin-empty-list">Loading…</p>
+                        <div class="dash-section">
+                            <div class="dash-section-header">
+                                <h2 class="dash-section-title">Blocked dates</h2>
+                                <p class="dash-section-subtitle">Close a whole day for online booking</p>
+                            </div>
+                            <div class="admin-form-group">
+                                <div class="admin-input-group">
+                                    <input type="date" id="clinicBlockDateInput" class="admin-input">
+                                    <button type="button" class="btn btn-outline btn-sm" id="clinicAddBlockDateBtn">Add date</button>
+                                </div>
+                            </div>
+                            <div class="admin-blocked-list" id="clinicBlockedDatesList">
+                                <p class="admin-empty-list">Loading…</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -438,7 +506,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="/lon-nav.js"></script>
-    <script src="/clinic.js?v=clinic-profile-4"></script>
+    <script src="/clinic.js?v=clinic-avail-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

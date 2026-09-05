@@ -1044,6 +1044,40 @@ function normalizeDayOverrides(raw) {
     return Array.from(byDate.values()).sort((a, b) => a.date.localeCompare(b.date));
 }
 
+function applySchedulePatch(body) {
+    const {
+        workingHours,
+        slotDuration,
+        blockedDates,
+        blockedTimeSlots,
+        dayOverrides,
+        timezone,
+        smartSlotGrouping
+    } = body || {};
+
+    if (workingHours) {
+        scheduleStore.workingHours = { ...scheduleStore.workingHours, ...workingHours };
+    }
+    if (slotDuration !== undefined) {
+        scheduleStore.slotDuration = slotDuration;
+    }
+    if (blockedDates !== undefined) {
+        scheduleStore.blockedDates = blockedDates;
+    }
+    if (blockedTimeSlots !== undefined) {
+        scheduleStore.blockedTimeSlots = blockedTimeSlots;
+    }
+    if (dayOverrides !== undefined) {
+        scheduleStore.dayOverrides = normalizeDayOverrides(dayOverrides);
+    }
+    if (timezone) {
+        scheduleStore.timezone = timezone;
+    }
+    if (typeof smartSlotGrouping === 'boolean') {
+        scheduleStore.smartSlotGrouping = smartSlotGrouping;
+    }
+}
+
 function timeToMinutes(hhmm) {
     const m = /^(\d{1,2}):(\d{2})$/.exec(String(hhmm || '').trim());
     if (!m) return null;
@@ -9115,45 +9149,27 @@ app.get('/api/admin/schedule', requireAdmin, (req, res) => {
 
 // ─── API: Admin — Update schedule settings ───
 app.post('/api/admin/schedule', requireAdmin, express.json(), async (req, res) => {
-    const {
-        workingHours,
-        slotDuration,
-        blockedDates,
-        blockedTimeSlots,
-        dayOverrides,
-        timezone,
-        smartSlotGrouping
-    } = req.body;
-
-    if (workingHours) {
-        scheduleStore.workingHours = { ...scheduleStore.workingHours, ...workingHours };
-    }
-    if (slotDuration !== undefined) {
-        scheduleStore.slotDuration = slotDuration;
-    }
-    if (blockedDates !== undefined) {
-        scheduleStore.blockedDates = blockedDates;
-    }
-    if (blockedTimeSlots !== undefined) {
-        scheduleStore.blockedTimeSlots = blockedTimeSlots;
-    }
-    if (dayOverrides !== undefined) {
-        scheduleStore.dayOverrides = normalizeDayOverrides(dayOverrides);
-    }
-    if (timezone) {
-        scheduleStore.timezone = timezone;
-    }
-    if (typeof smartSlotGrouping === 'boolean') {
-        scheduleStore.smartSlotGrouping = smartSlotGrouping;
-    }
-
-    scheduleStore.updatedAt = new Date().toISOString();
     try {
+        applySchedulePatch(req.body || {});
+        scheduleStore.updatedAt = new Date().toISOString();
         await persistScheduleStore();
         console.log('   📅 Schedule settings updated');
         res.json({ success: true, schedule: scheduleStore });
     } catch (err) {
         console.error('POST /api/admin/schedule:', err.message);
+        res.status(500).json({ error: 'Failed to persist schedule' });
+    }
+});
+
+app.post('/api/clinic/schedule', requireAuth, express.json(), async (req, res) => {
+    try {
+        applySchedulePatch(req.body || {});
+        scheduleStore.updatedAt = new Date().toISOString();
+        await persistScheduleStore();
+        console.log('   📅 Clinic schedule settings updated');
+        res.json({ success: true, schedule: scheduleStore });
+    } catch (err) {
+        console.error('POST /api/clinic/schedule:', err.message);
         res.status(500).json({ error: 'Failed to persist schedule' });
     }
 });

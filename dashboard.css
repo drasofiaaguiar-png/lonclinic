@@ -2275,6 +2275,16 @@ a.admin-nav-link {
     gap: 8px;
 }
 
+.clinic-avail-modes {
+    margin-top: 12px;
+}
+
+.clinic-avail-modes .btn.is-active {
+    background: var(--text-primary);
+    color: #fff;
+    border-color: var(--text-primary);
+}
+
 .admin-filter-chip {
     display: inline-flex;
     align-items: center;
