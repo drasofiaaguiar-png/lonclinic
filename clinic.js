@@ -82,14 +82,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicPatientsBody = document.getElementById('clinicPatientsBody');
     const clinicManagementAdminLinks = document.getElementById('clinicManagementAdminLinks');
     const clinicManagementClinicianNote = document.getElementById('clinicManagementClinicianNote');
+    const clinicPayRange = document.getElementById('clinicPayRange');
+    const clinicPayHours = document.getElementById('clinicPayHours');
+    const clinicPayPatients = document.getElementById('clinicPayPatients');
+    const clinicPayGross = document.getElementById('clinicPayGross');
+    const clinicPayIrs = document.getElementById('clinicPayIrs');
+    const clinicPaySs = document.getElementById('clinicPaySs');
+    const clinicPayNet = document.getElementById('clinicPayNet');
     const clinicProfileName = document.getElementById('clinicProfileName');
     const clinicProfileUsername = document.getElementById('clinicProfileUsername');
     const clinicProfileRole = document.getElementById('clinicProfileRole');
     const clinicProfileDoxy = document.getElementById('clinicProfileDoxy');
+    const clinicProfilePhoto = document.getElementById('clinicProfilePhoto');
+    const clinicProfilePhotoPlaceholder = document.getElementById('clinicProfilePhotoPlaceholder');
+    const clinicProfilePhotoInput = document.getElementById('clinicProfilePhotoInput');
+    const clinicProfilePhotoBtn = document.getElementById('clinicProfilePhotoBtn');
+    const clinicPhotoError = document.getElementById('clinicPhotoError');
     const clinicProfession = document.getElementById('clinicProfession');
     const clinicOrdemLabel = document.getElementById('clinicOrdemLabel');
     const clinicOrdemNumber = document.getElementById('clinicOrdemNumber');
     const clinicBio = document.getElementById('clinicBio');
+    const clinicCredentials = document.getElementById('clinicCredentials');
     const clinicPrimaryArea = document.getElementById('clinicPrimaryArea');
     const clinicSecondaryArea = document.getElementById('clinicSecondaryArea');
     const clinicProfileForm = document.getElementById('clinicProfileForm');
@@ -105,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         patients: { title: 'Patients', subtitle: 'People attached to your consultations' },
         resources: { title: 'Resources', subtitle: 'Video room and everyday clinic links' },
         management: { title: 'Management', subtitle: 'Clinic-wide settings and admin tools' },
-        profile: { title: 'Profile', subtitle: 'Ordem, bio, clinical areas and documents' }
+        profile: { title: 'Profile', subtitle: 'Ordem, bio, credentials, clinical areas and documents' }
     };
 
     const WEEKDAYS = [
@@ -123,7 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let staffDisplayName = '';
     let clinicDoxyPatientUrl = '';
     let activeClinicPanel = 'consultations';
-    let bookingsCache = [];
+    let clinicBillingSummary = null;
+    let clinicPayPeriod = 'week';
+    const CLINIC_PAY_IRS_KEY = 'lonClinicPayIrsPct';
+    const CLINIC_PAY_SS_KEY = 'lonClinicPaySsPct';
     let clinicScheduleData = null;
     let clinicAvailMode = 'weekly';
     let clinicOverrideCalYear = null;
@@ -189,6 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (panelId === 'availabilities') loadScheduleView();
         if (panelId === 'resources' || panelId === 'profile') loadDoxyRoom();
         if (panelId === 'profile') loadClinicProfile();
+        if (panelId === 'management') loadClinicBillingSummary();
     }
 
     // ─── Show Login ───
@@ -814,6 +831,101 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/"/g, '&quot;');
     }
 
+    function formatClinicPayHours(hours) {
+        const n = Number(hours) || 0;
+        if (Math.abs(n - Math.round(n)) < 0.05) return `${Math.round(n)}h`;
+        return `${n.toFixed(1).replace('.', ',')}h`;
+    }
+
+    function formatClinicPayEuro(cents) {
+        const n = (Number(cents) || 0) / 100;
+        const formatted = n.toLocaleString('pt-PT', { minimumFractionDigits: n % 1 === 0 ? 0 : 2, maximumFractionDigits: 2 });
+        return `${formatted} €`;
+    }
+
+    function parseClinicPayPct(el) {
+        if (!el) return null;
+        const raw = String(el.value || '').trim().replace(',', '.');
+        if (!raw) return null;
+        const n = Number(raw);
+        if (!Number.isFinite(n) || n < 0) return null;
+        return n;
+    }
+
+    function updateClinicPayNet() {
+        if (!clinicPayNet || !clinicBillingSummary) return;
+        const period = clinicBillingSummary[clinicPayPeriod] || clinicBillingSummary.week;
+        const gross = Number(period && period.paidCents) || 0;
+        const irs = parseClinicPayPct(clinicPayIrs);
+        const ss = parseClinicPayPct(clinicPaySs);
+        if (irs == null && ss == null) {
+            clinicPayNet.hidden = true;
+            return;
+        }
+        const irsAmt = Math.round(gross * ((irs || 0) / 100));
+        const ssAmt = Math.round(gross * ((ss || 0) / 100));
+        const net = Math.max(0, gross - irsAmt - ssAmt);
+        clinicPayNet.hidden = false;
+        clinicPayNet.textContent = `Líquido estimado: ${formatClinicPayEuro(net)}`;
+    }
+
+    function renderClinicPayCard() {
+        if (!clinicBillingSummary) return;
+        const period = clinicBillingSummary[clinicPayPeriod] || clinicBillingSummary.week || {};
+        if (clinicPayRange) clinicPayRange.textContent = period.rangeLabel || '—';
+        if (clinicPayHours) clinicPayHours.textContent = formatClinicPayHours(period.hours);
+        if (clinicPayPatients) clinicPayPatients.textContent = String(period.patients || 0);
+        if (clinicPayGross) clinicPayGross.textContent = formatClinicPayEuro(period.paidCents);
+        document.querySelectorAll('[data-pay-period]').forEach((btn) => {
+            btn.classList.toggle('is-active', btn.getAttribute('data-pay-period') === clinicPayPeriod);
+        });
+        updateClinicPayNet();
+    }
+
+    async function loadClinicBillingSummary() {
+        if (!clinicPayGross) return;
+        try {
+            const res = await fetch('/api/clinic/billing-summary');
+            if (res.status === 401) {
+                showLogin();
+                return;
+            }
+            if (!res.ok) throw new Error('Failed to load billing summary');
+            clinicBillingSummary = await res.json();
+            renderClinicPayCard();
+        } catch (err) {
+            console.error('Failed to load billing summary:', err);
+            if (clinicPayHours) clinicPayHours.textContent = '—';
+            if (clinicPayPatients) clinicPayPatients.textContent = '—';
+            if (clinicPayGross) clinicPayGross.textContent = '—';
+        }
+    }
+
+    document.querySelectorAll('[data-pay-period]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            clinicPayPeriod = btn.getAttribute('data-pay-period') === 'month' ? 'month' : 'week';
+            renderClinicPayCard();
+        });
+    });
+
+    try {
+        const savedIrs = localStorage.getItem(CLINIC_PAY_IRS_KEY);
+        const savedSs = localStorage.getItem(CLINIC_PAY_SS_KEY);
+        if (clinicPayIrs && savedIrs != null) clinicPayIrs.value = savedIrs;
+        if (clinicPaySs && savedSs != null) clinicPaySs.value = savedSs;
+    } catch (e) { /* ignore */ }
+
+    [clinicPayIrs, clinicPaySs].forEach((el) => {
+        if (!el) return;
+        el.addEventListener('input', () => {
+            try {
+                if (el === clinicPayIrs) localStorage.setItem(CLINIC_PAY_IRS_KEY, el.value);
+                if (el === clinicPaySs) localStorage.setItem(CLINIC_PAY_SS_KEY, el.value);
+            } catch (e) { /* ignore */ }
+            updateClinicPayNet();
+        });
+    });
+
     async function loadBookings() {
         try {
             const res = await fetch('/api/clinic/bookings');
@@ -1210,6 +1322,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }).join('');
     }
 
+    function setClinicProfilePhoto(hasPhoto) {
+        if (clinicProfilePhoto) {
+            if (hasPhoto) {
+                clinicProfilePhoto.src = `/api/clinic/profile/photo?t=${Date.now()}`;
+                clinicProfilePhoto.hidden = false;
+            } else {
+                clinicProfilePhoto.removeAttribute('src');
+                clinicProfilePhoto.hidden = true;
+            }
+        }
+        if (clinicProfilePhotoPlaceholder) {
+            clinicProfilePhotoPlaceholder.hidden = !!hasPhoto;
+        }
+        if (clinicProfilePhotoBtn) clinicProfilePhotoBtn.textContent = hasPhoto ? 'Replace photo' : 'Add photo';
+    }
+
     async function loadClinicProfile() {
         if (!clinicProfession) return;
         try {
@@ -1229,6 +1357,8 @@ document.addEventListener('DOMContentLoaded', () => {
             clinicProfession.value = data.profession || '';
             if (clinicOrdemNumber) clinicOrdemNumber.value = data.ordemNumber || '';
             if (clinicBio) clinicBio.value = data.bio || '';
+            if (clinicCredentials) clinicCredentials.value = data.credentials || '';
+            setClinicProfilePhoto(!!data.hasPhoto);
             updateOrdemLabel();
             fillAreaSelect(clinicPrimaryArea, data.profession, data.primaryArea);
             fillAreaSelect(clinicSecondaryArea, data.profession, data.secondaryArea);
@@ -1265,6 +1395,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 profession: clinicProfession.value,
                 ordemNumber: clinicOrdemNumber ? clinicOrdemNumber.value.trim() : '',
                 bio: clinicBio ? clinicBio.value.trim() : '',
+                credentials: clinicCredentials ? clinicCredentials.value.trim() : '',
                 primaryArea: clinicPrimaryArea ? clinicPrimaryArea.value : '',
                 secondaryArea: clinicSecondaryArea ? clinicSecondaryArea.value : ''
             };
@@ -1292,6 +1423,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 showProfileError(clinicProfileFormError, err.message || 'Failed to save profile');
             } finally {
                 if (clinicProfileSaveBtn) clinicProfileSaveBtn.disabled = false;
+            }
+        });
+    }
+
+    if (clinicProfilePhotoInput) {
+        clinicProfilePhotoInput.addEventListener('change', async () => {
+            if (clinicPhotoError) clinicPhotoError.style.display = 'none';
+            const file = clinicProfilePhotoInput.files && clinicProfilePhotoInput.files[0];
+            if (!file) return;
+            const form = new FormData();
+            form.append('photo', file);
+            try {
+                const res = await fetch('/api/clinic/profile/photo', { method: 'POST', body: form });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401) {
+                    showLogin();
+                    return;
+                }
+                if (!res.ok) throw new Error(data.error || 'Failed to upload photo');
+                setClinicProfilePhoto(true);
+            } catch (err) {
+                showProfileError(clinicPhotoError, err.message || 'Failed to upload photo');
+            } finally {
+                clinicProfilePhotoInput.value = '';
             }
         });
     }

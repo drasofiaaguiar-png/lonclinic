@@ -444,6 +444,9 @@ async function initSchema(p) {
             updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
         )
     `);
+    await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS photo_mime TEXT`);
+    await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS photo_data BYTEA`);
+    await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS credentials TEXT NOT NULL DEFAULT ''`);
     await p.query(`
         CREATE TABLE IF NOT EXISTS staff_documents (
             id SERIAL PRIMARY KEY,
@@ -1725,8 +1728,10 @@ function rowToStaffProfile(row) {
         profession: row.profession || '',
         ordemNumber: row.ordem_number || '',
         bio: row.bio || '',
+        credentials: row.credentials || '',
         primaryArea: row.primary_area || '',
         secondaryArea: row.secondary_area || '',
+        hasPhoto: !!(row.has_photo || row.photo_data),
         updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : row.updated_at
     };
 }
@@ -1752,7 +1757,12 @@ async function getStaffProfile(username) {
     const p = getPool();
     const u = String(username || '').trim().toLowerCase();
     if (!u) return null;
-    const r = await p.query('SELECT * FROM staff_profiles WHERE username = $1 LIMIT 1', [u]);
+    const r = await p.query(
+        `SELECT username, profession, ordem_number, bio, credentials, primary_area, secondary_area, updated_at,
+                (photo_data IS NOT NULL) AS has_photo
+         FROM staff_profiles WHERE username = $1 LIMIT 1`,
+        [u]
+    );
     return r.rows[0] ? rowToStaffProfile(r.rows[0]) : null;
 }
 
@@ -1763,22 +1773,60 @@ async function upsertStaffProfile(username, fields) {
     const profession = String(fields.profession || '').trim().slice(0, 32);
     const ordemNumber = String(fields.ordemNumber || '').trim().slice(0, 80);
     const bio = String(fields.bio || '').trim().slice(0, 4000);
+    const credentials = String(fields.credentials || '').trim().slice(0, 2000);
     const primaryArea = String(fields.primaryArea || '').trim().slice(0, 120);
     const secondaryArea = String(fields.secondaryArea || '').trim().slice(0, 120);
     const r = await p.query(
-        `INSERT INTO staff_profiles (username, profession, ordem_number, bio, primary_area, secondary_area, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, NOW())
+        `INSERT INTO staff_profiles (username, profession, ordem_number, bio, credentials, primary_area, secondary_area, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
          ON CONFLICT (username) DO UPDATE SET
             profession = EXCLUDED.profession,
             ordem_number = EXCLUDED.ordem_number,
             bio = EXCLUDED.bio,
+            credentials = EXCLUDED.credentials,
             primary_area = EXCLUDED.primary_area,
             secondary_area = EXCLUDED.secondary_area,
             updated_at = NOW()
-         RETURNING *`,
-        [u, profession, ordemNumber, bio, primaryArea, secondaryArea]
+         RETURNING username, profession, ordem_number, bio, credentials, primary_area, secondary_area, updated_at,
+                   (photo_data IS NOT NULL) AS has_photo`,
+        [u, profession, ordemNumber, bio, credentials, primaryArea, secondaryArea]
     );
     return rowToStaffProfile(r.rows[0]);
+}
+
+async function upsertStaffPhoto(username, { mime, data }) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    if (!u || !data) return null;
+    const photoMime = String(mime || 'image/jpeg').slice(0, 80);
+    const r = await p.query(
+        `INSERT INTO staff_profiles (username, photo_mime, photo_data, updated_at)
+         VALUES ($1, $2, $3, NOW())
+         ON CONFLICT (username) DO UPDATE SET
+            photo_mime = EXCLUDED.photo_mime,
+            photo_data = EXCLUDED.photo_data,
+            updated_at = NOW()
+         RETURNING username, profession, ordem_number, bio, credentials, primary_area, secondary_area, updated_at,
+                   (photo_data IS NOT NULL) AS has_photo`,
+        [u, photoMime, data]
+    );
+    return rowToStaffProfile(r.rows[0]);
+}
+
+async function getStaffPhoto(username) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return null;
+    const r = await p.query(
+        'SELECT photo_mime, photo_data FROM staff_profiles WHERE username = $1 LIMIT 1',
+        [u]
+    );
+    const row = r.rows[0];
+    if (!row || !row.photo_data) return null;
+    return {
+        mime: row.photo_mime || 'image/jpeg',
+        data: row.photo_data
+    };
 }
 
 async function listStaffDocuments(username) {
@@ -2065,6 +2113,8 @@ module.exports = {
     deleteProfessional,
     getStaffProfile,
     upsertStaffProfile,
+    upsertStaffPhoto,
+    getStaffPhoto,
     listStaffDocuments,
     upsertStaffDocument,
     getStaffDocument,

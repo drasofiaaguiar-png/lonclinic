@@ -1044,11 +1044,247 @@ body.dash-portal .dash-stat-card {
     color: var(--text-muted);
 }
 
+.clinic-billing-card {
+    max-width: 32rem;
+    padding: 20px 22px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+}
+
+.clinic-billing-brand {
+    margin: 0 0 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--text-primary);
+}
+
+.clinic-billing-label {
+    margin: 0 0 4px;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+
+.clinic-billing-name {
+    margin: 0 0 12px;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.clinic-billing-facts {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 4px;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.clinic-billing-bar {
+    display: grid;
+    grid-template-columns: minmax(16rem, 22rem) minmax(18rem, 1fr);
+    gap: 16px;
+    align-items: stretch;
+}
+
+.clinic-billing-card {
+    max-width: none;
+}
+
+.clinic-pay-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+    overflow: hidden;
+}
+
+.clinic-pay-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 18px 0;
+}
+
+.clinic-pay-period {
+    display: flex;
+    gap: 8px;
+}
+
+.clinic-pay-period-btn {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font: inherit;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.clinic-pay-period-btn.is-active {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.clinic-pay-range {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.clinic-pay-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    padding: 14px 18px 16px;
+}
+
+.clinic-pay-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 12px 10px;
+    border-radius: 10px;
+    background: #f3f4f6;
+}
+
+.clinic-pay-stat span {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.clinic-pay-stat strong {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.clinic-pay-stat.is-gross {
+    background: #ddebfa;
+}
+
+.clinic-pay-stat.is-gross span,
+.clinic-pay-stat.is-gross strong {
+    color: #1d4ed8;
+}
+
+.clinic-pay-calc {
+    padding: 0 18px 14px;
+    border-top: 1px solid var(--border-subtle);
+    padding-top: 16px;
+}
+
+.clinic-pay-calc-title {
+    margin: 0 0 12px;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.clinic-pay-calc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.clinic-pay-calc-grid label {
+    display: grid;
+    gap: 6px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.clinic-pay-net {
+    margin: 12px 0 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.clinic-pay-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: auto 0 0;
+    padding: 12px 18px;
+    background: #ddebfa;
+    color: #1d4ed8;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.clinic-pay-banner-icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    border-radius: 3px;
+    background: #60a5fa;
+}
+
+@media (max-width: 800px) {
+    .clinic-billing-bar {
+        grid-template-columns: 1fr;
+    }
+}
+
 .clinic-profile-dl {
     display: grid;
     gap: 16px;
     max-width: 36rem;
     margin: 0;
+}
+
+.clinic-photo-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin: 0 0 20px;
+}
+
+.clinic-photo-frame {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #eef2f6;
+    border: 1px solid var(--border-subtle);
+    cursor: pointer;
+}
+
+.clinic-photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.clinic-photo-frame img[hidden],
+.clinic-photo-placeholder[hidden] {
+    display: none;
+}
+
+.clinic-photo-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+.clinic-photo-actions .dash-section-subtitle {
+    margin: 8px 0 0;
 }
 
 .clinic-profile-dl div {
@@ -1077,7 +1313,19 @@ body.dash-portal .dash-stat-card {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    max-width: 42rem;
+    max-width: 48rem;
+}
+
+.clinic-bio-creds-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+@media (max-width: 700px) {
+    .clinic-bio-creds-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 .clinic-bio-input {

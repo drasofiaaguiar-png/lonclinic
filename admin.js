@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         professionals: { title: 'Professionals & Doxy', subtitle: 'Clinician logins and video rooms' },
         psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' },
         producers: { title: 'Diretório produtores', subtitle: 'Moderar candidaturas de produtores biológicos' },
-        profile: { title: 'Profile', subtitle: 'Ordem, bio, clinical areas and documents' }
+        profile: { title: 'Profile', subtitle: 'Ordem, bio, credentials, clinical areas and documents' }
     };
     let activeAdminPanel = 'schedule';
     let scheduleFilter = 'all';
@@ -3342,10 +3342,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const adminProfileUsername = document.getElementById('adminProfileUsername');
     const adminProfileRole = document.getElementById('adminProfileRole');
     const adminProfileDoxy = document.getElementById('adminProfileDoxy');
+    const adminProfilePhoto = document.getElementById('adminProfilePhoto');
+    const adminProfilePhotoPlaceholder = document.getElementById('adminProfilePhotoPlaceholder');
+    const adminProfilePhotoInput = document.getElementById('adminProfilePhotoInput');
+    const adminProfilePhotoBtn = document.getElementById('adminProfilePhotoBtn');
+    const adminPhotoError = document.getElementById('adminPhotoError');
     const adminProfession = document.getElementById('adminProfession');
     const adminOrdemLabel = document.getElementById('adminOrdemLabel');
     const adminOrdemNumber = document.getElementById('adminOrdemNumber');
     const adminBio = document.getElementById('adminBio');
+    const adminCredentials = document.getElementById('adminCredentials');
     const adminPrimaryArea = document.getElementById('adminPrimaryArea');
     const adminSecondaryArea = document.getElementById('adminSecondaryArea');
     const adminProfileForm = document.getElementById('adminProfileForm');
@@ -3416,6 +3422,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         el.style.display = 'block';
     }
 
+    function setAdminProfilePhoto(hasPhoto) {
+        if (adminProfilePhoto) {
+            if (hasPhoto) {
+                adminProfilePhoto.src = `/api/clinic/profile/photo?t=${Date.now()}`;
+                adminProfilePhoto.hidden = false;
+            } else {
+                adminProfilePhoto.removeAttribute('src');
+                adminProfilePhoto.hidden = true;
+            }
+        }
+        if (adminProfilePhotoPlaceholder) {
+            adminProfilePhotoPlaceholder.hidden = !!hasPhoto;
+        }
+        if (adminProfilePhotoBtn) adminProfilePhotoBtn.textContent = hasPhoto ? 'Replace photo' : 'Add photo';
+    }
+
     async function loadAdminProfile() {
         if (!adminProfession) return;
         try {
@@ -3443,6 +3465,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             adminProfession.value = data.profession || '';
             if (adminOrdemNumber) adminOrdemNumber.value = data.ordemNumber || '';
             if (adminBio) adminBio.value = data.bio || '';
+            if (adminCredentials) adminCredentials.value = data.credentials || '';
+            setAdminProfilePhoto(!!data.hasPhoto);
             updateAdminOrdemLabel();
             fillAreaSelect(adminPrimaryArea, data.profession, data.primaryArea);
             fillAreaSelect(adminSecondaryArea, data.profession, data.secondaryArea);
@@ -3479,6 +3503,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 profession: adminProfession.value,
                 ordemNumber: adminOrdemNumber ? adminOrdemNumber.value.trim() : '',
                 bio: adminBio ? adminBio.value.trim() : '',
+                credentials: adminCredentials ? adminCredentials.value.trim() : '',
                 primaryArea: adminPrimaryArea ? adminPrimaryArea.value : '',
                 secondaryArea: adminSecondaryArea ? adminSecondaryArea.value : ''
             };
@@ -3506,6 +3531,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showAdminProfileError(adminProfileFormError, err.message || 'Failed to save profile');
             } finally {
                 if (adminProfileSaveBtn) adminProfileSaveBtn.disabled = false;
+            }
+        });
+    }
+
+    if (adminProfilePhotoInput) {
+        adminProfilePhotoInput.addEventListener('change', async () => {
+            if (adminPhotoError) adminPhotoError.style.display = 'none';
+            const file = adminProfilePhotoInput.files && adminProfilePhotoInput.files[0];
+            if (!file) return;
+            const form = new FormData();
+            form.append('photo', file);
+            try {
+                const res = await fetch('/api/clinic/profile/photo', { method: 'POST', body: form });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401) {
+                    showLogin();
+                    return;
+                }
+                if (!res.ok) throw new Error(data.error || 'Failed to upload photo');
+                setAdminProfilePhoto(true);
+            } catch (err) {
+                showAdminProfileError(adminPhotoError, err.message || 'Failed to upload photo');
+            } finally {
+                adminProfilePhotoInput.value = '';
             }
         });
     }

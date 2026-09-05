@@ -16,7 +16,7 @@
     <title>Clinic Portal — Longevity Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=clinic-avail-1">
+    <link rel="stylesheet" href="/dashboard.css?v=clinic-creds-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -353,6 +353,61 @@
 
                 <div class="admin-panel" id="clinicPanelManagement" data-clinic-panel-content="management" hidden>
                     <div class="dash-section">
+                        <div class="clinic-billing-bar">
+                        <div class="clinic-billing-card">
+                            <p class="clinic-billing-brand">LON CLINIC</p>
+                            <p class="clinic-billing-label">Dados de Faturação</p>
+                            <p class="clinic-billing-name">Rita Sofia Cachulo Aguiar Fonseca</p>
+                            <ul class="clinic-billing-facts">
+                                <li>NIF: 224026127</li>
+                                <li>Isenção de IVA artigo 9º</li>
+                                <li>Sem retenção de IRS</li>
+                            </ul>
+                        </div>
+                        <div class="clinic-pay-card" id="clinicPayCard">
+                            <div class="clinic-pay-head">
+                                <div class="clinic-pay-period" role="group" aria-label="Período">
+                                    <button type="button" class="clinic-pay-period-btn is-active" data-pay-period="week">Esta semana</button>
+                                    <button type="button" class="clinic-pay-period-btn" data-pay-period="month">Este mês</button>
+                                </div>
+                                <span class="clinic-pay-range" id="clinicPayRange">—</span>
+                            </div>
+                            <div class="clinic-pay-stats">
+                                <div class="clinic-pay-stat">
+                                    <span>Horas</span>
+                                    <strong id="clinicPayHours">—</strong>
+                                </div>
+                                <div class="clinic-pay-stat">
+                                    <span>Pacientes</span>
+                                    <strong id="clinicPayPatients">—</strong>
+                                </div>
+                                <div class="clinic-pay-stat is-gross">
+                                    <span>Valor bruto</span>
+                                    <strong id="clinicPayGross">—</strong>
+                                </div>
+                            </div>
+                            <div class="clinic-pay-calc">
+                                <p class="clinic-pay-calc-title">Calcular líquido estimado</p>
+                                <div class="clinic-pay-calc-grid">
+                                    <label>
+                                        IRS (%)
+                                        <input type="number" id="clinicPayIrs" class="admin-input" min="0" max="100" step="0.1" placeholder="ex: 15" inputmode="decimal">
+                                    </label>
+                                    <label>
+                                        Seg. Social (%)
+                                        <input type="number" id="clinicPaySs" class="admin-input" min="0" max="100" step="0.1" placeholder="ex: 21.4" inputmode="decimal">
+                                    </label>
+                                </div>
+                                <p class="clinic-pay-net" id="clinicPayNet" hidden>Líquido estimado: —</p>
+                            </div>
+                            <p class="clinic-pay-banner">
+                                <span class="clinic-pay-banner-icon" aria-hidden="true"></span>
+                                Próximo escalão de pagamento brevemente
+                            </p>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="dash-section">
                         <div class="dash-section-header">
                             <h2 class="dash-section-title">Clinic management</h2>
                             <p class="dash-section-subtitle">Clinic-wide settings, invitations, and team accounts</p>
@@ -379,6 +434,18 @@
                             <h2 class="dash-section-title">Your profile</h2>
                             <p class="dash-section-subtitle">Professional details shown for your clinic account</p>
                         </div>
+                        <div class="clinic-photo-row">
+                            <label class="clinic-photo-frame" for="clinicProfilePhotoInput">
+                                <img id="clinicProfilePhoto" alt="Profile photo" hidden>
+                                <span class="clinic-photo-placeholder" id="clinicProfilePhotoPlaceholder">+</span>
+                            </label>
+                            <div class="clinic-photo-actions">
+                                <label class="btn btn-outline btn-sm" id="clinicProfilePhotoBtn" for="clinicProfilePhotoInput">Add photo</label>
+                                <input type="file" id="clinicProfilePhotoInput" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" hidden>
+                                <p class="dash-section-subtitle">JPG, PNG or WebP · max 4MB</p>
+                                <div id="clinicPhotoError" class="dash-login-error" style="display:none;" role="alert"></div>
+                            </div>
+                        </div>
                         <dl class="clinic-profile-dl">
                             <div>
                                 <dt>Name</dt>
@@ -401,7 +468,7 @@
                     <div class="dash-section">
                         <div class="dash-section-header">
                             <h2 class="dash-section-title">Professional details</h2>
-                            <p class="dash-section-subtitle">Ordem number, bio and clinical preference areas</p>
+                            <p class="dash-section-subtitle">Ordem number, bio, credentials and clinical preference areas</p>
                         </div>
                         <form id="clinicProfileForm" class="clinic-profile-form">
                             <div class="admin-form-group">
@@ -417,9 +484,15 @@
                                 <label for="clinicOrdemNumber" id="clinicOrdemLabel">Número da ordem</label>
                                 <input type="text" id="clinicOrdemNumber" class="admin-input" maxlength="80" placeholder="Cédula / número de cédula" autocomplete="off">
                             </div>
-                            <div class="admin-form-group">
-                                <label for="clinicBio">Bio</label>
-                                <textarea id="clinicBio" class="admin-input clinic-bio-input" rows="5" maxlength="4000" placeholder="Short professional bio"></textarea>
+                            <div class="clinic-bio-creds-grid">
+                                <div class="admin-form-group">
+                                    <label for="clinicBio">Bio</label>
+                                    <textarea id="clinicBio" class="admin-input clinic-bio-input" rows="5" maxlength="4000" placeholder="Short professional bio"></textarea>
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="clinicCredentials">Main credentials</label>
+                                    <textarea id="clinicCredentials" class="admin-input clinic-bio-input" rows="5" maxlength="2000" placeholder="Degrees, fellowships, specialisations"></textarea>
+                                </div>
                             </div>
                             <div class="admin-invite-grid">
                                 <div class="admin-form-group">
@@ -506,7 +579,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="/lon-nav.js"></script>
-    <script src="/clinic.js?v=clinic-avail-1"></script>
+    <script src="/clinic.js?v=clinic-creds-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

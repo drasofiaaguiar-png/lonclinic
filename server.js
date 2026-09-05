@@ -537,6 +537,7 @@ const psychologistApplicationsStore = []; // memory fallback for recrutamento
 const professionalsStore = []; // memory fallback for clinician accounts + Doxy rooms
 const producersStore = []; // memory fallback for organic producers directory
 const staffProfilesStore = new Map();
+const staffPhotosStore = new Map();
 const staffDocumentsStore = [];
 let professionalIdSeq = 1;
 let staffDocumentIdSeq = 1;
@@ -605,8 +606,10 @@ function emptyStaffProfile(username) {
         profession: '',
         ordemNumber: '',
         bio: '',
+        credentials: '',
         primaryArea: '',
         secondaryArea: '',
+        hasPhoto: false,
         updatedAt: null
     };
 }
@@ -629,7 +632,9 @@ async function getStaffProfileInternal(username) {
     if (usePersistentDb) {
         return (await db.getStaffProfile(u)) || emptyStaffProfile(u);
     }
-    return staffProfilesStore.get(u) || emptyStaffProfile(u);
+    const stored = staffProfilesStore.get(u) || emptyStaffProfile(u);
+    stored.hasPhoto = staffPhotosStore.has(u);
+    return stored;
 }
 
 async function saveStaffProfileInternal(username, fields) {
@@ -640,12 +645,39 @@ async function saveStaffProfileInternal(username, fields) {
         profession: String(fields.profession || '').trim().slice(0, 32),
         ordemNumber: String(fields.ordemNumber || '').trim().slice(0, 80),
         bio: String(fields.bio || '').trim().slice(0, 4000),
+        credentials: String(fields.credentials || '').trim().slice(0, 2000),
         primaryArea: String(fields.primaryArea || '').trim().slice(0, 120),
         secondaryArea: String(fields.secondaryArea || '').trim().slice(0, 120),
+        hasPhoto: staffPhotosStore.has(u),
         updatedAt: new Date().toISOString()
     };
     staffProfilesStore.set(u, next);
     return next;
+}
+
+async function saveStaffPhotoInternal(username, { mime, data }) {
+    const u = String(username || '').trim().toLowerCase();
+    if (!u || !data) return emptyStaffProfile(u);
+    if (usePersistentDb) return db.upsertStaffPhoto(u, { mime, data });
+    staffPhotosStore.set(u, {
+        mime: String(mime || 'image/jpeg'),
+        data,
+        updatedAt: new Date().toISOString()
+    });
+    const profile = staffProfilesStore.get(u) || emptyStaffProfile(u);
+    profile.hasPhoto = true;
+    profile.updatedAt = new Date().toISOString();
+    staffProfilesStore.set(u, profile);
+    return profile;
+}
+
+async function getStaffPhotoInternal(username) {
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return null;
+    if (usePersistentDb) return db.getStaffPhoto(u);
+    const photo = staffPhotosStore.get(u);
+    if (!photo || !photo.data) return null;
+    return { mime: photo.mime || 'image/jpeg', data: photo.data };
 }
 
 async function listStaffDocumentsInternal(username) {
@@ -1430,6 +1462,19 @@ const uploadStaffDocument = multer({
 const PRODUCER_IMAGE_EXTS = new Set(['.jpg', '.jpeg', '.png', '.webp']);
 const PRODUCER_IMAGE_MIMES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const PRODUCER_UPLOAD_ROOT = path.join(__dirname, 'uploads', 'producers');
+
+const uploadStaffPhoto = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 4 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        const ext = path.extname(file.originalname || '').toLowerCase();
+        const ok = PRODUCER_IMAGE_MIMES.has(file.mimetype) || PRODUCER_IMAGE_EXTS.has(ext);
+        if (!ok) {
+            return cb(new Error('Allowed photos: JPG, PNG or WebP.'));
+        }
+        return cb(null, true);
+    }
+});
 
 const uploadProducerImages = multer({
     storage: multer.memoryStorage(),
@@ -7925,8 +7970,10 @@ app.get('/api/clinic/profile', requireAuth, async (req, res) => {
             profession: profile.profession || '',
             ordemNumber: profile.ordemNumber || '',
             bio: profile.bio || '',
+            credentials: profile.credentials || '',
             primaryArea: profile.primaryArea || '',
             secondaryArea: profile.secondaryArea || '',
+            hasPhoto: !!profile.hasPhoto,
             documents,
             professions: STAFF_PROFESSIONS,
             documentKinds: STAFF_DOCUMENT_KINDS,
@@ -7950,6 +7997,7 @@ app.put('/api/clinic/profile', requireAuth, rateLimitStaffProfile, express.json(
             profession,
             ordemNumber: body.ordemNumber,
             bio: body.bio,
+            credentials: body.credentials,
             primaryArea: body.primaryArea,
             secondaryArea: body.secondaryArea
         });
@@ -7958,6 +8006,52 @@ app.put('/api/clinic/profile', requireAuth, rateLimitStaffProfile, express.json(
         console.error('PUT /api/clinic/profile:', err.message);
         res.status(500).json({ error: 'Failed to save profile' });
     }
+});
+
+app.get('/api/clinic/profile/photo', requireAuth, async (req, res) => {
+    try {
+        const username = staffSessionUsername(req);
+        const photo = await getStaffPhotoInternal(username);
+        if (!photo || !photo.data) {
+            return res.status(404).json({ error: 'No photo' });
+        }
+        res.set({
+            'Content-Type': photo.mime || 'image/jpeg',
+            'Cache-Control': 'private, no-store'
+        });
+        res.end(Buffer.isBuffer(photo.data) ? photo.data : Buffer.from(photo.data));
+    } catch (err) {
+        console.error('GET /api/clinic/profile/photo:', err.message);
+        res.status(500).json({ error: 'Failed to load photo' });
+    }
+});
+
+app.post('/api/clinic/profile/photo', requireAuth, rateLimitStaffProfile, (req, res) => {
+    uploadStaffPhoto.single('photo')(req, res, async (uploadErr) => {
+        if (uploadErr instanceof multer.MulterError) {
+            if (uploadErr.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({ error: 'Photo must be 4MB or smaller.' });
+            }
+            return res.status(400).json({ error: 'Could not process the photo.' });
+        }
+        if (uploadErr) {
+            return res.status(400).json({ error: uploadErr.message || 'Could not process the photo.' });
+        }
+        try {
+            const username = staffSessionUsername(req);
+            if (!req.file || !req.file.buffer) {
+                return res.status(400).json({ error: 'Choose a photo to upload' });
+            }
+            const profile = await saveStaffPhotoInternal(username, {
+                mime: req.file.mimetype || 'image/jpeg',
+                data: req.file.buffer
+            });
+            res.json({ ok: true, hasPhoto: true, updatedAt: profile && profile.updatedAt });
+        } catch (err) {
+            console.error('POST /api/clinic/profile/photo:', err.message);
+            res.status(500).json({ error: 'Failed to save photo' });
+        }
+    });
 });
 
 app.post('/api/clinic/profile/documents', requireAuth, rateLimitStaffProfile, (req, res) => {
@@ -8189,6 +8283,96 @@ app.get('/api/clinic/bookings', requireAuth, async (req, res) => {
     } catch (err) {
         console.error('GET /api/clinic/bookings:', err.message);
         res.status(500).json({ error: 'Failed to load clinic bookings' });
+    }
+});
+
+function bookingDateIso(b) {
+    const iso = (b && b.dateIso && String(b.dateIso).trim()) || '';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
+    const key = bookingSortKey(b || {});
+    const m = /^(\d{4}-\d{2}-\d{2})/.exec(key);
+    return m ? m[1] : '';
+}
+
+function formatPtDayRange(startIso, endIso) {
+    const months = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+    const a = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(startIso || ''));
+    const b = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(endIso || ''));
+    if (!a || !b) return '—';
+    const d1 = Number(a[3]);
+    const d2 = Number(b[3]);
+    const m1 = months[Number(a[2]) - 1];
+    const m2 = months[Number(b[2]) - 1];
+    if (a[2] === b[2] && a[1] === b[1]) return `${d1} - ${d2} ${m1}`;
+    return `${d1} ${m1} - ${d2} ${m2}`;
+}
+
+function summarizeBillingPeriod(bookings, startIso, endIso, slotMinutes) {
+    const patients = new Set();
+    let consultations = 0;
+    let paidCents = 0;
+    for (const b of bookings || []) {
+        if (!b || b.cancelled) continue;
+        if (String(b.service || '') === 'entrevista') continue;
+        const day = bookingDateIso(b);
+        if (!day || day < startIso || day > endIso) continue;
+        consultations += 1;
+        const email = String(b.email || '').toLowerCase().trim();
+        if (email) patients.add(email);
+        else patients.add(`ref:${b.bookingRef || consultations}`);
+        const amountCents = Math.max(0, Math.round(Number(b.amount) || 0));
+        const paymentId = String(b.paymentId || '');
+        const isComp = paymentId.startsWith('comp_') || amountCents === 0;
+        const isPaid = isComp || b.markedPaid === true;
+        if (isPaid && !isComp) paidCents += amountCents;
+    }
+    const hours = consultations * (Number(slotMinutes) || 30) / 60;
+    return {
+        startIso,
+        endIso,
+        rangeLabel: formatPtDayRange(startIso, endIso),
+        hours,
+        patients: patients.size,
+        consultations,
+        paidCents
+    };
+}
+
+app.get('/api/clinic/billing-summary', requireAuth, async (req, res) => {
+    try {
+        let bookings;
+        if (usePersistentDb) {
+            bookings = await db.findAllBookings();
+        } else {
+            bookings = [...bookingsStore];
+        }
+        bookings = filterBookingsForStaff(bookings, req);
+        const slotMinutes = Number(scheduleStore.slotDuration) || 30;
+        const today = lisbonTodayUtcMidnight();
+        const dow = today.getUTCDay();
+        const monday = addUtcDays(today, -((dow + 6) % 7));
+        const sunday = addUtcDays(monday, 6);
+        const monthStart = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1));
+        const monthEnd = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() + 1, 0));
+        const weekStartIso = isoFromUtcMidnight(monday);
+        const weekEndIso = isoFromUtcMidnight(sunday);
+        const monthStartIso = isoFromUtcMidnight(monthStart);
+        const monthEndIso = isoFromUtcMidnight(monthEnd);
+        res.json({
+            currency: 'eur',
+            slotMinutes,
+            week: {
+                label: 'Esta semana',
+                ...summarizeBillingPeriod(bookings, weekStartIso, weekEndIso, slotMinutes)
+            },
+            month: {
+                label: 'Este mês',
+                ...summarizeBillingPeriod(bookings, monthStartIso, monthEndIso, slotMinutes)
+            }
+        });
+    } catch (err) {
+        console.error('GET /api/clinic/billing-summary:', err.message);
+        res.status(500).json({ error: 'Failed to load billing summary' });
     }
 });
 
