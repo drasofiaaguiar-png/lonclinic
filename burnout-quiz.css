@@ -1081,6 +1081,26 @@
     gap: 8px;
 }
 
+.bq-book-now .dr-live-slots {
+    width: 100%;
+    max-width: none;
+    margin: 0 0 8px;
+    padding: 16px 16px 14px;
+    background: #f3faf6;
+    border: 1px solid #cfe6d8;
+    border-radius: 14px;
+}
+
+.bq-book-now .dr-live-slots[hidden] {
+    display: none;
+}
+
+.bq-book-now .bq-btn-soft {
+    background: transparent;
+    color: #255235;
+    border: 1px solid #255235;
+}
+
 .bq-book-now .bq-btn-lg {
     min-height: 52px;
     padding: 14px 22px;

@@ -1,21 +1,6 @@
 (function () {
     'use strict';
 
-    var PAY_BADGES_HTML =
-        '<span class="lon-pay-badges" aria-label="MB WAY e Multibanco">' +
-        '<span class="lon-pay-badge lon-pay-badge--mbway" title="MB WAY">' +
-        '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false">' +
-        '<rect width="24" height="24" rx="5" fill="#00C46B"/>' +
-        '<path fill="#fff" d="M6.2 16.4V7.6h2.1l1.7 5.4c.15.5.28.97.4 1.42h.06c.12-.45.25-.92.4-1.42l1.7-5.4h2.1v8.8h-1.7V10.1h-.05l-1.82 6.3h-1.48l-1.82-6.3H8V16.4H6.2zm11.1 0l-2.35-8.8h1.92l1.38 5.72h.05l1.4-5.72h1.8L17.3 16.4h-1.99z"/>' +
-        '</svg> MB WAY</span>' +
-        '<span class="lon-pay-badge lon-pay-badge--mb" title="Multibanco">' +
-        '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" focusable="false">' +
-        '<rect width="24" height="24" rx="5" fill="#003087"/>' +
-        '<rect x="4" y="6" width="16" height="3" fill="#E30613"/>' +
-        '<rect x="4" y="15" width="16" height="3" fill="#E30613"/>' +
-        '</svg> Multibanco</span>' +
-        '</span>';
-
     function pageLang() {
         var lang = (document.documentElement.getAttribute('lang') || 'pt').toLowerCase();
         if (lang.indexOf('en') === 0) return 'en';
@@ -254,7 +239,7 @@
 
     function fetchSlotsNetwork() {
         if (slotsMemory.inflight) return slotsMemory.inflight;
-        slotsMemory.inflight = fetch('/api/next-slots?limit=6&withinHours=24', { credentials: 'same-origin' })
+        slotsMemory.inflight = fetch('/api/next-slots?limit=8&withinHours=168', { credentials: 'same-origin' })
             .then(function (r) {
                 return r.json().then(function (data) {
                     data = data || {};
@@ -304,6 +289,52 @@
     function pageNeedsLangPolicy(fallbackHref) {
         var lang = pageLang();
         return lang === 'fr' || lang === 'de' || hrefNeedsLangPolicy(fallbackHref);
+    }
+
+    var CONSULT_LANG_NOTICE_EN = 'Consultations strictly conducted in English, Spanish or Portuguese';
+    var CONSULT_LANG_NOTICE_LOCAL = {
+        fr: 'Les consultations se d\u00e9roulent exclusivement en anglais, en espagnol ou en portugais. Pas de consultation en fran\u00e7ais.',
+        de: 'Sprechstunden ausschlie\u00dflich auf Englisch, Spanisch oder Portugiesisch. Keine Beratung auf Deutsch.'
+    };
+
+    function injectLangPolicyStyles() {
+        if (document.getElementById('lonLangPolicyStyles')) return;
+        var style = document.createElement('style');
+        style.id = 'lonLangPolicyStyles';
+        style.textContent =
+            '.lon-slots-lang-banner{margin:0 0 10px;background:#1a1408;color:#fff8e8;border-left:4px solid #d4a017;border-radius:10px;padding:10px 12px}' +
+            '.lon-slots-lang-en{margin:0;font-weight:800;font-size:.88rem}' +
+            '.lon-slots-lang-local{margin:4px 0 0;font-size:.8rem;line-height:1.35;opacity:.92}' +
+            '.cq-sticky-book .lon-slots-lang-banner{margin:0 0 8px}';
+        document.head.appendChild(style);
+    }
+
+    function langPolicyBannerHtml() {
+        var lang = pageLang();
+        var local = CONSULT_LANG_NOTICE_LOCAL[lang] || '';
+        return '<aside class="lon-slots-lang-banner" role="alert" data-lon-lang-policy>' +
+            '<p class="lon-slots-lang-en">' + CONSULT_LANG_NOTICE_EN + '</p>' +
+            (local ? '<p class="lon-slots-lang-local">' + local + '</p>' : '') +
+            '</aside>';
+    }
+
+    function ensureLangPolicyNotice(host) {
+        if (!host || host.querySelector('[data-lon-lang-policy]')) return;
+        host.insertAdjacentHTML('afterbegin', langPolicyBannerHtml());
+    }
+
+    function injectLangPolicyNotices() {
+        if (!pageNeedsLangPolicy(window.location.href)) return;
+        injectLangPolicyStyles();
+        if (!document.querySelector('.tq-lang-banner, [data-lon-lang-policy-page]')) {
+            var afterNav = document.querySelector('.lon-nav');
+            var pageBanner = document.createElement('div');
+            pageBanner.setAttribute('data-lon-lang-policy-page', '1');
+            pageBanner.innerHTML = langPolicyBannerHtml();
+            if (afterNav && afterNav.parentNode) afterNav.insertAdjacentElement('afterend', pageBanner);
+            else document.body.insertAdjacentElement('afterbegin', pageBanner);
+        }
+        document.querySelectorAll('[data-next-slots], [data-sticky-book]').forEach(ensureLangPolicyNotice);
     }
 
     function goCheckout(slot, opts) {
@@ -407,24 +438,6 @@
         });
     }
 
-    function attachPayBadges(el) {
-        if (!el || el.getAttribute('data-pay-skip') === '1') return;
-        if (el.closest('.lon-pay-wrap')) return;
-        if (el.getAttribute('data-pay-bound') === '1') return;
-        el.setAttribute('data-pay-bound', '1');
-        var wrap = document.createElement('span');
-        wrap.className = 'lon-pay-wrap';
-        el.parentNode.insertBefore(wrap, el);
-        wrap.appendChild(el);
-        wrap.insertAdjacentHTML('beforeend', PAY_BADGES_HTML);
-    }
-
-    function injectPayBadges() {
-        document.querySelectorAll('[data-pay-badges]').forEach(attachPayBadges);
-        document.querySelectorAll('.lon-service-glass .lon-btn, .consulta-price-card .lon-btn, .guide-book-cta, .nu-hero-actions .lon-btn-primary, .js-mp-cta.lon-btn-dark, .js-mp-cta.lon-btn-soft[data-pay-badges]').forEach(attachPayBadges);
-        document.querySelectorAll('a.js-consulta-cta.lon-btn-dark, a.js-consulta-cta.lon-btn-primary, #lonHeroBook, #consultaCtaHero, #next-2.pay-btn').forEach(attachPayBadges);
-    }
-
     function landingBookMeta() {
         var p = (location.pathname || '/').toLowerCase();
         var lang = pageLang();
@@ -439,6 +452,9 @@
                 cta: lang === 'en' ? 'Take the CBI test' : 'Fazer o teste CBI',
                 bookMode: 'link'
             };
+        }
+        if (/\/blog\/[^/?#]*burnout/i.test(p)) {
+            return { service: 'burnout_mensal', href: '/marcar/burnout-mensal', cta: book + ' \u2014 216 \u20AC/m\u00eas' };
         }
         if (/\/(saudemental|consultas|psicologia)(\/|$)/.test(p)) {
             return { service: 'saude_mental', href: '/saudemental', cta: book + ' \u2014 ' + formatEuro(60) };
@@ -498,11 +514,12 @@
             '<span class="cq-sticky-book-kicker">' + kicker + '</span>' +
             '<strong data-next-slot-when></strong>' +
             '</p>' +
-            '<a class="lon-btn lon-btn-dark" data-next-slot-cta data-pay-badges href="' + meta.href + '">' +
+            '<a class="lon-btn lon-btn-dark" data-next-slot-cta href="' + meta.href + '">' +
             (first ? meta.cta : weekFallbackLabel()) + '</a>' +
             '</div>';
         document.body.appendChild(bar);
         bar.hidden = false;
+        if (pageNeedsLangPolicy(meta.href)) ensureLangPolicyNotice(bar);
         var when = bar.querySelector('[data-next-slot-when]');
         var cta = bar.querySelector('[data-next-slot-cta]');
         if (first) {
@@ -518,7 +535,6 @@
                         goal: meta.goal || ''
                     });
                 });
-                attachPayBadges(cta);
             }
         }
     }
@@ -543,11 +559,6 @@
         });
     }
 
-    injectPayBadges();
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', injectPayBadges);
-    }
-
     function ensureWeekFallback(box, href) {
         var link = box.querySelector('[data-slots-fallback]');
         if (!link) {
@@ -566,6 +577,7 @@
         var slots = (hasHorizon && data && data.slots) ? data.slots : [];
         var first = slots[0] || null;
 
+        injectLangPolicyNotices();
         document.querySelectorAll('[data-next-slots]').forEach(function (box) {
             var row = box.querySelector('[data-next-slots-row]');
             var href = box.getAttribute('data-book-href') || '/marcar/clinica-geral';
@@ -648,6 +660,7 @@
         }
     }
 
+    injectLangPolicyNotices();
     var needsSlots = !!(
         document.querySelector('[data-next-slots], [data-sticky-book], #lonHeroBook, [data-doctor-available]') ||
         shouldInjectSticky()

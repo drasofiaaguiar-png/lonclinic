@@ -590,6 +590,12 @@
     }
 }
 
+@media (min-width: 960px) {
+    .mp-outcome-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
 .mp-outcome {
     background: #fff;
     border: 1px solid var(--lon-border);

@@ -1159,16 +1159,57 @@ async function findDueQuizRecoveries(nowMs, limit = 20) {
     return r.rows.map(rowToQuizAttempt);
 }
 
-async function mergeQuizAttemptResultByEmail(email, patch) {
+async function findDueNutricaoNurture(limit = 50) {
+    const p = getPool();
+    const cap = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 80);
+    const r = await p.query(
+        `SELECT * FROM quiz_attempts
+         WHERE quiz_id = 'nutricao-avaliacao'
+           AND email IS NOT NULL
+           AND COALESCE(result->>'convertedAt','') IN ('', '0')
+           AND COALESCE(NULLIF(result->>'nurtureStep',''),'0') ~ '^[0-9]+$'
+           AND COALESCE((result->>'nurtureStep')::int, 0) < 3
+           AND claimed_at > NOW() - INTERVAL '5 days'
+         ORDER BY claimed_at ASC
+         LIMIT $1`,
+        [cap]
+    );
+    return r.rows.map(rowToQuizAttempt);
+}
+
+async function claimNutricaoNurtureStep(id, fromStep, toStep, sentAtMs) {
+    const p = getPool();
+    const from = Number(fromStep) || 0;
+    const to = Number(toStep);
+    if (!id || to < 1 || to > 3 || to !== from + 1) return null;
+    const patch = { nurtureStep: to };
+    patch['nurture' + to + 'At'] = Number(sentAtMs) || Date.now();
+    const r = await p.query(
+        `UPDATE quiz_attempts
+         SET result = COALESCE(result, '{}'::jsonb) || $2::jsonb
+         WHERE id = $1
+           AND quiz_id = 'nutricao-avaliacao'
+           AND email IS NOT NULL
+           AND COALESCE(result->>'convertedAt','') IN ('', '0')
+           AND COALESCE((NULLIF(result->>'nurtureStep',''))::int, 0) = $3
+         RETURNING *`,
+        [id, JSON.stringify(patch), from]
+    );
+    return r.rows[0] ? rowToQuizAttempt(r.rows[0]) : null;
+}
+
+async function mergeQuizAttemptResultByEmail(email, patch, quizId) {
     const p = getPool();
     const e = String(email || '').toLowerCase().trim();
     if (!e || !patch || typeof patch !== 'object') return 0;
+    const qid = quizId ? String(quizId) : null;
     const r = await p.query(
         `UPDATE quiz_attempts
          SET result = COALESCE(result, '{}'::jsonb) || $2::jsonb
          WHERE LOWER(TRIM(email)) = $1
-           AND claimed_at > NOW() - INTERVAL '48 hours'`,
-        [e, JSON.stringify(patch)]
+           AND claimed_at > NOW() - INTERVAL '7 days'
+           AND ($3::text IS NULL OR quiz_id = $3)`,
+        [e, JSON.stringify(patch), qid]
     );
     return r.rowCount;
 }
@@ -2482,6 +2523,8 @@ module.exports = {
     claimQuizAttempt,
     findQuizAttemptsByEmail,
     findDueQuizRecoveries,
+    findDueNutricaoNurture,
+    claimNutricaoNurtureStep,
     mergeQuizAttemptResultByEmail,
     insertInvitation,
     updateInvitationStripeSession,

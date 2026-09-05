@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const nu = resolved.indexOf('nutricao_') === 0;
             trust.innerHTML = nu
                 ? '🔒 Fidelização 3 meses · sem cláusulas abusivas · cancelamento simples a seguir<br>🩺 1.ª consulta médica agendada logo após o pagamento'
-                : '🔒 Pagamento seguro · MB WAY e Multibanco<br>🩺 Consulta médica agendada imediatamente após o pagamento';
+                : '🔒 Pagamento seguro via Stripe<br>🩺 Consulta médica agendada imediatamente após o pagamento';
         }
     }
 

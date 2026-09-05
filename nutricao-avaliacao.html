@@ -26,7 +26,7 @@
     <meta property="og:site_name" content="Lon Clinic">
     <meta name="theme-color" content="#255235">
     <link rel="stylesheet" href="/landing.css?v=20260707a">
-    <link rel="stylesheet" href="/nutricao-avaliacao.css?v=20260905a">
+    <link rel="stylesheet" href="/nutricao-avaliacao.css?v=20260905b">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
@@ -42,8 +42,7 @@
 
     <div class="mpq-progress" id="progressWrap">
         <div class="mpq-progress-meta">
-            <span id="stepLabel">Passo 1 de 6</span>
-            <span id="pctLabel">16%</span>
+            <span id="stepLabel">Passo 1 de 6 — 16% concluído</span>
         </div>
         <div class="mpq-progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1" aria-label="Progresso da avaliação" id="progressBarHost">
             <b id="progressBar"></b>
@@ -184,7 +183,7 @@
                         <input type="email" id="email" name="email" autocomplete="email" maxlength="160" placeholder="nome@email.com">
                     </div>
                     <div class="mpq-field">
-                        <label for="phone">Telefone</label>
+                        <label for="phone">WhatsApp</label>
                         <input type="tel" id="phone" name="phone" autocomplete="tel" maxlength="20" value="+351 " placeholder="+351 9xx xxx xxx">
                     </div>
                 </div>
@@ -200,19 +199,40 @@
             </section>
         </form>
 
+        <section class="mpq-screen" id="screen-processing" hidden>
+            <div class="mpq-processing">
+                <div class="mpq-spin" aria-hidden="true"></div>
+                <p class="mpq-kicker">Análise clínica</p>
+                <h1>A analisar o seu perfil com base nos parâmetros metabólicos…</h1>
+                <p class="mpq-hint">IMC, histórico de dietas e relação com a comida — a preparar o plano recomendado.</p>
+            </div>
+        </section>
+
         <section class="mpq-screen" id="screen-result" hidden>
             <p class="mpq-kicker" id="resultKicker">Análise clínica concluída</p>
             <h1 id="resultTitle">O seu plano recomendado</h1>
             <p class="mpq-lead" id="resultMessage"></p>
             <p class="mpq-metrics" id="resultMetrics"></p>
+            <div class="mpq-hold" id="quizHold" hidden>
+                <p class="mpq-hold-kicker">1.ª consulta</p>
+                <p class="mpq-hold-time" id="quizHoldLabel">A carregar o próximo horário…</p>
+                <p class="mpq-hold-timer">Reservável durante <b id="quizHoldClock">15:00</b></p>
+            </div>
+            <div class="dr-live-slots" data-next-slots data-limit="3" data-service="nutricao_programa" data-book-href="/marcar/nutricao-programa?ref=nutricao-avaliacao" data-surface="imc-result" data-goal="Perda de peso / reeducação metabólica" hidden>
+                <p class="dr-live-slots-kicker">Próximos horários · consulta inicial de nutrição metabólica</p>
+                <div class="dr-live-slots-row" data-next-slots-row></div>
+                <a href="/marcar/nutricao-programa?ref=nutricao-avaliacao" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
+            </div>
             <div id="resultPlans"></div>
-            <p class="mpq-disclaimer">Esta avaliação não é um diagnóstico. O plano confirma-se na consulta inicial de nutrição metabólica — reeducação e acompanhamento, sem prescrição de aGLP-1. Fidelização mínima de 3 meses.</p>
+            <p class="mpq-buy-trust">🔒 Fidelização 3 meses · sem cláusulas abusivas<br>🩺 Consulta agendada imediatamente após o pagamento</p>
+            <p class="mpq-disclaimer">Esta avaliação não é um diagnóstico. O plano confirma-se na consulta inicial. Fidelização mínima de 3 meses.</p>
         </section>
     </main>
 
     <p class="mpq-foot">Lon Clinic · ERS n.º 45475 · Médicos inscritos na Ordem dos Médicos</p>
 
-    <script src="/lon-analytics.js?v=20260905e" defer></script>
-    <script src="/nutricao-avaliacao.js?v=20260905c" defer></script>
+    <script src="/lon-analytics.js?v=20260905i" defer></script>
+    <script src="/lon-slots.js?v=20260906c" defer></script>
+    <script src="/nutricao-avaliacao.js?v=20260905d" defer></script>
 </body>
 </html>

@@ -11,14 +11,14 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
-const { organizationJsonLd, originOf, canonicalHref, burnoutSpokeCanonicalPath } = require('./seo');
+const { organizationJsonLd, originOf, canonicalHref } = require('./seo');
 
 const QUEIXAS_DIR = path.join(__dirname, 'data', 'queixas');
 const MANIFEST_PATH = path.join(QUEIXAS_DIR, 'manifest.json');
 const PAGES_DIR = path.join(QUEIXAS_DIR, 'pages');
 
 const OPP_URL = 'https://www.ordemdospsicologos.pt/';
-const CSS_V = '20260820b';
+const CSS_V = '20260906c';
 
 const PRICE = {
     avulsa: { amount: '60', label: 'Sessão avulsa', unit: 'sessão' },
@@ -611,7 +611,7 @@ function renderPage(origin, slug) {
     const description = String(meta.description || answer);
     const datePub = String(meta.datePublished || '');
     const dateMod = String(meta.dateModified || meta.datePublished || '');
-    const canonicalPath = burnoutSpokeCanonicalPath(`/${encodeURIComponent(slug)}`);
+    const canonicalPath = `/${encodeURIComponent(slug)}`;
     const canonicalUrl = canonicalHref(canonicalPath);
     const ref = `queixa-${slug}`;
     const isBurnoutPsi = slug === 'psicologia-burnout';
@@ -673,6 +673,9 @@ function renderPage(origin, slug) {
                 </nav>
                 <h1>${escapeHtml(h1)}</h1>
                 <p class="qx-answer">${escapeHtml(answer)}</p>
+                ${isBurnoutPsi
+                    ? `<p class="qx-cbi-support">Quer avaliar o seu nível atual de exaustão? <a href="/burnout/teste?ref=${encodeURIComponent(ref)}">Faça o nosso Teste CBI de Burnout gratuito</a>.</p>`
+                    : ''}
                 ${bylineHtml(dateMod || datePub)}
                 <div class="qx-article-actions">
                     ${isBurnoutPsi

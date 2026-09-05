@@ -416,23 +416,18 @@
                     </div>
                     <div id="discountMessageStep2" class="discount-message" style="display:none;"></div>
                 </div>
-                <div class="lon-pay-methods" role="group" aria-label="Método de pagamento preferido">
-                    <p class="lon-pay-methods-label">Como prefere pagar</p>
-                    <div class="lon-pay-methods-row">
-                        <button type="button" class="lon-pay-method is-active" data-pay-method="card">Cartão</button>
-                        <button type="button" class="lon-pay-method" data-pay-method="mbway">MB WAY</button>
-                        <button type="button" class="lon-pay-method" data-pay-method="multibanco">Multibanco</button>
-                    </div>
-                    <p class="lon-pay-methods-note">MB WAY e Multibanco aparecem no Stripe quando estão activos na sua conta. Cartão, Apple Pay e Google Pay também.</p>
+                <div class="lon-pay-methods" role="group" aria-label="Método de pagamento">
+                    <p class="lon-pay-methods-label">Pagamento seguro via Stripe</p>
+                    <p class="lon-pay-methods-note">Cartão, Apple Pay e Google Pay, quando disponíveis.</p>
                 </div>
                 <div class="step-actions">
                     <button type="button" class="btn btn-outline btn-lg step-back" id="back-2">Voltar</button>
-                    <button type="button" class="btn btn-primary btn-lg step-next pay-btn" id="next-2" data-pay-badges>
+                    <button type="button" class="btn btn-primary btn-lg step-next pay-btn" id="next-2">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                         Pagar com Stripe
                     </button>
                 </div>
-                <p class="lon-buy-trust" id="lonBuyTrust">🔒 Pagamento seguro · MB WAY e Multibanco<br>🩺 Consulta médica agendada imediatamente após o pagamento</p>
+                <p class="lon-buy-trust" id="lonBuyTrust">🔒 Pagamento seguro via Stripe<br>🩺 Consulta médica agendada imediatamente após o pagamento</p>
                 <p class="stripe-error" id="stripeErrorStep2" style="display:none;"></p>
             </div>
 
@@ -514,7 +509,7 @@
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                             </div>
                             <div>
-                                <p class="stripe-info-text">Segue para o <strong>Stripe</strong> para pagar com <strong>MB WAY</strong>, <strong>Multibanco</strong> ou cartão. Apple Pay e Google Pay também, quando disponíveis.</p>
+                                <p class="stripe-info-text">You'll be redirected to <strong>Stripe</strong> to enter your payment details securely. Card, Apple Pay, and Google Pay accepted.</p>
                                 <p class="stripe-info-sub">Stripe is PCI Level 1 certified — the highest level of security in the payments industry.</p>
                             </div>
                         </div>
@@ -673,8 +668,6 @@
                     <div class="lon-footer-payments" aria-label="Métodos de pagamento">
                         <span>Visa</span>
                         <span>Mastercard</span>
-                        <span>MB Way</span>
-                        <span>Multibanco</span>
                     </div>
                 </div>
 
@@ -737,7 +730,7 @@
             <h2 id="lonExitTitle">Pode marcar agora ou falar connosco</h2>
             <ul class="lon-exit-faq">
                 <li>Consulta de clínica geral: <strong>39 €</strong>. Renovação de receita: <strong>19 €</strong>.</li>
-                <li>Pagamento por cartão, MB WAY ou Multibanco no checkout.</li>
+                <li>Pagamento por cartão no checkout Stripe.</li>
                 <li>A videoconsulta abre no browser — sem app.</li>
             </ul>
             <div class="lon-exit-actions">

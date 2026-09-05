@@ -296,6 +296,68 @@
     padding: 0 22px 28px;
 }
 
+.mpq-processing {
+    text-align: center;
+    padding: 48px 16px;
+}
+
+.mpq-spin {
+    width: 42px;
+    height: 42px;
+    margin: 0 auto 18px;
+    border: 3px solid rgba(37, 82, 53, 0.18);
+    border-top-color: var(--lon-accent);
+    border-radius: 50%;
+    animation: mpq-spin 0.9s linear infinite;
+}
+
+@keyframes mpq-spin {
+    to { transform: rotate(360deg); }
+}
+
+.mpq-hold {
+    background: #f4f8f5;
+    border: 1px solid #c9d4cc;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 0 0 18px;
+    text-align: center;
+}
+
+.mpq-hold-kicker {
+    margin: 0;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mpq-muted);
+}
+
+.mpq-hold-time {
+    margin: 6px 0 4px;
+    font-weight: 700;
+}
+
+.mpq-hold-timer {
+    margin: 0;
+    color: var(--lon-accent);
+}
+
+.mpq-hold-timer b {
+    font-variant-numeric: tabular-nums;
+}
+
+.mpq-buy-trust {
+    margin: 14px 0 0;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--mpq-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mpq-spin { animation: none; }
+}
+
 @media (max-width: 640px) {
     .mpq-nav .lon-btn {
         flex: 1;

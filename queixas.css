@@ -52,6 +52,16 @@
     margin: 0 0 20px;
 }
 
+.qx-cbi-support {
+    margin: 0 0 16px;
+    padding: 12px 14px;
+    background: #f4f7f5;
+    border-left: 4px solid #255235;
+    border-radius: 10px;
+    font-size: 1rem;
+    line-height: 1.45;
+}
+
 .qx-hero-meta {
     font-size: 0.92rem;
     color: var(--qx-olive-deep);

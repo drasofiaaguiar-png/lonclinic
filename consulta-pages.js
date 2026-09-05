@@ -170,7 +170,7 @@ function bookingCardsMarkup(aria, cards, tone) {
             <h3 class="guide-book-title">${escapeHtml(card.title)}</h3>
             <p class="guide-book-price">${escapeHtml(card.price)}</p>
             <p class="guide-book-note">${escapeHtml(card.note)}</p>
-            <a class="guide-book-cta js-consulta-cta" data-consulta-cta="${escapeHtml(card.track || 'consulta-card')}" data-pay-badges href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
+            <a class="guide-book-cta js-consulta-cta" data-consulta-cta="${escapeHtml(card.track || 'consulta-card')}" href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
         </article>`
         )
         .join('');
@@ -229,7 +229,7 @@ function ctaBand(page) {
                 <h2 class="cq-cta-title">${escapeHtml(page.ctaTitle || 'Marcar consulta médica online')}</h2>
                 <p class="cq-cta-lead">${escapeHtml(page.priceNote || page.price || '')}</p>
                 <div class="cq-cta-actions">
-                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="spoke-band" data-pay-badges href="${href}">${label}</a>
+                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="spoke-band" href="${href}">${label}</a>
                     <a class="lon-btn lon-btn-soft" href="/consulta">Ver todas as consultas</a>
                 </div>
             </div>
@@ -479,7 +479,7 @@ function renderSpoke(origin, slug) {
                 ${clinicianStripHtml()}
                 ${authors.authorBylineHtml(o, meta.author, datePub)}
                 <div class="cq-header-actions">
-                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="spoke-hero" data-pay-badges href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
+                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="spoke-hero" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
                     <a class="lon-btn lon-btn-soft" href="#quando-nao-online">Quando não tratar online</a>
                 </div>
                 <div class="cq-live-slots" data-next-slots data-limit="3" data-service="${slotService}" data-book-href="${escapeHtml(bookingHref)}" data-surface="consulta-hero" hidden>
@@ -519,7 +519,7 @@ function renderSpoke(origin, slug) {
                 <h2 id="cq-preco-title">Preço</h2>
                 <p class="cq-price-value">${escapeHtml(meta.price || '')}</p>
                 <p class="cq-price-note">${escapeHtml(meta.priceNote || '')}</p>
-                <a class="lon-btn lon-btn-primary js-consulta-cta" data-consulta-cta="spoke-price" data-pay-badges href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
+                <a class="lon-btn lon-btn-primary js-consulta-cta" data-consulta-cta="spoke-price" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
             </section>
 
             ${extraHtml ? `<div class="cq-prose" lang="pt-PT">${extraHtml}</div>` : ''}

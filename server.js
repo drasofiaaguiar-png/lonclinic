@@ -52,6 +52,7 @@ const producers = require('./producers');
 const wellness = require('./wellness');
 const seo = require('./seo');
 const { emailLink, withUtm, datedCampaign, TRACKED_REDIRECTS, safeInternalPath, trackedLinksForAdmin } = require('./utm');
+const nutricaoNurture = require('./nutricao-nurture');
 const { hydrateInfoHtml, NOINDEX_PAGES: INFO_NOINDEX_PAGES } = require('./info-ssr');
 const authors = require('./authors');
 const cvi = require('./cvi');
@@ -85,20 +86,7 @@ function stripeSessionIdSuffixForLog(id) {
 }
 
 async function createStripeCheckoutSession(sessionParams) {
-    const withPt = Object.assign({}, sessionParams, {
-        payment_method_types: ['card', 'mb_way', 'multibanco']
-    });
-    try {
-        return await stripe.checkout.sessions.create(withPt);
-    } catch (err) {
-        const msg = String((err && err.message) || '');
-        const unactivated = err && (err.code === 'payment_method_unactivated' || /payment method|mb_way|multibanco/i.test(msg));
-        if (!unactivated) throw err;
-        console.warn('   ⚠️  MB WAY / Multibanco not enabled on Stripe — checkout with card only. Enable them in the Stripe Dashboard for Portugal.');
-        return stripe.checkout.sessions.create(Object.assign({}, sessionParams, {
-            payment_method_types: ['card']
-        }));
-    }
+    return stripe.checkout.sessions.create(sessionParams);
 }
 
 const rateLimitClinicLogin = rateLimit({
@@ -1244,13 +1232,13 @@ async function ingestClientEvents(req, events) {
 ======================================== */
 const defaultScheduleStore = {
     workingHours: {
-        monday: { enabled: true, start: '07:00', end: '17:00' },
-        tuesday: { enabled: true, start: '07:00', end: '17:00' },
-        wednesday: { enabled: true, start: '07:00', end: '17:00' },
-        thursday: { enabled: true, start: '07:00', end: '17:00' },
-        friday: { enabled: true, start: '07:00', end: '17:00' },
-        saturday: { enabled: false, start: '07:00', end: '13:00' },
-        sunday: { enabled: false, start: '07:00', end: '17:00' }
+        monday: { enabled: true, start: '07:00', end: '21:00' },
+        tuesday: { enabled: true, start: '07:00', end: '21:00' },
+        wednesday: { enabled: true, start: '07:00', end: '21:00' },
+        thursday: { enabled: true, start: '07:00', end: '21:00' },
+        friday: { enabled: true, start: '07:00', end: '21:00' },
+        saturday: { enabled: true, start: '09:00', end: '21:00' },
+        sunday: { enabled: true, start: '09:00', end: '21:00' }
     },
     slotDuration: 30, // minutes
     blockedDates: [], // Array of date strings (YYYY-MM-DD)
@@ -1392,6 +1380,50 @@ function applySevenAmConsultationHours(store) {
     return changed;
 }
 
+function endNoEarlierThan(end, floorHhmm) {
+    const mins = timeToMinutes(end);
+    const floor = timeToMinutes(floorHhmm);
+    if (mins == null || floor == null || mins >= floor) {
+        const [h, min] = String(end || floorHhmm).slice(0, 5).split(':');
+        return `${String(h).padStart(2, '0')}:${min}`;
+    }
+    return floorHhmm;
+}
+
+/** Public grid must cover PT after-work (18:00–21:00) and weekends. */
+function applyPeakConsultationHours(store) {
+    if (!store || !store.workingHours) return false;
+    let changed = false;
+    const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+    const weekend = ['saturday', 'sunday'];
+    for (const day of weekdays) {
+        const wh = store.workingHours[day];
+        if (!wh || typeof wh !== 'object' || !wh.enabled) continue;
+        const next = endNoEarlierThan(wh.end, '21:00');
+        if (wh.end !== next) {
+            wh.end = next;
+            changed = true;
+        }
+    }
+    for (const day of weekend) {
+        const prev = store.workingHours[day];
+        const wh = prev && typeof prev === 'object'
+            ? prev
+            : { enabled: true, start: '09:00', end: '21:00' };
+        store.workingHours[day] = wh;
+        if (!wh.enabled) {
+            wh.enabled = true;
+            changed = true;
+        }
+        const nextEnd = endNoEarlierThan(wh.end, '21:00');
+        if (wh.end !== nextEnd) {
+            wh.end = nextEnd;
+            changed = true;
+        }
+    }
+    return changed;
+}
+
 function ensureScheduleStoreShape(raw) {
     const base = cloneDefaultSchedule();
     const input = raw && typeof raw === 'object' ? raw : {};
@@ -1412,7 +1444,7 @@ function ensureScheduleStoreShape(raw) {
             typeof input.smartSlotGrouping === 'boolean' ? input.smartSlotGrouping : base.smartSlotGrouping,
         updatedAt: input.updatedAt || new Date().toISOString()
     };
-    if (applySevenAmConsultationHours(store)) {
+    if (applySevenAmConsultationHours(store) || applyPeakConsultationHours(store)) {
         store.updatedAt = new Date().toISOString();
     }
     return store;
@@ -3080,8 +3112,8 @@ function burnoutQuizBandCopy(band) {
                 'Se estes sinais são recentes e ligeiros, pode ser útil observar como evoluem nas próximas semanas, dando atenção ao descanso, sono, recuperação e limites entre trabalho e vida pessoal.',
                 'Se o desgaste tem sido persistente, está a aumentar ou já está a interferir com o teu dia a dia, uma avaliação profissional pode ajudar a perceber o que está a acontecer e quais os próximos passos mais adequados.'
             ],
-            ctaTitle: 'Queres perceber melhor o teu resultado?',
-            ctaLead: 'Uma Consulta Especializada em Burnout — 60€ permite explorar os teus sintomas, o teu contexto pessoal e profissional e definir contigo os próximos passos.',
+            ctaTitle: 'Começa o plano de acompanhamento',
+            ctaLead: 'A subscrição Anti-Burnout — 216€/mês (4 consultas) é o próximo passo. A avaliação única de 60€ fica disponível se quiseres só um primeiro contacto.',
             emergency: ''
         },
         ELEVADO: {
@@ -3097,8 +3129,8 @@ function burnoutQuizBandCopy(band) {
             next: [
                 'Neste nível de resultado, recomendamos considerar uma avaliação profissional para perceber a origem e a intensidade destes sintomas e determinar que tipo de acompanhamento poderá ser mais adequado.'
             ],
-            ctaTitle: 'Consulta Especializada em Burnout — 60€',
-            ctaLead: 'Na consulta, podemos explorar o teu resultado, os sintomas que tens sentido e o impacto que estão a ter na tua vida, ajudando a definir os próximos passos.',
+            ctaTitle: 'Começa o plano agora — 216€/mês',
+            ctaLead: 'A subscrição semanal é o caminho em destaque. Na primeira sessão vemos o teu resultado CBI e definimos o plano. A avaliação única de 60€ fica como alternativa.',
             emergency: 'Se estiveres a passar por sofrimento intenso ou sentires que não estás seguro/a, procura ajuda médica urgente: 112 · SNS 24 808 24 24 24 · SOS Voz Amiga 213 544 545.'
         }
     };
@@ -3167,8 +3199,8 @@ function buildBurnoutQuizEmails(data) {
     const copy = burnoutQuizBandCopy(band);
     const visual = burnoutBandVisual(band, copy);
     const dominant = burnoutDominantInsight(personalNum, workNum, bodyNum);
-    const bookUrl = emailLink(`${PUBLIC_SITE_URL}/marcar/burnout`, datedCampaign('burnout_quiz_email'), 'book-consult');
     const programUrl = emailLink(`${PUBLIC_SITE_URL}/marcar/burnout-mensal`, datedCampaign('burnout_quiz_email'), 'book-subscription');
+    const bookUrl = emailLink(`${PUBLIC_SITE_URL}/marcar/burnout`, datedCampaign('burnout_quiz_email'), 'book-consult');
     const siteUrl = PUBLIC_SITE_URL;
     const font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
     const barFill = copy.accent;
@@ -3182,8 +3214,8 @@ function buildBurnoutQuizEmails(data) {
         `Pessoal: ${personal} · Trabalho: ${work} · Corpo: ${body}`,
         `Dimensão dominante: ${dominant.key}`,
         '',
-        `Consulta especializada: ${bookUrl}`,
-        `Subscrição Anti-Burnout: ${programUrl}`
+        `Subscrição Anti-Burnout (216€/mês): ${programUrl}`,
+        `Consulta avulsa 60€: ${bookUrl}`
     ].join('\n');
 
     const clinicHtml = `<!DOCTYPE html><html lang="pt"><body style="font-family:${font};line-height:1.5;color:#1c2a24;background:#f3f1ec;padding:24px">
@@ -3197,7 +3229,7 @@ ${burnoutDimBar('Burnout pessoal', personal, barFill)}
 ${burnoutDimBar('Burnout no trabalho', work, barFill)}
 ${burnoutDimBar('Sinais no corpo', body, barFill)}
 <p style="font-size:14px;color:#3d4a44">${escapeHtml(dominant.text)}</p>
-<p style="margin:20px 0 0"><a href="${escapeHtml(bookUrl)}" style="color:#255235">Consulta 60€</a> · <a href="${escapeHtml(programUrl)}" style="color:#255235">Subscrição 216€/mês</a></p>
+<p style="margin:20px 0 0"><a href="${escapeHtml(programUrl)}" style="color:#255235">Subscrição 216€/mês</a> · <a href="${escapeHtml(bookUrl)}" style="color:#255235">Consulta 60€</a></p>
 </td></tr></table>
 </body></html>`;
 
@@ -3231,16 +3263,9 @@ ${burnoutDimBar('Sinais no corpo', body, barFill)}
     if (copy.ctaLead) {
         userTextParts.push('', copy.ctaLead);
     }
-    userTextParts.push('', 'Marcar Consulta Especializada — 60€:', bookUrl);
-    if (copy.showProgram) {
-        userTextParts.push(
-            '',
-            BURNOUT_SUB_BLURB,
-            '',
-            'Conhecer a Subscrição Anti-Burnout — 216€/mês:',
-            programUrl
-        );
-    }
+    userTextParts.push('', 'Começar o plano — 216€/mês:', programUrl);
+    userTextParts.push('', BURNOUT_SUB_BLURB);
+    userTextParts.push('', 'Ou avaliação única — 60€:', bookUrl);
     if (copy.emergency) {
         userTextParts.push('', copy.emergency);
     }
@@ -3311,8 +3336,9 @@ ${burnoutEmailParagraphs(copy.next)}
 
 <p style="margin:18px 0 8px;font-size:16px;font-weight:700;color:#1c2a24;">${escapeHtml(copy.ctaTitle)}</p>
 ${copy.ctaLead ? `<p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#3d4a44;">${escapeHtml(copy.ctaLead)}</p>` : ''}
-${burnoutEmailButton(bookUrl, 'Marcar Consulta Especializada — 60€', true)}
-${copy.showProgram ? `<p style="margin:16px 0 12px;font-size:14px;line-height:1.6;color:#3d4a44;">${escapeHtml(BURNOUT_SUB_BLURB)}</p>${burnoutEmailButton(programUrl, 'Conhecer a Subscrição Anti-Burnout — 216€/mês', false)}` : ''}
+${burnoutEmailButton(programUrl, 'Começar o plano — 216€/mês', true)}
+<p style="margin:16px 0 12px;font-size:14px;line-height:1.6;color:#3d4a44;">${escapeHtml(BURNOUT_SUB_BLURB)}</p>
+${burnoutEmailButton(bookUrl, 'Avaliação única — 60€', false)}
 ${copy.emergency ? `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin:20px 0 0;"><tr><td style="background:#f6e8e4;border-radius:10px;padding:14px 16px;"><p style="margin:0;font-size:13px;line-height:1.55;color:#6b3a2e;">${escapeHtml(copy.emergency)}</p></td></tr></table>` : ''}
 
 </td>
@@ -3422,13 +3448,13 @@ function rememberQuizLead(lead) {
     quizLeadMemory.set(key, Object.assign({}, quizLeadMemory.get(key) || {}, lead, { email: key }));
 }
 
-async function patchQuizLead(email, patch) {
+async function patchQuizLead(email, patch, quizId) {
     const key = quizLeadKey(email);
     if (!key) return;
     const prev = quizLeadMemory.get(key) || { email: key };
     quizLeadMemory.set(key, Object.assign({}, prev, patch));
     if (usePersistentDb) {
-        try { await db.mergeQuizAttemptResultByEmail(key, patch); } catch (err) {
+        try { await db.mergeQuizAttemptResultByEmail(key, patch, quizId || null); } catch (err) {
             console.error('   ⚠️  quiz lead patch:', err.message);
         }
     }
@@ -3505,6 +3531,7 @@ async function runQuizLeadRecoveries() {
     const due = [];
     for (const lead of quizLeadMemory.values()) {
         if (!lead.email || lead.recoveredAt || lead.convertedAt) continue;
+        if (lead.quizId === 'nutricao-avaliacao') continue;
         if (Number(lead.recoverAt) && Number(lead.recoverAt) <= now) due.push(lead);
     }
     if (usePersistentDb) {
@@ -3513,6 +3540,7 @@ async function runQuizLeadRecoveries() {
             for (const row of rows) {
                 const result = row.result || {};
                 if (result.recoveredAt || result.convertedAt) continue;
+                if (row.quizId === 'nutricao-avaliacao') continue;
                 due.push({
                     email: row.email,
                     quizId: row.quizId,
@@ -3565,10 +3593,32 @@ function nutricaoAvaliacaoPlanLabel(plan) {
     return plan === 'completo' ? 'Programa Completo (1 162 €)' : 'Programa Nutrição (490 €)';
 }
 
+function nutricaoNurtureCtaUrl(plan, step) {
+    const href = nutricaoNurture.checkoutHref(plan);
+    return emailLink(`${PUBLIC_SITE_URL}${href}`, datedCampaign('nutricao_nurture_' + step), 'nurture-' + step);
+}
+
+function enrollNutricaoNurture(data) {
+    const claimedAt = Date.now();
+    rememberQuizLead({
+        email: data.email,
+        firstName: nutricaoNurture.firstNameOf(data.name),
+        leadName: data.name,
+        phone: data.phone,
+        leadPhone: data.phone,
+        quizId: 'nutricao-avaliacao',
+        plan: data.plan,
+        profile: nutricaoNurture.planMeta(data.plan).profile,
+        claimedAt,
+        nurtureStep: 0,
+        convertedAt: 0,
+        recoveredAt: 0
+    });
+    return claimedAt;
+}
+
 function buildNutricaoAvaliacaoEmails(data) {
     const plan = nutricaoAvaliacaoPlanLabel(data.plan);
-    const bookPath = data.plan === 'completo' ? '/marcar/nutricao-completo' : '/marcar/nutricao-programa';
-    const bookUrl = emailLink(`${PUBLIC_SITE_URL}${bookPath}`, datedCampaign('nutricao_avaliacao'), 'email-book');
     const L = NUTRICAO_AVALIACAO_LABELS;
     const clinicText = [
         'Avaliação metabólica (landing programa 6 meses)',
@@ -3597,22 +3647,11 @@ function buildNutricaoAvaliacaoEmails(data) {
 <li>Análises: ${escapeHtml(L.labs[data.labs] || data.labs)}</li>
 <li>Idade ${escapeHtml(data.age)} · ${escapeHtml(data.height)} cm · ${escapeHtml(data.weight)} kg → ${escapeHtml(data.desiredWeight)} kg${data.imc != null ? ` · IMC ${escapeHtml(data.imc)}` : ''}</li>
 </ul>`;
-    const userText = `Olá ${data.name},\n\nRecebemos a sua avaliação metabólica. Plano recomendado: ${plan}.\n\nPode começar aqui: ${PUBLIC_SITE_URL}${bookPath}?ref=avaliacao\n\nA 1.ª consulta confirma o plano com a equipa clínica.\n\nLON Clinic`;
-    const userHtml = `<p>Olá ${escapeHtml(data.name)},</p>
-<p>Recebemos a sua avaliação metabólica. Plano recomendado: <strong>${escapeHtml(plan)}</strong>.</p>
-<p><a href="${escapeHtml(bookUrl)}">Começar o programa</a></p>
-<p>A 1.ª consulta confirma o plano com a equipa clínica.</p>
-<p>LON Clinic</p>`;
     return {
         clinic: {
             subject: `Avaliação metabólica · ${data.name} · ${plan}`,
             text: clinicText,
             html: clinicHtml
-        },
-        user: {
-            subject: 'A sua avaliação metabólica · Lon Clinic',
-            text: userText,
-            html: userHtml
         }
     };
 }
@@ -3623,7 +3662,7 @@ async function sendNutricaoAvaliacaoEmails(data) {
         return false;
     }
     try {
-        const { clinic, user } = buildNutricaoAvaliacaoEmails(data);
+        const { clinic } = buildNutricaoAvaliacaoEmails(data);
         await deliverEmail({
             from: EMAIL_FROM,
             to: CONTACT_EMAIL,
@@ -3632,18 +3671,115 @@ async function sendNutricaoAvaliacaoEmails(data) {
             text: clinic.text,
             html: clinic.html
         });
-        await deliverEmail({
-            from: EMAIL_FROM,
-            to: data.email,
-            subject: user.subject,
-            text: user.text,
-            html: user.html
-        });
-        console.log('   📩 Nutrition screening emails sent:', data.email);
+        console.log('   📩 Nutrition screening (clinic) emailed:', data.email);
         return true;
     } catch (err) {
         console.error('   ❌ Failed to send nutrition screening emails:', err.message);
         return false;
+    }
+}
+
+async function sendNutricaoNurtureEmail(lead, step) {
+    const email = quizLeadKey(lead.email);
+    if (!email || lead.convertedAt) return false;
+    const ctaUrl = nutricaoNurtureCtaUrl(lead.plan, step);
+    const built = nutricaoNurture.buildStepEmail({
+        step,
+        name: lead.leadName || lead.firstName || '',
+        plan: lead.plan,
+        ctaUrl,
+        escapeHtml,
+        buttonHtml: (href, label) => burnoutEmailButton(href, label, true)
+    });
+    try {
+        await deliverEmail({
+            from: EMAIL_FROM,
+            to: email,
+            replyTo: CONTACT_EMAIL,
+            subject: built.subject,
+            text: built.text,
+            html: built.html
+        });
+        emitServerAnalytics('nurture_sent', {
+            props: {
+                quiz: 'nutricao-avaliacao',
+                step,
+                plan: lead.plan === 'completo' ? 'completo' : 'nutricao',
+                profile: nutricaoNurture.planMeta(lead.plan).profile
+            }
+        }).catch(() => {});
+        console.log(`   📩 Nutrition nurture ${step}/3 sent:`, email);
+        return true;
+    } catch (err) {
+        console.error(`   ❌ Nutrition nurture ${step} failed:`, err.message);
+        return false;
+    }
+}
+
+function nutricaoNurtureLeadFromRow(row) {
+    const result = row.result || {};
+    const claimedMs = row.claimedAt ? Date.parse(row.claimedAt) : 0;
+    return {
+        id: row.id,
+        email: row.email,
+        quizId: 'nutricao-avaliacao',
+        firstName: result.leadName || '',
+        leadName: result.leadName || '',
+        phone: result.leadPhone || '',
+        leadPhone: result.leadPhone || '',
+        plan: result.plan === 'completo' ? 'completo' : 'nutricao',
+        claimedAt: claimedMs,
+        nurtureStep: Number(result.nurtureStep) || 0,
+        convertedAt: result.convertedAt || 0
+    };
+}
+
+async function runNutricaoNurture() {
+    if (!isEmailConfigured) return;
+    const now = Date.now();
+    const candidates = [];
+    if (usePersistentDb) {
+        try {
+            const rows = await db.findDueNutricaoNurture();
+            for (const row of rows) {
+                const lead = nutricaoNurtureLeadFromRow(row);
+                const step = nutricaoNurture.dueStep(lead.claimedAt, lead.nurtureStep, now);
+                if (step) candidates.push(Object.assign({}, lead, { dueStep: step }));
+            }
+        } catch (err) {
+            console.error('   ⚠️  findDueNutricaoNurture:', err.message);
+        }
+    } else {
+        for (const lead of quizLeadMemory.values()) {
+            if (lead.quizId !== 'nutricao-avaliacao' || !lead.email || lead.convertedAt) continue;
+            const step = nutricaoNurture.dueStep(lead.claimedAt, lead.nurtureStep, now);
+            if (step) candidates.push(Object.assign({}, lead, { dueStep: step }));
+        }
+    }
+    const seen = new Set();
+    for (const lead of candidates) {
+        const key = quizLeadKey(lead.email) + ':' + lead.dueStep;
+        if (!lead.email || seen.has(key)) continue;
+        seen.add(key);
+        const fromStep = lead.dueStep - 1;
+        if (usePersistentDb && lead.id) {
+            try {
+                const claimed = await db.claimNutricaoNurtureStep(lead.id, fromStep, lead.dueStep, now);
+                if (!claimed) continue;
+            } catch (err) {
+                console.error('   ⚠️  claimNutricaoNurtureStep:', err.message);
+                continue;
+            }
+        } else {
+            const mem = quizLeadMemory.get(quizLeadKey(lead.email));
+            if (mem && (Number(mem.nurtureStep) || 0) !== fromStep) continue;
+            if (mem && mem.convertedAt) continue;
+        }
+        const sent = await sendNutricaoNurtureEmail(lead, lead.dueStep);
+        if (!sent) continue;
+        const patch = { nurtureStep: lead.dueStep };
+        patch['nurture' + lead.dueStep + 'At'] = now;
+        await patchQuizLead(lead.email, patch, 'nutricao-avaliacao');
     }
 }
 
@@ -4760,12 +4896,11 @@ function computeSmartGroupedSlotTimes(allSlots, bookingsForDate, slotDurationMin
     }
     if (occupied.size === 0) {
         if (allSlots.length === 1) return [allSlots[0]];
-        const morningAnchors = ['07:00', '08:00'].filter((t) => allSlots.includes(t));
+        const morningAnchors = ['07:00', '08:00', '09:00'].filter((t) => allSlots.includes(t));
+        const eveningAnchors = ['18:00', '19:00', '20:00'].filter((t) => allSlots.includes(t));
         const last = allSlots[allSlots.length - 1];
-        if (morningAnchors.length) {
-            return [...new Set([...morningAnchors, last])];
-        }
-        return [allSlots[0], last];
+        const first = allSlots[0];
+        return [...new Set([...morningAnchors, first, ...eveningAnchors, last])];
     }
     let minOcc = Infinity;
     let maxOcc = -Infinity;
@@ -4834,8 +4969,8 @@ function invalidateNextSlotsCache() {
 }
 
 function nextSlotsCacheKeyFromReq(req) {
-    const limit = Math.min(Math.max(parseInt(req.query && req.query.limit, 10) || 6, 1), 8);
-    const withinHours = Math.min(Math.max(parseInt(req.query && req.query.withinHours, 10) || 24, 1), 336);
+    const limit = Math.min(Math.max(parseInt(req.query && req.query.limit, 10) || 8, 1), 8);
+    const withinHours = Math.min(Math.max(parseInt(req.query && req.query.withinHours, 10) || 168, 1), 336);
     return `${limit}:${withinHours}`;
 }
 
@@ -5044,16 +5179,28 @@ function addDaysIso(dateIso, n) {
     return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-${String(dt.getUTCDate()).padStart(2, '0')}`;
 }
 
+function isWeekendIso(dateIso) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateIso || ''));
+    if (!m) return false;
+    const dow = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3])).getDay();
+    return dow === 0 || dow === 6;
+}
+
+function isEveningTime(hhmm) {
+    const mins = timeToMinutes(hhmm);
+    return mins != null && mins >= 18 * 60;
+}
+
 /** Next free public slots across upcoming days (homepage + landing heroes). */
 async function getNextBookableSlots(limit, maxDays, withinHours) {
     const cap = Math.min(Math.max(parseInt(limit, 10) || 1, 1), 8);
     const days = Math.min(Math.max(parseInt(maxDays, 10) || 14, 1), 21);
-    const horizonHours = Number.isFinite(withinHours) ? withinHours : 24;
+    const horizonHours = Number.isFinite(withinHours) ? withinHours : 168;
     const tz = scheduleStore.timezone || 'Europe/Lisbon';
     const horizonMs = horizonHours > 0 ? Date.now() + horizonHours * 60 * 60 * 1000 : Infinity;
     const now = lisbonNowParts();
-    const out = [];
-    for (let i = 0; i < days && out.length < cap; i++) {
+    const pool = [];
+    for (let i = 0; i < days; i++) {
         const dateIso = addDaysIso(now.dateIso, i);
         const daySchedule = getEffectiveDaySchedule(dateIso);
         if (!daySchedule || !daySchedule.enabled) continue;
@@ -5068,14 +5215,31 @@ async function getNextBookableSlots(limit, maxDays, withinHours) {
         for (const time of available) {
             const start = localWallTimeToUtcMs(dateIso, time, tz);
             if (Number.isFinite(start) && start > horizonMs) continue;
-            out.push({
+            pool.push({
                 id: slotIdFromDateTime(dateIso, time),
                 date: dateIso,
                 time
             });
-            if (out.length >= cap) break;
         }
     }
+    const evening = pool.filter((s) => isEveningTime(s.time));
+    const weekend = pool.filter((s) => isWeekendIso(s.date));
+    const out = [];
+    const seen = new Set();
+    const push = (slot) => {
+        if (!slot || !slot.id || seen.has(slot.id) || out.length >= cap) return;
+        seen.add(slot.id);
+        out.push(slot);
+    };
+    const reserve = (evening[0] ? 1 : 0) + (weekend[0] ? 1 : 0);
+    const soonestTake = Math.max(1, cap - reserve);
+    for (const slot of pool) {
+        if (out.length >= soonestTake) break;
+        push(slot);
+    }
+    push(evening[0]);
+    push(weekend.find((s) => !seen.has(s.id)));
+    for (const slot of pool) push(slot);
     return out;
 }
 
@@ -5337,15 +5501,18 @@ function startAppointmentReminderScheduler() {
     }, AUTOMATION_JOB_INTERVAL_MS);
     setInterval(() => {
         void runQuizLeadRecoveries();
+        void runNutricaoNurture();
     }, 60_000);
     setTimeout(() => {
         void runAutomationJobs();
     }, 15_000);
     setTimeout(() => {
         void runQuizLeadRecoveries();
+        void runNutricaoNurture();
     }, 20_000);
     console.log('   ⏰ Automation (reminders, follow-up, invite expiry): every 15m (first run ~15s after startup)');
     console.log('   ⏰ Quiz checkout recovery: every 60s');
+    console.log('   ⏰ Nutrition quiz nurture (1h / 24h / 48h): every 60s');
 }
 
 /** Avoid duplicate finalize when webhook and success-page API run together */
@@ -7605,7 +7772,7 @@ app.post('/api/burnout-quiz', rateLimitBurnoutQuiz, async (req, res) => {
     return res.json({
         success: true,
         emailed,
-        bookUrl: '/marcar/burnout?ref=burnout-quiz'
+        bookUrl: '/marcar/burnout-mensal?ref=burnout-quiz'
     });
 });
 
@@ -7782,7 +7949,15 @@ app.post('/api/nutricao-avaliacao', rateLimitBurnoutQuiz, async (req, res) => {
                     weight,
                     desiredWeight
                 },
-                result: { plan, imc },
+                result: {
+                    plan,
+                    imc,
+                    leadName: name,
+                    leadPhone: phone,
+                    profile: nutricaoNurture.planMeta(plan).profile,
+                    nurtureStep: 0,
+                    convertedAt: 0
+                },
                 score: eating === 'frequent' ? 2 : eating === 'some' ? 1 : 0
             });
             await db.claimQuizAttempt(id, claimToken, email);
@@ -7791,6 +7966,7 @@ app.post('/api/nutricao-avaliacao', rateLimitBurnoutQuiz, async (req, res) => {
         }
     }
 
+    enrollNutricaoNurture(payload);
     const emailed = await sendNutricaoAvaliacaoEmails(payload);
     emitServerAnalytics(
         'quiz_complete',
@@ -8489,6 +8665,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         };
 
         const sessionParams = {
+            payment_method_types: ['card'],
             mode: isSubscription ? 'subscription' : 'payment',
             customer_email: patientEmail,
             line_items: [lineItem],
@@ -10795,7 +10972,7 @@ async function loadNextSlotsBody(limit, withinHours) {
         return { body, cache: 'COALESCE' };
     }
     const pending = (async () => {
-        const maxDays = withinHours <= 24 ? 2 : Math.min(14, Math.ceil(withinHours / 24) + 1);
+        const maxDays = Math.min(14, Math.max(7, Math.ceil(withinHours / 24) + 1));
         const slots = await getNextBookableSlots(limit, maxDays, withinHours);
         const body = {
             slots,
@@ -10820,8 +10997,8 @@ async function loadNextSlotsBody(limit, withinHours) {
 
 app.get('/api/next-slots', rateLimitNextSlots, async (req, res) => {
     try {
-        const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 6, 1), 8);
-        const withinHours = Math.min(Math.max(parseInt(req.query.withinHours, 10) || 24, 1), 336);
+        const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 8, 1), 8);
+        const withinHours = Math.min(Math.max(parseInt(req.query.withinHours, 10) || 168, 1), 336);
         const { body, cache } = await loadNextSlotsBody(limit, withinHours);
         res.set('Cache-Control', `public, max-age=${Math.ceil(NEXT_SLOTS_TTL_MS / 1000)}, stale-while-revalidate=60`);
         res.set('X-Slots-Cache', cache);

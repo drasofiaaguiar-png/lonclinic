@@ -30,6 +30,7 @@ const AUTHORS = {
         yearsPractice: 9,
         worksFor: 'Lon Clinic',
         memberOf: 'Ordem dos Médicos',
+        ersNumber: '45475',
         alumniOf: 'Faculdade de Medicina da Universidade do Porto',
         knowsAbout: [
             'Medicina do Viajante',
@@ -118,6 +119,14 @@ function personNode(origin, slug) {
             }
         ]
     };
+    if (a.ersNumber) {
+        node.hasCredential.push({
+            '@type': 'EducationalOccupationalCredential',
+            credentialCategory: 'Registo ERS',
+            identifier: { '@type': 'PropertyValue', name: 'ERS', value: String(a.ersNumber) },
+            recognizedBy: { '@type': 'Organization', name: 'Entidade Reguladora da Saúde', url: ERS_URL }
+        });
+    }
     if (a.sameAs && a.sameAs.length) node.sameAs = a.sameAs;
     return node;
 }
@@ -287,7 +296,7 @@ function renderAuthorPage(origin, slug) {
                 <h2>Perfis e verificação</h2>
                 <p class="eeat-bio-verify">${verify}</p>
                 <p class="eeat-profile-actions">
-                    <a class="lon-btn lon-btn-primary" href="/marcar/clinica-geral" data-pay-badges>Marcar Consulta — 39 €</a>
+                    <a class="lon-btn lon-btn-primary" href="/marcar/clinica-geral">Marcar Consulta — 39 €</a>
                     <a class="lon-btn lon-btn-soft" href="/blog">Ler os guias médicos</a>
                 </p>
             </div>

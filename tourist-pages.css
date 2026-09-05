@@ -65,6 +65,28 @@
     opacity: 0.92;
 }
 
+.lon-slots-lang-banner {
+    margin: 0 0 10px;
+    background: #1a1408;
+    color: #fff8e8;
+    border-left: 4px solid #d4a017;
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.lon-slots-lang-en {
+    margin: 0;
+    font-weight: 800;
+    font-size: 0.88rem;
+}
+
+.lon-slots-lang-local {
+    margin: 4px 0 0;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    opacity: 0.92;
+}
+
 .tourist-body:has(.tq-lang-banner) .cq-article {
     padding-top: 28px;
 }

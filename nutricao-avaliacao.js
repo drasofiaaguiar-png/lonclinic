@@ -36,11 +36,15 @@
             result.hidden = true;
             result.classList.remove('is-active');
         }
+        var processing = $('screen-processing');
+        if (processing) {
+            processing.hidden = true;
+            processing.classList.remove('is-active');
+        }
         var wrap = $('progressWrap');
         if (wrap) wrap.hidden = false;
         var pct = Math.floor((n / TOTAL) * 100);
-        if ($('stepLabel')) $('stepLabel').textContent = 'Passo ' + n + ' de ' + TOTAL;
-        if ($('pctLabel')) $('pctLabel').textContent = pct + '%';
+        if ($('stepLabel')) $('stepLabel').textContent = 'Passo ' + n + ' de ' + TOTAL + ' — ' + pct + '% concluído';
         if ($('progressBar')) $('progressBar').style.width = pct + '%';
         if ($('progressBarHost')) $('progressBarHost').setAttribute('aria-valuenow', String(n));
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -149,6 +153,11 @@
         form.hidden = true;
         var wrap = $('progressWrap');
         if (wrap) wrap.hidden = true;
+        var processing = $('screen-processing');
+        if (processing) {
+            processing.hidden = true;
+            processing.classList.remove('is-active');
+        }
         var screen = $('screen-result');
         screen.hidden = false;
         screen.classList.add('is-active');
@@ -206,9 +215,60 @@
                 track('cta_click', { event_label: a.getAttribute('data-plan') || 'book' });
             });
         });
-
+        startHoldTimer();
         window.scrollTo({ top: 0, behavior: 'smooth' });
         track('quiz_complete', { event_label: data.plan });
+    }
+
+    var holdTimer = null;
+    function startHoldTimer() {
+        var box = $('quizHold');
+        var clock = $('quizHoldClock');
+        var label = $('quizHoldLabel');
+        if (!box || !clock) return;
+        box.hidden = false;
+        var until = 0;
+        try { until = parseInt(sessionStorage.getItem('lon_mpq_hold') || '0', 10) || 0; } catch (e) { until = 0; }
+        if (!until || until < Date.now()) until = Date.now() + 15 * 60 * 1000;
+        try { sessionStorage.setItem('lon_mpq_hold', String(until)); } catch (e2) { /* ignore */ }
+        if (holdTimer) clearInterval(holdTimer);
+        function tick() {
+            var left = Math.max(0, until - Date.now());
+            var m = Math.floor(left / 60000);
+            var s = Math.floor((left % 60000) / 1000);
+            clock.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+            if (left <= 0) clearInterval(holdTimer);
+        }
+        tick();
+        holdTimer = setInterval(tick, 1000);
+        fetch('/api/next-slots?limit=1&withinHours=72').then(function (r) { return r.json(); }).then(function (data) {
+            var slot = data && data.slots && data.slots[0];
+            if (!slot || !label) return;
+            label.textContent = 'Próxima vaga: ' + slot.date + ' · ' + slot.time;
+            document.querySelectorAll('.js-mpq-book').forEach(function (a) {
+                var href = a.getAttribute('href') || '';
+                if (href.indexOf('date=') >= 0) return;
+                a.setAttribute('href', href + (href.indexOf('?') >= 0 ? '&' : '?') + 'date=' + encodeURIComponent(slot.date) + '&time=' + encodeURIComponent(slot.time));
+            });
+        }).catch(function () {});
+    }
+
+    function showProcessingThen(done) {
+        for (var i = 1; i <= TOTAL; i++) {
+            var el = $('screen-' + i);
+            if (el) { el.hidden = true; el.classList.remove('is-active'); }
+        }
+        if (form) form.hidden = true;
+        var wrap = $('progressWrap');
+        if (wrap) wrap.hidden = true;
+        var processing = $('screen-processing');
+        if (processing) {
+            processing.hidden = false;
+            processing.classList.add('is-active');
+        }
+        var wait = 3800;
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) wait = 400;
+        setTimeout(done, wait);
     }
 
     document.querySelectorAll('.mpq-choice input[type="radio"]').forEach(function (input) {
@@ -265,11 +325,7 @@
             body: JSON.stringify(data)
         }).catch(function () { return null; }).finally(function () {
             storeForBooking(data);
-            track('quiz_complete', { event_label: data.plan });
-            var dest = data.plan === 'completo'
-                ? '/nutricao/programa?plano=completo&ref=avaliacao#pagamento'
-                : '/nutricao/programa?plano=nutricao&ref=avaliacao#planos';
-            window.location.href = dest;
+            showProcessingThen(function () { renderResults(data); });
         });
     });
 

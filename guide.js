@@ -8,7 +8,7 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
-const { organizationJsonLd, jsonLdScript, originOf, canonicalHref, burnoutSpokeCanonicalPath } = require('./seo');
+const { organizationJsonLd, jsonLdScript, originOf, canonicalHref } = require('./seo');
 const authors = require('./authors');
 const { socialLink } = require('./utm');
 const cvi = require('./cvi');
@@ -196,10 +196,9 @@ function burnoutHubCard() {
     };
 }
 
-/** Burnout magazine posts consolidate to the hub so Google has one transactional URL. */
 function blogCanonicalPath(meta) {
     const slug = String((meta && meta.slug) || '');
-    return burnoutSpokeCanonicalPath(`/blog/${encodeURIComponent(slug)}`);
+    return `/blog/${encodeURIComponent(slug)}`;
 }
 
 function burnoutHubStripHtml(lang) {
@@ -567,7 +566,7 @@ function bookCardHtml(card, tone, extraClass, extraAttrs) {
             <h3 class="guide-book-title">${escapeHtml(card.title)}</h3>
             <p class="guide-book-price"${card.whenAttr || ''}>${escapeHtml(card.price)}</p>
             <p class="guide-book-note">${escapeHtml(card.note)}</p>
-            <a class="guide-book-cta"${card.ctaAttr || ''} data-pay-badges href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
+            <a class="guide-book-cta"${card.ctaAttr || ''} href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
         </article>`;
 }
 
@@ -648,6 +647,87 @@ function insertAfterFirstH2(html, block) {
     return `${html.slice(0, end)}${block}${html.slice(end)}`;
 }
 
+function insertAfterFirstParagraph(html, block) {
+    const re = /<p\b[^>]*>[\s\S]*?<\/p>/i;
+    const m = re.exec(html);
+    if (!m || m.index == null) return `${block}${html}`;
+    const end = m.index + m[0].length;
+    return `${html.slice(0, end)}${block}${html.slice(end)}`;
+}
+
+function articleWantsLiveSlots(meta) {
+    if (!meta) return false;
+    if (meta.liveSlots === true) return true;
+    return articleCluster(meta) === 'burnout';
+}
+
+function rewriteBlogBurnoutServiceLinks(html) {
+    return String(html || '').replace(/href=(["'])\/psicologia-burnout(?:\?[^"']*)?\1/gi, 'href=$1/burnout$1');
+}
+
+function linkifyBurnoutMentions(html) {
+    const raw = String(html || '');
+    if (!raw) return raw;
+    const parts = raw.split(/(<a\b[^>]*>[\s\S]*?<\/a>)/gi);
+    let linked = false;
+    const termRe = /(s[ií]ndrome de exaust[aã]o|stress laboral|\bburnout\b)/i;
+    return parts.map((part) => {
+        if (linked || /^<a\b/i.test(part) || !termRe.test(part)) return part;
+        linked = true;
+        return part.replace(termRe, (match) => `<a href="/burnout">${match}</a>`);
+    }).join('');
+}
+
+function burnoutMentionNoteHtml(lang) {
+    const packs = {
+        pt: 'Para objectivar o desgaste: <a href="/burnout">centro burnout</a> · <a href="/burnout/teste">teste CBI gratuito</a>.',
+        en: 'To measure exhaustion: <a href="/burnout">burnout hub</a> · <a href="/burnout/teste">free CBI test</a>.',
+        es: 'Para objetivar el desgaste: <a href="/burnout">centro burnout</a> · <a href="/burnout/teste">test CBI gratuito</a>.',
+        fr: 'Pour objectiver l’épuisement : <a href="/burnout">centre burnout</a> · <a href="/burnout/teste">test CBI gratuit</a>.',
+        de: 'Um die Erschöpfung einzuordnen: <a href="/burnout">Burnout-Zentrum</a> · <a href="/burnout/teste">kostenloser CBI-Test</a>.'
+    };
+    return `<p class="guide-burnout-note">${packs[lang] || packs.pt}</p>`;
+}
+
+function articleLiveSlotsHtml(meta) {
+    const slug = String((meta && meta.slug) || 'artigo');
+    const kind = defaultCtaKind(meta);
+    const packs = {
+        burnout: {
+            service: 'burnout_mensal',
+            href: `/marcar/burnout-mensal?ref=blog-${encodeURIComponent(slug)}`,
+            kicker: 'Primeira sessão do plano · 216 €/mês'
+        },
+        nutrition: {
+            service: 'nutricao_programa',
+            href: `/marcar/nutricao-programa?ref=blog-${encodeURIComponent(slug)}`,
+            kicker: 'Próximos horários · consulta inicial de nutrição metabólica'
+        },
+        mental: {
+            service: 'saude_mental',
+            href: `/marcar/saude-mental?ref=blog-${encodeURIComponent(slug)}`,
+            kicker: 'Próximos horários · consulta de saúde mental'
+        },
+        travel: {
+            service: 'travel',
+            href: `/marcar/travel?ref=blog-${encodeURIComponent(slug)}`,
+            kicker: 'Próximos horários · consulta do viajante'
+        },
+        general: {
+            service: 'clinica_geral',
+            href: `/marcar/clinica-geral?ref=blog-${encodeURIComponent(slug)}`,
+            kicker: 'Próximos horários'
+        }
+    };
+    const pack = packs[kind] || packs.general;
+    return `
+<aside class="guide-live-slots dr-live-slots" data-next-slots data-limit="3" data-service="${escapeHtml(pack.service)}" data-book-href="${escapeHtml(pack.href)}" data-surface="blog-${escapeHtml(slug)}" hidden>
+    <p class="dr-live-slots-kicker">${escapeHtml(pack.kicker)}</p>
+    <div class="dr-live-slots-row" data-next-slots-row></div>
+    <a href="${escapeHtml(pack.href)}" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
+</aside>`;
+}
+
 function insertBeforeFaqOrEnd(html, block) {
     const faqRe = /<h2[^>]*>\s*(Perguntas frequentes|FAQ|Frequently asked questions)/i;
     if (faqRe.test(html)) return html.replace(faqRe, `${block}$&`);
@@ -709,14 +789,26 @@ function seriesBacklinksHtml(current, articles) {
 function injectArticleChrome(html, meta, articles, format) {
     const kind = defaultCtaKind(meta);
     const lang = articleLangCode(meta);
-    let out = String(html || '');
+    let out = rewriteBlogBurnoutServiceLinks(String(html || ''));
+    out = linkifyBurnoutMentions(out);
     const backlinks = seriesBacklinksHtml(meta, articles);
+    const slots = articleWantsLiveSlots(meta) && !out.includes('data-next-slots')
+        ? articleLiveSlotsHtml(meta)
+        : '';
+    const mentionsBurnout = /\/burnout|burnout|s[ií]ndrome de exaust|stress laboral/i.test(out);
+    const note = mentionsBurnout && articleCluster(meta) !== 'burnout' && !out.includes('guide-burnout-note')
+        ? burnoutMentionNoteHtml(lang)
+        : '';
     if (format === 'html') {
+        if (slots) out = insertAfterFirstParagraph(out, slots);
+        if (note) out = insertAfterFirstParagraph(out, note);
         if (!out.includes('guide-actions')) out += actionCardsHtml(kind, 0, lang);
         if (backlinks && !out.includes('guide-backlinks')) out += backlinks;
         return out;
     }
     out = expandCtaTokens(out, kind, lang);
+    if (slots) out = insertAfterFirstParagraph(out, slots);
+    if (note) out = insertAfterFirstParagraph(out, note);
     if (backlinks && !out.includes('guide-backlinks')) {
         out = insertAfterFirstH2(out, backlinks);
     }
@@ -875,8 +967,6 @@ function layoutGuidePage(opts) {
                     <div class="lon-footer-payments" aria-label="Métodos de pagamento">
                         <span>Visa</span>
                         <span>Mastercard</span>
-                        <span>MB Way</span>
-                        <span>Multibanco</span>
                     </div>
                 </div>
                 <div class="lon-footer-col">
@@ -926,7 +1016,7 @@ function layoutGuidePage(opts) {
     <script src="/lon-nav.js"></script>
     <script src="/i18n.js?v=20260905e" defer></script>
     <script src="/lon-analytics.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260905h" defer></script>
+    <script src="/lon-slots.js?v=20260906b" defer></script>
 </body>
 </html>`;
 }
@@ -1223,7 +1313,7 @@ function renderBlogArticle(origin, slug) {
         htmlLang: langMeta.htmlLang,
         ogLocale: langMeta.ogLocale,
         extraHead: articleHreflangLinks(o, meta, manifest.articles),
-        extraCssAfter: ['/guide.css?v=20260905h', '/author.css?v=20260820l'],
+        extraCssAfter: ['/guide.css?v=20260906a', '/author.css?v=20260820l'],
         mainHtml: magAppHtml(articlePath, articleInner)
     });
 
@@ -2118,7 +2208,7 @@ function layoutMagazinePage(opts) {
     <script src="/i18n.js?v=20260905e" defer></script>
     <script src="/lon-analytics.js?v=20260905e" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260905h" defer></script>
+    <script src="/lon-slots.js?v=20260906b" defer></script>
     <script src="/guide-actions.js?v=20260905a" defer></script>
 </body>
 </html>`;

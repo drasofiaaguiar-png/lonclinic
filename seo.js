@@ -88,6 +88,7 @@ function keepInfoPageQuery(pathname, search, req) {
 }
 
 const BURNOUT_HUB_PATH = '/burnout';
+const CLINICA_ANTI_BURNOUT_PATH = '/clinica-anti-burnout';
 
 function pathnameOnly(pathAndQuery) {
     let p = String(pathAndQuery || '/').split('?')[0].split('#')[0];
@@ -96,27 +97,14 @@ function pathnameOnly(pathAndQuery) {
     return p || '/';
 }
 
-/** CBI quiz and other clinical instruments keep a self-canonical. */
-function isBurnoutToolPath(pathname) {
-    const p = pathnameOnly(pathname);
-    if (p === '/burnout/teste' || p === '/burnout/testes') return true;
-    return /^\/burnout\/teste-[a-z0-9-]+$/.test(p);
+/** Only /clinica-anti-burnout cedes authority to the hub. Spokes, blog, and /psicologia-burnout stay self-canonical. */
+function isClinicaAntiBurnoutPath(pathname) {
+    return pathnameOnly(pathname) === CLINICA_ANTI_BURNOUT_PATH;
 }
 
-/**
- * Duplicate burnout URLs that must consolidate to the hub:
- * /blog/* burnout articles, /burnout/* spokes, /psicologia-burnout, /clinica-anti-burnout.
- */
+/** @deprecated name kept for callers — only the medical landing maps to the hub. */
 function isBurnoutAuthoritySpoke(pathname) {
-    const p = pathnameOnly(pathname);
-    if (p === '/clinica-anti-burnout' || p === '/psicologia-burnout') return true;
-    if (p === BURNOUT_HUB_PATH || isBurnoutToolPath(p)) return false;
-    if (p.startsWith('/burnout/')) return true;
-    if (p.startsWith('/blog/')) {
-        const slug = decodeURIComponent(p.slice('/blog/'.length).split('/')[0] || '');
-        return /burnout/i.test(slug);
-    }
-    return false;
+    return isClinicaAntiBurnoutPath(pathname);
 }
 
 function burnoutSpokeCanonicalPath(pathAndQuery) {
@@ -124,7 +112,7 @@ function burnoutSpokeCanonicalPath(pathAndQuery) {
     const qAt = raw.indexOf('?');
     const pathPart = qAt === -1 ? raw : raw.slice(0, qAt);
     const search = qAt === -1 ? '' : raw.slice(qAt);
-    if (isBurnoutAuthoritySpoke(pathPart)) return BURNOUT_HUB_PATH;
+    if (isClinicaAntiBurnoutPath(pathPart)) return BURNOUT_HUB_PATH;
     const cleaned = pathnameOnly(pathPart);
     return cleaned + search;
 }
@@ -169,7 +157,7 @@ function canonicalHref(pathAndQuery) {
     const search = qAt === -1 ? '' : p.slice(qAt);
     if (pathPart === '/index.html') pathPart = '/';
     if (pathPart.length > 1) pathPart = pathPart.replace(/\/+$/, '');
-    if (isBurnoutAuthoritySpoke(pathPart)) return `${SITE_ORIGIN}${BURNOUT_HUB_PATH}`;
+    if (isClinicaAntiBurnoutPath(pathPart)) return `${SITE_ORIGIN}${BURNOUT_HUB_PATH}`;
     return `${SITE_ORIGIN}${keepInfoPageQuery(pathPart || '/', search)}`;
 }
 

@@ -17,7 +17,7 @@ const NUTRICAO_DIR = path.join(__dirname, 'data', 'nutricao');
 const MANIFEST_PATH = path.join(NUTRICAO_DIR, 'manifest.json');
 const PAGES_DIR = path.join(NUTRICAO_DIR, 'pages');
 const CSS_V = '20260905j';
-const SLOTS_V = '20260905j';
+const SLOTS_V = '20260906b';
 const ON_URL = 'https://www.ordemdosnutricionistas.pt/';
 const NUTRICAO_PROGRAMA_HREF = '/marcar/nutricao-programa';
 const WEIGHT_LOSS_SLUGS = new Set(['glp-1', 'ozempic-wegovy']);
@@ -541,7 +541,7 @@ function renderHub(origin) {
                 <p class="nu-lead">A Lon Clinic não prescreve aGLP-1 (Ozempic, Wegovy) para perda de peso. O produto de peso é um programa nutricional e comportamental: reeducação metabólica, saciedade natural e acompanhamento contínuo para evitar o efeito ioiô. Há também fichas por condição (pós-parto, bariátrica, diabetes tipo 2, Hashimoto, celíaca, FODMAP, SOP) — orientação alimentar, não consulta para medicamento de emagrecimento.</p>
                 <p class="nu-hero-meta">Programa mensal a partir de 115 € · 2 consultas/mês + chat no portal · Psicologia quando o stress manda na comida</p>
                 <div class="nu-hero-actions">
-                    <a class="lon-btn lon-btn-primary" href="/marcar/nutricao-programa?ref=nutricao-hub" data-pay-badges>Consulta inicial de nutrição metabólica — 115 €</a>
+                    <a class="lon-btn lon-btn-primary" href="/marcar/nutricao-programa?ref=nutricao-hub">Consulta inicial de nutrição metabólica — 115 €</a>
                     <a class="lon-btn lon-btn-soft" href="/nutricao/programa">Programa 3 a 6 meses</a>
                     <a class="lon-btn lon-btn-soft" href="/nutricao/testes">Fazer um teste gratuito</a>
                 </div>

@@ -701,7 +701,7 @@ function bookingCardsHtml(page, ui, tone) {
             <h3 class="guide-book-title">${escapeHtml(card.title)}</h3>
             <p class="guide-book-price">${escapeHtml(card.price)}</p>
             <p class="guide-book-note">${escapeHtml(card.note)}</p>
-            <a class="guide-book-cta js-consulta-cta" data-consulta-cta="${escapeHtml(card.track)}" data-pay-badges href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
+            <a class="guide-book-cta js-consulta-cta" data-consulta-cta="${escapeHtml(card.track)}" href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
         </article>`
         )
         .join('');
@@ -721,9 +721,16 @@ function bookingServiceKey(page) {
 
 function liveSlotsHtml(page, ui, surface) {
     const href = applyConsultLangPolicy(page.bookingHref || '/marcar/clinica-geral', ui.htmlLang);
+    const langNote = needsConsultLangPolicy(ui.htmlLang)
+        ? `<aside class="lon-slots-lang-banner" role="alert" data-lon-lang-policy>
+            <p class="lon-slots-lang-en">${escapeHtml(CONSULT_LANG_POLICY_EN)}</p>
+            ${ui.languagesStrict ? `<p class="lon-slots-lang-local">${escapeHtml(ui.languagesStrict)}</p>` : ''}
+        </aside>`
+        : '';
     return `
         <div class="cq-live-slots" data-next-slots data-limit="3" data-service="${escapeHtml(bookingServiceKey(page))}" data-book-href="${escapeHtml(href)}" data-surface="${escapeHtml(surface || 'tourist')}" hidden>
             <p class="cq-live-slots-kicker">${escapeHtml(ui.slotKicker)}</p>
+            ${langNote}
             <div class="cq-live-slots-row" data-next-slots-row></div>
             <a href="${escapeHtml(href)}" class="dr-slots-week" data-slots-fallback hidden>${escapeHtml(ui.weekCta || ui.slotPending)}</a>
         </div>`;
@@ -755,7 +762,7 @@ function ctaBand(page, ui) {
                 <h2 class="cq-cta-title">${escapeHtml(page.ctaTitle || ui.navBook)}</h2>
                 <p class="cq-cta-lead">${escapeHtml(page.ctaLead || page.priceNote || '')}</p>
                 <div class="cq-cta-actions">
-                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="tourist-band" data-pay-badges href="${href}">${label}</a>
+                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="tourist-band" href="${href}">${label}</a>
                     <a class="lon-btn lon-btn-soft" href="${secondaryHref}">${secondaryLabel}</a>
                 </div>
             </div>
@@ -827,7 +834,7 @@ function layoutPage(opts) {
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260905f">
     <link rel="stylesheet" href="/consulta-pages.css?v=20260905f">
-    <link rel="stylesheet" href="/tourist-pages.css?v=20260905i">
+    <link rel="stylesheet" href="/tourist-pages.css?v=20260906c">
     <link rel="stylesheet" href="/author.css?v=20260820e">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -898,7 +905,7 @@ function layoutPage(opts) {
     <script src="/i18n.js?v=20260905e" defer></script>
     <script src="/lon-analytics.js?v=20260905e" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260905i" defer></script>
+    <script src="/lon-slots.js?v=20260906c" defer></script>
 </body>
 </html>`;
 }
@@ -993,7 +1000,7 @@ function renderPage(origin, slug) {
                 </p>
                 <p class="tq-langs-line${needsConsultLangPolicy(ui.htmlLang) ? ' tq-langs-line--strict' : ''}">${escapeHtml(ui.languagesLine)}</p>
                 <div class="cq-header-actions">
-                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="tourist-hero" data-pay-badges href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || ui.navBook)}</a>
+                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="tourist-hero" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || ui.navBook)}</a>
                     <a class="lon-btn lon-btn-soft" href="#quando-urgencia">${escapeHtml(ui.emergencyCta)}</a>
                 </div>
                 ${liveSlotsHtml(meta, ui, 'tourist-hero')}
@@ -1023,7 +1030,7 @@ function renderPage(origin, slug) {
                 <h2 id="tq-price">${escapeHtml(ui.priceTitle)}</h2>
                 <p class="cq-price-value">${escapeHtml(meta.price || '€39')}</p>
                 <p class="cq-price-note">${escapeHtml(meta.priceNote || '')}</p>
-                <a class="lon-btn lon-btn-primary js-consulta-cta" data-consulta-cta="tourist-price" data-pay-badges href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || ui.navBook)}</a>
+                <a class="lon-btn lon-btn-primary js-consulta-cta" data-consulta-cta="tourist-price" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || ui.navBook)}</a>
             </section>
 
             <section class="cq-split" id="quando-urgencia">

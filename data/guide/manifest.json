@@ -27,7 +27,8 @@
                     "q": "É preciso atingir o peso «ideal» para ter benefícios de saúde?",
                     "a": "Não — mesmo uma perda modesta de 5 a 10% do peso corporal já traz benefícios mensuráveis, segundo o CDC."
                 }
-            ]
+            ],
+            "liveSlots": true
         },
         {
             "slug": "deficit-calorico",
@@ -317,7 +318,8 @@
                     "q": "Como funciona a semaglutida no corpo?",
                     "a": "Imita a hormona natural GLP-1, ativando recetores cerebrais que regulam a fome e a saciedade, o que reduz a ingestão calórica."
                 }
-            ]
+            ],
+            "liveSlots": true
         },
         {
             "slug": "manter-o-peso-perdido",
@@ -462,7 +464,8 @@
                     "q": "Com que frequência devo rever o plano com a nutricionista?",
                     "a": "Varia consoante a situação, mas revisões periódicas ao longo do processo permitem ajustar a estratégia à medida que o corpo e as circunstâncias mudam."
                 }
-            ]
+            ],
+            "liveSlots": true
         },
         {
             "slug": "perda-de-peso-e-saude-hormonal",
@@ -1738,7 +1741,8 @@
                     "q": "A medicação para a ansiedade é para sempre?",
                     "a": "Não necessariamente — a duração do tratamento é decidida caso a caso, com o médico, consoante a evolução dos sintomas."
                 }
-            ]
+            ],
+            "liveSlots": true
         },
         {
             "slug": "depressao-mitos-e-factos",
@@ -2318,7 +2322,8 @@
                     "q": "A depressão tem cura?",
                     "a": "É uma condição altamente tratável — a maioria das pessoas melhora significativamente com o tratamento adequado, seja psicoterapia, medicação, ou uma combinação de ambas."
                 }
-            ]
+            ],
+            "liveSlots": true
         },
         {
             "slug": "burnout-o-que-e-sinais-cansaco",
@@ -2351,7 +2356,8 @@
                     "q": "Quando devo procurar um médico?",
                     "a": "Se os sintomas persistem há mais de duas semanas, afetam o sono, a concentração ou as relações pessoais, ou se sente que o descanso já não é suficiente para recuperar energia."
                 }
-            ]
+            ],
+            "liveSlots": true
         },
         {
             "slug": "9-sinais-de-burnout-no-trabalho",
@@ -2380,7 +2386,8 @@
                     "q": "O burnout afeta só quem trabalha demais?",
                     "a": "Não necessariamente. A investigação mostra que a perceção de injustiça e falta de apoio pesa tanto ou mais do que o número de horas trabalhadas."
                 }
-            ]
+            ],
+            "liveSlots": true
         },
         {
             "slug": "burnout-parental-investigacao",
@@ -2467,7 +2474,8 @@
                     "q": "Porque é que o burnout piora o sono?",
                     "a": "Os níveis elevados de cortisol associados ao stress crónico alteram a estrutura do sono, reduzindo o sono profundo, segundo dados da Sleep Foundation."
                 }
-            ]
+            ],
+            "liveSlots": true
         },
         {
             "slug": "burnout-ou-depressao",
@@ -2496,7 +2504,8 @@
                     "q": "A depressão melhora só com férias ou descanso?",
                     "a": "Normalmente não. Ao contrário do burnout, a depressão geralmente exige tratamento específico — psicoterapia, medicação, ou ambos."
                 }
-            ]
+            ],
+            "liveSlots": true
         },
         {
             "slug": "quanto-tempo-demora-a-recuperar-de-um-burnout",
@@ -2525,7 +2534,8 @@
                     "q": "Férias resolvem o burnout?",
                     "a": "Ajudam a aliviar sintomas a curto prazo, mas raramente resolvem a causa se nada mudar no contexto que gerou o esgotamento."
                 }
-            ]
+            ],
+            "liveSlots": true
         },
         {
             "slug": "burnout-digital-videochamadas",
@@ -2583,7 +2593,8 @@
                     "q": "Uma consulta de burnout pode justificar baixa médica em Portugal?",
                     "a": "Sim, consoante a avaliação clínica — o médico pode emitir um Certificado de Incapacidade Temporária, que dá acesso ao subsídio de doença da Segurança Social."
                 }
-            ]
+            ],
+            "liveSlots": true
         },
         {
             "slug": "burnout-em-profissoes-de-saude",
@@ -2670,7 +2681,8 @@
                     "q": "Quanto tempo pode durar o subsídio de doença?",
                     "a": "Depende da avaliação clínica e da eventual convocação para junta médica de reavaliação; o valor pago aumenta progressivamente com a duração da baixa, segundo as regras da Segurança Social."
                 }
-            ]
+            ],
+            "liveSlots": true
         },
         {
             "slug": "como-as-empresas-podem-prevenir-o-burnout",
@@ -2815,7 +2827,8 @@
                     "q": "O que ajuda a quebrar o ciclo stress-insónia?",
                     "a": "Horários regulares de sono, desconexão digital antes de deitar e, em casos persistentes, terapia especializada em insónia."
                 }
-            ]
+            ],
+            "liveSlots": true
         },
         {
             "slug": "burnout-em-cuidadores-informais",
@@ -2873,7 +2886,8 @@
                     "q": "O que fazer se tiver pensamentos de autoagressão?",
                     "a": "Procure ajuda imediata através da SNS 24 (808 24 24 24) ou dos serviços de urgência mais próximos — não espere que a situação melhore sozinha."
                 }
-            ]
+            ],
+            "liveSlots": true
         },
         {
             "slug": "regressar-ao-trabalho-depois-de-um-burnout",
@@ -2902,7 +2916,8 @@
                     "q": "Devo voltar ao mesmo ritmo de antes do burnout?",
                     "a": "Não é recomendável. Um regresso gradual e consciente é sinal de recuperação bem-feita, não de fraqueza."
                 }
-            ]
+            ],
+            "liveSlots": true
         },
         {
             "slug": "sns-vs-privado-portugal",

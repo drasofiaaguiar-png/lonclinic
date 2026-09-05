@@ -203,6 +203,39 @@ function utmPair(def, content) {
     return `ref=${ref}&utm_source=quiz&utm_medium=owned&utm_campaign=${camp}&utm_content=${encodeURIComponent(content)}`;
 }
 
+function quizSlotMeta(def) {
+    const href = String((def.booking && (def.booking.subHref || def.booking.consultHref)) || '');
+    if (/nutricao-programa/.test(href) || def.cluster === 'nutrition') {
+        return {
+            service: 'nutricao_programa',
+            href: `/marcar/nutricao-programa?ref=${encodeURIComponent(def.id + '-quiz')}`,
+            kicker: 'Próximos horários · consulta inicial de nutrição metabólica'
+        };
+    }
+    if (/burnout-mensal|\/marcar\/burnout/.test(href) || def.cluster === 'burnout') {
+        return {
+            service: 'burnout_mensal',
+            href: `/marcar/burnout-mensal?ref=${encodeURIComponent(def.id + '-quiz')}`,
+            kicker: 'Primeira sessão do plano · 216 €/mês'
+        };
+    }
+    return {
+        service: 'clinica_geral',
+        href: `/marcar/clinica-geral?ref=${encodeURIComponent(def.id + '-quiz')}`,
+        kicker: 'Próximos horários'
+    };
+}
+
+function quizSlotsHtml(def) {
+    const pack = quizSlotMeta(def);
+    return `
+                        <div class="dr-live-slots" data-next-slots data-limit="3" data-service="${escapeHtml(pack.service)}" data-book-href="${escapeHtml(pack.href)}" data-surface="quiz-${escapeHtml(def.id)}" hidden>
+                            <p class="dr-live-slots-kicker">${escapeHtml(pack.kicker)}</p>
+                            <div class="dr-live-slots-row" data-next-slots-row></div>
+                            <a href="${escapeHtml(pack.href)}" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
+                        </div>`;
+}
+
 function bookHref(def, which, content) {
     const b = def.booking || {};
     const base = which === 'sub' ? b.subHref : b.consultHref;
@@ -431,9 +464,10 @@ function renderQuizPage(origin, def) {
                             <p class="bq-hold-time" id="quizHoldLabel">A carregar o próximo horário…</p>
                             <p class="bq-hold-timer">Reservável durante <b id="quizHoldClock">15:00</b></p>
                         </div>
-                        <a class="bq-btn bq-btn-primary bq-btn-lg js-quiz-book" id="bookBtnPrimary" href="${consultHref}" data-pay-badges>${escapeHtml(b.consultName || 'Marcar consulta')}</a>
+                        <a class="bq-btn bq-btn-primary bq-btn-lg js-quiz-book" id="bookBtnPrimary" href="${consultHref}">${escapeHtml(b.consultName || 'Marcar consulta')}</a>
+                        ${quizSlotsHtml(def)}
                         <p class="bq-book-now-note" id="bookNowNote">Videoconsulta · o resultado do teste fica associado à marcação</p>
-                        <p class="bq-buy-trust" id="quizTrust">🔒 Pagamento seguro · MB WAY e Multibanco<br>🩺 Consulta agendada imediatamente após o pagamento</p>
+                        <p class="bq-buy-trust" id="quizTrust">🔒 Pagamento seguro via Stripe<br>🩺 Consulta agendada imediatamente após o pagamento</p>
                     </div>
                     <div class="bq-scales" id="scales"></div>
                     <div class="bq-insights" id="insights"></div>
@@ -491,7 +525,7 @@ function renderQuizPage(origin, def) {
     </aside>
     <script>window.CLINICAL_QUIZ = ${cfgJson};</script>
     <script src="/lon-analytics.js?v=20260905i" defer></script>
-    <script src="/lon-slots.js?v=20260905i" defer></script>
+    <script src="/lon-slots.js?v=20260906c" defer></script>
     <script src="/clinical-quiz-score.js?v=${JS_V}" defer></script>
     <script src="/clinical-quiz.js?v=${JS_V}" defer></script>
 </body>

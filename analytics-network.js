@@ -32,6 +32,7 @@ const ALLOWED_NAMES = new Set([
     'quiz_complete',
     'checkout_abandoned',
     'recovery_sent',
+    'nurture_sent',
     'triage_submitted',
     'heartbeat',
     'cancel',

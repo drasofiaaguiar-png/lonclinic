@@ -12,7 +12,7 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
-const { organizationJsonLd, originOf, canonicalHref, burnoutSpokeCanonicalPath } = require('./seo');
+const { organizationJsonLd, originOf, canonicalHref } = require('./seo');
 const authors = require('./authors');
 
 const BURNOUT_DIR = path.join(__dirname, 'data', 'burnout');
@@ -138,6 +138,17 @@ function liveSlotsHtml(ref, surface) {
         </div>`;
 }
 
+function cbiBannerHtml(ref) {
+    const r = encodeURIComponent(ref || 'burnout-spoke');
+    return `
+        <aside class="bo-cbi-banner" role="region" aria-label="Teste CBI de burnout">
+            <p class="bo-cbi-banner-kicker">Copenhagen Burnout Inventory</p>
+            <p class="bo-cbi-banner-title">Quer avaliar o seu nível atual de exaustão?</p>
+            <p class="bo-cbi-banner-lead">Faça o nosso Teste CBI de Burnout gratuito — 4 minutos, resultado imediato.</p>
+            <a class="lon-btn lon-btn-dark lon-btn-sm" href="/burnout/teste?ref=${r}">Fazer o teste CBI</a>
+        </aside>`;
+}
+
 function ctaBand(ref) {
     const r = encodeURIComponent(ref || 'burnout-hub');
     return `
@@ -247,7 +258,7 @@ function layoutBurnoutPage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260621b">
-    <link rel="stylesheet" href="/burnout-pages.css?v=20260906a">
+    <link rel="stylesheet" href="/burnout-pages.css?v=20260906c">
     <link rel="stylesheet" href="/author.css?v=20260820e">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     ${ldScripts}
@@ -354,7 +365,7 @@ function layoutBurnoutPage(opts) {
     <script src="/i18n.js?v=20260905e" defer></script>
     <script src="/lon-analytics.js?v=20260905e" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260906a" defer></script>
+    <script src="/lon-slots.js?v=20260906c" defer></script>
 </body>
 </html>`;
 }
@@ -495,7 +506,7 @@ function renderSpoke(origin, slug) {
     const datePub = String(meta.datePublished || '');
     const dateMod = String(meta.dateModified || meta.datePublished || '');
     const og = `${o}/image/image2.webp`;
-    const canonicalPath = burnoutSpokeCanonicalPath(`/burnout/${encodeURIComponent(slug)}`);
+    const canonicalPath = `/burnout/${encodeURIComponent(slug)}`;
     const ref = `burnout-${slug}`;
 
     const faqLd = Array.isArray(meta.faq) && meta.faq.length
@@ -556,8 +567,9 @@ function renderSpoke(origin, slug) {
                 <h1>${escapeHtml(title)}</h1>
                 <p class="bo-article-deck">${escapeHtml(description)}</p>
                 ${authors.authorBylineHtml(o, meta.author, datePub)}
+                ${cbiBannerHtml(ref)}
                 <div class="bo-article-actions">
-                    <a class="lon-btn lon-btn-dark lon-btn-sm" href="/burnout/teste?ref=${encodeURIComponent(ref)}">Teste gratuito</a>
+                    <a class="lon-btn lon-btn-dark lon-btn-sm" href="/burnout/teste?ref=${encodeURIComponent(ref)}">Fazer o teste CBI</a>
                     <a class="lon-btn lon-btn-soft lon-btn-sm" href="/burnout">Centro burnout</a>
                 </div>
                 ${liveSlotsHtml(ref, 'burnout-spoke')}
@@ -673,7 +685,7 @@ function renderCollection(origin) {
         origin: o,
         title: `${series.title} — Coleção | Lon Clinic`,
         description: series.description,
-        canonicalPath: '/burnout',
+        canonicalPath: '/burnout/colecao',
         ogImage: `${o}/image/image2.webp`,
         jsonLdExtra: jsonLd,
         mainHtml

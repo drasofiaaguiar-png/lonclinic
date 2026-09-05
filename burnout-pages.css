@@ -644,6 +644,46 @@
     font-weight: 600;
 }
 
+.bo-cbi-banner {
+    margin: 0 0 18px;
+    padding: 16px 18px;
+    background: #142018;
+    color: #f4f7f5;
+    border-radius: 14px;
+    border-left: 4px solid #d4a017;
+}
+
+.bo-cbi-banner-kicker {
+    margin: 0 0 4px;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.bo-cbi-banner-title {
+    margin: 0 0 6px;
+    font-weight: 800;
+    font-size: 1.05rem;
+}
+
+.bo-cbi-banner-lead {
+    margin: 0 0 12px;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    opacity: 0.92;
+}
+
+.qx-cbi-support {
+    margin: 0 0 16px;
+    padding: 12px 14px;
+    background: #f4f7f5;
+    border-left: 4px solid #255235;
+    border-radius: 10px;
+    font-size: 1rem;
+    line-height: 1.45;
+}
+
 .bo-not-found {
     padding: calc(var(--lon-nav-h, 72px) + 64px) 20px 80px;
     text-align: center;
