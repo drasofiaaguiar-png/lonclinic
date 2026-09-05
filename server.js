@@ -513,6 +513,13 @@ function sendHtmlNoCache(res, filePath, onErrorMessage) {
     });
 }
 
+/** Cloudflare caches anonymous HTML for ~4h (HIT + max-age=14400). A Set-Cookie
+ *  makes the response DYNAMIC, matching /admin. Harmless 60s marker only. */
+function sendStaffHtmlNoCache(res, filePath, onErrorMessage) {
+    res.append('Set-Cookie', 'lon_nocache=1; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly');
+    sendHtmlNoCache(res, filePath, onErrorMessage);
+}
+
 function sendHtmlNoCacheString(res, html, statusCode) {
     res.status(statusCode || 200).set({
         'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
@@ -5463,11 +5470,11 @@ app.get('/conta/vacina', (req, res) => {
 });
 
 app.get('/clinic-portal', (req, res) => {
-    sendHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
+    sendStaffHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
 });
 
 app.get('/clinic-portal/', (req, res) => {
-    sendHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
+    sendStaffHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
 });
 
 const CLINIC_PORTAL_ASSETS = new Set([
