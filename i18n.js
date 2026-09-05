@@ -698,6 +698,9 @@
                 burnout_programa: 'Anti-Burnout Program (8 sessions)',
                 renovacao: 'Medical Treatment Renewal',
                 longevidade: 'Longevity & Preventive Health Consultation',
+                nutricao_programa: 'Nutrition Program (6 months) — month 1',
+                nutricao_completo: 'Complete Metabolic Program — month 1',
+                nutricao_completo_reforcado: 'Complete Program — higher first payment',
             },
         },
         pt: {
@@ -722,6 +725,9 @@
                 burnout_programa: 'Programa Anti-Burnout (8 sessões)',
                 renovacao: 'Renovação de Tratamento Médico',
                 longevidade: 'Consulta de Longevidade e Saúde Preventiva',
+                nutricao_programa: 'Programa Nutrição (6 meses) — mês 1',
+                nutricao_completo: 'Programa Completo (6 meses) — mês 1',
+                nutricao_completo_reforcado: 'Programa Completo — entrada reforçada',
             },
         },
         es: {
@@ -746,6 +752,9 @@
                 burnout_programa: 'Programa anti-burnout (8 sesiones)',
                 renovacao: 'Renovación de tratamiento médico',
                 longevidade: 'Consulta de longevidad y salud preventiva',
+                nutricao_programa: 'Programa de nutrición (6 meses) — mes 1',
+                nutricao_completo: 'Programa completo — mes 1',
+                nutricao_completo_reforcado: 'Programa completo — entrada reforzada',
             },
         },
     };

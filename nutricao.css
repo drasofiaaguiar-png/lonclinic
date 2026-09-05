@@ -73,6 +73,11 @@
     border-color: var(--lon-accent);
 }
 
+.nu-card-feature {
+    border-left-width: 4px;
+    background: linear-gradient(180deg, #f3f8f4 0%, #fff 70%);
+}
+
 .nu-card-price {
     font-size: 0.75rem;
     font-weight: 700;

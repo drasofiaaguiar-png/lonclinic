@@ -96,6 +96,7 @@
   },
   "related": ["tfeq", "yfas", "ess", "who5"],
   "introLinks": [
+    { "href": "/nutricao/programa", "label": "Programa 6 meses" },
     { "href": "/nutricao/teste-tfeq", "label": "TFEQ · o que trava o peso" },
     { "href": "/nutricao/teste-ess", "label": "Sonolência / apneia (ESS)" },
     { "href": "/nutricao/ozempic-wegovy", "label": "Apoio com GLP-1" }

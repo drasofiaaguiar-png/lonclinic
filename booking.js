@@ -70,7 +70,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         burnout_mensal: { label: 'Subscrição Anti-Burnout', price: '216 €/mês', cents: 21600 },
         burnout_programa: { label: 'Programa Anti-Burnout (8 sessões)', price: '490 €', cents: 49000 },
         renovacao: { label: 'Renovação de Tratamento Médico', price: '19 €', cents: 1900 },
-        longevidade: { label: 'Consulta de Longevidade e Saúde Preventiva', price: '79 €', cents: 7900 }
+        longevidade: { label: 'Consulta de Longevidade e Saúde Preventiva', price: '79 €', cents: 7900 },
+        nutricao_programa: { label: 'Programa Nutrição (6 meses) — mês 1', price: '115 €', cents: 11500 },
+        nutricao_completo: { label: 'Programa Completo (6 meses) — mês 1', price: '227 €', cents: 22700 },
+        nutricao_completo_reforcado: { label: 'Programa Completo — entrada reforçada', price: '322 €', cents: 32200 }
     };
 
     // Travel tiered pricing: [count] → { cents, price, duration }
@@ -233,7 +236,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     burnout: 'burnout',
                     burnout_mensal: 'burnout-mensal',
                     burnout_programa: 'burnout-programa',
-                    longevidade: 'longevidade'
+                    longevidade: 'longevidade',
+                    nutricao_programa: 'nutricao-programa',
+                    nutricao_completo: 'nutricao-completo',
+                    nutricao_completo_reforcado: 'nutricao-completo-reforcado'
                 };
                 change.href = '/marcar/' + (slugMap[state.service] || 'clinica-geral');
             }
@@ -644,7 +650,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 burnout: 'burnout',
                 burnout_mensal: 'burnout-mensal',
                 burnout_programa: 'burnout-programa',
-                longevidade: 'longevidade'
+                longevidade: 'longevidade',
+                nutricao_programa: 'nutricao-programa',
+                nutricao_completo: 'nutricao-completo',
+                nutricao_completo_reforcado: 'nutricao-completo-reforcado'
             };
             var slug = tipoSlugMap[state.marcarTipo] || encodeURIComponent(state.marcarTipo);
             window.location.href = '/marcar/' + slug;
@@ -944,6 +953,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     function validateDiscountCode(code) {
+        const noDiscount = {
+            burnout_mensal: 1,
+            burnout_programa: 1,
+            nutricao_programa: 1,
+            nutricao_completo: 1,
+            nutricao_completo_reforcado: 1
+        };
+        if (noDiscount[state.service]) return null;
         const upperCode = code.toUpperCase().trim();
         if (discountCodes[upperCode]) {
             return discountCodes[upperCode];

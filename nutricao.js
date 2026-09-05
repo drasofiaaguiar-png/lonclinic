@@ -16,7 +16,7 @@ const authors = require('./authors');
 const NUTRICAO_DIR = path.join(__dirname, 'data', 'nutricao');
 const MANIFEST_PATH = path.join(NUTRICAO_DIR, 'manifest.json');
 const PAGES_DIR = path.join(NUTRICAO_DIR, 'pages');
-const CSS_V = '20260820b';
+const CSS_V = '20260905a';
 const ON_URL = 'https://www.ordemdosnutricionistas.pt/';
 
 const DEFAULT_BRING = [
@@ -336,6 +336,7 @@ function layoutPage(opts) {
             </a>
             <nav class="lon-nav-links" aria-label="Navegação principal">
                 <a href="/nutricao" aria-current="page">Nutrição</a>
+                <a href="/nutricao/programa">Programa 6 meses</a>
                 <a href="/nutricao/testes">Testes</a>
                 <a href="/consulta">Consulta médica</a>
                 <a href="/consultas">Psicologia</a>
@@ -351,6 +352,7 @@ function layoutPage(opts) {
         </div>
         <div class="lon-mobile-menu" id="lonMobileMenu">
             <a href="/nutricao">Nutrição por condição</a>
+            <a href="/nutricao/programa">Programa 6 meses</a>
             <a href="/nutricao/testes">Testes clínicos</a>
             <a href="/consulta">Consulta médica</a>
             <a href="/consultas">Psicologia por queixa</a>
@@ -369,6 +371,7 @@ function layoutPage(opts) {
                 <div class="lon-footer-col">
                     <h4>Nutrição</h4>
                     <a href="/nutricao">Todas as condições</a>
+                    <a href="/nutricao/programa">Programa metabólico · 6 meses</a>
                     <a href="/nutricao/testes">Testes clínicos</a>
                     ${footerLinks}
                 </div>
@@ -468,8 +471,19 @@ function renderHub(origin) {
                 <p class="nu-hero-meta">Consulta única 39 € ou 79 € · Follow-up sem pacote obrigatório · Psicologia quando o stress manda na comida</p>
                 <div class="nu-hero-actions">
                     <a class="lon-btn lon-btn-primary" href="/marcar/clinica-geral?ref=nutricao-hub" data-pay-badges>Marcar consulta — 39 €</a>
+                    <a class="lon-btn lon-btn-soft" href="/nutricao/programa">Programa 6 meses — a partir de 490 €</a>
                     <a class="lon-btn lon-btn-soft" href="/nutricao/testes">Fazer um teste gratuito</a>
                 </div>
+            </div>
+        </section>
+        <section class="nu-section" aria-labelledby="nu-g-programa">
+            <div class="lon-container">
+                <h2 id="nu-g-programa">Programa metabólico de 6 meses</h2>
+                <a class="nu-card nu-card-feature" href="/nutricao/programa">
+                    <span class="nu-card-price">490 € ou 1 162 €</span>
+                    <span class="nu-card-label">Medicina, nutrição e mente — sem dietas extremas</span>
+                    <span class="nu-card-desc">Diagnóstico por exames de sangue, plano alimentar e, se precisar, psicologia quinzenal. 100% online. Fidelização 3 meses.</span>
+                </a>
             </div>
         </section>
         <section class="nu-section" aria-labelledby="nu-g-testes">
