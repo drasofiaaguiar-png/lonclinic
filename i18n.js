@@ -130,7 +130,7 @@
         { s: '.lon-how-steps li:nth-child(2) h3', en: 'Schedule appointment', pt: 'Agendar consulta', es: 'Programar consulta' },
         { s: '.lon-how-steps li:nth-child(2) p', en: 'Book a day and time of your choice.', pt: 'Marque para um dia e hora à sua escolha.', es: 'Reserve el día y hora de su elección.' },
         { s: '.lon-how-steps li:nth-child(3) h3', en: 'Make payment', pt: 'Efetuar pagamento', es: 'Realizar pago' },
-        { s: '.lon-how-steps li:nth-child(3) p', en: 'Pay by Credit Card or bank transfer.', pt: 'Utilize Cartão de Crédito ou Referência Multibanco.', es: 'Pague con tarjeta de crédito o transferencia bancaria.' },
+        { s: '.lon-how-steps li:nth-child(3) p', en: 'Pay by Credit Card.', pt: 'Utilize Cartão de Crédito.', es: 'Pague con tarjeta de crédito.' },
         { s: '.lon-how-steps li:nth-child(4) h3', en: 'Medical consultation', pt: 'Consulta médica', es: 'Consulta médica' },
         { s: '.lon-how-steps li:nth-child(4) p', en: 'Join via your smartphone, tablet or computer.', pt: 'Aceda à consulta através do seu smartphone, tablet ou computador.', es: 'Acceda desde su smartphone, tablet o computadora.' },
 

@@ -8,7 +8,7 @@
     "nutritionistCedula": "",
     "nutritionistJobTitle": "Nutricionista",
     "nutritionistHref": "https://www.ordemdosnutricionistas.pt/",
-    "clinicianLine": "",
+    "clinicianLine": "Drª Rita Aguiar · Médica · Ordem dos Médicos · ERS 45475",
     "nutritionistCedulaTodo": "TODO: colar nome + n.º de cédula da Ordem dos Nutricionistas quando o utilizador enviar. Não inventar. O template em nutricao.js (nutritionBylineHtml + nutritionAuthorSchema) lê estes campos."
   },
   "pages": [
