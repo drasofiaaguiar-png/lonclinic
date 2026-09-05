@@ -16,7 +16,7 @@
     <title>Clinic Portal — Longevity Clinic</title>
     <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css?v=doxy-1">
+    <link rel="stylesheet" href="dashboard.css?v=clinic-sidebar-2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -81,92 +81,259 @@
         </section>
 
         <!-- Clinic Content (shown after login) -->
-        <section class="dash-content" id="clinicContent" style="display:none;">
-            <!-- Header -->
-            <div class="dash-header">
-                <div class="dash-header-left">
-                    <h1 class="dash-greeting" id="clinicGreeting">Clinic Portal</h1>
-                    <p class="dash-email" id="clinicUserInfo">Manage consultations and clinical records</p>
+        <section class="dash-content admin-shell" id="clinicContent" style="display:none;">
+            <div class="admin-sidebar-backdrop" id="clinicSidebarBackdrop" hidden></div>
+            <aside class="admin-sidebar" id="clinicSidebar" aria-label="Clinic navigation">
+                <div class="admin-sidebar-brand">
+                    <span class="admin-sidebar-brand-name">LON Clinic</span>
+                    <span class="admin-sidebar-brand-sub" id="clinicSidebarUser">Portal</span>
                 </div>
-                <div class="dash-header-right">
-                    <button class="btn btn-primary" id="refreshBtn">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85 3.7L22 10M3.51 15a9 9 0 0114.85-3.7L22 14"/></svg>
-                        Refresh
-                    </button>
-                    <button class="btn btn-outline dash-logout-btn" id="clinicLogoutBtn">Sign out</button>
+                <nav class="admin-sidebar-nav">
+                    <button type="button" class="admin-nav-item is-active" data-clinic-panel="consultations">Consultations</button>
+                    <button type="button" class="admin-nav-item" data-clinic-panel="availabilities">Availabilities</button>
+                    <button type="button" class="admin-nav-item" data-clinic-panel="bookings">Bookings</button>
+                    <button type="button" class="admin-nav-item" data-clinic-panel="patients">Patients</button>
+                    <button type="button" class="admin-nav-item" data-clinic-panel="resources">Resources</button>
+                    <button type="button" class="admin-nav-item" data-clinic-panel="management">Management</button>
+                    <button type="button" class="admin-nav-item" data-clinic-panel="profile">Profile</button>
+                </nav>
+                <div class="admin-sidebar-foot">
+                    <button type="button" class="btn btn-outline btn-sm" id="clinicLogoutBtn">Sign out</button>
                 </div>
-            </div>
+            </aside>
 
-            <div class="dash-section clinic-doxy-section" id="clinicDoxySection">
-                <div class="dash-section-header">
-                    <h2 class="dash-section-title">Video consultation room</h2>
-                    <p class="dash-section-subtitle" id="clinicDoxySubtitle">Open Doxy.me to admit patients from the waiting room</p>
-                </div>
-                <div class="clinic-doxy-card" id="clinicDoxyCard">
-                    <div class="clinic-doxy-card-main">
-                        <p class="clinic-doxy-label">Patient waiting room</p>
-                        <p class="clinic-doxy-url" id="clinicDoxyRoomUrl">Loading…</p>
-                        <p class="clinic-doxy-hint" id="clinicDoxyHint">Sign in to Doxy.me with your Doxy account (separate from Lon Clinic) to see who is waiting and start the call.</p>
+            <div class="admin-main">
+                <div class="dash-header">
+                    <div class="dash-header-left">
+                        <button type="button" class="admin-sidebar-toggle btn btn-outline btn-sm" id="clinicSidebarToggle" aria-label="Open menu">Menu</button>
+                        <h1 class="dash-greeting" id="clinicGreeting">Consultations</h1>
+                        <p class="dash-email" id="clinicUserInfo">All consultations and clinical notes</p>
                     </div>
-                    <div class="clinic-doxy-card-actions">
-                        <a class="btn btn-primary btn-lg" id="clinicOpenDoxyBtn" href="https://doxy.me" target="_blank" rel="noopener">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-                            Open Doxy.me
-                        </a>
-                        <button type="button" class="btn btn-outline" id="clinicCopyDoxyBtn">Copy patient link</button>
+                    <div class="dash-header-right">
+                        <button class="btn btn-primary" id="refreshBtn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85 3.7L22 10M3.51 15a9 9 0 0114.85-3.7L22 14"/></svg>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+
+                <div class="admin-panel is-active" id="clinicPanelConsultations" data-clinic-panel-content="consultations">
+                    <div class="dash-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">All consultations</h2>
+                            <p class="dash-section-subtitle">Click a consultation to view details and add clinical notes</p>
+                        </div>
+                        <div class="dash-table-wrap" id="clinicTableWrap">
+                            <div class="dash-empty" id="clinicEmpty">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                <p>No consultations found.</p>
+                            </div>
+                            <table class="dash-table" id="clinicTable" style="display:none;">
+                                <thead>
+                                    <tr>
+                                        <th>Reference</th>
+                                        <th>Service</th>
+                                        <th>Date & Time</th>
+                                        <th>Patient</th>
+                                        <th>Email</th>
+                                        <th>Status</th>
+                                        <th>Clinical Notes</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clinicTableBody">
+                                    <!-- Rows inserted by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-panel" id="clinicPanelAvailabilities" data-clinic-panel-content="availabilities" hidden>
+                    <div class="dash-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">Weekly hours</h2>
+                            <p class="dash-section-subtitle" id="clinicTimezoneLabel">Clinic booking hours in Europe/Lisbon</p>
+                        </div>
+                        <div class="clinic-hours-list" id="clinicHoursList">
+                            <p class="admin-empty-list">Loading hours…</p>
+                        </div>
+                    </div>
+                    <div class="dash-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">Slot settings</h2>
+                            <p class="dash-section-subtitle">How online booking offers time slots</p>
+                        </div>
+                        <p class="clinic-meta-line">Appointment duration: <strong id="clinicSlotDurationLabel">—</strong></p>
+                        <label class="clinic-toggle-label" for="smartSlotGroupingToggle" id="clinicSmartSlotLabel">
+                            <input type="checkbox" id="smartSlotGroupingToggle" checked />
+                            <span>Smart slot grouping</span>
+                        </label>
+                        <p class="dash-section-subtitle" style="margin-top: 0.75rem; max-width: 42rem;">
+                            <strong>On (default):</strong> an empty day shows only the first and last slot; after bookings exist, only the slot
+                            immediately before and after the booked block is offered.
+                            <strong>Off:</strong> patients see every free slot for the day.
+                        </p>
+                    </div>
+                    <div class="dash-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">Blocked dates</h2>
+                            <p class="dash-section-subtitle">Days closed for online booking</p>
+                        </div>
+                        <div class="admin-blocked-list" id="clinicBlockedDatesList">
+                            <p class="admin-empty-list">Loading…</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-panel" id="clinicPanelBookings" data-clinic-panel-content="bookings" hidden>
+                    <div class="dash-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">Upcoming bookings</h2>
+                            <p class="dash-section-subtitle">Confirmed appointments that have not yet taken place</p>
+                        </div>
+                        <div class="dash-table-wrap">
+                            <div class="dash-empty" id="clinicBookingsEmpty">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                                <p>No upcoming bookings.</p>
+                            </div>
+                            <table class="dash-table" id="clinicBookingsTable" style="display:none;">
+                                <thead>
+                                    <tr>
+                                        <th>Date & Time</th>
+                                        <th>Patient</th>
+                                        <th>Service</th>
+                                        <th>Reference</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clinicBookingsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-panel" id="clinicPanelPatients" data-clinic-panel-content="patients" hidden>
+                    <div class="dash-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">Patients</h2>
+                            <p class="dash-section-subtitle">People attached to your consultations, grouped by email</p>
+                        </div>
+                        <div class="dash-table-wrap">
+                            <div class="dash-empty" id="clinicPatientsEmpty">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                                <p>No patients yet.</p>
+                            </div>
+                            <table class="dash-table" id="clinicPatientsTable" style="display:none;">
+                                <thead>
+                                    <tr>
+                                        <th>Patient</th>
+                                        <th>Email</th>
+                                        <th>Visits</th>
+                                        <th>Latest consultation</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clinicPatientsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-panel" id="clinicDoxySection" data-clinic-panel-content="resources" hidden>
+                    <div class="dash-section clinic-doxy-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">Video consultation room</h2>
+                            <p class="dash-section-subtitle" id="clinicDoxySubtitle">Open Doxy.me to admit patients from the waiting room</p>
+                        </div>
+                        <div class="clinic-doxy-card" id="clinicDoxyCard">
+                            <div class="clinic-doxy-card-main">
+                                <p class="clinic-doxy-label">Patient waiting room</p>
+                                <p class="clinic-doxy-url" id="clinicDoxyRoomUrl">Loading…</p>
+                                <p class="clinic-doxy-hint" id="clinicDoxyHint">Sign in to Doxy.me with your Doxy account (separate from Lon Clinic) to see who is waiting and start the call.</p>
+                            </div>
+                            <div class="clinic-doxy-card-actions">
+                                <a class="btn btn-primary btn-lg" id="clinicOpenDoxyBtn" href="https://doxy.me" target="_blank" rel="noopener">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                                    Open Doxy.me
+                                </a>
+                                <button type="button" class="btn btn-outline" id="clinicCopyDoxyBtn">Copy patient link</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dash-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">Useful links</h2>
+                            <p class="dash-section-subtitle">Pages patients and the clinic use every day</p>
+                        </div>
+                        <div class="clinic-link-cards">
+                            <a class="clinic-link-card" href="/marcar">
+                                <strong>Book a consultation</strong>
+                                <span>Public booking calendar</span>
+                            </a>
+                            <a class="clinic-link-card" href="/patient-portal">
+                                <strong>Patient portal</strong>
+                                <span>Where patients open their dashboard</span>
+                            </a>
+                            <a class="clinic-link-card" href="https://doxy.me" target="_blank" rel="noopener">
+                                <strong>Doxy.me</strong>
+                                <span>Provider sign-in for video calls</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="admin-panel" id="clinicPanelManagement" data-clinic-panel-content="management" hidden>
+                    <div class="dash-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">Clinic management</h2>
+                            <p class="dash-section-subtitle">Clinic-wide settings, invitations, and team accounts</p>
+                        </div>
+                        <div class="clinic-link-cards" id="clinicManagementAdminLinks">
+                            <a class="clinic-link-card" href="/admin">
+                                <strong>Admin dashboard</strong>
+                                <span>Schedule, invitations, finances, professionals</span>
+                            </a>
+                            <a class="clinic-link-card" href="/diretorio">
+                                <strong>Producer directory</strong>
+                                <span>Moderate directory applications</span>
+                            </a>
+                        </div>
+                        <p class="dash-section-subtitle" id="clinicManagementClinicianNote" hidden>
+                            Clinic-wide settings (invitations, team logins, finances) are managed by an administrator in the admin dashboard.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="admin-panel" id="clinicPanelProfile" data-clinic-panel-content="profile" hidden>
+                    <div class="dash-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">Your profile</h2>
+                            <p class="dash-section-subtitle">Account used to sign in to the clinic portal</p>
+                        </div>
+                        <dl class="clinic-profile-dl">
+                            <div>
+                                <dt>Name</dt>
+                                <dd id="clinicProfileName">—</dd>
+                            </div>
+                            <div>
+                                <dt>Username</dt>
+                                <dd id="clinicProfileUsername">—</dd>
+                            </div>
+                            <div>
+                                <dt>Role</dt>
+                                <dd id="clinicProfileRole">—</dd>
+                            </div>
+                            <div>
+                                <dt>Doxy.me room</dt>
+                                <dd id="clinicProfileDoxy">—</dd>
+                            </div>
+                        </dl>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Booking slot behaviour (same auth as schedule API) -->
-            <div class="dash-section" id="clinicAdminSettings">
-                <div class="dash-section-header">
-                    <h2 class="dash-section-title">Booking availability</h2>
-                    <p class="dash-section-subtitle">How time slots appear when patients book online</p>
-                </div>
-                <label class="clinic-toggle-label" for="smartSlotGroupingToggle">
-                    <input type="checkbox" id="smartSlotGroupingToggle" checked />
-                    <span>Smart slot grouping</span>
-                </label>
-                <p class="dash-section-subtitle" style="margin-top: 0.75rem; max-width: 42rem;">
-                    <strong>On (default):</strong> an empty day shows only the first and last slot; after bookings exist, only the slot
-                    immediately before and after the booked block is offered, keeping the schedule contiguous.
-                    <strong>Off:</strong> patients see every free slot for the day.
-                </p>
-            </div>
-
-            <!-- Bookings Table -->
-            <div class="dash-section">
-            <div class="dash-section-header">
-                <h2 class="dash-section-title">All Consultations</h2>
-                <p class="dash-section-subtitle">Click on a consultation to view details and add clinical notes</p>
-            </div>
-            <div class="dash-table-wrap" id="clinicTableWrap">
-                <div class="dash-empty" id="clinicEmpty">
-                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    <p>No consultations found.</p>
-                </div>
-                <table class="dash-table" id="clinicTable" style="display:none;">
-                    <thead>
-                        <tr>
-                            <th>Reference</th>
-                            <th>Service</th>
-                            <th>Date & Time</th>
-                            <th>Patient</th>
-                            <th>Email</th>
-                            <th>Status</th>
-                            <th>Clinical Notes</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="clinicTableBody">
-                        <!-- Rows inserted by JS -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-            <!-- Consultation Details Modal -->
         <div class="clinic-modal" id="consultationModal" style="display:none;">
             <div class="clinic-modal-overlay" id="modalOverlay"></div>
             <div class="clinic-modal-content">
@@ -181,7 +348,6 @@
                 </div>
             </div>
         </div>
-        </section>
 
     </main>
 
@@ -208,7 +374,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="lon-nav.js"></script>
-    <script src="clinic.js?v=doxy-1"></script>
+    <script src="clinic.js?v=clinic-sidebar-2"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

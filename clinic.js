@@ -7,9 +7,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const SERVICE_LABELS = {
         longevity: 'Longevity Assessment',
+        'longevity-plus': 'Longevity Plus',
+        longevidade: 'Longevidade',
         travel: 'Travel Medicine Consultation',
         followup: 'Follow-Up Consultation',
-        entrevista: 'Entrevista de emprego'
+        entrevista: 'Entrevista de emprego',
+        clinica_geral: 'Clínica geral',
+        urgente: 'Urgente',
+        infeccao_urinaria: 'Infeção urinária',
+        saude_mental: 'Saúde mental',
+        burnout: 'Burnout especializada',
+        burnout_mensal: 'Anti-burnout',
+        burnout_programa: 'Programa anti-burnout',
+        renovacao: 'Renovação receita'
     };
 
     // ─── DOM Elements ───
@@ -33,15 +43,57 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalClose = document.getElementById('modalClose');
     const modalTitle = document.getElementById('modalTitle');
     const modalBody = document.getElementById('modalBody');
-    const clinicAdminSettings = document.getElementById('clinicAdminSettings');
     const clinicDoxyRoomUrl = document.getElementById('clinicDoxyRoomUrl');
     const clinicDoxyHint = document.getElementById('clinicDoxyHint');
     const clinicOpenDoxyBtn = document.getElementById('clinicOpenDoxyBtn');
     const clinicCopyDoxyBtn = document.getElementById('clinicCopyDoxyBtn');
     const clinicDoxySubtitle = document.getElementById('clinicDoxySubtitle');
+    const clinicSidebarUser = document.getElementById('clinicSidebarUser');
+    const clinicSidebarToggle = document.getElementById('clinicSidebarToggle');
+    const clinicSidebarBackdrop = document.getElementById('clinicSidebarBackdrop');
+    const clinicHoursList = document.getElementById('clinicHoursList');
+    const clinicTimezoneLabel = document.getElementById('clinicTimezoneLabel');
+    const clinicSlotDurationLabel = document.getElementById('clinicSlotDurationLabel');
+    const clinicBlockedDatesList = document.getElementById('clinicBlockedDatesList');
+    const clinicBookingsEmpty = document.getElementById('clinicBookingsEmpty');
+    const clinicBookingsTable = document.getElementById('clinicBookingsTable');
+    const clinicBookingsBody = document.getElementById('clinicBookingsBody');
+    const clinicPatientsEmpty = document.getElementById('clinicPatientsEmpty');
+    const clinicPatientsTable = document.getElementById('clinicPatientsTable');
+    const clinicPatientsBody = document.getElementById('clinicPatientsBody');
+    const clinicManagementAdminLinks = document.getElementById('clinicManagementAdminLinks');
+    const clinicManagementClinicianNote = document.getElementById('clinicManagementClinicianNote');
+    const clinicProfileName = document.getElementById('clinicProfileName');
+    const clinicProfileUsername = document.getElementById('clinicProfileUsername');
+    const clinicProfileRole = document.getElementById('clinicProfileRole');
+    const clinicProfileDoxy = document.getElementById('clinicProfileDoxy');
+
+    const CLINIC_PANEL_META = {
+        consultations: { title: 'Consultations', subtitle: 'Clinical notes for every consultation' },
+        availabilities: { title: 'Availabilities', subtitle: 'Weekly hours, slots, and blocked dates' },
+        bookings: { title: 'Bookings', subtitle: 'Upcoming confirmed appointments' },
+        patients: { title: 'Patients', subtitle: 'People attached to your consultations' },
+        resources: { title: 'Resources', subtitle: 'Video room and everyday clinic links' },
+        management: { title: 'Management', subtitle: 'Clinic-wide settings and admin tools' },
+        profile: { title: 'Profile', subtitle: 'Your clinic portal account' }
+    };
+
+    const WEEKDAYS = [
+        ['monday', 'Monday'],
+        ['tuesday', 'Tuesday'],
+        ['wednesday', 'Wednesday'],
+        ['thursday', 'Thursday'],
+        ['friday', 'Friday'],
+        ['saturday', 'Saturday'],
+        ['sunday', 'Sunday']
+    ];
 
     let clinicRole = 'admin';
+    let staffUsername = '';
+    let staffDisplayName = '';
     let clinicDoxyPatientUrl = '';
+    let activeClinicPanel = 'consultations';
+    let bookingsCache = [];
 
     // ─── Check Authentication Status ───
     async function checkAuthStatus() {
@@ -50,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
             
             if (data.authenticated) {
-                showClinicPortal(data.displayName || data.username, data.role);
+                showClinicPortal(data.displayName || data.username, data.role, data.username);
             } else {
                 showLogin();
             }
@@ -60,34 +112,85 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function closeClinicSidebar() {
+        if (!clinicContent) return;
+        clinicContent.classList.remove('sidebar-open');
+        if (clinicSidebarBackdrop) clinicSidebarBackdrop.hidden = true;
+    }
+
+    function openClinicSidebar() {
+        if (!clinicContent) return;
+        clinicContent.classList.add('sidebar-open');
+        if (clinicSidebarBackdrop) clinicSidebarBackdrop.hidden = false;
+    }
+
+    function setClinicPanel(panelId) {
+        if (!CLINIC_PANEL_META[panelId]) panelId = 'consultations';
+        activeClinicPanel = panelId;
+
+        document.querySelectorAll('[data-clinic-panel]').forEach((btn) => {
+            btn.classList.toggle('is-active', btn.getAttribute('data-clinic-panel') === panelId);
+        });
+        document.querySelectorAll('[data-clinic-panel-content]').forEach((el) => {
+            const match = el.getAttribute('data-clinic-panel-content') === panelId;
+            el.hidden = !match;
+            el.classList.toggle('is-active', match);
+        });
+
+        const meta = CLINIC_PANEL_META[panelId];
+        if (clinicGreeting) clinicGreeting.textContent = meta.title;
+        if (clinicUserInfo) clinicUserInfo.textContent = meta.subtitle;
+        if (refreshBtn) {
+            refreshBtn.style.display = ['consultations', 'bookings', 'patients'].includes(panelId) ? '' : 'none';
+        }
+        closeClinicSidebar();
+
+        if (panelId === 'consultations' || panelId === 'bookings' || panelId === 'patients') {
+            loadBookings();
+        }
+        if (panelId === 'availabilities') loadScheduleView();
+        if (panelId === 'resources' || panelId === 'profile') loadDoxyRoom();
+    }
+
     // ─── Show Login ───
     function showLogin() {
+        document.body.classList.remove('clinic-logged-in');
         clinicLogin.style.display = '';
         clinicContent.style.display = 'none';
+        closeClinicSidebar();
     }
 
     // ─── Show Clinic Portal ───
-    function showClinicPortal(username, role) {
+    function showClinicPortal(username, role, loginUsername) {
         clinicLogin.style.display = 'none';
-        clinicContent.style.display = 'block';
+        clinicContent.style.display = 'flex';
+        document.body.classList.add('clinic-logged-in');
         clinicRole = role || 'admin';
+        staffDisplayName = username || loginUsername || '';
+        staffUsername = loginUsername || username || '';
+        const isAdmin = clinicRole === 'admin';
 
-        if (username) {
-            clinicGreeting.textContent = `Welcome, ${username}`;
-            clinicUserInfo.textContent = clinicRole === 'clinician'
-                ? 'Your consultations and Doxy.me room'
-                : 'Manage consultations and clinical records';
+        if (clinicSidebarUser) {
+            clinicSidebarUser.textContent = staffDisplayName || 'Portal';
+        }
+        if (clinicManagementAdminLinks) {
+            clinicManagementAdminLinks.hidden = !isAdmin;
+        }
+        if (clinicManagementClinicianNote) {
+            clinicManagementClinicianNote.hidden = isAdmin;
+        }
+        if (clinicProfileName) clinicProfileName.textContent = staffDisplayName || '—';
+        if (clinicProfileUsername) clinicProfileUsername.textContent = staffUsername || '—';
+        if (clinicProfileRole) {
+            clinicProfileRole.textContent = isAdmin ? 'Clinic administrator' : 'Clinician';
+        }
+        if (smartSlotGroupingToggle) {
+            smartSlotGroupingToggle.disabled = !isAdmin;
         }
 
-        if (clinicAdminSettings) {
-            clinicAdminSettings.style.display = clinicRole === 'admin' ? '' : 'none';
-        }
-
+        setClinicPanel('consultations');
         loadDoxyRoom();
-        loadBookings();
-        if (clinicRole === 'admin') {
-            loadBookingSettings();
-        }
+        loadScheduleView();
     }
 
     async function loadDoxyRoom() {
@@ -109,12 +212,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (clinicDoxyPatientUrl) {
                 clinicDoxyRoomUrl.textContent = clinicDoxyPatientUrl;
+                if (clinicProfileDoxy) clinicProfileDoxy.textContent = clinicDoxyPatientUrl;
                 if (clinicDoxyHint) {
                     clinicDoxyHint.textContent = 'This is the link patients receive. Sign in to Doxy.me with your Doxy account (separate from Lon Clinic) to see the waiting room and start the call.';
                 }
                 if (clinicCopyDoxyBtn) clinicCopyDoxyBtn.disabled = false;
             } else {
                 clinicDoxyRoomUrl.textContent = 'Not configured yet';
+                if (clinicProfileDoxy) clinicProfileDoxy.textContent = 'Not configured yet';
                 if (clinicDoxyHint) {
                     clinicDoxyHint.textContent = clinicRole === 'admin'
                         ? 'Set DOXY_ROOM_URL (e.g. https://doxy.me/lonclinic/ritaaguiar) or add a room for each professional in Admin → Professionals.'
@@ -144,24 +249,47 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    async function loadBookingSettings() {
-        if (!smartSlotGroupingToggle) return;
+    async function loadScheduleView() {
+        if (!clinicHoursList) return;
         try {
-            const res = await fetch('/api/admin/schedule');
-            if (res.status === 401) {
-                showLogin();
-                return;
-            }
-            if (!res.ok) return;
+            const res = await fetch('/api/schedule');
+            if (!res.ok) throw new Error('Failed to load schedule');
             const schedule = await res.json();
-            smartSlotGroupingToggle.checked = !!schedule.smartSlotGrouping;
+            const hours = schedule.workingHours || {};
+            const tz = schedule.timezone || 'Europe/Lisbon';
+            if (clinicTimezoneLabel) {
+                clinicTimezoneLabel.textContent = `Clinic booking hours in ${tz}`;
+            }
+            clinicHoursList.innerHTML = WEEKDAYS.map(([key, label]) => {
+                const day = hours[key] || { enabled: false, start: '07:00', end: '17:00' };
+                const open = !!day.enabled;
+                const range = open ? `${day.start || '07:00'} – ${day.end || '17:00'}` : 'Closed';
+                return `<div class="clinic-hours-row${open ? '' : ' is-off'}"><span>${label}</span><strong>${range}</strong></div>`;
+            }).join('');
+            if (clinicSlotDurationLabel) {
+                clinicSlotDurationLabel.textContent = `${schedule.slotDuration || 30} minutes`;
+            }
+            if (smartSlotGroupingToggle) {
+                smartSlotGroupingToggle.checked = !!schedule.smartSlotGrouping;
+            }
+            const blocked = Array.isArray(schedule.blockedDates) ? [...schedule.blockedDates].sort() : [];
+            if (clinicBlockedDatesList) {
+                clinicBlockedDatesList.innerHTML = blocked.length
+                    ? blocked.map((d) => `<span class="clinic-blocked-chip">${escapeHtml(d)}</span>`).join('')
+                    : '<p class="admin-empty-list">No blocked dates.</p>';
+            }
         } catch (err) {
-            console.error('Failed to load booking settings:', err);
+            console.error('Failed to load schedule view:', err);
+            clinicHoursList.innerHTML = '<p class="admin-empty-list">Could not load availability.</p>';
         }
     }
 
     if (smartSlotGroupingToggle) {
         smartSlotGroupingToggle.addEventListener('change', async () => {
+            if (clinicRole !== 'admin') {
+                smartSlotGroupingToggle.checked = !smartSlotGroupingToggle.checked;
+                return;
+            }
             const enabled = smartSlotGroupingToggle.checked;
             try {
                 const res = await fetch('/api/admin/schedule', {
@@ -207,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await res.json();
 
             if (res.ok && data.success) {
-                showClinicPortal(data.displayName || username, data.role);
+                showClinicPortal(data.displayName || username, data.role, username);
                 clinicUsername.value = '';
                 clinicPassword.value = '';
             } else {
@@ -242,13 +370,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // ─── Load Bookings ───
+    function escapeHtml(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
     async function loadBookings() {
         try {
             const res = await fetch('/api/clinic/bookings');
             
             if (res.status === 401) {
-                // Not authenticated, show login
                 showLogin();
                 return;
             }
@@ -258,23 +392,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             const data = await res.json();
-
-            if (data.bookings && data.bookings.length > 0) {
-                renderBookings(data.bookings);
-            } else {
-                clinicEmpty.style.display = '';
-                clinicTable.style.display = 'none';
-            }
+            bookingsCache = Array.isArray(data.bookings) ? data.bookings : [];
+            renderBookings(bookingsCache);
+            renderUpcomingBookings(bookingsCache);
+            renderPatients(bookingsCache);
         } catch (err) {
             console.error('Failed to load bookings:', err);
-            clinicEmpty.style.display = '';
-            clinicTable.style.display = 'none';
+            bookingsCache = [];
+            renderBookings([]);
+            renderUpcomingBookings([]);
+            renderPatients([]);
         }
     }
 
-    // ─── Render Bookings ───
     function renderBookings(bookings) {
+        if (!clinicTableBody) return;
         clinicTableBody.innerHTML = '';
+        if (!bookings.length) {
+            clinicEmpty.style.display = '';
+            clinicTable.style.display = 'none';
+            return;
+        }
         clinicEmpty.style.display = 'none';
         clinicTable.style.display = 'table';
 
@@ -285,13 +423,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
             const status = getStatus(booking, now);
             const hasNotes = booking.hasClinicalNotes;
+            const ref = booking.bookingRef || '';
 
             row.innerHTML = `
-                <td class="ref-cell">${booking.bookingRef || '—'}</td>
-                <td class="service-cell">${serviceLabel}</td>
-                <td>${booking.date || '—'}${booking.time ? ' · ' + booking.time : ''}</td>
-                <td>${booking.patientName || '—'}${booking.travellerCount > 1 ? ` +${booking.travellerCount - 1}` : ''}</td>
-                <td>${booking.email || '—'}</td>
+                <td class="ref-cell">${escapeHtml(ref || '—')}</td>
+                <td class="service-cell">${escapeHtml(serviceLabel)}</td>
+                <td>${escapeHtml(booking.date || '—')}${booking.time ? ' · ' + escapeHtml(booking.time) : ''}</td>
+                <td>${escapeHtml(booking.patientName || '—')}${booking.travellerCount > 1 ? ` +${booking.travellerCount - 1}` : ''}</td>
+                <td>${escapeHtml(booking.email || '—')}</td>
                 <td><span class="dash-status ${status}">${status}</span></td>
                 <td>
                     ${hasNotes 
@@ -300,17 +439,92 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 </td>
                 <td>
-                    <button class="btn btn-outline btn-sm view-consultation-btn" data-booking-ref="${booking.bookingRef}">
+                    <button class="btn btn-outline btn-sm view-consultation-btn" data-booking-ref="${escapeHtml(ref)}">
                         View & Edit
                     </button>
                 </td>
             `;
 
-            // Add click handler
             const viewBtn = row.querySelector('.view-consultation-btn');
-            viewBtn.addEventListener('click', () => showConsultationModal(booking.bookingRef));
+            viewBtn.addEventListener('click', () => showConsultationModal(ref));
 
             clinicTableBody.appendChild(row);
+        });
+    }
+
+    function renderUpcomingBookings(bookings) {
+        if (!clinicBookingsBody) return;
+        const now = new Date();
+        const upcoming = bookings.filter((b) => !b.cancelled && getStatus(b, now) === 'upcoming');
+        clinicBookingsBody.innerHTML = '';
+        if (!upcoming.length) {
+            clinicBookingsEmpty.style.display = '';
+            clinicBookingsTable.style.display = 'none';
+            return;
+        }
+        clinicBookingsEmpty.style.display = 'none';
+        clinicBookingsTable.style.display = 'table';
+        upcoming.forEach((booking) => {
+            const row = document.createElement('tr');
+            const ref = booking.bookingRef || '';
+            const serviceLabel = SERVICE_LABELS[booking.service] || booking.service;
+            row.innerHTML = `
+                <td>${escapeHtml(booking.date || '—')}${booking.time ? ' · ' + escapeHtml(booking.time) : ''}</td>
+                <td>${escapeHtml(booking.patientName || '—')}</td>
+                <td>${escapeHtml(serviceLabel)}</td>
+                <td class="ref-cell">${escapeHtml(ref || '—')}</td>
+                <td>
+                    <button class="btn btn-outline btn-sm view-consultation-btn" data-booking-ref="${escapeHtml(ref)}">Open</button>
+                </td>
+            `;
+            row.querySelector('.view-consultation-btn').addEventListener('click', () => showConsultationModal(ref));
+            clinicBookingsBody.appendChild(row);
+        });
+    }
+
+    function renderPatients(bookings) {
+        if (!clinicPatientsBody) return;
+        const groups = new Map();
+        bookings.forEach((b) => {
+            if (b.cancelled) return;
+            const key = String(b.email || '').trim().toLowerCase() || String(b.patientName || '').trim().toLowerCase() || b.bookingRef;
+            if (!key) return;
+            if (!groups.has(key)) {
+                groups.set(key, {
+                    name: b.patientName || '—',
+                    email: b.email || '',
+                    visits: []
+                });
+            }
+            groups.get(key).visits.push(b);
+        });
+        const patients = [...groups.values()].sort((a, b) => String(a.name).localeCompare(String(b.name)));
+        clinicPatientsBody.innerHTML = '';
+        if (!patients.length) {
+            clinicPatientsEmpty.style.display = '';
+            clinicPatientsTable.style.display = 'none';
+            return;
+        }
+        clinicPatientsEmpty.style.display = 'none';
+        clinicPatientsTable.style.display = 'table';
+        const now = new Date();
+        patients.forEach((patient) => {
+            const visits = [...patient.visits].sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+            const latest = visits[0];
+            const latestRef = latest && latest.bookingRef ? latest.bookingRef : '';
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${escapeHtml(patient.name)}</td>
+                <td>${escapeHtml(patient.email || '—')}</td>
+                <td>${visits.length}</td>
+                <td>${escapeHtml(latest.date || '—')}${latest.time ? ' · ' + escapeHtml(latest.time) : ''} · ${escapeHtml(getStatus(latest, now))}</td>
+                <td>
+                    ${latestRef ? `<button class="btn btn-outline btn-sm view-consultation-btn" data-booking-ref="${escapeHtml(latestRef)}">Latest visit</button>` : ''}
+                </td>
+            `;
+            const btn = row.querySelector('.view-consultation-btn');
+            if (btn) btn.addEventListener('click', () => showConsultationModal(latestRef));
+            clinicPatientsBody.appendChild(row);
         });
     }
 
@@ -486,7 +700,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ─── Event Listeners ───
-    refreshBtn.addEventListener('click', loadBookings);
+    if (refreshBtn) refreshBtn.addEventListener('click', loadBookings);
+    document.querySelectorAll('[data-clinic-panel]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            setClinicPanel(btn.getAttribute('data-clinic-panel'));
+        });
+    });
+    if (clinicSidebarToggle) {
+        clinicSidebarToggle.addEventListener('click', () => {
+            if (clinicContent.classList.contains('sidebar-open')) closeClinicSidebar();
+            else openClinicSidebar();
+        });
+    }
+    if (clinicSidebarBackdrop) {
+        clinicSidebarBackdrop.addEventListener('click', closeClinicSidebar);
+    }
     modalOverlay.addEventListener('click', () => {
         consultationModal.style.display = 'none';
     });
