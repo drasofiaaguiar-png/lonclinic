@@ -5384,19 +5384,35 @@ app.get('/conta/vacina', (req, res) => {
 });
 
 app.get('/clinic-portal', (req, res) => {
-    res.set({
-        'Cache-Control': 'private, no-store, no-cache, must-revalidate, max-age=0',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-        'Surrogate-Control': 'no-store',
-        'CDN-Cache-Control': 'no-store',
-        'Cloudflare-CDN-Cache-Control': 'no-store'
-    });
-    res.redirect(302, '/clinic-portal/');
+    sendHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
 });
 
 app.get('/clinic-portal/', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
+});
+
+const CLINIC_PORTAL_ASSETS = new Set([
+    'landing.css',
+    'styles.css',
+    'dashboard.css',
+    'lon-nav.js',
+    'clinic.js'
+]);
+app.get('/clinic-portal/:file', (req, res, next) => {
+    const file = path.basename(String(req.params.file || ''));
+    if (!CLINIC_PORTAL_ASSETS.has(file)) return next();
+    res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+        'CDN-Cache-Control': 'no-store',
+        'Cloudflare-CDN-Cache-Control': 'no-store'
+    });
+    res.sendFile(path.join(__dirname, file), {
+        etag: false,
+        lastModified: false,
+        cacheControl: false
+    }, (err) => {
+        if (err) next();
+    });
 });
 
 app.get('/admin', (req, res) => {
