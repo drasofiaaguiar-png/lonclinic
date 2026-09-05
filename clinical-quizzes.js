@@ -525,7 +525,7 @@ function renderQuizPage(origin, def) {
     </aside>
     <script>window.CLINICAL_QUIZ = ${cfgJson};</script>
     <script src="/lon-analytics.js?v=20260905i" defer></script>
-    <script src="/lon-slots.js?v=20260906c" defer></script>
+    <script src="/lon-slots.js?v=20260906d" defer></script>
     <script src="/clinical-quiz-score.js?v=${JS_V}" defer></script>
     <script src="/clinical-quiz.js?v=${JS_V}" defer></script>
 </body>

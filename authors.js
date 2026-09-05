@@ -314,7 +314,7 @@ function renderAuthorPage(origin, slug) {
     <script src="/lon-nav.js"></script>
     <script src="/i18n.js?v=20260905e" defer></script>
     <script src="/lon-analytics.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260905g" defer></script>
+    <script src="/lon-slots.js?v=20260906d" defer></script>
 </body>
 </html>`;
 

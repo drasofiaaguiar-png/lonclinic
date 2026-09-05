@@ -464,6 +464,7 @@ module.exports = {
     canonicalPathFromRequest,
     burnoutSpokeCanonicalPath,
     isBurnoutAuthoritySpoke,
+    isClinicaAntiBurnoutPath,
     ensureCanonicalTag,
     applyHtmlSeo,
     rewriteApexSiteUrls,

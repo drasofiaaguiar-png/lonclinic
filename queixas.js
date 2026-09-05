@@ -455,7 +455,7 @@ function layoutQueixaPage(opts) {
     <script src="/i18n.js?v=20260905e" defer></script>
     <script src="/lon-analytics.js?v=20260905e" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260906a" defer></script>
+    <script src="/lon-slots.js?v=20260906d" defer></script>
 </body>
 </html>`;
 }

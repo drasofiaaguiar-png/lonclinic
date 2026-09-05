@@ -126,9 +126,9 @@ const UI = {
         openMenu: 'Ouvrir le menu',
         breadcrumbHub: 'Clinique touriste',
         kicker: 'Clinique touriste · Portugal 2026',
-        languagesLine: 'Consultations strictly conducted in English, Spanish or Portuguese.',
+        languagesLine: 'Consultations strictly provided in English and Portuguese',
         languagesStrict:
-            'Les consultations se déroulent exclusivement en anglais, en espagnol ou en portugais. Pas de consultation en français.',
+            'Les consultations se déroulent exclusivement en anglais ou en portugais. Pas de consultation en français.',
         clinician: 'Médecin inscrite à l’Ordem dos Médicos · ERS 45475',
         faqTitle: 'FAQ',
         priceTitle: 'Tarif',
@@ -152,7 +152,7 @@ const UI = {
         cardGpChip: 'Médecine générale',
         cardGpTitle: 'Téléconsultation',
         cardGpPrice: '39 € · ~30 min',
-        cardGpNote: 'Vidéo · consultations strictly in English, Spanish or Portuguese',
+        cardGpNote: 'Vidéo · consultations strictly provided in English and Portuguese',
         cardGpCta: 'Réserver — 39 €',
         cardRenewChip: 'Renouvellement',
         cardRenewTitle: 'Renouveler une ordonnance',
@@ -177,9 +177,9 @@ const UI = {
         openMenu: 'Menü öffnen',
         breadcrumbHub: 'Tourist clinic',
         kicker: 'Tourist clinic · Portugal 2026',
-        languagesLine: 'Consultations strictly conducted in English, Spanish or Portuguese.',
+        languagesLine: 'Consultations strictly provided in English and Portuguese',
         languagesStrict:
-            'Sprechstunden ausschließlich auf Englisch, Spanisch oder Portugiesisch. Keine Beratung auf Deutsch.',
+            'Sprechstunden ausschließlich auf Englisch oder Portugiesisch. Keine Beratung auf Deutsch.',
         clinician: 'Ärztin · Ordem dos Médicos · ERS 45475',
         faqTitle: 'FAQ',
         priceTitle: 'Preis',
@@ -203,7 +203,7 @@ const UI = {
         cardGpChip: 'Allgemeinmedizin',
         cardGpTitle: 'Online-Sprechstunde',
         cardGpPrice: '39 € · ~30 Min.',
-        cardGpNote: 'Video · consultations strictly in English, Spanish or Portuguese',
+        cardGpNote: 'Video · consultations strictly provided in English and Portuguese',
         cardGpCta: 'Buchen — 39 €',
         cardRenewChip: 'Rezept',
         cardRenewTitle: 'Rezept verlängern',
@@ -226,7 +226,7 @@ function escapeHtml(s) {
 }
 
 const CONSULT_LANG_POLICY = 'en-es-pt';
-const CONSULT_LANG_POLICY_EN = 'Consultations strictly conducted in English, Spanish or Portuguese';
+const CONSULT_LANG_POLICY_EN = 'Consultations strictly provided in English and Portuguese';
 
 function needsConsultLangPolicy(lang) {
     const l = String(lang || '')
@@ -905,7 +905,7 @@ function layoutPage(opts) {
     <script src="/i18n.js?v=20260905e" defer></script>
     <script src="/lon-analytics.js?v=20260905e" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260906c" defer></script>
+    <script src="/lon-slots.js?v=20260906d" defer></script>
 </body>
 </html>`;
 }

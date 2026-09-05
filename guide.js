@@ -15,6 +15,7 @@ const cvi = require('./cvi');
 
 const GUIDE_DIR = path.join(__dirname, 'data', 'guide');
 const MANIFEST_PATH = path.join(GUIDE_DIR, 'manifest.json');
+const SERIES_PATH = path.join(GUIDE_DIR, 'series.json');
 const ARTICLES_DIR = path.join(GUIDE_DIR, 'articles');
 const BURNOUT_MANIFEST_PATH = path.join(__dirname, 'data', 'burnout', 'manifest.json');
 
@@ -74,6 +75,64 @@ function loadManifest() {
         return { articles: [] };
     }
     return parsed;
+}
+
+function loadSeriesList() {
+    if (!fs.existsSync(SERIES_PATH)) return [];
+    try {
+        const parsed = JSON.parse(fs.readFileSync(SERIES_PATH, 'utf8'));
+        if (Array.isArray(parsed)) return parsed.filter(Boolean);
+        if (parsed && Array.isArray(parsed.series)) return parsed.series.filter(Boolean);
+        if (parsed && parsed.id) return [parsed];
+        return [];
+    } catch {
+        return [];
+    }
+}
+
+function seriesPartSlug(part) {
+    if (!part) return '';
+    return typeof part === 'string' ? part : String(part.slug || '');
+}
+
+function seriesPartSlugs(series) {
+    return (Array.isArray(series && series.parts) ? series.parts : []).map(seriesPartSlug).filter(isValidSlug);
+}
+
+function findSeriesForSlug(slug) {
+    const key = String(slug || '');
+    return loadSeriesList().find((series) => {
+        if (!series) return false;
+        if (series.slug === key) return true;
+        return seriesPartSlugs(series).includes(key);
+    }) || null;
+}
+
+function seriesPosition(slug, series) {
+    const all = seriesPartSlugs(series);
+    const index = all.indexOf(slug);
+    return {
+        index,
+        total: all.length,
+        prev: index > 0 ? all[index - 1] : null,
+        next: index >= 0 && index < all.length - 1 ? all[index + 1] : null
+    };
+}
+
+function seriesPartMeta(series, slug, articles) {
+    const part = (Array.isArray(series && series.parts) ? series.parts : []).find((p) => seriesPartSlug(p) === slug);
+    const article = (Array.isArray(articles) ? articles : []).find((a) => a && a.slug === slug);
+    return {
+        slug,
+        title: (part && part.navLabel) || (article && article.title) || slug,
+        href: `/blog/${encodeURIComponent(slug)}`
+    };
+}
+
+function isSeriesHub(meta, series) {
+    if (!meta || !series) return false;
+    if (meta.seriesHub === true) return true;
+    return series.slug === meta.slug;
 }
 
 const ARTICLE_LANGS = {
@@ -339,6 +398,9 @@ function readingTimeHtml(meta, lang) {
 function articleCluster(meta) {
     const slug = String((meta && meta.slug) || '');
     const about = String((meta && meta.about) || '').toLowerCase();
+    if (meta && (meta.series === 'livros-saude' || about === 'livros de saúde' || about === 'livros de saude')) {
+        return 'livros-saude';
+    }
     if (/vacina|viajante|travel|marcacao/.test(slug)) return 'travel';
     if (/burnout/.test(slug) || about === 'burnout') return 'burnout';
     if (/depress/.test(about) || /depressao|anedonia|antidepressivos/.test(slug)) return 'depressao';
@@ -350,11 +412,12 @@ function articleCluster(meta) {
 }
 
 function defaultCtaKind(meta) {
+    if (meta && meta.ctaKind) return String(meta.ctaKind);
     const cluster = articleCluster(meta);
     if (cluster === 'travel') return 'travel';
     if (cluster === 'mental' || cluster === 'depressao' || cluster === 'ansiedade' || cluster === 'autoconhecimento') return 'mental';
     if (cluster === 'burnout') return 'burnout';
-    if (cluster === 'perda-de-peso') return 'nutrition';
+    if (cluster === 'perda-de-peso' || cluster === 'livros-saude') return 'nutrition';
     return 'general';
 }
 
@@ -382,6 +445,7 @@ const CLUSTER_CROSS = {
     burnout: ['depressao', 'ansiedade', 'autoconhecimento'],
     autoconhecimento: ['ansiedade', 'depressao', 'mental'],
     'perda-de-peso': ['burnout', 'autoconhecimento', 'ansiedade'],
+    'livros-saude': ['perda-de-peso', 'burnout', 'general'],
     mental: ['depressao', 'ansiedade', 'burnout'],
     travel: ['general', 'mental'],
     general: ['travel', 'mental', 'perda-de-peso']
@@ -417,6 +481,15 @@ function actionCopy(lang) {
                 cta: 'Marcar — 39 €',
                 note: 'Online · acompanhamento individual, sem planos genéricos',
                 service: 'clinica_geral'
+            },
+            longevity: {
+                chip: 'Longevidade',
+                title: 'Consulta de longevidade',
+                price: '79 € · avaliação preventiva',
+                href: '/marcar/longevidade',
+                cta: 'Marcar — 79 €',
+                note: 'Online · biomarcadores e plano sustentável',
+                service: 'longevidade'
             },
             travel: {
                 chip: 'Viajante',
@@ -545,6 +618,7 @@ function actionCopy(lang) {
 function consultSpec(kind, lang) {
     const copy = actionCopy(lang);
     if (kind === 'nutrition') return copy.nutrition;
+    if (kind === 'longevity') return copy.longevity || copy.general;
     if (kind === 'travel') return copy.travel;
     if (kind === 'mental') return copy.psych;
     if (kind === 'burnout') return copy.hubBurnout;
@@ -689,11 +763,18 @@ function burnoutMentionNoteHtml(lang) {
     return `<p class="guide-burnout-note">${packs[lang] || packs.pt}</p>`;
 }
 
-function articleLiveSlotsHtml(meta) {
-    const slug = String((meta && meta.slug) || 'artigo');
-    const kind = defaultCtaKind(meta);
+function slotServicePack(slug, rawKind) {
+    const key = String(rawKind || '')
+        .trim()
+        .toLowerCase()
+        .replace(/[\s-]+/g, '_');
     const packs = {
         burnout: {
+            service: 'burnout',
+            href: `/marcar/burnout?ref=blog-${encodeURIComponent(slug)}`,
+            kicker: 'Próximos horários · consulta especializada em burnout'
+        },
+        burnout_mensal: {
             service: 'burnout_mensal',
             href: `/marcar/burnout-mensal?ref=blog-${encodeURIComponent(slug)}`,
             kicker: 'Primeira sessão do plano · 216 €/mês'
@@ -702,6 +783,21 @@ function articleLiveSlotsHtml(meta) {
             service: 'nutricao_programa',
             href: `/marcar/nutricao-programa?ref=blog-${encodeURIComponent(slug)}`,
             kicker: 'Próximos horários · consulta inicial de nutrição metabólica'
+        },
+        nutricao_programa: {
+            service: 'nutricao_programa',
+            href: `/marcar/nutricao-programa?ref=blog-${encodeURIComponent(slug)}`,
+            kicker: 'Próximos horários · consulta inicial de nutrição metabólica'
+        },
+        longevity: {
+            service: 'longevidade',
+            href: `/marcar/longevidade?ref=blog-${encodeURIComponent(slug)}`,
+            kicker: 'Próximos horários · consulta de longevidade'
+        },
+        longevidade: {
+            service: 'longevidade',
+            href: `/marcar/longevidade?ref=blog-${encodeURIComponent(slug)}`,
+            kicker: 'Próximos horários · consulta de longevidade'
         },
         mental: {
             service: 'saude_mental',
@@ -717,15 +813,99 @@ function articleLiveSlotsHtml(meta) {
             service: 'clinica_geral',
             href: `/marcar/clinica-geral?ref=blog-${encodeURIComponent(slug)}`,
             kicker: 'Próximos horários'
+        },
+        clinica_geral: {
+            service: 'clinica_geral',
+            href: `/marcar/clinica-geral?ref=blog-${encodeURIComponent(slug)}`,
+            kicker: 'Próximos horários'
         }
     };
-    const pack = packs[kind] || packs.general;
+    return packs[key] || packs.general;
+}
+
+function liveSlotsWidgetHtml(slug, pack) {
     return `
 <aside class="guide-live-slots dr-live-slots" data-next-slots data-limit="3" data-service="${escapeHtml(pack.service)}" data-book-href="${escapeHtml(pack.href)}" data-surface="blog-${escapeHtml(slug)}" hidden>
     <p class="dr-live-slots-kicker">${escapeHtml(pack.kicker)}</p>
     <div class="dr-live-slots-row" data-next-slots-row></div>
     <a href="${escapeHtml(pack.href)}" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
 </aside>`;
+}
+
+function articleLiveSlotsHtml(meta) {
+    const slug = String((meta && meta.slug) || 'artigo');
+    const kind = (meta && meta.slotService) || defaultCtaKind(meta);
+    return liveSlotsWidgetHtml(slug, slotServicePack(slug, kind));
+}
+
+function expandLonSlotsTokens(html, meta) {
+    const slug = String((meta && meta.slug) || 'artigo');
+    return String(html || '').replace(
+        /<p>\s*\[lon-slots:\s*servi[cç]o=["']([^"']+)["']\s*\]\s*<\/p>|\[lon-slots:\s*servi[cç]o=["']([^"']+)["']\s*\]/gi,
+        (_, a, b) => liveSlotsWidgetHtml(slug, slotServicePack(slug, a || b))
+    );
+}
+
+function seriesHubStripHtml(series, lang) {
+    if (!series) return '';
+    const hubHref = series.slug ? `/blog/${encodeURIComponent(series.slug)}` : '/blog';
+    const packs = {
+        pt: {
+            kicker: 'Série',
+            title: `Este artigo faz parte da série ${series.title}.`,
+            hub: 'Ver a série completa'
+        },
+        en: {
+            kicker: 'Series',
+            title: `This article is part of ${series.title}.`,
+            hub: 'See the full series'
+        }
+    };
+    const copy = packs[lang] || packs.pt;
+    return `
+<aside class="guide-hub-strip" aria-label="${escapeHtml(copy.kicker)}">
+    <p class="guide-hub-strip-kicker">${escapeHtml(copy.kicker)}</p>
+    <p class="guide-hub-strip-title">${escapeHtml(copy.title)}</p>
+    <p class="guide-hub-strip-actions">
+        <a href="${escapeHtml(hubHref)}">${escapeHtml(copy.hub)}</a>
+    </p>
+</aside>`;
+}
+
+function seriesNavHtml(slug, series, articles) {
+    if (!series) return '';
+    const pos = seriesPosition(slug, series);
+    if (pos.index < 0 || !pos.total) return '';
+    const hubHref = series.slug ? `/blog/${encodeURIComponent(series.slug)}` : '/blog';
+    const prev = pos.prev ? seriesPartMeta(series, pos.prev, articles) : null;
+    const next = pos.next ? seriesPartMeta(series, pos.next, articles) : null;
+    const prevLink = prev
+        ? `<a class="guide-series-link guide-series-link--prev" href="${escapeHtml(prev.href)}"><span>Anterior</span><strong>${escapeHtml(prev.title)}</strong></a>`
+        : '<span class="guide-series-link guide-series-link--empty"></span>';
+    const nextLink = next
+        ? `<a class="guide-series-link guide-series-link--next" href="${escapeHtml(next.href)}"><span>Seguinte</span><strong>${escapeHtml(next.title)}</strong></a>`
+        : '<span class="guide-series-link guide-series-link--empty"></span>';
+    return `
+<nav class="guide-series" aria-label="Navegação da série">
+    <p class="guide-series-meta"><a href="${escapeHtml(hubHref)}">${escapeHtml(series.title)}</a> · ${pos.index + 1} / ${pos.total}</p>
+    <div class="guide-series-nav">
+        ${prevLink}
+        ${nextLink}
+    </div>
+</nav>`;
+}
+
+function seriesListHtml(series, articles) {
+    if (!series) return '';
+    const items = seriesPartSlugs(series).map((slug, i) => {
+        const meta = seriesPartMeta(series, slug, articles);
+        const article = (Array.isArray(articles) ? articles : []).find((a) => a && a.slug === slug);
+        const dek = article && article.description
+            ? `<p class="guide-series-index-dek">${escapeHtml(article.description)}</p>`
+            : '';
+        return `<li class="guide-series-index-item"><span class="guide-series-index-num">${String(i + 1).padStart(2, '0')}</span><div><a href="${escapeHtml(meta.href)}">${escapeHtml(article && article.title ? article.title : meta.title)}</a>${dek}</div></li>`;
+    }).join('');
+    return `<ol class="guide-series-index">${items}</ol>`;
 }
 
 function insertBeforeFaqOrEnd(html, block) {
@@ -768,7 +948,12 @@ function pickCrossClusterArticles(current, articles, limit) {
 
 function seriesBacklinksHtml(current, articles) {
     const copy = actionCopy(articleLangCode(current));
-    const series = pickClusterArticles(current, articles, articleCluster(current), 8);
+    const seriesDef = findSeriesForSlug(current.slug);
+    const series = seriesDef
+        ? seriesPartSlugs(seriesDef)
+            .map((slug) => (Array.isArray(articles) ? articles : []).find((a) => a && a.slug === slug && a.slug !== current.slug && isListedArticle(a)))
+            .filter(Boolean)
+        : pickClusterArticles(current, articles, articleCluster(current), 8);
     const cross = pickCrossClusterArticles(current, articles, 4)
         .filter((a) => !series.some((s) => s.slug === a.slug));
     if (!series.length && !cross.length) return '';
@@ -776,9 +961,10 @@ function seriesBacklinksHtml(current, articles) {
     const seriesBlock = series.length
         ? `<p class="guide-backlinks-kicker">${escapeHtml(copy.series)}</p><ul class="guide-backlinks-list">${list(series)}</ul>`
         : '';
-    const crossBlock = cross.length
+    const crossBlock = cross.length && !seriesDef
         ? `<p class="guide-backlinks-kicker">${escapeHtml(copy.also)}</p><ul class="guide-backlinks-list">${list(cross)}</ul>`
         : '';
+    if (!seriesBlock && !crossBlock) return '';
     return `
 <nav class="guide-backlinks" aria-label="${escapeHtml(copy.relatedAria)}">
     ${seriesBlock}
@@ -791,7 +977,18 @@ function injectArticleChrome(html, meta, articles, format) {
     const lang = articleLangCode(meta);
     let out = rewriteBlogBurnoutServiceLinks(String(html || ''));
     out = linkifyBurnoutMentions(out);
-    const backlinks = seriesBacklinksHtml(meta, articles);
+    out = expandLonSlotsTokens(out, meta);
+    const seriesDef = findSeriesForSlug(meta && meta.slug);
+    const isHub = seriesDef && isSeriesHub(meta, seriesDef);
+    if (isHub && !out.includes('guide-series-index')) {
+        const index = seriesListHtml(seriesDef, articles);
+        if (index) {
+            out = /<h2\b/i.test(out)
+                ? insertAfterFirstH2(out, index)
+                : insertAfterFirstParagraph(out, index);
+        }
+    }
+    const backlinks = isHub ? '' : seriesBacklinksHtml(meta, articles);
     const slots = articleWantsLiveSlots(meta) && !out.includes('data-next-slots')
         ? articleLiveSlotsHtml(meta)
         : '';
@@ -837,6 +1034,11 @@ function pickRelatedArticles(current, articles) {
     (Array.isArray(current.related) ? current.related : []).forEach((ref) => {
         push(resolveRelatedRef(ref, bySlug, burnoutBySlug));
     });
+    const seriesDef = findSeriesForSlug(current.slug);
+    if (seriesDef) {
+        seriesPartSlugs(seriesDef).forEach((slug) => push(bySlug.get(slug)));
+        if (seriesDef.slug) push(bySlug.get(seriesDef.slug));
+    }
     siblingArticles(current, all).forEach(push);
     const rest = all.filter((a) => !seen.has(a.slug) && articleLangCode(a) === lang);
     rest.filter((a) => current.about && a.about === current.about).forEach(push);
@@ -921,7 +1123,7 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260418k">
-    <link rel="stylesheet" href="/guide.css?v=20260905h">
+    <link rel="stylesheet" href="/guide.css?v=20260906c">
     <link rel="stylesheet" href="/author.css?v=20260820l">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -1016,7 +1218,7 @@ function layoutGuidePage(opts) {
     <script src="/lon-nav.js"></script>
     <script src="/i18n.js?v=20260905e" defer></script>
     <script src="/lon-analytics.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260906b" defer></script>
+    <script src="/lon-slots.js?v=20260906d" defer></script>
 </body>
 </html>`;
 }
@@ -1186,6 +1388,19 @@ function renderBlogArticle(origin, slug) {
                     url: `${o}/burnout`
                 }
             } : {}),
+            ...(() => {
+                const seriesDef = findSeriesForSlug(slug);
+                if (!seriesDef || articleCluster(meta) === 'burnout') return {};
+                const hubUrl = `${o}/blog/${encodeURIComponent(seriesDef.slug || slug)}`;
+                return {
+                    isPartOf: {
+                        '@type': 'CollectionPage',
+                        '@id': hubUrl,
+                        name: seriesDef.title,
+                        url: hubUrl
+                    }
+                };
+            })(),
             image: og,
             ...(hasPart && hasPart.length ? { hasPart } : {}),
             ...(meta.about ? { about: { '@type': 'MedicalCondition', name: String(meta.about) } } : {}),
@@ -1213,6 +1428,25 @@ function renderBlogArticle(origin, slug) {
         });
     }
     if (cviParts.length) jsonLd.push(...cviParts);
+
+    const seriesDef = findSeriesForSlug(slug);
+    if (seriesDef && isSeriesHub(meta, seriesDef)) {
+        jsonLd.push({
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: seriesDef.title,
+            description: seriesDef.description || description,
+            url: pageUrl,
+            hasPart: seriesPartSlugs(seriesDef).map((partSlug) => {
+                const part = (manifest.articles || []).find((a) => a && a.slug === partSlug);
+                return {
+                    '@type': ['Article', 'MedicalWebPage'],
+                    headline: part && part.title ? part.title : partSlug,
+                    url: `${o}/blog/${encodeURIComponent(partSlug)}`
+                };
+            })
+        });
+    }
 
     jsonLd.push(magBreadcrumbJsonLd(o, magBreadcrumbCrumbs(`/blog/${encodeURIComponent(slug)}`, title)));
 
@@ -1255,9 +1489,20 @@ function renderBlogArticle(origin, slug) {
             { name: 'Burnout', href: '/burnout' },
             { name: title, href: articlePath, current: true }
         ];
+    } else if (seriesDef && !isSeriesHub(meta, seriesDef)) {
+        crumbItems = [
+            { name: 'Magazine', href: '/magazine' },
+            { name: seriesDef.title, href: `/blog/${encodeURIComponent(seriesDef.slug || slug)}` },
+            { name: title, href: articlePath, current: true }
+        ];
     }
     const crumbsHtml = magBreadcrumbHtml(crumbItems);
-    const hubStrip = articleCluster(meta) === 'burnout' ? burnoutHubStripHtml(lang) : '';
+    const hubStrip = articleCluster(meta) === 'burnout'
+        ? burnoutHubStripHtml(lang)
+        : (seriesDef && !isSeriesHub(meta, seriesDef) ? seriesHubStripHtml(seriesDef, lang) : '');
+    const seriesNav = seriesDef && !isSeriesHub(meta, seriesDef)
+        ? seriesNavHtml(slug, seriesDef, manifest.articles)
+        : '';
     const articleInner = format === 'markdown'
         ? `
     <main id="conteudo-principal" class="guide-article-main mag-article-main">
@@ -1277,6 +1522,7 @@ function renderBlogArticle(origin, slug) {
             <div class="guide-prose mag-story-prose" lang="${escapeHtml(langMeta.htmlLang)}">
                 ${articleHtml}
             </div>
+            ${seriesNav}
             </div>
             ${relatedHtml}
             ${closeCta}
@@ -1296,6 +1542,7 @@ function renderBlogArticle(origin, slug) {
             <div class="guide-prose" lang="${escapeHtml(langMeta.htmlLang)}">
                 ${articleHtml}
             </div>
+            ${seriesNav}
             ${relatedHtml}
             ${closeCta}
             ${bio}
@@ -1313,7 +1560,7 @@ function renderBlogArticle(origin, slug) {
         htmlLang: langMeta.htmlLang,
         ogLocale: langMeta.ogLocale,
         extraHead: articleHreflangLinks(o, meta, manifest.articles),
-        extraCssAfter: ['/guide.css?v=20260906a', '/author.css?v=20260820l'],
+        extraCssAfter: ['/guide.css?v=20260906c', '/author.css?v=20260820l'],
         mainHtml: magAppHtml(articlePath, articleInner)
     });
 
@@ -1347,6 +1594,9 @@ function renderNotFound(origin) {
 function magTheme(article) {
     const about = String((article && article.about) || '').toLowerCase();
     const slug = String((article && article.slug) || '');
+    if (article && (article.series === 'livros-saude' || about === 'livros de saúde' || about === 'livros de saude')) {
+        return 'livros-saude';
+    }
     if (/burnout/.test(about) || /burnout/.test(slug) || (article && article.href && String(article.href).startsWith('/burnout'))) {
         return 'burnout';
     }
@@ -1367,6 +1617,7 @@ function magThemeLabel(article) {
     if (theme === 'ansiedade') return 'Ansiedade';
     if (theme === 'autoconhecimento') return 'Autoconhecimento';
     if (theme === 'perda-de-peso') return 'Perda de peso';
+    if (theme === 'livros-saude') return 'Livros de saúde';
     if (theme === 'travel') return 'Viagem';
     return 'Clínica';
 }
@@ -1439,8 +1690,9 @@ function magTocHtml() {
                     <li><a href="#ansiedade"><span>04</span> Ansiedade</a></li>
                     <li><a href="#autoconhecimento"><span>05</span> Autoconhecimento</a></li>
                     <li><a href="#perda-de-peso"><span>06</span> Perda de peso</a></li>
-                    <li><a href="#saude-do-viajante"><span>07</span> Viagem</a></li>
-                    <li><a href="#clinica"><span>08</span> Clínica</a></li>
+                    <li><a href="#livros-saude"><span>07</span> Livros de saúde</a></li>
+                    <li><a href="#saude-do-viajante"><span>08</span> Viagem</a></li>
+                    <li><a href="#clinica"><span>09</span> Clínica</a></li>
                 </ol>
             </nav>`;
 }
@@ -1486,6 +1738,14 @@ function magCtaHtml(kind, lang) {
                 actions: [
                     { href: '/nutricao', label: 'Nutrição por condição' },
                     { href: '/marcar/clinica-geral?ref=magazine-perda-de-peso', label: 'Marcar consulta' }
+                ]
+            },
+            longevity: {
+                kicker: 'Longevidade',
+                title: 'Prevenir com biomarcadores reais.',
+                actions: [
+                    { href: '/marcar/longevidade', label: 'Consulta de longevidade' },
+                    { href: '/nutricao', label: 'Saúde metabólica' }
                 ]
             }
         },
@@ -1634,7 +1894,8 @@ function magCtaHtml(kind, lang) {
         travel: `/marcar/travel${langQ}`,
         burnout: `/burnout`,
         clinic: `/marcar/clinica-geral${langQ}`,
-        nutrition: `/marcar/clinica-geral${langQ}`
+        nutrition: `/marcar/clinica-geral${langQ}`,
+        longevity: `/marcar/longevidade${langQ}`
     };
     const labelByLang = {
         pt: 'Marcar consulta',
@@ -1662,7 +1923,7 @@ function magCtaHtml(kind, lang) {
     const actions = kind === 'burnout'
         ? `<a class="mag-cta-primary" href="/burnout">${escapeHtml(hubLabelByLang[lang] || hubLabelByLang.pt)}</a><a class="mag-cta-ghost" href="${escapeHtml(withLangHref('/burnout/teste', lang))}">${escapeHtml(testLabelByLang[lang] || testLabelByLang.pt)}</a>`
         : `<a class="mag-cta-primary" href="${escapeHtml(bookingHref)}">${escapeHtml(
-            kind === 'clinic' || kind === 'travel' || kind === 'mental' || kind === 'nutrition' ? (labelByLang[lang] || labelByLang.pt) : bookingLabel
+            kind === 'clinic' || kind === 'travel' || kind === 'mental' || kind === 'nutrition' || kind === 'longevity' ? (labelByLang[lang] || labelByLang.pt) : bookingLabel
         )}</a>`;
     return `<aside class="mag-cta" aria-label="${escapeHtml(pack.title)}">
                 <p>${escapeHtml(pack.kicker)}</p>
@@ -1884,6 +2145,22 @@ function magazineNavTree() {
             ]
         },
         {
+            label: 'Livros de saúde',
+            children: [
+                { label: 'A série', href: '/blog/os-10-livros-de-saude-mais-vendidos' },
+                { label: 'Outlive (Peter Attia)', href: '/blog/outlive-peter-attia' },
+                { label: 'Glucose Goddess', href: '/blog/metodo-glucose-goddess' },
+                { label: 'Emagrece Para Sempre', href: '/blog/emagrece-para-sempre-joana-pinho' },
+                { label: 'Food for Life', href: '/blog/food-for-life-tim-spector' },
+                { label: 'Hábitos Que Te Salvarão a Vida', href: '/blog/habitos-que-te-salvarao-a-vida' },
+                { label: 'A Dieta Perfeita', href: '/blog/a-dieta-perfeita-mariana-abecasis' },
+                { label: 'Good Energy', href: '/blog/good-energy-casey-means' },
+                { label: 'O Fim das Dietas', href: '/blog/o-fim-das-dietas-joel-fuhrman' },
+                { label: 'Emagreça sem Dietas', href: '/blog/emagreca-sem-dietas-diana-dinis' },
+                { label: 'How Not to Die', href: '/blog/how-not-to-die-michael-greger' }
+            ]
+        },
+        {
             label: 'Clínica turista',
             children: [
                 { label: 'Tourist clinic', href: '/tourist-clinic' },
@@ -2018,7 +2295,7 @@ function magBreadcrumbJsonLd(origin, crumbs) {
 }
 
 function magTopicAnchorsHtml() {
-    const skip = new Set(['saude-mental', 'burnout', 'depressao', 'ansiedade', 'autoconhecimento', 'perda-de-peso', 'saude-do-viajante', 'clinica']);
+    const skip = new Set(['saude-mental', 'burnout', 'depressao', 'ansiedade', 'autoconhecimento', 'perda-de-peso', 'livros-de-saude', 'saude-do-viajante', 'clinica']);
     const ids = [];
     function walk(nodes) {
         (Array.isArray(nodes) ? nodes : []).forEach((node) => {
@@ -2208,7 +2485,7 @@ function layoutMagazinePage(opts) {
     <script src="/i18n.js?v=20260905e" defer></script>
     <script src="/lon-analytics.js?v=20260905e" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260906b" defer></script>
+    <script src="/lon-slots.js?v=20260906d" defer></script>
     <script src="/guide-actions.js?v=20260905a" defer></script>
 </body>
 </html>`;
@@ -2223,6 +2500,7 @@ function renderMagazineIndex(origin) {
     const ansiedade = articles.filter((a) => magTheme(a) === 'ansiedade');
     const autoconhecimento = articles.filter((a) => magTheme(a) === 'autoconhecimento');
     const perdaPeso = articles.filter((a) => magTheme(a) === 'perda-de-peso');
+    const livrosSaude = articles.filter((a) => magTheme(a) === 'livros-saude');
     const travel = articles.filter((a) => magTheme(a) === 'travel');
     const clinic = articles.filter((a) => magTheme(a) === 'clinic');
     const cover = mental[0] || articles[0];
@@ -2249,6 +2527,9 @@ function renderMagazineIndex(origin) {
     const perdaPesoRest = featured && magTheme(featured) === 'perda-de-peso'
         ? perdaPeso.filter((a) => magHref(a) !== featuredHref)
         : perdaPeso;
+    const livrosSaudeRest = featured && magTheme(featured) === 'livros-saude'
+        ? livrosSaude.filter((a) => magHref(a) !== featuredHref)
+        : livrosSaude;
     const travelRest = featured && magTheme(featured) === 'travel'
         ? travel.filter((a) => magHref(a) !== featuredHref)
         : travel;
@@ -2262,6 +2543,7 @@ function renderMagazineIndex(origin) {
         magThemeRowHtml('ansiedade', 'Ansiedade', ansiedadeRest, 'mental'),
         magThemeRowHtml('autoconhecimento', 'Autoconhecimento', autoconhecimentoRest, 'mental'),
         magThemeRowHtml('perda-de-peso', 'Perda de peso', perdaPesoRest, 'nutrition'),
+        magThemeRowHtml('livros-saude', 'Livros de saúde', livrosSaudeRest, 'nutrition'),
         magClusterHtml(),
         magThemeRowHtml('saude-do-viajante', 'Viagem', travelRest, 'travel'),
         magThemeRowHtml('clinica', 'Clínica', clinicRest, 'clinic')
