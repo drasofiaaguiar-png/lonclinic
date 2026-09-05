@@ -464,7 +464,7 @@ function safeInternalNextPath(raw) {
 function requireAdminPage(req, res, next) {
     if (isAdminSession(req)) return next();
     if (req.session && req.session.clinicAuthenticated) {
-        return res.redirect(302, '/clinic-portal');
+        return res.redirect(302, '/clinic-portal/');
     }
     const nextPath = safeInternalNextPath(req.originalUrl || '/diretorio') || '/diretorio';
     return res.redirect(302, `/admin?next=${encodeURIComponent(nextPath)}`);
@@ -5383,7 +5383,15 @@ app.get('/conta/vacina', (req, res) => {
 });
 
 app.get('/clinic-portal', (req, res) => {
-    sendHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
+    res.set({
+        'Cache-Control': 'private, no-store, no-cache, must-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Surrogate-Control': 'no-store',
+        'CDN-Cache-Control': 'no-store',
+        'Cloudflare-CDN-Cache-Control': 'no-store'
+    });
+    res.redirect(302, '/clinic-portal/');
 });
 
 app.get('/clinic-portal/', (req, res) => {
@@ -5486,7 +5494,7 @@ app.get('/dashboard.html', (req, res) => {
 });
 
 app.get('/clinic.html', (req, res) => {
-    res.redirect(301, '/clinic-portal');
+    res.redirect(301, '/clinic-portal/');
 });
 
 app.get('/admin.html', (req, res) => {

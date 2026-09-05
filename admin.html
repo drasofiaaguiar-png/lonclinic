@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css?v=funnel-split-1">
+    <link rel="stylesheet" href="dashboard.css?v=admin-profile-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
     <meta name="description" content="Admin portal — manage schedule and availability.">
     <meta name="theme-color" content="#eaf2fb">
 </head>
-<body class="lon-landing">
+<body class="lon-landing admin-page">
 
     <a class="lon-skip" href="#conteudo-principal">Skip to content</a>
     <header class="lon-nav" id="lonNav">
@@ -99,7 +99,8 @@
                     <button type="button" class="admin-nav-item" data-admin-panel="professionals">Professionals &amp; Doxy</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="psychologists">Bolsa de Profissionais</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="producers">Diretório produtores</button>
-                    <a class="admin-nav-item admin-nav-link" href="/clinic-portal">Consultations &amp; notes</a>
+                    <button type="button" class="admin-nav-item" data-admin-panel="profile">Profile</button>
+                    <a class="admin-nav-item admin-nav-link" href="/clinic-portal/">Consultations &amp; notes</a>
                 </nav>
                 <div class="admin-sidebar-foot">
                     <button type="button" class="btn btn-outline btn-sm" id="adminLogoutBtn">Sign out</button>
@@ -840,6 +841,97 @@
                 </div>
             </div>
 
+            <div class="admin-panel" id="adminPanelProfile" data-admin-panel-content="profile" hidden>
+                <div class="dash-section">
+                    <div class="dash-section-header">
+                        <h2 class="dash-section-title">Your profile</h2>
+                        <p class="dash-section-subtitle">Professional details for this clinic account</p>
+                    </div>
+                    <dl class="clinic-profile-dl">
+                        <div>
+                            <dt>Name</dt>
+                            <dd id="adminProfileName">—</dd>
+                        </div>
+                        <div>
+                            <dt>Username</dt>
+                            <dd id="adminProfileUsername">—</dd>
+                        </div>
+                        <div>
+                            <dt>Role</dt>
+                            <dd id="adminProfileRole">—</dd>
+                        </div>
+                        <div>
+                            <dt>Doxy.me room</dt>
+                            <dd id="adminProfileDoxy">—</dd>
+                        </div>
+                    </dl>
+                </div>
+                <div class="dash-section">
+                    <div class="dash-section-header">
+                        <h2 class="dash-section-title">Professional details</h2>
+                        <p class="dash-section-subtitle">Ordem number, bio and clinical preference areas</p>
+                    </div>
+                    <form id="adminProfileForm" class="clinic-profile-form">
+                        <div class="admin-form-group">
+                            <label for="adminProfession">Profession</label>
+                            <select id="adminProfession" class="admin-select" required>
+                                <option value="">Select profession</option>
+                                <option value="medico">Médico</option>
+                                <option value="nutricionista">Nutricionista</option>
+                                <option value="psicologo">Psicólogo</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="adminOrdemNumber" id="adminOrdemLabel">Número da ordem</label>
+                            <input type="text" id="adminOrdemNumber" class="admin-input" maxlength="80" placeholder="Cédula / número de cédula" autocomplete="off">
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="adminBio">Bio</label>
+                            <textarea id="adminBio" class="admin-input clinic-bio-input" rows="5" maxlength="4000" placeholder="Short professional bio"></textarea>
+                        </div>
+                        <div class="admin-invite-grid">
+                            <div class="admin-form-group">
+                                <label for="adminPrimaryArea">Clinical preference — primary</label>
+                                <select id="adminPrimaryArea" class="admin-select">
+                                    <option value="">Select profession first</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="adminSecondaryArea">Clinical preference — secondary</label>
+                                <select id="adminSecondaryArea" class="admin-select">
+                                    <option value="">Select profession first</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="adminProfileFormError" class="dash-login-error" style="display:none;" role="alert"></div>
+                        <button type="submit" class="btn btn-primary" id="adminProfileSaveBtn">Save profile</button>
+                    </form>
+                </div>
+                <div class="dash-section">
+                    <div class="dash-section-header">
+                        <h2 class="dash-section-title">Documents</h2>
+                        <p class="dash-section-subtitle">Upload each file with its validity date. After upload, the document and expiry appear in the table.</p>
+                    </div>
+                    <div class="admin-professionals-table-wrap">
+                        <table class="admin-professionals-table clinic-docs-table" id="adminDocsTable">
+                            <thead>
+                                <tr>
+                                    <th>Documento</th>
+                                    <th>Ficheiro</th>
+                                    <th>Validade</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminDocsBody">
+                                <tr><td colspan="4" class="admin-empty-list">Loading…</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="dash-section-subtitle">PDF, JPG, PNG, WebP, DOC or DOCX · max 8MB</p>
+                    <div id="adminDocsError" class="dash-login-error" style="display:none;" role="alert"></div>
+                </div>
+            </div>
+
             </div><!-- /.admin-main -->
         </section>
     </main>
@@ -865,7 +957,7 @@
     </footer>
 
     <script src="lon-nav.js"></script>
-    <script src="admin.js?v=funnel-split-1"></script>
+    <script src="admin.js?v=admin-profile-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

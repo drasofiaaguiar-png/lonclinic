@@ -2514,31 +2514,52 @@ a.admin-nav-link {
 }
 
 /* Clinic portal: hide public top nav after login, full-height sidebar shell */
+body.clinic-portal-page .lon-nav,
+body.clinic-portal-page .lon-skip,
+body.clinic-portal-page .footer,
+body.clinic-portal-page .whatsapp-float,
+body.admin-page .lon-nav,
+body.admin-page .lon-skip,
+body.admin-page .footer,
+body.admin-page .whatsapp-float,
 body.clinic-logged-in .lon-nav,
 body.clinic-logged-in .lon-skip,
 body.clinic-logged-in .footer,
-body.clinic-logged-in .whatsapp-float {
+body.clinic-logged-in .whatsapp-float,
+body.admin-logged-in .lon-nav,
+body.admin-logged-in .lon-skip,
+body.admin-logged-in .footer,
+body.admin-logged-in .whatsapp-float {
     display: none !important;
 }
 
-body.clinic-logged-in .dash-page {
+body.clinic-portal-page .dash-page,
+body.admin-page .dash-page {
+    min-height: 100vh;
+}
+
+body.clinic-logged-in .dash-page,
+body.admin-logged-in .dash-page {
     padding: 0;
     max-width: none;
     min-height: 100vh;
 }
 
-body.clinic-logged-in .dash-content.admin-shell {
+body.clinic-logged-in .dash-content.admin-shell,
+body.admin-logged-in .dash-content.admin-shell {
     min-height: 100vh;
     border-radius: 0;
     border: none;
 }
 
 @media (max-width: 900px) {
-    body.clinic-logged-in .dash-page:has(.admin-shell) {
+    body.clinic-logged-in .dash-page:has(.admin-shell),
+    body.admin-logged-in .dash-page:has(.admin-shell) {
         padding: 0;
     }
 
-    body.clinic-logged-in .dash-content.admin-shell {
+    body.clinic-logged-in .dash-content.admin-shell,
+    body.admin-logged-in .dash-content.admin-shell {
         min-height: 100vh;
         border-radius: 0;
     }

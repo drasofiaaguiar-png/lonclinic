@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             if (data.authenticated) {
                 if (data.role && data.role !== 'admin') {
-                    window.location.href = '/clinic-portal';
+                    window.location.href = '/clinic-portal/';
                     return;
                 }
                 const next = safeDirectoryNext();
@@ -244,12 +244,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // ─── Show login ───
     function showLogin() {
+        document.body.classList.remove('admin-logged-in');
         adminLogin.style.display = 'flex';
         adminContent.style.display = 'none';
     }
 
     // ─── Show admin content ───
     function showAdminContent() {
+        document.body.classList.add('admin-logged-in');
         adminLogin.style.display = 'none';
         adminContent.style.display = 'flex';
         setAdminPanel('schedule');
@@ -266,7 +268,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' },
         professionals: { title: 'Professionals & Doxy', subtitle: 'Clinician logins and video rooms' },
         psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' },
-        producers: { title: 'Diretório produtores', subtitle: 'Moderar candidaturas de produtores biológicos' }
+        producers: { title: 'Diretório produtores', subtitle: 'Moderar candidaturas de produtores biológicos' },
+        profile: { title: 'Profile', subtitle: 'Ordem, bio, clinical areas and documents' }
     };
     let activeAdminPanel = 'schedule';
     let scheduleFilter = 'all';
@@ -348,6 +351,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (panelId === 'professionals') loadAdminProfessionals();
         if (panelId === 'psychologists') loadAdminPsychologists();
         if (panelId === 'producers') loadAdminProducers();
+        if (panelId === 'profile') loadAdminProfile();
     }
 
     document.querySelectorAll('[data-admin-panel]').forEach((btn) => {
@@ -467,7 +471,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <span class="admin-source-badge is-${isInterview ? 'interview' : source}">${badgeLabel}</span>
                         ${comp}
                         ${ref ? `<span class="admin-agenda-ref">${escapeHtml(ref)}</span>` : ''}
-                        ${ref && !isInterview ? `<a class="btn btn-outline btn-sm" href="/clinic-portal">Open notes</a>` : ''}
+                        ${ref && !isInterview ? `<a class="btn btn-outline btn-sm" href="/clinic-portal/">Open notes</a>` : ''}
                     </div>
                 `;
                 section.appendChild(item);
@@ -1491,7 +1495,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (res.ok) {
                     if (data.role && data.role !== 'admin') {
-                        window.location.href = '/clinic-portal';
+                        window.location.href = '/clinic-portal/';
                         return;
                     }
                     const next = safeDirectoryNext();
@@ -3228,7 +3232,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const res = await fetch('/api/admin/professionals');
             if (res.status === 401 || res.status === 403) {
-                if (res.status === 403) window.location.href = '/clinic-portal';
+                if (res.status === 403) window.location.href = '/clinic-portal/';
                 else showLogin();
                 return;
             }
@@ -3312,6 +3316,241 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } catch (err) {
                     alert('Network error. Please try again.');
                 }
+            }
+        });
+    }
+
+    const DEFAULT_ORDEM_LABELS = {
+        medico: 'Número da Ordem dos Médicos',
+        nutricionista: 'Número da Ordem dos Nutricionistas',
+        psicologo: 'Número da Ordem dos Psicólogos'
+    };
+    const DEFAULT_DOC_KINDS = {
+        contrato: 'Contrato',
+        seguro: 'Seguro de responsabilidade civil',
+        cv: 'CV',
+        identificacao: 'Documento de identificação',
+        cartao_ordem: 'Cartão da ordem'
+    };
+    let adminProfileMeta = {
+        professions: DEFAULT_ORDEM_LABELS,
+        documentKinds: DEFAULT_DOC_KINDS,
+        clinicalAreas: {},
+        documents: []
+    };
+    const adminProfileName = document.getElementById('adminProfileName');
+    const adminProfileUsername = document.getElementById('adminProfileUsername');
+    const adminProfileRole = document.getElementById('adminProfileRole');
+    const adminProfileDoxy = document.getElementById('adminProfileDoxy');
+    const adminProfession = document.getElementById('adminProfession');
+    const adminOrdemLabel = document.getElementById('adminOrdemLabel');
+    const adminOrdemNumber = document.getElementById('adminOrdemNumber');
+    const adminBio = document.getElementById('adminBio');
+    const adminPrimaryArea = document.getElementById('adminPrimaryArea');
+    const adminSecondaryArea = document.getElementById('adminSecondaryArea');
+    const adminProfileForm = document.getElementById('adminProfileForm');
+    const adminProfileFormError = document.getElementById('adminProfileFormError');
+    const adminProfileSaveBtn = document.getElementById('adminProfileSaveBtn');
+    const adminDocsBody = document.getElementById('adminDocsBody');
+    const adminDocsError = document.getElementById('adminDocsError');
+
+    function ordemLabelFor(profession) {
+        const labels = adminProfileMeta.professions || DEFAULT_ORDEM_LABELS;
+        return labels[profession] || 'Número da ordem';
+    }
+
+    function fillAreaSelect(selectEl, profession, selected) {
+        if (!selectEl) return;
+        const areas = (adminProfileMeta.clinicalAreas && adminProfileMeta.clinicalAreas[profession]) || [];
+        const value = selected || '';
+        const opts = ['<option value="">Select</option>'].concat(
+            areas.map((area) => `<option value="${escapeHtml(area)}">${escapeHtml(area)}</option>`)
+        );
+        if (value && !areas.includes(value)) {
+            opts.push(`<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`);
+        }
+        selectEl.innerHTML = opts.join('');
+        selectEl.value = value;
+        selectEl.disabled = !profession;
+    }
+
+    function updateAdminOrdemLabel() {
+        if (!adminOrdemLabel) return;
+        adminOrdemLabel.textContent = ordemLabelFor(adminProfession && adminProfession.value);
+    }
+
+    function renderAdminDocumentRows() {
+        if (!adminDocsBody) return;
+        const kinds = adminProfileMeta.documentKinds || DEFAULT_DOC_KINDS;
+        const uploaded = {};
+        (adminProfileMeta.documents || []).forEach((doc) => {
+            if (doc && doc.kind) uploaded[doc.kind] = doc;
+        });
+        adminDocsBody.innerHTML = Object.keys(kinds).map((kind) => {
+            const label = kinds[kind];
+            const doc = uploaded[kind];
+            const fileCell = doc
+                ? `<a class="clinic-doc-link" href="/api/clinic/profile/documents/${encodeURIComponent(doc.id)}">${escapeHtml(doc.originalName || label)}</a>`
+                : '<span class="clinic-doc-missing">Not uploaded</span>';
+            const validity = doc && doc.validUntil ? escapeHtml(doc.validUntil) : '—';
+            return `<tr data-doc-kind="${escapeHtml(kind)}">
+                <td>${escapeHtml(label)}</td>
+                <td>
+                    ${fileCell}
+                    <input type="file" class="clinic-doc-file" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx,application/pdf,image/*">
+                </td>
+                <td>
+                    <div class="clinic-doc-validity">${validity}</div>
+                    <input type="date" class="admin-input clinic-doc-date" value="${doc && doc.validUntil ? escapeHtml(doc.validUntil) : ''}" required>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline btn-sm clinic-doc-upload">${doc ? 'Replace' : 'Upload'}</button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    function showAdminProfileError(el, message) {
+        if (!el) return;
+        el.textContent = message;
+        el.style.display = 'block';
+    }
+
+    async function loadAdminProfile() {
+        if (!adminProfession) return;
+        try {
+            const [profileRes, doxyRes] = await Promise.all([
+                fetch('/api/clinic/profile'),
+                fetch('/api/clinic/doxy')
+            ]);
+            if (profileRes.status === 401) {
+                showLogin();
+                return;
+            }
+            if (!profileRes.ok) throw new Error('Failed to load profile');
+            const data = await profileRes.json();
+            adminProfileMeta = {
+                professions: data.professions || DEFAULT_ORDEM_LABELS,
+                documentKinds: data.documentKinds || DEFAULT_DOC_KINDS,
+                clinicalAreas: data.clinicalAreas || {},
+                documents: data.documents || []
+            };
+            if (adminProfileName) adminProfileName.textContent = data.displayName || data.username || '—';
+            if (adminProfileUsername) adminProfileUsername.textContent = data.username || '—';
+            if (adminProfileRole) {
+                adminProfileRole.textContent = data.role === 'admin' ? 'Clinic administrator' : 'Clinician';
+            }
+            adminProfession.value = data.profession || '';
+            if (adminOrdemNumber) adminOrdemNumber.value = data.ordemNumber || '';
+            if (adminBio) adminBio.value = data.bio || '';
+            updateAdminOrdemLabel();
+            fillAreaSelect(adminPrimaryArea, data.profession, data.primaryArea);
+            fillAreaSelect(adminSecondaryArea, data.profession, data.secondaryArea);
+            renderAdminDocumentRows();
+            if (adminProfileFormError) adminProfileFormError.style.display = 'none';
+            if (adminDocsError) adminDocsError.style.display = 'none';
+            if (doxyRes.ok) {
+                const doxy = await doxyRes.json().catch(() => ({}));
+                if (adminProfileDoxy) {
+                    adminProfileDoxy.textContent = doxy.patientRoomUrl || doxy.providerUrl || '—';
+                }
+            }
+        } catch (err) {
+            console.error('Failed to load admin profile:', err);
+            if (adminDocsBody) {
+                adminDocsBody.innerHTML = '<tr><td colspan="4" class="admin-empty-list">Could not load profile.</td></tr>';
+            }
+        }
+    }
+
+    if (adminProfession) {
+        adminProfession.addEventListener('change', () => {
+            updateAdminOrdemLabel();
+            fillAreaSelect(adminPrimaryArea, adminProfession.value, adminPrimaryArea.value);
+            fillAreaSelect(adminSecondaryArea, adminProfession.value, adminSecondaryArea.value);
+        });
+    }
+
+    if (adminProfileForm) {
+        adminProfileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (adminProfileFormError) adminProfileFormError.style.display = 'none';
+            const payload = {
+                profession: adminProfession.value,
+                ordemNumber: adminOrdemNumber ? adminOrdemNumber.value.trim() : '',
+                bio: adminBio ? adminBio.value.trim() : '',
+                primaryArea: adminPrimaryArea ? adminPrimaryArea.value : '',
+                secondaryArea: adminSecondaryArea ? adminSecondaryArea.value : ''
+            };
+            if (adminProfileSaveBtn) adminProfileSaveBtn.disabled = true;
+            try {
+                const res = await fetch('/api/clinic/profile', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401) {
+                    showLogin();
+                    return;
+                }
+                if (!res.ok) {
+                    throw new Error(data.error || 'Failed to save profile');
+                }
+                const prev = adminProfileSaveBtn ? adminProfileSaveBtn.textContent : '';
+                if (adminProfileSaveBtn) adminProfileSaveBtn.textContent = 'Saved';
+                setTimeout(() => {
+                    if (adminProfileSaveBtn) adminProfileSaveBtn.textContent = prev || 'Save profile';
+                }, 1600);
+            } catch (err) {
+                showAdminProfileError(adminProfileFormError, err.message || 'Failed to save profile');
+            } finally {
+                if (adminProfileSaveBtn) adminProfileSaveBtn.disabled = false;
+            }
+        });
+    }
+
+    if (adminDocsBody) {
+        adminDocsBody.addEventListener('click', async (e) => {
+            const btn = e.target.closest('.clinic-doc-upload');
+            if (!btn) return;
+            const row = btn.closest('tr');
+            const kind = row && row.getAttribute('data-doc-kind');
+            const fileInput = row && row.querySelector('.clinic-doc-file');
+            const dateInput = row && row.querySelector('.clinic-doc-date');
+            if (!kind || !fileInput || !dateInput) return;
+            if (adminDocsError) adminDocsError.style.display = 'none';
+            if (!fileInput.files || !fileInput.files[0]) {
+                showAdminProfileError(adminDocsError, 'Choose a file to upload.');
+                return;
+            }
+            if (!dateInput.value) {
+                showAdminProfileError(adminDocsError, 'Add the validity date.');
+                return;
+            }
+            const form = new FormData();
+            form.append('kind', kind);
+            form.append('validUntil', dateInput.value);
+            form.append('file', fileInput.files[0]);
+            btn.disabled = true;
+            try {
+                const res = await fetch('/api/clinic/profile/documents', {
+                    method: 'POST',
+                    body: form
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401) {
+                    showLogin();
+                    return;
+                }
+                if (!res.ok) {
+                    throw new Error(data.error || 'Failed to upload document');
+                }
+                await loadAdminProfile();
+            } catch (err) {
+                showAdminProfileError(adminDocsError, err.message || 'Failed to upload document');
+            } finally {
+                btn.disabled = false;
             }
         });
     }
