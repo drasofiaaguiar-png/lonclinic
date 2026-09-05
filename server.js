@@ -493,14 +493,18 @@ function staffAuthPayload(req) {
 
 function sendHtmlNoCache(res, filePath, onErrorMessage) {
     res.set({
-        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Cache-Control': 'private, no-store, no-cache, must-revalidate, max-age=0',
         'Pragma': 'no-cache',
         'Expires': '0',
         'Surrogate-Control': 'no-store',
         'CDN-Cache-Control': 'no-store',
         'Cloudflare-CDN-Cache-Control': 'no-store'
     });
-    res.sendFile(filePath, (err) => {
+    res.sendFile(filePath, {
+        etag: false,
+        lastModified: false,
+        cacheControl: false
+    }, (err) => {
         if (err) {
             console.error(`❌ Error sending ${path.basename(filePath)}:`, err.message);
             res.status(500).send(onErrorMessage);
@@ -5382,6 +5386,10 @@ app.get('/clinic-portal', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
 });
 
+app.get('/clinic-portal/', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
+});
+
 app.get('/admin', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'admin.html'), 'Error loading admin page');
 });
@@ -5645,7 +5653,20 @@ app.use(express.static(path.join(__dirname), {
         }
         // Admin / dashboard assets change often and are tiny — never cache them
         // (also bypasses Cloudflare's default 4h edge cache for static JS/CSS).
-        const adminAssets = new Set(['admin.js', 'admin.html', 'dashboard.css', 'admin.css', 'reviews.js', 'lon-analytics.js', 'diretorio.js', 'diretorio.css', 'cvi-recommend.js', 'cvi-recommend.css']);
+        const adminAssets = new Set([
+            'admin.js',
+            'admin.html',
+            'dashboard.css',
+            'admin.css',
+            'reviews.js',
+            'lon-analytics.js',
+            'diretorio.js',
+            'diretorio.css',
+            'cvi-recommend.js',
+            'cvi-recommend.css',
+            'clinic.js',
+            'clinic.html'
+        ]);
         if (adminAssets.has(base)) {
             res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
             res.setHeader('CDN-Cache-Control', 'no-store');
