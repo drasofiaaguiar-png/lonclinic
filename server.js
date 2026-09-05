@@ -85,7 +85,8 @@ function stripeSessionIdSuffixForLog(id) {
 
 const rateLimitClinicLogin = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 5,
+    max: 20,
+    skipSuccessfulRequests: true,
     standardHeaders: true,
     legacyHeaders: false,
     handler: (req, res) => {
@@ -7754,13 +7755,14 @@ if (process.env.NODE_ENV !== 'production') {
 
 // ─── API: Clinic — Login ───
 app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
-    const { username, password } = req.body;
+    const username = String((req.body && req.body.username) || '').trim();
+    const password = String((req.body && req.body.password) || '');
 
     if (!username || !password) {
         return res.status(400).json({ error: 'Username and password are required' });
     }
 
-    const usernameMatch = username === CLINIC_USERNAME;
+    const usernameMatch = username.toLowerCase() === CLINIC_USERNAME.toLowerCase();
     const passwordMatch = clinicPasswordHash
         ? await bcrypt.compare(password, clinicPasswordHash)
         : false;
