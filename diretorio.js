@@ -46,7 +46,7 @@
             const data = await res.json();
             if (data.authenticated && data.role === 'admin') return true;
             if (data.authenticated) {
-                window.location.replace('/clinic-portal/');
+                window.location.replace('/clinic-portal');
                 return false;
             }
         } catch (e) { /* fall through */ }

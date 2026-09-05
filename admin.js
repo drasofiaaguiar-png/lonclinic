@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             if (data.authenticated) {
                 if (data.role && data.role !== 'admin') {
-                    window.location.href = '/clinic-portal/';
+                    window.location.href = '/clinic-portal';
                     return;
                 }
                 const next = safeDirectoryNext();
@@ -471,7 +471,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <span class="admin-source-badge is-${isInterview ? 'interview' : source}">${badgeLabel}</span>
                         ${comp}
                         ${ref ? `<span class="admin-agenda-ref">${escapeHtml(ref)}</span>` : ''}
-                        ${ref && !isInterview ? `<a class="btn btn-outline btn-sm" href="/clinic-portal/">Open notes</a>` : ''}
+                        ${ref && !isInterview ? `<a class="btn btn-outline btn-sm" href="/clinic-portal">Open notes</a>` : ''}
                     </div>
                 `;
                 section.appendChild(item);
@@ -1495,7 +1495,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (res.ok) {
                     if (data.role && data.role !== 'admin') {
-                        window.location.href = '/clinic-portal/';
+                        window.location.href = '/clinic-portal';
                         return;
                     }
                     const next = safeDirectoryNext();
@@ -3232,7 +3232,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const res = await fetch('/api/admin/professionals');
             if (res.status === 401 || res.status === 403) {
-                if (res.status === 403) window.location.href = '/clinic-portal/';
+                if (res.status === 403) window.location.href = '/clinic-portal';
                 else showLogin();
                 return;
             }
