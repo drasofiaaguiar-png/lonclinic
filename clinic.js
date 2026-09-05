@@ -67,6 +67,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicProfileUsername = document.getElementById('clinicProfileUsername');
     const clinicProfileRole = document.getElementById('clinicProfileRole');
     const clinicProfileDoxy = document.getElementById('clinicProfileDoxy');
+    const clinicProfession = document.getElementById('clinicProfession');
+    const clinicOrdemLabel = document.getElementById('clinicOrdemLabel');
+    const clinicOrdemNumber = document.getElementById('clinicOrdemNumber');
+    const clinicBio = document.getElementById('clinicBio');
+    const clinicPrimaryArea = document.getElementById('clinicPrimaryArea');
+    const clinicSecondaryArea = document.getElementById('clinicSecondaryArea');
+    const clinicProfileForm = document.getElementById('clinicProfileForm');
+    const clinicProfileFormError = document.getElementById('clinicProfileFormError');
+    const clinicProfileSaveBtn = document.getElementById('clinicProfileSaveBtn');
+    const clinicDocsBody = document.getElementById('clinicDocsBody');
+    const clinicDocsError = document.getElementById('clinicDocsError');
 
     const CLINIC_PANEL_META = {
         consultations: { title: 'Consultations', subtitle: 'Clinical notes for every consultation' },
@@ -75,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         patients: { title: 'Patients', subtitle: 'People attached to your consultations' },
         resources: { title: 'Resources', subtitle: 'Video room and everyday clinic links' },
         management: { title: 'Management', subtitle: 'Clinic-wide settings and admin tools' },
-        profile: { title: 'Profile', subtitle: 'Your clinic portal account' }
+        profile: { title: 'Profile', subtitle: 'Ordem, bio, clinical areas and documents' }
     };
 
     const WEEKDAYS = [
@@ -150,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (panelId === 'availabilities') loadScheduleView();
         if (panelId === 'resources' || panelId === 'profile') loadDoxyRoom();
+        if (panelId === 'profile') loadClinicProfile();
     }
 
     // ─── Show Login ───
@@ -697,6 +709,212 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Failed to save clinical notes:', err);
             alert('Failed to save clinical notes. Please try again.');
         }
+    }
+
+    const DEFAULT_ORDEM_LABELS = {
+        medico: 'Número da Ordem dos Médicos',
+        nutricionista: 'Número da Ordem dos Nutricionistas',
+        psicologo: 'Número da Ordem dos Psicólogos'
+    };
+    const DEFAULT_DOC_KINDS = {
+        contrato: 'Contrato',
+        seguro: 'Seguro de responsabilidade civil',
+        cv: 'CV',
+        identificacao: 'Documento de identificação',
+        cartao_ordem: 'Cartão da ordem'
+    };
+    let clinicProfileMeta = {
+        professions: DEFAULT_ORDEM_LABELS,
+        documentKinds: DEFAULT_DOC_KINDS,
+        clinicalAreas: {},
+        documents: []
+    };
+
+    function ordemLabelFor(profession) {
+        const labels = clinicProfileMeta.professions || DEFAULT_ORDEM_LABELS;
+        return labels[profession] || 'Número da ordem';
+    }
+
+    function fillAreaSelect(selectEl, profession, selected) {
+        if (!selectEl) return;
+        const areas = (clinicProfileMeta.clinicalAreas && clinicProfileMeta.clinicalAreas[profession]) || [];
+        const value = selected || '';
+        const opts = ['<option value="">Select</option>'].concat(
+            areas.map((area) => `<option value="${escapeHtml(area)}">${escapeHtml(area)}</option>`)
+        );
+        if (value && !areas.includes(value)) {
+            opts.push(`<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`);
+        }
+        selectEl.innerHTML = opts.join('');
+        selectEl.value = value;
+        selectEl.disabled = !profession;
+    }
+
+    function updateOrdemLabel() {
+        if (!clinicOrdemLabel) return;
+        clinicOrdemLabel.textContent = ordemLabelFor(clinicProfession && clinicProfession.value);
+    }
+
+    function renderDocumentRows() {
+        if (!clinicDocsBody) return;
+        const kinds = clinicProfileMeta.documentKinds || DEFAULT_DOC_KINDS;
+        const uploaded = {};
+        (clinicProfileMeta.documents || []).forEach((doc) => {
+            if (doc && doc.kind) uploaded[doc.kind] = doc;
+        });
+        clinicDocsBody.innerHTML = Object.keys(kinds).map((kind) => {
+            const label = kinds[kind];
+            const doc = uploaded[kind];
+            const fileCell = doc
+                ? `<a class="clinic-doc-link" href="/api/clinic/profile/documents/${encodeURIComponent(doc.id)}">${escapeHtml(doc.originalName || label)}</a>`
+                : '<span class="clinic-doc-missing">Not uploaded</span>';
+            const validity = doc && doc.validUntil ? escapeHtml(doc.validUntil) : '—';
+            return `<tr data-doc-kind="${escapeHtml(kind)}">
+                <td>${escapeHtml(label)}</td>
+                <td>
+                    ${fileCell}
+                    <input type="file" class="clinic-doc-file" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx,application/pdf,image/*">
+                </td>
+                <td>
+                    <div class="clinic-doc-validity">${validity}</div>
+                    <input type="date" class="admin-input clinic-doc-date" value="${doc && doc.validUntil ? escapeHtml(doc.validUntil) : ''}" required>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-outline btn-sm clinic-doc-upload">${doc ? 'Replace' : 'Upload'}</button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    async function loadClinicProfile() {
+        if (!clinicProfession) return;
+        try {
+            const res = await fetch('/api/clinic/profile');
+            if (res.status === 401) {
+                showLogin();
+                return;
+            }
+            if (!res.ok) throw new Error('Failed to load profile');
+            const data = await res.json();
+            clinicProfileMeta = {
+                professions: data.professions || DEFAULT_ORDEM_LABELS,
+                documentKinds: data.documentKinds || DEFAULT_DOC_KINDS,
+                clinicalAreas: data.clinicalAreas || {},
+                documents: data.documents || []
+            };
+            clinicProfession.value = data.profession || '';
+            if (clinicOrdemNumber) clinicOrdemNumber.value = data.ordemNumber || '';
+            if (clinicBio) clinicBio.value = data.bio || '';
+            updateOrdemLabel();
+            fillAreaSelect(clinicPrimaryArea, data.profession, data.primaryArea);
+            fillAreaSelect(clinicSecondaryArea, data.profession, data.secondaryArea);
+            renderDocumentRows();
+            if (clinicProfileFormError) clinicProfileFormError.style.display = 'none';
+            if (clinicDocsError) clinicDocsError.style.display = 'none';
+        } catch (err) {
+            console.error('Failed to load clinic profile:', err);
+            if (clinicDocsBody) {
+                clinicDocsBody.innerHTML = '<tr><td colspan="4" class="admin-empty-list">Could not load profile.</td></tr>';
+            }
+        }
+    }
+
+    function showProfileError(el, message) {
+        if (!el) return;
+        el.textContent = message;
+        el.style.display = 'block';
+    }
+
+    if (clinicProfession) {
+        clinicProfession.addEventListener('change', () => {
+            updateOrdemLabel();
+            fillAreaSelect(clinicPrimaryArea, clinicProfession.value, clinicPrimaryArea.value);
+            fillAreaSelect(clinicSecondaryArea, clinicProfession.value, clinicSecondaryArea.value);
+        });
+    }
+
+    if (clinicProfileForm) {
+        clinicProfileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (clinicProfileFormError) clinicProfileFormError.style.display = 'none';
+            const payload = {
+                profession: clinicProfession.value,
+                ordemNumber: clinicOrdemNumber ? clinicOrdemNumber.value.trim() : '',
+                bio: clinicBio ? clinicBio.value.trim() : '',
+                primaryArea: clinicPrimaryArea ? clinicPrimaryArea.value : '',
+                secondaryArea: clinicSecondaryArea ? clinicSecondaryArea.value : ''
+            };
+            if (clinicProfileSaveBtn) clinicProfileSaveBtn.disabled = true;
+            try {
+                const res = await fetch('/api/clinic/profile', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401) {
+                    showLogin();
+                    return;
+                }
+                if (!res.ok) {
+                    throw new Error(data.error || 'Failed to save profile');
+                }
+                const prev = clinicProfileSaveBtn ? clinicProfileSaveBtn.textContent : '';
+                if (clinicProfileSaveBtn) clinicProfileSaveBtn.textContent = 'Saved';
+                setTimeout(() => {
+                    if (clinicProfileSaveBtn) clinicProfileSaveBtn.textContent = prev || 'Save profile';
+                }, 1600);
+            } catch (err) {
+                showProfileError(clinicProfileFormError, err.message || 'Failed to save profile');
+            } finally {
+                if (clinicProfileSaveBtn) clinicProfileSaveBtn.disabled = false;
+            }
+        });
+    }
+
+    if (clinicDocsBody) {
+        clinicDocsBody.addEventListener('click', async (e) => {
+            const btn = e.target.closest('.clinic-doc-upload');
+            if (!btn) return;
+            const row = btn.closest('tr');
+            const kind = row && row.getAttribute('data-doc-kind');
+            const fileInput = row && row.querySelector('.clinic-doc-file');
+            const dateInput = row && row.querySelector('.clinic-doc-date');
+            if (!kind || !fileInput || !dateInput) return;
+            if (clinicDocsError) clinicDocsError.style.display = 'none';
+            if (!fileInput.files || !fileInput.files[0]) {
+                showProfileError(clinicDocsError, 'Choose a file to upload.');
+                return;
+            }
+            if (!dateInput.value) {
+                showProfileError(clinicDocsError, 'Add the validity date.');
+                return;
+            }
+            const form = new FormData();
+            form.append('kind', kind);
+            form.append('validUntil', dateInput.value);
+            form.append('file', fileInput.files[0]);
+            btn.disabled = true;
+            try {
+                const res = await fetch('/api/clinic/profile/documents', {
+                    method: 'POST',
+                    body: form
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401) {
+                    showLogin();
+                    return;
+                }
+                if (!res.ok) {
+                    throw new Error(data.error || 'Failed to upload document');
+                }
+                await loadClinicProfile();
+            } catch (err) {
+                showProfileError(clinicDocsError, err.message || 'Failed to upload document');
+            } finally {
+                btn.disabled = false;
+            }
+        });
     }
 
     // ─── Event Listeners ───

@@ -1073,6 +1073,53 @@ body.dash-portal .dash-stat-card {
     word-break: break-word;
 }
 
+.clinic-profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 42rem;
+}
+
+.clinic-bio-input {
+    min-height: 8rem;
+    resize: vertical;
+}
+
+.clinic-docs-table td {
+    vertical-align: top;
+}
+
+.clinic-doc-link {
+    display: inline-block;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.clinic-doc-missing {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+}
+
+.clinic-doc-file {
+    display: block;
+    max-width: 100%;
+    font-size: 0.8125rem;
+}
+
+.clinic-doc-validity {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.clinic-docs-table .clinic-doc-date {
+    max-width: 11rem;
+}
+
 .admin-professionals-form {
     margin-bottom: 20px;
 }

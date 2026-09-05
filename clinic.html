@@ -16,7 +16,7 @@
     <title>Clinic Portal — Longevity Clinic</title>
     <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css?v=clinic-sidebar-2">
+    <link rel="stylesheet" href="dashboard.css?v=clinic-profile-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -309,7 +309,7 @@
                     <div class="dash-section">
                         <div class="dash-section-header">
                             <h2 class="dash-section-title">Your profile</h2>
-                            <p class="dash-section-subtitle">Account used to sign in to the clinic portal</p>
+                            <p class="dash-section-subtitle">Professional details shown for your clinic account</p>
                         </div>
                         <dl class="clinic-profile-dl">
                             <div>
@@ -329,6 +329,70 @@
                                 <dd id="clinicProfileDoxy">—</dd>
                             </div>
                         </dl>
+                    </div>
+                    <div class="dash-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">Professional details</h2>
+                            <p class="dash-section-subtitle">Ordem number, bio and clinical preference areas</p>
+                        </div>
+                        <form id="clinicProfileForm" class="clinic-profile-form">
+                            <div class="admin-form-group">
+                                <label for="clinicProfession">Profession</label>
+                                <select id="clinicProfession" class="admin-select" required>
+                                    <option value="">Select profession</option>
+                                    <option value="medico">Médico</option>
+                                    <option value="nutricionista">Nutricionista</option>
+                                    <option value="psicologo">Psicólogo</option>
+                                </select>
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="clinicOrdemNumber" id="clinicOrdemLabel">Número da ordem</label>
+                                <input type="text" id="clinicOrdemNumber" class="admin-input" maxlength="80" placeholder="Cédula / número de cédula" autocomplete="off">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="clinicBio">Bio</label>
+                                <textarea id="clinicBio" class="admin-input clinic-bio-input" rows="5" maxlength="4000" placeholder="Short professional bio"></textarea>
+                            </div>
+                            <div class="admin-invite-grid">
+                                <div class="admin-form-group">
+                                    <label for="clinicPrimaryArea">Clinical preference — primary</label>
+                                    <select id="clinicPrimaryArea" class="admin-select">
+                                        <option value="">Select profession first</option>
+                                    </select>
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="clinicSecondaryArea">Clinical preference — secondary</label>
+                                    <select id="clinicSecondaryArea" class="admin-select">
+                                        <option value="">Select profession first</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="clinicProfileFormError" class="dash-login-error" style="display:none;" role="alert"></div>
+                            <button type="submit" class="btn btn-primary" id="clinicProfileSaveBtn">Save profile</button>
+                        </form>
+                    </div>
+                    <div class="dash-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">Documents</h2>
+                            <p class="dash-section-subtitle">Upload each file with its validity date. After upload, the document and expiry appear in the table.</p>
+                        </div>
+                        <div class="admin-professionals-table-wrap">
+                            <table class="admin-professionals-table clinic-docs-table" id="clinicDocsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Documento</th>
+                                        <th>Ficheiro</th>
+                                        <th>Validade</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="clinicDocsBody">
+                                    <tr><td colspan="4" class="admin-empty-list">Loading…</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="dash-section-subtitle" id="clinicDocsHint">PDF, JPG, PNG, WebP, DOC or DOCX · max 8MB</p>
+                        <div id="clinicDocsError" class="dash-login-error" style="display:none;" role="alert"></div>
                     </div>
                 </div>
             </div>
@@ -374,7 +438,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="lon-nav.js"></script>
-    <script src="clinic.js?v=clinic-sidebar-2"></script>
+    <script src="clinic.js?v=clinic-profile-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

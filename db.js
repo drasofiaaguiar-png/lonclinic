@@ -434,6 +434,31 @@ async function initSchema(p) {
     await p.query(`CREATE UNIQUE INDEX IF NOT EXISTS idx_professionals_username_lower ON professionals (LOWER(username))`);
     await p.query(`CREATE INDEX IF NOT EXISTS idx_professionals_display_lower ON professionals (LOWER(TRIM(display_name)))`);
     await p.query(`
+        CREATE TABLE IF NOT EXISTS staff_profiles (
+            username VARCHAR(64) PRIMARY KEY,
+            profession VARCHAR(32) NOT NULL DEFAULT '',
+            ordem_number TEXT NOT NULL DEFAULT '',
+            bio TEXT NOT NULL DEFAULT '',
+            primary_area TEXT NOT NULL DEFAULT '',
+            secondary_area TEXT NOT NULL DEFAULT '',
+            updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS staff_documents (
+            id SERIAL PRIMARY KEY,
+            username VARCHAR(64) NOT NULL,
+            kind VARCHAR(32) NOT NULL,
+            original_name TEXT NOT NULL,
+            mime TEXT NOT NULL DEFAULT 'application/octet-stream',
+            valid_until DATE,
+            file_data BYTEA NOT NULL,
+            uploaded_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+    await p.query(`CREATE UNIQUE INDEX IF NOT EXISTS idx_staff_documents_user_kind ON staff_documents (username, kind)`);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_staff_documents_username ON staff_documents (username)`);
+    await p.query(`
         CREATE TABLE IF NOT EXISTS producers (
             id UUID PRIMARY KEY,
             slug VARCHAR(160) UNIQUE NOT NULL,
@@ -1684,6 +1709,131 @@ async function deleteProfessional(id) {
     return r.rowCount > 0;
 }
 
+function isoDateOnly(value) {
+    if (!value) return null;
+    if (value instanceof Date && !Number.isNaN(value.getTime())) {
+        return value.toISOString().slice(0, 10);
+    }
+    const s = String(value).slice(0, 10);
+    return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : null;
+}
+
+function rowToStaffProfile(row) {
+    if (!row) return null;
+    return {
+        username: row.username,
+        profession: row.profession || '',
+        ordemNumber: row.ordem_number || '',
+        bio: row.bio || '',
+        primaryArea: row.primary_area || '',
+        secondaryArea: row.secondary_area || '',
+        updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : row.updated_at
+    };
+}
+
+function rowToStaffDocument(row, { includeData } = {}) {
+    if (!row) return null;
+    const doc = {
+        id: row.id,
+        username: row.username,
+        kind: row.kind,
+        originalName: row.original_name || '',
+        mime: row.mime || 'application/octet-stream',
+        validUntil: isoDateOnly(row.valid_until),
+        uploadedAt: row.uploaded_at instanceof Date ? row.uploaded_at.toISOString() : row.uploaded_at
+    };
+    if (includeData) {
+        doc.fileData = row.file_data || null;
+    }
+    return doc;
+}
+
+async function getStaffProfile(username) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return null;
+    const r = await p.query('SELECT * FROM staff_profiles WHERE username = $1 LIMIT 1', [u]);
+    return r.rows[0] ? rowToStaffProfile(r.rows[0]) : null;
+}
+
+async function upsertStaffProfile(username, fields) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return null;
+    const profession = String(fields.profession || '').trim().slice(0, 32);
+    const ordemNumber = String(fields.ordemNumber || '').trim().slice(0, 80);
+    const bio = String(fields.bio || '').trim().slice(0, 4000);
+    const primaryArea = String(fields.primaryArea || '').trim().slice(0, 120);
+    const secondaryArea = String(fields.secondaryArea || '').trim().slice(0, 120);
+    const r = await p.query(
+        `INSERT INTO staff_profiles (username, profession, ordem_number, bio, primary_area, secondary_area, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, NOW())
+         ON CONFLICT (username) DO UPDATE SET
+            profession = EXCLUDED.profession,
+            ordem_number = EXCLUDED.ordem_number,
+            bio = EXCLUDED.bio,
+            primary_area = EXCLUDED.primary_area,
+            secondary_area = EXCLUDED.secondary_area,
+            updated_at = NOW()
+         RETURNING *`,
+        [u, profession, ordemNumber, bio, primaryArea, secondaryArea]
+    );
+    return rowToStaffProfile(r.rows[0]);
+}
+
+async function listStaffDocuments(username) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return [];
+    const r = await p.query(
+        `SELECT id, username, kind, original_name, mime, valid_until, uploaded_at
+         FROM staff_documents
+         WHERE username = $1
+         ORDER BY kind ASC`,
+        [u]
+    );
+    return r.rows.map((row) => rowToStaffDocument(row));
+}
+
+async function upsertStaffDocument(doc) {
+    const p = getPool();
+    const u = String(doc.username || '').trim().toLowerCase();
+    const kind = String(doc.kind || '').trim();
+    if (!u || !kind || !doc.fileData) return null;
+    const r = await p.query(
+        `INSERT INTO staff_documents (username, kind, original_name, mime, valid_until, file_data, uploaded_at)
+         VALUES ($1, $2, $3, $4, $5, $6, NOW())
+         ON CONFLICT (username, kind) DO UPDATE SET
+            original_name = EXCLUDED.original_name,
+            mime = EXCLUDED.mime,
+            valid_until = EXCLUDED.valid_until,
+            file_data = EXCLUDED.file_data,
+            uploaded_at = NOW()
+         RETURNING id, username, kind, original_name, mime, valid_until, uploaded_at`,
+        [
+            u,
+            kind,
+            String(doc.originalName || 'document').slice(0, 200),
+            String(doc.mime || 'application/octet-stream').slice(0, 120),
+            isoDateOnly(doc.validUntil),
+            doc.fileData
+        ]
+    );
+    return rowToStaffDocument(r.rows[0]);
+}
+
+async function getStaffDocument(id, username) {
+    const p = getPool();
+    const n = Number(id);
+    if (!Number.isInteger(n) || n < 1) return null;
+    const u = String(username || '').trim().toLowerCase();
+    const r = await p.query(
+        'SELECT * FROM staff_documents WHERE id = $1 AND username = $2 LIMIT 1',
+        [n, u]
+    );
+    return r.rows[0] ? rowToStaffDocument(r.rows[0], { includeData: true }) : null;
+}
+
 const PRODUCER_STATUSES = new Set(['pendente', 'aprovado', 'rejeitado']);
 
 function rowToProducer(row) {
@@ -1913,6 +2063,11 @@ module.exports = {
     insertProfessional,
     updateProfessional,
     deleteProfessional,
+    getStaffProfile,
+    upsertStaffProfile,
+    listStaffDocuments,
+    upsertStaffDocument,
+    getStaffDocument,
     insertProducer,
     listProducers,
     findProducerById,

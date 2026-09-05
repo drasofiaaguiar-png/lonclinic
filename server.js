@@ -203,6 +203,16 @@ const rateLimitProducerApply = rateLimit({
     }
 });
 
+const rateLimitStaffProfile = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 40,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Too many profile updates. Try again in a few minutes.' });
+    }
+});
+
 /* ========================================
    SECURITY HEADERS (CSP, HSTS, etc.)
 ======================================== */
@@ -521,7 +531,160 @@ const clinicalNotesStore = []; // memory fallback only
 const psychologistApplicationsStore = []; // memory fallback for recrutamento
 const professionalsStore = []; // memory fallback for clinician accounts + Doxy rooms
 const producersStore = []; // memory fallback for organic producers directory
+const staffProfilesStore = new Map();
+const staffDocumentsStore = [];
 let professionalIdSeq = 1;
+let staffDocumentIdSeq = 1;
+
+const STAFF_PROFESSIONS = {
+    medico: 'Número da Ordem dos Médicos',
+    nutricionista: 'Número da Ordem dos Nutricionistas',
+    psicologo: 'Número da Ordem dos Psicólogos'
+};
+
+const STAFF_DOCUMENT_KINDS = {
+    contrato: 'Contrato',
+    seguro: 'Seguro de responsabilidade civil',
+    cv: 'CV',
+    identificacao: 'Documento de identificação',
+    cartao_ordem: 'Cartão da ordem'
+};
+
+const STAFF_CLINICAL_AREAS = {
+    medico: [
+        'Clínica geral',
+        'Medicina interna',
+        'Saúde mental',
+        'Burnout',
+        'Consulta do viajante',
+        'Longevidade',
+        'Saúde da mulher',
+        'Pediatria',
+        'Doença aguda / urgente',
+        'Renovação de receita'
+    ],
+    nutricionista: [
+        'Nutrição clínica',
+        'Nutrição desportiva',
+        'Perturbações alimentares',
+        'Doença crónica',
+        'Emagrecimento',
+        'Saúde da mulher',
+        'Pediatria'
+    ],
+    psicologo: [
+        'Ansiedade',
+        'Depressão',
+        'Stress / burnout',
+        'Autoestima',
+        'Relações interpessoais',
+        'Relações de casal',
+        'Luto',
+        'Gestão emocional',
+        'Desenvolvimento pessoal',
+        'Parentalidade',
+        'Adolescência',
+        'Psicologia da saúde',
+        'Perturbações alimentares',
+        'Trauma'
+    ]
+};
+
+function staffSessionUsername(req) {
+    return String((req.session && req.session.clinicUsername) || '').trim().toLowerCase();
+}
+
+function emptyStaffProfile(username) {
+    return {
+        username: String(username || '').trim().toLowerCase(),
+        profession: '',
+        ordemNumber: '',
+        bio: '',
+        primaryArea: '',
+        secondaryArea: '',
+        updatedAt: null
+    };
+}
+
+function publicStaffDocument(doc) {
+    if (!doc) return null;
+    return {
+        id: doc.id,
+        kind: doc.kind,
+        label: STAFF_DOCUMENT_KINDS[doc.kind] || doc.kind,
+        originalName: doc.originalName || '',
+        validUntil: doc.validUntil || null,
+        uploadedAt: doc.uploadedAt || null
+    };
+}
+
+async function getStaffProfileInternal(username) {
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return emptyStaffProfile(u);
+    if (usePersistentDb) {
+        return (await db.getStaffProfile(u)) || emptyStaffProfile(u);
+    }
+    return staffProfilesStore.get(u) || emptyStaffProfile(u);
+}
+
+async function saveStaffProfileInternal(username, fields) {
+    const u = String(username || '').trim().toLowerCase();
+    if (usePersistentDb) return db.upsertStaffProfile(u, fields);
+    const next = {
+        username: u,
+        profession: String(fields.profession || '').trim().slice(0, 32),
+        ordemNumber: String(fields.ordemNumber || '').trim().slice(0, 80),
+        bio: String(fields.bio || '').trim().slice(0, 4000),
+        primaryArea: String(fields.primaryArea || '').trim().slice(0, 120),
+        secondaryArea: String(fields.secondaryArea || '').trim().slice(0, 120),
+        updatedAt: new Date().toISOString()
+    };
+    staffProfilesStore.set(u, next);
+    return next;
+}
+
+async function listStaffDocumentsInternal(username) {
+    const u = String(username || '').trim().toLowerCase();
+    if (usePersistentDb) return db.listStaffDocuments(u);
+    return staffDocumentsStore.filter((d) => d.username === u).map((d) => ({
+        id: d.id,
+        username: d.username,
+        kind: d.kind,
+        originalName: d.originalName,
+        mime: d.mime,
+        validUntil: d.validUntil,
+        uploadedAt: d.uploadedAt
+    }));
+}
+
+async function saveStaffDocumentInternal(doc) {
+    if (usePersistentDb) return db.upsertStaffDocument(doc);
+    const u = String(doc.username || '').trim().toLowerCase();
+    const existing = staffDocumentsStore.find((d) => d.username === u && d.kind === doc.kind);
+    const record = {
+        id: existing ? existing.id : staffDocumentIdSeq++,
+        username: u,
+        kind: doc.kind,
+        originalName: String(doc.originalName || 'document').slice(0, 200),
+        mime: String(doc.mime || 'application/octet-stream').slice(0, 120),
+        validUntil: doc.validUntil || null,
+        fileData: doc.fileData,
+        uploadedAt: new Date().toISOString()
+    };
+    if (existing) {
+        Object.assign(existing, record);
+        return { ...record, fileData: undefined };
+    }
+    staffDocumentsStore.push(record);
+    return { ...record, fileData: undefined };
+}
+
+async function getStaffDocumentInternal(id, username) {
+    if (usePersistentDb) return db.getStaffDocument(id, username);
+    const n = Number(id);
+    const u = String(username || '').trim().toLowerCase();
+    return staffDocumentsStore.find((d) => d.id === n && d.username === u) || null;
+}
 
 function normalizeProfessionalUsername(raw) {
     return String(raw || '').trim().toLowerCase();
@@ -1198,6 +1361,28 @@ const uploadCvPdf = multer({
         const isPdf = file.mimetype === 'application/pdf' || fileExt === '.pdf';
         if (!isPdf) {
             return cb(new Error('O CV deve ser um ficheiro PDF.'));
+        }
+        return cb(null, true);
+    }
+});
+
+const STAFF_DOC_EXTS = new Set(['.pdf', '.jpg', '.jpeg', '.png', '.webp', '.doc', '.docx']);
+const STAFF_DOC_MIMES = new Set([
+    'application/pdf',
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+]);
+const uploadStaffDocument = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 8 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        const ext = path.extname(file.originalname || '').toLowerCase();
+        const ok = STAFF_DOC_MIMES.has(file.mimetype) || STAFF_DOC_EXTS.has(ext);
+        if (!ok) {
+            return cb(new Error('Allowed files: PDF, JPG, PNG, WebP, DOC, DOCX.'));
         }
         return cb(null, true);
     }
@@ -7644,6 +7829,111 @@ app.get('/api/clinic/doxy', requireAuth, async (req, res) => {
     } catch (err) {
         console.error('GET /api/clinic/doxy:', err.message);
         res.status(500).json({ error: 'Failed to load Doxy room' });
+    }
+});
+
+app.get('/api/clinic/profile', requireAuth, async (req, res) => {
+    try {
+        const username = staffSessionUsername(req);
+        const profile = await getStaffProfileInternal(username);
+        const documents = (await listStaffDocumentsInternal(username)).map(publicStaffDocument);
+        res.json({
+            username,
+            displayName: req.session.clinicDisplayName || username,
+            role: req.session.clinicRole || 'admin',
+            profession: profile.profession || '',
+            ordemNumber: profile.ordemNumber || '',
+            bio: profile.bio || '',
+            primaryArea: profile.primaryArea || '',
+            secondaryArea: profile.secondaryArea || '',
+            documents,
+            professions: STAFF_PROFESSIONS,
+            documentKinds: STAFF_DOCUMENT_KINDS,
+            clinicalAreas: STAFF_CLINICAL_AREAS
+        });
+    } catch (err) {
+        console.error('GET /api/clinic/profile:', err.message);
+        res.status(500).json({ error: 'Failed to load profile' });
+    }
+});
+
+app.put('/api/clinic/profile', requireAuth, rateLimitStaffProfile, express.json(), async (req, res) => {
+    try {
+        const username = staffSessionUsername(req);
+        const body = req.body || {};
+        const profession = String(body.profession || '').trim();
+        if (profession && !STAFF_PROFESSIONS[profession]) {
+            return res.status(400).json({ error: 'Choose médico, nutricionista or psicólogo' });
+        }
+        const profile = await saveStaffProfileInternal(username, {
+            profession,
+            ordemNumber: body.ordemNumber,
+            bio: body.bio,
+            primaryArea: body.primaryArea,
+            secondaryArea: body.secondaryArea
+        });
+        res.json({ ok: true, profile });
+    } catch (err) {
+        console.error('PUT /api/clinic/profile:', err.message);
+        res.status(500).json({ error: 'Failed to save profile' });
+    }
+});
+
+app.post('/api/clinic/profile/documents', requireAuth, rateLimitStaffProfile, (req, res) => {
+    uploadStaffDocument.single('file')(req, res, async (uploadErr) => {
+        if (uploadErr instanceof multer.MulterError) {
+            if (uploadErr.code === 'LIMIT_FILE_SIZE') {
+                return res.status(400).json({ error: 'File must be 8MB or smaller.' });
+            }
+            return res.status(400).json({ error: 'Could not process the file.' });
+        }
+        if (uploadErr) {
+            return res.status(400).json({ error: uploadErr.message || 'Could not process the file.' });
+        }
+        try {
+            const username = staffSessionUsername(req);
+            const kind = String(req.body.kind || '').trim();
+            if (!STAFF_DOCUMENT_KINDS[kind]) {
+                return res.status(400).json({ error: 'Unknown document type' });
+            }
+            if (!req.file || !req.file.buffer) {
+                return res.status(400).json({ error: 'Choose a file to upload' });
+            }
+            const validUntil = String(req.body.validUntil || '').trim().slice(0, 10);
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(validUntil)) {
+                return res.status(400).json({ error: 'Validity date is required' });
+            }
+            const saved = await saveStaffDocumentInternal({
+                username,
+                kind,
+                originalName: req.file.originalname || STAFF_DOCUMENT_KINDS[kind],
+                mime: req.file.mimetype || 'application/octet-stream',
+                validUntil,
+                fileData: req.file.buffer
+            });
+            res.json({ ok: true, document: publicStaffDocument(saved) });
+        } catch (err) {
+            console.error('POST /api/clinic/profile/documents:', err.message);
+            res.status(500).json({ error: 'Failed to save document' });
+        }
+    });
+});
+
+app.get('/api/clinic/profile/documents/:id', requireAuth, async (req, res) => {
+    try {
+        const username = staffSessionUsername(req);
+        const doc = await getStaffDocumentInternal(req.params.id, username);
+        if (!doc || !doc.fileData) {
+            return res.status(404).json({ error: 'Document not found' });
+        }
+        const filename = String(doc.originalName || 'document').replace(/[\r\n"]/g, '');
+        res.setHeader('Content-Type', doc.mime || 'application/octet-stream');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+        res.send(Buffer.isBuffer(doc.fileData) ? doc.fileData : Buffer.from(doc.fileData));
+    } catch (err) {
+        console.error('GET /api/clinic/profile/documents:', err.message);
+        res.status(500).json({ error: 'Failed to download document' });
     }
 });
 
