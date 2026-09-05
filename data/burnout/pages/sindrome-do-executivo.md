@@ -55,7 +55,7 @@ Não é uma lista de dicas para «gerir melhor o stress». É um conjunto de cor
 <li><strong>Apoio profissional</strong> Quando o autocuidado não chega, o acompanhamento psicológico e a <a href="/clinica-anti-burnout">consulta anti-burnout</a> ajudam a romper um padrão que, sozinho, é particularmente difícil de abandonar.</li>
 </ol>
 
-Um ponto de partida objectivo: o [teste gratuito de burnout](/burnout/teste) (CBI). Se quiser agenda clínica, [marque consulta](/marcar/burnout).
+Um ponto de partida objectivo: o [teste gratuito de burnout](/burnout/teste) (CBI). Se quiser acompanhamento, o [psicólogo para burnout](/psicologia-burnout) é o passo seguinte.
 
 ## Para empresas e lideranças
 

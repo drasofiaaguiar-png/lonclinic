@@ -242,6 +242,6 @@ Se sente que o esgotamento está a persistir, interfere com a sua vida diária o
 - [Teste gratuito de burnout](/burnout/teste) — 4 minutos, resultado imediato
 - [Sintomas de burnout](/burnout/sintomas) · [Tratamento](/burnout/tratamento) · [Recuperação](/burnout/recuperacao)
 - [Burnout ou depressão](/burnout/depressao-ou-burnout)
-- [Consulta anti-burnout](/clinica-anti-burnout) · [Marcar consulta](/marcar/burnout)
+- [Teste de burnout](/burnout/teste) · [Psicólogo para burnout](/psicologia-burnout)
 
-Este artigo tem fins informativos e não substitui uma avaliação clínica individual. Se se reconhece nestes sinais e sente que o esgotamento está a afetar seriamente a sua vida, [falar com um profissional de saúde](/marcar/burnout) pode ser um primeiro passo importante.
+Este artigo tem fins informativos e não substitui uma avaliação clínica individual. Se se reconhece nestes sinais e sente que o esgotamento está a afetar seriamente a sua vida, [psicólogo para burnout](/psicologia-burnout) pode ser um primeiro passo importante.

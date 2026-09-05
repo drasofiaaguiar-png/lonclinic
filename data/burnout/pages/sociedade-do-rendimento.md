@@ -31,5 +31,5 @@ Complementa-se com [ambiente de trabalho saudável](/burnout/ambiente-de-trabalh
 
 - [Teste gratuito](/burnout/teste)  
 - [Sintomas](/burnout/sintomas) · [Tratamento](/burnout/tratamento)  
-- [Consulta anti-burnout](/clinica-anti-burnout) · [Marcar](/marcar/burnout)  
+- [Teste de burnout](/burnout/teste) · [Psicólogo para burnout](/psicologia-burnout)  
 - Empresas: [programas para equipas](/clinica-anti-burnout#empresas)

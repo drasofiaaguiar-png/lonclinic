@@ -835,7 +835,7 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260418k">
-    <link rel="stylesheet" href="/guide.css?v=20260903c">
+    <link rel="stylesheet" href="/guide.css?v=20260905h">
     <link rel="stylesheet" href="/author.css?v=20260820l">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -932,7 +932,7 @@ function layoutGuidePage(opts) {
     <script src="/lon-nav.js"></script>
     <script src="/i18n.js?v=20260905e" defer></script>
     <script src="/lon-analytics.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260905g" defer></script>
+    <script src="/lon-slots.js?v=20260905h" defer></script>
 </body>
 </html>`;
 }
@@ -1180,6 +1180,7 @@ function renderBlogArticle(origin, slug) {
         <article class="mag-story" itemscope itemtype="https://schema.org/MedicalWebPage">
             <header class="mag-story-head">
                 ${crumbsHtml}
+                ${hubStrip}
                 <p class="mag-story-kicker">${escapeHtml(kicker)}</p>
                 <h1 class="mag-story-title" itemprop="headline">${escapeHtml(title)}</h1>
                 <p class="mag-story-dek">${escapeHtml(description)}</p>
@@ -2123,7 +2124,7 @@ function layoutMagazinePage(opts) {
     <script src="/i18n.js?v=20260905e" defer></script>
     <script src="/lon-analytics.js?v=20260905e" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260905g" defer></script>
+    <script src="/lon-slots.js?v=20260905h" defer></script>
     <script src="/guide-actions.js?v=20260905a" defer></script>
 </body>
 </html>`;

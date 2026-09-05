@@ -32,5 +32,5 @@ Liga-se a um [ambiente de trabalho saudável](/burnout/ambiente-de-trabalho-saud
 
 - [Teste de burnout gratuito](/burnout/teste) — útil quando trabalho e casa se misturam  
 - [Psicologia Lon Clinic](/saudemental) — acompanhamento contínuo  
-- [Consulta anti-burnout](/clinica-anti-burnout) · [Marcar](/marcar/burnout)  
+- [Teste de burnout](/burnout/teste) · [Psicólogo para burnout](/psicologia-burnout)  
 - Empresas: [programas para equipas](/clinica-anti-burnout#empresas)

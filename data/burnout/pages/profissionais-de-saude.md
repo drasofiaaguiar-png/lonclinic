@@ -31,7 +31,7 @@ Reconhecer esta dupla responsabilidade é o primeiro passo para desenhar program
 
 - [Teste de burnout gratuito](/burnout/teste) — 4 minutos, resultado imediato  
 - [Consulta anti-burnout](/clinica-anti-burnout) — avaliação médica online, com discrição  
-- [Marcar consulta](/marcar/burnout)  
+- [Psicólogo para burnout](/psicologia-burnout)  
 - [Como avaliar o esgotamento](/burnout/avaliacao) · [Tratamento](/burnout/tratamento)
 
 A Lon Clinic também apoia organizações que queiram programas para equipas clínicas — veja a secção empresas na [clínica anti-burnout](/clinica-anti-burnout#empresas).

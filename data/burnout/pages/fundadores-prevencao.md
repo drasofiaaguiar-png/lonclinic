@@ -27,5 +27,5 @@ A responsabilidade não deve recair inteiramente sobre o fundador individual. Ac
 O burnout de fundadores não é uma fatalidade inevitável do empreendedorismo — é, na sua maioria, o resultado previsível de um conjunto de pressões específicas que, uma vez identificadas, podem ser geridas de forma muito mais deliberada. Reconhecer estas dinâmicas cedo — e agir sobre elas antes de se tornarem crise — é provavelmente um dos investimentos mais rentáveis que um fundador pode fazer, tanto na sua saúde como no futuro do próprio negócio.
 
 - [Teste de burnout gratuito](/burnout/teste)  
-- [Marcar consulta](/marcar/burnout)  
+- [Psicólogo para burnout](/psicologia-burnout)  
 - [Início da série](/burnout/fundadores) · [Toda a coleção](/burnout/colecao)

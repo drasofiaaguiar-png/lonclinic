@@ -36,5 +36,5 @@ Instrumentos úteis: [avaliação do esgotamento](/burnout/avaliacao), [teste gr
 ## Próximo passo
 
 - [Teste de burnout](/burnout/teste)  
-- [Consulta anti-burnout](/clinica-anti-burnout) · [Marcar](/marcar/burnout)  
+- [Teste de burnout](/burnout/teste) · [Psicólogo para burnout](/psicologia-burnout)  
 - Empresas: [programas para equipas](/clinica-anti-burnout#empresas)

@@ -21,7 +21,10 @@ const SERVICE_CENTS = {
     burnout_mensal: 21600,
     burnout_programa: 49000,
     renovacao: 1900,
-    longevidade: 7900
+    longevidade: 7900,
+    nutricao_programa: 11500,
+    nutricao_completo: 22700,
+    nutricao_completo_reforcado: 32200
 };
 
 const TRAVEL_TIER_CENTS = {
@@ -107,7 +110,13 @@ function computeCheckoutTotalCents(opts) {
     }
 
     let discountPercent = 0;
-    const noDiscountServices = new Set(['burnout_mensal', 'burnout_programa']);
+    const noDiscountServices = new Set([
+        'burnout_mensal',
+        'burnout_programa',
+        'nutricao_programa',
+        'nutricao_completo',
+        'nutricao_completo_reforcado'
+    ]);
     if (discountCode && !noDiscountServices.has(key)) {
         const code = String(discountCode).toUpperCase().trim();
         if (Object.prototype.hasOwnProperty.call(DISCOUNT_CODES, code)) {

@@ -21,6 +21,6 @@ Listas na internet não substituem história clínica. Medicamentos, sono, doen�
 
 1. Faça o [teste gratuito de burnout](/burnout/teste) para um retrato objectivo do esgotamento  
 2. Se o humor está muito baixo, há ideias de morte ou incapacidade grave — procure ajuda urgente  
-3. Para percurso clínico: [consulta anti-burnout](/clinica-anti-burnout) ou [marcar](/marcar/burnout)
+3. Para percurso clínico: [psicólogo para burnout](/psicologia-burnout)
 
 Mais contexto: [sintomas](/burnout/sintomas) · [tratamento](/burnout/tratamento)

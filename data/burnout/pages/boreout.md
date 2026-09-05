@@ -41,4 +41,4 @@ Mesmo quando a dúvida é «será burnout ou só tédio?», objetivar ajuda:
 
 - [Teste de burnout gratuito](/burnout/teste)  
 - [Sintomas de burnout](/burnout/sintomas) · [Avaliação do esgotamento](/burnout/avaliacao)  
-- [Marcar consulta](/marcar/burnout)
+- [Psicólogo para burnout](/psicologia-burnout)

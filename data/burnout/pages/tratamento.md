@@ -18,7 +18,7 @@ Na [consulta anti-burnout](/clinica-anti-burnout) online:
 - Foco em corpo e mente — não só em “gerir stress”
 - Encaminhamento para [psicologia](/psicologia-burnout) quando necessário
 
-Pode [marcar directamente](/marcar/burnout) ou começar pelo teste e decidir depois.
+Comece pelo teste e, a seguir, a [consulta de psicologia para burnout](/psicologia-burnout).
 
 ## Psicólogo burnout — quando entra na equação
 
@@ -36,4 +36,4 @@ Se já sabe que quer acompanhamento psicológico, veja a página de [psicólogo 
 
 - [Teste gratuito](/burnout/teste) — 4 minutos, resultado imediato  
 - [Como funciona a recuperação](/burnout/recuperacao)  
-- [Marcar consulta burnout](/marcar/burnout)
+- [Psicólogo para burnout](/psicologia-burnout)

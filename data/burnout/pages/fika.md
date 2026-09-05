@@ -18,4 +18,4 @@ Pode parecer contraintuitivo associar pausas regulares a maior produtividade, ma
 
 Não é preciso importar a palavra sueca — o princípio é o que importa: criar espaços protegidos, ainda que curtos, onde as conversas de trabalho ficam propositadamente de lado. Isto pode passar por uma pausa coletiva a meio da manhã, sem telemóveis nem ecrãs, ou por normas informais que tornem esses momentos genuinamente livres de agenda. Pequenos rituais deste tipo, quando sustentados no tempo, tornam-se parte da cultura organizacional — e essa cultura é, no fim, um dos fatores mais determinantes na prevenção do desgaste das equipas. Ver [ambiente de trabalho saudável](/burnout/ambiente-de-trabalho-saudavel).
 
-[Teste de burnout](/burnout/teste) · [Consulta](/clinica-anti-burnout) · [Marcar](/marcar/burnout)
+[Teste de burnout](/burnout/teste) · [Psicólogo para burnout](/psicologia-burnout)

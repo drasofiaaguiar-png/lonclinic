@@ -257,7 +257,7 @@ E essas duas coisas são muito diferentes.
 
 - [Teste gratuito de burnout](/burnout/teste) — 4 minutos, resultado imediato, com confidencialidade
 - [Consulta anti-burnout](/clinica-anti-burnout) — avaliação médica online
-- [Marcar consulta](/marcar/burnout)
+- [Psicólogo para burnout](/psicologia-burnout)
 - [Burnout nos profissionais de saúde](/burnout/profissionais-de-saude) · [Sintomas](/burnout/sintomas) · [Recuperação](/burnout/recuperacao)
 
-Este artigo tem fins informativos e não substitui uma avaliação clínica individual. Se se reconhece nestes sinais, [falar com um profissional de saúde](/marcar/burnout) pode ser um primeiro passo importante — sem precisar de esperar até já não conseguir trabalhar.
+Este artigo tem fins informativos e não substitui uma avaliação clínica individual. Se se reconhece nestes sinais, [psicólogo para burnout](/psicologia-burnout) pode ser um primeiro passo importante — sem precisar de esperar até já não conseguir trabalhar.

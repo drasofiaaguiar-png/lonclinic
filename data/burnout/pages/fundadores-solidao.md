@@ -26,4 +26,4 @@ Esta solidão específica não é apenas desconfortável — tem custo mensuráv
 
 Tratar a solidão do fundador como um risco de negócio — e não como uma fraqueza pessoal a esconder — é o primeiro passo para lhe dar a atenção que merece.
 
-[Teste](/burnout/teste) · [Consulta](/clinica-anti-burnout) · [Marcar](/marcar/burnout)
+[Teste](/burnout/teste) · [Psicólogo para burnout](/psicologia-burnout)

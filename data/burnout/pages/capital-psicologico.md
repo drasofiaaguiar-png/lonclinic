@@ -29,5 +29,5 @@ Para medir o estado atual da equipa ou de si próprio:
 
 - [Teste de burnout gratuito](/burnout/teste)  
 - [Como avaliar o esgotamento](/burnout/avaliacao)  
-- [Consulta anti-burnout](/clinica-anti-burnout) · [Marcar](/marcar/burnout)  
+- [Teste de burnout](/burnout/teste) · [Psicólogo para burnout](/psicologia-burnout)  
 - Empresas: [programas anti-burnout](/clinica-anti-burnout#empresas)

@@ -454,8 +454,8 @@ Depende da relação e do contexto. Nem todos os investidores têm a mesma abord
 ## O que fazer a seguir
 
 - [Teste gratuito de burnout](/burnout/teste) — 4 minutos, resultado imediato
-- [Consulta anti-burnout](/clinica-anti-burnout) · [Marcar consulta](/marcar/burnout)
+- [Teste de burnout](/burnout/teste) · [Psicólogo para burnout](/psicologia-burnout)
 - [Solidão do fundador](/burnout/fundadores-solidao) · [Prevenção e recuperação](/burnout/fundadores-prevencao)
 - [Coleção completa](/burnout/colecao#fundadores)
 
-Este artigo tem fins informativos e não substitui uma avaliação clínica individual. Se sente que o esgotamento está a afetar seriamente a sua saúde, a sua capacidade de trabalhar ou a sua vida pessoal, [procure apoio de um profissional de saúde](/marcar/burnout).
+Este artigo tem fins informativos e não substitui uma avaliação clínica individual. Se sente que o esgotamento está a afetar seriamente a sua saúde, a sua capacidade de trabalhar ou a sua vida pessoal, [psicólogo para burnout](/psicologia-burnout).

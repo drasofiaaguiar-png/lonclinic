@@ -47,6 +47,6 @@ Marque consulta se:
 3. Há impacto no sono, humor ou desempenho
 4. Suspeita de sobreposição com ansiedade, depressão, [ADHD](/blog/adhd-em-adultos-sintomas) ou [autismo em mulheres](/blog/autismo-em-mulheres-diagnostico-tardio)
 
-Comece pelo [teste gratuito de burnout](/burnout/teste) (baseado no Copenhagen Burnout Inventory) e, se quiser acompanhamento clínico, [marque consulta](/marcar/burnout) ou veja a [consulta anti-burnout](/clinica-anti-burnout).
+Comece pelo [teste gratuito de burnout](/burnout/teste) (baseado no Copenhagen Burnout Inventory) e, se quiser acompanhamento clínico, veja o [psicólogo para burnout](/psicologia-burnout).
 
 Para perceber a diferença face à depressão, leia [burnout ou depressão](/burnout/depressao-ou-burnout).

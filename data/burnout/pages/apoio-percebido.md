@@ -32,6 +32,6 @@ São gestos simples, mas com impacto mensurável na retenção, no absentismo e 
 Mesmo em bons ambientes, o esgotamento individual pode já estar instalado. Nesse caso:
 
 - [Teste de burnout gratuito](/burnout/teste)  
-- [Consulta anti-burnout](/clinica-anti-burnout) · [Marcar](/marcar/burnout)  
+- [Teste de burnout](/burnout/teste) · [Psicólogo para burnout](/psicologia-burnout)  
 - [Psicologia](/saudemental) para acompanhamento contínuo  
 - Empresas: [programas anti-burnout](/clinica-anti-burnout#empresas)

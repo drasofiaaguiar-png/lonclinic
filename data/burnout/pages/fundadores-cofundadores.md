@@ -27,4 +27,4 @@ Na maioria dos casos, a causa raiz não é incompatibilidade de personalidades, 
 
 Uma relação sólida entre cofundadores é, comprovadamente, um fator de proteção contra o esgotamento individual de cada um — mas só quando é cuidada de forma ativa, e não deixada a resolver-se sozinha.
 
-[Teste](/burnout/teste) · [Consulta](/clinica-anti-burnout) · [Marcar](/marcar/burnout)
+[Teste](/burnout/teste) · [Psicólogo para burnout](/psicologia-burnout)

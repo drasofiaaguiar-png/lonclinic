@@ -40,6 +40,6 @@ O direito a desligar não é um capricho — é uma condição para que o trabal
 Quando o corpo e o sono já falharam:
 
 - [Teste gratuito](/burnout/teste)  
-- [Consulta anti-burnout](/clinica-anti-burnout) · [Marcar](/marcar/burnout)  
+- [Teste de burnout](/burnout/teste) · [Psicólogo para burnout](/psicologia-burnout)  
 - [Tratamento](/burnout/tratamento) · [Recuperação](/burnout/recuperacao)  
 - Empresas: [programas para lideranças e equipas](/clinica-anti-burnout#empresas)

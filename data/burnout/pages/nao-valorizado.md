@@ -16,4 +16,4 @@ Outros sinais frequentes: exclusão de conversas relevantes, reconhecimento só 
 
 Um trabalho deficiente de recursos humanos e de gestão de pessoas conduz, de forma quase inevitável, à frustração e à ausência de compromisso. Investir em reconhecimento — feedback regular, oportunidades de crescimento reais, ajuste cuidado entre pessoa e função — não é apenas uma questão de bem-estar individual: é uma das formas mais diretas de proteger o compromisso e reduzir a rotatividade nas equipas.
 
-Se o desgaste já se instalou: [teste gratuito](/burnout/teste) · [consulta](/clinica-anti-burnout) · [marcar](/marcar/burnout).
+Se o desgaste já se instalou: [teste gratuito](/burnout/teste) · [psicólogo para burnout](/psicologia-burnout).

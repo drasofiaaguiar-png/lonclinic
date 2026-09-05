@@ -30,4 +30,4 @@ Recuperar capacidade ≠ voltar ao mesmo sistema que o esgotou. Significa:
 
 ## Se está no início
 
-Leia [sintomas de burnout](/burnout/sintomas) e [tratamento](/burnout/tratamento). Se quiser acompanhamento agora: [marcar consulta](/marcar/burnout).
+Leia [sintomas de burnout](/burnout/sintomas) e [tratamento](/burnout/tratamento). Se quiser acompanhamento agora: [psicólogo para burnout](/psicologia-burnout).

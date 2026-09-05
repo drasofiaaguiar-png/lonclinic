@@ -26,5 +26,5 @@ Gerir a componente emocional das equipas não é um «extra» de bem-estar desli
 ## Próximo passo
 
 - [Teste de burnout gratuito](/burnout/teste)  
-- [Consulta anti-burnout](/clinica-anti-burnout) · [Marcar](/marcar/burnout)  
+- [Teste de burnout](/burnout/teste) · [Psicólogo para burnout](/psicologia-burnout)  
 - [Psicologia](/saudemental) · Empresas: [programas para equipas](/clinica-anti-burnout#empresas)

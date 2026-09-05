@@ -23,7 +23,7 @@ Quem pesquisa **burnout em programadores** raramente está “só cansado”. Es
 Listas de “faça pomodoro” raramente resolvem burnout estabelecido. O que muda o curso:
 
 1. Avaliar o nível real — [teste CBI](/burnout/teste)  
-2. Consulta clínica se o corpo já entrou (sono, ansiedade, dor, colapso) — [marcar](/marcar/burnout)  
+2. Se o corpo já entrou (sono, ansiedade, dor, colapso) — [psicólogo para burnout](/psicologia-burnout)  
 3. Plano de recuperação com margem real, não só “PTO de 3 dias”
 
 Veja também a [consulta anti-burnout](/clinica-anti-burnout) e o hub [burnout](/burnout).

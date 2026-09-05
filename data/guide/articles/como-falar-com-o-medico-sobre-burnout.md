@@ -22,7 +22,7 @@ Não hesite em descrever sintomas físicos, mesmo que pareçam não relacionados
 
 Consoante a avaliação clínica, o médico pode emitir um Certificado de Incapacidade Temporária (a chamada «baixa médica»), que dá acesso ao subsídio de doença pago pela Segurança Social, desde que cumpridas as condições legais de elegibilidade. Pode também ser feito encaminhamento para psicologia, ou pedidos exames complementares. O artigo [burnout e baixa médica em Portugal](/blog/burnout-e-baixa-medica-em-portugal) explica direitos e valores.
 
-Uma consulta de telemedicina pode ser um bom primeiro passo, especialmente para quem tem dificuldade em encontrar tempo ou sente desconforto em abordar o tema presencialmente. Pode [marcar uma consulta de burnout](/marcar/burnout) ou ver a [clínica anti-burnout](/clinica-anti-burnout).
+Uma consulta de telemedicina pode ser um bom primeiro passo, especialmente para quem tem dificuldade em encontrar tempo ou sente desconforto em abordar o tema presencialmente. Comece pelo [centro burnout](/burnout) e pelo [teste CBI](/burnout/teste).
 
 ## Perguntas frequentes
 

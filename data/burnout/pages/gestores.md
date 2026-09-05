@@ -26,5 +26,5 @@ Recuperação de burnout em gestores não exige demissão imediata. Exige avalia
 
 - [Teste gratuito](/burnout/teste)  
 - [Tratamento burnout](/burnout/tratamento)  
-- [Marcar consulta](/marcar/burnout)  
+- [Psicólogo para burnout](/psicologia-burnout)  
 - [Clínica anti-burnout](/clinica-anti-burnout)

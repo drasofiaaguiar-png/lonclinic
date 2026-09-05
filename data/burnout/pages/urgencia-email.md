@@ -29,5 +29,5 @@ São medidas simples, mas que comunicam algo essencial — que o direito ao desc
 ## Próximo passo
 
 - [Direito a desligar](/burnout/direito-a-desligar) · [Teste de burnout](/burnout/teste)  
-- [Consulta anti-burnout](/clinica-anti-burnout) · [Marcar](/marcar/burnout)  
+- [Teste de burnout](/burnout/teste) · [Psicólogo para burnout](/psicologia-burnout)  
 - Empresas: [programas para equipas](/clinica-anti-burnout#empresas)

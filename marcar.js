@@ -99,6 +99,33 @@
                     'Lifestyle review and screening priorities.',
                     'For those who want to invest in health before chronic diseases arise.'
                 ]
+            },
+            nutricao_programa: {
+                label: 'Nutrition Program (6 months) — month 1',
+                duration: '30 min · first medical visit',
+                bullets: [
+                    'First month of the 6-month nutrition program (115 € now, then 75 €/month).',
+                    'Medical assessment, blood-test request and personalised nutrition plan.',
+                    'Minimum commitment of 3 months. Lab tests billed by your chosen laboratory.'
+                ]
+            },
+            nutricao_completo: {
+                label: 'Complete Metabolic Program — month 1',
+                duration: '30 min · first medical visit',
+                bullets: [
+                    'First month of the complete 6-month program (227 € now, then 187 €/month).',
+                    'Medicine, nutrition and 12 psychology sessions over 6 months.',
+                    'Minimum commitment of 3 months. Total 1,162 €.'
+                ]
+            },
+            nutricao_completo_reforcado: {
+                label: 'Complete Program — higher first payment',
+                duration: '30 min · first medical visit',
+                bullets: [
+                    'First month of the complete program (322 € now, then 168 €/month).',
+                    'Same clinical content as the balanced option. Total still 1,162 €.',
+                    'Minimum commitment of 3 months.'
+                ]
             }
         },
         es: {
@@ -194,6 +221,33 @@
                     'Revisión del estilo de vida y prioridades de cribado.',
                     'Para quienes quieren invertir en su salud antes de que aparezcan enfermedades crónicas.'
                 ]
+            },
+            nutricao_programa: {
+                label: 'Programa de nutrición (6 meses) — mes 1',
+                duration: '30 min · primera consulta médica',
+                bullets: [
+                    'Primer mes del programa de 6 meses (115 € ahora, luego 75 €/mes).',
+                    'Evaluación médica, petición de análisis y plan nutricional personalizado.',
+                    'Fidelización mínima de 3 meses. Los análisis se pagan en el laboratorio elegido.'
+                ]
+            },
+            nutricao_completo: {
+                label: 'Programa completo — mes 1',
+                duration: '30 min · primera consulta médica',
+                bullets: [
+                    'Primer mes del programa completo (227 € ahora, luego 187 €/mes).',
+                    'Medicina, nutrición y 12 sesiones de psicología en 6 meses.',
+                    'Fidelización mínima de 3 meses. Total 1 162 €.'
+                ]
+            },
+            nutricao_completo_reforcado: {
+                label: 'Programa completo — entrada reforzada',
+                duration: '30 min · primera consulta médica',
+                bullets: [
+                    'Primer mes del programa completo (322 € ahora, luego 168 €/mes).',
+                    'El mismo contenido clínico que la opción equilibrada. Total 1 162 €.',
+                    'Fidelización mínima de 3 meses.'
+                ]
             }
         }
     };
@@ -207,7 +261,10 @@
         burnout: 'burnout',
         burnout_mensal: 'burnout-mensal',
         burnout_programa: 'burnout-programa',
-        longevidade: 'longevidade'
+        longevidade: 'longevidade',
+        nutricao_programa: 'nutricao-programa',
+        nutricao_completo: 'nutricao-completo',
+        nutricao_completo_reforcado: 'nutricao-completo-reforcado'
     };
     var SLUG_TO_TYPE = {
         urgente: 'urgente',
@@ -224,7 +281,13 @@
         burnout_mensal: 'burnout_mensal',
         'burnout-programa': 'burnout_programa',
         burnout_programa: 'burnout_programa',
-        longevidade: 'longevidade'
+        longevidade: 'longevidade',
+        'nutricao-programa': 'nutricao_programa',
+        nutricao_programa: 'nutricao_programa',
+        'nutricao-completo': 'nutricao_completo',
+        nutricao_completo: 'nutricao_completo',
+        'nutricao-completo-reforcado': 'nutricao_completo_reforcado',
+        nutricao_completo_reforcado: 'nutricao_completo_reforcado'
     };
 
     var BURNOUT_FAMILY = ['burnout', 'burnout_mensal', 'burnout_programa'];
@@ -254,6 +317,36 @@
             price: '€490',
             unit: '8 sessões',
             note: 'CBI + relatório final escrito',
+            featured: false
+        }
+    ];
+    var NUTRICAO_FAMILY = ['nutricao_programa', 'nutricao_completo', 'nutricao_completo_reforcado'];
+    var NUTRICAO_PLAN_CARDS = [
+        {
+            tipo: 'nutricao_programa',
+            badge: 'Nutrição',
+            title: 'Programa Nutrição',
+            price: '115 €',
+            unit: 'mês 1',
+            note: 'Depois 75 €/mês · total 490 €',
+            featured: false
+        },
+        {
+            tipo: 'nutricao_completo',
+            badge: 'Completo',
+            title: 'Programa Completo',
+            price: '227 €',
+            unit: 'mês 1',
+            note: 'Depois 187 €/mês · total 1 162 €',
+            featured: true
+        },
+        {
+            tipo: 'nutricao_completo_reforcado',
+            badge: 'Entrada reforçada',
+            title: 'Mensalidade leve',
+            price: '322 €',
+            unit: 'mês 1',
+            note: 'Depois 168 €/mês · total 1 162 €',
             featured: false
         }
     ];
@@ -382,6 +475,45 @@
                 'Revisão de estilo de vida e prioridades de rastreio.',
                 'Para quem quer investir na saúde antes de surgirem doenças crónicas.'
             ]
+        },
+        nutricao_programa: {
+            label: 'Programa Nutrição (6 meses) — mês 1',
+            price: '115 €',
+            priceNote: ' · adesão mês 1',
+            cents: 11500,
+            duration: '30 min · 1.ª consulta médica',
+            serviceKey: 'nutricao_programa',
+            bullets: [
+                'Adesão ao programa de 6 meses: 115 € agora e 75 €/mês nos meses 2 a 6 (total 490 €).',
+                'Consulta médica, requisição de exames e plano alimentar personalizado.',
+                'Fidelização mínima de 3 meses. Análises pagas no laboratório da sua preferência.'
+            ]
+        },
+        nutricao_completo: {
+            label: 'Programa Completo (6 meses) — mês 1',
+            price: '227 €',
+            priceNote: ' · adesão mês 1',
+            cents: 22700,
+            duration: '30 min · 1.ª consulta médica',
+            serviceKey: 'nutricao_completo',
+            bullets: [
+                'Adesão ao programa completo: 227 € agora e 187 €/mês nos meses 2 a 6 (total 1 162 €).',
+                'Medicina, nutrição e 12 sessões de psicologia ao longo de 6 meses.',
+                'Fidelização mínima de 3 meses. Análises pagas no laboratório da sua preferência.'
+            ]
+        },
+        nutricao_completo_reforcado: {
+            label: 'Programa Completo — entrada reforçada',
+            price: '322 €',
+            priceNote: ' · adesão mês 1',
+            cents: 32200,
+            duration: '30 min · 1.ª consulta médica',
+            serviceKey: 'nutricao_completo_reforcado',
+            bullets: [
+                'Entrada reforçada: 322 € agora e 168 €/mês nos meses 2 a 6 (total 1 162 €).',
+                'O mesmo conteúdo clínico da opção equilibrada, com mensalidades mais leves.',
+                'Fidelização mínima de 3 meses. Análises pagas no laboratório da sua preferência.'
+            ]
         }
     };
 
@@ -433,13 +565,21 @@
         return BURNOUT_FAMILY.indexOf(t) >= 0;
     }
 
-    function renderBurnoutPlanPicker(activeTipo) {
+    function isNutricaoFamily(t) {
+        return NUTRICAO_FAMILY.indexOf(t) >= 0;
+    }
+
+    function renderPlanPicker(activeTipo, cards, kicker, heading) {
         var section = document.getElementById('marcarPlanSection');
         var grid = document.getElementById('marcarPlans');
         if (!section || !grid) return;
         section.hidden = false;
+        var kickerEl = document.getElementById('marcarPlanKicker');
+        var headingEl = document.getElementById('marcarPlanHeading');
+        if (kickerEl && kicker) kickerEl.textContent = kicker;
+        if (headingEl && heading) headingEl.textContent = heading;
         grid.innerHTML = '';
-        BURNOUT_PLAN_CARDS.forEach(function (card) {
+        cards.forEach(function (card) {
             var btn = document.createElement('a');
             btn.href = getPrettyMarcarUrl(card.tipo);
             btn.className = 'marcar-plan-card' + (card.tipo === activeTipo ? ' is-active' : '') + (card.featured ? ' is-featured' : '');
@@ -454,9 +594,15 @@
     }
 
     if (isBurnoutFamily(tipo)) {
-        renderBurnoutPlanPicker(tipo);
+        renderPlanPicker(tipo, BURNOUT_PLAN_CARDS, 'Anti-burnout', 'Escolhe o formato');
         var burnoutLink = document.getElementById('marcarBurnoutLink');
         if (burnoutLink) burnoutLink.hidden = false;
+    }
+
+    if (isNutricaoFamily(tipo)) {
+        renderPlanPicker(tipo, NUTRICAO_PLAN_CARDS, 'Programa metabólico', 'Escolha o plano');
+        var nutricaoLink = document.getElementById('marcarNutricaoLink');
+        if (nutricaoLink) nutricaoLink.hidden = false;
     }
 
     var state = {

@@ -26,6 +26,6 @@ O MBI é a referência histórica mais citada. O nosso [teste gratuito](/burnout
 
 O esgotamento laboral crónico não desaparece sozinho. Sem intervenção, tende a agravar-se e a ter consequências sérias, tanto para a saúde da pessoa como para o desempenho e a estabilidade das equipas — o que torna a avaliação precoce um investimento, não um custo.
 
-**Próximo passo:** [fazer o teste de burnout](/burnout/teste) · [marcar consulta](/marcar/burnout) · [clínica anti-burnout](/clinica-anti-burnout)
+**Próximo passo:** [fazer o teste de burnout](/burnout/teste) · [psicólogo para burnout](/psicologia-burnout)
 
 Para lideranças e o padrão de não conseguir desligar, veja também [síndrome do executivo](/burnout/sindrome-do-executivo).

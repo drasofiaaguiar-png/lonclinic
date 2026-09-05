@@ -22,6 +22,6 @@
 
 1. [Teste de burnout](/burnout/teste) — baseline em minutos  
 2. [Consulta médica anti-burnout](/clinica-anti-burnout) — se o corpo e o sono já falharam  
-3. [Marcar](/marcar/burnout) quando quiser agenda concreta  
+3. [Psicólogo para burnout](/psicologia-burnout) quando quiser acompanhamento  
 
 [Sintomas gerais](/burnout/sintomas) · [Recuperação](/burnout/recuperacao)

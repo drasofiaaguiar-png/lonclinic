@@ -28,5 +28,5 @@ Quanto mais paixão motiva as ocupações de uma pessoa, maior tende a ser o seu
 Se a paixão já deu lugar a esgotamento:
 
 - [Teste de burnout gratuito](/burnout/teste)  
-- [Consulta anti-burnout](/clinica-anti-burnout) · [Marcar](/marcar/burnout)  
+- [Teste de burnout](/burnout/teste) · [Psicólogo para burnout](/psicologia-burnout)  
 - [Psicologia](/saudemental) · Empresas: [programas para equipas](/clinica-anti-burnout#empresas)

@@ -25,4 +25,4 @@ A fadiga de decisão cria um ciclo particularmente traiçoeiro: a pessoa sente q
 
 Reduzir a fadiga de decisão não é sinal de que o fundador se está a desligar do negócio — é, pelo contrário, a condição para continuar a tomar as decisões que realmente importam com a clareza que elas exigem.
 
-Mais na série: [prevenção e recuperação](/burnout/fundadores-prevencao) · [Teste](/burnout/teste) · [Marcar consulta](/marcar/burnout)
+Mais na série: [prevenção e recuperação](/burnout/fundadores-prevencao) · [Teste](/burnout/teste) · [Psicólogo para burnout](/psicologia-burnout)

@@ -289,7 +289,7 @@
             return { service: 'saude_mental', href: '/saudemental', cta: book + ' \u2014 ' + formatEuro(60) };
         }
         if (/\/burnout|clinica-anti-burnout/.test(p)) {
-            return { service: 'burnout', href: '/marcar/burnout', cta: book + ' \u2014 ' + formatEuro(60) };
+            return { service: 'psicologia', href: '/psicologia-burnout', cta: book + ' \u2014 ' + formatEuro(60) };
         }
         if (/\/nutricao/.test(p)) {
             return { service: 'clinica_geral', href: '/marcar/clinica-geral?ref=nutricao', cta: book + ' \u2014 ' + formatEuro(39) };

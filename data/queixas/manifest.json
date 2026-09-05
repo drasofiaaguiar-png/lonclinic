@@ -27,6 +27,7 @@
         "Há sobreposição com tristeza persistente, apatia ou ataques de pânico — nesses casos a avaliação profissional distingue burnout de depressão ou ansiedade"
       ],
       "related": [
+        { "href": "/burnout", "label": "Centro burnout" },
         { "href": "/burnout/o-que-e", "label": "O que é burnout" },
         { "href": "/burnout/sintomas", "label": "Sintomas de burnout" },
         { "href": "/ansiedade-no-trabalho", "label": "Ansiedade no trabalho" },

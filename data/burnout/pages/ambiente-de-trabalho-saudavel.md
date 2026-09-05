@@ -27,7 +27,7 @@ Para objetivar o estado de uma equipa, instrumentos de [avaliação do esgotamen
 
 ## Como a Lon Clinic entra neste quadro
 
-- **Indivíduos** — [consulta anti-burnout](/clinica-anti-burnout), [psicologia](/saudemental) e [marcação online](/marcar/burnout)
+- **Indivíduos** — [teste CBI](/burnout/teste) e [psicólogo para burnout](/psicologia-burnout)
 - **Organizações** — programas e propostas para equipas; veja a secção empresas na [clínica anti-burnout](/clinica-anti-burnout#empresas)
 
 Ambiente saudável não elimina todo o stress laboral — mas reduz o risco de o stress se tornar burnout estrutural.

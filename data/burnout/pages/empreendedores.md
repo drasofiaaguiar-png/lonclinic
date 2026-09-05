@@ -22,7 +22,7 @@
 
 A recuperação exige triagem: o que é urgente de verdade, o que pode esperar, e o que o seu corpo já não tolera. Avaliação clínica ajuda a separar burnout de depressão, ansiedade e causas físicas — ver [burnout ou depressão](/burnout/depressao-ou-burnout).
 
-Comece pelo [teste](/burnout/teste) ou [marque consulta](/marcar/burnout). A [consulta anti-burnout](/clinica-anti-burnout) é online e pensada para agendas irregulares.
+Comece pelo [teste](/burnout/teste). O passo seguinte é o [psicólogo para burnout](/psicologia-burnout).
 
 Série completa para founders: [burnout de founder](/burnout/fundadores) (8 artigos) · [índice da coleção](/burnout/colecao#fundadores).
 

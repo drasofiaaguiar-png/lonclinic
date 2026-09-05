@@ -5641,7 +5641,10 @@ const MARCAR_TIPO_TO_SLUG = {
     burnout: 'burnout',
     burnout_mensal: 'burnout-mensal',
     burnout_programa: 'burnout-programa',
-    longevidade: 'longevidade'
+    longevidade: 'longevidade',
+    nutricao_programa: 'nutricao-programa',
+    nutricao_completo: 'nutricao-completo',
+    nutricao_completo_reforcado: 'nutricao-completo-reforcado'
 };
 
 function redirectToMarcarHtml(req, res) {
@@ -5908,6 +5911,10 @@ app.get('/nutricao', (req, res) => {
 
 app.get('/nutricao/', (req, res) => {
     res.redirect(301, '/nutricao');
+});
+
+app.get('/nutricao/programa', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'nutricao-programa.html'), 'Error loading nutrition program landing');
 });
 
 app.get('/nutricao/testes', (req, res) => {
@@ -8047,7 +8054,13 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
             ? `${description} · Subscrição mensal · 4 consultas (54€/sessão, −10%) · cancelável`
             : service === 'burnout_programa'
               ? `${description} · Programa 8 sessões com relatório final e CBI antes/depois`
-              : description;
+              : service === 'nutricao_programa'
+                ? `${description} · Adesão mês 1 do programa 6 meses (depois 75 €/mês · fidelização 3 meses)`
+                : service === 'nutricao_completo'
+                  ? `${description} · Adesão mês 1 (depois 187 €/mês · total 1 162 € · fidelização 3 meses)`
+                  : service === 'nutricao_completo_reforcado'
+                    ? `${description} · Adesão mês 1 entrada reforçada (depois 168 €/mês · total 1 162 € · fidelização 3 meses)`
+                    : description;
 
         const lineItem = {
             price_data: {
@@ -10737,6 +10750,9 @@ const INVITATION_SERVICE_LABEL = {
     burnout: { pt: 'Consulta Especializada em Burnout', en: 'Specialized Burnout Consultation', es: 'Consulta especializada en burnout' },
     burnout_mensal: { pt: 'Subscrição Anti-Burnout', en: 'Anti-Burnout Subscription', es: 'Suscripción Anti-Burnout' },
     burnout_programa: { pt: 'Programa Anti-Burnout (8 sessões)', en: 'Anti-Burnout Program (8 sessions)', es: 'Programa anti-burnout (8 sesiones)' },
+    nutricao_programa: { pt: 'Programa Nutrição (6 meses)', en: 'Nutrition Program (6 months)', es: 'Programa de nutrición (6 meses)' },
+    nutricao_completo: { pt: 'Programa Completo (6 meses)', en: 'Complete Metabolic Program (6 months)', es: 'Programa completo (6 meses)' },
+    nutricao_completo_reforcado: { pt: 'Programa Completo — entrada reforçada', en: 'Complete Program — higher first payment', es: 'Programa completo — entrada reforzada' },
     longevidade: { pt: 'Consulta de Longevidade', en: 'Longevity Consultation', es: 'Consulta de Longevidad' },
     renovacao: { pt: 'Renovação de Receita', en: 'Prescription Renewal', es: 'Renovación de Receta' }
 };
