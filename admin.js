@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             if (data.authenticated) {
                 if (data.role && data.role !== 'admin') {
-                    window.location.href = '/clinic-portal';
+                    showLogin({ clinicianSession: true });
                     return;
                 }
                 const next = safeDirectoryNext();
@@ -243,10 +243,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ─── Show login ───
-    function showLogin() {
+    function showLogin(opts) {
         document.body.classList.remove('admin-logged-in');
         adminLogin.style.display = 'flex';
         adminContent.style.display = 'none';
+        const clinicianNote = document.getElementById('adminClinicianNote');
+        if (clinicianNote) {
+            clinicianNote.hidden = !(opts && opts.clinicianSession);
+        }
     }
 
     // ─── Show admin content ───
@@ -1573,7 +1577,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (res.ok) {
                     if (data.role && data.role !== 'admin') {
-                        window.location.href = '/clinic-portal';
+                        adminLoginError.textContent = 'This account opens the clinic portal, not admin. Use the administrator username, or go to /clinic-portal.';
+                        adminLoginError.style.display = 'block';
                         return;
                     }
                     const next = safeDirectoryNext();

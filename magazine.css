@@ -643,6 +643,42 @@ html:has(body.mag-body) {
     color: var(--mag-ink-soft);
 }
 
+.mag-read-time {
+    letter-spacing: 0.04em;
+}
+
+.guide-keyfacts {
+    margin: 0 0 2rem;
+    padding: 1.25rem 1.35rem 1.15rem;
+    border: 1px solid rgba(156, 74, 86, 0.16);
+    background: #f7f1f2;
+}
+
+.guide-keyfacts-kicker {
+    margin: 0 0 0.65rem;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mag-rose);
+}
+
+.guide-keyfacts ul {
+    margin: 0;
+    padding-left: 1.15rem;
+}
+
+.guide-keyfacts li {
+    margin: 0 0 0.55rem;
+    font-size: 1.02rem;
+    line-height: 1.55;
+    color: #24181a;
+}
+
+.guide-keyfacts li:last-child {
+    margin-bottom: 0;
+}
+
 .mag-excerpt {
     margin: 0;
     font-size: 0.9rem;
@@ -1133,6 +1169,48 @@ html:has(body.mag-body) {
     margin: 2.4rem 0 2.8rem;
 }
 
+.mag-body .guide-book-grid--actions {
+    gap: 12px;
+}
+
+.mag-body .guide-backlinks {
+    margin: 2rem 0 2.4rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--mag-line);
+}
+
+.mag-body .mag-story-prose .guide-backlinks-kicker,
+.mag-body .guide-backlinks-kicker {
+    font-family: var(--mag-sans, inherit);
+    font-size: 0.64rem;
+    font-weight: 500;
+    font-style: normal;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mag-rose);
+    margin: 0 0 10px;
+}
+
+.mag-body .mag-story-prose .guide-backlinks-list,
+.mag-body .guide-backlinks-list {
+    list-style: none;
+    margin: 0 0 1.35rem;
+    padding: 0;
+}
+
+.mag-body .mag-story-prose .guide-backlinks-list li {
+    margin: 0;
+    font-size: 1.02rem;
+    line-height: 1.45;
+}
+
+.mag-body .guide-article-main-html .guide-actions,
+.mag-body .guide-article-main-html .guide-backlinks {
+    width: min(1180px, calc(100% - 64px));
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .mag-body .guide-book-card {
     color: var(--mag-ink);
     box-shadow: none;
@@ -1335,8 +1413,14 @@ html:has(body.mag-body) {
         width: calc(100% - 40px);
     }
 
-    .mag-body .guide-related-grid {
+    .mag-body .guide-related-grid,
+    .mag-body .guide-book-grid--actions {
         grid-template-columns: 1fr;
+    }
+
+    .mag-body .guide-article-main-html .guide-actions,
+    .mag-body .guide-article-main-html .guide-backlinks {
+        width: calc(100% - 40px);
     }
 }
 

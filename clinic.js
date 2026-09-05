@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicPassword = document.getElementById('clinicPassword');
     const loginError = document.getElementById('loginError');
     const clinicLogoutBtn = document.getElementById('clinicLogoutBtn');
+    const clinicAdminLink = document.getElementById('clinicAdminLink');
     const clinicGreeting = document.getElementById('clinicGreeting');
     const clinicUserInfo = document.getElementById('clinicUserInfo');
     
@@ -230,6 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clinicLogin.style.display = '';
         clinicContent.style.display = 'none';
         closeClinicSidebar();
+        if (clinicAdminLink) clinicAdminLink.hidden = true;
     }
 
     // ─── Show Clinic Portal ───
@@ -250,6 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (clinicProfileRole) {
             clinicProfileRole.textContent = isAdmin ? 'Clinic administrator' : 'Clinician';
         }
+        if (clinicAdminLink) clinicAdminLink.hidden = !isAdmin;
         if (smartSlotGroupingToggle) {
             smartSlotGroupingToggle.disabled = false;
         }

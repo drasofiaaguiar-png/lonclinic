@@ -16,8 +16,7 @@
     <title>Clinic Portal — Longevity Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=hours-card-1">
-    <!-- hours-card-1: availability highlight always visible after login -->
+    <link rel="stylesheet" href="/dashboard.css?v=hours-avail-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -97,6 +96,7 @@
                     <button type="button" class="admin-nav-item" data-clinic-panel="resources">Resources</button>
                     <button type="button" class="admin-nav-item" data-clinic-panel="management">Management</button>
                     <button type="button" class="admin-nav-item" data-clinic-panel="profile">Profile</button>
+                    <a class="admin-nav-item admin-nav-link" id="clinicAdminLink" href="/admin" hidden>Admin</a>
                 </nav>
                 <div class="admin-sidebar-foot">
                     <button type="button" class="btn btn-outline btn-sm" id="clinicLogoutBtn">Sign out</button>
@@ -117,13 +117,6 @@
                             Refresh
                         </button>
                     </div>
-                </div>
-
-                <div class="clinic-avail-highlight" id="clinicAvailHighlight">
-                    <p class="clinic-avail-highlight-label">Your availabilities</p>
-                    <ul class="clinic-avail-highlight-list" id="clinicAvailHighlightList">
-                        <li class="clinic-avail-highlight-empty">Loading…</li>
-                    </ul>
                 </div>
 
                 <div class="admin-panel is-active" id="clinicPanelConsultations" data-clinic-panel-content="consultations">
@@ -159,6 +152,12 @@
                 </div>
 
                 <div class="admin-panel" id="clinicPanelAvailabilities" data-clinic-panel-content="availabilities" hidden>
+                    <div class="clinic-avail-highlight" id="clinicAvailHighlight">
+                        <p class="clinic-avail-highlight-label">Your availabilities</p>
+                        <ul class="clinic-avail-highlight-list" id="clinicAvailHighlightList">
+                            <li class="clinic-avail-highlight-empty">Loading…</li>
+                        </ul>
+                    </div>
                     <div class="dash-section">
                         <div class="dash-section-header">
                             <h2 class="dash-section-title">Months</h2>
@@ -597,7 +596,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="/lon-nav.js"></script>
-    <script src="/clinic.js?v=hours-card-1"></script>
+    <script src="/clinic.js?v=admin-stay-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

@@ -553,6 +553,42 @@
     gap: 16px;
 }
 
+.guide-book-grid--actions {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.guide-backlinks {
+    margin: 1.8rem 0 2.2rem;
+    padding: 1.1rem 0 0.2rem;
+    border-top: 1px solid #e6ddd8;
+}
+
+.guide-backlinks-kicker {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #6b6b6b;
+    margin: 0 0 10px;
+}
+
+.guide-backlinks-list {
+    list-style: none;
+    margin: 0 0 1.2rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.guide-backlinks-list a {
+    font-weight: 500;
+}
+
+.guide-slot-card .guide-book-price {
+    text-transform: none;
+}
+
 .guide-book-card,
 .guide-book-card--t0 {
     background: #cfe8f7;
@@ -701,6 +737,7 @@
 
 @media (max-width: 700px) {
     .guide-book-grid,
+    .guide-book-grid--actions,
     .guide-related-grid {
         grid-template-columns: 1fr;
     }
@@ -859,4 +896,38 @@
         padding-left: 20px;
         padding-right: 20px;
     }
+}
+
+.guide-keyfacts {
+    margin: 0 0 1.8rem;
+    padding: 1.1rem 1.2rem 1.05rem;
+    border: 1px solid var(--lon-border, #d9e2dc);
+    border-radius: 16px;
+    background: #f6f8f6;
+}
+
+.guide-keyfacts-kicker {
+    margin: 0 0 0.55rem;
+    font-size: 0.72rem;
+    font-weight: 650;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lon-accent, #4a7c6f);
+}
+
+.guide-keyfacts ul {
+    margin: 0;
+    padding-left: 1.15rem;
+}
+
+.guide-keyfacts li {
+    margin: 0 0 0.45rem;
+}
+
+.guide-keyfacts li:last-child {
+    margin-bottom: 0;
+}
+
+.mag-read-time {
+    letter-spacing: 0.02em;
 }

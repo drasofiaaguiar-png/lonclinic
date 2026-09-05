@@ -233,17 +233,67 @@ function bodyToHtml(body, format) {
     return marked.parse(body);
 }
 
+function isVerifiedArticle(meta) {
+    return !(meta && meta.verified === false);
+}
+
+function articleAuthorBlock(origin, meta) {
+    if (isVerifiedArticle(meta)) {
+        return authors.articleAuthorSchema(origin, meta && meta.author);
+    }
+    const o = normalizeOrigin(origin);
+    return {
+        author: { '@id': `${o}/#organization` },
+        publisher: { '@id': `${o}/#organization` },
+        copyrightHolder: { '@id': `${o}/#organization` }
+    };
+}
+
+function readingMinutes(meta) {
+    const mins = Number(meta && meta.readingMinutes);
+    return Number.isFinite(mins) && mins >= 1 ? Math.round(mins) : 0;
+}
+
+function readingTimeLabel(meta, lang) {
+    const mins = readingMinutes(meta);
+    if (!mins) return '';
+    const labels = {
+        pt: `${mins} min de leitura`,
+        en: `${mins} min read`,
+        es: `${mins} min de lectura`,
+        fr: `${mins} min de lecture`,
+        de: `${mins} Min. Lesezeit`
+    };
+    return labels[lang] || labels.pt;
+}
+
+function readingTimeHtml(meta, lang) {
+    const label = readingTimeLabel(meta, lang);
+    if (!label) return '';
+    const mins = readingMinutes(meta);
+    return `<span class="mag-read-time"><time datetime="PT${mins}M">${escapeHtml(label)}</time></span>`;
+}
+
 function articleCluster(meta) {
     const slug = String((meta && meta.slug) || '');
     const about = String((meta && meta.about) || '').toLowerCase();
     if (/vacina|viajante|travel|marcacao/.test(slug)) return 'travel';
+    if (/burnout/.test(slug) || about === 'burnout') return 'burnout';
+    if (/depress/.test(about) || /depressao|anedonia|antidepressivos/.test(slug)) return 'depressao';
+    if (/ansiedade/.test(about) || /ansiedade|ataques-de-panico|fobias-especificas/.test(slug)) return 'ansiedade';
+    if (/autoconhecimento/.test(about) || /inteligencia-emocional|padroes-de-apego|autossabotagem|eneagrama|perfeccionismo|autocompaixao|sindrome-do-impostor|journaling|gatilhos-emocionais|crencas-limitantes|limites-pessoais|introspecao|autoestima/.test(slug)) return 'autoconhecimento';
+    if (/perda de peso/.test(about) || /perda-de-peso|deficit-calorico|efeito-ioio|fome-emocional|alimentacao-intuitiva|glp1|contagem-de-calorias|platos-na-perda|alcool-e-perda|proteina-e-saciedade|sono-e-peso|stress-e-perda|forca-vs-cardio|fibra-e-perda|manter-o-peso|nutricionista-plano/.test(slug)) return 'perda-de-peso';
     if (/autismo|adhd/.test(slug) || /autismo|adhd/.test(about)) return 'mental';
     return 'general';
 }
 
 function defaultCtaKind(meta) {
     const cluster = articleCluster(meta);
-    return cluster === 'travel' ? 'travel' : cluster === 'mental' ? 'mental' : 'general';
+    if (cluster === 'travel') return 'travel';
+    if (cluster === 'mental' || cluster === 'depressao' || cluster === 'ansiedade' || cluster === 'autoconhecimento') return 'mental';
+    if (cluster === 'burnout') return 'burnout';
+    if (cluster === 'perda-de-peso') return 'nutrition';
+    return 'general';
 }
 
 function relatedKicker(article) {
@@ -258,113 +308,370 @@ function relatedKicker(article) {
     return 'Guide';
 }
 
-function bookingCardsHtml(kind, tone) {
+function withLangHref(href, lang) {
+    if (!lang || lang === 'pt') return href;
+    const sep = String(href).includes('?') ? '&' : '?';
+    return `${href}${sep}lang=${encodeURIComponent(lang)}`;
+}
+
+const CLUSTER_CROSS = {
+    depressao: ['ansiedade', 'burnout', 'mental'],
+    ansiedade: ['depressao', 'autoconhecimento', 'burnout'],
+    burnout: ['depressao', 'ansiedade', 'autoconhecimento'],
+    autoconhecimento: ['ansiedade', 'depressao', 'mental'],
+    'perda-de-peso': ['burnout', 'autoconhecimento', 'ansiedade'],
+    mental: ['depressao', 'ansiedade', 'burnout'],
+    travel: ['general', 'mental'],
+    general: ['travel', 'mental', 'perda-de-peso']
+};
+
+function actionCopy(lang) {
     const packs = {
-        mental: [
-            {
-                chip: 'Consulta',
-                title: 'Consulta Médica de Saúde Mental',
-                price: '€60 · 45 min',
-                href: '/marcar/saude-mental',
+        pt: {
+            consultAria: 'Marcar consulta, teste e próximo horário',
+            series: 'Na mesma série',
+            also: 'Também no magazine',
+            related: 'Continuar a ler',
+            relatedAria: 'Artigos relacionados',
+            slotChip: 'Próxima consulta',
+            slotTitle: 'Próximo horário',
+            slotWhen: 'Horários em breve',
+            slotNote: 'As vagas desta consulta ainda estão a ser definidas. Pode marcar e escolhemos o horário consigo.',
+            slotCta: 'Ver horários',
+            psych: {
+                chip: 'Psicologia',
+                title: 'Consulta de psicologia',
+                price: '€60 · sessão avulsa',
+                href: '/saudemental',
                 cta: 'Marcar',
-                note: 'Online · avaliação clínica'
-            }
-        ],
-        travel: [
-            {
+                note: 'Online · ou 54€/semana no acompanhamento',
+                service: 'psicologia'
+            },
+            nutrition: {
+                chip: 'Nutrição',
+                title: 'Consulta de nutrição',
+                price: '€39 · 30 min',
+                href: '/marcar/clinica-geral?ref=blog-nutricao',
+                cta: 'Marcar',
+                note: 'Online · acompanhamento individual, sem planos genéricos',
+                service: 'clinica_geral'
+            },
+            travel: {
                 chip: 'Viajante',
-                title: 'Consulta do Viajante',
+                title: 'Consulta do viajante',
                 price: '€39 · 20 min',
                 href: '/marcar/travel',
                 cta: 'Marcar',
-                note: 'Orientação e prescrição no próprio dia'
-            }
-        ],
-        general: [
-            {
-                chip: 'Clínica Geral',
-                title: 'Consulta de Clínica Geral',
+                note: 'Orientação e prescrição no próprio dia',
+                service: 'travel'
+            },
+            general: {
+                chip: 'Clínica geral',
+                title: 'Consulta de clínica geral',
                 price: '€39 · 30 min',
                 href: '/marcar/clinica-geral',
                 cta: 'Marcar',
-                note: 'Médico no próprio dia'
+                note: 'Médico no próprio dia',
+                service: 'clinica_geral'
+            },
+            quizBurnout: {
+                chip: 'Teste',
+                title: 'Teste de burnout',
+                price: 'Gratuito · CBI',
+                href: '/burnout/teste',
+                cta: 'Fazer o teste',
+                note: 'Cinco minutos para perceber o grau de esgotamento'
+            },
+            quizPersonality: {
+                chip: 'Teste',
+                title: 'Teste de personalidade',
+                price: 'Gratuito · Big Five',
+                href: '/teste-personalidade',
+                cta: 'Fazer o teste',
+                note: 'Um retrato rápido de como está agora'
             }
-        ]
+        },
+        en: {
+            consultAria: 'Book a consultation, take a quiz, next appointment',
+            series: 'In this series',
+            also: 'Also in the magazine',
+            related: 'Keep reading',
+            relatedAria: 'Related articles',
+            slotChip: 'Next appointment',
+            slotTitle: 'Next available time',
+            slotWhen: 'Times coming soon',
+            slotNote: 'Appointment slots for this visit are still being set. You can book and we will choose a time with you.',
+            slotCta: 'See times',
+            psych: {
+                chip: 'Psychology',
+                title: 'Psychology consultation',
+                price: '€60 · single session',
+                href: '/saudemental',
+                cta: 'Book',
+                note: 'Online · or €54/week for ongoing care',
+                service: 'psicologia'
+            },
+            nutrition: {
+                chip: 'Nutrition',
+                title: 'Nutrition consultation',
+                price: '€39 · 30 min',
+                href: '/marcar/clinica-geral?ref=blog-nutricao',
+                cta: 'Book',
+                note: 'Online · individual follow-up, no generic plans',
+                service: 'clinica_geral'
+            },
+            travel: {
+                chip: 'Travel',
+                title: 'Travel clinic consultation',
+                price: '€39 · 20 min',
+                href: '/marcar/travel',
+                cta: 'Book',
+                note: 'Advice and a prescription the same day',
+                service: 'travel'
+            },
+            general: {
+                chip: 'GP',
+                title: 'General medicine consultation',
+                price: '€39 · 30 min',
+                href: '/marcar/clinica-geral',
+                cta: 'Book',
+                note: 'A doctor the same day',
+                service: 'clinica_geral'
+            },
+            quizBurnout: {
+                chip: 'Quiz',
+                title: 'Burnout test',
+                price: 'Free · CBI',
+                href: '/burnout/teste',
+                cta: 'Take the test',
+                note: 'Five minutes to see how depleted you are'
+            },
+            quizPersonality: {
+                chip: 'Quiz',
+                title: 'Personality test',
+                price: 'Free · Big Five',
+                href: '/teste-personalidade',
+                cta: 'Take the test',
+                note: 'A quick snapshot of how you are now'
+            }
+        }
     };
-    const cards = packs[kind] || packs.general;
+    packs.es = packs.en;
+    packs.fr = packs.en;
+    packs.de = packs.en;
+    return packs[lang] || packs.pt;
+}
+
+function consultSpec(kind, lang) {
+    const copy = actionCopy(lang);
+    if (kind === 'nutrition') return copy.nutrition;
+    if (kind === 'travel') return copy.travel;
+    if (kind === 'mental' || kind === 'burnout') return copy.psych;
+    return copy.general;
+}
+
+function quizSpec(kind, lang) {
+    const copy = actionCopy(lang);
+    return kind === 'burnout' ? copy.quizBurnout : copy.quizPersonality;
+}
+
+function bookCardHtml(card, tone, extraClass, extraAttrs) {
     const t = Math.abs(Number(tone) || 0) % 3;
-    const items = cards.map((card) => `
-        <article class="guide-book-card guide-book-card--t${t}">
+    const klass = extraClass ? ` ${extraClass}` : '';
+    const attrs = extraAttrs ? ` ${extraAttrs}` : '';
+    return `
+        <article class="guide-book-card guide-book-card--t${t}${klass}"${attrs}>
             <p class="guide-book-chip">${escapeHtml(card.chip)}</p>
             <h3 class="guide-book-title">${escapeHtml(card.title)}</h3>
-            <p class="guide-book-price">${escapeHtml(card.price)}</p>
+            <p class="guide-book-price"${card.whenAttr || ''}>${escapeHtml(card.price)}</p>
             <p class="guide-book-note">${escapeHtml(card.note)}</p>
-            <a class="guide-book-cta" href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
-        </article>`).join('');
+            <a class="guide-book-cta"${card.ctaAttr || ''} href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
+        </article>`;
+}
+
+function actionCardsHtml(kind, tone, lang) {
+    const copy = actionCopy(lang);
+    const consult = consultSpec(kind, lang);
+    const quiz = quizSpec(kind, lang);
+    const t = Math.abs(Number(tone) || 0);
+    const hydrate = consult.service === 'clinica_geral';
+    const consultHref = withLangHref(consult.href, lang);
+    const quizHref = withLangHref(quiz.href, lang);
+    const consultCard = bookCardHtml({
+        ...consult,
+        href: consultHref
+    }, t);
+    const quizCard = bookCardHtml({
+        ...quiz,
+        href: quizHref
+    }, t + 1);
+    const slotCard = bookCardHtml({
+        chip: copy.slotChip,
+        title: copy.slotTitle,
+        price: copy.slotWhen,
+        note: copy.slotNote,
+        href: consultHref,
+        cta: copy.slotCta,
+        whenAttr: ' data-next-slot-when aria-live="polite"',
+        ctaAttr: ' data-next-slot-cta'
+    }, t + 2, 'guide-slot-card', `data-next-slot data-service="${escapeHtml(consult.service)}" data-book-href="${escapeHtml(consultHref)}" data-hydrate="${hydrate ? '1' : '0'}" data-price="${escapeHtml(consult.price)}"`);
     return `
-<aside class="guide-book" aria-label="Marcar consulta">
-    <div class="guide-book-grid">${items}
+<aside class="guide-book guide-actions" aria-label="${escapeHtml(copy.consultAria)}">
+    <div class="guide-book-grid guide-book-grid--actions">${consultCard}${quizCard}${slotCard}
     </div>
 </aside>`;
 }
 
-function expandCtaTokens(html, kind) {
+function bookingCardsHtml(kind, tone, lang) {
+    return actionCardsHtml(kind, tone, lang || 'pt');
+}
+
+function consultOnlyCardHtml(kind, tone, lang) {
+    const consult = consultSpec(kind, lang);
+    const href = withLangHref(consult.href, lang);
+    const card = bookCardHtml({ ...consult, href }, tone);
+    return `
+<aside class="guide-book" aria-label="${escapeHtml(consult.title)}">
+    <div class="guide-book-grid">${card}
+    </div>
+</aside>`;
+}
+
+function expandCtaTokens(html, kind, lang) {
     let n = 0;
     return String(html || '').replace(
         /<p>\s*\{\{cta(?::([a-z-]+))?\}\}\s*<\/p>|\{\{cta(?::([a-z-]+))?\}\}/gi,
-        (_, a, b) => bookingCardsHtml(a || b || kind, n++)
+        (_, a, b) => {
+            const resolved = a || b || kind;
+            const idx = n++;
+            return idx === 0
+                ? actionCardsHtml(resolved, idx, lang)
+                : consultOnlyCardHtml(resolved, idx, lang);
+        }
     );
 }
 
-function injectBookingCards(html, kind) {
-    let out = expandCtaTokens(html, kind);
-    if (out.includes('guide-book-grid')) {
+function insertAfterFirstH2(html, block) {
+    const re = /<h2\b[^>]*>[\s\S]*?<\/h2>/i;
+    const m = re.exec(html);
+    if (!m || m.index == null) return `${html}${block}`;
+    const end = m.index + m[0].length;
+    return `${html.slice(0, end)}${block}${html.slice(end)}`;
+}
+
+function insertBeforeFaqOrEnd(html, block) {
+    const faqRe = /<h2[^>]*>\s*(Perguntas frequentes|FAQ|Frequently asked questions)/i;
+    if (faqRe.test(html)) return html.replace(faqRe, `${block}$&`);
+    return `${html}${block}`;
+}
+
+function listedGuideArticles(articles) {
+    return (Array.isArray(articles) ? articles : []).filter((a) => a && isValidSlug(a.slug) && isListedArticle(a));
+}
+
+function pickClusterArticles(current, articles, cluster, limit) {
+    const lang = articleLangCode(current);
+    const all = listedGuideArticles(articles).filter((a) => a.slug !== current.slug);
+    const sameLang = all.filter((a) => articleCluster(a) === cluster && articleLangCode(a) === lang);
+    const pool = sameLang.length ? sameLang : all.filter((a) => articleCluster(a) === cluster);
+    return pool.slice(0, limit);
+}
+
+function pickCrossClusterArticles(current, articles, limit) {
+    const lang = articleLangCode(current);
+    const seen = new Set([current.slug]);
+    const picked = [];
+    const all = listedGuideArticles(articles);
+    const targets = CLUSTER_CROSS[articleCluster(current)] || [];
+    targets.forEach((cluster) => {
+        if (picked.length >= limit) return;
+        const hit = all.find((a) => !seen.has(a.slug)
+            && articleCluster(a) === cluster
+            && articleLangCode(a) === lang);
+        const fallback = hit || all.find((a) => !seen.has(a.slug) && articleCluster(a) === cluster);
+        if (fallback) {
+            seen.add(fallback.slug);
+            picked.push(fallback);
+        }
+    });
+    return picked;
+}
+
+function seriesBacklinksHtml(current, articles) {
+    const copy = actionCopy(articleLangCode(current));
+    const series = pickClusterArticles(current, articles, articleCluster(current), 8);
+    const cross = pickCrossClusterArticles(current, articles, 4)
+        .filter((a) => !series.some((s) => s.slug === a.slug));
+    if (!series.length && !cross.length) return '';
+    const list = (items) => items.map((a) => `<li><a href="${escapeHtml(magHref(a))}">${escapeHtml(a.title)}</a></li>`).join('');
+    const seriesBlock = series.length
+        ? `<p class="guide-backlinks-kicker">${escapeHtml(copy.series)}</p><ul class="guide-backlinks-list">${list(series)}</ul>`
+        : '';
+    const crossBlock = cross.length
+        ? `<p class="guide-backlinks-kicker">${escapeHtml(copy.also)}</p><ul class="guide-backlinks-list">${list(cross)}</ul>`
+        : '';
+    return `
+<nav class="guide-backlinks" aria-label="${escapeHtml(copy.relatedAria)}">
+    ${seriesBlock}
+    ${crossBlock}
+</nav>`;
+}
+
+function injectArticleChrome(html, meta, articles, format) {
+    const kind = defaultCtaKind(meta);
+    const lang = articleLangCode(meta);
+    let out = String(html || '');
+    const backlinks = seriesBacklinksHtml(meta, articles);
+    if (format === 'html') {
+        if (!out.includes('guide-actions')) out += actionCardsHtml(kind, 0, lang);
+        if (backlinks && !out.includes('guide-backlinks')) out += backlinks;
         return out;
     }
-    const cta = bookingCardsHtml(kind);
-    const faqRe = /<h2[^>]*>\s*Perguntas frequentes/i;
-    if (faqRe.test(out)) {
-        out = out.replace(faqRe, `${cta}$&`);
+    out = expandCtaTokens(out, kind, lang);
+    if (backlinks && !out.includes('guide-backlinks')) {
+        out = insertAfterFirstH2(out, backlinks);
     }
-    const matches = [...out.matchAll(/<h2\b[^>]*>[\s\S]*?<\/h2>/gi)];
-    if (matches.length >= 2 && matches[1].index != null) {
-        const idx = matches[1].index;
-        out = `${out.slice(0, idx)}${cta}${out.slice(idx)}`;
-    } else if (!faqRe.test(html)) {
-        out += cta;
+    if (!out.includes('guide-actions')) {
+        out = insertBeforeFaqOrEnd(out, actionCardsHtml(kind, 0, lang));
     }
     return out;
 }
 
 function pickRelatedArticles(current, articles) {
-    const all = Array.isArray(articles) ? articles : [];
-    const bySlug = new Map(all.map((a) => [a.slug, a]));
+    const all = listedGuideArticles(articles);
+    const bySlug = new Map((Array.isArray(articles) ? articles : []).map((a) => [a.slug, a]));
     const burnoutBySlug = new Map((loadBurnoutManifest().pages || []).map((p) => [p.slug, p]));
     const picked = [];
     const seen = new Set([current.slug]);
+    const lang = articleLangCode(current);
     const push = (article) => {
-        if (!article || seen.has(article.slug) || picked.length >= 3) return;
+        if (!article || seen.has(article.slug) || picked.length >= 6) return;
+        if (article.listed === false) return;
         seen.add(article.slug);
         picked.push(article);
     };
     (Array.isArray(current.related) ? current.related : []).forEach((ref) => {
         push(resolveRelatedRef(ref, bySlug, burnoutBySlug));
     });
-    const rest = all.filter((a) => !seen.has(a.slug));
+    siblingArticles(current, all).forEach(push);
+    const rest = all.filter((a) => !seen.has(a.slug) && articleLangCode(a) === lang);
     rest.filter((a) => current.about && a.about === current.about).forEach(push);
     const cluster = articleCluster(current);
     rest.filter((a) => articleCluster(a) === cluster).forEach(push);
+    pickCrossClusterArticles(current, all, 4).forEach(push);
     rest.forEach(push);
+    all.filter((a) => !seen.has(a.slug)).forEach(push);
     return picked;
 }
 
 function relatedArticlesHtml(current, articles) {
     const related = pickRelatedArticles(current, articles);
     if (!related.length) return '';
+    const copy = actionCopy(articleLangCode(current));
     const cards = related.map((a) => magCardHtml(a, { kicker: true, cardClass: 'guide-related-card' })).join('');
     return `
-<nav class="guide-related" aria-label="Artigos relacionados">
-    <h2 class="guide-related-heading">Continuar a ler</h2>
+<nav class="guide-related" aria-label="${escapeHtml(copy.relatedAria)}">
+    <h2 class="guide-related-heading">${escapeHtml(copy.related)}</h2>
     <div class="guide-related-grid">${cards}
     </div>
 </nav>`;
@@ -556,7 +863,7 @@ function renderBlogIndex(origin) {
                         </a>
                         <div class="guide-card-content">
                             <p class="guide-card-date">${date}</p>
-                            <p class="eeat-byline guide-card-byline"><a rel="author" href="${authors.authorPath(authors.getAuthor())}">Médica · ${authors.getAuthor().yearsPractice} anos de prática clínica</a></p>
+                            ${isVerifiedArticle(a) ? `<p class="eeat-byline guide-card-byline"><a rel="author" href="${authors.authorPath(authors.getAuthor(a.author))}">Médica · ${authors.getAuthor(a.author).yearsPractice} anos de prática clínica</a></p>` : (readingTimeHtml(a, 'pt') ? `<p class="guide-card-byline">${readingTimeHtml(a, 'pt')}</p>` : '')}
                             <h2 class="guide-card-title"><a href="${href}">${t}</a></h2>
                             <p class="guide-card-desc">${d}</p>
                             <a class="lon-btn lon-btn-soft lon-btn-sm" href="${href}">Ler artigo</a>
@@ -657,10 +964,8 @@ function renderBlogArticle(origin, slug) {
         });
         if (dataDate && (!dateMod || dataDate > dateMod)) dateMod = dataDate;
     }
-    if (format !== 'html') {
-        articleHtml = injectBookingCards(articleHtml, ctaKind);
-    }
-    const relatedHtml = format === 'html' ? '' : relatedArticlesHtml(meta, manifest.articles);
+    articleHtml = injectArticleChrome(articleHtml, meta, manifest.articles, format);
+    const relatedHtml = relatedArticlesHtml(meta, manifest.articles);
     const og = meta.image ? `${o}${String(meta.image).startsWith('/') ? '' : '/'}${meta.image}` : `${o}/image/image2.webp`;
     const hasPart = cviParts[0] && Array.isArray(cviParts[0].itemListElement)
         ? cviParts[0].itemListElement.map((el) => ({
@@ -689,10 +994,13 @@ function renderBlogArticle(origin, slug) {
             image: og,
             ...(hasPart && hasPart.length ? { hasPart } : {}),
             ...(meta.about ? { about: { '@type': 'MedicalCondition', name: String(meta.about) } } : {}),
-            ...authors.articleAuthorSchema(o)
-        },
-        authors.personJsonLd(o)
+            ...(readingMinutes(meta) ? { timeRequired: `PT${readingMinutes(meta)}M` } : {}),
+            ...articleAuthorBlock(o, meta)
+        }
     ];
+    if (isVerifiedArticle(meta)) {
+        jsonLd.push(authors.personJsonLd(o));
+    }
     if (Array.isArray(meta.faq) && meta.faq.length) {
         jsonLd.push({
             '@context': 'https://schema.org',
@@ -715,17 +1023,25 @@ function renderBlogArticle(origin, slug) {
 
     const isTravelGuide = /vacina|viajante|travel/i.test(slug);
     const byline = (() => {
-        const a = authors.getAuthor(meta.author);
-        const href = authors.authorPath(a);
         const iso = String(dateMod || datePub || '').slice(0, 10);
         const lang = articleLangCode(meta);
         const chrome = ARTICLE_CHROME[lang] || ARTICLE_CHROME.pt;
         const time = iso
-            ? `<time datetime="${escapeHtml(iso)}">${escapeHtml(chrome.updated)} ${escapeHtml(magDate(iso, lang))}</time><span aria-hidden="true"> · </span>`
+            ? `<time datetime="${escapeHtml(iso)}">${escapeHtml(chrome.updated)} ${escapeHtml(magDate(iso, lang))}</time>`
             : '';
-        return `<p class="eeat-byline mag-story-by">${time}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">${escapeHtml(chrome.clinician(a.yearsPractice))}</a><span class="eeat-byline-review">${escapeHtml(chrome.review)}</span></p>`;
+        const read = readingTimeHtml(meta, lang);
+        const extras = [];
+        if (time && read) extras.push('<span aria-hidden="true"> · </span>');
+        if (read) extras.push(read);
+        if (!isVerifiedArticle(meta)) {
+            return `<p class="eeat-byline mag-story-by">${time}${extras.join('')}</p>`;
+        }
+        const a = authors.getAuthor(meta.author);
+        const href = authors.authorPath(a);
+        const sep = time || read ? '<span aria-hidden="true"> · </span>' : '';
+        return `<p class="eeat-byline mag-story-by">${time}${extras.join('')}${sep}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">${escapeHtml(chrome.clinician(a.yearsPractice))}</a><span class="eeat-byline-review">${escapeHtml(chrome.review)}</span></p>`;
     })();
-    const bio = authors.authorBioHtml(o, meta.author, dateMod || datePub);
+    const bio = isVerifiedArticle(meta) ? authors.authorBioHtml(o, meta.author, dateMod || datePub) : '';
     const leadFigure = meta.image
         ? `<figure class="guide-figure guide-figure-lead mag-story-hero"><img src="${escapeHtml(String(meta.image).startsWith('/') ? meta.image : `/${meta.image}`)}" alt="${escapeHtml(title)}" width="1600" height="900" decoding="async"></figure>`
         : '';
@@ -737,7 +1053,8 @@ function renderBlogArticle(origin, slug) {
     const langMeta = articleLangMeta(meta);
     const chrome = ARTICLE_CHROME[lang] || ARTICLE_CHROME.pt;
     const note = isTravelGuide ? chrome.travelNote : chrome.generalNote;
-    const closeCta = `<section class="mag-section mag-wrap mag-article-cta">${magCtaHtml(articleCluster(meta) === 'travel' ? 'travel' : articleCluster(meta) === 'mental' ? 'mental' : 'clinic', lang)}</section>`;
+    const closeCtaKind = defaultCtaKind(meta) === 'general' ? 'clinic' : defaultCtaKind(meta);
+    const closeCta = `<section class="mag-section mag-wrap mag-article-cta">${magCtaHtml(closeCtaKind, lang)}</section>`;
     const articleInner = format === 'markdown'
         ? `
     <main id="conteudo-principal" class="guide-article-main mag-article-main">
@@ -759,9 +1076,7 @@ function renderBlogArticle(origin, slug) {
             </div>
             ${relatedHtml}
             ${closeCta}
-            <div class="mag-story-body mag-story-body--foot">
-            ${bio}
-            </div>
+            ${bio ? `<div class="mag-story-body mag-story-body--foot">${bio}</div>` : ''}
         </article>
     </main>`
         : `
@@ -776,6 +1091,7 @@ function renderBlogArticle(origin, slug) {
             <div class="guide-prose" lang="${escapeHtml(langMeta.htmlLang)}">
                 ${articleHtml}
             </div>
+            ${relatedHtml}
             ${closeCta}
             ${bio}
         </article>
@@ -792,7 +1108,7 @@ function renderBlogArticle(origin, slug) {
         htmlLang: langMeta.htmlLang,
         ogLocale: langMeta.ogLocale,
         extraHead: articleHreflangLinks(o, meta, manifest.articles),
-        extraCssAfter: ['/guide.css?v=20260903c', '/author.css?v=20260820l'],
+        extraCssAfter: ['/guide.css?v=20260905b', '/author.css?v=20260820l'],
         mainHtml: magAppHtml(articlePath, articleInner)
     });
 
@@ -826,6 +1142,13 @@ function renderNotFound(origin) {
 function magTheme(article) {
     const about = String((article && article.about) || '').toLowerCase();
     const slug = String((article && article.slug) || '');
+    if (/burnout/.test(about) || /burnout/.test(slug) || (article && article.href && String(article.href).startsWith('/burnout'))) {
+        return 'burnout';
+    }
+    if (/depress/.test(about) || /depressao|anedonia|antidepressivos/.test(slug)) return 'depressao';
+    if (/ansiedade/.test(about) || /ansiedade|ataques-de-panico|fobias-especificas/.test(slug)) return 'ansiedade';
+    if (/autoconhecimento/.test(about) || /inteligencia-emocional|padroes-de-apego|autossabotagem|eneagrama|perfeccionismo|autocompaixao|sindrome-do-impostor|journaling|gatilhos-emocionais|crencas-limitantes|limites-pessoais|introspecao|autoestima/.test(slug)) return 'autoconhecimento';
+    if (/perda de peso/.test(about) || /perda-de-peso|deficit-calorico|efeito-ioio|fome-emocional|alimentacao-intuitiva|glp1|contagem-de-calorias|platos-na-perda|alcool-e-perda|proteina-e-saciedade|sono-e-peso|stress-e-perda|forca-vs-cardio|fibra-e-perda|manter-o-peso|nutricionista-plano/.test(slug)) return 'perda-de-peso';
     if (/autismo|adhd/.test(about) || /autismo|adhd/.test(slug)) return 'mental';
     if (/vacina|viajante|travel/.test(slug)) return 'travel';
     return 'clinic';
@@ -834,6 +1157,11 @@ function magTheme(article) {
 function magThemeLabel(article) {
     const theme = magTheme(article);
     if (theme === 'mental') return 'Mente';
+    if (theme === 'burnout') return 'Burnout';
+    if (theme === 'depressao') return 'Depressão';
+    if (theme === 'ansiedade') return 'Ansiedade';
+    if (theme === 'autoconhecimento') return 'Autoconhecimento';
+    if (theme === 'perda-de-peso') return 'Perda de peso';
     if (theme === 'travel') return 'Viagem';
     return 'Clínica';
 }
@@ -849,6 +1177,10 @@ function magCardDateHtml(article) {
 }
 
 function magCardBylineHtml(article) {
+    if (!isVerifiedArticle(article)) {
+        const read = readingTimeLabel(article, articleLangCode(article));
+        return read ? `<p class="mag-byline">${escapeHtml(read)}</p>` : '';
+    }
     const a = authors.getAuthor(article && article.author);
     return `<p class="mag-byline">Por ${escapeHtml(a.displayName)}</p>`;
 }
@@ -897,8 +1229,13 @@ function magTocHtml() {
                 <p class="mag-toc-kicker">Nesta edição</p>
                 <ol>
                     <li><a href="#saude-mental"><span>01</span> Mente</a></li>
-                    <li><a href="#saude-do-viajante"><span>02</span> Viagem</a></li>
-                    <li><a href="#clinica"><span>03</span> Clínica</a></li>
+                    <li><a href="#burnout"><span>02</span> Burnout</a></li>
+                    <li><a href="#depressao"><span>03</span> Depressão</a></li>
+                    <li><a href="#ansiedade"><span>04</span> Ansiedade</a></li>
+                    <li><a href="#autoconhecimento"><span>05</span> Autoconhecimento</a></li>
+                    <li><a href="#perda-de-peso"><span>06</span> Perda de peso</a></li>
+                    <li><a href="#saude-do-viajante"><span>07</span> Viagem</a></li>
+                    <li><a href="#clinica"><span>08</span> Clínica</a></li>
                 </ol>
             </nav>`;
 }
@@ -936,6 +1273,14 @@ function magCtaHtml(kind, lang) {
                 actions: [
                     { href: '/marcar/clinica-geral', label: 'Marcar consulta' },
                     { href: '/blog/telemedicina-em-casa', label: 'Telemedicina em casa' }
+                ]
+            },
+            nutrition: {
+                kicker: 'Nutrição',
+                title: 'Um plano que cabe na sua vida.',
+                actions: [
+                    { href: '/nutricao', label: 'Nutrição por condição' },
+                    { href: '/marcar/clinica-geral?ref=magazine-perda-de-peso', label: 'Marcar consulta' }
                 ]
             }
         },
@@ -1077,13 +1422,14 @@ function magCtaHtml(kind, lang) {
         }
     };
     const byLang = packs[lang] || packs.pt;
-    const pack = byLang[kind] || byLang.clinic;
+    const pack = byLang[kind] || packs.pt[kind] || byLang.clinic;
     const langQ = lang && lang !== 'pt' ? `?lang=${encodeURIComponent(lang)}` : '';
     const bookingByKind = {
-        mental: `/marcar/saude-mental${langQ}`,
+        mental: `/saudemental${langQ}`,
         travel: `/marcar/travel${langQ}`,
         burnout: `/marcar/burnout${langQ}`,
-        clinic: `/marcar/clinica-geral${langQ}`
+        clinic: `/marcar/clinica-geral${langQ}`,
+        nutrition: `/marcar/clinica-geral${langQ}`
     };
     const labelByLang = {
         pt: 'Marcar consulta',
@@ -1095,7 +1441,7 @@ function magCtaHtml(kind, lang) {
     const bookingHref = bookingByKind[kind] || bookingByKind.clinic;
     const bookingLabel = (pack.actions && pack.actions[0] && pack.actions[0].label) || labelByLang[lang] || labelByLang.pt;
     const actions = `<a class="mag-cta-primary" href="${escapeHtml(bookingHref)}">${escapeHtml(
-        kind === 'clinic' || kind === 'travel' || kind === 'burnout' || kind === 'mental' ? (labelByLang[lang] || labelByLang.pt) : bookingLabel
+        kind === 'clinic' || kind === 'travel' || kind === 'burnout' || kind === 'mental' || kind === 'nutrition' ? (labelByLang[lang] || labelByLang.pt) : bookingLabel
     )}</a>`;
     return `<aside class="mag-cta" aria-label="${escapeHtml(pack.title)}">
                 <p>${escapeHtml(pack.kicker)}</p>
@@ -1172,6 +1518,81 @@ function magazineNavTree() {
                 },
                 { label: 'ADHD em adultos', href: '/blog/adhd-em-adultos-sintomas' },
                 {
+                    label: 'Depressão',
+                    children: [
+                        { label: 'Mitos e factos', href: '/blog/depressao-mitos-e-factos' },
+                        { label: 'Primeiros sinais', href: '/blog/primeiros-sinais-de-depressao' },
+                        { label: 'Depressão sazonal', href: '/blog/depressao-sazonal' },
+                        { label: 'Depressão pós-parto', href: '/blog/depressao-pos-parto' },
+                        { label: 'Depressão em homens', href: '/blog/depressao-em-homens' },
+                        { label: 'Tristeza, luto ou depressão', href: '/blog/tristeza-luto-ou-depressao' },
+                        { label: 'Depressão e sono', href: '/blog/depressao-e-sono' },
+                        { label: 'Como apoiar alguém', href: '/blog/como-apoiar-alguem-com-depressao' },
+                        { label: 'Depressão em adolescentes', href: '/blog/depressao-em-adolescentes' },
+                        { label: 'Antidepressivos', href: '/blog/antidepressivos-o-que-esperar' },
+                        { label: 'Terapia ou medicação', href: '/blog/terapia-ou-medicacao-na-depressao' },
+                        { label: 'Alta funcionalidade', href: '/blog/depressao-de-alta-funcionalidade' },
+                        { label: 'Depressão e trabalho', href: '/blog/depressao-e-trabalho' },
+                        { label: 'Anedonia', href: '/blog/anedonia' },
+                        { label: 'Depressão crónica', href: '/blog/depressao-cronica-distimia' },
+                        { label: 'Exercício físico', href: '/blog/exercicio-fisico-e-depressao' },
+                        { label: 'Depressão em idosos', href: '/blog/depressao-em-idosos' },
+                        { label: 'Recaída', href: '/blog/recaida-na-depressao' },
+                        { label: 'Depressão e relações', href: '/blog/depressao-e-relacoes' },
+                        { label: 'Quando procurar ajuda', href: '/blog/quando-procurar-ajuda-para-a-depressao' }
+                    ]
+                },
+                {
+                    label: 'Ansiedade',
+                    children: [
+                        { label: 'Luta ou fuga', href: '/blog/ansiedade-luta-ou-fuga' },
+                        { label: 'Ataques de pânico', href: '/blog/ataques-de-panico' },
+                        { label: 'Ansiedade generalizada', href: '/blog/ansiedade-generalizada' },
+                        { label: 'Ansiedade social', href: '/blog/ansiedade-social' },
+                        { label: 'Ansiedade e insónia', href: '/blog/ansiedade-e-insonia' },
+                        { label: 'Técnicas de respiração', href: '/blog/tecnicas-de-respiracao-para-ansiedade' },
+                        { label: 'Ansiedade antecipatória', href: '/blog/ansiedade-antecipatoria' },
+                        { label: 'Ansiedade no trabalho', href: '/blog/ansiedade-no-trabalho' },
+                        { label: 'Normal ou perturbação', href: '/blog/ansiedade-normal-ou-perturbacao' },
+                        { label: 'Ansiedade em crianças', href: '/blog/ansiedade-em-criancas' },
+                        { label: 'Fobias específicas', href: '/blog/fobias-especificas' },
+                        { label: 'Problemas digestivos', href: '/blog/ansiedade-e-problemas-digestivos' },
+                        { label: 'Ansiedade financeira', href: '/blog/ansiedade-financeira' },
+                        { label: 'TCC para a ansiedade', href: '/blog/tcc-para-ansiedade' },
+                        { label: 'Antes de viagens', href: '/blog/ansiedade-antes-de-viagens' },
+                        { label: 'Cafeína', href: '/blog/cafeina-e-ansiedade' },
+                        { label: 'Ansiedade de desempenho', href: '/blog/ansiedade-de-desempenho' },
+                        { label: 'Saúde do coração', href: '/blog/ansiedade-e-saude-do-coracao' },
+                        { label: 'Mindfulness', href: '/blog/mindfulness-para-ansiedade' },
+                        { label: 'Quando justifica medicação', href: '/blog/quando-a-ansiedade-justifica-medicacao' }
+                    ]
+                },
+                {
+                    label: 'Autoconhecimento',
+                    children: [
+                        { label: 'O que é autoconhecimento', href: '/blog/o-que-e-autoconhecimento' },
+                        { label: 'Valores pessoais', href: '/blog/como-identificar-valores-pessoais' },
+                        { label: 'Inteligência emocional', href: '/blog/inteligencia-emocional' },
+                        { label: 'Padrões de apego', href: '/blog/padroes-de-apego' },
+                        { label: 'Autossabotagem', href: '/blog/autossabotagem' },
+                        { label: 'Reconhecer emoções', href: '/blog/reconhecer-emocoes-em-tempo-real' },
+                        { label: 'Journaling terapêutico', href: '/blog/journaling-terapeutico' },
+                        { label: 'Gatilhos emocionais', href: '/blog/gatilhos-emocionais' },
+                        { label: 'Autoestima vs autoconfiança', href: '/blog/autoestima-vs-autoconfianca' },
+                        { label: 'Crenças limitantes', href: '/blog/crencas-limitantes' },
+                        { label: 'Eneagrama', href: '/blog/eneagrama-autoconhecimento' },
+                        { label: 'Perfeccionismo', href: '/blog/perfeccionismo' },
+                        { label: 'Terapia e autoconhecimento', href: '/blog/como-a-terapia-ajuda-autoconhecimento' },
+                        { label: 'Infância e padrões', href: '/blog/impacto-da-infancia-nos-padroes' },
+                        { label: 'Autocompaixão', href: '/blog/autocompaixao' },
+                        { label: 'Viver segundo os valores', href: '/blog/viver-de-acordo-com-os-valores' },
+                        { label: 'Limites pessoais', href: '/blog/limites-pessoais' },
+                        { label: 'Síndrome do impostor', href: '/blog/sindrome-do-impostor' },
+                        { label: 'Introspeção e decisões', href: '/blog/introspecao-e-tomada-de-decisoes' },
+                        { label: 'Autoconhecimento financeiro', href: '/blog/autoconhecimento-financeiro' }
+                    ]
+                },
+                {
                     label: 'Burnout',
                     children: [
                         { label: 'Centro burnout', href: '/burnout' },
@@ -1183,11 +1604,62 @@ function magazineNavTree() {
                         { label: 'Parental', href: '/burnout/burnout-parental' },
                         { label: 'Médicos', href: '/burnout/medicos' },
                         { label: 'Founders', href: '/burnout/fundadores' },
-                        { label: 'Teste', href: '/burnout/teste' }
+                        { label: 'Teste', href: '/burnout/teste' },
+                        {
+                            label: 'Artigos',
+                            children: [
+                                { label: 'O que é e diferença do cansaço', href: '/blog/burnout-o-que-e-sinais-cansaco' },
+                                { label: '9 sinais no trabalho', href: '/blog/9-sinais-de-burnout-no-trabalho' },
+                                { label: 'Burnout parental', href: '/blog/burnout-parental-investigacao' },
+                                { label: 'Burnout académico', href: '/blog/burnout-academico' },
+                                { label: 'Sintomas físicos', href: '/blog/sintomas-fisicos-do-burnout' },
+                                { label: 'Burnout ou depressão', href: '/blog/burnout-ou-depressao' },
+                                { label: 'Quanto tempo demora a recuperar', href: '/blog/quanto-tempo-demora-a-recuperar-de-um-burnout' },
+                                { label: 'Burnout digital', href: '/blog/burnout-digital-videochamadas' },
+                                { label: 'Como falar com o médico', href: '/blog/como-falar-com-o-medico-sobre-burnout' },
+                                { label: 'Profissões de saúde', href: '/blog/burnout-em-profissoes-de-saude' },
+                                { label: 'Trabalho remoto', href: '/blog/sinais-de-burnout-no-trabalho-remoto' },
+                                { label: 'Baixa médica em Portugal', href: '/blog/burnout-e-baixa-medica-em-portugal' },
+                                { label: 'Prevenção nas empresas', href: '/blog/como-as-empresas-podem-prevenir-o-burnout' },
+                                { label: 'Burnout financeiro', href: '/blog/burnout-financeiro' },
+                                { label: 'Reconstruir a motivação', href: '/blog/reconstruir-a-motivacao-depois-de-um-burnout' },
+                                { label: 'Burnout materno', href: '/blog/burnout-materno' },
+                                { label: 'Burnout e sono', href: '/blog/como-o-burnout-afeta-o-sono' },
+                                { label: 'Cuidadores informais', href: '/blog/burnout-em-cuidadores-informais' },
+                                { label: 'Quando se torna mais sério', href: '/blog/quando-o-burnout-se-transforma-em-algo-mais-serio' },
+                                { label: 'Regressar ao trabalho', href: '/blog/regressar-ao-trabalho-depois-de-um-burnout' }
+                            ]
+                        }
                     ]
                 },
                 { label: 'Consulta de saúde mental', href: '/marcar/saude-mental' },
                 { label: 'Psicologia (subscrição)', href: '/saudemental' }
+            ]
+        },
+        {
+            label: 'Perda de peso',
+            children: [
+                { label: 'Nutrição por condição', href: '/nutricao' },
+                { label: 'Perda sustentável', href: '/blog/perda-de-peso-sustentavel' },
+                { label: 'Défice calórico', href: '/blog/deficit-calorico' },
+                { label: 'Stress e peso', href: '/blog/stress-e-perda-de-peso' },
+                { label: 'Sono e peso', href: '/blog/sono-e-peso-corporal' },
+                { label: 'Proteína e saciedade', href: '/blog/proteina-e-saciedade' },
+                { label: 'Efeito iô-iô', href: '/blog/efeito-ioio' },
+                { label: 'Menopausa', href: '/blog/perda-de-peso-na-menopausa' },
+                { label: 'Fome emocional', href: '/blog/fome-emocional-vs-fisica' },
+                { label: 'Fibra', href: '/blog/fibra-e-perda-de-peso' },
+                { label: 'Força vs cardio', href: '/blog/forca-vs-cardio-emagrecer' },
+                { label: 'Medicamentos GLP-1', href: '/blog/medicamentos-glp1-perda-de-peso' },
+                { label: 'Manter o peso', href: '/blog/manter-o-peso-perdido' },
+                { label: 'Pós-parto', href: '/blog/perda-de-peso-pos-parto' },
+                { label: 'Álcool', href: '/blog/alcool-e-perda-de-peso' },
+                { label: 'Contagem de calorias', href: '/blog/contagem-de-calorias' },
+                { label: 'Avaliação nutricional', href: '/blog/nutricionista-plano-perda-de-peso' },
+                { label: 'Saúde hormonal', href: '/blog/perda-de-peso-e-saude-hormonal' },
+                { label: 'Alimentação intuitiva', href: '/blog/alimentacao-intuitiva' },
+                { label: 'Platôs', href: '/blog/platos-na-perda-de-peso' },
+                { label: 'Viajar com frequência', href: '/blog/perda-de-peso-em-viagem' }
             ]
         },
         {
@@ -1325,7 +1797,7 @@ function magBreadcrumbJsonLd(origin, crumbs) {
 }
 
 function magTopicAnchorsHtml() {
-    const skip = new Set(['saude-mental', 'saude-do-viajante', 'clinica']);
+    const skip = new Set(['saude-mental', 'burnout', 'depressao', 'ansiedade', 'autoconhecimento', 'perda-de-peso', 'saude-do-viajante', 'clinica']);
     const ids = [];
     function walk(nodes) {
         (Array.isArray(nodes) ? nodes : []).forEach((node) => {
@@ -1502,7 +1974,7 @@ function layoutMagazinePage(opts) {
     <link rel="stylesheet" href="/landing.css?v=20260903b">
     ${extraCssHtml}
     ${extraCssAfterHtml}
-    <link rel="stylesheet" href="/magazine.css?v=20260903f">
+    <link rel="stylesheet" href="/magazine.css?v=20260905b">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='6' y='52' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%239c4a56'%3EL%3C/text%3E%3C/svg%3E">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     ${jsonLdScript(graph)}
@@ -1513,6 +1985,7 @@ function layoutMagazinePage(opts) {
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-nav.js"></script>
     <script src="/lon-analytics.js?v=20260904a" defer></script>
+    <script src="/guide-actions.js?v=20260905a" defer></script>
 </body>
 </html>`;
 }
@@ -1521,6 +1994,11 @@ function renderMagazineIndex(origin) {
     const o = normalizeOrigin(origin);
     const articles = sortArticles((loadManifest().articles || []).filter((a) => isValidSlug(a.slug) && isListedArticle(a)));
     const mental = articles.filter((a) => magTheme(a) === 'mental');
+    const burnout = articles.filter((a) => magTheme(a) === 'burnout');
+    const depressao = articles.filter((a) => magTheme(a) === 'depressao');
+    const ansiedade = articles.filter((a) => magTheme(a) === 'ansiedade');
+    const autoconhecimento = articles.filter((a) => magTheme(a) === 'autoconhecimento');
+    const perdaPeso = articles.filter((a) => magTheme(a) === 'perda-de-peso');
     const travel = articles.filter((a) => magTheme(a) === 'travel');
     const clinic = articles.filter((a) => magTheme(a) === 'clinic');
     const cover = mental[0] || articles[0];
@@ -1532,6 +2010,21 @@ function renderMagazineIndex(origin) {
     const mentalRest = featured && magTheme(featured) === 'mental'
         ? mental.filter((a) => magHref(a) !== featuredHref)
         : mental;
+    const burnoutRest = featured && magTheme(featured) === 'burnout'
+        ? burnout.filter((a) => magHref(a) !== featuredHref)
+        : burnout;
+    const depressaoRest = featured && magTheme(featured) === 'depressao'
+        ? depressao.filter((a) => magHref(a) !== featuredHref)
+        : depressao;
+    const ansiedadeRest = featured && magTheme(featured) === 'ansiedade'
+        ? ansiedade.filter((a) => magHref(a) !== featuredHref)
+        : ansiedade;
+    const autoconhecimentoRest = featured && magTheme(featured) === 'autoconhecimento'
+        ? autoconhecimento.filter((a) => magHref(a) !== featuredHref)
+        : autoconhecimento;
+    const perdaPesoRest = featured && magTheme(featured) === 'perda-de-peso'
+        ? perdaPeso.filter((a) => magHref(a) !== featuredHref)
+        : perdaPeso;
     const travelRest = featured && magTheme(featured) === 'travel'
         ? travel.filter((a) => magHref(a) !== featuredHref)
         : travel;
@@ -1540,6 +2033,11 @@ function renderMagazineIndex(origin) {
         : clinic;
     const rowsHtml = [
         magThemeRowHtml('saude-mental', 'Mente', mentalRest, 'mental'),
+        magThemeRowHtml('burnout', 'Burnout', burnoutRest, 'burnout'),
+        magThemeRowHtml('depressao', 'Depressão', depressaoRest, 'mental'),
+        magThemeRowHtml('ansiedade', 'Ansiedade', ansiedadeRest, 'mental'),
+        magThemeRowHtml('autoconhecimento', 'Autoconhecimento', autoconhecimentoRest, 'mental'),
+        magThemeRowHtml('perda-de-peso', 'Perda de peso', perdaPesoRest, 'nutrition'),
         magClusterHtml(),
         magThemeRowHtml('saude-do-viajante', 'Viagem', travelRest, 'travel'),
         magThemeRowHtml('clinica', 'Clínica', clinicRest, 'clinic')
@@ -1565,7 +2063,7 @@ function renderMagazineIndex(origin) {
                         url: `${o}/blog/${encodeURIComponent(a.slug)}`,
                         datePublished: a.datePublished || undefined,
                         dateModified: a.dateModified || a.datePublished || undefined,
-                        ...authors.articleAuthorSchema(o, a.author)
+                        ...articleAuthorBlock(o, a)
                     }
                 }))
             }
