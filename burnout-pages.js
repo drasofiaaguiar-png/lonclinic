@@ -1,8 +1,9 @@
 /**
  * Lon Clinic — Burnout hub (/burnout): SEO cluster with hub + spoke pages.
  * Interactive quiz stays at /burnout/teste (burnout-quiz.html).
- * Conversion product for CBI results: /psicologia-burnout.
- * Medical landing stays at /clinica-anti-burnout (not the default hub CTA).
+ * Primary conversion after CBI: /marcar/burnout-mensal (216 €/mês).
+ * /psicologia-burnout stays a real product page with unchanged psychology prices.
+ * Medical landing stays at /clinica-anti-burnout (not the default hub/quiz CTA).
  * Existing spokes stay; new editorial articles go to /blog/:slug, not /burnout/:slug.
  */
 
@@ -127,16 +128,26 @@ function bodyToHtml(body, format) {
     return marked.parse(body);
 }
 
+function liveSlotsHtml(ref, surface) {
+    const href = '/marcar/burnout-mensal?ref=' + encodeURIComponent(ref || 'burnout-hub');
+    return `
+        <div class="dr-live-slots" data-next-slots data-limit="3" data-service="burnout_mensal" data-book-href="${href}" data-surface="${escapeHtml(surface || 'burnout')}" hidden>
+            <p class="dr-live-slots-kicker">Primeira sessão do plano · 216 €/mês</p>
+            <div class="dr-live-slots-row" data-next-slots-row></div>
+            <a href="${href}" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
+        </div>`;
+}
+
 function ctaBand(ref) {
     const r = encodeURIComponent(ref || 'burnout-hub');
     return `
         <aside class="bo-cta-band" aria-label="Próximos passos">
             <div class="lon-container bo-cta-inner">
                 <p class="bo-cta-kicker">Comece pelo quadro</p>
-                <h2 class="bo-cta-title">Teste CBI no centro burnout. Consulta na ficha de psicologia.</h2>
+                <h2 class="bo-cta-title">Teste CBI no centro burnout. Depois, o plano de acompanhamento.</h2>
                 <div class="bo-cta-actions">
                     <a class="lon-btn lon-btn-dark" href="/burnout/teste?ref=${r}">Fazer o teste gratuito</a>
-                    <a class="lon-btn lon-btn-soft" href="/psicologia-burnout?ref=${r}">Psicólogo para burnout</a>
+                    <a class="lon-btn lon-btn-soft" href="/burnout">Centro burnout</a>
                 </div>
             </div>
         </aside>`;
@@ -236,7 +247,7 @@ function layoutBurnoutPage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260621b">
-    <link rel="stylesheet" href="/burnout-pages.css?v=20260905h">
+    <link rel="stylesheet" href="/burnout-pages.css?v=20260906a">
     <link rel="stylesheet" href="/author.css?v=20260820e">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     ${ldScripts}
@@ -343,7 +354,7 @@ function layoutBurnoutPage(opts) {
     <script src="/i18n.js?v=20260905e" defer></script>
     <script src="/lon-analytics.js?v=20260905e" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260905h" defer></script>
+    <script src="/lon-slots.js?v=20260906a" defer></script>
 </body>
 </html>`;
 }
@@ -394,12 +405,13 @@ function renderHub(origin) {
             <div class="lon-container bo-hero-inner">
                 <p class="bo-eyebrow">LON Clinic · Centro burnout</p>
                 <h1 id="bo-hub-title">Burnout</h1>
-                <p class="bo-lead">Não é só cansaço. O centro burnout reúne o que precisa de saber — sintomas, recuperação, profissões — e o teste CBI para objectivar o quadro. A consulta de psicologia é o passo seguinte.</p>
-                <p class="bo-hero-link"><a href="/burnout/o-que-e">O que é burnout →</a> · <a href="/psicologia-burnout">Psicólogo para burnout →</a> · <a href="/burnout/colecao">Coleção completa →</a></p>
+                <p class="bo-lead">Não é só cansaço. O centro burnout reúne sintomas, recuperação e o teste CBI para objectivar o quadro. O passo seguinte é o plano de acompanhamento — com a subscrição mensal em destaque.</p>
+                <p class="bo-hero-link"><a href="/burnout/o-que-e">O que é burnout →</a> · <a href="/burnout/teste">Teste CBI →</a> · <a href="/psicologia-burnout">Psicólogo para burnout →</a></p>
                 <div class="bo-hero-actions">
                     <a class="lon-btn lon-btn-dark" href="/burnout/teste?ref=burnout-hub">Fazer o teste gratuito</a>
                     <a class="lon-btn lon-btn-soft" href="/burnout/colecao">Ler a coleção</a>
                 </div>
+                ${liveSlotsHtml('burnout-hub', 'burnout-hub')}
             </div>
         </section>
 
@@ -451,7 +463,7 @@ function renderHub(origin) {
     return layoutBurnoutPage({
         origin: o,
         title: 'Burnout — Sintomas, teste e consulta online | Lon Clinic',
-        description: 'Centro Lon Clinic sobre burnout: sintomas, tratamento, recuperação, diferença face à depressão e o teste gratuito CBI. O passo seguinte é a consulta de psicologia.',
+        description: 'Centro Lon Clinic sobre burnout: sintomas, tratamento, recuperação, diferença face à depressão e o teste gratuito CBI. O passo seguinte é o plano de acompanhamento.',
         canonicalPath: '/burnout',
         ogImage: `${o}/image/image2.webp`,
         jsonLdExtra: jsonLd,
@@ -546,8 +558,9 @@ function renderSpoke(origin, slug) {
                 ${authors.authorBylineHtml(o, meta.author, datePub)}
                 <div class="bo-article-actions">
                     <a class="lon-btn lon-btn-dark lon-btn-sm" href="/burnout/teste?ref=${encodeURIComponent(ref)}">Teste gratuito</a>
-                    <a class="lon-btn lon-btn-primary lon-btn-sm" href="/psicologia-burnout?ref=${encodeURIComponent(ref)}">Psicólogo para burnout</a>
+                    <a class="lon-btn lon-btn-soft lon-btn-sm" href="/burnout">Centro burnout</a>
                 </div>
+                ${liveSlotsHtml(ref, 'burnout-spoke')}
             </header>
             <div class="bo-prose" lang="pt-PT">
                 ${articleHtml}

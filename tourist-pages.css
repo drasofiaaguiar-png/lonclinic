@@ -34,6 +34,41 @@
     color: var(--lon-muted, #6e6477);
 }
 
+.tq-langs-line--strict {
+    font-weight: 700;
+    color: #3a2a10;
+}
+
+.tq-lang-banner {
+    margin-top: var(--lon-nav-h, 72px);
+    position: sticky;
+    top: var(--lon-nav-h, 72px);
+    z-index: 50;
+    background: #1a1408;
+    color: #fff8e8;
+    border-bottom: 3px solid #d4a017;
+    padding: 12px 20px 14px;
+    text-align: center;
+}
+
+.tq-lang-banner-en {
+    margin: 0;
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+}
+
+.tq-lang-banner-local {
+    margin: 6px 0 0;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    opacity: 0.92;
+}
+
+.tourist-body:has(.tq-lang-banner) .cq-article {
+    padding-top: 28px;
+}
+
 .tq-notice {
     margin-top: 1.6rem;
     background: #f7f4ea;

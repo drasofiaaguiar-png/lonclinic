@@ -1,0 +1,304 @@
+/* Avaliação metabólica — 6 passos, alinhada à landing do programa */
+
+.mp-quiz-page {
+    --mpq-ink: #1f2a22;
+    --mpq-muted: #3d554a;
+    --mpq-line: #c9d4cc;
+    --mpq-paper: #f4f7f5;
+    min-height: 100vh;
+    background:
+        radial-gradient(ellipse 80% 50% at 8% -8%, rgba(37, 82, 53, 0.08), transparent 50%),
+        linear-gradient(180deg, #f7faf8 0%, #eef3f0 100%);
+    color: var(--mpq-ink);
+}
+
+.mpq-top {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 22px;
+    background: rgba(247, 250, 248, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--mpq-line);
+}
+
+.mpq-brand {
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    font-size: 0.95rem;
+}
+
+.mpq-exit {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--mpq-muted);
+}
+
+.mpq-exit:hover {
+    color: var(--lon-accent);
+}
+
+.mpq-progress {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 18px 22px 0;
+}
+
+.mpq-progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mpq-muted);
+    margin-bottom: 8px;
+}
+
+.mpq-progress-track {
+    height: 6px;
+    border-radius: 999px;
+    background: #dce6df;
+    overflow: hidden;
+}
+
+.mpq-progress-track b {
+    display: block;
+    height: 100%;
+    width: 16%;
+    background: var(--lon-accent);
+    border-radius: 999px;
+    transition: width 0.25s ease;
+}
+
+.mpq-main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 28px 22px 64px;
+}
+
+.mpq-screen[hidden] {
+    display: none;
+}
+
+.mpq-kicker {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lon-accent);
+    margin-bottom: 10px;
+}
+
+.mpq-screen h1 {
+    font-size: clamp(1.35rem, 4vw, 1.85rem);
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: 12px;
+}
+
+.mpq-hint,
+.mpq-lead {
+    color: var(--mpq-muted);
+    margin-bottom: 20px;
+    line-height: 1.55;
+}
+
+.mpq-choices {
+    display: grid;
+    gap: 10px;
+}
+
+.mpq-choice {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 16px 16px;
+    background: #fff;
+    border: 1.5px solid var(--mpq-line);
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.mpq-choice:hover,
+.mpq-choice:has(input:focus-visible) {
+    border-color: var(--lon-accent);
+}
+
+.mpq-choice:has(input:checked) {
+    border-color: var(--lon-accent);
+    background: #f3f8f4;
+    box-shadow: 0 8px 24px rgba(37, 82, 53, 0.1);
+}
+
+.mpq-choice input {
+    margin-top: 3px;
+    accent-color: var(--lon-accent);
+    flex-shrink: 0;
+}
+
+.mpq-choice strong {
+    font-weight: 700;
+}
+
+.mpq-fields {
+    display: grid;
+    gap: 14px;
+}
+
+@media (min-width: 560px) {
+    .mpq-fields {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .mpq-fields--contact {
+        grid-template-columns: 1fr;
+    }
+}
+
+.mpq-field label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.mpq-field input {
+    width: 100%;
+    border: 1.5px solid var(--mpq-line);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font: inherit;
+    background: #fff;
+}
+
+.mpq-field input:focus {
+    outline: 2px solid rgba(37, 82, 53, 0.25);
+    border-color: var(--lon-accent);
+}
+
+.mpq-check {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin: 18px 0 8px;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--mpq-muted);
+}
+
+.mpq-check a {
+    color: var(--lon-accent);
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.mpq-error {
+    color: #8b1e18;
+    font-size: 0.88rem;
+    margin: 8px 0 0;
+}
+
+.mpq-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.mpq-back {
+    background: none;
+    border: 0;
+    font: inherit;
+    font-weight: 600;
+    color: var(--mpq-muted);
+    cursor: pointer;
+    padding: 8px 0;
+}
+
+.mpq-back:hover {
+    color: var(--lon-accent);
+}
+
+.mpq-metrics {
+    font-size: 0.92rem;
+    color: var(--mpq-muted);
+    margin-bottom: 22px;
+}
+
+.mpq-plan {
+    background: #fff;
+    border: 1.5px solid var(--mpq-line);
+    border-radius: 20px;
+    padding: 24px 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 12px 32px rgba(20, 34, 24, 0.06);
+}
+
+.mpq-plan.is-featured {
+    border-color: var(--lon-accent);
+    background: linear-gradient(180deg, #f3f8f4 0%, #fff 55%);
+}
+
+.mpq-plan-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lon-accent);
+    margin-bottom: 6px;
+}
+
+.mpq-plan h2 {
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+}
+
+.mpq-plan-price {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--lon-accent);
+    line-height: 1;
+    margin: 8px 0 4px;
+}
+
+.mpq-plan-then {
+    font-size: 0.92rem;
+    color: var(--mpq-muted);
+    margin-bottom: 16px;
+}
+
+.mpq-plan .lon-btn {
+    width: 100%;
+    justify-content: center;
+}
+
+.mpq-disclaimer {
+    font-size: 0.8rem;
+    color: var(--mpq-muted);
+    line-height: 1.5;
+    margin-top: 20px;
+}
+
+.mpq-foot {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--mpq-muted);
+    padding: 0 22px 28px;
+}
+
+@media (max-width: 640px) {
+    .mpq-nav .lon-btn {
+        flex: 1;
+        justify-content: center;
+    }
+}

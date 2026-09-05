@@ -297,6 +297,7 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
         ['/burnout/testes', today, 'monthly', '0.86'],
         ['/nutricao/testes', today, 'monthly', '0.84'],
         ['/nutricao/programa', today, 'weekly', '0.9'],
+        ['/nutricao/avaliacao', today, 'monthly', '0.86'],
         ['/clinica-anti-burnout', today, 'weekly', '0.9'],
         ['/saudemental', today, 'weekly', '0.9'],
         ['/consultas', today, 'weekly', '0.92'],

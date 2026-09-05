@@ -84,6 +84,23 @@ function stripeSessionIdSuffixForLog(id) {
     return s.length <= 8 ? '***' : s.slice(-8);
 }
 
+async function createStripeCheckoutSession(sessionParams) {
+    const withPt = Object.assign({}, sessionParams, {
+        payment_method_types: ['card', 'mb_way', 'multibanco']
+    });
+    try {
+        return await stripe.checkout.sessions.create(withPt);
+    } catch (err) {
+        const msg = String((err && err.message) || '');
+        const unactivated = err && (err.code === 'payment_method_unactivated' || /payment method|mb_way|multibanco/i.test(msg));
+        if (!unactivated) throw err;
+        console.warn('   ⚠️  MB WAY / Multibanco not enabled on Stripe — checkout with card only. Enable them in the Stripe Dashboard for Portugal.');
+        return stripe.checkout.sessions.create(Object.assign({}, sessionParams, {
+            payment_method_types: ['card']
+        }));
+    }
+}
+
 const rateLimitClinicLogin = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 20,
@@ -416,6 +433,7 @@ function publicProfessional(pro) {
    CONTACT EMAIL CONFIGURATION
 ======================================== */
 const CONTACT_EMAIL = process.env.CONTACT_EMAIL || 'info@lonclinic.com';
+const CLINIC_WHATSAPP = String(process.env.CLINIC_WHATSAPP || '351928372775').replace(/\D/g, '');
 
 /* ========================================
    CLINIC PORTAL AUTHENTICATION
@@ -3384,6 +3402,251 @@ async function sendClinicalQuizEmails(def, data) {
     }
 }
 
+const QUIZ_RECOVERY_MS = 15 * 60 * 1000;
+const quizLeadMemory = new Map();
+
+function normalizePtMobile(raw) {
+    let d = String(raw || '').replace(/\D/g, '');
+    if (d.indexOf('351') === 0) d = d.slice(3);
+    if (d.length === 9 && d.charAt(0) === '9') return '+351' + d;
+    return '';
+}
+
+function quizLeadKey(email) {
+    return String(email || '').trim().toLowerCase();
+}
+
+function rememberQuizLead(lead) {
+    const key = quizLeadKey(lead && lead.email);
+    if (!key) return;
+    quizLeadMemory.set(key, Object.assign({}, quizLeadMemory.get(key) || {}, lead, { email: key }));
+}
+
+async function patchQuizLead(email, patch) {
+    const key = quizLeadKey(email);
+    if (!key) return;
+    const prev = quizLeadMemory.get(key) || { email: key };
+    quizLeadMemory.set(key, Object.assign({}, prev, patch));
+    if (usePersistentDb) {
+        try { await db.mergeQuizAttemptResultByEmail(key, patch); } catch (err) {
+            console.error('   ⚠️  quiz lead patch:', err.message);
+        }
+    }
+}
+
+async function markQuizLeadConverted(email) {
+    await patchQuizLead(email, { convertedAt: Date.now(), recoveredAt: Date.now() });
+}
+
+async function markQuizLeadCheckoutStarted(email) {
+    await patchQuizLead(email, { checkoutStartedAt: Date.now(), recoverAt: Date.now() + QUIZ_RECOVERY_MS });
+}
+
+function clinicWhatsAppHref(lead) {
+    const first = String(lead.firstName || lead.leadName || '').trim() || 'olá';
+    const text = `Olá ${first}, sou da coordenação clínica da LON. Vi que concluiu a sua avaliação metabólica. Ficou com alguma dúvida sobre como funcionam os exames de sangue ou o agendamento da 1.ª consulta médica?`;
+    const phone = String(lead.phone || lead.leadPhone || '').replace(/\D/g, '') || CLINIC_WHATSAPP;
+    const to = phone.indexOf('351') === 0 ? phone : (phone.length === 9 ? '351' + phone : CLINIC_WHATSAPP);
+    return `https://wa.me/${to}?text=${encodeURIComponent(text)}`;
+}
+
+async function sendQuizRecovery(lead) {
+    const email = quizLeadKey(lead.email);
+    if (!email) return false;
+    const first = String(lead.firstName || lead.leadName || '').trim();
+    const hello = first ? `Olá ${first}` : 'Olá';
+    const bookUrl = String(lead.bookUrl || `${PUBLIC_SITE_URL}/marcar/nutricao-programa?ref=quiz-recovery`);
+    const waHref = clinicWhatsAppHref(lead);
+    const bodyText = [
+        `${hello}, sou da coordenação clínica da LON.`,
+        '',
+        'Vi que concluiu a sua avaliação metabólica. Ficou com alguma dúvida sobre como funcionam os exames de sangue ou o agendamento da 1.ª consulta médica?',
+        '',
+        `Marcar a 1.ª consulta: ${bookUrl}`,
+        '',
+        'LON Clinic'
+    ].join('\n');
+    try {
+        if (isEmailConfigured) {
+            await deliverEmail({
+                from: EMAIL_FROM,
+                to: email,
+                subject: 'A sua avaliação metabólica — dúvidas sobre a 1.ª consulta?',
+                text: bodyText
+            });
+            await deliverEmail({
+                from: EMAIL_FROM,
+                to: CONTACT_EMAIL,
+                subject: `Recuperar checkout: ${email}`,
+                text: [
+                    'Lead do quiz sem pagamento (15 min).',
+                    `Nome: ${first || '—'}`,
+                    `Email: ${email}`,
+                    `WhatsApp: ${lead.phone || lead.leadPhone || '—'}`,
+                    `Quiz: ${lead.quizId || '—'}`,
+                    '',
+                    `Enviar WhatsApp agora: ${waHref}`,
+                    `Checkout: ${bookUrl}`
+                ].join('\n')
+            });
+        }
+        emitServerAnalytics('recovery_sent', { props: { quiz: lead.quizId || 'clinical', channel: 'email_whatsapp' } }).catch(() => {});
+        await patchQuizLead(email, { recoveredAt: Date.now() });
+        console.log('   📩 Quiz checkout recovery sent:', email);
+        return true;
+    } catch (err) {
+        console.error('   ❌ Quiz recovery failed:', err.message);
+        return false;
+    }
+}
+
+async function runQuizLeadRecoveries() {
+    const now = Date.now();
+    const due = [];
+    for (const lead of quizLeadMemory.values()) {
+        if (!lead.email || lead.recoveredAt || lead.convertedAt) continue;
+        if (Number(lead.recoverAt) && Number(lead.recoverAt) <= now) due.push(lead);
+    }
+    if (usePersistentDb) {
+        try {
+            const rows = await db.findDueQuizRecoveries(now);
+            for (const row of rows) {
+                const result = row.result || {};
+                if (result.recoveredAt || result.convertedAt) continue;
+                due.push({
+                    email: row.email,
+                    quizId: row.quizId,
+                    firstName: result.leadName || '',
+                    phone: result.leadPhone || '',
+                    leadName: result.leadName || '',
+                    leadPhone: result.leadPhone || '',
+                    bookUrl: result.bookUrl || '',
+                    recoverAt: Number(result.recoverAt) || 0
+                });
+            }
+        } catch (err) {
+            console.error('   ⚠️  findDueQuizRecoveries:', err.message);
+        }
+    }
+    const seen = new Set();
+    for (const lead of due) {
+        const key = quizLeadKey(lead.email);
+        if (!key || seen.has(key)) continue;
+        seen.add(key);
+        await sendQuizRecovery(lead);
+    }
+}
+
+const NUTRICAO_AVALIACAO_LABELS = {
+    goal: {
+        lose: 'Perder peso de forma sustentável e sem efeito io-io',
+        markers: 'Melhorar marcadores de saúde (glicemia, colesterol, tensão arterial)',
+        energy: 'Ganhar energia diária e combater o cansaço/burnout',
+        all: 'Todos os anteriores'
+    },
+    diets: {
+        first: 'É a primeira vez que procuro acompanhamento',
+        few: '1 a 3 vezes',
+        yoyo: 'Mais de 4 vezes (perde e recupera)'
+    },
+    eating: {
+        rare: 'Raras vezes — organizar refeições e consistência',
+        some: 'Algumas vezes — doces ou comida de conforto em dias difíceis',
+        frequent: 'Frequente — fome emocional, ansiedade à noite ou compulsão'
+    },
+    labs: {
+        recent: 'Há menos de 6 meses',
+        year: 'Há mais de 1 ano',
+        unknown: 'Não me recordo / há vários anos'
+    }
+};
+
+function nutricaoAvaliacaoPlanLabel(plan) {
+    return plan === 'completo' ? 'Programa Completo (1 162 €)' : 'Programa Nutrição (490 €)';
+}
+
+function buildNutricaoAvaliacaoEmails(data) {
+    const plan = nutricaoAvaliacaoPlanLabel(data.plan);
+    const bookPath = data.plan === 'completo' ? '/marcar/nutricao-completo' : '/marcar/nutricao-programa';
+    const bookUrl = emailLink(`${PUBLIC_SITE_URL}${bookPath}`, datedCampaign('nutricao_avaliacao'), 'email-book');
+    const L = NUTRICAO_AVALIACAO_LABELS;
+    const clinicText = [
+        'Avaliação metabólica (landing programa 6 meses)',
+        `Nome: ${data.name}`,
+        `Email: ${data.email}`,
+        `Telefone: ${data.phone}`,
+        `Plano recomendado: ${plan}`,
+        '',
+        `Objetivo: ${L.goal[data.goal] || data.goal}`,
+        `Histórico de dietas: ${L.diets[data.diets] || data.diets}`,
+        `Relação com a comida: ${L.eating[data.eating] || data.eating}`,
+        `Últimas análises: ${L.labs[data.labs] || data.labs}`,
+        `Idade: ${data.age}`,
+        `Altura: ${data.height} cm`,
+        `Peso atual: ${data.weight} kg`,
+        `Peso desejado: ${data.desiredWeight} kg`,
+        data.imc != null ? `IMC aproximado: ${data.imc}` : ''
+    ].filter(Boolean).join('\n');
+    const clinicHtml = `<p><strong>Avaliação metabólica</strong> — programa 6 meses</p>
+<p>${escapeHtml(data.name)} · ${escapeHtml(data.email)} · ${escapeHtml(data.phone)}</p>
+<p><strong>Plano recomendado:</strong> ${escapeHtml(plan)}</p>
+<ul>
+<li>Objetivo: ${escapeHtml(L.goal[data.goal] || data.goal)}</li>
+<li>Dietas: ${escapeHtml(L.diets[data.diets] || data.diets)}</li>
+<li>Relação com a comida: ${escapeHtml(L.eating[data.eating] || data.eating)}</li>
+<li>Análises: ${escapeHtml(L.labs[data.labs] || data.labs)}</li>
+<li>Idade ${escapeHtml(data.age)} · ${escapeHtml(data.height)} cm · ${escapeHtml(data.weight)} kg → ${escapeHtml(data.desiredWeight)} kg${data.imc != null ? ` · IMC ${escapeHtml(data.imc)}` : ''}</li>
+</ul>`;
+    const userText = `Olá ${data.name},\n\nRecebemos a sua avaliação metabólica. Plano recomendado: ${plan}.\n\nPode começar aqui: ${PUBLIC_SITE_URL}${bookPath}?ref=avaliacao\n\nA 1.ª consulta confirma o plano com a equipa clínica.\n\nLON Clinic`;
+    const userHtml = `<p>Olá ${escapeHtml(data.name)},</p>
+<p>Recebemos a sua avaliação metabólica. Plano recomendado: <strong>${escapeHtml(plan)}</strong>.</p>
+<p><a href="${escapeHtml(bookUrl)}">Começar o programa</a></p>
+<p>A 1.ª consulta confirma o plano com a equipa clínica.</p>
+<p>LON Clinic</p>`;
+    return {
+        clinic: {
+            subject: `Avaliação metabólica · ${data.name} · ${plan}`,
+            text: clinicText,
+            html: clinicHtml
+        },
+        user: {
+            subject: 'A sua avaliação metabólica · Lon Clinic',
+            text: userText,
+            html: userHtml
+        }
+    };
+}
+
+async function sendNutricaoAvaliacaoEmails(data) {
+    if (!isEmailConfigured) {
+        console.log('   ⚠️  Email not configured — nutrition screening not emailed');
+        return false;
+    }
+    try {
+        const { clinic, user } = buildNutricaoAvaliacaoEmails(data);
+        await deliverEmail({
+            from: EMAIL_FROM,
+            to: CONTACT_EMAIL,
+            replyTo: data.email,
+            subject: clinic.subject,
+            text: clinic.text,
+            html: clinic.html
+        });
+        await deliverEmail({
+            from: EMAIL_FROM,
+            to: data.email,
+            subject: user.subject,
+            text: user.text,
+            html: user.html
+        });
+        console.log('   📩 Nutrition screening emails sent:', data.email);
+        return true;
+    } catch (err) {
+        console.error('   ❌ Failed to send nutrition screening emails:', err.message);
+        return false;
+    }
+}
+
 async function sendCareersApplicationEmail(data) {
     if (!isEmailConfigured) {
         console.log('   ⚠️  Email not configured — cannot send careers application');
@@ -5072,10 +5335,17 @@ function startAppointmentReminderScheduler() {
     setInterval(() => {
         void runAutomationJobs();
     }, AUTOMATION_JOB_INTERVAL_MS);
+    setInterval(() => {
+        void runQuizLeadRecoveries();
+    }, 60_000);
     setTimeout(() => {
         void runAutomationJobs();
     }, 15_000);
+    setTimeout(() => {
+        void runQuizLeadRecoveries();
+    }, 20_000);
     console.log('   ⏰ Automation (reminders, follow-up, invite expiry): every 15m (first run ~15s after startup)');
+    console.log('   ⏰ Quiz checkout recovery: every 60s');
 }
 
 /** Avoid duplicate finalize when webhook and success-page API run together */
@@ -5356,6 +5626,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                     bookingRef: fin.bookingRef || null
                 }
             ).catch(() => {});
+            markQuizLeadConverted(session.customer_email || meta.contact_email || '').catch(() => {});
             break;
         }
 
@@ -5364,6 +5635,13 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             console.log(
                 '⏰ Checkout session expired (…' + stripeSessionIdSuffixForLog(expiredSession.id) + ')'
             );
+            emitServerAnalytics('checkout_abandoned', {
+                props: { service: bookingServiceTag((expiredSession.metadata || {}).service), via: 'stripe_expired' }
+            }).catch(() => {});
+            const expiredEmail = expiredSession.customer_email || (expiredSession.metadata && expiredSession.metadata.contact_email) || '';
+            if (expiredEmail) {
+                patchQuizLead(expiredEmail, { recoverAt: Date.now() }).catch(() => {});
+            }
             // Stripe Checkout sessions last at most 24h. Invitation payment links
             // stay valid until the consultation day, so do not cancel the invite
             // unless that day has already passed.
@@ -5915,6 +6193,10 @@ app.get('/nutricao/', (req, res) => {
 
 app.get('/nutricao/programa', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'nutricao-programa.html'), 'Error loading nutrition program landing');
+});
+
+app.get('/nutricao/avaliacao', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'nutricao-avaliacao.html'), 'Error loading nutrition screening quiz');
 });
 
 app.get('/nutricao/testes', (req, res) => {
@@ -7334,9 +7616,14 @@ app.post('/api/clinical-quiz', rateLimitBurnoutQuiz, async (req, res) => {
         return res.status(404).json({ error: 'Questionário desconhecido.' });
     }
     const email = String(req.body?.email || '').trim().toLowerCase();
+    const firstName = String(req.body?.name || '').trim().slice(0, 80);
+    const phone = normalizePtMobile(req.body?.phone);
     const answers = req.body?.answers;
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
         return res.status(400).json({ error: 'Email inválido.' });
+    }
+    if (def.cluster === 'nutrition' && !phone) {
+        return res.status(400).json({ error: 'Indique um telemóvel WhatsApp válido.' });
     }
     const invalid = clinicalQuizzes.validateAnswers(def, answers);
     if (invalid) {
@@ -7348,12 +7635,30 @@ app.post('/api/clinical-quiz', rateLimitBurnoutQuiz, async (req, res) => {
         return res.status(400).json({ error: 'Não foi possível calcular o resultado.' });
     }
 
+    const bookUrl = def.booking && def.booking.consultHref
+        ? `${def.booking.consultHref}?ref=${encodeURIComponent(def.id + '-quiz')}`
+        : '/marcar/clinica-geral';
+    const recoverAt = Date.now() + QUIZ_RECOVERY_MS;
     const payload = {
         email,
+        firstName,
+        phone,
         answers,
         scored,
-        band: scored.band ? scored.band.pill : ''
+        band: scored.band ? scored.band.pill : '',
+        bookUrl
     };
+
+    rememberQuizLead({
+        email,
+        firstName,
+        phone,
+        quizId: def.id,
+        bookUrl,
+        recoverAt,
+        recoveredAt: 0,
+        convertedAt: 0
+    });
 
     if (usePersistentDb) {
         try {
@@ -7370,7 +7675,11 @@ app.post('/api/clinical-quiz', rateLimitBurnoutQuiz, async (req, res) => {
                     band: payload.band,
                     scales: scored.scales,
                     crisis: scored.crisis,
-                    extra: scored.extra
+                    extra: scored.extra,
+                    leadName: firstName,
+                    leadPhone: phone,
+                    bookUrl,
+                    recoverAt
                 },
                 score: scored.display
             });
@@ -7383,15 +7692,118 @@ app.post('/api/clinical-quiz', rateLimitBurnoutQuiz, async (req, res) => {
     const emailed = await sendClinicalQuizEmails(def, payload);
     emitServerAnalytics(
         'quiz_complete',
-        { props: { quiz: def.id, band: payload.band || 'unknown', crisis: !!scored.crisis } },
+        { props: { quiz: def.id, band: payload.band || 'unknown', crisis: !!scored.crisis, lead: true } },
         req
     ).catch(() => {});
     return res.json({
         success: true,
         emailed,
-        bookUrl: def.booking && def.booking.consultHref
-            ? `${def.booking.consultHref}?ref=${encodeURIComponent(def.id + '-quiz')}`
-            : '/'
+        bookUrl
+    });
+});
+
+app.post('/api/nutricao-avaliacao', rateLimitBurnoutQuiz, async (req, res) => {
+    const name = String(req.body?.name || '').trim().slice(0, 120);
+    const email = String(req.body?.email || '').trim().toLowerCase().slice(0, 160);
+    const phone = String(req.body?.phone || '').trim().slice(0, 40);
+    const goal = String(req.body?.goal || '').trim();
+    const diets = String(req.body?.diets || '').trim();
+    const eating = String(req.body?.eating || '').trim();
+    const labs = String(req.body?.labs || '').trim();
+    const age = Number(req.body?.age);
+    const height = Number(req.body?.height);
+    const weight = Number(req.body?.weight);
+    const desiredWeight = Number(req.body?.desiredWeight);
+
+    const allowedGoal = { lose: 1, markers: 1, energy: 1, all: 1 };
+    const allowedDiets = { first: 1, few: 1, yoyo: 1 };
+    const allowedEating = { rare: 1, some: 1, frequent: 1 };
+    const allowedLabs = { recent: 1, year: 1, unknown: 1 };
+
+    if (name.length < 2) {
+        return res.status(400).json({ error: 'Nome inválido.' });
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        return res.status(400).json({ error: 'Email inválido.' });
+    }
+    if (String(phone).replace(/\D/g, '').length < 9) {
+        return res.status(400).json({ error: 'Telefone inválido.' });
+    }
+    if (!allowedGoal[goal] || !allowedDiets[diets] || !allowedEating[eating] || !allowedLabs[labs]) {
+        return res.status(400).json({ error: 'Respostas incompletas.' });
+    }
+    if (!Number.isFinite(age) || age < 16 || age > 90) {
+        return res.status(400).json({ error: 'Idade inválida.' });
+    }
+    if (!Number.isFinite(height) || height < 120 || height > 230) {
+        return res.status(400).json({ error: 'Altura inválida.' });
+    }
+    if (!Number.isFinite(weight) || weight < 30 || weight > 250) {
+        return res.status(400).json({ error: 'Peso inválido.' });
+    }
+    if (!Number.isFinite(desiredWeight) || desiredWeight < 30 || desiredWeight > 250) {
+        return res.status(400).json({ error: 'Peso desejado inválido.' });
+    }
+
+    const metres = height / 100;
+    const imc = metres ? Math.round((weight / (metres * metres)) * 10) / 10 : null;
+    const plan = eating === 'frequent' ? 'completo' : 'nutricao';
+    const payload = {
+        name,
+        email,
+        phone,
+        goal,
+        diets,
+        eating,
+        labs,
+        age,
+        height,
+        weight,
+        desiredWeight,
+        imc,
+        plan
+    };
+
+    if (usePersistentDb) {
+        try {
+            const id = crypto.randomUUID();
+            const claimToken = crypto.randomBytes(24).toString('hex');
+            await db.insertQuizAttempt({
+                id,
+                claimToken,
+                quizId: 'nutricao-avaliacao',
+                answers: {
+                    goal,
+                    diets,
+                    eating,
+                    labs,
+                    age,
+                    height,
+                    weight,
+                    desiredWeight
+                },
+                result: { plan, imc },
+                score: eating === 'frequent' ? 2 : eating === 'some' ? 1 : 0
+            });
+            await db.claimQuizAttempt(id, claimToken, email);
+        } catch (dbErr) {
+            console.error('POST /api/nutricao-avaliacao DB:', dbErr.message);
+        }
+    }
+
+    const emailed = await sendNutricaoAvaliacaoEmails(payload);
+    emitServerAnalytics(
+        'quiz_complete',
+        { props: { quiz: 'nutricao-avaliacao', plan } },
+        req
+    ).catch(() => {});
+    return res.json({
+        success: true,
+        emailed,
+        plan,
+        bookUrl: plan === 'completo'
+            ? '/marcar/nutricao-completo?ref=avaliacao'
+            : '/marcar/nutricao-programa?ref=avaliacao'
     });
 });
 
@@ -8077,7 +8489,6 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         };
 
         const sessionParams = {
-            payment_method_types: ['card'],
             mode: isSubscription ? 'subscription' : 'payment',
             customer_email: patientEmail,
             line_items: [lineItem],
@@ -8094,7 +8505,9 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
             sessionParams.payment_intent_data = { receipt_email: patientEmail };
         }
 
-        const session = await stripe.checkout.sessions.create(sessionParams);
+        const session = await createStripeCheckoutSession(sessionParams);
+
+        markQuizLeadCheckoutStarted(patientEmail).catch(() => {});
 
         if (checkoutHold) {
             const extended = Date.now() + SLOT_HOLD_CHECKOUT_MS;
@@ -8138,6 +8551,12 @@ app.get('/api/session/:sessionId', rateLimitSessionRetrieve, async (req, res) =>
         }
 
         await finalizePaidCheckoutSession(session, '[session-api] ');
+        markQuizLeadConverted(
+            session.customer_email ||
+            (session.customer_details && session.customer_details.email) ||
+            (session.metadata && session.metadata.contact_email) ||
+            ''
+        ).catch(() => {});
 
         const travellerCount = parseInt(session.metadata?.traveller_count, 10) || 1;
         const passengerNames = [];

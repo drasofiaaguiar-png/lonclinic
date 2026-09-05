@@ -10,8 +10,8 @@ const { originOf } = require('./seo');
 const { scoreQuiz, questionOptions } = require('./clinical-quiz-score');
 
 const QUIZ_DIR = path.join(__dirname, 'data', 'clinical-quizzes');
-const CSS_V = '20260905d';
-const JS_V = '20260905d';
+const CSS_V = '20260905i';
+const JS_V = '20260905i';
 
 const CBI = {
     id: 'cbi',
@@ -176,6 +176,7 @@ function clientConfig(def) {
         id: def.id,
         instrument: def.instrument,
         path: def.path,
+        cluster: def.cluster || '',
         stem: def.stem || '',
         scoring: def.scoring,
         gaugeMax: def.gaugeMax,
@@ -303,8 +304,8 @@ function renderQuizPage(origin, def) {
     </header>
     <div class="bq-progress" id="progressWrap" hidden>
         <div class="bq-progress-meta">
-            <span id="dimLabelShort">Secção</span>
-            <b id="stepLabel">1 / ${n}</b>
+            <span id="dimLabelShort">Menos de ${escapeHtml(String(def.minutes))} min</span>
+            <b id="stepLabel">Passo 1 de ${n} — 0% concluído</b>
         </div>
         <div class="bq-progress-inner" role="progressbar" aria-valuemin="1" aria-valuemax="${n}" aria-valuenow="1" aria-label="Progresso do teste" id="progressBarHost">
             ${segs}
@@ -315,7 +316,7 @@ function renderQuizPage(origin, def) {
         <div class="bq-stage" id="stage">
             <section class="bq-screen is-active" id="intro">
                 <div class="bq-intro">
-                    <p class="bq-kicker">${instrument} · ${def.minutes} min · ${n} perguntas</p>
+                    <p class="bq-kicker">${instrument} · menos de ${def.minutes} min · ${n} perguntas</p>
                     <h1>${h1}</h1>
                     <p>${lead}</p>
                     ${def.scoring === 'imc' ? `<div class="bq-imc-legend" aria-label="Escala de IMC e perímetro abdominal">
@@ -360,18 +361,40 @@ function renderQuizPage(origin, def) {
             </section>
             <section class="bq-screen" id="gate" hidden>
                 <div class="bq-card">
-                    <p class="bq-step-label">Quase lá</p>
-                    <h2>O teu resultado está pronto</h2>
-                    <p class="bq-lead">Mostramos a pontuação já a seguir — e enviamos por email a análise com o próximo passo clínico.</p>
+                    <p class="bq-step-label">Último passo · os seus contactos</p>
+                    <h2>O resultado está pronto — onde o enviamos?</h2>
+                    <p class="bq-lead">Não pedimos email no início. Agora precisamos do contacto para lhe enviar a análise e, se não concluir a marcação, a coordenação clínica pode esclarecer dúvidas por WhatsApp.</p>
                     <div class="bq-field">
-                        <label for="email">O teu email</label>
+                        <label for="leadName">Primeiro nome</label>
+                        <input type="text" id="leadName" autocomplete="given-name" maxlength="80" placeholder="Ana">
+                    </div>
+                    <div class="bq-field">
+                        <label for="email">Email</label>
                         <input type="email" id="email" inputmode="email" autocomplete="email" placeholder="nome@email.com">
                         <p class="bq-error" id="emailError" hidden>Escreve um email válido para continuar.</p>
                     </div>
-                    <p class="bq-privacy">Usamos o teu email apenas para enviar o resultado e conteúdo da Lon Clinic sobre saúde. Sem spam.</p>
+                    <div class="bq-field">
+                        <label for="leadPhone">WhatsApp</label>
+                        <input type="tel" id="leadPhone" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="9XX XXX XXX">
+                        <p class="bq-error" id="phoneError" hidden>Indica um telemóvel português válido.</p>
+                    </div>
+                    <p class="bq-privacy">Usamos o email e o WhatsApp para enviar o resultado e acompanhar a marcação. Sem spam.</p>
                     <div class="bq-actions bq-actions--end">
                         <button type="button" class="bq-btn bq-btn-primary" id="revealBtn">Ver o meu resultado</button>
                     </div>
+                </div>
+            </section>
+            <section class="bq-screen" id="processing" hidden>
+                <div class="bq-card bq-processing">
+                    <div class="bq-processing-spin" aria-hidden="true"></div>
+                    <p class="bq-step-label">Análise clínica</p>
+                    <h2 id="processingTitle">A analisar o seu perfil…</h2>
+                    <p class="bq-lead" id="processingText">A cruzar as respostas com os parâmetros do questionário.</p>
+                    <ol class="bq-processing-steps" aria-hidden="true">
+                        <li>Respostas</li>
+                        <li>Marcadores</li>
+                        <li>Faixa clínica</li>
+                    </ol>
                 </div>
             </section>
             <section class="bq-screen" id="results" hidden>
@@ -403,8 +426,14 @@ function renderQuizPage(origin, def) {
                         <p id="bandText"></p>
                     </div>
                     <div class="bq-book-now" id="bookNow">
-                        <a class="bq-btn bq-btn-primary bq-btn-lg js-quiz-book" id="bookBtnPrimary" href="${consultHref}">${escapeHtml(b.consultName || 'Marcar consulta')}</a>
+                        <div class="bq-hold" id="quizHold" hidden>
+                            <p class="bq-hold-kicker">1.ª consulta médica</p>
+                            <p class="bq-hold-time" id="quizHoldLabel">A carregar o próximo horário…</p>
+                            <p class="bq-hold-timer">Reservável durante <b id="quizHoldClock">15:00</b></p>
+                        </div>
+                        <a class="bq-btn bq-btn-primary bq-btn-lg js-quiz-book" id="bookBtnPrimary" href="${consultHref}" data-pay-badges>${escapeHtml(b.consultName || 'Marcar consulta')}</a>
                         <p class="bq-book-now-note" id="bookNowNote">Videoconsulta · o resultado do teste fica associado à marcação</p>
+                        <p class="bq-buy-trust" id="quizTrust">🔒 Pagamento seguro · MB WAY e Multibanco<br>🩺 Consulta agendada imediatamente após o pagamento</p>
                     </div>
                     <div class="bq-scales" id="scales"></div>
                     <div class="bq-insights" id="insights"></div>
@@ -461,7 +490,8 @@ function renderQuizPage(origin, def) {
         <a class="bq-btn bq-btn-primary js-quiz-book" id="stickyBookBtn" href="${stickyHref}">Marcar · ${escapeHtml(b.consultPrice || '')}€</a>
     </aside>
     <script>window.CLINICAL_QUIZ = ${cfgJson};</script>
-    <script src="/lon-analytics.js?v=20260904a" defer></script>
+    <script src="/lon-analytics.js?v=20260905i" defer></script>
+    <script src="/lon-slots.js?v=20260905i" defer></script>
     <script src="/clinical-quiz-score.js?v=${JS_V}" defer></script>
     <script src="/clinical-quiz.js?v=${JS_V}" defer></script>
 </body>
@@ -525,6 +555,7 @@ function renderHub(origin, cluster) {
         <div class="bq-intro bq-hub-intro">
             <h1>${escapeHtml(h1)}</h1>
             <p>${escapeHtml(lead)}</p>
+            ${isNu ? '<p><a href="/nutricao/avaliacao">Avaliação metabólica (2 min)</a> — o questionário do programa de 6 meses. Ou os testes clínicos abaixo.</p>' : ''}
         </div>
         <div class="bq-hub-grid">${cards}</div>
         <aside class="bq-crisis-foot">
@@ -598,6 +629,8 @@ function buildEmails(def, data, helpers) {
         crisisLine,
         '',
         `Email: ${data.email}`,
+        data.firstName ? `Nome: ${data.firstName}` : '',
+        data.phone ? `WhatsApp: ${data.phone}` : '',
         `Resultado: ${display} (${pill})`,
         extraLines.join('\n'),
         scaleLines.filter((l) => !extra.bmi).join(' · '),
@@ -612,6 +645,8 @@ function buildEmails(def, data, helpers) {
 <h2 style="margin:0 0 16px;font-size:20px">${escape(def.instrument)}</h2>
 ${scored.crisis ? '<p style="background:#f6e8e4;padding:10px 12px;border-radius:8px;color:#6b3a2e"><strong>Prioridade clínica</strong> — item de risco assinalado.</p>' : ''}
 <p><strong>Email:</strong> ${escape(data.email)}</p>
+${data.firstName ? `<p><strong>Nome:</strong> ${escape(data.firstName)}</p>` : ''}
+${data.phone ? `<p><strong>WhatsApp:</strong> ${escape(data.phone)}</p>` : ''}
 <p><strong>Resultado:</strong> ${escape(String(display))} · ${escape(pill)}</p>
 <p style="font-size:14px;color:#3d4a44">${escape(band.title || '')}</p>
 ${extraLines.length ? `<p style="font-size:14px;color:#3d4a44">${extraLines.map((l) => escape(l)).join('<br>')}</p>` : ''}

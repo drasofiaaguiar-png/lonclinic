@@ -1,11 +1,15 @@
 {
-  "updated": "2026-08-20",
-  "notes": "Mapa completo por objetivo/queixa. Volume ainda não validado em Keyword Planner. Perda de peso genérica e nutrição na gravidez: saturação alta — não são a primeira vaga. Bioimpedância só se o serviço existir. Cédula da Ordem dos Nutricionistas: preencher clinic.nutritionistName + nutritionistCedula quando o profissional estiver na equipa — o template já a destaca. GLP-1: nutrição de suporte, NÃO prescrição (desde ago/2025 restrita a 4 especialidades médicas em PT).",
+  "updated": "2026-09-05",
+  "notes": "Peso = programa de reeducação metabólica (nutricao_programa), NÃO prescrição de aGLP-1. /nutricao/glp-1 é página de transição/educação (alias ozempic-wegovy, sem 301). Cédula: NÃO inventar — preencher clinic.nutritionistName + nutritionistCedula numa só passagem quando o utilizador enviar.",
   "clinic": {
     "reviewer": "rita-aguiar",
+    "nutritionTeamLabel": "Equipa de nutrição Lon Clinic",
     "nutritionistName": "",
     "nutritionistCedula": "",
-    "nutritionistHref": "https://www.ordemdosnutricionistas.pt/"
+    "nutritionistJobTitle": "Nutricionista",
+    "nutritionistHref": "https://www.ordemdosnutricionistas.pt/",
+    "clinicianLine": "",
+    "nutritionistCedulaTodo": "TODO: colar nome + n.º de cédula da Ordem dos Nutricionistas quando o utilizador enviar. Não inventar. O template em nutricao.js (nutritionBylineHtml + nutritionAuthorSchema) lê estes campos."
   },
   "pages": [
     {
@@ -627,7 +631,7 @@
       },
       "related": [
         "sop",
-        "ozempic-wegovy",
+        "glp-1",
         "pos-bariatrica",
         { "href": "/gestao-de-stress", "label": "Gestão de stress" }
       ],
@@ -736,52 +740,58 @@
       ]
     },
     {
-      "slug": "ozempic-wegovy",
+      "slug": "glp-1",
+      "aliases": ["ozempic-wegovy"],
       "status": "live",
       "wave": 4,
       "month": "3-4",
-      "priority": "media-alta",
+      "priority": "alta",
       "group": "nicho",
-      "navLabel": "Nutrição com Ozempic/Wegovy",
-      "h1": "Acompanhamento nutricional com Ozempic ou Wegovy: consulta online",
-      "title": "Nutrição com Ozempic/Wegovy: consulta online | Lon Clinic",
-      "description": "Nutrição de suporte a Ozempic e Wegovy: proteína, náusea, massa magra e manutenção. Não prescrevemos o injectável. Consulta online a partir de 39 €.",
-      "hubBlurb": "Suporte alimentar ao injectável — proteína, efeitos secundários, manutenção. Sem prescrição.",
-      "condition": "Acompanhamento nutricional sob agonistas do GLP-1",
-      "bookingHref": "/marcar/clinica-geral?ref=nutricao-ozempic-wegovy",
-      "bookingLabel": "Marcar consulta — 39 €",
-      "price": "39 €",
-      "priceAmount": "39.00",
-      "priceNote": "Consulta de suporte nutricional, 39 € (ou 79 € se o caso for complexo). A Lon Clinic não substitui a prescrição do injectável. Desde agosto de 2025, em Portugal, a prescrição de injectáveis para diabetes/perda de peso está restrita a especialidades médicas definidas.",
-      "ctaTitle": "Marcar nutrição de suporte a Ozempic/Wegovy",
+      "pillar": "weight-loss",
+      "slotService": "nutricao_programa",
+      "navLabel": "aGLP-1, Ozempic e Wegovy",
+      "h1": "Está a pensar em aGLP-1 ou a fazer o desmame? O sucesso a longo prazo depende da nutrição",
+      "title": "aGLP-1, Ozempic e Wegovy: nutrição para não recuperar o peso | Lon Clinic",
+      "description": "A Lon Clinic não prescreve Ozempic nem Wegovy. Se está a pensar em aGLP-1 ou a desmamar, o sucesso a longo prazo é reeducação nutricional — programa mensal a partir de 115 €.",
+      "hubBlurb": "Página de transição: sem prescrição de aGLP-1. O hábito é o que fica quando a caneta pára.",
+      "condition": "Transição e manutenção nutricional em torno de agonistas do GLP-1",
+      "bookingHref": "/marcar/nutricao-programa?ref=nutricao-glp-1",
+      "bookingLabel": "Marcar consulta inicial de nutrição metabólica — 115 €",
+      "price": "115 €",
+      "priceAmount": "115.00",
+      "followUpAmount": "75.00",
+      "priceNote": "Mês 1 do Programa de Reeducação Metabólica (115 €), depois 75 €/mês. Duas consultas/mês, chat no portal e ajustes quinzenais. A Lon Clinic não prescreve aGLP-1 / Ozempic / Wegovy.",
+      "ctaTitle": "Começar o programa de reeducação — não a receita",
       "datePublished": "2026-08-20",
-      "dateModified": "2026-08-20",
+      "dateModified": "2026-09-05",
+      "serviceName": "Consulta inicial de nutrição metabólica",
       "lead": [
-        "O acompanhamento nutricional com Ozempic ou Wegovy trata o que o injectável não trata sozinho: proteína suficiente, náusea, obstipação, perda de massa magra e o que acontece quando a dose pára.",
-        "Na Lon Clinic isto é consulta médica online de suporte (39 € ou 79 €). Não é prescrição do fármaco. Desde agosto de 2025, em Portugal, esses injectáveis estão restritos a quatro especialidades médicas — a nutrição não pode substituir isso.",
-        "Alergia grave, vómitos incoercíveis, dor abdominal intensa (suspeita de pancreatite) ou desidratação: urgência, não um ajuste de lanche."
+        "Está a pensar em aGLP-1 (Ozempic, Wegovy ou equivalente) ou já está a fazer o desmame? O injectável muda o apetite. Não ensina a comer quando o apetite volta. O sucesso a longo prazo depende da nutrição.",
+        "A Lon Clinic não prescreve aGLP-1. Desde agosto de 2025, em Portugal, esses fármacos estão restritos a especialidades médicas definidas. Aqui o produto é um programa nutricional e comportamental contínuo — para quem quer perder peso sem ioiô, com ou sem caneta prescrita noutro lado.",
+        "Dor abdominal intensa, vómitos incoercíveis, icterícia ou desidratação sob injectável: urgência presencial, não um ajuste de lanche."
       ],
       "forWhom": [
-        "Quem já tem Ozempic, Wegovy ou outro GLP-1 prescrito por médico e precisa de comer com náusea e porções pequenas",
-        "Quem perdeu peso depressa e está a perder músculo ou cabelo",
-        "Quem vai parar o fármaco e tem medo de recuperar tudo à mesma velocidade",
-        "Quem tem diabetes tipo 2 ou SOP no mesmo quadro"
+        "Quem está a pesquisar Ozempic ou Wegovy e quer perceber o que acontece quando a receita acaba",
+        "Quem já tem aGLP-1 prescrito por outro médico e precisa de proteína, náusea e manutenção — sem nós receitarmos o fármaco",
+        "Quem está a desmamar e tem medo de recuperar o peso à mesma velocidade",
+        "Quem prefere reeducação metabólica em vez de uma clínica que vende a caneta sem estrutura"
       ],
       "whatChanges": [
-        "Nas primeiras 4 semanas: proteína em todas as refeições que ainda cabem, líquidos, e estratégias para náusea — não um défice calórico extra em cima do injectável",
-        "Força e massa magra entram na conversa cedo; o número da balança sozinho engana",
-        "Manutenção pós-tratamento: plano para quando o apetite volta — sem moralismo"
+        "Nas primeiras 4 semanas: refeições que cabem, proteína e saciedade natural — com ou sem injectável já prescrito noutro lado",
+        "Acompanhamento mensal contínuo: 2 consultas, chat no portal e ajustes quinzenais do plano, para o hábito ficar quando o apetite volta",
+        "Sem promessa de receita. Se ainda não tens prescritor elegível, dizemos isso na primeira frase — e avançamos com nutrição na mesma"
       ],
       "whatToBring": [
-        "Quem prescreveu o fármaco, a dose e a data de início",
-        "Efeitos secundários actuais (náusea, obstipação, refluxo, fadiga)",
+        "Se já tens aGLP-1: quem prescreveu, a dose e a data de início (não vamos renovar a receita)",
+        "Efeitos secundários actuais (náusea, obstipação, refluxo, fadiga), se existirem",
         "Peso de partida e peso actual, se os souberes",
-        "O que ainda consegues comer num dia típico"
+        "O que comes num dia típico — fotos do telemóvel chegam"
       ],
       "safeOnline": [
-        "Fármaco já prescrito, efeitos secundários digestivos ligeiros a moderados",
-        "Dúvidas sobre proteína, vitaminas e treino de força",
-        "Planeamento da manutenção"
+        "Dúvida sobre aGLP-1 vs. reeducação alimentar, sem emergência médica",
+        "Desmame ou manutenção depois de perder peso depressa",
+        "Náusea ou porções pequenas com fármaco já prescrito por outro médico",
+        "Querer um programa mensal em vez de uma consulta avulsa"
       ],
       "goToUrgent": [
         "Dor abdominal intensa, vómitos persistentes, icterícia — avaliação presencial urgente",
@@ -789,44 +799,54 @@
         "Reacção alérgica grave — 112"
       ],
       "howItWorks": [
-        { "title": "Confirmamos o enquadramento legal", "text": "Não prescrevemos o injectável nesta consulta de nutrição. Se ainda não tens prescritor elegível, dizemos-to com clareza." },
-        { "title": "Trabalhamos o prato em cima da dose que já tens", "text": "Proteína, náusea, obstipação, refluxo." },
-        { "title": "Follow-up", "text": "Nova consulta se a dose mudar ou se começares a manutenção. Sem pacote obrigatório." }
+        { "title": "Não receitamos o injectável", "text": "A primeira clareza: a Lon Clinic não prescreve Ozempic, Wegovy nem equivalentes. Se a tua pergunta é «quem me passa a receita», esta não é a página certa — e dizemos-to sem rodeios." },
+        { "title": "Consulta inicial de nutrição metabólica", "text": "Marcas o mês 1 do programa (115 €). Objectivo (perda de peso / reeducação) vai na marcação. Trabalhamos o prato, a saciedade e o que fazer se estiveres a desmamar." },
+        { "title": "Acompanhamento mensal", "text": "2 consultas/mês, chat no portal e ajustes quinzenais. O hábito é o produto — não a caneta." }
+      ],
+      "formats": [
+        { "name": "Consulta inicial de nutrição metabólica", "includes": "Mês 1 — arranque do programa, plano e objectivo de reeducação", "price": "115 €" },
+        { "name": "Mensalidade contínua", "includes": "2 consultas + chat no portal + ajustes quinzenais do plano", "price": "75 €/mês" },
+        { "name": "Programa completo (opcional)", "includes": "Nutrição + 12 sessões de psicologia em 6 meses", "price": "227 € no mês 1" }
       ],
       "psychologyBridge": {
         "title": "O injectável muda o apetite — não a cabeça",
-        "text": "Culpa, medo de recuperar, grazing quando a náusea passa: a psicologia trata o padrão. A nutrição trata o que cabe no estômago agora.",
-        "href": "/gestao-de-stress",
-        "label": "Gestão de stress: consulta de psicologia"
+        "text": "Culpa, medo de recuperar, grazing quando a náusea passa: a psicologia trata o padrão. A nutrição trata o que comes quando a receita acaba. O pilar burnout da Lon Clinic é psicologia; o de peso é este programa.",
+        "href": "/psicologia-burnout",
+        "label": "Psicologia burnout (outro pilar)"
       },
       "related": [
         "diabetes-tipo-2",
         "pos-bariatrica",
         "sop",
+        { "href": "/nutricao/programa", "label": "Programa de reeducação metabólica" },
         { "href": "/gestao-de-stress", "label": "Gestão de stress" }
       ],
       "faq": [
         {
-          "q": "A consulta de nutrição pode receitar Ozempic ou Wegovy?",
-          "a": "Não. Desde agosto de 2025, em Portugal, a prescrição destes injectáveis para diabetes ou perda de peso está restrita a especialidades médicas definidas. A Lon Clinic posiciona a nutrição como acompanhamento complementar: proteína, efeitos secundários e manutenção."
+          "q": "A Lon Clinic receita Ozempic, Wegovy ou outro aGLP-1?",
+          "a": "Não. Não prometemos prescrição destes injectáveis para perda de peso. Desde agosto de 2025, em Portugal, a prescrição está restrita a especialidades médicas definidas. Esta página existe para quem pesquisa GLP-1 e precisa de nutrição — antes, durante (se já tiver prescritor noutro lado) ou depois do desmame."
         },
         {
-          "q": "Vou perder músculo?",
-          "a": "Podes, se a comida descer demasiado e não houver proteína nem estímulo de força. A consulta existe para isso — não para empilhar mais défice em cima do fármaco."
+          "q": "Então o que é que vocês vendem?",
+          "a": "Um programa mensal de reeducação metabólica e perda de peso: 2 consultas com nutricionista, chat no portal e ajustes quinzenais do plano. O objectivo é adesão e hábitos, para o peso não voltar quando a «solução rápida» acaba."
+        },
+        {
+          "q": "Já estou a tomar o injectável. Posso na mesma?",
+          "a": "Sim — como acompanhamento nutricional, não como prescritores. Proteína, náusea, massa magra e o plano para quando a dose pára. A receita continua com o médico que a passou."
         },
         {
           "q": "O que acontece quando paro o medicamento?",
-          "a": "O apetite costuma voltar. Sem um plano de manutenção, parte do peso também. Não há garantia de manter tudo; há um plano explícito para o que podes controlar."
+          "a": "O apetite costuma voltar. Sem um plano de manutenção, parte do peso também. Não há garantia de manter tudo; há um programa explícito para o que podes controlar: refeições, saciedade e acompanhamento contínuo."
         },
         {
           "q": "Quanto custa?",
-          "a": "Consulta única: 39 € ou 79 €. Follow-up: nova consulta, sem pacote. Psicologia: 60 € ou 54 €/semana."
+          "a": "Consulta inicial / mês 1: 115 € (serviço Stripe nutricao_programa). Depois 75 €/mês. Programa completo com psicologia: 227 € no mês 1 (total 1 162 € em 6 meses). Fidelização mínima de 3 meses."
         }
       ]
     }
   ],
   "planned": [
-    { "slug": "perda-de-peso", "group": "peso", "navLabel": "Perda de peso / emagrecimento", "priority": "baixa", "intent": "transactional", "note": "Saturado (DrOnline, Multicare, DOCTA). Entrar só por nichos já no ar: SOP, bariátrica, GLP-1, diabetes tipo 2." },
+    { "slug": "perda-de-peso", "group": "peso", "navLabel": "Perda de peso / emagrecimento", "priority": "baixa", "intent": "transactional", "note": "Coberto pela landing /nutricao/programa (reeducação metabólica). Não criar ficha extra neste prefixo." },
     { "slug": "ganho-massa-muscular", "group": "peso", "navLabel": "Ganho de massa muscular", "priority": "media", "intent": "mixed" },
     { "slug": "obesidade", "group": "peso", "navLabel": "Consulta de obesidade", "priority": "media", "intent": "transactional", "note": "Não duplicar pós-bariátrica nem GLP-1. Só se o ângulo for avaliação médica da obesidade." },
     { "slug": "bioimpedancia", "group": "peso", "navLabel": "Composição corporal / bioimpedância", "priority": "baixa", "intent": "informational", "note": "Só publicar se o serviço existir de facto." },

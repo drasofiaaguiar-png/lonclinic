@@ -101,30 +101,30 @@
                 ]
             },
             nutricao_programa: {
-                label: 'Nutrition Program (6 months) — month 1',
-                duration: '30 min · first medical visit',
+                label: 'Initial metabolic nutrition consultation',
+                duration: 'Initial visit · then 2 consults/month',
                 bullets: [
-                    'First month of the 6-month nutrition program (115 € now, then 75 €/month).',
-                    'Medical assessment, blood-test request and personalised nutrition plan.',
-                    'Minimum commitment of 3 months. Lab tests billed by your chosen laboratory.'
+                    'Start of the metabolic re-education program (115 € now, then 75 €/month).',
+                    '2 nutrition consults/month, portal chat and fortnightly plan adjustments. No aGLP-1 prescription.',
+                    'Minimum 3 months. Weight-loss / re-education goal is added to the booking notes.'
                 ]
             },
             nutricao_completo: {
-                label: 'Complete Metabolic Program — month 1',
-                duration: '30 min · first medical visit',
+                label: 'Complete program (nutrition + psychology) — month 1',
+                duration: 'Initial visit · nutrition + psychology',
                 bullets: [
-                    'First month of the complete 6-month program (227 € now, then 187 €/month).',
-                    'Medicine, nutrition and 12 psychology sessions over 6 months.',
-                    'Minimum commitment of 3 months. Total 1,162 €.'
+                    'Nutrition plus 12 psychology sessions (227 € now, then 187 €/month). Total 1,162 €.',
+                    'Same habit-change program, with psychology when emotional eating leads. No aGLP-1.',
+                    'Minimum 3 months.'
                 ]
             },
             nutricao_completo_reforcado: {
-                label: 'Complete Program — higher first payment',
-                duration: '30 min · first medical visit',
+                label: 'Complete program — higher first payment',
+                duration: 'Initial visit · nutrition + psychology',
                 bullets: [
-                    'First month of the complete program (322 € now, then 168 €/month).',
-                    'Same clinical content as the balanced option. Total still 1,162 €.',
-                    'Minimum commitment of 3 months.'
+                    'Higher first payment: 322 € now, then 168 €/month. Total still 1,162 €.',
+                    'Same re-education and psychology plan, lighter later months. No aGLP-1 prescription.',
+                    'Minimum 3 months.'
                 ]
             }
         },
@@ -223,29 +223,29 @@
                 ]
             },
             nutricao_programa: {
-                label: 'Programa de nutrición (6 meses) — mes 1',
-                duration: '30 min · primera consulta médica',
+                label: 'Consulta inicial de nutrición metabólica',
+                duration: 'Consulta inicial · luego 2 consultas/mes',
                 bullets: [
-                    'Primer mes del programa de 6 meses (115 € ahora, luego 75 €/mes).',
-                    'Evaluación médica, petición de análisis y plan nutricional personalizado.',
-                    'Fidelización mínima de 3 meses. Los análisis se pagan en el laboratorio elegido.'
+                    'Inicio del programa de reeducación metabólica (115 € ahora, luego 75 €/mes).',
+                    '2 consultas/mes, chat en el portal y ajustes quincenales. Sin prescripción de aGLP-1.',
+                    'Fidelización mínima de 3 meses. El objetivo (pérdida de peso) va en las notas.'
                 ]
             },
             nutricao_completo: {
-                label: 'Programa completo — mes 1',
-                duration: '30 min · primera consulta médica',
+                label: 'Programa completo (nutrición + psicología) — mes 1',
+                duration: 'Consulta inicial · nutrición + psicología',
                 bullets: [
-                    'Primer mes del programa completo (227 € ahora, luego 187 €/mes).',
-                    'Medicina, nutrición y 12 sesiones de psicología en 6 meses.',
-                    'Fidelización mínima de 3 meses. Total 1 162 €.'
+                    'Nutrición y 12 sesiones de psicología (227 € ahora, luego 187 €/mes). Total 1 162 €.',
+                    'El mismo programa de hábitos, con psicología si manda el hambre emocional. Sin aGLP-1.',
+                    'Fidelización mínima de 3 meses.'
                 ]
             },
             nutricao_completo_reforcado: {
                 label: 'Programa completo — entrada reforzada',
-                duration: '30 min · primera consulta médica',
+                duration: 'Consulta inicial · nutrición + psicología',
                 bullets: [
-                    'Primer mes del programa completo (322 € ahora, luego 168 €/mes).',
-                    'El mismo contenido clínico que la opción equilibrada. Total 1 162 €.',
+                    'Entrada reforzada: 322 € ahora y 168 €/mes. Total 1 162 €.',
+                    'El mismo programa de reeducación y psicología. Sin prescripción de aGLP-1.',
                     'Fidelización mínima de 3 meses.'
                 ]
             }
@@ -291,6 +291,25 @@
     };
 
     var BURNOUT_FAMILY = ['burnout', 'burnout_mensal', 'burnout_programa'];
+    function burnoutClinicalIntent(tipo) {
+        var quiz = null;
+        try { quiz = JSON.parse(sessionStorage.getItem('lonBurnoutQuiz') || 'null'); } catch (e) { quiz = null; }
+        var intent = {
+            category: 'burnout',
+            product: tipo,
+            label: tipo === 'burnout_mensal'
+                ? 'Programa anti-burnout · subscrição mensal (CBI)'
+                : tipo === 'burnout_programa'
+                    ? 'Programa anti-burnout · 8 sessões (CBI)'
+                    : 'Avaliação única anti-burnout (CBI)'
+        };
+        if (quiz && quiz.band) {
+            intent.source = 'cbi';
+            intent.cbiBand = quiz.band;
+            if (quiz.global != null) intent.cbiGlobal = quiz.global;
+        }
+        return intent;
+    }
     var BURNOUT_PLAN_CARDS = [
         {
             tipo: 'burnout',
@@ -325,10 +344,10 @@
         {
             tipo: 'nutricao_programa',
             badge: 'Nutrição',
-            title: 'Programa Nutrição',
+            title: 'Reeducação metabólica',
             price: '115 €',
             unit: 'mês 1',
-            note: 'Depois 75 €/mês · total 490 €',
+            note: '2 consultas/mês · depois 75 €/mês',
             featured: false
         },
         {
@@ -477,42 +496,42 @@
             ]
         },
         nutricao_programa: {
-            label: 'Programa Nutrição (6 meses) — mês 1',
+            label: 'Consulta inicial de nutrição metabólica',
             price: '115 €',
-            priceNote: ' · adesão mês 1',
+            priceNote: ' · mês 1 do programa',
             cents: 11500,
-            duration: '30 min · 1.ª consulta médica',
+            duration: 'Consulta inicial · depois 2 consultas/mês',
             serviceKey: 'nutricao_programa',
             bullets: [
-                'Adesão ao programa de 6 meses: 115 € agora e 75 €/mês nos meses 2 a 6 (total 490 €).',
-                'Consulta médica, requisição de exames e plano alimentar personalizado.',
-                'Fidelização mínima de 3 meses. Análises pagas no laboratório da sua preferência.'
+                'Arranque do Programa de Reeducação Metabólica: 115 € agora e 75 €/mês nos meses seguintes (total 490 € em 6 meses).',
+                '2 consultas/mês com nutricionista, chat no portal e ajustes quinzenais do plano. Sem prescrição de aGLP-1.',
+                'Fidelização mínima de 3 meses. Objectivo (perda de peso / reeducação) vai nas notas da marcação.'
             ]
         },
         nutricao_completo: {
-            label: 'Programa Completo (6 meses) — mês 1',
+            label: 'Programa Completo (nutrição + psicologia) — mês 1',
             price: '227 €',
-            priceNote: ' · adesão mês 1',
+            priceNote: ' · mês 1 do programa',
             cents: 22700,
-            duration: '30 min · 1.ª consulta médica',
+            duration: 'Consulta inicial · nutrição + psicologia',
             serviceKey: 'nutricao_completo',
             bullets: [
-                'Adesão ao programa completo: 227 € agora e 187 €/mês nos meses 2 a 6 (total 1 162 €).',
-                'Medicina, nutrição e 12 sessões de psicologia ao longo de 6 meses.',
-                'Fidelização mínima de 3 meses. Análises pagas no laboratório da sua preferência.'
+                'Nutrição mensal e 12 sessões de psicologia: 227 € agora e 187 €/mês (total 1 162 € em 6 meses).',
+                'Mesma reeducação metabólica do plano Nutrição, com psicologia quando a fome emocional manda. Sem aGLP-1.',
+                'Fidelização mínima de 3 meses.'
             ]
         },
         nutricao_completo_reforcado: {
             label: 'Programa Completo — entrada reforçada',
             price: '322 €',
-            priceNote: ' · adesão mês 1',
+            priceNote: ' · mês 1 do programa',
             cents: 32200,
-            duration: '30 min · 1.ª consulta médica',
+            duration: 'Consulta inicial · nutrição + psicologia',
             serviceKey: 'nutricao_completo_reforcado',
             bullets: [
-                'Entrada reforçada: 322 € agora e 168 €/mês nos meses 2 a 6 (total 1 162 €).',
-                'O mesmo conteúdo clínico da opção equilibrada, com mensalidades mais leves.',
-                'Fidelização mínima de 3 meses. Análises pagas no laboratório da sua preferência.'
+                'Entrada reforçada: 322 € agora e 168 €/mês (total 1 162 € em 6 meses).',
+                'O mesmo programa de reeducação e psicologia, com mensalidades mais leves. Sem prescrição de aGLP-1.',
+                'Fidelização mínima de 3 meses.'
             ]
         }
     };
@@ -561,6 +580,19 @@
     if (errHide) errHide.style.display = 'none';
     applyPrettyUrlIfNeeded(tipo);
 
+    function needsConsultLangPolicy() {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('langpolicy') === 'en-es-pt') return true;
+        var ref = params.get('ref') || '';
+        return /-(fr|de)$/i.test(ref);
+    }
+
+    function showConsultLangBanner() {
+        var banner = document.getElementById('marcarLangBanner');
+        if (banner) banner.hidden = !needsConsultLangPolicy();
+    }
+    showConsultLangBanner();
+
     function isBurnoutFamily(t) {
         return BURNOUT_FAMILY.indexOf(t) >= 0;
     }
@@ -600,9 +632,11 @@
     }
 
     if (isNutricaoFamily(tipo)) {
-        renderPlanPicker(tipo, NUTRICAO_PLAN_CARDS, 'Programa metabólico', 'Escolha o plano');
+        renderPlanPicker(tipo, NUTRICAO_PLAN_CARDS, 'Reeducação metabólica', 'Escolha o plano — sem aGLP-1');
         var nutricaoLink = document.getElementById('marcarNutricaoLink');
         if (nutricaoLink) nutricaoLink.hidden = false;
+        var nutricaoTrust = document.getElementById('marcarBuyTrust');
+        if (nutricaoTrust) nutricaoTrust.hidden = false;
     }
 
     var state = {
@@ -1019,8 +1053,24 @@
             travellerCount: 1,
             hasInsurance: false,
             locale: lang,
-            renew: new URLSearchParams(window.location.search).get('renew') || null
+            renew: new URLSearchParams(window.location.search).get('renew') || null,
+            consultLangPolicy: needsConsultLangPolicy(),
+            ref: new URLSearchParams(window.location.search).get('ref') || null,
+            slotId: formatDateLocal(state.date).replace(/-/g, '') + '-' + String(state.time).replace(':', ''),
+            clinicalIntent: BURNOUT_FAMILY.indexOf(tipo) >= 0
+                ? burnoutClinicalIntent(tipo)
+                : (NUTRICAO_FAMILY.indexOf(tipo) >= 0 ? {
+                    category: 'weight-loss',
+                    product: consulta.serviceKey,
+                    goal: 'Perda de peso / reeducação metabólica',
+                    concerns: 'Objectivo: perda de peso / reeducação metabólica. Consulta inicial de nutrição metabólica — programa de reeducação, sem prescrição de aGLP-1.',
+                    label: 'Consulta inicial de nutrição metabólica'
+                } : null)
         };
+        if (payload.clinicalIntent && payload.clinicalIntent.goal) {
+            payload.goal = payload.clinicalIntent.goal;
+            payload.concerns = payload.clinicalIntent.concerns;
+        }
 
         try {
             sessionStorage.setItem('lonConsultaPrefill', JSON.stringify(payload));
@@ -1036,7 +1086,12 @@
             });
             window.LonAnalytics.flush();
         }
-        window.location.href = '/book-consultation';
+        var dest = '/book-consultation?slot=' + encodeURIComponent(payload.slotId) +
+            '&service=' + encodeURIComponent(consulta.serviceKey) +
+            '&date=' + encodeURIComponent(payload.dateISO) +
+            '&time=' + encodeURIComponent(state.time);
+        if (payload.consultLangPolicy) dest += '&langpolicy=en-es-pt';
+        window.location.href = dest;
     });
 
     // Language change handler

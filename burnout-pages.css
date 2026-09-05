@@ -62,6 +62,12 @@
     gap: 10px;
 }
 
+.bo-hero-inner .dr-live-slots,
+.bo-article-header .dr-live-slots {
+    margin: 18px 0 0;
+    max-width: 40rem;
+}
+
 .bo-section {
     padding: 48px 0 64px;
 }

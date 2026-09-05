@@ -29,7 +29,7 @@
     <meta name="twitter:image" content="https://www.lonclinic.com/image/image2.webp">
     <link rel="stylesheet" href="landing.css?v=20260903b">
     <link rel="stylesheet" href="styles.css?v=20260903b">
-    <link rel="stylesheet" href="booking.css?v=20260905e">
+    <link rel="stylesheet" href="booking.css?v=20260906b">
     <link rel="preload" as="image" href="/image/image2.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -122,6 +122,10 @@
                     </div>
                 </div>
             </div>
+
+            <aside class="lon-lang-banner" data-consult-lang-banner hidden role="alert">
+                <p class="lon-lang-banner-en">Consultations strictly conducted in English, Spanish or Portuguese</p>
+            </aside>
 
             <!-- Step 1: Schedule -->
             <div class="booking-step active" id="step-1">
@@ -258,6 +262,9 @@
                     <p class="booking-slot-change-wrap" id="bookingSlotChangeWrap" hidden>
                         <a href="/marcar/clinica-geral" id="bookingSlotChange">Alterar horário</a>
                     </p>
+                    <aside class="lon-lang-banner" data-consult-lang-banner hidden role="alert">
+                        <p class="lon-lang-banner-en">Consultations strictly conducted in English, Spanish or Portuguese</p>
+                    </aside>
                 </div>
                 <form class="details-form" id="detailsForm" novalidate>
 
@@ -377,6 +384,14 @@
 
                     <div class="form-divider"></div>
 
+                    <div class="form-group form-checkbox-group" id="consultLangAckWrap" hidden>
+                        <label class="form-checkbox">
+                            <input type="checkbox" id="consultLangAck" name="consultLangAck">
+                            <span class="checkbox-mark"></span>
+                            <span class="checkbox-text">I can complete this consultation in English, Spanish or Portuguese. I understand it will not be conducted in French or German.</span>
+                        </label>
+                        <span class="form-error">You must confirm the consultation language to proceed</span>
+                    </div>
                     <div class="form-group form-checkbox-group">
                         <label class="form-checkbox">
                             <input type="checkbox" id="consent" name="consent" required>
@@ -408,7 +423,7 @@
                         <button type="button" class="lon-pay-method" data-pay-method="mbway">MB WAY</button>
                         <button type="button" class="lon-pay-method" data-pay-method="multibanco">Multibanco</button>
                     </div>
-                    <p class="lon-pay-methods-note">O checkout Stripe mostra os métodos disponíveis na sua região.</p>
+                    <p class="lon-pay-methods-note">MB WAY e Multibanco aparecem no Stripe quando estão activos na sua conta. Cartão, Apple Pay e Google Pay também.</p>
                 </div>
                 <div class="step-actions">
                     <button type="button" class="btn btn-outline btn-lg step-back" id="back-2">Voltar</button>
@@ -417,6 +432,7 @@
                         Pagar com Stripe
                     </button>
                 </div>
+                <p class="lon-buy-trust" id="lonBuyTrust">🔒 Pagamento seguro · MB WAY e Multibanco<br>🩺 Consulta médica agendada imediatamente após o pagamento</p>
                 <p class="stripe-error" id="stripeErrorStep2" style="display:none;"></p>
             </div>
 
@@ -498,7 +514,7 @@
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                             </div>
                             <div>
-                                <p class="stripe-info-text">You'll be redirected to <strong>Stripe</strong> to enter your payment details securely. Card, Apple Pay, and Google Pay accepted.</p>
+                                <p class="stripe-info-text">Segue para o <strong>Stripe</strong> para pagar com <strong>MB WAY</strong>, <strong>Multibanco</strong> ou cartão. Apple Pay e Google Pay também, quando disponíveis.</p>
                                 <p class="stripe-info-sub">Stripe is PCI Level 1 certified — the highest level of security in the payments industry.</p>
                             </div>
                         </div>
@@ -708,7 +724,7 @@
     <script src="/lon-analytics.js?v=20260905e" defer></script>
     <script src="i18n.js?v=20260905e"></script>
     <script src="lon-nav.js?v=20260816b" defer></script>
-    <script src="/lon-slots.js?v=20260905g" defer></script>
+    <script src="/lon-slots.js?v=20260906a" defer></script>
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contact us on WhatsApp">
         <span>💬</span>
@@ -732,6 +748,6 @@
         </div>
     </div>
 
-    <script src="booking.js?v=20260905h"></script>
+    <script src="booking.js?v=20260906c"></script>
 </body>
 </html>

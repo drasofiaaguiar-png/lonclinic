@@ -16,8 +16,11 @@ const authors = require('./authors');
 const NUTRICAO_DIR = path.join(__dirname, 'data', 'nutricao');
 const MANIFEST_PATH = path.join(NUTRICAO_DIR, 'manifest.json');
 const PAGES_DIR = path.join(NUTRICAO_DIR, 'pages');
-const CSS_V = '20260905a';
+const CSS_V = '20260905j';
+const SLOTS_V = '20260905j';
 const ON_URL = 'https://www.ordemdosnutricionistas.pt/';
+const NUTRICAO_PROGRAMA_HREF = '/marcar/nutricao-programa';
+const WEIGHT_LOSS_SLUGS = new Set(['glp-1', 'ozempic-wegovy']);
 
 const DEFAULT_BRING = [
     'Últimas análises que tiveres (não precisas de as repetir só para marcar)',
@@ -37,26 +40,70 @@ function clinicConfig() {
     return m.clinic && typeof m.clinic === 'object' ? m.clinic : {};
 }
 
+function isWeightLossPage(meta) {
+    if (!meta) return false;
+    if (meta.pillar === 'weight-loss' || meta.slotService === 'nutricao_programa') return true;
+    return WEIGHT_LOSS_SLUGS.has(meta.slug) || (Array.isArray(meta.aliases) && meta.aliases.some((a) => WEIGHT_LOSS_SLUGS.has(a)));
+}
+
+function nutritionTeamLabel() {
+    const c = clinicConfig();
+    return String(c.nutritionTeamLabel || '').trim() || 'Equipa de nutrição Lon Clinic';
+}
+
 function nutritionBylineHtml(dateIso) {
     const c = clinicConfig();
     const name = String(c.nutritionistName || '').trim();
     const cedula = String(c.nutritionistCedula || '').trim();
+    const team = nutritionTeamLabel();
     const iso = String(dateIso || '').slice(0, 10);
     const dateBit = iso
         ? `<time datetime="${escapeHtml(iso)}">${escapeHtml(iso)}</time><span aria-hidden="true"> · </span>`
         : '';
+    const reviewer = authors.getAuthor(c.reviewer || 'rita-aguiar');
+    const href = c.nutritionistHref ? escapeHtml(c.nutritionistHref) : ON_URL;
     if (name && cedula) {
-        const href = c.nutritionistHref ? escapeHtml(c.nutritionistHref) : ON_URL;
         return `
         <p class="eeat-byline nu-byline">
             ${dateBit}<strong>${escapeHtml(name)}</strong>
-            <span> · Nutricionista · Cédula n.º ${escapeHtml(cedula)}</span>
-            <span class="eeat-byline-review"> · <a href="${href}" target="_blank" rel="noopener noreferrer">Ordem dos Nutricionistas</a> · Revisão médica Lon Clinic · ERS n.º 45475</span>
+            <span> · ${escapeHtml(c.nutritionistJobTitle || 'Nutricionista')} · Cédula n.º ${escapeHtml(cedula)}</span>
+            <span class="eeat-byline-review"> · <a href="${href}" target="_blank" rel="noopener noreferrer">Ordem dos Nutricionistas</a> · Revisão médica: ${escapeHtml(reviewer.displayName)} · ERS n.º 45475</span>
         </p>`;
     }
     return `
-        ${authors.authorBylineHtml('', c.reviewer || 'rita-aguiar', iso)}
-        <p class="nu-cedula-note">A nutrição é uma profissão regulada em Portugal pela <a href="${ON_URL}" target="_blank" rel="noopener noreferrer">Ordem dos Nutricionistas</a>. Nesta página a revisão clínica é médica. Um plano alimentar muito detalhado, quando necessário, é encaminhado para nutricionista com cédula — o número passará a estar visível aqui assim que o profissional estiver na equipa.</p>`;
+        <p class="eeat-byline nu-byline">
+            ${dateBit}<strong>${escapeHtml(team)}</strong>
+            <span> · Acompanhamento nutricional e comportamental</span>
+            <span class="eeat-byline-review"> · Revisão médica: ${escapeHtml(reviewer.displayName)} · ERS n.º 45475</span>
+        </p>
+        <p class="nu-cedula-note" data-nutritionist-cedula-todo="1">A nutrição é uma profissão regulada em Portugal pela <a href="${ON_URL}" target="_blank" rel="noopener noreferrer">Ordem dos Nutricionistas</a>. Esta página é da <strong>${escapeHtml(team)}</strong> — a cédula profissional (nome + n.º de cédula) será publicada nesta linha assim que o nutricionista estiver identificado. Não inventamos credenciais. <!-- TODO clinic.nutritionistName + clinic.nutritionistCedula --></p>`;
+}
+
+function nutritionAuthorSchema(origin) {
+    const o = normalizeOrigin(origin);
+    const c = clinicConfig();
+    const name = String(c.nutritionistName || '').trim();
+    const cedula = String(c.nutritionistCedula || '').trim();
+    const reviewer = authors.articleAuthorSchema(o, c.reviewer || 'rita-aguiar');
+    if (name && cedula) {
+        return {
+            author: {
+                '@type': 'Person',
+                name,
+                jobTitle: c.nutritionistJobTitle || 'Nutricionista',
+                identifier: { '@type': 'PropertyValue', name: 'Cédula Ordem dos Nutricionistas', value: cedula }
+            },
+            reviewedBy: reviewer.reviewedBy,
+            publisher: reviewer.publisher,
+            copyrightHolder: reviewer.copyrightHolder
+        };
+    }
+    return {
+        author: { '@type': 'Organization', name: nutritionTeamLabel(), url: `${o}/nutricao` },
+        reviewedBy: reviewer.reviewedBy,
+        publisher: reviewer.publisher,
+        copyrightHolder: reviewer.copyrightHolder
+    };
 }
 
 marked.use({ mangle: false, headerIds: true, gfm: true, breaks: true });
@@ -104,13 +151,20 @@ function livePages() {
 }
 
 function findPage(slug) {
-    return livePages().find((p) => p.slug === slug) || null;
+    const pages = livePages();
+    const direct = pages.find((p) => p.slug === slug);
+    if (direct) return direct;
+    return pages.find((p) => Array.isArray(p.aliases) && p.aliases.indexOf(slug) !== -1) || null;
 }
 
 function readPageFile(slug) {
     const filePath = path.join(PAGES_DIR, `${slug}.md`);
     if (!fs.existsSync(filePath)) return null;
     return fs.readFileSync(filePath, 'utf8');
+}
+
+function pageMarkdown(requestedSlug, meta) {
+    return readPageFile(requestedSlug) || (meta && meta.slug ? readPageFile(meta.slug) : null);
 }
 
 function listHtml(items) {
@@ -162,19 +216,30 @@ function psychologyBridgeHtml(bridge) {
 }
 
 function bookingCardsHtml(meta, tone) {
-    const primaryHref = meta.bookingHref || '/marcar/clinica-geral';
+    const weightLoss = isWeightLossPage(meta);
+    const primaryHref = meta.bookingHref || (weightLoss ? `${NUTRICAO_PROGRAMA_HREF}?ref=nutricao-${meta.slug || 'hub'}` : '/marcar/clinica-geral');
     const isLongevidade = String(primaryHref).indexOf('/marcar/longevidade') !== -1;
     const t = Math.abs(Number(tone) || 0) % 3;
     const cards = [
-        {
-            chip: isLongevidade ? 'Longevidade' : 'Nutrição',
-            title: isLongevidade ? 'Consulta de longevidade' : 'Orientação nutricional online',
-            price: meta.price || (isLongevidade ? '79 €' : '39 €'),
-            note: 'Videoconsulta · mudanças concretas nesta sessão, não um PDF genérico',
-            cta: 'Marcar',
-            href: primaryHref,
-            track: 'nutricao-card-book'
-        },
+        weightLoss
+            ? {
+                chip: 'Programa mensal',
+                title: 'Consulta inicial de nutrição metabólica',
+                price: meta.price || '115 €',
+                note: 'Arranque do programa — 2 consultas/mês, chat no portal e ajustes quinzenais. Sem prescrição de aGLP-1.',
+                cta: 'Marcar consulta inicial',
+                href: primaryHref,
+                track: 'nutricao-card-book'
+            }
+            : {
+                chip: isLongevidade ? 'Longevidade' : 'Nutrição',
+                title: isLongevidade ? 'Consulta de longevidade' : 'Orientação nutricional online',
+                price: meta.price || (isLongevidade ? '79 €' : '39 €'),
+                note: 'Videoconsulta · reeducação alimentar nesta sessão, não um PDF genérico nem receita de emagrecimento',
+                cta: 'Marcar',
+                href: primaryHref,
+                track: 'nutricao-card-book'
+            },
         {
             chip: 'Psicologia',
             title: 'Consulta de psicologia',
@@ -248,11 +313,17 @@ function groupLabel(group) {
 function formatTableHtml(meta) {
     const rows = Array.isArray(meta.formats) && meta.formats.length
         ? meta.formats
-        : [
-            { name: 'Consulta única', includes: 'Avaliação + orientações concretas nessa sessão (não um plano PDF genérico)', price: meta.price || '39 €' },
-            { name: 'Follow-up', includes: 'Nova videoconsulta, marcada só se fizer sentido — sem pacote obrigatório', price: meta.followUpPrice || meta.price || '39 €' },
-            { name: 'Psicologia (opcional)', includes: 'Stress, ansiedade, hábitos e imagem corporal', price: '60 € ou 54 €/semana' }
-        ];
+        : isWeightLossPage(meta)
+            ? [
+                { name: 'Consulta inicial de nutrição metabólica', includes: 'Mês 1 do programa mensal — diagnóstico alimentar, plano e arranque do acompanhamento', price: meta.price || '115 €' },
+                { name: 'Mensalidade contínua', includes: '2 consultas com nutricionista + chat no portal + ajustes quinzenais do plano', price: '75 €/mês' },
+                { name: 'Programa completo (opcional)', includes: 'Nutrição + 12 sessões de psicologia em 6 meses', price: '227 € no mês 1' }
+            ]
+            : [
+                { name: 'Consulta única', includes: 'Avaliação + orientações concretas nessa sessão (não um plano PDF genérico)', price: meta.price || '39 €' },
+                { name: 'Follow-up', includes: 'Nova videoconsulta, marcada só se fizer sentido — sem pacote obrigatório', price: meta.followUpPrice || meta.price || '39 €' },
+                { name: 'Psicologia (opcional)', includes: 'Stress, ansiedade, hábitos e imagem corporal', price: '60 € ou 54 €/semana' }
+            ];
     const tr = rows.map((row) => `
                     <tr>
                         <td>${escapeHtml(row.name)}</td>
@@ -336,7 +407,7 @@ function layoutPage(opts) {
             </a>
             <nav class="lon-nav-links" aria-label="Navegação principal">
                 <a href="/nutricao" aria-current="page">Nutrição</a>
-                <a href="/nutricao/programa">Programa 6 meses</a>
+                <a href="/nutricao/programa">Reeducação metabólica</a>
                 <a href="/nutricao/testes">Testes</a>
                 <a href="/consulta">Consulta médica</a>
                 <a href="/consultas">Psicologia</a>
@@ -344,7 +415,7 @@ function layoutPage(opts) {
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/marcar/clinica-geral?ref=nutricao-nav" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <a href="/nutricao/programa" class="lon-btn lon-btn-primary lon-btn-sm">Ver o programa</a>
                 <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
@@ -352,11 +423,11 @@ function layoutPage(opts) {
         </div>
         <div class="lon-mobile-menu" id="lonMobileMenu">
             <a href="/nutricao">Nutrição por condição</a>
-            <a href="/nutricao/programa">Programa 6 meses</a>
+            <a href="/nutricao/programa">Programa de reeducação metabólica</a>
             <a href="/nutricao/testes">Testes clínicos</a>
             <a href="/consulta">Consulta médica</a>
             <a href="/consultas">Psicologia por queixa</a>
-            <a href="/marcar/clinica-geral?ref=nutricao-nav-mobile">Marcar consulta</a>
+            <a href="/marcar/nutricao-programa?ref=nutricao-nav-mobile">Consulta inicial de nutrição</a>
         </div>
     </header>
     ${mainHtml}
@@ -365,13 +436,13 @@ function layoutPage(opts) {
             <div class="lon-footer-grid">
                 <div class="lon-footer-brand">
                     <h3>Lon Clinic</h3>
-                    <p>Orientação nutricional em consulta médica online — por condição, não genérica.</p>
+                    <p>Reeducação nutricional e acompanhamento personalizado — por condição, não um PDF genérico nem receita de emagrecimento.</p>
                     <div class="lon-ers-badge">Nº de Registo ERS: 45475</div>
                 </div>
                 <div class="lon-footer-col">
                     <h4>Nutrição</h4>
                     <a href="/nutricao">Todas as condições</a>
-                    <a href="/nutricao/programa">Programa metabólico · 6 meses</a>
+                    <a href="/nutricao/programa">Programa de reeducação metabólica</a>
                     <a href="/nutricao/testes">Testes clínicos</a>
                     ${footerLinks}
                 </div>
@@ -380,8 +451,8 @@ function layoutPage(opts) {
                     <a href="/consulta">Consulta médica</a>
                     <a href="/consultas">Psicologia</a>
                     <a href="/equipa/rita-aguiar">A médica</a>
-                    <a href="/marcar/clinica-geral">Marcar · 39 €</a>
-                    <a href="/marcar/longevidade">Longevidade · 79 €</a>
+                    <a href="/marcar/nutricao-programa">Consulta inicial de nutrição · 115 €</a>
+                    <a href="/marcar/clinica-geral">Clínica geral · 39 €</a>
                 </div>
                 <div class="lon-footer-col">
                     <h4>Apoio</h4>
@@ -403,7 +474,7 @@ function layoutPage(opts) {
     <script src="/i18n.js?v=20260905e" defer></script>
     <script src="/lon-analytics.js?v=20260905e" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260905g" defer></script>
+    <script src="/lon-slots.js?v=${SLOTS_V}" defer></script>
 </body>
 </html>`;
 }
@@ -441,7 +512,7 @@ function renderHub(origin) {
             '@context': 'https://schema.org',
             '@type': 'CollectionPage',
             name: 'Nutrição online por condição | Lon Clinic',
-            description: 'Orientação nutricional em consulta médica online: pós-parto, pós-bariátrica, Hashimoto, doença celíaca, intolerâncias alimentares e SOP.',
+            description: 'Reeducação nutricional e acompanhamento personalizado por condição: pós-parto, bariátrica, diabetes tipo 2, SOP e transição após aGLP-1.',
             url: `${o}/nutricao`,
             inLanguage: 'pt-PT',
             isPartOf: { '@type': 'WebSite', name: 'Lon Clinic', url: o },
@@ -465,24 +536,24 @@ function renderHub(origin) {
     <main id="conteudo-principal">
         <section class="nu-hero">
             <div class="lon-container nu-hero-inner">
-                <p class="cq-kicker">LON Clinic · Nutrição clínica</p>
-                <h1>Nutrição online, por condição — não «dieta genérica»</h1>
-                <p class="nu-lead">A Lon Clinic oferece orientação nutricional em consulta médica online para queixas específicas: pós-parto, bariátrica, diabetes tipo 2, Hashimoto, celíaca, FODMAP, SOP e acompanhamento com Ozempic/Wegovy. Cada página diz o que muda nas primeiras semanas, o que trazer e o preço — sem PDF vago.</p>
-                <p class="nu-hero-meta">Consulta única 39 € ou 79 € · Follow-up sem pacote obrigatório · Psicologia quando o stress manda na comida</p>
+                <p class="cq-kicker">LON Clinic · Reeducação nutricional</p>
+                <h1>Nutrição online para mudar o hábito — não para vender uma receita</h1>
+                <p class="nu-lead">A Lon Clinic não prescreve aGLP-1 (Ozempic, Wegovy) para perda de peso. O produto de peso é um programa nutricional e comportamental: reeducação metabólica, saciedade natural e acompanhamento contínuo para evitar o efeito ioiô. Há também fichas por condição (pós-parto, bariátrica, diabetes tipo 2, Hashimoto, celíaca, FODMAP, SOP) — orientação alimentar, não consulta para medicamento de emagrecimento.</p>
+                <p class="nu-hero-meta">Programa mensal a partir de 115 € · 2 consultas/mês + chat no portal · Psicologia quando o stress manda na comida</p>
                 <div class="nu-hero-actions">
-                    <a class="lon-btn lon-btn-primary" href="/marcar/clinica-geral?ref=nutricao-hub" data-pay-badges>Marcar consulta — 39 €</a>
-                    <a class="lon-btn lon-btn-soft" href="/nutricao/programa">Programa 6 meses — a partir de 490 €</a>
+                    <a class="lon-btn lon-btn-primary" href="/marcar/nutricao-programa?ref=nutricao-hub" data-pay-badges>Consulta inicial de nutrição metabólica — 115 €</a>
+                    <a class="lon-btn lon-btn-soft" href="/nutricao/programa">Programa 3 a 6 meses</a>
                     <a class="lon-btn lon-btn-soft" href="/nutricao/testes">Fazer um teste gratuito</a>
                 </div>
             </div>
         </section>
         <section class="nu-section" aria-labelledby="nu-g-programa">
             <div class="lon-container">
-                <h2 id="nu-g-programa">Programa metabólico de 6 meses</h2>
+                <h2 id="nu-g-programa">Programa de Reeducação Metabólica &amp; Perda de Peso</h2>
                 <a class="nu-card nu-card-feature" href="/nutricao/programa">
-                    <span class="nu-card-price">490 € ou 1 162 €</span>
-                    <span class="nu-card-label">Medicina, nutrição e mente — sem dietas extremas</span>
-                    <span class="nu-card-desc">Diagnóstico por exames de sangue, plano alimentar e, se precisar, psicologia quinzenal. 100% online. Fidelização 3 meses.</span>
+                    <span class="nu-card-price">115 € no mês 1 · depois 75 €/mês</span>
+                    <span class="nu-card-label">3 a 6 meses — hábitos, não a caneta</span>
+                    <span class="nu-card-desc">Duas consultas/mês com nutricionista, chat no portal e ajustes quinzenais do plano. Contra o ioiô das clínicas que vendem aGLP-1 sem estrutura. Fidelização 3 meses.</span>
                 </a>
             </div>
         </section>
@@ -490,6 +561,7 @@ function renderHub(origin) {
             <div class="lon-container">
                 <h2 id="nu-g-testes">Testes de alimentação e metabolismo</h2>
                 <div class="nu-card-grid">
+                    <a class="nu-card" href="/nutricao/avaliacao"><span class="nu-card-price">2 min</span><span class="nu-card-label">Avaliação do programa</span><span class="nu-card-desc">6 passos: objetivo, dietas, fome emocional e métricas — e o plano recomendado.</span></a>
                     <a class="nu-card" href="/nutricao/teste-imc"><span class="nu-card-price">1 min</span><span class="nu-card-label">IMC e cintura</span><span class="nu-card-desc">Excesso de peso ou obesidade — e quantos kg até ao peso normal.</span></a>
                     <a class="nu-card" href="/nutricao/teste-tfeq"><span class="nu-card-price">4 min</span><span class="nu-card-label">TFEQ-R18</span><span class="nu-card-desc">Restrição, descontrolo e fome emocional — o que trava o peso.</span></a>
                     <a class="nu-card" href="/nutricao/teste-yfas"><span class="nu-card-price">4 min</span><span class="nu-card-label">YFAS 2.0</span><span class="nu-card-desc">Sinais de compulsão por alimentos hipercalóricos.</span></a>
@@ -504,7 +576,7 @@ function renderHub(origin) {
     return layoutPage({
         origin: o,
         title: 'Nutrição online por condição | Lon Clinic',
-        description: 'Orientação nutricional em consulta médica online por condição: pós-parto, bariátrica, diabetes tipo 2, Hashimoto, celíaca, FODMAP, SOP e suporte a Ozempic/Wegovy. Preço visível. A partir de 39 €.',
+        description: 'Programa de reeducação metabólica e perda de peso (3 a 6 meses) e orientação nutricional por condição. Sem prescrição de aGLP-1. A partir de 115 €/mês.',
         canonicalPath: '/nutricao',
         jsonLdExtra: jsonLd,
         mainHtml
@@ -517,18 +589,27 @@ function renderSpoke(origin, slug) {
     if (!meta) return null;
 
     const o = normalizeOrigin(origin);
-    const raw = readPageFile(slug);
+    const raw = pageMarkdown(slug, meta);
     const extraHtml = raw ? marked.parse(raw) : '';
     const h1 = String(meta.h1 || slug);
     const description = String(meta.description || '');
     const datePub = String(meta.datePublished || '');
     const dateMod = String(meta.dateModified || meta.datePublished || '');
-    const canonicalPath = `/nutricao/${encodeURIComponent(slug)}`;
+    const weightLoss = isWeightLossPage(meta);
+    const canonicalPath = `/nutricao/${encodeURIComponent(meta.slug)}`;
     const canonicalUrl = canonicalHref(canonicalPath);
-    const bookingHref = meta.bookingHref || '/marcar/clinica-geral';
+    const bookingHref = meta.bookingHref || (weightLoss
+        ? `${NUTRICAO_PROGRAMA_HREF}?ref=nutricao-${meta.slug}`
+        : '/marcar/clinica-geral');
+    const slotService = meta.slotService || (weightLoss ? 'nutricao_programa' : 'clinica_geral');
     const pages = livePages();
     const lead = (Array.isArray(meta.lead) ? meta.lead : [meta.lead]).filter(Boolean)
         .map((p) => `<p>${escapeHtml(p)}</p>`).join('');
+    const slotsHtml = `
+                <div class="cq-live-slots" data-next-slots data-limit="3" data-service="${escapeHtml(slotService)}" data-book-href="${escapeHtml(bookingHref)}" data-surface="nutricao-${escapeHtml(meta.slug)}" data-goal="Perda de peso / reeducação metabólica" hidden>
+                    <p class="cq-live-slots-kicker">${weightLoss ? 'Próximos horários · consulta inicial de nutrição metabólica' : 'Próximos horários'}</p>
+                    <div class="cq-live-slots-row" data-next-slots-row></div>
+                </div>`;
 
     const jsonLd = [
         {
@@ -545,9 +626,9 @@ function renderSpoke(origin, slug) {
             isPartOf: { '@type': 'WebSite', name: 'Lon Clinic', url: o },
             about: { '@type': 'MedicalCondition', name: meta.condition || h1 },
             specialty: { '@type': 'MedicalSpecialty', name: 'Nutrition' },
-            ...authors.articleAuthorSchema(o)
+            ...nutritionAuthorSchema(o)
         },
-        authors.personJsonLd(o),
+        authors.personJsonLd(o, clinicConfig().reviewer || 'rita-aguiar'),
         {
             '@context': 'https://schema.org',
             '@type': 'Service',
@@ -558,15 +639,15 @@ function renderSpoke(origin, slug) {
             offers: [
                 {
                     '@type': 'Offer',
-                    name: 'Consulta única',
-                    price: String(meta.priceAmount || '39.00'),
+                    name: weightLoss ? 'Consulta inicial de nutrição metabólica' : 'Consulta única',
+                    price: String(meta.priceAmount || (weightLoss ? '115.00' : '39.00')),
                     priceCurrency: 'EUR',
                     availability: 'https://schema.org/InStock'
                 },
                 {
                     '@type': 'Offer',
-                    name: 'Follow-up',
-                    price: String(meta.followUpAmount || meta.priceAmount || '39.00'),
+                    name: weightLoss ? 'Mensalidade do programa' : 'Follow-up',
+                    price: String(meta.followUpAmount || (weightLoss ? '75.00' : meta.priceAmount || '39.00')),
                     priceCurrency: 'EUR',
                     availability: 'https://schema.org/InStock'
                 }
@@ -594,14 +675,15 @@ function renderSpoke(origin, slug) {
                     <span aria-hidden="true">/</span>
                     <span>${escapeHtml(meta.navLabel || h1)}</span>
                 </nav>
-                <p class="cq-kicker">Orientação nutricional · ERS 45475 · Ordem dos Nutricionistas</p>
+                <p class="cq-kicker">${weightLoss ? 'Reeducação nutricional · sem prescrição de aGLP-1' : 'Orientação nutricional'} · ERS 45475 · Ordem dos Nutricionistas</p>
                 <h1>${escapeHtml(h1)}</h1>
                 <div class="cq-lead">${lead}</div>
                 ${nutritionBylineHtml(datePub)}
                 <div class="cq-header-actions">
-                    <a class="lon-btn lon-btn-dark" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
+                    <a class="lon-btn lon-btn-dark" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || (weightLoss ? 'Marcar consulta inicial' : 'Marcar consulta'))}</a>
                     <a class="lon-btn lon-btn-soft" href="#preco">Ver preço</a>
                 </div>
+                ${slotsHtml}
             </header>
 
             <section class="cq-block" aria-labelledby="nu-for-title">
@@ -659,12 +741,12 @@ function renderSpoke(origin, slug) {
             </section>
 
             ${authors.authorBioHtml(o, meta.author, dateMod || datePub)}
-            <p class="cq-disclaimer">Informação de carácter geral — não substitui consulta médica nem consulta de nutricionista individualizada. A Lon Clinic está registada na ERS (n.º 45475). Planos alimentares muito detalhados são da competência de nutricionista inscrito na Ordem dos Nutricionistas.</p>
+            <p class="cq-disclaimer">Informação de carácter geral — não substitui consulta médica nem consulta de nutricionista individualizada. A Lon Clinic não prescreve aGLP-1 (Ozempic, Wegovy ou equivalentes) para perda de peso. A Lon Clinic está registada na ERS (n.º 45475). Planos alimentares detalhados são da competência de nutricionista inscrito na Ordem dos Nutricionistas — a cédula será publicada quando o profissional estiver identificado.</p>
             ${relatedHtml(meta.related, pages, slug)}
         </article>
         <aside class="cq-cta-band" aria-label="Marcar consulta">
             <div class="lon-container cq-cta-inner">
-                <p class="cq-cta-kicker">Preço visível · videoconsulta</p>
+                <p class="cq-cta-kicker">${weightLoss ? 'Programa mensal · consulta inicial de nutrição metabólica' : 'Preço visível · videoconsulta'}</p>
                 <h2 class="cq-cta-title">${escapeHtml(meta.ctaTitle || 'Marcar orientação nutricional')}</h2>
                 <p class="cq-cta-lead">${escapeHtml(meta.priceNote || meta.price || '')}</p>
                 <div class="cq-cta-actions">

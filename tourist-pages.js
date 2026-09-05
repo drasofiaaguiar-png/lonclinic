@@ -126,7 +126,9 @@ const UI = {
         openMenu: 'Ouvrir le menu',
         breadcrumbHub: 'Clinique touriste',
         kicker: 'Clinique touriste · Portugal 2026',
-        languagesLine: 'Consultations en anglais, espagnol ou portugais.',
+        languagesLine: 'Consultations strictly conducted in English, Spanish or Portuguese.',
+        languagesStrict:
+            'Les consultations se déroulent exclusivement en anglais, en espagnol ou en portugais. Pas de consultation en français.',
         clinician: 'Médecin inscrite à l’Ordem dos Médicos · ERS 45475',
         faqTitle: 'FAQ',
         priceTitle: 'Tarif',
@@ -150,7 +152,7 @@ const UI = {
         cardGpChip: 'Médecine générale',
         cardGpTitle: 'Téléconsultation',
         cardGpPrice: '39 € · ~30 min',
-        cardGpNote: 'Vidéo · anglais, espagnol ou portugais',
+        cardGpNote: 'Vidéo · consultations strictly in English, Spanish or Portuguese',
         cardGpCta: 'Réserver — 39 €',
         cardRenewChip: 'Renouvellement',
         cardRenewTitle: 'Renouveler une ordonnance',
@@ -175,7 +177,9 @@ const UI = {
         openMenu: 'Menü öffnen',
         breadcrumbHub: 'Tourist clinic',
         kicker: 'Tourist clinic · Portugal 2026',
-        languagesLine: 'Sprechstunden auf Englisch, Spanisch oder Portugiesisch.',
+        languagesLine: 'Consultations strictly conducted in English, Spanish or Portuguese.',
+        languagesStrict:
+            'Sprechstunden ausschließlich auf Englisch, Spanisch oder Portugiesisch. Keine Beratung auf Deutsch.',
         clinician: 'Ärztin · Ordem dos Médicos · ERS 45475',
         faqTitle: 'FAQ',
         priceTitle: 'Preis',
@@ -199,7 +203,7 @@ const UI = {
         cardGpChip: 'Allgemeinmedizin',
         cardGpTitle: 'Online-Sprechstunde',
         cardGpPrice: '39 € · ~30 Min.',
-        cardGpNote: 'Video · Englisch, Spanisch oder Portugiesisch',
+        cardGpNote: 'Video · consultations strictly in English, Spanish or Portuguese',
         cardGpCta: 'Buchen — 39 €',
         cardRenewChip: 'Rezept',
         cardRenewTitle: 'Rezept verlängern',
@@ -219,6 +223,40 @@ function escapeHtml(s) {
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
+}
+
+const CONSULT_LANG_POLICY = 'en-es-pt';
+const CONSULT_LANG_POLICY_EN = 'Consultations strictly conducted in English, Spanish or Portuguese';
+
+function needsConsultLangPolicy(lang) {
+    const l = String(lang || '')
+        .toLowerCase()
+        .replace('_', '-');
+    return l === 'fr' || l === 'de' || l.indexOf('fr-') === 0 || l.indexOf('de-') === 0;
+}
+
+function applyConsultLangPolicy(href, lang) {
+    const fallback = href || '/marcar/clinica-geral';
+    if (!needsConsultLangPolicy(lang)) return fallback;
+    try {
+        const u = new URL(String(fallback), 'https://lonclinic.invalid');
+        u.searchParams.set('langpolicy', CONSULT_LANG_POLICY);
+        return `${u.pathname}${u.search}`;
+    } catch (_) {
+        const base = String(fallback);
+        if (/[?&]langpolicy=/.test(base)) return base;
+        return base + (base.indexOf('?') >= 0 ? '&' : '?') + 'langpolicy=' + CONSULT_LANG_POLICY;
+    }
+}
+
+function languageBannerHtml(ui) {
+    if (!needsConsultLangPolicy(ui && ui.htmlLang)) return '';
+    const en = (ui && ui.languagesLine) || CONSULT_LANG_POLICY_EN;
+    const local = ui && ui.languagesStrict ? `<p class="tq-lang-banner-local">${escapeHtml(ui.languagesStrict)}</p>` : '';
+    return `<aside class="tq-lang-banner" role="alert">
+      <p class="tq-lang-banner-en">${escapeHtml(en)}</p>
+      ${local}
+    </aside>`;
 }
 
 function isValidSlug(slug) {
@@ -622,11 +660,17 @@ function siblingBookingHref(kind, ref, lang) {
 }
 
 function bookingCardsHtml(page, ui, tone) {
-    const primaryHref = page.bookingHref || '/marcar/clinica-geral';
+    const primaryHref = applyConsultLangPolicy(page.bookingHref || '/marcar/clinica-geral', ui.htmlLang);
     const q = bookingQuery(primaryHref);
     const renewFirst = q.path.indexOf('/marcar/renovacao') !== -1;
-    const gpHref = renewFirst ? siblingBookingHref('gp', q.ref, q.lang) : primaryHref;
-    const renewHref = renewFirst ? primaryHref : siblingBookingHref('renew', q.ref, q.lang);
+    const gpHref = applyConsultLangPolicy(
+        renewFirst ? siblingBookingHref('gp', q.ref, q.lang) : primaryHref,
+        ui.htmlLang
+    );
+    const renewHref = applyConsultLangPolicy(
+        renewFirst ? primaryHref : siblingBookingHref('renew', q.ref, q.lang),
+        ui.htmlLang
+    );
     const t = Math.abs(Number(tone) || 0) % 3;
     const cards = [
         {
@@ -676,7 +720,7 @@ function bookingServiceKey(page) {
 }
 
 function liveSlotsHtml(page, ui, surface) {
-    const href = page.bookingHref || '/marcar/clinica-geral';
+    const href = applyConsultLangPolicy(page.bookingHref || '/marcar/clinica-geral', ui.htmlLang);
     return `
         <div class="cq-live-slots" data-next-slots data-limit="3" data-service="${escapeHtml(bookingServiceKey(page))}" data-book-href="${escapeHtml(href)}" data-surface="${escapeHtml(surface || 'tourist')}" hidden>
             <p class="cq-live-slots-kicker">${escapeHtml(ui.slotKicker)}</p>
@@ -686,7 +730,7 @@ function liveSlotsHtml(page, ui, surface) {
 }
 
 function stickyBookHtml(page, ui) {
-    const href = page.bookingHref || '/marcar/clinica-geral';
+    const href = applyConsultLangPolicy(page.bookingHref || '/marcar/clinica-geral', ui.htmlLang);
     return `
         <div class="cq-sticky-book" data-sticky-book data-service="${escapeHtml(bookingServiceKey(page))}" data-book-href="${escapeHtml(href)}">
             <div class="cq-sticky-book-inner">
@@ -700,7 +744,7 @@ function stickyBookHtml(page, ui) {
 }
 
 function ctaBand(page, ui) {
-    const href = escapeHtml(page.bookingHref || '/marcar/clinica-geral');
+    const href = escapeHtml(applyConsultLangPolicy(page.bookingHref || '/marcar/clinica-geral', ui.htmlLang));
     const label = escapeHtml(page.bookingLabel || ui.navBook);
     const secondaryHref = escapeHtml(page.ctaSecondaryHref || '/tourist-clinic');
     const secondaryLabel = escapeHtml(page.ctaSecondaryLabel || ui.navHub);
@@ -783,7 +827,7 @@ function layoutPage(opts) {
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260905f">
     <link rel="stylesheet" href="/consulta-pages.css?v=20260905f">
-    <link rel="stylesheet" href="/tourist-pages.css?v=20260905f">
+    <link rel="stylesheet" href="/tourist-pages.css?v=20260905i">
     <link rel="stylesheet" href="/author.css?v=20260820e">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -815,6 +859,7 @@ function layoutPage(opts) {
             <a href="${book}">${escapeHtml(ui.navBook)}</a>
         </div>
     </header>
+    ${languageBannerHtml(ui)}
     ${mainHtml}
     <footer class="lon-footer">
         <div class="lon-container">
@@ -853,7 +898,7 @@ function layoutPage(opts) {
     <script src="/i18n.js?v=20260905e" defer></script>
     <script src="/lon-analytics.js?v=20260905e" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260905g" defer></script>
+    <script src="/lon-slots.js?v=20260905i" defer></script>
 </body>
 </html>`;
 }
@@ -870,7 +915,7 @@ function renderPage(origin, slug) {
     const datePub = String(meta.datePublished || '');
     const dateMod = String(meta.dateModified || meta.datePublished || '');
     const canonicalPath = `/${encodeURIComponent(slug)}`;
-    const bookingHref = meta.bookingHref || '/marcar/clinica-geral';
+    const bookingHref = applyConsultLangPolicy(meta.bookingHref || '/marcar/clinica-geral', ui.htmlLang);
     const siblings = groupPages(meta.group);
     const author = authors.getAuthor(meta.author);
 
@@ -946,7 +991,7 @@ function renderPage(origin, slug) {
                     <a href="${escapeHtml(authors.authorPath(author))}">${escapeHtml(author.displayName)}</a>
                     <span aria-hidden="true"> · </span>${escapeHtml(ui.clinician)}
                 </p>
-                <p class="tq-langs-line">${escapeHtml(ui.languagesLine)}</p>
+                <p class="tq-langs-line${needsConsultLangPolicy(ui.htmlLang) ? ' tq-langs-line--strict' : ''}">${escapeHtml(ui.languagesLine)}</p>
                 <div class="cq-header-actions">
                     <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="tourist-hero" data-pay-badges href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || ui.navBook)}</a>
                     <a class="lon-btn lon-btn-soft" href="#quando-urgencia">${escapeHtml(ui.emergencyCta)}</a>

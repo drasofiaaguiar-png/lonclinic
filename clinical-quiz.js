@@ -30,11 +30,15 @@
 
     var current = 0;
     var lastEmail = '';
+    var lastName = '';
+    var lastPhone = '';
     var lastScores = null;
     var answers = new Array(QUESTIONS.length).fill(null);
+    var holdTimer = null;
+    var isNutrition = cfg.cluster === 'nutrition' || cfg.scoring === 'imc';
 
     var $ = function (id) { return document.getElementById(id); };
-    var screens = { intro: $('intro'), quiz: $('quiz'), gate: $('gate'), results: $('results') };
+    var screens = { intro: $('intro'), quiz: $('quiz'), gate: $('gate'), processing: $('processing'), results: $('results') };
     var SEG_ORDER = (cfg.scales || []).map(function (s) { return s.id; });
 
     function show(name) {
@@ -45,7 +49,12 @@
             el.classList.toggle('is-active', active);
             el.hidden = !active;
         });
-        if ($('progressWrap')) $('progressWrap').hidden = (name !== 'quiz');
+        if ($('progressWrap')) $('progressWrap').hidden = (name !== 'quiz' && name !== 'gate');
+        if (name === 'gate' && $('stepLabel')) {
+            $('stepLabel').textContent = 'Último passo — email e WhatsApp';
+            if ($('progressBar')) $('progressBar').style.width = '100%';
+            if ($('dimLabelShort')) $('dimLabelShort').textContent = 'Captura';
+        }
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -83,8 +92,10 @@
             stem.hidden = !cfg.stem;
         }
         $('questionText').textContent = q.text;
-        $('stepLabel').textContent = (current + 1) + ' / ' + QUESTIONS.length;
-        $('progressBar').style.width = (((current + 1) / QUESTIONS.length) * 100) + '%';
+        var total = QUESTIONS.length;
+        var pct = Math.round(((current + 1) / total) * 100);
+        $('stepLabel').textContent = 'Passo ' + (current + 1) + ' de ' + total + ' — ' + pct + '% concluído';
+        $('progressBar').style.width = pct + '%';
         $('backBtn').style.visibility = current === 0 ? 'hidden' : 'visible';
 
         var box = $('options');
@@ -235,6 +246,8 @@
                 extra: scored.extra || null,
                 crisis: scored.crisis,
                 email: lastEmail,
+                name: lastName,
+                phone: lastPhone,
                 at: new Date().toISOString()
             }));
         } catch (e) { /* ignore */ }
@@ -266,6 +279,10 @@
         var subBtn = $('subBtn');
         if (subBtn && cfg.booking && Array.isArray(cfg.booking.hideSubOn)) {
             subBtn.hidden = cfg.booking.hideSubOn.indexOf(band.pill) !== -1;
+        }
+        if (cfg.scoring === 'imc' && band.pill && /NORMAL|BAIXO PESO/.test(band.pill) && $('bookBtnPrimary')) {
+            $('bookBtnPrimary').setAttribute('href', '/marcar/clinica-geral?ref=imc-quiz');
+            if ($('stickyBookBtn')) $('stickyBookBtn').setAttribute('href', '/marcar/clinica-geral?ref=imc-quiz');
         }
 
         var scalesBox = $('scales');
@@ -353,7 +370,11 @@
         }
 
         storeQuizForBooking(scored);
+        if (isNutrition && $('quizTrust')) {
+            $('quizTrust').innerHTML = '🔒 Fidelização 3 meses no programa · sem cláusulas abusivas<br>🩺 1.ª consulta médica agendada logo após o pagamento';
+        }
         show('results');
+        startHoldTimer();
         var sticky = $('stickyBook');
         if (sticky) {
             sticky.hidden = false;
@@ -393,16 +414,84 @@
         requestAnimationFrame(tick);
     }
 
-    function submitQuiz(email) {
+    function submitQuiz(email, extras) {
         return fetch('/api/clinical-quiz', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 quizId: cfg.id,
                 email: email,
+                name: extras && extras.name || '',
+                phone: extras && extras.phone || '',
                 answers: answers
             })
         }).catch(function () { return null; });
+    }
+
+    function normalizePhone(raw) {
+        var d = String(raw || '').replace(/\D/g, '');
+        if (d.indexOf('351') === 0) d = d.slice(3);
+        if (d.length === 9 && d.charAt(0) === '9') return '+351' + d;
+        return '';
+    }
+
+    function startHoldTimer() {
+        var box = $('quizHold');
+        var clock = $('quizHoldClock');
+        var label = $('quizHoldLabel');
+        if (!box || !clock) return;
+        box.hidden = false;
+        var key = 'lon_quiz_hold_' + (cfg.id || 'x');
+        var until = 0;
+        try {
+            until = parseInt(sessionStorage.getItem(key) || '0', 10) || 0;
+        } catch (e) { until = 0; }
+        if (!until || until < Date.now()) until = Date.now() + 15 * 60 * 1000;
+        try { sessionStorage.setItem(key, String(until)); } catch (e2) { /* ignore */ }
+        if (holdTimer) clearInterval(holdTimer);
+        function tick() {
+            var left = Math.max(0, until - Date.now());
+            var m = Math.floor(left / 60000);
+            var s = Math.floor((left % 60000) / 1000);
+            clock.textContent = m + ':' + (s < 10 ? '0' : '') + s;
+            if (left <= 0) {
+                clearInterval(holdTimer);
+                clock.textContent = '0:00';
+            }
+        }
+        tick();
+        holdTimer = setInterval(tick, 1000);
+        fetch('/api/next-slots?limit=1&withinHours=72').then(function (r) { return r.json(); }).then(function (data) {
+            var slot = data && data.slots && data.slots[0];
+            if (!slot || !label) return;
+            var when = slot.date + ' · ' + slot.time;
+            label.textContent = 'Próxima vaga: ' + when;
+            var btn = $('bookBtnPrimary');
+            if (btn && slot.date && slot.time) {
+                var href = btn.getAttribute('href') || '/marcar/clinica-geral';
+                var join = href.indexOf('?') >= 0 ? '&' : '?';
+                if (href.indexOf('date=') < 0) btn.setAttribute('href', href + join + 'date=' + encodeURIComponent(slot.date) + '&time=' + encodeURIComponent(slot.time));
+            }
+        }).catch(function () {});
+    }
+
+    function runProcessingThen(done) {
+        var title = $('processingTitle');
+        var text = $('processingText');
+        if (title) {
+            title.textContent = isNutrition
+                ? 'A analisar o seu perfil com base nos parâmetros metabólicos…'
+                : 'A analisar o seu perfil com base nas suas respostas…';
+        }
+        if (text) {
+            text.textContent = isNutrition
+                ? 'IMC, cintura e faixa clínica — a preparar o próximo passo médico.'
+                : 'A cruzar as respostas com os intervalos clínicos deste questionário.';
+        }
+        show('processing');
+        var wait = 3800;
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) wait = 400;
+        setTimeout(done, wait);
     }
 
     $('startBtn').addEventListener('click', function () {
@@ -422,22 +511,37 @@
 
     $('revealBtn').addEventListener('click', function () {
         var email = $('email').value.trim();
+        var name = $('leadName') ? $('leadName').value.trim() : '';
+        var phoneRaw = $('leadPhone') ? $('leadPhone').value.trim() : '';
+        var phone = normalizePhone(phoneRaw);
         var valid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+        if ($('emailError')) $('emailError').hidden = valid;
+        if ($('phoneError')) $('phoneError').hidden = true;
         if (!valid) {
-            $('emailError').hidden = false;
             $('email').focus();
             return;
         }
-        $('emailError').hidden = true;
+        if (isNutrition && !phone) {
+            if ($('phoneError')) $('phoneError').hidden = false;
+            if ($('leadPhone')) $('leadPhone').focus();
+            return;
+        }
+        if (phoneRaw && !phone) {
+            if ($('phoneError')) $('phoneError').hidden = false;
+            if ($('leadPhone')) $('leadPhone').focus();
+            return;
+        }
         lastEmail = email;
+        lastName = name;
+        lastPhone = phone;
         var btn = $('revealBtn');
         var prevLabel = btn.textContent;
         btn.disabled = true;
-        btn.textContent = 'A preparar o resultado…';
-        submitQuiz(email).finally(function () {
+        btn.textContent = 'A preparar…';
+        submitQuiz(email, { name: name, phone: phone }).finally(function () {
             btn.disabled = false;
             btn.textContent = prevLabel;
-            renderResults();
+            runProcessingThen(renderResults);
         });
     });
 
@@ -475,10 +579,16 @@
     $('restartBtn').addEventListener('click', function () {
         current = 0;
         lastEmail = '';
+        lastName = '';
+        lastPhone = '';
         lastScores = null;
         answers = new Array(QUESTIONS.length).fill(null);
         $('email').value = '';
+        if ($('leadName')) $('leadName').value = '';
+        if ($('leadPhone')) $('leadPhone').value = '';
         $('emailError').hidden = true;
+        if ($('phoneError')) $('phoneError').hidden = true;
+        if (holdTimer) clearInterval(holdTimer);
         $('gaugeArc').style.strokeDashoffset = 314.16;
         $('scoreNum').textContent = '0';
         $('bandPill').className = 'bq-pill';

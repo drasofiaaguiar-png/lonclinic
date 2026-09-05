@@ -1141,6 +1141,38 @@ async function findQuizAttemptsByEmail(email, limit = 50) {
     return r.rows.map(rowToQuizAttempt);
 }
 
+async function findDueQuizRecoveries(nowMs, limit = 20) {
+    const p = getPool();
+    const cap = Math.min(Math.max(parseInt(limit, 10) || 20, 1), 50);
+    const r = await p.query(
+        `SELECT * FROM quiz_attempts
+         WHERE email IS NOT NULL
+           AND COALESCE(result->>'recoveredAt','') = ''
+           AND COALESCE(result->>'convertedAt','') = ''
+           AND COALESCE(result->>'recoverAt','') ~ '^[0-9]+$'
+           AND (result->>'recoverAt')::bigint <= $1
+           AND claimed_at > NOW() - INTERVAL '48 hours'
+         ORDER BY claimed_at ASC
+         LIMIT $2`,
+        [Number(nowMs) || Date.now(), cap]
+    );
+    return r.rows.map(rowToQuizAttempt);
+}
+
+async function mergeQuizAttemptResultByEmail(email, patch) {
+    const p = getPool();
+    const e = String(email || '').toLowerCase().trim();
+    if (!e || !patch || typeof patch !== 'object') return 0;
+    const r = await p.query(
+        `UPDATE quiz_attempts
+         SET result = COALESCE(result, '{}'::jsonb) || $2::jsonb
+         WHERE LOWER(TRIM(email)) = $1
+           AND claimed_at > NOW() - INTERVAL '48 hours'`,
+        [e, JSON.stringify(patch)]
+    );
+    return r.rowCount;
+}
+
 /** IANA name for PostgreSQL AT TIME ZONE (schedule timezone). */
 function sanitizeTimeZoneName(raw) {
     const s = String(raw || '').trim();
@@ -2449,6 +2481,8 @@ module.exports = {
     findQuizAttemptById,
     claimQuizAttempt,
     findQuizAttemptsByEmail,
+    findDueQuizRecoveries,
+    mergeQuizAttemptResultByEmail,
     insertInvitation,
     updateInvitationStripeSession,
     findInvitationById,

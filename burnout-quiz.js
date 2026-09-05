@@ -40,25 +40,30 @@
     const BANDS = [
         { max: 24, pill: 'BAIXO', title: 'Energia sob controlo',
             text: 'O teu resultado apresenta poucos sinais de desgaste neste momento. Podes usá-lo como ponto de referência — e, se algo te preocupar, a porta está aberta.',
-            cta: 'Não precisas de marcar por causa deste resultado. Se quiseres perceber o padrão com um psicólogo, a ficha de psicologia para burnout está aqui.',
-            bookLabel: 'Ver consulta de psicologia',
-            bookNote: 'Opcional · só se quiseres um plano com um psicólogo' },
+            cta: 'Não precisas de marcar por causa deste resultado. Se quiseres um plano clínico, a avaliação única é o ponto de entrada; a subscrição é o acompanhamento regular.',
+            bookLabel: 'Ver o plano de acompanhamento',
+            bookNote: 'Opcional · avaliação 60 € · subscrição 216 €/mês · programa 490 €' },
         { max: 49, pill: 'LIGEIRO', title: 'Sinais de alerta iniciais',
             text: 'Ainda não aponta para um quadro instalado, mas algumas dimensões da tua energia podem já estar a pedir atenção. Nesta fase, descanso, limites e recuperação tendem a ter mais efeito.',
-            cta: 'Se estes sinais persistirem, a consulta de psicologia para burnout ajuda a perceber o padrão — sem alarme, com um plano concreto.',
-            bookLabel: 'Ver consulta de psicologia',
-            bookNote: 'Videochamada · 60 € · o resultado do teste chega à sessão' },
+            cta: 'Se estes sinais persistirem, o plano clínico começa na avaliação única e ganha regularidade na subscrição semanal — o resultado CBI chega à primeira sessão.',
+            bookLabel: 'Começar o plano — 216 €/mês',
+            bookNote: '4 consultas/mês · o resultado do teste chega à primeira sessão' },
         { max: 74, pill: 'MODERADO', title: 'O teu corpo já está a pagar a conta',
             text: 'O teu resultado sugere um nível moderado de desgaste. Isto não é, por si só, um diagnóstico de burnout — mas é um sinal de que a recuperação está mais difícil do que deveria.',
-            cta: 'O próximo passo é a consulta de psicologia para burnout. O psicólogo vê este resultado e ajuda-te a decidir o que fazer a seguir.',
-            bookLabel: 'Ver consulta de psicologia',
-            bookNote: 'Videochamada · 60 € · o resultado do teste chega à sessão' },
+            cta: 'O próximo passo é um plano de acompanhamento, não uma consulta avulsa isolada. A subscrição semanal é a opção em destaque; a avaliação única serve se quiseres um primeiro passo.',
+            bookLabel: 'Começar o plano — 216 €/mês',
+            bookNote: '4 consultas/mês · o resultado do teste chega à primeira sessão' },
         { max: 100, pill: 'ELEVADO', title: 'É altura de parar e pedir apoio',
             text: 'O teu resultado apresenta um nível elevado de sinais de desgaste. Não diagnostica burnout por si só — mas, quando estes sinais são persistentes, não devem ser ignorados.',
-            cta: 'Marca a consulta de psicologia para burnout. Em sofrimento intenso, procura ajuda médica urgente (112 ou SNS 24).',
-            bookLabel: 'Ver consulta de psicologia',
-            bookNote: 'Videochamada · 60 € · o resultado do teste chega à sessão' }
+            cta: 'Começa o plano de acompanhamento. Em sofrimento intenso, procura ajuda médica urgente (112 ou SNS 24).',
+            bookLabel: 'Começar o plano agora — 216 €/mês',
+            bookNote: '4 consultas/mês · o resultado do teste chega à primeira sessão' }
     ];
+
+    const PLAN_MENSAL = '/marcar/burnout-mensal?ref=burnout-quiz&utm_source=quiz&utm_medium=owned&utm_campaign=burnout-teste';
+    const PLAN_AVULSA = '/marcar/burnout?ref=burnout-quiz&utm_source=quiz&utm_medium=owned&utm_campaign=burnout-teste';
+    const PLAN_PROGRAMA = '/marcar/burnout-programa?ref=burnout-quiz&utm_source=quiz&utm_medium=owned&utm_campaign=burnout-teste';
+    const PRODUCT_URL = PLAN_MENSAL + '&utm_content=results-primary';
 
     const SCALE_INSIGHTS = {
         personal: { title: 'Exaustão pessoal',
@@ -76,8 +81,6 @@
         sono: 'Nota clínica: sono que não repara mantém o cortisol elevado e alimenta o ciclo do esgotamento — costuma ser o primeiro alvo do tratamento.',
         tensao: 'Nota clínica: tensão muscular persistente é das formas mais comuns de o corpo armazenar stress — e das que melhor respondem a intervenção.'
     };
-
-    const PRODUCT_URL = '/psicologia-burnout?ref=burnout-quiz&utm_source=quiz&utm_medium=owned&utm_campaign=burnout-teste&utm_content=results-primary';
 
     const DIM_META = {
         personal: {
@@ -230,18 +233,20 @@
         const bookNote = $('bookNowNote');
         const stickyBtn = $('stickyBookBtn');
         if (bookPrimary) {
-            bookPrimary.textContent = band.bookLabel || 'Ver consulta de psicologia';
+            bookPrimary.textContent = band.bookLabel || 'Começar o plano — 216 €/mês';
             bookPrimary.setAttribute('href', PRODUCT_URL);
         }
         if (bookNote) bookNote.textContent = band.bookNote || '';
         if (stickyBtn) {
-            stickyBtn.textContent = band.pill === 'ELEVADO' || band.pill === 'MODERADO' ? 'Ver consulta agora' : 'Ver consulta';
-            stickyBtn.setAttribute('href', PRODUCT_URL.replace('results-primary', 'results-sticky'));
+            stickyBtn.textContent = band.pill === 'ELEVADO' || band.pill === 'MODERADO' ? 'Começar o plano agora' : 'Ver o plano';
+            stickyBtn.setAttribute('href', PLAN_MENSAL + '&utm_content=results-sticky');
         }
         const bookCard = $('bookBtn');
-        if (bookCard) {
-            bookCard.setAttribute('href', PRODUCT_URL.replace('results-primary', 'results-card'));
-        }
+        if (bookCard) bookCard.setAttribute('href', PLAN_AVULSA + '&utm_content=results-entry');
+        const subCard = $('subBtn');
+        if (subCard) subCard.setAttribute('href', PLAN_MENSAL + '&utm_content=results-mensal');
+        const packCard = $('packBtn');
+        if (packCard) packCard.setAttribute('href', PLAN_PROGRAMA + '&utm_content=results-programa');
 
         $('valPersonal').textContent = s.personal + ' · ' + bandFor(s.personal).pill.toLowerCase();
         $('valWork').textContent = s.work + ' · ' + bandFor(s.work).pill.toLowerCase();

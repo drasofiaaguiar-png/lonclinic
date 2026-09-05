@@ -4,7 +4,7 @@ Semana 1: o que já comes, a medicação, as hipoglicemias, a HbA1c. Ainda não 
 
 ## O que esta consulta não é
 
-Não é endocrinologia. Não é prescrição de Ozempic ou Wegovy. Desde agosto de 2025, em Portugal, esses injectáveis estão restritos a especialidades médicas definidas. Se já os tens prescritos, o sítio do prato é a página de [nutrição com Ozempic/Wegovy](/nutricao/ozempic-wegovy). Se tens SOP, lê também [nutrição no SOP](/nutricao/sop).
+Não é endocrinologia. A Lon Clinic **não prescreve** Ozempic ou Wegovy. Desde agosto de 2025, em Portugal, esses injectáveis estão restritos a especialidades médicas definidas. Se estás a pensar em aGLP-1 ou a desmamar, o sítio do prato é a página de [transição aGLP-1](/nutricao/glp-1) e o [programa de reeducação](/nutricao/programa). Se tens SOP, lê também [nutrição no SOP](/nutricao/sop).
 
 Diabetes tipo 1 não se trata nesta página. A insulina e o risco de hipoglicemia pedem outra conversa.
 

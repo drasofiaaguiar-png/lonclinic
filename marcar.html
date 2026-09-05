@@ -18,7 +18,7 @@
     <link rel="canonical" href="https://www.lonclinic.com/marcar">
     <meta name="theme-color" content="#4A7C6F">
     <link rel="stylesheet" href="/landing.css">
-    <link rel="stylesheet" href="/marcar.css?v=20260905d">
+    <link rel="stylesheet" href="/marcar.css?v=20260905i">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
@@ -62,6 +62,10 @@
     <main class="lon-container marcar-main" id="marcarMain">
         <a href="/#servicos" class="marcar-back">← Voltar aos serviços</a>
 
+        <aside class="lon-lang-banner" id="marcarLangBanner" hidden role="alert">
+            <p class="lon-lang-banner-en">Consultations strictly conducted in English, Spanish or Portuguese</p>
+        </aside>
+
         <div class="marcar-plan-section" id="marcarPlanSection" hidden>
             <p class="marcar-plan-kicker" id="marcarPlanKicker">Anti-burnout</p>
             <h2 class="marcar-plan-heading" id="marcarPlanHeading">Escolhe o formato</h2>
@@ -81,7 +85,7 @@
                     <ul id="marcarBullets"></ul>
                 </div>
                 <p class="marcar-burnout-link" id="marcarBurnoutLink" hidden>Ainda não fez o teste? <a href="/burnout/teste?ref=marcar-burnout">Faça o teste de burnout</a> — 4 min, gratuito.</p>
-                <p class="marcar-burnout-link" id="marcarNutricaoLink" hidden>Ainda não fez a avaliação? <a href="/nutricao/teste-imc?ref=marcar-nutricao">IMC e cintura</a> — 2 min, gratuito. <a href="/nutricao/programa">Ver o programa de 6 meses</a>.</p>
+                <p class="marcar-burnout-link" id="marcarNutricaoLink" hidden>Ainda não fez a avaliação? <a href="/nutricao/avaliacao?ref=marcar-nutricao">Avaliação metabólica</a> — 2 min, gratuita. <a href="/nutricao/programa">Programa de reeducação (3 a 6 meses)</a> · <a href="/nutricao/glp-1">aGLP-1 / desmame</a>.</p>
             </aside>
 
             <section class="marcar-schedule-wrap" aria-labelledby="marcarScheduleTitle">
@@ -123,8 +127,9 @@
 
                 <div class="marcar-actions">
                     <a href="/#servicos" class="lon-btn lon-btn-ghost">Cancelar</a>
-                    <button type="button" class="lon-btn lon-btn-primary" id="marcarContinue" disabled>Continuar para dados e pagamento</button>
+                    <button type="button" class="lon-btn lon-btn-primary" id="marcarContinue" disabled data-pay-badges>Continuar para dados e pagamento</button>
                 </div>
+                <p class="marcar-buy-trust" id="marcarBuyTrust" hidden>🔒 Fidelização 3 meses · sem cláusulas abusivas<br>🩺 Consulta médica agendada imediatamente após o pagamento · MB WAY e Multibanco no checkout</p>
             </section>
         </div>
     </main>
@@ -140,9 +145,10 @@
             }
         })();
     </script>
-    <script src="/lon-analytics.js?v=20260904a" defer></script>
+    <script src="/lon-analytics.js?v=20260905i" defer></script>
     <script src="/i18n.js" defer></script>
     <script src="/lon-nav.js" defer></script>
-    <script src="/marcar.js?v=20260905h" defer></script>
+    <script src="/lon-slots.js?v=20260905i" defer></script>
+    <script src="/marcar.js?v=20260906c" defer></script>
 </body>
 </html>

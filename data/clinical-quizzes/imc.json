@@ -73,25 +73,25 @@
   "bands": [
     { "max": 18.49, "pill": "BAIXO PESO", "concern": "light", "title": "Abaixo do peso considerado normal", "bookLabel": "Marcar consulta — 39€", "bookNote": "Videoconsulta · avaliar se o baixo peso tem causa clínica" },
     { "max": 24.9, "pill": "NORMAL", "concern": "low", "title": "IMC na faixa considerada normal", "bookLabel": "Marcar consulta — 39€", "bookNote": "Opcional · se a cintura ou a composição corporal te preocuparem" },
-    { "max": 29.9, "pill": "EXCESSO DE PESO", "concern": "mid", "title": "Excesso de peso", "bookLabel": "Marcar consulta — 39€", "bookNote": "Videoconsulta · o IMC e a cintura ficam na marcação" },
-    { "max": 34.9, "pill": "OBESIDADE I", "concern": "high", "title": "Obesidade grau I", "bookLabel": "Marcar consulta — 39€", "bookNote": "Videoconsulta · plano nutricional e, se indicado, avaliação médica" },
-    { "max": 39.9, "pill": "OBESIDADE II", "concern": "high", "title": "Obesidade grau II", "bookLabel": "Marcar consulta agora — 39€", "bookNote": "Videoconsulta · casos mais complexos: longevidade 79€" },
-    { "max": 999, "pill": "OBESIDADE III", "concern": "high", "title": "Obesidade grau III", "bookLabel": "Marcar consulta agora — 39€", "bookNote": "Videoconsulta · avaliação médica e nutricional" }
+    { "max": 29.9, "pill": "EXCESSO DE PESO", "concern": "mid", "title": "Excesso de peso", "bookLabel": "Começar o programa — 115€", "bookNote": "1.ª consulta médica do programa de 6 meses" },
+    { "max": 34.9, "pill": "OBESIDADE I", "concern": "high", "title": "Obesidade grau I", "bookLabel": "Começar o programa — 115€", "bookNote": "1.ª consulta médica · exames e plano alimentar" },
+    { "max": 39.9, "pill": "OBESIDADE II", "concern": "high", "title": "Obesidade grau II", "bookLabel": "Começar o programa agora — 115€", "bookNote": "1.ª consulta médica do programa metabólico" },
+    { "max": 999, "pill": "OBESIDADE III", "concern": "high", "title": "Obesidade grau III", "bookLabel": "Começar o programa agora — 115€", "bookNote": "1.ª consulta médica · avaliação clínica e nutricional" }
   ],
   "insights": {
     "imc": { "title": "Quilos até ao peso normal", "text": "O peso-alvo usa o limite superior da faixa normal (IMC 24,9). Não é um objectivo estético — é o limiar clínico da OMS para deixar de classificar excesso de peso." },
     "waist": { "title": "A cintura conta tanto quanto o IMC", "text": "O IMC não distingue músculo de gordura. Uma cintura acima do limiar aumenta o risco metabólico mesmo com IMC «só» em excesso de peso — e às vezes com IMC ainda normal." }
   },
   "booking": {
-    "consultHref": "/marcar/clinica-geral",
-    "consultName": "Consulta de clínica geral / nutrição",
-    "consultPrice": "39",
-    "consultMeta": "Sessão única · 25–35 min",
-    "subHref": "/marcar/longevidade",
-    "subName": "Consulta de longevidade",
-    "subPrice": "79",
-    "subMeta": "Mais tempo · 45–60 min",
-    "stickyLabel": "Consulta de nutrição",
+    "consultHref": "/marcar/nutricao-programa",
+    "consultName": "Programa Nutrição · mês 1",
+    "consultPrice": "115",
+    "consultMeta": "6 meses · 1.ª consulta médica incluída",
+    "subHref": "/marcar/clinica-geral",
+    "subName": "Consulta avulsa",
+    "subPrice": "39",
+    "subMeta": "Sessão única · 25–35 min",
+    "stickyLabel": "Programa metabólico",
     "hideSubOn": ["NORMAL", "BAIXO PESO"]
   },
   "related": ["tfeq", "yfas", "ess", "who5"],
@@ -99,7 +99,7 @@
     { "href": "/nutricao/programa", "label": "Programa 6 meses" },
     { "href": "/nutricao/teste-tfeq", "label": "TFEQ · o que trava o peso" },
     { "href": "/nutricao/teste-ess", "label": "Sonolência / apneia (ESS)" },
-    { "href": "/nutricao/ozempic-wegovy", "label": "Apoio com GLP-1" }
+    { "href": "/nutricao/glp-1", "label": "aGLP-1 / desmame" }
   ],
   "disclaimer": "O IMC (OMS) classifica baixo peso (<18,5), peso normal (18,5–24,9), excesso de peso (25–29,9) e obesidade (≥30). O peso-alvo usa IMC 24,9 (limite superior da faixa normal). Os limiares de cintura seguem os critérios europeus: mulheres ≥80 / ≥88 cm; homens ≥94 / ≥102 cm. O IMC não distingue massa magra de gordura nem se aplica da mesma forma a grávidas, desportistas de alta massa muscular ou algumas etnias. Não é um diagnóstico. IMC >25 ou cintura de risco pede avaliação médica e nutricional da composição corporal.",
   "utmCampaign": "imc-teste"

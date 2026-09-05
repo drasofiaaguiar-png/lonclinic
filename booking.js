@@ -26,7 +26,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         marcarTipo: null,
         renewToken: null,
         holdId: null,
-        slotId: null
+        slotId: null,
+        consultLangPolicy: false
     };
 
     // ─── Load schedule data ───
@@ -71,8 +72,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         burnout_programa: { label: 'Programa Anti-Burnout (8 sessões)', price: '490 €', cents: 49000 },
         renovacao: { label: 'Renovação de Tratamento Médico', price: '19 €', cents: 1900 },
         longevidade: { label: 'Consulta de Longevidade e Saúde Preventiva', price: '79 €', cents: 7900 },
-        nutricao_programa: { label: 'Programa Nutrição (6 meses) — mês 1', price: '115 €', cents: 11500 },
-        nutricao_completo: { label: 'Programa Completo (6 meses) — mês 1', price: '227 €', cents: 22700 },
+        nutricao_programa: { label: 'Consulta inicial de nutrição metabólica', price: '115 €', cents: 11500 },
+        nutricao_completo: { label: 'Programa Completo (nutrição + psicologia) — mês 1', price: '227 €', cents: 22700 },
         nutricao_completo_reforcado: { label: 'Programa Completo — entrada reforçada', price: '322 €', cents: 32200 }
     };
 
@@ -157,6 +158,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         state.servicePrice = services[resolved].price;
         state.servicePriceCents = services[resolved].cents;
         updateTravellerCountVisibility();
+        const trust = document.getElementById('lonBuyTrust');
+        if (trust) {
+            const nu = resolved.indexOf('nutricao_') === 0;
+            trust.innerHTML = nu
+                ? '🔒 Fidelização 3 meses · sem cláusulas abusivas · cancelamento simples a seguir<br>🩺 1.ª consulta médica agendada logo após o pagamento'
+                : '🔒 Pagamento seguro · MB WAY e Multibanco<br>🩺 Consulta médica agendada imediatamente após o pagamento';
+        }
     }
 
     const preselect = urlParams.get('service');
@@ -814,9 +822,62 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Build passenger panels / tabs
         buildPassengerTabs();
+        applyClinicalIntentToForm();
     }
 
     // Collect all passenger data
+    function clinicalIntentNote() {
+        if (state.prefillConcerns) return state.prefillConcerns;
+        const intent = state.clinicalIntent;
+        if (intent && (intent.concerns || intent.goal || intent.label)) {
+            if (intent.concerns) return intent.concerns;
+            const bits = [intent.label || intent.goal].filter(Boolean);
+            if (intent.goal && intent.label && intent.goal !== intent.label) bits.push(intent.goal);
+            if (intent.cbiBand) {
+                bits.push('CBI ' + intent.cbiBand + (intent.cbiGlobal != null ? ' (' + intent.cbiGlobal + '/100)' : ''));
+            }
+            return bits.join(' · ');
+        }
+        if (state.service === 'nutricao_programa' || state.service === 'nutricao_completo' || state.service === 'nutricao_completo_reforcado') {
+            try {
+                const quiz = JSON.parse(sessionStorage.getItem('lonClinicalQuiz') || 'null');
+                if (quiz && quiz.instrument) {
+                    return 'Objectivo: perda de peso / reeducação metabólica. Teste ' + quiz.instrument +
+                        (quiz.band ? ' · ' + quiz.band : '');
+                }
+            } catch (e) { /* ignore */ }
+            return 'Objectivo: perda de peso / reeducação metabólica. Consulta inicial de nutrição metabólica — sem prescrição de aGLP-1.';
+        }
+        if (state.service === 'burnout' || state.service === 'burnout_mensal' || state.service === 'burnout_programa') {
+            try {
+                const quiz = JSON.parse(sessionStorage.getItem('lonBurnoutQuiz') || 'null');
+                if (quiz && quiz.band) {
+                    return 'Programa anti-burnout / CBI · ' + quiz.band +
+                        (quiz.global != null ? ' (' + quiz.global + '/100)' : '');
+                }
+            } catch (e) { /* ignore */ }
+            return 'Programa anti-burnout / CBI';
+        }
+        return '';
+    }
+
+    function applyClinicalIntentToForm() {
+        const note = clinicalIntentNote();
+        const ta = document.querySelector('.passenger-panel[data-passenger="1"] .p-concerns');
+        if (note && ta && !ta.value.trim()) ta.value = note;
+        try {
+            const raw = sessionStorage.getItem('lonClinicalQuiz');
+            if (!raw) return;
+            const q = JSON.parse(raw);
+            const emailEl = document.getElementById('email');
+            const phoneEl = document.getElementById('phone');
+            const first = document.querySelector('.p-firstName');
+            if (emailEl && q.email && !emailEl.value) emailEl.value = q.email;
+            if (phoneEl && q.phone && !phoneEl.value) phoneEl.value = q.phone;
+            if (first && q.name && !first.value) first.value = q.name;
+        } catch (e) { /* ignore */ }
+    }
+
     function getPassengersData() {
         const passengers = [];
         const count = state.service === 'travel' ? state.travellerCount : 1;
@@ -829,7 +890,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 dob: panel.querySelector('.p-dob')?.value || '',
                 nhs: panel.querySelector('.p-nhs')?.value?.trim() || '',
                 country: panel.querySelector('.p-country')?.value || '',
-                concerns: panel.querySelector('.p-concerns')?.value?.trim() || '',
+                concerns: panel.querySelector('.p-concerns')?.value?.trim() || (i === 1 ? clinicalIntentNote() : ''),
                 medications: panel.querySelector('.p-medications')?.value?.trim() || '',
                 allergies: panel.querySelector('.p-allergies')?.value?.trim() || ''
             });
@@ -914,6 +975,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 group.classList.remove('invalid');
             }
         });
+
+        if (state.consultLangPolicy) {
+            const langAck = document.getElementById('consultLangAck');
+            const langGroup = langAck && langAck.closest('.form-checkbox-group');
+            if (langAck && !langAck.checked) {
+                if (langGroup) langGroup.classList.add('invalid');
+                valid = false;
+            } else if (langGroup) {
+                langGroup.classList.remove('invalid');
+            }
+        }
 
         // Switch to the tab with the first error
         if (firstInvalidTab && count > 1) {
@@ -1503,6 +1575,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (prefill.holdId) state.holdId = prefill.holdId;
             if (prefill.slotId) state.slotId = prefill.slotId;
             if (prefill.renew) state.renewToken = prefill.renew;
+            if (prefill.consultLangPolicy) state.consultLangPolicy = true;
+            if (prefill.clinicalIntent) state.clinicalIntent = prefill.clinicalIntent;
+            if (prefill.goal) state.prefillGoal = prefill.goal;
+            if (prefill.concerns) state.prefillConcerns = prefill.concerns;
             if (prefill.locale) {
                 const loc = document.getElementById('bookingLocale');
                 if (loc) loc.value = prefill.locale;
@@ -1552,11 +1628,28 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
+        const refQ = urlParams.get('ref') || '';
+        if (urlParams.get('langpolicy') === 'en-es-pt' || /-(fr|de)$/i.test(refQ)) {
+            state.consultLangPolicy = true;
+        }
+
         updateTravellerCountVisibility();
         if (state.date && state.time) {
             refreshSlotHold();
             goToStep(2);
+            applyClinicalIntentToForm();
         }
+    }
+
+    function syncConsultLangPolicyUI() {
+        const on = !!state.consultLangPolicy;
+        document.querySelectorAll('[data-consult-lang-banner]').forEach((el) => {
+            el.hidden = !on;
+        });
+        const wrap = document.getElementById('consultLangAckWrap');
+        const ack = document.getElementById('consultLangAck');
+        if (wrap) wrap.hidden = !on;
+        if (ack) ack.required = on;
     }
 
     function slotIdFromDateTime(dateISO, time) {
@@ -1630,7 +1723,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     applyMarcarPrefill();
+    syncConsultLangPolicyUI();
     applyRenewalAndNextSlot();
+    applyClinicalIntentToForm();
 
     if (state.currentStep === 1) {
         renderCalendar();

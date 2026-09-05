@@ -52,12 +52,65 @@
             now.getDate() === Number(parts[3]);
     }
 
+    function readBurnoutQuiz() {
+        try {
+            var raw = sessionStorage.getItem('lonBurnoutQuiz');
+            return raw ? JSON.parse(raw) : null;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function isWeightLossPath(pathname) {
+        var p = String(pathname || '').toLowerCase();
+        return /\/nutricao\/(programa|glp-1|ozempic-wegovy|avaliacao|teste-imc|teste-tfeq|teste-yfas)(\/|$)/.test(p)
+            || /\/marcar\/nutricao-/.test(p);
+    }
+
+    function nutritionPrefill(opts) {
+        opts = opts || {};
+        var goal = opts.goal || 'Perda de peso / reeduca\u00e7\u00e3o metab\u00f3lica';
+        return {
+            goal: goal,
+            concerns: 'Objectivo: ' + goal + '. Consulta inicial de nutri\u00e7\u00e3o metab\u00f3lica \u2014 programa de reeduca\u00e7\u00e3o, sem prescri\u00e7\u00e3o de aGLP-1.',
+            category: 'weight-loss',
+            product: 'nutricao_programa',
+            label: 'Consulta inicial de nutri\u00e7\u00e3o metab\u00f3lica'
+        };
+    }
+
+    function clinicalIntentFor(service) {
+        if (service === 'nutricao_programa' || service === 'nutricao_completo' || service === 'nutricao_completo_reforcado') {
+            return nutritionPrefill();
+        }
+        if (service !== 'burnout' && service !== 'burnout_mensal' && service !== 'burnout_programa') {
+            return null;
+        }
+        var quiz = readBurnoutQuiz();
+        var intent = {
+            category: 'burnout',
+            product: service,
+            label: service === 'burnout_mensal'
+                ? 'Programa anti-burnout \u00b7 subscri\u00e7\u00e3o mensal (CBI)'
+                : service === 'burnout_programa'
+                    ? 'Programa anti-burnout \u00b7 8 sess\u00f5es (CBI)'
+                    : 'Avalia\u00e7\u00e3o \u00fanica anti-burnout (CBI)'
+        };
+        if (quiz && quiz.band) {
+            intent.source = 'cbi';
+            intent.cbiBand = quiz.band;
+            if (quiz.global != null) intent.cbiGlobal = quiz.global;
+        }
+        return intent;
+    }
+
     function serviceMeta(service) {
+        var lang = pageLang();
         if (service === 'renovacao') {
             return {
                 service: 'renovacao',
                 tipo: 'renovacao',
-                serviceLabel: pageLang() === 'en' ? 'Prescription renewal' : 'Renova\u00e7\u00e3o de tratamento m\u00e9dico',
+                serviceLabel: lang === 'en' ? 'Prescription renewal' : 'Renova\u00e7\u00e3o de tratamento m\u00e9dico',
                 servicePrice: formatEuro(19),
                 servicePriceCents: 1900
             };
@@ -66,12 +119,75 @@
             return {
                 service: 'travel',
                 tipo: 'travel',
-                serviceLabel: pageLang() === 'en' ? 'Travel clinic consultation' : 'Consulta do viajante',
+                serviceLabel: lang === 'en' ? 'Travel clinic consultation' : 'Consulta do viajante',
                 servicePrice: formatEuro(39),
                 servicePriceCents: 3900
             };
         }
-        var lang = pageLang();
+        if (service === 'burnout_mensal') {
+            return {
+                service: 'burnout_mensal',
+                tipo: 'burnout_mensal',
+                serviceLabel: lang === 'en' ? 'Anti-Burnout Subscription' : 'Subscri\u00e7\u00e3o Anti-Burnout',
+                servicePrice: '216 \u20AC/m\u00eas',
+                servicePriceCents: 21600
+            };
+        }
+        if (service === 'burnout_programa') {
+            return {
+                service: 'burnout_programa',
+                tipo: 'burnout_programa',
+                serviceLabel: lang === 'en' ? 'Anti-Burnout Program (8 sessions)' : 'Programa Anti-Burnout (8 sess\u00f5es)',
+                servicePrice: formatEuro(490),
+                servicePriceCents: 49000
+            };
+        }
+        if (service === 'burnout') {
+            return {
+                service: 'burnout',
+                tipo: 'burnout',
+                serviceLabel: lang === 'en' ? 'Specialized Burnout Consultation' : 'Consulta Especializada em Burnout',
+                servicePrice: formatEuro(60),
+                servicePriceCents: 6000
+            };
+        }
+        if (service === 'saude_mental') {
+            return {
+                service: 'saude_mental',
+                tipo: 'saude_mental',
+                serviceLabel: lang === 'en' ? 'Medical mental health consultation' : 'Consulta m\u00e9dica de sa\u00fade mental',
+                servicePrice: formatEuro(60),
+                servicePriceCents: 6000
+            };
+        }
+        if (service === 'nutricao_programa' || service === 'nutricao_completo' || service === 'nutricao_completo_reforcado') {
+            var nLabels = {
+                nutricao_programa: {
+                    pt: 'Consulta inicial de nutri\u00e7\u00e3o metab\u00f3lica',
+                    en: 'Initial metabolic nutrition consultation',
+                    es: 'Consulta inicial de nutrici\u00f3n metab\u00f3lica'
+                },
+                nutricao_completo: {
+                    pt: 'Programa completo \u2014 m\u00eas 1',
+                    en: 'Complete program \u2014 month 1',
+                    es: 'Programa completo \u2014 mes 1'
+                },
+                nutricao_completo_reforcado: {
+                    pt: 'Programa completo \u2014 entrada refor\u00e7ada',
+                    en: 'Complete program \u2014 higher first payment',
+                    es: 'Programa completo \u2014 entrada reforzada'
+                }
+            };
+            var nPrices = { nutricao_programa: 115, nutricao_completo: 227, nutricao_completo_reforcado: 322 };
+            var nLoc = lang === 'en' ? 'en' : lang === 'es' ? 'es' : 'pt';
+            return {
+                service: service,
+                tipo: service,
+                serviceLabel: nLabels[service][nLoc],
+                servicePrice: formatEuro(nPrices[service]),
+                servicePriceCents: nPrices[service] * 100
+            };
+        }
         return {
             service: 'clinica_geral',
             tipo: 'clinica_geral',
@@ -175,15 +291,35 @@
         return fetchSlotsNetwork();
     }
 
+    function hrefNeedsLangPolicy(href) {
+        try {
+            var u = new URL(href || '', window.location.origin);
+            if (u.searchParams.get('langpolicy') === 'en-es-pt') return true;
+            return /-(fr|de)$/i.test(u.searchParams.get('ref') || '');
+        } catch (e) {
+            return false;
+        }
+    }
+
+    function pageNeedsLangPolicy(fallbackHref) {
+        var lang = pageLang();
+        return lang === 'fr' || lang === 'de' || hrefNeedsLangPolicy(fallbackHref);
+    }
+
     function goCheckout(slot, opts) {
         opts = opts || {};
-        var meta = serviceMeta(opts.service || 'clinica_geral');
         var fallback = opts.fallbackHref || '/marcar/clinica-geral';
+        if (opts.bookMode === 'link') {
+            window.location.href = fallback;
+            return;
+        }
+        var meta = serviceMeta(opts.service || 'clinica_geral');
         if (!slot || !slot.date || !slot.time) {
             window.location.href = fallback;
             return;
         }
         var slotId = slot.id || slotIdFrom(slot.date, slot.time);
+        var consultLangPolicy = pageNeedsLangPolicy(fallback);
         var payload = {
             service: meta.service,
             tipo: meta.tipo,
@@ -196,8 +332,18 @@
             slotId: slotId,
             travellerCount: 1,
             hasInsurance: false,
-            locale: pageLang()
+            locale: pageLang(),
+            consultLangPolicy: consultLangPolicy,
+            clinicalIntent: clinicalIntentFor(meta.service),
+            goal: opts.goal || '',
+            concerns: opts.concerns || ''
         };
+        if (meta.service === 'nutricao_programa' || meta.service === 'nutricao_completo' || meta.service === 'nutricao_completo_reforcado') {
+            var nu = nutritionPrefill({ goal: opts.goal });
+            payload.goal = nu.goal;
+            payload.concerns = nu.concerns;
+            payload.clinicalIntent = nu;
+        }
         try {
             sessionStorage.setItem('lonConsultaPrefill', JSON.stringify(payload));
         } catch (e) { /* private mode */ }
@@ -207,6 +353,7 @@
                 '&date=' + encodeURIComponent(slot.date) +
                 '&time=' + encodeURIComponent(slot.time);
             if (holdId) dest += '&hold=' + encodeURIComponent(holdId);
+            if (consultLangPolicy) dest += '&langpolicy=en-es-pt';
             track('time_slot_clicked', {
                 surface: opts.surface || 'slots',
                 service: meta.service,
@@ -274,7 +421,7 @@
 
     function injectPayBadges() {
         document.querySelectorAll('[data-pay-badges]').forEach(attachPayBadges);
-        document.querySelectorAll('.lon-service-glass .lon-btn, .consulta-price-card .lon-btn, .guide-book-cta, .nu-hero-actions .lon-btn-primary').forEach(attachPayBadges);
+        document.querySelectorAll('.lon-service-glass .lon-btn, .consulta-price-card .lon-btn, .guide-book-cta, .nu-hero-actions .lon-btn-primary, .js-mp-cta.lon-btn-dark, .js-mp-cta.lon-btn-soft[data-pay-badges]').forEach(attachPayBadges);
         document.querySelectorAll('a.js-consulta-cta.lon-btn-dark, a.js-consulta-cta.lon-btn-primary, #lonHeroBook, #consultaCtaHero, #next-2.pay-btn').forEach(attachPayBadges);
     }
 
@@ -285,11 +432,36 @@
         if (/\/consulta\/renovacao|\/marcar\/renovacao|renew-prescription/.test(p)) {
             return { service: 'renovacao', href: '/marcar/renovacao', cta: book + ' \u2014 ' + formatEuro(19) };
         }
+        if (/\/psicologia-burnout/.test(p)) {
+            return {
+                service: '',
+                href: '/burnout/teste',
+                cta: lang === 'en' ? 'Take the CBI test' : 'Fazer o teste CBI',
+                bookMode: 'link'
+            };
+        }
         if (/\/(saudemental|consultas|psicologia)(\/|$)/.test(p)) {
             return { service: 'saude_mental', href: '/saudemental', cta: book + ' \u2014 ' + formatEuro(60) };
         }
+        if (/\/marcar\/burnout-programa/.test(p)) {
+            return { service: 'burnout_programa', href: '/marcar/burnout-programa', cta: book + ' \u2014 ' + formatEuro(490) };
+        }
+        if (/\/marcar\/burnout-mensal/.test(p)) {
+            return { service: 'burnout_mensal', href: '/marcar/burnout-mensal', cta: book + ' \u2014 216 \u20AC/m\u00eas' };
+        }
+        if (/\/marcar\/burnout(\/|$)/.test(p)) {
+            return { service: 'burnout', href: '/marcar/burnout', cta: book + ' \u2014 ' + formatEuro(60) };
+        }
         if (/\/burnout|clinica-anti-burnout/.test(p)) {
-            return { service: 'psicologia', href: '/psicologia-burnout', cta: book + ' \u2014 ' + formatEuro(60) };
+            return { service: 'burnout_mensal', href: '/marcar/burnout-mensal', cta: book + ' \u2014 216 \u20AC/m\u00eas' };
+        }
+        if (isWeightLossPath(p)) {
+            return {
+                service: 'nutricao_programa',
+                href: '/marcar/nutricao-programa?ref=sticky-nutricao',
+                cta: (lang === 'en' ? 'Initial metabolic nutrition consult' : 'Consulta inicial de nutri\u00e7\u00e3o metab\u00f3lica') + ' \u2014 ' + formatEuro(115),
+                goal: 'Perda de peso / reeduca\u00e7\u00e3o metab\u00f3lica'
+            };
         }
         if (/\/nutricao/.test(p)) {
             return { service: 'clinica_geral', href: '/marcar/clinica-geral?ref=nutricao', cta: book + ' \u2014 ' + formatEuro(39) };
@@ -317,8 +489,9 @@
         var bar = document.createElement('div');
         bar.className = 'cq-sticky-book';
         bar.setAttribute('data-sticky-book', '');
-        bar.setAttribute('data-service', meta.service);
+        bar.setAttribute('data-service', meta.service || '');
         bar.setAttribute('data-book-href', meta.href);
+        if (meta.bookMode) bar.setAttribute('data-book-mode', meta.bookMode);
         bar.innerHTML =
             '<div class="cq-sticky-book-inner">' +
             '<p class="cq-sticky-book-copy">' +
@@ -340,7 +513,9 @@
                     goCheckout(first, {
                         service: meta.service,
                         fallbackHref: meta.href,
-                        surface: 'sticky_book'
+                        surface: 'sticky_book',
+                        bookMode: meta.bookMode || '',
+                        goal: meta.goal || ''
                     });
                 });
                 attachPayBadges(cta);
@@ -408,9 +583,11 @@
             var limit = parseInt(box.getAttribute('data-limit'), 10);
             if (!Number.isFinite(limit) || limit < 1) limit = 3;
             renderRow(row, slots.slice(0, limit), {
-                service: box.getAttribute('data-service') || 'clinica_geral',
+                service: box.getAttribute('data-service') || landingBookMeta().service || 'clinica_geral',
                 fallbackHref: href,
-                surface: box.getAttribute('data-surface') || 'live_slots'
+                surface: box.getAttribute('data-surface') || 'live_slots',
+                bookMode: box.getAttribute('data-book-mode') || '',
+                goal: box.getAttribute('data-goal') || landingBookMeta().goal || ''
             });
         });
 
@@ -418,7 +595,9 @@
             bar.hidden = false;
             var cta = bar.querySelector('[data-next-slot-cta]');
             var href = bar.getAttribute('data-book-href') || (cta && cta.getAttribute('href')) || '/marcar/clinica-geral';
-            var service = bar.getAttribute('data-service') || 'clinica_geral';
+            var landing = landingBookMeta();
+            var service = bar.getAttribute('data-service') || landing.service || 'clinica_geral';
+            var bookMode = bar.getAttribute('data-book-mode') || landing.bookMode || '';
             var when = bar.querySelector('[data-next-slot-when]');
             var kicker = bar.querySelector('.cq-sticky-book-kicker');
             if (first) {
@@ -430,7 +609,9 @@
                         goCheckout(first, {
                             service: service,
                             fallbackHref: href,
-                            surface: 'sticky_book'
+                            surface: 'sticky_book',
+                            bookMode: bookMode,
+                            goal: bar.getAttribute('data-goal') || landing.goal || ''
                         });
                     });
                 }

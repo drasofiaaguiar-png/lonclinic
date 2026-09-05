@@ -195,9 +195,23 @@ function stepsHtml(steps) {
         </section>`;
 }
 
-function ctaBand(ref, label) {
+function ctaBand(ref, label, opts) {
     const r = encodeURIComponent(ref || 'consultas');
     const cta = escapeHtml(label || 'Começar a triagem');
+    if (opts && opts.tofuTest) {
+        return `
+        <aside class="qx-cta-band" aria-label="Próximos passos">
+            <div class="lon-container qx-cta-inner">
+                <p class="qx-cta-kicker">Comece pelo quadro</p>
+                <h2 class="qx-cta-title">Teste CBI no centro burnout</h2>
+                <p class="qx-cta-lead">Objectiva o desgaste em 4 minutos. A consulta de psicologia nesta página mantém o preço habitual — 60 € ou 54 €/semana.</p>
+                <div class="qx-cta-actions">
+                    <a class="lon-btn lon-btn-primary" href="/burnout/teste?ref=${r}">Fazer o teste gratuito</a>
+                    <a class="lon-btn lon-btn-soft" href="/burnout">Centro burnout</a>
+                </div>
+            </div>
+        </aside>`;
+    }
     return `
         <aside class="qx-cta-band" aria-label="Marcar consulta">
             <div class="lon-container qx-cta-inner">
@@ -441,7 +455,7 @@ function layoutQueixaPage(opts) {
     <script src="/i18n.js?v=20260905e" defer></script>
     <script src="/lon-analytics.js?v=20260905e" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260905g" defer></script>
+    <script src="/lon-slots.js?v=20260906a" defer></script>
 </body>
 </html>`;
 }
@@ -600,6 +614,7 @@ function renderPage(origin, slug) {
     const canonicalPath = `/${encodeURIComponent(slug)}`;
     const canonicalUrl = canonicalHref(canonicalPath);
     const ref = `queixa-${slug}`;
+    const isBurnoutPsi = slug === 'psicologia-burnout';
     const conditionName = meta.condition || meta.navLabel || h1;
 
     const about = meta.schemaType === 'service'
@@ -660,8 +675,11 @@ function renderPage(origin, slug) {
                 <p class="qx-answer">${escapeHtml(answer)}</p>
                 ${bylineHtml(dateMod || datePub)}
                 <div class="qx-article-actions">
-                    <a class="lon-btn lon-btn-primary lon-btn-sm" href="/triagem?ref=${encodeURIComponent(ref)}">Marcar consulta</a>
-                    <a class="lon-btn lon-btn-soft lon-btn-sm" href="#preco">Ver preço</a>
+                    ${isBurnoutPsi
+                        ? `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/burnout/teste?ref=${encodeURIComponent(ref)}">Fazer o teste CBI</a>
+                    <a class="lon-btn lon-btn-soft lon-btn-sm" href="/triagem?ref=${encodeURIComponent(ref)}">Marcar consulta</a>`
+                        : `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/triagem?ref=${encodeURIComponent(ref)}">Marcar consulta</a>
+                    <a class="lon-btn lon-btn-soft lon-btn-sm" href="#preco">Ver preço</a>`}
                 </div>
             </header>
 
@@ -687,7 +705,7 @@ function renderPage(origin, slug) {
             <p class="qx-disclaimer">Esta página não faz diagnóstico. A informação é geral e não substitui uma consulta de psicologia individualizada. Em crise ou risco imediato: <a href="tel:112">112</a> · <a href="tel:808242424">SNS 24</a> · <a href="tel:213544545">SOS Voz Amiga</a>.</p>
             ${relatedHtml(meta.related, slug)}
         </article>
-        ${ctaBand(ref, meta.ctaLabel)}
+        ${ctaBand(ref, meta.ctaLabel, { tofuTest: isBurnoutPsi })}
     </main>`;
 
     const title = String(meta.title || `${h1} | Lon Clinic`);
