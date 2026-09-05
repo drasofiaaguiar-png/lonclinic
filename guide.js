@@ -482,6 +482,23 @@ function actionCopy(lang) {
                 note: 'Online · acompanhamento individual, sem planos genéricos',
                 service: 'clinica_geral'
             },
+            nutritionProgram: {
+                chip: 'Nutrição',
+                title: 'Programa de reeducação metabólica',
+                price: '115 € · 1.º mês',
+                href: '/marcar/nutricao-programa',
+                cta: 'Começar — 115 €',
+                note: 'Acompanhamento contínuo · sem prescrição de aGLP-1',
+                service: 'nutricao_programa'
+            },
+            quizNutrition: {
+                chip: 'Avaliação',
+                title: 'Avaliação metabólica',
+                price: 'Gratuito · 2 min',
+                href: '/nutricao/avaliacao',
+                cta: 'Fazer a avaliação',
+                note: 'Perfil para o programa de reeducação'
+            },
             longevity: {
                 chip: 'Longevidade',
                 title: 'Consulta de longevidade',
@@ -618,16 +635,23 @@ function actionCopy(lang) {
 function consultSpec(kind, lang) {
     const copy = actionCopy(lang);
     if (kind === 'nutrition') return copy.nutrition;
+    if (kind === 'nutricao-programa' || kind === 'nutricao_programa') {
+        return copy.nutritionProgram || copy.nutrition;
+    }
     if (kind === 'longevity') return copy.longevity || copy.general;
     if (kind === 'travel') return copy.travel;
-    if (kind === 'mental') return copy.psych;
+    if (kind === 'mental' || kind === 'neurodiversidade' || kind === 'psicologia') return copy.psych;
     if (kind === 'burnout') return copy.hubBurnout;
     return copy.general;
 }
 
 function quizSpec(kind, lang) {
     const copy = actionCopy(lang);
-    return kind === 'burnout' ? copy.quizBurnout : copy.quizPersonality;
+    if (kind === 'burnout' || kind === 'neurodiversidade') return copy.quizBurnout;
+    if (kind === 'nutrition' || kind === 'nutricao-programa' || kind === 'nutricao_programa') {
+        return copy.quizNutrition || copy.quizPersonality;
+    }
+    return copy.quizPersonality;
 }
 
 function bookCardHtml(card, tone, extraClass, extraAttrs) {
@@ -660,7 +684,7 @@ function actionCardsHtml(kind, tone, lang) {
         ...quiz,
         href: quizHref
     }, t + 1);
-    if (kind === 'burnout') {
+    if (kind === 'burnout' || kind === 'neurodiversidade') {
         return `
 <aside class="guide-book guide-actions" aria-label="${escapeHtml(copy.consultAria)}">
     <div class="guide-book-grid guide-book-grid--actions">${consultCard}${quizCard}
@@ -788,6 +812,16 @@ function slotServicePack(slug, rawKind) {
             service: 'nutricao_programa',
             href: `/marcar/nutricao-programa?ref=blog-${encodeURIComponent(slug)}`,
             kicker: 'Próximos horários · consulta inicial de nutrição metabólica'
+        },
+        psicologia: {
+            service: 'saude_mental',
+            href: `/marcar/saude-mental?ref=blog-${encodeURIComponent(slug)}`,
+            kicker: 'Próximos horários · consulta de psicologia'
+        },
+        saude_mental: {
+            service: 'saude_mental',
+            href: `/marcar/saude-mental?ref=blog-${encodeURIComponent(slug)}`,
+            kicker: 'Próximos horários · consulta de psicologia'
         },
         longevity: {
             service: 'longevidade',
@@ -1740,6 +1774,22 @@ function magCtaHtml(kind, lang) {
                     { href: '/marcar/clinica-geral?ref=magazine-perda-de-peso', label: 'Marcar consulta' }
                 ]
             },
+            'nutricao-programa': {
+                kicker: 'Nutrição',
+                title: 'Transição GLP-1 e manutenção metabólica.',
+                actions: [
+                    { href: '/nutricao/glp-1', label: 'Página GLP-1' },
+                    { href: '/marcar/nutricao-programa', label: 'Programa nutricional' }
+                ]
+            },
+            neurodiversidade: {
+                kicker: 'Psicologia',
+                title: 'Quando o esgotamento pode ser TDAH, autismo ou burnout.',
+                actions: [
+                    { href: '/psicologia', label: 'Avaliação psicológica' },
+                    { href: '/burnout/teste', label: 'Teste CBI' }
+                ]
+            },
             longevity: {
                 kicker: 'Longevidade',
                 title: 'Prevenir com biomarcadores reais.',
@@ -1895,6 +1945,10 @@ function magCtaHtml(kind, lang) {
         burnout: `/burnout`,
         clinic: `/marcar/clinica-geral${langQ}`,
         nutrition: `/marcar/clinica-geral${langQ}`,
+        'nutricao-programa': `/marcar/nutricao-programa${langQ}`,
+        nutricao_programa: `/marcar/nutricao-programa${langQ}`,
+        neurodiversidade: `/psicologia`,
+        psicologia: `/marcar/saude-mental${langQ}`,
         longevity: `/marcar/longevidade${langQ}`
     };
     const labelByLang = {
@@ -1937,7 +1991,7 @@ function magClusterHtml() {
     return `<aside class="mag-cluster mag-wrap" aria-label="Autismo, ADHD e burnout">
                 <p class="mag-cluster-kicker">Dossier</p>
                 <h2 class="mag-cluster-title">Autismo, ADHD e burnout</h2>
-                <p class="mag-cluster-dek">Mascaramento, hiperfoco e esgotamento sobrepõem-se. Leia em conjunto o <a href="/blog/autismo-em-mulheres-diagnostico-tardio">diagnóstico tardio de autismo em mulheres</a>, os <a href="/blog/adhd-em-adultos-sintomas">sinais de ADHD em adultos</a> e <a href="/burnout/o-que-e">o que é burnout</a> — não como categorias isoladas.</p>
+                <p class="mag-cluster-dek">Mascaramento, hiperfoco e esgotamento sobrepõem-se. Leia em conjunto o <a href="/blog/unmasking-autism-devon-price">custo do masking</a>, <a href="/blog/adhd-2-0-hallowell-ratey">ADHD 2.0 e burnout invisível</a>, o <a href="/blog/autismo-em-mulheres-diagnostico-tardio">diagnóstico tardio em mulheres</a> e <a href="/burnout/o-que-e">o que é burnout</a> — não como categorias isoladas.</p>
                 ${magCtaHtml('burnout')}
             </aside>`;
 }
