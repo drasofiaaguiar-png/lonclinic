@@ -107,9 +107,50 @@
 }
 
 .marcar-schedule-wrap .marcar-sub {
+    margin: 0 0 16px;
     font-size: 0.875rem;
-    color: var(--marcar-muted);
-    margin-bottom: 20px;
+    color: var(--marcar-muted, #6e6477);
+}
+
+.marcar-quick-slots {
+    margin: 0 0 18px;
+    padding: 14px 16px 12px;
+    border: 1px solid var(--marcar-border, #d5ddd6);
+    border-radius: 14px;
+    background: #fff;
+}
+
+.marcar-quick-kicker {
+    margin: 0 0 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lon-muted, #6e6477);
+}
+
+.marcar-quick-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.marcar-quick-slot {
+    appearance: none;
+    border: 1px solid #255235;
+    background: #fff;
+    color: #255235;
+    border-radius: 999px;
+    padding: 8px 12px;
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.marcar-quick-slot:hover {
+    background: #255235;
+    color: #fff;
 }
 
 .marcar-schedule-layout {

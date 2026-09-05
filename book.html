@@ -29,7 +29,7 @@
     <meta name="twitter:image" content="https://www.lonclinic.com/image/image2.webp">
     <link rel="stylesheet" href="landing.css?v=20260903b">
     <link rel="stylesheet" href="styles.css?v=20260903b">
-    <link rel="stylesheet" href="booking.css?v=20260903c">
+    <link rel="stylesheet" href="booking.css?v=20260905d">
     <link rel="preload" as="image" href="/image/image2.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -128,7 +128,7 @@
                 <div class="booking-step1-intro">
                     <div class="step-header">
                         <h1 class="step-title">Escolha data e hora</h1>
-                        <p class="step-desc">Selecione um horário conveniente para a sua consulta por videochamada.</p>
+                        <p class="step-desc">Toque num horário livre — ou escolha outro dia no calendário.</p>
                     </div>
                     <figure class="booking-consult-figure">
                         <img src="image/image2.webp" alt="Médica em consulta de telemedicina" width="800" height="600" loading="eager" decoding="async" fetchpriority="high">
@@ -207,6 +207,12 @@
                         <span class="tc-summary-breakdown" id="travellerPriceBreakdown">1 person · 20 min · Video call</span>
                         <span class="tc-summary-total" id="travellerPriceTotal">€39</span>
                     </div>
+                </div>
+
+                <div class="booking-quick-slots" id="bookingQuickSlots" hidden>
+                    <p class="booking-quick-kicker">Próximos horários livres</p>
+                    <div class="booking-quick-row" data-quick-row></div>
+                    <p class="booking-quick-hint">Ou escolha outro dia no calendário.</p>
                 </div>
 
                 <div class="schedule-layout">
@@ -698,6 +704,6 @@
         <span>💬</span>
     </a>
 
-    <script src="booking.js?v=20260903c"></script>
+    <script src="booking.js?v=20260905c"></script>
 </body>
 </html>

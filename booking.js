@@ -429,7 +429,72 @@ document.addEventListener('DOMContentLoaded', async () => {
         state.time = null;
         document.getElementById('next-1').disabled = true;
         if (window.LonAnalytics) window.LonAnalytics.track('date_select', { surface: 'booking' });
-        renderTimeslots();
+        return renderTimeslots();
+    }
+
+    function formatQuickSlotLabel(slot) {
+        const d = parseStoredDate(slot.date);
+        if (!d) return slot.time;
+        const lang = window.CLINIC_I18N ? window.CLINIC_I18N.getLang() : 'pt';
+        const locale = lang === 'es' ? 'es-ES' : lang === 'en' ? 'en-GB' : 'pt-PT';
+        return d.toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + slot.time;
+    }
+
+    function findCalendarDayButton(dateObj) {
+        const day = String(dateObj.getDate());
+        return [...calGrid.querySelectorAll('.cal-day')].find((el) =>
+            el.textContent === day &&
+            !el.classList.contains('cal-empty') &&
+            !el.classList.contains('cal-disabled')
+        );
+    }
+
+    async function applyQuickSlot(slot, opts) {
+        const d = parseStoredDate(slot.date);
+        if (!d) return;
+        state.calMonth = d.getMonth();
+        state.calYear = d.getFullYear();
+        await renderCalendar();
+        const btn = findCalendarDayButton(d);
+        if (!btn) return;
+        await selectDate(d.getFullYear(), d.getMonth(), d.getDate(), btn);
+        if (opts && opts.selectTime === false) return;
+        const want = String(slot.time).length === 4 ? '0' + slot.time : slot.time;
+        timeslotGrid.querySelectorAll('.timeslot-btn').forEach((b) => {
+            if (b.textContent === want) b.click();
+        });
+        if (state.date && state.time && !(opts && opts.stayOnStep)) {
+            goToStep(2);
+        }
+    }
+
+    async function loadQuickSlots() {
+        const wrap = document.getElementById('bookingQuickSlots');
+        try {
+            const res = await fetch('/api/next-slots?limit=6');
+            if (!res.ok) return;
+            const data = await res.json();
+            const slots = (data && data.slots) || [];
+            if (!slots.length) return;
+            if (wrap) {
+                const row = wrap.querySelector('[data-quick-row]');
+                if (row) {
+                    row.innerHTML = '';
+                    slots.forEach((slot) => {
+                        const btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = 'booking-quick-slot';
+                        btn.textContent = formatQuickSlotLabel(slot);
+                        btn.addEventListener('click', () => applyQuickSlot(slot));
+                        row.appendChild(btn);
+                    });
+                    wrap.hidden = false;
+                }
+            }
+            if (!state.date && slots[0]) {
+                await applyQuickSlot(slots[0], { selectTime: false, stayOnStep: true });
+            }
+        } catch (e) { /* calendar still works */ }
     }
 
     async function renderTimeslots() {
@@ -1487,6 +1552,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (state.currentStep === 1) {
         renderCalendar();
+        loadQuickSlots();
     }
 
     // ─── Preload ───

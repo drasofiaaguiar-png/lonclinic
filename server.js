@@ -4554,7 +4554,7 @@ function addDaysIso(dateIso, n) {
 
 /** Next free public slots across upcoming days (homepage + renewal deep-link). */
 async function getNextBookableSlots(limit, maxDays) {
-    const cap = Math.min(Math.max(parseInt(limit, 10) || 1, 1), 5);
+    const cap = Math.min(Math.max(parseInt(limit, 10) || 1, 1), 8);
     const days = Math.min(Math.max(parseInt(maxDays, 10) || 14, 1), 21);
     const now = lisbonNowParts();
     const out = [];

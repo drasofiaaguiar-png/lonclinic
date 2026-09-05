@@ -58,7 +58,10 @@ const UI = {
         cardRenewTitle: 'Prescription renewal',
         cardRenewPrice: '€19',
         cardRenewNote: 'Stable long-term medicine · video, not a form',
-        cardRenewCta: 'Renew'
+        cardRenewCta: 'Renew',
+        slotKicker: 'Next available times',
+        slotCta: 'Book this time',
+        slotPending: 'See times'
     },
     es: {
         htmlLang: 'es',
@@ -103,7 +106,10 @@ const UI = {
         cardRenewTitle: 'Renovación de receta',
         cardRenewPrice: '19 €',
         cardRenewNote: 'Medicación crónica estable · vídeo, no un formulario',
-        cardRenewCta: 'Renovar'
+        cardRenewCta: 'Renovar',
+        slotKicker: 'Próximos horarios',
+        slotCta: 'Reservar esta hora',
+        slotPending: 'Ver horarios'
     },
     fr: {
         htmlLang: 'fr',
@@ -148,7 +154,10 @@ const UI = {
         cardRenewTitle: 'Renouveler une ordonnance',
         cardRenewPrice: '19 €',
         cardRenewNote: 'Traitement chronique stable · visio, pas un formulaire',
-        cardRenewCta: 'Renouveler'
+        cardRenewCta: 'Renouveler',
+        slotKicker: 'Prochains créneaux',
+        slotCta: 'Réserver ce créneau',
+        slotPending: 'Voir les horaires'
     },
     de: {
         htmlLang: 'de',
@@ -193,7 +202,10 @@ const UI = {
         cardRenewTitle: 'Rezept verlängern',
         cardRenewPrice: '19 €',
         cardRenewNote: 'Stabile Dauermedikation · Video, kein Formular',
-        cardRenewCta: 'Verlängern'
+        cardRenewCta: 'Verlängern',
+        slotKicker: 'Nächste Termine',
+        slotCta: 'Diesen Termin buchen',
+        slotPending: 'Zeiten ansehen'
     }
 };
 
@@ -452,9 +464,39 @@ function bookingCardsHtml(page, ui, tone) {
         .join('');
     return `
         <aside class="guide-book" aria-label="${escapeHtml(ui.bookAria)}">
-            <div class="guide-book-grid">${items}
+    <div class="guide-book-grid">${items}
+    </div>
+</aside>`;
+}
+
+function bookingServiceKey(page) {
+    const href = String((page && page.bookingHref) || '');
+    if (href.indexOf('/marcar/renovacao') !== -1) return 'renovacao';
+    if (href.indexOf('/marcar/travel') !== -1) return 'travel';
+    return 'clinica_geral';
+}
+
+function liveSlotsHtml(page, ui, surface) {
+    const href = page.bookingHref || '/marcar/clinica-geral';
+    return `
+        <div class="cq-live-slots" data-next-slots data-service="${escapeHtml(bookingServiceKey(page))}" data-book-href="${escapeHtml(href)}" data-surface="${escapeHtml(surface || 'tourist')}" hidden>
+            <p class="cq-live-slots-kicker">${escapeHtml(ui.slotKicker)}</p>
+            <div class="cq-live-slots-row" data-next-slots-row></div>
+        </div>`;
+}
+
+function stickyBookHtml(page, ui) {
+    const href = page.bookingHref || '/marcar/clinica-geral';
+    return `
+        <div class="cq-sticky-book" data-sticky-book data-service="${escapeHtml(bookingServiceKey(page))}" data-book-href="${escapeHtml(href)}">
+            <div class="cq-sticky-book-inner">
+                <p class="cq-sticky-book-copy">
+                    <span class="cq-sticky-book-kicker">${escapeHtml(ui.slotKicker)}</span>
+                    <strong data-next-slot-when>${escapeHtml(ui.slotPending)}</strong>
+                </p>
+                <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="sticky-book" data-next-slot-cta href="${escapeHtml(href)}">${escapeHtml(ui.slotCta)}</a>
             </div>
-        </aside>`;
+        </div>`;
 }
 
 function ctaBand(page, ui) {
@@ -540,8 +582,8 @@ function layoutPage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260621b">
-    <link rel="stylesheet" href="/consulta-pages.css?v=20260820b">
-    <link rel="stylesheet" href="/tourist-pages.css?v=20260820b">
+    <link rel="stylesheet" href="/consulta-pages.css?v=20260905d">
+    <link rel="stylesheet" href="/tourist-pages.css?v=20260905d">
     <link rel="stylesheet" href="/author.css?v=20260820e">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -608,6 +650,8 @@ function layoutPage(opts) {
     </footer>
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="${escapeHtml(ui.whatsapp)}">💬</a>
     <script src="/lon-nav.js"></script>
+    <script src="/lon-analytics.js?v=20260904a" defer></script>
+    <script src="/lon-slots.js?v=20260905c" defer></script>
 </body>
 </html>`;
 }
@@ -705,13 +749,14 @@ function renderPage(origin, slug) {
                     <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="tourist-hero" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || ui.navBook)}</a>
                     <a class="lon-btn lon-btn-soft" href="#quando-urgencia">${escapeHtml(ui.emergencyCta)}</a>
                 </div>
+                ${liveSlotsHtml(meta, ui, 'tourist-hero')}
             </header>
 
             ${notice}
 
-            ${sectionsHtml(meta.sections)}
-
             ${bookingCardsHtml(meta, ui, 0)}
+
+            ${sectionsHtml(meta.sections)}
 
             ${
                 Array.isArray(meta.howItWorks) && meta.howItWorks.length
@@ -753,6 +798,7 @@ function renderPage(origin, slug) {
             ${relatedHtml(meta, siblings, ui)}
         </article>
         ${ctaBand(meta, ui)}
+        ${stickyBookHtml(meta, ui)}
     </main>`;
 
     return {
@@ -892,6 +938,7 @@ function renderHub(origin) {
                     <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="tourist-hub-hero" href="${escapeHtml(bookingHref)}">${escapeHtml(hub.bookingLabel || 'Book online — €39')}</a>
                     <a class="lon-btn lon-btn-soft" href="#quando-urgencia">${escapeHtml(ui.emergencyCta)}</a>
                 </div>
+                ${liveSlotsHtml(hub, ui, 'tourist-hub')}
             </header>
 
             <aside class="tq-split-note" aria-label="Not the travel clinic">
@@ -899,9 +946,9 @@ function renderHub(origin) {
                 <p><a href="/travel-clinic">Going abroad? Travel clinic →</a></p>
             </aside>
 
-            ${sectionsHtml(hub.sections)}
-
             ${bookingCardsHtml(hub, ui, 0)}
+
+            ${sectionsHtml(hub.sections)}
 
             <section class="cq-price" aria-labelledby="tq-price">
                 <h2 id="tq-price">${escapeHtml(ui.priceTitle)}</h2>
@@ -941,6 +988,7 @@ function renderHub(origin) {
             ctaSecondaryHref: '/travel-clinic',
             ctaSecondaryLabel: 'Travel clinic — vaccines'
         }, ui)}
+        ${stickyBookHtml(hub, ui)}
     </main>`;
 
     const hreflang = [

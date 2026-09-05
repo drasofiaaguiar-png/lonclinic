@@ -279,13 +279,12 @@ textarea:focus {
 .lon-nav .lang-toggle {
     display: flex;
     align-items: center;
-    gap: 2px;
-    background: rgba(255, 255, 255, 0.13);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    gap: 4px;
+    background: #fff;
+    border: 1px solid rgba(21, 19, 27, 0.14);
     border-radius: 999px;
-    padding: 3px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    padding: 4px;
+    box-shadow: 0 1px 4px rgba(21, 19, 27, 0.06);
 }
 
 .lon-nav.is-scrolled .lon-nav-actions .lang-toggle {
@@ -607,6 +606,65 @@ textarea:focus {
     color: var(--lon-accent);
     text-decoration: underline;
     text-underline-offset: 2px;
+}
+
+.dr-live-slots {
+    max-width: 44ch;
+    margin: 0 0 22px;
+    padding: 14px 14px 12px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #c9d4cc;
+    border-radius: 14px;
+}
+
+.dr-live-slots[hidden] {
+    display: none;
+}
+
+.dr-live-slots-kicker {
+    margin: 0 0 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--lon-muted);
+}
+
+.dr-live-slots-row,
+.cq-live-slots-row,
+.booking-quick-row,
+.marcar-quick-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.lon-live-slot,
+.booking-quick-slot,
+.marcar-quick-slot {
+    appearance: none;
+    border: 1px solid #255235;
+    background: #fff;
+    color: #255235;
+    border-radius: 999px;
+    padding: 8px 12px;
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.lon-live-slot:hover,
+.booking-quick-slot:hover,
+.marcar-quick-slot:hover {
+    background: #255235;
+    color: #fff;
+}
+
+.dr-live-slots .dr-next-slot-other {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 0.86rem;
     font-weight: 600;
 }
 

@@ -44,7 +44,7 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="preload" as="image" href="/image/image2.webp" fetchpriority="high">
 
-    <link rel="stylesheet" href="landing.css?v=20260903c">
+    <link rel="stylesheet" href="landing.css?v=20260905d">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
@@ -174,12 +174,11 @@
                     <div class="dr-cta-row">
                         <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark" id="lonHeroBook">Marcar consulta</a>
                     </div>
-                    <p class="dr-next-slot" id="lonNextSlot" hidden>
-                        <span class="dr-next-slot-kicker">Próximo horário</span>
-                        <strong id="lonNextSlotWhen">—</strong>
-                        <span class="dr-next-slot-price">€39 · clínica geral</span>
-                        <a href="/marcar/clinica-geral" class="dr-next-slot-other" id="lonNextSlotOther">Outro horário</a>
-                    </p>
+                    <div class="dr-live-slots" data-next-slots data-limit="6" data-service="clinica_geral" data-book-href="/marcar/clinica-geral" data-surface="home" hidden>
+                        <p class="dr-live-slots-kicker">Próximos horários</p>
+                        <div class="dr-live-slots-row" data-next-slots-row></div>
+                        <a href="/marcar/clinica-geral" class="dr-next-slot-other">Outro horário</a>
+                    </div>
 
                     <ul class="dr-trust-list" aria-label="Destaques de confiança da clínica">
                         <li>Médicos acreditados pela Ordem dos Médicos Português</li>
@@ -622,6 +621,7 @@
     <script src="/lon-analytics.js?v=20260904a" defer></script>
     <script src="i18n.js?v=20260903c" defer></script>
     <script src="reviews.js?v=20260902a" defer></script>
-    <script src="landing.js?v=20260903c" defer></script>
+    <script src="landing.js?v=20260905c" defer></script>
+    <script src="/lon-slots.js?v=20260905c" defer></script>
 </body>
 </html>

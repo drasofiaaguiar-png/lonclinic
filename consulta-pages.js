@@ -286,7 +286,7 @@ function layoutConsultaPage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260621b">
-    <link rel="stylesheet" href="/consulta-pages.css?v=20260820b">
+    <link rel="stylesheet" href="/consulta-pages.css?v=20260905d">
     <link rel="stylesheet" href="/author.css?v=20260820e">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     ${ldScripts}
@@ -361,6 +361,8 @@ function layoutConsultaPage(opts) {
     </footer>
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contactar por WhatsApp">💬</a>
     <script src="/lon-nav.js"></script>
+    <script src="/lon-analytics.js?v=20260904a" defer></script>
+    <script src="/lon-slots.js?v=20260905c" defer></script>
 </body>
 </html>`;
 }
@@ -464,7 +466,13 @@ function renderSpoke(origin, slug) {
                     <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="spoke-hero" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
                     <a class="lon-btn lon-btn-soft" href="#quando-nao-online">Quando não tratar online</a>
                 </div>
+                <div class="cq-live-slots" data-next-slots data-service="clinica_geral" data-book-href="${escapeHtml(bookingHref)}" data-surface="consulta-hero" hidden>
+                    <p class="cq-live-slots-kicker">Próximos horários</p>
+                    <div class="cq-live-slots-row" data-next-slots-row></div>
+                </div>
             </header>
+
+            ${bookingCardsHtml(meta, 0)}
 
             <section class="cq-block" aria-labelledby="cq-sintomas-title">
                 <h2 id="cq-sintomas-title">Sintomas</h2>
@@ -489,8 +497,6 @@ function renderSpoke(origin, slug) {
                 ${stepsHtml(meta.howItWorks)}
             </section>
 
-            ${bookingCardsHtml(meta, 0)}
-
             <section class="cq-price" aria-labelledby="cq-preco-title">
                 <h2 id="cq-preco-title">Preço</h2>
                 <p class="cq-price-value">${escapeHtml(meta.price || '')}</p>
@@ -512,6 +518,15 @@ function renderSpoke(origin, slug) {
             ${relatedNav(meta, pages)}
         </article>
         ${ctaBand(meta)}
+        <div class="cq-sticky-book" data-sticky-book data-service="clinica_geral" data-book-href="${escapeHtml(bookingHref)}">
+            <div class="cq-sticky-book-inner">
+                <p class="cq-sticky-book-copy">
+                    <span class="cq-sticky-book-kicker">Próximo horário</span>
+                    <strong data-next-slot-when>Marcar consulta</strong>
+                </p>
+                <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="consulta-sticky" data-next-slot-cta href="${escapeHtml(bookingHref)}">Marcar este horário</a>
+            </div>
+        </div>
     </main>`;
 
     return {

@@ -18,7 +18,7 @@
     <link rel="canonical" href="https://www.lonclinic.com/marcar">
     <meta name="theme-color" content="#4A7C6F">
     <link rel="stylesheet" href="/landing.css">
-    <link rel="stylesheet" href="/marcar.css?v=20260903b">
+    <link rel="stylesheet" href="/marcar.css?v=20260905d">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
@@ -85,7 +85,11 @@
 
             <section class="marcar-schedule-wrap" aria-labelledby="marcarScheduleTitle">
                 <h2 id="marcarScheduleTitle">Data e hora</h2>
-                <p class="marcar-sub">Escolha o dia e o horário da sua consulta online.</p>
+                <p class="marcar-sub">Toque num horário livre, ou escolha outro dia no calendário.</p>
+                <div class="marcar-quick-slots" id="marcarQuickSlots" hidden>
+                    <p class="marcar-quick-kicker">Próximos horários livres</p>
+                    <div class="marcar-quick-row" data-quick-row></div>
+                </div>
 
                 <div class="marcar-schedule-layout">
                     <div class="marcar-cal-section">
@@ -138,6 +142,6 @@
     <script src="/lon-analytics.js?v=20260904a" defer></script>
     <script src="/i18n.js" defer></script>
     <script src="/lon-nav.js" defer></script>
-    <script src="/marcar.js?v=20260903c" defer></script>
+    <script src="/marcar.js?v=20260905c" defer></script>
 </body>
 </html>

@@ -656,7 +656,77 @@
         state.time = null;
         btnNext.disabled = true;
         if (window.LonAnalytics) window.LonAnalytics.track('date_select', { surface: 'booking' });
-        renderTimeslots();
+        return renderTimeslots();
+    }
+
+    function formatQuickSlotLabel(slot) {
+        var bits = String(slot.date || '').split('-').map(Number);
+        if (bits.length < 3) return slot.time;
+        var d = new Date(bits[0], bits[1] - 1, bits[2]);
+        var lang = getLang();
+        var localeStr = lang === 'pt' ? 'pt-PT' : lang === 'es' ? 'es-ES' : 'en-GB';
+        return d.toLocaleDateString(localeStr, { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + slot.time;
+    }
+
+    function findMarcarDayButton(dateObj) {
+        var day = String(dateObj.getDate());
+        var found = null;
+        calGrid.querySelectorAll('.marcar-cal-day').forEach(function (el) {
+            if (el.textContent === day && !el.classList.contains('marcar-cal-empty') && !el.classList.contains('marcar-cal-disabled')) {
+                found = el;
+            }
+        });
+        return found;
+    }
+
+    function applyQuickSlot(slot, opts) {
+        var bits = String(slot.date || '').split('-').map(Number);
+        if (bits.length < 3) return Promise.resolve();
+        var dateObj = new Date(bits[0], bits[1] - 1, bits[2]);
+        state.calMonth = dateObj.getMonth();
+        state.calYear = dateObj.getFullYear();
+        renderCalendar();
+        var dayBtn = findMarcarDayButton(dateObj);
+        if (!dayBtn) return Promise.resolve();
+        return Promise.resolve(selectDate(bits[0], bits[1] - 1, bits[2], dayBtn)).then(function () {
+            if (opts && opts.selectTime === false) return;
+            var want = String(slot.time).length === 4 ? '0' + slot.time : slot.time;
+            timeslotGrid.querySelectorAll('.marcar-slot-btn').forEach(function (b) {
+                if (b.textContent === want) b.click();
+            });
+            if (!(opts && opts.stayOnStep) && state.date && state.time && btnNext && !btnNext.disabled) {
+                btnNext.click();
+            }
+        });
+    }
+
+    function loadQuickSlots() {
+        var wrap = document.getElementById('marcarQuickSlots');
+        return fetch('/api/next-slots?limit=6')
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (data) {
+                var slots = data && data.slots ? data.slots : [];
+                if (!slots.length) return;
+                if (wrap) {
+                    var row = wrap.querySelector('[data-quick-row]');
+                    if (row) {
+                        row.innerHTML = '';
+                        slots.forEach(function (slot) {
+                            var btn = document.createElement('button');
+                            btn.type = 'button';
+                            btn.className = 'marcar-quick-slot';
+                            btn.textContent = formatQuickSlotLabel(slot);
+                            btn.addEventListener('click', function () { applyQuickSlot(slot); });
+                            row.appendChild(btn);
+                        });
+                        wrap.hidden = false;
+                    }
+                }
+                if (!state.date && slots[0]) {
+                    return applyQuickSlot(slots[0], { selectTime: false, stayOnStep: true });
+                }
+            })
+            .catch(function () { /* calendar still works */ });
     }
 
     function renderTimeslots() {
@@ -673,7 +743,7 @@
 
         var dateStr = formatDateLocal(state.date);
 
-        fetch('/api/admin/available-slots?date=' + encodeURIComponent(dateStr))
+        return fetch('/api/admin/available-slots?date=' + encodeURIComponent(dateStr))
             .then(function (r) { return r.json(); })
             .then(function (data) {
                 timeslotGrid.innerHTML = '';
@@ -861,5 +931,6 @@
                 }
             }
         }
+        loadQuickSlots();
     });
 })();
