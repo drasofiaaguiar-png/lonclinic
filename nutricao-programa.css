@@ -761,10 +761,6 @@
     color: var(--lon-accent, #255235);
 }
 
-.mp-pay-card {
-    position: relative;
-}
-
 .mp-landing[data-mp-plan="completo"] .mp-pay-card.is-featured::before,
 .mp-landing[data-mp-plan="completo"] #mpPayB::before {
     display: inline-block;

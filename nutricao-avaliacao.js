@@ -256,7 +256,6 @@
         var data = payload();
         submitting = true;
         var btn = $('submitBtn');
-        var prev = btn.textContent;
         btn.disabled = true;
         btn.textContent = 'A preparar o resultado…';
 
