@@ -1,6 +1,369 @@
 {
     "articles": [
         {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de saúde",
+            "series": "livros-saude",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "os-10-livros-de-saude-mais-vendidos",
+            "title": "Os 10 Livros de Saúde Mais Vendidos em Portugal (Comentados por uma Médica)",
+            "description": "Série de críticas clínicas aos bestsellers de saúde mais lidos em Portugal: o que a evidência confirma, onde o protocolo falha na prática, e o que pedir em consulta.",
+            "image": "/image/guide/guide-sunset-lake.jpg",
+            "seriesHub": true,
+            "ctaKind": "nutrition",
+            "readingMinutes": 4,
+            "related": [
+                "outlive-peter-attia",
+                "metodo-glucose-goddess",
+                "a-dieta-perfeita-mariana-abecasis"
+            ],
+            "faq": [
+                {
+                    "q": "Esta série recomenda os dez livros?",
+                    "a": "Não. Comenta-os. Em vários capítulos a evidência confirma uma parte do argumento e recusa o extremismo operacional — treino impossível de manter, sensores em pessoas saudáveis ou suplementação sem diagnóstico."
+                },
+                {
+                    "q": "Substitui uma consulta médica ou nutricional?",
+                    "a": "Não. Tem fins informativos. Decisões sobre análises, suplementos, dietas terapêuticas ou fadiga crónica exigem avaliação individual."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de saúde",
+            "series": "livros-saude",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "outlive-peter-attia",
+            "title": "Outlive (Peter Attia): a ciência da longevidade vs. a realidade do doente",
+            "description": "Outlive de Peter Attia defende ApoB e VO2 max. Uma médica analisa o que a evidência confirma e onde o protocolo falha na prática clínica real.",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "ctaKind": "longevity",
+            "slotService": "longevidade",
+            "readingMinutes": 5,
+            "related": [
+                "good-energy-casey-means",
+                "habitos-que-te-salvarao-a-vida",
+                "os-10-livros-de-saude-mais-vendidos"
+            ],
+            "faq": [
+                {
+                    "q": "A ApoB é mesmo melhor do que o LDL para avaliar risco cardiovascular?",
+                    "a": "Sim, segundo as diretrizes ESC/EAS 2019, a ApoB reflete o número total de partículas aterogénicas e é considerada uma medida mais precisa do risco residual do que o LDL-colesterol isolado, especialmente em pessoas com diabetes ou triglicéridos elevados."
+                },
+                {
+                    "q": "É preciso treinar 3-4 horas por semana em Zona 2 para ter benefícios de longevidade?",
+                    "a": "Não. A evidência mostra que mesmo atingir níveis moderados de aptidão cardiorrespiratória — cumprindo as recomendações gerais de 150 minutos semanais de atividade física — já reduz significativamente o risco de mortalidade; volumes muito superiores trazem ganhos adicionais decrescentes para a maioria das pessoas."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de saúde",
+            "series": "livros-saude",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "metodo-glucose-goddess",
+            "title": "O Método Glucose Goddess: hacks de glicose ou ilusão metabolicamente perigosa?",
+            "description": "O Método Glucose Goddess tem base científica real na ordem dos alimentos, mas o uso de sensores de glicose em pessoas saudáveis pode ser contraproducente. Análise clínica completa.",
+            "image": "/image/guide/guide-lake-boats.jpg",
+            "ctaKind": "nutrition",
+            "slotService": "nutricao-programa",
+            "readingMinutes": 5,
+            "related": [
+                "a-dieta-perfeita-mariana-abecasis",
+                "good-energy-casey-means",
+                "proteina-e-saciedade"
+            ],
+            "faq": [
+                {
+                    "q": "Comer vegetais antes dos hidratos de carbono reduz mesmo o pico de glicose?",
+                    "a": "Sim, num estudo controlado em pessoas com diabetes tipo 2, essa simples mudança de ordem reduziu o pico médio de glicose pós-prandial em 28,6%, sem alterar a composição da refeição."
+                },
+                {
+                    "q": "Devo usar um sensor contínuo de glicose (CGM) mesmo não sendo diabético?",
+                    "a": "Não é geralmente recomendado sem indicação clínica. Em pessoas saudáveis, o CGM pode levar a restrições alimentares desnecessárias, já que picos de glicose após fruta ou hidratos de carbono complexos são fisiológicos e normais."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de saúde",
+            "series": "livros-saude",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "emagrece-para-sempre-joana-pinho",
+            "title": "Emagrece Para Sempre: a restrição cognitiva e o mito da vontade",
+            "description": "Por que a restrição alimentar rígida falha a longo prazo? A ciência da compulsão alimentar e da fome hormonal, explicada por uma médica.",
+            "image": "/image/guide/guide-waterfall.jpg",
+            "ctaKind": "nutrition",
+            "slotService": "nutricao-programa",
+            "readingMinutes": 5,
+            "related": [
+                "emagreca-sem-dietas-diana-dinis",
+                "efeito-ioio",
+                "fome-emocional-vs-fisica"
+            ],
+            "faq": [
+                {
+                    "q": "Porque é que dietas muito restritivas costumam falhar a longo prazo?",
+                    "a": "Porque a restrição rígida ativa mecanismos psicológicos e hormonais de compensação: a quebra ocasional de uma regra alimentar tende a desencadear perda de controlo, e a fome fisiológica aumenta à medida que hormonas como a grelina se elevam em resposta à privação."
+                },
+                {
+                    "q": "A compulsão alimentar é sempre falta de força de vontade?",
+                    "a": "Não. Há uma base fisiológica documentada — incluindo alterações nos sinais hormonais de fome e saciedade — que torna a restrição rígida um fator de risco reconhecido para episódios de compulsão, independentemente da motivação da pessoa."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de saúde",
+            "series": "livros-saude",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "food-for-life-tim-spector",
+            "title": "Food for Life (Tim Spector): a microbiota e a regra dos 30 vegetais",
+            "description": "A regra dos 30 vegetais por semana tem base científica sólida — mas nem toda a gente a pode aplicar sem preparação. Veja quando pode piorar sintomas digestivos.",
+            "image": "/image/guide/guide-coastal-sun.jpg",
+            "ctaKind": "longevity",
+            "slotService": "longevidade",
+            "readingMinutes": 4,
+            "related": [
+                "how-not-to-die-michael-greger",
+                "o-fim-das-dietas-joel-fuhrman",
+                "os-10-livros-de-saude-mais-vendidos"
+            ],
+            "faq": [
+                {
+                    "q": "A regra dos 30 vegetais por semana é cientificamente válida?",
+                    "a": "Sim, tem origem num estudo real (American Gut Project, 2018) que associou maior diversidade de plantas consumidas a maior diversidade da microbiota intestinal. Não é, no entanto, um número rígido — é uma meta orientadora."
+                },
+                {
+                    "q": "Posso começar a comer 30 tipos de plantas diferentes de imediato se tenho intestino irritável?",
+                    "a": "Não é recomendável fazê-lo de forma abrupta. Um aumento súbito de fibra fermentável pode agravar sintomas em pessoas com SII ou SIBO; o ideal é uma introdução gradual e faseada, orientada por um profissional."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de saúde",
+            "series": "livros-saude",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "habitos-que-te-salvarao-a-vida",
+            "title": "Hábitos Que Te Salvarão a Vida: inflamação crónica de baixo grau",
+            "description": "A inflamação crónica de baixo grau é hoje reconhecida como um dos 12 hallmarks do envelhecimento. Saiba porque tratar apenas os sintomas não chega.",
+            "image": "/image/guide/guide-country-road.jpg",
+            "ctaKind": "general",
+            "slotService": "clinica-geral",
+            "readingMinutes": 4,
+            "related": [
+                "outlive-peter-attia",
+                "good-energy-casey-means",
+                "os-10-livros-de-saude-mais-vendidos"
+            ],
+            "faq": [
+                {
+                    "q": "O que é o inflammaging?",
+                    "a": "É o termo usado para descrever a inflamação crónica, persistente e de baixo grau que se acumula com a idade, e que a literatura científica atual identifica como um dos principais mecanismos por trás do envelhecimento e do aparecimento de doenças crónicas."
+                },
+                {
+                    "q": "Suplementos anti-inflamatórios genéricos resolvem o problema?",
+                    "a": "Raramente. A inflamação crónica tem causas muito diferentes de pessoa para pessoa — desde disfunção da tiroide a apneia do sono — pelo que a abordagem eficaz passa por identificar a causa antes de escolher a intervenção."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de saúde",
+            "series": "livros-saude",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "a-dieta-perfeita-mariana-abecasis",
+            "title": "A Dieta Perfeita: mitos do emagrecimento prático",
+            "description": "Não existe a dieta perfeita universal, confirma o maior ensaio clínico já feito sobre low-carb vs. low-fat. O que realmente importa para perder peso.",
+            "image": "/image/guide/guide-opera-coast.jpg",
+            "ctaKind": "nutrition",
+            "slotService": "nutricao-programa",
+            "readingMinutes": 4,
+            "related": [
+                "perda-de-peso-sustentavel",
+                "emagrece-para-sempre-joana-pinho",
+                "proteina-e-saciedade"
+            ],
+            "faq": [
+                {
+                    "q": "Low-carb ou low-fat: qual é melhor para emagrecer?",
+                    "a": "Segundo o maior ensaio clínico randomizado sobre o tema (DIETFITS, JAMA 2018), não há diferença significativa entre os dois desde que ambos sejam baseados em alimentos de boa qualidade e minimamente processados. O que determina o resultado é a adesão a longo prazo, não o tipo de dieta."
+                },
+                {
+                    "q": "Uma dieta genérica de revista serve para qualquer pessoa?",
+                    "a": "Não. Planos genéricos não têm em conta a composição corporal, a resistência à insulina ou o risco de perda de massa muscular de cada pessoa, fatores que podem alterar significativamente o resultado de um mesmo plano alimentar."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de saúde",
+            "series": "livros-saude",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "good-energy-casey-means",
+            "title": "Good Energy: disfunção mitocondrial e metabolismo celular",
+            "description": "Casey Means associa fadiga e ansiedade à disfunção metabólica — mas nem toda a exaustão é metabólica. Diagnóstico diferencial entre burnout e metabolismo.",
+            "image": "/image/guide/guide-group-walk.jpg",
+            "ctaKind": "burnout",
+            "slotService": "burnout",
+            "readingMinutes": 4,
+            "related": [
+                "outlive-peter-attia",
+                "burnout-o-que-e-sinais-cansaco",
+                "os-10-livros-de-saude-mais-vendidos"
+            ],
+            "faq": [
+                {
+                    "q": "Toda a fadiga crónica tem origem metabólica?",
+                    "a": "Não. Embora a disfunção metabólica e mitocondrial seja uma causa real e bem documentada de fadiga, sintomas semelhantes podem resultar de burnout, apneia do sono não diagnosticada ou outras causas que exigem diagnóstico diferencial antes de qualquer intervenção nutricional."
+                },
+                {
+                    "q": "O que é flexibilidade metabólica?",
+                    "a": "É a capacidade do corpo alternar eficientemente entre queimar hidratos de carbono e gordura como fonte de energia, consoante a disponibilidade de nutrientes. Quando essa capacidade está comprometida, fala-se em inflexibilidade metabólica, associada a resistência à insulina."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de saúde",
+            "series": "livros-saude",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "o-fim-das-dietas-joel-fuhrman",
+            "title": "O Fim das Dietas: nutritarianismo e a equação da densidade",
+            "description": "A equação de Fuhrman (Saúde = Nutrientes/Calorias) tem base científica em saciedade — mas o extremismo proteico do livro tem riscos reais para certas populações.",
+            "image": "/image/guide/guide-mountain-path.avif",
+            "ctaKind": "nutrition",
+            "slotService": "nutricao-programa",
+            "readingMinutes": 4,
+            "related": [
+                "proteina-e-saciedade",
+                "how-not-to-die-michael-greger",
+                "food-for-life-tim-spector"
+            ],
+            "faq": [
+                {
+                    "q": "Comer alimentos com baixa densidade calórica ajuda mesmo a comer menos?",
+                    "a": "Sim. Estudos controlados mostram que reduzir a densidade energética de uma refeição — mantendo o mesmo volume — aumenta a saciedade reportada e reduz a ingestão calórica nas refeições seguintes, de forma consistente e reprodutível."
+                },
+                {
+                    "q": "Uma dieta muito restritiva em proteína animal tem riscos?",
+                    "a": "Pode ter, especialmente em pessoas seniores ou desportistas: o risco principal é défice de vitamina B12, ferro heme e leucina, nutrientes que ajudam a preservar massa muscular e que são mais biodisponíveis em fontes animais."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de saúde",
+            "series": "livros-saude",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "emagreca-sem-dietas-diana-dinis",
+            "title": "Emagreça sem Dietas: alimentação intuitiva vs. fisiologia hormonal",
+            "description": "A alimentação intuitiva tem forte evidência para saúde mental — mas tem um limite fisiológico real em ambientes obesogénicos. Análise clínica.",
+            "image": "/image/guide/guide-sunset-lake.jpg",
+            "ctaKind": "nutrition",
+            "slotService": "nutricao-programa",
+            "readingMinutes": 5,
+            "related": [
+                "alimentacao-intuitiva",
+                "emagrece-para-sempre-joana-pinho",
+                "fome-emocional-vs-fisica"
+            ],
+            "faq": [
+                {
+                    "q": "A alimentação intuitiva tem evidência científica?",
+                    "a": "Sim. Uma meta-análise de 97 estudos (Linardon et al., 2021) encontrou associações consistentes entre maior alimentação intuitiva e melhor saúde psicológica, menor insatisfação corporal e menos comportamentos alimentares desregulados."
+                },
+                {
+                    "q": "A alimentação intuitiva funciona para qualquer pessoa, em qualquer contexto alimentar?",
+                    "a": "Nem sempre de forma imediata. Em ambientes ricos em alimentos ultraprocessados hiperpalatáveis, os sinais naturais de fome e saciedade podem estar temporariamente desregulados, o que pode exigir um trabalho prévio de recalibração antes de confiar apenas nesses sinais."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de saúde",
+            "series": "livros-saude",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "how-not-to-die-michael-greger",
+            "title": "How Not to Die: base vegetal rigorosa vs. equilíbrio metabólico",
+            "description": "O ensaio BROAD confirma benefícios reais de dietas plant-based — mas a conversão de ómega-3 vegetal é ineficiente. O que monitorizar antes de eliminar carne.",
+            "image": "/image/guide/1.webp",
+            "ctaKind": "general",
+            "slotService": "clinica-geral",
+            "readingMinutes": 5,
+            "related": [
+                "food-for-life-tim-spector",
+                "o-fim-das-dietas-joel-fuhrman",
+                "os-10-livros-de-saude-mais-vendidos"
+            ],
+            "faq": [
+                {
+                    "q": "Uma dieta 100% vegetal reverte mesmo doenças crónicas?",
+                    "a": "Há evidência clínica real de benefício: um ensaio randomizado (BROAD, 2017) mostrou perda de peso e melhoria de colesterol significativas com uma dieta vegetal integral sem restrição calórica. Isso não substitui, porém, o acompanhamento médico de doenças já diagnosticadas."
+                },
+                {
+                    "q": "É preciso suplementar alguma coisa numa dieta vegan?",
+                    "a": "Sim, quase sempre. A vitamina B12 é essencial e não existe em quantidade relevante em fontes vegetais; o ómega-3 (EPA/DHA) também deve ser considerado, já que a conversão do ómega-3 vegetal (ALA) para as formas ativas é muito ineficiente no corpo humano."
+                }
+            ]
+        },
+        {
             "slug": "perda-de-peso-sustentavel",
             "title": "Perda de peso sustentável: porque as dietas rápidas falham",
             "description": "A perda de peso rápida raramente é sustentável. Saiba, segundo o CDC, porque a abordagem gradual tem mais sucesso a longo prazo.",

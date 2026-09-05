@@ -1,0 +1,18 @@
+{
+    "id": "livros-saude",
+    "slug": "os-10-livros-de-saude-mais-vendidos",
+    "title": "Os 10 Livros de Saúde Mais Vendidos em Portugal (Comentados por uma Médica)",
+    "description": "Série de críticas clínicas aos bestsellers de saúde mais lidos em Portugal: o que a evidência confirma, onde o protocolo falha na prática, e o que faz sentido pedir em consulta.",
+    "parts": [
+        { "slug": "outlive-peter-attia", "navLabel": "Outlive (Peter Attia)" },
+        { "slug": "metodo-glucose-goddess", "navLabel": "O Método Glucose Goddess" },
+        { "slug": "emagrece-para-sempre-joana-pinho", "navLabel": "Emagrece Para Sempre" },
+        { "slug": "food-for-life-tim-spector", "navLabel": "Food for Life (Tim Spector)" },
+        { "slug": "habitos-que-te-salvarao-a-vida", "navLabel": "Hábitos Que Te Salvarão a Vida" },
+        { "slug": "a-dieta-perfeita-mariana-abecasis", "navLabel": "A Dieta Perfeita" },
+        { "slug": "good-energy-casey-means", "navLabel": "Good Energy" },
+        { "slug": "o-fim-das-dietas-joel-fuhrman", "navLabel": "O Fim das Dietas" },
+        { "slug": "emagreca-sem-dietas-diana-dinis", "navLabel": "Emagreça sem Dietas" },
+        { "slug": "how-not-to-die-michael-greger", "navLabel": "How Not to Die" }
+    ]
+}
