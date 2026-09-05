@@ -342,11 +342,37 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${start} – ${end}`;
     }
 
+    function clinicHoursOnDate(dateObj) {
+        if (!clinicScheduleData) return null;
+        const dateKey = formatClinicOverrideDateKey(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate());
+        const ov = (clinicScheduleData.dayOverrides || []).find((o) => o.date === dateKey);
+        if (ov) {
+            if (ov.enabled === false) return null;
+            return { date: dateKey, enabled: true, start: ov.start, end: ov.end };
+        }
+        const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+        const wh = clinicScheduleData.workingHours && clinicScheduleData.workingHours[dayNames[dateObj.getDay()]];
+        if (!wh || !wh.enabled) return null;
+        return { date: dateKey, enabled: true, start: wh.start, end: wh.end };
+    }
+
     function upcomingClinicDayHours() {
-        return (clinicScheduleData && clinicScheduleData.dayOverrides ? clinicScheduleData.dayOverrides : [])
-            .filter((entry) => entry && entry.enabled !== false && entry.date)
+        if (!clinicScheduleData) return [];
+        const today = clinicStartOfToday();
+        const todayKey = formatClinicOverrideDateKey(today.getFullYear(), today.getMonth(), today.getDate());
+        const futureOverrides = (clinicScheduleData.dayOverrides || [])
+            .filter((entry) => entry && entry.enabled !== false && entry.date && entry.date >= todayKey)
             .slice()
             .sort((a, b) => a.date.localeCompare(b.date));
+        if (futureOverrides.length) return futureOverrides;
+        const out = [];
+        const cursor = new Date(today);
+        for (let i = 0; i < 28 && out.length < 8; i++) {
+            const slot = clinicHoursOnDate(cursor);
+            if (slot) out.push(slot);
+            cursor.setDate(cursor.getDate() + 1);
+        }
+        return out;
     }
 
     function renderClinicAvailHighlight() {
