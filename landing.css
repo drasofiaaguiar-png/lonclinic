@@ -295,20 +295,28 @@ textarea:focus {
 .lon-nav-actions .lang-btn,
 .lon-nav .lang-btn {
     position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
     background: none;
     border: none;
-    padding: 4px 9px;
+    padding: 6px 11px;
     cursor: pointer;
     border-radius: 999px;
-    color: rgba(21, 19, 27, 0.5);
+    color: rgba(21, 19, 27, 0.55);
     transition: color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.04em;
     font-family: var(--lon-font);
     line-height: 1;
     text-transform: uppercase;
     user-select: none;
+}
+
+.lang-btn .lang-flag {
+    font-size: 0.95rem;
+    line-height: 1;
 }
 
 .lon-nav-actions .lang-btn.active,
@@ -666,6 +674,29 @@ textarea:focus {
     margin-top: 10px;
     font-size: 0.86rem;
     font-weight: 600;
+}
+
+.dr-slots-week {
+    display: none;
+    margin-top: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #255235;
+    text-decoration: none;
+}
+
+.dr-live-slots.is-fallback .dr-live-slots-row,
+.cq-live-slots.is-fallback .cq-live-slots-row,
+.dr-live-slots.is-fallback .dr-next-slot-other,
+.cq-live-slots.is-fallback .dr-next-slot-other {
+    display: none;
+}
+
+.dr-live-slots.is-fallback .dr-slots-week,
+.cq-live-slots.is-fallback .dr-slots-week {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
 }
 
 .dr-trust-list {
@@ -1949,6 +1980,164 @@ html[lang="pt-PT"] .lon-testimonial-translation-note {
     font-size: 0.72rem;
     font-weight: 600;
     color: #6b5b78;
+}
+
+.lon-pay-wrap {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+    max-width: 100%;
+}
+
+.lon-pay-badges {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.lon-pay-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    border-radius: 7px;
+    padding: 4px 8px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    white-space: nowrap;
+    background: #fff;
+    border: 1px solid #d7e4dc;
+    color: #1f3d2e;
+}
+
+.lon-pay-badge svg {
+    display: block;
+    flex-shrink: 0;
+}
+
+.lon-pay-badge--mbway {
+    color: #0a7a45;
+    border-color: #b7e8cc;
+    background: #f3fbf6;
+}
+
+.lon-pay-badge--mb {
+    color: #003087;
+    border-color: #c5d4ef;
+    background: #f4f7fd;
+}
+
+.cq-sticky-book {
+    display: none;
+}
+
+@media (max-width: 700px) {
+    .cq-sticky-book:not([hidden]) {
+        display: block;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 40;
+        background: #1f3d2e;
+        color: #fff;
+        box-shadow: 0 -8px 24px rgba(20, 34, 24, 0.18);
+        padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+
+    .cq-sticky-book-inner {
+        max-width: 44rem;
+        margin: 0 auto;
+        padding: 12px 16px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px 16px;
+    }
+
+    .cq-sticky-book-copy {
+        margin: 0;
+    }
+
+    .cq-sticky-book-kicker {
+        display: block;
+        font-size: 0.68rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.75;
+    }
+
+    .cq-sticky-book-inner .lon-btn-dark {
+        background: #fff;
+        color: #1f3d2e;
+    }
+
+    .cq-sticky-book .lon-pay-badge {
+        display: none;
+    }
+
+    body:has(.cq-sticky-book:not([hidden])) .lon-wa-float {
+        bottom: 88px;
+    }
+}
+
+.lon-social-proof {
+    margin: 18px 0 8px;
+}
+
+.lon-social-proof-kicker {
+    margin: 0 0 10px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lon-accent, #255235);
+}
+
+.lon-testimonial-card--compact {
+    padding: 14px 16px;
+    margin: 0 0 10px;
+}
+
+.lon-testimonial-card--compact .lon-testimonial-quote {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.9rem;
+}
+
+.eeat-avail-badge,
+.lon-avail-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0 4px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #e8f6ee;
+    color: #1a5c38;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.eeat-avail-badge[hidden],
+.lon-avail-badge[hidden] {
+    display: none;
+}
+
+.eeat-avail-badge::before,
+.lon-avail-badge::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #19a35a;
+    box-shadow: 0 0 0 4px rgba(25, 163, 90, 0.18);
 }
 
 .lon-footer-col h4 {

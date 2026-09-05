@@ -167,7 +167,9 @@
             const list = data.reviews || [];
             const cardClass = container.dataset.cardClass || 'lon-testimonial-card';
             const locale = detectLocale();
-            list.forEach(function (review) {
+            const limit = parseInt(container.dataset.limit, 10);
+            const picked = Number.isFinite(limit) && limit > 0 ? list.slice(0, limit) : list;
+            picked.forEach(function (review) {
                 if (review.id && container.querySelector('[data-review-id="' + review.id + '"]')) return;
                 container.appendChild(buildCard(review, cardClass, locale));
             });

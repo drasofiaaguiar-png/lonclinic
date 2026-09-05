@@ -1,0 +1,77 @@
+{
+  "id": "yfas",
+  "path": "/nutricao/teste-yfas",
+  "cluster": "nutrition",
+  "instrument": "YFAS 2.0",
+  "minutes": 4,
+  "title": "Teste YFAS 2.0 de compulsão alimentar grátis | Lon Clinic",
+  "h1": "Há sinais de dependência ou compulsão pela comida?",
+  "lead": "Rastreio baseado no YFAS 2.0 (Yale Food Addiction Scale): 13 perguntas sobre perda de controlo, craving e impacto na vida — a versão breve (mYFAS 2.0) usada em clínica. Ajuda a triar se o próximo passo é apoio comportamental, consulta médica, ou ambos (incluindo a conversa sobre análogos GLP-1 quando legalmente indicada).",
+  "description": "Rastreio YFAS 2.0 (mYFAS) grátis: 13 perguntas sobre compulsão por alimentos hipercalóricos. Resultado imediato para orientar nutrição e, se indicado, avaliação médica.",
+  "stem": "No último ano, com que frequência…",
+  "homeHref": "/nutricao",
+  "homeLabel": "LON Clinic — Nutrição",
+  "scoring": "yfas",
+  "gaugeMax": 11,
+  "gaugeLabel": "Critérios · 0–11",
+  "displayMultiplier": 1,
+  "higherIsBetter": false,
+  "bandOn": "raw",
+  "options": [
+    { "label": "Nunca", "v": 0 },
+    { "label": "Raramente", "v": 1 },
+    { "label": "Às vezes", "v": 2 },
+    { "label": "Frequentemente", "v": 3 },
+    { "label": "Quase todos os dias", "v": 4 }
+  ],
+  "scales": [
+    { "id": "criteria", "title": "Critérios de compulsão", "note": "Perda de controlo, tolerância, craving, tempo gasto, uso apesar de dano — 11 critérios." },
+    { "id": "impairment", "title": "Impacto na vida", "note": "O problema interfere com trabalho, relações ou causa sofrimento significativo." }
+  ],
+  "questions": [
+    { "scale": "criteria", "criterion": 1, "text": "Comeste certos alimentos em maior quantidade ou durante mais tempo do que pretendias." },
+    { "scale": "criteria", "criterion": 2, "text": "Tentaste reduzir ou deixar esses alimentos e não conseguiste." },
+    { "scale": "criteria", "criterion": 3, "text": "Passaste muito tempo a obter, a comer ou a recuperar destes alimentos." },
+    { "scale": "criteria", "criterion": 4, "text": "Tiveste um desejo tão forte (craving) que te foi difícil pensar noutra coisa." },
+    { "scale": "criteria", "criterion": 5, "text": "Deixaste de fazer atividades importantes (trabalho, família, lazer) por causa destes alimentos." },
+    { "scale": "criteria", "criterion": 6, "text": "Continuaste apesar de problemas emocionais ou físicos que estes alimentos agravam." },
+    { "scale": "criteria", "criterion": 7, "text": "Precisaste de comer cada vez mais para ter o mesmo efeito (tolerância)." },
+    { "scale": "criteria", "criterion": 8, "text": "Quando reduzias, ficavas irritado, agitado ou com mal-estar (sinais de privação)." },
+    { "scale": "criteria", "criterion": 9, "text": "Isto causou problemas no trabalho, em casa ou nas relações." },
+    { "scale": "criteria", "criterion": 10, "text": "Continuaste apesar de saberes que te faz mal (peso, saúde, humor)." },
+    { "scale": "criteria", "criterion": 11, "text": "Comeste em segredo, ou sentiste culpa intensa depois." },
+    { "scale": "impairment", "impairment": true, "text": "Este padrão interferiu de forma importante com a tua vida (trabalho, família, saúde)." },
+    { "scale": "impairment", "impairment": true, "text": "Sofreste de forma significativa por causa disto — não é «um pecadilho», é um problema." }
+  ],
+  "bands": [
+    { "max": 1, "pill": "SEM INDICADORES", "concern": "low", "title": "Sem perfil de compulsão neste rastreio", "text": "Não reuniste critérios suficientes, ou o impacto na vida é baixo. O padrão pode ser outro — restrição, fome emocional, ambiente alimentar. O TFEQ-R18 ajuda a ver isso.", "cta": "Se o peso ou a energia forem o tema, uma consulta de clínica geral (39€) chega para um plano sem o rótulo de «vício».", "bookLabel": "Marcar consulta — 39€", "bookNote": "Videoconsulta · 25–35 min" },
+    { "max": 3, "pill": "LIGEIRO", "concern": "light", "title": "Sinais ligeiros de compulsão", "text": "Há 2–3 critérios com impacto. Não é um diagnóstico de «food addiction» — é um sinal de que o controlo já falha e o apoio comportamental rende mais do que mais uma dieta.", "cta": "Marca consulta. Cruzamos este rastreio com o TFEQ e, se o eixo for stress, com psicologia.", "bookLabel": "Marcar consulta — 39€", "bookNote": "Videoconsulta · o resultado fica na marcação" },
+    { "max": 5, "pill": "MODERADO", "concern": "mid", "title": "O padrão já pede avaliação médica", "text": "4–5 critérios com impacto. Aqui a conversa deixa de ser só «força de vontade»: estrutura de refeições, sono, humor e, em casos selecionados, a discussão sobre tratamento médico (incluindo análogos GLP-1 quando a lei e a clínica o permitirem — a Lon Clinic não substitui o prescritor elegível).", "cta": "Marca consulta de clínica geral ou de longevidade (79€) se o quadro for complexo. O rastreio chega à sessão.", "bookLabel": "Marcar consulta — 39€", "bookNote": "Videoconsulta · triagem para o plano certo" },
+    { "max": 11, "pill": "GRAVE", "concern": "high", "title": "Compulsão com impacto — não fiques só neste teste", "text": "6 ou mais critérios com interferência na vida. Isto não diagnostica uma perturbação sozinho, mas indica sofrimento e perda de controlo que pedem acompanhamento médico e, muitas vezes, psicológico. Não é falta de disciplina.", "cta": "Marca agora. Se já tens GLP-1 prescrito, a nutrição de suporte trata proteína e náusea; se não tens, explicamos o enquadramento legal em Portugal sem falsas promessas de prescrição.", "bookLabel": "Marcar consulta agora — 39€", "bookNote": "Videoconsulta · o resultado chega à médica" }
+  ],
+  "insights": {
+    "criteria": { "title": "Critérios de compulsão", "text": "Perda de controlo, craving, tolerância ou uso apesar de dano estão presentes. O plano nutricional clássico (kcal e macros) não chega sozinho — precisas de estrutura e, se indicado, de avaliação médica." },
+    "impairment": { "title": "Já está a custar a vida", "text": "O impacto em trabalho, relações ou sofrimento é o que torna este rastreio clinicamente relevante. Sem interferência, sintomas isolados não fazem um quadro; com interferência, adiamento custa." }
+  },
+  "booking": {
+    "consultHref": "/marcar/clinica-geral",
+    "consultName": "Consulta de clínica geral / nutrição",
+    "consultPrice": "39",
+    "consultMeta": "Sessão única · 25–35 min",
+    "subHref": "/marcar/longevidade",
+    "subName": "Consulta de longevidade",
+    "subPrice": "79",
+    "subMeta": "Mais tempo · 45–60 min",
+    "stickyLabel": "Consulta de nutrição",
+    "hideSubOn": ["SEM INDICADORES"]
+  },
+  "related": ["imc", "tfeq", "ess", "phq9"],
+  "introLinks": [
+    { "href": "/nutricao/teste-imc", "label": "IMC e cintura" },
+    { "href": "/nutricao/teste-tfeq", "label": "TFEQ-R18 · três fatores" },
+    { "href": "/nutricao/ozempic-wegovy", "label": "Nutrição com GLP-1" },
+    { "href": "/nutricao/teste-ess", "label": "Sonolência / apneia (ESS)" }
+  ],
+  "disclaimer": "Rastreio Lon Clinic baseado no YFAS 2.0 / mYFAS 2.0 (Gearhardt, Corbin & Brownell; versão breve de 13 itens). Não reproduz o instrumento oficial na íntegra; a pontuação (critérios 0–11 + impacto) é uma adaptação clínica para triagem. Não diagnostica «food addiction» nem indica, por si, fármacos. Em Portugal, a prescrição de análogos GLP-1 para diabetes/perda de peso está restrita a especialidades definidas.",
+  "utmCampaign": "yfas-teste"
+}

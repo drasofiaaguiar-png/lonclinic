@@ -1,0 +1,70 @@
+{
+  "id": "ess",
+  "path": "/nutricao/teste-ess",
+  "cluster": "nutrition",
+  "instrument": "ESS",
+  "minutes": 2,
+  "title": "Teste ESS de sonolência diurna grátis | Lon Clinic",
+  "h1": "Tens sono a mais durante o dia?",
+  "lead": "A Escala de Sonolência de Epworth (ESS) mede a probabilidade de adormeceres em situações do dia-a-dia. Quem tem excesso de peso tem risco acrescido de apneia obstrutiva do sono — e a apneia parte o metabolismo, a energia e o controlo do apetite.",
+  "description": "Teste ESS grátis: 8 situações do dia-a-dia. Resultado imediato sobre sonolência e alerta para risco de apneia do sono — sobretudo com excesso de peso.",
+  "stem": "Qual a probabilidade de adormeceres ou cochilares, (não só de te sentires cansado) em cada situação?",
+  "homeHref": "/nutricao",
+  "homeLabel": "LON Clinic — Nutrição",
+  "scoring": "sum",
+  "gaugeMax": 24,
+  "gaugeLabel": "ESS · 0–24",
+  "displayMultiplier": 1,
+  "higherIsBetter": false,
+  "bandOn": "raw",
+  "options": [
+    { "label": "Nenhuma probabilidade", "v": 0 },
+    { "label": "Pequena probabilidade", "v": 1 },
+    { "label": "Probabilidade moderada", "v": 2 },
+    { "label": "Probabilidade elevada", "v": 3 }
+  ],
+  "scales": [
+    { "id": "passive", "title": "Situações passivas", "note": "Ler, ver televisão, estar sentado em público, no carro como passageiro, deitar à tarde." },
+    { "id": "active", "title": "Situações mais ativas", "note": "Conversar, depois do almoço, parado no trânsito — onde a sonolência já é um sinal mais forte." }
+  ],
+  "questions": [
+    { "scale": "passive", "text": "Sentado a ler" },
+    { "scale": "passive", "text": "A ver televisão" },
+    { "scale": "passive", "text": "Sentado, inativo, num lugar público (espera, teatro, reunião)" },
+    { "scale": "passive", "text": "Como passageiro num carro, durante cerca de uma hora sem parar" },
+    { "scale": "passive", "text": "Deitado a descansar à tarde, quando as circunstâncias o permitem" },
+    { "scale": "active", "text": "Sentado a conversar com alguém" },
+    { "scale": "active", "text": "Sentado sossegado depois do almoço, sem álcool" },
+    { "scale": "active", "text": "Num carro, parado alguns minutos no trânsito" }
+  ],
+  "bands": [
+    { "max": 7, "pill": "NORMAL", "concern": "low", "title": "Sonolência diurna baixa", "text": "O ESS não sugere sonolência excessiva. Se mesmo assim acordas cansado, o tema pode ser insónia (ISI), burnout ou a qualidade do sono — não só «cochilar de dia».", "cta": "Se o peso ou o metabolismo forem a queixa, a consulta de nutrição trata isso à parte. O ISI cobre a noite.", "bookLabel": "Marcar consulta — 39€", "bookNote": "Opcional · clínica geral 25–35 min" },
+    { "max": 12, "pill": "LIMITE", "concern": "light", "title": "Sonolência a merecer atenção", "text": "Estás na zona em que a sonolência já não é «normal». Com excesso de peso, ressonar ou pausas respiratórias, isto pede avaliação — a apneia parte glicose, tensão e fome.", "cta": "Marca consulta. A médica cruza este ESS com peso, pescoço, ressonar e, se indicado, orienta estudo do sono. Não conduzas se o sono te vence ao volante.", "bookLabel": "Marcar consulta — 39€", "bookNote": "Videoconsulta · o resultado fica na marcação" },
+    { "max": 15, "pill": "MODERADO", "concern": "mid", "title": "Sonolência excessiva — avalia apneia", "text": "Um ESS neste intervalo é o clássico alerta de apneia obstrutiva do sono, sobretudo com peso a mais. A apneia não se resolve com mais café nem com mais uma dieta.", "cta": "Marca agora. Consulta de clínica geral (39€) ou de longevidade (79€) se o quadro metabólico for complexo. Em sonolência ao volante, não conduzas.", "bookLabel": "Marcar consulta — 39€", "bookNote": "Videoconsulta · triagem de apneia e metabolismo" },
+    { "max": 24, "pill": "GRAVE", "concern": "high", "title": "Sonolência grave — isto é clínico", "text": "ESS elevado é risco: acidentes, pior controlo glicémico, hipertensão, fome e cansaço que nenhuma dieta explica. Procura avaliação. Se cochilas a conduzir, pára.", "cta": "Marca consulta hoje. Se já tens diagnóstico de apneia, a nutrição entra no plano de peso; se não tens, o primeiro passo é médico, não um plano alimentar isolado.", "bookLabel": "Marcar consulta agora — 39€", "bookNote": "Videoconsulta · prioridade clínica" }
+  ],
+  "insights": {
+    "passive": { "title": "Cochilar no sofá não chega para explicar isto", "text": "A sonolência em situações passivas é comum. O que conta é o conjunto — e se o ativo também pontua, o sinal fica clínico." },
+    "active": { "title": "Sonolência onde não deveria existir", "text": "Adormecer a conversar, depois do almoço ou no trânsito é um sinal forte. Com excesso de peso, a hipótese de apneia tem de estar em cima da mesa na consulta." }
+  },
+  "booking": {
+    "consultHref": "/marcar/clinica-geral",
+    "consultName": "Consulta de clínica geral",
+    "consultPrice": "39",
+    "consultMeta": "Sessão única · 25–35 min",
+    "subHref": "/marcar/longevidade",
+    "subName": "Consulta de longevidade",
+    "subPrice": "79",
+    "subMeta": "Mais tempo · 45–60 min",
+    "stickyLabel": "Consulta médica",
+    "hideSubOn": ["NORMAL"]
+  },
+  "related": ["imc", "isi", "tfeq", "who5"],
+  "introLinks": [
+    { "href": "/burnout/teste-isi", "label": "Insónia (ISI)" },
+    { "href": "/nutricao/teste-tfeq", "label": "Comportamento alimentar" },
+    { "href": "/nutricao/ozempic-wegovy", "label": "Nutrição e GLP-1" }
+  ],
+  "disclaimer": "A Epworth Sleepiness Scale (Johns, 1991) é um instrumento clínico de 8 itens sobre a probabilidade de adormecer. Adaptação Lon Clinic em português europeu. Não diagnostica apneia do sono. Um score elevado, sobretudo com excesso de peso, ressonar ou pausas respiratórias, indica avaliação médica — não um plano alimentar isolado. Não conduzas se a sonolência te vence ao volante.",
+  "utmCampaign": "ess-teste"
+}

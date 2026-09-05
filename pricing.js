@@ -5,7 +5,10 @@
 
 const SERVICE_ALIAS = {
     longevity: 'longevidade',
-    followup: 'clinica_geral'
+    followup: 'clinica_geral',
+    itu: 'clinica_geral',
+    infecao_urinaria: 'clinica_geral',
+    infeccao_urinaria: 'clinica_geral'
 };
 
 /** Base per-service prices (EUR cents). Travel uses tier tables below. */

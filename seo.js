@@ -268,6 +268,7 @@ const INDEXABLE_INFO_PAGES = [
     'contato',
     'trabalhe-connosco',
     'como-funciona',
+    'perguntas-frequentes',
     'seguranca-dados',
     'acessibilidade'
 ];
@@ -293,6 +294,8 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
         ['/burnout', today, 'weekly', '0.95'],
         ['/burnout/colecao', today, 'weekly', '0.9'],
         ['/burnout/teste', today, 'monthly', '0.9'],
+        ['/burnout/testes', today, 'monthly', '0.86'],
+        ['/nutricao/testes', today, 'monthly', '0.84'],
         ['/clinica-anti-burnout', today, 'weekly', '0.9'],
         ['/saudemental', today, 'weekly', '0.9'],
         ['/consultas', today, 'weekly', '0.92'],
@@ -367,6 +370,16 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
         }
     } catch (err) {
         console.error('sitemap: nutricao', err.message);
+    }
+
+    try {
+        const clinicalQuizzes = require('./clinical-quizzes');
+        for (const p of clinicalQuizzes.sitemapPaths()) {
+            if (p === '/burnout/testes' || p === '/nutricao/testes') continue;
+            entries.push(urlEntry(`${o}${p}`, today, 'monthly', '0.82'));
+        }
+    } catch (err) {
+        console.error('sitemap: clinical quizzes', err.message);
     }
 
     try {

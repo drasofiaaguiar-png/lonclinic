@@ -40,24 +40,24 @@
     const BANDS = [
         { max: 24, pill: 'BAIXO', title: 'Energia sob controlo',
             text: 'O teu resultado apresenta poucos sinais de desgaste neste momento. Podes usá-lo como ponto de referência — e, se algo te preocupar, a porta está aberta.',
-            cta: 'Não precisas de marcar por causa deste resultado. Se quiseres mesmo assim perceber o teu perfil com uma médica, a consulta está disponível.',
-            bookLabel: 'Marcar consulta — 60€',
-            bookNote: 'Opcional · só se quiseres perceber melhor o teu perfil' },
+            cta: 'Não precisas de marcar por causa deste resultado. Se quiseres perceber o padrão com um psicólogo, a ficha de psicologia para burnout está aqui.',
+            bookLabel: 'Ver consulta de psicologia',
+            bookNote: 'Opcional · só se quiseres um plano com um psicólogo' },
         { max: 49, pill: 'LIGEIRO', title: 'Sinais de alerta iniciais',
             text: 'Ainda não aponta para um quadro instalado, mas algumas dimensões da tua energia podem já estar a pedir atenção. Nesta fase, descanso, limites e recuperação tendem a ter mais efeito.',
-            cta: 'Se estes sinais persistirem, uma Consulta Especializada em Burnout ajuda a perceber o que está a acontecer — sem alarme, com um plano concreto.',
-            bookLabel: 'Marcar consulta — 60€',
-            bookNote: 'Videoconsulta · 60 min · o resultado do teste fica na marcação' },
+            cta: 'Se estes sinais persistirem, a consulta de psicologia para burnout ajuda a perceber o padrão — sem alarme, com um plano concreto.',
+            bookLabel: 'Ver consulta de psicologia',
+            bookNote: 'Videochamada · 60 € · o resultado do teste chega à sessão' },
         { max: 74, pill: 'MODERADO', title: 'O teu corpo já está a pagar a conta',
             text: 'O teu resultado sugere um nível moderado de desgaste. Isto não é, por si só, um diagnóstico de burnout — mas é um sinal de que a recuperação está mais difícil do que deveria.',
-            cta: 'Marca agora uma Consulta Especializada em Burnout. A médica vê este resultado e ajuda-te a decidir o próximo passo.',
-            bookLabel: 'Marcar consulta — 60€',
-            bookNote: 'Videoconsulta · 60 min · receita ou plano se indicado' },
+            cta: 'O próximo passo é a consulta de psicologia para burnout. O psicólogo vê este resultado e ajuda-te a decidir o que fazer a seguir.',
+            bookLabel: 'Ver consulta de psicologia',
+            bookNote: 'Videochamada · 60 € · o resultado do teste chega à sessão' },
         { max: 100, pill: 'ELEVADO', title: 'É altura de parar e pedir apoio',
             text: 'O teu resultado apresenta um nível elevado de sinais de desgaste. Não diagnostica burnout por si só — mas, quando estes sinais são persistentes, não devem ser ignorados.',
-            cta: 'Marca uma Consulta Especializada em Burnout hoje. Se já precisas de regularidade, a Subscrição Anti-Burnout são 4 consultas/mês (216€). Em sofrimento intenso, procura ajuda médica urgente.',
-            bookLabel: 'Marcar consulta agora — 60€',
-            bookNote: 'Videoconsulta · 60 min · o resultado do teste chega à consulta' }
+            cta: 'Marca a consulta de psicologia para burnout. Em sofrimento intenso, procura ajuda médica urgente (112 ou SNS 24).',
+            bookLabel: 'Ver consulta de psicologia',
+            bookNote: 'Videochamada · 60 € · o resultado do teste chega à sessão' }
     ];
 
     const SCALE_INSIGHTS = {
@@ -77,8 +77,7 @@
         tensao: 'Nota clínica: tensão muscular persistente é das formas mais comuns de o corpo armazenar stress — e das que melhor respondem a intervenção.'
     };
 
-    const BOOKING_URL = '/marcar/burnout?ref=burnout-quiz&utm_source=quiz&utm_medium=owned&utm_campaign=burnout-teste&utm_content=results-primary';
-    const SUB_URL = '/marcar/burnout-mensal?ref=burnout-quiz&utm_source=quiz&utm_medium=owned&utm_campaign=burnout-teste&utm_content=results-sub';
+    const PRODUCT_URL = '/psicologia-burnout?ref=burnout-quiz&utm_source=quiz&utm_medium=owned&utm_campaign=burnout-teste&utm_content=results-primary';
 
     const DIM_META = {
         personal: {
@@ -230,13 +229,18 @@
         const bookPrimary = $('bookBtnPrimary');
         const bookNote = $('bookNowNote');
         const stickyBtn = $('stickyBookBtn');
-        if (bookPrimary) bookPrimary.textContent = band.bookLabel || 'Marcar consulta — 60€';
+        if (bookPrimary) {
+            bookPrimary.textContent = band.bookLabel || 'Ver consulta de psicologia';
+            bookPrimary.setAttribute('href', PRODUCT_URL);
+        }
         if (bookNote) bookNote.textContent = band.bookNote || '';
-        if (stickyBtn) stickyBtn.textContent = band.pill === 'ELEVADO' || band.pill === 'MODERADO' ? 'Marcar agora · 60€' : 'Marcar · 60€';
-
-        const subBtn = $('subBtn');
-        if (subBtn) {
-            subBtn.hidden = (band.pill === 'BAIXO' || band.pill === 'LIGEIRO');
+        if (stickyBtn) {
+            stickyBtn.textContent = band.pill === 'ELEVADO' || band.pill === 'MODERADO' ? 'Ver consulta agora' : 'Ver consulta';
+            stickyBtn.setAttribute('href', PRODUCT_URL.replace('results-primary', 'results-sticky'));
+        }
+        const bookCard = $('bookBtn');
+        if (bookCard) {
+            bookCard.setAttribute('href', PRODUCT_URL.replace('results-primary', 'results-card'));
         }
 
         $('valPersonal').textContent = s.personal + ' · ' + bandFor(s.personal).pill.toLowerCase();

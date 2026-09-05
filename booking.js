@@ -24,7 +24,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         scheduleData: null, // Admin schedule configuration
         fromMarcar: false,
         marcarTipo: null,
-        renewToken: null
+        renewToken: null,
+        holdId: null,
+        slotId: null
     };
 
     // ─── Load schedule data ───
@@ -60,15 +62,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadSchedule();
 
     const services = {
-        clinica_geral: { label: 'Consulta Clínica Geral / Check Up', price: '€39', cents: 3900 },
-        urgente: { label: 'Consulta Médica Urgente (Adultos)', price: '€35', cents: 3500 },
-        travel: { label: 'Consulta do Viajante', price: '€39', cents: 3900 },
-        saude_mental: { label: 'Consulta Médica de Saúde Mental', price: '€60', cents: 6000 },
-        burnout: { label: 'Consulta Especializada em Burnout', price: '€60', cents: 6000 },
-        burnout_mensal: { label: 'Subscrição Anti-Burnout', price: '€216/mês', cents: 21600 },
-        burnout_programa: { label: 'Programa Anti-Burnout (8 sessões)', price: '€490', cents: 49000 },
-        renovacao: { label: 'Renovação de Tratamento Médico', price: '€19', cents: 1900 },
-        longevidade: { label: 'Consulta de Longevidade e Saúde Preventiva', price: '€79', cents: 7900 }
+        clinica_geral: { label: 'Consulta Clínica Geral / Check Up', price: '39 €', cents: 3900 },
+        urgente: { label: 'Consulta Médica Urgente (Adultos)', price: '35 €', cents: 3500 },
+        travel: { label: 'Consulta do Viajante', price: '39 €', cents: 3900 },
+        saude_mental: { label: 'Consulta Médica de Saúde Mental', price: '60 €', cents: 6000 },
+        burnout: { label: 'Consulta Especializada em Burnout', price: '60 €', cents: 6000 },
+        burnout_mensal: { label: 'Subscrição Anti-Burnout', price: '216 €/mês', cents: 21600 },
+        burnout_programa: { label: 'Programa Anti-Burnout (8 sessões)', price: '490 €', cents: 49000 },
+        renovacao: { label: 'Renovação de Tratamento Médico', price: '19 €', cents: 1900 },
+        longevidade: { label: 'Consulta de Longevidade e Saúde Preventiva', price: '79 €', cents: 7900 }
     };
 
     // Travel tiered pricing: [count] → { cents, price, duration }
@@ -136,7 +138,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         showCancelledMessage();
     }
 
-    const serviceAlias = { longevity: 'longevidade', followup: 'clinica_geral' };
+    const serviceAlias = {
+        longevity: 'longevidade',
+        followup: 'clinica_geral',
+        itu: 'clinica_geral',
+        infecao_urinaria: 'clinica_geral',
+        infeccao_urinaria: 'clinica_geral'
+    };
 
     function applyServiceKey(key) {
         const resolved = services[key] ? key : serviceAlias[key];
@@ -471,7 +479,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function loadQuickSlots() {
         const wrap = document.getElementById('bookingQuickSlots');
         try {
-            const res = await fetch('/api/next-slots?limit=6');
+            const res = await fetch('/api/next-slots?limit=6&withinHours=336');
             if (!res.ok) return;
             const data = await res.json();
             const slots = (data && data.slots) || [];
@@ -550,7 +558,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     timeslotGrid.querySelectorAll('.timeslot-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                     document.getElementById('next-1').disabled = false;
-                    if (window.LonAnalytics) window.LonAnalytics.track('slot_select', { surface: 'booking' });
+                    if (window.LonAnalytics) {
+                        window.LonAnalytics.track('slot_select', { surface: 'booking', time: slot });
+                        window.LonAnalytics.track('time_slot_clicked', { surface: 'booking', time: slot });
+                    }
                 });
                 timeslotGrid.appendChild(btn);
             });
@@ -595,7 +606,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     timeslotGrid.querySelectorAll('.timeslot-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                     document.getElementById('next-1').disabled = false;
-                    if (window.LonAnalytics) window.LonAnalytics.track('slot_select', { surface: 'booking' });
+                    if (window.LonAnalytics) {
+                        window.LonAnalytics.track('slot_select', { surface: 'booking', time: slot });
+                        window.LonAnalytics.track('time_slot_clicked', { surface: 'booking', time: slot });
+                    }
                 });
                 timeslotGrid.appendChild(btn);
             });
@@ -1163,7 +1177,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     passengers: passengers,
                     travelDest: document.getElementById('travelDest')?.value || '',
                     travelDates: document.getElementById('travelDates')?.value || '',
-                    locale: getBookingLocale()
+                    locale: getBookingLocale(),
+                    holdId: state.holdId || null
                 })
             });
 
@@ -1468,6 +1483,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             state.hasInsurance = !!prefill.hasInsurance;
             state.fromMarcar = true;
             state.marcarTipo = prefill.tipo || null;
+            if (prefill.holdId) state.holdId = prefill.holdId;
+            if (prefill.slotId) state.slotId = prefill.slotId;
             if (prefill.renew) state.renewToken = prefill.renew;
             if (prefill.locale) {
                 const loc = document.getElementById('bookingLocale');
@@ -1479,9 +1496,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         const timeQ = urlParams.get('time');
         const serviceQ = urlParams.get('service');
         const renewQ = urlParams.get('renew');
+        const slotQ = urlParams.get('slot');
+        const holdQ = urlParams.get('hold');
         if (serviceQ) applyServiceKey(serviceQ);
         if (renewQ) state.renewToken = renewQ;
-        if (dateQ && timeQ && /^\d{4}-\d{2}-\d{2}$/.test(dateQ) && /^\d{1,2}:\d{2}$/.test(timeQ)) {
+        if (holdQ) state.holdId = holdQ;
+        const slotMatch = slotQ && /^(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})$/.exec(slotQ);
+        if (slotMatch) {
+            state.slotId = slotQ;
+            const slotDate = `${slotMatch[1]}-${slotMatch[2]}-${slotMatch[3]}`;
+            const slotTime = `${slotMatch[4]}:${slotMatch[5]}`;
+            const parsedSlot = parseStoredDate(slotDate);
+            if (parsedSlot) {
+                state.date = parsedSlot;
+                state.time = slotTime;
+                const locale = (window.CLINIC_I18N && window.CLINIC_I18N.getLang() === 'es') ? 'es-ES'
+                    : (window.CLINIC_I18N && window.CLINIC_I18N.getLang() === 'en') ? 'en-GB' : 'pt-PT';
+                state.dateLabel = state.date.toLocaleDateString(locale, {
+                    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+                });
+                state.calMonth = state.date.getMonth();
+                state.calYear = state.date.getFullYear();
+                state.fromMarcar = true;
+            }
+        } else if (dateQ && timeQ && /^\d{4}-\d{2}-\d{2}$/.test(dateQ) && /^\d{1,2}:\d{2}$/.test(timeQ)) {
             const parsed = parseStoredDate(dateQ);
             if (parsed) {
                 state.date = parsed;
@@ -1499,8 +1537,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         updateTravellerCountVisibility();
         if (state.date && state.time) {
+            refreshSlotHold();
             goToStep(2);
         }
+    }
+
+    function slotIdFromDateTime(dateISO, time) {
+        const d = String(dateISO || '').replace(/-/g, '');
+        const t = String(time || '').replace(':', '');
+        return d + '-' + t.slice(0, 4);
+    }
+
+    async function refreshSlotHold() {
+        if (!state.date || !state.time) return;
+        const slot = state.slotId || slotIdFromDateTime(formatDateLocal(state.date), state.time);
+        try {
+            const res = await fetch('/api/slot-hold', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ slot, service: state.service || 'clinica_geral' })
+            });
+            if (res.status === 409) {
+                state.holdId = null;
+                return;
+            }
+            if (!res.ok) return;
+            const data = await res.json();
+            if (data && data.holdId) state.holdId = data.holdId;
+        } catch (e) { /* checkout still validates availability */ }
     }
 
     async function applyRenewalAndNextSlot() {
@@ -1515,7 +1580,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!state.date || !state.time) {
             if (state.renewToken || urlParams.get('service') === 'renovacao') {
                 try {
-                    const res = await fetch('/api/next-slots?limit=1');
+                    const res = await fetch('/api/next-slots?limit=1&withinHours=336');
                     if (res.ok) {
                         const data = await res.json();
                         const slot = data && data.slots && data.slots[0];
@@ -1554,6 +1619,73 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderCalendar();
         loadQuickSlots();
     }
+
+    document.querySelectorAll('[data-pay-method]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            document.querySelectorAll('[data-pay-method]').forEach(function (el) {
+                el.classList.toggle('is-active', el === btn);
+            });
+            var method = btn.getAttribute('data-pay-method') || 'card';
+            state.preferredPayment = method;
+            if (window.LonAnalytics) {
+                window.LonAnalytics.track('payment_method_selected', {
+                    method: method,
+                    surface: 'booking',
+                    funnel: 'patient_booking'
+                });
+            }
+        });
+    });
+
+    (function setupExitIntent() {
+        var modal = document.getElementById('lonExitIntent');
+        if (!modal) return;
+        var shown = false;
+        try {
+            if (sessionStorage.getItem('lon_exit_book') === '1') return;
+        } catch (e) { /* ignore */ }
+
+        function canShow() {
+            return state.currentStep < 4 && !shown;
+        }
+
+        function showExit() {
+            if (!canShow()) return;
+            shown = true;
+            modal.hidden = false;
+            document.body.classList.add('lon-exit-open');
+            try { sessionStorage.setItem('lon_exit_book', '1'); } catch (e2) { /* ignore */ }
+            if (window.LonAnalytics) {
+                window.LonAnalytics.track('exit_intent', { surface: 'booking', step: state.currentStep });
+            }
+        }
+
+        function hideExit() {
+            modal.hidden = true;
+            document.body.classList.remove('lon-exit-open');
+        }
+
+        modal.querySelectorAll('[data-exit-dismiss]').forEach(function (el) {
+            el.addEventListener('click', function (e) {
+                if (el.tagName === 'A' && el.getAttribute('href') === '#step-1') e.preventDefault();
+                hideExit();
+            });
+        });
+
+        document.addEventListener('mouseout', function (e) {
+            if (!e.relatedTarget && e.clientY <= 0) showExit();
+        });
+
+        if (window.matchMedia && window.matchMedia('(max-width: 700px)').matches) {
+            try { history.pushState({ lonExit: 1 }, ''); } catch (e3) { /* ignore */ }
+            window.addEventListener('popstate', function () {
+                if (canShow()) {
+                    showExit();
+                    try { history.pushState({ lonExit: 1 }, ''); } catch (e4) { /* ignore */ }
+                }
+            });
+        }
+    })();
 
     // ─── Preload ───
     setTimeout(() => {

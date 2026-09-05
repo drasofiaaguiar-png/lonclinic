@@ -89,6 +89,92 @@
         if (window.LonAnalytics) window.LonAnalytics.track(name, props);
     }
 
+    function slotIdFrom(dateISO, time) {
+        var d = String(dateISO || '').replace(/-/g, '');
+        var t = String(time || '').replace(':', '');
+        if (t.length === 3) t = '0' + t;
+        return d + '-' + t.slice(0, 4);
+    }
+
+    function weekFallbackLabel() {
+        var lang = pageLang();
+        if (lang === 'en') return "See this week's availability";
+        if (lang === 'es') return 'Ver disponibilidad de esta semana';
+        if (lang === 'fr') return 'Voir les disponibilités de la semaine';
+        if (lang === 'de') return 'Verfügbarkeit dieser Woche anzeigen';
+        return 'Ver disponibilidade desta semana';
+    }
+
+    var slotsMemory = { data: null, ts: 0, inflight: null };
+    var SLOTS_TTL_MS = 45000;
+    var SLOTS_STALE_MS = 120000;
+    var SLOTS_CACHE_KEY = 'lonNextSlots:v3';
+
+    function readSlotsCache() {
+        if (slotsMemory.data && (Date.now() - slotsMemory.ts) < SLOTS_STALE_MS) {
+            return { data: slotsMemory.data, ts: slotsMemory.ts };
+        }
+        try {
+            var raw = sessionStorage.getItem(SLOTS_CACHE_KEY);
+            if (!raw) return null;
+            var parsed = JSON.parse(raw);
+            if (!parsed || !parsed.data || !parsed.ts) return null;
+            if (Date.now() - parsed.ts > SLOTS_STALE_MS) return null;
+            slotsMemory.data = parsed.data;
+            slotsMemory.ts = parsed.ts;
+            return parsed;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function writeSlotsCache(data) {
+        slotsMemory.data = data;
+        slotsMemory.ts = Date.now();
+        try {
+            sessionStorage.setItem(SLOTS_CACHE_KEY, JSON.stringify({ data: data, ts: slotsMemory.ts }));
+        } catch (e) { /* private mode */ }
+    }
+
+    function fetchSlotsNetwork() {
+        if (slotsMemory.inflight) return slotsMemory.inflight;
+        slotsMemory.inflight = fetch('/api/next-slots?limit=6&withinHours=24', { credentials: 'same-origin' })
+            .then(function (r) {
+                return r.json().then(function (data) {
+                    data = data || {};
+                    data._ok = r.ok;
+                    data._http = r.status;
+                    return data;
+                }).catch(function () {
+                    return { slots: [], _ok: false, _http: r.status };
+                });
+            })
+            .then(function (data) {
+                if (data && data._ok && Array.isArray(data.slots) && !data.error) {
+                    writeSlotsCache(data);
+                    return data;
+                }
+                var cached = readSlotsCache();
+                if (cached && cached.data) return cached.data;
+                return data;
+            })
+            .finally(function () { slotsMemory.inflight = null; });
+        return slotsMemory.inflight;
+    }
+
+    function loadSlotsSWR() {
+        var cached = readSlotsCache();
+        var age = cached ? Date.now() - cached.ts : Infinity;
+        if (cached && cached.data && age < SLOTS_TTL_MS) {
+            return Promise.resolve(cached.data);
+        }
+        if (cached && cached.data && age < SLOTS_STALE_MS) {
+            fetchSlotsNetwork();
+            return Promise.resolve(cached.data);
+        }
+        return fetchSlotsNetwork();
+    }
+
     function goCheckout(slot, opts) {
         opts = opts || {};
         var meta = serviceMeta(opts.service || 'clinica_geral');
@@ -97,6 +183,7 @@
             window.location.href = fallback;
             return;
         }
+        var slotId = slot.id || slotIdFrom(slot.date, slot.time);
         var payload = {
             service: meta.service,
             tipo: meta.tipo,
@@ -106,6 +193,7 @@
             dateISO: slot.date,
             dateLabel: formatSlotWhen(slot.date, slot.time),
             time: slot.time,
+            slotId: slotId,
             travellerCount: 1,
             hasInsurance: false,
             locale: pageLang()
@@ -113,21 +201,49 @@
         try {
             sessionStorage.setItem('lonConsultaPrefill', JSON.stringify(payload));
         } catch (e) { /* private mode */ }
-        var dest = '/book-consultation?service=' + encodeURIComponent(meta.service) +
-            '&date=' + encodeURIComponent(slot.date) +
-            '&time=' + encodeURIComponent(slot.time);
-        track('time_slot_clicked', {
-            surface: opts.surface || 'slots',
-            service: meta.service,
-            time: slot.time
+        function navigate(holdId) {
+            var dest = '/book-consultation?slot=' + encodeURIComponent(slotId) +
+                '&service=' + encodeURIComponent(meta.service) +
+                '&date=' + encodeURIComponent(slot.date) +
+                '&time=' + encodeURIComponent(slot.time);
+            if (holdId) dest += '&hold=' + encodeURIComponent(holdId);
+            track('time_slot_clicked', {
+                surface: opts.surface || 'slots',
+                service: meta.service,
+                time: slot.time,
+                slot: slotId
+            });
+            track('cta_click', {
+                surface: opts.surface || 'slots',
+                service: meta.service,
+                step: 'next_slot'
+            });
+            if (window.LonAnalytics) window.LonAnalytics.flush();
+            window.location.href = dest;
+        }
+        fetch('/api/slot-hold', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ slot: slotId, service: meta.service })
+        }).then(function (r) {
+            if (r.status === 409) {
+                window.location.href = fallback;
+                return null;
+            }
+            return r.ok ? r.json() : {};
+        }).then(function (data) {
+            if (data == null) return;
+            if (data.holdId) {
+                try {
+                    payload.holdId = data.holdId;
+                    sessionStorage.setItem('lonConsultaPrefill', JSON.stringify(payload));
+                } catch (e2) { /* ignore */ }
+            }
+            navigate(data.holdId || '');
+        }).catch(function () {
+            navigate('');
         });
-        track('cta_click', {
-            surface: opts.surface || 'slots',
-            service: meta.service,
-            step: 'next_slot'
-        });
-        if (window.LonAnalytics) window.LonAnalytics.flush();
-        window.location.href = dest;
     }
 
     function renderRow(row, slots, opts) {
@@ -186,7 +302,7 @@
 
     function shouldInjectSticky() {
         var p = (location.pathname || '/').toLowerCase();
-        if (/book-consultation|\/book\.html|\/admin|patient-portal|clinic-portal|\/recrutamento/.test(p)) return false;
+        if (/book-consultation|\/book\.html|\/marcar(\/|$)|\/admin|patient-portal|clinic-portal|\/recrutamento/.test(p)) return false;
         if (document.querySelector('[data-sticky-book], .bq-sticky-book')) return false;
         return !!(document.querySelector('.lon-landing, .cq-body, .mag-body, .nu-hero, .bo-hero, .dr-hero, .consulta-cta-band, .eeat-profile-page'));
     }
@@ -195,7 +311,9 @@
         if (!shouldInjectSticky()) return;
         var meta = landingBookMeta();
         var lang = pageLang();
-        var kicker = lang === 'en' ? 'Next slot' : lang === 'es' ? 'Pr\u00f3ximo horario' : 'Pr\u00f3ximo hor\u00e1rio';
+        var kicker = first
+            ? (lang === 'en' ? 'Next slot' : lang === 'es' ? 'Pr\u00f3ximo horario' : 'Pr\u00f3ximo hor\u00e1rio')
+            : weekFallbackLabel();
         var bar = document.createElement('div');
         bar.className = 'cq-sticky-book';
         bar.setAttribute('data-sticky-book', '');
@@ -207,14 +325,15 @@
             '<span class="cq-sticky-book-kicker">' + kicker + '</span>' +
             '<strong data-next-slot-when></strong>' +
             '</p>' +
-            '<a class="lon-btn lon-btn-dark" data-next-slot-cta data-pay-badges href="' + meta.href + '">' + meta.cta + '</a>' +
+            '<a class="lon-btn lon-btn-dark" data-next-slot-cta data-pay-badges href="' + meta.href + '">' +
+            (first ? meta.cta : weekFallbackLabel()) + '</a>' +
             '</div>';
         document.body.appendChild(bar);
+        bar.hidden = false;
+        var when = bar.querySelector('[data-next-slot-when]');
+        var cta = bar.querySelector('[data-next-slot-cta]');
         if (first) {
-            var when = bar.querySelector('[data-next-slot-when]');
             if (when) when.textContent = formatSlotWhen(first.date, first.time);
-            bar.hidden = false;
-            var cta = bar.querySelector('[data-next-slot-cta]');
             if (cta) {
                 cta.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -254,69 +373,109 @@
         document.addEventListener('DOMContentLoaded', injectPayBadges);
     }
 
-    fetch('/api/next-slots?limit=6')
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (data) {
-            var slots = data && data.slots ? data.slots : [];
-            var first = slots[0] || null;
+    function ensureWeekFallback(box, href) {
+        var link = box.querySelector('[data-slots-fallback]');
+        if (!link) {
+            link = document.createElement('a');
+            link.setAttribute('data-slots-fallback', '');
+            link.className = 'dr-slots-week';
+            box.appendChild(link);
+        }
+        link.href = href;
+        link.textContent = weekFallbackLabel();
+        return link;
+    }
 
-            document.querySelectorAll('[data-next-slots]').forEach(function (box) {
-                var row = box.querySelector('[data-next-slots-row]');
-                if (!row || !slots.length) return;
-                var limit = parseInt(box.getAttribute('data-limit'), 10);
-                if (!Number.isFinite(limit) || limit < 1) limit = 3;
-                box.hidden = false;
-                renderRow(row, slots.slice(0, limit), {
-                    service: box.getAttribute('data-service') || 'clinica_geral',
-                    fallbackHref: box.getAttribute('data-book-href') || '/marcar/clinica-geral',
-                    surface: box.getAttribute('data-surface') || 'live_slots'
+    function applyLiveSlots(data) {
+        var hasHorizon = !(data && data.hasSlotsWithinHorizon === false);
+        var slots = (hasHorizon && data && data.slots) ? data.slots : [];
+        var first = slots[0] || null;
+
+        document.querySelectorAll('[data-next-slots]').forEach(function (box) {
+            var row = box.querySelector('[data-next-slots-row]');
+            var href = box.getAttribute('data-book-href') || '/marcar/clinica-geral';
+            var fallback = ensureWeekFallback(box, href);
+            box.hidden = false;
+            if (!slots.length) {
+                box.classList.add('is-fallback');
+                if (row) row.innerHTML = '';
+                fallback.hidden = false;
+                return;
+            }
+            box.classList.remove('is-fallback');
+            fallback.hidden = true;
+            if (!row) return;
+            var limit = parseInt(box.getAttribute('data-limit'), 10);
+            if (!Number.isFinite(limit) || limit < 1) limit = 3;
+            renderRow(row, slots.slice(0, limit), {
+                service: box.getAttribute('data-service') || 'clinica_geral',
+                fallbackHref: href,
+                surface: box.getAttribute('data-surface') || 'live_slots'
+            });
+        });
+
+        document.querySelectorAll('[data-sticky-book]').forEach(function (bar) {
+            bar.hidden = false;
+            var cta = bar.querySelector('[data-next-slot-cta]');
+            var href = bar.getAttribute('data-book-href') || (cta && cta.getAttribute('href')) || '/marcar/clinica-geral';
+            var service = bar.getAttribute('data-service') || 'clinica_geral';
+            var when = bar.querySelector('[data-next-slot-when]');
+            var kicker = bar.querySelector('.cq-sticky-book-kicker');
+            if (first) {
+                if (when) when.textContent = formatSlotWhen(first.date, first.time);
+                if (cta && cta.getAttribute('data-slot-bound') !== '1') {
+                    cta.setAttribute('data-slot-bound', '1');
+                    cta.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        goCheckout(first, {
+                            service: service,
+                            fallbackHref: href,
+                            surface: 'sticky_book'
+                        });
+                    });
+                }
+            } else {
+                if (kicker) kicker.textContent = weekFallbackLabel();
+                if (when) when.textContent = '';
+                if (cta) {
+                    cta.textContent = weekFallbackLabel();
+                    cta.setAttribute('href', href);
+                }
+            }
+        });
+
+        if (!document.querySelector('[data-sticky-book]')) {
+            injectStickyBar(first);
+        }
+        fillAvailability(first);
+
+        var heroBook = document.getElementById('lonHeroBook');
+        var nextSlotEl = document.getElementById('lonNextSlot');
+        var nextSlotWhen = document.getElementById('lonNextSlotWhen');
+        if (first && nextSlotWhen) nextSlotWhen.textContent = formatSlotWhen(first.date, first.time);
+        if (first && nextSlotEl) nextSlotEl.hidden = false;
+        if (heroBook && first && heroBook.getAttribute('data-slot-bound') !== '1') {
+            heroBook.setAttribute('data-slot-bound', '1');
+            heroBook.addEventListener('click', function (e) {
+                e.preventDefault();
+                goCheckout(first, {
+                    service: 'clinica_geral',
+                    fallbackHref: '/marcar/clinica-geral',
+                    surface: 'home'
                 });
             });
+        }
+    }
 
-            if (first) {
-                document.querySelectorAll('[data-next-slot-when]').forEach(function (el) {
-                    el.textContent = formatSlotWhen(first.date, first.time);
-                });
-                document.querySelectorAll('[data-sticky-book]').forEach(function (bar) {
-                    bar.hidden = false;
-                    var cta = bar.querySelector('[data-next-slot-cta]');
-                    var href = bar.getAttribute('data-book-href') || (cta && cta.getAttribute('href')) || '/marcar/clinica-geral';
-                    var service = bar.getAttribute('data-service') || 'clinica_geral';
-                    if (cta && cta.getAttribute('data-slot-bound') !== '1') {
-                        cta.setAttribute('data-slot-bound', '1');
-                        cta.addEventListener('click', function (e) {
-                            e.preventDefault();
-                            goCheckout(first, {
-                                service: service,
-                                fallbackHref: href,
-                                surface: 'sticky_book'
-                            });
-                        });
-                    }
-                });
-            }
+    var needsSlots = !!(
+        document.querySelector('[data-next-slots], [data-sticky-book], #lonHeroBook, [data-doctor-available]') ||
+        shouldInjectSticky()
+    );
+    if (!needsSlots) return;
 
-            injectStickyBar(first);
-            fillAvailability(first);
-
-            var heroBook = document.getElementById('lonHeroBook');
-            var nextSlotEl = document.getElementById('lonNextSlot');
-            var nextSlotWhen = document.getElementById('lonNextSlotWhen');
-            if (first && nextSlotWhen) nextSlotWhen.textContent = formatSlotWhen(first.date, first.time);
-            if (first && nextSlotEl) nextSlotEl.hidden = false;
-            if (heroBook && first && heroBook.getAttribute('data-slot-bound') !== '1') {
-                heroBook.setAttribute('data-slot-bound', '1');
-                heroBook.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    goCheckout(first, {
-                        service: 'clinica_geral',
-                        fallbackHref: '/marcar/clinica-geral',
-                        surface: 'home'
-                    });
-                });
-            }
-        })
+    loadSlotsSWR()
+        .then(function (data) { applyLiveSlots(data || { slots: [] }); })
         .catch(function () {
-            injectStickyBar(null);
+            applyLiveSlots({ slots: [] });
         });
 })();

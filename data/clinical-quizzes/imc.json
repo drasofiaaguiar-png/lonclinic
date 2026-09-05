@@ -1,0 +1,105 @@
+{
+  "id": "imc",
+  "path": "/nutricao/teste-imc",
+  "cluster": "nutrition",
+  "instrument": "IMC",
+  "minutes": 1,
+  "title": "Calculadora de IMC e perímetro abdominal grátis | Lon Clinic",
+  "h1": "Qual é o teu IMC — e quantos quilos faltam até um peso normal?",
+  "lead": "O Índice de Massa Corporal (peso ÷ altura²) diz se estás em excesso de peso ou obesidade. O perímetro abdominal acrescenta o risco cardiovascular da gordura visceral. Em 1 minuto: a tua faixa, o peso-alvo e os quilos a perder.",
+  "description": "Calculadora de IMC grátis: peso, altura e cintura. Resultado imediato com quilos a perder até ao peso normal e risco do perímetro abdominal.",
+  "stem": "",
+  "homeHref": "/nutricao",
+  "homeLabel": "LON Clinic — Nutrição",
+  "scoring": "imc",
+  "gaugeMax": 40,
+  "gaugeLabel": "IMC · kg/m²",
+  "displayMultiplier": 1,
+  "higherIsBetter": false,
+  "bandOn": "raw",
+  "scales": [
+    { "id": "imc", "title": "Índice de massa corporal", "note": "Peso (kg) a dividir pela altura em metros ao quadrado. Não distingue músculo de gordura." },
+    { "id": "waist", "title": "Perímetro abdominal", "note": "Gordura visceral e risco cardiovascular. Mulheres: ≥80 cm aumentado, ≥88 muito aumentado. Homens: ≥94 cm / ≥102 cm." }
+  ],
+  "questions": [
+    {
+      "id": "sex",
+      "scale": "waist",
+      "text": "Os limiares de cintura são diferentes para mulheres e homens. Qual usamos?",
+      "options": [
+        { "label": "Mulher (≥80 cm risco aumentado · ≥88 cm muito aumentado)", "v": 0 },
+        { "label": "Homem (≥94 cm risco aumentado · ≥102 cm muito aumentado)", "v": 1 }
+      ]
+    },
+    {
+      "id": "height",
+      "scale": "imc",
+      "input": "number",
+      "text": "Qual é a tua altura?",
+      "hint": "Podes escrever em cm (165) ou em metros (1,65).",
+      "placeholder": "165",
+      "unit": "cm ou m",
+      "min": 1.2,
+      "max": 230,
+      "step": 0.01
+    },
+    {
+      "id": "weight",
+      "scale": "imc",
+      "input": "number",
+      "text": "Qual é o teu peso actual?",
+      "hint": "O peso da balança, de manhã se possível, em quilogramas.",
+      "placeholder": "75",
+      "unit": "kg",
+      "min": 30,
+      "max": 250,
+      "step": 0.1
+    },
+    {
+      "id": "waist",
+      "scale": "waist",
+      "input": "number",
+      "text": "Qual é o teu perímetro abdominal?",
+      "hint": "Fita métrica logo acima do osso da anca, sem contrair a barriga, no fim de uma expiração normal. O IMC não vê gordura visceral — a cintura vê.",
+      "placeholder": "88",
+      "unit": "cm",
+      "min": 40,
+      "max": 200,
+      "step": 0.5,
+      "optional": true,
+      "skipLabel": "Não sei / saltar"
+    }
+  ],
+  "bands": [
+    { "max": 18.49, "pill": "BAIXO PESO", "concern": "light", "title": "Abaixo do peso considerado normal", "bookLabel": "Marcar consulta — 39€", "bookNote": "Videoconsulta · avaliar se o baixo peso tem causa clínica" },
+    { "max": 24.9, "pill": "NORMAL", "concern": "low", "title": "IMC na faixa considerada normal", "bookLabel": "Marcar consulta — 39€", "bookNote": "Opcional · se a cintura ou a composição corporal te preocuparem" },
+    { "max": 29.9, "pill": "EXCESSO DE PESO", "concern": "mid", "title": "Excesso de peso", "bookLabel": "Marcar consulta — 39€", "bookNote": "Videoconsulta · o IMC e a cintura ficam na marcação" },
+    { "max": 34.9, "pill": "OBESIDADE I", "concern": "high", "title": "Obesidade grau I", "bookLabel": "Marcar consulta — 39€", "bookNote": "Videoconsulta · plano nutricional e, se indicado, avaliação médica" },
+    { "max": 39.9, "pill": "OBESIDADE II", "concern": "high", "title": "Obesidade grau II", "bookLabel": "Marcar consulta agora — 39€", "bookNote": "Videoconsulta · casos mais complexos: longevidade 79€" },
+    { "max": 999, "pill": "OBESIDADE III", "concern": "high", "title": "Obesidade grau III", "bookLabel": "Marcar consulta agora — 39€", "bookNote": "Videoconsulta · avaliação médica e nutricional" }
+  ],
+  "insights": {
+    "imc": { "title": "Quilos até ao peso normal", "text": "O peso-alvo usa o limite superior da faixa normal (IMC 24,9). Não é um objectivo estético — é o limiar clínico da OMS para deixar de classificar excesso de peso." },
+    "waist": { "title": "A cintura conta tanto quanto o IMC", "text": "O IMC não distingue músculo de gordura. Uma cintura acima do limiar aumenta o risco metabólico mesmo com IMC «só» em excesso de peso — e às vezes com IMC ainda normal." }
+  },
+  "booking": {
+    "consultHref": "/marcar/clinica-geral",
+    "consultName": "Consulta de clínica geral / nutrição",
+    "consultPrice": "39",
+    "consultMeta": "Sessão única · 25–35 min",
+    "subHref": "/marcar/longevidade",
+    "subName": "Consulta de longevidade",
+    "subPrice": "79",
+    "subMeta": "Mais tempo · 45–60 min",
+    "stickyLabel": "Consulta de nutrição",
+    "hideSubOn": ["NORMAL", "BAIXO PESO"]
+  },
+  "related": ["tfeq", "yfas", "ess", "who5"],
+  "introLinks": [
+    { "href": "/nutricao/teste-tfeq", "label": "TFEQ · o que trava o peso" },
+    { "href": "/nutricao/teste-ess", "label": "Sonolência / apneia (ESS)" },
+    { "href": "/nutricao/ozempic-wegovy", "label": "Apoio com GLP-1" }
+  ],
+  "disclaimer": "O IMC (OMS) classifica baixo peso (<18,5), peso normal (18,5–24,9), excesso de peso (25–29,9) e obesidade (≥30). O peso-alvo usa IMC 24,9 (limite superior da faixa normal). Os limiares de cintura seguem os critérios europeus: mulheres ≥80 / ≥88 cm; homens ≥94 / ≥102 cm. O IMC não distingue massa magra de gordura nem se aplica da mesma forma a grávidas, desportistas de alta massa muscular ou algumas etnias. Não é um diagnóstico. IMC >25 ou cintura de risco pede avaliação médica e nutricional da composição corporal.",
+  "utmCampaign": "imc-teste"
+}

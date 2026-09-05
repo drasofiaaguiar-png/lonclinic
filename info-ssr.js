@@ -100,8 +100,24 @@ function hydrateInfoHtml(html, page, origin) {
     const rawDesc = String(data.subtitle || data.body || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
     const description = (rawDesc || 'Informações institucionais da Lon Clinic.').slice(0, 160);
     const schemaType = NOINDEX_PAGES.has(key) ? 'WebPage' : 'MedicalWebPage';
-    const jsonLd = [
-        {
+    const jsonLd = [];
+    if (Array.isArray(data.faq) && data.faq.length) {
+        jsonLd.push({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            name: data.title,
+            description,
+            url: canonical,
+            inLanguage: 'pt-PT',
+            isPartOf: { '@type': 'WebSite', name: 'Lon Clinic', url: o },
+            mainEntity: data.faq.map((item) => ({
+                '@type': 'Question',
+                name: item.q,
+                acceptedAnswer: { '@type': 'Answer', text: item.a }
+            }))
+        });
+    } else {
+        jsonLd.push({
             '@context': 'https://schema.org',
             '@type': schemaType,
             name: data.title,
@@ -110,9 +126,9 @@ function hydrateInfoHtml(html, page, origin) {
             inLanguage: 'pt-PT',
             isPartOf: { '@type': 'WebSite', name: 'Lon Clinic', url: o },
             publisher: organizationNode(o)
-        },
-        organizationJsonLd(o)
-    ];
+        });
+    }
+    jsonLd.push(organizationJsonLd(o));
 
     const bodyInner = data.bodyHtml
         ? data.bodyHtml

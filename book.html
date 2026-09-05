@@ -29,7 +29,7 @@
     <meta name="twitter:image" content="https://www.lonclinic.com/image/image2.webp">
     <link rel="stylesheet" href="landing.css?v=20260903b">
     <link rel="stylesheet" href="styles.css?v=20260903b">
-    <link rel="stylesheet" href="booking.css?v=20260905d">
+    <link rel="stylesheet" href="booking.css?v=20260905e">
     <link rel="preload" as="image" href="/image/image2.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -401,9 +401,18 @@
                     </div>
                     <div id="discountMessageStep2" class="discount-message" style="display:none;"></div>
                 </div>
+                <div class="lon-pay-methods" role="group" aria-label="Método de pagamento preferido">
+                    <p class="lon-pay-methods-label">Como prefere pagar</p>
+                    <div class="lon-pay-methods-row">
+                        <button type="button" class="lon-pay-method is-active" data-pay-method="card">Cartão</button>
+                        <button type="button" class="lon-pay-method" data-pay-method="mbway">MB WAY</button>
+                        <button type="button" class="lon-pay-method" data-pay-method="multibanco">Multibanco</button>
+                    </div>
+                    <p class="lon-pay-methods-note">O checkout Stripe mostra os métodos disponíveis na sua região.</p>
+                </div>
                 <div class="step-actions">
                     <button type="button" class="btn btn-outline btn-lg step-back" id="back-2">Voltar</button>
-                    <button type="button" class="btn btn-primary btn-lg step-next pay-btn" id="next-2">
+                    <button type="button" class="btn btn-primary btn-lg step-next pay-btn" id="next-2" data-pay-badges>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                         Pagar com Stripe
                     </button>
@@ -696,14 +705,33 @@
         </div>
     </footer>
 
-    <script src="/lon-analytics.js?v=20260904a" defer></script>
-    <script src="i18n.js?v=20260417e"></script>
+    <script src="/lon-analytics.js?v=20260905e" defer></script>
+    <script src="i18n.js?v=20260905e"></script>
     <script src="lon-nav.js?v=20260816b" defer></script>
+    <script src="/lon-slots.js?v=20260905g" defer></script>
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contact us on WhatsApp">
         <span>💬</span>
     </a>
 
-    <script src="booking.js?v=20260905c"></script>
+    <div class="lon-exit-modal" id="lonExitIntent" hidden>
+        <div class="lon-exit-modal-backdrop" data-exit-dismiss></div>
+        <div class="lon-exit-modal-card" role="dialog" aria-labelledby="lonExitTitle" aria-modal="true">
+            <p class="lon-exit-kicker">Ainda tem dúvidas?</p>
+            <h2 id="lonExitTitle">Pode marcar agora ou falar connosco</h2>
+            <ul class="lon-exit-faq">
+                <li>Consulta de clínica geral: <strong>39 €</strong>. Renovação de receita: <strong>19 €</strong>.</li>
+                <li>Pagamento por cartão, MB WAY ou Multibanco no checkout.</li>
+                <li>A videoconsulta abre no browser — sem app.</li>
+            </ul>
+            <div class="lon-exit-actions">
+                <a class="btn btn-primary" href="#step-1" data-exit-dismiss>Continuar a marcação</a>
+                <a class="btn btn-outline" href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            </div>
+            <button type="button" class="lon-exit-close" data-exit-dismiss aria-label="Fechar">×</button>
+        </div>
+    </div>
+
+    <script src="booking.js?v=20260905g"></script>
 </body>
 </html>

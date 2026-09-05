@@ -248,8 +248,8 @@ function renderAuthorPage(origin, slug) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/landing.css?v=20260817b">
-    <link rel="stylesheet" href="/author.css?v=20260818a">
+    <link rel="stylesheet" href="/landing.css?v=20260905f">
+    <link rel="stylesheet" href="/author.css?v=20260905e">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     ${jsonLd}
 </head>
@@ -280,13 +280,14 @@ function renderAuthorPage(origin, slug) {
                 <p class="eeat-profile-kicker">Equipa clínica · Lon Clinic</p>
                 <h1 itemprop="name">${escapeHtml(a.displayName)}</h1>
                 <p class="eeat-profile-role"><span itemprop="jobTitle">${escapeHtml(a.jobTitle)}</span> · ${a.yearsPractice} anos de prática clínica</p>
+                <p class="eeat-avail-badge" data-doctor-available data-doctor-name="Dr. Rita Aguiar" hidden></p>
                 ${paras}
                 <h2>Credenciais</h2>
                 <ul class="eeat-bio-creds">${creds}</ul>
                 <h2>Perfis e verificação</h2>
                 <p class="eeat-bio-verify">${verify}</p>
                 <p class="eeat-profile-actions">
-                    <a class="lon-btn lon-btn-primary" href="/marcar/clinica-geral">Marcar consulta</a>
+                    <a class="lon-btn lon-btn-primary" href="/marcar/clinica-geral" data-pay-badges>Marcar Consulta — 39 €</a>
                     <a class="lon-btn lon-btn-soft" href="/blog">Ler os guias médicos</a>
                 </p>
             </div>
@@ -302,6 +303,9 @@ function renderAuthorPage(origin, slug) {
         </div>
     </footer>
     <script src="/lon-nav.js"></script>
+    <script src="/i18n.js?v=20260905e" defer></script>
+    <script src="/lon-analytics.js?v=20260905e" defer></script>
+    <script src="/lon-slots.js?v=20260905g" defer></script>
 </body>
 </html>`;
 

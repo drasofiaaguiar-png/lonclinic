@@ -57,11 +57,12 @@
       "url": "https://www.lonclinic.com/burnout/teste",
       "inLanguage": "pt-PT",
       "about": { "@type": "MedicalCondition", "name": "Burnout" },
+      "isPartOf": { "@type": "WebPage", "name": "Centro burnout", "url": "https://www.lonclinic.com/burnout" },
       "publisher": { "@id": "https://www.lonclinic.com/#organization" }
     }
     </script>
     <link rel="stylesheet" href="/landing.css?v=20260621b">
-    <link rel="stylesheet" href="/burnout-quiz.css?v=20260822a">
+    <link rel="stylesheet" href="/burnout-quiz.css?v=20260905a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -101,6 +102,8 @@
                     <button type="button" class="bq-btn bq-btn-primary bq-btn-lg" id="startBtn">Começar o teste</button>
                     <p class="bq-intro-more">
                         <a href="/burnout/avaliacao">O que mede o teste →</a>
+                        <span aria-hidden="true"> · </span>
+                        <a href="/burnout/testes">PHQ-9, GAD-7, sono →</a>
                         <span aria-hidden="true"> · </span>
                         <a href="/burnout/o-que-e">O que é burnout →</a>
                         <span aria-hidden="true"> · </span>
@@ -170,8 +173,8 @@
                     </div>
 
                     <div class="bq-book-now" id="bookNow">
-                        <a class="bq-btn bq-btn-primary bq-btn-lg js-quiz-book" id="bookBtnPrimary" href="/marcar/burnout?ref=burnout-quiz&amp;utm_source=quiz&amp;utm_medium=owned&amp;utm_campaign=burnout-teste&amp;utm_content=results-primary">Marcar consulta — 60€</a>
-                        <p class="bq-book-now-note" id="bookNowNote">Videoconsulta · 60 minutos · o resultado do teste fica associado à marcação</p>
+                        <a class="bq-btn bq-btn-primary bq-btn-lg js-quiz-book" id="bookBtnPrimary" href="/psicologia-burnout?ref=burnout-quiz&amp;utm_source=quiz&amp;utm_medium=owned&amp;utm_campaign=burnout-teste&amp;utm_content=results-primary">Ver consulta de psicologia</a>
+                        <p class="bq-book-now-note" id="bookNowNote">Consulta de psicologia online · 60 € · o resultado do teste chega à sessão</p>
                     </div>
 
                     <div class="bq-scales">
@@ -197,24 +200,11 @@
                     <div class="bq-cta">
                         <h3>O próximo passo</h3>
                         <p id="ctaText"></p>
-                        <div class="bq-plan-grid">
-                            <a class="bq-plan-card js-quiz-book" href="/marcar/burnout?ref=burnout-quiz&amp;utm_source=quiz&amp;utm_medium=owned&amp;utm_campaign=burnout-teste&amp;utm_content=results-card" id="bookBtn">
-                                <span class="bq-plan-name">Consulta Especializada em Burnout</span>
-                                <span class="bq-plan-price">60<span class="bq-plan-currency">€</span></span>
-                                <span class="bq-plan-meta">Sessão única · 60 minutos</span>
-                            </a>
-                            <a class="bq-plan-card js-quiz-book" href="/marcar/burnout-mensal?ref=burnout-quiz&amp;utm_source=quiz&amp;utm_medium=owned&amp;utm_campaign=burnout-teste&amp;utm_content=results-sub" id="subBtn">
-                                <span class="bq-plan-name">Subscrição Anti-Burnout</span>
-                                <span class="bq-plan-price">216<span class="bq-plan-currency">€</span></span>
-                                <span class="bq-plan-meta">/mês · 4 consultas · 54€/sessão</span>
-                            </a>
-                        </div>
+                        <a class="bq-btn bq-btn-primary bq-btn-lg js-quiz-book" id="bookBtn" href="/psicologia-burnout?ref=burnout-quiz&amp;utm_source=quiz&amp;utm_medium=owned&amp;utm_campaign=burnout-teste&amp;utm_content=results-card">Ver consulta de psicologia — burnout</a>
                         <p class="bq-cta-more">
-                            <a href="/clinica-anti-burnout?ref=burnout-quiz">Ver clínica anti-burnout</a>
+                            <a href="/burnout">Voltar ao centro burnout</a>
                             <span aria-hidden="true"> · </span>
                             <a href="/burnout/colecao">Ler guias sobre burnout</a>
-                            <span aria-hidden="true"> · </span>
-                            <a href="/burnout/tratamento">Tratamento</a>
                         </p>
                     </div>
 
@@ -251,7 +241,7 @@
             <a href="/">Início</a>
             <a href="/burnout">Burnout</a>
             <a href="/burnout/colecao">Coleção</a>
-            <a href="/clinica-anti-burnout">Anti-Burnout</a>
+            <a href="/psicologia-burnout">Psicólogo para burnout</a>
             <a href="/saudemental">Psicologia</a>
             <a href="/faq">FAQ</a>
             <a href="/info.html?page=politica-privacidade">Privacidade</a>
@@ -260,11 +250,11 @@
     </footer>
 
     <aside class="bq-sticky-book" id="stickyBook" hidden>
-        <p>Consulta Especializada em Burnout</p>
-        <a class="bq-btn bq-btn-primary js-quiz-book" id="stickyBookBtn" href="/marcar/burnout?ref=burnout-quiz&amp;utm_source=quiz&amp;utm_medium=owned&amp;utm_campaign=burnout-teste&amp;utm_content=results-sticky">Marcar · 60€</a>
+        <p>Psicólogo para burnout</p>
+        <a class="bq-btn bq-btn-primary js-quiz-book" id="stickyBookBtn" href="/psicologia-burnout?ref=burnout-quiz&amp;utm_source=quiz&amp;utm_medium=owned&amp;utm_campaign=burnout-teste&amp;utm_content=results-sticky">Ver consulta</a>
     </aside>
 
     <script src="/lon-analytics.js?v=20260904a" defer></script>
-    <script src="/burnout-quiz.js?v=20260822a" defer></script>
+    <script src="/burnout-quiz.js?v=20260905a" defer></script>
 </body>
 </html>

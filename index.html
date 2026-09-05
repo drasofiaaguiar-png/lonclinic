@@ -44,7 +44,7 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="preload" as="image" href="/image/image2.webp" fetchpriority="high">
 
-    <link rel="stylesheet" href="landing.css?v=20260905d">
+    <link rel="stylesheet" href="/landing.css?v=20260905f">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
@@ -147,7 +147,7 @@
 
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm">Marcar — 39 €</a>
                 <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Open menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
@@ -172,12 +172,13 @@
                     <h1><span class="dr-hero-title-line">Consultas médicas online.</span><span class="dr-hero-title-line dr-hero-title-line--secondary">Uma nova abordagem à sua saúde.<br>Finalmente.</span></h1>
                     <p class="dr-lead">Marque a sua consulta médica em minutos. Cuide da sua saúde a curto e a longo prazo.</p>
                     <div class="dr-cta-row">
-                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark" id="lonHeroBook">Marcar consulta</a>
+                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark" id="lonHeroBook" data-pay-badges>Marcar Consulta — 39 €</a>
                     </div>
-                    <div class="dr-live-slots" data-next-slots data-limit="6" data-service="clinica_geral" data-book-href="/marcar/clinica-geral" data-surface="home" hidden>
+                    <div class="dr-live-slots" data-next-slots data-limit="3" data-service="clinica_geral" data-book-href="/marcar/clinica-geral" data-surface="home" hidden>
                         <p class="dr-live-slots-kicker">Próximos horários</p>
                         <div class="dr-live-slots-row" data-next-slots-row></div>
                         <a href="/marcar/clinica-geral" class="dr-next-slot-other">Outro horário</a>
+                        <a href="/marcar/clinica-geral" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
                     </div>
 
                     <ul class="dr-trust-list" aria-label="Destaques de confiança da clínica">
@@ -263,8 +264,8 @@
                             <span class="lon-service-chip">Medicina Geral</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta Clínica Geral / Check Up</h3>
-                                <p class="lon-service-price">€39 · 30 min</p>
-                                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
+                                <p class="lon-service-price">39 € · 30 min</p>
+                                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-soft lon-btn-sm" data-pay-badges>Marcar — 39 €</a>
                             </div>
                         </div>
                     </article>
@@ -274,8 +275,8 @@
                             <span class="lon-service-chip">Urgência</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta Médica Urgente (Adultos)</h3>
-                                <p class="lon-service-price">€35 · 15 min</p>
-                                <a href="/marcar/urgente" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
+                                <p class="lon-service-price">35 € · 15 min</p>
+                                <a href="/marcar/urgente" class="lon-btn lon-btn-soft lon-btn-sm" data-pay-badges>Marcar — 35 €</a>
                             </div>
                         </div>
                     </article>
@@ -286,8 +287,8 @@
                             <span class="lon-service-chip">Psicologia</span>
                             <div class="lon-service-glass">
                                 <h3>Sessão Avulsa de Psicologia</h3>
-                                <p class="lon-service-price">€60</p>
-                                <a href="/saudemental" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
+                                <p class="lon-service-price">60 €</p>
+                                <a href="/saudemental" class="lon-btn lon-btn-soft lon-btn-sm" data-pay-badges>Marcar — 60 €</a>
                             </div>
                         </div>
                     </article>
@@ -298,8 +299,8 @@
                             <span class="lon-service-chip">Psicologia</span>
                             <div class="lon-service-glass">
                                 <h3>Psicologia em Burnout</h3>
-                                <p class="lon-service-price">€54 /semana · poupa 10%</p>
-                                <a href="/saudemental" class="lon-btn lon-btn-soft lon-btn-sm">Subscrever</a>
+                                <p class="lon-service-price">54 € /semana · poupa 10%</p>
+                                <a href="/saudemental" class="lon-btn lon-btn-soft lon-btn-sm">Subscrever — 54 €/semana</a>
                                 <p class="lon-service-extra"><a href="/burnout/teste">Fazer teste de burnout →</a> · <a href="/burnout">Centro burnout →</a></p>
                             </div>
                         </div>
@@ -311,8 +312,8 @@
                             <span class="lon-service-chip">Saúde Mental</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta Médica de Saúde Mental</h3>
-                                <p class="lon-service-price">€60 · 45 min</p>
-                                <a href="/marcar/saude-mental" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
+                                <p class="lon-service-price">60 € · 45 min</p>
+                                <a href="/marcar/saude-mental" class="lon-btn lon-btn-soft lon-btn-sm" data-pay-badges>Marcar — 60 €</a>
                             </div>
                         </div>
                     </article>
@@ -323,8 +324,8 @@
                             <span class="lon-service-chip">Burn Out</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta Especializada em Burnout</h3>
-                                <p class="lon-service-price">€60 · 60 min</p>
-                                <a href="/marcar/burnout" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
+                                <p class="lon-service-price">60 € · 60 min</p>
+                                <a href="/marcar/burnout" class="lon-btn lon-btn-soft lon-btn-sm" data-pay-badges>Marcar — 60 €</a>
                                 <p class="lon-service-extra"><a href="/burnout/teste">Fazer teste de burnout →</a> · <a href="/burnout">Centro burnout →</a></p>
                             </div>
                         </div>
@@ -336,8 +337,8 @@
                             <span class="lon-service-chip">Subscrição</span>
                             <div class="lon-service-glass">
                                 <h3>Subscrição Anti-Burnout</h3>
-                                <p class="lon-service-price">€216 /mês</p>
-                                <a href="/marcar/burnout-mensal" class="lon-btn lon-btn-soft lon-btn-sm">Subscrever</a>
+                                <p class="lon-service-price">216 € /mês</p>
+                                <a href="/marcar/burnout-mensal" class="lon-btn lon-btn-soft lon-btn-sm">Subscrever — 216 €/mês</a>
                                 <p class="lon-service-extra"><a href="/clinica-anti-burnout">4 consultas/mês · 54€/sessão →</a></p>
                             </div>
                         </div>
@@ -349,8 +350,8 @@
                             <span class="lon-service-chip">Seguimento</span>
                             <div class="lon-service-glass">
                                 <h3>Renovação de Tratamento Médico</h3>
-                                <p class="lon-service-price">€19</p>
-                                <a href="/marcar/renovacao" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
+                                <p class="lon-service-price">19 €</p>
+                                <a href="/marcar/renovacao" class="lon-btn lon-btn-soft lon-btn-sm" data-pay-badges>Marcar — 19 €</a>
                             </div>
                         </div>
                     </article>
@@ -361,8 +362,8 @@
                             <span class="lon-service-chip">Viajante</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta do Viajante</h3>
-                                <p class="lon-service-price">€39 · 20 min</p>
-                                <a href="/marcar/travel" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
+                                <p class="lon-service-price">39 € · 20 min</p>
+                                <a href="/marcar/travel" class="lon-btn lon-btn-soft lon-btn-sm" data-pay-badges>Marcar — 39 €</a>
                             </div>
                         </div>
                     </article>
@@ -373,8 +374,8 @@
                             <span class="lon-service-chip">Viajante 2 pessoas</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta do Viajante 2 pessoas</h3>
-                                <p class="lon-service-price">€69 · 30 min</p>
-                                <a href="/marcar/travel?pessoas=2" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
+                                <p class="lon-service-price">69 € · 30 min</p>
+                                <a href="/marcar/travel?pessoas=2" class="lon-btn lon-btn-soft lon-btn-sm" data-pay-badges>Marcar — 69 €</a>
                             </div>
                         </div>
                     </article>
@@ -385,8 +386,8 @@
                             <span class="lon-service-chip">Longevidade</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta de Longevidade e Saúde Preventiva</h3>
-                                <p class="lon-service-price">€79 · 30 min</p>
-                                <a href="/marcar/longevidade" class="lon-btn lon-btn-soft lon-btn-sm">Marcar</a>
+                                <p class="lon-service-price">79 € · 30 min</p>
+                                <a href="/marcar/longevidade" class="lon-btn lon-btn-soft lon-btn-sm" data-pay-badges>Marcar — 79 €</a>
                             </div>
                         </div>
                     </article>
@@ -407,6 +408,7 @@
                     </div>
                     <div class="lon-team-card-body">
                         <h3 class="lon-team-name">Drª Rita Aguiar</h3>
+                        <p class="lon-avail-badge" data-doctor-available data-doctor-name="Dr. Rita Aguiar" hidden></p>
                         <p class="lon-team-role">Médica</p>
                         <ul class="lon-team-credentials">
                             <li class="lon-team-years">9 anos de prática clínica</li>
@@ -622,6 +624,6 @@
     <script src="i18n.js?v=20260903c" defer></script>
     <script src="reviews.js?v=20260902a" defer></script>
     <script src="landing.js?v=20260905c" defer></script>
-    <script src="/lon-slots.js?v=20260905c" defer></script>
+    <script src="/lon-slots.js?v=20260905g" defer></script>
 </body>
 </html>

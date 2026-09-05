@@ -336,6 +336,7 @@ function layoutPage(opts) {
             </a>
             <nav class="lon-nav-links" aria-label="Navegação principal">
                 <a href="/nutricao" aria-current="page">Nutrição</a>
+                <a href="/nutricao/testes">Testes</a>
                 <a href="/consulta">Consulta médica</a>
                 <a href="/consultas">Psicologia</a>
                 <a href="/saudemental">Planos</a>
@@ -350,6 +351,7 @@ function layoutPage(opts) {
         </div>
         <div class="lon-mobile-menu" id="lonMobileMenu">
             <a href="/nutricao">Nutrição por condição</a>
+            <a href="/nutricao/testes">Testes clínicos</a>
             <a href="/consulta">Consulta médica</a>
             <a href="/consultas">Psicologia por queixa</a>
             <a href="/marcar/clinica-geral?ref=nutricao-nav-mobile">Marcar consulta</a>
@@ -367,6 +369,7 @@ function layoutPage(opts) {
                 <div class="lon-footer-col">
                     <h4>Nutrição</h4>
                     <a href="/nutricao">Todas as condições</a>
+                    <a href="/nutricao/testes">Testes clínicos</a>
                     ${footerLinks}
                 </div>
                 <div class="lon-footer-col">
@@ -394,6 +397,10 @@ function layoutPage(opts) {
     </footer>
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contactar por WhatsApp">💬</a>
     <script src="/lon-nav.js"></script>
+    <script src="/i18n.js?v=20260905e" defer></script>
+    <script src="/lon-analytics.js?v=20260905e" defer></script>
+    <script src="/reviews.js?v=20260905e" defer></script>
+    <script src="/lon-slots.js?v=20260905g" defer></script>
 </body>
 </html>`;
 }
@@ -460,8 +467,20 @@ function renderHub(origin) {
                 <p class="nu-lead">A Lon Clinic oferece orientação nutricional em consulta médica online para queixas específicas: pós-parto, bariátrica, diabetes tipo 2, Hashimoto, celíaca, FODMAP, SOP e acompanhamento com Ozempic/Wegovy. Cada página diz o que muda nas primeiras semanas, o que trazer e o preço — sem PDF vago.</p>
                 <p class="nu-hero-meta">Consulta única 39 € ou 79 € · Follow-up sem pacote obrigatório · Psicologia quando o stress manda na comida</p>
                 <div class="nu-hero-actions">
-                    <a class="lon-btn lon-btn-primary" href="/marcar/clinica-geral?ref=nutricao-hub">Marcar consulta · 39 €</a>
-                    <a class="lon-btn lon-btn-soft" href="/consultas">Ver psicologia</a>
+                    <a class="lon-btn lon-btn-primary" href="/marcar/clinica-geral?ref=nutricao-hub" data-pay-badges>Marcar consulta — 39 €</a>
+                    <a class="lon-btn lon-btn-soft" href="/nutricao/testes">Fazer um teste gratuito</a>
+                </div>
+            </div>
+        </section>
+        <section class="nu-section" aria-labelledby="nu-g-testes">
+            <div class="lon-container">
+                <h2 id="nu-g-testes">Testes de alimentação e metabolismo</h2>
+                <div class="nu-card-grid">
+                    <a class="nu-card" href="/nutricao/teste-imc"><span class="nu-card-price">1 min</span><span class="nu-card-label">IMC e cintura</span><span class="nu-card-desc">Excesso de peso ou obesidade — e quantos kg até ao peso normal.</span></a>
+                    <a class="nu-card" href="/nutricao/teste-tfeq"><span class="nu-card-price">4 min</span><span class="nu-card-label">TFEQ-R18</span><span class="nu-card-desc">Restrição, descontrolo e fome emocional — o que trava o peso.</span></a>
+                    <a class="nu-card" href="/nutricao/teste-yfas"><span class="nu-card-price">4 min</span><span class="nu-card-label">YFAS 2.0</span><span class="nu-card-desc">Sinais de compulsão por alimentos hipercalóricos.</span></a>
+                    <a class="nu-card" href="/nutricao/teste-ess"><span class="nu-card-price">2 min</span><span class="nu-card-label">ESS · sonolência</span><span class="nu-card-desc">Alerta de apneia do sono — sobretudo com excesso de peso.</span></a>
+                    <a class="nu-card" href="/burnout/teste-who5"><span class="nu-card-price">1 min</span><span class="nu-card-label">WHO-5</span><span class="nu-card-desc">Bem-estar 0–100%. O micro-teste para cruzar com nutrição.</span></a>
                 </div>
             </div>
         </section>

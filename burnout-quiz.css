@@ -222,6 +222,57 @@
     text-decoration: underline;
 }
 
+.bq-imc-legend {
+    display: grid;
+    gap: 14px;
+    max-width: 440px;
+    margin: 0 auto 28px;
+    text-align: left;
+}
+
+.bq-imc-legend table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+    background: #fff;
+    border: 1px solid rgba(16, 24, 32, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.bq-imc-legend caption {
+    caption-side: top;
+    text-align: left;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--bq-muted);
+    margin: 0 0 8px;
+}
+
+.bq-imc-legend th,
+.bq-imc-legend td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(16, 24, 32, 0.06);
+}
+
+.bq-imc-legend th {
+    font-weight: 600;
+    color: var(--bq-muted);
+    background: var(--bq-mist, #f4f1eb);
+}
+
+.bq-imc-legend td:first-child {
+    font-weight: 600;
+    color: var(--bq-ink);
+    white-space: nowrap;
+}
+
+.bq-imc-legend tr:last-child td {
+    border-bottom: 0;
+}
+
 .bq-cta-more {
     margin: 18px 0 0;
     font-size: 0.9rem;
@@ -391,6 +442,53 @@
     font-size: 0.8125rem;
     color: var(--bq-warn);
     font-weight: 500;
+}
+
+.bq-hint {
+    font-size: 0.875rem;
+    color: var(--bq-muted);
+    line-height: 1.5;
+    margin: 0 0 14px;
+}
+
+.bq-num-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bq-num-input {
+    flex: 1;
+    font-family: inherit;
+    font-size: 1.35rem;
+    font-weight: 600;
+    padding: 14px 16px;
+    border: 1px solid rgba(16, 24, 32, 0.18);
+    border-radius: 10px;
+    background: var(--bq-mist);
+    color: var(--bq-ink);
+}
+
+.bq-num-input:focus {
+    outline: none;
+    border-color: var(--bq-accent);
+    background: #fff;
+    box-shadow: 0 0 0 3px var(--bq-accent-soft);
+}
+
+.bq-num-unit {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--bq-muted);
+    white-space: nowrap;
+}
+
+.bq-num-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
 }
 
 .bq-privacy {
@@ -899,6 +997,128 @@
     cursor: pointer;
     text-decoration: underline;
     text-underline-offset: 3px;
+}
+
+.bq-kicker {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--bq-accent);
+    margin: 0 0 12px;
+}
+
+.bq-stem {
+    font-size: 0.875rem;
+    color: var(--bq-muted);
+    margin: 0 0 10px;
+    line-height: 1.5;
+}
+
+.bq-crisis-banner {
+    background: #f6e8e4;
+    color: #6b3a2e;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    margin: 0 0 22px;
+}
+
+.bq-crisis-banner a {
+    color: #6b3a2e;
+    font-weight: 700;
+}
+
+.bq-related {
+    margin: 22px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.bq-related-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bq-muted);
+    margin: 0 0 4px;
+}
+
+.bq-related-link {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px 14px;
+    border: 1px solid var(--bq-line);
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    background: var(--bq-mist);
+}
+
+.bq-related-link strong {
+    font-size: 0.9rem;
+}
+
+.bq-related-link span {
+    font-size: 0.75rem;
+    color: var(--bq-muted);
+}
+
+.bq-hub-intro {
+    max-width: 640px;
+    margin: 0 auto 8px;
+    padding: 28px 24px 0;
+}
+
+.bq-hub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 12px 24px 36px;
+}
+
+.bq-hub-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 18px;
+    background: var(--bq-surface);
+    border: 1px solid var(--bq-line);
+    border-radius: 14px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.bq-hub-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--bq-accent);
+}
+
+.bq-hub-card-kicker {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bq-accent);
+}
+
+.bq-hub-card-title {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.bq-hub-card-lead {
+    font-size: 0.85rem;
+    color: var(--bq-muted);
+    line-height: 1.5;
 }
 
 @media (max-width: 520px) {

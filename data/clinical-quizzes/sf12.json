@@ -1,0 +1,92 @@
+{
+  "id": "sf12",
+  "path": "/burnout/teste-sf12",
+  "cluster": "wellbeing",
+  "instrument": "SF-12",
+  "minutes": 3,
+  "title": "Teste de qualidade de vida (modelo SF-12) | Lon Clinic",
+  "h1": "Como é que a saúde está a afetar a tua vida?",
+  "lead": "Doze perguntas sobre o impacto da saúde física e mental no dia-a-dia — as mesmas dimensões do SF-12. Usamos este perfil para medir evolução às 3 e 6 meses de acompanhamento, e como prova objetiva de que o plano está (ou não) a funcionar.",
+  "description": "Questionário de qualidade de vida em 12 itens (dimensões do SF-12): saúde física e mental. Resultado imediato. Ideal para follow-up às 3 e 6 meses.",
+  "stem": "Nas últimas 4 semanas…",
+  "homeHref": "/burnout",
+  "homeLabel": "LON Clinic",
+  "scoring": "sf12",
+  "gaugeMax": 100,
+  "gaugeLabel": "Qualidade de vida · 0–100",
+  "displayMultiplier": 1,
+  "higherIsBetter": true,
+  "bandOn": "display",
+  "scales": [
+    { "id": "pcs", "title": "Saúde física", "note": "Função, dor, energia para tarefas e perceção geral de saúde. Pontuação Lon 0–100 (mais alto = melhor)." },
+    { "id": "mcs", "title": "Saúde mental", "note": "Humor, calma, vida social e o quanto os problemas emocionais limitam o que fazes." }
+  ],
+  "questions": [
+    { "scale": "pcs", "text": "Em geral, como classificas a tua saúde neste momento?", "options": [
+      { "label": "Má", "v": 0 }, { "label": "Razoável", "v": 1 }, { "label": "Boa", "v": 2 }, { "label": "Muito boa", "v": 3 }, { "label": "Excelente", "v": 4 }
+    ]},
+    { "scale": "pcs", "text": "A tua saúde limita-te em esforço do dia-a-dia — caminhar, tarefas de casa, carregar compras?", "options": [
+      { "label": "Limita muito", "v": 0 }, { "label": "Limita bastante", "v": 1 }, { "label": "Limita um pouco", "v": 2 }, { "label": "Limita pouco", "v": 3 }, { "label": "Não limita", "v": 4 }
+    ]},
+    { "scale": "pcs", "text": "A tua saúde limita-te a subir escadas ou a fazer um esforço um pouco maior do que o habitual?", "options": [
+      { "label": "Limita muito", "v": 0 }, { "label": "Limita bastante", "v": 1 }, { "label": "Limita um pouco", "v": 2 }, { "label": "Limita pouco", "v": 3 }, { "label": "Não limita", "v": 4 }
+    ]},
+    { "scale": "pcs", "text": "Por causa da saúde física, fizeste menos do que gostarias no trabalho ou nas tarefas de casa?", "options": [
+      { "label": "Sempre", "v": 0 }, { "label": "Frequentemente", "v": 1 }, { "label": "Às vezes", "v": 2 }, { "label": "Raramente", "v": 3 }, { "label": "Nunca", "v": 4 }
+    ]},
+    { "scale": "pcs", "text": "Por causa da saúde física, estiveste limitado no tipo de trabalho ou atividades que consegues fazer?", "options": [
+      { "label": "Sempre", "v": 0 }, { "label": "Frequentemente", "v": 1 }, { "label": "Às vezes", "v": 2 }, { "label": "Raramente", "v": 3 }, { "label": "Nunca", "v": 4 }
+    ]},
+    { "scale": "mcs", "text": "Por causa de problemas emocionais, fizeste menos do que gostarias?", "options": [
+      { "label": "Sempre", "v": 0 }, { "label": "Frequentemente", "v": 1 }, { "label": "Às vezes", "v": 2 }, { "label": "Raramente", "v": 3 }, { "label": "Nunca", "v": 4 }
+    ]},
+    { "scale": "mcs", "text": "Por causa de problemas emocionais, fizeste o trabalho ou as tarefas de casa com menos cuidado do que o habitual?", "options": [
+      { "label": "Sempre", "v": 0 }, { "label": "Frequentemente", "v": 1 }, { "label": "Às vezes", "v": 2 }, { "label": "Raramente", "v": 3 }, { "label": "Nunca", "v": 4 }
+    ]},
+    { "scale": "pcs", "text": "A dor interferiu com o teu trabalho normal (incluindo as tarefas de casa)?", "options": [
+      { "label": "Extremamente", "v": 0 }, { "label": "Bastante", "v": 1 }, { "label": "Moderadamente", "v": 2 }, { "label": "Um pouco", "v": 3 }, { "label": "Nada", "v": 4 }
+    ]},
+    { "scale": "mcs", "text": "Sentiste-te calmo e em paz?", "options": [
+      { "label": "Nunca", "v": 0 }, { "label": "Raramente", "v": 1 }, { "label": "Às vezes", "v": 2 }, { "label": "Frequentemente", "v": 3 }, { "label": "Sempre", "v": 4 }
+    ]},
+    { "scale": "pcs", "text": "Tiveste energia para o teu dia?", "options": [
+      { "label": "Nunca", "v": 0 }, { "label": "Raramente", "v": 1 }, { "label": "Às vezes", "v": 2 }, { "label": "Frequentemente", "v": 3 }, { "label": "Sempre", "v": 4 }
+    ]},
+    { "scale": "mcs", "text": "Sentiste-te desanimado ou em baixo?", "options": [
+      { "label": "Sempre", "v": 0 }, { "label": "Frequentemente", "v": 1 }, { "label": "Às vezes", "v": 2 }, { "label": "Raramente", "v": 3 }, { "label": "Nunca", "v": 4 }
+    ]},
+    { "scale": "mcs", "text": "Problemas de saúde física ou emocional interferiram com a tua vida social (família, amigos, convívio)?", "options": [
+      { "label": "Sempre", "v": 0 }, { "label": "Frequentemente", "v": 1 }, { "label": "Às vezes", "v": 2 }, { "label": "Raramente", "v": 3 }, { "label": "Nunca", "v": 4 }
+    ]}
+  ],
+  "bands": [
+    { "max": 39, "pill": "BAIXO", "concern": "high", "title": "A saúde já está a encolher a vida", "text": "O perfil físico e/ou mental está numa zona baixa. Este questionário existe para isso: tornar visível o impacto — e servir de linha de base para daqui a 3 meses.", "cta": "Marca consulta. Se o mental puxa o índice, o caminho é anti-burnout; se o físico e o metabolismo pesam, a consulta de nutrição/longevidade.", "bookLabel": "Marcar consulta anti-burnout — 60€", "bookNote": "Videoconsulta · o perfil fica na marcação" },
+    { "max": 59, "pill": "MODERADO", "concern": "mid", "title": "Há impacto — ainda recuperável", "text": "Nem colapso nem saúde plena. É o intervalo em que 3 meses de acompanhamento costumam mostrar diferença neste mesmo questionário — por isso o usamos em follow-up.", "cta": "Um plano com regularidade (subscrição anti-burnout ou follow-up de nutrição) é o que permite repetir o SF-12 às 12 e 24 semanas com um número para comparar.", "bookLabel": "Marcar consulta — 60€", "bookNote": "Videoconsulta · linha de base para os 3 meses" },
+    { "max": 79, "pill": "BOM", "concern": "light", "title": "Qualidade de vida razoável a boa", "text": "O impacto da saúde no dia-a-dia é limitado. Serve de linha de base sólida. Se um domínio (físico ou mental) estiver claramente abaixo do outro, vale afinar aí.", "cta": "Não é urgente. Se quiseres otimizar o domínio mais fraco, a consulta certa está abaixo.", "bookLabel": "Marcar consulta — 60€", "bookNote": "Opcional" },
+    { "max": 100, "pill": "ELEVADO", "concern": "low", "title": "A saúde está a deixar-te viver", "text": "Físico e mental numa zona alta. Guarda este resultado: às 3 e 6 meses, repetir o mesmo teste é a forma mais honesta de ver se um plano manteve o que já está bem.", "cta": "Nada a marcar por obrigação. Se entrares num programa, repetimos este perfil no follow-up.", "bookLabel": "Marcar consulta — 60€", "bookNote": "Opcional" }
+  ],
+  "insights": {
+    "pcs": { "title": "O corpo a limitar o dia", "text": "A componente física está a puxar o índice. Dor, energia e limites nas tarefas são o território da consulta médica e, muitas vezes, da nutrição (incluindo sono e peso)." },
+    "mcs": { "title": "O mental a limitar o dia", "text": "A componente mental está mais baixa. Humor, calma e vida social encolhida apontam para burnout, ansiedade ou depressão — PHQ-9, GAD-7 e o teste de burnout afinam o próximo passo." }
+  },
+  "booking": {
+    "consultHref": "/marcar/burnout",
+    "consultName": "Consulta Especializada em Burnout",
+    "consultPrice": "60",
+    "consultMeta": "Sessão única · 60 minutos",
+    "subHref": "/marcar/clinica-geral",
+    "subName": "Consulta de nutrição / clínica geral",
+    "subPrice": "39",
+    "subMeta": "Videoconsulta · 25–35 min",
+    "stickyLabel": "Consulta anti-burnout",
+    "hideSubOn": []
+  },
+  "related": ["who5", "phq9", "ess", "cbi"],
+  "introLinks": [
+    { "href": "/burnout/teste-who5", "label": "WHO-5 (1 min)" },
+    { "href": "/burnout/teste", "label": "Teste de burnout" },
+    { "href": "/nutricao", "label": "Nutrição por condição" }
+  ],
+  "disclaimer": "Este questionário cobre as oito dimensões clássicas do SF-12 (Ware, Kosinski & Keller, 1996) — função física, desempenho físico, dor, saúde geral, vitalidade, função social, desempenho emocional e saúde mental — com itens Lon Clinic em português e pontuação 0–100 por domínio (média dos itens). Não utiliza o algoritmo proprietário SF-12® da QualityMetric/Optum nem produz scores T oficiais. Serve como linha de base e follow-up clínico interno. Não é um diagnóstico.",
+  "utmCampaign": "sf12-teste"
+}

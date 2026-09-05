@@ -43,6 +43,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 const guide = require('./guide');
 const burnoutPages = require('./burnout-pages');
+const clinicalQuizzes = require('./clinical-quizzes');
 const consultaPages = require('./consulta-pages');
 const queixas = require('./queixas');
 const nutricao = require('./nutricao');
@@ -50,7 +51,7 @@ const touristPages = require('./tourist-pages');
 const producers = require('./producers');
 const wellness = require('./wellness');
 const seo = require('./seo');
-const { emailLink, withUtm, TRACKED_REDIRECTS, safeInternalPath, trackedLinksForAdmin } = require('./utm');
+const { emailLink, withUtm, datedCampaign, TRACKED_REDIRECTS, safeInternalPath, trackedLinksForAdmin } = require('./utm');
 const { hydrateInfoHtml, NOINDEX_PAGES: INFO_NOINDEX_PAGES } = require('./info-ssr');
 const authors = require('./authors');
 const cvi = require('./cvi');
@@ -151,6 +152,33 @@ const rateLimitAnalytics = rateLimit({
     legacyHeaders: false,
     handler: (req, res) => {
         res.status(204).end();
+    }
+});
+
+const rateLimitNextSlots = rateLimit({
+    windowMs: 60 * 1000,
+    max: 40,
+    standardHeaders: true,
+    legacyHeaders: false,
+    skip: (req) => !!peekNextSlotsCache(req),
+    handler: (req, res) => {
+        const stale = peekNextSlotsCache(req);
+        if (stale) {
+            res.set('Cache-Control', 'public, max-age=15, stale-while-revalidate=60');
+            res.set('X-Slots-Cache', 'STALE');
+            return res.json(stale);
+        }
+        res.status(429).json({ error: 'Too many requests.', slots: [], withinHours: 24 });
+    }
+});
+
+const rateLimitSlotHold = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 30,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Too many slot reservations. Try again later.' });
     }
 });
 
@@ -1435,6 +1463,7 @@ function persistScheduleStoreToFile() {
 }
 
 async function persistScheduleStore() {
+    invalidateNextSlotsCache();
     if (usePersistentDb) {
         try {
             await db.saveSchedulePayload(scheduleStore);
@@ -3120,8 +3149,8 @@ function buildBurnoutQuizEmails(data) {
     const copy = burnoutQuizBandCopy(band);
     const visual = burnoutBandVisual(band, copy);
     const dominant = burnoutDominantInsight(personalNum, workNum, bodyNum);
-    const bookUrl = emailLink(`${PUBLIC_SITE_URL}/marcar/burnout`, 'burnout-quiz-email', 'book-consult');
-    const programUrl = emailLink(`${PUBLIC_SITE_URL}/marcar/burnout-mensal`, 'burnout-quiz-email', 'book-subscription');
+    const bookUrl = emailLink(`${PUBLIC_SITE_URL}/marcar/burnout`, datedCampaign('burnout_quiz_email'), 'book-consult');
+    const programUrl = emailLink(`${PUBLIC_SITE_URL}/marcar/burnout-mensal`, datedCampaign('burnout_quiz_email'), 'book-subscription');
     const siteUrl = PUBLIC_SITE_URL;
     const font = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
     const barFill = copy.accent;
@@ -3317,6 +3346,40 @@ async function sendBurnoutQuizEmails(data) {
         return true;
     } catch (err) {
         console.error('   ❌ Failed to send burnout quiz emails:', err.message);
+        return false;
+    }
+}
+
+async function sendClinicalQuizEmails(def, data) {
+    if (!isEmailConfigured) {
+        console.log('   ⚠️  Email not configured — clinical quiz result not emailed');
+        return false;
+    }
+    try {
+        const { clinic, user } = clinicalQuizzes.buildEmails(def, data, {
+            escapeHtml,
+            emailLink,
+            siteUrl: PUBLIC_SITE_URL
+        });
+        await deliverEmail({
+            from: EMAIL_FROM,
+            to: CONTACT_EMAIL,
+            replyTo: data.email,
+            subject: clinic.subject,
+            text: clinic.text,
+            html: clinic.html
+        });
+        await deliverEmail({
+            from: EMAIL_FROM,
+            to: data.email,
+            subject: user.subject,
+            text: user.text,
+            html: user.html
+        });
+        console.log('   📩 Clinical quiz emails sent:', def.id, data.email);
+        return true;
+    } catch (err) {
+        console.error('   ❌ Failed to send clinical quiz emails:', err.message);
         return false;
     }
 }
@@ -3876,7 +3939,7 @@ function buildFollowupEmail(data) {
     const t = followupEmailStrings(rawLocale);
     const name = (patientName || 'Patient').trim();
     const reviewUrl = trustpilotEvaluateUrl(rawLocale);
-    const siteReviewUrl = emailLink(`${PUBLIC_SITE_URL}/#deixar-opiniao`, 'post-consult-review', 'site-form');
+    const siteReviewUrl = emailLink(`${PUBLIC_SITE_URL}/#deixar-opiniao`, datedCampaign('post_consult_review'), 'site-form');
     const showRenewal = service !== 'renovacao' && service !== 'entrevista';
     const renewalHref = showRenewal
         ? renewalFollowupUrl({ email, patientName: name, bookingRef })
@@ -4480,13 +4543,175 @@ async function fetchInvitationLockedTimesForDateIso(dateIso) {
     }
 }
 
+const SLOT_HOLD_MS = 8 * 60 * 1000;
+const SLOT_HOLD_CHECKOUT_MS = 30 * 60 * 1000;
+const NEXT_SLOTS_TTL_MS = 45 * 1000;
+const nextSlotsCache = new Map();
+const nextSlotsInflight = new Map();
+const slotHoldsById = new Map();
+
+function slotIdFromDateTime(dateIso, time) {
+    const d = String(dateIso || '').replace(/-/g, '');
+    const t = String(time || '').replace(':', '').slice(0, 4);
+    if (!/^\d{8}$/.test(d) || !/^\d{4}$/.test(t)) return '';
+    return `${d}-${t}`;
+}
+
+function parseSlotId(raw) {
+    const m = /^(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})$/.exec(String(raw || '').trim());
+    if (!m) return null;
+    const date = `${m[1]}-${m[2]}-${m[3]}`;
+    const time = `${m[4]}:${m[5]}`;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return null;
+    return { id: `${m[1]}${m[2]}${m[3]}-${m[4]}${m[5]}`, date, time };
+}
+
+function invalidateNextSlotsCache() {
+    nextSlotsCache.clear();
+}
+
+function nextSlotsCacheKeyFromReq(req) {
+    const limit = Math.min(Math.max(parseInt(req.query && req.query.limit, 10) || 6, 1), 8);
+    const withinHours = Math.min(Math.max(parseInt(req.query && req.query.withinHours, 10) || 24, 1), 336);
+    return `${limit}:${withinHours}`;
+}
+
+function peekNextSlotsCache(req) {
+    const key = nextSlotsCacheKeyFromReq(req || { query: {} });
+    const hit = nextSlotsCache.get(key);
+    if (!hit || !hit.body) return null;
+    if (Date.now() - hit.ts > NEXT_SLOTS_TTL_MS * 4) return null;
+    return hit.body;
+}
+
+function readCookieValue(req, name) {
+    const header = String((req && req.headers && req.headers.cookie) || '');
+    const parts = header.split(';');
+    for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        const eq = part.indexOf('=');
+        if (eq < 0) continue;
+        if (part.slice(0, eq).trim() !== name) continue;
+        try {
+            return decodeURIComponent(part.slice(eq + 1).trim());
+        } catch {
+            return part.slice(eq + 1).trim();
+        }
+    }
+    return '';
+}
+
+function setHoldCookie(req, res, token) {
+    const proto = String((req && req.headers && req.headers['x-forwarded-proto']) || '').split(',')[0].trim();
+    const secure = !!(req && req.secure) || proto === 'https';
+    res.cookie('lon_hold', token, {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure,
+        path: '/',
+        maxAge: 20 * 60 * 1000
+    });
+}
+
+function purgeMemoryHolds() {
+    const now = Date.now();
+    for (const [id, hold] of slotHoldsById) {
+        if (!hold || hold.expiresAt <= now) slotHoldsById.delete(id);
+    }
+}
+
+async function purgeSlotHolds() {
+    purgeMemoryHolds();
+    if (usePersistentDb) {
+        try { await db.purgeExpiredSlotHolds(); } catch (err) {
+            console.error('purgeExpiredSlotHolds:', err.message);
+        }
+    }
+}
+
+function memoryHoldToPublic(hold) {
+    if (!hold) return null;
+    return {
+        holdId: hold.id,
+        slot: hold.slotId,
+        date: hold.dateIso,
+        time: hold.time,
+        service: hold.service || '',
+        expiresAt: new Date(hold.expiresAt).toISOString(),
+        expiresInSec: Math.max(0, Math.round((hold.expiresAt - Date.now()) / 1000))
+    };
+}
+
+async function findHoldById(id) {
+    await purgeSlotHolds();
+    const key = String(id || '');
+    if (!key) return null;
+    const mem = slotHoldsById.get(key);
+    if (mem && mem.expiresAt > Date.now()) return mem;
+    if (usePersistentDb) {
+        try {
+            const row = await db.findSlotHoldById(key);
+            if (row) {
+                slotHoldsById.set(row.id, row);
+                return row;
+            }
+        } catch (err) {
+            console.error('findHoldById:', err.message);
+        }
+    }
+    return null;
+}
+
+async function listHeldTimesForDate(dateIso, excludeHoldId) {
+    await purgeSlotHolds();
+    const times = new Set();
+    for (const hold of slotHoldsById.values()) {
+        if (hold.dateIso === dateIso && hold.expiresAt > Date.now() && hold.id !== excludeHoldId) {
+            times.add(hold.time);
+        }
+    }
+    if (usePersistentDb) {
+        try {
+            const dbTimes = await db.listActiveHoldTimesForDateIso(dateIso, excludeHoldId || null);
+            dbTimes.forEach((t) => times.add(t));
+        } catch (err) {
+            console.error('listHeldTimesForDate:', err.message);
+        }
+    }
+    return times;
+}
+
+async function releaseHold(id) {
+    if (!id) return;
+    slotHoldsById.delete(id);
+    if (usePersistentDb) {
+        try { await db.deleteSlotHoldById(id); } catch (err) {
+            console.error('deleteSlotHoldById:', err.message);
+        }
+    }
+    invalidateNextSlotsCache();
+}
+
+async function releaseHoldsForSlot(dateIso, time) {
+    const t = String(time || '').slice(0, 5);
+    for (const [id, hold] of slotHoldsById) {
+        if (hold.dateIso === dateIso && hold.time === t) slotHoldsById.delete(id);
+    }
+    if (usePersistentDb) {
+        try { await db.deleteSlotHoldsForSlot(dateIso, t); } catch (err) {
+            console.error('deleteSlotHoldsForSlot:', err.message);
+        }
+    }
+    invalidateNextSlotsCache();
+}
+
 /**
  * Slots patients may book for a date: schedule + optional smart grouping + not already taken.
  * Smart grouping is intentionally skipped when an explicit per-day override is in place,
  * so the admin's custom hours are surfaced as the full set of bookable slots.
  * Pass `bypassSmartGrouping=true` (admin tools) to return the full grid regardless of grouping.
  */
-async function getBookableSlotsForDateIso(dateIso, excludeBookingRef, excludeInvitationId, bypassSmartGrouping) {
+async function getBookableSlotsForDateIso(dateIso, excludeBookingRef, excludeInvitationId, bypassSmartGrouping, excludeHoldId) {
     const base = slotsForDateIso(dateIso);
     if (!base.length) return [];
     const slotDuration = scheduleStore.slotDuration || 30;
@@ -4511,6 +4736,10 @@ async function getBookableSlotsForDateIso(dateIso, excludeBookingRef, excludeInv
     }
     if (invitationLocked.size > 0) {
         slots = slots.filter((t) => !invitationLocked.has(t));
+    }
+    const heldTimes = await listHeldTimesForDate(dateIso, excludeHoldId || null);
+    if (heldTimes.size > 0) {
+        slots = slots.filter((t) => !heldTimes.has(t));
     }
     const free = [];
     for (const t of slots) {
@@ -4552,10 +4781,13 @@ function addDaysIso(dateIso, n) {
     return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth() + 1).padStart(2, '0')}-${String(dt.getUTCDate()).padStart(2, '0')}`;
 }
 
-/** Next free public slots across upcoming days (homepage + renewal deep-link). */
-async function getNextBookableSlots(limit, maxDays) {
+/** Next free public slots across upcoming days (homepage + landing heroes). */
+async function getNextBookableSlots(limit, maxDays, withinHours) {
     const cap = Math.min(Math.max(parseInt(limit, 10) || 1, 1), 8);
     const days = Math.min(Math.max(parseInt(maxDays, 10) || 14, 1), 21);
+    const horizonHours = Number.isFinite(withinHours) ? withinHours : 24;
+    const tz = scheduleStore.timezone || 'Europe/Lisbon';
+    const horizonMs = horizonHours > 0 ? Date.now() + horizonHours * 60 * 60 * 1000 : Infinity;
     const now = lisbonNowParts();
     const out = [];
     for (let i = 0; i < days && out.length < cap; i++) {
@@ -4571,7 +4803,13 @@ async function getNextBookableSlots(limit, maxDays) {
             });
         }
         for (const time of available) {
-            out.push({ date: dateIso, time });
+            const start = localWallTimeToUtcMs(dateIso, time, tz);
+            if (Number.isFinite(start) && start > horizonMs) continue;
+            out.push({
+                id: slotIdFromDateTime(dateIso, time),
+                date: dateIso,
+                time
+            });
             if (out.length >= cap) break;
         }
     }
@@ -4626,7 +4864,7 @@ function renewalFollowupUrl(booking, slot) {
         u.searchParams.set('date', slot.date);
         u.searchParams.set('time', slot.time);
     }
-    return emailLink(u.toString(), 'renewal-followup', 'renovacao-19');
+    return emailLink(u.toString(), datedCampaign('renewal_followup'), 'renovacao-19');
 }
 
 const AUTOMATION_JOB_INTERVAL_MS = 15 * 60 * 1000;
@@ -5026,6 +5264,13 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
         } else {
             bookingsStore.push(record);
             console.log(`${logPrefix}📋 Booking ${bookingRef} saved (${bookingsStore.length} total in memory)`);
+        }
+        const bookedIso = record.dateIso && String(record.dateIso).trim();
+        const bookedTime = normalizeTimeString({ time: record.time || '' });
+        if (bookedIso && bookedTime) {
+            await releaseHoldsForSlot(bookedIso, bookedTime);
+        } else {
+            invalidateNextSlotsCache();
         }
         return { ok: true, reason: 'recorded', bookingRef };
     } finally {
@@ -5582,6 +5827,18 @@ app.get('/burnout/teste', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'burnout-quiz.html'), 'Error loading burnout quiz page');
 });
 
+app.get('/burnout/testes', (req, res) => {
+    sendHtmlNoCacheString(res, clinicalQuizzes.renderHub(seo.SITE_ORIGIN, 'burnout'));
+});
+
+app.get('/burnout/teste-:quizId', (req, res) => {
+    const def = clinicalQuizzes.getQuizByPath(`/burnout/teste-${String(req.params.quizId || '').toLowerCase()}`);
+    if (!def) {
+        return sendHtmlNoCacheString(res, burnoutPages.renderNotFound(seo.SITE_ORIGIN), 404);
+    }
+    sendHtmlNoCacheString(res, clinicalQuizzes.renderQuizPage(seo.SITE_ORIGIN, def));
+});
+
 app.get('/burnout/consulta', (req, res) => {
     res.redirect(301, '/clinica-anti-burnout');
 });
@@ -5651,6 +5908,18 @@ app.get('/nutricao', (req, res) => {
 
 app.get('/nutricao/', (req, res) => {
     res.redirect(301, '/nutricao');
+});
+
+app.get('/nutricao/testes', (req, res) => {
+    sendHtmlNoCacheString(res, clinicalQuizzes.renderHub(seo.SITE_ORIGIN, 'nutrition'));
+});
+
+app.get('/nutricao/teste-:quizId', (req, res) => {
+    const def = clinicalQuizzes.getQuizByPath(`/nutricao/teste-${String(req.params.quizId || '').toLowerCase()}`);
+    if (!def) {
+        return sendHtmlNoCacheString(res, nutricao.renderNotFound(seo.SITE_ORIGIN), 404);
+    }
+    sendHtmlNoCacheString(res, clinicalQuizzes.renderQuizPage(seo.SITE_ORIGIN, def));
 });
 
 app.get('/nutricao/:slug', (req, res) => {
@@ -7051,6 +7320,74 @@ app.post('/api/burnout-quiz', rateLimitBurnoutQuiz, async (req, res) => {
     });
 });
 
+app.post('/api/clinical-quiz', rateLimitBurnoutQuiz, async (req, res) => {
+    const quizId = String(req.body?.quizId || '').trim();
+    const def = clinicalQuizzes.getQuiz(quizId);
+    if (!def) {
+        return res.status(404).json({ error: 'Questionário desconhecido.' });
+    }
+    const email = String(req.body?.email || '').trim().toLowerCase();
+    const answers = req.body?.answers;
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        return res.status(400).json({ error: 'Email inválido.' });
+    }
+    const invalid = clinicalQuizzes.validateAnswers(def, answers);
+    if (invalid) {
+        return res.status(400).json({ error: invalid });
+    }
+
+    const scored = clinicalQuizzes.scoreQuiz(def, answers);
+    if (!scored) {
+        return res.status(400).json({ error: 'Não foi possível calcular o resultado.' });
+    }
+
+    const payload = {
+        email,
+        answers,
+        scored,
+        band: scored.band ? scored.band.pill : ''
+    };
+
+    if (usePersistentDb) {
+        try {
+            const id = crypto.randomUUID();
+            const claimToken = crypto.randomBytes(24).toString('hex');
+            await db.insertQuizAttempt({
+                id,
+                claimToken,
+                quizId: def.id,
+                answers: payload.answers,
+                result: {
+                    display: scored.display,
+                    displayMax: scored.displayMax,
+                    band: payload.band,
+                    scales: scored.scales,
+                    crisis: scored.crisis,
+                    extra: scored.extra
+                },
+                score: scored.display
+            });
+            await db.claimQuizAttempt(id, claimToken, email);
+        } catch (dbErr) {
+            console.error('POST /api/clinical-quiz DB:', dbErr.message);
+        }
+    }
+
+    const emailed = await sendClinicalQuizEmails(def, payload);
+    emitServerAnalytics(
+        'quiz_complete',
+        { props: { quiz: def.id, band: payload.band || 'unknown', crisis: !!scored.crisis } },
+        req
+    ).catch(() => {});
+    return res.json({
+        success: true,
+        emailed,
+        bookUrl: def.booking && def.booking.consultHref
+            ? `${def.booking.consultHref}?ref=${encodeURIComponent(def.id + '-quiz')}`
+            : '/'
+    });
+});
+
 // ─── API: Contact form submission ───
 app.post('/api/contact', rateLimitContact, async (req, res) => {
     const name = (req.body?.name || '').trim();
@@ -7598,7 +7935,8 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
             travelDates,
             locale,
             dateIso,
-            discountCode
+            discountCode,
+            holdId: holdIdRaw
         } = req.body;
 
         // Validate required fields (amount is computed server-side; never trust client price)
@@ -7667,8 +8005,32 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
 
         const isoCheckout = (dateIso && String(dateIso).trim()) || '';
         const normTimeCheckout = normalizeTimeString({ time: time || '' });
+        let checkoutHold = null;
         if (isoCheckout && /^\d{4}-\d{2}-\d{2}$/.test(isoCheckout) && normTimeCheckout) {
-            const allowed = await getBookableSlotsForDateIso(isoCheckout, null);
+            const holderToken = readCookieValue(req, 'lon_hold');
+            if (holdIdRaw) {
+                checkoutHold = await findHoldById(holdIdRaw);
+                if (
+                    checkoutHold &&
+                    holderToken &&
+                    checkoutHold.holderToken !== holderToken
+                ) {
+                    checkoutHold = null;
+                }
+            }
+            const holdMatches = !!(
+                checkoutHold &&
+                checkoutHold.dateIso === isoCheckout &&
+                checkoutHold.time === normTimeCheckout &&
+                checkoutHold.expiresAt > Date.now()
+            );
+            const allowed = await getBookableSlotsForDateIso(
+                isoCheckout,
+                null,
+                null,
+                false,
+                holdMatches ? checkoutHold.id : null
+            );
             if (!allowed.includes(normTimeCheckout)) {
                 return res.status(400).json({ error: 'That time slot is not available' });
             }
@@ -7720,6 +8082,17 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         }
 
         const session = await stripe.checkout.sessions.create(sessionParams);
+
+        if (checkoutHold) {
+            const extended = Date.now() + SLOT_HOLD_CHECKOUT_MS;
+            checkoutHold.expiresAt = extended;
+            slotHoldsById.set(checkoutHold.id, checkoutHold);
+            if (usePersistentDb) {
+                try { await db.updateSlotHoldExpiry(checkoutHold.id, extended); } catch (err) {
+                    console.error('extend hold after checkout:', err.message);
+                }
+            }
+        }
 
         console.log('✅ Checkout session created:', session.id);
         emitServerAnalytics(
@@ -9979,20 +10352,132 @@ app.get('/api/schedule', (req, res) => {
     });
 });
 
-app.get('/api/next-slots', rateLimitAnalytics, async (req, res) => {
-    try {
-        const limit = req.query.limit;
-        const slots = await getNextBookableSlots(limit, 14);
-        res.set('Cache-Control', 'public, max-age=30');
-        res.json({
+async function loadNextSlotsBody(limit, withinHours) {
+    const cacheKey = `${limit}:${withinHours}`;
+    const hit = nextSlotsCache.get(cacheKey);
+    if (hit && Date.now() - hit.ts < NEXT_SLOTS_TTL_MS) {
+        return { body: hit.body, cache: 'HIT' };
+    }
+    if (nextSlotsInflight.has(cacheKey)) {
+        const body = await nextSlotsInflight.get(cacheKey);
+        return { body, cache: 'COALESCE' };
+    }
+    const pending = (async () => {
+        const maxDays = withinHours <= 24 ? 2 : Math.min(14, Math.ceil(withinHours / 24) + 1);
+        const slots = await getNextBookableSlots(limit, maxDays, withinHours);
+        const body = {
             slots,
+            withinHours,
+            hasSlotsWithinHorizon: slots.length > 0,
             timezone: scheduleStore.timezone || 'Europe/Lisbon',
             service: 'clinica_geral',
-            price: '€39'
-        });
+            price: '€39',
+            holdMinutes: Math.round(SLOT_HOLD_MS / 60000)
+        };
+        nextSlotsCache.set(cacheKey, { ts: Date.now(), body });
+        return body;
+    })();
+    nextSlotsInflight.set(cacheKey, pending);
+    try {
+        const body = await pending;
+        return { body, cache: hit ? 'STALE-REFRESH' : 'MISS' };
+    } finally {
+        nextSlotsInflight.delete(cacheKey);
+    }
+}
+
+app.get('/api/next-slots', rateLimitNextSlots, async (req, res) => {
+    try {
+        const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 6, 1), 8);
+        const withinHours = Math.min(Math.max(parseInt(req.query.withinHours, 10) || 24, 1), 336);
+        const { body, cache } = await loadNextSlotsBody(limit, withinHours);
+        res.set('Cache-Control', `public, max-age=${Math.ceil(NEXT_SLOTS_TTL_MS / 1000)}, stale-while-revalidate=60`);
+        res.set('X-Slots-Cache', cache);
+        res.json(body);
     } catch (err) {
         console.error('GET /api/next-slots:', err.message);
-        res.status(500).json({ error: 'Failed to load next slots' });
+        res.status(500).json({ error: 'Failed to load next slots', slots: [], withinHours: 24 });
+    }
+});
+
+app.post('/api/slot-hold', rateLimitSlotHold, async (req, res) => {
+    try {
+        const parsed = parseSlotId(req.body && req.body.slot);
+        const dateIso = parsed
+            ? parsed.date
+            : String((req.body && req.body.date) || '').trim();
+        const time = parsed
+            ? parsed.time
+            : normalizeTimeString({ time: (req.body && req.body.time) || '' });
+        if (!parsed && !(dateIso && /^\d{4}-\d{2}-\d{2}$/.test(dateIso) && time)) {
+            return res.status(400).json({ error: 'Invalid slot' });
+        }
+        const slotId = parsed ? parsed.id : slotIdFromDateTime(dateIso, time);
+        const service = bookingServiceTag((req.body && req.body.service) || 'clinica_geral');
+        const allowed = await getBookableSlotsForDateIso(dateIso, null, null, false);
+        const holderToken = readCookieValue(req, 'lon_hold') || crypto.randomBytes(16).toString('hex');
+
+        let existing = null;
+        if (usePersistentDb) {
+            try { existing = await db.findSlotHoldBySlot(dateIso, time); } catch (e) { /* ignore */ }
+        }
+        if (!existing) {
+            existing = [...slotHoldsById.values()].find(
+                (h) => h.dateIso === dateIso && h.time === time && h.expiresAt > Date.now()
+            );
+        }
+
+        if (existing && existing.holderToken === holderToken) {
+            const expiresAt = Date.now() + SLOT_HOLD_MS;
+            existing.expiresAt = expiresAt;
+            slotHoldsById.set(existing.id, existing);
+            if (usePersistentDb) {
+                try { await db.updateSlotHoldExpiry(existing.id, expiresAt); } catch (err) {
+                    console.error('refresh hold:', err.message);
+                }
+            }
+            setHoldCookie(req, res, holderToken);
+            return res.json(memoryHoldToPublic(existing));
+        }
+
+        if (existing && existing.holderToken !== holderToken) {
+            return res.status(409).json({ error: 'That time slot is being reserved by someone else' });
+        }
+
+        if (!allowed.includes(time)) {
+            return res.status(409).json({ error: 'That time slot is not available' });
+        }
+
+        const previous = usePersistentDb
+            ? await db.findSlotHoldByHolder(holderToken).catch(() => null)
+            : [...slotHoldsById.values()].find((h) => h.holderToken === holderToken && h.expiresAt > Date.now());
+        if (previous && previous.slotId !== slotId) {
+            await releaseHold(previous.id);
+        }
+
+        const hold = {
+            id: crypto.randomBytes(12).toString('hex'),
+            slotId,
+            dateIso,
+            time,
+            service,
+            holderToken,
+            expiresAt: Date.now() + SLOT_HOLD_MS
+        };
+        let saved = hold;
+        if (usePersistentDb) {
+            saved = await db.insertSlotHold(hold);
+            if (!saved) {
+                return res.status(409).json({ error: 'That time slot is being reserved by someone else' });
+            }
+        }
+        slotHoldsById.set(saved.id, saved);
+        invalidateNextSlotsCache();
+        setHoldCookie(req, res, holderToken);
+        res.json(memoryHoldToPublic(saved));
+    } catch (err) {
+        console.error('POST /api/slot-hold:', err.message);
+        res.status(500).json({ error: 'Failed to reserve slot' });
     }
 });
 
@@ -10048,7 +10533,17 @@ app.get('/api/admin/available-slots', async (req, res) => {
             ? String(req.query.excludeInvitation)
             : null;
         const allSlots = req.query.allSlots === '1' || req.query.allSlots === 'true';
-        const available = await getBookableSlotsForDateIso(dateStr, null, excludeInvitationId, allSlots);
+        const holderToken = readCookieValue(req, 'lon_hold');
+        let excludeHoldId = null;
+        if (holderToken) {
+            try {
+                const mine = usePersistentDb
+                    ? await db.findSlotHoldByHolder(holderToken)
+                    : [...slotHoldsById.values()].find((h) => h.holderToken === holderToken && h.expiresAt > Date.now());
+                if (mine && mine.dateIso === dateStr) excludeHoldId = mine.id;
+            } catch (e) { /* ignore */ }
+        }
+        const available = await getBookableSlotsForDateIso(dateStr, null, excludeInvitationId, allSlots, excludeHoldId);
         const referer = req.get('referer') || '';
         let bookingPath = '';
         try {
@@ -10163,7 +10658,7 @@ function buildInvitationEmail(invitation, paymentUrl, baseUrl) {
     const subject = t.subject(serviceLabel);
     const portalUrl = emailLink(
         `${baseUrl}/patient-portal?email=${encodeURIComponent(invitation.patientEmail)}`,
-        'invite-pay',
+        datedCampaign('invite_pay'),
         'portal'
     );
     const doxyUrl = doxyUrlFromEmailData({ doxyUrl: invitation.doxyUrl });

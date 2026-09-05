@@ -1156,7 +1156,31 @@
                     section: "APOIO",
                     title: "Perguntas frequentes",
                     subtitle: "Respostas rápidas às dúvidas mais comuns",
-                    body: "Se ainda não encontrou resposta, contacte-nos diretamente para esclarecimento personalizado."
+                    faq: [
+                        { q: "As consultas são com médicos certificados?", a: "Sim. Todas as consultas são realizadas por médicos devidamente credenciados e registados na Ordem dos Médicos." },
+                        { q: "Posso usar a Lon Clinic em caso de emergência?", a: "Não. Em situações de emergência deve ligar imediatamente para o 112, ou dirigir-se ao serviço de urgência hospitalar mais próximo." },
+                        { q: "Como posso pagar?", a: "Aceitamos cartão (Stripe), MB WAY e Referência Multibanco. O pagamento deve ser efetuado no momento da marcação para confirmar o agendamento." },
+                        { q: "Quanto custa a consulta de clínica geral?", a: "39 € pela videoconsulta de cerca de 30 minutos. A renovação de receita estável custa 19 €. Os preços estão visíveis nos botões antes do checkout." },
+                        { q: "Emitem atestados médicos?", a: "Sim, quando clinicamente justificado após videoconsulta. Consulte /consulta/atestado-medico. Não emitimos atestado por telefone." },
+                        { q: "Posso obter receita médica na consulta?", a: "Sim. Sempre que clinicamente indicado, a receita eletrónica é emitida durante a consulta e enviada por email ou SMS." }
+                    ],
+                    bodyHtml: `
+<p>Se ainda não encontrou resposta, contacte-nos para esclarecimento personalizado ou leia o <a href="/faq">FAQ completo</a>.</p>
+<h2>As consultas são com médicos certificados?</h2>
+<p>Sim. Todas as consultas são realizadas por médicos devidamente credenciados e registados na Ordem dos Médicos.</p>
+<h2>Posso usar a Lon Clinic em caso de emergência?</h2>
+<p>Não. Em situações de emergência deve ligar imediatamente para o 112, ou dirigir-se ao serviço de urgência hospitalar mais próximo. A Lon Clinic destina-se a situações que não requerem assistência presencial imediata.</p>
+<h2>Como posso pagar?</h2>
+<p>Aceitamos cartão (Stripe), MB WAY e Referência Multibanco. O pagamento deve ser efetuado no momento da marcação para confirmar o agendamento. Clínica geral: <strong>39 €</strong>. Renovação de receita: <strong>19 €</strong>.</p>
+<h2>Emitem atestados médicos?</h2>
+<p>Sim, quando clinicamente justificado após videoconsulta. Veja <a href="/consulta/atestado-medico">atestado médico online</a>. Não emitimos atestado por telefone.</p>
+<h2>Posso obter receita médica na consulta?</h2>
+<p>Sim. Sempre que clinicamente indicado, a receita eletrónica é emitida durante a consulta e enviada por email ou SMS. Para medicação crónica estável existe a <a href="/consulta/renovacao-receita">renovação de receita</a> a 19 €.</p>
+`,
+                    actions: [
+                        { label: "Marcar consulta — 39 €", href: "/marcar/clinica-geral", primary: true },
+                        { label: "Ver FAQ completo", href: "/faq", primary: false }
+                    ]
                 },
                 "como-funciona": {
                     section: "APOIO",
@@ -1766,15 +1790,34 @@
                 document.getElementById("ogUrl").setAttribute("content", canonicalUrl);
                 document.getElementById("twitterTitle").setAttribute("content", pageTitle);
                 document.getElementById("twitterDescription").setAttribute("content", metaDescription);
-                document.getElementById("structuredData").textContent = JSON.stringify({
-                    "@context": "https://schema.org",
-                    "@type": "MedicalWebPage",
-                    name: pageTitle,
-                    description: metaDescription,
-                    url: canonicalUrl,
-                    inLanguage: lang === 'es' ? 'es' : lang === 'en' ? 'en' : 'pt-PT',
-                    isPartOf: { "@type": "WebSite", name: "Lon Clinic", url: "https://www.lonclinic.com" }
-                });
+                document.getElementById("structuredData").textContent = JSON.stringify(
+                    data.faq && data.faq.length
+                        ? {
+                            "@context": "https://schema.org",
+                            "@type": "FAQPage",
+                            name: pageTitle,
+                            description: metaDescription,
+                            url: canonicalUrl,
+                            inLanguage: lang === 'es' ? 'es' : lang === 'en' ? 'en' : 'pt-PT',
+                            isPartOf: { "@type": "WebSite", name: "Lon Clinic", url: "https://www.lonclinic.com" },
+                            mainEntity: data.faq.map(function (item) {
+                                return {
+                                    "@type": "Question",
+                                    name: item.q,
+                                    acceptedAnswer: { "@type": "Answer", text: item.a }
+                                };
+                            })
+                        }
+                        : {
+                            "@context": "https://schema.org",
+                            "@type": "MedicalWebPage",
+                            name: pageTitle,
+                            description: metaDescription,
+                            url: canonicalUrl,
+                            inLanguage: lang === 'es' ? 'es' : lang === 'en' ? 'en' : 'pt-PT',
+                            isPartOf: { "@type": "WebSite", name: "Lon Clinic", url: "https://www.lonclinic.com" }
+                        }
+                );
 
                 document.getElementById("pill").textContent = data.section;
                 document.getElementById("title").textContent = data.title;

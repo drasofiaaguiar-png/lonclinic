@@ -702,7 +702,7 @@
 
     function loadQuickSlots() {
         var wrap = document.getElementById('marcarQuickSlots');
-        return fetch('/api/next-slots?limit=6')
+        return fetch('/api/next-slots?limit=6&withinHours=336')
             .then(function (r) { return r.ok ? r.json() : null; })
             .then(function (data) {
                 var slots = data && data.slots ? data.slots : [];
@@ -781,7 +781,10 @@
                         });
                         b.classList.add('selected');
                         btnNext.disabled = false;
-                        if (window.LonAnalytics) window.LonAnalytics.track('slot_select', { surface: 'booking' });
+                        if (window.LonAnalytics) {
+                            window.LonAnalytics.track('slot_select', { surface: 'booking' });
+                            window.LonAnalytics.track('time_slot_clicked', { surface: 'marcar' });
+                        }
                     });
                     timeslotGrid.appendChild(b);
                 });
@@ -824,7 +827,10 @@
                         });
                         b.classList.add('selected');
                         btnNext.disabled = false;
-                        if (window.LonAnalytics) window.LonAnalytics.track('slot_select', { surface: 'booking' });
+                        if (window.LonAnalytics) {
+                            window.LonAnalytics.track('slot_select', { surface: 'booking' });
+                            window.LonAnalytics.track('time_slot_clicked', { surface: 'marcar' });
+                        }
                     });
                     timeslotGrid.appendChild(b);
                 });

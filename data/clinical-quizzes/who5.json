@@ -1,0 +1,69 @@
+{
+  "id": "who5",
+  "path": "/burnout/teste-who5",
+  "cluster": "wellbeing",
+  "instrument": "WHO-5",
+  "minutes": 1,
+  "title": "Teste WHO-5 de bem-estar grátis — 5 perguntas | Lon Clinic",
+  "h1": "Em 1 minuto: como está o teu bem-estar?",
+  "lead": "O WHO-5 da Organização Mundial da Saúde mede o bem-estar psicológico nas últimas duas semanas — só 5 perguntas, pontuação de 0 a 100%. É o micro-questionário certo para um primeiro sinal, antes do teste de burnout ou de nutrição.",
+  "description": "Teste WHO-5 grátis: 5 perguntas, menos de 1 minuto, resultado 0–100%. Índice de bem-estar da OMS. Sem registo até ao resultado.",
+  "stem": "Nas últimas duas semanas…",
+  "homeHref": "/burnout",
+  "homeLabel": "LON Clinic",
+  "scoring": "who5",
+  "gaugeMax": 100,
+  "gaugeLabel": "WHO-5 · 0–100%",
+  "displayMultiplier": 4,
+  "higherIsBetter": true,
+  "bandOn": "display",
+  "options": [
+    { "label": "Nunca", "v": 0 },
+    { "label": "Algumas vezes", "v": 1 },
+    { "label": "Menos de metade do tempo", "v": 2 },
+    { "label": "Mais de metade do tempo", "v": 3 },
+    { "label": "A maior parte do tempo", "v": 4 },
+    { "label": "Todo o tempo", "v": 5 }
+  ],
+  "scales": [
+    { "id": "mood", "title": "Humor e calma", "note": "Bom humor e sensação de calma — o fundo afetivo das duas semanas." },
+    { "id": "energy", "title": "Energia e interesse", "note": "Vigor ao acordar e interesse no dia-a-dia." }
+  ],
+  "questions": [
+    { "scale": "mood", "text": "Senti-me bem e de bom humor" },
+    { "scale": "mood", "text": "Senti-me calmo e relaxado" },
+    { "scale": "energy", "text": "Senti-me ativo e vigoroso" },
+    { "scale": "energy", "text": "Acordei a sentir-me fresco e descansado" },
+    { "scale": "energy", "text": "A minha vida do dia-a-dia tem sido preenchida com coisas que me interessam" }
+  ],
+  "bands": [
+    { "max": 28, "pill": "MUITO BAIXO", "concern": "high", "title": "O bem-estar está no vermelho", "text": "Um WHO-5 ≤28% é o limiar em que se recomenda rastreio de depressão. Não é um diagnóstico — é um sinal para não ficar só neste número. Faz o PHQ-9 a seguir e marca consulta.", "cta": "Marca uma consulta hoje. Se o tema for esgotamento no trabalho, a consulta anti-burnout; se for peso, energia e comida, a consulta de nutrição.", "bookLabel": "Marcar consulta anti-burnout — 60€", "bookNote": "Videoconsulta · o resultado WHO-5 chega à marcação" },
+    { "max": 49, "pill": "BAIXO", "concern": "mid", "title": "Bem-estar abaixo do que seria saudável", "text": "Abaixo de 50% o WHO-5 sugere bem-estar pobre. É o ponto em que vale a pena um questionário mais específico (burnout, humor, sono ou alimentação) e uma conversa clínica.", "cta": "Escolhe o caminho: consulta anti-burnout se o trabalho te esgotou, ou consulta de nutrição se a energia e o peso forem o centro.", "bookLabel": "Marcar consulta anti-burnout — 60€", "bookNote": "Videoconsulta · 60 min" },
+    { "max": 69, "pill": "MODERADO", "concern": "light", "title": "Há margem para recuperar", "text": "Não estás no fundo da escala, mas o bem-estar não está sólido. Pequenos desvios no sono, no stress ou na alimentação costumam explicar este intervalo — e respondem a um plano.", "cta": "Se quiseres um plano concreto, marca consulta. Os testes de burnout, stress ou alimentação afinam o alvo.", "bookLabel": "Marcar consulta — 60€", "bookNote": "Opcional · se quiseres um plano" },
+    { "max": 100, "pill": "BOM", "concern": "low", "title": "Bem-estar numa zona saudável", "text": "O teu WHO-5 está numa zona compatível com bom bem-estar psicológico nas últimas duas semanas. Serve de linha de base — útil para repetir daqui a 3 meses.", "cta": "Não precisas de marcar por causa deste resultado. Se quiseres otimizar sono, performance ou alimentação, as consultas estão abertas.", "bookLabel": "Marcar consulta — 60€", "bookNote": "Opcional" }
+  ],
+  "insights": {
+    "mood": { "title": "O fundo afetivo", "text": "Humor e calma estão a puxar o índice para baixo. Vale a pena cruzar com o GAD-7 e o PHQ-9 — o WHO-5 é o sinal; esses dizem se é ansiedade, humor ou ambos." },
+    "energy": { "title": "Energia e interesse", "text": "Acordar sem descanso e um dia sem interesse são o core do esgotamento. O teste de burnout e o ISI de insónia são o passo seguinte mais útil." }
+  },
+  "booking": {
+    "consultHref": "/marcar/burnout",
+    "consultName": "Consulta Especializada em Burnout",
+    "consultPrice": "60",
+    "consultMeta": "Sessão única · 60 minutos",
+    "subHref": "/marcar/clinica-geral",
+    "subName": "Consulta de nutrição / clínica geral",
+    "subPrice": "39",
+    "subMeta": "Videoconsulta · 25–35 min",
+    "stickyLabel": "Consulta anti-burnout",
+    "hideSubOn": []
+  },
+  "related": ["phq9", "cbi", "tfeq", "sf12"],
+  "introLinks": [
+    { "href": "/burnout/teste", "label": "Teste de burnout" },
+    { "href": "/burnout/teste-phq9", "label": "PHQ-9" },
+    { "href": "/nutricao/teste-tfeq", "label": "Alimentação (TFEQ)" }
+  ],
+  "disclaimer": "O WHO-5 Well-Being Index é um instrumento da OMS, de utilização livre com atribuição. A pontuação é a soma (0–25) multiplicada por 4, resultando numa percentagem 0–100. Não é um diagnóstico. Um resultado ≤50% sugere bem-estar pobre; ≤28% recomenda rastreio de depressão (PHQ-9).",
+  "utmCampaign": "who5-teste"
+}

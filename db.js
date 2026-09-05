@@ -239,6 +239,21 @@ async function initSchema(p) {
     } catch (err) {
         console.warn('   ⚠️  idx_bookings_active_slot skipped:', err.message);
     }
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS slot_holds (
+            id VARCHAR(64) PRIMARY KEY,
+            slot_id VARCHAR(32) NOT NULL,
+            date_iso CHAR(10) NOT NULL,
+            time VARCHAR(5) NOT NULL,
+            service VARCHAR(64),
+            holder_token VARCHAR(64) NOT NULL,
+            expires_at TIMESTAMPTZ NOT NULL,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+    await p.query(`CREATE UNIQUE INDEX IF NOT EXISTS idx_slot_holds_slot ON slot_holds (date_iso, time)`);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_slot_holds_holder ON slot_holds (holder_token)`);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_slot_holds_expires ON slot_holds (expires_at)`);
     // Backfill Stripe (and complimentary) rows that were never admin-edited for tracking fields.
     await p.query(`
         UPDATE bookings
@@ -1235,6 +1250,128 @@ async function rescheduleBookingByRef(bookingRef, fields) {
 }
 
 /** True if another active booking uses the same slot (excluding optional bookingRef). */
+function rowToSlotHold(row) {
+    if (!row) return null;
+    const expiresAt = row.expires_at instanceof Date ? row.expires_at.getTime() : Date.parse(row.expires_at);
+    return {
+        id: row.id,
+        slotId: row.slot_id,
+        dateIso: row.date_iso,
+        time: String(row.time || '').slice(0, 5),
+        service: row.service || '',
+        holderToken: row.holder_token,
+        expiresAt: Number.isFinite(expiresAt) ? expiresAt : 0
+    };
+}
+
+async function purgeExpiredSlotHolds() {
+    const p = getPool();
+    if (!p) return;
+    await p.query(`DELETE FROM slot_holds WHERE expires_at <= NOW()`);
+}
+
+async function insertSlotHold(hold) {
+    const p = getPool();
+    if (!p) return null;
+    await purgeExpiredSlotHolds();
+    try {
+        const r = await p.query(
+            `INSERT INTO slot_holds (id, slot_id, date_iso, time, service, holder_token, expires_at)
+             VALUES ($1, $2, $3, $4, $5, $6, to_timestamp($7 / 1000.0))
+             RETURNING *`,
+            [
+                hold.id,
+                hold.slotId,
+                hold.dateIso,
+                hold.time,
+                hold.service || '',
+                hold.holderToken,
+                hold.expiresAt
+            ]
+        );
+        return rowToSlotHold(r.rows[0]);
+    } catch (err) {
+        if (err && err.code === '23505') return null;
+        throw err;
+    }
+}
+
+async function findSlotHoldById(id) {
+    const p = getPool();
+    if (!p || !id) return null;
+    const r = await p.query(
+        `SELECT * FROM slot_holds WHERE id = $1 AND expires_at > NOW() LIMIT 1`,
+        [String(id)]
+    );
+    return rowToSlotHold(r.rows[0]);
+}
+
+async function findSlotHoldBySlot(dateIso, time) {
+    const p = getPool();
+    if (!p) return null;
+    const r = await p.query(
+        `SELECT * FROM slot_holds
+         WHERE date_iso = $1 AND time = $2 AND expires_at > NOW()
+         LIMIT 1`,
+        [dateIso, String(time || '').slice(0, 5)]
+    );
+    return rowToSlotHold(r.rows[0]);
+}
+
+async function findSlotHoldByHolder(holderToken) {
+    const p = getPool();
+    if (!p || !holderToken) return null;
+    const r = await p.query(
+        `SELECT * FROM slot_holds
+         WHERE holder_token = $1 AND expires_at > NOW()
+         ORDER BY expires_at DESC
+         LIMIT 1`,
+        [String(holderToken)]
+    );
+    return rowToSlotHold(r.rows[0]);
+}
+
+async function updateSlotHoldExpiry(id, expiresAt) {
+    const p = getPool();
+    if (!p) return null;
+    const r = await p.query(
+        `UPDATE slot_holds
+         SET expires_at = to_timestamp($2 / 1000.0)
+         WHERE id = $1 AND expires_at > NOW()
+         RETURNING *`,
+        [id, expiresAt]
+    );
+    return rowToSlotHold(r.rows[0]);
+}
+
+async function deleteSlotHoldById(id) {
+    const p = getPool();
+    if (!p || !id) return;
+    await p.query(`DELETE FROM slot_holds WHERE id = $1`, [id]);
+}
+
+async function deleteSlotHoldsForSlot(dateIso, time) {
+    const p = getPool();
+    if (!p) return;
+    await p.query(
+        `DELETE FROM slot_holds WHERE date_iso = $1 AND time = $2`,
+        [dateIso, String(time || '').slice(0, 5)]
+    );
+}
+
+async function listActiveHoldTimesForDateIso(dateIso, excludeHoldId) {
+    const p = getPool();
+    if (!p) return [];
+    const r = await p.query(
+        `SELECT time FROM slot_holds
+         WHERE date_iso = $1
+           AND expires_at > NOW()
+           AND ($2::text IS NULL OR id <> $2)`,
+        [dateIso, excludeHoldId || null]
+    );
+    return r.rows.map((row) => String(row.time || '').slice(0, 5));
+}
+
 async function isSlotTakenByOther(dateIso, time, excludeBookingRef) {
     const p = getPool();
     const slotTime = String(time || '').trim().slice(0, 5);
@@ -2377,6 +2514,15 @@ module.exports = {
     cancelBookingByRef,
     rescheduleBookingByRef,
     isSlotTakenByOther,
+    insertSlotHold,
+    findSlotHoldById,
+    findSlotHoldBySlot,
+    findSlotHoldByHolder,
+    updateSlotHoldExpiry,
+    deleteSlotHoldById,
+    deleteSlotHoldsForSlot,
+    listActiveHoldTimesForDateIso,
+    purgeExpiredSlotHolds,
     listBookingsForDateIso,
     insertAnalyticsEvents,
     listAnalyticsEventsBetween,

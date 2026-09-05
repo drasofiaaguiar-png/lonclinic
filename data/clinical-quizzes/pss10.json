@@ -1,0 +1,72 @@
+{
+  "id": "pss10",
+  "path": "/burnout/teste-pss10",
+  "cluster": "burnout",
+  "instrument": "PSS-10",
+  "minutes": 2,
+  "title": "Teste PSS-10 de stress percebido grátis | Lon Clinic",
+  "h1": "Como tem sido o teu stress no último mês?",
+  "lead": "A Escala de Stress Percebido (PSS-10) mede a tua perceção do stress — não o número de tarefas. É o questionário rápido de entrada: curto, focado no dia-a-dia, útil no topo do funil anti-burnout.",
+  "description": "Teste PSS-10 grátis: 10 perguntas sobre o stress do último mês. Resultado imediato. Ideal para perceber se o esgotamento já passou de «semana má».",
+  "stem": "No último mês, com que frequência…",
+  "homeHref": "/burnout",
+  "homeLabel": "LON Clinic — Burnout",
+  "scoring": "sum",
+  "gaugeMax": 40,
+  "gaugeLabel": "PSS-10 · 0–40",
+  "displayMultiplier": 1,
+  "higherIsBetter": false,
+  "bandOn": "raw",
+  "options": [
+    { "label": "Nunca", "v": 0 },
+    { "label": "Quase nunca", "v": 1 },
+    { "label": "Às vezes", "v": 2 },
+    { "label": "Frequentemente", "v": 3 },
+    { "label": "Muito frequentemente", "v": 4 }
+  ],
+  "scales": [
+    { "id": "distress", "title": "Sobrecarga", "note": "Itens de perceção negativa: falta de controlo, nervosismo, dificuldades a acumular-se." },
+    { "id": "coping", "title": "Recursos", "note": "Itens invertidos: confiança, as coisas a correr à tua maneira, capacidade de lidar." }
+  ],
+  "questions": [
+    { "scale": "distress", "text": "Ficaste aborrecido por algo que aconteceu inesperadamente?" },
+    { "scale": "distress", "text": "Sentiste que não conseguias controlar as coisas importantes da tua vida?" },
+    { "scale": "distress", "text": "Sentiste-te nervoso e «stressado»?" },
+    { "scale": "coping", "text": "Sentiste-te confiante na tua capacidade de lidar com os teus problemas pessoais?", "reversed": true, "reverseMax": 4 },
+    { "scale": "coping", "text": "Sentiste que as coisas corriam à tua maneira?", "reversed": true, "reverseMax": 4 },
+    { "scale": "distress", "text": "Sentiste que não conseguias lidar com todas as coisas que tinhas para fazer?" },
+    { "scale": "coping", "text": "Foste capaz de controlar irritações na tua vida?", "reversed": true, "reverseMax": 4 },
+    { "scale": "coping", "text": "Sentiste que estavas em cima dos acontecimentos?", "reversed": true, "reverseMax": 4 },
+    { "scale": "distress", "text": "Zangaste-te por coisas que estavam fora do teu controlo?" },
+    { "scale": "distress", "text": "Sentiste que as dificuldades se acumulavam tanto que não as conseguias ultrapassar?" }
+  ],
+  "bands": [
+    { "max": 13, "pill": "BAIXO", "concern": "low", "title": "Stress percebido baixo", "text": "No último mês, a tua perceção de stress está numa zona manejável. Serve de ponto de referência — se o cansaço for outro, faz o teste de burnout.", "cta": "Não precisas de marcar por causa deste resultado. Se quiseres um plano de performance e recuperação, a consulta está aberta.", "bookLabel": "Marcar consulta — 60€", "bookNote": "Opcional · só se quiseres perceber melhor o teu perfil" },
+    { "max": 26, "pill": "MODERADO", "concern": "mid", "title": "O mês já está a pesar", "text": "O teu stress percebido está na zona intermédia: ainda não é o teto da escala, mas a sensação de controlo já falha com frequência. É exatamente o perfil em que uma intervenção curta rende mais.", "cta": "Marca uma Consulta Especializada em Burnout. O PSS-10 é um ótimo ponto de partida — a consulta transforma este número num plano.", "bookLabel": "Marcar consulta — 60€", "bookNote": "Videoconsulta · 60 min · o resultado fica na marcação" },
+    { "max": 40, "pill": "ELEVADO", "concern": "high", "title": "A perceção de stress está no vermelho", "text": "Sentes que as dificuldades se acumulam e o controlo escapa. Isto não diagnostica burnout sozinho, mas é o tipo de mês que, sem recuperação, desemboca em esgotamento.", "cta": "Marca agora. Se o padrão já dura semanas, a Subscrição Anti-Burnout dá 4 consultas/mês para baixar isto com regularidade.", "bookLabel": "Marcar consulta agora — 60€", "bookNote": "Videoconsulta · 60 min · o resultado chega à consulta" }
+  ],
+  "insights": {
+    "distress": { "title": "Sobrecarga percebida", "text": "O que pesa é a sensação de que as coisas acontecem sem ti ao volante. No burnout, esta perceção é tão clínica quanto as horas trabalhadas — e é o que o PSS-10 captura melhor do que uma lista de sintomas." },
+    "coping": { "title": "Os recursos estão a falhar", "text": "Os itens de confiança e de «as coisas a correr à tua maneira» estão baixos. Quando os recursos caem, o mesmo volume de trabalho passa a parecer impossível. A consulta trabalha isto de propósito — não só «reduzir tarefas»." }
+  },
+  "booking": {
+    "consultHref": "/marcar/burnout",
+    "consultName": "Consulta Especializada em Burnout",
+    "consultPrice": "60",
+    "consultMeta": "Sessão única · 60 minutos",
+    "subHref": "/marcar/burnout-mensal",
+    "subName": "Subscrição Anti-Burnout",
+    "subPrice": "216",
+    "subMeta": "/mês · 4 consultas · 54€/sessão",
+    "stickyLabel": "Consulta Especializada em Burnout",
+    "hideSubOn": ["BAIXO"]
+  },
+  "related": ["gad7", "who5", "cbi", "isi"],
+  "introLinks": [
+    { "href": "/burnout/teste", "label": "Teste de burnout (CBI)" },
+    { "href": "/burnout/teste-gad7", "label": "GAD-7 · ansiedade" },
+    { "href": "/burnout/teste-who5", "label": "WHO-5 · bem-estar (1 min)" }
+  ],
+  "disclaimer": "A Perceived Stress Scale (Cohen, Kamarck & Mermelstein, 1983) é um instrumento publicado para uso com atribuição. Versão de 10 itens; adaptação Lon Clinic em português europeu. Não é um diagnóstico nem substitui avaliação clínica.",
+  "utmCampaign": "pss10-teste"
+}

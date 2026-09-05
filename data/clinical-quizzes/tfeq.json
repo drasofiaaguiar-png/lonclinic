@@ -1,0 +1,92 @@
+{
+  "id": "tfeq",
+  "path": "/nutricao/teste-tfeq",
+  "cluster": "nutrition",
+  "instrument": "TFEQ-R18",
+  "minutes": 4,
+  "title": "Teste TFEQ-R18 de comportamento alimentar grátis | Lon Clinic",
+  "h1": "O que está a travar a tua alimentação?",
+  "lead": "O TFEQ-R18 (Three-Factor Eating Questionnaire) mede três padrões: restrição cognitiva, alimentação descontrolada e alimentação emocional. Serve para perceber se o obstáculo à perda de peso é emocional — stress, ansiedade — ou falta de planeamento dietético.",
+  "description": "Teste TFEQ-R18 grátis: 18 perguntas sobre restrição, descontrolo e fome emocional. Resultado imediato para orientar a consulta de nutrição.",
+  "stem": "Assinala a opção que melhor te descreve.",
+  "homeHref": "/nutricao",
+  "homeLabel": "LON Clinic — Nutrição",
+  "scoring": "tfeq",
+  "gaugeMax": 100,
+  "gaugeLabel": "Padrão dominante · 0–100",
+  "displayMultiplier": 1,
+  "higherIsBetter": false,
+  "bandOn": "display",
+  "options": [
+    { "label": "Completamente falso", "v": 0 },
+    { "label": "Bastante falso", "v": 1 },
+    { "label": "Bastante verdadeiro", "v": 2 },
+    { "label": "Completamente verdadeiro", "v": 3 }
+  ],
+  "scales": [
+    { "id": "cr", "title": "Restrição cognitiva", "note": "Controlar porções, evitar alimentos, «comer de dieta» — planeamento, ou rigidez que rebenta." },
+    { "id": "ue", "title": "Alimentação descontrolada", "note": "Começar e não conseguir parar, fome intensa, perda de controlo perante comida apetecível." },
+    { "id": "ee", "title": "Alimentação emocional", "note": "Comer com ansiedade, tristeza ou solidão — o stress no prato." }
+  ],
+  "questions": [
+    { "scale": "ue", "text": "Quando sinto o cheiro de comida muito apetecível, é difícil não comer — mesmo que tenha acabado a refeição." },
+    { "scale": "cr", "text": "Como de propósito porções pequenas para controlar o peso." },
+    { "scale": "ee", "text": "Quando me sinto ansioso, ponho-me a comer." },
+    { "scale": "ue", "text": "Às vezes, quando começo a comer, parece que não consigo parar." },
+    { "scale": "ue", "text": "Estar com alguém a comer deixa-me com fome suficiente para comer também." },
+    { "scale": "ee", "text": "Quando me sinto em baixo, como em excesso." },
+    { "scale": "ue", "text": "Quando vejo um alimento realmente tentador, acabo por ceder e comê-lo." },
+    { "scale": "ue", "text": "Fico com tanta fome que o estômago parece não ter fundo." },
+    { "scale": "ue", "text": "Tenho tanta fome que me custa parar antes de limpar o prato." },
+    { "scale": "ee", "text": "Quando me sinto sozinho, consolo-me a comer." },
+    { "scale": "cr", "text": "Agarro-me nas refeições de propósito para não ganhar peso." },
+    { "scale": "cr", "text": "Há alimentos que não como porque me fazem engordar." },
+    { "scale": "ue", "text": "Tenho fome suficiente para comer a qualquer hora." },
+    { "scale": "ue", "text": "Com que frequência sentes fome?", "options": [
+      { "label": "Quase nunca", "v": 0 }, { "label": "Às vezes", "v": 1 }, { "label": "Muitas vezes", "v": 2 }, { "label": "Quase sempre", "v": 3 }
+    ]},
+    { "scale": "cr", "text": "Evitas ter em casa alimentos tentadores?", "options": [
+      { "label": "Quase nunca", "v": 0 }, { "label": "Às vezes", "v": 1 }, { "label": "Muitas vezes", "v": 2 }, { "label": "Quase sempre", "v": 3 }
+    ]},
+    { "scale": "cr", "text": "Com que probabilidade escolhes alimentos mais leves ou de menor densidade calórica?", "options": [
+      { "label": "Muito improvável", "v": 0 }, { "label": "Improvável", "v": 1 }, { "label": "Provável", "v": 2 }, { "label": "Muito provável", "v": 3 }
+    ]},
+    { "scale": "ue", "text": "Chegas a comer em excesso mesmo sem fome?", "options": [
+      { "label": "Nunca", "v": 0 }, { "label": "Raramente", "v": 1 }, { "label": "Às vezes", "v": 2 }, { "label": "Com frequência", "v": 3 }
+    ]},
+    { "scale": "cr", "text": "Até que ponto te restringes de propósito na comida, no dia-a-dia?", "options": [
+      { "label": "Nada", "v": 0 }, { "label": "Pouco", "v": 1 }, { "label": "Bastante", "v": 2 }, { "label": "Muito", "v": 3 }
+    ]}
+  ],
+  "bands": [
+    { "max": 39, "pill": "BAIXO", "concern": "low", "title": "Nenhum padrão está a mandar no prato", "text": "Os três fatores estão numa zona baixa. Se o peso resiste na mesma, o tema pode ser metabolismo, medicação, sono ou um plano pouco ajustado — não um padrão alimentar extremo.", "cta": "Uma consulta de clínica geral (39€) ajuda a ver análises, medicação e o que realmente come. Sem um PDF genérico.", "bookLabel": "Marcar consulta — 39€", "bookNote": "Videoconsulta · 25–35 min" },
+    { "max": 64, "pill": "MODERADO", "concern": "mid", "title": "Há um padrão a travar-te", "text": "Um dos três fatores já está elevado o suficiente para explicar porque «saber o que comer» não chega. O gráfico abaixo diz se o travão é restrição rígida, descontrolo ou emoção.", "cta": "Marca consulta. Levamos este TFEQ à sessão para não tratares fome emocional como se fosse falta de disciplina.", "bookLabel": "Marcar consulta — 39€", "bookNote": "Videoconsulta · o resultado fica na marcação" },
+    { "max": 100, "pill": "ELEVADO", "concern": "high", "title": "O obstáculo principal já está identificado", "text": "O fator dominante está alto. Restrição extrema rebenta em descontrolo; descontrolo pede estrutura; alimentação emocional pede o eixo stress/ansiedade — por vezes com psicologia, não só com um plano de kcal.", "cta": "Marca agora. Se o padrão for emocional ou de compulsão, cruzamos com o YFAS e, se fizer sentido, com a consulta de longevidade (79€).", "bookLabel": "Marcar consulta agora — 39€", "bookNote": "Videoconsulta · o resultado chega à consulta" }
+  ],
+  "insights": {
+    "cr": { "title": "Restrição cognitiva a mandar", "text": "O teu travão é o controlo: porções, alimentos proibidos, «estar de dieta». Sem estrutura flexível, este padrão costuma rebentar em descontrolo. A consulta trabalha regras que durem — não mais uma lista curta." },
+    "ue": { "title": "Alimentação descontrolada a mandar", "text": "O travão é a perda de controlo: começar e não parar, fome intensa, comida apetecível a ganhar. Aqui o plano dietético clássico falha; precisas de estrutura de refeições, sono e, se houver sinais de compulsão, o rastreio YFAS." },
+    "ee": { "title": "Alimentação emocional a mandar", "text": "Comes quando estás ansioso, triste ou sozinho. O obstáculo não é falta de informação nutricional — é o eixo stress/humor. A consulta médica trata o prato; a psicologia trata o gatilho. Os testes GAD-7 e PSS-10 afinam essa parte." }
+  },
+  "booking": {
+    "consultHref": "/marcar/clinica-geral",
+    "consultName": "Consulta de clínica geral / nutrição",
+    "consultPrice": "39",
+    "consultMeta": "Sessão única · 25–35 min",
+    "subHref": "/marcar/longevidade",
+    "subName": "Consulta de longevidade",
+    "subPrice": "79",
+    "subMeta": "Mais tempo · 45–60 min",
+    "stickyLabel": "Consulta de nutrição",
+    "hideSubOn": ["BAIXO"]
+  },
+  "related": ["imc", "yfas", "who5", "ess"],
+  "introLinks": [
+    { "href": "/nutricao/teste-imc", "label": "IMC e quilos a perder" },
+    { "href": "/nutricao/teste-yfas", "label": "Compulsão alimentar (YFAS)" },
+    { "href": "/nutricao/ozempic-wegovy", "label": "Apoio com GLP-1" },
+    { "href": "/burnout/teste-gad7", "label": "Ansiedade (GAD-7)" }
+  ],
+  "disclaimer": "O TFEQ-R18 (Karlsson et al., 2000; baseado no Three-Factor Eating Questionnaire de Stunkard & Messick) avalia restrição cognitiva, alimentação descontrolada e alimentação emocional. Adaptação Lon Clinic em português europeu, com pontuação 0–100 por fator. Não diagnostica uma perturbação do comportamento alimentar nem substitui avaliação clínica.",
+  "utmCampaign": "tfeq-teste"
+}

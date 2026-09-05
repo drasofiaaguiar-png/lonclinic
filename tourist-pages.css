@@ -8,6 +8,9 @@
 }
 
 .tq-langs a {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
     font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -15,7 +18,8 @@
     color: var(--lon-accent, #255235);
     border: 1px solid #cfe6d8;
     border-radius: 999px;
-    padding: 4px 10px;
+    padding: 5px 11px;
+    background: #fff;
 }
 
 .tq-langs a[aria-current="page"] {
@@ -240,6 +244,25 @@
     gap: 8px;
 }
 
+.cq-live-slots.is-fallback .cq-live-slots-row {
+    display: none;
+}
+
+.cq-live-slots .dr-slots-week {
+    display: none;
+    margin-top: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #255235;
+    text-decoration: none;
+}
+
+.cq-live-slots.is-fallback .dr-slots-week {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+}
+
 .lon-live-slot {
     appearance: none;
     border: 1px solid #255235;
@@ -259,19 +282,12 @@
 }
 
 .cq-sticky-book {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 40;
-    background: #1f3d2e;
-    color: #fff;
-    box-shadow: 0 -8px 24px rgba(20, 34, 24, 0.18);
+    display: none;
 }
 
 .tourist-body,
 .cq-body {
-    padding-bottom: 92px;
+    padding-bottom: 0;
 }
 
 .cq-sticky-book-inner {
@@ -303,6 +319,28 @@
 }
 
 @media (max-width: 700px) {
+    .cq-sticky-book:not([hidden]) {
+        display: block;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 40;
+        background: #1f3d2e;
+        color: #fff;
+        box-shadow: 0 -8px 24px rgba(20, 34, 24, 0.18);
+        padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+
+    .tourist-body,
+    .cq-body {
+        padding-bottom: 92px;
+    }
+
+    .cq-sticky-book .lon-pay-badge {
+        display: none;
+    }
+
     .lon-wa-float {
         bottom: 88px;
     }

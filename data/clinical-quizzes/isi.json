@@ -1,0 +1,77 @@
+{
+  "id": "isi",
+  "path": "/burnout/teste-isi",
+  "cluster": "burnout",
+  "instrument": "ISI",
+  "minutes": 2,
+  "title": "Teste ISI de insónia grátis — gravidade do sono | Lon Clinic",
+  "h1": "Como está o teu sono neste momento?",
+  "lead": "O Índice de Gravidade da Insónia (ISI) mede a gravidade da insónia em 7 perguntas. No burnout, o sono é a primeira variável a quebrar — um score alto cria urgência real para pedir apoio.",
+  "description": "Teste ISI grátis: 7 perguntas sobre insónia. Resultado imediato. O sono é o primeiro sistema a falhar no esgotamento profissional.",
+  "stem": "Na última duas semanas, como classificas…",
+  "homeHref": "/burnout",
+  "homeLabel": "LON Clinic — Burnout",
+  "scoring": "sum",
+  "gaugeMax": 28,
+  "gaugeLabel": "ISI · 0–28",
+  "displayMultiplier": 1,
+  "higherIsBetter": false,
+  "bandOn": "raw",
+  "scales": [
+    { "id": "night", "title": "A noite", "note": "Adormecer, manter o sono e acordar demasiado cedo." },
+    { "id": "day", "title": "O dia seguinte", "note": "Satisfação, interferência, visibilidade para os outros e preocupação com o sono." }
+  ],
+  "questions": [
+    { "scale": "night", "text": "Dificuldade em adormecer", "options": [
+      { "label": "Nenhuma", "v": 0 }, { "label": "Ligeira", "v": 1 }, { "label": "Moderada", "v": 2 }, { "label": "Grave", "v": 3 }, { "label": "Muito grave", "v": 4 }
+    ]},
+    { "scale": "night", "text": "Dificuldade em permanecer a dormir", "options": [
+      { "label": "Nenhuma", "v": 0 }, { "label": "Ligeira", "v": 1 }, { "label": "Moderada", "v": 2 }, { "label": "Grave", "v": 3 }, { "label": "Muito grave", "v": 4 }
+    ]},
+    { "scale": "night", "text": "Problema de acordar demasiado cedo", "options": [
+      { "label": "Nenhum", "v": 0 }, { "label": "Ligeiro", "v": 1 }, { "label": "Moderado", "v": 2 }, { "label": "Grave", "v": 3 }, { "label": "Muito grave", "v": 4 }
+    ]},
+    { "scale": "day", "text": "Quão satisfeito estás com o teu padrão de sono atual?", "options": [
+      { "label": "Muito satisfeito", "v": 0 }, { "label": "Satisfeito", "v": 1 }, { "label": "Neutro", "v": 2 }, { "label": "Insatisfeito", "v": 3 }, { "label": "Muito insatisfeito", "v": 4 }
+    ]},
+    { "scale": "day", "text": "Até que ponto o problema de sono interfere com o teu funcionamento diário (cansaço, humor, trabalho, concentração)?", "options": [
+      { "label": "Nada", "v": 0 }, { "label": "Um pouco", "v": 1 }, { "label": "Algo", "v": 2 }, { "label": "Muito", "v": 3 }, { "label": "Muitíssimo", "v": 4 }
+    ]},
+    { "scale": "day", "text": "Quão percetível é o teu problema de sono para os outros, em termos do teu rendimento e qualidade de vida?", "options": [
+      { "label": "Nada", "v": 0 }, { "label": "Um pouco", "v": 1 }, { "label": "Algo", "v": 2 }, { "label": "Muito", "v": 3 }, { "label": "Muitíssimo", "v": 4 }
+    ]},
+    { "scale": "day", "text": "Quão preocupado ou angustiado estás com o teu problema de sono atual?", "options": [
+      { "label": "Nada", "v": 0 }, { "label": "Um pouco", "v": 1 }, { "label": "Algo", "v": 2 }, { "label": "Muito", "v": 3 }, { "label": "Muitíssimo", "v": 4 }
+    ]}
+  ],
+  "bands": [
+    { "max": 7, "pill": "SEM INSÓNIA", "concern": "low", "title": "O sono ainda recupera", "text": "Não há sinais clinicamente significativos de insónia neste rastreio. Se mesmo assim acordas exausto, o problema pode ser a qualidade do descanso ou o burnout — não só «demorar a adormecer».", "cta": "Se o cansaço persistir, faz o teste de burnout. A consulta continua disponível se quiseres um plano de recuperação.", "bookLabel": "Marcar consulta — 60€", "bookNote": "Opcional · só se o cansaço for o tema" },
+    { "max": 14, "pill": "SUBCLÍNICO", "concern": "light", "title": "O sono já está a falhar", "text": "Ainda não é insónia instalada, mas o padrão já interfere. No burnout, esta é a fase em que uma intervenção no sono evita o ciclo cortisol → exaustão → pior sono.", "cta": "Uma Consulta Especializada em Burnout trata o sono como alvo clínico — não como dica de higiene genérica.", "bookLabel": "Marcar consulta — 60€", "bookNote": "Videoconsulta · 60 min · o resultado fica na marcação" },
+    { "max": 21, "pill": "MODERADO", "concern": "mid", "title": "Insónia moderada — o corpo já está a pagar", "text": "O ISI nesta zona indica insónia com impacto no dia. É um dos preditores mais fortes de procurar ajuda: sem sono, o esgotamento não recupera com férias.", "cta": "Marca agora. O resultado do ISI chega à consulta; se precisar, pedimos avaliações adicionais (incluindo risco de apneia).", "bookLabel": "Marcar consulta — 60€", "bookNote": "Videoconsulta · 60 min · sono como prioridade" },
+    { "max": 28, "pill": "GRAVE", "concern": "high", "title": "A insónia está grave — não adiantes", "text": "Um ISI elevado é urgência clínica, não um «mau mês de sono». Alimenta humor, ansiedade e burnout. Se houver sonolência ao volante, não conduzas; procura avaliação.", "cta": "Marca consulta hoje. A Subscrição Anti-Burnout faz sentido quando o sono já partiu o resto do funcionamento.", "bookLabel": "Marcar consulta agora — 60€", "bookNote": "Videoconsulta · 60 min · o resultado chega à médica" }
+  ],
+  "insights": {
+    "night": { "title": "A arquitetura da noite", "text": "O problema está a adormecer, a manter o sono ou a acordar cedo demais. Cada padrão tem uma lógica diferente (ruminação, hipervigilância, cortisol matinal) — a consulta não trata «insónia» como uma coisa só." },
+    "day": { "title": "O dia já está contaminado", "text": "Não é só a noite: o funcionamento, o humor e a preocupação com o próprio sono estão altos. A ansiedade em relação ao sono é, muitas vezes, o que o mantém partido." }
+  },
+  "booking": {
+    "consultHref": "/marcar/burnout",
+    "consultName": "Consulta Especializada em Burnout",
+    "consultPrice": "60",
+    "consultMeta": "Sessão única · 60 minutos",
+    "subHref": "/marcar/burnout-mensal",
+    "subName": "Subscrição Anti-Burnout",
+    "subPrice": "216",
+    "subMeta": "/mês · 4 consultas · 54€/sessão",
+    "stickyLabel": "Consulta Especializada em Burnout",
+    "hideSubOn": ["SEM INSÓNIA", "SUBCLÍNICO"]
+  },
+  "related": ["ess", "phq9", "gad7", "cbi"],
+  "introLinks": [
+    { "href": "/burnout/teste", "label": "Teste de burnout (CBI)" },
+    { "href": "/nutricao/teste-ess", "label": "Sonolência diurna (ESS)" },
+    { "href": "/burnout/teste-phq9", "label": "PHQ-9 · humor" }
+  ],
+  "disclaimer": "O Insomnia Severity Index (Bastien, Vallières & Morin, 2001) é um instrumento clínico de 7 itens. Adaptação Lon Clinic em português europeu. Não diagnostica uma perturbação do sono nem substitui avaliação médica — incluindo estudo de apneia quando indicado.",
+  "utmCampaign": "isi-teste"
+}

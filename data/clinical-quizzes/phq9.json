@@ -1,0 +1,72 @@
+{
+  "id": "phq9",
+  "path": "/burnout/teste-phq9",
+  "cluster": "burnout",
+  "instrument": "PHQ-9",
+  "minutes": 2,
+  "title": "Teste PHQ-9 de depressão grátis — resultado imediato | Lon Clinic",
+  "h1": "Ajuda-nos a perceber o teu humor nas últimas duas semanas.",
+  "lead": "O PHQ-9 é o questionário clínico mais usado para rastrear a gravidade da depressão. No burnout, distingue esgotamento de um quadro depressivo que pede consulta médica agora.",
+  "description": "Teste PHQ-9 grátis: 9 perguntas, resultado imediato. Rastreio de depressão usado na clínica anti-burnout. Sem registo até ao resultado.",
+  "stem": "Nas últimas 2 semanas, com que frequência foste incomodado por algum dos seguintes problemas?",
+  "homeHref": "/burnout",
+  "homeLabel": "LON Clinic — Burnout",
+  "scoring": "sum",
+  "gaugeMax": 27,
+  "gaugeLabel": "PHQ-9 · 0–27",
+  "displayMultiplier": 1,
+  "higherIsBetter": false,
+  "bandOn": "raw",
+  "options": [
+    { "label": "Nunca", "v": 0 },
+    { "label": "Vários dias", "v": 1 },
+    { "label": "Mais de metade dos dias", "v": 2 },
+    { "label": "Quase todos os dias", "v": 3 }
+  ],
+  "scales": [
+    { "id": "mood", "title": "Humor e interesse", "note": "Anedonia, tristeza e autoestima (itens 1, 2, 6)." },
+    { "id": "somatic", "title": "Corpo e energia", "note": "Sono, cansaço, apetite, concentração e inquietação." }
+  ],
+  "questions": [
+    { "scale": "mood", "text": "Pouco interesse ou prazer em fazer as coisas" },
+    { "scale": "mood", "text": "Sentir-te triste, deprimido ou sem esperança" },
+    { "scale": "somatic", "text": "Dificuldade em adormecer ou permanecer a dormir, ou dormir demasiado" },
+    { "scale": "somatic", "text": "Sentir-te cansado ou com pouca energia" },
+    { "scale": "somatic", "text": "Falta de apetite ou comer em excesso" },
+    { "scale": "mood", "text": "Sentir-te mal contigo — ou que és um fracasso, ou que deixaste a família para baixo" },
+    { "scale": "somatic", "text": "Dificuldade de concentração, por exemplo ao ler ou ver televisão" },
+    { "scale": "somatic", "text": "Mover-te ou falar tão lentamente que outros notariam — ou o oposto, estar tão agitado que te moves muito mais do que o habitual" },
+    { "scale": "mood", "text": "Pensamentos de que seria melhor estar morto, ou de te magoares de alguma forma", "crisis": true }
+  ],
+  "bands": [
+    { "max": 4, "pill": "MÍNIMO", "concern": "low", "title": "Poucos sinais de depressão", "text": "O teu resultado não aponta para um quadro depressivo neste momento. Continua a fazer sentido cuidar do sono, do stress e da recuperação — sobretudo se vieste do teste de burnout.", "cta": "Se o esgotamento no trabalho for o que te trouxe aqui, o Índice de Burnout e a consulta anti-burnout continuam disponíveis.", "bookLabel": "Marcar consulta — 60€", "bookNote": "Opcional · só se quiseres perceber melhor o teu perfil" },
+    { "max": 9, "pill": "LIGEIRO", "concern": "light", "title": "Sinais ligeiros — vale a pena acompanhar", "text": "Há alguns sintomas de humor baixo. Isto não é um diagnóstico. Em contexto de burnout, um PHQ-9 ligeiro pede atenção ao sono, à carga e ao isolamento — antes de se instalar.", "cta": "Uma Consulta Especializada em Burnout ajuda a distinguir cansaço de humor clínico e a decidir se precisas de acompanhamento regular.", "bookLabel": "Marcar consulta — 60€", "bookNote": "Videoconsulta · 60 min · o resultado fica na marcação" },
+    { "max": 14, "pill": "MODERADO", "concern": "mid", "title": "O humor já está a pedir avaliação médica", "text": "Um PHQ-9 moderado sugere um quadro que não deve ser tratado só com «descansar mais». Pode ser burnout com humor deprimido, ou depressão a exigir plano clínico.", "cta": "Marca agora. A médica vê este resultado e ajuda-te a decidir o próximo passo — incluindo se a subscrição anti-burnout faz sentido.", "bookLabel": "Marcar consulta — 60€", "bookNote": "Videoconsulta · 60 min · o resultado chega à consulta" },
+    { "max": 19, "pill": "MODERADO-GRAVE", "concern": "high", "title": "Este resultado pede consulta sem adiar", "text": "A gravidade está na zona em que o rastreio deixa de ser «só informativo»: há sofrimento relevante. Não diagnostica depressão sozinho — mas é um sinal para avaliação médica imediata.", "cta": "Marca uma Consulta Especializada em Burnout hoje. Se o humor estiver a impedir o dia-a-dia, a subscrição (4 consultas/mês) dá regularidade.", "bookLabel": "Marcar consulta agora — 60€", "bookNote": "Videoconsulta · 60 min · prioridade clínica" },
+    { "max": 27, "pill": "GRAVE", "concern": "high", "title": "Procura apoio médico agora", "text": "O teu resultado está na zona mais elevada do PHQ-9. Isto não substitui um diagnóstico, mas indica sofrimento intenso. Se houver pensamentos de te magoares, usa os contactos de crise abaixo — não este site.", "cta": "Marca consulta hoje. Em risco imediato: 112, SNS 24 ou SOS Voz Amiga. Não esperes pelo «dia em que estiver melhor».", "bookLabel": "Marcar consulta agora — 60€", "bookNote": "Videoconsulta · 60 min · o resultado chega à médica" }
+  ],
+  "insights": {
+    "mood": { "title": "Humor e autoestima", "text": "O peso está sobretudo no humor, na perda de interesse e na forma como te vês. No burnout isto mistura-se com a exaustão — a consulta serve para não tratares depressão como se fosse só cansaço." },
+    "somatic": { "title": "O corpo a pagar a conta", "text": "Sono, energia, apetite e concentração estão no centro do teu resultado. São os mesmos sistemas que rebentam primeiro no esgotamento profissional — e os primeiros a melhorar com um plano clínico." }
+  },
+  "booking": {
+    "consultHref": "/marcar/burnout",
+    "consultName": "Consulta Especializada em Burnout",
+    "consultPrice": "60",
+    "consultMeta": "Sessão única · 60 minutos",
+    "subHref": "/marcar/burnout-mensal",
+    "subName": "Subscrição Anti-Burnout",
+    "subPrice": "216",
+    "subMeta": "/mês · 4 consultas · 54€/sessão",
+    "stickyLabel": "Consulta Especializada em Burnout",
+    "hideSubOn": ["MÍNIMO", "LIGEIRO"]
+  },
+  "related": ["gad7", "isi", "who5", "cbi"],
+  "introLinks": [
+    { "href": "/burnout/teste", "label": "Teste de burnout (CBI)" },
+    { "href": "/burnout/teste-gad7", "label": "Teste de ansiedade (GAD-7)" },
+    { "href": "/burnout/depressao-ou-burnout", "label": "Depressão ou burnout" }
+  ],
+  "disclaimer": "O PHQ-9 (Kroenke, Spitzer & Williams, 2001) é um instrumento de rastreio de utilização livre com atribuição. Versão portuguesa de uso clínico; adaptação Lon Clinic (tratamento informal). Não é um diagnóstico nem substitui avaliação por um profissional de saúde.",
+  "utmCampaign": "phq9-teste"
+}

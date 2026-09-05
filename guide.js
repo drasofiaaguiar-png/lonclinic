@@ -185,6 +185,75 @@ function loadBurnoutManifest() {
     }
 }
 
+function burnoutHubCard() {
+    return {
+        slug: 'burnout-hub',
+        href: '/burnout',
+        title: 'Centro burnout',
+        description: 'Sintomas, teste CBI, tratamento e recuperação — o dossier Lon Clinic.',
+        about: 'Burnout',
+        listed: true
+    };
+}
+
+/** Generic “what is burnout” posts consolidate to the hub. Long-tail articles keep a self-canonical. */
+const BLOG_CANONICAL_TO_BURNOUT_HUB = new Set([
+    'burnout-o-que-e-sinais-cansaco',
+    '9-sinais-de-burnout-no-trabalho'
+]);
+
+function blogCanonicalPath(meta) {
+    const slug = String((meta && meta.slug) || '');
+    if (BLOG_CANONICAL_TO_BURNOUT_HUB.has(slug)) return '/burnout';
+    return `/blog/${encodeURIComponent(slug)}`;
+}
+
+function burnoutHubStripHtml(lang) {
+    const packs = {
+        pt: {
+            kicker: 'Dossier',
+            title: 'Este artigo faz parte do centro burnout.',
+            hub: 'Ir ao centro burnout',
+            test: 'Fazer o teste CBI'
+        },
+        en: {
+            kicker: 'File',
+            title: 'This article belongs to the burnout hub.',
+            hub: 'Go to the burnout hub',
+            test: 'Take the CBI test'
+        },
+        es: {
+            kicker: 'Dossier',
+            title: 'Este artículo forma parte del centro de burnout.',
+            hub: 'Ir al centro burnout',
+            test: 'Hacer el test CBI'
+        },
+        fr: {
+            kicker: 'Dossier',
+            title: 'Cet article fait partie du centre burnout.',
+            hub: 'Aller au centre burnout',
+            test: 'Faire le test CBI'
+        },
+        de: {
+            kicker: 'Dossier',
+            title: 'Dieser Artikel gehört zum Burnout-Zentrum.',
+            hub: 'Zum Burnout-Zentrum',
+            test: 'CBI-Test machen'
+        }
+    };
+    const copy = packs[lang] || packs.pt;
+    return `
+<aside class="guide-hub-strip" aria-label="${escapeHtml(copy.kicker)}">
+    <p class="guide-hub-strip-kicker">${escapeHtml(copy.kicker)}</p>
+    <p class="guide-hub-strip-title">${escapeHtml(copy.title)}</p>
+    <p class="guide-hub-strip-actions">
+        <a href="/burnout">${escapeHtml(copy.hub)}</a>
+        <span aria-hidden="true"> · </span>
+        <a href="/burnout/teste">${escapeHtml(copy.test)}</a>
+    </p>
+</aside>`;
+}
+
 function burnoutAsCard(page) {
     if (!page || !page.slug) return null;
     const slug = String(page.slug);
@@ -337,22 +406,22 @@ function actionCopy(lang) {
             slotTitle: 'Próximo horário',
             slotWhen: 'Horários em breve',
             slotNote: 'As vagas desta consulta ainda estão a ser definidas. Pode marcar e escolhemos o horário consigo.',
-            slotCta: 'Ver horários',
+            slotCta: 'Marcar — 39 €',
             psych: {
                 chip: 'Psicologia',
                 title: 'Consulta de psicologia',
-                price: '€60 · sessão avulsa',
+                price: '60 € · sessão avulsa',
                 href: '/saudemental',
-                cta: 'Marcar',
-                note: 'Online · ou 54€/semana no acompanhamento',
+                cta: 'Marcar — 60 €',
+                note: 'Online · ou 54 €/semana no acompanhamento',
                 service: 'psicologia'
             },
             nutrition: {
                 chip: 'Nutrição',
                 title: 'Consulta de nutrição',
-                price: '€39 · 30 min',
+                price: '39 € · 30 min',
                 href: '/marcar/clinica-geral?ref=blog-nutricao',
-                cta: 'Marcar',
+                cta: 'Marcar — 39 €',
                 note: 'Online · acompanhamento individual, sem planos genéricos',
                 service: 'clinica_geral'
             },
@@ -361,16 +430,16 @@ function actionCopy(lang) {
                 title: 'Consulta do viajante',
                 price: '€39 · 20 min',
                 href: '/marcar/travel',
-                cta: 'Marcar',
+                cta: 'Marcar — 39 €',
                 note: 'Orientação e prescrição no próprio dia',
                 service: 'travel'
             },
             general: {
                 chip: 'Clínica geral',
                 title: 'Consulta de clínica geral',
-                price: '€39 · 30 min',
+                price: '39 € · 30 min',
                 href: '/marcar/clinica-geral',
-                cta: 'Marcar',
+                cta: 'Marcar — 39 €',
                 note: 'Médico no próprio dia',
                 service: 'clinica_geral'
             },
@@ -381,6 +450,15 @@ function actionCopy(lang) {
                 href: '/burnout/teste',
                 cta: 'Fazer o teste',
                 note: 'Cinco minutos para perceber o grau de esgotamento'
+            },
+            hubBurnout: {
+                chip: 'Dossier',
+                title: 'Centro burnout',
+                price: 'Guias + teste CBI',
+                href: '/burnout',
+                cta: 'Ir ao centro burnout',
+                note: 'Sintomas, tratamento, recuperação — o dossier da clínica',
+                service: 'burnout'
             },
             quizPersonality: {
                 chip: 'Teste',
@@ -414,7 +492,7 @@ function actionCopy(lang) {
             nutrition: {
                 chip: 'Nutrition',
                 title: 'Nutrition consultation',
-                price: '€39 · 30 min',
+                price: '39 € · 30 min',
                 href: '/marcar/clinica-geral?ref=blog-nutricao',
                 cta: 'Book',
                 note: 'Online · individual follow-up, no generic plans',
@@ -432,7 +510,7 @@ function actionCopy(lang) {
             general: {
                 chip: 'GP',
                 title: 'General medicine consultation',
-                price: '€39 · 30 min',
+                price: '39 € · 30 min',
                 href: '/marcar/clinica-geral',
                 cta: 'Book',
                 note: 'A doctor the same day',
@@ -453,6 +531,15 @@ function actionCopy(lang) {
                 href: '/teste-personalidade',
                 cta: 'Take the test',
                 note: 'A quick snapshot of how you are now'
+            },
+            hubBurnout: {
+                chip: 'File',
+                title: 'Burnout hub',
+                price: 'Guides + CBI test',
+                href: '/burnout',
+                cta: 'Go to the burnout hub',
+                note: 'Symptoms, recovery and the free CBI test',
+                service: 'burnout'
             }
         }
     };
@@ -466,7 +553,8 @@ function consultSpec(kind, lang) {
     const copy = actionCopy(lang);
     if (kind === 'nutrition') return copy.nutrition;
     if (kind === 'travel') return copy.travel;
-    if (kind === 'mental' || kind === 'burnout') return copy.psych;
+    if (kind === 'mental') return copy.psych;
+    if (kind === 'burnout') return copy.hubBurnout;
     return copy.general;
 }
 
@@ -485,7 +573,7 @@ function bookCardHtml(card, tone, extraClass, extraAttrs) {
             <h3 class="guide-book-title">${escapeHtml(card.title)}</h3>
             <p class="guide-book-price"${card.whenAttr || ''}>${escapeHtml(card.price)}</p>
             <p class="guide-book-note">${escapeHtml(card.note)}</p>
-            <a class="guide-book-cta"${card.ctaAttr || ''} href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
+            <a class="guide-book-cta"${card.ctaAttr || ''} data-pay-badges href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
         </article>`;
 }
 
@@ -505,6 +593,13 @@ function actionCardsHtml(kind, tone, lang) {
         ...quiz,
         href: quizHref
     }, t + 1);
+    if (kind === 'burnout') {
+        return `
+<aside class="guide-book guide-actions" aria-label="${escapeHtml(copy.consultAria)}">
+    <div class="guide-book-grid guide-book-grid--actions">${consultCard}${quizCard}
+    </div>
+</aside>`;
+    }
     const slotCard = bookCardHtml({
         chip: copy.slotChip,
         title: copy.slotTitle,
@@ -650,6 +745,9 @@ function pickRelatedArticles(current, articles) {
         seen.add(article.slug);
         picked.push(article);
     };
+    if (articleCluster(current) === 'burnout') {
+        push(burnoutHubCard());
+    }
     (Array.isArray(current.related) ? current.related : []).forEach((ref) => {
         push(resolveRelatedRef(ref, bySlug, burnoutBySlug));
     });
@@ -832,6 +930,9 @@ function layoutGuidePage(opts) {
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contactar por WhatsApp">💬</a>
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-nav.js"></script>
+    <script src="/i18n.js?v=20260905e" defer></script>
+    <script src="/lon-analytics.js?v=20260905e" defer></script>
+    <script src="/lon-slots.js?v=20260905g" defer></script>
 </body>
 </html>`;
 }
@@ -991,6 +1092,14 @@ function renderBlogArticle(origin, slug) {
                 '@type': 'WebPage',
                 '@id': pageUrl
             },
+            ...(articleCluster(meta) === 'burnout' ? {
+                isPartOf: {
+                    '@type': 'CollectionPage',
+                    '@id': `${o}/burnout`,
+                    name: 'Centro burnout',
+                    url: `${o}/burnout`
+                }
+            } : {}),
             image: og,
             ...(hasPart && hasPart.length ? { hasPart } : {}),
             ...(meta.about ? { about: { '@type': 'MedicalCondition', name: String(meta.about) } } : {}),
@@ -1047,7 +1156,7 @@ function renderBlogArticle(origin, slug) {
         : '';
 
     const articlePath = `/blog/${encodeURIComponent(slug)}`;
-    const crumbsHtml = magBreadcrumbHtml(magBreadcrumbCrumbs(articlePath, title));
+    const canonicalPath = blogCanonicalPath(meta);
     const kicker = magThemeLabel(meta);
     const lang = articleLangCode(meta);
     const langMeta = articleLangMeta(meta);
@@ -1055,6 +1164,16 @@ function renderBlogArticle(origin, slug) {
     const note = isTravelGuide ? chrome.travelNote : chrome.generalNote;
     const closeCtaKind = defaultCtaKind(meta) === 'general' ? 'clinic' : defaultCtaKind(meta);
     const closeCta = `<section class="mag-section mag-wrap mag-article-cta">${magCtaHtml(closeCtaKind, lang)}</section>`;
+    let crumbItems = magBreadcrumbCrumbs(articlePath, title);
+    if (articleCluster(meta) === 'burnout') {
+        crumbItems = [
+            { name: 'Magazine', href: '/magazine' },
+            { name: 'Burnout', href: '/burnout' },
+            { name: title, href: articlePath, current: true }
+        ];
+    }
+    const crumbsHtml = magBreadcrumbHtml(crumbItems);
+    const hubStrip = articleCluster(meta) === 'burnout' ? burnoutHubStripHtml(lang) : '';
     const articleInner = format === 'markdown'
         ? `
     <main id="conteudo-principal" class="guide-article-main mag-article-main">
@@ -1084,6 +1203,7 @@ function renderBlogArticle(origin, slug) {
         <article class="mag-story mag-story--html">
             <header class="mag-story-head mag-story-head--html">
                 ${crumbsHtml}
+                ${hubStrip}
                 <p class="mag-story-kicker">${escapeHtml(kicker)}</p>
                 ${byline}
                 ${shareBarHtml(`${o}/blog/${encodeURIComponent(slug)}`, title, `magazine-${slug}`)}
@@ -1101,14 +1221,14 @@ function renderBlogArticle(origin, slug) {
         origin: o,
         title: `${title} | LON Magazine`,
         description,
-        canonicalPath: articlePath,
+        canonicalPath,
         ogImage: og,
         jsonLd,
         ogType: 'article',
         htmlLang: langMeta.htmlLang,
         ogLocale: langMeta.ogLocale,
         extraHead: articleHreflangLinks(o, meta, manifest.articles),
-        extraCssAfter: ['/guide.css?v=20260905b', '/author.css?v=20260820l'],
+        extraCssAfter: ['/guide.css?v=20260905h', '/author.css?v=20260820l'],
         mainHtml: magAppHtml(articlePath, articleInner)
     });
 
@@ -1264,7 +1384,7 @@ function magCtaHtml(kind, lang) {
                 title: 'Quando o esgotamento já não é só cansaço.',
                 actions: [
                     { href: '/burnout/teste', label: 'Fazer o teste' },
-                    { href: '/marcar/burnout', label: 'Consulta de burnout' }
+                    { href: '/burnout', label: 'Centro burnout' }
                 ]
             },
             clinic: {
@@ -1306,7 +1426,7 @@ function magCtaHtml(kind, lang) {
                 title: 'When exhaustion is no longer just tiredness.',
                 actions: [
                     { href: '/burnout/teste?lang=en', label: 'Take the test' },
-                    { href: '/marcar/burnout?lang=en', label: 'Burnout consultation' }
+                    { href: '/burnout', label: 'Burnout hub' }
                 ]
             },
             clinic: {
@@ -1340,7 +1460,7 @@ function magCtaHtml(kind, lang) {
                 title: 'Cuando el agotamiento ya no es solo cansancio.',
                 actions: [
                     { href: '/burnout/teste?lang=es', label: 'Hacer el test' },
-                    { href: '/marcar/burnout?lang=es', label: 'Consulta de burnout' }
+                    { href: '/burnout', label: 'Centro burnout' }
                 ]
             },
             clinic: {
@@ -1374,7 +1494,7 @@ function magCtaHtml(kind, lang) {
                 title: 'Quand l’épuisement n’est plus seulement de la fatigue.',
                 actions: [
                     { href: '/burnout/teste?lang=fr', label: 'Faire le test' },
-                    { href: '/marcar/burnout?lang=fr', label: 'Consultation burnout' }
+                    { href: '/burnout', label: 'Centre burnout' }
                 ]
             },
             clinic: {
@@ -1408,7 +1528,7 @@ function magCtaHtml(kind, lang) {
                 title: 'Wenn Erschöpfung nicht mehr nur Müdigkeit ist.',
                 actions: [
                     { href: '/burnout/teste?lang=de', label: 'Test machen' },
-                    { href: '/marcar/burnout?lang=de', label: 'Burnout-Sprechstunde' }
+                    { href: '/burnout', label: 'Burnout-Zentrum' }
                 ]
             },
             clinic: {
@@ -1427,7 +1547,7 @@ function magCtaHtml(kind, lang) {
     const bookingByKind = {
         mental: `/saudemental${langQ}`,
         travel: `/marcar/travel${langQ}`,
-        burnout: `/marcar/burnout${langQ}`,
+        burnout: `/burnout`,
         clinic: `/marcar/clinica-geral${langQ}`,
         nutrition: `/marcar/clinica-geral${langQ}`
     };
@@ -1438,11 +1558,27 @@ function magCtaHtml(kind, lang) {
         fr: 'Prendre rendez-vous',
         de: 'Termin buchen'
     };
+    const hubLabelByLang = {
+        pt: 'Ir ao centro burnout',
+        en: 'Go to the burnout hub',
+        es: 'Ir al centro burnout',
+        fr: 'Aller au centre burnout',
+        de: 'Zum Burnout-Zentrum'
+    };
+    const testLabelByLang = {
+        pt: 'Fazer o teste',
+        en: 'Take the test',
+        es: 'Hacer el test',
+        fr: 'Faire le test',
+        de: 'Test machen'
+    };
     const bookingHref = bookingByKind[kind] || bookingByKind.clinic;
     const bookingLabel = (pack.actions && pack.actions[0] && pack.actions[0].label) || labelByLang[lang] || labelByLang.pt;
-    const actions = `<a class="mag-cta-primary" href="${escapeHtml(bookingHref)}">${escapeHtml(
-        kind === 'clinic' || kind === 'travel' || kind === 'burnout' || kind === 'mental' || kind === 'nutrition' ? (labelByLang[lang] || labelByLang.pt) : bookingLabel
-    )}</a>`;
+    const actions = kind === 'burnout'
+        ? `<a class="mag-cta-primary" href="/burnout">${escapeHtml(hubLabelByLang[lang] || hubLabelByLang.pt)}</a><a class="mag-cta-ghost" href="${escapeHtml(withLangHref('/burnout/teste', lang))}">${escapeHtml(testLabelByLang[lang] || testLabelByLang.pt)}</a>`
+        : `<a class="mag-cta-primary" href="${escapeHtml(bookingHref)}">${escapeHtml(
+            kind === 'clinic' || kind === 'travel' || kind === 'mental' || kind === 'nutrition' ? (labelByLang[lang] || labelByLang.pt) : bookingLabel
+        )}</a>`;
     return `<aside class="mag-cta" aria-label="${escapeHtml(pack.title)}">
                 <p>${escapeHtml(pack.kicker)}</p>
                 <h2>${escapeHtml(pack.title)}</h2>
@@ -1984,7 +2120,10 @@ function layoutMagazinePage(opts) {
     ${mainHtml}
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-nav.js"></script>
-    <script src="/lon-analytics.js?v=20260904a" defer></script>
+    <script src="/i18n.js?v=20260905e" defer></script>
+    <script src="/lon-analytics.js?v=20260905e" defer></script>
+    <script src="/reviews.js?v=20260905e" defer></script>
+    <script src="/lon-slots.js?v=20260905g" defer></script>
     <script src="/guide-actions.js?v=20260905a" defer></script>
 </body>
 </html>`;

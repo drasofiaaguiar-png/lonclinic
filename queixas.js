@@ -438,6 +438,10 @@ function layoutQueixaPage(opts) {
     </footer>
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contactar por WhatsApp">💬</a>
     <script src="/lon-nav.js"></script>
+    <script src="/i18n.js?v=20260905e" defer></script>
+    <script src="/lon-analytics.js?v=20260905e" defer></script>
+    <script src="/reviews.js?v=20260905e" defer></script>
+    <script src="/lon-slots.js?v=20260905g" defer></script>
 </body>
 </html>`;
 }

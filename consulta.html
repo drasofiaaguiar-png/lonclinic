@@ -27,8 +27,8 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="theme-color" content="#4A7C6F">
     <link rel="preload" as="image" href="/image/image2.webp" fetchpriority="high">
-    <link rel="stylesheet" href="/landing.css?v=20260418k">
-    <link rel="stylesheet" href="/consulta-pages.css?v=20260820b">
+    <link rel="stylesheet" href="/landing.css?v=20260905f">
+    <link rel="stylesheet" href="/consulta-pages.css?v=20260905e">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
@@ -372,8 +372,12 @@
                     <h1>Consulta Médica Online em Portugal</h1>
                     <p class="dr-lead">Fale com um médico licenciado por videoconsulta — rápido, seguro e sem sair de casa. Ideal para quem procura uma consulta médica online com a mesma qualidade de uma clínica presencial.</p>
                     <div class="dr-cta-row">
-                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark js-consulta-cta" id="consultaCtaHero" data-consulta-cta="hero" data-cta-location="hero_primary">Marcar Consulta Agora</a>
+                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark js-consulta-cta" id="consultaCtaHero" data-consulta-cta="hero" data-cta-location="hero_primary" data-pay-badges>Marcar Consulta — 39 €</a>
                         <a href="#como-funciona" class="lon-btn lon-btn-soft">Ver como funciona</a>
+                    </div>
+                    <div class="cq-live-slots" data-next-slots data-limit="3" data-service="clinica_geral" data-book-href="/marcar/clinica-geral" data-surface="consulta-hub" hidden>
+                        <p class="cq-live-slots-kicker">Próximos horários</p>
+                        <div class="cq-live-slots-row" data-next-slots-row></div>
                     </div>
                     <div class="consulta-trust-bar" role="list" aria-label="Sinais de confiança">
                         <div class="consulta-trust-item" role="listitem">
@@ -440,45 +444,51 @@
                 <div class="consulta-price-grid">
                     <article class="consulta-price-card">
                         <h3>Consulta Clínica Geral / Check-up</h3>
-                        <p class="consulta-price">€39</p>
+                        <p class="consulta-price">39 €</p>
                         <p class="consulta-price-meta">30 min · videoconsulta</p>
-                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;">Marcar</a>
+                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;" data-pay-badges>Marcar — 39 €</a>
                     </article>
                     <article class="consulta-price-card">
                         <h3>Consulta Médica Urgente (adultos)</h3>
-                        <p class="consulta-price">€35</p>
+                        <p class="consulta-price">35 €</p>
                         <p class="consulta-price-meta">15 min · videoconsulta</p>
-                        <a href="/marcar/urgente" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;">Marcar</a>
+                        <a href="/marcar/urgente" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;" data-pay-badges>Marcar — 35 €</a>
                     </article>
                     <article class="consulta-price-card">
                         <h3>Consulta de Saúde Mental</h3>
-                        <p class="consulta-price">€60</p>
+                        <p class="consulta-price">60 €</p>
                         <p class="consulta-price-meta">45 min · videoconsulta</p>
-                        <a href="/marcar/saude-mental" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;">Marcar</a>
+                        <a href="/marcar/saude-mental" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;" data-pay-badges>Marcar — 60 €</a>
                     </article>
                     <article class="consulta-price-card">
                         <h3>Renovação de tratamento médico</h3>
-                        <p class="consulta-price">€19</p>
+                        <p class="consulta-price">19 €</p>
                         <p class="consulta-price-meta">videoconsulta</p>
-                        <a href="/marcar/renovacao" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;">Marcar</a>
+                        <a href="/marcar/renovacao" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;" data-pay-badges>Marcar — 19 €</a>
                     </article>
                     <article class="consulta-price-card">
                         <h3>Consulta do Viajante</h3>
-                        <p class="consulta-price">€39</p>
+                        <p class="consulta-price">39 €</p>
                         <p class="consulta-price-meta">20 min · videoconsulta</p>
-                        <a href="/marcar/travel" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;">Marcar</a>
+                        <a href="/marcar/travel" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;" data-pay-badges>Marcar — 39 €</a>
                     </article>
                     <article class="consulta-price-card">
                         <h3>Consulta do Viajante — 2 pessoas</h3>
-                        <p class="consulta-price">€75</p>
+                        <p class="consulta-price">69 €</p>
                         <p class="consulta-price-meta">30 min · videoconsulta</p>
-                        <a href="/marcar/travel?pessoas=2" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;">Marcar</a>
+                        <a href="/marcar/travel?pessoas=2" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;" data-pay-badges>Marcar — 69 €</a>
+                    </article>
+                    <article class="consulta-price-card">
+                        <h3>Atestado médico</h3>
+                        <p class="consulta-price">39 €</p>
+                        <p class="consulta-price-meta">videoconsulta · se clinicamente justificado</p>
+                        <a href="/consulta/atestado-medico" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;" data-pay-badges>Marcar — 39 €</a>
                     </article>
                     <article class="consulta-price-card">
                         <h3>Longevidade e saúde preventiva</h3>
-                        <p class="consulta-price">€79</p>
+                        <p class="consulta-price">79 €</p>
                         <p class="consulta-price-meta">30 min · videoconsulta</p>
-                        <a href="/marcar/longevidade" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;">Marcar</a>
+                        <a href="/marcar/longevidade" class="lon-btn lon-btn-soft lon-btn-sm" style="align-self: flex-start;" data-pay-badges>Marcar — 79 €</a>
                     </article>
                 </div>
             </div>
@@ -491,6 +501,7 @@
                 <h2 id="consulta-confianca-title">Quem consulta consigo</h2>
                 <p class="consulta-sub">Sem depoimentos inventados. Credenciais verificáveis e o que os pacientes já escreveram.</p>
                 <div class="consulta-testimonials">
+                    <div data-reviews-list data-card-class="lon-testimonial-card lon-testimonial-card--compact" data-limit="2"></div>
                     <figure class="consulta-testimonial">
                         <blockquote>
                             <p>«Eu adorei a consulta! A doutora que me atendeu era super simpática, muito clara na abordagem do tema e esclareceu-me todas as dúvidas! Sem dúvida voltarei a contactar-vos nas minhas próximas viagens.»</p>
@@ -560,7 +571,7 @@
                 <div class="consulta-cta-band-inner">
                     <h2 id="consulta-final-cta-title">Pronto para a sua consulta médica online?</h2>
                     <p>Marque agora e fale com um médico no horário que preferir.</p>
-                    <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="footer_band" data-cta-location="footer_primary">Marcar Consulta Agora</a>
+                    <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="footer_band" data-cta-location="footer_primary" data-pay-badges>Marcar Consulta — 39 €</a>
                 </div>
             </div>
         </section>
@@ -587,6 +598,7 @@
                     <a href="/consulta#por-queixa">Consultas por queixa</a>
                     <a href="/consulta/infecao-urinaria">Infeção urinária</a>
                     <a href="/consulta/cistite-recorrente">Cistite recorrente</a>
+                    <a href="/consulta/atestado-medico">Atestado médico</a>
                     <a href="/consulta/renovacao-receita">Renovação de receita</a>
                     <a href="/consulta/refluxo">Refluxo e azia</a>
                     <a href="/marcar/travel">Consulta do Viajante</a>
@@ -619,6 +631,10 @@
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contactar por WhatsApp">💬</a>
 
     <script src="/lon-nav.js" defer></script>
+    <script src="/i18n.js?v=20260905e" defer></script>
+    <script src="/lon-analytics.js?v=20260905e" defer></script>
+    <script src="/reviews.js?v=20260905e" defer></script>
+    <script src="/lon-slots.js?v=20260905g" defer></script>
     <script>
     (function () {
         function trackConsultaCta(location) {

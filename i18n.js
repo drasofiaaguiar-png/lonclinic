@@ -45,7 +45,7 @@
         { s: '.lon-nav-links a[href="/blog"], .lon-mobile-menu a[href="/blog"]', en: 'Guides', pt: 'Guias', es: 'Guías' },
         { s: '.lon-nav-links a[href="/#contacto"], .lon-mobile-menu a[href="/#contacto"]', en: 'Contact', pt: 'Contato', es: 'Contacto' },
         { s: '.lon-nav-actions > a.lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
-        { s: '.lon-nav-actions > a.lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
+        { s: '.lon-nav-actions > a.lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
         { s: '.lon-mobile-menu a[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
     ];
 
@@ -81,16 +81,16 @@
         { s: '.lon-nav-links a[href="/blog"], .lon-mobile-menu a[href="/blog"]', en: 'Guides', pt: 'Guias', es: 'Guías' },
         { s: '.lon-nav-links a[href="#contacto"], .lon-mobile-menu a[href="#contacto"]', en: 'Contact', pt: 'Contato', es: 'Contacto' },
         { s: '.lon-nav-actions .lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
-        { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
+        { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
 
         /* ── Hero ── */
         { s: '.dr-badge', en: 'Telemedicine Platform', pt: 'Plataforma de telemedicina', es: 'Plataforma de telemedicina' },
         { s: '.dr-hero-title-line:not(.dr-hero-title-line--secondary)', en: 'Online medical consultations.', pt: 'Consultas médicas online.', es: 'Consultas médicas online.' },
         { s: '.dr-hero-title-line--secondary', en: 'A new approach to your health.<br>Finally.', pt: 'Uma nova abordagem à sua saúde.<br>Finalmente.', es: 'Un nuevo enfoque para su salud.<br>Por fin.', h: true },
         { s: '.dr-lead', en: 'Book your medical consultation in minutes. Take care of your short and long-term health.', pt: 'Marque a sua consulta médica em minutos. Cuide da sua saúde a curto e a longo prazo.', es: 'Reserve su consulta médica en minutos. Cuide su salud a corto y largo plazo.' },
-        { s: '.dr-cta-row .lon-btn-dark', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
+        { s: '.dr-cta-row .lon-btn-dark', en: 'Book consultation — 39 €', pt: 'Marcar Consulta — 39 €', es: 'Reservar consulta — 39 €' },
         { s: '.dr-next-slot-kicker', en: 'Next available', pt: 'Próximo horário', es: 'Próximo horario' },
-        { s: '.dr-next-slot-price', en: '€39 · general medicine', pt: '€39 · clínica geral', es: '€39 · medicina general' },
+        { s: '.dr-next-slot-price', en: '39 € · general medicine', pt: '39 € · clínica geral', es: '39 € · medicina general' },
         { s: '.dr-next-slot-other', en: 'Another time', pt: 'Outro horário', es: 'Otro horario' },
 
         /* ── Trust bullets ── */
@@ -157,12 +157,17 @@
         { s: '.lon-services .lon-service-card:nth-child(11) h3', en: 'Longevity & Preventive Health Consultation', pt: 'Consulta de Longevidade e Saúde Preventiva', es: 'Consulta de Longevidad y Salud Preventiva' },
 
         /* ── Book buttons ── */
-        { s: '.lon-service-card .lon-btn-soft', en: 'Book', pt: 'Marcar', es: 'Reservar' },
-        { s: '#lon-service-psicologia-avulsa .lon-btn-soft', en: 'Book', pt: 'Marcar', es: 'Reservar' },
-        { s: '#lon-service-psicologia-burnout .lon-btn-soft', en: 'Subscribe', pt: 'Subscrever', es: 'Suscribirse' },
-        { s: '#lon-service-saude-mental .lon-btn-soft', en: 'Book', pt: 'Marcar', es: 'Reservar' },
-        { s: '#lon-service-burnout .lon-btn-soft', en: 'Book', pt: 'Marcar', es: 'Reservar' },
-        { s: '#lon-service-burnout-sub .lon-btn-soft', en: 'Subscribe', pt: 'Subscrever', es: 'Suscribirse' },
+        { s: '.lon-services .lon-service-card:nth-child(1) .lon-btn-soft', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
+        { s: '.lon-services .lon-service-card:nth-child(2) .lon-btn-soft', en: 'Book — 35 €', pt: 'Marcar — 35 €', es: 'Reservar — 35 €' },
+        { s: '#lon-service-psicologia-avulsa .lon-btn-soft', en: 'Book — 60 €', pt: 'Marcar — 60 €', es: 'Reservar — 60 €' },
+        { s: '#lon-service-psicologia-burnout .lon-btn-soft', en: 'Subscribe — 54 €/week', pt: 'Subscrever — 54 €/semana', es: 'Suscribirse — 54 €/semana' },
+        { s: '#lon-service-saude-mental .lon-btn-soft', en: 'Book — 60 €', pt: 'Marcar — 60 €', es: 'Reservar — 60 €' },
+        { s: '#lon-service-burnout .lon-btn-soft', en: 'Book — 60 €', pt: 'Marcar — 60 €', es: 'Reservar — 60 €' },
+        { s: '#lon-service-burnout-sub .lon-btn-soft', en: 'Subscribe — 216 €/mo', pt: 'Subscrever — 216 €/mês', es: 'Suscribirse — 216 €/mes' },
+        { s: '.lon-services .lon-service-card:nth-child(8) .lon-btn-soft', en: 'Book — 19 €', pt: 'Marcar — 19 €', es: 'Reservar — 19 €' },
+        { s: '.lon-services .lon-service-card:nth-child(9) .lon-btn-soft', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
+        { s: '.lon-services .lon-service-card:nth-child(10) .lon-btn-soft', en: 'Book — 69 €', pt: 'Marcar — 69 €', es: 'Reservar — 69 €' },
+        { s: '.lon-services .lon-service-card:nth-child(11) .lon-btn-soft', en: 'Book — 79 €', pt: 'Marcar — 79 €', es: 'Reservar — 79 €' },
 
         /* ── Team section ── */
         { s: '.lon-team-kicker', en: 'Our team', pt: 'A nossa equipa', es: 'Nuestro equipo' },
@@ -502,7 +507,7 @@
         { s: '.lon-nav-links a[href="/#servicos"], .lon-mobile-menu a[href="/#servicos"]', en: 'Services', pt: 'Serviços', es: 'Servicios' },
         { s: '.lon-nav-links a[href="/#contacto"], .lon-mobile-menu a[href="/#contacto"]', en: 'Contact', pt: 'Contato', es: 'Contacto' },
         { s: '.lon-nav-actions .lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
-        { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
+        { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
 
         /* ── Error ── */
         { s: '#marcarError .marcar-error', en: 'Consultation type not found. Choose a service on the <a href="/#servicos">homepage</a>.', pt: 'Tipo de consulta não encontrado. Escolha um serviço na <a href="/#servicos">página inicial</a>.', es: 'Tipo de consulta no encontrado. Elija un servicio en la <a href="/#servicos">página de inicio</a>.', h: true },
@@ -539,7 +544,7 @@
         { s: '.lon-nav-links a[href="/#servicos"], .lon-mobile-menu a[href="/#servicos"]', en: 'Services', pt: 'Serviços', es: 'Servicios' },
         { s: '.lon-nav-links a[href="/#contacto"], .lon-mobile-menu a[href="/#contacto"]', en: 'Contact', pt: 'Contato', es: 'Contacto' },
         { s: '.lon-nav-actions .lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
-        { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
+        { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
         { s: '.foot', en: 'If you need immediate assistance, contact <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> or +351 928 372 775.', pt: 'Se precisar de ajuda imediata, contacte <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> ou +351 928 372 775.', es: 'Si necesita asistencia inmediata, contacte <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> o +351 928 372 775.', h: true },
     ];
 
@@ -919,9 +924,9 @@
 
     function createToggleHTML() {
         return `<div class="lang-toggle" role="group" aria-label="Language selector">
-            <button type="button" class="lang-btn${currentLang === 'en' ? ' active' : ''}" data-lang="en" aria-pressed="${currentLang === 'en'}">EN</button>
-            <button type="button" class="lang-btn${currentLang === 'pt' ? ' active' : ''}" data-lang="pt" aria-pressed="${currentLang === 'pt'}">PT</button>
-            <button type="button" class="lang-btn${currentLang === 'es' ? ' active' : ''}" data-lang="es" aria-pressed="${currentLang === 'es'}">ES</button>
+            <button type="button" class="lang-btn${currentLang === 'pt' ? ' active' : ''}" data-lang="pt" aria-pressed="${currentLang === 'pt'}"><span class="lang-flag" aria-hidden="true">🇵🇹</span> PT</button>
+            <button type="button" class="lang-btn${currentLang === 'en' ? ' active' : ''}" data-lang="en" aria-pressed="${currentLang === 'en'}"><span class="lang-flag" aria-hidden="true">🇬🇧</span> EN</button>
+            <button type="button" class="lang-btn${currentLang === 'es' ? ' active' : ''}" data-lang="es" aria-pressed="${currentLang === 'es'}"><span class="lang-flag" aria-hidden="true">🇪🇸</span> ES</button>
         </div>`;
     }
 

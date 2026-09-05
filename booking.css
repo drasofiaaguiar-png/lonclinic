@@ -1978,3 +1978,113 @@ body {
         padding: 20px;
     }
 }
+
+.lon-pay-methods {
+    margin: 8px 0 18px;
+}
+
+.lon-pay-methods-label {
+    margin: 0 0 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.lon-pay-methods-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.lon-pay-method {
+    appearance: none;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text-primary);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font: inherit;
+    font-size: 0.86rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.lon-pay-method.is-active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}
+
+.lon-pay-methods-note {
+    margin: 8px 0 0;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.lon-exit-modal[hidden] {
+    display: none;
+}
+
+.lon-exit-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+}
+
+.lon-exit-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 26, 20, 0.45);
+}
+
+.lon-exit-modal-card {
+    position: relative;
+    z-index: 1;
+    width: min(92vw, 420px);
+    margin: 18vh auto 0;
+    background: #fff;
+    border-radius: 18px;
+    padding: 28px 24px 22px;
+    box-shadow: 0 24px 60px rgba(15, 26, 20, 0.2);
+}
+
+.lon-exit-kicker {
+    margin: 0 0 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.lon-exit-modal-card h2 {
+    margin: 0 0 12px;
+    font-size: 1.25rem;
+}
+
+.lon-exit-faq {
+    margin: 0 0 18px;
+    padding-left: 18px;
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+}
+
+.lon-exit-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.lon-exit-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    border: 0;
+    background: none;
+    font-size: 1.6rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--text-muted);
+}

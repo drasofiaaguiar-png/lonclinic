@@ -1,10 +1,31 @@
 /**
  * UTM helper for links Lon Clinic actually sends (email, WhatsApp, social share).
  * Do not stamp these on internal nav — that overwrites paid last-touch.
+ *
+ * Campaign naming (utm_campaign):
+ *   lowercase snake_case, optional month+year suffix: theme_channel_monyyyy
+ *   examples: renewal_followup_sep2026, ig_bio_organic, invite_pay
  */
 'use strict';
 
 const { SITE_ORIGIN, originOf } = require('./seo');
+
+const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
+function slugCampaign(raw) {
+    return String(raw || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '')
+        .slice(0, 80);
+}
+
+function datedCampaign(base, date) {
+    const d = date instanceof Date ? date : new Date();
+    const slug = slugCampaign(base);
+    if (!slug) return '';
+    return `${slug}_${MONTHS[d.getUTCMonth()]}${d.getUTCFullYear()}`;
+}
 
 function withUtm(url, spec) {
     const s = spec || {};
@@ -56,14 +77,19 @@ function socialLink(url, network, campaign) {
 }
 
 const TRACKED_REDIRECTS = {
-    ig: { source: 'instagram_bio', medium: 'social', campaign: 'bio', label: 'Instagram bio' },
-    'ig-bio': { source: 'instagram_bio', medium: 'social', campaign: 'bio', label: 'Instagram bio' },
-    'ig-story': { source: 'instagram', medium: 'social', campaign: 'story', label: 'Instagram story' },
-    'ig-post': { source: 'instagram', medium: 'social', campaign: 'post', label: 'Instagram post / reel' },
-    wa: { source: 'whatsapp', medium: 'social', campaign: 'broadcast', label: 'WhatsApp broadcast' },
-    'wa-status': { source: 'whatsapp', medium: 'social', campaign: 'status', label: 'WhatsApp status' },
-    fb: { source: 'facebook', medium: 'social', campaign: 'organic', label: 'Facebook' },
-    linkedin: { source: 'linkedin', medium: 'social', campaign: 'organic', label: 'LinkedIn' }
+    ig: { source: 'instagram_bio', medium: 'social', campaign: 'ig_bio_organic', label: 'Instagram bio' },
+    'ig-bio': { source: 'instagram_bio', medium: 'social', campaign: 'ig_bio_organic', label: 'Instagram bio' },
+    'ig-story': { source: 'instagram', medium: 'social', campaign: 'ig_story_organic', label: 'Instagram story' },
+    'ig-post': { source: 'instagram', medium: 'social', campaign: 'ig_post_organic', label: 'Instagram post / reel' },
+    'ig-reel': { source: 'instagram', medium: 'social', campaign: 'ig_reel_organic', label: 'Instagram reel' },
+    wa: { source: 'whatsapp', medium: 'social', campaign: 'wa_broadcast', label: 'WhatsApp broadcast' },
+    'wa-status': { source: 'whatsapp', medium: 'social', campaign: 'wa_status', label: 'WhatsApp status' },
+    'wa-chat': { source: 'whatsapp', medium: 'social', campaign: 'wa_direct_chat', label: 'WhatsApp direct chat' },
+    fb: { source: 'facebook', medium: 'social', campaign: 'fb_organic', label: 'Facebook' },
+    linkedin: { source: 'linkedin', medium: 'social', campaign: 'linkedin_organic', label: 'LinkedIn' },
+    tiktok: { source: 'tiktok', medium: 'social', campaign: 'tiktok_organic', label: 'TikTok' },
+    google: { source: 'google', medium: 'organic', campaign: 'google_gbp', label: 'Google Business Profile' },
+    'email-sig': { source: 'email', medium: 'email', campaign: 'email_signature', label: 'Email signature' }
 };
 
 function safeInternalPath(raw) {
@@ -90,4 +116,4 @@ function trackedLinksForAdmin(origin) {
         }));
 }
 
-module.exports = { withUtm, emailLink, socialLink, TRACKED_REDIRECTS, safeInternalPath, trackedLinksForAdmin };
+module.exports = { withUtm, emailLink, socialLink, TRACKED_REDIRECTS, safeInternalPath, trackedLinksForAdmin, datedCampaign, slugCampaign };

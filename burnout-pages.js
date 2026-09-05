@@ -1,7 +1,8 @@
 /**
  * Lon Clinic — Burnout hub (/burnout): SEO cluster with hub + spoke pages.
  * Interactive quiz stays at /burnout/teste (burnout-quiz.html).
- * Conversion landing stays at /clinica-anti-burnout.
+ * Conversion product for CBI results: /psicologia-burnout.
+ * Medical landing stays at /clinica-anti-burnout (not the default hub CTA).
  * Existing spokes stay; new editorial articles go to /blog/:slug, not /burnout/:slug.
  */
 
@@ -131,12 +132,11 @@ function ctaBand(ref) {
     return `
         <aside class="bo-cta-band" aria-label="Próximos passos">
             <div class="lon-container bo-cta-inner">
-                <p class="bo-cta-kicker">Comece hoje</p>
-                <h2 class="bo-cta-title">Três caminhos. Escolha o que faz sentido agora.</h2>
+                <p class="bo-cta-kicker">Comece pelo quadro</p>
+                <h2 class="bo-cta-title">Teste CBI no centro burnout. Consulta na ficha de psicologia.</h2>
                 <div class="bo-cta-actions">
                     <a class="lon-btn lon-btn-dark" href="/burnout/teste?ref=${r}">Fazer o teste gratuito</a>
-                    <a class="lon-btn lon-btn-soft" href="/clinica-anti-burnout?ref=${r}">Ver consulta anti-burnout</a>
-                    <a class="lon-btn lon-btn-primary" href="/marcar/burnout?ref=${r}">Marcar consulta</a>
+                    <a class="lon-btn lon-btn-soft" href="/psicologia-burnout?ref=${r}">Psicólogo para burnout</a>
                 </div>
             </div>
         </aside>`;
@@ -251,12 +251,12 @@ function layoutBurnoutPage(opts) {
             <nav class="lon-nav-links" aria-label="Navegação principal">
                 <a href="/burnout" aria-current="page">Burnout</a>
                 <a href="/burnout/teste">Teste</a>
-                <a href="/clinica-anti-burnout">Consulta</a>
-                <a href="/saudemental">Psicologia</a>
+                <a href="/burnout/testes">Outros testes</a>
+                <a href="/psicologia-burnout">Psicologia</a>
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/marcar/burnout?ref=burnout-nav" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <a href="/burnout/teste?ref=burnout-nav" class="lon-btn lon-btn-primary lon-btn-sm">Fazer o teste</a>
                 <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
@@ -265,12 +265,13 @@ function layoutBurnoutPage(opts) {
         <div class="lon-mobile-menu" id="lonMobileMenu">
             <a href="/burnout">Burnout</a>
             <a href="/burnout/teste">Teste gratuito</a>
+            <a href="/burnout/testes">PHQ-9, GAD-7 e sono</a>
             <a href="/burnout/sintomas">Sintomas</a>
             <a href="/burnout/tratamento">Tratamento</a>
-            <a href="/clinica-anti-burnout">Consulta anti-burnout</a>
+            <a href="/psicologia-burnout">Psicólogo para burnout</a>
             <a href="/saudemental">Psicologia</a>
             <a href="/patient-portal">Login</a>
-            <a href="/marcar/burnout?ref=burnout-nav-mobile">Marcar consulta</a>
+            <a href="/burnout/teste?ref=burnout-nav-mobile">Fazer o teste</a>
         </div>
     </header>
     ${mainHtml}
@@ -294,6 +295,7 @@ function layoutBurnoutPage(opts) {
                     <a href="/burnout/urgencia-email">Urgência do e-mail</a>
                     <a href="/burnout/emocoes-e-produtividade">Emoções e produtividade</a>
                     <a href="/burnout/teste">Teste gratuito</a>
+                    <a href="/burnout/testes">PHQ-9, GAD-7, stress e sono</a>
                     <a href="/burnout/avaliacao">O que mede o teste</a>
                     <a href="/burnout/sintomas">Sintomas</a>
                     <a href="/burnout/tratamento">Tratamento</a>
@@ -304,7 +306,7 @@ function layoutBurnoutPage(opts) {
                     <a href="/burnout/apoio-percebido">Apoio percebido</a>
                     <a href="/burnout/direito-a-desligar">Direito a desligar</a>
                     <a href="/burnout/capital-psicologico">Capital psicológico</a>
-                    <a href="/clinica-anti-burnout">Consulta anti-burnout</a>
+                    <a href="/psicologia-burnout">Psicólogo para burnout</a>
                 </div>
                 <div class="lon-footer-col">
                     <h4>Por profissão</h4>
@@ -323,7 +325,7 @@ function layoutBurnoutPage(opts) {
                     <a href="/saudemental">Psicologia</a>
                     <a href="/faq">FAQ</a>
                     <a href="/info.html?page=contato">Contato</a>
-                    <a href="/marcar/burnout">Marcar consulta</a>
+                    <a href="/psicologia-burnout">Psicólogo para burnout</a>
                 </div>
             </div>
             <div class="lon-footer-bottom">
@@ -338,6 +340,10 @@ function layoutBurnoutPage(opts) {
     </footer>
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contactar por WhatsApp">💬</a>
     <script src="/lon-nav.js"></script>
+    <script src="/i18n.js?v=20260905e" defer></script>
+    <script src="/lon-analytics.js?v=20260905e" defer></script>
+    <script src="/reviews.js?v=20260905e" defer></script>
+    <script src="/lon-slots.js?v=20260905g" defer></script>
 </body>
 </html>`;
 }
@@ -386,13 +392,30 @@ function renderHub(origin) {
     <main id="conteudo-principal">
         <section class="bo-hero" aria-labelledby="bo-hub-title">
             <div class="lon-container bo-hero-inner">
-                <p class="bo-eyebrow">LON Clinic · Clínica Anti-Burnout</p>
+                <p class="bo-eyebrow">LON Clinic · Centro burnout</p>
                 <h1 id="bo-hub-title">Burnout</h1>
-                <p class="bo-lead">Não é só cansaço. Quando o esgotamento se instala, precisa de avaliação clínica — não de mais uma lista de dicas genéricas.</p>
+                <p class="bo-lead">Não é só cansaço. O centro burnout reúne o que precisa de saber — sintomas, recuperação, profissões — e o teste CBI para objectivar o quadro. A consulta de psicologia é o passo seguinte.</p>
                 <p class="bo-hero-link"><a href="/burnout/o-que-e">O que é burnout →</a> · <a href="/psicologia-burnout">Psicólogo para burnout →</a> · <a href="/burnout/colecao">Coleção completa →</a></p>
                 <div class="bo-hero-actions">
                     <a class="lon-btn lon-btn-dark" href="/burnout/teste?ref=burnout-hub">Fazer o teste gratuito</a>
-                    <a class="lon-btn lon-btn-soft" href="/marcar/burnout?ref=burnout-hub">Marcar consulta</a>
+                    <a class="lon-btn lon-btn-soft" href="/burnout/colecao">Ler a coleção</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="bo-section" aria-labelledby="bo-tests-title">
+            <div class="lon-container">
+                <h2 id="bo-tests-title">Testes clínicos</h2>
+                <p class="bo-section-lead">O Índice de Burnout (CBI) é o ponto de partida. PHQ-9, GAD-7, PSS-10, ISI e WHO-5 afinam humor, ansiedade, stress, sono e bem-estar — o mesmo fluxo, resultado imediato.</p>
+                <div class="bo-card-grid">
+                    <a class="bo-card" href="/burnout/teste"><span class="bo-card-label">Burnout (CBI)</span><span class="bo-card-desc">18 perguntas · o teste principal de esgotamento.</span></a>
+                    <a class="bo-card" href="/burnout/teste-phq9"><span class="bo-card-label">PHQ-9 · depressão</span><span class="bo-card-desc">9 perguntas · distingue burnout de humor clínico.</span></a>
+                    <a class="bo-card" href="/burnout/teste-gad7"><span class="bo-card-label">GAD-7 · ansiedade</span><span class="bo-card-desc">7 perguntas · o alerta que anda com a exaustão.</span></a>
+                    <a class="bo-card" href="/burnout/teste-pss10"><span class="bo-card-label">PSS-10 · stress</span><span class="bo-card-desc">10 perguntas · perceção de stress no último mês.</span></a>
+                    <a class="bo-card" href="/burnout/teste-isi"><span class="bo-card-label">ISI · insónia</span><span class="bo-card-desc">7 perguntas · o sono é o primeiro a quebrar.</span></a>
+                    <a class="bo-card" href="/burnout/teste-who5"><span class="bo-card-label">WHO-5 · bem-estar</span><span class="bo-card-desc">5 perguntas · 1 minuto · pontuação 0–100%.</span></a>
+                    <a class="bo-card" href="/burnout/teste-sf12"><span class="bo-card-label">Qualidade de vida</span><span class="bo-card-desc">12 perguntas · linha de base para os 3 e 6 meses.</span></a>
+                    <a class="bo-card" href="/burnout/testes"><span class="bo-card-label">Ver todos os testes</span><span class="bo-card-desc">Índice completo da clínica anti-burnout.</span></a>
                 </div>
             </div>
         </section>
@@ -428,7 +451,7 @@ function renderHub(origin) {
     return layoutBurnoutPage({
         origin: o,
         title: 'Burnout — Sintomas, teste e consulta online | Lon Clinic',
-        description: 'Centro Lon Clinic sobre burnout: sintomas, tratamento, recuperação, diferença face à depressão, teste gratuito CBI e consulta médica online em Portugal.',
+        description: 'Centro Lon Clinic sobre burnout: sintomas, tratamento, recuperação, diferença face à depressão e o teste gratuito CBI. O passo seguinte é a consulta de psicologia.',
         canonicalPath: '/burnout',
         ogImage: `${o}/image/image2.webp`,
         jsonLdExtra: jsonLd,
@@ -523,7 +546,7 @@ function renderSpoke(origin, slug) {
                 ${authors.authorBylineHtml(o, meta.author, datePub)}
                 <div class="bo-article-actions">
                     <a class="lon-btn lon-btn-dark lon-btn-sm" href="/burnout/teste?ref=${encodeURIComponent(ref)}">Teste gratuito</a>
-                    <a class="lon-btn lon-btn-primary lon-btn-sm" href="/marcar/burnout?ref=${encodeURIComponent(ref)}">Marcar consulta</a>
+                    <a class="lon-btn lon-btn-primary lon-btn-sm" href="/psicologia-burnout?ref=${encodeURIComponent(ref)}">Psicólogo para burnout</a>
                 </div>
             </header>
             <div class="bo-prose" lang="pt-PT">

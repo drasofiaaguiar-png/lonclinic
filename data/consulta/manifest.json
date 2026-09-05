@@ -258,6 +258,7 @@
         "refluxo",
         "infecao-urinaria",
         { "href": "/renew-prescription-holiday-portugal", "label": "Prescription renewal (tourists)" },
+        { "href": "/consulta/atestado-medico", "label": "Atestado médico online" },
         { "href": "/consulta", "label": "Consulta médica online" }
       ],
       "faq": [
@@ -276,6 +277,92 @@
         {
           "q": "Quanto tempo demora a receita a chegar?",
           "a": "Quando emitida no final da consulta, o código costuma chegar por SMS ou email de imediato, ou nos minutos seguintes."
+        }
+      ]
+    },
+    {
+      "slug": "atestado-medico",
+      "status": "live",
+      "category": "documentos",
+      "priority": 2,
+      "navLabel": "Atestado médico",
+      "h1": "Atestado Médico Online em Portugal",
+      "description": "Atestado médico online em Portugal: videoconsulta 39 €, preço visível. Quando o médico pode emitir o documento à distância e quando é preciso avaliação presencial.",
+      "hubBlurb": "Documento clínico após videoconsulta — 39 €, sem formulário automático.",
+      "condition": "Atestado médico / certificação clínica",
+      "consultMode": "video",
+      "bookingHref": "/marcar/clinica-geral?ref=consulta-atestado-medico",
+      "bookingLabel": "Marcar consulta — 39 €",
+      "price": "39 €",
+      "priceAmount": "39.00",
+      "priceNote": "Videoconsulta de clínica geral, 30 min. O atestado só é emitido se o médico o considerar clinicamente justificado. Sem taxa extra de documento no checkout.",
+      "ctaTitle": "Pedir avaliação para atestado médico",
+      "datePublished": "2026-09-05",
+      "dateModified": "2026-09-05",
+      "lead": [
+        "Precisa de um atestado médico com rapidez? Na Lon Clinic a avaliação é por videoconsulta — 39 €, preço visível antes de marcar.",
+        "O médico só emite o documento se, depois da consulta, o considerar clinicamente justificado. Não há atestado por telefone nem por questionário.",
+        "Baixa do SNS, atestados desportivos que exigem exame presencial, ou emergências: não é esta a via."
+      ],
+      "symptoms": [
+        "Pedido de justificação de ausência ao trabalho ou à escola por doença actual",
+        "Necessidade de um documento clínico após avaliação (não um modelo preenchido sem consulta)",
+        "Sintomas que o médico consegue discutir e observar por vídeo",
+        "Entidade destinatária que aceita certificação de medicina privada"
+      ],
+      "safeOnline": [
+        "Adulto, capaz de fazer videoconsulta com câmara",
+        "Motivo actual e proporcional — não um pedido para datas antigas sem avaliação",
+        "Sem sinais de alarme que exijam urgência (dor no peito, falta de ar, défice neurológico)",
+        "Percebe que o médico pode recusar o documento se a avaliação à distância não chegar"
+      ],
+      "goToUrgent": [
+        "Dor no peito, falta de ar, sinais de AVC, hemorragia ou desmaio — 112",
+        "Febre alta com confusão, vómitos incoercíveis, ou agravamento rápido",
+        "Pedido de baixa SNS / CIT — recorra ao circuito público indicado para o seu caso",
+        "Atestado de aptidão desportiva ou outro que a entidade exija presencialmente"
+      ],
+      "howItWorks": [
+        {
+          "title": "Marca a videoconsulta",
+          "text": "39 € visíveis. Indique o motivo do atestado e o que a entidade pede, para o médico saber se a via online chega."
+        },
+        {
+          "title": "Avaliação por vídeo",
+          "text": "Não é um PDF automático. O médico ouve a história, observa o que for possível por câmara e decide."
+        },
+        {
+          "title": "Documento, se for indicado",
+          "text": "Quando justificado, o atestado é emitido após a consulta. Se não for seguro ou não for o documento certo, explica o encaminhamento."
+        }
+      ],
+      "related": [
+        "renovacao-receita",
+        "infecao-urinaria",
+        { "href": "/consulta", "label": "Consulta médica online" },
+        { "href": "/digital-nomad-doctor-portugal", "label": "Doctor for digital nomads" },
+        { "href": "/equipa/rita-aguiar", "label": "A médica" }
+      ],
+      "faq": [
+        {
+          "q": "Emitem atestado médico online?",
+          "a": "Sim, quando clinicamente justificado após videoconsulta. Não emitimos atestado por telefone nem só com um formulário. O preço da consulta é 39 €."
+        },
+        {
+          "q": "Isto substitui a baixa do SNS?",
+          "a": "Não. A incapacidade temporária no SNS (CIT/baixa) tem regras próprias. Um atestado de medicina privada não é automaticamente uma baixa pública."
+        },
+        {
+          "q": "Quanto tempo demora o documento?",
+          "a": "Quando emitido, costuma ficar disponível no final da consulta ou pouco depois, por email. Não prometemos um prazo de minutos para a marcação em si — depende das vagas."
+        },
+        {
+          "q": "O empregador é obrigado a aceitar?",
+          "a": "Muitos empregadores privados aceitam um atestado de médico inscrito na Ordem dos Médicos. A política interna da empresa e a lei laboral aplicável ao seu contrato é que decidem. Se a entidade exigir um modelo ou exame presencial, diga-o na consulta."
+        },
+        {
+          "q": "Crianças podem ter atestado por esta via?",
+          "a": "As consultas de clínica geral da Lon Clinic destinam-se a adultos, salvo excepções descritas nos termos (por exemplo medicina do viajante com representante legal). Não use esta página para atestado pediátrico."
         }
       ]
     },

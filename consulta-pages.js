@@ -170,7 +170,7 @@ function bookingCardsMarkup(aria, cards, tone) {
             <h3 class="guide-book-title">${escapeHtml(card.title)}</h3>
             <p class="guide-book-price">${escapeHtml(card.price)}</p>
             <p class="guide-book-note">${escapeHtml(card.note)}</p>
-            <a class="guide-book-cta js-consulta-cta" data-consulta-cta="${escapeHtml(card.track || 'consulta-card')}" href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
+            <a class="guide-book-cta js-consulta-cta" data-consulta-cta="${escapeHtml(card.track || 'consulta-card')}" data-pay-badges href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
         </article>`
         )
         .join('');
@@ -190,7 +190,7 @@ function bookingCardsHtml(page, tone) {
         title: 'Consulta médica online',
         price: '39 € · ~30 min',
         note: 'Videoconsulta · médica identificada · receita electrónica se indicada',
-        cta: 'Marcar',
+        cta: 'Marcar — 39 €',
         href: isRenew ? `/marcar/clinica-geral?ref=${encodeURIComponent(slug)}` : primaryHref,
         track: 'consulta-card-gp'
     };
@@ -199,13 +199,26 @@ function bookingCardsHtml(page, tone) {
         title: 'Renovação de receita',
         price: '19 €',
         note: 'Medicação crónica estável · vídeo, não um formulário',
-        cta: 'Renovar',
+        cta: 'Renovar — 19 €',
         href: isRenew ? primaryHref : `/marcar/renovacao?ref=${encodeURIComponent(`${slug}-renovacao`)}`,
         track: 'consulta-card-renew'
     };
     return bookingCardsMarkup('Marcar consulta na Lon Clinic', isRenew ? [renew, gp] : [gp, renew], tone);
 }
 
+function socialProofHtml() {
+    return `
+        <aside class="lon-social-proof" aria-label="Opiniões de pacientes">
+            <p class="lon-social-proof-kicker">Pacientes verificados</p>
+            <div data-reviews-list data-card-class="lon-testimonial-card lon-testimonial-card--compact" data-limit="2"></div>
+        </aside>`;
+}
+
+function stickyCtaLabel(page) {
+    const href = String(page.bookingHref || '');
+    if (href.indexOf('/marcar/renovacao') !== -1) return 'Marcar Consulta — 19 €';
+    return 'Marcar Consulta — 39 €';
+}
 function ctaBand(page) {
     const href = escapeHtml(page.bookingHref || '/marcar/clinica-geral');
     const label = escapeHtml(page.bookingLabel || 'Marcar consulta');
@@ -216,7 +229,7 @@ function ctaBand(page) {
                 <h2 class="cq-cta-title">${escapeHtml(page.ctaTitle || 'Marcar consulta médica online')}</h2>
                 <p class="cq-cta-lead">${escapeHtml(page.priceNote || page.price || '')}</p>
                 <div class="cq-cta-actions">
-                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="spoke-band" href="${href}">${label}</a>
+                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="spoke-band" data-pay-badges href="${href}">${label}</a>
                     <a class="lon-btn lon-btn-soft" href="/consulta">Ver todas as consultas</a>
                 </div>
             </div>
@@ -285,8 +298,8 @@ function layoutConsultaPage(opts) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/landing.css?v=20260621b">
-    <link rel="stylesheet" href="/consulta-pages.css?v=20260905d">
+    <link rel="stylesheet" href="/landing.css?v=20260905f">
+    <link rel="stylesheet" href="/consulta-pages.css?v=20260905f">
     <link rel="stylesheet" href="/author.css?v=20260820e">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     ${ldScripts}
@@ -361,8 +374,10 @@ function layoutConsultaPage(opts) {
     </footer>
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contactar por WhatsApp">💬</a>
     <script src="/lon-nav.js"></script>
-    <script src="/lon-analytics.js?v=20260904a" defer></script>
-    <script src="/lon-slots.js?v=20260905c" defer></script>
+    <script src="/i18n.js?v=20260905e" defer></script>
+    <script src="/lon-analytics.js?v=20260905e" defer></script>
+    <script src="/reviews.js?v=20260905e" defer></script>
+    <script src="/lon-slots.js?v=20260905g" defer></script>
 </body>
 </html>`;
 }
@@ -382,6 +397,7 @@ function renderSpoke(origin, slug) {
     const dateMod = String(meta.dateModified || meta.datePublished || '');
     const canonicalPath = `/consulta/${encodeURIComponent(slug)}`;
     const bookingHref = meta.bookingHref || '/marcar/clinica-geral';
+    const slotService = String(bookingHref).indexOf('/marcar/renovacao') !== -1 ? 'renovacao' : 'clinica_geral';
     const pages = livePages();
 
     const faqLd = Array.isArray(meta.faq) && meta.faq.length
@@ -463,16 +479,18 @@ function renderSpoke(origin, slug) {
                 ${clinicianStripHtml()}
                 ${authors.authorBylineHtml(o, meta.author, datePub)}
                 <div class="cq-header-actions">
-                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="spoke-hero" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
+                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="spoke-hero" data-pay-badges href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
                     <a class="lon-btn lon-btn-soft" href="#quando-nao-online">Quando não tratar online</a>
                 </div>
-                <div class="cq-live-slots" data-next-slots data-service="clinica_geral" data-book-href="${escapeHtml(bookingHref)}" data-surface="consulta-hero" hidden>
+                <div class="cq-live-slots" data-next-slots data-limit="3" data-service="${slotService}" data-book-href="${escapeHtml(bookingHref)}" data-surface="consulta-hero" hidden>
                     <p class="cq-live-slots-kicker">Próximos horários</p>
                     <div class="cq-live-slots-row" data-next-slots-row></div>
+                    <a href="${escapeHtml(bookingHref)}" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
                 </div>
             </header>
 
             ${bookingCardsHtml(meta, 0)}
+            ${socialProofHtml()}
 
             <section class="cq-block" aria-labelledby="cq-sintomas-title">
                 <h2 id="cq-sintomas-title">Sintomas</h2>
@@ -501,7 +519,7 @@ function renderSpoke(origin, slug) {
                 <h2 id="cq-preco-title">Preço</h2>
                 <p class="cq-price-value">${escapeHtml(meta.price || '')}</p>
                 <p class="cq-price-note">${escapeHtml(meta.priceNote || '')}</p>
-                <a class="lon-btn lon-btn-primary js-consulta-cta" data-consulta-cta="spoke-price" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
+                <a class="lon-btn lon-btn-primary js-consulta-cta" data-consulta-cta="spoke-price" data-pay-badges href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
             </section>
 
             ${extraHtml ? `<div class="cq-prose" lang="pt-PT">${extraHtml}</div>` : ''}
@@ -518,13 +536,13 @@ function renderSpoke(origin, slug) {
             ${relatedNav(meta, pages)}
         </article>
         ${ctaBand(meta)}
-        <div class="cq-sticky-book" data-sticky-book data-service="clinica_geral" data-book-href="${escapeHtml(bookingHref)}">
+        <div class="cq-sticky-book" data-sticky-book data-service="${slotService}" data-book-href="${escapeHtml(bookingHref)}">
             <div class="cq-sticky-book-inner">
                 <p class="cq-sticky-book-copy">
                     <span class="cq-sticky-book-kicker">Próximo horário</span>
                     <strong data-next-slot-when>Marcar consulta</strong>
                 </p>
-                <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="consulta-sticky" data-next-slot-cta href="${escapeHtml(bookingHref)}">Marcar este horário</a>
+                <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="consulta-sticky" data-next-slot-cta href="${escapeHtml(bookingHref)}">${escapeHtml(stickyCtaLabel(meta))}</a>
             </div>
         </div>
     </main>`;

@@ -241,7 +241,7 @@
 
     function track(name, props) {
         enqueue(envelope(name, props));
-        if (/^(page_view|page_engaged|cta_click|date_select|slot_select|checkout_start|form_submit|whatsapp_click|job_application|interview_booked)$/.test(name)) {
+        if (/^(page_view|page_engaged|cta_click|date_select|slot_select|time_slot_clicked|payment_method_selected|checkout_start|form_submit|form_abandon|exit_intent|whatsapp_click|job_application|interview_booked)$/.test(name)) {
             flush();
         }
         if (typeof gtag === 'function' && name !== 'page_view' && name !== 'heartbeat' && name !== 'scroll_depth') {
@@ -380,9 +380,26 @@
     document.addEventListener('submit', function (e) {
         var form = e.target;
         if (!form || form.tagName !== 'FORM') return;
+        form.setAttribute('data-lon-form-submitted', '1');
         var formId = form.id || form.getAttribute('name') || 'unknown';
         track('form_submit', { form: String(formId).slice(0, 64), surface: pageContext().surface, funnel: pageContext().funnel });
     }, true);
+
+    function abandonOpenForms(reason) {
+        document.querySelectorAll('form[data-lon-form-started="1"]').forEach(function (form) {
+            if (form.getAttribute('data-lon-form-submitted') === '1') return;
+            if (form.getAttribute('data-lon-form-abandoned') === '1') return;
+            form.setAttribute('data-lon-form-abandoned', '1');
+            var formId = form.id || form.getAttribute('name') || 'unknown';
+            track('form_abandon', {
+                form: String(formId).slice(0, 64),
+                surface: pageContext().surface,
+                funnel: pageContext().funnel,
+                reason: String(reason || 'leave').slice(0, 40)
+            });
+        });
+        flush();
+    }
 
     var lastBeat = 0;
     function heartbeat() {
@@ -394,10 +411,15 @@
     }
     setInterval(heartbeat, 15000);
     document.addEventListener('visibilitychange', function () {
-        if (document.visibilityState === 'hidden') flush();
-        else heartbeat();
+        if (document.visibilityState === 'hidden') {
+            abandonOpenForms('hidden');
+            flush();
+        } else heartbeat();
     });
-    window.addEventListener('pagehide', flush);
+    window.addEventListener('pagehide', function () {
+        abandonOpenForms('pagehide');
+        flush();
+    });
 
     window.LonAnalytics = {
         track: track,

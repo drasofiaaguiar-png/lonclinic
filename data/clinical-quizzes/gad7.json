@@ -1,0 +1,69 @@
+{
+  "id": "gad7",
+  "path": "/burnout/teste-gad7",
+  "cluster": "burnout",
+  "instrument": "GAD-7",
+  "minutes": 2,
+  "title": "Teste GAD-7 de ansiedade grátis — resultado imediato | Lon Clinic",
+  "h1": "Ajuda-nos a perceber o teu nível de ansiedade.",
+  "lead": "O GAD-7 rastreia a ansiedade generalizada em 7 perguntas. No burnout, a ansiedade anda quase sempre ao lado da exaustão — e muda o plano de acompanhamento.",
+  "description": "Teste GAD-7 grátis: 7 perguntas, resultado imediato. Rastreio de ansiedade generalizada para personalizar o plano anti-burnout.",
+  "stem": "Nas últimas 2 semanas, com que frequência foste incomodado pelos seguintes problemas?",
+  "homeHref": "/burnout",
+  "homeLabel": "LON Clinic — Burnout",
+  "scoring": "sum",
+  "gaugeMax": 21,
+  "gaugeLabel": "GAD-7 · 0–21",
+  "displayMultiplier": 1,
+  "higherIsBetter": false,
+  "bandOn": "raw",
+  "options": [
+    { "label": "Nunca", "v": 0 },
+    { "label": "Vários dias", "v": 1 },
+    { "label": "Mais de metade dos dias", "v": 2 },
+    { "label": "Quase todos os dias", "v": 3 }
+  ],
+  "scales": [
+    { "id": "worry", "title": "Preocupação", "note": "Nervosismo, preocupações que não desligam, medo de que algo terrível aconteça." },
+    { "id": "body", "title": "Tensão e irritação", "note": "Dificuldade em relaxar, inquietação e irritabilidade — o corpo em alerta." }
+  ],
+  "questions": [
+    { "scale": "worry", "text": "Sentir-te nervoso, ansioso ou no limite" },
+    { "scale": "worry", "text": "Não conseguir parar ou controlar as preocupações" },
+    { "scale": "worry", "text": "Preocupar-te demasiado com coisas diferentes" },
+    { "scale": "body", "text": "Dificuldade em relaxar" },
+    { "scale": "body", "text": "Estar tão inquieto que é difícil ficares parado" },
+    { "scale": "body", "text": "Ficares facilmente aborrecido ou irritado" },
+    { "scale": "worry", "text": "Sentir medo, como se algo terrível pudesse acontecer" }
+  ],
+  "bands": [
+    { "max": 4, "pill": "MÍNIMO", "concern": "low", "title": "Ansiedade sob controlo", "text": "Poucos sinais de ansiedade generalizada neste momento. Se o cansaço for o tema, o teste de burnout continua a ser o melhor ponto de partida.", "cta": "Não precisas de marcar por causa deste resultado. Se o esgotamento no trabalho te preocupa, a consulta está disponível.", "bookLabel": "Marcar consulta — 60€", "bookNote": "Opcional · só se quiseres perceber melhor o teu perfil" },
+    { "max": 9, "pill": "LIGEIRO", "concern": "light", "title": "Ansiedade a pedir atenção", "text": "Há sinais ligeiros. No burnout, esta zona costuma ser o «não consigo desligar» — email, ruminação, maxilar cerrado — antes de o corpo ceder.", "cta": "Uma Consulta Especializada em Burnout ajuda a baixar o alerta sem transformar a tua vida numa lista de técnicas genéricas.", "bookLabel": "Marcar consulta — 60€", "bookNote": "Videoconsulta · 60 min · o resultado fica na marcação" },
+    { "max": 14, "pill": "MODERADO", "concern": "mid", "title": "A ansiedade já está a ocupar o dia", "text": "Um GAD-7 moderado sugere ansiedade que interfere. Anda frequentemente com a exaustão: o cérebro não desliga, o sono piora, o rendimento cai.", "cta": "Marca agora. Personalizamos o plano — limites, sono, ruminação — com o teu resultado à frente.", "bookLabel": "Marcar consulta — 60€", "bookNote": "Videoconsulta · 60 min · o resultado chega à consulta" },
+    { "max": 21, "pill": "ELEVADO", "concern": "high", "title": "É altura de pedir apoio", "text": "O teu resultado está na zona elevada do GAD-7. Não diagnostica uma perturbação de ansiedade sozinho, mas indica sofrimento que não deve ser ignorado.", "cta": "Marca uma Consulta Especializada em Burnout hoje. Se já precisas de regularidade, a Subscrição Anti-Burnout são 4 consultas/mês.", "bookLabel": "Marcar consulta agora — 60€", "bookNote": "Videoconsulta · 60 min · o resultado chega à consulta" }
+  ],
+  "insights": {
+    "worry": { "title": "A preocupação não desliga", "text": "O teu padrão é sobretudo cognitivo: preocupações que saltam de tema em tema e um fundo de medo. É o tipo de ansiedade que mais responde a um plano clínico — e que mais alimenta o burnout se ficar sem resposta." },
+    "body": { "title": "O corpo em alerta", "text": "Inquietação, tensão e irritabilidade estão altos. Isto não é «ser nervoso»: é o sistema de alarme ligado. No esgotamento, é das primeiras coisas que a consulta trata — porque sem baixar o alerta o sono não recupera." }
+  },
+  "booking": {
+    "consultHref": "/marcar/burnout",
+    "consultName": "Consulta Especializada em Burnout",
+    "consultPrice": "60",
+    "consultMeta": "Sessão única · 60 minutos",
+    "subHref": "/marcar/burnout-mensal",
+    "subName": "Subscrição Anti-Burnout",
+    "subPrice": "216",
+    "subMeta": "/mês · 4 consultas · 54€/sessão",
+    "stickyLabel": "Consulta Especializada em Burnout",
+    "hideSubOn": ["MÍNIMO", "LIGEIRO"]
+  },
+  "related": ["phq9", "pss10", "isi", "cbi"],
+  "introLinks": [
+    { "href": "/burnout/teste", "label": "Teste de burnout (CBI)" },
+    { "href": "/burnout/teste-phq9", "label": "Teste de depressão (PHQ-9)" },
+    { "href": "/burnout/teste-pss10", "label": "Teste de stress (PSS-10)" }
+  ],
+  "disclaimer": "O GAD-7 (Spitzer, Kroenke, Williams & Löwe, 2006) é um instrumento de rastreio de utilização livre com atribuição. Versão portuguesa de uso clínico; adaptação Lon Clinic. Não é um diagnóstico nem substitui avaliação por um profissional de saúde.",
+  "utmCampaign": "gad7-teste"
+}
