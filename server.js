@@ -7318,15 +7318,17 @@ function addUtcDays(d, n) {
 }
 
 function interviewHoursForWeekday(weekday) {
-    if (weekday === 6) return { startMin: 9 * 60, endMin: 13 * 60 };
-    return { startMin: 9 * 60, endMin: 19 * 60 };
+    if (weekday === 1 || weekday === 2) return { startMin: 14 * 60, endMin: 19 * 60 };
+    return null;
 }
 
 function interviewSlotTimesForDateIso(dateIso) {
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateIso || ''));
     if (!m) return [];
     const weekday = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]))).getUTCDay();
-    const { startMin, endMin } = interviewHoursForWeekday(weekday);
+    const hours = interviewHoursForWeekday(weekday);
+    if (!hours) return [];
+    const { startMin, endMin } = hours;
     const out = [];
     for (let min = startMin; min < endMin; min += INTERVIEW_SLOT_MINUTES) {
         out.push(`${pad2Interview(Math.floor(min / 60))}:${pad2Interview(min % 60)}`);
@@ -7336,12 +7338,12 @@ function interviewSlotTimesForDateIso(dateIso) {
 
 function offeredInterviewDateIsos() {
     const today = lisbonTodayUtcMidnight();
-    const tomorrow = addUtcDays(today, 1);
-    const untilSat = (6 - today.getUTCDay() + 7) % 7;
-    const saturday = addUtcDays(today, untilSat === 0 ? 7 : untilSat);
-    const out = [isoFromUtcMidnight(tomorrow)];
-    const satIso = isoFromUtcMidnight(saturday);
-    if (satIso !== out[0]) out.push(satIso);
+    const out = [];
+    for (let i = 1; i <= 7; i++) {
+        const d = addUtcDays(today, i);
+        const weekday = d.getUTCDay();
+        if (weekday === 1 || weekday === 2) out.push(isoFromUtcMidnight(d));
+    }
     return out;
 }
 
