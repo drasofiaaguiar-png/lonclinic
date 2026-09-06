@@ -464,7 +464,7 @@ function renderQuizPage(origin, def) {
                             <p class="bq-hold-time" id="quizHoldLabel">A carregar o próximo horário…</p>
                             <p class="bq-hold-timer">Reservável durante <b id="quizHoldClock">15:00</b></p>
                         </div>
-                        <a class="bq-btn bq-btn-primary bq-btn-lg js-quiz-book" id="bookBtnPrimary" href="${consultHref}">${escapeHtml(b.consultName || 'Marcar consulta')}</a>
+                        <a class="bq-btn bq-btn-primary bq-btn-lg js-quiz-book" id="bookBtnPrimary" data-cta="book" href="${consultHref}">${escapeHtml(b.consultName || 'Marcar consulta')}</a>
                         ${quizSlotsHtml(def)}
                         <p class="bq-book-now-note" id="bookNowNote">Videoconsulta · o resultado do teste fica associado à marcação</p>
                         <p class="bq-buy-trust" id="quizTrust">🔒 Pagamento seguro via Stripe<br>🩺 Consulta agendada imediatamente após o pagamento</p>
@@ -521,10 +521,10 @@ function renderQuizPage(origin, def) {
     </footer>
     <aside class="bq-sticky-book" id="stickyBook" hidden>
         <p>${escapeHtml(b.stickyLabel || b.consultName || 'Marcar consulta')}</p>
-        <a class="bq-btn bq-btn-primary js-quiz-book" id="stickyBookBtn" href="${stickyHref}">Marcar · ${escapeHtml(b.consultPrice || '')}€</a>
+        <a class="bq-btn bq-btn-primary js-quiz-book" id="stickyBookBtn" data-cta="book" href="${stickyHref}">Marcar consulta</a>
     </aside>
     <script>window.CLINICAL_QUIZ = ${cfgJson};</script>
-    <script src="/lon-analytics.js?v=20260905i" defer></script>
+    <script src="/lon-analytics.js?v=20260906e" defer></script>
     <script src="/lon-slots.js?v=20260906d" defer></script>
     <script src="/clinical-quiz-score.js?v=${JS_V}" defer></script>
     <script src="/clinical-quiz.js?v=${JS_V}" defer></script>

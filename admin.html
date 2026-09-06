@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=hours-avail-1">
+    <link rel="stylesheet" href="/dashboard.css?v=staff-fichas-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -705,7 +705,7 @@
                     <div class="dash-section-header" style="margin-top:28px;">
                         <div>
                             <h2 class="dash-section-title">Faturas e pagamentos</h2>
-                            <p class="dash-section-subtitle">Faturas uploaded by clinicians. Check payment sent after the transfer.</p>
+                            <p class="dash-section-subtitle">Faturas uploaded by professionals. Check payment sent after the transfer.</p>
                         </div>
                     </div>
                     <div id="adminPayoutsList" class="admin-payouts-list">
@@ -733,7 +733,7 @@
                     <div class="dash-section-header">
                         <div>
                             <h2 class="dash-section-title">Professionals &amp; Doxy rooms</h2>
-                            <p class="dash-section-subtitle">Each clinician gets a Lon Clinic login and their own Doxy.me waiting room. Patients receive that room link in emails and on the dashboard. The clinic admin account (environment credentials) still uses the default <code>DOXY_ROOM_URL</code>.</p>
+                            <p class="dash-section-subtitle">Each professional gets a Lon Clinic login and their own Doxy.me waiting room. Patients receive that room link in emails and on the dashboard. The clinic admin account (environment credentials) still uses the default <code>DOXY_ROOM_URL</code>.</p>
                         </div>
                     </div>
                     <p class="dash-section-subtitle" id="adminDefaultDoxyUrl" style="margin-top:0;"></p>
@@ -758,7 +758,7 @@
                             </div>
                             <div class="admin-form-group">
                                 <label for="proEmail">Email (availability reminders)</label>
-                                <input type="email" id="proEmail" class="admin-input" placeholder="clinician@email.com" autocomplete="off">
+                                <input type="email" id="proEmail" class="admin-input" placeholder="profissional@email.com" autocomplete="off">
                             </div>
                         </div>
                         <label class="clinic-toggle-label" for="proActive" style="margin-bottom:14px;">
@@ -786,6 +786,15 @@
                                 <tr><td colspan="5" class="admin-empty-list">Loading…</td></tr>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="dash-section-header" style="margin-top:32px;">
+                        <div>
+                            <h2 class="dash-section-title">Fichas dos profissionais</h2>
+                            <p class="dash-section-subtitle">Dados que cada profissional preenche no perfil: identificação, seguro, áreas e documentos.</p>
+                        </div>
+                    </div>
+                    <div id="adminStaffProfilesList" class="admin-staff-profiles">
+                        <p class="admin-empty-list">Loading…</p>
                     </div>
                 </div>
             </div>
@@ -875,16 +884,19 @@
                     </div>
                     <dl class="clinic-profile-dl">
                         <div>
-                            <dt>Name</dt>
-                            <dd id="adminProfileName">—</dd>
-                        </div>
-                        <div>
                             <dt>Username</dt>
                             <dd id="adminProfileUsername">—</dd>
                         </div>
                         <div>
                             <dt>Role</dt>
-                            <dd id="adminProfileRole">—</dd>
+                            <dd>
+                                <select id="adminProfession" class="admin-select clinic-profile-role-select" form="adminProfileForm" required>
+                                    <option value="">Select role</option>
+                                    <option value="medico">Médico</option>
+                                    <option value="psicologo">Psicólogo</option>
+                                    <option value="nutricionista">Nutricionista</option>
+                                </select>
+                            </dd>
                         </div>
                         <div>
                             <dt>Doxy.me room</dt>
@@ -895,21 +907,44 @@
                 <div class="dash-section">
                     <div class="dash-section-header">
                         <h2 class="dash-section-title">Professional details</h2>
-                        <p class="dash-section-subtitle">Ordem number, bio, credentials and clinical preference areas</p>
+                        <p class="dash-section-subtitle">Identificação, cédula, seguro, bio e áreas de preferência</p>
                     </div>
                     <form id="adminProfileForm" class="clinic-profile-form">
-                        <div class="admin-form-group">
-                            <label for="adminProfession">Profession</label>
-                            <select id="adminProfession" class="admin-select" required>
-                                <option value="">Select profession</option>
-                                <option value="medico">Médico</option>
-                                <option value="nutricionista">Nutricionista</option>
-                                <option value="psicologo">Psicólogo</option>
-                            </select>
+                        <div class="admin-invite-grid">
+                            <div class="admin-form-group">
+                                <label for="adminFullName">Nome</label>
+                                <input type="text" id="adminFullName" class="admin-input" maxlength="160" autocomplete="name">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="adminNif">NIF</label>
+                                <input type="text" id="adminNif" class="admin-input" maxlength="20" inputmode="numeric" autocomplete="off">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="adminOrdemNumber" id="adminOrdemLabel">Cédula profissional</label>
+                                <input type="text" id="adminOrdemNumber" class="admin-input" maxlength="80" placeholder="Cédula / número de cédula" autocomplete="off">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="adminCitizenCard">N.º Cartão de Cidadão</label>
+                                <input type="text" id="adminCitizenCard" class="admin-input" maxlength="32" autocomplete="off">
+                            </div>
                         </div>
                         <div class="admin-form-group">
-                            <label for="adminOrdemNumber" id="adminOrdemLabel">Número da ordem</label>
-                            <input type="text" id="adminOrdemNumber" class="admin-input" maxlength="80" placeholder="Cédula / número de cédula" autocomplete="off">
+                            <label for="adminAddress">Morada</label>
+                            <textarea id="adminAddress" class="admin-input clinic-bio-input clinic-address-input" rows="3" maxlength="400" placeholder="Morada completa"></textarea>
+                        </div>
+                        <div class="admin-invite-grid">
+                            <div class="admin-form-group">
+                                <label for="adminInsurer">Seguradora</label>
+                                <input type="text" id="adminInsurer" class="admin-input" maxlength="120" placeholder="Seguro de responsabilidade civil" autocomplete="off">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="adminInsurancePolicy">Apólice</label>
+                                <input type="text" id="adminInsurancePolicy" class="admin-input" maxlength="80" autocomplete="off">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="adminInsuranceValidUntil">Validade</label>
+                                <input type="date" id="adminInsuranceValidUntil" class="admin-input">
+                            </div>
                         </div>
                         <div class="clinic-bio-creds-grid">
                             <div class="admin-form-group">
@@ -921,18 +956,18 @@
                                 <textarea id="adminCredentials" class="admin-input clinic-bio-input" rows="5" maxlength="2000" placeholder="Degrees, fellowships, specialisations"></textarea>
                             </div>
                         </div>
-                        <div class="admin-invite-grid">
-                            <div class="admin-form-group">
-                                <label for="adminPrimaryArea">Clinical preference — primary</label>
-                                <select id="adminPrimaryArea" class="admin-select">
-                                    <option value="">Select profession first</option>
-                                </select>
-                            </div>
-                            <div class="admin-form-group">
-                                <label for="adminSecondaryArea">Clinical preference — secondary</label>
-                                <select id="adminSecondaryArea" class="admin-select">
-                                    <option value="">Select profession first</option>
-                                </select>
+                        <div class="clinic-pref-block">
+                            <h3 class="clinic-pref-heading">Áreas preferenciais</h3>
+                            <p class="dash-section-subtitle">Pode marcar várias. As primárias são as áreas em que prefere receber utentes; as secundárias são complementar.</p>
+                            <div class="clinic-pref-cols">
+                                <fieldset class="clinic-pref-col">
+                                    <legend>Preferências primárias</legend>
+                                    <div id="adminPrimaryAreas" class="clinic-pref-groups"></div>
+                                </fieldset>
+                                <fieldset class="clinic-pref-col">
+                                    <legend>Preferências secundárias</legend>
+                                    <div id="adminSecondaryAreas" class="clinic-pref-groups"></div>
+                                </fieldset>
                             </div>
                         </div>
                         <div id="adminProfileFormError" class="dash-login-error" style="display:none;" role="alert"></div>
@@ -942,7 +977,7 @@
                 <div class="dash-section">
                     <div class="dash-section-header">
                         <h2 class="dash-section-title">Documents</h2>
-                        <p class="dash-section-subtitle">Upload each file with its validity date. After upload, the document and expiry appear in the table.</p>
+                        <p class="dash-section-subtitle">CC, cópia da cédula (se aplicável), CV e restantes ficheiros. Indique a validade quando o documento caduca.</p>
                     </div>
                     <div class="admin-professionals-table-wrap">
                         <table class="admin-professionals-table clinic-docs-table" id="adminDocsTable">
@@ -959,7 +994,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <p class="dash-section-subtitle">PDF, JPG, PNG, WebP, DOC or DOCX · max 8MB</p>
+                    <p class="dash-section-subtitle">PDF, JPG, PNG, WebP, DOC or DOCX · max 25MB</p>
                     <div id="adminDocsError" class="dash-login-error" style="display:none;" role="alert"></div>
                 </div>
             </div>
@@ -989,7 +1024,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=admin-stay-1"></script>
+    <script src="/admin.js?v=staff-fichas-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

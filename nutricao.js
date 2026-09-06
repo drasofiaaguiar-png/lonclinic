@@ -227,7 +227,7 @@ function bookingCardsHtml(meta, tone) {
                 title: 'Consulta inicial de nutrição metabólica',
                 price: meta.price || '115 €',
                 note: 'Arranque do programa — 2 consultas/mês, chat no portal e ajustes quinzenais. Sem prescrição de aGLP-1.',
-                cta: 'Marcar consulta inicial',
+                cta: 'Marcar — 115 €',
                 href: primaryHref,
                 track: 'nutricao-card-book'
             }
@@ -236,7 +236,7 @@ function bookingCardsHtml(meta, tone) {
                 title: isLongevidade ? 'Consulta de longevidade' : 'Orientação nutricional online',
                 price: meta.price || (isLongevidade ? '79 €' : '39 €'),
                 note: 'Videoconsulta · reeducação alimentar nesta sessão, não um PDF genérico nem receita de emagrecimento',
-                cta: 'Marcar',
+                cta: isLongevidade ? 'Marcar — 79 €' : 'Marcar — 39 €',
                 href: primaryHref,
                 track: 'nutricao-card-book'
             },
@@ -391,7 +391,7 @@ function layoutPage(opts) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/landing.css?v=20260621b">
+    <link rel="stylesheet" href="/landing.css?v=20260906i">
     <link rel="stylesheet" href="/consulta-pages.css?v=20260820b">
     <link rel="stylesheet" href="/nutricao.css?v=${CSS_V}">
     <link rel="stylesheet" href="/author.css?v=20260820e">
@@ -469,10 +469,10 @@ function layoutPage(opts) {
             </div>
         </div>
     </footer>
-    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contactar por WhatsApp">💬</a>
+    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
     <script src="/lon-nav.js"></script>
     <script src="/i18n.js?v=20260906c" defer></script>
-    <script src="/lon-analytics.js?v=20260905e" defer></script>
+    <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=${SLOTS_V}" defer></script>
 </body>
@@ -680,7 +680,7 @@ function renderSpoke(origin, slug) {
                 <div class="cq-lead">${lead}</div>
                 ${nutritionBylineHtml(datePub)}
                 <div class="cq-header-actions">
-                    <a class="lon-btn lon-btn-dark" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || (weightLoss ? 'Marcar consulta inicial' : 'Marcar consulta'))}</a>
+                    <a class="lon-btn lon-btn-dark" data-cta="book" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
                     <a class="lon-btn lon-btn-soft" href="#preco">Ver preço</a>
                 </div>
                 ${slotsHtml}
@@ -728,7 +728,7 @@ function renderSpoke(origin, slug) {
                 <p class="cq-price-value">${escapeHtml(meta.price || '')}</p>
                 <p class="cq-price-note">${escapeHtml(meta.priceNote || '')}</p>
                 ${formatTableHtml(meta)}
-                <a class="lon-btn lon-btn-primary" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
+                <a class="lon-btn lon-btn-primary" data-cta="book" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
             </section>
 
             ${psychologyBridgeHtml(meta.psychologyBridge)}
@@ -750,7 +750,7 @@ function renderSpoke(origin, slug) {
                 <h2 class="cq-cta-title">${escapeHtml(meta.ctaTitle || 'Marcar orientação nutricional')}</h2>
                 <p class="cq-cta-lead">${escapeHtml(meta.priceNote || meta.price || '')}</p>
                 <div class="cq-cta-actions">
-                    <a class="lon-btn lon-btn-dark" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
+                    <a class="lon-btn lon-btn-dark" data-cta="book" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
                     <a class="lon-btn lon-btn-soft" href="/nutricao">Ver todas as condições</a>
                 </div>
             </div>

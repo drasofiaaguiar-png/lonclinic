@@ -296,7 +296,7 @@ function renderAuthorPage(origin, slug) {
                 <h2>Perfis e verificação</h2>
                 <p class="eeat-bio-verify">${verify}</p>
                 <p class="eeat-profile-actions">
-                    <a class="lon-btn lon-btn-primary" href="/marcar/clinica-geral">Marcar Consulta — 39 €</a>
+                    <a class="lon-btn lon-btn-primary" data-cta="book" href="/marcar/clinica-geral">Marcar consulta</a>
                     <a class="lon-btn lon-btn-soft" href="/blog">Ler os guias médicos</a>
                 </p>
             </div>
@@ -313,7 +313,7 @@ function renderAuthorPage(origin, slug) {
     </footer>
     <script src="/lon-nav.js"></script>
     <script src="/i18n.js?v=20260905e" defer></script>
-    <script src="/lon-analytics.js?v=20260905e" defer></script>
+    <script src="/lon-analytics.js?v=20260906e" defer></script>
     <script src="/lon-slots.js?v=20260906d" defer></script>
 </body>
 </html>`;

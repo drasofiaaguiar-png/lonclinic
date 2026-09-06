@@ -71,12 +71,12 @@
     }
   ],
   "bands": [
-    { "max": 18.49, "pill": "BAIXO PESO", "concern": "light", "title": "Abaixo do peso considerado normal", "bookLabel": "Marcar consulta — 39€", "bookNote": "Videoconsulta · avaliar se o baixo peso tem causa clínica" },
-    { "max": 24.9, "pill": "NORMAL", "concern": "low", "title": "IMC na faixa considerada normal", "bookLabel": "Marcar consulta — 39€", "bookNote": "Opcional · se a cintura ou a composição corporal te preocuparem" },
-    { "max": 29.9, "pill": "EXCESSO DE PESO", "concern": "mid", "title": "Excesso de peso", "bookLabel": "Consulta inicial de nutrição — 115€", "bookNote": "Programa de reeducação · 2 consultas/mês · sem aGLP-1" },
-    { "max": 34.9, "pill": "OBESIDADE I", "concern": "high", "title": "Obesidade grau I", "bookLabel": "Consulta inicial de nutrição — 115€", "bookNote": "Reeducação metabólica e adesão — não uma receita" },
-    { "max": 39.9, "pill": "OBESIDADE II", "concern": "high", "title": "Obesidade grau II", "bookLabel": "Consulta inicial de nutrição — 115€", "bookNote": "Programa mensal · hábitos contra o ioiô" },
-    { "max": 999, "pill": "OBESIDADE III", "concern": "high", "title": "Obesidade grau III", "bookLabel": "Consulta inicial de nutrição — 115€", "bookNote": "Acompanhamento nutricional contínuo · sem prescrição de aGLP-1" }
+    { "max": 18.49, "pill": "BAIXO PESO", "concern": "light", "title": "Abaixo do peso considerado normal", "bookLabel": "Marcar consulta", "bookNote": "Videoconsulta · avaliar se o baixo peso tem causa clínica" },
+    { "max": 24.9, "pill": "NORMAL", "concern": "low", "title": "IMC na faixa considerada normal", "bookLabel": "Marcar consulta", "bookNote": "Opcional · se a cintura ou a composição corporal te preocuparem" },
+    { "max": 29.9, "pill": "EXCESSO DE PESO", "concern": "mid", "title": "Excesso de peso", "bookLabel": "Marcar consulta", "bookNote": "Programa de reeducação · 2 consultas/mês · sem aGLP-1" },
+    { "max": 34.9, "pill": "OBESIDADE I", "concern": "high", "title": "Obesidade grau I", "bookLabel": "Marcar consulta", "bookNote": "Reeducação metabólica e adesão — não uma receita" },
+    { "max": 39.9, "pill": "OBESIDADE II", "concern": "high", "title": "Obesidade grau II", "bookLabel": "Marcar consulta", "bookNote": "Programa mensal · hábitos contra o ioiô" },
+    { "max": 999, "pill": "OBESIDADE III", "concern": "high", "title": "Obesidade grau III", "bookLabel": "Marcar consulta", "bookNote": "Acompanhamento nutricional contínuo · sem prescrição de aGLP-1" }
   ],
   "insights": {
     "imc": { "title": "Quilos até ao peso normal", "text": "O peso-alvo usa o limite superior da faixa normal (IMC 24,9). Não é um objectivo estético — é o limiar clínico da OMS para deixar de classificar excesso de peso." },

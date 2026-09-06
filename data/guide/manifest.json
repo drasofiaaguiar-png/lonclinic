@@ -1,6 +1,205 @@
 {
     "articles": [
         {
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de intestino",
+            "series": "bestsellers-saude-intestinal",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "os-10-bestsellers-saude-intestinal",
+            "title": "Os 10 Bestsellers de Saúde Intestinal: Analisados por uma Médica",
+            "description": "Cinco críticas clínicas a bestsellers e temas de saúde intestinal: o que a evidência confirma, onde a autoajuda falha, e o que pedir em consulta.",
+            "image": "/image/guide/guide-lake-boats.jpg",
+            "seriesHub": true,
+            "ctaKind": "nutrition",
+            "slotService": "nutricao-programa",
+            "readingMinutes": 4,
+            "related": [
+                "dez-por-cento-humano-alanna-collen",
+                "dieta-low-fodmap-sue-shepherd",
+                "a-logica-do-intestino-michael-gershon"
+            ],
+            "faq": [
+                {
+                    "q": "Esta série recomenda os cinco textos?",
+                    "a": "Não. Comenta-os. Em vários capítulos a evidência confirma uma parte do argumento e recusa o uso isolado — probióticos genéricos após antibióticos, restrição FODMAP indefinida, ou tratar ansiedade só com o intestino."
+                },
+                {
+                    "q": "Substitui uma consulta de nutrição, gastrenterologia ou psicologia?",
+                    "a": "Não. Tem fins informativos. Inchaço, SII, SIBO e a ligação intestino-ansiedade são questões clínicas; decisões de dieta, suplementos ou tratamento exigem avaliação individual."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de intestino",
+            "series": "bestsellers-saude-intestinal",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "dez-por-cento-humano-alanna-collen",
+            "title": "10% Humano: o microbioma e a ilusão do probiótico milagroso",
+            "description": "Tomar probióticos genéricos depois de antibióticos pode atrasar a recuperação do seu microbioma, mostra estudo na Cell. Veja o que a ciência recomenda.",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "ctaKind": "nutrition",
+            "slotService": "nutricao-programa",
+            "readingMinutes": 5,
+            "related": [
+                "psicobioticos-saude-mental-intestino",
+                "food-for-life-tim-spector",
+                "dieta-low-fodmap-sue-shepherd"
+            ],
+            "faq": [
+                {
+                    "q": "Tomar probióticos depois de antibióticos ajuda o intestino a recuperar mais depressa?",
+                    "a": "Nem sempre — pode até atrasar a recuperação. Um estudo controlado publicado na Cell mostrou que probióticos genéricos, tomados após antibioterapia, retardaram a reconstituição da microbiota própria em comparação com não tomar nada."
+                },
+                {
+                    "q": "A proporção entre tipos de bactérias intestinais afeta mesmo o peso?",
+                    "a": "Há evidência que associa a proporção entre as famílias Firmicutes e Bacteroidetes à eficiência com que o corpo extrai energia dos alimentos, embora esta seja uma peça de um sistema muito mais complexo, não um fator isolado que determine o peso."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de intestino",
+            "series": "bestsellers-saude-intestinal",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "a-logica-do-intestino-michael-gershon",
+            "title": "A Lógica do Intestino: o segundo cérebro e a ansiedade intestinal",
+            "description": "90% da serotonina do corpo é produzida no intestino, não no cérebro. Entenda a ciência real do segundo cérebro e onde a interpretação popular exagera.",
+            "image": "/image/guide/guide-waterfall.jpg",
+            "ctaKind": "mental",
+            "slotService": "psicologia",
+            "readingMinutes": 5,
+            "related": [
+                "ansiedade-e-problemas-digestivos",
+                "psicobioticos-saude-mental-intestino",
+                "dez-por-cento-humano-alanna-collen"
+            ],
+            "faq": [
+                {
+                    "q": "É verdade que a maior parte da serotonina do corpo está no intestino, não no cérebro?",
+                    "a": "Sim. Cerca de 90% da serotonina do organismo é produzida no intestino, por células especializadas cuja atividade é influenciada diretamente por bactérias específicas da microbiota intestinal."
+                },
+                {
+                    "q": "Só tratar o intestino resolve a ansiedade relacionada com digestão?",
+                    "a": "Raramente, isoladamente. Como a comunicação entre intestino e cérebro é bidirecional, restringir apenas alimentos sem tratar o componente psicológico do stress tende a produzir resultados limitados e frustrantes."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de intestino",
+            "series": "bestsellers-saude-intestinal",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "dieta-low-fodmap-sue-shepherd",
+            "title": "Dieta Low-FODMAP para a SII: solução temporária ou prisão alimentar?",
+            "description": "A dieta Low-FODMAP tem evidência científica sólida para o Intestino Irritável — mas manter a fase de eliminação por muito tempo pode prejudicar a sua microbiota.",
+            "image": "/image/guide/guide-coastal-sun.jpg",
+            "ctaKind": "nutrition",
+            "slotService": "nutricao-programa",
+            "readingMinutes": 5,
+            "related": [
+                "mito-do-sibo-sobrecrescimento-bacteriano",
+                "fibra-e-perda-de-peso",
+                "food-for-life-tim-spector"
+            ],
+            "faq": [
+                {
+                    "q": "A dieta Low-FODMAP funciona mesmo para a Síndrome do Intestino Irritável?",
+                    "a": "Sim, é uma das abordagens dietéticas com melhor evidência científica para a SII, com ensaios clínicos randomizados a mostrar reduções significativas de sintomas como dor, distensão e gases."
+                },
+                {
+                    "q": "Posso ficar indefinidamente na fase de eliminação de FODMAPs?",
+                    "a": "Não é recomendado. Manter a fase de eliminação por muito mais do que 6 a 8 semanas está associado a redução de bactérias intestinais benéficas — a reintrodução faseada é uma etapa essencial do protocolo, não opcional."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de intestino",
+            "series": "bestsellers-saude-intestinal",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "mito-do-sibo-sobrecrescimento-bacteriano",
+            "title": "O mito do SIBO: sobrecrescimento bacteriano, inchaço e a armadilha da auto-medicação",
+            "description": "Nem todo o inchaço abdominal é SIBO. A diretriz oficial do American College of Gastroenterology explica quando suspeitar — e por que a auto-medicação é arriscada.",
+            "image": "/image/guide/guide-country-road.jpg",
+            "ctaKind": "nutrition",
+            "slotService": "nutricao-programa",
+            "readingMinutes": 5,
+            "related": [
+                "dieta-low-fodmap-sue-shepherd",
+                "dez-por-cento-humano-alanna-collen",
+                "ansiedade-e-problemas-digestivos"
+            ],
+            "faq": [
+                {
+                    "q": "Todo o inchaço abdominal depois de comer é sinal de SIBO?",
+                    "a": "Não. Sintomas semelhantes podem ter várias outras causas — gastroparesia, insuficiência pancreática ou simples aerofagia — pelo que o diagnóstico correto exige avaliação clínica, não apenas identificação de sintomas."
+                },
+                {
+                    "q": "É seguro tratar um suposto SIBO com antimicrobianos naturais por conta própria?",
+                    "a": "Não é recomendado. Mesmo a diretriz oficial da especialidade reconhece que a evidência para vários tratamentos ainda é limitada, o que torna ainda mais importante confirmar o diagnóstico antes de qualquer intervenção, evitando tratar a causa errada."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de intestino",
+            "series": "bestsellers-saude-intestinal",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "psicobioticos-saude-mental-intestino",
+            "title": "Psicobióticos: a nova fronteira da saúde mental no intestino",
+            "description": "Certas estirpes probióticas específicas reduziram cortisol e ansiedade em ensaios clínicos — mas o efeito não se generaliza a qualquer iogurte ou suplemento.",
+            "image": "/image/guide/guide-opera-coast.jpg",
+            "ctaKind": "mental",
+            "slotService": "psicologia",
+            "readingMinutes": 5,
+            "related": [
+                "a-logica-do-intestino-michael-gershon",
+                "dez-por-cento-humano-alanna-collen",
+                "ansiedade-e-problemas-digestivos"
+            ],
+            "faq": [
+                {
+                    "q": "Qualquer probiótico ajuda a reduzir ansiedade?",
+                    "a": "Não. Os efeitos demonstrados em ensaios clínicos são específicos de certas combinações de estirpes estudadas — como L. helveticus R0052 e B. longum R0175 — e não se generalizam a qualquer suplemento probiótico do mercado."
+                },
+                {
+                    "q": "Os psicobióticos substituem o tratamento habitual da ansiedade ou depressão?",
+                    "a": "Não. A evidência disponível é promissora, mas trata-se de um complemento em investigação, não de uma alternativa à terapia comportamental ou ao acompanhamento clínico já estabelecido para estas condições."
+                }
+            ]
+        },
+        {
             "datePublished": "2026-09-05",
             "dateModified": "2026-09-05",
             "format": "markdown",

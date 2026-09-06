@@ -450,9 +450,9 @@
     function landingBookMeta() {
         var p = (location.pathname || '/').toLowerCase();
         var lang = pageLang();
-        var book = lang === 'en' ? 'Book consultation' : lang === 'es' ? 'Reservar consulta' : 'Marcar Consulta';
+        var book = lang === 'en' ? 'Book consultation' : lang === 'es' ? 'Reservar consulta' : 'Marcar consulta';
         if (/\/consulta\/renovacao|\/marcar\/renovacao|renew-prescription/.test(p)) {
-            return { service: 'renovacao', href: '/marcar/renovacao', cta: book + ' \u2014 ' + formatEuro(19) };
+            return { service: 'renovacao', href: '/marcar/renovacao', cta: book };
         }
         if (/\/psicologia-burnout/.test(p)) {
             return {
@@ -463,38 +463,38 @@
             };
         }
         if (/\/blog\/[^/?#]*burnout/i.test(p)) {
-            return { service: 'burnout_mensal', href: '/marcar/burnout-mensal', cta: book + ' \u2014 216 \u20AC/m\u00eas' };
+            return { service: 'burnout_mensal', href: '/marcar/burnout-mensal', cta: book };
         }
         if (/\/(saudemental|consultas|psicologia)(\/|$)/.test(p)) {
-            return { service: 'saude_mental', href: '/saudemental', cta: book + ' \u2014 ' + formatEuro(60) };
+            return { service: 'saude_mental', href: '/saudemental', cta: book };
         }
         if (/\/marcar\/burnout-programa/.test(p)) {
-            return { service: 'burnout_programa', href: '/marcar/burnout-programa', cta: book + ' \u2014 ' + formatEuro(490) };
+            return { service: 'burnout_programa', href: '/marcar/burnout-programa', cta: book };
         }
         if (/\/marcar\/burnout-mensal/.test(p)) {
-            return { service: 'burnout_mensal', href: '/marcar/burnout-mensal', cta: book + ' \u2014 216 \u20AC/m\u00eas' };
+            return { service: 'burnout_mensal', href: '/marcar/burnout-mensal', cta: book };
         }
         if (/\/marcar\/burnout(\/|$)/.test(p)) {
-            return { service: 'burnout', href: '/marcar/burnout', cta: book + ' \u2014 ' + formatEuro(60) };
+            return { service: 'burnout', href: '/marcar/burnout', cta: book };
         }
         if (/\/burnout|clinica-anti-burnout/.test(p)) {
-            return { service: 'burnout_mensal', href: '/marcar/burnout-mensal', cta: book + ' \u2014 216 \u20AC/m\u00eas' };
+            return { service: 'burnout_mensal', href: '/marcar/burnout-mensal', cta: book };
         }
         if (isWeightLossPath(p)) {
             return {
                 service: 'nutricao_programa',
                 href: '/marcar/nutricao-programa?ref=sticky-nutricao',
-                cta: (lang === 'en' ? 'Initial metabolic nutrition consult' : 'Consulta inicial de nutri\u00e7\u00e3o metab\u00f3lica') + ' \u2014 ' + formatEuro(115),
+                cta: book,
                 goal: 'Perda de peso / reeduca\u00e7\u00e3o metab\u00f3lica'
             };
         }
         if (/\/nutricao/.test(p)) {
-            return { service: 'clinica_geral', href: '/marcar/clinica-geral?ref=nutricao', cta: book + ' \u2014 ' + formatEuro(39) };
+            return { service: 'clinica_geral', href: '/marcar/clinica-geral?ref=nutricao', cta: book };
         }
         if (/\/marcar\/travel|travel-clinic/.test(p)) {
-            return { service: 'travel', href: '/marcar/travel', cta: book + ' \u2014 ' + formatEuro(39) };
+            return { service: 'travel', href: '/marcar/travel', cta: book };
         }
-        return { service: 'clinica_geral', href: '/marcar/clinica-geral', cta: book + ' \u2014 ' + formatEuro(39) };
+        return { service: 'clinica_geral', href: '/marcar/clinica-geral', cta: book };
     }
 
     function shouldInjectSticky() {
@@ -523,7 +523,7 @@
             '<span class="cq-sticky-book-kicker">' + kicker + '</span>' +
             '<strong data-next-slot-when></strong>' +
             '</p>' +
-            '<a class="lon-btn lon-btn-dark" data-next-slot-cta href="' + meta.href + '">' +
+            '<a class="lon-btn lon-btn-dark" data-next-slot-cta data-cta="book" href="' + meta.href + '">' +
             (first ? meta.cta : weekFallbackLabel()) + '</a>' +
             '</div>';
         document.body.appendChild(bar);

@@ -404,6 +404,9 @@ function articleCluster(meta) {
     if (meta && (meta.series === 'bestsellers-psicologia' || about === 'livros de psicologia')) {
         return 'bestsellers-psicologia';
     }
+    if (meta && (meta.series === 'bestsellers-saude-intestinal' || about === 'livros de intestino' || about === 'saúde intestinal' || about === 'saude intestinal')) {
+        return 'bestsellers-saude-intestinal';
+    }
     if (/vacina|viajante|travel|marcacao/.test(slug)) return 'travel';
     if (/burnout/.test(slug) || about === 'burnout') return 'burnout';
     if (/depress/.test(about) || /depressao|anedonia|antidepressivos/.test(slug)) return 'depressao';
@@ -420,7 +423,7 @@ function defaultCtaKind(meta) {
     if (cluster === 'travel') return 'travel';
     if (cluster === 'mental' || cluster === 'depressao' || cluster === 'ansiedade' || cluster === 'autoconhecimento' || cluster === 'bestsellers-psicologia') return 'mental';
     if (cluster === 'burnout') return 'burnout';
-    if (cluster === 'perda-de-peso' || cluster === 'livros-saude') return 'nutrition';
+    if (cluster === 'perda-de-peso' || cluster === 'livros-saude' || cluster === 'bestsellers-saude-intestinal') return 'nutrition';
     return 'general';
 }
 
@@ -450,6 +453,7 @@ const CLUSTER_CROSS = {
     'perda-de-peso': ['burnout', 'autoconhecimento', 'ansiedade'],
     'livros-saude': ['perda-de-peso', 'burnout', 'general'],
     'bestsellers-psicologia': ['burnout', 'ansiedade', 'depressao'],
+    'bestsellers-saude-intestinal': ['perda-de-peso', 'livros-saude', 'ansiedade'],
     mental: ['depressao', 'ansiedade', 'burnout'],
     travel: ['general', 'mental'],
     general: ['travel', 'mental', 'perda-de-peso']
@@ -467,7 +471,7 @@ function actionCopy(lang) {
             slotTitle: 'Próximo horário',
             slotWhen: 'Horários em breve',
             slotNote: 'As vagas desta consulta ainda estão a ser definidas. Pode marcar e escolhemos o horário consigo.',
-            slotCta: 'Marcar — 39 €',
+            slotCta: 'Marcar consulta',
             psych: {
                 chip: 'Psicologia',
                 title: 'Consulta de psicologia',
@@ -566,13 +570,13 @@ function actionCopy(lang) {
             slotTitle: 'Next available time',
             slotWhen: 'Times coming soon',
             slotNote: 'Appointment slots for this visit are still being set. You can book and we will choose a time with you.',
-            slotCta: 'See times',
+            slotCta: 'Book consultation',
             psych: {
                 chip: 'Psychology',
                 title: 'Psychology consultation',
                 price: '€60 · single session',
                 href: '/saudemental',
-                cta: 'Book',
+                cta: 'Book — 60 €',
                 note: 'Online · or €54/week for ongoing care',
                 service: 'psicologia'
             },
@@ -581,7 +585,7 @@ function actionCopy(lang) {
                 title: 'Nutrition consultation',
                 price: '39 € · 30 min',
                 href: '/marcar/clinica-geral?ref=blog-nutricao',
-                cta: 'Book',
+                cta: 'Book — 39 €',
                 note: 'Online · individual follow-up, no generic plans',
                 service: 'clinica_geral'
             },
@@ -590,7 +594,7 @@ function actionCopy(lang) {
                 title: 'Travel clinic consultation',
                 price: '€39 · 20 min',
                 href: '/marcar/travel',
-                cta: 'Book',
+                cta: 'Book — 39 €',
                 note: 'Advice and a prescription the same day',
                 service: 'travel'
             },
@@ -599,7 +603,7 @@ function actionCopy(lang) {
                 title: 'General medicine consultation',
                 price: '39 € · 30 min',
                 href: '/marcar/clinica-geral',
-                cta: 'Book',
+                cta: 'Book — 39 €',
                 note: 'A doctor the same day',
                 service: 'clinica_geral'
             },
@@ -1031,7 +1035,7 @@ function injectArticleChrome(html, meta, articles, format) {
         ? articleLiveSlotsHtml(meta)
         : '';
     const mentionsBurnout = /\/burnout|burnout|s[ií]ndrome de exaust|stress laboral/i.test(out);
-    const note = mentionsBurnout && articleCluster(meta) !== 'burnout' && articleCluster(meta) !== 'livros-saude' && articleCluster(meta) !== 'bestsellers-psicologia' && !out.includes('guide-burnout-note')
+    const note = mentionsBurnout && articleCluster(meta) !== 'burnout' && articleCluster(meta) !== 'livros-saude' && articleCluster(meta) !== 'bestsellers-psicologia' && articleCluster(meta) !== 'bestsellers-saude-intestinal' && !out.includes('guide-burnout-note')
         ? burnoutMentionNoteHtml(lang)
         : '';
     if (format === 'html') {
@@ -1160,7 +1164,7 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/landing.css?v=20260418k">
+    <link rel="stylesheet" href="/landing.css?v=20260906i">
     <link rel="stylesheet" href="/guide.css?v=20260906c">
     <link rel="stylesheet" href="/author.css?v=20260820l">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
@@ -1251,11 +1255,11 @@ function layoutGuidePage(opts) {
             </div>
         </div>
     </footer>
-    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contactar por WhatsApp">💬</a>
+    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-nav.js"></script>
     <script src="/i18n.js?v=20260905e" defer></script>
-    <script src="/lon-analytics.js?v=20260905e" defer></script>
+    <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/lon-slots.js?v=20260906d" defer></script>
 </body>
 </html>`;
@@ -1638,6 +1642,9 @@ function magTheme(article) {
     if (article && (article.series === 'bestsellers-psicologia' || about === 'livros de psicologia')) {
         return 'bestsellers-psicologia';
     }
+    if (article && (article.series === 'bestsellers-saude-intestinal' || about === 'livros de intestino' || about === 'saúde intestinal' || about === 'saude intestinal')) {
+        return 'bestsellers-saude-intestinal';
+    }
     if (/burnout/.test(about) || /burnout/.test(slug) || (article && article.href && String(article.href).startsWith('/burnout'))) {
         return 'burnout';
     }
@@ -1660,6 +1667,7 @@ function magThemeLabel(article) {
     if (theme === 'perda-de-peso') return 'Perda de peso';
     if (theme === 'livros-saude') return 'Livros de saúde';
     if (theme === 'bestsellers-psicologia') return 'Livros de psicologia';
+    if (theme === 'bestsellers-saude-intestinal') return 'Saúde intestinal';
     if (theme === 'travel') return 'Viagem';
     return 'Clínica';
 }
@@ -1734,8 +1742,9 @@ function magTocHtml() {
                     <li><a href="#perda-de-peso"><span>06</span> Perda de peso</a></li>
                     <li><a href="#livros-saude"><span>07</span> Livros de saúde</a></li>
                     <li><a href="#livros-psicologia"><span>08</span> Livros de psicologia</a></li>
-                    <li><a href="#saude-do-viajante"><span>09</span> Viagem</a></li>
-                    <li><a href="#clinica"><span>10</span> Clínica</a></li>
+                    <li><a href="#saude-intestinal"><span>09</span> Saúde intestinal</a></li>
+                    <li><a href="#saude-do-viajante"><span>10</span> Viagem</a></li>
+                    <li><a href="#clinica"><span>11</span> Clínica</a></li>
                 </ol>
             </nav>`;
 }
@@ -1962,7 +1971,7 @@ function magCtaHtml(kind, lang) {
     };
     const labelByLang = {
         pt: 'Marcar consulta',
-        en: 'Book a consultation',
+        en: 'Book consultation',
         es: 'Reservar consulta',
         fr: 'Prendre rendez-vous',
         de: 'Termin buchen'
@@ -2247,6 +2256,17 @@ function magazineNavTree() {
             ]
         },
         {
+            label: 'Saúde intestinal',
+            children: [
+                { label: 'A série', href: '/blog/os-10-bestsellers-saude-intestinal' },
+                { label: '10% Humano', href: '/blog/dez-por-cento-humano-alanna-collen' },
+                { label: 'A Lógica do Intestino', href: '/blog/a-logica-do-intestino-michael-gershon' },
+                { label: 'Dieta Low-FODMAP', href: '/blog/dieta-low-fodmap-sue-shepherd' },
+                { label: 'O mito do SIBO', href: '/blog/mito-do-sibo-sobrecrescimento-bacteriano' },
+                { label: 'Psicobióticos', href: '/blog/psicobioticos-saude-mental-intestino' }
+            ]
+        },
+        {
             label: 'Clínica turista',
             children: [
                 { label: 'Tourist clinic', href: '/tourist-clinic' },
@@ -2381,7 +2401,7 @@ function magBreadcrumbJsonLd(origin, crumbs) {
 }
 
 function magTopicAnchorsHtml() {
-    const skip = new Set(['saude-mental', 'burnout', 'depressao', 'ansiedade', 'autoconhecimento', 'perda-de-peso', 'livros-de-saude', 'livros-de-psicologia', 'saude-do-viajante', 'clinica']);
+    const skip = new Set(['saude-mental', 'burnout', 'depressao', 'ansiedade', 'autoconhecimento', 'perda-de-peso', 'livros-de-saude', 'livros-de-psicologia', 'saude-intestinal', 'saude-do-viajante', 'clinica']);
     const ids = [];
     function walk(nodes) {
         (Array.isArray(nodes) ? nodes : []).forEach((node) => {
@@ -2555,7 +2575,7 @@ function layoutMagazinePage(opts) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/landing.css?v=20260903b">
+    <link rel="stylesheet" href="/landing.css?v=20260906i">
     ${extraCssHtml}
     ${extraCssAfterHtml}
     <link rel="stylesheet" href="/magazine.css?v=20260905b">
@@ -2569,7 +2589,7 @@ function layoutMagazinePage(opts) {
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-nav.js"></script>
     <script src="/i18n.js?v=20260905e" defer></script>
-    <script src="/lon-analytics.js?v=20260905e" defer></script>
+    <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=20260906d" defer></script>
     <script src="/guide-actions.js?v=20260905a" defer></script>
@@ -2588,6 +2608,7 @@ function renderMagazineIndex(origin) {
     const perdaPeso = articles.filter((a) => magTheme(a) === 'perda-de-peso');
     const livrosSaude = articles.filter((a) => magTheme(a) === 'livros-saude');
     const livrosPsicologia = articles.filter((a) => magTheme(a) === 'bestsellers-psicologia');
+    const saudeIntestinal = articles.filter((a) => magTheme(a) === 'bestsellers-saude-intestinal');
     const travel = articles.filter((a) => magTheme(a) === 'travel');
     const clinic = articles.filter((a) => magTheme(a) === 'clinic');
     const cover = mental[0] || articles[0];
@@ -2620,6 +2641,9 @@ function renderMagazineIndex(origin) {
     const livrosPsicologiaRest = featured && magTheme(featured) === 'bestsellers-psicologia'
         ? livrosPsicologia.filter((a) => magHref(a) !== featuredHref)
         : livrosPsicologia;
+    const saudeIntestinalRest = featured && magTheme(featured) === 'bestsellers-saude-intestinal'
+        ? saudeIntestinal.filter((a) => magHref(a) !== featuredHref)
+        : saudeIntestinal;
     const travelRest = featured && magTheme(featured) === 'travel'
         ? travel.filter((a) => magHref(a) !== featuredHref)
         : travel;
@@ -2635,6 +2659,7 @@ function renderMagazineIndex(origin) {
         magThemeRowHtml('perda-de-peso', 'Perda de peso', perdaPesoRest, 'nutrition'),
         magThemeRowHtml('livros-saude', 'Livros de saúde', livrosSaudeRest, 'nutrition'),
         magThemeRowHtml('livros-psicologia', 'Livros de psicologia', livrosPsicologiaRest, 'mental'),
+        magThemeRowHtml('saude-intestinal', 'Saúde intestinal', saudeIntestinalRest, 'nutrition'),
         magClusterHtml(),
         magThemeRowHtml('saude-do-viajante', 'Viagem', travelRest, 'travel'),
         magThemeRowHtml('clinica', 'Clínica', clinicRest, 'clinic')

@@ -1321,24 +1321,122 @@ body.dash-portal .dash-stat-card {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    max-width: 48rem;
+    max-width: none;
+    width: 100%;
+}
+
+.clinic-profile-form .admin-input {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+}
+
+.clinic-profile-dl .clinic-profile-role-select {
+    max-width: 22rem;
 }
 
 .clinic-bio-creds-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-}
-
-@media (max-width: 700px) {
-    .clinic-bio-creds-grid {
-        grid-template-columns: 1fr;
-    }
+    grid-template-columns: 1fr;
+    gap: 16px;
 }
 
 .clinic-bio-input {
-    min-height: 8rem;
+    display: block;
+    width: 100%;
+    max-width: none;
+    min-height: 10rem;
     resize: vertical;
+    box-sizing: border-box;
+}
+
+.clinic-address-input {
+    min-height: 4.5rem;
+}
+
+.clinic-pref-block {
+    margin: 4px 0 8px;
+}
+
+.clinic-pref-heading {
+    margin: 0 0 6px;
+    font-size: 1rem;
+    font-weight: 650;
+    color: var(--text-primary);
+}
+
+.clinic-pref-cols {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 12px;
+}
+
+.clinic-pref-col {
+    margin: 0;
+    padding: 16px 16px 12px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    background: #f8fafc;
+    min-width: 0;
+}
+
+.clinic-pref-col legend {
+    padding: 0 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.clinic-pref-group {
+    margin: 0 0 14px;
+}
+
+.clinic-pref-group:last-child {
+    margin-bottom: 0;
+}
+
+.clinic-pref-group-title {
+    margin: 0 0 8px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.clinic-pref-list {
+    display: grid;
+    gap: 6px;
+}
+
+.clinic-pref-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.clinic-pref-check input {
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.clinic-pref-empty {
+    margin: 4px 0 0;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+    .clinic-pref-cols {
+        grid-template-columns: 1fr;
+    }
 }
 
 .clinic-iban-form {
@@ -1531,6 +1629,113 @@ body.dash-portal .dash-stat-card {
     font-size: 0.8125rem;
     color: var(--text-muted);
     word-break: break-all;
+}
+
+.admin-staff-profiles {
+    display: grid;
+    gap: 18px;
+}
+
+.admin-staff-profile-card {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    background: var(--bg-card);
+}
+
+.admin-staff-profile-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.admin-staff-profile-photo {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #eef2f6;
+    border: 1px solid var(--border-subtle);
+    flex-shrink: 0;
+}
+
+.admin-staff-profile-head h3 {
+    margin: 0 0 4px;
+    font-size: 1rem;
+}
+
+.admin-staff-profile-meta {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+
+.admin-staff-profile-dl {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px 18px;
+    margin: 0 0 16px;
+}
+
+.admin-staff-profile-dl div {
+    display: grid;
+    gap: 4px;
+}
+
+.admin-staff-profile-dl dt {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.admin-staff-profile-dl dd {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.admin-staff-profile-block {
+    margin: 0 0 14px;
+}
+
+.admin-staff-profile-block h4 {
+    margin: 0 0 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.admin-staff-profile-block p,
+.admin-staff-profile-block ul {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+}
+
+.admin-staff-profile-block ul {
+    padding-left: 1.1rem;
+}
+
+.admin-staff-docs {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 6px;
+}
+
+.admin-staff-docs li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    font-size: 0.875rem;
 }
 
 .admin-payout-months {

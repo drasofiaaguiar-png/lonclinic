@@ -23,7 +23,7 @@ const UI = {
         navConsulta: 'See a doctor',
         navHub: 'Tourist clinic',
         navTravel: 'Travel clinic',
-        navBook: 'Book consultation — 39 €',
+        navBook: 'Book consultation',
         navLogin: 'Login',
         openMenu: 'Open menu',
         breadcrumbHub: 'Tourist clinic',
@@ -46,6 +46,9 @@ const UI = {
             'General information for visitors in Portugal. It does not replace an individual medical consultation. In an emergency call 112.',
         reviewed: 'Reviewed by the Lon Clinic medical team',
         whatsapp: 'Contact on WhatsApp',
+        contactMenu: 'Contact us',
+        whatsappTalk: 'Talk on WhatsApp',
+        callClinic: 'Call the clinic',
         emergencyCta: 'Emergencies: 112',
         urgentNote: 'For a genuine emergency, call 112 or go to a public hospital emergency room (urgência).',
         bookAria: 'Book with Lon Clinic',
@@ -60,7 +63,7 @@ const UI = {
         cardRenewNote: 'Stable long-term medicine · video, not a form',
         cardRenewCta: 'Renew — 19 €',
         slotKicker: 'Next available times',
-        slotCta: 'Book consultation — 39 €',
+        slotCta: 'Book consultation',
         slotPending: 'See times',
         weekCta: "See this week's availability"
     },
@@ -72,7 +75,7 @@ const UI = {
         navConsulta: 'Ver a un médico',
         navHub: 'Clínica turista',
         navTravel: 'Clínica del viajero',
-        navBook: 'Reservar consulta — 39 €',
+        navBook: 'Reservar consulta',
         navLogin: 'Acceder',
         openMenu: 'Abrir menú',
         breadcrumbHub: 'Clínica turista',
@@ -95,6 +98,9 @@ const UI = {
             'Información general para visitantes en Portugal. No sustituye una consulta médica individual. En una emergencia, llame al 112.',
         reviewed: 'Revisado por el equipo médico de Lon Clinic',
         whatsapp: 'Contactar por WhatsApp',
+        contactMenu: 'Contactar',
+        whatsappTalk: 'Hablar por WhatsApp',
+        callClinic: 'Llamar a la clínica',
         emergencyCta: 'Urgencias: 112',
         urgentNote: 'En una emergencia real, llame al 112 o acuda a urgencias de un hospital público.',
         bookAria: 'Reservar en Lon Clinic',
@@ -109,7 +115,7 @@ const UI = {
         cardRenewNote: 'Medicación crónica estable · vídeo, no un formulario',
         cardRenewCta: 'Renovar — 19 €',
         slotKicker: 'Próximos horarios',
-        slotCta: 'Reservar consulta — 39 €',
+        slotCta: 'Reservar consulta',
         slotPending: 'Ver horarios',
         weekCta: 'Ver disponibilidad de esta semana'
     },
@@ -121,14 +127,14 @@ const UI = {
         navConsulta: 'Voir un médecin',
         navHub: 'Clinique touriste',
         navTravel: 'Clinique du voyageur',
-        navBook: 'Réserver — 39 €',
+        navBook: 'Réserver',
         navLogin: 'Connexion',
         openMenu: 'Ouvrir le menu',
         breadcrumbHub: 'Clinique touriste',
         kicker: 'Clinique touriste · Portugal 2026',
-        languagesLine: 'Consultations strictly provided in English and Portuguese',
+        languagesLine: 'Consultations strictly provided in English, Spanish or Portuguese',
         languagesStrict:
-            'Les consultations se déroulent exclusivement en anglais ou en portugais. Pas de consultation en français.',
+            'Les consultations se déroulent exclusivement en anglais, en espagnol ou en portugais. Pas de consultation en français.',
         clinician: 'Médecin inscrite à l’Ordem dos Médicos · ERS 45475',
         faqTitle: 'FAQ',
         priceTitle: 'Tarif',
@@ -146,13 +152,16 @@ const UI = {
             'Information générale pour les visiteurs au Portugal. Elle ne remplace pas une consultation individuelle. En urgence, appelez le 112.',
         reviewed: 'Relu par l’équipe médicale de Lon Clinic',
         whatsapp: 'Contacter sur WhatsApp',
+        contactMenu: 'Contacter',
+        whatsappTalk: 'Parler sur WhatsApp',
+        callClinic: 'Appeler la clinique',
         emergencyCta: 'Urgences : 112',
         urgentNote: 'En cas de véritable urgence, appelez le 112 ou rendez-vous aux urgences d’un hôpital public.',
         bookAria: 'Réserver chez Lon Clinic',
         cardGpChip: 'Médecine générale',
         cardGpTitle: 'Téléconsultation',
         cardGpPrice: '39 € · ~30 min',
-        cardGpNote: 'Vidéo · consultations strictly provided in English and Portuguese',
+        cardGpNote: 'Vidéo · consultations strictly provided in English, Spanish or Portuguese',
         cardGpCta: 'Réserver — 39 €',
         cardRenewChip: 'Renouvellement',
         cardRenewTitle: 'Renouveler une ordonnance',
@@ -160,7 +169,7 @@ const UI = {
         cardRenewNote: 'Traitement chronique stable · visio, pas un formulaire',
         cardRenewCta: 'Renouveler — 19 €',
         slotKicker: 'Prochains créneaux',
-        slotCta: 'Réserver — 39 €',
+        slotCta: 'Réserver',
         slotPending: 'Voir les horaires',
         weekCta: 'Voir les disponibilités de la semaine'
     },
@@ -172,14 +181,14 @@ const UI = {
         navConsulta: 'Arzt finden',
         navHub: 'Tourist clinic',
         navTravel: 'Reiseklinik',
-        navBook: 'Termin — 39 €',
+        navBook: 'Termin buchen',
         navLogin: 'Login',
         openMenu: 'Menü öffnen',
         breadcrumbHub: 'Tourist clinic',
         kicker: 'Tourist clinic · Portugal 2026',
-        languagesLine: 'Consultations strictly provided in English and Portuguese',
+        languagesLine: 'Consultations strictly provided in English, Spanish or Portuguese',
         languagesStrict:
-            'Sprechstunden ausschließlich auf Englisch oder Portugiesisch. Keine Beratung auf Deutsch.',
+            'Sprechstunden ausschließlich auf Englisch, Spanisch oder Portugiesisch. Keine Beratung auf Deutsch.',
         clinician: 'Ärztin · Ordem dos Médicos · ERS 45475',
         faqTitle: 'FAQ',
         priceTitle: 'Preis',
@@ -197,13 +206,16 @@ const UI = {
             'Allgemeine Information für Besucher in Portugal. Kein Ersatz für eine individuelle Arztkonsultation. Im Notfall 112 anrufen.',
         reviewed: 'Geprüft vom Ärzteteam der Lon Clinic',
         whatsapp: 'Per WhatsApp kontaktieren',
+        contactMenu: 'Kontakt',
+        whatsappTalk: 'Per WhatsApp schreiben',
+        callClinic: 'Klinik anrufen',
         emergencyCta: 'Notfall: 112',
         urgentNote: 'Bei einem echten Notfall 112 anrufen oder in die Notaufnahme eines öffentlichen Krankenhauses gehen.',
         bookAria: 'Bei Lon Clinic buchen',
         cardGpChip: 'Allgemeinmedizin',
         cardGpTitle: 'Online-Sprechstunde',
         cardGpPrice: '39 € · ~30 Min.',
-        cardGpNote: 'Video · consultations strictly provided in English and Portuguese',
+        cardGpNote: 'Video · consultations strictly provided in English, Spanish or Portuguese',
         cardGpCta: 'Buchen — 39 €',
         cardRenewChip: 'Rezept',
         cardRenewTitle: 'Rezept verlängern',
@@ -211,7 +223,7 @@ const UI = {
         cardRenewNote: 'Stabile Dauermedikation · Video, kein Formular',
         cardRenewCta: 'Verlängern — 19 €',
         slotKicker: 'Nächste Termine',
-        slotCta: 'Termin — 39 €',
+        slotCta: 'Termin buchen',
         slotPending: 'Zeiten ansehen',
         weekCta: 'Verfügbarkeit dieser Woche anzeigen'
     }
@@ -226,7 +238,7 @@ function escapeHtml(s) {
 }
 
 const CONSULT_LANG_POLICY = 'en-es-pt';
-const CONSULT_LANG_POLICY_EN = 'Consultations strictly provided in English and Portuguese';
+const CONSULT_LANG_POLICY_EN = 'Consultations strictly provided in English, Spanish or Portuguese';
 
 function needsConsultLangPolicy(lang) {
     const l = String(lang || '')
@@ -288,7 +300,7 @@ function cityDoctorPage(city) {
         description: `See an English-speaking doctor for ${city.name} without hunting a clinic. Video consultation 39 €, same-day slots, Portuguese e-prescription if indicated. For expats and visitors already in ${city.name}.`,
         h1: `English-speaking doctor in ${city.name}`,
         bookingHref: `/marcar/clinica-geral?ref=en-doctor-${city.slug}&lang=en`,
-        bookingLabel: 'Book online — 39 €',
+        bookingLabel: 'Book consultation',
         price: '39 €',
         priceNote: 'Video consultation with a licensed doctor, about 30 minutes. Electronic prescription included if indicated. No extra fee at checkout.',
         ctaTitle: `Need a doctor in ${city.name} today?`,
@@ -377,7 +389,7 @@ function nomadDoctorPage() {
         description: 'Need a doctor while working remotely in Portugal? English-speaking video GP 39 €, same-day slots, e-prescription valid in any pharmacy. For digital nomads without SNS.',
         h1: 'Digital nomad in Portugal? See a doctor online',
         bookingHref: '/marcar/clinica-geral?ref=digital-nomad&lang=en',
-        bookingLabel: 'Book online — 39 €',
+        bookingLabel: 'Book consultation',
         price: '39 €',
         priceNote: 'Video consultation with a licensed doctor, about 30 minutes. Electronic prescription included if indicated.',
         ctaTitle: 'Book a video slot from your laptop',
@@ -701,7 +713,7 @@ function bookingCardsHtml(page, ui, tone) {
             <h3 class="guide-book-title">${escapeHtml(card.title)}</h3>
             <p class="guide-book-price">${escapeHtml(card.price)}</p>
             <p class="guide-book-note">${escapeHtml(card.note)}</p>
-            <a class="guide-book-cta js-consulta-cta" data-consulta-cta="${escapeHtml(card.track)}" href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
+            <a class="guide-book-cta js-consulta-cta" data-consulta-cta="${escapeHtml(card.track)}" data-cta="book-priced" href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
         </article>`
         )
         .join('');
@@ -745,7 +757,7 @@ function stickyBookHtml(page, ui) {
                     <span class="cq-sticky-book-kicker">${escapeHtml(ui.slotKicker)}</span>
                     <strong data-next-slot-when>${escapeHtml(ui.slotPending)}</strong>
                 </p>
-                <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="sticky-book" data-next-slot-cta href="${escapeHtml(href)}">${escapeHtml(ui.slotCta)}</a>
+                <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="sticky-book" data-cta="book" data-next-slot-cta href="${escapeHtml(href)}">${escapeHtml(ui.slotCta)}</a>
             </div>
         </div>`;
 }
@@ -762,7 +774,7 @@ function ctaBand(page, ui) {
                 <h2 class="cq-cta-title">${escapeHtml(page.ctaTitle || ui.navBook)}</h2>
                 <p class="cq-cta-lead">${escapeHtml(page.ctaLead || page.priceNote || '')}</p>
                 <div class="cq-cta-actions">
-                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="tourist-band" href="${href}">${label}</a>
+                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="tourist-band" data-cta="book" href="${href}">${label}</a>
                     <a class="lon-btn lon-btn-soft" href="${secondaryHref}">${secondaryLabel}</a>
                 </div>
             </div>
@@ -832,7 +844,7 @@ function layoutPage(opts) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/landing.css?v=20260905f">
+    <link rel="stylesheet" href="/landing.css?v=20260906i">
     <link rel="stylesheet" href="/consulta-pages.css?v=20260905f">
     <link rel="stylesheet" href="/tourist-pages.css?v=20260906c">
     <link rel="stylesheet" href="/author.css?v=20260820e">
@@ -853,7 +865,7 @@ function layoutPage(opts) {
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">${escapeHtml(ui.navLogin)}</a>
-                <a href="${book}" class="lon-btn lon-btn-primary lon-btn-sm">${escapeHtml(ui.navBook)}</a>
+                <a href="${book}" class="lon-btn lon-btn-primary lon-btn-sm" data-cta="book">${escapeHtml(ui.navBook)}</a>
                 <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="${escapeHtml(ui.openMenu)}" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
@@ -863,7 +875,7 @@ function layoutPage(opts) {
             <a href="/consulta">${escapeHtml(ui.navConsulta)}</a>
             <a href="/tourist-clinic">${escapeHtml(ui.navHub)}</a>
             <a href="/patient-portal">${escapeHtml(ui.navLogin)}</a>
-            <a href="${book}">${escapeHtml(ui.navBook)}</a>
+            <a href="${book}" data-cta="book">${escapeHtml(ui.navBook)}</a>
         </div>
     </header>
     ${languageBannerHtml(ui)}
@@ -886,7 +898,7 @@ function layoutPage(opts) {
                     <h4>${escapeHtml(ui.footerSupport)}</h4>
                     <a href="/faq">FAQ</a>
                     <a href="/info.html?page=contato">${escapeHtml(ui.contact)}</a>
-                    <a href="${book}">${escapeHtml(ui.navBook)}</a>
+                    <a href="${book}" data-cta="book">${escapeHtml(ui.navBook)}</a>
                 </div>
                 <div class="lon-footer-col">
                     <h4>Legal</h4>
@@ -900,10 +912,10 @@ function layoutPage(opts) {
             </div>
         </div>
     </footer>
-    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="${escapeHtml(ui.whatsapp)}">💬</a>
+    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="${escapeHtml(ui.whatsappTalk)}">💬 ${escapeHtml(ui.whatsappTalk)}</a>
     <script src="/lon-nav.js"></script>
     <script src="/i18n.js?v=20260905e" defer></script>
-    <script src="/lon-analytics.js?v=20260905e" defer></script>
+    <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=20260906d" defer></script>
 </body>
@@ -1000,7 +1012,7 @@ function renderPage(origin, slug) {
                 </p>
                 <p class="tq-langs-line${needsConsultLangPolicy(ui.htmlLang) ? ' tq-langs-line--strict' : ''}">${escapeHtml(ui.languagesLine)}</p>
                 <div class="cq-header-actions">
-                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="tourist-hero" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || ui.navBook)}</a>
+                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="tourist-hero" data-cta="book" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || ui.navBook)}</a>
                     <a class="lon-btn lon-btn-soft" href="#quando-urgencia">${escapeHtml(ui.emergencyCta)}</a>
                 </div>
                 ${liveSlotsHtml(meta, ui, 'tourist-hero')}
@@ -1030,7 +1042,7 @@ function renderPage(origin, slug) {
                 <h2 id="tq-price">${escapeHtml(ui.priceTitle)}</h2>
                 <p class="cq-price-value">${escapeHtml(meta.price || '€39')}</p>
                 <p class="cq-price-note">${escapeHtml(meta.priceNote || '')}</p>
-                <a class="lon-btn lon-btn-primary js-consulta-cta" data-consulta-cta="tourist-price" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || ui.navBook)}</a>
+                <a class="lon-btn lon-btn-primary js-consulta-cta" data-consulta-cta="tourist-price" data-cta="book" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || ui.navBook)}</a>
             </section>
 
             <section class="cq-split" id="quando-urgencia">
@@ -1192,7 +1204,7 @@ function renderHub(origin) {
                 </p>
                 <p class="tq-langs-line">${escapeHtml(ui.languagesLine)}</p>
                 <div class="cq-header-actions">
-                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="tourist-hub-hero" href="${escapeHtml(bookingHref)}">${escapeHtml(hub.bookingLabel || 'Book online — €39')}</a>
+                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="tourist-hub-hero" data-cta="book" href="${escapeHtml(bookingHref)}">${escapeHtml(hub.bookingLabel || 'Book consultation')}</a>
                     <a class="lon-btn lon-btn-soft" href="#quando-urgencia">${escapeHtml(ui.emergencyCta)}</a>
                 </div>
                 ${liveSlotsHtml(hub, ui, 'tourist-hub')}
@@ -1211,7 +1223,7 @@ function renderHub(origin) {
                 <h2 id="tq-price">${escapeHtml(ui.priceTitle)}</h2>
                 <p class="cq-price-value">${escapeHtml(hub.price || '€39')}</p>
                 <p class="cq-price-note">${escapeHtml(hub.priceNote || ui.languagesLine)}</p>
-                <a class="lon-btn lon-btn-primary js-consulta-cta" data-consulta-cta="tourist-hub-price" href="${escapeHtml(bookingHref)}">${escapeHtml(hub.bookingLabel || 'Book online — €39')}</a>
+                <a class="lon-btn lon-btn-primary js-consulta-cta" data-consulta-cta="tourist-hub-price" data-cta="book" href="${escapeHtml(bookingHref)}">${escapeHtml(hub.bookingLabel || 'Book consultation')}</a>
             </section>
 
             <section class="cq-split" id="quando-urgencia">

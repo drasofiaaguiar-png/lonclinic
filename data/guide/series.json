@@ -55,6 +55,19 @@
         { "slug": "as-suas-zonas-erroneas-wayne-dyer", "navLabel": "As Suas Zonas Erróneas" },
         { "slug": "habitos-atomicos-james-clear", "navLabel": "Hábitos Atómicos" }
       ]
+    },
+    {
+      "id": "bestsellers-saude-intestinal",
+      "slug": "os-10-bestsellers-saude-intestinal",
+      "title": "Os 10 Bestsellers de Saúde Intestinal: Analisados por uma Médica",
+      "description": "Série de críticas clínicas a bestsellers e temas de saúde intestinal: o que a evidência confirma sobre microbioma, eixo intestino-cérebro, Low-FODMAP, SIBO e psicobióticos — e onde a autoajuda falha.",
+      "parts": [
+        { "slug": "dez-por-cento-humano-alanna-collen", "navLabel": "10% Humano" },
+        { "slug": "a-logica-do-intestino-michael-gershon", "navLabel": "A Lógica do Intestino" },
+        { "slug": "dieta-low-fodmap-sue-shepherd", "navLabel": "Dieta Low-FODMAP" },
+        { "slug": "mito-do-sibo-sobrecrescimento-bacteriano", "navLabel": "O mito do SIBO" },
+        { "slug": "psicobioticos-saude-mental-intestino", "navLabel": "Psicobióticos" }
+      ]
     }
   ]
 }

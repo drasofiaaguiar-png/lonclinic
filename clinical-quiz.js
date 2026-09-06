@@ -276,6 +276,7 @@
         $('bandText').textContent = band.text || '';
         $('ctaText').textContent = band.cta || '';
         if ($('bookBtnPrimary')) $('bookBtnPrimary').textContent = band.bookLabel || $('bookBtnPrimary').textContent;
+        if ($('stickyBookBtn') && band.bookLabel) $('stickyBookBtn').textContent = band.bookLabel;
         if ($('bookNowNote')) $('bookNowNote').textContent = band.bookNote || '';
 
         var subBtn = $('subBtn');

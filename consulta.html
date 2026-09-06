@@ -27,7 +27,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="theme-color" content="#4A7C6F">
     <link rel="preload" as="image" href="/image/image2.webp" fetchpriority="high">
-    <link rel="stylesheet" href="/landing.css?v=20260905f">
+    <link rel="stylesheet" href="/landing.css?v=20260906i">
     <link rel="stylesheet" href="/consulta-pages.css?v=20260905e">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -348,7 +348,7 @@
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm js-consulta-cta-nav" data-consulta-cta="nav">Marcar Consulta Agora</a>
+                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm js-consulta-cta-nav" data-consulta-cta="nav" data-cta="book-priced">Marcar — 39 €</a>
                 <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
@@ -372,7 +372,7 @@
                     <h1>Consulta Médica Online em Portugal</h1>
                     <p class="dr-lead">Fale com um médico licenciado por videoconsulta — rápido, seguro e sem sair de casa. Ideal para quem procura uma consulta médica online com a mesma qualidade de uma clínica presencial.</p>
                     <div class="dr-cta-row">
-                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark js-consulta-cta" id="consultaCtaHero" data-consulta-cta="hero" data-cta-location="hero_primary">Marcar Consulta — 39 €</a>
+                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark js-consulta-cta" id="consultaCtaHero" data-consulta-cta="hero" data-cta-location="hero_primary" data-cta="book">Marcar consulta</a>
                         <a href="#como-funciona" class="lon-btn lon-btn-soft">Ver como funciona</a>
                     </div>
                     <div class="cq-live-slots" data-next-slots data-limit="3" data-service="clinica_geral" data-book-href="/marcar/clinica-geral" data-surface="consulta-hub" hidden>
@@ -571,7 +571,7 @@
                 <div class="consulta-cta-band-inner">
                     <h2 id="consulta-final-cta-title">Pronto para a sua consulta médica online?</h2>
                     <p>Marque agora e fale com um médico no horário que preferir.</p>
-                    <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="footer_band" data-cta-location="footer_primary">Marcar Consulta — 39 €</a>
+                    <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="footer_band" data-cta-location="footer_primary" data-cta="book">Marcar consulta</a>
                 </div>
             </div>
         </section>
@@ -626,11 +626,11 @@
         </div>
     </footer>
 
-    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contactar por WhatsApp">💬</a>
+    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
 
     <script src="/lon-nav.js" defer></script>
     <script src="/i18n.js?v=20260905e" defer></script>
-    <script src="/lon-analytics.js?v=20260905e" defer></script>
+    <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=20260906d" defer></script>
     <script>
@@ -639,14 +639,14 @@
             if (typeof gtag !== 'function') return;
             gtag('event', 'consulta_marcar_agora_click', {
                 event_category: 'consulta_landing',
-                event_label: location || 'cta',
+                event_label: location || 'book',
                 page_location: window.location.href,
                 page_path: '/consulta'
             });
         }
         document.querySelectorAll('.js-consulta-cta, .js-consulta-cta-nav').forEach(function (el) {
             el.addEventListener('click', function () {
-                var loc = el.getAttribute('data-consulta-cta') || el.getAttribute('data-cta-location') || 'cta';
+                var loc = el.getAttribute('data-consulta-cta') || el.getAttribute('data-cta-location') || 'book';
                 trackConsultaCta(loc);
             });
         });

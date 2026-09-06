@@ -270,10 +270,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         invitations: { title: 'Invitations', subtitle: 'Send and manage booking invites' },
         availability: { title: 'Availability', subtitle: 'Working hours, blocks & slot preview' },
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' },
-        professionals: { title: 'Professionals & Doxy', subtitle: 'Clinician logins and video rooms' },
+        professionals: { title: 'Professionals & Doxy', subtitle: 'Logins, Doxy rooms and professional profile files' },
         psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' },
         producers: { title: 'Diretório produtores', subtitle: 'Moderar candidaturas de produtores biológicos' },
-        profile: { title: 'Profile', subtitle: 'Ordem, bio, credentials, clinical areas and documents' }
+        profile: { title: 'Profile', subtitle: 'Identificação, cédula, seguro, áreas e documentos' }
     };
     let activeAdminPanel = 'schedule';
     let scheduleFilter = 'all';
@@ -1494,7 +1494,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await res.json();
             const staff = data.staff || [];
             if (!staff.length) {
-                adminPayoutsList.innerHTML = '<p class="admin-empty-list">No clinicians yet.</p>';
+                adminPayoutsList.innerHTML = '<p class="admin-empty-list">No professionals yet.</p>';
                 return;
             }
             adminPayoutsList.innerHTML = staff.map((person) => {
@@ -3331,9 +3331,107 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             renderAdminProfessionals(professionalsCache);
             fillProfessionalsDatalist(professionalsCache);
+            loadAdminStaffProfiles();
         } catch (err) {
             console.error('Load professionals:', err);
             adminProfessionalsBody.innerHTML = '<tr><td colspan="5" class="admin-empty-list">Could not load professionals.</td></tr>';
+        }
+    }
+
+    const adminStaffProfilesList = document.getElementById('adminStaffProfilesList');
+
+    function dashText(value) {
+        const s = String(value || '').trim();
+        return s ? escapeHtml(s) : '—';
+    }
+
+    function areaListHtml(items) {
+        const list = Array.isArray(items) ? items.filter(Boolean) : [];
+        if (!list.length) return '<p>—</p>';
+        return `<ul>${list.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`;
+    }
+
+    function renderAdminStaffProfiles(data) {
+        if (!adminStaffProfilesList) return;
+        const staff = (data && data.staff) || [];
+        const kinds = (data && data.documentKinds) || {};
+        if (!staff.length) {
+            adminStaffProfilesList.innerHTML = '<p class="admin-empty-list">Ainda sem profissionais.</p>';
+            return;
+        }
+        adminStaffProfilesList.innerHTML = staff.map((p) => {
+            const user = encodeURIComponent(p.username || '');
+            const photo = p.hasPhoto
+                ? `<img class="admin-staff-profile-photo" src="/api/admin/staff-profiles/${user}/photo" alt="">`
+                : '<div class="admin-staff-profile-photo" aria-hidden="true"></div>';
+            const title = p.fullName || p.displayName || p.username || '';
+            const roleBits = [p.professionLabel, p.username].filter(Boolean).join(' · ');
+            const docs = Object.keys(kinds).map((kind) => {
+                const doc = (p.documents || []).find((d) => d && d.kind === kind);
+                const label = kinds[kind] || kind;
+                if (!doc) {
+                    return `<li><span>${escapeHtml(label)}</span><span class="clinic-doc-missing">Not uploaded</span></li>`;
+                }
+                const validity = doc.validUntil ? `Validade ${escapeHtml(doc.validUntil)}` : '';
+                return `<li>
+                    <span>${escapeHtml(label)}</span>
+                    <a class="clinic-doc-link" href="/api/admin/staff-profiles/${user}/documents/${encodeURIComponent(doc.id)}">${escapeHtml(doc.originalName || label)}</a>
+                    ${validity ? `<span class="clinic-doc-validity">${validity}</span>` : ''}
+                </li>`;
+            }).join('');
+            return `<article class="admin-staff-profile-card">
+                <div class="admin-staff-profile-head">
+                    ${photo}
+                    <div>
+                        <h3>${escapeHtml(title)}</h3>
+                        <p class="admin-staff-profile-meta">${escapeHtml(roleBits)}${p.email ? ` · ${escapeHtml(p.email)}` : ''}</p>
+                    </div>
+                </div>
+                <dl class="admin-staff-profile-dl">
+                    <div><dt>Nome</dt><dd>${dashText(p.fullName)}</dd></div>
+                    <div><dt>NIF</dt><dd>${dashText(p.nif)}</dd></div>
+                    <div><dt>Cédula profissional</dt><dd>${dashText(p.ordemNumber)}</dd></div>
+                    <div><dt>N.º Cartão de Cidadão</dt><dd>${dashText(p.citizenCard)}</dd></div>
+                    <div><dt>Morada</dt><dd>${dashText(p.address)}</dd></div>
+                    <div><dt>Seguradora</dt><dd>${dashText(p.insurer)}</dd></div>
+                    <div><dt>Apólice</dt><dd>${dashText(p.insurancePolicy)}</dd></div>
+                    <div><dt>Validade do seguro</dt><dd>${dashText(p.insuranceValidUntil)}</dd></div>
+                    <div><dt>IBAN</dt><dd>${dashText(p.iban)}</dd></div>
+                </dl>
+                <div class="admin-staff-profile-block">
+                    <h4>Bio</h4>
+                    <p>${dashText(p.bio)}</p>
+                </div>
+                <div class="admin-staff-profile-block">
+                    <h4>Credentials</h4>
+                    <p>${dashText(p.credentials)}</p>
+                </div>
+                <div class="admin-staff-profile-block">
+                    <h4>Preferências primárias</h4>
+                    ${areaListHtml(p.primaryAreas)}
+                </div>
+                <div class="admin-staff-profile-block">
+                    <h4>Preferências secundárias</h4>
+                    ${areaListHtml(p.secondaryAreas)}
+                </div>
+                <div class="admin-staff-profile-block">
+                    <h4>Documentos</h4>
+                    <ul class="admin-staff-docs">${docs}</ul>
+                </div>
+            </article>`;
+        }).join('');
+    }
+
+    async function loadAdminStaffProfiles() {
+        if (!adminStaffProfilesList) return;
+        try {
+            const res = await fetch('/api/admin/staff-profiles');
+            if (res.status === 401 || res.status === 403) return;
+            if (!res.ok) throw new Error('Failed to load staff profiles');
+            renderAdminStaffProfiles(await res.json());
+        } catch (err) {
+            console.error('Load staff profiles:', err);
+            adminStaffProfilesList.innerHTML = '<p class="admin-empty-list">Could not load professional profiles.</p>';
         }
     }
 
@@ -3412,21 +3510,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         psicologo: 'Número da Ordem dos Psicólogos'
     };
     const DEFAULT_DOC_KINDS = {
-        contrato: 'Contrato',
-        seguro: 'Seguro de responsabilidade civil',
+        identificacao: 'Cartão de Cidadão',
+        cartao_ordem: 'Cópia da cédula',
         cv: 'CV',
-        identificacao: 'Documento de identificação',
-        cartao_ordem: 'Cartão da ordem'
+        seguro: 'Seguro de responsabilidade civil',
+        contrato: 'Contrato'
     };
+    const OPTIONAL_DOC_VALIDITY = new Set(['cv']);
     let adminProfileMeta = {
         professions: DEFAULT_ORDEM_LABELS,
         documentKinds: DEFAULT_DOC_KINDS,
         clinicalAreas: {},
         documents: []
     };
-    const adminProfileName = document.getElementById('adminProfileName');
     const adminProfileUsername = document.getElementById('adminProfileUsername');
-    const adminProfileRole = document.getElementById('adminProfileRole');
     const adminProfileDoxy = document.getElementById('adminProfileDoxy');
     const adminProfilePhoto = document.getElementById('adminProfilePhoto');
     const adminProfilePhotoPlaceholder = document.getElementById('adminProfilePhotoPlaceholder');
@@ -3436,10 +3533,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const adminProfession = document.getElementById('adminProfession');
     const adminOrdemLabel = document.getElementById('adminOrdemLabel');
     const adminOrdemNumber = document.getElementById('adminOrdemNumber');
+    const adminFullName = document.getElementById('adminFullName');
+    const adminNif = document.getElementById('adminNif');
+    const adminCitizenCard = document.getElementById('adminCitizenCard');
+    const adminAddress = document.getElementById('adminAddress');
+    const adminInsurer = document.getElementById('adminInsurer');
+    const adminInsurancePolicy = document.getElementById('adminInsurancePolicy');
+    const adminInsuranceValidUntil = document.getElementById('adminInsuranceValidUntil');
     const adminBio = document.getElementById('adminBio');
     const adminCredentials = document.getElementById('adminCredentials');
-    const adminPrimaryArea = document.getElementById('adminPrimaryArea');
-    const adminSecondaryArea = document.getElementById('adminSecondaryArea');
+    const adminPrimaryAreas = document.getElementById('adminPrimaryAreas');
+    const adminSecondaryAreas = document.getElementById('adminSecondaryAreas');
     const adminProfileForm = document.getElementById('adminProfileForm');
     const adminProfileFormError = document.getElementById('adminProfileFormError');
     const adminProfileSaveBtn = document.getElementById('adminProfileSaveBtn');
@@ -3448,22 +3552,65 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function ordemLabelFor(profession) {
         const labels = adminProfileMeta.professions || DEFAULT_ORDEM_LABELS;
-        return labels[profession] || 'Número da ordem';
+        return labels[profession] || 'Cédula profissional';
     }
 
-    function fillAreaSelect(selectEl, profession, selected) {
-        if (!selectEl) return;
-        const areas = (adminProfileMeta.clinicalAreas && adminProfileMeta.clinicalAreas[profession]) || [];
-        const value = selected || '';
-        const opts = ['<option value="">Select</option>'].concat(
-            areas.map((area) => `<option value="${escapeHtml(area)}">${escapeHtml(area)}</option>`)
-        );
-        if (value && !areas.includes(value)) {
-            opts.push(`<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`);
+    function parseAreaList(value) {
+        if (Array.isArray(value)) {
+            return [...new Set(value.map((v) => String(v || '').trim()).filter(Boolean))];
         }
-        selectEl.innerHTML = opts.join('');
-        selectEl.value = value;
-        selectEl.disabled = !profession;
+        const s = String(value || '').trim();
+        if (!s) return [];
+        if (s.startsWith('[')) {
+            try { return parseAreaList(JSON.parse(s)); } catch (e) { /* ignore */ }
+        }
+        return [s];
+    }
+
+    function areaGroupsFor(profession) {
+        const groups = (adminProfileMeta.clinicalAreas && adminProfileMeta.clinicalAreas[profession]) || [];
+        return groups.filter((g) => g && Array.isArray(g.items));
+    }
+
+    function renderAreaChecks(container, profession, selected) {
+        if (!container) return;
+        const selectedSet = new Set(parseAreaList(selected));
+        if (!profession) {
+            container.innerHTML = '<p class="clinic-pref-empty">Seleccione a profissão primeiro</p>';
+            return;
+        }
+        const groups = areaGroupsFor(profession);
+        const known = new Set(groups.flatMap((g) => g.items || []));
+        const extra = [...selectedSet].filter((v) => !known.has(v));
+        const allGroups = extra.length ? groups.concat([{ group: 'Outras', items: extra }]) : groups;
+        container.innerHTML = allGroups.map((g) => `
+            <div class="clinic-pref-group">
+                <h3 class="clinic-pref-group-title">${escapeHtml(g.group)}</h3>
+                <div class="clinic-pref-list">
+                    ${(g.items || []).map((item) => `
+                        <label class="clinic-pref-check">
+                            <input type="checkbox" value="${escapeHtml(item)}" ${selectedSet.has(item) ? 'checked' : ''}>
+                            <span>${escapeHtml(item)}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('') || '<p class="clinic-pref-empty">Sem áreas para esta profissão</p>';
+    }
+
+    function readAreaChecks(container) {
+        if (!container) return [];
+        return [...container.querySelectorAll('input[type="checkbox"]:checked')].map((el) => el.value);
+    }
+
+    function keepKnownAreas(profession, selected) {
+        const known = new Set(areaGroupsFor(profession).flatMap((g) => g.items || []));
+        return parseAreaList(selected).filter((item) => known.has(item));
+    }
+
+    function fillAdminAreaChecks(profession, primarySelected, secondarySelected) {
+        renderAreaChecks(adminPrimaryAreas, profession, primarySelected);
+        renderAreaChecks(adminSecondaryAreas, profession, secondarySelected);
     }
 
     function updateAdminOrdemLabel() {
@@ -3485,6 +3632,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ? `<a class="clinic-doc-link" href="/api/clinic/profile/documents/${encodeURIComponent(doc.id)}">${escapeHtml(doc.originalName || label)}</a>`
                 : '<span class="clinic-doc-missing">Not uploaded</span>';
             const validity = doc && doc.validUntil ? escapeHtml(doc.validUntil) : '—';
+            const dateRequired = OPTIONAL_DOC_VALIDITY.has(kind) ? '' : ' required';
             return `<tr data-doc-kind="${escapeHtml(kind)}">
                 <td>${escapeHtml(label)}</td>
                 <td>
@@ -3493,7 +3641,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </td>
                 <td>
                     <div class="clinic-doc-validity">${validity}</div>
-                    <input type="date" class="admin-input clinic-doc-date" value="${doc && doc.validUntil ? escapeHtml(doc.validUntil) : ''}" required>
+                    <input type="date" class="admin-input clinic-doc-date" value="${doc && doc.validUntil ? escapeHtml(doc.validUntil) : ''}"${dateRequired}>
                 </td>
                 <td>
                     <button type="button" class="btn btn-outline btn-sm clinic-doc-upload">${doc ? 'Replace' : 'Upload'}</button>
@@ -3543,19 +3691,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 clinicalAreas: data.clinicalAreas || {},
                 documents: data.documents || []
             };
-            if (adminProfileName) adminProfileName.textContent = data.displayName || data.username || '—';
             if (adminProfileUsername) adminProfileUsername.textContent = data.username || '—';
-            if (adminProfileRole) {
-                adminProfileRole.textContent = data.role === 'admin' ? 'Clinic administrator' : 'Clinician';
-            }
             adminProfession.value = data.profession || '';
+            if (adminFullName) adminFullName.value = data.fullName || data.displayName || '';
+            if (adminNif) adminNif.value = data.nif || '';
+            if (adminCitizenCard) adminCitizenCard.value = data.citizenCard || '';
+            if (adminAddress) adminAddress.value = data.address || '';
+            if (adminInsurer) adminInsurer.value = data.insurer || '';
+            if (adminInsurancePolicy) adminInsurancePolicy.value = data.insurancePolicy || '';
+            if (adminInsuranceValidUntil) adminInsuranceValidUntil.value = data.insuranceValidUntil || '';
             if (adminOrdemNumber) adminOrdemNumber.value = data.ordemNumber || '';
             if (adminBio) adminBio.value = data.bio || '';
             if (adminCredentials) adminCredentials.value = data.credentials || '';
             setAdminProfilePhoto(!!data.hasPhoto);
             updateAdminOrdemLabel();
-            fillAreaSelect(adminPrimaryArea, data.profession, data.primaryArea);
-            fillAreaSelect(adminSecondaryArea, data.profession, data.secondaryArea);
+            fillAdminAreaChecks(data.profession, data.primaryAreas, data.secondaryAreas);
             renderAdminDocumentRows();
             if (adminProfileFormError) adminProfileFormError.style.display = 'none';
             if (adminDocsError) adminDocsError.style.display = 'none';
@@ -3576,10 +3726,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (adminProfession) {
         adminProfession.addEventListener('change', () => {
             updateAdminOrdemLabel();
-            fillAreaSelect(adminPrimaryArea, adminProfession.value, adminPrimaryArea.value);
-            fillAreaSelect(adminSecondaryArea, adminProfession.value, adminSecondaryArea.value);
+            fillAdminAreaChecks(
+                adminProfession.value,
+                keepKnownAreas(adminProfession.value, readAreaChecks(adminPrimaryAreas)),
+                keepKnownAreas(adminProfession.value, readAreaChecks(adminSecondaryAreas))
+            );
         });
     }
+
+    function bindAdminPrefExclusive(source, other) {
+        if (!source) return;
+        source.addEventListener('change', (e) => {
+            const input = e.target.closest('input[type="checkbox"]');
+            if (!input || !input.checked || !other) return;
+            other.querySelectorAll('input[type="checkbox"]').forEach((el) => {
+                if (el.value === input.value) el.checked = false;
+            });
+        });
+    }
+    bindAdminPrefExclusive(adminPrimaryAreas, adminSecondaryAreas);
+    bindAdminPrefExclusive(adminSecondaryAreas, adminPrimaryAreas);
 
     if (adminProfileForm) {
         adminProfileForm.addEventListener('submit', async (e) => {
@@ -3587,11 +3753,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (adminProfileFormError) adminProfileFormError.style.display = 'none';
             const payload = {
                 profession: adminProfession.value,
+                fullName: adminFullName ? adminFullName.value.trim() : '',
+                nif: adminNif ? adminNif.value.trim() : '',
+                citizenCard: adminCitizenCard ? adminCitizenCard.value.trim() : '',
+                address: adminAddress ? adminAddress.value.trim() : '',
+                insurer: adminInsurer ? adminInsurer.value.trim() : '',
+                insurancePolicy: adminInsurancePolicy ? adminInsurancePolicy.value.trim() : '',
+                insuranceValidUntil: adminInsuranceValidUntil ? adminInsuranceValidUntil.value : '',
                 ordemNumber: adminOrdemNumber ? adminOrdemNumber.value.trim() : '',
                 bio: adminBio ? adminBio.value.trim() : '',
                 credentials: adminCredentials ? adminCredentials.value.trim() : '',
-                primaryArea: adminPrimaryArea ? adminPrimaryArea.value : '',
-                secondaryArea: adminSecondaryArea ? adminSecondaryArea.value : ''
+                primaryAreas: readAreaChecks(adminPrimaryAreas),
+                secondaryAreas: readAreaChecks(adminSecondaryAreas)
             };
             if (adminProfileSaveBtn) adminProfileSaveBtn.disabled = true;
             try {
@@ -3659,7 +3832,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showAdminProfileError(adminDocsError, 'Choose a file to upload.');
                 return;
             }
-            if (!dateInput.value) {
+            if (dateInput.required && !dateInput.value) {
                 showAdminProfileError(adminDocsError, 'Add the validity date.');
                 return;
             }
