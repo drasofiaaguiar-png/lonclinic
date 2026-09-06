@@ -4830,6 +4830,7 @@
             "ctaKind": "travel",
             "liveSlots": true,
             "related": [
+                "vou-viajar-esta-semana-sem-vacinas",
                 "onde-fazer-consulta-medicina-do-viajante-lisboa",
                 "quanto-custa-consulta-medicina-do-viajante",
                 "vacinas-viajante-guia-completo",
@@ -4855,6 +4856,47 @@
                 {
                     "q": "Quanto custa uma consulta de medicina do viajante?",
                     "a": "Na Lon Clinic: 39 € (1 pessoa), 69 € (2), 107 € (3), 136 € (4). Cobre consulta e prescrição. Vacinas no CVI e comprimidos da malária pagam-se à parte."
+                }
+            ]
+        },
+        {
+            "slug": "vou-viajar-esta-semana-sem-vacinas",
+            "title": "Vou viajar esta semana e ainda não tenho vacinas — o que fazer",
+            "description": "Viagem esta semana sem vacinas? O que ainda dá consoante os dias que faltam. Consulta Lon Clinic hoje ou amanhã — no site ou WhatsApp. 39 €.",
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "html",
+            "image": "/image/guide/travel-cover-6.png",
+            "about": "Medicina do viajante",
+            "author": "rita-aguiar",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "quando-agendar-consulta-do-viajante",
+                "vacina-febre-amarela-guia-completo",
+                "onde-fazer-consulta-medicina-do-viajante-lisboa",
+                "quanto-custa-consulta-medicina-do-viajante"
+            ],
+            "faq": [
+                {
+                    "q": "Vou viajar esta semana e ainda não tenho vacinas. O que fazer?",
+                    "a": "Marque a consulta do viajante na Lon Clinic para hoje ou amanhã — no site ou por WhatsApp, 39 €. O que ainda dá para vacinar depende dos dias até ao voo. O certificado da febre amarela só vale a partir do 10.º dia após a toma."
+                },
+                {
+                    "q": "Posso viajar amanhã sem o certificado da vacina da febre amarela?",
+                    "a": "Depende do destino: nem todos os países o exigem. O certificado só é válido a partir do 10.º dia após a toma — isso não se contorna. A consulta confirma a exigência real e se há alternativa clínica."
+                },
+                {
+                    "q": "Ainda vale a pena tomar vacinas se a viagem é daqui a 2 dias?",
+                    "a": "Para muitas vacinas, sim: mesmo sem protecção completa à partida, continuam a fazer efeito na viagem. A decisão é por destino, na consulta."
+                },
+                {
+                    "q": "E se não houver tempo para todas as vacinas recomendadas?",
+                    "a": "A médica prioriza o risco real do itinerário, não a lista completa ideal. Malária, quando indicada, é receita para a farmácia, não vacina."
+                },
+                {
+                    "q": "Consigo marcar e fazer tudo sem sair de casa?",
+                    "a": "A consulta é por vídeo, marcada no site ou por WhatsApp. A prescrição chega por SMS ou e-mail. A toma das vacinas do circuito internacional é no CVI."
                 }
             ]
         },

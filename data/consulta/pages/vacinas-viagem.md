@@ -8,6 +8,7 @@ Febre amarela e outras do circuito CVI **não** se tomam na CUF, na farmácia da
 
 Guias por cidade:
 
+- [Vou viajar esta semana sem vacinas](/blog/vou-viajar-esta-semana-sem-vacinas)
 - [Quando e como agendar a consulta](/blog/quando-agendar-consulta-do-viajante)
 - [Onde fazer a consulta em Lisboa](/blog/onde-fazer-consulta-medicina-do-viajante-lisboa) — SNS, privado e online
 - [Lisboa](/blog/vacinas-viajante-lisboa) — vários CVI na ARSLVT
