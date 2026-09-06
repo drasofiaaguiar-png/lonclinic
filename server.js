@@ -764,10 +764,40 @@ function flattenClinicalAreaItems(profession) {
     return groups.flatMap((group) => (group && Array.isArray(group.items) ? group.items : []));
 }
 
+const STAFF_AREA_ALIASES = {
+    'Stress / burnout': 'Burnout',
+    'Luto': 'Luto (geral)',
+    'Parentalidade': 'Coaching parental',
+    'Perturbações alimentares': 'Distúrbio alimentar (incluindo excesso de peso)',
+    'Relações interpessoais': 'Relacionamentos',
+    'Relações de casal': 'Relacionamentos',
+    'Emagrecimento': 'Perda de peso',
+    'Nutrição desportiva': 'Nutrição desportiva lúdica'
+};
+
+function allKnownClinicalAreas() {
+    const known = new Set();
+    for (const profession of Object.keys(STAFF_CLINICAL_AREAS)) {
+        for (const item of flattenClinicalAreaItems(profession)) known.add(item);
+    }
+    return known;
+}
+
 function sanitizeStaffAreas(profession, values, disallowed) {
-    const allowed = new Set(flattenClinicalAreaItems(profession));
     const blocked = new Set(disallowed || []);
-    return parseStaffAreaList(values).filter((item) => allowed.has(item) && !blocked.has(item));
+    const allowed = new Set(flattenClinicalAreaItems(profession));
+    const known = allKnownClinicalAreas();
+    const seen = new Set();
+    const out = [];
+    for (const raw of parseStaffAreaList(values)) {
+        const item = STAFF_AREA_ALIASES[raw] || raw;
+        if (!item || blocked.has(item) || seen.has(item)) continue;
+        if (profession && allowed.size && !allowed.has(item) && known.has(item)) continue;
+        seen.add(item);
+        out.push(item);
+        if (out.length >= 80) break;
+    }
+    return out;
 }
 
 function isoDateOrEmpty(value) {
@@ -9763,6 +9793,15 @@ app.get('/api/clinic/profile', requireAuth, async (req, res) => {
         const profile = await getStaffProfileInternal(username);
         const documents = (await listStaffDocumentsInternal(username)).map(publicStaffDocument);
         const displayName = req.session.clinicDisplayName || username;
+        const primaryAreas = sanitizeStaffAreas(
+            profile.profession,
+            profile.primaryAreas != null ? profile.primaryAreas : profile.primaryArea
+        );
+        const secondaryAreas = sanitizeStaffAreas(
+            profile.profession,
+            profile.secondaryAreas != null ? profile.secondaryAreas : profile.secondaryArea,
+            primaryAreas
+        );
         res.json({
             username,
             displayName,
@@ -9778,8 +9817,8 @@ app.get('/api/clinic/profile', requireAuth, async (req, res) => {
             insuranceValidUntil: profile.insuranceValidUntil || '',
             bio: profile.bio || '',
             credentials: profile.credentials || '',
-            primaryAreas: parseStaffAreaList(profile.primaryAreas != null ? profile.primaryAreas : profile.primaryArea),
-            secondaryAreas: parseStaffAreaList(profile.secondaryAreas != null ? profile.secondaryAreas : profile.secondaryArea),
+            primaryAreas,
+            secondaryAreas,
             hasPhoto: !!profile.hasPhoto,
             documents,
             professions: STAFF_PROFESSIONS,
@@ -9964,13 +10003,19 @@ const STAFF_PROFESSION_TITLES = {
 
 function publicAdminStaffProfile(person, profile, documents) {
     const p = profile || emptyStaffProfile(person.username);
+    const primaryAreas = sanitizeStaffAreas(p.profession, p.primaryAreas != null ? p.primaryAreas : p.primaryArea);
+    const secondaryAreas = sanitizeStaffAreas(
+        p.profession,
+        p.secondaryAreas != null ? p.secondaryAreas : p.secondaryArea,
+        primaryAreas
+    );
     return {
         username: person.username,
         displayName: person.displayName || person.username,
         email: person.email || '',
         profession: p.profession || '',
         professionLabel: STAFF_PROFESSION_TITLES[p.profession] || '',
-        fullName: p.fullName || '',
+        fullName: p.fullName || person.displayName || '',
         nif: p.nif || '',
         citizenCard: p.citizenCard || '',
         address: p.address || '',
@@ -9981,8 +10026,8 @@ function publicAdminStaffProfile(person, profile, documents) {
         bio: p.bio || '',
         credentials: p.credentials || '',
         iban: p.iban || '',
-        primaryAreas: parseStaffAreaList(p.primaryAreas != null ? p.primaryAreas : p.primaryArea),
-        secondaryAreas: parseStaffAreaList(p.secondaryAreas != null ? p.secondaryAreas : p.secondaryArea),
+        primaryAreas,
+        secondaryAreas,
         hasPhoto: !!p.hasPhoto,
         updatedAt: p.updatedAt || null,
         documents: (documents || []).map(publicStaffDocument)
