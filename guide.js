@@ -401,6 +401,9 @@ function articleCluster(meta) {
     if (meta && (meta.series === 'livros-saude' || about === 'livros de saúde' || about === 'livros de saude')) {
         return 'livros-saude';
     }
+    if (meta && (meta.series === 'bestsellers-psicologia' || about === 'livros de psicologia')) {
+        return 'bestsellers-psicologia';
+    }
     if (/vacina|viajante|travel|marcacao/.test(slug)) return 'travel';
     if (/burnout/.test(slug) || about === 'burnout') return 'burnout';
     if (/depress/.test(about) || /depressao|anedonia|antidepressivos/.test(slug)) return 'depressao';
@@ -415,7 +418,7 @@ function defaultCtaKind(meta) {
     if (meta && meta.ctaKind) return String(meta.ctaKind);
     const cluster = articleCluster(meta);
     if (cluster === 'travel') return 'travel';
-    if (cluster === 'mental' || cluster === 'depressao' || cluster === 'ansiedade' || cluster === 'autoconhecimento') return 'mental';
+    if (cluster === 'mental' || cluster === 'depressao' || cluster === 'ansiedade' || cluster === 'autoconhecimento' || cluster === 'bestsellers-psicologia') return 'mental';
     if (cluster === 'burnout') return 'burnout';
     if (cluster === 'perda-de-peso' || cluster === 'livros-saude') return 'nutrition';
     return 'general';
@@ -446,6 +449,7 @@ const CLUSTER_CROSS = {
     autoconhecimento: ['ansiedade', 'depressao', 'mental'],
     'perda-de-peso': ['burnout', 'autoconhecimento', 'ansiedade'],
     'livros-saude': ['perda-de-peso', 'burnout', 'general'],
+    'bestsellers-psicologia': ['burnout', 'ansiedade', 'depressao'],
     mental: ['depressao', 'ansiedade', 'burnout'],
     travel: ['general', 'mental'],
     general: ['travel', 'mental', 'perda-de-peso']
@@ -875,8 +879,8 @@ function articleLiveSlotsHtml(meta) {
 function expandLonSlotsTokens(html, meta) {
     const slug = String((meta && meta.slug) || 'artigo');
     return String(html || '').replace(
-        /<p>\s*\[lon-slots:\s*servi[cç]o=["']([^"']+)["']\s*\]\s*<\/p>|\[lon-slots:\s*servi[cç]o=["']([^"']+)["']\s*\]/gi,
-        (_, a, b) => liveSlotsWidgetHtml(slug, slotServicePack(slug, a || b))
+        /(?:<p>\s*)?\[lon-slots:\s*servi[cç]o=(?:["']|&quot;)([^"'&]+)(?:["']|&quot;)\s*\](?:\s*<\/p>)?/gi,
+        (_, service) => liveSlotsWidgetHtml(slug, slotServicePack(slug, service))
     );
 }
 
@@ -1027,7 +1031,7 @@ function injectArticleChrome(html, meta, articles, format) {
         ? articleLiveSlotsHtml(meta)
         : '';
     const mentionsBurnout = /\/burnout|burnout|s[ií]ndrome de exaust|stress laboral/i.test(out);
-    const note = mentionsBurnout && articleCluster(meta) !== 'burnout' && !out.includes('guide-burnout-note')
+    const note = mentionsBurnout && articleCluster(meta) !== 'burnout' && articleCluster(meta) !== 'livros-saude' && articleCluster(meta) !== 'bestsellers-psicologia' && !out.includes('guide-burnout-note')
         ? burnoutMentionNoteHtml(lang)
         : '';
     if (format === 'html') {
@@ -1631,6 +1635,9 @@ function magTheme(article) {
     if (article && (article.series === 'livros-saude' || about === 'livros de saúde' || about === 'livros de saude')) {
         return 'livros-saude';
     }
+    if (article && (article.series === 'bestsellers-psicologia' || about === 'livros de psicologia')) {
+        return 'bestsellers-psicologia';
+    }
     if (/burnout/.test(about) || /burnout/.test(slug) || (article && article.href && String(article.href).startsWith('/burnout'))) {
         return 'burnout';
     }
@@ -1652,6 +1659,7 @@ function magThemeLabel(article) {
     if (theme === 'autoconhecimento') return 'Autoconhecimento';
     if (theme === 'perda-de-peso') return 'Perda de peso';
     if (theme === 'livros-saude') return 'Livros de saúde';
+    if (theme === 'bestsellers-psicologia') return 'Livros de psicologia';
     if (theme === 'travel') return 'Viagem';
     return 'Clínica';
 }
@@ -1725,8 +1733,9 @@ function magTocHtml() {
                     <li><a href="#autoconhecimento"><span>05</span> Autoconhecimento</a></li>
                     <li><a href="#perda-de-peso"><span>06</span> Perda de peso</a></li>
                     <li><a href="#livros-saude"><span>07</span> Livros de saúde</a></li>
-                    <li><a href="#saude-do-viajante"><span>08</span> Viagem</a></li>
-                    <li><a href="#clinica"><span>09</span> Clínica</a></li>
+                    <li><a href="#livros-psicologia"><span>08</span> Livros de psicologia</a></li>
+                    <li><a href="#saude-do-viajante"><span>09</span> Viagem</a></li>
+                    <li><a href="#clinica"><span>10</span> Clínica</a></li>
                 </ol>
             </nav>`;
 }
@@ -1974,11 +1983,18 @@ function magCtaHtml(kind, lang) {
     };
     const bookingHref = bookingByKind[kind] || bookingByKind.clinic;
     const bookingLabel = (pack.actions && pack.actions[0] && pack.actions[0].label) || labelByLang[lang] || labelByLang.pt;
-    const actions = kind === 'burnout'
-        ? `<a class="mag-cta-primary" href="/burnout">${escapeHtml(hubLabelByLang[lang] || hubLabelByLang.pt)}</a><a class="mag-cta-ghost" href="${escapeHtml(withLangHref('/burnout/teste', lang))}">${escapeHtml(testLabelByLang[lang] || testLabelByLang.pt)}</a>`
-        : `<a class="mag-cta-primary" href="${escapeHtml(bookingHref)}">${escapeHtml(
-            kind === 'clinic' || kind === 'travel' || kind === 'mental' || kind === 'nutrition' || kind === 'longevity' ? (labelByLang[lang] || labelByLang.pt) : bookingLabel
+    let actions;
+    if (kind === 'burnout') {
+        actions = `<a class="mag-cta-primary" href="/burnout">${escapeHtml(hubLabelByLang[lang] || hubLabelByLang.pt)}</a><a class="mag-cta-ghost" href="${escapeHtml(withLangHref('/burnout/teste', lang))}">${escapeHtml(testLabelByLang[lang] || testLabelByLang.pt)}</a>`;
+    } else if (kind === 'neurodiversidade' && pack.actions && pack.actions.length >= 2) {
+        actions = `<a class="mag-cta-primary" href="${escapeHtml(pack.actions[0].href)}">${escapeHtml(pack.actions[0].label)}</a><a class="mag-cta-ghost" href="${escapeHtml(pack.actions[1].href)}">${escapeHtml(pack.actions[1].label)}</a>`;
+    } else if ((kind === 'nutricao-programa' || kind === 'nutricao_programa') && pack.actions && pack.actions.length >= 2) {
+        actions = `<a class="mag-cta-primary" href="${escapeHtml(pack.actions[1].href)}">${escapeHtml(pack.actions[1].label)}</a><a class="mag-cta-ghost" href="${escapeHtml(pack.actions[0].href)}">${escapeHtml(pack.actions[0].label)}</a>`;
+    } else {
+        actions = `<a class="mag-cta-primary" href="${escapeHtml(bookingHref)}">${escapeHtml(
+            kind === 'clinic' || kind === 'travel' || kind === 'mental' || kind === 'nutrition' || kind === 'longevity' || kind === 'nutricao-programa' ? (labelByLang[lang] || labelByLang.pt) : bookingLabel
         )}</a>`;
+    }
     return `<aside class="mag-cta" aria-label="${escapeHtml(pack.title)}">
                 <p>${escapeHtml(pack.kicker)}</p>
                 <h2>${escapeHtml(pack.title)}</h2>
@@ -2215,6 +2231,22 @@ function magazineNavTree() {
             ]
         },
         {
+            label: 'Livros de psicologia',
+            children: [
+                { label: 'A série', href: '/blog/os-10-bestsellers-psicologia-saude-mental' },
+                { label: 'O Caminho do Monge', href: '/blog/o-caminho-do-monge-jay-shetty' },
+                { label: 'Como Fazer Coisas Difíceis', href: '/blog/como-fazer-coisas-dificeis-tim-cantopher' },
+                { label: 'Talvez Devesses Falar com Alguém', href: '/blog/talvez-devesses-falar-com-alguem' },
+                { label: 'A Coragem de Não Agradar', href: '/blog/a-coragem-de-nao-agradar' },
+                { label: 'Por Fim, a Paz', href: '/blog/por-fim-a-paz-judson-brewer' },
+                { label: 'O Corpo Guarda a Conta', href: '/blog/o-corpo-guarda-a-conta' },
+                { label: 'Por que Razão Dormimos', href: '/blog/por-que-razao-dormimos-matthew-walker' },
+                { label: 'Deixar de Pensar Demais', href: '/blog/deixar-de-pensar-demais-nick-trenton' },
+                { label: 'As Suas Zonas Erróneas', href: '/blog/as-suas-zonas-erroneas-wayne-dyer' },
+                { label: 'Hábitos Atómicos', href: '/blog/habitos-atomicos-james-clear' }
+            ]
+        },
+        {
             label: 'Clínica turista',
             children: [
                 { label: 'Tourist clinic', href: '/tourist-clinic' },
@@ -2349,7 +2381,7 @@ function magBreadcrumbJsonLd(origin, crumbs) {
 }
 
 function magTopicAnchorsHtml() {
-    const skip = new Set(['saude-mental', 'burnout', 'depressao', 'ansiedade', 'autoconhecimento', 'perda-de-peso', 'livros-de-saude', 'saude-do-viajante', 'clinica']);
+    const skip = new Set(['saude-mental', 'burnout', 'depressao', 'ansiedade', 'autoconhecimento', 'perda-de-peso', 'livros-de-saude', 'livros-de-psicologia', 'saude-do-viajante', 'clinica']);
     const ids = [];
     function walk(nodes) {
         (Array.isArray(nodes) ? nodes : []).forEach((node) => {
@@ -2555,6 +2587,7 @@ function renderMagazineIndex(origin) {
     const autoconhecimento = articles.filter((a) => magTheme(a) === 'autoconhecimento');
     const perdaPeso = articles.filter((a) => magTheme(a) === 'perda-de-peso');
     const livrosSaude = articles.filter((a) => magTheme(a) === 'livros-saude');
+    const livrosPsicologia = articles.filter((a) => magTheme(a) === 'bestsellers-psicologia');
     const travel = articles.filter((a) => magTheme(a) === 'travel');
     const clinic = articles.filter((a) => magTheme(a) === 'clinic');
     const cover = mental[0] || articles[0];
@@ -2584,6 +2617,9 @@ function renderMagazineIndex(origin) {
     const livrosSaudeRest = featured && magTheme(featured) === 'livros-saude'
         ? livrosSaude.filter((a) => magHref(a) !== featuredHref)
         : livrosSaude;
+    const livrosPsicologiaRest = featured && magTheme(featured) === 'bestsellers-psicologia'
+        ? livrosPsicologia.filter((a) => magHref(a) !== featuredHref)
+        : livrosPsicologia;
     const travelRest = featured && magTheme(featured) === 'travel'
         ? travel.filter((a) => magHref(a) !== featuredHref)
         : travel;
@@ -2598,6 +2634,7 @@ function renderMagazineIndex(origin) {
         magThemeRowHtml('autoconhecimento', 'Autoconhecimento', autoconhecimentoRest, 'mental'),
         magThemeRowHtml('perda-de-peso', 'Perda de peso', perdaPesoRest, 'nutrition'),
         magThemeRowHtml('livros-saude', 'Livros de saúde', livrosSaudeRest, 'nutrition'),
+        magThemeRowHtml('livros-psicologia', 'Livros de psicologia', livrosPsicologiaRest, 'mental'),
         magClusterHtml(),
         magThemeRowHtml('saude-do-viajante', 'Viagem', travelRest, 'travel'),
         magThemeRowHtml('clinica', 'Clínica', clinicRest, 'clinic')

@@ -6,6 +6,497 @@
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
+            "about": "Livros de psicologia",
+            "series": "bestsellers-psicologia",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "os-10-bestsellers-psicologia-saude-mental",
+            "title": "Os 10 Bestsellers de Psicologia e Saúde Mental Mais Vendidos em Portugal (Análise Crítica de uma Médica)",
+            "description": "Série de críticas clínicas aos bestsellers de psicologia e saúde mental em Portugal: o que a evidência confirma, onde a autoajuda falha, e o que pedir em consulta.",
+            "image": "/image/guide/guide-lake-boats.jpg",
+            "seriesHub": true,
+            "ctaKind": "mental",
+            "readingMinutes": 4,
+            "related": [
+                "o-caminho-do-monge-jay-shetty",
+                "talvez-devesses-falar-com-alguem",
+                "como-fazer-coisas-dificeis-tim-cantopher"
+            ],
+            "faq": [
+                {
+                    "q": "Esta série recomenda os dez livros?",
+                    "a": "Não. Comenta-os. Em vários capítulos a evidência confirma uma parte do argumento e recusa o uso isolado — meditar na depressão major, processar trauma só com um livro, ou otimizar hábitos em burnout avançado."
+                },
+                {
+                    "q": "Substitui uma consulta de psicologia ou uma avaliação médica?",
+                    "a": "Não. Tem fins informativos. Depressão, ansiedade generalizada, trauma e burnout são condições clínicas; decisões de tratamento exigem avaliação individual."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de psicologia",
+            "series": "bestsellers-psicologia",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "o-caminho-do-monge-jay-shetty",
+            "title": "O Caminho do Monge: o mito da positividade no esgotamento",
+            "description": "O Caminho do Monge popularizou o mindfulness — mas usá-lo sozinho num quadro de burnout ou depressão pode agravar a ruminação. Veja o que a ciência diz.",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "ctaKind": "burnout",
+            "slotService": "burnout",
+            "readingMinutes": 5,
+            "related": [
+                "deixar-de-pensar-demais-nick-trenton",
+                "como-fazer-coisas-dificeis-tim-cantopher",
+                "burnout-o-que-e-sinais-cansaco"
+            ],
+            "faq": [
+                {
+                    "q": "O mindfulness altera mesmo o cérebro?",
+                    "a": "Sim, há evidência de neuroimagem: 8 semanas de prática regular de mindfulness estão associadas a redução da densidade da amígdala e aumento no hipocampo, num estudo controlado publicado em 2011."
+                },
+                {
+                    "q": "A meditação pode ser suficiente para tratar burnout ou depressão?",
+                    "a": "Não, isoladamente. Nestes quadros clínicos, esvaziar a mente pode intensificar a ruminação. O mindfulness funciona melhor como complemento a um plano de tratamento estruturado, não como substituto de acompanhamento médico ou psicológico."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de psicologia",
+            "series": "bestsellers-psicologia",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "como-fazer-coisas-dificeis-tim-cantopher",
+            "title": "Como Fazer Coisas Difíceis: a biologia da exaustão humana",
+            "description": "O burnout tem uma base biológica real, não é fraqueza. Entenda o papel do cortisol crónico e da alostase, segundo a ciência.",
+            "image": "/image/guide/guide-waterfall.jpg",
+            "ctaKind": "burnout",
+            "slotService": "burnout",
+            "readingMinutes": 5,
+            "related": [
+                "habitos-atomicos-james-clear",
+                "o-caminho-do-monge-jay-shetty",
+                "regressar-ao-trabalho-depois-de-um-burnout"
+            ],
+            "faq": [
+                {
+                    "q": "O burnout é uma condição biológica real ou apenas cansaço?",
+                    "a": "Há um mecanismo biológico bem descrito — a carga alostática — que documenta como o stress crónico mantém o corpo num estado de ativação persistente, com efeitos mensuráveis em vários sistemas, incluindo o eixo hormonal do stress."
+                },
+                {
+                    "q": "O teste CBI substitui uma avaliação clínica de burnout?",
+                    "a": "Não. É um instrumento de rastreio útil para perceber o nível de exaustão, mas não é uma ferramenta de diagnóstico — sintomas persistentes devem sempre ser avaliados por um profissional de saúde."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de psicologia",
+            "series": "bestsellers-psicologia",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "talvez-devesses-falar-com-alguem",
+            "title": "Talvez Devesses Falar com Alguém: a ilusão do autodiagnóstico",
+            "description": "A relação terapêutica é o preditor mais consistente de sucesso na terapia — mais do que a técnica usada. Saiba porquê, com base numa meta-análise com 30 mil pacientes.",
+            "image": "/image/guide/guide-coastal-sun.jpg",
+            "ctaKind": "mental",
+            "slotService": "psicologia",
+            "readingMinutes": 5,
+            "related": [
+                "ansiedade-normal-ou-perturbacao",
+                "quando-a-ansiedade-justifica-medicacao",
+                "os-10-bestsellers-psicologia-saude-mental"
+            ],
+            "faq": [
+                {
+                    "q": "O que mais influencia o sucesso da terapia: a técnica ou o terapeuta?",
+                    "a": "Segundo a evidência disponível, a qualidade da relação (aliança terapêutica) entre paciente e terapeuta é um preditor mais consistente e robusto de bons resultados do que a escola teórica específica seguida pelo profissional."
+                },
+                {
+                    "q": "Ver vídeos sobre sintomas de ansiedade ou TDAH nas redes sociais é um bom ponto de partida para me tratar?",
+                    "a": "Pode ser um ponto de partida para procurar ajuda, mas não substitui uma avaliação clínica estruturada — identificar-se com sintomas descritos de forma genérica online cria frequentemente um viés que atrasa o diagnóstico correto da causa real."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de psicologia",
+            "series": "bestsellers-psicologia",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "a-coragem-de-nao-agradar",
+            "title": "A Coragem de Não Agradar: psicologia adleriana e os limites",
+            "description": "A necessidade excessiva de agradar aos outros (sociotropia) está ligada a maior risco de depressão. O que a psicologia adleriana acerta — e onde falha.",
+            "image": "/image/guide/guide-country-road.jpg",
+            "ctaKind": "mental",
+            "slotService": "psicologia",
+            "readingMinutes": 4,
+            "related": [
+                "limites-pessoais",
+                "as-suas-zonas-erroneas-wayne-dyer",
+                "depressao-mitos-e-factos"
+            ],
+            "faq": [
+                {
+                    "q": "A necessidade de agradar aos outros é mesmo um fator de risco para depressão?",
+                    "a": "Sim. A literatura científica descreve a sociotropia — necessidade elevada de aprovação e aceitação social — como uma vulnerabilidade cognitiva associada a maior risco de depressão perante rejeições ou conflitos interpessoais."
+                },
+                {
+                    "q": "Separar as minhas tarefas das dos outros resolve um ambiente de trabalho tóxico?",
+                    "a": "Não isoladamente. Técnicas de reestruturação mental ajudam a gerir a reação emocional da pessoa, mas não substituem intervenções diretas quando o problema é um ambiente de trabalho genuinamente hostil ou abusivo."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de psicologia",
+            "series": "bestsellers-psicologia",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "por-fim-a-paz-judson-brewer",
+            "title": "Por Fim, a Paz: a neurociência da ansiedade e dos hábitos",
+            "description": "A ansiedade pode funcionar como um hábito cerebral — mas essa abordagem tem limites claros na ansiedade generalizada com sintomas físicos. Análise clínica.",
+            "image": "/image/guide/guide-opera-coast.jpg",
+            "ctaKind": "mental",
+            "slotService": "psicologia",
+            "readingMinutes": 5,
+            "related": [
+                "ansiedade-generalizada",
+                "tcc-para-ansiedade",
+                "tecnicas-de-respiracao-para-ansiedade"
+            ],
+            "faq": [
+                {
+                    "q": "A ansiedade pode mesmo funcionar como um hábito do cérebro?",
+                    "a": "Sim, há evidência de neuroimagem que liga a ruminação ansiosa à atividade da rede de modo padrão, e programas baseados nesse mecanismo já mostraram, em ensaios clínicos, reduções significativas de sintomas de ansiedade generalizada."
+                },
+                {
+                    "q": "Só treino mental chega para tratar ansiedade com sintomas físicos fortes (taquicardia, tonturas)?",
+                    "a": "Nem sempre. Quando há um componente somático relevante, costuma ser necessário associar técnicas de regulação fisiológica direta (respiração, variabilidade cardíaca) à reestruturação cognitiva, e nalguns casos avaliação médica complementar."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de psicologia",
+            "series": "bestsellers-psicologia",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "o-corpo-guarda-a-conta",
+            "title": "O Corpo Guarda a Conta: trauma e sintomatologia somática",
+            "description": "O trauma não processado altera fisicamente o eixo hormonal do stress e pode manifestar-se como dor crónica. Mas ler sobre trauma sem acompanhamento tem riscos.",
+            "image": "/image/guide/guide-group-walk.jpg",
+            "ctaKind": "mental",
+            "slotService": "psicologia",
+            "readingMinutes": 5,
+            "related": [
+                "sintomas-fisicos-do-burnout",
+                "ansiedade-e-problemas-digestivos",
+                "talvez-devesses-falar-com-alguem"
+            ],
+            "faq": [
+                {
+                    "q": "O trauma psicológico pode mesmo causar sintomas físicos, como dor crónica?",
+                    "a": "Sim. Há evidência consistente de que o trauma não processado altera a regulação do eixo hormonal do stress, com associações documentadas a dor crónica, sintomas gastrointestinais e maior risco de outras condições de saúde mental."
+                },
+                {
+                    "q": "É seguro tentar processar um trauma sozinho, só a ler um livro sobre o tema?",
+                    "a": "Não é recomendado em casos de trauma significativo. Sem um ambiente terapêutico seguro, revisitar memórias traumáticas pode desencadear desregulação emocional ou dissociação — o acompanhamento profissional é importante precisamente para conter esse risco."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de psicologia",
+            "series": "bestsellers-psicologia",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "por-que-razao-dormimos-matthew-walker",
+            "title": "Por que Razão Dormimos: a neurobiologia do sono e da saúde mental",
+            "description": "A insónia não é só sintoma — é um fator de risco causal para depressão e burnout, confirma meta-análise com dados longitudinais. Saiba o que fazer.",
+            "image": "/image/guide/guide-sunset-lake.jpg",
+            "ctaKind": "mental",
+            "slotService": "psicologia",
+            "readingMinutes": 5,
+            "related": [
+                "ansiedade-e-insonia",
+                "como-o-burnout-afeta-o-sono",
+                "depressao-e-sono"
+            ],
+            "faq": [
+                {
+                    "q": "A insónia é apenas um sintoma de depressão ou pode causá-la?",
+                    "a": "A evidência longitudinal mostra que a insónia funciona também como fator de risco independente: precede e prediz o aparecimento de episódios depressivos e de ansiedade, não sendo apenas uma consequência."
+                },
+                {
+                    "q": "Preocupar-me em dormir exatamente 8 horas ajuda a dormir melhor?",
+                    "a": "Não necessariamente — pode ter o efeito contrário. A ansiedade excessiva sobre a quantidade perfeita de sono é um fenómeno clínico reconhecido (ortossónia) que pode, por si só, perpetuar a insónia."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de psicologia",
+            "series": "bestsellers-psicologia",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "deixar-de-pensar-demais-nick-trenton",
+            "title": "Deixar de Pensar Demais: o perigo da ruminação cognitiva",
+            "description": "Suprimir pensamentos indesejados piora o problema — o efeito do elefante branco explica porquê. O que funciona de verdade contra o overthinking.",
+            "image": "/image/guide/guide-mountain-path.avif",
+            "ctaKind": "mental",
+            "slotService": "psicologia",
+            "readingMinutes": 4,
+            "related": [
+                "o-caminho-do-monge-jay-shetty",
+                "ansiedade-antecipatoria",
+                "por-fim-a-paz-judson-brewer"
+            ],
+            "faq": [
+                {
+                    "q": "Tentar não pensar num problema ajuda a livrar-me dele?",
+                    "a": "Geralmente não — tende a ter o efeito oposto. A supressão ativa de um pensamento costuma aumentar a sua frequência e intensidade, um fenómeno bem documentado na investigação psicológica."
+                },
+                {
+                    "q": "Porque é que a ruminação é tão associada à ansiedade e à depressão?",
+                    "a": "Porque, teoricamente, é um estilo de resposta ao mal-estar que mantém o foco no problema sem gerar resolução prática, prolongando e intensificando o sofrimento em vez de o reduzir."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de psicologia",
+            "series": "bestsellers-psicologia",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "as-suas-zonas-erroneas-wayne-dyer",
+            "title": "As Suas Zonas Erróneas: autonomia emocional vs. reducionismo",
+            "description": "Achar que ter controlo sobre a vida ajuda a resiliência é verdade — mas dizer que a depressão é escolha de atitude ignora décadas de neurociência.",
+            "image": "/image/guide/1.webp",
+            "ctaKind": "mental",
+            "slotService": "psicologia",
+            "readingMinutes": 4,
+            "related": [
+                "depressao-mitos-e-factos",
+                "quando-procurar-ajuda-para-a-depressao",
+                "a-coragem-de-nao-agradar"
+            ],
+            "faq": [
+                {
+                    "q": "Acreditar que tenho controlo sobre a minha vida ajuda mesmo a saúde mental?",
+                    "a": "Sim, há uma base teórica e empírica sólida: o locus de controlo interno está associado a maior resiliência psicológica. Isso é diferente, porém, de dizer que perturbações do humor são apenas uma questão de escolha."
+                },
+                {
+                    "q": "A depressão é uma escolha de atitude?",
+                    "a": "Não. A depressão tem componentes biológicos, genéticos e sociais bem documentados. Reduzi-la a uma questão de atitude pode, na prática, aumentar o sofrimento ao gerar culpa adicional em quem já está doente."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Livros de psicologia",
+            "series": "bestsellers-psicologia",
+            "verified": false,
+            "liveSlots": true,
+            "slug": "habitos-atomicos-james-clear",
+            "title": "Hábitos Atómicos: psicologia comportamental e esgotamento",
+            "description": "Construir hábitos pequenos reduz a fadiga de decisão — mas aplicar sistemas de produtividade durante um burnout pode acelerar o colapso. Veja porquê.",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "ctaKind": "burnout",
+            "slotService": "burnout",
+            "readingMinutes": 4,
+            "related": [
+                "como-fazer-coisas-dificeis-tim-cantopher",
+                "o-caminho-do-monge-jay-shetty",
+                "reconstruir-a-motivacao-depois-de-um-burnout"
+            ],
+            "faq": [
+                {
+                    "q": "Quanto tempo demora a formar um novo hábito?",
+                    "a": "Um estudo de referência sobre o tema encontrou uma média próxima de dois a três meses para a automatização de um comportamento simples e repetido diariamente, com grande variação individual — está longe do mito popular dos 21 dias."
+                },
+                {
+                    "q": "Sistemas de produtividade ajudam alguém em burnout avançado?",
+                    "a": "Geralmente não, e podem até piorar o quadro. Em fase de esgotamento significativo, a prioridade é reduzir a carga cognitiva existente, não adicionar novos sistemas de otimização da rotina."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Perda de peso",
+            "series": "transicao-glp1",
+            "slug": "magic-pill-johann-hari",
+            "title": "Magic Pill (Johann Hari): o ricochete depois do GLP-1",
+            "description": "Hari descreve o impacto da semaglutida. A extensão do STEP 1 mostra que, ao parar o fármaco, se recupera em média dois terços do peso — a menos que haja um plano nutricional de manutenção.",
+            "image": "/image/guide/guide-lake-boats.jpg",
+            "ctaKind": "nutricao-programa",
+            "slotService": "nutricao-programa",
+            "liveSlots": true,
+            "readingMinutes": 5,
+            "related": [
+                "the-muscle-prescription-gabrielle-lyon",
+                "medicamentos-glp1-perda-de-peso",
+                "efeito-ioio"
+            ],
+            "faq": [
+                {
+                    "q": "Recuperar peso depois de parar o Ozempic é inevitável?",
+                    "a": "Não é inevitável, mas é o desfecho mais comum nos ensaios se não houver um plano de manutenção. A extensão do STEP 1 mostrou recuperação média de cerca de dois terços do peso ao fim de um ano sem semaglutida."
+                },
+                {
+                    "q": "A Lon Clinic prescreve semaglutida ou tirzepatida?",
+                    "a": "Não. Acompanamos nutrição e estilo de vida — inclusive no desmame. A prescrição de aGLP-1, em Portugal, cabe a especialidades definidas; esta clínica não a substitui."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Perda de peso",
+            "series": "transicao-glp1",
+            "slug": "the-muscle-prescription-gabrielle-lyon",
+            "title": "The Muscle Prescription (Gabrielle Lyon): sarcopenia e aGLP-1",
+            "description": "Lyon centra a medicina no músculo. No STEP 1, cerca de 40% da massa perdida com semaglutida foi magra — o programa nutricional da Lon Clinic prioriza proteína e composição corporal.",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "ctaKind": "nutricao-programa",
+            "slotService": "nutricao-programa",
+            "liveSlots": true,
+            "readingMinutes": 5,
+            "related": [
+                "magic-pill-johann-hari",
+                "proteina-e-saciedade",
+                "forca-vs-cardio-emagrecer"
+            ],
+            "faq": [
+                {
+                    "q": "Os aGLP-1 «derretem» músculo?",
+                    "a": "Não é um efeito directo de «comer músculo». É perda de peso rápida com ingestão proteica e estímulo insuficientes. Uma fracção relevante do que sai da balança pode ser magra, como no subestudo DXA do STEP 1."
+                },
+                {
+                    "q": "Preciso de um injectável para proteger o músculo?",
+                    "a": "Não. Proteína adequada, treino de força e um plano que se consiga manter são a base — com ou sem fármaco prescrito noutro lado. A Lon Clinic não prescreve aGLP-1."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "ADHD",
+            "series": "neurodiversidade-adultos",
+            "slug": "adhd-2-0-hallowell-ratey",
+            "title": "ADHD 2.0 (Hallowell e Ratey): disfunção executiva e burnout invisível",
+            "description": "Hallowell e Ratey descrevem o TDAH do adulto pela disfunção executiva. A prevalência ronda 2,5% a 4%; o esgotamento no trabalho muitas vezes mistura burnout e um cérebro que nunca foi avaliado.",
+            "image": "/image/guide/guide-waterfall.jpg",
+            "ctaKind": "neurodiversidade",
+            "slotService": "psicologia",
+            "liveSlots": true,
+            "readingMinutes": 5,
+            "related": [
+                "unmasking-autism-devon-price",
+                "adhd-em-adultos-sintomas",
+                "9-sinais-de-burnout-no-trabalho"
+            ],
+            "faq": [
+                {
+                    "q": "O teste CBI diagnostica TDAH?",
+                    "a": "Não. Mede exaustão (burnout). Se o resultado for alto e a história incluir desatenção, impulsividade ou desorganização desde a infância, o passo seguinte é uma avaliação clínica — não um teste online."
+                },
+                {
+                    "q": "Adultos podem ter TDAH sem terem sido diagnosticados em crianças?",
+                    "a": "Sim. Muitos compensam até o ambiente (trabalho, filhos, estudo) exceder a capacidade de mascarar. O diagnóstico tardio é comum, sobretudo quando o quadro é predominantemente de desatenção."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Autismo",
+            "series": "neurodiversidade-adultos",
+            "slug": "unmasking-autism-devon-price",
+            "title": "Unmasking Autism (Devon Price): o custo psicológico do masking",
+            "description": "Price descreve o masking autista. Raymaker et al. (2020) definiram o autistic burnout: exaustão com perda de competências, sobrecarga sensorial e retirada social — distinto do só cansaço laboral.",
+            "image": "/image/guide/guide-group-walk.jpg",
+            "ctaKind": "neurodiversidade",
+            "slotService": "psicologia",
+            "liveSlots": true,
+            "readingMinutes": 5,
+            "related": [
+                "adhd-2-0-hallowell-ratey",
+                "autismo-em-mulheres-diagnostico-tardio",
+                "autismo-nas-mulheres-interesse-especial"
+            ],
+            "faq": [
+                {
+                    "q": "Autistic burnout e burnout laboral são a mesma coisa?",
+                    "a": "Partilham a exaustão. O autistic burnout acrescenta, com frequência, regressão temporária de competências, sobrecarga sensorial e retirada social intensa, mesmo fora do emprego."
+                },
+                {
+                    "q": "Um artigo ou um teste online diagnostica autismo?",
+                    "a": "Não. O CBI mede esgotamento. O diagnóstico de autismo em adulto exige avaliação especializada. Este texto serve para reconhecer o padrão e pedir a consulta certa."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-05",
+            "dateModified": "2026-09-05",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
             "about": "Livros de saúde",
             "series": "livros-saude",
             "verified": false,
@@ -668,9 +1159,9 @@
             "verified": false,
             "readingMinutes": 4,
             "related": [
-                "nutricionista-plano-perda-de-peso",
-                "manter-o-peso-perdido",
-                "proteina-e-saciedade"
+                "magic-pill-johann-hari",
+                "the-muscle-prescription-gabrielle-lyon",
+                "manter-o-peso-perdido"
             ],
             "faq": [
                 {
@@ -3844,9 +4335,9 @@
             "image": "/image/image1_files/Marylebone_Large_Desktop.jpg",
             "about": "Autismo",
             "related": [
+                "unmasking-autism-devon-price",
                 "autismo-nas-mulheres-interesse-especial",
-                "adhd-em-adultos-sintomas",
-                "/burnout/o-que-e"
+                "adhd-em-adultos-sintomas"
             ],
             "faq": [
                 {
@@ -3906,9 +4397,9 @@
             "image": "/image/image2.webp",
             "about": "ADHD",
             "related": [
+                "adhd-2-0-hallowell-ratey",
                 "autismo-em-mulheres-diagnostico-tardio",
-                "autismo-nas-mulheres-interesse-especial",
-                "/burnout/depressao-ou-burnout"
+                "unmasking-autism-devon-price"
             ],
             "faq": [
                 {

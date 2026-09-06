@@ -1,9 +1,11 @@
 {
-    "id": "livros-saude",
-    "slug": "os-10-livros-de-saude-mais-vendidos",
-    "title": "Os 10 Livros de Saúde Mais Vendidos em Portugal (Comentados por uma Médica)",
-    "description": "Série de críticas clínicas aos bestsellers de saúde mais lidos em Portugal: o que a evidência confirma, onde o protocolo falha na prática, e o que faz sentido pedir em consulta.",
-    "parts": [
+  "series": [
+    {
+      "id": "livros-saude",
+      "slug": "os-10-livros-de-saude-mais-vendidos",
+      "title": "Os 10 Livros de Saúde Mais Vendidos em Portugal (Comentados por uma Médica)",
+      "description": "Série de críticas clínicas aos bestsellers de saúde mais lidos em Portugal: o que a evidência confirma, onde o protocolo falha na prática, e o que faz sentido pedir em consulta.",
+      "parts": [
         { "slug": "outlive-peter-attia", "navLabel": "Outlive (Peter Attia)" },
         { "slug": "metodo-glucose-goddess", "navLabel": "O Método Glucose Goddess" },
         { "slug": "emagrece-para-sempre-joana-pinho", "navLabel": "Emagrece Para Sempre" },
@@ -14,5 +16,45 @@
         { "slug": "o-fim-das-dietas-joel-fuhrman", "navLabel": "O Fim das Dietas" },
         { "slug": "emagreca-sem-dietas-diana-dinis", "navLabel": "Emagreça sem Dietas" },
         { "slug": "how-not-to-die-michael-greger", "navLabel": "How Not to Die" }
-    ]
+      ]
+    },
+    {
+      "id": "transicao-glp1",
+      "slug": "transicao-glp1-manutencao-metabolica",
+      "title": "Transição GLP-1 e manutenção metabólica",
+      "description": "Leituras clínicas de Magic Pill e The Muscle Prescription: o que a evidência diz sobre desmame de aGLP-1, ricochete e preservação muscular — e o que faz sentido no programa nutricional da Lon Clinic.",
+      "parts": [
+        { "slug": "magic-pill-johann-hari", "navLabel": "Magic Pill (Johann Hari)" },
+        { "slug": "the-muscle-prescription-gabrielle-lyon", "navLabel": "The Muscle Prescription" }
+      ]
+    },
+    {
+      "id": "neurodiversidade-adultos",
+      "slug": "neurodiversidade-adultos-tdah-autismo",
+      "title": "Neurodiversidade em adultos: TDAH, autismo e burnout",
+      "description": "Leituras clínicas de ADHD 2.0 e Unmasking Autism: disfunção executiva, masking e o esgotamento que se confunde com burnout laboral.",
+      "parts": [
+        { "slug": "adhd-2-0-hallowell-ratey", "navLabel": "ADHD 2.0" },
+        { "slug": "unmasking-autism-devon-price", "navLabel": "Unmasking Autism" }
+      ]
+    },
+    {
+      "id": "bestsellers-psicologia",
+      "slug": "os-10-bestsellers-psicologia-saude-mental",
+      "title": "Os 10 Bestsellers de Psicologia e Saúde Mental Mais Vendidos em Portugal (Análise Crítica de uma Médica)",
+      "description": "Série de críticas clínicas aos bestsellers de psicologia e saúde mental mais lidos em Portugal: o que a evidência confirma, onde a autoajuda falha em quadros clínicos, e o que faz sentido pedir em consulta.",
+      "parts": [
+        { "slug": "o-caminho-do-monge-jay-shetty", "navLabel": "O Caminho do Monge" },
+        { "slug": "como-fazer-coisas-dificeis-tim-cantopher", "navLabel": "Como Fazer Coisas Difíceis" },
+        { "slug": "talvez-devesses-falar-com-alguem", "navLabel": "Talvez Devesses Falar com Alguém" },
+        { "slug": "a-coragem-de-nao-agradar", "navLabel": "A Coragem de Não Agradar" },
+        { "slug": "por-fim-a-paz-judson-brewer", "navLabel": "Por Fim, a Paz" },
+        { "slug": "o-corpo-guarda-a-conta", "navLabel": "O Corpo Guarda a Conta" },
+        { "slug": "por-que-razao-dormimos-matthew-walker", "navLabel": "Por que Razão Dormimos" },
+        { "slug": "deixar-de-pensar-demais-nick-trenton", "navLabel": "Deixar de Pensar Demais" },
+        { "slug": "as-suas-zonas-erroneas-wayne-dyer", "navLabel": "As Suas Zonas Erróneas" },
+        { "slug": "habitos-atomicos-james-clear", "navLabel": "Hábitos Atómicos" }
+      ]
+    }
+  ]
 }
