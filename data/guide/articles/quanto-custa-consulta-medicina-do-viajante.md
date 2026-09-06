@@ -15,7 +15,7 @@ Videoconsulta com médica inscrita na Ordem dos Médicos, avaliação por destin
 
 Quem tem o circuito Medicare da clínica paga um escalão mais baixo na marcação de viajante; o preço standard é o da tabela acima. O recibo serve para o seguro, se o plano o aceitar — isso é do lado da apólice, não nosso.
 
-Marcar: [consulta do viajante](/marcar/travel). Páginas de conversão: [vacinas de viagem](/consulta/vacinas-viagem) e [profilaxia da malária](/consulta/profilaxia-malaria).
+Marcar: [consulta do viajante](/marcar/travel). Páginas de conversão: [vacinas de viagem](/consulta/vacinas-viagem) e [profilaxia da malária](/consulta/profilaxia-malaria). [Quando agendar](/blog/quando-agendar-consulta-do-viajante). Em Lisboa: [onde fazer a consulta](/blog/onde-fazer-consulta-medicina-do-viajante-lisboa) (SNS, privado e online).
 
 {{cta}}
 

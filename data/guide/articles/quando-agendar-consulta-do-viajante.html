@@ -1,0 +1,434 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Como obter vacinas para viajar em Portugal",
+  "description": "Consulta de medicina do viajante na Lon Clinic (39 €), prescrição no próprio dia e administração num Centro de Vacinação Internacional.",
+  "url": "https://www.lonclinic.com/blog/quando-agendar-consulta-do-viajante",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Consulta médica",
+      "url": "https://www.lonclinic.com/marcar/travel",
+      "text": "Videoconsulta de medicina do viajante na Lon Clinic, 39 € (1 pessoa). A médica avalia destino, itinerário e historial e, quando indicado, emite a prescrição no próprio dia por e-mail ou SMS."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Marcação para administração da vacina",
+      "url": "https://www.lonclinic.com/blog/vacinas-viajante-guia-completo",
+      "text": "Com a prescrição, marca a administração. Vacinas do circuito internacional (hepatite A, febre tifóide, febre amarela, meningocócica e outras) tomam-se num Centro de Vacinação Internacional. A febre amarela e o certificado internacional (CIVP) só se fazem no CVI."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Administração da vacina",
+      "text": "No percurso Lon Clinic: marcação online ou por WhatsApp, consulta muitas vezes no próprio dia ou no dia seguinte, e administração no CVI em regra em 1 a 7 dias consoante o centro. No percurso tradicional a espera pela consulta presencial chega a semanas ou 1 a 2 meses. Se a consulta presencial não for num CVI e precisar de febre amarela ou tifóide, ainda tem de marcar a toma à parte no CVI."
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Antecedência ideal para cada vacina",
+      "text": "Hepatite A: cerca de 2 semanas até resposta óptima de anticorpos. Febre tifóide: 1 a 2 semanas, consoante a formulação injectável ou oral. Febre amarela: protecção e validade do certificado a partir do 10.º dia após a toma; marque com 3 a 4 semanas de margem."
+    }
+  ]
+}
+</script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&display=swap');
+.agv, .agv * { box-sizing: border-box; }
+.agv {
+  --ink: #16232E;
+  --paper: #EDE6D6;
+  --paper-light: #F6F2E8;
+  --petrol: #3F5D54;
+  --rust: #B5482A;
+  --white: #FFFFFF;
+  --line: rgba(22,35,46,0.18);
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Inter, system-ui, sans-serif;
+  line-height: 1.55;
+  margin: 0 -8px 32px;
+  padding-bottom: 8px;
+}
+.agv a { color: var(--petrol); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+.agv a:hover { color: var(--rust); }
+.agv-wrap { max-width: 760px; margin: 0 auto; padding: 0 24px 48px; }
+.agv-hero { padding: 48px 24px 40px; border-bottom: 1px solid var(--line); }
+.agv-hero-inner { max-width: 760px; margin: 0 auto; }
+.agv-eyebrow { font-size: 14px; color: var(--petrol); font-weight: 600; margin: 0 0 14px; }
+.agv-hero h1 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 700;
+  font-size: clamp(32px, 5vw, 46px);
+  line-height: 1.15;
+  margin: 0 0 18px;
+  max-width: 16ch;
+  color: var(--ink);
+}
+.agv-hero p { font-size: 17px; max-width: 56ch; opacity: 0.85; margin: 0 0 28px; }
+.agv-stamp {
+  display: inline-flex;
+  align-items: center;
+  border: 1.5px solid var(--rust);
+  color: var(--rust);
+  padding: 8px 16px;
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 14px;
+  font-style: italic;
+  transform: rotate(-1.2deg);
+}
+.agv-category { margin-bottom: 52px; }
+.agv-category h2 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--petrol);
+  border-bottom: 2px solid var(--petrol);
+  padding-bottom: 10px;
+  margin: 0 0 6px;
+}
+.agv details { border-bottom: 1px solid var(--line); padding: 20px 0; }
+.agv details:first-of-type { border-top: 1px solid var(--line); }
+.agv summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16.5px;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+.agv summary::-webkit-details-marker { display: none; }
+.agv summary::after {
+  content: "+";
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 22px;
+  color: var(--rust);
+  flex-shrink: 0;
+}
+.agv details[open] summary::after { content: "–"; }
+.agv-answer { margin-top: 14px; max-width: 64ch; font-size: 15.5px; }
+.agv-answer p { margin: 0 0 12px; }
+.agv-answer p:last-child { margin-bottom: 0; }
+.agv-answer strong { color: var(--petrol); }
+.agv-note {
+  background: var(--paper-light);
+  border-left: 3px solid var(--rust);
+  padding: 14px 18px;
+  margin-top: 14px;
+  font-size: 14.5px;
+}
+.agv-cta {
+  margin-top: 48px;
+  padding: 32px;
+  background: var(--ink);
+  color: var(--paper-light);
+}
+.agv-cta h3 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 22px;
+  margin: 0 0 10px;
+  color: var(--paper-light);
+}
+.agv-cta p { margin: 0 0 20px; opacity: 0.85; max-width: 52ch; }
+.agv-cta a.agv-cta-btn {
+  display: inline-block;
+  background: var(--rust);
+  color: var(--white);
+  text-decoration: none;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 15px;
+}
+.agv-cta a.agv-cta-ghost {
+  display: inline-block;
+  margin-left: 16px;
+  color: var(--paper-light);
+  font-size: 14px;
+}
+.agv-steps { list-style: none; counter-reset: step; margin: 24px 0 0; padding: 0; }
+.agv-steps > li {
+  counter-increment: step;
+  position: relative;
+  padding: 0 0 24px 44px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+  font-size: 15.5px;
+}
+.agv-steps > li:last-child { border-bottom: none; margin-bottom: 0; }
+.agv-steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--petrol);
+  color: var(--paper-light);
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.agv-steps ul { margin: 10px 0 0; padding-left: 20px; }
+.agv-steps li li { padding: 0; border: none; margin: 0 0 6px; font-size: 15px; }
+.agv h3.agv-sub {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 36px 0 0;
+  color: var(--ink);
+}
+.agv-compare { display: flex; gap: 20px; margin-top: 24px; align-items: stretch; }
+.agv-compare-col { flex: 1; border: 1px solid var(--line); padding: 24px 22px; }
+.agv-compare-col.highlight {
+  border: 2px solid var(--rust);
+  background: var(--paper-light);
+  position: relative;
+}
+.agv-tag {
+  position: absolute;
+  top: -13px;
+  left: 20px;
+  background: var(--rust);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+}
+.agv-compare-col h4 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 17px;
+  margin: 0 0 18px;
+  color: var(--petrol);
+}
+.agv-compare-col.highlight h4 { color: var(--rust); }
+.agv-compare-col ol { list-style: none; counter-reset: cstep; margin: 0; padding: 0; }
+.agv-compare-col ol > li {
+  counter-increment: cstep;
+  position: relative;
+  padding: 0 0 16px 32px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+  font-size: 14.5px;
+}
+.agv-compare-col ol > li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.agv-compare-col ol > li::before {
+  content: counter(cstep);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--petrol);
+  color: var(--paper-light);
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 700;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.agv-compare-col.highlight ol > li::before { background: var(--rust); }
+.agv-sub-steps { margin-top: 10px; padding-left: 0; list-style: none; font-size: 13.5px; }
+.agv-sub-steps li { padding: 4px 0 4px 14px; border-bottom: none; margin: 0; position: static; }
+.agv-sub-steps li::before { content: "–"; position: static; background: none; color: var(--ink); opacity: 0.5; width: auto; height: auto; display: inline; margin-right: 6px; }
+.agv table.timing { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 14.5px; }
+.agv table.timing caption { text-align: left; caption-side: top; font-size: 13px; opacity: 0.7; margin-bottom: 8px; }
+.agv table.timing th, .agv table.timing td { text-align: left; padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.agv table.timing thead th {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--petrol);
+  border-bottom: 2px solid var(--petrol);
+}
+.agv table.timing tbody tr:last-child td { border-bottom: none; }
+.agv table.timing td:first-child { font-weight: 600; }
+.agv table.timing td.highlight-time { color: var(--rust); font-weight: 600; }
+.agv-fine { margin-top: 10px; font-size: 13px; opacity: 0.75; }
+.agv-legal { margin-top: 36px; font-size: 13px; opacity: 0.6; max-width: 64ch; }
+.agv-related { margin-top: 36px; font-size: 14.5px; }
+.agv-related h3 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 18px;
+  margin: 0 0 12px;
+}
+.agv-related ul { margin: 0; padding-left: 18px; }
+.agv-related li { margin: 0 0 8px; }
+@media (max-width: 640px) {
+  .agv-compare { flex-direction: column; }
+  .agv-cta a.agv-cta-ghost { display: block; margin: 14px 0 0; }
+}
+@media (max-width: 560px) {
+  .agv table.timing { font-size: 13.5px; }
+  .agv table.timing th, .agv table.timing td { padding: 10px; }
+}
+</style>
+
+<div class="agv">
+  <header class="agv-hero">
+    <div class="agv-hero-inner">
+      <p class="agv-eyebrow">Medicina do viajante</p>
+      <h1>O que precisa de saber antes de vacinar-se para viajar</h1>
+      <p>Respostas directas sobre vacinas, receitas, prazos e o Certificado Internacional de Vacinação — para quem tem uma viagem marcada e pouco tempo a perder.</p>
+      <span class="agv-stamp">Consulta online · Prescrição no próprio dia</span>
+    </div>
+  </header>
+
+  <div class="agv-wrap">
+    <section class="agv-category">
+      <h2>Quando e como agendar consulta do viajante em Portugal</h2>
+      <h3 class="agv-sub">Dois percursos possíveis</h3>
+      <div class="agv-compare">
+        <div class="agv-compare-col highlight">
+          <span class="agv-tag">Mais rápido</span>
+          <h4><a href="/travel-clinic">Consulta online — Lon Clinic</a></h4>
+          <ol>
+            <li><a href="/marcar/travel">Marcação online</a> ou por <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer">WhatsApp</a> — consulta muitas vezes no próprio dia ou no dia seguinte · <strong>39 €</strong></li>
+            <li>Prescrição no próprio dia; marca a vacina no CVI com essa receita</li>
+            <li>Administração: em regra 1–7 dias, consoante o <a href="/blog/vacinas-viajante-guia-completo">centro</a></li>
+          </ol>
+        </div>
+        <div class="agv-compare-col">
+          <h4>Percurso tradicional</h4>
+          <ol>
+            <li>Marcação de consulta por chamada, e-mail ou presencialmente, consoante o centro — espera de semanas a 1–2 meses. <a href="/blog/onde-fazer-consulta-medicina-do-viajante-lisboa">Onde fazer em Lisboa</a></li>
+            <li>Administração das vacinas no próprio dia da consulta (pode ser necessária mais do que uma toma)</li>
+            <li>
+              Se a consulta presencial <em>não</em> for num Centro de Vacinação Internacional e precisar de vacinas do circuito CVI (febre amarela, tifóide, hepatite A, entre outras), ainda marca a administração à parte no CVI:
+              <ul class="agv-sub-steps">
+                <li>Marcação: 1–7 dias, consoante o centro</li>
+                <li>Administração</li>
+              </ul>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <h3 class="agv-sub">Tempos ideais para cada vacina fazer efeito</h3>
+      <table class="timing">
+        <caption>Antecedência recomendada antes da viagem, para garantir protecção. O esquema exacto confirma-se na consulta.</caption>
+        <thead>
+          <tr>
+            <th>Vacina</th>
+            <th>Tempo até fazer efeito</th>
+            <th>Agendar com antecedência de</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Hepatite A</td>
+            <td>~2 semanas para resposta óptima de anticorpos</td>
+            <td class="highlight-time">2 semanas antes</td>
+          </tr>
+          <tr>
+            <td>Febre tifóide</td>
+            <td>~1 a 2 semanas, consoante a formulação (injectável ou oral)</td>
+            <td class="highlight-time">2 semanas antes</td>
+          </tr>
+          <tr>
+            <td><a href="/blog/vacina-febre-amarela-guia-completo">Febre amarela</a></td>
+            <td>Protecção e validade do certificado a partir do 10.º dia após a toma</td>
+            <td class="highlight-time">10 dias antes (idealmente 3–4 semanas de margem)</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="agv-fine">Orientações gerais — a médica confirma o esquema consoante o destino e o historial. Destinos: <a href="/blog/vacinas-para-viajar-por-pais">vacinas por país</a>.</p>
+    </section>
+
+    <section class="agv-category">
+      <h2>Vacinas e receitas</h2>
+
+      <details open>
+        <summary>A Lon Clinic pode prescrever vacinas de viagem?</summary>
+        <div class="agv-answer">
+          <p>Sim. Na <a href="/consulta/vacinas-viagem">consulta do viajante</a>, a médica avalia o destino, o itinerário e o historial, e pode <strong>prescrever as vacinas recomendadas</strong>. A prescrição chega por e-mail ou SMS no próprio dia, quando indicada.</p>
+          <p>As vacinas do circuito internacional <strong>não se levantam na farmácia</strong> como um comprimido: tomam-se num <a href="/blog/vacinas-viajante-guia-completo">Centro de Vacinação Internacional</a>. A <a href="/consulta/profilaxia-malaria">profilaxia da malária</a>, quando prescrita, vai para qualquer farmácia em Portugal.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>A Lon Clinic administra a vacina ou emite o Certificado Internacional de Vacinação (CIVP)?</summary>
+        <div class="agv-answer">
+          <p>Não. A Lon Clinic <strong>não administra vacinas presencialmente</strong> nem emite o CIVP (o «carimbo amarelo» de entrada em alguns países).</p>
+          <p>Recebe a <strong>prescrição</strong> no telemóvel ou e-mail e a lista dos CVI onde pode marcar a toma — em média <strong>1 a 7 dias</strong>, consoante o centro.</p>
+          <div class="agv-note">
+            Se a viagem exige febre amarela ou um documento físico carimbado, desloca-se a um CVI oficial. Em Lisboa: <a href="/blog/vacina-febre-amarela-lisboa">IHMT, Sete Rios e outros da ARSLVT</a>. A mesma prescrição vale em qualquer CVI de Portugal.
+          </div>
+        </div>
+      </details>
+
+      <details>
+        <summary>Quais as vacinas mais pedidas para viagem, e a Lon Clinic prescreve todas?</summary>
+        <div class="agv-answer">
+          <p>As mais comuns incluem hepatite A, hepatite B, febre tifóide, tétano/difteria, encefalite japonesa, <a href="/consulta/profilaxia-malaria">profilaxia da malária</a> (não é vacina) e febre amarela. A Lon Clinic <strong>pode prescrever todas estas</strong>, incluindo a febre amarela — a diferença é que esta última <strong>não pode ser administrada nem certificada</strong> por videoconsulta, só num CVI.</p>
+        </div>
+      </details>
+    </section>
+
+    <section class="agv-category">
+      <h2>Como obtenho vacinas para viajar</h2>
+      <p>O processo segue sempre a mesma sequência, em três etapas:</p>
+
+      <ol class="agv-steps">
+        <li>
+          <strong>Consulta médica</strong> — receita com base no destino e no seu perfil (e-mail/SMS). Online na <a href="/travel-clinic">Lon Clinic</a> ou presencial.
+        </li>
+        <li>
+          <strong>Marcação para administração</strong>, num destes locais:
+          <ul>
+            <li>Centro de saúde, farmácia ou hospital — vacinas de rotina (por exemplo tétano), quando o local as tiver</li>
+            <li><a href="/blog/vacinas-viajante-guia-completo">Centro de Vacinação Internacional</a> — circuito internacional: hepatite A, febre tifóide, <strong>febre amarela</strong> (e CIVP), meningocócica e outras indicadas</li>
+          </ul>
+        </li>
+        <li>
+          <strong>Administração</strong> no local marcado.
+        </li>
+      </ol>
+
+      <div class="agv-note">
+        Se a consulta e a toma forem no mesmo CVI, resume-se a um agendamento — mas a espera pela consulta presencial costuma ser maior. Guias: <a href="/blog/vacinas-viajante-lisboa">Lisboa</a>, <a href="/blog/vacinas-viajante-porto">Porto</a>.
+      </div>
+    </section>
+
+    <section class="agv-category">
+      <h2>Preços</h2>
+      <details open>
+        <summary>Quanto custa uma consulta de medicina do viajante?</summary>
+        <div class="agv-answer">
+          <p>Na Lon Clinic: <strong>39 €</strong> (1 pessoa), <strong>69 €</strong> (2 pessoas), <strong>107 €</strong> (3), <strong>136 €</strong> (4). Preço visível antes de pagar. <a href="/blog/quanto-custa-consulta-medicina-do-viajante">Detalhe do preço</a>.</p>
+          <p>Esse valor cobre a consulta e a prescrição. As vacinas no CVI e os comprimidos da malária na farmácia pagam-se à parte.</p>
+        </div>
+      </details>
+    </section>
+
+    <div class="agv-cta" id="agendar">
+      <h3>Ainda tem dúvidas sobre a sua viagem?</h3>
+      <p>Marque a consulta online (39 €) e receba a prescrição das vacinas necessárias antes de se deslocar a um CVI.</p>
+      <a class="agv-cta-btn" href="/marcar/travel">Marcar consulta — 39 €</a>
+      <a class="agv-cta-ghost" href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer">Ou WhatsApp</a>
+    </div>
+
+    <nav class="agv-related" aria-label="Artigos relacionados">
+      <h3>Continuar a ler</h3>
+      <ul>
+        <li><a href="/blog/onde-fazer-consulta-medicina-do-viajante-lisboa">Onde fazer a consulta em Lisboa</a></li>
+        <li><a href="/blog/quanto-custa-consulta-medicina-do-viajante">Quanto custa a consulta</a></li>
+        <li><a href="/blog/vacinas-para-viajar-por-pais">Que vacinas para o meu destino?</a></li>
+        <li><a href="/blog/vacina-febre-amarela-guia-completo">Febre amarela e certificado</a></li>
+      </ul>
+    </nav>
+
+    <p class="agv-legal">Esta página tem carácter informativo e não substitui uma consulta médica. Certificado Internacional de Vacinação e vacina da febre amarela apenas em centros oficiais autorizados. Lon Clinic — ERS 45475.</p>
+  </div>
+</div>

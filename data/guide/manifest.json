@@ -4757,6 +4757,8 @@
             "ctaKind": "travel",
             "liveSlots": true,
             "related": [
+                "quando-agendar-consulta-do-viajante",
+                "onde-fazer-consulta-medicina-do-viajante-lisboa",
                 "vacinas-para-viajar-por-pais",
                 "vacinas-viajante-guia-completo",
                 "vacina-febre-amarela-guia-completo"
@@ -4777,6 +4779,83 @@
             ]
         },
         {
+            "slug": "onde-fazer-consulta-medicina-do-viajante-lisboa",
+            "title": "Onde fazer consulta de medicina do viajante em Lisboa",
+            "description": "Consulta de medicina do viajante em Lisboa: SNS (Sete Rios, Curry Cabral, Santa Maria, Dona Estefânia, IHMT), privado e online. Lon Clinic 39 €; vacinas no CVI.",
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "markdown",
+            "image": "/image/guide/guide-opera-coast.jpg",
+            "about": "Medicina do viajante",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "quando-agendar-consulta-do-viajante",
+                "vacinas-viajante-lisboa",
+                "quanto-custa-consulta-medicina-do-viajante",
+                "vacina-febre-amarela-lisboa",
+                "vacinas-viajante-cuf"
+            ],
+            "faq": [
+                {
+                    "q": "Onde fazer consulta de medicina do viajante em Lisboa?",
+                    "a": "No SNS (Centros de Vacinação Internacional e hospitais como Sete Rios, Curry Cabral, Santa Maria e Dona Estefânia), no IHMT NOVA, em hospitais privados, ou online. Na Lon Clinic a videoconsulta custa 39 €; as vacinas do circuito internacional tomam-se depois num CVI."
+                },
+                {
+                    "q": "Posso fazer a consulta de medicina do viajante online?",
+                    "a": "Sim. A avaliação, a prescrição de vacinas e a receita da profilaxia da malária fazem-se por videoconsulta. A administração da vacina e o certificado internacional de febre amarela exigem presença num Centro de Vacinação Internacional."
+                },
+                {
+                    "q": "A CUF faz a consulta do viajante e as vacinas em Lisboa?",
+                    "a": "Pode fazer a consulta. Não administra o circuito CVI da febre amarela nem emite o certificado internacional nesse contexto — isso é no CVI público, com prescrição."
+                },
+                {
+                    "q": "Onde tomar a vacina da febre amarela em Lisboa depois da consulta online?",
+                    "a": "Num Centro de Vacinação Internacional da ARSLVT, com a prescrição da consulta. A mesma receita vale em qualquer CVI de Portugal, não só em Lisboa."
+                }
+            ]
+        },
+        {
+            "slug": "quando-agendar-consulta-do-viajante",
+            "title": "Quando e como agendar consulta do viajante em Portugal",
+            "description": "Quando e como agendar a consulta de medicina do viajante em Portugal: percurso online na Lon Clinic (39 €) vs. tradicional, vacinas, receitas e Certificado Internacional.",
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "html",
+            "image": "/image/guide/travel-cover-5.png",
+            "about": "Medicina do viajante",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "onde-fazer-consulta-medicina-do-viajante-lisboa",
+                "quanto-custa-consulta-medicina-do-viajante",
+                "vacinas-viajante-guia-completo",
+                "vacina-febre-amarela-guia-completo"
+            ],
+            "faq": [
+                {
+                    "q": "Quando e como agendar consulta do viajante em Portugal?",
+                    "a": "Na Lon Clinic: marcação online ou por WhatsApp, consulta muitas vezes no próprio dia ou no dia seguinte, 39 €. No SNS a espera pela consulta presencial chega a semanas ou 1 a 2 meses. As vacinas tomam-se depois num Centro de Vacinação Internacional."
+                },
+                {
+                    "q": "A Lon Clinic pode prescrever vacinas de viagem?",
+                    "a": "Sim. Na videoconsulta a médica avalia destino e historial e, quando indicado, emite a prescrição no próprio dia. As vacinas do circuito internacional tomam-se no CVI; a profilaxia da malária vai para qualquer farmácia."
+                },
+                {
+                    "q": "A Lon Clinic administra a vacina ou emite o Certificado Internacional de Vacinação (CIVP)?",
+                    "a": "Não. Não administra vacinas nem emite o CIVP. Recebe a prescrição e marca a toma num CVI (em regra 1 a 7 dias). Febre amarela e o certificado só no CVI — em Lisboa, IHMT, Sete Rios e outros da ARSLVT."
+                },
+                {
+                    "q": "Quais as vacinas mais pedidas para viagem, e a Lon Clinic prescreve todas?",
+                    "a": "Hepatite A, hepatite B, febre tifóide, tétano/difteria, encefalite japonesa, profilaxia da malária (não é vacina) e febre amarela. A Lon Clinic pode prescrever todas; a febre amarela só se administra e certifica no CVI."
+                },
+                {
+                    "q": "Quanto custa uma consulta de medicina do viajante?",
+                    "a": "Na Lon Clinic: 39 € (1 pessoa), 69 € (2), 107 € (3), 136 € (4). Cobre consulta e prescrição. Vacinas no CVI e comprimidos da malária pagam-se à parte."
+                }
+            ]
+        },
+        {
             "slug": "vacinas-para-viajar-por-pais",
             "title": "Que vacinas preciso para viajar? Guia por país (2026)",
             "description": "Lista orientativa de vacinas por destino a partir de Portugal: Brasil, Tailândia, Índia, Quénia, Angola, Moçambique. A lista exacta sai da consulta do viajante, 39 €.",
@@ -4790,6 +4869,8 @@
             "ctaKind": "travel",
             "liveSlots": true,
             "related": [
+                "quando-agendar-consulta-do-viajante",
+                "onde-fazer-consulta-medicina-do-viajante-lisboa",
                 "quanto-custa-consulta-medicina-do-viajante",
                 "vacinas-viajante-guia-completo",
                 "vacina-febre-amarela-guia-completo"

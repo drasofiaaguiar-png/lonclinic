@@ -714,6 +714,8 @@
         "diarreia-do-viajante",
         { "href": "/travel-clinic", "label": "Consulta do viajante (hub)" },
         { "href": "/blog/vacinas-para-viajar-por-pais", "label": "Vacinas por país" },
+        { "href": "/blog/quando-agendar-consulta-do-viajante", "label": "Quando agendar a consulta" },
+        { "href": "/blog/onde-fazer-consulta-medicina-do-viajante-lisboa", "label": "Consulta do viajante em Lisboa" },
         { "href": "/blog/vacinas-viajante-lisboa", "label": "Onde vacinar em Lisboa" },
         { "href": "/blog/quanto-custa-consulta-medicina-do-viajante", "label": "Quanto custa a consulta" }
       ],
