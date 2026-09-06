@@ -2840,7 +2840,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function assignAllPsychologistLogins() {
-        if (!window.confirm('Assign a clinic username and password to everyone on the board who does not have one yet? Rejected/eliminated people are skipped. Copy the passwords when they appear — they cannot be shown again.')) return;
+        if (!window.confirm('Assign a clinic username and password to everyone on the board and every name already used on bookings who does not have a login yet? Rejected/eliminated applications are skipped. Copy the passwords when they appear — they cannot be shown again.')) return;
         try {
             const res = await fetch('/api/admin/psychologists/logins', { method: 'POST' });
             const data = await res.json().catch(() => ({}));
@@ -3378,6 +3378,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const proCredsCopyBtn = document.getElementById('proCredsCopyBtn');
     let professionalsCache = [];
     let boardProfessionalsCache = [];
+    let namedProfessionalsCache = [];
     let proUsernameTouched = false;
     const PRO_PASSWORD_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
 
@@ -3494,16 +3495,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (proDisplayName) proDisplayName.focus();
     }
 
-    function renderAdminProfessionals(list, board) {
+    function renderAdminProfessionals(list, board, named) {
         if (!adminProfessionalsBody) return;
         const accounts = list || [];
         const linked = new Set(accounts.map((p) => String(p.id)));
-        const pending = (board || []).filter((a) => {
+        const accountNames = new Set(accounts.map((p) => String(p.displayName || '').trim().toLowerCase()).filter(Boolean));
+        const pendingBoard = (board || []).filter((a) => {
             const pro = a && a.professional;
             return !pro || !pro.id || !linked.has(String(pro.id));
         });
-        if (!accounts.length && !pending.length) {
-            adminProfessionalsBody.innerHTML = '<tr><td colspan="5" class="admin-empty-list">No professionals yet. People on the Bolsa appear here automatically. You can also add a name above.</td></tr>';
+        const pendingNames = (named || []).filter((row) => {
+            const name = String((row && row.name) || '').trim();
+            if (!name) return false;
+            const key = name.toLowerCase();
+            if (accountNames.has(key)) return false;
+            return !pendingBoard.some((a) => String(a.name || '').trim().toLowerCase() === key);
+        });
+        if (!accounts.length && !pendingBoard.length && !pendingNames.length) {
+            adminProfessionalsBody.innerHTML = '<tr><td colspan="5" class="admin-empty-list">No professionals yet. People on the Bolsa and names used on bookings appear here. You can also add a name above.</td></tr>';
             return;
         }
         const accountRows = accounts.map((p) => {
@@ -3523,14 +3532,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </td>
             </tr>`;
         });
-        const boardRows = pending.map((a) => {
+        const boardRows = pendingBoard.map((a) => {
             const name = a.name || '—';
             const email = a.email || '';
+            const status = a.status ? ` · ${a.status}` : '';
             return `<tr>
                 <td>${escapeHtml(name)}</td>
                 <td>—</td>
                 <td>${email ? escapeHtml(email) : '—'}</td>
-                <td><span class="admin-pro-status is-off">On board · no login</span></td>
+                <td><span class="admin-pro-status is-off">On board${escapeHtml(status)} · no login</span></td>
                 <td>
                     <div class="admin-pro-actions">
                         <button type="button" class="btn btn-primary btn-sm" data-psych-login="${escapeHtml(a.id)}">Assign login</button>
@@ -3538,7 +3548,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </td>
             </tr>`;
         });
-        adminProfessionalsBody.innerHTML = accountRows.concat(boardRows).join('');
+        const namedRows = pendingNames.map((row) => {
+            const name = row.name || '';
+            const count = row.bookingCount ? `${row.bookingCount} booking${row.bookingCount === 1 ? '' : 's'}` : 'Used on bookings';
+            return `<tr>
+                <td>${escapeHtml(name)}</td>
+                <td>—</td>
+                <td>${escapeHtml(count)}</td>
+                <td><span class="admin-pro-status is-off">Named on bookings · no login</span></td>
+                <td>
+                    <div class="admin-pro-actions">
+                        <button type="button" class="btn btn-primary btn-sm" data-pro-from-name="${encodeURIComponent(name)}">Assign login</button>
+                    </div>
+                </td>
+            </tr>`;
+        });
+        adminProfessionalsBody.innerHTML = accountRows.concat(boardRows, namedRows).join('');
     }
 
     async function loadAdminProfessionals() {
@@ -3554,6 +3579,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await res.json();
             professionalsCache = data.professionals || [];
             boardProfessionalsCache = data.board || [];
+            namedProfessionalsCache = data.named || [];
             if (adminDefaultDoxyUrl) {
                 adminDefaultDoxyUrl.textContent = data.defaultDoxyRoomUrl
                     ? `Default clinic room (admin / unassigned bookings): ${data.defaultDoxyRoomUrl}`
@@ -3561,17 +3587,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             const boardCountEl = document.getElementById('adminBoardCount');
             if (boardCountEl) {
-                const pending = boardProfessionalsCache.filter((a) => !a.professional || !a.professional.username);
-                boardCountEl.textContent = pending.length
-                    ? `${boardProfessionalsCache.length} people on the Bolsa · ${pending.length} without a clinic login`
-                    : (boardProfessionalsCache.length
-                        ? `${boardProfessionalsCache.length} people on the Bolsa — all have a clinic login`
-                        : 'No one on the Bolsa de Profissionais yet.');
+                const pendingBoard = boardProfessionalsCache.filter((a) => !a.professional || !a.professional.username);
+                const bits = [];
+                if (data.boardError) bits.push(`Could not load Bolsa: ${data.boardError}`);
+                bits.push(`${professionalsCache.length} clinic login${professionalsCache.length === 1 ? '' : 's'}`);
+                bits.push(`${boardProfessionalsCache.length} on the Bolsa (${pendingBoard.length} without login)`);
+                bits.push(`${namedProfessionalsCache.length} name${namedProfessionalsCache.length === 1 ? '' : 's'} used on bookings`);
+                boardCountEl.textContent = bits.join(' · ');
             }
-            renderAdminProfessionals(professionalsCache, boardProfessionalsCache);
+            renderAdminProfessionals(professionalsCache, boardProfessionalsCache, namedProfessionalsCache);
             fillProfessionalsDatalist(professionalsCache.concat(
-                boardProfessionalsCache.map((a) => ({ displayName: a.name })).filter((p) => p.displayName)
-            ));
+                boardProfessionalsCache.map((a) => ({ displayName: a.name })),
+                namedProfessionalsCache.map((row) => ({ displayName: row.name }))
+            ).filter((p) => p.displayName));
             loadAdminStaffProfiles();
         } catch (err) {
             console.error('Load professionals:', err);
@@ -3765,7 +3793,32 @@ document.addEventListener('DOMContentLoaded', async () => {
             const editBtn = e.target.closest('[data-pro-edit]');
             const passwordBtn = e.target.closest('[data-pro-password]');
             const loginBtn = e.target.closest('[data-psych-login]');
+            const fromNameBtn = e.target.closest('[data-pro-from-name]');
             const delBtn = e.target.closest('[data-pro-delete]');
+            if (fromNameBtn) {
+                const name = decodeURIComponent(fromNameBtn.getAttribute('data-pro-from-name') || '');
+                if (!name) return;
+                showProfessionalError('');
+                try {
+                    const res = await fetch('/api/admin/professionals', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ displayName: name })
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (!res.ok) {
+                        showProfessionalError(data.error || 'Could not assign login.');
+                        return;
+                    }
+                    await loadAdminProfessionals();
+                    if (data.generatedPassword && data.professional) {
+                        showProfessionalCreds(data.professional, data.generatedPassword);
+                    }
+                } catch (err) {
+                    showProfessionalError('Network error. Please try again.');
+                }
+                return;
+            }
             if (loginBtn) {
                 assignPsychologistLogin(loginBtn.getAttribute('data-psych-login'));
                 return;

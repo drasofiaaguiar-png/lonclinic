@@ -901,7 +901,16 @@ async function listPsychologistApplications({ status, band, q, limit } = {}) {
          LIMIT $${params.length}`,
         params
     );
-    return r.rows.map(rowToPsychologistApplication);
+    const out = [];
+    for (const row of r.rows) {
+        try {
+            const mapped = rowToPsychologistApplication(row);
+            if (mapped) out.push(mapped);
+        } catch (err) {
+            console.error('listPsychologistApplications row:', err.message);
+        }
+    }
+    return out;
 }
 
 async function findPsychologistApplicationById(id) {
@@ -1962,6 +1971,18 @@ function rowToProfessional(row) {
     };
 }
 
+async function listDistinctBookingProfessionalNames() {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT TRIM(professional) AS name, COUNT(*)::int AS c
+         FROM bookings
+         WHERE professional IS NOT NULL AND TRIM(professional) <> ''
+         GROUP BY 1
+         ORDER BY LOWER(TRIM(professional)) ASC`
+    );
+    return r.rows.map((row) => ({ name: row.name, bookingCount: row.c }));
+}
+
 async function listProfessionals() {
     const p = getPool();
     const r = await p.query('SELECT * FROM professionals ORDER BY LOWER(display_name) ASC, id ASC');
@@ -2777,6 +2798,7 @@ module.exports = {
     getSchedulePayload,
     saveSchedulePayload,
     listProfessionals,
+    listDistinctBookingProfessionalNames,
     findProfessionalById,
     findProfessionalByUsername,
     findProfessionalByEmail,

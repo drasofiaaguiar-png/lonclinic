@@ -7804,6 +7804,20 @@ app.post('/api/recrutamento/psicologia', rateLimitRecrutamentoPsicologia, (req, 
                 await db.insertPsychologistApplication(applicationRecord);
             } catch (dbErr) {
                 console.error('POST /api/recrutamento/psicologia DB:', dbErr.message);
+                psychologistApplicationsStore.unshift({
+                    id: applicationId,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                    name: applicationRecord.name,
+                    email: applicationRecord.email,
+                    phone: applicationRecord.phone || '',
+                    status,
+                    payload,
+                    score: scoring.score,
+                    scoreBand: scoring.band,
+                    eligible: scoring.eligible,
+                    professionalId: null
+                });
             }
         } else {
             psychologistApplicationsStore.unshift({
@@ -8775,21 +8789,33 @@ app.get('/api/admin/reviews', requireAdmin, async (req, res) => {
 async function findPsychologistApplicationInternal(id) {
     const key = String(id || '');
     if (!key) return null;
-    if (usePersistentDb) return db.findPsychologistApplicationById(key);
+    if (usePersistentDb) {
+        const fromDb = await db.findPsychologistApplicationById(key);
+        if (fromDb) return fromDb;
+    }
     return psychologistApplicationsStore.find((a) => a.id === key) || null;
 }
 
 async function listPsychologistApplicationsInternal({ status, band, q, limit } = {}) {
     const cap = Math.min(Math.max(parseInt(limit, 10) || 200, 1), 300);
+    let list;
     if (usePersistentDb) {
-        return db.listPsychologistApplications({
+        list = (await db.listPsychologistApplications({
             status: status || undefined,
             band: band || undefined,
             q: q || undefined,
             limit: cap
-        });
+        })) || [];
+        const seen = new Set((list || []).map((a) => String(a.id)));
+        for (const extra of psychologistApplicationsStore) {
+            if (extra && extra.id && !seen.has(String(extra.id))) {
+                list.push(extra);
+                seen.add(String(extra.id));
+            }
+        }
+    } else {
+        list = psychologistApplicationsStore.slice();
     }
-    let list = psychologistApplicationsStore.slice();
     if (status) list = list.filter((a) => a.status === status);
     if (band) list = list.filter((a) => a.scoreBand === band);
     if (q && String(q).trim()) {
@@ -8820,9 +8846,36 @@ async function listBoardApplicationsForAdmin({ includeRejected } = {}) {
     const out = [];
     for (const app of list || []) {
         if (skip.has(String(app.status || ''))) continue;
-        out.push(await enrichPsychologistApplicationSafe(app));
+        let professional = null;
+        try {
+            professional = publicProfessional(await linkedProfessionalForApplication(app));
+        } catch (err) {
+            console.error('link psychologist application:', err.message);
+        }
+        out.push({
+            id: app.id,
+            name: app.name || '',
+            email: app.email || '',
+            phone: app.phone || '',
+            status: app.status || '',
+            professionalId: app.professionalId || (professional && professional.id) || null,
+            professional
+        });
     }
     return out;
+}
+
+async function listBookingProfessionalNamesInternal() {
+    if (usePersistentDb) return db.listDistinctBookingProfessionalNames();
+    const counts = new Map();
+    for (const b of bookingsStore) {
+        const name = String((b && b.professional) || '').trim();
+        if (!name) continue;
+        counts.set(name, (counts.get(name) || 0) + 1);
+    }
+    return [...counts.entries()]
+        .map(([name, bookingCount]) => ({ name, bookingCount }))
+        .sort((a, b) => a.name.localeCompare(b.name, 'pt'));
 }
 
 app.get('/api/admin/psychologists', requireAdmin, async (req, res) => {
@@ -8872,6 +8925,28 @@ app.post('/api/admin/psychologists/logins', requireAdmin, async (req, res) => {
                 professional: publicProfessional(result.professional),
                 generatedPassword: result.generatedPassword
             });
+        }
+        const accountNames = new Set(
+            ((await listProfessionalsInternal()) || []).map((p) => String(p.displayName || '').trim().toLowerCase()).filter(Boolean)
+        );
+        const named = await listBookingProfessionalNamesInternal();
+        for (const row of named || []) {
+            const name = String((row && row.name) || '').trim();
+            if (!name || accountNames.has(name.toLowerCase())) continue;
+            const username = await allocateProfessionalUsername('', name);
+            const generatedPassword = generateProfessionalPassword();
+            const professional = await createProfessionalInternal({
+                username,
+                password: generatedPassword,
+                displayName: name,
+                active: true
+            });
+            created.push({
+                name,
+                professional: publicProfessional(professional),
+                generatedPassword
+            });
+            accountNames.add(name.toLowerCase());
         }
         res.json({ created, linked });
     } catch (err) {
@@ -10151,14 +10226,24 @@ app.get('/api/admin/professionals', requireAdmin, async (req, res) => {
     try {
         const list = await listProfessionalsInternal();
         let board = [];
+        let named = [];
+        let boardError = '';
         try {
-            board = await listBoardApplicationsForAdmin();
+            board = await listBoardApplicationsForAdmin({ includeRejected: true });
         } catch (boardErr) {
+            boardError = boardErr.message || 'Failed to load board';
             console.error('GET /api/admin/professionals board:', boardErr.message);
+        }
+        try {
+            named = await listBookingProfessionalNamesInternal();
+        } catch (namedErr) {
+            console.error('GET /api/admin/professionals names:', namedErr.message);
         }
         res.json({
             professionals: list.map(publicProfessional),
             board,
+            named,
+            boardError,
             defaultDoxyRoomUrl: DEFAULT_DOXY_ROOM_URL || null
         });
     } catch (err) {
