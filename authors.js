@@ -174,8 +174,8 @@ function authorBylineHtml(origin, slug, dateLabel) {
         : '';
     return `
         <p class="eeat-byline">
-            ${dateBit}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">Médica · ${a.yearsPractice} anos de prática clínica</a>
-            <span class="eeat-byline-review"> · Revisão Clínica pela Equipa Médica</span>
+            ${dateBit}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">${escapeHtml(a.displayName)}</a>
+            <span class="eeat-byline-review"> · Revisão clínica</span>
         </p>`;
 }
 
@@ -190,12 +190,13 @@ function formatReviewDate(iso) {
 }
 
 function authorBioHtml(origin, slug, dateIso) {
+    const a = getAuthor(slug);
     const iso = String(dateIso || '').slice(0, 10);
     const label = formatReviewDate(iso);
     const dateBit = iso && label
         ? ` · <time datetime="${escapeHtml(iso)}">${escapeHtml(label)}</time>`
         : '';
-    return `<p class="eeat-reviewed">Revisto pela equipa médica da Lon Clinic${dateBit}</p>`;
+    return `<p class="eeat-reviewed">Revisto pela <a class="eeat-byline-name" rel="author" href="${escapeHtml(authorPath(a))}">${escapeHtml(a.displayName)}</a>${dateBit}</p>`;
 }
 
 function renderAuthorPage(origin, slug) {

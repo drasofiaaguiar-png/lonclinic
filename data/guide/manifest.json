@@ -4754,6 +4754,7 @@
             "format": "markdown",
             "image": "/image/guide/travel-cover-hq-1.png",
             "about": "Medicina do viajante",
+            "author": "rita-aguiar",
             "ctaKind": "travel",
             "liveSlots": true,
             "related": [
@@ -4787,6 +4788,7 @@
             "format": "markdown",
             "image": "/image/guide/guide-opera-coast.jpg",
             "about": "Medicina do viajante",
+            "author": "rita-aguiar",
             "ctaKind": "travel",
             "liveSlots": true,
             "related": [
@@ -4818,12 +4820,13 @@
         {
             "slug": "quando-agendar-consulta-do-viajante",
             "title": "Quando e como agendar consulta do viajante em Portugal",
-            "description": "Quando e como agendar a consulta de medicina do viajante em Portugal: percurso online na Lon Clinic (39 €) vs. tradicional, vacinas, receitas e Certificado Internacional.",
+            "description": "Enquanto a maioria pede 4 a 8 semanas, a Lon Clinic marca a consulta para hoje ou amanhã — no site ou WhatsApp. 39 €. Vacinas, receitas e certificado internacional.",
             "datePublished": "2026-09-06",
             "dateModified": "2026-09-06",
             "format": "html",
             "image": "/image/guide/travel-cover-5.png",
             "about": "Medicina do viajante",
+            "author": "rita-aguiar",
             "ctaKind": "travel",
             "liveSlots": true,
             "related": [
@@ -4835,7 +4838,7 @@
             "faq": [
                 {
                     "q": "Quando e como agendar consulta do viajante em Portugal?",
-                    "a": "Na Lon Clinic: marcação online ou por WhatsApp, consulta muitas vezes no próprio dia ou no dia seguinte, 39 €. No SNS a espera pela consulta presencial chega a semanas ou 1 a 2 meses. As vacinas tomam-se depois num Centro de Vacinação Internacional."
+                    "a": "Enquanto a maioria dos serviços de medicina do viajante em Portugal pede 4 a 8 semanas, a Lon Clinic marca a tua consulta para hoje ou amanhã — no site ou por WhatsApp. 39 €. As vacinas tomam-se depois num Centro de Vacinação Internacional."
                 },
                 {
                     "q": "A Lon Clinic pode prescrever vacinas de viagem?",

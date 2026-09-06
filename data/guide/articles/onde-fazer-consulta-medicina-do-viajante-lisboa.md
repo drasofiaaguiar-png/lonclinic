@@ -2,7 +2,7 @@
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
 <li>Em Lisboa a consulta de medicina do viajante faz-se no <strong>SNS</strong> (CVI e hospitais), em <strong>privado presencial</strong> (ex. CUF) ou <strong>online</strong>.</li>
-<li>Na <a href="/travel-clinic">Lon Clinic</a> a consulta é por videoconsulta, <strong>39 €</strong>, com prescrição no próprio dia — a vacina toma-se depois num Centro de Vacinação Internacional.</li>
+<li>Na <a href="/travel-clinic">Lon Clinic</a> a consulta é por videoconsulta, <strong>39 €</strong> — hoje ou amanhã, no site ou WhatsApp. A vacina toma-se depois num Centro de Vacinação Internacional.</li>
 <li>Febre amarela e o certificado internacional (CIVP) <em>não</em> se fazem no ecrã nem na CUF: exigem CVI físico.</li>
 </ul>
 </aside>
@@ -70,3 +70,4 @@ Vacinas por destino: [guia por país](/blog/vacinas-para-viajar-por-pais). Presc
 - [DGS](https://www.dgs.pt/)
 - [ERS](https://www.ers.pt/) — prestador n.º 45475
 - IHMT NOVA — confirme contactos no site do instituto
+- Revisão clínica: [Drª Rita Aguiar](/equipa/rita-aguiar)

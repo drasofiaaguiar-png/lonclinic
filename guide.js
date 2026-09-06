@@ -1510,7 +1510,7 @@ function renderBlogArticle(origin, slug) {
         const a = authors.getAuthor(meta.author);
         const href = authors.authorPath(a);
         const sep = time || read ? '<span aria-hidden="true"> · </span>' : '';
-        return `<p class="eeat-byline mag-story-by">${time}${extras.join('')}${sep}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">${escapeHtml(chrome.clinician(a.yearsPractice))}</a><span class="eeat-byline-review">${escapeHtml(chrome.review)}</span></p>`;
+        return `<p class="eeat-byline mag-story-by">${time}${extras.join('')}${sep}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">${escapeHtml(a.displayName)}</a><span class="eeat-byline-review">${escapeHtml(chrome.review)}</span></p>`;
     })();
     const bio = isVerifiedArticle(meta) ? authors.authorBioHtml(o, meta.author, dateMod || datePub) : '';
     const leadFigure = meta.image
