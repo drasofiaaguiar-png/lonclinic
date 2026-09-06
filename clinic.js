@@ -100,7 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicPayNet = document.getElementById('clinicPayNet');
     const clinicProfileName = document.getElementById('clinicProfileName');
     const clinicProfileUsername = document.getElementById('clinicProfileUsername');
-    const clinicProfileRole = document.getElementById('clinicProfileRole');
     const clinicProfileDoxy = document.getElementById('clinicProfileDoxy');
     const clinicProfilePhoto = document.getElementById('clinicProfilePhoto');
     const clinicProfilePhotoPlaceholder = document.getElementById('clinicProfilePhotoPlaceholder');
@@ -110,10 +109,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicProfession = document.getElementById('clinicProfession');
     const clinicOrdemLabel = document.getElementById('clinicOrdemLabel');
     const clinicOrdemNumber = document.getElementById('clinicOrdemNumber');
+    const clinicFullName = document.getElementById('clinicFullName');
+    const clinicNif = document.getElementById('clinicNif');
+    const clinicCitizenCard = document.getElementById('clinicCitizenCard');
+    const clinicAddress = document.getElementById('clinicAddress');
+    const clinicInsurer = document.getElementById('clinicInsurer');
+    const clinicInsurancePolicy = document.getElementById('clinicInsurancePolicy');
+    const clinicInsuranceValidUntil = document.getElementById('clinicInsuranceValidUntil');
     const clinicBio = document.getElementById('clinicBio');
     const clinicCredentials = document.getElementById('clinicCredentials');
-    const clinicPrimaryArea = document.getElementById('clinicPrimaryArea');
-    const clinicSecondaryArea = document.getElementById('clinicSecondaryArea');
+    const clinicPrimaryAreas = document.getElementById('clinicPrimaryAreas');
+    const clinicSecondaryAreas = document.getElementById('clinicSecondaryAreas');
     const clinicProfileForm = document.getElementById('clinicProfileForm');
     const clinicProfileFormError = document.getElementById('clinicProfileFormError');
     const clinicProfileSaveBtn = document.getElementById('clinicProfileSaveBtn');
@@ -127,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         patients: { title: 'Patients', subtitle: 'People attached to your consultations' },
         resources: { title: 'Resources', subtitle: 'Video room and everyday clinic links' },
         management: { title: 'Management', subtitle: 'IBAN, faturas mensais e pagamentos' },
-        profile: { title: 'Profile', subtitle: 'Ordem, bio, credentials, clinical areas and documents' }
+        profile: { title: 'Profile', subtitle: 'Identificação, cédula, seguro, áreas e documentos' }
     };
 
     const WEEKDAYS = [
@@ -249,9 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (clinicProfileName) clinicProfileName.textContent = staffDisplayName || '—';
         if (clinicProfileUsername) clinicProfileUsername.textContent = staffUsername || '—';
-        if (clinicProfileRole) {
-            clinicProfileRole.textContent = isAdmin ? 'Clinic administrator' : 'Clinician';
-        }
         if (clinicAdminLink) clinicAdminLink.hidden = !isAdmin;
         if (smartSlotGroupingToggle) {
             smartSlotGroupingToggle.disabled = false;
@@ -976,6 +979,32 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/"/g, '&quot;');
     }
 
+    function patientIntakeBlock(booking) {
+        const intake = booking.patientIntake || booking.intake;
+        if (intake && (intake.concerns || intake.dob || intake.allergies || intake.medications)) {
+            const row = (label, value) => value
+                ? `<div class="clinic-detail-item"><span class="clinic-detail-label">${escapeHtml(label)}</span><span class="clinic-detail-value">${escapeHtml(value)}</span></div>`
+                : '';
+            return `
+                <div class="clinic-booking-details">
+                    <h3 class="clinic-section-title">Patient intake</h3>
+                    <div class="clinic-details-grid">
+                        ${row('Date of birth', intake.dob)}
+                        ${row('Country', intake.country)}
+                        ${row('Symptoms / reason', intake.concerns)}
+                        ${row('Medications', intake.medications)}
+                        ${row('Allergies', intake.allergies)}
+                        ${row('NHS / SNS', intake.nhs)}
+                    </div>
+                </div>`;
+        }
+        return `
+            <div class="clinic-booking-details">
+                <h3 class="clinic-section-title">Patient intake</h3>
+                <p style="color: var(--text-muted); margin: 0;">Clinical form not submitted yet.</p>
+            </div>`;
+    }
+
     function formatClinicPayHours(hours) {
         const n = Number(hours) || 0;
         if (Math.abs(n - Math.round(n)) < 0.05) return `${Math.round(n)}h`;
@@ -1252,6 +1281,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         ? '<span style="color: var(--accent); font-weight: 600;">✓ Notes</span>'
                         : '<span style="color: var(--text-muted);">No notes</span>'
                     }
+                    ${booking.hasPatientIntake
+                        ? '<br><span style="color: var(--accent); font-size: 0.85em;">Ficha ok</span>'
+                        : '<br><span style="color: var(--text-muted); font-size: 0.85em;">Ficha pendente</span>'
+                    }
                 </td>
                 <td>
                     <button class="btn btn-outline btn-sm view-consultation-btn" data-booking-ref="${escapeHtml(ref)}">
@@ -1402,6 +1435,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
 
+                ${patientIntakeBlock(booking)}
+
                 <div class="clinic-notes-section">
                     <h3 class="clinic-section-title">Clinical Notes</h3>
                     <form id="clinicalNotesForm" class="clinic-notes-form">
@@ -1520,12 +1555,13 @@ document.addEventListener('DOMContentLoaded', () => {
         psicologo: 'Número da Ordem dos Psicólogos'
     };
     const DEFAULT_DOC_KINDS = {
-        contrato: 'Contrato',
-        seguro: 'Seguro de responsabilidade civil',
+        identificacao: 'Cartão de Cidadão',
+        cartao_ordem: 'Cópia da cédula',
         cv: 'CV',
-        identificacao: 'Documento de identificação',
-        cartao_ordem: 'Cartão da ordem'
+        seguro: 'Seguro de responsabilidade civil',
+        contrato: 'Contrato'
     };
+    const OPTIONAL_DOC_VALIDITY = new Set(['cv']);
     let clinicProfileMeta = {
         professions: DEFAULT_ORDEM_LABELS,
         documentKinds: DEFAULT_DOC_KINDS,
@@ -1535,22 +1571,65 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function ordemLabelFor(profession) {
         const labels = clinicProfileMeta.professions || DEFAULT_ORDEM_LABELS;
-        return labels[profession] || 'Número da ordem';
+        return labels[profession] || 'Cédula profissional';
     }
 
-    function fillAreaSelect(selectEl, profession, selected) {
-        if (!selectEl) return;
-        const areas = (clinicProfileMeta.clinicalAreas && clinicProfileMeta.clinicalAreas[profession]) || [];
-        const value = selected || '';
-        const opts = ['<option value="">Select</option>'].concat(
-            areas.map((area) => `<option value="${escapeHtml(area)}">${escapeHtml(area)}</option>`)
-        );
-        if (value && !areas.includes(value)) {
-            opts.push(`<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`);
+    function parseAreaList(value) {
+        if (Array.isArray(value)) {
+            return [...new Set(value.map((v) => String(v || '').trim()).filter(Boolean))];
         }
-        selectEl.innerHTML = opts.join('');
-        selectEl.value = value;
-        selectEl.disabled = !profession;
+        const s = String(value || '').trim();
+        if (!s) return [];
+        if (s.startsWith('[')) {
+            try { return parseAreaList(JSON.parse(s)); } catch (e) { /* ignore */ }
+        }
+        return [s];
+    }
+
+    function areaGroupsFor(profession) {
+        const groups = (clinicProfileMeta.clinicalAreas && clinicProfileMeta.clinicalAreas[profession]) || [];
+        return groups.filter((g) => g && Array.isArray(g.items));
+    }
+
+    function renderAreaChecks(container, profession, selected) {
+        if (!container) return;
+        const selectedSet = new Set(parseAreaList(selected));
+        if (!profession) {
+            container.innerHTML = '<p class="clinic-pref-empty">Seleccione a profissão primeiro</p>';
+            return;
+        }
+        const groups = areaGroupsFor(profession);
+        const known = new Set(groups.flatMap((g) => g.items || []));
+        const extra = [...selectedSet].filter((v) => !known.has(v));
+        const allGroups = extra.length ? groups.concat([{ group: 'Outras', items: extra }]) : groups;
+        container.innerHTML = allGroups.map((g) => `
+            <div class="clinic-pref-group">
+                <h3 class="clinic-pref-group-title">${escapeHtml(g.group)}</h3>
+                <div class="clinic-pref-list">
+                    ${(g.items || []).map((item) => `
+                        <label class="clinic-pref-check">
+                            <input type="checkbox" value="${escapeHtml(item)}" ${selectedSet.has(item) ? 'checked' : ''}>
+                            <span>${escapeHtml(item)}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+        `).join('') || '<p class="clinic-pref-empty">Sem áreas para esta profissão</p>';
+    }
+
+    function readAreaChecks(container) {
+        if (!container) return [];
+        return [...container.querySelectorAll('input[type="checkbox"]:checked')].map((el) => el.value);
+    }
+
+    function keepKnownAreas(profession, selected) {
+        const known = new Set(areaGroupsFor(profession).flatMap((g) => g.items || []));
+        return parseAreaList(selected).filter((item) => known.has(item));
+    }
+
+    function fillClinicAreaChecks(profession, primarySelected, secondarySelected) {
+        renderAreaChecks(clinicPrimaryAreas, profession, primarySelected);
+        renderAreaChecks(clinicSecondaryAreas, profession, secondarySelected);
     }
 
     function updateOrdemLabel() {
@@ -1572,6 +1651,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? `<a class="clinic-doc-link" href="/api/clinic/profile/documents/${encodeURIComponent(doc.id)}">${escapeHtml(doc.originalName || label)}</a>`
                 : '<span class="clinic-doc-missing">Not uploaded</span>';
             const validity = doc && doc.validUntil ? escapeHtml(doc.validUntil) : '—';
+            const dateRequired = OPTIONAL_DOC_VALIDITY.has(kind) ? '' : ' required';
             return `<tr data-doc-kind="${escapeHtml(kind)}">
                 <td>${escapeHtml(label)}</td>
                 <td>
@@ -1580,7 +1660,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
                 <td>
                     <div class="clinic-doc-validity">${validity}</div>
-                    <input type="date" class="admin-input clinic-doc-date" value="${doc && doc.validUntil ? escapeHtml(doc.validUntil) : ''}" required>
+                    <input type="date" class="admin-input clinic-doc-date" value="${doc && doc.validUntil ? escapeHtml(doc.validUntil) : ''}"${dateRequired}>
                 </td>
                 <td>
                     <button type="button" class="btn btn-outline btn-sm clinic-doc-upload">${doc ? 'Replace' : 'Upload'}</button>
@@ -1622,13 +1702,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 documents: data.documents || []
             };
             clinicProfession.value = data.profession || '';
+            if (clinicFullName) clinicFullName.value = data.fullName || data.displayName || '';
+            if (clinicNif) clinicNif.value = data.nif || '';
+            if (clinicCitizenCard) clinicCitizenCard.value = data.citizenCard || '';
+            if (clinicAddress) clinicAddress.value = data.address || '';
+            if (clinicInsurer) clinicInsurer.value = data.insurer || '';
+            if (clinicInsurancePolicy) clinicInsurancePolicy.value = data.insurancePolicy || '';
+            if (clinicInsuranceValidUntil) clinicInsuranceValidUntil.value = data.insuranceValidUntil || '';
             if (clinicOrdemNumber) clinicOrdemNumber.value = data.ordemNumber || '';
             if (clinicBio) clinicBio.value = data.bio || '';
             if (clinicCredentials) clinicCredentials.value = data.credentials || '';
             setClinicProfilePhoto(!!data.hasPhoto);
             updateOrdemLabel();
-            fillAreaSelect(clinicPrimaryArea, data.profession, data.primaryArea);
-            fillAreaSelect(clinicSecondaryArea, data.profession, data.secondaryArea);
+            fillClinicAreaChecks(data.profession, data.primaryAreas, data.secondaryAreas);
             renderDocumentRows();
             if (clinicProfileFormError) clinicProfileFormError.style.display = 'none';
             if (clinicDocsError) clinicDocsError.style.display = 'none';
@@ -1649,10 +1735,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (clinicProfession) {
         clinicProfession.addEventListener('change', () => {
             updateOrdemLabel();
-            fillAreaSelect(clinicPrimaryArea, clinicProfession.value, clinicPrimaryArea.value);
-            fillAreaSelect(clinicSecondaryArea, clinicProfession.value, clinicSecondaryArea.value);
+            fillClinicAreaChecks(
+                clinicProfession.value,
+                keepKnownAreas(clinicProfession.value, readAreaChecks(clinicPrimaryAreas)),
+                keepKnownAreas(clinicProfession.value, readAreaChecks(clinicSecondaryAreas))
+            );
         });
     }
+
+    function bindClinicPrefExclusive(source, other) {
+        if (!source) return;
+        source.addEventListener('change', (e) => {
+            const input = e.target.closest('input[type="checkbox"]');
+            if (!input || !input.checked || !other) return;
+            other.querySelectorAll('input[type="checkbox"]').forEach((el) => {
+                if (el.value === input.value) el.checked = false;
+            });
+        });
+    }
+    bindClinicPrefExclusive(clinicPrimaryAreas, clinicSecondaryAreas);
+    bindClinicPrefExclusive(clinicSecondaryAreas, clinicPrimaryAreas);
 
     if (clinicProfileForm) {
         clinicProfileForm.addEventListener('submit', async (e) => {
@@ -1660,11 +1762,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (clinicProfileFormError) clinicProfileFormError.style.display = 'none';
             const payload = {
                 profession: clinicProfession.value,
+                fullName: clinicFullName ? clinicFullName.value.trim() : '',
+                nif: clinicNif ? clinicNif.value.trim() : '',
+                citizenCard: clinicCitizenCard ? clinicCitizenCard.value.trim() : '',
+                address: clinicAddress ? clinicAddress.value.trim() : '',
+                insurer: clinicInsurer ? clinicInsurer.value.trim() : '',
+                insurancePolicy: clinicInsurancePolicy ? clinicInsurancePolicy.value.trim() : '',
+                insuranceValidUntil: clinicInsuranceValidUntil ? clinicInsuranceValidUntil.value : '',
                 ordemNumber: clinicOrdemNumber ? clinicOrdemNumber.value.trim() : '',
                 bio: clinicBio ? clinicBio.value.trim() : '',
                 credentials: clinicCredentials ? clinicCredentials.value.trim() : '',
-                primaryArea: clinicPrimaryArea ? clinicPrimaryArea.value : '',
-                secondaryArea: clinicSecondaryArea ? clinicSecondaryArea.value : ''
+                primaryAreas: readAreaChecks(clinicPrimaryAreas),
+                secondaryAreas: readAreaChecks(clinicSecondaryAreas)
             };
             if (clinicProfileSaveBtn) clinicProfileSaveBtn.disabled = true;
             try {
@@ -1732,7 +1841,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showProfileError(clinicDocsError, 'Choose a file to upload.');
                 return;
             }
-            if (!dateInput.value) {
+            if (dateInput.required && !dateInput.value) {
                 showProfileError(clinicDocsError, 'Add the validity date.');
                 return;
             }

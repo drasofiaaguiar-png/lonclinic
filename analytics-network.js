@@ -38,7 +38,8 @@ const ALLOWED_NAMES = new Set([
     'cancel',
     'reschedule',
     'job_application',
-    'interview_booked'
+    'interview_booked',
+    'intake_submit'
 ]);
 
 const PII_KEY = /email|phone|tel|nhs|password|token|name|notes|answer|diagnos|prescription|dob|birth/i;

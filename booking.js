@@ -128,8 +128,175 @@ document.addEventListener('DOMContentLoaded', async () => {
         return 'en';
     }
 
-    // ─── Check for Stripe return ───
+    function intakeCopy() {
+        const lang = getBookingLocale();
+        const map = {
+            pt: {
+                doneTitle: 'Ficha clínica recebida',
+                submit: 'Enviar ficha clínica',
+                sending: 'A enviar…',
+                genericError: 'Não foi possível guardar. Tente novamente.',
+                missing: 'Este link da ficha já não é válido. Use o email de confirmação ou contacte-nos.'
+            },
+            en: {
+                doneTitle: 'Clinical form received',
+                submit: 'Send clinical form',
+                sending: 'Sending…',
+                genericError: 'Could not save. Please try again.',
+                missing: 'This form link is no longer valid. Use your confirmation email or contact us.'
+            },
+            es: {
+                doneTitle: 'Ficha clínica recibida',
+                submit: 'Enviar ficha clínica',
+                sending: 'Enviando…',
+                genericError: 'No se pudo guardar. Inténtelo de nuevo.',
+                missing: 'Este enlace ya no es válido. Use el correo de confirmación o contáctenos.'
+            }
+        };
+        return map[lang] || map.pt;
+    }
+
+    function fillIntakePrefill(prefill) {
+        const p = prefill || {};
+        const dob = document.getElementById('intakeDob');
+        const country = document.getElementById('intakeCountry');
+        const concerns = document.getElementById('intakeConcerns');
+        const meds = document.getElementById('intakeMedications');
+        const allergies = document.getElementById('intakeAllergies');
+        const nhs = document.getElementById('intakeNhs');
+        if (dob && p.dob) dob.value = p.dob;
+        if (country && p.country) country.value = p.country;
+        if (concerns && p.concerns && !concerns.value) concerns.value = p.concerns;
+        if (meds && p.medications) meds.value = p.medications;
+        if (allergies && p.allergies) allergies.value = p.allergies;
+        if (nhs && p.nhs) nhs.value = p.nhs;
+    }
+
+    function showIntakeCompleted() {
+        const form = document.getElementById('intakeForm');
+        const done = document.getElementById('intakeDone');
+        if (form) form.hidden = true;
+        if (done) done.hidden = false;
+    }
+
+    function bindIntakeForm(token) {
+        const form = document.getElementById('intakeForm');
+        if (!form || form.dataset.bound === '1') return;
+        form.dataset.bound = '1';
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const copy = intakeCopy();
+            const errEl = document.getElementById('intakeFormError');
+            const btn = document.getElementById('intakeSubmitBtn');
+            const dob = document.getElementById('intakeDob');
+            const concerns = document.getElementById('intakeConcerns');
+            let valid = true;
+            [dob, concerns].forEach((field) => {
+                const group = field && field.closest('.form-group');
+                if (!field || !String(field.value || '').trim()) {
+                    if (group) group.classList.add('invalid');
+                    valid = false;
+                } else if (group) group.classList.remove('invalid');
+            });
+            if (!valid) return;
+            if (errEl) {
+                errEl.hidden = true;
+                errEl.textContent = '';
+            }
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = copy.sending;
+            }
+            try {
+                const response = await fetch('/api/intake/' + encodeURIComponent(token), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        dob: dob.value,
+                        country: document.getElementById('intakeCountry')?.value || '',
+                        concerns: concerns.value.trim(),
+                        medications: document.getElementById('intakeMedications')?.value?.trim() || '',
+                        allergies: document.getElementById('intakeAllergies')?.value?.trim() || '',
+                        nhs: document.getElementById('intakeNhs')?.value?.trim() || ''
+                    })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) throw new Error(data.error || copy.genericError);
+                showIntakeCompleted();
+                if (window.LonAnalytics) window.LonAnalytics.track('intake_submit', { surface: 'booking', funnel: 'patient_booking' });
+            } catch (err) {
+                if (errEl) {
+                    errEl.textContent = err.message || copy.genericError;
+                    errEl.hidden = false;
+                }
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = copy.submit;
+                }
+            }
+        });
+    }
+
+    function markConfirmationStep() {
+        document.querySelectorAll('.booking-step').forEach(s => s.classList.remove('active'));
+        const step4 = document.getElementById('step-4');
+        if (step4) step4.classList.add('active');
+        document.querySelectorAll('.progress-step').forEach(ps => {
+            ps.classList.remove('active');
+            ps.classList.add('completed');
+        });
+        const last = document.querySelector('.progress-step[data-step="4"]');
+        if (last) {
+            last.classList.remove('completed');
+            last.classList.add('active');
+        }
+        document.querySelectorAll('.progress-line').forEach(l => l.classList.add('filled'));
+    }
+
+    async function showStandaloneIntake(token) {
+        markConfirmationStep();
+        const card = document.querySelector('.confirmation-card');
+        const actions = document.querySelector('.confirmation-actions');
+        if (card) card.hidden = true;
+        if (actions) actions.hidden = true;
+        const timeHint = document.getElementById('intakeTimeHint');
+        try {
+            const response = await fetch('/api/intake/' + encodeURIComponent(token));
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(data.error || 'not found');
+            if (timeHint && data.time) timeHint.textContent = data.time;
+            const svc = document.getElementById('confirmService');
+            const dt = document.getElementById('confirmDateTime');
+            const ref = document.getElementById('confirmRef');
+            if (svc && data.service) svc.textContent = i18nServiceLabel(data.service) || data.service;
+            if (dt) dt.textContent = [data.date, data.time].filter(Boolean).join(' · ') || '—';
+            if (ref && data.bookingRef) ref.textContent = data.bookingRef;
+            if (card) card.hidden = false;
+            if (data.completed) {
+                showIntakeCompleted();
+                return;
+            }
+            fillIntakePrefill(data.intakePrefill);
+            bindIntakeForm(token);
+        } catch (err) {
+            const form = document.getElementById('intakeForm');
+            if (form) form.hidden = true;
+            const errEl = document.getElementById('intakeFormError');
+            if (errEl) {
+                errEl.textContent = intakeCopy().missing;
+                errEl.hidden = false;
+            }
+        }
+    }
+
+    // ─── Check for Stripe return / intake form ───
     const urlParams = new URLSearchParams(window.location.search);
+    const fichaToken = (urlParams.get('ficha') || '').trim();
+
+    if (fichaToken) {
+        await showStandaloneIntake(fichaToken);
+        return;
+    }
 
     // Returning from Stripe Checkout — show confirmation
     if (urlParams.get('success') === 'true' && urlParams.get('session_id')) {
@@ -973,9 +1140,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const required = [
                 { cls: '.p-firstName', msg: 'first name' },
-                { cls: '.p-lastName', msg: 'last name' },
-                { cls: '.p-dob', msg: 'date of birth' },
-                { cls: '.p-country', msg: 'country' }
+                { cls: '.p-lastName', msg: 'last name' }
             ];
 
             required.forEach(({ cls }) => {
@@ -1482,6 +1647,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('confirmDateTime').textContent = `${data.date} at ${data.time}`;
             document.getElementById('confirmAmount').textContent = `€${(data.amount / 100).toFixed(0)}`;
             document.getElementById('confirmRef').textContent = data.bookingRef || '—';
+
+            const timeHint = document.getElementById('intakeTimeHint');
+            if (timeHint && data.time) timeHint.textContent = data.time;
+
+            if (data.intakeCompleted) {
+                showIntakeCompleted();
+            } else if (data.intakeToken) {
+                fillIntakePrefill(data.intakePrefill);
+                bindIntakeForm(data.intakeToken);
+            }
 
             const dashboardBtn = document.getElementById('goToDashboardBtn');
             if (dashboardBtn && data.email) {

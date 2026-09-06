@@ -27,9 +27,9 @@
     <meta name="twitter:title" content="Marcar Consulta Online | Lon Clinic">
     <meta name="twitter:description" content="Marcação rápida de consulta médica online com pagamento seguro.">
     <meta name="twitter:image" content="https://www.lonclinic.com/image/image2.webp">
-    <link rel="stylesheet" href="landing.css?v=20260903b">
+    <link rel="stylesheet" href="landing.css?v=20260906i">
     <link rel="stylesheet" href="styles.css?v=20260903b">
-    <link rel="stylesheet" href="booking.css?v=20260906b">
+    <link rel="stylesheet" href="booking.css?v=20260906i">
     <link rel="preload" as="image" href="/image/image2.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -257,7 +257,7 @@
             <div class="booking-step" id="step-2">
                 <div class="step-header">
                     <h1 class="step-title">Os seus dados</h1>
-                    <p class="step-desc">Indique as suas informações para prepararmos a consulta.</p>
+                    <p class="step-desc">Só precisamos do seu nome e contacto para confirmar a marcação. Os dados clínicos pedem-se a seguir ao pagamento.</p>
                     <p class="booking-slot-summary" id="bookingSlotSummary" hidden></p>
                     <p class="booking-slot-change-wrap" id="bookingSlotChangeWrap" hidden>
                         <a href="/marcar/clinica-geral" id="bookingSlotChange">Alterar horário</a>
@@ -312,16 +312,17 @@
                             <h3 class="form-section-title passenger-panel-title">Patient details</h3>
                             <div class="form-grid">
                                 <div class="form-group">
-                                    <label>First name *</label>
-                                    <input type="text" class="p-firstName" required placeholder="John" autocomplete="given-name">
+                                    <label for="firstName">Nome *</label>
+                                    <input type="text" id="firstName" class="p-firstName" required placeholder="João" autocomplete="given-name">
                                     <span class="form-error">Please enter first name</span>
                                 </div>
                                 <div class="form-group">
-                                    <label>Last name *</label>
-                                    <input type="text" class="p-lastName" required placeholder="Doe" autocomplete="family-name">
+                                    <label for="lastName">Apelido *</label>
+                                    <input type="text" id="lastName" class="p-lastName" required placeholder="Silva" autocomplete="family-name">
                                     <span class="form-error">Please enter last name</span>
                                 </div>
                             </div>
+                            <div id="checkoutClinicalDefer" class="checkout-clinical-defer" hidden>
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label>Date of birth *</label>
@@ -379,6 +380,7 @@
                                 <label>Known allergies</label>
                                 <input type="text" class="p-allergies" placeholder="e.g. Penicillin, latex, none">
                             </div>
+                            </div>
                         </div>
                     </div>
 
@@ -419,6 +421,7 @@
                 <div class="lon-pay-methods" role="group" aria-label="Método de pagamento">
                     <p class="lon-pay-methods-label">Pagamento seguro via Stripe</p>
                     <p class="lon-pay-methods-note">Cartão, Apple Pay e Google Pay, quando disponíveis.</p>
+                    <p class="lon-pay-after-note" id="checkoutAfterPayNote">Após o pagamento, irá receber um e-mail para preencher os seus dados clínicos/sintomas.</p>
                 </div>
                 <div class="step-actions">
                     <button type="button" class="btn btn-outline btn-lg step-back" id="back-2">Voltar</button>
@@ -587,8 +590,8 @@
                     <div class="confirmation-icon">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#c5c72c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
                     </div>
-                    <h1 class="step-title">Booking confirmed!</h1>
-                    <p class="step-desc">Your consultation has been successfully scheduled. A confirmation email has been sent to <strong id="confirmEmail">your email</strong>.</p>
+                    <h1 class="step-title" id="confirmTitle">Consulta confirmada</h1>
+                    <p class="step-desc" id="confirmLead">Para o médico preparar a sua consulta, preencha os seus dados clínicos no formulário abaixo <strong>(demora menos de 2 minutos)</strong>. Enviámos o mesmo link para <strong id="confirmEmail">o seu email</strong>.</p>
 
                     <div class="confirmation-card">
                         <div class="confirmation-row">
@@ -613,14 +616,70 @@
                         </div>
                     </div>
 
+                    <div class="intake-card" id="intakeCard">
+                        <div class="intake-done" id="intakeDone" hidden>
+                            <p class="intake-done-title">Ficha clínica recebida</p>
+                            <p>O médico já pode preparar a sua consulta. Se precisar de alterar algum dado, responda ao email de confirmação.</p>
+                        </div>
+                        <form class="details-form intake-form" id="intakeForm" novalidate>
+                            <h3 class="intake-form-title" id="intakeFormTitle">Ficha clínica</h3>
+                            <p class="intake-form-sub" id="intakeFormSub">Sintomas, medicação e alergias — para a consulta das <strong id="intakeTimeHint">hora marcada</strong>.</p>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="intakeDob">Data de nascimento *</label>
+                                    <input type="date" id="intakeDob" name="dob" required autocomplete="bday">
+                                    <span class="form-error">Indique a data de nascimento</span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="intakeCountry">País de residência</label>
+                                    <select id="intakeCountry" name="country">
+                                        <option value="" selected>Selecionar (opcional)</option>
+                                        <option value="PT">Portugal</option>
+                                        <option value="GB">United Kingdom</option>
+                                        <option value="ES">España</option>
+                                        <option value="FR">France</option>
+                                        <option value="DE">Deutschland</option>
+                                        <option value="US">United States</option>
+                                        <option value="BR">Brasil</option>
+                                        <option value="IE">Ireland</option>
+                                        <option value="NL">Netherlands</option>
+                                        <option value="BE">Belgium</option>
+                                        <option value="IT">Italia</option>
+                                        <option value="CH">Switzerland</option>
+                                        <option value="OTHER">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="intakeConcerns">Sintomas ou motivo da consulta *</label>
+                                <textarea id="intakeConcerns" name="concerns" rows="4" required placeholder="O que o traz hoje? Há quanto tempo? O que já tentou?"></textarea>
+                                <span class="form-error">Descreva os sintomas ou o motivo da consulta</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="intakeMedications">Medicação atual</label>
+                                <textarea id="intakeMedications" name="medications" rows="2" placeholder="Medicamentos, suplementos ou tratamentos em curso"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="intakeAllergies">Alergias conhecidas</label>
+                                <input type="text" id="intakeAllergies" name="allergies" placeholder="ex. Penicilina, látex, nenhuma">
+                            </div>
+                            <div class="form-group">
+                                <label for="intakeNhs">Nº utente / NHS (opcional)</label>
+                                <input type="text" id="intakeNhs" name="nhs" placeholder="Se tiver">
+                            </div>
+                            <p class="intake-form-error" id="intakeFormError" hidden></p>
+                            <button type="submit" class="btn btn-primary btn-lg" id="intakeSubmitBtn">Enviar ficha clínica</button>
+                        </form>
+                    </div>
+
                     <div class="confirmation-next-steps">
                         <h3>What happens next</h3>
                         <div class="next-step-list">
                             <div class="next-step-item">
                                 <div class="next-step-num">1</div>
                                 <div>
-                                    <strong>Check your email</strong>
-                                    <p>You'll receive a confirmation with your video link and preparation instructions.</p>
+                                    <strong>Preencha a ficha clínica</strong>
+                                    <p>O formulário acima (ou o link no email) chega ao médico antes da consulta.</p>
                                 </div>
                             </div>
                             <div class="next-step-item">
@@ -714,14 +773,12 @@
         </div>
     </footer>
 
-    <script src="/lon-analytics.js?v=20260905e" defer></script>
-    <script src="i18n.js?v=20260906c"></script>
+    <script src="/lon-analytics.js?v=20260906h" defer></script>
+    <script src="i18n.js?v=20260906e"></script>
     <script src="lon-nav.js?v=20260816b" defer></script>
     <script src="/lon-slots.js?v=20260906d" defer></script>
     <!-- WhatsApp Floating Button -->
-    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Contact us on WhatsApp">
-        <span>💬</span>
-    </a>
+    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
 
     <div class="lon-exit-modal" id="lonExitIntent" hidden>
         <div class="lon-exit-modal-backdrop" data-exit-dismiss></div>
@@ -741,6 +798,6 @@
         </div>
     </div>
 
-    <script src="booking.js?v=20260906d"></script>
+    <script src="booking.js?v=20260906e"></script>
 </body>
 </html>

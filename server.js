@@ -207,6 +207,16 @@ const rateLimitSessionRetrieve = rateLimit({
     }
 });
 
+const rateLimitIntake = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 40,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Too many attempts. Try again later.' });
+    }
+});
+
 const rateLimitRecrutamentoPsicologia = rateLimit({
     windowMs: 60 * 60 * 1000,
     max: 10,
@@ -300,7 +310,7 @@ app.use(
 );
 
 const ANALYTICS_SNIPPET =
-    '\n<script src="/lon-analytics.js?v=20260904a" defer></script>\n' +
+    '\n<script src="/lon-analytics.js?v=20260906e" defer></script>\n' +
     '<noscript><img src="/api/a.gif?n=page_view" alt="" width="1" height="1"></noscript>\n';
 function injectAnalyticsHtml(html) {
     if (!html || typeof html !== 'string') return html;
@@ -593,52 +603,177 @@ const STAFF_PROFESSIONS = {
 };
 
 const STAFF_DOCUMENT_KINDS = {
-    contrato: 'Contrato',
-    seguro: 'Seguro de responsabilidade civil',
+    identificacao: 'Cartão de Cidadão',
+    cartao_ordem: 'Cópia da cédula',
     cv: 'CV',
-    identificacao: 'Documento de identificação',
-    cartao_ordem: 'Cartão da ordem'
+    seguro: 'Seguro de responsabilidade civil',
+    contrato: 'Contrato'
 };
+const STAFF_DOC_OPTIONAL_VALIDITY = new Set(['cv']);
 
 const STAFF_CLINICAL_AREAS = {
     medico: [
-        'Clínica geral',
-        'Medicina interna',
-        'Saúde mental',
-        'Burnout',
-        'Consulta do viajante',
-        'Longevidade',
-        'Saúde da mulher',
-        'Pediatria',
-        'Doença aguda / urgente',
-        'Renovação de receita'
-    ],
-    nutricionista: [
-        'Nutrição clínica',
-        'Nutrição desportiva',
-        'Perturbações alimentares',
-        'Doença crónica',
-        'Emagrecimento',
-        'Saúde da mulher',
-        'Pediatria'
+        {
+            group: 'Áreas clínicas',
+            items: [
+                'Clínica geral',
+                'Medicina interna',
+                'Saúde mental',
+                'Burnout',
+                'Consulta do viajante',
+                'Longevidade',
+                'Saúde da mulher',
+                'Pediatria',
+                'Doença aguda / urgente',
+                'Renovação de receita'
+            ]
+        }
     ],
     psicologo: [
-        'Ansiedade',
-        'Depressão',
-        'Stress / burnout',
-        'Autoestima',
-        'Relações interpessoais',
-        'Relações de casal',
-        'Luto',
-        'Gestão emocional',
-        'Desenvolvimento pessoal',
-        'Parentalidade',
-        'Adolescência',
-        'Psicologia da saúde',
-        'Perturbações alimentares',
-        'Trauma'
+        {
+            group: 'Neurodesenvolvimento e saúde mental geral',
+            items: [
+                'Neurodesenvolvimento no adulto (autismo, PHDA, etc.) — avaliação/testes',
+                'Neurodesenvolvimento no adulto (autismo, PHDA, etc.) — acompanhamento',
+                'Ansiedade',
+                'Depressão',
+                'Burnout',
+                'Trauma',
+                'Perturbação obsessivo-compulsiva (POC)',
+                'Perturbação de pânico / fobias',
+                'Insónia (abordagem cognitivo-comportamental)',
+                'Dependências comportamentais (jogo, ecrãs/redes sociais)'
+            ]
+        },
+        {
+            group: 'Relacionamentos e família',
+            items: [
+                'LGBT',
+                'Relacionamentos',
+                'Questões familiares',
+                'Sexologia / disfunções sexuais',
+                'Coaching parental'
+            ]
+        },
+        {
+            group: 'Alimentação e imagem corporal',
+            items: [
+                'Distúrbio alimentar (incluindo excesso de peso)'
+            ]
+        },
+        {
+            group: 'Ciclo de vida e saúde hormonal',
+            items: [
+                'Sintomas psicológicos da menopausa/perimenopausa (humor, cognição)',
+                'Stress relacionado com fertilidade/PMA',
+                'Luto perinatal (perda gestacional)',
+                'Depressão pós-parto',
+                'Ajustamento a doença crónica'
+            ]
+        },
+        {
+            group: 'Outros',
+            items: [
+                'Luto (geral)',
+                'Transições de vida / questões existenciais e de identidade',
+                'Saúde mental de expatriados (choque cultural, adaptação)'
+            ]
+        }
+    ],
+    nutricionista: [
+        {
+            group: 'Gastrointestinal',
+            items: [
+                'SIBO',
+                'DII (Doença Inflamatória Intestinal)',
+                'SII (Síndrome do Intestino Irritável)',
+                'Gluten free',
+                'Lactose free',
+                'Intolerância à histamina'
+            ]
+        },
+        {
+            group: 'Metabólico e clínico',
+            items: [
+                'Perda de peso',
+                'Diabetes',
+                'Doenças cardiovasculares (colesterol, hipertensão)',
+                'Fígado gordo / NAFLD',
+                'Doença renal (dieta renal)',
+                'Protocolos autoimunes (Hashimoto, tiroide)'
+            ]
+        },
+        {
+            group: 'Hormonal / ciclo de vida',
+            items: [
+                'Endometriose',
+                'Menopausa',
+                'SOP (Síndrome do Ovário Policístico)',
+                'Fertilidade / nutrição pré-conceção',
+                'Gravidez e pós-parto',
+                'Andropausa'
+            ]
+        },
+        {
+            group: 'Desporto',
+            items: [
+                'Nutrição desportiva lúdica',
+                'Nutrição desportiva profissional'
+            ]
+        },
+        {
+            group: 'Outros',
+            items: [
+                'Nutrição bariátrica (pré/pós-cirurgia)',
+                'Nutrição vegan/vegetariana (transição)',
+                'Nutrição e pele (acne, eczema)',
+                'Nutrição de viagem (jet lag, problemas digestivos em viagem)',
+                'Nutrição para profissionais/executivos com pouco tempo'
+            ]
+        }
     ]
 };
+
+function parseStaffAreaList(value) {
+    if (Array.isArray(value)) {
+        const seen = new Set();
+        const out = [];
+        for (const raw of value) {
+            const item = String(raw || '').trim().slice(0, 160);
+            if (!item || seen.has(item)) continue;
+            seen.add(item);
+            out.push(item);
+            if (out.length >= 80) break;
+        }
+        return out;
+    }
+    const s = String(value || '').trim();
+    if (!s) return [];
+    if (s.startsWith('[')) {
+        try {
+            return parseStaffAreaList(JSON.parse(s));
+        } catch {
+            /* keep as a single legacy value */
+        }
+    }
+    return [s.slice(0, 160)];
+}
+
+function flattenClinicalAreaItems(profession) {
+    const groups = STAFF_CLINICAL_AREAS[profession] || [];
+    return groups.flatMap((group) => (group && Array.isArray(group.items) ? group.items : []));
+}
+
+function sanitizeStaffAreas(profession, values, disallowed) {
+    const allowed = new Set(flattenClinicalAreaItems(profession));
+    const blocked = new Set(disallowed || []);
+    return parseStaffAreaList(values).filter((item) => allowed.has(item) && !blocked.has(item));
+}
+
+function isoDateOrEmpty(value) {
+    const s = String(value || '').trim().slice(0, 10);
+    return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : '';
+}
 
 function staffSessionUsername(req) {
     return String((req.session && req.session.clinicUsername) || '').trim().toLowerCase();
@@ -649,13 +784,48 @@ function emptyStaffProfile(username) {
         username: String(username || '').trim().toLowerCase(),
         profession: '',
         ordemNumber: '',
+        fullName: '',
+        nif: '',
+        citizenCard: '',
+        address: '',
+        insurer: '',
+        insurancePolicy: '',
+        insuranceValidUntil: '',
         bio: '',
         credentials: '',
         iban: '',
-        primaryArea: '',
-        secondaryArea: '',
+        payoutsFromMonth: '',
+        primaryAreas: [],
+        secondaryAreas: [],
         hasPhoto: false,
         updatedAt: null
+    };
+}
+
+function normalizeStaffProfileFields(fields, existing) {
+    const prev = existing || emptyStaffProfile('');
+    const profession = String(fields.profession || '').trim().slice(0, 32);
+    const primaryAreas = sanitizeStaffAreas(profession, fields.primaryAreas != null ? fields.primaryAreas : fields.primaryArea);
+    const secondaryAreas = sanitizeStaffAreas(
+        profession,
+        fields.secondaryAreas != null ? fields.secondaryAreas : fields.secondaryArea,
+        primaryAreas
+    );
+    return {
+        profession,
+        ordemNumber: String(fields.ordemNumber || '').trim().slice(0, 80),
+        fullName: String(fields.fullName || '').trim().slice(0, 160),
+        nif: String(fields.nif || '').trim().slice(0, 20),
+        citizenCard: String(fields.citizenCard || '').trim().slice(0, 32),
+        address: String(fields.address || '').trim().slice(0, 400),
+        insurer: String(fields.insurer || '').trim().slice(0, 120),
+        insurancePolicy: String(fields.insurancePolicy || '').trim().slice(0, 80),
+        insuranceValidUntil: isoDateOrEmpty(fields.insuranceValidUntil),
+        bio: String(fields.bio || '').trim().slice(0, 4000),
+        credentials: String(fields.credentials || '').trim().slice(0, 2000),
+        iban: String(prev.iban || '').trim().slice(0, 42),
+        primaryAreas,
+        secondaryAreas
     };
 }
 
@@ -678,22 +848,26 @@ async function getStaffProfileInternal(username) {
         return (await db.getStaffProfile(u)) || emptyStaffProfile(u);
     }
     const stored = staffProfilesStore.get(u) || emptyStaffProfile(u);
-    stored.hasPhoto = staffPhotosStore.has(u);
-    return stored;
+    return {
+        ...emptyStaffProfile(u),
+        ...stored,
+        primaryAreas: parseStaffAreaList(stored.primaryAreas != null ? stored.primaryAreas : stored.primaryArea),
+        secondaryAreas: parseStaffAreaList(stored.secondaryAreas != null ? stored.secondaryAreas : stored.secondaryArea),
+        hasPhoto: staffPhotosStore.has(u)
+    };
 }
 
 async function saveStaffProfileInternal(username, fields) {
     const u = String(username || '').trim().toLowerCase();
-    if (usePersistentDb) return db.upsertStaffProfile(u, fields);
+    const existing = usePersistentDb
+        ? ((await db.getStaffProfile(u)) || emptyStaffProfile(u))
+        : (staffProfilesStore.get(u) || emptyStaffProfile(u));
+    const normalized = normalizeStaffProfileFields(fields, existing);
+    if (usePersistentDb) return db.upsertStaffProfile(u, normalized);
     const next = {
+        ...emptyStaffProfile(u),
+        ...normalized,
         username: u,
-        profession: String(fields.profession || '').trim().slice(0, 32),
-        ordemNumber: String(fields.ordemNumber || '').trim().slice(0, 80),
-        bio: String(fields.bio || '').trim().slice(0, 4000),
-        credentials: String(fields.credentials || '').trim().slice(0, 2000),
-        iban: String((staffProfilesStore.get(u) || {}).iban || '').trim().slice(0, 42),
-        primaryArea: String(fields.primaryArea || '').trim().slice(0, 120),
-        secondaryArea: String(fields.secondaryArea || '').trim().slice(0, 120),
         hasPhoto: staffPhotosStore.has(u),
         updatedAt: new Date().toISOString()
     };
@@ -750,6 +924,20 @@ async function saveStaffIbanInternal(username, iban) {
     profile.iban = String(iban || '').trim().slice(0, 42);
     profile.updatedAt = new Date().toISOString();
     staffProfilesStore.set(u, profile);
+    return profile;
+}
+
+async function saveStaffPayoutsFromMonthInternal(username, monthKey) {
+    const u = String(username || '').trim().toLowerCase();
+    const month = String(monthKey || '').trim();
+    if (!u || !isPayoutMonthKey(month)) return emptyStaffProfile(u);
+    if (usePersistentDb) return db.upsertStaffPayoutsFromMonth(u, month);
+    const profile = staffProfilesStore.get(u) || emptyStaffProfile(u);
+    if (!isPayoutMonthKey(profile.payoutsFromMonth)) {
+        profile.payoutsFromMonth = month;
+        profile.updatedAt = new Date().toISOString();
+        staffProfilesStore.set(u, profile);
+    }
     return profile;
 }
 
@@ -894,6 +1082,30 @@ async function listStaffDocumentsInternal(username) {
         mime: d.mime,
         validUntil: d.validUntil,
         uploadedAt: d.uploadedAt
+    }));
+}
+
+async function listAllStaffDocumentsInternal() {
+    if (usePersistentDb) return db.listAllStaffDocuments();
+    return staffDocumentsStore.map((d) => ({
+        id: d.id,
+        username: d.username,
+        kind: d.kind,
+        originalName: d.originalName,
+        mime: d.mime,
+        validUntil: d.validUntil,
+        uploadedAt: d.uploadedAt
+    }));
+}
+
+async function listStaffProfilesInternal() {
+    if (usePersistentDb) return db.listStaffProfiles();
+    return [...staffProfilesStore.values()].map((stored) => ({
+        ...emptyStaffProfile(stored.username),
+        ...stored,
+        primaryAreas: parseStaffAreaList(stored.primaryAreas != null ? stored.primaryAreas : stored.primaryArea),
+        secondaryAreas: parseStaffAreaList(stored.secondaryAreas != null ? stored.secondaryAreas : stored.secondaryArea),
+        hasPhoto: staffPhotosStore.has(stored.username)
     }));
 }
 
@@ -1079,10 +1291,18 @@ function doxyUrlFromEmailData(data) {
 
 function filterBookingsForStaff(bookings, req) {
     const list = Array.isArray(bookings) ? bookings : [];
-    if (isAdminSession(req)) return list;
-    const name = String((req.session && req.session.clinicDisplayName) || '').trim().toLowerCase();
-    if (!name) return [];
-    return list.filter((b) => String(b.professional || '').trim().toLowerCase() === name);
+    const scoped = isAdminSession(req)
+        ? list
+        : (() => {
+            const name = String((req.session && req.session.clinicDisplayName) || '').trim().toLowerCase();
+            if (!name) return [];
+            return list.filter((b) => String(b.professional || '').trim().toLowerCase() === name);
+        })();
+    return scoped.map((b) => {
+        if (!b) return b;
+        const { intakeToken, ...rest } = b;
+        return rest;
+    });
 }
 
 function staffCanAccessBooking(req, booking) {
@@ -1696,7 +1916,7 @@ const STAFF_DOC_MIMES = new Set([
 ]);
 const uploadStaffDocument = multer({
     storage: multer.memoryStorage(),
-    limits: { fileSize: 8 * 1024 * 1024 },
+    limits: { fileSize: 25 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         const ext = path.extname(file.originalname || '').toLowerCase();
         const ok = STAFF_DOC_MIMES.has(file.mimetype) || STAFF_DOC_EXTS.has(ext);
@@ -1758,6 +1978,8 @@ const CONFIRMATION_EMAIL_I18N = {
         emailTitle: 'Booking Confirmation',
         h2Confirmed: 'Booking Confirmed',
         thankYou: (name) => `Thank you, ${name}. Your consultation has been booked and payment received.`,
+        fillFormLead: 'To help your doctor prepare, please complete your clinical details (less than 2 minutes).',
+        fillFormButton: 'Fill in clinical form',
         refLabel: 'Booking Reference',
         colService: 'Service',
         colDate: 'Date',
@@ -1770,8 +1992,10 @@ const CONFIRMATION_EMAIL_I18N = {
         travelDatesLabel: 'Travel Dates',
         totalPaid: 'Total Paid',
         whatsNext: 'What happens next?',
-        step1Title: 'Pre-consultation questionnaire',
-        step1Body: "You'll receive a separate email with a health questionnaire to complete before your appointment.",
+        step1Title: 'Complete your clinical form',
+        step1Body: 'This takes less than 2 minutes and helps your doctor prepare. Use the button above, or the same link in this email.',
+        step1BodyWithLink: (url) =>
+            `This takes less than 2 minutes and helps your doctor prepare: ${url}`,
         step2Title: 'Video call link',
         step2NoDoxy: "We'll send you a secure video call link 24 hours before your appointment.",
         doxyBefore: 'Join your consultation via our secure video room:',
@@ -1793,7 +2017,8 @@ const CONFIRMATION_EMAIL_I18N = {
         footerOrCall: 'or call',
         footerCopy: '© 2026 Longevity Clinic. All rights reserved.',
         footerAuto: 'This is an automated confirmation email. Please do not reply directly to this address.',
-        subject: (service, date, ref) => `Booking Confirmed — ${service} on ${date} | Ref: ${ref}`,
+        subject: (service, date, ref, time) =>
+            `Action needed: Complete your clinical form for the ${time || ''} consultation | ${ref}`,
         textHead: 'BOOKING CONFIRMED',
         textThanks: (name) => `Thank you, ${name}. Your consultation has been booked and payment received.`,
         textDetails: 'BOOKING DETAILS',
@@ -1806,7 +2031,8 @@ const CONFIRMATION_EMAIL_I18N = {
         textTravelDates: 'Travel dates',
         textTotalPaid: 'Total Paid',
         textWhatsNext: 'WHAT HAPPENS NEXT',
-        textStep1: 'Pre-consultation questionnaire — check your inbox.',
+        textStep1: 'Complete your clinical form — use the link in this email (less than 2 minutes).',
+        textStep1WithLink: (url) => `Complete your clinical form (less than 2 minutes):\n   ${url}`,
         textStep2Doxy: (url) => `Video call link — join your secure video room at your scheduled time (no download required):\n   ${url}`,
         textStep2NoDoxy: 'Video call link — we will send a secure link 24 hours before your appointment.',
         textStep3: 'Your consultation — meet your physician online.',
@@ -1821,6 +2047,8 @@ const CONFIRMATION_EMAIL_I18N = {
         emailTitle: 'Confirmação de marcação',
         h2Confirmed: 'Marcação confirmada',
         thankYou: (name) => `Obrigado, ${name}. A sua consulta foi marcada e o pagamento foi recebido.`,
+        fillFormLead: 'Para o médico preparar a sua consulta, preencha os seus dados clínicos (demora menos de 2 minutos).',
+        fillFormButton: 'Preencher ficha clínica',
         refLabel: 'Referência da marcação',
         colService: 'Serviço',
         colDate: 'Data',
@@ -1833,8 +2061,10 @@ const CONFIRMATION_EMAIL_I18N = {
         travelDatesLabel: 'Datas da viagem',
         totalPaid: 'Total pago',
         whatsNext: 'Próximos passos',
-        step1Title: 'Questionário pré-consulta',
-        step1Body: 'Receberá um email separado com um questionário de saúde a preencher antes da consulta.',
+        step1Title: 'Preencha a ficha clínica',
+        step1Body: 'Demora menos de 2 minutos e ajuda o médico a preparar a consulta. Use o botão acima, ou o mesmo link neste email.',
+        step1BodyWithLink: (url) =>
+            `Demora menos de 2 minutos e ajuda o médico a preparar a consulta: ${url}`,
         step2Title: 'Ligação por vídeo',
         step2NoDoxy: 'Enviaremos uma ligação segura por vídeo 24 horas antes da sua consulta.',
         doxyBefore: 'Aceda à consulta através da nossa sala de vídeo segura:',
@@ -1856,7 +2086,8 @@ const CONFIRMATION_EMAIL_I18N = {
         footerOrCall: 'ou ligue para',
         footerCopy: '© 2026 Longevity Clinic. Todos os direitos reservados.',
         footerAuto: 'Este é um email de confirmação automático. Por favor não responda diretamente a este endereço.',
-        subject: (service, date, ref) => `Marcação confirmada — ${service} · ${date} | Ref.: ${ref}`,
+        subject: (service, date, ref, time) =>
+            `Ação necessária: Preencha a sua ficha clínica para a consulta das ${time || ''} | ${ref}`,
         textHead: 'MARCAÇÃO CONFIRMADA',
         textThanks: (name) => `Obrigado, ${name}. A sua consulta foi marcada e o pagamento foi recebido.`,
         textDetails: 'DETALHES DA MARCAÇÃO',
@@ -1869,7 +2100,8 @@ const CONFIRMATION_EMAIL_I18N = {
         textTravelDates: 'Datas da viagem',
         textTotalPaid: 'Total pago',
         textWhatsNext: 'PRÓXIMOS PASSOS',
-        textStep1: 'Questionário pré-consulta — verifique a sua caixa de entrada.',
+        textStep1: 'Preencha a ficha clínica — use o link neste email (menos de 2 minutos).',
+        textStep1WithLink: (url) => `Preencha a ficha clínica (menos de 2 minutos):\n   ${url}`,
         textStep2Doxy: (url) => `Ligação por vídeo — aceda à sala segura à hora marcada (sem instalação):\n   ${url}`,
         textStep2NoDoxy: 'Ligação por vídeo — enviaremos uma ligação segura 24 horas antes da consulta.',
         textStep3: 'A sua consulta — encontre-se com o seu médico online.',
@@ -1884,6 +2116,8 @@ const CONFIRMATION_EMAIL_I18N = {
         emailTitle: 'Confirmación de cita',
         h2Confirmed: 'Cita confirmada',
         thankYou: (name) => `Gracias, ${name}. Su consulta ha sido reservada y hemos recibido el pago.`,
+        fillFormLead: 'Para que el médico prepare su consulta, complete sus datos clínicos (menos de 2 minutos).',
+        fillFormButton: 'Completar ficha clínica',
         refLabel: 'Referencia de la reserva',
         colService: 'Servicio',
         colDate: 'Fecha',
@@ -1896,8 +2130,10 @@ const CONFIRMATION_EMAIL_I18N = {
         travelDatesLabel: 'Fechas del viaje',
         totalPaid: 'Total pagado',
         whatsNext: 'Próximos pasos',
-        step1Title: 'Cuestionario previo a la consulta',
-        step1Body: 'Recibirá un correo aparte con un cuestionario de salud que deberá completar antes de la cita.',
+        step1Title: 'Complete su ficha clínica',
+        step1Body: 'Tarda menos de 2 minutos y ayuda al médico a preparar la consulta. Use el botón de arriba, o el mismo enlace en este correo.',
+        step1BodyWithLink: (url) =>
+            `Tarda menos de 2 minutos y ayuda al médico a preparar la consulta: ${url}`,
         step2Title: 'Enlace de videollamada',
         step2NoDoxy: 'Le enviaremos un enlace seguro para la videollamada 24 horas antes de su cita.',
         doxyBefore: 'Acceda a la consulta a través de nuestra sala de vídeo segura:',
@@ -1919,7 +2155,8 @@ const CONFIRMATION_EMAIL_I18N = {
         footerOrCall: 'o llame al',
         footerCopy: '© 2026 Longevity Clinic. Todos los derechos reservados.',
         footerAuto: 'Este es un correo de confirmación automático. No responda directamente a esta dirección.',
-        subject: (service, date, ref) => `Cita confirmada — ${service} · ${date} | Ref.: ${ref}`,
+        subject: (service, date, ref, time) =>
+            `Acción necesaria: Complete su ficha clínica para la consulta de las ${time || ''} | ${ref}`,
         textHead: 'CITA CONFIRMADA',
         textThanks: (name) => `Gracias, ${name}. Su consulta ha sido reservada y hemos recibido el pago.`,
         textDetails: 'DETALLES DE LA RESERVA',
@@ -1932,7 +2169,8 @@ const CONFIRMATION_EMAIL_I18N = {
         textTravelDates: 'Fechas del viaje',
         textTotalPaid: 'Total pagado',
         textWhatsNext: 'PRÓXIMOS PASOS',
-        textStep1: 'Cuestionario previo — revise su bandeja de entrada.',
+        textStep1: 'Complete su ficha clínica — use el enlace de este correo (menos de 2 minutos).',
+        textStep1WithLink: (url) => `Complete su ficha clínica (menos de 2 minutos):\n   ${url}`,
         textStep2Doxy: (url) => `Enlace de videollamada — acceda a la sala segura a la hora acordada (sin descargas):\n   ${url}`,
         textStep2NoDoxy: 'Enlace de videollamada — le enviaremos un enlace seguro 24 horas antes de la cita.',
         textStep3: 'Su consulta — conéctese con su médico en línea.',
@@ -1965,7 +2203,8 @@ function buildConfirmationEmail(data) {
         travelDest,
         travelDates,
         locale: rawLocale,
-        doxyUrl: dataDoxyUrl
+        doxyUrl: dataDoxyUrl,
+        intakeUrl: dataIntakeUrl
     } = data;
 
     const t = confirmationEmailStrings(rawLocale);
@@ -2005,6 +2244,17 @@ function buildConfirmationEmail(data) {
             </tr>` : ''}
         `;
     }
+
+    const intakeUrl = (dataIntakeUrl && String(dataIntakeUrl).trim()) || '';
+    const intakeCtaButton = intakeUrl
+        ? `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:12px 0 0;">
+    <tr>
+        <td align="center" style="padding:0;">
+            <a href="${escapeHtml(intakeUrl)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;padding:14px 32px;border-radius:10px;">${t.fillFormButton}</a>
+        </td>
+    </tr>
+</table>`
+        : '';
 
     const doxyCtaButton = doxyUrl
         ? `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:16px 0 20px;">
@@ -2053,9 +2303,16 @@ function buildConfirmationEmail(data) {
                             </div>
 
                             <h2 style="margin: 0 0 8px; font-size: 24px; font-weight: 700; color: #0f172a; text-align: center;">${t.h2Confirmed}</h2>
-                            <p style="margin: 0 0 32px; font-size: 15px; color: #64748b; text-align: center; line-height: 1.5;">
+                            <p style="margin: 0 0 24px; font-size: 15px; color: #64748b; text-align: center; line-height: 1.5;">
                                 ${t.thankYou(patientName)}
                             </p>
+
+                            ${intakeUrl ? `
+                            <div style="background:#f1f5f2;border:1px solid #c9d4cc;border-radius:10px;padding:18px 20px;margin:0 0 28px;text-align:center;">
+                                <p style="margin:0 0 4px;font-size:15px;font-weight:700;color:#0f172a;">${t.step1Title}</p>
+                                <p style="margin:0 0 8px;font-size:14px;color:#475569;line-height:1.5;">${t.fillFormLead}</p>
+                                ${intakeCtaButton}
+                            </div>` : ''}
 
                             <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 20px; text-align: center; margin-bottom: 28px;">
                                 <p style="margin: 0 0 4px; font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em;">${t.refLabel}</p>
@@ -2201,7 +2458,7 @@ ${isMulti ? `${t.textTravellers}:  ${travellerCount}\n` : ''}${isTravel && trave
 
 ${t.textWhatsNext}
 ─────────────────
-1. ${t.textStep1}
+1. ${intakeUrl ? t.textStep1WithLink(intakeUrl) : t.textStep1}
 2. ${textStep2}
 3. ${t.textStep3}
 4. ${textStep4}
@@ -2212,7 +2469,7 @@ info@lonclinic.com | +351 928 372 775
 ${t.textFooterCopy}
 `;
 
-    return { html, text, subject: t.subject(serviceLabel, date, bookingRef) };
+    return { html, text, subject: t.subject(serviceLabel, date, bookingRef, time) };
 }
 
 /* ========================================
@@ -2235,7 +2492,8 @@ async function sendConfirmationEmail(data) {
     try {
         const payload = {
             ...data,
-            doxyUrl: data.doxyUrl || (await resolveDoxyRoomUrl(data.professional))
+            doxyUrl: data.doxyUrl || (await resolveDoxyRoomUrl(data.professional)),
+            intakeUrl: data.intakeUrl || (data.intakeToken ? patientIntakeUrl(data.intakeToken) : '')
         };
         const { html, text, subject } = buildConfirmationEmail(payload);
 
@@ -3917,7 +4175,10 @@ const REMINDER_EMAIL_I18N = {
         textNoDoxy: 'See your confirmation email for the video link.',
         textFooterCopy: '© 2026 Longevity Clinic',
         rescheduleStrong: 'Need to reschedule?',
-        rescheduleRest: 'Free rescheduling up to 24 hours before your appointment. Reply to this email or contact us.'
+        rescheduleRest: 'Free rescheduling up to 24 hours before your appointment. Reply to this email or contact us.',
+        intakeTitle: 'Clinical form still needed',
+        intakeBody: 'Please complete your clinical details before the consultation (less than 2 minutes).',
+        intakeButton: 'Fill in clinical form'
     },
     pt: {
         htmlLang: 'pt',
@@ -4096,11 +4357,26 @@ function reminderEmailStrings(locale, variant) {
 }
 
 function buildReminderEmail(data) {
-    const { patientName, serviceLabel, date, time, bookingRef, locale: rawLocale, reminderVariant } = data;
+    const { patientName, serviceLabel, date, time, bookingRef, locale: rawLocale, reminderVariant, intakeUrl: rawIntakeUrl } = data;
     const variant = reminderVariant === '1h' ? '1h' : '24h';
     const t = reminderEmailStrings(rawLocale, variant);
     const name = (patientName || 'Patient').trim();
     const doxyUrl = doxyUrlFromEmailData(data);
+    const intakeUrl = (rawIntakeUrl && String(rawIntakeUrl).trim()) || '';
+    const loc = normalizePatientLocale(rawLocale);
+    const intakeCopy = loc === 'pt'
+        ? { title: 'Ficha clínica ainda por preencher', body: 'Preencha os dados clínicos antes da consulta (menos de 2 minutos).', button: 'Preencher ficha clínica', text: 'Ficha clínica:' }
+        : loc === 'es'
+            ? { title: 'Ficha clínica pendiente', body: 'Complete sus datos clínicos antes de la consulta (menos de 2 minutos).', button: 'Completar ficha clínica', text: 'Ficha clínica:' }
+            : { title: 'Clinical form still needed', body: 'Please complete your clinical details before the consultation (less than 2 minutes).', button: 'Fill in clinical form', text: 'Clinical form:' };
+
+    const intakeBlock = intakeUrl
+        ? `<div style="background:#f1f5f2;border:1px solid #c9d4cc;border-radius:10px;padding:16px 18px;margin:0 0 24px;text-align:center;">
+            <p style="margin:0 0 6px;font-size:15px;font-weight:700;color:#0f172a;">${intakeCopy.title}</p>
+            <p style="margin:0 0 12px;font-size:14px;color:#475569;line-height:1.5;">${intakeCopy.body}</p>
+            <a href="${escapeHtml(intakeUrl)}" style="display:inline-block;background-color:#255235;color:#ffffff !important;font-size:14px;font-weight:600;text-decoration:none;padding:12px 24px;border-radius:10px;">${intakeCopy.button}</a>
+        </div>`
+        : '';
 
     const doxyCtaButton = doxyUrl
         ? `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:16px 0 20px;">
@@ -4169,6 +4445,8 @@ function buildReminderEmail(data) {
 
                             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 0 0 24px;">
 
+                            ${intakeBlock}
+
                             ${videoBlock}
 
                             <div style="background: #fefce8; border: 1px solid #fde68a; border-radius: 10px; padding: 14px 18px; margin-top: 28px;">
@@ -4207,7 +4485,7 @@ ${t.textDate}:     ${date}
 ${t.textTime}:     ${time}
 ${t.textFormat}:   ${t.formatVideo}
 ${t.textVideo}:    ${textVideo}
-
+${intakeUrl ? `\n${intakeCopy.text} ${intakeUrl}\n` : ''}
 ${t.rescheduleStrong} ${t.rescheduleRest}
 
 info@lonclinic.com | +351 928 372 775
@@ -4248,6 +4526,162 @@ async function sendReminderEmail(data) {
 }
 
 const PUBLIC_SITE_URL = seo.originOf(process.env.PUBLIC_SITE_URL || seo.SITE_ORIGIN);
+
+function newIntakeToken() {
+    return crypto.randomBytes(24).toString('hex');
+}
+
+function patientIntakeUrl(token) {
+    const t = String(token || '').trim();
+    if (!t) return '';
+    return emailLink(
+        `${PUBLIC_SITE_URL}/book-consultation?ficha=${encodeURIComponent(t)}`,
+        datedCampaign('intake_form'),
+        'ficha'
+    );
+}
+
+function publicIntakeUrl(token) {
+    const t = String(token || '').trim();
+    if (!t) return '';
+    return `${PUBLIC_SITE_URL}/book-consultation?ficha=${encodeURIComponent(t)}`;
+}
+
+function sanitizePatientIntakeBody(body, opts) {
+    const src = body && typeof body === 'object' ? body : {};
+    const dob = String(src.dob || '').trim();
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dob)) {
+        return { error: 'Please enter a valid date of birth' };
+    }
+    const born = new Date(`${dob}T00:00:00`);
+    if (Number.isNaN(born.getTime())) {
+        return { error: 'Please enter a valid date of birth' };
+    }
+    const ageYears = (Date.now() - born.getTime()) / (365.25 * 24 * 60 * 60 * 1000);
+    if (ageYears < 0 || ageYears > 120) {
+        return { error: 'Please enter a valid date of birth' };
+    }
+    const concerns = String(src.concerns || '').trim().slice(0, 4000);
+    if (concerns.length < 3) {
+        return { error: 'Please describe your symptoms or the reason for this consultation' };
+    }
+    const country = String(src.country || '').trim().slice(0, 8);
+    const allowedCountry = /^(GB|US|SE|DE|FR|NL|NO|DK|FI|CH|AT|BE|ES|IT|PT|IE|CA|AU|NZ|AE|SG|HK|JP|BR|OTHER)$/;
+    const intake = {
+        dob,
+        country: allowedCountry.test(country) ? country : '',
+        concerns,
+        medications: String(src.medications || '').trim().slice(0, 2000),
+        allergies: String(src.allergies || '').trim().slice(0, 500),
+        nhs: String(src.nhs || '').trim().slice(0, 32),
+        submittedAt: new Date().toISOString()
+    };
+    if (opts && opts.service === 'travel') {
+        intake.travelDest = String(src.travelDest || '').trim().slice(0, 500);
+        intake.travelDates = String(src.travelDates || '').trim().slice(0, 200);
+    }
+    return { ok: true, intake };
+}
+
+async function getBookingByPaymentId(paymentId) {
+    const pid = String(paymentId || '').trim();
+    if (!pid) return null;
+    if (usePersistentDb) {
+        return db.findBookingByPaymentId(pid);
+    }
+    return bookingsStore.find((b) => b.paymentId === pid) || null;
+}
+
+async function getBookingByIntakeToken(token) {
+    const t = String(token || '').trim();
+    if (!t || t.length < 16) return null;
+    if (usePersistentDb) {
+        return db.findBookingByIntakeToken(t);
+    }
+    return bookingsStore.find((b) => b.intakeToken === t && !b.cancelled) || null;
+}
+
+async function persistPatientIntake(booking, intake) {
+    if (usePersistentDb) {
+        return db.savePatientIntake(booking.bookingRef, intake);
+    }
+    const row = bookingsStore.find((b) => b.bookingRef === booking.bookingRef);
+    if (!row) return null;
+    row.intake = intake;
+    row.intakeCompletedAt = row.intakeCompletedAt || new Date().toISOString();
+    row.hasPatientIntake = true;
+    return row;
+}
+
+const INTAKE_REMINDER_EMAIL_I18N = {
+    en: {
+        htmlLang: 'en',
+        subject: (time, ref) => `Reminder: complete your clinical form for the ${time} consultation | ${ref}`,
+        h2: 'Your clinical form is still waiting',
+        lead: (name, time) =>
+            `Hello ${name}, your consultation at ${time} is confirmed. Please fill in your clinical details so the doctor can prepare (less than 2 minutes).`,
+        button: 'Fill in clinical form',
+        text: (name, time, url) =>
+            `Hello ${name}, please complete your clinical form for the ${time} consultation:\n${url}`
+    },
+    pt: {
+        htmlLang: 'pt',
+        subject: (time, ref) => `Lembrete: preencha a ficha clínica para a consulta das ${time} | ${ref}`,
+        h2: 'A sua ficha clínica ainda está por preencher',
+        lead: (name, time) =>
+            `Olá ${name}, a sua consulta das ${time} está confirmada. Preencha os dados clínicos para o médico preparar a consulta (menos de 2 minutos).`,
+        button: 'Preencher ficha clínica',
+        text: (name, time, url) =>
+            `Olá ${name}, preencha a ficha clínica para a consulta das ${time}:\n${url}`
+    },
+    es: {
+        htmlLang: 'es',
+        subject: (time, ref) => `Recordatorio: complete su ficha clínica para la consulta de las ${time} | ${ref}`,
+        h2: 'Su ficha clínica sigue pendiente',
+        lead: (name, time) =>
+            `Hola ${name}, su consulta de las ${time} está confirmada. Complete sus datos clínicos para que el médico pueda prepararse (menos de 2 minutos).`,
+        button: 'Completar ficha clínica',
+        text: (name, time, url) =>
+            `Hola ${name}, complete su ficha clínica para la consulta de las ${time}:\n${url}`
+    }
+};
+
+async function sendIntakeReminderEmail(booking) {
+    if (!isEmailConfigured) return false;
+    const to = (booking.email || '').trim();
+    if (!to || !to.includes('@')) return false;
+    const token = booking.intakeToken || '';
+    if (!token) return false;
+    const t = INTAKE_REMINDER_EMAIL_I18N[normalizePatientLocale(booking.patientLocale)] || INTAKE_REMINDER_EMAIL_I18N.en;
+    const url = patientIntakeUrl(token);
+    const name = (booking.patientName || 'Patient').trim();
+    const time = booking.time || '';
+    const html = `<!DOCTYPE html><html lang="${t.htmlLang}"><body style="margin:0;padding:0;background:#f0f4fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="padding:40px 20px;"><tr><td align="center">
+<table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;width:100%;">
+<tr><td style="background:#fff;border-radius:16px;padding:40px;">
+<h2 style="margin:0 0 12px;font-size:22px;color:#0f172a;text-align:center;">${t.h2}</h2>
+<p style="margin:0 0 24px;font-size:15px;color:#64748b;text-align:center;line-height:1.5;">${t.lead(escapeHtml(name), escapeHtml(time))}</p>
+<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"><tr><td align="center">
+<a href="${escapeHtml(url)}" style="display:inline-block;background-color:#255235;color:#fff !important;font-size:15px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:10px;">${t.button}</a>
+</td></tr></table>
+</td></tr></table>
+</td></tr></table></body></html>`;
+    try {
+        await deliverEmail({
+            from: EMAIL_FROM,
+            to,
+            subject: t.subject(time, booking.bookingRef),
+            text: t.text(name, time, url),
+            html
+        });
+        console.log('   ✉️  Intake reminder sent to:', to);
+        return true;
+    } catch (err) {
+        console.error('   ❌ Intake reminder failed:', err.message);
+        return false;
+    }
+}
 
 function trustpilotEvaluateUrl(locale) {
     const k = normalizePatientLocale(locale);
@@ -4819,6 +5253,15 @@ function memoryBookingsNeedingFollowup() {
     return bookingsStore.filter((b) => {
         if (b.cancelled || b.followupSent) return false;
         return b.consultationCompleted === true;
+    });
+}
+
+function memoryBookingsNeedingIntakeReminder() {
+    const cutoff = Date.now() - 90 * 60 * 1000;
+    return bookingsStore.filter((b) => {
+        if (b.cancelled || b.intakeReminderSent || b.intakeCompletedAt || !b.intakeToken) return false;
+        const created = Date.parse(b.createdAt || '');
+        return Number.isFinite(created) && created <= cutoff;
     });
 }
 
@@ -5400,14 +5843,17 @@ async function runAutomationJobs() {
         let list24 = [];
         let list1h = [];
         let listFu = [];
+        let listIntake = [];
         if (usePersistentDb) {
             list24 = await db.findBookingsNeeding24hReminder();
             list1h = await db.findBookingsNeeding1hReminder();
             listFu = await db.findBookingsNeedingFollowup();
+            listIntake = await db.findBookingsNeedingIntakeReminder();
         } else {
             list24 = memoryBookingsNeeding24h(tz);
             list1h = memoryBookingsNeeding1h(tz);
             listFu = memoryBookingsNeedingFollowup();
+            listIntake = memoryBookingsNeedingIntakeReminder();
         }
 
         const now = Date.now();
@@ -5440,7 +5886,8 @@ async function runAutomationJobs() {
                 bookingRef: b.bookingRef,
                 locale,
                 reminderVariant: '24h',
-                professional: b.professional || ''
+                professional: b.professional || '',
+                intakeUrl: (!b.intakeCompletedAt && b.intakeToken) ? patientIntakeUrl(b.intakeToken) : ''
             });
             if (!sent) continue;
             try {
@@ -5468,7 +5915,8 @@ async function runAutomationJobs() {
                 bookingRef: b.bookingRef,
                 locale,
                 reminderVariant: '1h',
-                professional: b.professional || ''
+                professional: b.professional || '',
+                intakeUrl: (!b.intakeCompletedAt && b.intakeToken) ? patientIntakeUrl(b.intakeToken) : ''
             });
             if (!sent) continue;
             try {
@@ -5487,6 +5935,29 @@ async function runAutomationJobs() {
         }
         for (const b of winFu) {
             await sendPostConsultationReviewEmail(b);
+        }
+
+        const nowMs = Date.now();
+        const dueIntake = (listIntake || []).filter((b) => {
+            if (b.cancelled || b.intakeCompletedAt || b.intakeReminderSent || !b.intakeToken) return false;
+            const appt = getAppointmentStartUtcMs(b, tz);
+            return !Number.isFinite(appt) || appt > nowMs;
+        });
+        if (dueIntake.length > 0) {
+            console.log(`   ⏰ Intake reminders: ${dueIntake.length} booking(s)`);
+        }
+        for (const b of dueIntake) {
+            const sent = await sendIntakeReminderEmail(b);
+            if (!sent) continue;
+            try {
+                if (usePersistentDb) await db.markIntakeReminderSent(b.bookingRef);
+                else {
+                    const row = bookingsStore.find((x) => x.bookingRef === b.bookingRef);
+                    if (row) row.intakeReminderSent = true;
+                }
+            } catch (err) {
+                console.error('   ❌ mark intake reminder:', b.bookingRef, err.message);
+            }
         }
     } catch (err) {
         console.error('   ❌ Automation job:', err.message);
@@ -5636,6 +6107,7 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
 
         const shortId = paymentId.length >= 8 ? paymentId.slice(-8) : paymentId;
         const bookingRef = 'LC-' + shortId.toUpperCase();
+        const intakeToken = newIntakeToken();
 
         const bookingService = bookingServiceTag(meta.service);
         const bookingData = {
@@ -5656,7 +6128,8 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
             travelDest: meta.travel_destinations,
             travelDates: meta.travel_dates,
             contactPhone: meta.contact_phone || '',
-            locale: meta.locale || 'en'
+            locale: meta.locale || 'en',
+            intakeToken
         };
 
         await sendConfirmationEmail(bookingData);
@@ -5689,6 +6162,10 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
             reminderSent: false,
             reminder1hSent: false,
             followupSent: false,
+            intakeToken,
+            intakeCompletedAt: null,
+            intakeReminderSent: false,
+            intake: null,
             createdAt: new Date().toISOString()
         };
 
@@ -5696,6 +6173,11 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
             const inserted = await db.insertBooking(record);
             if (!inserted) {
                 return { ok: true, reason: 'already_recorded' };
+            }
+            try {
+                await db.setBookingIntakeToken(bookingRef, intakeToken);
+            } catch (err) {
+                console.error(`${logPrefix}intake token save failed:`, err.message);
             }
             console.log(`${logPrefix}📋 Booking ${bookingRef} saved (database)`);
         } else {
@@ -8738,18 +9220,15 @@ app.get('/api/session/:sessionId', rateLimitSessionRetrieve, async (req, res) =>
         ).catch(() => {});
 
         const travellerCount = parseInt(session.metadata?.traveller_count, 10) || 1;
-        const passengerNames = [];
-        for (let i = 1; i <= travellerCount; i++) {
-            if (session.metadata[`p${i}_name`]) passengerNames.push(session.metadata[`p${i}_name`]);
-        }
-
         const piId = paymentIntentIdFromSession(session);
         const bookingRefShort = piId.length >= 8 ? piId.slice(-8).toUpperCase() : (piId || Date.now().toString(36)).toUpperCase();
+        const stored = await getBookingByPaymentId(piId);
+        const meta = session.metadata || {};
 
         const emailNorm = (
             session.customer_details?.email ||
             session.customer_email ||
-            session.metadata?.contact_email ||
+            meta.contact_email ||
             ''
         ).toLowerCase().trim();
         const stripeCustId = stripeCustomerIdFromSession(session);
@@ -8764,19 +9243,91 @@ app.get('/api/session/:sessionId', rateLimitSessionRetrieve, async (req, res) =>
         }
 
         res.json({
-            service: session.metadata.service,
-            date: session.metadata.date,
-            time: session.metadata.time,
+            service: meta.service,
+            date: meta.date,
+            time: meta.time,
             travellerCount,
             amount: session.amount_total,
             currency: session.currency,
-            bookingRef: 'LC-' + bookingRefShort,
-            isNewCustomer
+            bookingRef: (stored && stored.bookingRef) || ('LC-' + bookingRefShort),
+            email: emailNorm,
+            isNewCustomer,
+            intakeToken: (stored && stored.intakeToken) || '',
+            intakeCompleted: !!(stored && stored.intakeCompletedAt),
+            intakePrefill: {
+                concerns: meta.p1_concerns || '',
+                medications: meta.p1_medications || '',
+                allergies: meta.p1_allergies || '',
+                dob: meta.p1_dob || '',
+                nhs: meta.p1_nhs || '',
+                country: meta.p1_country || '',
+                travelDest: meta.travel_destinations || '',
+                travelDates: meta.travel_dates || ''
+            }
         });
 
     } catch (err) {
         console.error('Error retrieving session:', err.message);
         res.status(500).json({ error: 'Failed to retrieve session' });
+    }
+});
+
+function publicIntakePayload(booking) {
+    const intake = booking.intake || {};
+    return {
+        service: booking.service,
+        date: booking.date,
+        time: booking.time,
+        bookingRef: booking.bookingRef,
+        patientName: booking.patientName,
+        completed: !!booking.intakeCompletedAt,
+        intakePrefill: {
+            concerns: intake.concerns || '',
+            medications: intake.medications || '',
+            allergies: intake.allergies || '',
+            dob: intake.dob || '',
+            nhs: intake.nhs || '',
+            country: intake.country || '',
+            travelDest: intake.travelDest || '',
+            travelDates: intake.travelDates || ''
+        }
+    };
+}
+
+app.get('/api/intake/:token', rateLimitIntake, async (req, res) => {
+    try {
+        const booking = await getBookingByIntakeToken(req.params.token);
+        if (!booking) {
+            return res.status(404).json({ error: 'Form not found' });
+        }
+        res.json(publicIntakePayload(booking));
+    } catch (err) {
+        console.error('GET /api/intake:', err.message);
+        res.status(500).json({ error: 'Failed to load form' });
+    }
+});
+
+app.post('/api/intake/:token', rateLimitIntake, async (req, res) => {
+    try {
+        const booking = await getBookingByIntakeToken(req.params.token);
+        if (!booking) {
+            return res.status(404).json({ error: 'Form not found' });
+        }
+        const parsed = sanitizePatientIntakeBody(req.body, { service: booking.service });
+        if (!parsed.ok) {
+            return res.status(400).json({ error: parsed.error });
+        }
+        const saved = await persistPatientIntake(booking, parsed.intake);
+        if (!saved) {
+            return res.status(500).json({ error: 'Failed to save form' });
+        }
+        emitServerAnalytics('intake_submit', {
+            props: { service: booking.service, funnel: 'patient_booking' }
+        }).catch(() => {});
+        res.json({ ok: true, completed: true });
+    } catch (err) {
+        console.error('POST /api/intake:', err.message);
+        res.status(500).json({ error: 'Failed to save form' });
     }
 });
 
@@ -9211,16 +9762,24 @@ app.get('/api/clinic/profile', requireAuth, async (req, res) => {
         const username = staffSessionUsername(req);
         const profile = await getStaffProfileInternal(username);
         const documents = (await listStaffDocumentsInternal(username)).map(publicStaffDocument);
+        const displayName = req.session.clinicDisplayName || username;
         res.json({
             username,
-            displayName: req.session.clinicDisplayName || username,
+            displayName,
             role: req.session.clinicRole || 'admin',
             profession: profile.profession || '',
             ordemNumber: profile.ordemNumber || '',
+            fullName: profile.fullName || displayName || '',
+            nif: profile.nif || '',
+            citizenCard: profile.citizenCard || '',
+            address: profile.address || '',
+            insurer: profile.insurer || '',
+            insurancePolicy: profile.insurancePolicy || '',
+            insuranceValidUntil: profile.insuranceValidUntil || '',
             bio: profile.bio || '',
             credentials: profile.credentials || '',
-            primaryArea: profile.primaryArea || '',
-            secondaryArea: profile.secondaryArea || '',
+            primaryAreas: parseStaffAreaList(profile.primaryAreas != null ? profile.primaryAreas : profile.primaryArea),
+            secondaryAreas: parseStaffAreaList(profile.secondaryAreas != null ? profile.secondaryAreas : profile.secondaryArea),
             hasPhoto: !!profile.hasPhoto,
             documents,
             professions: STAFF_PROFESSIONS,
@@ -9244,10 +9803,17 @@ app.put('/api/clinic/profile', requireAuth, rateLimitStaffProfile, express.json(
         const profile = await saveStaffProfileInternal(username, {
             profession,
             ordemNumber: body.ordemNumber,
+            fullName: body.fullName,
+            nif: body.nif,
+            citizenCard: body.citizenCard,
+            address: body.address,
+            insurer: body.insurer,
+            insurancePolicy: body.insurancePolicy,
+            insuranceValidUntil: body.insuranceValidUntil,
             bio: body.bio,
             credentials: body.credentials,
-            primaryArea: body.primaryArea,
-            secondaryArea: body.secondaryArea
+            primaryAreas: body.primaryAreas != null ? body.primaryAreas : body.primaryArea,
+            secondaryAreas: body.secondaryAreas != null ? body.secondaryAreas : body.secondaryArea
         });
         res.json({ ok: true, profile });
     } catch (err) {
@@ -9306,7 +9872,7 @@ app.post('/api/clinic/profile/documents', requireAuth, rateLimitStaffProfile, (r
     uploadStaffDocument.single('file')(req, res, async (uploadErr) => {
         if (uploadErr instanceof multer.MulterError) {
             if (uploadErr.code === 'LIMIT_FILE_SIZE') {
-                return res.status(400).json({ error: 'File must be 8MB or smaller.' });
+                return res.status(400).json({ error: 'File must be 25MB or smaller.' });
             }
             return res.status(400).json({ error: 'Could not process the file.' });
         }
@@ -9323,7 +9889,11 @@ app.post('/api/clinic/profile/documents', requireAuth, rateLimitStaffProfile, (r
                 return res.status(400).json({ error: 'Choose a file to upload' });
             }
             const validUntil = String(req.body.validUntil || '').trim().slice(0, 10);
-            if (!/^\d{4}-\d{2}-\d{2}$/.test(validUntil)) {
+            const validityOptional = STAFF_DOC_OPTIONAL_VALIDITY.has(kind);
+            if (validUntil && !/^\d{4}-\d{2}-\d{2}$/.test(validUntil)) {
+                return res.status(400).json({ error: 'Validity date is invalid' });
+            }
+            if (!validityOptional && !/^\d{4}-\d{2}-\d{2}$/.test(validUntil)) {
                 return res.status(400).json({ error: 'Validity date is required' });
             }
             const saved = await saveStaffDocumentInternal({
@@ -9383,6 +9953,128 @@ app.get('/api/admin/professionals', requireAdmin, async (req, res) => {
     } catch (err) {
         console.error('GET /api/admin/professionals:', err.message);
         res.status(500).json({ error: 'Failed to load professionals' });
+    }
+});
+
+const STAFF_PROFESSION_TITLES = {
+    medico: 'Médico',
+    psicologo: 'Psicólogo',
+    nutricionista: 'Nutricionista'
+};
+
+function publicAdminStaffProfile(person, profile, documents) {
+    const p = profile || emptyStaffProfile(person.username);
+    return {
+        username: person.username,
+        displayName: person.displayName || person.username,
+        email: person.email || '',
+        profession: p.profession || '',
+        professionLabel: STAFF_PROFESSION_TITLES[p.profession] || '',
+        fullName: p.fullName || '',
+        nif: p.nif || '',
+        citizenCard: p.citizenCard || '',
+        address: p.address || '',
+        ordemNumber: p.ordemNumber || '',
+        insurer: p.insurer || '',
+        insurancePolicy: p.insurancePolicy || '',
+        insuranceValidUntil: p.insuranceValidUntil || '',
+        bio: p.bio || '',
+        credentials: p.credentials || '',
+        iban: p.iban || '',
+        primaryAreas: parseStaffAreaList(p.primaryAreas != null ? p.primaryAreas : p.primaryArea),
+        secondaryAreas: parseStaffAreaList(p.secondaryAreas != null ? p.secondaryAreas : p.secondaryArea),
+        hasPhoto: !!p.hasPhoto,
+        updatedAt: p.updatedAt || null,
+        documents: (documents || []).map(publicStaffDocument)
+    };
+}
+
+async function listAdminStaffPeople() {
+    const people = [];
+    const seen = new Set();
+    const addPerson = (username, extra) => {
+        const u = String(username || '').trim().toLowerCase();
+        if (!u || seen.has(u)) return;
+        seen.add(u);
+        people.push({
+            username: u,
+            displayName: (extra && extra.displayName) || u,
+            email: (extra && extra.email) || ''
+        });
+    };
+    addPerson(CLINIC_USERNAME, { displayName: CLINIC_USERNAME });
+    for (const p of (await listProfessionalsInternal()) || []) {
+        addPerson(p.username, { displayName: p.displayName || p.username, email: p.email || '' });
+    }
+    for (const profile of (await listStaffProfilesInternal()) || []) {
+        addPerson(profile.username, { displayName: profile.fullName || profile.username });
+    }
+    return people;
+}
+
+app.get('/api/admin/staff-profiles', requireAdmin, async (req, res) => {
+    try {
+        const people = await listAdminStaffPeople();
+        const profiles = await listStaffProfilesInternal();
+        const byUser = new Map();
+        for (const profile of profiles || []) {
+            if (profile && profile.username) byUser.set(String(profile.username).toLowerCase(), profile);
+        }
+        const docsByUser = new Map();
+        for (const doc of (await listAllStaffDocumentsInternal()) || []) {
+            if (!doc || !doc.username) continue;
+            const key = String(doc.username).toLowerCase();
+            if (!docsByUser.has(key)) docsByUser.set(key, []);
+            docsByUser.get(key).push(doc);
+        }
+        res.json({
+            staff: people.map((person) => publicAdminStaffProfile(
+                person,
+                byUser.get(person.username),
+                docsByUser.get(person.username) || []
+            )),
+            documentKinds: STAFF_DOCUMENT_KINDS
+        });
+    } catch (err) {
+        console.error('GET /api/admin/staff-profiles:', err.message);
+        res.status(500).json({ error: 'Failed to load staff profiles' });
+    }
+});
+
+app.get('/api/admin/staff-profiles/:username/photo', requireAdmin, async (req, res) => {
+    try {
+        const username = String(req.params.username || '').trim().toLowerCase();
+        const photo = await getStaffPhotoInternal(username);
+        if (!photo || !photo.data) {
+            return res.status(404).json({ error: 'No photo' });
+        }
+        res.set({
+            'Content-Type': photo.mime || 'image/jpeg',
+            'Cache-Control': 'private, no-store'
+        });
+        res.end(Buffer.isBuffer(photo.data) ? photo.data : Buffer.from(photo.data));
+    } catch (err) {
+        console.error('GET /api/admin/staff-profiles photo:', err.message);
+        res.status(500).json({ error: 'Failed to load photo' });
+    }
+});
+
+app.get('/api/admin/staff-profiles/:username/documents/:id', requireAdmin, async (req, res) => {
+    try {
+        const username = String(req.params.username || '').trim().toLowerCase();
+        const doc = await getStaffDocumentInternal(req.params.id, username);
+        if (!doc || !doc.fileData) {
+            return res.status(404).json({ error: 'Document not found' });
+        }
+        const filename = String(doc.originalName || 'document').replace(/[\r\n"]/g, '');
+        res.setHeader('Content-Type', doc.mime || 'application/octet-stream');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.setHeader('Cache-Control', 'private, no-store');
+        res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+        res.send(Buffer.isBuffer(doc.fileData) ? doc.fileData : Buffer.from(doc.fileData));
+    } catch (err) {
+        console.error('GET /api/admin/staff-profiles document:', err.message);
+        res.status(500).json({ error: 'Failed to download document' });
     }
 });
 
@@ -9648,6 +10340,39 @@ function isPayoutMonthKey(raw) {
     return /^\d{4}-(0[1-9]|1[0-2])$/.test(String(raw || ''));
 }
 
+function currentPayoutMonthKey() {
+    const today = lisbonTodayUtcMidnight();
+    return `${today.getUTCFullYear()}-${pad2Interview(today.getUTCMonth() + 1)}`;
+}
+
+function shiftPayoutMonthKey(key, delta) {
+    const m = /^(\d{4})-(\d{2})$/.exec(String(key || ''));
+    if (!m) return '';
+    const d = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1 + Number(delta || 0), 1));
+    return `${d.getUTCFullYear()}-${pad2Interview(d.getUTCMonth() + 1)}`;
+}
+
+function payoutMonthKeysInclusive(fromKey, toKey) {
+    const keys = [];
+    let k = fromKey;
+    for (let i = 0; i < 36 && isPayoutMonthKey(k) && k <= toKey; i++) {
+        keys.push(k);
+        k = shiftPayoutMonthKey(k, 1);
+    }
+    return keys;
+}
+
+async function ensurePayoutsFromMonthInternal(username) {
+    const currentKey = currentPayoutMonthKey();
+    const profile = await getStaffProfileInternal(username);
+    if (profile && isPayoutMonthKey(profile.payoutsFromMonth)) {
+        return profile.payoutsFromMonth;
+    }
+    await saveStaffPayoutsFromMonthInternal(username, currentKey);
+    const saved = await getStaffProfileInternal(username);
+    return (saved && isPayoutMonthKey(saved.payoutsFromMonth)) ? saved.payoutsFromMonth : currentKey;
+}
+
 function normalizeIbanInput(raw) {
     const s = String(raw || '').toUpperCase().replace(/[\s-]+/g, '');
     if (!s) return { iban: '' };
@@ -9719,19 +10444,26 @@ function buildAvailabilityMonthRows(confirmations) {
     return rows;
 }
 
-function buildPayoutMonthRows(bookings, invoices) {
+function buildPayoutMonthRows(bookings, invoices, fromMonthKey) {
     const byMonth = new Map();
     for (const inv of invoices || []) {
         if (inv && inv.month) byMonth.set(inv.month, inv);
     }
-    const today = lisbonTodayUtcMidnight();
+    const currentKey = currentPayoutMonthKey();
+    const endKey = shiftPayoutMonthKey(currentKey, 2);
+    let startKey = isPayoutMonthKey(fromMonthKey) ? fromMonthKey : currentKey;
+    if (startKey > currentKey) startKey = currentKey;
+    for (const inv of invoices || []) {
+        if (inv && isPayoutMonthKey(inv.month) && inv.month < startKey) {
+            startKey = inv.month;
+        }
+    }
     const slotMinutes = Number(scheduleStore.slotDuration) || 30;
     const rows = [];
-    for (let i = 0; i < 12; i++) {
-        const start = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() - i, 1));
-        const y = start.getUTCFullYear();
-        const mo = start.getUTCMonth();
-        const key = `${y}-${pad2Interview(mo + 1)}`;
+    for (const key of payoutMonthKeysInclusive(startKey, endKey)) {
+        const y = Number(key.slice(0, 4));
+        const mo = Number(key.slice(5, 7)) - 1;
+        const start = new Date(Date.UTC(y, mo, 1));
         const end = new Date(Date.UTC(y, mo + 1, 0));
         const summary = summarizeBillingPeriod(
             bookings,
@@ -9785,9 +10517,10 @@ app.get('/api/clinic/payouts', requireAuth, async (req, res) => {
         let bookings = await bookingsForPayouts();
         bookings = filterBookingsForStaff(bookings, req);
         const invoices = await listStaffInvoicesInternal(username);
+        const fromMonth = await ensurePayoutsFromMonthInternal(username);
         res.json({
             iban: profile.iban || '',
-            months: buildPayoutMonthRows(bookings, invoices)
+            months: buildPayoutMonthRows(bookings, invoices, fromMonth)
         });
     } catch (err) {
         console.error('GET /api/clinic/payouts:', err.message);
@@ -9831,7 +10564,7 @@ app.post('/api/clinic/payouts/:month/invoice', requireAuth, rateLimitStaffProfil
     uploadStaffDocument.single('file')(req, res, async (uploadErr) => {
         if (uploadErr instanceof multer.MulterError) {
             if (uploadErr.code === 'LIMIT_FILE_SIZE') {
-                return res.status(400).json({ error: 'Fatura must be 8MB or smaller.' });
+                return res.status(400).json({ error: 'Fatura must be 25MB or smaller.' });
             }
             return res.status(400).json({ error: 'Could not process the file.' });
         }
@@ -9921,11 +10654,12 @@ app.get('/api/admin/payouts', requireAdmin, async (req, res) => {
                 };
             const filtered = filterBookingsForStaff(bookings, fakeReq);
             const profile = await getStaffProfileInternal(person.username);
+            const fromMonth = await ensurePayoutsFromMonthInternal(person.username);
             staff.push({
                 username: person.username,
                 displayName: person.displayName,
                 iban: (profile && profile.iban) || '',
-                months: buildPayoutMonthRows(filtered, byUser.get(person.username) || [])
+                months: buildPayoutMonthRows(filtered, byUser.get(person.username) || [], fromMonth)
             });
         }
         res.json({ staff });
@@ -10805,8 +11539,13 @@ app.get('/api/clinic/booking/:bookingRef', requireAuth, async (req, res) => {
             : clinicalNotesStore.find((n) => n.bookingRef === bookingRef);
 
         res.json({
-            ...booking,
-            clinicalNotes: notes || null
+            ...(() => {
+                const { intakeToken, ...safe } = booking;
+                return safe;
+            })(),
+            clinicalNotes: notes || null,
+            patientIntake: booking.intake || null,
+            hasPatientIntake: !!booking.intakeCompletedAt
         });
     } catch (err) {
         console.error('GET /api/clinic/booking:', err.message);

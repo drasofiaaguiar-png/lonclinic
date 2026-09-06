@@ -147,8 +147,27 @@ function rowToBooking(row) {
         reviewRequested: row.review_requested === true,
         visitFrequency: row.visit_frequency || '',
         patientType: row.patient_type || '',
-        createdAt: createdAt instanceof Date ? createdAt.toISOString() : createdAt
+        createdAt: createdAt instanceof Date ? createdAt.toISOString() : createdAt,
+        intakeToken: row.intake_token || '',
+        intakeCompletedAt: row.intake_completed_at
+            ? (row.intake_completed_at instanceof Date
+                ? row.intake_completed_at.toISOString()
+                : row.intake_completed_at)
+            : null,
+        intakeReminderSent: row.intake_reminder_sent === true,
+        intake: parseIntakeJson(row.intake_json),
+        hasPatientIntake: !!row.intake_completed_at
     };
+}
+
+function parseIntakeJson(raw) {
+    if (!raw) return null;
+    if (typeof raw === 'object') return raw;
+    try {
+        return JSON.parse(raw);
+    } catch (e) {
+        return null;
+    }
 }
 
 function rowToClinicalNote(row) {
@@ -228,6 +247,13 @@ async function initSchema(p) {
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS consultation_completed BOOLEAN NOT NULL DEFAULT FALSE`);
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS visit_frequency VARCHAR(64)`);
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS patient_type VARCHAR(32)`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS intake_token VARCHAR(128)`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS intake_json JSONB`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS intake_completed_at TIMESTAMPTZ`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS intake_reminder_sent BOOLEAN NOT NULL DEFAULT FALSE`);
+    await p.query(
+        `CREATE UNIQUE INDEX IF NOT EXISTS idx_bookings_intake_token ON bookings (intake_token) WHERE intake_token IS NOT NULL`
+    );
     try {
         await p.query(`
             CREATE UNIQUE INDEX IF NOT EXISTS idx_bookings_active_slot
@@ -463,6 +489,14 @@ async function initSchema(p) {
     await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS photo_data BYTEA`);
     await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS credentials TEXT NOT NULL DEFAULT ''`);
     await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS iban TEXT NOT NULL DEFAULT ''`);
+    await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS full_name TEXT NOT NULL DEFAULT ''`);
+    await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS nif TEXT NOT NULL DEFAULT ''`);
+    await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS citizen_card TEXT NOT NULL DEFAULT ''`);
+    await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS address TEXT NOT NULL DEFAULT ''`);
+    await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS insurer TEXT NOT NULL DEFAULT ''`);
+    await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS insurance_policy TEXT NOT NULL DEFAULT ''`);
+    await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS insurance_valid_until DATE`);
+    await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS payouts_from_month VARCHAR(7) NOT NULL DEFAULT ''`);
     await p.query(`
         CREATE TABLE IF NOT EXISTS staff_invoices (
             username VARCHAR(64) NOT NULL,
@@ -1523,6 +1557,72 @@ async function bookingExistsByPaymentId(paymentId) {
     return r.rowCount > 0;
 }
 
+async function findBookingByPaymentId(paymentId) {
+    const p = getPool();
+    const r = await p.query('SELECT * FROM bookings WHERE payment_id = $1 LIMIT 1', [paymentId]);
+    return r.rows[0] ? rowToBooking(r.rows[0]) : null;
+}
+
+async function findBookingByIntakeToken(token) {
+    const p = getPool();
+    const t = String(token || '').trim();
+    if (!t || t.length < 16) return null;
+    const r = await p.query(
+        `SELECT * FROM bookings WHERE intake_token = $1 AND cancelled = FALSE LIMIT 1`,
+        [t]
+    );
+    return r.rows[0] ? rowToBooking(r.rows[0]) : null;
+}
+
+async function setBookingIntakeToken(bookingRef, token) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE bookings
+         SET intake_token = COALESCE(NULLIF(intake_token, ''), $2)
+         WHERE booking_ref = $1
+         RETURNING *`,
+        [bookingRef, token]
+    );
+    return r.rows[0] ? rowToBooking(r.rows[0]) : null;
+}
+
+async function savePatientIntake(bookingRef, intake) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE bookings
+         SET intake_json = $2::jsonb,
+             intake_completed_at = COALESCE(intake_completed_at, NOW())
+         WHERE booking_ref = $1
+         RETURNING *`,
+        [bookingRef, JSON.stringify(intake || {})]
+    );
+    return r.rows[0] ? rowToBooking(r.rows[0]) : null;
+}
+
+async function findBookingsNeedingIntakeReminder() {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT * FROM bookings
+         WHERE cancelled = FALSE
+           AND intake_reminder_sent = FALSE
+           AND intake_completed_at IS NULL
+           AND created_at < NOW() - INTERVAL '90 minutes'
+         ORDER BY created_at DESC`
+    );
+    return r.rows.map(rowToBooking);
+}
+
+async function markIntakeReminderSent(bookingRef) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE bookings
+         SET intake_reminder_sent = TRUE
+         WHERE booking_ref = $1 AND intake_reminder_sent = FALSE`,
+        [bookingRef]
+    );
+    return r.rowCount > 0;
+}
+
 /**
  * Prior paid bookings for the same person (normalized email OR Stripe Customer id), excluding this payment.
  * Used for Google Ads new_customer when Stripe links repeat purchases to cus_* even if email differs.
@@ -1961,17 +2061,58 @@ function isoDateOnly(value) {
     return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : null;
 }
 
+function parseStaffAreaList(value) {
+    if (Array.isArray(value)) {
+        const seen = new Set();
+        const out = [];
+        for (const raw of value) {
+            const item = String(raw || '').trim().slice(0, 160);
+            if (!item || seen.has(item)) continue;
+            seen.add(item);
+            out.push(item);
+            if (out.length >= 80) break;
+        }
+        return out;
+    }
+    const s = String(value || '').trim();
+    if (!s) return [];
+    if (s.startsWith('[')) {
+        try {
+            return parseStaffAreaList(JSON.parse(s));
+        } catch {
+            /* keep as a single legacy value */
+        }
+    }
+    return [s.slice(0, 160)];
+}
+
+function serializeStaffAreaList(value) {
+    return JSON.stringify(parseStaffAreaList(value));
+}
+
+const STAFF_PROFILE_RETURNING = `username, profession, ordem_number, bio, credentials, iban,
+            full_name, nif, citizen_card, address, insurer, insurance_policy, insurance_valid_until,
+            payouts_from_month, primary_area, secondary_area, updated_at, (photo_data IS NOT NULL) AS has_photo`;
+
 function rowToStaffProfile(row) {
     if (!row) return null;
     return {
         username: row.username,
         profession: row.profession || '',
         ordemNumber: row.ordem_number || '',
+        fullName: row.full_name || '',
+        nif: row.nif || '',
+        citizenCard: row.citizen_card || '',
+        address: row.address || '',
+        insurer: row.insurer || '',
+        insurancePolicy: row.insurance_policy || '',
+        insuranceValidUntil: isoDateOnly(row.insurance_valid_until) || '',
         bio: row.bio || '',
         credentials: row.credentials || '',
         iban: row.iban || '',
-        primaryArea: row.primary_area || '',
-        secondaryArea: row.secondary_area || '',
+        payoutsFromMonth: row.payouts_from_month || '',
+        primaryAreas: parseStaffAreaList(row.primary_area),
+        secondaryAreas: parseStaffAreaList(row.secondary_area),
         hasPhoto: !!(row.has_photo || row.photo_data),
         updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : row.updated_at
     };
@@ -1999,12 +2140,21 @@ async function getStaffProfile(username) {
     const u = String(username || '').trim().toLowerCase();
     if (!u) return null;
     const r = await p.query(
-        `SELECT username, profession, ordem_number, bio, credentials, iban, primary_area, secondary_area, updated_at,
-                (photo_data IS NOT NULL) AS has_photo
+        `SELECT ${STAFF_PROFILE_RETURNING}
          FROM staff_profiles WHERE username = $1 LIMIT 1`,
         [u]
     );
     return r.rows[0] ? rowToStaffProfile(r.rows[0]) : null;
+}
+
+async function listStaffProfiles() {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT ${STAFF_PROFILE_RETURNING}
+         FROM staff_profiles
+         ORDER BY LOWER(username) ASC`
+    );
+    return r.rows.map((row) => rowToStaffProfile(row));
 }
 
 async function upsertStaffProfile(username, fields) {
@@ -2013,24 +2163,43 @@ async function upsertStaffProfile(username, fields) {
     if (!u) return null;
     const profession = String(fields.profession || '').trim().slice(0, 32);
     const ordemNumber = String(fields.ordemNumber || '').trim().slice(0, 80);
+    const fullName = String(fields.fullName || '').trim().slice(0, 160);
+    const nif = String(fields.nif || '').trim().slice(0, 20);
+    const citizenCard = String(fields.citizenCard || '').trim().slice(0, 32);
+    const address = String(fields.address || '').trim().slice(0, 400);
+    const insurer = String(fields.insurer || '').trim().slice(0, 120);
+    const insurancePolicy = String(fields.insurancePolicy || '').trim().slice(0, 80);
+    const insuranceValidUntil = isoDateOnly(fields.insuranceValidUntil);
     const bio = String(fields.bio || '').trim().slice(0, 4000);
     const credentials = String(fields.credentials || '').trim().slice(0, 2000);
-    const primaryArea = String(fields.primaryArea || '').trim().slice(0, 120);
-    const secondaryArea = String(fields.secondaryArea || '').trim().slice(0, 120);
+    const primaryArea = serializeStaffAreaList(fields.primaryAreas != null ? fields.primaryAreas : fields.primaryArea);
+    const secondaryArea = serializeStaffAreaList(fields.secondaryAreas != null ? fields.secondaryAreas : fields.secondaryArea);
     const r = await p.query(
-        `INSERT INTO staff_profiles (username, profession, ordem_number, bio, credentials, primary_area, secondary_area, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, NOW())
+        `INSERT INTO staff_profiles (
+            username, profession, ordem_number, full_name, nif, citizen_card, address,
+            insurer, insurance_policy, insurance_valid_until, bio, credentials, primary_area, secondary_area, updated_at
+         )
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, NOW())
          ON CONFLICT (username) DO UPDATE SET
             profession = EXCLUDED.profession,
             ordem_number = EXCLUDED.ordem_number,
+            full_name = EXCLUDED.full_name,
+            nif = EXCLUDED.nif,
+            citizen_card = EXCLUDED.citizen_card,
+            address = EXCLUDED.address,
+            insurer = EXCLUDED.insurer,
+            insurance_policy = EXCLUDED.insurance_policy,
+            insurance_valid_until = EXCLUDED.insurance_valid_until,
             bio = EXCLUDED.bio,
             credentials = EXCLUDED.credentials,
             primary_area = EXCLUDED.primary_area,
             secondary_area = EXCLUDED.secondary_area,
             updated_at = NOW()
-         RETURNING username, profession, ordem_number, bio, credentials, iban, primary_area, secondary_area, updated_at,
-                   (photo_data IS NOT NULL) AS has_photo`,
-        [u, profession, ordemNumber, bio, credentials, primaryArea, secondaryArea]
+         RETURNING ${STAFF_PROFILE_RETURNING}`,
+        [
+            u, profession, ordemNumber, fullName, nif, citizenCard, address,
+            insurer, insurancePolicy, insuranceValidUntil, bio, credentials, primaryArea, secondaryArea
+        ]
     );
     return rowToStaffProfile(r.rows[0]);
 }
@@ -2047,8 +2216,7 @@ async function upsertStaffPhoto(username, { mime, data }) {
             photo_mime = EXCLUDED.photo_mime,
             photo_data = EXCLUDED.photo_data,
             updated_at = NOW()
-         RETURNING username, profession, ordem_number, bio, credentials, iban, primary_area, secondary_area, updated_at,
-                   (photo_data IS NOT NULL) AS has_photo`,
+         RETURNING ${STAFF_PROFILE_RETURNING}`,
         [u, photoMime, data]
     );
     return rowToStaffProfile(r.rows[0]);
@@ -2097,11 +2265,30 @@ async function upsertStaffIban(username, iban) {
          ON CONFLICT (username) DO UPDATE SET
             iban = EXCLUDED.iban,
             updated_at = NOW()
-         RETURNING username, profession, ordem_number, bio, credentials, iban, primary_area, secondary_area, updated_at,
-                   (photo_data IS NOT NULL) AS has_photo`,
+         RETURNING ${STAFF_PROFILE_RETURNING}`,
         [u, value]
     );
     return rowToStaffProfile(r.rows[0]);
+}
+
+async function upsertStaffPayoutsFromMonth(username, monthKey) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    const month = String(monthKey || '').trim();
+    if (!u || !/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) return null;
+    const r = await p.query(
+        `INSERT INTO staff_profiles (username, payouts_from_month, updated_at)
+         VALUES ($1, $2, NOW())
+         ON CONFLICT (username) DO UPDATE SET
+            payouts_from_month = EXCLUDED.payouts_from_month,
+            updated_at = NOW()
+         WHERE staff_profiles.payouts_from_month IS NULL
+            OR TRIM(staff_profiles.payouts_from_month) = ''
+         RETURNING ${STAFF_PROFILE_RETURNING}`,
+        [u, month]
+    );
+    if (r.rows[0]) return rowToStaffProfile(r.rows[0]);
+    return getStaffProfile(u);
 }
 
 async function listStaffInvoices(username) {
@@ -2281,6 +2468,16 @@ async function listStaffDocuments(username) {
          WHERE username = $1
          ORDER BY kind ASC`,
         [u]
+    );
+    return r.rows.map((row) => rowToStaffDocument(row));
+}
+
+async function listAllStaffDocuments() {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT id, username, kind, original_name, mime, valid_until, uploaded_at
+         FROM staff_documents
+         ORDER BY username ASC, kind ASC`
     );
     return r.rows.map((row) => rowToStaffDocument(row));
 }
@@ -2511,6 +2708,12 @@ module.exports = {
     isDatabaseEnabled,
     initDatabase,
     bookingExistsByPaymentId,
+    findBookingByPaymentId,
+    findBookingByIntakeToken,
+    setBookingIntakeToken,
+    savePatientIntake,
+    findBookingsNeedingIntakeReminder,
+    markIntakeReminderSent,
     countPriorBookingsExcludingPayment,
     insertBooking,
     insertBookingSafe,
@@ -2558,10 +2761,12 @@ module.exports = {
     updateProfessional,
     deleteProfessional,
     getStaffProfile,
+    listStaffProfiles,
     upsertStaffProfile,
     upsertStaffPhoto,
     getStaffPhoto,
     upsertStaffIban,
+    upsertStaffPayoutsFromMonth,
     listStaffInvoices,
     listAllStaffInvoices,
     getStaffInvoice,
@@ -2573,6 +2778,7 @@ module.exports = {
     setStaffMonthAvailabilityConfirmed,
     markStaffMonthAvailabilityReminder,
     listStaffDocuments,
+    listAllStaffDocuments,
     upsertStaffDocument,
     getStaffDocument,
     insertProducer,

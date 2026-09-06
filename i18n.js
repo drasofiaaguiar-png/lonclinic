@@ -88,7 +88,7 @@
         { s: '.dr-hero-title-line:not(.dr-hero-title-line--secondary)', en: 'Online medical consultations.', pt: 'Consultas médicas online.', es: 'Consultas médicas online.' },
         { s: '.dr-hero-title-line--secondary', en: 'A new approach to your health.<br>Finally.', pt: 'Uma nova abordagem à sua saúde.<br>Finalmente.', es: 'Un nuevo enfoque para su salud.<br>Por fin.', h: true },
         { s: '.dr-lead', en: 'Book your medical consultation in minutes. Take care of your short and long-term health.', pt: 'Marque a sua consulta médica em minutos. Cuide da sua saúde a curto e a longo prazo.', es: 'Reserve su consulta médica en minutos. Cuide su salud a corto y largo plazo.' },
-        { s: '.dr-cta-row .lon-btn-dark', en: 'Book consultation — 39 €', pt: 'Marcar Consulta — 39 €', es: 'Reservar consulta — 39 €' },
+        { s: '.dr-cta-row .lon-btn-dark', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
         { s: '.dr-next-slot-kicker', en: 'Next available', pt: 'Próximo horário', es: 'Próximo horario' },
         { s: '.dr-next-slot-price', en: '39 € · general medicine', pt: '39 € · clínica geral', es: '39 € · medicina general' },
         { s: '.dr-next-slot-other', en: 'Another time', pt: 'Outro horário', es: 'Otro horario' },
@@ -409,7 +409,7 @@
 
         /* ── Step 2: Details ── */
         { s: '#step-2 .step-title', en: 'Your details', pt: 'Os seus dados', es: 'Sus datos' },
-        { s: '#step-2 .step-desc', en: 'Please provide your information so we can prepare for your consultation.', pt: 'Por favor forneça as suas informações para que possamos preparar a sua consulta.', es: 'Por favor proporcione sus datos para que podamos preparar su consulta.' },
+        { s: '#step-2 .step-desc', en: 'We only need your name and contact to confirm the booking. Clinical details come after payment.', pt: 'Só precisamos do seu nome e contacto para confirmar a marcação. Os dados clínicos pedem-se a seguir ao pagamento.', es: 'Solo necesitamos su nombre y contacto para confirmar la reserva. Los datos clínicos se piden después del pago.' },
         { s: 'label[for="firstName"]', en: 'First name *', pt: 'Primeiro nome *', es: 'Nombre *' },
         { s: '#firstName', a: 'placeholder', en: 'John', pt: 'João', es: 'Juan' },
         { s: '#firstName ~ .form-error', en: 'Please enter your first name', pt: 'Por favor introduza o seu primeiro nome', es: 'Por favor introduzca su nombre' },
@@ -446,6 +446,7 @@
         { s: '#back-2', en: 'Back', pt: 'Voltar', es: 'Atrás' },
         { s: '#bookingSlotChange', en: 'Change time', pt: 'Alterar horário', es: 'Cambiar horario' },
         { s: '#next-2', en: 'Pay with Stripe', pt: 'Pagar com Stripe', es: 'Pagar con Stripe' },
+        { s: '#checkoutAfterPayNote', en: 'After payment, you will receive an email to fill in your clinical details and symptoms.', pt: 'Após o pagamento, irá receber um e-mail para preencher os seus dados clínicos/sintomas.', es: 'Tras el pago, recibirá un correo para completar sus datos clínicos y síntomas.' },
 
         /* ── Step 3: Review & Pay ── */
         { s: '#step-3 .step-title', en: 'Review & pay', pt: 'Revisão e pagamento', es: 'Revisar y pagar' },
@@ -471,8 +472,8 @@
         { s: '.summary-total .summary-label', en: 'Total', pt: 'Total', es: 'Total' },
 
         /* ── Step 4: Confirmation ── */
-        { s: '#step-4 .step-title', en: 'Booking confirmed!', pt: 'Marcação confirmada!', es: '¡Reserva confirmada!' },
-        { s: '#step-4 .step-desc', en: 'Your consultation has been successfully scheduled. A confirmation email has been sent to <strong id="confirmEmail">your email</strong>.', pt: 'A sua consulta foi agendada com sucesso. Um email de confirmação foi enviado para <strong id="confirmEmail">o seu email</strong>.', es: 'Su consulta ha sido programada con éxito. Se ha enviado un email de confirmación a <strong id="confirmEmail">su email</strong>.', h: true },
+        { s: '#confirmTitle', en: 'Consultation confirmed', pt: 'Consulta confirmada', es: 'Consulta confirmada' },
+        { s: '#confirmLead', en: 'To help your doctor prepare, fill in your clinical details below <strong>(takes less than 2 minutes)</strong>. We also sent this link to <strong id="confirmEmail">your email</strong>.', pt: 'Para o médico preparar a sua consulta, preencha os seus dados clínicos no formulário abaixo <strong>(demora menos de 2 minutos)</strong>. Enviámos o mesmo link para <strong id="confirmEmail">o seu email</strong>.', es: 'Para que el médico prepare su consulta, complete sus datos clínicos abajo <strong>(tarda menos de 2 minutos)</strong>. También enviamos este enlace a <strong id="confirmEmail">su email</strong>.', h: true },
         { s: '.confirmation-card .confirmation-row:nth-child(1) .confirmation-label', en: 'Service', pt: 'Serviço', es: 'Servicio' },
         { s: '.confirmation-card .confirmation-row:nth-child(2) .confirmation-label', en: 'Date & Time', pt: 'Data e Hora', es: 'Fecha y Hora' },
         { s: '.confirmation-card .confirmation-row:nth-child(3) .confirmation-label', en: 'Format', pt: 'Formato', es: 'Formato' },
@@ -480,8 +481,18 @@
         { s: '.confirmation-card .confirmation-row:nth-child(4) .confirmation-label', en: 'Amount paid', pt: 'Valor pago', es: 'Importe pagado' },
         { s: '.confirmation-card .confirmation-row:nth-child(5) .confirmation-label', en: 'Booking reference', pt: 'Referência da marcação', es: 'Referencia de reserva' },
         { s: '.confirmation-next-steps h3', en: 'What happens next', pt: 'Próximos passos', es: 'Qué ocurre a continuación' },
-        { s: '.next-step-item:nth-child(1) strong', en: 'Check your email', pt: 'Verifique o seu email', es: 'Revise su email' },
-        { s: '.next-step-item:nth-child(1) p', en: 'You\'ll receive a confirmation with your video link and preparation instructions.', pt: 'Receberá uma confirmação com o link de vídeo e instruções de preparação.', es: 'Recibirá una confirmación con su enlace de vídeo e instrucciones de preparación.' },
+        { s: '#intakeFormTitle', en: 'Clinical form', pt: 'Ficha clínica', es: 'Ficha clínica' },
+        { s: 'label[for="intakeDob"]', en: 'Date of birth *', pt: 'Data de nascimento *', es: 'Fecha de nacimiento *' },
+        { s: 'label[for="intakeCountry"]', en: 'Country of residence', pt: 'País de residência', es: 'País de residencia' },
+        { s: 'label[for="intakeConcerns"]', en: 'Symptoms or reason for the consultation *', pt: 'Sintomas ou motivo da consulta *', es: 'Síntomas o motivo de la consulta *' },
+        { s: '#intakeConcerns', a: 'placeholder', en: 'What brings you today? How long? What have you already tried?', pt: 'O que o traz hoje? Há quanto tempo? O que já tentou?', es: '¿Qué le trae hoy? ¿Desde cuándo? ¿Qué ha intentado ya?' },
+        { s: 'label[for="intakeMedications"]', en: 'Current medication', pt: 'Medicação atual', es: 'Medicación actual' },
+        { s: 'label[for="intakeAllergies"]', en: 'Known allergies', pt: 'Alergias conhecidas', es: 'Alergias conocidas' },
+        { s: 'label[for="intakeNhs"]', en: 'NHS / SNS number (optional)', pt: 'Nº utente / NHS (opcional)', es: 'N.º de usuario / NHS (opcional)' },
+        { s: '#intakeSubmitBtn', en: 'Send clinical form', pt: 'Enviar ficha clínica', es: 'Enviar ficha clínica' },
+        { s: '.intake-done-title', en: 'Clinical form received', pt: 'Ficha clínica recebida', es: 'Ficha clínica recibida' },
+        { s: '.next-step-item:nth-child(1) strong', en: 'Complete the clinical form', pt: 'Preencha a ficha clínica', es: 'Complete la ficha clínica' },
+        { s: '.next-step-item:nth-child(1) p', en: 'The form above (or the link in your email) reaches the doctor before your appointment.', pt: 'O formulário acima (ou o link no email) chega ao médico antes da consulta.', es: 'El formulario de arriba (o el enlace del correo) llega al médico antes de la cita.' },
         { s: '.next-step-item:nth-child(2) strong', en: 'Prepare for your consultation', pt: 'Prepare-se para a consulta', es: 'Prepárese para su consulta' },
         { s: '.next-step-item:nth-child(2) p', en: 'Have any relevant medical records, test results, or questions ready.', pt: 'Tenha quaisquer registos médicos, resultados de exames ou perguntas relevantes preparados.', es: 'Tenga listos los registros médicos, resultados de pruebas o preguntas relevantes.' },
         { s: '.next-step-item:nth-child(3) strong', en: 'Join your video call', pt: 'Junte-se à videochamada', es: 'Únase a su videollamada' },

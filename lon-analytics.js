@@ -241,7 +241,7 @@
 
     function track(name, props) {
         enqueue(envelope(name, props));
-        if (/^(page_view|page_engaged|cta_click|date_select|slot_select|time_slot_clicked|payment_method_selected|checkout_start|form_submit|form_abandon|exit_intent|whatsapp_click|job_application|interview_booked|quiz_complete|recovery_sent|nurture_sent)$/.test(name)) {
+        if (/^(page_view|page_engaged|cta_click|date_select|slot_select|time_slot_clicked|payment_method_selected|checkout_start|form_submit|form_abandon|exit_intent|whatsapp_click|job_application|interview_booked|quiz_complete|recovery_sent|nurture_sent|intake_submit)$/.test(name)) {
             flush();
         }
         if (typeof gtag === 'function' && name !== 'page_view' && name !== 'heartbeat' && name !== 'scroll_depth') {
@@ -331,14 +331,30 @@
     }
     window.addEventListener('scroll', onScroll, { passive: true });
 
+    function isBookingHref(href) {
+        return /\/(marcar|book-consultation)(\/|\?|$)/i.test(href) ||
+            /\/saudemental(\/|\?|$)/i.test(href) ||
+            /\/psicologia-burnout/i.test(href) ||
+            /\/nutricao\/programa/i.test(href);
+    }
+
+    function canonicalCtaText(el, href, text) {
+        var d = String((el && el.getAttribute('data-cta')) || '').trim().toLowerCase();
+        if (d === 'book' || d === 'book-priced') return d;
+        if (!isBookingHref(href)) return text;
+        if (/\d/.test(text) && /€|eur|\/m[eê]s/i.test(text)) return 'book-priced';
+        return 'book';
+    }
+
     document.addEventListener('click', function (e) {
         var t = e.target && e.target.closest ? e.target.closest('a,button,[data-analytics]') : null;
         if (!t) return;
         var href = (t.getAttribute('href') || '').slice(0, 180);
-        var text = String(t.getAttribute('data-analytics') || t.getAttribute('aria-label') || t.textContent || '')
+        var rawText = String(t.getAttribute('data-analytics') || t.getAttribute('aria-label') || t.textContent || '')
             .replace(/\s+/g, ' ')
             .trim()
             .slice(0, 80);
+        var text = canonicalCtaText(t, href, rawText);
         var id = (t.id || t.getAttribute('data-analytics-id') || '').slice(0, 64);
         if (t.matches && t.matches('[data-analytics], .lon-btn, .btn-primary, .cn-btn-primary, a[href*="marcar"], a[href*="book"], .bq-btn-primary, .bq-sticky-book a')) {
             track('cta_click', { text: text, href: href, id: id, surface: pageContext().surface, funnel: pageContext().funnel });
