@@ -1,6 +1,20 @@
 {
   "series": [
     {
+      "id": "vacinas-por-destino",
+      "slug": "vacinas-para-viajar-por-pais",
+      "title": "Vacinas para viajar por país",
+      "description": "Respostas directas a «que vacinas preciso para viajar para [país]?»: Brasil, Tailândia, Índia, Quénia, Angola e Moçambique — orientação clínica, não um checklist genérico.",
+      "parts": [
+        { "slug": "vacinas-para-viajar-ao-brasil", "navLabel": "Brasil" },
+        { "slug": "vacinas-para-viajar-a-tailandia", "navLabel": "Tailândia" },
+        { "slug": "vacinas-para-viajar-a-india", "navLabel": "Índia" },
+        { "slug": "vacinas-para-viajar-ao-quenia", "navLabel": "Quénia" },
+        { "slug": "vacinas-para-viajar-a-angola", "navLabel": "Angola" },
+        { "slug": "vacinas-para-viajar-a-mocambique", "navLabel": "Moçambique" }
+      ]
+    },
+    {
       "id": "livros-saude",
       "slug": "os-10-livros-de-saude-mais-vendidos",
       "title": "Os 10 Livros de Saúde Mais Vendidos em Portugal (Comentados por uma Médica)",

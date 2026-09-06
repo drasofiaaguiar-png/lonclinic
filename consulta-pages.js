@@ -12,7 +12,7 @@
 const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
-const { organizationJsonLd, originOf, canonicalHref } = require('./seo');
+const { organizationJsonLd, originOf, canonicalHref, travelProcedureNode } = require('./seo');
 const authors = require('./authors');
 
 const CONSULTA_DIR = path.join(__dirname, 'data', 'consulta');
@@ -181,17 +181,34 @@ function bookingCardsMarkup(aria, cards, tone) {
         </aside>`;
 }
 
+function slotServiceFromHref(href) {
+    const h = String(href || '');
+    if (h.indexOf('/marcar/renovacao') !== -1) return 'renovacao';
+    if (h.indexOf('/marcar/travel') !== -1) return 'travel';
+    return 'clinica_geral';
+}
+
 function bookingCardsHtml(page, tone) {
     const primaryHref = page.bookingHref || '/marcar/clinica-geral';
     const isRenew = String(primaryHref).indexOf('/marcar/renovacao') !== -1;
+    const isTravel = String(primaryHref).indexOf('/marcar/travel') !== -1;
     const slug = page.slug || 'consulta';
+    const travel = {
+        chip: 'Viajante',
+        title: 'Consulta do viajante',
+        price: '39 € · 1 pessoa',
+        note: 'Vacinas, malária e plano por destino · prescrição no próprio dia',
+        cta: 'Marcar — 39 €',
+        href: primaryHref,
+        track: 'consulta-card-travel'
+    };
     const gp = {
         chip: 'Clínica geral',
         title: 'Consulta médica online',
         price: '39 € · ~30 min',
         note: 'Videoconsulta · médica identificada · receita electrónica se indicada',
         cta: 'Marcar — 39 €',
-        href: isRenew ? `/marcar/clinica-geral?ref=${encodeURIComponent(slug)}` : primaryHref,
+        href: isTravel || isRenew ? `/marcar/clinica-geral?ref=${encodeURIComponent(slug)}` : primaryHref,
         track: 'consulta-card-gp'
     };
     const renew = {
@@ -203,6 +220,9 @@ function bookingCardsHtml(page, tone) {
         href: isRenew ? primaryHref : `/marcar/renovacao?ref=${encodeURIComponent(`${slug}-renovacao`)}`,
         track: 'consulta-card-renew'
     };
+    if (isTravel) {
+        return bookingCardsMarkup('Marcar consulta na Lon Clinic', [travel, gp], tone);
+    }
     return bookingCardsMarkup('Marcar consulta na Lon Clinic', isRenew ? [renew, gp] : [gp, renew], tone);
 }
 
@@ -243,7 +263,8 @@ function layoutConsultaPage(opts) {
         ogImage,
         jsonLdExtra,
         mainHtml,
-        robots
+        robots,
+        headerBookHref
     } = opts;
 
     const canonicalUrl = canonicalHref(canonicalPath);
@@ -317,7 +338,7 @@ function layoutConsultaPage(opts) {
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <a href="${escapeHtml(headerBookHref || '/marcar/clinica-geral')}" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
                 <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
@@ -329,7 +350,7 @@ function layoutConsultaPage(opts) {
             <a href="/travel-clinic">Medicina do viajante</a>
             <a href="/saudemental">Psicologia</a>
             <a href="/patient-portal">Login</a>
-            <a href="/marcar/clinica-geral">Marcar consulta</a>
+            <a href="${escapeHtml(headerBookHref || '/marcar/clinica-geral')}">Marcar consulta</a>
         </div>
     </header>
     ${mainHtml}
@@ -357,7 +378,7 @@ function layoutConsultaPage(opts) {
                     <h4>Apoio</h4>
                     <a href="/faq">FAQ</a>
                     <a href="/info.html?page=contato">Contato</a>
-                    <a href="/marcar/clinica-geral">Marcar consulta</a>
+                    <a href="${escapeHtml(headerBookHref || '/marcar/clinica-geral')}">Marcar consulta</a>
                 </div>
             </div>
             <div class="lon-footer-bottom">
@@ -395,8 +416,13 @@ function renderSpoke(origin, slug) {
     const dateMod = String(meta.dateModified || meta.datePublished || '');
     const canonicalPath = `/consulta/${encodeURIComponent(slug)}`;
     const bookingHref = meta.bookingHref || '/marcar/clinica-geral';
-    const slotService = String(bookingHref).indexOf('/marcar/renovacao') !== -1 ? 'renovacao' : 'clinica_geral';
+    const slotService = slotServiceFromHref(bookingHref);
+    const isTravel = slotService === 'travel' || meta.category === 'viagem';
     const pages = livePages();
+    const symptomsTitle = meta.symptomsTitle || 'Sintomas';
+    const onlineTitle = meta.onlineTitle || 'Quando a consulta online faz sentido';
+    const flagsTitle = meta.flagsTitle || 'Quando ir a uma urgência';
+    const skipOnlineLabel = meta.skipOnlineLabel || 'Quando não tratar online';
 
     const faqLd = Array.isArray(meta.faq) && meta.faq.length
         ? {
@@ -409,6 +435,10 @@ function renderSpoke(origin, slug) {
             }))
         }
         : null;
+
+    const aboutNode = isTravel
+        ? { '@type': 'MedicalProcedure', name: meta.condition || title }
+        : { '@type': 'MedicalCondition', name: meta.condition || title };
 
     const jsonLd = [
         {
@@ -423,10 +453,7 @@ function renderSpoke(origin, slug) {
             lastReviewed: dateMod || datePub || undefined,
             inLanguage: 'pt-PT',
             isPartOf: { '@type': 'WebSite', name: 'Lon Clinic', url: o },
-            about: {
-                '@type': 'MedicalCondition',
-                name: meta.condition || title
-            },
+            about: aboutNode,
             audience: { '@type': 'PeopleAudience', geographicArea: { '@type': 'Country', name: 'Portugal' } },
             ...authors.articleAuthorSchema(o)
         },
@@ -444,13 +471,25 @@ function renderSpoke(origin, slug) {
         {
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
-            itemListElement: [
-                { '@type': 'ListItem', position: 1, name: 'Lon Clinic', item: o },
-                { '@type': 'ListItem', position: 2, name: 'Consulta médica', item: `${o}/consulta` },
-                { '@type': 'ListItem', position: 3, name: meta.navLabel || title, item: `${o}${canonicalPath}` }
-            ]
+            itemListElement: isTravel
+                ? [
+                    { '@type': 'ListItem', position: 1, name: 'Lon Clinic', item: o },
+                    { '@type': 'ListItem', position: 2, name: 'Medicina do viajante', item: `${o}/travel-clinic` },
+                    { '@type': 'ListItem', position: 3, name: meta.navLabel || title, item: `${o}${canonicalPath}` }
+                ]
+                : [
+                    { '@type': 'ListItem', position: 1, name: 'Lon Clinic', item: o },
+                    { '@type': 'ListItem', position: 2, name: 'Consulta médica', item: `${o}/consulta` },
+                    { '@type': 'ListItem', position: 3, name: meta.navLabel || title, item: `${o}${canonicalPath}` }
+                ]
         }
     ];
+    if (isTravel) {
+        jsonLd.push({
+            '@context': 'https://schema.org',
+            ...travelProcedureNode(o)
+        });
+    }
     if (faqLd) jsonLd.push(faqLd);
 
     const leadParas = (Array.isArray(meta.lead) ? meta.lead : [meta.lead])
@@ -467,7 +506,7 @@ function renderSpoke(origin, slug) {
         <article class="cq-article">
             <header class="cq-header">
                 <nav class="cq-breadcrumb" aria-label="Caminho">
-                    <a href="/consulta">Consulta</a>
+                    <a href="${isTravel ? '/travel-clinic' : '/consulta'}">${isTravel ? 'Viajante' : 'Consulta'}</a>
                     <span aria-hidden="true">/</span>
                     <span>${escapeHtml(meta.navLabel || title)}</span>
                 </nav>
@@ -478,7 +517,7 @@ function renderSpoke(origin, slug) {
                 ${authors.authorBylineHtml(o, meta.author, datePub)}
                 <div class="cq-header-actions">
                     <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="spoke-hero" data-cta="book" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
-                    <a class="lon-btn lon-btn-soft" href="#quando-nao-online">Quando não tratar online</a>
+                    <a class="lon-btn lon-btn-soft" href="#quando-nao-online">${escapeHtml(skipOnlineLabel)}</a>
                 </div>
                 <div class="cq-live-slots" data-next-slots data-limit="3" data-service="${slotService}" data-book-href="${escapeHtml(bookingHref)}" data-surface="consulta-hero" hidden>
                     <p class="cq-live-slots-kicker">Próximos horários</p>
@@ -491,18 +530,18 @@ function renderSpoke(origin, slug) {
             ${socialProofHtml()}
 
             <section class="cq-block" aria-labelledby="cq-sintomas-title">
-                <h2 id="cq-sintomas-title">Sintomas</h2>
+                <h2 id="cq-sintomas-title">${escapeHtml(symptomsTitle)}</h2>
                 ${listHtml(meta.symptoms, 'cq-list')}
             </section>
 
             <section class="cq-split" id="quando-nao-online" aria-labelledby="cq-online-title">
-                <h2 id="cq-online-title" class="visually-hidden">Quando é seguro tratar online e quando ir à urgência</h2>
+                <h2 id="cq-online-title" class="visually-hidden">${escapeHtml(onlineTitle)} e ${escapeHtml(flagsTitle)}</h2>
                 <div class="cq-ok">
-                    <h2>Quando a consulta online faz sentido</h2>
+                    <h2>${escapeHtml(onlineTitle)}</h2>
                     ${listHtml(meta.safeOnline, 'cq-list')}
                 </div>
                 <div class="cq-flags">
-                    <h2>Quando ir a uma urgência</h2>
+                    <h2>${escapeHtml(flagsTitle)}</h2>
                     ${listHtml(meta.goToUrgent, 'cq-list')}
                     <p class="cq-flags-note">Em emergência, ligue <strong>112</strong>. Para triagem no SNS, ligue <strong>808 24 24 24</strong> (SNS 24).</p>
                 </div>
@@ -551,9 +590,10 @@ function renderSpoke(origin, slug) {
             title: `${title} | Lon Clinic`,
             description,
             canonicalPath,
-            ogImage: `${o}/image/image2.webp`,
+            ogImage: isTravel ? `${o}/image/travel-clinic-mountain-bg-v2.png` : `${o}/image/image2.webp`,
             jsonLdExtra: jsonLd,
-            mainHtml
+            mainHtml,
+            headerBookHref: bookingHref
         })
     };
 }
@@ -614,7 +654,7 @@ function renderHubClusterHtml() {
             href: '/travel-clinic',
             price: '39 €',
             label: 'Medicina do viajante',
-            desc: 'Vacinas, malária e aconselhamento pré-viagem — página já existente.'
+            desc: 'Hub: vacinas, malária e aconselhamento pré-viagem — consulta online.'
         }
     ]
         .map((c) => `

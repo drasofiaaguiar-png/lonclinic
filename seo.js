@@ -205,18 +205,61 @@ function applyHtmlSeo(html, req) {
     return ensureCanonicalTag(rewriteApexSiteUrls(html), canonicalHref(canonicalPathFromRequest(req)));
 }
 
+function napAddress() {
+    return {
+        '@type': 'PostalAddress',
+        addressLocality: 'Lisboa',
+        addressCountry: 'PT'
+    };
+}
+
+function travelProcedureNode(origin) {
+    const o = originOf(origin);
+    return {
+        '@type': 'MedicalProcedure',
+        '@id': `${o}/travel-clinic#consulta-viajante`,
+        name: 'Consulta de medicina do viajante',
+        alternateName: ['Consulta do viajante', 'Travel clinic'],
+        description:
+            'Videoconsulta de medicina do viajante em Portugal: avaliação por destino, prescrição de vacinas, profilaxia da malária e orientação para certificado internacional. Administração das vacinas num Centro de Vacinação Internacional.',
+        procedureType: 'https://schema.org/TherapeuticProcedure',
+        url: `${o}/travel-clinic`,
+        howPerformed: 'Videoconsulta com médica inscrita na Ordem dos Médicos. Prescrição electrónica no próprio dia, quando indicada.',
+        offers: {
+            '@type': 'Offer',
+            url: `${o}/marcar/travel`,
+            price: '39.00',
+            priceCurrency: 'EUR',
+            availability: 'https://schema.org/InStock'
+        }
+    };
+}
+
 function organizationNode(origin) {
     const o = originOf(origin);
     return {
-        '@type': 'Organization',
+        '@type': ['MedicalOrganization', 'MedicalClinic', 'MedicalBusiness', 'LocalBusiness', 'Organization'],
         '@id': `${o}/#organization`,
         name: 'Lon Clinic',
+        legalName: 'Lon Clinic',
         url: o,
         logo: `${o}/image/image2.webp`,
         image: `${o}/image/image2.webp`,
         email: 'info@lonclinic.com',
         telephone: '+351 928 372 775',
-        address: { '@type': 'PostalAddress', addressCountry: 'PT' },
+        address: napAddress(),
+        areaServed: [
+            { '@type': 'Country', name: 'Portugal' },
+            { '@type': 'Place', name: 'Europa' }
+        ],
+        priceRange: '€€',
+        medicalSpecialty: [
+            'Telemedicina',
+            'Medicina Geral',
+            'Medicina de Família',
+            'Medicina do viajante'
+        ],
+        availableService: [travelProcedureNode(o)],
         sameAs: ['https://www.trustpilot.com/review/lonclinic.com'],
         founder: {
             '@type': 'Person',
@@ -470,6 +513,7 @@ module.exports = {
     rewriteApexSiteUrls,
     organizationNode,
     organizationJsonLd,
+    travelProcedureNode,
     jsonLdScript,
     robotsTxt,
     buildSitemapXml

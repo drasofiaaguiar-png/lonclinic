@@ -647,21 +647,261 @@
     },
     {
       "slug": "vacinas-viagem",
-      "status": "planned",
+      "status": "live",
       "category": "viagem",
-      "navLabel": "Vacinas de viagem"
+      "priority": 1,
+      "navLabel": "Vacinas de viagem",
+      "h1": "Vacinas de viagem: consulta e prescrição online",
+      "description": "Que vacinas precisa para viajar? Consulta de medicina do viajante em Portugal, 39 €. Prescrição no próprio dia; administração num Centro de Vacinação Internacional.",
+      "hubBlurb": "Prescrição de vacinas de viagem — avaliação por destino, 39 €.",
+      "condition": "Vacinação do viajante",
+      "consultMode": "video",
+      "bookingHref": "/marcar/travel?ref=consulta-vacinas-viagem",
+      "bookingLabel": "Marcar consulta do viajante",
+      "price": "39 €",
+      "priceAmount": "39.00",
+      "priceNote": "Videoconsulta de medicina do viajante, 1 pessoa. Casal 69 €; 3 pessoas 107 €; 4 pessoas 136 €. As vacinas pagam-se à parte no CVI.",
+      "ctaTitle": "Obter a prescrição das vacinas de viagem",
+      "datePublished": "2026-09-06",
+      "dateModified": "2026-09-06",
+      "symptomsTitle": "O que se avalia na consulta",
+      "onlineTitle": "Quando a consulta online chega",
+      "flagsTitle": "Quando precisa de outro circuito",
+      "skipOnlineLabel": "Quando isto não chega",
+      "lead": [
+        "A lista de vacinas depende do país, das regiões que vai percorrer, da duração e do que já tem no boletim — não de um checklist genérico na internet.",
+        "Na Lon Clinic a avaliação é por videoconsulta, 39 €. Quando indicado, a médica emite a prescrição no próprio dia; toma as vacinas num Centro de Vacinação Internacional (CVI) em Portugal.",
+        "Febre amarela, hepatite A, febre tifóide e outras do circuito internacional não se administram na farmácia da esquina nem na CUF: exigem CVI e, em regra, prescrição médica."
+      ],
+      "symptoms": [
+        "Viagem a país com risco de doenças preveníveis por vacina (febre amarela, hepatite A, tifóide, entre outras)",
+        "Pedido de certificado internacional (CIVP) para entrada num destino",
+        "Dúvida entre vacina obrigatória, recomendada e rotina (tétano, sarampo)",
+        "Itinerário com várias escalas ou regiões rurais, não só a capital"
+      ],
+      "safeOnline": [
+        "Adulto, ou menor acompanhado por representante legal, a planear viagem com antecedência",
+        "Consegue descrever destinos, datas e tipo de actividades (cidade, safari, trekking)",
+        "Não está doente com febre no momento da consulta",
+        "Percebe que a vacina se toma depois, no CVI, não durante a videochamada"
+      ],
+      "goToUrgent": [
+        "Já está no destino com febre, icterícia, diarreia grave ou mal-estar intenso — isto não é consulta pré-viagem",
+        "Reacção alérgica grave após uma vacina já tomada — 112 ou urgência",
+        "Viagem nas próximas 48 horas sem tempo para o certificado de febre amarela (válido só 10 dias após a dose)",
+        "Situação obstétrica ou imunodepressão que a médica considere inadequada à distância — encaminha"
+      ],
+      "howItWorks": [
+        {
+          "title": "Marca a consulta do viajante",
+          "text": "39 € para uma pessoa, visível antes de pagar. Indique o país, as datas e o boletim de vacinas, se o tiver."
+        },
+        {
+          "title": "Avaliação por destino",
+          "text": "A médica cruza itinerário, idade, doenças e vacinas já tomadas. Não despacha um pacote igual para toda a gente."
+        },
+        {
+          "title": "Prescrição no próprio dia",
+          "text": "Quando indicada, recebe a prescrição para o CVI. A administração e o certificado internacional fazem-se no centro, não na Lon Clinic."
+        },
+        {
+          "title": "Escolhe o CVI",
+          "text": "A mesma prescrição vale em qualquer Centro de Vacinação Internacional de Portugal. Há guias de Lisboa, Porto, Coimbra, Braga e Algarve."
+        }
+      ],
+      "related": [
+        "profilaxia-malaria",
+        "diarreia-do-viajante",
+        { "href": "/travel-clinic", "label": "Consulta do viajante (hub)" },
+        { "href": "/blog/vacinas-para-viajar-por-pais", "label": "Vacinas por país" },
+        { "href": "/blog/vacinas-viajante-lisboa", "label": "Onde vacinar em Lisboa" },
+        { "href": "/blog/quanto-custa-consulta-medicina-do-viajante", "label": "Quanto custa a consulta" }
+      ],
+      "faq": [
+        {
+          "q": "A consulta inclui as vacinas?",
+          "a": "Inclui a avaliação e a prescrição. As vacinas tomam-se num Centro de Vacinação Internacional. O preço das vacinas é do CVI, não da Lon Clinic."
+        },
+        {
+          "q": "Onde tirar a vacina da febre amarela em Lisboa ou no Porto?",
+          "a": "Nos Centros de Vacinação Internacional da área — não em hospitais privados como a CUF. Em Lisboa há vários CVI na ARSLVT; no Porto, centros na área metropolitana. A prescrição da consulta do viajante é válida em qualquer CVI de Portugal."
+        },
+        {
+          "q": "Quanto tempo antes da viagem devo marcar?",
+          "a": "Idealmente 4 a 6 semanas. A consulta online faz-se em menos de 24 horas na maior parte dos casos, mas os CVI podem ter espera e algumas vacinas pedem mais do que uma dose. O certificado de febre amarela só é válido 10 dias após a vacinação."
+        },
+        {
+          "q": "Posso ir ao CVI sem receita?",
+          "a": "Em regra, não. Os CVI administram vacinas do circuito internacional mediante prescrição médica. A consulta do viajante existe precisamente para essa prescrição e para decidir o que é necessário no seu itinerário."
+        }
+      ]
     },
     {
       "slug": "profilaxia-malaria",
-      "status": "planned",
+      "status": "live",
       "category": "viagem",
-      "navLabel": "Profilaxia de malária"
+      "priority": 1,
+      "navLabel": "Profilaxia de malária",
+      "h1": "Preciso de receita para profilaxia da malária?",
+      "description": "Sim: a profilaxia da malária em Portugal exige receita médica. Consulta do viajante online, 39 €, com escolha do fármaco segundo o destino e o seu perfil.",
+      "hubBlurb": "Receita para profilaxia da malária — 39 €, por destino.",
+      "condition": "Profilaxia da malária",
+      "consultMode": "video",
+      "bookingHref": "/marcar/travel?ref=consulta-profilaxia-malaria",
+      "bookingLabel": "Marcar consulta do viajante",
+      "price": "39 €",
+      "priceAmount": "39.00",
+      "priceNote": "Videoconsulta de medicina do viajante. O fármaco, quando prescrito, paga-se na farmácia. Atovaquona-proguanil, doxiciclina ou mefloquina não são automedicação.",
+      "ctaTitle": "Pedir avaliação para profilaxia da malária",
+      "datePublished": "2026-09-06",
+      "dateModified": "2026-09-06",
+      "symptomsTitle": "Quando a profilaxia entra na conversa",
+      "onlineTitle": "Quando a consulta online chega",
+      "flagsTitle": "Quando isto não é o sítio certo",
+      "skipOnlineLabel": "Quando isto não chega",
+      "lead": [
+        "Sim: em Portugal a medicação para prevenir malária (atovaquona-proguanil, doxiciclina, mefloquina, entre outras) exige receita médica — não se despacha no balcão da farmácia sem prescrição.",
+        "A escolha do fármaco depende da região, da resistência local, da duração da estadia, da gravidez, de outras doenças e de interacções. Um esquema copiado de um fórum é um erro clínico frequente.",
+        "Na Lon Clinic a avaliação é a consulta do viajante, 39 € por videoconsulta. Quando indicada, a receita electrónica vai para qualquer farmácia em Portugal."
+      ],
+      "symptoms": [
+        "Viagem a zona com transmissão de malária (África subsariana, partes da Amazónia, algumas regiões da Ásia)",
+        "Estadia rural, safari, trekking ou noite fora de grandes cidades",
+        "Dúvida se a capital ou o resort «já não têm malária»",
+        "Pedido de receita porque «na última viagem tomei Malarone»"
+      ],
+      "safeOnline": [
+        "Viagem ainda não iniciada, com tempo para começar o esquema antes de entrar na zona de risco",
+        "Adulto capaz de fazer videoconsulta e de listar medicação habitual",
+        "Sem febre, sem mal-estar sugestivo de malária já contraída",
+        "Percebe que nem todos os destinos precisam de comprimidos — a médica pode não prescrever"
+      ],
+      "goToUrgent": [
+        "Já regressou (ou ainda está no destino) com febre: malária é urgência, não renovação de profilaxia — 112 ou serviço de urgência com capacidade de diagnóstico",
+        "Gravidez ou tentativa de engravidar: alguns fármacos estão contraindicados; pode ser preciso circuito presencial",
+        "Criança pequena: a dose e o fármaco não se improvisam nesta página",
+        "Alergia grave conhecida ao fármaco que pensa repetir"
+      ],
+      "howItWorks": [
+        {
+          "title": "Marca a consulta do viajante",
+          "text": "39 €. Leve o itinerário (regiões, não só o país) e a lista de medicamentos que já toma."
+        },
+        {
+          "title": "A médica decide se há indicação",
+          "text": "Muitas zonas urbanas de baixo risco não justificam comprimidos. Onde há risco, escolhe-se o esquema e quando começar — antes de partir, não no aeroporto."
+        },
+        {
+          "title": "Receita electrónica, se for indicada",
+          "text": "O código chega por SMS ou email e vale em qualquer farmácia portuguesa. Repelente, rede mosquiteira e horário crepuscular continuam a contar — a pílula não substitui isso."
+        }
+      ],
+      "related": [
+        "vacinas-viagem",
+        "diarreia-do-viajante",
+        { "href": "/travel-clinic", "label": "Consulta do viajante (hub)" },
+        { "href": "/blog/vacinas-para-viajar-ao-quenia", "label": "Vacinas e malária no Quénia" },
+        { "href": "/blog/quanto-custa-consulta-medicina-do-viajante", "label": "Quanto custa a consulta" }
+      ],
+      "faq": [
+        {
+          "q": "Preciso mesmo de receita para a profilaxia da malária?",
+          "a": "Sim. Em Portugal estes fármacos são de receita médica. A farmácia não os deve dispensar sem prescrição válida."
+        },
+        {
+          "q": "Posso repetir o mesmo comprimido da viagem anterior?",
+          "a": "Só depois de avaliação. O destino pode ser outro, a resistência local muda, e o seu estado de saúde também. A consulta confirma se o esquema antigo ainda é o certo."
+        },
+        {
+          "q": "A profilaxia substitui a vacina da febre amarela?",
+          "a": "Não. São problemas diferentes. Febre amarela é vírus e vacina (com certificado quando exigido). Malária é parasita e, quando indicada, medicação plus protecção contra picadas."
+        },
+        {
+          "q": "Quanto custa a consulta?",
+          "a": "39 € por uma pessoa. O medicamento paga-se à parte na farmácia, com a comparticipação que se aplicar ao seu caso — muitas vezes sem comparticipação neste contexto de viagem."
+        }
+      ]
     },
     {
       "slug": "diarreia-do-viajante",
-      "status": "planned",
+      "status": "live",
       "category": "viagem",
-      "navLabel": "Diarreia do viajante"
+      "priority": 2,
+      "navLabel": "Diarreia do viajante",
+      "h1": "Diarreia do viajante: consulta e receita online",
+      "description": "Diarreia do viajante: como prevenir, quando tratar à distância e quando ir à urgência. Consulta 39 € em Portugal, com receita se clinicamente indicada.",
+      "hubBlurb": "Prevenção e tratamento da diarreia do viajante — 39 €.",
+      "condition": "Diarreia do viajante",
+      "consultMode": "video",
+      "bookingHref": "/marcar/travel?ref=consulta-diarreia-do-viajante",
+      "bookingLabel": "Marcar consulta do viajante",
+      "price": "39 €",
+      "priceAmount": "39.00",
+      "priceNote": "Se ainda não partiu: consulta do viajante (kit e orientação). Se já está doente em Portugal de regresso, use clínica geral ou urgência conforme a gravidade.",
+      "ctaTitle": "Preparar a viagem contra a diarreia do viajante",
+      "datePublished": "2026-09-06",
+      "dateModified": "2026-09-06",
+      "symptomsTitle": "O que costuma ser a diarreia do viajante",
+      "onlineTitle": "Quando a consulta online faz sentido",
+      "flagsTitle": "Quando ir a uma urgência",
+      "skipOnlineLabel": "Quando não tratar só online",
+      "lead": [
+        "A diarreia do viajante é, na maior parte dos casos, um episódio agudo de fezes líquidas nos primeiros dias numa zona com higiene alimentar diferente — não é «intolerância à comida picante».",
+        "Antes de partir, a consulta do viajante (39 €) serve para prevenção, hidratação e, quando a médica o considerar, medicação de recurso no kit. Não é um antibiótico automático para meter na mala.",
+        "Se já está com febre alta, sangue nas fezes, vómitos incoercíveis ou sinais de desidratação, isto não é telemedicina de conforto: é urgência ou, no estrangeiro, o serviço local / 112 no regresso."
+      ],
+      "symptoms": [
+        "Fezes líquidas, cólicas, náuseas nas primeiras 72 horas após chegar",
+        "Viagem a destino com água ou alimentos de risco (rua, gelo, marisco cru)",
+        "Pedido de kit de viagem (sais de hidratação, antiespasmódico, antibiótico só se indicado)",
+        "História de diarreia grave em viagens anteriores"
+      ],
+      "safeOnline": [
+        "Ainda em Portugal, a preparar a viagem",
+        "Episódio ligeiro já no regresso, sem febre, sem sangue, a conseguir beber",
+        "Adulto, sem imunodepressão conhecida, sem doença inflamatória intestinal descompensada"
+      ],
+      "goToUrgent": [
+        "Sangue ou muco nas fezes, febre alta, arrepios",
+        "Vómitos que impedem beber, tonturas, oligúria, confusão — desidratação",
+        "Criança, grávida, ou pessoa idosa frágil",
+        "Sintomas que duram mais de 3–4 dias sem melhoria, ou diarreia ao regressar de zona de malária com febre (pode não ser «só gastrenterite»)"
+      ],
+      "howItWorks": [
+        {
+          "title": "Diga se é prevenção ou se já está doente",
+          "text": "Pré-viagem marca consulta do viajante. Já em Portugal com sintomas ligeiros, clínica geral pode ser o circuito certo. Febre e sangue: urgência."
+        },
+        {
+          "title": "Videoconsulta",
+          "text": "A médica distingue um quadro banal de um que pede exame, outro diagnóstico, ou não tratar com antibiótico «por se sim»."
+        },
+        {
+          "title": "Receita só se for indicada",
+          "text": "Sais de hidratação e medidas alimentares são a base. Antibiótico empírico não é rotina para todos os destinos nem para todas as pessoas."
+        }
+      ],
+      "related": [
+        "vacinas-viagem",
+        "profilaxia-malaria",
+        "obstipacao",
+        { "href": "/travel-clinic", "label": "Consulta do viajante (hub)" },
+        { "href": "/consulta/infecao-urinaria", "label": "Infeção urinária" }
+      ],
+      "faq": [
+        {
+          "q": "Levo sempre antibiótico na mala?",
+          "a": "Não por defeito. Em alguns itinerários e perfis a médica pode incluir medicação de recurso com instruções claras de quando usar — e quando não usar. Automedicar-se com o que sobrou da última viagem é uma má ideia."
+        },
+        {
+          "q": "A vacina da cólera ou da febre tifóide evita a diarreia do viajante?",
+          "a": "A tifóide cobre Salmonella Typhi, não o conjunto dos microrganismos que causam diarreia do viajante. A cólera tem indicação restrita. A prevenção principal continua a ser água, alimentos e higiene das mãos."
+        },
+        {
+          "q": "Estou no estrangeiro com diarreia. A Lon Clinic atende?",
+          "a": "Há apoio urgente em viagem por videochamada quando o quadro for adequado à distância. Febre alta, sangue ou desidratação pedem cuidados presenciais no país onde está."
+        }
+      ]
     },
     {
       "slug": "diarreia-aguda",

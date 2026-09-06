@@ -407,7 +407,7 @@ function articleCluster(meta) {
     if (meta && (meta.series === 'bestsellers-saude-intestinal' || about === 'livros de intestino' || about === 'saúde intestinal' || about === 'saude intestinal')) {
         return 'bestsellers-saude-intestinal';
     }
-    if (/vacina|viajante|travel|marcacao/.test(slug)) return 'travel';
+    if (/vacina|viajante|travel|marcacao|malaria|viajar-a|viajar-ao/.test(slug)) return 'travel';
     if (/burnout/.test(slug) || about === 'burnout') return 'burnout';
     if (/depress/.test(about) || /depressao|anedonia|antidepressivos/.test(slug)) return 'depressao';
     if (/ansiedade/.test(about) || /ansiedade|ataques-de-panico|fobias-especificas/.test(slug)) return 'ansiedade';

@@ -12,8 +12,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lon Clinic — Consulta do Viajante Online | Travel Clinic Portugal</title>
-<meta name="description" content="Consulta do Viajante Online com médico especialista. Prescrição de vacinas, malária e certificado internacional. €39 · Disponível 7 dias por semana · Portugal.">
+<title>Consulta de medicina do viajante em Portugal | 39 € | Lon Clinic</title>
+<meta name="description" content="Consulta de medicina do viajante em Portugal: 39 €, videoconsulta, prescrição de vacinas e profilaxia da malária no próprio dia. Vacinação no CVI — Lisboa, Porto e resto do país.">
 <meta name="keywords" content="consulta do viajante online, travel clinic Portugal, consulta viajante Lisboa, vacinas viagem Portugal, travel medicine Portugal">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://www.lonclinic.com/travel-clinic">
@@ -22,13 +22,13 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Lon Clinic">
 <meta property="og:url" content="https://www.lonclinic.com/travel-clinic">
-<meta property="og:title" content="Lon Clinic — Consulta do Viajante Online | Travel Clinic Portugal">
-<meta property="og:description" content="Consulta do Viajante Online com médico especialista. Prescrição de vacinas, malária e certificado internacional. €39 · Disponível 7 dias por semana · Portugal.">
+<meta property="og:title" content="Consulta de medicina do viajante em Portugal | 39 € | Lon Clinic">
+<meta property="og:description" content="Consulta de medicina do viajante em Portugal: 39 €, videoconsulta, prescrição de vacinas e profilaxia da malária no próprio dia. Vacinação no CVI — Lisboa, Porto e resto do país.">
 <meta property="og:image" content="https://www.lonclinic.com/image/travel-clinic-mountain-bg-v2.png">
 <meta property="og:locale" content="pt_PT">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Lon Clinic — Consulta do Viajante Online | Travel Clinic Portugal">
-<meta name="twitter:description" content="Consulta do Viajante Online com médico especialista. Prescrição de vacinas, malária e certificado internacional. €39 · Disponível 7 dias por semana · Portugal.">
+<meta name="twitter:title" content="Consulta de medicina do viajante em Portugal | 39 € | Lon Clinic">
+<meta name="twitter:description" content="Consulta de medicina do viajante em Portugal: 39 €, videoconsulta, prescrição de vacinas e profilaxia da malária no próprio dia. Vacinação no CVI — Lisboa, Porto e resto do país.">
 <meta name="twitter:image" content="https://www.lonclinic.com/image/travel-clinic-mountain-bg-v2.png">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
 <meta name="theme-color" content="#0c1410">
@@ -37,21 +37,34 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": ["MedicalClinic", "Organization"],
+  "@type": ["MedicalClinic", "MedicalBusiness", "LocalBusiness", "Organization"],
   "@id": "https://www.lonclinic.com/#organization",
   "name": "Lon Clinic",
-  "description": "Clínica de medicina do viajante online. Consultas de medicina de viagem, prescrição de vacinas, profilaxia da malária e certificado internacional.",
+  "description": "Clínica de medicina do viajante online em Portugal. Consultas de medicina de viagem, prescrição de vacinas, profilaxia da malária e certificado internacional.",
   "url": "https://www.lonclinic.com",
   "logo": "https://www.lonclinic.com/image/image2.webp",
+  "image": "https://www.lonclinic.com/image/travel-clinic-mountain-bg-v2.png",
   "telephone": "+351 928 372 775",
   "email": "info@lonclinic.com",
+  "priceRange": "€€",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Lisboa",
+    "addressCountry": "PT"
+  },
+  "areaServed": { "@type": "Country", "name": "Portugal" },
+  "medicalSpecialty": ["Medicina do viajante", "Telemedicina", "Medicina Geral"],
   "availableService": [{
-    "@type": "MedicalTherapy",
-    "name": "Consulta do Viajante Online",
-    "offers": { "@type": "Offer", "price": "39", "priceCurrency": "EUR" }
+    "@type": "MedicalProcedure",
+    "@id": "https://www.lonclinic.com/travel-clinic#consulta-viajante",
+    "name": "Consulta de medicina do viajante",
+    "alternateName": ["Consulta do viajante", "Travel clinic"],
+    "url": "https://www.lonclinic.com/travel-clinic",
+    "howPerformed": "Videoconsulta. Prescrição electrónica no próprio dia, quando indicada. Administração das vacinas num Centro de Vacinação Internacional.",
+    "offers": { "@type": "Offer", "url": "https://www.lonclinic.com/marcar/travel", "price": "39.00", "priceCurrency": "EUR", "availability": "https://schema.org/InStock" }
   }],
-  "areaServed": "Portugal",
   "availableLanguage": ["Portuguese", "English", "Spanish"],
+  "sameAs": ["https://www.trustpilot.com/review/lonclinic.com"],
   "founder": {
     "@type": "Person",
     "@id": "https://www.lonclinic.com/equipa/rita-aguiar#person",
@@ -65,11 +78,11 @@
 {
   "@context": "https://schema.org",
   "@type": "MedicalWebPage",
-  "name": "Consulta do Viajante Online | Lon Clinic",
+  "name": "Consulta de medicina do viajante em Portugal | Lon Clinic",
   "url": "https://www.lonclinic.com/travel-clinic",
   "inLanguage": "pt-PT",
   "isPartOf": { "@type": "WebSite", "name": "Lon Clinic", "url": "https://www.lonclinic.com" },
-  "about": { "@type": "MedicalProcedure", "name": "Consulta do Viajante" },
+  "about": { "@id": "https://www.lonclinic.com/travel-clinic#consulta-viajante" },
   "publisher": { "@id": "https://www.lonclinic.com/#organization" },
   "reviewedBy": { "@id": "https://www.lonclinic.com/equipa/rita-aguiar#person" }
 }
@@ -79,6 +92,21 @@
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Quanto custa uma consulta de medicina do viajante em Portugal?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Na Lon Clinic a videoconsulta custa 39 € por uma pessoa, 69 € por duas, 107 € por três e 136 € por quatro. As vacinas no Centro de Vacinação Internacional e a profilaxia da malária pagam-se à parte." }
+    },
+    {
+      "@type": "Question",
+      "name": "Preciso de receita para profilaxia da malária?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Sim. Em Portugal esses fármacos exigem receita médica. A Lon Clinic avalia o destino e, quando indicada, emite a receita electrónica na consulta do viajante." }
+    },
+    {
+      "@type": "Question",
+      "name": "Onde tirar a vacina da febre amarela em Lisboa ou no Porto?",
+      "acceptedAnswer": { "@type": "Answer", "text": "Num Centro de Vacinação Internacional, com prescrição médica. Não na CUF. A consulta online da Lon Clinic emite a prescrição; a administração e o certificado internacional fazem-se no CVI. A mesma prescrição vale em qualquer CVI de Portugal." }
+    },
     {
       "@type": "Question",
       "name": "A consulta inclui as vacinas do viajante?",
@@ -92,7 +120,7 @@
     {
       "@type": "Question",
       "name": "A consulta é válida para toda a família?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Sim. Existe opção para casal (€60) e família com crianças. Veja os pacotes disponíveis na página de marcação." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Sim. Duas pessoas 69 €, três 107 €, quatro 136 €. Marque o número de viajantes na página de marcação." }
     },
     {
       "@type": "Question",
@@ -103,11 +131,6 @@
       "@type": "Question",
       "name": "Os serviços são reembolsáveis pelo seguro?",
       "acceptedAnswer": { "@type": "Answer", "text": "Dependendo do plano de seguro, a consulta pode ser parcialmente reembolsável. Emitimos recibo com todos os dados necessários para submissão ao seguro." }
-    },
-    {
-      "@type": "Question",
-      "name": "O que acontece se precisar de apoio durante a viagem?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Disponibilizamos apoio urgente em viagem para situações que surjam durante a deslocação." }
     }
   ]
 }
@@ -282,7 +305,8 @@ body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif; ba
 .dest-bg .section-h2 em { color: var(--green); }
 .dest-bg .section-sub { color: var(--ink-soft); }
 .dest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
-.dest-pill { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r); padding: 11px 14px; display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--ink); transition: background 0.15s, border-color 0.15s, transform 0.12s; box-shadow: 0 2px 6px rgba(15,20,18,0.04); }
+.dest-pill { background: white; border: 0.5px solid var(--border-mid); border-radius: var(--r); padding: 11px 14px; display: flex; align-items: center; gap: 9px; font-size: 13px; color: var(--ink); transition: background 0.15s, border-color 0.15s, transform 0.12s; box-shadow: 0 2px 6px rgba(15,20,18,0.04); text-decoration: none; }
+a.dest-pill { color: inherit; }
 .dest-pill:hover { background: var(--green-faint); border-color: var(--green); transform: translateY(-1px); }
 .dest-flag { font-size: 18px; }
 .dest-note { text-align: center; margin-top: 24px; font-size: 12px; color: var(--ink-ghost); }
@@ -454,8 +478,8 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
     <div class="hero-kicker"><span class="hero-kicker-dot"></span>Medicina do Viajante · Portugal</div>
     <div class="hero-content">
       <div class="hero-left">
-        <h1>Cuidados médicos para<br>a sua jornada <em>internacional.</em></h1>
-        <p class="hero-sub">Consulta online com médico especialista — avaliação personalizada por destino, vacinas indicadas, profilaxia e plano clínico adaptado ao seu itinerário.</p>
+        <h1>Consulta de medicina do viajante<br>em <em>Portugal.</em></h1>
+        <p class="hero-sub">39 € · videoconsulta · prescrição de vacinas e profilaxia da malária no próprio dia. A vacina toma-se num Centro de Vacinação Internacional — a receita vale em Lisboa, Porto e no resto do país.</p>
         <div class="hero-price-row">
           <span class="hero-price">€39</span>
           <span class="hero-price-label">por consulta<br>preço fixo · sem surpresas</span>
@@ -588,24 +612,24 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
     <h2 class="section-h2">Para onde vai <em>viajar?</em></h2>
     <p class="section-sub">Cobrimos todos os destinos com risco sanitário. Avaliação personalizada por destino e itinerário.</p>
     <div class="dest-grid">
-      <div class="dest-pill"><span class="dest-flag">🇧🇷</span>Brasil</div>
-      <div class="dest-pill"><span class="dest-flag">🇦🇴</span>Angola</div>
-      <div class="dest-pill"><span class="dest-flag">🇲🇿</span>Moçambique</div>
-      <div class="dest-pill"><span class="dest-flag">🇹🇿</span>Tanzânia · Zanzibar</div>
-      <div class="dest-pill"><span class="dest-flag">🇰🇪</span>Quénia</div>
-      <div class="dest-pill"><span class="dest-flag">🇿🇦</span>África do Sul</div>
-      <div class="dest-pill"><span class="dest-flag">🇨🇴</span>Colômbia</div>
-      <div class="dest-pill"><span class="dest-flag">🇵🇪</span>Peru</div>
-      <div class="dest-pill"><span class="dest-flag">🇹🇭</span>Tailândia</div>
-      <div class="dest-pill"><span class="dest-flag">🇮🇳</span>Índia</div>
-      <div class="dest-pill"><span class="dest-flag">🇻🇳</span>Vietnam</div>
-      <div class="dest-pill"><span class="dest-flag">🇲🇻</span>Maldivas</div>
-      <div class="dest-pill"><span class="dest-flag">🇯🇲</span>Jamaica</div>
-      <div class="dest-pill"><span class="dest-flag">🇲🇽</span>México</div>
-      <div class="dest-pill"><span class="dest-flag">🇺🇾</span>Uruguai</div>
-      <div class="dest-pill"><span class="dest-flag">🇯🇵</span>Japão</div>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-ao-brasil"><span class="dest-flag">🇧🇷</span>Brasil</a>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-a-angola"><span class="dest-flag">🇦🇴</span>Angola</a>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-a-mocambique"><span class="dest-flag">🇲🇿</span>Moçambique</a>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-ao-quenia"><span class="dest-flag">🇹🇿</span>Tanzânia · Zanzibar</a>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-ao-quenia"><span class="dest-flag">🇰🇪</span>Quénia</a>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-por-pais"><span class="dest-flag">🇿🇦</span>África do Sul</a>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-por-pais"><span class="dest-flag">🇨🇴</span>Colômbia</a>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-por-pais"><span class="dest-flag">🇵🇪</span>Peru</a>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-a-tailandia"><span class="dest-flag">🇹🇭</span>Tailândia</a>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-a-india"><span class="dest-flag">🇮🇳</span>Índia</a>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-por-pais"><span class="dest-flag">🇻🇳</span>Vietnam</a>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-por-pais"><span class="dest-flag">🇲🇻</span>Maldivas</a>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-por-pais"><span class="dest-flag">🇯🇲</span>Jamaica</a>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-por-pais"><span class="dest-flag">🇲🇽</span>México</a>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-por-pais"><span class="dest-flag">🇺🇾</span>Uruguai</a>
+      <a class="dest-pill" href="/blog/vacinas-para-viajar-por-pais"><span class="dest-flag">🇯🇵</span>Japão</a>
     </div>
-    <p class="dest-note">Disponível para qualquer destino internacional</p>
+    <p class="dest-note"><a href="/blog/vacinas-para-viajar-por-pais">Vacinas por país</a> · disponível para qualquer destino internacional</p>
   </div>
 </section>
 
@@ -615,11 +639,11 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
     <h2 class="section-h2">Onde tomar as vacinas<br><em>do viajante</em></h2>
     <p class="section-sub">Hepatite A, febre tifóide, febre amarela e outras — os mesmos Centros de Vacinação Internacional. Horários e contactos verificados por contacto directo.</p>
     <div class="guides-grid">
+      <a class="guide-card" href="/blog/vacinas-para-viajar-por-pais"><div class="guide-city">Por país</div><div class="guide-desc">Que vacinas para Brasil, Tailândia, Índia, Quénia…</div><div class="guide-updated">Atualizado em 6 setembro 2026</div><div class="guide-arrow">→</div></a>
+      <a class="guide-card" href="/blog/quanto-custa-consulta-medicina-do-viajante"><div class="guide-city">Preço</div><div class="guide-desc">39 € a consulta · vacinas e malária à parte</div><div class="guide-updated">Atualizado em 6 setembro 2026</div><div class="guide-arrow">→</div></a>
+      <a class="guide-card" href="/consulta/profilaxia-malaria"><div class="guide-city">Malária</div><div class="guide-desc">Sim: a profilaxia exige receita médica</div><div class="guide-updated">Atualizado em 6 setembro 2026</div><div class="guide-arrow">→</div></a>
       <a class="guide-card" href="/blog/vacinas-viajante-lisboa"><div class="guide-city">Lisboa</div><div class="guide-desc">9 CVIs na área metropolitana</div><div class="guide-updated">Atualizado em 3 setembro 2026</div><div class="guide-arrow">→</div></a>
       <a class="guide-card" href="/blog/vacinas-viajante-porto"><div class="guide-city">Porto</div><div class="guide-desc">3 CVIs no Porto + Matosinhos</div><div class="guide-updated">Atualizado em 3 setembro 2026</div><div class="guide-arrow">→</div></a>
-      <a class="guide-card" href="/blog/vacinas-viajante-coimbra"><div class="guide-city">Coimbra</div><div class="guide-desc">Coimbra, Aveiro, Leiria, C. Branco</div><div class="guide-updated">Atualizado em 3 setembro 2026</div><div class="guide-arrow">→</div></a>
-      <a class="guide-card" href="/blog/vacinas-viajante-braga"><div class="guide-city">Braga</div><div class="guide-desc">Braga e Viana do Castelo</div><div class="guide-updated">Atualizado em 3 setembro 2026</div><div class="guide-arrow">→</div></a>
-      <a class="guide-card" href="/blog/vacinas-viajante-algarve"><div class="guide-city">Algarve</div><div class="guide-desc">Faro e Portimão</div><div class="guide-updated">Atualizado em 3 setembro 2026</div><div class="guide-arrow">→</div></a>
       <a class="guide-card" href="/blog/vacinas-viajante-guia-completo"><div class="guide-city">Guia Completo</div><div class="guide-desc">Quais vacinas, centros CVI e como marcar</div><div class="guide-updated">Atualizado em 3 setembro 2026</div><div class="guide-arrow">→</div></a>
     </div>
   </div>
@@ -661,11 +685,14 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
     <p class="section-sub" style="margin-bottom:32px;">As questões que mais surgem antes de marcar.</p>
     <div class="faq-cols">
       <div>
-        <div class="faq-item"><div class="faq-q">A consulta inclui as vacinas do viajante?</div><div class="faq-a">Inclui a avaliação e a prescrição. A administração é num Centro de Vacinação Internacional — a prescrição é válida em qualquer CVI de Portugal.</div></div>
+        <div class="faq-item"><div class="faq-q">Quanto custa uma consulta de medicina do viajante em Portugal?</div><div class="faq-a">Na Lon Clinic: <strong>39 €</strong> (1 pessoa), <strong>69 €</strong> (2), <strong>107 €</strong> (3), <strong>136 €</strong> (4). Vacinas no CVI e comprimidos da malária pagam-se à parte. <a href="/blog/quanto-custa-consulta-medicina-do-viajante">Detalhe do preço</a>.</div></div>
+        <div class="faq-item"><div class="faq-q">Preciso de receita para profilaxia da malária?</div><div class="faq-a">Sim. Em Portugal esses fármacos exigem receita médica. A avaliação é a <a href="/consulta/profilaxia-malaria">consulta do viajante</a>; quando indicada, a receita electrónica vai para qualquer farmácia.</div></div>
+        <div class="faq-item"><div class="faq-q">Onde tirar a vacina da febre amarela em Lisboa ou no Porto?</div><div class="faq-a">Num Centro de Vacinação Internacional, com prescrição — não na CUF. Guias: <a href="/blog/vacina-febre-amarela-lisboa">Lisboa</a> e <a href="/blog/vacina-febre-amarela-porto">Porto</a>. A prescrição da consulta vale em qualquer CVI de Portugal.</div></div>
+        <div class="faq-item"><div class="faq-q">A consulta inclui as vacinas do viajante?</div><div class="faq-a">Inclui a avaliação e a prescrição. A administração é num Centro de Vacinação Internacional — a prescrição é válida em qualquer CVI de Portugal. <a href="/consulta/vacinas-viagem">Vacinas de viagem</a>.</div></div>
         <div class="faq-item"><div class="faq-q">Quanto tempo antes da viagem devo marcar?</div><div class="faq-a">Idealmente 4 a 6 semanas. A consulta é feita em 24h, mas os CVI podem ter espera. Algumas vacinas pedem série de doses. Se precisar de febre amarela, o certificado só é válido 10 dias após a vacinação.</div></div>
-        <div class="faq-item"><div class="faq-q">A consulta é válida para toda a família?</div><div class="faq-a">Sim. Existe opção para casal (€60) e família com crianças. Veja os pacotes disponíveis na página de marcação.</div></div>
       </div>
       <div>
+        <div class="faq-item"><div class="faq-q">A consulta é válida para toda a família?</div><div class="faq-a">Sim. Duas pessoas 69 €, três 107 €, quatro 136 €. Veja os pacotes na página de marcação.</div></div>
         <div class="faq-item"><div class="faq-q">A consulta pode ser feita em inglês ou espanhol?</div><div class="faq-a">Sim. A Lon Clinic oferece consulta em português, inglês e espanhol. Indique o idioma preferido ao marcar.</div></div>
         <div class="faq-item"><div class="faq-q">Os serviços são reembolsáveis pelo seguro?</div><div class="faq-a">Dependendo do plano de seguro, a consulta pode ser parcialmente reembolsável. Emitimos recibo com todos os dados necessários para submissão ao seguro.</div></div>
         <div class="faq-item"><div class="faq-q">O que acontece se precisar de apoio durante a viagem?</div><div class="faq-a">Disponibilizamos <a href="/marcar/urgente">apoio urgente em viagem</a> para situações que surjam durante a deslocação.</div></div>
@@ -1172,7 +1199,7 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
     <div>
       <div class="footer-brand-name">Lon Clinic</div>
       <p class="footer-brand-desc">Clínica de medicina do viajante online. Consultas em português, inglês e espanhol. Disponível 7 dias por semana.</p>
-      <div class="footer-reg">N.º de Registo ERS: [número]</div>
+      <div class="footer-reg">N.º de Registo ERS: 45475</div>
     </div>
     <div class="footer-col">
       <h4>Serviços</h4>
@@ -1184,11 +1211,12 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
     <div class="footer-col">
       <h4>Guias</h4>
       <ul>
+        <li><a href="/blog/vacinas-para-viajar-por-pais">Vacinas por país</a></li>
+        <li><a href="/blog/quanto-custa-consulta-medicina-do-viajante">Quanto custa a consulta</a></li>
+        <li><a href="/consulta/profilaxia-malaria">Profilaxia da malária</a></li>
         <li><a href="/blog/vacinas-viajante-guia-completo">Vacinas do viajante</a></li>
         <li><a href="/blog/vacinas-viajante-lisboa">Lisboa</a></li>
         <li><a href="/blog/vacinas-viajante-porto">Porto</a></li>
-        <li><a href="/blog/vacinas-viajante-coimbra">Coimbra</a></li>
-        <li><a href="/blog/vacinas-viajante-algarve">Algarve</a></li>
         <li><a href="/blog/vacina-febre-amarela-guia-completo">Vacina febre amarela</a></li>
       </ul>
     </div>

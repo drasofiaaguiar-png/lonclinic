@@ -57,18 +57,23 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": ["MedicalClinic", "MedicalOrganization", "Organization"],
+      "@type": ["MedicalClinic", "MedicalBusiness", "MedicalOrganization", "LocalBusiness", "Organization"],
       "@id": "https://www.lonclinic.com/#organization",
       "name": "Lon Clinic",
       "url": "https://www.lonclinic.com",
       "logo": "https://www.lonclinic.com/image/image2.webp",
       "image": "https://www.lonclinic.com/image/image2.webp",
-      "description": "Clínica privada de telemedicina. Consultas médicas online em toda a Europa.",
-      "address": { "@type": "PostalAddress", "addressCountry": "PT" },
+      "description": "Clínica privada de telemedicina. Consultas médicas online em toda a Europa, incluindo medicina do viajante.",
+      "address": { "@type": "PostalAddress", "addressLocality": "Lisboa", "addressCountry": "PT" },
       "telephone": "+351 928 372 775",
       "email": "info@lonclinic.com",
       "priceRange": "€€",
-      "medicalSpecialty": ["Telemedicina", "Medicina Geral", "Medicina de Família"],
+      "medicalSpecialty": ["Telemedicina", "Medicina Geral", "Medicina de Família", "Medicina do viajante"],
+      "availableService": {
+        "@type": "MedicalProcedure",
+        "name": "Consulta de medicina do viajante",
+        "url": "https://www.lonclinic.com/travel-clinic"
+      },
       "areaServed": { "@type": "Place", "name": "Europa" },
       "sameAs": ["https://www.trustpilot.com/review/lonclinic.com"],
       "founder": {

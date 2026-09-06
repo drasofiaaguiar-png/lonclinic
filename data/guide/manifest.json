@@ -4746,6 +4746,234 @@
             "image": "/image/guide/guide-waterfall.jpg"
         },
         {
+            "slug": "quanto-custa-consulta-medicina-do-viajante",
+            "title": "Quanto custa uma consulta de medicina do viajante em Portugal?",
+            "description": "A consulta de medicina do viajante na Lon Clinic custa 39 € (1 pessoa), 69 € a duas. As vacinas no CVI e a profilaxia da malária pagam-se à parte.",
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-1.png",
+            "about": "Medicina do viajante",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "vacinas-viajante-guia-completo",
+                "vacina-febre-amarela-guia-completo"
+            ],
+            "faq": [
+                {
+                    "q": "Quanto custa uma consulta de medicina do viajante em Portugal?",
+                    "a": "Na Lon Clinic a videoconsulta custa 39 € por uma pessoa, 69 € por duas, 107 € por três e 136 € por quatro. As vacinas no Centro de Vacinação Internacional e os comprimidos da malária pagam-se à parte."
+                },
+                {
+                    "q": "O preço inclui as vacinas?",
+                    "a": "Não. Inclui a avaliação e a prescrição. A administração é no CVI, com o preço desse centro."
+                },
+                {
+                    "q": "A consulta é reembolsável pelo seguro?",
+                    "a": "Depende da apólice. Emitimos recibo com os dados para submissão. Medicina do viajante nem sempre está coberta da mesma forma que uma consulta de clínica geral."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-por-pais",
+            "title": "Que vacinas preciso para viajar? Guia por país (2026)",
+            "description": "Lista orientativa de vacinas por destino a partir de Portugal: Brasil, Tailândia, Índia, Quénia, Angola, Moçambique. A lista exacta sai da consulta do viajante, 39 €.",
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-2.webp",
+            "about": "Medicina do viajante",
+            "series": "vacinas-por-destino",
+            "seriesHub": true,
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "quanto-custa-consulta-medicina-do-viajante",
+                "vacinas-viajante-guia-completo",
+                "vacina-febre-amarela-guia-completo"
+            ],
+            "faq": [
+                {
+                    "q": "Que vacinas preciso para viajar para outro país?",
+                    "a": "Depende do itinerário, não só do país. Há vacinas obrigatórias para entrada (muitas vezes febre amarela), recomendadas pelo risco (hepatite A, tifóide) e as da rotina. A consulta do viajante na Lon Clinic define o esquema e passa a prescrição para o CVI."
+                },
+                {
+                    "q": "Onde tomo as vacinas em Portugal?",
+                    "a": "Nos Centros de Vacinação Internacional, com prescrição. Lisboa, Porto, Coimbra, Braga e Algarve têm guias na Lon Clinic. A CUF não administra o circuito da febre amarela."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-ao-brasil",
+            "title": "Que vacinas preciso para viajar para o Brasil?",
+            "description": "Febre amarela em muitas regiões, hepatite A, e malária na Amazónia — não no Rio turístico. Consulta do viajante em Portugal, 39 €, com prescrição para o CVI.",
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-3.webp",
+            "about": "Medicina do viajante",
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "vacina-febre-amarela-guia-completo",
+                "vacina-febre-amarela-lisboa"
+            ],
+            "faq": [
+                {
+                    "q": "Que vacinas preciso para viajar para o Brasil?",
+                    "a": "A febre amarela é a que mais muda o plano (interior e Amazónia; certificado conforme o percurso). Hepatite A entra quase sempre. Malária só em algumas regiões. A lista exacta sai da consulta do viajante."
+                },
+                {
+                    "q": "Onde tirar a vacina da febre amarela em Lisboa?",
+                    "a": "Num Centro de Vacinação Internacional da ARSLVT, com prescrição. Não na CUF. A Lon Clinic emite a prescrição por videoconsulta; a administração é no CVI."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-a-tailandia",
+            "title": "Que vacinas preciso para viajar para a Tailândia?",
+            "description": "Hepatite A e muitas vezes tifóide. Malária só em focos florestais, não no circuito de ilhas. Consulta do viajante em Portugal, 39 €.",
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-4.webp",
+            "about": "Medicina do viajante",
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "vacinas-para-viajar-a-india",
+                "vacinas-viajante-guia-completo"
+            ],
+            "faq": [
+                {
+                    "q": "Que vacinas preciso para viajar para a Tailândia?",
+                    "a": "Na maior parte das férias a partir de Portugal discutem-se hepatite A e febre tifóide. Encefalite japonesa e raiva dependem de estadia rural ou animais. Febre amarela só se o voo o exigir por outro país."
+                },
+                {
+                    "q": "Preciso de profilaxia da malária na Tailândia?",
+                    "a": "No circuito típico de Banguecoque e ilhas, muitas vezes não. Fronteiras florestais e noites rurais: aí sim, com receita médica. A consulta decide com o mapa, não com o visto."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-a-india",
+            "title": "Que vacinas preciso para viajar para a Índia?",
+            "description": "Hepatite A e febre tifóide na maior parte dos itinerários. Malária é focal. Consulta do viajante em Portugal, 39 €, com prescrição para o CVI.",
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-5.webp",
+            "about": "Medicina do viajante",
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "vacinas-para-viajar-a-tailandia",
+                "vacinas-viajante-guia-completo"
+            ],
+            "faq": [
+                {
+                    "q": "Que vacinas preciso para viajar para a Índia?",
+                    "a": "Hepatite A e febre tifóide entram na maior parte das consultas. Encefalite japonesa e raiva dependem da região e das actividades. Malária é por distrito e estação, não pelo país inteiro."
+                },
+                {
+                    "q": "A vacina da tifóide evita a diarreia do viajante?",
+                    "a": "Não. Cobre Salmonella Typhi. A diarreia banal do viajante tem outros agentes; água, alimentos e o kit certo pesam mais."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-ao-quenia",
+            "title": "Que vacinas preciso para viajar para o Quénia?",
+            "description": "Malária em quase todo o país, hepatite A e muitas vezes tifóide. Febre amarela conforme o voo e o certificado. Consulta do viajante em Portugal, 39 €.",
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-6.webp",
+            "about": "Medicina do viajante",
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "vacinas-para-viajar-a-mocambique",
+                "vacina-febre-amarela-guia-completo"
+            ],
+            "faq": [
+                {
+                    "q": "Que vacinas preciso para viajar para o Quénia?",
+                    "a": "Hepatite A e frequentemente tifóide. Febre amarela depende do percurso e das regras de certificado. A malária, na maior parte dos safaris, pede profilaxia com receita — não é vacina."
+                },
+                {
+                    "q": "Preciso de receita para a profilaxia da malária?",
+                    "a": "Sim. Em Portugal estes fármacos exigem receita médica. A Lon Clinic emite-a na consulta do viajante quando há indicação."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-a-angola",
+            "title": "Que vacinas preciso para viajar para Angola?",
+            "description": "Febre amarela muitas vezes obrigatória à entrada, malária em quase todo o país, hepatite A e tifóide. Consulta do viajante em Portugal, 39 €.",
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-7.webp",
+            "about": "Medicina do viajante",
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-para-viajar-a-mocambique"
+            ],
+            "faq": [
+                {
+                    "q": "Que vacinas preciso para viajar para Angola?",
+                    "a": "A febre amarela é muitas vezes exigida à entrada (certificado internacional, válido 10 dias após a vacina). Hepatite A e tifóide entram na conversa. Malária em praticamente todo o país, com receita de profilaxia."
+                },
+                {
+                    "q": "Posso tomar a febre amarela no dia do voo?",
+                    "a": "O certificado só é válido 10 dias após a dose. Marcar a consulta na véspera não acelera isso. Precisa de CVI com antecedência."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-para-viajar-a-mocambique",
+            "title": "Que vacinas preciso para viajar para Moçambique?",
+            "description": "Malária em quase todo o país, hepatite A e muitas vezes tifóide. Febre amarela se o voo o exigir. Consulta do viajante em Portugal, 39 €.",
+            "datePublished": "2026-09-06",
+            "dateModified": "2026-09-06",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-8.webp",
+            "about": "Medicina do viajante",
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-para-viajar-por-pais",
+                "vacinas-para-viajar-ao-quenia",
+                "vacinas-para-viajar-a-angola"
+            ],
+            "faq": [
+                {
+                    "q": "Que vacinas preciso para viajar para Moçambique?",
+                    "a": "Hepatite A e frequentemente febre tifóide. Febre amarela sobretudo se chegar de país com transmissão. O eixo clínico, na maior parte das viagens, é a profilaxia da malária com receita."
+                },
+                {
+                    "q": "Maputo de hotel ainda precisa de profilaxia da malária?",
+                    "a": "O risco existe em todo o país. A decisão é clínica, na consulta, com o seu itinerário — não um sim/não desta página."
+                }
+            ]
+        },
+        {
             "slug": "telemedicina-em-casa",
             "title": "Telemedicina em casa: o que pode esperar",
             "description": "Como funcionam as consultas online na Lon Clinic e que vantagens traz para o seu dia a dia.",
