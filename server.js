@@ -8779,39 +8779,68 @@ async function findPsychologistApplicationInternal(id) {
     return psychologistApplicationsStore.find((a) => a.id === key) || null;
 }
 
+async function listPsychologistApplicationsInternal({ status, band, q, limit } = {}) {
+    const cap = Math.min(Math.max(parseInt(limit, 10) || 200, 1), 300);
+    if (usePersistentDb) {
+        return db.listPsychologistApplications({
+            status: status || undefined,
+            band: band || undefined,
+            q: q || undefined,
+            limit: cap
+        });
+    }
+    let list = psychologistApplicationsStore.slice();
+    if (status) list = list.filter((a) => a.status === status);
+    if (band) list = list.filter((a) => a.scoreBand === band);
+    if (q && String(q).trim()) {
+        const needle = String(q).trim().toLowerCase();
+        list = list.filter(
+            (a) =>
+                String(a.name || '').toLowerCase().includes(needle) ||
+                String(a.email || '').toLowerCase().includes(needle) ||
+                String(a.cedulaOpp || '').toLowerCase().includes(needle)
+        );
+    }
+    return list.slice(0, cap);
+}
+
+async function enrichPsychologistApplicationSafe(app) {
+    if (!app) return app;
+    try {
+        return await enrichPsychologistApplication(app);
+    } catch (err) {
+        console.error('enrich psychologist application:', err.message);
+        return { ...app, professional: null };
+    }
+}
+
+async function listBoardApplicationsForAdmin({ includeRejected } = {}) {
+    const skip = includeRejected ? new Set() : new Set(['rejeitado', 'eliminado']);
+    const list = await listPsychologistApplicationsInternal({ limit: 300 });
+    const out = [];
+    for (const app of list || []) {
+        if (skip.has(String(app.status || ''))) continue;
+        out.push(await enrichPsychologistApplicationSafe(app));
+    }
+    return out;
+}
+
 app.get('/api/admin/psychologists', requireAdmin, async (req, res) => {
     try {
         const status = req.query.status ? String(req.query.status) : '';
         const band = req.query.band ? String(req.query.band) : '';
         const q = req.query.q ? String(req.query.q) : '';
-        let list;
-        if (usePersistentDb) {
-            list = await db.listPsychologistApplications({
-                status: status || undefined,
-                band: band || undefined,
-                q: q || undefined,
-                limit: 200
-            });
-        } else {
-            list = psychologistApplicationsStore.slice();
-            if (status) list = list.filter((a) => a.status === status);
-            if (band) list = list.filter((a) => a.scoreBand === band);
-            if (q.trim()) {
-                const needle = q.trim().toLowerCase();
-                list = list.filter(
-                    (a) =>
-                        String(a.name || '').toLowerCase().includes(needle) ||
-                        String(a.email || '').toLowerCase().includes(needle) ||
-                        String(a.cedulaOpp || '').toLowerCase().includes(needle)
-                );
-            }
-            list = list.slice(0, 200);
-        }
+        const list = await listPsychologistApplicationsInternal({
+            status: status || undefined,
+            band: band || undefined,
+            q: q || undefined,
+            limit: 300
+        });
         const applications = [];
         for (const app of list || []) {
-            applications.push(await enrichPsychologistApplication(app));
+            applications.push(await enrichPsychologistApplicationSafe(app));
         }
-        res.json({ applications });
+        res.json({ applications, total: applications.length });
     } catch (err) {
         console.error('GET /api/admin/psychologists:', err.message);
         res.status(500).json({ error: 'Failed to load psychologist applications' });
@@ -8821,12 +8850,7 @@ app.get('/api/admin/psychologists', requireAdmin, async (req, res) => {
 app.post('/api/admin/psychologists/logins', requireAdmin, async (req, res) => {
     try {
         const skip = new Set(['rejeitado', 'eliminado']);
-        let list;
-        if (usePersistentDb) {
-            list = await db.listPsychologistApplications({ limit: 200 });
-        } else {
-            list = psychologistApplicationsStore.slice(0, 200);
-        }
+        const list = await listPsychologistApplicationsInternal({ limit: 300 });
         const created = [];
         const linked = [];
         for (const app of list || []) {
@@ -10126,8 +10150,15 @@ function validateProfessionalDoxyUrl(raw, { required } = {}) {
 app.get('/api/admin/professionals', requireAdmin, async (req, res) => {
     try {
         const list = await listProfessionalsInternal();
+        let board = [];
+        try {
+            board = await listBoardApplicationsForAdmin();
+        } catch (boardErr) {
+            console.error('GET /api/admin/professionals board:', boardErr.message);
+        }
         res.json({
             professionals: list.map(publicProfessional),
+            board,
             defaultDoxyRoomUrl: DEFAULT_DOXY_ROOM_URL || null
         });
     } catch (err) {

@@ -3918,7 +3918,7 @@ body.admin-logged-in .dash-content.admin-shell {
     gap: 0;
     border: 1px solid var(--border-subtle);
     border-radius: 12px;
-    overflow: hidden;
+    overflow: auto;
     background: var(--surface, #fff);
 }
 

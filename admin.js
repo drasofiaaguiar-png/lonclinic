@@ -2688,6 +2688,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         adminPsychologistsList.innerHTML = '';
         list.forEach((a) => {
+            try {
             const item = document.createElement('details');
             item.className = 'admin-psych-row';
             item.dataset.id = a.id;
@@ -2738,6 +2739,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
             `;
             adminPsychologistsList.appendChild(item);
+            } catch (err) {
+                console.error('Render psychologist row:', err);
+            }
         });
     }
 
@@ -2761,6 +2765,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!res.ok) throw new Error('HTTP ' + res.status);
             const data = await res.json();
             psychologistsCache = data.applications || [];
+            const psychCount = document.getElementById('adminPsychCount');
+            if (psychCount) {
+                const n = psychologistsCache.length;
+                const withLogin = psychologistsCache.filter((a) => a.professional && a.professional.username).length;
+                psychCount.textContent = n
+                    ? `${n} profissional${n === 1 ? '' : 'is'} na bolsa · ${withLogin} com login`
+                    : 'Candidaturas recebidas (ex.: /recrutamento/psicologia).';
+            }
             renderAdminPsychologists(psychologistsCache);
         } catch (err) {
             console.error('Load admin psychologists:', err);
@@ -2797,7 +2809,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function assignPsychologistLogin(id, { resetPassword } = {}) {
-        const app = psychologistsCache.find((a) => String(a.id) === String(id));
+        const app = psychologistsCache.find((a) => String(a.id) === String(id))
+            || (typeof boardProfessionalsCache !== 'undefined' ? boardProfessionalsCache.find((a) => String(a.id) === String(id)) : null);
         const label = app && app.name ? app.name : 'this professional';
         if (resetPassword && !window.confirm(`Assign a new password to ${label}? The current password will stop working.`)) return;
         try {
@@ -2809,6 +2822,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await res.json().catch(() => ({}));
             if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status);
             await loadAdminPsychologists();
+            if (typeof loadAdminProfessionals === 'function') await loadAdminProfessionals();
             if (data.generatedPassword && data.professional) {
                 showPsychCreds([{
                     name: (data.application && data.application.name) || label,
@@ -2832,6 +2846,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await res.json().catch(() => ({}));
             if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status);
             await loadAdminPsychologists();
+            if (typeof loadAdminProfessionals === 'function') await loadAdminProfessionals();
             const created = (data.created || []).filter((row) => row.generatedPassword);
             if (created.length) {
                 showPsychCreds(created.map((row) => ({
@@ -3354,6 +3369,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const proActive = document.getElementById('proActive');
     const proSubmitBtn = document.getElementById('proSubmitBtn');
     const proCancelEditBtn = document.getElementById('proCancelEditBtn');
+    const proAssignBoardLoginsBtn = document.getElementById('proAssignBoardLoginsBtn');
     const adminProfessionalCreds = document.getElementById('adminProfessionalCreds');
     const proCredsPortal = document.getElementById('proCredsPortal');
     const proCredsName = document.getElementById('proCredsName');
@@ -3361,6 +3377,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const proCredsPassword = document.getElementById('proCredsPassword');
     const proCredsCopyBtn = document.getElementById('proCredsCopyBtn');
     let professionalsCache = [];
+    let boardProfessionalsCache = [];
     let proUsernameTouched = false;
     const PRO_PASSWORD_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
 
@@ -3477,13 +3494,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (proDisplayName) proDisplayName.focus();
     }
 
-    function renderAdminProfessionals(list) {
+    function renderAdminProfessionals(list, board) {
         if (!adminProfessionalsBody) return;
-        if (!list.length) {
-            adminProfessionalsBody.innerHTML = '<tr><td colspan="5" class="admin-empty-list">No professionals yet. Add a name above — a username and password are assigned automatically.</td></tr>';
+        const accounts = list || [];
+        const linked = new Set(accounts.map((p) => String(p.id)));
+        const pending = (board || []).filter((a) => {
+            const pro = a && a.professional;
+            return !pro || !pro.id || !linked.has(String(pro.id));
+        });
+        if (!accounts.length && !pending.length) {
+            adminProfessionalsBody.innerHTML = '<tr><td colspan="5" class="admin-empty-list">No professionals yet. People on the Bolsa appear here automatically. You can also add a name above.</td></tr>';
             return;
         }
-        adminProfessionalsBody.innerHTML = list.map((p) => {
+        const accountRows = accounts.map((p) => {
             const statusClass = p.active !== false ? 'admin-pro-status' : 'admin-pro-status is-off';
             const statusLabel = p.active !== false ? 'Active' : 'Disabled';
             return `<tr>
@@ -3499,7 +3522,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 </td>
             </tr>`;
-        }).join('');
+        });
+        const boardRows = pending.map((a) => {
+            const name = a.name || '—';
+            const email = a.email || '';
+            return `<tr>
+                <td>${escapeHtml(name)}</td>
+                <td>—</td>
+                <td>${email ? escapeHtml(email) : '—'}</td>
+                <td><span class="admin-pro-status is-off">On board · no login</span></td>
+                <td>
+                    <div class="admin-pro-actions">
+                        <button type="button" class="btn btn-primary btn-sm" data-psych-login="${escapeHtml(a.id)}">Assign login</button>
+                    </div>
+                </td>
+            </tr>`;
+        });
+        adminProfessionalsBody.innerHTML = accountRows.concat(boardRows).join('');
     }
 
     async function loadAdminProfessionals() {
@@ -3514,13 +3553,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!res.ok) throw new Error('Failed to load');
             const data = await res.json();
             professionalsCache = data.professionals || [];
+            boardProfessionalsCache = data.board || [];
             if (adminDefaultDoxyUrl) {
                 adminDefaultDoxyUrl.textContent = data.defaultDoxyRoomUrl
                     ? `Default clinic room (admin / unassigned bookings): ${data.defaultDoxyRoomUrl}`
                     : 'Default clinic room is not set. Add DOXY_ROOM_URL to the server environment, or set a room on each professional.';
             }
-            renderAdminProfessionals(professionalsCache);
-            fillProfessionalsDatalist(professionalsCache);
+            const boardCountEl = document.getElementById('adminBoardCount');
+            if (boardCountEl) {
+                const pending = boardProfessionalsCache.filter((a) => !a.professional || !a.professional.username);
+                boardCountEl.textContent = pending.length
+                    ? `${boardProfessionalsCache.length} people on the Bolsa · ${pending.length} without a clinic login`
+                    : (boardProfessionalsCache.length
+                        ? `${boardProfessionalsCache.length} people on the Bolsa — all have a clinic login`
+                        : 'No one on the Bolsa de Profissionais yet.');
+            }
+            renderAdminProfessionals(professionalsCache, boardProfessionalsCache);
+            fillProfessionalsDatalist(professionalsCache.concat(
+                boardProfessionalsCache.map((a) => ({ displayName: a.name })).filter((p) => p.displayName)
+            ));
             loadAdminStaffProfiles();
         } catch (err) {
             console.error('Load professionals:', err);
@@ -3666,6 +3717,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (proCancelEditBtn) {
         proCancelEditBtn.addEventListener('click', () => resetProfessionalForm());
     }
+    if (proAssignBoardLoginsBtn) {
+        proAssignBoardLoginsBtn.addEventListener('click', () => assignAllPsychologistLogins());
+    }
 
     if (adminProfessionalForm) {
         adminProfessionalForm.addEventListener('submit', async (e) => {
@@ -3710,7 +3764,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         adminProfessionalsBody.addEventListener('click', async (e) => {
             const editBtn = e.target.closest('[data-pro-edit]');
             const passwordBtn = e.target.closest('[data-pro-password]');
+            const loginBtn = e.target.closest('[data-psych-login]');
             const delBtn = e.target.closest('[data-pro-delete]');
+            if (loginBtn) {
+                assignPsychologistLogin(loginBtn.getAttribute('data-psych-login'));
+                return;
+            }
             if (editBtn) {
                 const id = Number(editBtn.getAttribute('data-pro-edit'));
                 const pro = professionalsCache.find((p) => p.id === id);
