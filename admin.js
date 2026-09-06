@@ -2535,7 +2535,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const psychologistsStatusFilter = document.getElementById('psychologistsStatusFilter');
     const psychologistsBandFilter = document.getElementById('psychologistsBandFilter');
     const psychologistsRefreshBtn = document.getElementById('psychologistsRefreshBtn');
+    const psychologistsAssignLoginsBtn = document.getElementById('psychologistsAssignLoginsBtn');
+    const adminPsychCreds = document.getElementById('adminPsychCreds');
+    const adminPsychCredsList = document.getElementById('adminPsychCredsList');
+    const psychCredsCopyBtn = document.getElementById('psychCredsCopyBtn');
     let psychologistsCache = [];
+    let lastPsychCredsText = '';
 
     const PSYCH_STATUS_OPTIONS = [
         'novo',
@@ -2700,6 +2705,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </span>
                     <span class="admin-psych-col admin-psych-col-role"><span class="admin-psych-role-tag">Psicólogo</span></span>
                     <span class="admin-psych-col admin-psych-col-status">${escapeHtml(a.status || 'novo')}</span>
+                    <span class="admin-psych-col admin-psych-col-login">
+                        ${a.professional && a.professional.username
+                            ? `<span class="admin-psych-login-tag">${escapeHtml(a.professional.username)}</span>`
+                            : '<span class="admin-psych-login-tag is-off">sem login</span>'}
+                    </span>
                     <span class="admin-psych-chevron" aria-hidden="true"></span>
                 </summary>
                 <div class="admin-psych-body">
@@ -2718,6 +2728,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <textarea class="admin-input admin-psych-notes" data-psych-id="${escapeHtml(a.id)}" rows="2" maxlength="4000">${escapeHtml(a.adminNotes || '')}</textarea>
                         </label>
                         <button type="button" class="btn btn-primary btn-sm admin-psych-save" data-psych-id="${escapeHtml(a.id)}">Guardar</button>
+                        <div class="admin-psych-login-row">
+                            ${a.professional && a.professional.username
+                                ? `<span>Clinic login: <code>${escapeHtml(a.professional.username)}</code> — portal <a href="/clinic-portal">/clinic-portal</a></span>
+                                   <button type="button" class="btn btn-outline btn-sm" data-psych-password="${escapeHtml(a.id)}">New password</button>`
+                                : `<button type="button" class="btn btn-primary btn-sm" data-psych-login="${escapeHtml(a.id)}">Assign clinic login</button>`}
+                        </div>
                     </div>
                 </div>
             `;
@@ -2752,6 +2768,89 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    function hidePsychCreds() {
+        if (adminPsychCreds) adminPsychCreds.hidden = true;
+        lastPsychCredsText = '';
+    }
+
+    function showPsychCreds(rows) {
+        if (!adminPsychCreds || !adminPsychCredsList || !rows || !rows.length) return;
+        const portal = `${window.location.origin}/clinic-portal`;
+        adminPsychCredsList.innerHTML = `
+            <p class="admin-pro-creds-line">Portal: <a href="/clinic-portal">${escapeHtml(portal)}</a></p>
+            <table class="admin-psych-creds-table">
+                <thead><tr><th>Name</th><th>Username</th><th>Password</th></tr></thead>
+                <tbody>
+                    ${rows.map((row) => `<tr>
+                        <td>${escapeHtml(row.name || '')}</td>
+                        <td><code>${escapeHtml(row.username || '')}</code></td>
+                        <td><code>${escapeHtml(row.password || '')}</code></td>
+                    </tr>`).join('')}
+                </tbody>
+            </table>`;
+        lastPsychCredsText = [
+            `Portal: ${portal}`,
+            ...rows.map((row) => `${row.name || ''}\t${row.username || ''}\t${row.password || ''}`)
+        ].join('\n');
+        adminPsychCreds.hidden = false;
+        adminPsychCreds.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    async function assignPsychologistLogin(id, { resetPassword } = {}) {
+        const app = psychologistsCache.find((a) => String(a.id) === String(id));
+        const label = app && app.name ? app.name : 'this professional';
+        if (resetPassword && !window.confirm(`Assign a new password to ${label}? The current password will stop working.`)) return;
+        try {
+            const res = await fetch(`/api/admin/psychologists/${encodeURIComponent(id)}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ resetPassword: !!resetPassword })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status);
+            await loadAdminPsychologists();
+            if (data.generatedPassword && data.professional) {
+                showPsychCreds([{
+                    name: (data.application && data.application.name) || label,
+                    username: data.professional.username,
+                    password: data.generatedPassword
+                }]);
+            } else {
+                hidePsychCreds();
+                alert(`${label} is already connected as ${(data.professional && data.professional.username) || 'a clinic login'}.`);
+            }
+        } catch (err) {
+            console.error('Assign psychologist login:', err);
+            alert(err.message || 'Não foi possível atribuir o login.');
+        }
+    }
+
+    async function assignAllPsychologistLogins() {
+        if (!window.confirm('Assign a clinic username and password to everyone on the board who does not have one yet? Rejected/eliminated people are skipped. Copy the passwords when they appear — they cannot be shown again.')) return;
+        try {
+            const res = await fetch('/api/admin/psychologists/logins', { method: 'POST' });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status);
+            await loadAdminPsychologists();
+            const created = (data.created || []).filter((row) => row.generatedPassword);
+            if (created.length) {
+                showPsychCreds(created.map((row) => ({
+                    name: row.name,
+                    username: row.professional && row.professional.username,
+                    password: row.generatedPassword
+                })));
+            } else {
+                hidePsychCreds();
+                alert(data.linked && data.linked.length
+                    ? 'Everyone already has a clinic login. Use New password on a person if you need to reset one.'
+                    : 'No professionals to assign.');
+            }
+        } catch (err) {
+            console.error('Assign all psychologist logins:', err);
+            alert(err.message || 'Não foi possível atribuir os logins.');
+        }
+    }
+
     async function savePsychologistApplication(id) {
         const statusEl = document.querySelector(`.admin-psych-status[data-psych-id="${id}"]`);
         const notesEl = document.querySelector(`.admin-psych-notes[data-psych-id="${id}"]`);
@@ -2775,6 +2874,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (psychologistsRefreshBtn) {
         psychologistsRefreshBtn.addEventListener('click', () => loadAdminPsychologists());
     }
+    if (psychologistsAssignLoginsBtn) {
+        psychologistsAssignLoginsBtn.addEventListener('click', () => assignAllPsychologistLogins());
+    }
     if (psychologistsStatusFilter) {
         psychologistsStatusFilter.addEventListener('change', () => loadAdminPsychologists());
     }
@@ -2788,11 +2890,34 @@ document.addEventListener('DOMContentLoaded', async () => {
             psychSearchTimer = setTimeout(() => loadAdminPsychologists(), 280);
         });
     }
+    if (psychCredsCopyBtn) {
+        psychCredsCopyBtn.addEventListener('click', async () => {
+            if (!lastPsychCredsText) return;
+            try {
+                await navigator.clipboard.writeText(lastPsychCredsText);
+                psychCredsCopyBtn.textContent = 'Copied';
+                setTimeout(() => { psychCredsCopyBtn.textContent = 'Copy logins'; }, 1600);
+            } catch (err) {
+                alert('Could not copy. Select the usernames and passwords above.');
+            }
+        });
+    }
     if (adminPsychologistsList) {
         adminPsychologistsList.addEventListener('click', (e) => {
-            const btn = e.target.closest('.admin-psych-save');
-            if (!btn) return;
-            savePsychologistApplication(btn.getAttribute('data-psych-id'));
+            const saveBtn = e.target.closest('.admin-psych-save');
+            if (saveBtn) {
+                savePsychologistApplication(saveBtn.getAttribute('data-psych-id'));
+                return;
+            }
+            const loginBtn = e.target.closest('[data-psych-login]');
+            if (loginBtn) {
+                assignPsychologistLogin(loginBtn.getAttribute('data-psych-login'));
+                return;
+            }
+            const passwordBtn = e.target.closest('[data-psych-password]');
+            if (passwordBtn) {
+                assignPsychologistLogin(passwordBtn.getAttribute('data-psych-password'), { resetPassword: true });
+            }
         });
     }
 
@@ -3223,12 +3348,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     const proDisplayName = document.getElementById('proDisplayName');
     const proUsername = document.getElementById('proUsername');
     const proPassword = document.getElementById('proPassword');
+    const proGeneratePasswordBtn = document.getElementById('proGeneratePasswordBtn');
     const proDoxyUrl = document.getElementById('proDoxyUrl');
     const proEmail = document.getElementById('proEmail');
     const proActive = document.getElementById('proActive');
     const proSubmitBtn = document.getElementById('proSubmitBtn');
     const proCancelEditBtn = document.getElementById('proCancelEditBtn');
+    const adminProfessionalCreds = document.getElementById('adminProfessionalCreds');
+    const proCredsPortal = document.getElementById('proCredsPortal');
+    const proCredsName = document.getElementById('proCredsName');
+    const proCredsUsername = document.getElementById('proCredsUsername');
+    const proCredsPassword = document.getElementById('proCredsPassword');
+    const proCredsCopyBtn = document.getElementById('proCredsCopyBtn');
     let professionalsCache = [];
+    let proUsernameTouched = false;
+    const PRO_PASSWORD_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
 
     function showProfessionalError(message) {
         if (!adminProfessionalError) return;
@@ -3239,6 +3373,56 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         adminProfessionalError.textContent = message;
         adminProfessionalError.style.display = 'block';
+    }
+
+    function hideProfessionalCreds() {
+        if (adminProfessionalCreds) adminProfessionalCreds.hidden = true;
+    }
+
+    function showProfessionalCreds(pro, password) {
+        if (!adminProfessionalCreds || !password) return;
+        const portal = `${window.location.origin}/clinic-portal`;
+        if (proCredsPortal) {
+            proCredsPortal.href = '/clinic-portal';
+            proCredsPortal.textContent = portal;
+        }
+        if (proCredsName) proCredsName.textContent = (pro && pro.displayName) || '';
+        if (proCredsUsername) proCredsUsername.textContent = (pro && pro.username) || '';
+        if (proCredsPassword) proCredsPassword.textContent = password;
+        adminProfessionalCreds.hidden = false;
+        adminProfessionalCreds.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function suggestProfessionalUsername(displayName) {
+        let s = String(displayName || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/[ªº]/g, '')
+            .replace(/\b(dra|dr|prof|profa)\b\.?/gi, ' ')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '.')
+            .replace(/^\.+|\.+$/g, '')
+            .replace(/\.{2,}/g, '.')
+            .slice(0, 64);
+        return s.length >= 3 ? s : '';
+    }
+
+    function generateProfessionalPassword() {
+        const bytes = new Uint8Array(12);
+        if (window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(bytes);
+        else for (let i = 0; i < 12; i++) bytes[i] = Math.floor(Math.random() * 256);
+        let out = '';
+        for (let i = 0; i < 12; i++) {
+            out += PRO_PASSWORD_ALPHABET[bytes[i] % PRO_PASSWORD_ALPHABET.length];
+            if (i === 3 || i === 7) out += '-';
+        }
+        return out;
+    }
+
+    function fillUsernameFromName() {
+        if (!proUsername || proUsername.disabled || proUsernameTouched) return;
+        const suggested = suggestProfessionalUsername(proDisplayName ? proDisplayName.value : '');
+        proUsername.value = suggested;
     }
 
     function fillProfessionalsDatalist(list) {
@@ -3256,10 +3440,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (adminProfessionalForm) adminProfessionalForm.reset();
         if (proEditId) proEditId.value = '';
         if (proActive) proActive.checked = true;
+        proUsernameTouched = false;
         if (proUsername) proUsername.disabled = false;
         if (proPassword) {
-            proPassword.required = true;
-            proPassword.placeholder = 'Min. 8 characters';
+            proPassword.required = false;
+            proPassword.type = 'password';
+            proPassword.placeholder = 'Assigned automatically if blank';
         }
         if (proSubmitBtn) proSubmitBtn.textContent = 'Add professional';
         if (proCancelEditBtn) proCancelEditBtn.hidden = true;
@@ -3268,15 +3454,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function startEditProfessional(pro) {
         if (!pro) return;
+        hideProfessionalCreds();
         if (proEditId) proEditId.value = String(pro.id);
         if (proDisplayName) proDisplayName.value = pro.displayName || '';
         if (proUsername) {
             proUsername.value = pro.username || '';
             proUsername.disabled = true;
+            proUsernameTouched = true;
         }
         if (proPassword) {
             proPassword.value = '';
             proPassword.required = false;
+            proPassword.type = 'password';
             proPassword.placeholder = 'Leave blank to keep current password';
         }
         if (proDoxyUrl) proDoxyUrl.value = pro.doxyRoomUrl || '';
@@ -3291,7 +3480,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderAdminProfessionals(list) {
         if (!adminProfessionalsBody) return;
         if (!list.length) {
-            adminProfessionalsBody.innerHTML = '<tr><td colspan="5" class="admin-empty-list">No professionals yet. Add one above — they can then sign in at the clinic portal and open their Doxy room.</td></tr>';
+            adminProfessionalsBody.innerHTML = '<tr><td colspan="5" class="admin-empty-list">No professionals yet. Add a name above — a username and password are assigned automatically.</td></tr>';
             return;
         }
         adminProfessionalsBody.innerHTML = list.map((p) => {
@@ -3305,6 +3494,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td>
                     <div class="admin-pro-actions">
                         <button type="button" class="btn btn-outline btn-sm" data-pro-edit="${p.id}">Edit</button>
+                        <button type="button" class="btn btn-outline btn-sm" data-pro-password="${p.id}">New password</button>
                         <button type="button" class="btn btn-outline btn-sm" data-pro-delete="${p.id}">Remove</button>
                     </div>
                 </td>
@@ -3435,6 +3625,44 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    if (proDisplayName) {
+        proDisplayName.addEventListener('input', fillUsernameFromName);
+    }
+    if (proUsername) {
+        proUsername.addEventListener('input', () => {
+            proUsernameTouched = true;
+        });
+    }
+    if (proGeneratePasswordBtn && proPassword) {
+        proGeneratePasswordBtn.addEventListener('click', () => {
+            proPassword.type = 'text';
+            proPassword.value = generateProfessionalPassword();
+            proPassword.focus();
+            proPassword.select();
+        });
+    }
+    if (proCredsCopyBtn) {
+        proCredsCopyBtn.addEventListener('click', async () => {
+            const portal = proCredsPortal ? proCredsPortal.textContent : `${window.location.origin}/clinic-portal`;
+            const username = proCredsUsername ? proCredsUsername.textContent : '';
+            const password = proCredsPassword ? proCredsPassword.textContent : '';
+            const name = proCredsName ? proCredsName.textContent : '';
+            const text = [
+                name ? `Name: ${name}` : '',
+                `Portal: ${portal}`,
+                `Username: ${username}`,
+                `Password: ${password}`
+            ].filter(Boolean).join('\n');
+            try {
+                await navigator.clipboard.writeText(text);
+                proCredsCopyBtn.textContent = 'Copied';
+                setTimeout(() => { proCredsCopyBtn.textContent = 'Copy login'; }, 1600);
+            } catch (err) {
+                showProfessionalError('Could not copy. Select the username and password above.');
+            }
+        });
+    }
+
     if (proCancelEditBtn) {
         proCancelEditBtn.addEventListener('click', () => resetProfessionalForm());
     }
@@ -3452,10 +3680,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 active: proActive ? proActive.checked : true
             };
             if (proPassword && proPassword.value) payload.password = proPassword.value;
-            if (!editingId && !payload.password) {
-                showProfessionalError('Password is required for a new account.');
-                return;
-            }
             try {
                 const res = await fetch(editingId ? `/api/admin/professionals/${encodeURIComponent(editingId)}` : '/api/admin/professionals', {
                     method: editingId ? 'PATCH' : 'POST',
@@ -3467,8 +3691,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                     showProfessionalError(data.error || 'Could not save professional.');
                     return;
                 }
+                const assignedPassword = data.generatedPassword || (proPassword && proPassword.value) || '';
+                const saved = data.professional || payload;
                 resetProfessionalForm();
                 await loadAdminProfessionals();
+                if (assignedPassword && saved && saved.username) {
+                    showProfessionalCreds(saved, assignedPassword);
+                } else {
+                    hideProfessionalCreds();
+                }
             } catch (err) {
                 showProfessionalError('Network error. Please try again.');
             }
@@ -3478,11 +3709,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (adminProfessionalsBody) {
         adminProfessionalsBody.addEventListener('click', async (e) => {
             const editBtn = e.target.closest('[data-pro-edit]');
+            const passwordBtn = e.target.closest('[data-pro-password]');
             const delBtn = e.target.closest('[data-pro-delete]');
             if (editBtn) {
                 const id = Number(editBtn.getAttribute('data-pro-edit'));
                 const pro = professionalsCache.find((p) => p.id === id);
                 startEditProfessional(pro);
+                return;
+            }
+            if (passwordBtn) {
+                const id = passwordBtn.getAttribute('data-pro-password');
+                const pro = professionalsCache.find((p) => String(p.id) === String(id));
+                if (!id || !window.confirm(`Assign a new password to ${pro && pro.displayName ? pro.displayName : 'this professional'}? The current password will stop working.`)) return;
+                try {
+                    const res = await fetch(`/api/admin/professionals/${encodeURIComponent(id)}/password`, { method: 'POST' });
+                    const data = await res.json().catch(() => ({}));
+                    if (!res.ok) {
+                        showProfessionalError(data.error || 'Could not assign a new password.');
+                        return;
+                    }
+                    showProfessionalError('');
+                    showProfessionalCreds(data.professional || pro, data.generatedPassword);
+                } catch (err) {
+                    showProfessionalError('Network error. Please try again.');
+                }
                 return;
             }
             if (delBtn) {

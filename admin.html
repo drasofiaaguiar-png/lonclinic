@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=staff-fichas-1">
+    <link rel="stylesheet" href="/dashboard.css?v=pro-board-login-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -733,7 +733,7 @@
                     <div class="dash-section-header">
                         <div>
                             <h2 class="dash-section-title">Professionals &amp; Doxy rooms</h2>
-                            <p class="dash-section-subtitle">Each professional gets a Lon Clinic login and their own Doxy.me waiting room. Patients receive that room link in emails and on the dashboard. The clinic admin account (environment credentials) still uses the default <code>DOXY_ROOM_URL</code>.</p>
+                            <p class="dash-section-subtitle">Each professional gets a Lon Clinic username and password plus their own Doxy.me waiting room. Leave username and password blank to assign them automatically — copy the login once; it is not stored in plain text. The clinic admin account (environment credentials) still uses the default <code>DOXY_ROOM_URL</code>.</p>
                         </div>
                     </div>
                     <p class="dash-section-subtitle" id="adminDefaultDoxyUrl" style="margin-top:0;"></p>
@@ -746,11 +746,14 @@
                             </div>
                             <div class="admin-form-group">
                                 <label for="proUsername">Username</label>
-                                <input type="text" id="proUsername" class="admin-input" required placeholder="e.g. sofia" autocomplete="off">
+                                <input type="text" id="proUsername" class="admin-input" placeholder="Assigned from the name if blank" autocomplete="off">
                             </div>
                             <div class="admin-form-group">
                                 <label for="proPassword">Password</label>
-                                <input type="password" id="proPassword" class="admin-input" placeholder="Min. 8 characters" autocomplete="new-password">
+                                <div class="admin-pro-password-row">
+                                    <input type="password" id="proPassword" class="admin-input" placeholder="Assigned automatically if blank" autocomplete="new-password">
+                                    <button type="button" class="btn btn-outline" id="proGeneratePasswordBtn">Generate</button>
+                                </div>
                             </div>
                             <div class="admin-form-group">
                                 <label for="proDoxyUrl">Doxy room URL</label>
@@ -771,6 +774,14 @@
                             <button type="button" class="btn btn-outline" id="proCancelEditBtn" hidden>Cancel edit</button>
                         </div>
                     </form>
+                    <div id="adminProfessionalCreds" class="admin-pro-creds" hidden>
+                        <p class="admin-pro-creds-title">Login assigned — copy it now. The password cannot be shown again.</p>
+                        <p class="admin-pro-creds-line">Portal: <a id="proCredsPortal" href="/clinic-portal">/clinic-portal</a></p>
+                        <p class="admin-pro-creds-line">Name: <span id="proCredsName"></span></p>
+                        <p class="admin-pro-creds-line">Username: <code id="proCredsUsername"></code></p>
+                        <p class="admin-pro-creds-line">Password: <code id="proCredsPassword"></code></p>
+                        <button type="button" class="btn btn-outline btn-sm" id="proCredsCopyBtn">Copy login</button>
+                    </div>
                     <div class="admin-professionals-table-wrap">
                         <table class="admin-professionals-table" id="adminProfessionalsTable">
                             <thead>
@@ -804,9 +815,10 @@
                     <div class="dash-section-header admin-schedule-toolbar">
                         <div>
                             <h2 class="dash-section-title">Bolsa de Profissionais</h2>
-                            <p class="dash-section-subtitle">Candidaturas recebidas (ex.: <code>/recrutamento/psicologia</code>) — score interno e estado do pipeline</p>
+                            <p class="dash-section-subtitle">Candidaturas recebidas (ex.: <code>/recrutamento/psicologia</code>) — score interno e estado do pipeline. Assign a clinic username and password to people already on this board; they can then sign in at <code>/clinic-portal</code>.</p>
                         </div>
                         <div class="admin-schedule-filters" role="group" aria-label="Filtrar profissionais">
+                            <button type="button" class="btn btn-primary btn-sm" id="psychologistsAssignLoginsBtn">Assign logins to all without one</button>
                             <button type="button" class="btn btn-outline btn-sm" id="psychologistsRefreshBtn">Refresh</button>
                         </div>
                     </div>
@@ -830,6 +842,11 @@
                             <option value="nao_avanca">Score não avança</option>
                             <option value="eliminado">Score eliminado</option>
                         </select>
+                    </div>
+                    <div id="adminPsychCreds" class="admin-pro-creds" hidden>
+                        <p class="admin-pro-creds-title">Clinic logins assigned — copy them now. Passwords cannot be shown again.</p>
+                        <div id="adminPsychCredsList"></div>
+                        <button type="button" class="btn btn-outline btn-sm" id="psychCredsCopyBtn">Copy logins</button>
                     </div>
                     <div id="adminPsychologistsList" class="admin-psych-list">
                         <p class="admin-empty-list">Loading…</p>
@@ -1024,7 +1041,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=staff-fichas-1"></script>
+    <script src="/admin.js?v=pro-board-login-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

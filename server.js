@@ -1176,6 +1176,60 @@ function isValidProfessionalUsername(raw) {
     return /^[a-zA-Z0-9._-]{3,64}$/.test(String(raw || '').trim());
 }
 
+const PROFESSIONAL_PASSWORD_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+
+function generateProfessionalPassword() {
+    const bytes = crypto.randomBytes(12);
+    let out = '';
+    for (let i = 0; i < 12; i++) {
+        out += PROFESSIONAL_PASSWORD_ALPHABET[bytes[i] % PROFESSIONAL_PASSWORD_ALPHABET.length];
+        if (i === 3 || i === 7) out += '-';
+    }
+    return out;
+}
+
+function usernameFromDisplayName(displayName) {
+    let s = String(displayName || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[ªº]/g, '')
+        .replace(/\b(dra|dr|prof|profa)\b\.?/gi, ' ')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '.')
+        .replace(/^\.+|\.+$/g, '')
+        .replace(/\.{2,}/g, '.')
+        .slice(0, 64);
+    if (s.length < 3) {
+        s = (`user.${s || crypto.randomBytes(3).toString('hex')}`).replace(/^\.+|\.+$/g, '').slice(0, 64);
+    }
+    if (!isValidProfessionalUsername(s)) s = `user.${crypto.randomBytes(4).toString('hex')}`.slice(0, 64);
+    return s;
+}
+
+async function allocateProfessionalUsername(preferred, displayName) {
+    let base = normalizeProfessionalUsername(preferred);
+    if (!isValidProfessionalUsername(base)) {
+        base = usernameFromDisplayName(displayName);
+    }
+    if (base === normalizeProfessionalUsername(CLINIC_USERNAME)) {
+        base = `${base}.pro`.slice(0, 64);
+    }
+    let candidate = base;
+    let n = 2;
+    while (
+        normalizeProfessionalUsername(candidate) === normalizeProfessionalUsername(CLINIC_USERNAME) ||
+        (await findProfessionalByUsernameInternal(candidate))
+    ) {
+        const suffix = String(n++);
+        candidate = `${base.slice(0, Math.max(3, 64 - suffix.length))}${suffix}`;
+        if (n > 99) {
+            candidate = `user.${crypto.randomBytes(4).toString('hex')}`.slice(0, 64);
+            break;
+        }
+    }
+    return candidate;
+}
+
 async function listProfessionalsInternal() {
     if (usePersistentDb) return db.listProfessionals();
     return [...professionalsStore];
@@ -1187,6 +1241,13 @@ async function findProfessionalByUsernameInternal(username) {
     if (usePersistentDb) return db.findProfessionalByUsername(u);
     const key = normalizeProfessionalUsername(u);
     return professionalsStore.find((p) => normalizeProfessionalUsername(p.username) === key) || null;
+}
+
+async function findProfessionalByEmailInternal(email) {
+    const e = String(email || '').trim().toLowerCase();
+    if (!e || !e.includes('@')) return null;
+    if (usePersistentDb) return db.findProfessionalByEmail(e);
+    return professionalsStore.find((p) => String(p.email || '').trim().toLowerCase() === e) || null;
 }
 
 async function findProfessionalByDisplayNameInternal(name) {
@@ -8711,50 +8772,130 @@ app.get('/api/admin/reviews', requireAdmin, async (req, res) => {
 });
 
 // ─── API: Admin — psychologist applications (recrutamento) ───
+async function findPsychologistApplicationInternal(id) {
+    const key = String(id || '');
+    if (!key) return null;
+    if (usePersistentDb) return db.findPsychologistApplicationById(key);
+    return psychologistApplicationsStore.find((a) => a.id === key) || null;
+}
+
 app.get('/api/admin/psychologists', requireAdmin, async (req, res) => {
     try {
         const status = req.query.status ? String(req.query.status) : '';
         const band = req.query.band ? String(req.query.band) : '';
         const q = req.query.q ? String(req.query.q) : '';
+        let list;
         if (usePersistentDb) {
-            const applications = await db.listPsychologistApplications({
+            list = await db.listPsychologistApplications({
                 status: status || undefined,
                 band: band || undefined,
                 q: q || undefined,
                 limit: 200
             });
-            return res.json({ applications });
+        } else {
+            list = psychologistApplicationsStore.slice();
+            if (status) list = list.filter((a) => a.status === status);
+            if (band) list = list.filter((a) => a.scoreBand === band);
+            if (q.trim()) {
+                const needle = q.trim().toLowerCase();
+                list = list.filter(
+                    (a) =>
+                        String(a.name || '').toLowerCase().includes(needle) ||
+                        String(a.email || '').toLowerCase().includes(needle) ||
+                        String(a.cedulaOpp || '').toLowerCase().includes(needle)
+                );
+            }
+            list = list.slice(0, 200);
         }
-        let list = psychologistApplicationsStore.slice();
-        if (status) list = list.filter((a) => a.status === status);
-        if (band) list = list.filter((a) => a.scoreBand === band);
-        if (q.trim()) {
-            const needle = q.trim().toLowerCase();
-            list = list.filter(
-                (a) =>
-                    String(a.name || '').toLowerCase().includes(needle) ||
-                    String(a.email || '').toLowerCase().includes(needle) ||
-                    String(a.cedulaOpp || '').toLowerCase().includes(needle)
-            );
+        const applications = [];
+        for (const app of list || []) {
+            applications.push(await enrichPsychologistApplication(app));
         }
-        res.json({ applications: list.slice(0, 200) });
+        res.json({ applications });
     } catch (err) {
         console.error('GET /api/admin/psychologists:', err.message);
         res.status(500).json({ error: 'Failed to load psychologist applications' });
     }
 });
 
+app.post('/api/admin/psychologists/logins', requireAdmin, async (req, res) => {
+    try {
+        const skip = new Set(['rejeitado', 'eliminado']);
+        let list;
+        if (usePersistentDb) {
+            list = await db.listPsychologistApplications({ limit: 200 });
+        } else {
+            list = psychologistApplicationsStore.slice(0, 200);
+        }
+        const created = [];
+        const linked = [];
+        for (const app of list || []) {
+            if (skip.has(String(app.status || ''))) continue;
+            const already = await linkedProfessionalForApplication(app);
+            if (already) {
+                await setApplicationProfessionalIdInternal(app.id, already.id);
+                linked.push({
+                    id: app.id,
+                    name: app.name,
+                    professional: publicProfessional(already)
+                });
+                continue;
+            }
+            const result = await assignLoginToPsychologistApplication(app, { resetPassword: false });
+            created.push({
+                id: app.id,
+                name: app.name,
+                professional: publicProfessional(result.professional),
+                generatedPassword: result.generatedPassword
+            });
+        }
+        res.json({ created, linked });
+    } catch (err) {
+        console.error('POST /api/admin/psychologists/logins:', err.message);
+        res.status(httpErrorStatus(err, 500)).json({ error: err.message || 'Failed to assign logins' });
+    }
+});
+
+app.post('/api/admin/psychologists/:id/login', requireAdmin, express.json(), async (req, res) => {
+    try {
+        const application = await findPsychologistApplicationInternal(req.params.id);
+        if (!application) return res.status(404).json({ error: 'Not found' });
+        const resetPassword = req.body && req.body.resetPassword === true;
+        const already = await linkedProfessionalForApplication(application);
+        if (already && !resetPassword) {
+            await setApplicationProfessionalIdInternal(application.id, already.id);
+            return res.json({
+                application: await enrichPsychologistApplication({
+                    ...application,
+                    professionalId: already.id
+                }),
+                professional: publicProfessional(already),
+                created: false
+            });
+        }
+        const result = await assignLoginToPsychologistApplication(application, {
+            resetPassword: resetPassword || !already
+        });
+        res.status(result.created ? 201 : 200).json({
+            application: await enrichPsychologistApplication({
+                ...application,
+                professionalId: result.professional.id
+            }),
+            professional: publicProfessional(result.professional),
+            generatedPassword: result.generatedPassword,
+            created: result.created
+        });
+    } catch (err) {
+        console.error('POST /api/admin/psychologists/:id/login:', err.message);
+        res.status(httpErrorStatus(err, 500)).json({ error: err.message || 'Failed to assign login' });
+    }
+});
+
 app.get('/api/admin/psychologists/:id', requireAdmin, async (req, res) => {
     try {
-        const id = String(req.params.id || '');
-        if (usePersistentDb) {
-            const application = await db.findPsychologistApplicationById(id);
-            if (!application) return res.status(404).json({ error: 'Not found' });
-            return res.json({ application });
-        }
-        const application = psychologistApplicationsStore.find((a) => a.id === id);
+        const application = await findPsychologistApplicationInternal(req.params.id);
         if (!application) return res.status(404).json({ error: 'Not found' });
-        res.json({ application });
+        res.json({ application: await enrichPsychologistApplication(application) });
     } catch (err) {
         console.error('GET /api/admin/psychologists/:id:', err.message);
         res.status(500).json({ error: 'Failed to load application' });
@@ -8769,14 +8910,14 @@ app.patch('/api/admin/psychologists/:id', requireAdmin, express.json(), async (r
         if (usePersistentDb) {
             const application = await db.updatePsychologistApplication(id, { status, adminNotes });
             if (!application) return res.status(404).json({ error: 'Not found' });
-            return res.json({ application });
+            return res.json({ application: await enrichPsychologistApplication(application) });
         }
         const idx = psychologistApplicationsStore.findIndex((a) => a.id === id);
         if (idx < 0) return res.status(404).json({ error: 'Not found' });
         if (status !== undefined) psychologistApplicationsStore[idx].status = status;
         if (adminNotes !== undefined) psychologistApplicationsStore[idx].adminNotes = adminNotes.slice(0, 4000);
         psychologistApplicationsStore[idx].updatedAt = new Date().toISOString();
-        res.json({ application: psychologistApplicationsStore[idx] });
+        res.json({ application: await enrichPsychologistApplication(psychologistApplicationsStore[idx]) });
     } catch (err) {
         console.error('PATCH /api/admin/psychologists/:id:', err.message);
         res.status(500).json({ error: 'Failed to update application' });
@@ -10123,61 +10264,187 @@ app.get('/api/admin/staff-profiles/:username/documents/:id', requireAdmin, async
     }
 });
 
+async function createProfessionalInternal({
+    username,
+    password,
+    displayName,
+    doxyRoomUrl,
+    email,
+    active
+}) {
+    const existing = await findProfessionalByUsernameInternal(username);
+    if (existing) {
+        const err = new Error('That username is already in use');
+        err.statusCode = 409;
+        err.code = '23505';
+        throw err;
+    }
+    const passwordHash = await bcrypt.hash(password, 12);
+    const record = {
+        username,
+        passwordHash,
+        displayName,
+        doxyRoomUrl: doxyRoomUrl || '',
+        email: String(email || '').trim().toLowerCase().slice(0, 320),
+        active: active !== false
+    };
+    if (usePersistentDb) return db.insertProfessional(record);
+    const created = {
+        id: professionalIdSeq++,
+        ...record,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+    };
+    professionalsStore.push(created);
+    return created;
+}
+
+async function setApplicationProfessionalIdInternal(appId, professionalId) {
+    if (usePersistentDb) {
+        return db.updatePsychologistApplication(appId, { professionalId });
+    }
+    const row = psychologistApplicationsStore.find((a) => a.id === appId);
+    if (!row) return null;
+    row.professionalId = professionalId;
+    row.updatedAt = new Date().toISOString();
+    return row;
+}
+
+async function linkedProfessionalForApplication(app) {
+    if (!app) return null;
+    if (app.professionalId) {
+        const byId = await findProfessionalByIdInternal(app.professionalId);
+        if (byId) return byId;
+    }
+    if (app.email) {
+        const byEmail = await findProfessionalByEmailInternal(app.email);
+        if (byEmail) return byEmail;
+    }
+    return null;
+}
+
+async function enrichPsychologistApplication(app) {
+    if (!app) return app;
+    const professional = await linkedProfessionalForApplication(app);
+    return {
+        ...app,
+        professionalId: app.professionalId || (professional && professional.id) || null,
+        professional: publicProfessional(professional)
+    };
+}
+
+async function seedPsychologistStaffProfile(professional, app) {
+    if (!professional || !professional.username) return;
+    const existing = await getStaffProfileInternal(professional.username);
+    await saveStaffProfileInternal(professional.username, {
+        ...existing,
+        profession: existing.profession || 'psicologo',
+        ordemNumber: existing.ordemNumber || app.cedulaOpp || '',
+        fullName: existing.fullName || app.name || professional.displayName || ''
+    });
+}
+
+async function assignLoginToPsychologistApplication(app, { resetPassword } = {}) {
+    const name = String(app.name || '').trim().slice(0, 200);
+    if (!name) {
+        const err = new Error('This application has no name');
+        err.statusCode = 400;
+        throw err;
+    }
+    let existing = await linkedProfessionalForApplication(app);
+    const emailRaw = String(app.email || '').trim().toLowerCase();
+
+    if (existing) {
+        await setApplicationProfessionalIdInternal(app.id, existing.id);
+        const fields = {};
+        if (emailRaw && !existing.email) fields.email = emailRaw;
+        let generatedPassword;
+        if (resetPassword) {
+            generatedPassword = generateProfessionalPassword();
+            fields.passwordHash = await bcrypt.hash(generatedPassword, 12);
+        }
+        if (Object.keys(fields).length) {
+            if (usePersistentDb) {
+                existing = await db.updateProfessional(existing.id, fields);
+            } else {
+                Object.assign(existing, fields, { updatedAt: new Date().toISOString() });
+            }
+        }
+        await seedPsychologistStaffProfile(existing, app);
+        return {
+            professional: existing,
+            generatedPassword,
+            created: false
+        };
+    }
+
+    const username = await allocateProfessionalUsername('', name);
+    const generatedPassword = generateProfessionalPassword();
+    const created = await createProfessionalInternal({
+        username,
+        password: generatedPassword,
+        displayName: name,
+        email: emailRaw,
+        active: true
+    });
+    await setApplicationProfessionalIdInternal(app.id, created.id);
+    await seedPsychologistStaffProfile(created, app);
+    console.log(`   👤 Professional created from board: ${created.username}`);
+    return {
+        professional: created,
+        generatedPassword,
+        created: true
+    };
+}
+
+function httpErrorStatus(err, fallback) {
+    const n = Number(err && err.statusCode);
+    return Number.isInteger(n) && n >= 400 && n < 600 ? n : fallback;
+}
+
 app.post('/api/admin/professionals', requireAdmin, express.json(), async (req, res) => {
     try {
         const body = req.body || {};
-        const username = String(body.username || '').trim();
         const displayName = String(body.displayName || '').trim().slice(0, 200);
-        const password = String(body.password || '');
-        if (!isValidProfessionalUsername(username)) {
-            return res.status(400).json({ error: 'Username must be 3–64 characters (letters, numbers, . _ -)' });
-        }
-        if (normalizeProfessionalUsername(username) === normalizeProfessionalUsername(CLINIC_USERNAME)) {
-            return res.status(409).json({ error: 'That username is reserved for the clinic admin account' });
-        }
         if (!displayName) {
             return res.status(400).json({ error: 'Display name is required' });
         }
-        if (password.length < 8) {
+        const requestedUsername = String(body.username || '').trim();
+        if (requestedUsername && !isValidProfessionalUsername(requestedUsername)) {
+            return res.status(400).json({ error: 'Username must be 3–64 characters (letters, numbers, . _ -)' });
+        }
+        if (requestedUsername && normalizeProfessionalUsername(requestedUsername) === normalizeProfessionalUsername(CLINIC_USERNAME)) {
+            return res.status(409).json({ error: 'That username is reserved for the clinic admin account' });
+        }
+        const username = await allocateProfessionalUsername(requestedUsername, displayName);
+        let password = String(body.password || '');
+        let generatedPassword = null;
+        if (!password) {
+            generatedPassword = generateProfessionalPassword();
+            password = generatedPassword;
+        } else if (password.length < 8) {
             return res.status(400).json({ error: 'Password must be at least 8 characters' });
         }
         const doxy = validateProfessionalDoxyUrl(body.doxyRoomUrl);
         if (doxy.error) return res.status(400).json({ error: doxy.error });
-
-        const existing = await findProfessionalByUsernameInternal(username);
-        if (existing) {
-            return res.status(409).json({ error: 'That username is already in use' });
+        const emailRaw = String(body.email || '').trim().toLowerCase();
+        if (emailRaw && (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRaw) || emailRaw.length > 320)) {
+            return res.status(400).json({ error: 'Enter a valid email' });
         }
-        const passwordHash = await bcrypt.hash(password, 12);
-        const record = {
+
+        const created = await createProfessionalInternal({
             username,
-            passwordHash,
+            password,
             displayName,
             doxyRoomUrl: doxy.url,
-            email: '',
+            email: emailRaw,
             active: body.active !== false
-        };
-        const emailRaw = String(body.email || '').trim().toLowerCase();
-        if (emailRaw) {
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRaw) || emailRaw.length > 320) {
-                return res.status(400).json({ error: 'Enter a valid email' });
-            }
-            record.email = emailRaw;
-        }
-        let created;
-        if (usePersistentDb) {
-            created = await db.insertProfessional(record);
-        } else {
-            created = {
-                id: professionalIdSeq++,
-                ...record,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
-            professionalsStore.push(created);
-        }
+        });
         console.log(`   👤 Professional created: ${created.username}`);
-        res.status(201).json({ professional: publicProfessional(created) });
+        res.status(201).json({
+            professional: publicProfessional(created),
+            generatedPassword: generatedPassword || undefined
+        });
     } catch (err) {
         if (err && err.code === '23505') {
             return res.status(409).json({ error: 'That username is already in use' });
@@ -10230,6 +10497,30 @@ app.patch('/api/admin/professionals/:id', requireAdmin, express.json(), async (r
     } catch (err) {
         console.error('PATCH /api/admin/professionals/:id:', err.message);
         res.status(500).json({ error: 'Failed to update professional' });
+    }
+});
+
+app.post('/api/admin/professionals/:id/password', requireAdmin, async (req, res) => {
+    try {
+        const existing = await findProfessionalByIdInternal(req.params.id);
+        if (!existing) return res.status(404).json({ error: 'Professional not found' });
+        const generatedPassword = generateProfessionalPassword();
+        const passwordHash = await bcrypt.hash(generatedPassword, 12);
+        let updated;
+        if (usePersistentDb) {
+            updated = await db.updateProfessional(existing.id, { passwordHash });
+        } else {
+            Object.assign(existing, { passwordHash, updatedAt: new Date().toISOString() });
+            updated = existing;
+        }
+        console.log(`   🔑 Professional password reset: ${updated.username}`);
+        res.json({
+            professional: publicProfessional(updated),
+            generatedPassword
+        });
+    } catch (err) {
+        console.error('POST /api/admin/professionals/:id/password:', err.message);
+        res.status(500).json({ error: 'Failed to assign a new password' });
     }
 });
 

@@ -1849,6 +1849,42 @@ body.dash-portal .dash-stat-card {
     gap: 8px;
 }
 
+.admin-pro-password-row {
+    display: flex;
+    gap: 8px;
+    align-items: stretch;
+}
+
+.admin-pro-password-row .admin-input {
+    flex: 1;
+}
+
+.admin-pro-creds {
+    margin: 0 0 20px;
+    padding: 16px 18px;
+    border: 1px solid rgba(26, 102, 65, 0.28);
+    border-radius: 10px;
+    background: rgba(26, 102, 65, 0.06);
+}
+
+.admin-pro-creds-title {
+    margin: 0 0 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.admin-pro-creds-line {
+    margin: 0 0 6px;
+    font-size: 0.875rem;
+}
+
+.admin-pro-creds code {
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+
 @media (max-width: 768px) {
     .clinic-doxy-card-actions {
         width: 100%;
@@ -3896,7 +3932,7 @@ body.admin-logged-in .dash-content.admin-shell {
 
 .admin-psych-summary {
     display: grid;
-    grid-template-columns: minmax(120px, 1.1fr) minmax(140px, 1.3fr) minmax(100px, 0.9fr) auto auto 28px;
+    grid-template-columns: minmax(120px, 1.1fr) minmax(140px, 1.3fr) minmax(100px, 0.9fr) auto auto auto 28px;
     gap: 10px 12px;
     align-items: center;
     padding: 12px 14px;
@@ -4063,6 +4099,50 @@ body.admin-logged-in .dash-content.admin-shell {
     margin-top: 4px;
 }
 
+.admin-psych-login-row {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-top: 4px;
+}
+
+.admin-psych-login-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(26, 102, 65, 0.1);
+    color: #1a6641;
+}
+
+.admin-psych-login-tag.is-off {
+    background: rgba(15, 23, 42, 0.06);
+    color: var(--text-muted);
+}
+
+.admin-psych-creds-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 12px;
+    font-size: 0.875rem;
+}
+
+.admin-psych-creds-table th,
+.admin-psych-creds-table td {
+    text-align: left;
+    padding: 6px 8px 6px 0;
+}
+
+.admin-psych-creds-table code {
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+
 .admin-psych-actions label {
     display: flex;
     flex-direction: column;
@@ -4084,7 +4164,8 @@ body.admin-logged-in .dash-content.admin-shell {
     .admin-psych-col-email,
     .admin-psych-col-phone,
     .admin-psych-col-role,
-    .admin-psych-col-status {
+    .admin-psych-col-status,
+    .admin-psych-col-login {
         grid-column: 1;
         justify-self: start;
         white-space: normal;

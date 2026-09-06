@@ -511,6 +511,10 @@ async function initSchema(p) {
         )
     `);
     await p.query(`ALTER TABLE professionals ADD COLUMN IF NOT EXISTS email TEXT NOT NULL DEFAULT ''`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS professional_id INTEGER`);
+    await p.query(
+        `CREATE INDEX IF NOT EXISTS idx_psychologist_applications_professional ON psychologist_applications (professional_id)`
+    );
     await p.query(`
         CREATE TABLE IF NOT EXISTS staff_month_availability (
             username VARCHAR(64) NOT NULL,
@@ -864,6 +868,7 @@ function rowToPsychologistApplication(row) {
         eliminationReasons: Array.isArray(row.elimination_reasons) ? row.elimination_reasons : [],
         status: row.status || 'novo',
         adminNotes: row.admin_notes || '',
+        professionalId: row.professional_id != null ? Number(row.professional_id) : null,
         cvFilename: row.cv_filename || '',
         payload: row.payload && typeof row.payload === 'object' ? row.payload : {}
     };
@@ -920,17 +925,24 @@ async function updatePsychologistApplication(id, patch) {
     const status =
         patch.status && allowedStatus.has(String(patch.status)) ? String(patch.status) : null;
     const adminNotes = patch.adminNotes !== undefined ? String(patch.adminNotes || '').slice(0, 4000) : null;
-    if (status == null && adminNotes == null) {
+    const professionalIdSpecified = Object.prototype.hasOwnProperty.call(patch, 'professionalId');
+    const professionalId = professionalIdSpecified
+        ? (Number.isInteger(Number(patch.professionalId)) && Number(patch.professionalId) > 0
+            ? Number(patch.professionalId)
+            : null)
+        : undefined;
+    if (status == null && adminNotes == null && !professionalIdSpecified) {
         return findPsychologistApplicationById(id);
     }
     const r = await p.query(
         `UPDATE psychologist_applications SET
             status = COALESCE($2, status),
             admin_notes = COALESCE($3, admin_notes),
+            professional_id = CASE WHEN $4::boolean THEN $5 ELSE professional_id END,
             updated_at = NOW()
          WHERE id = $1
          RETURNING *`,
-        [id, status, adminNotes]
+        [id, status, adminNotes, professionalIdSpecified, professionalIdSpecified ? professionalId : null]
     );
     return rowToPsychologistApplication(r.rows[0]);
 }
@@ -1975,6 +1987,17 @@ async function findProfessionalByUsername(username) {
     return r.rows[0] ? rowToProfessional(r.rows[0]) : null;
 }
 
+async function findProfessionalByEmail(email) {
+    const p = getPool();
+    const e = String(email || '').trim().toLowerCase();
+    if (!e || !e.includes('@')) return null;
+    const r = await p.query(
+        `SELECT * FROM professionals WHERE LOWER(TRIM(email)) = $1 ORDER BY id ASC LIMIT 1`,
+        [e]
+    );
+    return r.rows[0] ? rowToProfessional(r.rows[0]) : null;
+}
+
 async function findProfessionalByDisplayName(name) {
     const p = getPool();
     const n = String(name || '').trim();
@@ -2756,6 +2779,7 @@ module.exports = {
     listProfessionals,
     findProfessionalById,
     findProfessionalByUsername,
+    findProfessionalByEmail,
     findProfessionalByDisplayName,
     insertProfessional,
     updateProfessional,
