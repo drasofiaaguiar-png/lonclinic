@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadDoxyRoom() {
         if (!clinicDoxyRoomUrl || !clinicOpenDoxyBtn) return;
         try {
-            const res = await fetch('/api/clinic/doxy?v=ficheiros-1', { cache: 'no-store', credentials: 'same-origin' });
+            const res = await fetch('/api/clinic/doxy?v=dias-1', { cache: 'no-store', credentials: 'same-origin' });
             if (res.status === 401) {
                 showLogin();
                 return;
@@ -407,9 +407,19 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         clinicAvailHighlightList.innerHTML = upcoming.map((entry) => {
-            const dateLabel = formatClinicAvailDateLabel(entry.date);
+            const dateObj = new Date(`${entry.date}T12:00:00`);
+            const weekday = dateObj.toLocaleDateString('en-US', { weekday: 'long' });
+            const dateLabel = dateObj.toLocaleDateString('en-US', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
             const hoursLabel = formatClinicAvailHoursLabel(entry);
-            return `<li><span class="clinic-avail-highlight-date">${dateLabel}:</span> <span class="clinic-avail-highlight-hours">${hoursLabel}</span></li>`;
+            return `<li class="clinic-avail-day-card">
+                <span class="clinic-avail-day-weekday">${weekday}</span>
+                <span class="clinic-avail-highlight-date">${dateLabel}</span>
+                <span class="clinic-avail-highlight-hours">${hoursLabel}</span>
+            </li>`;
         }).join('');
     }
 

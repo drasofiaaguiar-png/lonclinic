@@ -1586,21 +1586,20 @@ body.dash-portal .dash-stat-card {
 
 .clinic-avail-highlight {
     margin: -8px 0 32px;
-    padding: 28px 32px;
-    border-radius: 18px;
-    background: #163024;
-    color: #f4f7f2;
-    box-shadow: 0 18px 40px rgba(22, 48, 36, 0.28);
-    border: 2px solid #c5c72c;
+    padding: 0;
+    background: none;
+    border: none;
+    box-shadow: none;
+    color: var(--text-primary);
 }
 
 .clinic-avail-highlight-label {
-    margin: 0 0 18px;
+    margin: 0 0 14px;
     font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #c5c72c;
+    color: var(--text-muted);
 }
 
 .clinic-avail-highlight-list {
@@ -1608,26 +1607,77 @@ body.dash-portal .dash-stat-card {
     padding: 0;
     list-style: none;
     display: grid;
-    gap: 16px;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    max-width: 28rem;
 }
 
-.clinic-avail-highlight-list li {
+.clinic-avail-day-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    column-gap: 16px;
+    row-gap: 2px;
+    align-items: baseline;
     margin: 0;
-    font-size: 1.35rem;
-    font-weight: 650;
-    letter-spacing: -0.03em;
-    line-height: 1.35;
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: #163024;
+    color: #f4f7f2;
+    border: 2px solid #c5c72c;
+    box-shadow: 0 12px 28px rgba(22, 48, 36, 0.22);
+}
+
+.clinic-avail-day-weekday {
+    grid-column: 1;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #c5c72c;
 }
 
 .clinic-avail-highlight-date {
+    grid-column: 1;
+    font-size: 1.15rem;
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    line-height: 1.25;
     color: #f4f7f2;
 }
 
 .clinic-avail-highlight-hours {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.02em;
     color: #c5c72c;
+    white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+    .clinic-avail-day-card {
+        grid-template-columns: 1fr;
+        row-gap: 6px;
+    }
+
+    .clinic-avail-highlight-hours {
+        grid-column: 1;
+        grid-row: auto;
+        white-space: normal;
+    }
 }
 
 .clinic-avail-highlight-empty {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 18px 20px;
+    border-radius: 16px;
+    background: #163024;
+    border: 2px dashed rgba(197, 199, 44, 0.45);
     font-size: 1rem;
     font-weight: 500;
     color: rgba(244, 247, 242, 0.72);
