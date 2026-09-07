@@ -439,13 +439,32 @@ function assignedDoxyRoomUrl(displayName, rawUrl) {
     return url;
 }
 
+function isSharedClinicDoxyRoom(raw) {
+    const url = normalizeDoxyRoomUrl(raw);
+    const shared = normalizeDoxyRoomUrl(DEFAULT_DOXY_ROOM_URL || DOXY_DEFAULT_PATIENT_ROOM);
+    return !!(url && shared && url === shared);
+}
+
+function doxyRoomViewForPerson(displayName, rawUrl, opts) {
+    const assigned = assignedDoxyRoomUrl(displayName, rawUrl);
+    if ((opts && opts.clinicAdmin) || isClinicLeadDoxyName(displayName)) {
+        return { url: assigned || DEFAULT_DOXY_ROOM_URL || '', pending: false };
+    }
+    if (assigned && !isSharedClinicDoxyRoom(assigned)) {
+        return { url: assigned, pending: false };
+    }
+    return { url: '', pending: true };
+}
+
 function publicProfessional(pro) {
     if (!pro) return null;
+    const doxy = doxyRoomViewForPerson(pro.displayName, pro.doxyRoomUrl);
     return {
         id: pro.id,
         username: pro.username,
         displayName: pro.displayName,
-        doxyRoomUrl: pro.doxyRoomUrl || '',
+        doxyRoomUrl: doxy.url,
+        doxyPending: doxy.pending,
         email: pro.email || '',
         active: pro.active !== false,
         createdAt: pro.createdAt || null,
@@ -10046,21 +10065,33 @@ app.get('/api/clinic/doxy', requireAuth, async (req, res) => {
         const role = req.session.clinicRole || 'admin';
         let displayName = req.session.clinicDisplayName || req.session.clinicUsername || '';
         let patientRoomUrl = '';
+        let pending = false;
         if (role === 'clinician' && req.session.professionalId) {
             const pro = await findProfessionalByIdInternal(req.session.professionalId);
             if (pro) {
                 displayName = pro.displayName || displayName;
-                patientRoomUrl = assignedDoxyRoomUrl(pro.displayName, pro.doxyRoomUrl);
+                const view = doxyRoomViewForPerson(pro.displayName, pro.doxyRoomUrl);
+                patientRoomUrl = view.url;
+                pending = view.pending;
+            } else {
+                pending = !isClinicLeadDoxyName(displayName);
+                if (!pending) patientRoomUrl = DEFAULT_DOXY_ROOM_URL || '';
             }
-        } else if (role === 'admin' && isClinicLeadDoxyName(displayName)) {
+        } else if (role === 'admin') {
             patientRoomUrl = DEFAULT_DOXY_ROOM_URL || '';
+            pending = false;
+        } else {
+            const view = doxyRoomViewForPerson(displayName, '');
+            patientRoomUrl = view.url;
+            pending = view.pending;
         }
         res.json({
             role,
             displayName,
-            patientRoomUrl: patientRoomUrl || null,
+            patientRoomUrl: pending ? null : (patientRoomUrl || null),
+            pending,
             providerUrl: DOXY_PROVIDER_URL,
-            configured: !!patientRoomUrl
+            configured: !pending && !!patientRoomUrl
         });
     } catch (err) {
         console.error('GET /api/clinic/doxy:', err.message);
@@ -10309,6 +10340,9 @@ function publicAdminStaffProfile(person, profile, documents) {
         p.secondaryAreas != null ? p.secondaryAreas : p.secondaryArea,
         primaryAreas
     );
+    const doxy = doxyRoomViewForPerson(person.displayName || person.username, person.doxyRoomUrl, {
+        clinicAdmin: String(person.username || '').toLowerCase() === String(CLINIC_USERNAME || '').trim().toLowerCase()
+    });
     return {
         username: person.username,
         displayName: person.displayName || person.username,
@@ -10328,6 +10362,8 @@ function publicAdminStaffProfile(person, profile, documents) {
         iban: p.iban || '',
         primaryAreas,
         secondaryAreas,
+        doxyRoomUrl: doxy.url,
+        doxyPending: doxy.pending,
         hasPhoto: !!p.hasPhoto,
         updatedAt: p.updatedAt || null,
         documents: (documents || []).map(publicStaffDocument)
@@ -10344,12 +10380,17 @@ async function listAdminStaffPeople() {
         people.push({
             username: u,
             displayName: (extra && extra.displayName) || u,
-            email: (extra && extra.email) || ''
+            email: (extra && extra.email) || '',
+            doxyRoomUrl: (extra && extra.doxyRoomUrl) || ''
         });
     };
     addPerson(CLINIC_USERNAME, { displayName: CLINIC_USERNAME });
     for (const p of (await listProfessionalsInternal()) || []) {
-        addPerson(p.username, { displayName: p.displayName || p.username, email: p.email || '' });
+        addPerson(p.username, {
+            displayName: p.displayName || p.username,
+            email: p.email || '',
+            doxyRoomUrl: p.doxyRoomUrl || ''
+        });
     }
     for (const profile of (await listStaffProfilesInternal()) || []) {
         addPerson(profile.username, { displayName: profile.fullName || profile.username });

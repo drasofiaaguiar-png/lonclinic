@@ -275,14 +275,24 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (!res.ok) throw new Error('Failed to load Doxy room');
             const data = await res.json();
-            clinicDoxyPatientUrl = data.patientRoomUrl || '';
+            clinicDoxyPatientUrl = data.pending ? '' : (data.patientRoomUrl || '');
             clinicOpenDoxyBtn.href = data.providerUrl || 'https://doxy.me';
             if (clinicDoxySubtitle) {
-                clinicDoxySubtitle.textContent = data.displayName
-                    ? `Open Doxy.me to admit patients waiting for ${data.displayName}`
-                    : 'Open Doxy.me to admit patients from the waiting room';
+                clinicDoxySubtitle.textContent = data.pending
+                    ? 'Your Doxy.me room is pending'
+                    : (data.displayName
+                        ? `Open Doxy.me to admit patients waiting for ${data.displayName}`
+                        : 'Open Doxy.me to admit patients from the waiting room');
             }
-            if (clinicDoxyPatientUrl) {
+            if (clinicDoxyRoomUrl) clinicDoxyRoomUrl.classList.toggle('is-pending', !!data.pending);
+            if (data.pending) {
+                clinicDoxyRoomUrl.textContent = 'Pending';
+                if (clinicProfileDoxy) clinicProfileDoxy.textContent = 'Pending';
+                if (clinicDoxyHint) {
+                    clinicDoxyHint.textContent = 'Your own patient waiting room is not ready yet. You will get a personal Doxy.me link — the clinic room is only for Dra. Sofia Aguiar.';
+                }
+                if (clinicCopyDoxyBtn) clinicCopyDoxyBtn.disabled = true;
+            } else if (clinicDoxyPatientUrl) {
                 clinicDoxyRoomUrl.textContent = clinicDoxyPatientUrl;
                 if (clinicProfileDoxy) clinicProfileDoxy.textContent = clinicDoxyPatientUrl;
                 if (clinicDoxyHint) {
@@ -290,12 +300,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 if (clinicCopyDoxyBtn) clinicCopyDoxyBtn.disabled = false;
             } else {
-                clinicDoxyRoomUrl.textContent = 'Not configured yet';
-                if (clinicProfileDoxy) clinicProfileDoxy.textContent = 'Not configured yet';
+                clinicDoxyRoomUrl.textContent = 'Pending';
+                if (clinicProfileDoxy) clinicProfileDoxy.textContent = 'Pending';
+                if (clinicDoxyRoomUrl) clinicDoxyRoomUrl.classList.add('is-pending');
                 if (clinicDoxyHint) {
-                    clinicDoxyHint.textContent = clinicRole === 'admin'
-                        ? 'This is Dra. Sofia Aguiar’s room. Other professionals need their own Doxy.me URL in Admin → Professionals.'
-                        : 'Ask an administrator to add your Doxy.me room URL to your professional account. Do not use Sofia Aguiar’s room.';
+                    clinicDoxyHint.textContent = 'Your own patient waiting room is not ready yet. You will get a personal Doxy.me link — the clinic room is only for Dra. Sofia Aguiar.';
                 }
                 if (clinicCopyDoxyBtn) clinicCopyDoxyBtn.disabled = true;
             }

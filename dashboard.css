@@ -944,6 +944,13 @@ body.dash-portal .dash-stat-card {
     word-break: break-all;
 }
 
+.clinic-doxy-url.is-pending {
+    color: var(--text-muted);
+    font-style: italic;
+    word-break: normal;
+    letter-spacing: 0.04em;
+}
+
 .clinic-doxy-hint {
     margin: 0;
     font-size: 0.8125rem;

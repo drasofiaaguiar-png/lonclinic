@@ -3521,7 +3521,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             return `<tr>
                 <td>${escapeHtml(p.displayName || '')}</td>
                 <td>${escapeHtml(p.username || '')}</td>
-                <td>${p.doxyRoomUrl ? `<a href="${escapeHtml(p.doxyRoomUrl)}" target="_blank" rel="noopener">${escapeHtml(p.doxyRoomUrl)}</a>` : '—'}</td>
+                <td>${p.doxyPending || !p.doxyRoomUrl
+                    ? 'Pending'
+                    : `<a href="${escapeHtml(p.doxyRoomUrl)}" target="_blank" rel="noopener">${escapeHtml(p.doxyRoomUrl)}</a>`}</td>
                 <td><span class="${statusClass}">${statusLabel}</span></td>
                 <td>
                     <div class="admin-pro-actions">
@@ -3699,6 +3701,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div><dt>Apólice</dt><dd>${dashText(p.insurancePolicy)}</dd></div>
                     <div><dt>Validade do seguro</dt><dd>${dashText(p.insuranceValidUntil)}</dd></div>
                     <div><dt>IBAN</dt><dd>${dashText(p.iban)}</dd></div>
+                    <div><dt>Doxy.me room</dt><dd>${p.doxyPending || !p.doxyRoomUrl ? 'Pending' : dashText(p.doxyRoomUrl)}</dd></div>
                 </dl>
                 <div class="admin-staff-profile-block">
                     <h4>Bio</h4>
@@ -4115,7 +4118,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (doxyRes.ok) {
                 const doxy = await doxyRes.json().catch(() => ({}));
                 if (adminProfileDoxy) {
-                    adminProfileDoxy.textContent = doxy.patientRoomUrl || 'Not set — add this professional’s own Doxy.me room in Professionals & Doxy';
+                    adminProfileDoxy.textContent = doxy.pending
+                        ? 'Pending'
+                        : (doxy.patientRoomUrl || 'Pending');
                 }
             }
         } catch (err) {
