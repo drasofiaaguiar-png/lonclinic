@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadDoxyRoom() {
         if (!clinicDoxyRoomUrl || !clinicOpenDoxyBtn) return;
         try {
-            const res = await fetch('/api/clinic/doxy?v=avail-1', { cache: 'no-store', credentials: 'same-origin' });
+            const res = await fetch('/api/clinic/doxy?v=docs-1', { cache: 'no-store', credentials: 'same-origin' });
             if (res.status === 401) {
                 showLogin();
                 return;
@@ -1720,6 +1720,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
             </tr>`;
         }).join('');
+        renderClinicProfileFiles();
+    }
+
+    function clinicDocumentHref(doc) {
+        return `/api/clinic/profile/documents/${encodeURIComponent(doc && doc.id)}`;
+    }
+
+    function renderClinicProfileFiles() {
+        const el = document.getElementById('clinicProfileFiles');
+        if (!el) return;
+        const kinds = clinicProfileMeta.documentKinds || DEFAULT_DOC_KINDS;
+        const docs = (clinicProfileMeta.documents || []).filter((item) => item && item.kind);
+        if (!docs.length) {
+            el.innerHTML = '<p class="admin-empty-list">Ainda sem documentos no perfil. Envie-os em Documentos, mais abaixo.</p>';
+            return;
+        }
+        const order = Object.keys(kinds);
+        docs.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind));
+        el.innerHTML = `<ul class="admin-staff-docs clinic-profile-files-list">${docs.map((doc) => {
+            const label = kinds[doc.kind] || doc.label || doc.kind;
+            const validity = doc.validUntil ? `<span class="clinic-doc-validity">Validade ${escapeHtml(doc.validUntil)}</span>` : '';
+            return `<li>
+                <span>${escapeHtml(label)}</span>
+                <a class="clinic-doc-link" href="${clinicDocumentHref(doc)}">${escapeHtml(doc.originalName || label)}</a>
+                ${validity}
+            </li>`;
+        }).join('')}</ul>`;
     }
 
     function setClinicProfilePhoto(hasPhoto) {
@@ -1833,6 +1860,12 @@ document.addEventListener('DOMContentLoaded', () => {
             ['Preferências secundárias', (payload.secondaryAreas || []).join(', ')]
         ];
         if (extra && extra.cvName) rows.push(['CV', extra.cvName]);
+        (clinicProfileMeta.documents || []).forEach((doc) => {
+            if (!doc || !doc.kind) return;
+            const kinds = clinicProfileMeta.documentKinds || DEFAULT_DOC_KINDS;
+            if (doc.kind === 'cv' && extra && extra.cvName) return;
+            rows.push([kinds[doc.kind] || doc.label || doc.kind, doc.originalName]);
+        });
         list.innerHTML = rows.map(([label, value]) => {
             const text = String(value || '').trim();
             return `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(text || '—')}</dd></div>`;

@@ -2020,6 +2020,24 @@ body.dash-portal .dash-stat-card {
     font-weight: 600;
 }
 
+.clinic-profile-files {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.clinic-profile-files .clinic-pref-heading {
+    margin-bottom: 4px;
+}
+
+.clinic-profile-files-body {
+    margin-top: 10px;
+}
+
+.clinic-profile-files-list .clinic-doc-link {
+    margin-bottom: 0;
+}
+
 .clinic-doc-missing {
     display: block;
     margin-bottom: 8px;

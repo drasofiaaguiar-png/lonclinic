@@ -475,7 +475,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <span class="admin-source-badge is-${isInterview ? 'interview' : source}">${badgeLabel}</span>
                         ${comp}
                         ${ref ? `<span class="admin-agenda-ref">${escapeHtml(ref)}</span>` : ''}
-                        ${ref && !isInterview ? `<a class="btn btn-outline btn-sm" href="/clinic-desk/avail">Open notes</a>` : ''}
+                        ${ref && !isInterview ? `<a class="btn btn-outline btn-sm" href="/clinic-desk/docs">Open notes</a>` : ''}
                     </div>
                 `;
                 section.appendChild(item);
@@ -1577,7 +1577,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (res.ok) {
                     if (data.role && data.role !== 'admin') {
-                        adminLoginError.textContent = 'This account opens the clinic portal, not admin. Use the administrator username, or go to /clinic-desk/avail.';
+                        adminLoginError.textContent = 'This account opens the clinic portal, not admin. Use the administrator username, or go to /clinic-desk/docs.';
                         adminLoginError.style.display = 'block';
                         return;
                     }
@@ -2731,7 +2731,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <button type="button" class="btn btn-primary btn-sm admin-psych-save" data-psych-id="${escapeHtml(a.id)}">Guardar</button>
                         <div class="admin-psych-login-row">
                             ${a.professional && a.professional.username
-                                ? `<span>Clinic login: <code>${escapeHtml(a.professional.username)}</code> — portal <a href="/clinic-desk/avail#profile">/clinic-desk/avail</a></span>
+                                ? `<span>Clinic login: <code>${escapeHtml(a.professional.username)}</code> — portal <a href="/clinic-desk/docs#profile">/clinic-desk/docs</a></span>
                                    <button type="button" class="btn btn-outline btn-sm" data-psych-password="${escapeHtml(a.id)}">New password</button>`
                                 : `<button type="button" class="btn btn-primary btn-sm" data-psych-login="${escapeHtml(a.id)}">Assign clinic login</button>`}
                         </div>
@@ -2787,9 +2787,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function showPsychCreds(rows) {
         if (!adminPsychCreds || !adminPsychCredsList || !rows || !rows.length) return;
-        const portal = `${window.location.origin}/clinic-desk/avail#profile`;
+        const portal = `${window.location.origin}/clinic-desk/docs#profile`;
         adminPsychCredsList.innerHTML = `
-            <p class="admin-pro-creds-line">Portal: <a href="/clinic-desk/avail#profile">${escapeHtml(portal)}</a></p>
+            <p class="admin-pro-creds-line">Portal: <a href="/clinic-desk/docs#profile">${escapeHtml(portal)}</a></p>
             <table class="admin-psych-creds-table">
                 <thead><tr><th>Name</th><th>Username</th><th>Password</th></tr></thead>
                 <tbody>
@@ -3399,9 +3399,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function showProfessionalCreds(pro, password) {
         if (!adminProfessionalCreds || !password) return;
-        const portal = `${window.location.origin}/clinic-desk/avail#profile`;
+        const portal = `${window.location.origin}/clinic-desk/docs#profile`;
         if (proCredsPortal) {
-            proCredsPortal.href = '/clinic-desk/avail#profile';
+            proCredsPortal.href = '/clinic-desk/docs#profile';
             proCredsPortal.textContent = portal;
         }
         if (proCredsName) proCredsName.textContent = (pro && pro.displayName) || '';
@@ -3573,7 +3573,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const res = await fetch('/api/admin/professionals');
             if (res.status === 401 || res.status === 403) {
-                if (res.status === 403) window.location.href = '/clinic-desk/avail';
+                if (res.status === 403) window.location.href = '/clinic-desk/docs';
                 else showLogin();
                 return;
             }
@@ -3785,6 +3785,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div><dt>IBAN</dt><dd>${dashText(p.iban)}</dd></div>
                     <div><dt>Doxy.me room</dt><dd>${p.doxyPending || !p.doxyRoomUrl ? 'Pending' : dashText(p.doxyRoomUrl)}</dd></div>
                 </dl>
+                <div class="admin-staff-profile-block">
+                    <h4>Documentos no perfil</h4>
+                    <ul class="admin-staff-docs">${docs}</ul>
+                </div>
                 <details class="admin-staff-profile-block clinic-bolsa-profile clinic-bolsa-banner clinic-registo-details">
                     <summary class="clinic-registo-summary"><span><h4>Dados de Registo</h4></span></summary>
                     <div class="clinic-registo-body">
@@ -3806,10 +3810,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="admin-staff-profile-block">
                     <h4>Preferências secundárias</h4>
                     ${areaListHtml(p.secondaryAreas)}
-                </div>
-                <div class="admin-staff-profile-block">
-                    <h4>Documentos</h4>
-                    <ul class="admin-staff-docs">${docs}</ul>
                 </div>
             </article>`;
         }).join('');
@@ -3846,7 +3846,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (proCredsCopyBtn) {
         proCredsCopyBtn.addEventListener('click', async () => {
-            const portal = proCredsPortal ? proCredsPortal.textContent : `${window.location.origin}/clinic-desk/avail#profile`;
+            const portal = proCredsPortal ? proCredsPortal.textContent : `${window.location.origin}/clinic-desk/docs#profile`;
             const username = proCredsUsername ? proCredsUsername.textContent : '';
             const password = proCredsPassword ? proCredsPassword.textContent : '';
             const name = proCredsName ? proCredsName.textContent : '';
@@ -4137,6 +4137,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </td>
             </tr>`;
         }).join('');
+        renderAdminProfileFiles();
+    }
+
+    function renderAdminProfileFiles() {
+        const el = document.getElementById('adminProfileFiles');
+        if (!el) return;
+        const kinds = adminProfileMeta.documentKinds || DEFAULT_DOC_KINDS;
+        const docs = (adminProfileMeta.documents || []).filter((item) => item && item.kind);
+        if (!docs.length) {
+            el.innerHTML = '<p class="admin-empty-list">Ainda sem documentos no perfil. Envie-os em Documentos, mais abaixo.</p>';
+            return;
+        }
+        const order = Object.keys(kinds);
+        docs.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind));
+        el.innerHTML = `<ul class="admin-staff-docs clinic-profile-files-list">${docs.map((doc) => {
+            const label = kinds[doc.kind] || doc.label || doc.kind;
+            const validity = doc.validUntil ? `<span class="clinic-doc-validity">Validade ${escapeHtml(doc.validUntil)}</span>` : '';
+            return `<li>
+                <span>${escapeHtml(label)}</span>
+                <a class="clinic-doc-link" href="/api/clinic/profile/documents/${encodeURIComponent(doc.id)}">${escapeHtml(doc.originalName || label)}</a>
+                ${validity}
+            </li>`;
+        }).join('')}</ul>`;
     }
 
     function showAdminProfileError(el, message) {
@@ -4166,7 +4189,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const [profileRes, doxyRes] = await Promise.all([
                 fetch('/api/clinic/ficha', { cache: 'no-store', credentials: 'same-origin' }),
-                fetch('/api/clinic/doxy?v=avail-1', { cache: 'no-store', credentials: 'same-origin' })
+                fetch('/api/clinic/doxy?v=docs-1', { cache: 'no-store', credentials: 'same-origin' })
             ]);
             if (profileRes.status === 401) {
                 showLogin();

@@ -16,8 +16,8 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = 'avail-1';
-const CLINIC_PORTAL_PATH = '/clinic-desk/avail';
+const CLINIC_PORTAL_BUILD = 'docs-1';
+const CLINIC_PORTAL_PATH = '/clinic-desk/docs';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
 const bcrypt = require('bcrypt');
@@ -673,7 +673,7 @@ async function serveClinicPortalHtml(res) {
             .replace(/src="\/clinic-portal\/clinic\.js\?v=[^"]+"/g, `src="${clinicPortalAssetUrl('clinic.js')}"`)
             .replace(/data-clinic-build="[^"]+"/, `data-clinic-build="${CLINIC_PORTAL_BUILD}"`)
             .replace(
-                /Portal (?:now-7set|live-1058|registo-1|avail-1) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
+                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
                 `Portal ${CLINIC_PORTAL_BUILD} — 7 set 2026. Entre com o username do profissional.`
             )
             .replace(
@@ -980,8 +980,9 @@ function normalizeStaffProfileFields(fields, existing) {
 
 function publicStaffDocument(doc) {
     if (!doc) return null;
+    const id = parseInt(String(doc.id == null ? '' : doc.id), 10);
     return {
-        id: doc.id,
+        id: Number.isInteger(id) && id > 0 ? id : doc.id,
         kind: doc.kind,
         label: STAFF_DOCUMENT_KINDS[doc.kind] || doc.kind,
         originalName: doc.originalName || '',
@@ -1281,9 +1282,10 @@ async function saveStaffDocumentInternal(doc) {
 }
 
 async function getStaffDocumentInternal(id, username) {
-    if (usePersistentDb) return db.getStaffDocument(id, username);
-    const n = Number(id);
+    const n = parseInt(String(id == null ? '' : id), 10);
     const u = String(username || '').trim().toLowerCase();
+    if (!Number.isInteger(n) || n < 1 || !u) return null;
+    if (usePersistentDb) return db.getStaffDocument(n, u);
     return staffDocumentsStore.find((d) => d.id === n && d.username === u) || null;
 }
 
@@ -7275,6 +7277,10 @@ app.get('/api/clinic/assets/:file', (req, res, next) => {
     }, (err) => {
         if (err) next();
     });
+});
+
+app.get('/clinic-desk/docs', (req, res) => {
+    serveClinicPortalHtml(res);
 });
 
 app.get('/clinic-desk/avail', (req, res) => {

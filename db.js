@@ -2584,7 +2584,7 @@ async function upsertStaffDocument(doc) {
 
 async function getStaffDocument(id, username) {
     const p = getPool();
-    const n = Number(id);
+    const n = parseInt(String(id == null ? '' : id), 10);
     if (!Number.isInteger(n) || n < 1) return null;
     const u = String(username || '').trim().toLowerCase();
     const r = await p.query(
