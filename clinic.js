@@ -1748,20 +1748,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if (clinicProfilePhotoBtn) clinicProfilePhotoBtn.textContent = hasPhoto ? 'Substituir foto' : 'Adicionar foto';
     }
 
-    function renderBolsaProfileHtml(bolsa) {
+    function renderBolsaProfileHtml(bolsa, opts) {
         if (!bolsa || !Array.isArray(bolsa.groups) || !bolsa.groups.length) {
             return '<p class="admin-empty-list">Ainda não há dados de registo ligados a esta conta.</p>';
         }
+        const cvHref = String((opts && opts.cvHref) || '');
         return bolsa.groups.map((g) => `
             <section class="admin-psych-section">
                 <h4>${escapeHtml(g.title || '')}</h4>
                 <dl class="admin-psych-qa-list">
                     ${(g.items || []).map((row) => {
-                        const text = String((row && row.value) || '');
-                        const long = text.includes('\n') || text.length > 120;
+                        const text = String((row && row.value) || '').trim();
+                        const isCv = (row && row.kind) === 'cv' || String((row && row.label) || '') === 'CV';
+                        const canDownload = isCv && bolsa.hasCv && cvHref;
+                        const display = text || '—';
+                        const long = !canDownload && (display.includes('\n') || display.length > 120);
+                        const dd = canDownload
+                            ? `<a class="clinic-doc-link" href="${escapeHtml(cvHref)}">${escapeHtml(text || bolsa.cvFilename || 'Descarregar CV')}</a>`
+                            : escapeHtml(display).replace(/\n/g, '<br>');
                         return `<div class="admin-psych-qa${long ? ' is-long' : ''}">
                             <dt>${escapeHtml((row && row.label) || '')}</dt>
-                            <dd>${escapeHtml(text).replace(/\n/g, '<br>')}</dd>
+                            <dd>${dd}</dd>
                         </div>`;
                     }).join('')}
                 </dl>
@@ -1802,18 +1809,20 @@ document.addEventListener('DOMContentLoaded', () => {
         wrap.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
 
-    function showBolsaProfileSection(wrapId, bodyId, subtitleId, bolsa) {
+    function showBolsaProfileSection(wrapId, bodyId, subtitleId, bolsa, opts) {
         const wrap = document.getElementById(wrapId);
         const body = document.getElementById(bodyId);
         const subtitle = document.getElementById(subtitleId);
-        if (body) body.innerHTML = renderBolsaProfileHtml(bolsa);
+        const linked = !!(bolsa && (bolsa.id || bolsa.email || (Array.isArray(bolsa.groups) && bolsa.groups.length)));
+        if (body) body.innerHTML = renderBolsaProfileHtml(bolsa, opts);
         if (wrap) wrap.hidden = false;
-        const linked = bolsa && Array.isArray(bolsa.groups) && bolsa.groups.length;
+        const details = wrap && wrap.querySelector('details');
+        if (details) details.open = linked;
         if (subtitle) {
             subtitle.textContent = linked
                 ? (bolsa.email
-                    ? `Candidatura ligada (${bolsa.email}) — clique para ver as respostas`
-                    : 'Candidatura ligada — clique para ver as respostas')
+                    ? `Candidatura ligada (${bolsa.email})`
+                    : 'Candidatura ligada — respostas da Bolsa de Profissionais')
                 : 'Sem candidatura ligada. Confirme o email na identificação e guarde o perfil.';
         }
     }
@@ -1861,7 +1870,9 @@ document.addEventListener('DOMContentLoaded', () => {
             renderDocumentRows();
             fillBolsaContactFields(clinicProfileEmail, clinicProfilePhone, data.bolsa, data.email);
             if (clinicProfilePhone) clinicProfilePhone.textContent = data.phone || (data.bolsa && data.bolsa.phone) || '—';
-            showBolsaProfileSection('clinicBolsaProfileWrap', 'clinicBolsaProfile', 'clinicRegistoSubtitle', data.bolsa);
+            showBolsaProfileSection('clinicBolsaProfileWrap', 'clinicBolsaProfile', 'clinicRegistoSubtitle', data.bolsa, {
+                cvHref: '/api/clinic/profile/bolsa-cv'
+            });
             if (data.fullName && clinicProfileName) clinicProfileName.textContent = data.fullName;
             loadDoxyRoom();
             if (clinicProfileFormError) clinicProfileFormError.style.display = 'none';

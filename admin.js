@@ -2672,7 +2672,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             <section class="admin-psych-section">
                 <h4>CV</h4>
                 <dl class="admin-psych-qa-list">
-                    ${psychQa('CV enviado', a.cvFilename || '—')}
+                    ${a.hasCv
+                        ? `<div class="admin-psych-qa">
+                            <dt>CV enviado</dt>
+                            <dd><a class="clinic-doc-link" href="/api/admin/psychologists/${encodeURIComponent(a.id)}/cv">${escapeHtml(a.cvFilename || 'Descarregar CV')}</a></dd>
+                        </div>`
+                        : psychQa('CV enviado', a.cvFilename || '—')}
                     ${psychQa('LinkedIn / website', p.linkedin)}
                     ${psychQa('Recebido em', formatPsychDate(a.createdAt))}
                 </dl>
@@ -3626,16 +3631,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!bolsa || !Array.isArray(bolsa.groups) || !bolsa.groups.length) {
             return `<p class="admin-empty-list">${escapeHtml((opts && opts.emptyMessage) || 'Ainda não há dados de registo ligados a esta conta.')}</p>`;
         }
+        const cvHref = String((opts && opts.cvHref) || '');
         return bolsa.groups.map((g) => `
             <section class="admin-psych-section">
                 <h4>${escapeHtml(g.title || '')}</h4>
                 <dl class="admin-psych-qa-list">
                     ${(g.items || []).map((row) => {
-                        const text = String((row && row.value) || '');
-                        const long = text.includes('\n') || text.length > 120;
+                        const text = String((row && row.value) || '').trim();
+                        const isCv = (row && row.kind) === 'cv' || String((row && row.label) || '') === 'CV';
+                        const canDownload = isCv && bolsa.hasCv && cvHref;
+                        const display = text || '—';
+                        const long = !canDownload && (display.includes('\n') || display.length > 120);
+                        const dd = canDownload
+                            ? `<a class="clinic-doc-link" href="${escapeHtml(cvHref)}">${escapeHtml(text || bolsa.cvFilename || 'Descarregar CV')}</a>`
+                            : escapeHtml(display).replace(/\n/g, '<br>');
                         return `<div class="admin-psych-qa${long ? ' is-long' : ''}">
                             <dt>${escapeHtml((row && row.label) || '')}</dt>
-                            <dd>${escapeHtml(text).replace(/\n/g, '<br>')}</dd>
+                            <dd>${dd}</dd>
                         </div>`;
                     }).join('')}
                 </dl>
@@ -3673,18 +3685,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         wrap.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
 
-    function showBolsaProfileSection(wrapId, bodyId, subtitleId, bolsa) {
+    function showBolsaProfileSection(wrapId, bodyId, subtitleId, bolsa, opts) {
         const wrap = document.getElementById(wrapId);
         const body = document.getElementById(bodyId);
         const subtitle = document.getElementById(subtitleId);
-        if (body) body.innerHTML = renderBolsaProfileHtml(bolsa);
+        const linked = !!(bolsa && (bolsa.id || bolsa.email || (Array.isArray(bolsa.groups) && bolsa.groups.length)));
+        if (body) body.innerHTML = renderBolsaProfileHtml(bolsa, opts);
         if (wrap) wrap.hidden = false;
-        const linked = bolsa && Array.isArray(bolsa.groups) && bolsa.groups.length;
+        const details = wrap && wrap.querySelector('details');
+        if (details) details.open = linked;
         if (subtitle) {
             subtitle.textContent = linked
                 ? (bolsa.email
-                    ? `Candidatura ligada (${bolsa.email}) — clique para ver as respostas`
-                    : 'Candidatura ligada — clique para ver as respostas')
+                    ? `Candidatura ligada (${bolsa.email})`
+                    : 'Candidatura ligada — respostas da Bolsa de Profissionais')
                 : 'Sem candidatura ligada. Confirme o email na identificação e guarde o perfil.';
         }
     }
@@ -3717,7 +3731,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ${validity ? `<span class="clinic-doc-validity">${validity}</span>` : ''}
                 </li>`;
             }).join('');
-            const linked = p.bolsa && Array.isArray(p.bolsa.groups) && p.bolsa.groups.length;
+            const linked = !!(p.bolsa && (p.bolsa.id || p.bolsa.email || (Array.isArray(p.bolsa.groups) && p.bolsa.groups.length)));
+            const cvHref = p.bolsa && p.bolsa.hasCv
+                ? `/api/admin/staff-profiles/${user}/bolsa-cv`
+                : '';
             return `<article class="admin-staff-profile-card">
                 <div class="admin-staff-profile-head">
                     ${photo}
@@ -3735,6 +3752,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div><dt>Sala Doxy.me</dt><dd>${p.doxyPending || !p.doxyRoomUrl ? 'Pendente' : dashText(p.doxyRoomUrl)}</dd></div>
                     </dl>
                 </div>
+                <details class="admin-staff-profile-block clinic-bolsa-profile clinic-bolsa-banner clinic-registo-details"${linked ? ' open' : ''}>
+                    <summary class="clinic-registo-summary"><span><h4>Dados de Registo</h4><p class="dash-section-subtitle">${linked ? (p.bolsa.email ? `Candidatura ligada (${escapeHtml(p.bolsa.email)})` : 'Candidatura ligada') : 'Sem candidatura ligada'}</p></span></summary>
+                    <div class="clinic-registo-body">
+                        ${renderBolsaProfileHtml(p.bolsa, {
+                            emptyMessage: 'Sem dados de registo ligados a esta conta.',
+                            cvHref
+                        })}
+                    </div>
+                </details>
                 <div class="admin-staff-profile-block">
                     <h4>Dados profissionais</h4>
                     <dl class="admin-staff-profile-dl">
@@ -3768,12 +3794,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <h4>Documentos</h4>
                     <ul class="admin-staff-docs">${docs}</ul>
                 </div>
-                <details class="admin-staff-profile-block clinic-bolsa-profile clinic-bolsa-banner clinic-registo-details">
-                    <summary class="clinic-registo-summary"><span><h4>Dados de Registo</h4><p class="dash-section-subtitle">${linked ? 'Candidatura ligada — clique para ver' : 'Sem candidatura ligada'}</p></span></summary>
-                    <div class="clinic-registo-body">
-                        ${renderBolsaProfileHtml(p.bolsa, { emptyMessage: 'Sem dados de registo ligados a esta conta.' })}
-                    </div>
-                </details>
             </article>`;
         }).join('');
     }
@@ -4164,7 +4184,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateAdminOrdemLabel();
             fillAdminAreaChecks(data.profession, data.primaryAreas, data.secondaryAreas);
             renderAdminDocumentRows();
-            showBolsaProfileSection('adminBolsaProfileWrap', 'adminBolsaProfile', 'adminRegistoSubtitle', data.bolsa);
+            showBolsaProfileSection('adminBolsaProfileWrap', 'adminBolsaProfile', 'adminRegistoSubtitle', data.bolsa, {
+                cvHref: '/api/clinic/profile/bolsa-cv'
+            });
             if (adminProfileFormError) adminProfileFormError.style.display = 'none';
             if (adminDocsError) adminDocsError.style.display = 'none';
             if (doxyRes.ok) {

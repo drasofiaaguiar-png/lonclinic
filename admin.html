@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=perfil-2">
+    <link rel="stylesheet" href="/dashboard.css?v=perfil-3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -937,6 +937,19 @@
                         </div>
                     </dl>
                 </div>
+                <div class="dash-section clinic-bolsa-banner" id="adminBolsaProfileWrap">
+                    <details class="clinic-registo-details" id="adminRegistoDetails" open>
+                        <summary class="clinic-registo-summary">
+                            <span>
+                                <h2 class="dash-section-title">Dados de Registo</h2>
+                                <p class="dash-section-subtitle" id="adminRegistoSubtitle">Respostas da candidatura à Bolsa de Profissionais</p>
+                            </span>
+                        </summary>
+                        <div class="clinic-registo-body">
+                            <div id="adminBolsaProfile" class="clinic-bolsa-profile">A carregar dados de registo…</div>
+                        </div>
+                    </details>
+                </div>
                 <div class="dash-section">
                     <div class="dash-section-header">
                         <h2 class="dash-section-title">Dados profissionais</h2>
@@ -1030,19 +1043,6 @@
                     <p class="dash-section-subtitle">PDF, JPG, PNG, WebP, DOC ou DOCX · máx. 25MB</p>
                     <div id="adminDocsError" class="dash-login-error" style="display:none;" role="alert"></div>
                 </div>
-                <div class="dash-section clinic-bolsa-banner" id="adminBolsaProfileWrap">
-                    <details class="clinic-registo-details" id="adminRegistoDetails">
-                        <summary class="clinic-registo-summary">
-                            <span>
-                                <h2 class="dash-section-title">Dados de Registo</h2>
-                                <p class="dash-section-subtitle" id="adminRegistoSubtitle">Respostas da candidatura à Bolsa de Profissionais — clique para abrir</p>
-                            </span>
-                        </summary>
-                        <div class="clinic-registo-body">
-                            <div id="adminBolsaProfile" class="clinic-bolsa-profile">A carregar dados de registo…</div>
-                        </div>
-                    </details>
-                </div>
             </div>
 
             </div><!-- /.admin-main -->
@@ -1070,7 +1070,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=perfil-2"></script>
+    <script src="/admin.js?v=perfil-3"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

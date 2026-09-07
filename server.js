@@ -16,7 +16,7 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = 'perfil-2';
+const CLINIC_PORTAL_BUILD = 'perfil-3';
 const CLINIC_PORTAL_PATH = '/clinic-desk/dias';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
@@ -673,7 +673,7 @@ async function serveClinicPortalHtml(res) {
             .replace(/src="\/clinic-portal\/clinic\.js\?v=[^"]+"/g, `src="${clinicPortalAssetUrl('clinic.js')}"`)
             .replace(/data-clinic-build="[^"]+"/, `data-clinic-build="${CLINIC_PORTAL_BUILD}"`)
             .replace(
-                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|perfil-2) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
+                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|perfil-2|perfil-3) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
                 `Portal ${CLINIC_PORTAL_BUILD} — 7 set 2026. Entre com o username do profissional.`
             );
         res.append('Set-Cookie', `lon_portal=${CLINIC_PORTAL_BUILD}; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly`);
@@ -694,6 +694,7 @@ const bookingsStore = []; // memory fallback only
 const reviewsStore = []; // memory fallback for patient reviews
 const clinicalNotesStore = []; // memory fallback only
 const psychologistApplicationsStore = []; // memory fallback for recrutamento
+const psychologistCvStore = new Map();
 const professionalsStore = []; // memory fallback for clinician accounts + Doxy rooms
 const producersStore = []; // memory fallback for organic producers directory
 const staffProfilesStore = new Map();
@@ -1385,6 +1386,59 @@ function bolsaPayloadObject(app) {
         } catch (e) { /* ignore */ }
     }
     return {};
+}
+
+function hydrateBolsaPayload(app) {
+    const p = bolsaPayloadObject(app);
+    const pick = (...values) => firstNonEmpty(...values);
+    const pickList = (...values) => {
+        for (const value of values) {
+            if (Array.isArray(value) && value.length) return value;
+            if (typeof value === 'string' && value.trim()) return value;
+        }
+        return '';
+    };
+    return {
+        nome: pick(p.nome, app.name),
+        email: pick(p.email, app.email),
+        telefone: pick(p.telefone, app.phone),
+        localidade: pick(p.localidade, app.localidade),
+        pais: p.pais || app.pais || '',
+        pais_especificar: p.pais_especificar || '',
+        opp_inscrito: p.opp_inscrito || '',
+        cedula_opp: pick(p.cedula_opp, app.cedulaOpp),
+        grau_academico: pick(p.grau_academico, app.grauAcademico),
+        formacao_complementar: p.formacao_complementar || '',
+        anos_clinica: pick(p.anos_clinica, app.anosClinica),
+        anos_individuais: pick(p.anos_individuais, app.anosIndividuais),
+        experiencia_online: pick(p.experiencia_online, app.experienciaOnline),
+        n_consultas_online: p.n_consultas_online != null && p.n_consultas_online !== ''
+            ? String(p.n_consultas_online)
+            : '',
+        areas_clinicas: pickList(p.areas_clinicas, app.areasClinicas),
+        areas_outro: p.areas_outro || '',
+        populacoes: pickList(p.populacoes, app.populacoes),
+        tipos_casos: p.tipos_casos || '',
+        horas_iniciais: pick(p.horas_iniciais, app.horasIniciais),
+        dias_semana: pickList(p.dias_semana, app.diasSemana),
+        horarios_fixos: pick(p.horarios_fixos, app.horariosFixos),
+        disponibilidade_estavel: pick(p.disponibilidade_estavel, app.disponibilidadeEstavel),
+        aumento_futuro: p.aumento_futuro || '',
+        horas_aumento: p.horas_aumento || '',
+        aceita_condicoes: p.aceita_condicoes || '',
+        abordagem_terapeutica: p.abordagem_terapeutica || '',
+        modelos: pickList(p.modelos, app.modelos),
+        idiomas: pickList(p.idiomas, app.idiomas),
+        videoconferencia: p.videoconferencia || '',
+        atividade_profissional: p.atividade_profissional || '',
+        rc_profissional: p.rc_profissional || '',
+        limitacoes: p.limitacoes || '',
+        entrevista_disponibilidade: p.entrevista_disponibilidade || '',
+        periodos_entrevista: p.periodos_entrevista || '',
+        bolsa_autorizacao: pick(p.bolsa_autorizacao, app.bolsaAutorizacao),
+        linkedin: p.linkedin || '',
+        recebido_em: pick(p.recebido_em, app.createdAt)
+    };
 }
 
 function bolsaApplicationEmails(app) {
@@ -8092,8 +8146,16 @@ app.post('/api/recrutamento/psicologia', rateLimitRecrutamentoPsicologia, (req, 
             eliminationReasons: scoring.elimination_reasons,
             payload,
             cvFilename,
+            cvMime: (cv && cv.mimetype) || 'application/pdf',
+            cvData: cv && cv.buffer,
             status
         };
+
+        psychologistCvStore.set(applicationId, {
+            filename: cvFilename,
+            mime: applicationRecord.cvMime,
+            data: cv.buffer
+        });
 
         if (usePersistentDb) {
             try {
@@ -8112,7 +8174,9 @@ app.post('/api/recrutamento/psicologia', rateLimitRecrutamentoPsicologia, (req, 
                     score: scoring.score,
                     scoreBand: scoring.band,
                     eligible: scoring.eligible,
-                    professionalId: null
+                    professionalId: null,
+                    cvFilename,
+                    hasCv: true
                 });
             }
         } else {
@@ -8147,6 +8211,7 @@ app.post('/api/recrutamento/psicologia', rateLimitRecrutamentoPsicologia, (req, 
                 status,
                 adminNotes: '',
                 cvFilename,
+                hasCv: true,
                 payload
             });
             if (psychologistApplicationsStore.length > 500) psychologistApplicationsStore.length = 500;
@@ -9283,6 +9348,17 @@ app.post('/api/admin/psychologists/:id/login', requireAdmin, express.json(), asy
     } catch (err) {
         console.error('POST /api/admin/psychologists/:id/login:', err.message);
         res.status(httpErrorStatus(err, 500)).json({ error: err.message || 'Failed to assign login' });
+    }
+});
+
+app.get('/api/admin/psychologists/:id/cv', requireAdmin, async (req, res) => {
+    try {
+        const application = await findPsychologistApplicationInternal(req.params.id);
+        if (!application) return res.status(404).json({ error: 'Not found' });
+        await sendBolsaCvResponse(res, application);
+    } catch (err) {
+        console.error('GET /api/admin/psychologists cv:', err.message);
+        res.status(500).json({ error: 'Failed to download CV' });
     }
 });
 
@@ -10566,6 +10642,38 @@ app.get('/api/clinic/profile/documents/:id', requireAuth, async (req, res) => {
     }
 });
 
+async function sendBolsaCvResponse(res, app) {
+    if (!app || !app.id) {
+        return res.status(404).json({ error: 'CV not found' });
+    }
+    let file = psychologistCvStore.get(app.id) || null;
+    if (!file && usePersistentDb) {
+        try { file = await db.getPsychologistApplicationCv(app.id); } catch (e) { file = null; }
+    }
+    if (!file || !file.data) {
+        return res.status(404).json({ error: 'CV not found' });
+    }
+    const filename = String(file.filename || app.cvFilename || 'cv.pdf').replace(/[\r\n"]/g, '');
+    res.setHeader('Content-Type', file.mime || 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Cache-Control', 'private, no-store');
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    res.send(Buffer.isBuffer(file.data) ? file.data : Buffer.from(file.data));
+}
+
+app.get('/api/clinic/profile/bolsa-cv', requireAuth, async (req, res) => {
+    try {
+        const username = staffSessionUsername(req);
+        const filled = await fillStaffProfileFromBolsa(username);
+        const appId = filled.bolsa && filled.bolsa.id;
+        const app = appId ? await findPsychologistApplicationInternal(appId) : null;
+        await sendBolsaCvResponse(res, app || filled.bolsa);
+    } catch (err) {
+        console.error('GET /api/clinic/profile/bolsa-cv:', err.message);
+        res.status(500).json({ error: 'Failed to download CV' });
+    }
+});
+
 function validateProfessionalDoxyUrl(raw, { required } = {}) {
     const trimmed = String(raw || '').trim();
     if (!trimmed) {
@@ -10734,6 +10842,19 @@ app.get('/api/admin/staff-profiles', requireAdmin, async (req, res) => {
     } catch (err) {
         console.error('GET /api/admin/staff-profiles:', err.message);
         res.status(500).json({ error: 'Failed to load staff profiles' });
+    }
+});
+
+app.get('/api/admin/staff-profiles/:username/bolsa-cv', requireAdmin, async (req, res) => {
+    try {
+        const username = String(req.params.username || '').trim().toLowerCase();
+        const filled = await fillStaffProfileFromBolsa(username);
+        const appId = filled.bolsa && filled.bolsa.id;
+        const app = appId ? await findPsychologistApplicationInternal(appId) : null;
+        await sendBolsaCvResponse(res, app || filled.bolsa);
+    } catch (err) {
+        console.error('GET /api/admin/staff-profiles bolsa-cv:', err.message);
+        res.status(500).json({ error: 'Failed to download CV' });
     }
 });
 
@@ -11026,6 +11147,17 @@ async function findBolsaApplicationForStaff(username, professional) {
     const finish = (app) => mergeKnownBolsaApplication(app, username, pro) || seed || app || null;
     const fromStore = (predicate) => (psychologistApplicationsStore || []).find(predicate) || null;
 
+    try {
+        if (pro && pro.id) {
+            const byId = usePersistentDb
+                ? await db.findPsychologistApplicationByProfessionalId(pro.id)
+                : fromStore((a) => Number(a.professionalId) === Number(pro.id));
+            if (byId) return finish(byId);
+        }
+    } catch (err) {
+        console.error('findBolsaApplicationForStaff by id:', err.message);
+    }
+
     const emails = [];
     const seenEmail = new Set();
     const addEmail = (raw) => {
@@ -11060,23 +11192,6 @@ async function findBolsaApplicationForStaff(username, professional) {
         } catch (err) {
             console.error('findBolsaApplicationForStaff by email:', err.message);
         }
-    }
-
-    try {
-        if (pro && pro.id) {
-            const byId = usePersistentDb
-                ? await db.findPsychologistApplicationByProfessionalId(pro.id)
-                : fromStore((a) => Number(a.professionalId) === Number(pro.id));
-            if (byId) {
-                const appEmails = bolsaApplicationEmails(byId);
-                const proEmail = normalizeStaffEmail(pro.email);
-                if (!proEmail || !appEmails.length || appEmails.includes(proEmail)) {
-                    return finish(byId);
-                }
-            }
-        }
-    } catch (err) {
-        console.error('findBolsaApplicationForStaff by id:', err.message);
     }
 
     const u = String(username || '').trim().toLowerCase();
@@ -11129,9 +11244,9 @@ async function ensureAllBolsaStaffProfiles() {
             if (!match) {
                 const appName = bolsaApplicationName(app);
                 match = (pros || []).find((p) => {
-                    if (!p || isValidStaffEmail(p.email)) return false;
+                    if (!p) return false;
                     if (usernameMatchesPersonName(p.username, appName)) return true;
-                    if (personNamesMatch(p.displayName, appName) && !isClinicLeadDoxyName(p.displayName)) return true;
+                    if (personNamesMatch(p.displayName, appName) && !isClinicLeadDoxyName(p.displayName) && !isJunkStaffName(p.displayName)) return true;
                     return false;
                 });
             }
@@ -11237,57 +11352,67 @@ function joinBolsaList(value) {
 
 function publicBolsaProfile(app) {
     if (!app) return null;
-    const p = bolsaPayloadObject(app);
+    const p = hydrateBolsaPayload(app);
     const pais = p.pais === 'Outro' && p.pais_especificar
         ? `Outro: ${p.pais_especificar}`
-        : (p.pais || app.pais || '');
+        : (p.pais || '');
+    const areas = (() => {
+        const raw = Array.isArray(p.areas_clinicas) ? p.areas_clinicas.slice() : joinBolsaList(p.areas_clinicas);
+        if (!Array.isArray(raw)) return raw;
+        const extra = String(p.areas_outro || '').trim();
+        const cleaned = raw.map((item) => (item === 'Outro' && extra ? extra : item)).filter(Boolean);
+        if (extra && !cleaned.includes(extra)) cleaned.push(extra);
+        return cleaned;
+    })();
+    const received = p.recebido_em
+        ? (String(p.recebido_em).includes('T')
+            ? (() => {
+                const d = new Date(p.recebido_em);
+                return Number.isNaN(d.getTime()) ? p.recebido_em : d.toLocaleString('pt-PT');
+            })()
+            : p.recebido_em)
+        : '';
     const pushGroup = (groups, title, pairs) => {
-        const items = pairs
-            .map(([label, value]) => ({ label, value: joinBolsaList(value) }))
-            .filter((row) => row.value);
-        if (items.length) groups.push({ title, items });
+        groups.push({
+            title,
+            items: pairs.map(([label, value]) => ({ label, value: joinBolsaList(value) }))
+        });
     };
     const groups = [];
     pushGroup(groups, 'Dados pessoais', [
-        ['Nome completo', p.nome || app.name],
-        ['Email', p.email || app.email],
-        ['Telefone', p.telefone || app.phone],
-        ['Localidade', p.localidade || app.localidade],
+        ['Nome completo', p.nome],
+        ['Email', p.email],
+        ['Telefone', p.telefone],
+        ['Localidade', p.localidade],
         ['País onde exerce', pais]
     ]);
     pushGroup(groups, 'Formação e inscrição profissional', [
         ['Inscrito/a na OPP', p.opp_inscrito],
-        ['Cédula OPP', p.cedula_opp || app.cedulaOpp],
-        ['Grau académico', p.grau_academico || app.grauAcademico],
+        ['Cédula OPP', p.cedula_opp],
+        ['Grau académico', p.grau_academico],
         ['Formação complementar', p.formacao_complementar]
     ]);
     pushGroup(groups, 'Experiência profissional', [
-        ['Anos de Psicologia Clínica', p.anos_clinica || app.anosClinica],
-        ['Anos em consultas individuais', p.anos_individuais || app.anosIndividuais],
-        ['Experiência em consultas online', p.experiencia_online || app.experienciaOnline],
+        ['Anos de Psicologia Clínica', p.anos_clinica],
+        ['Anos em consultas individuais', p.anos_individuais],
+        ['Experiência em consultas online', p.experiencia_online],
         ['N.º de consultas online', p.n_consultas_online],
-        ['Áreas de maior experiência', (() => {
-            const raw = Array.isArray(p.areas_clinicas) ? p.areas_clinicas.slice() : [];
-            const extra = String(p.areas_outro || '').trim();
-            const cleaned = raw.map((item) => (item === 'Outro' && extra ? extra : item)).filter(Boolean);
-            if (extra && !cleaned.includes(extra)) cleaned.push(extra);
-            return cleaned.length ? cleaned : (app.areasClinicas || []);
-        })()],
-        ['Populações', p.populacoes || app.populacoes],
+        ['Áreas de maior experiência', areas],
+        ['Populações', p.populacoes],
         ['Casos que prefere acompanhar', p.tipos_casos]
     ]);
     pushGroup(groups, 'Disponibilidade', [
-        ['Horas semanais iniciais', p.horas_iniciais || app.horasIniciais],
-        ['Dias da semana', p.dias_semana || app.diasSemana],
-        ['Horários fixos', p.horarios_fixos || app.horariosFixos],
-        ['Disponibilidade estável', p.disponibilidade_estavel || app.disponibilidadeEstavel],
+        ['Horas semanais iniciais', p.horas_iniciais],
+        ['Dias da semana', p.dias_semana],
+        ['Horários fixos', p.horarios_fixos],
+        ['Disponibilidade estável', p.disponibilidade_estavel],
         ['Aumento de horas', p.aumento_futuro],
         ['Horas para as quais poderia aumentar', p.horas_aumento]
     ]);
     pushGroup(groups, 'Perfil clínico', [
         ['Abordagem terapêutica', p.abordagem_terapeutica],
-        ['Modelos / abordagens', p.modelos || app.modelos],
-        ['Idiomas', p.idiomas || app.idiomas],
+        ['Modelos / abordagens', p.modelos],
+        ['Idiomas', p.idiomas],
         ['Videoconferência', p.videoconferencia]
     ]);
     pushGroup(groups, 'Condições e disponibilidade extra', [
@@ -11297,21 +11422,27 @@ function publicBolsaProfile(app) {
         ['Limitações relevantes', p.limitacoes],
         ['Disponibilidade para entrevista online', p.entrevista_disponibilidade],
         ['Períodos para entrevista', p.periodos_entrevista],
-        ['Autorização bolsa / contactos futuros', p.bolsa_autorizacao || app.bolsaAutorizacao]
+        ['Autorização bolsa / contactos futuros', p.bolsa_autorizacao]
     ]);
-    pushGroup(groups, 'CV e contactos extra', [
-        ['CV enviado', app.cvFilename],
-        ['LinkedIn / website', p.linkedin],
-        ['Recebido em', p.recebido_em]
-    ]);
+    const hasCv = app.hasCv === true || psychologistCvStore.has(app.id);
+    const cvName = firstNonEmpty(app.cvFilename, p.cv_filename, hasCv ? 'CV enviado' : '');
+    groups.push({
+        title: 'CV e contactos extra',
+        items: [
+            { label: 'CV', value: cvName, kind: hasCv ? 'cv' : '' },
+            { label: 'LinkedIn / website', value: joinBolsaList(p.linkedin) },
+            { label: 'Recebido em', value: joinBolsaList(received) }
+        ]
+    });
     return {
         id: app.id,
-        name: app.name || p.nome || '',
-        email: app.email || p.email || '',
-        phone: firstNonEmpty(p.telefone, app.phone),
-        cedula: firstNonEmpty(p.cedula_opp, app.cedulaOpp),
-        localidade: firstNonEmpty(p.localidade, app.localidade),
+        name: p.nome || app.name || '',
+        email: p.email || app.email || '',
+        phone: p.telefone || '',
+        cedula: p.cedula_opp || '',
+        localidade: p.localidade || '',
         cvFilename: firstNonEmpty(app.cvFilename, p.cv_filename),
+        hasCv,
         groups
     };
 }
@@ -11414,6 +11545,30 @@ async function seedPsychologistStaffProfile(professional, app) {
     }
 }
 
+async function copyBolsaCvToStaffDocuments(username, app) {
+    const u = String(username || '').trim().toLowerCase();
+    if (!u || !app) return;
+    try {
+        const existing = (await listStaffDocumentsInternal(u) || []).find((d) => d && d.kind === 'cv');
+        if (existing) return;
+        let file = psychologistCvStore.get(app.id) || null;
+        if (!file && usePersistentDb && app.id) {
+            file = await db.getPsychologistApplicationCv(app.id);
+        }
+        if (!file || !file.data) return;
+        await saveStaffDocumentInternal({
+            username: u,
+            kind: 'cv',
+            originalName: file.filename || app.cvFilename || 'CV.pdf',
+            mime: file.mime || 'application/pdf',
+            validUntil: '',
+            fileData: file.data
+        });
+    } catch (err) {
+        console.error('copyBolsaCvToStaffDocuments:', err.message);
+    }
+}
+
 async function fillStaffProfileFromBolsa(username) {
     const u = String(username || '').trim().toLowerCase();
     if (!u) return { profile: await getStaffProfileInternal(u), bolsa: null };
@@ -11454,8 +11609,10 @@ async function fillStaffProfileFromBolsa(username) {
                 try { await setApplicationProfessionalIdInternal(app.id, professional.id); } catch (e) { /* ignore */ }
             }
             await seedPsychologistStaffProfile(professional, app);
+            await copyBolsaCvToStaffDocuments(professional.username || u, app);
         } else if (app && u) {
             await seedPsychologistStaffProfile({ username: u, displayName: app.name || '' }, app);
+            await copyBolsaCvToStaffDocuments(u, app);
         }
     } catch (err) {
         console.error('fillStaffProfileFromBolsa seed:', err.message);
@@ -11475,9 +11632,6 @@ async function fillStaffProfileFromBolsa(username) {
             }
         }
     }
-    console.log(
-        `   📋 Bolsa fill ${u}: app=${(app && app.id) || 'none'} email=${(bolsa && bolsa.email) || ''} groups=${(bolsa && bolsa.groups && bolsa.groups.length) || 0}`
-    );
     return {
         profile: await getStaffProfileInternal(u),
         bolsa

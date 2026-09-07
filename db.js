@@ -515,6 +515,8 @@ async function initSchema(p) {
     await p.query(
         `CREATE INDEX IF NOT EXISTS idx_psychologist_applications_professional ON psychologist_applications (professional_id)`
     );
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS cv_mime TEXT`);
+    await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS cv_data BYTEA`);
     await p.query(`
         CREATE TABLE IF NOT EXISTS staff_month_availability (
             username VARCHAR(64) NOT NULL,
@@ -782,6 +784,42 @@ async function insertReview(record) {
     return rowToReview(r.rows[0]);
 }
 
+const PSYCH_APP_SELECT = `
+    id, created_at, updated_at, name, email, phone, score, score_band, eligible,
+    elimination_reasons, payload, cv_filename, cv_mime,
+    (cv_data IS NOT NULL AND octet_length(cv_data) > 0) AS has_cv,
+    localidade, pais, cedula_opp, grau_academico, anos_clinica, anos_individuais, experiencia_online,
+    areas_clinicas, populacoes, idiomas, modelos, dias_semana,
+    horas_iniciais, horarios_fixos, disponibilidade_estavel, bolsa_autorizacao,
+    score_breakdown, status, admin_notes, professional_id
+`;
+
+function parseJsonObject(raw) {
+    if (raw && typeof raw === 'object' && !Array.isArray(raw)) return raw;
+    if (typeof raw === 'string' && raw.trim()) {
+        try {
+            const parsed = JSON.parse(raw);
+            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) return parsed;
+        } catch {
+            /* ignore */
+        }
+    }
+    return {};
+}
+
+function parseJsonArray(raw) {
+    if (Array.isArray(raw)) return raw;
+    if (typeof raw === 'string' && raw.trim()) {
+        try {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) return parsed;
+        } catch {
+            /* ignore */
+        }
+    }
+    return [];
+}
+
 async function insertPsychologistApplication(record) {
     const p = getPool();
     const payload = record.payload && typeof record.payload === 'object' ? record.payload : {};
@@ -789,18 +827,20 @@ async function insertPsychologistApplication(record) {
     const r = await p.query(
         `INSERT INTO psychologist_applications
             (id, name, email, phone, score, score_band, eligible, elimination_reasons, payload, cv_filename,
+             cv_mime, cv_data,
              localidade, pais, cedula_opp, grau_academico, anos_clinica, anos_individuais, experiencia_online,
              areas_clinicas, populacoes, idiomas, modelos, dias_semana,
              horas_iniciais, horarios_fixos, disponibilidade_estavel, bolsa_autorizacao,
              score_breakdown, status, admin_notes, updated_at)
          VALUES (
             $1, $2, $3, $4, $5, $6, $7, $8::jsonb, $9::jsonb, $10,
-            $11, $12, $13, $14, $15, $16, $17,
-            $18::jsonb, $19::jsonb, $20::jsonb, $21::jsonb, $22::jsonb,
-            $23, $24, $25, $26,
-            $27::jsonb, $28, $29, NOW()
+            $11, $12,
+            $13, $14, $15, $16, $17, $18, $19,
+            $20::jsonb, $21::jsonb, $22::jsonb, $23::jsonb, $24::jsonb,
+            $25, $26, $27, $28,
+            $29::jsonb, $30, $31, NOW()
          )
-         RETURNING *`,
+         RETURNING ${PSYCH_APP_SELECT}`,
         [
             record.id,
             record.name,
@@ -812,6 +852,8 @@ async function insertPsychologistApplication(record) {
             JSON.stringify(record.eliminationReasons || []),
             JSON.stringify(payload),
             record.cvFilename || null,
+            record.cvMime || (record.cvData ? 'application/pdf' : null),
+            record.cvData || null,
             payload.localidade || null,
             payload.pais || null,
             payload.cedula_opp || null,
@@ -852,25 +894,27 @@ function rowToPsychologistApplication(row) {
         anosClinica: row.anos_clinica || '',
         anosIndividuais: row.anos_individuais || '',
         experienciaOnline: row.experiencia_online || '',
-        areasClinicas: Array.isArray(row.areas_clinicas) ? row.areas_clinicas : [],
-        populacoes: Array.isArray(row.populacoes) ? row.populacoes : [],
-        idiomas: Array.isArray(row.idiomas) ? row.idiomas : [],
-        modelos: Array.isArray(row.modelos) ? row.modelos : [],
-        diasSemana: Array.isArray(row.dias_semana) ? row.dias_semana : [],
+        areasClinicas: parseJsonArray(row.areas_clinicas),
+        populacoes: parseJsonArray(row.populacoes),
+        idiomas: parseJsonArray(row.idiomas),
+        modelos: parseJsonArray(row.modelos),
+        diasSemana: parseJsonArray(row.dias_semana),
         horasIniciais: row.horas_iniciais || '',
         horariosFixos: row.horarios_fixos || '',
         disponibilidadeEstavel: row.disponibilidade_estavel || '',
         bolsaAutorizacao: row.bolsa_autorizacao || '',
         score: row.score != null ? Number(row.score) : 0,
         scoreBand: row.score_band || '',
-        scoreBreakdown: row.score_breakdown && typeof row.score_breakdown === 'object' ? row.score_breakdown : {},
+        scoreBreakdown: parseJsonObject(row.score_breakdown),
         eligible: row.eligible === true,
-        eliminationReasons: Array.isArray(row.elimination_reasons) ? row.elimination_reasons : [],
+        eliminationReasons: parseJsonArray(row.elimination_reasons),
         status: row.status || 'novo',
         adminNotes: row.admin_notes || '',
         professionalId: row.professional_id != null ? Number(row.professional_id) : null,
         cvFilename: row.cv_filename || '',
-        payload: row.payload && typeof row.payload === 'object' ? row.payload : {}
+        cvMime: row.cv_mime || '',
+        hasCv: row.has_cv === true || row.has_cv === 't' || Number(row.has_cv) === 1,
+        payload: parseJsonObject(row.payload)
     };
 }
 
@@ -896,7 +940,7 @@ async function listPsychologistApplications({ status, band, q, limit } = {}) {
     params.push(cap);
     const where = clauses.length ? `WHERE ${clauses.join(' AND ')}` : '';
     const r = await p.query(
-        `SELECT * FROM psychologist_applications ${where}
+        `SELECT ${PSYCH_APP_SELECT} FROM psychologist_applications ${where}
          ORDER BY score DESC NULLS LAST, created_at DESC
          LIMIT $${params.length}`,
         params
@@ -915,7 +959,7 @@ async function listPsychologistApplications({ status, band, q, limit } = {}) {
 
 async function findPsychologistApplicationById(id) {
     const p = getPool();
-    const r = await p.query(`SELECT * FROM psychologist_applications WHERE id = $1 LIMIT 1`, [id]);
+    const r = await p.query(`SELECT ${PSYCH_APP_SELECT} FROM psychologist_applications WHERE id = $1 LIMIT 1`, [id]);
     return rowToPsychologistApplication(r.rows[0]);
 }
 
@@ -924,7 +968,7 @@ async function findPsychologistApplicationByProfessionalId(id) {
     const n = Number(id);
     if (!Number.isInteger(n) || n < 1) return null;
     const r = await p.query(
-        `SELECT * FROM psychologist_applications
+        `SELECT ${PSYCH_APP_SELECT} FROM psychologist_applications
          WHERE professional_id = $1
          ORDER BY updated_at DESC NULLS LAST, created_at DESC
          LIMIT 1`,
@@ -938,7 +982,7 @@ async function findPsychologistApplicationByEmail(email) {
     const e = String(email || '').trim().toLowerCase();
     if (!e || !e.includes('@')) return null;
     const r = await p.query(
-        `SELECT * FROM psychologist_applications
+        `SELECT ${PSYCH_APP_SELECT} FROM psychologist_applications
          WHERE LOWER(TRIM(email)) = $1
             OR LOWER(TRIM(COALESCE(payload->>'email', payload->>'Email', ''))) = $1
          ORDER BY updated_at DESC NULLS LAST, created_at DESC
@@ -979,10 +1023,28 @@ async function updatePsychologistApplication(id, patch) {
             professional_id = CASE WHEN $4::boolean THEN $5 ELSE professional_id END,
             updated_at = NOW()
          WHERE id = $1
-         RETURNING *`,
+         RETURNING ${PSYCH_APP_SELECT}`,
         [id, status, adminNotes, professionalIdSpecified, professionalIdSpecified ? professionalId : null]
     );
     return rowToPsychologistApplication(r.rows[0]);
+}
+
+async function getPsychologistApplicationCv(id) {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT cv_filename, cv_mime, cv_data
+         FROM psychologist_applications
+         WHERE id = $1
+         LIMIT 1`,
+        [id]
+    );
+    const row = r.rows[0];
+    if (!row || !row.cv_data || !row.cv_data.length) return null;
+    return {
+        filename: row.cv_filename || 'cv.pdf',
+        mime: row.cv_mime || 'application/pdf',
+        data: row.cv_data
+    };
 }
 
 async function listPublicReviews(limit = 50) {
@@ -2818,6 +2880,7 @@ module.exports = {
     findPsychologistApplicationById,
     findPsychologistApplicationByProfessionalId,
     findPsychologistApplicationByEmail,
+    getPsychologistApplicationCv,
     updatePsychologistApplication,
     listPublicReviews,
     listAllReviews,
