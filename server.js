@@ -6213,6 +6213,71 @@ async function sendAvailabilityReminderEmail({ to, name, monthLabel, deadlineLab
     await deliverEmail({ from: EMAIL_FROM, to, subject, text, html });
 }
 
+function professionalLoginPortalUrl() {
+    return `${PUBLIC_SITE_URL}${CLINIC_PORTAL_PATH}#profile`;
+}
+
+function defaultProfessionalLoginNote(name) {
+    const who = String(name || '').trim();
+    const greeting = who ? `Olá ${who},` : 'Olá,';
+    return `${greeting}\n\nSeguem os dados de acesso ao portal da Lon Clinic. Abra o link abaixo, introduza o username e a password e inicie sessão.`;
+}
+
+function sanitizeProfessionalLoginNote(raw, name) {
+    let s = String(raw || '')
+        .replace(/<[^>]*>/g, '')
+        .replace(/\r\n/g, '\n')
+        .trim();
+    if (s.length > 800) s = s.slice(0, 800).trim();
+    return s || defaultProfessionalLoginNote(name);
+}
+
+async function resolveProfessionalNotifyEmail(pro) {
+    const direct = String((pro && pro.email) || '').trim();
+    if (isValidStaffEmail(direct)) return normalizeStaffEmail(direct);
+    const username = pro && pro.username;
+    if (!username) return '';
+    try {
+        const filled = await fillStaffProfileFromBolsa(username);
+        const fromBolsa = filled && filled.bolsa && filled.bolsa.email;
+        if (isValidStaffEmail(fromBolsa)) return normalizeStaffEmail(fromBolsa);
+    } catch (_) { /* keep empty */ }
+    return '';
+}
+
+async function professionalPasswordMatches(plain, hash) {
+    if (!plain || !hash) return false;
+    try {
+        return await bcrypt.compare(String(plain), String(hash));
+    } catch (_) {
+        return false;
+    }
+}
+
+async function sendProfessionalLoginEmail({ to, name, username, password, note }) {
+    const portalUrl = professionalLoginPortalUrl();
+    const intro = sanitizeProfessionalLoginNote(note, name);
+    const subject = 'Acesso ao portal da Lon Clinic';
+    const text = [
+        intro,
+        '',
+        `Portal: ${portalUrl}`,
+        `Username: ${username}`,
+        `Password: ${password}`,
+        '',
+        'Lon Clinic'
+    ].join('\n');
+    const introHtml = escapeHtml(intro).replace(/\n/g, '<br>');
+    const html = `<div style="font-family:system-ui,sans-serif;line-height:1.5;color:#111">
+<p style="margin:0 0 12px;">${introHtml}</p>
+<p style="margin:0 0 6px;"><a href="${escapeHtml(portalUrl)}">${escapeHtml(portalUrl)}</a></p>
+<p style="margin:0 0 4px;">Username: <strong>${escapeHtml(username)}</strong></p>
+<p style="margin:0 0 12px;">Password: <strong>${escapeHtml(password)}</strong></p>
+<p style="margin:0;">Lon Clinic</p>
+</div>`;
+    await deliverEmail({ from: EMAIL_FROM, to, subject, text, html });
+}
+
 async function runAvailabilityMonthReminders() {
     const today = lisbonTodayUtcMidnight();
     const day = today.getUTCDate();
@@ -12473,6 +12538,84 @@ app.post('/api/admin/professionals/:id/password', requireAdmin, async (req, res)
     } catch (err) {
         console.error('POST /api/admin/professionals/:id/password:', err.message);
         res.status(500).json({ error: 'Failed to assign a new password' });
+    }
+});
+
+app.post('/api/admin/professionals/:id/send-login-email', requireAdmin, express.json(), async (req, res) => {
+    try {
+        if (!isEmailConfigured) {
+            return res.status(503).json({ error: 'Email is not configured on the server.' });
+        }
+        const existing = await findProfessionalByIdInternal(req.params.id);
+        if (!existing) return res.status(404).json({ error: 'Professional not found' });
+        const body = req.body && typeof req.body === 'object' ? req.body : {};
+        const name = String(existing.displayName || existing.username || '').trim();
+        const requestedEmail = String(body.email || '').trim();
+        let to = '';
+        if (requestedEmail) {
+            const nextEmail = normalizeStaffEmail(requestedEmail);
+            if (!isValidStaffEmail(nextEmail)) {
+                return res.status(400).json({ code: 'invalid_email', error: 'Enter a valid email.' });
+            }
+            to = nextEmail;
+        } else {
+            to = await resolveProfessionalNotifyEmail(existing);
+        }
+        if (!to) {
+            return res.status(400).json({
+                code: 'missing_email',
+                error: 'Add an email on the ficha before sending login details.'
+            });
+        }
+        if (normalizeStaffEmail(existing.email || '') !== to) {
+            const patched = await patchProfessionalInternal(existing, { email: to });
+            if (patched) Object.assign(existing, patched);
+        }
+        const offeredPassword = String(body.password || '');
+        const confirmReset = body.confirmReset === true;
+        let plaintext = '';
+        let generatedPassword = null;
+        const matches = await professionalPasswordMatches(offeredPassword, existing.passwordHash);
+        if (matches) {
+            plaintext = offeredPassword;
+        } else if (!confirmReset) {
+            return res.status(409).json({
+                code: 'needs_reset',
+                error: 'The current password cannot be shown again. Confirm to generate a new password and email it. The old password will stop working.'
+            });
+        } else {
+            generatedPassword = generateProfessionalPassword();
+            const passwordHash = await bcrypt.hash(generatedPassword, 12);
+            let updated;
+            if (usePersistentDb) {
+                updated = await db.updateProfessional(existing.id, { passwordHash });
+            } else {
+                Object.assign(existing, { passwordHash, updatedAt: new Date().toISOString() });
+                updated = existing;
+            }
+            Object.assign(existing, updated || {});
+            plaintext = generatedPassword;
+            console.log(`   🔑 Professional password reset for login email: ${existing.username}`);
+        }
+        const note = sanitizeProfessionalLoginNote(body.note, name);
+        await sendProfessionalLoginEmail({
+            to,
+            name,
+            username: existing.username,
+            password: plaintext,
+            note
+        });
+        console.log(`   ✉️  Professional login email sent to ${to} (${existing.username})`);
+        res.json({
+            ok: true,
+            emailedTo: to,
+            professional: publicProfessional(existing),
+            generatedPassword: generatedPassword || undefined,
+            resetPassword: Boolean(generatedPassword)
+        });
+    } catch (err) {
+        console.error('POST /api/admin/professionals/:id/send-login-email:', err.message);
+        res.status(500).json({ error: err.message || 'Failed to send login email' });
     }
 });
 

@@ -2413,6 +2413,33 @@ body.dash-portal .dash-stat-card {
     border-radius: 4px;
 }
 
+.admin-pro-creds-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.admin-send-login-card {
+    max-width: 480px;
+}
+
+.admin-send-login-card textarea.admin-input {
+    min-height: 96px;
+    resize: vertical;
+}
+
+.admin-send-login-warn {
+    margin: 0 0 14px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: rgba(180, 83, 9, 0.1);
+    border: 1px solid rgba(180, 83, 9, 0.25);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    line-height: 1.45;
+}
+
 @media (max-width: 768px) {
     .clinic-doxy-card-actions {
         width: 100%;

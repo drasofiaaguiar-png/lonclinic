@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=pro-files-4">
+    <link rel="stylesheet" href="/dashboard.css?v=login-email-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -313,6 +313,37 @@
                         <div class="dash-modal-actions">
                             <button type="button" class="btn btn-outline" data-close-schedule-modal>Cancel</button>
                             <button type="submit" class="btn btn-primary" id="scheduleNextSubmit">Confirm appointment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="dash-modal" id="sendLoginEmailModal" hidden>
+                <div class="dash-modal-backdrop" data-close-send-login-modal></div>
+                <div class="dash-modal-card admin-send-login-card" role="dialog" aria-modal="true" aria-labelledby="sendLoginEmailTitle">
+                    <h2 class="dash-modal-title" id="sendLoginEmailTitle">Send login email</h2>
+                    <p class="dash-modal-desc" id="sendLoginEmailDesc">A short message in Portuguese, plus the portal, username and password.</p>
+                    <form id="sendLoginEmailForm">
+                        <input type="hidden" id="sendLoginProId" value="">
+                        <div class="admin-form-group">
+                            <label>Professional</label>
+                            <div class="admin-schedule-next-patient" id="sendLoginNameLabel"></div>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="sendLoginEmailTo">Email</label>
+                            <input type="email" id="sendLoginEmailTo" class="admin-input" required placeholder="profissional@email.com" autocomplete="off">
+                            <small id="sendLoginEmailHint" style="display:block;margin-top:6px;opacity:.7;">Saved on the ficha if it is missing or you change it here.</small>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="sendLoginNote">Short message</label>
+                            <textarea id="sendLoginNote" class="admin-input" rows="5" maxlength="800"></textarea>
+                            <small style="display:block;margin-top:6px;opacity:.7;">The portal, username and password are added automatically.</small>
+                        </div>
+                        <p class="admin-send-login-warn" id="sendLoginResetWarn" hidden>A new password will be generated and emailed. The current password will stop working.</p>
+                        <div id="sendLoginEmailError" class="dash-login-error" style="display:none;" role="alert"></div>
+                        <div class="dash-modal-actions">
+                            <button type="button" class="btn btn-outline" data-close-send-login-modal>Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="sendLoginSubmitBtn">Send email</button>
                         </div>
                     </form>
                 </div>
@@ -733,7 +764,7 @@
                     <div class="dash-section-header">
                         <div>
                             <h2 class="dash-section-title">Professionals &amp; Doxy rooms</h2>
-                            <p class="dash-section-subtitle">Every professional with a profile file is a collapsible row. Active rows have a clinic login and password; the others have a file but cannot sign in yet. Only Dra. Sofia Aguiar uses the clinic Doxy room. Copy each password when it appears; it is not stored in plain text.</p>
+                            <p class="dash-section-subtitle">Every professional with a profile file is a collapsible row. Active rows have a clinic login and password; the others have a file but cannot sign in yet. Only Dra. Sofia Aguiar uses the clinic Doxy room. Send the login by email from the row, or copy it when the password appears — it is not stored in plain text.</p>
                         </div>
                     </div>
                     <p class="dash-section-subtitle" id="adminDefaultDoxyUrl" style="margin-top:0;"></p>
@@ -787,7 +818,11 @@
                         <p class="admin-pro-creds-line">Name: <span id="proCredsName"></span></p>
                         <p class="admin-pro-creds-line">Username: <code id="proCredsUsername"></code></p>
                         <p class="admin-pro-creds-line">Password: <code id="proCredsPassword"></code></p>
-                        <button type="button" class="btn btn-outline btn-sm" id="proCredsCopyBtn">Copy login</button>
+                        <p class="admin-pro-creds-line" id="proCredsSendStatus" hidden></p>
+                        <div class="admin-pro-creds-actions">
+                            <button type="button" class="btn btn-outline btn-sm" id="proCredsCopyBtn">Copy login</button>
+                            <button type="button" class="btn btn-primary btn-sm" id="proCredsSendBtn">Send login email</button>
+                        </div>
                     </div>
                     <div class="admin-pro-files-wrap">
                         <div class="admin-pro-files-legend" aria-hidden="true">
@@ -1160,7 +1195,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=pro-files-4"></script>
+    <script src="/admin.js?v=login-email-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

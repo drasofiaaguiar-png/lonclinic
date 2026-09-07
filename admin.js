@@ -2993,6 +2993,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     username: data.professional.username,
                     password: data.generatedPassword
                 }]);
+                rememberFreshPassword(data.professional, data.generatedPassword);
             } else {
                 hidePsychCreds();
                 alert(`${label} is already connected as ${(data.professional && data.professional.username) || 'a clinic login'}.`);
@@ -3018,6 +3019,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     username: row.professional && row.professional.username,
                     password: row.generatedPassword
                 })));
+                created.forEach((row) => rememberFreshPassword(row.professional, row.generatedPassword));
             } else {
                 hidePsychCreds();
                 alert(data.linked && data.linked.length
@@ -3105,6 +3107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     username: body.professional.username,
                     password: body.generatedPassword
                 }]);
+                rememberFreshPassword(body.professional, body.generatedPassword);
             }
         } catch (err) {
             console.error('Create bolsa:', err);
@@ -3697,13 +3700,165 @@ document.addEventListener('DOMContentLoaded', async () => {
     const proCredsUsername = document.getElementById('proCredsUsername');
     const proCredsPassword = document.getElementById('proCredsPassword');
     const proCredsCopyBtn = document.getElementById('proCredsCopyBtn');
+    const proCredsSendBtn = document.getElementById('proCredsSendBtn');
+    const proCredsSendStatus = document.getElementById('proCredsSendStatus');
+    const sendLoginEmailModal = document.getElementById('sendLoginEmailModal');
+    const sendLoginEmailForm = document.getElementById('sendLoginEmailForm');
+    const sendLoginProId = document.getElementById('sendLoginProId');
+    const sendLoginNameLabel = document.getElementById('sendLoginNameLabel');
+    const sendLoginEmailTo = document.getElementById('sendLoginEmailTo');
+    const sendLoginNote = document.getElementById('sendLoginNote');
+    const sendLoginResetWarn = document.getElementById('sendLoginResetWarn');
+    const sendLoginEmailError = document.getElementById('sendLoginEmailError');
+    const sendLoginSubmitBtn = document.getElementById('sendLoginSubmitBtn');
     let professionalsCache = [];
     let boardProfessionalsCache = [];
     let namedProfessionalsCache = [];
     let staffProfilesCache = [];
     let staffDocumentKindsCache = {};
     let proUsernameTouched = false;
+    const freshPasswordsById = Object.create(null);
     const PRO_PASSWORD_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+
+    function rememberFreshPassword(pro, password) {
+        if (!pro || !password) return;
+        const id = pro.id || pro.professionalId;
+        if (id) freshPasswordsById[String(id)] = String(password);
+    }
+
+    function defaultProfessionalLoginNote(name) {
+        const who = String(name || '').trim();
+        const greeting = who ? `Olá ${who},` : 'Olá,';
+        return `${greeting}\n\nSeguem os dados de acesso ao portal da Lon Clinic. Abra o link abaixo, introduza o username e a password e inicie sessão.`;
+    }
+
+    function professionalRecordById(id) {
+        const key = String(id || '');
+        if (!key) return null;
+        const fromStaff = (staffProfilesCache || []).find((p) => String(p.id || p.professionalId || '') === key);
+        const fromPro = (professionalsCache || []).find((p) => String(p.id) === key);
+        if (!fromStaff && !fromPro) return null;
+        return professionalFileRecord(fromStaff, fromPro);
+    }
+
+    function setSendLoginError(message) {
+        if (!sendLoginEmailError) return;
+        if (!message) {
+            sendLoginEmailError.style.display = 'none';
+            sendLoginEmailError.textContent = '';
+            return;
+        }
+        sendLoginEmailError.textContent = message;
+        sendLoginEmailError.style.display = 'block';
+    }
+
+    function setProfessionalCredsSendStatus(message) {
+        if (!proCredsSendStatus) return;
+        if (!message) {
+            proCredsSendStatus.hidden = true;
+            proCredsSendStatus.textContent = '';
+            return;
+        }
+        proCredsSendStatus.hidden = false;
+        proCredsSendStatus.textContent = message;
+    }
+
+    function closeSendLoginEmailModal() {
+        if (sendLoginEmailModal) sendLoginEmailModal.hidden = true;
+        setSendLoginError('');
+    }
+
+    function openSendLoginEmailModal(pro) {
+        if (!pro || !pro.id) return;
+        const name = pro.displayName || pro.fullName || pro.username || 'this professional';
+        const email = String(pro.email || '').trim();
+        const fresh = freshPasswordsById[String(pro.id)] || '';
+        if (sendLoginProId) sendLoginProId.value = String(pro.id);
+        if (sendLoginNameLabel) sendLoginNameLabel.textContent = name;
+        if (sendLoginEmailTo) sendLoginEmailTo.value = email;
+        if (sendLoginNote) sendLoginNote.value = defaultProfessionalLoginNote(name);
+        if (sendLoginResetWarn) sendLoginResetWarn.hidden = !!fresh;
+        if (sendLoginSubmitBtn) {
+            sendLoginSubmitBtn.textContent = fresh ? 'Send email' : 'Generate password & send';
+            sendLoginSubmitBtn.disabled = false;
+        }
+        const hint = document.getElementById('sendLoginEmailHint');
+        if (hint) {
+            hint.textContent = email
+                ? 'Saved on the ficha if it is missing or you change it here.'
+                : 'Required — this address is saved on the ficha.';
+        }
+        setSendLoginError('');
+        if (sendLoginEmailModal) sendLoginEmailModal.hidden = false;
+        if (sendLoginEmailTo) sendLoginEmailTo.focus();
+    }
+
+    async function submitSendLoginEmail(forceReset) {
+        const id = sendLoginProId ? sendLoginProId.value : '';
+        const email = sendLoginEmailTo ? sendLoginEmailTo.value.trim() : '';
+        const note = sendLoginNote ? sendLoginNote.value.trim() : '';
+        const password = forceReset ? '' : (freshPasswordsById[String(id)] || '');
+        if (!id) {
+            setSendLoginError('Professional not found.');
+            return;
+        }
+        if (!email) {
+            setSendLoginError('Add an email on the ficha before sending.');
+            if (sendLoginEmailTo) sendLoginEmailTo.focus();
+            return;
+        }
+        const confirmReset = !password;
+        if (confirmReset && !forceReset) {
+            const label = sendLoginNameLabel ? sendLoginNameLabel.textContent : 'this professional';
+            if (!window.confirm(`Assign a new password to ${label} and email it? The current password will stop working.`)) return;
+        }
+        if (sendLoginSubmitBtn) sendLoginSubmitBtn.disabled = true;
+        setSendLoginError('');
+        try {
+            const res = await fetch(`/api/admin/professionals/${encodeURIComponent(id)}/send-login-email`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email,
+                    note,
+                    password: password || undefined,
+                    confirmReset
+                })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (res.status === 409 && data.code === 'needs_reset' && !forceReset) {
+                if (!window.confirm('The current password cannot be shown again. Generate a new password and email it? The old password will stop working.')) {
+                    if (sendLoginSubmitBtn) sendLoginSubmitBtn.disabled = false;
+                    return;
+                }
+                return submitSendLoginEmail(true);
+            }
+            if (!res.ok) {
+                setSendLoginError(data.error || 'Could not send login email.');
+                if (data.code === 'missing_email') {
+                    const person = professionalRecordById(id);
+                    if (person) fillCreateProfileForm(person);
+                }
+                if (sendLoginSubmitBtn) sendLoginSubmitBtn.disabled = false;
+                return;
+            }
+            closeSendLoginEmailModal();
+            await loadAdminProfessionals();
+            const sentPro = data.professional || professionalRecordById(id);
+            const newPassword = data.generatedPassword || password;
+            if (newPassword && sentPro) {
+                showProfessionalCreds(sentPro, newPassword);
+            }
+            const to = data.emailedTo || email;
+            setProfessionalCredsSendStatus(`Login email sent to ${to}.`);
+            if (!adminProfessionalCreds || adminProfessionalCreds.hidden) {
+                showProfessionalError(`Login email sent to ${to}.`);
+            }
+        } catch (err) {
+            setSendLoginError('Network error. Please try again.');
+            if (sendLoginSubmitBtn) sendLoginSubmitBtn.disabled = false;
+        }
+    }
 
     function showProfessionalError(message) {
         if (!adminProfessionalError) return;
@@ -3718,10 +3873,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function hideProfessionalCreds() {
         if (adminProfessionalCreds) adminProfessionalCreds.hidden = true;
+        setProfessionalCredsSendStatus('');
     }
 
     function showProfessionalCreds(pro, password) {
         if (!adminProfessionalCreds || !password) return;
+        rememberFreshPassword(pro, password);
         const portal = `${window.location.origin}/clinic-desk/dias#profile`;
         if (proCredsPortal) {
             proCredsPortal.href = '/clinic-desk/dias#profile';
@@ -3730,6 +3887,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (proCredsName) proCredsName.textContent = (pro && pro.displayName) || '';
         if (proCredsUsername) proCredsUsername.textContent = (pro && pro.username) || '';
         if (proCredsPassword) proCredsPassword.textContent = password;
+        if (adminProfessionalCreds && pro && pro.id) adminProfessionalCreds.dataset.proId = String(pro.id);
+        setProfessionalCredsSendStatus('');
         adminProfessionalCreds.hidden = false;
         adminProfessionalCreds.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
@@ -3856,6 +4015,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             bits.push(`<button type="button" class="btn btn-outline btn-sm" data-pro-edit="${p.id}">Edit login / Doxy</button>`);
             bits.push(`<button type="button" class="btn btn-outline btn-sm" data-pro-password="${p.id}">New password</button>`);
             if (!p.isClinicAdmin) {
+                bits.push(`<button type="button" class="btn btn-primary btn-sm" data-pro-send-login="${p.id}">Send login email</button>`);
                 bits.push(`<button type="button" class="btn btn-outline btn-sm" data-pro-delete="${p.id}">Remove login</button>`);
             }
         } else if (p.boardId && !p.hasLogin) {
@@ -4409,6 +4569,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    if (proCredsSendBtn) {
+        proCredsSendBtn.addEventListener('click', () => {
+            const id = adminProfessionalCreds && adminProfessionalCreds.dataset.proId;
+            const person = professionalRecordById(id);
+            const username = proCredsUsername ? proCredsUsername.textContent : '';
+            const name = proCredsName ? proCredsName.textContent : '';
+            const password = proCredsPassword ? proCredsPassword.textContent : '';
+            const pro = person || { id, username, displayName: name };
+            if (password && id) rememberFreshPassword(pro, password);
+            if (!pro.id) {
+                showProfessionalError('Could not find this professional.');
+                return;
+            }
+            openSendLoginEmailModal(pro);
+        });
+    }
+    document.querySelectorAll('[data-close-send-login-modal]').forEach((el) => {
+        el.addEventListener('click', closeSendLoginEmailModal);
+    });
+    if (sendLoginEmailForm) {
+        sendLoginEmailForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            submitSendLoginEmail(false);
+        });
+    }
+
     if (proCancelEditBtn) {
         proCancelEditBtn.addEventListener('click', () => resetProfessionalForm());
     }
@@ -4461,6 +4647,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const assignStaffLoginBtn = e.target.closest('[data-staff-assign-login]');
             const editBtn = e.target.closest('[data-pro-edit]');
             const passwordBtn = e.target.closest('[data-pro-password]');
+            const sendLoginBtn = e.target.closest('[data-pro-send-login]');
             const loginBtn = e.target.closest('[data-psych-login]');
             const fromNameBtn = e.target.closest('[data-pro-from-name]');
             const delBtn = e.target.closest('[data-pro-delete]');
@@ -4529,6 +4716,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const id = Number(editBtn.getAttribute('data-pro-edit'));
                 const pro = professionalsCache.find((p) => p.id === id);
                 startEditProfessional(pro);
+                return;
+            }
+            if (sendLoginBtn) {
+                const id = sendLoginBtn.getAttribute('data-pro-send-login');
+                const pro = professionalRecordById(id);
+                if (!pro || !pro.id) {
+                    showProfessionalError('Could not find this professional.');
+                    return;
+                }
+                openSendLoginEmailModal(pro);
                 return;
             }
             if (passwordBtn) {
