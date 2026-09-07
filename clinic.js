@@ -1591,9 +1591,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return groups.filter((g) => g && Array.isArray(g.items));
     }
 
-    function renderAreaChecks(container, profession, selected) {
+    function renderAreaChecks(container, profession, selected, fieldName) {
         if (!container) return;
         const selectedSet = new Set(parseAreaList(selected));
+        const inputName = fieldName || 'areas';
         if (!profession) {
             container.innerHTML = '<p class="clinic-pref-empty">Seleccione a profissão primeiro</p>';
             return;
@@ -1608,7 +1609,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="clinic-pref-list">
                     ${(g.items || []).map((item) => `
                         <label class="clinic-pref-check">
-                            <input type="checkbox" value="${escapeHtml(item)}" ${selectedSet.has(item) ? 'checked' : ''}>
+                            <input type="checkbox" name="${escapeHtml(inputName)}" value="${escapeHtml(item)}" ${selectedSet.has(item) ? 'checked' : ''}>
                             <span>${escapeHtml(item)}</span>
                         </label>
                     `).join('')}
@@ -1628,8 +1629,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function fillClinicAreaChecks(profession, primarySelected, secondarySelected) {
-        renderAreaChecks(clinicPrimaryAreas, profession, primarySelected);
-        renderAreaChecks(clinicSecondaryAreas, profession, secondarySelected);
+        renderAreaChecks(clinicPrimaryAreas, profession, primarySelected, 'primaryAreas');
+        renderAreaChecks(clinicSecondaryAreas, profession, secondarySelected, 'secondaryAreas');
     }
 
     function updateOrdemLabel() {

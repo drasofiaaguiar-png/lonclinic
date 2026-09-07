@@ -1331,6 +1331,11 @@ body.dash-portal .dash-stat-card {
     box-sizing: border-box;
 }
 
+.clinic-profile-form textarea.clinic-bio-input {
+    flex: none;
+    width: 100%;
+}
+
 .clinic-profile-dl .clinic-profile-role-select {
     max-width: 22rem;
 }
@@ -1345,13 +1350,16 @@ body.dash-portal .dash-stat-card {
     display: block;
     width: 100%;
     max-width: none;
-    min-height: 10rem;
+    min-height: 18rem;
+    height: 18rem;
     resize: vertical;
     box-sizing: border-box;
+    line-height: 1.5;
 }
 
 .clinic-address-input {
     min-height: 4.5rem;
+    height: 4.5rem;
 }
 
 .clinic-pref-block {
@@ -1413,8 +1421,10 @@ body.dash-portal .dash-stat-card {
 .clinic-pref-check {
     display: flex;
     align-items: flex-start;
-    gap: 8px;
+    gap: 10px;
     margin: 0;
+    padding: 6px 8px;
+    border-radius: 8px;
     font-size: 0.8125rem;
     font-weight: 500;
     line-height: 1.4;
@@ -1422,9 +1432,18 @@ body.dash-portal .dash-stat-card {
     cursor: pointer;
 }
 
+.clinic-pref-check:hover {
+    background: rgba(37, 82, 53, 0.06);
+}
+
 .clinic-pref-check input {
-    margin-top: 2px;
+    appearance: auto;
+    -webkit-appearance: checkbox;
+    margin-top: 3px;
+    width: 1.1rem;
+    height: 1.1rem;
     flex-shrink: 0;
+    cursor: pointer;
 }
 
 .clinic-pref-empty {

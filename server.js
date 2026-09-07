@@ -427,9 +427,7 @@ function clinicDoxyOwnerNameKey(raw) {
 
 function isClinicLeadDoxyName(raw) {
     const s = clinicDoxyOwnerNameKey(raw);
-    return s === 'sofia aguiar' || s === 'rita aguiar'
-        || /(^|\s)sofia aguiar(\s|$)/.test(s)
-        || /(^|\s)rita aguiar(\s|$)/.test(s);
+    return s === 'sofia aguiar' || /(^|\s)sofia aguiar(\s|$)/.test(s);
 }
 
 function assignedDoxyRoomUrl(displayName, rawUrl) {
@@ -10047,7 +10045,7 @@ app.get('/api/clinic/doxy', requireAuth, async (req, res) => {
                 displayName = pro.displayName || displayName;
                 patientRoomUrl = assignedDoxyRoomUrl(pro.displayName, pro.doxyRoomUrl);
             }
-        } else if (role === 'admin') {
+        } else if (role === 'admin' && isClinicLeadDoxyName(displayName)) {
             patientRoomUrl = DEFAULT_DOXY_ROOM_URL || '';
         }
         res.json({

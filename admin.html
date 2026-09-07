@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=pro-doxy-own-1">
+    <link rel="stylesheet" href="/dashboard.css?v=profile-ui-2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -733,7 +733,7 @@
                     <div class="dash-section-header">
                         <div>
                             <h2 class="dash-section-title">Professionals &amp; Doxy rooms</h2>
-                            <p class="dash-section-subtitle">Clinic logins and Doxy rooms. <strong>https://doxy.me/lonclinic/ritaaguiar</strong> is Dra. Sofia Aguiar’s room (also used for unassigned bookings). Leave Doxy blank for everyone else — each professional will have their own room.</p>
+                            <p class="dash-section-subtitle">Clinic logins and Doxy rooms. Only Dra. Sofia Aguiar uses the clinic room. Leave Doxy blank for everyone else — each professional will have their own. Copy each password when it appears; it is not stored in plain text.</p>
                         </div>
                     </div>
                     <p class="dash-section-subtitle" id="adminDefaultDoxyUrl" style="margin-top:0;"></p>
@@ -970,16 +970,16 @@
                         <div class="clinic-bio-creds-grid">
                             <div class="admin-form-group">
                                 <label for="adminBio">Bio</label>
-                                <textarea id="adminBio" class="admin-input clinic-bio-input" rows="5" maxlength="4000" placeholder="Short professional bio"></textarea>
+                                <textarea id="adminBio" class="admin-input clinic-bio-input" rows="14" maxlength="4000" placeholder="Professional bio"></textarea>
                             </div>
                             <div class="admin-form-group">
                                 <label for="adminCredentials">Main credentials</label>
-                                <textarea id="adminCredentials" class="admin-input clinic-bio-input" rows="5" maxlength="2000" placeholder="Degrees, fellowships, specialisations"></textarea>
+                                <textarea id="adminCredentials" class="admin-input clinic-bio-input" rows="14" maxlength="2000" placeholder="Degrees, fellowships, specialisations"></textarea>
                             </div>
                         </div>
                         <div class="clinic-pref-block">
                             <h3 class="clinic-pref-heading">Áreas preferenciais</h3>
-                            <p class="dash-section-subtitle">Pode marcar várias. As primárias são as áreas em que prefere receber utentes; as secundárias são complementar.</p>
+                            <p class="dash-section-subtitle">Marque todas as que se aplicam — pode escolher várias em cada lista. As primárias são as áreas em que prefere receber utentes; as secundárias são complementar.</p>
                             <div class="clinic-pref-cols">
                                 <fieldset class="clinic-pref-col">
                                     <legend>Preferências primárias</legend>
@@ -1045,7 +1045,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=pro-doxy-own-1"></script>
+    <script src="/admin.js?v=profile-ui-2"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

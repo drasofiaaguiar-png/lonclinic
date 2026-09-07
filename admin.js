@@ -3582,7 +3582,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             namedProfessionalsCache = data.named || [];
             if (adminDefaultDoxyUrl) {
                 adminDefaultDoxyUrl.textContent = data.defaultDoxyRoomUrl
-                    ? `Sofia Aguiar’s Doxy room (clinic admin / unassigned bookings): ${data.defaultDoxyRoomUrl}. Other professionals stay blank until you add their own room.`
+                    ? `Clinic fallback room (unassigned bookings only). Other professionals stay blank until you add their own Doxy URL.`
                     : 'No clinic Doxy room is set. Add one on Dra. Sofia Aguiar’s profile, or leave other professionals blank until each has their own.';
             }
             const boardCountEl = document.getElementById('adminBoardCount');
@@ -3934,9 +3934,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         return groups.filter((g) => g && Array.isArray(g.items));
     }
 
-    function renderAreaChecks(container, profession, selected) {
+    function renderAreaChecks(container, profession, selected, fieldName) {
         if (!container) return;
         const selectedSet = new Set(parseAreaList(selected));
+        const inputName = fieldName || 'areas';
         if (!profession) {
             container.innerHTML = '<p class="clinic-pref-empty">Seleccione a profissão primeiro</p>';
             return;
@@ -3951,7 +3952,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="clinic-pref-list">
                     ${(g.items || []).map((item) => `
                         <label class="clinic-pref-check">
-                            <input type="checkbox" value="${escapeHtml(item)}" ${selectedSet.has(item) ? 'checked' : ''}>
+                            <input type="checkbox" name="${escapeHtml(inputName)}" value="${escapeHtml(item)}" ${selectedSet.has(item) ? 'checked' : ''}>
                             <span>${escapeHtml(item)}</span>
                         </label>
                     `).join('')}
@@ -3971,8 +3972,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function fillAdminAreaChecks(profession, primarySelected, secondarySelected) {
-        renderAreaChecks(adminPrimaryAreas, profession, primarySelected);
-        renderAreaChecks(adminSecondaryAreas, profession, secondarySelected);
+        renderAreaChecks(adminPrimaryAreas, profession, primarySelected, 'primaryAreas');
+        renderAreaChecks(adminSecondaryAreas, profession, secondarySelected, 'secondaryAreas');
     }
 
     function updateAdminOrdemLabel() {
@@ -4074,7 +4075,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (doxyRes.ok) {
                 const doxy = await doxyRes.json().catch(() => ({}));
                 if (adminProfileDoxy) {
-                    adminProfileDoxy.textContent = doxy.patientRoomUrl || doxy.providerUrl || '—';
+                    adminProfileDoxy.textContent = doxy.patientRoomUrl || 'Not set — add this professional’s own Doxy.me room in Professionals & Doxy';
                 }
             }
         } catch (err) {
