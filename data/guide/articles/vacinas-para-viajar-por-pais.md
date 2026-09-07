@@ -34,7 +34,7 @@ A [consulta do viajante](/travel-clinic) da Lon Clinic (39 €) cruza destino, d
 
 Consulta em Lisboa (não só a vacina): [onde fazer consulta de medicina do viajante](/blog/onde-fazer-consulta-medicina-do-viajante-lisboa). [Quando agendar](/blog/quando-agendar-consulta-do-viajante) (prazos e percurso online vs. tradicional).
 
-[Lisboa](/blog/vacinas-viajante-lisboa), [Porto](/blog/vacinas-viajante-porto), [Coimbra](/blog/vacinas-viajante-coimbra), [Braga](/blog/vacinas-viajante-braga), [Algarve](/blog/vacinas-viajante-algarve). A [febre amarela](/blog/vacina-febre-amarela-guia-completo) tem certificado com validade de 10 dias após a dose.
+[Lisboa](/blog/vacinas-viajante-lisboa), [Porto](/blog/vacinas-viajante-porto), [Coimbra](/blog/vacinas-viajante-coimbra), [Braga](/blog/vacinas-viajante-braga), [Algarve](/blog/vacinas-viajante-algarve). Lista nacional com experiência de contacto: [Centros de Vacinação Internacional](/blog/centros-de-vacinacao-internacional-portugal). A [febre amarela](/blog/vacina-febre-amarela-guia-completo) tem certificado com validade de 10 dias após a dose.
 
 ## Fontes
 

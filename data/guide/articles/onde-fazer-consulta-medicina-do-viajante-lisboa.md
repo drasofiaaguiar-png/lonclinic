@@ -47,7 +47,7 @@ Marcação prévia em todos. Não apareça sem horário.
 
 **IHMT NOVA — Instituto de Higiene e Medicina Tropical**, na Junqueira. Centro de referência de medicina tropical (adultos e, em regra, também pediátrico). Contacte o instituto para horários e email de marcação; não inventamos um número aqui.
 
-Na área metropolitana há mais CVI (Almada, Amadora, Cascais, Oeiras, Loures). Lista com moradas: [vacinas do viajante em Lisboa](/blog/vacinas-viajante-lisboa).
+Na área metropolitana há mais CVI (Almada, Amadora, Cascais, Oeiras, Loures). Lista com moradas: [vacinas do viajante em Lisboa](/blog/vacinas-viajante-lisboa). Contactos e experiência de marcação em todo o país: [Centros de Vacinação Internacional por região](/blog/centros-de-vacinacao-internacional-portugal).
 
 ## Setor privado presencial
 

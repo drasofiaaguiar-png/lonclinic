@@ -1,6 +1,52 @@
 {
     "articles": [
         {
+            "slug": "centros-de-vacinacao-internacional-portugal",
+            "title": "Centros de Vacinação Internacional em Portugal: guia completo por região (2026)",
+            "description": "Contactos, horários e experiência real de marcação em todos os Centros de Vacinação Internacional em Portugal. Consulta do viajante online, 39 €.",
+            "datePublished": "2026-09-07",
+            "dateModified": "2026-09-07",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Medicina do viajante",
+            "author": "rita-aguiar",
+            "image": "/image/guide/travel-cover-7.png",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "readingMinutes": 12,
+            "related": [
+                "vacinas-viajante-guia-completo",
+                "quando-agendar-consulta-do-viajante",
+                "onde-fazer-consulta-medicina-do-viajante-lisboa",
+                "quanto-custa-consulta-medicina-do-viajante",
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-viajante-lisboa"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de ir a um Centro de Vacinação Internacional para tomar vacinas de viagem?",
+                    "a": "A febre amarela e o certificado internacional (CIVP) só se fazem num Centro de Vacinação Internacional. Outras vacinas de viagem podem, com receita, ser administradas em farmácia. A consulta do viajante define o plano; na Lon Clinic a videoconsulta custa 39 € e a prescrição serve para marcar a toma no CVI."
+                },
+                {
+                    "q": "Quanto tempo demora a marcar uma consulta do viajante no SNS?",
+                    "a": "Varia de cerca de um dia de espera para vacina (ULS Lezíria, Santarém) a mais de dois ou três meses para consulta (ULS Gaia/Espinho ou doenças infecciosas do CHP). Na Lon Clinic a consulta é em regra hoje ou amanhã; a espera da vacina continua a ser a do centro."
+                },
+                {
+                    "q": "A prescrição electrónica chega para tomar a vacina no CVI?",
+                    "a": "Em vários centros, não. Pedem a prescrição em papel no dia da toma — por exemplo na ULS de Coimbra e na ULS do Arco Ribeirinho — mesmo que já exista receita electrónica."
+                },
+                {
+                    "q": "Os Centros de Vacinação Internacional atendem em inglês?",
+                    "a": "Nem todos. O e-mail costuma ser a via mais fiável. Na ULS Santa Maria (Sete Rios) a marcação por e-mail costuma ter resposta no próprio dia ou no dia seguinte."
+                },
+                {
+                    "q": "Porque é que tantos centros não atendem o telefone?",
+                    "a": "Na auditoria da Lon Clinic (3–7 de setembro de 2026), parte dos centros usa atendimento automático com pedido de retorno, tem linhas avariadas, ou não atendeu nas tentativas feitas. Recomenda-se o e-mail em paralelo."
+                }
+            ]
+        },
+        {
             "datePublished": "2026-09-06",
             "dateModified": "2026-09-06",
             "format": "markdown",
@@ -4760,6 +4806,7 @@
             "related": [
                 "quando-agendar-consulta-do-viajante",
                 "onde-fazer-consulta-medicina-do-viajante-lisboa",
+                "centros-de-vacinacao-internacional-portugal",
                 "vacinas-para-viajar-por-pais",
                 "vacinas-viajante-guia-completo",
                 "vacina-febre-amarela-guia-completo"
@@ -4794,6 +4841,7 @@
             "related": [
                 "quando-agendar-consulta-do-viajante",
                 "vacinas-viajante-lisboa",
+                "centros-de-vacinacao-internacional-portugal",
                 "quanto-custa-consulta-medicina-do-viajante",
                 "vacina-febre-amarela-lisboa",
                 "vacinas-viajante-cuf"
@@ -4833,6 +4881,7 @@
                 "vou-viajar-esta-semana-sem-vacinas",
                 "onde-fazer-consulta-medicina-do-viajante-lisboa",
                 "quanto-custa-consulta-medicina-do-viajante",
+                "centros-de-vacinacao-internacional-portugal",
                 "vacinas-viajante-guia-completo",
                 "vacina-febre-amarela-guia-completo"
             ],
@@ -4917,6 +4966,7 @@
                 "quando-agendar-consulta-do-viajante",
                 "onde-fazer-consulta-medicina-do-viajante-lisboa",
                 "quanto-custa-consulta-medicina-do-viajante",
+                "centros-de-vacinacao-internacional-portugal",
                 "vacinas-viajante-guia-completo",
                 "vacina-febre-amarela-guia-completo"
             ],

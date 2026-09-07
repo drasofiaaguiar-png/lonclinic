@@ -502,6 +502,7 @@
     letter-spacing: -0.02em;
     margin: 2rem 0 0.75rem;
     color: var(--lon-primary);
+    scroll-margin-top: 92px;
 }
 
 .guide-prose h3 {
@@ -509,6 +510,7 @@
     font-weight: 700;
     margin: 1.5rem 0 0.5rem;
     color: var(--lon-primary);
+    scroll-margin-top: 92px;
 }
 
 .guide-prose p {
@@ -817,6 +819,66 @@
     border: none;
     border-top: 1px solid var(--lon-border);
     margin: 2rem 0;
+}
+
+.guide-region-index {
+    margin: 0 0 1.6rem;
+    padding: 0.9rem 1rem 0.85rem;
+    border: 1px solid var(--lon-border, #d9e2dc);
+    border-radius: 14px;
+    background: #f6f8f6;
+}
+
+.guide-region-index ul {
+    margin: 0;
+    padding-left: 1.15rem;
+    columns: 2;
+    column-gap: 1.5rem;
+}
+
+@media (max-width: 560px) {
+    .guide-region-index ul {
+        columns: 1;
+    }
+}
+
+.guide-table-scroll {
+    overflow-x: auto;
+    margin: 0 0 1.6rem;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--lon-border, #d9e2dc);
+    border-radius: 12px;
+}
+
+.guide-prose .guide-table-scroll table {
+    margin: 0;
+    border: 0;
+}
+
+.guide-prose table {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    margin: 0 0 1.6rem;
+}
+
+.guide-prose th,
+.guide-prose td {
+    border: 1px solid var(--lon-border, #d9e2dc);
+    padding: 0.55rem 0.7rem;
+    text-align: left;
+    vertical-align: top;
+}
+
+.guide-prose thead th {
+    background: #f6f8f6;
+    font-weight: 650;
+}
+
+.guide-prose td a {
+    word-break: break-word;
 }
 
 /* Full-width CTA/disclaimer strips for custom HTML guide articles */

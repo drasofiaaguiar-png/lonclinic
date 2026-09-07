@@ -347,11 +347,19 @@ function readArticleFile(slug, format) {
     return fs.readFileSync(filePath, 'utf8');
 }
 
+function wrapMarkdownTables(html) {
+    return String(html || '').replace(/<table\b[\s\S]*?<\/table>/gi, (table) => (
+        /class="guide-table-scroll"/i.test(table)
+            ? table
+            : `<div class="guide-table-scroll">${table}</div>`
+    ));
+}
+
 function bodyToHtml(body, format) {
     if (format === 'html') {
         return body;
     }
-    return marked.parse(body);
+    return wrapMarkdownTables(marked.parse(body));
 }
 
 function isVerifiedArticle(meta) {
@@ -1165,7 +1173,7 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260906i">
-    <link rel="stylesheet" href="/guide.css?v=20260906c">
+    <link rel="stylesheet" href="/guide.css?v=20260907a">
     <link rel="stylesheet" href="/author.css?v=20260820l">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -1602,7 +1610,7 @@ function renderBlogArticle(origin, slug) {
         htmlLang: langMeta.htmlLang,
         ogLocale: langMeta.ogLocale,
         extraHead: articleHreflangLinks(o, meta, manifest.articles),
-        extraCssAfter: ['/guide.css?v=20260906c', '/author.css?v=20260820l'],
+        extraCssAfter: ['/guide.css?v=20260907a', '/author.css?v=20260820l'],
         mainHtml: magAppHtml(articlePath, articleInner)
     });
 
@@ -2283,6 +2291,7 @@ function magazineNavTree() {
                 {
                     label: 'Vacinas do viajante',
                     children: [
+                        { label: 'Centros por região', href: '/blog/centros-de-vacinacao-internacional-portugal' },
                         { label: 'Guia completo', href: '/blog/vacinas-viajante-guia-completo' },
                         { label: 'Lisboa', href: '/blog/vacinas-viajante-lisboa' },
                         { label: 'Porto', href: '/blog/vacinas-viajante-porto' },
