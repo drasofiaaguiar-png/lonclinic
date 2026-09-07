@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadDoxyRoom() {
         if (!clinicDoxyRoomUrl || !clinicOpenDoxyBtn) return;
         try {
-            const res = await fetch('/api/clinic/doxy');
+            const res = await fetch('/api/clinic/doxy?v=live-1058', { cache: 'no-store', credentials: 'same-origin' });
             if (res.status === 401) {
                 showLogin();
                 return;
@@ -1775,7 +1775,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadClinicProfile() {
         if (!clinicProfession) return;
         try {
-            const res = await fetch('/api/clinic/profile');
+            const res = await fetch('/api/clinic/ficha', { cache: 'no-store', credentials: 'same-origin' });
             if (res.status === 401) {
                 showLogin();
                 return;

@@ -16,8 +16,8 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = 'now-7set';
-const CLINIC_PORTAL_PATH = '/clinic-desk/now';
+const CLINIC_PORTAL_BUILD = 'live-1058';
+const CLINIC_PORTAL_PATH = '/clinic-desk/live';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
 const bcrypt = require('bcrypt');
@@ -372,6 +372,21 @@ app.use(session({
     }
 }));
 
+app.use((req, res, next) => {
+    if (String(req.path || '').startsWith('/api/')) {
+        res.set({
+            'Cache-Control': 'private, no-store, no-cache, must-revalidate, max-age=0',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+            'Surrogate-Control': 'no-store',
+            'CDN-Cache-Control': 'no-store',
+            'Cloudflare-CDN-Cache-Control': 'no-store',
+            'Vary': 'Cookie'
+        });
+    }
+    next();
+});
+
 /* ========================================
    DOXY.ME CONFIGURATION
 ======================================== */
@@ -435,6 +450,9 @@ function isClinicLeadDoxyName(raw) {
 function isKnownBolsaUsername(username) {
     const u = String(username || '').trim().toLowerCase();
     if (!u) return false;
+    if (u === 'sofia.magalhaes' || u === 'sofia.pinto.magalhaes' || u === 'sofia.pinto.de.magalhaes') {
+        return true;
+    }
     return (KNOWN_BOLSA_APPLICATIONS || []).some((item) => (item.usernames || []).includes(u));
 }
 
@@ -655,7 +673,7 @@ async function serveClinicPortalHtml(res) {
             .replace(/src="\/clinic-portal\/clinic\.js\?v=[^"]+"/g, `src="${clinicPortalAssetUrl('clinic.js')}"`)
             .replace(/data-clinic-build="[^"]+"/, `data-clinic-build="${CLINIC_PORTAL_BUILD}"`)
             .replace(
-                'Access the clinic portal to manage consultations, clinical records, and your Doxy.me room.',
+                /Portal now-7set — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
                 `Portal ${CLINIC_PORTAL_BUILD} — 7 set 2026. Entre com o username do profissional.`
             )
             .replace(
@@ -1331,6 +1349,11 @@ function personNamesMatch(a, b) {
     if (ta[0] === tb[0] && ta[ta.length - 1] === tb[tb.length - 1]) return true;
     const [shorter, longer] = ta.length <= tb.length ? [ta, tb] : [tb, ta];
     return shorter.length >= 2 && shorter.every((token) => longer.includes(token));
+}
+
+function isJunkStaffName(raw) {
+    const n = normalizePersonName(raw);
+    return !n || n === 'admin' || n === 'administrator' || n === 'portal' || n === 'user' || n === 'clinica' || n === 'clinic';
 }
 
 function usernameMatchesPersonName(username, name) {
@@ -7254,6 +7277,10 @@ app.get('/api/clinic/assets/:file', (req, res, next) => {
     });
 });
 
+app.get('/clinic-desk/live', (req, res) => {
+    serveClinicPortalHtml(res);
+});
+
 app.get('/clinic-desk/now', (req, res) => {
     serveClinicPortalHtml(res);
 });
@@ -10298,17 +10325,22 @@ app.get('/api/clinic/doxy', requireAuth, async (req, res) => {
     }
 });
 
-app.get('/api/clinic/profile', requireAuth, async (req, res) => {
+async function handleClinicProfileGet(req, res) {
     try {
         const username = staffSessionUsername(req);
         const filled = await fillStaffProfileFromBolsa(username);
         const profile = filled.profile || await getStaffProfileInternal(username);
         const documents = (await listStaffDocumentsInternal(username)).map(publicStaffDocument);
-        const displayName = profile.fullName || req.session.clinicDisplayName || username;
         const professional = await findProfessionalByUsernameInternal(username).catch(() => null);
         const email = [professional && professional.email, filled.bolsa && filled.bolsa.email]
             .map((raw) => normalizeStaffEmail(raw))
             .find((value) => isValidStaffEmail(value)) || '';
+        const displayName = firstNonEmpty(
+            isJunkStaffName(profile.fullName) ? '' : profile.fullName,
+            filled.bolsa && filled.bolsa.name,
+            isJunkStaffName(req.session.clinicDisplayName) ? '' : req.session.clinicDisplayName,
+            username
+        );
         const primaryAreas = sanitizeStaffAreas(
             profile.profession,
             profile.primaryAreas != null ? profile.primaryAreas : profile.primaryArea
@@ -10327,7 +10359,7 @@ app.get('/api/clinic/profile', requireAuth, async (req, res) => {
                 : (req.session.clinicRole || 'admin'),
             profession: profile.profession || '',
             ordemNumber: profile.ordemNumber || '',
-            fullName: profile.fullName || displayName || '',
+            fullName: displayName || '',
             nif: profile.nif || '',
             citizenCard: profile.citizenCard || '',
             address: profile.address || '',
@@ -10350,7 +10382,10 @@ app.get('/api/clinic/profile', requireAuth, async (req, res) => {
         console.error('GET /api/clinic/profile:', err.message);
         res.status(500).json({ error: 'Failed to load profile' });
     }
-});
+}
+
+app.get('/api/clinic/profile', requireAuth, handleClinicProfileGet);
+app.get('/api/clinic/ficha', requireAuth, handleClinicProfileGet);
 
 app.put('/api/clinic/profile', requireAuth, rateLimitStaffProfile, express.json(), async (req, res) => {
     try {
@@ -11024,18 +11059,16 @@ async function findBolsaApplicationForStaff(username, professional) {
             return emails.some((email) => appEmails.includes(email));
         });
         if (byEmailScan) return finish(byEmailScan);
-        if (!accountEmail) {
-            const byName = (list || []).find((app) => {
-                const appName = bolsaApplicationName(app);
-                if (!appName) return false;
-                if (u && usernameFromDisplayName(appName) === u) return true;
-                if (u && usernameMatchesPersonName(u, appName)) return true;
-                if (seed && personNamesMatch(appName, seed.name)) return true;
-                if (display && !isClinicLeadDoxyName(display) && personNamesMatch(display, appName)) return true;
-                return false;
-            });
-            if (byName) return finish(byName);
-        }
+        const byName = (list || []).find((app) => {
+            const appName = bolsaApplicationName(app);
+            if (!appName) return false;
+            if (u && usernameFromDisplayName(appName) === u) return true;
+            if (u && usernameMatchesPersonName(u, appName)) return true;
+            if (seed && personNamesMatch(appName, seed.name)) return true;
+            if (display && !isClinicLeadDoxyName(display) && !isJunkStaffName(display) && personNamesMatch(display, appName)) return true;
+            return false;
+        });
+        if (byName) return finish(byName);
     } catch (err) {
         console.error('findBolsaApplicationForStaff by name:', err.message);
     }
@@ -11298,10 +11331,8 @@ async function seedPsychologistStaffProfile(professional, app) {
     const existing = await getStaffProfileInternal(professional.username);
     const p = bolsaPayloadObject(app);
     const bolsaName = firstNonEmpty(app.name, p.nome, professional.displayName);
-    const storedName = firstNonEmpty(existing.fullName, professional.displayName);
-    const fullName = (bolsaName && storedName && !personNamesMatch(storedName, bolsaName))
-        ? bolsaName
-        : firstNonEmpty(existing.fullName, bolsaName);
+    const storedName = isJunkStaffName(existing.fullName) ? '' : existing.fullName;
+    const fullName = firstNonEmpty(bolsaName, storedName);
     const pais = p.pais === 'Outro' && p.pais_especificar
         ? p.pais_especificar
         : (p.pais || app.pais || '');
@@ -11331,8 +11362,15 @@ async function seedPsychologistStaffProfile(professional, app) {
         fields.doxyRoomUrl = assignedDoxyRoomUrl(bolsaName, professional.doxyRoomUrl, professional.username);
     }
     const seedEmail = bolsaApplicationEmails(app)[0] || '';
-    if (professional.id && seedEmail && !isValidStaffEmail(professional.email)) {
+    if (professional.id && seedEmail && (
+        !isValidStaffEmail(professional.email)
+        || isKnownBolsaUsername(professional.username)
+        || usernameMatchesPersonName(professional.username, bolsaName)
+    )) {
         fields.email = seedEmail;
+    }
+    if (professional.id && isSharedClinicDoxyRoom(professional.doxyRoomUrl) && !isClinicLeadAccount(bolsaName || professional.displayName, professional.username)) {
+        fields.doxyRoomUrl = assignedDoxyRoomUrl(bolsaName || professional.displayName, '', professional.username);
     }
     if (professional.id && Object.keys(fields).length) {
         try {
@@ -11354,7 +11392,9 @@ async function fillStaffProfileFromBolsa(username) {
     } catch (err) {
         console.error('fillStaffProfileFromBolsa professional:', err.message);
     }
-    if (professional && professional.id && !isValidStaffEmail(professional.email)) {
+    if (professional && professional.id && (
+        !isValidStaffEmail(professional.email) || isKnownBolsaUsername(u)
+    )) {
         const hint = knownBolsaApplicationForStaff(u, professional);
         const hintEmail = bolsaApplicationEmails(hint)[0] || '';
         if (hintEmail) {
@@ -11371,7 +11411,11 @@ async function fillStaffProfileFromBolsa(username) {
     try {
         if (app && professional) {
             const appEmail = bolsaApplicationEmails(app)[0] || '';
-            if (appEmail && professional.id && !isValidStaffEmail(professional.email)) {
+            if (appEmail && professional.id && (
+                !isValidStaffEmail(professional.email)
+                || isKnownBolsaUsername(u)
+                || usernameMatchesPersonName(u, bolsaApplicationName(app))
+            )) {
                 professional = await patchProfessionalInternal(professional, { email: appEmail });
             }
             if (!app.professionalId && professional.id) {
@@ -11390,6 +11434,18 @@ async function fillStaffProfileFromBolsa(username) {
     } catch (err) {
         console.error('fillStaffProfileFromBolsa public:', err.message);
     }
+    if (!bolsa || !Array.isArray(bolsa.groups) || !bolsa.groups.length) {
+        const seed = mergeKnownBolsaApplication(app, u, professional);
+        if (seed) {
+            try { bolsa = publicBolsaProfile(seed); } catch (e) { /* ignore */ }
+            if (professional && seed) {
+                try { await seedPsychologistStaffProfile(professional, seed); } catch (e) { /* ignore */ }
+            }
+        }
+    }
+    console.log(
+        `   📋 Bolsa fill ${u}: app=${(app && app.id) || 'none'} email=${(bolsa && bolsa.email) || ''} groups=${(bolsa && bolsa.groups && bolsa.groups.length) || 0}`
+    );
     return {
         profile: await getStaffProfileInternal(u),
         bolsa
