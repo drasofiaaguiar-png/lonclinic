@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         invitations: { title: 'Invitations', subtitle: 'Send and manage booking invites' },
         availability: { title: 'Availability', subtitle: 'Working hours, blocks & slot preview' },
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' },
-        professionals: { title: 'Professionals & Doxy', subtitle: 'Logins, Doxy rooms and professional profile files' },
+        professionals: { title: 'Professionals & Doxy', subtitle: 'Collapsible profile files — active logins vs no login' },
         psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' },
         producers: { title: 'Diretório produtores', subtitle: 'Moderar candidaturas de produtores biológicos' },
         profile: { title: 'Perfil', subtitle: 'Identificação, dados profissionais, documentos e candidatura' }
@@ -2533,7 +2533,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const adminPsychologistsList = document.getElementById('adminPsychologistsList');
     const psychologistsSearch = document.getElementById('psychologistsSearch');
     const psychologistsStatusFilter = document.getElementById('psychologistsStatusFilter');
-    const psychologistsBandFilter = document.getElementById('psychologistsBandFilter');
     const psychologistsRefreshBtn = document.getElementById('psychologistsRefreshBtn');
     const psychologistsAssignLoginsBtn = document.getElementById('psychologistsAssignLoginsBtn');
     const adminPsychCreds = document.getElementById('adminPsychCreds');
@@ -2687,7 +2686,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             </section>
         `).join('');
         const status = (opts && opts.status) || 'bolsa';
-        const notes = (opts && opts.adminNotes) || '';
         const meta = `
             <section class="admin-psych-section">
                 <h4>Pipeline</h4>
@@ -2697,10 +2695,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <select id="${escapeHtml(prefix)}-status" name="status" class="admin-select">
                             ${PSYCH_STATUS_OPTIONS.map((s) => `<option value="${s}" ${status === s ? 'selected' : ''}>${s}</option>`).join('')}
                         </select>
-                    </div>
-                    <div class="admin-form-group is-wide">
-                        <label for="${escapeHtml(prefix)}-adminNotes">Notas internas</label>
-                        <textarea id="${escapeHtml(prefix)}-adminNotes" name="adminNotes" class="admin-input" rows="2" maxlength="4000">${escapeHtml(notes)}</textarea>
                     </div>
                     ${opts && opts.createLogin
                         ? `<label class="clinic-toggle-label is-wide" for="${escapeHtml(prefix)}-createLogin">
@@ -2769,18 +2763,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             p.pais === 'Outro' && p.pais_especificar
                 ? `Outro: ${p.pais_especificar}`
                 : p.pais || a.pais || '';
-        const scoreBits = a.scoreBreakdown || {};
         return `
-            <div class="admin-psych-scoreline">
-                <strong>Score interno:</strong> ${escapeHtml(String(a.score ?? 0))} · ${escapeHtml(a.scoreBand || '—')}
-                ${a.eligible === false ? ' · não elegível' : ''}
-                ${Array.isArray(a.eliminationReasons) && a.eliminationReasons.length
-                    ? ` · eliminação: ${escapeHtml(a.eliminationReasons.join(', '))}`
-                    : ''}
-                ${scoreBits.experiencia != null
-                    ? `<span class="admin-psych-score-break">exp ${escapeHtml(String(scoreBits.experiencia))}/30 · disp ${escapeHtml(String(scoreBits.disponibilidade))}/25 · perfil ${escapeHtml(String(scoreBits.perfil))}/25 · qualidade ${escapeHtml(String(scoreBits.qualidade))}/20</span>`
-                    : ''}
-            </div>
             <section class="admin-psych-section">
                 <h4>Dados pessoais</h4>
                 <dl class="admin-psych-qa-list">
@@ -2910,10 +2893,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 ).join('')}
                             </select>
                         </label>
-                        <label class="admin-psych-notes-label">
-                            Notas
-                            <textarea class="admin-input admin-psych-notes" data-psych-id="${escapeHtml(a.id)}" rows="2" maxlength="4000">${escapeHtml(a.adminNotes || '')}</textarea>
-                        </label>
                         <button type="button" class="btn btn-primary btn-sm admin-psych-save" data-psych-id="${escapeHtml(a.id)}">Guardar</button>
                         <div class="admin-psych-login-row">
                             <button type="button" class="btn btn-outline btn-sm" data-psych-edit="${escapeHtml(a.id)}">Editar dados</button>
@@ -2940,9 +2919,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const params = new URLSearchParams();
             if (psychologistsStatusFilter && psychologistsStatusFilter.value) {
                 params.set('status', psychologistsStatusFilter.value);
-            }
-            if (psychologistsBandFilter && psychologistsBandFilter.value) {
-                params.set('band', psychologistsBandFilter.value);
             }
             if (psychologistsSearch && psychologistsSearch.value.trim()) {
                 params.set('q', psychologistsSearch.value.trim());
@@ -3086,8 +3062,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     payload: data.payload,
-                    status: data.status,
-                    adminNotes: data.adminNotes
+                    status: data.status
                 })
             });
             const body = await res.json().catch(() => ({}));
@@ -3113,7 +3088,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 body: JSON.stringify({
                     payload: data.payload,
                     status: data.status || 'bolsa',
-                    adminNotes: data.adminNotes,
                     createLogin: data.createLogin
                 })
             });
@@ -3177,8 +3151,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             form.innerHTML = `
                 ${renderBolsaFormHtml(bolsaPayloadFromApp(app), {
                     idPrefix: `bolsa-${id}`,
-                    status: (app && app.status) || 'novo',
-                    adminNotes: (app && app.adminNotes) || ''
+                    status: (app && app.status) || 'novo'
                 })}
                 <div class="admin-psych-edit-actions">
                     <button type="submit" class="btn btn-primary btn-sm">Guardar dados</button>
@@ -3224,9 +3197,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (psychologistsStatusFilter) {
         psychologistsStatusFilter.addEventListener('change', () => loadAdminPsychologists());
-    }
-    if (psychologistsBandFilter) {
-        psychologistsBandFilter.addEventListener('change', () => loadAdminPsychologists());
     }
     let psychSearchTimer = null;
     if (psychologistsSearch) {
@@ -3730,6 +3700,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     let professionalsCache = [];
     let boardProfessionalsCache = [];
     let namedProfessionalsCache = [];
+    let staffProfilesCache = [];
+    let staffDocumentKindsCache = {};
     let proUsernameTouched = false;
     const PRO_PASSWORD_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
 
@@ -3842,81 +3814,160 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (proActive) proActive.checked = pro.active !== false;
         if (proSubmitBtn) proSubmitBtn.textContent = 'Save changes';
         if (proCancelEditBtn) proCancelEditBtn.hidden = false;
+        const addLoginDetails = document.getElementById('adminAddLoginDetails');
+        if (addLoginDetails) {
+            addLoginDetails.open = true;
+            addLoginDetails.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
         showProfessionalError('');
         if (proDisplayName) proDisplayName.focus();
     }
 
-    function renderAdminProfessionals(list, board, named) {
+    function professionalDoxyCell(p) {
+        if (!p || p.doxyPending || !p.doxyRoomUrl) return 'Pending';
+        const label = String(p.doxyRoomUrl).replace(/^https?:\/\//, '');
+        return `<a href="${escapeHtml(p.doxyRoomUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${escapeHtml(label)}</a>`;
+    }
+
+    function professionalFileRecord(staff, account) {
+        const p = staff || {};
+        const a = account || {};
+        const username = p.username || a.username || '';
+        const hasLogin = p.hasLogin === true || p.isClinicAdmin === true || !!(a && a.username);
+        const active = hasLogin && p.active !== false && a.active !== false;
+        return {
+            ...p,
+            id: p.id || a.id || null,
+            username,
+            displayName: p.fullName || p.displayName || a.displayName || username,
+            email: p.email || a.email || '',
+            doxyRoomUrl: p.doxyRoomUrl || a.doxyRoomUrl || '',
+            doxyPending: p.doxyPending != null ? p.doxyPending : (a.doxyPending || !a.doxyRoomUrl),
+            hasLogin,
+            active,
+            hasFile: p.hasFile === true || !!p.updatedAt,
+            isClinicAdmin: p.isClinicAdmin === true
+        };
+    }
+
+    function professionalFileActionsHtml(p) {
+        const bits = [];
+        if (p.hasLogin && p.id) {
+            bits.push(`<button type="button" class="btn btn-outline btn-sm" data-pro-edit="${p.id}">Edit login / Doxy</button>`);
+            bits.push(`<button type="button" class="btn btn-outline btn-sm" data-pro-password="${p.id}">New password</button>`);
+            if (!p.isClinicAdmin) {
+                bits.push(`<button type="button" class="btn btn-outline btn-sm" data-pro-delete="${p.id}">Remove login</button>`);
+            }
+        } else if (p.boardId && !p.hasLogin) {
+            bits.push(`<button type="button" class="btn btn-primary btn-sm" data-psych-login="${escapeHtml(p.boardId)}">Assign login</button>`);
+        } else if (!p.hasLogin && p.username && !p.isClinicAdmin) {
+            bits.push(`<button type="button" class="btn btn-primary btn-sm" data-staff-assign-login="${escapeHtml(p.username)}">Assign login</button>`);
+        }
+        if (p.username) {
+            bits.push(`<button type="button" class="btn btn-outline btn-sm" data-staff-edit="${escapeHtml(p.username)}">Editar ficha</button>`);
+        }
+        return bits.length ? `<div class="admin-pro-actions">${bits.join('')}</div>` : '';
+    }
+
+    function renderAdminProfessionals() {
         if (!adminProfessionalsBody) return;
-        const accounts = list || [];
-        const linked = new Set(accounts.map((p) => String(p.id)));
-        const accountNames = new Set(accounts.map((p) => String(p.displayName || '').trim().toLowerCase()).filter(Boolean));
-        const pendingBoard = (board || []).filter((a) => {
-            const pro = a && a.professional;
-            return !pro || !pro.id || !linked.has(String(pro.id));
+        const openKeys = new Set(
+            [...adminProfessionalsBody.querySelectorAll('details[data-file-key][open]')]
+                .map((el) => el.getAttribute('data-file-key'))
+                .filter(Boolean)
+        );
+        const byUser = new Map(
+            (professionalsCache || []).map((a) => [String(a.username || '').trim().toLowerCase(), a])
+        );
+        const seen = new Set();
+        const files = [];
+        (staffProfilesCache || []).forEach((staff) => {
+            if (staff.hasFile === false && staff.hasLogin !== true && staff.isClinicAdmin !== true) return;
+            const key = String(staff.username || '').trim().toLowerCase();
+            if (!key || seen.has(key)) return;
+            seen.add(key);
+            files.push(professionalFileRecord(staff, byUser.get(key)));
         });
-        const pendingNames = (named || []).filter((row) => {
-            const name = String((row && row.name) || '').trim();
-            if (!name) return false;
-            const key = name.toLowerCase();
-            if (accountNames.has(key)) return false;
-            return !pendingBoard.some((a) => String(a.name || '').trim().toLowerCase() === key);
+        (professionalsCache || []).forEach((account) => {
+            const key = String(account.username || '').trim().toLowerCase();
+            if (!key || seen.has(key)) return;
+            seen.add(key);
+            files.push(professionalFileRecord(null, account));
         });
-        if (!accounts.length && !pendingBoard.length && !pendingNames.length) {
-            adminProfessionalsBody.innerHTML = '<tr><td colspan="5" class="admin-empty-list">No professionals yet. People on the Bolsa and names used on bookings appear here. You can also add a name above.</td></tr>';
+        const listedEmails = new Set(files.map((f) => String(f.email || '').trim().toLowerCase()).filter(Boolean));
+        const listedNames = new Set(files.map((f) => String(f.displayName || '').trim().toLowerCase()).filter(Boolean));
+        (boardProfessionalsCache || []).forEach((a) => {
+            const proUser = String((a.professional && a.professional.username) || '').trim().toLowerCase();
+            if (proUser && seen.has(proUser)) return;
+            const emailKey = String(a.email || '').trim().toLowerCase();
+            const nameKey = String(a.name || '').trim().toLowerCase();
+            if (emailKey && listedEmails.has(emailKey)) return;
+            if (nameKey && listedNames.has(nameKey)) return;
+            seen.add(proUser || `board:${a.id}`);
+            if (emailKey) listedEmails.add(emailKey);
+            if (nameKey) listedNames.add(nameKey);
+            files.push({
+                boardId: a.id,
+                username: '',
+                displayName: a.name || '—',
+                email: a.email || '',
+                phone: a.phone || '',
+                hasLogin: false,
+                active: false,
+                doxyPending: true,
+                doxyRoomUrl: '',
+                boardStatus: a.status || '',
+                isBoardFile: true
+            });
+        });
+        files.sort((a, b) => {
+            const aLogin = a.hasLogin && a.active ? 0 : a.hasLogin ? 1 : 2;
+            const bLogin = b.hasLogin && b.active ? 0 : b.hasLogin ? 1 : 2;
+            if (aLogin !== bLogin) return aLogin - bLogin;
+            return String(a.displayName || a.username || '')
+                .localeCompare(String(b.displayName || b.username || ''), 'pt', { sensitivity: 'base' });
+        });
+
+        const boardCountEl = document.getElementById('adminBoardCount');
+        if (boardCountEl) {
+            const activeCount = files.filter((p) => p.hasLogin && p.active).length;
+            const noLoginCount = files.filter((p) => !p.hasLogin).length;
+            const bits = [];
+            bits.push(`${files.length} file${files.length === 1 ? '' : 's'}`);
+            bits.push(`${activeCount} active`);
+            bits.push(`${noLoginCount} without login`);
+            boardCountEl.textContent = bits.join(' · ');
+        }
+
+        if (!files.length) {
+            adminProfessionalsBody.innerHTML = '<p class="admin-empty-list">No professional files yet. Create a ficha below — with a login, or as a file only.</p>';
             return;
         }
-        const accountRows = accounts.map((p) => {
-            const statusClass = p.active !== false ? 'admin-pro-status' : 'admin-pro-status is-off';
-            const statusLabel = p.active !== false ? 'Active' : 'Disabled';
-            return `<tr>
-                <td>${escapeHtml(p.displayName || '')}</td>
-                <td>${escapeHtml(p.username || '')}</td>
-                <td>${p.doxyPending || !p.doxyRoomUrl
-                    ? 'Pending'
-                    : `<a href="${escapeHtml(p.doxyRoomUrl)}" target="_blank" rel="noopener">${escapeHtml(p.doxyRoomUrl)}</a>`}</td>
-                <td><span class="${statusClass}">${statusLabel}</span></td>
-                <td>
-                    <div class="admin-pro-actions">
-                        <button type="button" class="btn btn-outline btn-sm" data-pro-edit="${p.id}">Edit</button>
-                        <button type="button" class="btn btn-outline btn-sm" data-pro-password="${p.id}">New password</button>
-                        <button type="button" class="btn btn-outline btn-sm" data-pro-delete="${p.id}">Remove</button>
-                    </div>
-                </td>
-            </tr>`;
-        });
-        const boardRows = pendingBoard.map((a) => {
-            const name = a.name || '—';
-            const email = a.email || '';
-            const status = a.status ? ` · ${a.status}` : '';
-            return `<tr>
-                <td>${escapeHtml(name)}</td>
-                <td>—</td>
-                <td>${email ? escapeHtml(email) : '—'}</td>
-                <td><span class="admin-pro-status is-off">On board${escapeHtml(status)} · no login</span></td>
-                <td>
-                    <div class="admin-pro-actions">
-                        <button type="button" class="btn btn-primary btn-sm" data-psych-login="${escapeHtml(a.id)}">Assign login</button>
-                    </div>
-                </td>
-            </tr>`;
-        });
-        const namedRows = pendingNames.map((row) => {
-            const name = row.name || '';
-            const count = row.bookingCount ? `${row.bookingCount} booking${row.bookingCount === 1 ? '' : 's'}` : 'Used on bookings';
-            return `<tr>
-                <td>${escapeHtml(name)}</td>
-                <td>—</td>
-                <td>${escapeHtml(count)}</td>
-                <td><span class="admin-pro-status is-off">Named on bookings · no login</span></td>
-                <td>
-                    <div class="admin-pro-actions">
-                        <button type="button" class="btn btn-primary btn-sm" data-pro-from-name="${encodeURIComponent(name)}">Assign login</button>
-                    </div>
-                </td>
-            </tr>`;
-        });
-        adminProfessionalsBody.innerHTML = accountRows.concat(boardRows, namedRows).join('');
+
+        const kinds = staffDocumentKindsCache || {};
+        adminProfessionalsBody.innerHTML = files.map((p) => {
+            const key = String(p.username || (p.boardId ? `board:${p.boardId}` : '') || p.displayName || '').trim().toLowerCase();
+            const statusLabel = !p.hasLogin ? 'No login' : (p.active ? 'Active' : 'Disabled');
+            const statusClass = p.hasLogin && p.active ? 'admin-pro-status' : 'admin-pro-status is-off';
+            const userLabel = p.hasLogin ? (p.username || '—') : '—';
+            const title = p.fullName || p.displayName || p.username || '—';
+            return `<details class="admin-psych-row" data-file-key="${escapeHtml(key)}"${openKeys.has(key) ? ' open' : ''}>
+                <summary class="admin-psych-summary">
+                    <span class="admin-psych-col admin-psych-col-name">${escapeHtml(title)}</span>
+                    <span class="admin-psych-col admin-psych-col-user">${escapeHtml(userLabel)}</span>
+                    <span class="admin-psych-col admin-psych-col-doxy">${professionalDoxyCell(p)}</span>
+                    <span class="admin-psych-col admin-psych-col-login"><span class="${statusClass}">${statusLabel}</span></span>
+                    <span class="admin-psych-chevron" aria-hidden="true"></span>
+                </summary>
+                <div class="admin-psych-body">
+                    ${p.hasLogin
+                        ? `<p class="admin-pro-login-note">Clinic login: <code>${escapeHtml(p.username || '')}</code> — portal <a href="/clinic-desk/dias#profile">/clinic-desk/dias</a>${p.active ? '' : ' · account disabled'}</p>`
+                        : '<p class="admin-pro-login-note">File only — no clinic username or password yet. Assign a login when this professional should sign in.</p>'}
+                    ${professionalFileActionsHtml(p)}
+                    ${staffProfileFichaHtml(p, kinds)}
+                </div>
+            </details>`;
+        }).join('');
     }
 
     async function loadAdminProfessionals() {
@@ -3938,30 +3989,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ? `Clinic fallback room (unassigned bookings only). Other professionals stay blank until you add their own Doxy URL.`
                     : 'No clinic Doxy room is set. Add one on Dra. Sofia Aguiar’s profile, or leave other professionals blank until each has their own.';
             }
-            const boardCountEl = document.getElementById('adminBoardCount');
-            if (boardCountEl) {
-                const pendingBoard = boardProfessionalsCache.filter((a) => !a.professional || !a.professional.username);
-                const bits = [];
-                if (data.boardError) bits.push(`Could not load Bolsa: ${data.boardError}`);
-                bits.push(`${professionalsCache.length} clinic login${professionalsCache.length === 1 ? '' : 's'}`);
-                bits.push(`${boardProfessionalsCache.length} on the Bolsa (${pendingBoard.length} without login)`);
-                bits.push(`${namedProfessionalsCache.length} name${namedProfessionalsCache.length === 1 ? '' : 's'} used on bookings`);
-                boardCountEl.textContent = bits.join(' · ');
-            }
-            renderAdminProfessionals(professionalsCache, boardProfessionalsCache, namedProfessionalsCache);
             fillProfessionalsDatalist(professionalsCache.concat(
                 boardProfessionalsCache.map((a) => ({ displayName: a.name })),
                 namedProfessionalsCache.map((row) => ({ displayName: row.name }))
             ).filter((p) => p.displayName));
-            loadAdminStaffProfiles();
+            await loadAdminStaffProfiles();
         } catch (err) {
             console.error('Load professionals:', err);
-            adminProfessionalsBody.innerHTML = '<tr><td colspan="5" class="admin-empty-list">Could not load professionals.</td></tr>';
+            adminProfessionalsBody.innerHTML = '<p class="admin-empty-list">Could not load professionals.</p>';
         }
     }
 
     const adminStaffProfilesList = document.getElementById('adminStaffProfilesList');
-    let staffProfilesCache = [];
 
     function dashText(value) {
         const s = String(value || '').trim();
@@ -3974,16 +4013,26 @@ document.addEventListener('DOMContentLoaded', async () => {
         return `<ul>${list.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`;
     }
 
+    function isInternalBolsaProfileItem(row) {
+        const label = String((row && row.label) || '').toLowerCase();
+        return /score|pontua|nota interna|notas internas|elegível|elegivel|eliminação|eliminacao/.test(label);
+    }
+
+    function isInternalBolsaProfileGroup(group) {
+        const title = String((group && group.title) || '').toLowerCase();
+        return /score|pontua|notas internas/.test(title);
+    }
+
     function renderBolsaProfileHtml(bolsa, opts) {
         if (!bolsa || !Array.isArray(bolsa.groups) || !bolsa.groups.length) {
             return `<p class="admin-empty-list">${escapeHtml((opts && opts.emptyMessage) || 'Ainda não há dados de registo ligados a esta conta.')}</p>`;
         }
         const cvHref = String((opts && opts.cvHref) || '');
-        return bolsa.groups.map((g) => `
+        return bolsa.groups.filter((g) => !isInternalBolsaProfileGroup(g)).map((g) => `
             <section class="admin-psych-section">
                 <h4>${escapeHtml(g.title || '')}</h4>
                 <dl class="admin-psych-qa-list">
-                    ${(g.items || []).map((row) => {
+                    ${(g.items || []).filter((row) => !isInternalBolsaProfileItem(row)).map((row) => {
                         const text = String((row && row.value) || '').trim();
                         const isCv = (row && row.kind) === 'cv' || String((row && row.label) || '') === 'CV';
                         const canDownload = isCv && bolsa.hasCv && cvHref;
@@ -4020,46 +4069,54 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    function renderAdminStaffProfiles(data) {
-        if (!adminStaffProfilesList) return;
-        const staff = (data && data.staff) || [];
-        const kinds = (data && data.documentKinds) || {};
-        if (!staff.length) {
-            adminStaffProfilesList.innerHTML = '<p class="admin-empty-list">Ainda sem profissionais.</p>';
-            return;
+    function staffProfileFichaHtml(p, kinds) {
+        if (!p) return '';
+        if (p.isBoardFile) {
+            const status = p.boardStatus ? ` · ${escapeHtml(p.boardStatus)}` : '';
+            return `<div class="admin-staff-profile-block">
+                <h4>Identificação</h4>
+                <dl class="admin-staff-profile-dl">
+                    <div><dt>Nome</dt><dd>${dashText(p.displayName)}</dd></div>
+                    <div><dt>Email</dt><dd>${dashText(p.email)}</dd></div>
+                    <div><dt>Telefone</dt><dd>${dashText(p.phone)}</dd></div>
+                    <div><dt>Sala Doxy.me</dt><dd>Pendente</dd></div>
+                </dl>
+                <p class="admin-pro-login-note">Bolsa application file${status}. Assign a clinic login to activate this professional.</p>
+            </div>`;
         }
-        adminStaffProfilesList.innerHTML = staff.map((p) => {
-            const user = encodeURIComponent(p.username || '');
-            const photo = p.hasPhoto
-                ? `<img class="admin-staff-profile-photo" src="/api/admin/staff-profiles/${user}/photo" alt="">`
-                : '<div class="admin-staff-profile-photo" aria-hidden="true"></div>';
-            const title = p.fullName || p.displayName || p.username || '';
-            const roleBits = [p.professionLabel, p.username].filter(Boolean).join(' · ');
-            const docs = Object.keys(kinds).map((kind) => {
-                const doc = (p.documents || []).find((d) => d && d.kind === kind);
-                const label = kinds[kind] || kind;
-                if (!doc) {
-                    return `<li><span>${escapeHtml(label)}</span><span class="clinic-doc-missing">Por enviar</span></li>`;
-                }
-                const validity = doc.validUntil ? `Validade ${escapeHtml(doc.validUntil)}` : '';
-                return `<li>
-                    <span>${escapeHtml(label)}</span>
-                    <a class="clinic-doc-link" href="/api/admin/staff-profiles/${user}/documents/${encodeURIComponent(doc.id)}">${escapeHtml(doc.originalName || label)}</a>
-                    ${validity ? `<span class="clinic-doc-validity">${validity}</span>` : ''}
-                </li>`;
-            }).join('');
-            const linked = !!(p.bolsa && (p.bolsa.id || p.bolsa.email || (Array.isArray(p.bolsa.groups) && p.bolsa.groups.length)));
-            const cvHref = p.bolsa && p.bolsa.hasCv
-                ? `/api/admin/staff-profiles/${user}/bolsa-cv`
-                : '';
-            return `<article class="admin-staff-profile-card">
-                <div class="admin-staff-profile-head">
+        const user = encodeURIComponent(p.username || '');
+        const photo = p.hasPhoto && p.username
+            ? `<img class="admin-staff-profile-photo" src="/api/admin/staff-profiles/${user}/photo" alt="">`
+            : '<div class="admin-staff-profile-photo" aria-hidden="true"></div>';
+        const title = p.fullName || p.displayName || p.username || '';
+        const roleBits = [p.professionLabel, p.hasLogin ? p.username : ''].filter(Boolean).join(' · ');
+        const docKinds = kinds && typeof kinds === 'object' ? kinds : {};
+        const docs = Object.keys(docKinds).map((kind) => {
+            const doc = (p.documents || []).find((d) => d && d.kind === kind);
+            const label = docKinds[kind] || kind;
+            if (!doc) {
+                return `<li><span>${escapeHtml(label)}</span><span class="clinic-doc-missing">Por enviar</span></li>`;
+            }
+            const validity = doc.validUntil ? `Validade ${escapeHtml(doc.validUntil)}` : '';
+            const href = p.username
+                ? `/api/admin/staff-profiles/${user}/documents/${encodeURIComponent(doc.id)}`
+                : '#';
+            return `<li>
+                <span>${escapeHtml(label)}</span>
+                <a class="clinic-doc-link" href="${escapeHtml(href)}">${escapeHtml(doc.originalName || label)}</a>
+                ${validity ? `<span class="clinic-doc-validity">${validity}</span>` : ''}
+            </li>`;
+        }).join('');
+        const linked = !!(p.bolsa && (p.bolsa.id || p.bolsa.email || (Array.isArray(p.bolsa.groups) && p.bolsa.groups.length)));
+        const cvHref = p.bolsa && p.bolsa.hasCv && p.username
+            ? `/api/admin/staff-profiles/${user}/bolsa-cv`
+            : '';
+        return `<div class="admin-staff-profile-head">
                     ${photo}
                     <div>
                         <h3>${escapeHtml(title)}</h3>
                         <p class="admin-staff-profile-meta">${escapeHtml(roleBits)}${p.email ? ` · ${escapeHtml(p.email)}` : ''}</p>
                     </div>
-                    <button type="button" class="btn btn-outline btn-sm" data-staff-edit="${escapeHtml(p.username || '')}">Editar ficha</button>
                 </div>
                 <div class="admin-staff-profile-block">
                     <h4>Identificação</h4>
@@ -4115,23 +4172,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="admin-staff-profile-block">
                     <h4>Documentos</h4>
                     <ul class="admin-staff-docs">${docs}</ul>
-                </div>
-            </article>`;
-        }).join('');
+                </div>`;
     }
 
     async function loadAdminStaffProfiles() {
-        if (!adminStaffProfilesList) return;
         try {
             const res = await fetch('/api/admin/staff-profiles');
-            if (res.status === 401 || res.status === 403) return;
+            if (res.status === 401 || res.status === 403) {
+                renderAdminProfessionals();
+                return;
+            }
             if (!res.ok) throw new Error('Failed to load staff profiles');
             const data = await res.json();
             staffProfilesCache = data.staff || [];
-            renderAdminStaffProfiles(data);
+            staffDocumentKindsCache = data.documentKinds || {};
+            renderAdminProfessionals();
         } catch (err) {
             console.error('Load staff profiles:', err);
-            adminStaffProfilesList.innerHTML = '<p class="admin-empty-list">Could not load professional profiles.</p>';
+            renderAdminProfessionals();
         }
     }
 
@@ -4147,6 +4205,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const staffProfilePassword = document.getElementById('staffProfilePassword');
     const staffProfileUsernameWrap = document.getElementById('staffProfileUsernameWrap');
     const staffProfilePasswordWrap = document.getElementById('staffProfilePasswordWrap');
+    const staffProfileAssignLogin = document.getElementById('staffProfileAssignLogin');
+    const staffProfileAssignLoginWrap = document.getElementById('staffProfileAssignLoginWrap');
     const staffProfileNif = document.getElementById('staffProfileNif');
     const staffProfileOrdem = document.getElementById('staffProfileOrdem');
     const staffProfileCitizenCard = document.getElementById('staffProfileCitizenCard');
@@ -4158,6 +4218,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     const staffProfileCredentials = document.getElementById('staffProfileCredentials');
     const staffProfileSubmitBtn = document.getElementById('staffProfileSubmitBtn');
     const staffProfileCancelBtn = document.getElementById('staffProfileCancelBtn');
+
+    function syncStaffProfileLoginFields() {
+        const editing = !!(staffProfileEditUser && staffProfileEditUser.value.trim());
+        const assign = !staffProfileAssignLogin || staffProfileAssignLogin.checked;
+        if (staffProfileAssignLoginWrap) staffProfileAssignLoginWrap.hidden = editing;
+        if (staffProfileUsernameWrap) staffProfileUsernameWrap.hidden = editing ? false : !assign;
+        if (staffProfilePasswordWrap) staffProfilePasswordWrap.hidden = editing || !assign;
+        if (!editing && staffProfileSubmitBtn) {
+            staffProfileSubmitBtn.textContent = assign ? 'Criar ficha e login' : 'Criar ficha';
+        }
+    }
 
     function showCreateProfileError(message) {
         if (!adminCreateProfileError) return;
@@ -4176,9 +4247,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (staffProfileUsernameWrap) staffProfileUsernameWrap.hidden = false;
         if (staffProfilePasswordWrap) staffProfilePasswordWrap.hidden = false;
         if (staffProfileUsername) staffProfileUsername.disabled = false;
+        if (staffProfileAssignLogin) staffProfileAssignLogin.checked = true;
         if (staffProfileSubmitBtn) staffProfileSubmitBtn.textContent = 'Criar ficha e login';
         if (staffProfileCancelBtn) staffProfileCancelBtn.hidden = true;
         if (adminCreateProfileSummary) adminCreateProfileSummary.textContent = 'Criar ficha de profissional';
+        syncStaffProfileLoginFields();
         showCreateProfileError('');
     }
 
@@ -4198,6 +4271,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (staffProfilePassword) staffProfilePassword.value = '';
         if (staffProfileUsernameWrap) staffProfileUsernameWrap.hidden = false;
         if (staffProfilePasswordWrap) staffProfilePasswordWrap.hidden = true;
+        if (staffProfileAssignLoginWrap) staffProfileAssignLoginWrap.hidden = true;
         if (staffProfileNif) staffProfileNif.value = p.nif || '';
         if (staffProfileOrdem) staffProfileOrdem.value = p.ordemNumber || '';
         if (staffProfileCitizenCard) staffProfileCitizenCard.value = p.citizenCard || '';
@@ -4214,6 +4288,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             adminCreateProfileDetails.open = true;
             adminCreateProfileDetails.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
+        syncStaffProfileLoginFields();
         showCreateProfileError('');
     }
 
@@ -4232,10 +4307,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             insurancePolicy: staffProfileInsurancePolicy ? staffProfileInsurancePolicy.value.trim() : '',
             insuranceValidUntil: staffProfileInsuranceValid ? staffProfileInsuranceValid.value : '',
             bio: staffProfileBio ? staffProfileBio.value.trim() : '',
-            credentials: staffProfileCredentials ? staffProfileCredentials.value.trim() : ''
+            credentials: staffProfileCredentials ? staffProfileCredentials.value.trim() : '',
+            assignLogin: !staffProfileAssignLogin || staffProfileAssignLogin.checked
         };
     }
 
+    if (staffProfileAssignLogin) {
+        staffProfileAssignLogin.addEventListener('change', syncStaffProfileLoginFields);
+    }
     if (staffProfileCancelBtn) {
         staffProfileCancelBtn.addEventListener('click', () => resetCreateProfileForm());
     }
@@ -4250,7 +4329,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showCreateProfileError('O nome é obrigatório.');
                 return;
             }
-            if (!editing && payload.password && payload.password.length < 8) {
+            if (!editing && payload.assignLogin && payload.password && payload.password.length < 8) {
                 showCreateProfileError('A password deve ter pelo menos 8 caracteres.');
                 return;
             }
@@ -4378,11 +4457,46 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (adminProfessionalsBody) {
         adminProfessionalsBody.addEventListener('click', async (e) => {
+            const staffEditBtn = e.target.closest('[data-staff-edit]');
+            const assignStaffLoginBtn = e.target.closest('[data-staff-assign-login]');
             const editBtn = e.target.closest('[data-pro-edit]');
             const passwordBtn = e.target.closest('[data-pro-password]');
             const loginBtn = e.target.closest('[data-psych-login]');
             const fromNameBtn = e.target.closest('[data-pro-from-name]');
             const delBtn = e.target.closest('[data-pro-delete]');
+            if (staffEditBtn) {
+                const username = staffEditBtn.getAttribute('data-staff-edit');
+                const person = staffProfilesCache.find((p) => String(p.username) === String(username))
+                    || professionalsCache.find((p) => String(p.username) === String(username));
+                if (person) fillCreateProfileForm(person);
+                return;
+            }
+            if (assignStaffLoginBtn) {
+                const username = assignStaffLoginBtn.getAttribute('data-staff-assign-login');
+                const person = staffProfilesCache.find((p) => String(p.username) === String(username));
+                const label = (person && (person.fullName || person.displayName)) || username || 'this professional';
+                if (!username || !window.confirm(`Assign a clinic login to ${label}? A password will be generated.`)) return;
+                showProfessionalError('');
+                try {
+                    const res = await fetch(`/api/admin/staff-profiles/${encodeURIComponent(username)}/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: (person && person.email) || '' })
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (!res.ok) {
+                        showProfessionalError(data.error || 'Could not assign login.');
+                        return;
+                    }
+                    await loadAdminProfessionals();
+                    if (data.generatedPassword && data.professional) {
+                        showProfessionalCreds(data.professional, data.generatedPassword);
+                    }
+                } catch (err) {
+                    showProfessionalError('Network error. Please try again.');
+                }
+                return;
+            }
             if (fromNameBtn) {
                 const name = decodeURIComponent(fromNameBtn.getAttribute('data-pro-from-name') || '');
                 if (!name) return;

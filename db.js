@@ -2964,6 +2964,41 @@ async function closePool() {
     }
 }
 
+async function replaceEmailTypo(wrongEmail, rightEmail) {
+    const p = getPool();
+    const wrong = String(wrongEmail || '').trim().toLowerCase();
+    const right = String(rightEmail || '').trim().toLowerCase();
+    if (!wrong || !right || wrong === right) return { professionals: 0, applications: 0, bookings: 0, invitations: 0 };
+    const professionals = await p.query(
+        `UPDATE professionals SET email = $1, updated_at = NOW()
+          WHERE LOWER(TRIM(email)) = $2`,
+        [right, wrong]
+    );
+    const applications = await p.query(
+        `UPDATE psychologist_applications
+            SET email = $1,
+                payload = jsonb_set(COALESCE(payload, '{}'::jsonb), '{email}', to_jsonb($1::text), true),
+                updated_at = NOW()
+          WHERE LOWER(TRIM(email)) = $2
+             OR LOWER(TRIM(COALESCE(payload->>'email', payload->>'Email', ''))) = $2`,
+        [right, wrong]
+    );
+    const bookings = await p.query(
+        `UPDATE bookings SET email = $1 WHERE LOWER(TRIM(email)) = $2`,
+        [right, wrong]
+    );
+    const invitations = await p.query(
+        `UPDATE booking_invitations SET patient_email = $1 WHERE LOWER(TRIM(patient_email)) = $2`,
+        [right, wrong]
+    );
+    return {
+        professionals: professionals.rowCount || 0,
+        applications: applications.rowCount || 0,
+        bookings: bookings.rowCount || 0,
+        invitations: invitations.rowCount || 0
+    };
+}
+
 (() => {
     const url = hasDatabaseUrl();
     const discrete = hasDiscreteDbCredentials();
@@ -3090,5 +3125,6 @@ module.exports = {
     listStaffVisitorIds,
     analyticsBookingStats,
     analyticsApplicationStats,
+    replaceEmailTypo,
     closePool
 };

@@ -1478,16 +1478,26 @@ document.addEventListener('DOMContentLoaded', () => {
         if (clinicProfilePhotoBtn) clinicProfilePhotoBtn.textContent = hasPhoto ? 'Substituir foto' : 'Adicionar foto';
     }
 
+    function isInternalBolsaProfileItem(row) {
+        const label = String((row && row.label) || '').toLowerCase();
+        return /score|pontua|nota interna|notas internas|elegível|elegivel|eliminação|eliminacao/.test(label);
+    }
+
+    function isInternalBolsaProfileGroup(group) {
+        const title = String((group && group.title) || '').toLowerCase();
+        return /score|pontua|notas internas/.test(title);
+    }
+
     function renderBolsaProfileHtml(bolsa, opts) {
         if (!bolsa || !Array.isArray(bolsa.groups) || !bolsa.groups.length) {
             return '<p class="admin-empty-list">Ainda não há dados de registo ligados a esta conta.</p>';
         }
         const cvHref = String((opts && opts.cvHref) || '');
-        return bolsa.groups.map((g) => `
+        return bolsa.groups.filter((g) => !isInternalBolsaProfileGroup(g)).map((g) => `
             <section class="admin-psych-section">
                 <h4>${escapeHtml(g.title || '')}</h4>
                 <dl class="admin-psych-qa-list">
-                    ${(g.items || []).map((row) => {
+                    ${(g.items || []).filter((row) => !isInternalBolsaProfileItem(row)).map((row) => {
                         const text = String((row && row.value) || '').trim();
                         const isCv = (row && row.kind) === 'cv' || String((row && row.label) || '') === 'CV';
                         const canDownload = isCv && bolsa.hasCv && cvHref;

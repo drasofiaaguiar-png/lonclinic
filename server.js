@@ -16,7 +16,7 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = 'dias-2';
+const CLINIC_PORTAL_BUILD = 'ficha-1';
 const CLINIC_PORTAL_PATH = '/clinic-desk/dias';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
@@ -673,7 +673,7 @@ async function serveClinicPortalHtml(res) {
             .replace(/src="\/clinic-portal\/clinic\.js\?v=[^"]+"/g, `src="${clinicPortalAssetUrl('clinic.js')}"`)
             .replace(/data-clinic-build="[^"]+"/, `data-clinic-build="${CLINIC_PORTAL_BUILD}"`)
             .replace(
-                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
+                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|ficha-1|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8|perfil-9|perfil-10) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
                 `Portal ${CLINIC_PORTAL_BUILD} — 7 set 2026. Entre com o username do profissional.`
             );
         res.append('Set-Cookie', `lon_portal=${CLINIC_PORTAL_BUILD}; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly`);
@@ -1495,6 +1495,11 @@ function bolsaApplicationName(app) {
     return firstNonEmpty(app.name, payload.nome);
 }
 
+async function staffProfileUsernameTaken(username) {
+    const profile = await getStaffProfileInternal(username);
+    return !!(profile && profile.updatedAt);
+}
+
 async function allocateProfessionalUsername(preferred, displayName) {
     let base = normalizeProfessionalUsername(preferred);
     if (!isValidProfessionalUsername(base)) {
@@ -1507,7 +1512,8 @@ async function allocateProfessionalUsername(preferred, displayName) {
     let n = 2;
     while (
         normalizeProfessionalUsername(candidate) === normalizeProfessionalUsername(CLINIC_USERNAME) ||
-        (await findProfessionalByUsernameInternal(candidate))
+        (await findProfessionalByUsernameInternal(candidate)) ||
+        (await staffProfileUsernameTaken(candidate))
     ) {
         const suffix = String(n++);
         candidate = `${base.slice(0, Math.max(3, 64 - suffix.length))}${suffix}`;
@@ -2158,6 +2164,7 @@ async function bootstrapPersistence() {
         await ensureProfessionalDoxyRooms();
         await ensureKnownBolsaApplications();
         await ensureAllBolsaStaffProfiles();
+        await fixKnownEmailTypos();
         return;
     }
     scheduleStore = loadScheduleStore();
@@ -2165,6 +2172,20 @@ async function bootstrapPersistence() {
     await ensureProfessionalDoxyRooms();
     await ensureKnownBolsaApplications();
     await ensureAllBolsaStaffProfiles();
+}
+
+async function fixKnownEmailTypos() {
+    if (!usePersistentDb) return;
+    try {
+        const changed = await db.replaceEmailTypo(
+            'francisvavfcqiadros@gmail.com',
+            'francisvavfcquadros@gmail.com'
+        );
+        const n = Object.values(changed || {}).reduce((sum, v) => sum + (Number(v) || 0), 0);
+        if (n) console.log(`   ✉️  Corrected Francisca email typo in ${n} record(s)`);
+    } catch (err) {
+        console.error('fixKnownEmailTypos:', err.message);
+    }
 }
 
 /* ========================================
@@ -10990,7 +11011,26 @@ const STAFF_PROFESSION_TITLES = {
     nutricionista: 'Nutricionista'
 };
 
-function publicAdminStaffProfile(person, profile, documents, bolsa) {
+function staffRecordHasFile(profile, documents, bolsa) {
+    const p = profile || {};
+    if (p.updatedAt) return true;
+    if (p.hasPhoto) return true;
+    if (Array.isArray(documents) && documents.length) return true;
+    if (bolsa && (bolsa.id || (Array.isArray(bolsa.groups) && bolsa.groups.length))) return true;
+    const text = [
+        p.fullName, p.nif, p.citizenCard, p.address, p.ordemNumber,
+        p.insurer, p.insurancePolicy, p.bio, p.credentials, p.iban, p.profession
+    ];
+    if (text.some((v) => String(v || '').trim())) return true;
+    if ((Array.isArray(p.consultLanguages) && p.consultLanguages.length)
+        || (Array.isArray(p.primaryAreas) && p.primaryAreas.length)
+        || (Array.isArray(p.secondaryAreas) && p.secondaryAreas.length)
+        || (Array.isArray(p.primaryArea) && p.primaryArea.length)
+        || (Array.isArray(p.secondaryArea) && p.secondaryArea.length)) return true;
+    return false;
+}
+
+function publicAdminStaffProfile(person, profile, documents, bolsa, professional) {
     const p = profile || emptyStaffProfile(person.username);
     const primaryAreas = sanitizeStaffAreas(p.profession, p.primaryAreas != null ? p.primaryAreas : p.primaryArea);
     const secondaryAreas = sanitizeStaffAreas(
@@ -11004,14 +11044,22 @@ function publicAdminStaffProfile(person, profile, documents, bolsa) {
         isJunkStaffName(person.displayName) ? '' : person.displayName
     );
     const email = firstNonEmpty(person.email, bolsa && bolsa.email);
+    const isClinicAdmin = String(person.username || '').toLowerCase() === String(CLINIC_USERNAME || '').trim().toLowerCase()
+        && !isKnownBolsaUsername(person.username);
+    const hasLogin = !!(professional && professional.username) || person.hasLogin === true || isClinicAdmin;
+    const active = hasLogin && (professional ? professional.active !== false : person.active !== false);
     const doxy = doxyRoomViewForPerson(fullName || person.displayName || person.username, person.doxyRoomUrl, {
-        clinicAdmin: String(person.username || '').toLowerCase() === String(CLINIC_USERNAME || '').trim().toLowerCase()
-            && !isKnownBolsaUsername(person.username),
+        clinicAdmin: isClinicAdmin,
         username: person.username
     });
     return {
+        id: (professional && professional.id) || person.id || null,
         username: person.username,
         displayName: firstNonEmpty(fullName, person.username),
+        hasLogin,
+        active,
+        professionalId: (professional && professional.id) || person.id || null,
+        isClinicAdmin,
         email,
         phone: (bolsa && bolsa.phone) || '',
         profession: p.profession || '',
@@ -11034,7 +11082,8 @@ function publicAdminStaffProfile(person, profile, documents, bolsa) {
         doxyPending: doxy.pending,
         hasPhoto: !!p.hasPhoto,
         updatedAt: p.updatedAt || null,
-        documents: (documents || []).map(publicStaffDocument)
+        documents: (documents || []).map(publicStaffDocument),
+        hasFile: staffRecordHasFile(p, documents, bolsa)
     };
 }
 
@@ -11049,17 +11098,25 @@ async function listAdminStaffPeople() {
             username: u,
             displayName: (extra && extra.displayName) || u,
             email: (extra && extra.email) || '',
-            doxyRoomUrl: (extra && extra.doxyRoomUrl) || ''
+            doxyRoomUrl: (extra && extra.doxyRoomUrl) || '',
+            id: extra && extra.id ? extra.id : null,
+            hasLogin: extra && extra.hasLogin === true,
+            active: extra && extra.active !== false
         });
     };
     addPerson(CLINIC_USERNAME, {
-        displayName: isJunkStaffName(CLINIC_USERNAME) ? '' : CLINIC_USERNAME
+        displayName: isJunkStaffName(CLINIC_USERNAME) ? '' : CLINIC_USERNAME,
+        hasLogin: true,
+        active: true
     });
     for (const p of (await listProfessionalsInternal()) || []) {
         addPerson(p.username, {
             displayName: p.displayName || p.username,
             email: p.email || '',
-            doxyRoomUrl: p.doxyRoomUrl || ''
+            doxyRoomUrl: p.doxyRoomUrl || '',
+            id: p.id,
+            hasLogin: true,
+            active: p.active !== false
         });
     }
     for (const profile of (await listStaffProfilesInternal()) || []) {
@@ -11091,17 +11148,22 @@ app.get('/api/admin/staff-profiles', requireAdmin, async (req, res) => {
                 filled.profile || byUser.get(person.username) || {},
                 filled.app
             );
+            const isClinicAdmin = person.username === normalizeProfessionalUsername(CLINIC_USERNAME);
             staff.push({
                 ...publicAdminStaffProfile(
                     {
                         ...person,
+                        id: (fresh && fresh.id) || person.id || null,
+                        hasLogin: !!(fresh && fresh.username) || isClinicAdmin || person.hasLogin === true,
+                        active: fresh ? fresh.active !== false : (isClinicAdmin || person.active !== false),
                         email: (fresh && fresh.email) || person.email,
                         displayName: (fresh && fresh.displayName) || person.displayName,
                         doxyRoomUrl: (fresh && fresh.doxyRoomUrl) || person.doxyRoomUrl
                     },
                     profile,
                     docsByUser.get(person.username) || [],
-                    filled.bolsa || null
+                    filled.bolsa || null,
+                    fresh
                 ),
                 bolsa: filled.bolsa || null
             });
@@ -11169,36 +11231,45 @@ app.post('/api/admin/staff-profiles', requireAdmin, express.json(), async (req, 
         if (requestedUsername && (await findProfessionalByUsernameInternal(requestedUsername))) {
             return res.status(409).json({ error: 'That username is already in use' });
         }
-        const username = await allocateProfessionalUsername(requestedUsername, fullName);
-        let password = String(body.password || '');
-        let generatedPassword = null;
-        if (!password) {
-            generatedPassword = generateProfessionalPassword();
-            password = generatedPassword;
-        } else if (password.length < 8) {
-            return res.status(400).json({ error: 'Password must be at least 8 characters' });
+        if (requestedUsername && (await staffProfileUsernameTaken(requestedUsername))) {
+            return res.status(409).json({ error: 'That username is already in use' });
         }
-        const created = await createProfessionalInternal({
-            username,
-            password,
-            displayName: fullName,
-            email,
-            active: body.active !== false
-        });
+        const assignLogin = body.assignLogin !== false && body.createLogin !== false;
+        const username = await allocateProfessionalUsername(requestedUsername, fullName);
+        let created = null;
+        let generatedPassword = null;
+        if (assignLogin) {
+            let password = String(body.password || '');
+            if (!password) {
+                generatedPassword = generateProfessionalPassword();
+                password = generatedPassword;
+            } else if (password.length < 8) {
+                return res.status(400).json({ error: 'Password must be at least 8 characters' });
+            }
+            created = await createProfessionalInternal({
+                username,
+                password,
+                displayName: fullName,
+                email,
+                active: body.active !== false
+            });
+        }
         const bolsaApp = email ? await findPsychologistApplicationByEmailInternal(email) : null;
         if (bolsaApp) {
-            await setApplicationProfessionalIdInternal(bolsaApp.id, created.id);
-            await seedPsychologistStaffProfile(created, bolsaApp);
-            await copyBolsaCvToStaffDocuments(created.username, bolsaApp);
+            if (created && created.id) {
+                await setApplicationProfessionalIdInternal(bolsaApp.id, created.id);
+            }
+            await seedPsychologistStaffProfile(created || { username, displayName: fullName, email }, bolsaApp);
+            await copyBolsaCvToStaffDocuments((created && created.username) || username, bolsaApp);
         }
-        const existingProfile = await getStaffProfileInternal(created.username);
-        const profile = await saveStaffProfileInternal(created.username, {
+        const existingProfile = await getStaffProfileInternal(username);
+        const profile = await saveStaffProfileInternal(username, {
             ...existingProfile,
             ...staffProfileInputFromBody({ ...body, fullName, profession })
         });
-        console.log(`   👤 Professional profile created: ${created.username}`);
+        console.log(`   👤 Professional profile created: ${username}${created ? ' (with login)' : ' (file only)'}`);
         res.status(201).json({
-            professional: publicProfessional(created),
+            professional: created ? publicProfessional(created) : null,
             profile,
             generatedPassword: generatedPassword || undefined
         });
@@ -11256,6 +11327,65 @@ app.patch('/api/admin/staff-profiles/:username', requireAdmin, express.json(), a
     } catch (err) {
         console.error('PATCH /api/admin/staff-profiles:', err.message);
         res.status(500).json({ error: 'Failed to update profile' });
+    }
+});
+
+app.post('/api/admin/staff-profiles/:username/login', requireAdmin, express.json(), async (req, res) => {
+    try {
+        const username = String(req.params.username || '').trim().toLowerCase();
+        if (!username || !isValidProfessionalUsername(username)) {
+            return res.status(400).json({ error: 'Username is required' });
+        }
+        if (username === normalizeProfessionalUsername(CLINIC_USERNAME)) {
+            return res.status(409).json({ error: 'That username is reserved for the clinic admin account' });
+        }
+        const existing = await findProfessionalByUsernameInternal(username);
+        if (existing) {
+            return res.status(409).json({
+                error: 'This professional already has a clinic login',
+                professional: publicProfessional(existing)
+            });
+        }
+        const profile = await getStaffProfileInternal(username);
+        if (!profile.updatedAt) {
+            return res.status(404).json({ error: 'Professional file not found' });
+        }
+        const filled = await fillStaffProfileFromBolsa(username);
+        const displayName = firstNonEmpty(profile.fullName, filled.bolsa && filled.bolsa.name, username);
+        const email = firstNonEmpty(
+            req.body && req.body.email,
+            filled.bolsa && filled.bolsa.email
+        );
+        if (email) {
+            const taken = await findProfessionalByEmailInternal(email);
+            if (taken) {
+                return res.status(409).json({ error: 'That email already has a clinic login' });
+            }
+        }
+        const generatedPassword = generateProfessionalPassword();
+        const created = await createProfessionalInternal({
+            username,
+            password: generatedPassword,
+            displayName,
+            email,
+            active: true
+        });
+        if (filled.app && filled.app.id) {
+            await setApplicationProfessionalIdInternal(filled.app.id, created.id);
+            await seedPsychologistStaffProfile(created, filled.app);
+            await copyBolsaCvToStaffDocuments(created.username, filled.app);
+        }
+        console.log(`   👤 Login assigned to professional file: ${created.username}`);
+        res.status(201).json({
+            professional: publicProfessional(created),
+            generatedPassword
+        });
+    } catch (err) {
+        if (err && err.code === '23505') {
+            return res.status(409).json({ error: 'That username is already in use' });
+        }
+        console.error('POST /api/admin/staff-profiles login:', err.message);
+        res.status(httpErrorStatus(err, 500)).json({ error: err.message || 'Failed to assign login' });
     }
 });
 
@@ -11849,7 +11979,7 @@ function publicBolsaProfile(app) {
             { label: 'Recebido em', value: joinBolsaList(received) }
         ]
     });
-    return {
+    return sanitizePublicBolsaProfile({
         id: app.id,
         name: p.nome || app.name || '',
         email: p.email || app.email || '',
@@ -11859,6 +11989,34 @@ function publicBolsaProfile(app) {
         cvFilename: firstNonEmpty(app.cvFilename, p.cv_filename),
         hasCv,
         consultLanguages: sanitizeConsultLanguages(p.idiomas),
+        groups
+    });
+}
+
+function isInternalBolsaProfileLabel(label) {
+    return /score|pontua|nota interna|notas internas|elegível|elegivel|eliminação|eliminacao/i.test(String(label || ''));
+}
+
+function sanitizePublicBolsaProfile(bolsa) {
+    if (!bolsa || typeof bolsa !== 'object') return null;
+    const groups = Array.isArray(bolsa.groups)
+        ? bolsa.groups
+            .filter((group) => !/score|pontua|notas internas/i.test(String((group && group.title) || '')))
+            .map((group) => ({
+                title: group.title || '',
+                items: (group.items || []).filter((row) => !isInternalBolsaProfileLabel(row && row.label))
+            }))
+        : [];
+    return {
+        id: bolsa.id,
+        name: bolsa.name || '',
+        email: bolsa.email || '',
+        phone: bolsa.phone || '',
+        cedula: bolsa.cedula || '',
+        localidade: bolsa.localidade || '',
+        cvFilename: bolsa.cvFilename || '',
+        hasCv: !!bolsa.hasCv,
+        consultLanguages: Array.isArray(bolsa.consultLanguages) ? bolsa.consultLanguages : [],
         groups
     };
 }

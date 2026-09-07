@@ -2248,6 +2248,84 @@ body.dash-portal .dash-stat-card {
     align-items: flex-start;
 }
 
+.admin-pro-files-wrap {
+    margin: 8px 0 8px;
+}
+
+.admin-pro-files-legend {
+    display: grid;
+    grid-template-columns: minmax(140px, 1.4fr) minmax(90px, 0.8fr) minmax(140px, 1.3fr) auto 28px;
+    gap: 10px 12px;
+    padding: 4px 14px 8px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.admin-pro-files .admin-psych-summary {
+    grid-template-columns: minmax(140px, 1.4fr) minmax(90px, 0.8fr) minmax(140px, 1.3fr) auto 28px;
+}
+
+.admin-pro-files .admin-psych-col-user,
+.admin-pro-files .admin-psych-col-doxy {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text-secondary, #445);
+    font-size: 0.8125rem;
+}
+
+.admin-pro-files .admin-psych-col-doxy a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.admin-pro-files .admin-psych-col-doxy a:hover {
+    color: #255235;
+    text-decoration: underline;
+}
+
+.admin-pro-files .admin-psych-col-login .admin-pro-status {
+    justify-self: end;
+}
+
+.admin-pro-files .admin-staff-profile-head {
+    margin-bottom: 12px;
+}
+
+.admin-pro-files .admin-staff-profile-block:last-child {
+    margin-bottom: 0;
+}
+
+.admin-pro-files .admin-pro-login-note {
+    margin: 0 0 12px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+.admin-pro-files .admin-pro-actions {
+    margin: 0 0 14px;
+}
+
+@media (max-width: 800px) {
+    .admin-pro-files-legend {
+        display: none;
+    }
+    .admin-pro-files .admin-psych-summary {
+        grid-template-columns: 1fr 28px;
+    }
+    .admin-pro-files .admin-psych-col-user,
+    .admin-pro-files .admin-psych-col-doxy,
+    .admin-pro-files .admin-psych-col-login {
+        grid-column: 1;
+        justify-self: start;
+        white-space: normal;
+    }
+}
+
 .admin-professionals-form {
     margin-bottom: 20px;
 }
