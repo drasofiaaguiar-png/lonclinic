@@ -536,7 +536,7 @@ function safeInternalNextPath(raw) {
 function requireAdminPage(req, res, next) {
     if (isAdminSession(req)) return next();
     if (req.session && req.session.clinicAuthenticated) {
-        return res.redirect(302, '/clinic-portal');
+        return res.redirect(302, '/clinic-portal/');
     }
     const nextPath = safeInternalNextPath(req.originalUrl || '/diretorio') || '/diretorio';
     return res.redirect(302, `/admin?next=${encodeURIComponent(nextPath)}`);
@@ -5898,7 +5898,7 @@ async function peopleForAvailabilityReminders() {
 }
 
 async function sendAvailabilityReminderEmail({ to, name, monthLabel, deadlineLabel, kind }) {
-    const portalUrl = `${PUBLIC_SITE_URL}/clinic-portal`;
+    const portalUrl = `${PUBLIC_SITE_URL}/clinic-portal/`;
     const isFinal = kind === 15;
     const subject = isFinal
         ? `Deadline: availabilities for ${monthLabel}`
@@ -7059,7 +7059,9 @@ app.get('/conta/vacina', (req, res) => {
 });
 
 app.get('/clinic-portal', (req, res) => {
-    sendStaffHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
+    // Bare /clinic-portal is stuck as a Cloudflare HIT of old HTML (Age > 40h).
+    // Trailing slash is a different cache key and gets the current clinic.html.
+    res.redirect(302, '/clinic-portal/');
 });
 
 app.get('/clinic-portal/', (req, res) => {
@@ -7186,7 +7188,7 @@ app.get('/dashboard.html', (req, res) => {
 });
 
 app.get('/clinic.html', (req, res) => {
-    res.redirect(301, '/clinic-portal');
+    res.redirect(301, '/clinic-portal/');
 });
 
 app.get('/admin.html', (req, res) => {
