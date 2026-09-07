@@ -283,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadDoxyRoom() {
         if (!clinicDoxyRoomUrl || !clinicOpenDoxyBtn) return;
         try {
-            const res = await fetch('/api/clinic/doxy?v=live-1058', { cache: 'no-store', credentials: 'same-origin' });
+            const res = await fetch('/api/clinic/doxy?v=registo-1', { cache: 'no-store', credentials: 'same-origin' });
             if (res.status === 401) {
                 showLogin();
                 return;
@@ -1712,7 +1712,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderBolsaProfileHtml(bolsa) {
         if (!bolsa || !Array.isArray(bolsa.groups) || !bolsa.groups.length) {
-            return '<p class="admin-empty-list">Esta conta ainda não está ligada a uma candidatura da Bolsa de Profissionais.</p>';
+            return '<p class="admin-empty-list">Ainda não há dados de registo ligados a esta conta.</p>';
         }
         return bolsa.groups.map((g) => `
             <section class="admin-psych-section">
@@ -1745,15 +1745,73 @@ document.addEventListener('DOMContentLoaded', () => {
         wrap.className = 'dash-section clinic-bolsa-banner';
         wrap.id = wrapId;
         wrap.innerHTML = `
-            <div class="dash-section-header">
-                <h2 class="dash-section-title">Bolsa de Profissionais</h2>
-                <p class="dash-section-subtitle">Candidatura ligada a esta conta.</p>
-            </div>
-            <div id="${bodyId}" class="clinic-bolsa-profile"></div>
+            <details class="clinic-registo-details" open>
+                <summary class="clinic-registo-summary">
+                    <span>
+                        <h2 class="dash-section-title">Dados de Registo</h2>
+                        <p class="dash-section-subtitle">Respostas da candidatura — clique para abrir</p>
+                    </span>
+                </summary>
+                <div class="clinic-registo-body">
+                    <div id="${bodyId}" class="clinic-bolsa-profile"></div>
+                </div>
+            </details>
         `;
         panel.insertBefore(wrap, panel.firstElementChild);
         body = document.getElementById(bodyId);
         return { wrap, body };
+    }
+
+    function cvDocument() {
+        return (clinicProfileMeta.documents || []).find((d) => d && d.kind === 'cv') || null;
+    }
+
+    function renderRegistoCv(bolsa) {
+        const status = document.getElementById('clinicRegistoCvStatus');
+        const btn = document.getElementById('clinicRegistoCvBtn');
+        const doc = cvDocument();
+        const bits = [];
+        if (doc) {
+            bits.push(`CV no perfil: <a class="clinic-doc-link" href="/api/clinic/profile/documents/${encodeURIComponent(doc.id)}">${escapeHtml(doc.originalName || 'CV')}</a>`);
+        }
+        if (bolsa && bolsa.cvFilename && (!doc || String(bolsa.cvFilename) !== doc.originalName)) {
+            bits.push(`CV da candidatura: ${escapeHtml(bolsa.cvFilename)}`);
+        }
+        if (status) {
+            status.innerHTML = bits.length
+                ? bits.join('<br>')
+                : 'Pode enviar o CV aqui (PDF, DOC ou DOCX · máx. 25MB).';
+        }
+        if (btn) btn.textContent = doc ? 'Substituir CV' : 'Enviar CV';
+    }
+
+    function showSavedProfileSummary(payload, extra) {
+        const wrap = document.getElementById('clinicSavedDetails');
+        const list = document.getElementById('clinicSavedSummary');
+        if (!wrap || !list) return;
+        const professionLabels = { medico: 'Médico', psicologo: 'Psicólogo', nutricionista: 'Nutricionista' };
+        const rows = [
+            ['Nome', payload.fullName],
+            ['Email', payload.email],
+            ['Role', professionLabels[payload.profession] || payload.profession],
+            ['Cédula', payload.ordemNumber],
+            ['NIF', payload.nif],
+            ['N.º Cartão de Cidadão', payload.citizenCard],
+            ['Morada', payload.address],
+            ['Seguradora', payload.insurer],
+            ['Apólice', payload.insurancePolicy],
+            ['Validade do seguro', payload.insuranceValidUntil],
+            ['Preferências primárias', (payload.primaryAreas || []).join(', ')],
+            ['Preferências secundárias', (payload.secondaryAreas || []).join(', ')]
+        ];
+        if (extra && extra.cvName) rows.push(['CV', extra.cvName]);
+        list.innerHTML = rows.map(([label, value]) => {
+            const text = String(value || '').trim();
+            return `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(text || '—')}</dd></div>`;
+        }).join('');
+        wrap.hidden = false;
+        wrap.open = true;
+        wrap.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
 
     function showBolsaProfileSection(panelId, wrapId, bodyId, bolsa) {
@@ -1761,6 +1819,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!mount.wrap || !mount.body) return;
         mount.body.innerHTML = renderBolsaProfileHtml(bolsa);
         mount.wrap.hidden = false;
+        renderRegistoCv(bolsa);
     }
 
     function fillBolsaContactFields(emailEl, phoneEl, bolsa, accountEmail) {
@@ -1805,8 +1864,6 @@ document.addEventListener('DOMContentLoaded', () => {
             renderDocumentRows();
             fillBolsaContactFields(clinicProfileEmail, clinicProfilePhone, data.bolsa, data.email);
             showBolsaProfileSection('clinicPanelProfile', 'clinicBolsaProfileWrap', 'clinicBolsaProfile', data.bolsa);
-            const bolsaSub = document.querySelector('#clinicBolsaProfileWrap .dash-section-subtitle');
-            if (bolsaSub && data.build) bolsaSub.textContent = `Ligada pelo mesmo email · ${data.build}`;
             if (data.fullName && clinicProfileName) clinicProfileName.textContent = data.fullName;
             loadDoxyRoom();
             if (clinicProfileFormError) clinicProfileFormError.style.display = 'none';
@@ -1885,6 +1942,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error(data.error || 'Failed to save profile');
                 }
                 await loadClinicProfile();
+                showSavedProfileSummary(payload, { cvName: (cvDocument() && cvDocument().originalName) || '' });
                 const prev = clinicProfileSaveBtn ? clinicProfileSaveBtn.textContent : '';
                 if (clinicProfileSaveBtn) clinicProfileSaveBtn.textContent = 'Saved';
                 setTimeout(() => {
@@ -1918,6 +1976,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 showProfileError(clinicPhotoError, err.message || 'Failed to upload photo');
             } finally {
                 clinicProfilePhotoInput.value = '';
+            }
+        });
+    }
+
+    const clinicRegistoCvBtn = document.getElementById('clinicRegistoCvBtn');
+    const clinicRegistoCvInput = document.getElementById('clinicRegistoCvInput');
+    const clinicRegistoCvError = document.getElementById('clinicRegistoCvError');
+    if (clinicRegistoCvBtn && clinicRegistoCvInput) {
+        clinicRegistoCvBtn.addEventListener('click', async () => {
+            if (clinicRegistoCvError) clinicRegistoCvError.style.display = 'none';
+            const file = clinicRegistoCvInput.files && clinicRegistoCvInput.files[0];
+            if (!file) {
+                showProfileError(clinicRegistoCvError, 'Escolha o ficheiro do CV.');
+                return;
+            }
+            const form = new FormData();
+            form.append('kind', 'cv');
+            form.append('file', file);
+            clinicRegistoCvBtn.disabled = true;
+            try {
+                const res = await fetch('/api/clinic/profile/documents', { method: 'POST', body: form });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401) {
+                    showLogin();
+                    return;
+                }
+                if (!res.ok) throw new Error(data.error || 'Failed to upload CV');
+                await loadClinicProfile();
+            } catch (err) {
+                showProfileError(clinicRegistoCvError, err.message || 'Failed to upload CV');
+            } finally {
+                clinicRegistoCvBtn.disabled = false;
+                clinicRegistoCvInput.value = '';
             }
         });
     }

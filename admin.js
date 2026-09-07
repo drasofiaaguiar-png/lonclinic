@@ -475,7 +475,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <span class="admin-source-badge is-${isInterview ? 'interview' : source}">${badgeLabel}</span>
                         ${comp}
                         ${ref ? `<span class="admin-agenda-ref">${escapeHtml(ref)}</span>` : ''}
-                        ${ref && !isInterview ? `<a class="btn btn-outline btn-sm" href="/clinic-desk/live">Open notes</a>` : ''}
+                        ${ref && !isInterview ? `<a class="btn btn-outline btn-sm" href="/clinic-desk/registo">Open notes</a>` : ''}
                     </div>
                 `;
                 section.appendChild(item);
@@ -1577,7 +1577,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (res.ok) {
                     if (data.role && data.role !== 'admin') {
-                        adminLoginError.textContent = 'This account opens the clinic portal, not admin. Use the administrator username, or go to /clinic-desk/live.';
+                        adminLoginError.textContent = 'This account opens the clinic portal, not admin. Use the administrator username, or go to /clinic-desk/registo.';
                         adminLoginError.style.display = 'block';
                         return;
                     }
@@ -2731,7 +2731,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <button type="button" class="btn btn-primary btn-sm admin-psych-save" data-psych-id="${escapeHtml(a.id)}">Guardar</button>
                         <div class="admin-psych-login-row">
                             ${a.professional && a.professional.username
-                                ? `<span>Clinic login: <code>${escapeHtml(a.professional.username)}</code> — portal <a href="/clinic-desk/live#profile">/clinic-desk/live</a></span>
+                                ? `<span>Clinic login: <code>${escapeHtml(a.professional.username)}</code> — portal <a href="/clinic-desk/registo#profile">/clinic-desk/registo</a></span>
                                    <button type="button" class="btn btn-outline btn-sm" data-psych-password="${escapeHtml(a.id)}">New password</button>`
                                 : `<button type="button" class="btn btn-primary btn-sm" data-psych-login="${escapeHtml(a.id)}">Assign clinic login</button>`}
                         </div>
@@ -2787,9 +2787,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function showPsychCreds(rows) {
         if (!adminPsychCreds || !adminPsychCredsList || !rows || !rows.length) return;
-        const portal = `${window.location.origin}/clinic-desk/live#profile`;
+        const portal = `${window.location.origin}/clinic-desk/registo#profile`;
         adminPsychCredsList.innerHTML = `
-            <p class="admin-pro-creds-line">Portal: <a href="/clinic-desk/live#profile">${escapeHtml(portal)}</a></p>
+            <p class="admin-pro-creds-line">Portal: <a href="/clinic-desk/registo#profile">${escapeHtml(portal)}</a></p>
             <table class="admin-psych-creds-table">
                 <thead><tr><th>Name</th><th>Username</th><th>Password</th></tr></thead>
                 <tbody>
@@ -3399,9 +3399,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function showProfessionalCreds(pro, password) {
         if (!adminProfessionalCreds || !password) return;
-        const portal = `${window.location.origin}/clinic-desk/live#profile`;
+        const portal = `${window.location.origin}/clinic-desk/registo#profile`;
         if (proCredsPortal) {
-            proCredsPortal.href = '/clinic-desk/live#profile';
+            proCredsPortal.href = '/clinic-desk/registo#profile';
             proCredsPortal.textContent = portal;
         }
         if (proCredsName) proCredsName.textContent = (pro && pro.displayName) || '';
@@ -3573,7 +3573,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const res = await fetch('/api/admin/professionals');
             if (res.status === 401 || res.status === 403) {
-                if (res.status === 403) window.location.href = '/clinic-desk/live';
+                if (res.status === 403) window.location.href = '/clinic-desk/registo';
                 else showLogin();
                 return;
             }
@@ -3624,7 +3624,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function renderBolsaProfileHtml(bolsa, opts) {
         if (!bolsa || !Array.isArray(bolsa.groups) || !bolsa.groups.length) {
-            return `<p class="admin-empty-list">${escapeHtml((opts && opts.emptyMessage) || 'Esta conta ainda não está ligada a uma candidatura da Bolsa de Profissionais.')}</p>`;
+            return `<p class="admin-empty-list">${escapeHtml((opts && opts.emptyMessage) || 'Ainda não há dados de registo ligados a esta conta.')}</p>`;
         }
         return bolsa.groups.map((g) => `
             <section class="admin-psych-section">
@@ -3657,15 +3657,74 @@ document.addEventListener('DOMContentLoaded', async () => {
         wrap.className = 'dash-section clinic-bolsa-banner';
         wrap.id = wrapId;
         wrap.innerHTML = `
-            <div class="dash-section-header">
-                <h2 class="dash-section-title">Bolsa de Profissionais</h2>
-                <p class="dash-section-subtitle">Candidatura ligada a esta conta.</p>
-            </div>
-            <div id="${bodyId}" class="clinic-bolsa-profile"></div>
+            <details class="clinic-registo-details" open>
+                <summary class="clinic-registo-summary">
+                    <span>
+                        <h2 class="dash-section-title">Dados de Registo</h2>
+                        <p class="dash-section-subtitle">Respostas da candidatura — clique para abrir</p>
+                    </span>
+                </summary>
+                <div class="clinic-registo-body">
+                    <div id="${bodyId}" class="clinic-bolsa-profile"></div>
+                </div>
+            </details>
         `;
         panel.insertBefore(wrap, panel.firstElementChild);
         body = document.getElementById(bodyId);
         return { wrap, body };
+    }
+
+    function adminCvDocument() {
+        return (adminProfileMeta.documents || []).find((d) => d && d.kind === 'cv') || null;
+    }
+
+    function renderAdminRegistoCv(bolsa) {
+        const status = document.getElementById('adminRegistoCvStatus');
+        const btn = document.getElementById('adminRegistoCvBtn');
+        const doc = adminCvDocument();
+        const bits = [];
+        if (doc) {
+            bits.push(`CV no perfil: <a class="clinic-doc-link" href="/api/clinic/profile/documents/${encodeURIComponent(doc.id)}">${escapeHtml(doc.originalName || 'CV')}</a>`);
+        }
+        if (bolsa && bolsa.cvFilename && (!doc || String(bolsa.cvFilename) !== doc.originalName)) {
+            bits.push(`CV da candidatura: ${escapeHtml(bolsa.cvFilename)}`);
+        }
+        if (status) {
+            status.innerHTML = bits.length
+                ? bits.join('<br>')
+                : 'Pode enviar o CV aqui (PDF, DOC ou DOCX · máx. 25MB).';
+        }
+        if (btn) btn.textContent = doc ? 'Substituir CV' : 'Enviar CV';
+    }
+
+    function showAdminSavedProfileSummary(payload) {
+        const wrap = document.getElementById('adminSavedDetails');
+        const list = document.getElementById('adminSavedSummary');
+        if (!wrap || !list) return;
+        const professionLabels = { medico: 'Médico', psicologo: 'Psicólogo', nutricionista: 'Nutricionista' };
+        const rows = [
+            ['Nome', payload.fullName],
+            ['Email', payload.email],
+            ['Role', professionLabels[payload.profession] || payload.profession],
+            ['Cédula', payload.ordemNumber],
+            ['NIF', payload.nif],
+            ['N.º Cartão de Cidadão', payload.citizenCard],
+            ['Morada', payload.address],
+            ['Seguradora', payload.insurer],
+            ['Apólice', payload.insurancePolicy],
+            ['Validade do seguro', payload.insuranceValidUntil],
+            ['Preferências primárias', (payload.primaryAreas || []).join(', ')],
+            ['Preferências secundárias', (payload.secondaryAreas || []).join(', ')]
+        ];
+        const cv = adminCvDocument();
+        if (cv) rows.push(['CV', cv.originalName]);
+        list.innerHTML = rows.map(([label, value]) => {
+            const text = String(value || '').trim();
+            return `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(text || '—')}</dd></div>`;
+        }).join('');
+        wrap.hidden = false;
+        wrap.open = true;
+        wrap.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
 
     function showBolsaProfileSection(panelId, wrapId, bodyId, bolsa) {
@@ -3673,6 +3732,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!mount.wrap || !mount.body) return;
         mount.body.innerHTML = renderBolsaProfileHtml(bolsa);
         mount.wrap.hidden = false;
+        renderAdminRegistoCv(bolsa);
     }
 
     function renderAdminStaffProfiles(data) {
@@ -3725,10 +3785,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div><dt>IBAN</dt><dd>${dashText(p.iban)}</dd></div>
                     <div><dt>Doxy.me room</dt><dd>${p.doxyPending || !p.doxyRoomUrl ? 'Pending' : dashText(p.doxyRoomUrl)}</dd></div>
                 </dl>
-                <div class="admin-staff-profile-block clinic-bolsa-profile clinic-bolsa-banner">
-                    <h4>Bolsa de Profissionais</h4>
-                    ${renderBolsaProfileHtml(p.bolsa, { emptyMessage: 'Sem candidatura da Bolsa ligada a esta conta.' })}
-                </div>
+                <details class="admin-staff-profile-block clinic-bolsa-profile clinic-bolsa-banner clinic-registo-details">
+                    <summary class="clinic-registo-summary"><span><h4>Dados de Registo</h4></span></summary>
+                    <div class="clinic-registo-body">
+                        ${renderBolsaProfileHtml(p.bolsa, { emptyMessage: 'Sem dados de registo ligados a esta conta.' })}
+                    </div>
+                </details>
                 <div class="admin-staff-profile-block">
                     <h4>Bio</h4>
                     <p>${dashText(p.bio)}</p>
@@ -3784,7 +3846,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (proCredsCopyBtn) {
         proCredsCopyBtn.addEventListener('click', async () => {
-            const portal = proCredsPortal ? proCredsPortal.textContent : `${window.location.origin}/clinic-desk/live#profile`;
+            const portal = proCredsPortal ? proCredsPortal.textContent : `${window.location.origin}/clinic-desk/registo#profile`;
             const username = proCredsUsername ? proCredsUsername.textContent : '';
             const password = proCredsPassword ? proCredsPassword.textContent : '';
             const name = proCredsName ? proCredsName.textContent : '';
@@ -4104,7 +4166,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const [profileRes, doxyRes] = await Promise.all([
                 fetch('/api/clinic/ficha', { cache: 'no-store', credentials: 'same-origin' }),
-                fetch('/api/clinic/doxy?v=live-1058', { cache: 'no-store', credentials: 'same-origin' })
+                fetch('/api/clinic/doxy?v=registo-1', { cache: 'no-store', credentials: 'same-origin' })
             ]);
             if (profileRes.status === 401) {
                 showLogin();
@@ -4218,6 +4280,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     throw new Error(data.error || 'Failed to save profile');
                 }
                 await loadAdminProfile();
+                showAdminSavedProfileSummary(payload);
                 const prev = adminProfileSaveBtn ? adminProfileSaveBtn.textContent : '';
                 if (adminProfileSaveBtn) adminProfileSaveBtn.textContent = 'Saved';
                 setTimeout(() => {
@@ -4251,6 +4314,39 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showAdminProfileError(adminPhotoError, err.message || 'Failed to upload photo');
             } finally {
                 adminProfilePhotoInput.value = '';
+            }
+        });
+    }
+
+    const adminRegistoCvBtn = document.getElementById('adminRegistoCvBtn');
+    const adminRegistoCvInput = document.getElementById('adminRegistoCvInput');
+    const adminRegistoCvError = document.getElementById('adminRegistoCvError');
+    if (adminRegistoCvBtn && adminRegistoCvInput) {
+        adminRegistoCvBtn.addEventListener('click', async () => {
+            if (adminRegistoCvError) adminRegistoCvError.style.display = 'none';
+            const file = adminRegistoCvInput.files && adminRegistoCvInput.files[0];
+            if (!file) {
+                showAdminProfileError(adminRegistoCvError, 'Escolha o ficheiro do CV.');
+                return;
+            }
+            const form = new FormData();
+            form.append('kind', 'cv');
+            form.append('file', file);
+            adminRegistoCvBtn.disabled = true;
+            try {
+                const res = await fetch('/api/clinic/profile/documents', { method: 'POST', body: form });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401) {
+                    showLogin();
+                    return;
+                }
+                if (!res.ok) throw new Error(data.error || 'Failed to upload CV');
+                await loadAdminProfile();
+            } catch (err) {
+                showAdminProfileError(adminRegistoCvError, err.message || 'Failed to upload CV');
+            } finally {
+                adminRegistoCvBtn.disabled = false;
+                adminRegistoCvInput.value = '';
             }
         });
     }

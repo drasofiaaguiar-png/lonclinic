@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=live-1058">
+    <link rel="stylesheet" href="/dashboard.css?v=registo-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -64,7 +64,7 @@
                 </div>
                 <h1 class="dash-login-title">Admin Portal</h1>
                 <p class="dash-login-desc">Access the admin portal to manage your schedule and availability.</p>
-                <p class="dash-login-note" id="adminClinicianNote" hidden>You are signed in to the clinic portal. Admin needs the administrator account — sign in below, or <a href="/clinic-desk/live#profile">return to the clinic portal</a>.</p>
+                <p class="dash-login-note" id="adminClinicianNote" hidden>You are signed in to the clinic portal. Admin needs the administrator account — sign in below, or <a href="/clinic-desk/registo#profile">return to the clinic portal</a>.</p>
                 <form class="dash-login-form" id="adminLoginForm">
                     <div class="dash-form-group">
                         <label for="adminUsername">Username</label>
@@ -101,7 +101,7 @@
                     <button type="button" class="admin-nav-item" data-admin-panel="psychologists">Bolsa de Profissionais</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="producers">Diretório produtores</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="profile">Profile</button>
-                    <a class="admin-nav-item admin-nav-link" href="/clinic-desk/live">Consultations &amp; notes</a>
+                    <a class="admin-nav-item admin-nav-link" href="/clinic-desk/registo">Consultations &amp; notes</a>
                 </nav>
                 <div class="admin-sidebar-foot">
                     <button type="button" class="btn btn-outline btn-sm" id="adminLogoutBtn">Sign out</button>
@@ -780,7 +780,7 @@
                     </form>
                     <div id="adminProfessionalCreds" class="admin-pro-creds" hidden>
                         <p class="admin-pro-creds-title">Login assigned — copy it now. The password cannot be shown again.</p>
-                        <p class="admin-pro-creds-line">Portal: <a id="proCredsPortal" href="/clinic-desk/live#profile">/clinic-desk/live</a></p>
+                        <p class="admin-pro-creds-line">Portal: <a id="proCredsPortal" href="/clinic-desk/registo#profile">/clinic-desk/registo</a></p>
                         <p class="admin-pro-creds-line">Name: <span id="proCredsName"></span></p>
                         <p class="admin-pro-creds-line">Username: <code id="proCredsUsername"></code></p>
                         <p class="admin-pro-creds-line">Password: <code id="proCredsPassword"></code></p>
@@ -887,11 +887,26 @@
 
             <div class="admin-panel" id="adminPanelProfile" data-admin-panel-content="profile" hidden>
                 <div class="dash-section clinic-bolsa-banner" id="adminBolsaProfileWrap">
-                    <div class="dash-section-header">
-                        <h2 class="dash-section-title">Bolsa de Profissionais</h2>
-                        <p class="dash-section-subtitle">Candidatura ligada a esta conta — telefone, disponibilidade, populações e restantes respostas.</p>
+                    <details class="clinic-registo-details" id="adminRegistoDetails">
+                        <summary class="clinic-registo-summary">
+                            <span>
+                                <h2 class="dash-section-title">Dados de Registo</h2>
+                                <p class="dash-section-subtitle">Respostas da candidatura — clique para abrir</p>
+                            </span>
+                        </summary>
+                        <div class="clinic-registo-body">
+                            <div id="adminBolsaProfile" class="clinic-bolsa-profile">A carregar dados de registo…</div>
+                        </div>
+                    </details>
+                    <div class="clinic-registo-cv">
+                        <h3 class="clinic-pref-heading">CV</h3>
+                        <p class="dash-section-subtitle" id="adminRegistoCvStatus">Pode enviar o CV aqui (PDF, DOC ou DOCX · máx. 25MB).</p>
+                        <div class="clinic-registo-cv-row">
+                            <input type="file" id="adminRegistoCvInput" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                            <button type="button" class="btn btn-outline btn-sm" id="adminRegistoCvBtn">Enviar CV</button>
+                        </div>
+                        <div id="adminRegistoCvError" class="dash-login-error" style="display:none;" role="alert"></div>
                     </div>
-                    <div id="adminBolsaProfile" class="clinic-bolsa-profile">A carregar candidatura da Bolsa…</div>
                 </div>
                 <div class="dash-section">
                     <div class="dash-section-header">
@@ -918,7 +933,7 @@
                         <div>
                             <dt>Email</dt>
                             <dd>
-                                <input id="adminProfileEmail" class="admin-input" type="email" form="adminProfileForm" autocomplete="email" placeholder="o mesmo email da Bolsa de Profissionais">
+                                <input id="adminProfileEmail" class="admin-input" type="email" form="adminProfileForm" autocomplete="email" placeholder="o mesmo email da candidatura">
                             </dd>
                         </div>
                         <div>
@@ -1010,6 +1025,10 @@
                         </div>
                         <div id="adminProfileFormError" class="dash-login-error" style="display:none;" role="alert"></div>
                         <button type="submit" class="btn btn-primary" id="adminProfileSaveBtn">Save profile</button>
+                        <details class="clinic-saved-details" id="adminSavedDetails" hidden>
+                            <summary class="clinic-saved-summary">Informações guardadas</summary>
+                            <dl class="clinic-profile-dl clinic-saved-dl" id="adminSavedSummary"></dl>
+                        </details>
                     </form>
                 </div>
                 <div class="dash-section">
@@ -1062,7 +1081,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=live-1058"></script>
+    <script src="/admin.js?v=registo-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

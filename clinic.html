@@ -16,7 +16,7 @@
     <title>Clinic Portal — Longevity Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=live-1058">
+    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=registo-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
     <meta name="description" content="Clinic portal — manage consultations and clinical records.">
     <meta name="theme-color" content="#eaf2fb">
 </head>
-<body class="lon-landing clinic-portal-page" data-clinic-build="live-1058">
+<body class="lon-landing clinic-portal-page" data-clinic-build="registo-1">
 
     <a class="lon-skip" href="#conteudo-principal">Skip to content</a>
     <header class="lon-nav" id="lonNav">
@@ -63,7 +63,7 @@
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                 </div>
                 <h1 class="dash-login-title">Clinic Portal</h1>
-                <p class="dash-login-desc">Portal live-1058 — 7 set 2026. Entre com o username do profissional.</p>
+                <p class="dash-login-desc">Portal registo-1 — 7 set 2026. Entre com o username do profissional.</p>
                 <form class="dash-login-form" id="clinicLoginForm">
                     <div class="dash-form-group">
                         <label for="clinicUsername">Username</label>
@@ -447,11 +447,26 @@
 
                 <div class="admin-panel" id="clinicPanelProfile" data-clinic-panel-content="profile" hidden>
                     <div class="dash-section clinic-bolsa-banner" id="clinicBolsaProfileWrap">
-                        <div class="dash-section-header">
-                            <h2 class="dash-section-title">Bolsa de Profissionais</h2>
-                            <p class="dash-section-subtitle">Ligada pelo mesmo email da candidatura da Bolsa.</p>
+                        <details class="clinic-registo-details" id="clinicRegistoDetails">
+                            <summary class="clinic-registo-summary">
+                                <span>
+                                    <h2 class="dash-section-title">Dados de Registo</h2>
+                                    <p class="dash-section-subtitle">Respostas da candidatura — clique para abrir</p>
+                                </span>
+                            </summary>
+                            <div class="clinic-registo-body">
+                                <div id="clinicBolsaProfile" class="clinic-bolsa-profile">A carregar dados de registo…</div>
+                            </div>
+                        </details>
+                        <div class="clinic-registo-cv" id="clinicRegistoCv">
+                            <h3 class="clinic-pref-heading">CV</h3>
+                            <p class="dash-section-subtitle" id="clinicRegistoCvStatus">Pode enviar o CV aqui (PDF, DOC ou DOCX · máx. 25MB).</p>
+                            <div class="clinic-registo-cv-row">
+                                <input type="file" id="clinicRegistoCvInput" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                                <button type="button" class="btn btn-outline btn-sm" id="clinicRegistoCvBtn">Enviar CV</button>
+                            </div>
+                            <div id="clinicRegistoCvError" class="dash-login-error" style="display:none;" role="alert"></div>
                         </div>
-                        <div id="clinicBolsaProfile" class="clinic-bolsa-profile">A carregar candidatura da Bolsa…</div>
                     </div>
                     <div class="dash-section">
                         <div class="dash-section-header">
@@ -478,7 +493,7 @@
                             <div>
                                 <dt>Email</dt>
                                 <dd>
-                                    <input id="clinicProfileEmail" class="admin-input" type="email" form="clinicProfileForm" autocomplete="email" placeholder="o mesmo email da Bolsa de Profissionais">
+                                    <input id="clinicProfileEmail" class="admin-input" type="email" form="clinicProfileForm" autocomplete="email" placeholder="o mesmo email da candidatura">
                                 </dd>
                             </div>
                             <div>
@@ -570,6 +585,10 @@
                             </div>
                             <div id="clinicProfileFormError" class="dash-login-error" style="display:none;" role="alert"></div>
                             <button type="submit" class="btn btn-primary" id="clinicProfileSaveBtn">Save profile</button>
+                            <details class="clinic-saved-details" id="clinicSavedDetails" hidden>
+                                <summary class="clinic-saved-summary">Informações guardadas</summary>
+                                <dl class="clinic-profile-dl clinic-saved-dl" id="clinicSavedSummary"></dl>
+                            </details>
                         </form>
                     </div>
                     <div class="dash-section">
@@ -639,7 +658,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="/lon-nav.js"></script>
-    <script src="/clinic-portal/clinic.js?v=live-1058"></script>
+    <script src="/clinic-portal/clinic.js?v=registo-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

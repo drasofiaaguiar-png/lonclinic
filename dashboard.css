@@ -1481,6 +1481,96 @@ body.dash-portal .dash-stat-card {
     margin-top: 8px;
 }
 
+.clinic-registo-details {
+    margin: 0;
+}
+
+.clinic-registo-summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.clinic-registo-summary::-webkit-details-marker,
+.clinic-saved-summary::-webkit-details-marker,
+.clinic-registo-summary::marker,
+.clinic-saved-summary::marker {
+    display: none;
+    content: '';
+}
+
+.clinic-registo-summary h2,
+.clinic-registo-summary h4,
+.clinic-registo-summary .dash-section-subtitle {
+    margin: 0;
+}
+
+.clinic-registo-summary .dash-section-subtitle {
+    margin-top: 4px;
+}
+
+.clinic-registo-summary::after,
+.clinic-saved-summary::after {
+    content: '';
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    margin-right: 4px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.15s ease;
+}
+
+.clinic-registo-details[open] > .clinic-registo-summary::after,
+.clinic-saved-details[open] > .clinic-saved-summary::after {
+    transform: rotate(-135deg);
+    margin-top: 6px;
+}
+
+.clinic-registo-body {
+    margin-top: 14px;
+}
+
+.clinic-registo-cv {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(26, 102, 65, 0.18);
+}
+
+.clinic-registo-cv-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.clinic-saved-details {
+    margin: 16px 0 0;
+    padding: 12px 14px;
+    border: 1px solid var(--border-subtle, #d7dee6);
+    border-radius: 12px;
+    background: #f7faf8;
+}
+
+.clinic-saved-summary {
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.clinic-saved-dl {
+    margin-top: 12px;
+}
+
 @media (max-width: 900px) {
     .clinic-pref-cols {
         grid-template-columns: 1fr;
