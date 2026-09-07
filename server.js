@@ -8101,7 +8101,8 @@ function sanitizeRecrutamentoPayload(raw) {
         entrevista_disponibilidade: str(raw.entrevista_disponibilidade, 10),
         periodos_entrevista: str(raw.periodos_entrevista, 1000),
         bolsa_autorizacao: str(raw.bolsa_autorizacao, 10),
-        linkedin: str(raw.linkedin, 300)
+        linkedin: str(raw.linkedin, 300),
+        areas_outro: str(raw.areas_outro, 200)
     };
 }
 
@@ -9190,6 +9191,116 @@ async function findPsychologistApplicationInternal(id) {
     return psychologistApplicationsStore.find((a) => a.id === key) || null;
 }
 
+async function findPsychologistApplicationByEmailInternal(email) {
+    const e = normalizeStaffEmail(email);
+    if (!isValidStaffEmail(e)) return null;
+    if (usePersistentDb) {
+        const fromDb = await db.findPsychologistApplicationByEmail(e);
+        if (fromDb) return fromDb;
+    }
+    return (psychologistApplicationsStore || []).find((a) => bolsaApplicationEmails(a).includes(e)) || null;
+}
+
+function coerceAdminBolsaLists(raw) {
+    const out = raw && typeof raw === 'object' && !Array.isArray(raw) ? { ...raw } : {};
+    ['areas_clinicas', 'populacoes', 'idiomas', 'modelos', 'dias_semana'].forEach((key) => {
+        if (typeof out[key] === 'string') {
+            out[key] = out[key].split(/[,;\n]+/).map((s) => s.trim()).filter(Boolean);
+        }
+    });
+    return out;
+}
+
+const PSYCH_APP_ALLOWED_STATUS = new Set([
+    'novo',
+    'prioritario',
+    'shortlist',
+    'entrevista',
+    'aceite',
+    'bolsa',
+    'rejeitado',
+    'eliminado'
+]);
+
+function memoryPsychologistApplicationFromRecord(record, previous) {
+    const payload = record && record.payload && typeof record.payload === 'object' ? record.payload : {};
+    return {
+        id: record.id,
+        createdAt: (previous && previous.createdAt) || record.createdAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        name: record.name || payload.nome || '',
+        email: record.email || payload.email || '',
+        phone: record.phone || payload.telefone || '',
+        localidade: payload.localidade || '',
+        pais: payload.pais || '',
+        cedulaOpp: payload.cedula_opp || '',
+        grauAcademico: payload.grau_academico || '',
+        anosClinica: payload.anos_clinica || '',
+        anosIndividuais: payload.anos_individuais || '',
+        experienciaOnline: payload.experiencia_online || '',
+        areasClinicas: Array.isArray(payload.areas_clinicas) ? payload.areas_clinicas : [],
+        populacoes: Array.isArray(payload.populacoes) ? payload.populacoes : [],
+        idiomas: Array.isArray(payload.idiomas) ? payload.idiomas : [],
+        modelos: Array.isArray(payload.modelos) ? payload.modelos : [],
+        diasSemana: Array.isArray(payload.dias_semana) ? payload.dias_semana : [],
+        horasIniciais: payload.horas_iniciais || '',
+        horariosFixos: payload.horarios_fixos || '',
+        disponibilidadeEstavel: payload.disponibilidade_estavel || '',
+        bolsaAutorizacao: payload.bolsa_autorizacao || '',
+        score: Number.isFinite(record.score) ? record.score : 0,
+        scoreBand: record.scoreBand || '',
+        scoreBreakdown: record.scoreBreakdown || {},
+        eligible: record.eligible === true,
+        eliminationReasons: record.eliminationReasons || [],
+        status: record.status || 'novo',
+        adminNotes: record.adminNotes || '',
+        professionalId: record.professionalId || (previous && previous.professionalId) || null,
+        cvFilename: record.cvFilename || (previous && previous.cvFilename) || '',
+        cvMime: record.cvMime || (previous && previous.cvMime) || '',
+        hasCv: record.hasCv === true || (previous && previous.hasCv === true) || psychologistCvStore.has(record.id),
+        payload
+    };
+}
+
+function buildAdminBolsaPatch(existing, body) {
+    const incomingRaw = body && body.payload && typeof body.payload === 'object' && !Array.isArray(body.payload)
+        ? body.payload
+        : null;
+    const patch = {};
+    if (incomingRaw) {
+        const payload = sanitizeRecrutamentoPayload({
+            ...hydrateBolsaPayload(existing),
+            ...coerceAdminBolsaLists(incomingRaw)
+        });
+        const scoring = scorePsychologistApplication(payload, true);
+        patch.payload = payload;
+        patch.score = scoring.score;
+        patch.scoreBand = scoring.band;
+        patch.eligible = scoring.eligible;
+        patch.eliminationReasons = scoring.elimination_reasons;
+        patch.scoreBreakdown = scoring.breakdown;
+    }
+    if (body && body.status && PSYCH_APP_ALLOWED_STATUS.has(String(body.status))) {
+        patch.status = String(body.status);
+    }
+    if (body && body.adminNotes !== undefined) {
+        patch.adminNotes = String(body.adminNotes || '').slice(0, 4000);
+    }
+    if (existing && Object.prototype.hasOwnProperty.call(existing, 'professionalId')) {
+        patch.professionalId = existing.professionalId;
+    }
+    return patch;
+}
+
+async function syncBolsaApplicationSideEffects(app) {
+    if (!app) return app;
+    const professional = await linkedProfessionalForApplication(app);
+    if (!professional) return app;
+    await setApplicationProfessionalIdInternal(app.id, professional.id);
+    await seedPsychologistStaffProfile(professional, app);
+    return { ...app, professionalId: professional.id };
+}
+
 async function listPsychologistApplicationsInternal({ status, band, q, limit } = {}) {
     const cap = Math.min(Math.max(parseInt(limit, 10) || 200, 1), 300);
     let list;
@@ -9291,6 +9402,67 @@ app.get('/api/admin/psychologists', requireAdmin, async (req, res) => {
     } catch (err) {
         console.error('GET /api/admin/psychologists:', err.message);
         res.status(500).json({ error: 'Failed to load psychologist applications' });
+    }
+});
+
+app.post('/api/admin/psychologists', requireAdmin, express.json(), async (req, res) => {
+    try {
+        const body = req.body || {};
+        const payload = sanitizeRecrutamentoPayload(coerceAdminBolsaLists(body.payload || body));
+        if (!payload.nome) {
+            return res.status(400).json({ error: 'Nome is required' });
+        }
+        if (!payload.email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(payload.email)) {
+            return res.status(400).json({ error: 'Indique um email válido.' });
+        }
+        const scoring = scorePsychologistApplication(payload, true);
+        const status = body.status && PSYCH_APP_ALLOWED_STATUS.has(String(body.status))
+            ? String(body.status)
+            : 'bolsa';
+        const record = {
+            id: crypto.randomUUID(),
+            name: payload.nome,
+            email: payload.email,
+            phone: payload.telefone,
+            score: scoring.score,
+            scoreBand: scoring.band,
+            scoreBreakdown: scoring.breakdown,
+            eligible: scoring.eligible,
+            eliminationReasons: scoring.elimination_reasons,
+            payload,
+            status,
+            adminNotes: String(body.adminNotes || '').slice(0, 4000)
+        };
+        let application = null;
+        if (usePersistentDb) {
+            try {
+                application = await db.insertPsychologistApplication(record);
+            } catch (dbErr) {
+                console.error('POST /api/admin/psychologists DB:', dbErr.message);
+            }
+        }
+        if (!application) {
+            application = memoryPsychologistApplicationFromRecord(record);
+            psychologistApplicationsStore.unshift(application);
+            if (psychologistApplicationsStore.length > 500) psychologistApplicationsStore.length = 500;
+        }
+        application = await syncBolsaApplicationSideEffects(application);
+        let loginResult = null;
+        if (body.createLogin === true) {
+            const already = await linkedProfessionalForApplication(application);
+            if (!already) {
+                loginResult = await assignLoginToPsychologistApplication(application, { resetPassword: false });
+                application = await findPsychologistApplicationInternal(application.id) || application;
+            }
+        }
+        res.status(201).json({
+            application: await enrichPsychologistApplication(application),
+            professional: loginResult ? publicProfessional(loginResult.professional) : undefined,
+            generatedPassword: loginResult && loginResult.generatedPassword
+        });
+    } catch (err) {
+        console.error('POST /api/admin/psychologists:', err.message);
+        res.status(httpErrorStatus(err, 500)).json({ error: err.message || 'Failed to create application' });
     }
 });
 
@@ -9409,22 +9581,48 @@ app.get('/api/admin/psychologists/:id', requireAdmin, async (req, res) => {
 app.patch('/api/admin/psychologists/:id', requireAdmin, express.json(), async (req, res) => {
     try {
         const id = String(req.params.id || '');
-        const status = req.body?.status != null ? String(req.body.status) : undefined;
-        const adminNotes = req.body?.adminNotes != null ? String(req.body.adminNotes) : undefined;
+        const existing = await findPsychologistApplicationInternal(id);
+        if (!existing) return res.status(404).json({ error: 'Not found' });
+        const patch = buildAdminBolsaPatch(existing, req.body || {});
+        let application = null;
         if (usePersistentDb) {
-            const application = await db.updatePsychologistApplication(id, { status, adminNotes });
-            if (!application) return res.status(404).json({ error: 'Not found' });
-            return res.json({ application: await enrichPsychologistApplication(application) });
+            application = await db.updatePsychologistApplication(id, patch);
         }
-        const idx = psychologistApplicationsStore.findIndex((a) => a.id === id);
-        if (idx < 0) return res.status(404).json({ error: 'Not found' });
-        if (status !== undefined) psychologistApplicationsStore[idx].status = status;
-        if (adminNotes !== undefined) psychologistApplicationsStore[idx].adminNotes = adminNotes.slice(0, 4000);
-        psychologistApplicationsStore[idx].updatedAt = new Date().toISOString();
-        res.json({ application: await enrichPsychologistApplication(psychologistApplicationsStore[idx]) });
+        if (!application) {
+            const idx = psychologistApplicationsStore.findIndex((a) => a.id === id);
+            if (idx < 0 && !usePersistentDb) return res.status(404).json({ error: 'Not found' });
+            if (idx >= 0) {
+                psychologistApplicationsStore[idx] = memoryPsychologistApplicationFromRecord(
+                    { ...psychologistApplicationsStore[idx], ...patch },
+                    psychologistApplicationsStore[idx]
+                );
+                application = psychologistApplicationsStore[idx];
+            }
+        }
+        if (!application) return res.status(404).json({ error: 'Not found' });
+        application = await syncBolsaApplicationSideEffects(application);
+        res.json({ application: await enrichPsychologistApplication(application) });
     } catch (err) {
         console.error('PATCH /api/admin/psychologists/:id:', err.message);
         res.status(500).json({ error: 'Failed to update application' });
+    }
+});
+
+app.delete('/api/admin/psychologists/:id', requireAdmin, async (req, res) => {
+    try {
+        const id = String(req.params.id || '');
+        const existing = await findPsychologistApplicationInternal(id);
+        if (!existing) return res.status(404).json({ error: 'Not found' });
+        if (usePersistentDb) {
+            await db.deletePsychologistApplication(id);
+        }
+        const idx = psychologistApplicationsStore.findIndex((a) => a.id === id);
+        if (idx >= 0) psychologistApplicationsStore.splice(idx, 1);
+        psychologistCvStore.delete(id);
+        res.json({ ok: true, id });
+    } catch (err) {
+        console.error('DELETE /api/admin/psychologists/:id:', err.message);
+        res.status(500).json({ error: 'Failed to delete application' });
     }
 });
 
@@ -10917,11 +11115,154 @@ app.get('/api/admin/staff-profiles', requireAdmin, async (req, res) => {
         }
         res.json({
             staff,
-            documentKinds: STAFF_DOCUMENT_KINDS
+            documentKinds: STAFF_DOCUMENT_KINDS,
+            professions: STAFF_PROFESSION_TITLES
         });
     } catch (err) {
         console.error('GET /api/admin/staff-profiles:', err.message);
         res.status(500).json({ error: 'Failed to load staff profiles' });
+    }
+});
+
+function staffProfileInputFromBody(body) {
+    const src = body && typeof body === 'object' ? body : {};
+    return {
+        profession: String(src.profession || '').trim().slice(0, 32),
+        fullName: String(src.fullName || src.displayName || '').trim().slice(0, 160),
+        ordemNumber: String(src.ordemNumber || '').trim().slice(0, 80),
+        nif: String(src.nif || '').trim().slice(0, 20),
+        citizenCard: String(src.citizenCard || '').trim().slice(0, 32),
+        address: String(src.address || '').trim().slice(0, 400),
+        insurer: String(src.insurer || '').trim().slice(0, 120),
+        insurancePolicy: String(src.insurancePolicy || '').trim().slice(0, 80),
+        insuranceValidUntil: String(src.insuranceValidUntil || '').trim().slice(0, 10),
+        bio: String(src.bio || '').trim().slice(0, 4000),
+        credentials: String(src.credentials || '').trim().slice(0, 2000),
+        consultLanguages: src.consultLanguages,
+        primaryAreas: src.primaryAreas != null ? src.primaryAreas : src.primaryArea,
+        secondaryAreas: src.secondaryAreas != null ? src.secondaryAreas : src.secondaryArea
+    };
+}
+
+app.post('/api/admin/staff-profiles', requireAdmin, express.json(), async (req, res) => {
+    try {
+        const body = req.body || {};
+        const fullName = String(body.fullName || body.displayName || '').trim().slice(0, 160);
+        if (!fullName) {
+            return res.status(400).json({ error: 'Nome is required' });
+        }
+        const profession = String(body.profession || '').trim();
+        if (profession && !STAFF_PROFESSIONS[profession]) {
+            return res.status(400).json({ error: 'Choose médico, nutricionista or psicólogo' });
+        }
+        let email = String(body.email || '').trim();
+        if (email) {
+            email = normalizeStaffEmail(email);
+            if (!isValidStaffEmail(email)) {
+                return res.status(400).json({ error: 'Email inválido' });
+            }
+            const taken = await findProfessionalByEmailInternal(email);
+            if (taken) {
+                return res.status(409).json({ error: 'That email already has a clinic login' });
+            }
+        }
+        const requestedUsername = String(body.username || '').trim();
+        if (requestedUsername && !isValidProfessionalUsername(requestedUsername)) {
+            return res.status(400).json({ error: 'Username must be 3–64 characters (letters, numbers, . _ -)' });
+        }
+        if (requestedUsername && normalizeProfessionalUsername(requestedUsername) === normalizeProfessionalUsername(CLINIC_USERNAME)) {
+            return res.status(409).json({ error: 'That username is reserved for the clinic admin account' });
+        }
+        if (requestedUsername && (await findProfessionalByUsernameInternal(requestedUsername))) {
+            return res.status(409).json({ error: 'That username is already in use' });
+        }
+        const username = await allocateProfessionalUsername(requestedUsername, fullName);
+        let password = String(body.password || '');
+        let generatedPassword = null;
+        if (!password) {
+            generatedPassword = generateProfessionalPassword();
+            password = generatedPassword;
+        } else if (password.length < 8) {
+            return res.status(400).json({ error: 'Password must be at least 8 characters' });
+        }
+        const created = await createProfessionalInternal({
+            username,
+            password,
+            displayName: fullName,
+            email,
+            active: body.active !== false
+        });
+        const bolsaApp = email ? await findPsychologistApplicationByEmailInternal(email) : null;
+        if (bolsaApp) {
+            await setApplicationProfessionalIdInternal(bolsaApp.id, created.id);
+            await seedPsychologistStaffProfile(created, bolsaApp);
+            await copyBolsaCvToStaffDocuments(created.username, bolsaApp);
+        }
+        const existingProfile = await getStaffProfileInternal(created.username);
+        const profile = await saveStaffProfileInternal(created.username, {
+            ...existingProfile,
+            ...staffProfileInputFromBody({ ...body, fullName, profession })
+        });
+        console.log(`   👤 Professional profile created: ${created.username}`);
+        res.status(201).json({
+            professional: publicProfessional(created),
+            profile,
+            generatedPassword: generatedPassword || undefined
+        });
+    } catch (err) {
+        if (err && err.code === '23505') {
+            return res.status(409).json({ error: 'That username is already in use' });
+        }
+        console.error('POST /api/admin/staff-profiles:', err.message);
+        res.status(httpErrorStatus(err, 500)).json({ error: err.message || 'Failed to create profile' });
+    }
+});
+
+app.patch('/api/admin/staff-profiles/:username', requireAdmin, express.json(), async (req, res) => {
+    try {
+        const username = String(req.params.username || '').trim().toLowerCase();
+        if (!username) return res.status(400).json({ error: 'Username is required' });
+        const professional = await findProfessionalByUsernameInternal(username);
+        const existing = await getStaffProfileInternal(username);
+        if (!professional && !existing.updatedAt && username !== normalizeProfessionalUsername(CLINIC_USERNAME)) {
+            return res.status(404).json({ error: 'Professional not found' });
+        }
+        const body = req.body || {};
+        const profession = String(body.profession || existing.profession || '').trim();
+        if (profession && !STAFF_PROFESSIONS[profession]) {
+            return res.status(400).json({ error: 'Choose médico, nutricionista or psicólogo' });
+        }
+        const fullName = String(body.fullName || body.displayName || existing.fullName || '').trim().slice(0, 160);
+        const profile = await saveStaffProfileInternal(username, {
+            ...existing,
+            ...staffProfileInputFromBody({ ...body, profession, fullName })
+        });
+        const patch = {};
+        if (profile.fullName && !isJunkStaffName(profile.fullName)) {
+            patch.displayName = String(profile.fullName).slice(0, 160);
+        }
+        if (Object.prototype.hasOwnProperty.call(body, 'email')) {
+            const raw = String(body.email || '').trim();
+            if (raw) {
+                const nextEmail = normalizeStaffEmail(raw);
+                if (!isValidStaffEmail(nextEmail)) {
+                    return res.status(400).json({ error: 'Email inválido' });
+                }
+                patch.email = nextEmail;
+            }
+        }
+        let updated = professional;
+        if (professional && professional.id && Object.keys(patch).length) {
+            updated = await patchProfessionalInternal(professional, patch);
+        }
+        res.json({
+            ok: true,
+            profile,
+            professional: publicProfessional(updated || professional)
+        });
+    } catch (err) {
+        console.error('PATCH /api/admin/staff-profiles:', err.message);
+        res.status(500).json({ error: 'Failed to update profile' });
     }
 });
 

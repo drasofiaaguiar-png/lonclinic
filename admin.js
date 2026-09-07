@@ -2553,6 +2553,186 @@ document.addEventListener('DOMContentLoaded', async () => {
         'eliminado'
     ];
 
+    const YES_NO = ['Sim', 'Não'];
+    const BOLSA_FIELD_GROUPS = [
+        {
+            title: 'Dados pessoais',
+            fields: [
+                { key: 'nome', label: 'Nome completo', type: 'text', required: true, max: 120 },
+                { key: 'email', label: 'Email', type: 'email', required: true, max: 160 },
+                { key: 'telefone', label: 'Telefone', type: 'text', max: 40 },
+                { key: 'localidade', label: 'Localidade', type: 'text', max: 120 },
+                { key: 'pais', label: 'País', type: 'select', options: ['Portugal', 'Outro'] },
+                { key: 'pais_especificar', label: 'País (se outro)', type: 'text', max: 80 }
+            ]
+        },
+        {
+            title: 'Formação e inscrição profissional',
+            fields: [
+                { key: 'opp_inscrito', label: 'Inscrito/a na OPP', type: 'select', options: YES_NO },
+                { key: 'cedula_opp', label: 'Cédula OPP', type: 'text', max: 40 },
+                { key: 'grau_academico', label: 'Grau académico', type: 'select', options: ['Mestrado Integrado em Psicologia', 'Licenciatura + Mestrado em Psicologia', 'Outro'] },
+                { key: 'formacao_complementar', label: 'Formação complementar', type: 'textarea', max: 3000 }
+            ]
+        },
+        {
+            title: 'Experiência profissional',
+            fields: [
+                { key: 'anos_clinica', label: 'Anos em Psicologia Clínica', type: 'select', options: ['Menos de 1 ano', '1–2 anos', '3–5 anos', '6–10 anos', 'Mais de 10 anos'] },
+                { key: 'anos_individuais', label: 'Anos em consultas individuais', type: 'select', options: ['Menos de 1 ano', '1–2 anos', '3–5 anos', '6–10 anos', 'Mais de 10 anos'] },
+                { key: 'experiencia_online', label: 'Experiência em consultas online', type: 'select', options: ['Sim, atualmente', 'Sim, mas não atualmente', 'Não'] },
+                { key: 'n_consultas_online', label: 'N.º consultas online', type: 'select', options: ['Menos de 20', '20–50', '50–100', '100–300', 'Mais de 300'] },
+                { key: 'areas_clinicas', label: 'Áreas clínicas (separadas por vírgula)', type: 'text', max: 800, wide: true },
+                { key: 'areas_outro', label: 'Outra área', type: 'text', max: 200 },
+                { key: 'populacoes', label: 'Populações (separadas por vírgula)', type: 'text', max: 400, wide: true },
+                { key: 'tipos_casos', label: 'Tipos de casos', type: 'textarea', max: 3000 }
+            ]
+        },
+        {
+            title: 'Disponibilidade',
+            fields: [
+                { key: 'horas_iniciais', label: 'Horas semanais iniciais', type: 'select', options: ['1 hora', '2 horas', '3 horas', '4 horas', 'Mais de 4 horas'] },
+                { key: 'dias_semana', label: 'Dias da semana (separados por vírgula)', type: 'text', max: 200, wide: true },
+                { key: 'horarios_fixos', label: 'Horários fixos', type: 'textarea', max: 2000 },
+                { key: 'disponibilidade_estavel', label: 'Disponibilidade estável', type: 'select', options: ['Sim', 'Na maioria das semanas', 'Não'] },
+                { key: 'aumento_futuro', label: 'Aumento de horas', type: 'select', options: ['Sim, a curto prazo', 'Sim, mas apenas futuramente', 'Talvez', 'Não'] },
+                { key: 'horas_aumento', label: 'Horas para as quais poderia aumentar', type: 'select', options: ['3–4 horas', '5–8 horas', '9–12 horas', 'Mais de 12 horas', 'Depende da procura'] }
+            ]
+        },
+        {
+            title: 'Perfil clínico',
+            fields: [
+                { key: 'aceita_condicoes', label: 'Aceita as condições', type: 'select', options: YES_NO },
+                { key: 'abordagem_terapeutica', label: 'Abordagem terapêutica', type: 'textarea', max: 2000 },
+                { key: 'modelos', label: 'Modelos / abordagens (separados por vírgula)', type: 'text', max: 400, wide: true },
+                { key: 'idiomas', label: 'Idiomas (separados por vírgula)', type: 'text', max: 200, wide: true },
+                { key: 'videoconferencia', label: 'Videoconferência', type: 'select', options: YES_NO }
+            ]
+        },
+        {
+            title: 'Administrativo',
+            fields: [
+                { key: 'atividade_profissional', label: 'Atividade profissional aberta', type: 'select', options: ['Sim', 'Não', 'Posso abrir caso seja necessário'] },
+                { key: 'rc_profissional', label: 'Seguro de responsabilidade civil', type: 'select', options: ['Sim', 'Não', 'Em processo de obtenção'] },
+                { key: 'limitacoes', label: 'Limitações relevantes', type: 'textarea', max: 2000 },
+                { key: 'entrevista_disponibilidade', label: 'Disponibilidade para entrevista', type: 'select', options: YES_NO },
+                { key: 'periodos_entrevista', label: 'Períodos para entrevista', type: 'textarea', max: 1000 },
+                { key: 'bolsa_autorizacao', label: 'Autorização bolsa / contactos futuros', type: 'select', options: YES_NO },
+                { key: 'linkedin', label: 'LinkedIn / website', type: 'text', max: 300, wide: true }
+            ]
+        }
+    ];
+
+    function bolsaFieldValue(value) {
+        if (Array.isArray(value)) return value.join(', ');
+        return value == null ? '' : String(value);
+    }
+
+    function bolsaPayloadFromApp(a) {
+        const p = (a && a.payload && typeof a.payload === 'object') ? a.payload : {};
+        return {
+            ...p,
+            nome: p.nome || (a && a.name) || '',
+            email: p.email || (a && a.email) || '',
+            telefone: p.telefone || (a && a.phone) || '',
+            localidade: p.localidade || (a && a.localidade) || '',
+            pais: p.pais || (a && a.pais) || '',
+            cedula_opp: p.cedula_opp || (a && a.cedulaOpp) || '',
+            grau_academico: p.grau_academico || (a && a.grauAcademico) || '',
+            anos_clinica: p.anos_clinica || (a && a.anosClinica) || '',
+            anos_individuais: p.anos_individuais || (a && a.anosIndividuais) || '',
+            experiencia_online: p.experiencia_online || (a && a.experienciaOnline) || '',
+            areas_clinicas: p.areas_clinicas || (a && a.areasClinicas) || [],
+            populacoes: p.populacoes || (a && a.populacoes) || [],
+            idiomas: p.idiomas || (a && a.idiomas) || [],
+            modelos: p.modelos || (a && a.modelos) || [],
+            dias_semana: p.dias_semana || (a && a.diasSemana) || [],
+            horas_iniciais: p.horas_iniciais || (a && a.horasIniciais) || '',
+            horarios_fixos: p.horarios_fixos || (a && a.horariosFixos) || '',
+            disponibilidade_estavel: p.disponibilidade_estavel || (a && a.disponibilidadeEstavel) || '',
+            bolsa_autorizacao: p.bolsa_autorizacao || (a && a.bolsaAutorizacao) || ''
+        };
+    }
+
+    function renderBolsaFieldControl(field, value, idPrefix) {
+        const name = field.key;
+        const id = `${idPrefix}-${name}`;
+        const val = bolsaFieldValue(value);
+        if (field.type === 'textarea') {
+            return `<textarea id="${escapeHtml(id)}" name="${escapeHtml(name)}" class="admin-input" rows="3" maxlength="${field.max || 3000}">${escapeHtml(val)}</textarea>`;
+        }
+        if (field.type === 'select') {
+            const options = ['', ...(field.options || [])];
+            return `<select id="${escapeHtml(id)}" name="${escapeHtml(name)}" class="admin-select">
+                ${options.map((o) => `<option value="${escapeHtml(o)}" ${val === o ? 'selected' : ''}>${escapeHtml(o || '—')}</option>`).join('')}
+            </select>`;
+        }
+        return `<input id="${escapeHtml(id)}" name="${escapeHtml(name)}" type="${escapeHtml(field.type || 'text')}" class="admin-input" value="${escapeHtml(val)}" maxlength="${field.max || 200}" ${field.required ? 'required' : ''}>`;
+    }
+
+    function renderBolsaFormHtml(payload, opts) {
+        const prefix = (opts && opts.idPrefix) || 'bolsa';
+        const data = payload || {};
+        const groups = BOLSA_FIELD_GROUPS.map((group) => `
+            <section class="admin-psych-section">
+                <h4>${escapeHtml(group.title)}</h4>
+                <div class="admin-bolsa-form-grid">
+                    ${group.fields.map((field) => `
+                        <div class="admin-form-group${field.wide || field.type === 'textarea' ? ' is-wide' : ''}">
+                            <label for="${escapeHtml(prefix + '-' + field.key)}">${escapeHtml(field.label)}</label>
+                            ${renderBolsaFieldControl(field, data[field.key], prefix)}
+                        </div>
+                    `).join('')}
+                </div>
+            </section>
+        `).join('');
+        const status = (opts && opts.status) || 'bolsa';
+        const notes = (opts && opts.adminNotes) || '';
+        const meta = `
+            <section class="admin-psych-section">
+                <h4>Pipeline</h4>
+                <div class="admin-bolsa-form-grid">
+                    <div class="admin-form-group">
+                        <label for="${escapeHtml(prefix)}-status">Status</label>
+                        <select id="${escapeHtml(prefix)}-status" name="status" class="admin-select">
+                            ${PSYCH_STATUS_OPTIONS.map((s) => `<option value="${s}" ${status === s ? 'selected' : ''}>${s}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="admin-form-group is-wide">
+                        <label for="${escapeHtml(prefix)}-adminNotes">Notas internas</label>
+                        <textarea id="${escapeHtml(prefix)}-adminNotes" name="adminNotes" class="admin-input" rows="2" maxlength="4000">${escapeHtml(notes)}</textarea>
+                    </div>
+                    ${opts && opts.createLogin
+                        ? `<label class="clinic-toggle-label is-wide" for="${escapeHtml(prefix)}-createLogin">
+                            <input type="checkbox" id="${escapeHtml(prefix)}-createLogin" name="createLogin">
+                            <span>Também criar ficha e login da clínica</span>
+                        </label>`
+                        : ''}
+                </div>
+            </section>
+        `;
+        return groups + meta;
+    }
+
+    function readBolsaForm(form) {
+        if (!form) return { payload: {}, status: '', adminNotes: '', createLogin: false };
+        const payload = {};
+        form.querySelectorAll('[name]').forEach((el) => {
+            const key = el.getAttribute('name');
+            if (!key || key === 'status' || key === 'adminNotes' || key === 'createLogin') return;
+            payload[key] = el.value;
+        });
+        const statusEl = form.querySelector('[name="status"]');
+        const notesEl = form.querySelector('[name="adminNotes"]');
+        const loginEl = form.querySelector('[name="createLogin"]');
+        return {
+            payload,
+            status: statusEl ? statusEl.value : '',
+            adminNotes: notesEl ? notesEl.value : '',
+            createLogin: !!(loginEl && loginEl.checked)
+        };
+    }
+
     function formatPsychDate(iso) {
         if (!iso) return '—';
         try {
@@ -2719,7 +2899,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <span class="admin-psych-chevron" aria-hidden="true"></span>
                 </summary>
                 <div class="admin-psych-body">
-                    ${renderPsychFullAnswers(a)}
+                    <div class="admin-psych-view">${renderPsychFullAnswers(a)}</div>
+                    <form class="admin-psych-edit-form admin-create-form" data-psych-edit-form="${escapeHtml(a.id)}" hidden></form>
                     <div class="admin-psych-actions">
                         <label>
                             Status
@@ -2735,6 +2916,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </label>
                         <button type="button" class="btn btn-primary btn-sm admin-psych-save" data-psych-id="${escapeHtml(a.id)}">Guardar</button>
                         <div class="admin-psych-login-row">
+                            <button type="button" class="btn btn-outline btn-sm" data-psych-edit="${escapeHtml(a.id)}">Editar dados</button>
+                            <button type="button" class="btn btn-outline btn-sm" data-psych-delete="${escapeHtml(a.id)}">Eliminar</button>
                             ${a.professional && a.professional.username
                                 ? `<span>Clinic login: <code>${escapeHtml(a.professional.username)}</code> — portal <a href="/clinic-desk/dias#profile">/clinic-desk/dias</a></span>
                                    <button type="button" class="btn btn-outline btn-sm" data-psych-password="${escapeHtml(a.id)}">New password</button>`
@@ -2891,6 +3074,148 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    async function saveBolsaApplicationFromForm(id, form) {
+        const data = readBolsaForm(form);
+        if (!data.payload.nome || !data.payload.email) {
+            alert('Nome e email são obrigatórios.');
+            return;
+        }
+        try {
+            const res = await fetch(`/api/admin/psychologists/${encodeURIComponent(id)}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    payload: data.payload,
+                    status: data.status,
+                    adminNotes: data.adminNotes
+                })
+            });
+            const body = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(body.error || 'HTTP ' + res.status);
+            await loadAdminPsychologists();
+            if (typeof loadAdminProfessionals === 'function') await loadAdminProfessionals();
+        } catch (err) {
+            console.error('Save bolsa data:', err);
+            alert(err.message || 'Não foi possível guardar os dados.');
+        }
+    }
+
+    async function createBolsaApplicationFromForm(form) {
+        const data = readBolsaForm(form);
+        if (!data.payload.nome || !data.payload.email) {
+            alert('Nome e email são obrigatórios.');
+            return;
+        }
+        try {
+            const res = await fetch('/api/admin/psychologists', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    payload: data.payload,
+                    status: data.status || 'bolsa',
+                    adminNotes: data.adminNotes,
+                    createLogin: data.createLogin
+                })
+            });
+            const body = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(body.error || 'HTTP ' + res.status);
+            form.reset();
+            fillBolsaCreateForm();
+            const details = document.getElementById('adminBolsaCreateDetails');
+            if (details) details.open = false;
+            await loadAdminPsychologists();
+            if (typeof loadAdminProfessionals === 'function') await loadAdminProfessionals();
+            if (body.generatedPassword && body.professional) {
+                showPsychCreds([{
+                    name: (body.application && body.application.name) || data.payload.nome,
+                    username: body.professional.username,
+                    password: body.generatedPassword
+                }]);
+            }
+        } catch (err) {
+            console.error('Create bolsa:', err);
+            alert(err.message || 'Não foi possível adicionar à bolsa.');
+        }
+    }
+
+    async function deleteBolsaApplication(id) {
+        const app = psychologistsCache.find((a) => String(a.id) === String(id));
+        const label = (app && app.name) || 'este profissional';
+        if (!window.confirm(`Eliminar ${label} da bolsa? A ficha e o login da clínica, se existirem, mantêm-se.`)) return;
+        try {
+            const res = await fetch(`/api/admin/psychologists/${encodeURIComponent(id)}`, { method: 'DELETE' });
+            const body = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(body.error || 'HTTP ' + res.status);
+            await loadAdminPsychologists();
+        } catch (err) {
+            console.error('Delete bolsa:', err);
+            alert(err.message || 'Não foi possível eliminar.');
+        }
+    }
+
+    function fillBolsaCreateForm() {
+        const form = document.getElementById('adminBolsaCreateForm');
+        if (!form) return;
+        form.innerHTML = `
+            ${renderBolsaFormHtml({}, { idPrefix: 'bolsa-new', status: 'bolsa', createLogin: true })}
+            <div class="admin-invite-actions">
+                <button type="submit" class="btn btn-primary">Adicionar à bolsa</button>
+            </div>
+        `;
+    }
+
+    function toggleBolsaEditForm(id) {
+        const row = adminPsychologistsList && adminPsychologistsList.querySelector(`.admin-psych-row[data-id="${id}"]`);
+        if (!row) return;
+        const view = row.querySelector('.admin-psych-view');
+        const form = row.querySelector('[data-psych-edit-form]');
+        const editBtn = row.querySelector('[data-psych-edit]');
+        if (!form) return;
+        const opening = form.hidden;
+        if (opening) {
+            const app = psychologistsCache.find((a) => String(a.id) === String(id));
+            form.innerHTML = `
+                ${renderBolsaFormHtml(bolsaPayloadFromApp(app), {
+                    idPrefix: `bolsa-${id}`,
+                    status: (app && app.status) || 'novo',
+                    adminNotes: (app && app.adminNotes) || ''
+                })}
+                <div class="admin-psych-edit-actions">
+                    <button type="submit" class="btn btn-primary btn-sm">Guardar dados</button>
+                    <button type="button" class="btn btn-outline btn-sm" data-psych-edit-cancel="${escapeHtml(id)}">Cancelar</button>
+                </div>
+            `;
+            form.hidden = false;
+            if (view) view.hidden = true;
+            if (editBtn) editBtn.textContent = 'Fechar edição';
+            row.open = true;
+        } else {
+            form.hidden = true;
+            form.innerHTML = '';
+            if (view) view.hidden = false;
+            if (editBtn) editBtn.textContent = 'Editar dados';
+        }
+    }
+
+    fillBolsaCreateForm();
+    const adminBolsaCreateForm = document.getElementById('adminBolsaCreateForm');
+    if (adminBolsaCreateForm) {
+        adminBolsaCreateForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            createBolsaApplicationFromForm(adminBolsaCreateForm);
+        });
+    }
+    const psychologistsAddBtn = document.getElementById('psychologistsAddBtn');
+    const adminBolsaCreateDetails = document.getElementById('adminBolsaCreateDetails');
+    if (psychologistsAddBtn && adminBolsaCreateDetails) {
+        psychologistsAddBtn.addEventListener('click', () => {
+            adminBolsaCreateDetails.open = true;
+            adminBolsaCreateDetails.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            const first = adminBolsaCreateForm && adminBolsaCreateForm.querySelector('input, select, textarea');
+            if (first) first.focus();
+        });
+    }
+
     if (psychologistsRefreshBtn) {
         psychologistsRefreshBtn.addEventListener('click', () => loadAdminPsychologists());
     }
@@ -2937,7 +3262,28 @@ document.addEventListener('DOMContentLoaded', async () => {
             const passwordBtn = e.target.closest('[data-psych-password]');
             if (passwordBtn) {
                 assignPsychologistLogin(passwordBtn.getAttribute('data-psych-password'), { resetPassword: true });
+                return;
             }
+            const editBtn = e.target.closest('[data-psych-edit]');
+            if (editBtn) {
+                toggleBolsaEditForm(editBtn.getAttribute('data-psych-edit'));
+                return;
+            }
+            const cancelBtn = e.target.closest('[data-psych-edit-cancel]');
+            if (cancelBtn) {
+                toggleBolsaEditForm(cancelBtn.getAttribute('data-psych-edit-cancel'));
+                return;
+            }
+            const deleteBtn = e.target.closest('[data-psych-delete]');
+            if (deleteBtn) {
+                deleteBolsaApplication(deleteBtn.getAttribute('data-psych-delete'));
+            }
+        });
+        adminPsychologistsList.addEventListener('submit', (e) => {
+            const form = e.target.closest('[data-psych-edit-form]');
+            if (!form) return;
+            e.preventDefault();
+            saveBolsaApplicationFromForm(form.getAttribute('data-psych-edit-form'), form);
         });
     }
 
@@ -3615,6 +3961,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const adminStaffProfilesList = document.getElementById('adminStaffProfilesList');
+    let staffProfilesCache = [];
 
     function dashText(value) {
         const s = String(value || '').trim();
@@ -3712,6 +4059,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <h3>${escapeHtml(title)}</h3>
                         <p class="admin-staff-profile-meta">${escapeHtml(roleBits)}${p.email ? ` · ${escapeHtml(p.email)}` : ''}</p>
                     </div>
+                    <button type="button" class="btn btn-outline btn-sm" data-staff-edit="${escapeHtml(p.username || '')}">Editar ficha</button>
                 </div>
                 <div class="admin-staff-profile-block">
                     <h4>Identificação</h4>
@@ -3778,11 +4126,170 @@ document.addEventListener('DOMContentLoaded', async () => {
             const res = await fetch('/api/admin/staff-profiles');
             if (res.status === 401 || res.status === 403) return;
             if (!res.ok) throw new Error('Failed to load staff profiles');
-            renderAdminStaffProfiles(await res.json());
+            const data = await res.json();
+            staffProfilesCache = data.staff || [];
+            renderAdminStaffProfiles(data);
         } catch (err) {
             console.error('Load staff profiles:', err);
             adminStaffProfilesList.innerHTML = '<p class="admin-empty-list">Could not load professional profiles.</p>';
         }
+    }
+
+    const adminCreateProfileForm = document.getElementById('adminCreateProfileForm');
+    const adminCreateProfileDetails = document.getElementById('adminCreateProfileDetails');
+    const adminCreateProfileSummary = document.getElementById('adminCreateProfileSummary');
+    const adminCreateProfileError = document.getElementById('adminCreateProfileError');
+    const staffProfileEditUser = document.getElementById('staffProfileEditUser');
+    const staffProfileFullName = document.getElementById('staffProfileFullName');
+    const staffProfileEmail = document.getElementById('staffProfileEmail');
+    const staffProfileProfession = document.getElementById('staffProfileProfession');
+    const staffProfileUsername = document.getElementById('staffProfileUsername');
+    const staffProfilePassword = document.getElementById('staffProfilePassword');
+    const staffProfileUsernameWrap = document.getElementById('staffProfileUsernameWrap');
+    const staffProfilePasswordWrap = document.getElementById('staffProfilePasswordWrap');
+    const staffProfileNif = document.getElementById('staffProfileNif');
+    const staffProfileOrdem = document.getElementById('staffProfileOrdem');
+    const staffProfileCitizenCard = document.getElementById('staffProfileCitizenCard');
+    const staffProfileAddress = document.getElementById('staffProfileAddress');
+    const staffProfileInsurer = document.getElementById('staffProfileInsurer');
+    const staffProfileInsurancePolicy = document.getElementById('staffProfileInsurancePolicy');
+    const staffProfileInsuranceValid = document.getElementById('staffProfileInsuranceValid');
+    const staffProfileBio = document.getElementById('staffProfileBio');
+    const staffProfileCredentials = document.getElementById('staffProfileCredentials');
+    const staffProfileSubmitBtn = document.getElementById('staffProfileSubmitBtn');
+    const staffProfileCancelBtn = document.getElementById('staffProfileCancelBtn');
+
+    function showCreateProfileError(message) {
+        if (!adminCreateProfileError) return;
+        if (!message) {
+            adminCreateProfileError.style.display = 'none';
+            adminCreateProfileError.textContent = '';
+            return;
+        }
+        adminCreateProfileError.textContent = message;
+        adminCreateProfileError.style.display = 'block';
+    }
+
+    function resetCreateProfileForm() {
+        if (adminCreateProfileForm) adminCreateProfileForm.reset();
+        if (staffProfileEditUser) staffProfileEditUser.value = '';
+        if (staffProfileUsernameWrap) staffProfileUsernameWrap.hidden = false;
+        if (staffProfilePasswordWrap) staffProfilePasswordWrap.hidden = false;
+        if (staffProfileUsername) staffProfileUsername.disabled = false;
+        if (staffProfileSubmitBtn) staffProfileSubmitBtn.textContent = 'Criar ficha e login';
+        if (staffProfileCancelBtn) staffProfileCancelBtn.hidden = true;
+        if (adminCreateProfileSummary) adminCreateProfileSummary.textContent = 'Criar ficha de profissional';
+        showCreateProfileError('');
+    }
+
+    function fillCreateProfileForm(p) {
+        if (!p) {
+            resetCreateProfileForm();
+            return;
+        }
+        if (staffProfileEditUser) staffProfileEditUser.value = p.username || '';
+        if (staffProfileFullName) staffProfileFullName.value = p.fullName || p.displayName || '';
+        if (staffProfileEmail) staffProfileEmail.value = p.email || '';
+        if (staffProfileProfession) staffProfileProfession.value = p.profession || '';
+        if (staffProfileUsername) {
+            staffProfileUsername.value = p.username || '';
+            staffProfileUsername.disabled = true;
+        }
+        if (staffProfilePassword) staffProfilePassword.value = '';
+        if (staffProfileUsernameWrap) staffProfileUsernameWrap.hidden = false;
+        if (staffProfilePasswordWrap) staffProfilePasswordWrap.hidden = true;
+        if (staffProfileNif) staffProfileNif.value = p.nif || '';
+        if (staffProfileOrdem) staffProfileOrdem.value = p.ordemNumber || '';
+        if (staffProfileCitizenCard) staffProfileCitizenCard.value = p.citizenCard || '';
+        if (staffProfileAddress) staffProfileAddress.value = p.address || '';
+        if (staffProfileInsurer) staffProfileInsurer.value = p.insurer || '';
+        if (staffProfileInsurancePolicy) staffProfileInsurancePolicy.value = p.insurancePolicy || '';
+        if (staffProfileInsuranceValid) staffProfileInsuranceValid.value = p.insuranceValidUntil || '';
+        if (staffProfileBio) staffProfileBio.value = p.bio || '';
+        if (staffProfileCredentials) staffProfileCredentials.value = p.credentials || '';
+        if (staffProfileSubmitBtn) staffProfileSubmitBtn.textContent = 'Guardar ficha';
+        if (staffProfileCancelBtn) staffProfileCancelBtn.hidden = false;
+        if (adminCreateProfileSummary) adminCreateProfileSummary.textContent = `Editar ficha — ${p.fullName || p.displayName || p.username || ''}`;
+        if (adminCreateProfileDetails) {
+            adminCreateProfileDetails.open = true;
+            adminCreateProfileDetails.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        showCreateProfileError('');
+    }
+
+    function readCreateProfileForm() {
+        return {
+            fullName: staffProfileFullName ? staffProfileFullName.value.trim() : '',
+            email: staffProfileEmail ? staffProfileEmail.value.trim() : '',
+            profession: staffProfileProfession ? staffProfileProfession.value : '',
+            username: staffProfileUsername ? staffProfileUsername.value.trim() : '',
+            password: staffProfilePassword ? staffProfilePassword.value : '',
+            nif: staffProfileNif ? staffProfileNif.value.trim() : '',
+            ordemNumber: staffProfileOrdem ? staffProfileOrdem.value.trim() : '',
+            citizenCard: staffProfileCitizenCard ? staffProfileCitizenCard.value.trim() : '',
+            address: staffProfileAddress ? staffProfileAddress.value.trim() : '',
+            insurer: staffProfileInsurer ? staffProfileInsurer.value.trim() : '',
+            insurancePolicy: staffProfileInsurancePolicy ? staffProfileInsurancePolicy.value.trim() : '',
+            insuranceValidUntil: staffProfileInsuranceValid ? staffProfileInsuranceValid.value : '',
+            bio: staffProfileBio ? staffProfileBio.value.trim() : '',
+            credentials: staffProfileCredentials ? staffProfileCredentials.value.trim() : ''
+        };
+    }
+
+    if (staffProfileCancelBtn) {
+        staffProfileCancelBtn.addEventListener('click', () => resetCreateProfileForm());
+    }
+
+    if (adminCreateProfileForm) {
+        adminCreateProfileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            showCreateProfileError('');
+            const editing = staffProfileEditUser && staffProfileEditUser.value.trim();
+            const payload = readCreateProfileForm();
+            if (!payload.fullName) {
+                showCreateProfileError('O nome é obrigatório.');
+                return;
+            }
+            if (!editing && payload.password && payload.password.length < 8) {
+                showCreateProfileError('A password deve ter pelo menos 8 caracteres.');
+                return;
+            }
+            try {
+                const res = await fetch(
+                    editing
+                        ? `/api/admin/staff-profiles/${encodeURIComponent(editing)}`
+                        : '/api/admin/staff-profiles',
+                    {
+                        method: editing ? 'PATCH' : 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    }
+                );
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status);
+                const createdPro = data.professional;
+                const password = data.generatedPassword || payload.password || '';
+                resetCreateProfileForm();
+                if (typeof loadAdminProfessionals === 'function') await loadAdminProfessionals();
+                else await loadAdminStaffProfiles();
+                if (!editing && password && createdPro && createdPro.username && typeof showProfessionalCreds === 'function') {
+                    showProfessionalCreds(createdPro, password);
+                    if (adminProfessionalCreds) adminProfessionalCreds.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            } catch (err) {
+                showCreateProfileError(err.message || 'Não foi possível guardar a ficha.');
+            }
+        });
+    }
+
+    if (adminStaffProfilesList) {
+        adminStaffProfilesList.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-staff-edit]');
+            if (!btn) return;
+            const username = btn.getAttribute('data-staff-edit');
+            const person = staffProfilesCache.find((p) => String(p.username) === String(username));
+            if (person) fillCreateProfileForm(person);
+        });
     }
 
     if (proDisplayName) {

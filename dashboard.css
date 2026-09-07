@@ -2019,6 +2019,62 @@ body.dash-portal .dash-stat-card {
     margin-bottom: 16px;
 }
 
+.admin-staff-profile-head > div {
+    min-width: 0;
+    flex: 1;
+}
+
+.admin-staff-profile-head .btn {
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.admin-create-card {
+    margin: 0 0 20px;
+    padding: 14px 16px 16px;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-card);
+}
+
+.admin-create-card > summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    list-style: none;
+}
+
+.admin-create-card > summary::-webkit-details-marker {
+    display: none;
+}
+
+.admin-create-card[open] > summary {
+    margin-bottom: 14px;
+}
+
+.admin-create-form {
+    display: grid;
+    gap: 14px;
+}
+
+.admin-bolsa-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px 16px;
+}
+
+.admin-bolsa-form-grid .is-wide,
+.admin-bolsa-form-grid .clinic-toggle-label {
+    grid-column: 1 / -1;
+}
+
+.admin-psych-edit-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
 .admin-staff-profile-photo {
     width: 64px;
     height: 64px;

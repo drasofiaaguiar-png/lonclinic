@@ -993,41 +993,157 @@ async function findPsychologistApplicationByEmail(email) {
     return rowToPsychologistApplication(r.rows[0]);
 }
 
+const PSYCH_APP_ALLOWED_STATUS = new Set([
+    'novo',
+    'prioritario',
+    'shortlist',
+    'entrevista',
+    'aceite',
+    'bolsa',
+    'rejeitado',
+    'eliminado'
+]);
+
 async function updatePsychologistApplication(id, patch) {
-    const p = getPool();
-    const allowedStatus = new Set([
-        'novo',
-        'prioritario',
-        'shortlist',
-        'entrevista',
-        'aceite',
-        'bolsa',
-        'rejeitado',
-        'eliminado'
-    ]);
-    const status =
-        patch.status && allowedStatus.has(String(patch.status)) ? String(patch.status) : null;
-    const adminNotes = patch.adminNotes !== undefined ? String(patch.adminNotes || '').slice(0, 4000) : null;
-    const professionalIdSpecified = Object.prototype.hasOwnProperty.call(patch, 'professionalId');
-    const professionalId = professionalIdSpecified
-        ? (Number.isInteger(Number(patch.professionalId)) && Number(patch.professionalId) > 0
-            ? Number(patch.professionalId)
-            : null)
-        : undefined;
-    if (status == null && adminNotes == null && !professionalIdSpecified) {
-        return findPsychologistApplicationById(id);
+    const existing = await findPsychologistApplicationById(id);
+    if (!existing) return null;
+    const hasPayload = !!(patch && patch.payload && typeof patch.payload === 'object' && !Array.isArray(patch.payload));
+    if (!hasPayload) {
+        const status = patch && patch.status && PSYCH_APP_ALLOWED_STATUS.has(String(patch.status))
+            ? String(patch.status)
+            : null;
+        const adminNotes = patch && patch.adminNotes !== undefined
+            ? String(patch.adminNotes || '').slice(0, 4000)
+            : null;
+        const professionalIdSpecified = !!(patch && Object.prototype.hasOwnProperty.call(patch, 'professionalId'));
+        const professionalId = professionalIdSpecified
+            ? (Number.isInteger(Number(patch.professionalId)) && Number(patch.professionalId) > 0
+                ? Number(patch.professionalId)
+                : null)
+            : undefined;
+        if (status == null && adminNotes == null && !professionalIdSpecified) {
+            return existing;
+        }
+        const p = getPool();
+        const r = await p.query(
+            `UPDATE psychologist_applications SET
+                status = COALESCE($2, status),
+                admin_notes = COALESCE($3, admin_notes),
+                professional_id = CASE WHEN $4::boolean THEN $5 ELSE professional_id END,
+                updated_at = NOW()
+             WHERE id = $1
+             RETURNING ${PSYCH_APP_SELECT}`,
+            [id, status, adminNotes, professionalIdSpecified, professionalIdSpecified ? professionalId : null]
+        );
+        return rowToPsychologistApplication(r.rows[0]);
     }
+    const payload = patch.payload;
+    const asArr = (v) => (Array.isArray(v) ? v : []);
+    const status = patch.status && PSYCH_APP_ALLOWED_STATUS.has(String(patch.status))
+        ? String(patch.status)
+        : existing.status;
+    const adminNotes = patch.adminNotes !== undefined
+        ? String(patch.adminNotes || '').slice(0, 4000)
+        : existing.adminNotes;
+    let professionalId = existing.professionalId;
+    if (Object.prototype.hasOwnProperty.call(patch, 'professionalId')) {
+        professionalId = Number.isInteger(Number(patch.professionalId)) && Number(patch.professionalId) > 0
+            ? Number(patch.professionalId)
+            : null;
+    }
+    const name = String((payload && payload.nome) || existing.name || '').trim().slice(0, 200) || existing.name;
+    const email = String((payload && payload.email) || existing.email || '').trim().toLowerCase().slice(0, 320) || existing.email;
+    const phone = payload && Object.prototype.hasOwnProperty.call(payload, 'telefone')
+        ? String(payload.telefone || '').trim().slice(0, 40)
+        : (existing.phone || '');
+    const score = patch.score != null && Number.isFinite(Number(patch.score))
+        ? Number(patch.score)
+        : existing.score;
+    const scoreBand = patch.scoreBand
+        ? String(patch.scoreBand).slice(0, 32)
+        : existing.scoreBand;
+    const eligible = patch.eligible != null ? patch.eligible === true : existing.eligible;
+    const eliminationReasons = Array.isArray(patch.eliminationReasons)
+        ? patch.eliminationReasons
+        : (existing.eliminationReasons || []);
+    const scoreBreakdown = patch.scoreBreakdown && typeof patch.scoreBreakdown === 'object'
+        ? patch.scoreBreakdown
+        : (existing.scoreBreakdown || {});
+    const p = getPool();
     const r = await p.query(
         `UPDATE psychologist_applications SET
-            status = COALESCE($2, status),
-            admin_notes = COALESCE($3, admin_notes),
-            professional_id = CASE WHEN $4::boolean THEN $5 ELSE professional_id END,
+            name = $2,
+            email = $3,
+            phone = $4,
+            payload = $5::jsonb,
+            localidade = $6,
+            pais = $7,
+            cedula_opp = $8,
+            grau_academico = $9,
+            anos_clinica = $10,
+            anos_individuais = $11,
+            experiencia_online = $12,
+            areas_clinicas = $13::jsonb,
+            populacoes = $14::jsonb,
+            idiomas = $15::jsonb,
+            modelos = $16::jsonb,
+            dias_semana = $17::jsonb,
+            horas_iniciais = $18,
+            horarios_fixos = $19,
+            disponibilidade_estavel = $20,
+            bolsa_autorizacao = $21,
+            score = $22,
+            score_band = $23,
+            eligible = $24,
+            elimination_reasons = $25::jsonb,
+            score_breakdown = $26::jsonb,
+            status = $27,
+            admin_notes = $28,
+            professional_id = $29,
             updated_at = NOW()
          WHERE id = $1
          RETURNING ${PSYCH_APP_SELECT}`,
-        [id, status, adminNotes, professionalIdSpecified, professionalIdSpecified ? professionalId : null]
+        [
+            id,
+            name,
+            email,
+            phone || null,
+            JSON.stringify(payload || {}),
+            payload.localidade || null,
+            payload.pais || null,
+            payload.cedula_opp || null,
+            payload.grau_academico || null,
+            payload.anos_clinica || null,
+            payload.anos_individuais || null,
+            payload.experiencia_online || null,
+            JSON.stringify(asArr(payload.areas_clinicas)),
+            JSON.stringify(asArr(payload.populacoes)),
+            JSON.stringify(asArr(payload.idiomas)),
+            JSON.stringify(asArr(payload.modelos)),
+            JSON.stringify(asArr(payload.dias_semana)),
+            payload.horas_iniciais || null,
+            payload.horarios_fixos || null,
+            payload.disponibilidade_estavel || null,
+            payload.bolsa_autorizacao || null,
+            Number.isFinite(score) ? score : 0,
+            scoreBand || 'nao_avanca',
+            eligible === true,
+            JSON.stringify(eliminationReasons || []),
+            JSON.stringify(scoreBreakdown || {}),
+            status || 'novo',
+            adminNotes || null,
+            professionalId
+        ]
     );
     return rowToPsychologistApplication(r.rows[0]);
+}
+
+async function deletePsychologistApplication(id) {
+    const p = getPool();
+    const key = String(id || '');
+    if (!key) return false;
+    const r = await p.query('DELETE FROM psychologist_applications WHERE id = $1', [key]);
+    return r.rowCount > 0;
 }
 
 async function getPsychologistApplicationCv(id) {
@@ -2901,6 +3017,7 @@ module.exports = {
     findPsychologistApplicationByEmail,
     getPsychologistApplicationCv,
     updatePsychologistApplication,
+    deletePsychologistApplication,
     listPublicReviews,
     listAllReviews,
     findAllBookings,

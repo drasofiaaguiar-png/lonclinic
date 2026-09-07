@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=perfil-8">
+    <link rel="stylesheet" href="/dashboard.css?v=perfil-9">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -805,9 +805,87 @@
                     <div class="dash-section-header" style="margin-top:32px;">
                         <div>
                             <h2 class="dash-section-title">Fichas dos profissionais</h2>
-                            <p class="dash-section-subtitle">A mesma ficha do portal: identificação, dados profissionais, documentos e candidatura ligada pelo email.</p>
+                            <p class="dash-section-subtitle">A mesma ficha do portal: identificação, dados profissionais, documentos e candidatura ligada pelo email. Crie uma ficha mesmo que a pessoa ainda não tenha conta.</p>
                         </div>
                     </div>
+                    <details class="admin-create-card" id="adminCreateProfileDetails">
+                        <summary id="adminCreateProfileSummary">Criar ficha de profissional</summary>
+                        <form id="adminCreateProfileForm" class="admin-create-form">
+                            <input type="hidden" id="staffProfileEditUser" value="">
+                            <div class="admin-invite-grid">
+                                <div class="admin-form-group">
+                                    <label for="staffProfileFullName">Nome</label>
+                                    <input type="text" id="staffProfileFullName" class="admin-input" required maxlength="160" autocomplete="name">
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="staffProfileEmail">Email</label>
+                                    <input type="email" id="staffProfileEmail" class="admin-input" maxlength="320" autocomplete="email">
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="staffProfileProfession">Profissão</label>
+                                    <select id="staffProfileProfession" class="admin-select">
+                                        <option value="">Seleccione</option>
+                                        <option value="medico">Médico</option>
+                                        <option value="psicologo">Psicólogo</option>
+                                        <option value="nutricionista">Nutricionista</option>
+                                    </select>
+                                </div>
+                                <div class="admin-form-group" id="staffProfileUsernameWrap">
+                                    <label for="staffProfileUsername">Username</label>
+                                    <input type="text" id="staffProfileUsername" class="admin-input" maxlength="64" placeholder="Gerado a partir do nome se ficar em branco" autocomplete="off">
+                                </div>
+                                <div class="admin-form-group" id="staffProfilePasswordWrap">
+                                    <label for="staffProfilePassword">Password</label>
+                                    <input type="text" id="staffProfilePassword" class="admin-input" maxlength="80" placeholder="Gerada automaticamente se ficar em branco" autocomplete="off">
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="staffProfileNif">NIF</label>
+                                    <input type="text" id="staffProfileNif" class="admin-input" maxlength="20" inputmode="numeric" autocomplete="off">
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="staffProfileOrdem">Cédula profissional</label>
+                                    <input type="text" id="staffProfileOrdem" class="admin-input" maxlength="80" autocomplete="off">
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="staffProfileCitizenCard">N.º Cartão de Cidadão</label>
+                                    <input type="text" id="staffProfileCitizenCard" class="admin-input" maxlength="32" autocomplete="off">
+                                </div>
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="staffProfileAddress">Morada</label>
+                                <textarea id="staffProfileAddress" class="admin-input clinic-address-input" rows="2" maxlength="400"></textarea>
+                            </div>
+                            <div class="admin-invite-grid">
+                                <div class="admin-form-group">
+                                    <label for="staffProfileInsurer">Seguradora</label>
+                                    <input type="text" id="staffProfileInsurer" class="admin-input" maxlength="120" autocomplete="off">
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="staffProfileInsurancePolicy">Apólice</label>
+                                    <input type="text" id="staffProfileInsurancePolicy" class="admin-input" maxlength="80" autocomplete="off">
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="staffProfileInsuranceValid">Validade do seguro</label>
+                                    <input type="date" id="staffProfileInsuranceValid" class="admin-input">
+                                </div>
+                            </div>
+                            <div class="clinic-bio-creds-grid">
+                                <div class="admin-form-group">
+                                    <label for="staffProfileBio">Bio</label>
+                                    <textarea id="staffProfileBio" class="admin-input clinic-bio-input" rows="6" maxlength="4000"></textarea>
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="staffProfileCredentials">Credenciais</label>
+                                    <textarea id="staffProfileCredentials" class="admin-input clinic-bio-input" rows="6" maxlength="2000"></textarea>
+                                </div>
+                            </div>
+                            <div id="adminCreateProfileError" class="dash-login-error" style="display:none;" role="alert"></div>
+                            <div class="admin-invite-actions">
+                                <button type="submit" class="btn btn-primary" id="staffProfileSubmitBtn">Criar ficha e login</button>
+                                <button type="button" class="btn btn-outline" id="staffProfileCancelBtn" hidden>Cancelar</button>
+                            </div>
+                        </form>
+                    </details>
                     <div id="adminStaffProfilesList" class="admin-staff-profiles">
                         <p class="admin-empty-list">Loading…</p>
                     </div>
@@ -822,10 +900,15 @@
                             <p class="dash-section-subtitle" id="adminPsychCount">Candidaturas recebidas (ex.: <code>/recrutamento/psicologia</code>) — score interno e estado do pipeline. Assign a clinic username and password here or in Professionals &amp; Doxy.</p>
                         </div>
                         <div class="admin-schedule-filters" role="group" aria-label="Filtrar profissionais">
+                            <button type="button" class="btn btn-primary btn-sm" id="psychologistsAddBtn">Adicionar à bolsa</button>
                             <button type="button" class="btn btn-primary btn-sm" id="psychologistsAssignLoginsBtn">Assign logins to all without one</button>
                             <button type="button" class="btn btn-outline btn-sm" id="psychologistsRefreshBtn">Refresh</button>
                         </div>
                     </div>
+                    <details class="admin-create-card" id="adminBolsaCreateDetails">
+                        <summary>Novo profissional na bolsa</summary>
+                        <form id="adminBolsaCreateForm" class="admin-create-form"></form>
+                    </details>
                     <div class="admin-psych-filters">
                         <input type="search" id="psychologistsSearch" class="admin-input" placeholder="Search name, email, cédula…" autocomplete="off">
                         <select id="psychologistsStatusFilter" class="admin-select">
@@ -1084,7 +1167,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=perfil-8"></script>
+    <script src="/admin.js?v=perfil-9"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">
