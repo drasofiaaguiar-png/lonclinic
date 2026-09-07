@@ -1457,6 +1457,23 @@ body.dash-portal .dash-stat-card {
     margin: 0;
 }
 
+.clinic-bolsa-banner {
+    margin: 0 0 24px;
+    padding: 18px 20px 20px;
+    border: 1px solid rgba(26, 102, 65, 0.28);
+    border-radius: 14px;
+    background: rgba(26, 102, 65, 0.07);
+}
+
+.clinic-bolsa-banner .dash-section-header {
+    margin-bottom: 12px;
+}
+
+.clinic-bolsa-banner h2,
+.clinic-bolsa-banner h4 {
+    color: #163024;
+}
+
 .clinic-bolsa-profile .admin-psych-section {
     margin-top: 8px;
 }

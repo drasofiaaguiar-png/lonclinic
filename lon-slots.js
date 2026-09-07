@@ -499,7 +499,7 @@
 
     function shouldInjectSticky() {
         var p = (location.pathname || '/').toLowerCase();
-        if (/book-consultation|\/book\.html|\/marcar(\/|$)|\/admin|patient-portal|clinic-portal|\/recrutamento/.test(p)) return false;
+        if (/book-consultation|\/book\.html|\/marcar(\/|$)|\/admin|patient-portal|clinic-portal|clinic-desk|\/recrutamento/.test(p)) return false;
         if (document.querySelector('[data-sticky-book], .bq-sticky-book')) return false;
         return !!(document.querySelector('.lon-landing, .cq-body, .mag-body, .nu-hero, .bo-hero, .dr-hero, .consulta-cta-band, .eeat-profile-page'));
     }

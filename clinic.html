@@ -16,7 +16,7 @@
     <title>Clinic Portal — Longevity Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=doxy-pending-2">
+    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=bolsa-desk-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
     <meta name="description" content="Clinic portal — manage consultations and clinical records.">
     <meta name="theme-color" content="#eaf2fb">
 </head>
-<body class="lon-landing clinic-portal-page">
+<body class="lon-landing clinic-portal-page" data-clinic-build="bolsa-desk-1">
 
     <a class="lon-skip" href="#conteudo-principal">Skip to content</a>
     <header class="lon-nav" id="lonNav">
@@ -446,6 +446,13 @@
                 </div>
 
                 <div class="admin-panel" id="clinicPanelProfile" data-clinic-panel-content="profile" hidden>
+                    <div class="dash-section clinic-bolsa-banner" id="clinicBolsaProfileWrap">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">Bolsa de Profissionais</h2>
+                            <p class="dash-section-subtitle">Candidatura ligada a esta conta — telefone, disponibilidade, populações e restantes respostas.</p>
+                        </div>
+                        <div id="clinicBolsaProfile" class="clinic-bolsa-profile">A carregar candidatura da Bolsa…</div>
+                    </div>
                     <div class="dash-section">
                         <div class="dash-section-header">
                             <h2 class="dash-section-title">Your profile</h2>
@@ -469,6 +476,14 @@
                                 <dd id="clinicProfileUsername">—</dd>
                             </div>
                             <div>
+                                <dt>Email</dt>
+                                <dd id="clinicProfileEmail">—</dd>
+                            </div>
+                            <div>
+                                <dt>Telefone</dt>
+                                <dd id="clinicProfilePhone">—</dd>
+                            </div>
+                            <div>
                                 <dt>Role</dt>
                                 <dd>
                                     <select id="clinicProfession" class="admin-select clinic-profile-role-select" form="clinicProfileForm" required>
@@ -484,13 +499,6 @@
                                 <dd id="clinicProfileDoxy">—</dd>
                             </div>
                         </dl>
-                    </div>
-                    <div class="dash-section" id="clinicBolsaProfileWrap" hidden>
-                        <div class="dash-section-header">
-                            <h2 class="dash-section-title">Bolsa de Profissionais</h2>
-                            <p class="dash-section-subtitle">Campos extra da candidatura (telefone, disponibilidade, populações, etc.) que não cabem no formulário acima.</p>
-                        </div>
-                        <div id="clinicBolsaProfile" class="clinic-bolsa-profile"></div>
                     </div>
                     <div class="dash-section">
                         <div class="dash-section-header">
@@ -629,7 +637,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="/lon-nav.js"></script>
-    <script src="/clinic.js?v=doxy-pending-2"></script>
+    <script src="/clinic-portal/clinic.js?v=bolsa-desk-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

@@ -12,6 +12,7 @@ const PRIVATE_DISALLOWS = [
     '/admin',
     '/doctors',
     '/clinic-portal',
+    '/clinic-desk',
     '/patient-portal',
     '/conta',
     '/diretorio',

@@ -475,7 +475,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <span class="admin-source-badge is-${isInterview ? 'interview' : source}">${badgeLabel}</span>
                         ${comp}
                         ${ref ? `<span class="admin-agenda-ref">${escapeHtml(ref)}</span>` : ''}
-                        ${ref && !isInterview ? `<a class="btn btn-outline btn-sm" href="/clinic-portal/app">Open notes</a>` : ''}
+                        ${ref && !isInterview ? `<a class="btn btn-outline btn-sm" href="/clinic-desk">Open notes</a>` : ''}
                     </div>
                 `;
                 section.appendChild(item);
@@ -1577,7 +1577,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (res.ok) {
                     if (data.role && data.role !== 'admin') {
-                        adminLoginError.textContent = 'This account opens the clinic portal, not admin. Use the administrator username, or go to /clinic-portal/app.';
+                        adminLoginError.textContent = 'This account opens the clinic portal, not admin. Use the administrator username, or go to /clinic-desk.';
                         adminLoginError.style.display = 'block';
                         return;
                     }
@@ -2731,7 +2731,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <button type="button" class="btn btn-primary btn-sm admin-psych-save" data-psych-id="${escapeHtml(a.id)}">Guardar</button>
                         <div class="admin-psych-login-row">
                             ${a.professional && a.professional.username
-                                ? `<span>Clinic login: <code>${escapeHtml(a.professional.username)}</code> — portal <a href="/clinic-portal/app">/clinic-portal</a></span>
+                                ? `<span>Clinic login: <code>${escapeHtml(a.professional.username)}</code> — portal <a href="/clinic-desk#profile">/clinic-desk</a></span>
                                    <button type="button" class="btn btn-outline btn-sm" data-psych-password="${escapeHtml(a.id)}">New password</button>`
                                 : `<button type="button" class="btn btn-primary btn-sm" data-psych-login="${escapeHtml(a.id)}">Assign clinic login</button>`}
                         </div>
@@ -2787,9 +2787,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function showPsychCreds(rows) {
         if (!adminPsychCreds || !adminPsychCredsList || !rows || !rows.length) return;
-        const portal = `${window.location.origin}/clinic-portal/app`;
+        const portal = `${window.location.origin}/clinic-desk#profile`;
         adminPsychCredsList.innerHTML = `
-            <p class="admin-pro-creds-line">Portal: <a href="/clinic-portal/app">${escapeHtml(portal)}</a></p>
+            <p class="admin-pro-creds-line">Portal: <a href="/clinic-desk#profile">${escapeHtml(portal)}</a></p>
             <table class="admin-psych-creds-table">
                 <thead><tr><th>Name</th><th>Username</th><th>Password</th></tr></thead>
                 <tbody>
@@ -3399,9 +3399,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function showProfessionalCreds(pro, password) {
         if (!adminProfessionalCreds || !password) return;
-        const portal = `${window.location.origin}/clinic-portal/app`;
+        const portal = `${window.location.origin}/clinic-desk#profile`;
         if (proCredsPortal) {
-            proCredsPortal.href = '/clinic-portal/app';
+            proCredsPortal.href = '/clinic-desk#profile';
             proCredsPortal.textContent = portal;
         }
         if (proCredsName) proCredsName.textContent = (pro && pro.displayName) || '';
@@ -3573,7 +3573,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const res = await fetch('/api/admin/professionals');
             if (res.status === 401 || res.status === 403) {
-                if (res.status === 403) window.location.href = '/clinic-portal/app';
+                if (res.status === 403) window.location.href = '/clinic-desk';
                 else showLogin();
                 return;
             }
@@ -3622,8 +3622,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         return `<ul>${list.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`;
     }
 
-    function renderBolsaProfileHtml(bolsa) {
-        if (!bolsa || !Array.isArray(bolsa.groups) || !bolsa.groups.length) return '';
+    function renderBolsaProfileHtml(bolsa, opts) {
+        if (!bolsa || !Array.isArray(bolsa.groups) || !bolsa.groups.length) {
+            return `<p class="admin-empty-list">${escapeHtml((opts && opts.emptyMessage) || 'Esta conta ainda não está ligada a uma candidatura da Bolsa de Profissionais.')}</p>`;
+        }
         return bolsa.groups.map((g) => `
             <section class="admin-psych-section">
                 <h4>${escapeHtml(g.title || '')}</h4>
@@ -3641,18 +3643,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         `).join('');
     }
 
-    function showBolsaProfileSection(wrapId, bodyId, bolsa) {
-        const wrap = document.getElementById(wrapId);
-        const body = document.getElementById(bodyId);
-        if (!wrap || !body) return;
-        const html = renderBolsaProfileHtml(bolsa);
-        if (!html) {
-            wrap.hidden = true;
-            body.innerHTML = '';
-            return;
+    function ensureBolsaProfileMount(panelId, wrapId, bodyId) {
+        let wrap = document.getElementById(wrapId);
+        let body = document.getElementById(bodyId);
+        if (wrap && body) {
+            wrap.hidden = false;
+            wrap.classList.add('clinic-bolsa-banner');
+            return { wrap, body };
         }
-        body.innerHTML = html;
-        wrap.hidden = false;
+        const panel = document.getElementById(panelId);
+        if (!panel) return { wrap: null, body: null };
+        wrap = document.createElement('div');
+        wrap.className = 'dash-section clinic-bolsa-banner';
+        wrap.id = wrapId;
+        wrap.innerHTML = `
+            <div class="dash-section-header">
+                <h2 class="dash-section-title">Bolsa de Profissionais</h2>
+                <p class="dash-section-subtitle">Candidatura ligada a esta conta.</p>
+            </div>
+            <div id="${bodyId}" class="clinic-bolsa-profile"></div>
+        `;
+        panel.insertBefore(wrap, panel.firstElementChild);
+        body = document.getElementById(bodyId);
+        return { wrap, body };
+    }
+
+    function showBolsaProfileSection(panelId, wrapId, bodyId, bolsa) {
+        const mount = ensureBolsaProfileMount(panelId, wrapId, bodyId);
+        if (!mount.wrap || !mount.body) return;
+        mount.body.innerHTML = renderBolsaProfileHtml(bolsa);
+        mount.wrap.hidden = false;
     }
 
     function renderAdminStaffProfiles(data) {
@@ -3693,6 +3713,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
                 <dl class="admin-staff-profile-dl">
                     <div><dt>Nome</dt><dd>${dashText(p.fullName)}</dd></div>
+                    <div><dt>Email (Bolsa)</dt><dd>${dashText(p.bolsa && p.bolsa.email)}</dd></div>
+                    <div><dt>Telefone (Bolsa)</dt><dd>${dashText(p.bolsa && p.bolsa.phone)}</dd></div>
                     <div><dt>NIF</dt><dd>${dashText(p.nif)}</dd></div>
                     <div><dt>Cédula profissional</dt><dd>${dashText(p.ordemNumber)}</dd></div>
                     <div><dt>N.º Cartão de Cidadão</dt><dd>${dashText(p.citizenCard)}</dd></div>
@@ -3703,6 +3725,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div><dt>IBAN</dt><dd>${dashText(p.iban)}</dd></div>
                     <div><dt>Doxy.me room</dt><dd>${p.doxyPending || !p.doxyRoomUrl ? 'Pending' : dashText(p.doxyRoomUrl)}</dd></div>
                 </dl>
+                <div class="admin-staff-profile-block clinic-bolsa-profile clinic-bolsa-banner">
+                    <h4>Bolsa de Profissionais</h4>
+                    ${renderBolsaProfileHtml(p.bolsa, { emptyMessage: 'Sem candidatura da Bolsa ligada a esta conta.' })}
+                </div>
                 <div class="admin-staff-profile-block">
                     <h4>Bio</h4>
                     <p>${dashText(p.bio)}</p>
@@ -3723,12 +3749,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <h4>Documentos</h4>
                     <ul class="admin-staff-docs">${docs}</ul>
                 </div>
-                ${p.bolsa && p.bolsa.groups && p.bolsa.groups.length
-                    ? `<div class="admin-staff-profile-block clinic-bolsa-profile">
-                        <h4>Bolsa de Profissionais</h4>
-                        ${renderBolsaProfileHtml(p.bolsa)}
-                    </div>`
-                    : ''}
             </article>`;
         }).join('');
     }
@@ -3764,7 +3784,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (proCredsCopyBtn) {
         proCredsCopyBtn.addEventListener('click', async () => {
-            const portal = proCredsPortal ? proCredsPortal.textContent : `${window.location.origin}/clinic-portal/app`;
+            const portal = proCredsPortal ? proCredsPortal.textContent : `${window.location.origin}/clinic-desk#profile`;
             const username = proCredsUsername ? proCredsUsername.textContent : '';
             const password = proCredsPassword ? proCredsPassword.textContent : '';
             const name = proCredsName ? proCredsName.textContent : '';
@@ -3928,6 +3948,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         documents: []
     };
     const adminProfileUsername = document.getElementById('adminProfileUsername');
+    const adminProfileEmail = document.getElementById('adminProfileEmail');
+    const adminProfilePhone = document.getElementById('adminProfilePhone');
     const adminProfileDoxy = document.getElementById('adminProfileDoxy');
     const adminProfilePhoto = document.getElementById('adminProfilePhoto');
     const adminProfilePhotoPlaceholder = document.getElementById('adminProfilePhotoPlaceholder');
@@ -4097,6 +4119,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 documents: data.documents || []
             };
             if (adminProfileUsername) adminProfileUsername.textContent = data.username || '—';
+            if (adminProfileEmail) adminProfileEmail.textContent = (data.bolsa && data.bolsa.email) || '—';
+            if (adminProfilePhone) adminProfilePhone.textContent = (data.bolsa && data.bolsa.phone) || '—';
             adminProfession.value = data.profession || '';
             if (adminFullName) adminFullName.value = data.fullName || data.displayName || '';
             if (adminNif) adminNif.value = data.nif || '';
@@ -4112,7 +4136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateAdminOrdemLabel();
             fillAdminAreaChecks(data.profession, data.primaryAreas, data.secondaryAreas);
             renderAdminDocumentRows();
-            showBolsaProfileSection('adminBolsaProfileWrap', 'adminBolsaProfile', data.bolsa);
+            showBolsaProfileSection('adminPanelProfile', 'adminBolsaProfileWrap', 'adminBolsaProfile', data.bolsa);
             if (adminProfileFormError) adminProfileFormError.style.display = 'none';
             if (adminDocsError) adminDocsError.style.display = 'none';
             if (doxyRes.ok) {

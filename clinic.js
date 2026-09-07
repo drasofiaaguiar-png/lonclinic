@@ -100,6 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicPayNet = document.getElementById('clinicPayNet');
     const clinicProfileName = document.getElementById('clinicProfileName');
     const clinicProfileUsername = document.getElementById('clinicProfileUsername');
+    const clinicProfileEmail = document.getElementById('clinicProfileEmail');
+    const clinicProfilePhone = document.getElementById('clinicProfilePhone');
     const clinicProfileDoxy = document.getElementById('clinicProfileDoxy');
     const clinicProfilePhoto = document.getElementById('clinicProfilePhoto');
     const clinicProfilePhotoPlaceholder = document.getElementById('clinicProfilePhotoPlaceholder');
@@ -213,6 +215,9 @@ document.addEventListener('DOMContentLoaded', () => {
             clinicSaveScheduleBtn.style.display = panelId === 'availabilities' ? '' : 'none';
         }
         closeClinicSidebar();
+        if (location.hash !== `#${panelId}`) {
+            try { history.replaceState(null, '', `${location.pathname}${location.search}#${panelId}`); } catch (err) { /* ignore */ }
+        }
 
         if (panelId === 'consultations' || panelId === 'bookings' || panelId === 'patients') {
             loadBookings();
@@ -260,9 +265,19 @@ document.addEventListener('DOMContentLoaded', () => {
             smartSlotGroupingToggle.disabled = false;
         }
 
-        setClinicPanel('consultations');
+        setClinicPanel(initialClinicPanel());
         loadDoxyRoom();
         loadScheduleView();
+    }
+
+    function initialClinicPanel() {
+        const hash = String(location.hash || '').replace(/^#/, '').toLowerCase();
+        if (CLINIC_PANEL_META[hash]) return hash;
+        try {
+            const panel = new URLSearchParams(location.search).get('panel');
+            if (panel && CLINIC_PANEL_META[panel]) return panel;
+        } catch (err) { /* ignore */ }
+        return 'consultations';
     }
 
     async function loadDoxyRoom() {
@@ -1696,7 +1711,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderBolsaProfileHtml(bolsa) {
-        if (!bolsa || !Array.isArray(bolsa.groups) || !bolsa.groups.length) return '';
+        if (!bolsa || !Array.isArray(bolsa.groups) || !bolsa.groups.length) {
+            return '<p class="admin-empty-list">Esta conta ainda não está ligada a uma candidatura da Bolsa de Profissionais.</p>';
+        }
         return bolsa.groups.map((g) => `
             <section class="admin-psych-section">
                 <h4>${escapeHtml(g.title || '')}</h4>
@@ -1714,18 +1731,41 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     }
 
-    function showBolsaProfileSection(wrapId, bodyId, bolsa) {
-        const wrap = document.getElementById(wrapId);
-        const body = document.getElementById(bodyId);
-        if (!wrap || !body) return;
-        const html = renderBolsaProfileHtml(bolsa);
-        if (!html) {
-            wrap.hidden = true;
-            body.innerHTML = '';
-            return;
+    function ensureBolsaProfileMount(panelId, wrapId, bodyId) {
+        let wrap = document.getElementById(wrapId);
+        let body = document.getElementById(bodyId);
+        if (wrap && body) {
+            wrap.hidden = false;
+            wrap.classList.add('clinic-bolsa-banner');
+            return { wrap, body };
         }
-        body.innerHTML = html;
-        wrap.hidden = false;
+        const panel = document.getElementById(panelId);
+        if (!panel) return { wrap: null, body: null };
+        wrap = document.createElement('div');
+        wrap.className = 'dash-section clinic-bolsa-banner';
+        wrap.id = wrapId;
+        wrap.innerHTML = `
+            <div class="dash-section-header">
+                <h2 class="dash-section-title">Bolsa de Profissionais</h2>
+                <p class="dash-section-subtitle">Candidatura ligada a esta conta.</p>
+            </div>
+            <div id="${bodyId}" class="clinic-bolsa-profile"></div>
+        `;
+        panel.insertBefore(wrap, panel.firstElementChild);
+        body = document.getElementById(bodyId);
+        return { wrap, body };
+    }
+
+    function showBolsaProfileSection(panelId, wrapId, bodyId, bolsa) {
+        const mount = ensureBolsaProfileMount(panelId, wrapId, bodyId);
+        if (!mount.wrap || !mount.body) return;
+        mount.body.innerHTML = renderBolsaProfileHtml(bolsa);
+        mount.wrap.hidden = false;
+    }
+
+    function fillBolsaContactFields(emailEl, phoneEl, bolsa) {
+        if (emailEl) emailEl.textContent = (bolsa && bolsa.email) || '—';
+        if (phoneEl) phoneEl.textContent = (bolsa && bolsa.phone) || '—';
     }
 
     async function loadClinicProfile() {
@@ -1759,7 +1799,8 @@ document.addEventListener('DOMContentLoaded', () => {
             updateOrdemLabel();
             fillClinicAreaChecks(data.profession, data.primaryAreas, data.secondaryAreas);
             renderDocumentRows();
-            showBolsaProfileSection('clinicBolsaProfileWrap', 'clinicBolsaProfile', data.bolsa);
+            fillBolsaContactFields(clinicProfileEmail, clinicProfilePhone, data.bolsa);
+            showBolsaProfileSection('clinicPanelProfile', 'clinicBolsaProfileWrap', 'clinicBolsaProfile', data.bolsa);
             if (clinicProfileFormError) clinicProfileFormError.style.display = 'none';
             if (clinicDocsError) clinicDocsError.style.display = 'none';
         } catch (err) {

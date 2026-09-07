@@ -557,7 +557,7 @@ function safeInternalNextPath(raw) {
 function requireAdminPage(req, res, next) {
     if (isAdminSession(req)) return next();
     if (req.session && req.session.clinicAuthenticated) {
-        return res.redirect(302, '/clinic-portal/app');
+        return res.redirect(302, '/clinic-desk');
     }
     const nextPath = safeInternalNextPath(req.originalUrl || '/diretorio') || '/diretorio';
     return res.redirect(302, `/admin?next=${encodeURIComponent(nextPath)}`);
@@ -725,7 +725,9 @@ const STAFF_CLINICAL_AREAS = {
             items: [
                 'Luto (geral)',
                 'Transições de vida / questões existenciais e de identidade',
-                'Saúde mental de expatriados (choque cultural, adaptação)'
+                'Saúde mental de expatriados (choque cultural, adaptação)',
+                'Autoestima',
+                'Gestão emocional'
             ]
         }
     ],
@@ -824,7 +826,9 @@ const STAFF_AREA_ALIASES = {
     'Nutrição desportiva': 'Nutrição desportiva lúdica',
     'Psicologia da saúde': 'Ajustamento a doença crónica',
     'Perturbações do desenvolvimento': 'Neurodesenvolvimento no adulto (autismo, PHDA, etc.) — acompanhamento',
-    'Desenvolvimento pessoal': 'Transições de vida / questões existenciais e de identidade'
+    'Desenvolvimento pessoal': 'Transições de vida / questões existenciais e de identidade',
+    'Auto-estima': 'Autoestima',
+    'Gestao emocional': 'Gestão emocional'
 };
 
 function allKnownClinicalAreas() {
@@ -1256,6 +1260,49 @@ function usernameFromDisplayName(displayName) {
     }
     if (!isValidProfessionalUsername(s)) s = `user.${crypto.randomBytes(4).toString('hex')}`.slice(0, 64);
     return s;
+}
+
+function normalizePersonName(raw) {
+    return String(raw || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[ªº]/g, '')
+        .replace(/\b(dra|dr|prof|profa)\b\.?/gi, ' ')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, ' ')
+        .replace(/\b(de|da|do|das|dos|e)\b/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function personNamesMatch(a, b) {
+    const na = normalizePersonName(a);
+    const nb = normalizePersonName(b);
+    if (!na || !nb) return false;
+    if (na === nb) return true;
+    const ta = na.split(' ').filter(Boolean);
+    const tb = nb.split(' ').filter(Boolean);
+    if (!ta.length || !tb.length) return false;
+    if (ta[0] === tb[0] && ta[ta.length - 1] === tb[tb.length - 1]) return true;
+    const [shorter, longer] = ta.length <= tb.length ? [ta, tb] : [tb, ta];
+    return shorter.length >= 2 && shorter.every((token) => longer.includes(token));
+}
+
+function usernameMatchesPersonName(username, name) {
+    const parts = String(username || '')
+        .trim()
+        .toLowerCase()
+        .split(/[._-]+/)
+        .filter((part) => part.length > 1);
+    const nameTokens = normalizePersonName(name).split(' ').filter(Boolean);
+    if (parts.length < 2 || nameTokens.length < 2) return false;
+    return parts.every((part) => nameTokens.includes(part));
+}
+
+function bolsaApplicationName(app) {
+    if (!app) return '';
+    const payload = app.payload && typeof app.payload === 'object' ? app.payload : {};
+    return firstNonEmpty(app.name, payload.nome);
 }
 
 async function allocateProfessionalUsername(preferred, displayName) {
@@ -1911,12 +1958,14 @@ async function bootstrapPersistence() {
         await persistScheduleStore();
         await ensureProfessionalDoxyRooms();
         await ensureKnownBolsaApplications();
+        await ensureAllBolsaStaffProfiles();
         return;
     }
     scheduleStore = loadScheduleStore();
     persistScheduleStoreToFile();
     await ensureProfessionalDoxyRooms();
     await ensureKnownBolsaApplications();
+    await ensureAllBolsaStaffProfiles();
 }
 
 /* ========================================
@@ -5925,7 +5974,7 @@ async function peopleForAvailabilityReminders() {
 }
 
 async function sendAvailabilityReminderEmail({ to, name, monthLabel, deadlineLabel, kind }) {
-    const portalUrl = `${PUBLIC_SITE_URL}/clinic-portal/app`;
+    const portalUrl = `${PUBLIC_SITE_URL}/clinic-desk`;
     const isFinal = kind === 15;
     const subject = isFinal
         ? `Deadline: availabilities for ${monthLabel}`
@@ -7085,17 +7134,26 @@ app.get('/conta/vacina', (req, res) => {
     sendHtmlNoCacheString(res, cvi.renderRecommendPage(seo.SITE_ORIGIN));
 });
 
+app.get('/clinic-desk', (req, res) => {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    sendStaffHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
+});
+
+app.get('/clinic-desk/', (req, res) => {
+    res.redirect(302, '/clinic-desk');
+});
+
 app.get('/clinic-portal/app', (req, res) => {
     sendStaffHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
 });
 
 app.get('/clinic-portal/app/', (req, res) => {
-    res.redirect(302, '/clinic-portal/app');
+    res.redirect(302, '/clinic-desk');
 });
 
 app.get('/clinic-portal', (req, res) => {
     // /clinic-portal and /clinic-portal/ are stuck as Cloudflare HITs of old HTML.
-    res.redirect(302, '/clinic-portal/app');
+    res.redirect(302, '/clinic-desk');
 });
 
 app.get('/clinic-portal/', (req, res) => {
@@ -7222,7 +7280,7 @@ app.get('/dashboard.html', (req, res) => {
 });
 
 app.get('/clinic.html', (req, res) => {
-    res.redirect(301, '/clinic-portal/app');
+    res.redirect(301, '/clinic-desk');
 });
 
 app.get('/admin.html', (req, res) => {
@@ -10032,6 +10090,7 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
             req.session.professionalId = pro.id;
             req.session.clinicLoginTime = new Date().toISOString();
             setStaffDeviceCookie(res);
+            try { await fillStaffProfileFromBolsa(pro.username); } catch (e) { /* profile still loads later */ }
 
             console.log(`   🔐 Clinic portal login (clinician): ${pro.username}`);
             return res.json({
@@ -10754,14 +10813,55 @@ async function findBolsaApplicationForStaff(username, professional) {
         }
     }
     const u = String(username || '').trim().toLowerCase();
-    if (u) {
-        const list = usePersistentDb
-            ? await listPsychologistApplicationsInternal({ limit: 300 })
-            : psychologistApplicationsStore.slice();
-        const byName = (list || []).find((a) => usernameFromDisplayName(a.name || '') === u);
-        if (byName) return mergeKnownBolsaApplication(byName, username, pro);
-    }
+    const display = String((pro && pro.displayName) || '').trim();
+    const list = usePersistentDb
+        ? await listPsychologistApplicationsInternal({ limit: 300 })
+        : psychologistApplicationsStore.slice();
+    const byName = (list || []).find((app) => {
+        const appName = bolsaApplicationName(app);
+        if (!appName) return false;
+        if (u && usernameFromDisplayName(appName) === u) return true;
+        if (u && usernameMatchesPersonName(u, appName)) return true;
+        if (display && personNamesMatch(display, appName)) return true;
+        return false;
+    });
+    if (byName) return mergeKnownBolsaApplication(byName, username, pro);
     return mergeKnownBolsaApplication(null, username, pro);
+}
+
+async function ensureAllBolsaStaffProfiles() {
+    try {
+        const apps = await listPsychologistApplicationsInternal({ limit: 300 });
+        const pros = await listProfessionalsInternal();
+        for (const app of apps || []) {
+            if (app.professionalId) continue;
+            const appName = bolsaApplicationName(app);
+            const appEmail = String(app.email || '').trim().toLowerCase();
+            const match = (pros || []).find((p) => {
+                if (!p) return false;
+                if (appEmail && String(p.email || '').trim().toLowerCase() === appEmail) return true;
+                if (personNamesMatch(p.displayName, appName)) return true;
+                if (usernameMatchesPersonName(p.username, appName)) return true;
+                return false;
+            });
+            if (!match) continue;
+            try {
+                await setApplicationProfessionalIdInternal(app.id, match.id);
+            } catch (err) {
+                console.error('ensureAllBolsaStaffProfiles link:', err.message);
+            }
+        }
+        for (const pro of pros || []) {
+            if (!pro || !pro.username) continue;
+            try {
+                await fillStaffProfileFromBolsa(pro.username);
+            } catch (err) {
+                console.error('ensureAllBolsaStaffProfiles seed:', err.message);
+            }
+        }
+    } catch (err) {
+        console.error('ensureAllBolsaStaffProfiles:', err.message);
+    }
 }
 
 async function ensureKnownBolsaApplications() {
@@ -10897,6 +10997,9 @@ function publicBolsaProfile(app) {
         id: app.id,
         name: app.name || p.nome || '',
         email: app.email || p.email || '',
+        phone: firstNonEmpty(p.telefone, app.phone),
+        cedula: firstNonEmpty(p.cedula_opp, app.cedulaOpp),
+        localidade: firstNonEmpty(p.localidade, app.localidade),
         groups
     };
 }

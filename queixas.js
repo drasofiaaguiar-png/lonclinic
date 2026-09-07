@@ -35,7 +35,7 @@ const DEFAULT_STEPS = [
 /** One-segment paths that must never be claimed by a queixa slug. */
 const RESERVED_SLUGS = new Set([
     'admin', 'api', 'blog', 'book', 'book-consultation', 'burnout', 'clinic',
-    'clinic-portal', 'clinica-anti-burnout', 'anti-burnout', 'consulta', 'consultas',
+    'clinic-portal', 'clinic-desk', 'clinica-anti-burnout', 'anti-burnout', 'consulta', 'consultas',
     'consultancy', 'dashboard', 'diretorio', 'doctors', 'equipa', 'faq', 'guide',
     'image', 'info', 'invite', 'magazine', 'marcar', 'patient-portal', 'psicologia',
     'quiz', 'recrutamento', 'robots', 'saudemental', 'sitemap', 'teste-burnout',
