@@ -939,8 +939,9 @@ async function findPsychologistApplicationByEmail(email) {
     if (!e || !e.includes('@')) return null;
     const r = await p.query(
         `SELECT * FROM psychologist_applications
-         WHERE LOWER(email) = $1
-         ORDER BY created_at DESC
+         WHERE LOWER(TRIM(email)) = $1
+            OR LOWER(TRIM(COALESCE(payload->>'email', payload->>'Email', ''))) = $1
+         ORDER BY updated_at DESC NULLS LAST, created_at DESC
          LIMIT 1`,
         [e]
     );

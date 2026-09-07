@@ -3713,7 +3713,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
                 <dl class="admin-staff-profile-dl">
                     <div><dt>Nome</dt><dd>${dashText(p.fullName)}</dd></div>
-                    <div><dt>Email (Bolsa)</dt><dd>${dashText(p.bolsa && p.bolsa.email)}</dd></div>
+                    <div><dt>Email</dt><dd>${dashText(p.email || (p.bolsa && p.bolsa.email))}</dd></div>
                     <div><dt>Telefone (Bolsa)</dt><dd>${dashText(p.bolsa && p.bolsa.phone)}</dd></div>
                     <div><dt>NIF</dt><dd>${dashText(p.nif)}</dd></div>
                     <div><dt>Cédula profissional</dt><dd>${dashText(p.ordemNumber)}</dd></div>
@@ -4119,7 +4119,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 documents: data.documents || []
             };
             if (adminProfileUsername) adminProfileUsername.textContent = data.username || '—';
-            if (adminProfileEmail) adminProfileEmail.textContent = (data.bolsa && data.bolsa.email) || '—';
+            if (adminProfileEmail) {
+                if ('value' in adminProfileEmail) adminProfileEmail.value = data.email || (data.bolsa && data.bolsa.email) || '';
+                else adminProfileEmail.textContent = data.email || (data.bolsa && data.bolsa.email) || '—';
+            }
             if (adminProfilePhone) adminProfilePhone.textContent = (data.bolsa && data.bolsa.phone) || '—';
             adminProfession.value = data.profession || '';
             if (adminFullName) adminFullName.value = data.fullName || data.displayName || '';
@@ -4186,6 +4189,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const payload = {
                 profession: adminProfession.value,
                 fullName: adminFullName ? adminFullName.value.trim() : '',
+                email: adminProfileEmail && 'value' in adminProfileEmail ? adminProfileEmail.value.trim() : '',
                 nif: adminNif ? adminNif.value.trim() : '',
                 citizenCard: adminCitizenCard ? adminCitizenCard.value.trim() : '',
                 address: adminAddress ? adminAddress.value.trim() : '',
@@ -4213,6 +4217,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (!res.ok) {
                     throw new Error(data.error || 'Failed to save profile');
                 }
+                await loadAdminProfile();
                 const prev = adminProfileSaveBtn ? adminProfileSaveBtn.textContent : '';
                 if (adminProfileSaveBtn) adminProfileSaveBtn.textContent = 'Saved';
                 setTimeout(() => {

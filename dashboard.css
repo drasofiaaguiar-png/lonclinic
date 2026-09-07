@@ -1343,8 +1343,11 @@ body.dash-portal .dash-stat-card {
     width: 100%;
 }
 
-.clinic-profile-dl .clinic-profile-role-select {
+.clinic-profile-dl .clinic-profile-role-select,
+.clinic-profile-dl .admin-input {
     max-width: 22rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .clinic-bio-creds-grid {

@@ -1763,8 +1763,12 @@ document.addEventListener('DOMContentLoaded', () => {
         mount.wrap.hidden = false;
     }
 
-    function fillBolsaContactFields(emailEl, phoneEl, bolsa) {
-        if (emailEl) emailEl.textContent = (bolsa && bolsa.email) || '—';
+    function fillBolsaContactFields(emailEl, phoneEl, bolsa, accountEmail) {
+        const email = String(accountEmail || (bolsa && bolsa.email) || '').trim();
+        if (emailEl) {
+            if ('value' in emailEl) emailEl.value = email;
+            else emailEl.textContent = email || '—';
+        }
         if (phoneEl) phoneEl.textContent = (bolsa && bolsa.phone) || '—';
     }
 
@@ -1799,7 +1803,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateOrdemLabel();
             fillClinicAreaChecks(data.profession, data.primaryAreas, data.secondaryAreas);
             renderDocumentRows();
-            fillBolsaContactFields(clinicProfileEmail, clinicProfilePhone, data.bolsa);
+            fillBolsaContactFields(clinicProfileEmail, clinicProfilePhone, data.bolsa, data.email);
             showBolsaProfileSection('clinicPanelProfile', 'clinicBolsaProfileWrap', 'clinicBolsaProfile', data.bolsa);
             if (data.fullName && clinicProfileName) clinicProfileName.textContent = data.fullName;
             loadDoxyRoom();
@@ -1850,6 +1854,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const payload = {
                 profession: clinicProfession.value,
                 fullName: clinicFullName ? clinicFullName.value.trim() : '',
+                email: clinicProfileEmail && 'value' in clinicProfileEmail ? clinicProfileEmail.value.trim() : '',
                 nif: clinicNif ? clinicNif.value.trim() : '',
                 citizenCard: clinicCitizenCard ? clinicCitizenCard.value.trim() : '',
                 address: clinicAddress ? clinicAddress.value.trim() : '',
@@ -1877,6 +1882,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!res.ok) {
                     throw new Error(data.error || 'Failed to save profile');
                 }
+                await loadClinicProfile();
                 const prev = clinicProfileSaveBtn ? clinicProfileSaveBtn.textContent : '';
                 if (clinicProfileSaveBtn) clinicProfileSaveBtn.textContent = 'Saved';
                 setTimeout(() => {

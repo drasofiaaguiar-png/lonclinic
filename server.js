@@ -1313,9 +1313,46 @@ function usernameMatchesPersonName(username, name) {
     return parts.every((part) => nameTokens.includes(part));
 }
 
+function normalizeStaffEmail(raw) {
+    return String(raw || '').trim().toLowerCase();
+}
+
+function isValidStaffEmail(raw) {
+    const email = normalizeStaffEmail(raw);
+    return email.length >= 5 && email.length <= 320 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function bolsaPayloadObject(app) {
+    if (!app) return {};
+    const raw = app.payload;
+    if (raw && typeof raw === 'object' && !Array.isArray(raw)) return raw;
+    if (typeof raw === 'string' && raw.trim()) {
+        try {
+            const parsed = JSON.parse(raw);
+            if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) return parsed;
+        } catch (e) { /* ignore */ }
+    }
+    return {};
+}
+
+function bolsaApplicationEmails(app) {
+    if (!app) return [];
+    const payload = bolsaPayloadObject(app);
+    const out = [];
+    const seen = new Set();
+    const payloadEmail = payload.email != null ? payload.email : payload.Email;
+    for (const raw of [app.email, payloadEmail]) {
+        const email = normalizeStaffEmail(raw);
+        if (!isValidStaffEmail(email) || seen.has(email)) continue;
+        seen.add(email);
+        out.push(email);
+    }
+    return out;
+}
+
 function bolsaApplicationName(app) {
     if (!app) return '';
-    const payload = app.payload && typeof app.payload === 'object' ? app.payload : {};
+    const payload = bolsaPayloadObject(app);
     return firstNonEmpty(app.name, payload.nome);
 }
 
@@ -1378,6 +1415,22 @@ async function findProfessionalByIdInternal(id) {
     if (!Number.isInteger(n) || n < 1) return null;
     if (usePersistentDb) return db.findProfessionalById(n);
     return professionalsStore.find((p) => p.id === n) || null;
+}
+
+async function patchProfessionalInternal(professional, fields) {
+    if (!professional || !professional.id || !fields) return professional;
+    if (!Object.keys(fields).length) return professional;
+    try {
+        if (usePersistentDb) {
+            const updated = await db.updateProfessional(professional.id, fields);
+            return updated || professional;
+        }
+        Object.assign(professional, fields, { updatedAt: new Date().toISOString() });
+        return professional;
+    } catch (err) {
+        console.error('patchProfessionalInternal:', err.message);
+        return professional;
+    }
 }
 
 function producerImageExt(file) {
@@ -10196,6 +10249,10 @@ app.get('/api/clinic/profile', requireAuth, async (req, res) => {
         const profile = filled.profile || await getStaffProfileInternal(username);
         const documents = (await listStaffDocumentsInternal(username)).map(publicStaffDocument);
         const displayName = profile.fullName || req.session.clinicDisplayName || username;
+        const professional = await findProfessionalByUsernameInternal(username).catch(() => null);
+        const email = [professional && professional.email, filled.bolsa && filled.bolsa.email]
+            .map((raw) => normalizeStaffEmail(raw))
+            .find((value) => isValidStaffEmail(value)) || '';
         const primaryAreas = sanitizeStaffAreas(
             profile.profession,
             profile.primaryAreas != null ? profile.primaryAreas : profile.primaryArea
@@ -10208,6 +10265,7 @@ app.get('/api/clinic/profile', requireAuth, async (req, res) => {
         res.json({
             username,
             displayName,
+            email,
             role: req.session.professionalId || req.session.clinicRole === 'clinician'
                 ? 'clinician'
                 : (req.session.clinicRole || 'admin'),
@@ -10245,6 +10303,19 @@ app.put('/api/clinic/profile', requireAuth, rateLimitStaffProfile, express.json(
         if (profession && !STAFF_PROFESSIONS[profession]) {
             return res.status(400).json({ error: 'Choose médico, nutricionista or psicólogo' });
         }
+        if (Object.prototype.hasOwnProperty.call(body, 'email')) {
+            const raw = String(body.email || '').trim();
+            if (raw) {
+                const nextEmail = normalizeStaffEmail(raw);
+                if (!isValidStaffEmail(nextEmail)) {
+                    return res.status(400).json({ error: 'Email inválido' });
+                }
+                const professional = await findProfessionalByUsernameInternal(username);
+                if (professional && professional.id) {
+                    await patchProfessionalInternal(professional, { email: nextEmail });
+                }
+            }
+        }
         const profile = await saveStaffProfileInternal(username, {
             profession,
             ordemNumber: body.ordemNumber,
@@ -10260,7 +10331,14 @@ app.put('/api/clinic/profile', requireAuth, rateLimitStaffProfile, express.json(
             primaryAreas: body.primaryAreas != null ? body.primaryAreas : body.primaryArea,
             secondaryAreas: body.secondaryAreas != null ? body.secondaryAreas : body.secondaryArea
         });
-        res.json({ ok: true, profile });
+        const filled = await fillStaffProfileFromBolsa(username);
+        const professional = await findProfessionalByUsernameInternal(username).catch(() => null);
+        res.json({
+            ok: true,
+            profile: filled.profile || profile,
+            bolsa: filled.bolsa || null,
+            email: normalizeStaffEmail((professional && professional.email) || (filled.bolsa && filled.bolsa.email))
+        });
     } catch (err) {
         console.error('PUT /api/clinic/profile:', err.message);
         res.status(500).json({ error: 'Failed to save profile' });
@@ -10510,10 +10588,16 @@ app.get('/api/admin/staff-profiles', requireAdmin, async (req, res) => {
         const staff = [];
         for (const person of people) {
             const filled = await fillStaffProfileFromBolsa(person.username);
+            const fresh = await findProfessionalByUsernameInternal(person.username).catch(() => null);
             const profile = filled.profile || byUser.get(person.username);
             staff.push({
                 ...publicAdminStaffProfile(
-                    person,
+                    {
+                        ...person,
+                        email: (fresh && fresh.email) || person.email,
+                        displayName: (fresh && fresh.displayName) || person.displayName,
+                        doxyRoomUrl: (fresh && fresh.doxyRoomUrl) || person.doxyRoomUrl
+                    },
                     profile,
                     docsByUser.get(person.username) || []
                 ),
@@ -10639,8 +10723,8 @@ async function linkedProfessionalForApplication(app) {
         const byId = await findProfessionalByIdInternal(app.professionalId);
         if (byId) return byId;
     }
-    if (app.email) {
-        const byEmail = await findProfessionalByEmailInternal(app.email);
+    for (const email of bolsaApplicationEmails(app)) {
+        const byEmail = await findProfessionalByEmailInternal(email);
         if (byEmail) return byEmail;
     }
     return null;
@@ -10788,8 +10872,8 @@ function mergeKnownBolsaApplication(app, username, professional) {
         || personNamesMatch(appName, seed.name)
         || usernameMatchesPersonName(username, appName);
     if (!samePerson) return seed;
-    const existingPayload = app.payload && typeof app.payload === 'object' ? app.payload : {};
-    const seedPayload = seed.payload && typeof seed.payload === 'object' ? seed.payload : {};
+    const existingPayload = bolsaPayloadObject(app);
+    const seedPayload = bolsaPayloadObject(seed);
     const payload = { ...seedPayload };
     for (const [key, value] of Object.entries(existingPayload)) {
         if (!isEmptyBolsaValue(value)) payload[key] = value;
@@ -10816,52 +10900,85 @@ async function findBolsaApplicationForStaff(username, professional) {
         try { pro = await findProfessionalByUsernameInternal(username); } catch (e) { pro = null; }
     }
     const seed = mergeKnownBolsaApplication(null, username, pro);
-    const finish = (app) => mergeKnownBolsaApplication(app, username, pro) || seed || null;
+    const finish = (app) => mergeKnownBolsaApplication(app, username, pro) || seed || app || null;
     const fromStore = (predicate) => (psychologistApplicationsStore || []).find(predicate) || null;
+
+    const emails = [];
+    const seenEmail = new Set();
+    const addEmail = (raw) => {
+        const email = normalizeStaffEmail(raw);
+        if (!isValidStaffEmail(email) || seenEmail.has(email)) return;
+        seenEmail.add(email);
+        emails.push(email);
+    };
+    addEmail(pro && pro.email);
+    for (const email of bolsaApplicationEmails(seed)) addEmail(email);
+    const accountEmail = isValidStaffEmail(pro && pro.email) ? normalizeStaffEmail(pro.email) : '';
+
+    for (const email of emails) {
+        try {
+            let byEmail = null;
+            if (usePersistentDb) byEmail = await db.findPsychologistApplicationByEmail(email);
+            if (!byEmail) {
+                byEmail = fromStore((a) => bolsaApplicationEmails(a).includes(email));
+            }
+            if (!byEmail) continue;
+            if (pro && pro.id) {
+                try {
+                    if (Number(byEmail.professionalId) !== Number(pro.id)) {
+                        await setApplicationProfessionalIdInternal(byEmail.id, pro.id);
+                    }
+                } catch (e) { /* ignore */ }
+                if (!isValidStaffEmail(pro.email)) {
+                    pro = await patchProfessionalInternal(pro, { email });
+                }
+            }
+            return finish(byEmail);
+        } catch (err) {
+            console.error('findBolsaApplicationForStaff by email:', err.message);
+        }
+    }
+
     try {
         if (pro && pro.id) {
             const byId = usePersistentDb
                 ? await db.findPsychologistApplicationByProfessionalId(pro.id)
                 : fromStore((a) => Number(a.professionalId) === Number(pro.id));
-            const merged = finish(byId);
-            if (merged && (seed || bolsaApplicationName(merged))) return merged;
+            if (byId) {
+                const appEmails = bolsaApplicationEmails(byId);
+                const proEmail = normalizeStaffEmail(pro.email);
+                if (!proEmail || !appEmails.length || appEmails.includes(proEmail)) {
+                    return finish(byId);
+                }
+            }
         }
     } catch (err) {
         console.error('findBolsaApplicationForStaff by id:', err.message);
     }
-    const emails = [
-        String((pro && pro.email) || '').trim().toLowerCase(),
-        String((seed && seed.email) || '').trim().toLowerCase(),
-        String((knownBolsaApplicationForStaff(username, pro) || {}).email || '').trim().toLowerCase()
-    ].filter((e) => e && e.includes('@'));
-    for (const email of [...new Set(emails)]) {
-        try {
-            const byEmail = usePersistentDb
-                ? await db.findPsychologistApplicationByEmail(email)
-                : fromStore((a) => String(a.email || '').trim().toLowerCase() === email);
-            const merged = finish(byEmail);
-            if (merged) return merged;
-        } catch (err) {
-            console.error('findBolsaApplicationForStaff by email:', err.message);
-        }
-    }
+
     const u = String(username || '').trim().toLowerCase();
     const display = String((pro && pro.displayName) || '').trim();
     try {
         const list = usePersistentDb
             ? await listPsychologistApplicationsInternal({ limit: 300 })
             : psychologistApplicationsStore.slice();
-        const byName = (list || []).find((app) => {
-            const appName = bolsaApplicationName(app);
-            if (!appName) return false;
-            if (u && usernameFromDisplayName(appName) === u) return true;
-            if (u && usernameMatchesPersonName(u, appName)) return true;
-            if (seed && personNamesMatch(appName, seed.name)) return true;
-            if (display && !isClinicLeadDoxyName(display) && personNamesMatch(display, appName)) return true;
-            return false;
+        const byEmailScan = (list || []).find((app) => {
+            const appEmails = bolsaApplicationEmails(app);
+            return emails.some((email) => appEmails.includes(email));
         });
-        const merged = finish(byName);
-        if (merged) return merged;
+        if (byEmailScan) return finish(byEmailScan);
+        if (!accountEmail) {
+            const byName = (list || []).find((app) => {
+                const appName = bolsaApplicationName(app);
+                if (!appName) return false;
+                if (u && usernameFromDisplayName(appName) === u) return true;
+                if (u && usernameMatchesPersonName(u, appName)) return true;
+                if (seed && personNamesMatch(appName, seed.name)) return true;
+                if (display && !isClinicLeadDoxyName(display) && personNamesMatch(display, appName)) return true;
+                return false;
+            });
+            if (byName) return finish(byName);
+        }
     } catch (err) {
         console.error('findBolsaApplicationForStaff by name:', err.message);
     }
@@ -10872,20 +10989,44 @@ async function ensureAllBolsaStaffProfiles() {
     try {
         const apps = await listPsychologistApplicationsInternal({ limit: 300 });
         const pros = await listProfessionalsInternal();
+        const proByEmail = new Map();
+        for (const p of pros || []) {
+            const email = normalizeStaffEmail(p && p.email);
+            if (isValidStaffEmail(email) && !proByEmail.has(email)) proByEmail.set(email, p);
+        }
         for (const app of apps || []) {
-            if (app.professionalId) continue;
-            const appName = bolsaApplicationName(app);
-            const appEmail = String(app.email || '').trim().toLowerCase();
-            const match = (pros || []).find((p) => {
-                if (!p) return false;
-                if (appEmail && String(p.email || '').trim().toLowerCase() === appEmail) return true;
-                if (personNamesMatch(p.displayName, appName)) return true;
-                if (usernameMatchesPersonName(p.username, appName)) return true;
-                return false;
-            });
+            const emails = bolsaApplicationEmails(app);
+            let match = null;
+            let matchedByEmail = false;
+            for (const email of emails) {
+                match = proByEmail.get(email) || (pros || []).find((p) => normalizeStaffEmail(p.email) === email);
+                if (match) {
+                    matchedByEmail = true;
+                    break;
+                }
+            }
+            if (!match) {
+                const appName = bolsaApplicationName(app);
+                match = (pros || []).find((p) => {
+                    if (!p || isValidStaffEmail(p.email)) return false;
+                    if (usernameMatchesPersonName(p.username, appName)) return true;
+                    if (personNamesMatch(p.displayName, appName) && !isClinicLeadDoxyName(p.displayName)) return true;
+                    return false;
+                });
+            }
             if (!match) continue;
+            const appEmail = emails[0] || '';
             try {
-                await setApplicationProfessionalIdInternal(app.id, match.id);
+                if (appEmail && !isValidStaffEmail(match.email)) {
+                    const updated = await patchProfessionalInternal(match, { email: appEmail });
+                    if (updated) Object.assign(match, updated);
+                    proByEmail.set(appEmail, match);
+                }
+                if (matchedByEmail || !app.professionalId) {
+                    if (Number(app.professionalId) !== Number(match.id)) {
+                        await setApplicationProfessionalIdInternal(app.id, match.id);
+                    }
+                }
             } catch (err) {
                 console.error('ensureAllBolsaStaffProfiles link:', err.message);
             }
@@ -10975,7 +11116,7 @@ function joinBolsaList(value) {
 
 function publicBolsaProfile(app) {
     if (!app) return null;
-    const p = app.payload && typeof app.payload === 'object' ? app.payload : {};
+    const p = bolsaPayloadObject(app);
     const pais = p.pais === 'Outro' && p.pais_especificar
         ? `Outro: ${p.pais_especificar}`
         : (p.pais || app.pais || '');
@@ -11098,7 +11239,7 @@ function bioFromBolsaApplication(app) {
 async function seedPsychologistStaffProfile(professional, app) {
     if (!professional || !professional.username || !app) return;
     const existing = await getStaffProfileInternal(professional.username);
-    const p = app.payload && typeof app.payload === 'object' ? app.payload : {};
+    const p = bolsaPayloadObject(app);
     const bolsaName = firstNonEmpty(app.name, p.nome, professional.displayName);
     const storedName = firstNonEmpty(existing.fullName, professional.displayName);
     const fullName = (bolsaName && storedName && !personNamesMatch(storedName, bolsaName))
@@ -11127,16 +11268,19 @@ async function seedPsychologistStaffProfile(professional, app) {
         primaryAreas: existingPrimary.length ? existingPrimary : areasFromBolsaApplication(app),
         secondaryAreas: existing.secondaryAreas
     });
+    const fields = {};
     if (professional.id && bolsaName && !personNamesMatch(professional.displayName, bolsaName)) {
-        const fields = {
-            displayName: bolsaName,
-            doxyRoomUrl: assignedDoxyRoomUrl(bolsaName, professional.doxyRoomUrl, professional.username)
-        };
-        const seedEmail = firstNonEmpty(app.email, p.email);
-        if (seedEmail && !professional.email) fields.email = seedEmail;
+        fields.displayName = bolsaName;
+        fields.doxyRoomUrl = assignedDoxyRoomUrl(bolsaName, professional.doxyRoomUrl, professional.username);
+    }
+    const seedEmail = bolsaApplicationEmails(app)[0] || '';
+    if (professional.id && seedEmail && !isValidStaffEmail(professional.email)) {
+        fields.email = seedEmail;
+    }
+    if (professional.id && Object.keys(fields).length) {
         try {
-            if (usePersistentDb) await db.updateProfessional(professional.id, fields);
-            else Object.assign(professional, fields, { updatedAt: new Date().toISOString() });
+            const updated = await patchProfessionalInternal(professional, fields);
+            if (updated) Object.assign(professional, updated);
         } catch (err) {
             console.error('seedPsychologistStaffProfile name fix:', err.message);
         }
@@ -11153,6 +11297,13 @@ async function fillStaffProfileFromBolsa(username) {
     } catch (err) {
         console.error('fillStaffProfileFromBolsa professional:', err.message);
     }
+    if (professional && professional.id && !isValidStaffEmail(professional.email)) {
+        const hint = knownBolsaApplicationForStaff(u, professional);
+        const hintEmail = bolsaApplicationEmails(hint)[0] || '';
+        if (hintEmail) {
+            professional = await patchProfessionalInternal(professional, { email: hintEmail });
+        }
+    }
     try {
         app = await findBolsaApplicationForStaff(u, professional);
     } catch (err) {
@@ -11162,6 +11313,10 @@ async function fillStaffProfileFromBolsa(username) {
     if (!app) app = mergeKnownBolsaApplication(null, u, professional);
     try {
         if (app && professional) {
+            const appEmail = bolsaApplicationEmails(app)[0] || '';
+            if (appEmail && professional.id && !isValidStaffEmail(professional.email)) {
+                professional = await patchProfessionalInternal(professional, { email: appEmail });
+            }
             if (!app.professionalId && professional.id) {
                 try { await setApplicationProfessionalIdInternal(app.id, professional.id); } catch (e) { /* ignore */ }
             }
