@@ -1801,6 +1801,8 @@ document.addEventListener('DOMContentLoaded', () => {
             renderDocumentRows();
             fillBolsaContactFields(clinicProfileEmail, clinicProfilePhone, data.bolsa);
             showBolsaProfileSection('clinicPanelProfile', 'clinicBolsaProfileWrap', 'clinicBolsaProfile', data.bolsa);
+            if (data.fullName && clinicProfileName) clinicProfileName.textContent = data.fullName;
+            loadDoxyRoom();
             if (clinicProfileFormError) clinicProfileFormError.style.display = 'none';
             if (clinicDocsError) clinicDocsError.style.display = 'none';
         } catch (err) {

@@ -430,9 +430,22 @@ function isClinicLeadDoxyName(raw) {
     return s === 'sofia aguiar' || /(^|\s)sofia aguiar(\s|$)/.test(s);
 }
 
-function assignedDoxyRoomUrl(displayName, rawUrl) {
+function isKnownBolsaUsername(username) {
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return false;
+    return (KNOWN_BOLSA_APPLICATIONS || []).some((item) => (item.usernames || []).includes(u));
+}
+
+function isClinicLeadAccount(displayName, username) {
+    if (isKnownBolsaUsername(username)) return false;
+    const u = String(username || '').trim().toLowerCase();
+    if (u && u === normalizeProfessionalUsername(CLINIC_USERNAME)) return true;
+    return isClinicLeadDoxyName(displayName);
+}
+
+function assignedDoxyRoomUrl(displayName, rawUrl, username) {
     const url = normalizeDoxyRoomUrl(rawUrl);
-    if (isClinicLeadDoxyName(displayName)) {
+    if (isClinicLeadAccount(displayName, username)) {
         return url || DEFAULT_DOXY_ROOM_URL || '';
     }
     if (url && DEFAULT_DOXY_ROOM_URL && url === DEFAULT_DOXY_ROOM_URL) return '';
@@ -446,8 +459,9 @@ function isSharedClinicDoxyRoom(raw) {
 }
 
 function doxyRoomViewForPerson(displayName, rawUrl, opts) {
-    const assigned = assignedDoxyRoomUrl(displayName, rawUrl);
-    if ((opts && opts.clinicAdmin) || isClinicLeadDoxyName(displayName)) {
+    const username = (opts && opts.username) || '';
+    const assigned = assignedDoxyRoomUrl(displayName, rawUrl, username);
+    if ((opts && opts.clinicAdmin) || isClinicLeadAccount(displayName, username)) {
         return { url: assigned || DEFAULT_DOXY_ROOM_URL || '', pending: false };
     }
     if (assigned && !isSharedClinicDoxyRoom(assigned)) {
@@ -458,7 +472,7 @@ function doxyRoomViewForPerson(displayName, rawUrl, opts) {
 
 function publicProfessional(pro) {
     if (!pro) return null;
-    const doxy = doxyRoomViewForPerson(pro.displayName, pro.doxyRoomUrl);
+    const doxy = doxyRoomViewForPerson(pro.displayName, pro.doxyRoomUrl, { username: pro.username });
     return {
         id: pro.id,
         username: pro.username,
@@ -1463,7 +1477,7 @@ async function resolveDoxyRoomUrl(professionalName) {
     if (name) {
         try {
             const pro = await findProfessionalByDisplayNameInternal(name);
-            if (pro) return assignedDoxyRoomUrl(pro.displayName, pro.doxyRoomUrl);
+            if (pro) return assignedDoxyRoomUrl(pro.displayName, pro.doxyRoomUrl, pro.username);
         } catch (err) {
             console.error('   ⚠️  resolveDoxyRoomUrl:', err.message);
         }
@@ -10091,13 +10105,15 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
             req.session.clinicLoginTime = new Date().toISOString();
             setStaffDeviceCookie(res);
             try { await fillStaffProfileFromBolsa(pro.username); } catch (e) { /* profile still loads later */ }
+            const fresh = (await findProfessionalByUsernameInternal(pro.username)) || pro;
+            req.session.clinicDisplayName = fresh.displayName || pro.displayName || pro.username;
 
             console.log(`   🔐 Clinic portal login (clinician): ${pro.username}`);
             return res.json({
                 success: true,
                 message: 'Login successful',
                 role: 'clinician',
-                displayName: pro.displayName || pro.username
+                displayName: req.session.clinicDisplayName
             });
         }
     } catch (err) {
@@ -10147,11 +10163,11 @@ app.get('/api/clinic/doxy', requireAuth, async (req, res) => {
             }
             if (pro) {
                 displayName = pro.displayName || displayName;
-                const view = doxyRoomViewForPerson(pro.displayName, pro.doxyRoomUrl);
+                const view = doxyRoomViewForPerson(pro.displayName, pro.doxyRoomUrl, { username: pro.username });
                 patientRoomUrl = view.url;
                 pending = view.pending;
             } else {
-                const view = doxyRoomViewForPerson(displayName, '');
+                const view = doxyRoomViewForPerson(displayName, '', { username: req.session.clinicUsername });
                 patientRoomUrl = view.url;
                 pending = view.pending;
             }
@@ -10179,7 +10195,7 @@ app.get('/api/clinic/profile', requireAuth, async (req, res) => {
         const filled = await fillStaffProfileFromBolsa(username);
         const profile = filled.profile || await getStaffProfileInternal(username);
         const documents = (await listStaffDocumentsInternal(username)).map(publicStaffDocument);
-        const displayName = req.session.clinicDisplayName || username;
+        const displayName = profile.fullName || req.session.clinicDisplayName || username;
         const primaryAreas = sanitizeStaffAreas(
             profile.profession,
             profile.primaryAreas != null ? profile.primaryAreas : profile.primaryArea
@@ -10418,6 +10434,8 @@ function publicAdminStaffProfile(person, profile, documents) {
     );
     const doxy = doxyRoomViewForPerson(person.displayName || person.username, person.doxyRoomUrl, {
         clinicAdmin: String(person.username || '').toLowerCase() === String(CLINIC_USERNAME || '').trim().toLowerCase()
+            && !isKnownBolsaUsername(person.username),
+        username: person.username
     });
     return {
         username: person.username,
@@ -10553,7 +10571,7 @@ async function ensureProfessionalDoxyRooms() {
     try {
         const list = await listProfessionalsInternal();
         for (const pro of list || []) {
-            const next = assignedDoxyRoomUrl(pro.displayName, pro.doxyRoomUrl);
+            const next = assignedDoxyRoomUrl(pro.displayName, pro.doxyRoomUrl, pro.username);
             const current = normalizeDoxyRoomUrl(pro.doxyRoomUrl);
             if (next === current) continue;
             if (usePersistentDb) {
@@ -10589,7 +10607,7 @@ async function createProfessionalInternal({
         username,
         passwordHash,
         displayName,
-        doxyRoomUrl: assignedDoxyRoomUrl(displayName, doxyRoomUrl),
+        doxyRoomUrl: assignedDoxyRoomUrl(displayName, doxyRoomUrl, username),
         email: String(email || '').trim().toLowerCase().slice(0, 320),
         active: active !== false
     };
@@ -10765,6 +10783,11 @@ function mergeKnownBolsaApplication(app, username, professional) {
     }
     if (!seed) return app || null;
     if (!app) return seed;
+    const appName = bolsaApplicationName(app);
+    const samePerson = !appName
+        || personNamesMatch(appName, seed.name)
+        || usernameMatchesPersonName(username, appName);
+    if (!samePerson) return seed;
     const existingPayload = app.payload && typeof app.payload === 'object' ? app.payload : {};
     const seedPayload = seed.payload && typeof seed.payload === 'object' ? seed.payload : {};
     const payload = { ...seedPayload };
@@ -10788,45 +10811,61 @@ function mergeKnownBolsaApplication(app, username, professional) {
 }
 
 async function findBolsaApplicationForStaff(username, professional) {
-    const pro = professional || (await findProfessionalByUsernameInternal(username));
+    let pro = professional;
+    if (!pro) {
+        try { pro = await findProfessionalByUsernameInternal(username); } catch (e) { pro = null; }
+    }
+    const seed = mergeKnownBolsaApplication(null, username, pro);
+    const finish = (app) => mergeKnownBolsaApplication(app, username, pro) || seed || null;
     const fromStore = (predicate) => (psychologistApplicationsStore || []).find(predicate) || null;
-    if (pro && pro.id) {
-        if (usePersistentDb) {
-            const byId = await db.findPsychologistApplicationByProfessionalId(pro.id);
-            if (byId) return mergeKnownBolsaApplication(byId, username, pro);
-        } else {
-            const byId = fromStore((a) => Number(a.professionalId) === Number(pro.id));
-            if (byId) return mergeKnownBolsaApplication(byId, username, pro);
+    try {
+        if (pro && pro.id) {
+            const byId = usePersistentDb
+                ? await db.findPsychologistApplicationByProfessionalId(pro.id)
+                : fromStore((a) => Number(a.professionalId) === Number(pro.id));
+            const merged = finish(byId);
+            if (merged && (seed || bolsaApplicationName(merged))) return merged;
         }
+    } catch (err) {
+        console.error('findBolsaApplicationForStaff by id:', err.message);
     }
     const emails = [
         String((pro && pro.email) || '').trim().toLowerCase(),
+        String((seed && seed.email) || '').trim().toLowerCase(),
         String((knownBolsaApplicationForStaff(username, pro) || {}).email || '').trim().toLowerCase()
     ].filter((e) => e && e.includes('@'));
     for (const email of [...new Set(emails)]) {
-        if (usePersistentDb) {
-            const byEmail = await db.findPsychologistApplicationByEmail(email);
-            if (byEmail) return mergeKnownBolsaApplication(byEmail, username, pro);
-        } else {
-            const byEmail = fromStore((a) => String(a.email || '').trim().toLowerCase() === email);
-            if (byEmail) return mergeKnownBolsaApplication(byEmail, username, pro);
+        try {
+            const byEmail = usePersistentDb
+                ? await db.findPsychologistApplicationByEmail(email)
+                : fromStore((a) => String(a.email || '').trim().toLowerCase() === email);
+            const merged = finish(byEmail);
+            if (merged) return merged;
+        } catch (err) {
+            console.error('findBolsaApplicationForStaff by email:', err.message);
         }
     }
     const u = String(username || '').trim().toLowerCase();
     const display = String((pro && pro.displayName) || '').trim();
-    const list = usePersistentDb
-        ? await listPsychologistApplicationsInternal({ limit: 300 })
-        : psychologistApplicationsStore.slice();
-    const byName = (list || []).find((app) => {
-        const appName = bolsaApplicationName(app);
-        if (!appName) return false;
-        if (u && usernameFromDisplayName(appName) === u) return true;
-        if (u && usernameMatchesPersonName(u, appName)) return true;
-        if (display && personNamesMatch(display, appName)) return true;
-        return false;
-    });
-    if (byName) return mergeKnownBolsaApplication(byName, username, pro);
-    return mergeKnownBolsaApplication(null, username, pro);
+    try {
+        const list = usePersistentDb
+            ? await listPsychologistApplicationsInternal({ limit: 300 })
+            : psychologistApplicationsStore.slice();
+        const byName = (list || []).find((app) => {
+            const appName = bolsaApplicationName(app);
+            if (!appName) return false;
+            if (u && usernameFromDisplayName(appName) === u) return true;
+            if (u && usernameMatchesPersonName(u, appName)) return true;
+            if (seed && personNamesMatch(appName, seed.name)) return true;
+            if (display && !isClinicLeadDoxyName(display) && personNamesMatch(display, appName)) return true;
+            return false;
+        });
+        const merged = finish(byName);
+        if (merged) return merged;
+    } catch (err) {
+        console.error('findBolsaApplicationForStaff by name:', err.message);
+    }
+    return seed || finish(null);
 }
 
 async function ensureAllBolsaStaffProfiles() {
@@ -10903,9 +10942,19 @@ async function ensureKnownBolsaApplications() {
             if (pro && app && !app.professionalId) {
                 await setApplicationProfessionalIdInternal(app.id, pro.id);
             }
-            if (pro && !pro.email) {
-                if (usePersistentDb) await db.updateProfessional(pro.id, { email: seed.email });
-                else pro.email = seed.email;
+            if (pro) {
+                const fields = {};
+                if (seed.email && !pro.email) fields.email = seed.email;
+                if (seed.name && !personNamesMatch(pro.displayName, seed.name)) {
+                    fields.displayName = seed.name;
+                    fields.doxyRoomUrl = assignedDoxyRoomUrl(seed.name, pro.doxyRoomUrl, pro.username);
+                } else if (isSharedClinicDoxyRoom(pro.doxyRoomUrl) && !isClinicLeadAccount(pro.displayName, pro.username)) {
+                    fields.doxyRoomUrl = '';
+                }
+                if (Object.keys(fields).length) {
+                    if (usePersistentDb) pro = (await db.updateProfessional(pro.id, fields)) || pro;
+                    else Object.assign(pro, fields, { updatedAt: new Date().toISOString() });
+                }
             }
             if (targetUsername) {
                 await seedPsychologistStaffProfile(
@@ -11050,11 +11099,16 @@ async function seedPsychologistStaffProfile(professional, app) {
     if (!professional || !professional.username || !app) return;
     const existing = await getStaffProfileInternal(professional.username);
     const p = app.payload && typeof app.payload === 'object' ? app.payload : {};
+    const bolsaName = firstNonEmpty(app.name, p.nome, professional.displayName);
+    const storedName = firstNonEmpty(existing.fullName, professional.displayName);
+    const fullName = (bolsaName && storedName && !personNamesMatch(storedName, bolsaName))
+        ? bolsaName
+        : firstNonEmpty(existing.fullName, bolsaName);
     const pais = p.pais === 'Outro' && p.pais_especificar
         ? p.pais_especificar
         : (p.pais || app.pais || '');
     const address = firstNonEmpty(
-        existing.address,
+        existing.address && personNamesMatch(storedName, bolsaName || storedName) ? existing.address : '',
         [firstNonEmpty(p.localidade, app.localidade), pais].filter(Boolean).join(', ')
     );
     const existingPrimary = Array.isArray(existing.primaryAreas) ? existing.primaryAreas : [];
@@ -11062,7 +11116,7 @@ async function seedPsychologistStaffProfile(professional, app) {
         ...existing,
         profession: existing.profession || 'psicologo',
         ordemNumber: firstNonEmpty(existing.ordemNumber, app.cedulaOpp, p.cedula_opp),
-        fullName: firstNonEmpty(existing.fullName, app.name, p.nome, professional.displayName),
+        fullName,
         address,
         insurer: firstNonEmpty(
             existing.insurer,
@@ -11073,24 +11127,60 @@ async function seedPsychologistStaffProfile(professional, app) {
         primaryAreas: existingPrimary.length ? existingPrimary : areasFromBolsaApplication(app),
         secondaryAreas: existing.secondaryAreas
     });
+    if (professional.id && bolsaName && !personNamesMatch(professional.displayName, bolsaName)) {
+        const fields = {
+            displayName: bolsaName,
+            doxyRoomUrl: assignedDoxyRoomUrl(bolsaName, professional.doxyRoomUrl, professional.username)
+        };
+        const seedEmail = firstNonEmpty(app.email, p.email);
+        if (seedEmail && !professional.email) fields.email = seedEmail;
+        try {
+            if (usePersistentDb) await db.updateProfessional(professional.id, fields);
+            else Object.assign(professional, fields, { updatedAt: new Date().toISOString() });
+        } catch (err) {
+            console.error('seedPsychologistStaffProfile name fix:', err.message);
+        }
+    }
 }
 
 async function fillStaffProfileFromBolsa(username) {
     const u = String(username || '').trim().toLowerCase();
     if (!u) return { profile: await getStaffProfileInternal(u), bolsa: null };
-    const professional = await findProfessionalByUsernameInternal(u);
-    const app = await findBolsaApplicationForStaff(u, professional);
-    if (app && professional) {
-        if (!app.professionalId && professional.id) {
-            try { await setApplicationProfessionalIdInternal(app.id, professional.id); } catch (e) { /* ignore */ }
+    let professional = null;
+    let app = null;
+    try {
+        professional = await findProfessionalByUsernameInternal(u);
+    } catch (err) {
+        console.error('fillStaffProfileFromBolsa professional:', err.message);
+    }
+    try {
+        app = await findBolsaApplicationForStaff(u, professional);
+    } catch (err) {
+        console.error('fillStaffProfileFromBolsa lookup:', err.message);
+        app = mergeKnownBolsaApplication(null, u, professional);
+    }
+    if (!app) app = mergeKnownBolsaApplication(null, u, professional);
+    try {
+        if (app && professional) {
+            if (!app.professionalId && professional.id) {
+                try { await setApplicationProfessionalIdInternal(app.id, professional.id); } catch (e) { /* ignore */ }
+            }
+            await seedPsychologistStaffProfile(professional, app);
+        } else if (app && u) {
+            await seedPsychologistStaffProfile({ username: u, displayName: app.name || '' }, app);
         }
-        await seedPsychologistStaffProfile(professional, app);
-    } else if (app && u) {
-        await seedPsychologistStaffProfile({ username: u, displayName: app.name || '' }, app);
+    } catch (err) {
+        console.error('fillStaffProfileFromBolsa seed:', err.message);
+    }
+    let bolsa = null;
+    try {
+        bolsa = publicBolsaProfile(app);
+    } catch (err) {
+        console.error('fillStaffProfileFromBolsa public:', err.message);
     }
     return {
         profile: await getStaffProfileInternal(u),
-        bolsa: publicBolsaProfile(app)
+        bolsa
     };
 }
 
@@ -11186,7 +11276,7 @@ app.post('/api/admin/professionals', requireAdmin, express.json(), async (req, r
             username,
             password,
             displayName,
-            doxyRoomUrl: assignedDoxyRoomUrl(displayName, doxy.url),
+            doxyRoomUrl: assignedDoxyRoomUrl(displayName, doxy.url, username),
             email: emailRaw,
             active: body.active !== false
         });
@@ -11224,7 +11314,8 @@ app.patch('/api/admin/professionals/:id', requireAdmin, express.json(), async (r
         if (Object.prototype.hasOwnProperty.call(fields, 'doxyRoomUrl') || Object.prototype.hasOwnProperty.call(fields, 'displayName')) {
             fields.doxyRoomUrl = assignedDoxyRoomUrl(
                 nextName,
-                Object.prototype.hasOwnProperty.call(fields, 'doxyRoomUrl') ? fields.doxyRoomUrl : existing.doxyRoomUrl
+                Object.prototype.hasOwnProperty.call(fields, 'doxyRoomUrl') ? fields.doxyRoomUrl : existing.doxyRoomUrl,
+                existing.username
             );
         }
         if (Object.prototype.hasOwnProperty.call(body, 'email')) {
