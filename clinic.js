@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadDoxyRoom() {
         if (!clinicDoxyRoomUrl || !clinicOpenDoxyBtn) return;
         try {
-            const res = await fetch('/api/clinic/doxy?v=docs-1', { cache: 'no-store', credentials: 'same-origin' });
+            const res = await fetch('/api/clinic/doxy?v=ficheiros-1', { cache: 'no-store', credentials: 'same-origin' });
             if (res.status === 401) {
                 showLogin();
                 return;
