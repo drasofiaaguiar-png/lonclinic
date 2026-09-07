@@ -475,7 +475,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <span class="admin-source-badge is-${isInterview ? 'interview' : source}">${badgeLabel}</span>
                         ${comp}
                         ${ref ? `<span class="admin-agenda-ref">${escapeHtml(ref)}</span>` : ''}
-                        ${ref && !isInterview ? `<a class="btn btn-outline btn-sm" href="/clinic-portal/">Open notes</a>` : ''}
+                        ${ref && !isInterview ? `<a class="btn btn-outline btn-sm" href="/clinic-portal/app">Open notes</a>` : ''}
                     </div>
                 `;
                 section.appendChild(item);
@@ -1577,7 +1577,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (res.ok) {
                     if (data.role && data.role !== 'admin') {
-                        adminLoginError.textContent = 'This account opens the clinic portal, not admin. Use the administrator username, or go to /clinic-portal/.';
+                        adminLoginError.textContent = 'This account opens the clinic portal, not admin. Use the administrator username, or go to /clinic-portal/app.';
                         adminLoginError.style.display = 'block';
                         return;
                     }
@@ -2731,7 +2731,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <button type="button" class="btn btn-primary btn-sm admin-psych-save" data-psych-id="${escapeHtml(a.id)}">Guardar</button>
                         <div class="admin-psych-login-row">
                             ${a.professional && a.professional.username
-                                ? `<span>Clinic login: <code>${escapeHtml(a.professional.username)}</code> — portal <a href="/clinic-portal/">/clinic-portal</a></span>
+                                ? `<span>Clinic login: <code>${escapeHtml(a.professional.username)}</code> — portal <a href="/clinic-portal/app">/clinic-portal</a></span>
                                    <button type="button" class="btn btn-outline btn-sm" data-psych-password="${escapeHtml(a.id)}">New password</button>`
                                 : `<button type="button" class="btn btn-primary btn-sm" data-psych-login="${escapeHtml(a.id)}">Assign clinic login</button>`}
                         </div>
@@ -2787,9 +2787,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function showPsychCreds(rows) {
         if (!adminPsychCreds || !adminPsychCredsList || !rows || !rows.length) return;
-        const portal = `${window.location.origin}/clinic-portal/`;
+        const portal = `${window.location.origin}/clinic-portal/app`;
         adminPsychCredsList.innerHTML = `
-            <p class="admin-pro-creds-line">Portal: <a href="/clinic-portal/">${escapeHtml(portal)}</a></p>
+            <p class="admin-pro-creds-line">Portal: <a href="/clinic-portal/app">${escapeHtml(portal)}</a></p>
             <table class="admin-psych-creds-table">
                 <thead><tr><th>Name</th><th>Username</th><th>Password</th></tr></thead>
                 <tbody>
@@ -3399,9 +3399,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function showProfessionalCreds(pro, password) {
         if (!adminProfessionalCreds || !password) return;
-        const portal = `${window.location.origin}/clinic-portal/`;
+        const portal = `${window.location.origin}/clinic-portal/app`;
         if (proCredsPortal) {
-            proCredsPortal.href = '/clinic-portal/';
+            proCredsPortal.href = '/clinic-portal/app';
             proCredsPortal.textContent = portal;
         }
         if (proCredsName) proCredsName.textContent = (pro && pro.displayName) || '';
@@ -3573,7 +3573,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const res = await fetch('/api/admin/professionals');
             if (res.status === 401 || res.status === 403) {
-                if (res.status === 403) window.location.href = '/clinic-portal/';
+                if (res.status === 403) window.location.href = '/clinic-portal/app';
                 else showLogin();
                 return;
             }
@@ -3764,7 +3764,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     if (proCredsCopyBtn) {
         proCredsCopyBtn.addEventListener('click', async () => {
-            const portal = proCredsPortal ? proCredsPortal.textContent : `${window.location.origin}/clinic-portal/`;
+            const portal = proCredsPortal ? proCredsPortal.textContent : `${window.location.origin}/clinic-portal/app`;
             const username = proCredsUsername ? proCredsUsername.textContent : '';
             const password = proCredsPassword ? proCredsPassword.textContent : '';
             const name = proCredsName ? proCredsName.textContent : '';

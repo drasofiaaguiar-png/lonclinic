@@ -484,6 +484,8 @@ const CLINIC_WHATSAPP = String(process.env.CLINIC_WHATSAPP || '351928372775').re
 
 function isAdminSession(req) {
     if (!req || !req.session || !req.session.clinicAuthenticated) return false;
+    if (req.session.professionalId) return false;
+    if (req.session.clinicRole === 'clinician') return false;
     const role = req.session.clinicRole;
     // Legacy sessions (before per-professional logins) were always the env admin.
     return !role || role === 'admin';
@@ -555,7 +557,7 @@ function safeInternalNextPath(raw) {
 function requireAdminPage(req, res, next) {
     if (isAdminSession(req)) return next();
     if (req.session && req.session.clinicAuthenticated) {
-        return res.redirect(302, '/clinic-portal/');
+        return res.redirect(302, '/clinic-portal/app');
     }
     const nextPath = safeInternalNextPath(req.originalUrl || '/diretorio') || '/diretorio';
     return res.redirect(302, `/admin?next=${encodeURIComponent(nextPath)}`);
@@ -578,7 +580,9 @@ function staffAuthPayload(req) {
         authenticated: true,
         username: req.session.clinicUsername || null,
         displayName: req.session.clinicDisplayName || req.session.clinicUsername || null,
-        role: req.session.clinicRole || 'admin'
+        role: req.session.professionalId || req.session.clinicRole === 'clinician'
+            ? 'clinician'
+            : (req.session.clinicRole || 'admin')
     };
 }
 
@@ -5921,7 +5925,7 @@ async function peopleForAvailabilityReminders() {
 }
 
 async function sendAvailabilityReminderEmail({ to, name, monthLabel, deadlineLabel, kind }) {
-    const portalUrl = `${PUBLIC_SITE_URL}/clinic-portal/`;
+    const portalUrl = `${PUBLIC_SITE_URL}/clinic-portal/app`;
     const isFinal = kind === 15;
     const subject = isFinal
         ? `Deadline: availabilities for ${monthLabel}`
@@ -7081,10 +7085,17 @@ app.get('/conta/vacina', (req, res) => {
     sendHtmlNoCacheString(res, cvi.renderRecommendPage(seo.SITE_ORIGIN));
 });
 
+app.get('/clinic-portal/app', (req, res) => {
+    sendStaffHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
+});
+
+app.get('/clinic-portal/app/', (req, res) => {
+    res.redirect(302, '/clinic-portal/app');
+});
+
 app.get('/clinic-portal', (req, res) => {
-    // Bare /clinic-portal is stuck as a Cloudflare HIT of old HTML (Age > 40h).
-    // Trailing slash is a different cache key and gets the current clinic.html.
-    res.redirect(302, '/clinic-portal/');
+    // /clinic-portal and /clinic-portal/ are stuck as Cloudflare HITs of old HTML.
+    res.redirect(302, '/clinic-portal/app');
 });
 
 app.get('/clinic-portal/', (req, res) => {
@@ -7211,7 +7222,7 @@ app.get('/dashboard.html', (req, res) => {
 });
 
 app.get('/clinic.html', (req, res) => {
-    res.redirect(301, '/clinic-portal/');
+    res.redirect(301, '/clinic-portal/app');
 });
 
 app.get('/admin.html', (req, res) => {
@@ -10062,28 +10073,32 @@ app.get('/api/clinic/auth-status', (req, res) => {
 
 app.get('/api/clinic/doxy', requireAuth, async (req, res) => {
     try {
-        const role = req.session.clinicRole || 'admin';
+        const isClinician = req.session.clinicRole === 'clinician' || !!req.session.professionalId;
+        const role = isClinician ? 'clinician' : (isAdminSession(req) ? 'admin' : 'clinician');
         let displayName = req.session.clinicDisplayName || req.session.clinicUsername || '';
         let patientRoomUrl = '';
         let pending = false;
-        if (role === 'clinician' && req.session.professionalId) {
-            const pro = await findProfessionalByIdInternal(req.session.professionalId);
+        if (role === 'clinician') {
+            let pro = null;
+            if (req.session.professionalId) {
+                pro = await findProfessionalByIdInternal(req.session.professionalId);
+            }
+            if (!pro && req.session.clinicUsername) {
+                pro = await findProfessionalByUsernameInternal(req.session.clinicUsername);
+            }
             if (pro) {
                 displayName = pro.displayName || displayName;
                 const view = doxyRoomViewForPerson(pro.displayName, pro.doxyRoomUrl);
                 patientRoomUrl = view.url;
                 pending = view.pending;
             } else {
-                pending = !isClinicLeadDoxyName(displayName);
-                if (!pending) patientRoomUrl = DEFAULT_DOXY_ROOM_URL || '';
+                const view = doxyRoomViewForPerson(displayName, '');
+                patientRoomUrl = view.url;
+                pending = view.pending;
             }
-        } else if (role === 'admin') {
+        } else {
             patientRoomUrl = DEFAULT_DOXY_ROOM_URL || '';
             pending = false;
-        } else {
-            const view = doxyRoomViewForPerson(displayName, '');
-            patientRoomUrl = view.url;
-            pending = view.pending;
         }
         res.json({
             role,
@@ -10118,7 +10133,9 @@ app.get('/api/clinic/profile', requireAuth, async (req, res) => {
         res.json({
             username,
             displayName,
-            role: req.session.clinicRole || 'admin',
+            role: req.session.professionalId || req.session.clinicRole === 'clinician'
+                ? 'clinician'
+                : (req.session.clinicRole || 'admin'),
             profession: profile.profession || '',
             ordemNumber: profile.ordemNumber || '',
             fullName: profile.fullName || displayName || '',
