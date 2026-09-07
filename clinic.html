@@ -16,7 +16,7 @@
     <title>Clinic Portal — Longevity Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=perfil-8">
+    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=dias-2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
     <meta name="description" content="Clinic portal — manage consultations and clinical records.">
     <meta name="theme-color" content="#eaf2fb">
 </head>
-<body class="lon-landing clinic-portal-page" data-clinic-build="perfil-8">
+<body class="lon-landing clinic-portal-page" data-clinic-build="dias-2">
 
     <a class="lon-skip" href="#conteudo-principal">Skip to content</a>
     <header class="lon-nav" id="lonNav">
@@ -63,7 +63,7 @@
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                 </div>
                 <h1 class="dash-login-title">Clinic Portal</h1>
-                <p class="dash-login-desc">Portal perfil-8 — 7 set 2026. Entre com o username do profissional.</p>
+                <p class="dash-login-desc">Portal dias-2 — 7 set 2026. Entre com o username do profissional.</p>
                 <form class="dash-login-form" id="clinicLoginForm">
                     <div class="dash-form-group">
                         <label for="clinicUsername">Username</label>
@@ -152,33 +152,10 @@
                 </div>
 
                 <div class="admin-panel" id="clinicPanelAvailabilities" data-clinic-panel-content="availabilities" hidden>
-                    <div class="clinic-avail-highlight" id="clinicAvailHighlight">
-                        <p class="clinic-avail-highlight-label">Your availabilities</p>
-                        <ul class="clinic-avail-highlight-list" id="clinicAvailHighlightList">
-                            <li class="clinic-avail-highlight-empty">Loading…</li>
-                        </ul>
-                    </div>
                     <div class="dash-section">
                         <div class="dash-section-header">
-                            <h2 class="dash-section-title">Months</h2>
-                            <p class="dash-section-subtitle">Give availabilities by the 15th of the month before. Tick when that month is defined.</p>
-                        </div>
-                        <div id="clinicAvailMonths" class="clinic-avail-month-list">
-                            <p class="admin-empty-list">Loading…</p>
-                        </div>
-                        <div id="clinicAvailMonthsError" class="dash-login-error" style="display:none;" role="alert"></div>
-                    </div>
-                    <div class="dash-section">
-                        <div class="dash-section-header">
-                            <h2 class="dash-section-title">Typical week</h2>
-                            <p class="dash-section-subtitle" id="clinicTimezoneLabel">Repeats every week unless a day on the calendar has its own hours</p>
-                        </div>
-                        <div class="clinic-typical-week" id="clinicWorkingHoursGrid"></div>
-                    </div>
-                    <div class="dash-section">
-                        <div class="dash-section-header">
-                            <h2 class="dash-section-title">This month</h2>
-                            <p class="dash-section-subtitle">Click a day to set hours. Change Start / End to update every selected day.</p>
+                            <h2 class="dash-section-title">Select days</h2>
+                            <p class="dash-section-subtitle">Click the days you want, set the hours, then save. Saved days appear as cards below.</p>
                         </div>
                         <div class="admin-override-cal-header">
                             <button type="button" class="btn btn-outline btn-sm" id="clinicOverrideCalPrev" aria-label="Previous month">←</button>
@@ -200,62 +177,19 @@
                                     <label for="clinicBulkOverrideEnd">End</label>
                                     <input type="time" id="clinicBulkOverrideEnd" class="admin-time-input" value="17:00">
                                 </div>
-                                <label class="admin-override-open-label">
-                                    <input type="checkbox" id="clinicBulkOverrideEnabled" checked>
-                                    <span>Open</span>
-                                </label>
                             </div>
                             <div class="admin-override-bulk-actions">
-                                <button type="button" class="btn btn-outline btn-sm" id="clinicFillWeekdaysBtn">Fill weekdays this month</button>
-                                <button type="button" class="btn btn-outline btn-sm" id="clinicBulkOverrideRemove">Remove hours on selected</button>
+                                <button type="button" class="btn btn-outline btn-sm" id="clinicBulkOverrideRemove">Remove selected days</button>
                                 <button type="button" class="btn btn-outline btn-sm" id="clinicBulkOverrideClearSelection">Clear selection</button>
                             </div>
                         </div>
-                        <p class="admin-override-hint">Click several days to set the same hours. Grey hours come from the typical week; green hours are set on that day.</p>
-                        <div class="admin-blocked-list" id="clinicDayOverridesList"></div>
                     </div>
-                    <details class="clinic-avail-more">
-                        <summary>More settings</summary>
-                        <div class="dash-section">
-                            <div class="dash-section-header">
-                                <h2 class="dash-section-title">Slot settings</h2>
-                                <p class="dash-section-subtitle">How online booking offers time slots</p>
-                            </div>
-                            <div class="admin-form-group">
-                                <label for="clinicSlotDuration">Appointment duration</label>
-                                <select id="clinicSlotDuration" class="admin-select">
-                                    <option value="15">15 minutes</option>
-                                    <option value="30">30 minutes</option>
-                                    <option value="45">45 minutes</option>
-                                    <option value="60">60 minutes</option>
-                                </select>
-                            </div>
-                            <label class="clinic-toggle-label" for="smartSlotGroupingToggle" id="clinicSmartSlotLabel">
-                                <input type="checkbox" id="smartSlotGroupingToggle" checked />
-                                <span>Smart slot grouping</span>
-                            </label>
-                            <p class="dash-section-subtitle" style="margin-top: 0.75rem; max-width: 42rem;">
-                                <strong>On (default):</strong> an empty day shows only the first and last slot; after bookings exist, only the slot
-                                immediately before and after the booked block is offered.
-                                <strong>Off:</strong> patients see every free slot for the day.
-                            </p>
-                        </div>
-                        <div class="dash-section">
-                            <div class="dash-section-header">
-                                <h2 class="dash-section-title">Blocked dates</h2>
-                                <p class="dash-section-subtitle">Close a whole day for online booking</p>
-                            </div>
-                            <div class="admin-form-group">
-                                <div class="admin-input-group">
-                                    <input type="date" id="clinicBlockDateInput" class="admin-input">
-                                    <button type="button" class="btn btn-outline btn-sm" id="clinicAddBlockDateBtn">Add date</button>
-                                </div>
-                            </div>
-                            <div class="admin-blocked-list" id="clinicBlockedDatesList">
-                                <p class="admin-empty-list">Loading…</p>
-                            </div>
-                        </div>
-                    </details>
+                    <div class="clinic-avail-highlight" id="clinicAvailHighlight">
+                        <p class="clinic-avail-highlight-label">Saved days</p>
+                        <ul class="clinic-avail-highlight-list" id="clinicAvailHighlightList">
+                            <li class="clinic-avail-highlight-empty">Loading…</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="admin-panel" id="clinicPanelBookings" data-clinic-panel-content="bookings" hidden>
@@ -647,7 +581,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="/lon-nav.js"></script>
-    <script src="/clinic-portal/clinic.js?v=perfil-8"></script>
+    <script src="/clinic-portal/clinic.js?v=dias-2"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

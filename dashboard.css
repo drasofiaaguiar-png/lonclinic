@@ -1658,7 +1658,7 @@ body.dash-portal .dash-stat-card {
 }
 
 .clinic-avail-highlight {
-    margin: -8px 0 32px;
+    margin: 8px 0 32px;
     padding: 0;
     background: none;
     border: none;
@@ -1680,9 +1680,9 @@ body.dash-portal .dash-stat-card {
     padding: 0;
     list-style: none;
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-    max-width: 28rem;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+    max-width: 52rem;
 }
 
 .clinic-avail-day-card {
@@ -1695,10 +1695,10 @@ body.dash-portal .dash-stat-card {
     margin: 0;
     padding: 16px 18px;
     border-radius: 16px;
-    background: #163024;
-    color: #f4f7f2;
-    border: 2px solid #c5c72c;
-    box-shadow: 0 12px 28px rgba(22, 48, 36, 0.22);
+    background: #e7f3fb;
+    color: #1e4a73;
+    border: 1px solid #c5dff0;
+    box-shadow: none;
 }
 
 .clinic-avail-day-weekday {
@@ -1707,7 +1707,7 @@ body.dash-portal .dash-stat-card {
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #c5c72c;
+    color: #3b82c4;
 }
 
 .clinic-avail-highlight-date {
@@ -1716,7 +1716,7 @@ body.dash-portal .dash-stat-card {
     font-weight: 650;
     letter-spacing: -0.03em;
     line-height: 1.25;
-    color: #f4f7f2;
+    color: #1e4a73;
 }
 
 .clinic-avail-highlight-hours {
@@ -1727,7 +1727,7 @@ body.dash-portal .dash-stat-card {
     font-size: 1.05rem;
     font-weight: 650;
     letter-spacing: -0.02em;
-    color: #c5c72c;
+    color: #2563a8;
     white-space: nowrap;
 }
 
@@ -1749,11 +1749,11 @@ body.dash-portal .dash-stat-card {
     margin: 0;
     padding: 18px 20px;
     border-radius: 16px;
-    background: #163024;
-    border: 2px dashed rgba(197, 199, 44, 0.45);
+    background: #e7f3fb;
+    border: 1px dashed #b7d4e8;
     font-size: 1rem;
     font-weight: 500;
-    color: rgba(244, 247, 242, 0.72);
+    color: #3b5f80;
 }
 
 .clinic-avail-month-list {

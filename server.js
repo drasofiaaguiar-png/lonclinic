@@ -16,7 +16,7 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = 'perfil-8';
+const CLINIC_PORTAL_BUILD = 'dias-2';
 const CLINIC_PORTAL_PATH = '/clinic-desk/dias';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
@@ -673,7 +673,7 @@ async function serveClinicPortalHtml(res) {
             .replace(/src="\/clinic-portal\/clinic\.js\?v=[^"]+"/g, `src="${clinicPortalAssetUrl('clinic.js')}"`)
             .replace(/data-clinic-build="[^"]+"/, `data-clinic-build="${CLINIC_PORTAL_BUILD}"`)
             .replace(
-                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
+                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
                 `Portal ${CLINIC_PORTAL_BUILD} — 7 set 2026. Entre com o username do profissional.`
             );
         res.append('Set-Cookie', `lon_portal=${CLINIC_PORTAL_BUILD}; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly`);
@@ -2027,15 +2027,8 @@ function applyPeakConsultationHours(store) {
         }
     }
     for (const day of weekend) {
-        const prev = store.workingHours[day];
-        const wh = prev && typeof prev === 'object'
-            ? prev
-            : { enabled: true, start: '09:00', end: '21:00' };
-        store.workingHours[day] = wh;
-        if (!wh.enabled) {
-            wh.enabled = true;
-            changed = true;
-        }
+        const wh = store.workingHours[day];
+        if (!wh || typeof wh !== 'object' || !wh.enabled) continue;
         const nextEnd = endNoEarlierThan(wh.end, '21:00');
         if (wh.end !== nextEnd) {
             wh.end = nextEnd;
