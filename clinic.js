@@ -1805,6 +1805,8 @@ document.addEventListener('DOMContentLoaded', () => {
             renderDocumentRows();
             fillBolsaContactFields(clinicProfileEmail, clinicProfilePhone, data.bolsa, data.email);
             showBolsaProfileSection('clinicPanelProfile', 'clinicBolsaProfileWrap', 'clinicBolsaProfile', data.bolsa);
+            const bolsaSub = document.querySelector('#clinicBolsaProfileWrap .dash-section-subtitle');
+            if (bolsaSub && data.build) bolsaSub.textContent = `Ligada pelo mesmo email · ${data.build}`;
             if (data.fullName && clinicProfileName) clinicProfileName.textContent = data.fullName;
             loadDoxyRoom();
             if (clinicProfileFormError) clinicProfileFormError.style.display = 'none';

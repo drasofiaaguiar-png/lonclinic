@@ -16,6 +16,8 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
+const CLINIC_PORTAL_BUILD = 'now-7set';
+const CLINIC_PORTAL_PATH = '/clinic-desk/now';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
 const bcrypt = require('bcrypt');
@@ -571,7 +573,7 @@ function safeInternalNextPath(raw) {
 function requireAdminPage(req, res, next) {
     if (isAdminSession(req)) return next();
     if (req.session && req.session.clinicAuthenticated) {
-        return res.redirect(302, '/clinic-desk');
+        return res.redirect(302, CLINIC_PORTAL_PATH);
     }
     const nextPath = safeInternalNextPath(req.originalUrl || '/diretorio') || '/diretorio';
     return res.redirect(302, `/admin?next=${encodeURIComponent(nextPath)}`);
@@ -588,7 +590,7 @@ function isStaffRequest(req) {
 function staffAuthPayload(req) {
     const authenticated = !!(req.session && req.session.clinicAuthenticated);
     if (!authenticated) {
-        return { authenticated: false, username: null, displayName: null, role: null };
+        return { authenticated: false, username: null, displayName: null, role: null, build: CLINIC_PORTAL_BUILD };
     }
     return {
         authenticated: true,
@@ -596,7 +598,8 @@ function staffAuthPayload(req) {
         displayName: req.session.clinicDisplayName || req.session.clinicUsername || null,
         role: req.session.professionalId || req.session.clinicRole === 'clinician'
             ? 'clinician'
-            : (req.session.clinicRole || 'admin')
+            : (req.session.clinicRole || 'admin'),
+        build: CLINIC_PORTAL_BUILD
     };
 }
 
@@ -638,6 +641,34 @@ function sendHtmlNoCacheString(res, html, statusCode) {
         'Cloudflare-CDN-Cache-Control': 'no-store'
     });
     res.type('html').send(html);
+}
+
+function clinicPortalAssetUrl(file) {
+    return `/api/clinic/assets/${file}?v=${CLINIC_PORTAL_BUILD}`;
+}
+
+async function serveClinicPortalHtml(res) {
+    try {
+        let html = await fs.promises.readFile(path.join(__dirname, 'clinic.html'), 'utf8');
+        html = html
+            .replace(/href="\/clinic-portal\/dashboard\.css\?v=[^"]+"/g, `href="${clinicPortalAssetUrl('dashboard.css')}"`)
+            .replace(/src="\/clinic-portal\/clinic\.js\?v=[^"]+"/g, `src="${clinicPortalAssetUrl('clinic.js')}"`)
+            .replace(/data-clinic-build="[^"]+"/, `data-clinic-build="${CLINIC_PORTAL_BUILD}"`)
+            .replace(
+                'Access the clinic portal to manage consultations, clinical records, and your Doxy.me room.',
+                `Portal ${CLINIC_PORTAL_BUILD} — 7 set 2026. Entre com o username do profissional.`
+            )
+            .replace(
+                'Candidatura ligada a esta conta — telefone, disponibilidade, populações e restantes respostas.',
+                'Ligada pelo mesmo email da candidatura da Bolsa.'
+            );
+        res.append('Set-Cookie', `lon_portal=${CLINIC_PORTAL_BUILD}; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly`);
+        res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+        sendHtmlNoCacheString(res, html);
+    } catch (err) {
+        console.error('serveClinicPortalHtml:', err.message);
+        res.status(500).send('Error loading clinic portal');
+    }
 }
 
 /* ========================================
@@ -6041,7 +6072,7 @@ async function peopleForAvailabilityReminders() {
 }
 
 async function sendAvailabilityReminderEmail({ to, name, monthLabel, deadlineLabel, kind }) {
-    const portalUrl = `${PUBLIC_SITE_URL}/clinic-desk`;
+    const portalUrl = `${PUBLIC_SITE_URL}${CLINIC_PORTAL_PATH}#profile`;
     const isFinal = kind === 15;
     const subject = isFinal
         ? `Deadline: availabilities for ${monthLabel}`
@@ -7201,30 +7232,55 @@ app.get('/conta/vacina', (req, res) => {
     sendHtmlNoCacheString(res, cvi.renderRecommendPage(seo.SITE_ORIGIN));
 });
 
+app.get('/api/clinic/portal', (req, res) => {
+    serveClinicPortalHtml(res);
+});
+
+app.get('/api/clinic/assets/:file', (req, res, next) => {
+    const file = path.basename(String(req.params.file || ''));
+    if (!CLINIC_PORTAL_ASSETS.has(file)) return next();
+    res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+        'CDN-Cache-Control': 'no-store',
+        'Cloudflare-CDN-Cache-Control': 'no-store',
+        'X-Robots-Tag': 'noindex, nofollow, noarchive'
+    });
+    res.sendFile(path.join(__dirname, file), {
+        etag: false,
+        lastModified: false,
+        cacheControl: false
+    }, (err) => {
+        if (err) next();
+    });
+});
+
+app.get('/clinic-desk/now', (req, res) => {
+    serveClinicPortalHtml(res);
+});
+
 app.get('/clinic-desk', (req, res) => {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
-    sendStaffHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
+    serveClinicPortalHtml(res);
 });
 
 app.get('/clinic-desk/', (req, res) => {
-    res.redirect(302, '/clinic-desk');
+    res.redirect(302, CLINIC_PORTAL_PATH);
 });
 
 app.get('/clinic-portal/app', (req, res) => {
-    sendStaffHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
+    serveClinicPortalHtml(res);
 });
 
 app.get('/clinic-portal/app/', (req, res) => {
-    res.redirect(302, '/clinic-desk');
+    res.redirect(302, CLINIC_PORTAL_PATH);
 });
 
 app.get('/clinic-portal', (req, res) => {
-    // /clinic-portal and /clinic-portal/ are stuck as Cloudflare HITs of old HTML.
-    res.redirect(302, '/clinic-desk');
+    res.redirect(302, CLINIC_PORTAL_PATH);
 });
 
 app.get('/clinic-portal/', (req, res) => {
-    sendStaffHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading clinic portal');
+    serveClinicPortalHtml(res);
 });
 
 const CLINIC_PORTAL_ASSETS = new Set([
@@ -7347,7 +7403,7 @@ app.get('/dashboard.html', (req, res) => {
 });
 
 app.get('/clinic.html', (req, res) => {
-    res.redirect(301, '/clinic-desk');
+    res.redirect(302, CLINIC_PORTAL_PATH);
 });
 
 app.get('/admin.html', (req, res) => {
@@ -10287,7 +10343,8 @@ app.get('/api/clinic/profile', requireAuth, async (req, res) => {
             professions: STAFF_PROFESSIONS,
             documentKinds: STAFF_DOCUMENT_KINDS,
             clinicalAreas: STAFF_CLINICAL_AREAS,
-            bolsa: filled.bolsa || null
+            bolsa: filled.bolsa || null,
+            build: CLINIC_PORTAL_BUILD
         });
     } catch (err) {
         console.error('GET /api/clinic/profile:', err.message);
