@@ -3582,8 +3582,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             namedProfessionalsCache = data.named || [];
             if (adminDefaultDoxyUrl) {
                 adminDefaultDoxyUrl.textContent = data.defaultDoxyRoomUrl
-                    ? `Default clinic room (admin / unassigned bookings): ${data.defaultDoxyRoomUrl}`
-                    : 'Default clinic room is not set. Add DOXY_ROOM_URL to the server environment, or set a room on each professional.';
+                    ? `Sofia Aguiar’s Doxy room (clinic admin / unassigned bookings): ${data.defaultDoxyRoomUrl}. Other professionals stay blank until you add their own room.`
+                    : 'No clinic Doxy room is set. Add one on Dra. Sofia Aguiar’s profile, or leave other professionals blank until each has their own.';
             }
             const boardCountEl = document.getElementById('adminBoardCount');
             if (boardCountEl) {

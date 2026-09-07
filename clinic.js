@@ -294,8 +294,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (clinicProfileDoxy) clinicProfileDoxy.textContent = 'Not configured yet';
                 if (clinicDoxyHint) {
                     clinicDoxyHint.textContent = clinicRole === 'admin'
-                        ? 'Set DOXY_ROOM_URL (e.g. https://doxy.me/lonclinic/ritaaguiar) or add a room for each professional in Admin → Professionals.'
-                        : 'Ask an administrator to add your Doxy.me room URL to your professional account.';
+                        ? 'This is Dra. Sofia Aguiar’s room. Other professionals need their own Doxy.me URL in Admin → Professionals.'
+                        : 'Ask an administrator to add your Doxy.me room URL to your professional account. Do not use Sofia Aguiar’s room.';
                 }
                 if (clinicCopyDoxyBtn) clinicCopyDoxyBtn.disabled = true;
             }
