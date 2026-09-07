@@ -497,6 +497,7 @@ async function initSchema(p) {
     await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS insurance_policy TEXT NOT NULL DEFAULT ''`);
     await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS insurance_valid_until DATE`);
     await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS payouts_from_month VARCHAR(7) NOT NULL DEFAULT ''`);
+    await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS consult_languages TEXT NOT NULL DEFAULT '[]'`);
     await p.query(`
         CREATE TABLE IF NOT EXISTS staff_invoices (
             username VARCHAR(64) NOT NULL,
@@ -2227,7 +2228,7 @@ function serializeStaffAreaList(value) {
 
 const STAFF_PROFILE_RETURNING = `username, profession, ordem_number, bio, credentials, iban,
             full_name, nif, citizen_card, address, insurer, insurance_policy, insurance_valid_until,
-            payouts_from_month, primary_area, secondary_area, updated_at, (photo_data IS NOT NULL) AS has_photo`;
+            payouts_from_month, consult_languages, primary_area, secondary_area, updated_at, (photo_data IS NOT NULL) AS has_photo`;
 
 function rowToStaffProfile(row) {
     if (!row) return null;
@@ -2246,6 +2247,7 @@ function rowToStaffProfile(row) {
         credentials: row.credentials || '',
         iban: row.iban || '',
         payoutsFromMonth: row.payouts_from_month || '',
+        consultLanguages: parseStaffAreaList(row.consult_languages),
         primaryAreas: parseStaffAreaList(row.primary_area),
         secondaryAreas: parseStaffAreaList(row.secondary_area),
         hasPhoto: !!(row.has_photo || row.photo_data),
@@ -2307,14 +2309,16 @@ async function upsertStaffProfile(username, fields) {
     const insuranceValidUntil = isoDateOnly(fields.insuranceValidUntil);
     const bio = String(fields.bio || '').trim().slice(0, 4000);
     const credentials = String(fields.credentials || '').trim().slice(0, 2000);
+    const consultLanguages = serializeStaffAreaList(fields.consultLanguages);
     const primaryArea = serializeStaffAreaList(fields.primaryAreas != null ? fields.primaryAreas : fields.primaryArea);
     const secondaryArea = serializeStaffAreaList(fields.secondaryAreas != null ? fields.secondaryAreas : fields.secondaryArea);
     const r = await p.query(
         `INSERT INTO staff_profiles (
             username, profession, ordem_number, full_name, nif, citizen_card, address,
-            insurer, insurance_policy, insurance_valid_until, bio, credentials, primary_area, secondary_area, updated_at
+            insurer, insurance_policy, insurance_valid_until, bio, credentials, consult_languages,
+            primary_area, secondary_area, updated_at
          )
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, NOW())
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, NOW())
          ON CONFLICT (username) DO UPDATE SET
             profession = EXCLUDED.profession,
             ordem_number = EXCLUDED.ordem_number,
@@ -2327,13 +2331,15 @@ async function upsertStaffProfile(username, fields) {
             insurance_valid_until = EXCLUDED.insurance_valid_until,
             bio = EXCLUDED.bio,
             credentials = EXCLUDED.credentials,
+            consult_languages = EXCLUDED.consult_languages,
             primary_area = EXCLUDED.primary_area,
             secondary_area = EXCLUDED.secondary_area,
             updated_at = NOW()
          RETURNING ${STAFF_PROFILE_RETURNING}`,
         [
             u, profession, ordemNumber, fullName, nif, citizenCard, address,
-            insurer, insurancePolicy, insuranceValidUntil, bio, credentials, primaryArea, secondaryArea
+            insurer, insurancePolicy, insuranceValidUntil, bio, credentials, consultLanguages,
+            primaryArea, secondaryArea
         ]
     );
     return rowToStaffProfile(r.rows[0]);
@@ -2656,6 +2662,19 @@ async function getStaffDocument(id, username) {
     return r.rows[0] ? rowToStaffDocument(r.rows[0], { includeData: true }) : null;
 }
 
+async function deleteStaffDocument(id, username) {
+    const p = getPool();
+    const n = parseInt(String(id == null ? '' : id), 10);
+    if (!Number.isInteger(n) || n < 1) return false;
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return false;
+    const r = await p.query(
+        'DELETE FROM staff_documents WHERE id = $1 AND username = $2 RETURNING id',
+        [n, u]
+    );
+    return r.rowCount > 0;
+}
+
 const PRODUCER_STATUSES = new Set(['pendente', 'aprovado', 'rejeitado']);
 
 function rowToProducer(row) {
@@ -2921,6 +2940,7 @@ module.exports = {
     listAllStaffDocuments,
     upsertStaffDocument,
     getStaffDocument,
+    deleteStaffDocument,
     insertProducer,
     listProducers,
     findProducerById,

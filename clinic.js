@@ -117,11 +117,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicInsuranceValidUntil = document.getElementById('clinicInsuranceValidUntil');
     const clinicBio = document.getElementById('clinicBio');
     const clinicCredentials = document.getElementById('clinicCredentials');
+    const clinicConsultLanguages = document.getElementById('clinicConsultLanguages');
+    const clinicConsultLangOtherWrap = document.getElementById('clinicConsultLangOtherWrap');
+    const clinicConsultLangOther = document.getElementById('clinicConsultLangOther');
     const clinicPrimaryAreas = document.getElementById('clinicPrimaryAreas');
     const clinicSecondaryAreas = document.getElementById('clinicSecondaryAreas');
     const clinicProfileForm = document.getElementById('clinicProfileForm');
     const clinicProfileFormError = document.getElementById('clinicProfileFormError');
     const clinicProfileSaveBtn = document.getElementById('clinicProfileSaveBtn');
+    const clinicProfileSaveConfirm = document.getElementById('clinicProfileSaveConfirm');
     const clinicDocsBody = document.getElementById('clinicDocsBody');
     const clinicDocsError = document.getElementById('clinicDocsError');
 
@@ -1624,12 +1628,30 @@ document.addEventListener('DOMContentLoaded', () => {
         contrato: 'Contrato'
     };
     const OPTIONAL_DOC_VALIDITY = new Set(['cv']);
+    const DEFAULT_CONSULT_LANGUAGES = ['Português', 'Inglês', 'Espanhol', 'Francês'];
     let clinicProfileMeta = {
         professions: DEFAULT_ORDEM_LABELS,
         documentKinds: DEFAULT_DOC_KINDS,
         clinicalAreas: {},
         documents: []
     };
+    let clinicProfileLoaded = null;
+
+    function firstFilledText(...values) {
+        for (const value of values) {
+            const s = String(value == null ? '' : value).trim();
+            if (s) return s;
+        }
+        return '';
+    }
+
+    function firstFilledList(...values) {
+        for (const value of values) {
+            const list = parseAreaList(value);
+            if (list.length) return list;
+        }
+        return [];
+    }
 
     function ordemLabelFor(profession) {
         const labels = clinicProfileMeta.professions || DEFAULT_ORDEM_LABELS;
@@ -1685,6 +1707,44 @@ document.addEventListener('DOMContentLoaded', () => {
         return [...container.querySelectorAll('input[type="checkbox"]:checked')].map((el) => el.value);
     }
 
+    function fillConsultLanguageChecks(selected) {
+        if (!clinicConsultLanguages) return;
+        const options = clinicProfileMeta.consultLanguageOptions || DEFAULT_CONSULT_LANGUAGES;
+        const selectedList = parseAreaList(selected);
+        const known = new Set(options);
+        const extras = selectedList.filter((v) => !known.has(v));
+        const otherValue = extras.join(', ');
+        clinicConsultLanguages.innerHTML = options.map((item) => `
+            <label class="clinic-pref-check">
+                <input type="checkbox" name="consultLanguages" value="${escapeHtml(item)}" ${selectedList.includes(item) ? 'checked' : ''}>
+                <span>${escapeHtml(item)}</span>
+            </label>
+        `).join('') + `
+            <label class="clinic-pref-check">
+                <input type="checkbox" name="consultLanguagesOther" id="clinicConsultLangOtherCheck" ${otherValue ? 'checked' : ''}>
+                <span>Outro</span>
+            </label>
+        `;
+        if (clinicConsultLangOther) clinicConsultLangOther.value = otherValue;
+        const syncOther = () => {
+            const checked = document.getElementById('clinicConsultLangOtherCheck');
+            if (clinicConsultLangOtherWrap) clinicConsultLangOtherWrap.hidden = !(checked && checked.checked);
+        };
+        syncOther();
+        const otherCheck = document.getElementById('clinicConsultLangOtherCheck');
+        if (otherCheck) otherCheck.addEventListener('change', syncOther);
+    }
+
+    function readConsultLanguages() {
+        const values = clinicConsultLanguages
+            ? [...clinicConsultLanguages.querySelectorAll('input[name="consultLanguages"]:checked')].map((el) => el.value)
+            : [];
+        const otherCheck = document.getElementById('clinicConsultLangOtherCheck');
+        const extra = clinicConsultLangOther ? clinicConsultLangOther.value.trim() : '';
+        if (otherCheck && otherCheck.checked && extra) values.push(extra);
+        return values;
+    }
+
     function keepKnownAreas(profession, selected) {
         const known = new Set(areaGroupsFor(profession).flatMap((g) => g.items || []));
         return parseAreaList(selected).filter((item) => known.has(item));
@@ -1725,8 +1785,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="clinic-doc-validity">${validity}</div>
                     <input type="date" class="admin-input clinic-doc-date" value="${doc && doc.validUntil ? escapeHtml(doc.validUntil) : ''}"${dateRequired}>
                 </td>
-                <td>
+                <td class="clinic-doc-actions">
                     <button type="button" class="btn btn-outline btn-sm clinic-doc-upload">${doc ? 'Substituir' : 'Enviar'}</button>
+                    ${doc ? `<button type="button" class="btn btn-outline btn-sm clinic-doc-delete" data-doc-id="${escapeHtml(String(doc.id))}">Eliminar</button>` : ''}
                 </td>
             </tr>`;
         }).join('');
@@ -1776,39 +1837,6 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     }
 
-    function showSavedProfileSummary(payload, extra) {
-        const wrap = document.getElementById('clinicSavedDetails');
-        const list = document.getElementById('clinicSavedSummary');
-        if (!wrap || !list) return;
-        const professionLabels = { medico: 'Médico', psicologo: 'Psicólogo', nutricionista: 'Nutricionista' };
-        const rows = [
-            ['Nome', payload.fullName],
-            ['Email', payload.email],
-            ['Profissão', professionLabels[payload.profession] || payload.profession],
-            ['Cédula', payload.ordemNumber],
-            ['NIF', payload.nif],
-            ['N.º Cartão de Cidadão', payload.citizenCard],
-            ['Morada', payload.address],
-            ['Seguradora', payload.insurer],
-            ['Apólice', payload.insurancePolicy],
-            ['Validade do seguro', payload.insuranceValidUntil],
-            ['Preferências primárias', (payload.primaryAreas || []).join(', ')],
-            ['Preferências secundárias', (payload.secondaryAreas || []).join(', ')]
-        ];
-        (clinicProfileMeta.documents || []).forEach((doc) => {
-            if (!doc || !doc.kind) return;
-            const kinds = clinicProfileMeta.documentKinds || DEFAULT_DOC_KINDS;
-            rows.push([kinds[doc.kind] || doc.label || doc.kind, doc.originalName]);
-        });
-        list.innerHTML = rows.map(([label, value]) => {
-            const text = String(value || '').trim();
-            return `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(text || '—')}</dd></div>`;
-        }).join('');
-        wrap.hidden = false;
-        wrap.open = true;
-        wrap.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-    }
-
     function showBolsaProfileSection(wrapId, bodyId, subtitleId, bolsa, opts) {
         const wrap = document.getElementById(wrapId);
         const body = document.getElementById(bodyId);
@@ -1846,27 +1874,34 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (!res.ok) throw new Error('Failed to load profile');
             const data = await res.json();
+            clinicProfileLoaded = data;
             clinicProfileMeta = {
                 professions: data.professions || DEFAULT_ORDEM_LABELS,
                 documentKinds: data.documentKinds || DEFAULT_DOC_KINDS,
                 clinicalAreas: data.clinicalAreas || {},
+                consultLanguageOptions: data.consultLanguageOptions || DEFAULT_CONSULT_LANGUAGES,
                 documents: data.documents || []
             };
-            clinicProfession.value = data.profession || '';
+            clinicProfession.value = data.profession || (data.bolsa ? 'psicologo' : '');
             if (clinicProfileUsername) clinicProfileUsername.textContent = data.username || '—';
-            if (clinicFullName) clinicFullName.value = data.fullName || data.displayName || '';
+            if (clinicFullName) clinicFullName.value = data.fullName || data.displayName || (data.bolsa && data.bolsa.name) || '';
             if (clinicNif) clinicNif.value = data.nif || '';
             if (clinicCitizenCard) clinicCitizenCard.value = data.citizenCard || '';
-            if (clinicAddress) clinicAddress.value = data.address || '';
+            if (clinicAddress) clinicAddress.value = data.address || (data.bolsa && data.bolsa.localidade) || '';
             if (clinicInsurer) clinicInsurer.value = data.insurer || '';
             if (clinicInsurancePolicy) clinicInsurancePolicy.value = data.insurancePolicy || '';
             if (clinicInsuranceValidUntil) clinicInsuranceValidUntil.value = data.insuranceValidUntil || '';
-            if (clinicOrdemNumber) clinicOrdemNumber.value = data.ordemNumber || '';
+            if (clinicOrdemNumber) clinicOrdemNumber.value = data.ordemNumber || (data.bolsa && data.bolsa.cedula) || '';
             if (clinicBio) clinicBio.value = data.bio || '';
             if (clinicCredentials) clinicCredentials.value = data.credentials || '';
             setClinicProfilePhoto(!!data.hasPhoto);
             updateOrdemLabel();
-            fillClinicAreaChecks(data.profession, data.primaryAreas, data.secondaryAreas);
+            fillClinicAreaChecks(data.profession || clinicProfession.value, data.primaryAreas, data.secondaryAreas);
+            fillConsultLanguageChecks(
+                (data.consultLanguages && data.consultLanguages.length)
+                    ? data.consultLanguages
+                    : ((data.bolsa && data.bolsa.consultLanguages) || [])
+            );
             renderDocumentRows();
             fillBolsaContactFields(clinicProfileEmail, clinicProfilePhone, data.bolsa, data.email);
             if (clinicProfilePhone) clinicProfilePhone.textContent = data.phone || (data.bolsa && data.bolsa.phone) || '—';
@@ -1889,6 +1924,24 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!el) return;
         el.textContent = message;
         el.style.display = 'block';
+    }
+
+    function showProfileSavedConfirm(el) {
+        if (!el) return;
+        el.hidden = false;
+        el.classList.add('is-on');
+        clearTimeout(el._hideTimer);
+        el._hideTimer = setTimeout(() => {
+            el.hidden = true;
+            el.classList.remove('is-on');
+        }, 5000);
+    }
+
+    function hideProfileSavedConfirm(el) {
+        if (!el || el.dataset.locked === '1') return;
+        clearTimeout(el._hideTimer);
+        el.hidden = true;
+        el.classList.remove('is-on');
     }
 
     if (clinicProfession) {
@@ -1919,21 +1972,30 @@ document.addEventListener('DOMContentLoaded', () => {
         clinicProfileForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (clinicProfileFormError) clinicProfileFormError.style.display = 'none';
+            hideProfileSavedConfirm(clinicProfileSaveConfirm);
+            const loaded = clinicProfileLoaded || {};
+            const bolsa = loaded.bolsa || {};
+            const languages = firstFilledList(readConsultLanguages(), loaded.consultLanguages, bolsa.consultLanguages);
             const payload = {
-                profession: clinicProfession.value,
-                fullName: clinicFullName ? clinicFullName.value.trim() : '',
-                email: clinicProfileEmail && 'value' in clinicProfileEmail ? clinicProfileEmail.value.trim() : '',
-                nif: clinicNif ? clinicNif.value.trim() : '',
-                citizenCard: clinicCitizenCard ? clinicCitizenCard.value.trim() : '',
-                address: clinicAddress ? clinicAddress.value.trim() : '',
-                insurer: clinicInsurer ? clinicInsurer.value.trim() : '',
-                insurancePolicy: clinicInsurancePolicy ? clinicInsurancePolicy.value.trim() : '',
-                insuranceValidUntil: clinicInsuranceValidUntil ? clinicInsuranceValidUntil.value : '',
-                ordemNumber: clinicOrdemNumber ? clinicOrdemNumber.value.trim() : '',
-                bio: clinicBio ? clinicBio.value.trim() : '',
-                credentials: clinicCredentials ? clinicCredentials.value.trim() : '',
-                primaryAreas: readAreaChecks(clinicPrimaryAreas),
-                secondaryAreas: readAreaChecks(clinicSecondaryAreas)
+                profession: firstFilledText(clinicProfession.value, loaded.profession, bolsa.id || bolsa.email ? 'psicologo' : ''),
+                fullName: firstFilledText(clinicFullName && clinicFullName.value, loaded.fullName, loaded.displayName, bolsa.name),
+                email: firstFilledText(
+                    clinicProfileEmail && 'value' in clinicProfileEmail ? clinicProfileEmail.value : '',
+                    loaded.email,
+                    bolsa.email
+                ),
+                nif: firstFilledText(clinicNif && clinicNif.value, loaded.nif),
+                citizenCard: firstFilledText(clinicCitizenCard && clinicCitizenCard.value, loaded.citizenCard),
+                address: firstFilledText(clinicAddress && clinicAddress.value, loaded.address, bolsa.localidade),
+                insurer: firstFilledText(clinicInsurer && clinicInsurer.value, loaded.insurer),
+                insurancePolicy: firstFilledText(clinicInsurancePolicy && clinicInsurancePolicy.value, loaded.insurancePolicy),
+                insuranceValidUntil: firstFilledText(clinicInsuranceValidUntil && clinicInsuranceValidUntil.value, loaded.insuranceValidUntil),
+                ordemNumber: firstFilledText(clinicOrdemNumber && clinicOrdemNumber.value, loaded.ordemNumber, bolsa.cedula),
+                bio: firstFilledText(clinicBio && clinicBio.value, loaded.bio),
+                credentials: firstFilledText(clinicCredentials && clinicCredentials.value, loaded.credentials),
+                consultLanguages: languages,
+                primaryAreas: firstFilledList(readAreaChecks(clinicPrimaryAreas), loaded.primaryAreas),
+                secondaryAreas: firstFilledList(readAreaChecks(clinicSecondaryAreas), loaded.secondaryAreas)
             };
             if (clinicProfileSaveBtn) clinicProfileSaveBtn.disabled = true;
             try {
@@ -1950,19 +2012,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!res.ok) {
                     throw new Error(data.error || 'Failed to save profile');
                 }
-                await loadClinicProfile();
-                showSavedProfileSummary(payload);
-                const prev = clinicProfileSaveBtn ? clinicProfileSaveBtn.textContent : '';
-                if (clinicProfileSaveBtn) clinicProfileSaveBtn.textContent = 'Guardado';
-                setTimeout(() => {
-                    if (clinicProfileSaveBtn) clinicProfileSaveBtn.textContent = prev || 'Guardar perfil';
-                }, 1600);
+                showProfileSavedConfirm(clinicProfileSaveConfirm);
+                if (clinicProfileSaveConfirm) clinicProfileSaveConfirm.dataset.locked = '1';
+                try {
+                    await loadClinicProfile();
+                } finally {
+                    if (clinicProfileSaveConfirm) {
+                        requestAnimationFrame(() => {
+                            delete clinicProfileSaveConfirm.dataset.locked;
+                        });
+                    }
+                }
             } catch (err) {
+                hideProfileSavedConfirm(clinicProfileSaveConfirm);
                 showProfileError(clinicProfileFormError, err.message || 'Failed to save profile');
             } finally {
                 if (clinicProfileSaveBtn) clinicProfileSaveBtn.disabled = false;
             }
         });
+    }
+
+    const clinicPanelProfile = document.getElementById('clinicPanelProfile');
+    if (clinicPanelProfile) {
+        clinicPanelProfile.addEventListener('input', () => hideProfileSavedConfirm(clinicProfileSaveConfirm));
+        clinicPanelProfile.addEventListener('change', () => hideProfileSavedConfirm(clinicProfileSaveConfirm));
     }
 
     if (clinicProfilePhotoInput) {
@@ -1991,6 +2064,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (clinicDocsBody) {
         clinicDocsBody.addEventListener('click', async (e) => {
+            const deleteBtn = e.target.closest('.clinic-doc-delete');
+            if (deleteBtn) {
+                const docId = deleteBtn.getAttribute('data-doc-id');
+                if (!docId) return;
+                if (clinicDocsError) clinicDocsError.style.display = 'none';
+                if (!window.confirm('Eliminar este ficheiro?')) return;
+                deleteBtn.disabled = true;
+                try {
+                    const res = await fetch(`/api/clinic/profile/documents/${encodeURIComponent(docId)}`, {
+                        method: 'DELETE',
+                        credentials: 'same-origin'
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (res.status === 401) {
+                        showLogin();
+                        return;
+                    }
+                    if (!res.ok) throw new Error(data.error || 'Failed to delete document');
+                    await loadClinicProfile();
+                } catch (err) {
+                    showProfileError(clinicDocsError, err.message || 'Failed to delete document');
+                    deleteBtn.disabled = false;
+                }
+                return;
+            }
             const btn = e.target.closest('.clinic-doc-upload');
             if (!btn) return;
             const row = btn.closest('tr');

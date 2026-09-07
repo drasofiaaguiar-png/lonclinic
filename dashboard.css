@@ -1336,6 +1336,48 @@ body.dash-portal .dash-stat-card {
     word-break: break-word;
 }
 
+.clinic-profile-save-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+}
+
+.clinic-profile-save-confirm {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 650;
+    color: #163024;
+}
+
+.clinic-profile-save-confirm[hidden] {
+    display: none !important;
+}
+
+.clinic-save-toggle {
+    position: relative;
+    width: 38px;
+    height: 22px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: #2f7a4a;
+    box-shadow: inset 0 0 0 1px rgba(22, 48, 36, 0.12);
+}
+
+.clinic-save-toggle-knob {
+    position: absolute;
+    top: 2px;
+    left: 18px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(22, 48, 36, 0.2);
+}
+
 .clinic-profile-form {
     display: flex;
     flex-direction: column;
@@ -1438,6 +1480,18 @@ body.dash-portal .dash-stat-card {
 .clinic-pref-list {
     display: grid;
     gap: 6px;
+}
+
+.clinic-lang-fieldset {
+    margin-top: 12px;
+}
+
+.clinic-lang-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.clinic-lang-other {
+    margin: 10px 0 0;
 }
 
 .clinic-pref-check {
@@ -1589,6 +1643,9 @@ body.dash-portal .dash-stat-card {
         grid-template-columns: 1fr;
     }
     .clinic-bio-creds-grid {
+        grid-template-columns: 1fr;
+    }
+    .clinic-lang-list {
         grid-template-columns: 1fr;
     }
 }
@@ -2126,6 +2183,13 @@ body.dash-portal .dash-stat-card {
 
 .clinic-docs-table .clinic-doc-date {
     max-width: 11rem;
+}
+
+.clinic-doc-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: flex-start;
 }
 
 .admin-professionals-form {

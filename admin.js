@@ -3655,36 +3655,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         `).join('');
     }
 
-    function showAdminSavedProfileSummary(payload) {
-        const wrap = document.getElementById('adminSavedDetails');
-        const list = document.getElementById('adminSavedSummary');
-        if (!wrap || !list) return;
-        const professionLabels = { medico: 'Médico', psicologo: 'Psicólogo', nutricionista: 'Nutricionista' };
-        const rows = [
-            ['Nome', payload.fullName],
-            ['Email', payload.email],
-            ['Profissão', professionLabels[payload.profession] || payload.profession],
-            ['Cédula', payload.ordemNumber],
-            ['NIF', payload.nif],
-            ['N.º Cartão de Cidadão', payload.citizenCard],
-            ['Morada', payload.address],
-            ['Seguradora', payload.insurer],
-            ['Apólice', payload.insurancePolicy],
-            ['Validade do seguro', payload.insuranceValidUntil],
-            ['Preferências primárias', (payload.primaryAreas || []).join(', ')],
-            ['Preferências secundárias', (payload.secondaryAreas || []).join(', ')]
-        ];
-        const cv = (adminProfileMeta.documents || []).find((d) => d && d.kind === 'cv');
-        if (cv) rows.push(['CV', cv.originalName]);
-        list.innerHTML = rows.map(([label, value]) => {
-            const text = String(value || '').trim();
-            return `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(text || '—')}</dd></div>`;
-        }).join('');
-        wrap.hidden = false;
-        wrap.open = true;
-        wrap.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-    }
-
     function showBolsaProfileSection(wrapId, bodyId, subtitleId, bolsa, opts) {
         const wrap = document.getElementById(wrapId);
         const body = document.getElementById(bodyId);
@@ -3781,6 +3751,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="admin-staff-profile-block">
                     <h4>Credenciais</h4>
                     <p>${dashText(p.credentials)}</p>
+                </div>
+                <div class="admin-staff-profile-block">
+                    <h4>Idiomas de consulta</h4>
+                    ${areaListHtml(p.consultLanguages)}
                 </div>
                 <div class="admin-staff-profile-block">
                     <h4>Preferências primárias</h4>
@@ -3986,12 +3960,31 @@ document.addEventListener('DOMContentLoaded', async () => {
         contrato: 'Contrato'
     };
     const OPTIONAL_DOC_VALIDITY = new Set(['cv']);
+    const DEFAULT_CONSULT_LANGUAGES = ['Português', 'Inglês', 'Espanhol', 'Francês'];
     let adminProfileMeta = {
         professions: DEFAULT_ORDEM_LABELS,
         documentKinds: DEFAULT_DOC_KINDS,
         clinicalAreas: {},
+        consultLanguageOptions: DEFAULT_CONSULT_LANGUAGES,
         documents: []
     };
+    let adminProfileLoaded = null;
+
+    function firstFilledText(...values) {
+        for (const value of values) {
+            const s = String(value == null ? '' : value).trim();
+            if (s) return s;
+        }
+        return '';
+    }
+
+    function firstFilledList(...values) {
+        for (const value of values) {
+            const list = parseAreaList(value);
+            if (list.length) return list;
+        }
+        return [];
+    }
     const adminProfileUsername = document.getElementById('adminProfileUsername');
     const adminProfileEmail = document.getElementById('adminProfileEmail');
     const adminProfilePhone = document.getElementById('adminProfilePhone');
@@ -4013,11 +4006,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     const adminInsuranceValidUntil = document.getElementById('adminInsuranceValidUntil');
     const adminBio = document.getElementById('adminBio');
     const adminCredentials = document.getElementById('adminCredentials');
+    const adminConsultLanguages = document.getElementById('adminConsultLanguages');
+    const adminConsultLangOtherWrap = document.getElementById('adminConsultLangOtherWrap');
+    const adminConsultLangOther = document.getElementById('adminConsultLangOther');
     const adminPrimaryAreas = document.getElementById('adminPrimaryAreas');
     const adminSecondaryAreas = document.getElementById('adminSecondaryAreas');
     const adminProfileForm = document.getElementById('adminProfileForm');
     const adminProfileFormError = document.getElementById('adminProfileFormError');
     const adminProfileSaveBtn = document.getElementById('adminProfileSaveBtn');
+    const adminProfileSaveConfirm = document.getElementById('adminProfileSaveConfirm');
     const adminDocsBody = document.getElementById('adminDocsBody');
     const adminDocsError = document.getElementById('adminDocsError');
 
@@ -4075,6 +4072,44 @@ document.addEventListener('DOMContentLoaded', async () => {
         return [...container.querySelectorAll('input[type="checkbox"]:checked')].map((el) => el.value);
     }
 
+    function fillConsultLanguageChecks(selected) {
+        if (!adminConsultLanguages) return;
+        const options = adminProfileMeta.consultLanguageOptions || DEFAULT_CONSULT_LANGUAGES;
+        const selectedList = parseAreaList(selected);
+        const known = new Set(options);
+        const extras = selectedList.filter((v) => !known.has(v));
+        const otherValue = extras.join(', ');
+        adminConsultLanguages.innerHTML = options.map((item) => `
+            <label class="clinic-pref-check">
+                <input type="checkbox" name="consultLanguages" value="${escapeHtml(item)}" ${selectedList.includes(item) ? 'checked' : ''}>
+                <span>${escapeHtml(item)}</span>
+            </label>
+        `).join('') + `
+            <label class="clinic-pref-check">
+                <input type="checkbox" name="consultLanguagesOther" id="adminConsultLangOtherCheck" ${otherValue ? 'checked' : ''}>
+                <span>Outro</span>
+            </label>
+        `;
+        if (adminConsultLangOther) adminConsultLangOther.value = otherValue;
+        const syncOther = () => {
+            const checked = document.getElementById('adminConsultLangOtherCheck');
+            if (adminConsultLangOtherWrap) adminConsultLangOtherWrap.hidden = !(checked && checked.checked);
+        };
+        syncOther();
+        const otherCheck = document.getElementById('adminConsultLangOtherCheck');
+        if (otherCheck) otherCheck.addEventListener('change', syncOther);
+    }
+
+    function readConsultLanguages() {
+        const values = adminConsultLanguages
+            ? [...adminConsultLanguages.querySelectorAll('input[name="consultLanguages"]:checked')].map((el) => el.value)
+            : [];
+        const otherCheck = document.getElementById('adminConsultLangOtherCheck');
+        const extra = adminConsultLangOther ? adminConsultLangOther.value.trim() : '';
+        if (otherCheck && otherCheck.checked && extra) values.push(extra);
+        return values;
+    }
+
     function keepKnownAreas(profession, selected) {
         const known = new Set(areaGroupsFor(profession).flatMap((g) => g.items || []));
         return parseAreaList(selected).filter((item) => known.has(item));
@@ -4115,8 +4150,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="clinic-doc-validity">${validity}</div>
                     <input type="date" class="admin-input clinic-doc-date" value="${doc && doc.validUntil ? escapeHtml(doc.validUntil) : ''}"${dateRequired}>
                 </td>
-                <td>
+                <td class="clinic-doc-actions">
                     <button type="button" class="btn btn-outline btn-sm clinic-doc-upload">${doc ? 'Substituir' : 'Enviar'}</button>
+                    ${doc ? `<button type="button" class="btn btn-outline btn-sm clinic-doc-delete" data-doc-id="${escapeHtml(String(doc.id))}">Eliminar</button>` : ''}
                 </td>
             </tr>`;
         }).join('');
@@ -4126,6 +4162,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!el) return;
         el.textContent = message;
         el.style.display = 'block';
+    }
+
+    function showProfileSavedConfirm(el) {
+        if (!el) return;
+        el.hidden = false;
+        el.classList.add('is-on');
+        clearTimeout(el._hideTimer);
+        el._hideTimer = setTimeout(() => {
+            el.hidden = true;
+            el.classList.remove('is-on');
+        }, 5000);
+    }
+
+    function hideProfileSavedConfirm(el) {
+        if (!el || el.dataset.locked === '1') return;
+        clearTimeout(el._hideTimer);
+        el.hidden = true;
+        el.classList.remove('is-on');
     }
 
     function setAdminProfilePhoto(hasPhoto) {
@@ -4157,10 +4211,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             if (!profileRes.ok) throw new Error('Failed to load profile');
             const data = await profileRes.json();
+            adminProfileLoaded = data;
             adminProfileMeta = {
                 professions: data.professions || DEFAULT_ORDEM_LABELS,
                 documentKinds: data.documentKinds || DEFAULT_DOC_KINDS,
                 clinicalAreas: data.clinicalAreas || {},
+                consultLanguageOptions: data.consultLanguageOptions || DEFAULT_CONSULT_LANGUAGES,
                 documents: data.documents || []
             };
             if (adminProfileUsername) adminProfileUsername.textContent = data.username || '—';
@@ -4169,20 +4225,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                 else adminProfileEmail.textContent = data.email || (data.bolsa && data.bolsa.email) || '—';
             }
             if (adminProfilePhone) adminProfilePhone.textContent = data.phone || (data.bolsa && data.bolsa.phone) || '—';
-            adminProfession.value = data.profession || '';
-            if (adminFullName) adminFullName.value = data.fullName || data.displayName || '';
+            adminProfession.value = data.profession || (data.bolsa ? 'psicologo' : '');
+            if (adminFullName) adminFullName.value = data.fullName || data.displayName || (data.bolsa && data.bolsa.name) || '';
             if (adminNif) adminNif.value = data.nif || '';
             if (adminCitizenCard) adminCitizenCard.value = data.citizenCard || '';
-            if (adminAddress) adminAddress.value = data.address || '';
+            if (adminAddress) adminAddress.value = data.address || (data.bolsa && data.bolsa.localidade) || '';
             if (adminInsurer) adminInsurer.value = data.insurer || '';
             if (adminInsurancePolicy) adminInsurancePolicy.value = data.insurancePolicy || '';
             if (adminInsuranceValidUntil) adminInsuranceValidUntil.value = data.insuranceValidUntil || '';
-            if (adminOrdemNumber) adminOrdemNumber.value = data.ordemNumber || '';
+            if (adminOrdemNumber) adminOrdemNumber.value = data.ordemNumber || (data.bolsa && data.bolsa.cedula) || '';
             if (adminBio) adminBio.value = data.bio || '';
             if (adminCredentials) adminCredentials.value = data.credentials || '';
             setAdminProfilePhoto(!!data.hasPhoto);
             updateAdminOrdemLabel();
-            fillAdminAreaChecks(data.profession, data.primaryAreas, data.secondaryAreas);
+            fillAdminAreaChecks(data.profession || adminProfession.value, data.primaryAreas, data.secondaryAreas);
+            fillConsultLanguageChecks(
+                (data.consultLanguages && data.consultLanguages.length)
+                    ? data.consultLanguages
+                    : ((data.bolsa && data.bolsa.consultLanguages) || [])
+            );
             renderAdminDocumentRows();
             showBolsaProfileSection('adminBolsaProfileWrap', 'adminBolsaProfile', 'adminRegistoSubtitle', data.bolsa, {
                 cvHref: '/api/clinic/profile/bolsa-cv'
@@ -4233,21 +4294,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         adminProfileForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             if (adminProfileFormError) adminProfileFormError.style.display = 'none';
+            hideProfileSavedConfirm(adminProfileSaveConfirm);
+            const loaded = adminProfileLoaded || {};
+            const bolsa = loaded.bolsa || {};
+            const languages = firstFilledList(readConsultLanguages(), loaded.consultLanguages, bolsa.consultLanguages);
             const payload = {
-                profession: adminProfession.value,
-                fullName: adminFullName ? adminFullName.value.trim() : '',
-                email: adminProfileEmail && 'value' in adminProfileEmail ? adminProfileEmail.value.trim() : '',
-                nif: adminNif ? adminNif.value.trim() : '',
-                citizenCard: adminCitizenCard ? adminCitizenCard.value.trim() : '',
-                address: adminAddress ? adminAddress.value.trim() : '',
-                insurer: adminInsurer ? adminInsurer.value.trim() : '',
-                insurancePolicy: adminInsurancePolicy ? adminInsurancePolicy.value.trim() : '',
-                insuranceValidUntil: adminInsuranceValidUntil ? adminInsuranceValidUntil.value : '',
-                ordemNumber: adminOrdemNumber ? adminOrdemNumber.value.trim() : '',
-                bio: adminBio ? adminBio.value.trim() : '',
-                credentials: adminCredentials ? adminCredentials.value.trim() : '',
-                primaryAreas: readAreaChecks(adminPrimaryAreas),
-                secondaryAreas: readAreaChecks(adminSecondaryAreas)
+                profession: firstFilledText(adminProfession.value, loaded.profession, bolsa.id || bolsa.email ? 'psicologo' : ''),
+                fullName: firstFilledText(adminFullName && adminFullName.value, loaded.fullName, loaded.displayName, bolsa.name),
+                email: firstFilledText(
+                    adminProfileEmail && 'value' in adminProfileEmail ? adminProfileEmail.value : '',
+                    loaded.email,
+                    bolsa.email
+                ),
+                nif: firstFilledText(adminNif && adminNif.value, loaded.nif),
+                citizenCard: firstFilledText(adminCitizenCard && adminCitizenCard.value, loaded.citizenCard),
+                address: firstFilledText(adminAddress && adminAddress.value, loaded.address, bolsa.localidade),
+                insurer: firstFilledText(adminInsurer && adminInsurer.value, loaded.insurer),
+                insurancePolicy: firstFilledText(adminInsurancePolicy && adminInsurancePolicy.value, loaded.insurancePolicy),
+                insuranceValidUntil: firstFilledText(adminInsuranceValidUntil && adminInsuranceValidUntil.value, loaded.insuranceValidUntil),
+                ordemNumber: firstFilledText(adminOrdemNumber && adminOrdemNumber.value, loaded.ordemNumber, bolsa.cedula),
+                bio: firstFilledText(adminBio && adminBio.value, loaded.bio),
+                credentials: firstFilledText(adminCredentials && adminCredentials.value, loaded.credentials),
+                consultLanguages: languages,
+                primaryAreas: firstFilledList(readAreaChecks(adminPrimaryAreas), loaded.primaryAreas),
+                secondaryAreas: firstFilledList(readAreaChecks(adminSecondaryAreas), loaded.secondaryAreas)
             };
             if (adminProfileSaveBtn) adminProfileSaveBtn.disabled = true;
             try {
@@ -4264,19 +4334,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (!res.ok) {
                     throw new Error(data.error || 'Failed to save profile');
                 }
-                await loadAdminProfile();
-                showAdminSavedProfileSummary(payload);
-                const prev = adminProfileSaveBtn ? adminProfileSaveBtn.textContent : '';
-                if (adminProfileSaveBtn) adminProfileSaveBtn.textContent = 'Guardado';
-                setTimeout(() => {
-                    if (adminProfileSaveBtn) adminProfileSaveBtn.textContent = prev || 'Guardar perfil';
-                }, 1600);
+                showProfileSavedConfirm(adminProfileSaveConfirm);
+                if (adminProfileSaveConfirm) adminProfileSaveConfirm.dataset.locked = '1';
+                try {
+                    await loadAdminProfile();
+                } finally {
+                    if (adminProfileSaveConfirm) {
+                        requestAnimationFrame(() => {
+                            delete adminProfileSaveConfirm.dataset.locked;
+                        });
+                    }
+                }
             } catch (err) {
+                hideProfileSavedConfirm(adminProfileSaveConfirm);
                 showAdminProfileError(adminProfileFormError, err.message || 'Failed to save profile');
             } finally {
                 if (adminProfileSaveBtn) adminProfileSaveBtn.disabled = false;
             }
         });
+    }
+
+    const adminPanelProfile = document.getElementById('adminPanelProfile');
+    if (adminPanelProfile) {
+        adminPanelProfile.addEventListener('input', () => hideProfileSavedConfirm(adminProfileSaveConfirm));
+        adminPanelProfile.addEventListener('change', () => hideProfileSavedConfirm(adminProfileSaveConfirm));
     }
 
     if (adminProfilePhotoInput) {
@@ -4305,6 +4386,31 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (adminDocsBody) {
         adminDocsBody.addEventListener('click', async (e) => {
+            const deleteBtn = e.target.closest('.clinic-doc-delete');
+            if (deleteBtn) {
+                const docId = deleteBtn.getAttribute('data-doc-id');
+                if (!docId) return;
+                if (adminDocsError) adminDocsError.style.display = 'none';
+                if (!window.confirm('Eliminar este ficheiro?')) return;
+                deleteBtn.disabled = true;
+                try {
+                    const res = await fetch(`/api/clinic/profile/documents/${encodeURIComponent(docId)}`, {
+                        method: 'DELETE',
+                        credentials: 'same-origin'
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    if (res.status === 401) {
+                        showLogin();
+                        return;
+                    }
+                    if (!res.ok) throw new Error(data.error || 'Failed to delete document');
+                    await loadAdminProfile();
+                } catch (err) {
+                    showAdminProfileError(adminDocsError, err.message || 'Failed to delete document');
+                    deleteBtn.disabled = false;
+                }
+                return;
+            }
             const btn = e.target.closest('.clinic-doc-upload');
             if (!btn) return;
             const row = btn.closest('tr');

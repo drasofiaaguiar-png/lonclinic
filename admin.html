@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=perfil-3">
+    <link rel="stylesheet" href="/dashboard.css?v=perfil-8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -953,7 +953,7 @@
                 <div class="dash-section">
                     <div class="dash-section-header">
                         <h2 class="dash-section-title">Dados profissionais</h2>
-                        <p class="dash-section-subtitle">NIF, cédula, seguro, bio e áreas de preferência</p>
+                        <p class="dash-section-subtitle">NIF, cédula, seguro, bio, idiomas de consulta e áreas de preferência</p>
                     </div>
                     <form id="adminProfileForm" class="clinic-profile-form">
                         <div class="admin-invite-grid">
@@ -999,6 +999,18 @@
                             </div>
                         </div>
                         <div class="clinic-pref-block">
+                            <h3 class="clinic-pref-heading">Idiomas de consulta</h3>
+                            <p class="dash-section-subtitle">Línguas em que realiza consultas com utentes.</p>
+                            <fieldset class="clinic-pref-col clinic-lang-fieldset">
+                                <legend>Selecção múltipla</legend>
+                                <div id="adminConsultLanguages" class="clinic-pref-list clinic-lang-list"></div>
+                                <div class="admin-form-group clinic-lang-other" id="adminConsultLangOtherWrap" hidden>
+                                    <label for="adminConsultLangOther">Especifique o idioma</label>
+                                    <input type="text" id="adminConsultLangOther" class="admin-input" maxlength="80" placeholder="ex.: Alemão" autocomplete="off">
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="clinic-pref-block">
                             <h3 class="clinic-pref-heading">Áreas preferenciais</h3>
                             <p class="dash-section-subtitle">A lista muda com a profissão. As primárias são as áreas em que prefere receber utentes; as secundárias são complementar. Uma área não pode estar nas duas listas.</p>
                             <div class="clinic-pref-cols">
@@ -1013,17 +1025,19 @@
                             </div>
                         </div>
                         <div id="adminProfileFormError" class="dash-login-error" style="display:none;" role="alert"></div>
+                        <div class="clinic-profile-save-row">
                         <button type="submit" class="btn btn-primary" id="adminProfileSaveBtn">Guardar perfil</button>
-                        <details class="clinic-saved-details" id="adminSavedDetails" hidden>
-                            <summary class="clinic-saved-summary">Informações guardadas</summary>
-                            <dl class="clinic-profile-dl clinic-saved-dl" id="adminSavedSummary"></dl>
-                        </details>
+                        <p class="clinic-profile-save-confirm" id="adminProfileSaveConfirm" hidden role="status">
+                            <span class="clinic-save-toggle" aria-hidden="true"><span class="clinic-save-toggle-knob"></span></span>
+                            Alterações guardadas
+                        </p>
+                        </div>
                     </form>
                 </div>
                 <div class="dash-section">
                     <div class="dash-section-header">
                         <h2 class="dash-section-title">Documentos</h2>
-                        <p class="dash-section-subtitle">Cartão de Cidadão, cópia da cédula, CV, seguro e contrato. Visíveis nesta conta e nas fichas dos profissionais. Indique a validade quando o documento caduca.</p>
+                        <p class="dash-section-subtitle">Cartão de Cidadão, cópia da cédula, CV, seguro e contrato. Visíveis nesta conta e nas fichas dos profissionais. Pode substituir ou eliminar um ficheiro enviado. Indique a validade quando o documento caduca.</p>
                     </div>
                     <div class="admin-professionals-table-wrap">
                         <table class="admin-professionals-table clinic-docs-table" id="adminDocsTable">
@@ -1070,7 +1084,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=perfil-3"></script>
+    <script src="/admin.js?v=perfil-8"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

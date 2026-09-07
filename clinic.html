@@ -16,7 +16,7 @@
     <title>Clinic Portal — Longevity Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=perfil-3">
+    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=perfil-8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
     <meta name="description" content="Clinic portal — manage consultations and clinical records.">
     <meta name="theme-color" content="#eaf2fb">
 </head>
-<body class="lon-landing clinic-portal-page" data-clinic-build="perfil-3">
+<body class="lon-landing clinic-portal-page" data-clinic-build="perfil-8">
 
     <a class="lon-skip" href="#conteudo-principal">Skip to content</a>
     <header class="lon-nav" id="lonNav">
@@ -63,7 +63,7 @@
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                 </div>
                 <h1 class="dash-login-title">Clinic Portal</h1>
-                <p class="dash-login-desc">Portal perfil-3 — 7 set 2026. Entre com o username do profissional.</p>
+                <p class="dash-login-desc">Portal perfil-8 — 7 set 2026. Entre com o username do profissional.</p>
                 <form class="dash-login-form" id="clinicLoginForm">
                     <div class="dash-form-group">
                         <label for="clinicUsername">Username</label>
@@ -500,7 +500,7 @@
                     <div class="dash-section">
                         <div class="dash-section-header">
                             <h2 class="dash-section-title">Dados profissionais</h2>
-                            <p class="dash-section-subtitle">NIF, cédula, seguro, bio e áreas de preferência</p>
+                            <p class="dash-section-subtitle">NIF, cédula, seguro, bio, idiomas de consulta e áreas de preferência</p>
                         </div>
                         <form id="clinicProfileForm" class="clinic-profile-form">
                             <div class="admin-invite-grid">
@@ -546,6 +546,18 @@
                                 </div>
                             </div>
                             <div class="clinic-pref-block">
+                                <h3 class="clinic-pref-heading">Idiomas de consulta</h3>
+                                <p class="dash-section-subtitle">Línguas em que realiza consultas com utentes.</p>
+                                <fieldset class="clinic-pref-col clinic-lang-fieldset">
+                                    <legend>Selecção múltipla</legend>
+                                    <div id="clinicConsultLanguages" class="clinic-pref-list clinic-lang-list"></div>
+                                    <div class="admin-form-group clinic-lang-other" id="clinicConsultLangOtherWrap" hidden>
+                                        <label for="clinicConsultLangOther">Especifique o idioma</label>
+                                        <input type="text" id="clinicConsultLangOther" class="admin-input" maxlength="80" placeholder="ex.: Alemão" autocomplete="off">
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="clinic-pref-block">
                                 <h3 class="clinic-pref-heading">Áreas preferenciais</h3>
                                 <p class="dash-section-subtitle">A lista muda com a profissão. As primárias são as áreas em que prefere receber utentes; as secundárias são complementar. Uma área não pode estar nas duas listas.</p>
                                 <div class="clinic-pref-cols">
@@ -560,17 +572,19 @@
                                 </div>
                             </div>
                             <div id="clinicProfileFormError" class="dash-login-error" style="display:none;" role="alert"></div>
+                            <div class="clinic-profile-save-row">
                             <button type="submit" class="btn btn-primary" id="clinicProfileSaveBtn">Guardar perfil</button>
-                            <details class="clinic-saved-details" id="clinicSavedDetails" hidden>
-                                <summary class="clinic-saved-summary">Informações guardadas</summary>
-                                <dl class="clinic-profile-dl clinic-saved-dl" id="clinicSavedSummary"></dl>
-                            </details>
+                            <p class="clinic-profile-save-confirm" id="clinicProfileSaveConfirm" hidden role="status">
+                                <span class="clinic-save-toggle" aria-hidden="true"><span class="clinic-save-toggle-knob"></span></span>
+                                Alterações guardadas
+                            </p>
+                            </div>
                         </form>
                     </div>
                     <div class="dash-section">
                         <div class="dash-section-header">
                             <h2 class="dash-section-title">Documentos</h2>
-                            <p class="dash-section-subtitle">Cartão de Cidadão, cópia da cédula, CV, seguro e contrato. Visíveis para si e para a administração. Indique a validade quando o documento caduca.</p>
+                            <p class="dash-section-subtitle">Cartão de Cidadão, cópia da cédula, CV, seguro e contrato. Visíveis para si e para a administração. Pode substituir ou eliminar um ficheiro enviado. Indique a validade quando o documento caduca.</p>
                         </div>
                         <div class="admin-professionals-table-wrap">
                             <table class="admin-professionals-table clinic-docs-table" id="clinicDocsTable">
@@ -633,7 +647,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="/lon-nav.js"></script>
-    <script src="/clinic-portal/clinic.js?v=perfil-3"></script>
+    <script src="/clinic-portal/clinic.js?v=perfil-8"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">
