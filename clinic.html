@@ -16,7 +16,7 @@
     <title>Clinic Portal — Longevity Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=registo-1">
+    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=avail-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
     <meta name="description" content="Clinic portal — manage consultations and clinical records.">
     <meta name="theme-color" content="#eaf2fb">
 </head>
-<body class="lon-landing clinic-portal-page" data-clinic-build="registo-1">
+<body class="lon-landing clinic-portal-page" data-clinic-build="avail-1">
 
     <a class="lon-skip" href="#conteudo-principal">Skip to content</a>
     <header class="lon-nav" id="lonNav">
@@ -63,7 +63,7 @@
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                 </div>
                 <h1 class="dash-login-title">Clinic Portal</h1>
-                <p class="dash-login-desc">Portal registo-1 — 7 set 2026. Entre com o username do profissional.</p>
+                <p class="dash-login-desc">Portal avail-1 — 7 set 2026. Entre com o username do profissional.</p>
                 <form class="dash-login-form" id="clinicLoginForm">
                     <div class="dash-form-group">
                         <label for="clinicUsername">Username</label>
@@ -170,23 +170,52 @@
                     </div>
                     <div class="dash-section">
                         <div class="dash-section-header">
-                            <h2 class="dash-section-title">Set availability</h2>
-                            <p class="dash-section-subtitle" id="clinicTimezoneLabel">Choose weekly hours, or specific days of the month</p>
+                            <h2 class="dash-section-title">Typical week</h2>
+                            <p class="dash-section-subtitle" id="clinicTimezoneLabel">Repeats every week unless a day on the calendar has its own hours</p>
                         </div>
-                        <div class="admin-schedule-filters clinic-avail-modes" role="group" aria-label="Availability type">
-                            <button type="button" class="btn btn-outline btn-sm is-active" data-avail-mode="weekly">Weekly hours</button>
-                            <button type="button" class="btn btn-outline btn-sm" data-avail-mode="month">Day of the month</button>
-                        </div>
+                        <div class="clinic-typical-week" id="clinicWorkingHoursGrid"></div>
                     </div>
-
-                    <div id="clinicAvailWeekly">
-                        <div class="dash-section">
-                            <div class="dash-section-header">
-                                <h2 class="dash-section-title">Weekly hours</h2>
-                                <p class="dash-section-subtitle">Repeats every week for online booking</p>
-                            </div>
-                            <div class="admin-schedule-grid" id="clinicWorkingHoursGrid"></div>
+                    <div class="dash-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">This month</h2>
+                            <p class="dash-section-subtitle">Click a day to set hours. Change Start / End to update every selected day.</p>
                         </div>
+                        <div class="admin-override-cal-header">
+                            <button type="button" class="btn btn-outline btn-sm" id="clinicOverrideCalPrev" aria-label="Previous month">←</button>
+                            <span class="admin-override-cal-title" id="clinicOverrideCalMonthLabel"></span>
+                            <button type="button" class="btn btn-outline btn-sm" id="clinicOverrideCalNext" aria-label="Next month">→</button>
+                        </div>
+                        <div class="admin-override-weekdays" aria-hidden="true">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                        <div class="admin-override-cal-grid clinic-avail-cal-grid" id="clinicOverrideCalGrid"></div>
+                        <div class="admin-override-bulk clinic-avail-hours-bar">
+                            <p class="clinic-avail-hours-label">Hours for selected days</p>
+                            <div class="admin-override-bulk-row">
+                                <div class="admin-time-group admin-override-time">
+                                    <label for="clinicBulkOverrideStart">Start</label>
+                                    <input type="time" id="clinicBulkOverrideStart" class="admin-time-input" value="07:00">
+                                </div>
+                                <div class="admin-time-group admin-override-time">
+                                    <label for="clinicBulkOverrideEnd">End</label>
+                                    <input type="time" id="clinicBulkOverrideEnd" class="admin-time-input" value="17:00">
+                                </div>
+                                <label class="admin-override-open-label">
+                                    <input type="checkbox" id="clinicBulkOverrideEnabled" checked>
+                                    <span>Open</span>
+                                </label>
+                            </div>
+                            <div class="admin-override-bulk-actions">
+                                <button type="button" class="btn btn-outline btn-sm" id="clinicFillWeekdaysBtn">Fill weekdays this month</button>
+                                <button type="button" class="btn btn-outline btn-sm" id="clinicBulkOverrideRemove">Remove hours on selected</button>
+                                <button type="button" class="btn btn-outline btn-sm" id="clinicBulkOverrideClearSelection">Clear selection</button>
+                            </div>
+                        </div>
+                        <p class="admin-override-hint">Click several days to set the same hours. Grey hours come from the typical week; green hours are set on that day.</p>
+                        <div class="admin-blocked-list" id="clinicDayOverridesList"></div>
+                    </div>
+                    <details class="clinic-avail-more">
+                        <summary>More settings</summary>
                         <div class="dash-section">
                             <div class="dash-section-header">
                                 <h2 class="dash-section-title">Slot settings</h2>
@@ -211,48 +240,6 @@
                                 <strong>Off:</strong> patients see every free slot for the day.
                             </p>
                         </div>
-                    </div>
-
-                    <div id="clinicAvailMonth" hidden>
-                        <div class="dash-section">
-                            <div class="dash-section-header">
-                                <h2 class="dash-section-title">Days of the month</h2>
-                                <p class="dash-section-subtitle">Select dates and set hours. These override the weekly schedule for that day. Blocked dates still take priority.</p>
-                            </div>
-                            <div class="admin-override-cal-header">
-                                <button type="button" class="btn btn-outline btn-sm" id="clinicOverrideCalPrev" aria-label="Previous month">←</button>
-                                <span class="admin-override-cal-title" id="clinicOverrideCalMonthLabel"></span>
-                                <button type="button" class="btn btn-outline btn-sm" id="clinicOverrideCalNext" aria-label="Next month">→</button>
-                            </div>
-                            <div class="admin-override-weekdays" aria-hidden="true">
-                                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-                            </div>
-                            <div class="admin-override-cal-grid" id="clinicOverrideCalGrid"></div>
-                            <div class="admin-override-bulk">
-                                <div class="admin-override-bulk-row">
-                                    <div class="admin-time-group admin-override-time">
-                                        <label for="clinicBulkOverrideStart">Start</label>
-                                        <input type="time" id="clinicBulkOverrideStart" class="admin-time-input" value="07:00">
-                                    </div>
-                                    <div class="admin-time-group admin-override-time">
-                                        <label for="clinicBulkOverrideEnd">End</label>
-                                        <input type="time" id="clinicBulkOverrideEnd" class="admin-time-input" value="17:00">
-                                    </div>
-                                    <label class="admin-override-open-label">
-                                        <input type="checkbox" id="clinicBulkOverrideEnabled" checked>
-                                        <span>Open for bookings</span>
-                                    </label>
-                                </div>
-                                <div class="admin-override-bulk-actions">
-                                    <button type="button" class="btn btn-primary btn-sm" id="clinicBulkOverrideApply">Apply to selected days</button>
-                                    <button type="button" class="btn btn-outline btn-sm" id="clinicBulkOverrideRemove">Remove override on selected</button>
-                                    <button type="button" class="btn btn-outline btn-sm" id="clinicBulkOverrideSelectWeekdays">Weekdays this month</button>
-                                    <button type="button" class="btn btn-outline btn-sm" id="clinicBulkOverrideClearSelection">Clear selection</button>
-                                </div>
-                            </div>
-                            <p class="admin-override-hint"><strong>Tip:</strong> click days to multi-select. Orange mark = already has a custom schedule.</p>
-                            <div class="admin-blocked-list" id="clinicDayOverridesList"></div>
-                        </div>
                         <div class="dash-section">
                             <div class="dash-section-header">
                                 <h2 class="dash-section-title">Blocked dates</h2>
@@ -268,7 +255,7 @@
                                 <p class="admin-empty-list">Loading…</p>
                             </div>
                         </div>
-                    </div>
+                    </details>
                 </div>
 
                 <div class="admin-panel" id="clinicPanelBookings" data-clinic-panel-content="bookings" hidden>
@@ -658,7 +645,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="/lon-nav.js"></script>
-    <script src="/clinic-portal/clinic.js?v=registo-1"></script>
+    <script src="/clinic-portal/clinic.js?v=avail-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

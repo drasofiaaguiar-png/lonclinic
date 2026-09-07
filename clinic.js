@@ -59,8 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicWorkingHoursGrid = document.getElementById('clinicWorkingHoursGrid');
     const clinicSlotDuration = document.getElementById('clinicSlotDuration');
     const clinicSaveScheduleBtn = document.getElementById('clinicSaveScheduleBtn');
-    const clinicAvailWeekly = document.getElementById('clinicAvailWeekly');
-    const clinicAvailMonth = document.getElementById('clinicAvailMonth');
     const clinicAvailMonths = document.getElementById('clinicAvailMonths');
     const clinicAvailMonthsError = document.getElementById('clinicAvailMonthsError');
     const clinicAvailHighlightList = document.getElementById('clinicAvailHighlightList');
@@ -72,9 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicBulkOverrideStart = document.getElementById('clinicBulkOverrideStart');
     const clinicBulkOverrideEnd = document.getElementById('clinicBulkOverrideEnd');
     const clinicBulkOverrideEnabled = document.getElementById('clinicBulkOverrideEnabled');
-    const clinicBulkOverrideApply = document.getElementById('clinicBulkOverrideApply');
     const clinicBulkOverrideRemove = document.getElementById('clinicBulkOverrideRemove');
-    const clinicBulkOverrideSelectWeekdays = document.getElementById('clinicBulkOverrideSelectWeekdays');
+    const clinicFillWeekdaysBtn = document.getElementById('clinicFillWeekdaysBtn');
     const clinicBulkOverrideClearSelection = document.getElementById('clinicBulkOverrideClearSelection');
     const clinicBlockDateInput = document.getElementById('clinicBlockDateInput');
     const clinicAddBlockDateBtn = document.getElementById('clinicAddBlockDateBtn');
@@ -130,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const CLINIC_PANEL_META = {
         consultations: { title: 'Consultations', subtitle: 'Clinical notes for every consultation' },
-        availabilities: { title: 'Availabilities', subtitle: 'Weekly hours or specific days of the month' },
+        availabilities: { title: 'Availabilities', subtitle: 'Typical week and days on the calendar' },
         bookings: { title: 'Bookings', subtitle: 'Upcoming confirmed appointments' },
         patients: { title: 'Patients', subtitle: 'People attached to your consultations' },
         resources: { title: 'Resources', subtitle: 'Video room and everyday clinic links' },
@@ -158,7 +155,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const CLINIC_PAY_IRS_KEY = 'lonClinicPayIrsPct';
     const CLINIC_PAY_SS_KEY = 'lonClinicPaySsPct';
     let clinicScheduleData = null;
-    let clinicAvailMode = 'weekly';
     let clinicOverrideCalYear = null;
     let clinicOverrideCalMonth = null;
     const clinicSelectedOverrideDates = new Set();
@@ -223,8 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
             loadBookings();
         }
         if (panelId === 'availabilities') {
-            const hasDayHours = !!(clinicScheduleData && (clinicScheduleData.dayOverrides || []).some((o) => o && o.enabled !== false));
-            if (hasDayHours) setClinicAvailMode('month');
             loadScheduleView();
             loadClinicAvailabilityMonths();
         }
@@ -283,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadDoxyRoom() {
         if (!clinicDoxyRoomUrl || !clinicOpenDoxyBtn) return;
         try {
-            const res = await fetch('/api/clinic/doxy?v=registo-1', { cache: 'no-store', credentials: 'same-origin' });
+            const res = await fetch('/api/clinic/doxy?v=avail-1', { cache: 'no-store', credentials: 'same-origin' });
             if (res.status === 401) {
                 showLogin();
                 return;
@@ -433,19 +427,67 @@ document.addEventListener('DOMContentLoaded', () => {
         clinicSaveScheduleBtn.textContent = 'Save availability •';
     }
 
-    function setClinicAvailMode(mode) {
-        clinicAvailMode = mode === 'month' ? 'month' : 'weekly';
-        document.querySelectorAll('[data-avail-mode]').forEach((btn) => {
-            btn.classList.toggle('is-active', btn.getAttribute('data-avail-mode') === clinicAvailMode);
-        });
-        if (clinicAvailWeekly) clinicAvailWeekly.hidden = clinicAvailMode !== 'weekly';
-        if (clinicAvailMonth) clinicAvailMonth.hidden = clinicAvailMode !== 'month';
-        if (clinicAvailMode === 'month') {
-            ensureClinicOverrideCalInitialized();
-            renderClinicOverrideCalendar();
-            renderClinicDayOverridesList();
-            renderClinicBlockedDates();
+    function clinicHoursFromInputs() {
+        return {
+            enabled: clinicBulkOverrideEnabled ? clinicBulkOverrideEnabled.checked : true,
+            start: (clinicBulkOverrideStart && clinicBulkOverrideStart.value) || '07:00',
+            end: (clinicBulkOverrideEnd && clinicBulkOverrideEnd.value) || '17:00'
+        };
+    }
+
+    function hoursForNewClinicDay(dateStr) {
+        const week = weekdayDefaultsForClinicDate(dateStr);
+        if (week && week.enabled) {
+            return { enabled: true, start: week.start || '07:00', end: week.end || '17:00' };
         }
+        return clinicHoursFromInputs();
+    }
+
+    function renderClinicWorkingHours() {
+        if (!clinicWorkingHoursGrid || !clinicScheduleData) return;
+        const short = {
+            monday: 'Mon',
+            tuesday: 'Tue',
+            wednesday: 'Wed',
+            thursday: 'Thu',
+            friday: 'Fri',
+            saturday: 'Sat',
+            sunday: 'Sun'
+        };
+        clinicWorkingHoursGrid.innerHTML = '';
+        WEEKDAYS.forEach(([day, label]) => {
+            const dayData = clinicScheduleData.workingHours[day] || { enabled: false, start: '07:00', end: '17:00' };
+            const card = document.createElement('div');
+            card.className = 'clinic-typical-day' + (dayData.enabled ? '' : ' is-off');
+            card.innerHTML = `
+                <label class="clinic-typical-day-toggle">
+                    <input type="checkbox" ${dayData.enabled ? 'checked' : ''} data-day="${day}" aria-label="${label}">
+                    <span>${short[day]}</span>
+                </label>
+                <input type="time" value="${dayData.start}" data-day="${day}" data-type="start" class="admin-time-input" ${dayData.enabled ? '' : 'disabled'} aria-label="${label} start">
+                <input type="time" value="${dayData.end}" data-day="${day}" data-type="end" class="admin-time-input" ${dayData.enabled ? '' : 'disabled'} aria-label="${label} end">
+            `;
+            clinicWorkingHoursGrid.appendChild(card);
+            const toggle = card.querySelector('input[type="checkbox"]');
+            const timeInputs = card.querySelectorAll('input[type="time"]');
+            toggle.addEventListener('change', (e) => {
+                const on = e.target.checked;
+                card.classList.toggle('is-off', !on);
+                timeInputs.forEach((inp) => { inp.disabled = !on; });
+                markClinicScheduleDirty();
+                updateClinicWorkingHoursInModel();
+                renderClinicOverrideCalendar();
+                renderClinicAvailHighlight();
+            });
+            timeInputs.forEach((inp) => {
+                inp.addEventListener('change', () => {
+                    markClinicScheduleDirty();
+                    updateClinicWorkingHoursInModel();
+                    renderClinicOverrideCalendar();
+                    renderClinicAvailHighlight();
+                });
+            });
+        });
     }
 
     function renderClinicAvailabilityMonths(months) {
@@ -556,55 +598,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function renderClinicWorkingHours() {
-        if (!clinicWorkingHoursGrid || !clinicScheduleData) return;
-        clinicWorkingHoursGrid.innerHTML = '';
-        WEEKDAYS.forEach(([day, label]) => {
-            const dayData = clinicScheduleData.workingHours[day] || { enabled: false, start: '07:00', end: '17:00' };
-            const dayCard = document.createElement('div');
-            dayCard.className = 'admin-day-card';
-            dayCard.innerHTML = `
-                <div class="admin-day-header">
-                    <label class="admin-day-toggle">
-                        <input type="checkbox" ${dayData.enabled ? 'checked' : ''} data-day="${day}">
-                        <span class="admin-day-label">${label}</span>
-                    </label>
-                </div>
-                <div class="admin-day-times" ${!dayData.enabled ? 'style="opacity:0.5;pointer-events:none;"' : ''}>
-                    <div class="admin-time-group">
-                        <label>Start</label>
-                        <input type="time" value="${dayData.start}" data-day="${day}" data-type="start" class="admin-time-input">
-                    </div>
-                    <div class="admin-time-group">
-                        <label>End</label>
-                        <input type="time" value="${dayData.end}" data-day="${day}" data-type="end" class="admin-time-input">
-                    </div>
-                </div>
-            `;
-            clinicWorkingHoursGrid.appendChild(dayCard);
-            const toggle = dayCard.querySelector('input[type="checkbox"]');
-            toggle.addEventListener('change', (e) => {
-                const timesDiv = dayCard.querySelector('.admin-day-times');
-                timesDiv.style.opacity = e.target.checked ? '1' : '0.5';
-                timesDiv.style.pointerEvents = e.target.checked ? 'auto' : 'none';
-                markClinicScheduleDirty();
-                updateClinicWorkingHoursInModel();
-            });
-            dayCard.querySelectorAll('input[type="time"]').forEach((inp) => {
-                inp.addEventListener('change', () => {
-                    markClinicScheduleDirty();
-                    updateClinicWorkingHoursInModel();
-                });
-            });
-        });
-    }
-
     function renderClinicDayOverridesList() {
         renderClinicAvailHighlight();
         if (!clinicDayOverridesList || !clinicScheduleData) return;
         const list = clinicScheduleData.dayOverrides || [];
         if (list.length === 0) {
-            clinicDayOverridesList.innerHTML = '<p class="admin-empty-list">No per-day hours yet</p>';
+            clinicDayOverridesList.innerHTML = '<p class="admin-empty-list">No day-specific hours yet. Grey times follow the typical week.</p>';
             return;
         }
         clinicDayOverridesList.innerHTML = '';
@@ -644,6 +643,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const today0 = clinicStartOfToday();
         clinicOverrideCalGrid.innerHTML = '';
         const overrideMap = new Map((clinicScheduleData.dayOverrides || []).map((o) => [o.date, o]));
+        const blockedSet = new Set(clinicScheduleData.blockedDates || []);
         for (let i = 0; i < startDay; i++) {
             const empty = document.createElement('div');
             empty.className = 'admin-override-cal-empty';
@@ -661,19 +661,43 @@ document.addEventListener('DOMContentLoaded', () => {
             num.textContent = String(d);
             btn.appendChild(num);
             const ov = overrideMap.get(dateKey);
-            if (ov) {
+            const week = weekdayDefaultsForClinicDate(dateKey);
+            if (blockedSet.has(dateKey)) {
                 const label = document.createElement('span');
-                label.className = 'admin-override-day-hours' + (ov.enabled ? '' : ' is-closed');
-                label.textContent = ov.enabled ? `${ov.start.slice(0, 5)}–${ov.end.slice(0, 5)}` : 'Closed';
+                label.className = 'admin-override-day-hours is-closed';
+                label.textContent = 'Blocked';
                 btn.appendChild(label);
                 btn.classList.add('admin-override-has-rule');
+            } else if (ov) {
+                const label = document.createElement('span');
+                label.className = 'admin-override-day-hours' + (ov.enabled ? '' : ' is-closed');
+                label.textContent = ov.enabled ? `${String(ov.start).slice(0, 5)}–${String(ov.end).slice(0, 5)}` : 'Closed';
+                btn.appendChild(label);
+                btn.classList.add('admin-override-has-rule');
+            } else if (week && week.enabled) {
+                const label = document.createElement('span');
+                label.className = 'admin-override-day-hours is-template';
+                label.textContent = `${String(week.start).slice(0, 5)}–${String(week.end).slice(0, 5)}`;
+                btn.appendChild(label);
             }
             if (dateObj < today0) {
                 btn.disabled = true;
             } else {
                 btn.addEventListener('click', () => {
-                    if (clinicSelectedOverrideDates.has(dateKey)) clinicSelectedOverrideDates.delete(dateKey);
-                    else clinicSelectedOverrideDates.add(dateKey);
+                    if (clinicSelectedOverrideDates.has(dateKey)) {
+                        clinicSelectedOverrideDates.delete(dateKey);
+                    } else {
+                        clinicSelectedOverrideDates.add(dateKey);
+                        const existing = (clinicScheduleData.dayOverrides || []).find((o) => o.date === dateKey);
+                        if (!existing) {
+                            applyClinicOverrideToDates([dateKey], {
+                                clearSelection: false,
+                                hours: hoursForNewClinicDay(dateKey)
+                            });
+                            syncClinicBulkInputsToSelection();
+                            return;
+                        }
+                    }
                     renderClinicOverrideCalendar();
                     syncClinicBulkInputsToSelection();
                 });
@@ -711,16 +735,18 @@ document.addEventListener('DOMContentLoaded', () => {
             item.querySelector('.admin-remove-btn').addEventListener('click', () => {
                 clinicScheduleData.blockedDates = clinicScheduleData.blockedDates.filter((d) => d !== date);
                 renderClinicBlockedDates();
+                renderClinicOverrideCalendar();
                 markClinicScheduleDirty();
             });
         });
     }
 
-    function applyClinicOverrideToDates(dates, { clearSelection = true } = {}) {
+    function applyClinicOverrideToDates(dates, { clearSelection = true, hours } = {}) {
         if (!clinicScheduleData || !dates || dates.length === 0) return;
-        const start = clinicBulkOverrideStart && clinicBulkOverrideStart.value ? clinicBulkOverrideStart.value : '07:00';
-        const end = clinicBulkOverrideEnd && clinicBulkOverrideEnd.value ? clinicBulkOverrideEnd.value : '17:00';
-        const enabled = clinicBulkOverrideEnabled ? clinicBulkOverrideEnabled.checked : true;
+        const source = hours || clinicHoursFromInputs();
+        const start = source.start || '07:00';
+        const end = source.end || '17:00';
+        const enabled = source.enabled !== false;
         const map = new Map((clinicScheduleData.dayOverrides || []).map((o) => [o.date, { ...o }]));
         for (const dateStr of dates) {
             map.set(dateStr, { date: dateStr, enabled, start, end });
@@ -730,6 +756,33 @@ document.addEventListener('DOMContentLoaded', () => {
         renderClinicOverrideCalendar();
         renderClinicDayOverridesList();
         markClinicScheduleDirty();
+    }
+
+    function fillClinicWeekdaysThisMonth() {
+        if (!clinicScheduleData) return;
+        ensureClinicOverrideCalInitialized();
+        const y = clinicOverrideCalYear;
+        const m = clinicOverrideCalMonth;
+        const dim = new Date(y, m + 1, 0).getDate();
+        const today0 = clinicStartOfToday();
+        const map = new Map((clinicScheduleData.dayOverrides || []).map((o) => [o.date, { ...o }]));
+        clinicSelectedOverrideDates.clear();
+        for (let d = 1; d <= dim; d++) {
+            const dateObj = new Date(y, m, d);
+            dateObj.setHours(0, 0, 0, 0);
+            const dow = dateObj.getDay();
+            if (dow < 1 || dow > 5 || dateObj < today0) continue;
+            const dateStr = formatClinicOverrideDateKey(y, m, d);
+            const week = weekdayDefaultsForClinicDate(dateStr);
+            if (!week.enabled) continue;
+            map.set(dateStr, { date: dateStr, enabled: true, start: week.start, end: week.end });
+            clinicSelectedOverrideDates.add(dateStr);
+        }
+        clinicScheduleData.dayOverrides = Array.from(map.values()).sort((a, b) => a.date.localeCompare(b.date));
+        renderClinicOverrideCalendar();
+        renderClinicDayOverridesList();
+        markClinicScheduleDirty();
+        syncClinicBulkInputsToSelection();
     }
 
     async function loadScheduleView() {
@@ -748,7 +801,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             const tz = clinicScheduleData.timezone;
             if (clinicTimezoneLabel) {
-                clinicTimezoneLabel.textContent = `Choose weekly hours, or specific days of the month · ${tz}`;
+                clinicTimezoneLabel.textContent = `Repeats every week unless a day on the calendar has its own hours · ${tz}`;
             }
             if (clinicSlotDuration) clinicSlotDuration.value = String(clinicScheduleData.slotDuration || 30);
             if (smartSlotGroupingToggle) {
@@ -762,10 +815,12 @@ document.addEventListener('DOMContentLoaded', () => {
             renderClinicOverrideCalendar();
             renderClinicDayOverridesList();
             renderClinicBlockedDates();
-            if ((clinicScheduleData.dayOverrides || []).some((o) => o && o.enabled !== false)) {
-                setClinicAvailMode('month');
-            } else {
-                setClinicAvailMode(clinicAvailMode);
+            const seedDay = WEEKDAYS.find(([day]) => clinicScheduleData.workingHours[day] && clinicScheduleData.workingHours[day].enabled);
+            if (seedDay) {
+                const seed = clinicScheduleData.workingHours[seedDay[0]];
+                if (clinicBulkOverrideStart) clinicBulkOverrideStart.value = seed.start || '07:00';
+                if (clinicBulkOverrideEnd) clinicBulkOverrideEnd.value = seed.end || '17:00';
+                if (clinicBulkOverrideEnabled) clinicBulkOverrideEnabled.checked = true;
             }
             if (clinicSaveScheduleBtn) {
                 clinicSaveScheduleBtn.classList.remove('admin-save-dirty');
@@ -778,10 +833,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-
-    document.querySelectorAll('[data-avail-mode]').forEach((btn) => {
-        btn.addEventListener('click', () => setClinicAvailMode(btn.getAttribute('data-avail-mode')));
-    });
 
     if (clinicSlotDuration) {
         clinicSlotDuration.addEventListener('change', () => {
@@ -822,29 +873,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (clinicBulkOverrideApply) {
-        clinicBulkOverrideApply.addEventListener('click', () => {
-            if (!clinicScheduleData) return;
-            if (clinicSelectedOverrideDates.size === 0) {
-                alert('Select at least one future day in the calendar.');
-                return;
-            }
-            applyClinicOverrideToDates(Array.from(clinicSelectedOverrideDates));
+    if (clinicFillWeekdaysBtn) {
+        clinicFillWeekdaysBtn.addEventListener('click', () => {
+            fillClinicWeekdaysThisMonth();
         });
     }
     [clinicBulkOverrideStart, clinicBulkOverrideEnd, clinicBulkOverrideEnabled].forEach((el) => {
         if (!el) return;
         el.addEventListener('change', () => {
-            if (clinicSelectedOverrideDates.size === 1) {
-                applyClinicOverrideToDates(Array.from(clinicSelectedOverrideDates), { clearSelection: false });
-            }
+            if (!clinicScheduleData || clinicSelectedOverrideDates.size === 0) return;
+            applyClinicOverrideToDates(Array.from(clinicSelectedOverrideDates), { clearSelection: false });
         });
     });
     if (clinicBulkOverrideRemove) {
         clinicBulkOverrideRemove.addEventListener('click', () => {
             if (!clinicScheduleData) return;
             if (clinicSelectedOverrideDates.size === 0) {
-                alert('Select days to remove overrides from.');
+                alert('Select days to remove hours from.');
                 return;
             }
             for (const dateStr of clinicSelectedOverrideDates) {
@@ -854,24 +899,6 @@ document.addEventListener('DOMContentLoaded', () => {
             renderClinicOverrideCalendar();
             renderClinicDayOverridesList();
             markClinicScheduleDirty();
-        });
-    }
-    if (clinicBulkOverrideSelectWeekdays) {
-        clinicBulkOverrideSelectWeekdays.addEventListener('click', () => {
-            ensureClinicOverrideCalInitialized();
-            const y = clinicOverrideCalYear;
-            const m = clinicOverrideCalMonth;
-            const dim = new Date(y, m + 1, 0).getDate();
-            const today0 = clinicStartOfToday();
-            for (let d = 1; d <= dim; d++) {
-                const dateObj = new Date(y, m, d);
-                dateObj.setHours(0, 0, 0, 0);
-                const dow = dateObj.getDay();
-                if (dow >= 1 && dow <= 5 && dateObj >= today0) {
-                    clinicSelectedOverrideDates.add(formatClinicOverrideDateKey(y, m, d));
-                }
-            }
-            renderClinicOverrideCalendar();
         });
     }
     if (clinicBulkOverrideClearSelection) {
@@ -888,6 +915,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!clinicScheduleData.blockedDates.includes(date)) {
                 clinicScheduleData.blockedDates.push(date);
                 renderClinicBlockedDates();
+                renderClinicOverrideCalendar();
                 markClinicScheduleDirty();
             }
             clinicBlockDateInput.value = '';

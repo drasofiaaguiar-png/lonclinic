@@ -1658,6 +1658,114 @@ body.dash-portal .dash-stat-card {
     color: var(--text-primary);
 }
 
+.clinic-typical-week {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(92px, 1fr));
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.clinic-typical-day {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px 8px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    background: var(--bg-card);
+    min-width: 0;
+}
+
+.clinic-typical-day.is-off {
+    opacity: 0.55;
+}
+
+.clinic-typical-day-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    user-select: none;
+}
+
+.clinic-typical-day-toggle input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+}
+
+.clinic-typical-day .admin-time-input {
+    width: 100%;
+    min-width: 0;
+    font-size: 0.75rem;
+}
+
+.clinic-avail-hours-bar {
+    max-width: 560px;
+}
+
+.clinic-avail-hours-label {
+    margin: 0 0 10px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+#clinicPanelAvailabilities .admin-override-weekdays,
+#clinicPanelAvailabilities .admin-override-cal-grid {
+    max-width: 560px;
+}
+
+.admin-override-day-hours.is-template {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.clinic-avail-more {
+    margin: 4px 0 28px;
+    padding: 14px 18px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    background: var(--bg-card);
+}
+
+.clinic-avail-more > summary {
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+}
+
+.clinic-avail-more > summary::-webkit-details-marker,
+.clinic-avail-more > summary::marker {
+    display: none;
+    content: '';
+}
+
+.clinic-avail-more > summary::after {
+    content: '';
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    margin-left: 10px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    vertical-align: 2px;
+}
+
+.clinic-avail-more[open] > summary::after {
+    transform: rotate(-135deg);
+    vertical-align: -1px;
+}
+
+.clinic-avail-more .dash-section {
+    margin-top: 16px;
+}
+
 .clinic-iban-form .admin-form-group {
     margin: 0;
 }

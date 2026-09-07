@@ -16,8 +16,8 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = 'registo-1';
-const CLINIC_PORTAL_PATH = '/clinic-desk/registo';
+const CLINIC_PORTAL_BUILD = 'avail-1';
+const CLINIC_PORTAL_PATH = '/clinic-desk/avail';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
 const bcrypt = require('bcrypt');
@@ -673,7 +673,7 @@ async function serveClinicPortalHtml(res) {
             .replace(/src="\/clinic-portal\/clinic\.js\?v=[^"]+"/g, `src="${clinicPortalAssetUrl('clinic.js')}"`)
             .replace(/data-clinic-build="[^"]+"/, `data-clinic-build="${CLINIC_PORTAL_BUILD}"`)
             .replace(
-                /Portal (?:now-7set|live-1058|registo-1) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
+                /Portal (?:now-7set|live-1058|registo-1|avail-1) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
                 `Portal ${CLINIC_PORTAL_BUILD} — 7 set 2026. Entre com o username do profissional.`
             )
             .replace(
@@ -7275,6 +7275,10 @@ app.get('/api/clinic/assets/:file', (req, res, next) => {
     }, (err) => {
         if (err) next();
     });
+});
+
+app.get('/clinic-desk/avail', (req, res) => {
+    serveClinicPortalHtml(res);
 });
 
 app.get('/clinic-desk/registo', (req, res) => {
