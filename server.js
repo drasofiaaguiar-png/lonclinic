@@ -799,7 +799,9 @@ const STAFF_AREA_ALIASES = {
     'Relações de casal': 'Relacionamentos',
     'Emagrecimento': 'Perda de peso',
     'Nutrição desportiva': 'Nutrição desportiva lúdica',
-    'Psicologia da saúde': 'Ajustamento a doença crónica'
+    'Psicologia da saúde': 'Ajustamento a doença crónica',
+    'Perturbações do desenvolvimento': 'Neurodesenvolvimento no adulto (autismo, PHDA, etc.) — acompanhamento',
+    'Desenvolvimento pessoal': 'Transições de vida / questões existenciais e de identidade'
 };
 
 function allKnownClinicalAreas() {
@@ -1885,11 +1887,13 @@ async function bootstrapPersistence() {
         }
         await persistScheduleStore();
         await ensureProfessionalDoxyRooms();
+        await ensureKnownBolsaApplications();
         return;
     }
     scheduleStore = loadScheduleStore();
     persistScheduleStoreToFile();
     await ensureProfessionalDoxyRooms();
+    await ensureKnownBolsaApplications();
 }
 
 /* ========================================
@@ -10517,29 +10521,244 @@ async function enrichPsychologistApplication(app) {
     };
 }
 
+const KNOWN_BOLSA_APPLICATIONS = [
+    {
+        usernames: ['sofia.magalhaes', 'sofia.pinto.magalhaes', 'sofia.pinto.de.magalhaes'],
+        application: {
+            id: '8f3c1a2b-4d5e-4a6f-9b0c-1d2e3f4a5b6c',
+            name: 'Sofia Magalhães',
+            email: 'sofiamagalhaes.p2@gmail.com',
+            phone: '+351916524597',
+            score: 0,
+            scoreBand: 'shortlist',
+            eligible: true,
+            eliminationReasons: [],
+            cvFilename: 'CV_Sofia Pinto de Magalhães_26 (1).pdf',
+            status: 'aceite',
+            cedulaOpp: '25873',
+            grauAcademico: 'Licenciatura + Mestrado em Psicologia',
+            anosClinica: '6–10 anos',
+            anosIndividuais: '6–10 anos',
+            experienciaOnline: 'Sim, atualmente',
+            areasClinicas: [
+                'Ansiedade',
+                'Depressão',
+                'Stress / burnout',
+                'Autoestima',
+                'Relações interpessoais',
+                'Relações de casal',
+                'Gestão emocional',
+                'Desenvolvimento pessoal',
+                'Parentalidade',
+                'Psicologia da saúde',
+                'Perturbações do desenvolvimento'
+            ],
+            populacoes: ['Adultos', 'Jovens adultos'],
+            idiomas: ['Português', 'Inglês'],
+            modelos: ['Cognitivo-comportamental', 'Integrativa'],
+            diasSemana: ['Quarta-feira'],
+            horasIniciais: '2 horas',
+            horariosFixos: '20h-22h',
+            disponibilidadeEstavel: 'Sim',
+            bolsaAutorizacao: 'Sim',
+            payload: {
+                nome: 'Sofia Magalhães',
+                email: 'sofiamagalhaes.p2@gmail.com',
+                telefone: '+351916524597',
+                localidade: 'Cruz Quebrada, Oeiras',
+                pais: 'Portugal',
+                opp_inscrito: 'Sim',
+                cedula_opp: '25873',
+                grau_academico: 'Licenciatura + Mestrado em Psicologia',
+                formacao_complementar: 'Especialização avançada em terapia familiar e de casal',
+                anos_clinica: '6–10 anos',
+                anos_individuais: '6–10 anos',
+                experiencia_online: 'Sim, atualmente',
+                n_consultas_online: '50–100',
+                areas_clinicas: [
+                    'Ansiedade',
+                    'Depressão',
+                    'Stress / burnout',
+                    'Autoestima',
+                    'Relações interpessoais',
+                    'Relações de casal',
+                    'Gestão emocional',
+                    'Desenvolvimento pessoal',
+                    'Parentalidade',
+                    'Psicologia da saúde',
+                    'Outro'
+                ],
+                areas_outro: 'Perturbações do desenvolvimento',
+                populacoes: ['Adultos', 'Jovens adultos'],
+                tipos_casos: 'Dificuldades relacionais e emocionais; dificuldades no papel parental/ treino parental; perturbações de ansiedade e depressivas; perturbação do espectro do autismo; perturbação de hiperatividade e défice de atenção .',
+                horas_iniciais: '2 horas',
+                dias_semana: ['Quarta-feira'],
+                horarios_fixos: '20h-22h',
+                disponibilidade_estavel: 'Sim',
+                aumento_futuro: 'Sim, a curto prazo',
+                horas_aumento: '5–8 horas',
+                aceita_condicoes: 'Sim',
+                abordagem_terapeutica: 'Essência humanística mas Base cognitivo comportamentamental',
+                modelos: ['Cognitivo-comportamental', 'Integrativa'],
+                idiomas: ['Português', 'Inglês'],
+                videoconferencia: 'Sim',
+                atividade_profissional: 'Sim',
+                rc_profissional: 'Sim',
+                limitacoes: '',
+                entrevista_disponibilidade: 'Sim',
+                periodos_entrevista: 'Sábados no período da manhã',
+                bolsa_autorizacao: 'Sim',
+                linkedin: '',
+                recebido_em: '03/09/2026, 19:18:55'
+            }
+        }
+    }
+];
+
+function knownBolsaApplicationForStaff(username, professional) {
+    const u = String(username || '').trim().toLowerCase();
+    const email = String((professional && professional.email) || '').trim().toLowerCase();
+    const display = String((professional && professional.displayName) || '').trim().toLowerCase();
+    const row = KNOWN_BOLSA_APPLICATIONS.find((item) => {
+        if (u && (item.usernames || []).includes(u)) return true;
+        if (email && String(item.application.email || '').toLowerCase() === email) return true;
+        const seedName = String(item.application.name || '').trim().toLowerCase();
+        if (display && seedName && display === seedName) return true;
+        if (u && usernameFromDisplayName(item.application.name) === u) return true;
+        return false;
+    });
+    return row ? row.application : null;
+}
+
+function isEmptyBolsaValue(value) {
+    if (value == null) return true;
+    if (Array.isArray(value)) return !value.length;
+    if (typeof value === 'object') return !Object.keys(value).length;
+    return String(value).trim() === '';
+}
+
+function mergeKnownBolsaApplication(app, username, professional) {
+    let seed = knownBolsaApplicationForStaff(username, professional);
+    if (!seed && app && app.email) {
+        const email = String(app.email || '').trim().toLowerCase();
+        const row = KNOWN_BOLSA_APPLICATIONS.find(
+            (item) => String(item.application.email || '').toLowerCase() === email
+        );
+        if (row) seed = row.application;
+    }
+    if (!seed) return app || null;
+    if (!app) return seed;
+    const existingPayload = app.payload && typeof app.payload === 'object' ? app.payload : {};
+    const seedPayload = seed.payload && typeof seed.payload === 'object' ? seed.payload : {};
+    const payload = { ...seedPayload };
+    for (const [key, value] of Object.entries(existingPayload)) {
+        if (!isEmptyBolsaValue(value)) payload[key] = value;
+    }
+    return {
+        ...seed,
+        ...app,
+        payload,
+        name: firstNonEmpty(app.name, seed.name),
+        email: firstNonEmpty(app.email, seed.email),
+        phone: firstNonEmpty(app.phone, seed.phone),
+        cvFilename: firstNonEmpty(app.cvFilename, seed.cvFilename),
+        cedulaOpp: firstNonEmpty(app.cedulaOpp, seed.cedulaOpp),
+        grauAcademico: firstNonEmpty(app.grauAcademico, seed.grauAcademico),
+        anosClinica: firstNonEmpty(app.anosClinica, seed.anosClinica),
+        anosIndividuais: firstNonEmpty(app.anosIndividuais, seed.anosIndividuais),
+        experienciaOnline: firstNonEmpty(app.experienciaOnline, seed.experienciaOnline)
+    };
+}
+
 async function findBolsaApplicationForStaff(username, professional) {
     const pro = professional || (await findProfessionalByUsernameInternal(username));
     const fromStore = (predicate) => (psychologistApplicationsStore || []).find(predicate) || null;
     if (pro && pro.id) {
         if (usePersistentDb) {
             const byId = await db.findPsychologistApplicationByProfessionalId(pro.id);
-            if (byId) return byId;
+            if (byId) return mergeKnownBolsaApplication(byId, username, pro);
         } else {
             const byId = fromStore((a) => Number(a.professionalId) === Number(pro.id));
-            if (byId) return byId;
+            if (byId) return mergeKnownBolsaApplication(byId, username, pro);
         }
     }
-    const email = String((pro && pro.email) || '').trim().toLowerCase();
-    if (email) {
+    const emails = [
+        String((pro && pro.email) || '').trim().toLowerCase(),
+        String((knownBolsaApplicationForStaff(username, pro) || {}).email || '').trim().toLowerCase()
+    ].filter((e) => e && e.includes('@'));
+    for (const email of [...new Set(emails)]) {
         if (usePersistentDb) {
             const byEmail = await db.findPsychologistApplicationByEmail(email);
-            if (byEmail) return byEmail;
+            if (byEmail) return mergeKnownBolsaApplication(byEmail, username, pro);
         } else {
             const byEmail = fromStore((a) => String(a.email || '').trim().toLowerCase() === email);
-            if (byEmail) return byEmail;
+            if (byEmail) return mergeKnownBolsaApplication(byEmail, username, pro);
         }
     }
-    return null;
+    const u = String(username || '').trim().toLowerCase();
+    if (u) {
+        const list = usePersistentDb
+            ? await listPsychologistApplicationsInternal({ limit: 300 })
+            : psychologistApplicationsStore.slice();
+        const byName = (list || []).find((a) => usernameFromDisplayName(a.name || '') === u);
+        if (byName) return mergeKnownBolsaApplication(byName, username, pro);
+    }
+    return mergeKnownBolsaApplication(null, username, pro);
+}
+
+async function ensureKnownBolsaApplications() {
+    for (const item of KNOWN_BOLSA_APPLICATIONS) {
+        const seed = item.application;
+        try {
+            let app = null;
+            if (usePersistentDb) {
+                app = await db.findPsychologistApplicationByEmail(seed.email);
+                if (!app) {
+                    try {
+                        app = await db.insertPsychologistApplication(seed);
+                    } catch (err) {
+                        console.error('ensureKnownBolsaApplications insert:', err.message);
+                        app = await db.findPsychologistApplicationByEmail(seed.email);
+                    }
+                }
+            } else {
+                app = psychologistApplicationsStore.find(
+                    (a) => String(a.email || '').trim().toLowerCase() === seed.email
+                ) || null;
+                if (!app) {
+                    psychologistApplicationsStore.unshift({
+                        ...seed,
+                        createdAt: '2026-09-03T18:18:55.000Z',
+                        updatedAt: new Date().toISOString()
+                    });
+                    app = psychologistApplicationsStore[0];
+                }
+            }
+            let pro = null;
+            for (const uname of item.usernames || []) {
+                pro = await findProfessionalByUsernameInternal(uname);
+                if (pro) break;
+            }
+            if (!pro) pro = await findProfessionalByEmailInternal(seed.email);
+            if (!pro) pro = await findProfessionalByDisplayNameInternal(seed.name);
+            const targetUsername = (pro && pro.username) || (item.usernames && item.usernames[0]) || '';
+            if (pro && app && !app.professionalId) {
+                await setApplicationProfessionalIdInternal(app.id, pro.id);
+            }
+            if (pro && !pro.email) {
+                if (usePersistentDb) await db.updateProfessional(pro.id, { email: seed.email });
+                else pro.email = seed.email;
+            }
+            if (targetUsername) {
+                await seedPsychologistStaffProfile(
+                    pro || { username: targetUsername, displayName: seed.name },
+                    mergeKnownBolsaApplication(app, targetUsername, pro) || seed
+                );
+            }
+        } catch (err) {
+            console.error('ensureKnownBolsaApplications:', err.message);
+        }
+    }
 }
 
 function joinBolsaList(value) {
@@ -10578,7 +10797,13 @@ function publicBolsaProfile(app) {
         ['Anos em consultas individuais', p.anos_individuais || app.anosIndividuais],
         ['Experiência em consultas online', p.experiencia_online || app.experienciaOnline],
         ['N.º de consultas online', p.n_consultas_online],
-        ['Áreas de maior experiência', p.areas_clinicas || app.areasClinicas],
+        ['Áreas de maior experiência', (() => {
+            const raw = Array.isArray(p.areas_clinicas) ? p.areas_clinicas.slice() : [];
+            const extra = String(p.areas_outro || '').trim();
+            const cleaned = raw.map((item) => (item === 'Outro' && extra ? extra : item)).filter(Boolean);
+            if (extra && !cleaned.includes(extra)) cleaned.push(extra);
+            return cleaned.length ? cleaned : (app.areasClinicas || []);
+        })()],
         ['Populações', p.populacoes || app.populacoes],
         ['Casos que prefere acompanhar', p.tipos_casos]
     ]);
@@ -10596,11 +10821,19 @@ function publicBolsaProfile(app) {
         ['Idiomas', p.idiomas || app.idiomas],
         ['Videoconferência', p.videoconferencia]
     ]);
-    pushGroup(groups, 'Administrativo', [
+    pushGroup(groups, 'Condições e disponibilidade extra', [
+        ['Aceita as condições da colaboração', p.aceita_condicoes],
         ['Atividade profissional aberta', p.atividade_profissional],
         ['Seguro de responsabilidade civil', p.rc_profissional],
         ['Limitações relevantes', p.limitacoes],
-        ['LinkedIn / website', p.linkedin]
+        ['Disponibilidade para entrevista online', p.entrevista_disponibilidade],
+        ['Períodos para entrevista', p.periodos_entrevista],
+        ['Autorização bolsa / contactos futuros', p.bolsa_autorizacao || app.bolsaAutorizacao]
+    ]);
+    pushGroup(groups, 'CV e contactos extra', [
+        ['CV enviado', app.cvFilename],
+        ['LinkedIn / website', p.linkedin],
+        ['Recebido em', p.recebido_em]
     ]);
     return {
         id: app.id,
@@ -10624,7 +10857,8 @@ function areasFromBolsaApplication(app) {
     const out = raw.map((item) => String(item || '').trim()).filter((item) => item && item !== 'Outro');
     const extra = String(p.areas_outro || '').trim();
     if (extra) out.push(extra);
-    return out;
+    const allowed = new Set(flattenClinicalAreaItems('psicologo'));
+    return sanitizeStaffAreas('psicologo', out).filter((item) => allowed.has(item));
 }
 
 function credentialsFromBolsaApplication(app) {
