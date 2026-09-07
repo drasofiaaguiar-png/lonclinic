@@ -1256,6 +1256,18 @@ body.dash-portal .dash-stat-card {
     margin: 0;
 }
 
+.clinic-profile-meta {
+    margin-top: 20px;
+    max-width: none;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 720px) {
+    .clinic-profile-meta {
+        grid-template-columns: 1fr;
+    }
+}
+
 .clinic-photo-row {
     display: flex;
     align-items: center;
@@ -1352,7 +1364,7 @@ body.dash-portal .dash-stat-card {
 
 .clinic-bio-creds-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 16px;
 }
 
@@ -1569,10 +1581,14 @@ body.dash-portal .dash-stat-card {
 
 .clinic-saved-dl {
     margin-top: 12px;
+    max-width: none;
 }
 
 @media (max-width: 900px) {
     .clinic-pref-cols {
+        grid-template-columns: 1fr;
+    }
+    .clinic-bio-creds-grid {
         grid-template-columns: 1fr;
     }
 }

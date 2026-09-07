@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         professionals: { title: 'Professionals & Doxy', subtitle: 'Logins, Doxy rooms and professional profile files' },
         psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' },
         producers: { title: 'Diretório produtores', subtitle: 'Moderar candidaturas de produtores biológicos' },
-        profile: { title: 'Profile', subtitle: 'Identificação, cédula, seguro, áreas e documentos' }
+        profile: { title: 'Perfil', subtitle: 'Identificação, dados profissionais, documentos e candidatura' }
     };
     let activeAdminPanel = 'schedule';
     let scheduleFilter = 'all';
@@ -3643,60 +3643,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         `).join('');
     }
 
-    function ensureBolsaProfileMount(panelId, wrapId, bodyId) {
-        let wrap = document.getElementById(wrapId);
-        let body = document.getElementById(bodyId);
-        if (wrap && body) {
-            wrap.hidden = false;
-            wrap.classList.add('clinic-bolsa-banner');
-            return { wrap, body };
-        }
-        const panel = document.getElementById(panelId);
-        if (!panel) return { wrap: null, body: null };
-        wrap = document.createElement('div');
-        wrap.className = 'dash-section clinic-bolsa-banner';
-        wrap.id = wrapId;
-        wrap.innerHTML = `
-            <details class="clinic-registo-details" open>
-                <summary class="clinic-registo-summary">
-                    <span>
-                        <h2 class="dash-section-title">Dados de Registo</h2>
-                        <p class="dash-section-subtitle">Respostas da candidatura — clique para abrir</p>
-                    </span>
-                </summary>
-                <div class="clinic-registo-body">
-                    <div id="${bodyId}" class="clinic-bolsa-profile"></div>
-                </div>
-            </details>
-        `;
-        panel.insertBefore(wrap, panel.firstElementChild);
-        body = document.getElementById(bodyId);
-        return { wrap, body };
-    }
-
-    function adminCvDocument() {
-        return (adminProfileMeta.documents || []).find((d) => d && d.kind === 'cv') || null;
-    }
-
-    function renderAdminRegistoCv(bolsa) {
-        const status = document.getElementById('adminRegistoCvStatus');
-        const btn = document.getElementById('adminRegistoCvBtn');
-        const doc = adminCvDocument();
-        const bits = [];
-        if (doc) {
-            bits.push(`CV no perfil: <a class="clinic-doc-link" href="/api/clinic/profile/documents/${encodeURIComponent(doc.id)}">${escapeHtml(doc.originalName || 'CV')}</a>`);
-        }
-        if (bolsa && bolsa.cvFilename && (!doc || String(bolsa.cvFilename) !== doc.originalName)) {
-            bits.push(`CV da candidatura: ${escapeHtml(bolsa.cvFilename)}`);
-        }
-        if (status) {
-            status.innerHTML = bits.length
-                ? bits.join('<br>')
-                : 'Pode enviar o CV aqui (PDF, DOC ou DOCX · máx. 25MB).';
-        }
-        if (btn) btn.textContent = doc ? 'Substituir CV' : 'Enviar CV';
-    }
-
     function showAdminSavedProfileSummary(payload) {
         const wrap = document.getElementById('adminSavedDetails');
         const list = document.getElementById('adminSavedSummary');
@@ -3705,7 +3651,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const rows = [
             ['Nome', payload.fullName],
             ['Email', payload.email],
-            ['Role', professionLabels[payload.profession] || payload.profession],
+            ['Profissão', professionLabels[payload.profession] || payload.profession],
             ['Cédula', payload.ordemNumber],
             ['NIF', payload.nif],
             ['N.º Cartão de Cidadão', payload.citizenCard],
@@ -3716,7 +3662,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             ['Preferências primárias', (payload.primaryAreas || []).join(', ')],
             ['Preferências secundárias', (payload.secondaryAreas || []).join(', ')]
         ];
-        const cv = adminCvDocument();
+        const cv = (adminProfileMeta.documents || []).find((d) => d && d.kind === 'cv');
         if (cv) rows.push(['CV', cv.originalName]);
         list.innerHTML = rows.map(([label, value]) => {
             const text = String(value || '').trim();
@@ -3727,12 +3673,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         wrap.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
 
-    function showBolsaProfileSection(panelId, wrapId, bodyId, bolsa) {
-        const mount = ensureBolsaProfileMount(panelId, wrapId, bodyId);
-        if (!mount.wrap || !mount.body) return;
-        mount.body.innerHTML = renderBolsaProfileHtml(bolsa);
-        mount.wrap.hidden = false;
-        renderAdminRegistoCv(bolsa);
+    function showBolsaProfileSection(wrapId, bodyId, subtitleId, bolsa) {
+        const wrap = document.getElementById(wrapId);
+        const body = document.getElementById(bodyId);
+        const subtitle = document.getElementById(subtitleId);
+        if (body) body.innerHTML = renderBolsaProfileHtml(bolsa);
+        if (wrap) wrap.hidden = false;
+        const linked = bolsa && Array.isArray(bolsa.groups) && bolsa.groups.length;
+        if (subtitle) {
+            subtitle.textContent = linked
+                ? (bolsa.email
+                    ? `Candidatura ligada (${bolsa.email}) — clique para ver as respostas`
+                    : 'Candidatura ligada — clique para ver as respostas')
+                : 'Sem candidatura ligada. Confirme o email na identificação e guarde o perfil.';
+        }
     }
 
     function renderAdminStaffProfiles(data) {
@@ -3754,7 +3708,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const doc = (p.documents || []).find((d) => d && d.kind === kind);
                 const label = kinds[kind] || kind;
                 if (!doc) {
-                    return `<li><span>${escapeHtml(label)}</span><span class="clinic-doc-missing">Not uploaded</span></li>`;
+                    return `<li><span>${escapeHtml(label)}</span><span class="clinic-doc-missing">Por enviar</span></li>`;
                 }
                 const validity = doc.validUntil ? `Validade ${escapeHtml(doc.validUntil)}` : '';
                 return `<li>
@@ -3763,6 +3717,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ${validity ? `<span class="clinic-doc-validity">${validity}</span>` : ''}
                 </li>`;
             }).join('');
+            const linked = p.bolsa && Array.isArray(p.bolsa.groups) && p.bolsa.groups.length;
             return `<article class="admin-staff-profile-card">
                 <div class="admin-staff-profile-head">
                     ${photo}
@@ -3771,36 +3726,34 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <p class="admin-staff-profile-meta">${escapeHtml(roleBits)}${p.email ? ` · ${escapeHtml(p.email)}` : ''}</p>
                     </div>
                 </div>
-                <dl class="admin-staff-profile-dl">
-                    <div><dt>Nome</dt><dd>${dashText(p.fullName)}</dd></div>
-                    <div><dt>Email</dt><dd>${dashText(p.email || (p.bolsa && p.bolsa.email))}</dd></div>
-                    <div><dt>Telefone (Bolsa)</dt><dd>${dashText(p.bolsa && p.bolsa.phone)}</dd></div>
-                    <div><dt>NIF</dt><dd>${dashText(p.nif)}</dd></div>
-                    <div><dt>Cédula profissional</dt><dd>${dashText(p.ordemNumber)}</dd></div>
-                    <div><dt>N.º Cartão de Cidadão</dt><dd>${dashText(p.citizenCard)}</dd></div>
-                    <div><dt>Morada</dt><dd>${dashText(p.address)}</dd></div>
-                    <div><dt>Seguradora</dt><dd>${dashText(p.insurer)}</dd></div>
-                    <div><dt>Apólice</dt><dd>${dashText(p.insurancePolicy)}</dd></div>
-                    <div><dt>Validade do seguro</dt><dd>${dashText(p.insuranceValidUntil)}</dd></div>
-                    <div><dt>IBAN</dt><dd>${dashText(p.iban)}</dd></div>
-                    <div><dt>Doxy.me room</dt><dd>${p.doxyPending || !p.doxyRoomUrl ? 'Pending' : dashText(p.doxyRoomUrl)}</dd></div>
-                </dl>
                 <div class="admin-staff-profile-block">
-                    <h4>Documentos no perfil</h4>
-                    <ul class="admin-staff-docs">${docs}</ul>
+                    <h4>Identificação</h4>
+                    <dl class="admin-staff-profile-dl">
+                        <div><dt>Nome</dt><dd>${dashText(p.fullName)}</dd></div>
+                        <div><dt>Email</dt><dd>${dashText(p.email)}</dd></div>
+                        <div><dt>Telefone</dt><dd>${dashText(p.phone || (p.bolsa && p.bolsa.phone))}</dd></div>
+                        <div><dt>Sala Doxy.me</dt><dd>${p.doxyPending || !p.doxyRoomUrl ? 'Pendente' : dashText(p.doxyRoomUrl)}</dd></div>
+                    </dl>
                 </div>
-                <details class="admin-staff-profile-block clinic-bolsa-profile clinic-bolsa-banner clinic-registo-details">
-                    <summary class="clinic-registo-summary"><span><h4>Dados de Registo</h4></span></summary>
-                    <div class="clinic-registo-body">
-                        ${renderBolsaProfileHtml(p.bolsa, { emptyMessage: 'Sem dados de registo ligados a esta conta.' })}
-                    </div>
-                </details>
+                <div class="admin-staff-profile-block">
+                    <h4>Dados profissionais</h4>
+                    <dl class="admin-staff-profile-dl">
+                        <div><dt>NIF</dt><dd>${dashText(p.nif)}</dd></div>
+                        <div><dt>Cédula profissional</dt><dd>${dashText(p.ordemNumber)}</dd></div>
+                        <div><dt>N.º Cartão de Cidadão</dt><dd>${dashText(p.citizenCard)}</dd></div>
+                        <div><dt>Morada</dt><dd>${dashText(p.address)}</dd></div>
+                        <div><dt>Seguradora</dt><dd>${dashText(p.insurer)}</dd></div>
+                        <div><dt>Apólice</dt><dd>${dashText(p.insurancePolicy)}</dd></div>
+                        <div><dt>Validade do seguro</dt><dd>${dashText(p.insuranceValidUntil)}</dd></div>
+                        <div><dt>IBAN</dt><dd>${dashText(p.iban)}</dd></div>
+                    </dl>
+                </div>
                 <div class="admin-staff-profile-block">
                     <h4>Bio</h4>
                     <p>${dashText(p.bio)}</p>
                 </div>
                 <div class="admin-staff-profile-block">
-                    <h4>Credentials</h4>
+                    <h4>Credenciais</h4>
                     <p>${dashText(p.credentials)}</p>
                 </div>
                 <div class="admin-staff-profile-block">
@@ -3811,6 +3764,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <h4>Preferências secundárias</h4>
                     ${areaListHtml(p.secondaryAreas)}
                 </div>
+                <div class="admin-staff-profile-block">
+                    <h4>Documentos</h4>
+                    <ul class="admin-staff-docs">${docs}</ul>
+                </div>
+                <details class="admin-staff-profile-block clinic-bolsa-profile clinic-bolsa-banner clinic-registo-details">
+                    <summary class="clinic-registo-summary"><span><h4>Dados de Registo</h4><p class="dash-section-subtitle">${linked ? 'Candidatura ligada — clique para ver' : 'Sem candidatura ligada'}</p></span></summary>
+                    <div class="clinic-registo-body">
+                        ${renderBolsaProfileHtml(p.bolsa, { emptyMessage: 'Sem dados de registo ligados a esta conta.' })}
+                    </div>
+                </details>
             </article>`;
         }).join('');
     }
@@ -4119,7 +4082,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const doc = uploaded[kind];
             const fileCell = doc
                 ? `<a class="clinic-doc-link" href="/api/clinic/profile/documents/${encodeURIComponent(doc.id)}">${escapeHtml(doc.originalName || label)}</a>`
-                : '<span class="clinic-doc-missing">Not uploaded</span>';
+                : '<span class="clinic-doc-missing">Por enviar</span>';
             const validity = doc && doc.validUntil ? escapeHtml(doc.validUntil) : '—';
             const dateRequired = OPTIONAL_DOC_VALIDITY.has(kind) ? '' : ' required';
             return `<tr data-doc-kind="${escapeHtml(kind)}">
@@ -4133,33 +4096,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <input type="date" class="admin-input clinic-doc-date" value="${doc && doc.validUntil ? escapeHtml(doc.validUntil) : ''}"${dateRequired}>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-outline btn-sm clinic-doc-upload">${doc ? 'Replace' : 'Upload'}</button>
+                    <button type="button" class="btn btn-outline btn-sm clinic-doc-upload">${doc ? 'Substituir' : 'Enviar'}</button>
                 </td>
             </tr>`;
         }).join('');
-        renderAdminProfileFiles();
-    }
-
-    function renderAdminProfileFiles() {
-        const el = document.getElementById('adminProfileFiles');
-        if (!el) return;
-        const kinds = adminProfileMeta.documentKinds || DEFAULT_DOC_KINDS;
-        const docs = (adminProfileMeta.documents || []).filter((item) => item && item.kind);
-        if (!docs.length) {
-            el.innerHTML = '<p class="admin-empty-list">Ainda sem documentos no perfil. Envie-os em Documentos, mais abaixo.</p>';
-            return;
-        }
-        const order = Object.keys(kinds);
-        docs.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind));
-        el.innerHTML = `<ul class="admin-staff-docs clinic-profile-files-list">${docs.map((doc) => {
-            const label = kinds[doc.kind] || doc.label || doc.kind;
-            const validity = doc.validUntil ? `<span class="clinic-doc-validity">Validade ${escapeHtml(doc.validUntil)}</span>` : '';
-            return `<li>
-                <span>${escapeHtml(label)}</span>
-                <a class="clinic-doc-link" href="/api/clinic/profile/documents/${encodeURIComponent(doc.id)}">${escapeHtml(doc.originalName || label)}</a>
-                ${validity}
-            </li>`;
-        }).join('')}</ul>`;
     }
 
     function showAdminProfileError(el, message) {
@@ -4181,7 +4121,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (adminProfilePhotoPlaceholder) {
             adminProfilePhotoPlaceholder.hidden = !!hasPhoto;
         }
-        if (adminProfilePhotoBtn) adminProfilePhotoBtn.textContent = hasPhoto ? 'Replace photo' : 'Add photo';
+        if (adminProfilePhotoBtn) adminProfilePhotoBtn.textContent = hasPhoto ? 'Substituir foto' : 'Adicionar foto';
     }
 
     async function loadAdminProfile() {
@@ -4189,7 +4129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const [profileRes, doxyRes] = await Promise.all([
                 fetch('/api/clinic/ficha', { cache: 'no-store', credentials: 'same-origin' }),
-                fetch('/api/clinic/doxy?v=dias-1', { cache: 'no-store', credentials: 'same-origin' })
+                fetch('/api/clinic/doxy', { cache: 'no-store', credentials: 'same-origin' })
             ]);
             if (profileRes.status === 401) {
                 showLogin();
@@ -4208,7 +4148,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if ('value' in adminProfileEmail) adminProfileEmail.value = data.email || (data.bolsa && data.bolsa.email) || '';
                 else adminProfileEmail.textContent = data.email || (data.bolsa && data.bolsa.email) || '—';
             }
-            if (adminProfilePhone) adminProfilePhone.textContent = (data.bolsa && data.bolsa.phone) || '—';
+            if (adminProfilePhone) adminProfilePhone.textContent = data.phone || (data.bolsa && data.bolsa.phone) || '—';
             adminProfession.value = data.profession || '';
             if (adminFullName) adminFullName.value = data.fullName || data.displayName || '';
             if (adminNif) adminNif.value = data.nif || '';
@@ -4224,7 +4164,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateAdminOrdemLabel();
             fillAdminAreaChecks(data.profession, data.primaryAreas, data.secondaryAreas);
             renderAdminDocumentRows();
-            showBolsaProfileSection('adminPanelProfile', 'adminBolsaProfileWrap', 'adminBolsaProfile', data.bolsa);
+            showBolsaProfileSection('adminBolsaProfileWrap', 'adminBolsaProfile', 'adminRegistoSubtitle', data.bolsa);
             if (adminProfileFormError) adminProfileFormError.style.display = 'none';
             if (adminDocsError) adminDocsError.style.display = 'none';
             if (doxyRes.ok) {
@@ -4305,9 +4245,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 await loadAdminProfile();
                 showAdminSavedProfileSummary(payload);
                 const prev = adminProfileSaveBtn ? adminProfileSaveBtn.textContent : '';
-                if (adminProfileSaveBtn) adminProfileSaveBtn.textContent = 'Saved';
+                if (adminProfileSaveBtn) adminProfileSaveBtn.textContent = 'Guardado';
                 setTimeout(() => {
-                    if (adminProfileSaveBtn) adminProfileSaveBtn.textContent = prev || 'Save profile';
+                    if (adminProfileSaveBtn) adminProfileSaveBtn.textContent = prev || 'Guardar perfil';
                 }, 1600);
             } catch (err) {
                 showAdminProfileError(adminProfileFormError, err.message || 'Failed to save profile');
@@ -4341,39 +4281,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    const adminRegistoCvBtn = document.getElementById('adminRegistoCvBtn');
-    const adminRegistoCvInput = document.getElementById('adminRegistoCvInput');
-    const adminRegistoCvError = document.getElementById('adminRegistoCvError');
-    if (adminRegistoCvBtn && adminRegistoCvInput) {
-        adminRegistoCvBtn.addEventListener('click', async () => {
-            if (adminRegistoCvError) adminRegistoCvError.style.display = 'none';
-            const file = adminRegistoCvInput.files && adminRegistoCvInput.files[0];
-            if (!file) {
-                showAdminProfileError(adminRegistoCvError, 'Escolha o ficheiro do CV.');
-                return;
-            }
-            const form = new FormData();
-            form.append('kind', 'cv');
-            form.append('file', file);
-            adminRegistoCvBtn.disabled = true;
-            try {
-                const res = await fetch('/api/clinic/profile/documents', { method: 'POST', body: form });
-                const data = await res.json().catch(() => ({}));
-                if (res.status === 401) {
-                    showLogin();
-                    return;
-                }
-                if (!res.ok) throw new Error(data.error || 'Failed to upload CV');
-                await loadAdminProfile();
-            } catch (err) {
-                showAdminProfileError(adminRegistoCvError, err.message || 'Failed to upload CV');
-            } finally {
-                adminRegistoCvBtn.disabled = false;
-                adminRegistoCvInput.value = '';
-            }
-        });
-    }
-
     if (adminDocsBody) {
         adminDocsBody.addEventListener('click', async (e) => {
             const btn = e.target.closest('.clinic-doc-upload');
@@ -4385,11 +4292,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!kind || !fileInput || !dateInput) return;
             if (adminDocsError) adminDocsError.style.display = 'none';
             if (!fileInput.files || !fileInput.files[0]) {
-                showAdminProfileError(adminDocsError, 'Choose a file to upload.');
+                showAdminProfileError(adminDocsError, 'Escolha um ficheiro para enviar.');
                 return;
             }
             if (dateInput.required && !dateInput.value) {
-                showAdminProfileError(adminDocsError, 'Add the validity date.');
+                showAdminProfileError(adminDocsError, 'Indique a validade do documento.');
                 return;
             }
             const form = new FormData();

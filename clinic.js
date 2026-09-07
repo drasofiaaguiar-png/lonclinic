@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         patients: { title: 'Patients', subtitle: 'People attached to your consultations' },
         resources: { title: 'Resources', subtitle: 'Video room and everyday clinic links' },
         management: { title: 'Management', subtitle: 'IBAN, faturas mensais e pagamentos' },
-        profile: { title: 'Profile', subtitle: 'Identificação, cédula, seguro, áreas e documentos' }
+        profile: { title: 'Perfil', subtitle: 'Identificação, dados profissionais, documentos e candidatura' }
     };
 
     const WEEKDAYS = [
@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadDoxyRoom() {
         if (!clinicDoxyRoomUrl || !clinicOpenDoxyBtn) return;
         try {
-            const res = await fetch('/api/clinic/doxy?v=dias-1', { cache: 'no-store', credentials: 'same-origin' });
+            const res = await fetch('/api/clinic/doxy', { cache: 'no-store', credentials: 'same-origin' });
             if (res.status === 401) {
                 showLogin();
                 return;
@@ -1712,7 +1712,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const doc = uploaded[kind];
             const fileCell = doc
                 ? `<a class="clinic-doc-link" href="/api/clinic/profile/documents/${encodeURIComponent(doc.id)}">${escapeHtml(doc.originalName || label)}</a>`
-                : '<span class="clinic-doc-missing">Not uploaded</span>';
+                : '<span class="clinic-doc-missing">Por enviar</span>';
             const validity = doc && doc.validUntil ? escapeHtml(doc.validUntil) : '—';
             const dateRequired = OPTIONAL_DOC_VALIDITY.has(kind) ? '' : ' required';
             return `<tr data-doc-kind="${escapeHtml(kind)}">
@@ -1726,37 +1726,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     <input type="date" class="admin-input clinic-doc-date" value="${doc && doc.validUntil ? escapeHtml(doc.validUntil) : ''}"${dateRequired}>
                 </td>
                 <td>
-                    <button type="button" class="btn btn-outline btn-sm clinic-doc-upload">${doc ? 'Replace' : 'Upload'}</button>
+                    <button type="button" class="btn btn-outline btn-sm clinic-doc-upload">${doc ? 'Substituir' : 'Enviar'}</button>
                 </td>
             </tr>`;
         }).join('');
-        renderClinicProfileFiles();
-    }
-
-    function clinicDocumentHref(doc) {
-        return `/api/clinic/profile/documents/${encodeURIComponent(doc && doc.id)}`;
-    }
-
-    function renderClinicProfileFiles() {
-        const el = document.getElementById('clinicProfileFiles');
-        if (!el) return;
-        const kinds = clinicProfileMeta.documentKinds || DEFAULT_DOC_KINDS;
-        const docs = (clinicProfileMeta.documents || []).filter((item) => item && item.kind);
-        if (!docs.length) {
-            el.innerHTML = '<p class="admin-empty-list">Ainda sem documentos no perfil. Envie-os em Documentos, mais abaixo.</p>';
-            return;
-        }
-        const order = Object.keys(kinds);
-        docs.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind));
-        el.innerHTML = `<ul class="admin-staff-docs clinic-profile-files-list">${docs.map((doc) => {
-            const label = kinds[doc.kind] || doc.label || doc.kind;
-            const validity = doc.validUntil ? `<span class="clinic-doc-validity">Validade ${escapeHtml(doc.validUntil)}</span>` : '';
-            return `<li>
-                <span>${escapeHtml(label)}</span>
-                <a class="clinic-doc-link" href="${clinicDocumentHref(doc)}">${escapeHtml(doc.originalName || label)}</a>
-                ${validity}
-            </li>`;
-        }).join('')}</ul>`;
     }
 
     function setClinicProfilePhoto(hasPhoto) {
@@ -1772,7 +1745,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (clinicProfilePhotoPlaceholder) {
             clinicProfilePhotoPlaceholder.hidden = !!hasPhoto;
         }
-        if (clinicProfilePhotoBtn) clinicProfilePhotoBtn.textContent = hasPhoto ? 'Replace photo' : 'Add photo';
+        if (clinicProfilePhotoBtn) clinicProfilePhotoBtn.textContent = hasPhoto ? 'Substituir foto' : 'Adicionar foto';
     }
 
     function renderBolsaProfileHtml(bolsa) {
@@ -1796,60 +1769,6 @@ document.addEventListener('DOMContentLoaded', () => {
         `).join('');
     }
 
-    function ensureBolsaProfileMount(panelId, wrapId, bodyId) {
-        let wrap = document.getElementById(wrapId);
-        let body = document.getElementById(bodyId);
-        if (wrap && body) {
-            wrap.hidden = false;
-            wrap.classList.add('clinic-bolsa-banner');
-            return { wrap, body };
-        }
-        const panel = document.getElementById(panelId);
-        if (!panel) return { wrap: null, body: null };
-        wrap = document.createElement('div');
-        wrap.className = 'dash-section clinic-bolsa-banner';
-        wrap.id = wrapId;
-        wrap.innerHTML = `
-            <details class="clinic-registo-details" open>
-                <summary class="clinic-registo-summary">
-                    <span>
-                        <h2 class="dash-section-title">Dados de Registo</h2>
-                        <p class="dash-section-subtitle">Respostas da candidatura — clique para abrir</p>
-                    </span>
-                </summary>
-                <div class="clinic-registo-body">
-                    <div id="${bodyId}" class="clinic-bolsa-profile"></div>
-                </div>
-            </details>
-        `;
-        panel.insertBefore(wrap, panel.firstElementChild);
-        body = document.getElementById(bodyId);
-        return { wrap, body };
-    }
-
-    function cvDocument() {
-        return (clinicProfileMeta.documents || []).find((d) => d && d.kind === 'cv') || null;
-    }
-
-    function renderRegistoCv(bolsa) {
-        const status = document.getElementById('clinicRegistoCvStatus');
-        const btn = document.getElementById('clinicRegistoCvBtn');
-        const doc = cvDocument();
-        const bits = [];
-        if (doc) {
-            bits.push(`CV no perfil: <a class="clinic-doc-link" href="/api/clinic/profile/documents/${encodeURIComponent(doc.id)}">${escapeHtml(doc.originalName || 'CV')}</a>`);
-        }
-        if (bolsa && bolsa.cvFilename && (!doc || String(bolsa.cvFilename) !== doc.originalName)) {
-            bits.push(`CV da candidatura: ${escapeHtml(bolsa.cvFilename)}`);
-        }
-        if (status) {
-            status.innerHTML = bits.length
-                ? bits.join('<br>')
-                : 'Pode enviar o CV aqui (PDF, DOC ou DOCX · máx. 25MB).';
-        }
-        if (btn) btn.textContent = doc ? 'Substituir CV' : 'Enviar CV';
-    }
-
     function showSavedProfileSummary(payload, extra) {
         const wrap = document.getElementById('clinicSavedDetails');
         const list = document.getElementById('clinicSavedSummary');
@@ -1858,7 +1777,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const rows = [
             ['Nome', payload.fullName],
             ['Email', payload.email],
-            ['Role', professionLabels[payload.profession] || payload.profession],
+            ['Profissão', professionLabels[payload.profession] || payload.profession],
             ['Cédula', payload.ordemNumber],
             ['NIF', payload.nif],
             ['N.º Cartão de Cidadão', payload.citizenCard],
@@ -1869,11 +1788,9 @@ document.addEventListener('DOMContentLoaded', () => {
             ['Preferências primárias', (payload.primaryAreas || []).join(', ')],
             ['Preferências secundárias', (payload.secondaryAreas || []).join(', ')]
         ];
-        if (extra && extra.cvName) rows.push(['CV', extra.cvName]);
         (clinicProfileMeta.documents || []).forEach((doc) => {
             if (!doc || !doc.kind) return;
             const kinds = clinicProfileMeta.documentKinds || DEFAULT_DOC_KINDS;
-            if (doc.kind === 'cv' && extra && extra.cvName) return;
             rows.push([kinds[doc.kind] || doc.label || doc.kind, doc.originalName]);
         });
         list.innerHTML = rows.map(([label, value]) => {
@@ -1885,12 +1802,20 @@ document.addEventListener('DOMContentLoaded', () => {
         wrap.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
     }
 
-    function showBolsaProfileSection(panelId, wrapId, bodyId, bolsa) {
-        const mount = ensureBolsaProfileMount(panelId, wrapId, bodyId);
-        if (!mount.wrap || !mount.body) return;
-        mount.body.innerHTML = renderBolsaProfileHtml(bolsa);
-        mount.wrap.hidden = false;
-        renderRegistoCv(bolsa);
+    function showBolsaProfileSection(wrapId, bodyId, subtitleId, bolsa) {
+        const wrap = document.getElementById(wrapId);
+        const body = document.getElementById(bodyId);
+        const subtitle = document.getElementById(subtitleId);
+        if (body) body.innerHTML = renderBolsaProfileHtml(bolsa);
+        if (wrap) wrap.hidden = false;
+        const linked = bolsa && Array.isArray(bolsa.groups) && bolsa.groups.length;
+        if (subtitle) {
+            subtitle.textContent = linked
+                ? (bolsa.email
+                    ? `Candidatura ligada (${bolsa.email}) — clique para ver as respostas`
+                    : 'Candidatura ligada — clique para ver as respostas')
+                : 'Sem candidatura ligada. Confirme o email na identificação e guarde o perfil.';
+        }
     }
 
     function fillBolsaContactFields(emailEl, phoneEl, bolsa, accountEmail) {
@@ -1919,6 +1844,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 documents: data.documents || []
             };
             clinicProfession.value = data.profession || '';
+            if (clinicProfileUsername) clinicProfileUsername.textContent = data.username || '—';
             if (clinicFullName) clinicFullName.value = data.fullName || data.displayName || '';
             if (clinicNif) clinicNif.value = data.nif || '';
             if (clinicCitizenCard) clinicCitizenCard.value = data.citizenCard || '';
@@ -1934,7 +1860,8 @@ document.addEventListener('DOMContentLoaded', () => {
             fillClinicAreaChecks(data.profession, data.primaryAreas, data.secondaryAreas);
             renderDocumentRows();
             fillBolsaContactFields(clinicProfileEmail, clinicProfilePhone, data.bolsa, data.email);
-            showBolsaProfileSection('clinicPanelProfile', 'clinicBolsaProfileWrap', 'clinicBolsaProfile', data.bolsa);
+            if (clinicProfilePhone) clinicProfilePhone.textContent = data.phone || (data.bolsa && data.bolsa.phone) || '—';
+            showBolsaProfileSection('clinicBolsaProfileWrap', 'clinicBolsaProfile', 'clinicRegistoSubtitle', data.bolsa);
             if (data.fullName && clinicProfileName) clinicProfileName.textContent = data.fullName;
             loadDoxyRoom();
             if (clinicProfileFormError) clinicProfileFormError.style.display = 'none';
@@ -2013,11 +1940,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error(data.error || 'Failed to save profile');
                 }
                 await loadClinicProfile();
-                showSavedProfileSummary(payload, { cvName: (cvDocument() && cvDocument().originalName) || '' });
+                showSavedProfileSummary(payload);
                 const prev = clinicProfileSaveBtn ? clinicProfileSaveBtn.textContent : '';
-                if (clinicProfileSaveBtn) clinicProfileSaveBtn.textContent = 'Saved';
+                if (clinicProfileSaveBtn) clinicProfileSaveBtn.textContent = 'Guardado';
                 setTimeout(() => {
-                    if (clinicProfileSaveBtn) clinicProfileSaveBtn.textContent = prev || 'Save profile';
+                    if (clinicProfileSaveBtn) clinicProfileSaveBtn.textContent = prev || 'Guardar perfil';
                 }, 1600);
             } catch (err) {
                 showProfileError(clinicProfileFormError, err.message || 'Failed to save profile');
@@ -2051,39 +1978,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const clinicRegistoCvBtn = document.getElementById('clinicRegistoCvBtn');
-    const clinicRegistoCvInput = document.getElementById('clinicRegistoCvInput');
-    const clinicRegistoCvError = document.getElementById('clinicRegistoCvError');
-    if (clinicRegistoCvBtn && clinicRegistoCvInput) {
-        clinicRegistoCvBtn.addEventListener('click', async () => {
-            if (clinicRegistoCvError) clinicRegistoCvError.style.display = 'none';
-            const file = clinicRegistoCvInput.files && clinicRegistoCvInput.files[0];
-            if (!file) {
-                showProfileError(clinicRegistoCvError, 'Escolha o ficheiro do CV.');
-                return;
-            }
-            const form = new FormData();
-            form.append('kind', 'cv');
-            form.append('file', file);
-            clinicRegistoCvBtn.disabled = true;
-            try {
-                const res = await fetch('/api/clinic/profile/documents', { method: 'POST', body: form });
-                const data = await res.json().catch(() => ({}));
-                if (res.status === 401) {
-                    showLogin();
-                    return;
-                }
-                if (!res.ok) throw new Error(data.error || 'Failed to upload CV');
-                await loadClinicProfile();
-            } catch (err) {
-                showProfileError(clinicRegistoCvError, err.message || 'Failed to upload CV');
-            } finally {
-                clinicRegistoCvBtn.disabled = false;
-                clinicRegistoCvInput.value = '';
-            }
-        });
-    }
-
     if (clinicDocsBody) {
         clinicDocsBody.addEventListener('click', async (e) => {
             const btn = e.target.closest('.clinic-doc-upload');
@@ -2095,11 +1989,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!kind || !fileInput || !dateInput) return;
             if (clinicDocsError) clinicDocsError.style.display = 'none';
             if (!fileInput.files || !fileInput.files[0]) {
-                showProfileError(clinicDocsError, 'Choose a file to upload.');
+                showProfileError(clinicDocsError, 'Escolha um ficheiro para enviar.');
                 return;
             }
             if (dateInput.required && !dateInput.value) {
-                showProfileError(clinicDocsError, 'Add the validity date.');
+                showProfileError(clinicDocsError, 'Indique a validade do documento.');
                 return;
             }
             const form = new FormData();

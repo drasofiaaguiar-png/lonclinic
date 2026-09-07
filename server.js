@@ -16,7 +16,7 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = 'dias-1';
+const CLINIC_PORTAL_BUILD = 'perfil-2';
 const CLINIC_PORTAL_PATH = '/clinic-desk/dias';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
@@ -673,12 +673,8 @@ async function serveClinicPortalHtml(res) {
             .replace(/src="\/clinic-portal\/clinic\.js\?v=[^"]+"/g, `src="${clinicPortalAssetUrl('clinic.js')}"`)
             .replace(/data-clinic-build="[^"]+"/, `data-clinic-build="${CLINIC_PORTAL_BUILD}"`)
             .replace(
-                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
+                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|perfil-2) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
                 `Portal ${CLINIC_PORTAL_BUILD} — 7 set 2026. Entre com o username do profissional.`
-            )
-            .replace(
-                'Candidatura ligada a esta conta — telefone, disponibilidade, populações e restantes respostas.',
-                'Ligada pelo mesmo email da candidatura da Bolsa.'
             );
         res.append('Set-Cookie', `lon_portal=${CLINIC_PORTAL_BUILD}; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly`);
         res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
@@ -10363,6 +10359,7 @@ async function handleClinicProfileGet(req, res) {
             isJunkStaffName(req.session.clinicDisplayName) ? '' : req.session.clinicDisplayName,
             username
         );
+        const bolsaLinked = !!(filled.bolsa && Array.isArray(filled.bolsa.groups) && filled.bolsa.groups.length);
         const primaryAreas = sanitizeStaffAreas(
             profile.profession,
             profile.primaryAreas != null ? profile.primaryAreas : profile.primaryArea
@@ -10382,6 +10379,8 @@ async function handleClinicProfileGet(req, res) {
             profession: profile.profession || '',
             ordemNumber: profile.ordemNumber || '',
             fullName: displayName || '',
+            phone: (filled.bolsa && filled.bolsa.phone) || '',
+            bolsaLinked,
             nif: profile.nif || '',
             citizenCard: profile.citizenCard || '',
             address: profile.address || '',
@@ -10616,7 +10615,7 @@ const STAFF_PROFESSION_TITLES = {
     nutricionista: 'Nutricionista'
 };
 
-function publicAdminStaffProfile(person, profile, documents) {
+function publicAdminStaffProfile(person, profile, documents, bolsa) {
     const p = profile || emptyStaffProfile(person.username);
     const primaryAreas = sanitizeStaffAreas(p.profession, p.primaryAreas != null ? p.primaryAreas : p.primaryArea);
     const secondaryAreas = sanitizeStaffAreas(
@@ -10624,18 +10623,25 @@ function publicAdminStaffProfile(person, profile, documents) {
         p.secondaryAreas != null ? p.secondaryAreas : p.secondaryArea,
         primaryAreas
     );
-    const doxy = doxyRoomViewForPerson(person.displayName || person.username, person.doxyRoomUrl, {
+    const fullName = firstNonEmpty(
+        isJunkStaffName(p.fullName) ? '' : p.fullName,
+        bolsa && bolsa.name,
+        isJunkStaffName(person.displayName) ? '' : person.displayName
+    );
+    const email = firstNonEmpty(person.email, bolsa && bolsa.email);
+    const doxy = doxyRoomViewForPerson(fullName || person.displayName || person.username, person.doxyRoomUrl, {
         clinicAdmin: String(person.username || '').toLowerCase() === String(CLINIC_USERNAME || '').trim().toLowerCase()
             && !isKnownBolsaUsername(person.username),
         username: person.username
     });
     return {
         username: person.username,
-        displayName: person.displayName || person.username,
-        email: person.email || '',
+        displayName: firstNonEmpty(fullName, person.username),
+        email,
+        phone: (bolsa && bolsa.phone) || '',
         profession: p.profession || '',
         professionLabel: STAFF_PROFESSION_TITLES[p.profession] || '',
-        fullName: p.fullName || person.displayName || '',
+        fullName,
         nif: p.nif || '',
         citizenCard: p.citizenCard || '',
         address: p.address || '',
@@ -10670,7 +10676,9 @@ async function listAdminStaffPeople() {
             doxyRoomUrl: (extra && extra.doxyRoomUrl) || ''
         });
     };
-    addPerson(CLINIC_USERNAME, { displayName: CLINIC_USERNAME });
+    addPerson(CLINIC_USERNAME, {
+        displayName: isJunkStaffName(CLINIC_USERNAME) ? '' : CLINIC_USERNAME
+    });
     for (const p of (await listProfessionalsInternal()) || []) {
         addPerson(p.username, {
             displayName: p.displayName || p.username,
@@ -10713,7 +10721,8 @@ app.get('/api/admin/staff-profiles', requireAdmin, async (req, res) => {
                         doxyRoomUrl: (fresh && fresh.doxyRoomUrl) || person.doxyRoomUrl
                     },
                     profile,
-                    docsByUser.get(person.username) || []
+                    docsByUser.get(person.username) || [],
+                    filled.bolsa || null
                 ),
                 bolsa: filled.bolsa || null
             });
@@ -11355,12 +11364,12 @@ async function seedPsychologistStaffProfile(professional, app) {
     const p = bolsaPayloadObject(app);
     const bolsaName = firstNonEmpty(app.name, p.nome, professional.displayName);
     const storedName = isJunkStaffName(existing.fullName) ? '' : existing.fullName;
-    const fullName = firstNonEmpty(bolsaName, storedName);
+    const fullName = firstNonEmpty(storedName, bolsaName);
     const pais = p.pais === 'Outro' && p.pais_especificar
         ? p.pais_especificar
         : (p.pais || app.pais || '');
     const address = firstNonEmpty(
-        existing.address && personNamesMatch(storedName, bolsaName || storedName) ? existing.address : '',
+        existing.address,
         [firstNonEmpty(p.localidade, app.localidade), pais].filter(Boolean).join(', ')
     );
     const existingPrimary = Array.isArray(existing.primaryAreas) ? existing.primaryAreas : [];
@@ -11380,7 +11389,7 @@ async function seedPsychologistStaffProfile(professional, app) {
         secondaryAreas: existing.secondaryAreas
     });
     const fields = {};
-    if (professional.id && bolsaName && !personNamesMatch(professional.displayName, bolsaName)) {
+    if (professional.id && bolsaName && isJunkStaffName(professional.displayName)) {
         fields.displayName = bolsaName;
         fields.doxyRoomUrl = assignedDoxyRoomUrl(bolsaName, professional.doxyRoomUrl, professional.username);
     }

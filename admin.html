@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=dias-1">
+    <link rel="stylesheet" href="/dashboard.css?v=perfil-2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -805,7 +805,7 @@
                     <div class="dash-section-header" style="margin-top:32px;">
                         <div>
                             <h2 class="dash-section-title">Fichas dos profissionais</h2>
-                            <p class="dash-section-subtitle">Perfil de cada conta, preenchido a partir da Bolsa de Profissionais quando existe candidatura ligada.</p>
+                            <p class="dash-section-subtitle">A mesma ficha do portal: identificação, dados profissionais, documentos e candidatura ligada pelo email.</p>
                         </div>
                     </div>
                     <div id="adminStaffProfilesList" class="admin-staff-profiles">
@@ -886,93 +886,64 @@
             </div>
 
             <div class="admin-panel" id="adminPanelProfile" data-admin-panel-content="profile" hidden>
-                <div class="dash-section clinic-bolsa-banner" id="adminBolsaProfileWrap">
-                    <details class="clinic-registo-details" id="adminRegistoDetails">
-                        <summary class="clinic-registo-summary">
-                            <span>
-                                <h2 class="dash-section-title">Dados de Registo</h2>
-                                <p class="dash-section-subtitle">Respostas da candidatura — clique para abrir</p>
-                            </span>
-                        </summary>
-                        <div class="clinic-registo-body">
-                            <div id="adminBolsaProfile" class="clinic-bolsa-profile">A carregar dados de registo…</div>
-                        </div>
-                    </details>
-                    <div class="clinic-registo-cv">
-                        <h3 class="clinic-pref-heading">CV</h3>
-                        <p class="dash-section-subtitle" id="adminRegistoCvStatus">Pode enviar o CV aqui (PDF, DOC ou DOCX · máx. 25MB).</p>
-                        <div class="clinic-registo-cv-row">
-                            <input type="file" id="adminRegistoCvInput" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-                            <button type="button" class="btn btn-outline btn-sm" id="adminRegistoCvBtn">Enviar CV</button>
-                        </div>
-                        <div id="adminRegistoCvError" class="dash-login-error" style="display:none;" role="alert"></div>
-                    </div>
-                </div>
                 <div class="dash-section">
                     <div class="dash-section-header">
-                        <h2 class="dash-section-title">Your profile</h2>
-                        <p class="dash-section-subtitle">Professional details for this clinic account</p>
+                        <h2 class="dash-section-title">Identificação</h2>
+                        <p class="dash-section-subtitle">Foto, nome, contacto e profissão desta conta</p>
                     </div>
                     <div class="clinic-photo-row">
                         <label class="clinic-photo-frame" for="adminProfilePhotoInput">
-                            <img id="adminProfilePhoto" alt="Profile photo" hidden>
+                            <img id="adminProfilePhoto" alt="Foto de perfil" hidden>
                             <span class="clinic-photo-placeholder" id="adminProfilePhotoPlaceholder">+</span>
                         </label>
                         <div class="clinic-photo-actions">
-                            <label class="btn btn-outline btn-sm" id="adminProfilePhotoBtn" for="adminProfilePhotoInput">Add photo</label>
+                            <label class="btn btn-outline btn-sm" id="adminProfilePhotoBtn" for="adminProfilePhotoInput">Adicionar foto</label>
                             <input type="file" id="adminProfilePhotoInput" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" hidden>
-                            <p class="dash-section-subtitle">JPG, PNG or WebP · max 4MB</p>
+                            <p class="dash-section-subtitle">JPG, PNG ou WebP · máx. 4MB</p>
                             <div id="adminPhotoError" class="dash-login-error" style="display:none;" role="alert"></div>
                         </div>
                     </div>
-                    <dl class="clinic-profile-dl">
+                    <div class="admin-invite-grid">
+                        <div class="admin-form-group">
+                            <label for="adminFullName">Nome</label>
+                            <input type="text" id="adminFullName" class="admin-input" form="adminProfileForm" maxlength="160" autocomplete="name">
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="adminProfileEmail">Email</label>
+                            <input id="adminProfileEmail" class="admin-input" type="email" form="adminProfileForm" autocomplete="email" placeholder="o mesmo email da candidatura">
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="adminProfession">Profissão</label>
+                            <select id="adminProfession" class="admin-select clinic-profile-role-select" form="adminProfileForm" required>
+                                <option value="">Seleccione</option>
+                                <option value="medico">Médico</option>
+                                <option value="psicologo">Psicólogo</option>
+                                <option value="nutricionista">Nutricionista</option>
+                            </select>
+                        </div>
+                    </div>
+                    <dl class="clinic-profile-dl clinic-profile-meta">
                         <div>
                             <dt>Username</dt>
                             <dd id="adminProfileUsername">—</dd>
-                        </div>
-                        <div>
-                            <dt>Email</dt>
-                            <dd>
-                                <input id="adminProfileEmail" class="admin-input" type="email" form="adminProfileForm" autocomplete="email" placeholder="o mesmo email da candidatura">
-                            </dd>
                         </div>
                         <div>
                             <dt>Telefone</dt>
                             <dd id="adminProfilePhone">—</dd>
                         </div>
                         <div>
-                            <dt>Role</dt>
-                            <dd>
-                                <select id="adminProfession" class="admin-select clinic-profile-role-select" form="adminProfileForm" required>
-                                    <option value="">Select role</option>
-                                    <option value="medico">Médico</option>
-                                    <option value="psicologo">Psicólogo</option>
-                                    <option value="nutricionista">Nutricionista</option>
-                                </select>
-                            </dd>
-                        </div>
-                        <div>
-                            <dt>Doxy.me room</dt>
+                            <dt>Sala Doxy.me</dt>
                             <dd id="adminProfileDoxy">—</dd>
                         </div>
                     </dl>
-                    <div class="clinic-profile-files">
-                        <h3 class="clinic-pref-heading">Documentos no perfil</h3>
-                        <p class="dash-section-subtitle">Ficheiros enviados neste perfil — visíveis para si e nas fichas dos profissionais.</p>
-                        <div id="adminProfileFiles" class="clinic-profile-files-body">A carregar documentos…</div>
-                    </div>
                 </div>
                 <div class="dash-section">
                     <div class="dash-section-header">
-                        <h2 class="dash-section-title">Professional details</h2>
-                        <p class="dash-section-subtitle">Identificação, cédula, seguro, bio e áreas de preferência</p>
+                        <h2 class="dash-section-title">Dados profissionais</h2>
+                        <p class="dash-section-subtitle">NIF, cédula, seguro, bio e áreas de preferência</p>
                     </div>
                     <form id="adminProfileForm" class="clinic-profile-form">
                         <div class="admin-invite-grid">
-                            <div class="admin-form-group">
-                                <label for="adminFullName">Nome</label>
-                                <input type="text" id="adminFullName" class="admin-input" maxlength="160" autocomplete="name">
-                            </div>
                             <div class="admin-form-group">
                                 <label for="adminNif">NIF</label>
                                 <input type="text" id="adminNif" class="admin-input" maxlength="20" inputmode="numeric" autocomplete="off">
@@ -1007,16 +978,16 @@
                         <div class="clinic-bio-creds-grid">
                             <div class="admin-form-group">
                                 <label for="adminBio">Bio</label>
-                                <textarea id="adminBio" class="admin-input clinic-bio-input" rows="14" maxlength="4000" placeholder="Professional bio"></textarea>
+                                <textarea id="adminBio" class="admin-input clinic-bio-input" rows="14" maxlength="4000" placeholder="Apresentação profissional"></textarea>
                             </div>
                             <div class="admin-form-group">
-                                <label for="adminCredentials">Main credentials</label>
-                                <textarea id="adminCredentials" class="admin-input clinic-bio-input" rows="14" maxlength="2000" placeholder="Degrees, fellowships, specialisations"></textarea>
+                                <label for="adminCredentials">Credenciais</label>
+                                <textarea id="adminCredentials" class="admin-input clinic-bio-input" rows="14" maxlength="2000" placeholder="Formação, especializações, fellowships"></textarea>
                             </div>
                         </div>
                         <div class="clinic-pref-block">
                             <h3 class="clinic-pref-heading">Áreas preferenciais</h3>
-                            <p class="dash-section-subtitle">Marque todas as que se aplicam — pode escolher várias em cada lista. As primárias são as áreas em que prefere receber utentes; as secundárias são complementar.</p>
+                            <p class="dash-section-subtitle">A lista muda com a profissão. As primárias são as áreas em que prefere receber utentes; as secundárias são complementar. Uma área não pode estar nas duas listas.</p>
                             <div class="clinic-pref-cols">
                                 <fieldset class="clinic-pref-col">
                                     <legend>Preferências primárias</legend>
@@ -1029,7 +1000,7 @@
                             </div>
                         </div>
                         <div id="adminProfileFormError" class="dash-login-error" style="display:none;" role="alert"></div>
-                        <button type="submit" class="btn btn-primary" id="adminProfileSaveBtn">Save profile</button>
+                        <button type="submit" class="btn btn-primary" id="adminProfileSaveBtn">Guardar perfil</button>
                         <details class="clinic-saved-details" id="adminSavedDetails" hidden>
                             <summary class="clinic-saved-summary">Informações guardadas</summary>
                             <dl class="clinic-profile-dl clinic-saved-dl" id="adminSavedSummary"></dl>
@@ -1038,8 +1009,8 @@
                 </div>
                 <div class="dash-section">
                     <div class="dash-section-header">
-                        <h2 class="dash-section-title">Documents</h2>
-                        <p class="dash-section-subtitle">CC, cópia da cédula (se aplicável), CV e restantes ficheiros. Indique a validade quando o documento caduca.</p>
+                        <h2 class="dash-section-title">Documentos</h2>
+                        <p class="dash-section-subtitle">Cartão de Cidadão, cópia da cédula, CV, seguro e contrato. Visíveis nesta conta e nas fichas dos profissionais. Indique a validade quando o documento caduca.</p>
                     </div>
                     <div class="admin-professionals-table-wrap">
                         <table class="admin-professionals-table clinic-docs-table" id="adminDocsTable">
@@ -1052,12 +1023,25 @@
                                 </tr>
                             </thead>
                             <tbody id="adminDocsBody">
-                                <tr><td colspan="4" class="admin-empty-list">Loading…</td></tr>
+                                <tr><td colspan="4" class="admin-empty-list">A carregar…</td></tr>
                             </tbody>
                         </table>
                     </div>
-                    <p class="dash-section-subtitle">PDF, JPG, PNG, WebP, DOC or DOCX · max 25MB</p>
+                    <p class="dash-section-subtitle">PDF, JPG, PNG, WebP, DOC ou DOCX · máx. 25MB</p>
                     <div id="adminDocsError" class="dash-login-error" style="display:none;" role="alert"></div>
+                </div>
+                <div class="dash-section clinic-bolsa-banner" id="adminBolsaProfileWrap">
+                    <details class="clinic-registo-details" id="adminRegistoDetails">
+                        <summary class="clinic-registo-summary">
+                            <span>
+                                <h2 class="dash-section-title">Dados de Registo</h2>
+                                <p class="dash-section-subtitle" id="adminRegistoSubtitle">Respostas da candidatura à Bolsa de Profissionais — clique para abrir</p>
+                            </span>
+                        </summary>
+                        <div class="clinic-registo-body">
+                            <div id="adminBolsaProfile" class="clinic-bolsa-profile">A carregar dados de registo…</div>
+                        </div>
+                    </details>
                 </div>
             </div>
 
@@ -1086,7 +1070,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=dias-1"></script>
+    <script src="/admin.js?v=perfil-2"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">
