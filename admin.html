@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=profile-ui-2">
+    <link rel="stylesheet" href="/dashboard.css?v=profile-ui-3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -925,6 +925,13 @@
                         </div>
                     </dl>
                 </div>
+                <div class="dash-section" id="adminBolsaProfileWrap" hidden>
+                    <div class="dash-section-header">
+                        <h2 class="dash-section-title">Bolsa de Profissionais</h2>
+                        <p class="dash-section-subtitle">Respostas da candidatura nesta conta. Os campos abaixo são preenchidos a partir daqui e podem ser editados.</p>
+                    </div>
+                    <div id="adminBolsaProfile" class="clinic-bolsa-profile"></div>
+                </div>
                 <div class="dash-section">
                     <div class="dash-section-header">
                         <h2 class="dash-section-title">Professional details</h2>
@@ -1045,7 +1052,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=profile-ui-2"></script>
+    <script src="/admin.js?v=profile-ui-3"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

@@ -919,6 +919,34 @@ async function findPsychologistApplicationById(id) {
     return rowToPsychologistApplication(r.rows[0]);
 }
 
+async function findPsychologistApplicationByProfessionalId(id) {
+    const p = getPool();
+    const n = Number(id);
+    if (!Number.isInteger(n) || n < 1) return null;
+    const r = await p.query(
+        `SELECT * FROM psychologist_applications
+         WHERE professional_id = $1
+         ORDER BY updated_at DESC NULLS LAST, created_at DESC
+         LIMIT 1`,
+        [n]
+    );
+    return rowToPsychologistApplication(r.rows[0]);
+}
+
+async function findPsychologistApplicationByEmail(email) {
+    const p = getPool();
+    const e = String(email || '').trim().toLowerCase();
+    if (!e || !e.includes('@')) return null;
+    const r = await p.query(
+        `SELECT * FROM psychologist_applications
+         WHERE LOWER(email) = $1
+         ORDER BY created_at DESC
+         LIMIT 1`,
+        [e]
+    );
+    return rowToPsychologistApplication(r.rows[0]);
+}
+
 async function updatePsychologistApplication(id, patch) {
     const p = getPool();
     const allowedStatus = new Set([
@@ -2787,6 +2815,8 @@ module.exports = {
     insertPsychologistApplication,
     listPsychologistApplications,
     findPsychologistApplicationById,
+    findPsychologistApplicationByProfessionalId,
+    findPsychologistApplicationByEmail,
     updatePsychologistApplication,
     listPublicReviews,
     listAllReviews,

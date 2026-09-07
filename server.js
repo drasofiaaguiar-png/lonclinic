@@ -798,7 +798,8 @@ const STAFF_AREA_ALIASES = {
     'Relações interpessoais': 'Relacionamentos',
     'Relações de casal': 'Relacionamentos',
     'Emagrecimento': 'Perda de peso',
-    'Nutrição desportiva': 'Nutrição desportiva lúdica'
+    'Nutrição desportiva': 'Nutrição desportiva lúdica',
+    'Psicologia da saúde': 'Ajustamento a doença crónica'
 };
 
 function allKnownClinicalAreas() {
@@ -10064,7 +10065,8 @@ app.get('/api/clinic/doxy', requireAuth, async (req, res) => {
 app.get('/api/clinic/profile', requireAuth, async (req, res) => {
     try {
         const username = staffSessionUsername(req);
-        const profile = await getStaffProfileInternal(username);
+        const filled = await fillStaffProfileFromBolsa(username);
+        const profile = filled.profile || await getStaffProfileInternal(username);
         const documents = (await listStaffDocumentsInternal(username)).map(publicStaffDocument);
         const displayName = req.session.clinicDisplayName || username;
         const primaryAreas = sanitizeStaffAreas(
@@ -10097,7 +10099,8 @@ app.get('/api/clinic/profile', requireAuth, async (req, res) => {
             documents,
             professions: STAFF_PROFESSIONS,
             documentKinds: STAFF_DOCUMENT_KINDS,
-            clinicalAreas: STAFF_CLINICAL_AREAS
+            clinicalAreas: STAFF_CLINICAL_AREAS,
+            bolsa: filled.bolsa || null
         });
     } catch (err) {
         console.error('GET /api/clinic/profile:', err.message);
@@ -10363,12 +10366,21 @@ app.get('/api/admin/staff-profiles', requireAdmin, async (req, res) => {
             if (!docsByUser.has(key)) docsByUser.set(key, []);
             docsByUser.get(key).push(doc);
         }
+        const staff = [];
+        for (const person of people) {
+            const filled = await fillStaffProfileFromBolsa(person.username);
+            const profile = filled.profile || byUser.get(person.username);
+            staff.push({
+                ...publicAdminStaffProfile(
+                    person,
+                    profile,
+                    docsByUser.get(person.username) || []
+                ),
+                bolsa: filled.bolsa || null
+            });
+        }
         res.json({
-            staff: people.map((person) => publicAdminStaffProfile(
-                person,
-                byUser.get(person.username),
-                docsByUser.get(person.username) || []
-            )),
+            staff,
             documentKinds: STAFF_DOCUMENT_KINDS
         });
     } catch (err) {
@@ -10503,15 +10515,186 @@ async function enrichPsychologistApplication(app) {
     };
 }
 
+async function findBolsaApplicationForStaff(username, professional) {
+    const pro = professional || (await findProfessionalByUsernameInternal(username));
+    const fromStore = (predicate) => (psychologistApplicationsStore || []).find(predicate) || null;
+    if (pro && pro.id) {
+        if (usePersistentDb) {
+            const byId = await db.findPsychologistApplicationByProfessionalId(pro.id);
+            if (byId) return byId;
+        } else {
+            const byId = fromStore((a) => Number(a.professionalId) === Number(pro.id));
+            if (byId) return byId;
+        }
+    }
+    const email = String((pro && pro.email) || '').trim().toLowerCase();
+    if (email) {
+        if (usePersistentDb) {
+            const byEmail = await db.findPsychologistApplicationByEmail(email);
+            if (byEmail) return byEmail;
+        } else {
+            const byEmail = fromStore((a) => String(a.email || '').trim().toLowerCase() === email);
+            if (byEmail) return byEmail;
+        }
+    }
+    return null;
+}
+
+function joinBolsaList(value) {
+    if (Array.isArray(value)) return value.map((v) => String(v || '').trim()).filter(Boolean).join(', ');
+    return String(value || '').trim();
+}
+
+function publicBolsaProfile(app) {
+    if (!app) return null;
+    const p = app.payload && typeof app.payload === 'object' ? app.payload : {};
+    const pais = p.pais === 'Outro' && p.pais_especificar
+        ? `Outro: ${p.pais_especificar}`
+        : (p.pais || app.pais || '');
+    const pushGroup = (groups, title, pairs) => {
+        const items = pairs
+            .map(([label, value]) => ({ label, value: joinBolsaList(value) }))
+            .filter((row) => row.value);
+        if (items.length) groups.push({ title, items });
+    };
+    const groups = [];
+    pushGroup(groups, 'Dados pessoais', [
+        ['Nome completo', p.nome || app.name],
+        ['Email', p.email || app.email],
+        ['Telefone', p.telefone || app.phone],
+        ['Localidade', p.localidade || app.localidade],
+        ['País onde exerce', pais]
+    ]);
+    pushGroup(groups, 'Formação e inscrição profissional', [
+        ['Inscrito/a na OPP', p.opp_inscrito],
+        ['Cédula OPP', p.cedula_opp || app.cedulaOpp],
+        ['Grau académico', p.grau_academico || app.grauAcademico],
+        ['Formação complementar', p.formacao_complementar]
+    ]);
+    pushGroup(groups, 'Experiência profissional', [
+        ['Anos de Psicologia Clínica', p.anos_clinica || app.anosClinica],
+        ['Anos em consultas individuais', p.anos_individuais || app.anosIndividuais],
+        ['Experiência em consultas online', p.experiencia_online || app.experienciaOnline],
+        ['N.º de consultas online', p.n_consultas_online],
+        ['Áreas de maior experiência', p.areas_clinicas || app.areasClinicas],
+        ['Populações', p.populacoes || app.populacoes],
+        ['Casos que prefere acompanhar', p.tipos_casos]
+    ]);
+    pushGroup(groups, 'Disponibilidade', [
+        ['Horas semanais iniciais', p.horas_iniciais || app.horasIniciais],
+        ['Dias da semana', p.dias_semana || app.diasSemana],
+        ['Horários fixos', p.horarios_fixos || app.horariosFixos],
+        ['Disponibilidade estável', p.disponibilidade_estavel || app.disponibilidadeEstavel],
+        ['Aumento de horas', p.aumento_futuro],
+        ['Horas para as quais poderia aumentar', p.horas_aumento]
+    ]);
+    pushGroup(groups, 'Perfil clínico', [
+        ['Abordagem terapêutica', p.abordagem_terapeutica],
+        ['Modelos / abordagens', p.modelos || app.modelos],
+        ['Idiomas', p.idiomas || app.idiomas],
+        ['Videoconferência', p.videoconferencia]
+    ]);
+    pushGroup(groups, 'Administrativo', [
+        ['Atividade profissional aberta', p.atividade_profissional],
+        ['Seguro de responsabilidade civil', p.rc_profissional],
+        ['Limitações relevantes', p.limitacoes],
+        ['LinkedIn / website', p.linkedin]
+    ]);
+    return {
+        id: app.id,
+        name: app.name || p.nome || '',
+        email: app.email || p.email || '',
+        groups
+    };
+}
+
+function firstNonEmpty(...values) {
+    for (const value of values) {
+        const s = String(value == null ? '' : value).trim();
+        if (s) return s;
+    }
+    return '';
+}
+
+function areasFromBolsaApplication(app) {
+    const p = (app && app.payload) || {};
+    const raw = Array.isArray(p.areas_clinicas) ? p.areas_clinicas : (app.areasClinicas || []);
+    const out = raw.map((item) => String(item || '').trim()).filter((item) => item && item !== 'Outro');
+    const extra = String(p.areas_outro || '').trim();
+    if (extra) out.push(extra);
+    return out;
+}
+
+function credentialsFromBolsaApplication(app) {
+    const p = (app && app.payload) || {};
+    const lines = [
+        firstNonEmpty(p.grau_academico, app.grauAcademico),
+        firstNonEmpty(p.formacao_complementar),
+        firstNonEmpty(p.anos_clinica, app.anosClinica) && `Experiência clínica: ${firstNonEmpty(p.anos_clinica, app.anosClinica)}`,
+        firstNonEmpty(p.anos_individuais, app.anosIndividuais) && `Consultas individuais: ${firstNonEmpty(p.anos_individuais, app.anosIndividuais)}`,
+        firstNonEmpty(p.experiencia_online, app.experienciaOnline) && `Consultas online: ${firstNonEmpty(p.experiencia_online, app.experienciaOnline)}`,
+        p.n_consultas_online != null && String(p.n_consultas_online).trim() && `N.º consultas online: ${p.n_consultas_online}`,
+        joinBolsaList(p.modelos || app.modelos) && `Modelos: ${joinBolsaList(p.modelos || app.modelos)}`,
+        joinBolsaList(p.idiomas || app.idiomas) && `Idiomas: ${joinBolsaList(p.idiomas || app.idiomas)}`
+    ].filter(Boolean);
+    return lines.join('\n').slice(0, 2000);
+}
+
+function bioFromBolsaApplication(app) {
+    const p = (app && app.payload) || {};
+    const parts = [
+        firstNonEmpty(p.abordagem_terapeutica),
+        firstNonEmpty(p.tipos_casos) && `Casos que prefere acompanhar:\n${p.tipos_casos}`
+    ].filter(Boolean);
+    return parts.join('\n\n').slice(0, 4000);
+}
+
 async function seedPsychologistStaffProfile(professional, app) {
-    if (!professional || !professional.username) return;
+    if (!professional || !professional.username || !app) return;
     const existing = await getStaffProfileInternal(professional.username);
+    const p = app.payload && typeof app.payload === 'object' ? app.payload : {};
+    const pais = p.pais === 'Outro' && p.pais_especificar
+        ? p.pais_especificar
+        : (p.pais || app.pais || '');
+    const address = firstNonEmpty(
+        existing.address,
+        [firstNonEmpty(p.localidade, app.localidade), pais].filter(Boolean).join(', ')
+    );
+    const existingPrimary = Array.isArray(existing.primaryAreas) ? existing.primaryAreas : [];
     await saveStaffProfileInternal(professional.username, {
         ...existing,
         profession: existing.profession || 'psicologo',
-        ordemNumber: existing.ordemNumber || app.cedulaOpp || '',
-        fullName: existing.fullName || app.name || professional.displayName || ''
+        ordemNumber: firstNonEmpty(existing.ordemNumber, app.cedulaOpp, p.cedula_opp),
+        fullName: firstNonEmpty(existing.fullName, app.name, p.nome, professional.displayName),
+        address,
+        insurer: firstNonEmpty(
+            existing.insurer,
+            p.rc_profissional === 'Sim' ? 'Responsabilidade civil profissional' : ''
+        ),
+        bio: firstNonEmpty(existing.bio, bioFromBolsaApplication(app)),
+        credentials: firstNonEmpty(existing.credentials, credentialsFromBolsaApplication(app)),
+        primaryAreas: existingPrimary.length ? existingPrimary : areasFromBolsaApplication(app),
+        secondaryAreas: existing.secondaryAreas
     });
+}
+
+async function fillStaffProfileFromBolsa(username) {
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return { profile: await getStaffProfileInternal(u), bolsa: null };
+    const professional = await findProfessionalByUsernameInternal(u);
+    const app = await findBolsaApplicationForStaff(u, professional);
+    if (app && professional) {
+        if (!app.professionalId && professional.id) {
+            try { await setApplicationProfessionalIdInternal(app.id, professional.id); } catch (e) { /* ignore */ }
+        }
+        await seedPsychologistStaffProfile(professional, app);
+    } else if (app && u) {
+        await seedPsychologistStaffProfile({ username: u, displayName: app.name || '' }, app);
+    }
+    return {
+        profile: await getStaffProfileInternal(u),
+        bolsa: publicBolsaProfile(app)
+    };
 }
 
 async function assignLoginToPsychologistApplication(app, { resetPassword } = {}) {

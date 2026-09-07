@@ -1446,10 +1446,12 @@ body.dash-portal .dash-stat-card {
     cursor: pointer;
 }
 
-.clinic-pref-empty {
-    margin: 4px 0 0;
-    font-size: 0.8125rem;
-    color: var(--text-muted);
+.clinic-bolsa-profile {
+    margin: 0;
+}
+
+.clinic-bolsa-profile .admin-psych-section {
+    margin-top: 8px;
 }
 
 @media (max-width: 900px) {

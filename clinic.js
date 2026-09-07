@@ -1686,6 +1686,39 @@ document.addEventListener('DOMContentLoaded', () => {
         if (clinicProfilePhotoBtn) clinicProfilePhotoBtn.textContent = hasPhoto ? 'Replace photo' : 'Add photo';
     }
 
+    function renderBolsaProfileHtml(bolsa) {
+        if (!bolsa || !Array.isArray(bolsa.groups) || !bolsa.groups.length) return '';
+        return bolsa.groups.map((g) => `
+            <section class="admin-psych-section">
+                <h4>${escapeHtml(g.title || '')}</h4>
+                <dl class="admin-psych-qa-list">
+                    ${(g.items || []).map((row) => {
+                        const text = String((row && row.value) || '');
+                        const long = text.includes('\n') || text.length > 120;
+                        return `<div class="admin-psych-qa${long ? ' is-long' : ''}">
+                            <dt>${escapeHtml((row && row.label) || '')}</dt>
+                            <dd>${escapeHtml(text).replace(/\n/g, '<br>')}</dd>
+                        </div>`;
+                    }).join('')}
+                </dl>
+            </section>
+        `).join('');
+    }
+
+    function showBolsaProfileSection(wrapId, bodyId, bolsa) {
+        const wrap = document.getElementById(wrapId);
+        const body = document.getElementById(bodyId);
+        if (!wrap || !body) return;
+        const html = renderBolsaProfileHtml(bolsa);
+        if (!html) {
+            wrap.hidden = true;
+            body.innerHTML = '';
+            return;
+        }
+        body.innerHTML = html;
+        wrap.hidden = false;
+    }
+
     async function loadClinicProfile() {
         if (!clinicProfession) return;
         try {
@@ -1717,6 +1750,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateOrdemLabel();
             fillClinicAreaChecks(data.profession, data.primaryAreas, data.secondaryAreas);
             renderDocumentRows();
+            showBolsaProfileSection('clinicBolsaProfileWrap', 'clinicBolsaProfile', data.bolsa);
             if (clinicProfileFormError) clinicProfileFormError.style.display = 'none';
             if (clinicDocsError) clinicDocsError.style.display = 'none';
         } catch (err) {

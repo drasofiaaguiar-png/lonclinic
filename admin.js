@@ -3620,6 +3620,39 @@ document.addEventListener('DOMContentLoaded', async () => {
         return `<ul>${list.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`;
     }
 
+    function renderBolsaProfileHtml(bolsa) {
+        if (!bolsa || !Array.isArray(bolsa.groups) || !bolsa.groups.length) return '';
+        return bolsa.groups.map((g) => `
+            <section class="admin-psych-section">
+                <h4>${escapeHtml(g.title || '')}</h4>
+                <dl class="admin-psych-qa-list">
+                    ${(g.items || []).map((row) => {
+                        const text = String((row && row.value) || '');
+                        const long = text.includes('\n') || text.length > 120;
+                        return `<div class="admin-psych-qa${long ? ' is-long' : ''}">
+                            <dt>${escapeHtml((row && row.label) || '')}</dt>
+                            <dd>${escapeHtml(text).replace(/\n/g, '<br>')}</dd>
+                        </div>`;
+                    }).join('')}
+                </dl>
+            </section>
+        `).join('');
+    }
+
+    function showBolsaProfileSection(wrapId, bodyId, bolsa) {
+        const wrap = document.getElementById(wrapId);
+        const body = document.getElementById(bodyId);
+        if (!wrap || !body) return;
+        const html = renderBolsaProfileHtml(bolsa);
+        if (!html) {
+            wrap.hidden = true;
+            body.innerHTML = '';
+            return;
+        }
+        body.innerHTML = html;
+        wrap.hidden = false;
+    }
+
     function renderAdminStaffProfiles(data) {
         if (!adminStaffProfilesList) return;
         const staff = (data && data.staff) || [];
@@ -3687,6 +3720,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <h4>Documentos</h4>
                     <ul class="admin-staff-docs">${docs}</ul>
                 </div>
+                ${p.bolsa && p.bolsa.groups && p.bolsa.groups.length
+                    ? `<div class="admin-staff-profile-block clinic-bolsa-profile">
+                        <h4>Bolsa de Profissionais</h4>
+                        ${renderBolsaProfileHtml(p.bolsa)}
+                    </div>`
+                    : ''}
             </article>`;
         }).join('');
     }
@@ -4070,6 +4109,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateAdminOrdemLabel();
             fillAdminAreaChecks(data.profession, data.primaryAreas, data.secondaryAreas);
             renderAdminDocumentRows();
+            showBolsaProfileSection('adminBolsaProfileWrap', 'adminBolsaProfile', data.bolsa);
             if (adminProfileFormError) adminProfileFormError.style.display = 'none';
             if (adminDocsError) adminDocsError.style.display = 'none';
             if (doxyRes.ok) {
