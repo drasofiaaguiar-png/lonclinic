@@ -12,6 +12,7 @@ const { organizationJsonLd, jsonLdScript, originOf, canonicalHref } = require('.
 const authors = require('./authors');
 const { socialLink } = require('./utm');
 const cvi = require('./cvi');
+const talkCta = require('./talk-cta');
 
 const GUIDE_DIR = path.join(__dirname, 'data', 'guide');
 const MANIFEST_PATH = path.join(GUIDE_DIR, 'manifest.json');
@@ -470,7 +471,7 @@ const CLUSTER_CROSS = {
 function actionCopy(lang) {
     const packs = {
         pt: {
-            consultAria: 'Marcar consulta, teste e próximo horário',
+            consultAria: 'Fale com um médico, teste e próximo horário',
             series: 'Na mesma série',
             also: 'Também no magazine',
             related: 'Continuar a ler',
@@ -479,13 +480,13 @@ function actionCopy(lang) {
             slotTitle: 'Próximo horário',
             slotWhen: 'Horários em breve',
             slotNote: 'As vagas desta consulta ainda estão a ser definidas. Pode marcar e escolhemos o horário consigo.',
-            slotCta: 'Marcar consulta',
+            slotCta: 'Fale com um médico',
             psych: {
                 chip: 'Psicologia',
                 title: 'Consulta de psicologia',
                 price: '60 € · sessão avulsa',
                 href: '/saudemental',
-                cta: 'Marcar — 60 €',
+                cta: 'Fale com um psicólogo',
                 note: 'Online · ou 54 €/semana no acompanhamento',
                 service: 'psicologia'
             },
@@ -494,7 +495,7 @@ function actionCopy(lang) {
                 title: 'Consulta de nutrição',
                 price: '39 € · 30 min',
                 href: '/marcar/clinica-geral?ref=blog-nutricao',
-                cta: 'Marcar — 39 €',
+                cta: 'Fale com um nutricionista',
                 note: 'Online · acompanhamento individual, sem planos genéricos',
                 service: 'clinica_geral'
             },
@@ -503,7 +504,7 @@ function actionCopy(lang) {
                 title: 'Programa de reeducação metabólica',
                 price: '115 € · 1.º mês',
                 href: '/marcar/nutricao-programa',
-                cta: 'Começar — 115 €',
+                cta: 'Fale com um nutricionista',
                 note: 'Acompanhamento contínuo · sem prescrição de aGLP-1',
                 service: 'nutricao_programa'
             },
@@ -520,7 +521,7 @@ function actionCopy(lang) {
                 title: 'Consulta de longevidade',
                 price: '79 € · avaliação preventiva',
                 href: '/marcar/longevidade',
-                cta: 'Marcar — 79 €',
+                cta: 'Fale com um médico',
                 note: 'Online · biomarcadores e plano sustentável',
                 service: 'longevidade'
             },
@@ -529,7 +530,7 @@ function actionCopy(lang) {
                 title: 'Consulta do viajante',
                 price: '€39 · 20 min',
                 href: '/marcar/travel',
-                cta: 'Marcar — 39 €',
+                cta: 'Fale com um médico',
                 note: 'Orientação e prescrição no próprio dia',
                 service: 'travel'
             },
@@ -538,7 +539,7 @@ function actionCopy(lang) {
                 title: 'Consulta de clínica geral',
                 price: '39 € · 30 min',
                 href: '/marcar/clinica-geral',
-                cta: 'Marcar — 39 €',
+                cta: 'Fale com um médico',
                 note: 'Médico no próprio dia',
                 service: 'clinica_geral'
             },
@@ -578,13 +579,13 @@ function actionCopy(lang) {
             slotTitle: 'Next available time',
             slotWhen: 'Times coming soon',
             slotNote: 'Appointment slots for this visit are still being set. You can book and we will choose a time with you.',
-            slotCta: 'Book consultation',
+            slotCta: 'Talk to a doctor',
             psych: {
                 chip: 'Psychology',
                 title: 'Psychology consultation',
                 price: '€60 · single session',
                 href: '/saudemental',
-                cta: 'Book — 60 €',
+                cta: 'Talk to a psychologist',
                 note: 'Online · or €54/week for ongoing care',
                 service: 'psicologia'
             },
@@ -593,7 +594,7 @@ function actionCopy(lang) {
                 title: 'Nutrition consultation',
                 price: '39 € · 30 min',
                 href: '/marcar/clinica-geral?ref=blog-nutricao',
-                cta: 'Book — 39 €',
+                cta: 'Talk to a nutritionist',
                 note: 'Online · individual follow-up, no generic plans',
                 service: 'clinica_geral'
             },
@@ -602,7 +603,7 @@ function actionCopy(lang) {
                 title: 'Travel clinic consultation',
                 price: '€39 · 20 min',
                 href: '/marcar/travel',
-                cta: 'Book — 39 €',
+                cta: 'Talk to a doctor',
                 note: 'Advice and a prescription the same day',
                 service: 'travel'
             },
@@ -611,7 +612,7 @@ function actionCopy(lang) {
                 title: 'General medicine consultation',
                 price: '39 € · 30 min',
                 href: '/marcar/clinica-geral',
-                cta: 'Book — 39 €',
+                cta: 'Talk to a doctor',
                 note: 'A doctor the same day',
                 service: 'clinica_geral'
             },
@@ -674,19 +675,30 @@ function bookCardHtml(card, tone, extraClass, extraAttrs) {
     const t = Math.abs(Number(tone) || 0) % 3;
     const klass = extraClass ? ` ${extraClass}` : '';
     const attrs = extraAttrs ? ` ${extraAttrs}` : '';
+    const talkAttr = card.talkRole ? ` data-talk-cta="${escapeHtml(card.talkRole)}"` : '';
     return `
         <article class="guide-book-card guide-book-card--t${t}${klass}"${attrs}>
             <p class="guide-book-chip">${escapeHtml(card.chip)}</p>
             <h3 class="guide-book-title">${escapeHtml(card.title)}</h3>
             <p class="guide-book-price"${card.whenAttr || ''}>${escapeHtml(card.price)}</p>
             <p class="guide-book-note">${escapeHtml(card.note)}</p>
-            <a class="guide-book-cta"${card.ctaAttr || ''} href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
+            <a class="guide-book-cta"${card.ctaAttr || ''}${talkAttr} href="${escapeHtml(card.href)}">${escapeHtml(card.cta)}</a>
         </article>`;
 }
 
-function actionCardsHtml(kind, tone, lang) {
+function applyTalkCta(consult, kind, lang, slug) {
+    if (kind === 'burnout' || kind === 'neurodiversidade') return consult;
+    const talk = talkCta.resolve({ kind, slug, lang });
+    const next = { ...consult, cta: talk.label, talkRole: talk.role };
+    if (talk.role === 'psych' || talk.role === 'psychFind' || talk.role === 'nutritionFind') {
+        next.href = talk.href;
+    }
+    return next;
+}
+
+function actionCardsHtml(kind, tone, lang, slug) {
     const copy = actionCopy(lang);
-    const consult = consultSpec(kind, lang);
+    const consult = applyTalkCta(consultSpec(kind, lang), kind, lang, slug);
     const quiz = quizSpec(kind, lang);
     const t = Math.abs(Number(tone) || 0);
     const hydrate = consult.service === 'clinica_geral';
@@ -713,7 +725,8 @@ function actionCardsHtml(kind, tone, lang) {
         price: copy.slotWhen,
         note: copy.slotNote,
         href: consultHref,
-        cta: copy.slotCta,
+        cta: consult.cta || copy.slotCta,
+        talkRole: consult.talkRole,
         whenAttr: ' data-next-slot-when aria-live="polite"',
         ctaAttr: ' data-next-slot-cta'
     }, t + 2, 'guide-slot-card', `data-next-slot data-service="${escapeHtml(consult.service)}" data-book-href="${escapeHtml(consultHref)}" data-hydrate="${hydrate ? '1' : '0'}" data-price="${escapeHtml(consult.price)}"`);
@@ -724,12 +737,12 @@ function actionCardsHtml(kind, tone, lang) {
 </aside>`;
 }
 
-function bookingCardsHtml(kind, tone, lang) {
-    return actionCardsHtml(kind, tone, lang || 'pt');
+function bookingCardsHtml(kind, tone, lang, slug) {
+    return actionCardsHtml(kind, tone, lang || 'pt', slug);
 }
 
-function consultOnlyCardHtml(kind, tone, lang) {
-    const consult = consultSpec(kind, lang);
+function consultOnlyCardHtml(kind, tone, lang, slug) {
+    const consult = applyTalkCta(consultSpec(kind, lang), kind, lang, slug);
     const href = withLangHref(consult.href, lang);
     const card = bookCardHtml({ ...consult, href }, tone);
     return `
@@ -739,7 +752,7 @@ function consultOnlyCardHtml(kind, tone, lang) {
 </aside>`;
 }
 
-function expandCtaTokens(html, kind, lang) {
+function expandCtaTokens(html, kind, lang, slug) {
     let n = 0;
     return String(html || '').replace(
         /<p>\s*\{\{cta(?::([a-z-]+))?\}\}\s*<\/p>|\{\{cta(?::([a-z-]+))?\}\}/gi,
@@ -747,8 +760,8 @@ function expandCtaTokens(html, kind, lang) {
             const resolved = a || b || kind;
             const idx = n++;
             return idx === 0
-                ? actionCardsHtml(resolved, idx, lang)
-                : consultOnlyCardHtml(resolved, idx, lang);
+                ? actionCardsHtml(resolved, idx, lang, slug)
+                : consultOnlyCardHtml(resolved, idx, lang, slug);
         }
     );
 }
@@ -1049,18 +1062,18 @@ function injectArticleChrome(html, meta, articles, format) {
     if (format === 'html') {
         if (slots) out = insertAfterFirstParagraph(out, slots);
         if (note) out = insertAfterFirstParagraph(out, note);
-        if (!out.includes('guide-actions')) out += actionCardsHtml(kind, 0, lang);
+        if (!out.includes('guide-actions')) out += actionCardsHtml(kind, 0, lang, meta && meta.slug);
         if (backlinks && !out.includes('guide-backlinks')) out += backlinks;
         return out;
     }
-    out = expandCtaTokens(out, kind, lang);
+    out = expandCtaTokens(out, kind, lang, meta && meta.slug);
     if (slots) out = insertAfterFirstParagraph(out, slots);
     if (note) out = insertAfterFirstParagraph(out, note);
     if (backlinks && !out.includes('guide-backlinks')) {
         out = insertAfterFirstH2(out, backlinks);
     }
     if (!out.includes('guide-actions')) {
-        out = insertBeforeFaqOrEnd(out, actionCardsHtml(kind, 0, lang));
+        out = insertBeforeFaqOrEnd(out, actionCardsHtml(kind, 0, lang, meta && meta.slug));
     }
     return out;
 }
@@ -1194,7 +1207,7 @@ function layoutGuidePage(opts) {
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/#servicos" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm" data-talk-cta="doctor">Fale com um médico</a>
                 <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Open menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
@@ -1266,9 +1279,10 @@ function layoutGuidePage(opts) {
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-nav.js"></script>
-    <script src="/i18n.js?v=20260905e" defer></script>
+    <script src="/talk-cta.js?v=20260908a" defer></script>
+    <script src="/i18n.js?v=20260908a" defer></script>
     <script src="/lon-analytics.js?v=20260906h" defer></script>
-    <script src="/lon-slots.js?v=20260906d" defer></script>
+    <script src="/lon-slots.js?v=20260908b" defer></script>
 </body>
 </html>`;
 }
@@ -1531,7 +1545,7 @@ function renderBlogArticle(origin, slug) {
     const chrome = ARTICLE_CHROME[lang] || ARTICLE_CHROME.pt;
     const note = isTravelGuide ? chrome.travelNote : chrome.generalNote;
     const closeCtaKind = defaultCtaKind(meta) === 'general' ? 'clinic' : defaultCtaKind(meta);
-    const closeCta = `<section class="mag-section mag-wrap mag-article-cta">${magCtaHtml(closeCtaKind, lang)}</section>`;
+    const closeCta = `<section class="mag-section mag-wrap mag-article-cta">${magCtaHtml(closeCtaKind, lang, slug)}</section>`;
     let crumbItems = magBreadcrumbCrumbs(articlePath, title);
     if (articleCluster(meta) === 'burnout') {
         crumbItems = [
@@ -1611,7 +1625,10 @@ function renderBlogArticle(origin, slug) {
         ogLocale: langMeta.ogLocale,
         extraHead: articleHreflangLinks(o, meta, manifest.articles),
         extraCssAfter: ['/guide.css?v=20260907a', '/author.css?v=20260820l'],
-        mainHtml: magAppHtml(articlePath, articleInner)
+        mainHtml: magAppHtml(articlePath, articleInner, {
+            magazineCurrent: true,
+            talk: talkCta.resolve({ kind: ctaKind, slug, lang })
+        })
     });
 
     return { html };
@@ -1757,7 +1774,7 @@ function magTocHtml() {
             </nav>`;
 }
 
-function magCtaHtml(kind, lang) {
+function magCtaHtml(kind, lang, slug) {
     const packs = {
         pt: {
             mental: {
@@ -1788,7 +1805,7 @@ function magCtaHtml(kind, lang) {
                 kicker: 'Clínica',
                 title: 'Uma consulta, com tempo.',
                 actions: [
-                    { href: '/marcar/clinica-geral', label: 'Marcar consulta' },
+                    { href: '/marcar/clinica-geral', label: 'Fale com um médico' },
                     { href: '/blog/telemedicina-em-casa', label: 'Telemedicina em casa' }
                 ]
             },
@@ -1797,7 +1814,7 @@ function magCtaHtml(kind, lang) {
                 title: 'Um plano que cabe na sua vida.',
                 actions: [
                     { href: '/nutricao', label: 'Nutrição por condição' },
-                    { href: '/marcar/clinica-geral?ref=magazine-perda-de-peso', label: 'Marcar consulta' }
+                    { href: '/marcar/clinica-geral?ref=magazine-perda-de-peso', label: 'Fale com um nutricionista' }
                 ]
             },
             'nutricao-programa': {
@@ -1977,13 +1994,8 @@ function magCtaHtml(kind, lang) {
         psicologia: `/marcar/saude-mental${langQ}`,
         longevity: `/marcar/longevidade${langQ}`
     };
-    const labelByLang = {
-        pt: 'Marcar consulta',
-        en: 'Book consultation',
-        es: 'Reservar consulta',
-        fr: 'Prendre rendez-vous',
-        de: 'Termin buchen'
-    };
+    const talkKind = kind === 'clinic' || kind === 'general' ? 'clinic' : kind;
+    const talk = talkCta.resolve({ kind: talkKind, slug, lang });
     const hubLabelByLang = {
         pt: 'Ir ao centro burnout',
         en: 'Go to the burnout hub',
@@ -1998,19 +2010,19 @@ function magCtaHtml(kind, lang) {
         fr: 'Faire le test',
         de: 'Test machen'
     };
-    const bookingHref = bookingByKind[kind] || bookingByKind.clinic;
-    const bookingLabel = (pack.actions && pack.actions[0] && pack.actions[0].label) || labelByLang[lang] || labelByLang.pt;
+    const bookingHref = (kind === 'mental' || kind === 'psicologia')
+        ? talk.href
+        : (bookingByKind[kind] || bookingByKind.clinic);
+    const bookingLabel = talk.label || (pack.actions && pack.actions[0] && pack.actions[0].label);
     let actions;
     if (kind === 'burnout') {
         actions = `<a class="mag-cta-primary" href="/burnout">${escapeHtml(hubLabelByLang[lang] || hubLabelByLang.pt)}</a><a class="mag-cta-ghost" href="${escapeHtml(withLangHref('/burnout/teste', lang))}">${escapeHtml(testLabelByLang[lang] || testLabelByLang.pt)}</a>`;
     } else if (kind === 'neurodiversidade' && pack.actions && pack.actions.length >= 2) {
         actions = `<a class="mag-cta-primary" href="${escapeHtml(pack.actions[0].href)}">${escapeHtml(pack.actions[0].label)}</a><a class="mag-cta-ghost" href="${escapeHtml(pack.actions[1].href)}">${escapeHtml(pack.actions[1].label)}</a>`;
     } else if ((kind === 'nutricao-programa' || kind === 'nutricao_programa') && pack.actions && pack.actions.length >= 2) {
-        actions = `<a class="mag-cta-primary" href="${escapeHtml(pack.actions[1].href)}">${escapeHtml(pack.actions[1].label)}</a><a class="mag-cta-ghost" href="${escapeHtml(pack.actions[0].href)}">${escapeHtml(pack.actions[0].label)}</a>`;
+        actions = `<a class="mag-cta-primary" href="${escapeHtml(pack.actions[1].href)}">${escapeHtml(talk.label)}</a><a class="mag-cta-ghost" href="${escapeHtml(pack.actions[0].href)}">${escapeHtml(pack.actions[0].label)}</a>`;
     } else {
-        actions = `<a class="mag-cta-primary" href="${escapeHtml(bookingHref)}">${escapeHtml(
-            kind === 'clinic' || kind === 'travel' || kind === 'mental' || kind === 'nutrition' || kind === 'longevity' || kind === 'nutricao-programa' ? (labelByLang[lang] || labelByLang.pt) : bookingLabel
-        )}</a>`;
+        actions = `<a class="mag-cta-primary" href="${escapeHtml(bookingHref)}" data-talk-cta="${escapeHtml(talk.role)}">${escapeHtml(bookingLabel)}</a>`;
     }
     return `<aside class="mag-cta" aria-label="${escapeHtml(pack.title)}">
                 <p>${escapeHtml(pack.kicker)}</p>
@@ -2190,6 +2202,8 @@ function magazineNavTree() {
                                 { label: 'Trabalho remoto', href: '/blog/sinais-de-burnout-no-trabalho-remoto' },
                                 { label: 'Baixa médica em Portugal', href: '/blog/burnout-e-baixa-medica-em-portugal' },
                                 { label: 'Prevenção nas empresas', href: '/blog/como-as-empresas-podem-prevenir-o-burnout' },
+                                { label: 'Equipa motivada ou a cumprir horário', href: '/blog/como-saber-se-a-equipa-esta-motivada' },
+                                { label: 'Só um founder entende o burnout?', href: '/blog/so-um-founder-entende-o-burnout-de-um-founder' },
                                 { label: 'Burnout financeiro', href: '/blog/burnout-financeiro' },
                                 { label: 'Reconstruir a motivação', href: '/blog/reconstruir-a-motivacao-depois-de-um-burnout' },
                                 { label: 'Burnout materno', href: '/blog/burnout-materno' },
@@ -2452,6 +2466,10 @@ function magSidenavHtml(currentPath) {
 
 function magLonNavHtml(opts) {
     const magCurrent = opts && opts.magazineCurrent === false ? '' : ' aria-current="page"';
+    const talk = (opts && opts.talk) || talkCta.resolve({ kind: 'clinic', lang: 'pt' });
+    const talkHref = escapeHtml(talk.href);
+    const talkLabel = escapeHtml(talk.label);
+    const talkRole = escapeHtml(talk.role);
     return `<header class="lon-nav" id="lonNav">
         <div class="lon-container lon-nav-inner">
             <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
@@ -2465,7 +2483,7 @@ function magLonNavHtml(opts) {
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <a href="${talkHref}" class="lon-btn lon-btn-primary lon-btn-sm" data-talk-cta="${talkRole}">${talkLabel}</a>
                 <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
@@ -2477,6 +2495,7 @@ function magLonNavHtml(opts) {
             <a href="/blog">Guias</a>
             <a href="/#contacto">Contato</a>
             <a href="/patient-portal">Login</a>
+            <a href="${talkHref}" data-talk-cta="${talkRole}">${talkLabel}</a>
         </div>
     </header>`;
 }
@@ -2597,10 +2616,11 @@ function layoutMagazinePage(opts) {
     ${mainHtml}
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-nav.js"></script>
-    <script src="/i18n.js?v=20260905e" defer></script>
+    <script src="/talk-cta.js?v=20260908a" defer></script>
+    <script src="/i18n.js?v=20260908a" defer></script>
     <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260906d" defer></script>
+    <script src="/lon-slots.js?v=20260908b" defer></script>
     <script src="/guide-actions.js?v=20260905a" defer></script>
 </body>
 </html>`;

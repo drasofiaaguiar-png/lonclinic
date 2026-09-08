@@ -245,7 +245,7 @@
       "title": "Síndrome do executivo",
       "description": "Síndrome do executivo (workaholism / burnout do líder): incapacidade de desligar, culpa ao descansar e impacto na saúde — e como começar a inverter o padrão.",
       "datePublished": "2026-08-06",
-      "dateModified": "2026-09-02",
+      "dateModified": "2026-09-08",
       "format": "markdown",
       "group": "guides",
       "faq": [
@@ -260,6 +260,10 @@
         {
           "q": "Quando procurar ajuda profissional?",
           "a": "Quando o autocuidado (sono, exercício, desconexão) não chega, quando há culpa intensa ao descansar, ou quando já há sintomas físicos — sono, dores, hipertensão, problemas digestivos. A avaliação clínica e o acompanhamento psicológico ajudam a romper o padrão."
+        },
+        {
+          "q": "Só outro founder percebe o burnout do líder?",
+          "a": "Outro founder percebe o contexto; um psicólogo com prática em burnout executivo trata o quadro. Pares para isolamento; acompanhamento clínico para o tratamento."
         }
       ]
     },
@@ -489,7 +493,7 @@
       "title": "Burnout em gestores",
       "description": "Burnout em gestores e líderes de equipa: responsabilidade sem margem, reuniões infinitas e decisão sob fadiga.",
       "datePublished": "2026-08-06",
-      "dateModified": "2026-08-06",
+      "dateModified": "2026-09-08",
       "format": "markdown",
       "group": "profession"
     },
@@ -499,7 +503,7 @@
       "title": "Burnout em empreendedores",
       "description": "Burnout em empreendedores e founders: identidade fundida com o negócio, incerteza financeira e a ideia de que 'não se pode parar'.",
       "datePublished": "2026-08-06",
-      "dateModified": "2026-08-06",
+      "dateModified": "2026-09-08",
       "format": "markdown",
       "group": "profession"
     },

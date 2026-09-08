@@ -451,8 +451,15 @@
         var p = (location.pathname || '/').toLowerCase();
         var lang = pageLang();
         var book = lang === 'en' ? 'Book consultation' : lang === 'es' ? 'Reservar consulta' : 'Marcar consulta';
+        var talk = (window.LonTalkCta && window.LonTalkCta.shouldTalk(p, document.body && document.body.className))
+            ? window.LonTalkCta.resolveFromPath(p, lang, document.body && document.body.className)
+            : null;
+        var talkCta = talk && talk.label ? talk.label : book;
         if (/\/consulta\/renovacao|\/marcar\/renovacao|renew-prescription/.test(p)) {
             return { service: 'renovacao', href: '/marcar/renovacao', cta: book };
+        }
+        if (/\/blog\/[^/?#]*burnout/i.test(p)) {
+            return { service: 'burnout_mensal', href: '/marcar/burnout-mensal', cta: talkCta };
         }
         if (/\/psicologia-burnout/.test(p)) {
             return {
@@ -462,11 +469,14 @@
                 bookMode: 'link'
             };
         }
-        if (/\/blog\/[^/?#]*burnout/i.test(p)) {
-            return { service: 'burnout_mensal', href: '/marcar/burnout-mensal', cta: book };
+        if (document.body && document.body.classList.contains('qx-body')) {
+            return { service: 'saude_mental', href: '/triagem', cta: talkCta, bookMode: 'link' };
         }
-        if (/\/(saudemental|consultas|psicologia)(\/|$)/.test(p)) {
+        if (/\/(saudemental|psicologia)(\/|$)/.test(p)) {
             return { service: 'saude_mental', href: '/saudemental', cta: book };
+        }
+        if (/\/consultas(\/|$)/.test(p)) {
+            return { service: 'saude_mental', href: '/triagem', cta: talkCta, bookMode: 'link' };
         }
         if (/\/marcar\/burnout-programa/.test(p)) {
             return { service: 'burnout_programa', href: '/marcar/burnout-programa', cta: book };
@@ -478,23 +488,23 @@
             return { service: 'burnout', href: '/marcar/burnout', cta: book };
         }
         if (/\/burnout|clinica-anti-burnout/.test(p)) {
-            return { service: 'burnout_mensal', href: '/marcar/burnout-mensal', cta: book };
+            return { service: 'burnout_mensal', href: '/marcar/burnout-mensal', cta: talkCta };
         }
         if (isWeightLossPath(p)) {
             return {
                 service: 'nutricao_programa',
                 href: '/marcar/nutricao-programa?ref=sticky-nutricao',
-                cta: book,
+                cta: talkCta,
                 goal: 'Perda de peso / reeduca\u00e7\u00e3o metab\u00f3lica'
             };
         }
         if (/\/nutricao/.test(p)) {
-            return { service: 'clinica_geral', href: '/marcar/clinica-geral?ref=nutricao', cta: book };
+            return { service: 'clinica_geral', href: '/marcar/clinica-geral?ref=nutricao', cta: talkCta };
         }
         if (/\/marcar\/travel|travel-clinic/.test(p)) {
             return { service: 'travel', href: '/marcar/travel', cta: book };
         }
-        return { service: 'clinica_geral', href: '/marcar/clinica-geral', cta: book };
+        return { service: 'clinica_geral', href: '/marcar/clinica-geral', cta: talkCta };
     }
 
     function shouldInjectSticky() {

@@ -12,12 +12,13 @@ const path = require('path');
 const { marked } = require('marked');
 const { organizationJsonLd, originOf, canonicalHref } = require('./seo');
 const authors = require('./authors');
+const talkCta = require('./talk-cta');
 
 const NUTRICAO_DIR = path.join(__dirname, 'data', 'nutricao');
 const MANIFEST_PATH = path.join(NUTRICAO_DIR, 'manifest.json');
 const PAGES_DIR = path.join(NUTRICAO_DIR, 'pages');
 const CSS_V = '20260905j';
-const SLOTS_V = '20260906d';
+const SLOTS_V = '20260908b';
 const ON_URL = 'https://www.ordemdosnutricionistas.pt/';
 const NUTRICAO_PROGRAMA_HREF = '/marcar/nutricao-programa';
 const WEIGHT_LOSS_SLUGS = new Set(['glp-1', 'ozempic-wegovy']);
@@ -215,6 +216,27 @@ function psychologyBridgeHtml(bridge) {
         </aside>`;
 }
 
+function nutritionTalk(meta) {
+    const href = String((meta && meta.bookingHref) || '');
+    if (href.includes('/marcar/longevidade')) {
+        return talkCta.resolve({
+            kind: 'longevity',
+            slug: meta && meta.slug,
+            lang: 'pt',
+            existingLabel: meta && meta.bookingLabel,
+            bookingHref: href
+        });
+    }
+    const weightLoss = isWeightLossPage(meta);
+    return talkCta.resolve({
+        kind: weightLoss ? 'nutricao-programa' : 'nutrition',
+        slug: meta && meta.slug,
+        lang: 'pt',
+        existingLabel: meta && meta.bookingLabel,
+        bookingHref: href || undefined
+    });
+}
+
 function bookingCardsHtml(meta, tone) {
     const weightLoss = isWeightLossPage(meta);
     const primaryHref = meta.bookingHref || (weightLoss ? `${NUTRICAO_PROGRAMA_HREF}?ref=nutricao-${meta.slug || 'hub'}` : '/marcar/clinica-geral');
@@ -227,7 +249,7 @@ function bookingCardsHtml(meta, tone) {
                 title: 'Consulta inicial de nutrição metabólica',
                 price: meta.price || '115 €',
                 note: 'Arranque do programa — 2 consultas/mês, chat no portal e ajustes quinzenais. Sem prescrição de aGLP-1.',
-                cta: 'Marcar — 115 €',
+                cta: 'Fale com um nutricionista',
                 href: primaryHref,
                 track: 'nutricao-card-book'
             }
@@ -236,7 +258,7 @@ function bookingCardsHtml(meta, tone) {
                 title: isLongevidade ? 'Consulta de longevidade' : 'Orientação nutricional online',
                 price: meta.price || (isLongevidade ? '79 €' : '39 €'),
                 note: 'Videoconsulta · reeducação alimentar nesta sessão, não um PDF genérico nem receita de emagrecimento',
-                cta: isLongevidade ? 'Marcar — 79 €' : 'Marcar — 39 €',
+                cta: isLongevidade ? 'Fale com um médico' : 'Fale com um nutricionista',
                 href: primaryHref,
                 track: 'nutricao-card-book'
             },
@@ -263,7 +285,7 @@ function bookingCardsHtml(meta, tone) {
         )
         .join('');
     return `
-        <aside class="guide-book" aria-label="Marcar consulta na Lon Clinic">
+        <aside class="guide-book" aria-label="Fale com um nutricionista na Lon Clinic">
             <div class="guide-book-grid">${items}
             </div>
         </aside>`;
@@ -471,7 +493,8 @@ function layoutPage(opts) {
     </footer>
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
     <script src="/lon-nav.js"></script>
-    <script src="/i18n.js?v=20260906c" defer></script>
+    <script src="/talk-cta.js?v=20260908a" defer></script>
+    <script src="/i18n.js?v=20260908a" defer></script>
     <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=${SLOTS_V}" defer></script>
@@ -601,6 +624,8 @@ function renderSpoke(origin, slug) {
     const bookingHref = meta.bookingHref || (weightLoss
         ? `${NUTRICAO_PROGRAMA_HREF}?ref=nutricao-${meta.slug}`
         : '/marcar/clinica-geral');
+    const talk = nutritionTalk({ ...meta, bookingHref });
+    const talkLabel = talk.label;
     const slotService = meta.slotService || (weightLoss ? 'nutricao_programa' : 'clinica_geral');
     const pages = livePages();
     const lead = (Array.isArray(meta.lead) ? meta.lead : [meta.lead]).filter(Boolean)
@@ -680,7 +705,7 @@ function renderSpoke(origin, slug) {
                 <div class="cq-lead">${lead}</div>
                 ${nutritionBylineHtml(datePub)}
                 <div class="cq-header-actions">
-                    <a class="lon-btn lon-btn-dark" data-cta="book" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
+                    <a class="lon-btn lon-btn-dark" data-cta="book" data-talk-cta="${escapeHtml(talk.role)}" href="${escapeHtml(bookingHref)}">${escapeHtml(talkLabel)}</a>
                     <a class="lon-btn lon-btn-soft" href="#preco">Ver preço</a>
                 </div>
                 ${slotsHtml}
@@ -728,7 +753,7 @@ function renderSpoke(origin, slug) {
                 <p class="cq-price-value">${escapeHtml(meta.price || '')}</p>
                 <p class="cq-price-note">${escapeHtml(meta.priceNote || '')}</p>
                 ${formatTableHtml(meta)}
-                <a class="lon-btn lon-btn-primary" data-cta="book" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
+                <a class="lon-btn lon-btn-primary" data-cta="book" data-talk-cta="${escapeHtml(talk.role)}" href="${escapeHtml(bookingHref)}">${escapeHtml(talkLabel)}</a>
             </section>
 
             ${psychologyBridgeHtml(meta.psychologyBridge)}
@@ -744,13 +769,13 @@ function renderSpoke(origin, slug) {
             <p class="cq-disclaimer">Informação de carácter geral — não substitui consulta médica nem consulta de nutricionista individualizada. A Lon Clinic não prescreve aGLP-1 (Ozempic, Wegovy ou equivalentes) para perda de peso. A Lon Clinic está registada na ERS (n.º 45475). Planos alimentares detalhados são da competência de nutricionista inscrito na Ordem dos Nutricionistas — a cédula será publicada quando o profissional estiver identificado.</p>
             ${relatedHtml(meta.related, pages, slug)}
         </article>
-        <aside class="cq-cta-band" aria-label="Marcar consulta">
+        <aside class="cq-cta-band" aria-label="${escapeHtml(talkLabel)}">
             <div class="lon-container cq-cta-inner">
                 <p class="cq-cta-kicker">${weightLoss ? 'Programa mensal · consulta inicial de nutrição metabólica' : 'Preço visível · videoconsulta'}</p>
-                <h2 class="cq-cta-title">${escapeHtml(meta.ctaTitle || 'Marcar orientação nutricional')}</h2>
+                <h2 class="cq-cta-title">${escapeHtml(meta.ctaTitle || talkLabel)}</h2>
                 <p class="cq-cta-lead">${escapeHtml(meta.priceNote || meta.price || '')}</p>
                 <div class="cq-cta-actions">
-                    <a class="lon-btn lon-btn-dark" data-cta="book" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
+                    <a class="lon-btn lon-btn-dark" data-cta="book" data-talk-cta="${escapeHtml(talk.role)}" href="${escapeHtml(bookingHref)}">${escapeHtml(talkLabel)}</a>
                     <a class="lon-btn lon-btn-soft" href="/nutricao">Ver todas as condições</a>
                 </div>
             </div>

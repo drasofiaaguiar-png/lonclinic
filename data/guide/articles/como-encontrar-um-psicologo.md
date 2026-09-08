@@ -34,7 +34,7 @@ Mas também me aconteceu o contrário. Gostei tanto da minha psicóloga que a re
 
 Antes de procurar um nome, procura uma direcção. Alguns pontos de partida úteis:
 
-- **Motivo principal**: [ansiedade](/blog/ansiedade-normal-ou-perturbacao), [burnout](/burnout), luto, questões relacionais, [autoestima](/blog/autoestima-vs-autoconfianca), um diagnóstico específico (por exemplo, [PHDA no adulto](/blog/adhd-em-adultos-sintomas))?
+- **Motivo principal**: [ansiedade](/blog/ansiedade-normal-ou-perturbacao), [burnout](/burnout), luto, questões relacionais, [autoestima](/blog/autoestima-vs-autoconfianca), um diagnóstico específico (por exemplo, [PHDA no adulto](/blog/adhd-em-adultos-sintomas))? Se o contexto é fundar ou gerir uma empresa, [só um founder entende o burnout de um founder](/blog/so-um-founder-entende-o-burnout-de-um-founder) explica porque o generalista muitas vezes não chega.
 - **Abordagem que te atrai**: terapia cognitivo-comportamental (mais estruturada, orientada a objectivos), psicodinâmica (mais exploratória, foco no passado e padrões inconscientes), sistémica (foco em relações e contexto), entre outras. Não precisas de saber tecnicamente — mas vale a pena perguntar ao psicólogo qual é a abordagem dele e ver se a descrição te soa bem.
 - **Formato**: presencial ou online? Para muita gente em Portugal, sobretudo fora dos grandes centros urbanos, a telepsicologia resolve o problema de simplesmente não haver oferta suficiente perto de casa.
 

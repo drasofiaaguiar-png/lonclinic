@@ -22,10 +22,19 @@
     /* ── Page detection ── */
     function detectPage() {
         const p = window.location.pathname.toLowerCase();
-        if (p.includes('travel')) return 'travel';
-        if (p.includes('book')) return 'book';
-        if (p.includes('marcar')) return 'marcar';
-        if (p.includes('info')) return 'info';
+        if (p.includes('/marcar')) return 'marcar';
+        if (p.includes('book.html') || /\/book(\/|$)/.test(p)) return 'book';
+        if (p.includes('info.html') || p.includes('/info')) return 'info';
+        if (p.includes('travel') && !p.includes('/blog') && !p.includes('/consulta/')) return 'travel';
+        if (/^\/(blog|magazine|consulta\/|nutricao\/|burnout\/|consultas)(\/|$)?/.test(p) || /^\/consulta\//.test(p)) {
+            return 'content';
+        }
+        try {
+            const b = document.body;
+            if (b && (b.classList.contains('mag-body') || b.classList.contains('cq-body') || b.classList.contains('qx-body') || b.classList.contains('guide-body') || b.classList.contains('bo-body') || b.classList.contains('nu-body'))) {
+                return 'content';
+            }
+        } catch (e) { /* ignore */ }
         return 'index';
     }
     const PAGE = detectPage();
@@ -45,7 +54,7 @@
         { s: '.lon-nav-links a[href="/blog"], .lon-mobile-menu a[href="/blog"]', en: 'Guides', pt: 'Guias', es: 'Guías' },
         { s: '.lon-nav-links a[href="/#contacto"], .lon-mobile-menu a[href="/#contacto"]', en: 'Contact', pt: 'Contato', es: 'Contacto' },
         { s: '.lon-nav-actions > a.lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
-        { s: '.lon-nav-actions > a.lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
+        { s: '.lon-nav-actions > a.lon-btn-primary[href="/marcar/clinica-geral"]:not([data-talk-cta])', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
         { s: '.lon-mobile-menu a[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
     ];
 
@@ -81,7 +90,7 @@
         { s: '.lon-nav-links a[href="/blog"], .lon-mobile-menu a[href="/blog"]', en: 'Guides', pt: 'Guias', es: 'Guías' },
         { s: '.lon-nav-links a[href="#contacto"], .lon-mobile-menu a[href="#contacto"]', en: 'Contact', pt: 'Contato', es: 'Contacto' },
         { s: '.lon-nav-actions .lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
-        { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
+        { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]:not([data-talk-cta])', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
 
         /* ── Hero ── */
         { s: '.dr-badge', en: 'Telemedicine Platform', pt: 'Plataforma de telemedicina', es: 'Plataforma de telemedicina' },
@@ -518,7 +527,7 @@
         { s: '.lon-nav-links a[href="/#servicos"], .lon-mobile-menu a[href="/#servicos"]', en: 'Services', pt: 'Serviços', es: 'Servicios' },
         { s: '.lon-nav-links a[href="/#contacto"], .lon-mobile-menu a[href="/#contacto"]', en: 'Contact', pt: 'Contato', es: 'Contacto' },
         { s: '.lon-nav-actions .lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
-        { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
+        { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]:not([data-talk-cta])', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
 
         /* ── Error ── */
         { s: '#marcarError .marcar-error', en: 'Consultation type not found. Choose a service on the <a href="/#servicos">homepage</a>.', pt: 'Tipo de consulta não encontrado. Escolha um serviço na <a href="/#servicos">página inicial</a>.', es: 'Tipo de consulta no encontrado. Elija un servicio en la <a href="/#servicos">página de inicio</a>.', h: true },
@@ -545,6 +554,15 @@
         { s: '#marcarContinue', en: 'Continue to details and payment', pt: 'Continuar para dados e pagamento', es: 'Continuar a datos y pago' },
     ];
 
+    const CONTENT = [
+        { s: '[data-talk-cta="doctor"]', en: 'Talk to a doctor', pt: 'Fale com um médico', es: 'Hable con un médico' },
+        { s: '[data-talk-cta="doctorNow"]', en: 'Talk to a doctor now', pt: 'Fale com um médico agora', es: 'Hable con un médico ahora' },
+        { s: '[data-talk-cta="psych"]', en: 'Talk to a psychologist', pt: 'Fale com um psicólogo', es: 'Hable con un psicólogo' },
+        { s: '[data-talk-cta="psychFind"]', en: 'Find your psychologist', pt: 'Encontre o seu psicólogo', es: 'Encuentre a su psicólogo' },
+        { s: '[data-talk-cta="nutrition"]', en: 'Talk to a nutritionist', pt: 'Fale com um nutricionista', es: 'Hable con un nutricionista' },
+        { s: '[data-talk-cta="nutritionFind"]', en: 'Find your nutritionist', pt: 'Encontre o seu nutricionista', es: 'Encuentre a su nutricionista' }
+    ];
+
     /* ═══════════════════════════
        INFO PAGE
     ═══════════════════════════ */
@@ -555,7 +573,7 @@
         { s: '.lon-nav-links a[href="/#servicos"], .lon-mobile-menu a[href="/#servicos"]', en: 'Services', pt: 'Serviços', es: 'Servicios' },
         { s: '.lon-nav-links a[href="/#contacto"], .lon-mobile-menu a[href="/#contacto"]', en: 'Contact', pt: 'Contato', es: 'Contacto' },
         { s: '.lon-nav-actions .lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
-        { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
+        { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]:not([data-talk-cta])', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
         { s: '.foot', en: 'If you need immediate assistance, contact <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> or +351 928 372 775.', pt: 'Se precisar de ajuda imediata, contacte <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> ou +351 928 372 775.', es: 'Si necesita asistencia inmediata, contacte <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> o +351 928 372 775.', h: true },
     ];
 
@@ -775,7 +793,7 @@
     ══════════════════════════════════════════ */
 
     function getEntries() {
-        const map = { index: INDEX, travel: TRAVEL, book: BOOK, marcar: MARCAR, info: INFO };
+        const map = { index: INDEX, travel: TRAVEL, book: BOOK, marcar: MARCAR, info: INFO, content: CONTENT };
         const pageEntries = map[PAGE] || [];
         const commonEntries = (PAGE !== 'book') ? COMMON : [];
         // LON_NAV only needed for longevity travel/book pages (lon-nav with /#... links)

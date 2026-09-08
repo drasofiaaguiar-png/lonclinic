@@ -18,7 +18,7 @@
 - Sono leve, domingo com nó no estômago
 - Queda de clareza estratégica
 
-Se isto lhe soa familiar no papel de líder de equipa, leia também [síndrome do executivo](/burnout/sindrome-do-executivo) — o padrão de não conseguir desligar, mesmo sem cansaço «óbvio».
+Se isto lhe soa familiar no papel de líder de equipa, leia também [síndrome do executivo](/burnout/sindrome-do-executivo) — o padrão de não conseguir desligar, mesmo sem cansaço «óbvio» — e [como saber se a equipa está motivada](/blog/como-saber-se-a-equipa-esta-motivada). Se a pergunta for «só outro founder me percebe?», a resposta está em [só um founder entende o burnout de um founder](/blog/so-um-founder-entende-o-burnout-de-um-founder).
 
 ## O que fazer sem abandonar o cargo amanhã
 

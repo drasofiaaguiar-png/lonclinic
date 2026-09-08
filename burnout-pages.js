@@ -258,7 +258,7 @@ function layoutBurnoutPage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260906i">
-    <link rel="stylesheet" href="/burnout-pages.css?v=20260906c">
+    <link rel="stylesheet" href="/burnout-pages.css?v=20260908a">
     <link rel="stylesheet" href="/author.css?v=20260820e">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     ${ldScripts}
@@ -362,10 +362,11 @@ function layoutBurnoutPage(opts) {
     </footer>
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
     <script src="/lon-nav.js"></script>
-    <script src="/i18n.js?v=20260905e" defer></script>
+    <script src="/talk-cta.js?v=20260908a" defer></script>
+    <script src="/i18n.js?v=20260908a" defer></script>
     <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260906d" defer></script>
+    <script src="/lon-slots.js?v=20260908b" defer></script>
 </body>
 </html>`;
 }

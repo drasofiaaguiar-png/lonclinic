@@ -14,6 +14,7 @@ const path = require('path');
 const { marked } = require('marked');
 const { organizationJsonLd, originOf, canonicalHref, travelProcedureNode } = require('./seo');
 const authors = require('./authors');
+const talkCta = require('./talk-cta');
 
 const CONSULTA_DIR = path.join(__dirname, 'data', 'consulta');
 const MANIFEST_PATH = path.join(CONSULTA_DIR, 'manifest.json');
@@ -198,7 +199,7 @@ function bookingCardsHtml(page, tone) {
         title: 'Consulta do viajante',
         price: '39 € · 1 pessoa',
         note: 'Vacinas, malária e plano por destino · prescrição no próprio dia',
-        cta: 'Marcar — 39 €',
+        cta: 'Fale com um médico',
         href: primaryHref,
         track: 'consulta-card-travel'
     };
@@ -207,7 +208,7 @@ function bookingCardsHtml(page, tone) {
         title: 'Consulta médica online',
         price: '39 € · ~30 min',
         note: 'Videoconsulta · médica identificada · receita electrónica se indicada',
-        cta: 'Marcar — 39 €',
+        cta: 'Fale com um médico',
         href: isTravel || isRenew ? `/marcar/clinica-geral?ref=${encodeURIComponent(slug)}` : primaryHref,
         track: 'consulta-card-gp'
     };
@@ -221,9 +222,29 @@ function bookingCardsHtml(page, tone) {
         track: 'consulta-card-renew'
     };
     if (isTravel) {
-        return bookingCardsMarkup('Marcar consulta na Lon Clinic', [travel, gp], tone);
+        return bookingCardsMarkup('Fale com um médico na Lon Clinic', [travel, gp], tone);
     }
-    return bookingCardsMarkup('Marcar consulta na Lon Clinic', isRenew ? [renew, gp] : [gp, renew], tone);
+    return bookingCardsMarkup('Fale com um médico na Lon Clinic', isRenew ? [renew, gp] : [gp, renew], tone);
+}
+
+function spokeTalk(page) {
+    const slug = (page && page.slug) || '';
+    const href = String((page && page.bookingHref) || '');
+    if (href.includes('/marcar/renovacao') || slug === 'renovacao-receita') {
+        const existing = page && page.bookingLabel;
+        return {
+            role: 'renew',
+            label: talkCta.isGenericBookLabel(existing) ? 'Renovar — 19 €' : existing,
+            href: href || '/marcar/renovacao'
+        };
+    }
+    return talkCta.resolve({
+        kind: (page && page.category) === 'viagem' ? 'travel' : 'clinic',
+        slug,
+        lang: 'pt',
+        existingLabel: page && page.bookingLabel,
+        bookingHref: href || '/marcar/clinica-geral'
+    });
 }
 
 function socialProofHtml() {
@@ -234,17 +255,18 @@ function socialProofHtml() {
         </aside>`;
 }
 
-function stickyCtaLabel() {
-    return 'Marcar consulta';
+function stickyCtaLabel(page) {
+    return spokeTalk(page).label;
 }
 function ctaBand(page) {
-    const href = escapeHtml(page.bookingHref || '/marcar/clinica-geral');
-    const label = escapeHtml(page.bookingLabel || 'Marcar consulta');
+    const talk = spokeTalk(page);
+    const href = escapeHtml(talk.href);
+    const label = escapeHtml(talk.label);
     return `
-        <aside class="cq-cta-band" aria-label="Marcar consulta">
+        <aside class="cq-cta-band" aria-label="${label}">
             <div class="lon-container cq-cta-inner">
                 <p class="cq-cta-kicker">Preço visível · videoconsulta</p>
-                <h2 class="cq-cta-title">${escapeHtml(page.ctaTitle || 'Marcar consulta médica online')}</h2>
+                <h2 class="cq-cta-title">${escapeHtml(page.ctaTitle || talk.label)}</h2>
                 <p class="cq-cta-lead">${escapeHtml(page.priceNote || page.price || '')}</p>
                 <div class="cq-cta-actions">
                     <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="spoke-band" data-cta="book" href="${href}">${label}</a>
@@ -264,9 +286,14 @@ function layoutConsultaPage(opts) {
         jsonLdExtra,
         mainHtml,
         robots,
-        headerBookHref
+        headerBookHref,
+        headerBookLabel,
+        headerTalkRole
     } = opts;
 
+    const navCtaHref = escapeHtml(headerBookHref || '/marcar/clinica-geral');
+    const navCtaLabel = escapeHtml(headerBookLabel || 'Fale com um médico');
+    const navTalkRole = escapeHtml(headerTalkRole || 'doctor');
     const canonicalUrl = canonicalHref(canonicalPath);
     const safeTitle = escapeHtml(title);
     const safeDesc = escapeHtml(description);
@@ -338,7 +365,7 @@ function layoutConsultaPage(opts) {
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="${escapeHtml(headerBookHref || '/marcar/clinica-geral')}" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <a href="${navCtaHref}" class="lon-btn lon-btn-primary lon-btn-sm" data-talk-cta="${navTalkRole}">${navCtaLabel}</a>
                 <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
@@ -350,7 +377,7 @@ function layoutConsultaPage(opts) {
             <a href="/travel-clinic">Medicina do viajante</a>
             <a href="/saudemental">Psicologia</a>
             <a href="/patient-portal">Login</a>
-            <a href="${escapeHtml(headerBookHref || '/marcar/clinica-geral')}">Marcar consulta</a>
+            <a href="${navCtaHref}" data-talk-cta="${navTalkRole}">${navCtaLabel}</a>
         </div>
     </header>
     ${mainHtml}
@@ -378,7 +405,7 @@ function layoutConsultaPage(opts) {
                     <h4>Apoio</h4>
                     <a href="/faq">FAQ</a>
                     <a href="/info.html?page=contato">Contato</a>
-                    <a href="${escapeHtml(headerBookHref || '/marcar/clinica-geral')}">Marcar consulta</a>
+                    <a href="${navCtaHref}">${navCtaLabel}</a>
                 </div>
             </div>
             <div class="lon-footer-bottom">
@@ -393,10 +420,11 @@ function layoutConsultaPage(opts) {
     </footer>
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
     <script src="/lon-nav.js"></script>
-    <script src="/i18n.js?v=20260905e" defer></script>
+    <script src="/talk-cta.js?v=20260908a" defer></script>
+    <script src="/i18n.js?v=20260908a" defer></script>
     <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260906d" defer></script>
+    <script src="/lon-slots.js?v=20260908b" defer></script>
 </body>
 </html>`;
 }
@@ -416,6 +444,8 @@ function renderSpoke(origin, slug) {
     const dateMod = String(meta.dateModified || meta.datePublished || '');
     const canonicalPath = `/consulta/${encodeURIComponent(slug)}`;
     const bookingHref = meta.bookingHref || '/marcar/clinica-geral';
+    const talk = spokeTalk(meta);
+    const talkLabel = talk.label;
     const slotService = slotServiceFromHref(bookingHref);
     const isTravel = slotService === 'travel' || meta.category === 'viagem';
     const pages = livePages();
@@ -516,7 +546,7 @@ function renderSpoke(origin, slug) {
                 ${clinicianStripHtml()}
                 ${authors.authorBylineHtml(o, meta.author, datePub)}
                 <div class="cq-header-actions">
-                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="spoke-hero" data-cta="book" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
+                    <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="spoke-hero" data-cta="book" data-talk-cta="${escapeHtml(talk.role)}" href="${escapeHtml(bookingHref)}">${escapeHtml(talkLabel)}</a>
                     <a class="lon-btn lon-btn-soft" href="#quando-nao-online">${escapeHtml(skipOnlineLabel)}</a>
                 </div>
                 <div class="cq-live-slots" data-next-slots data-limit="3" data-service="${slotService}" data-book-href="${escapeHtml(bookingHref)}" data-surface="consulta-hero" hidden>
@@ -556,7 +586,7 @@ function renderSpoke(origin, slug) {
                 <h2 id="cq-preco-title">Preço</h2>
                 <p class="cq-price-value">${escapeHtml(meta.price || '')}</p>
                 <p class="cq-price-note">${escapeHtml(meta.priceNote || '')}</p>
-                <a class="lon-btn lon-btn-primary js-consulta-cta" data-consulta-cta="spoke-price" data-cta="book" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || 'Marcar consulta')}</a>
+                <a class="lon-btn lon-btn-primary js-consulta-cta" data-consulta-cta="spoke-price" data-cta="book" data-talk-cta="${escapeHtml(talk.role)}" href="${escapeHtml(bookingHref)}">${escapeHtml(talkLabel)}</a>
             </section>
 
             ${extraHtml ? `<div class="cq-prose" lang="pt-PT">${extraHtml}</div>` : ''}
@@ -577,9 +607,9 @@ function renderSpoke(origin, slug) {
             <div class="cq-sticky-book-inner">
                 <p class="cq-sticky-book-copy">
                     <span class="cq-sticky-book-kicker">Próximo horário</span>
-                    <strong data-next-slot-when>Marcar consulta</strong>
+                    <strong data-next-slot-when>${escapeHtml(talkLabel)}</strong>
                 </p>
-                <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="consulta-sticky" data-cta="book" data-next-slot-cta href="${escapeHtml(bookingHref)}">${escapeHtml(stickyCtaLabel(meta))}</a>
+                <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="consulta-sticky" data-cta="book" data-next-slot-cta data-talk-cta="${escapeHtml(talk.role)}" href="${escapeHtml(bookingHref)}">${escapeHtml(talkLabel)}</a>
             </div>
         </div>
     </main>`;
@@ -593,7 +623,9 @@ function renderSpoke(origin, slug) {
             ogImage: isTravel ? `${o}/image/travel-clinic-mountain-bg-v2.png` : `${o}/image/image2.webp`,
             jsonLdExtra: jsonLd,
             mainHtml,
-            headerBookHref: bookingHref
+            headerBookHref: bookingHref,
+            headerBookLabel: talkLabel,
+            headerTalkRole: talk.role
         })
     };
 }

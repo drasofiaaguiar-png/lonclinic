@@ -20,9 +20,9 @@ Esta solidão específica não é apenas desconfortável — tem custo mensuráv
 
 ## O que ajuda, na prática
 
-- Construir relações com pares que estejam a viver desafios semelhantes — outros fundadores, não necessariamente da mesma área, mas na mesma fase de construção.
+- Construir relações com pares que estejam a viver desafios semelhantes — outros fundadores, não necessariamente da mesma área, mas na mesma fase de construção. Isso reduz isolamento; não substitui tratamento clínico — [só um founder entende o burnout de um founder](/blog/so-um-founder-entende-o-burnout-de-um-founder).
 - Separar conscientemente os espaços onde se é «fundador» dos espaços onde se é, simplesmente, a pessoa.
-- Considerar acompanhamento profissional ([psicologia](/saudemental) ou coaching) como um investimento estrutural no negócio, não como um luxo pessoal à parte.
+- Considerar acompanhamento psicológico ([psicologia](/saudemental), [psicólogo para burnout](/psicologia-burnout)) como um investimento estrutural no negócio, não como um luxo pessoal à parte. Um coach de negócios não trata burnout.
 
 Tratar a solidão do fundador como um risco de negócio — e não como uma fraqueza pessoal a esconder — é o primeiro passo para lhe dar a atenção que merece.
 

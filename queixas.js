@@ -12,6 +12,7 @@ const fs = require('fs');
 const path = require('path');
 const { marked } = require('marked');
 const { organizationJsonLd, originOf, canonicalHref } = require('./seo');
+const talkCta = require('./talk-cta');
 
 const QUEIXAS_DIR = path.join(__dirname, 'data', 'queixas');
 const MANIFEST_PATH = path.join(QUEIXAS_DIR, 'manifest.json');
@@ -197,7 +198,7 @@ function stepsHtml(steps) {
 
 function ctaBand(ref, label, opts) {
     const r = encodeURIComponent(ref || 'consultas');
-    const cta = escapeHtml(label || 'Começar a triagem');
+    const cta = escapeHtml(talkCta.isGenericBookLabel(label) ? talkCta.label('psychFind', 'pt') : (label || talkCta.label('psychFind', 'pt')));
     if (opts && opts.tofuTest) {
         return `
         <aside class="qx-cta-band" aria-label="Próximos passos">
@@ -213,13 +214,13 @@ function ctaBand(ref, label, opts) {
         </aside>`;
     }
     return `
-        <aside class="qx-cta-band" aria-label="Marcar consulta">
+        <aside class="qx-cta-band" aria-label="Encontre o seu psicólogo">
             <div class="lon-container qx-cta-inner">
                 <p class="qx-cta-kicker">Próximo passo</p>
-                <h2 class="qx-cta-title">Marca a consulta de psicologia online</h2>
+                <h2 class="qx-cta-title">Encontre o seu psicólogo</h2>
                 <p class="qx-cta-lead">A triagem leva poucos minutos. Depois escolhes o psicólogo ou deixas a equipa fazer o matching.</p>
                 <div class="qx-cta-actions">
-                    <a class="lon-btn lon-btn-primary" href="/triagem?ref=${r}">${cta}</a>
+                    <a class="lon-btn lon-btn-primary" href="/triagem?ref=${r}" data-talk-cta="psychFind">${cta}</a>
                     <a class="lon-btn lon-btn-soft" href="/saudemental?ref=${r}">Ver planos e preço</a>
                 </div>
             </div>
@@ -235,7 +236,7 @@ function bookingCardsHtml(ref, tone) {
             title: 'Sessão de psicologia',
             price: `${PRICE.avulsa.amount} € · ${PRICE.avulsa.unit}`,
             note: 'Videochamada · psicólogo inscrito na Ordem dos Psicólogos Portugueses',
-            cta: 'Marcar',
+            cta: 'Encontre o seu psicólogo',
             href: `/triagem?ref=${r}`
         },
         {
@@ -260,7 +261,7 @@ function bookingCardsHtml(ref, tone) {
         )
         .join('');
     return `
-        <aside class="guide-book" aria-label="Marcar consulta na Lon Clinic">
+        <aside class="guide-book" aria-label="Fale com um psicólogo na Lon Clinic">
             <div class="guide-book-grid">${items}
             </div>
         </aside>`;
@@ -395,7 +396,7 @@ function layoutQueixaPage(opts) {
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/triagem?ref=consultas-nav" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <a href="/triagem?ref=consultas-nav" class="lon-btn lon-btn-primary lon-btn-sm" data-talk-cta="psychFind">Encontre o seu psicólogo</a>
                 <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
@@ -407,7 +408,7 @@ function layoutQueixaPage(opts) {
             <a href="/burnout">Centro burnout</a>
             <a href="/triagem">Triagem</a>
             <a href="/patient-portal">Login</a>
-            <a href="/triagem?ref=consultas-nav-mobile">Marcar consulta</a>
+            <a href="/triagem?ref=consultas-nav-mobile" data-talk-cta="psychFind">Encontre o seu psicólogo</a>
         </div>
     </header>
     ${mainHtml}
@@ -452,10 +453,11 @@ function layoutQueixaPage(opts) {
     </footer>
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
     <script src="/lon-nav.js"></script>
-    <script src="/i18n.js?v=20260905e" defer></script>
+    <script src="/talk-cta.js?v=20260908a" defer></script>
+    <script src="/i18n.js?v=20260908a" defer></script>
     <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260906d" defer></script>
+    <script src="/lon-slots.js?v=20260908b" defer></script>
 </body>
 </html>`;
 }
@@ -680,8 +682,8 @@ function renderPage(origin, slug) {
                 <div class="qx-article-actions">
                     ${isBurnoutPsi
                         ? `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/burnout/teste?ref=${encodeURIComponent(ref)}">Fazer o teste CBI</a>
-                    <a class="lon-btn lon-btn-soft lon-btn-sm" href="/triagem?ref=${encodeURIComponent(ref)}">Marcar consulta</a>`
-                        : `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/triagem?ref=${encodeURIComponent(ref)}">Marcar consulta</a>
+                    <a class="lon-btn lon-btn-soft lon-btn-sm" href="/triagem?ref=${encodeURIComponent(ref)}" data-talk-cta="psychFind">Encontre o seu psicólogo</a>`
+                        : `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/triagem?ref=${encodeURIComponent(ref)}" data-talk-cta="psychFind">Encontre o seu psicólogo</a>
                     <a class="lon-btn lon-btn-soft lon-btn-sm" href="#preco">Ver preço</a>`}
                 </div>
             </header>

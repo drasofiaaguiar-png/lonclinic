@@ -10,7 +10,7 @@ Mas existe também incerteza financeira, responsabilidade sobre outras pessoas, 
 
 Quando a empresa começa a ocupar praticamente todo o espaço mental disponível, é fácil deixar de perceber onde acaba o trabalho e começa a própria pessoa.
 
-É aí que o **burnout de founder** pode começar a instalar-se. Encaixa no fenómeno ocupacional descrito em [o que é burnout](/burnout/o-que-e) — com uma particularidade: a empresa e a identidade fundem-se com facilidade.
+É aí que o **burnout de founder** pode começar a instalar-se. Encaixa no fenómeno ocupacional descrito em [o que é burnout](/burnout/o-que-e) — com uma particularidade: a empresa e a identidade fundem-se com facilidade. A tentação de falar só com outros founders, e o que isso não trata, está em [só um founder entende o burnout de um founder](/blog/so-um-founder-entende-o-burnout-de-um-founder).
 
 Este é o **1.º artigo** da [série sobre burnout em fundadores](/burnout/colecao#fundadores). Continua em: [a solidão do fundador](/burnout/fundadores-solidao).
 

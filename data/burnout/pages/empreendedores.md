@@ -22,7 +22,7 @@
 
 A recuperação exige triagem: o que é urgente de verdade, o que pode esperar, e o que o seu corpo já não tolera. Avaliação clínica ajuda a separar burnout de depressão, ansiedade e causas físicas — ver [burnout ou depressão](/burnout/depressao-ou-burnout).
 
-Comece pelo [teste](/burnout/teste). O passo seguinte é o [psicólogo para burnout](/psicologia-burnout).
+Comece pelo [teste](/burnout/teste). O passo seguinte é o [psicólogo para burnout](/psicologia-burnout). A pergunta «só outro founder me percebe?» tem resposta em [só um founder entende o burnout de um founder](/blog/so-um-founder-entende-o-burnout-de-um-founder).
 
 Série completa para founders: [burnout de founder](/burnout/fundadores) (8 artigos) · [índice da coleção](/burnout/colecao#fundadores).
 

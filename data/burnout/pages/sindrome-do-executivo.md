@@ -55,11 +55,24 @@ Não é uma lista de dicas para «gerir melhor o stress». É um conjunto de cor
 <li><strong>Apoio profissional</strong> Quando o autocuidado não chega, o acompanhamento psicológico e a <a href="/clinica-anti-burnout">consulta anti-burnout</a> ajudam a romper um padrão que, sozinho, é particularmente difícil de abandonar.</li>
 </ol>
 
-Um ponto de partida objectivo: o [teste gratuito de burnout](/burnout/teste) (CBI). Se quiser acompanhamento, o [psicólogo para burnout](/psicologia-burnout) é o passo seguinte.
+Um ponto de partida objectivo é medir o esgotamento — não adivinhar se «ainda aguenta».
+
+<aside class="bo-cbi-banner" role="region" aria-label="Teste CBI de burnout">
+<p class="bo-cbi-banner-kicker">Copenhagen Burnout Inventory</p>
+<p class="bo-cbi-banner-title">Quer avaliar o seu nível actual de exaustão?</p>
+<p class="bo-cbi-banner-lead">Teste CBI gratuito — 4 minutos, resultado imediato. Não diagnostica; dá um ponto de partida para a consulta.</p>
+<p><a class="lon-btn lon-btn-dark lon-btn-sm" href="/burnout/teste?ref=sindrome-do-executivo">Fazer o teste de burnout</a></p>
+</aside>
+
+Se quiser acompanhamento, o [psicólogo para burnout](/psicologia-burnout) é o passo seguinte.
 
 ## Para empresas e lideranças
 
 São muitas vezes os perfis mais dedicados e valiosos os que estão em maior risco — precisamente por serem os últimos a pedir ajuda. Reconhecer o padrão nas chefias é uma medida de risco, não um «benefício de wellness».
+
+Se a pergunta for a da equipa — motivada de verdade, ou só a cumprir horário — o artigo [como saber se a equipa está motivada](/blog/como-saber-se-a-equipa-esta-motivada) descreve os sinais que se lêem de fora (corpo, ausências, conflito) e quando o problema já não é individual.
+
+Se a pergunta for a tua — «só outro founder me percebe?» — a resposta curta está em [só um founder entende o burnout de um founder](/blog/so-um-founder-entende-o-burnout-de-um-founder): pares para contexto, psicólogo especializado para o tratamento.
 
 A Lon Clinic trabalha com pessoas e organizações neste contexto. Saiba mais sobre a [clínica anti-burnout](/clinica-anti-burnout) ou leia sobre [recuperação de burnout](/burnout/recuperacao).
 
@@ -77,5 +90,9 @@ A Lon Clinic trabalha com pessoas e organizações neste contexto. Saiba mais so
 <details>
 <summary>Quando procurar ajuda profissional?</summary>
 <p>Quando o autocuidado (sono, exercício, desconexão) não chega, quando há culpa intensa ao descansar, ou quando já há sintomas físicos — sono, dores, hipertensão, problemas digestivos. A avaliação clínica e o acompanhamento psicológico ajudam a romper o padrão.</p>
+</details>
+<details>
+<summary>Só outro founder percebe o burnout do líder?</summary>
+<p>Outro founder percebe o contexto; um psicólogo com prática em burnout executivo trata o quadro. O detalhe está em <a href="/blog/so-um-founder-entende-o-burnout-de-um-founder">só um founder entende o burnout de um founder</a>.</p>
 </details>
 </div>

@@ -1,6 +1,100 @@
 {
     "articles": [
         {
+            "slug": "so-um-founder-entende-o-burnout-de-um-founder",
+            "title": "Só um founder entende o burnout de um founder?",
+            "description": "Não. Outro founder entende o contexto; um psicólogo com prática em burnout executivo trata o quadro. Comunidade de pares + acompanhamento clínico — o modelo híbrido.",
+            "datePublished": "2026-09-08",
+            "dateModified": "2026-09-08",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Burnout",
+            "image": "/image/image1_files/ColmoreRow_Large_Desktop.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "readingMinutes": 7,
+            "related": [
+                "/burnout/sindrome-do-executivo",
+                "/burnout/fundadores",
+                "/burnout/empreendedores",
+                "como-encontrar-um-psicologo",
+                "como-saber-se-a-equipa-esta-motivada",
+                "burnout-o-que-e-sinais-cansaco"
+            ],
+            "faq": [
+                {
+                    "q": "Só um founder entende o burnout de um founder?",
+                    "a": "Não necessariamente. Outro founder entende o contexto; um psicólogo com prática em burnout executivo trata o quadro. O ideal é as duas coisas: pares para isolamento e contexto, clínico para o tratamento."
+                },
+                {
+                    "q": "Um coach de negócios pode substituir um psicólogo no tratamento de burnout?",
+                    "a": "Não. Um coach foca-se em estratégia e objectivos de negócio. Burnout pode envolver exaustão, sono, ansiedade e sintomas depressivos — fora do âmbito de um coach e dentro do de um psicólogo ou, quando indicado, de um médico."
+                },
+                {
+                    "q": "Como sei se é burnout ou apenas uma fase de trabalho intenso?",
+                    "a": "Trabalho intenso é temporário e reversível com descanso. Burnout mantém-se depois de férias e inclui exaustão persistente, cinismo ou distanciamento, e sensação de ineficácia. A síndrome do executivo é o padrão de não conseguir desligar mesmo quando o calendário deveria permitir."
+                },
+                {
+                    "q": "Vale a pena participar em comunidades de founders para lidar com burnout?",
+                    "a": "Sim, como complemento — ajuda a normalizar a experiência e reduz o isolamento. Não substitui acompanhamento clínico quando o quadro já está instalado."
+                },
+                {
+                    "q": "Pode um psicólogo que nunca foi founder tratar o burnout de um founder?",
+                    "a": "Sim. A formação clínica e a prática em burnout executivo e alta performance importam mais do que ter fundado uma empresa. Ter sido founder ajuda no contexto; não substitui o tratamento."
+                },
+                {
+                    "q": "Que tipo de psicólogo devo procurar como founder ou CEO?",
+                    "a": "Um profissional com experiência em burnout executivo, liderança sob pressão e ansiedade de alta performance — não apenas um generalista. Em Portugal, confirma a cédula na OPP; na Lon Clinic, a triagem ou o psicólogo para burnout."
+                }
+            ]
+        },
+        {
+            "slug": "como-saber-se-a-equipa-esta-motivada",
+            "title": "Como saber se a minha equipa está motivada ou só a cumprir horário?",
+            "description": "Sinais que um founder ou RH vê de fora: mudanças físicas sustentadas, ninguém faltar, conflito recorrente. Quando é a pessoa — e quando é a estrutura.",
+            "datePublished": "2026-09-08",
+            "dateModified": "2026-09-08",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Burnout",
+            "image": "/image/image1_files/CoventGarden_Large_Desktop.jpg",
+            "verified": false,
+            "ctaKind": "burnout",
+            "readingMinutes": 8,
+            "related": [
+                "/burnout/sindrome-do-executivo",
+                "so-um-founder-entende-o-burnout-de-um-founder",
+                "como-as-empresas-podem-prevenir-o-burnout",
+                "9-sinais-de-burnout-no-trabalho",
+                "/burnout/gestores",
+                "/burnout/ambiente-de-trabalho-saudavel"
+            ],
+            "faq": [
+                {
+                    "q": "Como saber se a minha equipa está motivada ou só a cumprir horário?",
+                    "a": "Não há um indicador único. Olhe para padrões ao longo do tempo: mudanças físicas sustentadas, ninguém faltar mesmo quando a carga é insustentável, e conflito interpessoal recorrente. Um caso isolado pode ser a vida da pessoa; o mesmo sinal em várias pessoas aponta para a forma como o trabalho está organizado."
+                },
+                {
+                    "q": "Ninguém faltar é um bom sinal?",
+                    "a": "Nem sempre. Presença perfeita pode ser saúde — ou medo de parar. Em Portugal o consumo de antidepressivos está entre os mais altos da OCDE, e a depressão crónica auto-reportada foi a mais elevada da UE em 2019."
+                },
+                {
+                    "q": "Devo comentar o peso ou o aspecto físico de um colaborador?",
+                    "a": "Não como avaliação, não em público, não como diagnóstico. Se a mudança é visível e sustentada, a conversa é de preocupação. Alterações físicas têm muitas causas; o gestor não é médico."
+                },
+                {
+                    "q": "Qual é a relação com a síndrome do executivo?",
+                    "a": "A síndrome do executivo é o padrão de não conseguir desligar — frequentemente nas chefias mais dedicadas. Uma equipa a cumprir horário e um líder que não para são duas faces do mesmo sistema."
+                },
+                {
+                    "q": "O que faz a Lon Clinic com empresas?",
+                    "a": "Acompanhamento de nutrição e saúde mental em grupo e em 1:1, intervenção em conflitos crónicos de equipa (com relatório) e atividades de team building. O contacto é por WhatsApp ou pela clínica anti-burnout para empresas."
+                }
+            ]
+        },
+        {
             "slug": "consulta-do-viajante-urgente",
             "title": "Preciso de uma consulta do viajante o quanto antes em Portugal — como encontrar?",
             "description": "Consulta do viajante urgente em Portugal: videoconsulta hoje ou amanhã, 39 €. Prescrição no próprio dia; vacinas no CVI. O certificado da febre amarela só vale a partir do 10.º dia.",
@@ -104,6 +198,7 @@
             "related": [
                 "talvez-devesses-falar-com-alguem",
                 "como-a-terapia-ajuda-autoconhecimento",
+                "so-um-founder-entende-o-burnout-de-um-founder",
                 "como-encontrar-um-nutricionista",
                 "tcc-para-ansiedade",
                 "telemedicina-em-casa",
@@ -3597,7 +3692,7 @@
             "title": "9 sinais de burnout no trabalho que não deve ignorar",
             "description": "Conheça os sinais de alerta do burnout profissional segundo a Mayo Clinic e a Gallup, e saiba quando é altura de agir.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-08",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
@@ -3608,6 +3703,7 @@
             "related": [
                 "burnout-o-que-e-sinais-cansaco",
                 "como-as-empresas-podem-prevenir-o-burnout",
+                "como-saber-se-a-equipa-esta-motivada",
                 "/burnout/sintomas"
             ],
             "faq": [
@@ -3922,7 +4018,7 @@
             "title": "Como as empresas podem prevenir o burnout das suas equipas",
             "description": "Dados da Gallup revelam as principais causas organizacionais do burnout. Descubra o que as empresas podem realmente fazer para o prevenir.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-08",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
@@ -3931,6 +4027,7 @@
             "verified": false,
             "readingMinutes": 4,
             "related": [
+                "como-saber-se-a-equipa-esta-motivada",
                 "9-sinais-de-burnout-no-trabalho",
                 "/burnout/ambiente-de-trabalho-saudavel",
                 "/burnout/apoio-percebido"

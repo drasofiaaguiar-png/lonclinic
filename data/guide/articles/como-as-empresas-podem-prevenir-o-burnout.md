@@ -29,7 +29,7 @@ A mesma investigação mostra que colaboradores cuja chefia está sempre dispon�
 - Políticas claras sobre disponibilidade fora de horas
 - Acesso facilitado a apoio psicológico através de programas de bem-estar corporativo
 
-Programas para organizações estão descritos na [clínica anti-burnout](/clinica-anti-burnout#empresas).
+Antes da política, há o diagnóstico de corredor: [como saber se a equipa está motivada ou só a cumprir horário](/blog/como-saber-se-a-equipa-esta-motivada). Programas para organizações estão descritos na [clínica anti-burnout](/clinica-anti-burnout#empresas).
 
 ## Perguntas frequentes
 
