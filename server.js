@@ -16,7 +16,7 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = 'email-1';
+const CLINIC_PORTAL_BUILD = 'password-1';
 const CLINIC_PORTAL_PATH = '/clinic-desk/dias';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
@@ -256,6 +256,16 @@ const rateLimitStaffProfile = rateLimit({
     legacyHeaders: false,
     handler: (req, res) => {
         res.status(429).json({ error: 'Too many profile updates. Try again in a few minutes.' });
+    }
+});
+
+const rateLimitClinicPassword = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 8,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Demasiadas tentativas. Tente novamente daqui a alguns minutos.' });
     }
 });
 
@@ -727,8 +737,8 @@ async function serveClinicPortalHtml(res) {
             .replace(/src="\/clinic-portal\/clinic\.js\?v=[^"]+"/g, `src="${clinicPortalAssetUrl('clinic.js')}"`)
             .replace(/data-clinic-build="[^"]+"/, `data-clinic-build="${CLINIC_PORTAL_BUILD}"`)
             .replace(
-                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|ficha-1|scope-1|scope-2|email-1|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8|perfil-9|perfil-10) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
-                `Portal ${CLINIC_PORTAL_BUILD} — 7 set 2026. Entre com o username do profissional.`
+                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|ficha-1|scope-1|scope-2|email-1|email-login-1|password-1|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8|perfil-9|perfil-10) — 7 set 2026\. Entre com o username(?: ou o email)? do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
+                `Portal ${CLINIC_PORTAL_BUILD} — 7 set 2026. Entre com o username ou o email do profissional.`
             );
         res.append('Set-Cookie', `lon_portal=${CLINIC_PORTAL_BUILD}; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly`);
         res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
@@ -1601,6 +1611,30 @@ async function findProfessionalByEmailInternal(email) {
     if (!e || !e.includes('@')) return null;
     if (usePersistentDb) return db.findProfessionalByEmail(e);
     return professionalsStore.find((p) => String(p.email || '').trim().toLowerCase() === e) || null;
+}
+
+async function findProfessionalForClinicLogin(identifier) {
+    const raw = String(identifier || '').trim();
+    if (!raw) return null;
+    if (!raw.includes('@')) {
+        return findProfessionalByUsernameInternal(raw);
+    }
+    const email = normalizeStaffEmail(raw);
+    if (!isValidStaffEmail(email)) return null;
+    const byEmail = await findProfessionalByEmailInternal(email);
+    if (byEmail) return byEmail;
+    const byUsername = await findProfessionalByUsernameInternal(raw);
+    if (byUsername) return byUsername;
+    try {
+        const app = await findPsychologistApplicationByEmailInternal(email);
+        if (app && app.professionalId) {
+            const byId = await findProfessionalByIdInternal(app.professionalId);
+            if (byId) return byId;
+        }
+    } catch (err) {
+        console.error('findProfessionalForClinicLogin bolsa:', err.message);
+    }
+    return null;
 }
 
 async function findProfessionalByDisplayNameInternal(name) {
@@ -6688,7 +6722,7 @@ function professionalLoginPortalUrl() {
 function defaultProfessionalLoginNote(name) {
     const who = String(name || '').trim();
     const greeting = who ? `Olá ${who},` : 'Olá,';
-    return `${greeting}\n\nSeguem os dados de acesso ao portal da Lon Clinic. Abra o link abaixo, introduza o username e a password e inicie sessão.`;
+    return `${greeting}\n\nSeguem os dados de acesso ao portal da Lon Clinic. Abra o link abaixo, introduza o username ou o email e a password e inicie sessão.`;
 }
 
 function sanitizeProfessionalLoginNote(raw, name) {
@@ -11069,42 +11103,52 @@ if (process.env.NODE_ENV !== 'production') {
 
 // ─── API: Clinic — Login ───
 app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
-    const username = String((req.body && req.body.username) || '').trim();
+    const identifier = String(
+        (req.body && (req.body.username || req.body.email)) || ''
+    ).trim();
     const password = String((req.body && req.body.password) || '');
 
-    if (!username || !password) {
-        return res.status(400).json({ error: 'Username and password are required' });
+    if (!identifier || !password) {
+        return res.status(400).json({ error: 'Username or email and password are required' });
     }
 
-    const usernameMatch = username.toLowerCase() === CLINIC_USERNAME.toLowerCase();
+    const usernameMatch = identifier.toLowerCase() === CLINIC_USERNAME.toLowerCase();
     const passwordMatch = clinicPasswordHash
         ? await bcrypt.compare(password, clinicPasswordHash)
         : false;
 
     if (usernameMatch && passwordMatch) {
         req.session.clinicAuthenticated = true;
-        req.session.clinicUsername = username;
-        req.session.clinicDisplayName = username;
+        req.session.clinicUsername = CLINIC_USERNAME;
+        req.session.clinicDisplayName = CLINIC_USERNAME;
         req.session.clinicRole = 'admin';
         req.session.professionalId = null;
         req.session.clinicLoginTime = new Date().toISOString();
         setStaffDeviceCookie(res);
 
-        console.log(`   🔐 Clinic portal login (admin): ${username}`);
+        console.log(`   🔐 Clinic portal login (admin): ${CLINIC_USERNAME}`);
         return res.json({
             success: true,
             message: 'Login successful',
             role: 'admin',
-            displayName: username
+            username: CLINIC_USERNAME,
+            displayName: CLINIC_USERNAME
         });
     }
 
     try {
-        const pro = await findProfessionalByUsernameInternal(username);
+        const pro = await findProfessionalForClinicLogin(identifier);
         const passwordOk = pro && pro.passwordHash
             ? await bcrypt.compare(password, pro.passwordHash)
             : false;
         if (pro && pro.active !== false && passwordOk) {
+            const loginEmail = normalizeStaffEmail(identifier);
+            if (isValidStaffEmail(loginEmail) && !isValidStaffEmail(pro.email)) {
+                try {
+                    const patched = await patchProfessionalInternal(pro, { email: loginEmail });
+                    if (patched) Object.assign(pro, patched);
+                } catch (e) { /* login still continues */ }
+            }
             req.session.clinicAuthenticated = true;
             req.session.clinicUsername = pro.username;
             req.session.clinicDisplayName = pro.displayName || pro.username;
@@ -11121,6 +11165,7 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
                 success: true,
                 message: 'Login successful',
                 role: 'clinician',
+                username: pro.username,
                 displayName: req.session.clinicDisplayName
             });
         }
@@ -11128,8 +11173,8 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
         console.error('   ⚠️  Professional login lookup failed:', err.message);
     }
 
-    console.log(`   ⚠️  Failed clinic login attempt: ${username}`);
-    res.status(401).json({ error: 'Invalid username or password' });
+    console.log(`   ⚠️  Failed clinic login attempt: ${identifier}`);
+    res.status(401).json({ error: 'Invalid username, email or password' });
 });
 
 // ─── API: Clinic — Logout ───
@@ -11259,6 +11304,7 @@ async function handleClinicProfileGet(req, res) {
             documentKinds: STAFF_DOCUMENT_KINDS,
             clinicalAreas: STAFF_CLINICAL_AREAS,
             bolsa: filled.bolsa || null,
+            canChangePassword: !!(professional && professional.id && professional.passwordHash && !isAdminSession(req)),
             build: CLINIC_PORTAL_BUILD
         });
     } catch (err) {
@@ -11356,6 +11402,59 @@ app.put('/api/clinic/profile', requireAuth, rateLimitStaffProfile, express.json(
             return res.status(409).json({ error: 'This professional file is already linked. Refresh and try again.' });
         }
         res.status(500).json({ error: 'Failed to save profile' });
+    }
+});
+
+app.post('/api/clinic/password', requireAuth, rateLimitClinicPassword, express.json(), async (req, res) => {
+    try {
+        if (isAdminSession(req)) {
+            return res.status(403).json({ error: 'The administrator password is not changed here.' });
+        }
+        const body = req.body || {};
+        const currentPassword = String(body.currentPassword || '');
+        const newPassword = String(body.newPassword || '');
+        const confirmPassword = String(body.confirmPassword || '');
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            return res.status(400).json({ error: 'Introduza a password atual, a nova password e a confirmação.' });
+        }
+        if (newPassword.length < 8 || newPassword.length > 200) {
+            return res.status(400).json({ error: 'A nova password deve ter entre 8 e 200 caracteres.' });
+        }
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({ error: 'As passwords novas não coincidem.' });
+        }
+        if (currentPassword === newPassword) {
+            return res.status(400).json({ error: 'A nova password tem de ser diferente da atual.' });
+        }
+        const username = staffSessionUsername(req);
+        let pro = null;
+        if (req.session && req.session.professionalId) {
+            pro = await findProfessionalByIdInternal(req.session.professionalId);
+        }
+        if (!pro) pro = await findProfessionalByUsernameInternal(username);
+        if (!pro || pro.active === false || !pro.passwordHash) {
+            return res.status(400).json({ error: 'Esta conta não tem uma password de portal para alterar.' });
+        }
+        const currentOk = await professionalPasswordMatches(currentPassword, pro.passwordHash);
+        if (!currentOk) {
+            return res.status(400).json({ error: 'A password atual está incorreta.' });
+        }
+        const passwordHash = await bcrypt.hash(newPassword, 12);
+        let updated = null;
+        if (usePersistentDb) {
+            updated = await db.updateProfessional(pro.id, { passwordHash });
+        } else {
+            Object.assign(pro, { passwordHash, updatedAt: new Date().toISOString() });
+            updated = pro;
+        }
+        if (!updated) {
+            return res.status(500).json({ error: 'Failed to update password' });
+        }
+        console.log(`   🔑 Clinic portal password changed: ${pro.username}`);
+        res.json({ ok: true, saved: true });
+    } catch (err) {
+        console.error('POST /api/clinic/password:', err.message);
+        res.status(500).json({ error: 'Failed to update password' });
     }
 });
 

@@ -1589,7 +1589,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     showAdminContent();
                     await loadSchedule();
                 } else {
-                    adminLoginError.textContent = data.error || 'Invalid username or password';
+                    adminLoginError.textContent = data.error || 'Invalid username, email or password';
                     adminLoginError.style.display = 'block';
                 }
             } catch (err) {
@@ -3735,7 +3735,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function defaultProfessionalLoginNote(name) {
         const who = String(name || '').trim();
         const greeting = who ? `Olá ${who},` : 'Olá,';
-        return `${greeting}\n\nSeguem os dados de acesso ao portal da Lon Clinic. Abra o link abaixo, introduza o username e a password e inicie sessão.`;
+        return `${greeting}\n\nSeguem os dados de acesso ao portal da Lon Clinic. Abra o link abaixo, introduza o username ou o email e a password e inicie sessão.`;
     }
 
     function professionalRecordById(id) {

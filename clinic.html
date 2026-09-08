@@ -16,7 +16,7 @@
     <title>Clinic Portal — Longevity Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=email-1">
+    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=password-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
     <meta name="description" content="Clinic portal — manage consultations and clinical records.">
     <meta name="theme-color" content="#eaf2fb">
 </head>
-<body class="lon-landing clinic-portal-page" data-clinic-build="email-1">
+<body class="lon-landing clinic-portal-page" data-clinic-build="password-1">
 
     <a class="lon-skip" href="#conteudo-principal">Skip to content</a>
     <header class="lon-nav" id="lonNav">
@@ -63,11 +63,11 @@
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                 </div>
                 <h1 class="dash-login-title">Clinic Portal</h1>
-                <p class="dash-login-desc">Portal email-1 — 7 set 2026. Entre com o username do profissional.</p>
+                <p class="dash-login-desc">Portal password-1 — 7 set 2026. Entre com o username ou o email do profissional.</p>
                 <form class="dash-login-form" id="clinicLoginForm">
                     <div class="dash-form-group">
-                        <label for="clinicUsername">Username</label>
-                        <input type="text" id="clinicUsername" placeholder="Enter username" required autocomplete="username">
+                        <label for="clinicUsername">Username or email</label>
+                        <input type="text" id="clinicUsername" placeholder="username or email" required autocomplete="username">
                     </div>
                     <div class="dash-form-group">
                         <label for="clinicPassword">Password</label>
@@ -418,6 +418,36 @@
                             </div>
                         </dl>
                     </div>
+                    <div class="dash-section" id="clinicPasswordWrap">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">Password</h2>
+                            <p class="dash-section-subtitle">Altere a password desta conta. Mínimo 8 caracteres.</p>
+                        </div>
+                        <form id="clinicPasswordForm" class="clinic-profile-form" novalidate>
+                            <div class="admin-invite-grid">
+                                <div class="admin-form-group">
+                                    <label for="clinicCurrentPassword">Password atual</label>
+                                    <input type="password" id="clinicCurrentPassword" class="admin-input" maxlength="200" autocomplete="current-password">
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="clinicNewPassword">Nova password</label>
+                                    <input type="password" id="clinicNewPassword" class="admin-input" maxlength="200" autocomplete="new-password">
+                                </div>
+                                <div class="admin-form-group">
+                                    <label for="clinicConfirmPassword">Confirmar nova password</label>
+                                    <input type="password" id="clinicConfirmPassword" class="admin-input" maxlength="200" autocomplete="new-password">
+                                </div>
+                            </div>
+                            <div id="clinicPasswordFormError" class="dash-login-error" style="display:none;" role="alert"></div>
+                            <div class="clinic-profile-save-row">
+                                <button type="submit" class="btn btn-primary" id="clinicPasswordSaveBtn">Guardar password</button>
+                                <p class="clinic-profile-save-confirm" id="clinicPasswordSaveConfirm" hidden role="status">
+                                    <span class="clinic-save-toggle" aria-hidden="true"><span class="clinic-save-toggle-knob"></span></span>
+                                    Password atualizada
+                                </p>
+                            </div>
+                        </form>
+                    </div>
                     <div class="dash-section clinic-bolsa-banner" id="clinicBolsaProfileWrap">
                         <details class="clinic-registo-details" id="clinicRegistoDetails" open>
                             <summary class="clinic-registo-summary">
@@ -581,7 +611,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="/lon-nav.js"></script>
-    <script src="/clinic-portal/clinic.js?v=email-1"></script>
+    <script src="/clinic-portal/clinic.js?v=password-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

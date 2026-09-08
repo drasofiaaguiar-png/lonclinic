@@ -112,6 +112,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicProfileFormError = document.getElementById('clinicProfileFormError');
     const clinicProfileSaveBtn = document.getElementById('clinicProfileSaveBtn');
     const clinicProfileSaveConfirm = document.getElementById('clinicProfileSaveConfirm');
+    const clinicPasswordWrap = document.getElementById('clinicPasswordWrap');
+    const clinicPasswordForm = document.getElementById('clinicPasswordForm');
+    const clinicPasswordFormError = document.getElementById('clinicPasswordFormError');
+    const clinicPasswordSaveBtn = document.getElementById('clinicPasswordSaveBtn');
+    const clinicPasswordSaveConfirm = document.getElementById('clinicPasswordSaveConfirm');
+    const clinicCurrentPassword = document.getElementById('clinicCurrentPassword');
+    const clinicNewPassword = document.getElementById('clinicNewPassword');
+    const clinicConfirmPassword = document.getElementById('clinicConfirmPassword');
     const clinicDocsBody = document.getElementById('clinicDocsBody');
     const clinicDocsError = document.getElementById('clinicDocsError');
 
@@ -122,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         patients: { title: 'Patients', subtitle: 'Only people scheduled with you' },
         resources: { title: 'Resources', subtitle: 'Video room and everyday clinic links' },
         management: { title: 'Management', subtitle: 'IBAN, faturas mensais e pagamentos' },
-        profile: { title: 'Perfil', subtitle: 'Identificação, dados profissionais, documentos e candidatura' }
+        profile: { title: 'Perfil', subtitle: 'Identificação, password, dados profissionais, documentos e candidatura' }
     };
 
     const WEEKDAYS = [
@@ -245,6 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (clinicProfileName) clinicProfileName.textContent = staffDisplayName || '—';
         if (clinicProfileUsername) clinicProfileUsername.textContent = staffUsername || '—';
         if (clinicAdminLink) clinicAdminLink.hidden = !isAdmin;
+        if (clinicPasswordWrap) clinicPasswordWrap.hidden = isAdmin;
 
         setClinicPanel(initialClinicPanel());
         loadDoxyRoom();
@@ -652,11 +661,11 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         loginError.style.display = 'none';
         
-        const username = clinicUsername.value.trim();
+        const identifier = clinicUsername.value.trim();
         const password = clinicPassword.value;
         
-        if (!username || !password) {
-            loginError.textContent = 'Please enter both username and password';
+        if (!identifier || !password) {
+            loginError.textContent = 'Please enter your username or email and password';
             loginError.style.display = 'block';
             return;
         }
@@ -665,17 +674,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch('/api/clinic/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
+                body: JSON.stringify({ username: identifier, password })
             });
 
             const data = await res.json();
 
             if (res.ok && data.success) {
-                showClinicPortal(data.displayName || username, data.role, username);
+                showClinicPortal(data.displayName || identifier, data.role, data.username || identifier);
                 clinicUsername.value = '';
                 clinicPassword.value = '';
             } else {
-                loginError.textContent = data.error || 'Invalid username or password';
+                loginError.textContent = data.error || 'Invalid username, email or password';
                 loginError.style.display = 'block';
             }
         } catch (err) {
@@ -1602,7 +1611,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             if (data.fullName && clinicProfileName) clinicProfileName.textContent = data.fullName;
             loadDoxyRoom();
+            if (clinicPasswordWrap) {
+                clinicPasswordWrap.hidden = data.canChangePassword === false;
+            }
             if (clinicProfileFormError) clinicProfileFormError.style.display = 'none';
+            if (clinicPasswordFormError) clinicPasswordFormError.style.display = 'none';
             if (clinicDocsError) clinicDocsError.style.display = 'none';
         } catch (err) {
             console.error('Failed to load clinic profile:', err);
@@ -1733,6 +1746,58 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (clinicProfileSaveBtn) clinicProfileSaveBtn.disabled = false;
             }
         });
+    }
+
+    if (clinicPasswordForm) {
+        clinicPasswordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (clinicPasswordFormError) clinicPasswordFormError.style.display = 'none';
+            hideProfileSavedConfirm(clinicPasswordSaveConfirm);
+            const currentPassword = clinicCurrentPassword ? clinicCurrentPassword.value : '';
+            const newPassword = clinicNewPassword ? clinicNewPassword.value : '';
+            const confirmPassword = clinicConfirmPassword ? clinicConfirmPassword.value : '';
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                showProfileError(clinicPasswordFormError, 'Introduza a password atual, a nova password e a confirmação.');
+                return;
+            }
+            if (newPassword.length < 8) {
+                showProfileError(clinicPasswordFormError, 'A nova password deve ter pelo menos 8 caracteres.');
+                if (clinicNewPassword && clinicNewPassword.focus) clinicNewPassword.focus();
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                showProfileError(clinicPasswordFormError, 'As passwords novas não coincidem.');
+                if (clinicConfirmPassword && clinicConfirmPassword.focus) clinicConfirmPassword.focus();
+                return;
+            }
+            if (clinicPasswordSaveBtn) clinicPasswordSaveBtn.disabled = true;
+            try {
+                const res = await fetch('/api/clinic/password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ currentPassword, newPassword, confirmPassword })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401) {
+                    showLogin();
+                    return;
+                }
+                if (!res.ok) {
+                    throw new Error(data.error || 'Failed to update password');
+                }
+                if (clinicCurrentPassword) clinicCurrentPassword.value = '';
+                if (clinicNewPassword) clinicNewPassword.value = '';
+                if (clinicConfirmPassword) clinicConfirmPassword.value = '';
+                showProfileSavedConfirm(clinicPasswordSaveConfirm);
+            } catch (err) {
+                hideProfileSavedConfirm(clinicPasswordSaveConfirm);
+                showProfileError(clinicPasswordFormError, err.message || 'Failed to update password');
+            } finally {
+                if (clinicPasswordSaveBtn) clinicPasswordSaveBtn.disabled = false;
+            }
+        });
+        clinicPasswordForm.addEventListener('input', () => hideProfileSavedConfirm(clinicPasswordSaveConfirm));
     }
 
     const clinicPanelProfile = document.getElementById('clinicPanelProfile');
