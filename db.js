@@ -639,6 +639,8 @@ async function initSchema(p) {
         )
     `);
     await p.query(`ALTER TABLE professionals ADD COLUMN IF NOT EXISTS email TEXT NOT NULL DEFAULT ''`);
+    await p.query(`ALTER TABLE professionals ADD COLUMN IF NOT EXISTS login_email_sent_to TEXT NOT NULL DEFAULT ''`);
+    await p.query(`ALTER TABLE professionals ADD COLUMN IF NOT EXISTS login_email_sent_at TIMESTAMPTZ`);
     await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS professional_id INTEGER`);
     await p.query(
         `CREATE INDEX IF NOT EXISTS idx_psychologist_applications_professional ON psychologist_applications (professional_id)`
@@ -2355,6 +2357,10 @@ function rowToProfessional(row) {
         displayName: row.display_name || '',
         doxyRoomUrl: row.doxy_room_url || '',
         email: row.email || '',
+        loginEmailSentTo: row.login_email_sent_to || '',
+        loginEmailSentAt: row.login_email_sent_at instanceof Date
+            ? row.login_email_sent_at.toISOString()
+            : (row.login_email_sent_at || null),
         active: row.active !== false,
         createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
         updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : row.updated_at
@@ -2480,6 +2486,8 @@ async function updateProfessional(id, fields) {
         displayName: 'display_name',
         doxyRoomUrl: 'doxy_room_url',
         email: 'email',
+        loginEmailSentTo: 'login_email_sent_to',
+        loginEmailSentAt: 'login_email_sent_at',
         passwordHash: 'password_hash',
         active: 'active'
     };
@@ -2494,6 +2502,14 @@ async function updateProfessional(id, fields) {
             v = v == null || String(v).trim() === '' ? null : String(v).trim().slice(0, 300);
         }
         if (jsKey === 'email') v = String(v || '').trim().toLowerCase().slice(0, 320);
+        if (jsKey === 'loginEmailSentTo') v = String(v || '').trim().toLowerCase().slice(0, 320);
+        if (jsKey === 'loginEmailSentAt') {
+            if (!v) v = null;
+            else if (!(v instanceof Date)) {
+                const parsed = new Date(v);
+                v = Number.isNaN(parsed.getTime()) ? null : parsed;
+            }
+        }
         if (jsKey === 'active') v = v === true || v === 'true' || v === 1;
         sets.push(`${col} = $${i}`);
         vals.push(v);

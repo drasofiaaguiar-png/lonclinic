@@ -4022,6 +4022,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             username,
             displayName: p.fullName || p.displayName || a.displayName || username,
             email: p.email || a.email || '',
+            loginEmailSentTo: p.loginEmailSentTo || a.loginEmailSentTo || '',
+            loginEmailSentAt: p.loginEmailSentAt || a.loginEmailSentAt || null,
             profession: p.profession || '',
             professionLabel: p.professionLabel || '',
             doxyRoomUrl: p.doxyRoomUrl || a.doxyRoomUrl || '',
@@ -4031,6 +4033,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             hasFile: p.hasFile === true || !!p.updatedAt,
             isClinicAdmin: p.isClinicAdmin === true
         };
+    }
+
+    function professionalLoginEmailSentHtml(p) {
+        if (!p || !p.hasLogin || p.isClinicAdmin) return '';
+        const to = String(p.loginEmailSentTo || '').trim();
+        if (!to && !p.loginEmailSentAt) {
+            return '<p class="admin-pro-login-note">Login email: not sent yet.</p>';
+        }
+        const when = formatPsychDate(p.loginEmailSentAt);
+        return `<p class="admin-pro-login-note">Last login email: <strong>${escapeHtml(to || '—')}</strong>${p.loginEmailSentAt ? ` · ${escapeHtml(when)}` : ''}</p>`;
+    }
+
+    function professionalLoginEmailSentLabel(p) {
+        const to = String((p && p.loginEmailSentTo) || '').trim();
+        if (!to) return '';
+        return `<small class="admin-pro-sent-mail">${escapeHtml(to)}</small>`;
     }
 
     function professionalFileActionsHtml(p) {
@@ -4142,7 +4160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const title = p.fullName || p.displayName || p.username || '—';
             return `<details class="admin-psych-row" data-file-key="${escapeHtml(key)}"${openKeys.has(key) ? ' open' : ''}>
                 <summary class="admin-psych-summary">
-                    <span class="admin-psych-col admin-psych-col-name">${escapeHtml(title)}</span>
+                    <span class="admin-psych-col admin-psych-col-name">${escapeHtml(title)}${professionalLoginEmailSentLabel(p)}</span>
                     <span class="admin-psych-col admin-psych-col-role">${professionalTypeCell(p)}</span>
                     <span class="admin-psych-col admin-psych-col-user">${escapeHtml(userLabel)}</span>
                     <span class="admin-psych-col admin-psych-col-doxy">${professionalDoxyCell(p)}</span>
@@ -4153,6 +4171,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ${p.hasLogin
                         ? `<p class="admin-pro-login-note">Clinic login: <code>${escapeHtml(p.username || '')}</code> — portal <a href="/clinic-desk/dias#profile">/clinic-desk/dias</a>${p.active ? '' : ' · account disabled'}</p>`
                         : '<p class="admin-pro-login-note">File only — no clinic username or password yet. Assign a login when this professional should sign in.</p>'}
+                    ${professionalLoginEmailSentHtml(p)}
                     ${professionalFileActionsHtml(p)}
                     ${staffProfileFichaHtml(p, kinds)}
                 </div>

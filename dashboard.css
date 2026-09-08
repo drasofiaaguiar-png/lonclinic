@@ -2310,6 +2310,19 @@ body.dash-portal .dash-stat-card {
     color: var(--text-muted);
 }
 
+.admin-pro-files .admin-pro-sent-mail {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .admin-pro-files .admin-pro-actions {
     margin: 0 0 14px;
 }

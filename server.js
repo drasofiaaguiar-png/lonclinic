@@ -510,6 +510,8 @@ function publicProfessional(pro) {
         doxyRoomUrl: doxy.url,
         doxyPending: doxy.pending,
         email: pro.email || '',
+        loginEmailSentTo: pro.loginEmailSentTo || '',
+        loginEmailSentAt: pro.loginEmailSentAt || null,
         active: pro.active !== false,
         createdAt: pro.createdAt || null,
         updatedAt: pro.updatedAt || null
@@ -11709,6 +11711,8 @@ function publicAdminStaffProfile(person, profile, documents, bolsa, professional
         professionalId: (professional && professional.id) || person.id || null,
         isClinicAdmin,
         email,
+        loginEmailSentTo: (professional && professional.loginEmailSentTo) || '',
+        loginEmailSentAt: (professional && professional.loginEmailSentAt) || null,
         phone: (bolsa && bolsa.phone) || '',
         profession: p.profession || '',
         professionLabel: STAFF_PROFESSION_TITLES[p.profession] || '',
@@ -13250,6 +13254,11 @@ app.post('/api/admin/professionals/:id/send-login-email', requireAdmin, express.
             password: plaintext,
             note
         });
+        const marked = await patchProfessionalInternal(existing, {
+            loginEmailSentTo: to,
+            loginEmailSentAt: new Date().toISOString()
+        });
+        if (marked) Object.assign(existing, marked);
         console.log(`   ✉️  Professional login email sent to ${to} (${existing.username})`);
         res.json({
             ok: true,
