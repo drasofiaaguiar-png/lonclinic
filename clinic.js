@@ -1322,6 +1322,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return '';
     }
 
+    function isValidProfileEmail(raw) {
+        const email = String(raw || '').trim().toLowerCase();
+        return email.length >= 5 && email.length <= 320 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
     function firstFilledList(...values) {
         for (const value of values) {
             const list = parseAreaList(value);
@@ -1538,7 +1543,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? (bolsa.email
                     ? `Candidatura ligada (${bolsa.email})`
                     : 'Candidatura ligada — respostas da Bolsa de Profissionais')
-                : 'Sem candidatura ligada. Confirme o email na identificação e guarde o perfil.';
+                : 'Sem candidatura ligada a esta conta. Pode guardar o perfil na mesma.';
         }
     }
 
@@ -1660,6 +1665,17 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             if (clinicProfileFormError) clinicProfileFormError.style.display = 'none';
             hideProfileSavedConfirm(clinicProfileSaveConfirm);
+            const typedEmail = String(
+                clinicProfileEmail && 'value' in clinicProfileEmail ? clinicProfileEmail.value : ''
+            ).trim();
+            if (typedEmail && !isValidProfileEmail(typedEmail)) {
+                showProfileError(
+                    clinicProfileFormError,
+                    'Introduza um email completo, por exemplo nome@gmail.com. Não é preciso confirmá-lo noutro passo.'
+                );
+                if (clinicProfileEmail && clinicProfileEmail.focus) clinicProfileEmail.focus();
+                return;
+            }
             const loaded = clinicProfileLoaded || {};
             const bolsa = loaded.bolsa || {};
             const languages = firstFilledList(readConsultLanguages(), loaded.consultLanguages, bolsa.consultLanguages);
@@ -1667,7 +1683,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 profession: firstFilledText(clinicProfession.value, loaded.profession, bolsa.id || bolsa.email ? 'psicologo' : ''),
                 fullName: firstFilledText(clinicFullName && clinicFullName.value, loaded.fullName, loaded.displayName, bolsa.name),
                 email: firstFilledText(
-                    clinicProfileEmail && 'value' in clinicProfileEmail ? clinicProfileEmail.value : '',
+                    typedEmail,
                     loaded.email,
                     bolsa.email
                 ),

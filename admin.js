@@ -4255,7 +4255,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ? (bolsa.email
                     ? `Candidatura ligada (${bolsa.email})`
                     : 'Candidatura ligada — respostas da Bolsa de Profissionais')
-                : 'Sem candidatura ligada. Confirme o email na identificação e guarde o perfil.';
+                : 'Sem candidatura ligada a esta conta. Pode guardar o perfil na mesma.';
         }
     }
 
@@ -4854,6 +4854,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         return '';
     }
 
+    function isValidProfileEmail(raw) {
+        const email = String(raw || '').trim().toLowerCase();
+        return email.length >= 5 && email.length <= 320 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
     function firstFilledList(...values) {
         for (const value of values) {
             const list = parseAreaList(value);
@@ -5171,6 +5176,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             e.preventDefault();
             if (adminProfileFormError) adminProfileFormError.style.display = 'none';
             hideProfileSavedConfirm(adminProfileSaveConfirm);
+            const typedEmail = String(
+                adminProfileEmail && 'value' in adminProfileEmail ? adminProfileEmail.value : ''
+            ).trim();
+            if (typedEmail && !isValidProfileEmail(typedEmail)) {
+                showAdminProfileError(
+                    adminProfileFormError,
+                    'Introduza um email completo, por exemplo nome@gmail.com. Não é preciso confirmá-lo noutro passo.'
+                );
+                if (adminProfileEmail && adminProfileEmail.focus) adminProfileEmail.focus();
+                return;
+            }
             const loaded = adminProfileLoaded || {};
             const bolsa = loaded.bolsa || {};
             const languages = firstFilledList(readConsultLanguages(), loaded.consultLanguages, bolsa.consultLanguages);
@@ -5178,7 +5194,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 profession: firstFilledText(adminProfession.value, loaded.profession, bolsa.id || bolsa.email ? 'psicologo' : ''),
                 fullName: firstFilledText(adminFullName && adminFullName.value, loaded.fullName, loaded.displayName, bolsa.name),
                 email: firstFilledText(
-                    adminProfileEmail && 'value' in adminProfileEmail ? adminProfileEmail.value : '',
+                    typedEmail,
                     loaded.email,
                     bolsa.email
                 ),

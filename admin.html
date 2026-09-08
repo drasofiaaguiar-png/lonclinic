@@ -1020,13 +1020,13 @@
                             <label for="adminFullName">Nome</label>
                             <input type="text" id="adminFullName" class="admin-input" form="adminProfileForm" maxlength="160" autocomplete="name">
                         </div>
-                        <div class="admin-form-group">
-                            <label for="adminProfileEmail">Email</label>
-                            <input id="adminProfileEmail" class="admin-input" type="email" form="adminProfileForm" autocomplete="email" placeholder="o mesmo email da candidatura">
-                        </div>
-                        <div class="admin-form-group">
-                            <label for="adminProfession">Profissão</label>
-                            <select id="adminProfession" class="admin-select clinic-profile-role-select" form="adminProfileForm" required>
+                            <div class="admin-form-group">
+                                <label for="adminProfileEmail">Email</label>
+                                <input id="adminProfileEmail" class="admin-input" type="text" inputmode="email" form="adminProfileForm" autocomplete="email" maxlength="320" placeholder="nome@email.com" spellcheck="false">
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="adminProfession">Profissão</label>
+                                <select id="adminProfession" class="admin-select clinic-profile-role-select" form="adminProfileForm">
                                 <option value="">Seleccione</option>
                                 <option value="medico">Médico</option>
                                 <option value="psicologo">Psicólogo</option>
@@ -1067,7 +1067,7 @@
                         <h2 class="dash-section-title">Dados profissionais</h2>
                         <p class="dash-section-subtitle">NIF, cédula, seguro, bio, idiomas de consulta e áreas de preferência</p>
                     </div>
-                    <form id="adminProfileForm" class="clinic-profile-form">
+                    <form id="adminProfileForm" class="clinic-profile-form" novalidate>
                         <div class="admin-invite-grid">
                             <div class="admin-form-group">
                                 <label for="adminNif">NIF</label>
@@ -1196,7 +1196,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=pro-dedupe-1"></script>
+    <script src="/admin.js?v=email-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

@@ -16,7 +16,7 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = 'scope-2';
+const CLINIC_PORTAL_BUILD = 'email-1';
 const CLINIC_PORTAL_PATH = '/clinic-desk/dias';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
@@ -727,7 +727,7 @@ async function serveClinicPortalHtml(res) {
             .replace(/src="\/clinic-portal\/clinic\.js\?v=[^"]+"/g, `src="${clinicPortalAssetUrl('clinic.js')}"`)
             .replace(/data-clinic-build="[^"]+"/, `data-clinic-build="${CLINIC_PORTAL_BUILD}"`)
             .replace(
-                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|ficha-1|scope-1|scope-2|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8|perfil-9|perfil-10) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
+                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|ficha-1|scope-1|scope-2|email-1|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8|perfil-9|perfil-10) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
                 `Portal ${CLINIC_PORTAL_BUILD} — 7 set 2026. Entre com o username do profissional.`
             );
         res.append('Set-Cookie', `lon_portal=${CLINIC_PORTAL_BUILD}; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly`);
@@ -1448,14 +1448,12 @@ function isJunkStaffName(raw) {
 }
 
 function usernameMatchesPersonName(username, name) {
-    const parts = String(username || '')
+    const fromUser = String(username || '')
         .trim()
         .toLowerCase()
-        .split(/[._-]+/)
-        .filter((part) => part.length > 1);
-    const nameTokens = normalizePersonName(name).split(' ').filter(Boolean);
-    if (parts.length < 2 || nameTokens.length < 2) return false;
-    return parts.every((part) => nameTokens.includes(part));
+        .replace(/\d+$/g, '')
+        .replace(/[._-]+/g, ' ');
+    return personNamesMatch(fromUser, name);
 }
 
 function normalizeStaffEmail(raw) {
@@ -11336,6 +11334,11 @@ app.put('/api/clinic/profile', requireAuth, rateLimitStaffProfile, express.json(
         let updated = professional;
         if (professional && professional.id && Object.keys(patch).length) {
             updated = await patchProfessionalInternal(professional, patch);
+        }
+        if (updated && (patch.email || patch.displayName)) {
+            try {
+                await findBolsaApplicationForStaff(username, updated);
+            } catch (_) { /* next profile load still retries */ }
         }
         if (patch.displayName && req.session) {
             req.session.clinicDisplayName = patch.displayName;
