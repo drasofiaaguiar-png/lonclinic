@@ -1,6 +1,49 @@
 {
     "articles": [
         {
+            "slug": "consulta-do-viajante-urgente",
+            "title": "Preciso de uma consulta do viajante o quanto antes em Portugal — como encontrar?",
+            "description": "Consulta do viajante urgente em Portugal: videoconsulta hoje ou amanhã, 39 €. Prescrição no próprio dia; vacinas no CVI. O certificado da febre amarela só vale a partir do 10.º dia.",
+            "datePublished": "2026-09-08",
+            "dateModified": "2026-09-08",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Medicina do viajante",
+            "author": "rita-aguiar",
+            "image": "/image/guide/travel-cover-hq-2.webp",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "slotService": "travel",
+            "readingMinutes": 5,
+            "related": [
+                "quando-agendar-consulta-do-viajante",
+                "vou-viajar-esta-semana-sem-vacinas",
+                "centros-de-vacinacao-internacional-portugal",
+                "quanto-custa-consulta-medicina-do-viajante",
+                "vacina-febre-amarela-guia-completo",
+                "onde-fazer-consulta-medicina-do-viajante-lisboa"
+            ],
+            "faq": [
+                {
+                    "q": "Consigo uma consulta do viajante para hoje em Portugal?",
+                    "a": "Na Lon Clinic, em regra sim — hoje ou amanhã, no site ou por WhatsApp, 39 €. O gargalo deixa de ser a consulta e passa a ser a vaga no CVI, se precisares de vacina."
+                },
+                {
+                    "q": "A consulta online já me dá a vacina?",
+                    "a": "Não. A consulta avalia e, quando indicado, emite a prescrição no próprio dia. A administração (e o certificado da febre amarela) é no CVI. Sem receita, muitos centros nem marcam a toma."
+                },
+                {
+                    "q": "Ainda vale a pena se parto daqui a três dias e preciso de febre amarela?",
+                    "a": "O certificado só vale a partir do 10.º dia após a dose — pagar a consulta não acelera isso. A consulta continua a servir para malária, outras vacinas, e para saber se o destino exige mesmo o certificado."
+                },
+                {
+                    "q": "Quanto custa uma consulta do viajante urgente?",
+                    "a": "Na Lon Clinic: 39 € por uma pessoa, 69 € a duas. Vacinas no CVI e comprimidos da malária pagam-se à parte."
+                }
+            ]
+        },
+        {
             "slug": "como-encontrar-um-nutricionista",
             "title": "Como encontrar um nutricionista de que gostes (mesmo) em Portugal",
             "description": "Sinais de alerta (suplementos, dietas milagrosas) e o que procurar: cédula da Ordem, comida real e um encaixe que te motive — não só um plano certo no papel.",
@@ -101,6 +144,7 @@
             "liveSlots": true,
             "readingMinutes": 12,
             "related": [
+                "consulta-do-viajante-urgente",
                 "vacinas-viajante-guia-completo",
                 "quando-agendar-consulta-do-viajante",
                 "onde-fazer-consulta-medicina-do-viajante-lisboa",
@@ -4894,6 +4938,7 @@
             "ctaKind": "travel",
             "liveSlots": true,
             "related": [
+                "consulta-do-viajante-urgente",
                 "quando-agendar-consulta-do-viajante",
                 "onde-fazer-consulta-medicina-do-viajante-lisboa",
                 "centros-de-vacinacao-internacional-portugal",
@@ -4968,6 +5013,7 @@
             "ctaKind": "travel",
             "liveSlots": true,
             "related": [
+                "consulta-do-viajante-urgente",
                 "vou-viajar-esta-semana-sem-vacinas",
                 "onde-fazer-consulta-medicina-do-viajante-lisboa",
                 "quanto-custa-consulta-medicina-do-viajante",
@@ -5011,6 +5057,7 @@
             "ctaKind": "travel",
             "liveSlots": true,
             "related": [
+                "consulta-do-viajante-urgente",
                 "quando-agendar-consulta-do-viajante",
                 "vacina-febre-amarela-guia-completo",
                 "onde-fazer-consulta-medicina-do-viajante-lisboa",

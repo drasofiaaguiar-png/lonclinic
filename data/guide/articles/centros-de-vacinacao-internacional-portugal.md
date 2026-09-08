@@ -9,7 +9,7 @@
 
 Se vai viajar para um país que exige ou recomenda vacinação específica — febre amarela, hepatite A/B, febre tifóide ou encefalite japonesa — precisa de um **Centro de Vacinação Internacional**, o circuito da consulta do viajante no SNS. Os centros estão organizados por Unidade Local de Saúde (ULS) em Portugal continental e nas ilhas.
 
-Marcar essa consulta no SNS pode levar semanas ou meses, e uma parte dos centros não atende o telefone. A [Lon Clinic](/travel-clinic) é clínica de telemedicina: [marca a consulta](/marcar/travel) para hoje ou amanhã, 39 €. A prescrição obtida usa-se depois para agendar a toma num dos centros desta lista.
+Marcar essa consulta no SNS pode levar semanas ou meses, e uma parte dos centros não atende o telefone. A [Lon Clinic](/travel-clinic) é clínica de telemedicina: [marca a consulta](/marcar/travel) para hoje ou amanhã, 39 €. Se partes em poucos dias, [como encontrar uma consulta do viajante urgente](/blog/consulta-do-viajante-urgente). A prescrição obtida usa-se depois para agendar a toma num dos centros desta lista.
 
 {{cta}}
 
