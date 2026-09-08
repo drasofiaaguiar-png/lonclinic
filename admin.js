@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         invitations: { title: 'Invitations', subtitle: 'Send and manage booking invites' },
         availability: { title: 'Availability', subtitle: 'Working hours, blocks & slot preview' },
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' },
-        professionals: { title: 'Professionals & Doxy', subtitle: 'One person: login, ficha, Doxy and bolsa' },
+        professionals: { title: 'Professionals', subtitle: 'Directory of clinic professionals' },
         psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' },
         producers: { title: 'Diretório produtores', subtitle: 'Moderar candidaturas de produtores biológicos' },
         profile: { title: 'Perfil', subtitle: 'Identificação, dados profissionais, documentos e candidatura' }
@@ -3678,22 +3678,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // ─── Professionals & Doxy rooms ───
+    // ─── Professionals directory ───
     const adminProfessionalsBody = document.getElementById('adminProfessionalsBody');
-    const adminProfessionalForm = document.getElementById('adminProfessionalForm');
+    const adminDirDetail = document.getElementById('adminDirDetail');
+    const adminDirSearch = document.getElementById('adminDirSearch');
+    const adminDirCount = document.getElementById('adminDirCount');
     const adminProfessionalError = document.getElementById('adminProfessionalError');
-    const adminDefaultDoxyUrl = document.getElementById('adminDefaultDoxyUrl');
-    const proEditId = document.getElementById('proEditId');
-    const proDisplayName = document.getElementById('proDisplayName');
-    const proUsername = document.getElementById('proUsername');
-    const proPassword = document.getElementById('proPassword');
-    const proGeneratePasswordBtn = document.getElementById('proGeneratePasswordBtn');
-    const proDoxyUrl = document.getElementById('proDoxyUrl');
-    const proEmail = document.getElementById('proEmail');
-    const proActive = document.getElementById('proActive');
-    const proSubmitBtn = document.getElementById('proSubmitBtn');
-    const proCancelEditBtn = document.getElementById('proCancelEditBtn');
-    const proAssignBoardLoginsBtn = document.getElementById('proAssignBoardLoginsBtn');
     const adminProfessionalCreds = document.getElementById('adminProfessionalCreds');
     const proCredsPortal = document.getElementById('proCredsPortal');
     const proCredsName = document.getElementById('proCredsName');
@@ -3722,9 +3712,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         psicologo: 'Psicólogo'
     };
     let staffProfessionTitlesCache = { ...STAFF_PROFESSION_LABELS };
-    let proUsernameTouched = false;
     const freshPasswordsById = Object.create(null);
-    const PRO_PASSWORD_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+    let dirSearchQuery = '';
+    let dirProfessionFilter = '';
+    let selectedProfessionalKey = '';
 
     function rememberFreshPassword(pro, password) {
         if (!pro || !password) return;
@@ -3738,13 +3729,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         return `${greeting}\n\nSeguem os dados de acesso ao portal da Lon Clinic. Abra o link abaixo, introduza o username ou o email e a password e inicie sessão.`;
     }
 
+    function professionalKey(p) {
+        if (!p) return '';
+        const username = String(p.username || '').trim().toLowerCase();
+        if (username) return `u:${username}`;
+        if (p.id != null && p.id !== '') return `id:${p.id}`;
+        return '';
+    }
+
     function professionalRecordById(id) {
         const key = String(id || '');
         if (!key) return null;
-        const fromStaff = (staffProfilesCache || []).find((p) => String(p.id || p.professionalId || '') === key);
-        const fromPro = (professionalsCache || []).find((p) => String(p.id) === key);
-        if (!fromStaff && !fromPro) return null;
-        return professionalFileRecord(fromStaff, fromPro);
+        return directoryProfessionals().find((p) => String(p.id || p.professionalId || '') === key) || null;
+    }
+
+    function professionalByKey(key) {
+        if (!key) return null;
+        return directoryProfessionals().find((p) => professionalKey(p) === key) || null;
     }
 
     function setSendLoginError(message) {
@@ -3809,7 +3810,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
         if (!email) {
-            setSendLoginError('Add an email on the ficha before sending.');
+            setSendLoginError('Add an email before sending.');
             if (sendLoginEmailTo) sendLoginEmailTo.focus();
             return;
         }
@@ -3841,10 +3842,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             if (!res.ok) {
                 setSendLoginError(data.error || 'Could not send login email.');
-                if (data.code === 'missing_email') {
-                    const person = professionalRecordById(id);
-                    if (person) fillCreateProfileForm(person);
-                }
                 if (sendLoginSubmitBtn) sendLoginSubmitBtn.disabled = false;
                 return;
             }
@@ -3877,11 +3874,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         adminProfessionalError.style.display = 'block';
     }
 
-    function hideProfessionalCreds() {
-        if (adminProfessionalCreds) adminProfessionalCreds.hidden = true;
-        setProfessionalCredsSendStatus('');
-    }
-
     function showProfessionalCreds(pro, password) {
         if (!adminProfessionalCreds || !password) return;
         rememberFreshPassword(pro, password);
@@ -3890,45 +3882,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             proCredsPortal.href = '/clinic-desk/dias#profile';
             proCredsPortal.textContent = portal;
         }
-        if (proCredsName) proCredsName.textContent = (pro && pro.displayName) || '';
+        if (proCredsName) proCredsName.textContent = (pro && (pro.displayName || pro.fullName)) || '';
         if (proCredsUsername) proCredsUsername.textContent = (pro && pro.username) || '';
         if (proCredsPassword) proCredsPassword.textContent = password;
         if (adminProfessionalCreds && pro && pro.id) adminProfessionalCreds.dataset.proId = String(pro.id);
         setProfessionalCredsSendStatus('');
         adminProfessionalCreds.hidden = false;
         adminProfessionalCreds.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-
-    function suggestProfessionalUsername(displayName) {
-        let s = String(displayName || '')
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/[ªº]/g, '')
-            .replace(/\b(dra|dr|prof|profa)\b\.?/gi, ' ')
-            .toLowerCase()
-            .replace(/[^a-z0-9]+/g, '.')
-            .replace(/^\.+|\.+$/g, '')
-            .replace(/\.{2,}/g, '.')
-            .slice(0, 64);
-        return s.length >= 3 ? s : '';
-    }
-
-    function generateProfessionalPassword() {
-        const bytes = new Uint8Array(12);
-        if (window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(bytes);
-        else for (let i = 0; i < 12; i++) bytes[i] = Math.floor(Math.random() * 256);
-        let out = '';
-        for (let i = 0; i < 12; i++) {
-            out += PRO_PASSWORD_ALPHABET[bytes[i] % PRO_PASSWORD_ALPHABET.length];
-            if (i === 3 || i === 7) out += '-';
-        }
-        return out;
-    }
-
-    function fillUsernameFromName() {
-        if (!proUsername || proUsername.disabled || proUsernameTouched) return;
-        const suggested = suggestProfessionalUsername(proDisplayName ? proDisplayName.value : '');
-        proUsername.value = suggested;
     }
 
     function fillProfessionalsDatalist(list) {
@@ -3942,145 +3902,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         dl.innerHTML = [...names].map((n) => `<option value="${escapeHtml(n)}"></option>`).join('');
     }
 
-    function resetProfessionalForm() {
-        if (adminProfessionalForm) adminProfessionalForm.reset();
-        if (proEditId) proEditId.value = '';
-        if (proActive) proActive.checked = true;
-        proUsernameTouched = false;
-        if (proUsername) proUsername.disabled = false;
-        if (proPassword) {
-            proPassword.required = false;
-            proPassword.type = 'password';
-            proPassword.placeholder = 'Assigned automatically if blank';
-        }
-        if (proSubmitBtn) proSubmitBtn.textContent = 'Add professional';
-        if (proCancelEditBtn) proCancelEditBtn.hidden = true;
-        showProfessionalError('');
-    }
-
-    function startEditProfessional(pro) {
-        if (!pro) return;
-        hideProfessionalCreds();
-        if (proEditId) proEditId.value = String(pro.id);
-        if (proDisplayName) proDisplayName.value = pro.displayName || '';
-        if (proUsername) {
-            proUsername.value = pro.username || '';
-            proUsername.disabled = true;
-            proUsernameTouched = true;
-        }
-        if (proPassword) {
-            proPassword.value = '';
-            proPassword.required = false;
-            proPassword.type = 'password';
-            proPassword.placeholder = 'Leave blank to keep current password';
-        }
-        if (proDoxyUrl) proDoxyUrl.value = pro.doxyRoomUrl || '';
-        if (proEmail) proEmail.value = pro.email || '';
-        if (proActive) proActive.checked = pro.active !== false;
-        if (proSubmitBtn) proSubmitBtn.textContent = 'Save changes';
-        if (proCancelEditBtn) proCancelEditBtn.hidden = false;
-        const addLoginDetails = document.getElementById('adminAddLoginDetails');
-        if (addLoginDetails) {
-            addLoginDetails.open = true;
-            addLoginDetails.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        showProfessionalError('');
-        if (proDisplayName) proDisplayName.focus();
-    }
-
-    function professionalDoxyCell(p) {
-        if (!p || p.doxyPending || !p.doxyRoomUrl) return 'Pending';
-        const label = String(p.doxyRoomUrl).replace(/^https?:\/\//, '');
-        return `<a href="${escapeHtml(p.doxyRoomUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${escapeHtml(label)}</a>`;
-    }
-
     function professionalTypeLabel(p) {
         if (!p) return '';
         const titles = staffProfessionTitlesCache || STAFF_PROFESSION_LABELS;
         if (p.professionLabel) return p.professionLabel;
         const key = String(p.profession || '').trim();
         if (key && titles[key]) return titles[key];
-        if (p.isBoardFile || (p.bolsa && (p.bolsa.id || p.bolsa.email))) return titles.psicologo || 'Psicólogo';
         return '';
     }
 
-    function professionalTypeCell(p) {
-        const label = professionalTypeLabel(p);
-        if (!label) return '—';
-        return `<span class="admin-psych-role-tag">${escapeHtml(label)}</span>`;
-    }
-
-    function professionalFileRecord(staff, account) {
-        const p = staff || {};
-        const a = account || {};
-        const username = p.username || a.username || '';
-        const hasLogin = p.hasLogin === true || p.isClinicAdmin === true || !!(a && a.username);
-        const active = hasLogin && p.active !== false && a.active !== false;
-        return {
-            ...p,
-            id: p.id || a.id || null,
-            username,
-            displayName: p.fullName || p.displayName || a.displayName || username,
-            email: p.email || a.email || '',
-            loginEmailSentTo: p.loginEmailSentTo || a.loginEmailSentTo || '',
-            loginEmailSentAt: p.loginEmailSentAt || a.loginEmailSentAt || null,
-            profession: p.profession || '',
-            professionLabel: p.professionLabel || '',
-            doxyRoomUrl: p.doxyRoomUrl || a.doxyRoomUrl || '',
-            doxyPending: p.doxyPending != null ? p.doxyPending : (a.doxyPending || !a.doxyRoomUrl),
-            hasLogin,
-            active,
-            hasFile: p.hasFile === true || !!p.updatedAt,
-            isClinicAdmin: p.isClinicAdmin === true
-        };
-    }
-
-    function professionalLoginEmailSentHtml(p) {
-        if (!p || !p.hasLogin || p.isClinicAdmin) return '';
-        const to = String(p.loginEmailSentTo || '').trim();
-        if (!to && !p.loginEmailSentAt) {
-            return '<p class="admin-pro-login-note">Login email: not sent yet.</p>';
-        }
-        const when = formatPsychDate(p.loginEmailSentAt);
-        return `<p class="admin-pro-login-note">Last login email: <strong>${escapeHtml(to || '—')}</strong>${p.loginEmailSentAt ? ` · ${escapeHtml(when)}` : ''}</p>`;
-    }
-
-    function professionalLoginEmailSentLabel(p) {
-        const to = String((p && p.loginEmailSentTo) || '').trim();
-        if (!to) return '';
-        return `<small class="admin-pro-sent-mail">${escapeHtml(to)}</small>`;
-    }
-
-    function professionalFileActionsHtml(p) {
-        const bits = [];
-        if (p.hasLogin && p.id) {
-            bits.push(`<button type="button" class="btn btn-outline btn-sm" data-pro-edit="${p.id}">Edit login / Doxy</button>`);
-            bits.push(`<button type="button" class="btn btn-outline btn-sm" data-pro-password="${p.id}">New password</button>`);
-            if (!p.isClinicAdmin) {
-                bits.push(`<button type="button" class="btn btn-primary btn-sm" data-pro-send-login="${p.id}">Send login email</button>`);
-                bits.push(`<button type="button" class="btn btn-outline btn-sm" data-pro-delete="${p.id}">Remove login</button>`);
-            }
-        } else if (p.boardId && !p.hasLogin) {
-            bits.push(`<button type="button" class="btn btn-primary btn-sm" data-psych-login="${escapeHtml(p.boardId)}">Assign login</button>`);
-        } else if (!p.hasLogin && p.username && !p.isClinicAdmin) {
-            bits.push(`<button type="button" class="btn btn-primary btn-sm" data-staff-assign-login="${escapeHtml(p.username)}">Assign login</button>`);
-        }
-        if (p.username && !p.isClinicAdmin) {
-            bits.push(`<button type="button" class="btn btn-outline btn-sm" data-staff-delete-file="${escapeHtml(p.username)}">Remove file</button>`);
-        }
-        if (p.username) {
-            bits.push(`<button type="button" class="btn btn-outline btn-sm" data-staff-edit="${escapeHtml(p.username)}">Editar ficha</button>`);
-        }
-        return bits.length ? `<div class="admin-pro-actions">${bits.join('')}</div>` : '';
-    }
-
-    function renderAdminProfessionals() {
-        if (!adminProfessionalsBody) return;
-        const openKeys = new Set(
-            [...adminProfessionalsBody.querySelectorAll('details[data-file-key][open]')]
-                .map((el) => el.getAttribute('data-file-key'))
-                .filter(Boolean)
-        );
+    function directoryProfessionals() {
         const byUser = new Map(
             (professionalsCache || []).map((a) => [String(a.username || '').trim().toLowerCase(), a])
         );
@@ -4088,138 +3919,86 @@ document.addEventListener('DOMContentLoaded', async () => {
         const files = [];
         (staffProfilesCache || []).forEach((staff) => {
             if (staff.hasFile === false && staff.hasLogin !== true && staff.isClinicAdmin !== true) return;
-            const key = String(staff.username || '').trim().toLowerCase();
+            const key = professionalKey(staff);
             if (!key || seen.has(key)) return;
             seen.add(key);
-            files.push(professionalFileRecord(staff, byUser.get(key)));
-        });
-        (professionalsCache || []).forEach((account) => {
-            const key = String(account.username || '').trim().toLowerCase();
-            if (!key || seen.has(key)) return;
-            seen.add(key);
-            files.push(professionalFileRecord(null, account));
-        });
-        const listedEmails = new Set(files.map((f) => String(f.email || '').trim().toLowerCase()).filter(Boolean));
-        const listedNames = new Set(files.map((f) => String(f.displayName || '').trim().toLowerCase()).filter(Boolean));
-        (boardProfessionalsCache || []).forEach((a) => {
-            const proUser = String((a.professional && a.professional.username) || '').trim().toLowerCase();
-            if (proUser && seen.has(proUser)) return;
-            const emailKey = String(a.email || '').trim().toLowerCase();
-            const nameKey = String(a.name || '').trim().toLowerCase();
-            if (emailKey && listedEmails.has(emailKey)) return;
-            if (nameKey && listedNames.has(nameKey)) return;
-            seen.add(proUser || `board:${a.id}`);
-            if (emailKey) listedEmails.add(emailKey);
-            if (nameKey) listedNames.add(nameKey);
+            const account = byUser.get(String(staff.username || '').trim().toLowerCase());
             files.push({
-                boardId: a.id,
-                username: '',
-                displayName: a.name || '—',
-                email: a.email || '',
-                phone: a.phone || '',
-                profession: 'psicologo',
-                professionLabel: (staffProfessionTitlesCache && staffProfessionTitlesCache.psicologo) || 'Psicólogo',
-                hasLogin: false,
-                active: false,
-                doxyPending: true,
-                doxyRoomUrl: '',
-                boardStatus: a.status || '',
-                isBoardFile: true
+                ...staff,
+                id: staff.id || (account && account.id) || null,
+                displayName: staff.fullName || staff.displayName || (account && account.displayName) || staff.username || '',
+                email: staff.email || (account && account.email) || '',
+                doxyRoomUrl: staff.doxyRoomUrl || (account && account.doxyRoomUrl) || '',
+                doxyPending: staff.doxyPending != null
+                    ? staff.doxyPending
+                    : !(account && account.doxyRoomUrl),
+                hasLogin: staff.hasLogin === true || staff.isClinicAdmin === true || !!(account && account.username),
+                active: staff.active !== false && (!account || account.active !== false)
             });
         });
-        files.sort((a, b) => {
-            const aLogin = a.hasLogin && a.active ? 0 : a.hasLogin ? 1 : 2;
-            const bLogin = b.hasLogin && b.active ? 0 : b.hasLogin ? 1 : 2;
-            if (aLogin !== bLogin) return aLogin - bLogin;
-            return String(a.displayName || a.username || '')
-                .localeCompare(String(b.displayName || b.username || ''), 'pt', { sensitivity: 'base' });
+        (professionalsCache || []).forEach((account) => {
+            const userKey = String(account.username || '').trim().toLowerCase();
+            const key = professionalKey(account);
+            if ((userKey && seen.has(`u:${userKey}`)) || (key && seen.has(key))) return;
+            if (userKey) seen.add(`u:${userKey}`);
+            if (key) seen.add(key);
+            files.push({
+                ...account,
+                fullName: account.displayName || account.username || '',
+                displayName: account.displayName || account.username || '',
+                hasLogin: true,
+                active: account.active !== false,
+                hasPhoto: false
+            });
         });
-
-        const boardCountEl = document.getElementById('adminBoardCount');
-        if (boardCountEl) {
-            const activeCount = files.filter((p) => p.hasLogin && p.active).length;
-            const noLoginCount = files.filter((p) => !p.hasLogin).length;
-            const bits = [];
-            bits.push(`${files.length} file${files.length === 1 ? '' : 's'}`);
-            bits.push(`${activeCount} active`);
-            bits.push(`${noLoginCount} without login`);
-            boardCountEl.textContent = bits.join(' · ');
-        }
-
-        if (!files.length) {
-            adminProfessionalsBody.innerHTML = '<p class="admin-empty-list">No professional files yet. Create a ficha below — with a login, or as a file only.</p>';
-            return;
-        }
-
-        const kinds = staffDocumentKindsCache || {};
-        adminProfessionalsBody.innerHTML = files.map((p) => {
-            const key = String(p.username || (p.boardId ? `board:${p.boardId}` : '') || p.displayName || '').trim().toLowerCase();
-            const statusLabel = !p.hasLogin ? 'No login' : (p.active ? 'Active' : 'Disabled');
-            const statusClass = p.hasLogin && p.active ? 'admin-pro-status' : 'admin-pro-status is-off';
-            const userLabel = p.hasLogin ? (p.username || '—') : '—';
-            const title = p.fullName || p.displayName || p.username || '—';
-            return `<details class="admin-psych-row" data-file-key="${escapeHtml(key)}"${openKeys.has(key) ? ' open' : ''}>
-                <summary class="admin-psych-summary">
-                    <span class="admin-psych-col admin-psych-col-name">${escapeHtml(title)}${professionalLoginEmailSentLabel(p)}</span>
-                    <span class="admin-psych-col admin-psych-col-role">${professionalTypeCell(p)}</span>
-                    <span class="admin-psych-col admin-psych-col-user">${escapeHtml(userLabel)}</span>
-                    <span class="admin-psych-col admin-psych-col-doxy">${professionalDoxyCell(p)}</span>
-                    <span class="admin-psych-col admin-psych-col-login"><span class="${statusClass}">${statusLabel}</span></span>
-                    <span class="admin-psych-chevron" aria-hidden="true"></span>
-                </summary>
-                <div class="admin-psych-body">
-                    ${p.hasLogin
-                        ? `<p class="admin-pro-login-note">Clinic login: <code>${escapeHtml(p.username || '')}</code> — portal <a href="/clinic-desk/dias#profile">/clinic-desk/dias</a>${p.active ? '' : ' · account disabled'}</p>`
-                        : '<p class="admin-pro-login-note">File only — no clinic username or password yet. Assign a login when this professional should sign in.</p>'}
-                    ${professionalLoginEmailSentHtml(p)}
-                    ${professionalFileActionsHtml(p)}
-                    ${staffProfileFichaHtml(p, kinds)}
-                </div>
-            </details>`;
-        }).join('');
+        files.sort((a, b) => String(a.displayName || a.fullName || a.username || '')
+            .localeCompare(String(b.displayName || b.fullName || b.username || ''), 'pt', { sensitivity: 'base' }));
+        return files;
     }
 
-    async function loadAdminProfessionals() {
-        if (!adminProfessionalsBody) return;
-        try {
-            const res = await fetch('/api/admin/professionals');
-            if (res.status === 401 || res.status === 403) {
-                if (res.status === 403) window.location.href = '/clinic-desk/dias';
-                else showLogin();
-                return;
-            }
-            if (!res.ok) throw new Error('Failed to load');
-            const data = await res.json();
-            professionalsCache = data.professionals || [];
-            boardProfessionalsCache = data.board || [];
-            namedProfessionalsCache = data.named || [];
-            if (adminDefaultDoxyUrl) {
-                adminDefaultDoxyUrl.textContent = data.defaultDoxyRoomUrl
-                    ? `Clinic fallback room (unassigned bookings only). Other professionals stay blank until you add their own Doxy URL.`
-                    : 'No clinic Doxy room is set. Add one on Dra. Sofia Aguiar’s profile, or leave other professionals blank until each has their own.';
-            }
-            fillProfessionalsDatalist(professionalsCache.concat(
-                boardProfessionalsCache.map((a) => ({ displayName: a.name })),
-                namedProfessionalsCache.map((row) => ({ displayName: row.name }))
-            ).filter((p) => p.displayName));
-            await loadAdminStaffProfiles();
-        } catch (err) {
-            console.error('Load professionals:', err);
-            adminProfessionalsBody.innerHTML = '<p class="admin-empty-list">Could not load professionals.</p>';
-        }
+    function filteredDirectoryProfessionals() {
+        const q = dirSearchQuery.trim().toLowerCase();
+        return directoryProfessionals().filter((p) => {
+            if (dirProfessionFilter && String(p.profession || '') !== dirProfessionFilter) return false;
+            if (!q) return true;
+            const hay = [
+                p.displayName, p.fullName, p.username, p.email, professionalTypeLabel(p)
+            ].map((v) => String(v || '').toLowerCase()).join(' ');
+            return hay.includes(q);
+        });
     }
 
-    const adminStaffProfilesList = document.getElementById('adminStaffProfilesList');
+    function initialsFromName(name) {
+        const parts = String(name || '').trim().split(/\s+/).filter((p) => p && !/^(dra?|prof\.?a?)$/i.test(p));
+        if (!parts.length) return '·';
+        const first = parts[0][0] || '';
+        const last = parts.length > 1 ? (parts[parts.length - 1][0] || '') : '';
+        return (first + last).toUpperCase();
+    }
+
+    function professionalPhotoHtml(p, className) {
+        const title = p.fullName || p.displayName || p.username || '';
+        if (p.hasPhoto && p.username) {
+            return `<img class="${className}" src="/api/admin/staff-profiles/${encodeURIComponent(p.username)}/photo" alt="">`;
+        }
+        return `<span class="${className} is-initials" aria-hidden="true">${escapeHtml(initialsFromName(title))}</span>`;
+    }
+
+    function professionalStatusLabel(p) {
+        if (!p.hasLogin) return { text: 'File only', off: true };
+        if (p.active) return { text: 'Active', off: false };
+        return { text: 'Disabled', off: true };
+    }
 
     function dashText(value) {
         const s = String(value || '').trim();
         return s ? escapeHtml(s) : '—';
     }
 
-    function areaListHtml(items) {
+    function areaTagsHtml(items) {
         const list = Array.isArray(items) ? items.filter(Boolean) : [];
-        if (!list.length) return '<p>—</p>';
-        return `<ul>${list.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`;
+        if (!list.length) return '';
+        return `<div class="admin-dir-tags">${list.map((item) => `<span>${escapeHtml(item)}</span>`).join('')}</div>`;
     }
 
     function isInternalBolsaProfileItem(row) {
@@ -4278,32 +4057,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    function staffProfileFichaHtml(p, kinds) {
-        if (!p) return '';
-        if (p.isBoardFile) {
-            const status = p.boardStatus ? ` · ${escapeHtml(p.boardStatus)}` : '';
-            return `<div class="admin-staff-profile-block">
-                <h4>Identificação</h4>
-                <dl class="admin-staff-profile-dl">
-                    <div><dt>Nome</dt><dd>${dashText(p.displayName)}</dd></div>
-                    <div><dt>Tipo</dt><dd>${dashText(professionalTypeLabel(p))}</dd></div>
-                    <div><dt>Email</dt><dd>${dashText(p.email)}</dd></div>
-                    <div><dt>Telefone</dt><dd>${dashText(p.phone)}</dd></div>
-                    <div><dt>Sala Doxy.me</dt><dd>Pendente</dd></div>
-                </dl>
-                <p class="admin-pro-login-note">Bolsa application file${status}. Assign a clinic login to activate this professional.</p>
-            </div>`;
+    function renderDirectoryDetail(p) {
+        if (!adminDirDetail) return;
+        if (!p) {
+            adminDirDetail.hidden = true;
+            adminDirDetail.innerHTML = '';
+            return;
         }
+        const title = p.fullName || p.displayName || p.username || '—';
+        const role = professionalTypeLabel(p);
+        const status = professionalStatusLabel(p);
+        const kinds = staffDocumentKindsCache || {};
         const user = encodeURIComponent(p.username || '');
-        const photo = p.hasPhoto && p.username
-            ? `<img class="admin-staff-profile-photo" src="/api/admin/staff-profiles/${user}/photo" alt="">`
-            : '<div class="admin-staff-profile-photo" aria-hidden="true"></div>';
-        const title = p.fullName || p.displayName || p.username || '';
-        const roleBits = [p.professionLabel, p.hasLogin ? p.username : ''].filter(Boolean).join(' · ');
-        const docKinds = kinds && typeof kinds === 'object' ? kinds : {};
-        const docs = Object.keys(docKinds).map((kind) => {
+        const docs = Object.keys(kinds).map((kind) => {
             const doc = (p.documents || []).find((d) => d && d.kind === kind);
-            const label = docKinds[kind] || kind;
+            const label = kinds[kind] || kind;
             if (!doc) {
                 return `<li><span>${escapeHtml(label)}</span><span class="clinic-doc-missing">Por enviar</span></li>`;
             }
@@ -4317,73 +4085,80 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ${validity ? `<span class="clinic-doc-validity">${validity}</span>` : ''}
             </li>`;
         }).join('');
-        const linked = !!(p.bolsa && (p.bolsa.id || p.bolsa.email || (Array.isArray(p.bolsa.groups) && p.bolsa.groups.length)));
-        const cvHref = p.bolsa && p.bolsa.hasCv && p.username
-            ? `/api/admin/staff-profiles/${user}/bolsa-cv`
+        const doxy = p.doxyPending || !p.doxyRoomUrl
+            ? 'Pending'
+            : `<a href="${escapeHtml(p.doxyRoomUrl)}" target="_blank" rel="noopener">${escapeHtml(String(p.doxyRoomUrl).replace(/^https?:\/\//, ''))}</a>`;
+        const sendLogin = p.hasLogin && p.id && !p.isClinicAdmin
+            ? `<button type="button" class="btn btn-primary btn-sm" data-pro-send-login="${escapeHtml(String(p.id))}">Send login email</button>`
             : '';
-        return `<div class="admin-staff-profile-head">
-                    ${photo}
-                    <div>
-                        <h3>${escapeHtml(title)}</h3>
-                        <p class="admin-staff-profile-meta">${escapeHtml(roleBits)}${p.email ? ` · ${escapeHtml(p.email)}` : ''}</p>
-                    </div>
+        adminDirDetail.hidden = false;
+        adminDirDetail.innerHTML = `
+            <div class="admin-dir-detail-head">
+                ${professionalPhotoHtml(p, 'admin-dir-detail-photo')}
+                <div>
+                    <h3>${escapeHtml(title)}</h3>
+                    <p>${[role, p.hasLogin ? p.username : ''].filter(Boolean).map(escapeHtml).join(' · ') || '—'}</p>
                 </div>
-                <div class="admin-staff-profile-block">
-                    <h4>Identificação</h4>
-                    <dl class="admin-staff-profile-dl">
-                        <div><dt>Nome</dt><dd>${dashText(p.fullName)}</dd></div>
-                        <div><dt>Tipo</dt><dd>${dashText(professionalTypeLabel(p))}</dd></div>
-                        <div><dt>Email</dt><dd>${dashText(p.email)}</dd></div>
-                        <div><dt>Telefone</dt><dd>${dashText(p.phone || (p.bolsa && p.bolsa.phone))}</dd></div>
-                        <div><dt>Sala Doxy.me</dt><dd>${p.doxyPending || !p.doxyRoomUrl ? 'Pendente' : dashText(p.doxyRoomUrl)}</dd></div>
-                    </dl>
-                </div>
-                <details class="admin-staff-profile-block clinic-bolsa-profile clinic-bolsa-banner clinic-registo-details"${linked ? ' open' : ''}>
-                    <summary class="clinic-registo-summary"><span><h4>Dados de Registo</h4><p class="dash-section-subtitle">${linked ? (p.bolsa.email ? `Candidatura ligada (${escapeHtml(p.bolsa.email)})` : 'Candidatura ligada') : 'Sem candidatura ligada'}</p></span></summary>
-                    <div class="clinic-registo-body">
-                        ${renderBolsaProfileHtml(p.bolsa, {
-                            emptyMessage: 'Sem dados de registo ligados a esta conta.',
-                            cvHref
-                        })}
-                    </div>
-                </details>
-                <div class="admin-staff-profile-block">
-                    <h4>Dados profissionais</h4>
-                    <dl class="admin-staff-profile-dl">
-                        <div><dt>NIF</dt><dd>${dashText(p.nif)}</dd></div>
-                        <div><dt>Cédula profissional</dt><dd>${dashText(p.ordemNumber)}</dd></div>
-                        <div><dt>N.º Cartão de Cidadão</dt><dd>${dashText(p.citizenCard)}</dd></div>
-                        <div><dt>Morada</dt><dd>${dashText(p.address)}</dd></div>
-                        <div><dt>Seguradora</dt><dd>${dashText(p.insurer)}</dd></div>
-                        <div><dt>Apólice</dt><dd>${dashText(p.insurancePolicy)}</dd></div>
-                        <div><dt>Validade do seguro</dt><dd>${dashText(p.insuranceValidUntil)}</dd></div>
-                        <div><dt>IBAN</dt><dd>${dashText(p.iban)}</dd></div>
-                    </dl>
-                </div>
-                <div class="admin-staff-profile-block">
-                    <h4>Bio</h4>
-                    <p>${dashText(p.bio)}</p>
-                </div>
-                <div class="admin-staff-profile-block">
-                    <h4>Credenciais</h4>
-                    <p>${dashText(p.credentials)}</p>
-                </div>
-                <div class="admin-staff-profile-block">
-                    <h4>Idiomas de consulta</h4>
-                    ${areaListHtml(p.consultLanguages)}
-                </div>
-                <div class="admin-staff-profile-block">
-                    <h4>Preferências primárias</h4>
-                    ${areaListHtml(p.primaryAreas)}
-                </div>
-                <div class="admin-staff-profile-block">
-                    <h4>Preferências secundárias</h4>
-                    ${areaListHtml(p.secondaryAreas)}
-                </div>
-                <div class="admin-staff-profile-block">
-                    <h4>Documentos</h4>
-                    <ul class="admin-staff-docs">${docs}</ul>
-                </div>`;
+                <span class="admin-pro-status${status.off ? ' is-off' : ''}">${escapeHtml(status.text)}</span>
+            </div>
+            <dl class="admin-staff-profile-dl">
+                <div><dt>Email</dt><dd>${dashText(p.email)}</dd></div>
+                <div><dt>Telefone</dt><dd>${dashText(p.phone || (p.bolsa && p.bolsa.phone))}</dd></div>
+                <div><dt>Sala Doxy.me</dt><dd>${doxy}</dd></div>
+                <div><dt>NIF</dt><dd>${dashText(p.nif)}</dd></div>
+                <div><dt>Cédula</dt><dd>${dashText(p.ordemNumber)}</dd></div>
+                <div><dt>Cartão de Cidadão</dt><dd>${dashText(p.citizenCard)}</dd></div>
+                <div><dt>Morada</dt><dd>${dashText(p.address)}</dd></div>
+                <div><dt>Seguro</dt><dd>${dashText([p.insurer, p.insurancePolicy, p.insuranceValidUntil].filter(Boolean).join(' · '))}</dd></div>
+                <div><dt>IBAN</dt><dd>${dashText(p.iban)}</dd></div>
+            </dl>
+            ${p.bio ? `<div class="admin-staff-profile-block"><h4>Bio</h4><p>${dashText(p.bio)}</p></div>` : ''}
+            ${p.credentials ? `<div class="admin-staff-profile-block"><h4>Credenciais</h4><p>${dashText(p.credentials)}</p></div>` : ''}
+            ${areaTagsHtml(p.consultLanguages) ? `<div class="admin-staff-profile-block"><h4>Idiomas</h4>${areaTagsHtml(p.consultLanguages)}</div>` : ''}
+            ${areaTagsHtml(p.primaryAreas) ? `<div class="admin-staff-profile-block"><h4>Áreas primárias</h4>${areaTagsHtml(p.primaryAreas)}</div>` : ''}
+            ${areaTagsHtml(p.secondaryAreas) ? `<div class="admin-staff-profile-block"><h4>Áreas secundárias</h4>${areaTagsHtml(p.secondaryAreas)}</div>` : ''}
+            ${docs ? `<div class="admin-staff-profile-block"><h4>Documentos</h4><ul class="admin-staff-docs">${docs}</ul></div>` : ''}
+            ${sendLogin ? `<div class="admin-dir-detail-actions">${sendLogin}</div>` : ''}
+        `;
+    }
+
+    function renderAdminProfessionals() {
+        if (!adminProfessionalsBody) return;
+        const all = directoryProfessionals();
+        const files = filteredDirectoryProfessionals();
+        if (adminDirCount) {
+            const noun = all.length === 1 ? 'professional' : 'professionals';
+            adminDirCount.textContent = files.length === all.length
+                ? `${all.length} ${noun}`
+                : `${files.length} of ${all.length} ${noun}`;
+        }
+        if (!all.length) {
+            adminProfessionalsBody.innerHTML = '<p class="admin-empty-list">No professionals yet.</p>';
+            renderDirectoryDetail(null);
+            return;
+        }
+        if (!files.length) {
+            adminProfessionalsBody.innerHTML = '<p class="admin-empty-list">No professionals match this filter.</p>';
+            renderDirectoryDetail(null);
+            return;
+        }
+        if (selectedProfessionalKey && !files.some((p) => professionalKey(p) === selectedProfessionalKey)) {
+            selectedProfessionalKey = professionalKey(files[0]);
+        }
+        adminProfessionalsBody.innerHTML = files.map((p) => {
+            const key = professionalKey(p);
+            const title = p.fullName || p.displayName || p.username || '—';
+            const role = professionalTypeLabel(p) || 'Professional';
+            const status = professionalStatusLabel(p);
+            const selected = key && key === selectedProfessionalKey;
+            return `<button type="button" class="admin-dir-card${selected ? ' is-selected' : ''}" data-dir-key="${escapeHtml(key)}" aria-pressed="${selected ? 'true' : 'false'}">
+                ${professionalPhotoHtml(p, 'admin-dir-photo')}
+                <strong class="admin-dir-name">${escapeHtml(title)}</strong>
+                <span class="admin-dir-role">${escapeHtml(role)}</span>
+                <span class="admin-pro-status${status.off ? ' is-off' : ''}">${escapeHtml(status.text)}</span>
+            </button>`;
+        }).join('');
+        renderDirectoryDetail(professionalByKey(selectedProfessionalKey));
     }
 
     async function loadAdminStaffProfiles() {
@@ -4407,200 +4182,74 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    const adminCreateProfileForm = document.getElementById('adminCreateProfileForm');
-    const adminCreateProfileDetails = document.getElementById('adminCreateProfileDetails');
-    const adminCreateProfileSummary = document.getElementById('adminCreateProfileSummary');
-    const adminCreateProfileError = document.getElementById('adminCreateProfileError');
-    const staffProfileEditUser = document.getElementById('staffProfileEditUser');
-    const staffProfileFullName = document.getElementById('staffProfileFullName');
-    const staffProfileEmail = document.getElementById('staffProfileEmail');
-    const staffProfileProfession = document.getElementById('staffProfileProfession');
-    const staffProfileUsername = document.getElementById('staffProfileUsername');
-    const staffProfilePassword = document.getElementById('staffProfilePassword');
-    const staffProfileUsernameWrap = document.getElementById('staffProfileUsernameWrap');
-    const staffProfilePasswordWrap = document.getElementById('staffProfilePasswordWrap');
-    const staffProfileAssignLogin = document.getElementById('staffProfileAssignLogin');
-    const staffProfileAssignLoginWrap = document.getElementById('staffProfileAssignLoginWrap');
-    const staffProfileNif = document.getElementById('staffProfileNif');
-    const staffProfileOrdem = document.getElementById('staffProfileOrdem');
-    const staffProfileCitizenCard = document.getElementById('staffProfileCitizenCard');
-    const staffProfileAddress = document.getElementById('staffProfileAddress');
-    const staffProfileInsurer = document.getElementById('staffProfileInsurer');
-    const staffProfileInsurancePolicy = document.getElementById('staffProfileInsurancePolicy');
-    const staffProfileInsuranceValid = document.getElementById('staffProfileInsuranceValid');
-    const staffProfileBio = document.getElementById('staffProfileBio');
-    const staffProfileCredentials = document.getElementById('staffProfileCredentials');
-    const staffProfileSubmitBtn = document.getElementById('staffProfileSubmitBtn');
-    const staffProfileCancelBtn = document.getElementById('staffProfileCancelBtn');
-
-    function syncStaffProfileLoginFields() {
-        const editing = !!(staffProfileEditUser && staffProfileEditUser.value.trim());
-        const assign = !staffProfileAssignLogin || staffProfileAssignLogin.checked;
-        if (staffProfileAssignLoginWrap) staffProfileAssignLoginWrap.hidden = editing;
-        if (staffProfileUsernameWrap) staffProfileUsernameWrap.hidden = editing ? false : !assign;
-        if (staffProfilePasswordWrap) staffProfilePasswordWrap.hidden = editing || !assign;
-        if (!editing && staffProfileSubmitBtn) {
-            staffProfileSubmitBtn.textContent = assign ? 'Criar ficha e login' : 'Criar ficha';
-        }
-    }
-
-    function showCreateProfileError(message) {
-        if (!adminCreateProfileError) return;
-        if (!message) {
-            adminCreateProfileError.style.display = 'none';
-            adminCreateProfileError.textContent = '';
-            return;
-        }
-        adminCreateProfileError.textContent = message;
-        adminCreateProfileError.style.display = 'block';
-    }
-
-    function resetCreateProfileForm() {
-        if (adminCreateProfileForm) adminCreateProfileForm.reset();
-        if (staffProfileEditUser) staffProfileEditUser.value = '';
-        if (staffProfileUsernameWrap) staffProfileUsernameWrap.hidden = false;
-        if (staffProfilePasswordWrap) staffProfilePasswordWrap.hidden = false;
-        if (staffProfileUsername) staffProfileUsername.disabled = false;
-        if (staffProfileAssignLogin) staffProfileAssignLogin.checked = true;
-        if (staffProfileSubmitBtn) staffProfileSubmitBtn.textContent = 'Criar ficha e login';
-        if (staffProfileCancelBtn) staffProfileCancelBtn.hidden = true;
-        if (adminCreateProfileSummary) adminCreateProfileSummary.textContent = 'Criar ficha de profissional';
-        syncStaffProfileLoginFields();
-        showCreateProfileError('');
-    }
-
-    function fillCreateProfileForm(p) {
-        if (!p) {
-            resetCreateProfileForm();
-            return;
-        }
-        if (staffProfileEditUser) staffProfileEditUser.value = p.username || '';
-        if (staffProfileFullName) staffProfileFullName.value = p.fullName || p.displayName || '';
-        if (staffProfileEmail) staffProfileEmail.value = p.email || '';
-        if (staffProfileProfession) staffProfileProfession.value = p.profession || '';
-        if (staffProfileUsername) {
-            staffProfileUsername.value = p.username || '';
-            staffProfileUsername.disabled = true;
-        }
-        if (staffProfilePassword) staffProfilePassword.value = '';
-        if (staffProfileUsernameWrap) staffProfileUsernameWrap.hidden = false;
-        if (staffProfilePasswordWrap) staffProfilePasswordWrap.hidden = true;
-        if (staffProfileAssignLoginWrap) staffProfileAssignLoginWrap.hidden = true;
-        if (staffProfileNif) staffProfileNif.value = p.nif || '';
-        if (staffProfileOrdem) staffProfileOrdem.value = p.ordemNumber || '';
-        if (staffProfileCitizenCard) staffProfileCitizenCard.value = p.citizenCard || '';
-        if (staffProfileAddress) staffProfileAddress.value = p.address || '';
-        if (staffProfileInsurer) staffProfileInsurer.value = p.insurer || '';
-        if (staffProfileInsurancePolicy) staffProfileInsurancePolicy.value = p.insurancePolicy || '';
-        if (staffProfileInsuranceValid) staffProfileInsuranceValid.value = p.insuranceValidUntil || '';
-        if (staffProfileBio) staffProfileBio.value = p.bio || '';
-        if (staffProfileCredentials) staffProfileCredentials.value = p.credentials || '';
-        if (staffProfileSubmitBtn) staffProfileSubmitBtn.textContent = 'Guardar ficha';
-        if (staffProfileCancelBtn) staffProfileCancelBtn.hidden = false;
-        if (adminCreateProfileSummary) adminCreateProfileSummary.textContent = `Editar ficha — ${p.fullName || p.displayName || p.username || ''}`;
-        if (adminCreateProfileDetails) {
-            adminCreateProfileDetails.open = true;
-            adminCreateProfileDetails.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-        syncStaffProfileLoginFields();
-        showCreateProfileError('');
-    }
-
-    function readCreateProfileForm() {
-        return {
-            fullName: staffProfileFullName ? staffProfileFullName.value.trim() : '',
-            email: staffProfileEmail ? staffProfileEmail.value.trim() : '',
-            profession: staffProfileProfession ? staffProfileProfession.value : '',
-            username: staffProfileUsername ? staffProfileUsername.value.trim() : '',
-            password: staffProfilePassword ? staffProfilePassword.value : '',
-            nif: staffProfileNif ? staffProfileNif.value.trim() : '',
-            ordemNumber: staffProfileOrdem ? staffProfileOrdem.value.trim() : '',
-            citizenCard: staffProfileCitizenCard ? staffProfileCitizenCard.value.trim() : '',
-            address: staffProfileAddress ? staffProfileAddress.value.trim() : '',
-            insurer: staffProfileInsurer ? staffProfileInsurer.value.trim() : '',
-            insurancePolicy: staffProfileInsurancePolicy ? staffProfileInsurancePolicy.value.trim() : '',
-            insuranceValidUntil: staffProfileInsuranceValid ? staffProfileInsuranceValid.value : '',
-            bio: staffProfileBio ? staffProfileBio.value.trim() : '',
-            credentials: staffProfileCredentials ? staffProfileCredentials.value.trim() : '',
-            assignLogin: !staffProfileAssignLogin || staffProfileAssignLogin.checked
-        };
-    }
-
-    if (staffProfileAssignLogin) {
-        staffProfileAssignLogin.addEventListener('change', syncStaffProfileLoginFields);
-    }
-    if (staffProfileCancelBtn) {
-        staffProfileCancelBtn.addEventListener('click', () => resetCreateProfileForm());
-    }
-
-    if (adminCreateProfileForm) {
-        adminCreateProfileForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            showCreateProfileError('');
-            const editing = staffProfileEditUser && staffProfileEditUser.value.trim();
-            const payload = readCreateProfileForm();
-            if (!payload.fullName) {
-                showCreateProfileError('O nome é obrigatório.');
+    async function loadAdminProfessionals() {
+        if (!adminProfessionalsBody) return;
+        try {
+            const res = await fetch('/api/admin/professionals');
+            if (res.status === 401 || res.status === 403) {
+                if (res.status === 403) window.location.href = '/clinic-desk/dias';
+                else showLogin();
                 return;
             }
-            if (!editing && payload.assignLogin && payload.password && payload.password.length < 8) {
-                showCreateProfileError('A password deve ter pelo menos 8 caracteres.');
+            if (!res.ok) throw new Error('Failed to load');
+            const data = await res.json();
+            professionalsCache = data.professionals || [];
+            boardProfessionalsCache = data.board || [];
+            namedProfessionalsCache = data.named || [];
+            fillProfessionalsDatalist(professionalsCache.concat(
+                boardProfessionalsCache.map((a) => ({ displayName: a.name })),
+                namedProfessionalsCache.map((row) => ({ displayName: row.name }))
+            ).filter((p) => p.displayName));
+            await loadAdminStaffProfiles();
+        } catch (err) {
+            console.error('Load professionals:', err);
+            adminProfessionalsBody.innerHTML = '<p class="admin-empty-list">Could not load professionals.</p>';
+        }
+    }
+
+    if (adminDirSearch) {
+        adminDirSearch.addEventListener('input', () => {
+            dirSearchQuery = adminDirSearch.value || '';
+            renderAdminProfessionals();
+        });
+    }
+
+    document.querySelectorAll('[data-dir-type]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            dirProfessionFilter = btn.getAttribute('data-dir-type') || '';
+            document.querySelectorAll('[data-dir-type]').forEach((el) => {
+                const on = (el.getAttribute('data-dir-type') || '') === dirProfessionFilter;
+                el.classList.toggle('btn-primary', on);
+                el.classList.toggle('btn-outline', !on);
+                el.setAttribute('aria-pressed', on ? 'true' : 'false');
+            });
+            renderAdminProfessionals();
+        });
+    });
+
+    if (adminProfessionalsBody) {
+        adminProfessionalsBody.addEventListener('click', (e) => {
+            const card = e.target.closest('[data-dir-key]');
+            if (!card) return;
+            selectedProfessionalKey = card.getAttribute('data-dir-key') || '';
+            renderAdminProfessionals();
+            if (adminDirDetail) adminDirDetail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+    }
+
+    if (adminDirDetail) {
+        adminDirDetail.addEventListener('click', (e) => {
+            const sendLoginBtn = e.target.closest('[data-pro-send-login]');
+            if (!sendLoginBtn) return;
+            const pro = professionalRecordById(sendLoginBtn.getAttribute('data-pro-send-login'));
+            if (!pro || !pro.id) {
+                showProfessionalError('Could not find this professional.');
                 return;
             }
-            try {
-                const res = await fetch(
-                    editing
-                        ? `/api/admin/staff-profiles/${encodeURIComponent(editing)}`
-                        : '/api/admin/staff-profiles',
-                    {
-                        method: editing ? 'PATCH' : 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    }
-                );
-                const data = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(data.error || 'HTTP ' + res.status);
-                const createdPro = data.professional;
-                const password = data.generatedPassword || payload.password || '';
-                resetCreateProfileForm();
-                if (typeof loadAdminProfessionals === 'function') await loadAdminProfessionals();
-                else await loadAdminStaffProfiles();
-                if (!editing && password && createdPro && createdPro.username && typeof showProfessionalCreds === 'function') {
-                    showProfessionalCreds(createdPro, password);
-                    if (adminProfessionalCreds) adminProfessionalCreds.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                }
-            } catch (err) {
-                showCreateProfileError(err.message || 'Não foi possível guardar a ficha.');
-            }
+            openSendLoginEmailModal(pro);
         });
     }
 
-    if (adminStaffProfilesList) {
-        adminStaffProfilesList.addEventListener('click', (e) => {
-            const btn = e.target.closest('[data-staff-edit]');
-            if (!btn) return;
-            const username = btn.getAttribute('data-staff-edit');
-            const person = staffProfilesCache.find((p) => String(p.username) === String(username));
-            if (person) fillCreateProfileForm(person);
-        });
-    }
-
-    if (proDisplayName) {
-        proDisplayName.addEventListener('input', fillUsernameFromName);
-    }
-    if (proUsername) {
-        proUsername.addEventListener('input', () => {
-            proUsernameTouched = true;
-        });
-    }
-    if (proGeneratePasswordBtn && proPassword) {
-        proGeneratePasswordBtn.addEventListener('click', () => {
-            proPassword.type = 'text';
-            proPassword.value = generateProfessionalPassword();
-            proPassword.focus();
-            proPassword.select();
-        });
-    }
     if (proCredsCopyBtn) {
         proCredsCopyBtn.addEventListener('click', async () => {
             const portal = proCredsPortal ? proCredsPortal.textContent : `${window.location.origin}/clinic-desk/dias#profile`;
@@ -4646,199 +4295,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         sendLoginEmailForm.addEventListener('submit', (e) => {
             e.preventDefault();
             submitSendLoginEmail(false);
-        });
-    }
-
-    if (proCancelEditBtn) {
-        proCancelEditBtn.addEventListener('click', () => resetProfessionalForm());
-    }
-    if (proAssignBoardLoginsBtn) {
-        proAssignBoardLoginsBtn.addEventListener('click', () => assignAllPsychologistLogins());
-    }
-
-    if (adminProfessionalForm) {
-        adminProfessionalForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            showProfessionalError('');
-            const editingId = proEditId && proEditId.value ? proEditId.value : '';
-            const payload = {
-                displayName: proDisplayName ? proDisplayName.value.trim() : '',
-                username: proUsername ? proUsername.value.trim() : '',
-                doxyRoomUrl: proDoxyUrl ? proDoxyUrl.value.trim() : '',
-                email: proEmail ? proEmail.value.trim() : '',
-                active: proActive ? proActive.checked : true
-            };
-            if (proPassword && proPassword.value) payload.password = proPassword.value;
-            try {
-                const res = await fetch(editingId ? `/api/admin/professionals/${encodeURIComponent(editingId)}` : '/api/admin/professionals', {
-                    method: editingId ? 'PATCH' : 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const data = await res.json().catch(() => ({}));
-                if (!res.ok) {
-                    showProfessionalError(data.error || 'Could not save professional.');
-                    return;
-                }
-                const assignedPassword = data.generatedPassword || (proPassword && proPassword.value) || '';
-                const saved = data.professional || payload;
-                resetProfessionalForm();
-                await loadAdminProfessionals();
-                if (assignedPassword && saved && saved.username) {
-                    showProfessionalCreds(saved, assignedPassword);
-                } else {
-                    hideProfessionalCreds();
-                }
-            } catch (err) {
-                showProfessionalError('Network error. Please try again.');
-            }
-        });
-    }
-
-    if (adminProfessionalsBody) {
-        adminProfessionalsBody.addEventListener('click', async (e) => {
-            const staffEditBtn = e.target.closest('[data-staff-edit]');
-            const deleteFileBtn = e.target.closest('[data-staff-delete-file]');
-            const assignStaffLoginBtn = e.target.closest('[data-staff-assign-login]');
-            const editBtn = e.target.closest('[data-pro-edit]');
-            const passwordBtn = e.target.closest('[data-pro-password]');
-            const sendLoginBtn = e.target.closest('[data-pro-send-login]');
-            const loginBtn = e.target.closest('[data-psych-login]');
-            const fromNameBtn = e.target.closest('[data-pro-from-name]');
-            const delBtn = e.target.closest('[data-pro-delete]');
-            if (staffEditBtn) {
-                const username = staffEditBtn.getAttribute('data-staff-edit');
-                const person = staffProfilesCache.find((p) => String(p.username) === String(username))
-                    || professionalsCache.find((p) => String(p.username) === String(username));
-                if (person) fillCreateProfileForm(person);
-                return;
-            }
-            if (deleteFileBtn) {
-                const username = deleteFileBtn.getAttribute('data-staff-delete-file');
-                const person = professionalFileRecord(
-                    staffProfilesCache.find((p) => String(p.username) === String(username)),
-                    professionalsCache.find((p) => String(p.username) === String(username))
-                );
-                const label = (person && (person.displayName || person.fullName)) || username || 'this professional';
-                if (!username || !window.confirm(`Remove the file and login for ${label}? This cannot be undone. Bookings keep the name.`)) return;
-                showProfessionalError('');
-                try {
-                    const res = await fetch(`/api/admin/staff-profiles/${encodeURIComponent(username)}`, { method: 'DELETE' });
-                    const data = await res.json().catch(() => ({}));
-                    if (!res.ok) {
-                        showProfessionalError(data.error || 'Could not remove professional file.');
-                        return;
-                    }
-                    await loadAdminProfessionals();
-                } catch (err) {
-                    showProfessionalError('Network error. Please try again.');
-                }
-                return;
-            }
-            if (assignStaffLoginBtn) {
-                const username = assignStaffLoginBtn.getAttribute('data-staff-assign-login');
-                const person = staffProfilesCache.find((p) => String(p.username) === String(username));
-                const label = (person && (person.fullName || person.displayName)) || username || 'this professional';
-                if (!username || !window.confirm(`Assign a clinic login to ${label}? A password will be generated.`)) return;
-                showProfessionalError('');
-                try {
-                    const res = await fetch(`/api/admin/staff-profiles/${encodeURIComponent(username)}/login`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email: (person && person.email) || '' })
-                    });
-                    const data = await res.json().catch(() => ({}));
-                    if (!res.ok) {
-                        showProfessionalError(data.error || 'Could not assign login.');
-                        return;
-                    }
-                    await loadAdminProfessionals();
-                    if (data.generatedPassword && data.professional) {
-                        showProfessionalCreds(data.professional, data.generatedPassword);
-                    }
-                } catch (err) {
-                    showProfessionalError('Network error. Please try again.');
-                }
-                return;
-            }
-            if (fromNameBtn) {
-                const name = decodeURIComponent(fromNameBtn.getAttribute('data-pro-from-name') || '');
-                if (!name) return;
-                showProfessionalError('');
-                try {
-                    const res = await fetch('/api/admin/professionals', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ displayName: name })
-                    });
-                    const data = await res.json().catch(() => ({}));
-                    if (!res.ok) {
-                        showProfessionalError(data.error || 'Could not assign login.');
-                        return;
-                    }
-                    await loadAdminProfessionals();
-                    if (data.generatedPassword && data.professional) {
-                        showProfessionalCreds(data.professional, data.generatedPassword);
-                    }
-                } catch (err) {
-                    showProfessionalError('Network error. Please try again.');
-                }
-                return;
-            }
-            if (loginBtn) {
-                assignPsychologistLogin(loginBtn.getAttribute('data-psych-login'));
-                return;
-            }
-            if (editBtn) {
-                const id = Number(editBtn.getAttribute('data-pro-edit'));
-                const pro = professionalsCache.find((p) => p.id === id);
-                startEditProfessional(pro);
-                return;
-            }
-            if (sendLoginBtn) {
-                const id = sendLoginBtn.getAttribute('data-pro-send-login');
-                const pro = professionalRecordById(id);
-                if (!pro || !pro.id) {
-                    showProfessionalError('Could not find this professional.');
-                    return;
-                }
-                openSendLoginEmailModal(pro);
-                return;
-            }
-            if (passwordBtn) {
-                const id = passwordBtn.getAttribute('data-pro-password');
-                const pro = professionalsCache.find((p) => String(p.id) === String(id));
-                if (!id || !window.confirm(`Assign a new password to ${pro && pro.displayName ? pro.displayName : 'this professional'}? The current password will stop working.`)) return;
-                try {
-                    const res = await fetch(`/api/admin/professionals/${encodeURIComponent(id)}/password`, { method: 'POST' });
-                    const data = await res.json().catch(() => ({}));
-                    if (!res.ok) {
-                        showProfessionalError(data.error || 'Could not assign a new password.');
-                        return;
-                    }
-                    showProfessionalError('');
-                    showProfessionalCreds(data.professional || pro, data.generatedPassword);
-                } catch (err) {
-                    showProfessionalError('Network error. Please try again.');
-                }
-                return;
-            }
-            if (delBtn) {
-                const id = delBtn.getAttribute('data-pro-delete');
-                if (!id || !window.confirm('Remove this professional account? Existing bookings keep the name, but they will no longer be able to sign in.')) return;
-                try {
-                    const res = await fetch(`/api/admin/professionals/${encodeURIComponent(id)}`, { method: 'DELETE' });
-                    if (!res.ok) {
-                        const data = await res.json().catch(() => ({}));
-                        alert(data.error || 'Could not remove professional.');
-                        return;
-                    }
-                    if (proEditId && proEditId.value === String(id)) resetProfessionalForm();
-                    await loadAdminProfessionals();
-                } catch (err) {
-                    alert('Network error. Please try again.');
-                }
-            }
         });
     }
 

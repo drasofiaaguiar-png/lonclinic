@@ -2252,104 +2252,184 @@ body.dash-portal .dash-stat-card {
     align-items: flex-start;
 }
 
-.admin-pro-files-wrap {
-    margin: 8px 0 8px;
+.admin-dir-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin: 0 0 18px;
 }
 
-.admin-pro-files-legend {
-    display: grid;
-    grid-template-columns: minmax(140px, 1.3fr) minmax(100px, 0.85fr) minmax(90px, 0.7fr) minmax(130px, 1.2fr) auto 28px;
-    gap: 10px 12px;
-    padding: 4px 14px 8px;
+.admin-dir-toolbar .admin-input {
+    flex: 1 1 220px;
+    min-width: 180px;
+    max-width: 360px;
+}
+
+.admin-dir-type-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.admin-dir-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+.admin-dir-row > .admin-empty-list {
+    flex: 1 1 100%;
+    margin: 12px 0;
+}
+
+.admin-dir-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    width: 168px;
+    padding: 18px 14px 16px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    background: var(--bg-card, #fff);
+    text-align: center;
+    cursor: pointer;
+    color: inherit;
+    font: inherit;
+    box-shadow: none;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.admin-dir-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(28, 42, 36, 0.08);
+}
+
+.admin-dir-card:focus-visible {
+    outline: 2px solid #2f6342;
+    outline-offset: 2px;
+}
+
+.admin-dir-card.is-selected {
+    border-color: #2f6342;
+    box-shadow: 0 0 0 3px rgba(47, 99, 66, 0.16);
+}
+
+.admin-dir-photo {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #eef2f6;
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-dir-photo.is-initials {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: #255235;
+    background: rgba(47, 99, 66, 0.1);
+}
+
+.admin-dir-name {
+    display: block;
+    font-size: 0.92rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--text-primary, #1c2a24);
+}
+
+.admin-dir-role {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #255235;
+}
+
+.admin-dir-detail {
+    margin-top: 22px;
+    padding: 20px 22px 18px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    background: var(--bg-card, #fff);
+}
+
+.admin-dir-detail-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.admin-dir-detail-head > div {
+    min-width: 0;
+    flex: 1;
+}
+
+.admin-dir-detail-head h3 {
+    margin: 0 0 4px;
+    font-size: 1.15rem;
+}
+
+.admin-dir-detail-head p {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+}
+
+.admin-dir-detail-photo {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #eef2f6;
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.admin-dir-detail-photo.is-initials {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #255235;
+    background: rgba(47, 99, 66, 0.1);
+}
+
+.admin-dir-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.admin-dir-tags span {
     font-size: 0.72rem;
     font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-}
-
-.admin-pro-files .admin-psych-summary {
-    grid-template-columns: minmax(140px, 1.3fr) minmax(100px, 0.85fr) minmax(90px, 0.7fr) minmax(130px, 1.2fr) auto 28px;
-}
-
-.admin-pro-files .admin-psych-col-role {
-    min-width: 0;
-}
-
-.admin-pro-files .admin-psych-col-user,
-.admin-pro-files .admin-psych-col-doxy {
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: var(--text-secondary, #445);
-    font-size: 0.8125rem;
-}
-
-.admin-pro-files .admin-psych-col-doxy a {
-    color: inherit;
-    text-decoration: none;
-}
-
-.admin-pro-files .admin-psych-col-doxy a:hover {
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: rgba(47, 99, 66, 0.1);
     color: #255235;
-    text-decoration: underline;
 }
 
-.admin-pro-files .admin-psych-col-login .admin-pro-status {
-    justify-self: end;
+.admin-dir-detail-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
 }
 
-.admin-pro-files .admin-staff-profile-head {
-    margin-bottom: 12px;
-}
-
-.admin-pro-files .admin-staff-profile-block:last-child {
-    margin-bottom: 0;
-}
-
-.admin-pro-files .admin-pro-login-note {
-    margin: 0 0 12px;
-    font-size: 0.875rem;
-    color: var(--text-muted);
-}
-
-.admin-pro-files .admin-pro-sent-mail {
-    display: block;
-    margin-top: 2px;
-    font-size: 0.75rem;
-    font-weight: 400;
-    letter-spacing: 0;
-    text-transform: none;
-    color: var(--text-muted);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.admin-pro-files .admin-pro-actions {
-    margin: 0 0 14px;
-}
-
-@media (max-width: 800px) {
-    .admin-pro-files-legend {
-        display: none;
+@media (max-width: 640px) {
+    .admin-dir-card {
+        width: calc(50% - 7px);
+        min-width: 140px;
     }
-    .admin-pro-files .admin-psych-summary {
-        grid-template-columns: 1fr 28px;
-    }
-    .admin-pro-files .admin-psych-col-role,
-    .admin-pro-files .admin-psych-col-user,
-    .admin-pro-files .admin-psych-col-doxy,
-    .admin-pro-files .admin-psych-col-login {
-        grid-column: 1;
-        justify-self: start;
-        white-space: normal;
-    }
-}
-
-.admin-professionals-form {
-    margin-bottom: 20px;
 }
 
 .admin-professionals-table-wrap {

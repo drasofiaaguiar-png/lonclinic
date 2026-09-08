@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=login-sent-1">
+    <link rel="stylesheet" href="/dashboard.css?v=pro-dir-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -97,7 +97,7 @@
                     <button type="button" class="admin-nav-item" data-admin-panel="invitations">Invitations</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="availability">Availability</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="reviews">Reviews</button>
-                    <button type="button" class="admin-nav-item" data-admin-panel="professionals">Professionals &amp; Doxy</button>
+                    <button type="button" class="admin-nav-item" data-admin-panel="professionals">Professionals</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="psychologists">Bolsa de Profissionais</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="producers">Diretório produtores</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="profile">Profile</button>
@@ -758,60 +758,24 @@
             </div>
             </div>
 
-            <!-- Bolsa de Profissionais panel -->
             <div class="admin-panel" id="adminPanelProfessionals" data-admin-panel-content="professionals" hidden>
                 <div class="dash-section">
-                    <div class="dash-section-header">
+                    <div class="dash-section-header admin-schedule-toolbar">
                         <div>
-                            <h2 class="dash-section-title">Professionals &amp; Doxy rooms</h2>
-                            <p class="dash-section-subtitle">One person: login, ficha, Doxy and bolsa candidatura. Creating a professional always creates the ficha; hiring from the bolsa attaches the candidatura. Only Dra. Sofia Aguiar uses the clinic Doxy room. Send the login by email from the row — the password is not stored in plain text.</p>
+                            <h2 class="dash-section-title">Professionals</h2>
+                            <p class="dash-section-subtitle" id="adminDirCount">Directory of people with a clinic file or login.</p>
                         </div>
                     </div>
-                    <p class="dash-section-subtitle" id="adminDefaultDoxyUrl" style="margin-top:0;"></p>
-                    <p class="dash-section-subtitle" id="adminBoardCount" style="margin-top:0;"></p>
-                    <div class="admin-invite-actions" style="margin-bottom:16px;">
-                        <button type="button" class="btn btn-primary" id="proAssignBoardLoginsBtn">Assign logins to everyone on the board without one</button>
+                    <div class="admin-dir-toolbar">
+                        <input type="search" id="adminDirSearch" class="admin-input" placeholder="Search name, email, username…" autocomplete="off">
+                        <div class="admin-dir-type-filters" role="group" aria-label="Filter by profession">
+                            <button type="button" class="btn btn-primary btn-sm" data-dir-type="" aria-pressed="true">All</button>
+                            <button type="button" class="btn btn-outline btn-sm" data-dir-type="medico" aria-pressed="false">Médico</button>
+                            <button type="button" class="btn btn-outline btn-sm" data-dir-type="psicologo" aria-pressed="false">Psicólogo</button>
+                            <button type="button" class="btn btn-outline btn-sm" data-dir-type="nutricionista" aria-pressed="false">Nutricionista</button>
+                        </div>
                     </div>
-                    <details class="admin-create-card" id="adminAddLoginDetails">
-                        <summary>Add or edit clinic login</summary>
-                    <form id="adminProfessionalForm" class="admin-professionals-form">
-                        <input type="hidden" id="proEditId" value="">
-                        <div class="admin-invite-grid">
-                            <div class="admin-form-group">
-                                <label for="proDisplayName">Display name</label>
-                                <input type="text" id="proDisplayName" class="admin-input" required placeholder="e.g. Dra. Sofia Aguiar" autocomplete="name">
-                            </div>
-                            <div class="admin-form-group">
-                                <label for="proUsername">Username</label>
-                                <input type="text" id="proUsername" class="admin-input" placeholder="Assigned from the name if blank" autocomplete="off">
-                            </div>
-                            <div class="admin-form-group">
-                                <label for="proPassword">Password</label>
-                                <div class="admin-pro-password-row">
-                                    <input type="password" id="proPassword" class="admin-input" placeholder="Assigned automatically if blank" autocomplete="new-password">
-                                    <button type="button" class="btn btn-outline" id="proGeneratePasswordBtn">Generate</button>
-                                </div>
-                            </div>
-                            <div class="admin-form-group">
-                                <label for="proDoxyUrl">Doxy room URL</label>
-                                <input type="text" id="proDoxyUrl" class="admin-input" placeholder="Leave blank except for Sofia Aguiar">
-                            </div>
-                            <div class="admin-form-group">
-                                <label for="proEmail">Email (availability reminders)</label>
-                                <input type="email" id="proEmail" class="admin-input" placeholder="profissional@email.com" autocomplete="off">
-                            </div>
-                        </div>
-                        <label class="clinic-toggle-label" for="proActive" style="margin-bottom:14px;">
-                            <input type="checkbox" id="proActive" checked>
-                            <span>Account active (can sign in)</span>
-                        </label>
-                        <div id="adminProfessionalError" class="dash-login-error" style="display:none;" role="alert"></div>
-                        <div class="admin-invite-actions">
-                            <button type="submit" class="btn btn-primary" id="proSubmitBtn">Add professional</button>
-                            <button type="button" class="btn btn-outline" id="proCancelEditBtn" hidden>Cancel edit</button>
-                        </div>
-                    </form>
-                    </details>
+                    <div id="adminProfessionalError" class="dash-login-error" style="display:none;" role="alert"></div>
                     <div id="adminProfessionalCreds" class="admin-pro-creds" hidden>
                         <p class="admin-pro-creds-title">Login assigned — copy it now. The password cannot be shown again.</p>
                         <p class="admin-pro-creds-line">Portal: <a id="proCredsPortal" href="/clinic-desk/dias#profile">/clinic-desk/dias</a></p>
@@ -824,107 +788,10 @@
                             <button type="button" class="btn btn-primary btn-sm" id="proCredsSendBtn">Send login email</button>
                         </div>
                     </div>
-                    <div class="admin-pro-files-wrap">
-                        <div class="admin-pro-files-legend" aria-hidden="true">
-                            <span>Name</span>
-                            <span>Type</span>
-                            <span>Username</span>
-                            <span>Doxy room</span>
-                            <span>Login</span>
-                        </div>
-                        <div id="adminProfessionalsBody" class="admin-psych-list admin-pro-files">
-                            <p class="admin-empty-list">Loading…</p>
-                        </div>
+                    <div id="adminProfessionalsBody" class="admin-dir-row">
+                        <p class="admin-empty-list">Loading…</p>
                     </div>
-                    <div class="dash-section-header" style="margin-top:32px;">
-                        <div>
-                            <h2 class="dash-section-title">Fichas dos profissionais</h2>
-                            <p class="dash-section-subtitle">Criar ficha cria a pessoa completa (login + perfil). Abrir uma linha acima mostra Doxy, ficha e candidatura da bolsa.</p>
-                        </div>
-                    </div>
-                    <details class="admin-create-card" id="adminCreateProfileDetails">
-                        <summary id="adminCreateProfileSummary">Criar ficha de profissional</summary>
-                        <form id="adminCreateProfileForm" class="admin-create-form">
-                            <input type="hidden" id="staffProfileEditUser" value="">
-                            <div class="admin-invite-grid">
-                                <div class="admin-form-group">
-                                    <label for="staffProfileFullName">Nome</label>
-                                    <input type="text" id="staffProfileFullName" class="admin-input" required maxlength="160" autocomplete="name">
-                                </div>
-                                <div class="admin-form-group">
-                                    <label for="staffProfileEmail">Email</label>
-                                    <input type="email" id="staffProfileEmail" class="admin-input" maxlength="320" autocomplete="email">
-                                </div>
-                                <div class="admin-form-group">
-                                    <label for="staffProfileProfession">Profissão</label>
-                                    <select id="staffProfileProfession" class="admin-select">
-                                        <option value="">Seleccione</option>
-                                        <option value="medico">Médico</option>
-                                        <option value="psicologo">Psicólogo</option>
-                                        <option value="nutricionista">Nutricionista</option>
-                                    </select>
-                                </div>
-                                <div class="admin-form-group" id="staffProfileUsernameWrap">
-                                    <label for="staffProfileUsername">Username</label>
-                                    <input type="text" id="staffProfileUsername" class="admin-input" maxlength="64" placeholder="Gerado a partir do nome se ficar em branco" autocomplete="off">
-                                </div>
-                                <div class="admin-form-group" id="staffProfilePasswordWrap">
-                                    <label for="staffProfilePassword">Password</label>
-                                    <input type="text" id="staffProfilePassword" class="admin-input" maxlength="80" placeholder="Gerada automaticamente se ficar em branco" autocomplete="off">
-                                </div>
-                                <div class="admin-form-group">
-                                    <label for="staffProfileNif">NIF</label>
-                                    <input type="text" id="staffProfileNif" class="admin-input" maxlength="20" inputmode="numeric" autocomplete="off">
-                                </div>
-                                <div class="admin-form-group">
-                                    <label for="staffProfileOrdem">Cédula profissional</label>
-                                    <input type="text" id="staffProfileOrdem" class="admin-input" maxlength="80" autocomplete="off">
-                                </div>
-                                <div class="admin-form-group">
-                                    <label for="staffProfileCitizenCard">N.º Cartão de Cidadão</label>
-                                    <input type="text" id="staffProfileCitizenCard" class="admin-input" maxlength="32" autocomplete="off">
-                                </div>
-                            </div>
-                            <div class="admin-form-group">
-                                <label for="staffProfileAddress">Morada</label>
-                                <textarea id="staffProfileAddress" class="admin-input clinic-address-input" rows="2" maxlength="400"></textarea>
-                            </div>
-                            <div class="admin-invite-grid">
-                                <div class="admin-form-group">
-                                    <label for="staffProfileInsurer">Seguradora</label>
-                                    <input type="text" id="staffProfileInsurer" class="admin-input" maxlength="120" autocomplete="off">
-                                </div>
-                                <div class="admin-form-group">
-                                    <label for="staffProfileInsurancePolicy">Apólice</label>
-                                    <input type="text" id="staffProfileInsurancePolicy" class="admin-input" maxlength="80" autocomplete="off">
-                                </div>
-                                <div class="admin-form-group">
-                                    <label for="staffProfileInsuranceValid">Validade do seguro</label>
-                                    <input type="date" id="staffProfileInsuranceValid" class="admin-input">
-                                </div>
-                            </div>
-                            <div class="clinic-bio-creds-grid">
-                                <div class="admin-form-group">
-                                    <label for="staffProfileBio">Bio</label>
-                                    <textarea id="staffProfileBio" class="admin-input clinic-bio-input" rows="6" maxlength="4000"></textarea>
-                                </div>
-                                <div class="admin-form-group">
-                                    <label for="staffProfileCredentials">Credenciais</label>
-                                    <textarea id="staffProfileCredentials" class="admin-input clinic-bio-input" rows="6" maxlength="2000"></textarea>
-                                </div>
-                            </div>
-                            <label class="clinic-toggle-label" id="staffProfileAssignLoginWrap" for="staffProfileAssignLogin">
-                                <input type="checkbox" id="staffProfileAssignLogin" checked>
-                                <span>Assign clinic login (username and password)</span>
-                            </label>
-                            <div id="adminCreateProfileError" class="dash-login-error" style="display:none;" role="alert"></div>
-                            <div class="admin-invite-actions">
-                                <button type="submit" class="btn btn-primary" id="staffProfileSubmitBtn">Criar ficha e login</button>
-                                <button type="button" class="btn btn-outline" id="staffProfileCancelBtn" hidden>Cancelar</button>
-                            </div>
-                        </form>
-                    </details>
-                    <div id="adminStaffProfilesList" class="admin-staff-profiles" hidden></div>
+                    <div id="adminDirDetail" class="admin-dir-detail" hidden></div>
                 </div>
             </div>
 
@@ -1196,7 +1063,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=login-sent-1"></script>
+    <script src="/admin.js?v=pro-dir-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">
