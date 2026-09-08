@@ -262,6 +262,36 @@ async function unifyHiredPersonRecords(p) {
                AND a.name IS NOT NULL AND TRIM(a.name) <> ''
                AND LOWER(TRIM(b.professional)) = LOWER(TRIM(a.name))
         `);
+        await p.query(`
+            UPDATE staff_profiles s
+               SET username = LOWER(s.username)
+             WHERE s.username <> LOWER(s.username)
+               AND NOT EXISTS (
+                    SELECT 1 FROM staff_profiles x
+                     WHERE x.username = LOWER(s.username)
+               )
+        `);
+        await p.query(`
+            UPDATE staff_profiles s
+               SET professional_id = NULL
+             WHERE s.professional_id IS NOT NULL
+               AND NOT EXISTS (
+                    SELECT 1
+                      FROM (
+                            SELECT DISTINCT ON (professional_id) username
+                              FROM staff_profiles
+                             WHERE professional_id IS NOT NULL
+                             ORDER BY professional_id,
+                                      CASE WHEN EXISTS (
+                                          SELECT 1 FROM professionals p
+                                           WHERE p.id = staff_profiles.professional_id
+                                             AND LOWER(p.username) = LOWER(staff_profiles.username)
+                                      ) THEN 0 ELSE 1 END,
+                                      updated_at DESC NULLS LAST
+                      ) keep
+                     WHERE keep.username = s.username
+               )
+        `);
         try {
             await p.query(`
                 CREATE UNIQUE INDEX IF NOT EXISTS idx_psychologist_applications_one_person
@@ -2203,6 +2233,46 @@ function joinedRowToBookingWithNotes(row) {
     };
 }
 
+async function findBookingsForStaffScope({ professionalId, labels, withNotes } = {}) {
+    const p = getPool();
+    const id = Number(professionalId);
+    const hasId = Number.isInteger(id) && id > 0;
+    const names = [...new Set((Array.isArray(labels) ? labels : [])
+        .map((value) => String(value || '').trim().toLowerCase())
+        .filter(Boolean))];
+    if (!hasId && !names.length) return [];
+    const params = [];
+    const where = [];
+    if (hasId) {
+        params.push(id);
+        where.push(`b.professional_id = $${params.length}`);
+    }
+    if (names.length) {
+        params.push(names);
+        where.push(`(b.professional_id IS NULL AND LOWER(TRIM(COALESCE(b.professional, ''))) = ANY($${params.length}::text[]))`);
+    }
+    const notesSelect = withNotes
+        ? `,
+            n.consultation_date AS n_consultation_date,
+            n.notes AS n_notes,
+            n.diagnosis AS n_diagnosis,
+            n.prescriptions AS n_prescriptions,
+            n.follow_up AS n_follow_up,
+            n.created_by AS n_created_by,
+            n.created_at AS n_created_at,
+            n.updated_at AS n_updated_at`
+        : '';
+    const notesJoin = withNotes ? 'LEFT JOIN clinical_notes n ON n.booking_ref = b.booking_ref' : '';
+    const r = await p.query(
+        `SELECT b.*${notesSelect}
+           FROM bookings b
+           ${notesJoin}
+          WHERE ${where.join(' OR ')}`,
+        params
+    );
+    return withNotes ? r.rows.map(joinedRowToBookingWithNotes) : r.rows.map(rowToBooking);
+}
+
 async function findAllBookingsWithClinicalNotes() {
     const p = getPool();
     const r = await p.query(`
@@ -2610,11 +2680,21 @@ async function removeExperimentalTestProfessionals(p) {
 
 function isoDateOnly(value) {
     if (!value) return null;
+    let s = '';
     if (value instanceof Date && !Number.isNaN(value.getTime())) {
-        return value.toISOString().slice(0, 10);
+        s = value.toISOString().slice(0, 10);
+    } else {
+        s = String(value).trim().slice(0, 10);
     }
-    const s = String(value).slice(0, 10);
-    return /^\d{4}-\d{2}-\d{2}$/.test(s) ? s : null;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(s)) return null;
+    const year = Number(s.slice(0, 4));
+    const month = Number(s.slice(5, 7));
+    const day = Number(s.slice(8, 10));
+    const dt = new Date(Date.UTC(year, month - 1, day));
+    if (dt.getUTCFullYear() !== year || dt.getUTCMonth() !== month - 1 || dt.getUTCDate() !== day) {
+        return null;
+    }
+    return s;
 }
 
 function parseStaffAreaList(value) {
@@ -2700,7 +2780,10 @@ async function getStaffProfile(username) {
     if (!u) return null;
     const r = await p.query(
         `SELECT ${STAFF_PROFILE_RETURNING}
-         FROM staff_profiles WHERE username = $1 LIMIT 1`,
+         FROM staff_profiles
+         WHERE LOWER(username) = $1
+         ORDER BY CASE WHEN username = $1 THEN 0 ELSE 1 END
+         LIMIT 1`,
         [u]
     );
     return r.rows[0] ? rowToStaffProfile(r.rows[0]) : null;
@@ -2716,10 +2799,46 @@ async function listStaffProfiles() {
     return r.rows.map((row) => rowToStaffProfile(row));
 }
 
+async function clearConflictingStaffProfileLink(p, username) {
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return;
+    await p.query(
+        `UPDATE staff_profiles
+            SET professional_id = NULL
+          WHERE professional_id = (
+                SELECT id FROM professionals WHERE LOWER(username) = $1 LIMIT 1
+          )
+            AND LOWER(username) <> $1`,
+        [u]
+    );
+}
+
+async function queryStaffProfileWrite(p, sql, params, username) {
+    try {
+        return await p.query(sql, params);
+    } catch (err) {
+        if (err && err.code === '23505') {
+            await clearConflictingStaffProfileLink(p, username);
+            return p.query(sql, params);
+        }
+        throw err;
+    }
+}
+
 async function upsertStaffProfile(username, fields) {
     const p = getPool();
     const u = String(username || '').trim().toLowerCase();
     if (!u) return null;
+    await p.query(
+        `UPDATE staff_profiles
+            SET username = LOWER(username)
+          WHERE LOWER(username) = $1
+            AND username <> $1
+            AND NOT EXISTS (
+                SELECT 1 FROM staff_profiles x WHERE x.username = $1
+            )`,
+        [u]
+    );
     const profession = String(fields.profession || '').trim().slice(0, 32);
     const ordemNumber = String(fields.ordemNumber || '').trim().slice(0, 80);
     const fullName = String(fields.fullName || '').trim().slice(0, 160);
@@ -2734,8 +2853,12 @@ async function upsertStaffProfile(username, fields) {
     const consultLanguages = serializeStaffAreaList(fields.consultLanguages);
     const primaryArea = serializeStaffAreaList(fields.primaryAreas != null ? fields.primaryAreas : fields.primaryArea);
     const secondaryArea = serializeStaffAreaList(fields.secondaryAreas != null ? fields.secondaryAreas : fields.secondaryArea);
-    const r = await p.query(
-        `INSERT INTO staff_profiles (
+    const params = [
+        u, profession, ordemNumber, fullName, nif, citizenCard, address,
+        insurer, insurancePolicy, insuranceValidUntil, bio, credentials, consultLanguages,
+        primaryArea, secondaryArea
+    ];
+    const sql = `INSERT INTO staff_profiles (
             username, profession, ordem_number, full_name, nif, citizen_card, address,
             insurer, insurance_policy, insurance_valid_until, bio, credentials, consult_languages,
             primary_area, secondary_area, professional_id, updated_at
@@ -2762,14 +2885,9 @@ async function upsertStaffProfile(username, fields) {
             secondary_area = EXCLUDED.secondary_area,
             professional_id = COALESCE(staff_profiles.professional_id, EXCLUDED.professional_id),
             updated_at = NOW()
-         RETURNING ${STAFF_PROFILE_RETURNING}`,
-        [
-            u, profession, ordemNumber, fullName, nif, citizenCard, address,
-            insurer, insurancePolicy, insuranceValidUntil, bio, credentials, consultLanguages,
-            primaryArea, secondaryArea
-        ]
-    );
-    return rowToStaffProfile(r.rows[0]);
+         RETURNING ${STAFF_PROFILE_RETURNING}`;
+    const r = await queryStaffProfileWrite(p, sql, params, u);
+    return r.rows[0] ? rowToStaffProfile(r.rows[0]) : null;
 }
 
 async function upsertStaffPhoto(username, { mime, data }) {
@@ -2777,7 +2895,8 @@ async function upsertStaffPhoto(username, { mime, data }) {
     const u = String(username || '').trim().toLowerCase();
     if (!u || !data) return null;
     const photoMime = String(mime || 'image/jpeg').slice(0, 80);
-    const r = await p.query(
+    const r = await queryStaffProfileWrite(
+        p,
         `INSERT INTO staff_profiles (username, photo_mime, photo_data, professional_id, updated_at)
          VALUES ($1, $2, $3, (SELECT id FROM professionals WHERE LOWER(username) = $1 LIMIT 1), NOW())
          ON CONFLICT (username) DO UPDATE SET
@@ -2786,7 +2905,8 @@ async function upsertStaffPhoto(username, { mime, data }) {
             professional_id = COALESCE(staff_profiles.professional_id, EXCLUDED.professional_id),
             updated_at = NOW()
          RETURNING ${STAFF_PROFILE_RETURNING}`,
-        [u, photoMime, data]
+        [u, photoMime, data],
+        u
     );
     return rowToStaffProfile(r.rows[0]);
 }
@@ -2796,7 +2916,7 @@ async function getStaffPhoto(username) {
     const u = String(username || '').trim().toLowerCase();
     if (!u) return null;
     const r = await p.query(
-        'SELECT photo_mime, photo_data FROM staff_profiles WHERE username = $1 LIMIT 1',
+        'SELECT photo_mime, photo_data FROM staff_profiles WHERE LOWER(username) = $1 LIMIT 1',
         [u]
     );
     const row = r.rows[0];
@@ -2828,7 +2948,8 @@ async function upsertStaffIban(username, iban) {
     const u = String(username || '').trim().toLowerCase();
     if (!u) return null;
     const value = String(iban || '').trim().slice(0, 42);
-    const r = await p.query(
+    const r = await queryStaffProfileWrite(
+        p,
         `INSERT INTO staff_profiles (username, iban, professional_id, updated_at)
          VALUES ($1, $2, (SELECT id FROM professionals WHERE LOWER(username) = $1 LIMIT 1), NOW())
          ON CONFLICT (username) DO UPDATE SET
@@ -2836,7 +2957,8 @@ async function upsertStaffIban(username, iban) {
             professional_id = COALESCE(staff_profiles.professional_id, EXCLUDED.professional_id),
             updated_at = NOW()
          RETURNING ${STAFF_PROFILE_RETURNING}`,
-        [u, value]
+        [u, value],
+        u
     );
     return rowToStaffProfile(r.rows[0]);
 }
@@ -2846,7 +2968,8 @@ async function upsertStaffPayoutsFromMonth(username, monthKey) {
     const u = String(username || '').trim().toLowerCase();
     const month = String(monthKey || '').trim();
     if (!u || !/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) return null;
-    const r = await p.query(
+    const r = await queryStaffProfileWrite(
+        p,
         `INSERT INTO staff_profiles (username, payouts_from_month, professional_id, updated_at)
          VALUES ($1, $2, (SELECT id FROM professionals WHERE LOWER(username) = $1 LIMIT 1), NOW())
          ON CONFLICT (username) DO UPDATE SET
@@ -2856,7 +2979,8 @@ async function upsertStaffPayoutsFromMonth(username, monthKey) {
          WHERE staff_profiles.payouts_from_month IS NULL
             OR TRIM(staff_profiles.payouts_from_month) = ''
          RETURNING ${STAFF_PROFILE_RETURNING}`,
-        [u, month]
+        [u, month],
+        u
     );
     if (r.rows[0]) return rowToStaffProfile(r.rows[0]);
     return getStaffProfile(u);
@@ -3371,6 +3495,7 @@ module.exports = {
     listAllReviews,
     findAllBookings,
     findAllBookingsWithClinicalNotes,
+    findBookingsForStaffScope,
     findBookingByRef,
     getClinicalNoteByRef,
     upsertClinicalNote,

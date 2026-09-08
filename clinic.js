@@ -116,10 +116,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicDocsError = document.getElementById('clinicDocsError');
 
     const CLINIC_PANEL_META = {
-        consultations: { title: 'Consultations', subtitle: 'Clinical notes for every consultation' },
+        consultations: { title: 'Consultations', subtitle: 'Clinical notes for consultations assigned to you' },
         availabilities: { title: 'Availabilities', subtitle: 'Pick days on the calendar and set the hours' },
-        bookings: { title: 'Bookings', subtitle: 'Upcoming confirmed appointments' },
-        patients: { title: 'Patients', subtitle: 'People attached to your consultations' },
+        bookings: { title: 'Bookings', subtitle: 'Upcoming appointments assigned to you' },
+        patients: { title: 'Patients', subtitle: 'Only people scheduled with you' },
         resources: { title: 'Resources', subtitle: 'Video room and everyday clinic links' },
         management: { title: 'Management', subtitle: 'IBAN, faturas mensais e pagamentos' },
         profile: { title: 'Perfil', subtitle: 'Identificação, dados profissionais, documentos e candidatura' }
@@ -1130,6 +1130,14 @@ document.addEventListener('DOMContentLoaded', () => {
     async function showConsultationModal(bookingRef) {
         try {
             const res = await fetch(`/api/clinic/booking/${bookingRef}`);
+            if (res.status === 401) {
+                showLogin();
+                return;
+            }
+            if (!res.ok) {
+                alert('This consultation is not assigned to you.');
+                return;
+            }
             const booking = await res.json();
 
             modalTitle.textContent = `Consultation: ${booking.bookingRef}`;

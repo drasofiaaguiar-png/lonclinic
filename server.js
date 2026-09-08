@@ -16,7 +16,7 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = 'ficha-1';
+const CLINIC_PORTAL_BUILD = 'scope-2';
 const CLINIC_PORTAL_PATH = '/clinic-desk/dias';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
@@ -516,13 +516,55 @@ const CLINIC_WHATSAPP = String(process.env.CLINIC_WHATSAPP || '351928372775').re
    CLINIC PORTAL AUTHENTICATION
 ======================================== */
 
+function isClinicAdminUsername(username) {
+    return normalizeProfessionalUsername(username) === normalizeProfessionalUsername(CLINIC_USERNAME);
+}
+
 function isAdminSession(req) {
     if (!req || !req.session || !req.session.clinicAuthenticated) return false;
     if (req.session.professionalId) return false;
     if (req.session.clinicRole === 'clinician') return false;
+    if (!isClinicAdminUsername(req.session.clinicUsername)) return false;
     const role = req.session.clinicRole;
-    // Legacy sessions (before per-professional logins) were always the env admin.
     return !role || role === 'admin';
+}
+
+async function bindStaffSession(req) {
+    const session = req && req.session;
+    if (!session || !session.clinicAuthenticated) return;
+    const username = String(session.clinicUsername || '').trim();
+    if (!username) {
+        session.clinicRole = 'clinician';
+        session.professionalId = null;
+        return;
+    }
+    if (isClinicAdminUsername(username) && session.clinicRole !== 'clinician' && !session.professionalId) {
+        session.clinicRole = 'admin';
+        session.professionalId = null;
+        return;
+    }
+    const existingId = Number(session.professionalId);
+    if (session.clinicRole === 'clinician' && Number.isInteger(existingId) && existingId > 0) {
+        return;
+    }
+    try {
+        const pro = await findProfessionalByUsernameInternal(username);
+        if (pro && pro.active !== false) {
+            session.clinicRole = 'clinician';
+            session.professionalId = pro.id;
+            const display = String(pro.displayName || '').trim();
+            if (display && (!session.clinicDisplayName || isJunkStaffName(session.clinicDisplayName))) {
+                session.clinicDisplayName = display;
+            }
+            return;
+        }
+    } catch (err) {
+        console.error('bindStaffSession lookup:', err.message);
+    }
+    if (!isClinicAdminUsername(username)) {
+        session.clinicRole = 'clinician';
+        session.professionalId = Number.isInteger(existingId) && existingId > 0 ? existingId : null;
+    }
 }
 
 const STAFF_DEVICE_COOKIE = 'lon_staff';
@@ -563,17 +605,26 @@ function wantsStaffDeviceMark(req) {
     return v === '1' || v === 'staff';
 }
 
-// Middleware to check if user is authenticated
-function requireAuth(req, res, next) {
-    if (req.session && req.session.clinicAuthenticated) {
-        return next();
-    }
-    return res.status(401).json({ error: 'Authentication required' });
-}
-
-function requireAdmin(req, res, next) {
+async function requireAuth(req, res, next) {
     if (!req.session || !req.session.clinicAuthenticated) {
         return res.status(401).json({ error: 'Authentication required' });
+    }
+    try {
+        await bindStaffSession(req);
+    } catch (err) {
+        console.error('bindStaffSession:', err.message);
+    }
+    return next();
+}
+
+async function requireAdmin(req, res, next) {
+    if (!req.session || !req.session.clinicAuthenticated) {
+        return res.status(401).json({ error: 'Authentication required' });
+    }
+    try {
+        await bindStaffSession(req);
+    } catch (err) {
+        console.error('bindStaffSession:', err.message);
     }
     if (!isAdminSession(req)) {
         return res.status(403).json({ error: 'Admin access required' });
@@ -588,7 +639,12 @@ function safeInternalNextPath(raw) {
     return s;
 }
 
-function requireAdminPage(req, res, next) {
+async function requireAdminPage(req, res, next) {
+    try {
+        await bindStaffSession(req);
+    } catch (err) {
+        console.error('bindStaffSession:', err.message);
+    }
     if (isAdminSession(req)) return next();
     if (req.session && req.session.clinicAuthenticated) {
         return res.redirect(302, CLINIC_PORTAL_PATH);
@@ -614,9 +670,7 @@ function staffAuthPayload(req) {
         authenticated: true,
         username: req.session.clinicUsername || null,
         displayName: req.session.clinicDisplayName || req.session.clinicUsername || null,
-        role: req.session.professionalId || req.session.clinicRole === 'clinician'
-            ? 'clinician'
-            : (req.session.clinicRole || 'admin'),
+        role: isAdminSession(req) ? 'admin' : 'clinician',
         build: CLINIC_PORTAL_BUILD
     };
 }
@@ -673,7 +727,7 @@ async function serveClinicPortalHtml(res) {
             .replace(/src="\/clinic-portal\/clinic\.js\?v=[^"]+"/g, `src="${clinicPortalAssetUrl('clinic.js')}"`)
             .replace(/data-clinic-build="[^"]+"/, `data-clinic-build="${CLINIC_PORTAL_BUILD}"`)
             .replace(
-                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|ficha-1|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8|perfil-9|perfil-10) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
+                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|ficha-1|scope-1|scope-2|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8|perfil-9|perfil-10) — 7 set 2026\. Entre com o username do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
                 `Portal ${CLINIC_PORTAL_BUILD} — 7 set 2026. Entre com o username do profissional.`
             );
         res.append('Set-Cookie', `lon_portal=${CLINIC_PORTAL_BUILD}; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly`);
@@ -1601,11 +1655,13 @@ async function applyProfessionalAssignment(fields) {
     if (person) {
         next.professionalId = person.id;
         next.professional = person.displayName || person.username;
+        professionalLabelOwnerCache = { at: 0, owners: new Map(), collisions: new Set() };
         return next;
     }
     if (hasName && !String(next.professional || '').trim()) {
         next.professional = null;
         next.professionalId = null;
+        professionalLabelOwnerCache = { at: 0, owners: new Map(), collisions: new Set() };
     }
     return next;
 }
@@ -1804,46 +1860,188 @@ function doxyUrlFromEmailData(data) {
     return DEFAULT_DOXY_ROOM_URL || '';
 }
 
-function staffScopeFromReq(req) {
+function addStaffScopeName(scope, value) {
+    const raw = String(value || '').trim();
+    if (!raw) return;
+    scope.names.add(raw.toLowerCase());
+    const normalized = normalizePersonName(raw);
+    if (normalized) scope.normalized.add(normalized);
+}
+
+function putProfessionalLabelOwner(owners, collisions, professionalId, value) {
+    const id = Number(professionalId);
+    if (!Number.isInteger(id) || id < 1) return;
+    const raw = String(value || '').trim();
+    if (!raw) return;
+    const keys = [raw.toLowerCase()];
+    const normalized = normalizePersonName(raw);
+    if (normalized) keys.push(`n:${normalized}`);
+    for (const key of keys) {
+        if (collisions.has(key)) continue;
+        if (owners.has(key) && owners.get(key) !== id) {
+            owners.delete(key);
+            collisions.add(key);
+            continue;
+        }
+        owners.set(key, id);
+    }
+}
+
+let professionalLabelOwnerCache = { at: 0, owners: new Map(), collisions: new Set() };
+
+async function professionalLabelOwnerIndex() {
+    const now = Date.now();
+    if (professionalLabelOwnerCache.owners && now - professionalLabelOwnerCache.at < 10000) {
+        return professionalLabelOwnerCache;
+    }
+    const owners = new Map();
+    const collisions = new Set();
+    for (const person of (await listProfessionalsInternal()) || []) {
+        if (!person || !person.id) continue;
+        putProfessionalLabelOwner(owners, collisions, person.id, person.displayName);
+        putProfessionalLabelOwner(owners, collisions, person.id, person.username);
+    }
+    for (const profile of (await listStaffProfilesInternal()) || []) {
+        if (!profile) continue;
+        putProfessionalLabelOwner(owners, collisions, profile.professionalId, profile.fullName);
+    }
+    professionalLabelOwnerCache = { at: now, owners, collisions };
+    return professionalLabelOwnerCache;
+}
+
+async function resolveProfessionalForSession(session) {
+    const username = String((session && session.clinicUsername) || '').trim();
+    const n = Number(session && session.professionalId);
+    if (Number.isInteger(n) && n > 0) {
+        const byId = await findProfessionalByIdInternal(n);
+        if (byId) return byId;
+    }
+    if (username) {
+        const byUser = await findProfessionalByUsernameInternal(username);
+        if (byUser) return byUser;
+    }
+    if (isClinicAdminUsername(username) || isClinicLeadAccount(session && session.clinicDisplayName, username)) {
+        const list = await listProfessionalsInternal();
+        return (list || []).find((person) => (
+            isClinicLeadAccount(person.displayName, person.username)
+            || isClinicLeadDoxyName(person.displayName)
+        )) || null;
+    }
+    return null;
+}
+
+async function staffScopeFromReq(req) {
     const session = (req && req.session) || {};
-    const n = Number(session.professionalId);
-    const professionalId = Number.isInteger(n) && n > 0 ? n : null;
-    const names = new Set();
-    const add = (value) => {
-        const s = String(value || '').trim().toLowerCase();
-        if (s) names.add(s);
+    const scope = {
+        professionalId: null,
+        names: new Set(),
+        normalized: new Set(),
+        labelOwners: new Map(),
+        collisions: new Set()
     };
-    add(session.clinicDisplayName);
-    add(session.clinicUsername);
-    return { professionalId, names };
+    addStaffScopeName(scope, session.clinicDisplayName);
+    addStaffScopeName(scope, session.clinicUsername);
+    try {
+        const pro = await resolveProfessionalForSession(session);
+        if (pro) {
+            scope.professionalId = pro.id;
+            addStaffScopeName(scope, pro.displayName);
+            addStaffScopeName(scope, pro.username);
+        }
+    } catch (err) {
+        console.error('staffScopeFromReq professional:', err.message);
+    }
+    const username = staffSessionUsername(req);
+    if (username) {
+        try {
+            const profile = await getStaffProfileInternal(username);
+            if (profile) addStaffScopeName(scope, profile.fullName);
+        } catch (err) {
+            console.error('staffScopeFromReq profile:', err.message);
+        }
+    }
+    try {
+        const index = await professionalLabelOwnerIndex();
+        scope.labelOwners = index.owners || new Map();
+        scope.collisions = index.collisions || new Set();
+    } catch (err) {
+        console.error('staffScopeFromReq label owners:', err.message);
+    }
+    return scope;
+}
+
+function bookingProfessionalId(booking) {
+    const n = Number(booking && booking.professionalId);
+    return Number.isInteger(n) && n > 0 ? n : null;
 }
 
 function bookingBelongsToStaff(booking, scope) {
-    if (!booking || !scope) return false;
-    const bookingId = Number(booking.professionalId);
-    if (scope.professionalId && Number.isInteger(bookingId) && bookingId > 0) {
+    if (!booking || !scope || !scope.professionalId) return false;
+    const bookingId = bookingProfessionalId(booking);
+    if (bookingId) {
         return bookingId === scope.professionalId;
     }
-    const label = String(booking.professional || '').trim().toLowerCase();
-    return !!label && scope.names.has(label);
+    const raw = String(booking.professional || '').trim();
+    if (!raw) return false;
+    const key = raw.toLowerCase();
+    const normalized = normalizePersonName(raw);
+    if (scope.collisions.has(key) || (normalized && scope.collisions.has(`n:${normalized}`))) {
+        return false;
+    }
+    const ownerId = scope.labelOwners.get(key)
+        || (normalized ? scope.labelOwners.get(`n:${normalized}`) : null);
+    if (ownerId) {
+        return ownerId === scope.professionalId;
+    }
+    return scope.names.has(key) || (!!normalized && scope.normalized.has(normalized));
 }
 
-function filterBookingsForStaff(bookings, req) {
+function stripBookingIntakeToken(booking) {
+    if (!booking) return booking;
+    const { intakeToken, intake, clinicalNotes, ...rest } = booking;
+    return {
+        ...rest,
+        hasClinicalNotes: !!(booking.hasClinicalNotes || clinicalNotes),
+        hasPatientIntake: !!(booking.hasPatientIntake || booking.intakeCompletedAt)
+    };
+}
+
+async function filterBookingsForStaff(bookings, req) {
     const list = Array.isArray(bookings) ? bookings : [];
-    const scoped = isAdminSession(req)
-        ? list
-        : list.filter((b) => bookingBelongsToStaff(b, staffScopeFromReq(req)));
-    return scoped.map((b) => {
-        if (!b) return b;
-        const { intakeToken, ...rest } = b;
-        return rest;
-    });
+    const scope = await staffScopeFromReq(req);
+    return list.filter((booking) => bookingBelongsToStaff(booking, scope)).map(stripBookingIntakeToken);
 }
 
-function staffCanAccessBooking(req, booking) {
+async function listBookingsVisibleToReq(req, { withNotes } = {}) {
+    const scope = await staffScopeFromReq(req);
+    if (!scope.professionalId && !scope.names.size) return [];
+    let list;
+    if (usePersistentDb) {
+        list = await db.findBookingsForStaffScope({
+            professionalId: scope.professionalId,
+            labels: [...scope.names],
+            withNotes: !!withNotes
+        });
+    } else {
+        const raw = [...bookingsStore];
+        list = withNotes
+            ? raw.map((booking) => {
+                const notes = clinicalNotesStore.find((n) => n.bookingRef === booking.bookingRef);
+                return {
+                    ...booking,
+                    hasClinicalNotes: !!notes,
+                    clinicalNotes: notes || null
+                };
+            })
+            : raw;
+    }
+    return list.filter((booking) => bookingBelongsToStaff(booking, scope)).map(stripBookingIntakeToken);
+}
+
+async function staffCanAccessBooking(req, booking) {
     if (!booking) return false;
-    if (isAdminSession(req)) return true;
-    return bookingBelongsToStaff(booking, staffScopeFromReq(req));
+    const scope = await staffScopeFromReq(req);
+    return bookingBelongsToStaff(booking, scope);
 }
 
 function requestCountry(req) {
@@ -10954,7 +11152,14 @@ app.post('/api/clinic/logout', (req, res) => {
 });
 
 // ─── API: Clinic — Check authentication status ───
-app.get('/api/clinic/auth-status', (req, res) => {
+app.get('/api/clinic/auth-status', async (req, res) => {
+    if (req.session && req.session.clinicAuthenticated) {
+        try {
+            await bindStaffSession(req);
+        } catch (err) {
+            console.error('bindStaffSession:', err.message);
+        }
+    }
     res.json(staffAuthPayload(req));
 });
 
@@ -11032,9 +11237,7 @@ async function handleClinicProfileGet(req, res) {
             username,
             displayName,
             email,
-            role: req.session.professionalId || req.session.clinicRole === 'clinician'
-                ? 'clinician'
-                : (req.session.clinicRole || 'admin'),
+            role: isAdminSession(req) ? 'admin' : 'clinician',
             profession: profile.profession || '',
             ordemNumber: profile.ordemNumber || '',
             fullName: displayName || '',
@@ -11119,6 +11322,9 @@ app.put('/api/clinic/profile', requireAuth, rateLimitStaffProfile, express.json(
         }
         const merged = overlayStaffFormWithBolsa(submitted, filled.app);
         const profile = await saveStaffProfileInternal(username, merged);
+        if (!profile) {
+            return res.status(500).json({ error: 'Failed to save profile' });
+        }
         const professional = await findProfessionalByUsernameInternal(username).catch(() => null);
         if (profile.fullName && !isJunkStaffName(profile.fullName)) {
             patch.displayName = String(profile.fullName).slice(0, 160);
@@ -11142,7 +11348,10 @@ app.put('/api/clinic/profile', requireAuth, rateLimitStaffProfile, express.json(
             fullName: (profile && profile.fullName) || ''
         });
     } catch (err) {
-        console.error('PUT /api/clinic/profile:', err.message);
+        console.error('PUT /api/clinic/profile:', err.code || '', err.message);
+        if (err && err.code === '23505') {
+            return res.status(409).json({ error: 'This professional file is already linked. Refresh and try again.' });
+        }
         res.status(500).json({ error: 'Failed to save profile' });
     }
 });
@@ -11518,22 +11727,26 @@ app.get('/api/admin/staff-profiles', requireAdmin, async (req, res) => {
 
 function staffProfileInputFromBody(body) {
     const src = body && typeof body === 'object' ? body : {};
-    return {
-        profession: String(src.profession || '').trim().slice(0, 32),
-        fullName: String(src.fullName || src.displayName || '').trim().slice(0, 160),
-        ordemNumber: String(src.ordemNumber || '').trim().slice(0, 80),
-        nif: String(src.nif || '').trim().slice(0, 20),
-        citizenCard: String(src.citizenCard || '').trim().slice(0, 32),
-        address: String(src.address || '').trim().slice(0, 400),
-        insurer: String(src.insurer || '').trim().slice(0, 120),
-        insurancePolicy: String(src.insurancePolicy || '').trim().slice(0, 80),
-        insuranceValidUntil: String(src.insuranceValidUntil || '').trim().slice(0, 10),
-        bio: String(src.bio || '').trim().slice(0, 4000),
-        credentials: String(src.credentials || '').trim().slice(0, 2000),
-        consultLanguages: src.consultLanguages,
-        primaryAreas: src.primaryAreas != null ? src.primaryAreas : src.primaryArea,
-        secondaryAreas: src.secondaryAreas != null ? src.secondaryAreas : src.secondaryArea
-    };
+    const out = {};
+    if (src.profession != null) out.profession = String(src.profession || '').trim().slice(0, 32);
+    if (src.fullName != null || src.displayName != null) {
+        out.fullName = String(src.fullName || src.displayName || '').trim().slice(0, 160);
+    }
+    if (src.ordemNumber != null) out.ordemNumber = String(src.ordemNumber || '').trim().slice(0, 80);
+    if (src.nif != null) out.nif = String(src.nif || '').trim().slice(0, 20);
+    if (src.citizenCard != null) out.citizenCard = String(src.citizenCard || '').trim().slice(0, 32);
+    if (src.address != null) out.address = String(src.address || '').trim().slice(0, 400);
+    if (src.insurer != null) out.insurer = String(src.insurer || '').trim().slice(0, 120);
+    if (src.insurancePolicy != null) out.insurancePolicy = String(src.insurancePolicy || '').trim().slice(0, 80);
+    if (src.insuranceValidUntil != null) out.insuranceValidUntil = String(src.insuranceValidUntil || '').trim().slice(0, 10);
+    if (src.bio != null) out.bio = String(src.bio || '').trim().slice(0, 4000);
+    if (src.credentials != null) out.credentials = String(src.credentials || '').trim().slice(0, 2000);
+    if (Object.prototype.hasOwnProperty.call(src, 'consultLanguages')) out.consultLanguages = src.consultLanguages;
+    if (Object.prototype.hasOwnProperty.call(src, 'primaryAreas')) out.primaryAreas = src.primaryAreas;
+    else if (Object.prototype.hasOwnProperty.call(src, 'primaryArea')) out.primaryAreas = src.primaryArea;
+    if (Object.prototype.hasOwnProperty.call(src, 'secondaryAreas')) out.secondaryAreas = src.secondaryAreas;
+    else if (Object.prototype.hasOwnProperty.call(src, 'secondaryArea')) out.secondaryAreas = src.secondaryArea;
+    return out;
 }
 
 app.post('/api/admin/staff-profiles', requireAdmin, express.json(), async (req, res) => {
@@ -11638,6 +11851,9 @@ app.patch('/api/admin/staff-profiles/:username', requireAdmin, express.json(), a
             ...existing,
             ...staffProfileInputFromBody({ ...body, profession, fullName })
         });
+        if (!profile) {
+            return res.status(500).json({ error: 'Failed to update profile' });
+        }
         const patch = {};
         if (profile.fullName && !isJunkStaffName(profile.fullName)) {
             patch.displayName = String(profile.fullName).slice(0, 160);
@@ -11662,7 +11878,10 @@ app.patch('/api/admin/staff-profiles/:username', requireAdmin, express.json(), a
             professional: publicProfessional(updated || professional)
         });
     } catch (err) {
-        console.error('PATCH /api/admin/staff-profiles:', err.message);
+        console.error('PATCH /api/admin/staff-profiles:', err.code || '', err.message);
+        if (err && err.code === '23505') {
+            return res.status(409).json({ error: 'This professional file is already linked. Refresh and try again.' });
+        }
         res.status(500).json({ error: 'Failed to update profile' });
     }
 });
@@ -12974,22 +13193,8 @@ app.get('/api/clinic/bookings', requireAuth, async (req, res) => {
             return new Date(b.createdAt) - new Date(a.createdAt);
         };
 
-        let bookingsWithNotes;
-        if (usePersistentDb) {
-            bookingsWithNotes = (await db.findAllBookingsWithClinicalNotes()).sort(sortFn);
-        } else {
-            const sorted = [...bookingsStore].sort(sortFn);
-            bookingsWithNotes = sorted.map((booking) => {
-                const notes = clinicalNotesStore.find((n) => n.bookingRef === booking.bookingRef);
-                return {
-                    ...booking,
-                    hasClinicalNotes: !!notes,
-                    clinicalNotes: notes || null
-                };
-            });
-        }
-
-        res.json({ bookings: filterBookingsForStaff(bookingsWithNotes, req) });
+        const bookings = (await listBookingsVisibleToReq(req, { withNotes: true })).sort(sortFn);
+        res.json({ bookings });
     } catch (err) {
         console.error('GET /api/clinic/bookings:', err.message);
         res.status(500).json({ error: 'Failed to load clinic bookings' });
@@ -13050,13 +13255,7 @@ function summarizeBillingPeriod(bookings, startIso, endIso, slotMinutes) {
 
 app.get('/api/clinic/billing-summary', requireAuth, async (req, res) => {
     try {
-        let bookings;
-        if (usePersistentDb) {
-            bookings = await db.findAllBookings();
-        } else {
-            bookings = [...bookingsStore];
-        }
-        bookings = filterBookingsForStaff(bookings, req);
+        const bookings = await listBookingsVisibleToReq(req, { withNotes: false });
         const slotMinutes = Number(scheduleStore.slotDuration) || 30;
         const today = lisbonTodayUtcMidnight();
         const dow = today.getUTCDay();
@@ -13269,8 +13468,7 @@ app.get('/api/clinic/payouts', requireAuth, async (req, res) => {
     try {
         const username = staffSessionUsername(req);
         const profile = await getStaffProfileInternal(username);
-        let bookings = await bookingsForPayouts();
-        bookings = filterBookingsForStaff(bookings, req);
+        const bookings = await listBookingsVisibleToReq(req, { withNotes: false });
         const invoices = await listStaffInvoicesInternal(username);
         const fromMonth = await ensurePayoutsFromMonthInternal(username);
         res.json({
@@ -13401,18 +13599,16 @@ app.get('/api/admin/payouts', requireAdmin, async (req, res) => {
 
         const staff = [];
         for (const person of people) {
-            const fakeReq = person.username === String(CLINIC_USERNAME || '').trim().toLowerCase()
-                ? req
-                : {
-                    session: {
-                        clinicAuthenticated: true,
-                        clinicRole: 'clinician',
-                        clinicUsername: person.username,
-                        clinicDisplayName: person.displayName,
-                        professionalId: person.professionalId || null
-                    }
-                };
-            const filtered = filterBookingsForStaff(bookings, fakeReq);
+            const fakeReq = {
+                session: {
+                    clinicAuthenticated: true,
+                    clinicRole: 'clinician',
+                    clinicUsername: person.username,
+                    clinicDisplayName: person.displayName,
+                    professionalId: person.professionalId || null
+                }
+            };
+            const filtered = await filterBookingsForStaff(bookings, fakeReq);
             const profile = await getStaffProfileInternal(person.username);
             const fromMonth = await ensurePayoutsFromMonthInternal(person.username);
             staff.push({
@@ -13892,6 +14088,7 @@ app.patch('/api/admin/patients/:bookingRef', requireAdmin, express.json(), async
             return res.status(400).json({ error: 'No fields to update' });
         }
 
+        Object.assign(fields, await applyProfessionalAssignment(fields));
         const updated = await db.updateBookingAdminFields(bookingRef, fields);
         if (!updated) return res.status(404).json({ error: 'Booking not found' });
 
@@ -14253,8 +14450,11 @@ app.post('/api/admin/patients/schedule-next', requireAdmin, express.json(), asyn
 
         const bookingRef = confirmed.bookingRef;
         if (bookingRef) {
+            const assigned = await applyProfessionalAssignment({
+                professional: professional || null
+            });
             await db.updateBookingAdminFields(bookingRef, {
-                professional: professional || null,
+                ...assigned,
                 visitFrequency: visitFrequency || null,
                 patientType: patientType || null,
                 patientPhone: patientPhone || null,
@@ -14288,22 +14488,17 @@ app.get('/api/clinic/booking/:bookingRef', requireAuth, async (req, res) => {
             ? await db.findBookingByRef(bookingRef)
             : bookingsStore.find((b) => b.bookingRef === bookingRef);
 
-        if (!booking) {
+        if (!booking || !(await staffCanAccessBooking(req, booking))) {
             return res.status(404).json({ error: 'Booking not found' });
-        }
-        if (!staffCanAccessBooking(req, booking)) {
-            return res.status(403).json({ error: 'This consultation is assigned to another professional' });
         }
 
         const notes = usePersistentDb
             ? await db.getClinicalNoteByRef(bookingRef)
             : clinicalNotesStore.find((n) => n.bookingRef === bookingRef);
 
+        const { intakeToken, ...safe } = booking;
         res.json({
-            ...(() => {
-                const { intakeToken, ...safe } = booking;
-                return safe;
-            })(),
+            ...safe,
             clinicalNotes: notes || null,
             patientIntake: booking.intake || null,
             hasPatientIntake: !!booking.intakeCompletedAt
@@ -14336,11 +14531,8 @@ app.post('/api/clinic/notes', requireAuth, express.json(), async (req, res) => {
         const booking = usePersistentDb
             ? await db.findBookingByRef(refUpper)
             : bookingsStore.find((b) => b.bookingRef === refUpper);
-        if (!booking) {
+        if (!booking || !(await staffCanAccessBooking(req, booking))) {
             return res.status(404).json({ error: 'Booking not found' });
-        }
-        if (!staffCanAccessBooking(req, booking)) {
-            return res.status(403).json({ error: 'This consultation is assigned to another professional' });
         }
 
         const now = new Date().toISOString();
@@ -14400,8 +14592,8 @@ app.get('/api/clinic/notes/:bookingRef', requireAuth, async (req, res) => {
         const booking = usePersistentDb
             ? await db.findBookingByRef(bookingRef)
             : bookingsStore.find((b) => b.bookingRef === bookingRef);
-        if (booking && !staffCanAccessBooking(req, booking)) {
-            return res.status(403).json({ error: 'This consultation is assigned to another professional' });
+        if (!booking || !(await staffCanAccessBooking(req, booking))) {
+            return res.status(404).json({ error: 'Clinical notes not found' });
         }
         const notes = usePersistentDb
             ? await db.getClinicalNoteByRef(bookingRef)

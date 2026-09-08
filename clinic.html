@@ -16,7 +16,7 @@
     <title>Clinic Portal — Longevity Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=ficha-1">
+    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=scope-2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
     <meta name="description" content="Clinic portal — manage consultations and clinical records.">
     <meta name="theme-color" content="#eaf2fb">
 </head>
-<body class="lon-landing clinic-portal-page" data-clinic-build="ficha-1">
+<body class="lon-landing clinic-portal-page" data-clinic-build="scope-2">
 
     <a class="lon-skip" href="#conteudo-principal">Skip to content</a>
     <header class="lon-nav" id="lonNav">
@@ -63,7 +63,7 @@
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                 </div>
                 <h1 class="dash-login-title">Clinic Portal</h1>
-                <p class="dash-login-desc">Portal ficha-1 — 7 set 2026. Entre com o username do profissional.</p>
+                <p class="dash-login-desc">Portal scope-2 — 7 set 2026. Entre com o username do profissional.</p>
                 <form class="dash-login-form" id="clinicLoginForm">
                     <div class="dash-form-group">
                         <label for="clinicUsername">Username</label>
@@ -108,7 +108,7 @@
                     <div class="dash-header-left">
                         <button type="button" class="admin-sidebar-toggle btn btn-outline btn-sm" id="clinicSidebarToggle" aria-label="Open menu">Menu</button>
                         <h1 class="dash-greeting" id="clinicGreeting">Consultations</h1>
-                        <p class="dash-email" id="clinicUserInfo">All consultations and clinical notes</p>
+                        <p class="dash-email" id="clinicUserInfo">Consultations assigned to you</p>
                     </div>
                     <div class="dash-header-right">
                         <button class="btn btn-primary" id="clinicSaveScheduleBtn" style="display:none;">Save availability</button>
@@ -122,13 +122,13 @@
                 <div class="admin-panel is-active" id="clinicPanelConsultations" data-clinic-panel-content="consultations">
                     <div class="dash-section">
                         <div class="dash-section-header">
-                            <h2 class="dash-section-title">All consultations</h2>
-                            <p class="dash-section-subtitle">Click a consultation to view details and add clinical notes</p>
+                            <h2 class="dash-section-title">Your consultations</h2>
+                            <p class="dash-section-subtitle">Only consultations scheduled with you. Click a row to add clinical notes</p>
                         </div>
                         <div class="dash-table-wrap" id="clinicTableWrap">
                             <div class="dash-empty" id="clinicEmpty">
                                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                <p>No consultations found.</p>
+                                <p>No consultations assigned to you.</p>
                             </div>
                             <table class="dash-table" id="clinicTable" style="display:none;">
                                 <thead>
@@ -196,12 +196,12 @@
                     <div class="dash-section">
                         <div class="dash-section-header">
                             <h2 class="dash-section-title">Upcoming bookings</h2>
-                            <p class="dash-section-subtitle">Confirmed appointments that have not yet taken place</p>
+                            <p class="dash-section-subtitle">Confirmed appointments scheduled with you</p>
                         </div>
                         <div class="dash-table-wrap">
                             <div class="dash-empty" id="clinicBookingsEmpty">
                                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                <p>No upcoming bookings.</p>
+                                <p>No upcoming bookings assigned to you.</p>
                             </div>
                             <table class="dash-table" id="clinicBookingsTable" style="display:none;">
                                 <thead>
@@ -223,12 +223,12 @@
                     <div class="dash-section">
                         <div class="dash-section-header">
                             <h2 class="dash-section-title">Patients</h2>
-                            <p class="dash-section-subtitle">People attached to your consultations, grouped by email</p>
+                            <p class="dash-section-subtitle">Only people scheduled with you, grouped by email</p>
                         </div>
                         <div class="dash-table-wrap">
                             <div class="dash-empty" id="clinicPatientsEmpty">
                                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-                                <p>No patients yet.</p>
+                                <p>No patients scheduled with you yet.</p>
                             </div>
                             <table class="dash-table" id="clinicPatientsTable" style="display:none;">
                                 <thead>
@@ -581,7 +581,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="/lon-nav.js"></script>
-    <script src="/clinic-portal/clinic.js?v=ficha-1"></script>
+    <script src="/clinic-portal/clinic.js?v=scope-2"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">
