@@ -2254,7 +2254,7 @@ body.dash-portal .dash-stat-card {
 
 .admin-pro-files-legend {
     display: grid;
-    grid-template-columns: minmax(140px, 1.4fr) minmax(90px, 0.8fr) minmax(140px, 1.3fr) auto 28px;
+    grid-template-columns: minmax(140px, 1.3fr) minmax(100px, 0.85fr) minmax(90px, 0.7fr) minmax(130px, 1.2fr) auto 28px;
     gap: 10px 12px;
     padding: 4px 14px 8px;
     font-size: 0.72rem;
@@ -2265,7 +2265,11 @@ body.dash-portal .dash-stat-card {
 }
 
 .admin-pro-files .admin-psych-summary {
-    grid-template-columns: minmax(140px, 1.4fr) minmax(90px, 0.8fr) minmax(140px, 1.3fr) auto 28px;
+    grid-template-columns: minmax(140px, 1.3fr) minmax(100px, 0.85fr) minmax(90px, 0.7fr) minmax(130px, 1.2fr) auto 28px;
+}
+
+.admin-pro-files .admin-psych-col-role {
+    min-width: 0;
 }
 
 .admin-pro-files .admin-psych-col-user,
@@ -2317,6 +2321,7 @@ body.dash-portal .dash-stat-card {
     .admin-pro-files .admin-psych-summary {
         grid-template-columns: 1fr 28px;
     }
+    .admin-pro-files .admin-psych-col-role,
     .admin-pro-files .admin-psych-col-user,
     .admin-pro-files .admin-psych-col-doxy,
     .admin-pro-files .admin-psych-col-login {

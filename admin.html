@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=login-email-1">
+    <link rel="stylesheet" href="/dashboard.css?v=pro-type-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -764,7 +764,7 @@
                     <div class="dash-section-header">
                         <div>
                             <h2 class="dash-section-title">Professionals &amp; Doxy rooms</h2>
-                            <p class="dash-section-subtitle">Every professional with a profile file is a collapsible row. Active rows have a clinic login and password; the others have a file but cannot sign in yet. Only Dra. Sofia Aguiar uses the clinic Doxy room. Send the login by email from the row, or copy it when the password appears — it is not stored in plain text.</p>
+                            <p class="dash-section-subtitle">One person: login, ficha, Doxy and bolsa candidatura. Creating a professional always creates the ficha; hiring from the bolsa attaches the candidatura. Only Dra. Sofia Aguiar uses the clinic Doxy room. Send the login by email from the row — the password is not stored in plain text.</p>
                         </div>
                     </div>
                     <p class="dash-section-subtitle" id="adminDefaultDoxyUrl" style="margin-top:0;"></p>
@@ -827,6 +827,7 @@
                     <div class="admin-pro-files-wrap">
                         <div class="admin-pro-files-legend" aria-hidden="true">
                             <span>Name</span>
+                            <span>Type</span>
                             <span>Username</span>
                             <span>Doxy room</span>
                             <span>Login</span>
@@ -838,7 +839,7 @@
                     <div class="dash-section-header" style="margin-top:32px;">
                         <div>
                             <h2 class="dash-section-title">Fichas dos profissionais</h2>
-                            <p class="dash-section-subtitle">Create or edit a profile file even if the person does not have a clinic login yet. Open a row above to see the ficha, Doxy room and whether they are active.</p>
+                            <p class="dash-section-subtitle">Criar ficha cria a pessoa completa (login + perfil). Abrir uma linha acima mostra Doxy, ficha e candidatura da bolsa.</p>
                         </div>
                     </div>
                     <details class="admin-create-card" id="adminCreateProfileDetails">
@@ -932,7 +933,7 @@
                     <div class="dash-section-header admin-schedule-toolbar">
                         <div>
                             <h2 class="dash-section-title">Bolsa de Profissionais</h2>
-                            <p class="dash-section-subtitle" id="adminPsychCount">Candidaturas recebidas (ex.: <code>/recrutamento/psicologia</code>). Assign a clinic username and password here or in Professionals &amp; Doxy.</p>
+                            <p class="dash-section-subtitle" id="adminPsychCount">Candidaturas recebidas (ex.: <code>/recrutamento/psicologia</code>). Aceitar/atribuir login cria a mesma pessoa no portal — ficha e login ficam ligados a esta candidatura.</p>
                         </div>
                         <div class="admin-schedule-filters" role="group" aria-label="Filtrar profissionais">
                             <button type="button" class="btn btn-primary btn-sm" id="psychologistsAddBtn">Adicionar à bolsa</button>
@@ -1195,7 +1196,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=login-email-1"></script>
+    <script src="/admin.js?v=pro-dedupe-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

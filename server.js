@@ -959,6 +959,7 @@ function emptyStaffProfile(username) {
         consultLanguages: [],
         primaryAreas: [],
         secondaryAreas: [],
+        professionalId: null,
         hasPhoto: false,
         updatedAt: null
     };
@@ -1369,6 +1370,11 @@ function normalizePersonName(raw) {
         .trim();
 }
 
+function numericUsernameSuffix(username) {
+    const m = String(username || '').trim().toLowerCase().match(/[a-z](\d{1,2})$/);
+    return m ? Number(m[1]) : 0;
+}
+
 function personNamesMatch(a, b) {
     const na = normalizePersonName(a);
     const nb = normalizePersonName(b);
@@ -1555,6 +1561,91 @@ async function findProfessionalByDisplayNameInternal(name) {
     ) || null;
 }
 
+async function resolvePersonFromLabel(raw) {
+    const label = String(raw == null ? '' : raw).trim();
+    if (!label) return null;
+    if (/^\d+$/.test(label)) {
+        const byId = await findProfessionalByIdInternal(label);
+        if (byId) return byId;
+    }
+    const byUser = await findProfessionalByUsernameInternal(label);
+    if (byUser) return byUser;
+    const byName = await findProfessionalByDisplayNameInternal(label);
+    if (byName) return byName;
+    if (usePersistentDb) {
+        try {
+            const byFull = await db.findProfessionalByStaffFullName(label);
+            if (byFull) return byFull;
+        } catch (err) {
+            console.error('resolvePersonFromLabel full name:', err.message);
+        }
+    } else {
+        const key = label.toLowerCase();
+        for (const profile of staffProfilesStore.values()) {
+            if (String(profile.fullName || '').trim().toLowerCase() !== key) continue;
+            const pro = await findProfessionalByUsernameInternal(profile.username);
+            if (pro) return pro;
+        }
+    }
+    return null;
+}
+
+async function applyProfessionalAssignment(fields) {
+    const next = fields && typeof fields === 'object' ? { ...fields } : {};
+    const hasName = Object.prototype.hasOwnProperty.call(next, 'professional');
+    const hasId = Object.prototype.hasOwnProperty.call(next, 'professionalId');
+    if (!hasName && !hasId) return next;
+    let person = null;
+    if (hasId) person = await findProfessionalByIdInternal(next.professionalId);
+    if (!person && hasName) person = await resolvePersonFromLabel(next.professional);
+    if (person) {
+        next.professionalId = person.id;
+        next.professional = person.displayName || person.username;
+        return next;
+    }
+    if (hasName && !String(next.professional || '').trim()) {
+        next.professional = null;
+        next.professionalId = null;
+    }
+    return next;
+}
+
+async function attachPersonFacets(professional) {
+    if (!professional || !professional.username) return professional;
+    try {
+        const existing = await getStaffProfileInternal(professional.username);
+        const fullName = firstNonEmpty(
+            isJunkStaffName(existing.fullName) ? '' : existing.fullName,
+            professional.displayName
+        );
+        await saveStaffProfileInternal(professional.username, {
+            ...existing,
+            fullName
+        });
+    } catch (err) {
+        console.error('attachPersonFacets profile:', err.message);
+    }
+    try {
+        const email = String(professional.email || '').trim();
+        if (!email) return professional;
+        const app = await findPsychologistApplicationByEmailInternal(email);
+        if (!app || !professional.id) return professional;
+        if (app.professionalId && Number(app.professionalId) !== Number(professional.id)) return professional;
+        if (!app.professionalId) {
+            try {
+                await setApplicationProfessionalIdInternal(app.id, professional.id);
+            } catch (err) {
+                console.error('attachPersonFacets link application:', err.message);
+            }
+        }
+        await seedPsychologistStaffProfile(professional, app);
+        await copyBolsaCvToStaffDocuments(professional.username, app);
+    } catch (err) {
+        console.error('attachPersonFacets bolsa:', err.message);
+    }
+    return professional;
+}
+
 async function findProfessionalByIdInternal(id) {
     const n = Number(id);
     if (!Number.isInteger(n) || n < 1) return null;
@@ -1566,12 +1657,29 @@ async function patchProfessionalInternal(professional, fields) {
     if (!professional || !professional.id || !fields) return professional;
     if (!Object.keys(fields).length) return professional;
     try {
+        let updated;
         if (usePersistentDb) {
-            const updated = await db.updateProfessional(professional.id, fields);
-            return updated || professional;
+            updated = await db.updateProfessional(professional.id, fields);
+        } else {
+            Object.assign(professional, fields, { updatedAt: new Date().toISOString() });
+            updated = professional;
         }
-        Object.assign(professional, fields, { updatedAt: new Date().toISOString() });
-        return professional;
+        updated = updated || professional;
+        if (fields.displayName && updated.displayName) {
+            try {
+                if (usePersistentDb) await db.syncBookingProfessionalLabel(updated.id, updated.displayName);
+                else {
+                    for (const b of bookingsStore) {
+                        if (Number(b.professionalId) === Number(updated.id)) {
+                            b.professional = updated.displayName;
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error('patchProfessionalInternal booking labels:', err.message);
+            }
+        }
+        return updated;
     } catch (err) {
         console.error('patchProfessionalInternal:', err.message);
         return professional;
@@ -1696,15 +1804,35 @@ function doxyUrlFromEmailData(data) {
     return DEFAULT_DOXY_ROOM_URL || '';
 }
 
+function staffScopeFromReq(req) {
+    const session = (req && req.session) || {};
+    const n = Number(session.professionalId);
+    const professionalId = Number.isInteger(n) && n > 0 ? n : null;
+    const names = new Set();
+    const add = (value) => {
+        const s = String(value || '').trim().toLowerCase();
+        if (s) names.add(s);
+    };
+    add(session.clinicDisplayName);
+    add(session.clinicUsername);
+    return { professionalId, names };
+}
+
+function bookingBelongsToStaff(booking, scope) {
+    if (!booking || !scope) return false;
+    const bookingId = Number(booking.professionalId);
+    if (scope.professionalId && Number.isInteger(bookingId) && bookingId > 0) {
+        return bookingId === scope.professionalId;
+    }
+    const label = String(booking.professional || '').trim().toLowerCase();
+    return !!label && scope.names.has(label);
+}
+
 function filterBookingsForStaff(bookings, req) {
     const list = Array.isArray(bookings) ? bookings : [];
     const scoped = isAdminSession(req)
         ? list
-        : (() => {
-            const name = String((req.session && req.session.clinicDisplayName) || '').trim().toLowerCase();
-            if (!name) return [];
-            return list.filter((b) => String(b.professional || '').trim().toLowerCase() === name);
-        })();
+        : list.filter((b) => bookingBelongsToStaff(b, staffScopeFromReq(req)));
     return scoped.map((b) => {
         if (!b) return b;
         const { intakeToken, ...rest } = b;
@@ -1715,8 +1843,7 @@ function filterBookingsForStaff(bookings, req) {
 function staffCanAccessBooking(req, booking) {
     if (!booking) return false;
     if (isAdminSession(req)) return true;
-    const name = String((req.session && req.session.clinicDisplayName) || '').trim().toLowerCase();
-    return !!name && String(booking.professional || '').trim().toLowerCase() === name;
+    return bookingBelongsToStaff(booking, staffScopeFromReq(req));
 }
 
 function requestCountry(req) {
@@ -2165,6 +2292,8 @@ async function bootstrapPersistence() {
         await ensureKnownBolsaApplications();
         await ensureAllBolsaStaffProfiles();
         await fixKnownEmailTypos();
+        await removeDuplicateMariaSaraProfessionals();
+        await removeExperimentalTestProfessionals();
         return;
     }
     scheduleStore = loadScheduleStore();
@@ -2172,6 +2301,8 @@ async function bootstrapPersistence() {
     await ensureProfessionalDoxyRooms();
     await ensureKnownBolsaApplications();
     await ensureAllBolsaStaffProfiles();
+    await removeDuplicateMariaSaraProfessionals();
+    await removeExperimentalTestProfessionals();
 }
 
 async function fixKnownEmailTypos() {
@@ -2185,6 +2316,147 @@ async function fixKnownEmailTypos() {
         if (n) console.log(`   ✉️  Corrected Francisca email typo in ${n} record(s)`);
     } catch (err) {
         console.error('fixKnownEmailTypos:', err.message);
+    }
+}
+
+async function deleteProfessionalFileInternal(username, { retargetProfessional } = {}) {
+    const u = normalizeProfessionalUsername(username);
+    if (!u) return { ok: false, username: u };
+    if (u === normalizeProfessionalUsername(CLINIC_USERNAME)) {
+        const err = new Error('That username is reserved for the clinic admin account');
+        err.statusCode = 409;
+        throw err;
+    }
+    const existing = await findProfessionalByUsernameInternal(u);
+    const retargetId = retargetProfessional && retargetProfessional.id ? retargetProfessional.id : null;
+    if (usePersistentDb) {
+        return db.deleteProfessionalFile(u, { retargetProfessionalId: retargetId });
+    }
+    if (existing) {
+        for (const app of psychologistApplicationsStore) {
+            if (Number(app.professionalId) === Number(existing.id)) {
+                app.professionalId = retargetId || null;
+                app.updatedAt = new Date().toISOString();
+            }
+        }
+        const idx = professionalsStore.findIndex((p) => p.id === existing.id);
+        if (idx >= 0) professionalsStore.splice(idx, 1);
+    }
+    staffProfilesStore.delete(u);
+    staffPhotosStore.delete(u);
+    for (let i = staffDocumentsStore.length - 1; i >= 0; i -= 1) {
+        if (staffDocumentsStore[i].username === u) staffDocumentsStore.splice(i, 1);
+    }
+    for (const key of [...staffInvoicesStore.keys()]) {
+        if (key.startsWith(`${u}|`)) staffInvoicesStore.delete(key);
+    }
+    for (const key of [...staffMonthAvailStore.keys()]) {
+        if (key.startsWith(`${u}|`)) staffMonthAvailStore.delete(key);
+    }
+    return { ok: true, username: u, id: existing && existing.id };
+}
+
+async function removeDuplicateMariaSaraProfessionals() {
+    const dupes = [
+        'maria.sara.ferreira.de.almeida.judice.gamito2',
+        'maria.sara.ferreira.de.almeida.judice.gamito3'
+    ];
+    try {
+        if (usePersistentDb) {
+            const result = await db.removeDuplicateMariaSaraProfessionals();
+            if (result && result.removed) {
+                console.log(
+                    `   👤 Removed ${result.removed} duplicate Maria Sara file(s); kept ${result.keeper}`
+                );
+            }
+            return result;
+        }
+        const list = await listProfessionalsInternal();
+        const keep = (list || []).find((p) => {
+            const u = normalizeProfessionalUsername(p && p.username);
+            return u && !dupes.includes(u) && (
+                u === 'maria.sara.ferreira.de.almeida.judice.gamito'
+                || personNamesMatch(p.displayName, 'Maria Sara Ferreira de Almeida Judice Gamito')
+            );
+        });
+        if (!keep) return { removed: 0, keeper: null };
+        let removed = 0;
+        for (const username of dupes) {
+            const existing = await findProfessionalByUsernameInternal(username);
+            const profile = await getStaffProfileInternal(username).catch(() => null);
+            if (!existing && !(profile && profile.updatedAt)) continue;
+            await deleteProfessionalFileInternal(username, { retargetProfessional: keep });
+            removed += 1;
+        }
+        if (removed) {
+            console.log(`   👤 Removed ${removed} duplicate Maria Sara file(s); kept ${keep.username}`);
+        }
+        return { removed, keeper: keep.username };
+    } catch (err) {
+        console.error('removeDuplicateMariaSaraProfessionals:', err.message);
+        return { removed: 0, keeper: null };
+    }
+}
+
+function isExperimentalTestIdentity(username, name) {
+    const u = normalizeProfessionalUsername(username);
+    const n = normalizePersonName(name);
+    if (u === 'user.r' || /^user\.r\d{1,2}$/.test(u)) return true;
+    return n === 'r';
+}
+
+async function removeExperimentalTestProfessionals() {
+    try {
+        if (usePersistentDb) {
+            const result = await db.removeExperimentalTestProfessionals();
+            const n = Number(result && result.removed || 0) + Number(result && result.applications || 0);
+            if (n) {
+                console.log(
+                    `   👤 Removed ${result.removed || 0} experimental professional file(s)` +
+                    (result.applications ? ` and ${result.applications} test bolsa row(s)` : '')
+                );
+            }
+            return result;
+        }
+        const seen = new Set();
+        const usernames = [];
+        const add = (username, name) => {
+            const u = normalizeProfessionalUsername(username);
+            if (!u || seen.has(u) || u === normalizeProfessionalUsername(CLINIC_USERNAME)) return;
+            if (!isExperimentalTestIdentity(u, name)) return;
+            seen.add(u);
+            usernames.push(u);
+        };
+        for (const p of (await listProfessionalsInternal()) || []) {
+            add(p.username, p.displayName);
+        }
+        for (const p of (await listStaffProfilesInternal()) || []) {
+            add(p.username, p.fullName || p.displayName);
+        }
+        let removed = 0;
+        for (const username of usernames) {
+            const result = await deleteProfessionalFileInternal(username);
+            if (result && result.ok) removed += 1;
+        }
+        let applications = 0;
+        for (let i = psychologistApplicationsStore.length - 1; i >= 0; i -= 1) {
+            const app = psychologistApplicationsStore[i];
+            const nome = (app && app.payload && (app.payload.nome || app.payload.Nome)) || '';
+            if (normalizePersonName(app && app.name) === 'r' || normalizePersonName(nome) === 'r') {
+                psychologistApplicationsStore.splice(i, 1);
+                applications += 1;
+            }
+        }
+        if (removed || applications) {
+            console.log(
+                `   👤 Removed ${removed} experimental professional file(s)` +
+                (applications ? ` and ${applications} test bolsa row(s)` : '')
+            );
+        }
+        return { removed, applications };
+    } catch (err) {
+        console.error('removeExperimentalTestProfessionals:', err.message);
+        return { removed: 0, applications: 0 };
     }
 }
 
@@ -11299,7 +11571,7 @@ app.post('/api/admin/staff-profiles', requireAdmin, express.json(), async (req, 
         if (requestedUsername && (await staffProfileUsernameTaken(requestedUsername))) {
             return res.status(409).json({ error: 'That username is already in use' });
         }
-        const assignLogin = body.assignLogin !== false && body.createLogin !== false;
+        const assignLogin = true;
         const username = await allocateProfessionalUsername(requestedUsername, fullName);
         let created = null;
         let generatedPassword = null;
@@ -11392,6 +11664,24 @@ app.patch('/api/admin/staff-profiles/:username', requireAdmin, express.json(), a
     } catch (err) {
         console.error('PATCH /api/admin/staff-profiles:', err.message);
         res.status(500).json({ error: 'Failed to update profile' });
+    }
+});
+
+app.delete('/api/admin/staff-profiles/:username', requireAdmin, async (req, res) => {
+    try {
+        const username = String(req.params.username || '').trim().toLowerCase();
+        if (!username) return res.status(400).json({ error: 'Username is required' });
+        const professional = await findProfessionalByUsernameInternal(username);
+        const existing = await getStaffProfileInternal(username);
+        if (!professional && !(existing && existing.updatedAt)) {
+            return res.status(404).json({ error: 'Professional not found' });
+        }
+        const result = await deleteProfessionalFileInternal(username);
+        console.log(`   👤 Professional file removed: ${username}`);
+        res.json({ ok: true, username, id: result && result.id });
+    } catch (err) {
+        console.error('DELETE /api/admin/staff-profiles:', err.message);
+        res.status(httpErrorStatus(err, 500)).json({ error: err.message || 'Failed to delete professional file' });
     }
 });
 
@@ -11548,7 +11838,11 @@ async function createProfessionalInternal({
         email: String(email || '').trim().toLowerCase().slice(0, 320),
         active: active !== false
     };
-    if (usePersistentDb) return db.insertProfessional(record);
+    if (usePersistentDb) {
+        const created = await db.insertProfessional(record);
+        await attachPersonFacets(created);
+        return created;
+    }
     const created = {
         id: professionalIdSeq++,
         ...record,
@@ -11556,6 +11850,7 @@ async function createProfessionalInternal({
         updatedAt: new Date().toISOString()
     };
     professionalsStore.push(created);
+    await attachPersonFacets(created);
     return created;
 }
 
@@ -11580,7 +11875,21 @@ async function linkedProfessionalForApplication(app) {
         const byEmail = await findProfessionalByEmailInternal(email);
         if (byEmail) return byEmail;
     }
-    return null;
+    const name = bolsaApplicationName(app);
+    if (!name || isJunkStaffName(name)) return null;
+    const list = await listProfessionalsInternal();
+    const matches = (list || []).filter((p) => {
+        if (!p || p.active === false) return false;
+        if (isClinicLeadDoxyName(p.displayName) || isJunkStaffName(p.displayName)) return false;
+        return personNamesMatch(p.displayName, name) || usernameMatchesPersonName(p.username, name);
+    });
+    if (!matches.length) return null;
+    matches.sort((a, b) => {
+        const suffix = numericUsernameSuffix(a.username) - numericUsernameSuffix(b.username);
+        if (suffix) return suffix;
+        return Number(a.id || 0) - Number(b.id || 0);
+    });
+    return matches[0];
 }
 
 async function enrichPsychologistApplication(app) {
@@ -12440,6 +12749,24 @@ app.post('/api/admin/professionals', requireAdmin, express.json(), async (req, r
         if (emailRaw && (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRaw) || emailRaw.length > 320)) {
             return res.status(400).json({ error: 'Enter a valid email' });
         }
+        if (emailRaw) {
+            const byEmail = await findProfessionalByEmailInternal(emailRaw);
+            if (byEmail) {
+                return res.status(409).json({
+                    error: 'That email already has a clinic login',
+                    professional: publicProfessional(byEmail)
+                });
+            }
+        }
+        if (!requestedUsername) {
+            const byName = await findProfessionalByDisplayNameInternal(displayName);
+            if (byName) {
+                return res.status(409).json({
+                    error: 'A professional with that name already has a clinic login',
+                    professional: publicProfessional(byName)
+                });
+            }
+        }
 
         const created = await createProfessionalInternal({
             username,
@@ -12503,12 +12830,9 @@ app.patch('/api/admin/professionals/:id', requireAdmin, express.json(), async (r
             }
             fields.passwordHash = await bcrypt.hash(String(body.password), 12);
         }
-        let updated;
-        if (usePersistentDb) {
-            updated = await db.updateProfessional(existing.id, fields);
-        } else {
-            Object.assign(existing, fields, { updatedAt: new Date().toISOString() });
-            updated = existing;
+        const updated = await patchProfessionalInternal(existing, fields);
+        if (fields.email) {
+            try { await attachPersonFacets(updated); } catch (e) { /* ignore */ }
         }
         res.json({ professional: publicProfessional(updated) });
     } catch (err) {
@@ -13058,18 +13382,22 @@ app.get('/api/admin/payouts', requireAdmin, async (req, res) => {
         }
         const people = [];
         const seen = new Set();
-        const addPerson = (username, displayName) => {
+        const addPerson = (username, displayName, professionalId) => {
             const u = String(username || '').trim().toLowerCase();
             if (!u || seen.has(u)) return;
             seen.add(u);
-            people.push({ username: u, displayName: displayName || u });
+            people.push({
+                username: u,
+                displayName: displayName || u,
+                professionalId: professionalId || null
+            });
         };
-        addPerson(CLINIC_USERNAME, CLINIC_USERNAME);
+        addPerson(CLINIC_USERNAME, CLINIC_USERNAME, null);
         const professionals = await listProfessionalsInternal();
         for (const p of professionals || []) {
-            addPerson(p.username, p.displayName || p.username);
+            addPerson(p.username, p.displayName || p.username, p.id);
         }
-        for (const u of byUser.keys()) addPerson(u, u);
+        for (const u of byUser.keys()) addPerson(u, u, null);
 
         const staff = [];
         for (const person of people) {
@@ -13080,7 +13408,8 @@ app.get('/api/admin/payouts', requireAdmin, async (req, res) => {
                         clinicAuthenticated: true,
                         clinicRole: 'clinician',
                         clinicUsername: person.username,
-                        clinicDisplayName: person.displayName
+                        clinicDisplayName: person.displayName,
+                        professionalId: person.professionalId || null
                     }
                 };
             const filtered = filterBookingsForStaff(bookings, fakeReq);
@@ -13550,6 +13879,7 @@ app.patch('/api/admin/patients/:bookingRef', requireAdmin, express.json(), async
         const body = req.body || {};
         const fields = {};
         if (Object.prototype.hasOwnProperty.call(body, 'professional')) fields.professional = body.professional;
+        if (Object.prototype.hasOwnProperty.call(body, 'professionalId')) fields.professionalId = body.professionalId;
         if (Object.prototype.hasOwnProperty.call(body, 'markedPaid')) fields.markedPaid = body.markedPaid;
         if (Object.prototype.hasOwnProperty.call(body, 'invoiceSent')) fields.invoiceSent = body.invoiceSent;
         if (Object.prototype.hasOwnProperty.call(body, 'reviewRequested')) fields.reviewRequested = body.reviewRequested;

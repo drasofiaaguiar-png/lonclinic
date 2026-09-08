@@ -142,6 +142,7 @@ function rowToBooking(row) {
         followupSent: row.followup_sent === true,
         consultationCompleted: row.consultation_completed === true,
         professional: row.professional || '',
+        professionalId: row.professional_id != null ? Number(row.professional_id) : null,
         markedPaid: row.marked_paid === true,
         invoiceSent: row.invoice_sent === true,
         reviewRequested: row.review_requested === true,
@@ -182,6 +183,102 @@ function rowToClinicalNote(row) {
         createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
         updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : row.updated_at
     };
+}
+
+async function unifyHiredPersonRecords(p) {
+    try {
+        await p.query(`
+            UPDATE staff_profiles s
+               SET professional_id = p.id
+              FROM professionals p
+             WHERE s.professional_id IS NULL
+               AND LOWER(s.username) = LOWER(p.username)
+        `);
+        await p.query(`
+            UPDATE psychologist_applications a
+               SET professional_id = p.id, updated_at = NOW()
+              FROM professionals p
+             WHERE a.professional_id IS NULL
+               AND p.email IS NOT NULL AND TRIM(p.email) <> ''
+               AND (
+                    LOWER(TRIM(a.email)) = LOWER(TRIM(p.email))
+                    OR LOWER(TRIM(COALESCE(a.payload->>'email', a.payload->>'Email', ''))) = LOWER(TRIM(p.email))
+               )
+        `);
+        await p.query(`
+            UPDATE psychologist_applications a
+               SET professional_id = NULL
+             WHERE a.professional_id IS NOT NULL
+               AND a.id <> (
+                    SELECT x.id FROM psychologist_applications x
+                     WHERE x.professional_id = a.professional_id
+                     ORDER BY CASE x.status
+                        WHEN 'aceite' THEN 0
+                        WHEN 'bolsa' THEN 1
+                        WHEN 'shortlist' THEN 2
+                        WHEN 'entrevista' THEN 3
+                        ELSE 4
+                     END,
+                     x.updated_at DESC NULLS LAST,
+                     x.created_at DESC
+                     LIMIT 1
+               )
+        `);
+        await p.query(`
+            UPDATE bookings b
+               SET professional_id = x.id
+              FROM (
+                    SELECT LOWER(TRIM(display_name)) AS key, MIN(id) AS id
+                      FROM professionals
+                     WHERE display_name IS NOT NULL AND TRIM(display_name) <> ''
+                     GROUP BY 1
+                    HAVING COUNT(*) = 1
+              ) x
+             WHERE b.professional_id IS NULL
+               AND LOWER(TRIM(b.professional)) = x.key
+        `);
+        await p.query(`
+            UPDATE bookings b
+               SET professional_id = p.id
+              FROM professionals p
+             WHERE b.professional_id IS NULL
+               AND LOWER(TRIM(b.professional)) = LOWER(p.username)
+        `);
+        await p.query(`
+            UPDATE bookings b
+               SET professional_id = s.professional_id
+              FROM staff_profiles s
+             WHERE b.professional_id IS NULL
+               AND s.professional_id IS NOT NULL
+               AND s.full_name IS NOT NULL AND TRIM(s.full_name) <> ''
+               AND LOWER(TRIM(b.professional)) = LOWER(TRIM(s.full_name))
+        `);
+        await p.query(`
+            UPDATE bookings b
+               SET professional_id = a.professional_id
+              FROM psychologist_applications a
+             WHERE b.professional_id IS NULL
+               AND a.professional_id IS NOT NULL
+               AND a.name IS NOT NULL AND TRIM(a.name) <> ''
+               AND LOWER(TRIM(b.professional)) = LOWER(TRIM(a.name))
+        `);
+        try {
+            await p.query(`
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_psychologist_applications_one_person
+                    ON psychologist_applications (professional_id)
+                    WHERE professional_id IS NOT NULL
+            `);
+            await p.query(`
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_staff_profiles_professional_id
+                    ON staff_profiles (professional_id)
+                    WHERE professional_id IS NOT NULL
+            `);
+        } catch (idxErr) {
+            console.error('unifyHiredPersonRecords indexes:', idxErr.message);
+        }
+    } catch (err) {
+        console.error('unifyHiredPersonRecords:', err.message);
+    }
 }
 
 async function initSchema(p) {
@@ -518,6 +615,10 @@ async function initSchema(p) {
     );
     await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS cv_mime TEXT`);
     await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS cv_data BYTEA`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS professional_id INTEGER`);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_bookings_professional_id ON bookings (professional_id)`);
+    await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS professional_id INTEGER`);
+    await unifyHiredPersonRecords(p);
     await p.query(`
         CREATE TABLE IF NOT EXISTS staff_month_availability (
             username VARCHAR(64) NOT NULL,
@@ -1891,9 +1992,9 @@ async function insertBooking(booking) {
             amount, currency, payment_id, stripe_customer_id,
             date_iso, patient_locale, patient_phone,
             cancelled, reschedule_count, reminder_sent, reminder_1h_sent, followup_sent,
-            professional, marked_paid, invoice_sent, review_requested, visit_frequency, patient_type,
+            professional, professional_id, marked_paid, invoice_sent, review_requested, visit_frequency, patient_type,
             consultation_completed
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26)
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27)
         ON CONFLICT (payment_id) DO NOTHING
         RETURNING *`,
         [
@@ -1917,6 +2018,9 @@ async function insertBooking(booking) {
             booking.reminder1hSent === true,
             booking.followupSent === true,
             booking.professional || null,
+            Number.isInteger(Number(booking.professionalId)) && Number(booking.professionalId) > 0
+                ? Number(booking.professionalId)
+                : null,
             markedPaid,
             invoiceSent,
             booking.reviewRequested === true,
@@ -1955,6 +2059,7 @@ async function updateBookingAdminFields(bookingRef, fields) {
 
     const map = {
         professional: 'professional',
+        professionalId: 'professional_id',
         markedPaid: 'marked_paid',
         invoiceSent: 'invoice_sent',
         reviewRequested: 'review_requested',
@@ -1993,11 +2098,18 @@ async function updateBookingAdminFields(bookingRef, fields) {
         if (jsKey === 'professional' || jsKey === 'patientPhone') {
             v = v == null ? null : String(v).trim().slice(0, 200);
             if (v === '') v = null;
+        } else if (jsKey === 'professionalId') {
+            const n = Number(v);
+            v = Number.isInteger(n) && n > 0 ? n : null;
         } else {
             v = v === true || v === 'true' || v === 1 || v === '1';
         }
         sets.push(`${col} = $${i++}`);
         vals.push(v);
+        if (jsKey === 'professional' && v == null && !Object.prototype.hasOwnProperty.call(fields, 'professionalId')) {
+            sets.push(`professional_id = $${i++}`);
+            vals.push(null);
+        }
     }
 
     if (sets.length) {
@@ -2242,6 +2354,36 @@ async function findProfessionalByDisplayName(name) {
     return r.rows[0] ? rowToProfessional(r.rows[0]) : null;
 }
 
+async function findProfessionalByStaffFullName(name) {
+    const p = getPool();
+    const n = String(name || '').trim();
+    if (!n) return null;
+    const r = await p.query(
+        `SELECT p.* FROM professionals p
+          JOIN staff_profiles s
+            ON s.professional_id = p.id
+            OR LOWER(s.username) = LOWER(p.username)
+         WHERE LOWER(TRIM(s.full_name)) = LOWER(TRIM($1))
+         ORDER BY p.id ASC
+         LIMIT 2`,
+        [n]
+    );
+    if (r.rows.length !== 1) return null;
+    return rowToProfessional(r.rows[0]);
+}
+
+async function syncBookingProfessionalLabel(professionalId, displayName) {
+    const p = getPool();
+    const id = Number(professionalId);
+    const label = String(displayName || '').trim().slice(0, 200);
+    if (!Number.isInteger(id) || id < 1 || !label) return 0;
+    const r = await p.query(
+        `UPDATE bookings SET professional = $1 WHERE professional_id = $2`,
+        [label, id]
+    );
+    return r.rowCount || 0;
+}
+
 async function insertProfessional(pro) {
     const p = getPool();
     const r = await p.query(
@@ -2304,6 +2446,168 @@ async function deleteProfessional(id) {
     return r.rowCount > 0;
 }
 
+async function deleteProfessionalFileOn(client, username, { retargetProfessionalId } = {}) {
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return { ok: false, username: u, deleted: false };
+    const pro = await client.query(
+        'SELECT id FROM professionals WHERE LOWER(username) = $1 LIMIT 1',
+        [u]
+    );
+    const profileExists = await client.query(
+        'SELECT 1 FROM staff_profiles WHERE LOWER(username) = $1 LIMIT 1',
+        [u]
+    );
+    const id = pro.rows[0] ? Number(pro.rows[0].id) : null;
+    const hadFile = !!(id || (profileExists.rows && profileExists.rows[0]));
+    if (!hadFile) {
+        const docs = await client.query('SELECT 1 FROM staff_documents WHERE LOWER(username) = $1 LIMIT 1', [u]);
+        if (!docs.rows[0]) return { ok: true, username: u, id: null, deleted: false };
+    }
+    const retarget = Number(retargetProfessionalId);
+    const keepId = Number.isInteger(retarget) && retarget > 0 && retarget !== id ? retarget : null;
+    if (id) {
+        if (keepId) {
+            await client.query(
+                `UPDATE psychologist_applications a
+                    SET professional_id = $1, updated_at = NOW()
+                  WHERE a.professional_id = $2
+                    AND NOT EXISTS (
+                        SELECT 1 FROM psychologist_applications x
+                         WHERE x.professional_id = $1
+                    )`,
+                [keepId, id]
+            );
+            await client.query(
+                `UPDATE bookings SET professional_id = $1 WHERE professional_id = $2`,
+                [keepId, id]
+            );
+        }
+        await client.query(
+            `UPDATE psychologist_applications SET professional_id = NULL, updated_at = NOW()
+              WHERE professional_id = $1`,
+            [id]
+        );
+        await client.query(
+            `UPDATE bookings SET professional_id = NULL WHERE professional_id = $1`,
+            [id]
+        );
+        await client.query(
+            `UPDATE staff_profiles SET professional_id = NULL WHERE professional_id = $1`,
+            [id]
+        );
+    }
+    await client.query('DELETE FROM staff_documents WHERE LOWER(username) = $1', [u]);
+    await client.query('DELETE FROM staff_invoices WHERE LOWER(username) = $1', [u]);
+    await client.query('DELETE FROM staff_month_availability WHERE LOWER(username) = $1', [u]);
+    await client.query('DELETE FROM staff_profiles WHERE LOWER(username) = $1', [u]);
+    let professionals = 0;
+    if (id) {
+        const del = await client.query('DELETE FROM professionals WHERE id = $1', [id]);
+        professionals = del.rowCount || 0;
+    }
+    return { ok: true, username: u, id, deleted: hadFile || professionals > 0 };
+}
+
+async function deleteProfessionalFile(username, opts) {
+    const p = getPool();
+    const client = await p.connect();
+    try {
+        await client.query('BEGIN');
+        const result = await deleteProfessionalFileOn(client, username, opts);
+        await client.query('COMMIT');
+        return result;
+    } catch (err) {
+        try { await client.query('ROLLBACK'); } catch (e) { /* ignore */ }
+        throw err;
+    } finally {
+        client.release();
+    }
+}
+
+const MARIA_SARA_DUPLICATE_USERNAMES = [
+    'maria.sara.ferreira.de.almeida.judice.gamito2',
+    'maria.sara.ferreira.de.almeida.judice.gamito3'
+];
+
+async function removeDuplicateMariaSaraProfessionals(p) {
+    const db = p || getPool();
+    const dupes = MARIA_SARA_DUPLICATE_USERNAMES;
+    let keeper = await db.query(
+        `SELECT id, username FROM professionals
+          WHERE LOWER(username) <> ALL($1::text[])
+            AND (
+                LOWER(username) = 'maria.sara.ferreira.de.almeida.judice.gamito'
+                OR LOWER(username) LIKE 'maria.sara.ferreira.de.almeida.judice.gamito%'
+                OR LOWER(TRIM(display_name)) IN (
+                    SELECT LOWER(TRIM(display_name))
+                      FROM professionals
+                     WHERE LOWER(username) = ANY($1::text[])
+                       AND display_name IS NOT NULL AND TRIM(display_name) <> ''
+                )
+            )
+          ORDER BY
+            CASE WHEN LOWER(username) = 'maria.sara.ferreira.de.almeida.judice.gamito' THEN 0
+                 WHEN LOWER(username) ~ '[a-z][0-9]{1,2}$' THEN 2
+                 ELSE 1 END,
+            id ASC
+          LIMIT 1`,
+        [dupes]
+    );
+    let keep = keeper.rows[0] || null;
+    const toRemove = dupes.slice();
+    if (!keep) {
+        const among = await db.query(
+            `SELECT id, username FROM professionals
+              WHERE LOWER(username) = ANY($1::text[])
+              ORDER BY id ASC`,
+            [dupes]
+        );
+        if (among.rows.length < 2) return { removed: 0, keeper: among.rows[0] ? among.rows[0].username : null };
+        keep = among.rows[0];
+        toRemove.splice(0, toRemove.length, ...among.rows.slice(1).map((row) => String(row.username).toLowerCase()));
+    }
+    let removed = 0;
+    for (const username of toRemove) {
+        const result = await deleteProfessionalFileOn(db, username, { retargetProfessionalId: keep.id });
+        if (result && result.deleted) removed += 1;
+    }
+    return { removed, keeper: keep.username };
+}
+
+async function removeExperimentalTestProfessionals(p) {
+    const db = p || getPool();
+    const found = await db.query(
+        `SELECT DISTINCT LOWER(username) AS username FROM (
+            SELECT username FROM professionals
+             WHERE LOWER(username) = 'user.r'
+                OR LOWER(username) ~ '^user\\.r[0-9]{1,2}$'
+                OR LOWER(TRIM(display_name)) = 'r'
+            UNION
+            SELECT username FROM staff_profiles
+             WHERE LOWER(username) = 'user.r'
+                OR LOWER(username) ~ '^user\\.r[0-9]{1,2}$'
+                OR LOWER(TRIM(full_name)) = 'r'
+        ) x
+         WHERE username IS NOT NULL AND TRIM(username) <> ''`
+    );
+    let removed = 0;
+    for (const row of found.rows || []) {
+        const result = await deleteProfessionalFileOn(db, row.username);
+        if (result && result.deleted) removed += 1;
+    }
+    const apps = await db.query(
+        `SELECT id FROM psychologist_applications
+          WHERE LOWER(TRIM(name)) = 'r'
+             OR LOWER(TRIM(COALESCE(payload->>'nome', payload->>'Nome', ''))) = 'r'`
+    );
+    let applications = 0;
+    for (const row of apps.rows || []) {
+        const del = await db.query('DELETE FROM psychologist_applications WHERE id = $1', [row.id]);
+        if (del.rowCount) applications += 1;
+    }
+    return { removed, applications };
+}
+
 function isoDateOnly(value) {
     if (!value) return null;
     if (value instanceof Date && !Number.isNaN(value.getTime())) {
@@ -2344,12 +2648,14 @@ function serializeStaffAreaList(value) {
 
 const STAFF_PROFILE_RETURNING = `username, profession, ordem_number, bio, credentials, iban,
             full_name, nif, citizen_card, address, insurer, insurance_policy, insurance_valid_until,
-            payouts_from_month, consult_languages, primary_area, secondary_area, updated_at, (photo_data IS NOT NULL) AS has_photo`;
+            payouts_from_month, consult_languages, primary_area, secondary_area, professional_id,
+            updated_at, (photo_data IS NOT NULL) AS has_photo`;
 
 function rowToStaffProfile(row) {
     if (!row) return null;
     return {
         username: row.username,
+        professionalId: row.professional_id != null ? Number(row.professional_id) : null,
         profession: row.profession || '',
         ordemNumber: row.ordem_number || '',
         fullName: row.full_name || '',
@@ -2432,9 +2738,13 @@ async function upsertStaffProfile(username, fields) {
         `INSERT INTO staff_profiles (
             username, profession, ordem_number, full_name, nif, citizen_card, address,
             insurer, insurance_policy, insurance_valid_until, bio, credentials, consult_languages,
-            primary_area, secondary_area, updated_at
+            primary_area, secondary_area, professional_id, updated_at
          )
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, NOW())
+         VALUES (
+            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15,
+            (SELECT id FROM professionals WHERE LOWER(username) = $1 LIMIT 1),
+            NOW()
+         )
          ON CONFLICT (username) DO UPDATE SET
             profession = EXCLUDED.profession,
             ordem_number = EXCLUDED.ordem_number,
@@ -2450,6 +2760,7 @@ async function upsertStaffProfile(username, fields) {
             consult_languages = EXCLUDED.consult_languages,
             primary_area = EXCLUDED.primary_area,
             secondary_area = EXCLUDED.secondary_area,
+            professional_id = COALESCE(staff_profiles.professional_id, EXCLUDED.professional_id),
             updated_at = NOW()
          RETURNING ${STAFF_PROFILE_RETURNING}`,
         [
@@ -2467,11 +2778,12 @@ async function upsertStaffPhoto(username, { mime, data }) {
     if (!u || !data) return null;
     const photoMime = String(mime || 'image/jpeg').slice(0, 80);
     const r = await p.query(
-        `INSERT INTO staff_profiles (username, photo_mime, photo_data, updated_at)
-         VALUES ($1, $2, $3, NOW())
+        `INSERT INTO staff_profiles (username, photo_mime, photo_data, professional_id, updated_at)
+         VALUES ($1, $2, $3, (SELECT id FROM professionals WHERE LOWER(username) = $1 LIMIT 1), NOW())
          ON CONFLICT (username) DO UPDATE SET
             photo_mime = EXCLUDED.photo_mime,
             photo_data = EXCLUDED.photo_data,
+            professional_id = COALESCE(staff_profiles.professional_id, EXCLUDED.professional_id),
             updated_at = NOW()
          RETURNING ${STAFF_PROFILE_RETURNING}`,
         [u, photoMime, data]
@@ -2517,10 +2829,11 @@ async function upsertStaffIban(username, iban) {
     if (!u) return null;
     const value = String(iban || '').trim().slice(0, 42);
     const r = await p.query(
-        `INSERT INTO staff_profiles (username, iban, updated_at)
-         VALUES ($1, $2, NOW())
+        `INSERT INTO staff_profiles (username, iban, professional_id, updated_at)
+         VALUES ($1, $2, (SELECT id FROM professionals WHERE LOWER(username) = $1 LIMIT 1), NOW())
          ON CONFLICT (username) DO UPDATE SET
             iban = EXCLUDED.iban,
+            professional_id = COALESCE(staff_profiles.professional_id, EXCLUDED.professional_id),
             updated_at = NOW()
          RETURNING ${STAFF_PROFILE_RETURNING}`,
         [u, value]
@@ -2534,10 +2847,11 @@ async function upsertStaffPayoutsFromMonth(username, monthKey) {
     const month = String(monthKey || '').trim();
     if (!u || !/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) return null;
     const r = await p.query(
-        `INSERT INTO staff_profiles (username, payouts_from_month, updated_at)
-         VALUES ($1, $2, NOW())
+        `INSERT INTO staff_profiles (username, payouts_from_month, professional_id, updated_at)
+         VALUES ($1, $2, (SELECT id FROM professionals WHERE LOWER(username) = $1 LIMIT 1), NOW())
          ON CONFLICT (username) DO UPDATE SET
             payouts_from_month = EXCLUDED.payouts_from_month,
+            professional_id = COALESCE(staff_profiles.professional_id, EXCLUDED.professional_id),
             updated_at = NOW()
          WHERE staff_profiles.payouts_from_month IS NULL
             OR TRIM(staff_profiles.payouts_from_month) = ''
@@ -3068,6 +3382,8 @@ module.exports = {
     findProfessionalByUsername,
     findProfessionalByEmail,
     findProfessionalByDisplayName,
+    findProfessionalByStaffFullName,
+    syncBookingProfessionalLabel,
     insertProfessional,
     updateProfessional,
     deleteProfessional,
@@ -3126,5 +3442,8 @@ module.exports = {
     analyticsBookingStats,
     analyticsApplicationStats,
     replaceEmailTypo,
+    deleteProfessionalFile,
+    removeDuplicateMariaSaraProfessionals,
+    removeExperimentalTestProfessionals,
     closePool
 };

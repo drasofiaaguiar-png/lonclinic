@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         invitations: { title: 'Invitations', subtitle: 'Send and manage booking invites' },
         availability: { title: 'Availability', subtitle: 'Working hours, blocks & slot preview' },
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' },
-        professionals: { title: 'Professionals & Doxy', subtitle: 'Collapsible profile files — active logins vs no login' },
+        professionals: { title: 'Professionals & Doxy', subtitle: 'One person: login, ficha, Doxy and bolsa' },
         psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' },
         producers: { title: 'Diretório produtores', subtitle: 'Moderar candidaturas de produtores biológicos' },
         profile: { title: 'Perfil', subtitle: 'Identificação, dados profissionais, documentos e candidatura' }
@@ -3716,6 +3716,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     let namedProfessionalsCache = [];
     let staffProfilesCache = [];
     let staffDocumentKindsCache = {};
+    const STAFF_PROFESSION_LABELS = {
+        medico: 'Médico',
+        nutricionista: 'Nutricionista',
+        psicologo: 'Psicólogo'
+    };
+    let staffProfessionTitlesCache = { ...STAFF_PROFESSION_LABELS };
     let proUsernameTouched = false;
     const freshPasswordsById = Object.create(null);
     const PRO_PASSWORD_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
@@ -3988,6 +3994,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         return `<a href="${escapeHtml(p.doxyRoomUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${escapeHtml(label)}</a>`;
     }
 
+    function professionalTypeLabel(p) {
+        if (!p) return '';
+        const titles = staffProfessionTitlesCache || STAFF_PROFESSION_LABELS;
+        if (p.professionLabel) return p.professionLabel;
+        const key = String(p.profession || '').trim();
+        if (key && titles[key]) return titles[key];
+        if (p.isBoardFile || (p.bolsa && (p.bolsa.id || p.bolsa.email))) return titles.psicologo || 'Psicólogo';
+        return '';
+    }
+
+    function professionalTypeCell(p) {
+        const label = professionalTypeLabel(p);
+        if (!label) return '—';
+        return `<span class="admin-psych-role-tag">${escapeHtml(label)}</span>`;
+    }
+
     function professionalFileRecord(staff, account) {
         const p = staff || {};
         const a = account || {};
@@ -4000,6 +4022,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             username,
             displayName: p.fullName || p.displayName || a.displayName || username,
             email: p.email || a.email || '',
+            profession: p.profession || '',
+            professionLabel: p.professionLabel || '',
             doxyRoomUrl: p.doxyRoomUrl || a.doxyRoomUrl || '',
             doxyPending: p.doxyPending != null ? p.doxyPending : (a.doxyPending || !a.doxyRoomUrl),
             hasLogin,
@@ -4022,6 +4046,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             bits.push(`<button type="button" class="btn btn-primary btn-sm" data-psych-login="${escapeHtml(p.boardId)}">Assign login</button>`);
         } else if (!p.hasLogin && p.username && !p.isClinicAdmin) {
             bits.push(`<button type="button" class="btn btn-primary btn-sm" data-staff-assign-login="${escapeHtml(p.username)}">Assign login</button>`);
+        }
+        if (p.username && !p.isClinicAdmin) {
+            bits.push(`<button type="button" class="btn btn-outline btn-sm" data-staff-delete-file="${escapeHtml(p.username)}">Remove file</button>`);
         }
         if (p.username) {
             bits.push(`<button type="button" class="btn btn-outline btn-sm" data-staff-edit="${escapeHtml(p.username)}">Editar ficha</button>`);
@@ -4072,6 +4099,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 displayName: a.name || '—',
                 email: a.email || '',
                 phone: a.phone || '',
+                profession: 'psicologo',
+                professionLabel: (staffProfessionTitlesCache && staffProfessionTitlesCache.psicologo) || 'Psicólogo',
                 hasLogin: false,
                 active: false,
                 doxyPending: true,
@@ -4114,6 +4143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return `<details class="admin-psych-row" data-file-key="${escapeHtml(key)}"${openKeys.has(key) ? ' open' : ''}>
                 <summary class="admin-psych-summary">
                     <span class="admin-psych-col admin-psych-col-name">${escapeHtml(title)}</span>
+                    <span class="admin-psych-col admin-psych-col-role">${professionalTypeCell(p)}</span>
                     <span class="admin-psych-col admin-psych-col-user">${escapeHtml(userLabel)}</span>
                     <span class="admin-psych-col admin-psych-col-doxy">${professionalDoxyCell(p)}</span>
                     <span class="admin-psych-col admin-psych-col-login"><span class="${statusClass}">${statusLabel}</span></span>
@@ -4237,6 +4267,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <h4>Identificação</h4>
                 <dl class="admin-staff-profile-dl">
                     <div><dt>Nome</dt><dd>${dashText(p.displayName)}</dd></div>
+                    <div><dt>Tipo</dt><dd>${dashText(professionalTypeLabel(p))}</dd></div>
                     <div><dt>Email</dt><dd>${dashText(p.email)}</dd></div>
                     <div><dt>Telefone</dt><dd>${dashText(p.phone)}</dd></div>
                     <div><dt>Sala Doxy.me</dt><dd>Pendente</dd></div>
@@ -4282,6 +4313,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <h4>Identificação</h4>
                     <dl class="admin-staff-profile-dl">
                         <div><dt>Nome</dt><dd>${dashText(p.fullName)}</dd></div>
+                        <div><dt>Tipo</dt><dd>${dashText(professionalTypeLabel(p))}</dd></div>
                         <div><dt>Email</dt><dd>${dashText(p.email)}</dd></div>
                         <div><dt>Telefone</dt><dd>${dashText(p.phone || (p.bolsa && p.bolsa.phone))}</dd></div>
                         <div><dt>Sala Doxy.me</dt><dd>${p.doxyPending || !p.doxyRoomUrl ? 'Pendente' : dashText(p.doxyRoomUrl)}</dd></div>
@@ -4346,6 +4378,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await res.json();
             staffProfilesCache = data.staff || [];
             staffDocumentKindsCache = data.documentKinds || {};
+            if (data.professions && typeof data.professions === 'object') {
+                staffProfessionTitlesCache = { ...STAFF_PROFESSION_LABELS, ...data.professions };
+            }
             renderAdminProfessionals();
         } catch (err) {
             console.error('Load staff profiles:', err);
@@ -4644,6 +4679,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (adminProfessionalsBody) {
         adminProfessionalsBody.addEventListener('click', async (e) => {
             const staffEditBtn = e.target.closest('[data-staff-edit]');
+            const deleteFileBtn = e.target.closest('[data-staff-delete-file]');
             const assignStaffLoginBtn = e.target.closest('[data-staff-assign-login]');
             const editBtn = e.target.closest('[data-pro-edit]');
             const passwordBtn = e.target.closest('[data-pro-password]');
@@ -4656,6 +4692,28 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const person = staffProfilesCache.find((p) => String(p.username) === String(username))
                     || professionalsCache.find((p) => String(p.username) === String(username));
                 if (person) fillCreateProfileForm(person);
+                return;
+            }
+            if (deleteFileBtn) {
+                const username = deleteFileBtn.getAttribute('data-staff-delete-file');
+                const person = professionalFileRecord(
+                    staffProfilesCache.find((p) => String(p.username) === String(username)),
+                    professionalsCache.find((p) => String(p.username) === String(username))
+                );
+                const label = (person && (person.displayName || person.fullName)) || username || 'this professional';
+                if (!username || !window.confirm(`Remove the file and login for ${label}? This cannot be undone. Bookings keep the name.`)) return;
+                showProfessionalError('');
+                try {
+                    const res = await fetch(`/api/admin/staff-profiles/${encodeURIComponent(username)}`, { method: 'DELETE' });
+                    const data = await res.json().catch(() => ({}));
+                    if (!res.ok) {
+                        showProfessionalError(data.error || 'Could not remove professional file.');
+                        return;
+                    }
+                    await loadAdminProfessionals();
+                } catch (err) {
+                    showProfessionalError('Network error. Please try again.');
+                }
                 return;
             }
             if (assignStaffLoginBtn) {
