@@ -2821,30 +2821,18 @@ async function clearConflictingStaffProfileLink(p, username) {
     await p.query(
         `UPDATE staff_profiles
             SET professional_id = NULL
-          WHERE professional_id = (
+          WHERE professional_id IS NOT NULL
+            AND professional_id = (
                 SELECT id FROM professionals WHERE LOWER(username) = $1 LIMIT 1
-          )
-            AND LOWER(username) <> $1`,
+            )
+            AND username <> $1`,
         [u]
     );
 }
 
-async function queryStaffProfileWrite(p, sql, params, username) {
-    try {
-        return await p.query(sql, params);
-    } catch (err) {
-        if (err && err.code === '23505') {
-            await clearConflictingStaffProfileLink(p, username);
-            return p.query(sql, params);
-        }
-        throw err;
-    }
-}
-
-async function upsertStaffProfile(username, fields) {
-    const p = getPool();
+async function normalizeStaffProfileUsernameRow(p, username) {
     const u = String(username || '').trim().toLowerCase();
-    if (!u) return null;
+    if (!u) return;
     await p.query(
         `UPDATE staff_profiles
             SET username = LOWER(username)
@@ -2855,6 +2843,39 @@ async function upsertStaffProfile(username, fields) {
             )`,
         [u]
     );
+}
+
+async function linkStaffProfileProfessional(p, username) {
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return;
+    const sql = `
+        UPDATE staff_profiles s
+           SET professional_id = p.id
+          FROM professionals p
+         WHERE s.professional_id IS NULL
+           AND LOWER(s.username) = $1
+           AND LOWER(p.username) = $1`;
+    try {
+        await p.query(sql, [u]);
+    } catch (err) {
+        if (!(err && err.code === '23505')) {
+            console.error('linkStaffProfileProfessional:', err.message);
+            return;
+        }
+        try {
+            await clearConflictingStaffProfileLink(p, u);
+            await p.query(sql, [u]);
+        } catch (err2) {
+            console.error('linkStaffProfileProfessional retry:', err2.message);
+        }
+    }
+}
+
+async function upsertStaffProfile(username, fields) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return null;
+    await normalizeStaffProfileUsernameRow(p, u);
     const profession = String(fields.profession || '').trim().slice(0, 32);
     const ordemNumber = String(fields.ordemNumber || '').trim().slice(0, 80);
     const fullName = String(fields.fullName || '').trim().slice(0, 160);
@@ -2874,57 +2895,74 @@ async function upsertStaffProfile(username, fields) {
         insurer, insurancePolicy, insuranceValidUntil, bio, credentials, consultLanguages,
         primaryArea, secondaryArea
     ];
-    const sql = `INSERT INTO staff_profiles (
-            username, profession, ordem_number, full_name, nif, citizen_card, address,
-            insurer, insurance_policy, insurance_valid_until, bio, credentials, consult_languages,
-            primary_area, secondary_area, professional_id, updated_at
-         )
-         VALUES (
-            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15,
-            (SELECT id FROM professionals WHERE LOWER(username) = $1 LIMIT 1),
-            NOW()
-         )
-         ON CONFLICT (username) DO UPDATE SET
-            profession = EXCLUDED.profession,
-            ordem_number = EXCLUDED.ordem_number,
-            full_name = EXCLUDED.full_name,
-            nif = EXCLUDED.nif,
-            citizen_card = EXCLUDED.citizen_card,
-            address = EXCLUDED.address,
-            insurer = EXCLUDED.insurer,
-            insurance_policy = EXCLUDED.insurance_policy,
-            insurance_valid_until = EXCLUDED.insurance_valid_until,
-            bio = EXCLUDED.bio,
-            credentials = EXCLUDED.credentials,
-            consult_languages = EXCLUDED.consult_languages,
-            primary_area = EXCLUDED.primary_area,
-            secondary_area = EXCLUDED.secondary_area,
-            professional_id = COALESCE(staff_profiles.professional_id, EXCLUDED.professional_id),
+    const updateSql = `UPDATE staff_profiles SET
+            profession = $2,
+            ordem_number = $3,
+            full_name = $4,
+            nif = $5,
+            citizen_card = $6,
+            address = $7,
+            insurer = $8,
+            insurance_policy = $9,
+            insurance_valid_until = $10,
+            bio = $11,
+            credentials = $12,
+            consult_languages = $13,
+            primary_area = $14,
+            secondary_area = $15,
             updated_at = NOW()
+         WHERE LOWER(username) = $1
          RETURNING ${STAFF_PROFILE_RETURNING}`;
-    const r = await queryStaffProfileWrite(p, sql, params, u);
-    return r.rows[0] ? rowToStaffProfile(r.rows[0]) : null;
+    let r = await p.query(updateSql, params);
+    if (!r.rows[0]) {
+        try {
+            r = await p.query(
+                `INSERT INTO staff_profiles (
+                    username, profession, ordem_number, full_name, nif, citizen_card, address,
+                    insurer, insurance_policy, insurance_valid_until, bio, credentials, consult_languages,
+                    primary_area, secondary_area, updated_at
+                 )
+                 VALUES (
+                    $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, NOW()
+                 )
+                 RETURNING ${STAFF_PROFILE_RETURNING}`,
+                params
+            );
+        } catch (err) {
+            if (!(err && err.code === '23505')) throw err;
+            r = await p.query(updateSql, params);
+        }
+    }
+    await linkStaffProfileProfessional(p, u);
+    return (r.rows[0] ? rowToStaffProfile(r.rows[0]) : null) || getStaffProfile(u);
 }
 
 async function upsertStaffPhoto(username, { mime, data }) {
     const p = getPool();
     const u = String(username || '').trim().toLowerCase();
     if (!u || !data) return null;
+    await normalizeStaffProfileUsernameRow(p, u);
     const photoMime = String(mime || 'image/jpeg').slice(0, 80);
-    const r = await queryStaffProfileWrite(
-        p,
-        `INSERT INTO staff_profiles (username, photo_mime, photo_data, professional_id, updated_at)
-         VALUES ($1, $2, $3, (SELECT id FROM professionals WHERE LOWER(username) = $1 LIMIT 1), NOW())
-         ON CONFLICT (username) DO UPDATE SET
-            photo_mime = EXCLUDED.photo_mime,
-            photo_data = EXCLUDED.photo_data,
-            professional_id = COALESCE(staff_profiles.professional_id, EXCLUDED.professional_id),
-            updated_at = NOW()
-         RETURNING ${STAFF_PROFILE_RETURNING}`,
-        [u, photoMime, data],
-        u
-    );
-    return rowToStaffProfile(r.rows[0]);
+    const updateSql = `UPDATE staff_profiles
+            SET photo_mime = $2, photo_data = $3, updated_at = NOW()
+          WHERE LOWER(username) = $1
+          RETURNING ${STAFF_PROFILE_RETURNING}`;
+    let r = await p.query(updateSql, [u, photoMime, data]);
+    if (!r.rows[0]) {
+        try {
+            r = await p.query(
+                `INSERT INTO staff_profiles (username, photo_mime, photo_data, updated_at)
+                 VALUES ($1, $2, $3, NOW())
+                 RETURNING ${STAFF_PROFILE_RETURNING}`,
+                [u, photoMime, data]
+            );
+        } catch (err) {
+            if (!(err && err.code === '23505')) throw err;
+            r = await p.query(updateSql, [u, photoMime, data]);
+        }
+    }
+    await linkStaffProfileProfessional(p, u);
+    return r.rows[0] ? rowToStaffProfile(r.rows[0]) : getStaffProfile(u);
 }
 
 async function getStaffPhoto(username) {
@@ -2963,20 +3001,28 @@ async function upsertStaffIban(username, iban) {
     const p = getPool();
     const u = String(username || '').trim().toLowerCase();
     if (!u) return null;
+    await normalizeStaffProfileUsernameRow(p, u);
     const value = String(iban || '').trim().slice(0, 42);
-    const r = await queryStaffProfileWrite(
-        p,
-        `INSERT INTO staff_profiles (username, iban, professional_id, updated_at)
-         VALUES ($1, $2, (SELECT id FROM professionals WHERE LOWER(username) = $1 LIMIT 1), NOW())
-         ON CONFLICT (username) DO UPDATE SET
-            iban = EXCLUDED.iban,
-            professional_id = COALESCE(staff_profiles.professional_id, EXCLUDED.professional_id),
-            updated_at = NOW()
-         RETURNING ${STAFF_PROFILE_RETURNING}`,
-        [u, value],
-        u
-    );
-    return rowToStaffProfile(r.rows[0]);
+    const updateSql = `UPDATE staff_profiles
+            SET iban = $2, updated_at = NOW()
+          WHERE LOWER(username) = $1
+          RETURNING ${STAFF_PROFILE_RETURNING}`;
+    let r = await p.query(updateSql, [u, value]);
+    if (!r.rows[0]) {
+        try {
+            r = await p.query(
+                `INSERT INTO staff_profiles (username, iban, updated_at)
+                 VALUES ($1, $2, NOW())
+                 RETURNING ${STAFF_PROFILE_RETURNING}`,
+                [u, value]
+            );
+        } catch (err) {
+            if (!(err && err.code === '23505')) throw err;
+            r = await p.query(updateSql, [u, value]);
+        }
+    }
+    await linkStaffProfileProfessional(p, u);
+    return r.rows[0] ? rowToStaffProfile(r.rows[0]) : getStaffProfile(u);
 }
 
 async function upsertStaffPayoutsFromMonth(username, monthKey) {
@@ -2984,20 +3030,31 @@ async function upsertStaffPayoutsFromMonth(username, monthKey) {
     const u = String(username || '').trim().toLowerCase();
     const month = String(monthKey || '').trim();
     if (!u || !/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) return null;
-    const r = await queryStaffProfileWrite(
-        p,
-        `INSERT INTO staff_profiles (username, payouts_from_month, professional_id, updated_at)
-         VALUES ($1, $2, (SELECT id FROM professionals WHERE LOWER(username) = $1 LIMIT 1), NOW())
-         ON CONFLICT (username) DO UPDATE SET
-            payouts_from_month = EXCLUDED.payouts_from_month,
-            professional_id = COALESCE(staff_profiles.professional_id, EXCLUDED.professional_id),
-            updated_at = NOW()
-         WHERE staff_profiles.payouts_from_month IS NULL
-            OR TRIM(staff_profiles.payouts_from_month) = ''
-         RETURNING ${STAFF_PROFILE_RETURNING}`,
-        [u, month],
-        u
-    );
+    await normalizeStaffProfileUsernameRow(p, u);
+    const existing = await getStaffProfile(u);
+    if (existing && String(existing.payoutsFromMonth || '').trim()) {
+        return existing;
+    }
+    const updateSql = `UPDATE staff_profiles
+            SET payouts_from_month = $2, updated_at = NOW()
+          WHERE LOWER(username) = $1
+            AND (payouts_from_month IS NULL OR TRIM(payouts_from_month) = '')
+          RETURNING ${STAFF_PROFILE_RETURNING}`;
+    let r = await p.query(updateSql, [u, month]);
+    if (!r.rows[0] && !(existing && existing.updatedAt)) {
+        try {
+            r = await p.query(
+                `INSERT INTO staff_profiles (username, payouts_from_month, updated_at)
+                 VALUES ($1, $2, NOW())
+                 RETURNING ${STAFF_PROFILE_RETURNING}`,
+                [u, month]
+            );
+        } catch (err) {
+            if (!(err && err.code === '23505')) throw err;
+            r = await p.query(updateSql, [u, month]);
+        }
+    }
+    await linkStaffProfileProfessional(p, u);
     if (r.rows[0]) return rowToStaffProfile(r.rows[0]);
     return getStaffProfile(u);
 }

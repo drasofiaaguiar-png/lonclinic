@@ -902,6 +902,10 @@ body.dash-portal .dash-stat-card {
     max-width: 42rem;
 }
 
+.clinic-toggle-label[hidden] {
+    display: none !important;
+}
+
 .clinic-toggle-label input[type='checkbox'] {
     width: 18px;
     height: 18px;
