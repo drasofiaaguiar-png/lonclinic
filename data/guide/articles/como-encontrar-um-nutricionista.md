@@ -3,7 +3,7 @@
 <ul>
 <li>Em nutrição, o sinal de alarme mais comum não é incompetência técnica — é vender suplementos, batidos ou «dietas de 3 passos» antes de perceber o teu historial.</li>
 <li>Em Portugal, só pode exercer quem está inscrito na Ordem dos Nutricionistas; confirma o número de cédula no registo nacional.</li>
-<li>Um plano equilibrado também pode falhar se o tom não te motivar. Tal como com o [psicólogo](/blog/como-encontrar-um-psicologo), não basta ser bom: tem de ser bom para ti.</li>
+<li>Um plano equilibrado também pode falhar se o tom não te motivar. Tal como com o <a href="/blog/como-encontrar-um-psicologo">psicólogo</a>, não basta ser bom: tem de ser bom para ti.</li>
 </ul>
 </aside>
 
