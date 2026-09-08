@@ -1,6 +1,91 @@
 {
     "articles": [
         {
+            "slug": "como-encontrar-um-nutricionista",
+            "title": "Como encontrar um nutricionista de que gostes (mesmo) em Portugal",
+            "description": "Sinais de alerta (suplementos, dietas milagrosas) e o que procurar: cédula da Ordem, comida real e um encaixe que te motive — não só um plano certo no papel.",
+            "datePublished": "2026-09-08",
+            "dateModified": "2026-09-08",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "image": "/image/guide/guide-opera-coast.jpg",
+            "about": "Perda de peso",
+            "verified": false,
+            "ctaKind": "nutricao-programa",
+            "liveSlots": true,
+            "slotService": "nutricao-programa",
+            "readingMinutes": 6,
+            "related": [
+                "como-encontrar-um-psicologo",
+                "nutricionista-plano-perda-de-peso",
+                "perda-de-peso-sustentavel",
+                "fome-emocional-vs-fisica",
+                "efeito-ioio"
+            ],
+            "faq": [
+                {
+                    "q": "Como sei se o nutricionista está a vender-me um produto em vez de me acompanhar?",
+                    "a": "Sinais úteis: suplementos ou batidos logo na primeira consulta, vendidos pela própria clínica; dietas com nome de marketing e prazo milagroso; lanches processados no lugar de comida real. Um plano que começa pela tua alimentação e só suplementa com indicação clínica vai no sentido contrário."
+                },
+                {
+                    "q": "Como confirmo se um nutricionista pode exercer em Portugal?",
+                    "a": "Pede o número de cédula profissional e confirma no registo nacional da Ordem dos Nutricionistas, pelo nome ou pelo número. Sem inscrição, o exercício da profissão não é legal."
+                },
+                {
+                    "q": "E se o plano estiver certo mas eu não me sentir motivada?",
+                    "a": "Também é motivo para mudar. Explicar o «o quê» sem um «porquê» que te faça sentido, ou um tom demasiado distante para os hábitos que precisas de alterar, é um mau encaixe — não um falhanço teu."
+                },
+                {
+                    "q": "A Lon Clinic vende suplementos ou receituário de Ozempic?",
+                    "a": "Não. A abordagem é alimentação e hábitos. A clínica não prescreve aGLP-1 para perda de peso; suplementação, quando entra, é excepção clínica, não venda."
+                }
+            ]
+        },
+        {
+            "slug": "como-encontrar-um-psicologo",
+            "title": "Como encontrar um psicólogo de que gostes (mesmo) em Portugal",
+            "description": "A aliança terapêutica prediz o resultado mais do que a técnica. Guia prático para escolher psicólogo em Portugal: cédula OPP, primeira sessão e quando mudar.",
+            "datePublished": "2026-09-08",
+            "dateModified": "2026-09-08",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "about": "Psicologia",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 7,
+            "related": [
+                "talvez-devesses-falar-com-alguem",
+                "como-a-terapia-ajuda-autoconhecimento",
+                "como-encontrar-um-nutricionista",
+                "tcc-para-ansiedade",
+                "telemedicina-em-casa",
+                "adhd-em-adultos-sintomas"
+            ],
+            "faq": [
+                {
+                    "q": "A recomendação de um amigo chega para escolher psicólogo?",
+                    "a": "É um bom ponto de partida para saber se o profissional é competente, mas não te diz se o estilo dele encaixa no que precisas. Um psicólogo diretivo pode ser excelente para uma pessoa e errado para outra."
+                },
+                {
+                    "q": "Como confirmo se um psicólogo pode exercer em Portugal?",
+                    "a": "Pede o número de cédula profissional e confirma no directório da Ordem dos Psicólogos Portugueses, pelo nome ou pelo número. Sem inscrição na OPP, o exercício da psicologia em Portugal não é legal."
+                },
+                {
+                    "q": "Quantas sessões devo dar antes de mudar?",
+                    "a": "Duas ou três sessões chegam, na maior parte dos casos, para perceber se te sentes ouvida e à vontade. Se depois disso ainda estiveres a «monitorizar» o que dizes, está bem mudar — não é um fracasso."
+                },
+                {
+                    "q": "A terapia online funciona tão bem como a presencial?",
+                    "a": "Para muita gente, sim: a evidência sobre a aliança terapêutica mantém-se no formato à distância. O que muda é a logística e, para algumas pessoas, o à vontade de estar em casa. Se preferires a sala, essa preferência é válida."
+                }
+            ]
+        },
+        {
             "slug": "centros-de-vacinacao-internacional-portugal",
             "title": "Centros de Vacinação Internacional em Portugal: guia completo por região (2026)",
             "description": "Contactos, horários e experiência real de marcação em todos os Centros de Vacinação Internacional em Portugal. Consulta do viajante online, 39 €.",
@@ -364,6 +449,7 @@
             "related": [
                 "ansiedade-normal-ou-perturbacao",
                 "quando-a-ansiedade-justifica-medicacao",
+                "como-encontrar-um-psicologo",
                 "os-10-bestsellers-psicologia-saude-mental"
             ],
             "faq": [
@@ -1115,6 +1201,7 @@
             "related": [
                 "deficit-calorico",
                 "efeito-ioio",
+                "como-encontrar-um-nutricionista",
                 "nutricionista-plano-perda-de-peso"
             ],
             "faq": [
@@ -1551,6 +1638,7 @@
             "readingMinutes": 3,
             "related": [
                 "perda-de-peso-sustentavel",
+                "como-encontrar-um-nutricionista",
                 "perda-de-peso-e-saude-hormonal",
                 "contagem-de-calorias"
             ],
@@ -2046,6 +2134,7 @@
             "related": [
                 "o-que-e-autoconhecimento",
                 "tcc-para-ansiedade",
+                "como-encontrar-um-psicologo",
                 "journaling-terapeutico"
             ],
             "faq": [
@@ -3410,6 +3499,7 @@
             "related": [
                 "primeiros-sinais-de-depressao",
                 "depressao-mitos-e-factos",
+                "como-encontrar-um-psicologo",
                 "quando-o-burnout-se-transforma-em-algo-mais-serio"
             ],
             "faq": [
@@ -5160,6 +5250,7 @@
             "related": [
                 "adhd-em-adultos-sintomas",
                 "autismo-em-mulheres-diagnostico-tardio",
+                "como-encontrar-um-psicologo",
                 "marcacao-guia-rapido"
             ]
         },

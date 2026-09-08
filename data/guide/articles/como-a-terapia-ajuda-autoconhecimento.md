@@ -20,7 +20,7 @@ A [terapia cognitivo-comportamental](/blog/tcc-para-ansiedade) ajuda a identific
 
 ## A própria relação terapêutica importa
 
-Para além das técnicas específicas, sentir-se genuinamente compreendido e aceite por outra pessoa — o terapeuta — pode, por si só, funcionar como uma experiência corretiva importante, especialmente para quem cresceu sem essa experiência de ser verdadeiramente visto por alguém. Pode [marcar uma consulta de saúde mental](/marcar/saude-mental) ou ver [psicologia](/saudemental).
+Para além das técnicas específicas, sentir-se genuinamente compreendido e aceite por outra pessoa — o terapeuta — pode, por si só, funcionar como uma experiência corretiva importante, especialmente para quem cresceu sem essa experiência de ser verdadeiramente visto por alguém. [Escolher o psicólogo certo](/blog/como-encontrar-um-psicologo) faz parte desse processo. Pode [marcar uma consulta de saúde mental](/marcar/saude-mental) ou ver [psicologia](/saudemental).
 
 ## Perguntas frequentes
 

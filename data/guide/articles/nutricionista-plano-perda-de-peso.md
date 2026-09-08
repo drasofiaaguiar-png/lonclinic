@@ -10,6 +10,8 @@
 
 Duas pessoas com o mesmo peso e o mesmo objetivo podem precisar de estratégias completamente diferentes para chegar lá — e é exatamente aqui que um plano genérico encontrado online tende a falhar onde uma avaliação nutricional profissional tem sucesso.
 
+Antes de marcar, [como encontrar um nutricionista em Portugal](/blog/como-encontrar-um-nutricionista) ajuda a distinguir quem ensina a comer de quem está sobretudo a vender um produto.
+
 Fatores como metabolismo basal, condições de saúde subjacentes (tiroide, resistência à insulina, questões hormonais), rotina de trabalho, preferências e restrições alimentares, e histórico de relação com a comida influenciam significativamente que estratégia tem probabilidade real de funcionar. Na Lon Clinic a orientação nutricional faz-se em [consulta médica online](/nutricao), com encaminhamento para nutricionista quando o plano pede mais detalhe.
 
 {{cta}}

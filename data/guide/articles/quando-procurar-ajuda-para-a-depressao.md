@@ -20,7 +20,7 @@ Perda de peso ou apetite significativa, incapacidade de sair da cama ou cumprir 
 
 ## Onde procurar ajuda em Portugal
 
-Uma consulta de medicina geral, presencial ou por [telemedicina](/blog/telemedicina-em-casa), é frequentemente um bom ponto de partida, podendo encaminhar para [psicologia](/saudemental) ou psiquiatria consoante a gravidade. Pode [marcar uma consulta de saúde mental](/marcar/saude-mental). Em situação de crise ou pensamentos de autoagressão, a linha SNS 24 (808 24 24 24) e os serviços de urgência estão disponíveis para apoio imediato.
+Uma consulta de medicina geral, presencial ou por [telemedicina](/blog/telemedicina-em-casa), é frequentemente um bom ponto de partida, podendo encaminhar para [psicologia](/saudemental) ou psiquiatria consoante a gravidade. [Como escolher um psicólogo em Portugal](/blog/como-encontrar-um-psicologo) descreve o que verificar antes da primeira sessão. Pode [marcar uma consulta de saúde mental](/marcar/saude-mental). Em situação de crise ou pensamentos de autoagressão, a linha SNS 24 (808 24 24 24) e os serviços de urgência estão disponíveis para apoio imediato.
 
 ## Perguntas frequentes
 

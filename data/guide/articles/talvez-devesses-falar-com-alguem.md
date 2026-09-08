@@ -12,7 +12,7 @@ A psicoterapeuta Lori Gottlieb desmistifica o processo terapêutico através de 
 
 ## O que a evidência científica diz
 
-A aliança terapêutica — a relação de confiança e colaboração entre paciente e terapeuta — é um dos preditores mais consistentes de sucesso em saúde mental. Uma meta-análise de referência (Flückiger, Del Re, Wampold & Horvath, *Psychotherapy*, 2018), que reuniu 295 estudos e mais de 30 mil pacientes, encontrou uma associação robusta e consistente entre a qualidade da aliança terapêutica e o resultado do tratamento — mantendo-se em diferentes abordagens teóricas, formatos (presencial ou online) e populações de pacientes.
+A aliança terapêutica — a relação de confiança e colaboração entre paciente e terapeuta — é um dos preditores mais consistentes de sucesso em saúde mental. Uma meta-análise de referência (Flückiger, Del Re, Wampold & Horvath, *Psychotherapy*, 2018), que reuniu 295 estudos e mais de 30 mil pacientes, encontrou uma associação robusta e consistente entre a qualidade da aliança terapêutica e o resultado do tratamento — mantendo-se em diferentes abordagens teóricas, formatos (presencial ou online) e populações de pacientes. Por isso, [encontrar o psicólogo certo](/blog/como-encontrar-um-psicologo) importa tanto como a escola teórica.
 
 A armadilha moderna que o livro combate é o autodiagnóstico nas redes sociais. Identificar-se com «sintomas de TDAH ou ansiedade» vistos em vídeos curtos cria um viés de confirmação que pode atrasar a identificação e o tratamento da causa real do sofrimento. Distinguir [ansiedade normal de perturbação](/blog/ansiedade-normal-ou-perturbacao) e perceber [quando a ansiedade justifica medicação](/blog/quando-a-ansiedade-justifica-medicacao) exige conversa clínica, não um reel.
 
