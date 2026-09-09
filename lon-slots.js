@@ -136,6 +136,15 @@
                 servicePriceCents: 6000
             };
         }
+        if (service === 'psicologia') {
+            return {
+                service: 'psicologia',
+                tipo: 'psicologia',
+                serviceLabel: lang === 'en' ? 'Psychology session' : lang === 'es' ? 'Sesi\u00f3n de psicolog\u00eda' : 'Sess\u00e3o de Psicologia',
+                servicePrice: formatEuro(60),
+                servicePriceCents: 6000
+            };
+        }
         if (service === 'saude_mental') {
             return {
                 service: 'saude_mental',
@@ -218,14 +227,26 @@
     var slotsMemory = { data: null, ts: 0, inflight: null };
     var SLOTS_TTL_MS = 45000;
     var SLOTS_STALE_MS = 120000;
-    var SLOTS_CACHE_KEY = 'lonNextSlots:v3';
+    var SLOTS_CACHE_KEY = 'lonNextSlots:v4';
+
+    function currentSlotsService() {
+        try {
+            return landingBookMeta().service || 'clinica_geral';
+        } catch (e) {
+            return 'clinica_geral';
+        }
+    }
+
+    function slotsCacheKey() {
+        return SLOTS_CACHE_KEY + ':' + currentSlotsService();
+    }
 
     function readSlotsCache() {
         if (slotsMemory.data && (Date.now() - slotsMemory.ts) < SLOTS_STALE_MS) {
             return { data: slotsMemory.data, ts: slotsMemory.ts };
         }
         try {
-            var raw = sessionStorage.getItem(SLOTS_CACHE_KEY);
+            var raw = sessionStorage.getItem(slotsCacheKey());
             if (!raw) return null;
             var parsed = JSON.parse(raw);
             if (!parsed || !parsed.data || !parsed.ts) return null;
@@ -242,13 +263,13 @@
         slotsMemory.data = data;
         slotsMemory.ts = Date.now();
         try {
-            sessionStorage.setItem(SLOTS_CACHE_KEY, JSON.stringify({ data: data, ts: slotsMemory.ts }));
+            sessionStorage.setItem(slotsCacheKey(), JSON.stringify({ data: data, ts: slotsMemory.ts }));
         } catch (e) { /* private mode */ }
     }
 
     function fetchSlotsNetwork() {
         if (slotsMemory.inflight) return slotsMemory.inflight;
-        slotsMemory.inflight = fetch('/api/next-slots?limit=8&withinHours=168', { credentials: 'same-origin' })
+        slotsMemory.inflight = fetch('/api/next-slots?limit=8&withinHours=168&service=' + encodeURIComponent(currentSlotsService()), { credentials: 'same-origin' })
             .then(function (r) {
                 return r.json().then(function (data) {
                     data = data || {};
@@ -351,6 +372,17 @@
         var fallback = opts.fallbackHref || '/marcar/clinica-geral';
         if (opts.bookMode === 'link') {
             window.location.href = fallback;
+            return;
+        }
+        if ((opts.service || '') === 'psicologia') {
+            var psiDest = fallback || '/marcar/psicologia';
+            try {
+                var u = new URL(psiDest, window.location.origin);
+                if (slot && slot.date) u.searchParams.set('date', slot.date);
+                if (slot && slot.time) u.searchParams.set('time', slot.time);
+                psiDest = u.pathname + u.search;
+            } catch (e) { /* keep fallback */ }
+            window.location.href = psiDest;
             return;
         }
         var meta = serviceMeta(opts.service || 'clinica_geral');
@@ -473,10 +505,13 @@
             return { service: 'saude_mental', href: '/triagem', cta: talkCta, bookMode: 'link' };
         }
         if (/\/(saudemental|psicologia)(\/|$)/.test(p)) {
-            return { service: 'saude_mental', href: '/saudemental', cta: book };
+            return { service: 'psicologia', href: '/marcar/psicologia', cta: book };
         }
         if (/\/consultas(\/|$)/.test(p)) {
             return { service: 'saude_mental', href: '/triagem', cta: talkCta, bookMode: 'link' };
+        }
+        if (/\/marcar\/psicologia/.test(p)) {
+            return { service: 'psicologia', href: '/marcar/psicologia', cta: book };
         }
         if (/\/marcar\/burnout-programa/.test(p)) {
             return { service: 'burnout_programa', href: '/marcar/burnout-programa', cta: book };

@@ -7,7 +7,7 @@
 </ul>
 </aside>
 
-Em Portugal, uma consulta de psicologia no sector privado custa, em média, **entre 40 € e 70 €**, sendo 60 € o valor mais comum. A primeira consulta é por vezes ligeiramente mais cara do que as seguintes. Quem tem ADSE ou determinados seguros de saúde pode reduzir este custo através de reembolso ou comparticipação.
+Em Portugal, uma consulta de psicologia no sector privado custa, em média, **entre 40 € e 70 €**, sendo 60 € o valor mais comum. A primeira consulta é por vezes ligeiramente mais cara do que as seguintes. Quem tem ADSE ou determinados seguros de saúde pode reduzir este custo através de reembolso ou comparticipação. Há também [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal) — SNS, Cheque-Psicólogo (Cuida-te) e gabinetes universitários — com listas de espera e critérios próprios.
 
 Consultas online, como as da Lon Clinic, tendem a ter um preço fixo e mais previsível: **60 €** por sessão avulsa, o mesmo valor independentemente do psicólogo ou da especialidade. No acompanhamento semanal o preço desce para **54 €/semana**.
 
@@ -31,7 +31,7 @@ A eficácia da terapia online, para a generalidade dos casos, é hoje considerad
 
 ## Privado vs comparticipado: quanto posso poupar?
 
-Se for beneficiário da **ADSE**, pode obter reembolso pelas consultas de psicologia em regime livre, o que reduz o custo efectivo por sessão. O valor exacto e o número de actos comparticipados por ano estão na tabela ADSE em vigor — confirme no [site da ADSE](https://www.adse.pt/) antes de agendar.
+Se for beneficiário da **ADSE**, pode obter reembolso pelas consultas de psicologia em regime livre, o que reduz o custo efectivo por sessão. O valor exacto e o número de actos comparticipados por ano estão na tabela ADSE em vigor — confirme no [site da ADSE](https://www.adse.pt/) e no guia [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal) antes de agendar.
 
 Algumas seguradoras de saúde privadas também cobrem psicologia, embora a cobertura seja ainda desigual entre operadoras. Vale sempre a pena confirmar as condições do seu plano. O [guia de seguros de saúde em Portugal](/blog/seguros-saude-portugal-guia) explica a diferença entre rede convencionada e reembolso; [seguro de saúde: compensa?](/blog/seguro-saude-compensa) compara o prémio anual com o custo de pagar consulta a consulta.
 

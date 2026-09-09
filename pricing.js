@@ -22,6 +22,7 @@ const SERVICE_CENTS = {
     burnout_programa: 49000,
     renovacao: 1900,
     longevidade: 7900,
+    psicologia: 6000,
     nutricao_programa: 11500,
     nutricao_completo: 22700,
     nutricao_completo_reforcado: 32200

@@ -61,6 +61,15 @@
                     'Privacy and adequate time for clinical conversation.'
                 ]
             },
+            psicologia: {
+                label: 'Psychology session',
+                duration: '50–60 min',
+                bullets: [
+                    'Video session with a Lon Clinic psychologist.',
+                    'Choose the area of support first; the calendar only shows who treats that specialty.',
+                    'If two psychologists are free at the same time, you see both and choose.'
+                ]
+            },
             burnout: {
                 label: 'Specialized Burnout Consultation',
                 duration: '60 min',
@@ -183,6 +192,15 @@
                     'Privacidad y tiempo adecuado para la conversación clínica.'
                 ]
             },
+            psicologia: {
+                label: 'Sesión de psicología',
+                duration: '50–60 min',
+                bullets: [
+                    'Sesión por videollamada con un psicólogo de LON Clinic.',
+                    'Elija primero el área de apoyo; el calendario solo muestra a quien trata esa especialidad.',
+                    'Si dos psicólogos tienen la misma hora, ve ambos y elige.'
+                ]
+            },
             burnout: {
                 label: 'Consulta especializada en burnout',
                 duration: '60 min',
@@ -264,7 +282,8 @@
         longevidade: 'longevidade',
         nutricao_programa: 'nutricao-programa',
         nutricao_completo: 'nutricao-completo',
-        nutricao_completo_reforcado: 'nutricao-completo-reforcado'
+        nutricao_completo_reforcado: 'nutricao-completo-reforcado',
+        psicologia: 'psicologia'
     };
     var SLUG_TO_TYPE = {
         urgente: 'urgente',
@@ -287,7 +306,8 @@
         'nutricao-completo': 'nutricao_completo',
         nutricao_completo: 'nutricao_completo',
         'nutricao-completo-reforcado': 'nutricao_completo_reforcado',
-        nutricao_completo_reforcado: 'nutricao_completo_reforcado'
+        nutricao_completo_reforcado: 'nutricao_completo_reforcado',
+        psicologia: 'psicologia'
     };
 
     var BURNOUT_FAMILY = ['burnout', 'burnout_mensal', 'burnout_programa'];
@@ -443,6 +463,18 @@
                 'Privacidade e tempo adequado à conversa clínica.'
             ]
         },
+        psicologia: {
+            label: 'Sessão de Psicologia',
+            price: '€60',
+            cents: 6000,
+            duration: '50–60 min',
+            serviceKey: 'psicologia',
+            bullets: [
+                'Sessão por videochamada com um psicólogo da LON Clinic.',
+                'Escolha primeiro a área de apoio; o calendário mostra só quem trata essa especialidade.',
+                'Se dois psicólogos tiverem a mesma hora, vê ambos e escolhe.'
+            ]
+        },
         burnout: {
             label: 'Consulta Especializada em Burnout',
             price: '€60',
@@ -580,6 +612,9 @@
     if (errHide) errHide.style.display = 'none';
     applyPrettyUrlIfNeeded(tipo);
 
+    var scheduleWrapEarly = document.getElementById('marcarScheduleWrap');
+    if (scheduleWrapEarly) scheduleWrapEarly.hidden = tipo === 'psicologia';
+
     function needsConsultLangPolicy() {
         var params = new URLSearchParams(window.location.search);
         if (params.get('langpolicy') === 'en-es-pt') return true;
@@ -648,8 +683,59 @@
         calYear: new Date().getFullYear(),
         date: null,
         dateLabel: '',
-        time: null
+        time: null,
+        specialty: null,
+        specialties: [],
+        bookableDates: [],
+        professionalsByTime: {},
+        professionalId: null,
+        professionalName: null
     };
+
+    function isPsychology() {
+        return tipo === 'psicologia';
+    }
+
+    function psychologyCopy() {
+        var lang = getLang();
+        if (lang === 'en') {
+            return {
+                kicker: 'Support',
+                heading: 'What kind of support are you looking for?',
+                sub: 'The calendar only shows psychologists who treat this area.',
+                choosePro: 'More than one psychologist is free at this time. Choose who you prefer.',
+                emptyDays: 'No published times in this area right now. Try another area or contact us.'
+            };
+        }
+        if (lang === 'es') {
+            return {
+                kicker: 'Apoyo',
+                heading: '¿Qué tipo de apoyo busca?',
+                sub: 'El calendario solo muestra psicólogos que tratan esta área.',
+                choosePro: 'Hay más de un psicólogo libre a esta hora. Elija a quién prefiere.',
+                emptyDays: 'No hay horarios publicados en esta área ahora. Pruebe otra área o contáctenos.'
+            };
+        }
+        return {
+            kicker: 'Apoio',
+            heading: 'Que tipo de apoio procura?',
+            sub: 'O calendário mostra só psicólogos que tratam esta área.',
+            choosePro: 'Há mais do que um psicólogo livre nesta hora. Escolha quem prefere.',
+            emptyDays: 'Não há horários publicados nesta área neste momento. Experimente outra área ou contacte-nos.'
+        };
+    }
+
+    function escapeHtml(value) {
+        return String(value || '').replace(/[&<>"']/g, function (ch) {
+            return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
+        });
+    }
+
+    function initialsFromName(name) {
+        var parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+        if (!parts.length) return 'P';
+        return (parts[0].charAt(0) + (parts[1] ? parts[1].charAt(0) : '')).toUpperCase();
+    }
 
     document.getElementById('marcarTitle').textContent = consulta.label;
     document.getElementById('marcarPrice').textContent = consulta.price + (consulta.priceNote || '');
@@ -669,10 +755,167 @@
     }
 
     function loadSchedule() {
+        if (isPsychology()) return Promise.resolve();
         return fetch('/api/schedule')
             .then(function (r) { return r.ok ? r.json() : null; })
             .then(function (d) { state.scheduleData = d; })
             .catch(function () { state.scheduleData = null; });
+    }
+
+    function loadBookableDays() {
+        if (!isPsychology() || !state.specialty) {
+            state.bookableDates = [];
+            return Promise.resolve();
+        }
+        return fetch('/api/bookable-days?service=psicologia&specialty=' + encodeURIComponent(state.specialty))
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (d) { state.bookableDates = (d && d.dates) || []; })
+            .catch(function () { state.bookableDates = []; });
+    }
+
+    function syncPsychologyUrl() {
+        if (!isPsychology() || !window.history || typeof window.history.replaceState !== 'function') return;
+        var params = new URLSearchParams(window.location.search);
+        params.delete('tipo');
+        if (state.specialty) params.set('specialty', state.specialty);
+        else params.delete('specialty');
+        var rest = params.toString();
+        var pretty = '/marcar/psicologia' + (rest ? '?' + rest : '');
+        var current = window.location.pathname + window.location.search;
+        if (current !== pretty) window.history.replaceState(null, '', pretty);
+    }
+
+    function applySpecialtyCopy() {
+        var copy = psychologyCopy();
+        var kicker = document.getElementById('marcarSpecialtyKicker');
+        var heading = document.getElementById('marcarSpecialtyHeading');
+        var sub = document.getElementById('marcarSpecialtySub');
+        if (kicker) kicker.textContent = copy.kicker;
+        if (heading) heading.textContent = copy.heading;
+        if (sub) sub.textContent = copy.sub;
+        var scheduleSub = document.getElementById('marcarScheduleSub');
+        if (scheduleSub && isPsychology()) {
+            scheduleSub.textContent = state.bookableDates && state.bookableDates.length
+                ? copy.sub
+                : (state.specialty ? copy.emptyDays : copy.sub);
+        }
+    }
+
+    function renderSpecialtyButtons() {
+        var grid = document.getElementById('marcarSpecialties');
+        if (!grid) return;
+        grid.innerHTML = '';
+        state.specialties.forEach(function (spec) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'marcar-spec-card' + (state.specialty === spec.id ? ' is-active' : '');
+            btn.textContent = spec.label;
+            btn.setAttribute('aria-pressed', state.specialty === spec.id ? 'true' : 'false');
+            btn.addEventListener('click', function () { selectSpecialty(spec.id); });
+            grid.appendChild(btn);
+        });
+    }
+
+    function selectSpecialty(id) {
+        state.specialty = id;
+        state.date = null;
+        state.dateLabel = '';
+        state.time = null;
+        state.professionalId = null;
+        state.professionalName = null;
+        state.professionalsByTime = {};
+        if (btnNext) btnNext.disabled = true;
+        var quick = document.getElementById('marcarQuickSlots');
+        if (quick) quick.hidden = true;
+        hideProfessionals();
+        renderSpecialtyButtons();
+        syncPsychologyUrl();
+        var scheduleWrap = document.getElementById('marcarScheduleWrap');
+        if (scheduleWrap) scheduleWrap.hidden = false;
+        return loadBookableDays().then(function () {
+            applySpecialtyCopy();
+            renderCalendar();
+            applyUrlDateTime();
+            return loadQuickSlots();
+        });
+    }
+
+    function initPsychologyFlow() {
+        var section = document.getElementById('marcarSpecialtySection');
+        var scheduleWrap = document.getElementById('marcarScheduleWrap');
+        if (section) section.hidden = false;
+        if (scheduleWrap) scheduleWrap.hidden = true;
+        applySpecialtyCopy();
+        var fromUrl = new URLSearchParams(window.location.search).get('specialty');
+        return fetch('/api/psychology/specialties?lang=' + encodeURIComponent(getLang()))
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (data) {
+                state.specialties = (data && data.specialties) || [];
+                renderSpecialtyButtons();
+                if (fromUrl && state.specialties.some(function (s) { return s.id === fromUrl; })) {
+                    return selectSpecialty(fromUrl);
+                }
+            })
+            .catch(function () {
+                state.specialties = [];
+            });
+    }
+
+    function hideProfessionals() {
+        var wrap = document.getElementById('marcarPros');
+        if (wrap) {
+            wrap.innerHTML = '';
+            wrap.hidden = true;
+        }
+    }
+
+    function applyProfessionalsForTime(pros) {
+        var wrap = document.getElementById('marcarPros');
+        state.professionalId = null;
+        state.professionalName = null;
+        if (!isPsychology()) {
+            hideProfessionals();
+            if (btnNext) btnNext.disabled = false;
+            return;
+        }
+        var list = Array.isArray(pros) ? pros : [];
+        if (!list.length) {
+            hideProfessionals();
+            if (btnNext) btnNext.disabled = true;
+            return;
+        }
+        if (list.length === 1) {
+            state.professionalId = list[0].id;
+            state.professionalName = list[0].name;
+            hideProfessionals();
+            if (btnNext) btnNext.disabled = false;
+            return;
+        }
+        if (btnNext) btnNext.disabled = true;
+        if (!wrap) return;
+        wrap.hidden = false;
+        wrap.innerHTML = '<p class="marcar-pros-kicker">' + escapeHtml(psychologyCopy().choosePro) + '</p>';
+        list.forEach(function (pro) {
+            var card = document.createElement('button');
+            card.type = 'button';
+            card.className = 'marcar-pro-card';
+            var photo = pro.photoUrl
+                ? '<img class="marcar-pro-photo" src="' + escapeHtml(pro.photoUrl) + '" alt="">'
+                : '<span class="marcar-pro-fallback" aria-hidden="true">' + escapeHtml(initialsFromName(pro.name)) + '</span>';
+            var bio = pro.bio ? '<p>' + escapeHtml(pro.bio) + '</p>' : '';
+            card.innerHTML = photo +
+                '<span class="marcar-pro-copy"><strong>' + escapeHtml(pro.name) + '</strong>' + bio + '</span>';
+            card.addEventListener('click', function () {
+                wrap.querySelectorAll('.marcar-pro-card').forEach(function (el) {
+                    el.classList.remove('is-selected');
+                });
+                card.classList.add('is-selected');
+                state.professionalId = pro.id;
+                state.professionalName = pro.name;
+                if (btnNext) btnNext.disabled = false;
+            });
+            wrap.appendChild(card);
+        });
     }
 
     function formatDateLocal(dateObj) {
@@ -688,6 +931,10 @@
         if (dateObj <= today) return false;
 
         var dateStr = formatDateLocal(dateObj);
+        if (isPsychology()) {
+            return (state.bookableDates || []).indexOf(dateStr) >= 0;
+        }
+
         if (state.scheduleData && state.scheduleData.blockedDates && state.scheduleData.blockedDates.indexOf(dateStr) >= 0) {
             return false;
         }
@@ -837,6 +1084,9 @@
         btn.classList.add('marcar-cal-selected');
 
         state.time = null;
+        state.professionalId = null;
+        state.professionalName = null;
+        hideProfessionals();
         btnNext.disabled = true;
         if (window.LonAnalytics) window.LonAnalytics.track('date_select', { surface: 'booking' });
         return renderTimeslots();
@@ -885,7 +1135,12 @@
 
     function loadQuickSlots() {
         var wrap = document.getElementById('marcarQuickSlots');
-        return fetch('/api/next-slots?limit=6&withinHours=336')
+        if (isPsychology() && !state.specialty) return Promise.resolve();
+        var url = '/api/next-slots?limit=6&withinHours=336';
+        if (isPsychology()) {
+            url += '&service=psicologia&specialty=' + encodeURIComponent(state.specialty);
+        }
+        return fetch(url)
             .then(function (r) { return r.ok ? r.json() : null; })
             .then(function (data) {
                 var slots = data && data.slots ? data.slots : [];
@@ -912,7 +1167,38 @@
             .catch(function () { /* calendar still works */ });
     }
 
+    function paintSlotButtons(available, professionalsByTime) {
+        timeslotGrid.innerHTML = '';
+        state.professionalsByTime = professionalsByTime || {};
+        if (!available.length) {
+            timeslotGrid.innerHTML = '<p class="marcar-times-empty">' + getString('noSlots') + '</p>';
+            return;
+        }
+        available.forEach(function (slot) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.className = 'marcar-slot-btn';
+            b.textContent = slot;
+            b.addEventListener('click', function () {
+                state.time = slot;
+                timeslotGrid.querySelectorAll('.marcar-slot-btn').forEach(function (x) {
+                    x.classList.remove('selected');
+                });
+                b.classList.add('selected');
+                applyProfessionalsForTime(state.professionalsByTime[slot] || []);
+                if (window.LonAnalytics) {
+                    window.LonAnalytics.track('slot_select', { surface: 'booking' });
+                    window.LonAnalytics.track('time_slot_clicked', { surface: 'marcar' });
+                }
+            });
+            timeslotGrid.appendChild(b);
+        });
+    }
+
     function renderTimeslots() {
+        hideProfessionals();
+        state.professionalId = null;
+        state.professionalName = null;
         if (!state.date) {
             setMarcarUrgentHint(false);
             timeslotHeading.textContent = getString('selectDateFirst');
@@ -925,12 +1211,16 @@
         timeslotGrid.innerHTML = '<p class="marcar-times-empty">' + getString('loading') + '</p>';
 
         var dateStr = formatDateLocal(state.date);
+        var url = isPsychology()
+            ? '/api/bookable-slots?date=' + encodeURIComponent(dateStr) +
+                '&service=psicologia&specialty=' + encodeURIComponent(state.specialty || '')
+            : '/api/admin/available-slots?date=' + encodeURIComponent(dateStr);
 
-        return fetch('/api/admin/available-slots?date=' + encodeURIComponent(dateStr))
+        return fetch(url)
             .then(function (r) { return r.json(); })
             .then(function (data) {
-                timeslotGrid.innerHTML = '';
                 var available = (data && data.available) ? data.available.slice() : [];
+                var byTime = (data && data.professionalsByTime) || {};
 
                 var today = new Date();
                 today.setHours(0, 0, 0, 0);
@@ -947,38 +1237,18 @@
                     });
                 }
 
-                if (!available.length) {
-                    timeslotGrid.innerHTML = '<p class="marcar-times-empty">' + getString('noSlots') + '</p>';
-                    return;
-                }
-
-                available.forEach(function (slot) {
-                    var b = document.createElement('button');
-                    b.type = 'button';
-                    b.className = 'marcar-slot-btn';
-                    b.textContent = slot;
-                    b.addEventListener('click', function () {
-                        state.time = slot;
-                        timeslotGrid.querySelectorAll('.marcar-slot-btn').forEach(function (x) {
-                            x.classList.remove('selected');
-                        });
-                        b.classList.add('selected');
-                        btnNext.disabled = false;
-                        if (window.LonAnalytics) {
-                            window.LonAnalytics.track('slot_select', { surface: 'booking' });
-                            window.LonAnalytics.track('time_slot_clicked', { surface: 'marcar' });
-                        }
-                    });
-                    timeslotGrid.appendChild(b);
-                });
+                paintSlotButtons(available, byTime);
             })
             .catch(function () {
+                if (isPsychology()) {
+                    paintSlotButtons([], {});
+                    return;
+                }
                 var slots = [];
                 for (var h = 9; h < 17; h++) {
                     slots.push(String(h).padStart(2, '0') + ':00');
                     slots.push(String(h).padStart(2, '0') + ':30');
                 }
-                timeslotGrid.innerHTML = '';
                 var today = new Date();
                 today.setHours(0, 0, 0, 0);
                 var selectedDate = new Date(state.date);
@@ -992,31 +1262,7 @@
                         return (parts[0] * 60 + parts[1]) > (ch * 60 + cm);
                     })
                     : slots;
-
-                if (!filtered.length) {
-                    timeslotGrid.innerHTML = '<p class="marcar-times-empty">' + getString('noSlots') + '</p>';
-                    return;
-                }
-
-                filtered.forEach(function (slot) {
-                    var b = document.createElement('button');
-                    b.type = 'button';
-                    b.className = 'marcar-slot-btn';
-                    b.textContent = slot;
-                    b.addEventListener('click', function () {
-                        state.time = slot;
-                        timeslotGrid.querySelectorAll('.marcar-slot-btn').forEach(function (x) {
-                            x.classList.remove('selected');
-                        });
-                        b.classList.add('selected');
-                        btnNext.disabled = false;
-                        if (window.LonAnalytics) {
-                            window.LonAnalytics.track('slot_select', { surface: 'booking' });
-                            window.LonAnalytics.track('time_slot_clicked', { surface: 'marcar' });
-                        }
-                    });
-                    timeslotGrid.appendChild(b);
-                });
+                paintSlotButtons(filtered, {});
             });
     }
 
@@ -1040,6 +1286,7 @@
 
     btnNext.addEventListener('click', function () {
         if (!state.date || !state.time) return;
+        if (isPsychology() && !state.professionalId) return;
 
         var lang = getLang();
         var i18nData = CONSULTATION_I18N[lang];
@@ -1060,6 +1307,9 @@
             consultLangPolicy: needsConsultLangPolicy(),
             ref: new URLSearchParams(window.location.search).get('ref') || null,
             slotId: formatDateLocal(state.date).replace(/-/g, '') + '-' + String(state.time).replace(':', ''),
+            professionalId: state.professionalId || null,
+            professionalName: state.professionalName || null,
+            specialty: state.specialty || null,
             clinicalIntent: BURNOUT_FAMILY.indexOf(tipo) >= 0
                 ? burnoutClinicalIntent(tipo)
                 : (NUTRICAO_FAMILY.indexOf(tipo) >= 0 ? {
@@ -1094,12 +1344,24 @@
             '&date=' + encodeURIComponent(payload.dateISO) +
             '&time=' + encodeURIComponent(state.time);
         if (payload.consultLangPolicy) dest += '&langpolicy=en-es-pt';
+        if (state.professionalId) dest += '&professionalId=' + encodeURIComponent(state.professionalId);
+        if (state.specialty) dest += '&specialty=' + encodeURIComponent(state.specialty);
         window.location.href = dest;
     });
 
     // Language change handler
     window.MARCAR_LANG_CHANGED = function (lang) {
         applyConsultaI18n();
+        if (isPsychology()) {
+            applySpecialtyCopy();
+            fetch('/api/psychology/specialties?lang=' + encodeURIComponent(getLang()))
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .then(function (data) {
+                    if (data && data.specialties) state.specialties = data.specialties;
+                    renderSpecialtyButtons();
+                })
+                .catch(function () { renderSpecialtyButtons(); });
+        }
         renderCalendar();
         // Re-render timeslots heading if date not selected
         if (!state.date) {
@@ -1110,37 +1372,49 @@
         setMarcarUrgentHint(!marcarUrgentHint.hidden);
     };
 
-    loadSchedule().then(function () {
-        renderCalendar();
+    function applyUrlDateTime() {
         var params = new URLSearchParams(window.location.search);
         var dateQ = params.get('date');
         var timeQ = params.get('time');
-        if (dateQ && /^\d{4}-\d{2}-\d{2}$/.test(dateQ)) {
-            var bits = dateQ.split('-').map(Number);
-            var dateObj = new Date(bits[0], bits[1] - 1, bits[2]);
-            if (isDateAvailable(dateObj) || formatDateLocal(dateObj) === dateQ) {
-                state.calMonth = dateObj.getMonth();
-                state.calYear = dateObj.getFullYear();
-                renderCalendar();
-                var dayBtn = null;
-                calGrid.querySelectorAll('.marcar-cal-day').forEach(function (el) {
-                    if (el.textContent === String(bits[2]) && !el.classList.contains('marcar-cal-empty')) {
-                        dayBtn = el;
-                    }
-                });
-                if (dayBtn && !dayBtn.classList.contains('marcar-cal-disabled')) {
-                    selectDate(bits[0], bits[1] - 1, bits[2], dayBtn);
-                    if (timeQ) {
-                        var want = timeQ.length === 4 ? '0' + timeQ : timeQ;
-                        setTimeout(function () {
-                            timeslotGrid.querySelectorAll('.marcar-slot-btn').forEach(function (b) {
-                                if (b.textContent === want) b.click();
-                            });
-                        }, 400);
-                    }
-                }
+        if (!dateQ || !/^\d{4}-\d{2}-\d{2}$/.test(dateQ)) return;
+        var bits = dateQ.split('-').map(Number);
+        var dateObj = new Date(bits[0], bits[1] - 1, bits[2]);
+        if (isPsychology()) {
+            if (!state.specialty || !isDateAvailable(dateObj)) return;
+        } else if (!(isDateAvailable(dateObj) || formatDateLocal(dateObj) === dateQ)) {
+            return;
+        }
+        state.calMonth = dateObj.getMonth();
+        state.calYear = dateObj.getFullYear();
+        renderCalendar();
+        var dayBtn = null;
+        calGrid.querySelectorAll('.marcar-cal-day').forEach(function (el) {
+            if (el.textContent === String(bits[2]) && !el.classList.contains('marcar-cal-empty')) {
+                dayBtn = el;
+            }
+        });
+        if (dayBtn && !dayBtn.classList.contains('marcar-cal-disabled')) {
+            selectDate(bits[0], bits[1] - 1, bits[2], dayBtn);
+            if (timeQ) {
+                var want = timeQ.length === 4 ? '0' + timeQ : timeQ;
+                setTimeout(function () {
+                    timeslotGrid.querySelectorAll('.marcar-slot-btn').forEach(function (b) {
+                        if (b.textContent === want) b.click();
+                    });
+                }, 400);
             }
         }
-        loadQuickSlots();
-    });
+    }
+
+    function bootMarcarCalendar() {
+        renderCalendar();
+        applyUrlDateTime();
+        if (!isPsychology() || state.specialty) loadQuickSlots();
+    }
+
+    if (isPsychology()) {
+        initPsychologyFlow();
+    } else {
+        loadSchedule().then(bootMarcarCalendar);
+    }
 })();

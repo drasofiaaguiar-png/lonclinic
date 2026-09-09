@@ -730,6 +730,7 @@
                 nutricao_programa: 'Initial metabolic nutrition consultation',
                 nutricao_completo: 'Complete program (nutrition + psychology) — month 1',
                 nutricao_completo_reforcado: 'Complete program — higher first payment',
+                psicologia: 'Psychology session',
             },
         },
         pt: {
@@ -757,6 +758,7 @@
                 nutricao_programa: 'Consulta inicial de nutrição metabólica',
                 nutricao_completo: 'Programa Completo (nutrição + psicologia) — mês 1',
                 nutricao_completo_reforcado: 'Programa Completo — entrada reforçada',
+                psicologia: 'Sessão de Psicologia',
             },
         },
         es: {
@@ -784,6 +786,7 @@
                 nutricao_programa: 'Consulta inicial de nutrición metabólica',
                 nutricao_completo: 'Programa completo (nutrición + psicología) — mes 1',
                 nutricao_completo_reforcado: 'Programa completo — entrada reforzada',
+                psicologia: 'Sesión de psicología',
             },
         },
     };

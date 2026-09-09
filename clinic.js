@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
         burnout: 'Burnout especializada',
         burnout_mensal: 'Anti-burnout',
         burnout_programa: 'Programa anti-burnout',
-        renovacao: 'Renovação receita'
+        renovacao: 'Renovação receita',
+        psicologia: 'Psicologia'
     };
 
     // ─── DOM Elements ───
@@ -125,23 +126,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const CLINIC_PANEL_META = {
         consultations: { title: 'Consultations', subtitle: 'Clinical notes for consultations assigned to you' },
-        availabilities: { title: 'Availabilities', subtitle: 'Pick days on the calendar and set the hours' },
+        availabilities: { title: 'Availabilities', subtitle: 'Your days only — they stay saved on your account' },
         bookings: { title: 'Bookings', subtitle: 'Upcoming appointments assigned to you' },
         patients: { title: 'Patients', subtitle: 'Only people scheduled with you' },
         resources: { title: 'Resources', subtitle: 'Video room and everyday clinic links' },
         management: { title: 'Management', subtitle: 'IBAN, faturas mensais e pagamentos' },
         profile: { title: 'Perfil', subtitle: 'Identificação, password, dados profissionais, documentos e candidatura' }
     };
-
-    const WEEKDAYS = [
-        ['monday', 'Monday'],
-        ['tuesday', 'Tuesday'],
-        ['wednesday', 'Wednesday'],
-        ['thursday', 'Thursday'],
-        ['friday', 'Friday'],
-        ['saturday', 'Saturday'],
-        ['sunday', 'Sunday']
-    ];
 
     let clinicRole = 'admin';
     let staffUsername = '';
@@ -157,6 +148,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let clinicOverrideCalYear = null;
     let clinicOverrideCalMonth = null;
     const clinicSelectedOverrideDates = new Set();
+    let clinicScheduleDirty = false;
+    let clinicAvailSaveTimer = null;
+    let clinicAvailSaveInFlight = false;
+    let clinicAvailSaveAttempts = 0;
 
     // ─── Check Authentication Status ───
     async function checkAuthStatus() {
@@ -218,7 +213,11 @@ document.addEventListener('DOMContentLoaded', () => {
             loadBookings();
         }
         if (panelId === 'availabilities') {
-            loadScheduleView();
+            if (clinicScheduleDirty || clinicAvailSaveInFlight) {
+                void saveClinicAvailability({ quiet: true });
+            } else {
+                loadScheduleView();
+            }
         }
         if (panelId === 'resources' || panelId === 'profile') loadDoxyRoom();
         if (panelId === 'profile') loadClinicProfile();
@@ -374,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!clinicAvailHighlightList) return;
         const upcoming = clinicSavedDayHours;
         if (!upcoming.length) {
-            clinicAvailHighlightList.innerHTML = '<li class="clinic-avail-highlight-empty">No saved days yet. Select days above, set the hours, then save.</li>';
+            clinicAvailHighlightList.innerHTML = '<li class="clinic-avail-highlight-empty">No saved days yet. Click days on the calendar — they are saved to your account automatically.</li>';
             return;
         }
         clinicAvailHighlightList.innerHTML = upcoming.map((entry) => {
@@ -403,9 +402,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function markClinicScheduleDirty() {
+        clinicScheduleDirty = true;
         if (!clinicSaveScheduleBtn) return;
         clinicSaveScheduleBtn.classList.add('admin-save-dirty');
         clinicSaveScheduleBtn.textContent = 'Save availability •';
+        queueClinicAvailabilitySave();
+    }
+
+    function queueClinicAvailabilitySave() {
+        if (clinicAvailSaveTimer) clearTimeout(clinicAvailSaveTimer);
+        clinicAvailSaveTimer = setTimeout(() => {
+            clinicAvailSaveTimer = null;
+            void saveClinicAvailability({ quiet: true });
+        }, 500);
     }
 
     function clinicHoursFromInputs() {
@@ -423,19 +432,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const source = existing || clinicHoursFromInputs();
         if (clinicBulkOverrideStart) clinicBulkOverrideStart.value = source.start || '07:00';
         if (clinicBulkOverrideEnd) clinicBulkOverrideEnd.value = source.end || '17:00';
-    }
-
-    function closedWeeklyHours(existing) {
-        const hours = {};
-        WEEKDAYS.forEach(([day]) => {
-            const prev = (existing && existing[day]) || {};
-            hours[day] = {
-                enabled: false,
-                start: prev.start || '07:00',
-                end: prev.end || '17:00'
-            };
-        });
-        return hours;
     }
 
     function renderClinicOverrideCalendar() {
@@ -523,33 +519,139 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadScheduleView() {
         if (!clinicOverrideCalGrid) return;
+        if (clinicScheduleDirty || clinicAvailSaveInFlight) return;
         try {
-            const res = await fetch('/api/schedule');
+            const res = await fetch('/api/clinic/schedule', { credentials: 'same-origin' });
+            if (res.status === 401) {
+                showLogin();
+                return;
+            }
             if (!res.ok) throw new Error('Failed to load schedule');
+            if (clinicScheduleDirty) return;
             const schedule = await res.json();
+            if (clinicScheduleDirty) return;
             clinicScheduleData = {
-                workingHours: schedule.workingHours || {},
                 slotDuration: schedule.slotDuration || 30,
                 dayOverrides: Array.isArray(schedule.dayOverrides)
                     ? schedule.dayOverrides.filter((o) => o && o.enabled !== false).map((o) => ({ ...o, enabled: true }))
                     : [],
-                timezone: schedule.timezone || 'Europe/Lisbon',
-                smartSlotGrouping: !!schedule.smartSlotGrouping
+                timezone: schedule.timezone || 'Europe/Lisbon'
             };
             ensureClinicOverrideCalInitialized();
             renderClinicOverrideCalendar();
             snapshotClinicSavedDays();
+            clinicScheduleDirty = false;
             if (clinicSaveScheduleBtn) {
                 clinicSaveScheduleBtn.classList.remove('admin-save-dirty');
                 clinicSaveScheduleBtn.textContent = 'Save availability';
+                clinicSaveScheduleBtn.disabled = false;
             }
         } catch (err) {
             console.error('Failed to load schedule view:', err);
+            if (clinicScheduleData) return;
             clinicSavedDayHours = [];
             if (clinicAvailHighlightList) {
                 clinicAvailHighlightList.innerHTML = '<li class="clinic-avail-highlight-empty">Could not load availability.</li>';
             }
         }
+    }
+
+    function clinicDayOverridesPayload() {
+        return (clinicScheduleData && clinicScheduleData.dayOverrides || [])
+            .filter((o) => o && o.enabled !== false && o.date)
+            .map((o) => ({
+                date: o.date,
+                enabled: true,
+                start: String(o.start || '07:00').slice(0, 5),
+                end: String(o.end || '17:00').slice(0, 5)
+            }));
+    }
+
+    async function saveClinicAvailability({ quiet } = {}) {
+        if (!clinicScheduleData) return false;
+        if (clinicAvailSaveTimer) {
+            clearTimeout(clinicAvailSaveTimer);
+            clinicAvailSaveTimer = null;
+        }
+        if (clinicAvailSaveInFlight) {
+            clinicAvailSaveQueued = true;
+            return false;
+        }
+        clinicAvailSaveInFlight = true;
+        if (clinicSaveScheduleBtn) {
+            clinicSaveScheduleBtn.disabled = true;
+            clinicSaveScheduleBtn.textContent = 'Saving…';
+        }
+        const dayOverrides = clinicDayOverridesPayload();
+        try {
+            const res = await fetch('/api/clinic/schedule', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ dayOverrides }),
+                credentials: 'same-origin'
+            });
+            if (res.status === 401) {
+                clinicAvailSaveQueued = false;
+                showLogin();
+                return false;
+            }
+            if (!res.ok) throw new Error('Failed to save');
+            const data = await res.json().catch(() => ({}));
+            clinicScheduleData.dayOverrides = Array.isArray(data.dayOverrides)
+                ? data.dayOverrides.filter((o) => o && o.enabled !== false).map((o) => ({ ...o, enabled: true }))
+                : dayOverrides;
+            clinicScheduleDirty = false;
+            clinicAvailSaveAttempts = 0;
+            snapshotClinicSavedDays();
+            if (clinicSaveScheduleBtn) {
+                clinicSaveScheduleBtn.classList.remove('admin-save-dirty');
+                clinicSaveScheduleBtn.textContent = 'Saved';
+                setTimeout(() => {
+                    if (!clinicScheduleDirty && clinicSaveScheduleBtn) {
+                        clinicSaveScheduleBtn.textContent = 'Save availability';
+                        clinicSaveScheduleBtn.disabled = false;
+                    }
+                }, 1600);
+            }
+            return true;
+        } catch (err) {
+            console.error('Failed to save availability:', err);
+            if (clinicSaveScheduleBtn) {
+                clinicSaveScheduleBtn.disabled = false;
+                clinicSaveScheduleBtn.textContent = 'Save availability •';
+                clinicSaveScheduleBtn.classList.add('admin-save-dirty');
+            }
+            if (!quiet) {
+                alert('Failed to save availability. Please try again.');
+            } else if (clinicAvailSaveAttempts < 3) {
+                clinicAvailSaveAttempts += 1;
+                clinicAvailSaveTimer = setTimeout(() => {
+                    clinicAvailSaveTimer = null;
+                    void saveClinicAvailability({ quiet: true });
+                }, 2000);
+            }
+            return false;
+        } finally {
+            clinicAvailSaveInFlight = false;
+            if (clinicAvailSaveQueued) {
+                clinicAvailSaveQueued = false;
+                queueClinicAvailabilitySave();
+            }
+        }
+    }
+
+    function flushClinicAvailabilityBeacon() {
+        if (!clinicScheduleDirty || !clinicScheduleData) return;
+        try {
+            fetch('/api/clinic/schedule', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ dayOverrides: clinicDayOverridesPayload() }),
+                credentials: 'same-origin',
+                keepalive: true
+            });
+            clinicScheduleDirty = false;
+        } catch (err) { /* ignore */ }
     }
 
     if (clinicOverrideCalPrev) {
@@ -605,56 +707,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (clinicSaveScheduleBtn) {
-        clinicSaveScheduleBtn.addEventListener('click', async () => {
+        clinicSaveScheduleBtn.addEventListener('click', () => {
             if (!clinicScheduleData) {
                 alert('Availability is still loading. Try again.');
                 return;
             }
-            const dayOverrides = (clinicScheduleData.dayOverrides || [])
-                .filter((o) => o && o.enabled !== false && o.date)
-                .map((o) => ({
-                    date: o.date,
-                    enabled: true,
-                    start: String(o.start || '07:00').slice(0, 5),
-                    end: String(o.end || '17:00').slice(0, 5)
-                }));
-            const payload = {
-                workingHours: closedWeeklyHours(clinicScheduleData.workingHours),
-                slotDuration: clinicScheduleData.slotDuration || 30,
-                blockedDates: [],
-                dayOverrides,
-                smartSlotGrouping: !!clinicScheduleData.smartSlotGrouping
-            };
-            clinicSaveScheduleBtn.disabled = true;
-            clinicSaveScheduleBtn.textContent = 'Saving…';
-            try {
-                const res = await fetch('/api/clinic/schedule', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (res.status === 401) {
-                    showLogin();
-                    return;
-                }
-                if (!res.ok) throw new Error('Failed to save');
-                clinicScheduleData.workingHours = payload.workingHours;
-                clinicScheduleData.dayOverrides = dayOverrides;
-                snapshotClinicSavedDays();
-                clinicSaveScheduleBtn.classList.remove('admin-save-dirty');
-                clinicSaveScheduleBtn.textContent = 'Saved';
-                setTimeout(() => {
-                    clinicSaveScheduleBtn.textContent = 'Save availability';
-                    clinicSaveScheduleBtn.disabled = false;
-                }, 1600);
-            } catch (err) {
-                console.error('Failed to save availability:', err);
-                alert('Failed to save availability. Please try again.');
-                clinicSaveScheduleBtn.disabled = false;
-                clinicSaveScheduleBtn.textContent = 'Save availability';
-            }
+            void saveClinicAvailability();
         });
     }
+
+    window.addEventListener('pagehide', flushClinicAvailabilityBeacon);
+    window.addEventListener('beforeunload', (e) => {
+        if (!clinicScheduleDirty) return;
+        flushClinicAvailabilityBeacon();
+        e.preventDefault();
+        e.returnValue = '';
+    });
 
     // ─── Login ───
     clinicLoginForm.addEventListener('submit', async (e) => {

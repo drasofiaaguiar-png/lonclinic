@@ -298,6 +298,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         burnout_programa: 'Programa anti-burnout',
         longevidade: 'Longevidade',
         renovacao: 'Renovação receita',
+        psicologia: 'Psicologia',
         longevity: 'Longevity Assessment',
         'longevity-plus': 'Longevity Plus',
         followup: 'Follow-up',

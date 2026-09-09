@@ -116,7 +116,8 @@
         const q = refQuery(slug, o.ref);
         const withRef = (base) => (q ? `${base}${base.includes('?') ? '&' : '?'}${q}` : base);
 
-        if (role === 'psychFind' || role === 'psych') return withRef('/triagem');
+        if (role === 'psychFind') return withRef('/triagem');
+        if (role === 'psych') return withRef('/marcar/psicologia');
         if (role === 'nutritionFind') return '/nutricao/avaliacao';
         if (role === 'nutrition') {
             if (kind === 'nutricao-programa' || kind === 'nutricao_programa') {

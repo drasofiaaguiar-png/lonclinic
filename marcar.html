@@ -18,7 +18,7 @@
     <link rel="canonical" href="https://www.lonclinic.com/marcar">
     <meta name="theme-color" content="#4A7C6F">
     <link rel="stylesheet" href="/landing.css">
-    <link rel="stylesheet" href="/marcar.css?v=20260906b">
+    <link rel="stylesheet" href="/marcar.css?v=20260909psi">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
@@ -72,6 +72,13 @@
             <div class="marcar-plans" id="marcarPlans"></div>
         </div>
 
+        <div class="marcar-plan-section" id="marcarSpecialtySection" hidden>
+            <p class="marcar-plan-kicker" id="marcarSpecialtyKicker">Apoio</p>
+            <h2 class="marcar-plan-heading" id="marcarSpecialtyHeading">Que tipo de apoio procura?</h2>
+            <p class="marcar-sub" id="marcarSpecialtySub">O calendário mostra só psicólogos que tratam esta área.</p>
+            <div class="marcar-specialties" id="marcarSpecialties"></div>
+        </div>
+
         <div class="marcar-layout">
             <aside class="marcar-info" aria-labelledby="marcarTitle">
                 <h1 id="marcarTitle">—</h1>
@@ -88,9 +95,9 @@
                 <p class="marcar-burnout-link" id="marcarNutricaoLink" hidden>Ainda não fez a avaliação? <a href="/nutricao/avaliacao?ref=marcar-nutricao">Avaliação metabólica</a> — 2 min, gratuita. <a href="/nutricao/programa">Programa de reeducação (3 a 6 meses)</a> · <a href="/nutricao/glp-1">aGLP-1 / desmame</a>.</p>
             </aside>
 
-            <section class="marcar-schedule-wrap" aria-labelledby="marcarScheduleTitle">
+            <section class="marcar-schedule-wrap" id="marcarScheduleWrap" aria-labelledby="marcarScheduleTitle">
                 <h2 id="marcarScheduleTitle">Data e hora</h2>
-                <p class="marcar-sub">Toque num horário livre, ou escolha outro dia no calendário.</p>
+                <p class="marcar-sub" id="marcarScheduleSub">Toque num horário livre, ou escolha outro dia no calendário.</p>
                 <div class="marcar-quick-slots" id="marcarQuickSlots" hidden>
                     <p class="marcar-quick-kicker">Próximos horários livres</p>
                     <div class="marcar-quick-row" data-quick-row></div>
@@ -117,6 +124,7 @@
                         <div class="marcar-times-grid" id="marcarTimesGrid">
                             <p class="marcar-times-empty">Selecione uma data à esquerda.</p>
                         </div>
+                        <div class="marcar-pros" id="marcarPros" hidden></div>
                         <p class="marcar-urgent-hint" id="marcarUrgentHint" hidden></p>
                         <p class="marcar-tz">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
@@ -143,12 +151,16 @@
                 document.getElementById('marcarError').style.display = 'block';
                 document.getElementById('marcarMain').style.display = 'none';
             }
+            if (/\/marcar\/psicologia(\/|$)/.test(window.location.pathname)) {
+                var wrap = document.getElementById('marcarScheduleWrap');
+                if (wrap) wrap.hidden = true;
+            }
         })();
     </script>
     <script src="/lon-analytics.js?v=20260906e" defer></script>
     <script src="/i18n.js" defer></script>
     <script src="/lon-nav.js" defer></script>
-    <script src="/lon-slots.js?v=20260906d" defer></script>
-    <script src="/marcar.js?v=20260906d" defer></script>
+    <script src="/lon-slots.js?v=20260909psi" defer></script>
+    <script src="/marcar.js?v=20260909psi" defer></script>
 </body>
 </html>

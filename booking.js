@@ -27,7 +27,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         renewToken: null,
         holdId: null,
         slotId: null,
-        consultLangPolicy: false
+        consultLangPolicy: false,
+        professionalId: null,
+        specialty: null
     };
 
     // ─── Load schedule data ───
@@ -74,7 +76,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         longevidade: { label: 'Consulta de Longevidade e Saúde Preventiva', price: '79 €', cents: 7900 },
         nutricao_programa: { label: 'Consulta inicial de nutrição metabólica', price: '115 €', cents: 11500 },
         nutricao_completo: { label: 'Programa Completo (nutrição + psicologia) — mês 1', price: '227 €', cents: 22700 },
-        nutricao_completo_reforcado: { label: 'Programa Completo — entrada reforçada', price: '322 €', cents: 32200 }
+        nutricao_completo_reforcado: { label: 'Programa Completo — entrada reforçada', price: '322 €', cents: 32200 },
+        psicologia: { label: 'Sessão de Psicologia', price: '60 €', cents: 6000 }
     };
 
     // Travel tiered pricing: [count] → { cents, price, duration }
@@ -1459,7 +1462,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     travelDest: document.getElementById('travelDest')?.value || '',
                     travelDates: document.getElementById('travelDates')?.value || '',
                     locale: getBookingLocale(),
-                    holdId: state.holdId || null
+                    holdId: state.holdId || null,
+                    professionalId: state.professionalId || null,
+                    specialty: state.specialty || null
                 })
             });
 
@@ -1781,6 +1786,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (prefill.clinicalIntent) state.clinicalIntent = prefill.clinicalIntent;
             if (prefill.goal) state.prefillGoal = prefill.goal;
             if (prefill.concerns) state.prefillConcerns = prefill.concerns;
+            if (prefill.professionalId) state.professionalId = Number(prefill.professionalId) || null;
+            if (prefill.specialty) state.specialty = prefill.specialty;
             if (prefill.locale) {
                 const loc = document.getElementById('bookingLocale');
                 if (loc) loc.value = prefill.locale;
@@ -1793,9 +1800,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const renewQ = urlParams.get('renew');
         const slotQ = urlParams.get('slot');
         const holdQ = urlParams.get('hold');
+        const proQ = urlParams.get('professionalId');
+        const specQ = urlParams.get('specialty');
         if (serviceQ) applyServiceKey(serviceQ);
         if (renewQ) state.renewToken = renewQ;
         if (holdQ) state.holdId = holdQ;
+        if (proQ) state.professionalId = Number(proQ) || state.professionalId;
+        if (specQ) state.specialty = specQ;
         const slotMatch = slotQ && /^(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})$/.exec(slotQ);
         if (slotMatch) {
             state.slotId = slotQ;
@@ -1868,7 +1879,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 method: 'POST',
                 credentials: 'same-origin',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ slot, service: state.service || 'clinica_geral' })
+                body: JSON.stringify({
+                    slot,
+                    service: state.service || 'clinica_geral',
+                    professionalId: state.professionalId || null,
+                    specialty: state.specialty || null
+                })
             });
             if (res.status === 409) {
                 state.holdId = null;

@@ -382,15 +382,25 @@ async function initSchema(p) {
         `CREATE UNIQUE INDEX IF NOT EXISTS idx_bookings_intake_token ON bookings (intake_token) WHERE intake_token IS NOT NULL`
     );
     try {
+        await p.query(`DROP INDEX IF EXISTS idx_bookings_active_slot`);
         await p.query(`
-            CREATE UNIQUE INDEX IF NOT EXISTS idx_bookings_active_slot
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_bookings_active_slot_pro
+            ON bookings (date_iso, (LEFT(TRIM(time), 5)), professional_id)
+            WHERE cancelled = FALSE
+              AND professional_id IS NOT NULL
+              AND date_iso IS NOT NULL
+              AND TRIM(COALESCE(time, '')) <> ''
+        `);
+        await p.query(`
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_bookings_active_slot_unassigned
             ON bookings (date_iso, (LEFT(TRIM(time), 5)))
             WHERE cancelled = FALSE
+              AND professional_id IS NULL
               AND date_iso IS NOT NULL
               AND TRIM(COALESCE(time, '')) <> ''
         `);
     } catch (err) {
-        console.warn('   ⚠️  idx_bookings_active_slot skipped:', err.message);
+        console.warn('   ⚠️  bookings slot uniqueness indexes skipped:', err.message);
     }
     await p.query(`
         CREATE TABLE IF NOT EXISTS slot_holds (
@@ -404,7 +414,16 @@ async function initSchema(p) {
             created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
         )
     `);
-    await p.query(`CREATE UNIQUE INDEX IF NOT EXISTS idx_slot_holds_slot ON slot_holds (date_iso, time)`);
+    await p.query(`ALTER TABLE slot_holds ADD COLUMN IF NOT EXISTS professional_id INTEGER`);
+    try {
+        await p.query(`DROP INDEX IF EXISTS idx_slot_holds_slot`);
+        await p.query(`
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_slot_holds_slot
+            ON slot_holds (date_iso, time, (COALESCE(professional_id, 0)))
+        `);
+    } catch (err) {
+        console.warn('   ⚠️  idx_slot_holds_slot skipped:', err.message);
+    }
     await p.query(`CREATE INDEX IF NOT EXISTS idx_slot_holds_holder ON slot_holds (holder_token)`);
     await p.query(`CREATE INDEX IF NOT EXISTS idx_slot_holds_expires ON slot_holds (expires_at)`);
     // Backfill Stripe (and complimentary) rows that were never admin-edited for tracking fields.
@@ -660,6 +679,13 @@ async function initSchema(p) {
             reminder_10_sent BOOLEAN NOT NULL DEFAULT FALSE,
             reminder_15_sent BOOLEAN NOT NULL DEFAULT FALSE,
             PRIMARY KEY (username, month)
+        )
+    `);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS staff_availability_days (
+            username VARCHAR(64) PRIMARY KEY,
+            days JSONB NOT NULL DEFAULT '[]'::jsonb,
+            updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
         )
     `);
     await p.query(`
@@ -1730,6 +1756,7 @@ function rowToSlotHold(row) {
         dateIso: row.date_iso,
         time: String(row.time || '').slice(0, 5),
         service: row.service || '',
+        professionalId: row.professional_id != null ? Number(row.professional_id) : null,
         holderToken: row.holder_token,
         expiresAt: Number.isFinite(expiresAt) ? expiresAt : 0
     };
@@ -1747,8 +1774,8 @@ async function insertSlotHold(hold) {
     await purgeExpiredSlotHolds();
     try {
         const r = await p.query(
-            `INSERT INTO slot_holds (id, slot_id, date_iso, time, service, holder_token, expires_at)
-             VALUES ($1, $2, $3, $4, $5, $6, to_timestamp($7 / 1000.0))
+            `INSERT INTO slot_holds (id, slot_id, date_iso, time, service, professional_id, holder_token, expires_at)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, to_timestamp($8 / 1000.0))
              RETURNING *`,
             [
                 hold.id,
@@ -1756,6 +1783,9 @@ async function insertSlotHold(hold) {
                 hold.dateIso,
                 hold.time,
                 hold.service || '',
+                Number.isInteger(Number(hold.professionalId)) && Number(hold.professionalId) > 0
+                    ? Number(hold.professionalId)
+                    : null,
                 hold.holderToken,
                 hold.expiresAt
             ]
@@ -1777,14 +1807,27 @@ async function findSlotHoldById(id) {
     return rowToSlotHold(r.rows[0]);
 }
 
-async function findSlotHoldBySlot(dateIso, time) {
+async function findSlotHoldBySlot(dateIso, time, professionalId) {
     const p = getPool();
     if (!p) return null;
+    const slotTime = String(time || '').slice(0, 5);
+    const proId = Number(professionalId);
+    if (Number.isInteger(proId) && proId > 0) {
+        const r = await p.query(
+            `SELECT * FROM slot_holds
+             WHERE date_iso = $1 AND time = $2 AND expires_at > NOW()
+               AND professional_id = $3
+             LIMIT 1`,
+            [dateIso, slotTime, proId]
+        );
+        return rowToSlotHold(r.rows[0]);
+    }
     const r = await p.query(
         `SELECT * FROM slot_holds
          WHERE date_iso = $1 AND time = $2 AND expires_at > NOW()
+           AND professional_id IS NULL
          LIMIT 1`,
-        [dateIso, String(time || '').slice(0, 5)]
+        [dateIso, slotTime]
     );
     return rowToSlotHold(r.rows[0]);
 }
@@ -1830,9 +1873,21 @@ async function deleteSlotHoldsForSlot(dateIso, time) {
     );
 }
 
-async function listActiveHoldTimesForDateIso(dateIso, excludeHoldId) {
+async function listActiveHoldTimesForDateIso(dateIso, excludeHoldId, professionalId) {
     const p = getPool();
     if (!p) return [];
+    const proId = Number(professionalId);
+    if (Number.isInteger(proId) && proId > 0) {
+        const r = await p.query(
+            `SELECT time FROM slot_holds
+             WHERE date_iso = $1
+               AND expires_at > NOW()
+               AND ($2::text IS NULL OR id <> $2)
+               AND (professional_id = $3 OR professional_id IS NULL)`,
+            [dateIso, excludeHoldId || null, proId]
+        );
+        return r.rows.map((row) => String(row.time || '').slice(0, 5));
+    }
     const r = await p.query(
         `SELECT time FROM slot_holds
          WHERE date_iso = $1
@@ -1843,9 +1898,23 @@ async function listActiveHoldTimesForDateIso(dateIso, excludeHoldId) {
     return r.rows.map((row) => String(row.time || '').slice(0, 5));
 }
 
-async function isSlotTakenByOther(dateIso, time, excludeBookingRef) {
+async function isSlotTakenByOther(dateIso, time, excludeBookingRef, professionalId) {
     const p = getPool();
     const slotTime = String(time || '').trim().slice(0, 5);
+    const proId = Number(professionalId);
+    if (Number.isInteger(proId) && proId > 0) {
+        const r = await p.query(
+            `SELECT 1 FROM bookings
+             WHERE cancelled = FALSE
+               AND date_iso = $1
+               AND LEFT(TRIM(time), 5) = $2
+               AND ($3::text IS NULL OR booking_ref <> $3)
+               AND (professional_id = $4 OR professional_id IS NULL)
+             LIMIT 1`,
+            [dateIso, slotTime, excludeBookingRef || null, proId]
+        );
+        return r.rowCount > 0;
+    }
     const r = await p.query(
         `SELECT 1 FROM bookings
          WHERE cancelled = FALSE
@@ -2605,6 +2674,7 @@ async function deleteProfessionalFileOn(client, username, { retargetProfessional
     await client.query('DELETE FROM staff_documents WHERE LOWER(username) = $1', [u]);
     await client.query('DELETE FROM staff_invoices WHERE LOWER(username) = $1', [u]);
     await client.query('DELETE FROM staff_month_availability WHERE LOWER(username) = $1', [u]);
+    await client.query('DELETE FROM staff_availability_days WHERE LOWER(username) = $1', [u]);
     await client.query('DELETE FROM staff_profiles WHERE LOWER(username) = $1', [u]);
     let professionals = 0;
     if (id) {
@@ -3246,6 +3316,59 @@ async function markStaffMonthAvailabilityReminder(username, month, which) {
     return rowToStaffMonthAvailability(r.rows[0]);
 }
 
+function rowToStaffAvailabilityDays(row) {
+    if (!row) return null;
+    let days = row.days;
+    if (typeof days === 'string') {
+        try { days = JSON.parse(days); } catch (err) { days = []; }
+    }
+    if (!Array.isArray(days)) days = [];
+    return {
+        username: row.username,
+        days,
+        updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : row.updated_at
+    };
+}
+
+async function getStaffAvailabilityDays(username) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return null;
+    const r = await p.query(
+        `SELECT username, days, updated_at
+         FROM staff_availability_days
+         WHERE LOWER(username) = $1
+         LIMIT 1`,
+        [u]
+    );
+    return r.rows[0] ? rowToStaffAvailabilityDays(r.rows[0]) : null;
+}
+
+async function listAllStaffAvailabilityDays() {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT username, days, updated_at FROM staff_availability_days`
+    );
+    return r.rows.map(rowToStaffAvailabilityDays);
+}
+
+async function setStaffAvailabilityDays(username, days) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return null;
+    const payload = Array.isArray(days) ? days : [];
+    const r = await p.query(
+        `INSERT INTO staff_availability_days (username, days, updated_at)
+         VALUES ($1, $2::jsonb, NOW())
+         ON CONFLICT (username) DO UPDATE SET
+            days = EXCLUDED.days,
+            updated_at = NOW()
+         RETURNING username, days, updated_at`,
+        [u, JSON.stringify(payload)]
+    );
+    return rowToStaffAvailabilityDays(r.rows[0]);
+}
+
 async function listStaffDocuments(username) {
     const p = getPool();
     const u = String(username || '').trim().toLowerCase();
@@ -3622,6 +3745,9 @@ module.exports = {
     getStaffMonthAvailability,
     setStaffMonthAvailabilityConfirmed,
     markStaffMonthAvailabilityReminder,
+    getStaffAvailabilityDays,
+    listAllStaffAvailabilityDays,
+    setStaffAvailabilityDays,
     listStaffDocuments,
     listAllStaffDocuments,
     upsertStaffDocument,
