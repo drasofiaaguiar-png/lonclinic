@@ -674,7 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch('/api/clinic/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: identifier, password })
+                body: JSON.stringify({ email: identifier, username: identifier, password })
             });
 
             const data = await res.json();

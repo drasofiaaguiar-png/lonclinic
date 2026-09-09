@@ -16,7 +16,7 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = 'email-only-1';
+const CLINIC_PORTAL_BUILD = '9set-email';
 const CLINIC_PORTAL_PATH = '/clinic-desk/dias';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
@@ -739,8 +739,8 @@ async function serveClinicPortalHtml(res) {
             .replace(/src="\/clinic-portal\/clinic\.js\?v=[^"]+"/g, `src="${clinicPortalAssetUrl('clinic.js')}"`)
             .replace(/data-clinic-build="[^"]+"/, `data-clinic-build="${CLINIC_PORTAL_BUILD}"`)
             .replace(
-                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|ficha-1|scope-1|scope-2|email-1|email-login-1|password-1|email-only-1|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8|perfil-9|perfil-10) — 7 set 2026\. Entre com o (?:username(?: ou o email)?|email) do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
-                `Portal ${CLINIC_PORTAL_BUILD} — 7 set 2026. Entre com o email do profissional.`
+                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|ficha-1|scope-1|scope-2|email-1|email-login-1|password-1|email-only-1|9set-email|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8|perfil-9|perfil-10) — 7 set 2026\. Entre com o (?:username(?: ou o email)?|email) do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
+                `Portal ${CLINIC_PORTAL_BUILD} — Use o email da sua ficha para entrar.`
             );
         res.append('Set-Cookie', `lon_portal=${CLINIC_PORTAL_BUILD}; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly`);
         res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
@@ -1612,7 +1612,9 @@ async function findProfessionalByEmailInternal(email) {
     const e = String(email || '').trim().toLowerCase();
     if (!e || !e.includes('@')) return null;
     if (usePersistentDb) return db.findProfessionalByEmail(e);
-    return professionalsStore.find((p) => String(p.email || '').trim().toLowerCase() === e) || null;
+    const direct = professionalsStore.find((p) => String(p.email || '').trim().toLowerCase() === e);
+    if (direct) return direct;
+    return professionalsStore.find((p) => String(p.loginEmailSentTo || '').trim().toLowerCase() === e) || null;
 }
 
 async function findProfessionalForClinicLogin(identifier) {
@@ -6968,6 +6970,23 @@ function startAppointmentReminderScheduler() {
     console.log('   ⏰ Automation (reminders, follow-up, invite expiry): every 15m (first run ~15s after startup)');
     console.log('   ⏰ Quiz checkout recovery: every 60s');
     console.log('   ⏰ Nutrition quiz nurture (1h / 24h / 48h): every 60s');
+    if (isStripeConfigured) {
+        setTimeout(() => {
+            void reconcileRecentPaidCheckouts({ hours: 72 }).then((result) => {
+                if (result && result.recovered && result.recovered.length) {
+                    console.log(`   💳 Startup Stripe reconcile recovered ${result.recovered.length} booking(s)`);
+                }
+            }).catch((err) => {
+                console.error('   ⚠️  Startup Stripe reconcile failed:', err.message);
+            });
+        }, 25_000);
+        setInterval(() => {
+            void reconcileRecentPaidCheckouts({ hours: 6 }).catch((err) => {
+                console.error('   ⚠️  Scheduled Stripe reconcile failed:', err.message);
+            });
+        }, 15 * 60 * 1000);
+        console.log('   ⏰ Stripe paid-checkout reconcile: every 15m (first scan ~25s after startup)');
+    }
 }
 
 /** Avoid duplicate finalize when webhook and success-page API run together */
@@ -6995,12 +7014,22 @@ function stripeCustomerIdFromSession(session) {
  * Sends patient + admin emails and persists the booking once per Stripe payment.
  * Used by the Stripe webhook and by GET /api/session/:id so confirmations still go out
  * if the webhook is misconfigured, delayed, or unreachable.
+ *
+ * After Stripe has collected money, this must never refuse to save because the slot
+ * looks unavailable. Checkout holds the slot for up to 30 minutes, and
+ * getBookableSlotsForDateIso hides held times — re-checking availability here used
+ * to drop paid bookings from the dashboard.
  */
 async function bookingRecordedByPaymentId(paymentId) {
     if (usePersistentDb) {
         return db.bookingExistsByPaymentId(paymentId);
     }
     return bookingsStore.some((b) => b.paymentId === paymentId);
+}
+
+async function bookingRefForPaymentId(paymentId) {
+    const existing = await getBookingByPaymentId(paymentId);
+    return existing && existing.bookingRef ? existing.bookingRef : null;
 }
 
 async function countPriorBookingsExcludingPayment(paymentId, email, stripeCustomerId) {
@@ -7031,14 +7060,14 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
     }
 
     if (await bookingRecordedByPaymentId(paymentId)) {
-        return { ok: true, reason: 'already_recorded' };
+        return { ok: true, reason: 'already_recorded', bookingRef: await bookingRefForPaymentId(paymentId) };
     }
 
     if (checkoutFinalizeInFlight.has(paymentId)) {
         for (let i = 0; i < 50; i++) {
             await new Promise((r) => setTimeout(r, 100));
             if (await bookingRecordedByPaymentId(paymentId)) {
-                return { ok: true, reason: 'awaited_peer' };
+                return { ok: true, reason: 'awaited_peer', bookingRef: await bookingRefForPaymentId(paymentId) };
             }
         }
         console.warn(`${logPrefix}finalizePaidCheckoutSession: timeout waiting for in-flight finalize for ${paymentId}`);
@@ -7048,36 +7077,23 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
     checkoutFinalizeInFlight.add(paymentId);
     try {
         if (await bookingRecordedByPaymentId(paymentId)) {
-            return { ok: true, reason: 'already_recorded' };
+            return { ok: true, reason: 'already_recorded', bookingRef: await bookingRefForPaymentId(paymentId) };
         }
 
         const meta = session.metadata || {};
         const isoRaw = meta.date_iso && String(meta.date_iso).trim();
         const normTimeFinal = normalizeTimeString({ time: meta.time || '' });
         if (isoRaw && /^\d{4}-\d{2}-\d{2}$/.test(isoRaw) && normTimeFinal) {
-            // If this came from an admin-issued invitation, allow any slot in the grid
-            // plus invitation-only times (07:00–08:30, 21:00) outside weekly hours.
-            const allowAdminSlot = !!meta.invitation_id;
-            const allowed = allowAdminSlot
-                ? await isInvitationSlotAllowed(isoRaw, normTimeFinal, meta.invitation_id || null)
-                : (await getBookableSlotsForDateIso(isoRaw, null, null, false)).includes(normTimeFinal);
-            if (!allowed) {
-                console.warn(
-                    `${logPrefix}finalizePaidCheckoutSession: slot not bookable ${isoRaw} ${normTimeFinal}`
-                );
-                return { ok: false, reason: 'invalid_slot' };
-            }
+            let taken = false;
             if (usePersistentDb) {
-                const taken = await db.isSlotTakenByOther(isoRaw, normTimeFinal, null);
-                if (taken) {
-                    console.warn(
-                        `${logPrefix}finalizePaidCheckoutSession: slot already taken ${isoRaw} ${normTimeFinal}`
-                    );
-                    return { ok: false, reason: 'slot_taken' };
-                }
-            } else if (!isSlotFreeInMemory(isoRaw, normTimeFinal, null)) {
-                console.warn(`${logPrefix}finalizePaidCheckoutSession: slot not free in memory`);
-                return { ok: false, reason: 'slot_taken' };
+                taken = await db.isSlotTakenByOther(isoRaw, normTimeFinal, null);
+            } else {
+                taken = !isSlotFreeInMemory(isoRaw, normTimeFinal, null);
+            }
+            if (taken) {
+                console.warn(
+                    `${logPrefix}finalizePaidCheckoutSession: slot already has a booking ${isoRaw} ${normTimeFinal} — still recording paid checkout ${session.id}`
+                );
             }
         }
 
@@ -7116,9 +7132,6 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
             intakeToken
         };
 
-        await sendConfirmationEmail(bookingData);
-        await sendAdminNotificationEmail(bookingData);
-
         const emailNorm = (
             session.customer_details?.email ||
             session.customer_email ||
@@ -7154,9 +7167,30 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
         };
 
         if (usePersistentDb) {
-            const inserted = await db.insertBooking(record);
+            let inserted = false;
+            try {
+                inserted = await db.insertBooking(record);
+            } catch (err) {
+                if (await bookingRecordedByPaymentId(paymentId)) {
+                    return { ok: true, reason: 'already_recorded', bookingRef: await bookingRefForPaymentId(paymentId) };
+                }
+                const slotClash = err && (err.code === '23505' || /idx_bookings_active_slot/i.test(String(err.message || '')));
+                if (slotClash && record.dateIso) {
+                    console.warn(
+                        `${logPrefix}slot already booked; still saving paid checkout ${session.id} (${record.dateIso} ${record.time})`
+                    );
+                    inserted = await db.insertBooking({
+                        ...record,
+                        date: record.dateIso || record.date,
+                        dateIso: null
+                    });
+                } else {
+                    console.error(`${logPrefix}insertBooking failed for paid checkout ${session.id}:`, err.message);
+                    throw err;
+                }
+            }
             if (!inserted) {
-                return { ok: true, reason: 'already_recorded' };
+                return { ok: true, reason: 'already_recorded', bookingRef: await bookingRefForPaymentId(paymentId) };
             }
             try {
                 await db.setBookingIntakeToken(bookingRef, intakeToken);
@@ -7168,6 +7202,14 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
             bookingsStore.push(record);
             console.log(`${logPrefix}📋 Booking ${bookingRef} saved (${bookingsStore.length} total in memory)`);
         }
+
+        try {
+            await sendConfirmationEmail(bookingData);
+            await sendAdminNotificationEmail(bookingData);
+        } catch (err) {
+            console.error(`${logPrefix}confirmation email failed after booking save:`, err.message);
+        }
+
         const bookedIso = record.dateIso && String(record.dateIso).trim();
         const bookedTime = normalizeTimeString({ time: record.time || '' });
         if (bookedIso && bookedTime) {
@@ -7178,6 +7220,119 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
         return { ok: true, reason: 'recorded', bookingRef };
     } finally {
         checkoutFinalizeInFlight.delete(paymentId);
+    }
+}
+
+async function refreshCheckoutSessionFromStripe(session) {
+    if (!stripe || !session || !session.id) return session;
+    try {
+        return await stripe.checkout.sessions.retrieve(session.id);
+    } catch (err) {
+        console.error('Could not re-fetch Checkout session:', err.message);
+        return session;
+    }
+}
+
+async function followUpPaidCheckout(session, fin, logPrefix = '') {
+    const meta = (session && session.metadata) || {};
+    if (usePersistentDb && meta.invitation_id && fin && fin.ok) {
+        try {
+            const updated = await db.markInvitationPaid(meta.invitation_id, fin.bookingRef || null);
+            if (updated) console.log(`${logPrefix}✅ Invitation ${meta.invitation_id} marked paid`);
+        } catch (e) {
+            console.error(`${logPrefix}⚠️  Failed to mark invitation paid:`, e.message);
+        }
+    }
+    if (fin && fin.ok && fin.reason === 'recorded') {
+        emitServerAnalytics(
+            meta.invitation_id ? 'invite_paid' : 'payment_succeeded',
+            {
+                visitorId: meta.lon_vid || null,
+                sessionId: meta.lon_sid || null,
+                props: {
+                    service: bookingServiceTag(meta.service),
+                    via: meta.invitation_id ? 'invite' : 'checkout',
+                    funnel: 'patient_booking'
+                },
+                revenueCents: session.amount_total || 0,
+                currency: session.currency || 'eur',
+                bookingRef: fin.bookingRef || null
+            }
+        ).catch(() => {});
+    }
+    markQuizLeadConverted(session.customer_email || meta.contact_email || '').catch(() => {});
+}
+
+async function ingestPaidCheckoutSession(session, logPrefix = '') {
+    const fresh = await refreshCheckoutSessionFromStripe(session);
+    const fin = await finalizePaidCheckoutSession(fresh, logPrefix);
+    if (fin.reason === 'already_recorded' || fin.reason === 'awaited_peer') {
+        console.log(`${logPrefix}ℹ️  Checkout already finalized (idempotent skip)`);
+    }
+    if (fin.ok) {
+        await followUpPaidCheckout(fresh, fin, logPrefix);
+    }
+    return fin;
+}
+
+let stripeReconcileInFlight = false;
+
+async function reconcileRecentPaidCheckouts({ hours = 72, limit = 100 } = {}) {
+    if (!stripe) {
+        return { ok: false, error: 'Stripe is not configured', recovered: [], skipped: 0, failed: [] };
+    }
+    if (stripeReconcileInFlight) {
+        return { ok: true, reason: 'in_flight', recovered: [], skipped: 0, failed: [] };
+    }
+    stripeReconcileInFlight = true;
+    const recovered = [];
+    const failed = [];
+    let skipped = 0;
+    let scanned = 0;
+    try {
+        const createdGte = Math.floor(Date.now() / 1000) - Math.max(1, hours) * 3600;
+        let startingAfter;
+        while (scanned < 200) {
+            const page = await stripe.checkout.sessions.list({
+                limit: Math.min(100, limit),
+                created: { gte: createdGte },
+                ...(startingAfter ? { starting_after: startingAfter } : {})
+            });
+            for (const session of page.data) {
+                scanned += 1;
+                if (session.payment_status !== 'paid') continue;
+                const fin = await finalizePaidCheckoutSession(session, '[reconcile] ');
+                if (!fin.ok) {
+                    if (fin.reason === 'not_paid' || fin.reason === 'no_payment_intent') {
+                        skipped += 1;
+                        continue;
+                    }
+                    failed.push({ id: session.id, reason: fin.reason });
+                    continue;
+                }
+                if (fin.reason === 'recorded') {
+                    await followUpPaidCheckout(session, fin, '[reconcile] ');
+                    recovered.push({
+                        id: session.id,
+                        bookingRef: fin.bookingRef || null,
+                        email: session.customer_email || (session.metadata && session.metadata.contact_email) || ''
+                    });
+                } else {
+                    skipped += 1;
+                }
+            }
+            if (!page.has_more || !page.data.length) break;
+            startingAfter = page.data[page.data.length - 1].id;
+        }
+        if (recovered.length) {
+            console.log(`[reconcile] recovered ${recovered.length} paid Checkout session(s) missing from the dashboard`);
+        }
+        return { ok: true, scanned, recovered, skipped, failed };
+    } catch (err) {
+        console.error('[reconcile] Stripe checkout scan failed:', err.message);
+        return { ok: false, error: err.message, scanned, recovered, skipped, failed };
+    } finally {
+        stripeReconcileInFlight = false;
     }
 }
 
@@ -7213,7 +7368,8 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
     // Handle events
     switch (event.type) {
-        case 'checkout.session.completed': {
+        case 'checkout.session.completed':
+        case 'checkout.session.async_payment_succeeded': {
             const session = event.data.object;
             const meta = session.metadata || {};
             const travellerCount = parseInt(meta.traveller_count, 10) || 1;
@@ -7231,35 +7387,11 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                     travellerCount
             );
 
-            const fin = await finalizePaidCheckoutSession(session, '   ');
-            if (fin.reason === 'already_recorded' || fin.reason === 'awaited_peer') {
-                console.log('   ℹ️  Checkout already finalized (idempotent skip)');
+            const fin = await ingestPaidCheckoutSession(session, '   ');
+            if (!fin.ok && fin.reason !== 'not_paid') {
+                console.error('   ❌ Failed to record paid checkout:', fin.reason, session.id);
+                return res.status(500).send(`Finalize failed: ${fin.reason}`);
             }
-            // If this Checkout came from an admin-issued invitation, mark it paid.
-            if (usePersistentDb && meta.invitation_id) {
-                try {
-                    const updated = await db.markInvitationPaid(meta.invitation_id, fin.bookingRef || null);
-                    if (updated) console.log(`   ✅ Invitation ${meta.invitation_id} marked paid`);
-                } catch (e) {
-                    console.error('   ⚠️  Failed to mark invitation paid:', e.message);
-                }
-            }
-            emitServerAnalytics(
-                meta.invitation_id ? 'invite_paid' : 'payment_succeeded',
-                {
-                    visitorId: meta.lon_vid || null,
-                    sessionId: meta.lon_sid || null,
-                    props: {
-                        service: bookingServiceTag(meta.service),
-                        via: meta.invitation_id ? 'invite' : 'checkout',
-                        funnel: 'patient_booking'
-                    },
-                    revenueCents: session.amount_total || 0,
-                    currency: session.currency || 'eur',
-                    bookingRef: fin.bookingRef || null
-                }
-            ).catch(() => {});
-            markQuizLeadConverted(session.customer_email || meta.contact_email || '').catch(() => {});
             break;
         }
 
@@ -10661,13 +10793,10 @@ app.get('/api/session/:sessionId', rateLimitSessionRetrieve, async (req, res) =>
             return res.status(400).json({ error: 'Payment not completed' });
         }
 
-        await finalizePaidCheckoutSession(session, '[session-api] ');
-        markQuizLeadConverted(
-            session.customer_email ||
-            (session.customer_details && session.customer_details.email) ||
-            (session.metadata && session.metadata.contact_email) ||
-            ''
-        ).catch(() => {});
+        const fin = await ingestPaidCheckoutSession(session, '[session-api] ');
+        if (!fin.ok) {
+            console.error('[session-api] failed to record paid checkout:', fin.reason, session.id);
+        }
 
         const travellerCount = parseInt(session.metadata?.traveller_count, 10) || 1;
         const piId = paymentIntentIdFromSession(session);
@@ -13837,6 +13966,21 @@ async function enrichBookingsWithSource(bookings) {
         };
     });
 }
+
+app.post('/api/admin/reconcile-stripe', requireAdmin, async (req, res) => {
+    try {
+        const rawHours = (req.body && req.body.hours) != null ? req.body.hours : req.query.hours;
+        const hours = Math.min(Math.max(parseInt(rawHours, 10) || 72, 1), 168);
+        const result = await reconcileRecentPaidCheckouts({ hours });
+        if (!result.ok && result.error === 'Stripe is not configured') {
+            return res.status(503).json(result);
+        }
+        res.json(result);
+    } catch (err) {
+        console.error('POST /api/admin/reconcile-stripe:', err.message);
+        res.status(500).json({ error: 'Failed to reconcile Stripe payments' });
+    }
+});
 
 // ─── API: Admin — Upcoming consultations schedule ───
 app.get('/api/admin/upcoming-consultations', requireAdmin, async (req, res) => {

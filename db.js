@@ -2409,7 +2409,25 @@ async function findProfessionalByEmail(email) {
     const e = String(email || '').trim().toLowerCase();
     if (!e || !e.includes('@')) return null;
     const r = await p.query(
-        `SELECT * FROM professionals WHERE LOWER(TRIM(email)) = $1 ORDER BY id ASC LIMIT 1`,
+        `SELECT * FROM (
+            SELECT p.*, 1 AS match_rank
+              FROM professionals p
+             WHERE LOWER(TRIM(p.email)) = $1
+            UNION ALL
+            SELECT p.*, 2 AS match_rank
+              FROM professionals p
+             WHERE LOWER(TRIM(p.login_email_sent_to)) = $1
+               AND TRIM(p.login_email_sent_to) <> ''
+            UNION ALL
+            SELECT p.*, 3 AS match_rank
+              FROM professionals p
+              JOIN psychologist_applications a
+                ON a.professional_id = p.id
+             WHERE LOWER(TRIM(a.email)) = $1
+                OR LOWER(TRIM(COALESCE(a.payload->>'email', a.payload->>'Email', ''))) = $1
+         ) x
+         ORDER BY match_rank ASC, id ASC
+         LIMIT 1`,
         [e]
     );
     return r.rows[0] ? rowToProfessional(r.rows[0]) : null;
