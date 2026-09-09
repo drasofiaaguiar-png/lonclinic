@@ -14040,6 +14040,35 @@ app.get('/api/admin/upcoming-consultations', requireAdmin, async (req, res) => {
     }
 });
 
+app.post('/api/admin/bookings/:ref/resend-confirmation', requireAdmin, async (req, res) => {
+    try {
+        const ref = String(req.params.ref || '').trim();
+        if (!ref) return res.status(400).json({ error: 'Missing booking reference' });
+        const refUpper = ref.toUpperCase();
+        const booking = usePersistentDb
+            ? (await db.findBookingByRef(refUpper)) || (await db.findBookingByRef(ref))
+            : bookingsStore.find((b) => {
+                const existing = String(b.bookingRef || '');
+                return existing === ref || existing.toUpperCase() === refUpper;
+            });
+        if (!booking) return res.status(404).json({ error: 'Booking not found' });
+        if (booking.cancelled) {
+            return res.status(409).json({ error: 'This consultation is cancelled' });
+        }
+        if (String(booking.service || '') === 'entrevista') {
+            return res.status(409).json({ error: 'Job interviews do not use the patient confirmation email' });
+        }
+        const sent = await sendConfirmationEmail(bookingDataFromBooking(booking));
+        if (!sent) {
+            return res.status(500).json({ error: 'Could not send the confirmation email' });
+        }
+        res.json({ ok: true, email: booking.email, bookingRef: booking.bookingRef });
+    } catch (err) {
+        console.error('POST /api/admin/bookings/:ref/resend-confirmation:', err.message);
+        res.status(500).json({ error: 'Failed to send confirmation' });
+    }
+});
+
 function consultationPatientType(consultationCount) {
     const n = Number(consultationCount) || 0;
     return n > 1 ? 'Regular' : 'One-time';
@@ -15508,6 +15537,33 @@ async function createInvitationStripeSession(invitation, baseUrl) {
         expires_at: invitationStripeExpiresAtUnix(invitation)
     });
     return session;
+}
+
+function bookingDataFromBooking(booking) {
+    const travellerCount = Math.max(1, Math.min(4, parseInt(booking && booking.travellerCount, 10) || 1));
+    const name = String((booking && booking.patientName) || 'Patient').trim() || 'Patient';
+    const passengers = [name];
+    for (let i = 2; i <= travellerCount; i++) passengers.push(`Traveller ${i}`);
+    return {
+        bookingRef: booking.bookingRef,
+        patientName: name,
+        email: booking.email,
+        service: booking.service,
+        serviceLabel: serviceLabelFromCode(booking.service),
+        date: booking.dateIso || booking.date,
+        time: booking.time,
+        amount: booking.amount,
+        currency: booking.currency || 'eur',
+        travellerCount,
+        hasInsurance: !!booking.hasInsurance,
+        passengers,
+        travelDest: booking.travelDest || '',
+        travelDates: booking.travelDates || '',
+        contactPhone: booking.patientPhone || '',
+        locale: normalizePatientLocale(booking.patientLocale || 'pt'),
+        professional: booking.professional || '',
+        intakeToken: booking.intakeToken || ''
+    };
 }
 
 function bookingDataFromInvitation(invitation, bookingRef) {

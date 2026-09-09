@@ -285,6 +285,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const adminSidebarBackdrop = document.getElementById('adminSidebarBackdrop');
     const adminScheduleList = document.getElementById('adminScheduleList');
     const scheduleRefreshBtn = document.getElementById('scheduleRefreshBtn');
+    const scheduleStripeSyncBtn = document.getElementById('scheduleStripeSyncBtn');
 
     const SERVICE_LABELS_ADMIN = {
         clinica_geral: 'Clínica geral',
@@ -475,6 +476,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <span class="admin-source-badge is-${isInterview ? 'interview' : source}">${badgeLabel}</span>
                         ${comp}
                         ${ref ? `<span class="admin-agenda-ref">${escapeHtml(ref)}</span>` : ''}
+                        ${ref && !isInterview ? `<button type="button" class="btn btn-outline btn-sm" data-resend-confirm="${escapeHtml(ref)}">Send confirmation</button>` : ''}
                         ${ref && !isInterview ? `<a class="btn btn-outline btn-sm" href="/clinic-desk/dias">Open notes</a>` : ''}
                     </div>
                 `;
@@ -514,6 +516,82 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (scheduleRefreshBtn) {
         scheduleRefreshBtn.addEventListener('click', () => loadUpcomingConsultations());
+    }
+
+    async function sendBookingConfirmationEmail(ref, btn) {
+        const bookingRef = String(ref || '').trim();
+        if (!bookingRef) return;
+        const original = btn ? btn.textContent : 'Send confirmation';
+        if (btn) {
+            btn.disabled = true;
+            btn.textContent = 'Sending…';
+        }
+        try {
+            const res = await fetch(`/api/admin/bookings/${encodeURIComponent(bookingRef)}/resend-confirmation`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await res.json().catch(() => ({}));
+            if (res.status === 401) return;
+            if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+            if (btn) btn.textContent = 'Sent';
+            alert(`Confirmation sent to ${data.email || 'the patient'}, with the video-room link.`);
+        } catch (err) {
+            alert(err.message || 'Could not send confirmation.');
+            if (btn) btn.textContent = original;
+        } finally {
+            if (btn) {
+                setTimeout(() => {
+                    btn.textContent = original;
+                    btn.disabled = false;
+                }, 2200);
+            }
+        }
+    }
+
+    if (adminScheduleList) {
+        adminScheduleList.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-resend-confirm]');
+            if (!btn) return;
+            sendBookingConfirmationEmail(btn.getAttribute('data-resend-confirm'), btn);
+        });
+    }
+
+    if (scheduleStripeSyncBtn) {
+        scheduleStripeSyncBtn.addEventListener('click', async () => {
+            const original = scheduleStripeSyncBtn.textContent;
+            scheduleStripeSyncBtn.disabled = true;
+            scheduleStripeSyncBtn.textContent = 'Checking Stripe…';
+            try {
+                const res = await fetch('/api/admin/reconcile-stripe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ hours: 72 })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401) return;
+                if (!res.ok) {
+                    throw new Error(data.error || `HTTP ${res.status}`);
+                }
+                const recovered = Array.isArray(data.recovered) ? data.recovered.length : 0;
+                scheduleStripeSyncBtn.textContent = recovered
+                    ? `Recovered ${recovered}`
+                    : 'No missing payments';
+                await loadUpcomingConsultations();
+                if (typeof loadPatientsTable === 'function') {
+                    await loadPatientsTable();
+                }
+            } catch (err) {
+                console.error('Stripe reconcile:', err);
+                scheduleStripeSyncBtn.textContent = 'Sync failed';
+                alert(err.message || 'Could not recover Stripe payments.');
+            } finally {
+                setTimeout(() => {
+                    scheduleStripeSyncBtn.textContent = original;
+                    scheduleStripeSyncBtn.disabled = false;
+                }, 2500);
+            }
+        });
     }
 
     // ─── Patients table ───
@@ -897,6 +975,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 </label>
                             </td>
                             <td class="admin-patients-actions-cell">
+                                ${c.cancelled || !c.bookingRef
+                                    ? ''
+                                    : `<button type="button" class="btn btn-outline btn-sm" data-resend-confirm="${escapeHtml(c.bookingRef)}">Send confirmation</button>`}
                                 <button type="button" class="admin-patients-icon-btn is-delete" data-delete-ref="${escapeHtml(c.bookingRef)}" title="Delete consultation">
                                     ${ICON_DELETE}
                                 </button>
@@ -959,6 +1040,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 e.stopPropagation();
                 const ref = btn.getAttribute('data-schedule-next');
                 if (ref) openScheduleNextModal(ref);
+            });
+        });
+
+        adminPatientsBody.querySelectorAll('[data-resend-confirm]').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                sendBookingConfirmationEmail(btn.getAttribute('data-resend-confirm'), btn);
             });
         });
 
