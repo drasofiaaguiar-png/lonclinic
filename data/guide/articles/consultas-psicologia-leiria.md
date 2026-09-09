@@ -1,35 +1,44 @@
 <aside class="guide-keyfacts">
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
-<li>Pode marcar psicologia online em Leiria sem estar no consultório: a Lon Clinic atende por videochamada a <strong>60 €</strong> (ou <strong>54 €/semana</strong>), <strong>45 minutos</strong> semanais.</li>
-<li>O **Politécnico de Leiria** tem o **CAE — Centro de Apoio ao Estudante**, com consultas de psicologia **gratuitas para estudantes do IPL** (presencial ou online), na [página oficial](https://www.</li>
-<li>Mapa: <a href="/blog/psicologia-online-portugal-por-distrito">psicologia online por distrito</a> · <a href="/blog/consultas-psicologia-lisboa">lisboa</a>.</li>
+<li>Em Leiria pode marcar psicologia online na Lon Clinic: <strong>60 €</strong> ou <strong>54 €/semana</strong>, <strong>45 minutos</strong>.</li>
+<li>O <strong>Politécnico de Leiria</strong> tem o <strong>CAE</strong>, com consultas de psicologia <strong>gratuitas para estudantes do IPL</strong> — <a href="https://www.ipleiria.pt/viver/sucesso-academico/apoio-psicologico/">página oficial</a>. O SNS é a <strong>ULS da Região de Leiria</strong>.</li>
+<li>Mapa: <a href="/blog/psicologia-online-portugal-por-distrito">psicologia online por distrito</a> · <a href="/blog/consultas-psicologia-coimbra">Coimbra</a> · <a href="/blog/consultas-psicologia-lisboa">Lisboa</a>.</li>
 </ul>
 </aside>
 
-Em Leiria, há o particular, o SNS (médico de família / ULS) e, quando for estudante, o SAS da instituição. A Lon Clinic acrescenta a consulta **online** em Leiria: sem deslocação, preço fixo, especialidade que o código postal local pode não ter.
+Em Leiria, o **Politécnico de Leiria** tem o **CAE — Centro de Apoio ao Estudante**, com consultas de psicologia **gratuitas para estudantes do IPL** (presencial ou online), na [página oficial](https://www.ipleiria.pt/viver/sucesso-academico/apoio-psicologico/). O SNS é a **ULS da Região de Leiria**. O nome oficial do apoio estudantil é o CAE, não «SAS de psicologia». A Lon Clinic é **online** em Leiria: **60 €** ou **54 €/semana**, **45 minutos**.
 
-Faixa nacional 40 €–70 € no particular. Nacional: [quanto custa](/blog/quanto-custa-consulta-psicologia-portugal). Gratuitas: [consultas gratuitas](/blog/consultas-psicologia-gratuitas-portugal). Formato: [online vs presencial](/blog/psicologia-online-vs-presencial). Universidades: [apoio psicológico nas universidades](/blog/apoio-psicologico-universidades-portugal).
+Números nacionais: [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal). Gratuitas: [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal). Formato: [psicologia online vs presencial](/blog/psicologia-online-vs-presencial). Universidades: [apoio psicológico nas universidades](/blog/apoio-psicologico-universidades-portugal).
 
-## Apoio gratuito em Leiria
+## Onde encontrar consultas de psicologia em Leiria?
 
-O **Politécnico de Leiria** tem o **CAE — Centro de Apoio ao Estudante**, com consultas de psicologia **gratuitas para estudantes do IPL** (presencial ou online), na [página oficial](https://www.ipleiria.pt/viver/sucesso-academico/apoio-psicologico/). O SNS é a **ULS da Região de Leiria**. O nome oficial do apoio psicológico estudantil é o CAE, não «SAS de psicologia».
+SNS via **ULS da Região de Leiria**. Estudantes do IPL: [CAE](https://www.ipleiria.pt/viver/sucesso-academico/apoio-psicologico/). A Lon Clinic atende a partir de Leiria. Coimbra: [guia](/blog/consultas-psicologia-coimbra).
 
 Não publicamos tempos de espera. Em crise: **SNS 24 (808 24 24 24)** ou **112**.
 
 {{cta}}
 
-## Porquê online em Leiria
+## Porquê psicologia online em Leiria?
 
-- Sem viagem. Link no browser; sem instalar aplicações.
+Leiria está entre Coimbra e Lisboa; a especialidade privada não cobre sempre casal ou burnout. A videochamada não pede a A1.
+
+- Sem viagem. Link no browser (Doxy.me); sem instalar aplicações.
 - **60 €** avulsa ou **54 €/semana** — o preço **não muda** com a cidade.
 - **45 minutos**, semanal, incluindo a primeira.
 - Especialidade, não código postal: [ansiedade](/ansiedade-no-trabalho), [burnout](/psicologia-burnout), [terapia de casal](/terapia-de-casal), [ataques de pânico](/ataques-de-panico), [gestão de stress](/gestao-de-stress). Só queixas que o site publica.
 - **Podes mudar de psicólogo sempre que quiseres, sem justificação, e recomeçar do zero.**
-- Inscritos na **OPP**; recibo ADSE/seguro — [ADSE](/blog/adse-seguros-psicologia-portugal).
+- Inscritos na **OPP**; recibo ADSE/seguro — [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal).
 
+Cidades próximas: [Coimbra](/blog/consultas-psicologia-coimbra) · [Lisboa](/blog/consultas-psicologia-lisboa) · [psicologia online por distrito](/blog/psicologia-online-portugal-por-distrito).
 
-Cidades próximas: [Coimbra](/blog/consultas-psicologia-coimbra) · [lisboa](/blog/consultas-psicologia-lisboa).
+## O Politécnico de Leiria tem apoio psicológico?
+
+Sim. O [CAE](https://www.ipleiria.pt/viver/sucesso-academico/apoio-psicologico/) descreve consultas **gratuitas para estudantes do IPL**, presencial ou online. Não é um SAS universitário com outro nome. Quem não é do IPL usa o SNS, o particular ou a Lon Clinic.
+
+## A ADSE cobre psicologia em Leiria?
+
+Sim. A ADSE comparticipa psicologia clínica em regime livre em Leiria como no resto do país, com recibo.
 
 {{cta}}
 
@@ -37,24 +46,37 @@ Cidades próximas: [Coimbra](/blog/consultas-psicologia-coimbra) · [lisboa](/bl
 
 ## Perguntas frequentes
 
-### Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?
+### Onde encontrar consultas de psicologia em Leiria?
 
-Não. A consulta Lon é videochamada: pode estar em Leiria ou noutro sítio com internet. O preço e a sessão não exigem presença no consultório de Leiria.
+No particular de Leiria, no SNS via ULS da Região de Leiria, no CAE do Politécnico de Leiria (estudantes IPL) ou online na Lon Clinic a partir de Leiria.
 
-### O preço muda consoante a cidade?
+### Quanto custa uma consulta de psicologia em Leiria?
 
-Não. Na Lon Clinic o preço é fixo: **60 €** a sessão avulsa ou **54 €/semana** — esteja em Leiria ou noutro distrito.
+No particular a faixa habitual é a nacional (cerca de 40 € a 70 €). Na Lon Clinic: 60 € ou 54 €/semana, 45 minutos.
 
-### Como marco consulta?
+### Há psicologia online em Leiria?
 
-Escolhe o psicólogo em [saúde mental](/saudemental) por especialidade ou faz a [triagem](/triagem), marca e recebe o link no email. Sessão de 45 minutos.
+Sim. A Lon Clinic atende por videochamada a partir de Leiria, no browser.
+
+### O Politécnico de Leiria tem apoio psicológico?
+
+Sim. O CAE — Centro de Apoio ao Estudante oferece consultas gratuitas a estudantes do IPL. Confirme na página oficial. A Lon Clinic não é o CAE.
+
+### Como marcar consulta de psicologia em Leiria?
+
+Escolha o psicólogo na página de saúde mental da Lon Clinic (/saudemental) ou faça a triagem. Sessão de 45 minutos a partir de Leiria.
+
+### A ADSE cobre psicologia em Leiria?
+
+Sim. A ADSE comparticipa psicologia clínica em regime livre em Leiria como no resto do país, com recibo.
 
 ---
 
-Este artigo tem fins informativos e não substitui uma avaliação clínica individual. Em crise: **SNS 24 (808 24 24 24)** ou **112**.
+Este artigo tem fins informativos e não substitui uma avaliação clínica ou psicológica individual. Se está a atravessar uma crise ou tem pensamentos de fazer mal a si próprio, procure ajuda imediata através da linha **SNS 24 (808 24 24 24)** ou dos serviços de urgência (**112**).
 
 ## Fontes
 
-- Instituições nomeadas no texto (páginas oficiais SAS / ULS / SESARAM)
+- [IPL — CAE / apoio psicológico](https://www.ipleiria.pt/viver/sucesso-academico/apoio-psicologico/)
+- ULS da Região de Leiria
 - [OPP — Directório](https://www.ordemdospsicologos.pt/pt/membros)
-- Preçário Lon Clinic — 45 min; 60 € / 54 €/semana
+- Preçário da Lon Clinic, 2026 — 45 min; 60 € / 54 €/semana

@@ -64,7 +64,7 @@ Sim. A Lon Clinic atende por videochamada em todos os distritos, na Madeira e no
 
 ### Como marcar uma consulta de psicologia online em Portugal?
 
-Escolhe psicólogo em /saudemental ou faz a triagem, marca (60 € ou 54 €/semana), recebe o link Doxy.me no browser. A sessão dura 45 minutos.
+Escolha o psicólogo na página de saúde mental da Lon Clinic (/saudemental) ou faça a [triagem](/triagem), marque (60 € ou 54 €/semana) e receba o link Doxy.me no browser. A sessão dura 45 minutos.
 
 ### A psicologia online funciona no Porto, em Lisboa e em Aveiro?
 

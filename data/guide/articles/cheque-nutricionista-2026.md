@@ -11,11 +11,13 @@ O **Cheque Cuida-te — Nutrição** (ainda pesquisado como Cheque-Nutricionista
 
 A Lon Clinic tem nutrição **paga** — [115 €](/nutricao/programa) no mês 1, depois 75 €/mês. **Não afirmamos adesão ao cheque.** Quem tem cheque marca com um aderente da lista oficial; quem quer o programa Lon marca em [/nutricao](/nutricao).
 
-Preços do particular: [quanto custa uma consulta de nutrição](/blog/quanto-custa-consulta-nutricao-portugal). Recibo ADSE: [ADSE e nutrição](/blog/adse-consultas-nutricao-portugal).
+Preços do particular: [quanto custa uma consulta de nutrição](/blog/quanto-custa-consulta-nutricao-portugal). Recibo ADSE: [ADSE e nutrição](/blog/adse-consultas-nutricao-portugal). Formato: [consulta de nutrição online](/blog/consulta-nutricao-online-como-funciona). Perda de peso: [consultas de nutrição para perda de peso](/blog/consultas-nutricao-perda-de-peso). Títulos: [nutricionista ou dietista](/blog/nutricionista-ou-dietista-portugal). O irmão em psicologia: [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal) e [apoio nas universidades](/blog/apoio-psicologico-universidades-portugal).
 
 ## Quem pode pedir o Cheque Cuida-te — Nutrição?
 
 Jovens com **12 a 35 anos, inclusive**, em Portugal. Até serem maiores, precisam de autorização dos representantes legais. Em 2026 a medida **deixou de estar limitada ao ensino superior** — o universo é a faixa etária, não a matrícula ([gov.pt](https://www.gov.pt/servicos/pedir-cheque-cuida-te-nutricao), actualizado em 25.08.2026).
+
+{{cta}}
 
 ## Quantas consultas dá o Cheque-Nutricionista?
 

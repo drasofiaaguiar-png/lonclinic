@@ -12,6 +12,8 @@ A promessa de «perder 5 kg em duas semanas» é sedutora — e quase sempre ins
 
 Segundo os [Centers for Disease Control and Prevention](https://www.cdc.gov/healthy-weight-growth/site.html) (CDC), a perda de peso saudável não é sobre uma «dieta» ou «programa» pontual — é sobre um estilo de vida contínuo que inclui mudanças duradouras nos hábitos diários de alimentação e exercício. A evidência mostra que pessoas que perdem peso de forma gradual e constante tendem a ser mais bem-sucedidas a manter essa perda ao longo do tempo, comparadas com quem opta por abordagens rápidas e drásticas.
 
+O desenho clínico da casa está em [consultas de nutrição para perda de peso](/blog/consultas-nutricao-perda-de-peso) e no [programa de reeducação metabólica](/nutricao/programa) (115 € / 75 €/mês, sem aGLP-1).
+
 {{cta}}
 
 ## Porque a rapidez tende a falhar a longo prazo

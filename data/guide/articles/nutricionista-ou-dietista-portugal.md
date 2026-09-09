@@ -9,7 +9,7 @@
 
 É uma das perguntas mais comuns antes de marcar uma consulta de nutrição — e a resposta, em Portugal, é mais simples do que em muitos outros países. **Nutricionista** e **dietista** exercem sob a mesma Ordem: não existe aqui a hierarquia formal que noutros sistemas reserva um título ao hospital e outro ao consultório.
 
-Confirme sempre a cédula no [registo nacional da Ordem dos Nutricionistas](https://www.ordemdosnutricionistas.pt/registoNacional.php?cod=0C0A). Preços: [quanto custa uma consulta de nutrição](/blog/quanto-custa-consulta-nutricao-portugal). ADSE: [ADSE e nutrição](/blog/adse-consultas-nutricao-portugal). Cheque público: [Cheque-Nutricionista 2026](/blog/cheque-nutricionista-2026). Hub: [/nutricao](/nutricao).
+Confirme sempre a cédula no [registo nacional da Ordem dos Nutricionistas](https://www.ordemdosnutricionistas.pt/registoNacional.php?cod=0C0A). Preços: [quanto custa uma consulta de nutrição](/blog/quanto-custa-consulta-nutricao-portugal). ADSE: [ADSE e nutrição](/blog/adse-consultas-nutricao-portugal). Cheque público: [Cheque-Nutricionista 2026](/blog/cheque-nutricionista-2026). Hub: [/nutricao](/nutricao). Perda de peso: [consultas de nutrição para perda de peso](/blog/consultas-nutricao-perda-de-peso). Online: [consulta de nutrição online](/blog/consulta-nutricao-online-como-funciona).
 
 ## Nutricionista e dietista são regulados pela mesma Ordem?
 

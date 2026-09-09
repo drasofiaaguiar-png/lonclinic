@@ -9,7 +9,7 @@
 
 Em Lisboa, uma consulta de psicologia no sector privado costuma custar **50 € a 80 €** — a área metropolitana está no topo da faixa nacional. O SNS continua a ser o médico de família e a espera do ACES; quem está inscrito na Universidade de Lisboa pode pedir apoio psicológico aos **Serviços de Ação Social (SASULisboa)** e, em algumas unidades orgânicas, ao gabinete da faculdade — **em regra gratuito ou a custo reduzido para inscritos**. A Lon Clinic é a alternativa **online**: consulta a partir de Lisboa, da AML ou do Vale do Tejo, sem trânsito e sem lista de espera de consultório.
 
-Números nacionais: [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal). Gratuitas: [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal). Formato: [online vs presencial](/blog/psicologia-online-vs-presencial).
+Números nacionais: [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal). Gratuitas: [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal). Formato: [online vs presencial](/blog/psicologia-online-vs-presencial). Universidades: [apoio psicológico nas universidades](/blog/apoio-psicologico-universidades-portugal). AML: [Almada](/blog/consultas-psicologia-almada) · [Cascais](/blog/consultas-psicologia-cascais) · [Sintra](/blog/consultas-psicologia-sintra).
 
 ## Onde encontrar consultas de psicologia em Lisboa?
 

@@ -12,6 +12,8 @@
 
 Segundo a [Harvard Health Publishing](https://www.health.harvard.edu/mind-and-mood/how-to-curb-your-stress-eating), a fome física costuma desenvolver-se de forma gradual, e pode ser satisfeita com uma variedade de alimentos; a fome emocional, por outro lado, surge repentinamente e costuma dirigir-se especificamente a alimentos de conforto — mais frequentemente doces, salgados ou fritos. O [stress crónico](/blog/stress-e-perda-de-peso) é um dos gatilhos mais comuns.
 
+Quando a fome emocional manda no peso, o [programa de reeducação](/nutricao/programa) articula nutrição com [psicologia](/saudemental). O percurso nutricional está em [consultas de nutrição para perda de peso](/blog/consultas-nutricao-perda-de-peso).
+
 {{cta}}
 
 ## Outros sinais que ajudam a diferenciar

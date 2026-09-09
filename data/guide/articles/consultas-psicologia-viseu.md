@@ -1,35 +1,40 @@
 <aside class="guide-keyfacts">
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
-<li>Pode marcar psicologia online em Viseu sem estar no consultório: a Lon Clinic atende por videochamada a <strong>60 €</strong> (ou <strong>54 €/semana</strong>), <strong>45 minutos</strong> semanais.</li>
-<li>O SNS é a **ULS de Viseu Dão-Lafões**.</li>
-<li>Mapa: <a href="/blog/psicologia-online-portugal-por-distrito">psicologia online por distrito</a> · <a href="/blog/consultas-psicologia-aveiro">aveiro</a>.</li>
+<li>Em Viseu pode marcar psicologia online na Lon Clinic: <strong>60 €</strong> ou <strong>54 €/semana</strong>, <strong>45 minutos</strong>.</li>
+<li>O SNS é a <strong>ULS de Viseu Dão-Lafões</strong>.</li>
+<li>Mapa: <a href="/blog/psicologia-online-portugal-por-distrito">psicologia online por distrito</a> · <a href="/blog/consultas-psicologia-coimbra">Coimbra</a> · <a href="/blog/consultas-psicologia-covilha">Covilhã</a>.</li>
 </ul>
 </aside>
 
-Em Viseu, há o particular, o SNS (médico de família / ULS) e, quando for estudante, o SAS da instituição. A Lon Clinic acrescenta a consulta **online** em Viseu: sem deslocação, preço fixo, especialidade que o código postal local pode não ter.
+Em Viseu, o SNS de psicologia passa pela **ULS de Viseu Dão-Lafões**. Sem gabinete universitário público com o mesmo peso de Coimbra ou Aveiro — confirme o SAS da sua instituição se for estudante. A Lon Clinic é **online** em Viseu: **60 €** ou **54 €/semana**, **45 minutos**.
 
-Faixa nacional 40 €–70 €. Nacional: [quanto custa](/blog/quanto-custa-consulta-psicologia-portugal). Gratuitas: [consultas gratuitas](/blog/consultas-psicologia-gratuitas-portugal). Formato: [online vs presencial](/blog/psicologia-online-vs-presencial). Universidades: [apoio psicológico nas universidades](/blog/apoio-psicologico-universidades-portugal).
+Números nacionais: [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal). Gratuitas: [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal). Formato: [psicologia online vs presencial](/blog/psicologia-online-vs-presencial). Universidades: [apoio psicológico nas universidades](/blog/apoio-psicologico-universidades-portugal).
 
-## Apoio gratuito em Viseu
+## Onde encontrar consultas de psicologia em Viseu?
 
-O SNS é a **ULS de Viseu Dão-Lafões**. Psicologia no SNS: médico de família desta ULS. Sem gabinete universitário público com o mesmo peso de Coimbra ou Aveiro — confirme o SAS da sua instituição se for estudante.
+SNS via **ULS de Viseu Dão-Lafões**. Particular local. A Lon Clinic atende a partir de Viseu. Não inventamos um SAS de psicologia para o IPV.
 
 Não publicamos tempos de espera. Em crise: **SNS 24 (808 24 24 24)** ou **112**.
 
 {{cta}}
 
-## Porquê online em Viseu
+## Porquê psicologia online em Viseu?
 
-- Sem viagem. Link no browser; sem instalar aplicações.
+Viseu tem ULS própria; a especialidade privada (casal, burnout) é mais curta do que em Coimbra. A videochamada cobre essa lacuna.
+
+- Sem viagem. Link no browser (Doxy.me); sem instalar aplicações.
 - **60 €** avulsa ou **54 €/semana** — o preço **não muda** com a cidade.
 - **45 minutos**, semanal, incluindo a primeira.
 - Especialidade, não código postal: [ansiedade](/ansiedade-no-trabalho), [burnout](/psicologia-burnout), [terapia de casal](/terapia-de-casal), [ataques de pânico](/ataques-de-panico), [gestão de stress](/gestao-de-stress). Só queixas que o site publica.
 - **Podes mudar de psicólogo sempre que quiseres, sem justificação, e recomeçar do zero.**
-- Inscritos na **OPP**; recibo ADSE/seguro — [ADSE](/blog/adse-seguros-psicologia-portugal).
+- Inscritos na **OPP**; recibo ADSE/seguro — [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal).
 
+Cidades próximas: [Coimbra](/blog/consultas-psicologia-coimbra) · [Covilhã](/blog/consultas-psicologia-covilha) · [Guarda](/blog/consultas-psicologia-guarda) · [psicologia online por distrito](/blog/psicologia-online-portugal-por-distrito).
 
-Cidades próximas: [aveiro](/blog/consultas-psicologia-aveiro) · [Coimbra](/blog/consultas-psicologia-coimbra) · [Guarda](/blog/consultas-psicologia-guarda).
+## A ADSE cobre psicologia em Viseu?
+
+Sim. A ADSE comparticipa psicologia clínica em regime livre em Viseu como no resto do país, com recibo.
 
 {{cta}}
 
@@ -37,24 +42,32 @@ Cidades próximas: [aveiro](/blog/consultas-psicologia-aveiro) · [Coimbra](/blo
 
 ## Perguntas frequentes
 
-### Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?
+### Onde encontrar consultas de psicologia em Viseu?
 
-Não. A consulta Lon é videochamada: pode estar em Viseu ou noutro sítio com internet. O preço e a sessão não exigem presença no consultório de Viseu.
+No particular de Viseu, no SNS via ULS de Viseu Dão-Lafões, ou online na Lon Clinic a partir de Viseu.
 
-### O preço muda consoante a cidade?
+### Quanto custa uma consulta de psicologia em Viseu?
 
-Não. Na Lon Clinic o preço é fixo: **60 €** a sessão avulsa ou **54 €/semana** — esteja em Viseu ou noutro distrito.
+No particular a faixa habitual é a nacional (cerca de 40 € a 70 €). Na Lon Clinic: 60 € ou 54 €/semana, 45 minutos.
 
-### Como marco consulta?
+### Há psicologia online em Viseu?
 
-Escolhe o psicólogo em [saúde mental](/saudemental) por especialidade ou faz a [triagem](/triagem), marca e recebe o link no email. Sessão de 45 minutos.
+Sim. A Lon Clinic atende por videochamada a partir de Viseu, no browser.
+
+### Como marcar consulta de psicologia em Viseu?
+
+Escolha o psicólogo na página de saúde mental da Lon Clinic (/saudemental) ou faça a triagem. Sessão de 45 minutos a partir de Viseu.
+
+### A ADSE cobre psicologia em Viseu?
+
+Sim. A ADSE comparticipa psicologia clínica em regime livre em Viseu como no resto do país, com recibo.
 
 ---
 
-Este artigo tem fins informativos e não substitui uma avaliação clínica individual. Em crise: **SNS 24 (808 24 24 24)** ou **112**.
+Este artigo tem fins informativos e não substitui uma avaliação clínica ou psicológica individual. Se está a atravessar uma crise ou tem pensamentos de fazer mal a si próprio, procure ajuda imediata através da linha **SNS 24 (808 24 24 24)** ou dos serviços de urgência (**112**).
 
 ## Fontes
 
-- Instituições nomeadas no texto (páginas oficiais SAS / ULS / SESARAM)
+- ULS de Viseu Dão-Lafões
 - [OPP — Directório](https://www.ordemdospsicologos.pt/pt/membros)
-- Preçário Lon Clinic — 45 min; 60 € / 54 €/semana
+- Preçário da Lon Clinic, 2026 — 45 min; 60 € / 54 €/semana

@@ -17,6 +17,8 @@ Sim, para beneficiários ADSE, em psicologia clínica, nos dois regimes. A Lon C
 
 O pedido de reembolso tem prazo (em regra até **seis meses** após o acto). Confirme documentos e prazos no [serviço gov.pt](https://www2.gov.pt/pt/servicos/pedir-o-reembolso-de-despesas-de-saude-a-adse).
 
+{{cta}}
+
 ## ADSE: regime convencionado vs regime livre
 
 | | Regime convencionado | Regime livre |

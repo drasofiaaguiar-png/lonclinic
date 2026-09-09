@@ -16,6 +16,69 @@ const talkCta = require('./talk-cta');
 
 const GUIDE_DIR = path.join(__dirname, 'data', 'guide');
 const MANIFEST_PATH = path.join(GUIDE_DIR, 'manifest.json');
+const DEFAULT_GUIDE_IMAGE = '/image/guide/guide-hiker-view.jpg';
+const DEFAULT_OG_IMAGE = '/image/image3.webp';
+const GUIDE_IMAGE_DIMS = new Map();
+
+function resolveGuideImage(src) {
+    if (!src) return DEFAULT_GUIDE_IMAGE;
+    const p = String(src).startsWith('/') ? String(src) : `/${src}`;
+    const tiny = {
+        '/image/guide/guide-opera-coast.jpg': '/image/image1_files/CoventGarden_Large_Desktop.jpg',
+        '/image/guide/guide-sunset-lake.jpg': '/image/guide/guide-hiker-view.jpg',
+        '/image/guide/guide-lake-boats.jpg': '/image/guide/guide-country-road.jpg',
+        '/image/guide/guide-waterfall.jpg': '/image/guide/guide-group-walk.jpg',
+        '/image/guide/guide-coastal-sun.jpg': '/image/image1_files/Marylebone_Large_Desktop.jpg',
+        '/image/guide/guide-mountain-path.avif': '/image/travel-clinic-mountain-bg.jpg',
+        '/image/image2.webp': '/image/image3.webp',
+        '/image/guide/travel-cover-hq-1.png': '/image/guide/travel-cover-hq-2.webp',
+        '/image/guide/travel-cover-2.png': '/image/guide/travel-cover-hq-3.webp',
+        '/image/guide/travel-cover-3.png': '/image/guide/travel-cover-hq-4.webp',
+        '/image/guide/travel-cover-4.png': '/image/guide/travel-cover-hq-5.webp',
+        '/image/guide/travel-cover-5.png': '/image/guide/travel-cover-hq-6.webp',
+        '/image/guide/travel-cover-6.png': '/image/guide/travel-cover-hq-7.webp',
+        '/image/guide/travel-cover-7.png': '/image/guide/travel-cover-hq-8.webp',
+        '/image/guide/travel-cover-8.png': '/image/travel-clinic-mountain-bg.jpg'
+    };
+    return tiny[p] || p;
+}
+
+function readGuideImageSize(webPath) {
+    if (GUIDE_IMAGE_DIMS.has(webPath)) return GUIDE_IMAGE_DIMS.get(webPath);
+    let size = { w: 1600, h: 900 };
+    try {
+        const abs = path.join(__dirname, webPath.replace(/^\//, ''));
+        if (fs.existsSync(abs)) {
+            const buf = fs.readFileSync(abs);
+            const jpeg = buf[0] === 0xff && buf[1] === 0xd8;
+            if (jpeg) {
+                let i = 2;
+                while (i < buf.length - 8) {
+                    if (buf[i] !== 0xff) { i += 1; continue; }
+                    const marker = buf[i + 1];
+                    if (marker === 0xc0 || marker === 0xc1 || marker === 0xc2) {
+                        size = { w: buf.readUInt16BE(i + 7), h: buf.readUInt16BE(i + 5) };
+                        break;
+                    }
+                    i += 2 + buf.readUInt16BE(i + 2);
+                }
+            } else if (buf.toString('ascii', 8, 12) === 'WEBP') {
+                const chunk = buf.toString('ascii', 12, 16);
+                if (chunk === 'VP8X') size = { w: 1 + buf.readUIntLE(24, 3), h: 1 + buf.readUIntLE(27, 3) };
+            } else if (buf[0] === 0x89 && buf.toString('ascii', 1, 4) === 'PNG') {
+                size = { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
+            }
+        }
+    } catch { /* keep fallback */ }
+    GUIDE_IMAGE_DIMS.set(webPath, size);
+    return size;
+}
+
+function guideLeadFigureHtml(src, alt) {
+    const url = resolveGuideImage(src);
+    const { w, h } = readGuideImageSize(url);
+    return `<figure class="guide-figure guide-figure-lead mag-story-hero"><img src="${escapeHtml(url)}" srcset="${escapeHtml(url)} ${w}w" sizes="100vw" alt="${escapeHtml(alt)}" width="${w}" height="${h}" decoding="async" fetchpriority="high"></figure>`;
+}
 const SERIES_PATH = path.join(GUIDE_DIR, 'series.json');
 const ARTICLES_DIR = path.join(GUIDE_DIR, 'articles');
 const BURNOUT_MANIFEST_PATH = path.join(__dirname, 'data', 'burnout', 'manifest.json');
@@ -1291,7 +1354,7 @@ function renderBlogIndex(origin) {
     const o = normalizeOrigin(origin);
     const manifest = loadManifest();
     const articles = sortArticles((manifest.articles || []).filter((a) => isValidSlug(a.slug) && isListedArticle(a)));
-    const defaultOg = `${o}/image/image2.webp`;
+    const defaultOg = `${o}${DEFAULT_OG_IMAGE}`;
 
     const cards = articles.map((a) => {
         const slug = a.slug;
@@ -1304,7 +1367,7 @@ function renderBlogIndex(origin) {
             : '';
         const imagePath = a.image
             ? `${String(a.image).startsWith('/') ? '' : '/'}${String(a.image)}`
-            : '/image/image2.webp';
+            : DEFAULT_GUIDE_IMAGE;
         const img = escapeHtml(imagePath);
         return `
                 <article class="lon-service-card is-visible guide-card" role="listitem">
@@ -1419,7 +1482,7 @@ function renderBlogArticle(origin, slug) {
     }
     articleHtml = injectArticleChrome(articleHtml, meta, manifest.articles, format);
     const relatedHtml = relatedArticlesHtml(meta, manifest.articles);
-    const og = meta.image ? `${o}${String(meta.image).startsWith('/') ? '' : '/'}${meta.image}` : `${o}/image/image2.webp`;
+    const og = `${o}${resolveGuideImage(meta.image)}`;
     const hasPart = cviParts[0] && Array.isArray(cviParts[0].itemListElement)
         ? cviParts[0].itemListElement.map((el) => ({
             '@type': 'WebPageElement',
@@ -1536,7 +1599,7 @@ function renderBlogArticle(origin, slug) {
     })();
     const bio = isVerifiedArticle(meta) ? authors.authorBioHtml(o, meta.author, dateMod || datePub) : '';
     const leadFigure = meta.image
-        ? `<figure class="guide-figure guide-figure-lead mag-story-hero"><img src="${escapeHtml(String(meta.image).startsWith('/') ? meta.image : `/${meta.image}`)}" alt="${escapeHtml(title)}" width="1600" height="900" decoding="async"></figure>`
+        ? guideLeadFigureHtml(meta.image, title)
         : '';
 
     const kicker = magThemeLabel(meta);
@@ -1649,7 +1712,7 @@ function renderNotFound(origin) {
         title: 'Não encontrado | Lon Clinic',
         description: 'O artigo pedido não foi encontrado.',
         canonicalPath: '/blog',
-        ogImage: `${o}/image/image2.webp`,
+        ogImage: `${o}${DEFAULT_OG_IMAGE}`,
         jsonLd: null,
         mainHtml,
         navCurrent: 'guide',
@@ -2075,10 +2138,7 @@ function magDate(iso, lang) {
 }
 
 function magImage(article) {
-    const image = article && article.image
-        ? `${String(article.image).startsWith('/') ? '' : '/'}${String(article.image)}`
-        : '/image/image2.webp';
-    return escapeHtml(image);
+    return escapeHtml(resolveGuideImage(article && article.image));
 }
 
 function magHref(article) {
@@ -2190,6 +2250,8 @@ function magazineNavTree() {
                         {
                             label: 'Artigos',
                             children: [
+                                { label: 'O que é burnout', href: '/blog/o-que-e-burnout' },
+                                { label: 'Psicologia online para burnout', href: '/blog/psicologia-online-para-burnout' },
                                 { label: 'Sinais e quando procurar ajuda', href: '/blog/burnout-sinais-quando-procurar-ajuda' },
                                 { label: 'O que é e diferença do cansaço', href: '/blog/burnout-o-que-e-sinais-cansaco' },
                                 { label: '9 sinais no trabalho', href: '/blog/9-sinais-de-burnout-no-trabalho' },
@@ -2403,6 +2465,7 @@ function magazineNavTree() {
                         { label: 'CUF', href: '/blog/vacina-febre-amarela-cuf' }
                     ]
                 },
+                { label: 'Consulta médica para viajantes', href: '/blog/consulta-medica-viajantes-vacinas' },
                 { label: 'Consulta do viajante', href: '/marcar/travel' }
             ]
         },
@@ -2413,6 +2476,11 @@ function magazineNavTree() {
                 { label: 'Seguros de saúde', href: '/blog/seguros-saude-portugal-guia' },
                 { label: 'Seguro de saúde: compensa?', href: '/blog/seguro-saude-compensa' },
                 { label: 'Telemedicina em casa', href: '/blog/telemedicina-em-casa' },
+                { label: 'Consulta médica online vale a pena?', href: '/blog/consulta-medica-online-vale-a-pena' },
+                { label: 'Renovar receita online', href: '/blog/renovar-receita-medica-online' },
+                { label: 'Como escolher telemedicina', href: '/blog/melhores-plataformas-telemedicina' },
+                { label: 'Saúde preventiva (adultos jovens)', href: '/blog/saude-preventiva-adultos-jovens' },
+                { label: 'Consulta para viajantes', href: '/blog/consulta-medica-viajantes-vacinas' },
                 { label: 'Como marcar', href: '/blog/marcacao-guia-rapido' }
             ]
         }
@@ -2682,7 +2750,7 @@ function layoutMagazinePage(opts) {
     <link rel="stylesheet" href="/landing.css?v=20260906i">
     ${extraCssHtml}
     ${extraCssAfterHtml}
-    <link rel="stylesheet" href="/magazine.css?v=20260909t">
+    <link rel="stylesheet" href="/magazine.css?v=20260909u">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='6' y='52' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%239c4a56'%3EL%3C/text%3E%3C/svg%3E">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     ${jsonLdScript(graph)}
@@ -2717,9 +2785,7 @@ function renderMagazineIndex(origin) {
     const travel = articles.filter((a) => magTheme(a) === 'travel');
     const clinic = articles.filter((a) => magTheme(a) === 'clinic');
     const cover = mental[0] || articles[0];
-    const og = cover && cover.image
-        ? `${o}${String(cover.image).startsWith('/') ? '' : '/'}${cover.image}`
-        : `${o}/image/image2.webp`;
+    const og = `${o}${resolveGuideImage(cover && cover.image)}`;
     const featured = mental[0] || articles[0];
     const featuredHref = featured ? magHref(featured) : '';
     const mentalRest = featured && magTheme(featured) === 'mental'

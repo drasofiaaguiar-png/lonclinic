@@ -5,7 +5,7 @@ A **telemedicina** permite falar com um médico no conforto da sua casa, sem des
 É também o formato usado nas [consultas de saúde mental](/marcar/saude-mental) e na avaliação de condições como [ADHD em adultos](/blog/adhd-em-adultos-sintomas) ou [autismo em mulheres](/blog/autismo-em-mulheres-diagnostico-tardio). Se estás a escolher com quem falar, [como encontrar um psicólogo](/blog/como-encontrar-um-psicologo) cobre credenciais, primeira sessão e quando mudar. O preço — no mercado e na Lon Clinic — está em [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal).
 
 <figure class="guide-figure">
-<img src="/image/guide/guide-sunset-lake.jpg" alt="Lago calmo ao entardecer — o espaço quieto a partir do qual uma consulta em casa pode acontecer" width="1600" height="900" loading="lazy" decoding="async">
+<img src="/image/guide/guide-hiker-view.jpg" alt="Horizonte aberto — o espaço quieto a partir do qual uma consulta em casa pode acontecer" width="2560" height="1642" loading="lazy" decoding="async">
 </figure>
 
 {{cta}}
@@ -17,7 +17,7 @@ A **telemedicina** permite falar com um médico no conforto da sua casa, sem des
 - Um **espaço calmo** e com boa luz, para o médico o conseguir avaliar com segurança
 
 <figure class="guide-figure">
-<img src="/image/guide/guide-lake-boats.jpg" alt="Lago de montanha em luz clara — o tipo de ambiente calmo e bem iluminado que ajuda numa consulta por videochamada" width="1600" height="900" loading="lazy" decoding="async">
+<img src="/image/guide/guide-country-road.jpg" alt="Estrada em luz clara — o tipo de ambiente calmo e bem iluminado que ajuda numa consulta por videochamada" width="1920" height="1080" loading="lazy" decoding="async">
 </figure>
 
 ## Durante a consulta

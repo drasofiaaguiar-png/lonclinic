@@ -1,35 +1,44 @@
 <aside class="guide-keyfacts">
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
-<li>Pode marcar psicologia online na Covilhã sem estar no consultório: a Lon Clinic atende por videochamada a <strong>60 €</strong> (ou <strong>54 €/semana</strong>), <strong>45 minutos</strong> semanais.</li>
-<li>A **UBI** tem o **GAP — Gabinete de Apoio Psicológico** ([gabap.</li>
-<li>Mapa: <a href="/blog/psicologia-online-portugal-por-distrito">psicologia online por distrito</a> · <a href="/blog/consultas-psicologia-aveiro">aveiro</a>.</li>
+<li>Na Covilhã pode marcar psicologia online na Lon Clinic: <strong>60 €</strong> ou <strong>54 €/semana</strong>, <strong>45 minutos</strong>.</li>
+<li>A <strong>UBI</strong> tem o <strong>GAP — Gabinete de Apoio Psicológico</strong> (<a href="https://gabap.ubi.pt/">gabap.ubi.pt</a>). O SNS está na <strong>ULS da Cova da Beira</strong>.</li>
+<li>Mapa: <a href="/blog/psicologia-online-portugal-por-distrito">psicologia online por distrito</a> · <a href="/blog/consultas-psicologia-guarda">Guarda</a> · <a href="/blog/consultas-psicologia-viseu">Viseu</a>.</li>
 </ul>
 </aside>
 
-Em Covilhã, há o particular, o SNS (médico de família / ULS) e, quando for estudante, o SAS da instituição. A Lon Clinic acrescenta a consulta **online** na Covilhã: sem deslocação, preço fixo, especialidade que o código postal local pode não ter.
+Na Covilhã, a **UBI** tem o **GAP — Gabinete de Apoio Psicológico** ([gabap.ubi.pt](https://gabap.ubi.pt/), gap@ubi.pt), para a comunidade académica. O SNS da serra está na **ULS da Cova da Beira**. (Castelo Branco ainda não tem guia nesta série.) A Lon Clinic é **online** na Covilhã: **60 €** ou **54 €/semana**, **45 minutos**.
 
-Faixa nacional 40 €–70 €. Nacional: [quanto custa](/blog/quanto-custa-consulta-psicologia-portugal). Gratuitas: [consultas gratuitas](/blog/consultas-psicologia-gratuitas-portugal). Formato: [online vs presencial](/blog/psicologia-online-vs-presencial). Universidades: [apoio psicológico nas universidades](/blog/apoio-psicologico-universidades-portugal).
+Números nacionais: [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal). Gratuitas: [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal). Formato: [psicologia online vs presencial](/blog/psicologia-online-vs-presencial). Universidades: [apoio psicológico nas universidades](/blog/apoio-psicologico-universidades-portugal).
 
-## Apoio gratuito na Covilhã
+## Onde encontrar consultas de psicologia na Covilhã?
 
-A **UBI** tem o **GAP — Gabinete de Apoio Psicológico** ([gabap.ubi.pt](https://gabap.ubi.pt/), gap@ubi.pt), para a comunidade académica. O SNS da serra está na **ULS da Cova da Beira**. (Castelo Branco, se precisar de guia próprio, ainda não está nesta série.)
+SNS via **ULS da Cova da Beira**. Comunidade académica: [GAP da UBI](https://gabap.ubi.pt/). A Lon Clinic atende a partir da Covilhã. Guarda: [guia](/blog/consultas-psicologia-guarda).
 
 Não publicamos tempos de espera. Em crise: **SNS 24 (808 24 24 24)** ou **112**.
 
 {{cta}}
 
-## Porquê online na Covilhã
+## Porquê psicologia online na Covilhã?
 
-- Sem viagem. Link no browser; sem instalar aplicações.
+A Cova da Beira não tem a densidade de consultórios de Lisboa. A videochamada a partir da Covilhã ou do Fundão usa a mesma clínica.
+
+- Sem viagem. Link no browser (Doxy.me); sem instalar aplicações.
 - **60 €** avulsa ou **54 €/semana** — o preço **não muda** com a cidade.
 - **45 minutos**, semanal, incluindo a primeira.
 - Especialidade, não código postal: [ansiedade](/ansiedade-no-trabalho), [burnout](/psicologia-burnout), [terapia de casal](/terapia-de-casal), [ataques de pânico](/ataques-de-panico), [gestão de stress](/gestao-de-stress). Só queixas que o site publica.
 - **Podes mudar de psicólogo sempre que quiseres, sem justificação, e recomeçar do zero.**
-- Inscritos na **OPP**; recibo ADSE/seguro — [ADSE](/blog/adse-seguros-psicologia-portugal).
+- Inscritos na **OPP**; recibo ADSE/seguro — [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal).
 
+Cidades próximas: [Guarda](/blog/consultas-psicologia-guarda) · [Viseu](/blog/consultas-psicologia-viseu) · [psicologia online por distrito](/blog/psicologia-online-portugal-por-distrito).
 
-Cidades próximas: [Guarda](/blog/consultas-psicologia-guarda).
+## A UBI tem apoio psicológico na Covilhã?
+
+Sim. O [GAP](https://gabap.ubi.pt/) (gap@ubi.pt) destina-se à comunidade académica da UBI. Confirme regras na página oficial. A Lon Clinic não é o GAP.
+
+## A ADSE cobre psicologia na Covilhã?
+
+Sim. A ADSE comparticipa psicologia clínica em regime livre na Covilhã como no resto do país, com recibo.
 
 {{cta}}
 
@@ -37,24 +46,37 @@ Cidades próximas: [Guarda](/blog/consultas-psicologia-guarda).
 
 ## Perguntas frequentes
 
-### Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?
+### Onde encontrar consultas de psicologia na Covilhã?
 
-Não. A consulta Lon é videochamada: pode estar na Covilhã ou noutro sítio com internet. O preço e a sessão não exigem presença no consultório da Covilhã.
+No particular da Covilhã, no SNS via ULS da Cova da Beira, no GAP da UBI (comunidade académica) ou online na Lon Clinic a partir da Covilhã.
 
-### O preço muda consoante a cidade?
+### Quanto custa uma consulta de psicologia na Covilhã?
 
-Não. Na Lon Clinic o preço é fixo: **60 €** a sessão avulsa ou **54 €/semana** — esteja na Covilhã ou noutro distrito.
+No particular a faixa habitual é a nacional (cerca de 40 € a 70 €). Na Lon Clinic: 60 € ou 54 €/semana, 45 minutos.
 
-### Como marco consulta?
+### Há psicologia online na Covilhã?
 
-Escolhe o psicólogo em [saúde mental](/saudemental) por especialidade ou faz a [triagem](/triagem), marca e recebe o link no email. Sessão de 45 minutos.
+Sim. A Lon Clinic atende por videochamada a partir da Covilhã, no browser.
+
+### A UBI tem apoio psicológico na Covilhã?
+
+Sim. O GAP — Gabinete de Apoio Psicológico (gabap.ubi.pt) atende a comunidade académica. Confirme no site da UBI. A Lon Clinic é independente da UBI.
+
+### Como marcar consulta de psicologia na Covilhã?
+
+Escolha o psicólogo na página de saúde mental da Lon Clinic (/saudemental) ou faça a triagem. Sessão de 45 minutos a partir da Covilhã.
+
+### A ADSE cobre psicologia na Covilhã?
+
+Sim. A ADSE comparticipa psicologia clínica em regime livre na Covilhã como no resto do país, com recibo.
 
 ---
 
-Este artigo tem fins informativos e não substitui uma avaliação clínica individual. Em crise: **SNS 24 (808 24 24 24)** ou **112**.
+Este artigo tem fins informativos e não substitui uma avaliação clínica ou psicológica individual. Se está a atravessar uma crise ou tem pensamentos de fazer mal a si próprio, procure ajuda imediata através da linha **SNS 24 (808 24 24 24)** ou dos serviços de urgência (**112**).
 
 ## Fontes
 
-- Instituições nomeadas no texto (páginas oficiais SAS / ULS / SESARAM)
+- [GAP — UBI](https://gabap.ubi.pt/)
+- ULS da Cova da Beira
 - [OPP — Directório](https://www.ordemdospsicologos.pt/pt/membros)
-- Preçário Lon Clinic — 45 min; 60 € / 54 €/semana
+- Preçário da Lon Clinic, 2026 — 45 min; 60 € / 54 €/semana

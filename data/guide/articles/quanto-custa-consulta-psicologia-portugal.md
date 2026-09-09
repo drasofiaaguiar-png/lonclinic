@@ -19,7 +19,7 @@ No outro extremo, é possível encontrar consultas mais acessíveis — sobretud
 
 Lisboa e Setúbal tendem a ter os preços mais altos; fora das áreas metropolitanas a média desce. O que quase nunca muda é a duração típica: cerca de 50 minutos.
 
-Se ainda está a escolher com quem falar, [como encontrar um psicólogo](/blog/como-encontrar-um-psicologo) cobre cédula da OPP, primeira sessão e quando mudar.
+Se ainda está a escolher com quem falar, [como encontrar um psicólogo](/blog/como-encontrar-um-psicologo) cobre cédula da OPP, primeira sessão e quando mudar. Por cidade: [psicologia online por distrito](/blog/psicologia-online-portugal-por-distrito).
 
 {{cta}}
 

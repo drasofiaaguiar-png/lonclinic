@@ -9,11 +9,13 @@
 
 A ADSE comparticipa consultas de nutrição — em **regime convencionado** (rede) e, desde as alterações anunciadas para 2025, também em **regime livre** (escolhe o nutricionista, paga, pede reembolso). A Lon Clinic trabalha em **regime livre** e emite recibo. Os valores de copagamento e de teto **não** são um número que possamos garantir neste artigo para 2026: a fonte de verdade é a [tabela ADSE](https://www.adse.pt/) / [ADSE Direta](https://adsedireta.adse.pt/) na data do recibo.
 
-Preço de mercado e programa Lon: [quanto custa uma consulta de nutrição](/blog/quanto-custa-consulta-nutricao-portugal). Cheque público (12–35 anos): [Cheque-Nutricionista 2026](/blog/cheque-nutricionista-2026). Há um guia irmão para psicologia: [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal).
+Preço de mercado e programa Lon: [quanto custa uma consulta de nutrição](/blog/quanto-custa-consulta-nutricao-portugal). Cheque público (12–35 anos): [Cheque-Nutricionista 2026](/blog/cheque-nutricionista-2026). Há um guia irmão para psicologia: [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal). Formato da consulta Lon: [consulta de nutrição online](/blog/consulta-nutricao-online-como-funciona). Programa: [reeducação metabólica](/nutricao/programa).
 
 ## A ADSE comparticipa consultas de nutrição online?
 
 A ADSE anunciou, em dezembro de 2024, a **inclusão de teleconsultas** no regime livre e a **inclusão da nutrição** nas tabelas. Isso **não** equivale a um «sim» automático para *todas* as videochamadas de nutrição em 2026: o acto tem de constar da nomenclatura em vigor e o recibo tem de identificar correctamente o profissional (cédula da [Ordem dos Nutricionistas](https://www.ordemdosnutricionistas.pt/registoNacional.php?cod=0C0A)). Confirme o código e se a videochamada é reembolsável no [simulador da ADSE Direta](https://adsedireta.adse.pt/SimReemb/) antes de contar com o valor.
+
+{{cta}}
 
 ## Quanto recebo de volta se pagar uma consulta de nutrição em regime livre?
 

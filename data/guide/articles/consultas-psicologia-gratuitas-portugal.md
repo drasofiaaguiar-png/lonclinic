@@ -9,7 +9,7 @@
 
 Em Portugal, é possível aceder a apoio psicológico gratuito através do **Serviço Nacional de Saúde (SNS)**, do **Cheque-Psicólogo** (Cheque Cuida-te — Psicologia, Programa Cuida-te / IPDJ), dos **gabinetes de apoio psicológico das universidades** e de **linhas de apoio telefónico**. O acesso pelo SNS costuma implicar listas de espera; os restantes canais têm critérios próprios (idade, situação académica, tipo de problema). Este guia resume as principais vias em 2026 e o que precisa de saber sobre cada uma.
 
-Quem está a comparar com o privado: [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal). Quem ainda está a escolher profissional: [como encontrar um psicólogo](/blog/como-encontrar-um-psicologo).
+Quem está a comparar com o privado: [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal). Quem ainda está a escolher profissional: [como encontrar um psicólogo](/blog/como-encontrar-um-psicologo). Formato: [psicologia online vs presencial](/blog/psicologia-online-vs-presencial). Por cidade: [psicologia online por distrito](/blog/psicologia-online-portugal-por-distrito).
 
 ## Onde posso pedir ajuda psicológica gratuita?
 
@@ -48,7 +48,7 @@ A lista oficial de psicólogos aderentes é a do gov.pt / IPDJ — não uma list
 
 ## Como procurar ajuda psicológica gratuita sendo estudante?
 
-A generalidade das universidades públicas portuguesas — Coimbra, Porto, Lisboa, Minho, Aveiro, Algarve, entre outras — tem gabinete de apoio psicopedagógico ou serviço de aconselhamento psicológico **gratuito para estudantes inscritos**. O acesso costuma ser por marcação nos serviços de acção social (SAS) ou no próprio gabinete.
+A generalidade das universidades públicas portuguesas — Coimbra, Porto, Lisboa, Minho, Aveiro, Algarve, entre outras — tem gabinete de apoio psicopedagógico ou serviço de aconselhamento psicológico **gratuito para estudantes inscritos**. O mapa verificado está em [apoio psicológico nas universidades](/blog/apoio-psicologico-universidades-portugal). O acesso costuma ser por marcação nos serviços de acção social (SAS) ou no próprio gabinete.
 
 A lista de espera varia com o ano lectivo: a procura sobe perto de exames. Este apoio **termina, em regra, quando o estudante deixa de estar inscrito** — planeie a continuidade (SNS, Cheque Cuida-te se tiver idade, ou privado) antes dessa data.
 

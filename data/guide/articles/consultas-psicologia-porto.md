@@ -9,7 +9,7 @@
 
 No Porto, uma consulta de psicologia no sector privado costuma custar **50 € a 70 €**. O SNS continua a ser a referenciação pelo médico de família. Quem está inscrito na Universidade do Porto tem dois caminhos universitários distintos: o **Gabinete de Apoio Médico e Psicológico (GAMP)** dos **Serviços de Ação Social (SASUP)** — consultas de psicologia **em regra gratuitas para estudantes inscritos** — e a **Unidade de Consulta Psicológica da FPCEUP**, aberta à comunidade, com tabela própria a confirmar na faculdade. A Lon Clinic é a consulta **online** a partir do Porto ou da região Norte, sem viagem ao centro da cidade.
 
-Números nacionais: [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal). Gratuitas: [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal). Formato: [online vs presencial](/blog/psicologia-online-vs-presencial).
+Números nacionais: [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal). Gratuitas: [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal). Formato: [online vs presencial](/blog/psicologia-online-vs-presencial). Universidades: [apoio psicológico nas universidades](/blog/apoio-psicologico-universidades-portugal).
 
 ## Onde encontrar consultas de psicologia no Porto?
 

@@ -1,35 +1,40 @@
 <aside class="guide-keyfacts">
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
-<li>Pode marcar psicologia online em Almada sem estar no consultório: a Lon Clinic atende por videochamada a <strong>60 €</strong> (ou <strong>54 €/semana</strong>), <strong>45 minutos</strong> semanais.</li>
-<li>Almada está na **ULS de Almada-Seixal** (Hospital Garcia de Orta + ACeS Almada-Seixal).</li>
-<li>Mapa: <a href="/blog/psicologia-online-portugal-por-distrito">psicologia online por distrito</a> · <a href="/blog/consultas-psicologia-lisboa">lisboa</a>.</li>
+<li>Em Almada pode marcar psicologia online na Lon Clinic: <strong>60 €</strong> ou <strong>54 €/semana</strong>, <strong>45 minutos</strong>.</li>
+<li>Almada está na <strong>ULS de Almada-Seixal</strong> (Hospital Garcia de Orta + ACeS Almada-Seixal).</li>
+<li>Mapa: <a href="/blog/psicologia-online-portugal-por-distrito">psicologia online por distrito</a> · <a href="/blog/consultas-psicologia-lisboa">Lisboa</a> · <a href="/blog/consultas-psicologia-seixal">Seixal</a>.</li>
 </ul>
 </aside>
 
-Em Almada, há o particular, o SNS (médico de família / ULS) e, quando for estudante, o SAS da instituição. A Lon Clinic acrescenta a consulta **online** em Almada: sem deslocação, preço fixo, especialidade que o código postal local pode não ter.
+Almada está na **ULS de Almada-Seixal** (Hospital Garcia de Orta + ACeS Almada-Seixal). A travessia do Tejo é o atrito habitual até ao particular de Lisboa — a videochamada evita o ferry ou a ponte. Os preços da AML tendem a **50 €–80 €**. A Lon Clinic em Almada: **60 €** ou **54 €/semana**, **45 minutos**.
 
-Faixa AML 50 €–80 € no particular. Nacional: [quanto custa](/blog/quanto-custa-consulta-psicologia-portugal). Gratuitas: [consultas gratuitas](/blog/consultas-psicologia-gratuitas-portugal). Formato: [online vs presencial](/blog/psicologia-online-vs-presencial). Universidades: [apoio psicológico nas universidades](/blog/apoio-psicologico-universidades-portugal).
+Números nacionais: [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal). Gratuitas: [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal). Formato: [psicologia online vs presencial](/blog/psicologia-online-vs-presencial). Universidades: [apoio psicológico nas universidades](/blog/apoio-psicologico-universidades-portugal).
 
-## Apoio gratuito em Almada
+## Onde encontrar consultas de psicologia em Almada?
 
-Almada está na **ULS de Almada-Seixal** (Hospital Garcia de Orta + ACeS Almada-Seixal). A travessia do Tejo é o atrito habitual até ao particular de Lisboa — a videochamada evita o ferry/ponte. Preços da AML tendem a **50 €–80 €**.
+SNS via **ULS de Almada-Seixal**. Particular da margem sul ou de Lisboa. A Lon Clinic atende a partir de Almada, Cacilhas ou Costa da Caparica. [Lisboa](/blog/consultas-psicologia-lisboa) · [Seixal](/blog/consultas-psicologia-seixal).
 
 Não publicamos tempos de espera. Em crise: **SNS 24 (808 24 24 24)** ou **112**.
 
 {{cta}}
 
-## Porquê online em Almada
+## Porquê psicologia online em Almada?
 
-- Sem viagem. Link no browser; sem instalar aplicações.
+O Garcia de Orta cobre o SNS; o particular denso fica em Lisboa. A sessão Lon abre no browser em Almada.
+
+- Sem viagem. Link no browser (Doxy.me); sem instalar aplicações.
 - **60 €** avulsa ou **54 €/semana** — o preço **não muda** com a cidade.
 - **45 minutos**, semanal, incluindo a primeira.
 - Especialidade, não código postal: [ansiedade](/ansiedade-no-trabalho), [burnout](/psicologia-burnout), [terapia de casal](/terapia-de-casal), [ataques de pânico](/ataques-de-panico), [gestão de stress](/gestao-de-stress). Só queixas que o site publica.
 - **Podes mudar de psicólogo sempre que quiseres, sem justificação, e recomeçar do zero.**
-- Inscritos na **OPP**; recibo ADSE/seguro — [ADSE](/blog/adse-seguros-psicologia-portugal).
+- Inscritos na **OPP**; recibo ADSE/seguro — [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal).
 
+Cidades próximas: [Lisboa](/blog/consultas-psicologia-lisboa) · [Seixal](/blog/consultas-psicologia-seixal) · [Barreiro](/blog/consultas-psicologia-barreiro) · [psicologia online por distrito](/blog/psicologia-online-portugal-por-distrito).
 
-Cidades próximas: [lisboa](/blog/consultas-psicologia-lisboa) · [Seixal](/blog/consultas-psicologia-seixal) · [Barreiro](/blog/consultas-psicologia-barreiro).
+## A ADSE cobre psicologia em Almada?
+
+Sim. A ADSE comparticipa psicologia clínica em regime livre em Almada como no resto do país, com recibo.
 
 {{cta}}
 
@@ -37,24 +42,32 @@ Cidades próximas: [lisboa](/blog/consultas-psicologia-lisboa) · [Seixal](/blog
 
 ## Perguntas frequentes
 
-### Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?
+### Onde encontrar consultas de psicologia em Almada?
 
-Não. A consulta Lon é videochamada: pode estar em Almada ou noutro sítio com internet. O preço e a sessão não exigem presença no consultório de Almada.
+No particular de Almada ou de Lisboa, no SNS via ULS de Almada-Seixal, ou online na Lon Clinic a partir de Almada.
 
-### O preço muda consoante a cidade?
+### Quanto custa uma consulta de psicologia em Almada?
 
-Não. Na Lon Clinic o preço é fixo: **60 €** a sessão avulsa ou **54 €/semana** — esteja em Almada ou noutro distrito.
+Na AML a faixa do particular tende a 50 € a 80 €. Na Lon Clinic: 60 € ou 54 €/semana, 45 minutos.
 
-### Como marco consulta?
+### Há psicologia online em Almada?
 
-Escolhe o psicólogo em [saúde mental](/saudemental) por especialidade ou faz a [triagem](/triagem), marca e recebe o link no email. Sessão de 45 minutos.
+Sim. A Lon Clinic atende por videochamada a partir de Almada, no browser, sem a travessia do Tejo.
+
+### Como marcar consulta de psicologia em Almada?
+
+Escolha o psicólogo na página de saúde mental da Lon Clinic (/saudemental) ou faça a triagem. Sessão de 45 minutos a partir de Almada.
+
+### A ADSE cobre psicologia em Almada?
+
+Sim. A ADSE comparticipa psicologia clínica em regime livre em Almada como no resto do país, com recibo.
 
 ---
 
-Este artigo tem fins informativos e não substitui uma avaliação clínica individual. Em crise: **SNS 24 (808 24 24 24)** ou **112**.
+Este artigo tem fins informativos e não substitui uma avaliação clínica ou psicológica individual. Se está a atravessar uma crise ou tem pensamentos de fazer mal a si próprio, procure ajuda imediata através da linha **SNS 24 (808 24 24 24)** ou dos serviços de urgência (**112**).
 
 ## Fontes
 
-- Instituições nomeadas no texto (páginas oficiais SAS / ULS / SESARAM)
+- ULS de Almada-Seixal (Hospital Garcia de Orta)
 - [OPP — Directório](https://www.ordemdospsicologos.pt/pt/membros)
-- Preçário Lon Clinic — 45 min; 60 € / 54 €/semana
+- Preçário da Lon Clinic, 2026 — 45 min; 60 € / 54 €/semana
