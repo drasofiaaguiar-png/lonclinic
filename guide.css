@@ -856,8 +856,8 @@
 }
 
 .guide-prose table {
-    width: max-content;
-    min-width: 100%;
+    width: 100%;
+    min-width: 0;
     border-collapse: collapse;
     font-size: 0.875rem;
     line-height: 1.45;
@@ -867,9 +867,12 @@
 .guide-prose th,
 .guide-prose td {
     border: 1px solid var(--lon-border, #d9e2dc);
-    padding: 0.55rem 0.7rem;
+    padding: 0.55rem 0.75rem;
     text-align: left;
     vertical-align: top;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .guide-prose thead th {

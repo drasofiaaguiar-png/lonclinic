@@ -1105,6 +1105,25 @@ html:has(body.mag-body) {
     padding: 0;
 }
 
+.mag-body .mag-story-prose .guide-table-scroll {
+    width: min(1180px, calc(100vw - 48px));
+    max-width: min(1180px, calc(100vw - 48px));
+    margin-left: calc(50% - min(590px, 50vw - 24px));
+    margin-right: 0;
+}
+
+.mag-body .mag-story-prose .guide-table-scroll table,
+.mag-body .mag-story-prose table {
+    width: 100%;
+    min-width: 0;
+}
+
+@media (min-width: 900px) {
+    .mag-body .mag-story-prose .guide-table-scroll {
+        overflow-x: visible;
+    }
+}
+
 .mag-body .mag-story-prose h2 {
     font-family: var(--mag-serif);
     font-size: 1.85rem;
