@@ -4640,24 +4640,45 @@ function rememberQuizLead(lead) {
     quizLeadMemory.set(key, Object.assign({}, quizLeadMemory.get(key) || {}, lead, { email: key }));
 }
 
+function isClinicalQuizRecoveryLead(lead) {
+    const quizId = String((lead && lead.quizId) || '').trim();
+    if (!quizId || quizId === 'nutricao-avaliacao') return false;
+    if (lead.recoveredAt || lead.convertedAt) return false;
+    return true;
+}
+
 async function patchQuizLead(email, patch, quizId) {
     const key = quizLeadKey(email);
     if (!key) return;
-    const prev = quizLeadMemory.get(key) || { email: key };
-    quizLeadMemory.set(key, Object.assign({}, prev, patch));
+    const prev = quizLeadMemory.get(key);
+    const nextQuizId = String(quizId || (prev && prev.quizId) || '').trim();
+    if (!prev && !nextQuizId) return;
+    quizLeadMemory.set(key, Object.assign({}, prev || { email: key }, patch, nextQuizId ? { quizId: nextQuizId } : {}));
     if (usePersistentDb) {
-        try { await db.mergeQuizAttemptResultByEmail(key, patch, quizId || null); } catch (err) {
+        try { await db.mergeQuizAttemptResultByEmail(key, patch, nextQuizId || null); } catch (err) {
             console.error('   ⚠️  quiz lead patch:', err.message);
         }
     }
 }
 
 async function markQuizLeadConverted(email) {
-    await patchQuizLead(email, { convertedAt: Date.now(), recoveredAt: Date.now() });
+    const key = quizLeadKey(email);
+    const existing = quizLeadMemory.get(key);
+    if (existing && existing.quizId) {
+        await patchQuizLead(email, { convertedAt: Date.now(), recoveredAt: Date.now() }, existing.quizId);
+        return;
+    }
+    if (usePersistentDb) {
+        try { await db.mergeQuizAttemptResultByEmail(key, { convertedAt: Date.now(), recoveredAt: Date.now() }, null); } catch (err) {
+            console.error('   ⚠️  quiz lead converted:', err.message);
+        }
+    }
 }
 
 async function markQuizLeadCheckoutStarted(email) {
-    await patchQuizLead(email, { checkoutStartedAt: Date.now(), recoverAt: Date.now() + QUIZ_RECOVERY_MS });
+    const existing = quizLeadMemory.get(quizLeadKey(email));
+    if (!existing || !isClinicalQuizRecoveryLead(existing)) return;
+    await patchQuizLead(email, { checkoutStartedAt: Date.now(), recoverAt: Date.now() + QUIZ_RECOVERY_MS }, existing.quizId);
 }
 
 function clinicWhatsAppHref(lead) {
@@ -4670,7 +4691,7 @@ function clinicWhatsAppHref(lead) {
 
 async function sendQuizRecovery(lead) {
     const email = quizLeadKey(lead.email);
-    if (!email) return false;
+    if (!email || !isClinicalQuizRecoveryLead(lead)) return false;
     const first = String(lead.firstName || lead.leadName || '').trim();
     const hello = first ? `Olá ${first}` : 'Olá';
     const bookUrl = String(lead.bookUrl || `${PUBLIC_SITE_URL}/marcar/nutricao-programa?ref=quiz-recovery`);
@@ -4722,9 +4743,9 @@ async function runQuizLeadRecoveries() {
     const now = Date.now();
     const due = [];
     for (const lead of quizLeadMemory.values()) {
-        if (!lead.email || lead.recoveredAt || lead.convertedAt) continue;
-        if (lead.quizId === 'nutricao-avaliacao') continue;
-        if (Number(lead.recoverAt) && Number(lead.recoverAt) <= now) due.push(lead);
+        if (!isClinicalQuizRecoveryLead(lead)) continue;
+        if (!Number(lead.recoverAt) || Number(lead.recoverAt) > now) continue;
+        due.push(lead);
     }
     if (usePersistentDb) {
         try {
@@ -4732,7 +4753,7 @@ async function runQuizLeadRecoveries() {
             for (const row of rows) {
                 const result = row.result || {};
                 if (result.recoveredAt || result.convertedAt) continue;
-                if (row.quizId === 'nutricao-avaliacao') continue;
+                if (!row.quizId || row.quizId === 'nutricao-avaliacao') continue;
                 due.push({
                     email: row.email,
                     quizId: row.quizId,
@@ -7419,7 +7440,10 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             }).catch(() => {});
             const expiredEmail = expiredSession.customer_email || (expiredSession.metadata && expiredSession.metadata.contact_email) || '';
             if (expiredEmail) {
-                patchQuizLead(expiredEmail, { recoverAt: Date.now() }).catch(() => {});
+                const existing = quizLeadMemory.get(quizLeadKey(expiredEmail));
+                if (existing && isClinicalQuizRecoveryLead(existing)) {
+                    patchQuizLead(expiredEmail, { recoverAt: Date.now() }, existing.quizId).catch(() => {});
+                }
             }
             // Stripe Checkout sessions last at most 24h. Invitation payment links
             // stay valid until the consultation day, so do not cancel the invite

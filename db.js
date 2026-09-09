@@ -1543,6 +1543,8 @@ async function findDueQuizRecoveries(nowMs, limit = 20) {
     const r = await p.query(
         `SELECT * FROM quiz_attempts
          WHERE email IS NOT NULL
+           AND quiz_id IS NOT NULL AND TRIM(quiz_id) <> ''
+           AND quiz_id <> 'nutricao-avaliacao'
            AND COALESCE(result->>'recoveredAt','') = ''
            AND COALESCE(result->>'convertedAt','') = ''
            AND COALESCE(result->>'recoverAt','') ~ '^[0-9]+$'
