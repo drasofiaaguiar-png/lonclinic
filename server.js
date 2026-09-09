@@ -16,7 +16,7 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = 'password-1';
+const CLINIC_PORTAL_BUILD = 'email-only-1';
 const CLINIC_PORTAL_PATH = '/clinic-desk/dias';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
@@ -739,8 +739,8 @@ async function serveClinicPortalHtml(res) {
             .replace(/src="\/clinic-portal\/clinic\.js\?v=[^"]+"/g, `src="${clinicPortalAssetUrl('clinic.js')}"`)
             .replace(/data-clinic-build="[^"]+"/, `data-clinic-build="${CLINIC_PORTAL_BUILD}"`)
             .replace(
-                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|ficha-1|scope-1|scope-2|email-1|email-login-1|password-1|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8|perfil-9|perfil-10) — 7 set 2026\. Entre com o username(?: ou o email)? do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
-                `Portal ${CLINIC_PORTAL_BUILD} — 7 set 2026. Entre com o username ou o email do profissional.`
+                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|ficha-1|scope-1|scope-2|email-1|email-login-1|password-1|email-only-1|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8|perfil-9|perfil-10) — 7 set 2026\. Entre com o (?:username(?: ou o email)?|email) do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
+                `Portal ${CLINIC_PORTAL_BUILD} — 7 set 2026. Entre com o email do profissional.`
             );
         res.append('Set-Cookie', `lon_portal=${CLINIC_PORTAL_BUILD}; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly`);
         res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
@@ -1616,17 +1616,10 @@ async function findProfessionalByEmailInternal(email) {
 }
 
 async function findProfessionalForClinicLogin(identifier) {
-    const raw = String(identifier || '').trim();
-    if (!raw) return null;
-    if (!raw.includes('@')) {
-        return findProfessionalByUsernameInternal(raw);
-    }
-    const email = normalizeStaffEmail(raw);
+    const email = normalizeStaffEmail(identifier);
     if (!isValidStaffEmail(email)) return null;
     const byEmail = await findProfessionalByEmailInternal(email);
     if (byEmail) return byEmail;
-    const byUsername = await findProfessionalByUsernameInternal(raw);
-    if (byUsername) return byUsername;
     try {
         const app = await findPsychologistApplicationByEmailInternal(email);
         if (app && app.professionalId) {
@@ -6724,7 +6717,7 @@ function professionalLoginPortalUrl() {
 function defaultProfessionalLoginNote(name) {
     const who = String(name || '').trim();
     const greeting = who ? `Olá ${who},` : 'Olá,';
-    return `${greeting}\n\nSeguem os dados de acesso ao portal da Lon Clinic. Abra o link abaixo, introduza o username ou o email e a password e inicie sessão.`;
+    return `${greeting}\n\nSeguem os dados de acesso ao portal da Lon Clinic. Abra o link abaixo, introduza o email e a password e inicie sessão.`;
 }
 
 function sanitizeProfessionalLoginNote(raw, name) {
@@ -6762,11 +6755,12 @@ async function sendProfessionalLoginEmail({ to, name, username, password, note }
     const portalUrl = professionalLoginPortalUrl();
     const intro = sanitizeProfessionalLoginNote(note, name);
     const subject = 'Acesso ao portal da Lon Clinic';
+    const loginId = isValidStaffEmail(to) ? normalizeStaffEmail(to) : String(username || '').trim();
     const text = [
         intro,
         '',
         `Portal: ${portalUrl}`,
-        `Username: ${username}`,
+        `Email: ${loginId}`,
         `Password: ${password}`,
         '',
         'Lon Clinic'
@@ -6775,7 +6769,7 @@ async function sendProfessionalLoginEmail({ to, name, username, password, note }
     const html = `<div style="font-family:system-ui,sans-serif;line-height:1.5;color:#111">
 <p style="margin:0 0 12px;">${introHtml}</p>
 <p style="margin:0 0 6px;"><a href="${escapeHtml(portalUrl)}">${escapeHtml(portalUrl)}</a></p>
-<p style="margin:0 0 4px;">Username: <strong>${escapeHtml(username)}</strong></p>
+<p style="margin:0 0 4px;">Email: <strong>${escapeHtml(loginId)}</strong></p>
 <p style="margin:0 0 12px;">Password: <strong>${escapeHtml(password)}</strong></p>
 <p style="margin:0;">Lon Clinic</p>
 </div>`;
@@ -11111,7 +11105,7 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
     const password = String((req.body && req.body.password) || '');
 
     if (!identifier || !password) {
-        return res.status(400).json({ error: 'Username or email and password are required' });
+        return res.status(400).json({ error: 'Email and password are required' });
     }
 
     const usernameMatch = identifier.toLowerCase() === CLINIC_USERNAME.toLowerCase();
@@ -11119,23 +11113,32 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
         ? await bcrypt.compare(password, clinicPasswordHash)
         : false;
 
-    if (usernameMatch && passwordMatch) {
-        req.session.clinicAuthenticated = true;
-        req.session.clinicUsername = CLINIC_USERNAME;
-        req.session.clinicDisplayName = CLINIC_USERNAME;
-        req.session.clinicRole = 'admin';
-        req.session.professionalId = null;
-        req.session.clinicLoginTime = new Date().toISOString();
-        setStaffDeviceCookie(res);
+    if (usernameMatch) {
+        if (passwordMatch) {
+            req.session.clinicAuthenticated = true;
+            req.session.clinicUsername = CLINIC_USERNAME;
+            req.session.clinicDisplayName = CLINIC_USERNAME;
+            req.session.clinicRole = 'admin';
+            req.session.professionalId = null;
+            req.session.clinicLoginTime = new Date().toISOString();
+            setStaffDeviceCookie(res);
 
-        console.log(`   🔐 Clinic portal login (admin): ${CLINIC_USERNAME}`);
-        return res.json({
-            success: true,
-            message: 'Login successful',
-            role: 'admin',
-            username: CLINIC_USERNAME,
-            displayName: CLINIC_USERNAME
-        });
+            console.log(`   🔐 Clinic portal login (admin): ${CLINIC_USERNAME}`);
+            return res.json({
+                success: true,
+                message: 'Login successful',
+                role: 'admin',
+                username: CLINIC_USERNAME,
+                displayName: CLINIC_USERNAME
+            });
+        }
+        console.log(`   ⚠️  Failed clinic login attempt: ${identifier}`);
+        return res.status(401).json({ error: 'Invalid username or password' });
+    }
+
+    if (!isValidStaffEmail(normalizeStaffEmail(identifier))) {
+        console.log(`   ⚠️  Failed clinic login attempt: ${identifier}`);
+        return res.status(401).json({ error: 'Sign in with your email and password' });
     }
 
     try {
@@ -11176,7 +11179,7 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
     }
 
     console.log(`   ⚠️  Failed clinic login attempt: ${identifier}`);
-    res.status(401).json({ error: 'Invalid username, email or password' });
+    res.status(401).json({ error: 'Invalid email or password' });
 });
 
 // ─── API: Clinic — Logout ───

@@ -322,7 +322,7 @@
                 <div class="dash-modal-backdrop" data-close-send-login-modal></div>
                 <div class="dash-modal-card admin-send-login-card" role="dialog" aria-modal="true" aria-labelledby="sendLoginEmailTitle">
                     <h2 class="dash-modal-title" id="sendLoginEmailTitle">Send login email</h2>
-                    <p class="dash-modal-desc" id="sendLoginEmailDesc">A short message in Portuguese, plus the portal, username or email, and password.</p>
+                    <p class="dash-modal-desc" id="sendLoginEmailDesc">A short message in Portuguese, plus the portal, email, and password.</p>
                     <form id="sendLoginEmailForm">
                         <input type="hidden" id="sendLoginProId" value="">
                         <div class="admin-form-group">
@@ -337,7 +337,7 @@
                         <div class="admin-form-group">
                             <label for="sendLoginNote">Short message</label>
                             <textarea id="sendLoginNote" class="admin-input" rows="5" maxlength="800"></textarea>
-                            <small style="display:block;margin-top:6px;opacity:.7;">The portal, username and password are added automatically.</small>
+                            <small style="display:block;margin-top:6px;opacity:.7;">The portal, email and password are added automatically.</small>
                         </div>
                         <p class="admin-send-login-warn" id="sendLoginResetWarn" hidden>A new password will be generated and emailed. The current password will stop working.</p>
                         <div id="sendLoginEmailError" class="dash-login-error" style="display:none;" role="alert"></div>
@@ -780,7 +780,7 @@
                         <p class="admin-pro-creds-title">Login assigned — copy it now. The password cannot be shown again.</p>
                         <p class="admin-pro-creds-line">Portal: <a id="proCredsPortal" href="/clinic-desk/dias#profile">/clinic-desk/dias</a></p>
                         <p class="admin-pro-creds-line">Name: <span id="proCredsName"></span></p>
-                        <p class="admin-pro-creds-line">Username: <code id="proCredsUsername"></code></p>
+                        <p class="admin-pro-creds-line">Email: <code id="proCredsUsername"></code></p>
                         <p class="admin-pro-creds-line">Password: <code id="proCredsPassword"></code></p>
                         <p class="admin-pro-creds-line" id="proCredsSendStatus" hidden></p>
                         <div class="admin-pro-creds-actions">
@@ -1063,7 +1063,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=pro-dir-1"></script>
+    <script src="/admin.js?v=email-only-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

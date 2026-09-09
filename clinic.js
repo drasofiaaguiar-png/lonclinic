@@ -665,7 +665,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = clinicPassword.value;
         
         if (!identifier || !password) {
-            loginError.textContent = 'Please enter your username or email and password';
+            loginError.textContent = 'Please enter your email and password';
             loginError.style.display = 'block';
             return;
         }
@@ -684,7 +684,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 clinicUsername.value = '';
                 clinicPassword.value = '';
             } else {
-                loginError.textContent = data.error || 'Invalid username, email or password';
+                loginError.textContent = data.error || 'Invalid email or password';
                 loginError.style.display = 'block';
             }
         } catch (err) {

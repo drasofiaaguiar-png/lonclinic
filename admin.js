@@ -1589,7 +1589,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     showAdminContent();
                     await loadSchedule();
                 } else {
-                    adminLoginError.textContent = data.error || 'Invalid username, email or password';
+                    adminLoginError.textContent = data.error || 'Invalid username or password';
                     adminLoginError.style.display = 'block';
                 }
             } catch (err) {
@@ -2876,7 +2876,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <span class="admin-psych-col admin-psych-col-status">${escapeHtml(a.status || 'novo')}</span>
                     <span class="admin-psych-col admin-psych-col-login">
                         ${a.professional && a.professional.username
-                            ? `<span class="admin-psych-login-tag">${escapeHtml(a.professional.username)}</span>`
+                            ? `<span class="admin-psych-login-tag">${escapeHtml(a.professional.email || a.professional.username)}</span>`
                             : '<span class="admin-psych-login-tag is-off">sem login</span>'}
                     </span>
                     <span class="admin-psych-chevron" aria-hidden="true"></span>
@@ -2898,7 +2898,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <button type="button" class="btn btn-outline btn-sm" data-psych-edit="${escapeHtml(a.id)}">Editar dados</button>
                             <button type="button" class="btn btn-outline btn-sm" data-psych-delete="${escapeHtml(a.id)}">Eliminar</button>
                             ${a.professional && a.professional.username
-                                ? `<span>Clinic login: <code>${escapeHtml(a.professional.username)}</code> — portal <a href="/clinic-desk/dias#profile">/clinic-desk/dias</a></span>
+                                ? `<span>Clinic login: <code>${escapeHtml(a.professional.email || a.professional.username)}</code> — portal <a href="/clinic-desk/dias#profile">/clinic-desk/dias</a></span>
                                    <button type="button" class="btn btn-outline btn-sm" data-psych-password="${escapeHtml(a.id)}">New password</button>`
                                 : `<button type="button" class="btn btn-primary btn-sm" data-psych-login="${escapeHtml(a.id)}">Assign clinic login</button>`}
                         </div>
@@ -2955,18 +2955,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         adminPsychCredsList.innerHTML = `
             <p class="admin-pro-creds-line">Portal: <a href="/clinic-desk/dias#profile">${escapeHtml(portal)}</a></p>
             <table class="admin-psych-creds-table">
-                <thead><tr><th>Name</th><th>Username</th><th>Password</th></tr></thead>
+                <thead><tr><th>Name</th><th>Email</th><th>Password</th></tr></thead>
                 <tbody>
                     ${rows.map((row) => `<tr>
                         <td>${escapeHtml(row.name || '')}</td>
-                        <td><code>${escapeHtml(row.username || '')}</code></td>
+                        <td><code>${escapeHtml(row.email || '')}</code></td>
                         <td><code>${escapeHtml(row.password || '')}</code></td>
                     </tr>`).join('')}
                 </tbody>
             </table>`;
         lastPsychCredsText = [
             `Portal: ${portal}`,
-            ...rows.map((row) => `${row.name || ''}\t${row.username || ''}\t${row.password || ''}`)
+            ...rows.map((row) => `${row.name || ''}\t${row.email || ''}\t${row.password || ''}`)
         ].join('\n');
         adminPsychCreds.hidden = false;
         adminPsychCreds.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -2990,7 +2990,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (data.generatedPassword && data.professional) {
                 showPsychCreds([{
                     name: (data.application && data.application.name) || label,
-                    username: data.professional.username,
+                    email: data.professional.email || (app && app.email) || '',
                     password: data.generatedPassword
                 }]);
                 rememberFreshPassword(data.professional, data.generatedPassword);
@@ -3016,7 +3016,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (created.length) {
                 showPsychCreds(created.map((row) => ({
                     name: row.name,
-                    username: row.professional && row.professional.username,
+                    email: (row.professional && row.professional.email) || row.email || '',
                     password: row.generatedPassword
                 })));
                 created.forEach((row) => rememberFreshPassword(row.professional, row.generatedPassword));
@@ -3104,7 +3104,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (body.generatedPassword && body.professional) {
                 showPsychCreds([{
                     name: (body.application && body.application.name) || data.payload.nome,
-                    username: body.professional.username,
+                    email: body.professional.email || data.payload.email || '',
                     password: body.generatedPassword
                 }]);
                 rememberFreshPassword(body.professional, body.generatedPassword);
@@ -3726,7 +3726,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function defaultProfessionalLoginNote(name) {
         const who = String(name || '').trim();
         const greeting = who ? `Olá ${who},` : 'Olá,';
-        return `${greeting}\n\nSeguem os dados de acesso ao portal da Lon Clinic. Abra o link abaixo, introduza o username ou o email e a password e inicie sessão.`;
+        return `${greeting}\n\nSeguem os dados de acesso ao portal da Lon Clinic. Abra o link abaixo, introduza o email e a password e inicie sessão.`;
     }
 
     function professionalKey(p) {
@@ -3883,7 +3883,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             proCredsPortal.textContent = portal;
         }
         if (proCredsName) proCredsName.textContent = (pro && (pro.displayName || pro.fullName)) || '';
-        if (proCredsUsername) proCredsUsername.textContent = (pro && pro.username) || '';
+        if (proCredsUsername) proCredsUsername.textContent = (pro && pro.email) || '';
         if (proCredsPassword) proCredsPassword.textContent = password;
         if (adminProfessionalCreds && pro && pro.id) adminProfessionalCreds.dataset.proId = String(pro.id);
         setProfessionalCredsSendStatus('');
@@ -4097,7 +4097,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ${professionalPhotoHtml(p, 'admin-dir-detail-photo')}
                 <div>
                     <h3>${escapeHtml(title)}</h3>
-                    <p>${[role, p.hasLogin ? p.username : ''].filter(Boolean).map(escapeHtml).join(' · ') || '—'}</p>
+                    <p>${[role, p.hasLogin ? (p.email || 'no email on file') : ''].filter(Boolean).map(escapeHtml).join(' · ') || '—'}</p>
                 </div>
                 <span class="admin-pro-status${status.off ? ' is-off' : ''}">${escapeHtml(status.text)}</span>
             </div>
@@ -4253,13 +4253,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (proCredsCopyBtn) {
         proCredsCopyBtn.addEventListener('click', async () => {
             const portal = proCredsPortal ? proCredsPortal.textContent : `${window.location.origin}/clinic-desk/dias#profile`;
-            const username = proCredsUsername ? proCredsUsername.textContent : '';
+            const email = proCredsUsername ? proCredsUsername.textContent : '';
             const password = proCredsPassword ? proCredsPassword.textContent : '';
             const name = proCredsName ? proCredsName.textContent : '';
             const text = [
                 name ? `Name: ${name}` : '',
                 `Portal: ${portal}`,
-                `Username: ${username}`,
+                `Email: ${email}`,
                 `Password: ${password}`
             ].filter(Boolean).join('\n');
             try {
@@ -4267,7 +4267,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 proCredsCopyBtn.textContent = 'Copied';
                 setTimeout(() => { proCredsCopyBtn.textContent = 'Copy login'; }, 1600);
             } catch (err) {
-                showProfessionalError('Could not copy. Select the username and password above.');
+                showProfessionalError('Could not copy. Select the email and password above.');
             }
         });
     }
