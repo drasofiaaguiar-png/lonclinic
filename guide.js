@@ -2190,6 +2190,7 @@ function magazineNavTree() {
                         {
                             label: 'Artigos',
                             children: [
+                                { label: 'Sinais e quando procurar ajuda', href: '/blog/burnout-sinais-quando-procurar-ajuda' },
                                 { label: 'O que é e diferença do cansaço', href: '/blog/burnout-o-que-e-sinais-cansaco' },
                                 { label: '9 sinais no trabalho', href: '/blog/9-sinais-de-burnout-no-trabalho' },
                                 { label: 'Burnout parental', href: '/blog/burnout-parental-investigacao' },
@@ -2218,6 +2219,72 @@ function magazineNavTree() {
                 },
                 { label: 'Como encontrar um psicólogo', href: '/blog/como-encontrar-um-psicologo' },
                 { label: 'Quanto custa uma consulta', href: '/blog/quanto-custa-consulta-psicologia-portugal' },
+                { label: 'Consultas gratuitas', href: '/blog/consultas-psicologia-gratuitas-portugal' },
+                { label: 'Apoio nas universidades', href: '/blog/apoio-psicologico-universidades-portugal' },
+                { label: 'ADSE e seguros', href: '/blog/adse-seguros-psicologia-portugal' },
+                { label: 'Online vs presencial', href: '/blog/psicologia-online-vs-presencial' },
+                { label: 'Primeira consulta', href: '/blog/primeira-consulta-psicologia-o-que-esperar' },
+                { label: 'Quando ir ao psicólogo', href: '/blog/quando-ir-ao-psicologo-sinais' },
+                { label: 'Psicólogo para ansiedade', href: '/blog/psicologo-ansiedade-quando-procurar-ajuda' },
+                {
+                    label: 'Por cidade',
+                    children: [
+                        { label: 'Online por distrito', href: '/blog/psicologia-online-portugal-por-distrito' },
+                        {
+                            label: 'Norte',
+                            children: [
+                                { label: 'Porto', href: '/blog/consultas-psicologia-porto' },
+                                { label: 'Braga', href: '/blog/consultas-psicologia-braga' },
+                                { label: 'Guimarães', href: '/blog/consultas-psicologia-guimaraes' },
+                                { label: 'Gondomar', href: '/blog/consultas-psicologia-gondomar' },
+                                { label: 'Matosinhos', href: '/blog/consultas-psicologia-matosinhos' },
+                                { label: 'Penafiel', href: '/blog/consultas-psicologia-penafiel' },
+                                { label: 'Marco de Canaveses', href: '/blog/consultas-psicologia-marco-de-canaveses' },
+                                { label: 'Vila Real', href: '/blog/consultas-psicologia-vila-real' },
+                                { label: 'Viana do Castelo', href: '/blog/consultas-psicologia-viana-do-castelo' },
+                                { label: 'Guarda', href: '/blog/consultas-psicologia-guarda' }
+                            ]
+                        },
+                        {
+                            label: 'Centro',
+                            children: [
+                                { label: 'Aveiro', href: '/blog/consultas-psicologia-aveiro' },
+                                { label: 'Ovar', href: '/blog/consultas-psicologia-ovar' },
+                                { label: 'Coimbra', href: '/blog/consultas-psicologia-coimbra' },
+                                { label: 'Figueira da Foz', href: '/blog/consultas-psicologia-figueira-da-foz' },
+                                { label: 'Viseu', href: '/blog/consultas-psicologia-viseu' },
+                                { label: 'Covilhã', href: '/blog/consultas-psicologia-covilha' },
+                                { label: 'Leiria', href: '/blog/consultas-psicologia-leiria' }
+                            ]
+                        },
+                        {
+                            label: 'Lisboa e AML',
+                            children: [
+                                { label: 'Lisboa', href: '/blog/consultas-psicologia-lisboa' },
+                                { label: 'Almada', href: '/blog/consultas-psicologia-almada' },
+                                { label: 'Seixal', href: '/blog/consultas-psicologia-seixal' },
+                                { label: 'Barreiro', href: '/blog/consultas-psicologia-barreiro' },
+                                { label: 'Setúbal', href: '/blog/consultas-psicologia-setubal' },
+                                { label: 'Sintra', href: '/blog/consultas-psicologia-sintra' },
+                                { label: 'Cascais', href: '/blog/consultas-psicologia-cascais' },
+                                { label: 'Loures', href: '/blog/consultas-psicologia-loures' },
+                                { label: 'Vila Franca de Xira', href: '/blog/consultas-psicologia-vila-franca-de-xira' },
+                                { label: 'Torres Vedras', href: '/blog/consultas-psicologia-torres-vedras' }
+                            ]
+                        },
+                        {
+                            label: 'Alentejo, Algarve e ilhas',
+                            children: [
+                                { label: 'Santarém', href: '/blog/consultas-psicologia-santarem' },
+                                { label: 'Évora', href: '/blog/consultas-psicologia-evora' },
+                                { label: 'Beja', href: '/blog/consultas-psicologia-beja' },
+                                { label: 'Faro', href: '/blog/consultas-psicologia-faro' },
+                                { label: 'Madeira', href: '/blog/consultas-psicologia-madeira' },
+                                { label: 'Luanda (emigrantes)', href: '/blog/consultas-psicologia-luanda' }
+                            ]
+                        }
+                    ]
+                },
                 { label: 'Consulta de saúde mental', href: '/marcar/saude-mental' },
                 { label: 'Psicologia (subscrição)', href: '/saudemental' }
             ]
@@ -2226,6 +2293,12 @@ function magazineNavTree() {
             label: 'Perda de peso',
             children: [
                 { label: 'Nutrição por condição', href: '/nutricao' },
+                { label: 'Quanto custa nutrição', href: '/blog/quanto-custa-consulta-nutricao-portugal' },
+                { label: 'ADSE e nutrição', href: '/blog/adse-consultas-nutricao-portugal' },
+                { label: 'Cheque-Nutricionista 2026', href: '/blog/cheque-nutricionista-2026' },
+                { label: 'Nutricionista ou dietista', href: '/blog/nutricionista-ou-dietista-portugal' },
+                { label: 'Nutrição para perda de peso', href: '/blog/consultas-nutricao-perda-de-peso' },
+                { label: 'Consulta de nutrição online', href: '/blog/consulta-nutricao-online-como-funciona' },
                 { label: 'Perda sustentável', href: '/blog/perda-de-peso-sustentavel' },
                 { label: 'Défice calórico', href: '/blog/deficit-calorico' },
                 { label: 'Stress e peso', href: '/blog/stress-e-perda-de-peso' },

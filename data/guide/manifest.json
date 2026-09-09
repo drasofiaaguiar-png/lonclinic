@@ -1,6 +1,1963 @@
 {
     "articles": [
         {
+            "slug": "consulta-nutricao-online-como-funciona",
+            "title": "Consulta de Nutrição Online: Como Funciona e o Que Esperar",
+            "description": "Como é a consulta de nutrição online na Lon Clinic: videochamada no browser, 115 € no mês 1, recibo ADSE. Sem app e sem 45 € inventados.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Perda de peso",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "verified": false,
+            "ctaKind": "nutricao-programa",
+            "liveSlots": true,
+            "slotService": "nutricao-programa",
+            "readingMinutes": 6,
+            "related": [
+                "quanto-custa-consulta-nutricao-portugal",
+                "adse-consultas-nutricao-portugal",
+                "cheque-nutricionista-2026",
+                "nutricionista-ou-dietista-portugal",
+                "como-encontrar-um-nutricionista",
+                "consultas-nutricao-perda-de-peso",
+                "psicologia-online-vs-presencial"
+            ],
+            "faq": [
+                {
+                    "q": "Uma consulta de nutrição online é tão eficaz como uma presencial?",
+                    "a": "Para plano e hábitos, a regularidade importa mais do que a sala. Análises e antropometria presencial continuam quando forem precisas. Não afirmamos equivalência idêntica à da psicoterapia online."
+                },
+                {
+                    "q": "Preciso de algum equipamento especial para a consulta online?",
+                    "a": "Não. Browser, câmara e o link do email. Sem instalar aplicações."
+                },
+                {
+                    "q": "Posso pedir reembolso ao meu seguro ou à ADSE por uma consulta de nutrição online?",
+                    "a": "Guarde o recibo com NIF. Confirme o acto de video nutrição na ADSE Direta e, no seguro, a apólice. Não garantimos o reembolso da videochamada."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-nutricao-perda-de-peso",
+            "title": "Como Funcionam as Consultas de Nutrição para Perda de Peso",
+            "description": "O programa Lon de reeducação metabólica (3 a 6 meses, 115 € / 75 €/mês) sem aGLP-1. Uma consulta isolada não chega.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Perda de peso",
+            "image": "/image/guide/guide-group-walk.jpg",
+            "verified": false,
+            "ctaKind": "nutricao-programa",
+            "liveSlots": true,
+            "slotService": "nutricao-programa",
+            "readingMinutes": 6,
+            "related": [
+                "quanto-custa-consulta-nutricao-portugal",
+                "adse-consultas-nutricao-portugal",
+                "cheque-nutricionista-2026",
+                "nutricionista-ou-dietista-portugal",
+                "como-encontrar-um-nutricionista",
+                "consulta-nutricao-online-como-funciona",
+                "perda-de-peso-sustentavel",
+                "fome-emocional-vs-fisica"
+            ],
+            "faq": [
+                {
+                    "q": "Uma consulta de nutrição chega para perder peso?",
+                    "a": "Não. O programa Lon é acompanhamento de 3 a 6 meses, duas consultas por mês."
+                },
+                {
+                    "q": "Preciso de medicação para perder peso com acompanhamento nutricional?",
+                    "a": "Não. O programa é alimentar e comportamental, sem prescrição de aGLP-1."
+                },
+                {
+                    "q": "Quanto tempo demora a ver resultados?",
+                    "a": "Varia. O desenho da clínica é 3 a 6 meses de regularidade, sem garantia de quilos num prazo fixo."
+                }
+            ]
+        },
+        {
+            "slug": "apoio-psicologico-universidades-portugal",
+            "title": "Apoio Psicológico Gratuito nas Universidades Portuguesas",
+            "description": "SAS e gabinetes verificados: U.Porto, ULisboa, UA, UMinho, UC, UBI, UAlg, UÉvora, UTAD. O que fazer depois do curso.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-opera-coast.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "consultas-psicologia-gratuitas-portugal",
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-porto",
+                "consultas-psicologia-lisboa",
+                "consultas-psicologia-aveiro",
+                "adse-seguros-psicologia-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "As universidades portuguesas têm apoio psicológico gratuito?",
+                    "a": "Para estudantes inscritos, a generalidade das universidades públicas tem gabinete SAS ou de faculdade — geralmente gratuito ou a custo reduzido. Confirme na sua instituição."
+                },
+                {
+                    "q": "Como marcar consulta de psicologia na universidade?",
+                    "a": "Pelo canal oficial do SAS ou do gabinete (portal, app ou email), com inscrição válida em Portugal."
+                },
+                {
+                    "q": "O que acontece ao apoio psicológico quando termino o curso?",
+                    "a": "Costuma terminar com a matrícula. Depois: SNS, Cheque Cuida-te se couber na idade, ADSE/seguro, ou particular."
+                },
+                {
+                    "q": "As universidades também têm consultas de nutrição gratuitas?",
+                    "a": "Muitas instituições de ensino superior em Portugal têm alguma oferta nos SAS — não é universal. Confirme no SAS; o Cheque Cuida-te — Nutrição cobre os 12–35 anos."
+                }
+            ]
+        },
+        {
+            "slug": "nutricionista-ou-dietista-portugal",
+            "title": "Nutricionista ou Dietista: Qual a Diferença em Portugal?",
+            "description": "Ambos são regulados pela Ordem dos Nutricionistas (2011). Sem hierarquia legal. Como confirmar a cédula.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Perda de peso",
+            "image": "/image/guide/guide-lake-boats.jpg",
+            "verified": false,
+            "ctaKind": "nutricao-programa",
+            "liveSlots": true,
+            "slotService": "nutricao-programa",
+            "readingMinutes": 6,
+            "related": [
+                "quanto-custa-consulta-nutricao-portugal",
+                "adse-consultas-nutricao-portugal",
+                "cheque-nutricionista-2026",
+                "nutricionista-ou-dietista-portugal",
+                "como-encontrar-um-nutricionista"
+            ],
+            "faq": [
+                {
+                    "q": "Um dietista pode fazer o mesmo trabalho que um nutricionista em Portugal?",
+                    "a": "Em regra sim, no âmbito da cédula da mesma Ordem. A diferença está sobretudo na licenciatura, não numa hierarquia legal."
+                },
+                {
+                    "q": "Como sei se um nutricionista é certificado em Portugal?",
+                    "a": "Confirme a inscrição e a cédula no registo nacional da Ordem dos Nutricionistas."
+                },
+                {
+                    "q": "A consulta com um dietista custa mais barato do que com um nutricionista?",
+                    "a": "Não por regra. Na Lon Clinic o programa é 115 € no mês 1 e 75 €/mês depois, independentemente do título."
+                }
+            ]
+        },
+        {
+            "slug": "cheque-nutricionista-2026",
+            "title": "Cheque-Nutricionista 2026: Consultas de Nutrição Gratuitas dos 12 aos 35 Anos",
+            "description": "Cheque Cuida-te — Nutrição (IPDJ): 12–35 anos, 2+2 consultas, gov.pt. A Lon Clinic não se apresenta como aderente.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Perda de peso",
+            "image": "/image/guide/guide-waterfall.jpg",
+            "verified": false,
+            "ctaKind": "nutricao-programa",
+            "liveSlots": true,
+            "slotService": "nutricao-programa",
+            "readingMinutes": 6,
+            "related": [
+                "quanto-custa-consulta-nutricao-portugal",
+                "adse-consultas-nutricao-portugal",
+                "cheque-nutricionista-2026",
+                "nutricionista-ou-dietista-portugal",
+                "como-encontrar-um-nutricionista",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Quem pode pedir o Cheque Cuida-te — Nutrição?",
+                    "a": "Jovens dos 12 aos 35 anos em Portugal, inclusive. Até à maioridade, com autorização dos representantes legais. Já não é preciso ser estudante do ensino superior."
+                },
+                {
+                    "q": "Quantas consultas dá o Cheque-Nutricionista?",
+                    "a": "Duas de avaliação; cada conjunto seguinte são duas consultas. Sem máximo de conjuntos, por indicação clínica."
+                },
+                {
+                    "q": "Como pedir o Cheque-Nutricionista?",
+                    "a": "No gov.pt (Cheque Cuida-te — Nutrição), com autenticação digital. Depois marca com um nutricionista aderente."
+                },
+                {
+                    "q": "A Lon Clinic aceita o Cheque-Nutricionista?",
+                    "a": "Não o afirmamos. O cheque usa-se com a lista oficial; o programa Lon é pago (115 € / 75 €/mês)."
+                }
+            ]
+        },
+        {
+            "slug": "adse-consultas-nutricao-portugal",
+            "title": "ADSE e Consultas de Nutrição: Como Funciona a Comparticipação em 2026",
+            "description": "A ADSE inclui nutrição em convencionado e livre. Confirme tetos na ADSE Direta. Lon é regime livre (115 € / 75 €/mês).",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Perda de peso",
+            "image": "/image/guide/guide-coastal-sun.jpg",
+            "verified": false,
+            "ctaKind": "nutricao-programa",
+            "liveSlots": true,
+            "slotService": "nutricao-programa",
+            "readingMinutes": 6,
+            "related": [
+                "quanto-custa-consulta-nutricao-portugal",
+                "adse-consultas-nutricao-portugal",
+                "cheque-nutricionista-2026",
+                "nutricionista-ou-dietista-portugal",
+                "como-encontrar-um-nutricionista",
+                "adse-seguros-psicologia-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "A ADSE comparticipa consultas de nutrição online?",
+                    "a": "A ADSE anunciou teleconsultas e nutrição nas tabelas de 2025. Se a sua videochamada entra no acto, confirme na ADSE Direta."
+                },
+                {
+                    "q": "Quanto recebo de volta se pagar uma consulta de nutrição em regime livre?",
+                    "a": "O teto está na tabela ADSE em vigor. Não afirmamos um euro fixo neste artigo. Use o simulador da ADSE Direta."
+                },
+                {
+                    "q": "Preciso de uma consulta médica prévia para a ADSE comparticipar a consulta de nutrição?",
+                    "a": "Confirme na ADSE Direta e na nomenclatura do acto. Não publicamos uma exigência de receita como garantia para 2026."
+                }
+            ]
+        },
+        {
+            "slug": "quanto-custa-consulta-nutricao-portugal",
+            "title": "Quanto Custa uma Consulta de Nutrição em Portugal? (Preços 2026)",
+            "description": "Faixa particular 40–70 €. Na Lon Clinic: 115 € no mês 1 e 75 €/mês — não 45 €. ADSE e Cheque Cuida-te.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Perda de peso",
+            "image": "/image/guide/guide-country-road.jpg",
+            "verified": false,
+            "ctaKind": "nutricao-programa",
+            "liveSlots": true,
+            "slotService": "nutricao-programa",
+            "readingMinutes": 6,
+            "related": [
+                "quanto-custa-consulta-nutricao-portugal",
+                "adse-consultas-nutricao-portugal",
+                "cheque-nutricionista-2026",
+                "nutricionista-ou-dietista-portugal",
+                "como-encontrar-um-nutricionista",
+                "consulta-nutricao-online-como-funciona",
+                "consultas-nutricao-perda-de-peso"
+            ],
+            "faq": [
+                {
+                    "q": "Quanto custa uma consulta de nutrição em média em Portugal?",
+                    "a": "No particular, 40 € a 70 € é a faixa mais citada. Na Lon Clinic o mês 1 custa 115 € e o acompanhamento 75 €/mês."
+                },
+                {
+                    "q": "As consultas de seguimento custam o mesmo que a primeira consulta?",
+                    "a": "Em muitas clínicas, não. Na Lon Clinic o mês 1 é 115 €; depois 75 €/mês."
+                },
+                {
+                    "q": "É possível ter consultas de nutrição gratuitas em Portugal?",
+                    "a": "Sim: SNS, Cheque Cuida-te — Nutrição (12–35 anos, aderentes) e alguns SAS. A Lon Clinic não afirma ser aderente do cheque."
+                }
+            ]
+        },
+        {
+            "slug": "psicologia-online-portugal-por-distrito",
+            "title": "Psicologia Online em Portugal por Distrito",
+            "description": "Consulta de psicologia online em qualquer distrito, Madeira e Açores, hora de Lisboa. 60 € / 54 €/semana. Guias do Porto, Lisboa e Aveiro.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-sunset-lake.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "consultas-psicologia-porto",
+                "consultas-psicologia-lisboa",
+                "consultas-psicologia-aveiro",
+                "psicologia-online-vs-presencial",
+                "quanto-custa-consulta-psicologia-portugal",
+                "consultas-psicologia-gratuitas-portugal",
+                "consultas-psicologia-braga",
+                "consultas-psicologia-guimaraes",
+                "consultas-psicologia-guarda",
+                "consultas-psicologia-gondomar",
+                "consultas-psicologia-matosinhos",
+                "consultas-psicologia-penafiel",
+                "consultas-psicologia-marco-de-canaveses",
+                "consultas-psicologia-vila-real",
+                "consultas-psicologia-viana-do-castelo",
+                "consultas-psicologia-coimbra",
+                "consultas-psicologia-covilha",
+                "consultas-psicologia-figueira-da-foz",
+                "consultas-psicologia-viseu",
+                "consultas-psicologia-leiria",
+                "consultas-psicologia-ovar",
+                "consultas-psicologia-almada",
+                "consultas-psicologia-setubal",
+                "consultas-psicologia-seixal",
+                "consultas-psicologia-barreiro",
+                "consultas-psicologia-sintra",
+                "consultas-psicologia-cascais",
+                "consultas-psicologia-loures",
+                "consultas-psicologia-torres-vedras",
+                "consultas-psicologia-vila-franca-de-xira",
+                "consultas-psicologia-santarem",
+                "consultas-psicologia-evora",
+                "consultas-psicologia-beja",
+                "consultas-psicologia-faro",
+                "consultas-psicologia-madeira",
+                "consultas-psicologia-luanda"
+            ],
+            "faq": [
+                {
+                    "q": "Posso fazer psicologia online em qualquer distrito de Portugal?",
+                    "a": "Sim. A Lon Clinic atende por videochamada em todos os distritos, na Madeira e nos Açores, à hora de Lisboa."
+                },
+                {
+                    "q": "Como marcar uma consulta de psicologia online em Portugal?",
+                    "a": "Escolhe psicólogo em /saudemental ou faz a triagem, marca (60 € ou 54 €/semana), recebe o link no browser. 45 minutos."
+                },
+                {
+                    "q": "A psicologia online funciona no Porto, em Lisboa e em Aveiro?",
+                    "a": "Sim. Há guias locais para Porto, Lisboa e Aveiro; a consulta online é a mesma clínica."
+                },
+                {
+                    "q": "E se estiver na Madeira, nos Açores ou no estrangeiro?",
+                    "a": "Madeira e Açores: a mesma videochamada, hora de Lisboa. No estrangeiro use /psicologo-emigrantes. Não há produto Lon em Luanda."
+                },
+                {
+                    "q": "Quanto custa a psicologia online na Lon Clinic?",
+                    "a": "60 € avulsa ou 54 €/semana. 45 minutos. Pode mudar de psicólogo e recomeçar do zero."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-porto",
+            "title": "Consultas de Psicologia no Porto: Online, SNS e U.Porto",
+            "description": "Privado 50–70 €, GAMP/SASUP, FPCEUP e psicologia online a 60 € a partir do Porto.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/image1_files/CoventGarden_Large_Desktop.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "consultas-psicologia-aveiro",
+                "consultas-psicologia-gratuitas-portugal",
+                "quanto-custa-consulta-psicologia-portugal",
+                "como-encontrar-um-psicologo",
+                "psicologia-online-vs-presencial"
+            ],
+            "faq": [
+                {
+                    "q": "Onde encontrar consultas de psicologia no Porto?",
+                    "a": "No privado, no SNS, no GAMP dos SASUP, na FPCEUP ou online na Lon Clinic a partir do Porto."
+                },
+                {
+                    "q": "Quanto custa uma consulta de psicologia no Porto?",
+                    "a": "No particular, 50 € a 70 € é típico. Na Lon Clinic: 60 € ou 54 €/semana, 45 minutos."
+                },
+                {
+                    "q": "Há psicologia online no Porto?",
+                    "a": "Sim. Videochamada a partir do Porto e da região Norte, no browser."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-lisboa",
+            "title": "Consultas de Psicologia em Lisboa: Online, SNS e ULisboa",
+            "description": "Privado 50–80 € na AML, SASULisboa e psicologia online a 60 € sem trânsito.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/image1_files/Marylebone_Large_Desktop.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-porto",
+                "consultas-psicologia-aveiro",
+                "consultas-psicologia-gratuitas-portugal",
+                "quanto-custa-consulta-psicologia-portugal",
+                "como-encontrar-um-psicologo",
+                "psicologia-online-vs-presencial"
+            ],
+            "faq": [
+                {
+                    "q": "Onde encontrar consultas de psicologia em Lisboa?",
+                    "a": "No privado da AML, no SNS, nos SASULisboa ou online na Lon Clinic a partir de Lisboa."
+                },
+                {
+                    "q": "Quanto custa uma consulta de psicologia em Lisboa?",
+                    "a": "No particular, 50 € a 80 € é típico. Na Lon Clinic: 60 € ou 54 €/semana."
+                },
+                {
+                    "q": "Há psicologia online em Lisboa?",
+                    "a": "Sim. Videochamada a partir de Lisboa, AML e Vale do Tejo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-aveiro",
+            "title": "Consultas de Psicologia em Aveiro: Online, SNS e Universidade de Aveiro",
+            "description": "SAS da UA, privado 40–70 € e psicologia online a 60 € a partir de Aveiro.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/image1_files/ColmoreRow_Large_Desktop.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-porto",
+                "consultas-psicologia-lisboa",
+                "consultas-psicologia-gratuitas-portugal",
+                "quanto-custa-consulta-psicologia-portugal",
+                "como-encontrar-um-psicologo",
+                "psicologia-online-vs-presencial"
+            ],
+            "faq": [
+                {
+                    "q": "Onde encontrar consultas de psicologia em Aveiro?",
+                    "a": "No privado, no SNS, nos SAS da UA (inscritos) ou online na Lon Clinic a partir de Aveiro."
+                },
+                {
+                    "q": "Quanto custa uma consulta de psicologia em Aveiro?",
+                    "a": "No particular, cerca de 40 € a 70 €. Na Lon Clinic: 60 € ou 54 €/semana."
+                },
+                {
+                    "q": "Há psicologia online em Aveiro?",
+                    "a": "Sim. Videochamada a partir de Aveiro e da região Centro."
+                }
+            ]
+        },
+        {
+            "slug": "burnout-sinais-quando-procurar-ajuda",
+            "title": "Burnout: Sinais, Quando Procurar Ajuda e Como Funciona o Acompanhamento",
+            "description": "Exaustão, cinismo e ineficácia (OMS/Maslach). Quando procurar psicologia, teste CBI e empresas. 60 € / 54 €/semana.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Burnout",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "verified": false,
+            "ctaKind": "burnout",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "burnout-o-que-e-sinais-cansaco",
+                "burnout-ou-depressao",
+                "9-sinais-de-burnout-no-trabalho",
+                "como-as-empresas-podem-prevenir-o-burnout"
+            ],
+            "faq": [
+                {
+                    "q": "Quais são os sinais de burnout?",
+                    "a": "Exaustão que não recupera com descanso, cinismo ou distanciamento, e ineficácia — as três dimensões OMS/Maslach."
+                },
+                {
+                    "q": "Quando procurar ajuda para burnout?",
+                    "a": "Quando estes sinais persistem e já custam função, sono ou relações. O teste CBI objectiva; não substitui a consulta."
+                },
+                {
+                    "q": "Burnout ou depressão — como distinguir?",
+                    "a": "O burnout liga-se ao trabalho; a depressão atravessa mais áreas. Podem coexistir."
+                },
+                {
+                    "q": "Como o psicólogo ajuda no burnout?",
+                    "a": "Ajuda a mapear o padrão, a recuperar limites e a tratar ansiedade ou humor associados."
+                },
+                {
+                    "q": "A Lon Clinic trabalha com empresas?",
+                    "a": "Sim, no produto existente: clínica anti-burnout para empresas. Não há um pacote novo neste artigo."
+                }
+            ]
+        },
+        {
+            "slug": "psicologo-ansiedade-quando-procurar-ajuda",
+            "title": "Psicólogo para Ansiedade: Quando Procurar Ajuda",
+            "description": "Quando a ansiedade já ocupa o sono, o trabalho ou as relações. TCC, 45 min semanais, 60 € / 54 €/semana.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-group-walk.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "tcc-para-ansiedade",
+                "ansiedade-normal-ou-perturbacao",
+                "quando-ir-ao-psicologo-sinais",
+                "consultas-psicologia-gratuitas-portugal",
+                "quanto-custa-consulta-psicologia-portugal",
+                "como-encontrar-um-psicologo",
+                "psicologia-online-vs-presencial"
+            ],
+            "faq": [
+                {
+                    "q": "Quando procurar um psicólogo para a ansiedade?",
+                    "a": "Quando a preocupação, a evitação ou o alerta no corpo já ocupam o sono, o trabalho ou as relações de forma repetida."
+                },
+                {
+                    "q": "Preciso de um diagnóstico para ir ao psicólogo com ansiedade?",
+                    "a": "Não. O custo no dia a dia chega."
+                },
+                {
+                    "q": "A TCC funciona para a ansiedade?",
+                    "a": "Sim, para a generalidade das perturbações de ansiedade (Olatunji, Cisler & Deacon, 2010)."
+                },
+                {
+                    "q": "A terapia online resulta para a ansiedade?",
+                    "a": "Para a maior parte dos adultos, a evidência trata os formatos como equivalentes."
+                },
+                {
+                    "q": "Posso mudar de psicólogo na Lon Clinic?",
+                    "a": "Sim. Sem justificação, e recomeçar do zero."
+                }
+            ]
+        },
+        {
+            "slug": "quando-ir-ao-psicologo-sinais",
+            "title": "Quando Ir ao Psicólogo? Sinais de Que Deve Procurar Ajuda",
+            "description": "Não é preciso estar em crise. Sinais para procurar psicologia em Portugal. 60 € / 54 €/semana.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-opera-coast.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "primeira-consulta-psicologia-o-que-esperar",
+                "como-encontrar-um-psicologo",
+                "quando-procurar-ajuda-para-a-depressao",
+                "consultas-psicologia-gratuitas-portugal",
+                "quanto-custa-consulta-psicologia-portugal",
+                "como-encontrar-um-psicologo",
+                "psicologia-online-vs-presencial"
+            ],
+            "faq": [
+                {
+                    "q": "Quando se deve ir ao psicólogo?",
+                    "a": "Quando o que sente interfere de forma consistente no bem-estar ou no dia a dia — mesmo sem crise."
+                },
+                {
+                    "q": "Quando ir ao psicólogo?",
+                    "a": "Quando o padrão já dura e o descanso ou a conversa informal já não chegam."
+                },
+                {
+                    "q": "Quem deve ir ao psicólogo?",
+                    "a": "Qualquer pessoa que queira um espaço confidencial para o que está a pesar."
+                },
+                {
+                    "q": "Quais são as razões para ir ao psicólogo?",
+                    "a": "Ansiedade, humor baixo, relações, esgotamento no trabalho e transições são razões frequentes e suficientes."
+                },
+                {
+                    "q": "Em que situações um psicólogo pode me ajudar?",
+                    "a": "Quando precisa de regularidade, método e confidencialidade para mudar um padrão."
+                }
+            ]
+        },
+        {
+            "slug": "primeira-consulta-psicologia-o-que-esperar",
+            "title": "Primeira Consulta de Psicologia: O Que Esperar e o Que Dizer",
+            "description": "Não precisa de discurso preparado. Na Lon Clinic a primeira sessão dura 45 minutos, 60 €.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-lake-boats.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "como-encontrar-um-psicologo",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal",
+                "quanto-custa-consulta-psicologia-portugal",
+                "como-encontrar-um-psicologo",
+                "psicologia-online-vs-presencial"
+            ],
+            "faq": [
+                {
+                    "q": "Como é a primeira consulta de psicologia?",
+                    "a": "O psicólogo procura conhecer-te e perceber o motivo da procura. Não é preciso um discurso preparado."
+                },
+                {
+                    "q": "O que dizer na primeira consulta de psicologia?",
+                    "a": "O que está a doer agora, há quanto tempo, e o que gostarias que mudasse."
+                },
+                {
+                    "q": "Quanto tempo dura a primeira consulta?",
+                    "a": "No mercado, 45 a 60 minutos. Na Lon Clinic, incluindo a primeira, 45 minutos semanais."
+                },
+                {
+                    "q": "O que acontece se não gostar do psicólogo?",
+                    "a": "Podes mudar sempre que quiseres, sem justificação, e recomeçar do zero."
+                },
+                {
+                    "q": "A primeira consulta é mais cara?",
+                    "a": "Em algumas clínicas, sim. Na Lon Clinic custa o mesmo: 60 € ou 54 €/semana."
+                }
+            ]
+        },
+        {
+            "slug": "psicologia-online-vs-presencial",
+            "title": "Psicologia Online vs Presencial: O Que Escolher em 2026?",
+            "description": "Para a maior parte dos adultos a evidência trata os formatos como equivalentes. Lon: 45 min, 60 € / 54 €/semana.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-waterfall.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "consultas-psicologia-gratuitas-portugal",
+                "quanto-custa-consulta-psicologia-portugal",
+                "como-encontrar-um-psicologo",
+                "psicologia-online-vs-presencial",
+                "primeira-consulta-psicologia-o-que-esperar",
+                "adse-seguros-psicologia-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "A terapia online funciona tão bem como a presencial?",
+                    "a": "Para a maior parte dos adultos, a evidência trata os formatos como equivalentes (aliança terapêutica; Flückiger 2018)."
+                },
+                {
+                    "q": "Qual é a diferença entre psicologia online e presencial?",
+                    "a": "O trabalho clínico é o mesmo; muda o sítio. Na Lon Clinic só há online: 45 minutos, 60 € ou 54 €/semana."
+                },
+                {
+                    "q": "Como funciona uma consulta de psicologia online?",
+                    "a": "Escolhe psicólogo ou faz a triagem, marca, recebe um link no browser, sessão de 45 minutos."
+                },
+                {
+                    "q": "Posso mudar de psicólogo na Lon Clinic?",
+                    "a": "Sim. Sem justificação, e recomeçar do zero."
+                },
+                {
+                    "q": "Quanto custa a psicologia online na Lon Clinic?",
+                    "a": "60 € avulsa ou 54 €/semana. 45 minutos."
+                }
+            ]
+        },
+        {
+            "slug": "adse-seguros-psicologia-portugal",
+            "title": "ADSE e Seguros de Saúde Cobrem Psicologia? Guia 2026",
+            "description": "A ADSE comparticipa psicologia em convencionado e livre. Sem prescrição desde maio de 2024. Confirme tetos em adse.pt.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-coastal-sun.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "consultas-psicologia-gratuitas-portugal",
+                "quanto-custa-consulta-psicologia-portugal",
+                "como-encontrar-um-psicologo",
+                "psicologia-online-vs-presencial",
+                "adse-consultas-nutricao-portugal",
+                "seguros-saude-portugal-guia"
+            ],
+            "faq": [
+                {
+                    "q": "A ADSE comparticipa consultas de psicologia?",
+                    "a": "Sim, em convencionado e em livre. Desde maio de 2024 não é necessária prescrição médica para o reembolso dos actos de psicologia."
+                },
+                {
+                    "q": "Quantas consultas de psicologia a ADSE comparticipa?",
+                    "a": "O teto anual está na tabela ADSE em vigor — confirme em adse.pt / ADSE Direta."
+                },
+                {
+                    "q": "O seguro de saúde cobre consultas de psicologia?",
+                    "a": "Depende do plano. Peça à operadora os limites e se a videochamada conta."
+                },
+                {
+                    "q": "As consultas de psicologia entram no IRS?",
+                    "a": "Em geral sim, como despesas de saúde, com fatura com NIF. Confirme no Portal das Finanças."
+                },
+                {
+                    "q": "A Multicare cobre consultas de psicologia?",
+                    "a": "Só o seu plano responde. Leia as Condições Gerais ou pergunte à linha da apólice."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-braga",
+            "title": "Consultas de Psicologia em Braga: Online e SNS",
+            "description": "Psicologia online em Braga: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-porto",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Braga ou noutro sítio com internet. Não precisa de ir a um consultório de Braga."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Braga ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Braga não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-guimaraes",
+            "title": "Consultas de Psicologia em Guimarães: Online e SNS",
+            "description": "Psicologia online em Guimarães: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-group-walk.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-porto",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Guimarães ou noutro sítio com internet. Não precisa de ir a um consultório de Guimarães."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Guimarães ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Guimarães não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-guarda",
+            "title": "Consultas de Psicologia na Guarda: Online e SNS",
+            "description": "Psicologia online na Guarda: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-opera-coast.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-aveiro",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar na Guarda ou noutro sítio com internet. Não precisa de ir a um consultório da Guarda."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, na Guarda ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Guarda não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-gondomar",
+            "title": "Consultas de Psicologia em Gondomar: Online e SNS",
+            "description": "Psicologia online em Gondomar: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-lake-boats.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-porto",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Gondomar ou noutro sítio com internet. Não precisa de ir a um consultório de Gondomar."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Gondomar ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Gondomar não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-matosinhos",
+            "title": "Consultas de Psicologia em Matosinhos: Online e SNS",
+            "description": "Psicologia online em Matosinhos: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-waterfall.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-porto",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Matosinhos ou noutro sítio com internet. Não precisa de ir a um consultório de Matosinhos."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Matosinhos ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Matosinhos não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-penafiel",
+            "title": "Consultas de Psicologia em Penafiel: Online e SNS",
+            "description": "Psicologia online em Penafiel: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-coastal-sun.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-porto",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Penafiel ou noutro sítio com internet. Não precisa de ir a um consultório de Penafiel."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Penafiel ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Penafiel não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-marco-de-canaveses",
+            "title": "Consultas de Psicologia em Marco de Canaveses: Online e SNS",
+            "description": "Psicologia online em Marco de Canaveses: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-country-road.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-porto",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Marco de Canaveses ou noutro sítio com internet. Não precisa de ir a um consultório de Marco de Canaveses."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Marco de Canaveses ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Marco de Canaveses não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-vila-real",
+            "title": "Consultas de Psicologia em Vila Real: Online e SNS",
+            "description": "Psicologia online em Vila Real: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-sunset-lake.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-porto",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Vila Real ou noutro sítio com internet. Não precisa de ir a um consultório de Vila Real."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Vila Real ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Vila Real não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-viana-do-castelo",
+            "title": "Consultas de Psicologia em Viana do Castelo: Online e SNS",
+            "description": "Psicologia online em Viana do Castelo: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/image1_files/CoventGarden_Large_Desktop.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-porto",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Viana do Castelo ou noutro sítio com internet. Não precisa de ir a um consultório de Viada do Castelo."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Viana do Castelo ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Viana do Castelo não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-coimbra",
+            "title": "Consultas de Psicologia em Coimbra: Online e SNS",
+            "description": "Psicologia online em Coimbra: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/image1_files/Marylebone_Large_Desktop.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-aveiro",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Coimbra ou noutro sítio com internet. Não precisa de ir a um consultório de Coimbra."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Coimbra ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Coimbra não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-covilha",
+            "title": "Consultas de Psicologia na Covilhã: Online e SNS",
+            "description": "Psicologia online na Covilhã: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/image1_files/ColmoreRow_Large_Desktop.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-aveiro",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar na Covilhã ou noutro sítio com internet. Não precisa de ir a um consultório da Covilhã."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, na Covilhã ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Covilhã não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-figueira-da-foz",
+            "title": "Consultas de Psicologia na Figueira da Foz: Online e SNS",
+            "description": "Psicologia online na Figueira da Foz: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-coimbra",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar na Figueira da Foz ou noutro sítio com internet. Não precisa de ir a um consultório da Figueira da Foz."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, na Figueira da Foz ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Figueira da Foz não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-viseu",
+            "title": "Consultas de Psicologia em Viseu: Online e SNS",
+            "description": "Psicologia online em Viseu: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-group-walk.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-aveiro",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Viseu ou noutro sítio com internet. Não precisa de ir a um consultório de Viseu."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Viseu ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Viseu não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-leiria",
+            "title": "Consultas de Psicologia em Leiria: Online e SNS",
+            "description": "Psicologia online em Leiria: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-opera-coast.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Leiria ou noutro sítio com internet. Não precisa de ir a um consultório de Leiria."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Leiria ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Leiria não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-ovar",
+            "title": "Consultas de Psicologia em Ovar: Online e SNS",
+            "description": "Psicologia online em Ovar: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-lake-boats.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-aveiro",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Ovar ou noutro sítio com internet. Não precisa de ir a um consultório de Ovar."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Ovar ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Ovar não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-almada",
+            "title": "Consultas de Psicologia em Almada: Online e SNS",
+            "description": "Psicologia online em Almada: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-waterfall.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Almada ou noutro sítio com internet. Não precisa de ir a um consultório de Almada."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Almada ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Almada não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-setubal",
+            "title": "Consultas de Psicologia em Setúbal: Online e SNS",
+            "description": "Psicologia online em Setúbal: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-coastal-sun.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Setúbal ou noutro sítio com internet. Não precisa de ir a um consultório de Setúbal."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Setúbal ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Setúbal não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-seixal",
+            "title": "Consultas de Psicologia no Seixal: Online e SNS",
+            "description": "Psicologia online no Seixal: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-country-road.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar no Seixal ou noutro sítio com internet. Não precisa de ir a um consultório do Seixal."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, no Seixal ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Seixal não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-barreiro",
+            "title": "Consultas de Psicologia no Barreiro: Online e SNS",
+            "description": "Psicologia online no Barreiro: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-sunset-lake.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar no Barreiro ou noutro sítio com internet. Não precisa de ir a um consultório do Barreiro."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, no Barreiro ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Barreiro não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-sintra",
+            "title": "Consultas de Psicologia em Sintra: Online e SNS",
+            "description": "Psicologia online em Sintra: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/image1_files/CoventGarden_Large_Desktop.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Sintra ou noutro sítio com internet. Não precisa de ir a um consultório de Sintra."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Sintra ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Sintra não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-cascais",
+            "title": "Consultas de Psicologia em Cascais: Online e SNS",
+            "description": "Psicologia online em Cascais: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/image1_files/Marylebone_Large_Desktop.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Cascais ou noutro sítio com internet. Não precisa de ir a um consultório de Cascais."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Cascais ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Cascais não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-loures",
+            "title": "Consultas de Psicologia em Loures: Online e SNS",
+            "description": "Psicologia online em Loures: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/image1_files/ColmoreRow_Large_Desktop.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Loures ou noutro sítio com internet. Não precisa de ir a um consultório de Loures."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Loures ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Loures não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-torres-vedras",
+            "title": "Consultas de Psicologia em Torres Vedras: Online e SNS",
+            "description": "Psicologia online em Torres Vedras: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Torres Vedras ou noutro sítio com internet. Não precisa de ir a um consultório de Torres Vedras."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Torres Vedras ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Torres Vedras não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-vila-franca-de-xira",
+            "title": "Consultas de Psicologia em Vila Franca de Xira: Online e SNS",
+            "description": "Psicologia online em Vila Franca de Xira: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-group-walk.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Vila Franca de Xira ou noutro sítio com internet. Não precisa de ir a um consultório de Vila Franca de Xira."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Vila Franca de Xira ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Vila Franca de Xira não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-santarem",
+            "title": "Consultas de Psicologia em Santarém: Online e SNS",
+            "description": "Psicologia online em Santarém: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-opera-coast.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Santarém ou noutro sítio com internet. Não precisa de ir a um consultório de Santarém."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Santarém ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Santarém não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-evora",
+            "title": "Consultas de Psicologia em Évora: Online e SNS",
+            "description": "Psicologia online em Évora: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-lake-boats.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Évora ou noutro sítio com internet. Não precisa de ir a um consultório de Évora."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Évora ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Évora não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-beja",
+            "title": "Consultas de Psicologia em Beja: Online e SNS",
+            "description": "Psicologia online em Beja: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-waterfall.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Beja ou noutro sítio com internet. Não precisa de ir a um consultório de Beja."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Beja ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Beja não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-faro",
+            "title": "Consultas de Psicologia em Faro: Online e SNS",
+            "description": "Psicologia online em Faro: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-coastal-sun.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Faro ou noutro sítio com internet. Não precisa de ir a um consultório de Faro."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Faro ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Faro não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-madeira",
+            "title": "Consultas de Psicologia na Madeira: Online e SNS",
+            "description": "Psicologia online na Madeira: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-country-road.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar na Madeira ou noutro sítio com internet. Não precisa de ir a um consultório da Madeira."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, na Madeira ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Madeira não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-luanda",
+            "title": "Consultas de Psicologia em Luanda: Psicólogo Português Online",
+            "description": "Psicologia online em Luanda: 60 € / 54 €/semana, 45 minutos. SNS e SAS locais verificados..",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-sunset-lake.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-portugal-por-distrito",
+                "consultas-psicologia-lisboa",
+                "quanto-custa-consulta-psicologia-portugal",
+                "psicologia-online-vs-presencial",
+                "consultas-psicologia-gratuitas-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de estar fisicamente na cidade para marcar consulta com um psicólogo online?",
+                    "a": "Não. A consulta é online: pode estar em Luanda ou noutro sítio com internet. Não precisa de ir a um consultório de Luanda."
+                },
+                {
+                    "q": "O preço muda consoante a cidade?",
+                    "a": "Não. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, em Luanda ou noutro distrito."
+                },
+                {
+                    "q": "Como marco consulta?",
+                    "a": "Escolhe psicólogo em /saudemental por especialidade ou faz a triagem, marca e recebe o link por email. A sessão dura 45 minutos. Luanda não altera o processo."
+                }
+            ]
+        },
+        {
+            "slug": "consultas-psicologia-gratuitas-portugal",
+            "title": "Consultas de Psicologia Gratuitas em Portugal: Guia Completo 2026",
+            "description": "Onde encontrar apoio psicológico gratuito em Portugal: SNS, Cheque-Psicólogo/Cuida-te, universidades e linhas de apoio. Como marcar e o que esperar em 2026.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/image1_files/CoventGarden_Large_Desktop.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 7,
+            "related": [
+                "quanto-custa-consulta-psicologia-portugal",
+                "como-encontrar-um-psicologo",
+                "quando-procurar-ajuda-para-a-depressao",
+                "telemedicina-em-casa",
+                "sns-vs-privado-portugal",
+                "seguros-saude-portugal-guia",
+                "apoio-psicologico-universidades-portugal",
+                "adse-seguros-psicologia-portugal",
+                "psicologia-online-portugal-por-distrito"
+            ],
+            "faq": [
+                {
+                    "q": "Onde posso pedir ajuda psicológica gratuita?",
+                    "a": "As principais vias em Portugal são o médico de família (referenciação para psicologia no SNS), o Cheque Cuida-te — Psicologia (jovens dos 12 aos 35 anos, pedido no gov.pt), os gabinetes de apoio psicológico das universidades (estudantes inscritos) e linhas gratuitas como a SNS 24 (808 24 24 24) e a SOS Voz Amiga."
+                },
+                {
+                    "q": "Como marcar consulta de psicologia no SNS?",
+                    "a": "Através do médico de família, que referencia para psicologia nos cuidados de saúde primários ou hospitalares. A linha SNS 24 (808 24 24 24) faz triagem e orienta o percurso. Em alguns centros o pedido começa por essa linha; a referenciação formal continua, em regra, no médico de família."
+                },
+                {
+                    "q": "Como posso obter apoio psicológico no SNS?",
+                    "a": "Contacte o seu centro de saúde e peça referenciação para psicologia. Em maior urgência, a SNS 24 orienta; em crise ou risco imediato use o 112 ou a urgência hospitalar — não a lista de espera da consulta."
+                },
+                {
+                    "q": "Como procurar ajuda psicológica gratuita sendo estudante?",
+                    "a": "Contacte os serviços de acção social ou o gabinete de apoio psicopedagógico da sua universidade. A generalidade das instituições de ensino superior público em Portugal tem este serviço para estudantes inscritos. O Cheque Cuida-te (12–35 anos) é uma via à parte, que não exige matrícula."
+                },
+                {
+                    "q": "As consultas gratuitas têm lista de espera?",
+                    "a": "Sim, é frequente, sobretudo no SNS. O tempo varia por região e instituição. Universidades acumulam procura em época de exames. O Cheque Cuida-te depende da disponibilidade do psicólogo aderente. Enquanto espera, as linhas de apoio e, se precisar, uma consulta privada pontual são o complemento habitual."
+                },
+                {
+                    "q": "Quem pode pedir o Cheque-Psicólogo em 2026?",
+                    "a": "Jovens dos 12 aos 35 anos, inclusive. Até à maioridade é preciso autorização dos representantes legais. Pede-se no gov.pt. A medida é de intervenção breve e não substitui cuidados especializados do SNS."
+                }
+            ]
+        },
+        {
             "slug": "quanto-custa-consulta-psicologia-portugal",
             "title": "Quanto Custa uma Consulta de Psicologia em Portugal em 2026?",
             "description": "Preços médios de consultas de psicologia em Portugal em 2026, presencial vs online, privado vs ADSE/seguros. Compare e marque consulta a 60 €.",
@@ -17,12 +1974,15 @@
             "slotService": "psicologia",
             "readingMinutes": 6,
             "related": [
+                "consultas-psicologia-gratuitas-portugal",
                 "como-encontrar-um-psicologo",
                 "telemedicina-em-casa",
                 "seguros-saude-portugal-guia",
                 "seguro-saude-compensa",
                 "tcc-para-ansiedade",
-                "talvez-devesses-falar-com-alguem"
+                "talvez-devesses-falar-com-alguem",
+                "adse-seguros-psicologia-portugal",
+                "psicologia-online-vs-presencial"
             ],
             "faq": [
                 {
@@ -205,7 +2165,10 @@
                 "nutricionista-plano-perda-de-peso",
                 "perda-de-peso-sustentavel",
                 "fome-emocional-vs-fisica",
-                "efeito-ioio"
+                "efeito-ioio",
+                "quanto-custa-consulta-nutricao-portugal",
+                "nutricionista-ou-dietista-portugal",
+                "consultas-nutricao-perda-de-peso"
             ],
             "faq": [
                 {
@@ -243,6 +2206,7 @@
             "slotService": "psicologia",
             "readingMinutes": 7,
             "related": [
+                "consultas-psicologia-gratuitas-portugal",
                 "quanto-custa-consulta-psicologia-portugal",
                 "talvez-devesses-falar-com-alguem",
                 "como-a-terapia-ajuda-autoconhecimento",
@@ -250,7 +2214,8 @@
                 "como-encontrar-um-nutricionista",
                 "tcc-para-ansiedade",
                 "telemedicina-em-casa",
-                "adhd-em-adultos-sintomas"
+                "primeira-consulta-psicologia-o-que-esperar",
+                "quando-ir-ao-psicologo-sinais"
             ],
             "faq": [
                 {
@@ -3717,7 +5682,8 @@
             "related": [
                 "9-sinais-de-burnout-no-trabalho",
                 "burnout-ou-depressao",
-                "/burnout/o-que-e"
+                "/burnout/o-que-e",
+                "burnout-sinais-quando-procurar-ajuda"
             ],
             "faq": [
                 {
