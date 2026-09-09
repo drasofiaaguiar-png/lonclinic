@@ -1624,10 +1624,24 @@ async function findProfessionalForClinicLogin(identifier) {
     if (byEmail) return byEmail;
     try {
         const app = await findPsychologistApplicationByEmailInternal(email);
-        if (app && app.professionalId) {
+        if (!app) return null;
+        if (app.professionalId) {
             const byId = await findProfessionalByIdInternal(app.professionalId);
             if (byId) return byId;
         }
+        const appName = bolsaApplicationName(app) || app.name;
+        if (!appName) return null;
+        const byName = await findProfessionalByDisplayNameInternal(appName);
+        if (byName) return byName;
+        if (usePersistentDb) {
+            const byFull = await db.findProfessionalByStaffFullName(appName);
+            if (byFull) return byFull;
+        }
+        const list = await listProfessionalsInternal();
+        return (list || []).find((p) => {
+            if (!p || p.active === false) return false;
+            return personNamesMatch(p.displayName, appName) || usernameMatchesPersonName(p.username, appName);
+        }) || null;
     } catch (err) {
         console.error('findProfessionalForClinicLogin bolsa:', err.message);
     }
