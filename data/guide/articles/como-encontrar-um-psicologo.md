@@ -56,7 +56,7 @@ Se a resposta a estas perguntas for «não» depois de duas ou três sessões, e
 
 Parece pouco romântico dizer isto, mas o preço, a frequência e a facilidade de marcação influenciam directamente se vais manter a terapia a longo prazo — e a consistência é o que realmente traz resultados. Vale a pena perguntar, logo no início:
 
-- Qual o custo por sessão e há opções de subscrição ou pacotes?
+- Qual o custo por sessão e há opções de subscrição ou pacotes? Em Portugal a faixa privada mais comum é 40 €–70 €; o detalhe está em [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal).
 - Há flexibilidade de horários (incluindo fim do dia, para quem trabalha)?
 - É possível continuar online se, por exemplo, mudares de cidade?
 

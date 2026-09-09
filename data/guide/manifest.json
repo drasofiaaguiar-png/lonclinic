@@ -1,6 +1,53 @@
 {
     "articles": [
         {
+            "slug": "quanto-custa-consulta-psicologia-portugal",
+            "title": "Quanto Custa uma Consulta de Psicologia em Portugal em 2026?",
+            "description": "Preços médios de consultas de psicologia em Portugal em 2026, presencial vs online, privado vs ADSE/seguros. Compare e marque consulta a 60 €.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "image": "/image/image1_files/Marylebone_Large_Desktop.jpg",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "como-encontrar-um-psicologo",
+                "telemedicina-em-casa",
+                "seguros-saude-portugal-guia",
+                "seguro-saude-compensa",
+                "tcc-para-ansiedade",
+                "talvez-devesses-falar-com-alguem"
+            ],
+            "faq": [
+                {
+                    "q": "Qual é o preço de uma consulta de Psicologia?",
+                    "a": "Em Portugal, o preço médio de uma consulta de psicologia privada situa-se entre 40 € e 70 €, sendo 60 € o valor mais comum a nível nacional. Na Lon Clinic a sessão avulsa custa 60 €."
+                },
+                {
+                    "q": "Qual é a média para Psicologia em Portugal?",
+                    "a": "A média nacional ronda os 50 €–60 € por sessão, com variações consoante a região (Lisboa e Setúbal tendem a ter os preços mais altos) e a experiência do psicólogo."
+                },
+                {
+                    "q": "Qual é o preço médio de uma consulta com um Psicólogo?",
+                    "a": "O valor mais frequentemente reportado por clínicas privadas em Portugal é de 60 € por sessão de cerca de 50 minutos."
+                },
+                {
+                    "q": "O preço é o mesmo para todas as especialidades?",
+                    "a": "Não necessariamente em todas as clínicas — consultas de casal ou familiar, por exemplo, costumam ter duração maior e por vezes preço mais elevado. Na Lon Clinic, o preço de 60 € (ou 54 €/semana em acompanhamento) é fixo independentemente da especialidade."
+                },
+                {
+                    "q": "Quanto custa a primeira consulta?",
+                    "a": "Na maioria das clínicas privadas portuguesas, a primeira consulta tem o mesmo preço das seguintes ou é ligeiramente mais cara, por incluir uma avaliação inicial mais aprofundada. Na Lon Clinic a primeira sessão custa o mesmo: 60 €."
+                }
+            ]
+        },
+        {
             "slug": "so-um-founder-entende-o-burnout-de-um-founder",
             "title": "Só um founder entende o burnout de um founder?",
             "description": "Não. Outro founder entende o contexto; um psicólogo com prática em burnout executivo trata o quadro. Comunidade de pares + acompanhamento clínico — o modelo híbrido.",
@@ -196,6 +243,7 @@
             "slotService": "psicologia",
             "readingMinutes": 7,
             "related": [
+                "quanto-custa-consulta-psicologia-portugal",
                 "talvez-devesses-falar-com-alguem",
                 "como-a-terapia-ajuda-autoconhecimento",
                 "so-um-founder-entende-o-burnout-de-um-founder",
@@ -4312,7 +4360,8 @@
             "related": [
                 "sns-vs-privado-portugal",
                 "seguro-saude-compensa",
-                "telemedicina-em-casa"
+                "telemedicina-em-casa",
+                "quanto-custa-consulta-psicologia-portugal"
             ],
             "faq": [
                 {
@@ -5395,6 +5444,7 @@
                 "adhd-em-adultos-sintomas",
                 "autismo-em-mulheres-diagnostico-tardio",
                 "como-encontrar-um-psicologo",
+                "quanto-custa-consulta-psicologia-portugal",
                 "marcacao-guia-rapido"
             ]
         },

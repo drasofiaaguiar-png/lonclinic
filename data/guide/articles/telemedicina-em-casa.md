@@ -2,7 +2,7 @@
 
 A **telemedicina** permite falar com um médico no conforto da sua casa, sem deslocações nem salas de espera. Na Lon Clinic, cada consulta é realizada por médicos registados, com a mesma rigorosidade clínica de uma consulta presencial adequada a este formato.
 
-É também o formato usado nas [consultas de saúde mental](/marcar/saude-mental) e na avaliação de condições como [ADHD em adultos](/blog/adhd-em-adultos-sintomas) ou [autismo em mulheres](/blog/autismo-em-mulheres-diagnostico-tardio). Se estás a escolher com quem falar, [como encontrar um psicólogo](/blog/como-encontrar-um-psicologo) cobre credenciais, primeira sessão e quando mudar.
+É também o formato usado nas [consultas de saúde mental](/marcar/saude-mental) e na avaliação de condições como [ADHD em adultos](/blog/adhd-em-adultos-sintomas) ou [autismo em mulheres](/blog/autismo-em-mulheres-diagnostico-tardio). Se estás a escolher com quem falar, [como encontrar um psicólogo](/blog/como-encontrar-um-psicologo) cobre credenciais, primeira sessão e quando mudar. O preço — no mercado e na Lon Clinic — está em [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal).
 
 <figure class="guide-figure">
 <img src="/image/guide/guide-sunset-lake.jpg" alt="Lago calmo ao entardecer — o espaço quieto a partir do qual uma consulta em casa pode acontecer" width="1600" height="900" loading="lazy" decoding="async">

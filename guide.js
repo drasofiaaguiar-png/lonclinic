@@ -485,7 +485,7 @@ function actionCopy(lang) {
                 chip: 'Psicologia',
                 title: 'Consulta de psicologia',
                 price: '60 € · sessão avulsa',
-                href: '/saudemental',
+                href: '/marcar/psicologia',
                 cta: 'Fale com um psicólogo',
                 note: 'Online · ou 54 €/semana no acompanhamento',
                 service: 'psicologia'
@@ -584,7 +584,7 @@ function actionCopy(lang) {
                 chip: 'Psychology',
                 title: 'Psychology consultation',
                 price: '€60 · single session',
-                href: '/saudemental',
+                href: '/marcar/psicologia',
                 cta: 'Talk to a psychologist',
                 note: 'Online · or €54/week for ongoing care',
                 service: 'psicologia'
@@ -1678,6 +1678,7 @@ function magTheme(article) {
     if (/autoconhecimento/.test(about) || /inteligencia-emocional|padroes-de-apego|autossabotagem|eneagrama|perfeccionismo|autocompaixao|sindrome-do-impostor|journaling|gatilhos-emocionais|crencas-limitantes|limites-pessoais|introspecao|autoestima/.test(slug)) return 'autoconhecimento';
     if (/perda de peso/.test(about) || /perda-de-peso|deficit-calorico|efeito-ioio|fome-emocional|alimentacao-intuitiva|glp1|contagem-de-calorias|platos-na-perda|alcool-e-perda|proteina-e-saciedade|sono-e-peso|stress-e-perda|forca-vs-cardio|fibra-e-perda|manter-o-peso|nutricionista-plano/.test(slug)) return 'perda-de-peso';
     if (/autismo|adhd/.test(about) || /autismo|adhd/.test(slug)) return 'mental';
+    if (/psicolog/.test(about) || /encontrar-um-psicologo|consulta-psicologia/.test(slug)) return 'mental';
     if (/vacina|viajante|travel/.test(slug)) return 'travel';
     return 'clinic';
 }
@@ -1991,7 +1992,7 @@ function magCtaHtml(kind, lang, slug) {
         'nutricao-programa': `/marcar/nutricao-programa${langQ}`,
         nutricao_programa: `/marcar/nutricao-programa${langQ}`,
         neurodiversidade: `/psicologia`,
-        psicologia: `/marcar/saude-mental${langQ}`,
+        psicologia: `/marcar/psicologia${langQ}`,
         longevity: `/marcar/longevidade${langQ}`
     };
     const talkKind = kind === 'clinic' || kind === 'general' ? 'clinic' : kind;
@@ -2215,6 +2216,8 @@ function magazineNavTree() {
                         }
                     ]
                 },
+                { label: 'Como encontrar um psicólogo', href: '/blog/como-encontrar-um-psicologo' },
+                { label: 'Quanto custa uma consulta', href: '/blog/quanto-custa-consulta-psicologia-portugal' },
                 { label: 'Consulta de saúde mental', href: '/marcar/saude-mental' },
                 { label: 'Psicologia (subscrição)', href: '/saudemental' }
             ]
