@@ -1931,6 +1931,17 @@ async function applyProfessionalAssignment(fields) {
     return next;
 }
 
+async function resolveInvitationProfessionalName(raw) {
+    const value = String(raw || '').trim();
+    if (!value) return '';
+    try {
+        const assigned = await applyProfessionalAssignment({ professional: value });
+        return String(assigned.professional || value).trim().slice(0, 160);
+    } catch (e) {
+        return value.slice(0, 160);
+    }
+}
+
 async function attachPersonFacets(professional) {
     if (!professional || !professional.username) return professional;
     try {
@@ -15629,6 +15640,7 @@ app.post('/api/admin/patients/schedule-next', requireAdmin, express.json(), asyn
             serviceLabel = `${serviceLabel} · preço especial`;
         }
 
+        const professionalName = await resolveInvitationProfessionalName(professional);
         let invitation = await db.insertInvitation({
             id,
             invitationToken: token,
@@ -15645,6 +15657,7 @@ app.post('/api/admin/patients/schedule-next', requireAdmin, express.json(), asyn
             status: 'pending',
             travellerCount,
             hasInsurance,
+            professional: professionalName || null,
             createdBy: (req.session && req.session.clinicUsername) || 'admin'
         });
 
@@ -16365,6 +16378,7 @@ const INVITATION_EMAIL_I18N = {
         intro: 'A sua marcação foi criada pela equipa da Lon Clinic. Está reservada e à sua espera — basta concluir o pagamento para confirmar.',
         slotLabel: 'Data e hora',
         serviceLabel: 'Tipo de consulta',
+        professionalLabel: 'Profissional',
         amountLabel: 'Valor',
         payNow: 'Pagar e confirmar consulta',
         payNote: 'O pagamento é processado em segurança pela Stripe. Este link é válido até ao dia da consulta. A consulta só fica confirmada após o pagamento.',
@@ -16380,6 +16394,7 @@ const INVITATION_EMAIL_I18N = {
         intro: 'Your appointment has been pre-booked by the Lon Clinic team and is reserved for you — simply complete payment to confirm.',
         slotLabel: 'Date & time',
         serviceLabel: 'Consultation',
+        professionalLabel: 'Professional',
         amountLabel: 'Amount',
         payNow: 'Pay & confirm appointment',
         payNote: 'Payment is processed securely by Stripe. This link remains valid until the day of your consultation. The appointment is confirmed only once payment is complete.',
@@ -16395,6 +16410,7 @@ const INVITATION_EMAIL_I18N = {
         intro: 'Su cita ha sido creada por el equipo de Lon Clinic y está reservada para usted — sólo falta completar el pago para confirmarla.',
         slotLabel: 'Fecha y hora',
         serviceLabel: 'Tipo de consulta',
+        professionalLabel: 'Profesional',
         amountLabel: 'Importe',
         payNow: 'Pagar y confirmar cita',
         payNote: 'El pago se procesa de forma segura mediante Stripe. Este enlace es válido hasta el día de la consulta. La cita queda confirmada tras el pago.',
@@ -16425,6 +16441,13 @@ function buildInvitationEmail(invitation, paymentUrl, baseUrl) {
     const time = (invitation.time || '').slice(0, 5);
     const priceLabel = `€${(invitation.amountCents / 100).toFixed(2)}`;
     const serviceLabel = invitation.serviceLabel || invitation.service;
+    const professionalName = String(invitation.professional || '').trim();
+    const professionalHtml = professionalName
+        ? `<tr><td style="padding:14px 16px;border-bottom:1px solid #e2e8f0;">
+              <span style="font-size:12px;color:#64748b;display:block;text-transform:uppercase;letter-spacing:0.06em;">${t.professionalLabel}</span>
+              <strong style="font-size:15px;color:#0f172a;display:block;margin-top:4px;">${escapeHtml(professionalName)}</strong>
+            </td></tr>`
+        : '';
     const subject = t.subject(serviceLabel);
     const portalUrl = emailLink(
         `${baseUrl}/patient-portal?email=${encodeURIComponent(invitation.patientEmail)}`,
@@ -16457,6 +16480,7 @@ function buildInvitationEmail(invitation, paymentUrl, baseUrl) {
               <span style="font-size:12px;color:#64748b;display:block;text-transform:uppercase;letter-spacing:0.06em;">${t.serviceLabel}</span>
               <strong style="font-size:15px;color:#0f172a;display:block;margin-top:4px;">${serviceLabel}</strong>
             </td></tr>
+            ${professionalHtml}
             <tr><td style="padding:14px 16px;">
               <span style="font-size:12px;color:#64748b;display:block;text-transform:uppercase;letter-spacing:0.06em;">${t.amountLabel}</span>
               <strong style="font-size:15px;color:#0f172a;display:block;margin-top:4px;">${priceLabel}</strong>
@@ -16483,12 +16507,17 @@ function buildInvitationEmail(invitation, paymentUrl, baseUrl) {
     </td></tr>
   </table>
 </body></html>`;
-    const text = `${t.greeting(invitation.patientName)}\n\n${t.intro}\n\n${t.slotLabel}: ${dateLabel} · ${time}\n${t.serviceLabel}: ${serviceLabel}\n${t.amountLabel}: ${priceLabel}\n\n${t.payNow}: ${paymentUrl}\n\n${doxyUrl ? `${t.accessTitle}\n${t.accessBody}\n${doxyUrl}\n\n` : ''}${t.portalLine(portalUrl).replace(/<[^>]+>/g, '')}\n\n${t.footer}\n`;
+    const text = `${t.greeting(invitation.patientName)}\n\n${t.intro}\n\n${t.slotLabel}: ${dateLabel} · ${time}\n${t.serviceLabel}: ${serviceLabel}\n${professionalName ? `${t.professionalLabel}: ${professionalName}\n` : ''}${t.amountLabel}: ${priceLabel}\n\n${t.payNow}: ${paymentUrl}\n\n${doxyUrl ? `${t.accessTitle}\n${t.accessBody}\n${doxyUrl}\n\n` : ''}${t.portalLine(portalUrl).replace(/<[^>]+>/g, '')}\n\n${t.footer}\n`;
     return { subject, html, text };
 }
 
 async function sendInvitationEmail(invitation, paymentUrl, baseUrl) {
-    const { subject, html, text } = buildInvitationEmail(invitation, paymentUrl, baseUrl);
+    const professional = await resolveInvitationProfessionalName(invitation && invitation.professional);
+    const { subject, html, text } = buildInvitationEmail(
+        professional ? { ...invitation, professional } : invitation,
+        paymentUrl,
+        baseUrl
+    );
     return deliverEmail({
         from: process.env.EMAIL_FROM || 'Lon Clinic <info@lonclinic.com>',
         to: invitation.patientEmail,
@@ -16759,7 +16788,8 @@ function bookingDataFromInvitation(invitation, bookingRef) {
         travelDest: '',
         travelDates: '',
         contactPhone: invitation.patientPhone || '',
-        locale: normalizePatientLocale(invitation.locale || 'pt')
+        locale: normalizePatientLocale(invitation.locale || 'pt'),
+        professional: invitation.professional || ''
     };
 }
 
@@ -16777,7 +16807,13 @@ async function confirmInvitationWithoutPayment(invitation, { paymentPrefix = 'ma
     const paymentId = `${prefix}_${crypto.randomUUID().replace(/-/g, '')}`;
     const shortId = paymentId.slice(-8).toUpperCase();
     const bookingRef = `LC-${shortId}`;
-    const bookingData = bookingDataFromInvitation(invitation, bookingRef);
+    const assignedPro = invitation.professional
+        ? await applyProfessionalAssignment({ professional: invitation.professional })
+        : {};
+    const bookingData = bookingDataFromInvitation(
+        assignedPro.professional ? { ...invitation, professional: assignedPro.professional } : invitation,
+        bookingRef
+    );
     const amountCents = bookingData.amount;
 
     const record = {
@@ -16794,6 +16830,8 @@ async function confirmInvitationWithoutPayment(invitation, { paymentPrefix = 'ma
         currency: invitation.currency || 'eur',
         paymentId,
         patientLocale: normalizePatientLocale(invitation.locale || 'pt'),
+        professional: assignedPro.professional || null,
+        professionalId: assignedPro.professionalId || null,
         cancelled: false,
         rescheduleCount: 0,
         reminderSent: false,
@@ -16929,6 +16967,7 @@ app.post('/api/admin/invitations', requireAdmin, express.json(), async (req, res
             serviceLabel = `${serviceLabel} · preço especial`;
         }
 
+        const professional = await resolveInvitationProfessionalName(professionalRaw);
         let invitation = await db.insertInvitation({
             id,
             invitationToken: token,
@@ -16945,10 +16984,9 @@ app.post('/api/admin/invitations', requireAdmin, express.json(), async (req, res
             status: 'pending',
             travellerCount,
             hasInsurance: !!hasInsurance,
+            professional: professional || null,
             createdBy: (req.session && req.session.clinicUsername) || 'admin'
         });
-        const professional = String(professionalRaw || '').trim();
-        if (professional) invitation.professional = professional.slice(0, 160);
 
         const baseUrl = getBaseUrl(req);
         let emailDelivered = true;

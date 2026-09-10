@@ -501,6 +501,7 @@ async function initSchema(p) {
     );
     await p.query(`ALTER TABLE booking_invitations ADD COLUMN IF NOT EXISTS traveller_count INTEGER NOT NULL DEFAULT 1`);
     await p.query(`ALTER TABLE booking_invitations ADD COLUMN IF NOT EXISTS has_insurance BOOLEAN NOT NULL DEFAULT FALSE`);
+    await p.query(`ALTER TABLE booking_invitations ADD COLUMN IF NOT EXISTS professional TEXT`);
     await p.query(`
         CREATE TABLE IF NOT EXISTS patient_reviews (
             id UUID PRIMARY KEY,
@@ -1431,6 +1432,7 @@ function rowToInvitation(row) {
         status: row.status,
         travellerCount: row.traveller_count != null ? row.traveller_count : 1,
         hasInsurance: row.has_insurance === true,
+        professional: row.professional || '',
         bookingRef: row.booking_ref || null,
         createdBy: row.created_by || null,
         createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
@@ -1447,8 +1449,8 @@ async function insertInvitation(record) {
             id, invitation_token, patient_name, patient_email, patient_phone,
             service, service_label, date_iso, time, locale,
             amount_cents, currency, stripe_session_id, stripe_session_url, stripe_session_expires_at,
-            status, booking_ref, created_by, traveller_count, has_insurance
-         ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20)
+            status, booking_ref, created_by, traveller_count, has_insurance, professional
+         ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)
          RETURNING *`,
         [
             record.id,
@@ -1470,7 +1472,8 @@ async function insertInvitation(record) {
             record.bookingRef || null,
             record.createdBy || null,
             Math.max(1, Math.min(4, parseInt(record.travellerCount, 10) || 1)),
-            record.hasInsurance === true
+            record.hasInsurance === true,
+            String(record.professional || '').trim().slice(0, 160) || null
         ]
     );
     return rowToInvitation(r.rows[0]);
