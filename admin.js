@@ -2988,7 +2988,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <button type="button" class="btn btn-outline btn-sm" data-psych-edit="${escapeHtml(a.id)}">Editar dados</button>
                             <button type="button" class="btn btn-outline btn-sm" data-psych-delete="${escapeHtml(a.id)}">Eliminar</button>
                             ${a.professional && a.professional.username
-                                ? `<span>Clinic login: <code>${escapeHtml(a.professional.email || a.professional.username)}</code> — portal <a href="/clinic-desk/dias#profile">/clinic-desk/dias</a></span>
+                                ? `<span>Clinic login: <code>${escapeHtml(a.professional.email || a.professional.username)}</code> — portal <a href="/clinic-desk/dias">/clinic-desk/dias</a></span>
                                    <button type="button" class="btn btn-outline btn-sm" data-psych-password="${escapeHtml(a.id)}">New password</button>`
                                 : `<button type="button" class="btn btn-primary btn-sm" data-psych-login="${escapeHtml(a.id)}">Assign clinic login</button>`}
                         </div>
@@ -3041,9 +3041,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function showPsychCreds(rows) {
         if (!adminPsychCreds || !adminPsychCredsList || !rows || !rows.length) return;
-        const portal = `${window.location.origin}/clinic-desk/dias#profile`;
+        const portal = `${window.location.origin}/clinic-desk/dias`;
         adminPsychCredsList.innerHTML = `
-            <p class="admin-pro-creds-line">Portal: <a href="/clinic-desk/dias#profile">${escapeHtml(portal)}</a></p>
+            <p class="admin-pro-creds-line">Portal: <a href="/clinic-desk/dias">${escapeHtml(portal)}</a></p>
             <table class="admin-psych-creds-table">
                 <thead><tr><th>Name</th><th>Email</th><th>Password</th></tr></thead>
                 <tbody>
@@ -3967,9 +3967,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     function showProfessionalCreds(pro, password) {
         if (!adminProfessionalCreds || !password) return;
         rememberFreshPassword(pro, password);
-        const portal = `${window.location.origin}/clinic-desk/dias#profile`;
+        const portal = `${window.location.origin}/clinic-desk/dias`;
         if (proCredsPortal) {
-            proCredsPortal.href = '/clinic-desk/dias#profile';
+            proCredsPortal.href = '/clinic-desk/dias';
             proCredsPortal.textContent = portal;
         }
         if (proCredsName) proCredsName.textContent = (pro && (pro.displayName || pro.fullName)) || '';
@@ -4342,7 +4342,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (proCredsCopyBtn) {
         proCredsCopyBtn.addEventListener('click', async () => {
-            const portal = proCredsPortal ? proCredsPortal.textContent : `${window.location.origin}/clinic-desk/dias#profile`;
+            const portal = proCredsPortal ? proCredsPortal.textContent : `${window.location.origin}/clinic-desk/dias`;
             const email = proCredsUsername ? proCredsUsername.textContent : '';
             const password = proCredsPassword ? proCredsPassword.textContent : '';
             const name = proCredsName ? proCredsName.textContent : '';

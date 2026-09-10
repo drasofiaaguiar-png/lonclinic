@@ -16,7 +16,7 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = '9set-avail';
+const CLINIC_PORTAL_BUILD = '10set-noperfil';
 const CLINIC_PORTAL_PATH = '/clinic-desk/dias';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
@@ -7019,7 +7019,7 @@ async function peopleForAvailabilityReminders() {
 }
 
 async function sendAvailabilityReminderEmail({ to, name, monthLabel, deadlineLabel, kind }) {
-    const portalUrl = `${PUBLIC_SITE_URL}${CLINIC_PORTAL_PATH}#profile`;
+    const portalUrl = `${PUBLIC_SITE_URL}${CLINIC_PORTAL_PATH}#availabilities`;
     const isFinal = kind === 15;
     const subject = isFinal
         ? `Deadline: availabilities for ${monthLabel}`
@@ -7039,7 +7039,7 @@ async function sendAvailabilityReminderEmail({ to, name, monthLabel, deadlineLab
 }
 
 function professionalLoginPortalUrl() {
-    return `${PUBLIC_SITE_URL}${CLINIC_PORTAL_PATH}#profile`;
+    return `${PUBLIC_SITE_URL}${CLINIC_PORTAL_PATH}`;
 }
 
 function defaultProfessionalLoginNote(name) {
