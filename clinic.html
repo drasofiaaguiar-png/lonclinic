@@ -16,7 +16,7 @@
     <title>Clinic Portal — Longevity Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=10set-noperfil">
+    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=10set-me">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
     <meta name="description" content="Clinic portal — manage consultations and clinical records.">
     <meta name="theme-color" content="#eaf2fb">
 </head>
-<body class="lon-landing clinic-portal-page" data-clinic-build="10set-noperfil">
+<body class="lon-landing clinic-portal-page" data-clinic-build="10set-me">
 
     <a class="lon-skip" href="#conteudo-principal">Skip to content</a>
     <header class="lon-nav" id="lonNav">
@@ -63,7 +63,7 @@
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                 </div>
                 <h1 class="dash-login-title">Clinic Portal</h1>
-                <p class="dash-login-desc">Portal 10set-noperfil — Use o email da sua ficha para entrar.</p>
+                <p class="dash-login-desc">Portal 10set-me — Use o email da sua ficha para entrar.</p>
                 <form class="dash-login-form" id="clinicLoginForm">
                     <div class="dash-form-group">
                         <label for="clinicUsername">Email</label>
@@ -95,6 +95,7 @@
                     <button type="button" class="admin-nav-item" data-clinic-panel="patients">Patients</button>
                     <button type="button" class="admin-nav-item" data-clinic-panel="resources">Resources</button>
                     <button type="button" class="admin-nav-item" data-clinic-panel="management">Management</button>
+                    <button type="button" class="admin-nav-item" data-clinic-panel="profile">Profile</button>
                     <a class="admin-nav-item admin-nav-link" id="clinicAdminLink" href="/admin" hidden>Admin</a>
                 </nav>
                 <div class="admin-sidebar-foot">
@@ -364,6 +365,45 @@
                         <div id="clinicPayoutError" class="dash-login-error" style="display:none;" role="alert"></div>
                     </div>
                 </div>
+
+                <div class="admin-panel" id="clinicPanelProfile" data-clinic-panel-content="profile" hidden>
+                    <div class="dash-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">O seu perfil</h2>
+                            <p class="dash-section-subtitle">Foto, nome e email desta conta — só visíveis para si</p>
+                        </div>
+                        <div class="clinic-photo-row">
+                            <label class="clinic-photo-frame" for="clinicProfilePhotoInput">
+                                <img id="clinicProfilePhoto" alt="Foto de perfil" hidden>
+                                <span class="clinic-photo-placeholder" id="clinicProfilePhotoPlaceholder">+</span>
+                            </label>
+                            <div class="clinic-photo-actions">
+                                <label class="btn btn-outline btn-sm" id="clinicProfilePhotoBtn" for="clinicProfilePhotoInput">Adicionar foto</label>
+                                <input type="file" id="clinicProfilePhotoInput" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" hidden>
+                                <p class="dash-section-subtitle">JPG, PNG ou WebP · máx. 4MB</p>
+                                <div id="clinicPhotoError" class="dash-login-error" style="display:none;" role="alert"></div>
+                            </div>
+                        </div>
+                        <form id="clinicProfileForm" class="clinic-profile-form clinic-me-form" novalidate>
+                            <div class="admin-form-group">
+                                <label for="clinicFullName">Nome</label>
+                                <input type="text" id="clinicFullName" class="admin-input" maxlength="160" autocomplete="name" required>
+                            </div>
+                            <div class="admin-form-group">
+                                <label for="clinicProfileEmail">Email</label>
+                                <input type="email" id="clinicProfileEmail" class="admin-input" maxlength="320" inputmode="email" autocomplete="email" placeholder="nome@email.com" spellcheck="false">
+                            </div>
+                            <div id="clinicProfileFormError" class="dash-login-error" style="display:none;" role="alert"></div>
+                            <div class="clinic-profile-save-row">
+                                <button type="submit" class="btn btn-primary" id="clinicProfileSaveBtn">Guardar</button>
+                                <p class="clinic-profile-save-confirm" id="clinicProfileSaveConfirm" hidden role="status">
+                                    <span class="clinic-save-toggle" aria-hidden="true"><span class="clinic-save-toggle-knob"></span></span>
+                                    Alterações guardadas
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -406,7 +446,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="/lon-nav.js"></script>
-    <script src="/clinic-portal/clinic.js?v=10set-noperfil"></script>
+    <script src="/clinic-portal/clinic.js?v=10set-me"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

@@ -1318,6 +1318,10 @@ body.dash-portal .dash-stat-card {
     margin: 8px 0 0;
 }
 
+.clinic-me-form {
+    max-width: 28rem;
+}
+
 .clinic-profile-dl div {
     display: grid;
     gap: 4px;

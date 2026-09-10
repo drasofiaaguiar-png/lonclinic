@@ -16,7 +16,7 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = '10set-noperfil';
+const CLINIC_PORTAL_BUILD = '10set-me';
 const CLINIC_PORTAL_PATH = '/clinic-desk/dias';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
@@ -558,6 +558,17 @@ async function bindStaffSession(req) {
     }
     const existingId = Number(session.professionalId);
     if (session.clinicRole === 'clinician' && Number.isInteger(existingId) && existingId > 0) {
+        try {
+            const pro = await findProfessionalByIdInternal(existingId);
+            if (pro && pro.active !== false) {
+                session.clinicUsername = pro.username;
+                if (pro.displayName && !isJunkStaffName(pro.displayName)) {
+                    session.clinicDisplayName = pro.displayName;
+                }
+            }
+        } catch (err) {
+            console.error('bindStaffSession refresh:', err.message);
+        }
         return;
     }
     try {
@@ -740,7 +751,11 @@ async function serveClinicPortalHtml(res) {
             .replace(/src="\/clinic-portal\/clinic\.js\?v=[^"]+"/g, `src="${clinicPortalAssetUrl('clinic.js')}"`)
             .replace(/data-clinic-build="[^"]+"/, `data-clinic-build="${CLINIC_PORTAL_BUILD}"`)
             .replace(
-                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|ficha-1|scope-1|scope-2|email-1|email-login-1|password-1|email-only-1|9set-email|9set-avail|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8|perfil-9|perfil-10) — 7 set 2026\. Entre com o (?:username(?: ou o email)?|email) do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
+                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|ficha-1|scope-1|scope-2|email-1|email-login-1|password-1|email-only-1|9set-email|9set-avail|10set-noperfil|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8|perfil-9|perfil-10) — 7 set 2026\. Entre com o (?:username(?: ou o email)?|email) do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
+                `Portal ${CLINIC_PORTAL_BUILD} — Use o email da sua ficha para entrar.`
+            )
+            .replace(
+                /Portal [A-Za-z0-9._-]+ — Use o email da sua ficha para entrar\./g,
                 `Portal ${CLINIC_PORTAL_BUILD} — Use o email da sua ficha para entrar.`
             );
         res.append('Set-Cookie', `lon_portal=${CLINIC_PORTAL_BUILD}; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly`);
@@ -1006,6 +1021,34 @@ function isoDateOrEmpty(value) {
 
 function staffSessionUsername(req) {
     return String((req.session && req.session.clinicUsername) || '').trim().toLowerCase();
+}
+
+async function staffAccountForSession(req) {
+    const session = (req && req.session) || {};
+    const sessionUsername = String(session.clinicUsername || '').trim().toLowerCase();
+    let professional = null;
+    const id = Number(session.professionalId);
+    if (Number.isInteger(id) && id > 0) {
+        try {
+            professional = await findProfessionalByIdInternal(id);
+        } catch (err) {
+            console.error('staffAccountForSession id:', err.message);
+        }
+        if (professional && professional.active === false) professional = null;
+    }
+    const adminOnly = isClinicAdminUsername(sessionUsername)
+        && session.clinicRole === 'admin'
+        && !session.professionalId;
+    if (!professional && sessionUsername && !adminOnly) {
+        try {
+            professional = await findProfessionalByUsernameInternal(sessionUsername);
+        } catch (err) {
+            console.error('staffAccountForSession username:', err.message);
+        }
+        if (professional && professional.active === false) professional = null;
+    }
+    const username = String((professional && professional.username) || sessionUsername || '').trim().toLowerCase();
+    return { username, professional };
 }
 
 function emptyStaffProfile(username) {
@@ -7039,7 +7082,7 @@ async function sendAvailabilityReminderEmail({ to, name, monthLabel, deadlineLab
 }
 
 function professionalLoginPortalUrl() {
-    return `${PUBLIC_SITE_URL}${CLINIC_PORTAL_PATH}`;
+    return `${PUBLIC_SITE_URL}${CLINIC_PORTAL_PATH}#profile`;
 }
 
 function defaultProfessionalLoginNote(name) {
@@ -8421,6 +8464,10 @@ app.get('/clinic-desk/docs', (req, res) => {
 });
 
 app.get('/clinic-desk/avail', (req, res) => {
+    serveClinicPortalHtml(res);
+});
+
+app.get('/clinic-desk/perfil', (req, res) => {
     serveClinicPortalHtml(res);
 });
 
@@ -11754,6 +11801,96 @@ app.get('/api/clinic/doxy', requireAuth, async (req, res) => {
     }
 });
 
+async function publicClinicIdentity(req) {
+    const { username, professional } = await staffAccountForSession(req);
+    const stored = username ? await getStaffProfileInternal(username) : emptyStaffProfile('');
+    const fullName = firstNonEmpty(
+        professional && !isJunkStaffName(professional.displayName) ? professional.displayName : '',
+        stored && !isJunkStaffName(stored.fullName) ? stored.fullName : '',
+        req.session && !isJunkStaffName(req.session.clinicDisplayName) ? req.session.clinicDisplayName : ''
+    );
+    const email = professional && isValidStaffEmail(professional.email)
+        ? normalizeStaffEmail(professional.email)
+        : '';
+    return {
+        username: username || '',
+        fullName,
+        email,
+        hasPhoto: !!(stored && stored.hasPhoto),
+        role: isAdminSession(req) ? 'admin' : 'clinician',
+        build: CLINIC_PORTAL_BUILD
+    };
+}
+
+app.get('/api/clinic/me', requireAuth, async (req, res) => {
+    try {
+        res.json(await publicClinicIdentity(req));
+    } catch (err) {
+        console.error('GET /api/clinic/me:', err.message);
+        res.status(500).json({ error: 'Failed to load profile' });
+    }
+});
+
+app.put('/api/clinic/me', requireAuth, rateLimitStaffProfile, express.json(), async (req, res) => {
+    try {
+        const { username, professional } = await staffAccountForSession(req);
+        if (!username) {
+            return res.status(400).json({ error: 'Esta sessão não tem uma conta de profissional.' });
+        }
+        const body = req.body || {};
+        const fullName = String(body.fullName || body.displayName || '').trim().slice(0, 160);
+        const rawEmail = Object.prototype.hasOwnProperty.call(body, 'email')
+            ? String(body.email || '').trim()
+            : '';
+        if (!fullName) {
+            return res.status(400).json({ error: 'Introduza o nome.' });
+        }
+        let nextEmail = '';
+        if (rawEmail) {
+            nextEmail = normalizeStaffEmail(rawEmail);
+            if (!isValidStaffEmail(nextEmail)) {
+                return res.status(400).json({ error: 'Email inválido' });
+            }
+            const owner = await findProfessionalByEmailInternal(nextEmail);
+            if (owner && (!professional || Number(owner.id) !== Number(professional.id))) {
+                return res.status(409).json({ error: 'Este email já está associado a outro profissional.' });
+            }
+        }
+        const existing = await getStaffProfileInternal(username);
+        const profile = await saveStaffProfileInternal(username, {
+            ...existing,
+            fullName
+        });
+        if (!profile) {
+            return res.status(500).json({ error: 'Failed to save profile' });
+        }
+        const patch = { displayName: fullName };
+        if (nextEmail) patch.email = nextEmail;
+        let updated = professional;
+        if (professional && professional.id) {
+            if (!nextEmail && !isValidStaffEmail(professional.email)) {
+                return res.status(400).json({ error: 'Introduza o email.' });
+            }
+            updated = await patchProfessionalInternal(professional, patch);
+        }
+        if (req.session) {
+            req.session.clinicDisplayName = fullName;
+            if (updated && updated.username) req.session.clinicUsername = updated.username;
+        }
+        res.json({
+            ok: true,
+            saved: true,
+            ...(await publicClinicIdentity(req))
+        });
+    } catch (err) {
+        console.error('PUT /api/clinic/me:', err.code || '', err.message);
+        if (err && err.code === '23505') {
+            return res.status(409).json({ error: 'Este email já está associado a outro profissional.' });
+        }
+        res.status(500).json({ error: 'Failed to save profile' });
+    }
+});
+
 async function handleClinicProfileGet(req, res) {
     try {
         const username = staffSessionUsername(req);
@@ -11965,7 +12102,7 @@ app.post('/api/clinic/password', requireAuth, rateLimitClinicPassword, express.j
 
 app.get('/api/clinic/profile/photo', requireAuth, async (req, res) => {
     try {
-        const username = staffSessionUsername(req);
+        const { username } = await staffAccountForSession(req);
         const photo = await getStaffPhotoInternal(username);
         if (!photo || !photo.data) {
             return res.status(404).json({ error: 'No photo' });
@@ -11993,7 +12130,10 @@ app.post('/api/clinic/profile/photo', requireAuth, rateLimitStaffProfile, (req, 
             return res.status(400).json({ error: uploadErr.message || 'Could not process the photo.' });
         }
         try {
-            const username = staffSessionUsername(req);
+            const { username } = await staffAccountForSession(req);
+            if (!username) {
+                return res.status(400).json({ error: 'Esta sessão não tem uma conta de profissional.' });
+            }
             if (!req.file || !req.file.buffer) {
                 return res.status(400).json({ error: 'Choose a photo to upload' });
             }

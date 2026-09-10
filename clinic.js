@@ -82,6 +82,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicPayIrs = document.getElementById('clinicPayIrs');
     const clinicPaySs = document.getElementById('clinicPaySs');
     const clinicPayNet = document.getElementById('clinicPayNet');
+    const clinicProfilePhoto = document.getElementById('clinicProfilePhoto');
+    const clinicProfilePhotoPlaceholder = document.getElementById('clinicProfilePhotoPlaceholder');
+    const clinicProfilePhotoInput = document.getElementById('clinicProfilePhotoInput');
+    const clinicProfilePhotoBtn = document.getElementById('clinicProfilePhotoBtn');
+    const clinicPhotoError = document.getElementById('clinicPhotoError');
+    const clinicFullName = document.getElementById('clinicFullName');
+    const clinicProfileEmail = document.getElementById('clinicProfileEmail');
+    const clinicProfileForm = document.getElementById('clinicProfileForm');
+    const clinicProfileFormError = document.getElementById('clinicProfileFormError');
+    const clinicProfileSaveBtn = document.getElementById('clinicProfileSaveBtn');
+    const clinicProfileSaveConfirm = document.getElementById('clinicProfileSaveConfirm');
 
     const CLINIC_PANEL_META = {
         consultations: { title: 'Consultations', subtitle: 'Clinical notes for consultations assigned to you' },
@@ -89,7 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
         bookings: { title: 'Bookings', subtitle: 'Upcoming appointments assigned to you' },
         patients: { title: 'Patients', subtitle: 'Only people scheduled with you' },
         resources: { title: 'Resources', subtitle: 'Video room and everyday clinic links' },
-        management: { title: 'Management', subtitle: 'IBAN, faturas mensais e pagamentos' }
+        management: { title: 'Management', subtitle: 'IBAN, faturas mensais e pagamentos' },
+        profile: { title: 'Perfil', subtitle: 'Foto, nome e email desta conta' }
     };
 
     let clinicRole = 'admin';
@@ -177,6 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         if (panelId === 'resources') loadDoxyRoom();
+        if (panelId === 'profile') loadClinicIdentity();
         if (panelId === 'management') {
             loadClinicBillingSummary();
             loadClinicPayouts();
@@ -215,6 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const hash = String(location.hash || '').replace(/^#/, '').toLowerCase();
         if (CLINIC_PANEL_META[hash]) return hash;
         try {
+            if (/\/clinic-desk\/perfil\/?$/i.test(location.pathname)) return 'profile';
             const panel = new URLSearchParams(location.search).get('panel');
             if (panel && CLINIC_PANEL_META[panel]) return panel;
         } catch (err) { /* ignore */ }
@@ -1324,6 +1338,71 @@ document.addEventListener('DOMContentLoaded', () => {
         el.style.display = 'block';
     }
 
+    function hideProfileError(el) {
+        if (!el) return;
+        el.textContent = '';
+        el.style.display = 'none';
+    }
+
+    function showProfileSavedConfirm(el) {
+        if (!el) return;
+        el.hidden = false;
+        el.classList.add('is-on');
+        clearTimeout(el._hideTimer);
+        el._hideTimer = setTimeout(() => {
+            el.hidden = true;
+            el.classList.remove('is-on');
+        }, 5000);
+    }
+
+    function hideProfileSavedConfirm(el) {
+        if (!el || el.dataset.locked === '1') return;
+        clearTimeout(el._hideTimer);
+        el.hidden = true;
+        el.classList.remove('is-on');
+    }
+
+    function isValidClinicEmail(raw) {
+        const email = String(raw || '').trim().toLowerCase();
+        return email.length >= 5 && email.length <= 320 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function setClinicProfilePhoto(hasPhoto) {
+        if (clinicProfilePhoto) {
+            if (hasPhoto) {
+                clinicProfilePhoto.src = `/api/clinic/profile/photo?t=${Date.now()}`;
+                clinicProfilePhoto.hidden = false;
+            } else {
+                clinicProfilePhoto.removeAttribute('src');
+                clinicProfilePhoto.hidden = true;
+            }
+        }
+        if (clinicProfilePhotoPlaceholder) clinicProfilePhotoPlaceholder.hidden = !!hasPhoto;
+        if (clinicProfilePhotoBtn) clinicProfilePhotoBtn.textContent = hasPhoto ? 'Substituir foto' : 'Adicionar foto';
+    }
+
+    async function loadClinicIdentity() {
+        if (!clinicProfileForm) return;
+        hideProfileError(clinicProfileFormError);
+        hideProfileError(clinicPhotoError);
+        try {
+            const res = await fetch('/api/clinic/me', { cache: 'no-store', credentials: 'same-origin' });
+            if (res.status === 401) {
+                showLogin();
+                return;
+            }
+            if (!res.ok) throw new Error('Failed to load profile');
+            const data = await res.json();
+            if (clinicFullName) clinicFullName.value = data.fullName || '';
+            if (clinicProfileEmail) clinicProfileEmail.value = data.email || '';
+            setClinicProfilePhoto(!!data.hasPhoto);
+            if (data.fullName && clinicSidebarUser) clinicSidebarUser.textContent = data.fullName;
+        } catch (err) {
+            console.error('Failed to load clinic identity:', err);
+            showProfileError(clinicProfileFormError, 'Não foi possível carregar o perfil.');
+        }
+    }
+
     // ─── Event Listeners ───
     if (refreshBtn) refreshBtn.addEventListener('click', loadBookings);
     document.querySelectorAll('[data-clinic-panel]').forEach((btn) => {
@@ -1339,6 +1418,85 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (clinicSidebarBackdrop) {
         clinicSidebarBackdrop.addEventListener('click', closeClinicSidebar);
+    }
+    if (clinicProfileForm) {
+        clinicProfileForm.addEventListener('input', () => hideProfileSavedConfirm(clinicProfileSaveConfirm));
+        clinicProfileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideProfileError(clinicProfileFormError);
+            hideProfileSavedConfirm(clinicProfileSaveConfirm);
+            const fullName = String(clinicFullName && clinicFullName.value ? clinicFullName.value : '').trim();
+            const email = String(clinicProfileEmail && clinicProfileEmail.value ? clinicProfileEmail.value : '').trim();
+            if (!fullName) {
+                showProfileError(clinicProfileFormError, 'Introduza o nome.');
+                if (clinicFullName) clinicFullName.focus();
+                return;
+            }
+            if (clinicRole !== 'admin' && !email) {
+                showProfileError(clinicProfileFormError, 'Introduza o email.');
+                if (clinicProfileEmail) clinicProfileEmail.focus();
+                return;
+            }
+            if (email && !isValidClinicEmail(email)) {
+                showProfileError(
+                    clinicProfileFormError,
+                    'Introduza um email completo, por exemplo nome@gmail.com.'
+                );
+                if (clinicProfileEmail) clinicProfileEmail.focus();
+                return;
+            }
+            if (clinicProfileSaveBtn) clinicProfileSaveBtn.disabled = true;
+            try {
+                const res = await fetch('/api/clinic/me', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ fullName, email })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401) {
+                    showLogin();
+                    return;
+                }
+                if (!res.ok) throw new Error(data.error || 'Failed to save profile');
+                staffDisplayName = data.fullName || fullName;
+                if (clinicSidebarUser) clinicSidebarUser.textContent = staffDisplayName || 'Portal';
+                if (clinicFullName) clinicFullName.value = data.fullName || fullName;
+                if (clinicProfileEmail) clinicProfileEmail.value = data.email || email;
+                showProfileSavedConfirm(clinicProfileSaveConfirm);
+            } catch (err) {
+                showProfileError(clinicProfileFormError, err.message || 'Failed to save profile');
+            } finally {
+                if (clinicProfileSaveBtn) clinicProfileSaveBtn.disabled = false;
+            }
+        });
+    }
+    if (clinicProfilePhotoInput) {
+        clinicProfilePhotoInput.addEventListener('change', async () => {
+            hideProfileError(clinicPhotoError);
+            const file = clinicProfilePhotoInput.files && clinicProfilePhotoInput.files[0];
+            if (!file) return;
+            const form = new FormData();
+            form.append('photo', file);
+            try {
+                const res = await fetch('/api/clinic/profile/photo', {
+                    method: 'POST',
+                    body: form,
+                    credentials: 'same-origin'
+                });
+                const data = await res.json().catch(() => ({}));
+                if (res.status === 401) {
+                    showLogin();
+                    return;
+                }
+                if (!res.ok) throw new Error(data.error || 'Failed to upload photo');
+                setClinicProfilePhoto(true);
+            } catch (err) {
+                showProfileError(clinicPhotoError, err.message || 'Failed to upload photo');
+            } finally {
+                clinicProfilePhotoInput.value = '';
+            }
+        });
     }
     modalOverlay.addEventListener('click', () => {
         consultationModal.style.display = 'none';
