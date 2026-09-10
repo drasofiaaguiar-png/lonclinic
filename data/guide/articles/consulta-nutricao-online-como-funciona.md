@@ -11,7 +11,7 @@ A consulta de nutrição online é a mesma consulta clínica — anamnese, plano
 
 Não é uma sessão avulsa a 45 €. O checkout é **115 €** no mês 1 e **75 €/mês** a seguir. O slot no `booking.js` para serviços que não são viagem, urgência ou saúde mental tem **30 minutos** — incluindo nutrição. **Não afirmamos seguimentos de 20 minutos.**
 
-O análogo de formato em psicologia (sem misturar clínica) está em [psicologia online vs presencial](/blog/psicologia-online-vs-presencial). Preços: [quanto custa uma consulta de nutrição](/blog/quanto-custa-consulta-nutricao-portugal). Perda de peso: [consultas de nutrição para perda de peso](/blog/consultas-nutricao-perda-de-peso). Hub: [/nutricao](/nutricao).
+Hub: [consulta de nutrição — preço, como funciona e quando marcar](/blog/consulta-nutricao-preco-como-funciona). O análogo de formato em psicologia (sem misturar clínica) está em [psicologia online vs presencial](/blog/psicologia-online-vs-presencial). Preços: [quanto custa uma consulta de nutrição](/blog/quanto-custa-consulta-nutricao-portugal). Perda de peso: [consultas de nutrição para perda de peso](/blog/consultas-nutricao-perda-de-peso). Hub: [/nutricao](/nutricao).
 
 ## Uma consulta de nutrição online é tão eficaz como uma presencial?
 

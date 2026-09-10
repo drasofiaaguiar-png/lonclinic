@@ -32,7 +32,7 @@ Em Portugal, a **receita eletrónica** emitida por médico com cédula é o cana
 - Clínica geral: **39 €**, 30 min
 - Renovação de receita: **19 €**
 - Psicologia: **60 €** avulsa / **54 €/semana**, 45 min — [psicologia online vs presencial](/blog/psicologia-online-vs-presencial)
-- Nutrição: **115 €** no mês 1 / **75 €/mês** — [consulta de nutrição online](/blog/consulta-nutricao-online-como-funciona)
+- Nutrição: **115 €** / **75 €/mês** — [consulta de nutrição](/blog/consulta-nutricao-preco-como-funciona)
 - Viajante: **39 €**, 20 min (1 pessoa)
 
 A clínica tem avaliação no [Trustpilot](https://pt.trustpilot.com/evaluate/lonclinic.com). Médicos com cédula da [Ordem dos Médicos](https://www.ordemdosmedicos.pt/). Registo [ERS](https://www.ers.pt/) 45475.

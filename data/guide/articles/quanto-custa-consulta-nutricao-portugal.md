@@ -11,7 +11,7 @@ Se está a pensar marcar uma consulta de nutrição em Portugal, a primeira perg
 
 Na Lon Clinic o número que conta no checkout é outro: **115 €** no primeiro mês do [programa de nutrição](/nutricao/programa), depois **75 €/mês**. Não usamos 45 € — esse valor não está no preçário.
 
-Como escolher profissional: [nutricionista ou dietista](/blog/nutricionista-ou-dietista-portugal) e [como encontrar um nutricionista](/blog/como-encontrar-um-nutricionista). Hub: [/nutricao](/nutricao).
+Guia da consulta (preço, formato e quando marcar): [consulta de nutrição](/blog/consulta-nutricao-preco-como-funciona). Como escolher profissional: [nutricionista ou dietista](/blog/nutricionista-ou-dietista-portugal) e [como encontrar um nutricionista](/blog/como-encontrar-um-nutricionista). Hub: [/nutricao](/nutricao).
 
 ## Quanto custa uma consulta de nutrição em média em Portugal?
 

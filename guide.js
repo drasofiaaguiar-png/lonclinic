@@ -2355,6 +2355,7 @@ function magazineNavTree() {
             label: 'Perda de peso',
             children: [
                 { label: 'Nutrição por condição', href: '/nutricao' },
+                { label: 'Consulta de nutrição', href: '/blog/consulta-nutricao-preco-como-funciona' },
                 { label: 'Quanto custa nutrição', href: '/blog/quanto-custa-consulta-nutricao-portugal' },
                 { label: 'ADSE e nutrição', href: '/blog/adse-consultas-nutricao-portugal' },
                 { label: 'Cheque-Nutricionista 2026', href: '/blog/cheque-nutricionista-2026' },

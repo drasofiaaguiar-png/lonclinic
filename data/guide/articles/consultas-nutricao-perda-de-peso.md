@@ -9,7 +9,7 @@
 
 As consultas de nutrição para perda de peso, na Lon Clinic, não são uma sessão avulsa para «receber um plano». São o [programa de reeducação metabólica e perda de peso](/nutricao/programa): acompanhamento de **3 a 6 meses**, duas consultas por mês, chat no portal e ajustes quinzenais. **Não há medicação injetável** neste produto — a clínica **não prescreve aGLP-1** (Ozempic, Wegovy ou equivalentes) para emagrecer.
 
-O preço no checkout é **115 €** no mês 1 e **75 €/mês** a seguir (`pricing.js`: 11500 cêntimos), não 45 €. Hub: [/nutricao](/nutricao). Como escolher profissional: [nutricionista ou dietista](/blog/nutricionista-ou-dietista-portugal). Custos e ADSE: [quanto custa](/blog/quanto-custa-consulta-nutricao-portugal) · [ADSE](/blog/adse-consultas-nutricao-portugal) · [Cheque-Nutricionista](/blog/cheque-nutricionista-2026).
+O preço no checkout é **115 €** no mês 1 e **75 €/mês** a seguir (`pricing.js`: 11500 cêntimos), não 45 €. Guia da consulta: [preço, como funciona e quando marcar](/blog/consulta-nutricao-preco-como-funciona). Hub: [/nutricao](/nutricao). Como escolher profissional: [nutricionista ou dietista](/blog/nutricionista-ou-dietista-portugal). Custos e ADSE: [quanto custa](/blog/quanto-custa-consulta-nutricao-portugal) · [ADSE](/blog/adse-consultas-nutricao-portugal) · [Cheque-Nutricionista](/blog/cheque-nutricionista-2026).
 
 ## Uma consulta de nutrição chega para perder peso?
 

@@ -333,6 +333,54 @@
             ]
         },
         {
+            "slug": "consulta-nutricao-preco-como-funciona",
+            "title": "Consulta de Nutrição: Preço, Como Funciona e Quando Marcar",
+            "description": "Hub: 115 € / 75 €/mês, 30 min, 100% online. ADSE, Cheque Cuida-te (12–35) e quando marcar. Sem 45 €.",
+            "datePublished": "2026-09-09",
+            "dateModified": "2026-09-09",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Perda de peso",
+            "image": "/image/image1_files/LincolnSquare_Large_Desktop.jpg",
+            "verified": false,
+            "ctaKind": "nutricao-programa",
+            "liveSlots": true,
+            "slotService": "nutricao-programa",
+            "readingMinutes": 7,
+            "related": [
+                "quanto-custa-consulta-nutricao-portugal",
+                "consulta-nutricao-online-como-funciona",
+                "nutricionista-ou-dietista-portugal",
+                "adse-consultas-nutricao-portugal",
+                "cheque-nutricionista-2026",
+                "consultas-nutricao-perda-de-peso",
+                "como-encontrar-um-nutricionista"
+            ],
+            "faq": [
+                {
+                    "q": "Quanto custa uma consulta de nutrição?",
+                    "a": "No particular, a faixa mais citada em Portugal é 40 € a 70 € por sessão — não é uma tabela oficial. Na Lon Clinic a consulta inicial é 115 € e o acompanhamento 75 €/mês (duas consultas; slot de 30 minutos). Não é 45 €."
+                },
+                {
+                    "q": "A consulta de nutrição online funciona tão bem como a presencial?",
+                    "a": "Para plano e hábitos, a regularidade importa mais do que a sala. A Lon Clinic faz nutrição a 100% online. Análises e medidas presenciais continuam quando forem precisas. Não afirmamos equivalência clínica idêntica à da psicoterapia online."
+                },
+                {
+                    "q": "Preciso de referenciação médica para marcar consulta de nutrição?",
+                    "a": "No particular e na Lon Clinic, não. No SNS, a via habitual é o médico de família. O Cheque Cuida-te — Nutrição (12–35 anos) pede-se no gov.pt a um aderente. Para ADSE, confirme o acto na ADSE Direta."
+                },
+                {
+                    "q": "Nutricionista pode prescrever suplementos?",
+                    "a": "Comida primeiro. O nutricionista da Lon Clinic não vende suplementos. Se a suplementação for clínica, articula-se com consulta médica. Medicamentos (incluindo aGLP-1) são prescrição médica."
+                },
+                {
+                    "q": "Quantas consultas de nutrição são normalmente necessárias?",
+                    "a": "Uma sessão isolada raramente chega. Na Lon Clinic o acompanhamento é duas consultas por mês, com um percurso típico de 3 a 6 meses. O número exacto depende do objectivo."
+                }
+            ]
+        },
+        {
             "slug": "consulta-nutricao-online-como-funciona",
             "title": "Consulta de Nutrição Online: Como Funciona em 2026",
             "description": "Videochamada no browser, 115 € no mês 1 e 75 €/mês, recibo ADSE. Sem app e sem 45 € inventados.",
@@ -349,14 +397,14 @@
             "slotService": "nutricao-programa",
             "readingMinutes": 6,
             "related": [
+                "consulta-nutricao-preco-como-funciona",
                 "consultas-nutricao-perda-de-peso",
                 "quanto-custa-consulta-nutricao-portugal",
                 "adse-consultas-nutricao-portugal",
                 "cheque-nutricionista-2026",
                 "nutricionista-ou-dietista-portugal",
                 "como-encontrar-um-nutricionista",
-                "psicologia-online-vs-presencial",
-                "melhores-plataformas-telemedicina"
+                "psicologia-online-vs-presencial"
             ],
             "faq": [
                 {
@@ -390,14 +438,14 @@
             "slotService": "nutricao-programa",
             "readingMinutes": 6,
             "related": [
+                "consulta-nutricao-preco-como-funciona",
                 "quanto-custa-consulta-nutricao-portugal",
                 "adse-consultas-nutricao-portugal",
                 "cheque-nutricionista-2026",
                 "nutricionista-ou-dietista-portugal",
                 "como-encontrar-um-nutricionista",
                 "consulta-nutricao-online-como-funciona",
-                "perda-de-peso-sustentavel",
-                "fome-emocional-vs-fisica"
+                "perda-de-peso-sustentavel"
             ],
             "faq": [
                 {
@@ -476,6 +524,7 @@
             "slotService": "nutricao-programa",
             "readingMinutes": 6,
             "related": [
+                "consulta-nutricao-preco-como-funciona",
                 "quanto-custa-consulta-nutricao-portugal",
                 "adse-consultas-nutricao-portugal",
                 "cheque-nutricionista-2026",
@@ -515,14 +564,14 @@
             "slotService": "nutricao-programa",
             "readingMinutes": 6,
             "related": [
+                "consulta-nutricao-preco-como-funciona",
                 "quanto-custa-consulta-nutricao-portugal",
                 "adse-consultas-nutricao-portugal",
                 "nutricionista-ou-dietista-portugal",
                 "consultas-nutricao-perda-de-peso",
                 "consulta-nutricao-online-como-funciona",
                 "consultas-psicologia-gratuitas-portugal",
-                "apoio-psicologico-universidades-portugal",
-                "como-encontrar-um-nutricionista"
+                "apoio-psicologico-universidades-portugal"
             ],
             "faq": [
                 {
@@ -560,6 +609,7 @@
             "slotService": "nutricao-programa",
             "readingMinutes": 6,
             "related": [
+                "consulta-nutricao-preco-como-funciona",
                 "quanto-custa-consulta-nutricao-portugal",
                 "cheque-nutricionista-2026",
                 "nutricionista-ou-dietista-portugal",
@@ -600,6 +650,7 @@
             "slotService": "nutricao-programa",
             "readingMinutes": 6,
             "related": [
+                "consulta-nutricao-preco-como-funciona",
                 "consulta-nutricao-online-como-funciona",
                 "consultas-nutricao-perda-de-peso",
                 "adse-consultas-nutricao-portugal",
@@ -2855,14 +2906,14 @@
             "slotService": "nutricao-programa",
             "readingMinutes": 6,
             "related": [
+                "consulta-nutricao-preco-como-funciona",
                 "quanto-custa-consulta-nutricao-portugal",
                 "nutricionista-ou-dietista-portugal",
                 "consultas-nutricao-perda-de-peso",
                 "consulta-nutricao-online-como-funciona",
                 "adse-consultas-nutricao-portugal",
                 "cheque-nutricionista-2026",
-                "perda-de-peso-sustentavel",
-                "como-encontrar-um-psicologo"
+                "perda-de-peso-sustentavel"
             ],
             "faq": [
                 {

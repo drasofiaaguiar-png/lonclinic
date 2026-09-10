@@ -9,7 +9,7 @@
 
 A ADSE comparticipa consultas de nutrição — em **regime convencionado** (rede) e, desde as alterações anunciadas para 2025, também em **regime livre** (escolhe o nutricionista, paga, pede reembolso). A Lon Clinic trabalha em **regime livre** e emite recibo. Os valores de copagamento e de teto **não** são um número que possamos garantir neste artigo para 2026: a fonte de verdade é a [tabela ADSE](https://www.adse.pt/) / [ADSE Direta](https://adsedireta.adse.pt/) na data do recibo.
 
-Preço de mercado e programa Lon: [quanto custa uma consulta de nutrição](/blog/quanto-custa-consulta-nutricao-portugal). Cheque público (12–35 anos): [Cheque-Nutricionista 2026](/blog/cheque-nutricionista-2026). Há um guia irmão para psicologia: [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal). Formato da consulta Lon: [consulta de nutrição online](/blog/consulta-nutricao-online-como-funciona). Programa: [reeducação metabólica](/nutricao/programa).
+Hub da consulta: [preço, como funciona e quando marcar](/blog/consulta-nutricao-preco-como-funciona). Preço de mercado e programa Lon: [quanto custa uma consulta de nutrição](/blog/quanto-custa-consulta-nutricao-portugal). Cheque público (12–35 anos): [Cheque-Nutricionista 2026](/blog/cheque-nutricionista-2026). Há um guia irmão para psicologia: [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal). Formato da consulta Lon: [consulta de nutrição online](/blog/consulta-nutricao-online-como-funciona). Programa: [reeducação metabólica](/nutricao/programa).
 
 ## A ADSE comparticipa consultas de nutrição online?
 
