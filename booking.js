@@ -131,6 +131,173 @@ document.addEventListener('DOMContentLoaded', async () => {
         return 'en';
     }
 
+    const TYPE_DROPDOWN_KEYS = [
+        'clinica_geral', 'urgente', 'psicologia', 'nutricao_programa',
+        'burnout', 'travel', 'longevidade', 'renovacao'
+    ];
+    const TYPE_TO_SLUG = {
+        urgente: 'urgente',
+        infeccao_urinaria: 'infeccao-urinaria',
+        clinica_geral: 'clinica-geral',
+        renovacao: 'renovacao',
+        travel: 'travel',
+        saude_mental: 'saude-mental',
+        burnout: 'burnout',
+        burnout_mensal: 'burnout-mensal',
+        burnout_programa: 'burnout-programa',
+        longevidade: 'longevidade',
+        nutricao_programa: 'nutricao-programa',
+        nutricao_completo: 'nutricao-completo',
+        nutricao_completo_reforcado: 'nutricao-completo-reforcado',
+        psicologia: 'psicologia'
+    };
+    const TYPE_DROPDOWN_FALLBACK = {
+        clinica_geral: 'Clínica Geral / Check-up',
+        urgente: 'Consulta Médica Urgente',
+        psicologia: 'Saúde Mental / Psicologia',
+        nutricao_programa: 'Nutrição',
+        burnout: 'Burnout',
+        travel: 'Medicina do Viajante',
+        longevidade: 'Longevidade',
+        renovacao: 'Renovação de tratamento'
+    };
+
+    function bookingString(key, fallback) {
+        if (window.CLINIC_I18N && typeof window.CLINIC_I18N.getBookingString === 'function') {
+            const value = window.CLINIC_I18N.getBookingString(key);
+            if (value != null && value !== '') return value;
+        }
+        return fallback;
+    }
+
+    function dropdownValueFor(serviceKey) {
+        if (!serviceKey) return 'clinica_geral';
+        if (serviceKey.indexOf('burnout') === 0) return 'burnout';
+        if (serviceKey.indexOf('nutricao_') === 0) return 'nutricao_programa';
+        return serviceKey;
+    }
+
+    function formatEurFromCents(cents) {
+        const value = Number(cents || 0) / 100;
+        if (Number.isInteger(value)) return value + ' €';
+        return value.toFixed(2).replace('.', ',') + ' €';
+    }
+
+    function currentTotalCents() {
+        const isTravel = state.service === 'travel';
+        const count = isTravel ? 1 : Math.max(1, state.travellerCount || 1);
+        let subtotalCents = isTravel ? state.servicePriceCents : state.servicePriceCents * count;
+        let discountCents = 0;
+        if (state.discountPercent > 0) {
+            discountCents = Math.round(subtotalCents * (state.discountPercent / 100));
+        }
+        let totalCents = subtotalCents - discountCents;
+        if (totalCents < 50) totalCents = 50;
+        return totalCents;
+    }
+
+    function serviceDurationLabel(serviceKey) {
+        if (state.service === 'travel') {
+            const tp = getCurrentTravelPrice();
+            if (tp && tp.duration) return tp.duration;
+        }
+        if (state.serviceDuration) return state.serviceDuration;
+        const durations = bookingString('durations', null);
+        if (durations && durations[serviceKey]) return durations[serviceKey];
+        return '';
+    }
+
+    function payButtonLabel(priceText) {
+        const tmpl = bookingString('payCta', 'Pagar {price}');
+        return String(tmpl).replace('{price}', priceText);
+    }
+
+    function fillCheckoutTypeSelect() {
+        const select = document.getElementById('checkoutServiceType');
+        if (!select) return;
+        const labels = bookingString('typeOptions', TYPE_DROPDOWN_FALLBACK) || TYPE_DROPDOWN_FALLBACK;
+        const selected = dropdownValueFor(state.service);
+        const keys = TYPE_DROPDOWN_KEYS.slice();
+        if (state.service && keys.indexOf(selected) < 0) keys.unshift(state.service);
+        select.innerHTML = keys.map((key) => {
+            const label = labels[key] || i18nServiceLabel(key) || (services[key] && services[key].label) || key;
+            return `<option value="${key}">${label}</option>`;
+        }).join('');
+        select.value = selected;
+    }
+
+    function saveCheckoutDraft() {
+        try {
+            const first = document.querySelector('.p-firstName');
+            const last = document.querySelector('.p-lastName');
+            const email = document.getElementById('email');
+            const phone = document.getElementById('phone');
+            sessionStorage.setItem('lonCheckoutDraft', JSON.stringify({
+                firstName: first ? first.value : '',
+                lastName: last ? last.value : '',
+                email: email ? email.value : '',
+                phone: phone ? phone.value : ''
+            }));
+        } catch (e) { /* ignore */ }
+    }
+
+    function restoreCheckoutDraft() {
+        try {
+            const raw = sessionStorage.getItem('lonCheckoutDraft');
+            if (!raw) return;
+            const draft = JSON.parse(raw);
+            sessionStorage.removeItem('lonCheckoutDraft');
+            const first = document.querySelector('.p-firstName');
+            const last = document.querySelector('.p-lastName');
+            const email = document.getElementById('email');
+            const phone = document.getElementById('phone');
+            if (first && draft.firstName && !first.value) first.value = draft.firstName;
+            if (last && draft.lastName && !last.value) last.value = draft.lastName;
+            if (email && draft.email && !email.value) email.value = draft.email;
+            if (phone && draft.phone && !phone.value) phone.value = draft.phone;
+        } catch (e) { /* ignore */ }
+    }
+
+    function updatePayButton() {
+        const label = document.getElementById('next-2-label');
+        const priceText = formatEurFromCents(currentTotalCents());
+        if (label) label.textContent = payButtonLabel(priceText);
+        const payAmount = document.getElementById('checkoutPayAmount');
+        if (payAmount) payAmount.textContent = priceText;
+    }
+
+    function updateCheckoutSummary() {
+        fillCheckoutTypeSelect();
+        const whenEl = document.getElementById('checkoutWhen');
+        const priceEl = document.getElementById('checkoutPrice');
+        const durationEl = document.getElementById('checkoutDuration');
+        const priceText = formatEurFromCents(currentTotalCents());
+        const duration = serviceDurationLabel(state.service);
+        if (whenEl) {
+            if (state.dateLabel && state.time) {
+                whenEl.textContent = `${state.dateLabel} · ${state.time}`;
+            } else {
+                whenEl.textContent = '';
+            }
+        }
+        if (priceEl) priceEl.textContent = priceText;
+        if (durationEl) durationEl.textContent = duration;
+        updatePayButton();
+    }
+
+    function bindCheckoutTypeSelect() {
+        const select = document.getElementById('checkoutServiceType');
+        if (!select || select.dataset.bound === '1') return;
+        select.dataset.bound = '1';
+        select.addEventListener('change', () => {
+            const next = select.value;
+            if (!next || next === dropdownValueFor(state.service)) return;
+            saveCheckoutDraft();
+            const slug = TYPE_TO_SLUG[next] || next.replace(/_/g, '-');
+            window.location.href = '/marcar/' + slug;
+        });
+    }
+
     function intakeCopy() {
         const lang = getBookingLocale();
         const map = {
@@ -328,13 +495,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         state.servicePrice = services[resolved].price;
         state.servicePriceCents = services[resolved].cents;
         updateTravellerCountVisibility();
-        const trust = document.getElementById('lonBuyTrust');
-        if (trust) {
-            const nu = resolved.indexOf('nutricao_') === 0;
-            trust.innerHTML = nu
-                ? '🔒 Fidelização 3 meses · sem cláusulas abusivas · cancelamento simples a seguir<br>🩺 1.ª consulta médica agendada logo após o pagamento'
-                : '🔒 Pagamento seguro via Stripe<br>🩺 Consulta médica agendada imediatamente após o pagamento';
-        }
+        updateCheckoutSummary();
     }
 
     const preselect = urlParams.get('service');
@@ -390,7 +551,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (step === 1) renderCalendar();
         if (step === 2) {
             initDetailsForm();
+            restoreCheckoutDraft();
             updateSlotSummary();
+            bindCheckoutTypeSelect();
         }
         if (step === 3) updateReviewAndSummary();
     }
@@ -399,32 +562,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         const el = document.getElementById('bookingSlotSummary');
         const wrap = document.getElementById('bookingSlotChangeWrap');
         const change = document.getElementById('bookingSlotChange');
-        if (!el) return;
+        const slug = TYPE_TO_SLUG[state.service] || 'clinica-geral';
+        if (change) change.href = '/marcar/' + slug;
         if (state.date && state.time) {
-            el.hidden = false;
-            el.textContent = `${state.serviceLabel} · ${state.dateLabel} · ${state.time} · ${state.servicePrice}`;
-            if (wrap) wrap.hidden = false;
-            if (change) {
-                const slugMap = {
-                    urgente: 'urgente',
-                    clinica_geral: 'clinica-geral',
-                    renovacao: 'renovacao',
-                    travel: 'travel',
-                    saude_mental: 'saude-mental',
-                    burnout: 'burnout',
-                    burnout_mensal: 'burnout-mensal',
-                    burnout_programa: 'burnout-programa',
-                    longevidade: 'longevidade',
-                    nutricao_programa: 'nutricao-programa',
-                    nutricao_completo: 'nutricao-completo',
-                    nutricao_completo_reforcado: 'nutricao-completo-reforcado'
-                };
-                change.href = '/marcar/' + (slugMap[state.service] || 'clinica-geral');
+            if (el) {
+                el.hidden = true;
+                el.textContent = `${state.serviceLabel} · ${state.dateLabel} · ${state.time} · ${state.servicePrice}`;
             }
+            if (wrap) wrap.hidden = false;
         } else {
-            el.hidden = true;
+            if (el) el.hidden = true;
             if (wrap) wrap.hidden = true;
         }
+        updateCheckoutSummary();
     }
 
     // ═══════════════════════════════════════
@@ -934,6 +1084,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Update panel 1 title
         const panel1Title = panelsContainer.querySelector('.passenger-panel[data-passenger="1"] .passenger-panel-title');
         if (panel1Title) {
+            panel1Title.hidden = count <= 1;
             panel1Title.textContent = count > 1 ? 'Traveller 1' : 'Patient details';
         }
 
@@ -1403,6 +1554,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         document.getElementById('summaryTotal').textContent = totalFormatted;
+        updateCheckoutSummary();
     }
 
     document.getElementById('back-3').addEventListener('click', () => goToStep(2));
@@ -1417,7 +1569,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         payBtn.disabled = true;
         payBtn.innerHTML = `
             <div class="processing-spinner" style="width:18px;height:18px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:8px;"></div>
-            Redirecting to Stripe...
+            ${bookingString('redirecting', 'A redirecionar…')}
         `;
         if (stripeError) stripeError.style.display = 'none';
 
@@ -1490,7 +1642,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             payBtn.disabled = false;
             payBtn.innerHTML = `
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                Pagar com Stripe
+                <span id="next-2-label">${payButtonLabel(formatEurFromCents(currentTotalCents()))}</span>
             `;
         }
     });
@@ -1739,6 +1891,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             state.serviceLabel = i18nServiceLabel(state.service);
         }
 
+        updateSlotSummary();
+
         if (state.date && state.currentStep === 1) {
             applyUrgentContactHint();
         }
@@ -1770,6 +1924,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             state.servicePriceCents = typeof prefill.servicePriceCents === 'number'
                 ? prefill.servicePriceCents
                 : services[prefill.service].cents;
+            state.serviceDuration = prefill.duration || '';
             state.date = parseStoredDate(prefill.dateISO);
             state.dateLabel = prefill.dateLabel;
             state.time = prefill.time;

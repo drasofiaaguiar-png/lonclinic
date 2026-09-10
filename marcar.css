@@ -611,3 +611,91 @@
     line-height: 1.4;
     color: var(--marcar-muted);
 }
+
+.marcar-need {
+    max-width: 780px;
+    margin: 0 auto;
+}
+
+.marcar-need-title,
+.marcar-page-title {
+    font-size: clamp(1.45rem, 3vw, 1.85rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin: 0 0 20px;
+}
+
+.marcar-need-grid {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 640px) {
+    .marcar-need-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.marcar-need-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 22px 18px;
+    border-radius: 16px;
+    border: 1.5px solid var(--marcar-border);
+    background: var(--marcar-surface);
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 4px 14px rgba(22, 33, 25, 0.04);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.marcar-need-card:hover {
+    border-color: var(--marcar-accent-strong);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(22, 33, 25, 0.08);
+}
+
+.marcar-need-emoji {
+    font-size: 1.55rem;
+    line-height: 1;
+}
+
+.marcar-need-name {
+    font-size: 1.08rem;
+    font-weight: 700;
+}
+
+.marcar-need-desc {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: var(--marcar-muted);
+}
+
+.marcar-type-wrap {
+    margin: 0 0 24px;
+    max-width: 420px;
+}
+
+.marcar-type-wrap label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--marcar-text);
+}
+
+.marcar-type-wrap select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--marcar-border);
+    border-radius: 12px;
+    background: var(--marcar-surface);
+    color: var(--marcar-text);
+    font: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+}

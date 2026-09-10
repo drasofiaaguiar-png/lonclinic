@@ -18,7 +18,7 @@
     <link rel="canonical" href="https://www.lonclinic.com/marcar">
     <meta name="theme-color" content="#4A7C6F">
     <link rel="stylesheet" href="/landing.css">
-    <link rel="stylesheet" href="/marcar.css?v=20260909psi">
+    <link rel="stylesheet" href="/marcar.css?v=20260910b">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
@@ -60,7 +60,41 @@
     </div>
 
     <main class="lon-container marcar-main" id="marcarMain">
-        <a href="/#servicos" class="marcar-back">← Voltar aos serviços</a>
+        <section class="marcar-need" id="marcarNeedChoice" hidden>
+            <a href="/" class="marcar-back" id="marcarNeedBack">← Voltar ao início</a>
+            <h1 class="marcar-need-title" id="marcarNeedTitle">O que precisa neste momento?</h1>
+            <div class="marcar-need-grid">
+                <a class="marcar-need-card" id="marcarNeedMedicina" data-need-href="/marcar/clinica-geral" href="/marcar/clinica-geral">
+                    <span class="marcar-need-emoji" aria-hidden="true">🩺</span>
+                    <span class="marcar-need-name">Medicina</span>
+                    <span class="marcar-need-desc">Consultas médicas, urgência e acompanhamento</span>
+                </a>
+                <a class="marcar-need-card" id="marcarNeedPsicologia" data-need-href="/marcar/psicologia" href="/marcar/psicologia">
+                    <span class="marcar-need-emoji" aria-hidden="true">🧠</span>
+                    <span class="marcar-need-name">Psicologia</span>
+                    <span class="marcar-need-desc">Saúde mental, ansiedade e burnout</span>
+                </a>
+                <a class="marcar-need-card" id="marcarNeedNutricao" data-need-href="/marcar/nutricao-programa" href="/marcar/nutricao-programa">
+                    <span class="marcar-need-emoji" aria-hidden="true">🥗</span>
+                    <span class="marcar-need-name">Nutrição</span>
+                    <span class="marcar-need-desc">Nutrição clínica e acompanhamento personalizado</span>
+                </a>
+                <a class="marcar-need-card" id="marcarNeedLongevidade" data-need-href="/marcar/longevidade" href="/marcar/longevidade">
+                    <span class="marcar-need-emoji" aria-hidden="true">🧬</span>
+                    <span class="marcar-need-name">Prevenção &amp; Longevidade</span>
+                    <span class="marcar-need-desc">Saúde preventiva e plano a longo prazo</span>
+                </a>
+            </div>
+        </section>
+
+        <div id="marcarBookingFlow">
+        <a href="/marcar" class="marcar-back" id="marcarBookingBack">← Voltar</a>
+
+        <h1 class="marcar-page-title" id="marcarPageTitle">Vamos marcar a sua consulta</h1>
+        <div class="marcar-type-wrap">
+            <label for="marcarTypeSelect" id="marcarTypeLabel">Tipo de consulta</label>
+            <select id="marcarTypeSelect" aria-labelledby="marcarTypeLabel"></select>
+        </div>
 
         <aside class="lon-lang-banner" id="marcarLangBanner" hidden role="alert">
             <p class="lon-lang-banner-en">Consultations strictly provided in English and Portuguese</p>
@@ -81,7 +115,7 @@
 
         <div class="marcar-layout">
             <aside class="marcar-info" aria-labelledby="marcarTitle">
-                <h1 id="marcarTitle">—</h1>
+                <h2 id="marcarTitle">—</h2>
                 <p class="marcar-price" id="marcarPrice">—</p>
                 <div class="marcar-meta">
                     <span id="marcarDuration">—</span>
@@ -99,7 +133,7 @@
                 <h2 id="marcarScheduleTitle">Data e hora</h2>
                 <p class="marcar-sub" id="marcarScheduleSub">Toque num horário livre, ou escolha outro dia no calendário.</p>
                 <div class="marcar-quick-slots" id="marcarQuickSlots" hidden>
-                    <p class="marcar-quick-kicker">Próximos horários livres</p>
+                    <p class="marcar-quick-kicker" id="marcarQuickKicker">Próximos horários disponíveis</p>
                     <div class="marcar-quick-row" data-quick-row></div>
                 </div>
 
@@ -140,6 +174,7 @@
                 <p class="marcar-buy-trust" id="marcarBuyTrust" hidden>🔒 Fidelização 3 meses · sem cláusulas abusivas<br>🩺 Consulta médica agendada imediatamente após o pagamento</p>
             </section>
         </div>
+        </div>
     </main>
 
     <script>
@@ -147,9 +182,13 @@
             var p = new URLSearchParams(window.location.search);
             var hasQueryTipo = !!p.get('tipo');
             var hasPathTipo = /^\/marcar\/[^/?#]+/.test(window.location.pathname);
+            var need = document.getElementById('marcarNeedChoice');
+            var flow = document.getElementById('marcarBookingFlow');
             if (!hasQueryTipo && !hasPathTipo) {
-                document.getElementById('marcarError').style.display = 'block';
-                document.getElementById('marcarMain').style.display = 'none';
+                if (need) need.hidden = false;
+                if (flow) flow.hidden = true;
+            } else if (need) {
+                need.hidden = true;
             }
             if (/\/marcar\/psicologia(\/|$)/.test(window.location.pathname)) {
                 var wrap = document.getElementById('marcarScheduleWrap');
@@ -158,9 +197,9 @@
         })();
     </script>
     <script src="/lon-analytics.js?v=20260906e" defer></script>
-    <script src="/i18n.js" defer></script>
+    <script src="/i18n.js?v=20260910b" defer></script>
     <script src="/lon-nav.js" defer></script>
     <script src="/lon-slots.js?v=20260909psi" defer></script>
-    <script src="/marcar.js?v=20260909psi" defer></script>
+    <script src="/marcar.js?v=20260910b" defer></script>
 </body>
 </html>

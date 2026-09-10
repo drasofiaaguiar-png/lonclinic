@@ -580,10 +580,17 @@
         return SLUG_TO_TYPE[slug] || null;
     }
 
-    function getPrettyMarcarUrl(tipoKey) {
+    function getPrettyMarcarUrl(tipoKey, resetSlot) {
         var slug = TYPE_TO_SLUG[tipoKey] || tipoKey;
         var params = new URLSearchParams(window.location.search);
         params.delete('tipo');
+        if (resetSlot) {
+            params.delete('date');
+            params.delete('time');
+            params.delete('slot');
+            params.delete('specialty');
+            params.delete('professionalId');
+        }
         var rest = params.toString();
         return '/marcar/' + slug + (rest ? '?' + rest : '');
     }
@@ -597,20 +604,113 @@
         }
     }
 
+    var TYPE_DROPDOWN_KEYS = [
+        'clinica_geral',
+        'urgente',
+        'psicologia',
+        'nutricao_programa',
+        'burnout',
+        'travel',
+        'longevidade',
+        'renovacao'
+    ];
+
+    var TYPE_DROPDOWN_FALLBACK = {
+        clinica_geral: 'Clínica Geral / Check-up',
+        urgente: 'Consulta Médica Urgente',
+        psicologia: 'Saúde Mental / Psicologia',
+        nutricao_programa: 'Nutrição',
+        burnout: 'Burnout',
+        travel: 'Medicina do Viajante',
+        longevidade: 'Longevidade',
+        renovacao: 'Renovação de tratamento'
+    };
+
+    function dropdownValueFor(t) {
+        if (BURNOUT_FAMILY.indexOf(t) >= 0) return 'burnout';
+        if (NUTRICAO_FAMILY.indexOf(t) >= 0) return 'nutricao_programa';
+        return t;
+    }
+
+    function typeOptionLabels() {
+        if (window.CLINIC_I18N && typeof window.CLINIC_I18N.getBookingString === 'function') {
+            var fromI18n = window.CLINIC_I18N.getBookingString('typeOptions');
+            if (fromI18n) return fromI18n;
+        }
+        return TYPE_DROPDOWN_FALLBACK;
+    }
+
+    function fillTypeSelect(selectEl, currentTipo) {
+        if (!selectEl) return;
+        var labels = typeOptionLabels();
+        var selected = dropdownValueFor(currentTipo);
+        var keys = TYPE_DROPDOWN_KEYS.slice();
+        if (currentTipo && keys.indexOf(selected) < 0) {
+            keys.unshift(currentTipo);
+        }
+        var html = '';
+        keys.forEach(function (key) {
+            var label = labels[key] || (CONSULTATION_TYPES[key] && CONSULTATION_TYPES[key].label) || key;
+            html += '<option value="' + key + '"' + (key === selected ? ' selected' : '') + '>' + label + '</option>';
+        });
+        selectEl.innerHTML = html;
+        selectEl.value = selected;
+    }
+
+    function showNeedChoice() {
+        var need = document.getElementById('marcarNeedChoice');
+        var flow = document.getElementById('marcarBookingFlow');
+        var err = document.getElementById('marcarError');
+        if (need) need.hidden = false;
+        if (flow) flow.hidden = true;
+        if (err) err.style.display = 'none';
+        var rest = window.location.search;
+        if (rest) {
+            document.querySelectorAll('#marcarNeedChoice a[data-need-href]').forEach(function (a) {
+                a.href = a.getAttribute('data-need-href') + rest;
+            });
+        }
+    }
+
     var tipo = resolveTipoFromUrl();
     var consulta = tipo && CONSULTATION_TYPES[tipo] ? CONSULTATION_TYPES[tipo] : null;
+    var hasPathTipo = /^\/marcar\/[^/?#]+/.test(window.location.pathname);
+    var hasQueryTipo = !!new URLSearchParams(window.location.search).get('tipo');
 
     if (!consulta) {
-        var err = document.getElementById('marcarError');
-        var main = document.getElementById('marcarMain');
-        if (err) err.style.display = 'block';
-        if (main) main.style.display = 'none';
+        if (hasPathTipo || hasQueryTipo) {
+            var err = document.getElementById('marcarError');
+            var main = document.getElementById('marcarMain');
+            var flowBad = document.getElementById('marcarBookingFlow');
+            var needBad = document.getElementById('marcarNeedChoice');
+            if (err) err.style.display = 'block';
+            if (flowBad) flowBad.hidden = true;
+            if (needBad) needBad.hidden = true;
+            if (main) main.style.display = 'block';
+        } else {
+            showNeedChoice();
+        }
         return;
     }
+
+    var needHide = document.getElementById('marcarNeedChoice');
+    var flowShow = document.getElementById('marcarBookingFlow');
+    if (needHide) needHide.hidden = true;
+    if (flowShow) flowShow.hidden = false;
 
     var errHide = document.getElementById('marcarError');
     if (errHide) errHide.style.display = 'none';
     applyPrettyUrlIfNeeded(tipo);
+
+    var typeSelect = document.getElementById('marcarTypeSelect');
+    fillTypeSelect(typeSelect, tipo);
+    if (typeSelect) {
+        typeSelect.addEventListener('change', function () {
+            var next = typeSelect.value;
+            if (!next || next === dropdownValueFor(tipo)) return;
+            window.location.href = getPrettyMarcarUrl(next, true);
+        });
+    }
 
     var scheduleWrapEarly = document.getElementById('marcarScheduleWrap');
     if (scheduleWrapEarly) scheduleWrapEarly.hidden = tipo === 'psicologia';
@@ -990,6 +1090,7 @@
             if (titleEl) titleEl.textContent = data.label;
             var durationEl = document.getElementById('marcarDuration');
             if (durationEl) durationEl.textContent = data.duration;
+            fillTypeSelect(document.getElementById('marcarTypeSelect'), tipo);
             var ul = document.getElementById('marcarBullets');
             if (ul) {
                 ul.innerHTML = '';
@@ -1297,6 +1398,7 @@
             serviceLabel: localizedLabel,
             servicePrice: consulta.price,
             servicePriceCents: consulta.cents,
+            duration: consulta.duration,
             dateISO: formatDateLocal(state.date),
             dateLabel: state.dateLabel,
             time: state.time,
@@ -1352,6 +1454,7 @@
     // Language change handler
     window.MARCAR_LANG_CHANGED = function (lang) {
         applyConsultaI18n();
+        fillTypeSelect(document.getElementById('marcarTypeSelect'), tipo);
         if (isPsychology()) {
             applySpecialtyCopy();
             fetch('/api/psychology/specialties?lang=' + encodeURIComponent(getLang()))

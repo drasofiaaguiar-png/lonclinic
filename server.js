@@ -8035,8 +8035,12 @@ function redirectToMarcarHtml(req, res) {
         return res.redirect(301, `/marcar/${slug}${suffix}`);
     }
 
-    const suffix = params.toString() ? `?${params.toString()}` : '';
-    return res.redirect(301, '/marcar.html' + suffix);
+    const filePath = path.join(__dirname, 'marcar.html');
+    if (!fs.existsSync(filePath)) {
+        console.error('❌ marcar.html missing at:', filePath);
+        return res.status(500).send('marcar.html not found on server');
+    }
+    sendHtmlNoCache(res, filePath, 'Error loading marcar page');
 }
 app.get('/marcar', redirectToMarcarHtml);
 app.get('/marcar/', redirectToMarcarHtml);

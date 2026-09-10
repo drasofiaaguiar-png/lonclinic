@@ -23,7 +23,7 @@
     function detectPage() {
         const p = window.location.pathname.toLowerCase();
         if (p.includes('/marcar')) return 'marcar';
-        if (p.includes('book.html') || /\/book(\/|$)/.test(p)) return 'book';
+        if (p.includes('book.html') || p.includes('book-consultation') || /\/book(\/|$)/.test(p)) return 'book';
         if (p.includes('info.html') || p.includes('/info')) return 'info';
         if (p.includes('travel') && !p.includes('/blog') && !p.includes('/consulta/')) return 'travel';
         if (/^\/(blog|magazine|consulta\/|nutricao\/|burnout\/|consultas)(\/|$)?/.test(p) || /^\/consulta\//.test(p)) {
@@ -93,20 +93,21 @@
         { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]:not([data-talk-cta])', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
 
         /* ── Hero ── */
-        { s: '.dr-badge', en: 'Telemedicine Platform', pt: 'Plataforma de telemedicina', es: 'Plataforma de telemedicina' },
-        { s: '.dr-hero-title-line:not(.dr-hero-title-line--secondary)', en: 'Online medical consultations.', pt: 'Consultas médicas online.', es: 'Consultas médicas online.' },
-        { s: '.dr-hero-title-line--secondary', en: 'A new approach to your health.<br>Finally.', pt: 'Uma nova abordagem à sua saúde.<br>Finalmente.', es: 'Un nuevo enfoque para su salud.<br>Por fin.', h: true },
-        { s: '.dr-lead', en: 'Book your medical consultation in minutes. Take care of your short and long-term health.', pt: 'Marque a sua consulta médica em minutos. Cuide da sua saúde a curto e a longo prazo.', es: 'Reserve su consulta médica en minutos. Cuide su salud a corto y largo plazo.' },
+        { s: '.dr-hero-title-line:not(.dr-hero-title-line--secondary)', en: 'Finally, a complete approach to your health.', pt: 'Finalmente, uma abordagem completa à sua saúde.', es: 'Por fin, un enfoque completo de su salud.' },
+        { s: '.dr-hero-title-line--secondary', en: 'Take care of yourself, wherever you are.', pt: 'Cuide de si, onde quer que esteja.', es: 'Cuídese, esté donde esté.' },
+        { s: '.dr-lead', en: 'Doctor, psychologist and nutritionist, in one place, with personalised follow-up.', pt: 'Médico, psicólogo e nutricionista, num só lugar e com acompanhamento personalizado.', es: 'Médico, psicólogo y nutricionista, en un solo lugar y con seguimiento personalizado.' },
         { s: '.dr-cta-row .lon-btn-dark', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
         { s: '.dr-next-slot-kicker', en: 'Next available', pt: 'Próximo horário', es: 'Próximo horario' },
         { s: '.dr-next-slot-price', en: '39 € · general medicine', pt: '39 € · clínica geral', es: '39 € · medicina general' },
         { s: '.dr-next-slot-other', en: 'Another time', pt: 'Outro horário', es: 'Otro horario' },
 
         /* ── Trust bullets ── */
-        { s: '.dr-trust-list li:nth-child(1)', en: 'Doctors accredited by the Portuguese Medical Association', pt: 'Médicos acreditados pela Ordem dos Médicos Português', es: 'Médicos acreditados por el Colegio de Médicos Português' },
-        { s: '.dr-trust-list li:nth-child(2)', en: 'Consultations in Portuguese, English and Spanish', pt: 'Consultas em português, inglês e espanhol', es: 'Consultas en portugués, inglés y español' },
-        { s: '.dr-trust-list li:nth-child(3)', en: 'Prescriptions and exam requests after the consultation', pt: 'Receitas e pedidos de exames no final da consulta', es: 'Recetas y solicitudes de exámenes al final de la consulta' },
-        { s: '.dr-trust-list li:nth-child(4)', en: 'No waiting room. No travel.', pt: 'Sem sala de espera. Sem deslocação.', es: 'Sin sala de espera. Sin desplazamiento.' },
+        { s: '.dr-trust-list li:nth-child(1)', en: 'Clinic certified by Portugal’s Health Regulatory Authority', pt: 'Clínica certificada pela Entidade Reguladora da Saúde em Portugal', es: 'Clínica certificada por la Entidad Reguladora de la Salud en Portugal' },
+        { s: '.dr-trust-list li:nth-child(2)', en: 'Doctors registered with the Portuguese Medical Association', pt: 'Médicos inscritos na Ordem dos Médicos Portuguesa', es: 'Médicos inscritos en el Colegio de Médicos de Portugal' },
+        { s: '.dr-trust-list li:nth-child(3)', en: 'Nutritionists and psychologists registered with their respective professional bodies', pt: 'Nutricionistas e Psicólogos inscritos nas respetivas ordens', es: 'Nutricionistas y psicólogos inscritos en sus respectivos colegios profesionales' },
+        { s: '.dr-trust-list li:nth-child(4)', en: 'Consultations in Portuguese, English and Spanish', pt: 'Consultas em português, inglês e espanhol', es: 'Consultas en portugués, inglés y español' },
+        { s: '.dr-trust-list li:nth-child(5)', en: 'Prescriptions and exam requests, when clinically indicated', pt: 'Receitas e pedidos de exames, quando clinicamente indicados', es: 'Recetas y solicitudes de exámenes, cuando estén clínicamente indicadas' },
+        { s: '.dr-trust-list li:nth-child(6)', en: 'No waiting room. No travel.', pt: 'Sem sala de espera. Sem deslocação.', es: 'Sin sala de espera. Sin desplazamiento.' },
 
         /* ── Manifesto ── */
         { s: '.dr-clinic-manifesto__text', en: 'We are not a platform with hundreds of anonymous doctors. We are a clinic where each patient has a story and the doctor listens, follows up, and thinks about your long-term health.', pt: 'Não somos uma plataforma com centenas de médicos anónimos. Somos uma clínica onde cada paciente tem uma história e o médico ouve-te, acompanha-te, e pensa na tua saúde a longo prazo.', es: 'No somos una plataforma con cientos de médicos anónimos. Somos una clínica donde cada paciente tiene una historia y el médico te escucha, te acompaña y piensa en tu salud a largo plazo.' },
@@ -417,18 +418,21 @@
         { s: '#next-1', en: 'Continue to details', pt: 'Continuar para dados', es: 'Continuar a datos' },
 
         /* ── Step 2: Details ── */
-        { s: '#step-2 .step-title', en: 'Your details', pt: 'Os seus dados', es: 'Sus datos' },
-        { s: '#step-2 .step-desc', en: 'We only need your name and contact to confirm the booking. Clinical details come after payment.', pt: 'Só precisamos do seu nome e contacto para confirmar a marcação. Os dados clínicos pedem-se a seguir ao pagamento.', es: 'Solo necesitamos su nombre y contacto para confirmar la reserva. Los datos clínicos se piden después del pago.' },
-        { s: 'label[for="firstName"]', en: 'First name *', pt: 'Primeiro nome *', es: 'Nombre *' },
+        { s: '#step-2 .step-title', en: 'Almost there. Let\'s confirm your appointment.', pt: 'Quase lá. Vamos confirmar a sua consulta.', es: 'Casi listo. Confirmemos su consulta.' },
+        { s: '#checkoutConsultKicker', en: 'Your appointment', pt: 'A sua consulta', es: 'Su consulta' },
+        { s: '#checkoutTypeLabel', en: 'Type', pt: 'Tipo', es: 'Tipo' },
+        { s: '#checkoutDetailsTitle', en: 'Your details', pt: 'Os seus dados', es: 'Sus datos' },
+        { s: '#checkoutDetailsLead', en: 'We only need these details to confirm your booking.', pt: 'Precisamos apenas destes dados para confirmar a sua marcação.', es: 'Solo necesitamos estos datos para confirmar su reserva.' },
+        { s: 'label[for="firstName"]', en: 'First name *', pt: 'Nome *', es: 'Nombre *' },
         { s: '#firstName', a: 'placeholder', en: 'John', pt: 'João', es: 'Juan' },
         { s: '#firstName ~ .form-error', en: 'Please enter your first name', pt: 'Por favor introduza o seu primeiro nome', es: 'Por favor introduzca su nombre' },
         { s: 'label[for="lastName"]', en: 'Last name *', pt: 'Apelido *', es: 'Apellido *' },
         { s: '#lastName', a: 'placeholder', en: 'Doe', pt: 'Silva', es: 'García' },
         { s: '#lastName ~ .form-error', en: 'Please enter your last name', pt: 'Por favor introduza o seu apelido', es: 'Por favor introduzca su apellido' },
-        { s: 'label[for="email"]', en: 'Email address *', pt: 'Endereço de email *', es: 'Correo electrónico *' },
+        { s: 'label[for="email"]', en: 'Email *', pt: 'Email *', es: 'Email *' },
         { s: '#email', a: 'placeholder', en: 'john@example.com', pt: 'joao@exemplo.com', es: 'juan@ejemplo.com' },
         { s: '#email ~ .form-error', en: 'Please enter a valid email address', pt: 'Por favor introduza um endereço de email válido', es: 'Por favor introduzca un correo electrónico válido' },
-        { s: 'label[for="phone"]', en: 'Phone number *', pt: 'Número de telefone *', es: 'Número de teléfono *' },
+        { s: 'label[for="phone"]', en: 'Mobile *', pt: 'Telemóvel *', es: 'Móvil *' },
         { s: '#phone', a: 'placeholder', en: '+351 928 372 775', pt: '+351 928 372 775', es: '+34 600 000 000' },
         { s: '#phone ~ .form-error', en: 'Please enter your phone number', pt: 'Por favor introduza o seu número de telefone', es: 'Por favor introduzca su número de teléfono' },
         { s: 'label[for="dob"]', en: 'Date of birth *', pt: 'Data de nascimento *', es: 'Fecha de nacimiento *' },
@@ -436,7 +440,7 @@
         { s: 'label[for="country"]', en: 'Country of residence *', pt: 'País de residência *', es: 'País de residencia *' },
         { s: '#country option[value=""]', en: 'Select your country', pt: 'Selecione o seu país', es: 'Seleccione su país' },
         { s: '#country ~ .form-error', en: 'Please select your country', pt: 'Por favor selecione o seu país', es: 'Por favor seleccione su país' },
-        { s: '.form-section-title', en: 'Health background', pt: 'Historial de saúde', es: 'Historial de salud' },
+        { s: '.form-subsection-title', en: 'Health background', pt: 'Historial de saúde', es: 'Historial de salud' },
         { s: 'label[for="travelDest"]', en: 'Travel destination(s) *', pt: 'Destino(s) de viagem *', es: 'Destino(s) de viaje *' },
         { s: '#travelDest', a: 'placeholder', en: 'e.g. Thailand, Kenya, Peru', pt: 'ex. Tailândia, Quénia, Peru', es: 'ej. Tailandia, Kenia, Perú' },
         { s: '#travelDest ~ .form-hint', en: 'List all planned destinations for this trip', pt: 'Liste todos os destinos planeados para esta viagem', es: 'Liste todos los destinos planificados para este viaje' },
@@ -448,14 +452,19 @@
         { s: '#medications', a: 'placeholder', en: 'List any current medications, supplements, or treatments...', pt: 'Liste quaisquer medicamentos, suplementos ou tratamentos atuais...', es: 'Liste cualquier medicamento, suplemento o tratamiento actual...' },
         { s: 'label[for="allergies"]', en: 'Known allergies', pt: 'Alergias conhecidas', es: 'Alergias conocidas' },
         { s: '#allergies', a: 'placeholder', en: 'e.g. Penicillin, latex, none', pt: 'ex. Penicilina, látex, nenhuma', es: 'ej. Penicilina, látex, ninguna' },
-        { s: '#consent ~ .checkbox-text', en: 'I consent to my health information being securely processed for the purpose of this consultation. <a href="#" style="color: var(--accent);">Privacy Policy</a>', pt: 'Autorizo o tratamento seguro das minhas informações de saúde para efeitos desta consulta. <a href="#" style="color: var(--accent);">Política de Privacidade</a>', es: 'Consiento que mi información de salud sea procesada de forma segura para los fines de esta consulta. <a href="#" style="color: var(--accent);">Política de Privacidad</a>', h: true },
-        { s: '#terms ~ .checkbox-text', en: 'I agree to the <a href="#" style="color: var(--accent);">Terms of Service</a> and understand this is a private medical consultation.', pt: 'Concordo com os <a href="#" style="color: var(--accent);">Termos de Serviço</a> e compreendo que esta é uma consulta médica privada.', es: 'Acepto los <a href="#" style="color: var(--accent);">Términos de Servicio</a> y entiendo que esta es una consulta médica privada.', h: true },
+        { s: '#checkoutBeforeTitle', en: 'Before the consultation', pt: 'Antes da consulta', es: 'Antes de la consulta' },
+        { s: '#checkoutBeforeLead', en: 'After payment, you will receive an email to fill in your symptoms and clinical information securely. This lets the professional prepare for your appointment in advance.', pt: 'Após o pagamento, receberá um email para preencher os seus sintomas e informação clínica de forma segura. Assim, o profissional que o acompanha poderá preparar a consulta com antecedência.', es: 'Tras el pago, recibirá un correo para completar sus síntomas e información clínica de forma segura. Así, el profesional que le atiende podrá preparar la consulta con antelación.' },
+        { s: '#consentText', en: 'I consent to the secure processing of my health data for this consultation. <a href="/info.html?page=politica-privacidade" style="color: var(--accent);">Privacy Policy</a>', pt: 'Autorizo o tratamento seguro dos meus dados de saúde para efeitos desta consulta. <a href="/info.html?page=politica-privacidade" style="color: var(--accent);">Política de Privacidade</a>', es: 'Autorizo el tratamiento seguro de mis datos de salud para esta consulta. <a href="/info.html?page=politica-privacidade" style="color: var(--accent);">Política de privacidad</a>', h: true },
+        { s: '#termsText', en: 'I have read and accept the <a href="/info.html?page=termos-condicoes" style="color: var(--accent);">Terms and Conditions</a> and understand this is a private medical consultation.', pt: 'Li e aceito os <a href="/info.html?page=termos-condicoes" style="color: var(--accent);">Termos e Condições</a> e compreendo que esta é uma consulta médica privada.', es: 'He leído y acepto los <a href="/info.html?page=termos-condicoes" style="color: var(--accent);">Términos y Condiciones</a> y comprendo que esta es una consulta médica privada.', h: true },
         { s: '.form-checkbox-group:nth-child(12) .form-error', en: 'You must consent to proceed', pt: 'Deve consentir para prosseguir', es: 'Debe dar su consentimiento para continuar' },
         { s: '.form-checkbox-group:nth-child(13) .form-error', en: 'You must agree to the terms', pt: 'Deve concordar com os termos', es: 'Debe aceptar los términos' },
+        { s: '#checkoutPayTitle', en: 'Payment', pt: 'Pagamento', es: 'Pago' },
+        { s: '#checkoutPayNote', en: 'Secure payment with card, Apple Pay or Google Pay, when available.', pt: 'Pagamento seguro com cartão, Apple Pay ou Google Pay, quando disponíveis.', es: 'Pago seguro con tarjeta, Apple Pay o Google Pay, cuando estén disponibles.' },
         { s: '#back-2', en: 'Back', pt: 'Voltar', es: 'Atrás' },
         { s: '#bookingSlotChange', en: 'Change time', pt: 'Alterar horário', es: 'Cambiar horario' },
-        { s: '#next-2', en: 'Pay with Stripe', pt: 'Pagar com Stripe', es: 'Pagar con Stripe' },
-        { s: '#checkoutAfterPayNote', en: 'After payment, you will receive an email to fill in your clinical details and symptoms.', pt: 'Após o pagamento, irá receber um e-mail para preencher os seus dados clínicos/sintomas.', es: 'Tras el pago, recibirá un correo para completar sus datos clínicos y síntomas.' },
+        { s: '#lonBuyTrustLine1', en: '🔒 Secure payment', pt: '🔒 Pagamento seguro', es: '🔒 Pago seguro' },
+        { s: '#lonBuyTrustLine2', en: '✓ Appointment confirmed immediately after payment', pt: '✓ Consulta confirmada imediatamente após o pagamento', es: '✓ Consulta confirmada inmediatamente después del pago' },
+        { s: '#lonBuyTrustLine3', en: '✓ Clinical details collected securely', pt: '✓ Dados clínicos recolhidos de forma segura', es: '✓ Datos clínicos recogidos de forma segura' },
 
         /* ── Step 3: Review & Pay ── */
         { s: '#step-3 .step-title', en: 'Review & pay', pt: 'Revisão e pagamento', es: 'Revisar y pagar' },
@@ -532,8 +541,22 @@
         /* ── Error ── */
         { s: '#marcarError .marcar-error', en: 'Consultation type not found. Choose a service on the <a href="/#servicos">homepage</a>.', pt: 'Tipo de consulta não encontrado. Escolha um serviço na <a href="/#servicos">página inicial</a>.', es: 'Tipo de consulta no encontrado. Elija un servicio en la <a href="/#servicos">página de inicio</a>.', h: true },
 
+        /* ── Need choice ── */
+        { s: '#marcarNeedBack', en: '\u2190 Back to homepage', pt: '\u2190 Voltar ao início', es: '\u2190 Volver al inicio' },
+        { s: '#marcarNeedTitle', en: 'What do you need right now?', pt: 'O que precisa neste momento?', es: '¿Qué necesita en este momento?' },
+        { s: '#marcarNeedMedicina .marcar-need-name', en: 'Medicine', pt: 'Medicina', es: 'Medicina' },
+        { s: '#marcarNeedMedicina .marcar-need-desc', en: 'Medical consultations, urgent care and follow-up', pt: 'Consultas médicas, urgência e acompanhamento', es: 'Consultas médicas, urgencia y seguimiento' },
+        { s: '#marcarNeedPsicologia .marcar-need-name', en: 'Psychology', pt: 'Psicologia', es: 'Psicología' },
+        { s: '#marcarNeedPsicologia .marcar-need-desc', en: 'Mental health, anxiety and burnout', pt: 'Saúde mental, ansiedade e burnout', es: 'Salud mental, ansiedad y burnout' },
+        { s: '#marcarNeedNutricao .marcar-need-name', en: 'Nutrition', pt: 'Nutrição', es: 'Nutrición' },
+        { s: '#marcarNeedNutricao .marcar-need-desc', en: 'Clinical nutrition and personalised follow-up', pt: 'Nutrição clínica e acompanhamento personalizado', es: 'Nutrición clínica y seguimiento personalizado' },
+        { s: '#marcarNeedLongevidade .marcar-need-name', en: 'Prevention & Longevity', pt: 'Prevenção & Longevidade', es: 'Prevención y longevidad' },
+        { s: '#marcarNeedLongevidade .marcar-need-desc', en: 'Preventive health and a long-term plan', pt: 'Saúde preventiva e plano a longo prazo', es: 'Salud preventiva y plan a largo plazo' },
+
         /* ── Back link ── */
-        { s: '.marcar-back', en: '\u2190 Back to services', pt: '\u2190 Voltar aos serviços', es: '\u2190 Volver a los servicios' },
+        { s: '#marcarBookingBack', en: '\u2190 Back', pt: '\u2190 Voltar', es: '\u2190 Volver' },
+        { s: '#marcarPageTitle', en: 'Let\'s book your appointment', pt: 'Vamos marcar a sua consulta', es: 'Vamos a reservar su consulta' },
+        { s: '#marcarTypeLabel', en: 'Consultation type', pt: 'Tipo de consulta', es: 'Tipo de consulta' },
 
         /* ── Service meta ── */
         { s: '.marcar-meta span:nth-child(2)', en: 'Video call', pt: 'Videochamada', es: 'Videollamada' },
@@ -542,7 +565,8 @@
 
         /* ── Schedule section ── */
         { s: '#marcarScheduleTitle', en: 'Date and time', pt: 'Data e hora', es: 'Fecha y hora' },
-        { s: '.marcar-sub', en: 'Choose the day and time for your online consultation.', pt: 'Escolha o dia e o horário da sua consulta online.', es: 'Elija el día y la hora de su consulta online.' },
+        { s: '#marcarScheduleSub', en: 'Tap a free slot — or pick another day on the calendar.', pt: 'Toque num horário livre, ou escolha outro dia no calendário.', es: 'Toque un horario libre, o elija otro día en el calendario.' },
+        { s: '#marcarQuickKicker', en: 'Next available times', pt: 'Próximos horários disponíveis', es: 'Próximos horarios disponibles' },
         { s: '#marcarCalPrev', a: 'aria-label', en: 'Previous month', pt: 'Mês anterior', es: 'Mes anterior' },
         { s: '#marcarCalNext', a: 'aria-label', en: 'Next month', pt: 'Mês seguinte', es: 'Mes siguiente' },
 
@@ -732,6 +756,36 @@
                 nutricao_completo_reforcado: 'Complete program — higher first payment',
                 psicologia: 'Psychology session',
             },
+            typeOptions: {
+                clinica_geral: 'General Medicine / Check-up',
+                urgente: 'Urgent Medical Consultation',
+                psicologia: 'Mental Health / Psychology',
+                nutricao_programa: 'Nutrition',
+                burnout: 'Burnout',
+                travel: 'Travel Medicine',
+                longevidade: 'Longevity',
+                renovacao: 'Treatment renewal'
+            },
+            durations: {
+                clinica_geral: '30 minutes',
+                urgente: '25 minutes',
+                travel: '20 min',
+                saude_mental: '30–45 min',
+                psicologia: '50 min',
+                burnout: '60 min',
+                burnout_mensal: '60 min · 4 sessions/month',
+                burnout_programa: '8 sessions · 60 min',
+                renovacao: '15–20 min',
+                longevidade: '45–60 min',
+                nutricao_programa: 'Initial visit',
+                nutricao_completo: 'Initial visit',
+                nutricao_completo_reforcado: 'Initial visit',
+                infeccao_urinaria: '20–30 min'
+            },
+            payCta: 'Pay {price}',
+            redirecting: 'Redirecting to Stripe…',
+            yourConsultation: 'Your appointment',
+            typeLabel: 'Type',
         },
         pt: {
             months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -760,6 +814,36 @@
                 nutricao_completo_reforcado: 'Programa Completo — entrada reforçada',
                 psicologia: 'Sessão de Psicologia',
             },
+            typeOptions: {
+                clinica_geral: 'Clínica Geral / Check-up',
+                urgente: 'Consulta Médica Urgente',
+                psicologia: 'Saúde Mental / Psicologia',
+                nutricao_programa: 'Nutrição',
+                burnout: 'Burnout',
+                travel: 'Medicina do Viajante',
+                longevidade: 'Longevidade',
+                renovacao: 'Renovação de tratamento'
+            },
+            durations: {
+                clinica_geral: '30 minutos',
+                urgente: '25 minutos',
+                travel: '20 min',
+                saude_mental: '30–45 min',
+                psicologia: '50 min',
+                burnout: '60 min',
+                burnout_mensal: '60 min · 4 consultas/mês',
+                burnout_programa: '8 sessões · 60 min',
+                renovacao: '15–20 min',
+                longevidade: '45–60 min',
+                nutricao_programa: 'Consulta inicial',
+                nutricao_completo: 'Consulta inicial',
+                nutricao_completo_reforcado: 'Consulta inicial',
+                infeccao_urinaria: '20–30 min'
+            },
+            payCta: 'Pagar {price}',
+            redirecting: 'A redirecionar…',
+            yourConsultation: 'A sua consulta',
+            typeLabel: 'Tipo',
         },
         es: {
             months: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -788,6 +872,36 @@
                 nutricao_completo_reforcado: 'Programa completo — entrada reforzada',
                 psicologia: 'Sesión de psicología',
             },
+            typeOptions: {
+                clinica_geral: 'Medicina general / Chequeo',
+                urgente: 'Consulta médica urgente',
+                psicologia: 'Salud mental / Psicología',
+                nutricao_programa: 'Nutrición',
+                burnout: 'Burnout',
+                travel: 'Medicina del viajero',
+                longevidade: 'Longevidad',
+                renovacao: 'Renovación de tratamiento'
+            },
+            durations: {
+                clinica_geral: '30 minutos',
+                urgente: '25 minutos',
+                travel: '20 min',
+                saude_mental: '30–45 min',
+                psicologia: '50 min',
+                burnout: '60 min',
+                burnout_mensal: '60 min · 4 consultas/mes',
+                burnout_programa: '8 sesiones · 60 min',
+                renovacao: '15–20 min',
+                longevidade: '45–60 min',
+                nutricao_programa: 'Consulta inicial',
+                nutricao_completo: 'Consulta inicial',
+                nutricao_completo_reforcado: 'Consulta inicial',
+                infeccao_urinaria: '20–30 min'
+            },
+            payCta: 'Pagar {price}',
+            redirecting: 'Redirigiendo…',
+            yourConsultation: 'Su consulta',
+            typeLabel: 'Tipo',
         },
     };
 
