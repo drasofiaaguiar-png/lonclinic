@@ -844,17 +844,56 @@ async function insertAnalyticsEvents(rows) {
     return inserted;
 }
 
+const ANALYTICS_FUNNEL_NAMES = [
+    'page_view',
+    'page_engaged',
+    'cta_click',
+    'whatsapp_click',
+    'date_select',
+    'slot_select',
+    'checkout_start',
+    'checkout_created',
+    'payment_succeeded',
+    'booking_confirmed',
+    'invite_paid',
+    'intake_submit',
+    'job_application',
+    'interview_booked',
+    'form_start',
+    'form_submit'
+];
+
 async function listAnalyticsEventsBetween(fromIso, toIso, { excludeHeartbeat } = {}) {
     const p = getPool();
-    const r = await p.query(
-        `SELECT * FROM analytics_events
-         WHERE occurred_at >= $1::timestamptz AND occurred_at <= $2::timestamptz
-           AND ($3::boolean IS NOT TRUE OR name <> 'heartbeat')
-         ORDER BY occurred_at ASC
-         LIMIT 50000`,
-        [fromIso, toIso, !!excludeHeartbeat]
-    );
-    return r.rows.map(rowToAnalyticsEvent);
+    const [recent, funnel] = await Promise.all([
+        p.query(
+            `SELECT * FROM analytics_events
+             WHERE occurred_at >= $1::timestamptz AND occurred_at <= $2::timestamptz
+               AND ($3::boolean IS NOT TRUE OR name <> 'heartbeat')
+             ORDER BY occurred_at DESC
+             LIMIT 40000`,
+            [fromIso, toIso, !!excludeHeartbeat]
+        ),
+        p.query(
+            `SELECT * FROM analytics_events
+             WHERE occurred_at >= $1::timestamptz AND occurred_at <= $2::timestamptz
+               AND name = ANY($3::text[])
+             ORDER BY occurred_at DESC
+             LIMIT 8000`,
+            [fromIso, toIso, ANALYTICS_FUNNEL_NAMES]
+        )
+    ]);
+    const seen = new Set();
+    const merged = [];
+    for (const row of [...funnel.rows, ...recent.rows]) {
+        const id = row && row.event_id;
+        if (id && seen.has(id)) continue;
+        if (id) seen.add(id);
+        const mapped = rowToAnalyticsEvent(row);
+        if (mapped) merged.push(mapped);
+    }
+    merged.sort((a, b) => String(a.occurredAt || '').localeCompare(String(b.occurredAt || '')));
+    return merged;
 }
 
 async function listLiveAnalyticsSessions(sinceIso) {

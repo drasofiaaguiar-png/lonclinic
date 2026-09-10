@@ -392,6 +392,52 @@ function groupCount(rows, key, limit) {
         .map(([key, count]) => ({ key, count }));
 }
 
+function convertingSessionIds(rows) {
+    const sids = new Set();
+    for (const r of rows || []) {
+        if (!r || !r.sessionId) continue;
+        if (
+            r.name === 'payment_succeeded' ||
+            r.name === 'booking_confirmed' ||
+            r.name === 'invite_paid' ||
+            r.name === 'checkout_created'
+        ) {
+            sids.add(String(r.sessionId));
+        }
+    }
+    return sids;
+}
+
+function rankCampaigns(used, views, limit) {
+    const convertingSids = convertingSessionIds(used);
+    const convertingKeys = new Set();
+    for (const r of used || []) {
+        if (!r || !r.utmCampaign || !r.sessionId) continue;
+        if (convertingSids.has(String(r.sessionId))) convertingKeys.add(r.utmCampaign);
+    }
+    const ranked = groupCount(
+        (used || []).filter((r) => r.utmCampaign),
+        'utmCampaign',
+        24
+    );
+    const converting = ranked.filter((c) => convertingKeys.has(c.key));
+    const rest = ranked.filter((c) => !convertingKeys.has(c.key));
+    const fromViews = groupCount(
+        (views || []).filter((r) => r.utmCampaign),
+        'utmCampaign',
+        8
+    );
+    const seen = new Set();
+    const out = [];
+    for (const item of [...converting, ...rest, ...fromViews]) {
+        if (!item || !item.key || seen.has(item.key)) continue;
+        seen.add(item.key);
+        out.push(item);
+        if (out.length >= (limit || 8)) break;
+    }
+    return out;
+}
+
 function sessionLandings(views, limit) {
     const sorted = [...(views || [])].sort(
         (a, b) => new Date(a.occurredAt).getTime() - new Date(b.occurredAt).getTime()
@@ -633,11 +679,7 @@ function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaff
         devices: groupCount(views, 'device', 5),
         browsers: groupCount(views, 'browser', 6),
         countries: groupCount(views.filter((r) => r.country), 'country', 8),
-        campaigns: groupCount(
-            views.filter((r) => r.utmCampaign),
-            'utmCampaign',
-            8
-        ),
+        campaigns: rankCampaigns(used, views),
         ctas: groupCount(
             cta.map((r) => ({ key: (r.props && (r.props.text || r.props.id)) || 'cta' })),
             'key',
