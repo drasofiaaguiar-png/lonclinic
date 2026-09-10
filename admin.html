@@ -393,8 +393,11 @@
                             </select>
                         </div>
                         <div class="admin-form-group">
-                            <label for="inviteProfessional">Professional <span style="font-weight:400;opacity:.7;">— optional</span></label>
-                            <input type="text" id="inviteProfessional" class="admin-input" list="adminProfessionalsList" placeholder="Professional">
+                            <label for="inviteProfessional">Professional</label>
+                            <select id="inviteProfessional" class="admin-select">
+                                <option value="">Choose a professional…</option>
+                            </select>
+                            <small style="display:block;margin-top:6px;opacity:.7;">The list shows people for this consultation type.</small>
                         </div>
                         <div class="admin-travel-options" id="inviteTravelOptions" hidden>
                             <p class="admin-travel-options-title">Consulta do viajante — escolha pessoas e seguro. O preço fica à frente de cada opção.</p>
@@ -1195,7 +1198,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=casal-invite-1"></script>
+    <script src="/admin.js?v=casal-invite-2"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

@@ -375,7 +375,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (panelId === 'patients') loadPatientsTable();
         if (panelId === 'finances') loadFinancesPanel();
         if (panelId === 'analytics') loadAnalyticsPanel();
-        if (panelId === 'invitations') loadInvitations();
+        if (panelId === 'invitations') {
+            loadInvitations();
+            fillInviteProfessionalSelect();
+        }
         if (panelId === 'reviews') loadAdminReviews();
         if (panelId === 'availability') loadStaffAvailabilityPicker();
         if (panelId === 'hours-board') loadHoursBoard();
@@ -3079,6 +3082,61 @@ document.addEventListener('DOMContentLoaded', async () => {
         renovacao: 1900
     };
 
+    function inviteProfessionForService(svc) {
+        const key = String(svc || '');
+        if (key === 'psicologia' || key.indexOf('terapia_casal') === 0 || key === 'burnout' || key.indexOf('burnout_') === 0) {
+            return 'psicologo';
+        }
+        if (key.indexOf('nutricao') === 0) return 'nutricionista';
+        if (
+            key === 'clinica_geral'
+            || key === 'urgente'
+            || key === 'travel'
+            || key === 'renovacao'
+            || key === 'saude_mental'
+            || key === 'longevidade'
+            || key === 'infeccao_urinaria'
+        ) return 'medico';
+        return '';
+    }
+
+    async function ensureInviteStaffPeople() {
+        if (staffAvailPeople && staffAvailPeople.length) return staffAvailPeople;
+        try {
+            const res = await fetch('/api/admin/staff-availability', { credentials: 'same-origin' });
+            if (!res.ok) return staffAvailPeople || [];
+            const data = await res.json();
+            staffAvailPeople = data.people || [];
+            if (data.platform) hoursBoardPlatform = data.platform;
+            return staffAvailPeople;
+        } catch (err) {
+            console.error('Load invite professionals:', err);
+            return staffAvailPeople || [];
+        }
+    }
+
+    async function fillInviteProfessionalSelect() {
+        if (!inviteProfessional) return;
+        const current = inviteProfessional.value;
+        const want = inviteProfessionForService(inviteService && inviteService.value);
+        const people = await ensureInviteStaffPeople();
+        let list = (people || []).slice();
+        if (want) list = list.filter((p) => p.profession === want);
+        list.sort((a, b) => String(a.displayName || '').localeCompare(String(b.displayName || ''), 'pt'));
+        inviteProfessional.innerHTML = '<option value="">Choose a professional…</option>';
+        list.forEach((p) => {
+            const opt = document.createElement('option');
+            opt.value = p.username || p.displayName || '';
+            opt.textContent = p.professionLabel
+                ? `${p.displayName} · ${p.professionLabel}`
+                : (p.displayName || p.username || '');
+            inviteProfessional.appendChild(opt);
+        });
+        if (current && list.some((p) => (p.username || p.displayName) === current)) {
+            inviteProfessional.value = current;
+        }
+    }
+
     function parseCustomPriceCents() {
         if (!inviteCustomPrice) return null;
         const raw = String(inviteCustomPrice.value || '').trim();
@@ -3148,7 +3206,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
     }
-    if (inviteService) inviteService.addEventListener('change', refreshInvitePriceUI);
+    if (inviteService) inviteService.addEventListener('change', () => {
+        refreshInvitePriceUI();
+        fillInviteProfessionalSelect();
+    });
     if (inviteTravelOptions) inviteTravelOptions.addEventListener('change', refreshInvitePriceUI);
     if (inviteCustomPrice) inviteCustomPrice.addEventListener('input', () => {
         if (inviteComplimentary && inviteCustomPrice.value !== '' && Number(inviteCustomPrice.value) === 0) {
@@ -3419,6 +3480,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 inviteTime.value = '';
                 fillTimeDatalist('inviteTimeSlots', [], ['21:00']);
                 refreshInvitePriceUI();
+                fillInviteProfessionalSelect();
                 await loadInvitations();
                 loadUpcomingConsultations();
                 setTimeout(() => { inviteSubmitBtn.textContent = 'Create & send invitation'; inviteSubmitBtn.disabled = false; }, 2500);
