@@ -82,6 +82,7 @@
         const o = opts || {};
         const s = hay(o);
         if (/como-encontrar-um-psicologo/.test(s)) return 'psychFind';
+        if (/terapia-de-casal/.test(s)) return 'psych';
         if (/como-encontrar-um-nutricionista/.test(s)) return 'nutritionFind';
         if (/vacina-febre-amarela|consulta-do-viajante-urgente|vou-viajar-esta-semana/.test(s)) {
             return 'doctorNow';
@@ -117,7 +118,10 @@
         const withRef = (base) => (q ? `${base}${base.includes('?') ? '&' : '?'}${q}` : base);
 
         if (role === 'psychFind') return withRef('/triagem');
-        if (role === 'psych') return withRef('/marcar/psicologia');
+        if (role === 'psych') {
+            if (/terapia-de-casal/.test(hay(o))) return withRef('/marcar/terapia-casal');
+            return withRef('/marcar/psicologia');
+        }
         if (role === 'nutritionFind') return '/nutricao/avaliacao';
         if (role === 'nutrition') {
             if (kind === 'nutricao-programa' || kind === 'nutricao_programa') {

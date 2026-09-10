@@ -70,6 +70,24 @@
                     'If two psychologists are free at the same time, you see both and choose.'
                 ]
             },
+            terapia_casal: {
+                label: 'Couples therapy',
+                duration: '50–60 min',
+                bullets: [
+                    'Video session with both partners and a Lon Clinic psychologist.',
+                    'The calendar only shows psychologists who treat couples and relationships.',
+                    'One-off session — no continuity commitment.'
+                ]
+            },
+            terapia_casal_mensal: {
+                label: 'Couples therapy subscription',
+                duration: '50–60 min · 4 sessions/month',
+                bullets: [
+                    '4 couples sessions per month (€65/week — billed monthly at €260).',
+                    'Cancelable monthly subscription after the first month.',
+                    'Same 50–60 minute video format as the one-off session.'
+                ]
+            },
             burnout: {
                 label: 'Specialized Burnout Consultation',
                 duration: '60 min',
@@ -201,6 +219,24 @@
                     'Si dos psicólogos tienen la misma hora, ve ambos y elige.'
                 ]
             },
+            terapia_casal: {
+                label: 'Terapia de pareja',
+                duration: '50–60 min',
+                bullets: [
+                    'Sesión por videollamada con ambos y un psicólogo de LON Clinic.',
+                    'El calendario solo muestra psicólogos que tratan pareja y relaciones.',
+                    'Sesión suelta, sin compromiso de continuidad.'
+                ]
+            },
+            terapia_casal_mensal: {
+                label: 'Suscripción de terapia de pareja',
+                duration: '50–60 min · 4 sesiones/mes',
+                bullets: [
+                    '4 sesiones de pareja al mes (65 €/semana — cobrado mensualmente a 260 €).',
+                    'Suscripción mensual cancelable después del primer mes.',
+                    'El mismo formato de 50–60 min que la sesión suelta.'
+                ]
+            },
             burnout: {
                 label: 'Consulta especializada en burnout',
                 duration: '60 min',
@@ -283,7 +319,9 @@
         nutricao_programa: 'nutricao-programa',
         nutricao_completo: 'nutricao-completo',
         nutricao_completo_reforcado: 'nutricao-completo-reforcado',
-        psicologia: 'psicologia'
+        psicologia: 'psicologia',
+        terapia_casal: 'terapia-casal',
+        terapia_casal_mensal: 'terapia-casal-mensal'
     };
     var SLUG_TO_TYPE = {
         urgente: 'urgente',
@@ -307,7 +345,11 @@
         nutricao_completo: 'nutricao_completo',
         'nutricao-completo-reforcado': 'nutricao_completo_reforcado',
         nutricao_completo_reforcado: 'nutricao_completo_reforcado',
-        psicologia: 'psicologia'
+        psicologia: 'psicologia',
+        'terapia-casal': 'terapia_casal',
+        terapia_casal: 'terapia_casal',
+        'terapia-casal-mensal': 'terapia_casal_mensal',
+        terapia_casal_mensal: 'terapia_casal_mensal'
     };
 
     var BURNOUT_FAMILY = ['burnout', 'burnout_mensal', 'burnout_programa'];
@@ -387,6 +429,28 @@
             unit: 'mês 1',
             note: 'Depois 168 €/mês · total 1 162 €',
             featured: false
+        }
+    ];
+
+    var CASAL_FAMILY = ['terapia_casal', 'terapia_casal_mensal'];
+    var CASAL_PLAN_CARDS = [
+        {
+            tipo: 'terapia_casal',
+            badge: 'Avulsa',
+            title: 'Sessão de casal',
+            price: '€75',
+            unit: 'por sessão',
+            note: '50–60 min · os dois na videochamada',
+            featured: false
+        },
+        {
+            tipo: 'terapia_casal_mensal',
+            badge: 'Semanal',
+            title: 'Subscrição de casal',
+            price: '€65',
+            unit: '/semana',
+            note: 'Cobrado mensalmente · 260€/mês',
+            featured: true
         }
     ];
 
@@ -473,6 +537,31 @@
                 'Sessão por videochamada com um psicólogo da LON Clinic.',
                 'Escolha primeiro a área de apoio; o calendário mostra só quem trata essa especialidade.',
                 'Se dois psicólogos tiverem a mesma hora, vê ambos e escolhe.'
+            ]
+        },
+        terapia_casal: {
+            label: 'Terapia de casal',
+            price: '€75',
+            cents: 7500,
+            duration: '50–60 min',
+            serviceKey: 'terapia_casal',
+            bullets: [
+                'Sessão por videochamada com os dois e um psicólogo da LON Clinic.',
+                'O calendário mostra só psicólogos que tratam casal e relacionamentos.',
+                'Sessão avulsa, sem compromisso de continuidade.'
+            ]
+        },
+        terapia_casal_mensal: {
+            label: 'Subscrição de terapia de casal',
+            price: '€260',
+            priceNote: '/mês',
+            cents: 26000,
+            duration: '50–60 min · 4 sessões/mês',
+            serviceKey: 'terapia_casal_mensal',
+            bullets: [
+                '4 sessões de casal por mês (65€/semana — cobrado mensalmente).',
+                'Subscrição mensal cancelável após o primeiro mês.',
+                'O mesmo formato de 50–60 minutos da sessão avulsa.'
             ]
         },
         burnout: {
@@ -608,6 +697,7 @@
         'clinica_geral',
         'urgente',
         'psicologia',
+        'terapia_casal',
         'nutricao_programa',
         'burnout',
         'travel',
@@ -619,6 +709,7 @@
         clinica_geral: 'Clínica Geral / Check-up',
         urgente: 'Consulta Médica Urgente',
         psicologia: 'Saúde Mental / Psicologia',
+        terapia_casal: 'Terapia de casal',
         nutricao_programa: 'Nutrição',
         burnout: 'Burnout',
         travel: 'Medicina do Viajante',
@@ -628,6 +719,7 @@
 
     function dropdownValueFor(t) {
         if (BURNOUT_FAMILY.indexOf(t) >= 0) return 'burnout';
+        if (CASAL_FAMILY.indexOf(t) >= 0) return 'terapia_casal';
         if (NUTRICAO_FAMILY.indexOf(t) >= 0) return 'nutricao_programa';
         return t;
     }
@@ -777,6 +869,49 @@
         if (nutricaoTrust) nutricaoTrust.hidden = false;
     }
 
+    if (isCasalFamily(tipo)) {
+        var casalLang = getLang();
+        var casalCards = CASAL_PLAN_CARDS;
+        var casalKicker = 'Terapia de casal';
+        var casalHeading = 'Escolhe o formato';
+        if (casalLang === 'en') {
+            casalKicker = 'Couples therapy';
+            casalHeading = 'Choose the format';
+            casalCards = [
+                Object.assign({}, CASAL_PLAN_CARDS[0], {
+                    badge: 'One-off',
+                    title: 'Couples session',
+                    unit: 'per session',
+                    note: '50–60 min · both partners on the video call'
+                }),
+                Object.assign({}, CASAL_PLAN_CARDS[1], {
+                    badge: 'Weekly',
+                    title: 'Couples subscription',
+                    unit: '/week',
+                    note: 'Billed monthly · €260/month'
+                })
+            ];
+        } else if (casalLang === 'es') {
+            casalKicker = 'Terapia de pareja';
+            casalHeading = 'Elige el formato';
+            casalCards = [
+                Object.assign({}, CASAL_PLAN_CARDS[0], {
+                    badge: 'Suelta',
+                    title: 'Sesión de pareja',
+                    unit: 'por sesión',
+                    note: '50–60 min · los dos en videollamada'
+                }),
+                Object.assign({}, CASAL_PLAN_CARDS[1], {
+                    badge: 'Semanal',
+                    title: 'Suscripción de pareja',
+                    unit: '/semana',
+                    note: 'Cobrado mensualmente · 260 €/mes'
+                })
+            ];
+        }
+        renderPlanPicker(tipo, casalCards, casalKicker, casalHeading);
+    }
+
     var state = {
         scheduleData: null,
         calMonth: new Date().getMonth(),
@@ -799,6 +934,14 @@
 
     function isPsychology() {
         return tipo === 'psicologia';
+    }
+
+    function isCasalFamily(t) {
+        return CASAL_FAMILY.indexOf(t) >= 0;
+    }
+
+    function usesPsychStaff() {
+        return isPsychology() || isCasalFamily(tipo);
     }
 
     function usesStaffSlotCalendar() {
@@ -864,7 +1007,7 @@
     }
 
     function loadSchedule() {
-        if (isPsychology()) return Promise.resolve();
+        if (usesPsychStaff()) return Promise.resolve();
         return fetch('/api/schedule')
             .then(function (r) { return r.ok ? r.json() : null; })
             .then(function (d) { state.scheduleData = d; })
@@ -878,7 +1021,7 @@
             return Promise.resolve();
         }
         var url = '/api/bookable-days?service=' + encodeURIComponent(bookingService());
-        if (isPsychology() && state.specialty) {
+        if (usesPsychStaff() && state.specialty) {
             url += '&specialty=' + encodeURIComponent(state.specialty);
         }
         return fetch(url)
@@ -937,6 +1080,10 @@
     }
 
     function selectSpecialty(id) {
+        if (id === 'casal') {
+            window.location.href = getPrettyMarcarUrl('terapia_casal');
+            return Promise.resolve();
+        }
         state.specialty = id;
         state.date = null;
         state.dateLabel = '';
@@ -994,7 +1141,7 @@
         var list = Array.isArray(pros) ? pros : [];
         state.professionalId = null;
         state.professionalName = null;
-        if (!isPsychology()) {
+        if (!usesPsychStaff()) {
             if (list.length === 1) {
                 state.professionalId = list[0].id;
                 state.professionalName = list[0].name;
@@ -1262,7 +1409,7 @@
         var wrap = document.getElementById('marcarQuickSlots');
         if (isPsychology() && !state.specialty) return Promise.resolve();
         var url = '/api/next-slots?limit=6&withinHours=336&service=' + encodeURIComponent(bookingService());
-        if (isPsychology() && state.specialty) {
+        if (usesPsychStaff() && state.specialty) {
             url += '&specialty=' + encodeURIComponent(state.specialty);
         }
         return fetch(url)
@@ -1338,7 +1485,7 @@
         var dateStr = formatDateLocal(state.date);
         var url = '/api/bookable-slots?date=' + encodeURIComponent(dateStr) +
             '&service=' + encodeURIComponent(bookingService());
-        if (isPsychology()) {
+        if (usesPsychStaff()) {
             url += '&specialty=' + encodeURIComponent(state.specialty || '');
         }
 
@@ -1366,7 +1513,7 @@
                 paintSlotButtons(available, byTime);
             })
             .catch(function () {
-                if (isPsychology()) {
+                if (usesPsychStaff()) {
                     paintSlotButtons([], {});
                     return;
                 }
@@ -1412,7 +1559,7 @@
 
     btnNext.addEventListener('click', function () {
         if (!state.date || !state.time) return;
-        if (isPsychology() && !state.professionalId) return;
+        if (usesPsychStaff() && !state.professionalId) return;
 
         var lang = getLang();
         var i18nData = CONSULTATION_I18N[lang];
@@ -1507,7 +1654,7 @@
         if (!dateQ || !/^\d{4}-\d{2}-\d{2}$/.test(dateQ)) return;
         var bits = dateQ.split('-').map(Number);
         var dateObj = new Date(bits[0], bits[1] - 1, bits[2]);
-        if (isPsychology()) {
+        if (usesPsychStaff()) {
             if (!state.specialty || !isDateAvailable(dateObj)) return;
         } else if (!(isDateAvailable(dateObj) || formatDateLocal(dateObj) === dateQ)) {
             return;
@@ -1542,6 +1689,11 @@
 
     if (isPsychology()) {
         initPsychologyFlow();
+    } else if (isCasalFamily(tipo)) {
+        var casalSpec = document.getElementById('marcarSpecialtySection');
+        if (casalSpec) casalSpec.hidden = true;
+        state.specialty = 'relacionamentos';
+        loadBookableDays().then(bootMarcarCalendar);
     } else {
         loadSchedule().then(loadBookableDays).then(bootMarcarCalendar);
     }

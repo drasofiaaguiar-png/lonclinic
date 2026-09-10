@@ -39,7 +39,7 @@ Na Lon Clinic o recibo serve para o pedido de reembolso, se o seu plano o aceita
 
 ## Quanto custa uma consulta de psicologia na Lon Clinic?
 
-Na Lon Clinic, a consulta de psicologia online tem um **preço fixo de 60 €** na sessão avulsa, sem taxas escondidas, com psicólogos inscritos na [Ordem dos Psicólogos Portugueses](https://www.ordemdospsicologos.pt/pt/membros). O preço é o mesmo seja qual for a especialidade — [ansiedade](/ansiedade-no-trabalho), [burnout](/psicologia-burnout), [terapia de casal](/terapia-de-casal), questões familiares, entre outras — e seja qual for o psicólogo escolhido dentro da equipa.
+Na Lon Clinic, a consulta de psicologia online individual tem um **preço fixo de 60 €** na sessão avulsa, sem taxas escondidas, com psicólogos inscritos na [Ordem dos Psicólogos Portugueses](https://www.ordemdospsicologos.pt/pt/membros). O preço individual é o mesmo seja qual for a queixa — [ansiedade](/ansiedade-no-trabalho), [burnout](/psicologia-burnout), questões familiares, entre outras — e seja qual for o psicólogo escolhido dentro da equipa. A [terapia de casal](/terapia-de-casal) tem preço próprio: **75 €** avulsa ou **65 €/semana** cobrados mensalmente.
 
 Há duas formas de pagar:
 
@@ -70,7 +70,7 @@ O valor mais frequentemente reportado por clínicas privadas em Portugal é de 6
 
 ### O preço é o mesmo para todas as especialidades?
 
-Não necessariamente em todas as clínicas — consultas de casal ou familiar, por exemplo, costumam ter duração maior e por vezes preço mais elevado. Na Lon Clinic, o preço de 60 € (ou 54 €/semana em acompanhamento) é fixo independentemente da especialidade, incluindo [terapia de casal](/terapia-de-casal).
+Não. A consulta individual custa 60 € (ou 54 €/semana em acompanhamento). A [terapia de casal](/terapia-de-casal) tem preço próprio: 75 € avulsa ou 65 €/semana cobrados mensalmente (260 €/mês).
 
 ### Quanto custa a primeira consulta?
 

@@ -34,6 +34,15 @@ const PSYCHOLOGY_SPECIALTIES = [
         areas: ['Burnout']
     },
     {
+        id: 'casal',
+        label: {
+            pt: 'Terapia de casal',
+            en: 'Couples therapy',
+            es: 'Terapia de pareja'
+        },
+        areas: ['Relacionamentos']
+    },
+    {
         id: 'relacionamentos',
         label: {
             pt: 'Relacionamentos e família',
@@ -104,9 +113,19 @@ function normalizeServiceKey(service) {
         .replace(/[\s-]+/g, '_');
 }
 
+function isCoupleTherapyService(service) {
+    const key = normalizeServiceKey(service);
+    return key === 'terapia_casal' || key === 'terapia_casal_mensal';
+}
+
+function isPsychologyStaffService(service) {
+    const key = normalizeServiceKey(service);
+    return key === 'psicologia' || isCoupleTherapyService(key);
+}
+
 function serviceProfession(service) {
     const key = normalizeServiceKey(service);
-    if (key === 'psicologia' || key === 'burnout' || key.startsWith('burnout_')) return 'psicologo';
+    if (key === 'psicologia' || isCoupleTherapyService(key) || key === 'burnout' || key.startsWith('burnout_')) return 'psicologo';
     if (key.startsWith('nutricao')) return 'nutricionista';
     if (
         key === 'clinica_geral'
@@ -128,10 +147,11 @@ function usesStaffCalendars(service) {
 }
 
 function requiresProfessionalChoice(service) {
-    return serviceProfession(service) === 'psicologo' && normalizeServiceKey(service) === 'psicologia';
+    return isPsychologyStaffService(service);
 }
 
 function specialtyForService(service, specialty) {
+    if (isCoupleTherapyService(service)) return 'relacionamentos';
     return String(specialty || '').trim().toLowerCase();
 }
 
@@ -214,10 +234,115 @@ function profileMatchesSpecialty(profile, specialtyId) {
     return spec.areas.some((area) => have.has(area));
 }
 
+function openHours(row) {
+    if (!row || row.enabled === false) return null;
+    const start = String(row.start || '').slice(0, 5);
+    const end = String(row.end || '').slice(0, 5);
+    if (!/^\d{2}:\d{2}$/.test(start) || !/^\d{2}:\d{2}$/.test(end)) return null;
+    return { start, end };
+}
+
 function timeToMinutes(hhmm) {
     const m = /^(\d{1,2}):(\d{2})$/.exec(String(hhmm || '').trim());
     if (!m) return null;
     return Number(m[1]) * 60 + Number(m[2]);
+}
+
+/** Overlap of two { start, end } windows. Null if either is closed or they do not overlap. */
+function intersectHours(a, b) {
+    const left = openHours(a);
+    const right = openHours(b);
+    if (!left || !right) return null;
+    const from = Math.max(timeToMinutes(left.start), timeToMinutes(right.start));
+    const to = Math.min(timeToMinutes(left.end), timeToMinutes(right.end));
+    if (from == null || to == null || to <= from) return null;
+    return { start: minutesToTime(from), end: minutesToTime(to) };
+}
+
+function mergeHourRanges(ranges) {
+    const open = (Array.isArray(ranges) ? ranges : [])
+        .map((row) => openHours(row))
+        .filter(Boolean)
+        .sort((a, b) => timeToMinutes(a.start) - timeToMinutes(b.start));
+    const merged = [];
+    for (const row of open) {
+        const last = merged[merged.length - 1];
+        if (!last || timeToMinutes(row.start) > timeToMinutes(last.end)) {
+            merged.push({ start: row.start, end: row.end });
+        } else if (timeToMinutes(row.end) > timeToMinutes(last.end)) {
+            last.end = row.end;
+        }
+    }
+    return merged;
+}
+
+/** Staff hours that sit inside the clinic window, merged into contiguous ranges. */
+function unionOfferedHours(staffRows, platformRow) {
+    return mergeHourRanges(
+        (Array.isArray(staffRows) ? staffRows : []).map((row) => intersectHours(row, platformRow))
+    );
+}
+
+function platformHoursForDate(platform, dateIso) {
+    const blocked = new Set((platform && platform.blockedDates) || []);
+    if (!dateIso || blocked.has(dateIso)) return null;
+    const ov = ((platform && platform.dayOverrides) || []).find((item) => item && item.date === dateIso);
+    if (ov) return openHours(ov);
+    const key = weekdayKeyFromIso(dateIso);
+    const weekly = (platform && platform.weekly) || {};
+    return openHours(weekly[key]);
+}
+
+function crossDayHours(staffRow, platformRow) {
+    const staff = openHours(staffRow);
+    const platform = openHours(platformRow);
+    const bookable = intersectHours(staff, platform);
+    return {
+        staff,
+        platform,
+        bookable,
+        outside: !!staff && !bookable,
+        clipped: !!(bookable && staff && (bookable.start !== staff.start || bookable.end !== staff.end))
+    };
+}
+
+function hasCrossedBookableHours(weekly, days, platform) {
+    const staffWeekly = normalizeWeeklyHours(weekly);
+    const platformWeekly = normalizeWeeklyHours(platform && platform.weekly);
+    for (const day of WEEKDAY_KEYS) {
+        if (intersectHours(
+            staffWeekly[day] && staffWeekly[day].enabled ? staffWeekly[day] : null,
+            platformWeekly[day] && platformWeekly[day].enabled ? platformWeekly[day] : null
+        )) {
+            return true;
+        }
+    }
+    for (const item of Array.isArray(days) ? days : []) {
+        if (!item || item.enabled === false || !item.date) continue;
+        if (intersectHours({ start: item.start, end: item.end }, platformHoursForDate(platform, item.date))) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function hasHoursOutsidePlatform(weekly, days, platform) {
+    const staffWeekly = normalizeWeeklyHours(weekly);
+    const platformWeekly = normalizeWeeklyHours(platform && platform.weekly);
+    for (const day of WEEKDAY_KEYS) {
+        const staff = staffWeekly[day] && staffWeekly[day].enabled ? staffWeekly[day] : null;
+        if (!staff) continue;
+        if (!intersectHours(staff, platformWeekly[day] && platformWeekly[day].enabled ? platformWeekly[day] : null)) {
+            return true;
+        }
+    }
+    for (const item of Array.isArray(days) ? days : []) {
+        if (!item || item.enabled === false || !item.date) continue;
+        if (!intersectHours({ start: item.start, end: item.end }, platformHoursForDate(platform, item.date))) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function minutesToTime(mins) {
@@ -263,12 +388,21 @@ module.exports = {
     PROFESSION_CONSULT_HINT,
     serviceProfession,
     usesStaffCalendars,
+    isCoupleTherapyService,
+    isPsychologyStaffService,
     requiresProfessionalChoice,
     specialtyForService,
     emptyWeeklyHours,
     normalizeWeeklyHours,
     weekdayKeyFromIso,
     hoursForDate,
+    intersectHours,
+    mergeHourRanges,
+    unionOfferedHours,
+    platformHoursForDate,
+    crossDayHours,
+    hasCrossedBookableHours,
+    hasHoursOutsidePlatform,
     weeklyHasEnabled,
     hasBookableHours,
     psychologySpecialty,

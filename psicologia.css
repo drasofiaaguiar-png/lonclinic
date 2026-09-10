@@ -1441,9 +1441,10 @@ html.lenis body {
 
 @media (min-width: 800px) {
     .psi-plans-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: repeat(3, 1fr);
         align-items: stretch;
         gap: 22px;
+        max-width: 1100px;
     }
 }
 

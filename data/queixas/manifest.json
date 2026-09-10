@@ -160,12 +160,12 @@
       "navLabel": "Terapia de casal",
       "h1": "Terapia de casal online",
       "title": "Terapia de casal online | Lon Clinic",
-      "description": "Terapia de casal online em português. Dificuldades de comunicação, conflito ou distância emocional. Sessão 60 € ou 54 €/semana. Psicólogos inscritos na OPP.",
-      "answer": "A terapia de casal é um acompanhamento psicológico focado na relação — comunicação, conflito, distância emocional ou a decisão de ficar ou separar. Na Lon Clinic faz-se por videochamada, em português, com psicólogos inscritos na Ordem dos Psicólogos Portugueses. A sessão avulsa custa 60 €; o acompanhamento semanal custa 54 €/semana.",
+      "description": "Terapia de casal online em português. Dificuldades de comunicação, conflito ou distância emocional. Sessão 75 € ou 65 €/semana (cobrado mensalmente). Psicólogos inscritos na OPP.",
+      "answer": "A terapia de casal é um acompanhamento psicológico focado na relação — comunicação, conflito, distância emocional ou a decisão de ficar ou separar. Na Lon Clinic faz-se por videochamada, em português, com psicólogos inscritos na Ordem dos Psicólogos Portugueses. A sessão avulsa custa 75 €; o acompanhamento semanal custa 65 €/semana, cobrado mensalmente (260 €/mês).",
       "condition": "Terapia de casal",
       "schemaType": "service",
       "datePublished": "2026-08-20",
-      "dateModified": "2026-08-20",
+      "dateModified": "2026-09-10",
       "symptoms": [
         "Discussões que se repetem sem chegar a lado nenhum",
         "Silêncio, evitação ou a sensação de viver em paralelo",
@@ -192,11 +192,11 @@
         },
         {
           "q": "Temos de ir os dois a todas as sessões?",
-          "a": "O trabalho de casal faz sentido com os dois presentes na maior parte das sessões. Em alguns momentos o psicólogo pode propor uma sessão individual para esclarecer um ponto. A triagem ajuda a perceber o formato que se adequa."
+          "a": "O trabalho de casal faz sentido com os dois presentes na maior parte das sessões. Em alguns momentos o psicólogo pode propor uma sessão individual para esclarecer um ponto. No agendamento escolhes sessão avulsa ou a subscrição semanal."
         },
         {
           "q": "Quanto custa a terapia de casal na Lon Clinic?",
-          "a": "A sessão avulsa custa 60 €. O acompanhamento semanal custa 54 €/semana, com compromisso mínimo de 1 mês. O preço é o mesmo da consulta de psicologia online; não há taxa extra por ser casal."
+          "a": "A sessão avulsa custa 75 €. O acompanhamento semanal custa 65 €/semana, cobrado mensalmente (260 €/mês), com compromisso mínimo de 1 mês. O preço é específico da terapia de casal — não é o da consulta individual."
         },
         {
           "q": "E se só um quiser terapia?",

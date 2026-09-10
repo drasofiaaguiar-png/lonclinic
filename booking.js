@@ -79,7 +79,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         nutricao_programa: { label: 'Consulta inicial de nutrição metabólica', price: '115 €', cents: 11500 },
         nutricao_completo: { label: 'Programa Completo (nutrição + psicologia) — mês 1', price: '227 €', cents: 22700 },
         nutricao_completo_reforcado: { label: 'Programa Completo — entrada reforçada', price: '322 €', cents: 32200 },
-        psicologia: { label: 'Sessão de Psicologia', price: '60 €', cents: 6000 }
+        psicologia: { label: 'Sessão de Psicologia', price: '60 €', cents: 6000 },
+        terapia_casal: { label: 'Terapia de casal', price: '75 €', cents: 7500 },
+        terapia_casal_mensal: { label: 'Subscrição de terapia de casal', price: '260 €/mês', cents: 26000 }
     };
 
     // Travel tiered pricing: [count] → { cents, price, duration }
@@ -134,7 +136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     const TYPE_DROPDOWN_KEYS = [
-        'clinica_geral', 'urgente', 'psicologia', 'nutricao_programa',
+        'clinica_geral', 'urgente', 'psicologia', 'terapia_casal', 'nutricao_programa',
         'burnout', 'travel', 'longevidade', 'renovacao'
     ];
     const TYPE_TO_SLUG = {
@@ -151,12 +153,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         nutricao_programa: 'nutricao-programa',
         nutricao_completo: 'nutricao-completo',
         nutricao_completo_reforcado: 'nutricao-completo-reforcado',
-        psicologia: 'psicologia'
+        psicologia: 'psicologia',
+        terapia_casal: 'terapia-casal',
+        terapia_casal_mensal: 'terapia-casal-mensal'
     };
     const TYPE_DROPDOWN_FALLBACK = {
         clinica_geral: 'Clínica Geral / Check-up',
         urgente: 'Consulta Médica Urgente',
         psicologia: 'Saúde Mental / Psicologia',
+        terapia_casal: 'Terapia de casal',
         nutricao_programa: 'Nutrição',
         burnout: 'Burnout',
         travel: 'Medicina do Viajante',
@@ -175,6 +180,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function dropdownValueFor(serviceKey) {
         if (!serviceKey) return 'clinica_geral';
         if (serviceKey.indexOf('burnout') === 0) return 'burnout';
+        if (serviceKey.indexOf('terapia_casal') === 0) return 'terapia_casal';
         if (serviceKey.indexOf('nutricao_') === 0) return 'nutricao_programa';
         return serviceKey;
     }
@@ -496,6 +502,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         state.serviceLabel = services[resolved].label;
         state.servicePrice = services[resolved].price;
         state.servicePriceCents = services[resolved].cents;
+        if ((resolved === 'terapia_casal' || resolved === 'terapia_casal_mensal') && !state.specialty) {
+            state.specialty = 'relacionamentos';
+        }
         updateTravellerCountVisibility();
         updateCheckoutSummary();
     }
@@ -684,7 +693,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const service = state.service || 'clinica_geral';
         try {
             let url = '/api/bookable-days?service=' + encodeURIComponent(service);
-            if (service === 'psicologia' && state.specialty) {
+            if ((service === 'psicologia' || service === 'terapia_casal' || service === 'terapia_casal_mensal') && state.specialty) {
                 url += '&specialty=' + encodeURIComponent(state.specialty);
             }
             const res = await fetch(url);
@@ -924,7 +933,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const pros = byTime[slot] || [];
                     if (pros.length === 1) {
                         state.professionalId = pros[0].id;
-                    } else if (state.service !== 'psicologia') {
+                    } else if (state.service !== 'psicologia' && state.service !== 'terapia_casal' && state.service !== 'terapia_casal_mensal') {
                         state.professionalId = null;
                     }
                     timeslotGrid.querySelectorAll('.timeslot-btn').forEach(b => b.classList.remove('selected'));
@@ -1411,6 +1420,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function validateDiscountCode(code) {
         const noDiscount = {
             burnout_mensal: 1,
+            terapia_casal_mensal: 1,
             burnout_programa: 1,
             nutricao_programa: 1,
             nutricao_completo: 1,
@@ -1761,6 +1771,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 durationMinutes = 15;
             } else if (data.service === 'saude_mental') {
                 durationMinutes = 45;
+            } else if (data.service === 'psicologia' || data.service === 'terapia_casal' || data.service === 'terapia_casal_mensal') {
+                durationMinutes = 60;
             } else if (data.service === 'burnout' || data.service === 'burnout_mensal' || data.service === 'burnout_programa') {
                 durationMinutes = 60;
             }

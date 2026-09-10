@@ -145,6 +145,24 @@
                 servicePriceCents: 6000
             };
         }
+        if (service === 'terapia_casal') {
+            return {
+                service: 'terapia_casal',
+                tipo: 'terapia_casal',
+                serviceLabel: lang === 'en' ? 'Couples therapy' : lang === 'es' ? 'Terapia de pareja' : 'Terapia de casal',
+                servicePrice: formatEuro(75),
+                servicePriceCents: 7500
+            };
+        }
+        if (service === 'terapia_casal_mensal') {
+            return {
+                service: 'terapia_casal_mensal',
+                tipo: 'terapia_casal_mensal',
+                serviceLabel: lang === 'en' ? 'Couples therapy subscription' : lang === 'es' ? 'Suscripci\u00f3n de terapia de pareja' : 'Subscri\u00e7\u00e3o de terapia de casal',
+                servicePrice: '260 \u20AC/m\u00eas',
+                servicePriceCents: 26000
+            };
+        }
         if (service === 'saude_mental') {
             return {
                 service: 'saude_mental',
@@ -657,6 +675,12 @@
                 cta: lang === 'en' ? 'Take the CBI test' : 'Fazer o teste CBI',
                 bookMode: 'link'
             };
+        }
+        if (/\/marcar\/terapia-casal-mensal/.test(p)) {
+            return { service: 'terapia_casal_mensal', href: '/marcar/terapia-casal-mensal', cta: book };
+        }
+        if (/\/terapia-de-casal/.test(p) || /\/marcar\/terapia-casal/.test(p)) {
+            return { service: 'terapia_casal', href: '/marcar/terapia-casal', cta: book };
         }
         if (document.body && document.body.classList.contains('qx-body')) {
             return { service: 'saude_mental', href: '/triagem', cta: talkCta, bookMode: 'link' };

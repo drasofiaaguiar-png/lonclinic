@@ -9,7 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
         longevity: 'Longevity Assessment',
         travel: 'Travel Medicine Consultation',
         followup: 'Follow-Up Consultation',
-        entrevista: 'Entrevista de emprego'
+        entrevista: 'Entrevista de emprego',
+        psicologia: 'Psicologia',
+        terapia_casal: 'Terapia de casal',
+        terapia_casal_mensal: 'Terapia de casal (subscrição)'
     };
 
     // ─── DOM Elements ───

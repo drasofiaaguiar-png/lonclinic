@@ -359,9 +359,15 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
 
     const today = new Date().toISOString().slice(0, 10);
     const entries = [];
+    let contentLastmod = today;
+    try {
+        contentLastmod = guide.newestListedArticleDate() || today;
+    } catch (err) {
+        console.error('sitemap: newest article date', err.message);
+    }
 
     const staticPages = [
-        ['/', today, 'weekly', '1.0'],
+        ['/', contentLastmod, 'weekly', '1.0'],
         ['/travel-clinic', today, 'weekly', '1.0'],
         ['/tourist-clinic', today, 'weekly', '0.92'],
         ['/consulta', today, 'weekly', '0.9'],
@@ -380,8 +386,8 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
         ['/recrutamento/psicologia', today, 'monthly', '0.6'],
         ['/consultancy', today, 'monthly', '0.7'],
         ['/faq', today, 'monthly', '0.7'],
-        ['/blog', today, 'weekly', '0.8'],
-        ['/magazine', today, 'weekly', '0.85'],
+        ['/blog', contentLastmod, 'weekly', '0.8'],
+        ['/magazine', contentLastmod, 'weekly', '0.85'],
         ['/wellness', today, 'weekly', '0.75'],
         ['/equipa/rita-aguiar', today, 'monthly', '0.8'],
         ['/info.html', today, 'monthly', '0.6']
@@ -389,6 +395,16 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
 
     for (const [path, lastmod, freq, pri] of staticPages) {
         entries.push(urlEntry(`${o}${path}`, lastmod, freq, pri));
+    }
+
+    try {
+        for (const s of guide.magazineSections()) {
+            const lastmod = guide.newestListedArticleDate(s.theme) || contentLastmod;
+            entries.push(urlEntry(`${o}/magazine/${encodeURIComponent(s.slug)}`, lastmod, 'weekly', '0.78'));
+        }
+        entries.push(urlEntry(`${o}/magazine/indice`, contentLastmod, 'weekly', '0.72'));
+    } catch (err) {
+        console.error('sitemap: magazine sections', err.message);
     }
 
     for (const page of INDEXABLE_INFO_PAGES) {

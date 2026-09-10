@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=staff-avail-3">
+    <link rel="stylesheet" href="/dashboard.css?v=staff-avail-5">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -131,7 +131,7 @@
                     <div class="dash-section-header admin-schedule-toolbar">
                         <div>
                             <h2 class="dash-section-title">Upcoming consultations</h2>
-                            <p class="dash-section-subtitle">Clinic-scheduled invites and patient self-bookings</p>
+                            <p class="dash-section-subtitle">Today’s appointments stay on the board until midnight, plus later clinic invites and patient bookings</p>
                         </div>
                         <div class="admin-schedule-filters" role="tablist" aria-label="Filter by source">
                             <button type="button" class="admin-filter-chip is-active" data-schedule-filter="all">All <span id="schedCountAll">0</span></button>
@@ -378,6 +378,9 @@
                                 <option value="urgente">Urgente · €35</option>
                                 <option value="infeccao_urinaria">Infeção urinária · €35</option>
                                 <option value="travel">Consulta do Viajante</option>
+                                <option value="psicologia">Psicologia · €60</option>
+                                <option value="terapia_casal">Terapia de casal · €75</option>
+                                <option value="terapia_casal_mensal">Terapia de casal · €260/mês</option>
                                 <option value="saude_mental">Saúde mental · €60</option>
                                 <option value="burnout">Burnout especializada · €60</option>
                                 <option value="burnout_mensal">Anti-burnout · €216/mês</option>
@@ -510,7 +513,7 @@
             <div class="dash-section">
                 <div class="dash-section-header">
                     <h2 class="dash-section-title">Professional hours</h2>
-                    <p class="dash-section-subtitle">Set weekly hours per person. Patients only see slots for that profession’s consultations.</p>
+                    <p class="dash-section-subtitle">Set weekly hours per person. Patients book the combined hours of that profession, inside the clinic window below.</p>
                 </div>
                 <div class="admin-staff-avail-picker">
                     <label for="staffAvailSelect">Professional</label>
@@ -539,6 +542,7 @@
                             <input type="time" id="staffWeeklyEnd" class="admin-time-input" value="17:00">
                         </div>
                         <p class="admin-weekly-hours-hint" id="staffWeeklyHoursHint">Select the days first, then set the hours.</p>
+                        <p class="admin-weekly-platform-hint" id="staffWeeklyPlatformHint"></p>
                     </div>
                 </div>
                 <div class="dash-section">
@@ -582,7 +586,7 @@
 
             <details class="clinic-avail-more" id="adminClinicFallbackDetails">
             <summary>Clinic fallback hours</summary>
-            <p class="admin-override-hint">Used for a consultation type until at least one professional of that type has hours above.</p>
+            <p class="admin-override-hint">Clinic opening hours: the outer window. A consultation type (psychology, medicine, nutrition) is offered as the combined hours of everyone in that profession who is available, clipped to this window. Example: psychologist A 08:00–11:00 and B 11:00–12:00 → psychology 08:00–12:00. Also used as fallback until at least one professional of that type has hours.</p>
             <div class="dash-section">
                 <div class="dash-section-header">
                     <h2 class="dash-section-title">Working Hours</h2>
@@ -711,16 +715,22 @@
                     <div class="dash-section-header admin-schedule-toolbar">
                         <div>
                             <h2 class="dash-section-title">Hours board</h2>
-                            <p class="dash-section-subtitle">Weekly hours and date exceptions for each professional. Use this to check that calendars are complete before patients book.</p>
+                            <p class="dash-section-subtitle">Patients book each consultation type as the combined hours of that profession, inside clinic opening hours.</p>
                         </div>
                         <div class="admin-schedule-filters">
                             <input type="search" id="hoursBoardSearch" class="admin-input admin-patients-search" placeholder="Search name or profession…">
                             <button type="button" class="admin-filter-chip is-active" data-hours-filter="all">All</button>
                             <button type="button" class="admin-filter-chip" data-hours-filter="missing">Missing hours</button>
+                            <button type="button" class="admin-filter-chip" data-hours-filter="outside">Outside clinic</button>
                             <button type="button" class="btn btn-outline btn-sm" id="hoursBoardRefreshBtn">Refresh</button>
                         </div>
                     </div>
                     <p class="admin-hours-board-summary" id="hoursBoardSummary"></p>
+                    <p class="admin-hours-legend">
+                        <span><span class="admin-hours-offered">08:00–12:00</span> offered on that consultation (union of the team)</span>
+                        <span><span class="admin-hours-on">08:00–11:00</span> that person’s calendar</span>
+                        <span><span class="admin-hours-outside">22:00–23:00</span> outside clinic opening, not offered</span>
+                    </p>
                     <div class="admin-patients-table-wrap">
                         <table class="admin-patients-table admin-hours-board-table" id="hoursBoardTable">
                             <thead>
@@ -1178,7 +1188,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=staff-avail-3"></script>
+    <script src="/admin.js?v=staff-avail-5"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

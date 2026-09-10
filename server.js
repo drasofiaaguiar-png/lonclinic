@@ -5368,6 +5368,8 @@ const SERVICE_LABELS = {
     travel: 'Travel Medicine Consultation',
     followup: 'Follow-up Consultation',
     psicologia: 'Psicologia',
+    terapia_casal: 'Terapia de casal',
+    terapia_casal_mensal: 'Terapia de casal (subscrição)',
 };
 
 function serviceLabelFromCode(service) {
@@ -6419,7 +6421,7 @@ function getAppointmentStartUtcMs(booking, timeZone) {
 
 function appointmentDurationMinutes(booking) {
     const s = booking && booking.service;
-    if (s === 'psicologia') return 60;
+    if (s === 'psicologia' || s === 'terapia_casal' || s === 'terapia_casal_mensal') return 60;
     if (s === 'travel') {
         const c = booking.travellerCount || 1;
         if (c === 1) return 20;
@@ -6883,7 +6885,7 @@ async function listStaffBookablePeople(service, specialtyId) {
         const avail = availByUser.get(u) || { days: [], weekly: {} };
         const days = normalizeDayOverrides(avail.days);
         const weekly = staffBooking.normalizeWeeklyHours(avail.weekly);
-        if (!staffBooking.hasBookableHours(weekly, days)) continue;
+        if (!staffBooking.hasCrossedBookableHours(weekly, days, publicPlatformHours())) continue;
         let pro = Number.isInteger(Number(profile.professionalId))
             ? byId.get(Number(profile.professionalId))
             : null;
@@ -6903,8 +6905,24 @@ async function listStaffBookablePeople(service, specialtyId) {
     return out;
 }
 
+function publicPlatformHours() {
+    return {
+        weekly: staffBooking.normalizeWeeklyHours(scheduleStore.workingHours),
+        dayOverrides: normalizeDayOverrides(scheduleStore.dayOverrides),
+        blockedDates: Array.isArray(scheduleStore.blockedDates) ? scheduleStore.blockedDates.slice() : []
+    };
+}
+
+function platformOpenHoursForDate(dateIso) {
+    const day = getEffectiveDaySchedule(dateIso);
+    if (!day || !day.enabled) return null;
+    const start = day.source === 'override' ? day.start : startNoLaterThan7am(day.start);
+    return { start, end: day.end };
+}
+
 function hoursForStaffOnDate(person, dateIso) {
-    return staffBooking.hoursForDate(person && person.weekly, person && person.days, dateIso);
+    const staff = staffBooking.hoursForDate(person && person.weekly, person && person.days, dateIso);
+    return staffBooking.intersectHours(staff, platformOpenHoursForDate(dateIso));
 }
 
 function blockedTicksFromBookings(bookings, professionalId, excludeBookingRef, step) {
@@ -6943,8 +6961,14 @@ async function slotsForStaffPersonOnDate(person, dateIso, service, excludeHoldId
     const duration = appointmentDurationMinutes({ service });
     const grid = staffBooking.timesFromHours(hours.start, hours.end, step);
     if (!grid.length) return [];
+    const blockedTicks = new Set(
+        (scheduleStore.blockedTimeSlots || [])
+            .filter((item) => item && item.date === dateIso)
+            .map((item) => String(item.time || '').slice(0, 5))
+    );
     const bookings = await fetchBookingsForDateIso(dateIso);
     const blocked = blockedTicksFromBookings(bookings, person.id, excludeBookingRef, step);
+    blockedTicks.forEach((t) => blocked.add(t));
     const held = await ticksHeldForProfessional(dateIso, person.id, excludeHoldId, duration, step);
     held.forEach((t) => blocked.add(t));
     return grid.filter((start) => {
@@ -7080,6 +7104,7 @@ async function getNextBookableSlots(limit, maxDays, withinHours, opts) {
         ? await listStaffBookablePeople(service, specialty)
         : [];
     const staffMode = staffPeople.length > 0;
+    const mustStaff = staffBooking.requiresProfessionalChoice(service);
     const pool = [];
     for (let i = 0; i < days; i++) {
         const dateIso = addDaysIso(now.dateIso, i);
@@ -7089,6 +7114,8 @@ async function getNextBookableSlots(limit, maxDays, withinHours, opts) {
             const packed = await getStaffBookableSlotsForDate(dateIso, { service, specialty });
             available = packed.available || [];
             professionalsByTime = packed.professionalsByTime || {};
+        } else if (mustStaff) {
+            continue;
         } else {
             const daySchedule = getEffectiveDaySchedule(dateIso);
             if (!daySchedule || !daySchedule.enabled) continue;
@@ -8251,7 +8278,9 @@ const MARCAR_TIPO_TO_SLUG = {
     nutricao_programa: 'nutricao-programa',
     nutricao_completo: 'nutricao-completo',
     nutricao_completo_reforcado: 'nutricao-completo-reforcado',
-    psicologia: 'psicologia'
+    psicologia: 'psicologia',
+    terapia_casal: 'terapia-casal',
+    terapia_casal_mensal: 'terapia-casal-mensal'
 };
 
 function redirectToMarcarHtml(req, res) {
@@ -11322,7 +11351,9 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
 
         const isSubscription = isStripeSubscriptionService(service);
         const productDescription = isSubscription
-            ? `${description} · Subscrição mensal · 4 consultas (54€/sessão, −10%) · cancelável`
+            ? (service === 'terapia_casal_mensal'
+                ? `${description} · Subscrição mensal · 4 sessões (65€/semana) · cobrado mensalmente · cancelável`
+                : `${description} · Subscrição mensal · 4 consultas (54€/sessão, −10%) · cancelável`)
             : service === 'burnout_programa'
               ? `${description} · Programa 8 sessões com relatório final e CBI antes/depois`
               : service === 'nutricao_programa'
@@ -14825,6 +14856,7 @@ function isBookingUpcoming(b, now = new Date()) {
     if (b.cancelled) return false;
     const key = bookingSortKey(b);
     const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(key);
+    const todayIso = lisbonNowParts().dateIso;
     if (!m) {
         if (String(b.service || '') === 'entrevista') return true;
         try {
@@ -14835,6 +14867,8 @@ function isBookingUpcoming(b, now = new Date()) {
             return false;
         }
     }
+    const dateIso = `${m[1]}-${m[2]}-${m[3]}`;
+    if (dateIso === todayIso) return true;
     const when = new Date(
         Number(m[1]),
         Number(m[2]) - 1,
@@ -15884,6 +15918,7 @@ app.get('/api/admin/staff-availability', requireAdmin, async (req, res) => {
         const proByUser = new Map(
             (professionals || []).map((p) => [normalizeProfessionalUsername(p.username), p])
         );
+        const platform = publicPlatformHours();
         const list = [];
         for (const person of people || []) {
             const u = String(person.username || '').trim().toLowerCase();
@@ -15902,13 +15937,15 @@ app.get('/api/admin/staff-availability', requireAdmin, async (req, res) => {
                 weeklyDays: staffBooking.WEEKDAY_KEYS.filter((day) => weekly[day] && weekly[day].enabled).length,
                 extraDays: days.filter((item) => item.enabled !== false).length,
                 hasHours: staffBooking.hasBookableHours(weekly, days),
+                hasOverlap: staffBooking.hasCrossedBookableHours(weekly, days, platform),
+                hasOutsideHours: staffBooking.hasHoursOutsidePlatform(weekly, days, platform),
                 hasLogin: !!(proByUser.get(u) || person.hasLogin),
                 weekly,
                 dayOverrides: days
             });
         }
         list.sort((a, b) => String(a.displayName).localeCompare(String(b.displayName), 'pt'));
-        res.json({ people: list, hints: staffBooking.PROFESSION_CONSULT_HINT });
+        res.json({ people: list, hints: staffBooking.PROFESSION_CONSULT_HINT, platform });
     } catch (err) {
         console.error('GET /api/admin/staff-availability:', err.message);
         res.status(500).json({ error: 'Failed to load staff availability' });
@@ -15980,7 +16017,11 @@ async function loadNextSlotsBody(limit, withinHours, opts) {
             hasSlotsWithinHorizon: slots.length > 0,
             timezone: scheduleStore.timezone || 'Europe/Lisbon',
             service,
-            price: service === 'psicologia' ? '€60' : '€39',
+            price: service === 'terapia_casal'
+                ? '€75'
+                : service === 'terapia_casal_mensal'
+                    ? '€260/mês'
+                    : service === 'psicologia' ? '€60' : '€39',
             holdMinutes: Math.round(SLOT_HOLD_MS / 60000)
         };
         nextSlotsCache.set(cacheKey, { ts: Date.now(), body });
@@ -16055,6 +16096,16 @@ app.get('/api/bookable-slots', async (req, res) => {
             return res.json({
                 available: packed.available,
                 professionalsByTime: packed.professionalsByTime,
+                date: dateIso,
+                service,
+                specialty,
+                mode: 'staff'
+            });
+        }
+        if (staffBooking.requiresProfessionalChoice(service)) {
+            return res.json({
+                available: [],
+                professionalsByTime: {},
                 date: dateIso,
                 service,
                 specialty,
@@ -16461,7 +16512,9 @@ const INVITATION_SERVICE_LABEL = {
     nutricao_completo_reforcado: { pt: 'Programa Completo — entrada reforçada', en: 'Complete Program — higher first payment', es: 'Programa completo — entrada reforzada' },
     longevidade: { pt: 'Consulta de Longevidade', en: 'Longevity Consultation', es: 'Consulta de Longevidad' },
     renovacao: { pt: 'Renovação de Receita', en: 'Prescription Renewal', es: 'Renovación de Receta' },
-    psicologia: { pt: 'Sessão de Psicologia', en: 'Psychology Session', es: 'Sesión de psicología' }
+    psicologia: { pt: 'Sessão de Psicologia', en: 'Psychology Session', es: 'Sesión de psicología' },
+    terapia_casal: { pt: 'Terapia de casal', en: 'Couples therapy', es: 'Terapia de pareja' },
+    terapia_casal_mensal: { pt: 'Subscrição de terapia de casal', en: 'Couples therapy subscription', es: 'Suscripción de terapia de pareja' }
 };
 function invitationServiceLabel(service, locale) {
     const k = String(service || '').toLowerCase();

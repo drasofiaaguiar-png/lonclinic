@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let staffAvailUsername = '';
     let staffAvailData = null;
     let staffAvailPeople = [];
+    let hoursBoardPlatform = { weekly: {}, dayOverrides: [], blockedDates: [] };
     let staffAvailCalYear = null;
     let staffAvailCalMonth = null;
     const staffAvailSelectedDates = new Set();
@@ -288,7 +289,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         analytics: { title: 'Analytics', subtitle: 'Patient booking vs job application funnels' },
         invitations: { title: 'Invitations', subtitle: 'Send and manage booking invites' },
         availability: { title: 'Availability', subtitle: 'Hours per professional, used on each consultation type' },
-        'hours-board': { title: 'Hours board', subtitle: 'Check weekly hours for every professional' },
+        'hours-board': { title: 'Hours board', subtitle: 'Combined hours per profession, inside clinic opening hours' },
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' },
         professionals: { title: 'Professionals', subtitle: 'Directory of clinic professionals' },
         psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' },
@@ -319,6 +320,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         longevidade: 'Longevidade',
         renovacao: 'Renovação receita',
         psicologia: 'Psicologia',
+        terapia_casal: 'Terapia de casal',
+        terapia_casal_mensal: 'Terapia de casal (subscrição)',
         longevity: 'Longevity Assessment',
         'longevity-plus': 'Longevity Plus',
         followup: 'Follow-up',
@@ -2143,6 +2146,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const staffWeeklyEnd = document.getElementById('staffWeeklyEnd');
     const staffWeeklyHoursRow = document.getElementById('staffWeeklyHoursRow');
     const staffWeeklyHoursHint = document.getElementById('staffWeeklyHoursHint');
+    const staffWeeklyPlatformHint = document.getElementById('staffWeeklyPlatformHint');
     const staffAvailCalPrev = document.getElementById('staffAvailCalPrev');
     const staffAvailCalNext = document.getElementById('staffAvailCalNext');
     const staffAvailCalMonthLabel = document.getElementById('staffAvailCalMonthLabel');
@@ -2154,6 +2158,128 @@ document.addEventListener('DOMContentLoaded', async () => {
     const staffAvailBulkApply = document.getElementById('staffAvailBulkApply');
     const staffAvailBulkRemove = document.getElementById('staffAvailBulkRemove');
     const staffAvailBulkClear = document.getElementById('staffAvailBulkClear');
+
+    function staffTimeToMinutes(hhmm) {
+        const m = /^(\d{1,2}):(\d{2})$/.exec(String(hhmm || '').trim());
+        if (!m) return null;
+        return Number(m[1]) * 60 + Number(m[2]);
+    }
+
+    function staffMinutesToTime(mins) {
+        const h = Math.floor(mins / 60);
+        const m = mins % 60;
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    }
+
+    function intersectHoursClient(a, b) {
+        const left = a && a.enabled !== false ? a : null;
+        const right = b && b.enabled !== false ? b : null;
+        if (!left || !right) return null;
+        const fromA = staffTimeToMinutes(left.start);
+        const fromB = staffTimeToMinutes(right.start);
+        const toA = staffTimeToMinutes(left.end);
+        const toB = staffTimeToMinutes(right.end);
+        if (fromA == null || fromB == null || toA == null || toB == null) return null;
+        const from = Math.max(fromA, fromB);
+        const to = Math.min(toA, toB);
+        if (to <= from) return null;
+        return { start: staffMinutesToTime(from), end: staffMinutesToTime(to) };
+    }
+
+    function mergeHourRangesClient(ranges) {
+        const open = (ranges || []).filter((row) => row && row.start && row.end)
+            .slice()
+            .sort((a, b) => staffTimeToMinutes(a.start) - staffTimeToMinutes(b.start));
+        const merged = [];
+        open.forEach((row) => {
+            const last = merged[merged.length - 1];
+            const start = staffTimeToMinutes(row.start);
+            const end = staffTimeToMinutes(row.end);
+            if (start == null || end == null || end <= start) return;
+            if (!last || start > staffTimeToMinutes(last.end)) {
+                merged.push({ start: row.start, end: row.end });
+            } else if (end > staffTimeToMinutes(last.end)) {
+                last.end = row.end;
+            }
+        });
+        return merged;
+    }
+
+    function formatMergedRanges(ranges) {
+        if (!ranges || !ranges.length) return '';
+        return ranges.map((row) => formatHourRange(row.start, row.end)).join(' · ');
+    }
+
+    function currentPlatformSource() {
+        if (hoursBoardPlatform && hoursBoardPlatform.weekly && hoursBoardPlatform.weekly.monday) {
+            return hoursBoardPlatform;
+        }
+        return scheduleData || hoursBoardPlatform || {};
+    }
+
+    function platformWeeklyRow(day, source) {
+        const src = source || currentPlatformSource();
+        const weekly = src.weekly || src.workingHours || {};
+        return weekly[day] || null;
+    }
+
+    function formatHourRange(start, end) {
+        return `${String(start || '').slice(0, 5)}–${String(end || '').slice(0, 5)}`;
+    }
+
+    function compactWeeklyLabel(weekly) {
+        if (!weekly) return '';
+        const groups = [];
+        STAFF_WEEKDAYS.forEach(([day, short]) => {
+            const row = weekly[day];
+            const key = !row || !row.enabled ? 'off' : `${row.start}-${row.end}`;
+            const last = groups[groups.length - 1];
+            if (last && last.key === key) last.days.push(short);
+            else groups.push({ key, days: [short], row });
+        });
+        return groups.map((g) => {
+            const span = g.days.length === 1 ? g.days[0] : `${g.days[0]}–${g.days[g.days.length - 1]}`;
+            if (g.key === 'off') return `${span} closed`;
+            return `${span} ${formatHourRange(g.row.start, g.row.end)}`;
+        }).join(' · ');
+    }
+
+    function updateStaffWeeklyPlatformHint() {
+        if (!staffWeeklyPlatformHint) return;
+        const weekly = (staffAvailData && staffAvailData.weekly) || {};
+        const enabledDays = STAFF_WEEKDAYS.filter(([day]) => weekly[day] && weekly[day].enabled);
+        const platformSrc = currentPlatformSource();
+        const platformWeekly = platformSrc.weekly || platformSrc.workingHours;
+        if (!enabledDays.length) {
+            const windowLabel = compactWeeklyLabel(platformWeekly);
+            staffWeeklyPlatformHint.textContent = windowLabel
+                ? `Clinic window: ${windowLabel}. These hours join everyone else in this profession — patients book the combined coverage.`
+                : 'These hours join everyone else in this profession. Patients book the combined coverage, inside clinic opening hours.';
+            return;
+        }
+        const offered = [];
+        const outside = [];
+        enabledDays.forEach(([day, , longLabel]) => {
+            const staff = weekly[day];
+            const plat = platformWeeklyRow(day, platformSrc);
+            const book = intersectHoursClient(staff, plat);
+            if (!book) {
+                const platLabel = plat && plat.enabled ? formatHourRange(plat.start, plat.end) : 'closed';
+                outside.push(`${longLabel} (${platLabel})`);
+                return;
+            }
+            offered.push(`${longLabel} ${formatHourRange(book.start, book.end)}`);
+        });
+        if (outside.length && !offered.length) {
+            staffWeeklyPlatformHint.textContent = `These hours sit outside the clinic window (${outside.join(', ')}), so they do not add to this profession’s booking page.`;
+            return;
+        }
+        if (outside.length) {
+            staffWeeklyPlatformHint.textContent = `Adds ${offered.join('; ')} to this profession’s combined hours. Not added: ${outside.join(', ')}.`;
+            return;
+        }
+        staffWeeklyPlatformHint.textContent = `Adds ${offered.join('; ')} to this profession’s combined hours. Patients see the union of the whole team.`;
+    }
 
     function emptyStaffWeekly() {
         const out = {};
@@ -2241,9 +2367,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         staffWeeklyDays.innerHTML = '';
         STAFF_WEEKDAYS.forEach(([day, shortLabel, longLabel]) => {
             const dayData = weekly[day] || { enabled: false, start: '09:00', end: '17:00' };
+            const plat = platformWeeklyRow(day);
+            const outside = !!(dayData.enabled && !intersectHoursClient(dayData, plat));
             const btn = document.createElement('button');
             btn.type = 'button';
-            btn.className = 'admin-weekly-day' + (dayData.enabled ? ' is-selected' : '');
+            btn.className = 'admin-weekly-day'
+                + (dayData.enabled ? ' is-selected' : '')
+                + (outside ? ' is-outside' : '');
             btn.textContent = shortLabel;
             btn.setAttribute('aria-pressed', dayData.enabled ? 'true' : 'false');
             btn.setAttribute('aria-label', longLabel);
@@ -2273,6 +2403,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 : 'Select the days first, then set the hours.';
         }
         if (selectedCount) syncStaffWeeklyHourInputs();
+        updateStaffWeeklyPlatformHint();
     }
 
     function ensureStaffAvailCalInitialized() {
@@ -2409,7 +2540,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
         staffAvailHint.hidden = false;
-        staffAvailHint.textContent = `${person.professionLabel || person.profession}: ${person.consultHint || 'hours feed that profession’s booking pages.'}`;
+        staffAvailHint.textContent = `${person.professionLabel || person.profession}: ${person.consultHint || 'hours feed that profession’s booking pages.'} Patients book the combined hours of everyone in this profession.`;
     }
 
     function fillStaffAvailSelect() {
@@ -2438,6 +2569,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!res.ok) throw new Error('Failed to load professionals');
             const data = await res.json();
             staffAvailPeople = data.people || [];
+            if (data.platform) hoursBoardPlatform = data.platform;
             fillStaffAvailSelect();
             if (staffAvailUsername) {
                 if (staffAvailSelect) staffAvailSelect.value = staffAvailUsername;
@@ -2458,11 +2590,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     const hoursBoardBody = document.getElementById('hoursBoardBody');
     const hoursBoardSummary = document.getElementById('hoursBoardSummary');
 
-    function formatHoursCell(row) {
-        if (!row || !row.enabled) return '<span class="admin-hours-off">—</span>';
-        const start = String(row.start || '').slice(0, 5);
-        const end = String(row.end || '').slice(0, 5);
-        return `<span class="admin-hours-on">${escapeHtml(start)}–${escapeHtml(end)}</span>`;
+    function platformHoursForDateClient(dateStr) {
+        const plat = hoursBoardPlatform || {};
+        if ((plat.blockedDates || []).includes(dateStr)) return null;
+        const ov = (plat.dayOverrides || []).find((item) => item && item.date === dateStr);
+        if (ov) return ov.enabled === false ? null : ov;
+        return platformWeeklyRow(staffWeekdayFromDate(dateStr), plat);
+    }
+
+    function formatCrossedHoursCell(staffRow, platformRow) {
+        const staff = staffRow && staffRow.enabled ? staffRow : null;
+        const plat = platformRow && platformRow.enabled ? platformRow : null;
+        if (!staff) {
+            return {
+                html: '<span class="admin-hours-off">—</span>',
+                outside: false
+            };
+        }
+        const bookable = intersectHoursClient(staff, plat);
+        if (!bookable) {
+            return {
+                html: `<div class="admin-hours-cell"><span class="admin-hours-outside">${escapeHtml(formatHourRange(staff.start, staff.end))}</span><span class="admin-hours-clip">outside clinic</span></div>`,
+                outside: true
+            };
+        }
+        const clipped = bookable.start !== staff.start || bookable.end !== staff.end;
+        const clip = clipped
+            ? `<span class="admin-hours-clip">adds ${escapeHtml(formatHourRange(bookable.start, bookable.end))}</span>`
+            : '';
+        return {
+            html: `<div class="admin-hours-cell"><span class="admin-hours-on">${escapeHtml(formatHourRange(staff.start, staff.end))}</span>${clip}</div>`,
+            outside: false
+        };
     }
 
     function formatHoursException(entry) {
@@ -2471,13 +2630,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             ? String(entry.date || '')
             : date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
         if (entry.enabled === false) return `${when}: closed`;
-        return `${when}: ${String(entry.start || '').slice(0, 5)}–${String(entry.end || '').slice(0, 5)}`;
+        const staffRange = formatHourRange(entry.start, entry.end);
+        const plat = platformHoursForDateClient(entry.date);
+        const bookable = intersectHoursClient(
+            { enabled: true, start: entry.start, end: entry.end },
+            plat
+        );
+        if (bookable) {
+            const bookRange = formatHourRange(bookable.start, bookable.end);
+            if (bookRange !== staffRange) return `${when}: ${bookRange} (staff ${staffRange})`;
+            return `${when}: ${bookRange}`;
+        }
+        return `${when}: ${staffRange} (outside clinic)`;
     }
 
     function hoursBoardVisiblePeople() {
         const q = String((hoursBoardSearch && hoursBoardSearch.value) || '').trim().toLowerCase();
         return (hoursBoardPeople || []).filter((person) => {
             if (hoursBoardFilter === 'missing' && person.hasHours) return false;
+            if (hoursBoardFilter === 'outside' && !person.hasOutsideHours) return false;
             if (!q) return true;
             const hay = [
                 person.displayName,
@@ -2489,18 +2660,75 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    function hoursBoardPlatformRowHtml() {
+        const weekly = (hoursBoardPlatform && hoursBoardPlatform.weekly) || {};
+        return `<tr class="admin-hours-platform-row">
+            <td><strong>Clinic open</strong></td>
+            <td>Outer window</td>
+            ${STAFF_WEEKDAYS.map(([day]) => {
+                const row = weekly[day];
+                if (!row || !row.enabled) return '<td><span class="admin-hours-off">Closed</span></td>';
+                return `<td><span class="admin-hours-platform">${escapeHtml(formatHourRange(row.start, row.end))}</span></td>`;
+            }).join('')}
+            <td class="admin-hours-extra"><span class="admin-hours-off">Clinic exceptions apply</span></td>
+            <td></td>
+        </tr>`;
+    }
+
+    const HOURS_BOARD_PROFESSIONS = [
+        ['psicologo', 'Psicologia'],
+        ['medico', 'Medicina'],
+        ['nutricionista', 'Nutrição']
+    ];
+
+    function hoursBoardProfessionRowsHtml() {
+        const platformWeekly = (hoursBoardPlatform && hoursBoardPlatform.weekly) || {};
+        return HOURS_BOARD_PROFESSIONS.map(([profession, label]) => {
+            const team = (hoursBoardPeople || []).filter((p) => p.profession === profession && p.hasHours);
+            const count = team.length;
+            const countLabel = count
+                ? `${count} professional${count === 1 ? '' : 's'}`
+                : 'no hours set';
+            return `<tr class="admin-hours-profession-row">
+                <td><strong>${escapeHtml(label)}</strong></td>
+                <td>${escapeHtml(countLabel)}</td>
+                ${STAFF_WEEKDAYS.map(([day]) => {
+                    const ranges = mergeHourRangesClient(
+                        team.map((person) => intersectHoursClient(
+                            (person.weekly || {})[day],
+                            platformWeekly[day]
+                        )).filter(Boolean)
+                    );
+                    if (!ranges.length) {
+                        return '<td><span class="admin-hours-off">—</span></td>';
+                    }
+                    return `<td><span class="admin-hours-offered">${escapeHtml(formatMergedRanges(ranges))}</span></td>`;
+                }).join('')}
+                <td class="admin-hours-extra"><span class="admin-hours-off">Offered to patients</span></td>
+                <td></td>
+            </tr>`;
+        }).join('');
+    }
+
     function renderHoursBoard() {
         if (!hoursBoardBody) return;
         const missing = (hoursBoardPeople || []).filter((p) => !p.hasHours).length;
+        const outside = (hoursBoardPeople || []).filter((p) => p.hasOutsideHours).length;
+        const platformLabel = compactWeeklyLabel((hoursBoardPlatform && hoursBoardPlatform.weekly) || {});
         if (hoursBoardSummary) {
             const n = (hoursBoardPeople || []).length;
-            hoursBoardSummary.textContent = n
-                ? `${n} professional${n === 1 ? '' : 's'} · ${missing} without hours`
-                : '';
+            const bits = [];
+            if (platformLabel) bits.push(`Clinic: ${platformLabel}`);
+            if (n) bits.push(`${n} professional${n === 1 ? '' : 's'}`);
+            if (n) bits.push(`${missing} without hours`);
+            if (n) bits.push(`${outside} outside clinic`);
+            hoursBoardSummary.textContent = bits.join(' · ');
         }
         const rows = hoursBoardVisiblePeople();
+        const headRows = hoursBoardPlatformRowHtml() + hoursBoardProfessionRowsHtml();
         if (!rows.length) {
-            hoursBoardBody.innerHTML = '<tr><td colspan="11" class="admin-empty-list">No professionals match this view.</td></tr>';
+            hoursBoardBody.innerHTML = headRows
+                + '<tr><td colspan="11" class="admin-empty-list">No professionals match this view.</td></tr>';
             return;
         }
         const todayKey = formatOverrideDateKey(
@@ -2508,7 +2736,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             startOfToday().getMonth(),
             startOfToday().getDate()
         );
-        hoursBoardBody.innerHTML = rows.map((person) => {
+        const platformWeekly = (hoursBoardPlatform && hoursBoardPlatform.weekly) || {};
+        hoursBoardBody.innerHTML = headRows + rows.map((person) => {
             const weekly = person.weekly || {};
             const extras = (person.dayOverrides || [])
                 .filter((item) => item && item.date && item.date >= todayKey)
@@ -2521,17 +2750,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             const flags = [];
             if (!person.hasHours) flags.push('No hours');
             if (!person.profession) flags.push('No profession');
+            if (person.hasOutsideHours) flags.push('Outside clinic');
+            else if (person.hasHours && person.hasOverlap === false) flags.push('No overlap');
             const flagHtml = flags.length
                 ? `<div class="admin-hours-flags">${flags.map((f) => `<span>${escapeHtml(f)}</span>`).join('')}</div>`
                 : '';
-            const rowClass = person.hasHours ? '' : ' class="is-missing"';
+            const rowClass = !person.hasHours
+                ? ' class="is-missing"'
+                : person.hasOutsideHours
+                    ? ' class="is-outside"'
+                    : '';
             return `<tr${rowClass}>
                 <td>
                     <strong>${escapeHtml(person.displayName || person.username)}</strong>
                     ${flagHtml}
                 </td>
                 <td>${escapeHtml(role)}</td>
-                ${STAFF_WEEKDAYS.map(([day]) => `<td>${formatHoursCell(weekly[day])}</td>`).join('')}
+                ${STAFF_WEEKDAYS.map(([day]) => {
+                    const cell = formatCrossedHoursCell(weekly[day], platformWeekly[day]);
+                    return `<td${cell.outside ? ' class="is-hours-outside"' : ''}>${cell.html}</td>`;
+                }).join('')}
                 <td class="admin-hours-extra">${extraHtml}</td>
                 <td><button type="button" class="btn btn-outline btn-sm" data-hours-edit="${escapeHtml(person.username)}">Edit</button></td>
             </tr>`;
@@ -2551,8 +2789,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const res = await fetch('/api/admin/staff-availability', { credentials: 'same-origin' });
             if (!res.ok) throw new Error('Failed to load');
             const data = await res.json();
+            hoursBoardPlatform = data.platform || { weekly: {}, dayOverrides: [], blockedDates: [] };
             hoursBoardPeople = (data.people || []).slice().sort((a, b) => {
                 if (!!a.hasHours !== !!b.hasHours) return a.hasHours ? 1 : -1;
+                if (!!a.hasOutsideHours !== !!b.hasOutsideHours) return a.hasOutsideHours ? -1 : 1;
                 return String(a.displayName || '').localeCompare(String(b.displayName || ''), 'pt');
             });
             renderHoursBoard();
@@ -2712,6 +2952,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!staffAvailData) return;
         applyStaffWeeklyHoursToEnabledDays();
         markStaffAvailDirty();
+        renderStaffWeeklyGrid();
         renderStaffAvailCalendar();
     }
     if (staffWeeklyStart) staffWeeklyStart.addEventListener('change', onStaffWeeklyHoursChange);
@@ -2818,6 +3059,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         urgente: 3500,
         infeccao_urinaria: 3500,
         saude_mental: 6000,
+        psicologia: 6000,
+        terapia_casal: 7500,
+        terapia_casal_mensal: 26000,
         burnout: 6000,
         burnout_mensal: 21600,
         burnout_programa: 49000,

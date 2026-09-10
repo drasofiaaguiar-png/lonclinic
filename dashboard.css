@@ -2407,6 +2407,20 @@ body.dash-portal .dash-stat-card {
     color: #fff;
 }
 
+.admin-weekly-day.is-selected.is-outside {
+    background: #9a5b1f;
+    border-color: #9a5b1f;
+    color: #fff;
+}
+
+.admin-weekly-platform-hint {
+    margin: 8px 0 0;
+    flex: 1 1 100%;
+    font-size: 0.82rem;
+    color: #4d5f52;
+    line-height: 1.4;
+}
+
 .admin-weekly-hours-row {
     display: flex;
     flex-wrap: wrap;
@@ -4116,8 +4130,18 @@ body.admin-logged-in .dash-content.admin-shell {
     color: #5a6b60;
 }
 
+.admin-hours-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin: 0 0 12px;
+    font-size: 0.78rem;
+    color: #5a6b60;
+}
+
 .admin-hours-board-table td {
     white-space: nowrap;
+    vertical-align: top;
 }
 
 .admin-hours-board-table td.admin-hours-extra {
@@ -4128,14 +4152,60 @@ body.admin-logged-in .dash-content.admin-shell {
     color: #3d4d42;
 }
 
+.admin-hours-board-table tr.admin-hours-platform-row td {
+    background: #eef4ef;
+    font-weight: 650;
+    border-bottom: 1px solid rgba(37, 82, 53, 0.12);
+}
+
+.admin-hours-board-table tr.admin-hours-profession-row td {
+    background: #f3f7f3;
+    font-weight: 650;
+    border-bottom: 1px solid rgba(37, 82, 53, 0.08);
+}
+
+.admin-hours-offered {
+    font-variant-numeric: tabular-nums;
+    font-weight: 750;
+    color: #1f3d2a;
+}
+
+.admin-hours-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
 .admin-hours-on {
     font-variant-numeric: tabular-nums;
     font-weight: 650;
     color: #1f3d2a;
 }
 
+.admin-hours-platform {
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    color: #255235;
+}
+
 .admin-hours-off {
     color: #9aa59c;
+}
+
+.admin-hours-outside {
+    font-variant-numeric: tabular-nums;
+    font-weight: 650;
+    color: #9a5b1f;
+}
+
+.admin-hours-clip {
+    font-size: 0.68rem;
+    font-weight: 550;
+    color: #7a8a7e;
+}
+
+.admin-hours-cell .admin-hours-clip {
+    display: block;
 }
 
 .admin-hours-flags {
@@ -4157,6 +4227,14 @@ body.admin-logged-in .dash-content.admin-shell {
 
 .admin-hours-board-table tr.is-missing td {
     background: rgba(197, 120, 44, 0.06);
+}
+
+.admin-hours-board-table tr.is-outside td {
+    background: rgba(197, 120, 44, 0.04);
+}
+
+.admin-hours-board-table td.is-hours-outside {
+    background: rgba(197, 120, 44, 0.1);
 }
 
 .admin-patients-table-wrap {

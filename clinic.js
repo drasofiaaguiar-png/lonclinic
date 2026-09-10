@@ -20,7 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
         burnout_mensal: 'Anti-burnout',
         burnout_programa: 'Programa anti-burnout',
         renovacao: 'Renovação receita',
-        psicologia: 'Psicologia'
+        psicologia: 'Psicologia',
+        terapia_casal: 'Terapia de casal',
+        terapia_casal_mensal: 'Terapia de casal (subscrição)'
     };
 
     // ─── DOM Elements ───

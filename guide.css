@@ -64,6 +64,43 @@
     gap: 22px;
 }
 
+.guide-index .mag-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    margin-top: 22px;
+}
+
+.guide-index .mag-topics a {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #f2f4f6;
+}
+
+.guide-index .mag-topics a:hover,
+.guide-index .mag-topics a[aria-current="page"] {
+    border-color: #fff;
+    color: #fff;
+}
+
+.guide-index-more {
+    margin: 28px 0 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #f2f4f6;
+}
+
+.guide-index-more a {
+    color: #fff;
+}
+
 .guide-list-section .guide-card.lon-service-card {
     box-sizing: border-box;
     background: #ffffff !important;

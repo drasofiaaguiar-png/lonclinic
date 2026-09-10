@@ -26,11 +26,32 @@ const PRICE = {
     weekly: { amount: '54', label: 'Acompanhamento semanal', unit: 'semana', note: 'mínimo 1 mês; depois podes cancelar' }
 };
 
+const PRICE_CASAL = {
+    avulsa: { amount: '75', label: 'Sessão avulsa', unit: 'sessão' },
+    weekly: {
+        amount: '65',
+        label: 'Acompanhamento semanal',
+        unit: 'semana',
+        note: 'cobrado mensalmente (260 €/mês); mínimo 1 mês; depois podes cancelar'
+    }
+};
+
+function priceFor(slug) {
+    return slug === 'terapia-de-casal' ? PRICE_CASAL : PRICE;
+}
+
 const DEFAULT_STEPS = [
     'Preenches a triagem online — leva poucos minutos e ajuda a perceber o que precisas.',
     'És associado a um psicólogo inscrito na Ordem dos Psicólogos Portugueses, ou escolhes o profissional.',
     'A consulta é por videochamada, 100% online, no mesmo fuso de Lisboa.',
     'No plano semanal tens uma sessão de vídeo por semana e mensagens entre sessões. As respostas chegam em dias úteis, das 9h às 17h.'
+];
+
+const CASAL_STEPS = [
+    'Marcas a sessão avulsa (75 €) ou a subscrição semanal (65 €/semana, cobrada mensalmente a 260 €).',
+    'O calendário mostra só psicólogos que tratam casal e relacionamentos — escolhes o horário e o profissional.',
+    'A sessão é por videochamada, 50–60 min, com os dois presentes.',
+    'No plano semanal ficas com 4 sessões por mês. Depois do primeiro mês, podes cancelar.'
 ];
 
 /** One-segment paths that must never be claimed by a queixa slug. */
@@ -161,26 +182,40 @@ function faqJsonLd(faq) {
     };
 }
 
-function priceHtml() {
+function priceHtml(price) {
+    const p = price || PRICE;
+    const isCasal = p === PRICE_CASAL;
+    const lead = isCasal
+        ? `O preço da terapia de casal na Lon Clinic é transparente: <strong>${p.avulsa.amount} € por sessão avulsa</strong>, ou <strong>${p.weekly.amount} € por semana</strong> no acompanhamento contínuo, cobrado mensalmente (260 €/mês).`
+        : `O preço da consulta de psicologia online na Lon Clinic é transparente: <strong>${p.avulsa.amount} € por sessão avulsa</strong>, ou <strong>${p.weekly.amount} € por semana</strong> no acompanhamento contínuo.`;
+    const caption = isCasal
+        ? 'Preço da terapia de casal online na Lon Clinic'
+        : 'Preço da consulta de psicologia online na Lon Clinic';
+    const avulsaIncludes = isCasal
+        ? 'Uma sessão de vídeo com os dois, sem compromisso de continuidade'
+        : 'Uma sessão de vídeo, sem compromisso de continuidade';
+    const weeklyIncludes = isCasal
+        ? `4 sessões de vídeo por mês com os dois (${escapeHtml(p.weekly.note)})`
+        : `1 sessão de vídeo por semana + mensagens ilimitadas (${escapeHtml(p.weekly.note)})`;
     return `
         <section class="qx-block" id="preco" aria-labelledby="qx-price-title">
             <h2 id="qx-price-title">Preço</h2>
-            <p>O preço da consulta de psicologia online na Lon Clinic é transparente: <strong>${PRICE.avulsa.amount} € por sessão avulsa</strong>, ou <strong>${PRICE.weekly.amount} € por semana</strong> no acompanhamento contínuo.</p>
+            <p>${lead}</p>
             <table class="qx-price-table">
-                <caption>Preço da consulta de psicologia online na Lon Clinic</caption>
+                <caption>${caption}</caption>
                 <thead>
                     <tr><th>Opção</th><th>Preço</th><th>O que inclui</th></tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>${escapeHtml(PRICE.avulsa.label)}</td>
-                        <td><strong>${PRICE.avulsa.amount} €</strong> / ${escapeHtml(PRICE.avulsa.unit)}</td>
-                        <td>Uma sessão de vídeo, sem compromisso de continuidade</td>
+                        <td>${escapeHtml(p.avulsa.label)}</td>
+                        <td><strong>${p.avulsa.amount} €</strong> / ${escapeHtml(p.avulsa.unit)}</td>
+                        <td>${avulsaIncludes}</td>
                     </tr>
                     <tr>
-                        <td>${escapeHtml(PRICE.weekly.label)}</td>
-                        <td><strong>${PRICE.weekly.amount} €</strong> / ${escapeHtml(PRICE.weekly.unit)}</td>
-                        <td>1 sessão de vídeo por semana + mensagens ilimitadas (${escapeHtml(PRICE.weekly.note)})</td>
+                        <td>${escapeHtml(p.weekly.label)}</td>
+                        <td><strong>${p.weekly.amount} €</strong> / ${escapeHtml(p.weekly.unit)}</td>
+                        <td>${weeklyIncludes}</td>
                     </tr>
                 </tbody>
             </table>
@@ -199,6 +234,20 @@ function stepsHtml(steps) {
 function ctaBand(ref, label, opts) {
     const r = encodeURIComponent(ref || 'consultas');
     const cta = escapeHtml(talkCta.isGenericBookLabel(label) ? talkCta.label('psychFind', 'pt') : (label || talkCta.label('psychFind', 'pt')));
+    if (opts && opts.casal) {
+        return `
+        <aside class="qx-cta-band" aria-label="Marcar terapia de casal">
+            <div class="lon-container qx-cta-inner">
+                <p class="qx-cta-kicker">Próximo passo</p>
+                <h2 class="qx-cta-title">Marcar terapia de casal</h2>
+                <p class="qx-cta-lead">Sessão avulsa 75 €, ou 65 €/semana cobrados mensalmente (260 €/mês). Os dois na mesma videochamada.</p>
+                <div class="qx-cta-actions">
+                    <a class="lon-btn lon-btn-primary" href="/marcar/terapia-casal?ref=${r}">Marcar sessão avulsa</a>
+                    <a class="lon-btn lon-btn-soft" href="/marcar/terapia-casal-mensal?ref=${r}">Subscrever 65 €/semana</a>
+                </div>
+            </div>
+        </aside>`;
+    }
     if (opts && opts.tofuTest) {
         return `
         <aside class="qx-cta-band" aria-label="Próximos passos">
@@ -227,14 +276,35 @@ function ctaBand(ref, label, opts) {
         </aside>`;
 }
 
-function bookingCardsHtml(ref, tone) {
+function bookingCardsHtml(ref, tone, opts) {
     const r = encodeURIComponent(ref || 'consultas');
     const t = Math.abs(Number(tone) || 0) % 3;
-    const cards = [
+    const isCasal = !!(opts && opts.casal);
+    const price = isCasal ? PRICE_CASAL : PRICE;
+    const cards = isCasal
+        ? [
+            {
+                chip: 'Consulta',
+                title: 'Sessão de terapia de casal',
+                price: `${price.avulsa.amount} € · ${price.avulsa.unit}`,
+                note: 'Videochamada com os dois · psicólogo inscrito na Ordem dos Psicólogos Portugueses',
+                cta: 'Marcar sessão avulsa',
+                href: `/marcar/terapia-casal?ref=${r}`
+            },
+            {
+                chip: 'Semanal',
+                title: 'Subscrição de casal',
+                price: `${price.weekly.amount} € /${price.weekly.unit}`,
+                note: 'Cobrado mensalmente (260 €/mês) · 1 sessão de vídeo por semana',
+                cta: 'Subscrever',
+                href: `/marcar/terapia-casal-mensal?ref=${r}`
+            }
+        ]
+        : [
         {
             chip: 'Consulta',
             title: 'Sessão de psicologia',
-            price: `${PRICE.avulsa.amount} € · ${PRICE.avulsa.unit}`,
+            price: `${price.avulsa.amount} € · ${price.avulsa.unit}`,
             note: 'Videochamada · psicólogo inscrito na Ordem dos Psicólogos Portugueses',
             cta: 'Encontre o seu psicólogo',
             href: `/triagem?ref=${r}`
@@ -242,7 +312,7 @@ function bookingCardsHtml(ref, tone) {
         {
             chip: 'Semanal',
             title: 'Acompanhamento semanal',
-            price: `${PRICE.weekly.amount} € /${PRICE.weekly.unit}`,
+            price: `${price.weekly.amount} € /${price.weekly.unit}`,
             note: '1 sessão de vídeo por semana + mensagens entre sessões',
             cta: 'Ver planos',
             href: `/saudemental?ref=${r}`
@@ -561,7 +631,9 @@ function renderHub(origin) {
     });
 }
 
-function serviceJsonLd(o, meta, canonicalUrl) {
+function serviceJsonLd(o, meta, canonicalUrl, price) {
+    const p = price || PRICE;
+    const bookUrl = meta.slug === 'terapia-de-casal' ? `${o}/marcar/terapia-casal` : `${o}/triagem`;
     return {
         '@context': 'https://schema.org',
         '@type': 'Service',
@@ -577,21 +649,21 @@ function serviceJsonLd(o, meta, canonicalUrl) {
         ],
         availableChannel: {
             '@type': 'ServiceChannel',
-            serviceUrl: `${o}/triagem`,
+            serviceUrl: bookUrl,
             availableLanguage: ['pt', 'pt-PT']
         },
         offers: [
             {
                 '@type': 'Offer',
-                name: PRICE.avulsa.label,
-                price: PRICE.avulsa.amount,
+                name: p.avulsa.label,
+                price: p.avulsa.amount,
                 priceCurrency: 'EUR',
                 availability: 'https://schema.org/InStock'
             },
             {
                 '@type': 'Offer',
-                name: PRICE.weekly.label,
-                price: PRICE.weekly.amount,
+                name: p.weekly.label,
+                price: p.weekly.amount,
                 priceCurrency: 'EUR',
                 unitText: 'WEEK',
                 availability: 'https://schema.org/InStock'
@@ -617,6 +689,8 @@ function renderPage(origin, slug) {
     const canonicalUrl = canonicalHref(canonicalPath);
     const ref = `queixa-${slug}`;
     const isBurnoutPsi = slug === 'psicologia-burnout';
+    const isCasal = slug === 'terapia-de-casal';
+    const pagePrice = priceFor(slug);
     const conditionName = meta.condition || meta.navLabel || h1;
 
     const about = meta.schemaType === 'service'
@@ -643,7 +717,7 @@ function renderPage(origin, slug) {
             publisher: { '@id': `${o}/#organization` },
             mainEntity: { '@id': `${canonicalUrl}#service` }
         },
-        { ...serviceJsonLd(o, meta, canonicalUrl), '@id': `${canonicalUrl}#service` },
+        { ...serviceJsonLd(o, meta, canonicalUrl, pagePrice), '@id': `${canonicalUrl}#service` },
         {
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
@@ -683,6 +757,9 @@ function renderPage(origin, slug) {
                     ${isBurnoutPsi
                         ? `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/burnout/teste?ref=${encodeURIComponent(ref)}">Fazer o teste CBI</a>
                     <a class="lon-btn lon-btn-soft lon-btn-sm" href="/triagem?ref=${encodeURIComponent(ref)}" data-talk-cta="psychFind">Encontre o seu psicólogo</a>`
+                        : isCasal
+                            ? `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/marcar/terapia-casal?ref=${encodeURIComponent(ref)}">Marcar terapia de casal</a>
+                    <a class="lon-btn lon-btn-soft lon-btn-sm" href="#preco">Ver preço</a>`
                         : `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/triagem?ref=${encodeURIComponent(ref)}" data-talk-cta="psychFind">Encontre o seu psicólogo</a>
                     <a class="lon-btn lon-btn-soft lon-btn-sm" href="#preco">Ver preço</a>`}
                 </div>
@@ -698,19 +775,19 @@ function renderPage(origin, slug) {
                 ${listHtml(meta.whenToSeek || [], false)}
             </section>
 
-            ${bookingCardsHtml(ref, 0)}
+            ${bookingCardsHtml(ref, 0, { casal: isCasal })}
 
             ${extraBlock}
-            ${stepsHtml(meta.steps)}
-            ${bookingCardsHtml(ref, 1)}
-            ${priceHtml()}
+            ${stepsHtml(isCasal ? (meta.steps && meta.steps.length ? meta.steps : CASAL_STEPS) : meta.steps)}
+            ${bookingCardsHtml(ref, 1, { casal: isCasal })}
+            ${priceHtml(pagePrice)}
             ${faqHtml(meta.faq)}
 
             <p class="eeat-reviewed">Conteúdo revisto pela Lon Clinic. O acompanhamento é feito por psicólogos inscritos na Ordem dos Psicólogos Portugueses. ERS n.º 45475${dateMod || datePub ? ` · <time datetime="${escapeHtml(String(dateMod || datePub).slice(0, 10))}">${escapeHtml(formatReviewDate(dateMod || datePub))}</time>` : ''}.</p>
             <p class="qx-disclaimer">Esta página não faz diagnóstico. A informação é geral e não substitui uma consulta de psicologia individualizada. Em crise ou risco imediato: <a href="tel:112">112</a> · <a href="tel:808242424">SNS 24</a> · <a href="tel:213544545">SOS Voz Amiga</a>.</p>
             ${relatedHtml(meta.related, slug)}
         </article>
-        ${ctaBand(ref, meta.ctaLabel, { tofuTest: isBurnoutPsi })}
+        ${ctaBand(ref, meta.ctaLabel, { tofuTest: isBurnoutPsi, casal: isCasal })}
     </main>`;
 
     const title = String(meta.title || `${h1} | Lon Clinic`);
@@ -753,6 +830,7 @@ function renderNotFound(origin) {
 
 module.exports = {
     PRICE,
+    PRICE_CASAL,
     DEFAULT_STEPS,
     RESERVED_SLUGS,
     escapeHtml,

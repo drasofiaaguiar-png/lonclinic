@@ -1249,7 +1249,7 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260906i">
-    <link rel="stylesheet" href="/guide.css?v=20260909t">
+    <link rel="stylesheet" href="/guide.css?v=20260910b">
     <link rel="stylesheet" href="/author.css?v=20260820l">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -1318,6 +1318,7 @@ function layoutGuidePage(opts) {
                     <h4>Apoio</h4>
                     <a href="/faq">Perguntas frequentes</a>
                     <a href="/magazine">Magazine</a>
+                    <a href="/magazine/indice">Índice</a>
                     <a href="/blog">Guides</a>
                     <a href="/info.html?page=como-funciona">Como funciona</a>
                     <a href="/info.html?page=seguranca-dados">Segurança dos dados</a>
@@ -1352,11 +1353,11 @@ function layoutGuidePage(opts) {
 
 function renderBlogIndex(origin) {
     const o = normalizeOrigin(origin);
-    const manifest = loadManifest();
-    const articles = sortArticles((manifest.articles || []).filter((a) => isValidSlug(a.slug) && isListedArticle(a)));
+    const articles = loadListedArticles();
+    const recent = articles.slice(0, BLOG_INDEX_LIMIT);
     const defaultOg = `${o}${DEFAULT_OG_IMAGE}`;
 
-    const cards = articles.map((a) => {
+    const cards = recent.map((a) => {
         const slug = a.slug;
         const href = `/blog/${encodeURIComponent(slug)}`;
         const t = escapeHtml(String(a.title || slug));
@@ -1396,7 +1397,7 @@ function renderBlogIndex(origin) {
         name: 'Guias Médicos Profissionais | Lon Clinic',
         description: 'Descubra as melhores informações médicas para o seu bem-estar',
         url: `${o}/blog`,
-        blogPost: articles.map((a) => ({
+        blogPost: recent.map((a) => ({
             '@type': 'BlogPosting',
             headline: String(a.title || a.slug),
             description: String(a.description || ''),
@@ -1406,13 +1407,18 @@ function renderBlogIndex(origin) {
         }))
     };
 
+    const moreHtml = articles.length > recent.length
+        ? `<p class="guide-index-more">Os ${articles.length} artigos estão agrupados por tema na <a href="/magazine">Magazine</a> e no <a href="/magazine/indice">índice completo</a>.</p>`
+        : '';
+
     const mainHtml = `
     <main id="conteudo-principal">
         <section class="guide-hero" aria-label="Guias">
             <div class="lon-container guide-hero-inner">
                 <p class="dr-badge">Guias</p>
                 <h1 class="guide-hero-title">Guias Médicos Profissionais</h1>
-                <p class="guide-hero-lead">Descubra as melhores informações médicas para o seu bem-estar</p>
+                <p class="guide-hero-lead">Os mais recentes, e o resto por tema na Magazine.</p>
+                ${magazineTopicsNavHtml()}
             </div>
         </section>
         <section class="guide-list-section" aria-label="Lista de artigos">
@@ -1421,6 +1427,7 @@ function renderBlogIndex(origin) {
                     ${cards}
                     ${emptyState}
                 </div>
+                ${moreHtml}
             </div>
         </section>
     </main>`;
@@ -1428,7 +1435,7 @@ function renderBlogIndex(origin) {
     return layoutGuidePage({
         origin: o,
         title: 'Guias Médicos Profissionais | Lon Clinic',
-        description: 'Descubra as melhores informações médicas para o seu bem-estar',
+        description: 'Guias médicos recentes da Lon Clinic. O índice completo está na Magazine, por tema.',
         canonicalPath: '/blog',
         ogImage: defaultOg,
         jsonLd,
@@ -1687,7 +1694,7 @@ function renderBlogArticle(origin, slug) {
         htmlLang: langMeta.htmlLang,
         ogLocale: langMeta.ogLocale,
         extraHead: articleHreflangLinks(o, meta, manifest.articles),
-        extraCssAfter: ['/guide.css?v=20260909t', '/author.css?v=20260820l'],
+        extraCssAfter: ['/guide.css?v=20260910b', '/author.css?v=20260820l'],
         mainHtml: magAppHtml(articlePath, articleInner, {
             magazineCurrent: true,
             talk: talkCta.resolve({ kind: ctaKind, slug, lang })
@@ -1721,6 +1728,115 @@ function renderNotFound(origin) {
     });
 }
 
+const MAGAZINE_SECTIONS = [
+    {
+        slug: 'saude-mental',
+        theme: 'mental',
+        title: 'Mente',
+        description: 'Psicologia, autismo, ADHD e consultas em Portugal: guias da Lon Magazine.',
+        ctaKind: 'mental'
+    },
+    {
+        slug: 'burnout',
+        theme: 'burnout',
+        title: 'Burnout',
+        description: 'Sinais de burnout, recuperação, trabalho e quando procurar ajuda.',
+        ctaKind: 'burnout'
+    },
+    {
+        slug: 'depressao',
+        theme: 'depressao',
+        title: 'Depressão',
+        description: 'Depressão: primeiros sinais, tratamento e quando pedir ajuda.',
+        ctaKind: 'mental'
+    },
+    {
+        slug: 'ansiedade',
+        theme: 'ansiedade',
+        title: 'Ansiedade',
+        description: 'Ansiedade, pânico e insónia: guias clínicos da Lon Magazine.',
+        ctaKind: 'mental'
+    },
+    {
+        slug: 'autoconhecimento',
+        theme: 'autoconhecimento',
+        title: 'Autoconhecimento',
+        description: 'Valores, limites, perfeccionismo e terapia.',
+        ctaKind: 'mental'
+    },
+    {
+        slug: 'perda-de-peso',
+        theme: 'perda-de-peso',
+        title: 'Perda de peso',
+        description: 'Nutrição, défice calórico e perda de peso sustentável.',
+        ctaKind: 'nutrition'
+    },
+    {
+        slug: 'livros-saude',
+        theme: 'livros-saude',
+        title: 'Livros de saúde',
+        description: 'Leituras de saúde com leitura clínica da Lon Magazine.',
+        ctaKind: 'nutrition'
+    },
+    {
+        slug: 'livros-psicologia',
+        theme: 'bestsellers-psicologia',
+        title: 'Livros de psicologia',
+        description: 'Bestsellers de psicologia lidos em contexto clínico.',
+        ctaKind: 'mental'
+    },
+    {
+        slug: 'saude-intestinal',
+        theme: 'bestsellers-saude-intestinal',
+        title: 'Saúde intestinal',
+        description: 'Intestino, microbiota e leituras de gastroenterologia.',
+        ctaKind: 'nutrition'
+    },
+    {
+        slug: 'saude-do-viajante',
+        theme: 'travel',
+        title: 'Viagem',
+        description: 'Vacinas, consulta do viajante e febre amarela em Portugal.',
+        ctaKind: 'travel'
+    },
+    {
+        slug: 'clinica',
+        theme: 'clinic',
+        title: 'Clínica',
+        description: 'Telemedicina, SNS vs privado e como marcar consulta.',
+        ctaKind: 'clinic'
+    }
+];
+
+const MAGAZINE_SECTION_ALIASES = {
+    'livros-de-saude': 'livros-saude',
+    'livros-de-psicologia': 'livros-psicologia',
+    mente: 'saude-mental',
+    viagem: 'saude-do-viajante'
+};
+
+const MAG_ROW_PREVIEW = 4;
+const BLOG_INDEX_LIMIT = 24;
+const HOME_EDITORIAL_THEMES = ['burnout', 'mental', 'ansiedade', 'perda-de-peso', 'travel', 'clinic'];
+
+function magazineSections() {
+    return MAGAZINE_SECTIONS.slice();
+}
+
+function magazineSectionBySlug(slug) {
+    const key = MAGAZINE_SECTION_ALIASES[String(slug || '')] || slug;
+    return MAGAZINE_SECTIONS.find((s) => s.slug === key) || null;
+}
+
+function magazineSectionByTheme(theme) {
+    return MAGAZINE_SECTIONS.find((s) => s.theme === theme) || null;
+}
+
+function magazineSectionPath(slug) {
+    const section = magazineSectionBySlug(slug);
+    return section ? `/magazine/${section.slug}` : '/magazine';
+}
+
 function magTheme(article) {
     const about = String((article && article.about) || '').toLowerCase();
     const slug = String((article && article.slug) || '');
@@ -1747,18 +1863,47 @@ function magTheme(article) {
 }
 
 function magThemeLabel(article) {
-    const theme = magTheme(article);
-    if (theme === 'mental') return 'Mente';
-    if (theme === 'burnout') return 'Burnout';
-    if (theme === 'depressao') return 'Depressão';
-    if (theme === 'ansiedade') return 'Ansiedade';
-    if (theme === 'autoconhecimento') return 'Autoconhecimento';
-    if (theme === 'perda-de-peso') return 'Perda de peso';
-    if (theme === 'livros-saude') return 'Livros de saúde';
-    if (theme === 'bestsellers-psicologia') return 'Livros de psicologia';
-    if (theme === 'bestsellers-saude-intestinal') return 'Saúde intestinal';
-    if (theme === 'travel') return 'Viagem';
-    return 'Clínica';
+    const section = magazineSectionByTheme(magTheme(article));
+    return section ? section.title : 'Clínica';
+}
+
+function loadListedArticles() {
+    return sortArticles(listedGuideArticles(loadManifest().articles || []));
+}
+
+function newestListedArticleDate(theme) {
+    const pool = theme
+        ? loadListedArticles().filter((a) => magTheme(a) === theme)
+        : loadListedArticles();
+    let max = '';
+    for (const a of pool) {
+        const d = String(a.dateModified || a.datePublished || '').slice(0, 10);
+        if (/^\d{4}-\d{2}-\d{2}$/.test(d) && d > max) max = d;
+    }
+    return max;
+}
+
+function magazineTopicsNavHtml(opts) {
+    const current = opts && opts.current;
+    const indiceCurrent = opts && opts.indice;
+    const links = MAGAZINE_SECTIONS.map((s) => {
+        const cur = current === s.slug ? ' aria-current="page"' : '';
+        return `<a href="${escapeHtml(magazineSectionPath(s.slug))}"${cur}>${escapeHtml(s.title)}</a>`;
+    }).join('\n');
+    const indiceCur = indiceCurrent ? ' aria-current="page"' : '';
+    return `<nav class="mag-topics" aria-label="Temas da magazine">${links}
+<a href="/magazine/indice"${indiceCur}>Índice</a></nav>`;
+}
+
+function magIndexListHtml(articles) {
+    const items = (Array.isArray(articles) ? articles : []).map((a) => {
+        const iso = String((a.dateModified || a.datePublished) || '').slice(0, 10);
+        const date = /^\d{4}-\d{2}-\d{2}$/.test(iso)
+            ? `<time datetime="${escapeHtml(iso)}">${escapeHtml(magDate(iso, 'pt'))}</time>`
+            : '';
+        return `<li><a href="${escapeHtml(magHref(a))}">${escapeHtml(a.title || a.slug)}</a>${date}</li>`;
+    }).join('');
+    return `<ol class="mag-index-list">${items}</ol>`;
 }
 
 function magIssueLine() {
@@ -1820,20 +1965,15 @@ function magFeaturedHtml(article) {
 }
 
 function magTocHtml() {
+    const items = MAGAZINE_SECTIONS.map((s, i) => {
+        const n = String(i + 1).padStart(2, '0');
+        return `<li><a href="${escapeHtml(magazineSectionPath(s.slug))}"><span>${n}</span> ${escapeHtml(s.title)}</a></li>`;
+    }).join('');
     return `<nav class="mag-toc mag-wrap" aria-label="Nesta edição">
                 <p class="mag-toc-kicker">Nesta edição</p>
                 <ol>
-                    <li><a href="#saude-mental"><span>01</span> Mente</a></li>
-                    <li><a href="#burnout"><span>02</span> Burnout</a></li>
-                    <li><a href="#depressao"><span>03</span> Depressão</a></li>
-                    <li><a href="#ansiedade"><span>04</span> Ansiedade</a></li>
-                    <li><a href="#autoconhecimento"><span>05</span> Autoconhecimento</a></li>
-                    <li><a href="#perda-de-peso"><span>06</span> Perda de peso</a></li>
-                    <li><a href="#livros-saude"><span>07</span> Livros de saúde</a></li>
-                    <li><a href="#livros-psicologia"><span>08</span> Livros de psicologia</a></li>
-                    <li><a href="#saude-intestinal"><span>09</span> Saúde intestinal</a></li>
-                    <li><a href="#saude-do-viajante"><span>10</span> Viagem</a></li>
-                    <li><a href="#clinica"><span>11</span> Clínica</a></li>
+                    ${items}
+                    <li><a href="/magazine/indice"><span>${String(MAGAZINE_SECTIONS.length + 1).padStart(2, '0')}</span> Índice</a></li>
                 </ol>
             </nav>`;
 }
@@ -2108,13 +2248,19 @@ function magClusterHtml() {
 function magThemeRowHtml(id, title, articles, ctaKind) {
     if (!articles.length) return '';
     const cta = ctaKind ? magCtaHtml(ctaKind) : '';
+    const preview = articles.slice(0, MAG_ROW_PREVIEW);
+    const moreHref = magazineSectionPath(id);
+    const moreLabel = articles.length > preview.length
+        ? `Ver todos · ${articles.length} artigos`
+        : `Índice de ${title}`;
     return `<section class="mag-section mag-wrap" id="${escapeHtml(id)}" aria-labelledby="${escapeHtml(id)}-title">
                 <div class="mag-section-head">
                     <p class="mag-section-kicker">Nesta edição</p>
                     <h2 id="${escapeHtml(id)}-title">${escapeHtml(title)}</h2>
                 </div>
-                <div class="mag-row">${articles.map(magCardHtml).join('')}
+                <div class="mag-row">${preview.map(magCardHtml).join('')}
                 </div>
+                <p class="mag-section-more"><a href="${escapeHtml(moreHref)}">${escapeHtml(moreLabel)}</a></p>
                 ${cta}
             </section>`;
 }
@@ -2517,7 +2663,9 @@ function magFindNavPath(currentPath) {
 function magCrumbHref(node) {
     if (node && node.href) return magPath(node.href);
     const id = magAnchorId(node && node.label);
-    return id ? `/magazine#${id}` : '/magazine';
+    if (!id) return '/magazine';
+    const section = magazineSectionBySlug(id);
+    return section ? `/magazine/${section.slug}` : `/magazine#${id}`;
 }
 
 function magBreadcrumbCrumbs(currentPath, pageTitle) {
@@ -2534,6 +2682,17 @@ function magBreadcrumbCrumbs(currentPath, pageTitle) {
     if (!trail.length) {
         items[0].current = true;
         if (pageTitle && currentPath && currentPath !== '/magazine') {
+            if (currentPath.indexOf('/blog/') === 0) {
+                const slug = decodeURIComponent(currentPath.slice(6).split('/')[0] || '');
+                const article = loadListedArticles().find((a) => a.slug === slug);
+                const section = article && magazineSectionByTheme(magTheme(article));
+                if (section) {
+                    items[0].current = false;
+                    items.push({ name: section.title, href: `/magazine/${section.slug}` });
+                    items.push({ name: pageTitle, href: currentPath, current: true });
+                    return items;
+                }
+            }
             items.push({ name: pageTitle, href: currentPath, current: true });
             items[0].current = false;
         }
@@ -2657,6 +2816,7 @@ function magLonFootHtml() {
                 <div class="lon-footer-col">
                     <h4>Magazine</h4>
                     <a href="/magazine">Lon Magazine</a>
+                    <a href="/magazine/indice">Índice</a>
                     <a href="/blog">Guias</a>
                     <a href="/burnout">Burnout</a>
                     <a href="/saudemental">Psicologia</a>
@@ -2751,7 +2911,7 @@ function layoutMagazinePage(opts) {
     <link rel="stylesheet" href="/landing.css?v=20260906i">
     ${extraCssHtml}
     ${extraCssAfterHtml}
-    <link rel="stylesheet" href="/magazine.css?v=20260909u">
+    <link rel="stylesheet" href="/magazine.css?v=20260910a">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='6' y='52' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%239c4a56'%3EL%3C/text%3E%3C/svg%3E">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     ${jsonLdScript(graph)}
@@ -2848,16 +3008,13 @@ function renderMagazineIndex(origin) {
             ...authors.articleAuthorSchema(o),
             mainEntity: {
                 '@type': 'ItemList',
-                itemListElement: articles.map((a, i) => ({
+                itemListElement: MAGAZINE_SECTIONS.map((s, i) => ({
                     '@type': 'ListItem',
                     position: i + 1,
                     item: {
-                        '@type': ['Article', 'MedicalWebPage'],
-                        headline: String(a.title || a.slug),
-                        url: `${o}/blog/${encodeURIComponent(a.slug)}`,
-                        datePublished: a.datePublished || undefined,
-                        dateModified: a.dateModified || a.datePublished || undefined,
-                        ...articleAuthorBlock(o, a)
+                        '@type': 'CollectionPage',
+                        name: s.title,
+                        url: `${o}/magazine/${s.slug}`
                     }
                 }))
             }
@@ -2872,6 +3029,7 @@ function renderMagazineIndex(origin) {
                 <h1 class="visually-hidden">Lon Magazine</h1>
                 ${magFeaturedHtml(featured)}
                 ${magTocHtml()}
+                <div class="mag-wrap mag-topics-wrap">${magazineTopicsNavHtml()}</div>
                 ${rowsHtml}
             </main>`, { magazineCurrent: true });
 
@@ -2886,6 +3044,196 @@ function renderMagazineIndex(origin) {
     });
 }
 
+function collectionJsonLd(origin, opts) {
+    const o = normalizeOrigin(origin);
+    const articles = opts.articles || [];
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'CollectionPage',
+        name: opts.name,
+        description: opts.description,
+        url: `${o}${opts.path}`,
+        isPartOf: { '@type': 'WebSite', name: 'Lon Clinic', url: o },
+        mainEntity: {
+            '@type': 'ItemList',
+            numberOfItems: articles.length,
+            itemListElement: articles.map((a, i) => ({
+                '@type': 'ListItem',
+                position: i + 1,
+                url: `${o}/blog/${encodeURIComponent(a.slug)}`,
+                name: String(a.title || a.slug)
+            }))
+        }
+    };
+}
+
+function renderMagazineSection(origin, slug) {
+    const section = magazineSectionBySlug(slug);
+    if (!section) return null;
+    const o = normalizeOrigin(origin);
+    const articles = loadListedArticles().filter((a) => magTheme(a) === section.theme);
+    const cover = articles[0];
+    const og = `${o}${resolveGuideImage(cover && cover.image)}`;
+    const path = `/magazine/${section.slug}`;
+    const crumbs = [
+        { name: 'Magazine', href: '/magazine' },
+        { name: section.title, href: path, current: true }
+    ];
+    const jsonLd = [
+        collectionJsonLd(o, {
+            name: `${section.title} | LON Magazine`,
+            description: section.description,
+            path,
+            articles
+        }),
+        magBreadcrumbJsonLd(o, crumbs)
+    ];
+    const empty = articles.length
+        ? ''
+        : '<p class="mag-index-empty">Ainda não há artigos neste tema.</p>';
+    const mainHtml = magAppHtml(path, `
+            <main id="conteudo-principal" class="mag-content mag-index-page">
+                <header class="mag-index-head mag-wrap">
+                    ${magBreadcrumbHtml(crumbs)}
+                    <p class="mag-section-kicker">LON Magazine</p>
+                    <h1>${escapeHtml(section.title)}</h1>
+                    <p class="mag-index-dek">${escapeHtml(section.description)}</p>
+                    ${magazineTopicsNavHtml({ current: section.slug })}
+                </header>
+                <section class="mag-wrap" aria-label="Artigos de ${escapeHtml(section.title)}">
+                    ${magIndexListHtml(articles)}
+                    ${empty}
+                    ${section.ctaKind ? magCtaHtml(section.ctaKind) : ''}
+                </section>
+            </main>`, { magazineCurrent: true });
+    return layoutMagazinePage({
+        origin: o,
+        title: `${section.title} | LON Magazine`,
+        description: section.description,
+        canonicalPath: path,
+        ogImage: og,
+        jsonLd,
+        mainHtml
+    });
+}
+
+function renderMagazineIndice(origin) {
+    const o = normalizeOrigin(origin);
+    const articles = loadListedArticles();
+    const cover = articles[0];
+    const og = `${o}${resolveGuideImage(cover && cover.image)}`;
+    const crumbs = [
+        { name: 'Magazine', href: '/magazine' },
+        { name: 'Índice', href: '/magazine/indice', current: true }
+    ];
+    const groups = MAGAZINE_SECTIONS.map((s) => {
+        const group = articles.filter((a) => magTheme(a) === s.theme);
+        if (!group.length) return '';
+        return `<section class="mag-index-group mag-wrap" id="${escapeHtml(s.slug)}" aria-labelledby="indice-${escapeHtml(s.slug)}">
+                    <h2 id="indice-${escapeHtml(s.slug)}"><a href="${escapeHtml(magazineSectionPath(s.slug))}">${escapeHtml(s.title)}</a></h2>
+                    ${magIndexListHtml(group)}
+                </section>`;
+    }).join('');
+    const jsonLd = [
+        collectionJsonLd(o, {
+            name: 'Índice | LON Magazine',
+            description: 'Índice de todos os artigos da Lon Magazine, por tema.',
+            path: '/magazine/indice',
+            articles
+        }),
+        magBreadcrumbJsonLd(o, crumbs)
+    ];
+    const mainHtml = magAppHtml('/magazine/indice', `
+            <main id="conteudo-principal" class="mag-content mag-index-page">
+                <header class="mag-index-head mag-wrap">
+                    ${magBreadcrumbHtml(crumbs)}
+                    <p class="mag-section-kicker">LON Magazine</p>
+                    <h1>Índice</h1>
+                    <p class="mag-index-dek">${articles.length} artigos, agrupados por tema. Sem imagens — só títulos, para o Google e para quem procura um guia específico.</p>
+                    ${magazineTopicsNavHtml({ indice: true })}
+                </header>
+                ${groups}
+            </main>`, { magazineCurrent: true });
+    return layoutMagazinePage({
+        origin: o,
+        title: 'Índice | LON Magazine',
+        description: 'Índice de todos os artigos da Lon Magazine, por tema.',
+        canonicalPath: '/magazine/indice',
+        ogImage: og,
+        jsonLd,
+        mainHtml
+    });
+}
+
+function homeEditorialPicks(limit) {
+    const sorted = loadListedArticles();
+    const picked = [];
+    const seen = new Set();
+    const cap = limit || 6;
+    HOME_EDITORIAL_THEMES.forEach((theme) => {
+        if (picked.length >= cap) return;
+        const hit = sorted.find((a) => magTheme(a) === theme && !seen.has(a.slug));
+        if (hit) {
+            picked.push(hit);
+            seen.add(hit.slug);
+        }
+    });
+    sorted.forEach((a) => {
+        if (picked.length >= cap) return;
+        if (!seen.has(a.slug)) {
+            picked.push(a);
+            seen.add(a.slug);
+        }
+    });
+    return picked;
+}
+
+function homeEditorialStripHtml() {
+    const picks = homeEditorialPicks(6);
+    if (!picks.length) return '';
+    const cards = picks.map((a) => {
+        const href = magHref(a);
+        const kicker = magThemeLabel(a);
+        const desc = a.description ? `<p>${escapeHtml(a.description)}</p>` : '';
+        return `<a class="dr-magazine-home-card" href="${escapeHtml(href)}">
+                    <span class="dr-magazine-home-kicker">${escapeHtml(kicker)}</span>
+                    <h3>${escapeHtml(a.title || a.slug)}</h3>
+                    ${desc}
+                </a>`;
+    }).join('');
+    const topics = MAGAZINE_SECTIONS.map((s) => (
+        `<a href="${escapeHtml(magazineSectionPath(s.slug))}">${escapeHtml(s.title)}</a>`
+    )).join('');
+    return `<section class="dr-magazine-home" id="magazine-home" aria-labelledby="magazine-home-title">
+        <div class="lon-container">
+            <p class="dr-magazine-home__eyebrow">Lon Magazine</p>
+            <h2 id="magazine-home-title">Guias médicos recentes</h2>
+            <p class="dr-magazine-home__lead">Seis guias em destaque. O resto está na revista, por tema.</p>
+            <p class="dr-magazine-home-actions">
+                <a class="dr-magazine-home__more" href="/magazine">Magazine</a>
+                <a class="dr-magazine-home__more" href="/blog">Todos os guias</a>
+                <a class="dr-magazine-home__more" href="/magazine/indice">Índice</a>
+            </p>
+            <div class="dr-magazine-home-grid">${cards}</div>
+            <nav class="dr-magazine-home-topics" aria-label="Temas da magazine">${topics}</nav>
+        </div>
+    </section>`;
+}
+
+function injectHomeEditorialHtml(html) {
+    if (!html || typeof html !== 'string') return html;
+    if (html.includes('id="magazine-home"')) return html;
+    const strip = homeEditorialStripHtml();
+    if (!strip) return html;
+    if (html.includes('<!-- MAGAZINE_HOME_STRIP -->')) {
+        return html.replace('<!-- MAGAZINE_HOME_STRIP -->', strip);
+    }
+    return html.replace(
+        '</section>\n\n        <section class="dr-platform"',
+        `</section>\n\n        ${strip}\n\n        <section class="dr-platform"`
+    );
+}
+
 module.exports = {
     escapeHtml,
     isValidSlug,
@@ -2893,6 +3241,11 @@ module.exports = {
     renderMagazineIndex,
     renderBlogArticle,
     renderNotFound,
+    renderMagazineSection,
+    renderMagazineIndice,
+    injectHomeEditorialHtml,
+    magazineSections,
+    newestListedArticleDate,
     loadManifest,
     sortArticles,
     articleSitemapAlternates,
