@@ -789,11 +789,20 @@
         bookableDates: [],
         professionalsByTime: {},
         professionalId: null,
-        professionalName: null
+        professionalName: null,
+        slotMode: 'clinic'
     };
+
+    function bookingService() {
+        return (consulta && consulta.serviceKey) || tipo;
+    }
 
     function isPsychology() {
         return tipo === 'psicologia';
+    }
+
+    function usesStaffSlotCalendar() {
+        return state.slotMode === 'staff';
     }
 
     function psychologyCopy() {
@@ -863,14 +872,25 @@
     }
 
     function loadBookableDays() {
-        if (!isPsychology() || !state.specialty) {
+        if (isPsychology() && !state.specialty) {
             state.bookableDates = [];
+            state.slotMode = 'clinic';
             return Promise.resolve();
         }
-        return fetch('/api/bookable-days?service=psicologia&specialty=' + encodeURIComponent(state.specialty))
+        var url = '/api/bookable-days?service=' + encodeURIComponent(bookingService());
+        if (isPsychology() && state.specialty) {
+            url += '&specialty=' + encodeURIComponent(state.specialty);
+        }
+        return fetch(url)
             .then(function (r) { return r.ok ? r.json() : null; })
-            .then(function (d) { state.bookableDates = (d && d.dates) || []; })
-            .catch(function () { state.bookableDates = []; });
+            .then(function (d) {
+                state.bookableDates = (d && d.dates) || [];
+                state.slotMode = (d && d.mode) || (state.bookableDates.length ? 'staff' : 'clinic');
+            })
+            .catch(function () {
+                state.bookableDates = [];
+                state.slotMode = 'clinic';
+            });
     }
 
     function syncPsychologyUrl() {
@@ -971,14 +991,18 @@
 
     function applyProfessionalsForTime(pros) {
         var wrap = document.getElementById('marcarPros');
+        var list = Array.isArray(pros) ? pros : [];
         state.professionalId = null;
         state.professionalName = null;
         if (!isPsychology()) {
+            if (list.length === 1) {
+                state.professionalId = list[0].id;
+                state.professionalName = list[0].name;
+            }
             hideProfessionals();
             if (btnNext) btnNext.disabled = false;
             return;
         }
-        var list = Array.isArray(pros) ? pros : [];
         if (!list.length) {
             hideProfessionals();
             if (btnNext) btnNext.disabled = true;
@@ -1031,7 +1055,7 @@
         if (dateObj <= today) return false;
 
         var dateStr = formatDateLocal(dateObj);
-        if (isPsychology()) {
+        if (usesStaffSlotCalendar()) {
             return (state.bookableDates || []).indexOf(dateStr) >= 0;
         }
 
@@ -1237,9 +1261,9 @@
     function loadQuickSlots() {
         var wrap = document.getElementById('marcarQuickSlots');
         if (isPsychology() && !state.specialty) return Promise.resolve();
-        var url = '/api/next-slots?limit=6&withinHours=336';
-        if (isPsychology()) {
-            url += '&service=psicologia&specialty=' + encodeURIComponent(state.specialty);
+        var url = '/api/next-slots?limit=6&withinHours=336&service=' + encodeURIComponent(bookingService());
+        if (isPsychology() && state.specialty) {
+            url += '&specialty=' + encodeURIComponent(state.specialty);
         }
         return fetch(url)
             .then(function (r) { return r.ok ? r.json() : null; })
@@ -1312,10 +1336,11 @@
         timeslotGrid.innerHTML = '<p class="marcar-times-empty">' + getString('loading') + '</p>';
 
         var dateStr = formatDateLocal(state.date);
-        var url = isPsychology()
-            ? '/api/bookable-slots?date=' + encodeURIComponent(dateStr) +
-                '&service=psicologia&specialty=' + encodeURIComponent(state.specialty || '')
-            : '/api/admin/available-slots?date=' + encodeURIComponent(dateStr);
+        var url = '/api/bookable-slots?date=' + encodeURIComponent(dateStr) +
+            '&service=' + encodeURIComponent(bookingService());
+        if (isPsychology()) {
+            url += '&specialty=' + encodeURIComponent(state.specialty || '');
+        }
 
         return fetch(url)
             .then(function (r) { return r.json(); })
@@ -1518,6 +1543,6 @@
     if (isPsychology()) {
         initPsychologyFlow();
     } else {
-        loadSchedule().then(bootMarcarCalendar);
+        loadSchedule().then(loadBookableDays).then(bootMarcarCalendar);
     }
 })();

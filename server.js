@@ -1381,54 +1381,109 @@ function fallbackPublicDayOverrides() {
     return enabledDayOverrides(scheduleStore.dayOverrides);
 }
 
-function staffAvailabilityRecord(username, days) {
+function staffAvailabilityRecord(username, days, weekly) {
     return {
         username: String(username || '').trim().toLowerCase(),
-        days: enabledDayOverrides(days),
+        days: normalizeDayOverrides(days),
+        weekly: staffBooking.normalizeWeeklyHours(weekly),
         updatedAt: new Date().toISOString()
     };
 }
 
+function publicStaffAvailability(record) {
+    const weekly = staffBooking.normalizeWeeklyHours(record && record.weekly);
+    const days = normalizeDayOverrides(record && record.days);
+    return {
+        username: record && record.username ? String(record.username).toLowerCase() : '',
+        weekly,
+        dayOverrides: days,
+        days: days.filter((item) => item.enabled !== false),
+        updatedAt: (record && record.updatedAt) || null
+    };
+}
+
 async function listAllStaffAvailabilityDaysInternal() {
-    if (usePersistentDb) return db.listAllStaffAvailabilityDays();
+    if (usePersistentDb) {
+        return (await db.listAllStaffAvailabilityDays()).map((row) => ({
+            username: row.username,
+            days: normalizeDayOverrides(row.days),
+            weekly: staffBooking.normalizeWeeklyHours(row.weekly),
+            updatedAt: row.updatedAt || null
+        }));
+    }
     return [...staffAvailDaysStore.values()].map((row) => ({
         username: row.username,
-        days: enabledDayOverrides(row.days),
+        days: normalizeDayOverrides(row.days),
+        weekly: staffBooking.normalizeWeeklyHours(row.weekly),
         updatedAt: row.updatedAt || null
     }));
 }
 
-async function getStaffAvailabilityDaysInternal(username) {
+async function getStaffAvailabilityRecordInternal(username) {
     const u = String(username || '').trim().toLowerCase();
-    if (!u) return [];
+    if (!u) return staffAvailabilityRecord('', [], {});
     if (usePersistentDb) {
         const row = await db.getStaffAvailabilityDays(u);
-        if (row) return enabledDayOverrides(row.days);
-    } else {
-        const stored = staffAvailDaysStore.get(u);
-        if (stored) return enabledDayOverrides(stored.days);
-    }
-    const fallback = fallbackPublicDayOverrides();
-    if (fallback.length) {
-        try {
-            await setStaffAvailabilityDaysInternal(u, fallback);
-        } catch (err) {
-            console.error('seed staff availability:', err.message);
+        if (row) {
+            return {
+                username: u,
+                days: normalizeDayOverrides(row.days),
+                weekly: staffBooking.normalizeWeeklyHours(row.weekly),
+                updatedAt: row.updatedAt || null
+            };
         }
+        return staffAvailabilityRecord(u, [], {});
     }
-    return fallback;
+    const stored = staffAvailDaysStore.get(u);
+    if (stored) {
+        return {
+            username: u,
+            days: normalizeDayOverrides(stored.days),
+            weekly: staffBooking.normalizeWeeklyHours(stored.weekly),
+            updatedAt: stored.updatedAt || null
+        };
+    }
+    return staffAvailabilityRecord(u, [], {});
+}
+
+async function getStaffAvailabilityDaysInternal(username) {
+    const record = await getStaffAvailabilityRecordInternal(username);
+    return enabledDayOverrides(record.days);
 }
 
 async function setStaffAvailabilityDaysInternal(username, days) {
     const u = String(username || '').trim().toLowerCase();
-    const next = enabledDayOverrides(days);
+    const existing = await getStaffAvailabilityRecordInternal(u);
+    const incoming = enabledDayOverrides(days);
+    const openDates = new Set(incoming.map((item) => item.date));
+    const keptClosed = normalizeDayOverrides(existing.days)
+        .filter((item) => item.enabled === false && !openDates.has(item.date));
+    const next = normalizeDayOverrides([...incoming, ...keptClosed]);
     if (usePersistentDb) {
         const saved = await db.setStaffAvailabilityDays(u, next);
         return enabledDayOverrides(saved && saved.days);
     }
-    const record = staffAvailabilityRecord(u, next);
+    const record = staffAvailabilityRecord(u, next, existing.weekly);
     staffAvailDaysStore.set(u, record);
-    return record.days;
+    return record.days.filter((item) => item.enabled !== false);
+}
+
+async function setStaffAvailabilityRecordInternal(username, days, weekly) {
+    const u = String(username || '').trim().toLowerCase();
+    const nextDays = normalizeDayOverrides(days);
+    const nextWeekly = staffBooking.normalizeWeeklyHours(weekly);
+    if (usePersistentDb) {
+        const saved = await db.setStaffAvailabilityRecord(u, nextDays, nextWeekly);
+        return {
+            username: u,
+            days: normalizeDayOverrides(saved && saved.days),
+            weekly: staffBooking.normalizeWeeklyHours(saved && saved.weekly),
+            updatedAt: (saved && saved.updatedAt) || new Date().toISOString()
+        };
+    }
+    const record = staffAvailabilityRecord(u, nextDays, nextWeekly);
+    staffAvailDaysStore.set(u, record);
+    return record;
 }
 
 function widerHours(a, b) {
@@ -6803,6 +6858,7 @@ function publicStaffBookingCard(person) {
 async function listStaffBookablePeople(service, specialtyId) {
     const profession = staffBooking.serviceProfession(service);
     if (!profession) return [];
+    const spec = staffBooking.specialtyForService(service, specialtyId);
     const [profiles, professionals, availRows] = await Promise.all([
         listStaffProfilesInternal(),
         listProfessionalsInternal(),
@@ -6812,20 +6868,22 @@ async function listStaffBookablePeople(service, specialtyId) {
         (professionals || []).map((pro) => [normalizeProfessionalUsername(pro.username), pro])
     );
     const byId = new Map((professionals || []).map((pro) => [Number(pro.id), pro]));
-    const daysByUser = new Map();
+    const availByUser = new Map();
     for (const row of availRows || []) {
         const u = String(row.username || '').trim().toLowerCase();
-        if (u) daysByUser.set(u, enabledDayOverrides(row.days));
+        if (u) availByUser.set(u, row);
     }
     const out = [];
     for (const profile of profiles || []) {
         if (!profile || profile.profession !== profession) continue;
-        if (profession === 'psicologo' && !staffBooking.profileMatchesSpecialty(profile, specialtyId)) {
+        if (profession === 'psicologo' && !staffBooking.profileMatchesSpecialty(profile, spec)) {
             continue;
         }
         const u = String(profile.username || '').trim().toLowerCase();
-        const days = daysByUser.get(u) || [];
-        if (!days.length) continue;
+        const avail = availByUser.get(u) || { days: [], weekly: {} };
+        const days = normalizeDayOverrides(avail.days);
+        const weekly = staffBooking.normalizeWeeklyHours(avail.weekly);
+        if (!staffBooking.hasBookableHours(weekly, days)) continue;
         let pro = Number.isInteger(Number(profile.professionalId))
             ? byId.get(Number(profile.professionalId))
             : null;
@@ -6838,16 +6896,15 @@ async function listStaffBookablePeople(service, specialtyId) {
             fullName: profile.fullName || pro.displayName || u,
             bio: profile.bio || '',
             hasPhoto: !!profile.hasPhoto,
-            days
+            days,
+            weekly
         });
     }
     return out;
 }
 
 function hoursForStaffOnDate(person, dateIso) {
-    const day = (person.days || []).find((item) => item.date === dateIso && item.enabled !== false);
-    if (!day) return null;
-    return { start: day.start, end: day.end };
+    return staffBooking.hoursForDate(person && person.weekly, person && person.days, dateIso);
 }
 
 function blockedTicksFromBookings(bookings, professionalId, excludeBookingRef, step) {
@@ -6928,24 +6985,45 @@ async function getStaffBookableSlotsForDate(dateIso, opts) {
 async function listStaffBookableDates(service, specialty, maxDays) {
     const days = Math.min(Math.max(parseInt(maxDays, 10) || 60, 1), 90);
     const people = await listStaffBookablePeople(service, specialty);
+    if (!people.length) return [];
     const today = lisbonNowParts().dateIso;
-    const dates = new Set();
-    for (const person of people) {
-        for (const day of person.days || []) {
-            if (!day || day.enabled === false || !day.date || day.date < today) continue;
-            dates.add(day.date);
-        }
+    const dates = [];
+    for (let i = 0; i < days; i++) {
+        const dateIso = addDaysIso(today, i);
+        if (people.some((person) => hoursForStaffOnDate(person, dateIso))) dates.push(dateIso);
     }
-    return Array.from(dates).filter((d) => {
-        const diff = (Date.parse(`${d}T12:00:00Z`) - Date.parse(`${today}T12:00:00Z`)) / 86400000;
-        return diff >= 0 && diff < days;
-    }).sort();
+    return dates;
 }
 
 async function staffPersonById(professionalId, service, specialty) {
     const people = await listStaffBookablePeople(service, specialty || 'outro');
     const id = Number(professionalId);
     return people.find((p) => p.id === id) || null;
+}
+
+async function resolveBookableProfessional({ service, specialty, dateIso, time, professionalId }) {
+    const spec = staffBooking.specialtyForService(service, specialty);
+    const people = await listStaffBookablePeople(service, spec);
+    if (!people.length) return { mode: 'clinic', person: null, people };
+    const want = Number(professionalId);
+    let person = null;
+    if (Number.isInteger(want) && want > 0) {
+        person = people.find((p) => p.id === want) || null;
+        if (person) {
+            const times = await slotsForStaffPersonOnDate(person, dateIso, service, null, null);
+            if (!times.includes(time)) person = null;
+        }
+    }
+    if (!person && staffBooking.requiresProfessionalChoice(service)) {
+        return { mode: 'staff', person: null, people, error: 'choose' };
+    }
+    if (!person) {
+        const packed = await getStaffBookableSlotsForDate(dateIso, { service, specialty: spec });
+        const list = packed.professionalsByTime[time] || [];
+        if (list.length) person = people.find((p) => p.id === list[0].id) || null;
+    }
+    if (!person) return { mode: 'staff', person: null, people, error: 'unavailable' };
+    return { mode: 'staff', person, people };
 }
 
 function lisbonNowParts() {
@@ -6997,8 +7075,11 @@ async function getNextBookableSlots(limit, maxDays, withinHours, opts) {
     const horizonMs = horizonHours > 0 ? Date.now() + horizonHours * 60 * 60 * 1000 : Infinity;
     const now = lisbonNowParts();
     const service = bookingServiceTag((opts && opts.service) || '');
-    const specialty = String((opts && opts.specialty) || '').trim().toLowerCase();
-    const staffMode = staffBooking.usesStaffCalendars(service);
+    const specialty = staffBooking.specialtyForService(service, (opts && opts.specialty) || '');
+    const staffPeople = staffBooking.usesStaffCalendars(service)
+        ? await listStaffBookablePeople(service, specialty)
+        : [];
+    const staffMode = staffPeople.length > 0;
     const pool = [];
     for (let i = 0; i < days; i++) {
         const dateIso = addDaysIso(now.dateIso, i);
@@ -11141,18 +11222,27 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         };
         const staffMode = staffBooking.usesStaffCalendars(service);
         const professionalId = Number(professionalIdRaw);
-        if (staffMode) {
-            if (!(Number.isInteger(professionalId) && professionalId > 0)) {
-                return res.status(400).json({ error: 'Escolha o psicólogo para este horário.' });
+        const isoCheckoutEarly = (dateIso && String(dateIso).trim()) || '';
+        const normTimeEarly = normalizeTimeString({ time: time || '' });
+        if (staffMode && isoCheckoutEarly && /^\d{4}-\d{2}-\d{2}$/.test(isoCheckoutEarly) && normTimeEarly) {
+            const resolved = await resolveBookableProfessional({
+                service,
+                specialty,
+                dateIso: isoCheckoutEarly,
+                time: normTimeEarly,
+                professionalId
+            });
+            if (resolved.mode === 'staff') {
+                if (!resolved.person) {
+                    const msg = resolved.error === 'choose'
+                        ? 'Escolha o psicólogo para este horário.'
+                        : 'Esse horário já não está disponível.';
+                    return res.status(400).json({ error: msg });
+                }
+                metadata.professional_id = String(resolved.person.id);
+                metadata.professional_name = String(resolved.person.fullName || resolved.person.displayName || '').slice(0, 160);
+                metadata.specialty = staffBooking.specialtyForService(service, specialty);
             }
-            const spec = String(specialty || '').trim().toLowerCase() || 'outro';
-            const person = await staffPersonById(professionalId, service, spec);
-            if (!person) {
-                return res.status(400).json({ error: 'Esse psicólogo não está disponível para esta especialidade.' });
-            }
-            metadata.professional_id = String(person.id);
-            metadata.professional_name = String(person.fullName || person.displayName || '').slice(0, 160);
-            metadata.specialty = spec;
         }
         const analyticsIds = anonymousIds(req);
         if (analyticsIds.visitorId) metadata.lon_vid = String(analyticsIds.visitorId).slice(0, 64);
@@ -11187,16 +11277,18 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
                     checkoutHold = null;
                 }
             }
+            const assignedProId = Number(metadata.professional_id) || 0;
+            const useStaffSlot = assignedProId > 0;
             const holdMatches = !!(
                 checkoutHold &&
                 checkoutHold.dateIso === isoCheckout &&
                 checkoutHold.time === normTimeCheckout &&
                 checkoutHold.expiresAt > Date.now()
-                && (!staffMode || Number(checkoutHold.professionalId) === professionalId)
+                && (!useStaffSlot || Number(checkoutHold.professionalId) === assignedProId)
             );
             let slotOk = false;
-            if (staffMode) {
-                const person = await staffPersonById(professionalId, service, metadata.specialty || 'outro');
+            if (useStaffSlot) {
+                const person = await staffPersonById(assignedProId, service, metadata.specialty || 'outro');
                 const allowedStaff = person
                     ? await slotsForStaffPersonOnDate(
                         person,
@@ -15741,9 +15833,10 @@ app.get('/api/clinic/schedule', requireAuth, async (req, res) => {
     try {
         const username = staffSessionUsername(req);
         if (!username) return res.status(401).json({ error: 'Authentication required' });
-        const dayOverrides = await getStaffAvailabilityDaysInternal(username);
+        const record = await getStaffAvailabilityRecordInternal(username);
         res.json({
-            dayOverrides,
+            dayOverrides: enabledDayOverrides(record.days),
+            weekly: staffBooking.normalizeWeeklyHours(record.weekly),
             timezone: scheduleStore.timezone || 'Europe/Lisbon',
             slotDuration: scheduleStore.slotDuration || 30
         });
@@ -15758,21 +15851,96 @@ app.post('/api/clinic/schedule', requireAuth, express.json(), async (req, res) =
         const username = staffSessionUsername(req);
         if (!username) return res.status(401).json({ error: 'Authentication required' });
         const dayOverrides = await setStaffAvailabilityDaysInternal(username, (req.body || {}).dayOverrides);
-        try {
-            await rebuildPublicDayOverridesFromStaff();
-        } catch (err) {
-            console.error('rebuild public day overrides:', err.message);
-        }
+        const record = await getStaffAvailabilityRecordInternal(username);
         console.log(`   📅 Clinic availability saved for ${username} (${dayOverrides.length} days)`);
+        invalidateNextSlotsCache();
         res.json({
             success: true,
             dayOverrides,
+            weekly: staffBooking.normalizeWeeklyHours(record.weekly),
             timezone: scheduleStore.timezone || 'Europe/Lisbon',
             slotDuration: scheduleStore.slotDuration || 30
         });
     } catch (err) {
         console.error('POST /api/clinic/schedule:', err.message);
         res.status(500).json({ error: 'Failed to persist availability' });
+    }
+});
+
+app.get('/api/admin/staff-availability', requireAdmin, async (req, res) => {
+    try {
+        const [people, profiles, availRows, professionals] = await Promise.all([
+            listAdminStaffPeople(),
+            listStaffProfilesInternal(),
+            listAllStaffAvailabilityDaysInternal(),
+            listProfessionalsInternal()
+        ]);
+        const byUser = new Map(
+            (profiles || []).map((p) => [String(p.username || '').toLowerCase(), p])
+        );
+        const availBy = new Map(
+            (availRows || []).map((row) => [String(row.username || '').toLowerCase(), row])
+        );
+        const proByUser = new Map(
+            (professionals || []).map((p) => [normalizeProfessionalUsername(p.username), p])
+        );
+        const list = [];
+        for (const person of people || []) {
+            const u = String(person.username || '').trim().toLowerCase();
+            if (!u) continue;
+            const profile = byUser.get(u) || {};
+            const record = availBy.get(u) || { days: [], weekly: {} };
+            const weekly = staffBooking.normalizeWeeklyHours(record.weekly);
+            const days = normalizeDayOverrides(record.days);
+            const profession = profile.profession || '';
+            list.push({
+                username: u,
+                displayName: firstNonEmpty(isJunkStaffName(profile.fullName) ? '' : profile.fullName, person.displayName, u),
+                profession,
+                professionLabel: STAFF_PROFESSION_TITLES[profession] || '',
+                consultHint: staffBooking.PROFESSION_CONSULT_HINT[profession] || '',
+                weeklyDays: staffBooking.WEEKDAY_KEYS.filter((day) => weekly[day] && weekly[day].enabled).length,
+                extraDays: days.filter((item) => item.enabled !== false).length,
+                hasHours: staffBooking.hasBookableHours(weekly, days),
+                hasLogin: !!(proByUser.get(u) || person.hasLogin)
+            });
+        }
+        list.sort((a, b) => String(a.displayName).localeCompare(String(b.displayName), 'pt'));
+        res.json({ people: list, hints: staffBooking.PROFESSION_CONSULT_HINT });
+    } catch (err) {
+        console.error('GET /api/admin/staff-availability:', err.message);
+        res.status(500).json({ error: 'Failed to load staff availability' });
+    }
+});
+
+app.get('/api/admin/staff-availability/:username', requireAdmin, async (req, res) => {
+    try {
+        const username = String(req.params.username || '').trim().toLowerCase();
+        if (!username) return res.status(400).json({ error: 'Username required' });
+        const record = await getStaffAvailabilityRecordInternal(username);
+        res.json(publicStaffAvailability(record));
+    } catch (err) {
+        console.error('GET /api/admin/staff-availability/:username:', err.message);
+        res.status(500).json({ error: 'Failed to load availability' });
+    }
+});
+
+app.put('/api/admin/staff-availability/:username', requireAdmin, express.json(), async (req, res) => {
+    try {
+        const username = String(req.params.username || '').trim().toLowerCase();
+        if (!username) return res.status(400).json({ error: 'Username required' });
+        const body = req.body || {};
+        const saved = await setStaffAvailabilityRecordInternal(
+            username,
+            body.dayOverrides != null ? body.dayOverrides : body.days,
+            body.weekly
+        );
+        console.log(`   📅 Admin availability saved for ${username}`);
+        invalidateNextSlotsCache();
+        res.json({ success: true, ...publicStaffAvailability(saved) });
+    } catch (err) {
+        console.error('PUT /api/admin/staff-availability/:username:', err.message);
+        res.status(500).json({ error: 'Failed to save availability' });
     }
 });
 
@@ -15849,12 +16017,15 @@ app.get('/api/psychology/specialties', (req, res) => {
 app.get('/api/bookable-days', async (req, res) => {
     try {
         const service = bookingServiceTag(req.query.service || '');
-        const specialty = String(req.query.specialty || '').trim().toLowerCase();
+        const specialty = staffBooking.specialtyForService(
+            bookingServiceTag(req.query.service || ''),
+            req.query.specialty
+        );
         if (!staffBooking.usesStaffCalendars(service)) {
-            return res.json({ dates: [], service });
+            return res.json({ dates: [], service, mode: 'clinic' });
         }
         const dates = await listStaffBookableDates(service, specialty, 60);
-        res.json({ dates, service, specialty });
+        res.json({ dates, service, specialty, mode: dates.length ? 'staff' : 'clinic' });
     } catch (err) {
         console.error('GET /api/bookable-days:', err.message);
         res.status(500).json({ error: 'Failed to load days', dates: [] });
@@ -15865,27 +16036,31 @@ app.get('/api/bookable-slots', async (req, res) => {
     try {
         const dateIso = String(req.query.date || '').trim();
         const service = bookingServiceTag(req.query.service || '');
-        const specialty = String(req.query.specialty || '').trim().toLowerCase();
+        const specialty = staffBooking.specialtyForService(service, req.query.specialty);
         const professionalId = Number(req.query.professionalId);
         if (!/^\d{4}-\d{2}-\d{2}$/.test(dateIso)) {
             return res.status(400).json({ error: 'Invalid date' });
         }
-        if (!staffBooking.usesStaffCalendars(service)) {
-            const available = await getBookableSlotsForDateIso(dateIso, null, null, false);
-            return res.json({ available, professionalsByTime: {}, date: dateIso, service });
+        const people = staffBooking.usesStaffCalendars(service)
+            ? await listStaffBookablePeople(service, specialty)
+            : [];
+        if (people.length) {
+            const packed = await getStaffBookableSlotsForDate(dateIso, {
+                service,
+                specialty,
+                professionalId: Number.isInteger(professionalId) && professionalId > 0 ? professionalId : null
+            });
+            return res.json({
+                available: packed.available,
+                professionalsByTime: packed.professionalsByTime,
+                date: dateIso,
+                service,
+                specialty,
+                mode: 'staff'
+            });
         }
-        const packed = await getStaffBookableSlotsForDate(dateIso, {
-            service,
-            specialty,
-            professionalId: Number.isInteger(professionalId) && professionalId > 0 ? professionalId : null
-        });
-        res.json({
-            available: packed.available,
-            professionalsByTime: packed.professionalsByTime,
-            date: dateIso,
-            service,
-            specialty
-        });
+        const available = await getBookableSlotsForDateIso(dateIso, null, null, false);
+        return res.json({ available, professionalsByTime: {}, date: dateIso, service, mode: 'clinic' });
     } catch (err) {
         console.error('GET /api/bookable-slots:', err.message);
         res.status(500).json({ error: 'Failed to load slots', available: [], professionalsByTime: {} });
@@ -15932,15 +16107,24 @@ app.post('/api/slot-hold', rateLimitSlotHold, async (req, res) => {
         const service = bookingServiceTag((req.body && req.body.service) || 'clinica_geral');
         const specialty = String((req.body && req.body.specialty) || '').trim().toLowerCase();
         const professionalId = Number((req.body && req.body.professionalId) || 0);
-        const staffMode = staffBooking.usesStaffCalendars(service);
-        if (staffMode && !(Number.isInteger(professionalId) && professionalId > 0)) {
-            return res.status(400).json({ error: 'Choose a psychologist for this time' });
+        const resolved = await resolveBookableProfessional({
+            service,
+            specialty,
+            dateIso,
+            time,
+            professionalId
+        });
+        const staffMode = resolved.mode === 'staff';
+        if (staffMode && !resolved.person) {
+            const msg = resolved.error === 'choose'
+                ? 'Choose a psychologist for this time'
+                : 'That time slot is not available';
+            return res.status(staffMode && resolved.error === 'choose' ? 400 : 409).json({ error: msg });
         }
+        const assignedId = staffMode ? resolved.person.id : null;
         let allowed = [];
         if (staffMode) {
-            const person = await staffPersonById(professionalId, service, specialty || 'outro');
-            if (!person) return res.status(409).json({ error: 'That psychologist is not available' });
-            allowed = await slotsForStaffPersonOnDate(person, dateIso, service, null, null);
+            allowed = await slotsForStaffPersonOnDate(resolved.person, dateIso, service, null, null);
         } else {
             allowed = await getBookableSlotsForDateIso(dateIso, null, null, false);
         }
@@ -15949,13 +16133,13 @@ app.post('/api/slot-hold', rateLimitSlotHold, async (req, res) => {
         let existing = null;
         if (usePersistentDb) {
             try {
-                existing = await db.findSlotHoldBySlot(dateIso, time, staffMode ? professionalId : null);
+                existing = await db.findSlotHoldBySlot(dateIso, time, staffMode ? assignedId : null);
             } catch (e) { /* ignore */ }
         }
         if (!existing) {
             existing = [...slotHoldsById.values()].find(
                 (h) => h.dateIso === dateIso && h.time === time && h.expiresAt > Date.now()
-                    && (!staffMode || Number(h.professionalId) === professionalId)
+                    && (!staffMode || Number(h.professionalId) === assignedId)
             );
         }
 
@@ -15993,7 +16177,7 @@ app.post('/api/slot-hold', rateLimitSlotHold, async (req, res) => {
             dateIso,
             time,
             service,
-            professionalId: staffMode ? professionalId : null,
+            professionalId: staffMode ? assignedId : null,
             holderToken,
             expiresAt: Date.now() + SLOT_HOLD_MS
         };

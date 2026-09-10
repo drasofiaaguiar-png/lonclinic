@@ -702,6 +702,7 @@ async function initSchema(p) {
             updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
         )
     `);
+    await p.query(`ALTER TABLE staff_availability_days ADD COLUMN IF NOT EXISTS weekly JSONB NOT NULL DEFAULT '{}'::jsonb`);
     await p.query(`
         CREATE TABLE IF NOT EXISTS staff_documents (
             id SERIAL PRIMARY KEY,
@@ -3407,16 +3408,24 @@ async function markStaffMonthAvailabilityReminder(username, month, which) {
     return rowToStaffMonthAvailability(r.rows[0]);
 }
 
+function parseJsonbField(value, fallback) {
+    if (value == null) return fallback;
+    if (typeof value === 'string') {
+        try { return JSON.parse(value); } catch (err) { return fallback; }
+    }
+    return value;
+}
+
 function rowToStaffAvailabilityDays(row) {
     if (!row) return null;
-    let days = row.days;
-    if (typeof days === 'string') {
-        try { days = JSON.parse(days); } catch (err) { days = []; }
-    }
+    let days = parseJsonbField(row.days, []);
     if (!Array.isArray(days)) days = [];
+    let weekly = parseJsonbField(row.weekly, {});
+    if (!weekly || typeof weekly !== 'object' || Array.isArray(weekly)) weekly = {};
     return {
         username: row.username,
         days,
+        weekly,
         updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : row.updated_at
     };
 }
@@ -3426,7 +3435,7 @@ async function getStaffAvailabilityDays(username) {
     const u = String(username || '').trim().toLowerCase();
     if (!u) return null;
     const r = await p.query(
-        `SELECT username, days, updated_at
+        `SELECT username, days, weekly, updated_at
          FROM staff_availability_days
          WHERE LOWER(username) = $1
          LIMIT 1`,
@@ -3438,7 +3447,7 @@ async function getStaffAvailabilityDays(username) {
 async function listAllStaffAvailabilityDays() {
     const p = getPool();
     const r = await p.query(
-        `SELECT username, days, updated_at FROM staff_availability_days`
+        `SELECT username, days, weekly, updated_at FROM staff_availability_days`
     );
     return r.rows.map(rowToStaffAvailabilityDays);
 }
@@ -3449,13 +3458,32 @@ async function setStaffAvailabilityDays(username, days) {
     if (!u) return null;
     const payload = Array.isArray(days) ? days : [];
     const r = await p.query(
-        `INSERT INTO staff_availability_days (username, days, updated_at)
-         VALUES ($1, $2::jsonb, NOW())
+        `INSERT INTO staff_availability_days (username, days, weekly, updated_at)
+         VALUES ($1, $2::jsonb, '{}'::jsonb, NOW())
          ON CONFLICT (username) DO UPDATE SET
             days = EXCLUDED.days,
             updated_at = NOW()
-         RETURNING username, days, updated_at`,
+         RETURNING username, days, weekly, updated_at`,
         [u, JSON.stringify(payload)]
+    );
+    return rowToStaffAvailabilityDays(r.rows[0]);
+}
+
+async function setStaffAvailabilityRecord(username, days, weekly) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return null;
+    const dayPayload = Array.isArray(days) ? days : [];
+    const weeklyPayload = weekly && typeof weekly === 'object' ? weekly : {};
+    const r = await p.query(
+        `INSERT INTO staff_availability_days (username, days, weekly, updated_at)
+         VALUES ($1, $2::jsonb, $3::jsonb, NOW())
+         ON CONFLICT (username) DO UPDATE SET
+            days = EXCLUDED.days,
+            weekly = EXCLUDED.weekly,
+            updated_at = NOW()
+         RETURNING username, days, weekly, updated_at`,
+        [u, JSON.stringify(dayPayload), JSON.stringify(weeklyPayload)]
     );
     return rowToStaffAvailabilityDays(r.rows[0]);
 }
@@ -3843,6 +3871,7 @@ module.exports = {
     getStaffAvailabilityDays,
     listAllStaffAvailabilityDays,
     setStaffAvailabilityDays,
+    setStaffAvailabilityRecord,
     listStaffDocuments,
     listAllStaffDocuments,
     upsertStaffDocument,

@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=pro-email-1">
+    <link rel="stylesheet" href="/dashboard.css?v=staff-avail-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -508,8 +508,73 @@
             <div class="admin-panel" id="adminPanelAvailability" data-admin-panel-content="availability" hidden>
             <div class="dash-section">
                 <div class="dash-section-header">
+                    <h2 class="dash-section-title">Professional hours</h2>
+                    <p class="dash-section-subtitle">Set weekly hours per person. Patients only see slots for that profession’s consultations.</p>
+                </div>
+                <div class="admin-staff-avail-picker">
+                    <label for="staffAvailSelect">Professional</label>
+                    <select id="staffAvailSelect" class="admin-select">
+                        <option value="">Choose a professional…</option>
+                    </select>
+                </div>
+                <p class="admin-staff-avail-hint" id="staffAvailHint" hidden></p>
+                <div id="staffAvailError" class="dash-login-error" style="display:none;" role="alert"></div>
+            </div>
+
+            <div id="staffAvailEditor" hidden>
+                <div class="dash-section">
+                    <div class="dash-section-header">
+                        <h2 class="dash-section-title">Weekly hours</h2>
+                        <p class="dash-section-subtitle">Repeats every week until you close a specific date below.</p>
+                    </div>
+                    <div class="admin-schedule-grid" id="staffWeeklyGrid"></div>
+                </div>
+                <div class="dash-section">
+                    <div class="dash-section-header">
+                        <h2 class="dash-section-title">Date exceptions</h2>
+                        <p class="dash-section-subtitle">Different hours or a closed day on a specific date.</p>
+                    </div>
+                    <div class="admin-override-cal-header">
+                        <button type="button" class="btn btn-outline btn-sm" id="staffAvailCalPrev" aria-label="Previous month">←</button>
+                        <span class="admin-override-cal-title" id="staffAvailCalMonthLabel"></span>
+                        <button type="button" class="btn btn-outline btn-sm" id="staffAvailCalNext" aria-label="Next month">→</button>
+                    </div>
+                    <div class="admin-override-weekdays" aria-hidden="true">
+                        <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                    </div>
+                    <div class="admin-override-cal-grid" id="staffAvailCalGrid"></div>
+                    <div class="admin-override-bulk">
+                        <div class="admin-override-bulk-row">
+                            <div class="admin-time-group admin-override-time">
+                                <label for="staffAvailBulkStart">Start</label>
+                                <input type="time" id="staffAvailBulkStart" class="admin-time-input" value="09:00">
+                            </div>
+                            <div class="admin-time-group admin-override-time">
+                                <label for="staffAvailBulkEnd">End</label>
+                                <input type="time" id="staffAvailBulkEnd" class="admin-time-input" value="17:00">
+                            </div>
+                            <label class="admin-override-open-label">
+                                <input type="checkbox" id="staffAvailBulkEnabled" checked>
+                                <span>Open for bookings</span>
+                            </label>
+                        </div>
+                        <div class="admin-override-bulk-actions">
+                            <button type="button" class="btn btn-primary btn-sm" id="staffAvailBulkApply">Apply to selected days</button>
+                            <button type="button" class="btn btn-outline btn-sm" id="staffAvailBulkRemove">Remove exception</button>
+                            <button type="button" class="btn btn-outline btn-sm" id="staffAvailBulkClear">Clear selection</button>
+                        </div>
+                    </div>
+                    <div class="admin-blocked-list" id="staffAvailDaysList"></div>
+                </div>
+            </div>
+
+            <details class="clinic-avail-more" id="adminClinicFallbackDetails">
+            <summary>Clinic fallback hours</summary>
+            <p class="admin-override-hint">Used for a consultation type until at least one professional of that type has hours above.</p>
+            <div class="dash-section">
+                <div class="dash-section-header">
                     <h2 class="dash-section-title">Working Hours</h2>
-                    <p class="dash-section-subtitle">Set your availability for each day of the week</p>
+                    <p class="dash-section-subtitle">Clinic-wide fallback for each day of the week</p>
                 </div>
                 <div class="admin-schedule-grid" id="workingHoursGrid">
                     <!-- Generated by JS -->
@@ -625,6 +690,7 @@
                     <p class="admin-preview-empty">Select a date and click Preview to see available slots</p>
                 </div>
             </div>
+            </details>
             </div>
 
             <!-- Analytics panel -->
@@ -1059,7 +1125,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=pro-email-1"></script>
+    <script src="/admin.js?v=staff-avail-1"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

@@ -407,6 +407,17 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+    function clinicWeeklyHoursForDate(dateKey) {
+        const weekly = (clinicScheduleData && clinicScheduleData.weekly) || {};
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateKey || ''));
+        if (!m) return null;
+        const dateObj = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+        const key = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][dateObj.getDay()];
+        const row = weekly[key];
+        if (!row || !row.enabled) return null;
+        return { start: row.start || '09:00', end: row.end || '17:00' };
+    }
+
     function syncClinicBulkInputsToSelection() {
         if (!clinicScheduleData || clinicSelectedOverrideDates.size !== 1) return;
         const [dateStr] = Array.from(clinicSelectedOverrideDates);
@@ -451,12 +462,18 @@ document.addEventListener('DOMContentLoaded', () => {
             num.textContent = String(d);
             btn.appendChild(num);
             const ov = overrideMap.get(dateKey);
+            const weeklyRow = !ov ? clinicWeeklyHoursForDate(dateKey) : null;
             if (ov) {
                 const label = document.createElement('span');
                 label.className = 'admin-override-day-hours';
                 label.textContent = `${String(ov.start).slice(0, 5)}–${String(ov.end).slice(0, 5)}`;
                 btn.appendChild(label);
                 btn.classList.add('admin-override-has-rule');
+            } else if (weeklyRow) {
+                const label = document.createElement('span');
+                label.className = 'admin-override-day-hours is-template';
+                label.textContent = `${String(weeklyRow.start).slice(0, 5)}–${String(weeklyRow.end).slice(0, 5)}`;
+                btn.appendChild(label);
             }
             if (dateObj < today0) {
                 btn.disabled = true;
@@ -514,6 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (clinicScheduleDirty) return;
             clinicScheduleData = {
                 slotDuration: schedule.slotDuration || 30,
+                weekly: schedule.weekly || {},
                 dayOverrides: Array.isArray(schedule.dayOverrides)
                     ? schedule.dayOverrides.filter((o) => o && o.enabled !== false).map((o) => ({ ...o, enabled: true }))
                     : [],

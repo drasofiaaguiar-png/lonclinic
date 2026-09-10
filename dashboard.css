@@ -2332,6 +2332,45 @@ body.dash-portal .dash-stat-card {
     gap: 8px;
 }
 
+.admin-staff-avail-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 560px;
+    margin-top: 8px;
+}
+
+.admin-staff-avail-picker .admin-select {
+    width: 100%;
+}
+
+.admin-staff-avail-hint {
+    margin: 12px 0 0;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    line-height: 1.45;
+}
+
+#adminClinicFallbackDetails {
+    margin-top: 8px;
+}
+
+#adminClinicFallbackDetails > summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 16px;
+    list-style: none;
+}
+
+#adminClinicFallbackDetails > summary::-webkit-details-marker {
+    display: none;
+}
+
+#staffAvailEditor .admin-schedule-grid {
+    margin-top: 8px;
+}
+
 .admin-dir-row {
     display: flex;
     flex-wrap: wrap;

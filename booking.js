@@ -29,7 +29,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         slotId: null,
         consultLangPolicy: false,
         professionalId: null,
-        specialty: null
+        specialty: null,
+        bookableDates: [],
+        slotMode: 'clinic'
     };
 
     // ─── Load schedule data ───
@@ -678,6 +680,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    async function loadBookableDays() {
+        const service = state.service || 'clinica_geral';
+        try {
+            let url = '/api/bookable-days?service=' + encodeURIComponent(service);
+            if (service === 'psicologia' && state.specialty) {
+                url += '&specialty=' + encodeURIComponent(state.specialty);
+            }
+            const res = await fetch(url);
+            if (!res.ok) throw new Error('bookable-days');
+            const data = await res.json();
+            state.bookableDates = (data && data.dates) || [];
+            state.slotMode = (data && data.mode) || (state.bookableDates.length ? 'staff' : 'clinic');
+        } catch (err) {
+            state.bookableDates = [];
+            state.slotMode = 'clinic';
+        }
+    }
+
     function isDateAvailable(dateObj) {
         // Check if date is in the past
         const today = new Date();
@@ -686,6 +706,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Check if date is blocked
         const dateStr = formatDateLocal(dateObj);
+        if (state.slotMode === 'staff') {
+            return (state.bookableDates || []).includes(dateStr);
+        }
+
         if (state.scheduleData && state.scheduleData.blockedDates && state.scheduleData.blockedDates.includes(dateStr)) {
             return false;
         }
@@ -813,7 +837,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function loadQuickSlots() {
         const wrap = document.getElementById('bookingQuickSlots');
         try {
-            const res = await fetch('/api/next-slots?limit=6&withinHours=336');
+            const res = await fetch(
+                '/api/next-slots?limit=6&withinHours=336&service=' + encodeURIComponent(state.service || 'clinica_geral') +
+                (state.specialty ? '&specialty=' + encodeURIComponent(state.specialty) : '')
+            );
             if (!res.ok) return;
             const data = await res.json();
             const slots = (data && data.slots) || [];
@@ -849,7 +876,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         try {
             // Fetch available slots from admin schedule
-            const res = await fetch(`/api/admin/available-slots?date=${dateStr}`);
+            const res = await fetch(
+                '/api/bookable-slots?date=' + encodeURIComponent(dateStr) +
+                '&service=' + encodeURIComponent(state.service || 'clinica_geral') +
+                (state.specialty ? '&specialty=' + encodeURIComponent(state.specialty) : '')
+            );
             const data = await res.json();
 
             timeslotGrid.innerHTML = '';
@@ -883,12 +914,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
+            const byTime = data.professionalsByTime || {};
             availableSlots.forEach(slot => {
                 const btn = document.createElement('button');
                 btn.className = 'timeslot-btn';
                 btn.textContent = slot;
                 btn.addEventListener('click', () => {
                     state.time = slot;
+                    const pros = byTime[slot] || [];
+                    if (pros.length === 1) {
+                        state.professionalId = pros[0].id;
+                    } else if (state.service !== 'psicologia') {
+                        state.professionalId = null;
+                    }
                     timeslotGrid.querySelectorAll('.timeslot-btn').forEach(b => b.classList.remove('selected'));
                     btn.classList.add('selected');
                     document.getElementById('next-1').disabled = false;
@@ -2099,6 +2137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     syncConsultLangPolicyUI();
     applyRenewalAndNextSlot();
     applyClinicalIntentToForm();
+    await loadBookableDays();
 
     if (state.currentStep === 1) {
         renderCalendar();

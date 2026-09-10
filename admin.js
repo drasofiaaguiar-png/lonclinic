@@ -64,15 +64,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         scheduleDirty = true;
         updateSaveButtonState();
     }
+    let staffAvailDirty = false;
+    let staffAvailUsername = '';
+    let staffAvailData = null;
+    let staffAvailPeople = [];
+    let staffAvailCalYear = null;
+    let staffAvailCalMonth = null;
+    const staffAvailSelectedDates = new Set();
+    const STAFF_WEEKDAYS = [
+        ['monday', 'Monday'],
+        ['tuesday', 'Tuesday'],
+        ['wednesday', 'Wednesday'],
+        ['thursday', 'Thursday'],
+        ['friday', 'Friday'],
+        ['saturday', 'Saturday'],
+        ['sunday', 'Sunday']
+    ];
+
     function updateSaveButtonState() {
         if (!saveScheduleBtn) return;
-        if (scheduleDirty) {
+        const staffMode = !!staffAvailUsername;
+        const dirty = staffMode ? staffAvailDirty : scheduleDirty;
+        if (dirty) {
             saveScheduleBtn.classList.add('admin-save-dirty');
-            saveScheduleBtn.textContent = 'Save Schedule •';
+            saveScheduleBtn.textContent = staffMode ? 'Save availability •' : 'Save Schedule •';
         } else {
             saveScheduleBtn.classList.remove('admin-save-dirty');
             if (saveScheduleBtn.textContent !== '✓ Saved') {
-                saveScheduleBtn.textContent = 'Save Schedule';
+                saveScheduleBtn.textContent = staffMode ? 'Save availability' : 'Save Schedule';
             }
         }
     }
@@ -268,7 +287,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         finances: { title: 'Finances', subtitle: 'Monthly revenue by patient' },
         analytics: { title: 'Analytics', subtitle: 'Patient booking vs job application funnels' },
         invitations: { title: 'Invitations', subtitle: 'Send and manage booking invites' },
-        availability: { title: 'Availability', subtitle: 'Working hours, blocks & slot preview' },
+        availability: { title: 'Availability', subtitle: 'Hours per professional, used on each consultation type' },
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' },
         professionals: { title: 'Professionals', subtitle: 'Directory of clinic professionals' },
         psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' },
@@ -354,6 +373,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (panelId === 'analytics') loadAnalyticsPanel();
         if (panelId === 'invitations') loadInvitations();
         if (panelId === 'reviews') loadAdminReviews();
+        if (panelId === 'availability') loadStaffAvailabilityPicker();
         if (panelId === 'professionals') loadAdminProfessionals();
         if (panelId === 'psychologists') loadAdminPsychologists();
         if (panelId === 'producers') loadAdminProducers();
@@ -2111,9 +2131,437 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // ─── Staff availability (per professional) ───
+    const staffAvailSelect = document.getElementById('staffAvailSelect');
+    const staffAvailHint = document.getElementById('staffAvailHint');
+    const staffAvailError = document.getElementById('staffAvailError');
+    const staffAvailEditor = document.getElementById('staffAvailEditor');
+    const staffWeeklyGrid = document.getElementById('staffWeeklyGrid');
+    const staffAvailCalPrev = document.getElementById('staffAvailCalPrev');
+    const staffAvailCalNext = document.getElementById('staffAvailCalNext');
+    const staffAvailCalMonthLabel = document.getElementById('staffAvailCalMonthLabel');
+    const staffAvailCalGrid = document.getElementById('staffAvailCalGrid');
+    const staffAvailDaysList = document.getElementById('staffAvailDaysList');
+    const staffAvailBulkStart = document.getElementById('staffAvailBulkStart');
+    const staffAvailBulkEnd = document.getElementById('staffAvailBulkEnd');
+    const staffAvailBulkEnabled = document.getElementById('staffAvailBulkEnabled');
+    const staffAvailBulkApply = document.getElementById('staffAvailBulkApply');
+    const staffAvailBulkRemove = document.getElementById('staffAvailBulkRemove');
+    const staffAvailBulkClear = document.getElementById('staffAvailBulkClear');
+
+    function emptyStaffWeekly() {
+        const out = {};
+        STAFF_WEEKDAYS.forEach(([day]) => {
+            out[day] = { enabled: false, start: '09:00', end: '17:00' };
+        });
+        return out;
+    }
+
+    function staffWeekdayFromDate(dateStr) {
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr || '');
+        if (!m) return '';
+        const dateObj = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+        return ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][dateObj.getDay()] || '';
+    }
+
+    function markStaffAvailDirty() {
+        staffAvailDirty = true;
+        updateSaveButtonState();
+    }
+
+    function setStaffAvailError(message) {
+        if (!staffAvailError) return;
+        if (!message) {
+            staffAvailError.style.display = 'none';
+            staffAvailError.textContent = '';
+            return;
+        }
+        staffAvailError.textContent = message;
+        staffAvailError.style.display = 'block';
+    }
+
+    function staffWeeklyHoursForDate(dateStr) {
+        const weekly = (staffAvailData && staffAvailData.weekly) || {};
+        const key = staffWeekdayFromDate(dateStr);
+        const row = weekly[key];
+        if (!row || !row.enabled) return null;
+        return { start: row.start || '09:00', end: row.end || '17:00' };
+    }
+
+    function readStaffWeeklyFromGrid() {
+        const weekly = emptyStaffWeekly();
+        STAFF_WEEKDAYS.forEach(([day]) => {
+            const toggle = staffWeeklyGrid && staffWeeklyGrid.querySelector(`input[type="checkbox"][data-staff-day="${day}"]`);
+            const startInput = staffWeeklyGrid && staffWeeklyGrid.querySelector(`input[data-staff-day="${day}"][data-type="start"]`);
+            const endInput = staffWeeklyGrid && staffWeeklyGrid.querySelector(`input[data-staff-day="${day}"][data-type="end"]`);
+            weekly[day] = {
+                enabled: !!(toggle && toggle.checked),
+                start: (startInput && startInput.value) || '09:00',
+                end: (endInput && endInput.value) || '17:00'
+            };
+        });
+        return weekly;
+    }
+
+    function renderStaffWeeklyGrid() {
+        if (!staffWeeklyGrid || !staffAvailData) return;
+        const weekly = staffAvailData.weekly || emptyStaffWeekly();
+        staffWeeklyGrid.innerHTML = '';
+        STAFF_WEEKDAYS.forEach(([day, label]) => {
+            const dayData = weekly[day] || { enabled: false, start: '09:00', end: '17:00' };
+            const dayCard = document.createElement('div');
+            dayCard.className = 'admin-day-card';
+            dayCard.innerHTML = `
+                <div class="admin-day-header">
+                    <label class="admin-day-toggle">
+                        <input type="checkbox" ${dayData.enabled ? 'checked' : ''} data-staff-day="${day}">
+                        <span class="admin-day-label">${label}</span>
+                    </label>
+                </div>
+                <div class="admin-day-times" ${!dayData.enabled ? 'style="opacity:0.5;pointer-events:none;"' : ''}>
+                    <div class="admin-time-group">
+                        <label>Start</label>
+                        <input type="time" value="${dayData.start}" data-staff-day="${day}" data-type="start" class="admin-time-input">
+                    </div>
+                    <div class="admin-time-group">
+                        <label>End</label>
+                        <input type="time" value="${dayData.end}" data-staff-day="${day}" data-type="end" class="admin-time-input">
+                    </div>
+                </div>
+            `;
+            staffWeeklyGrid.appendChild(dayCard);
+            const toggle = dayCard.querySelector('input[type="checkbox"]');
+            toggle.addEventListener('change', (e) => {
+                const timesDiv = dayCard.querySelector('.admin-day-times');
+                timesDiv.style.opacity = e.target.checked ? '1' : '0.5';
+                timesDiv.style.pointerEvents = e.target.checked ? 'auto' : 'none';
+                staffAvailData.weekly = readStaffWeeklyFromGrid();
+                markStaffAvailDirty();
+                renderStaffAvailCalendar();
+            });
+            dayCard.querySelectorAll('input[type="time"]').forEach((inp) => {
+                inp.addEventListener('change', () => {
+                    staffAvailData.weekly = readStaffWeeklyFromGrid();
+                    markStaffAvailDirty();
+                    renderStaffAvailCalendar();
+                });
+            });
+        });
+    }
+
+    function ensureStaffAvailCalInitialized() {
+        if (staffAvailCalYear === null || staffAvailCalMonth === null) {
+            const t = new Date();
+            staffAvailCalYear = t.getFullYear();
+            staffAvailCalMonth = t.getMonth();
+        }
+    }
+
+    function renderStaffAvailDaysList() {
+        if (!staffAvailDaysList || !staffAvailData) return;
+        const list = (staffAvailData.dayOverrides || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+        staffAvailDaysList.innerHTML = '';
+        if (!list.length) return;
+        list.forEach((entry) => {
+            const item = document.createElement('div');
+            item.className = 'admin-blocked-item';
+            const formatted = new Date(`${entry.date}T12:00:00`).toLocaleDateString('en-GB', {
+                weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
+            });
+            const hoursLabel = entry.enabled !== false
+                ? `${entry.start} – ${entry.end}`
+                : 'Closed';
+            item.innerHTML = `
+                <span>${formatted}: ${hoursLabel}</span>
+                <button type="button" class="admin-remove-btn" data-staff-od="${entry.date}" aria-label="Remove">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            `;
+            staffAvailDaysList.appendChild(item);
+            item.querySelector('.admin-remove-btn').addEventListener('click', () => {
+                staffAvailData.dayOverrides = (staffAvailData.dayOverrides || []).filter((o) => o.date !== entry.date);
+                staffAvailSelectedDates.delete(entry.date);
+                markStaffAvailDirty();
+                renderStaffAvailDaysList();
+                renderStaffAvailCalendar();
+            });
+        });
+    }
+
+    function renderStaffAvailCalendar() {
+        if (!staffAvailCalGrid || !staffAvailCalMonthLabel || !staffAvailData) return;
+        ensureStaffAvailCalInitialized();
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        staffAvailCalMonthLabel.textContent = `${monthNames[staffAvailCalMonth]} ${staffAvailCalYear}`;
+        const firstDay = new Date(staffAvailCalYear, staffAvailCalMonth, 1).getDay();
+        const daysInMonth = new Date(staffAvailCalYear, staffAvailCalMonth + 1, 0).getDate();
+        const startDay = (firstDay + 6) % 7;
+        const today0 = startOfToday();
+        staffAvailCalGrid.innerHTML = '';
+        const overrideMap = new Map((staffAvailData.dayOverrides || []).map((o) => [o.date, o]));
+        for (let i = 0; i < startDay; i++) {
+            const empty = document.createElement('div');
+            empty.className = 'admin-override-cal-empty';
+            staffAvailCalGrid.appendChild(empty);
+        }
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateKey = formatOverrideDateKey(staffAvailCalYear, staffAvailCalMonth, d);
+            const dateObj = new Date(staffAvailCalYear, staffAvailCalMonth, d);
+            dateObj.setHours(0, 0, 0, 0);
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'admin-override-day';
+            const num = document.createElement('span');
+            num.className = 'admin-override-day-num';
+            num.textContent = String(d);
+            btn.appendChild(num);
+            const ov = overrideMap.get(dateKey);
+            const weekly = !ov ? staffWeeklyHoursForDate(dateKey) : null;
+            if (ov) {
+                const label = document.createElement('span');
+                label.className = 'admin-override-day-hours' + (ov.enabled ? '' : ' is-closed');
+                label.textContent = ov.enabled ? `${String(ov.start).slice(0, 5)}–${String(ov.end).slice(0, 5)}` : 'Closed';
+                btn.appendChild(label);
+                btn.classList.add('admin-override-has-rule');
+            } else if (weekly) {
+                const label = document.createElement('span');
+                label.className = 'admin-override-day-hours is-template';
+                label.textContent = `${String(weekly.start).slice(0, 5)}–${String(weekly.end).slice(0, 5)}`;
+                btn.appendChild(label);
+            }
+            if (dateObj < today0) {
+                btn.disabled = true;
+            } else {
+                btn.addEventListener('click', () => {
+                    if (staffAvailSelectedDates.has(dateKey)) staffAvailSelectedDates.delete(dateKey);
+                    else staffAvailSelectedDates.add(dateKey);
+                    renderStaffAvailCalendar();
+                });
+            }
+            if (staffAvailSelectedDates.has(dateKey)) btn.classList.add('admin-override-selected');
+            staffAvailCalGrid.appendChild(btn);
+        }
+    }
+
+    function applyStaffAvailToSelection() {
+        if (!staffAvailData || !staffAvailSelectedDates.size) return;
+        const start = (staffAvailBulkStart && staffAvailBulkStart.value) || '09:00';
+        const end = (staffAvailBulkEnd && staffAvailBulkEnd.value) || '17:00';
+        const enabled = staffAvailBulkEnabled ? staffAvailBulkEnabled.checked : true;
+        const byDate = new Map((staffAvailData.dayOverrides || []).map((o) => [o.date, o]));
+        staffAvailSelectedDates.forEach((date) => {
+            byDate.set(date, { date, enabled, start, end });
+        });
+        staffAvailData.dayOverrides = Array.from(byDate.values()).sort((a, b) => a.date.localeCompare(b.date));
+        markStaffAvailDirty();
+        renderStaffAvailCalendar();
+        renderStaffAvailDaysList();
+    }
+
+    function removeStaffAvailSelection() {
+        if (!staffAvailData || !staffAvailSelectedDates.size) return;
+        staffAvailData.dayOverrides = (staffAvailData.dayOverrides || [])
+            .filter((o) => !staffAvailSelectedDates.has(o.date));
+        markStaffAvailDirty();
+        renderStaffAvailCalendar();
+        renderStaffAvailDaysList();
+    }
+
+    function renderStaffAvailHint(person) {
+        if (!staffAvailHint) return;
+        if (!person) {
+            staffAvailHint.hidden = true;
+            staffAvailHint.textContent = '';
+            return;
+        }
+        if (!person.profession) {
+            staffAvailHint.hidden = false;
+            staffAvailHint.innerHTML = 'Set this person’s profession in <strong>Professionals</strong> so the hours appear on the right consultation.';
+            return;
+        }
+        staffAvailHint.hidden = false;
+        staffAvailHint.textContent = `${person.professionLabel || person.profession}: ${person.consultHint || 'hours feed that profession’s booking pages.'}`;
+    }
+
+    function fillStaffAvailSelect() {
+        if (!staffAvailSelect) return;
+        const current = staffAvailSelect.value;
+        staffAvailSelect.innerHTML = '<option value="">Choose a professional…</option>';
+        staffAvailPeople.forEach((person) => {
+            const opt = document.createElement('option');
+            opt.value = person.username;
+            const tag = person.professionLabel || 'No profession';
+            const hours = person.hasHours
+                ? `${person.weeklyDays} weekly day${person.weeklyDays === 1 ? '' : 's'}`
+                : 'no hours yet';
+            opt.textContent = `${person.displayName} · ${tag} · ${hours}`;
+            staffAvailSelect.appendChild(opt);
+        });
+        if (current && staffAvailPeople.some((p) => p.username === current)) {
+            staffAvailSelect.value = current;
+        }
+    }
+
+    async function loadStaffAvailabilityPicker() {
+        setStaffAvailError('');
+        try {
+            const res = await fetch('/api/admin/staff-availability', { credentials: 'same-origin' });
+            if (!res.ok) throw new Error('Failed to load professionals');
+            const data = await res.json();
+            staffAvailPeople = data.people || [];
+            fillStaffAvailSelect();
+            if (staffAvailUsername) {
+                updateSaveButtonState();
+                return loadSelectedStaffAvailability(staffAvailUsername);
+            }
+            updateSaveButtonState();
+        } catch (err) {
+            console.error('Load staff availability list:', err);
+            setStaffAvailError('Could not load professionals.');
+        }
+    }
+
+    async function loadSelectedStaffAvailability(username) {
+        if (!username) {
+            staffAvailUsername = '';
+            staffAvailData = null;
+            staffAvailDirty = false;
+            staffAvailSelectedDates.clear();
+            if (staffAvailEditor) staffAvailEditor.hidden = true;
+            renderStaffAvailHint(null);
+            updateSaveButtonState();
+            return;
+        }
+        if (staffAvailDirty && staffAvailUsername && staffAvailUsername !== username) {
+            const keep = window.confirm('Save hours for the current professional before switching?');
+            if (keep) {
+                const ok = await saveStaffAvailability();
+                if (!ok) {
+                    if (staffAvailSelect) staffAvailSelect.value = staffAvailUsername;
+                    return;
+                }
+            }
+        }
+        setStaffAvailError('');
+        try {
+            const res = await fetch(`/api/admin/staff-availability/${encodeURIComponent(username)}`, {
+                credentials: 'same-origin'
+            });
+            if (!res.ok) throw new Error('Failed to load');
+            const data = await res.json();
+            staffAvailUsername = username;
+            staffAvailData = {
+                weekly: data.weekly || emptyStaffWeekly(),
+                dayOverrides: Array.isArray(data.dayOverrides) ? data.dayOverrides : []
+            };
+            staffAvailDirty = false;
+            staffAvailSelectedDates.clear();
+            if (staffAvailEditor) staffAvailEditor.hidden = false;
+            renderStaffWeeklyGrid();
+            renderStaffAvailCalendar();
+            renderStaffAvailDaysList();
+            renderStaffAvailHint(staffAvailPeople.find((p) => p.username === username) || null);
+            updateSaveButtonState();
+        } catch (err) {
+            console.error('Load staff availability:', err);
+            setStaffAvailError('Could not load this professional’s hours.');
+        }
+    }
+
+    async function saveStaffAvailability() {
+        if (!staffAvailUsername || !staffAvailData) return false;
+        staffAvailData.weekly = readStaffWeeklyFromGrid();
+        if (saveScheduleBtn) {
+            saveScheduleBtn.disabled = true;
+            saveScheduleBtn.textContent = 'Saving...';
+        }
+        try {
+            const res = await fetch(`/api/admin/staff-availability/${encodeURIComponent(staffAvailUsername)}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                    weekly: staffAvailData.weekly,
+                    dayOverrides: staffAvailData.dayOverrides || []
+                })
+            });
+            if (!res.ok) throw new Error('Failed to save');
+            const data = await res.json();
+            staffAvailData.weekly = data.weekly || staffAvailData.weekly;
+            staffAvailData.dayOverrides = Array.isArray(data.dayOverrides) ? data.dayOverrides : staffAvailData.dayOverrides;
+            staffAvailDirty = false;
+            renderStaffWeeklyGrid();
+            renderStaffAvailCalendar();
+            renderStaffAvailDaysList();
+            if (saveScheduleBtn) {
+                saveScheduleBtn.classList.remove('admin-save-dirty');
+                saveScheduleBtn.textContent = '✓ Saved';
+                setTimeout(() => {
+                    if (!staffAvailDirty && saveScheduleBtn) {
+                        saveScheduleBtn.textContent = 'Save availability';
+                        saveScheduleBtn.disabled = false;
+                    }
+                }, 1600);
+            }
+            return true;
+        } catch (err) {
+            console.error('Save staff availability:', err);
+            setStaffAvailError('Could not save hours. Try again.');
+            if (saveScheduleBtn) {
+                saveScheduleBtn.disabled = false;
+                saveScheduleBtn.textContent = 'Save availability •';
+                saveScheduleBtn.classList.add('admin-save-dirty');
+            }
+            return false;
+        }
+    }
+
+    if (staffAvailSelect) {
+        staffAvailSelect.addEventListener('change', () => {
+            void loadSelectedStaffAvailability(staffAvailSelect.value);
+        });
+    }
+    if (staffAvailCalPrev) {
+        staffAvailCalPrev.addEventListener('click', () => {
+            ensureStaffAvailCalInitialized();
+            staffAvailCalMonth -= 1;
+            if (staffAvailCalMonth < 0) {
+                staffAvailCalMonth = 11;
+                staffAvailCalYear -= 1;
+            }
+            renderStaffAvailCalendar();
+        });
+    }
+    if (staffAvailCalNext) {
+        staffAvailCalNext.addEventListener('click', () => {
+            ensureStaffAvailCalInitialized();
+            staffAvailCalMonth += 1;
+            if (staffAvailCalMonth > 11) {
+                staffAvailCalMonth = 0;
+                staffAvailCalYear += 1;
+            }
+            renderStaffAvailCalendar();
+        });
+    }
+    if (staffAvailBulkApply) staffAvailBulkApply.addEventListener('click', applyStaffAvailToSelection);
+    if (staffAvailBulkRemove) staffAvailBulkRemove.addEventListener('click', removeStaffAvailSelection);
+    if (staffAvailBulkClear) {
+        staffAvailBulkClear.addEventListener('click', () => {
+            staffAvailSelectedDates.clear();
+            renderStaffAvailCalendar();
+        });
+    }
+
     // ─── Save schedule ───
     if (saveScheduleBtn) {
         saveScheduleBtn.addEventListener('click', async () => {
+            if (staffAvailUsername) {
+                await saveStaffAvailability();
+                return;
+            }
             if (!scheduleData) {
                 alert('Schedule data not loaded. Please refresh the page.');
                 return;

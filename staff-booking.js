@@ -89,15 +89,105 @@ const PSYCHOLOGY_SPECIALTIES = [
     }
 ];
 
+const WEEKDAY_KEYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+const PROFESSION_CONSULT_HINT = {
+    medico: 'Clínica geral, viajante, renovação, saúde mental médica, longevidade e urgente',
+    psicologo: 'Psicologia e burnout',
+    nutricionista: 'Nutrição'
+};
+
+function normalizeServiceKey(service) {
+    return String(service || '')
+        .trim()
+        .toLowerCase()
+        .replace(/[\s-]+/g, '_');
+}
+
 function serviceProfession(service) {
-    const key = String(service || '').trim().toLowerCase();
-    if (key === 'psicologia') return 'psicologo';
+    const key = normalizeServiceKey(service);
+    if (key === 'psicologia' || key === 'burnout' || key.startsWith('burnout_')) return 'psicologo';
     if (key.startsWith('nutricao')) return 'nutricionista';
+    if (
+        key === 'clinica_geral'
+        || key === 'travel'
+        || key === 'renovacao'
+        || key === 'saude_mental'
+        || key === 'longevidade'
+        || key === 'longevity'
+        || key === 'urgente'
+        || key === 'infeccao_urinaria'
+        || key === 'infecao_urinaria'
+        || key === 'followup'
+    ) return 'medico';
     return null;
 }
 
 function usesStaffCalendars(service) {
-    return serviceProfession(service) === 'psicologo';
+    return !!serviceProfession(service);
+}
+
+function requiresProfessionalChoice(service) {
+    return serviceProfession(service) === 'psicologo' && normalizeServiceKey(service) === 'psicologia';
+}
+
+function specialtyForService(service, specialty) {
+    return String(specialty || '').trim().toLowerCase();
+}
+
+function emptyWeeklyHours() {
+    const out = {};
+    for (const day of WEEKDAY_KEYS) {
+        out[day] = { enabled: false, start: '09:00', end: '17:00' };
+    }
+    return out;
+}
+
+function normalizeWeeklyHours(input) {
+    const src = input && typeof input === 'object' ? input : {};
+    const out = emptyWeeklyHours();
+    for (const day of WEEKDAY_KEYS) {
+        const row = src[day] && typeof src[day] === 'object' ? src[day] : {};
+        let start = String(row.start || '09:00').slice(0, 5);
+        let end = String(row.end || '17:00').slice(0, 5);
+        if (!/^\d{2}:\d{2}$/.test(start)) start = '09:00';
+        if (!/^\d{2}:\d{2}$/.test(end)) end = '17:00';
+        out[day] = {
+            enabled: !!row.enabled,
+            start,
+            end
+        };
+    }
+    return out;
+}
+
+function weekdayKeyFromIso(dateIso) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateIso || ''));
+    if (!m) return '';
+    const dt = new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3])));
+    return ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][dt.getUTCDay()] || '';
+}
+
+function hoursForDate(weekly, days, dateIso) {
+    const override = (Array.isArray(days) ? days : []).find((item) => item && item.date === dateIso);
+    if (override) {
+        if (override.enabled === false) return null;
+        return { start: override.start, end: override.end };
+    }
+    const key = weekdayKeyFromIso(dateIso);
+    const wh = weekly && weekly[key];
+    if (!wh || !wh.enabled) return null;
+    return { start: wh.start, end: wh.end };
+}
+
+function weeklyHasEnabled(weekly) {
+    const src = weekly || {};
+    return WEEKDAY_KEYS.some((day) => src[day] && src[day].enabled);
+}
+
+function hasBookableHours(weekly, days) {
+    if (weeklyHasEnabled(weekly)) return true;
+    return (Array.isArray(days) ? days : []).some((item) => item && item.enabled !== false && item.date);
 }
 
 function psychologySpecialty(id) {
@@ -169,8 +259,18 @@ function startFitsDuration(allTimes, startHhmm, durationMinutes, stepMinutes) {
 
 module.exports = {
     PSYCHOLOGY_SPECIALTIES,
+    WEEKDAY_KEYS,
+    PROFESSION_CONSULT_HINT,
     serviceProfession,
     usesStaffCalendars,
+    requiresProfessionalChoice,
+    specialtyForService,
+    emptyWeeklyHours,
+    normalizeWeeklyHours,
+    weekdayKeyFromIso,
+    hoursForDate,
+    weeklyHasEnabled,
+    hasBookableHours,
     psychologySpecialty,
     publicPsychologySpecialties,
     profileMatchesSpecialty,
