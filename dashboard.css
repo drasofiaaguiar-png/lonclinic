@@ -2371,6 +2371,62 @@ body.dash-portal .dash-stat-card {
     margin-top: 8px;
 }
 
+.admin-weekly-days {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 4px 0 18px;
+}
+
+.admin-weekly-day {
+    min-width: 3.4rem;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(53, 80, 60, 0.2);
+    background: #fff;
+    color: #1f2a22;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 650;
+    cursor: pointer;
+    appearance: none;
+}
+
+.admin-weekly-day:hover {
+    border-color: #2f6342;
+}
+
+.admin-weekly-day:focus-visible {
+    outline: 2px solid #255235;
+    outline-offset: 2px;
+}
+
+.admin-weekly-day.is-selected {
+    background: #255235;
+    border-color: #255235;
+    color: #fff;
+}
+
+.admin-weekly-hours-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 14px 18px;
+    margin-bottom: 8px;
+}
+
+.admin-weekly-hours-row.is-idle {
+    opacity: 0.55;
+}
+
+.admin-weekly-hours-hint {
+    margin: 0;
+    flex: 1 1 12rem;
+    font-size: 0.86rem;
+    line-height: 1.4;
+    color: #5a6b60;
+}
+
 .admin-dir-row {
     display: flex;
     flex-wrap: wrap;

@@ -72,13 +72,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     let staffAvailCalMonth = null;
     const staffAvailSelectedDates = new Set();
     const STAFF_WEEKDAYS = [
-        ['monday', 'Monday'],
-        ['tuesday', 'Tuesday'],
-        ['wednesday', 'Wednesday'],
-        ['thursday', 'Thursday'],
-        ['friday', 'Friday'],
-        ['saturday', 'Saturday'],
-        ['sunday', 'Sunday']
+        ['monday', 'Mon', 'Monday'],
+        ['tuesday', 'Tue', 'Tuesday'],
+        ['wednesday', 'Wed', 'Wednesday'],
+        ['thursday', 'Thu', 'Thursday'],
+        ['friday', 'Fri', 'Friday'],
+        ['saturday', 'Sat', 'Saturday'],
+        ['sunday', 'Sun', 'Sunday']
     ];
 
     function updateSaveButtonState() {
@@ -2136,7 +2136,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const staffAvailHint = document.getElementById('staffAvailHint');
     const staffAvailError = document.getElementById('staffAvailError');
     const staffAvailEditor = document.getElementById('staffAvailEditor');
-    const staffWeeklyGrid = document.getElementById('staffWeeklyGrid');
+    const staffWeeklyDays = document.getElementById('staffWeeklyDays');
+    const staffWeeklyStart = document.getElementById('staffWeeklyStart');
+    const staffWeeklyEnd = document.getElementById('staffWeeklyEnd');
+    const staffWeeklyHoursRow = document.getElementById('staffWeeklyHoursRow');
+    const staffWeeklyHoursHint = document.getElementById('staffWeeklyHoursHint');
     const staffAvailCalPrev = document.getElementById('staffAvailCalPrev');
     const staffAvailCalNext = document.getElementById('staffAvailCalNext');
     const staffAvailCalMonthLabel = document.getElementById('staffAvailCalMonthLabel');
@@ -2188,65 +2192,85 @@ document.addEventListener('DOMContentLoaded', async () => {
         return { start: row.start || '09:00', end: row.end || '17:00' };
     }
 
-    function readStaffWeeklyFromGrid() {
-        const weekly = emptyStaffWeekly();
+    function staffWeeklyHourDefaults() {
+        return {
+            start: (staffWeeklyStart && staffWeeklyStart.value) || '09:00',
+            end: (staffWeeklyEnd && staffWeeklyEnd.value) || '17:00'
+        };
+    }
+
+    function firstEnabledStaffWeeklyDay(weekly) {
+        const hours = weekly || {};
+        return STAFF_WEEKDAYS.find(([day]) => hours[day] && hours[day].enabled);
+    }
+
+    function syncStaffWeeklyHourInputs() {
+        const weekly = (staffAvailData && staffAvailData.weekly) || emptyStaffWeekly();
+        const first = firstEnabledStaffWeeklyDay(weekly);
+        const row = first ? weekly[first[0]] : null;
+        if (staffWeeklyStart) staffWeeklyStart.value = (row && row.start) || '09:00';
+        if (staffWeeklyEnd) staffWeeklyEnd.value = (row && row.end) || '17:00';
+    }
+
+    function applyStaffWeeklyHoursToEnabledDays() {
+        if (!staffAvailData) return;
+        const weekly = staffAvailData.weekly || emptyStaffWeekly();
+        const hours = staffWeeklyHourDefaults();
         STAFF_WEEKDAYS.forEach(([day]) => {
-            const toggle = staffWeeklyGrid && staffWeeklyGrid.querySelector(`input[type="checkbox"][data-staff-day="${day}"]`);
-            const startInput = staffWeeklyGrid && staffWeeklyGrid.querySelector(`input[data-staff-day="${day}"][data-type="start"]`);
-            const endInput = staffWeeklyGrid && staffWeeklyGrid.querySelector(`input[data-staff-day="${day}"][data-type="end"]`);
-            weekly[day] = {
-                enabled: !!(toggle && toggle.checked),
-                start: (startInput && startInput.value) || '09:00',
-                end: (endInput && endInput.value) || '17:00'
-            };
+            const row = weekly[day] || { enabled: false, start: hours.start, end: hours.end };
+            if (row.enabled) {
+                row.start = hours.start;
+                row.end = hours.end;
+            }
+            weekly[day] = row;
         });
-        return weekly;
+        staffAvailData.weekly = weekly;
+    }
+
+    function readStaffWeeklyFromGrid() {
+        if (staffAvailData && staffAvailData.weekly) return staffAvailData.weekly;
+        return emptyStaffWeekly();
     }
 
     function renderStaffWeeklyGrid() {
-        if (!staffWeeklyGrid || !staffAvailData) return;
+        if (!staffWeeklyDays || !staffAvailData) return;
         const weekly = staffAvailData.weekly || emptyStaffWeekly();
-        staffWeeklyGrid.innerHTML = '';
-        STAFF_WEEKDAYS.forEach(([day, label]) => {
+        const selectedCount = STAFF_WEEKDAYS.filter(([day]) => weekly[day] && weekly[day].enabled).length;
+        staffWeeklyDays.innerHTML = '';
+        STAFF_WEEKDAYS.forEach(([day, shortLabel, longLabel]) => {
             const dayData = weekly[day] || { enabled: false, start: '09:00', end: '17:00' };
-            const dayCard = document.createElement('div');
-            dayCard.className = 'admin-day-card';
-            dayCard.innerHTML = `
-                <div class="admin-day-header">
-                    <label class="admin-day-toggle">
-                        <input type="checkbox" ${dayData.enabled ? 'checked' : ''} data-staff-day="${day}">
-                        <span class="admin-day-label">${label}</span>
-                    </label>
-                </div>
-                <div class="admin-day-times" ${!dayData.enabled ? 'style="opacity:0.5;pointer-events:none;"' : ''}>
-                    <div class="admin-time-group">
-                        <label>Start</label>
-                        <input type="time" value="${dayData.start}" data-staff-day="${day}" data-type="start" class="admin-time-input">
-                    </div>
-                    <div class="admin-time-group">
-                        <label>End</label>
-                        <input type="time" value="${dayData.end}" data-staff-day="${day}" data-type="end" class="admin-time-input">
-                    </div>
-                </div>
-            `;
-            staffWeeklyGrid.appendChild(dayCard);
-            const toggle = dayCard.querySelector('input[type="checkbox"]');
-            toggle.addEventListener('change', (e) => {
-                const timesDiv = dayCard.querySelector('.admin-day-times');
-                timesDiv.style.opacity = e.target.checked ? '1' : '0.5';
-                timesDiv.style.pointerEvents = e.target.checked ? 'auto' : 'none';
-                staffAvailData.weekly = readStaffWeeklyFromGrid();
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'admin-weekly-day' + (dayData.enabled ? ' is-selected' : '');
+            btn.textContent = shortLabel;
+            btn.setAttribute('aria-pressed', dayData.enabled ? 'true' : 'false');
+            btn.setAttribute('aria-label', longLabel);
+            btn.addEventListener('click', () => {
+                const next = staffAvailData.weekly || emptyStaffWeekly();
+                const row = next[day] || { enabled: false, start: '09:00', end: '17:00' };
+                row.enabled = !row.enabled;
+                if (row.enabled) {
+                    const hours = staffWeeklyHourDefaults();
+                    row.start = hours.start;
+                    row.end = hours.end;
+                }
+                next[day] = row;
+                staffAvailData.weekly = next;
                 markStaffAvailDirty();
+                renderStaffWeeklyGrid();
                 renderStaffAvailCalendar();
             });
-            dayCard.querySelectorAll('input[type="time"]').forEach((inp) => {
-                inp.addEventListener('change', () => {
-                    staffAvailData.weekly = readStaffWeeklyFromGrid();
-                    markStaffAvailDirty();
-                    renderStaffAvailCalendar();
-                });
-            });
+            staffWeeklyDays.appendChild(btn);
         });
+        if (staffWeeklyHoursRow) {
+            staffWeeklyHoursRow.classList.toggle('is-idle', selectedCount === 0);
+        }
+        if (staffWeeklyHoursHint) {
+            staffWeeklyHoursHint.textContent = selectedCount
+                ? 'These hours apply to the selected days, every week.'
+                : 'Select the days first, then set the hours.';
+        }
+        if (selectedCount) syncStaffWeeklyHourInputs();
     }
 
     function ensureStaffAvailCalInitialized() {
@@ -2554,6 +2578,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderStaffAvailCalendar();
         });
     }
+    function onStaffWeeklyHoursChange() {
+        if (!staffAvailData) return;
+        applyStaffWeeklyHoursToEnabledDays();
+        markStaffAvailDirty();
+        renderStaffAvailCalendar();
+    }
+    if (staffWeeklyStart) staffWeeklyStart.addEventListener('change', onStaffWeeklyHoursChange);
+    if (staffWeeklyEnd) staffWeeklyEnd.addEventListener('change', onStaffWeeklyHoursChange);
 
     // ─── Save schedule ───
     if (saveScheduleBtn) {
