@@ -16,7 +16,7 @@
     <title>Admin Portal — Schedule Management | LON Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/dashboard.css?v=staff-avail-2">
+    <link rel="stylesheet" href="/dashboard.css?v=staff-avail-3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -96,6 +96,7 @@
                     <button type="button" class="admin-nav-item" data-admin-panel="finances">Finances</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="invitations">Invitations</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="availability">Availability</button>
+                    <button type="button" class="admin-nav-item" data-admin-panel="hours-board">Hours board</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="reviews">Reviews</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="professionals">Professionals</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="psychologists">Bolsa de Profissionais</button>
@@ -704,6 +705,47 @@
             </details>
             </div>
 
+            <!-- Hours board panel -->
+            <div class="admin-panel" id="adminPanelHoursBoard" data-admin-panel-content="hours-board" hidden>
+                <div class="dash-section">
+                    <div class="dash-section-header admin-schedule-toolbar">
+                        <div>
+                            <h2 class="dash-section-title">Hours board</h2>
+                            <p class="dash-section-subtitle">Weekly hours and date exceptions for each professional. Use this to check that calendars are complete before patients book.</p>
+                        </div>
+                        <div class="admin-schedule-filters">
+                            <input type="search" id="hoursBoardSearch" class="admin-input admin-patients-search" placeholder="Search name or profession…">
+                            <button type="button" class="admin-filter-chip is-active" data-hours-filter="all">All</button>
+                            <button type="button" class="admin-filter-chip" data-hours-filter="missing">Missing hours</button>
+                            <button type="button" class="btn btn-outline btn-sm" id="hoursBoardRefreshBtn">Refresh</button>
+                        </div>
+                    </div>
+                    <p class="admin-hours-board-summary" id="hoursBoardSummary"></p>
+                    <div class="admin-patients-table-wrap">
+                        <table class="admin-patients-table admin-hours-board-table" id="hoursBoardTable">
+                            <thead>
+                                <tr>
+                                    <th>Professional</th>
+                                    <th>Profession</th>
+                                    <th>Mon</th>
+                                    <th>Tue</th>
+                                    <th>Wed</th>
+                                    <th>Thu</th>
+                                    <th>Fri</th>
+                                    <th>Sat</th>
+                                    <th>Sun</th>
+                                    <th>Date exceptions</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="hoursBoardBody">
+                                <tr><td colspan="11" class="admin-empty-list">Loading…</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <!-- Analytics panel -->
             <div class="admin-panel" id="adminPanelAnalytics" data-admin-panel-content="analytics" hidden>
                 <div class="dash-section">
@@ -1136,7 +1178,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/admin.js?v=staff-avail-2"></script>
+    <script src="/admin.js?v=staff-avail-3"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

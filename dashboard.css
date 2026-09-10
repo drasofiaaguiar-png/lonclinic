@@ -4110,6 +4110,55 @@ body.admin-logged-in .dash-content.admin-shell {
     max-width: 280px;
 }
 
+.admin-hours-board-summary {
+    margin: 0 0 10px;
+    font-size: 0.88rem;
+    color: #5a6b60;
+}
+
+.admin-hours-board-table td {
+    white-space: nowrap;
+}
+
+.admin-hours-board-table td.admin-hours-extra {
+    white-space: normal;
+    min-width: 8.5rem;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    color: #3d4d42;
+}
+
+.admin-hours-on {
+    font-variant-numeric: tabular-nums;
+    font-weight: 650;
+    color: #1f3d2a;
+}
+
+.admin-hours-off {
+    color: #9aa59c;
+}
+
+.admin-hours-flags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+}
+
+.admin-hours-flags span {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: #f4e6d8;
+    color: #7a4a1a;
+    font-size: 0.72rem;
+    font-weight: 650;
+}
+
+.admin-hours-board-table tr.is-missing td {
+    background: rgba(197, 120, 44, 0.06);
+}
+
 .admin-patients-table-wrap {
     overflow-x: auto;
     margin-top: 8px;

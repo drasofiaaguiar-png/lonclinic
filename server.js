@@ -15902,7 +15902,9 @@ app.get('/api/admin/staff-availability', requireAdmin, async (req, res) => {
                 weeklyDays: staffBooking.WEEKDAY_KEYS.filter((day) => weekly[day] && weekly[day].enabled).length,
                 extraDays: days.filter((item) => item.enabled !== false).length,
                 hasHours: staffBooking.hasBookableHours(weekly, days),
-                hasLogin: !!(proByUser.get(u) || person.hasLogin)
+                hasLogin: !!(proByUser.get(u) || person.hasLogin),
+                weekly,
+                dayOverrides: days
             });
         }
         list.sort((a, b) => String(a.displayName).localeCompare(String(b.displayName), 'pt'));

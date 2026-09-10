@@ -288,6 +288,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         analytics: { title: 'Analytics', subtitle: 'Patient booking vs job application funnels' },
         invitations: { title: 'Invitations', subtitle: 'Send and manage booking invites' },
         availability: { title: 'Availability', subtitle: 'Hours per professional, used on each consultation type' },
+        'hours-board': { title: 'Hours board', subtitle: 'Check weekly hours for every professional' },
         reviews: { title: 'Reviews', subtitle: 'Patient feedback from the website' },
         professionals: { title: 'Professionals', subtitle: 'Directory of clinic professionals' },
         psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' },
@@ -374,6 +375,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (panelId === 'invitations') loadInvitations();
         if (panelId === 'reviews') loadAdminReviews();
         if (panelId === 'availability') loadStaffAvailabilityPicker();
+        if (panelId === 'hours-board') loadHoursBoard();
         if (panelId === 'professionals') loadAdminProfessionals();
         if (panelId === 'psychologists') loadAdminPsychologists();
         if (panelId === 'producers') loadAdminProducers();
@@ -2438,6 +2440,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             staffAvailPeople = data.people || [];
             fillStaffAvailSelect();
             if (staffAvailUsername) {
+                if (staffAvailSelect) staffAvailSelect.value = staffAvailUsername;
                 updateSaveButtonState();
                 return loadSelectedStaffAvailability(staffAvailUsername);
             }
@@ -2447,6 +2450,133 @@ document.addEventListener('DOMContentLoaded', async () => {
             setStaffAvailError('Could not load professionals.');
         }
     }
+
+    let hoursBoardPeople = [];
+    let hoursBoardFilter = 'all';
+    const hoursBoardSearch = document.getElementById('hoursBoardSearch');
+    const hoursBoardRefreshBtn = document.getElementById('hoursBoardRefreshBtn');
+    const hoursBoardBody = document.getElementById('hoursBoardBody');
+    const hoursBoardSummary = document.getElementById('hoursBoardSummary');
+
+    function formatHoursCell(row) {
+        if (!row || !row.enabled) return '<span class="admin-hours-off">—</span>';
+        const start = String(row.start || '').slice(0, 5);
+        const end = String(row.end || '').slice(0, 5);
+        return `<span class="admin-hours-on">${escapeHtml(start)}–${escapeHtml(end)}</span>`;
+    }
+
+    function formatHoursException(entry) {
+        const date = new Date(`${entry.date}T12:00:00`);
+        const when = Number.isNaN(date.getTime())
+            ? String(entry.date || '')
+            : date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+        if (entry.enabled === false) return `${when}: closed`;
+        return `${when}: ${String(entry.start || '').slice(0, 5)}–${String(entry.end || '').slice(0, 5)}`;
+    }
+
+    function hoursBoardVisiblePeople() {
+        const q = String((hoursBoardSearch && hoursBoardSearch.value) || '').trim().toLowerCase();
+        return (hoursBoardPeople || []).filter((person) => {
+            if (hoursBoardFilter === 'missing' && person.hasHours) return false;
+            if (!q) return true;
+            const hay = [
+                person.displayName,
+                person.username,
+                person.professionLabel,
+                person.profession
+            ].join(' ').toLowerCase();
+            return hay.indexOf(q) >= 0;
+        });
+    }
+
+    function renderHoursBoard() {
+        if (!hoursBoardBody) return;
+        const missing = (hoursBoardPeople || []).filter((p) => !p.hasHours).length;
+        if (hoursBoardSummary) {
+            const n = (hoursBoardPeople || []).length;
+            hoursBoardSummary.textContent = n
+                ? `${n} professional${n === 1 ? '' : 's'} · ${missing} without hours`
+                : '';
+        }
+        const rows = hoursBoardVisiblePeople();
+        if (!rows.length) {
+            hoursBoardBody.innerHTML = '<tr><td colspan="11" class="admin-empty-list">No professionals match this view.</td></tr>';
+            return;
+        }
+        const todayKey = formatOverrideDateKey(
+            startOfToday().getFullYear(),
+            startOfToday().getMonth(),
+            startOfToday().getDate()
+        );
+        hoursBoardBody.innerHTML = rows.map((person) => {
+            const weekly = person.weekly || {};
+            const extras = (person.dayOverrides || [])
+                .filter((item) => item && item.date && item.date >= todayKey)
+                .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+            const extraHtml = extras.length
+                ? extras.slice(0, 4).map((item) => escapeHtml(formatHoursException(item))).join('<br>')
+                    + (extras.length > 4 ? `<br><span class="admin-hours-off">+${extras.length - 4} more</span>` : '')
+                : '<span class="admin-hours-off">—</span>';
+            const role = person.professionLabel || 'No profession';
+            const flags = [];
+            if (!person.hasHours) flags.push('No hours');
+            if (!person.profession) flags.push('No profession');
+            const flagHtml = flags.length
+                ? `<div class="admin-hours-flags">${flags.map((f) => `<span>${escapeHtml(f)}</span>`).join('')}</div>`
+                : '';
+            const rowClass = person.hasHours ? '' : ' class="is-missing"';
+            return `<tr${rowClass}>
+                <td>
+                    <strong>${escapeHtml(person.displayName || person.username)}</strong>
+                    ${flagHtml}
+                </td>
+                <td>${escapeHtml(role)}</td>
+                ${STAFF_WEEKDAYS.map(([day]) => `<td>${formatHoursCell(weekly[day])}</td>`).join('')}
+                <td class="admin-hours-extra">${extraHtml}</td>
+                <td><button type="button" class="btn btn-outline btn-sm" data-hours-edit="${escapeHtml(person.username)}">Edit</button></td>
+            </tr>`;
+        }).join('');
+        hoursBoardBody.querySelectorAll('[data-hours-edit]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                staffAvailUsername = btn.getAttribute('data-hours-edit') || '';
+                setAdminPanel('availability');
+            });
+        });
+    }
+
+    async function loadHoursBoard() {
+        if (!hoursBoardBody) return;
+        hoursBoardBody.innerHTML = '<tr><td colspan="11" class="admin-empty-list">Loading…</td></tr>';
+        try {
+            const res = await fetch('/api/admin/staff-availability', { credentials: 'same-origin' });
+            if (!res.ok) throw new Error('Failed to load');
+            const data = await res.json();
+            hoursBoardPeople = (data.people || []).slice().sort((a, b) => {
+                if (!!a.hasHours !== !!b.hasHours) return a.hasHours ? 1 : -1;
+                return String(a.displayName || '').localeCompare(String(b.displayName || ''), 'pt');
+            });
+            renderHoursBoard();
+        } catch (err) {
+            console.error('Load hours board:', err);
+            hoursBoardBody.innerHTML = '<tr><td colspan="11" class="admin-empty-list">Could not load hours.</td></tr>';
+        }
+    }
+
+    if (hoursBoardSearch) {
+        hoursBoardSearch.addEventListener('input', () => renderHoursBoard());
+    }
+    if (hoursBoardRefreshBtn) {
+        hoursBoardRefreshBtn.addEventListener('click', () => loadHoursBoard());
+    }
+    document.querySelectorAll('[data-hours-filter]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            hoursBoardFilter = btn.getAttribute('data-hours-filter') || 'all';
+            document.querySelectorAll('[data-hours-filter]').forEach((el) => {
+                el.classList.toggle('is-active', el === btn);
+            });
+            renderHoursBoard();
+        });
+    });
 
     async function loadSelectedStaffAvailability(username) {
         if (!username) {
