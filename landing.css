@@ -553,6 +553,14 @@ textarea:focus {
     margin-bottom: 14px;
 }
 
+.dr-hero:has(.dr-hero-closer) h1 {
+    font-size: clamp(1.85rem, 3.6vw, 2.7rem);
+    line-height: 1.14;
+    letter-spacing: -0.03em;
+    max-width: min(20ch, 100%);
+    margin-bottom: 12px;
+}
+
 .dr-hero-title-line {
     display: block;
 }
@@ -565,12 +573,14 @@ textarea:focus {
     letter-spacing: -0.01em;
 }
 
-.dr-hero-content > .dr-hero-title-line--secondary {
-    font-size: clamp(1.45rem, 3.4vw, 2.4rem);
+.dr-hero-closer {
+    font-size: clamp(1.2rem, 2.4vw, 1.65rem);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
     color: #ffffff;
-    max-width: min(28ch, 100%);
-    margin-top: 0;
-    margin-bottom: 22px;
+    max-width: min(36ch, 100%);
+    margin: 0 0 22px;
 }
 
 .dr-lead {
@@ -581,6 +591,13 @@ textarea:focus {
 
 .dr-hero-content > .dr-lead {
     margin-bottom: 14px;
+}
+
+.dr-hero:has(.dr-hero-closer) .dr-lead {
+    font-size: clamp(1.04rem, 1.35vw, 1.18rem);
+    line-height: 1.45;
+    font-weight: 500;
+    max-width: 36ch;
 }
 
 .dr-cta-row {
@@ -901,6 +918,111 @@ textarea:focus {
 
 .dr-burnout-promo__cta {
     flex-shrink: 0;
+}
+
+.dr-magazine-home {
+    padding: clamp(40px, 7vw, 64px) 0;
+    background: #fff;
+    border-block: 1px solid rgba(34, 56, 47, 0.08);
+}
+
+.dr-magazine-home__eyebrow {
+    margin: 0 0 10px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c4744a;
+}
+
+.dr-magazine-home h2 {
+    margin: 0 0 10px;
+    font-size: clamp(1.35rem, 3.2vw, 1.85rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: #22382f;
+}
+
+.dr-magazine-home__lead {
+    margin: 0;
+    max-width: 48ch;
+    font-size: 0.98rem;
+    line-height: 1.55;
+    color: #3d554a;
+}
+
+.dr-magazine-home-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    margin: 14px 0 0;
+}
+
+.dr-magazine-home__more {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #255235;
+    text-decoration: none;
+}
+
+.dr-magazine-home__more:hover {
+    text-decoration: underline;
+}
+
+.dr-magazine-home-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 8px 28px;
+    margin-top: 28px;
+}
+
+.dr-magazine-home-card {
+    display: block;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(34, 56, 47, 0.1);
+    text-decoration: none;
+    color: inherit;
+}
+
+.dr-magazine-home-kicker {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #c4744a;
+}
+
+.dr-magazine-home-card h3 {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+    line-height: 1.3;
+    color: #22382f;
+}
+
+.dr-magazine-home-card p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: #3d554a;
+}
+
+.dr-magazine-home-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 14px;
+    margin-top: 28px;
+    font-size: 0.88rem;
+}
+
+.dr-magazine-home-topics a {
+    color: #255235;
+    text-decoration: none;
+}
+
+.dr-magazine-home-topics a:hover {
+    text-decoration: underline;
 }
 
 .lon-service-extra {
@@ -2278,15 +2400,19 @@ html[lang="pt-PT"] .lon-testimonial-translation-note {
         font-size: clamp(1.9rem, 9vw, 2.8rem);
     }
 
+    .dr-hero:has(.dr-hero-closer) h1 {
+        font-size: clamp(1.7rem, 7.2vw, 2.25rem);
+    }
+
     .dr-lead {
         max-width: none;
         margin-left: auto;
         margin-right: auto;
     }
 
-    .dr-hero-content > .dr-hero-title-line--secondary {
+    .dr-hero-closer {
         max-width: none;
-        font-size: clamp(1.2rem, 6vw, 1.85rem);
+        font-size: clamp(1.22rem, 5.2vw, 1.5rem);
     }
 
     .dr-trust-list {
@@ -2442,7 +2568,8 @@ html[lang="pt-PT"] .lon-testimonial-translation-note {
     padding: 0;
 }
 
-.dr-hero h1 {
+.dr-hero h1,
+.dr-hero-closer {
     color: #ffffff;
 }
 

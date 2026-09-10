@@ -94,7 +94,7 @@
 
         /* ── Hero ── */
         { s: '.dr-hero-title-line:not(.dr-hero-title-line--secondary)', en: 'Finally, a complete approach to your health.', pt: 'Finalmente, uma abordagem completa à sua saúde.', es: 'Por fin, un enfoque completo de su salud.' },
-        { s: '.dr-hero-title-line--secondary', en: 'Take care of yourself, wherever you are.', pt: 'Cuide de si, onde quer que esteja.', es: 'Cuídese, esté donde esté.' },
+        { s: '.dr-hero-closer', en: 'Take care of yourself, wherever you are.', pt: 'Cuide de si, onde quer que esteja.', es: 'Cuídese, esté donde esté.' },
         { s: '.dr-lead', en: 'Doctor, psychologist and nutritionist, in one place, with personalised follow-up.', pt: 'Médico, psicólogo e nutricionista, num só lugar e com acompanhamento personalizado.', es: 'Médico, psicólogo y nutricionista, en un solo lugar y con seguimiento personalizado.' },
         { s: '.dr-cta-row .lon-btn-dark', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
         { s: '.dr-next-slot-kicker', en: 'Next available', pt: 'Próximo horário', es: 'Próximo horario' },
@@ -102,9 +102,9 @@
         { s: '.dr-next-slot-other', en: 'Another time', pt: 'Outro horário', es: 'Otro horario' },
 
         /* ── Trust bullets ── */
-        { s: '.dr-trust-list li:nth-child(1)', en: 'Clinic certified by Portugal’s Health Regulatory Authority', pt: 'Clínica certificada pela Entidade Reguladora da Saúde em Portugal', es: 'Clínica certificada por la Entidad Reguladora de la Salud en Portugal' },
-        { s: '.dr-trust-list li:nth-child(2)', en: 'Doctors registered with the Portuguese Medical Association', pt: 'Médicos inscritos na Ordem dos Médicos Portuguesa', es: 'Médicos inscritos en el Colegio de Médicos de Portugal' },
-        { s: '.dr-trust-list li:nth-child(3)', en: 'Nutritionists and psychologists registered with their respective professional bodies', pt: 'Nutricionistas e Psicólogos inscritos nas respetivas ordens', es: 'Nutricionistas y psicólogos inscritos en sus respectivos colegios profesionales' },
+        { s: '.dr-trust-list li:nth-child(1)', en: 'Clinic certified by the Health Regulatory Authority', pt: 'Clínica certificada pela Entidade Reguladora da Saúde', es: 'Clínica certificada por la Entidad Reguladora de la Salud' },
+        { s: '.dr-trust-list li:nth-child(2)', en: 'Doctors registered with the Medical Association', pt: 'Médicos inscritos na Ordem dos Médicos', es: 'Médicos inscritos en el Colegio de Médicos' },
+        { s: '.dr-trust-list li:nth-child(3)', en: 'Nutritionists and psychologists registered with their respective professional bodies', pt: 'Nutricionistas e Psicólogos inscritos nas respetivas Ordens', es: 'Nutricionistas y psicólogos inscritos en sus respectivos Colegios profesionales' },
         { s: '.dr-trust-list li:nth-child(4)', en: 'Consultations in Portuguese, English and Spanish', pt: 'Consultas em português, inglês e espanhol', es: 'Consultas en portugués, inglés y español' },
         { s: '.dr-trust-list li:nth-child(5)', en: 'Prescriptions and exam requests, when clinically indicated', pt: 'Receitas e pedidos de exames, quando clinicamente indicados', es: 'Recetas y solicitudes de exámenes, cuando estén clínicamente indicadas' },
         { s: '.dr-trust-list li:nth-child(6)', en: 'No waiting room. No travel.', pt: 'Sem sala de espera. Sem deslocação.', es: 'Sin sala de espera. Sin desplazamiento.' },
@@ -117,6 +117,12 @@
         { s: '#burnout-promo-title', en: 'How much of your tiredness is already burnout?', pt: 'Quanto do teu cansaço já é burnout?', es: '¿Cuánto de tu cansancio ya es burnout?' },
         { s: '.dr-burnout-promo__lead', en: 'Free 4-minute test based on the Copenhagen Burnout Inventory. Instant results with practical recommendations.', pt: 'Teste gratuito em 4 minutos, baseado no Copenhagen Burnout Inventory. Resultado imediato com recomendações práticas.', es: 'Test gratuito en 4 minutos, basado en el Copenhagen Burnout Inventory. Resultado inmediato con recomendaciones prácticas.' },
         { s: '.dr-burnout-promo__cta', en: 'Take the test', pt: 'Fazer o teste', es: 'Hacer el test' },
+        { s: '.dr-magazine-home__eyebrow', en: 'Lon Magazine', pt: 'Lon Magazine', es: 'Lon Magazine' },
+        { s: '#magazine-home-title', en: 'Recent medical guides', pt: 'Guias médicos recentes', es: 'Guías médicas recientes' },
+        { s: '.dr-magazine-home__lead', en: 'Six featured guides. The rest is in the magazine, by topic.', pt: 'Seis guias em destaque. O resto está na revista, por tema.', es: 'Seis guías destacadas. El resto está en la revista, por tema.' },
+        { s: '.dr-magazine-home__more[href="/magazine"]', en: 'Magazine', pt: 'Magazine', es: 'Magazine' },
+        { s: '.dr-magazine-home__more[href="/blog"]', en: 'All guides', pt: 'Todos os guias', es: 'Todas las guías' },
+        { s: '.dr-magazine-home__more[href="/magazine/indice"]', en: 'Index', pt: 'Índice', es: 'Índice' },
         { s: '.lon-service-card[data-category="mental"] .lon-service-extra a', en: 'Take the burnout test →', pt: 'Fazer teste de burnout →', es: 'Hacer test de burnout →' },
         { s: '#lon-service-psicologia-avulsa .lon-service-chip', en: 'Psychology', pt: 'Psicologia', es: 'Psicología' },
         { s: '#lon-service-psicologia-avulsa h3', en: 'Single Psychology Session', pt: 'Sessão Avulsa de Psicologia', es: 'Sesión suelta de Psicología' },
