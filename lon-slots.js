@@ -205,7 +205,11 @@
     }
 
     function track(name, props) {
-        if (window.LonAnalytics) window.LonAnalytics.track(name, props);
+        try {
+            if (window.LonAnalytics && typeof window.LonAnalytics.track === 'function') {
+                window.LonAnalytics.track(name, props);
+            }
+        } catch (e) { /* never block booking UI */ }
     }
 
     function slotIdFrom(dateISO, time) {
@@ -224,10 +228,28 @@
         return 'Ver disponibilidade desta semana';
     }
 
-    var slotsMemory = { data: null, ts: 0, inflight: null };
+    var slotsMemory = { data: null, ts: 0, service: '', inflight: null, inflightService: '', controller: null };
+    var liveState = { first: null };
+    var slotsGen = 0;
     var SLOTS_TTL_MS = 45000;
     var SLOTS_STALE_MS = 120000;
     var SLOTS_CACHE_KEY = 'lonNextSlots:v4';
+
+    var HERO_SERVICE_PACKS = {
+        clinica_geral: { service: 'clinica_geral', href: '/marcar/clinica-geral' },
+        nutricao_programa: {
+            service: 'nutricao_programa',
+            href: '/marcar/nutricao-programa',
+            goal: 'Perda de peso / reeduca\u00e7\u00e3o metab\u00f3lica'
+        },
+        psicologia: { service: 'psicologia', href: '/marcar/psicologia' }
+    };
+
+    function heroServicePack() {
+        var sel = document.getElementById('lonHeroService');
+        if (!sel) return null;
+        return HERO_SERVICE_PACKS[sel.value] || HERO_SERVICE_PACKS.clinica_geral;
+    }
 
     function currentSlotsService() {
         try {
@@ -237,60 +259,180 @@
         }
     }
 
-    function slotsCacheKey() {
-        return SLOTS_CACHE_KEY + ':' + currentSlotsService();
+    function slotCalendarGroup(service) {
+        if (service === 'clinica_geral' || service === 'nutricao_programa' ||
+            service === 'nutricao_completo' || service === 'nutricao_completo_reforcado') {
+            return 'medical';
+        }
+        return service || '';
     }
 
-    function readSlotsCache() {
-        if (slotsMemory.data && (Date.now() - slotsMemory.ts) < SLOTS_STALE_MS) {
-            return { data: slotsMemory.data, ts: slotsMemory.ts };
+    function slotsCacheKeyFor(service) {
+        return SLOTS_CACHE_KEY + ':' + (service || 'clinica_geral');
+    }
+
+    function siblingSlotService(service) {
+        if (service === 'nutricao_programa') return 'clinica_geral';
+        return '';
+    }
+
+    function abortSlotsFetch() {
+        if (!slotsMemory.controller) return;
+        try { slotsMemory.controller.abort(); } catch (e) { /* ignore */ }
+        slotsMemory.controller = null;
+        slotsMemory.inflight = null;
+        slotsMemory.inflightService = '';
+    }
+
+    function setHomeSlotsBusy(busy) {
+        var box = document.querySelector('[data-next-slots][data-surface="home"]');
+        if (!box) return;
+        if (busy) {
+            box.classList.add('is-loading');
+            box.setAttribute('aria-busy', 'true');
+        } else {
+            box.classList.remove('is-loading');
+            box.removeAttribute('aria-busy');
         }
+    }
+
+    function syncHeroBookingTargets(pack) {
+        if (!pack) return;
+        var box = document.querySelector('[data-next-slots][data-surface="home"]');
+        if (box) {
+            box.setAttribute('data-service', pack.service);
+            box.setAttribute('data-book-href', pack.href);
+            if (pack.goal) box.setAttribute('data-goal', pack.goal);
+            else box.removeAttribute('data-goal');
+            var other = box.querySelector('.dr-next-slot-other');
+            if (other) other.setAttribute('href', pack.href);
+            var week = box.querySelector('[data-slots-fallback]');
+            if (week) week.setAttribute('href', pack.href);
+        }
+        var heroBook = document.getElementById('lonHeroBook');
+        if (heroBook) heroBook.setAttribute('href', pack.href);
+        var sticky = document.querySelector('[data-sticky-book]');
+        if (sticky) {
+            sticky.setAttribute('data-service', pack.service);
+            sticky.setAttribute('data-book-href', pack.href);
+            if (pack.goal) sticky.setAttribute('data-goal', pack.goal);
+            else sticky.removeAttribute('data-goal');
+            var stickyCta = sticky.querySelector('[data-next-slot-cta]');
+            if (stickyCta) stickyCta.setAttribute('href', pack.href);
+        }
+    }
+
+    function readSessionSlots(service) {
         try {
-            var raw = sessionStorage.getItem(slotsCacheKey());
+            var raw = sessionStorage.getItem(slotsCacheKeyFor(service));
             if (!raw) return null;
             var parsed = JSON.parse(raw);
             if (!parsed || !parsed.data || !parsed.ts) return null;
             if (Date.now() - parsed.ts > SLOTS_STALE_MS) return null;
-            slotsMemory.data = parsed.data;
-            slotsMemory.ts = parsed.ts;
             return parsed;
         } catch (e) {
             return null;
         }
     }
 
-    function writeSlotsCache(data) {
+    function readAnySessionSlots(service) {
+        if (!service) return null;
+        try {
+            var raw = sessionStorage.getItem(slotsCacheKeyFor(service));
+            if (!raw) return null;
+            var parsed = JSON.parse(raw);
+            if (!parsed || !parsed.data || !Array.isArray(parsed.data.slots) || !parsed.data.slots.length) return null;
+            return parsed;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function readSlotsCache() {
+        var service = currentSlotsService();
+        if (slotsMemory.data && slotsMemory.service &&
+            slotCalendarGroup(slotsMemory.service) === slotCalendarGroup(service) &&
+            (Date.now() - slotsMemory.ts) < SLOTS_STALE_MS) {
+            return { data: slotsMemory.data, ts: slotsMemory.ts };
+        }
+        var hit = readSessionSlots(service);
+        if (hit) {
+            slotsMemory.data = hit.data;
+            slotsMemory.ts = hit.ts;
+            slotsMemory.service = service;
+            return hit;
+        }
+        var sibling = siblingSlotService(service);
+        if (sibling) {
+            hit = readSessionSlots(sibling);
+            if (hit) return hit;
+        }
+        return null;
+    }
+
+    function writeSlotsCache(data, service) {
+        var key = service || currentSlotsService();
         slotsMemory.data = data;
         slotsMemory.ts = Date.now();
+        slotsMemory.service = key;
         try {
-            sessionStorage.setItem(slotsCacheKey(), JSON.stringify({ data: data, ts: slotsMemory.ts }));
+            sessionStorage.setItem(slotsCacheKeyFor(key), JSON.stringify({ data: data, ts: slotsMemory.ts }));
         } catch (e) { /* private mode */ }
     }
 
-    function fetchSlotsNetwork() {
-        if (slotsMemory.inflight) return slotsMemory.inflight;
-        slotsMemory.inflight = fetch('/api/next-slots?limit=8&withinHours=168&service=' + encodeURIComponent(currentSlotsService()), { credentials: 'same-origin' })
+    function fetchSlotsNetwork(service) {
+        var requested = service || currentSlotsService();
+        if (slotsMemory.inflight && slotsMemory.inflightService === requested) {
+            return slotsMemory.inflight;
+        }
+        abortSlotsFetch();
+        var controller = typeof AbortController === 'function' ? new AbortController() : null;
+        slotsMemory.controller = controller;
+        var req = fetch('/api/next-slots?limit=8&withinHours=168&service=' + encodeURIComponent(requested), {
+            credentials: 'same-origin',
+            signal: controller ? controller.signal : undefined
+        })
             .then(function (r) {
                 return r.json().then(function (data) {
                     data = data || {};
                     data._ok = r.ok;
                     data._http = r.status;
+                    data._service = requested;
                     return data;
                 }).catch(function () {
-                    return { slots: [], _ok: false, _http: r.status };
+                    return { slots: [], _ok: false, _http: r.status, _service: requested };
                 });
             })
+            .catch(function (err) {
+                var cached = readSlotsCache();
+                if (cached && cached.data) return cached.data;
+                return {
+                    slots: [],
+                    _ok: false,
+                    _aborted: !!(err && err.name === 'AbortError'),
+                    _service: requested
+                };
+            })
             .then(function (data) {
+                if (currentSlotsService() !== requested) return data;
                 if (data && data._ok && Array.isArray(data.slots) && !data.error) {
-                    writeSlotsCache(data);
+                    writeSlotsCache(data, requested);
                     return data;
                 }
                 var cached = readSlotsCache();
                 if (cached && cached.data) return cached.data;
                 return data;
             })
-            .finally(function () { slotsMemory.inflight = null; });
-        return slotsMemory.inflight;
+            .finally(function () {
+                if (slotsMemory.inflightService === requested) {
+                    slotsMemory.inflight = null;
+                    slotsMemory.inflightService = '';
+                    if (slotsMemory.controller === controller) slotsMemory.controller = null;
+                }
+            });
+        slotsMemory.inflight = req;
+        slotsMemory.inflightService = requested;
+        return req;
     }
 
     function loadSlotsSWR() {
@@ -302,6 +444,12 @@
         if (cached && cached.data && age < SLOTS_STALE_MS) {
             fetchSlotsNetwork();
             return Promise.resolve(cached.data);
+        }
+        var service = currentSlotsService();
+        var display = cached || readAnySessionSlots(service) || readAnySessionSlots(siblingSlotService(service));
+        if (display && display.data && Array.isArray(display.data.slots) && display.data.slots.length) {
+            fetchSlotsNetwork(service);
+            return Promise.resolve(display.data);
         }
         return fetchSlotsNetwork();
     }
@@ -487,6 +635,15 @@
             ? window.LonTalkCta.resolveFromPath(p, lang, document.body && document.body.className)
             : null;
         var talkCta = talk && talk.label ? talk.label : book;
+        var hero = heroServicePack();
+        if (hero) {
+            return {
+                service: hero.service,
+                href: hero.href,
+                cta: talkCta,
+                goal: hero.goal || ''
+            };
+        }
         if (/\/consulta\/renovacao|\/marcar\/renovacao|renew-prescription/.test(p)) {
             return { service: 'renovacao', href: '/marcar/renovacao', cta: book };
         }
@@ -581,7 +738,7 @@
             if (cta) {
                 cta.addEventListener('click', function (e) {
                     e.preventDefault();
-                    goCheckout(first, {
+                    goCheckout(liveState.first, {
                         service: meta.service,
                         fallbackHref: meta.href,
                         surface: 'sticky_book',
@@ -627,9 +784,11 @@
     }
 
     function applyLiveSlots(data) {
+        setHomeSlotsBusy(false);
         var hasHorizon = !(data && data.hasSlotsWithinHorizon === false);
         var slots = (hasHorizon && data && data.slots) ? data.slots : [];
         var first = slots[0] || null;
+        liveState.first = first;
 
         injectLangPolicyNotices();
         document.querySelectorAll('[data-next-slots]').forEach(function (box) {
@@ -667,17 +826,26 @@
             var when = bar.querySelector('[data-next-slot-when]');
             var kicker = bar.querySelector('.cq-sticky-book-kicker');
             if (first) {
+                var lang = pageLang();
+                if (kicker) {
+                    kicker.textContent = lang === 'en' ? 'Next slot' : lang === 'es' ? 'Pr\u00f3ximo horario' : 'Pr\u00f3ximo hor\u00e1rio';
+                }
                 if (when) when.textContent = formatSlotWhen(first.date, first.time);
+                if (cta) {
+                    cta.textContent = landing.cta;
+                    cta.setAttribute('href', href);
+                }
                 if (cta && cta.getAttribute('data-slot-bound') !== '1') {
                     cta.setAttribute('data-slot-bound', '1');
                     cta.addEventListener('click', function (e) {
                         e.preventDefault();
-                        goCheckout(first, {
-                            service: service,
-                            fallbackHref: href,
+                        var current = landingBookMeta();
+                        goCheckout(liveState.first, {
+                            service: bar.getAttribute('data-service') || current.service,
+                            fallbackHref: bar.getAttribute('data-book-href') || current.href,
                             surface: 'sticky_book',
-                            bookMode: bookMode,
-                            goal: bar.getAttribute('data-goal') || landing.goal || ''
+                            bookMode: bar.getAttribute('data-book-mode') || current.bookMode || '',
+                            goal: bar.getAttribute('data-goal') || current.goal || ''
                         });
                     });
                 }
@@ -701,14 +869,17 @@
         var nextSlotWhen = document.getElementById('lonNextSlotWhen');
         if (first && nextSlotWhen) nextSlotWhen.textContent = formatSlotWhen(first.date, first.time);
         if (first && nextSlotEl) nextSlotEl.hidden = false;
-        if (heroBook && first && heroBook.getAttribute('data-slot-bound') !== '1') {
+        if (heroBook && heroBook.getAttribute('data-slot-bound') !== '1') {
             heroBook.setAttribute('data-slot-bound', '1');
             heroBook.addEventListener('click', function (e) {
+                if (!liveState.first) return;
                 e.preventDefault();
-                goCheckout(first, {
-                    service: 'clinica_geral',
-                    fallbackHref: '/marcar/clinica-geral',
-                    surface: 'home'
+                var meta = landingBookMeta();
+                goCheckout(liveState.first, {
+                    service: meta.service,
+                    fallbackHref: meta.href,
+                    surface: 'home',
+                    goal: meta.goal || ''
                 });
             });
         }
@@ -721,9 +892,45 @@
     );
     if (!needsSlots) return;
 
-    loadSlotsSWR()
-        .then(function (data) { applyLiveSlots(data || { slots: [] }); })
-        .catch(function () {
-            applyLiveSlots({ slots: [] });
+    function reloadLiveSlots(forceNetwork) {
+        var requested = currentSlotsService();
+        var gen = ++slotsGen;
+        var loader = forceNetwork ? fetchSlotsNetwork(requested) : loadSlotsSWR();
+        return loader
+            .then(function (data) {
+                if (gen !== slotsGen || currentSlotsService() !== requested) return;
+                applyLiveSlots(data || { slots: [] });
+            })
+            .catch(function () {
+                if (gen !== slotsGen || currentSlotsService() !== requested) return;
+                var cached = readSlotsCache();
+                applyLiveSlots((cached && cached.data) || { slots: [] });
+            });
+    }
+
+    var heroSelect = document.getElementById('lonHeroService');
+    if (heroSelect) {
+        heroSelect.addEventListener('change', function () {
+            var pack = heroServicePack();
+            syncHeroBookingTargets(pack);
+            if (pack && slotCalendarGroup(pack.service) !== 'medical') {
+                liveState.first = null;
+            }
+            var cached = readSlotsCache()
+                || readAnySessionSlots(pack && pack.service)
+                || readAnySessionSlots(siblingSlotService(pack && pack.service));
+            if (cached && cached.data && Array.isArray(cached.data.slots) && cached.data.slots.length) {
+                applyLiveSlots(cached.data);
+            } else {
+                applyLiveSlots({ slots: [] });
+            }
+            track('hero_service_change', {
+                surface: 'home',
+                service: pack && pack.service
+            });
+            reloadLiveSlots(true);
         });
+    }
+
+    reloadLiveSlots();
 })();

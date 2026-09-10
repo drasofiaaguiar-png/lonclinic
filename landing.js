@@ -5,7 +5,7 @@
     var toggle = document.getElementById('lonNavToggle');
     var mobileMenu = document.getElementById('lonMobileMenu');
     var tabButtons = document.querySelectorAll('.lon-tab');
-    var cards = document.querySelectorAll('.lon-service-card');
+    var cards = document.querySelectorAll('.lon-services .lon-service-grid .lon-service-card');
     var servicesGrid = document.querySelector('.lon-services .lon-service-grid');
 
     function setActiveTab(tabId) {
@@ -48,8 +48,8 @@
             if (t) {
                 e.preventDefault();
                 setActiveTab(t);
-                var el = document.getElementById('servicos');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                var el = document.getElementById('servicos-lista') || document.getElementById('servicos');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 if (history.replaceState) {
                     history.replaceState(null, '', '#servicos-' + t);
                 }

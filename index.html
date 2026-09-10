@@ -44,7 +44,7 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="preload" as="image" href="/image/image2.webp" fetchpriority="high">
 
-    <link rel="stylesheet" href="/landing.css?v=20260910e">
+    <link rel="stylesheet" href="/landing.css?v=20260910i">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
@@ -174,14 +174,22 @@
             <div class="lon-container dr-hero-grid">
                 <div class="dr-hero-content">
                     <h1><span class="dr-hero-title-line">Finalmente, uma abordagem completa à sua saúde.</span></h1>
-                    <p class="dr-lead">Médico, psicólogo e nutricionista, num só lugar e com acompanhamento personalizado.</p>
+                    <p class="dr-lead">Consultas médicas, saúde mental e nutrição com profissionais que conhecem a sua história e acompanham a sua saúde a longo prazo.</p>
                     <h2 class="dr-hero-closer">Cuide de si, onde quer que esteja.</h2>
                     <div class="dr-cta-row">
-                        <a href="/marcar" class="lon-btn lon-btn-dark" id="lonHeroBook" data-cta="book">Marcar consulta</a>
+                        <label class="dr-hero-service-wrap">
+                            <span class="visually-hidden">Tipo de consulta</span>
+                            <select id="lonHeroService" class="dr-hero-service" autocomplete="off">
+                                <option value="clinica_geral" selected>Médico</option>
+                                <option value="nutricao_programa">Nutrição</option>
+                                <option value="psicologia">Psicólogo</option>
+                            </select>
+                        </label>
+                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark" id="lonHeroBook" data-cta="book">Marcar consulta</a>
                     </div>
                     <div class="dr-live-slots" data-next-slots data-limit="3" data-service="clinica_geral" data-book-href="/marcar/clinica-geral" data-surface="home" hidden>
                         <p class="dr-live-slots-kicker">Próximos horários</p>
-                        <div class="dr-live-slots-row" data-next-slots-row></div>
+                        <div class="dr-live-slots-row" data-next-slots-row aria-live="polite"></div>
                         <a href="/marcar/clinica-geral" class="dr-next-slot-other">Outro horário</a>
                         <a href="/marcar/clinica-geral" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
                     </div>
@@ -233,7 +241,7 @@
                     <li class="lon-service-card is-visible">
                         <span class="lon-how-step-num">1</span>
                         <h3>Escolher consulta</h3>
-                        <p>Selecione a especialidade<br>ou atestado.</p>
+                        <p>Diga o que precisa — nós indicamos a consulta certa.</p>
                     </li>
                     <li class="lon-service-card is-visible">
                         <span class="lon-how-step-num">2</span>
@@ -254,8 +262,47 @@
             </div>
         </section>
 
-        <section class="lon-services" id="servicos">
+        <section class="lon-services" id="servicos" aria-labelledby="lon-need-title">
             <div class="lon-container">
+                <header class="lon-need-header">
+                    <p class="lon-need-kicker">Em que podemos ajudar?</p>
+                    <h2 id="lon-need-title">O que precisa hoje?</h2>
+                    <p class="lon-need-lead">Escolha o que precisa. Nós ajudamos a encontrar a consulta certa.</p>
+                </header>
+                <div class="lon-need-grid">
+                    <a class="lon-need-card" id="lon-need-medico" href="#servicos-urgencias" data-open-tab="urgencias">
+                        <span class="lon-need-emoji" aria-hidden="true">🩺</span>
+                        <h3>Preciso de falar com um médico</h3>
+                        <p>Consultas de clínica geral, sintomas, check-up e acompanhamento.</p>
+                        <span class="lon-need-cta">Ver consultas</span>
+                    </a>
+                    <a class="lon-need-card" id="lon-need-psico" href="#servicos-mental" data-open-tab="mental">
+                        <span class="lon-need-emoji" aria-hidden="true">🧠</span>
+                        <h3>Preciso de apoio psicológico</h3>
+                        <p>Saúde mental, ansiedade, stress, burnout e acompanhamento.</p>
+                        <span class="lon-need-cta">Ver consultas</span>
+                    </a>
+                    <a class="lon-need-card" id="lon-need-viagem" href="#servicos-especialidades" data-open-tab="especialidades">
+                        <span class="lon-need-emoji" aria-hidden="true">✈️</span>
+                        <h3>Vou viajar</h3>
+                        <p>Consulta do viajante, prevenção e aconselhamento antes da viagem.</p>
+                        <span class="lon-need-cta">Ver consultas</span>
+                    </a>
+                    <a class="lon-need-card" id="lon-need-nutricao" href="/nutricao">
+                        <span class="lon-need-emoji" aria-hidden="true">🥗</span>
+                        <h3>Quero cuidar melhor da minha saúde</h3>
+                        <p>Nutrição, prevenção e acompanhamento personalizado.</p>
+                        <span class="lon-need-cta">Ver consultas</span>
+                    </a>
+                    <a class="lon-need-card lon-need-card--urgent" id="lon-need-urgente" href="/marcar/urgente">
+                        <span class="lon-need-emoji" aria-hidden="true">⚡</span>
+                        <h3>Preciso de uma consulta urgente</h3>
+                        <p>Para situações clínicas que precisam de avaliação médica rápida.</p>
+                        <span class="lon-need-cta">Consulta urgente</span>
+                    </a>
+                </div>
+
+                <p class="lon-need-or" id="servicos-lista">Todas as consultas</p>
                 <div class="lon-tabs" role="tablist" aria-label="Service filters">
                     <button type="button" class="lon-tab is-active" role="tab" aria-selected="true" data-tab="urgencias">Medicina Geral</button>
                     <button type="button" class="lon-tab" role="tab" aria-selected="false" data-tab="mental">Saúde Mental</button>
@@ -626,9 +673,9 @@
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-analytics.js?v=20260906i" defer></script>
-    <script src="i18n.js?v=20260910f" defer></script>
+    <script src="i18n.js?v=20260910p" defer></script>
     <script src="reviews.js?v=20260902a" defer></script>
-    <script src="landing.js?v=20260905c" defer></script>
-    <script src="/lon-slots.js?v=20260909psi" defer></script>
+    <script src="landing.js?v=20260910h" defer></script>
+    <script src="/lon-slots.js?v=20260910o" defer></script>
 </body>
 </html>
