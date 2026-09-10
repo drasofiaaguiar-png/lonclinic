@@ -16,7 +16,7 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = '10set-me';
+const CLINIC_PORTAL_BUILD = '10set-pw';
 const CLINIC_PORTAL_PATH = '/clinic-desk/dias';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 
@@ -100,6 +100,26 @@ const rateLimitClinicLogin = rateLimit({
     legacyHeaders: false,
     handler: (req, res) => {
         res.status(429).json({ error: 'Too many login attempts. Try again in a few minutes.' });
+    }
+});
+
+const rateLimitClinicPasswordResetRequest = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 8,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Demasiados pedidos. Tente novamente dentro de alguns minutos.' });
+    }
+});
+
+const rateLimitClinicPasswordResetConfirm = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Demasiadas tentativas. Tente novamente dentro de alguns minutos.' });
     }
 });
 
@@ -778,6 +798,9 @@ const clinicalNotesStore = []; // memory fallback only
 const psychologistApplicationsStore = []; // memory fallback for recrutamento
 const psychologistCvStore = new Map();
 const professionalsStore = []; // memory fallback for clinician accounts + Doxy rooms
+const passwordResetsStore = []; // memory fallback for clinic forgot-password codes
+let passwordResetIdSeq = 1;
+const passwordResetRequestTimes = new Map(); // email -> timestamps
 const producersStore = []; // memory fallback for organic producers directory
 const staffProfilesStore = new Map();
 const staffPhotosStore = new Map();
@@ -2677,6 +2700,7 @@ async function bootstrapPersistence() {
         await ensureKnownBolsaApplications();
         await ensureAllBolsaStaffProfiles();
         await fixKnownEmailTypos();
+        await assignKnownProfessionalEmails();
         await removeDuplicateMariaSaraProfessionals();
         await removeExperimentalTestProfessionals();
         return;
@@ -2686,6 +2710,7 @@ async function bootstrapPersistence() {
     await ensureProfessionalDoxyRooms();
     await ensureKnownBolsaApplications();
     await ensureAllBolsaStaffProfiles();
+    await assignKnownProfessionalEmails();
     await removeDuplicateMariaSaraProfessionals();
     await removeExperimentalTestProfessionals();
 }
@@ -2701,6 +2726,60 @@ async function fixKnownEmailTypos() {
         if (n) console.log(`   ✉️  Corrected Francisca email typo in ${n} record(s)`);
     } catch (err) {
         console.error('fixKnownEmailTypos:', err.message);
+    }
+}
+
+const KNOWN_PROFESSIONAL_EMAILS = [
+    {
+        email: 'ritaaguiarfonseca@gmail.com',
+        names: ['Rita Aguiar', 'Rita Aguiar Fonseca'],
+        usernames: ['rita.aguiar', 'ritaaguiar', 'rita.aguiar.fonseca', 'ritaaguiarfonseca']
+    }
+];
+
+function professionalMatchesKnownPerson(pro, known, extraLabels) {
+    if (!pro || !known) return false;
+    const u = normalizeProfessionalUsername(pro.username);
+    if ((known.usernames || []).some((name) => normalizeProfessionalUsername(name) === u)) return true;
+    if ((known.names || []).some((name) => usernameMatchesPersonName(pro.username, name))) return true;
+    const labels = [pro.displayName, ...(extraLabels || [])].filter(Boolean);
+    return labels.some((label) => (known.names || []).some((name) => personNamesMatch(label, name)));
+}
+
+async function assignKnownProfessionalEmails() {
+    try {
+        const list = await listProfessionalsInternal();
+        if (!list || !list.length) return;
+        let profiles = [];
+        try {
+            profiles = await listStaffProfilesInternal();
+        } catch (_) {
+            profiles = [];
+        }
+        const profileByUser = new Map(
+            (profiles || []).map((row) => [normalizeProfessionalUsername(row.username), row])
+        );
+        for (const known of KNOWN_PROFESSIONAL_EMAILS) {
+            const email = normalizeStaffEmail(known.email);
+            if (!isValidStaffEmail(email)) continue;
+            const match = list.find((pro) => {
+                const profile = profileByUser.get(normalizeProfessionalUsername(pro.username));
+                return professionalMatchesKnownPerson(pro, known, [profile && profile.fullName]);
+            });
+            if (!match) continue;
+            const owner = await findProfessionalByEmailInternal(email);
+            if (owner && Number(owner.id) !== Number(match.id)) {
+                console.log(`   ⚠️  Known email ${email} already belongs to ${owner.username}`);
+                continue;
+            }
+            if (normalizeStaffEmail(match.email) === email) continue;
+            if (isValidStaffEmail(match.email)) continue;
+            const updated = await patchProfessionalInternal(match, { email });
+            try { await attachPersonFacets(updated || match); } catch (_) { /* ignore */ }
+            console.log(`   ✉️  Associated clinic email for ${match.displayName || match.username}: ${email}`);
+        }
+    } catch (err) {
+        console.error('assignKnownProfessionalEmails:', err.message);
     }
 }
 
@@ -7142,6 +7221,34 @@ async function sendProfessionalLoginEmail({ to, name, username, password, note }
 <p style="margin:0 0 6px;"><a href="${escapeHtml(portalUrl)}">${escapeHtml(portalUrl)}</a></p>
 <p style="margin:0 0 4px;">Email: <strong>${escapeHtml(loginId)}</strong></p>
 <p style="margin:0 0 12px;">Password: <strong>${escapeHtml(password)}</strong></p>
+<p style="margin:0;">Lon Clinic</p>
+</div>`;
+    await deliverEmail({ from: EMAIL_FROM, to, subject, text, html });
+}
+
+async function sendProfessionalPasswordResetEmail({ to, name, code }) {
+    const portalUrl = professionalLoginPortalUrl();
+    const who = String(name || '').trim();
+    const greeting = who ? `Olá ${who},` : 'Olá,';
+    const subject = 'Código para redefinir a password — Lon Clinic';
+    const text = [
+        greeting,
+        '',
+        'Use este código para definir uma nova password no portal da Lon Clinic:',
+        String(code),
+        '',
+        'O código expira dentro de 15 minutos. Se não pediu esta alteração, ignore este email.',
+        '',
+        `Portal: ${portalUrl}`,
+        '',
+        'Lon Clinic'
+    ].join('\n');
+    const html = `<div style="font-family:system-ui,sans-serif;line-height:1.5;color:#111">
+<p style="margin:0 0 12px;">${escapeHtml(greeting)}</p>
+<p style="margin:0 0 12px;">Use este código para definir uma nova password no portal da Lon Clinic:</p>
+<p style="margin:0 0 16px;font-size:28px;letter-spacing:0.18em;font-weight:700;">${escapeHtml(String(code))}</p>
+<p style="margin:0 0 12px;">O código expira dentro de 15 minutos. Se não pediu esta alteração, ignore este email.</p>
+<p style="margin:0 0 12px;"><a href="${escapeHtml(portalUrl)}">${escapeHtml(portalUrl)}</a></p>
 <p style="margin:0;">Lon Clinic</p>
 </div>`;
     await deliverEmail({ from: EMAIL_FROM, to, subject, text, html });
@@ -11729,6 +11836,200 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
     res.status(401).json({ error: 'Invalid email or password' });
 });
 
+const PASSWORD_RESET_CODE_TTL_MS = 15 * 60 * 1000;
+const PASSWORD_RESET_MAX_ATTEMPTS = 5;
+const PASSWORD_RESET_MAX_PER_EMAIL = 3;
+const PASSWORD_RESET_ACCEPTED = {
+    ok: true,
+    message: 'Se este email tiver uma conta, enviámos um código. Verifique a caixa de entrada.'
+};
+
+function hashPasswordResetCode(code) {
+    return crypto.createHmac('sha256', SESSION_SECRET).update(String(code || '')).digest('hex');
+}
+
+function passwordResetCodesEqual(code, storedHash) {
+    const given = Buffer.from(hashPasswordResetCode(code), 'hex');
+    const stored = Buffer.from(String(storedHash || ''), 'hex');
+    if (given.length !== stored.length || given.length === 0) return false;
+    return crypto.timingSafeEqual(given, stored);
+}
+
+function generatePasswordResetCode() {
+    return String(crypto.randomInt(0, 1000000)).padStart(6, '0');
+}
+
+function normalizePasswordResetCode(raw) {
+    return String(raw || '').replace(/\D/g, '').slice(0, 6);
+}
+
+function passwordResetRequestsRecent(email) {
+    const key = normalizeStaffEmail(email);
+    const now = Date.now();
+    const windowMs = 15 * 60 * 1000;
+    const prev = (passwordResetRequestTimes.get(key) || []).filter((ts) => now - ts < windowMs);
+    passwordResetRequestTimes.set(key, prev);
+    return prev.length;
+}
+
+function rememberPasswordResetRequest(email) {
+    const key = normalizeStaffEmail(email);
+    const prev = passwordResetRequestTimes.get(key) || [];
+    prev.push(Date.now());
+    passwordResetRequestTimes.set(key, prev);
+}
+
+function passwordResetExpired(row) {
+    if (!row || row.usedAt) return true;
+    const exp = new Date(row.expiresAt).getTime();
+    return !Number.isFinite(exp) || exp <= Date.now();
+}
+
+async function createPasswordResetInternal(professional, email, codeHash, expiresAt) {
+    if (usePersistentDb) {
+        return db.createProfessionalPasswordReset({
+            professionalId: professional.id,
+            email,
+            codeHash,
+            expiresAt
+        });
+    }
+    const now = new Date().toISOString();
+    for (const row of passwordResetsStore) {
+        if (Number(row.professionalId) === Number(professional.id) && !row.usedAt) {
+            row.usedAt = now;
+        }
+    }
+    const created = {
+        id: passwordResetIdSeq++,
+        professionalId: professional.id,
+        email,
+        codeHash,
+        expiresAt: expiresAt instanceof Date ? expiresAt.toISOString() : expiresAt,
+        attempts: 0,
+        usedAt: null,
+        createdAt: now
+    };
+    passwordResetsStore.push(created);
+    return created;
+}
+
+async function findActivePasswordResetInternal(email) {
+    const e = normalizeStaffEmail(email);
+    if (usePersistentDb) return db.findActiveProfessionalPasswordReset(e);
+    const matches = passwordResetsStore
+        .filter((row) => normalizeStaffEmail(row.email) === e && !passwordResetExpired(row))
+        .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)));
+    return matches[0] || null;
+}
+
+async function incrementPasswordResetAttemptsInternal(id) {
+    if (usePersistentDb) return db.incrementProfessionalPasswordResetAttempts(id);
+    const row = passwordResetsStore.find((item) => Number(item.id) === Number(id));
+    if (!row) return null;
+    row.attempts = (Number(row.attempts) || 0) + 1;
+    return row;
+}
+
+async function markPasswordResetUsedInternal(id) {
+    if (usePersistentDb) return db.markProfessionalPasswordResetUsed(id);
+    const row = passwordResetsStore.find((item) => Number(item.id) === Number(id));
+    if (!row) return false;
+    row.usedAt = row.usedAt || new Date().toISOString();
+    return true;
+}
+
+async function setProfessionalPasswordHashInternal(professional, passwordHash) {
+    if (usePersistentDb) {
+        return db.updateProfessional(professional.id, { passwordHash });
+    }
+    Object.assign(professional, { passwordHash, updatedAt: new Date().toISOString() });
+    return professional;
+}
+
+app.post('/api/clinic/password-reset/request', rateLimitClinicPasswordResetRequest, async (req, res) => {
+    const email = normalizeStaffEmail((req.body && req.body.email) || '');
+    if (!isValidStaffEmail(email)) {
+        return res.status(400).json({ error: 'Introduza um email válido.' });
+    }
+    if (!isEmailConfigured) {
+        return res.status(503).json({ error: 'O envio de email não está configurado neste momento.' });
+    }
+    if (isClinicAdminUsername(email) || email === normalizeStaffEmail(CLINIC_USERNAME)) {
+        return res.json(PASSWORD_RESET_ACCEPTED);
+    }
+    if (passwordResetRequestsRecent(email) >= PASSWORD_RESET_MAX_PER_EMAIL) {
+        return res.json(PASSWORD_RESET_ACCEPTED);
+    }
+    rememberPasswordResetRequest(email);
+    try {
+        const pro = await findProfessionalForClinicLogin(email);
+        if (!pro || pro.active === false || isClinicAdminUsername(pro.username)) {
+            return res.json(PASSWORD_RESET_ACCEPTED);
+        }
+        if (!isValidStaffEmail(pro.email)) {
+            try {
+                const patched = await patchProfessionalInternal(pro, { email });
+                if (patched) Object.assign(pro, patched);
+            } catch (_) { /* still send to the requested address */ }
+        }
+        const code = generatePasswordResetCode();
+        const expiresAt = new Date(Date.now() + PASSWORD_RESET_CODE_TTL_MS);
+        await createPasswordResetInternal(pro, email, hashPasswordResetCode(code), expiresAt);
+        await sendProfessionalPasswordResetEmail({
+            to: email,
+            name: pro.displayName || pro.username,
+            code
+        });
+        console.log(`   ✉️  Password reset code sent to ${email} (${pro.username})`);
+        return res.json(PASSWORD_RESET_ACCEPTED);
+    } catch (err) {
+        console.error('POST /api/clinic/password-reset/request:', err.message);
+        return res.status(500).json({ error: 'Não foi possível enviar o código. Tente novamente.' });
+    }
+});
+
+app.post('/api/clinic/password-reset/confirm', rateLimitClinicPasswordResetConfirm, async (req, res) => {
+    const email = normalizeStaffEmail((req.body && req.body.email) || '');
+    const code = normalizePasswordResetCode((req.body && req.body.code) || '');
+    const password = String((req.body && req.body.password) || '');
+    if (!isValidStaffEmail(email) || code.length !== 6) {
+        return res.status(400).json({ error: 'Introduza o email e o código de 6 dígitos.' });
+    }
+    if (password.length < 8) {
+        return res.status(400).json({ error: 'A nova password deve ter pelo menos 8 caracteres.' });
+    }
+    const invalid = { error: 'Código inválido ou expirado.' };
+    try {
+        const row = await findActivePasswordResetInternal(email);
+        if (!row) return res.status(400).json(invalid);
+        if ((Number(row.attempts) || 0) >= PASSWORD_RESET_MAX_ATTEMPTS) {
+            await markPasswordResetUsedInternal(row.id);
+            return res.status(400).json(invalid);
+        }
+        if (!passwordResetCodesEqual(code, row.codeHash)) {
+            const updated = await incrementPasswordResetAttemptsInternal(row.id);
+            if (updated && (Number(updated.attempts) || 0) >= PASSWORD_RESET_MAX_ATTEMPTS) {
+                await markPasswordResetUsedInternal(row.id);
+            }
+            return res.status(400).json(invalid);
+        }
+        const pro = await findProfessionalByIdInternal(row.professionalId);
+        if (!pro || pro.active === false) {
+            await markPasswordResetUsedInternal(row.id);
+            return res.status(400).json(invalid);
+        }
+        const passwordHash = await bcrypt.hash(password, 12);
+        await setProfessionalPasswordHashInternal(pro, passwordHash);
+        await markPasswordResetUsedInternal(row.id);
+        console.log(`   🔑 Professional password reset via email code: ${pro.username}`);
+        return res.json({ ok: true, message: 'Password atualizada. Entre com o email e a nova password.' });
+    } catch (err) {
+        console.error('POST /api/clinic/password-reset/confirm:', err.message);
+        return res.status(500).json({ error: 'Não foi possível atualizar a password. Tente novamente.' });
+    }
+});
+
 // ─── API: Clinic — Logout ───
 app.post('/api/clinic/logout', (req, res) => {
     if (req.session) {
@@ -13789,6 +14090,12 @@ app.patch('/api/admin/professionals/:id', requireAdmin, express.json(), async (r
             const emailRaw = String(body.email || '').trim().toLowerCase();
             if (emailRaw && (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRaw) || emailRaw.length > 320)) {
                 return res.status(400).json({ error: 'Enter a valid email' });
+            }
+            if (emailRaw) {
+                const owner = await findProfessionalByEmailInternal(emailRaw);
+                if (owner && Number(owner.id) !== Number(existing.id)) {
+                    return res.status(409).json({ error: 'That email already has a clinic login' });
+                }
             }
             fields.email = emailRaw;
         }

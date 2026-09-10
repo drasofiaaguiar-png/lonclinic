@@ -373,6 +373,62 @@ body.dash-portal .clinic-notes-section {
     text-align: center;
 }
 
+.dash-login-ok {
+    background: rgba(26, 102, 65, 0.1);
+    border: 1px solid rgba(26, 102, 65, 0.28);
+    color: #1a6641;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.dash-login-forgot-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 16px;
+    margin: 14px 0 0;
+}
+
+.dash-login-forgot {
+    border: 0;
+    background: none;
+    padding: 0;
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+}
+
+.dash-login-forgot:hover,
+.dash-login-forgot:focus-visible {
+    color: var(--text-primary);
+}
+
+.dash-login-code {
+    letter-spacing: 0.28em;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.admin-dir-email-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    flex: 1 1 260px;
+}
+
+.admin-dir-email-form .admin-input {
+    flex: 1;
+    min-width: 200px;
+}
+
 .dash-login-note {
     font-size: 0.6875rem;
     color: var(--text-muted);

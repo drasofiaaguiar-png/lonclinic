@@ -30,6 +30,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicUsername = document.getElementById('clinicUsername');
     const clinicPassword = document.getElementById('clinicPassword');
     const loginError = document.getElementById('loginError');
+    const clinicLoginTitle = document.getElementById('clinicLoginTitle');
+    const clinicLoginDesc = document.getElementById('clinicLoginDesc');
+    const clinicLoginOk = document.getElementById('clinicLoginOk');
+    const clinicForgotForm = document.getElementById('clinicForgotForm');
+    const clinicForgotEmail = document.getElementById('clinicForgotEmail');
+    const clinicForgotLink = document.getElementById('clinicForgotLink');
+    const clinicForgotBack = document.getElementById('clinicForgotBack');
+    const clinicForgotSubmit = document.getElementById('clinicForgotSubmit');
+    const forgotError = document.getElementById('forgotError');
+    const clinicResetForm = document.getElementById('clinicResetForm');
+    const clinicResetCode = document.getElementById('clinicResetCode');
+    const clinicResetPassword = document.getElementById('clinicResetPassword');
+    const clinicResetPassword2 = document.getElementById('clinicResetPassword2');
+    const clinicResetSubmit = document.getElementById('clinicResetSubmit');
+    const clinicResetResend = document.getElementById('clinicResetResend');
+    const clinicResetBack = document.getElementById('clinicResetBack');
+    const resetError = document.getElementById('resetError');
+    let clinicResetEmail = '';
     const clinicLogoutBtn = document.getElementById('clinicLogoutBtn');
     const clinicAdminLink = document.getElementById('clinicAdminLink');
     const clinicGreeting = document.getElementById('clinicGreeting');
@@ -203,6 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clinicContent.style.display = 'none';
         closeClinicSidebar();
         if (clinicAdminLink) clinicAdminLink.hidden = true;
+        setClinicAuthView('signin');
     }
 
     // ─── Show Clinic Portal ───
@@ -688,16 +707,89 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ─── Login ───
+    function hideAuthMessage(el) {
+        if (!el) return;
+        el.style.display = 'none';
+        el.hidden = true;
+        el.textContent = '';
+    }
+
+    function showAuthError(el, message) {
+        if (!el) return;
+        el.textContent = message || '';
+        el.style.display = message ? 'block' : 'none';
+        el.hidden = !message;
+    }
+
+    function showAuthOk(message) {
+        if (!clinicLoginOk) return;
+        if (!message) {
+            clinicLoginOk.hidden = true;
+            clinicLoginOk.textContent = '';
+            return;
+        }
+        clinicLoginOk.hidden = false;
+        clinicLoginOk.textContent = message;
+    }
+
+    function setClinicAuthView(view) {
+        const mode = view === 'forgot' || view === 'reset' ? view : 'signin';
+        if (clinicLoginForm) clinicLoginForm.hidden = mode !== 'signin';
+        if (clinicForgotForm) clinicForgotForm.hidden = mode !== 'forgot';
+        if (clinicResetForm) clinicResetForm.hidden = mode !== 'reset';
+        if (clinicLoginTitle) {
+            clinicLoginTitle.textContent = mode === 'signin'
+                ? 'Clinic Portal'
+                : mode === 'forgot'
+                    ? 'Recuperar password'
+                    : 'Redefinir password';
+        }
+        if (clinicLoginDesc) {
+            clinicLoginDesc.textContent = mode === 'signin'
+                ? `Portal ${document.body.getAttribute('data-clinic-build') || '10set-pw'} — Use o email da sua ficha para entrar.`
+                : mode === 'forgot'
+                    ? 'Indique o email da ficha. Enviamos um código para definir uma nova password.'
+                    : 'Introduza o código enviado por email e escolha uma nova password.';
+        }
+        if (mode !== 'signin') hideAuthMessage(loginError);
+        if (mode !== 'forgot') hideAuthMessage(forgotError);
+        if (mode !== 'reset') hideAuthMessage(resetError);
+        if (mode === 'forgot' && clinicForgotEmail) {
+            const fromLogin = clinicUsername && clinicUsername.value.trim();
+            if (!clinicForgotEmail.value && fromLogin) clinicForgotEmail.value = fromLogin;
+            clinicForgotEmail.focus();
+        }
+        if (mode === 'reset' && clinicResetCode) clinicResetCode.focus();
+        if (mode === 'signin' && clinicUsername) clinicUsername.focus();
+    }
+
+    async function requestPasswordResetCode(email, { fromResend } = {}) {
+        const res = await fetch('/api/clinic/password-reset/request', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ email })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+            throw new Error(data.error || 'Não foi possível enviar o código. Tente novamente.');
+        }
+        clinicResetEmail = email;
+        showAuthOk(data.message || 'Se este email tiver uma conta, enviámos um código. Verifique a caixa de entrada.');
+        if (!fromResend) setClinicAuthView('reset');
+        return data;
+    }
+
     clinicLoginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        loginError.style.display = 'none';
+        hideAuthMessage(loginError);
+        showAuthOk('');
         
         const identifier = clinicUsername.value.trim();
         const password = clinicPassword.value;
         
         if (!identifier || !password) {
-            loginError.textContent = 'Please enter your email and password';
-            loginError.style.display = 'block';
+            showAuthError(loginError, 'Please enter your email and password');
             return;
         }
 
@@ -705,6 +797,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch('/api/clinic/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'same-origin',
                 body: JSON.stringify({ email: identifier, username: identifier, password })
             });
 
@@ -715,15 +808,122 @@ document.addEventListener('DOMContentLoaded', () => {
                 clinicUsername.value = '';
                 clinicPassword.value = '';
             } else {
-                loginError.textContent = data.error || 'Invalid email or password';
-                loginError.style.display = 'block';
+                showAuthError(loginError, data.error || 'Invalid email or password');
             }
         } catch (err) {
             console.error('Login error:', err);
-            loginError.textContent = 'Failed to connect to server. Please try again.';
-            loginError.style.display = 'block';
+            showAuthError(loginError, 'Failed to connect to server. Please try again.');
         }
     });
+
+    if (clinicForgotLink) {
+        clinicForgotLink.addEventListener('click', () => {
+            showAuthOk('');
+            setClinicAuthView('forgot');
+        });
+    }
+    if (clinicForgotBack) {
+        clinicForgotBack.addEventListener('click', () => {
+            showAuthOk('');
+            setClinicAuthView('signin');
+        });
+    }
+    if (clinicResetBack) {
+        clinicResetBack.addEventListener('click', () => {
+            showAuthOk('');
+            setClinicAuthView('signin');
+        });
+    }
+    if (clinicForgotForm) {
+        clinicForgotForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAuthMessage(forgotError);
+            showAuthOk('');
+            const email = clinicForgotEmail ? clinicForgotEmail.value.trim() : '';
+            if (!email) {
+                showAuthError(forgotError, 'Introduza o email da ficha.');
+                return;
+            }
+            if (clinicForgotSubmit) clinicForgotSubmit.disabled = true;
+            try {
+                await requestPasswordResetCode(email);
+            } catch (err) {
+                showAuthError(forgotError, err.message || 'Não foi possível enviar o código. Tente novamente.');
+            } finally {
+                if (clinicForgotSubmit) clinicForgotSubmit.disabled = false;
+            }
+        });
+    }
+    if (clinicResetResend) {
+        clinicResetResend.addEventListener('click', async () => {
+            hideAuthMessage(resetError);
+            const email = clinicResetEmail || (clinicForgotEmail && clinicForgotEmail.value.trim()) || '';
+            if (!email) {
+                setClinicAuthView('forgot');
+                return;
+            }
+            clinicResetResend.disabled = true;
+            try {
+                await requestPasswordResetCode(email, { fromResend: true });
+            } catch (err) {
+                showAuthError(resetError, err.message || 'Não foi possível enviar o código. Tente novamente.');
+            } finally {
+                clinicResetResend.disabled = false;
+            }
+        });
+    }
+    if (clinicResetCode) {
+        clinicResetCode.addEventListener('input', () => {
+            clinicResetCode.value = clinicResetCode.value.replace(/\D/g, '').slice(0, 6);
+        });
+    }
+    if (clinicResetForm) {
+        clinicResetForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAuthMessage(resetError);
+            const email = clinicResetEmail || (clinicForgotEmail && clinicForgotEmail.value.trim()) || '';
+            const code = clinicResetCode ? clinicResetCode.value.replace(/\D/g, '') : '';
+            const password = clinicResetPassword ? clinicResetPassword.value : '';
+            const password2 = clinicResetPassword2 ? clinicResetPassword2.value : '';
+            if (!email || code.length !== 6) {
+                showAuthError(resetError, 'Introduza o código de 6 dígitos enviado por email.');
+                return;
+            }
+            if (password.length < 8) {
+                showAuthError(resetError, 'A nova password deve ter pelo menos 8 caracteres.');
+                return;
+            }
+            if (password !== password2) {
+                showAuthError(resetError, 'As passwords não coincidem.');
+                return;
+            }
+            if (clinicResetSubmit) clinicResetSubmit.disabled = true;
+            try {
+                const res = await fetch('/api/clinic/password-reset/confirm', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ email, code, password })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    showAuthError(resetError, data.error || 'Código inválido ou expirado.');
+                    return;
+                }
+                if (clinicResetPassword) clinicResetPassword.value = '';
+                if (clinicResetPassword2) clinicResetPassword2.value = '';
+                if (clinicResetCode) clinicResetCode.value = '';
+                if (clinicUsername && email) clinicUsername.value = email;
+                if (clinicPassword) clinicPassword.value = '';
+                setClinicAuthView('signin');
+                showAuthOk(data.message || 'Password atualizada. Entre com o email e a nova password.');
+            } catch (err) {
+                showAuthError(resetError, 'Failed to connect to server. Please try again.');
+            } finally {
+                if (clinicResetSubmit) clinicResetSubmit.disabled = false;
+            }
+        });
+    }
 
     // ─── Logout ───
     clinicLogoutBtn.addEventListener('click', async () => {

@@ -660,6 +660,20 @@ async function initSchema(p) {
     await p.query(`ALTER TABLE professionals ADD COLUMN IF NOT EXISTS email TEXT NOT NULL DEFAULT ''`);
     await p.query(`ALTER TABLE professionals ADD COLUMN IF NOT EXISTS login_email_sent_to TEXT NOT NULL DEFAULT ''`);
     await p.query(`ALTER TABLE professionals ADD COLUMN IF NOT EXISTS login_email_sent_at TIMESTAMPTZ`);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS professional_password_resets (
+            id SERIAL PRIMARY KEY,
+            professional_id INTEGER NOT NULL REFERENCES professionals(id) ON DELETE CASCADE,
+            email TEXT NOT NULL,
+            code_hash TEXT NOT NULL,
+            expires_at TIMESTAMPTZ NOT NULL,
+            attempts INTEGER NOT NULL DEFAULT 0,
+            used_at TIMESTAMPTZ,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_pro_pwreset_email_created ON professional_password_resets (LOWER(TRIM(email)), created_at DESC)`);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_pro_pwreset_pro_created ON professional_password_resets (professional_id, created_at DESC)`);
     await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS professional_id INTEGER`);
     await p.query(
         `CREATE INDEX IF NOT EXISTS idx_psychologist_applications_professional ON psychologist_applications (professional_id)`
@@ -2613,6 +2627,83 @@ async function updateProfessional(id, fields) {
     return r.rows[0] ? rowToProfessional(r.rows[0]) : existing;
 }
 
+function rowToPasswordReset(row) {
+    if (!row) return null;
+    return {
+        id: row.id,
+        professionalId: row.professional_id,
+        email: row.email || '',
+        codeHash: row.code_hash,
+        expiresAt: row.expires_at instanceof Date ? row.expires_at.toISOString() : row.expires_at,
+        attempts: Number(row.attempts) || 0,
+        usedAt: row.used_at instanceof Date ? row.used_at.toISOString() : (row.used_at || null),
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at
+    };
+}
+
+async function createProfessionalPasswordReset({ professionalId, email, codeHash, expiresAt }) {
+    const p = getPool();
+    const id = Number(professionalId);
+    const e = String(email || '').trim().toLowerCase().slice(0, 320);
+    if (!Number.isInteger(id) || id < 1 || !e || !codeHash || !expiresAt) return null;
+    await p.query(
+        `UPDATE professional_password_resets
+            SET used_at = COALESCE(used_at, NOW())
+          WHERE professional_id = $1
+            AND used_at IS NULL`,
+        [id]
+    );
+    const exp = expiresAt instanceof Date ? expiresAt : new Date(expiresAt);
+    const r = await p.query(
+        `INSERT INTO professional_password_resets (professional_id, email, code_hash, expires_at)
+         VALUES ($1, $2, $3, $4)
+         RETURNING *`,
+        [id, e, String(codeHash), exp]
+    );
+    return rowToPasswordReset(r.rows[0]);
+}
+
+async function findActiveProfessionalPasswordReset(email) {
+    const p = getPool();
+    const e = String(email || '').trim().toLowerCase();
+    if (!e) return null;
+    const r = await p.query(
+        `SELECT * FROM professional_password_resets
+          WHERE LOWER(TRIM(email)) = $1
+            AND used_at IS NULL
+            AND expires_at > NOW()
+          ORDER BY created_at DESC
+          LIMIT 1`,
+        [e]
+    );
+    return r.rows[0] ? rowToPasswordReset(r.rows[0]) : null;
+}
+
+async function incrementProfessionalPasswordResetAttempts(id) {
+    const p = getPool();
+    const n = Number(id);
+    if (!Number.isInteger(n) || n < 1) return null;
+    const r = await p.query(
+        `UPDATE professional_password_resets
+            SET attempts = attempts + 1
+          WHERE id = $1
+          RETURNING *`,
+        [n]
+    );
+    return r.rows[0] ? rowToPasswordReset(r.rows[0]) : null;
+}
+
+async function markProfessionalPasswordResetUsed(id) {
+    const p = getPool();
+    const n = Number(id);
+    if (!Number.isInteger(n) || n < 1) return false;
+    const r = await p.query(
+        `UPDATE professional_password_resets SET used_at = COALESCE(used_at, NOW()) WHERE id = $1`,
+        [n]
+    );
+    return r.rowCount > 0;
+}
+
 async function deleteProfessional(id) {
     const p = getPool();
     const n = Number(id);
@@ -3727,6 +3818,10 @@ module.exports = {
     syncBookingProfessionalLabel,
     insertProfessional,
     updateProfessional,
+    createProfessionalPasswordReset,
+    findActiveProfessionalPasswordReset,
+    incrementProfessionalPasswordResetAttempts,
+    markProfessionalPasswordResetUsed,
     deleteProfessional,
     getStaffProfile,
     listStaffProfiles,

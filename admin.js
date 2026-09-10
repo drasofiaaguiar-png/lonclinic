@@ -4181,6 +4181,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         const sendLogin = p.hasLogin && p.id && !p.isClinicAdmin
             ? `<button type="button" class="btn btn-primary btn-sm" data-pro-send-login="${escapeHtml(String(p.id))}">Send login email</button>`
             : '';
+        const saveEmail = p.hasLogin && p.id && !p.isClinicAdmin
+            ? `<form class="admin-dir-email-form" data-pro-email-form="${escapeHtml(String(p.id))}">
+                    <input type="email" class="admin-input" name="email" value="${escapeHtml(p.email || '')}" placeholder="rita@email.com" required autocomplete="off" inputmode="email">
+                    <button type="submit" class="btn btn-outline btn-sm">Guardar email</button>
+               </form>`
+            : '';
         adminDirDetail.hidden = false;
         adminDirDetail.innerHTML = `
             <div class="admin-dir-detail-head">
@@ -4208,7 +4214,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             ${areaTagsHtml(p.primaryAreas) ? `<div class="admin-staff-profile-block"><h4>Áreas primárias</h4>${areaTagsHtml(p.primaryAreas)}</div>` : ''}
             ${areaTagsHtml(p.secondaryAreas) ? `<div class="admin-staff-profile-block"><h4>Áreas secundárias</h4>${areaTagsHtml(p.secondaryAreas)}</div>` : ''}
             ${docs ? `<div class="admin-staff-profile-block"><h4>Documentos</h4><ul class="admin-staff-docs">${docs}</ul></div>` : ''}
-            ${sendLogin ? `<div class="admin-dir-detail-actions">${sendLogin}</div>` : ''}
+            ${saveEmail || sendLogin ? `<div class="admin-dir-detail-actions">${saveEmail}${sendLogin}</div>` : ''}
         `;
     }
 
@@ -4337,6 +4343,44 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
             openSendLoginEmailModal(pro);
+        });
+        adminDirDetail.addEventListener('submit', async (e) => {
+            const form = e.target.closest('[data-pro-email-form]');
+            if (!form) return;
+            e.preventDefault();
+            const id = form.getAttribute('data-pro-email-form');
+            const input = form.querySelector('input[name="email"]');
+            const email = input ? input.value.trim() : '';
+            const btn = form.querySelector('button[type="submit"]');
+            if (!id) {
+                showProfessionalError('Could not find this professional.');
+                return;
+            }
+            if (!email) {
+                showProfessionalError('Add an email before saving.');
+                if (input) input.focus();
+                return;
+            }
+            if (btn) btn.disabled = true;
+            showProfessionalError('');
+            try {
+                const res = await fetch(`/api/admin/professionals/${encodeURIComponent(id)}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    showProfessionalError(data.error || 'Could not save email.');
+                    return;
+                }
+                await loadAdminProfessionals();
+                showProfessionalError(`Email saved: ${email}`);
+            } catch (err) {
+                showProfessionalError('Network error. Please try again.');
+            } finally {
+                if (btn) btn.disabled = false;
+            }
         });
     }
 
