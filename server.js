@@ -16675,6 +16675,10 @@ async function createInvitationStripeSession(invitation, baseUrl) {
         invitation_id: invitation.id,
         p1_name: invitation.patientName.substring(0, 500)
     };
+    const professionalName = String(invitation.professional || '').trim();
+    if (professionalName) {
+        metadata.professional_name = professionalName.substring(0, 160);
+    }
     // Mirror the same shape as the regular checkout for downstream finalisation.
     for (let i = 2; i <= travellerCount; i++) {
         metadata[`p${i}_name`] = `Traveller ${i}`;
@@ -16841,7 +16845,8 @@ app.post('/api/admin/invitations', requireAdmin, express.json(), async (req, res
             travellers,
             hasInsurance,
             amountCents: customAmountCents,
-            confirmWithoutInvoice
+            confirmWithoutInvoice,
+            professional: professionalRaw
         } = req.body || {};
 
         if (!patientName || !patientEmail || !service || !dateIso || !time) {
@@ -16942,6 +16947,8 @@ app.post('/api/admin/invitations', requireAdmin, express.json(), async (req, res
             hasInsurance: !!hasInsurance,
             createdBy: (req.session && req.session.clinicUsername) || 'admin'
         });
+        const professional = String(professionalRaw || '').trim();
+        if (professional) invitation.professional = professional.slice(0, 160);
 
         const baseUrl = getBaseUrl(req);
         let emailDelivered = true;
@@ -16955,6 +16962,10 @@ app.post('/api/admin/invitations', requireAdmin, express.json(), async (req, res
                 invitation = confirmed.invitation;
                 emailDelivered = confirmed.emailDelivered !== false;
                 emailError = confirmed.emailError || null;
+                if (confirmed.bookingRef && professional) {
+                    const assigned = await applyProfessionalAssignment({ professional });
+                    await db.updateBookingAdminFields(confirmed.bookingRef, assigned);
+                }
                 console.log(`   ✉️  Direct booking ready for ${invitation.patientEmail} (${invitation.dateIso} ${invitation.time})`);
             } catch (e) {
                 emailError = e.message || 'Direct confirmation failed';

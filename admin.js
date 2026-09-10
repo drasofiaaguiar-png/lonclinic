@@ -1348,7 +1348,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ? `Last visit ${p.lastDateIso} at ${p.lastTime || '—'}. Suggested from recurrence and usual day/time.`
                     : 'Suggested from recurrence and last visit day/time.';
             }
-            if (scheduleNextService && p.service) scheduleNextService.value = p.service;
+            if (scheduleNextService && p.service) {
+                const want = String(p.service);
+                if (want && !Array.from(scheduleNextService.options).some((o) => o.value === want)) {
+                    const opt = document.createElement('option');
+                    opt.value = want;
+                    opt.textContent = SERVICE_LABELS_ADMIN[want] || want;
+                    scheduleNextService.appendChild(opt);
+                }
+                scheduleNextService.value = want;
+            }
             if (scheduleNextProfessional) scheduleNextProfessional.value = p.professional || '';
             refreshScheduleNextTravelUI();
             const suggest = data.suggestion;
@@ -3042,6 +3051,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const inviteEmail = document.getElementById('inviteEmail');
     const invitePhone = document.getElementById('invitePhone');
     const inviteService = document.getElementById('inviteService');
+    const inviteProfessional = document.getElementById('inviteProfessional');
     const inviteDate = document.getElementById('inviteDate');
     const inviteTime = document.getElementById('inviteTime');
     const inviteLocale = document.getElementById('inviteLocale');
@@ -3359,6 +3369,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 dateIso: inviteDate.value,
                 time: inviteTime.value,
                 locale: inviteLocale.value,
+                professional: inviteProfessional ? inviteProfessional.value.trim() : '',
                 travellers: inviteService.value === 'travel' ? inviteTravellerCount() : 1,
                 hasInsurance: inviteService.value === 'travel' && inviteHasInsurance()
             };
