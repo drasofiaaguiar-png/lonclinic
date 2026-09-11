@@ -72,9 +72,9 @@
             },
             psicologia_mensal: {
                 label: 'Psychology subscription',
-                duration: '50 minutes · billed monthly',
+                duration: '50 minutes · 4 sessions/month',
                 bullets: [
-                    'Regular follow-up with a Lon Clinic psychologist — €56/month, billed monthly.',
+                    'Regular follow-up with a Lon Clinic psychologist — €56/month for 4 sessions.',
                     'Valid for every area of individual psychology (couples therapy has its own price).',
                     'Cancel at any time. Same 50-minute video format as the one-off session.'
                 ]
@@ -239,9 +239,9 @@
             },
             psicologia_mensal: {
                 label: 'Suscripción de psicología',
-                duration: '50 minutos · cobrado mensualmente',
+                duration: '50 minutos · 4 sesiones/mes',
                 bullets: [
-                    'Seguimiento regular con un psicólogo de LON Clinic — 56 €/mes, cobrado mensualmente.',
+                    'Seguimiento regular con un psicólogo de LON Clinic — 56 €/mes por 4 sesiones.',
                     'Válida para todas las áreas de psicología individual (la terapia de pareja tiene su propio precio).',
                     'Cancelable en cualquier momento. Mismo formato de 50 minutos que la sesión suelta.'
                 ]
@@ -504,7 +504,7 @@
             title: 'Subscrição de Psicologia',
             price: '€56',
             unit: '/mês',
-            note: 'Acompanhamento regular · cancelável a qualquer momento',
+            note: '4 sessões por mês · cancelável a qualquer momento',
             featured: true
         },
         {
@@ -630,10 +630,10 @@
             price: '€56',
             priceNote: '/mês',
             cents: 5600,
-            duration: '50 minutos · cobrado mensalmente',
+            duration: '50 minutos · 4 sessões/mês',
             serviceKey: 'psicologia_mensal',
             bullets: [
-                'Acompanhamento regular com um psicólogo da LON Clinic — 56 €/mês, cobrado mensalmente.',
+                'Acompanhamento regular com um psicólogo da LON Clinic — 56 €/mês por 4 sessões.',
                 'Válida para todas as áreas de psicologia individual (a terapia de casal tem preço próprio).',
                 'Cancelável a qualquer momento. O mesmo formato de 50 minutos da sessão avulsa.'
             ]
@@ -1063,14 +1063,14 @@
             psiKicker = 'Psychology';
             psiHeading = 'Choose the format';
             psiCards = localizePlanCards(PSICOLOGIA_PLAN_CARDS, {
-                psicologia_mensal: { badge: 'Recommended', title: 'Psychology subscription', unit: '/month', note: 'Regular follow-up · cancel any time' },
+                psicologia_mensal: { badge: 'Recommended', title: 'Psychology subscription', unit: '/month', note: '4 sessions a month · cancel any time' },
                 psicologia: { badge: 'One-off', title: 'Single session', unit: 'per session', note: '50 min · no commitment' }
             });
         } else if (psiLang === 'es') {
             psiKicker = 'Psicología';
             psiHeading = 'Elige el formato';
             psiCards = localizePlanCards(PSICOLOGIA_PLAN_CARDS, {
-                psicologia_mensal: { badge: 'Recomendado', title: 'Suscripción de psicología', unit: '/mes', note: 'Seguimiento regular · cancelable en cualquier momento' },
+                psicologia_mensal: { badge: 'Recomendado', title: 'Suscripción de psicología', unit: '/mes', note: '4 sesiones al mes · cancelable en cualquier momento' },
                 psicologia: { badge: 'Suelta', title: 'Sesión única', unit: 'por sesión', note: '50 min · sin compromiso' }
             });
         }

@@ -326,6 +326,25 @@ async function initBookingFlow() {
         return value.toFixed(2).replace('.', ',') + ' €';
     }
 
+    function isMonthlySubscription(serviceKey) {
+        return serviceKey === 'psicologia_mensal'
+            || serviceKey === 'terapia_casal_mensal'
+            || serviceKey === 'burnout_mensal';
+    }
+
+    function monthlyPriceSuffix() {
+        const lang = getBookingLocale();
+        if (lang === 'en') return '/month';
+        if (lang === 'es') return '/mes';
+        return '/mês';
+    }
+
+    function formatPayablePrice(cents, serviceKey) {
+        const text = formatEurFromCents(cents);
+        if (isMonthlySubscription(serviceKey || state.service)) return text + monthlyPriceSuffix();
+        return text;
+    }
+
     function currentTotalCents() {
         const isTravel = state.service === 'travel';
         const count = isTravel ? 1 : Math.max(1, state.travellerCount || 1);
@@ -344,9 +363,9 @@ async function initBookingFlow() {
             const tp = getCurrentTravelPrice();
             if (tp && tp.duration) return tp.duration;
         }
-        if (state.serviceDuration) return state.serviceDuration;
         const durations = bookingString('durations', null);
         if (durations && durations[serviceKey]) return durations[serviceKey];
+        if (state.serviceDuration) return state.serviceDuration;
         return '';
     }
 
@@ -403,7 +422,7 @@ async function initBookingFlow() {
 
     function updatePayButton() {
         const label = document.getElementById('next-2-label');
-        const priceText = formatEurFromCents(currentTotalCents());
+        const priceText = formatPayablePrice(currentTotalCents(), state.service);
         if (label) label.textContent = payButtonLabel(priceText);
         const payAmount = document.getElementById('checkoutPayAmount');
         if (payAmount) payAmount.textContent = priceText;
@@ -414,7 +433,7 @@ async function initBookingFlow() {
         const whenEl = document.getElementById('checkoutWhen');
         const priceEl = document.getElementById('checkoutPrice');
         const durationEl = document.getElementById('checkoutDuration');
-        const priceText = formatEurFromCents(currentTotalCents());
+        const priceText = formatPayablePrice(currentTotalCents(), state.service);
         const duration = serviceDurationLabel(state.service);
         if (whenEl) {
             if (state.dateLabel && state.time) {
@@ -746,7 +765,7 @@ async function initBookingFlow() {
                 perMonth: '/mês',
                 perSession: 'por sessão',
                 subTitle: 'Subscrição de Psicologia',
-                subNote: 'Acompanhamento regular · cancelável a qualquer momento',
+                subNote: '4 sessões por mês · cancelável a qualquer momento',
                 oneTitle: 'Sessão única',
                 oneNote: '50 min · sem compromisso',
                 casalSubTitle: 'Subscrição de casal',
@@ -781,7 +800,7 @@ async function initBookingFlow() {
                 perMonth: '/month',
                 perSession: 'per session',
                 subTitle: 'Psychology subscription',
-                subNote: 'Regular follow-up · cancel any time',
+                subNote: '4 sessions a month · cancel any time',
                 oneTitle: 'Single session',
                 oneNote: '50 min · no commitment',
                 casalSubTitle: 'Couples subscription',
@@ -816,7 +835,7 @@ async function initBookingFlow() {
                 perMonth: '/mes',
                 perSession: 'por sesión',
                 subTitle: 'Suscripción de psicología',
-                subNote: 'Seguimiento regular · cancelable en cualquier momento',
+                subNote: '4 sesiones al mes · cancelable en cualquier momento',
                 oneTitle: 'Sesión única',
                 oneNote: '50 min · sin compromiso',
                 casalSubTitle: 'Suscripción de pareja',
@@ -2323,7 +2342,7 @@ async function initBookingFlow() {
             payBtn.disabled = false;
             payBtn.innerHTML = `
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-                <span id="next-2-label">${payButtonLabel(formatEurFromCents(currentTotalCents()))}</span>
+                <span id="next-2-label">${payButtonLabel(formatPayablePrice(currentTotalCents(), state.service))}</span>
             `;
         }
     });
