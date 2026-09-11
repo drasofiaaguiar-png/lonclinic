@@ -725,8 +725,11 @@ async function initBookingFlow() {
             restoreCheckoutDraft();
             updateSlotSummary();
             bindCheckoutTypeSelect();
+            applyCheckoutHeroCopy();
+            relabelNutritionProgress();
         }
         if (step === 3) updateReviewAndSummary();
+        relabelNutritionProgress();
     }
 
     function updateSlotSummary() {
@@ -886,21 +889,22 @@ async function initBookingFlow() {
         const c = checkoutPsiCopy();
         if (family === 'nutricao') {
             const month1 = '· ' + c.month1;
-            const cards = [
-                { key: 'nutricao_programa', badge: c.recommended, title: c.nutriProgramTitle, price: services.nutricao_programa.price, unit: month1, note: c.nutriProgramNote, featured: true },
-                { key: 'nutricao_consulta', badge: c.oneOff, title: c.nutriOneTitle, price: services.nutricao_consulta.price, unit: c.perConsult, note: c.nutriOneNote, featured: false }
-            ];
-            // Completo variants are only reachable from /nutricao/programa — keep the active one visible.
-            if (state.service === 'nutricao_completo') {
-                cards.unshift({ key: 'nutricao_completo', badge: c.recommended, title: c.nutriCompletoTitle, price: services.nutricao_completo.price, unit: month1, note: c.nutriCompletoNote, featured: true });
-                cards[1].badge = '';
-                cards[1].featured = false;
-            } else if (state.service === 'nutricao_completo_reforcado') {
-                cards.unshift({ key: 'nutricao_completo_reforcado', badge: c.recommended, title: c.nutriReforcadoTitle, price: services.nutricao_completo_reforcado.price, unit: month1, note: c.nutriReforcadoNote, featured: true });
-                cards[1].badge = '';
-                cards[1].featured = false;
+            if (state.service === 'nutricao_completo' || state.service === 'nutricao_completo_reforcado') {
+                return [
+                    { key: 'nutricao_completo', badge: c.recommended, title: c.nutriCompletoTitle, price: services.nutricao_completo.price, unit: month1, note: c.nutriCompletoNote, featured: state.service === 'nutricao_completo' },
+                    { key: 'nutricao_completo_reforcado', badge: '', title: c.nutriReforcadoTitle, price: services.nutricao_completo_reforcado.price, unit: month1, note: c.nutriReforcadoNote, featured: state.service === 'nutricao_completo_reforcado' }
+                ];
             }
-            return cards;
+            if (state.service === 'nutricao_consulta') {
+                return [
+                    { key: 'nutricao_programa', badge: c.recommended, title: c.nutriProgramTitle, price: services.nutricao_programa.price, unit: month1, note: c.nutriProgramNote, featured: true },
+                    { key: 'nutricao_consulta', badge: c.oneOff, title: c.nutriOneTitle, price: services.nutricao_consulta.price, unit: c.perConsult, note: c.nutriOneNote, featured: false }
+                ];
+            }
+            return [
+                { key: 'nutricao_programa', badge: c.recommended, title: c.nutriProgramTitle, price: services.nutricao_programa.price, unit: month1, note: c.nutriProgramNote, featured: true },
+                { key: 'nutricao_completo', badge: 'Completo', title: c.nutriCompletoTitle, price: services.nutricao_completo.price, unit: month1, note: c.nutriCompletoNote, featured: false }
+            ];
         }
         if (family === 'terapia_casal') {
             return [
@@ -1180,14 +1184,59 @@ async function initBookingFlow() {
             const fromSelect = select && select.options[select.selectedIndex]
                 ? select.options[select.selectedIndex].textContent
                 : '';
-            typeName.textContent = fromSelect || state.serviceLabel || '';
+            typeName.textContent = state.serviceLabel || fromSelect || '';
             typeName.hidden = !typeName.textContent;
         }
         if (specChip) {
-            const label = specialtyCheckoutLabel();
+            const label = planFamilyFor(state.service) === 'nutricao'
+                ? (state.prefillGoal || '')
+                : specialtyCheckoutLabel();
             specChip.textContent = label;
             specChip.hidden = !label;
         }
+    }
+
+    function applyCheckoutHeroCopy() {
+        const lead = document.getElementById('checkoutHeroLead');
+        const eyebrow = document.getElementById('checkoutEyebrow');
+        if (planFamilyFor(state.service) !== 'nutricao') return;
+        const lang = (window.CLINIC_I18N && typeof window.CLINIC_I18N.getLang === 'function')
+            ? window.CLINIC_I18N.getLang()
+            : getBookingLocale();
+        const copy = {
+            pt: {
+                eyebrow: 'Confirmar e pagar',
+                lead: 'Reveja o plano e o horário, confirme o contacto e conclua o pagamento seguro.'
+            },
+            en: {
+                eyebrow: 'Confirm and pay',
+                lead: 'Review the plan and time, confirm your contact details, then complete secure payment.'
+            },
+            es: {
+                eyebrow: 'Confirmar y pagar',
+                lead: 'Revise el plan y el horario, confirme su contacto y complete el pago seguro.'
+            }
+        };
+        const row = copy[lang] || copy.pt;
+        if (eyebrow) eyebrow.textContent = row.eyebrow;
+        if (lead) lead.textContent = row.lead;
+    }
+
+    function relabelNutritionProgress() {
+        if (planFamilyFor(state.service) !== 'nutricao') return;
+        const labels = document.querySelectorAll('.booking-progress .progress-label');
+        if (!labels.length) return;
+        const lang = (window.CLINIC_I18N && typeof window.CLINIC_I18N.getLang === 'function')
+            ? window.CLINIC_I18N.getLang()
+            : getBookingLocale();
+        const first = state.fromMarcar
+            ? { pt: 'Plano e horário', en: 'Plan & time', es: 'Plan y hora' }
+            : { pt: 'Horário', en: 'Time', es: 'Horario' };
+        const second = { pt: 'Dados e pagamento', en: 'Details and payment', es: 'Datos y pago' };
+        const third = { pt: 'Confirmado', en: 'Confirmed', es: 'Confirmado' };
+        if (labels[0]) labels[0].textContent = first[lang] || first.pt;
+        if (labels[1]) labels[1].textContent = second[lang] || second.pt;
+        if (labels[2]) labels[2].textContent = third[lang] || third.pt;
     }
 
     function renderCheckoutPsychology() {
@@ -1196,8 +1245,18 @@ async function initBookingFlow() {
         const proWrap = document.getElementById('checkoutPro');
         const alt = document.getElementById('checkoutAlt');
         const psych = isPsychStaffService(state.service);
-        setPsychCheckoutChrome(psych);
+        const nutri = family === 'nutricao';
+        setPsychCheckoutChrome(psych || nutri);
+        applyCheckoutHeroCopy();
+        relabelNutritionProgress();
         if (!family || !state.date || !state.time) {
+            if (picker) picker.hidden = true;
+            if (proWrap) proWrap.hidden = true;
+            if (alt) alt.hidden = true;
+            return;
+        }
+        if (nutri && state.fromMarcar) {
+            // Plan was already chosen on /marcar — don't ask again on a second form.
             if (picker) picker.hidden = true;
             if (proWrap) proWrap.hidden = true;
             if (alt) alt.hidden = true;
@@ -1917,9 +1976,23 @@ async function initBookingFlow() {
             const emailEl = document.getElementById('email');
             const phoneEl = document.getElementById('phone');
             const first = document.querySelector('.p-firstName');
+            const last = document.querySelector('.p-lastName');
             if (emailEl && q.email && !emailEl.value) emailEl.value = q.email;
             if (phoneEl && q.phone && !phoneEl.value) phoneEl.value = q.phone;
-            if (first && q.name && !first.value) first.value = q.name;
+            if (q.name) {
+                const parts = String(q.name).trim().split(/\s+/);
+                if (first && !first.value) first.value = parts[0] || '';
+                if (last && !last.value && parts.length > 1) last.value = parts.slice(1).join(' ');
+            }
+            const detailsTitle = document.getElementById('checkoutDetailsTitle');
+            if (detailsTitle && (q.email || q.phone || q.name)) {
+                const lang = getBookingLocale();
+                detailsTitle.textContent = lang === 'en'
+                    ? 'Confirm the contact from your assessment:'
+                    : lang === 'es'
+                        ? 'Confirme el contacto de su evaluación:'
+                        : 'Confirme o contacto da avaliação:';
+            }
         } catch (e2) { /* ignore */ }
     }
 
@@ -2601,6 +2674,9 @@ async function initBookingFlow() {
         if (state.date && state.currentStep === 1) {
             applyUrgentContactHint();
         }
+
+        applyCheckoutHeroCopy();
+        relabelNutritionProgress();
 
         // Re-render review if on payment step
         if (state.currentStep === 3) updateReviewAndSummary();

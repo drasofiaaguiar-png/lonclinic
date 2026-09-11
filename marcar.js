@@ -1022,15 +1022,32 @@
     }
 
     if (isNutricaoFamily(tipo)) {
-        // Programa 6 meses + consulta avulsa. The Completo variants only show when arriving on them
-        // from /nutricao/programa, so the active plan is always visible.
-        var nutricaoCards = NUTRICAO_PLAN_CARDS.filter(function (card) {
-            if (card.tipo === 'nutricao_programa' || card.tipo === 'nutricao_consulta') return true;
-            return card.tipo === tipo;
-        }).map(function (card) {
+        // Keep the user inside the program they already picked. Completo shows only the two
+        // payment modalities; the 6-month program shows Nutrição vs Completo — never the 45 €
+        // one-off, which is a different product and made the funnel feel like a new form.
+        var nutricaoCards;
+        var nutricaoKicker = 'Nutrição';
+        var nutricaoHeading = 'Programa Nutrição ou Completo com psicologia';
+        if (tipo === 'nutricao_completo' || tipo === 'nutricao_completo_reforcado') {
+            nutricaoCards = NUTRICAO_PLAN_CARDS.filter(function (card) {
+                return card.tipo === 'nutricao_completo' || card.tipo === 'nutricao_completo_reforcado';
+            });
+            nutricaoKicker = 'Programa Completo';
+            nutricaoHeading = 'Escolha a entrada — o total é o mesmo (1 162 €)';
+        } else if (tipo === 'nutricao_consulta') {
+            nutricaoCards = NUTRICAO_PLAN_CARDS.filter(function (card) {
+                return card.tipo === 'nutricao_programa' || card.tipo === 'nutricao_consulta';
+            });
+            nutricaoHeading = 'Consulta avulsa ou programa de 6 meses — sem aGLP-1';
+        } else {
+            nutricaoCards = NUTRICAO_PLAN_CARDS.filter(function (card) {
+                return card.tipo === 'nutricao_programa' || card.tipo === 'nutricao_completo';
+            });
+        }
+        nutricaoCards = nutricaoCards.map(function (card) {
             return Object.assign({}, card, { featured: card.tipo === tipo });
         });
-        renderPlanPicker(tipo, nutricaoCards, 'Nutrição', 'Consulta avulsa ou programa de 6 meses — sem aGLP-1');
+        renderPlanPicker(tipo, nutricaoCards, nutricaoKicker, nutricaoHeading);
         var nutricaoLink = document.getElementById('marcarNutricaoLink');
         if (nutricaoLink) nutricaoLink.hidden = false;
         var nutricaoTrust = document.getElementById('marcarBuyTrust');
@@ -1045,6 +1062,17 @@
         if (nuTypePills) nuTypePills.hidden = true;
         if (nuSpecialtySection) nuSpecialtySection.hidden = false;
         applyNutricaoGoalCopy();
+        var nuBack = document.getElementById('marcarBookingBack');
+        if (nuBack) {
+            var nuRef = new URLSearchParams(window.location.search).get('ref') || '';
+            if (/avaliacao/i.test(nuRef)) {
+                nuBack.href = '/nutricao/avaliacao';
+                nuBack.textContent = '← Voltar à avaliação';
+            } else {
+                nuBack.href = '/nutricao/programa';
+                nuBack.textContent = '← Voltar ao programa';
+            }
+        }
     }
 
     function localizePlanCards(cards, overridesByTipo) {
@@ -2096,7 +2124,9 @@
         pt: {
             eyebrow: 'Marcação',
             lead: 'Poucos passos, cerca de dois minutos. Só paga no fim e pode cancelar até 24 horas antes da consulta.',
-            steps: { format: 'Serviço e formato', schedule: 'Data e hora' },
+            steps: { format: 'Serviço e formato', schedule: 'Data e hora', pay: 'Pagamento' },
+            nutriSteps: { format: 'Plano e objectivo', schedule: 'Data e hora', pay: 'Pagamento' },
+            nutriLead: 'Três passos no mesmo fluxo: plano, horário e pagamento. Só paga no fim e pode cancelar até 24 horas antes.',
             back: 'Voltar',
             next: 'Continuar',
             toPayment: 'Continuar para pagamento',
@@ -2117,7 +2147,9 @@
         en: {
             eyebrow: 'Booking',
             lead: 'A few steps, about two minutes. You only pay at the end and can cancel up to 24 hours before the appointment.',
-            steps: { format: 'Service and format', schedule: 'Date and time' },
+            steps: { format: 'Service and format', schedule: 'Date and time', pay: 'Payment' },
+            nutriSteps: { format: 'Plan and goal', schedule: 'Date and time', pay: 'Payment' },
+            nutriLead: 'Three steps in the same flow: plan, time and payment. You only pay at the end and can cancel up to 24 hours before.',
             back: 'Back',
             next: 'Continue',
             toPayment: 'Continue to payment',
@@ -2138,7 +2170,9 @@
         es: {
             eyebrow: 'Reserva',
             lead: 'Pocos pasos, unos dos minutos. Solo paga al final y puede cancelar hasta 24 horas antes de la consulta.',
-            steps: { format: 'Servicio y formato', schedule: 'Fecha y hora' },
+            steps: { format: 'Servicio y formato', schedule: 'Fecha y hora', pay: 'Pago' },
+            nutriSteps: { format: 'Plan y objetivo', schedule: 'Fecha y hora', pay: 'Pago' },
+            nutriLead: 'Tres pasos en el mismo flujo: plan, horario y pago. Solo paga al final y puede cancelar hasta 24 horas antes.',
             back: 'Volver',
             next: 'Continuar',
             toPayment: 'Continuar al pago',
@@ -2164,6 +2198,17 @@
 
     function shellSteps() {
         return ['format', 'schedule'];
+    }
+
+    function shellProgressSteps() {
+        var steps = shellSteps().slice();
+        if (isNutricaoFamily(tipo)) steps.push('pay');
+        return steps;
+    }
+
+    function shellStepLabel(copy, name) {
+        var map = (isNutricaoFamily(tipo) && copy.nutriSteps) ? copy.nutriSteps : copy.steps;
+        return map[name] || copy.steps[name] || name;
     }
 
     var shell = { step: 0, booted: false };
@@ -2214,10 +2259,10 @@
             li.className = idx < shell.step ? 'is-done' : (idx === shell.step ? 'is-current' : '');
             var btn = document.createElement('button');
             btn.type = 'button';
-            btn.disabled = idx >= shell.step;
+            btn.disabled = idx >= shell.step || name === 'pay';
             if (idx === shell.step) btn.setAttribute('aria-current', 'step');
             btn.innerHTML = '<span class="marcar-progress-bar"></span>' +
-                '<span class="marcar-progress-label">' + (idx + 1) + '. ' + escapeHtml(copy.steps[name]) + '</span>';
+                '<span class="marcar-progress-label">' + (idx + 1) + '. ' + escapeHtml(shellStepLabel(copy, name)) + '</span>';
             btn.addEventListener('click', function () {
                 if (idx < shell.step) shellGo(idx);
             });
@@ -2273,11 +2318,11 @@
         var footnote = document.getElementById('marcarFootnote');
         var scheduleSub = document.getElementById('marcarScheduleSub');
         if (eyebrow) eyebrow.textContent = copy.eyebrow;
-        if (lead) lead.textContent = copy.lead;
+        if (lead) lead.textContent = (isNutricaoFamily(tipo) && copy.nutriLead) ? copy.nutriLead : copy.lead;
         if (footnote) footnote.textContent = copy.footnote;
         if (scheduleSub && !isPsychology()) scheduleSub.textContent = copy.scheduleSub;
 
-        shellRenderProgress(steps);
+        shellRenderProgress(shellProgressSteps());
         shellRenderSummary();
 
         var bar = document.getElementById('marcarActionBar');

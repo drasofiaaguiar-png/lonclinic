@@ -48,8 +48,34 @@
 
     function isWeightLossPath(pathname) {
         var p = String(pathname || '').toLowerCase();
-        return /\/nutricao\/(programa|glp-1|ozempic-wegovy|avaliacao|teste-imc|teste-tfeq|teste-yfas)(\/|$)/.test(p)
+        return /^\/nutricao\/?$/.test(p)
+            || /\/nutricao\/(programa|glp-1|ozempic-wegovy|avaliacao|testes|teste-imc|teste-tfeq|teste-yfas|teste-ess)(\/|$)/.test(p)
             || /\/marcar\/nutricao-/.test(p);
+    }
+
+    function isNutritionService(service) {
+        return String(service || '').indexOf('nutricao') === 0;
+    }
+
+    function staysInMarcar(opts) {
+        opts = opts || {};
+        var service = String(opts.service || '');
+        var href = String(opts.fallbackHref || '');
+        if (service === 'psicologia' || service === 'psicologia_mensal') return true;
+        if (isNutritionService(service)) return true;
+        return /\/marcar\/(psicologia|nutricao-)/.test(href);
+    }
+
+    function marcarHrefForSlot(fallback, slot) {
+        var dest = fallback || '/marcar/clinica-geral';
+        try {
+            var u = new URL(dest, window.location.origin);
+            if (slot && slot.date) u.searchParams.set('date', slot.date);
+            if (slot && slot.time) u.searchParams.set('time', slot.time);
+            return u.pathname + u.search;
+        } catch (e) {
+            return dest;
+        }
     }
 
     function nutritionPrefill(opts) {
@@ -549,15 +575,29 @@
             window.location.href = fallback;
             return;
         }
-        if ((opts.service || '') === 'psicologia' || (opts.service || '') === 'psicologia_mensal') {
-            var psiDest = fallback || '/marcar/psicologia-mensal';
-            try {
-                var u = new URL(psiDest, window.location.origin);
-                if (slot && slot.date) u.searchParams.set('date', slot.date);
-                if (slot && slot.time) u.searchParams.set('time', slot.time);
-                psiDest = u.pathname + u.search;
-            } catch (e) { /* keep fallback */ }
-            window.location.href = psiDest;
+        if (staysInMarcar(opts)) {
+            var marcarFallback = fallback;
+            if (isNutritionService(opts.service) && !/\/marcar\/nutricao-/.test(marcarFallback)) {
+                marcarFallback = '/marcar/' + String(opts.service).replace(/_/g, '-');
+            }
+            if ((opts.service === 'psicologia' || opts.service === 'psicologia_mensal') && !/\/marcar\/psicologia/.test(marcarFallback)) {
+                marcarFallback = opts.service === 'psicologia'
+                    ? '/marcar/psicologia?plan=avulsa'
+                    : '/marcar/psicologia-mensal';
+            }
+            track('time_slot_clicked', {
+                surface: opts.surface || 'slots',
+                service: opts.service || '',
+                time: slot && slot.time,
+                step: 'marcar'
+            });
+            track('cta_click', {
+                surface: opts.surface || 'slots',
+                service: opts.service || '',
+                step: 'next_slot'
+            });
+            if (window.LonAnalytics) window.LonAnalytics.flush();
+            window.location.href = marcarHrefForSlot(marcarFallback, slot);
             return;
         }
         var meta = serviceMeta(opts.service || 'clinica_geral');

@@ -23,8 +23,8 @@ function planMeta(plan) {
 
 function checkoutHref(plan) {
     return plan === 'completo'
-        ? '/nutricao/programa?plano=completo#pagamento'
-        : '/nutricao/programa?plano=nutricao#planos';
+        ? '/marcar/nutricao-completo?ref=nurture'
+        : '/marcar/nutricao-programa?ref=nurture';
 }
 
 function dueStep(claimedAtMs, nurtureStep, nowMs) {
