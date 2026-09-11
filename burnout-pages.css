@@ -2,7 +2,9 @@
 
 .bo-body {
     min-height: 100vh;
-    background: transparent;
+    background: #ffffff;
+    color: #142018;
+    color-scheme: light;
 }
 
 .bo-eyebrow {
@@ -17,6 +19,7 @@
 
 .bo-hero {
     padding: calc(var(--lon-nav-h, 72px) + 48px) 0 56px;
+    background: #ffffff;
 }
 
 .bo-hero-inner {
@@ -35,7 +38,7 @@
 .bo-lead {
     font-size: 1.125rem;
     line-height: 1.55;
-    color: var(--lon-muted, #3d554a);
+    color: #2a3a32;
     margin: 0 0 28px;
     max-width: 36ch;
 }

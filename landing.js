@@ -36,7 +36,7 @@
     var hash = window.location.hash;
     if (hash.indexOf('#servicos-') === 0) {
         var part = hash.replace('#servicos-', '');
-        if (['urgencias', 'especialidades', 'mental', 'longevidade'].indexOf(part) >= 0) {
+        if (['urgencias', 'especialidades', 'mental', 'longevidade', 'nutricao'].indexOf(part) >= 0) {
             initialTab = part;
         }
     }

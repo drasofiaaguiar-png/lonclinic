@@ -292,7 +292,7 @@ function layoutPage(opts) {
                     <a href="/nutricao">Nutrição online</a>
                     <a href="/equipa/rita-aguiar">A médica</a>
                     <a href="/faq">FAQ</a>
-                    <a href="/info.html?page=contato">Contato</a>
+                    <a href="/info.html?page=contato">Contacto</a>
                 </div>
             </div>
             <div class="lon-footer-bottom">

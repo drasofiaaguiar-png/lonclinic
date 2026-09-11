@@ -1295,6 +1295,9 @@
             .then(function (d) {
                 state.bookableDates = (d && d.dates) || [];
                 state.slotMode = (d && d.mode) || (usesPsychStaff() || state.bookableDates.length ? 'staff' : 'clinic');
+                if (state.slotMode === 'staff' && !state.bookableDates.length && !usesPsychStaff()) {
+                    state.slotMode = 'clinic';
+                }
             })
             .catch(function () {
                 state.bookableDates = [];
@@ -1618,6 +1621,9 @@
         var dateStr = formatDateLocal(dateObj);
         if (usesStaffSlotCalendar()) {
             return (state.bookableDates || []).indexOf(dateStr) >= 0;
+        }
+        if (state.bookableDates && state.bookableDates.length) {
+            return state.bookableDates.indexOf(dateStr) >= 0;
         }
 
         if (state.scheduleData && state.scheduleData.blockedDates && state.scheduleData.blockedDates.indexOf(dateStr) >= 0) {
@@ -2106,7 +2112,8 @@
                 dayBtn = el;
             }
         });
-        if (dayBtn && !dayBtn.classList.contains('marcar-cal-disabled')) {
+        if (dayBtn) {
+            dayBtn.classList.remove('marcar-cal-disabled');
             if (timeQ) state.pendingTime = timeQ.length === 4 ? '0' + timeQ : timeQ;
             selectDate(bits[0], bits[1] - 1, bits[2], dayBtn);
         }

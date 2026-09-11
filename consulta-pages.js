@@ -404,7 +404,7 @@ function layoutConsultaPage(opts) {
                 <div class="lon-footer-col">
                     <h4>Apoio</h4>
                     <a href="/faq">FAQ</a>
-                    <a href="/info.html?page=contato">Contato</a>
+                    <a href="/info.html?page=contato">Contacto</a>
                     <a href="${navCtaHref}">${navCtaLabel}</a>
                 </div>
             </div>

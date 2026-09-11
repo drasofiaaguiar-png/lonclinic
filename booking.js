@@ -1397,6 +1397,9 @@ async function initBookingFlow() {
             state.bookableDates = (data && data.dates) || [];
             state.slotMode = (data && data.mode)
                 || (isPsychStaffService(service) || state.bookableDates.length ? 'staff' : 'clinic');
+            if (state.slotMode === 'staff' && !state.bookableDates.length && !isPsychStaffService(service)) {
+                state.slotMode = 'clinic';
+            }
         } catch (err) {
             state.bookableDates = [];
             state.slotMode = isPsychStaffService(state.service || '') ? 'staff' : 'clinic';

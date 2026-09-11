@@ -255,7 +255,7 @@ function ctaBand(ref, label, opts) {
             <div class="lon-container qx-cta-inner">
                 <p class="qx-cta-kicker">Comece pelo quadro</p>
                 <h2 class="qx-cta-title">Teste CBI no centro burnout</h2>
-                <p class="qx-cta-lead">Objectiva o desgaste em 4 minutos. A consulta de psicologia nesta página mantém o preço habitual — 60 € ou 54 €/semana.</p>
+                <p class="qx-cta-lead">Objectiva o desgaste em 4 minutos. A consulta de psicologia nesta página mantém o preço habitual — 60 € ou 56 €/semana.</p>
                 <div class="qx-cta-actions">
                     <a class="lon-btn lon-btn-primary" href="/burnout/teste?ref=${r}">Fazer o teste gratuito</a>
                     <a class="lon-btn lon-btn-soft" href="/burnout">Centro burnout</a>
@@ -508,7 +508,7 @@ function layoutQueixaPage(opts) {
                     <h4>Clínica</h4>
                     <a href="/equipa/rita-aguiar">A médica</a>
                     <a href="/faq">FAQ</a>
-                    <a href="/info.html?page=contato">Contato</a>
+                    <a href="/info.html?page=contato">Contacto</a>
                     <a href="https://www.ordemdospsicologos.pt/" target="_blank" rel="noopener noreferrer">Ordem dos Psicólogos</a>
                 </div>
             </div>
@@ -525,10 +525,10 @@ function layoutQueixaPage(opts) {
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
     <script src="/lon-nav.js"></script>
     <script src="/talk-cta.js?v=20260908a" defer></script>
-    <script src="/i18n.js?v=20260908a" defer></script>
+    <script src="/i18n.js?v=20260911p" defer></script>
     <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260908b" defer></script>
+    <script src="/lon-slots.js?v=20260911p" defer></script>
 </body>
 </html>`;
 }
@@ -609,7 +609,7 @@ function renderHub(origin) {
                 <p class="qx-eyebrow">LON Clinic · Psicologia online</p>
                 <h1 id="qx-hub-title">Consulta de psicologia online, por queixa</h1>
                 <p class="qx-lead">A Lon Clinic oferece consulta de psicologia online em português para queixas específicas — não uma página genérica de «psicólogo online». Cada página explica o que é, quando procurar ajuda, como funciona e quanto custa.</p>
-                <p class="qx-hero-meta">Psicólogos inscritos na Ordem dos Psicólogos Portugueses · 60 €/sessão ou 54 €/semana</p>
+                <p class="qx-hero-meta">Psicólogos inscritos na Ordem dos Psicólogos Portugueses · 60 €/sessão ou 56 €/semana</p>
                 <div class="qx-hero-actions">
                     <a class="lon-btn lon-btn-primary" href="/triagem?ref=consultas-hub">Começar a triagem</a>
                     <a class="lon-btn lon-btn-soft" href="/saudemental?ref=consultas-hub">Ver planos</a>

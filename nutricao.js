@@ -18,7 +18,7 @@ const NUTRICAO_DIR = path.join(__dirname, 'data', 'nutricao');
 const MANIFEST_PATH = path.join(NUTRICAO_DIR, 'manifest.json');
 const PAGES_DIR = path.join(NUTRICAO_DIR, 'pages');
 const CSS_V = '20260905j';
-const SLOTS_V = '20260911n';
+const SLOTS_V = '20260911p';
 const ON_URL = 'https://www.ordemdosnutricionistas.pt/';
 const NUTRICAO_PROGRAMA_HREF = '/marcar/nutricao-programa';
 const WEIGHT_LOSS_SLUGS = new Set(['glp-1', 'ozempic-wegovy']);
@@ -265,7 +265,7 @@ function bookingCardsHtml(meta, tone) {
         {
             chip: 'Psicologia',
             title: 'Consulta de psicologia',
-            price: '60 € ou 54 €/semana',
+            price: '60 € ou 56 €/semana',
             note: 'Hábitos, stress e imagem corporal — se fizer sentido',
             cta: 'Triagem',
             href: `/triagem?ref=${encodeURIComponent(`nutricao-${meta.slug || 'hub'}`)}`,
@@ -344,7 +344,7 @@ function formatTableHtml(meta) {
             : [
                 { name: 'Consulta única', includes: 'Avaliação + orientações concretas nessa sessão (não um plano PDF genérico)', price: meta.price || '39 €' },
                 { name: 'Follow-up', includes: 'Nova videoconsulta, marcada só se fizer sentido — sem pacote obrigatório', price: meta.followUpPrice || meta.price || '39 €' },
-                { name: 'Psicologia (opcional)', includes: 'Stress, ansiedade, hábitos e imagem corporal', price: '60 € ou 54 €/semana' }
+                { name: 'Psicologia (opcional)', includes: 'Stress, ansiedade, hábitos e imagem corporal', price: '60 € ou 56 €/semana' }
             ];
     const tr = rows.map((row) => `
                     <tr>
@@ -479,7 +479,7 @@ function layoutPage(opts) {
                 <div class="lon-footer-col">
                     <h4>Apoio</h4>
                     <a href="/faq">FAQ</a>
-                    <a href="/info.html?page=contato">Contato</a>
+                    <a href="/info.html?page=contato">Contacto</a>
                 </div>
             </div>
             <div class="lon-footer-bottom">
@@ -494,7 +494,7 @@ function layoutPage(opts) {
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
     <script src="/lon-nav.js"></script>
     <script src="/talk-cta.js?v=20260908a" defer></script>
-    <script src="/i18n.js?v=20260908a" defer></script>
+    <script src="/i18n.js?v=20260911p" defer></script>
     <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=${SLOTS_V}" defer></script>

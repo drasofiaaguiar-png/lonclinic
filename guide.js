@@ -550,7 +550,7 @@ function actionCopy(lang) {
                 price: '60 € · sessão avulsa',
                 href: '/marcar/psicologia',
                 cta: 'Fale com um psicólogo',
-                note: 'Online · ou 54 €/semana no acompanhamento',
+                note: 'Online · ou 56 €/semana no acompanhamento',
                 service: 'psicologia'
             },
             nutrition: {
@@ -1265,8 +1265,8 @@ function layoutGuidePage(opts) {
             <nav class="lon-nav-links" aria-label="Navegação principal">
                 <a href="/#inicio">Início</a>
                 <a href="/magazine">Magazine</a>
-                <a${guideNavAttrs}>Guides</a>
-                <a href="/#contacto">Contato</a>
+                <a${guideNavAttrs}>Guias</a>
+                <a href="/#contacto">Contacto</a>
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
@@ -1279,8 +1279,8 @@ function layoutGuidePage(opts) {
         <div class="lon-mobile-menu" id="lonMobileMenu">
             <a href="/#inicio">Início</a>
             <a href="/magazine">Magazine</a>
-            <a href="/blog">Guides</a>
-            <a href="/#contacto">Contato</a>
+            <a href="/blog">Guias</a>
+            <a href="/#contacto">Contacto</a>
             <a href="/patient-portal">Login</a>
         </div>
     </header>
@@ -1311,7 +1311,7 @@ function layoutGuidePage(opts) {
                     <a href="/equipa/rita-aguiar">A equipa</a>
                     <a href="/info.html?page=parcerias">Parcerias</a>
                     <a href="/info.html?page=registo-medico">Registo médico</a>
-                    <a href="/info.html?page=contato">Contato</a>
+                    <a href="/info.html?page=contato">Contacto</a>
                     <a href="/info.html?page=trabalhe-connosco">Trabalhe connosco</a>
                 </div>
                 <div class="lon-footer-col">
@@ -1319,7 +1319,7 @@ function layoutGuidePage(opts) {
                     <a href="/faq">Perguntas frequentes</a>
                     <a href="/magazine">Magazine</a>
                     <a href="/magazine/indice">Índice</a>
-                    <a href="/blog">Guides</a>
+                    <a href="/blog">Guias</a>
                     <a href="/info.html?page=como-funciona">Como funciona</a>
                     <a href="/info.html?page=seguranca-dados">Segurança dos dados</a>
                     <a href="/info.html?page=acessibilidade">Acessibilidade</a>
@@ -1344,7 +1344,7 @@ function layoutGuidePage(opts) {
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-nav.js"></script>
     <script src="/talk-cta.js?v=20260908a" defer></script>
-    <script src="/i18n.js?v=20260908a" defer></script>
+    <script src="/i18n.js?v=20260911p" defer></script>
     <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/lon-slots.js?v=20260911n" defer></script>
 </body>
@@ -2783,7 +2783,7 @@ function magLonNavHtml(opts) {
                 <a href="/#inicio">Início</a>
                 <a href="/magazine"${magCurrent}>Magazine</a>
                 <a href="/blog">Guias</a>
-                <a href="/#contacto">Contato</a>
+                <a href="/#contacto">Contacto</a>
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
@@ -2797,7 +2797,7 @@ function magLonNavHtml(opts) {
             <a href="/#inicio">Início</a>
             <a href="/magazine"${magCurrent}>Magazine</a>
             <a href="/blog">Guias</a>
-            <a href="/#contacto">Contato</a>
+            <a href="/#contacto">Contacto</a>
             <a href="/patient-portal">Login</a>
             <a href="${talkHref}" data-talk-cta="${talkRole}">${talkLabel}</a>
         </div>
@@ -2826,7 +2826,7 @@ function magLonFootHtml() {
                     <a href="/marcar/clinica-geral">Clínica geral</a>
                     <a href="/marcar/travel">Consulta do viajante</a>
                     <a href="/marcar/saude-mental">Saúde mental</a>
-                    <a href="/info.html?page=contato">Contato</a>
+                    <a href="/info.html?page=contato">Contacto</a>
                 </div>
             </div>
             <div class="lon-footer-bottom">
@@ -2922,7 +2922,7 @@ function layoutMagazinePage(opts) {
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-nav.js"></script>
     <script src="/talk-cta.js?v=20260908a" defer></script>
-    <script src="/i18n.js?v=20260908a" defer></script>
+    <script src="/i18n.js?v=20260911p" defer></script>
     <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=20260911n" defer></script>

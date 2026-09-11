@@ -7063,6 +7063,18 @@ async function getStaffBookableSlotsForDate(dateIso, opts) {
     return { available, professionalsByTime };
 }
 
+function listClinicBookableDates(maxDays) {
+    const days = Math.min(Math.max(parseInt(maxDays, 10) || 60, 1), 90);
+    const today = lisbonNowParts().dateIso;
+    const dates = [];
+    for (let i = 1; i <= days; i += 1) {
+        const dateIso = addDaysIso(today, i);
+        const daySchedule = getEffectiveDaySchedule(dateIso);
+        if (daySchedule && daySchedule.enabled) dates.push(dateIso);
+    }
+    return dates;
+}
+
 async function listStaffBookableDates(service, specialty, maxDays, professionalId) {
     const days = Math.min(Math.max(parseInt(maxDays, 10) || 60, 1), 90);
     const all = await listStaffBookablePeople(service, specialty);
@@ -8408,6 +8420,12 @@ app.get('/marcar.html', (req, res) => {
 });
 
 app.get('/book-consultation', (req, res) => {
+    const q = req.query || {};
+    const hasBookingContext = q.slot || q.service || q.date || q.ficha
+        || q.success || q.session_id || q.cancelled || q.invitation;
+    if (!hasBookingContext) {
+        return res.redirect(302, '/marcar');
+    }
     sendHtmlNoCache(res, path.join(__dirname, 'book.html'), 'Error loading booking page');
 });
 
@@ -16321,21 +16339,16 @@ app.get('/api/psychology/specialties', (req, res) => {
 app.get('/api/bookable-days', async (req, res) => {
     try {
         const service = bookingServiceTag(req.query.service || '');
-        const specialty = staffBooking.specialtyForService(
-            bookingServiceTag(req.query.service || ''),
-            req.query.specialty
-        );
-        if (!staffBooking.usesStaffCalendars(service)) {
-            return res.json({ dates: [], service, mode: 'clinic' });
-        }
+        const specialty = staffBooking.specialtyForService(service, req.query.specialty);
         const professionalId = Number(req.query.professionalId);
-        const dates = await listStaffBookableDates(
-            service,
-            specialty,
-            60,
-            Number.isInteger(professionalId) && professionalId > 0 ? professionalId : null
-        );
-        res.json({ dates, service, specialty, mode: 'staff' });
+        const proId = Number.isInteger(professionalId) && professionalId > 0 ? professionalId : null;
+        if (staffBooking.usesStaffCalendars(service)) {
+            const dates = await listStaffBookableDates(service, specialty, 60, proId);
+            if (dates.length || staffBooking.requiresProfessionalChoice(service)) {
+                return res.json({ dates, service, specialty, mode: 'staff' });
+            }
+        }
+        return res.json({ dates: listClinicBookableDates(60), service, mode: 'clinic' });
     } catch (err) {
         console.error('GET /api/bookable-days:', err.message);
         res.status(500).json({ error: 'Failed to load days', dates: [] });

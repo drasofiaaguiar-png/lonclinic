@@ -57,21 +57,13 @@
         return String(service || '').indexOf('nutricao') === 0;
     }
 
-    function staysInMarcar(opts) {
-        opts = opts || {};
-        var service = String(opts.service || '');
-        var href = String(opts.fallbackHref || '');
-        if (service === 'psicologia' || service === 'psicologia_mensal') return true;
-        if (isNutritionService(service)) return true;
-        return /\/marcar\/(psicologia|nutricao-)/.test(href);
-    }
-
     function marcarHrefForSlot(fallback, slot) {
         var dest = fallback || '/marcar/clinica-geral';
         try {
             var u = new URL(dest, window.location.origin);
             if (slot && slot.date) u.searchParams.set('date', slot.date);
             if (slot && slot.time) u.searchParams.set('time', slot.time);
+            if (slot && slot.professionalId) u.searchParams.set('professionalId', String(slot.professionalId));
             return u.pathname + u.search;
         } catch (e) {
             return dest;
@@ -575,109 +567,28 @@
             window.location.href = fallback;
             return;
         }
-        if (staysInMarcar(opts)) {
-            var marcarFallback = fallback;
-            if (isNutritionService(opts.service) && !/\/marcar\/nutricao-/.test(marcarFallback)) {
-                marcarFallback = '/marcar/' + String(opts.service).replace(/_/g, '-');
-            }
-            if ((opts.service === 'psicologia' || opts.service === 'psicologia_mensal') && !/\/marcar\/psicologia/.test(marcarFallback)) {
-                marcarFallback = opts.service === 'psicologia'
-                    ? '/marcar/psicologia?plan=avulsa'
-                    : '/marcar/psicologia-mensal';
-            }
-            track('time_slot_clicked', {
-                surface: opts.surface || 'slots',
-                service: opts.service || '',
-                time: slot && slot.time,
-                step: 'marcar'
-            });
-            track('cta_click', {
-                surface: opts.surface || 'slots',
-                service: opts.service || '',
-                step: 'next_slot'
-            });
-            if (window.LonAnalytics) window.LonAnalytics.flush();
-            window.location.href = marcarHrefForSlot(marcarFallback, slot);
-            return;
+        var marcarFallback = fallback;
+        if (isNutritionService(opts.service) && !/\/marcar\/nutricao-/.test(marcarFallback)) {
+            marcarFallback = '/marcar/' + String(opts.service).replace(/_/g, '-');
         }
-        var meta = serviceMeta(opts.service || 'clinica_geral');
-        if (!slot || !slot.date || !slot.time) {
-            window.location.href = fallback;
-            return;
+        if ((opts.service === 'psicologia' || opts.service === 'psicologia_mensal') && !/\/marcar\/psicologia/.test(marcarFallback)) {
+            marcarFallback = opts.service === 'psicologia'
+                ? '/marcar/psicologia?plan=avulsa'
+                : '/marcar/psicologia-mensal';
         }
-        var slotId = slot.id || slotIdFrom(slot.date, slot.time);
-        var consultLangPolicy = pageNeedsLangPolicy(fallback);
-        var payload = {
-            service: meta.service,
-            tipo: meta.tipo,
-            serviceLabel: meta.serviceLabel,
-            servicePrice: meta.servicePrice,
-            servicePriceCents: meta.servicePriceCents,
-            dateISO: slot.date,
-            dateLabel: formatSlotWhen(slot.date, slot.time),
-            time: slot.time,
-            slotId: slotId,
-            travellerCount: 1,
-            hasInsurance: false,
-            locale: pageLang(),
-            consultLangPolicy: consultLangPolicy,
-            clinicalIntent: clinicalIntentFor(meta.service),
-            goal: opts.goal || '',
-            concerns: opts.concerns || ''
-        };
-        if (meta.service === 'nutricao_programa' || meta.service === 'nutricao_completo' || meta.service === 'nutricao_completo_reforcado') {
-            var nu = nutritionPrefill({ goal: opts.goal });
-            payload.goal = nu.goal;
-            payload.concerns = nu.concerns;
-            payload.clinicalIntent = nu;
-        }
-        try {
-            sessionStorage.setItem('lonConsultaPrefill', JSON.stringify(payload));
-        } catch (e) { /* private mode */ }
-        function navigate(holdId) {
-            var dest = '/book-consultation?slot=' + encodeURIComponent(slotId) +
-                '&service=' + encodeURIComponent(meta.service) +
-                '&date=' + encodeURIComponent(slot.date) +
-                '&time=' + encodeURIComponent(slot.time);
-            if (holdId) dest += '&hold=' + encodeURIComponent(holdId);
-            if (consultLangPolicy) dest += '&langpolicy=en-es-pt';
-            track('time_slot_clicked', {
-                surface: opts.surface || 'slots',
-                service: meta.service,
-                time: slot.time,
-                slot: slotId
-            });
-            track('cta_click', {
-                surface: opts.surface || 'slots',
-                service: meta.service,
-                step: 'next_slot'
-            });
-            if (window.LonAnalytics) window.LonAnalytics.flush();
-            window.location.href = dest;
-        }
-        fetch('/api/slot-hold', {
-            method: 'POST',
-            credentials: 'same-origin',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ slot: slotId, service: meta.service })
-        }).then(function (r) {
-            if (r.status === 409) {
-                window.location.href = fallback;
-                return null;
-            }
-            return r.ok ? r.json() : {};
-        }).then(function (data) {
-            if (data == null) return;
-            if (data.holdId) {
-                try {
-                    payload.holdId = data.holdId;
-                    sessionStorage.setItem('lonConsultaPrefill', JSON.stringify(payload));
-                } catch (e2) { /* ignore */ }
-            }
-            navigate(data.holdId || '');
-        }).catch(function () {
-            navigate('');
+        track('time_slot_clicked', {
+            surface: opts.surface || 'slots',
+            service: opts.service || '',
+            time: slot && slot.time,
+            step: 'marcar'
         });
+        track('cta_click', {
+            surface: opts.surface || 'slots',
+            service: opts.service || '',
+            step: 'next_slot'
+        });
+        if (window.LonAnalytics) window.LonAnalytics.flush();
+        window.location.href = marcarHrefForSlot(marcarFallback, slot);
     }
 
     function renderRow(row, slots, opts) {

@@ -273,9 +273,9 @@ function renderAuthorPage(origin, slug) {
             <nav class="lon-nav-links" aria-label="Navegação principal">
                 <a href="/#inicio">Início</a>
                 <a href="/magazine">Magazine</a>
-                <a href="/blog">Guides</a>
+                <a href="/blog">Guias</a>
                 <a href="/equipa/rita-aguiar" aria-current="page">Equipa</a>
-                <a href="/#contacto">Contato</a>
+                <a href="/#contacto">Contacto</a>
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
