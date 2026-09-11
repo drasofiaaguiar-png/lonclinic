@@ -3,7 +3,9 @@
 ======================================== */
 
 :root {
-    --font: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* Body: Instrument Sans · Display (headings): Bricolage Grotesque — same pair as the app root route. */
+    --font: 'Instrument Sans', 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Bricolage Grotesque', 'Instrument Sans', 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     --bg-primary: #ffffff;
     --bg: #ffffff;
     --bg-card: #ffffff;
@@ -160,11 +162,113 @@ body {
     margin-bottom: 28px;
 }
 
+.booking-page h1,
+.booking-page h2,
+.booking-page h3,
+.booking-page .step-title {
+    font-family: var(--font-display);
+}
+
 .step-title {
     font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 600;
     letter-spacing: -0.025em;
     margin-bottom: 10px;
+}
+
+/* ========================================
+   ROUTE BOUNDARIES — not found / error
+   (min-h-screen flex center · max-w-md text-center · primary + outline buttons)
+======================================== */
+.booking-boundary {
+    min-height: calc(100vh - 116px - 72px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 16px;
+}
+
+.booking-boundary[hidden] {
+    display: none;
+}
+
+.booking-boundary-inner {
+    max-width: 28rem;
+    text-align: center;
+}
+
+.booking-boundary-code {
+    font-family: var(--font-display);
+    font-size: 4.5rem;
+    line-height: 1;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.booking-boundary-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--text-primary);
+    margin: 1rem 0 0;
+}
+
+.booking-boundary-desc {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    color: var(--text-muted);
+    margin: 0.5rem 0 0;
+}
+
+.booking-boundary-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.booking-boundary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-family: var(--font);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.booking-boundary-btn.is-primary {
+    background: var(--accent);
+    color: #ffffff;
+    border: 1px solid var(--accent);
+}
+
+.booking-boundary-btn.is-primary:hover {
+    background: rgba(37, 82, 53, 0.9);
+}
+
+.booking-boundary-btn.is-outline {
+    background: var(--bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.booking-boundary-btn.is-outline:hover {
+    background: var(--bg-elevated);
+}
+
+.booking-boundary-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
 }
 
 .step-desc {

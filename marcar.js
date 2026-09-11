@@ -903,8 +903,29 @@
         });
     }
 
-    var scheduleWrapEarly = document.getElementById('marcarScheduleWrap');
-    if (scheduleWrapEarly) scheduleWrapEarly.hidden = PSICOLOGIA_FAMILY.indexOf(tipo) >= 0;
+    // Service pills (step 1). Same keys/labels as the legacy <select>, which stays as a hidden fallback.
+    function renderTypePills() {
+        var wrap = document.getElementById('marcarTypePills');
+        if (!wrap) return;
+        var labels = typeOptionLabels();
+        var selected = dropdownValueFor(tipo);
+        var keys = TYPE_DROPDOWN_KEYS.slice();
+        if (tipo && keys.indexOf(selected) < 0) keys.unshift(tipo);
+        wrap.innerHTML = '';
+        keys.forEach(function (key) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'marcar-pill' + (key === selected ? ' is-active' : '');
+            btn.setAttribute('aria-pressed', key === selected ? 'true' : 'false');
+            btn.textContent = labels[key] || (CONSULTATION_TYPES[key] && CONSULTATION_TYPES[key].label) || key;
+            btn.addEventListener('click', function () {
+                if (key === selected) return;
+                window.location.href = getPrettyMarcarUrl(key, true);
+            });
+            wrap.appendChild(btn);
+        });
+    }
+    renderTypePills();
 
     function needsConsultLangPolicy() {
         var params = new URLSearchParams(window.location.search);
@@ -937,6 +958,7 @@
         if (kickerEl && kicker) kickerEl.textContent = kicker;
         if (headingEl && heading) headingEl.textContent = heading;
         grid.innerHTML = '';
+        grid.classList.toggle('has-3', cards.length >= 3);
         cards.forEach(function (card) {
             var btn = document.createElement('a');
             btn.href = getPrettyMarcarUrl(card.tipo);
@@ -1252,21 +1274,17 @@
         hideProfessionals();
         renderSpecialtyButtons();
         syncPsychologyUrl();
-        var scheduleWrap = document.getElementById('marcarScheduleWrap');
-        if (scheduleWrap) scheduleWrap.hidden = false;
+        shellRefresh();
         return loadBookableDays().then(function () {
             applySpecialtyCopy();
             renderCalendar();
             applyUrlDateTime();
             return loadQuickSlots();
-        });
+        }).then(shellRefresh);
     }
 
     function initPsychologyFlow() {
-        var section = document.getElementById('marcarSpecialtySection');
-        var scheduleWrap = document.getElementById('marcarScheduleWrap');
-        if (section) section.hidden = false;
-        if (scheduleWrap) scheduleWrap.hidden = true;
+        // Step visibility (apoio → data e hora) is handled by the shell stepper.
         applySpecialtyCopy();
         var fromUrl = new URLSearchParams(window.location.search).get('specialty');
         return fetch('/api/psychology/specialties?lang=' + encodeURIComponent(getLang()))
@@ -1299,20 +1317,24 @@
             if (list.length === 1) setSelectedProfessional(list[0]);
             hideProfessionals();
             if (btnNext) btnNext.disabled = false;
+            shellRefresh();
             return;
         }
         if (!list.length) {
             hideProfessionals();
             if (btnNext) btnNext.disabled = true;
+            shellRefresh();
             return;
         }
         if (list.length === 1) {
             setSelectedProfessional(list[0]);
             hideProfessionals();
             if (btnNext) btnNext.disabled = false;
+            shellRefresh();
             return;
         }
         if (btnNext) btnNext.disabled = true;
+        shellRefresh();
         if (!wrap) return;
         wrap.hidden = false;
         wrap.innerHTML = '<p class="marcar-pros-kicker">' + escapeHtml(psychologyCopy().choosePro) + '</p>';
@@ -1334,6 +1356,7 @@
                 card.classList.add('is-selected');
                 setSelectedProfessional(pro);
                 if (btnNext) btnNext.disabled = false;
+                shellRefresh();
             });
             wrap.appendChild(card);
             if (wantedProId && Number(pro.id) === wantedProId) card.click();
@@ -1510,6 +1533,7 @@
         setSelectedProfessional(null);
         hideProfessionals();
         btnNext.disabled = true;
+        shellRefresh();
         if (window.LonAnalytics) window.LonAnalytics.track('date_select', { surface: 'booking' });
         return renderTimeslots();
     }
@@ -1596,24 +1620,46 @@
             timeslotGrid.innerHTML = '<p class="marcar-times-empty">' + getString('noSlots') + '</p>';
             return;
         }
+        var copy = shellCopy();
+        var groups = [
+            { label: copy.morning, slots: [] },
+            { label: copy.afternoon, slots: [] }
+        ];
         available.forEach(function (slot) {
-            var b = document.createElement('button');
-            b.type = 'button';
-            b.className = 'marcar-slot-btn';
-            b.textContent = slot;
-            b.addEventListener('click', function () {
-                state.time = slot;
-                timeslotGrid.querySelectorAll('.marcar-slot-btn').forEach(function (x) {
-                    x.classList.remove('selected');
+            var hour = Number(String(slot).split(':')[0]);
+            groups[hour < 13 ? 0 : 1].slots.push(slot);
+        });
+        groups.forEach(function (group) {
+            if (!group.slots.length) return;
+            var section = document.createElement('div');
+            section.className = 'marcar-times-group';
+            var kicker = document.createElement('p');
+            kicker.className = 'marcar-eyebrow';
+            kicker.textContent = group.label;
+            section.appendChild(kicker);
+            var row = document.createElement('div');
+            row.className = 'marcar-times-row';
+            group.slots.forEach(function (slot) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'marcar-slot-btn';
+                b.textContent = slot;
+                b.addEventListener('click', function () {
+                    state.time = slot;
+                    timeslotGrid.querySelectorAll('.marcar-slot-btn').forEach(function (x) {
+                        x.classList.remove('selected');
+                    });
+                    b.classList.add('selected');
+                    applyProfessionalsForTime(state.professionalsByTime[slot] || []);
+                    if (window.LonAnalytics) {
+                        window.LonAnalytics.track('slot_select', { surface: 'booking' });
+                        window.LonAnalytics.track('time_slot_clicked', { surface: 'marcar' });
+                    }
                 });
-                b.classList.add('selected');
-                applyProfessionalsForTime(state.professionalsByTime[slot] || []);
-                if (window.LonAnalytics) {
-                    window.LonAnalytics.track('slot_select', { surface: 'booking' });
-                    window.LonAnalytics.track('time_slot_clicked', { surface: 'marcar' });
-                }
+                row.appendChild(b);
             });
-            timeslotGrid.appendChild(b);
+            section.appendChild(row);
+            timeslotGrid.appendChild(section);
         });
     }
 
@@ -1783,6 +1829,8 @@
     window.MARCAR_LANG_CHANGED = function (lang) {
         applyConsultaI18n();
         fillTypeSelect(document.getElementById('marcarTypeSelect'), tipo);
+        renderTypePills();
+        shellRefresh();
         if (isPsychology()) {
             applySpecialtyCopy();
             fetch('/api/psychology/specialties?lang=' + encodeURIComponent(getLang()))
@@ -1837,17 +1885,274 @@
         }
     }
 
+    /* ──────────────────────────────────────────────────────────────────────
+       Shell: 3 passos (Serviço e formato → Apoio → Data e hora), resumo
+       lateral e barra de ação fixa. Só orquestra visibilidade e copy; a
+       lógica de horários/profissionais continua a ser a do motor acima.
+    ────────────────────────────────────────────────────────────────────── */
+    var SHELL_COPY = {
+        pt: {
+            eyebrow: 'Marcação',
+            lead: 'Poucos passos, cerca de dois minutos. Só paga no fim e pode cancelar até 24 horas antes da consulta.',
+            steps: { format: 'Serviço e formato', support: 'Apoio e profissional', schedule: 'Data e hora' },
+            back: 'Voltar',
+            next: 'Continuar',
+            toPayment: 'Continuar para pagamento',
+            needSpecialty: 'Escolha uma área de apoio para continuar.',
+            needDate: 'Escolha um dia com vagas no calendário.',
+            needTime: 'Escolha um horário para continuar.',
+            needPro: 'Escolha o profissional para continuar.',
+            readyPay: 'Os dados pessoais e o pagamento são no passo seguinte.',
+            morning: 'Manhã',
+            afternoon: 'Tarde',
+            summary: 'Resumo',
+            rows: { consult: 'Consulta', area: 'Área', pro: 'Profissional', when: 'Quando', format: 'Formato' },
+            video: 'Videochamada',
+            emptyValue: '—',
+            footnote: 'Profissionais certificados · consultas confidenciais por videochamada · cancelamento gratuito até 24h antes · pagamento seguro por cartão (Stripe).',
+            scheduleSub: 'Os dias com ponto verde têm horários livres. Toque num horário, ou escolha outro dia no calendário.'
+        },
+        en: {
+            eyebrow: 'Booking',
+            lead: 'A few steps, about two minutes. You only pay at the end and can cancel up to 24 hours before the appointment.',
+            steps: { format: 'Service and format', support: 'Support and professional', schedule: 'Date and time' },
+            back: 'Back',
+            next: 'Continue',
+            toPayment: 'Continue to payment',
+            needSpecialty: 'Choose a support area to continue.',
+            needDate: 'Pick a day with free slots on the calendar.',
+            needTime: 'Pick a time to continue.',
+            needPro: 'Choose the professional to continue.',
+            readyPay: 'Personal details and payment come in the next step.',
+            morning: 'Morning',
+            afternoon: 'Afternoon',
+            summary: 'Summary',
+            rows: { consult: 'Consultation', area: 'Area', pro: 'Professional', when: 'When', format: 'Format' },
+            video: 'Video call',
+            emptyValue: '—',
+            footnote: 'Certified professionals · confidential video consultations · free cancellation up to 24h before · secure card payment (Stripe).',
+            scheduleSub: 'Days with a green dot have free slots. Tap a time, or pick another day on the calendar.'
+        },
+        es: {
+            eyebrow: 'Reserva',
+            lead: 'Pocos pasos, unos dos minutos. Solo paga al final y puede cancelar hasta 24 horas antes de la consulta.',
+            steps: { format: 'Servicio y formato', support: 'Apoyo y profesional', schedule: 'Fecha y hora' },
+            back: 'Volver',
+            next: 'Continuar',
+            toPayment: 'Continuar al pago',
+            needSpecialty: 'Elija un área de apoyo para continuar.',
+            needDate: 'Elija un día con huecos en el calendario.',
+            needTime: 'Elija un horario para continuar.',
+            needPro: 'Elija el profesional para continuar.',
+            readyPay: 'Los datos personales y el pago vienen en el siguiente paso.',
+            morning: 'Mañana',
+            afternoon: 'Tarde',
+            summary: 'Resumen',
+            rows: { consult: 'Consulta', area: 'Área', pro: 'Profesional', when: 'Cuándo', format: 'Formato' },
+            video: 'Videollamada',
+            emptyValue: '—',
+            footnote: 'Profesionales certificados · consultas confidenciales por videollamada · cancelación gratuita hasta 24h antes · pago seguro con tarjeta (Stripe).',
+            scheduleSub: 'Los días con punto verde tienen horarios libres. Toque un horario o elija otro día en el calendario.'
+        }
+    };
+
+    function shellCopy() {
+        return SHELL_COPY[getLang()] || SHELL_COPY.pt;
+    }
+
+    function shellSteps() {
+        var steps = ['format'];
+        if (isPsychology()) steps.push('support');
+        steps.push('schedule');
+        return steps;
+    }
+
+    var shell = { step: 0, booted: false };
+
+    function shellStepDone(name) {
+        if (name === 'format') return true;
+        if (name === 'support') return !!state.specialty;
+        if (name === 'schedule') return !!(state.date && state.time && (!usesPsychStaff() || state.professionalId));
+        return false;
+    }
+
+    function shellHint(name) {
+        var copy = shellCopy();
+        if (name === 'support' && !state.specialty) return copy.needSpecialty;
+        if (name === 'schedule') {
+            if (!state.date) return copy.needDate;
+            if (!state.time) return copy.needTime;
+            if (usesPsychStaff() && !state.professionalId) return copy.needPro;
+            return copy.readyPay;
+        }
+        return '';
+    }
+
+    function localizedConsultaLabel() {
+        var i18nData = CONSULTATION_I18N[getLang()];
+        return (i18nData && i18nData[tipo]) ? i18nData[tipo].label : consulta.label;
+    }
+
+    function localizedConsultaDuration() {
+        var i18nData = CONSULTATION_I18N[getLang()];
+        return (i18nData && i18nData[tipo]) ? i18nData[tipo].duration : consulta.duration;
+    }
+
+    function specialtyLabel() {
+        if (!state.specialty) return '';
+        var found = (state.specialties || []).filter(function (s) { return s.id === state.specialty; })[0];
+        return found ? found.label : state.specialty;
+    }
+
+    function shellRenderProgress(steps) {
+        var list = document.getElementById('marcarProgress');
+        if (!list) return;
+        var copy = shellCopy();
+        list.style.setProperty('--marcar-steps', String(steps.length));
+        list.innerHTML = '';
+        steps.forEach(function (name, idx) {
+            var li = document.createElement('li');
+            li.className = idx < shell.step ? 'is-done' : (idx === shell.step ? 'is-current' : '');
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.disabled = idx >= shell.step;
+            if (idx === shell.step) btn.setAttribute('aria-current', 'step');
+            btn.innerHTML = '<span class="marcar-progress-bar"></span>' +
+                '<span class="marcar-progress-label">' + (idx + 1) + '. ' + escapeHtml(copy.steps[name]) + '</span>';
+            btn.addEventListener('click', function () {
+                if (idx < shell.step) shellGo(idx);
+            });
+            li.appendChild(btn);
+            list.appendChild(li);
+        });
+    }
+
+    function shellRenderSummary() {
+        var copy = shellCopy();
+        var title = document.getElementById('marcarSummaryTitle');
+        var price = document.getElementById('marcarSummaryPrice');
+        var list = document.getElementById('marcarSummaryList');
+        var eyebrow = document.querySelector('#marcarSummary .marcar-eyebrow');
+        if (eyebrow) eyebrow.textContent = copy.summary;
+        if (title) title.textContent = localizedConsultaLabel();
+        if (price) price.textContent = consulta.price + (consulta.priceNote || '');
+        if (!list) return;
+        var rows = [];
+        if (isPsychology()) rows.push([copy.rows.area, specialtyLabel()]);
+        if (usesPsychStaff()) rows.push([copy.rows.pro, state.professionalName || '']);
+        rows.push([copy.rows.when, state.date && state.time ? state.dateLabel + ' · ' + state.time : (state.date ? state.dateLabel : '')]);
+        rows.push([copy.rows.format, copy.video + ' · ' + localizedConsultaDuration()]);
+        list.innerHTML = '';
+        rows.forEach(function (row) {
+            var wrap = document.createElement('div');
+            wrap.className = 'marcar-summary-row';
+            var dt = document.createElement('dt');
+            dt.textContent = row[0];
+            var dd = document.createElement('dd');
+            dd.textContent = row[1] || copy.emptyValue;
+            if (!row[1]) dd.className = 'is-empty';
+            wrap.appendChild(dt);
+            wrap.appendChild(dd);
+            list.appendChild(wrap);
+        });
+    }
+
+    function shellRefresh() {
+        if (!shell || !shell.booted) return;
+        var steps = shellSteps();
+        if (shell.step > steps.length - 1) shell.step = steps.length - 1;
+        var current = steps[shell.step];
+        var copy = shellCopy();
+
+        document.querySelectorAll('#marcarBookingFlow .marcar-step').forEach(function (el) {
+            el.hidden = el.getAttribute('data-step') !== current;
+        });
+
+        var eyebrow = document.getElementById('marcarEyebrow');
+        var lead = document.getElementById('marcarLead');
+        var footnote = document.getElementById('marcarFootnote');
+        var scheduleSub = document.getElementById('marcarScheduleSub');
+        if (eyebrow) eyebrow.textContent = copy.eyebrow;
+        if (lead) lead.textContent = copy.lead;
+        if (footnote) footnote.textContent = copy.footnote;
+        if (scheduleSub && !isPsychology()) scheduleSub.textContent = copy.scheduleSub;
+
+        shellRenderProgress(steps);
+        shellRenderSummary();
+
+        var bar = document.getElementById('marcarActionBar');
+        var back = document.getElementById('marcarStepBack');
+        var hint = document.getElementById('marcarStepHint');
+        var next = document.getElementById('marcarStepNext');
+        if (bar) bar.hidden = false;
+        if (back) back.textContent = copy.back;
+        var isLast = shell.step === steps.length - 1;
+        if (next) {
+            next.textContent = isLast ? copy.toPayment : copy.next;
+            next.disabled = !shellStepDone(current);
+        }
+        if (hint) hint.textContent = shellHint(current);
+    }
+
+    function shellGo(idx) {
+        var steps = shellSteps();
+        shell.step = Math.max(0, Math.min(idx, steps.length - 1));
+        shellRefresh();
+        var anchor = document.getElementById('marcarProgress');
+        if (anchor && typeof anchor.scrollIntoView === 'function') {
+            var top = anchor.getBoundingClientRect().top + window.pageYOffset - 96;
+            window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        }
+    }
+
+    function shellInit() {
+        var params = new URLSearchParams(window.location.search);
+        var steps = shellSteps();
+        var start = 0;
+        // Returning with a slot (plan switch) or with an area already chosen → jump to the calendar.
+        if (params.get('date') || (isPsychology() && params.get('specialty'))) start = steps.length - 1;
+        shell.step = start;
+        shell.booted = true;
+
+        var back = document.getElementById('marcarStepBack');
+        var next = document.getElementById('marcarStepNext');
+        if (back) {
+            back.addEventListener('click', function () {
+                if (shell.step > 0) {
+                    shellGo(shell.step - 1);
+                    return;
+                }
+                var link = document.getElementById('marcarBookingBack');
+                window.location.href = (link && link.getAttribute('href')) || '/marcar';
+            });
+        }
+        if (next) {
+            next.addEventListener('click', function () {
+                var current = shellSteps()[shell.step];
+                if (!shellStepDone(current)) return;
+                if (shell.step < shellSteps().length - 1) {
+                    shellGo(shell.step + 1);
+                    if (window.LonAnalytics) window.LonAnalytics.track('marcar_step', { surface: 'marcar', step: shellSteps()[shell.step] });
+                    return;
+                }
+                if (btnNext && !btnNext.disabled) btnNext.click();
+            });
+        }
+        shellRefresh();
+    }
+
     function bootMarcarCalendar() {
         renderCalendar();
         applyUrlDateTime();
-        if (!isPsychology() || state.specialty) loadQuickSlots();
+        shellRefresh();
+        if (!isPsychology() || state.specialty) return loadQuickSlots().then(shellRefresh);
     }
 
+    shellInit();
+
     if (isPsychology()) {
-        initPsychologyFlow();
+        initPsychologyFlow().then(shellRefresh);
     } else if (isCasalFamily(tipo)) {
-        var casalSpec = document.getElementById('marcarSpecialtySection');
-        if (casalSpec) casalSpec.hidden = true;
         state.specialty = 'relacionamentos';
         loadBookableDays().then(bootMarcarCalendar);
     } else {

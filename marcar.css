@@ -699,3 +699,646 @@
     font-size: 0.95rem;
     font-weight: 600;
 }
+
+/* ========================================================================
+   Shell — 3 passos, resumo lateral e barra de ação fixa
+   (formato da rota "/" da app: eyebrow · h1 · progress bars · cards ·
+    aside sticky · action bar). Fontes: Bricolage Grotesque + Instrument Sans.
+======================================================================== */
+:root {
+    --marcar-font: 'Instrument Sans', 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --marcar-font-display: 'Bricolage Grotesque', 'Instrument Sans', 'DM Sans', sans-serif;
+    --marcar-primary: #255235;
+    --marcar-primary-fg: #ffffff;
+    --marcar-brand-soft: #e6efe9;
+    --marcar-highlight: #c4744a;
+    --marcar-shadow-card: 0 6px 18px rgba(22, 33, 25, 0.06);
+    --marcar-shadow-float: 0 10px 24px rgba(37, 82, 53, 0.22);
+}
+
+#marcarBookingFlow,
+#marcarBookingFlow button,
+#marcarBookingFlow select,
+.marcar-actionbar,
+.marcar-actionbar button {
+    font-family: var(--marcar-font);
+}
+
+#marcarBookingFlow h1,
+#marcarBookingFlow h2,
+#marcarBookingFlow h3,
+.marcar-summary-title,
+.marcar-plan-price,
+.marcar-price {
+    font-family: var(--marcar-font-display);
+}
+
+.marcar-main {
+    padding-bottom: 160px; /* room for the fixed action bar */
+    max-width: 64rem;
+}
+
+@media (min-width: 640px) {
+    .marcar-main {
+        padding-bottom: 112px;
+    }
+}
+
+.marcar-eyebrow {
+    margin: 0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--marcar-muted);
+}
+
+#marcarBookingFlow .marcar-page-title {
+    margin: 8px 0 0;
+    max-width: 36rem;
+    font-size: clamp(1.75rem, 3.4vw, 2.25rem);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+}
+
+.marcar-lead {
+    margin: 12px 0 0;
+    max-width: 36rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--marcar-muted);
+}
+
+/* progress */
+.marcar-progress {
+    list-style: none;
+    margin: 32px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--marcar-steps, 3), minmax(0, 1fr));
+    gap: 8px;
+}
+
+.marcar-progress button {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    cursor: default;
+    color: inherit;
+}
+
+.marcar-progress li.is-done button {
+    cursor: pointer;
+}
+
+.marcar-progress-bar {
+    display: block;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--marcar-border);
+}
+
+.marcar-progress li.is-done .marcar-progress-bar,
+.marcar-progress li.is-current .marcar-progress-bar {
+    background: var(--marcar-primary);
+}
+
+.marcar-progress-label {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--marcar-muted);
+}
+
+.marcar-progress li.is-done .marcar-progress-label,
+.marcar-progress li.is-current .marcar-progress-label {
+    color: var(--marcar-text);
+}
+
+/* layout */
+.marcar-grid {
+    margin-top: 32px;
+    display: grid;
+    gap: 24px;
+}
+
+@media (min-width: 1024px) {
+    .marcar-grid {
+        grid-template-columns: minmax(0, 1fr) 18rem;
+        align-items: start;
+    }
+}
+
+.marcar-col {
+    display: grid;
+    gap: 24px;
+}
+
+.marcar-card {
+    border: 1px solid var(--marcar-border);
+    border-radius: 16px;
+    background: var(--marcar-surface);
+    padding: 20px;
+    box-shadow: var(--marcar-shadow-card);
+}
+
+@media (min-width: 640px) {
+    .marcar-card {
+        padding: 28px;
+    }
+}
+
+.marcar-step[hidden],
+#marcarContinue[hidden] {
+    display: none !important;
+}
+
+.marcar-card-title,
+#marcarBookingFlow .marcar-schedule-wrap h2,
+#marcarBookingFlow .marcar-plan-heading {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+}
+
+#marcarBookingFlow .marcar-plan-section {
+    margin: 0;
+}
+
+#marcarBookingFlow #marcarPlanSection {
+    margin: 32px 0 0;
+}
+
+#marcarBookingFlow .marcar-plan-kicker {
+    margin: 0 0 4px;
+}
+
+#marcarBookingFlow .marcar-plan-heading {
+    margin-bottom: 4px;
+}
+
+#marcarBookingFlow .marcar-plans {
+    margin-top: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#marcarBookingFlow .marcar-plans.has-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 640px) {
+    #marcarBookingFlow .marcar-plans,
+    #marcarBookingFlow .marcar-plans.has-3 {
+        grid-template-columns: 1fr;
+    }
+}
+
+.marcar-plan-card {
+    position: relative;
+}
+
+.marcar-plan-card.is-featured .marcar-plan-badge {
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--marcar-highlight);
+    color: #fff;
+    font-size: 0.625rem;
+    letter-spacing: 0.12em;
+}
+
+.marcar-plan-card.is-featured {
+    padding-top: 22px;
+}
+
+/* type pills */
+.marcar-type-pills {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.marcar-pill {
+    appearance: none;
+    border: 1px solid var(--marcar-border);
+    background: var(--marcar-surface-soft);
+    color: var(--marcar-text);
+    border-radius: 999px;
+    padding: 8px 16px;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+.marcar-pill:hover {
+    border-color: rgba(37, 82, 53, 0.4);
+}
+
+.marcar-pill.is-active {
+    border-color: var(--marcar-primary);
+    background: var(--marcar-primary);
+    color: var(--marcar-primary-fg);
+}
+
+/* specialties → soft pills */
+#marcarBookingFlow .marcar-specialties {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+#marcarBookingFlow .marcar-spec-card {
+    min-height: 0;
+    padding: 8px 16px;
+    border-radius: 999px;
+    border-width: 1px;
+    background: var(--marcar-surface-soft);
+    font-weight: 500;
+    font-size: 0.875rem;
+    box-shadow: none;
+    transform: none;
+}
+
+#marcarBookingFlow .marcar-spec-card.is-active {
+    background: var(--marcar-brand-soft);
+    border-color: var(--marcar-primary);
+    color: #153624;
+    font-weight: 600;
+    box-shadow: none;
+}
+
+#marcarBookingFlow .marcar-sub {
+    margin: 4px 0 0;
+    font-size: 0.875rem;
+    color: var(--marcar-muted);
+}
+
+/* "o que inclui" (ficha) inside step 1 */
+#marcarBookingFlow .marcar-info {
+    margin-top: 20px;
+    padding: 20px 0 0;
+    border: 0;
+    border-top: 1px solid var(--marcar-border);
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+}
+
+.marcar-info-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 16px;
+}
+
+#marcarBookingFlow .marcar-info h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+#marcarBookingFlow .marcar-price {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--marcar-text);
+}
+
+#marcarBookingFlow .marcar-meta {
+    margin: 12px 0 0;
+}
+
+#marcarBookingFlow .marcar-desc {
+    margin-top: 16px;
+    font-size: 0.875rem;
+}
+
+#marcarBookingFlow .marcar-desc-title {
+    margin: 0 0 8px;
+    font-weight: 600;
+    color: var(--marcar-text);
+}
+
+#marcarBookingFlow .marcar-desc ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+}
+
+#marcarBookingFlow .marcar-desc li {
+    margin: 0;
+    padding-left: 1.4em;
+    position: relative;
+}
+
+#marcarBookingFlow .marcar-desc li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--marcar-primary);
+    font-weight: 700;
+}
+
+/* schedule */
+#marcarBookingFlow .marcar-schedule-layout {
+    margin-top: 20px;
+}
+
+#marcarBookingFlow .marcar-cal-section {
+    background: transparent;
+    border: 0;
+    padding: 0;
+}
+
+#marcarBookingFlow .marcar-cal-nav {
+    width: auto;
+    height: auto;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.875rem;
+}
+
+#marcarBookingFlow .marcar-cal-nav:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+#marcarBookingFlow .marcar-cal-day {
+    position: relative;
+    border-radius: 8px;
+    background: var(--marcar-surface-soft);
+    font-family: var(--marcar-font);
+}
+
+#marcarBookingFlow .marcar-cal-day.marcar-cal-empty,
+#marcarBookingFlow .marcar-cal-day.marcar-cal-disabled {
+    background: transparent;
+}
+
+#marcarBookingFlow .marcar-cal-day.marcar-cal-disabled {
+    color: rgba(66, 80, 69, 0.4);
+}
+
+#marcarBookingFlow .marcar-cal-day:not(.marcar-cal-disabled):not(.marcar-cal-empty):not(.marcar-cal-selected)::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--marcar-primary);
+    transform: translateX(-50%);
+}
+
+#marcarBookingFlow .marcar-cal-day:hover:not(.marcar-cal-disabled):not(.marcar-cal-empty) {
+    background: var(--marcar-brand-soft);
+}
+
+#marcarBookingFlow .marcar-cal-day.marcar-cal-today {
+    border: 1px solid rgba(37, 82, 53, 0.35);
+}
+
+#marcarBookingFlow .marcar-cal-day.marcar-cal-selected {
+    background: var(--marcar-primary);
+    color: #fff;
+}
+
+#marcarBookingFlow .marcar-times h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-family: var(--marcar-font);
+}
+
+#marcarBookingFlow .marcar-times-grid {
+    display: block;
+    max-height: none;
+    overflow: visible;
+    padding: 0;
+}
+
+.marcar-times-group + .marcar-times-group {
+    margin-top: 16px;
+}
+
+.marcar-times-group .marcar-eyebrow {
+    margin-bottom: 8px;
+}
+
+.marcar-times-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+#marcarBookingFlow .marcar-slot-btn {
+    padding: 8px 0;
+    border-radius: 8px;
+    background: var(--marcar-surface-soft);
+    font-family: var(--marcar-font);
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: border-color 0.15s ease, background-color 0.15s ease, color 0.15s ease;
+}
+
+#marcarBookingFlow .marcar-slot-btn:hover {
+    border-color: rgba(37, 82, 53, 0.4);
+}
+
+#marcarBookingFlow .marcar-slot-btn.selected {
+    border-color: var(--marcar-primary);
+    background: var(--marcar-primary);
+    color: #fff;
+}
+
+#marcarBookingFlow .marcar-times-empty {
+    padding: 16px;
+    border: 1px dashed var(--marcar-border);
+    border-radius: 12px;
+    text-align: left;
+}
+
+#marcarBookingFlow .marcar-callout {
+    margin: 24px 0 0;
+    padding: 16px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--marcar-brand-soft);
+    color: #153624;
+    font-size: 0.875rem;
+}
+
+.marcar-footnote {
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--marcar-muted);
+}
+
+/* summary aside */
+.marcar-summary {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .marcar-summary {
+        display: block;
+        position: sticky;
+        top: calc(var(--lon-nav-h) + 16px);
+    }
+}
+
+.marcar-summary-title {
+    margin: 8px 0 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.marcar-summary-price {
+    margin: 4px 0 0;
+    font-size: 0.875rem;
+    color: var(--marcar-muted);
+}
+
+.marcar-summary-price:empty {
+    display: none;
+}
+
+.marcar-summary-list {
+    margin: 16px 0 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--marcar-border);
+    display: grid;
+    gap: 8px;
+    font-size: 0.875rem;
+}
+
+.marcar-summary-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.marcar-summary-row dt {
+    color: var(--marcar-muted);
+}
+
+.marcar-summary-row dd {
+    margin: 0;
+    text-align: right;
+    font-weight: 500;
+}
+
+.marcar-summary-row dd.is-empty {
+    font-weight: 400;
+    color: rgba(66, 80, 69, 0.6);
+}
+
+/* action bar */
+.marcar-actionbar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    border-top: 1px solid var(--marcar-border);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.marcar-actionbar[hidden] {
+    display: none;
+}
+
+.marcar-actionbar-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    max-width: 64rem;
+}
+
+.marcar-actionbar-back,
+.marcar-actionbar-next {
+    appearance: none;
+    font: inherit;
+    font-size: 0.875rem;
+    border-radius: 999px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+}
+
+.marcar-actionbar-back {
+    border: 1px solid var(--marcar-border);
+    background: transparent;
+    color: var(--marcar-text);
+    font-weight: 500;
+}
+
+.marcar-actionbar-back:disabled,
+.marcar-actionbar-next:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* Same bar on mobile, tablet and desktop: Voltar + Continuar (largura total), dica por baixo. */
+.marcar-actionbar-hint {
+    order: 3;
+    width: 100%;
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--marcar-muted);
+}
+
+.marcar-actionbar-hint:empty {
+    display: none;
+}
+
+.marcar-actionbar-next {
+    flex: 1;
+    border: 0;
+    background: var(--marcar-primary);
+    color: var(--marcar-primary-fg);
+    font-weight: 600;
+    padding: 12px 20px;
+    box-shadow: var(--marcar-shadow-float);
+}
+
+.marcar-actionbar-next:not(:disabled):hover {
+    background: #1d4229;
+}
+
+@media (min-width: 640px) {
+    .marcar-actionbar {
+        box-shadow: 0 -8px 24px rgba(22, 33, 25, 0.06);
+    }
+
+    .marcar-actionbar-inner {
+        padding: 14px 24px;
+    }
+
+    .marcar-actionbar-back {
+        padding: 12px 20px;
+    }
+}

@@ -3,7 +3,115 @@
    Multi-passenger support for Travel Medicine
 ======================================== */
 
-document.addEventListener('DOMContentLoaded', async () => {
+/* ─── Route boundaries (not found / error) — mirrors the app root route's
+   notFoundComponent / errorComponent, in plain DOM. ─── */
+const BOOKING_BOUNDARY_COPY = {
+    pt: {
+        nfTitle: 'Consulta não encontrada',
+        nfDesc: 'Este tipo de consulta não existe ou já não está disponível.',
+        nfPrimary: 'Ver consultas',
+        home: 'Ir para o início',
+        errTitle: 'Esta página não carregou',
+        errDesc: 'Algo falhou do nosso lado. Pode tentar de novo ou voltar ao início.',
+        retry: 'Tentar novamente'
+    },
+    en: {
+        nfTitle: 'Consultation not found',
+        nfDesc: 'This consultation type doesn\'t exist or is no longer available.',
+        nfPrimary: 'See consultations',
+        home: 'Go home',
+        errTitle: 'This page didn\'t load',
+        errDesc: 'Something went wrong on our end. You can try again or head back home.',
+        retry: 'Try again'
+    },
+    es: {
+        nfTitle: 'Consulta no encontrada',
+        nfDesc: 'Este tipo de consulta no existe o ya no está disponible.',
+        nfPrimary: 'Ver consultas',
+        home: 'Ir al inicio',
+        errTitle: 'Esta página no cargó',
+        errDesc: 'Algo falló de nuestro lado. Puede intentarlo de nuevo o volver al inicio.',
+        retry: 'Intentar de nuevo'
+    }
+};
+
+function bookingBoundaryLang() {
+    try {
+        if (window.CLINIC_I18N && typeof window.CLINIC_I18N.getLang === 'function') {
+            const l = window.CLINIC_I18N.getLang();
+            if (BOOKING_BOUNDARY_COPY[l]) return l;
+        }
+        const s = localStorage.getItem('clinic_lang');
+        if (BOOKING_BOUNDARY_COPY[s]) return s;
+    } catch (e) { /* ignore */ }
+    return 'pt';
+}
+
+function hideBookingFlowChrome() {
+    document.querySelectorAll('.booking-step').forEach((s) => s.classList.remove('active'));
+    const progress = document.querySelector('.booking-progress');
+    if (progress) progress.hidden = true;
+    const banner = document.querySelector('.booking-container > .lon-lang-banner');
+    if (banner) banner.hidden = true;
+}
+
+function reportBookingError(error, boundary) {
+    try {
+        if (window.LonAnalytics && typeof window.LonAnalytics.track === 'function') {
+            window.LonAnalytics.track('client_error', {
+                surface: 'booking',
+                boundary,
+                message: String((error && error.message) || error).slice(0, 300)
+            });
+        }
+    } catch (e) { /* never block the boundary */ }
+}
+
+function showBookingNotFound(requestedService) {
+    const el = document.getElementById('bookingNotFound');
+    if (!el) return;
+    const c = BOOKING_BOUNDARY_COPY[bookingBoundaryLang()];
+    hideBookingFlowChrome();
+    const title = document.getElementById('bookingNotFoundTitle');
+    const desc = document.getElementById('bookingNotFoundDesc');
+    const primary = document.getElementById('bookingNotFoundPrimary');
+    const home = document.getElementById('bookingNotFoundHome');
+    if (title) title.textContent = c.nfTitle;
+    if (desc) desc.textContent = c.nfDesc;
+    if (primary) primary.textContent = c.nfPrimary;
+    if (home) home.textContent = c.home;
+    el.hidden = false;
+    reportBookingError(new Error('Unknown service: ' + requestedService), 'booking_not_found');
+}
+
+function showBookingError(error) {
+    console.error(error);
+    const el = document.getElementById('bookingError');
+    if (!el) return;
+    const c = BOOKING_BOUNDARY_COPY[bookingBoundaryLang()];
+    hideBookingFlowChrome();
+    const title = document.getElementById('bookingErrorTitle');
+    const desc = document.getElementById('bookingErrorDesc');
+    const retry = document.getElementById('bookingErrorRetry');
+    const home = document.getElementById('bookingErrorHome');
+    if (title) title.textContent = c.errTitle;
+    if (desc) desc.textContent = c.errDesc;
+    if (home) home.textContent = c.home;
+    if (retry) {
+        retry.textContent = c.retry;
+        // "router.invalidate() + reset()" equivalent: reload the route, keeping the query string.
+        retry.addEventListener('click', () => window.location.reload(), { once: true });
+    }
+    el.hidden = false;
+    document.body.classList.add('loaded');
+    reportBookingError(error, 'booking_root_error_component');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initBookingFlow().catch(showBookingError);
+});
+
+async function initBookingFlow() {
 
     // ─── State ───
     const state = {
@@ -538,6 +646,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const preselect = urlParams.get('service');
     if (preselect) {
+        const known = services[preselect] || serviceAlias[preselect];
+        if (!known) {
+            // Unknown route param → not-found boundary (instead of silently falling back to clínica geral).
+            showBookingNotFound(preselect);
+            return;
+        }
         applyServiceKey(preselect);
     }
     if (!state.service) {
@@ -2677,4 +2791,4 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.body.classList.add('loaded');
     }, 100);
 
-});
+}
