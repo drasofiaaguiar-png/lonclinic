@@ -50,6 +50,7 @@ const consultaPages = require('./consulta-pages');
 const queixas = require('./queixas');
 const nutricao = require('./nutricao');
 const touristPages = require('./tourist-pages');
+const pillarPages = require('./pillar-pages');
 const producers = require('./producers');
 const wellness = require('./wellness');
 const seo = require('./seo');
@@ -8905,9 +8906,19 @@ app.get('/doctors.html', (req, res) => {
     res.redirect(301, '/doctors');
 });
 
-// Symptom pages (/ansiedade-no-trabalho, …) and tourist guides — after named routes.
+// Pillar landings, symptom pages (/ansiedade-no-trabalho, …) and tourist guides — after named routes.
 app.get('/:slug', (req, res, next) => {
     const slug = String(req.params.slug || '').toLowerCase();
+    if (pillarPages.hasPublishedSlug(slug)) {
+        try {
+            const result = pillarPages.renderPage(seo.SITE_ORIGIN, slug);
+            if (!result) return next();
+            return sendHtmlNoCacheString(res, result.html);
+        } catch (err) {
+            console.error('❌ Pillar page error:', err.message || err);
+            return res.status(500).type('html').send('Error loading page.');
+        }
+    }
     if (touristPages.hasPublishedSlug(slug)) {
         try {
             const result = touristPages.renderPage(seo.SITE_ORIGIN, slug);

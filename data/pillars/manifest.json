@@ -1,0 +1,110 @@
+{
+  "pages": [
+    {
+      "slug": "psicologo-online-portugal",
+      "area": "psicologia",
+      "status": "published",
+      "title": "Psicólogo Online em Portugal | Consulta de Psicologia | LON Clinic",
+      "description": "Consulta de psicologia online com profissionais qualificados. Acompanhamento personalizado, próximo e seguro, onde quer que esteja. Marque na LON Clinic.",
+      "h1": "Psicólogo Online em Portugal",
+      "navLabel": "Psicólogo online",
+      "lead": "A psicologia online permite falar com um profissional qualificado através de videoconsulta, sem deslocações e a partir de qualquer lugar.",
+      "keywords": ["psicólogo online", "psicólogo online Portugal", "psicologia online", "consulta de psicologia online", "acompanhamento psicológico online", "psicóloga online", "saúde mental online"],
+      "datePublished": "2026-09-11",
+      "dateModified": "2026-09-11",
+      "breadcrumb": { "label": "Psicologia", "href": "/saudemental" },
+      "primaryCta": { "label": "Marcar consulta de psicologia", "href": "/marcar/psicologia" },
+      "secondaryCta": { "label": "Ver psicólogos e planos", "href": "/saudemental" },
+      "faq": [
+        { "q": "O que é um psicólogo online?", "a": "Um psicólogo online é um profissional de Psicologia que realiza consultas através de videoconsulta, permitindo acompanhamento à distância." },
+        { "q": "Como funciona uma consulta de psicologia online?", "a": "A consulta decorre por videoconsulta, num ambiente privado, permitindo conversar com o psicólogo e trabalhar as questões identificadas ao longo do acompanhamento." },
+        { "q": "Posso ter acompanhamento psicológico online em Portugal?", "a": "Sim. A psicologia online permite realizar consultas à distância, desde que esta modalidade seja adequada à situação e ao enquadramento profissional aplicável." },
+        { "q": "Devo procurar um psicólogo se estiver apenas stressado?", "a": "O stress pode ser uma razão válida para procurar apoio. Um profissional pode ajudar a compreender o que está a contribuir para esse estado e a desenvolver estratégias adequadas." },
+        { "q": "Psicologia online é adequada para burnout?", "a": "Pode ser útil no acompanhamento de situações relacionadas com stress e burnout, sendo importante avaliar individualmente cada caso." }
+      ],
+      "closing": {
+        "title": "Falar pode ser o primeiro passo",
+        "lines": ["Não precisa de ter todas as respostas antes de procurar ajuda.", "Pode começar simplesmente por ser ouvido."],
+        "signature": ["LON Clinic.", "Voltar a si."]
+      },
+      "related": [
+        { "href": "/saudemental", "label": "Psicologia online: planos e psicólogos" },
+        { "href": "/consultas", "label": "Consultas de psicologia por queixa" },
+        { "href": "/burnout-sintomas-causas-tratamento", "label": "Burnout: sintomas, causas e como recuperar" },
+        { "href": "/medico-online-portugal", "label": "Médico online em Portugal" },
+        { "href": "/nutricao", "label": "Nutrição online" }
+      ]
+    },
+    {
+      "slug": "medico-online-portugal",
+      "area": "medicina",
+      "status": "published",
+      "title": "Médico Online em Portugal | Consulta Médica Online | LON Clinic",
+      "description": "Consulta médica online em Portugal por videoconsulta. Fale com um médico sem deslocações e receba orientação adequada à sua situação.",
+      "h1": "Médico Online em Portugal",
+      "navLabel": "Médico online",
+      "lead": "Precisa de falar com um médico sem se deslocar a uma clínica? Na LON Clinic pode realizar uma consulta médica online através de videoconsulta.",
+      "keywords": ["médico online Portugal", "consulta médica online", "médico online", "consulta online médico", "consultas médicas online", "clínico geral online", "online doctor Portugal"],
+      "datePublished": "2026-09-11",
+      "dateModified": "2026-09-11",
+      "breadcrumb": { "label": "Medicina", "href": "/consulta" },
+      "primaryCta": { "label": "Marcar consulta médica", "href": "/marcar/clinica-geral" },
+      "secondaryCta": { "label": "Ver consultas médicas", "href": "/consulta" },
+      "faq": [
+        { "q": "Posso falar com um médico online em Portugal?", "a": "Sim. A LON Clinic disponibiliza consultas médicas através de videoconsulta, permitindo falar com um profissional sem deslocação." },
+        { "q": "Como funciona uma consulta médica online?", "a": "A consulta é realizada por videoconsulta. O médico recolhe informação sobre a situação, avalia o que é possível avaliar à distância e orienta os próximos passos." },
+        { "q": "Um médico online pode fazer um diagnóstico?", "a": "Em determinadas situações, um médico pode realizar uma avaliação clínica através de videoconsulta. A possibilidade de diagnóstico depende da situação e da informação disponível. Algumas situações exigem observação presencial ou exames complementares." },
+        { "q": "Posso ter uma consulta médica online se estiver em Portugal temporariamente?", "a": "A possibilidade depende da situação, do profissional e do enquadramento aplicável. A LON Clinic pode orientar o processo durante a marcação." },
+        { "q": "Uma consulta online substitui uma consulta presencial?", "a": "Nem sempre. Algumas situações podem ser acompanhadas à distância, enquanto outras requerem observação presencial." }
+      ],
+      "closing": {
+        "title": "Cuidados de saúde que acompanham a sua vida",
+        "lines": ["A saúde não deve ficar limitada ao lugar onde está.", "Cuidados de saúde próximos, acessíveis e humanos."],
+        "signature": ["LON Clinic.", "A tua saúde, sem barreiras."]
+      },
+      "related": [
+        { "href": "/consulta", "label": "Consultas médicas online" },
+        { "href": "/tourist-clinic", "label": "Médico para turistas em Portugal" },
+        { "href": "/travel-clinic", "label": "Consulta do viajante" },
+        { "href": "/psicologo-online-portugal", "label": "Psicólogo online em Portugal" },
+        { "href": "/nutricao", "label": "Nutrição online" }
+      ]
+    },
+    {
+      "slug": "burnout-sintomas-causas-tratamento",
+      "area": "burnout",
+      "status": "published",
+      "title": "Burnout: Sintomas, Causas e Como Recuperar | LON Clinic",
+      "description": "O que é burnout? Conheça os principais sintomas, fatores de risco e formas de procurar ajuda. Um guia da LON Clinic sobre burnout e saúde mental.",
+      "h1": "Burnout: sintomas, causas e como recuperar",
+      "navLabel": "Burnout",
+      "lead": "Burnout é um estado associado ao stress crónico no contexto profissional e pode manifestar-se através de exaustão, distanciamento emocional e sensação de menor eficácia.",
+      "keywords": ["burnout", "burnout sintomas", "burnout teste", "burnout parental", "burnout tratamento", "burnout tem cura", "fases do burnout", "o que é burnout", "stress crónico", "esgotamento profissional"],
+      "datePublished": "2026-09-11",
+      "dateModified": "2026-09-11",
+      "breadcrumb": { "label": "Burnout", "href": "/burnout" },
+      "primaryCta": { "label": "Fazer o teste de burnout", "href": "/burnout/teste" },
+      "secondaryCta": { "label": "Falar com um psicólogo", "href": "/marcar/psicologia" },
+      "faq": [
+        { "q": "O que é burnout?", "a": "Burnout é um fenómeno associado ao stress crónico no contexto profissional, caracterizado por dimensões como exaustão, distanciamento mental e redução da eficácia profissional." },
+        { "q": "Quais são os primeiros sinais de burnout?", "a": "Cansaço persistente, dificuldade em desligar, irritabilidade, alterações do sono, perda de motivação e sensação de sobrecarga podem ser alguns dos sinais." },
+        { "q": "Burnout tem cura?", "a": "O burnout pode ser acompanhado e tratado, mas a abordagem deve ser individualizada. Pode envolver mudanças no contexto de stress, acompanhamento psicológico e avaliação médica quando necessário." },
+        { "q": "Burnout é uma doença?", "a": "O burnout é reconhecido pela Organização Mundial da Saúde como um fenómeno ocupacional relacionado com stress crónico no trabalho, não sendo classificado como uma condição médica." },
+        { "q": "Como saber se tenho burnout?", "a": "Os sintomas podem levantar essa possibilidade, mas não permitem um diagnóstico por si só. Uma avaliação profissional pode ajudar a compreender a situação." },
+        { "q": "Quando devo procurar um psicólogo por burnout?", "a": "Quando o stress, cansaço ou sofrimento emocional começam a interferir com o trabalho, relações, sono ou vida quotidiana, procurar apoio pode ser importante." }
+      ],
+      "closing": {
+        "title": "O corpo fala. A mente também.",
+        "lines": ["Vivemos cada vez mais depressa.", "E, por vezes, afastamo-nos de nós.", "Stress.\nCansaço.\nDesconexão.", "Cuidar começa por ouvir.", "Voltar a ouvir.\nVoltar a equilibrar.\nVoltar a si."],
+        "signature": ["LON Clinic."]
+      },
+      "related": [
+        { "href": "/burnout", "label": "Centro burnout" },
+        { "href": "/burnout/teste", "label": "Teste de burnout (CBI)" },
+        { "href": "/psicologo-online-portugal", "label": "Psicólogo online em Portugal" },
+        { "href": "/blog/sinais-de-burnout-no-trabalho-remoto", "label": "Sinais de burnout no trabalho remoto" },
+        { "href": "/consultas", "label": "Consultas de psicologia por queixa" }
+      ]
+    }
+  ]
+}

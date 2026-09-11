@@ -448,6 +448,16 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
     }
 
     try {
+        const pillarPages = require('./pillar-pages');
+        for (const p of pillarPages.livePages()) {
+            const lastmod = String(p.dateModified || p.datePublished || today).slice(0, 10);
+            entries.push(urlEntry(`${o}/${encodeURIComponent(p.slug)}`, lastmod, 'weekly', '0.9'));
+        }
+    } catch (err) {
+        console.error('sitemap: pillar pages', err.message);
+    }
+
+    try {
         for (const p of queixas.publishedPages()) {
             if (isBurnoutAuthoritySpoke(`/${p.slug}`)) continue;
             const lastmod = String(p.dateModified || p.datePublished || today).slice(0, 10);

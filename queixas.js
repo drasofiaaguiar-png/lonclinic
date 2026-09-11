@@ -67,7 +67,8 @@ const RESERVED_SLUGS = new Set([
     'uti-portugal-what-to-do', 'infeccion-urinaria-portugal-que-hacer',
     'infection-urinaire-portugal-que-faire', 'blasenentzuendung-portugal-was-tun',
     'renew-prescription-holiday-portugal', 'renovar-receta-vacaciones-portugal',
-    'renouveler-ordonnance-vacances-portugal', 'rezept-verlaengern-urlaub-portugal'
+    'renouveler-ordonnance-vacances-portugal', 'rezept-verlaengern-urlaub-portugal',
+    'psicologo-online-portugal', 'medico-online-portugal', 'burnout-sintomas-causas-tratamento'
 ]);
 
 marked.use({
