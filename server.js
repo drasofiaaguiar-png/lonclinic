@@ -11448,7 +11448,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
             ? (service === 'terapia_casal_mensal'
                 ? `${description} · Subscrição mensal · 4 sessões (65€/semana) · cobrado mensalmente · cancelável`
                 : service === 'psicologia_mensal'
-                    ? `${description} · Subscrição mensal de psicologia · 56 €/mês por 4 sessões · cobrado mensalmente · cancelável`
+                    ? `${description} · Subscrição mensal de psicologia · 56 €/semana · 4 sessões (224 €/mês) · cobrado mensalmente · cancelável`
                     : `${description} · Subscrição mensal · 4 consultas (54€/sessão, −10%) · cancelável`)
             : service === 'burnout_programa'
               ? `${description} · Programa 8 sessões com relatório final e CBI antes/depois`
@@ -16276,7 +16276,7 @@ async function loadNextSlotsBody(limit, withinHours, opts) {
                 : service === 'terapia_casal_mensal'
                     ? '€260/mês'
                     : service === 'psicologia_mensal'
-                        ? '€56/mês'
+                        ? '€224/mês'
                         : service === 'psicologia' ? '€60' : '€39',
             holdMinutes: Math.round(SLOT_HOLD_MS / 60000)
         };

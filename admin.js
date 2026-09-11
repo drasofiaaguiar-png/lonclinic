@@ -3096,6 +3096,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         psicologia: 6000,
         terapia_casal: 7500,
         terapia_casal_mensal: 26000,
+        psicologia_mensal: 22400,
         burnout: 6000,
         burnout_mensal: 21600,
         burnout_programa: 49000,

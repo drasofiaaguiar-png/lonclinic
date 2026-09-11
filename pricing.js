@@ -23,7 +23,7 @@ const SERVICE_CENTS = {
     renovacao: 1900,
     longevidade: 7900,
     psicologia: 6000,
-    psicologia_mensal: 5600,
+    psicologia_mensal: 22400,
     terapia_casal: 7500,
     terapia_casal_mensal: 26000,
     nutricao_consulta: 4500,

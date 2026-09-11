@@ -150,8 +150,8 @@
                 service: 'psicologia_mensal',
                 tipo: 'psicologia_mensal',
                 serviceLabel: lang === 'en' ? 'Psychology subscription' : lang === 'es' ? 'Suscripci\u00f3n de psicolog\u00eda' : 'Subscri\u00e7\u00e3o de Psicologia',
-                servicePrice: '56 \u20AC/m\u00eas',
-                servicePriceCents: 5600
+                servicePrice: '224 \u20AC/m\u00eas',
+                servicePriceCents: 22400
             };
         }
         if (service === 'terapia_casal') {
