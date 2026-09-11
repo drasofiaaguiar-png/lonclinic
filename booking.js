@@ -1244,10 +1244,11 @@ async function initBookingFlow() {
             if (!res.ok) throw new Error('bookable-days');
             const data = await res.json();
             state.bookableDates = (data && data.dates) || [];
-            state.slotMode = (data && data.mode) || (state.bookableDates.length ? 'staff' : 'clinic');
+            state.slotMode = (data && data.mode)
+                || (isPsychStaffService(service) || state.bookableDates.length ? 'staff' : 'clinic');
         } catch (err) {
             state.bookableDates = [];
-            state.slotMode = 'clinic';
+            state.slotMode = isPsychStaffService(state.service || '') ? 'staff' : 'clinic';
         }
     }
 
@@ -1259,7 +1260,7 @@ async function initBookingFlow() {
 
         // Check if date is blocked
         const dateStr = formatDateLocal(dateObj);
-        if (state.slotMode === 'staff') {
+        if (isPsychStaffService(state.service || '') || state.slotMode === 'staff') {
             return (state.bookableDates || []).includes(dateStr);
         }
 

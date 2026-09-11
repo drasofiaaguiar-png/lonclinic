@@ -1140,7 +1140,7 @@
     }
 
     function usesStaffSlotCalendar() {
-        return state.slotMode === 'staff';
+        return usesPsychStaff() || state.slotMode === 'staff';
     }
 
     function psychologyCopy() {
@@ -1212,7 +1212,7 @@
     function loadBookableDays() {
         if (isPsychology() && !state.specialty) {
             state.bookableDates = [];
-            state.slotMode = 'clinic';
+            state.slotMode = 'staff';
             return Promise.resolve();
         }
         var url = '/api/bookable-days?service=' + encodeURIComponent(bookingService());
@@ -1223,11 +1223,11 @@
             .then(function (r) { return r.ok ? r.json() : null; })
             .then(function (d) {
                 state.bookableDates = (d && d.dates) || [];
-                state.slotMode = (d && d.mode) || (state.bookableDates.length ? 'staff' : 'clinic');
+                state.slotMode = (d && d.mode) || (usesPsychStaff() || state.bookableDates.length ? 'staff' : 'clinic');
             })
             .catch(function () {
                 state.bookableDates = [];
-                state.slotMode = 'clinic';
+                state.slotMode = usesPsychStaff() ? 'staff' : 'clinic';
             });
     }
 

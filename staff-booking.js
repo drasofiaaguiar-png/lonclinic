@@ -230,16 +230,24 @@ function weekdayKeyFromIso(dateIso) {
     return ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][dt.getUTCDay()] || '';
 }
 
+function hasOpenDayRows(days) {
+    return (Array.isArray(days) ? days : []).some((item) => item && item.date && item.enabled !== false);
+}
+
 /**
  * Open hour blocks for one date. A date may hold several rows (e.g. 10–12 and
- * 15–17); any row on that date replaces the weekly template for that day.
+ * 15–17). Any row on that date replaces the weekly template for that day.
+ * Once a person has published dated rows, dates without a row stay closed —
+ * leftover weekly hours must not invent slots the psychologist did not add.
  * A closed row (enabled === false) with no open rows closes the day.
  */
 function hourRangesForDate(weekly, days, dateIso) {
-    const rows = (Array.isArray(days) ? days : []).filter((item) => item && item.date === dateIso);
+    const allDays = Array.isArray(days) ? days : [];
+    const rows = allDays.filter((item) => item && item.date === dateIso);
     if (rows.length) {
         return mergeHourRanges(rows.filter((item) => item.enabled !== false));
     }
+    if (hasOpenDayRows(allDays)) return [];
     const key = weekdayKeyFromIso(dateIso);
     const wh = weekly && weekly[key];
     if (!wh || !wh.enabled) return [];
@@ -276,15 +284,32 @@ function publicPsychologySpecialties(lang) {
     }));
 }
 
+/** Comma-separated specialty ids → known specialty entries (unknown ids dropped). */
+function psychologySpecialtyList(specialtyId) {
+    return String(specialtyId || '')
+        .split(',')
+        .map((item) => item.trim().toLowerCase())
+        .filter(Boolean)
+        .map(psychologySpecialty)
+        .filter(Boolean);
+}
+
+/**
+ * `specialtyId` may hold several ids ("ansiedade,burnout"). The profile matches when
+ * it treats at least one of the chosen areas. An unknown id or "outro" (no areas)
+ * means "any psychologist".
+ */
 function profileMatchesSpecialty(profile, specialtyId) {
     if (!profile || profile.profession !== 'psicologo') return false;
-    const spec = psychologySpecialty(specialtyId);
-    if (!spec || !spec.areas) return true;
+    const ids = String(specialtyId || '').split(',').map((item) => item.trim()).filter(Boolean);
+    const specs = psychologySpecialtyList(specialtyId);
+    if (!ids.length || specs.length < ids.length) return true;
+    if (specs.some((spec) => !spec.areas)) return true;
     const have = new Set([
         ...((profile.primaryAreas || profile.primaryArea) || []),
         ...((profile.secondaryAreas || profile.secondaryArea) || [])
     ].map((item) => String(item || '').trim()).filter(Boolean));
-    return spec.areas.some((area) => have.has(area));
+    return specs.some((spec) => spec.areas.some((area) => have.has(area)));
 }
 
 function openHours(row) {
@@ -416,6 +441,26 @@ function timesFromHours(start, end, stepMinutes) {
     return out;
 }
 
+/** Start times that fit inside the given ranges (no booking/hold filtering). */
+function bookableStartsFromRanges(ranges, opts) {
+    const step = Number(opts && opts.step) || 30;
+    const duration = Number(opts && opts.duration) || step;
+    const hourly = !!(opts && opts.hourly);
+    const gridSet = new Set();
+    for (const range of Array.isArray(ranges) ? ranges : []) {
+        if (!range) continue;
+        for (const t of timesFromHours(range.start, range.end, step)) gridSet.add(t);
+    }
+    const grid = Array.from(gridSet).sort((a, b) => timeToMinutes(a) - timeToMinutes(b));
+    return grid.filter((start) => {
+        if (hourly) {
+            const mins = timeToMinutes(start);
+            if (mins == null || mins % 60 !== 0) return false;
+        }
+        return startFitsDuration(grid, start, duration, step);
+    });
+}
+
 function occupiedTimesFromStart(startHhmm, durationMinutes, stepMinutes) {
     const step = Number(stepMinutes) || 30;
     const dur = Math.max(step, Number(durationMinutes) || step);
@@ -467,6 +512,7 @@ module.exports = {
     timeToMinutes,
     minutesToTime,
     timesFromHours,
+    bookableStartsFromRanges,
     occupiedTimesFromStart,
     startFitsDuration
 };

@@ -7068,10 +7068,17 @@ async function listStaffBookableDates(service, specialty, maxDays) {
     const people = await listStaffBookablePeople(service, specialty);
     if (!people.length) return [];
     const today = lisbonNowParts().dateIso;
+    const step = scheduleStore.slotDuration || 30;
+    const duration = appointmentDurationMinutes({ service });
+    const hourly = staffBooking.isPsychologyStaffService(service);
     const dates = [];
     for (let i = 0; i < days; i++) {
         const dateIso = addDaysIso(today, i);
-        if (people.some((person) => hoursForStaffOnDate(person, dateIso).length)) dates.push(dateIso);
+        const hasStart = people.some((person) => staffBooking.bookableStartsFromRanges(
+            hoursForStaffOnDate(person, dateIso),
+            { step, duration, hourly }
+        ).length);
+        if (hasStart) dates.push(dateIso);
     }
     return dates;
 }
@@ -16299,7 +16306,7 @@ app.get('/api/bookable-days', async (req, res) => {
             return res.json({ dates: [], service, mode: 'clinic' });
         }
         const dates = await listStaffBookableDates(service, specialty, 60);
-        res.json({ dates, service, specialty, mode: dates.length ? 'staff' : 'clinic' });
+        res.json({ dates, service, specialty, mode: 'staff' });
     } catch (err) {
         console.error('GET /api/bookable-days:', err.message);
         res.status(500).json({ error: 'Failed to load days', dates: [] });

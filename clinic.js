@@ -539,7 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         clinicAvailWeeklyHint.hidden = false;
         clinicAvailWeeklyHint.textContent =
-            `Fixed weekly hours set by the clinic: ${parts.join(' · ')}. On any date with a line below, only the lines count for that day.`;
+            `Admin weekly template (${parts.join(' · ')}) is ignored while you have lines below — patients only see those blocks.`;
     }
 
     function renderClinicAvailRows() {
