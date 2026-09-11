@@ -4733,6 +4733,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let dirSearchQuery = '';
     let dirProfessionFilter = '';
     let selectedProfessionalKey = '';
+    let dirEditing = false;
 
     function rememberFreshPassword(pro, password) {
         if (!pro || !password) return;
@@ -4945,6 +4946,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 id: staff.id || (account && account.id) || null,
                 displayName: staff.fullName || staff.displayName || (account && account.displayName) || staff.username || '',
                 email: staff.email || (account && account.email) || '',
+                // The email the login account actually has; password recovery only looks at this one.
+                loginEmail: (account && account.email) || '',
                 doxyRoomUrl: staff.doxyRoomUrl || (account && account.doxyRoomUrl) || '',
                 doxyPending: staff.doxyPending != null
                     ? staff.doxyPending
@@ -4963,6 +4966,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ...account,
                 fullName: account.displayName || account.username || '',
                 displayName: account.displayName || account.username || '',
+                loginEmail: account.email || '',
                 hasLogin: true,
                 active: account.active !== false,
                 hasPhoto: false
@@ -5108,24 +5112,44 @@ document.addEventListener('DOMContentLoaded', async () => {
         const sendLogin = p.hasLogin && p.id && !p.isClinicAdmin
             ? `<button type="button" class="btn btn-primary btn-sm" data-pro-send-login="${escapeHtml(String(p.id))}">Send login email</button>`
             : '';
-        const saveEmail = p.hasLogin && p.id && !p.isClinicAdmin
-            ? `<form class="admin-dir-email-form" data-pro-email-form="${escapeHtml(String(p.id))}">
-                    <input type="email" class="admin-input" name="email" value="${escapeHtml(p.email || '')}" placeholder="rita@email.com" required autocomplete="off" inputmode="email">
-                    <button type="submit" class="btn btn-outline btn-sm">Guardar email</button>
-               </form>`
+        const canEdit = !!p.username && !p.isClinicAdmin;
+        const editBtn = canEdit
+            ? `<button type="button" class="btn btn-outline btn-sm" data-pro-edit="${escapeHtml(p.username)}">Editar ficha</button>`
+            : '';
+        const loginEmailRow = p.hasLogin && !p.isClinicAdmin
+            ? `<div><dt>Email de login</dt><dd>${p.loginEmail
+                ? escapeHtml(p.loginEmail)
+                : '<span class="admin-dir-login-warn">Sem email na conta — a recuperação de password não funciona até o guardar</span>'}</dd></div>`
             : '';
         adminDirDetail.hidden = false;
+        if (dirEditing && canEdit) {
+            adminDirDetail.innerHTML = `
+                <div class="admin-dir-detail-head">
+                    ${professionalPhotoHtml(p, 'admin-dir-detail-photo')}
+                    <div>
+                        <h3>${escapeHtml(title)}</h3>
+                        <p>${escapeHtml(role || 'Professional')} · a editar</p>
+                    </div>
+                    <span class="admin-pro-status${status.off ? ' is-off' : ''}">${escapeHtml(status.text)}</span>
+                </div>
+                ${renderDirectoryEditForm(p)}
+            `;
+            const first = adminDirDetail.querySelector('input[name="fullName"]');
+            if (first) first.focus();
+            return;
+        }
         adminDirDetail.innerHTML = `
             <div class="admin-dir-detail-head">
                 ${professionalPhotoHtml(p, 'admin-dir-detail-photo')}
                 <div>
                     <h3>${escapeHtml(title)}</h3>
-                    <p>${[role, p.hasLogin ? (p.email || 'no email on file') : ''].filter(Boolean).map(escapeHtml).join(' · ') || '—'}</p>
+                    <p>${[role, p.hasLogin ? (p.loginEmail || p.email || 'no email on file') : ''].filter(Boolean).map(escapeHtml).join(' · ') || '—'}</p>
                 </div>
                 <span class="admin-pro-status${status.off ? ' is-off' : ''}">${escapeHtml(status.text)}</span>
             </div>
             <dl class="admin-staff-profile-dl">
-                <div><dt>Email</dt><dd>${dashText(p.email)}</dd></div>
+                ${loginEmailRow}
+                <div><dt>${p.hasLogin && !p.isClinicAdmin ? 'Email (bolsa / ficha)' : 'Email'}</dt><dd>${dashText(p.email)}</dd></div>
                 <div><dt>Telefone</dt><dd>${dashText(p.phone || (p.bolsa && p.bolsa.phone))}</dd></div>
                 <div><dt>Sala Doxy.me</dt><dd>${doxy}</dd></div>
                 <div><dt>NIF</dt><dd>${dashText(p.nif)}</dd></div>
@@ -5141,8 +5165,153 @@ document.addEventListener('DOMContentLoaded', async () => {
             ${areaTagsHtml(p.primaryAreas) ? `<div class="admin-staff-profile-block"><h4>Áreas primárias</h4>${areaTagsHtml(p.primaryAreas)}</div>` : ''}
             ${areaTagsHtml(p.secondaryAreas) ? `<div class="admin-staff-profile-block"><h4>Áreas secundárias</h4>${areaTagsHtml(p.secondaryAreas)}</div>` : ''}
             ${docs ? `<div class="admin-staff-profile-block"><h4>Documentos</h4><ul class="admin-staff-docs">${docs}</ul></div>` : ''}
-            ${saveEmail || sendLogin ? `<div class="admin-dir-detail-actions">${saveEmail}${sendLogin}</div>` : ''}
+            ${editBtn || sendLogin ? `<div class="admin-dir-detail-actions">${editBtn}${sendLogin}</div>` : ''}
         `;
+    }
+
+    function inputField(name, label, value, opts) {
+        const o = opts || {};
+        const type = o.type || 'text';
+        const attrs = [
+            `type="${type}"`,
+            `name="${name}"`,
+            `class="admin-input"`,
+            `value="${escapeHtml(value == null ? '' : String(value))}"`,
+            o.placeholder ? `placeholder="${escapeHtml(o.placeholder)}"` : '',
+            o.required ? 'required' : '',
+            o.maxlength ? `maxlength="${o.maxlength}"` : '',
+            type === 'email' ? 'inputmode="email" autocomplete="off"' : 'autocomplete="off"'
+        ].filter(Boolean).join(' ');
+        return `<label class="${o.wide ? 'is-wide' : ''}"><span>${escapeHtml(label)}</span><input ${attrs}></label>`;
+    }
+
+    function textareaField(name, label, value, rows) {
+        return `<label class="is-wide"><span>${escapeHtml(label)}</span><textarea name="${name}" class="admin-input" rows="${rows || 3}">${escapeHtml(value == null ? '' : String(value))}</textarea></label>`;
+    }
+
+    function renderDirectoryEditForm(p) {
+        const hasAccount = !!(p.hasLogin && p.id && !p.isClinicAdmin);
+        const professionOptions = Object.entries(staffProfessionTitlesCache || STAFF_PROFESSION_LABELS)
+            .map(([key, label]) => `<option value="${escapeHtml(key)}"${String(p.profession || '') === key ? ' selected' : ''}>${escapeHtml(label)}</option>`)
+            .join('');
+        const validUntil = String(p.insuranceValidUntil || '').slice(0, 10);
+        const emailValue = hasAccount ? (p.loginEmail || p.email || '') : (p.email || '');
+        const emailHint = hasAccount
+            ? 'É com este email que o profissional entra no portal e recebe o código de recuperação de password.'
+            : 'Esta ficha ainda não tem login; o email fica apenas na ficha.';
+        return `
+            <form class="admin-dir-edit-form" data-pro-edit-form="${escapeHtml(p.username)}" data-pro-id="${escapeHtml(String(p.id || ''))}">
+                ${inputField('fullName', 'Nome completo', p.fullName || p.displayName || '', { required: true, maxlength: 160 })}
+                <label><span>Profissão</span>
+                    <select name="profession" class="admin-select">
+                        <option value=""${!p.profession ? ' selected' : ''}>—</option>
+                        ${professionOptions}
+                    </select>
+                </label>
+                <label class="is-wide"><span>${hasAccount ? 'Email de login' : 'Email'}</span>
+                    <input type="email" name="email" class="admin-input" value="${escapeHtml(emailValue)}" placeholder="nome@email.com" inputmode="email" autocomplete="off"${hasAccount ? ' required' : ''}>
+                    <small>${escapeHtml(emailHint)}</small>
+                </label>
+                ${hasAccount ? inputField('doxyRoomUrl', 'Sala Doxy.me', p.doxyPending ? '' : (p.doxyRoomUrl || ''), { type: 'url', placeholder: 'https://doxy.me/…', wide: true }) : ''}
+                ${inputField('ordemNumber', 'Cédula / n.º da Ordem', p.ordemNumber, { maxlength: 80 })}
+                ${inputField('nif', 'NIF', p.nif, { maxlength: 20 })}
+                ${inputField('citizenCard', 'Cartão de Cidadão', p.citizenCard, { maxlength: 32 })}
+                ${inputField('address', 'Morada', p.address, { maxlength: 400, wide: true })}
+                ${inputField('insurer', 'Seguradora', p.insurer, { maxlength: 120 })}
+                ${inputField('insurancePolicy', 'Apólice', p.insurancePolicy, { maxlength: 80 })}
+                ${inputField('insuranceValidUntil', 'Validade do seguro', validUntil, { type: 'date' })}
+                ${textareaField('bio', 'Bio', p.bio, 4)}
+                ${textareaField('credentials', 'Credenciais', p.credentials, 3)}
+                ${hasAccount ? `<label class="admin-dir-edit-check is-wide"><input type="checkbox" name="active"${p.active ? ' checked' : ''}> Conta ativa (pode entrar no portal)</label>` : ''}
+                ${p.iban ? `<p class="admin-dir-edit-note is-wide">IBAN: <code>${escapeHtml(p.iban)}</code> — só o profissional o altera, no portal.</p>` : ''}
+                <div class="admin-dir-edit-actions">
+                    <button type="submit" class="btn btn-primary btn-sm">Guardar alterações</button>
+                    <button type="button" class="btn btn-outline btn-sm" data-pro-edit-cancel>Cancelar</button>
+                </div>
+            </form>
+        `;
+    }
+
+    async function submitDirectoryEdit(form) {
+        const username = form.getAttribute('data-pro-edit-form') || '';
+        const id = form.getAttribute('data-pro-id') || '';
+        const p = professionalByKey(selectedProfessionalKey) || {};
+        const hasAccount = !!(p.hasLogin && id && !p.isClinicAdmin);
+        const fd = new FormData(form);
+        const text = (name) => String(fd.get(name) || '').trim();
+        const fullName = text('fullName');
+        if (!fullName) {
+            showProfessionalError('O nome é obrigatório.');
+            return;
+        }
+        const email = text('email').toLowerCase();
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showProfessionalError('Email inválido.');
+            return;
+        }
+        if (hasAccount && !email) {
+            showProfessionalError('Uma conta com login precisa de um email.');
+            return;
+        }
+        const profileBody = {
+            fullName,
+            profession: text('profession'),
+            ordemNumber: text('ordemNumber'),
+            nif: text('nif'),
+            citizenCard: text('citizenCard'),
+            address: text('address'),
+            insurer: text('insurer'),
+            insurancePolicy: text('insurancePolicy'),
+            insuranceValidUntil: text('insuranceValidUntil'),
+            bio: text('bio'),
+            credentials: text('credentials')
+        };
+        // The account PATCH checks that no other login owns the email; the profile PATCH does not.
+        if (!hasAccount && email) profileBody.email = email;
+        const accountBody = {};
+        if (hasAccount) {
+            if (email !== String(p.loginEmail || '').toLowerCase()) accountBody.email = email;
+            const doxy = text('doxyRoomUrl');
+            const currentDoxy = p.doxyPending ? '' : String(p.doxyRoomUrl || '');
+            if (doxy !== currentDoxy) accountBody.doxyRoomUrl = doxy;
+            const active = fd.get('active') === 'on';
+            if (active !== (p.active !== false)) accountBody.active = active;
+            if (fullName !== String(p.displayName || '')) accountBody.displayName = fullName;
+        }
+        const buttons = form.querySelectorAll('button');
+        buttons.forEach((b) => { b.disabled = true; });
+        showProfessionalError('');
+        try {
+            if (Object.keys(accountBody).length) {
+                const res = await fetch(`/api/admin/professionals/${encodeURIComponent(id)}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(accountBody)
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    showProfessionalError(data.error || 'Não foi possível guardar a conta.');
+                    return;
+                }
+            }
+            const res = await fetch(`/api/admin/staff-profiles/${encodeURIComponent(username)}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(profileBody)
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                showProfessionalError(data.error || 'Não foi possível guardar a ficha.');
+                return;
+            }
+            dirEditing = false;
+            await loadAdminProfessionals();
+            showProfessionalError(`Ficha guardada: ${fullName}${accountBody.email ? ` · email de login ${accountBody.email}` : ''}`);
+        } catch (err) {
+            showProfessionalError('Erro de rede. Tente novamente.');
+        } finally {
+            buttons.forEach((b) => { b.disabled = false; });
+        }
     }
 
     function renderAdminProfessionals() {
@@ -5254,7 +5423,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         adminProfessionalsBody.addEventListener('click', (e) => {
             const card = e.target.closest('[data-dir-key]');
             if (!card) return;
-            selectedProfessionalKey = card.getAttribute('data-dir-key') || '';
+            const nextKey = card.getAttribute('data-dir-key') || '';
+            if (nextKey !== selectedProfessionalKey) dirEditing = false;
+            selectedProfessionalKey = nextKey;
             renderAdminProfessionals();
             if (adminDirDetail) adminDirDetail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
@@ -5262,6 +5433,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (adminDirDetail) {
         adminDirDetail.addEventListener('click', (e) => {
+            const editBtn = e.target.closest('[data-pro-edit]');
+            if (editBtn) {
+                dirEditing = true;
+                showProfessionalError('');
+                renderAdminProfessionals();
+                return;
+            }
+            if (e.target.closest('[data-pro-edit-cancel]')) {
+                dirEditing = false;
+                showProfessionalError('');
+                renderAdminProfessionals();
+                return;
+            }
             const sendLoginBtn = e.target.closest('[data-pro-send-login]');
             if (!sendLoginBtn) return;
             const pro = professionalRecordById(sendLoginBtn.getAttribute('data-pro-send-login'));
@@ -5271,43 +5455,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             openSendLoginEmailModal(pro);
         });
-        adminDirDetail.addEventListener('submit', async (e) => {
-            const form = e.target.closest('[data-pro-email-form]');
+        adminDirDetail.addEventListener('submit', (e) => {
+            const form = e.target.closest('[data-pro-edit-form]');
             if (!form) return;
             e.preventDefault();
-            const id = form.getAttribute('data-pro-email-form');
-            const input = form.querySelector('input[name="email"]');
-            const email = input ? input.value.trim() : '';
-            const btn = form.querySelector('button[type="submit"]');
-            if (!id) {
-                showProfessionalError('Could not find this professional.');
-                return;
-            }
-            if (!email) {
-                showProfessionalError('Add an email before saving.');
-                if (input) input.focus();
-                return;
-            }
-            if (btn) btn.disabled = true;
-            showProfessionalError('');
-            try {
-                const res = await fetch(`/api/admin/professionals/${encodeURIComponent(id)}`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email })
-                });
-                const data = await res.json().catch(() => ({}));
-                if (!res.ok) {
-                    showProfessionalError(data.error || 'Could not save email.');
-                    return;
-                }
-                await loadAdminProfessionals();
-                showProfessionalError(`Email saved: ${email}`);
-            } catch (err) {
-                showProfessionalError('Network error. Please try again.');
-            } finally {
-                if (btn) btn.disabled = false;
-            }
+            void submitDirectoryEdit(form);
         });
     }
 
