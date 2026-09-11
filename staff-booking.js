@@ -118,14 +118,56 @@ function isCoupleTherapyService(service) {
     return key === 'terapia_casal' || key === 'terapia_casal_mensal';
 }
 
+function isIndividualPsychologyService(service) {
+    const key = normalizeServiceKey(service);
+    return key === 'psicologia' || key === 'psicologia_mensal';
+}
+
 function isPsychologyStaffService(service) {
     const key = normalizeServiceKey(service);
-    return key === 'psicologia' || isCoupleTherapyService(key);
+    return isIndividualPsychologyService(key) || isCoupleTherapyService(key);
+}
+
+/**
+ * Couples therapy is only offered by named psychologists (default: Dra. Carolina Rocha).
+ * Override with COUPLES_THERAPY_PSYCHOLOGISTS="Nome Um, Nome Dois" (matched on full name or username).
+ */
+const DEFAULT_COUPLES_THERAPISTS = ['Carolina Rocha'];
+
+function normalizePersonName(value) {
+    return String(value || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/\b(dra?|doutora?|psicolog[ao])\.?\s+/g, '')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+}
+
+function coupleTherapistNames() {
+    const raw = process.env.COUPLES_THERAPY_PSYCHOLOGISTS;
+    const list = raw && String(raw).trim()
+        ? String(raw).split(/[,;]/)
+        : DEFAULT_COUPLES_THERAPISTS;
+    return list.map(normalizePersonName).filter(Boolean);
+}
+
+function isCoupleTherapist(person) {
+    if (!person) return false;
+    const allowed = coupleTherapistNames();
+    if (!allowed.length) return true;
+    const candidates = [
+        person.fullName,
+        person.displayName,
+        person.name,
+        person.username
+    ].map(normalizePersonName).filter(Boolean);
+    return allowed.some((want) => candidates.some((have) => have === want || have.indexOf(want) >= 0));
 }
 
 function serviceProfession(service) {
     const key = normalizeServiceKey(service);
-    if (key === 'psicologia' || isCoupleTherapyService(key) || key === 'burnout' || key.startsWith('burnout_')) return 'psicologo';
+    if (isIndividualPsychologyService(key) || isCoupleTherapyService(key) || key === 'burnout' || key.startsWith('burnout_')) return 'psicologo';
     if (key.startsWith('nutricao')) return 'nutricionista';
     if (
         key === 'clinica_geral'
@@ -389,7 +431,9 @@ module.exports = {
     serviceProfession,
     usesStaffCalendars,
     isCoupleTherapyService,
+    isIndividualPsychologyService,
     isPsychologyStaffService,
+    isCoupleTherapist,
     requiresProfessionalChoice,
     specialtyForService,
     emptyWeeklyHours,

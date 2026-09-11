@@ -29,7 +29,7 @@
     <meta name="twitter:image" content="https://www.lonclinic.com/image/image2.webp">
     <link rel="stylesheet" href="landing.css?v=20260906i">
     <link rel="stylesheet" href="styles.css?v=20260903b">
-    <link rel="stylesheet" href="booking.css?v=20260910b">
+    <link rel="stylesheet" href="booking.css?v=20260911a">
     <link rel="preload" as="image" href="/image/image2.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -271,6 +271,22 @@
                         <span id="checkoutDuration"></span>
                     </p>
                     <p class="booking-slot-summary" id="bookingSlotSummary" hidden></p>
+                    <div class="checkout-plan-picker" id="checkoutPlanPicker" hidden></div>
+                    <div class="checkout-pro" id="checkoutPro" hidden></div>
+                    <details class="checkout-alt" id="checkoutAlt" hidden>
+                        <summary id="checkoutAltSummary">Alterar horário, psicólogo ou tema</summary>
+                        <div class="checkout-alt-body">
+                            <div class="checkout-alt-group" id="checkoutAltSlotsWrap" hidden>
+                                <p class="checkout-alt-label" id="checkoutAltSlotsLabel">Outros horários</p>
+                                <div class="checkout-alt-row" id="checkoutAltSlots"></div>
+                            </div>
+                            <div class="checkout-alt-group" id="checkoutAltProsWrap" hidden>
+                                <p class="checkout-alt-label" id="checkoutAltProsLabel">Outro psicólogo nesta hora</p>
+                                <div class="checkout-alt-row" id="checkoutAltPros"></div>
+                            </div>
+                            <p class="checkout-alt-links" id="checkoutAltLinks"></p>
+                        </div>
+                    </details>
                     <p class="booking-slot-change-wrap" id="bookingSlotChangeWrap" hidden>
                         <a href="/marcar/clinica-geral" id="bookingSlotChange">Alterar horário</a>
                     </p>
@@ -784,9 +800,9 @@
     </footer>
 
     <script src="/lon-analytics.js?v=20260906h" defer></script>
-    <script src="i18n.js?v=20260910b"></script>
+    <script src="i18n.js?v=20260911a"></script>
     <script src="lon-nav.js?v=20260816b" defer></script>
-    <script src="/lon-slots.js?v=20260906d" defer></script>
+    <script src="/lon-slots.js?v=20260911a" defer></script>
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
 
@@ -808,6 +824,6 @@
         </div>
     </div>
 
-    <script src="booking.js?v=20260910c"></script>
+    <script src="booking.js?v=20260911a"></script>
 </body>
 </html>

@@ -70,6 +70,15 @@
                     'If two psychologists are free at the same time, you see both and choose.'
                 ]
             },
+            psicologia_mensal: {
+                label: 'Psychology subscription',
+                duration: '50 minutes · billed monthly',
+                bullets: [
+                    'Regular follow-up with a Lon Clinic psychologist — €56/month, billed monthly.',
+                    'Valid for every area of individual psychology (couples therapy has its own price).',
+                    'Cancel at any time. Same 50-minute video format as the one-off session.'
+                ]
+            },
             terapia_casal: {
                 label: 'Couples therapy',
                 duration: '50–60 min',
@@ -219,6 +228,15 @@
                     'Si dos psicólogos tienen la misma hora, ve ambos y elige.'
                 ]
             },
+            psicologia_mensal: {
+                label: 'Suscripción de psicología',
+                duration: '50 minutos · cobrado mensualmente',
+                bullets: [
+                    'Seguimiento regular con un psicólogo de LON Clinic — 56 €/mes, cobrado mensualmente.',
+                    'Válida para todas las áreas de psicología individual (la terapia de pareja tiene su propio precio).',
+                    'Cancelable en cualquier momento. Mismo formato de 50 minutos que la sesión suelta.'
+                ]
+            },
             terapia_casal: {
                 label: 'Terapia de pareja',
                 duration: '50–60 min',
@@ -320,6 +338,7 @@
         nutricao_completo: 'nutricao-completo',
         nutricao_completo_reforcado: 'nutricao-completo-reforcado',
         psicologia: 'psicologia',
+        psicologia_mensal: 'psicologia-mensal',
         terapia_casal: 'terapia-casal',
         terapia_casal_mensal: 'terapia-casal-mensal'
     };
@@ -346,6 +365,8 @@
         'nutricao-completo-reforcado': 'nutricao_completo_reforcado',
         nutricao_completo_reforcado: 'nutricao_completo_reforcado',
         psicologia: 'psicologia',
+        'psicologia-mensal': 'psicologia_mensal',
+        psicologia_mensal: 'psicologia_mensal',
         'terapia-casal': 'terapia_casal',
         terapia_casal: 'terapia_casal',
         'terapia-casal-mensal': 'terapia_casal_mensal',
@@ -432,8 +453,39 @@
         }
     ];
 
+    var PSICOLOGIA_FAMILY = ['psicologia', 'psicologia_mensal'];
+    var PSICOLOGIA_PLAN_CARDS = [
+        {
+            tipo: 'psicologia_mensal',
+            badge: 'Recomendado',
+            title: 'Subscrição de Psicologia',
+            price: '€56',
+            unit: '/mês',
+            note: 'Acompanhamento regular · cancelável a qualquer momento',
+            featured: true
+        },
+        {
+            tipo: 'psicologia',
+            badge: 'Avulsa',
+            title: 'Sessão única',
+            price: '€60',
+            unit: 'por sessão',
+            note: '50 min · sem compromisso',
+            featured: false
+        }
+    ];
+
     var CASAL_FAMILY = ['terapia_casal', 'terapia_casal_mensal'];
     var CASAL_PLAN_CARDS = [
+        {
+            tipo: 'terapia_casal_mensal',
+            badge: 'Recomendado',
+            title: 'Subscrição de casal',
+            price: '€65',
+            unit: '/semana',
+            note: 'Cobrado mensalmente · 260€/mês',
+            featured: true
+        },
         {
             tipo: 'terapia_casal',
             badge: 'Avulsa',
@@ -442,15 +494,6 @@
             unit: 'por sessão',
             note: '50–60 min · os dois na videochamada',
             featured: false
-        },
-        {
-            tipo: 'terapia_casal_mensal',
-            badge: 'Semanal',
-            title: 'Subscrição de casal',
-            price: '€65',
-            unit: '/semana',
-            note: 'Cobrado mensalmente · 260€/mês',
-            featured: true
         }
     ];
 
@@ -537,6 +580,19 @@
                 'Sessão por videochamada com um psicólogo da LON Clinic.',
                 'Escolha primeiro a área de apoio; o calendário mostra só quem trata essa especialidade.',
                 'Se dois psicólogos tiverem a mesma hora, vê ambos e escolhe.'
+            ]
+        },
+        psicologia_mensal: {
+            label: 'Subscrição de Psicologia',
+            price: '€56',
+            priceNote: '/mês',
+            cents: 5600,
+            duration: '50 minutos · cobrado mensalmente',
+            serviceKey: 'psicologia_mensal',
+            bullets: [
+                'Acompanhamento regular com um psicólogo da LON Clinic — 56 €/mês, cobrado mensalmente.',
+                'Válida para todas as áreas de psicologia individual (a terapia de casal tem preço próprio).',
+                'Cancelável a qualquer momento. O mesmo formato de 50 minutos da sessão avulsa.'
             ]
         },
         terapia_casal: {
@@ -719,6 +775,7 @@
 
     function dropdownValueFor(t) {
         if (BURNOUT_FAMILY.indexOf(t) >= 0) return 'burnout';
+        if (PSICOLOGIA_FAMILY.indexOf(t) >= 0) return 'psicologia';
         if (CASAL_FAMILY.indexOf(t) >= 0) return 'terapia_casal';
         if (NUTRICAO_FAMILY.indexOf(t) >= 0) return 'nutricao_programa';
         return t;
@@ -805,7 +862,7 @@
     }
 
     var scheduleWrapEarly = document.getElementById('marcarScheduleWrap');
-    if (scheduleWrapEarly) scheduleWrapEarly.hidden = tipo === 'psicologia';
+    if (scheduleWrapEarly) scheduleWrapEarly.hidden = PSICOLOGIA_FAMILY.indexOf(tipo) >= 0;
 
     function needsConsultLangPolicy() {
         var params = new URLSearchParams(window.location.search);
@@ -841,6 +898,18 @@
         cards.forEach(function (card) {
             var btn = document.createElement('a');
             btn.href = getPrettyMarcarUrl(card.tipo);
+            btn.addEventListener('click', function (ev) {
+                // Keep the slot already picked on this page when switching format.
+                if (card.tipo === activeTipo || !state || !state.date || !state.time) return;
+                ev.preventDefault();
+                var params = new URLSearchParams(window.location.search);
+                params.delete('tipo');
+                params.set('date', formatDateLocal(state.date));
+                params.set('time', state.time);
+                if (state.specialty) params.set('specialty', state.specialty);
+                if (state.professionalId) params.set('professionalId', String(state.professionalId));
+                window.location.href = '/marcar/' + (TYPE_TO_SLUG[card.tipo] || card.tipo) + '?' + params.toString();
+            });
             btn.className = 'marcar-plan-card' + (card.tipo === activeTipo ? ' is-active' : '') + (card.featured ? ' is-featured' : '');
             btn.setAttribute('aria-current', card.tipo === activeTipo ? 'true' : 'false');
             btn.innerHTML =
@@ -869,6 +938,36 @@
         if (nutricaoTrust) nutricaoTrust.hidden = false;
     }
 
+    function localizePlanCards(cards, overridesByTipo) {
+        if (!overridesByTipo) return cards;
+        return cards.map(function (card) {
+            return Object.assign({}, card, overridesByTipo[card.tipo] || {});
+        });
+    }
+
+    if (PSICOLOGIA_FAMILY.indexOf(tipo) >= 0) {
+        var psiLang = getLang();
+        var psiCards = PSICOLOGIA_PLAN_CARDS;
+        var psiKicker = 'Psicologia';
+        var psiHeading = 'Escolhe o formato';
+        if (psiLang === 'en') {
+            psiKicker = 'Psychology';
+            psiHeading = 'Choose the format';
+            psiCards = localizePlanCards(PSICOLOGIA_PLAN_CARDS, {
+                psicologia_mensal: { badge: 'Recommended', title: 'Psychology subscription', unit: '/month', note: 'Regular follow-up · cancel any time' },
+                psicologia: { badge: 'One-off', title: 'Single session', unit: 'per session', note: '50 min · no commitment' }
+            });
+        } else if (psiLang === 'es') {
+            psiKicker = 'Psicología';
+            psiHeading = 'Elige el formato';
+            psiCards = localizePlanCards(PSICOLOGIA_PLAN_CARDS, {
+                psicologia_mensal: { badge: 'Recomendado', title: 'Suscripción de psicología', unit: '/mes', note: 'Seguimiento regular · cancelable en cualquier momento' },
+                psicologia: { badge: 'Suelta', title: 'Sesión única', unit: 'por sesión', note: '50 min · sin compromiso' }
+            });
+        }
+        renderPlanPicker(tipo, psiCards, psiKicker, psiHeading);
+    }
+
     if (isCasalFamily(tipo)) {
         var casalLang = getLang();
         var casalCards = CASAL_PLAN_CARDS;
@@ -877,37 +976,37 @@
         if (casalLang === 'en') {
             casalKicker = 'Couples therapy';
             casalHeading = 'Choose the format';
-            casalCards = [
-                Object.assign({}, CASAL_PLAN_CARDS[0], {
+            casalCards = localizePlanCards(CASAL_PLAN_CARDS, {
+                terapia_casal: {
                     badge: 'One-off',
                     title: 'Couples session',
                     unit: 'per session',
                     note: '50–60 min · both partners on the video call'
-                }),
-                Object.assign({}, CASAL_PLAN_CARDS[1], {
-                    badge: 'Weekly',
+                },
+                terapia_casal_mensal: {
+                    badge: 'Recommended',
                     title: 'Couples subscription',
                     unit: '/week',
                     note: 'Billed monthly · €260/month'
-                })
-            ];
+                }
+            });
         } else if (casalLang === 'es') {
             casalKicker = 'Terapia de pareja';
             casalHeading = 'Elige el formato';
-            casalCards = [
-                Object.assign({}, CASAL_PLAN_CARDS[0], {
+            casalCards = localizePlanCards(CASAL_PLAN_CARDS, {
+                terapia_casal: {
                     badge: 'Suelta',
                     title: 'Sesión de pareja',
                     unit: 'por sesión',
                     note: '50–60 min · los dos en videollamada'
-                }),
-                Object.assign({}, CASAL_PLAN_CARDS[1], {
-                    badge: 'Semanal',
+                },
+                terapia_casal_mensal: {
+                    badge: 'Recomendado',
                     title: 'Suscripción de pareja',
                     unit: '/semana',
                     note: 'Cobrado mensualmente · 260 €/mes'
-                })
-            ];
+                }
+            });
         }
         renderPlanPicker(tipo, casalCards, casalKicker, casalHeading);
     }
@@ -925,6 +1024,8 @@
         professionalsByTime: {},
         professionalId: null,
         professionalName: null,
+        professionalBio: null,
+        professionalPhotoUrl: null,
         slotMode: 'clinic'
     };
 
@@ -933,7 +1034,14 @@
     }
 
     function isPsychology() {
-        return tipo === 'psicologia';
+        return PSICOLOGIA_FAMILY.indexOf(tipo) >= 0;
+    }
+
+    function setSelectedProfessional(pro) {
+        state.professionalId = pro ? pro.id : null;
+        state.professionalName = pro ? pro.name : null;
+        state.professionalBio = pro ? (pro.bio || null) : null;
+        state.professionalPhotoUrl = pro ? (pro.photoUrl || null) : null;
     }
 
     function isCasalFamily(t) {
@@ -1043,7 +1151,7 @@
         if (state.specialty) params.set('specialty', state.specialty);
         else params.delete('specialty');
         var rest = params.toString();
-        var pretty = '/marcar/psicologia' + (rest ? '?' + rest : '');
+        var pretty = '/marcar/' + (TYPE_TO_SLUG[tipo] || 'psicologia') + (rest ? '?' + rest : '');
         var current = window.location.pathname + window.location.search;
         if (current !== pretty) window.history.replaceState(null, '', pretty);
     }
@@ -1088,8 +1196,7 @@
         state.date = null;
         state.dateLabel = '';
         state.time = null;
-        state.professionalId = null;
-        state.professionalName = null;
+        setSelectedProfessional(null);
         state.professionalsByTime = {};
         if (btnNext) btnNext.disabled = true;
         var quick = document.getElementById('marcarQuickSlots');
@@ -1139,13 +1246,9 @@
     function applyProfessionalsForTime(pros) {
         var wrap = document.getElementById('marcarPros');
         var list = Array.isArray(pros) ? pros : [];
-        state.professionalId = null;
-        state.professionalName = null;
+        setSelectedProfessional(null);
         if (!usesPsychStaff()) {
-            if (list.length === 1) {
-                state.professionalId = list[0].id;
-                state.professionalName = list[0].name;
-            }
+            if (list.length === 1) setSelectedProfessional(list[0]);
             hideProfessionals();
             if (btnNext) btnNext.disabled = false;
             return;
@@ -1156,8 +1259,7 @@
             return;
         }
         if (list.length === 1) {
-            state.professionalId = list[0].id;
-            state.professionalName = list[0].name;
+            setSelectedProfessional(list[0]);
             hideProfessionals();
             if (btnNext) btnNext.disabled = false;
             return;
@@ -1166,6 +1268,7 @@
         if (!wrap) return;
         wrap.hidden = false;
         wrap.innerHTML = '<p class="marcar-pros-kicker">' + escapeHtml(psychologyCopy().choosePro) + '</p>';
+        var wantedProId = Number(new URLSearchParams(window.location.search).get('professionalId')) || 0;
         list.forEach(function (pro) {
             var card = document.createElement('button');
             card.type = 'button';
@@ -1181,11 +1284,11 @@
                     el.classList.remove('is-selected');
                 });
                 card.classList.add('is-selected');
-                state.professionalId = pro.id;
-                state.professionalName = pro.name;
+                setSelectedProfessional(pro);
                 if (btnNext) btnNext.disabled = false;
             });
             wrap.appendChild(card);
+            if (wantedProId && Number(pro.id) === wantedProId) card.click();
         });
     }
 
@@ -1356,8 +1459,7 @@
         btn.classList.add('marcar-cal-selected');
 
         state.time = null;
-        state.professionalId = null;
-        state.professionalName = null;
+        setSelectedProfessional(null);
         hideProfessionals();
         btnNext.disabled = true;
         if (window.LonAnalytics) window.LonAnalytics.track('date_select', { surface: 'booking' });
@@ -1469,8 +1571,7 @@
 
     function renderTimeslots() {
         hideProfessionals();
-        state.professionalId = null;
-        state.professionalName = null;
+        setSelectedProfessional(null);
         if (!state.date) {
             setMarcarUrgentHint(false);
             timeslotHeading.textContent = getString('selectDateFirst');
@@ -1583,6 +1684,8 @@
             slotId: formatDateLocal(state.date).replace(/-/g, '') + '-' + String(state.time).replace(':', ''),
             professionalId: state.professionalId || null,
             professionalName: state.professionalName || null,
+            professionalBio: state.professionalBio || null,
+            professionalPhotoUrl: state.professionalPhotoUrl || null,
             specialty: state.specialty || null,
             clinicalIntent: BURNOUT_FAMILY.indexOf(tipo) >= 0
                 ? burnoutClinicalIntent(tipo)

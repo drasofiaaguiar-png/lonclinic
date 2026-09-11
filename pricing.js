@@ -23,6 +23,7 @@ const SERVICE_CENTS = {
     renovacao: 1900,
     longevidade: 7900,
     psicologia: 6000,
+    psicologia_mensal: 5600,
     terapia_casal: 7500,
     terapia_casal_mensal: 26000,
     nutricao_programa: 11500,
@@ -53,7 +54,7 @@ const DISCOUNT_CODES = {
 
 const STRIPE_MIN_CENTS = 50;
 
-const STRIPE_SUBSCRIPTION_SERVICES = new Set(['burnout_mensal', 'terapia_casal_mensal']);
+const STRIPE_SUBSCRIPTION_SERVICES = new Set(['burnout_mensal', 'psicologia_mensal', 'terapia_casal_mensal']);
 
 function isStripeSubscriptionService(serviceKey) {
     return STRIPE_SUBSCRIPTION_SERVICES.has(serviceKey);
@@ -116,6 +117,7 @@ function computeCheckoutTotalCents(opts) {
     const noDiscountServices = new Set([
         'burnout_mensal',
         'burnout_programa',
+        'psicologia_mensal',
         'terapia_casal_mensal',
         'nutricao_programa',
         'nutricao_completo',

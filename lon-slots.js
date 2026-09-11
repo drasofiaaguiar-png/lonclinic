@@ -145,6 +145,15 @@
                 servicePriceCents: 6000
             };
         }
+        if (service === 'psicologia_mensal') {
+            return {
+                service: 'psicologia_mensal',
+                tipo: 'psicologia_mensal',
+                serviceLabel: lang === 'en' ? 'Psychology subscription' : lang === 'es' ? 'Suscripci\u00f3n de psicolog\u00eda' : 'Subscri\u00e7\u00e3o de Psicologia',
+                servicePrice: '56 \u20AC/m\u00eas',
+                servicePriceCents: 5600
+            };
+        }
         if (service === 'terapia_casal') {
             return {
                 service: 'terapia_casal',
@@ -540,7 +549,7 @@
             window.location.href = fallback;
             return;
         }
-        if ((opts.service || '') === 'psicologia') {
+        if ((opts.service || '') === 'psicologia' || (opts.service || '') === 'psicologia_mensal') {
             var psiDest = fallback || '/marcar/psicologia';
             try {
                 var u = new URL(psiDest, window.location.origin);
@@ -690,6 +699,9 @@
         }
         if (/\/consultas(\/|$)/.test(p)) {
             return { service: 'saude_mental', href: '/triagem', cta: talkCta, bookMode: 'link' };
+        }
+        if (/\/marcar\/psicologia-mensal/.test(p)) {
+            return { service: 'psicologia_mensal', href: '/marcar/psicologia-mensal', cta: book };
         }
         if (/\/marcar\/psicologia/.test(p)) {
             return { service: 'psicologia', href: '/marcar/psicologia', cta: book };

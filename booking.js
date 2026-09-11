@@ -29,9 +29,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         slotId: null,
         consultLangPolicy: false,
         professionalId: null,
+        professionalName: null,
+        professionalBio: null,
+        professionalPhotoUrl: null,
         specialty: null,
         bookableDates: [],
-        slotMode: 'clinic'
+        slotMode: 'clinic',
+        checkoutProsAtTime: [],
+        checkoutContextKey: null
     };
 
     // ─── Load schedule data ───
@@ -80,6 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         nutricao_completo: { label: 'Programa Completo (nutrição + psicologia) — mês 1', price: '227 €', cents: 22700 },
         nutricao_completo_reforcado: { label: 'Programa Completo — entrada reforçada', price: '322 €', cents: 32200 },
         psicologia: { label: 'Sessão de Psicologia', price: '60 €', cents: 6000 },
+        psicologia_mensal: { label: 'Subscrição de Psicologia', price: '56 €/mês', cents: 5600 },
         terapia_casal: { label: 'Terapia de casal', price: '75 €', cents: 7500 },
         terapia_casal_mensal: { label: 'Subscrição de terapia de casal', price: '260 €/mês', cents: 26000 }
     };
@@ -154,9 +160,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         nutricao_completo: 'nutricao-completo',
         nutricao_completo_reforcado: 'nutricao-completo-reforcado',
         psicologia: 'psicologia',
+        psicologia_mensal: 'psicologia-mensal',
         terapia_casal: 'terapia-casal',
         terapia_casal_mensal: 'terapia-casal-mensal'
     };
+    /* Subscription first (preferred), one-off second. */
+    const CHECKOUT_PLAN_FAMILIES = {
+        psicologia: ['psicologia_mensal', 'psicologia'],
+        terapia_casal: ['terapia_casal_mensal', 'terapia_casal']
+    };
+    function planFamilyFor(serviceKey) {
+        const key = String(serviceKey || '');
+        if (key === 'psicologia' || key === 'psicologia_mensal') return 'psicologia';
+        if (key === 'terapia_casal' || key === 'terapia_casal_mensal') return 'terapia_casal';
+        return null;
+    }
+    function isPsychStaffService(serviceKey) {
+        return !!planFamilyFor(serviceKey);
+    }
     const TYPE_DROPDOWN_FALLBACK = {
         clinica_geral: 'Clínica Geral / Check-up',
         urgente: 'Consulta Médica Urgente',
@@ -180,6 +201,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function dropdownValueFor(serviceKey) {
         if (!serviceKey) return 'clinica_geral';
         if (serviceKey.indexOf('burnout') === 0) return 'burnout';
+        if (serviceKey.indexOf('psicologia') === 0) return 'psicologia';
         if (serviceKey.indexOf('terapia_casal') === 0) return 'terapia_casal';
         if (serviceKey.indexOf('nutricao_') === 0) return 'nutricao_programa';
         return serviceKey;
@@ -574,18 +596,356 @@ document.addEventListener('DOMContentLoaded', async () => {
         const wrap = document.getElementById('bookingSlotChangeWrap');
         const change = document.getElementById('bookingSlotChange');
         const slug = TYPE_TO_SLUG[state.service] || 'clinica-geral';
+        const psych = isPsychStaffService(state.service);
         if (change) change.href = '/marcar/' + slug;
         if (state.date && state.time) {
             if (el) {
                 el.hidden = true;
                 el.textContent = `${state.serviceLabel} · ${state.dateLabel} · ${state.time} · ${state.servicePrice}`;
             }
-            if (wrap) wrap.hidden = false;
+            if (wrap) wrap.hidden = psych;
         } else {
             if (el) el.hidden = true;
             if (wrap) wrap.hidden = true;
         }
         updateCheckoutSummary();
+        renderCheckoutPsychology();
+    }
+
+    // ═══════════════════════════════════════
+    //  Psychology checkout: chosen professional + plan (subscription first) + minimal alternatives
+    // ═══════════════════════════════════════
+    function checkoutPsiCopy() {
+        const lang = (window.CLINIC_I18N && typeof window.CLINIC_I18N.getLang === 'function')
+            ? window.CLINIC_I18N.getLang()
+            : getBookingLocale();
+        const map = {
+            pt: {
+                yourPsychologist: 'O seu psicólogo',
+                recommended: 'Recomendado',
+                oneOff: 'Avulsa',
+                perMonth: '/mês',
+                perSession: 'por sessão',
+                subTitle: 'Subscrição de Psicologia',
+                subNote: 'Acompanhamento regular · cancelável a qualquer momento',
+                oneTitle: 'Sessão única',
+                oneNote: '50 min · sem compromisso',
+                casalSubTitle: 'Subscrição de casal',
+                casalSubNote: '65 €/semana · cobrado mensalmente',
+                casalOneTitle: 'Sessão de casal',
+                casalOneNote: '50–60 min · os dois na videochamada',
+                altSummary: 'Alterar horário, psicólogo ou tema',
+                altSummaryCasal: 'Alterar horário ou psicólogo',
+                otherTimes: 'Outros horários',
+                otherPros: 'Outro psicólogo nesta hora',
+                changeTheme: 'Mudar tema',
+                fullCalendar: 'Ver calendário completo',
+                keepPro: 'Manter'
+            },
+            en: {
+                yourPsychologist: 'Your psychologist',
+                recommended: 'Recommended',
+                oneOff: 'One-off',
+                perMonth: '/month',
+                perSession: 'per session',
+                subTitle: 'Psychology subscription',
+                subNote: 'Regular follow-up · cancel any time',
+                oneTitle: 'Single session',
+                oneNote: '50 min · no commitment',
+                casalSubTitle: 'Couples subscription',
+                casalSubNote: '€65/week · billed monthly',
+                casalOneTitle: 'Couples session',
+                casalOneNote: '50–60 min · both partners on the call',
+                altSummary: 'Change time, psychologist or topic',
+                altSummaryCasal: 'Change time or psychologist',
+                otherTimes: 'Other times',
+                otherPros: 'Another psychologist at this time',
+                changeTheme: 'Change topic',
+                fullCalendar: 'See full calendar',
+                keepPro: 'Keep'
+            },
+            es: {
+                yourPsychologist: 'Su psicólogo',
+                recommended: 'Recomendado',
+                oneOff: 'Suelta',
+                perMonth: '/mes',
+                perSession: 'por sesión',
+                subTitle: 'Suscripción de psicología',
+                subNote: 'Seguimiento regular · cancelable en cualquier momento',
+                oneTitle: 'Sesión única',
+                oneNote: '50 min · sin compromiso',
+                casalSubTitle: 'Suscripción de pareja',
+                casalSubNote: '65 €/semana · cobrado mensualmente',
+                casalOneTitle: 'Sesión de pareja',
+                casalOneNote: '50–60 min · los dos en videollamada',
+                altSummary: 'Cambiar horario, psicólogo o tema',
+                altSummaryCasal: 'Cambiar horario o psicólogo',
+                otherTimes: 'Otros horarios',
+                otherPros: 'Otro psicólogo a esta hora',
+                changeTheme: 'Cambiar tema',
+                fullCalendar: 'Ver calendario completo',
+                keepPro: 'Mantener'
+            }
+        };
+        return map[lang] || map.pt;
+    }
+
+    function escapeHtml(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, (ch) => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[ch]);
+    }
+
+    function initialsFromName(name) {
+        const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+        if (!parts.length) return 'P';
+        return (parts[0].charAt(0) + (parts[1] ? parts[1].charAt(0) : '')).toUpperCase();
+    }
+
+    function planCardsFor(family) {
+        const c = checkoutPsiCopy();
+        if (family === 'terapia_casal') {
+            return [
+                { key: 'terapia_casal_mensal', badge: c.recommended, title: c.casalSubTitle, price: '260 €', unit: c.perMonth, note: c.casalSubNote, featured: true },
+                { key: 'terapia_casal', badge: c.oneOff, title: c.casalOneTitle, price: '75 €', unit: c.perSession, note: c.casalOneNote, featured: false }
+            ];
+        }
+        return [
+            { key: 'psicologia_mensal', badge: c.recommended, title: c.subTitle, price: '56 €', unit: c.perMonth, note: c.subNote, featured: true },
+            { key: 'psicologia', badge: c.oneOff, title: c.oneTitle, price: '60 €', unit: c.perSession, note: c.oneNote, featured: false }
+        ];
+    }
+
+    function switchCheckoutPlan(nextKey) {
+        if (!services[nextKey] || nextKey === state.service) return;
+        state.serviceDuration = '';
+        state.discountCode = '';
+        state.discountPercent = 0;
+        const msg = document.getElementById('discountMessageStep2');
+        if (msg) msg.style.display = 'none';
+        applyServiceKey(nextKey);
+        state.serviceLabel = i18nServiceLabel(nextKey);
+        if (window.LonAnalytics) {
+            window.LonAnalytics.track('plan_switch', { surface: 'booking', service: nextKey });
+        }
+        updateSlotSummary();
+    }
+
+    function renderCheckoutPlanPicker(family) {
+        const wrap = document.getElementById('checkoutPlanPicker');
+        if (!wrap) return;
+        wrap.innerHTML = '';
+        planCardsFor(family).forEach((card) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'checkout-plan-card' + (card.key === state.service ? ' is-active' : '') + (card.featured ? ' is-featured' : '');
+            btn.setAttribute('aria-pressed', card.key === state.service ? 'true' : 'false');
+            btn.innerHTML =
+                '<span class="checkout-plan-badge">' + escapeHtml(card.badge) + '</span>' +
+                '<span class="checkout-plan-title">' + escapeHtml(card.title) + '</span>' +
+                '<span class="checkout-plan-price">' + escapeHtml(card.price) + '<small>' + escapeHtml(card.unit) + '</small></span>' +
+                '<span class="checkout-plan-note">' + escapeHtml(card.note) + '</span>';
+            btn.addEventListener('click', () => switchCheckoutPlan(card.key));
+            wrap.appendChild(btn);
+        });
+        wrap.hidden = false;
+    }
+
+    function setCheckoutProfessional(pro) {
+        state.professionalId = pro ? (Number(pro.id) || null) : null;
+        state.professionalName = pro ? (pro.name || null) : null;
+        state.professionalBio = pro ? (pro.bio || null) : null;
+        state.professionalPhotoUrl = pro ? (pro.photoUrl || null) : null;
+    }
+
+    function renderCheckoutPro() {
+        const wrap = document.getElementById('checkoutPro');
+        if (!wrap) return;
+        if (!state.professionalName) {
+            wrap.hidden = true;
+            wrap.innerHTML = '';
+            return;
+        }
+        const c = checkoutPsiCopy();
+        const photo = state.professionalPhotoUrl
+            ? '<img class="checkout-pro-photo" src="' + escapeHtml(state.professionalPhotoUrl) + '" alt="">'
+            : '<span class="checkout-pro-fallback" aria-hidden="true">' + escapeHtml(initialsFromName(state.professionalName)) + '</span>';
+        const bio = state.professionalBio ? '<p class="checkout-pro-bio">' + escapeHtml(state.professionalBio) + '</p>' : '';
+        wrap.innerHTML =
+            '<p class="checkout-pro-kicker">' + escapeHtml(c.yourPsychologist) + '</p>' +
+            '<div class="checkout-pro-card">' + photo +
+            '<div class="checkout-pro-copy"><strong>' + escapeHtml(state.professionalName) + '</strong>' + bio + '</div></div>';
+        wrap.hidden = false;
+    }
+
+    function currentSlotIdKey() {
+        return state.date && state.time ? formatDateLocal(state.date) + '|' + state.time + '|' + (state.specialty || '') : '';
+    }
+
+    async function loadCheckoutSlotContext() {
+        if (!state.date || !state.time) return;
+        const key = currentSlotIdKey();
+        if (state.checkoutContextKey === key) {
+            renderCheckoutAltPros();
+            return;
+        }
+        state.checkoutContextKey = key;
+        try {
+            const res = await fetch(
+                '/api/bookable-slots?date=' + encodeURIComponent(formatDateLocal(state.date)) +
+                '&service=' + encodeURIComponent(state.service) +
+                (state.specialty ? '&specialty=' + encodeURIComponent(state.specialty) : '')
+            );
+            if (!res.ok) return;
+            const data = await res.json();
+            const list = (data && data.professionalsByTime && data.professionalsByTime[state.time]) || [];
+            state.checkoutProsAtTime = list;
+            let chosen = list.find((p) => Number(p.id) === Number(state.professionalId)) || null;
+            if (!chosen && list.length) chosen = list[0];
+            if (chosen && (Number(chosen.id) !== Number(state.professionalId) || !state.professionalName || !state.professionalBio)) {
+                setCheckoutProfessional(chosen);
+                renderCheckoutPro();
+            }
+            renderCheckoutAltPros();
+        } catch (e) { /* professional card stays as prefilled */ }
+    }
+
+    function renderCheckoutAltPros() {
+        const wrap = document.getElementById('checkoutAltProsWrap');
+        const row = document.getElementById('checkoutAltPros');
+        const label = document.getElementById('checkoutAltProsLabel');
+        if (!wrap || !row) return;
+        const others = (state.checkoutProsAtTime || []).filter((p) => Number(p.id) !== Number(state.professionalId));
+        if (!others.length) {
+            wrap.hidden = true;
+            row.innerHTML = '';
+            return;
+        }
+        if (label) label.textContent = checkoutPsiCopy().otherPros;
+        row.innerHTML = '';
+        others.slice(0, 3).forEach((pro) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'checkout-alt-chip';
+            btn.textContent = pro.name;
+            btn.addEventListener('click', () => {
+                setCheckoutProfessional(pro);
+                refreshSlotHold();
+                renderCheckoutPro();
+                renderCheckoutAltPros();
+            });
+            row.appendChild(btn);
+        });
+        wrap.hidden = false;
+    }
+
+    function slotLabelForChip(slot) {
+        const d = parseStoredDate(slot.date);
+        if (!d) return slot.time;
+        const lang = window.CLINIC_I18N ? window.CLINIC_I18N.getLang() : 'pt';
+        const locale = lang === 'es' ? 'es-ES' : lang === 'en' ? 'en-GB' : 'pt-PT';
+        return d.toLocaleDateString(locale, { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + slot.time;
+    }
+
+    function applyCheckoutAltSlot(slot) {
+        const d = parseStoredDate(slot.date);
+        if (!d) return;
+        const lang = window.CLINIC_I18N ? window.CLINIC_I18N.getLang() : 'pt';
+        const locale = lang === 'es' ? 'es-ES' : lang === 'en' ? 'en-GB' : 'pt-PT';
+        state.date = d;
+        state.time = String(slot.time).length === 4 ? '0' + slot.time : slot.time;
+        state.dateLabel = d.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        state.calMonth = d.getMonth();
+        state.calYear = d.getFullYear();
+        state.slotId = slotIdFromDateTime(slot.date, state.time);
+        state.holdId = null;
+        const pros = Array.isArray(slot.professionals) ? slot.professionals : [];
+        const keep = pros.find((p) => Number(p.id) === Number(state.professionalId));
+        setCheckoutProfessional(keep || pros[0] || null);
+        state.checkoutProsAtTime = pros;
+        state.checkoutContextKey = null;
+        refreshSlotHold();
+        if (window.LonAnalytics) window.LonAnalytics.track('slot_select', { surface: 'checkout_alt', time: state.time });
+        updateSlotSummary();
+    }
+
+    async function loadCheckoutAltSlots() {
+        const wrap = document.getElementById('checkoutAltSlotsWrap');
+        const row = document.getElementById('checkoutAltSlots');
+        const label = document.getElementById('checkoutAltSlotsLabel');
+        if (!wrap || !row) return;
+        try {
+            const res = await fetch(
+                '/api/next-slots?limit=6&withinHours=336&service=' + encodeURIComponent(state.service) +
+                (state.specialty ? '&specialty=' + encodeURIComponent(state.specialty) : '')
+            );
+            if (!res.ok) return;
+            const data = await res.json();
+            const current = state.date && state.time ? slotIdFromDateTime(formatDateLocal(state.date), state.time) : '';
+            const slots = ((data && data.slots) || []).filter((s) => s && s.id !== current).slice(0, 4);
+            row.innerHTML = '';
+            if (!slots.length) {
+                wrap.hidden = true;
+                return;
+            }
+            if (label) label.textContent = checkoutPsiCopy().otherTimes;
+            slots.forEach((slot) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'checkout-alt-chip';
+                btn.textContent = slotLabelForChip(slot);
+                btn.addEventListener('click', () => applyCheckoutAltSlot(slot));
+                row.appendChild(btn);
+            });
+            wrap.hidden = false;
+        } catch (e) { /* alternatives are optional */ }
+    }
+
+    function renderCheckoutAltLinks(family) {
+        const links = document.getElementById('checkoutAltLinks');
+        if (!links) return;
+        const c = checkoutPsiCopy();
+        const slug = TYPE_TO_SLUG[state.service] || 'psicologia';
+        const slotParams = new URLSearchParams();
+        if (state.date && state.time) {
+            slotParams.set('date', formatDateLocal(state.date));
+            slotParams.set('time', state.time);
+        }
+        const parts = [];
+        if (family === 'psicologia') {
+            // No specialty in the URL → marcar shows the topic picker again, keeping the slot.
+            const q = slotParams.toString();
+            parts.push('<a href="/marcar/' + slug + (q ? '?' + q : '') + '">' + escapeHtml(c.changeTheme) + '</a>');
+        }
+        const calParams = new URLSearchParams(slotParams);
+        if (state.specialty && family === 'psicologia') calParams.set('specialty', state.specialty);
+        if (state.professionalId) calParams.set('professionalId', String(state.professionalId));
+        const cq = calParams.toString();
+        parts.push('<a href="/marcar/' + slug + (cq ? '?' + cq : '') + '">' + escapeHtml(c.fullCalendar) + '</a>');
+        links.innerHTML = parts.join('<span class="checkout-alt-sep"> · </span>');
+    }
+
+    function renderCheckoutPsychology() {
+        const family = planFamilyFor(state.service);
+        const picker = document.getElementById('checkoutPlanPicker');
+        const proWrap = document.getElementById('checkoutPro');
+        const alt = document.getElementById('checkoutAlt');
+        if (!family || !state.date || !state.time) {
+            if (picker) picker.hidden = true;
+            if (proWrap) proWrap.hidden = true;
+            if (alt) alt.hidden = true;
+            return;
+        }
+        renderCheckoutPlanPicker(family);
+        renderCheckoutPro();
+        if (alt) {
+            const summary = document.getElementById('checkoutAltSummary');
+            if (summary) summary.textContent = family === 'terapia_casal' ? checkoutPsiCopy().altSummaryCasal : checkoutPsiCopy().altSummary;
+            renderCheckoutAltLinks(family);
+            alt.hidden = false;
+        }
+        loadCheckoutSlotContext();
+        loadCheckoutAltSlots();
     }
 
     // ═══════════════════════════════════════
@@ -693,7 +1053,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const service = state.service || 'clinica_geral';
         try {
             let url = '/api/bookable-days?service=' + encodeURIComponent(service);
-            if ((service === 'psicologia' || service === 'terapia_casal' || service === 'terapia_casal_mensal') && state.specialty) {
+            if (isPsychStaffService(service) && state.specialty) {
                 url += '&specialty=' + encodeURIComponent(state.specialty);
             }
             const res = await fetch(url);
@@ -933,7 +1293,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const pros = byTime[slot] || [];
                     if (pros.length === 1) {
                         state.professionalId = pros[0].id;
-                    } else if (state.service !== 'psicologia' && state.service !== 'terapia_casal' && state.service !== 'terapia_casal_mensal') {
+                    } else if (!isPsychStaffService(state.service)) {
                         state.professionalId = null;
                     }
                     timeslotGrid.querySelectorAll('.timeslot-btn').forEach(b => b.classList.remove('selected'));
@@ -1430,6 +1790,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function validateDiscountCode(code) {
         const noDiscount = {
             burnout_mensal: 1,
+            psicologia_mensal: 1,
             terapia_casal_mensal: 1,
             burnout_programa: 1,
             nutricao_programa: 1,
@@ -1782,7 +2143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 durationMinutes = 15;
             } else if (data.service === 'saude_mental') {
                 durationMinutes = 45;
-            } else if (data.service === 'psicologia' || data.service === 'terapia_casal' || data.service === 'terapia_casal_mensal') {
+            } else if (isPsychStaffService(data.service)) {
                 durationMinutes = 60;
             } else if (data.service === 'burnout' || data.service === 'burnout_mensal' || data.service === 'burnout_programa') {
                 durationMinutes = 60;
@@ -2003,6 +2364,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (prefill.goal) state.prefillGoal = prefill.goal;
             if (prefill.concerns) state.prefillConcerns = prefill.concerns;
             if (prefill.professionalId) state.professionalId = Number(prefill.professionalId) || null;
+            if (prefill.professionalName) state.professionalName = String(prefill.professionalName);
+            if (prefill.professionalBio) state.professionalBio = String(prefill.professionalBio);
+            if (prefill.professionalPhotoUrl) state.professionalPhotoUrl = String(prefill.professionalPhotoUrl);
             if (prefill.specialty) state.specialty = prefill.specialty;
             if (prefill.locale) {
                 const loc = document.getElementById('bookingLocale');
