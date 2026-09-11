@@ -1796,6 +1796,15 @@ textarea:focus {
         max-width: 920px;
         align-items: stretch;
     }
+
+    .lon-testimonials-grid:has(> :nth-child(2)) > .lon-testimonial-card {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .lon-testimonials-grid:has(> :nth-child(2)) > .lon-testimonial-card .lon-testimonial-meta {
+        margin-top: auto;
+    }
 }
 
 .lon-testimonial-card {
@@ -1849,6 +1858,21 @@ textarea:focus {
 
 .lon-testimonial-author {
     font-weight: 600;
+    color: #1a6641;
+}
+
+.lon-testimonial-source {
+    margin-left: 6px;
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: #64748b;
+    text-decoration: underline;
+    text-decoration-color: rgba(100, 116, 139, 0.4);
+    text-underline-offset: 2px;
+}
+
+.lon-testimonial-source:hover,
+.lon-testimonial-source:focus-visible {
     color: #1a6641;
 }
 
