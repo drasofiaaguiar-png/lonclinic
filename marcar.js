@@ -963,16 +963,25 @@
             var btn = document.createElement('a');
             btn.href = getPrettyMarcarUrl(card.tipo);
             btn.addEventListener('click', function (ev) {
-                // Keep the slot already picked on this page when switching format.
-                if (card.tipo === activeTipo || !state || !state.date || !state.time) return;
+                if (card.tipo === activeTipo) {
+                    ev.preventDefault();
+                    return;
+                }
                 ev.preventDefault();
                 var params = new URLSearchParams(window.location.search);
                 params.delete('tipo');
-                params.set('date', formatDateLocal(state.date));
-                params.set('time', state.time);
-                if (state.specialty) params.set('specialty', state.specialty);
-                if (state.professionalId) params.set('professionalId', String(state.professionalId));
-                window.location.href = '/marcar/' + (TYPE_TO_SLUG[card.tipo] || card.tipo) + '?' + params.toString();
+                // Keep the slot already picked on this page when switching format.
+                if (state && state.date && state.time) {
+                    params.set('date', formatDateLocal(state.date));
+                    params.set('time', state.time);
+                    if (state.specialty) params.set('specialty', state.specialty);
+                    if (state.professionalId) params.set('professionalId', String(state.professionalId));
+                }
+                // Stay on the same step after the reload (the card is chosen in step 1, the user
+                // still has to press "Continuar").
+                if (shell && shell.booted) params.set('step', shellSteps()[shell.step] || 'format');
+                var rest = params.toString();
+                window.location.href = '/marcar/' + (TYPE_TO_SLUG[card.tipo] || card.tipo) + (rest ? '?' + rest : '');
             });
             btn.className = 'marcar-plan-card' + (card.tipo === activeTipo ? ' is-active' : '') + (card.featured ? ' is-featured' : '');
             btn.setAttribute('aria-current', card.tipo === activeTipo ? 'true' : 'false');
@@ -1036,6 +1045,14 @@
             });
         }
         renderPlanPicker(tipo, psiCards, psiKicker, psiHeading);
+        // In psychology the "consultation type" is the support area: swap the generic
+        // service pills for the specialty picker, inside step 1.
+        var psiTypeLabel = document.getElementById('marcarTypeLabel');
+        var psiTypePills = document.getElementById('marcarTypePills');
+        var psiSpecialtySection = document.getElementById('marcarSpecialtySection');
+        if (psiTypeLabel) psiTypeLabel.hidden = true;
+        if (psiTypePills) psiTypePills.hidden = true;
+        if (psiSpecialtySection) psiSpecialtySection.hidden = false;
     }
 
     if (isCasalFamily(tipo)) {
@@ -1284,7 +1301,7 @@
     }
 
     function initPsychologyFlow() {
-        // Step visibility (apoio → data e hora) is handled by the shell stepper.
+        // The support area lives in step 1 (with the format); step visibility is handled by the shell stepper.
         applySpecialtyCopy();
         var fromUrl = new URLSearchParams(window.location.search).get('specialty');
         return fetch('/api/psychology/specialties?lang=' + encodeURIComponent(getLang()))
@@ -1886,15 +1903,17 @@
     }
 
     /* ──────────────────────────────────────────────────────────────────────
-       Shell: 3 passos (Serviço e formato → Apoio → Data e hora), resumo
-       lateral e barra de ação fixa. Só orquestra visibilidade e copy; a
-       lógica de horários/profissionais continua a ser a do motor acima.
+       Shell: 2 passos (Serviço e formato → Data e hora), resumo lateral e
+       barra de ação fixa. Em psicologia o passo 1 inclui a área de apoio
+       (o "tipo de consulta" dentro da psicologia) e o formato. Só orquestra
+       visibilidade e copy; a lógica de horários/profissionais continua a
+       ser a do motor acima.
     ────────────────────────────────────────────────────────────────────── */
     var SHELL_COPY = {
         pt: {
             eyebrow: 'Marcação',
             lead: 'Poucos passos, cerca de dois minutos. Só paga no fim e pode cancelar até 24 horas antes da consulta.',
-            steps: { format: 'Serviço e formato', support: 'Apoio e profissional', schedule: 'Data e hora' },
+            steps: { format: 'Serviço e formato', schedule: 'Data e hora' },
             back: 'Voltar',
             next: 'Continuar',
             toPayment: 'Continuar para pagamento',
@@ -1915,7 +1934,7 @@
         en: {
             eyebrow: 'Booking',
             lead: 'A few steps, about two minutes. You only pay at the end and can cancel up to 24 hours before the appointment.',
-            steps: { format: 'Service and format', support: 'Support and professional', schedule: 'Date and time' },
+            steps: { format: 'Service and format', schedule: 'Date and time' },
             back: 'Back',
             next: 'Continue',
             toPayment: 'Continue to payment',
@@ -1936,7 +1955,7 @@
         es: {
             eyebrow: 'Reserva',
             lead: 'Pocos pasos, unos dos minutos. Solo paga al final y puede cancelar hasta 24 horas antes de la consulta.',
-            steps: { format: 'Servicio y formato', support: 'Apoyo y profesional', schedule: 'Fecha y hora' },
+            steps: { format: 'Servicio y formato', schedule: 'Fecha y hora' },
             back: 'Volver',
             next: 'Continuar',
             toPayment: 'Continuar al pago',
@@ -1961,24 +1980,21 @@
     }
 
     function shellSteps() {
-        var steps = ['format'];
-        if (isPsychology()) steps.push('support');
-        steps.push('schedule');
-        return steps;
+        return ['format', 'schedule'];
     }
 
     var shell = { step: 0, booted: false };
 
     function shellStepDone(name) {
-        if (name === 'format') return true;
-        if (name === 'support') return !!state.specialty;
+        // Psychology: the support area is chosen in step 1 (it is the "consultation type").
+        if (name === 'format') return !isPsychology() || !!state.specialty;
         if (name === 'schedule') return !!(state.date && state.time && (!usesPsychStaff() || state.professionalId));
         return false;
     }
 
     function shellHint(name) {
         var copy = shellCopy();
-        if (name === 'support' && !state.specialty) return copy.needSpecialty;
+        if (name === 'format' && isPsychology() && !state.specialty) return copy.needSpecialty;
         if (name === 'schedule') {
             if (!state.date) return copy.needDate;
             if (!state.time) return copy.needTime;
@@ -2109,10 +2125,23 @@
         var params = new URLSearchParams(window.location.search);
         var steps = shellSteps();
         var start = 0;
-        // Returning with a slot (plan switch) or with an area already chosen → jump to the calendar.
-        if (params.get('date') || (isPsychology() && params.get('specialty'))) start = steps.length - 1;
+        var wantedStep = params.get('step');
+        if (wantedStep && steps.indexOf(wantedStep) >= 0) {
+            // Explicit step (kept across a format switch) wins.
+            start = steps.indexOf(wantedStep);
+        } else if (params.get('date') && (!isPsychology() || params.get('specialty'))) {
+            // Returning with a slot already picked → jump to the calendar. In psychology this only
+            // makes sense once the support area is known; a slot coming from the homepage without
+            // an area starts in step 1 (choose area + format) and the slot is applied afterwards.
+            start = steps.length - 1;
+        }
         shell.step = start;
         shell.booted = true;
+        if (wantedStep && window.history && typeof window.history.replaceState === 'function') {
+            params.delete('step');
+            var rest = params.toString();
+            window.history.replaceState(null, '', window.location.pathname + (rest ? '?' + rest : ''));
+        }
 
         var back = document.getElementById('marcarStepBack');
         var next = document.getElementById('marcarStepNext');
