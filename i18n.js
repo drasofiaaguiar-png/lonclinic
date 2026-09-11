@@ -1136,20 +1136,53 @@
     /* ══════════════════════════════════════════
        TOGGLE UI
     ══════════════════════════════════════════ */
+    const LANG_FLAGS = { pt: '🇵🇹', en: '🇬🇧', es: '🇪🇸' };
+
+    function setToggleOpen(toggle, open) {
+        toggle.classList.toggle('is-open', open);
+        const current = toggle.querySelector('.lang-current');
+        if (current) current.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
+    function closeAllToggles(except) {
+        document.querySelectorAll('.lang-toggle.is-open').forEach(t => {
+            if (t !== except) setToggleOpen(t, false);
+        });
+    }
+
     function bindLangToggleClick(el) {
         el.addEventListener('click', (e) => {
+            const current = e.target.closest('.lang-current');
+            if (current) {
+                const open = !el.classList.contains('is-open');
+                closeAllToggles(el);
+                setToggleOpen(el, open);
+                return;
+            }
             const btn = e.target.closest('.lang-btn');
             if (!btn) return;
             const lang = btn.dataset.lang;
             if (lang && lang !== currentLang) setLang(lang);
+            setToggleOpen(el, false);
         });
     }
 
+    // Close the compact (mobile) dropdown when tapping outside or pressing Escape
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.lang-toggle')) closeAllToggles();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeAllToggles();
+    });
+
     function createToggleHTML() {
         return `<div class="lang-toggle" role="group" aria-label="Language selector">
-            <button type="button" class="lang-btn${currentLang === 'pt' ? ' active' : ''}" data-lang="pt" aria-pressed="${currentLang === 'pt'}"><span class="lang-flag" aria-hidden="true">🇵🇹</span> PT</button>
-            <button type="button" class="lang-btn${currentLang === 'en' ? ' active' : ''}" data-lang="en" aria-pressed="${currentLang === 'en'}"><span class="lang-flag" aria-hidden="true">🇬🇧</span> EN</button>
-            <button type="button" class="lang-btn${currentLang === 'es' ? ' active' : ''}" data-lang="es" aria-pressed="${currentLang === 'es'}"><span class="lang-flag" aria-hidden="true">🇪🇸</span> ES</button>
+            <button type="button" class="lang-current" aria-label="Language" aria-haspopup="true" aria-expanded="false"><span class="lang-flag" aria-hidden="true">${LANG_FLAGS[currentLang] || LANG_FLAGS.en}</span></button>
+            <div class="lang-options">
+                <button type="button" class="lang-btn${currentLang === 'pt' ? ' active' : ''}" data-lang="pt" aria-pressed="${currentLang === 'pt'}"><span class="lang-flag" aria-hidden="true">🇵🇹</span> PT</button>
+                <button type="button" class="lang-btn${currentLang === 'en' ? ' active' : ''}" data-lang="en" aria-pressed="${currentLang === 'en'}"><span class="lang-flag" aria-hidden="true">🇬🇧</span> EN</button>
+                <button type="button" class="lang-btn${currentLang === 'es' ? ' active' : ''}" data-lang="es" aria-pressed="${currentLang === 'es'}"><span class="lang-flag" aria-hidden="true">🇪🇸</span> ES</button>
+            </div>
         </div>`;
     }
 
@@ -1180,9 +1213,9 @@
             mobileContent.insertBefore(mobileToggle, mobileContent.firstChild);
         }
 
-        // Lon mobile drawer
+        // Lon mobile drawer — only when the header has no compact flag toggle
         const lonMobileMenu = document.getElementById('lonMobileMenu');
-        if (lonMobileMenu && !mobileContent) {
+        if (lonMobileMenu && !mobileContent && !lonNavActions) {
             const lonWrapper = document.createElement('div');
             lonWrapper.innerHTML = createToggleHTML();
             const lonMobileToggle = lonWrapper.firstElementChild;
@@ -1197,6 +1230,9 @@
             const active = btn.dataset.lang === lang;
             btn.classList.toggle('active', active);
             btn.setAttribute('aria-pressed', active);
+        });
+        document.querySelectorAll('.lang-toggle .lang-current .lang-flag').forEach(flag => {
+            flag.textContent = LANG_FLAGS[lang] || LANG_FLAGS.en;
         });
     }
 

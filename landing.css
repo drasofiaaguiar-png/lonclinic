@@ -332,6 +332,97 @@ textarea:focus {
     color: rgba(21, 19, 27, 0.8);
 }
 
+/* Current-flag button only exists for the compact (mobile) header toggle */
+.lang-toggle .lang-current {
+    display: none;
+}
+
+.lang-toggle .lang-options {
+    display: contents;
+}
+
+/* ── Compact header toggle: one flag, options on tap ── */
+@media (max-width: 959px) {
+    .lon-nav-actions .lang-toggle {
+        position: relative;
+        gap: 0;
+        background: none;
+        border: none;
+        border-radius: 0;
+        padding: 0;
+        box-shadow: none;
+    }
+
+    .lon-nav.is-scrolled .lon-nav-actions .lang-toggle {
+        background: none;
+        border-color: transparent;
+    }
+
+    .lon-nav-actions .lang-toggle .lang-current {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        padding: 0;
+        border-radius: 12px;
+        border: 1px solid rgba(53, 80, 60, 0.28);
+        background: rgba(255, 255, 255, 0.8);
+        cursor: pointer;
+        transition: background 0.2s ease, border-color 0.2s ease;
+    }
+
+    .lon-nav-actions .lang-toggle .lang-current .lang-flag {
+        font-size: 1.15rem;
+        line-height: 1;
+    }
+
+    .lon-nav-actions .lang-toggle.is-open .lang-current {
+        background: #fff;
+        border-color: rgba(53, 80, 60, 0.45);
+    }
+
+    .lon-nav-actions .lang-toggle .lang-options {
+        display: none;
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 128px;
+        padding: 6px;
+        background: #fff;
+        border: 1px solid var(--lon-border);
+        border-radius: 14px;
+        box-shadow: 0 16px 34px rgba(20, 34, 24, 0.16);
+        z-index: 1000;
+    }
+
+    .lon-nav-actions .lang-toggle.is-open .lang-options {
+        display: flex;
+    }
+
+    .lon-nav-actions .lang-toggle .lang-btn {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 9px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        font-size: 0.78rem;
+    }
+
+    .lon-nav-actions .lang-toggle .lang-btn .lang-flag {
+        font-size: 1.05rem;
+    }
+
+    /* Header keeps only logo + flag + burger while the burger is visible.
+       Pages without a burger keep their buttons. */
+    .lon-nav-actions:has(.lon-nav-toggle) .lon-btn-ghost,
+    .lon-nav-actions:has(.lon-nav-toggle) .lon-btn-primary {
+        display: none;
+    }
+}
+
 /* Mobile drawer lang toggle */
 #lonMobileMenu .lang-toggle,
 .lang-toggle-mobile {
@@ -2669,10 +2760,6 @@ html[lang="pt-PT"] .lon-testimonial-translation-note {
 
     .dr-cta-row {
         display: grid;
-    }
-
-    .lon-nav-actions .lon-btn-ghost {
-        display: none;
     }
 }
 
