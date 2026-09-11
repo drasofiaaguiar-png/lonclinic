@@ -12087,24 +12087,41 @@ async function setProfessionalPasswordHashInternal(professional, passwordHash) {
     return professional;
 }
 
+/** The client always sees the same neutral answer, so the reason only goes to the logs. */
+function logPasswordResetSkipped(email, reason) {
+    console.log(`   🔕 Password reset not sent to ${email}: ${reason}`);
+}
+
 app.post('/api/clinic/password-reset/request', rateLimitClinicPasswordResetRequest, async (req, res) => {
     const email = normalizeStaffEmail((req.body && req.body.email) || '');
     if (!isValidStaffEmail(email)) {
+        console.log(`   🔕 Password reset rejected: invalid email "${String((req.body && req.body.email) || '').slice(0, 120)}"`);
         return res.status(400).json({ error: 'Introduza um email válido.' });
     }
     if (!isEmailConfigured) {
+        logPasswordResetSkipped(email, 'email transport not configured (RESEND_API_KEY / SMTP)');
         return res.status(503).json({ error: 'O envio de email não está configurado neste momento.' });
     }
     if (isClinicAdminUsername(email) || email === normalizeStaffEmail(CLINIC_USERNAME)) {
+        logPasswordResetSkipped(email, 'clinic admin account (password comes from CLINIC_PASSWORD)');
         return res.json(PASSWORD_RESET_ACCEPTED);
     }
     if (passwordResetRequestsRecent(email) >= PASSWORD_RESET_MAX_PER_EMAIL) {
+        logPasswordResetSkipped(email, `more than ${PASSWORD_RESET_MAX_PER_EMAIL} requests in 15 minutes`);
         return res.json(PASSWORD_RESET_ACCEPTED);
     }
     rememberPasswordResetRequest(email);
     try {
         const pro = await findProfessionalForClinicLogin(email);
         if (!pro || pro.active === false || isClinicAdminUsername(pro.username)) {
+            logPasswordResetSkipped(
+                email,
+                !pro
+                    ? 'no professional file has this email (set it in Admin → Diretório → Guardar email)'
+                    : pro.active === false
+                        ? `professional ${pro.username} is inactive`
+                        : `professional ${pro.username} is the admin account`
+            );
             return res.json(PASSWORD_RESET_ACCEPTED);
         }
         if (!isValidStaffEmail(pro.email)) {
@@ -12116,11 +12133,16 @@ app.post('/api/clinic/password-reset/request', rateLimitClinicPasswordResetReque
         const code = generatePasswordResetCode();
         const expiresAt = new Date(Date.now() + PASSWORD_RESET_CODE_TTL_MS);
         await createPasswordResetInternal(pro, email, hashPasswordResetCode(code), expiresAt);
-        await sendProfessionalPasswordResetEmail({
-            to: email,
-            name: pro.displayName || pro.username,
-            code
-        });
+        try {
+            await sendProfessionalPasswordResetEmail({
+                to: email,
+                name: pro.displayName || pro.username,
+                code
+            });
+        } catch (mailErr) {
+            console.error(`   ⚠️  Password reset email to ${email} (${pro.username}) failed:`, mailErr.message);
+            return res.status(500).json({ error: 'Não foi possível enviar o código. Tente novamente.' });
+        }
         console.log(`   ✉️  Password reset code sent to ${email} (${pro.username})`);
         return res.json(PASSWORD_RESET_ACCEPTED);
     } catch (err) {
