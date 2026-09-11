@@ -2747,6 +2747,27 @@ async function markProfessionalPasswordResetUsed(id) {
     return r.rowCount > 0;
 }
 
+/** Most recent reset codes issued for an email (admin diagnostics; hashes are never returned). */
+async function listProfessionalPasswordResets(email, limit = 10) {
+    const p = getPool();
+    const e = String(email || '').trim().toLowerCase();
+    if (!e) return [];
+    const n = Math.min(Math.max(Number(limit) || 10, 1), 50);
+    const r = await p.query(
+        `SELECT id, professional_id, email, expires_at, attempts, used_at, created_at
+           FROM professional_password_resets
+          WHERE LOWER(TRIM(email)) = $1
+          ORDER BY created_at DESC
+          LIMIT $2`,
+        [e, n]
+    );
+    return r.rows.map((row) => {
+        const item = rowToPasswordReset(row);
+        delete item.codeHash;
+        return item;
+    });
+}
+
 async function deleteProfessional(id) {
     const p = getPool();
     const n = Number(id);
@@ -3892,6 +3913,7 @@ module.exports = {
     findActiveProfessionalPasswordReset,
     incrementProfessionalPasswordResetAttempts,
     markProfessionalPasswordResetUsed,
+    listProfessionalPasswordResets,
     deleteProfessional,
     getStaffProfile,
     listStaffProfiles,

@@ -5379,6 +5379,7 @@ const SERVICE_LABELS = {
     travel: 'Travel Medicine Consultation',
     followup: 'Follow-up Consultation',
     psicologia: 'Psicologia',
+    psicologia_mensal: 'Psicologia (subscrição)',
     terapia_casal: 'Terapia de casal',
     terapia_casal_mensal: 'Terapia de casal (subscrição)',
 };
@@ -6432,7 +6433,7 @@ function getAppointmentStartUtcMs(booking, timeZone) {
 
 function appointmentDurationMinutes(booking) {
     const s = booking && booking.service;
-    if (s === 'psicologia' || s === 'terapia_casal' || s === 'terapia_casal_mensal') return 60;
+    if (s === 'psicologia' || s === 'psicologia_mensal' || s === 'terapia_casal' || s === 'terapia_casal_mensal') return 60;
     if (s === 'travel') {
         const c = booking.travellerCount || 1;
         if (c === 1) return 20;
@@ -6893,6 +6894,16 @@ async function listStaffBookablePeople(service, specialtyId) {
             continue;
         }
         const u = String(profile.username || '').trim().toLowerCase();
+        if (staffBooking.isCoupleTherapyService(service)) {
+            const proForName = Number.isInteger(Number(profile.professionalId))
+                ? byId.get(Number(profile.professionalId))
+                : byUsername.get(normalizeProfessionalUsername(u));
+            if (!staffBooking.isCoupleTherapist({
+                fullName: profile.fullName,
+                displayName: proForName && proForName.displayName,
+                username: u
+            })) continue;
+        }
         const avail = availByUser.get(u) || { days: [], weekly: {} };
         const days = normalizeDayOverrides(avail.days);
         const weekly = staffBooking.normalizeWeeklyHours(avail.weekly);
@@ -8294,6 +8305,7 @@ const MARCAR_TIPO_TO_SLUG = {
     nutricao_completo: 'nutricao-completo',
     nutricao_completo_reforcado: 'nutricao-completo-reforcado',
     psicologia: 'psicologia',
+    psicologia_mensal: 'psicologia-mensal',
     terapia_casal: 'terapia-casal',
     terapia_casal_mensal: 'terapia-casal-mensal'
 };
@@ -11370,7 +11382,9 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         const productDescription = isSubscription
             ? (service === 'terapia_casal_mensal'
                 ? `${description} · Subscrição mensal · 4 sessões (65€/semana) · cobrado mensalmente · cancelável`
-                : `${description} · Subscrição mensal · 4 consultas (54€/sessão, −10%) · cancelável`)
+                : service === 'psicologia_mensal'
+                    ? `${description} · Subscrição mensal de psicologia · 56 €/mês · cobrado mensalmente · cancelável`
+                    : `${description} · Subscrição mensal · 4 consultas (54€/sessão, −10%) · cancelável`)
             : service === 'burnout_programa'
               ? `${description} · Programa 8 sessões com relatório final e CBI antes/depois`
               : service === 'nutricao_programa'
@@ -12189,6 +12203,76 @@ app.post('/api/clinic/password-reset/confirm', rateLimitClinicPasswordResetConfi
     } catch (err) {
         console.error('POST /api/clinic/password-reset/confirm:', err.message);
         return res.status(500).json({ error: 'Não foi possível atualizar a password. Tente novamente.' });
+    }
+});
+
+/**
+ * Admin-only: explain what the forgot-password flow would do for an email, without sending anything.
+ * Open in the browser while signed in to /admin: /api/admin/password-reset/diagnose?email=...
+ */
+app.get('/api/admin/password-reset/diagnose', requireAdmin, async (req, res) => {
+    const email = normalizeStaffEmail(req.query.email || '');
+    const out = {
+        email,
+        validEmail: isValidStaffEmail(email),
+        emailConfigured: isEmailConfigured,
+        emailTransport: isResendConfigured ? 'resend' : isSmtpConfigured ? 'smtp' : 'none',
+        emailFrom: EMAIL_FROM,
+        isAdminAccount: false,
+        requestsLast15Min: 0,
+        maxRequestsPer15Min: PASSWORD_RESET_MAX_PER_EMAIL,
+        professional: null,
+        recentCodes: [],
+        wouldSendCode: false,
+        reason: ''
+    };
+    if (!out.validEmail) {
+        out.reason = 'Email inválido.';
+        return res.json(out);
+    }
+    try {
+        out.isAdminAccount = isClinicAdminUsername(email) || email === normalizeStaffEmail(CLINIC_USERNAME);
+        out.requestsLast15Min = passwordResetRequestsRecent(email);
+        const pro = await findProfessionalForClinicLogin(email);
+        if (pro) {
+            out.professional = {
+                id: pro.id,
+                username: pro.username,
+                displayName: pro.displayName || '',
+                emailOnFile: pro.email || '',
+                active: pro.active !== false,
+                hasPassword: !!pro.passwordHash
+            };
+        }
+        if (usePersistentDb) {
+            out.recentCodes = await db.listProfessionalPasswordResets(email, 10);
+        } else {
+            out.recentCodes = passwordResetsStore
+                .filter((row) => normalizeStaffEmail(row.email) === email)
+                .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
+                .slice(0, 10)
+                .map(({ codeHash, ...rest }) => rest);
+        }
+        if (!out.emailConfigured) {
+            out.reason = 'O envio de email não está configurado (RESEND_API_KEY / SMTP).';
+        } else if (out.isAdminAccount) {
+            out.reason = 'É a conta de administração; a password vem de CLINIC_PASSWORD e não há código por email.';
+        } else if (!pro) {
+            out.reason = 'Nenhuma ficha de profissional tem este email (nem candidatura da bolsa com este email).';
+        } else if (pro.active === false) {
+            out.reason = `A ficha ${pro.username} está inativa.`;
+        } else if (isClinicAdminUsername(pro.username)) {
+            out.reason = `A ficha ${pro.username} é a conta de administração.`;
+        } else if (out.requestsLast15Min >= PASSWORD_RESET_MAX_PER_EMAIL) {
+            out.reason = `Já houve ${out.requestsLast15Min} pedidos nos últimos 15 minutos; novos pedidos são ignorados até a janela passar.`;
+        } else {
+            out.wouldSendCode = true;
+            out.reason = 'Um pedido agora geraria um código e enviaria o email.';
+        }
+        return res.json(out);
+    } catch (err) {
+        console.error('GET /api/admin/password-reset/diagnose:', err.message);
+        return res.status(500).json({ ...out, error: err.message });
     }
 });
 
@@ -16062,7 +16146,9 @@ async function loadNextSlotsBody(limit, withinHours, opts) {
                 ? '€75'
                 : service === 'terapia_casal_mensal'
                     ? '€260/mês'
-                    : service === 'psicologia' ? '€60' : '€39',
+                    : service === 'psicologia_mensal'
+                        ? '€56/mês'
+                        : service === 'psicologia' ? '€60' : '€39',
             holdMinutes: Math.round(SLOT_HOLD_MS / 60000)
         };
         nextSlotsCache.set(cacheKey, { ts: Date.now(), body });
@@ -16570,6 +16656,7 @@ const INVITATION_SERVICE_LABEL = {
     longevidade: { pt: 'Consulta de Longevidade', en: 'Longevity Consultation', es: 'Consulta de Longevidad' },
     renovacao: { pt: 'Renovação de Receita', en: 'Prescription Renewal', es: 'Renovación de Receta' },
     psicologia: { pt: 'Sessão de Psicologia', en: 'Psychology Session', es: 'Sesión de psicología' },
+    psicologia_mensal: { pt: 'Subscrição de Psicologia', en: 'Psychology subscription', es: 'Suscripción de psicología' },
     terapia_casal: { pt: 'Terapia de casal', en: 'Couples therapy', es: 'Terapia de pareja' },
     terapia_casal_mensal: { pt: 'Subscrição de terapia de casal', en: 'Couples therapy subscription', es: 'Suscripción de terapia de pareja' }
 };
