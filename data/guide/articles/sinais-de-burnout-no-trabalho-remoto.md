@@ -7,14 +7,22 @@
 </ul>
 </aside>
 
-
 O trabalho remoto prometeu mais flexibilidade — e trouxe, para muitos, mais horas de trabalho e menos limites claros entre a vida pessoal e profissional.
 
 A ausência de fronteira física entre casa e escritório dificulta o «desligar» mental. Muitas pessoas em regime remoto trabalham mais horas do que trabalhariam presencialmente, sem sequer se aperceberem, precisamente porque não existe o sinal claro de «sair do escritório». O mesmo dilema aparece no [trabalho híbrido](/burnout/trabalho-hibrido).
 
+<figure class="guide-figure guide-figure-highlight">
+<img src="/image/guide/blog/sinais-de-burnout-no-trabalho-remoto-destaque.webp" alt="Mulher sentada à mesa da cozinha, com o portátil fechado ao lado e o chá já frio" width="1280" height="720" loading="lazy" decoding="async">
+<figcaption>Sem a fronteira física entre casa e escritório, o dia de trabalho deixa de ter um fim claro.</figcaption>
+</figure>
+
 ## O papel específico da fadiga de videochamadas
 
 A investigação de Stanford sobre «sobrecarga não-verbal» mostra que reuniões consecutivas por videochamada, sem pausas entre elas, geram um tipo de fadiga psicológica distinta da simples fadiga de trabalho — associada ao contacto visual prolongado e à autoavaliação constante de se ver em vídeo. Este efeito é particularmente relevante em contextos de trabalho remoto, onde a videochamada substitui grande parte da interação presencial. Artigo dedicado: [burnout digital e videochamadas](/blog/burnout-digital-videochamadas).
+
+<figure class="guide-figure">
+<img src="/image/guide/blog/sinais-de-burnout-no-trabalho-remoto-videochamadas.webp" alt="Pessoa em frente ao portátil durante uma videochamada de grupo, ao fim do dia" width="1280" height="720" loading="lazy" decoding="async">
+</figure>
 
 ## O isolamento social como fator de risco
 
@@ -38,7 +46,6 @@ Pode aumentar certos fatores de risco — como o isolamento social e a dificulda
 ### Como reduzir a fadiga de reuniões por vídeo?
 
 Reduzir reuniões consecutivas, esconder a própria imagem durante a chamada e criar pausas reais entre elas, segundo a investigação de Stanford sobre fadiga de videochamadas.
-
 
 ---
 

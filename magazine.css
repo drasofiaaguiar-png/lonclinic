@@ -1101,6 +1101,24 @@ html:has(body.mag-body) {
     max-height: 520px;
 }
 
+.mag-body .guide-figure-highlight {
+    background: #16100f;
+}
+
+.mag-body .guide-figure-highlight figcaption {
+    font-family: var(--mag-serif);
+    font-size: 1.3rem;
+    font-style: italic;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+    .mag-body .guide-figure-highlight figcaption {
+        font-size: 1.08rem;
+    }
+}
+
 .mag-story-prose {
     padding: 0;
 }
