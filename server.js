@@ -2486,6 +2486,11 @@ function cloneDefaultSchedule() {
     return JSON.parse(JSON.stringify(defaultScheduleStore));
 }
 
+/**
+ * Date rows: `{ date, enabled, start, end }`. A date may carry several open
+ * blocks (10–12 and 15–17); overlapping/touching blocks on the same date are
+ * merged. A closed row is kept only when the date has no open block.
+ */
 function normalizeDayOverrides(raw) {
     if (!Array.isArray(raw)) return [];
     const timeOk = (t) => typeof t === 'string' && /^\d{2}:\d{2}$/.test(t);
@@ -2498,14 +2503,28 @@ function normalizeDayOverrides(raw) {
         let end = String(item.end || '17:00').slice(0, 5);
         if (!timeOk(start)) start = '09:00';
         if (!timeOk(end)) end = '17:00';
-        byDate.set(date, {
-            date,
-            enabled: item.enabled !== false,
-            start,
-            end
-        });
+        if (!byDate.has(date)) byDate.set(date, { open: [], closed: null });
+        const bucket = byDate.get(date);
+        if (item.enabled === false) {
+            if (!bucket.closed) bucket.closed = { start, end };
+            continue;
+        }
+        const from = timeToMinutes(start);
+        const to = timeToMinutes(end);
+        if (from == null || to == null || to <= from) continue;
+        bucket.open.push({ start, end });
     }
-    return Array.from(byDate.values()).sort((a, b) => a.date.localeCompare(b.date));
+    const out = [];
+    for (const [date, bucket] of byDate) {
+        if (bucket.open.length) {
+            for (const range of staffBooking.mergeHourRanges(bucket.open)) {
+                out.push({ date, enabled: true, start: range.start, end: range.end });
+            }
+        } else if (bucket.closed) {
+            out.push({ date, enabled: false, start: bucket.closed.start, end: bucket.closed.end });
+        }
+    }
+    return out.sort((a, b) => a.date.localeCompare(b.date) || a.start.localeCompare(b.start));
 }
 
 function applySchedulePatch(body) {
@@ -6945,9 +6964,11 @@ function platformOpenHoursForDate(dateIso) {
     return { start, end: day.end };
 }
 
+/** Bookable hour blocks for one staff member on a date, clipped to the clinic window. */
 function hoursForStaffOnDate(person, dateIso) {
-    const staff = staffBooking.hoursForDate(person && person.weekly, person && person.days, dateIso);
-    return staffBooking.intersectHours(staff, platformOpenHoursForDate(dateIso));
+    const staff = staffBooking.hourRangesForDate(person && person.weekly, person && person.days, dateIso);
+    if (!staff.length) return [];
+    return staffBooking.unionOfferedHours(staff, platformOpenHoursForDate(dateIso));
 }
 
 function blockedTicksFromBookings(bookings, professionalId, excludeBookingRef, step) {
@@ -6980,11 +7001,15 @@ async function ticksHeldForProfessional(dateIso, professionalId, excludeHoldId, 
 }
 
 async function slotsForStaffPersonOnDate(person, dateIso, service, excludeHoldId, excludeBookingRef) {
-    const hours = hoursForStaffOnDate(person, dateIso);
-    if (!hours) return [];
+    const ranges = hoursForStaffOnDate(person, dateIso);
+    if (!ranges.length) return [];
     const step = scheduleStore.slotDuration || 30;
     const duration = appointmentDurationMinutes({ service });
-    const grid = staffBooking.timesFromHours(hours.start, hours.end, step);
+    const gridSet = new Set();
+    for (const range of ranges) {
+        for (const t of staffBooking.timesFromHours(range.start, range.end, step)) gridSet.add(t);
+    }
+    const grid = Array.from(gridSet).sort((a, b) => timeToMinutes(a) - timeToMinutes(b));
     if (!grid.length) return [];
     const blockedTicks = new Set(
         (scheduleStore.blockedTimeSlots || [])
@@ -7046,7 +7071,7 @@ async function listStaffBookableDates(service, specialty, maxDays) {
     const dates = [];
     for (let i = 0; i < days; i++) {
         const dateIso = addDaysIso(today, i);
-        if (people.some((person) => hoursForStaffOnDate(person, dateIso))) dates.push(dateIso);
+        if (people.some((person) => hoursForStaffOnDate(person, dateIso).length)) dates.push(dateIso);
     }
     return dates;
 }

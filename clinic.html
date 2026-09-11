@@ -189,41 +189,58 @@
                 <div class="admin-panel" id="clinicPanelAvailabilities" data-clinic-panel-content="availabilities" hidden>
                     <div class="dash-section">
                         <div class="dash-section-header">
-                            <h2 class="dash-section-title">Select days</h2>
-                            <p class="dash-section-subtitle">Weekly hours come from the admin dashboard. Extra days you click stay on your account.</p>
+                            <h2 class="dash-section-title">Add availability</h2>
+                            <p class="dash-section-subtitle">One line per block of hours. Repeat a weekday across a whole month, or add a single date. Split days are fine — add a second line for the same day.</p>
                         </div>
-                        <div class="admin-override-cal-header">
-                            <button type="button" class="btn btn-outline btn-sm" id="clinicOverrideCalPrev" aria-label="Previous month">←</button>
-                            <span class="admin-override-cal-title" id="clinicOverrideCalMonthLabel"></span>
-                            <button type="button" class="btn btn-outline btn-sm" id="clinicOverrideCalNext" aria-label="Next month">→</button>
+                        <div class="clinic-avail-modes" role="group" aria-label="How to add">
+                            <button type="button" class="btn btn-outline btn-sm is-active" data-clinic-avail-mode="weekday">By weekday</button>
+                            <button type="button" class="btn btn-outline btn-sm" data-clinic-avail-mode="date">By date</button>
                         </div>
-                        <div class="admin-override-weekdays" aria-hidden="true">
-                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-                        </div>
-                        <div class="admin-override-cal-grid clinic-avail-cal-grid" id="clinicOverrideCalGrid"></div>
-                        <div class="admin-override-bulk clinic-avail-hours-bar">
-                            <p class="clinic-avail-hours-label">Hours for selected days</p>
-                            <div class="admin-override-bulk-row">
-                                <div class="admin-time-group admin-override-time">
-                                    <label for="clinicBulkOverrideStart">Start</label>
-                                    <input type="time" id="clinicBulkOverrideStart" class="admin-time-input" value="07:00">
-                                </div>
-                                <div class="admin-time-group admin-override-time">
-                                    <label for="clinicBulkOverrideEnd">End</label>
-                                    <input type="time" id="clinicBulkOverrideEnd" class="admin-time-input" value="17:00">
-                                </div>
+                        <form class="clinic-avail-add" id="clinicAvailAddForm" novalidate>
+                            <div class="admin-time-group clinic-avail-add-field" data-clinic-avail-field="weekday">
+                                <label for="clinicAvailWeekday">Weekday</label>
+                                <select id="clinicAvailWeekday" class="admin-select">
+                                    <option value="monday">Mondays</option>
+                                    <option value="tuesday">Tuesdays</option>
+                                    <option value="wednesday">Wednesdays</option>
+                                    <option value="thursday">Thursdays</option>
+                                    <option value="friday">Fridays</option>
+                                    <option value="saturday">Saturdays</option>
+                                    <option value="sunday">Sundays</option>
+                                </select>
                             </div>
-                            <div class="admin-override-bulk-actions">
-                                <button type="button" class="btn btn-outline btn-sm" id="clinicBulkOverrideRemove">Remove selected days</button>
-                                <button type="button" class="btn btn-outline btn-sm" id="clinicBulkOverrideClearSelection">Clear selection</button>
+                            <div class="admin-time-group clinic-avail-add-field" data-clinic-avail-field="weekday">
+                                <label for="clinicAvailMonth">Month</label>
+                                <select id="clinicAvailMonth" class="admin-select"></select>
                             </div>
-                        </div>
+                            <div class="admin-time-group clinic-avail-add-field" data-clinic-avail-field="date" hidden>
+                                <label for="clinicAvailDate">Date</label>
+                                <input type="date" id="clinicAvailDate" class="admin-time-input clinic-avail-date-input">
+                            </div>
+                            <div class="admin-time-group clinic-avail-add-field">
+                                <label for="clinicAvailStart">Start</label>
+                                <input type="time" id="clinicAvailStart" class="admin-time-input" value="10:00" step="1800">
+                            </div>
+                            <div class="admin-time-group clinic-avail-add-field">
+                                <label for="clinicAvailEnd">End</label>
+                                <input type="time" id="clinicAvailEnd" class="admin-time-input" value="12:00" step="1800">
+                            </div>
+                            <div class="clinic-avail-add-submit">
+                                <button type="submit" class="btn btn-primary btn-sm" id="clinicAvailAddBtn">Add</button>
+                            </div>
+                        </form>
+                        <p class="clinic-avail-add-preview" id="clinicAvailAddPreview"></p>
+                        <div id="clinicAvailError" class="dash-login-error" style="display:none;" role="alert"></div>
+                        <p class="admin-weekly-platform-hint clinic-avail-weekly-hint" id="clinicAvailWeeklyHint" hidden></p>
                     </div>
-                    <div class="clinic-avail-highlight" id="clinicAvailHighlight">
-                        <p class="clinic-avail-highlight-label">Saved days</p>
-                        <ul class="clinic-avail-highlight-list" id="clinicAvailHighlightList">
-                            <li class="clinic-avail-highlight-empty">Loading…</li>
-                        </ul>
+                    <div class="dash-section">
+                        <div class="dash-section-header">
+                            <h2 class="dash-section-title">Your availability</h2>
+                            <p class="dash-section-subtitle">Upcoming blocks, one per line. Change the hours inline or remove a line — it saves automatically.</p>
+                        </div>
+                        <div class="clinic-avail-rows" id="clinicAvailRows">
+                            <p class="clinic-avail-rows-empty">Loading…</p>
+                        </div>
                     </div>
                 </div>
 

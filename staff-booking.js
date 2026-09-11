@@ -230,16 +230,27 @@ function weekdayKeyFromIso(dateIso) {
     return ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][dt.getUTCDay()] || '';
 }
 
-function hoursForDate(weekly, days, dateIso) {
-    const override = (Array.isArray(days) ? days : []).find((item) => item && item.date === dateIso);
-    if (override) {
-        if (override.enabled === false) return null;
-        return { start: override.start, end: override.end };
+/**
+ * Open hour blocks for one date. A date may hold several rows (e.g. 10–12 and
+ * 15–17); any row on that date replaces the weekly template for that day.
+ * A closed row (enabled === false) with no open rows closes the day.
+ */
+function hourRangesForDate(weekly, days, dateIso) {
+    const rows = (Array.isArray(days) ? days : []).filter((item) => item && item.date === dateIso);
+    if (rows.length) {
+        return mergeHourRanges(rows.filter((item) => item.enabled !== false));
     }
     const key = weekdayKeyFromIso(dateIso);
     const wh = weekly && weekly[key];
-    if (!wh || !wh.enabled) return null;
-    return { start: wh.start, end: wh.end };
+    if (!wh || !wh.enabled) return [];
+    return mergeHourRanges([{ start: wh.start, end: wh.end }]);
+}
+
+/** Legacy single-window view: envelope of all open blocks on that date. */
+function hoursForDate(weekly, days, dateIso) {
+    const ranges = hourRangesForDate(weekly, days, dateIso);
+    if (!ranges.length) return null;
+    return { start: ranges[0].start, end: ranges[ranges.length - 1].end };
 }
 
 function weeklyHasEnabled(weekly) {
@@ -440,6 +451,7 @@ module.exports = {
     normalizeWeeklyHours,
     weekdayKeyFromIso,
     hoursForDate,
+    hourRangesForDate,
     intersectHours,
     mergeHourRanges,
     unionOfferedHours,

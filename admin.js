@@ -2428,7 +2428,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function renderStaffAvailDaysList() {
         if (!staffAvailDaysList || !staffAvailData) return;
-        const list = (staffAvailData.dayOverrides || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+        const list = (staffAvailData.dayOverrides || []).slice().sort((a, b) =>
+            a.date.localeCompare(b.date) || String(a.start || '').localeCompare(String(b.start || ''))
+        );
         staffAvailDaysList.innerHTML = '';
         if (!list.length) return;
         list.forEach((entry) => {
@@ -2448,8 +2450,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
             staffAvailDaysList.appendChild(item);
             item.querySelector('.admin-remove-btn').addEventListener('click', () => {
-                staffAvailData.dayOverrides = (staffAvailData.dayOverrides || []).filter((o) => o.date !== entry.date);
-                staffAvailSelectedDates.delete(entry.date);
+                // Remove only this block; other blocks on the same date stay.
+                staffAvailData.dayOverrides = (staffAvailData.dayOverrides || []).filter((o) => o !== entry);
+                if (!(staffAvailData.dayOverrides || []).some((o) => o.date === entry.date)) {
+                    staffAvailSelectedDates.delete(entry.date);
+                }
                 markStaffAvailDirty();
                 renderStaffAvailDaysList();
                 renderStaffAvailCalendar();
@@ -2470,7 +2475,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const startDay = (firstDay + 6) % 7;
         const today0 = startOfToday();
         staffAvailCalGrid.innerHTML = '';
-        const overrideMap = new Map((staffAvailData.dayOverrides || []).map((o) => [o.date, o]));
+        // A date may hold several blocks (e.g. 10–12 and 15–17).
+        const overrideMap = new Map();
+        (staffAvailData.dayOverrides || []).forEach((o) => {
+            if (!o || !o.date) return;
+            if (!overrideMap.has(o.date)) overrideMap.set(o.date, []);
+            overrideMap.get(o.date).push(o);
+        });
         for (let i = 0; i < startDay; i++) {
             const empty = document.createElement('div');
             empty.className = 'admin-override-cal-empty';
@@ -2487,12 +2498,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             num.className = 'admin-override-day-num';
             num.textContent = String(d);
             btn.appendChild(num);
-            const ov = overrideMap.get(dateKey);
-            const weekly = !ov ? staffWeeklyHoursForDate(dateKey) : null;
-            if (ov) {
+            const ovList = overrideMap.get(dateKey) || [];
+            const openBlocks = ovList.filter((o) => o.enabled !== false);
+            const weekly = !ovList.length ? staffWeeklyHoursForDate(dateKey) : null;
+            if (ovList.length) {
                 const label = document.createElement('span');
-                label.className = 'admin-override-day-hours' + (ov.enabled ? '' : ' is-closed');
-                label.textContent = ov.enabled ? `${String(ov.start).slice(0, 5)}–${String(ov.end).slice(0, 5)}` : 'Closed';
+                label.className = 'admin-override-day-hours' + (openBlocks.length ? '' : ' is-closed');
+                label.textContent = openBlocks.length
+                    ? openBlocks
+                        .slice()
+                        .sort((a, b) => String(a.start).localeCompare(String(b.start)))
+                        .map((o) => `${String(o.start).slice(0, 5)}–${String(o.end).slice(0, 5)}`)
+                        .join(' · ')
+                    : 'Closed';
                 btn.appendChild(label);
                 btn.classList.add('admin-override-has-rule');
             } else if (weekly) {
@@ -2520,11 +2538,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const start = (staffAvailBulkStart && staffAvailBulkStart.value) || '09:00';
         const end = (staffAvailBulkEnd && staffAvailBulkEnd.value) || '17:00';
         const enabled = staffAvailBulkEnabled ? staffAvailBulkEnabled.checked : true;
-        const byDate = new Map((staffAvailData.dayOverrides || []).map((o) => [o.date, o]));
+        // Replace every block on the selected dates with the new one; leave other dates untouched.
+        const kept = (staffAvailData.dayOverrides || []).filter((o) => o && !staffAvailSelectedDates.has(o.date));
         staffAvailSelectedDates.forEach((date) => {
-            byDate.set(date, { date, enabled, start, end });
+            kept.push({ date, enabled, start, end });
         });
-        staffAvailData.dayOverrides = Array.from(byDate.values()).sort((a, b) => a.date.localeCompare(b.date));
+        staffAvailData.dayOverrides = kept.sort((a, b) =>
+            a.date.localeCompare(b.date) || String(a.start || '').localeCompare(String(b.start || ''))
+        );
         markStaffAvailDirty();
         renderStaffAvailCalendar();
         renderStaffAvailDaysList();
