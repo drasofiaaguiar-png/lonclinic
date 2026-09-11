@@ -502,9 +502,9 @@
             tipo: 'psicologia_mensal',
             badge: 'Recomendado',
             title: 'Subscrição de Psicologia',
-            price: '€224',
-            unit: '/mês',
-            note: '56 €/semana · cobrado mensalmente',
+            price: '€56',
+            unit: '/semana',
+            note: 'Cobrado mensalmente · 224 €/mês',
             featured: true
         },
         {
@@ -1063,14 +1063,14 @@
             psiKicker = 'Psychology';
             psiHeading = 'Choose the format';
             psiCards = localizePlanCards(PSICOLOGIA_PLAN_CARDS, {
-                psicologia_mensal: { badge: 'Recommended', title: 'Psychology subscription', unit: '/month', note: '€56/week · billed monthly' },
+                psicologia_mensal: { badge: 'Recommended', title: 'Psychology subscription', unit: '/week', note: 'Billed monthly · €224/month' },
                 psicologia: { badge: 'One-off', title: 'Single session', unit: 'per session', note: '50 min · no commitment' }
             });
         } else if (psiLang === 'es') {
             psiKicker = 'Psicología';
             psiHeading = 'Elige el formato';
             psiCards = localizePlanCards(PSICOLOGIA_PLAN_CARDS, {
-                psicologia_mensal: { badge: 'Recomendado', title: 'Suscripción de psicología', unit: '/mes', note: '56 €/semana · cobrado mensualmente' },
+                psicologia_mensal: { badge: 'Recomendado', title: 'Suscripción de psicología', unit: '/semana', note: 'Cobrado mensualmente · 224 €/mes' },
                 psicologia: { badge: 'Suelta', title: 'Sesión única', unit: 'por sesión', note: '50 min · sin compromiso' }
             });
         }

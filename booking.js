@@ -763,9 +763,10 @@ async function initBookingFlow() {
                 recommended: 'Recomendado',
                 oneOff: 'Avulsa',
                 perMonth: '/mês',
+                perWeek: '/semana',
                 perSession: 'por sessão',
                 subTitle: 'Subscrição de Psicologia',
-                subNote: '56 €/semana · cobrado mensalmente',
+                subNote: 'Cobrado mensalmente · 224 €/mês',
                 oneTitle: 'Sessão única',
                 oneNote: '50 min · sem compromisso',
                 casalSubTitle: 'Subscrição de casal',
@@ -798,9 +799,10 @@ async function initBookingFlow() {
                 recommended: 'Recommended',
                 oneOff: 'One-off',
                 perMonth: '/month',
+                perWeek: '/week',
                 perSession: 'per session',
                 subTitle: 'Psychology subscription',
-                subNote: '€56/week · billed monthly',
+                subNote: 'Billed monthly · €224/month',
                 oneTitle: 'Single session',
                 oneNote: '50 min · no commitment',
                 casalSubTitle: 'Couples subscription',
@@ -833,9 +835,10 @@ async function initBookingFlow() {
                 recommended: 'Recomendado',
                 oneOff: 'Suelta',
                 perMonth: '/mes',
+                perWeek: '/semana',
                 perSession: 'por sesión',
                 subTitle: 'Suscripción de psicología',
-                subNote: '56 €/semana · cobrado mensualmente',
+                subNote: 'Cobrado mensualmente · 224 €/mes',
                 oneTitle: 'Sesión única',
                 oneNote: '50 min · sin compromiso',
                 casalSubTitle: 'Suscripción de pareja',
@@ -906,7 +909,7 @@ async function initBookingFlow() {
             ];
         }
         return [
-            { key: 'psicologia_mensal', badge: c.recommended, title: c.subTitle, price: '224 €', unit: c.perMonth, note: c.subNote, featured: true },
+            { key: 'psicologia_mensal', badge: c.recommended, title: c.subTitle, price: '56 €', unit: c.perWeek, note: c.subNote, featured: true },
             { key: 'psicologia', badge: c.oneOff, title: c.oneTitle, price: '60 €', unit: c.perSession, note: c.oneNote, featured: false }
         ];
     }
