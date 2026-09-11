@@ -5379,7 +5379,6 @@ const SERVICE_LABELS = {
     travel: 'Travel Medicine Consultation',
     followup: 'Follow-up Consultation',
     psicologia: 'Psicologia',
-    psicologia_mensal: 'Psicologia (subscrição)',
     terapia_casal: 'Terapia de casal',
     terapia_casal_mensal: 'Terapia de casal (subscrição)',
 };
@@ -6433,7 +6432,7 @@ function getAppointmentStartUtcMs(booking, timeZone) {
 
 function appointmentDurationMinutes(booking) {
     const s = booking && booking.service;
-    if (s === 'psicologia' || s === 'psicologia_mensal' || s === 'terapia_casal' || s === 'terapia_casal_mensal') return 60;
+    if (s === 'psicologia' || s === 'terapia_casal' || s === 'terapia_casal_mensal') return 60;
     if (s === 'travel') {
         const c = booking.travellerCount || 1;
         if (c === 1) return 20;
@@ -6894,16 +6893,6 @@ async function listStaffBookablePeople(service, specialtyId) {
             continue;
         }
         const u = String(profile.username || '').trim().toLowerCase();
-        if (staffBooking.isCoupleTherapyService(service)) {
-            const proForName = Number.isInteger(Number(profile.professionalId))
-                ? byId.get(Number(profile.professionalId))
-                : byUsername.get(normalizeProfessionalUsername(u));
-            if (!staffBooking.isCoupleTherapist({
-                fullName: profile.fullName,
-                displayName: proForName && proForName.displayName,
-                username: u
-            })) continue;
-        }
         const avail = availByUser.get(u) || { days: [], weekly: {} };
         const days = normalizeDayOverrides(avail.days);
         const weekly = staffBooking.normalizeWeeklyHours(avail.weekly);
@@ -8305,7 +8294,6 @@ const MARCAR_TIPO_TO_SLUG = {
     nutricao_completo: 'nutricao-completo',
     nutricao_completo_reforcado: 'nutricao-completo-reforcado',
     psicologia: 'psicologia',
-    psicologia_mensal: 'psicologia-mensal',
     terapia_casal: 'terapia-casal',
     terapia_casal_mensal: 'terapia-casal-mensal'
 };
@@ -11382,9 +11370,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         const productDescription = isSubscription
             ? (service === 'terapia_casal_mensal'
                 ? `${description} · Subscrição mensal · 4 sessões (65€/semana) · cobrado mensalmente · cancelável`
-                : service === 'psicologia_mensal'
-                    ? `${description} · Subscrição mensal de psicologia · 56 €/mês · cobrado mensalmente · cancelável`
-                    : `${description} · Subscrição mensal · 4 consultas (54€/sessão, −10%) · cancelável`)
+                : `${description} · Subscrição mensal · 4 consultas (54€/sessão, −10%) · cancelável`)
             : service === 'burnout_programa'
               ? `${description} · Programa 8 sessões com relatório final e CBI antes/depois`
               : service === 'nutricao_programa'
@@ -16146,9 +16132,7 @@ async function loadNextSlotsBody(limit, withinHours, opts) {
                 ? '€75'
                 : service === 'terapia_casal_mensal'
                     ? '€260/mês'
-                    : service === 'psicologia_mensal'
-                        ? '€56/mês'
-                        : service === 'psicologia' ? '€60' : '€39',
+                    : service === 'psicologia' ? '€60' : '€39',
             holdMinutes: Math.round(SLOT_HOLD_MS / 60000)
         };
         nextSlotsCache.set(cacheKey, { ts: Date.now(), body });
@@ -16656,7 +16640,6 @@ const INVITATION_SERVICE_LABEL = {
     longevidade: { pt: 'Consulta de Longevidade', en: 'Longevity Consultation', es: 'Consulta de Longevidad' },
     renovacao: { pt: 'Renovação de Receita', en: 'Prescription Renewal', es: 'Renovación de Receta' },
     psicologia: { pt: 'Sessão de Psicologia', en: 'Psychology Session', es: 'Sesión de psicología' },
-    psicologia_mensal: { pt: 'Subscrição de Psicologia', en: 'Psychology subscription', es: 'Suscripción de psicología' },
     terapia_casal: { pt: 'Terapia de casal', en: 'Couples therapy', es: 'Terapia de pareja' },
     terapia_casal_mensal: { pt: 'Subscrição de terapia de casal', en: 'Couples therapy subscription', es: 'Suscripción de terapia de pareja' }
 };
