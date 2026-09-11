@@ -7699,6 +7699,10 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
                 passengerNames.push(meta[`p${i}_name`]);
             }
         }
+        // Checkout no longer collects a name, so fall back to the one Stripe captured on the card
+        const stripeName = String(session.customer_details?.name || '').trim();
+        const resolvedPatientName =
+            passengerNames[0] || stripeName || meta.contact_email?.split('@')[0] || 'Patient';
 
         const shortId = paymentId.length >= 8 ? paymentId.slice(-8) : paymentId;
         const bookingRef = 'LC-' + shortId.toUpperCase();
@@ -7707,7 +7711,7 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
         const bookingService = bookingServiceTag(meta.service);
         const bookingData = {
             bookingRef,
-            patientName: passengerNames[0] || meta.contact_email?.split('@')[0] || 'Patient',
+            patientName: resolvedPatientName,
             email: session.customer_details?.email || session.customer_email || meta.contact_email,
             service: bookingService,
             serviceLabel: (meta.service_label && String(meta.service_label).trim())
@@ -7719,7 +7723,7 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
             currency: session.currency,
             travellerCount,
             hasInsurance: meta.has_insurance === 'medicare',
-            passengers: passengerNames,
+            passengers: passengerNames.length ? passengerNames : [resolvedPatientName],
             travelDest: meta.travel_destinations,
             travelDates: meta.travel_dates,
             contactPhone: meta.contact_phone || '',
@@ -7743,7 +7747,7 @@ async function finalizePaidCheckoutSession(session, logPrefix = '') {
             date: meta.date,
             time: meta.time,
             dateIso: meta.date_iso && String(meta.date_iso).trim() ? String(meta.date_iso).trim() : null,
-            patientName: passengerNames[0] || 'Patient',
+            patientName: resolvedPatientName,
             patientPhone: meta.contact_phone || '',
             travellerCount,
             amount: session.amount_total,
@@ -11215,9 +11219,11 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         } = req.body;
 
         // Validate required fields (amount is computed server-side; never trust client price)
-        if (!service || !patientEmail || !patientName) {
+        // Checkout no longer asks for a name; it comes from Stripe's cardholder details.
+        if (!service || !patientEmail) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
+        patientName = String(patientName || '').trim();
 
         const pricing = computeCheckoutTotalCents({
             service,
@@ -11292,7 +11298,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         if (Array.isArray(passengers)) {
             passengers.slice(0, 4).forEach((p, i) => {
                 const n = i + 1;
-                metadata[`p${n}_name`] = `${p.firstName} ${p.lastName}`.substring(0, 500);
+                metadata[`p${n}_name`] = `${p.firstName || ''} ${p.lastName || ''}`.trim().substring(0, 500);
                 metadata[`p${n}_dob`] = p.dob || '';
                 metadata[`p${n}_nhs`] = p.nhs || '';
                 metadata[`p${n}_country`] = p.country || '';

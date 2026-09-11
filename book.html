@@ -281,7 +281,7 @@
                 <form class="details-form" id="detailsForm" novalidate>
 
                     <h2 class="form-section-title" id="checkoutDetailsTitle">Os seus dados</h2>
-                    <p class="form-section-lead" id="checkoutDetailsLead">Precisamos apenas destes dados para confirmar a sua marcação.</p>
+                    <p class="form-section-lead" id="checkoutDetailsLead">Só precisamos do seu email e telemóvel para confirmar a marcação e enviar o link da consulta.</p>
 
                     <!-- Passenger tabs (travel multi-passenger) -->
                     <div id="passengerTabs" class="passenger-tabs" style="display:none;"></div>
@@ -291,16 +291,18 @@
                         <!-- Panel 1 (default / single patient) -->
                         <div class="passenger-panel active" data-passenger="1">
                             <h3 class="form-section-title passenger-panel-title" hidden>Patient details</h3>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="firstName">Nome *</label>
-                                    <input type="text" id="firstName" class="p-firstName" required placeholder="João" autocomplete="given-name">
-                                    <span class="form-error">Please enter first name</span>
-                                </div>
-                                <div class="form-group">
-                                    <label for="lastName">Apelido *</label>
-                                    <input type="text" id="lastName" class="p-lastName" required placeholder="Silva" autocomplete="family-name">
-                                    <span class="form-error">Please enter last name</span>
+                            <div id="checkoutNameFields" hidden>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="firstName">Nome *</label>
+                                        <input type="text" id="firstName" class="p-firstName" placeholder="João" autocomplete="given-name">
+                                        <span class="form-error">Please enter first name</span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName">Apelido *</label>
+                                        <input type="text" id="lastName" class="p-lastName" placeholder="Silva" autocomplete="family-name">
+                                        <span class="form-error">Please enter last name</span>
+                                    </div>
                                 </div>
                             </div>
                             <div id="checkoutClinicalDefer" class="checkout-clinical-defer" hidden>
@@ -395,8 +397,8 @@
 
                     <div class="form-divider"></div>
 
-                    <h2 class="form-section-title" id="checkoutBeforeTitle">Antes da consulta</h2>
-                    <p class="form-section-lead" id="checkoutBeforeLead">Após o pagamento, receberá um email para preencher os seus sintomas e informação clínica de forma segura. Assim, o profissional que o acompanha poderá preparar a consulta com antecedência.</p>
+                    <h2 class="form-section-title" id="checkoutBeforeTitle">Próximo passo</h2>
+                    <p class="form-section-lead" id="checkoutBeforeLead">Depois de concluir o agendamento receberá no email um formulário para preencher os seus sintomas e informação clínica de forma segura. Assim, o profissional que o acompanha prepara a consulta com antecedência.</p>
 
                     <div class="form-group form-checkbox-group" id="consultLangAckWrap" hidden>
                         <label class="form-checkbox">
@@ -410,17 +412,9 @@
                         <label class="form-checkbox">
                             <input type="checkbox" id="consent" name="consent" required>
                             <span class="checkbox-mark"></span>
-                            <span class="checkbox-text" id="consentText">Autorizo o tratamento seguro dos meus dados de saúde para efeitos desta consulta. <a href="/info.html?page=politica-privacidade" style="color: var(--accent);">Política de Privacidade</a></span>
+                            <span class="checkbox-text" id="consentText">Aceito os <a href="/info.html?page=termos-condicoes" style="color: var(--accent);">Termos e Condições</a> e a <a href="/info.html?page=politica-privacidade" style="color: var(--accent);">Política de Privacidade</a>, e autorizo o tratamento seguro dos meus dados de saúde para esta consulta médica privada.</span>
                         </label>
-                        <span class="form-error">You must consent to proceed</span>
-                    </div>
-                    <div class="form-group form-checkbox-group">
-                        <label class="form-checkbox">
-                            <input type="checkbox" id="terms" name="terms" required>
-                            <span class="checkbox-mark"></span>
-                            <span class="checkbox-text" id="termsText">Li e aceito os <a href="/info.html?page=termos-condicoes" style="color: var(--accent);">Termos e Condições</a> e compreendo que esta é uma consulta médica privada.</span>
-                        </label>
-                        <span class="form-error">You must agree to the terms</span>
+                        <span class="form-error" id="consentError">You must consent to proceed</span>
                     </div>
                 </form>
                 <div class="discount-section booking-step2-discount">

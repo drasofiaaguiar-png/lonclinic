@@ -1135,6 +1135,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             panel1Title.textContent = count > 1 ? 'Traveller 1' : 'Patient details';
         }
 
+        // Single-patient checkout asks for contact details only; multi-passenger needs a name per traveller
+        const nameFields = document.getElementById('checkoutNameFields');
+        if (nameFields) {
+            nameFields.hidden = count <= 1;
+            nameFields.querySelectorAll('input').forEach((input) => { input.required = count > 1; });
+        }
+
         // Remove extra panels
         panelsContainer.querySelectorAll('.passenger-panel').forEach(panel => {
             const idx = parseInt(panel.dataset.passenger);
@@ -1301,7 +1308,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Contact fields
         ['email', 'phone'].forEach(id => {
             const field = document.getElementById(id);
-            const group = field.closest('.form-group');
+            const group = field && field.closest('.form-group');
+            if (!field || !group) return;
             if (!field.value.trim()) {
                 group.classList.add('invalid');
                 valid = false;
@@ -1346,6 +1354,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             required.forEach(({ cls }) => {
                 const field = panel.querySelector(cls);
+                if (field && field.closest('[hidden]')) return;
                 const group = field?.closest('.form-group');
                 if (field && !field.value.trim()) {
                     group?.classList.add('invalid');
@@ -1360,7 +1369,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Checkboxes
         ['consent', 'terms'].forEach(id => {
             const checkbox = document.getElementById(id);
-            const group = checkbox.closest('.form-checkbox-group');
+            const group = checkbox && checkbox.closest('.form-checkbox-group');
+            if (!checkbox || !group) return;
             if (!checkbox.checked) {
                 group.classList.add('invalid');
                 valid = false;
@@ -1540,7 +1550,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <h3 class="review-card-title">${title}</h3>
                 <div class="review-row">
                     <span class="review-label">Name</span>
-                    <span class="review-value">${p.firstName} ${p.lastName}</span>
+                    <span class="review-value">${`${p.firstName} ${p.lastName}`.trim() || emailVal}</span>
                 </div>
                 ${p.nhs ? `<div class="review-row"><span class="review-label">NHS number</span><span class="review-value">${p.nhs}</span></div>` : ''}
                 <div class="review-row">
@@ -1589,7 +1599,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else {
                 subtotalRow.style.display = 'none';
             }
-            document.getElementById('summaryPatient').textContent = `${passengers[0].firstName} ${passengers[0].lastName}`;
+            document.getElementById('summaryPatient').textContent =
+                `${passengers[0].firstName} ${passengers[0].lastName}`.trim() || emailVal;
         }
 
         // Show/hide discount row
@@ -1655,9 +1666,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     date: state.dateLabel,
                     dateIso: formatDateLocal(state.date),
                     time: state.time,
-                    patientName: `${passengers[0].firstName} ${passengers[0].lastName}`,
+                    patientName: `${passengers[0].firstName} ${passengers[0].lastName}`.trim(),
                     patientEmail: document.getElementById('email').value,
-                    patientPhone: document.getElementById('phone').value,
+                    patientPhone: document.getElementById('phone')?.value || '',
                     passengers: passengers,
                     travelDest: document.getElementById('travelDest')?.value || '',
                     travelDates: document.getElementById('travelDates')?.value || '',

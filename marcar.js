@@ -63,7 +63,7 @@
             },
             psicologia: {
                 label: 'Psychology session',
-                duration: '50–60 min',
+                duration: '50 minutes',
                 bullets: [
                     'Video session with a Lon Clinic psychologist.',
                     'Choose the area of support first; the calendar only shows who treats that specialty.',
@@ -212,7 +212,7 @@
             },
             psicologia: {
                 label: 'Sesión de psicología',
-                duration: '50–60 min',
+                duration: '50 minutos',
                 bullets: [
                     'Sesión por videollamada con un psicólogo de LON Clinic.',
                     'Elija primero el área de apoyo; el calendario solo muestra a quien trata esa especialidad.',
@@ -531,7 +531,7 @@
             label: 'Sessão de Psicologia',
             price: '€60',
             cents: 6000,
-            duration: '50–60 min',
+            duration: '50 minutos',
             serviceKey: 'psicologia',
             bullets: [
                 'Sessão por videochamada com um psicólogo da LON Clinic.',
