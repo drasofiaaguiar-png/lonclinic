@@ -578,6 +578,10 @@
     box-shadow: 0 8px 22px rgba(37, 82, 53, 0.1);
 }
 
+.marcar-pro-card.is-static {
+    cursor: default;
+}
+
 .marcar-pro-photo,
 .marcar-pro-fallback {
     flex: 0 0 56px;

@@ -482,6 +482,19 @@
             featured: false
         }
     ];
+    var NUTRICAO_DEFAULT_GOAL = 'perda-de-peso';
+    var NUTRICAO_GOALS = [
+        { id: 'perda-de-peso', aliases: ['emagrecimento'], label: { pt: 'Perda de peso', en: 'Weight loss', es: 'Pérdida de peso' } },
+        { id: 'glp-1', aliases: ['ozempic-wegovy', 'ozempic', 'wegovy'], label: { pt: 'aGLP-1 / desmame', en: 'aGLP-1 / taper', es: 'aGLP-1 / destete' } },
+        { id: 'diabetes-tipo-2', aliases: ['diabetes'], label: { pt: 'Diabetes tipo 2', en: 'Type 2 diabetes', es: 'Diabetes tipo 2' } },
+        { id: 'sop', aliases: [], label: { pt: 'SOP', en: 'PCOS', es: 'SOP' } },
+        { id: 'hashimoto', aliases: [], label: { pt: 'Hashimoto', en: 'Hashimoto', es: 'Hashimoto' } },
+        { id: 'pos-parto', aliases: [], label: { pt: 'Pós-parto', en: 'Postpartum', es: 'Posparto' } },
+        { id: 'pos-bariatrica', aliases: ['bariatrica'], label: { pt: 'Pós-bariátrica', en: 'Post-bariatric', es: 'Post-bariátrica' } },
+        { id: 'doenca-celiaca', aliases: ['celiaca'], label: { pt: 'Doença celíaca', en: 'Coeliac disease', es: 'Celiaquía' } },
+        { id: 'intolerancias', aliases: ['intolerancias-alimentares', 'fodmap'], label: { pt: 'Intolerâncias / FODMAP', en: 'Intolerances / FODMAP', es: 'Intolerancias / FODMAP' } },
+        { id: 'outro', aliases: [], label: { pt: 'Outro / ainda não sei', en: 'Other / not sure yet', es: 'Otro / aún no sé' } }
+    ];
 
     var PSICOLOGIA_FAMILY = ['psicologia', 'psicologia_mensal'];
     var PSICOLOGIA_PLAN_CARDS = [
@@ -758,12 +771,15 @@
     function resolveTipoFromUrl() {
         var params = new URLSearchParams(window.location.search);
         var queryTipo = params.get('tipo');
+        var wantAvulsa = params.get('plan') === 'avulsa';
         if (queryTipo) {
+            if (queryTipo === 'psicologia' && !wantAvulsa) return 'psicologia_mensal';
             return queryTipo;
         }
         var m = window.location.pathname.match(/^\/marcar\/([^/?#]+)/);
         if (!m || !m[1]) return null;
         var slug = decodeURIComponent(m[1]).toLowerCase();
+        if (slug === 'psicologia' && !wantAvulsa) return 'psicologia_mensal';
         return SLUG_TO_TYPE[slug] || null;
     }
 
@@ -771,6 +787,8 @@
         var slug = TYPE_TO_SLUG[tipoKey] || tipoKey;
         var params = new URLSearchParams(window.location.search);
         params.delete('tipo');
+        if (tipoKey === 'psicologia') params.set('plan', 'avulsa');
+        else if (tipoKey === 'psicologia_mensal') params.delete('plan');
         if (resetSlot) {
             params.delete('date');
             params.delete('time');
@@ -778,6 +796,7 @@
             params.delete('specialty');
             params.delete('professionalId');
         }
+        if (NUTRICAO_FAMILY.indexOf(tipoKey) < 0) params.delete('goal');
         var rest = params.toString();
         return '/marcar/' + slug + (rest ? '?' + rest : '');
     }
@@ -970,6 +989,8 @@
                 ev.preventDefault();
                 var params = new URLSearchParams(window.location.search);
                 params.delete('tipo');
+                if (card.tipo === 'psicologia') params.set('plan', 'avulsa');
+                else if (card.tipo === 'psicologia_mensal') params.delete('plan');
                 // Keep the slot already picked on this page when switching format.
                 if (state && state.date && state.time) {
                     params.set('date', formatDateLocal(state.date));
@@ -1015,6 +1036,15 @@
         var nutricaoTrust = document.getElementById('marcarBuyTrust');
         // "Fidelização 3 meses" only applies to the programs, not to the one-off consultation.
         if (nutricaoTrust) nutricaoTrust.hidden = tipo === 'nutricao_consulta';
+        // Like psychology: the generic service pills give way to nutrition motives,
+        // with weight loss already selected.
+        var nuTypeLabel = document.getElementById('marcarTypeLabel');
+        var nuTypePills = document.getElementById('marcarTypePills');
+        var nuSpecialtySection = document.getElementById('marcarSpecialtySection');
+        if (nuTypeLabel) nuTypeLabel.hidden = true;
+        if (nuTypePills) nuTypePills.hidden = true;
+        if (nuSpecialtySection) nuSpecialtySection.hidden = false;
+        applyNutricaoGoalCopy();
     }
 
     function localizePlanCards(cards, overridesByTipo) {
@@ -1107,13 +1137,15 @@
         time: null,
         specialty: null,
         specialties: [],
+        nutricaoGoal: NUTRICAO_DEFAULT_GOAL,
         bookableDates: [],
         professionalsByTime: {},
         professionalId: null,
         professionalName: null,
         professionalBio: null,
         professionalPhotoUrl: null,
-        slotMode: 'clinic'
+        slotMode: 'clinic',
+        pendingTime: null
     };
 
     function bookingService() {
@@ -1151,6 +1183,7 @@
                 heading: 'What kind of support are you looking for?',
                 sub: 'The calendar only shows psychologists who treat this area.',
                 choosePro: 'More than one psychologist is free at this time. Choose who you prefer.',
+                yourPsychologist: 'Your psychologist',
                 emptyDays: 'No published times in this area right now. Try another area or contact us.'
             };
         }
@@ -1160,6 +1193,7 @@
                 heading: '¿Qué tipo de apoyo busca?',
                 sub: 'El calendario solo muestra psicólogos que tratan esta área.',
                 choosePro: 'Hay más de un psicólogo libre a esta hora. Elija a quién prefiere.',
+                yourPsychologist: 'Su psicólogo',
                 emptyDays: 'No hay horarios publicados en esta área ahora. Pruebe otra área o contáctenos.'
             };
         }
@@ -1168,6 +1202,7 @@
             heading: 'Que tipo de apoio procura?',
             sub: 'O calendário mostra só psicólogos que tratam esta área.',
             choosePro: 'Há mais do que um psicólogo livre nesta hora. Escolha quem prefere.',
+            yourPsychologist: 'O seu psicólogo',
             emptyDays: 'Não há horários publicados nesta área neste momento. Experimente outra área ou contacte-nos.'
         };
     }
@@ -1209,16 +1244,24 @@
             .catch(function () { state.scheduleData = null; });
     }
 
+    function staffCalendarQuery() {
+        var q = '';
+        if (usesPsychStaff() && state.specialty) {
+            q += '&specialty=' + encodeURIComponent(state.specialty);
+        }
+        var fromUrl = Number(new URLSearchParams(window.location.search).get('professionalId')) || 0;
+        var proId = Number(state.professionalId) || fromUrl;
+        if (proId) q += '&professionalId=' + encodeURIComponent(proId);
+        return q;
+    }
+
     function loadBookableDays() {
         if (isPsychology() && !state.specialty) {
             state.bookableDates = [];
             state.slotMode = 'staff';
             return Promise.resolve();
         }
-        var url = '/api/bookable-days?service=' + encodeURIComponent(bookingService());
-        if (usesPsychStaff() && state.specialty) {
-            url += '&specialty=' + encodeURIComponent(state.specialty);
-        }
+        var url = '/api/bookable-days?service=' + encodeURIComponent(bookingService()) + staffCalendarQuery();
         return fetch(url)
             .then(function (r) { return r.ok ? r.json() : null; })
             .then(function (d) {
@@ -1318,6 +1361,139 @@
             });
     }
 
+    function nutricaoGoalCopy() {
+        var lang = getLang();
+        if (lang === 'en') {
+            return {
+                kicker: 'Goal',
+                heading: 'What is this nutrition visit for?',
+                sub: 'Weight loss is selected by default. Change it if you are coming for another reason — it goes in the booking notes.'
+            };
+        }
+        if (lang === 'es') {
+            return {
+                kicker: 'Objetivo',
+                heading: '¿Cuál es el motivo de la consulta de nutrición?',
+                sub: 'La pérdida de peso viene seleccionada. Cámbielo si viene por otro motivo — queda en las notas de la reserva.'
+            };
+        }
+        return {
+            kicker: 'Objectivo',
+            heading: 'Qual é o motivo da consulta de nutrição?',
+            sub: 'A perda de peso vem seleccionada. Mude se o motivo for outro — vai nas notas da marcação.'
+        };
+    }
+
+    function nutricaoGoalById(id, strict) {
+        var key = String(id || '').trim().toLowerCase();
+        var found = null;
+        NUTRICAO_GOALS.forEach(function (item) {
+            if (found) return;
+            if (item.id === key || (item.aliases && item.aliases.indexOf(key) >= 0)) found = item;
+        });
+        if (found) return found;
+        return strict ? null : NUTRICAO_GOALS[0];
+    }
+
+    function nutricaoGoalLabel(id) {
+        var item = nutricaoGoalById(id);
+        var lang = getLang();
+        return (item && (item.label[lang] || item.label.pt)) || '';
+    }
+
+    function nutricaoGoalNoteLabel(id) {
+        var item = nutricaoGoalById(id);
+        return (item && item.label.pt) || 'Perda de peso / reeducação metabólica';
+    }
+
+    function applyNutricaoGoalCopy() {
+        var copy = nutricaoGoalCopy();
+        var kicker = document.getElementById('marcarSpecialtyKicker');
+        var heading = document.getElementById('marcarSpecialtyHeading');
+        var sub = document.getElementById('marcarSpecialtySub');
+        if (kicker) kicker.textContent = copy.kicker;
+        if (heading) heading.textContent = copy.heading;
+        if (sub) sub.textContent = copy.sub;
+    }
+
+    function renderNutricaoGoalButtons() {
+        var grid = document.getElementById('marcarSpecialties');
+        if (!grid) return;
+        grid.innerHTML = '';
+        NUTRICAO_GOALS.forEach(function (item) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'marcar-spec-card' + (state.nutricaoGoal === item.id ? ' is-active' : '');
+            btn.textContent = item.label[getLang()] || item.label.pt;
+            btn.setAttribute('aria-pressed', state.nutricaoGoal === item.id ? 'true' : 'false');
+            btn.addEventListener('click', function () { selectNutricaoGoal(item.id); });
+            grid.appendChild(btn);
+        });
+    }
+
+    function syncNutricaoGoalUrl() {
+        if (!isNutricaoFamily(tipo) || !window.history || typeof window.history.replaceState !== 'function') return;
+        var params = new URLSearchParams(window.location.search);
+        params.delete('tipo');
+        if (state.nutricaoGoal && state.nutricaoGoal !== NUTRICAO_DEFAULT_GOAL) params.set('goal', state.nutricaoGoal);
+        else params.delete('goal');
+        var rest = params.toString();
+        var pretty = '/marcar/' + (TYPE_TO_SLUG[tipo] || 'nutricao-programa') + (rest ? '?' + rest : '');
+        var current = window.location.pathname + window.location.search;
+        if (current !== pretty) window.history.replaceState(null, '', pretty);
+    }
+
+    function selectNutricaoGoal(id) {
+        var item = nutricaoGoalById(id, true);
+        if (!item) return;
+        state.nutricaoGoal = item.id;
+        renderNutricaoGoalButtons();
+        syncNutricaoGoalUrl();
+        shellRefresh();
+    }
+
+    function resolveNutricaoGoalFromUrl() {
+        var params = new URLSearchParams(window.location.search);
+        var fromUrl = params.get('goal');
+        if (fromUrl && nutricaoGoalById(fromUrl, true)) return nutricaoGoalById(fromUrl, true).id;
+        var ref = String(params.get('ref') || '');
+        var m = /^nutricao-(.+)$/i.exec(ref);
+        if (m) {
+            var slug = decodeURIComponent(m[1]).toLowerCase();
+            var matched = nutricaoGoalById(slug, true);
+            if (matched) return matched.id;
+        }
+        return NUTRICAO_DEFAULT_GOAL;
+    }
+
+    function nutricaoClinicalIntent() {
+        var goalLabel = nutricaoGoalNoteLabel(state.nutricaoGoal);
+        if (tipo === 'nutricao_consulta') {
+            return {
+                category: 'nutrition',
+                product: 'nutricao_consulta',
+                goal: goalLabel,
+                concerns: 'Objectivo: ' + goalLabel + '. Consulta de nutrição avulsa (sem programa). Sem prescrição de aGLP-1.',
+                label: 'Consulta de nutrição'
+            };
+        }
+        return {
+            category: state.nutricaoGoal === 'perda-de-peso' ? 'weight-loss' : 'nutrition',
+            product: consulta.serviceKey,
+            goal: goalLabel,
+            concerns: 'Objectivo: ' + goalLabel + '. Programa de perda de peso 6 meses (acompanhamento médico + nutrição) — sem prescrição de aGLP-1.',
+            label: consulta.label
+        };
+    }
+
+    function initNutricaoGoals() {
+        state.nutricaoGoal = resolveNutricaoGoalFromUrl();
+        applyNutricaoGoalCopy();
+        renderNutricaoGoalButtons();
+        syncNutricaoGoalUrl();
+        shellRefresh();
+    }
+
     function hideProfessionals() {
         var wrap = document.getElementById('marcarPros');
         if (wrap) {
@@ -1343,29 +1519,48 @@
             shellRefresh();
             return;
         }
-        if (list.length === 1) {
-            setSelectedProfessional(list[0]);
-            hideProfessionals();
-            if (btnNext) btnNext.disabled = false;
+        if (!wrap) {
+            if (list.length === 1) {
+                setSelectedProfessional(list[0]);
+                if (btnNext) btnNext.disabled = false;
+            } else if (btnNext) btnNext.disabled = true;
             shellRefresh();
             return;
         }
-        if (btnNext) btnNext.disabled = true;
-        shellRefresh();
-        if (!wrap) return;
+        var copy = psychologyCopy();
+        var choosable = list.length > 1;
         wrap.hidden = false;
-        wrap.innerHTML = '<p class="marcar-pros-kicker">' + escapeHtml(psychologyCopy().choosePro) + '</p>';
+        wrap.innerHTML = '<p class="marcar-pros-kicker">' + escapeHtml(choosable ? copy.choosePro : copy.yourPsychologist) + '</p>';
         var wantedProId = Number(new URLSearchParams(window.location.search).get('professionalId')) || 0;
-        list.forEach(function (pro) {
-            var card = document.createElement('button');
-            card.type = 'button';
-            card.className = 'marcar-pro-card';
+
+        function proMarkup(pro) {
             var photo = pro.photoUrl
                 ? '<img class="marcar-pro-photo" src="' + escapeHtml(pro.photoUrl) + '" alt="">'
                 : '<span class="marcar-pro-fallback" aria-hidden="true">' + escapeHtml(initialsFromName(pro.name)) + '</span>';
             var bio = pro.bio ? '<p>' + escapeHtml(pro.bio) + '</p>' : '';
-            card.innerHTML = photo +
+            return photo +
                 '<span class="marcar-pro-copy"><strong>' + escapeHtml(pro.name) + '</strong>' + bio + '</span>';
+        }
+
+        if (!choosable) {
+            var only = list[0];
+            var card = document.createElement('article');
+            card.className = 'marcar-pro-card is-static is-selected';
+            card.innerHTML = proMarkup(only);
+            wrap.appendChild(card);
+            setSelectedProfessional(only);
+            if (btnNext) btnNext.disabled = false;
+            shellRefresh();
+            return;
+        }
+
+        if (btnNext) btnNext.disabled = true;
+        shellRefresh();
+        list.forEach(function (pro) {
+            var card = document.createElement('button');
+            card.type = 'button';
+            card.className = 'marcar-pro-card';
+            card.innerHTML = proMarkup(pro);
             card.addEventListener('click', function () {
                 wrap.querySelectorAll('.marcar-pro-card').forEach(function (el) {
                     el.classList.remove('is-selected');
@@ -1584,12 +1779,11 @@
         renderCalendar();
         var dayBtn = findMarcarDayButton(dateObj);
         if (!dayBtn) return Promise.resolve();
+        if (!(opts && opts.selectTime === false) && slot.time) {
+            var pending = String(slot.time);
+            state.pendingTime = pending.length === 4 ? '0' + pending : pending;
+        }
         return Promise.resolve(selectDate(bits[0], bits[1] - 1, bits[2], dayBtn)).then(function () {
-            if (opts && opts.selectTime === false) return;
-            var want = String(slot.time).length === 4 ? '0' + slot.time : slot.time;
-            timeslotGrid.querySelectorAll('.marcar-slot-btn').forEach(function (b) {
-                if (b.textContent === want) b.click();
-            });
             if (!(opts && opts.stayOnStep) && state.date && state.time && btnNext && !btnNext.disabled) {
                 btnNext.click();
             }
@@ -1599,10 +1793,8 @@
     function loadQuickSlots() {
         var wrap = document.getElementById('marcarQuickSlots');
         if (isPsychology() && !state.specialty) return Promise.resolve();
-        var url = '/api/next-slots?limit=6&withinHours=336&service=' + encodeURIComponent(bookingService());
-        if (usesPsychStaff() && state.specialty) {
-            url += '&specialty=' + encodeURIComponent(state.specialty);
-        }
+        var url = '/api/next-slots?limit=6&withinHours=336&service=' + encodeURIComponent(bookingService()) +
+            staffCalendarQuery();
         return fetch(url)
             .then(function (r) { return r.ok ? r.json() : null; })
             .then(function (data) {
@@ -1624,7 +1816,7 @@
                     }
                 }
                 if (!state.date && slots[0]) {
-                    return applyQuickSlot(slots[0], { selectTime: false, stayOnStep: true });
+                    return applyQuickSlot(slots[0], { stayOnStep: true });
                 }
             })
             .catch(function () { /* calendar still works */ });
@@ -1678,6 +1870,14 @@
             section.appendChild(row);
             timeslotGrid.appendChild(section);
         });
+        var want = state.pendingTime;
+        state.pendingTime = null;
+        if (want) {
+            var target = String(want).length === 4 ? '0' + want : String(want);
+            timeslotGrid.querySelectorAll('.marcar-slot-btn').forEach(function (b) {
+                if (b.textContent === target) b.click();
+            });
+        }
     }
 
     function renderTimeslots() {
@@ -1696,10 +1896,7 @@
 
         var dateStr = formatDateLocal(state.date);
         var url = '/api/bookable-slots?date=' + encodeURIComponent(dateStr) +
-            '&service=' + encodeURIComponent(bookingService());
-        if (usesPsychStaff()) {
-            url += '&specialty=' + encodeURIComponent(state.specialty || '');
-        }
+            '&service=' + encodeURIComponent(bookingService()) + staffCalendarQuery();
 
         return fetch(url)
             .then(function (r) { return r.json(); })
@@ -1800,18 +1997,7 @@
             specialty: state.specialty || null,
             clinicalIntent: BURNOUT_FAMILY.indexOf(tipo) >= 0
                 ? burnoutClinicalIntent(tipo)
-                : (tipo === 'nutricao_consulta' ? {
-                    category: 'nutrition',
-                    product: 'nutricao_consulta',
-                    concerns: 'Consulta de nutrição avulsa (sem programa). Sem prescrição de aGLP-1.',
-                    label: 'Consulta de nutrição'
-                } : NUTRICAO_FAMILY.indexOf(tipo) >= 0 ? {
-                    category: 'weight-loss',
-                    product: consulta.serviceKey,
-                    goal: 'Perda de peso / reeducação metabólica',
-                    concerns: 'Objectivo: perda de peso / reeducação metabólica. Programa de perda de peso 6 meses (acompanhamento médico + nutrição) — sem prescrição de aGLP-1.',
-                    label: 'Programa de perda de peso · 6 meses'
-                } : null)
+                : (NUTRICAO_FAMILY.indexOf(tipo) >= 0 ? nutricaoClinicalIntent() : null)
         };
         if (payload.clinicalIntent && payload.clinicalIntent.goal) {
             payload.goal = payload.clinicalIntent.goal;
@@ -1857,6 +2043,9 @@
                     renderSpecialtyButtons();
                 })
                 .catch(function () { renderSpecialtyButtons(); });
+        } else if (isNutricaoFamily(tipo)) {
+            applyNutricaoGoalCopy();
+            renderNutricaoGoalButtons();
         }
         renderCalendar();
         // Re-render timeslots heading if date not selected
@@ -1890,22 +2079,16 @@
             }
         });
         if (dayBtn && !dayBtn.classList.contains('marcar-cal-disabled')) {
+            if (timeQ) state.pendingTime = timeQ.length === 4 ? '0' + timeQ : timeQ;
             selectDate(bits[0], bits[1] - 1, bits[2], dayBtn);
-            if (timeQ) {
-                var want = timeQ.length === 4 ? '0' + timeQ : timeQ;
-                setTimeout(function () {
-                    timeslotGrid.querySelectorAll('.marcar-slot-btn').forEach(function (b) {
-                        if (b.textContent === want) b.click();
-                    });
-                }, 400);
-            }
         }
     }
 
     /* ──────────────────────────────────────────────────────────────────────
        Shell: 2 passos (Serviço e formato → Data e hora), resumo lateral e
        barra de ação fixa. Em psicologia o passo 1 inclui a área de apoio
-       (o "tipo de consulta" dentro da psicologia) e o formato. Só orquestra
+       (o "tipo de consulta" dentro da psicologia) e o formato. Em nutrição o
+       passo 1 mostra os motivos (perda de peso pré-seleccionada) e o formato.
        visibilidade e copy; a lógica de horários/profissionais continua a
        ser a do motor acima.
     ────────────────────────────────────────────────────────────────────── */
@@ -1925,7 +2108,7 @@
             morning: 'Manhã',
             afternoon: 'Tarde',
             summary: 'Resumo',
-            rows: { consult: 'Consulta', area: 'Área', pro: 'Profissional', when: 'Quando', format: 'Formato' },
+            rows: { consult: 'Consulta', area: 'Área', objetivo: 'Objectivo', pro: 'Profissional', when: 'Quando', format: 'Formato' },
             video: 'Videochamada',
             emptyValue: '—',
             footnote: 'Profissionais certificados · consultas confidenciais por videochamada · cancelamento gratuito até 24h antes · pagamento seguro por cartão (Stripe).',
@@ -1946,7 +2129,7 @@
             morning: 'Morning',
             afternoon: 'Afternoon',
             summary: 'Summary',
-            rows: { consult: 'Consultation', area: 'Area', pro: 'Professional', when: 'When', format: 'Format' },
+            rows: { consult: 'Consultation', area: 'Area', objetivo: 'Goal', pro: 'Professional', when: 'When', format: 'Format' },
             video: 'Video call',
             emptyValue: '—',
             footnote: 'Certified professionals · confidential video consultations · free cancellation up to 24h before · secure card payment (Stripe).',
@@ -1967,7 +2150,7 @@
             morning: 'Mañana',
             afternoon: 'Tarde',
             summary: 'Resumen',
-            rows: { consult: 'Consulta', area: 'Área', pro: 'Profesional', when: 'Cuándo', format: 'Formato' },
+            rows: { consult: 'Consulta', area: 'Área', objetivo: 'Objetivo', pro: 'Profesional', when: 'Cuándo', format: 'Formato' },
             video: 'Videollamada',
             emptyValue: '—',
             footnote: 'Profesionales certificados · consultas confidenciales por videollamada · cancelación gratuita hasta 24h antes · pago seguro con tarjeta (Stripe).',
@@ -2055,6 +2238,7 @@
         if (!list) return;
         var rows = [];
         if (isPsychology()) rows.push([copy.rows.area, specialtyLabel()]);
+        if (isNutricaoFamily(tipo)) rows.push([copy.rows.objetivo, nutricaoGoalLabel(state.nutricaoGoal)]);
         if (usesPsychStaff()) rows.push([copy.rows.pro, state.professionalName || '']);
         rows.push([copy.rows.when, state.date && state.time ? state.dateLabel + ' · ' + state.time : (state.date ? state.dateLabel : '')]);
         rows.push([copy.rows.format, copy.video + ' · ' + localizedConsultaDuration()]);
@@ -2184,6 +2368,9 @@
     } else if (isCasalFamily(tipo)) {
         state.specialty = 'relacionamentos';
         loadBookableDays().then(bootMarcarCalendar);
+    } else if (isNutricaoFamily(tipo)) {
+        initNutricaoGoals();
+        loadSchedule().then(loadBookableDays).then(bootMarcarCalendar);
     } else {
         loadSchedule().then(loadBookableDays).then(bootMarcarCalendar);
     }

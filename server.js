@@ -7063,9 +7063,13 @@ async function getStaffBookableSlotsForDate(dateIso, opts) {
     return { available, professionalsByTime };
 }
 
-async function listStaffBookableDates(service, specialty, maxDays) {
+async function listStaffBookableDates(service, specialty, maxDays, professionalId) {
     const days = Math.min(Math.max(parseInt(maxDays, 10) || 60, 1), 90);
-    const people = await listStaffBookablePeople(service, specialty);
+    const all = await listStaffBookablePeople(service, specialty);
+    const wantId = Number(professionalId);
+    const people = Number.isInteger(wantId) && wantId > 0
+        ? all.filter((p) => p.id === wantId)
+        : all;
     if (!people.length) return [];
     const today = lisbonNowParts().dateIso;
     const step = scheduleStore.slotDuration || 30;
@@ -7164,9 +7168,13 @@ async function getNextBookableSlots(limit, maxDays, withinHours, opts) {
     const now = lisbonNowParts();
     const service = bookingServiceTag((opts && opts.service) || '');
     const specialty = staffBooking.specialtyForService(service, (opts && opts.specialty) || '');
-    const staffPeople = staffBooking.usesStaffCalendars(service)
+    const wantId = Number(opts && opts.professionalId);
+    let staffPeople = staffBooking.usesStaffCalendars(service)
         ? await listStaffBookablePeople(service, specialty)
         : [];
+    if (Number.isInteger(wantId) && wantId > 0) {
+        staffPeople = staffPeople.filter((p) => p.id === wantId);
+    }
     const staffMode = staffPeople.length > 0;
     const mustStaff = staffBooking.requiresProfessionalChoice(service);
     const pool = [];
@@ -7175,7 +7183,11 @@ async function getNextBookableSlots(limit, maxDays, withinHours, opts) {
         let available = [];
         let professionalsByTime = {};
         if (staffMode) {
-            const packed = await getStaffBookableSlotsForDate(dateIso, { service, specialty });
+            const packed = await getStaffBookableSlotsForDate(dateIso, {
+                service,
+                specialty,
+                professionalId: Number.isInteger(wantId) && wantId > 0 ? wantId : null
+            });
             available = packed.available || [];
             professionalsByTime = packed.professionalsByTime || {};
         } else if (mustStaff) {
@@ -16235,7 +16247,9 @@ app.get('/api/schedule', (req, res) => {
 async function loadNextSlotsBody(limit, withinHours, opts) {
     const service = bookingServiceTag((opts && opts.service) || 'clinica_geral');
     const specialty = String((opts && opts.specialty) || '').trim().toLowerCase();
-    const cacheKey = `${limit}:${withinHours}:${service}:${specialty}`;
+    const professionalId = Number(opts && opts.professionalId);
+    const proKey = Number.isInteger(professionalId) && professionalId > 0 ? String(professionalId) : '';
+    const cacheKey = `${limit}:${withinHours}:${service}:${specialty}:${proKey}`;
     const hit = nextSlotsCache.get(cacheKey);
     if (hit && Date.now() - hit.ts < NEXT_SLOTS_TTL_MS) {
         return { body: hit.body, cache: 'HIT' };
@@ -16246,7 +16260,11 @@ async function loadNextSlotsBody(limit, withinHours, opts) {
     }
     const pending = (async () => {
         const maxDays = Math.min(14, Math.max(7, Math.ceil(withinHours / 24) + 1));
-        const slots = await getNextBookableSlots(limit, maxDays, withinHours, { service, specialty });
+        const slots = await getNextBookableSlots(limit, maxDays, withinHours, {
+            service,
+            specialty,
+            professionalId: proKey ? professionalId : null
+        });
         const body = {
             slots,
             withinHours,
@@ -16280,7 +16298,12 @@ app.get('/api/next-slots', rateLimitNextSlots, async (req, res) => {
         const withinHours = Math.min(Math.max(parseInt(req.query.withinHours, 10) || 168, 1), 336);
         const service = bookingServiceTag(req.query.service || 'clinica_geral');
         const specialty = String(req.query.specialty || '').trim().toLowerCase();
-        const { body, cache } = await loadNextSlotsBody(limit, withinHours, { service, specialty });
+        const professionalId = Number(req.query.professionalId);
+        const { body, cache } = await loadNextSlotsBody(limit, withinHours, {
+            service,
+            specialty,
+            professionalId: Number.isInteger(professionalId) && professionalId > 0 ? professionalId : null
+        });
         res.set('Cache-Control', `public, max-age=${Math.ceil(NEXT_SLOTS_TTL_MS / 1000)}, stale-while-revalidate=60`);
         res.set('X-Slots-Cache', cache);
         res.json(body);
@@ -16305,7 +16328,13 @@ app.get('/api/bookable-days', async (req, res) => {
         if (!staffBooking.usesStaffCalendars(service)) {
             return res.json({ dates: [], service, mode: 'clinic' });
         }
-        const dates = await listStaffBookableDates(service, specialty, 60);
+        const professionalId = Number(req.query.professionalId);
+        const dates = await listStaffBookableDates(
+            service,
+            specialty,
+            60,
+            Number.isInteger(professionalId) && professionalId > 0 ? professionalId : null
+        );
         res.json({ dates, service, specialty, mode: 'staff' });
     } catch (err) {
         console.error('GET /api/bookable-days:', err.message);

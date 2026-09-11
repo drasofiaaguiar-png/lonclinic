@@ -1055,7 +1055,8 @@ async function initBookingFlow() {
         try {
             const res = await fetch(
                 '/api/next-slots?limit=6&withinHours=336&service=' + encodeURIComponent(state.service) +
-                (state.specialty ? '&specialty=' + encodeURIComponent(state.specialty) : '')
+                (state.specialty ? '&specialty=' + encodeURIComponent(state.specialty) : '') +
+                (state.professionalId ? '&professionalId=' + encodeURIComponent(state.professionalId) : '')
             );
             if (!res.ok) return;
             const data = await res.json();
@@ -1240,6 +1241,9 @@ async function initBookingFlow() {
             if (isPsychStaffService(service) && state.specialty) {
                 url += '&specialty=' + encodeURIComponent(state.specialty);
             }
+            if (state.professionalId) {
+                url += '&professionalId=' + encodeURIComponent(state.professionalId);
+            }
             const res = await fetch(url);
             if (!res.ok) throw new Error('bookable-days');
             const data = await res.json();
@@ -1393,7 +1397,8 @@ async function initBookingFlow() {
         try {
             const res = await fetch(
                 '/api/next-slots?limit=6&withinHours=336&service=' + encodeURIComponent(state.service || 'clinica_geral') +
-                (state.specialty ? '&specialty=' + encodeURIComponent(state.specialty) : '')
+                (state.specialty ? '&specialty=' + encodeURIComponent(state.specialty) : '') +
+                (state.professionalId ? '&professionalId=' + encodeURIComponent(state.professionalId) : '')
             );
             if (!res.ok) return;
             const data = await res.json();
@@ -1433,7 +1438,8 @@ async function initBookingFlow() {
             const res = await fetch(
                 '/api/bookable-slots?date=' + encodeURIComponent(dateStr) +
                 '&service=' + encodeURIComponent(state.service || 'clinica_geral') +
-                (state.specialty ? '&specialty=' + encodeURIComponent(state.specialty) : '')
+                (state.specialty ? '&specialty=' + encodeURIComponent(state.specialty) : '') +
+                (state.professionalId ? '&professionalId=' + encodeURIComponent(state.professionalId) : '')
             );
             const data = await res.json();
 

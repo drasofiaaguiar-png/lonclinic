@@ -267,8 +267,10 @@ function weeklyHasEnabled(weekly) {
 }
 
 function hasBookableHours(weekly, days) {
-    if (weeklyHasEnabled(weekly)) return true;
-    return (Array.isArray(days) ? days : []).some((item) => item && item.enabled !== false && item.date);
+    if (hasOpenDayRows(days)) {
+        return (Array.isArray(days) ? days : []).some((item) => item && item.enabled !== false && item.date);
+    }
+    return weeklyHasEnabled(weekly);
 }
 
 function psychologySpecialty(id) {
@@ -284,6 +286,45 @@ function publicPsychologySpecialties(lang) {
     }));
 }
 
+const AREA_MATCH_ALIASES = {
+    'Stress / burnout': 'Burnout',
+    'Luto': 'Luto (geral)',
+    'Parentalidade': 'Coaching parental',
+    'Perturbações alimentares': 'Distúrbio alimentar (incluindo excesso de peso)',
+    'Relações interpessoais': 'Relacionamentos',
+    'Relações de casal': 'Relacionamentos',
+    'Psicologia da saúde': 'Ajustamento a doença crónica',
+    'Perturbações do desenvolvimento': 'Neurodesenvolvimento no adulto (autismo, PHDA, etc.) — acompanhamento',
+    'Desenvolvimento pessoal': 'Transições de vida / questões existenciais e de identidade',
+    'Auto-estima': 'Autoestima',
+    'Gestao emocional': 'Gestão emocional'
+};
+
+function canonicalClinicalArea(value) {
+    const name = String(value || '').trim();
+    return AREA_MATCH_ALIASES[name] || name;
+}
+
+function asAreaList(value) {
+    if (Array.isArray(value)) return value;
+    const s = String(value || '').trim();
+    return s ? [s] : [];
+}
+
+/** Primary and secondary clinical areas on a staff profile, with legacy aliases folded. */
+function profileClinicalAreas(profile) {
+    const raw = [
+        ...asAreaList(profile && (profile.primaryAreas != null ? profile.primaryAreas : profile.primaryArea)),
+        ...asAreaList(profile && (profile.secondaryAreas != null ? profile.secondaryAreas : profile.secondaryArea))
+    ];
+    const have = new Set();
+    for (const item of raw) {
+        const name = canonicalClinicalArea(item);
+        if (name) have.add(name);
+    }
+    return have;
+}
+
 /** Comma-separated specialty ids → known specialty entries (unknown ids dropped). */
 function psychologySpecialtyList(specialtyId) {
     return String(specialtyId || '')
@@ -296,20 +337,23 @@ function psychologySpecialtyList(specialtyId) {
 
 /**
  * `specialtyId` may hold several ids ("ansiedade,burnout"). The profile matches when
- * it treats at least one of the chosen areas. An unknown id or "outro" (no areas)
- * means "any psychologist".
+ * at least one chosen area sits in primary or secondary clinical areas.
+ * No specialty yet (homepage slots) or "outro" → any psychologist with hours.
+ * Unknown specialty ids do not match everyone.
  */
 function profileMatchesSpecialty(profile, specialtyId) {
     if (!profile || profile.profession !== 'psicologo') return false;
-    const ids = String(specialtyId || '').split(',').map((item) => item.trim()).filter(Boolean);
+    const ids = String(specialtyId || '')
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean);
+    if (!ids.length) return true;
     const specs = psychologySpecialtyList(specialtyId);
-    if (!ids.length || specs.length < ids.length) return true;
+    if (!specs.length) return false;
     if (specs.some((spec) => !spec.areas)) return true;
-    const have = new Set([
-        ...((profile.primaryAreas || profile.primaryArea) || []),
-        ...((profile.secondaryAreas || profile.secondaryArea) || [])
-    ].map((item) => String(item || '').trim()).filter(Boolean));
-    return specs.some((spec) => spec.areas.some((area) => have.has(area)));
+    const have = profileClinicalAreas(profile);
+    if (!have.size) return false;
+    return specs.some((spec) => spec.areas.some((area) => have.has(canonicalClinicalArea(area))));
 }
 
 function openHours(row) {
@@ -385,6 +429,14 @@ function crossDayHours(staffRow, platformRow) {
 }
 
 function hasCrossedBookableHours(weekly, days, platform) {
+    const openDays = (Array.isArray(days) ? days : []).filter(
+        (item) => item && item.enabled !== false && item.date
+    );
+    if (openDays.length) {
+        return openDays.some((item) =>
+            intersectHours({ start: item.start, end: item.end }, platformHoursForDate(platform, item.date))
+        );
+    }
     const staffWeekly = normalizeWeeklyHours(weekly);
     const platformWeekly = normalizeWeeklyHours(platform && platform.weekly);
     for (const day of WEEKDAY_KEYS) {
@@ -392,12 +444,6 @@ function hasCrossedBookableHours(weekly, days, platform) {
             staffWeekly[day] && staffWeekly[day].enabled ? staffWeekly[day] : null,
             platformWeekly[day] && platformWeekly[day].enabled ? platformWeekly[day] : null
         )) {
-            return true;
-        }
-    }
-    for (const item of Array.isArray(days) ? days : []) {
-        if (!item || item.enabled === false || !item.date) continue;
-        if (intersectHours({ start: item.start, end: item.end }, platformHoursForDate(platform, item.date))) {
             return true;
         }
     }
@@ -508,6 +554,7 @@ module.exports = {
     hasBookableHours,
     psychologySpecialty,
     publicPsychologySpecialties,
+    profileClinicalAreas,
     profileMatchesSpecialty,
     timeToMinutes,
     minutesToTime,

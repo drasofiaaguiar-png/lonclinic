@@ -120,7 +120,7 @@
         if (role === 'psychFind') return withRef('/triagem');
         if (role === 'psych') {
             if (/terapia-de-casal/.test(hay(o))) return withRef('/marcar/terapia-casal');
-            return withRef('/marcar/psicologia');
+            return withRef('/marcar/psicologia-mensal');
         }
         if (role === 'nutritionFind') return '/nutricao/avaliacao';
         if (role === 'nutrition') {

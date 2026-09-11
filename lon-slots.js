@@ -269,7 +269,7 @@
             href: '/marcar/nutricao-programa',
             goal: 'Perda de peso / reeduca\u00e7\u00e3o metab\u00f3lica'
         },
-        psicologia: { service: 'psicologia', href: '/marcar/psicologia' }
+        psicologia: { service: 'psicologia_mensal', href: '/marcar/psicologia-mensal' }
     };
 
     function heroServicePack() {
@@ -550,7 +550,7 @@
             return;
         }
         if ((opts.service || '') === 'psicologia' || (opts.service || '') === 'psicologia_mensal') {
-            var psiDest = fallback || '/marcar/psicologia';
+            var psiDest = fallback || '/marcar/psicologia-mensal';
             try {
                 var u = new URL(psiDest, window.location.origin);
                 if (slot && slot.date) u.searchParams.set('date', slot.date);
@@ -694,17 +694,20 @@
         if (document.body && document.body.classList.contains('qx-body')) {
             return { service: 'saude_mental', href: '/triagem', cta: talkCta, bookMode: 'link' };
         }
-        if (/\/(saudemental|psicologia)(\/|$)/.test(p)) {
-            return { service: 'psicologia', href: '/marcar/psicologia', cta: book };
-        }
-        if (/\/consultas(\/|$)/.test(p)) {
-            return { service: 'saude_mental', href: '/triagem', cta: talkCta, bookMode: 'link' };
-        }
         if (/\/marcar\/psicologia-mensal/.test(p)) {
             return { service: 'psicologia_mensal', href: '/marcar/psicologia-mensal', cta: book };
         }
         if (/\/marcar\/psicologia/.test(p)) {
-            return { service: 'psicologia', href: '/marcar/psicologia', cta: book };
+            if (typeof window !== 'undefined' && /(?:^|[?&])plan=avulsa(?:&|$)/.test(window.location.search || '')) {
+                return { service: 'psicologia', href: '/marcar/psicologia?plan=avulsa', cta: book };
+            }
+            return { service: 'psicologia_mensal', href: '/marcar/psicologia-mensal', cta: book };
+        }
+        if (/\/(saudemental|psicologia)(\/|$)/.test(p)) {
+            return { service: 'psicologia_mensal', href: '/marcar/psicologia-mensal', cta: book };
+        }
+        if (/\/consultas(\/|$)/.test(p)) {
+            return { service: 'saude_mental', href: '/triagem', cta: talkCta, bookMode: 'link' };
         }
         if (/\/marcar\/burnout-programa/.test(p)) {
             return { service: 'burnout_programa', href: '/marcar/burnout-programa', cta: book };
