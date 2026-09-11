@@ -5116,6 +5116,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const editBtn = canEdit
             ? `<button type="button" class="btn btn-outline btn-sm" data-pro-edit="${escapeHtml(p.username)}">Editar ficha</button>`
             : '';
+        const assignLogin = canEdit && !p.hasLogin
+            ? `<button type="button" class="btn btn-primary btn-sm" data-pro-assign-login="${escapeHtml(p.username)}">Atribuir login</button>`
+            : '';
         const loginEmailRow = p.hasLogin && !p.isClinicAdmin
             ? `<div><dt>Email de login</dt><dd>${p.loginEmail
                 ? escapeHtml(p.loginEmail)
@@ -5165,8 +5168,69 @@ document.addEventListener('DOMContentLoaded', async () => {
             ${areaTagsHtml(p.primaryAreas) ? `<div class="admin-staff-profile-block"><h4>Áreas primárias</h4>${areaTagsHtml(p.primaryAreas)}</div>` : ''}
             ${areaTagsHtml(p.secondaryAreas) ? `<div class="admin-staff-profile-block"><h4>Áreas secundárias</h4>${areaTagsHtml(p.secondaryAreas)}</div>` : ''}
             ${docs ? `<div class="admin-staff-profile-block"><h4>Documentos</h4><ul class="admin-staff-docs">${docs}</ul></div>` : ''}
-            ${editBtn || sendLogin ? `<div class="admin-dir-detail-actions">${editBtn}${sendLogin}</div>` : ''}
+            ${!p.hasLogin && canEdit ? '<p class="admin-dir-edit-note">Esta ficha ainda não tem conta de login, por isso a recuperação de password não funciona. Atribua um login e depois envie o email de acesso.</p>' : ''}
+            ${editBtn || sendLogin || assignLogin ? `<div class="admin-dir-detail-actions">${editBtn}${assignLogin}${sendLogin}</div>` : ''}
         `;
+    }
+
+    async function assignLoginToStaffFile(username, btn) {
+        const p = professionalByKey(selectedProfessionalKey) || {};
+        if (btn) btn.disabled = true;
+        showProfessionalError('');
+        try {
+            const res = await fetch(`/api/admin/staff-profiles/${encodeURIComponent(username)}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: String(p.email || '').trim() })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                showProfessionalError(data.error || 'Não foi possível atribuir o login.');
+                return;
+            }
+            await loadAdminProfessionals();
+            if (data.professional && data.generatedPassword) {
+                showProfessionalCreds(data.professional, data.generatedPassword);
+            }
+            showProfessionalError(`Login atribuído a ${(data.professional && data.professional.displayName) || username}. Envie o email de acesso ou peça ao profissional para usar "Esqueci a password".`);
+        } catch (err) {
+            showProfessionalError('Erro de rede. Tente novamente.');
+        } finally {
+            if (btn) btn.disabled = false;
+        }
+    }
+
+    const adminDirAssignLoginsBtn = document.getElementById('adminDirAssignLoginsBtn');
+    if (adminDirAssignLoginsBtn) {
+        adminDirAssignLoginsBtn.addEventListener('click', async () => {
+            if (!window.confirm('Criar uma conta de login para todas as fichas que ainda não têm? O email vem da candidatura da bolsa quando existe; os restantes ficam para preencher em "Editar ficha".')) return;
+            adminDirAssignLoginsBtn.disabled = true;
+            showProfessionalError('');
+            try {
+                const res = await fetch('/api/admin/staff-profiles/logins', { method: 'POST' });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    showProfessionalError(data.error || 'Não foi possível atribuir os logins.');
+                    return;
+                }
+                await loadAdminProfessionals();
+                const created = data.created || [];
+                if (!created.length) {
+                    showProfessionalError('Todas as fichas já têm login.');
+                    return;
+                }
+                const missing = created.filter((row) => !row.email).map((row) => row.displayName || row.username);
+                showProfessionalError(
+                    `${created.length} login(s) criado(s): ${created.map((row) => row.displayName || row.username).join(', ')}.`
+                    + (missing.length ? ` Sem email ainda: ${missing.join(', ')} — preencha em "Editar ficha".` : '')
+                    + ' Cada profissional pode entrar com "Esqueci a password" ou receber o email de acesso.'
+                );
+            } catch (err) {
+                showProfessionalError('Erro de rede. Tente novamente.');
+            } finally {
+                adminDirAssignLoginsBtn.disabled = false;
+            }
+        });
     }
 
     function inputField(name, label, value, opts) {
@@ -5444,6 +5508,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 dirEditing = false;
                 showProfessionalError('');
                 renderAdminProfessionals();
+                return;
+            }
+            const assignBtn = e.target.closest('[data-pro-assign-login]');
+            if (assignBtn) {
+                void assignLoginToStaffFile(assignBtn.getAttribute('data-pro-assign-login') || '', assignBtn);
                 return;
             }
             const sendLoginBtn = e.target.closest('[data-pro-send-login]');

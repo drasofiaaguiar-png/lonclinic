@@ -2769,6 +2769,7 @@ async function bootstrapPersistence() {
         await assignKnownProfessionalEmails();
         await removeDuplicateMariaSaraProfessionals();
         await removeExperimentalTestProfessionals();
+        await ensureAllStaffProfilesHaveLogins();
         return;
     }
     scheduleStore = loadScheduleStore();
@@ -2779,6 +2780,7 @@ async function bootstrapPersistence() {
     await assignKnownProfessionalEmails();
     await removeDuplicateMariaSaraProfessionals();
     await removeExperimentalTestProfessionals();
+    await ensureAllStaffProfilesHaveLogins();
 }
 
 async function fixKnownEmailTypos() {
@@ -13203,6 +13205,16 @@ app.delete('/api/admin/staff-profiles/:username', requireAdmin, async (req, res)
     }
 });
 
+app.post('/api/admin/staff-profiles/logins', requireAdmin, async (req, res) => {
+    try {
+        const created = await ensureAllStaffProfilesHaveLogins();
+        res.json({ created });
+    } catch (err) {
+        console.error('POST /api/admin/staff-profiles/logins:', err.message);
+        res.status(500).json({ error: err.message || 'Failed to assign logins' });
+    }
+});
+
 app.post('/api/admin/staff-profiles/:username/login', requireAdmin, express.json(), async (req, res) => {
     try {
         const username = String(req.params.username || '').trim().toLowerCase();
@@ -13655,6 +13667,54 @@ async function findBolsaApplicationForStaff(username, professional) {
         console.error('findBolsaApplicationForStaff by name:', err.message);
     }
     return seed || finish(null);
+}
+
+/**
+ * Every professional file gets a clinic login, so "Esqueci a password" can always set a password.
+ * The email comes from the linked bolsa application when there is one; otherwise the admin adds it later.
+ */
+async function ensureAllStaffProfilesHaveLogins() {
+    const created = [];
+    try {
+        const profiles = await listStaffProfilesInternal();
+        for (const profile of profiles || []) {
+            const username = normalizeProfessionalUsername(profile && profile.username);
+            if (!username || !isValidProfessionalUsername(username)) continue;
+            if (username === normalizeProfessionalUsername(CLINIC_USERNAME)) continue;
+            try {
+                if (await findProfessionalByUsernameInternal(username)) continue;
+                const filled = await fillStaffProfileFromBolsa(username);
+                const bolsa = filled && filled.bolsa;
+                const displayName = firstNonEmpty(
+                    isJunkStaffName(profile.fullName) ? '' : profile.fullName,
+                    bolsa && bolsa.name,
+                    username
+                );
+                let email = normalizeStaffEmail(bolsa && bolsa.email);
+                if (!isValidStaffEmail(email) || (await findProfessionalByEmailInternal(email))) email = '';
+                const professional = await createProfessionalInternal({
+                    username,
+                    password: generateProfessionalPassword(),
+                    displayName,
+                    email,
+                    active: true
+                });
+                if (filled && filled.app && filled.app.id && professional && professional.id) {
+                    try { await setApplicationProfessionalIdInternal(filled.app.id, professional.id); } catch (_) { /* optional link */ }
+                }
+                created.push({ username, displayName, email });
+                console.log(
+                    `   👤 Login created for professional file ${username}`
+                    + (email ? ` (${email})` : ' (no email yet — add it in Admin → Professionals → Editar ficha)')
+                );
+            } catch (err) {
+                console.error(`ensureAllStaffProfilesHaveLogins ${username}:`, err.message);
+            }
+        }
+    } catch (err) {
+        console.error('ensureAllStaffProfilesHaveLogins:', err.message);
+    }
+    return created;
 }
 
 async function ensureAllBolsaStaffProfiles() {
