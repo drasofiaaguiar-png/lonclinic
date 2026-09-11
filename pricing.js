@@ -26,6 +26,7 @@ const SERVICE_CENTS = {
     psicologia_mensal: 5600,
     terapia_casal: 7500,
     terapia_casal_mensal: 26000,
+    nutricao_consulta: 4500,
     nutricao_programa: 11500,
     nutricao_completo: 22700,
     nutricao_completo_reforcado: 32200

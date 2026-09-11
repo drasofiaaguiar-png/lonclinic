@@ -57,10 +57,10 @@
         var goal = opts.goal || 'Perda de peso / reeduca\u00e7\u00e3o metab\u00f3lica';
         return {
             goal: goal,
-            concerns: 'Objectivo: ' + goal + '. Consulta inicial de nutri\u00e7\u00e3o metab\u00f3lica \u2014 programa de reeduca\u00e7\u00e3o, sem prescri\u00e7\u00e3o de aGLP-1.',
+            concerns: 'Objectivo: ' + goal + '. Programa de perda de peso 6 meses (acompanhamento m\u00e9dico + nutri\u00e7\u00e3o) \u2014 sem prescri\u00e7\u00e3o de aGLP-1.',
             category: 'weight-loss',
             product: 'nutricao_programa',
-            label: 'Consulta inicial de nutri\u00e7\u00e3o metab\u00f3lica'
+            label: 'Programa de perda de peso \u00b7 6 meses'
         };
     }
 
@@ -193,9 +193,9 @@
         if (service === 'nutricao_programa' || service === 'nutricao_completo' || service === 'nutricao_completo_reforcado') {
             var nLabels = {
                 nutricao_programa: {
-                    pt: 'Consulta inicial de nutri\u00e7\u00e3o metab\u00f3lica',
-                    en: 'Initial metabolic nutrition consultation',
-                    es: 'Consulta inicial de nutrici\u00f3n metab\u00f3lica'
+                    pt: 'Programa de perda de peso \u00b7 6 meses',
+                    en: 'Weight-loss program \u00b7 6 months',
+                    es: 'Programa de p\u00e9rdida de peso \u00b7 6 meses'
                 },
                 nutricao_completo: {
                     pt: 'Programa completo \u2014 m\u00eas 1',

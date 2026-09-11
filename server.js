@@ -6996,7 +6996,14 @@ async function slotsForStaffPersonOnDate(person, dateIso, service, excludeHoldId
     blockedTicks.forEach((t) => blocked.add(t));
     const held = await ticksHeldForProfessional(dateIso, person.id, excludeHoldId, duration, step);
     held.forEach((t) => blocked.add(t));
+    // Psychology / couple therapy sessions last 60 min and start on the hour
+    // (10:00, 11:00, ...) — the 30-min grid is kept only for blocking ticks.
+    const hourlyStarts = staffBooking.isPsychologyStaffService(service);
     return grid.filter((start) => {
+        if (hourlyStarts) {
+            const mins = timeToMinutes(start);
+            if (mins == null || mins % 60 !== 0) return false;
+        }
         if (!staffBooking.startFitsDuration(grid, start, duration, step)) return false;
         return staffBooking.occupiedTimesFromStart(start, duration, step).every((t) => !blocked.has(t));
     });
@@ -8304,6 +8311,7 @@ const MARCAR_TIPO_TO_SLUG = {
     burnout_mensal: 'burnout-mensal',
     burnout_programa: 'burnout-programa',
     longevidade: 'longevidade',
+    nutricao_consulta: 'nutricao-consulta',
     nutricao_programa: 'nutricao-programa',
     nutricao_completo: 'nutricao-completo',
     nutricao_completo_reforcado: 'nutricao-completo-reforcado',
@@ -11401,7 +11409,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
             : service === 'burnout_programa'
               ? `${description} · Programa 8 sessões com relatório final e CBI antes/depois`
               : service === 'nutricao_programa'
-                ? `${description} · Adesão mês 1 do programa 6 meses (depois 75 €/mês · fidelização 3 meses)`
+                ? `${description} · Programa de perda de peso 6 meses (acompanhamento médico + nutrição) · mês 1 (depois 75 €/mês · fidelização 3 meses)`
                 : service === 'nutricao_completo'
                   ? `${description} · Adesão mês 1 (depois 187 €/mês · total 1 162 € · fidelização 3 meses)`
                   : service === 'nutricao_completo_reforcado'
@@ -16721,7 +16729,8 @@ const INVITATION_SERVICE_LABEL = {
     burnout: { pt: 'Consulta Especializada em Burnout', en: 'Specialized Burnout Consultation', es: 'Consulta especializada en burnout' },
     burnout_mensal: { pt: 'Subscrição Anti-Burnout', en: 'Anti-Burnout Subscription', es: 'Suscripción Anti-Burnout' },
     burnout_programa: { pt: 'Programa Anti-Burnout (8 sessões)', en: 'Anti-Burnout Program (8 sessions)', es: 'Programa anti-burnout (8 sesiones)' },
-    nutricao_programa: { pt: 'Programa Nutrição (6 meses)', en: 'Nutrition Program (6 months)', es: 'Programa de nutrición (6 meses)' },
+    nutricao_consulta: { pt: 'Consulta de Nutrição', en: 'Nutrition Consultation', es: 'Consulta de nutrición' },
+    nutricao_programa: { pt: 'Programa de Perda de Peso (6 meses)', en: 'Weight-Loss Program (6 months)', es: 'Programa de pérdida de peso (6 meses)' },
     nutricao_completo: { pt: 'Programa Completo (6 meses)', en: 'Complete Metabolic Program (6 months)', es: 'Programa completo (6 meses)' },
     nutricao_completo_reforcado: { pt: 'Programa Completo — entrada reforçada', en: 'Complete Program — higher first payment', es: 'Programa completo — entrada reforzada' },
     longevidade: { pt: 'Consulta de Longevidade', en: 'Longevity Consultation', es: 'Consulta de Longevidad' },

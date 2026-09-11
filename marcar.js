@@ -136,11 +136,20 @@
                     'For those who want to invest in health before chronic diseases arise.'
                 ]
             },
-            nutricao_programa: {
-                label: 'Initial metabolic nutrition consultation',
-                duration: 'Initial visit · then 2 consults/month',
+            nutricao_consulta: {
+                label: 'Nutrition consultation',
+                duration: '30 min',
                 bullets: [
-                    'Start of the metabolic re-education program (115 € now, then 75 €/month).',
+                    'One-off video consultation with a nutritionist — no program, no commitment.',
+                    'Dietary assessment and concrete guidance to get started. No aGLP-1 prescription.',
+                    'You can move to the 6-month program at any time if you want ongoing follow-up.'
+                ]
+            },
+            nutricao_programa: {
+                label: 'Weight-loss program · 6 months',
+                duration: 'Month 1 · then €75/month · total €490',
+                bullets: [
+                    'Medical follow-up + nutrition for 6 months (115 € now, then 75 €/month · total 490 €).',
                     '2 nutrition consults/month, portal chat and fortnightly plan adjustments. No aGLP-1 prescription.',
                     'Minimum 3 months. Weight-loss / re-education goal is added to the booking notes.'
                 ]
@@ -294,11 +303,20 @@
                     'Para quienes quieren invertir en su salud antes de que aparezcan enfermedades crónicas.'
                 ]
             },
-            nutricao_programa: {
-                label: 'Consulta inicial de nutrición metabólica',
-                duration: 'Consulta inicial · luego 2 consultas/mes',
+            nutricao_consulta: {
+                label: 'Consulta de nutrición',
+                duration: '30 min',
                 bullets: [
-                    'Inicio del programa de reeducación metabólica (115 € ahora, luego 75 €/mes).',
+                    'Consulta suelta con nutricionista por videollamada — sin programa ni permanencia.',
+                    'Valoración alimentaria y pautas concretas para empezar. Sin prescripción de aGLP-1.',
+                    'Puede pasar al programa de 6 meses en cualquier momento si quiere seguimiento continuo.'
+                ]
+            },
+            nutricao_programa: {
+                label: 'Programa de pérdida de peso · 6 meses',
+                duration: 'Mes 1 · luego 75 €/mes · total 490 €',
+                bullets: [
+                    'Seguimiento médico + nutrición durante 6 meses (115 € ahora, luego 75 €/mes · total 490 €).',
                     '2 consultas/mes, chat en el portal y ajustes quincenales. Sin prescripción de aGLP-1.',
                     'Fidelización mínima de 3 meses. El objetivo (pérdida de peso) va en las notas.'
                 ]
@@ -334,6 +352,7 @@
         burnout_mensal: 'burnout-mensal',
         burnout_programa: 'burnout-programa',
         longevidade: 'longevidade',
+        nutricao_consulta: 'nutricao-consulta',
         nutricao_programa: 'nutricao-programa',
         nutricao_completo: 'nutricao-completo',
         nutricao_completo_reforcado: 'nutricao-completo-reforcado',
@@ -358,6 +377,8 @@
         'burnout-programa': 'burnout_programa',
         burnout_programa: 'burnout_programa',
         longevidade: 'longevidade',
+        'nutricao-consulta': 'nutricao_consulta',
+        nutricao_consulta: 'nutricao_consulta',
         'nutricao-programa': 'nutricao_programa',
         nutricao_programa: 'nutricao_programa',
         'nutricao-completo': 'nutricao_completo',
@@ -422,15 +443,24 @@
             featured: false
         }
     ];
-    var NUTRICAO_FAMILY = ['nutricao_programa', 'nutricao_completo', 'nutricao_completo_reforcado'];
+    var NUTRICAO_FAMILY = ['nutricao_consulta', 'nutricao_programa', 'nutricao_completo', 'nutricao_completo_reforcado'];
     var NUTRICAO_PLAN_CARDS = [
         {
             tipo: 'nutricao_programa',
-            badge: 'Nutrição',
-            title: 'Reeducação metabólica',
+            badge: 'Recomendado',
+            title: 'Programa de perda de peso · 6 meses',
             price: '115 €',
-            unit: 'mês 1',
-            note: '2 consultas/mês · depois 75 €/mês',
+            unit: '· mês 1',
+            note: 'Acompanhamento médico + nutrição · depois 75 €/mês · total 490 €',
+            featured: true
+        },
+        {
+            tipo: 'nutricao_consulta',
+            badge: 'Avulsa',
+            title: 'Consulta de nutrição',
+            price: '45 €',
+            unit: 'por consulta',
+            note: '30 min · sem compromisso',
             featured: false
         },
         {
@@ -672,15 +702,27 @@
                 'Para quem quer investir na saúde antes de surgirem doenças crónicas.'
             ]
         },
+        nutricao_consulta: {
+            label: 'Consulta de nutrição',
+            price: '45 €',
+            cents: 4500,
+            duration: '30 min',
+            serviceKey: 'nutricao_consulta',
+            bullets: [
+                'Consulta avulsa com nutricionista, por videochamada — sem programa nem fidelização.',
+                'Avaliação alimentar e orientações concretas para começar. Sem prescrição de aGLP-1.',
+                'Se quiser acompanhamento contínuo, pode passar ao programa de 6 meses em qualquer altura.'
+            ]
+        },
         nutricao_programa: {
-            label: 'Consulta inicial de nutrição metabólica',
+            label: 'Programa de perda de peso · 6 meses',
             price: '115 €',
-            priceNote: ' · mês 1 do programa',
+            priceNote: ' · mês 1 · depois 75 €/mês',
             cents: 11500,
-            duration: 'Consulta inicial · depois 2 consultas/mês',
+            duration: 'Mês 1 · depois 75 €/mês · total 490 €',
             serviceKey: 'nutricao_programa',
             bullets: [
-                'Arranque do Programa de Reeducação Metabólica: 115 € agora e 75 €/mês nos meses seguintes (total 490 € em 6 meses).',
+                'Acompanhamento médico + nutrição durante 6 meses: 115 € agora e 75 €/mês nos meses seguintes (total 490 €).',
                 '2 consultas/mês com nutricionista, chat no portal e ajustes quinzenais do plano. Sem prescrição de aGLP-1.',
                 'Fidelização mínima de 3 meses. Objectivo (perda de peso / reeducação) vai nas notas da marcação.'
             ]
@@ -928,14 +970,20 @@
     }
 
     if (isNutricaoFamily(tipo)) {
-        var nutricaoCards = NUTRICAO_PLAN_CARDS.map(function (card) {
+        // Programa 6 meses + consulta avulsa. The Completo variants only show when arriving on them
+        // from /nutricao/programa, so the active plan is always visible.
+        var nutricaoCards = NUTRICAO_PLAN_CARDS.filter(function (card) {
+            if (card.tipo === 'nutricao_programa' || card.tipo === 'nutricao_consulta') return true;
+            return card.tipo === tipo;
+        }).map(function (card) {
             return Object.assign({}, card, { featured: card.tipo === tipo });
         });
-        renderPlanPicker(tipo, nutricaoCards, 'Reeducação metabólica', 'Escolha o plano — sem aGLP-1');
+        renderPlanPicker(tipo, nutricaoCards, 'Nutrição', 'Consulta avulsa ou programa de 6 meses — sem aGLP-1');
         var nutricaoLink = document.getElementById('marcarNutricaoLink');
         if (nutricaoLink) nutricaoLink.hidden = false;
         var nutricaoTrust = document.getElementById('marcarBuyTrust');
-        if (nutricaoTrust) nutricaoTrust.hidden = false;
+        // "Fidelização 3 meses" only applies to the programs, not to the one-off consultation.
+        if (nutricaoTrust) nutricaoTrust.hidden = tipo === 'nutricao_consulta';
     }
 
     function localizePlanCards(cards, overridesByTipo) {
@@ -1689,12 +1737,17 @@
             specialty: state.specialty || null,
             clinicalIntent: BURNOUT_FAMILY.indexOf(tipo) >= 0
                 ? burnoutClinicalIntent(tipo)
-                : (NUTRICAO_FAMILY.indexOf(tipo) >= 0 ? {
+                : (tipo === 'nutricao_consulta' ? {
+                    category: 'nutrition',
+                    product: 'nutricao_consulta',
+                    concerns: 'Consulta de nutrição avulsa (sem programa). Sem prescrição de aGLP-1.',
+                    label: 'Consulta de nutrição'
+                } : NUTRICAO_FAMILY.indexOf(tipo) >= 0 ? {
                     category: 'weight-loss',
                     product: consulta.serviceKey,
                     goal: 'Perda de peso / reeducação metabólica',
-                    concerns: 'Objectivo: perda de peso / reeducação metabólica. Consulta inicial de nutrição metabólica — programa de reeducação, sem prescrição de aGLP-1.',
-                    label: 'Consulta inicial de nutrição metabólica'
+                    concerns: 'Objectivo: perda de peso / reeducação metabólica. Programa de perda de peso 6 meses (acompanhamento médico + nutrição) — sem prescrição de aGLP-1.',
+                    label: 'Programa de perda de peso · 6 meses'
                 } : null)
         };
         if (payload.clinicalIntent && payload.clinicalIntent.goal) {

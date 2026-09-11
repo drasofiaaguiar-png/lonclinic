@@ -81,7 +81,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         burnout_programa: { label: 'Programa Anti-Burnout (8 sessões)', price: '490 €', cents: 49000 },
         renovacao: { label: 'Renovação de Tratamento Médico', price: '19 €', cents: 1900 },
         longevidade: { label: 'Consulta de Longevidade e Saúde Preventiva', price: '79 €', cents: 7900 },
-        nutricao_programa: { label: 'Consulta inicial de nutrição metabólica', price: '115 €', cents: 11500 },
+        nutricao_consulta: { label: 'Consulta de nutrição', price: '45 €', cents: 4500 },
+        nutricao_programa: { label: 'Programa de perda de peso · 6 meses (acompanhamento médico + nutrição)', price: '115 €', cents: 11500 },
         nutricao_completo: { label: 'Programa Completo (nutrição + psicologia) — mês 1', price: '227 €', cents: 22700 },
         nutricao_completo_reforcado: { label: 'Programa Completo — entrada reforçada', price: '322 €', cents: 32200 },
         psicologia: { label: 'Sessão de Psicologia', price: '60 €', cents: 6000 },
@@ -156,6 +157,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         burnout_mensal: 'burnout-mensal',
         burnout_programa: 'burnout-programa',
         longevidade: 'longevidade',
+        nutricao_consulta: 'nutricao-consulta',
         nutricao_programa: 'nutricao-programa',
         nutricao_completo: 'nutricao-completo',
         nutricao_completo_reforcado: 'nutricao-completo-reforcado',
@@ -164,19 +166,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         terapia_casal: 'terapia-casal',
         terapia_casal_mensal: 'terapia-casal-mensal'
     };
-    /* Subscription first (preferred), one-off second. */
+    /* Subscription / program first (preferred), one-off second. */
     const CHECKOUT_PLAN_FAMILIES = {
         psicologia: ['psicologia_mensal', 'psicologia'],
-        terapia_casal: ['terapia_casal_mensal', 'terapia_casal']
+        terapia_casal: ['terapia_casal_mensal', 'terapia_casal'],
+        nutricao: ['nutricao_programa', 'nutricao_consulta']
     };
     function planFamilyFor(serviceKey) {
         const key = String(serviceKey || '');
         if (key === 'psicologia' || key === 'psicologia_mensal') return 'psicologia';
         if (key === 'terapia_casal' || key === 'terapia_casal_mensal') return 'terapia_casal';
+        if (key.indexOf('nutricao_') === 0) return 'nutricao';
         return null;
     }
     function isPsychStaffService(serviceKey) {
-        return !!planFamilyFor(serviceKey);
+        const family = planFamilyFor(serviceKey);
+        return family === 'psicologia' || family === 'terapia_casal';
     }
     const TYPE_DROPDOWN_FALLBACK = {
         clinica_geral: 'Clínica Geral / Check-up',
@@ -634,6 +639,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 casalSubNote: '65 €/semana · cobrado mensalmente',
                 casalOneTitle: 'Sessão de casal',
                 casalOneNote: '50–60 min · os dois na videochamada',
+                perConsult: 'por consulta',
+                month1: 'mês 1',
+                nutriProgramTitle: 'Programa de perda de peso · 6 meses',
+                nutriProgramNote: 'Acompanhamento médico + nutrição · depois 75 €/mês · total 490 €',
+                nutriOneTitle: 'Consulta de nutrição',
+                nutriOneNote: '30 min · sem compromisso',
+                nutriCompletoTitle: 'Programa Completo · nutrição + psicologia',
+                nutriCompletoNote: 'Depois 187 €/mês · total 1 162 €',
+                nutriReforcadoTitle: 'Programa Completo · entrada reforçada',
+                nutriReforcadoNote: 'Depois 168 €/mês · total 1 162 €',
                 altSummary: 'Alterar horário, psicólogo ou tema',
                 altSummaryCasal: 'Alterar horário ou psicólogo',
                 otherTimes: 'Outros horários',
@@ -656,6 +671,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 casalSubNote: '€65/week · billed monthly',
                 casalOneTitle: 'Couples session',
                 casalOneNote: '50–60 min · both partners on the call',
+                perConsult: 'per consultation',
+                month1: 'month 1',
+                nutriProgramTitle: 'Weight-loss program · 6 months',
+                nutriProgramNote: 'Medical follow-up + nutrition · then €75/month · total €490',
+                nutriOneTitle: 'Nutrition consultation',
+                nutriOneNote: '30 min · no commitment',
+                nutriCompletoTitle: 'Complete program · nutrition + psychology',
+                nutriCompletoNote: 'Then €187/month · total €1,162',
+                nutriReforcadoTitle: 'Complete program · higher first payment',
+                nutriReforcadoNote: 'Then €168/month · total €1,162',
                 altSummary: 'Change time, psychologist or topic',
                 altSummaryCasal: 'Change time or psychologist',
                 otherTimes: 'Other times',
@@ -678,6 +703,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 casalSubNote: '65 €/semana · cobrado mensualmente',
                 casalOneTitle: 'Sesión de pareja',
                 casalOneNote: '50–60 min · los dos en videollamada',
+                perConsult: 'por consulta',
+                month1: 'mes 1',
+                nutriProgramTitle: 'Programa de pérdida de peso · 6 meses',
+                nutriProgramNote: 'Seguimiento médico + nutrición · luego 75 €/mes · total 490 €',
+                nutriOneTitle: 'Consulta de nutrición',
+                nutriOneNote: '30 min · sin compromiso',
+                nutriCompletoTitle: 'Programa completo · nutrición + psicología',
+                nutriCompletoNote: 'Luego 187 €/mes · total 1 162 €',
+                nutriReforcadoTitle: 'Programa completo · entrada reforzada',
+                nutriReforcadoNote: 'Luego 168 €/mes · total 1 162 €',
                 altSummary: 'Cambiar horario, psicólogo o tema',
                 altSummaryCasal: 'Cambiar horario o psicólogo',
                 otherTimes: 'Otros horarios',
@@ -704,6 +739,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function planCardsFor(family) {
         const c = checkoutPsiCopy();
+        if (family === 'nutricao') {
+            const month1 = '· ' + c.month1;
+            const cards = [
+                { key: 'nutricao_programa', badge: c.recommended, title: c.nutriProgramTitle, price: services.nutricao_programa.price, unit: month1, note: c.nutriProgramNote, featured: true },
+                { key: 'nutricao_consulta', badge: c.oneOff, title: c.nutriOneTitle, price: services.nutricao_consulta.price, unit: c.perConsult, note: c.nutriOneNote, featured: false }
+            ];
+            // Completo variants are only reachable from /nutricao/programa — keep the active one visible.
+            if (state.service === 'nutricao_completo') {
+                cards.unshift({ key: 'nutricao_completo', badge: c.recommended, title: c.nutriCompletoTitle, price: services.nutricao_completo.price, unit: month1, note: c.nutriCompletoNote, featured: true });
+                cards[1].badge = '';
+                cards[1].featured = false;
+            } else if (state.service === 'nutricao_completo_reforcado') {
+                cards.unshift({ key: 'nutricao_completo_reforcado', badge: c.recommended, title: c.nutriReforcadoTitle, price: services.nutricao_completo_reforcado.price, unit: month1, note: c.nutriReforcadoNote, featured: true });
+                cards[1].badge = '';
+                cards[1].featured = false;
+            }
+            return cards;
+        }
         if (family === 'terapia_casal') {
             return [
                 { key: 'terapia_casal_mensal', badge: c.recommended, title: c.casalSubTitle, price: '260 €', unit: c.perMonth, note: c.casalSubNote, featured: true },
@@ -718,6 +771,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function switchCheckoutPlan(nextKey) {
         if (!services[nextKey] || nextKey === state.service) return;
+        const prevNote = clinicalIntentNote();
         state.serviceDuration = '';
         state.discountCode = '';
         state.discountPercent = 0;
@@ -725,6 +779,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (msg) msg.style.display = 'none';
         applyServiceKey(nextKey);
         state.serviceLabel = i18nServiceLabel(nextKey);
+        if (planFamilyFor(nextKey) === 'nutricao') {
+            // The auto-filled intake note names the plan — regenerate it for the new plan,
+            // but never overwrite text the patient typed.
+            state.clinicalIntent = null;
+            state.prefillConcerns = '';
+            const ta = document.querySelector('.passenger-panel[data-passenger="1"] .p-concerns');
+            if (ta && (!ta.value.trim() || ta.value.trim() === String(prevNote || '').trim())) {
+                ta.value = clinicalIntentNote();
+            }
+        }
         if (window.LonAnalytics) {
             window.LonAnalytics.track('plan_switch', { surface: 'booking', service: nextKey });
         }
@@ -937,6 +1001,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
         renderCheckoutPlanPicker(family);
+        if (!isPsychStaffService(state.service)) {
+            // Nutrition: plan choice only — no psychologist card or alternatives block.
+            if (proWrap) proWrap.hidden = true;
+            if (alt) alt.hidden = true;
+            return;
+        }
         renderCheckoutPro();
         if (alt) {
             const summary = document.getElementById('checkoutAltSummary');
@@ -1386,6 +1456,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 burnout_mensal: 'burnout-mensal',
                 burnout_programa: 'burnout-programa',
                 longevidade: 'longevidade',
+                nutricao_consulta: 'nutricao-consulta',
                 nutricao_programa: 'nutricao-programa',
                 nutricao_completo: 'nutricao-completo',
                 nutricao_completo_reforcado: 'nutricao-completo-reforcado'
@@ -1573,6 +1644,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             return bits.join(' · ');
         }
+        if (state.service === 'nutricao_consulta') {
+            return 'Consulta de nutrição avulsa (sem programa). Sem prescrição de aGLP-1.';
+        }
         if (state.service === 'nutricao_programa' || state.service === 'nutricao_completo' || state.service === 'nutricao_completo_reforcado') {
             try {
                 const meta = JSON.parse(sessionStorage.getItem('lonNutricaoAvaliacao') || 'null');
@@ -1596,7 +1670,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         (quiz.band ? ' · ' + quiz.band : '');
                 }
             } catch (e) { /* ignore */ }
-            return 'Objectivo: perda de peso / reeducação metabólica. Consulta inicial de nutrição metabólica — sem prescrição de aGLP-1.';
+            return 'Objectivo: perda de peso / reeducação metabólica. Programa de perda de peso 6 meses (acompanhamento médico + nutrição) — sem prescrição de aGLP-1.';
         }
         if (state.service === 'burnout' || state.service === 'burnout_mensal' || state.service === 'burnout_programa') {
             try {
