@@ -305,6 +305,23 @@ body {
     margin-top: 20px;
 }
 
+.checkout-eyebrow,
+.checkout-hero-lead,
+.checkout-consult-chips,
+.checkout-type-name,
+.checkout-pay-brands {
+    display: none;
+}
+
+.checkout-layout {
+    width: 100%;
+}
+
+.checkout-rail {
+    max-width: 640px;
+    margin: 0 auto;
+}
+
 .checkout-consult-card {
     text-align: left;
     margin: 0 auto 28px;
@@ -315,8 +332,17 @@ body {
     border-radius: 14px;
 }
 
+.checkout-consult-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 12px;
+    margin-bottom: 10px;
+}
+
 .checkout-consult-kicker {
-    margin: 0 0 8px;
+    margin: 0;
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -349,8 +375,33 @@ body {
     font-weight: 600;
 }
 
+.checkout-meta {
+    display: grid;
+    gap: 8px;
+    margin: 4px 0 0;
+}
+
+.checkout-meta-item {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 8px;
+    align-items: baseline;
+}
+
+.checkout-meta dt {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.checkout-meta dd {
+    margin: 0;
+}
+
 .checkout-summary-when {
-    margin: 0 0 6px;
+    margin: 0;
     font-size: 0.95rem;
     color: var(--text-secondary, #425045);
 }
@@ -380,7 +431,7 @@ body {
     font: inherit;
     text-align: left;
     cursor: pointer;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
 }
 
 .checkout-plan-card:hover {
@@ -490,6 +541,14 @@ body {
     font-size: 0.95rem;
 }
 
+.checkout-pro-role {
+    display: block;
+    margin-top: 3px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
 .checkout-pro-bio {
     margin: 4px 0 0;
     font-size: 0.84rem;
@@ -574,11 +633,577 @@ body {
     }
 }
 
+/* ========================================
+   PSYCHOLOGY CHECKOUT — professional UI
+   (same information order; refined layout)
+======================================== */
+body.lon-landing.is-psych-checkout {
+    background: #f3f6f3;
+}
+
+body.is-psych-checkout .booking-container {
+    max-width: 1120px;
+}
+
+body.is-psych-checkout .booking-progress {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0 0 8px;
+    margin-bottom: 28px;
+}
+
+body.is-psych-checkout .progress-dot {
+    width: 30px;
+    height: 30px;
+    font-size: 0.75rem;
+}
+
+body.is-psych-checkout .checkout-eyebrow,
+body.is-psych-checkout .checkout-hero-lead,
+body.is-psych-checkout .checkout-consult-chips,
+body.is-psych-checkout .checkout-pay-brands {
+    display: flex;
+}
+
+body.is-psych-checkout .checkout-eyebrow {
+    margin: 0 0 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #5a6b60;
+}
+
+body.is-psych-checkout .checkout-hero {
+    text-align: left;
+    margin: 0 0 28px;
+    max-width: none;
+}
+
+body.is-psych-checkout .checkout-hero .step-title {
+    margin-bottom: 8px;
+    max-width: 22ch;
+    font-size: clamp(1.7rem, 3.2vw, 2.35rem);
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    color: #15241a;
+}
+
+body.is-psych-checkout .checkout-hero-lead {
+    display: block;
+    max-width: 38rem;
+    margin: 0;
+    color: #4d5e53;
+}
+
+body.is-psych-checkout .checkout-layout {
+    display: grid;
+    gap: 20px;
+}
+
+body.is-psych-checkout .checkout-main {
+    display: grid;
+    gap: 18px;
+    min-width: 0;
+}
+
+body.is-psych-checkout .checkout-consult-card,
+body.is-psych-checkout .checkout-form-card,
+body.is-psych-checkout .checkout-pay-card {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    background: #fff;
+    border: 1px solid #d7e0d9;
+    border-radius: 22px;
+    box-shadow: 0 10px 32px rgba(21, 36, 26, 0.05);
+}
+
+body.is-psych-checkout .checkout-consult-card {
+    padding: 24px;
+}
+
+body.is-psych-checkout .checkout-consult-head {
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #e4ece6;
+}
+
+body.is-psych-checkout .checkout-consult-kicker {
+    font-size: 0.68rem;
+    color: #255235;
+}
+
+body.is-psych-checkout .checkout-consult-chips {
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+body.is-psych-checkout .checkout-mode-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #e8f0ea;
+    color: #1b3f29;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+body.is-psych-checkout .checkout-mode-chip.is-soft {
+    background: #f4efe8;
+    color: #6a4630;
+}
+
+body.is-psych-checkout .checkout-type-row {
+    margin-bottom: 16px;
+}
+
+body.is-psych-checkout .checkout-type-row label,
+body.is-psych-checkout .checkout-type-row select {
+    display: none;
+}
+
+body.is-psych-checkout .checkout-type-name {
+    display: block;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #15241a;
+}
+
+body.is-psych-checkout .checkout-meta {
+    gap: 0;
+    border: 1px solid #e4ece6;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #f7faf8;
+}
+
+body.is-psych-checkout .checkout-meta-item {
+    grid-template-columns: 6.2rem minmax(0, 1fr);
+    padding: 12px 16px;
+    gap: 12px;
+}
+
+body.is-psych-checkout .checkout-meta-item + .checkout-meta-item {
+    border-top: 1px solid #e4ece6;
+}
+
+body.is-psych-checkout .checkout-meta dt {
+    color: #6a7a70;
+}
+
+body.is-psych-checkout .checkout-meta dd,
+body.is-psych-checkout .checkout-summary-when {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #1a2b20;
+}
+
+body.is-psych-checkout .checkout-summary-price {
+    font-size: 1.05rem;
+}
+
+body.is-psych-checkout .checkout-plan-picker {
+    gap: 12px;
+    margin-top: 18px;
+}
+
+body.is-psych-checkout .checkout-plan-card {
+    position: relative;
+    gap: 6px;
+    padding: 16px 16px 14px;
+    border-radius: 16px;
+    border: 1px solid #d7e0d9;
+    box-shadow: none;
+}
+
+body.is-psych-checkout .checkout-plan-card:hover {
+    transform: translateY(-1px);
+    border-color: #255235;
+}
+
+body.is-psych-checkout .checkout-plan-card.is-active {
+    background: #e6efe9;
+    border-color: #255235;
+    box-shadow: inset 0 0 0 1px #255235;
+}
+
+body.is-psych-checkout .checkout-plan-card.is-featured.is-active {
+    background: #fbeee4;
+    border-color: #c4744a;
+    box-shadow: inset 0 0 0 1px #c4744a;
+}
+
+body.is-psych-checkout .checkout-plan-card.is-active::after {
+    content: '';
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: #255235 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center / 12px 12px no-repeat;
+}
+
+body.is-psych-checkout .checkout-plan-card.is-featured.is-active::after {
+    background-color: #c4744a;
+}
+
+body.is-psych-checkout .checkout-plan-badge {
+    display: inline-flex;
+    align-self: flex-start;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(37, 82, 53, 0.1);
+}
+
+body.is-psych-checkout .checkout-plan-card.is-featured .checkout-plan-badge {
+    background: #c4744a;
+    color: #fff;
+}
+
+body.is-psych-checkout .checkout-plan-title {
+    padding-right: 28px;
+    font-family: var(--font-display);
+    font-size: 1rem;
+}
+
+body.is-psych-checkout .checkout-plan-price {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    letter-spacing: -0.03em;
+}
+
+body.is-psych-checkout .checkout-pro {
+    margin-top: 18px;
+}
+
+body.is-psych-checkout .checkout-pro-kicker {
+    color: #255235;
+}
+
+body.is-psych-checkout .checkout-pro-card {
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border-radius: 18px;
+    border-color: #d7e0d9;
+    background: linear-gradient(180deg, #fbfcfb 0%, #f4f8f5 100%);
+}
+
+body.is-psych-checkout .checkout-pro-photo,
+body.is-psych-checkout .checkout-pro-fallback {
+    flex-basis: 72px;
+    width: 72px;
+    height: 72px;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 1px #c9d4cc, 0 8px 18px rgba(21, 36, 26, 0.08);
+}
+
+body.is-psych-checkout .checkout-pro-copy strong {
+    font-family: var(--font-display);
+    font-size: 1.12rem;
+    letter-spacing: -0.02em;
+}
+
+body.is-psych-checkout .checkout-pro-bio {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-clamp: 3;
+    overflow: hidden;
+    margin-top: 6px;
+}
+
+body.is-psych-checkout .checkout-alt {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #e4ece6;
+}
+
+body.is-psych-checkout .checkout-alt summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    font-size: 0.88rem;
+}
+
+body.is-psych-checkout .checkout-alt summary::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    margin-top: -3px;
+}
+
+body.is-psych-checkout .checkout-alt[open] summary::after {
+    transform: rotate(-135deg);
+    margin-top: 2px;
+}
+
+body.is-psych-checkout .checkout-alt-body {
+    padding: 12px;
+    border-radius: 14px;
+    background: #f7faf8;
+}
+
+body.is-psych-checkout .checkout-alt-chip {
+    border-color: #c9d4cc;
+    background: #fff;
+    color: #1b3f29;
+}
+
+body.is-psych-checkout .checkout-alt-chip:hover {
+    border-color: #255235;
+    background: #255235;
+}
+
+body.is-psych-checkout .checkout-form-card {
+    padding: 24px 24px 8px;
+}
+
+body.is-psych-checkout .details-form {
+    max-width: none;
+    margin: 0;
+}
+
+body.is-psych-checkout .form-section-title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+}
+
+body.is-psych-checkout .form-section-lead {
+    margin: 0 0 20px;
+    color: #4d5e53;
+}
+
+body.is-psych-checkout .form-group label {
+    font-weight: 600;
+    color: #2c3d31;
+}
+
+body.is-psych-checkout .form-group input,
+body.is-psych-checkout .form-group select,
+body.is-psych-checkout .form-group textarea {
+    padding: 13px 16px;
+    border-radius: 12px;
+    border-color: #c9d4cc;
+    background: #fbfcfb;
+}
+
+body.is-psych-checkout .form-group input:focus,
+body.is-psych-checkout .form-group select:focus,
+body.is-psych-checkout .form-group textarea:focus {
+    background: #fff;
+}
+
+body.is-psych-checkout .form-divider {
+    margin: 22px 0 20px;
+    background: #e4ece6;
+}
+
+body.is-psych-checkout .form-checkbox {
+    padding: 14px;
+    border: 1px solid #e4ece6;
+    border-radius: 14px;
+    background: #f7faf8;
+    font-weight: 400;
+}
+
+body.is-psych-checkout .checkout-rail {
+    min-width: 0;
+    max-width: none;
+    margin: 0;
+}
+
+body.is-psych-checkout .checkout-pay-card {
+    padding: 22px 22px 20px;
+}
+
+body.is-psych-checkout .booking-step2-discount {
+    margin: 0 0 18px;
+    padding-bottom: 16px;
+}
+
+body.is-psych-checkout .discount-input {
+    border-radius: 12px;
+    background: #f7faf8;
+}
+
+body.is-psych-checkout .lon-pay-methods {
+    margin: 0 0 8px;
+}
+
+body.is-psych-checkout #checkoutPayTitle {
+    margin-bottom: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #5a6b60;
+    font-family: var(--font);
+}
+
+body.is-psych-checkout .checkout-pay-amount {
+    font-family: var(--font-display);
+    font-size: 2.15rem;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin: 0 0 8px;
+    color: #15241a;
+}
+
+body.is-psych-checkout .lon-pay-methods-note {
+    margin: 0 0 12px;
+    font-size: 0.84rem;
+    line-height: 1.45;
+}
+
+body.is-psych-checkout .checkout-pay-brands {
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0 0 6px;
+}
+
+body.is-psych-checkout .checkout-pay-brands span {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 8px;
+    border: 1px solid #e4ece6;
+    background: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: #3f5346;
+}
+
+body.is-psych-checkout #step-2 .step-actions {
+    margin-top: 18px;
+    gap: 10px;
+}
+
+body.is-psych-checkout #step-2 .pay-btn {
+    flex: 1;
+    min-height: 52px;
+    border-radius: 14px;
+    font-weight: 700;
+    box-shadow: 0 10px 24px rgba(37, 82, 53, 0.22);
+}
+
+body.is-psych-checkout #step-2 .step-back {
+    border-radius: 14px;
+    background: #fff;
+}
+
+body.is-psych-checkout .lon-buy-trust {
+    margin-top: 16px;
+    display: grid;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: #4d5e53;
+}
+
+body.is-psych-checkout .lon-buy-trust li {
+    position: relative;
+    padding-left: 22px;
+}
+
+body.is-psych-checkout .lon-buy-trust li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.35em;
+    width: 12px;
+    height: 12px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23255235' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+@media (min-width: 960px) {
+    body.is-psych-checkout .checkout-layout {
+        grid-template-columns: minmax(0, 1fr) 340px;
+        gap: 28px;
+        align-items: start;
+    }
+
+    body.is-psych-checkout .checkout-pay-card {
+        position: sticky;
+        top: 96px;
+    }
+
+    body.is-psych-checkout #step-2 .step-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+    }
+
+    body.is-psych-checkout #step-2 .step-actions .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 959px) {
+    body.is-psych-checkout .booking-page {
+        padding-bottom: 120px;
+    }
+
+    body.is-psych-checkout #step-2 .step-actions {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 40;
+        margin: 0;
+        padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+        background: rgba(255, 255, 255, 0.94);
+        backdrop-filter: blur(12px);
+        border-top: 1px solid #d7e0d9;
+        flex-direction: row;
+        box-shadow: 0 -10px 28px rgba(21, 36, 26, 0.08);
+    }
+
+    body.is-psych-checkout #step-2 .step-back {
+        min-width: 0;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    body.is-psych-checkout #step-2 .pay-btn {
+        flex: 1;
+    }
+
+    body.is-psych-checkout .lon-wa-float {
+        bottom: 86px;
+    }
+}
+
 .form-section-lead {
     margin: -8px 0 18px;
     font-size: 0.92rem;
     line-height: 1.5;
     color: var(--text-secondary, #425045);
+}
+
+.checkout-next-list {
+    margin: -8px 0 0;
+    padding: 0 0 0 1.35rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--text-secondary, #425045);
+}
+
+.checkout-next-list li + li {
+    margin-top: 8px;
 }
 
 .checkout-pay-amount {
@@ -1465,6 +2090,10 @@ body {
     margin-bottom: 16px;
 }
 
+.form-grid-stack {
+    grid-template-columns: 1fr;
+}
+
 .form-group {
     margin-bottom: 16px;
 }
@@ -2334,6 +2963,30 @@ body {
 
     .step-actions .btn {
         width: 100%;
+    }
+
+    body.is-psych-checkout .booking-page {
+        padding-bottom: 120px;
+    }
+
+    body.is-psych-checkout #step-2 .step-actions {
+        flex-direction: row;
+    }
+
+    body.is-psych-checkout #step-2 .step-actions .btn {
+        width: auto;
+    }
+
+    body.is-psych-checkout #step-2 .pay-btn {
+        flex: 1;
+        width: auto;
+    }
+
+    body.is-psych-checkout .checkout-consult-card,
+    body.is-psych-checkout .checkout-form-card,
+    body.is-psych-checkout .checkout-pay-card {
+        padding: 18px 16px;
+        border-radius: 18px;
     }
 
     .confirmation-actions {

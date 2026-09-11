@@ -769,7 +769,10 @@ async function initBookingFlow() {
                 otherPros: 'Outro psicólogo nesta hora',
                 changeTheme: 'Mudar tema',
                 fullCalendar: 'Ver calendário completo',
-                keepPro: 'Manter'
+                keepPro: 'Manter',
+                proRole: 'Psicólogo clínico',
+                proRoleCasal: 'Psicólogo · terapia de casal',
+                videoCall: 'Videochamada'
             },
             en: {
                 yourPsychologist: 'Your psychologist',
@@ -801,7 +804,10 @@ async function initBookingFlow() {
                 otherPros: 'Another psychologist at this time',
                 changeTheme: 'Change topic',
                 fullCalendar: 'See full calendar',
-                keepPro: 'Keep'
+                keepPro: 'Keep',
+                proRole: 'Clinical psychologist',
+                proRoleCasal: 'Psychologist · couples therapy',
+                videoCall: 'Video call'
             },
             es: {
                 yourPsychologist: 'Su psicólogo',
@@ -833,7 +839,10 @@ async function initBookingFlow() {
                 otherPros: 'Otro psicólogo a esta hora',
                 changeTheme: 'Cambiar tema',
                 fullCalendar: 'Ver calendario completo',
-                keepPro: 'Mantener'
+                keepPro: 'Mantener',
+                proRole: 'Psicólogo clínico',
+                proRoleCasal: 'Psicólogo · terapia de pareja',
+                videoCall: 'Videollamada'
             }
         };
         return map[lang] || map.pt;
@@ -949,10 +958,13 @@ async function initBookingFlow() {
             ? '<img class="checkout-pro-photo" src="' + escapeHtml(state.professionalPhotoUrl) + '" alt="">'
             : '<span class="checkout-pro-fallback" aria-hidden="true">' + escapeHtml(initialsFromName(state.professionalName)) + '</span>';
         const bio = state.professionalBio ? '<p class="checkout-pro-bio">' + escapeHtml(state.professionalBio) + '</p>' : '';
+        const role = planFamilyFor(state.service) === 'terapia_casal' ? c.proRoleCasal : c.proRole;
         wrap.innerHTML =
             '<p class="checkout-pro-kicker">' + escapeHtml(c.yourPsychologist) + '</p>' +
             '<div class="checkout-pro-card">' + photo +
-            '<div class="checkout-pro-copy"><strong>' + escapeHtml(state.professionalName) + '</strong>' + bio + '</div></div>';
+            '<div class="checkout-pro-copy"><strong>' + escapeHtml(state.professionalName) + '</strong>' +
+            '<span class="checkout-pro-role">' + escapeHtml(role) + ' · ' + escapeHtml(c.videoCall) + '</span>' +
+            bio + '</div></div>';
         wrap.hidden = false;
     }
 
@@ -1104,11 +1116,65 @@ async function initBookingFlow() {
         links.innerHTML = parts.join('<span class="checkout-alt-sep"> · </span>');
     }
 
+    function specialtyCheckoutLabel() {
+        const lang = (window.CLINIC_I18N && typeof window.CLINIC_I18N.getLang === 'function')
+            ? window.CLINIC_I18N.getLang()
+            : getBookingLocale();
+        const loc = lang === 'en' || lang === 'es' ? lang : 'pt';
+        const map = {
+            ansiedade: { pt: 'Ansiedade / pânico', en: 'Anxiety / panic', es: 'Ansiedad / pánico' },
+            depressao: { pt: 'Depressão', en: 'Depression', es: 'Depresión' },
+            burnout: { pt: 'Burnout', en: 'Burnout', es: 'Burnout' },
+            casal: { pt: 'Terapia de casal', en: 'Couples therapy', es: 'Terapia de pareja' },
+            relacionamentos: { pt: 'Relacionamentos e família', en: 'Relationships and family', es: 'Relaciones y familia' },
+            trauma: { pt: 'Trauma / luto', en: 'Trauma / grief', es: 'Trauma / duelo' },
+            neuro: { pt: 'PHDA / autismo / neurodiversidade', en: 'ADHD / autism / neurodiversity', es: 'TDAH / autismo / neurodiversidad' },
+            alimentacao: { pt: 'Alimentação e imagem corporal', en: 'Eating and body image', es: 'Alimentación e imagen corporal' },
+            outro: { pt: 'Outro / ainda não sei', en: 'Other / not sure yet', es: 'Otro / aún no sé' }
+        };
+        const row = map[String(state.specialty || '')];
+        return row ? (row[loc] || row.pt) : '';
+    }
+
+    function setPsychCheckoutChrome(on) {
+        document.body.classList.toggle('is-psych-checkout', !!on);
+        const typeName = document.getElementById('checkoutTypeName');
+        const specChip = document.getElementById('checkoutSpecialtyChip');
+        const modeChip = document.getElementById('checkoutModeChip');
+        if (modeChip && on) modeChip.textContent = checkoutPsiCopy().videoCall;
+        if (!on) {
+            if (typeName) {
+                typeName.hidden = true;
+                typeName.textContent = '';
+            }
+            if (specChip) {
+                specChip.hidden = true;
+                specChip.textContent = '';
+            }
+            return;
+        }
+        if (typeName) {
+            const select = document.getElementById('checkoutServiceType');
+            const fromSelect = select && select.options[select.selectedIndex]
+                ? select.options[select.selectedIndex].textContent
+                : '';
+            typeName.textContent = fromSelect || state.serviceLabel || '';
+            typeName.hidden = !typeName.textContent;
+        }
+        if (specChip) {
+            const label = specialtyCheckoutLabel();
+            specChip.textContent = label;
+            specChip.hidden = !label;
+        }
+    }
+
     function renderCheckoutPsychology() {
         const family = planFamilyFor(state.service);
         const picker = document.getElementById('checkoutPlanPicker');
         const proWrap = document.getElementById('checkoutPro');
         const alt = document.getElementById('checkoutAlt');
+        const psych = isPsychStaffService(state.service);
+        setPsychCheckoutChrome(psych);
         if (!family || !state.date || !state.time) {
             if (picker) picker.hidden = true;
             if (proWrap) proWrap.hidden = true;
@@ -1116,7 +1182,7 @@ async function initBookingFlow() {
             return;
         }
         renderCheckoutPlanPicker(family);
-        if (!isPsychStaffService(state.service)) {
+        if (!psych) {
             // Nutrition: plan choice only — no psychologist card or alternatives block.
             if (proWrap) proWrap.hidden = true;
             if (alt) alt.hidden = true;
