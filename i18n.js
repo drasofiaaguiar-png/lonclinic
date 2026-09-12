@@ -102,8 +102,6 @@
         { s: '#lonHeroService option[value="clinica_geral"]', en: 'Doctor', pt: 'Médico', es: 'Médico' },
         { s: '#lonHeroService option[value="nutricao_programa"]', en: 'Nutrition', pt: 'Nutrição', es: 'Nutrición' },
         { s: '#lonHeroService option[value="psicologia"]', en: 'Psychologist', pt: 'Psicólogo', es: 'Psicólogo' },
-        { s: '.dr-hero-ers-num', en: '45.475', pt: '45.475', es: '45.475' },
-        { s: '.dr-hero-ers p:last-child', en: 'Registration with the Health Regulatory Authority', pt: 'Registo na Entidade Reguladora da Saúde', es: 'Registro en la Entidad Reguladora de la Salud' },
         { s: '.dr-hero-meta', en: 'Online consultation · No travel · Wherever you are', pt: 'Consulta online · Sem deslocações · Onde quer que esteja', es: 'Consulta online · Sin desplazamientos · Esté donde esté' },
         { s: '.dr-live-slots-kicker', en: 'Available appointments', pt: 'Consultas disponíveis', es: 'Consultas disponibles' },
         { s: '.dr-next-slot-kicker', en: 'Next available', pt: 'Próximo horário', es: 'Próximo horario' },
@@ -113,7 +111,7 @@
         { s: '.dr-float-card strong', en: 'Your online health clinic.', pt: 'A sua clínica de saúde, online.', es: 'Su clínica de salud, online.' },
 
         /* ── Trust bullets ── */
-        { s: '.dr-trust-list li:nth-child(1)', en: 'Clinic certified by the Health Regulatory Authority', pt: 'Clínica certificada pela Entidade Reguladora da Saúde', es: 'Clínica certificada por la Entidad Reguladora de la Salud' },
+        { s: '.dr-trust-list li:nth-child(1)', en: 'Clinic certified by the Health Regulatory Authority no. 45.475', pt: 'Clínica certificada pela Entidade Reguladora da Saúde nº 45.475', es: 'Clínica certificada por la Entidad Reguladora de la Salud n.º 45.475' },
         { s: '.dr-trust-list li:nth-child(2)', en: 'Doctors registered with the Medical Association', pt: 'Médicos inscritos na Ordem dos Médicos', es: 'Médicos inscritos en el Colegio de Médicos' },
         { s: '.dr-trust-list li:nth-child(3)', en: 'Nutritionists and psychologists registered with their respective professional bodies', pt: 'Nutricionistas e Psicólogos inscritos nas respetivas Ordens', es: 'Nutricionistas y psicólogos inscritos en sus respectivos Colegios profesionales' },
         { s: '.dr-trust-list li:nth-child(4)', en: 'Consultations in Portuguese, English and Spanish', pt: 'Consultas em português, inglês e espanhol', es: 'Consultas en portugués, inglés y español' },

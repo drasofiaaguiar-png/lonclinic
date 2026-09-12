@@ -3649,26 +3649,29 @@ body.lon-home .lon-nav:not(.is-scrolled) .lon-nav-toggle span {
 .lon-home .lon-logo-name {
     display: inline-flex;
     align-items: baseline;
-    gap: 0.22em;
+    gap: 0.35em;
     font-size: 1.15rem;
     letter-spacing: -0.045em;
     font-weight: 650;
     color: var(--lon-ink);
 }
 
-.lon-home .lon-logo-lon {
+.lon-home .lon-logo-word {
+    display: inline;
     font-family: Fraunces, Georgia, serif;
     font-style: italic;
     font-weight: 500;
     letter-spacing: -0.04em;
 }
 
+.lon-home .lon-logo-lon,
+.lon-home .lon-logo-gevity {
+    font: inherit;
+    letter-spacing: inherit;
+}
+
 .lon-home .lon-logo-gevity {
     color: var(--lon-sage-deep);
-    font-family: inherit;
-    font-style: normal;
-    font-weight: 500;
-    letter-spacing: -0.04em;
 }
 
 .lon-home .lon-logo-clinic {
@@ -3740,6 +3743,7 @@ body.lon-home .dr-hero {
     min-height: 100svh;
     background: #b7aea4;
     border-radius: 0;
+    overflow: hidden;
 }
 
 .lon-home .dr-hero::before {
@@ -3748,13 +3752,15 @@ body.lon-home .dr-hero {
 
 .lon-home .dr-hero-bg {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    top: 50%;
+    left: 14%;
+    width: 132%;
+    height: 132%;
     max-width: none;
     max-height: none;
     object-fit: cover;
-    object-position: 86% 38%;
+    object-position: 50% 28%;
+    transform: translateY(-50%);
     z-index: 0;
     pointer-events: none;
 }
@@ -3866,10 +3872,12 @@ body.lon-home .dr-hero {
 
 .lon-home .dr-hero-dock {
     display: grid;
-    grid-template-columns: minmax(16rem, 1.35fr) minmax(11rem, 0.55fr);
+    grid-template-columns: 1fr;
     gap: 12px;
     width: 100%;
-    padding: 0 clamp(18px, 4vw, 48px) clamp(16px, 3vh, 28px);
+    max-width: 36rem;
+    padding: 0 clamp(24px, 5vw, 72px) clamp(16px, 3vh, 28px);
+    align-self: flex-start;
 }
 
 .lon-home .dr-hero-glass {
@@ -3909,71 +3917,38 @@ body.lon-home .dr-hero {
     color: var(--lon-forest);
 }
 
-.lon-home .dr-hero-ers {
-    position: static;
-    right: auto;
-    bottom: auto;
-    width: auto;
-    margin: 0;
-    padding: 16px 18px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.lon-home .dr-hero-ers-num {
-    font-size: 1.7rem;
-    letter-spacing: -0.05em;
-    line-height: 1;
-    font-weight: 550;
-}
-
-.lon-home .dr-hero-ers p:last-child {
-    margin-top: 6px;
-    font-size: 0.68rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: rgba(247, 243, 234, 0.62);
-}
-
 .lon-home .lon-trust-strip {
-    grid-column: 1 / -1;
-    padding: 4px 6px;
-    border: 1px solid rgba(247, 243, 234, 0.22);
+    padding: 6px 10px;
 }
 
 .lon-home .lon-trust-strip .dr-trust-list {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 0;
     max-width: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .lon-home .lon-trust-strip .dr-trust-list li {
     position: relative;
     background: transparent;
     border: 0;
+    border-bottom: 1px solid rgba(247, 243, 234, 0.16);
     color: rgba(247, 243, 234, 0.88);
-    padding: 12px 14px;
-    font-size: 0.82rem;
+    padding: 11px 8px;
+    font-size: 0.84rem;
     line-height: 1.4;
     backdrop-filter: none;
 }
 
-.lon-home .lon-trust-strip .dr-trust-list li::before {
-    content: none;
+.lon-home .lon-trust-strip .dr-trust-list li:last-child {
+    border-bottom: 0;
 }
 
-@media (min-width: 800px) {
-    .lon-home .lon-trust-strip .dr-trust-list {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 0;
-    }
-
-    .lon-home .lon-trust-strip .dr-trust-list li:nth-child(-n+3) {
-        border-top: 0;
-        padding-top: 12px;
-    }
+.lon-home .lon-trust-strip .dr-trust-list li::before {
+    content: none;
 }
 
 /* ── Intro ── */
@@ -4631,12 +4606,12 @@ body.lon-home #como-funciona .lon-how-step-num {
     }
 
     .lon-home .dr-hero-bg {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        max-width: none;
-        object-position: 78% 30%;
+        top: 50%;
+        left: 8%;
+        width: 128%;
+        height: 128%;
+        object-position: 50% 26%;
+        transform: translateY(-50%);
     }
 
     .lon-home .dr-hero-scrim {
@@ -4658,11 +4633,8 @@ body.lon-home #como-funciona .lon-how-step-num {
 
     .lon-home .dr-hero-dock {
         grid-template-columns: 1fr;
+        max-width: none;
         padding: 0 16px 16px;
-    }
-
-    .lon-home .lon-trust-strip .dr-trust-list {
-        grid-template-columns: 1fr 1fr;
     }
 
     .lon-home .dr-hero h1 {
@@ -4678,11 +4650,6 @@ body.lon-home #como-funciona .lon-how-step-num {
     .lon-home .dr-hero-content .dr-cta-row .lon-btn,
     .lon-home .dr-hero-content .dr-hero-service-wrap,
     .lon-home .dr-hero-content .dr-hero-service {
-        width: auto;
-    }
-
-    .lon-home .dr-hero-ers {
-        position: static;
         width: auto;
     }
 
