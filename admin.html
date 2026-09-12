@@ -77,6 +77,49 @@
                     <div id="adminLoginError" class="dash-login-error" style="display:none;"></div>
                     <button type="submit" class="btn btn-primary btn-lg dash-login-btn">Sign in</button>
                 </form>
+                <form class="dash-login-form" id="adminTotpForm" hidden>
+                    <div class="dash-form-group">
+                        <label for="adminTotpCode">Código 2FA</label>
+                        <input type="text" id="adminTotpCode" class="dash-login-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" required>
+                    </div>
+                    <div id="adminTotpError" class="dash-login-error" style="display:none;"></div>
+                    <button type="submit" class="btn btn-primary btn-lg dash-login-btn">Verificar código</button>
+                    <p class="dash-login-forgot-wrap">
+                        <button type="button" class="dash-login-forgot" id="adminTotpRecoverLink">Usar código de recuperação</button>
+                    </p>
+                </form>
+                <form class="dash-login-form" id="adminTotpSetupForm" hidden>
+                    <p class="dash-form-hint">Adicione esta conta na aplicação autenticadora com o código secreto abaixo.</p>
+                    <div class="dash-form-group">
+                        <label for="adminTotpSecret">Código secreto</label>
+                        <input type="text" id="adminTotpSecret" class="dash-login-secret" readonly autocomplete="off" spellcheck="false">
+                    </div>
+                    <p class="dash-login-otpauth" id="adminTotpOtpauthWrap" hidden>
+                        <a id="adminTotpOtpauth" href="#">Abrir na aplicação autenticadora</a>
+                    </p>
+                    <div class="dash-form-group">
+                        <label for="adminTotpSetupCode">Código de 6 dígitos</label>
+                        <input type="text" id="adminTotpSetupCode" class="dash-login-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" required>
+                    </div>
+                    <div id="adminTotpSetupError" class="dash-login-error" style="display:none;"></div>
+                    <button type="submit" class="btn btn-primary btn-lg dash-login-btn">Ativar 2FA e entrar</button>
+                </form>
+                <form class="dash-login-form" id="adminTotpRecoverForm" hidden>
+                    <div class="dash-form-group">
+                        <label for="adminTotpRecoverCode">Código de recuperação</label>
+                        <input type="text" id="adminTotpRecoverCode" autocomplete="off" maxlength="12" placeholder="xxxx-xxxx" required spellcheck="false">
+                    </div>
+                    <div id="adminTotpRecoverError" class="dash-login-error" style="display:none;"></div>
+                    <button type="submit" class="btn btn-primary btn-lg dash-login-btn">Entrar com código de recuperação</button>
+                    <p class="dash-login-forgot-wrap">
+                        <button type="button" class="dash-login-forgot" id="adminTotpRecoverBack">Voltar ao código 2FA</button>
+                    </p>
+                </form>
+                <div id="adminTotpCodesPanel" class="dash-login-form" hidden>
+                    <p class="dash-form-hint">Guarde estes códigos de recuperação num sítio seguro. Cada um só pode ser usado uma vez.</p>
+                    <pre class="dash-login-recovery" id="adminTotpCodesList"></pre>
+                    <button type="button" class="btn btn-primary btn-lg dash-login-btn" id="adminTotpCodesContinue">Continuar para o portal</button>
+                </div>
                 <p class="dash-login-note">Authorized administrators only. All access is logged.</p>
             </div>
         </section>

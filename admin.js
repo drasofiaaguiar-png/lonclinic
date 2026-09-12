@@ -15,6 +15,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     const adminLoginForm = document.getElementById('adminLoginForm');
     const adminLoginError = document.getElementById('adminLoginError');
     const adminLogoutBtn = document.getElementById('adminLogoutBtn');
+    const adminTotpForm = document.getElementById('adminTotpForm');
+    const adminTotpCode = document.getElementById('adminTotpCode');
+    const adminTotpError = document.getElementById('adminTotpError');
+    const adminTotpRecoverLink = document.getElementById('adminTotpRecoverLink');
+    const adminTotpSetupForm = document.getElementById('adminTotpSetupForm');
+    const adminTotpSecret = document.getElementById('adminTotpSecret');
+    const adminTotpOtpauth = document.getElementById('adminTotpOtpauth');
+    const adminTotpOtpauthWrap = document.getElementById('adminTotpOtpauthWrap');
+    const adminTotpSetupCode = document.getElementById('adminTotpSetupCode');
+    const adminTotpSetupError = document.getElementById('adminTotpSetupError');
+    const adminTotpRecoverForm = document.getElementById('adminTotpRecoverForm');
+    const adminTotpRecoverCode = document.getElementById('adminTotpRecoverCode');
+    const adminTotpRecoverError = document.getElementById('adminTotpRecoverError');
+    const adminTotpRecoverBack = document.getElementById('adminTotpRecoverBack');
+    const adminTotpCodesPanel = document.getElementById('adminTotpCodesPanel');
+    const adminTotpCodesList = document.getElementById('adminTotpCodesList');
+    const adminTotpCodesContinue = document.getElementById('adminTotpCodesContinue');
     const saveScheduleBtn = document.getElementById('saveScheduleBtn');
     const workingHoursGrid = document.getElementById('workingHoursGrid');
     const slotDurationSelect = document.getElementById('slotDuration');
@@ -267,6 +284,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.body.classList.remove('admin-logged-in');
         adminLogin.style.display = 'flex';
         adminContent.style.display = 'none';
+        setAdminAuthView('signin');
         const clinicianNote = document.getElementById('adminClinicianNote');
         if (clinicianNote) {
             clinicianNote.hidden = !(opts && opts.clinicianSession);
@@ -1684,11 +1702,60 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    function showLoginError(el, message) {
+        if (!el) return;
+        el.textContent = message || '';
+        el.style.display = message ? 'block' : 'none';
+    }
+
+    function setAdminAuthView(view) {
+        const mode = ['totp', 'totp-setup', 'totp-recover', 'totp-codes'].includes(view) ? view : 'signin';
+        if (adminLoginForm) adminLoginForm.hidden = mode !== 'signin';
+        if (adminTotpForm) adminTotpForm.hidden = mode !== 'totp';
+        if (adminTotpSetupForm) adminTotpSetupForm.hidden = mode !== 'totp-setup';
+        if (adminTotpRecoverForm) adminTotpRecoverForm.hidden = mode !== 'totp-recover';
+        if (adminTotpCodesPanel) adminTotpCodesPanel.hidden = mode !== 'totp-codes';
+        showLoginError(adminLoginError, '');
+        showLoginError(adminTotpError, '');
+        showLoginError(adminTotpSetupError, '');
+        showLoginError(adminTotpRecoverError, '');
+        if (mode === 'totp' && adminTotpCode) adminTotpCode.focus();
+        if (mode === 'totp-setup' && adminTotpSetupCode) adminTotpSetupCode.focus();
+        if (mode === 'totp-recover' && adminTotpRecoverCode) adminTotpRecoverCode.focus();
+    }
+
+    let pendingAdminLogin = null;
+
+    async function enterAdminSession() {
+        const next = safeDirectoryNext();
+        if (next) {
+            window.location.replace(next);
+            return;
+        }
+        showAdminContent();
+        await loadSchedule();
+    }
+
+    function finishAdminLogin(data) {
+        if (data.role && data.role !== 'admin') {
+            setAdminAuthView('signin');
+            showLoginError(adminLoginError, 'This account opens the clinic portal, not admin. Use the administrator username, or go to /clinic-desk/dias.');
+            return;
+        }
+        if (Array.isArray(data.recoveryCodes) && data.recoveryCodes.length) {
+            pendingAdminLogin = data;
+            if (adminTotpCodesList) adminTotpCodesList.textContent = data.recoveryCodes.join('\n');
+            setAdminAuthView('totp-codes');
+            return;
+        }
+        void enterAdminSession();
+    }
+
     // ─── Login handler ───
     if (adminLoginForm) {
         adminLoginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            adminLoginError.style.display = 'none';
+            showLoginError(adminLoginError, '');
 
             const username = document.getElementById('adminUsername').value;
             const password = document.getElementById('adminPassword').value;
@@ -1697,34 +1764,103 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const res = await fetch('/api/clinic/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
                     body: JSON.stringify({ username, password })
                 });
 
                 const data = await res.json();
 
-                if (res.ok) {
-                    if (data.role && data.role !== 'admin') {
-                        adminLoginError.textContent = 'This account opens the clinic portal, not admin. Use the administrator username, or go to /clinic-desk/dias.';
-                        adminLoginError.style.display = 'block';
-                        return;
+                if (res.ok && data.requiresTotpSetup) {
+                    if (adminTotpSecret) {
+                        adminTotpSecret.value = String(data.secret || '').replace(/(.{4})/g, '$1 ').trim();
                     }
-                    const next = safeDirectoryNext();
-                    if (next) {
-                        window.location.replace(next);
-                        return;
+                    if (adminTotpOtpauth && adminTotpOtpauthWrap) {
+                        if (data.otpauthUrl) {
+                            adminTotpOtpauth.href = data.otpauthUrl;
+                            adminTotpOtpauthWrap.hidden = false;
+                        } else {
+                            adminTotpOtpauthWrap.hidden = true;
+                        }
                     }
-                    showAdminContent();
-                    await loadSchedule();
+                    setAdminAuthView('totp-setup');
+                } else if (res.ok && data.requiresTotp) {
+                    setAdminAuthView('totp');
+                } else if (res.ok && data.success) {
+                    finishAdminLogin(data);
                 } else {
-                    adminLoginError.textContent = data.error || 'Invalid username or password';
-                    adminLoginError.style.display = 'block';
+                    showLoginError(adminLoginError, data.error || 'Invalid username or password');
                 }
             } catch (err) {
-                adminLoginError.textContent = 'Connection error. Please try again.';
-                adminLoginError.style.display = 'block';
+                showLoginError(adminLoginError, 'Connection error. Please try again.');
             }
         });
     }
+
+    async function submitAdminTotp(code, { recover } = {}) {
+        const path = recover ? '/api/clinic/login/totp/recover' : '/api/clinic/login/totp';
+        const res = await fetch(path, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ code })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.success) {
+            throw new Error(data.error || 'Código inválido.');
+        }
+        finishAdminLogin(data);
+    }
+
+    if (adminTotpForm) {
+        adminTotpForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await submitAdminTotp(adminTotpCode ? adminTotpCode.value.trim() : '');
+            } catch (err) {
+                showLoginError(adminTotpError, err.message || 'Código inválido.');
+            }
+        });
+    }
+    if (adminTotpSetupForm) {
+        adminTotpSetupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await submitAdminTotp(adminTotpSetupCode ? adminTotpSetupCode.value.trim() : '');
+            } catch (err) {
+                showLoginError(adminTotpSetupError, err.message || 'Código inválido.');
+            }
+        });
+    }
+    if (adminTotpRecoverForm) {
+        adminTotpRecoverForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await submitAdminTotp(adminTotpRecoverCode ? adminTotpRecoverCode.value.trim() : '', { recover: true });
+            } catch (err) {
+                showLoginError(adminTotpRecoverError, err.message || 'Código inválido.');
+            }
+        });
+    }
+    if (adminTotpRecoverLink) {
+        adminTotpRecoverLink.addEventListener('click', () => setAdminAuthView('totp-recover'));
+    }
+    if (adminTotpRecoverBack) {
+        adminTotpRecoverBack.addEventListener('click', () => setAdminAuthView('totp'));
+    }
+    if (adminTotpCodesContinue) {
+        adminTotpCodesContinue.addEventListener('click', () => {
+            const pending = pendingAdminLogin;
+            pendingAdminLogin = null;
+            if (pending) finishAdminLogin({ ...pending, recoveryCodes: null });
+            else void enterAdminSession();
+        });
+    }
+    [adminTotpCode, adminTotpSetupCode].forEach((el) => {
+        if (!el) return;
+        el.addEventListener('input', () => {
+            el.value = el.value.replace(/\D/g, '').slice(0, 6);
+        });
+    });
 
     // ─── Logout handler ───
     if (adminLogoutBtn) {
@@ -3906,10 +4042,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <summary class="admin-psych-summary">
                     <span class="admin-psych-col admin-psych-col-name">${escapeHtml(a.name || '—')}</span>
                     <span class="admin-psych-col admin-psych-col-email">
-                        ${email ? `<a href="mailto:${escapeHtml(email)}" onclick="event.stopPropagation()">${escapeHtml(email)}</a>` : '—'}
+                        ${email ? `<a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a>` : '—'}
                     </span>
                     <span class="admin-psych-col admin-psych-col-phone">
-                        ${phone ? `<a href="tel:${escapeHtml(phone)}" onclick="event.stopPropagation()">${escapeHtml(phone)}</a>` : '—'}
+                        ${phone ? `<a href="tel:${escapeHtml(phone)}">${escapeHtml(phone)}</a>` : '—'}
                     </span>
                     <span class="admin-psych-col admin-psych-col-role"><span class="admin-psych-role-tag">Psicólogo</span></span>
                     <span class="admin-psych-col admin-psych-col-status">${escapeHtml(a.status || 'novo')}</span>
@@ -3944,6 +4080,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 </div>
             `;
+            item.querySelector('summary')?.addEventListener('click', (e) => {
+                if (e.target.closest('a')) e.stopPropagation();
+            });
             adminPsychologistsList.appendChild(item);
             } catch (err) {
                 console.error('Render psychologist row:', err);

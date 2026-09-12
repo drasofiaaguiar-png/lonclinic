@@ -472,15 +472,15 @@ footer { background: var(--off-white); color: var(--ink-soft); padding: 48px 28p
     <a class="nav-logo" href="/"><span class="nav-logo-dot"></span>Lon Clinic</a>
     <ul class="nav-links">
       <li><a href="#como-funciona" id="nav-how">Como funciona</a></li>
-      <li><a href="#servicos" id="nav-services" onclick="return navToPtSection('servicos');">Serviços</a></li>
-      <li><a href="#guias" id="nav-guides" onclick="return navToPtSection('guias');">Guias</a></li>
-      <li><a href="#faq" id="nav-faq" onclick="return navToPtSection('faq');">FAQ</a></li>
+      <li><a href="#servicos" id="nav-services">Serviços</a></li>
+      <li><a href="#guias" id="nav-guides">Guias</a></li>
+      <li><a href="#faq" id="nav-faq">FAQ</a></li>
     </ul>
     <div class="nav-right">
       <div class="nav-lang">
-        <button class="lang-btn active" type="button" onclick="setLang('pt')">PT</button>
-        <button class="lang-btn" type="button" onclick="setLang('en')">EN</button>
-        <button class="lang-btn" type="button" onclick="setLang('es')">ES</button>
+        <button class="lang-btn active" type="button" data-lang="pt">PT</button>
+        <button class="lang-btn" type="button" data-lang="en">EN</button>
+        <button class="lang-btn" type="button" data-lang="es">ES</button>
       </div>
       <a class="nav-cta" href="/marcar/travel" id="nav-cta">Marcar consulta</a>
     </div>
@@ -1330,6 +1330,16 @@ function syncHeroVideos() {
 }
 
 document.addEventListener('DOMContentLoaded', syncHeroVideos);
+document.querySelectorAll('.lang-btn[data-lang]').forEach((btn) => {
+  btn.addEventListener('click', () => setLang(btn.getAttribute('data-lang')));
+});
+['servicos', 'guias', 'faq'].forEach((hash) => {
+  const el = document.getElementById(hash === 'servicos' ? 'nav-services' : hash === 'guias' ? 'nav-guides' : 'nav-faq');
+  if (!el) return;
+  el.addEventListener('click', (e) => {
+    if (!navToPtSection(hash)) e.preventDefault();
+  });
+});
 </script>
 <script src="/reviews.js?v=20260817b" defer></script>
 </body>

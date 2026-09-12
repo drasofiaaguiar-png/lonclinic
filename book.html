@@ -366,65 +366,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="checkoutClinicalDefer" class="checkout-clinical-defer" hidden>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label>Date of birth *</label>
-                                    <input type="date" class="p-dob" required autocomplete="bday">
-                                    <span class="form-error">Please enter date of birth</span>
-                                </div>
-                                <div class="form-group">
-                                    <label>NHS number</label>
-                                    <input type="text" class="p-nhs" placeholder="e.g. 485 777 3456">
-                                    <span class="form-hint">10-digit NHS number (optional)</span>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Country of residence *</label>
-                                <select class="p-country" required>
-                                    <option value="" disabled selected>Select country</option>
-                                    <option value="GB">United Kingdom</option>
-                                    <option value="US">United States</option>
-                                    <option value="SE">Sweden</option>
-                                    <option value="DE">Germany</option>
-                                    <option value="FR">France</option>
-                                    <option value="NL">Netherlands</option>
-                                    <option value="NO">Norway</option>
-                                    <option value="DK">Denmark</option>
-                                    <option value="FI">Finland</option>
-                                    <option value="CH">Switzerland</option>
-                                    <option value="AT">Austria</option>
-                                    <option value="BE">Belgium</option>
-                                    <option value="ES">Spain</option>
-                                    <option value="IT">Italy</option>
-                                    <option value="PT">Portugal</option>
-                                    <option value="IE">Ireland</option>
-                                    <option value="CA">Canada</option>
-                                    <option value="AU">Australia</option>
-                                    <option value="NZ">New Zealand</option>
-                                    <option value="AE">United Arab Emirates</option>
-                                    <option value="SG">Singapore</option>
-                                    <option value="HK">Hong Kong</option>
-                                    <option value="JP">Japan</option>
-                                    <option value="OTHER">Other</option>
-                                </select>
-                                <span class="form-error">Please select country</span>
-                            </div>
-
-                            <h4 class="form-subsection-title">Medical background</h4>
-                            <div class="form-group">
-                                <label>Health concerns or goals</label>
-                                <textarea class="p-concerns" rows="3" placeholder="Describe any specific concerns, conditions, or health goals..."></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>Current medications</label>
-                                <textarea class="p-medications" rows="2" placeholder="List any current medications, supplements, or treatments..."></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>Known allergies</label>
-                                <input type="text" class="p-allergies" placeholder="e.g. Penicillin, latex, none">
-                            </div>
-                            </div>
                         </div>
                     </div>
 
@@ -700,60 +641,8 @@
                         </div>
                     </div>
 
-                    <div class="intake-card" id="intakeCard">
-                        <div class="intake-done" id="intakeDone" hidden>
-                            <p class="intake-done-title">Ficha clínica recebida</p>
-                            <p>O médico já pode preparar a sua consulta. Se precisar de alterar algum dado, responda ao email de confirmação.</p>
-                        </div>
-                        <form class="details-form intake-form" id="intakeForm" novalidate>
-                            <h3 class="intake-form-title" id="intakeFormTitle">Ficha clínica</h3>
-                            <p class="intake-form-sub" id="intakeFormSub">Sintomas, medicação e alergias — para a consulta das <strong id="intakeTimeHint">hora marcada</strong>.</p>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="intakeDob">Data de nascimento *</label>
-                                    <input type="date" id="intakeDob" name="dob" required autocomplete="bday">
-                                    <span class="form-error">Indique a data de nascimento</span>
-                                </div>
-                                <div class="form-group">
-                                    <label for="intakeCountry">País de residência</label>
-                                    <select id="intakeCountry" name="country">
-                                        <option value="" selected>Selecionar (opcional)</option>
-                                        <option value="PT">Portugal</option>
-                                        <option value="GB">United Kingdom</option>
-                                        <option value="ES">España</option>
-                                        <option value="FR">France</option>
-                                        <option value="DE">Deutschland</option>
-                                        <option value="US">United States</option>
-                                        <option value="BR">Brasil</option>
-                                        <option value="IE">Ireland</option>
-                                        <option value="NL">Netherlands</option>
-                                        <option value="BE">Belgium</option>
-                                        <option value="IT">Italia</option>
-                                        <option value="CH">Switzerland</option>
-                                        <option value="OTHER">Other</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="intakeConcerns">Sintomas ou motivo da consulta *</label>
-                                <textarea id="intakeConcerns" name="concerns" rows="4" required placeholder="O que o traz hoje? Há quanto tempo? O que já tentou?"></textarea>
-                                <span class="form-error">Descreva os sintomas ou o motivo da consulta</span>
-                            </div>
-                            <div class="form-group">
-                                <label for="intakeMedications">Medicação atual</label>
-                                <textarea id="intakeMedications" name="medications" rows="2" placeholder="Medicamentos, suplementos ou tratamentos em curso"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="intakeAllergies">Alergias conhecidas</label>
-                                <input type="text" id="intakeAllergies" name="allergies" placeholder="ex. Penicilina, látex, nenhuma">
-                            </div>
-                            <div class="form-group">
-                                <label for="intakeNhs">Nº utente / NHS (opcional)</label>
-                                <input type="text" id="intakeNhs" name="nhs" placeholder="Se tiver">
-                            </div>
-                            <p class="intake-form-error" id="intakeFormError" hidden></p>
-                            <button type="submit" class="btn btn-primary btn-lg" id="intakeSubmitBtn">Enviar ficha clínica</button>
-                        </form>
+                    <div class="intake-card" id="intakeCard" hidden>
+                        <p class="intake-form-sub">Os dados clínicos (sintomas, medicação, alergias) são recolhidos na consulta, não neste site.</p>
                     </div>
 
                     <div class="confirmation-next-steps">
@@ -762,19 +651,12 @@
                             <div class="next-step-item">
                                 <div class="next-step-num">1</div>
                                 <div>
-                                    <strong>Preencha a ficha clínica</strong>
-                                    <p>O formulário acima (ou o link no email) chega ao médico antes da consulta.</p>
+                                    <strong>Prepare for your consultation</strong>
+                                    <p>Have any relevant questions ready. Clinical details are discussed during the appointment.</p>
                                 </div>
                             </div>
                             <div class="next-step-item">
                                 <div class="next-step-num">2</div>
-                                <div>
-                                    <strong>Prepare for your consultation</strong>
-                                    <p>Have any relevant medical records, test results, or questions ready.</p>
-                                </div>
-                            </div>
-                            <div class="next-step-item">
-                                <div class="next-step-num">3</div>
                                 <div>
                                     <strong>Join your video call</strong>
                                     <p>Click the link in your email at your scheduled time. No software download needed.</p>
@@ -790,7 +672,7 @@
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                             Add to Google Calendar
                         </a>
-                        <button class="btn btn-primary btn-lg" onclick="window.print()">
+                        <button type="button" class="btn btn-primary btn-lg" id="printConfirmationBtn">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
                             Print confirmation
                         </button>

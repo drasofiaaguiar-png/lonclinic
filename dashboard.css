@@ -416,6 +416,29 @@ body.dash-portal .clinic-notes-section {
     font-variant-numeric: tabular-nums;
 }
 
+.dash-login-secret,
+.dash-login-recovery {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    letter-spacing: 0.08em;
+    word-break: break-all;
+}
+
+.dash-login-recovery {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    margin: 0 0 16px;
+    white-space: pre-wrap;
+}
+
+.dash-login-otpauth {
+    margin: -8px 0 16px;
+    font-size: 0.8125rem;
+}
+
 .admin-dir-edit-form {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));

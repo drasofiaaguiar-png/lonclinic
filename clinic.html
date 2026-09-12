@@ -80,6 +80,53 @@
                         <button type="button" class="dash-login-forgot" id="clinicForgotLink">Esqueci a password</button>
                     </p>
                 </form>
+                <form class="dash-login-form" id="clinicTotpForm" hidden>
+                    <div class="dash-form-group">
+                        <label for="clinicTotpCode">Código 2FA</label>
+                        <input type="text" id="clinicTotpCode" class="dash-login-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" required>
+                    </div>
+                    <div id="totpError" class="dash-login-error" style="display:none;"></div>
+                    <button type="submit" class="btn btn-primary btn-lg dash-login-btn">Verificar código</button>
+                    <p class="dash-login-forgot-wrap">
+                        <button type="button" class="dash-login-forgot" id="clinicTotpRecoverLink">Usar código de recuperação</button>
+                        <button type="button" class="dash-login-forgot" id="clinicTotpBack">Voltar ao início de sessão</button>
+                    </p>
+                </form>
+                <form class="dash-login-form" id="clinicTotpSetupForm" hidden>
+                    <p class="dash-form-hint" id="clinicTotpSetupHint">Adicione esta conta na aplicação autenticadora com o código secreto abaixo.</p>
+                    <div class="dash-form-group">
+                        <label for="clinicTotpSecret">Código secreto</label>
+                        <input type="text" id="clinicTotpSecret" class="dash-login-secret" readonly autocomplete="off" spellcheck="false">
+                    </div>
+                    <p class="dash-login-otpauth" id="clinicTotpOtpauthWrap" hidden>
+                        <a id="clinicTotpOtpauth" href="#">Abrir na aplicação autenticadora</a>
+                    </p>
+                    <div class="dash-form-group">
+                        <label for="clinicTotpSetupCode">Código de 6 dígitos</label>
+                        <input type="text" id="clinicTotpSetupCode" class="dash-login-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="000000" required>
+                    </div>
+                    <div id="totpSetupError" class="dash-login-error" style="display:none;"></div>
+                    <button type="submit" class="btn btn-primary btn-lg dash-login-btn">Ativar 2FA e entrar</button>
+                    <p class="dash-login-forgot-wrap">
+                        <button type="button" class="dash-login-forgot" id="clinicTotpSetupBack">Voltar ao início de sessão</button>
+                    </p>
+                </form>
+                <form class="dash-login-form" id="clinicTotpRecoverForm" hidden>
+                    <div class="dash-form-group">
+                        <label for="clinicTotpRecoverCode">Código de recuperação</label>
+                        <input type="text" id="clinicTotpRecoverCode" autocomplete="off" maxlength="12" placeholder="xxxx-xxxx" required spellcheck="false">
+                    </div>
+                    <div id="totpRecoverError" class="dash-login-error" style="display:none;"></div>
+                    <button type="submit" class="btn btn-primary btn-lg dash-login-btn">Entrar com código de recuperação</button>
+                    <p class="dash-login-forgot-wrap">
+                        <button type="button" class="dash-login-forgot" id="clinicTotpRecoverBack">Voltar ao código 2FA</button>
+                    </p>
+                </form>
+                <div id="clinicTotpCodesPanel" class="dash-login-form" hidden>
+                    <p class="dash-form-hint">Guarde estes códigos de recuperação num sítio seguro. Cada um só pode ser usado uma vez.</p>
+                    <pre class="dash-login-recovery" id="clinicTotpCodesList"></pre>
+                    <button type="button" class="btn btn-primary btn-lg dash-login-btn" id="clinicTotpCodesContinue">Continuar para o portal</button>
+                </div>
                 <form class="dash-login-form" id="clinicForgotForm" hidden>
                     <div class="dash-form-group">
                         <label for="clinicForgotEmail">Email</label>
@@ -94,15 +141,15 @@
                 <form class="dash-login-form" id="clinicResetForm" hidden>
                     <div class="dash-form-group">
                         <label for="clinicResetCode">Código</label>
-                        <input type="text" id="clinicResetCode" class="dash-login-code" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="000000" required>
+                        <input type="text" id="clinicResetCode" class="dash-login-code" autocomplete="one-time-code" maxlength="64" placeholder="Código do email" required spellcheck="false">
                     </div>
                     <div class="dash-form-group">
                         <label for="clinicResetPassword">Nova password</label>
-                        <input type="password" id="clinicResetPassword" placeholder="Mínimo 8 caracteres" required minlength="8" autocomplete="new-password">
+                        <input type="password" id="clinicResetPassword" placeholder="Mínimo 12 caracteres" required minlength="12" autocomplete="new-password">
                     </div>
                     <div class="dash-form-group">
                         <label for="clinicResetPassword2">Confirmar password</label>
-                        <input type="password" id="clinicResetPassword2" placeholder="Repita a password" required minlength="8" autocomplete="new-password">
+                        <input type="password" id="clinicResetPassword2" placeholder="Repita a password" required minlength="12" autocomplete="new-password">
                     </div>
                     <div id="resetError" class="dash-login-error" style="display:none;"></div>
                     <button type="submit" class="btn btn-primary btn-lg dash-login-btn" id="clinicResetSubmit">Guardar nova password</button>

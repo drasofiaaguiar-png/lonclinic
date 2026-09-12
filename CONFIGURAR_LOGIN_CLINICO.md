@@ -11,6 +11,9 @@ Adicione estas variáveis no Railway/Render:
 1. **CLINIC_USERNAME** - Nome de utilizador para o portal clínico
 2. **CLINIC_PASSWORD** - Palavra-passe para o portal clínico
 3. **SESSION_SECRET** - Chave secreta para as sessões (obrigatório em produção)
+4. **CLINICAL_ENCRYPTION_KEY** (opcional) - Chave para encriptar notas clínicas, IBAN e dados de intake em disco. Se não existir, usa-se um derivado de `SESSION_SECRET`.
+
+O login do portal clínico e do admin exige **2FA (TOTP)**. No primeiro acesso após a password, o site mostra um código secreto para a aplicação autenticadora (Google Authenticator, Authy, etc.). Guarde os códigos de recuperação — cada um só pode ser usado uma vez.
 
 ---
 
@@ -71,14 +74,13 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 ---
 
-## 🔄 Valores Padrão (Desenvolvimento)
+## 🔄 Sem valores por omissão
 
-Se não configurar as variáveis, o sistema usa valores padrão:
-- **CLINIC_USERNAME:** `admin`
-- **CLINIC_PASSWORD:** `admin123`
-- **SESSION_SECRET:** `longevity-clinic-secret-key-change-in-production`
+O servidor **não arranca** sem `CLINIC_USERNAME`, `CLINIC_PASSWORD` e `SESSION_SECRET`. Não existem credenciais padrão. Gere o secret com:
 
-⚠️ **NUNCA use os valores padrão em produção!**
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
 
 ---
 
@@ -100,9 +102,10 @@ Para maior segurança em produção:
 
 1. **HTTPS obrigatório** - Configure SSL/TLS
 2. **Rate limiting** - Limite tentativas de login
-3. **2FA** - Considere autenticação de dois fatores
+3. **2FA** - Obrigatório no login clínico e admin (TOTP + códigos de recuperação)
 4. **Logs de acesso** - Monitore tentativas de login
 5. **Timeout de sessão** - Sessões expiram após 8 horas
+6. **Encriptação de campos** - Notas clínicas, IBAN e intake são gravados com AES-256-GCM
 
 ---
 

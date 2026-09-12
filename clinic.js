@@ -49,6 +49,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicResetResend = document.getElementById('clinicResetResend');
     const clinicResetBack = document.getElementById('clinicResetBack');
     const resetError = document.getElementById('resetError');
+    const clinicTotpForm = document.getElementById('clinicTotpForm');
+    const clinicTotpCode = document.getElementById('clinicTotpCode');
+    const totpError = document.getElementById('totpError');
+    const clinicTotpRecoverLink = document.getElementById('clinicTotpRecoverLink');
+    const clinicTotpBack = document.getElementById('clinicTotpBack');
+    const clinicTotpSetupForm = document.getElementById('clinicTotpSetupForm');
+    const clinicTotpSecret = document.getElementById('clinicTotpSecret');
+    const clinicTotpOtpauth = document.getElementById('clinicTotpOtpauth');
+    const clinicTotpOtpauthWrap = document.getElementById('clinicTotpOtpauthWrap');
+    const clinicTotpSetupCode = document.getElementById('clinicTotpSetupCode');
+    const totpSetupError = document.getElementById('totpSetupError');
+    const clinicTotpSetupBack = document.getElementById('clinicTotpSetupBack');
+    const clinicTotpRecoverForm = document.getElementById('clinicTotpRecoverForm');
+    const clinicTotpRecoverCode = document.getElementById('clinicTotpRecoverCode');
+    const totpRecoverError = document.getElementById('totpRecoverError');
+    const clinicTotpRecoverBack = document.getElementById('clinicTotpRecoverBack');
+    const clinicTotpCodesPanel = document.getElementById('clinicTotpCodesPanel');
+    const clinicTotpCodesList = document.getElementById('clinicTotpCodesList');
+    const clinicTotpCodesContinue = document.getElementById('clinicTotpCodesContinue');
     let clinicResetEmail = '';
     const clinicLogoutBtn = document.getElementById('clinicLogoutBtn');
     const clinicAdminLink = document.getElementById('clinicAdminLink');
@@ -151,6 +170,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 showClinicPortal(data.displayName || data.username, data.role, data.username);
             } else {
                 showLogin();
+                const resetTok = new URLSearchParams(window.location.search).get('reset') || '';
+                if (/^[a-f0-9]{64}$/i.test(resetTok)) {
+                    if (clinicResetCode) clinicResetCode.value = resetTok.toLowerCase();
+                    setClinicAuthView('reset');
+                }
             }
         } catch (err) {
             console.error('Failed to check auth status:', err);
@@ -895,27 +919,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function setClinicAuthView(view) {
-        const mode = view === 'forgot' || view === 'reset' ? view : 'signin';
+        const mode = ['forgot', 'reset', 'totp', 'totp-setup', 'totp-recover', 'totp-codes'].includes(view)
+            ? view
+            : 'signin';
         if (clinicLoginForm) clinicLoginForm.hidden = mode !== 'signin';
         if (clinicForgotForm) clinicForgotForm.hidden = mode !== 'forgot';
         if (clinicResetForm) clinicResetForm.hidden = mode !== 'reset';
+        if (clinicTotpForm) clinicTotpForm.hidden = mode !== 'totp';
+        if (clinicTotpSetupForm) clinicTotpSetupForm.hidden = mode !== 'totp-setup';
+        if (clinicTotpRecoverForm) clinicTotpRecoverForm.hidden = mode !== 'totp-recover';
+        if (clinicTotpCodesPanel) clinicTotpCodesPanel.hidden = mode !== 'totp-codes';
         if (clinicLoginTitle) {
             clinicLoginTitle.textContent = mode === 'signin'
                 ? 'Clinic Portal'
                 : mode === 'forgot'
                     ? 'Recuperar password'
-                    : 'Redefinir password';
+                    : mode === 'reset'
+                        ? 'Redefinir password'
+                        : mode === 'totp-setup'
+                            ? 'Ativar 2FA'
+                            : mode === 'totp-codes'
+                                ? 'Códigos de recuperação'
+                                : mode === 'totp-recover'
+                                    ? 'Código de recuperação'
+                                    : 'Verificação 2FA';
         }
         if (clinicLoginDesc) {
             clinicLoginDesc.textContent = mode === 'signin'
                 ? `Portal ${document.body.getAttribute('data-clinic-build') || '10set-pw'} — Use o email da sua ficha para entrar.`
                 : mode === 'forgot'
-                    ? 'Indique o email da ficha. Enviamos um código para definir uma nova password.'
-                    : 'Introduza o código enviado por email e escolha uma nova password.';
+                    ? 'Indique o email da ficha. Enviamos um link para definir uma nova password.'
+                    : mode === 'reset'
+                        ? 'Introduza o código enviado por email e escolha uma nova password.'
+                        : mode === 'totp-setup'
+                            ? 'A autenticação de dois fatores é obrigatória. Guarde o código secreto na aplicação autenticadora e confirme com um código de 6 dígitos.'
+                            : mode === 'totp-codes'
+                                ? 'Guarde estes códigos agora. Não voltarão a ser mostrados.'
+                                : mode === 'totp-recover'
+                                    ? 'Use um dos códigos de recuperação que guardou quando ativou o 2FA.'
+                                    : 'Introduza o código de 6 dígitos da aplicação autenticadora.';
         }
         if (mode !== 'signin') hideAuthMessage(loginError);
         if (mode !== 'forgot') hideAuthMessage(forgotError);
         if (mode !== 'reset') hideAuthMessage(resetError);
+        if (mode !== 'totp') hideAuthMessage(totpError);
+        if (mode !== 'totp-setup') hideAuthMessage(totpSetupError);
+        if (mode !== 'totp-recover') hideAuthMessage(totpRecoverError);
         if (mode === 'forgot' && clinicForgotEmail) {
             const fromLogin = clinicUsername && clinicUsername.value.trim();
             if (!clinicForgotEmail.value && fromLogin) clinicForgotEmail.value = fromLogin;
@@ -923,6 +972,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (mode === 'reset' && clinicResetCode) clinicResetCode.focus();
         if (mode === 'signin' && clinicUsername) clinicUsername.focus();
+        if (mode === 'totp' && clinicTotpCode) clinicTotpCode.focus();
+        if (mode === 'totp-setup' && clinicTotpSetupCode) clinicTotpSetupCode.focus();
+        if (mode === 'totp-recover' && clinicTotpRecoverCode) clinicTotpRecoverCode.focus();
+    }
+
+    let pendingClinicLogin = null;
+
+    function formatTotpSecret(secret) {
+        return String(secret || '').replace(/(.{4})/g, '$1 ').trim();
+    }
+
+    function applyTotpSetup(data) {
+        if (clinicTotpSecret) clinicTotpSecret.value = formatTotpSecret(data.secret || '');
+        if (clinicTotpOtpauth && clinicTotpOtpauthWrap) {
+            if (data.otpauthUrl) {
+                clinicTotpOtpauth.href = data.otpauthUrl;
+                clinicTotpOtpauthWrap.hidden = false;
+            } else {
+                clinicTotpOtpauth.removeAttribute('href');
+                clinicTotpOtpauthWrap.hidden = true;
+            }
+        }
+        setClinicAuthView('totp-setup');
+    }
+
+    function finishClinicLogin(data, identifier) {
+        const enter = () => {
+            showClinicPortal(data.displayName || identifier, data.role, data.username || identifier);
+            if (clinicUsername) clinicUsername.value = '';
+            if (clinicPassword) clinicPassword.value = '';
+            if (clinicTotpCode) clinicTotpCode.value = '';
+            if (clinicTotpSetupCode) clinicTotpSetupCode.value = '';
+            if (clinicTotpRecoverCode) clinicTotpRecoverCode.value = '';
+            pendingClinicLogin = null;
+        };
+        if (Array.isArray(data.recoveryCodes) && data.recoveryCodes.length) {
+            pendingClinicLogin = { data, identifier };
+            if (clinicTotpCodesList) clinicTotpCodesList.textContent = data.recoveryCodes.join('\n');
+            setClinicAuthView('totp-codes');
+            return;
+        }
+        enter();
     }
 
     async function requestPasswordResetCode(email, { fromResend } = {}) {
@@ -965,10 +1056,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await res.json();
 
-            if (res.ok && data.success) {
-                showClinicPortal(data.displayName || identifier, data.role, data.username || identifier);
-                clinicUsername.value = '';
-                clinicPassword.value = '';
+            if (res.ok && data.requiresTotpSetup) {
+                applyTotpSetup(data);
+            } else if (res.ok && data.requiresTotp) {
+                setClinicAuthView('totp');
+            } else if (res.ok && data.success) {
+                finishClinicLogin(data, identifier);
             } else {
                 showAuthError(loginError, data.error || 'Invalid email or password');
             }
@@ -976,6 +1069,85 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Login error:', err);
             showAuthError(loginError, 'Failed to connect to server. Please try again.');
         }
+    });
+
+    async function submitClinicTotp(code, { recover } = {}) {
+        const path = recover ? '/api/clinic/login/totp/recover' : '/api/clinic/login/totp';
+        const errorEl = recover ? totpRecoverError : (clinicTotpSetupForm && !clinicTotpSetupForm.hidden ? totpSetupError : totpError);
+        const res = await fetch(path, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ code })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.success) {
+            throw new Error(data.error || 'Código inválido.');
+        }
+        finishClinicLogin(data, (clinicUsername && clinicUsername.value.trim()) || data.username || '');
+        hideAuthMessage(errorEl);
+    }
+
+    if (clinicTotpForm) {
+        clinicTotpForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAuthMessage(totpError);
+            const code = clinicTotpCode ? clinicTotpCode.value.trim() : '';
+            try {
+                await submitClinicTotp(code);
+            } catch (err) {
+                showAuthError(totpError, err.message || 'Código inválido.');
+            }
+        });
+    }
+    if (clinicTotpSetupForm) {
+        clinicTotpSetupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAuthMessage(totpSetupError);
+            const code = clinicTotpSetupCode ? clinicTotpSetupCode.value.trim() : '';
+            try {
+                await submitClinicTotp(code);
+            } catch (err) {
+                showAuthError(totpSetupError, err.message || 'Código inválido.');
+            }
+        });
+    }
+    if (clinicTotpRecoverForm) {
+        clinicTotpRecoverForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideAuthMessage(totpRecoverError);
+            const code = clinicTotpRecoverCode ? clinicTotpRecoverCode.value.trim() : '';
+            try {
+                await submitClinicTotp(code, { recover: true });
+            } catch (err) {
+                showAuthError(totpRecoverError, err.message || 'Código inválido.');
+            }
+        });
+    }
+    if (clinicTotpRecoverLink) {
+        clinicTotpRecoverLink.addEventListener('click', () => setClinicAuthView('totp-recover'));
+    }
+    if (clinicTotpBack) {
+        clinicTotpBack.addEventListener('click', () => setClinicAuthView('signin'));
+    }
+    if (clinicTotpSetupBack) {
+        clinicTotpSetupBack.addEventListener('click', () => setClinicAuthView('signin'));
+    }
+    if (clinicTotpRecoverBack) {
+        clinicTotpRecoverBack.addEventListener('click', () => setClinicAuthView('totp'));
+    }
+    if (clinicTotpCodesContinue) {
+        clinicTotpCodesContinue.addEventListener('click', () => {
+            const pending = pendingClinicLogin;
+            pendingClinicLogin = null;
+            if (pending) finishClinicLogin({ ...pending.data, recoveryCodes: null }, pending.identifier);
+        });
+    }
+    [clinicTotpCode, clinicTotpSetupCode].forEach((el) => {
+        if (!el) return;
+        el.addEventListener('input', () => {
+            el.value = el.value.replace(/\D/g, '').slice(0, 6);
+        });
     });
 
     if (clinicForgotLink) {
@@ -1036,7 +1208,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (clinicResetCode) {
         clinicResetCode.addEventListener('input', () => {
-            clinicResetCode.value = clinicResetCode.value.replace(/\D/g, '').slice(0, 6);
+            clinicResetCode.value = clinicResetCode.value.replace(/[^a-fA-F0-9]/g, '').toLowerCase().slice(0, 64);
         });
     }
     if (clinicResetForm) {
@@ -1044,15 +1216,15 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             hideAuthMessage(resetError);
             const email = clinicResetEmail || (clinicForgotEmail && clinicForgotEmail.value.trim()) || '';
-            const code = clinicResetCode ? clinicResetCode.value.replace(/\D/g, '') : '';
+            const code = clinicResetCode ? clinicResetCode.value.replace(/[^a-fA-F0-9]/g, '').toLowerCase() : '';
             const password = clinicResetPassword ? clinicResetPassword.value : '';
             const password2 = clinicResetPassword2 ? clinicResetPassword2.value : '';
-            if (!email || code.length !== 6) {
-                showAuthError(resetError, 'Introduza o código de 6 dígitos enviado por email.');
+            if (!email || code.length !== 64) {
+                showAuthError(resetError, 'Introduza o código enviado por email.');
                 return;
             }
-            if (password.length < 8) {
-                showAuthError(resetError, 'A nova password deve ter pelo menos 8 caracteres.');
+            if (password.length < 12) {
+                showAuthError(resetError, 'A nova password deve ter pelo menos 12 caracteres.');
                 return;
             }
             if (password !== password2) {

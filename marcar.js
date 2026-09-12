@@ -2063,7 +2063,6 @@
         };
         if (payload.clinicalIntent && payload.clinicalIntent.goal) {
             payload.goal = payload.clinicalIntent.goal;
-            payload.concerns = payload.clinicalIntent.concerns;
         }
 
         try {

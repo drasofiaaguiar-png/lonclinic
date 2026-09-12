@@ -108,6 +108,8 @@ function showBookingError(error) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const printBtn = document.getElementById('printConfirmationBtn');
+    if (printBtn) printBtn.addEventListener('click', () => window.print());
     initBookingFlow().catch(showBookingError);
 });
 
@@ -608,37 +610,12 @@ async function initBookingFlow() {
     async function showStandaloneIntake(token) {
         markConfirmationStep();
         const card = document.querySelector('.confirmation-card');
-        const actions = document.querySelector('.confirmation-actions');
+        const intakeCard = document.getElementById('intakeCard');
         if (card) card.hidden = true;
-        if (actions) actions.hidden = true;
-        const timeHint = document.getElementById('intakeTimeHint');
-        try {
-            const response = await fetch('/api/intake/' + encodeURIComponent(token));
-            const data = await response.json().catch(() => ({}));
-            if (!response.ok) throw new Error(data.error || 'not found');
-            if (timeHint && data.time) timeHint.textContent = data.time;
-            const svc = document.getElementById('confirmService');
-            const dt = document.getElementById('confirmDateTime');
-            const ref = document.getElementById('confirmRef');
-            if (svc && data.service) svc.textContent = i18nServiceLabel(data.service) || data.service;
-            if (dt) dt.textContent = [data.date, data.time].filter(Boolean).join(' · ') || '—';
-            if (ref && data.bookingRef) ref.textContent = data.bookingRef;
-            if (card) card.hidden = false;
-            if (data.completed) {
-                showIntakeCompleted();
-                return;
-            }
-            fillIntakePrefill(data.intakePrefill);
-            bindIntakeForm(token);
-        } catch (err) {
-            const form = document.getElementById('intakeForm');
-            if (form) form.hidden = true;
-            const errEl = document.getElementById('intakeFormError');
-            if (errEl) {
-                errEl.textContent = intakeCopy().missing;
-                errEl.hidden = false;
-            }
+        if (intakeCard) {
+            intakeCard.hidden = false;
         }
+        void token;
     }
 
     // ─── Check for Stripe return / intake form ───
@@ -1782,62 +1759,6 @@ async function initBookingFlow() {
                     <span class="form-error">Please enter last name</span>
                 </div>
             </div>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>Date of birth *</label>
-                    <input type="date" class="p-dob" required>
-                    <span class="form-error">Please enter date of birth</span>
-                </div>
-                <div class="form-group">
-                    <label>NHS number</label>
-                    <input type="text" class="p-nhs" placeholder="e.g. 485 777 3456">
-                    <span class="form-hint">10-digit NHS number (optional)</span>
-                </div>
-            </div>
-            <div class="form-group">
-                <label>Country of residence *</label>
-                <select class="p-country" required>
-                    <option value="" disabled selected>Select country</option>
-                    <option value="GB">United Kingdom</option>
-                    <option value="US">United States</option>
-                    <option value="SE">Sweden</option>
-                    <option value="DE">Germany</option>
-                    <option value="FR">France</option>
-                    <option value="NL">Netherlands</option>
-                    <option value="NO">Norway</option>
-                    <option value="DK">Denmark</option>
-                    <option value="FI">Finland</option>
-                    <option value="CH">Switzerland</option>
-                    <option value="AT">Austria</option>
-                    <option value="BE">Belgium</option>
-                    <option value="ES">Spain</option>
-                    <option value="IT">Italy</option>
-                    <option value="PT">Portugal</option>
-                    <option value="IE">Ireland</option>
-                    <option value="CA">Canada</option>
-                    <option value="AU">Australia</option>
-                    <option value="NZ">New Zealand</option>
-                    <option value="AE">United Arab Emirates</option>
-                    <option value="SG">Singapore</option>
-                    <option value="HK">Hong Kong</option>
-                    <option value="JP">Japan</option>
-                    <option value="OTHER">Other</option>
-                </select>
-                <span class="form-error">Please select country</span>
-            </div>
-            <h4 class="form-subsection-title">Medical background</h4>
-            <div class="form-group">
-                <label>Health concerns or goals</label>
-                <textarea class="p-concerns" rows="3" placeholder="Describe any specific concerns, conditions, or health goals..."></textarea>
-            </div>
-            <div class="form-group">
-                <label>Current medications</label>
-                <textarea class="p-medications" rows="2" placeholder="List any current medications, supplements, or treatments..."></textarea>
-            </div>
-            <div class="form-group">
-                <label>Known allergies</label>
-                <input type="text" class="p-allergies" placeholder="e.g. Penicillin, latex, none">
-            </div>
         </div>`;
     }
 
@@ -1977,9 +1898,6 @@ async function initBookingFlow() {
     }
 
     function applyClinicalIntentToForm() {
-        const note = clinicalIntentNote();
-        const ta = document.querySelector('.passenger-panel[data-passenger="1"] .p-concerns');
-        if (note && ta && !ta.value.trim()) ta.value = note;
         try {
             const raw = sessionStorage.getItem('lonClinicalQuiz');
             if (raw) {
@@ -2027,13 +1945,7 @@ async function initBookingFlow() {
             if (!panel) continue;
             passengers.push({
                 firstName: panel.querySelector('.p-firstName')?.value?.trim() || '',
-                lastName: panel.querySelector('.p-lastName')?.value?.trim() || '',
-                dob: panel.querySelector('.p-dob')?.value || '',
-                nhs: panel.querySelector('.p-nhs')?.value?.trim() || '',
-                country: panel.querySelector('.p-country')?.value || '',
-                concerns: panel.querySelector('.p-concerns')?.value?.trim() || (i === 1 ? clinicalIntentNote() : ''),
-                medications: panel.querySelector('.p-medications')?.value?.trim() || '',
-                allergies: panel.querySelector('.p-allergies')?.value?.trim() || ''
+                lastName: panel.querySelector('.p-lastName')?.value?.trim() || ''
             });
         }
         return passengers;
@@ -2291,11 +2203,6 @@ async function initBookingFlow() {
                 <div class="review-row">
                     <span class="review-label">Name</span>
                     <span class="review-value">${`${p.firstName} ${p.lastName}`.trim() || emailVal}</span>
-                </div>
-                ${p.nhs ? `<div class="review-row"><span class="review-label">NHS number</span><span class="review-value">${p.nhs}</span></div>` : ''}
-                <div class="review-row">
-                    <span class="review-label">Date of birth</span>
-                    <span class="review-value">${p.dob}</span>
                 </div>
                 ${i === 0 ? `<div class="review-row"><span class="review-label">Email</span><span class="review-value">${emailVal}</span></div>` : ''}
             `;
@@ -2608,13 +2515,6 @@ async function initBookingFlow() {
 
             const timeHint = document.getElementById('intakeTimeHint');
             if (timeHint && data.time) timeHint.textContent = data.time;
-
-            if (data.intakeCompleted) {
-                showIntakeCompleted();
-            } else if (data.intakeToken) {
-                fillIntakePrefill(data.intakePrefill);
-                bindIntakeForm(data.intakeToken);
-            }
 
             const dashboardBtn = document.getElementById('goToDashboardBtn');
             if (dashboardBtn && data.email) {

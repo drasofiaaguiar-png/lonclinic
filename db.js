@@ -7,6 +7,7 @@ const util = require('util');
 const fs = require('fs');
 const path = require('path');
 const { Pool } = require('pg');
+const { encryptField, decryptField, decryptJson } = require('./field-crypto');
 
 let pool = null;
 
@@ -89,10 +90,12 @@ function isLocalPostgresHost(hostname) {
  * root CA bundled at prod-ca-2021.crt (same file as Dashboard → Database → SSL Configuration).
  */
 function getPostgresSslOptions() {
-    return {
-        rejectUnauthorized: true,
-        ca: fs.readFileSync(path.join(__dirname, 'prod-ca-2021.crt')).toString()
-    };
+    const opts = { rejectUnauthorized: true };
+    const caPath = path.join(__dirname, 'prod-ca-2021.crt');
+    if (fs.existsSync(caPath)) {
+        opts.ca = fs.readFileSync(caPath).toString();
+    }
+    return opts;
 }
 
 function getPool() {
@@ -163,22 +166,47 @@ function rowToBooking(row) {
 
 function parseIntakeJson(raw) {
     if (!raw) return null;
-    if (typeof raw === 'object') return raw;
+    if (typeof raw === 'object') {
+        if (raw.__enc) {
+            const parsed = decryptJson(raw.__enc);
+            return parsed && typeof parsed === 'object' ? parsed : null;
+        }
+        return raw;
+    }
+    const text = String(raw);
+    if (text.startsWith('enc:v1:')) {
+        const parsed = decryptJson(text);
+        return parsed && typeof parsed === 'object' ? parsed : null;
+    }
     try {
-        return JSON.parse(raw);
+        const parsed = JSON.parse(text);
+        if (parsed && typeof parsed === 'object' && parsed.__enc) {
+            const inner = decryptJson(parsed.__enc);
+            return inner && typeof inner === 'object' ? inner : null;
+        }
+        return parsed;
     } catch (e) {
         return null;
     }
+}
+
+function serializeIntakeJson(intake) {
+    const json = JSON.stringify(intake || {});
+    const enc = encryptField(json);
+    if (enc && enc.startsWith('enc:v1:')) {
+        return JSON.stringify({ __enc: enc });
+    }
+    return json;
 }
 
 function rowToClinicalNote(row) {
     return {
         bookingRef: row.booking_ref,
         consultationDate: row.consultation_date,
-        notes: row.notes || '',
-        diagnosis: row.diagnosis || '',
-        prescriptions: row.prescriptions || '',
-        followUp: row.follow_up || '',
+        notes: decryptField(row.notes || ''),
+        diagnosis: decryptField(row.diagnosis || ''),
+        prescriptions: decryptField(row.prescriptions || ''),
+        followUp: decryptField(row.follow_up || ''),
         createdBy: row.created_by || '',
         createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
         updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : row.updated_at
@@ -749,6 +777,27 @@ async function initSchema(p) {
     await p.query(`CREATE INDEX IF NOT EXISTS idx_producers_status ON producers (status)`);
     await p.query(`CREATE INDEX IF NOT EXISTS idx_producers_district ON producers (district)`);
     await p.query(`CREATE INDEX IF NOT EXISTS idx_producers_name_lower ON producers (LOWER(name))`);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS audit_log (
+            id BIGSERIAL PRIMARY KEY,
+            username TEXT,
+            action TEXT NOT NULL,
+            detail TEXT,
+            ip TEXT,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_audit_log_created ON audit_log (created_at DESC)`);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS staff_totp (
+            username TEXT PRIMARY KEY,
+            secret_enc TEXT NOT NULL,
+            enabled BOOLEAN NOT NULL DEFAULT FALSE,
+            recovery_hashes TEXT[] NOT NULL DEFAULT '{}',
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
 }
 
 function rowToAnalyticsEvent(row) {
@@ -2084,7 +2133,7 @@ async function savePatientIntake(bookingRef, intake) {
              intake_completed_at = COALESCE(intake_completed_at, NOW())
          WHERE booking_ref = $1
          RETURNING *`,
-        [bookingRef, JSON.stringify(intake || {})]
+        [bookingRef, serializeIntakeJson(intake)]
     );
     return r.rows[0] ? rowToBooking(r.rows[0]) : null;
 }
@@ -2345,10 +2394,10 @@ function joinedRowToBookingWithNotes(row) {
         clinicalNotes = {
             bookingRef: row.booking_ref,
             consultationDate: row.n_consultation_date,
-            notes: row.n_notes || '',
-            diagnosis: row.n_diagnosis || '',
-            prescriptions: row.n_prescriptions || '',
-            followUp: row.n_follow_up || '',
+            notes: decryptField(row.n_notes || ''),
+            diagnosis: decryptField(row.n_diagnosis || ''),
+            prescriptions: decryptField(row.n_prescriptions || ''),
+            followUp: decryptField(row.n_follow_up || ''),
             createdBy: row.n_created_by || '',
             createdAt:
                 row.n_created_at instanceof Date ? row.n_created_at.toISOString() : row.n_created_at,
@@ -2450,10 +2499,10 @@ async function upsertClinicalNote(note) {
         [
             note.bookingRef,
             note.consultationDate,
-            note.notes,
-            note.diagnosis,
-            note.prescriptions,
-            note.followUp,
+            encryptField(note.notes || ''),
+            encryptField(note.diagnosis || ''),
+            encryptField(note.prescriptions || ''),
+            encryptField(note.followUp || ''),
             note.createdBy,
             note.createdAt,
             note.updatedAt
@@ -3001,14 +3050,14 @@ function rowToStaffProfile(row) {
         ordemNumber: row.ordem_number || '',
         fullName: row.full_name || '',
         nif: row.nif || '',
-        citizenCard: row.citizen_card || '',
+        citizenCard: decryptField(row.citizen_card || ''),
         address: row.address || '',
         insurer: row.insurer || '',
         insurancePolicy: row.insurance_policy || '',
         insuranceValidUntil: isoDateOnly(row.insurance_valid_until) || '',
         bio: row.bio || '',
         credentials: row.credentials || '',
-        iban: row.iban || '',
+        iban: decryptField(row.iban || ''),
         payoutsFromMonth: row.payouts_from_month || '',
         consultLanguages: parseStaffAreaList(row.consult_languages),
         primaryAreas: parseStaffAreaList(row.primary_area),
@@ -3125,7 +3174,7 @@ async function upsertStaffProfile(username, fields) {
     const ordemNumber = String(fields.ordemNumber || '').trim().slice(0, 80);
     const fullName = String(fields.fullName || '').trim().slice(0, 160);
     const nif = String(fields.nif || '').trim().slice(0, 20);
-    const citizenCard = String(fields.citizenCard || '').trim().slice(0, 32);
+    const citizenCard = encryptField(String(fields.citizenCard || '').trim().slice(0, 32));
     const address = String(fields.address || '').trim().slice(0, 400);
     const insurer = String(fields.insurer || '').trim().slice(0, 120);
     const insurancePolicy = String(fields.insurancePolicy || '').trim().slice(0, 80);
@@ -3247,7 +3296,7 @@ async function upsertStaffIban(username, iban) {
     const u = String(username || '').trim().toLowerCase();
     if (!u) return null;
     await normalizeStaffProfileUsernameRow(p, u);
-    const value = String(iban || '').trim().slice(0, 42);
+    const value = encryptField(String(iban || '').trim().slice(0, 42));
     const updateSql = `UPDATE staff_profiles
             SET iban = $2, updated_at = NOW()
           WHERE LOWER(username) = $1
@@ -3844,9 +3893,106 @@ async function replaceEmailTypo(wrongEmail, rightEmail) {
     );
 })();
 
+async function insertAuditLog({ username, action, detail, ip }) {
+    const p = getPool();
+    if (!p) return;
+    await p.query(
+        `INSERT INTO audit_log (username, action, detail, ip) VALUES ($1, $2, $3, $4)`,
+        [
+            String(username || '').slice(0, 64) || null,
+            String(action || 'unknown').slice(0, 80),
+            String(detail || '').slice(0, 500) || null,
+            String(ip || '').slice(0, 64) || null
+        ]
+    );
+}
+
+function totpUsernameKey(username) {
+    return String(username || '').trim().toLowerCase();
+}
+
+function rowToStaffTotp(row) {
+    if (!row) return null;
+    const hashes = row.recovery_hashes;
+    return {
+        username: row.username,
+        secret: decryptField(row.secret_enc || ''),
+        enabled: row.enabled === true,
+        recoveryHashes: Array.isArray(hashes) ? hashes.filter(Boolean) : [],
+        updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : row.updated_at
+    };
+}
+
+async function getStaffTotp(username) {
+    const p = getPool();
+    const u = totpUsernameKey(username);
+    if (!p || !u) return null;
+    const r = await p.query(
+        `SELECT username, secret_enc, enabled, recovery_hashes, updated_at
+         FROM staff_totp WHERE LOWER(username) = $1 LIMIT 1`,
+        [u]
+    );
+    return r.rows[0] ? rowToStaffTotp(r.rows[0]) : null;
+}
+
+async function upsertStaffTotpSecret(username, secretPlain, { enabled = false, recoveryHashes = null } = {}) {
+    const p = getPool();
+    const u = totpUsernameKey(username);
+    if (!p || !u || !secretPlain) return null;
+    const secretEnc = encryptField(String(secretPlain));
+    const hashes = Array.isArray(recoveryHashes) ? recoveryHashes : null;
+    const r = await p.query(
+        `INSERT INTO staff_totp (username, secret_enc, enabled, recovery_hashes, updated_at)
+         VALUES ($1, $2, $3, COALESCE($4::text[], '{}'), NOW())
+         ON CONFLICT (username) DO UPDATE SET
+            secret_enc = EXCLUDED.secret_enc,
+            enabled = EXCLUDED.enabled,
+            recovery_hashes = COALESCE($4::text[], staff_totp.recovery_hashes),
+            updated_at = NOW()
+         RETURNING username, secret_enc, enabled, recovery_hashes, updated_at`,
+        [u, secretEnc, enabled === true, hashes]
+    );
+    return r.rows[0] ? rowToStaffTotp(r.rows[0]) : null;
+}
+
+async function enableStaffTotp(username, recoveryHashes) {
+    const p = getPool();
+    const u = totpUsernameKey(username);
+    if (!p || !u) return null;
+    const hashes = Array.isArray(recoveryHashes) ? recoveryHashes : [];
+    const r = await p.query(
+        `UPDATE staff_totp
+            SET enabled = TRUE, recovery_hashes = $2::text[], updated_at = NOW()
+          WHERE LOWER(username) = $1
+          RETURNING username, secret_enc, enabled, recovery_hashes, updated_at`,
+        [u, hashes]
+    );
+    return r.rows[0] ? rowToStaffTotp(r.rows[0]) : null;
+}
+
+async function replaceStaffTotpRecoveryHashes(username, recoveryHashes) {
+    const p = getPool();
+    const u = totpUsernameKey(username);
+    if (!p || !u) return null;
+    const hashes = Array.isArray(recoveryHashes) ? recoveryHashes : [];
+    const r = await p.query(
+        `UPDATE staff_totp
+            SET recovery_hashes = $2::text[], updated_at = NOW()
+          WHERE LOWER(username) = $1
+          RETURNING username, secret_enc, enabled, recovery_hashes, updated_at`,
+        [u, hashes]
+    );
+    return r.rows[0] ? rowToStaffTotp(r.rows[0]) : null;
+}
+
 module.exports = {
     getPool,
     isDatabaseEnabled,
+    insertAuditLog,
+    getStaffTotp,
+    upsertStaffTotpSecret,
+    enableStaffTotp,
+    replaceStaffTotpRecoveryHashes,
     initDatabase,
     bookingExistsByPaymentId,
     findBookingByPaymentId,

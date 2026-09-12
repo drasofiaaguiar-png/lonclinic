@@ -1911,22 +1911,6 @@ function listingTitle(raw) {
         return part.replace(core, lowered);
     }).join('');
 }
-    const s = String(raw || '').trim();
-    if (!s) return s;
-    const parts = s.split(/(\s+)/);
-    let seenWord = false;
-    return parts.map((part) => {
-        if (!part || /^\s+$/.test(part)) return part;
-        const coreMatch = part.match(/[A-Za-zÀ-ÿ0-9][A-Za-zÀ-ÿ0-9'’.-]*/);
-        const core = coreMatch ? coreMatch[0] : '';
-        const isFirst = !seenWord;
-        if (core) seenWord = true;
-        if (!core || keep.test(core) || /^[A-Z0-9]{2,}(?:-\d+)?$/.test(core)) return part;
-        if (isFirst) return part;
-        const lowered = core.charAt(0).toLowerCase() + core.slice(1);
-        return part.replace(core, lowered);
-    }).join('');
-}
 
 function magIndexListHtml(articles) {
     const items = (Array.isArray(articles) ? articles : []).map((a) => {

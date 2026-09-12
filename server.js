@@ -26,6 +26,7 @@ let clinicPasswordHash = null;
 bcrypt.hash(CLINIC_PASSWORD, 12).then(h => { clinicPasswordHash = h; });
 
 const db = require('./db');
+const totp = require('./totp');
 const analyticsNet = require('./analytics-network');
 const { computeCheckoutTotalCents, isStripeSubscriptionService, normalizeServiceKey } = require('./pricing');
 
@@ -63,6 +64,7 @@ const staffBooking = require('./staff-booking');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 const session = require('express-session');
+const PgSession = require('connect-pg-simple')(session);
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
@@ -101,6 +103,17 @@ const rateLimitClinicLogin = rateLimit({
     legacyHeaders: false,
     handler: (req, res) => {
         res.status(429).json({ error: 'Too many login attempts. Try again in a few minutes.' });
+    }
+});
+
+const rateLimitClinicTotp = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    skipSuccessfulRequests: true,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Demasiadas tentativas de código. Tente novamente em alguns minutos.' });
     }
 });
 
@@ -291,9 +304,40 @@ const rateLimitClinicPassword = rateLimit({
     }
 });
 
+const rateLimitPatientPortal = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 30,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Too many requests. Try again in a few minutes.' });
+    }
+});
+
+const rateLimitCareers = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 8,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Demasiadas candidaturas. Tente novamente mais tarde.' });
+    }
+});
+
+function debugEndpointsEnabled() {
+    if (process.env.NODE_ENV === 'production') return false;
+    if (process.env.RAILWAY_ENVIRONMENT || process.env.RAILWAY_ENVIRONMENT_ID) return false;
+    return true;
+}
+
 /* ========================================
    SECURITY HEADERS (CSP, HSTS, etc.)
 ======================================== */
+app.use((req, res, next) => {
+    res.locals.cspNonce = crypto.randomBytes(16).toString('base64');
+    next();
+});
+
 app.use(
     helmet({
         contentSecurityPolicy: {
@@ -301,14 +345,16 @@ app.use(
                 defaultSrc: ["'self'"],
                 scriptSrc: [
                     "'self'",
-                    "'unsafe-inline'",
+                    (req, res) => `'nonce-${res.locals.cspNonce}'`,
+                    "'strict-dynamic'",
                     'https://www.googletagmanager.com',
                     'https://www.google-analytics.com',
                     'https://ssl.google-analytics.com',
                     'https://js.stripe.com',
-                    'https://cdnjs.cloudflare.com'
+                    'https://cdnjs.cloudflare.com',
+                    'https://widget.trustpilot.com'
                 ],
-                scriptSrcAttr: ["'unsafe-inline'"],
+                scriptSrcAttr: ["'none'"],
                 styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
                 fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
                 imgSrc: ["'self'", 'data:', 'https:'],
@@ -357,15 +403,22 @@ function injectAnalyticsHtml(html) {
     return html + ANALYTICS_SNIPPET;
 }
 
-function injectPublicHtml(html, req) {
-    return injectAnalyticsHtml(seo.applyHtmlSeo(html, req));
+function applyCspNonce(html, nonce) {
+    if (!html || typeof html !== 'string' || !nonce) return html;
+    const n = String(nonce).replace(/[^A-Za-z0-9+/=_-]/g, '');
+    if (!n) return html;
+    return html.replace(/<script\b(?![^>]*\bnonce=)/gi, `<script nonce="${n}"`);
+}
+
+function injectPublicHtml(html, req, nonce) {
+    return applyCspNonce(injectAnalyticsHtml(seo.applyHtmlSeo(html, req)), nonce);
 }
 
 app.use((req, res, next) => {
     const origSend = res.send.bind(res);
     res.send = function (body) {
         if (typeof body === 'string' && /<html[\s>]/i.test(body)) {
-            body = injectPublicHtml(body, req);
+            body = injectPublicHtml(body, req, res.locals.cspNonce);
         }
         return origSend(body);
     };
@@ -382,7 +435,7 @@ app.use((req, res, next) => {
         fs.readFile(fp, 'utf8', (err, html) => {
             if (err) return origSendFile(filePath, options, cb);
             if (!res.getHeader('Content-Type')) res.setHeader('Content-Type', 'text/html; charset=utf-8');
-            origSend(injectPublicHtml(html, req));
+            origSend(injectPublicHtml(html, req, res.locals.cspNonce));
             if (typeof cb === 'function') cb();
         });
     };
@@ -396,6 +449,13 @@ app.use(session({
     secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: (db.isDatabaseEnabled() && db.getPool())
+        ? new PgSession({
+            pool: db.getPool(),
+            tableName: 'user_sessions',
+            createTableIfMissing: true
+        })
+        : undefined,
     cookie: {
         secure: true,
         sameSite: 'lax',
@@ -642,7 +702,181 @@ function ipIsStaff(req) {
 
 function setStaffDeviceCookie(res) {
     if (!res || typeof res.append !== 'function') return;
-    setAnalyticsCookie(res, STAFF_DEVICE_COOKIE, STAFF_DEVICE_TOKEN, STAFF_DEVICE_TTL_SEC);
+    res.append(
+        'Set-Cookie',
+        `${STAFF_DEVICE_COOKIE}=${encodeURIComponent(STAFF_DEVICE_TOKEN)}; Path=/; Max-Age=${STAFF_DEVICE_TTL_SEC}; SameSite=Lax; Secure; HttpOnly`
+    );
+}
+
+function establishStaffSession(req, res, sessionFields, payload) {
+    const finish = () => {
+        Object.assign(req.session, sessionFields);
+        setStaffDeviceCookie(res);
+        req.session.save((err) => {
+            if (err) {
+                console.error('session.save:', err.message);
+                return res.status(500).json({ error: 'Failed to create session' });
+            }
+            res.json(payload);
+        });
+    };
+    if (typeof req.session.regenerate === 'function') {
+        req.session.regenerate((err) => {
+            if (err) {
+                console.error('session.regenerate:', err.message);
+                return res.status(500).json({ error: 'Failed to create session' });
+            }
+            finish();
+        });
+        return;
+    }
+    finish();
+}
+
+const TOTP_PENDING_TTL_MS = 10 * 60 * 1000;
+const staffTotpMemory = new Map();
+
+function totpUsernameKey(username) {
+    return String(username || '').trim().toLowerCase();
+}
+
+async function getStaffTotpRecord(username) {
+    const u = totpUsernameKey(username);
+    if (!u) return null;
+    if (usePersistentDb) return db.getStaffTotp(u);
+    return staffTotpMemory.get(u) || null;
+}
+
+async function saveStaffTotpSecret(username, secretPlain, opts) {
+    const u = totpUsernameKey(username);
+    if (!u || !secretPlain) return null;
+    if (usePersistentDb) return db.upsertStaffTotpSecret(u, secretPlain, opts || {});
+    const prev = staffTotpMemory.get(u) || {};
+    const rec = {
+        username: u,
+        secret: String(secretPlain),
+        enabled: !!(opts && opts.enabled),
+        recoveryHashes: Array.isArray(opts && opts.recoveryHashes)
+            ? opts.recoveryHashes
+            : (prev.recoveryHashes || []),
+        updatedAt: new Date().toISOString()
+    };
+    staffTotpMemory.set(u, rec);
+    return rec;
+}
+
+async function enableStaffTotpRecord(username, recoveryHashes) {
+    const u = totpUsernameKey(username);
+    if (!u) return null;
+    if (usePersistentDb) return db.enableStaffTotp(u, recoveryHashes);
+    const prev = staffTotpMemory.get(u);
+    if (!prev) return null;
+    const rec = {
+        ...prev,
+        enabled: true,
+        recoveryHashes: Array.isArray(recoveryHashes) ? recoveryHashes : [],
+        updatedAt: new Date().toISOString()
+    };
+    staffTotpMemory.set(u, rec);
+    return rec;
+}
+
+async function replaceStaffTotpRecovery(username, recoveryHashes) {
+    const u = totpUsernameKey(username);
+    if (!u) return null;
+    if (usePersistentDb) return db.replaceStaffTotpRecoveryHashes(u, recoveryHashes);
+    const prev = staffTotpMemory.get(u);
+    if (!prev) return null;
+    const rec = {
+        ...prev,
+        recoveryHashes: Array.isArray(recoveryHashes) ? recoveryHashes : [],
+        updatedAt: new Date().toISOString()
+    };
+    staffTotpMemory.set(u, rec);
+    return rec;
+}
+
+function getValidTotpPending(req) {
+    const pending = req.session && req.session.totpPending;
+    if (!pending || !pending.username) return null;
+    if (Date.now() - Number(pending.at || 0) > TOTP_PENDING_TTL_MS) return null;
+    return pending;
+}
+
+function staffSessionFromIdentity(identity) {
+    return {
+        clinicAuthenticated: true,
+        clinicUsername: identity.username,
+        clinicDisplayName: identity.displayName,
+        clinicRole: identity.role,
+        professionalId: identity.professionalId || null,
+        clinicLoginTime: new Date().toISOString()
+    };
+}
+
+function staffLoginPayload(identity, extra) {
+    return Object.assign({
+        success: true,
+        message: 'Login successful',
+        role: identity.role,
+        username: identity.username,
+        displayName: identity.displayName
+    }, extra || {});
+}
+
+function saveTotpPendingSession(req, res, pending, payload) {
+    const finish = () => {
+        req.session.totpPending = pending;
+        req.session.clinicAuthenticated = false;
+        delete req.session.clinicUsername;
+        delete req.session.clinicRole;
+        delete req.session.professionalId;
+        req.session.save((err) => {
+            if (err) {
+                console.error('session.save:', err.message);
+                return res.status(500).json({ error: 'Failed to create session' });
+            }
+            res.json(payload);
+        });
+    };
+    if (typeof req.session.regenerate === 'function') {
+        req.session.regenerate((err) => {
+            if (err) {
+                console.error('session.regenerate:', err.message);
+                return res.status(500).json({ error: 'Failed to create session' });
+            }
+            finish();
+        });
+        return;
+    }
+    finish();
+}
+
+async function beginStaffTotpChallenge(req, res, identity) {
+    const pending = {
+        username: identity.username,
+        displayName: identity.displayName,
+        role: identity.role,
+        professionalId: identity.professionalId || null,
+        at: Date.now()
+    };
+    try {
+        const rec = await getStaffTotpRecord(identity.username);
+        if (rec && rec.enabled && rec.secret) {
+            return saveTotpPendingSession(req, res, pending, { requiresTotp: true });
+        }
+        const secret = (rec && rec.secret) ? rec.secret : totp.generateSecret();
+        await saveStaffTotpSecret(identity.username, secret, { enabled: false });
+        pending.setup = true;
+        return saveTotpPendingSession(req, res, pending, {
+            requiresTotpSetup: true,
+            otpauthUrl: totp.otpauthUrl(secret, identity.username, 'Lon Clinic'),
+            secret
+        });
+    } catch (err) {
+        console.error('beginStaffTotpChallenge:', err.message);
+        return res.status(500).json({ error: 'Failed to start two-factor authentication' });
+    }
 }
 
 function wantsStaffDeviceMark(req) {
@@ -2275,12 +2509,43 @@ function bookingBelongsToStaff(booking, scope) {
 
 function stripBookingIntakeToken(booking) {
     if (!booking) return booking;
-    const { intakeToken, intake, clinicalNotes, ...rest } = booking;
+    const { intakeToken, intake, clinicalNotes, paymentId, stripeCustomerId, ...rest } = booking;
     return {
         ...rest,
         hasClinicalNotes: !!(booking.hasClinicalNotes || clinicalNotes),
         hasPatientIntake: !!(booking.hasPatientIntake || booking.intakeCompletedAt)
     };
+}
+
+function publicPatientBooking(booking) {
+    const extra = enrichBookingForPatientApi(booking);
+    return {
+        bookingRef: extra.bookingRef,
+        service: extra.service,
+        date: extra.date,
+        time: extra.time,
+        dateIso: extra.dateIso || null,
+        patientName: extra.patientName,
+        email: extra.email,
+        cancelled: !!extra.cancelled,
+        canCancel: !!extra.canCancel,
+        canReschedule: !!extra.canReschedule,
+        rescheduleRemaining: extra.rescheduleRemaining
+    };
+}
+
+async function logAudit(req, action, detail) {
+    if (!usePersistentDb) return;
+    try {
+        await db.insertAuditLog({
+            username: req && req.session && req.session.clinicUsername,
+            action,
+            detail,
+            ip: requestClientIp(req)
+        });
+    } catch (err) {
+        console.error('audit_log:', err.message);
+    }
 }
 
 async function filterBookingsForStaff(bookings, req) {
@@ -3114,6 +3379,51 @@ async function deliverEmail(mailOptions) {
     return transporter.sendMail(mailOptions);
 }
 
+function sniffUploadKind(buffer) {
+    if (!buffer || !Buffer.isBuffer(buffer) || buffer.length < 8) return '';
+    if (buffer.slice(0, 5).toString('ascii') === '%PDF-') return 'pdf';
+    if (buffer[0] === 0xFF && buffer[1] === 0xD8 && buffer[2] === 0xFF) return 'jpeg';
+    if (buffer[0] === 0x89 && buffer[1] === 0x50 && buffer[2] === 0x4E && buffer[3] === 0x47) return 'png';
+    if (buffer.slice(0, 4).toString('ascii') === 'RIFF' && buffer.slice(8, 12).toString('ascii') === 'WEBP') return 'webp';
+    if (buffer[0] === 0xD0 && buffer[1] === 0xCF && buffer[2] === 0x11 && buffer[3] === 0xE0) return 'doc';
+    if (buffer[0] === 0x50 && buffer[1] === 0x4B && (buffer[2] === 0x03 || buffer[2] === 0x05 || buffer[2] === 0x07)) return 'zip';
+    return '';
+}
+
+function assertUploadMatches(file, allowed) {
+    if (!file) return;
+    const ext = path.extname(file.originalname || '').toLowerCase();
+    const mime = String(file.mimetype || '').toLowerCase();
+    const magic = sniffUploadKind(file.buffer);
+    const ok = allowed.some((rule) => (
+        rule.exts.includes(ext) &&
+        rule.mimes.includes(mime) &&
+        rule.magic.includes(magic)
+    ));
+    if (!ok) {
+        const err = new Error('Unsupported or mismatched file type.');
+        err.statusCode = 400;
+        throw err;
+    }
+}
+
+const CAREER_UPLOAD_RULES = [
+    { exts: ['.pdf'], mimes: ['application/pdf'], magic: ['pdf'] },
+    { exts: ['.doc'], mimes: ['application/msword'], magic: ['doc'] },
+    {
+        exts: ['.docx'],
+        mimes: ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+        magic: ['zip']
+    }
+];
+const CV_PDF_RULES = [{ exts: ['.pdf'], mimes: ['application/pdf'], magic: ['pdf'] }];
+const IMAGE_UPLOAD_RULES = [
+    { exts: ['.jpg', '.jpeg'], mimes: ['image/jpeg'], magic: ['jpeg'] },
+    { exts: ['.png'], mimes: ['image/png'], magic: ['png'] },
+    { exts: ['.webp'], mimes: ['image/webp'], magic: ['webp'] }
+];
+const STAFF_DOC_UPLOAD_RULES = CAREER_UPLOAD_RULES.concat(IMAGE_UPLOAD_RULES);
+
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
@@ -3127,7 +3437,7 @@ const upload = multer({
         ]);
         const allowedExtensions = ['.pdf', '.doc', '.docx'];
         const fileExt = path.extname(file.originalname || '').toLowerCase();
-        const isAllowed = allowedMimeTypes.has(file.mimetype) || allowedExtensions.includes(fileExt);
+        const isAllowed = allowedMimeTypes.has(file.mimetype) && allowedExtensions.includes(fileExt);
         if (!isAllowed) {
             return cb(new Error('Unsupported file type. Allowed: PDF, DOC, DOCX.'));
         }
@@ -3142,7 +3452,7 @@ const uploadCvPdf = multer({
     },
     fileFilter: (req, file, cb) => {
         const fileExt = path.extname(file.originalname || '').toLowerCase();
-        const isPdf = file.mimetype === 'application/pdf' || fileExt === '.pdf';
+        const isPdf = file.mimetype === 'application/pdf' && fileExt === '.pdf';
         if (!isPdf) {
             return cb(new Error('O CV deve ser um ficheiro PDF.'));
         }
@@ -3164,7 +3474,7 @@ const uploadStaffDocument = multer({
     limits: { fileSize: 25 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         const ext = path.extname(file.originalname || '').toLowerCase();
-        const ok = STAFF_DOC_MIMES.has(file.mimetype) || STAFF_DOC_EXTS.has(ext);
+        const ok = STAFF_DOC_MIMES.has(file.mimetype) && STAFF_DOC_EXTS.has(ext);
         if (!ok) {
             return cb(new Error('Allowed files: PDF, JPG, PNG, WebP, DOC, DOCX.'));
         }
@@ -3181,7 +3491,7 @@ const uploadStaffPhoto = multer({
     limits: { fileSize: 4 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
         const ext = path.extname(file.originalname || '').toLowerCase();
-        const ok = PRODUCER_IMAGE_MIMES.has(file.mimetype) || PRODUCER_IMAGE_EXTS.has(ext);
+        const ok = PRODUCER_IMAGE_MIMES.has(file.mimetype) && PRODUCER_IMAGE_EXTS.has(ext);
         if (!ok) {
             return cb(new Error('Allowed photos: JPG, PNG or WebP.'));
         }
@@ -3197,7 +3507,7 @@ const uploadProducerImages = multer({
     },
     fileFilter: (req, file, cb) => {
         const ext = path.extname(file.originalname || '').toLowerCase();
-        const ok = PRODUCER_IMAGE_MIMES.has(file.mimetype) || PRODUCER_IMAGE_EXTS.has(ext);
+        const ok = PRODUCER_IMAGE_MIMES.has(file.mimetype) && PRODUCER_IMAGE_EXTS.has(ext);
         if (!ok) {
             return cb(new Error('Imagens permitidas: JPG, PNG ou WebP.'));
         }
@@ -3738,7 +4048,7 @@ async function sendConfirmationEmail(data) {
         const payload = {
             ...data,
             doxyUrl: data.doxyUrl || (await resolveDoxyRoomUrl(data.professional)),
-            intakeUrl: data.intakeUrl || (data.intakeToken ? patientIntakeUrl(data.intakeToken) : '')
+            intakeUrl: ''
         };
         const { html, text, subject } = buildConfirmationEmail(payload);
 
@@ -7424,28 +7734,31 @@ async function sendProfessionalLoginEmail({ to, name, username, password, note }
 
 async function sendProfessionalPasswordResetEmail({ to, name, code }) {
     const portalUrl = professionalLoginPortalUrl();
+    const resetUrl = `${portalUrl}${portalUrl.includes('?') ? '&' : '?'}reset=${encodeURIComponent(code)}`;
     const who = String(name || '').trim();
     const greeting = who ? `Olá ${who},` : 'Olá,';
-    const subject = 'Código para redefinir a password — Lon Clinic';
+    const subject = 'Redefinir a password — Lon Clinic';
     const text = [
         greeting,
         '',
-        'Use este código para definir uma nova password no portal da Lon Clinic:',
+        'Para definir uma nova password no portal da Lon Clinic, abra este link (válido 15 minutos):',
+        resetUrl,
+        '',
+        'Se preferir, copie o código no ecrã de redefinição:',
         String(code),
         '',
-        'O código expira dentro de 15 minutos. Se não pediu esta alteração, ignore este email.',
-        '',
-        `Portal: ${portalUrl}`,
+        'Se não pediu esta alteração, ignore este email.',
         '',
         'Lon Clinic'
     ].join('\n');
     const html = `<div style="font-family:system-ui,sans-serif;line-height:1.5;color:#111">
 <p style="margin:0 0 12px;">${escapeHtml(greeting)}</p>
-<p style="margin:0 0 12px;">Use este código para definir uma nova password no portal da Lon Clinic:</p>
-<p style="margin:0 0 16px;font-size:28px;letter-spacing:0.18em;font-weight:700;">${escapeHtml(String(code))}</p>
-<p style="margin:0 0 12px;">O código expira dentro de 15 minutos. Se não pediu esta alteração, ignore este email.</p>
-<p style="margin:0 0 12px;"><a href="${escapeHtml(portalUrl)}">${escapeHtml(portalUrl)}</a></p>
-<p style="margin:0;">Lon Clinic</p>
+<p style="margin:0 0 12px;">Para definir uma nova password no portal da Lon Clinic, abra este link (válido 15 minutos):</p>
+<p style="margin:0 0 16px;"><a href="${escapeHtml(resetUrl)}">${escapeHtml(resetUrl)}</a></p>
+<p style="margin:0 0 12px;">Se preferir, copie o código no ecrã de redefinição:</p>
+<p style="margin:0 0 16px;font-size:13px;word-break:break-all;font-family:ui-monospace,monospace;">${escapeHtml(String(code))}</p>
+<p style="margin:0;">Se não pediu esta alteração, ignore este email.</p>
+<p style="margin:12px 0 0;">Lon Clinic</p>
 </div>`;
     await deliverEmail({ from: EMAIL_FROM, to, subject, text, html });
 }
@@ -7545,7 +7858,7 @@ async function runAutomationJobs() {
                 locale,
                 reminderVariant: '24h',
                 professional: b.professional || '',
-                intakeUrl: (!b.intakeCompletedAt && b.intakeToken) ? patientIntakeUrl(b.intakeToken) : ''
+                intakeUrl: ''
             });
             if (!sent) continue;
             try {
@@ -7574,7 +7887,7 @@ async function runAutomationJobs() {
                 locale,
                 reminderVariant: '1h',
                 professional: b.professional || '',
-                intakeUrl: (!b.intakeCompletedAt && b.intakeToken) ? patientIntakeUrl(b.intakeToken) : ''
+                intakeUrl: ''
             });
             if (!sent) continue;
             try {
@@ -7595,12 +7908,7 @@ async function runAutomationJobs() {
             await sendPostConsultationReviewEmail(b);
         }
 
-        const nowMs = Date.now();
-        const dueIntake = (listIntake || []).filter((b) => {
-            if (b.cancelled || b.intakeCompletedAt || b.intakeReminderSent || !b.intakeToken) return false;
-            const appt = getAppointmentStartUtcMs(b, tz);
-            return !Number.isFinite(appt) || appt > nowMs;
-        });
+        const dueIntake = [];
         if (dueIntake.length > 0) {
             console.log(`   ⏰ Intake reminders: ${dueIntake.length} booking(s)`);
         }
@@ -8441,7 +8749,7 @@ app.get('/invite/:token', async (req, res) => {
         }
         const locale = invitation.locale || 'pt';
         if (invitation.status === 'paid') {
-            return res.redirect(302, `${getBaseUrl(req)}/patient-portal?email=${encodeURIComponent(invitation.patientEmail)}`);
+            return res.redirect(302, `${getBaseUrl(req)}/patient-portal`);
         }
         if (invitation.status !== 'pending') {
             return sendHtmlNoCacheString(res, renderInviteStatusHtml({ kind: 'cancelled', locale }), 410);
@@ -9033,31 +9341,30 @@ app.get('/robots.txt', (req, res) => {
     res.send(seo.robotsTxt());
 });
 
-// Block raw file access to Guide source files (content is server-rendered at /blog).
+// Block source, data, scripts, and other non-public artifacts from static serving.
 app.use((req, res, next) => {
-    const p = (req.path || '').split('?')[0];
-    if (p === '/data/burnout' || p.startsWith('/data/burnout/')) {
+    const p = (req.path || '').split('?')[0].toLowerCase();
+    const deniedPrefixes = [
+        '/data/', '/scripts/', '/.cursor/', '/.github/', '/node_modules/', '/uploads/'
+    ];
+    if (deniedPrefixes.some((pre) => p === pre.slice(0, -1) || p.startsWith(pre))) {
         return res.status(404).type('text').send('Not found');
     }
-    if (p === '/data/consulta' || p.startsWith('/data/consulta/')) {
+    const base = path.basename(p);
+    const deniedFiles = new Set([
+        'server.js', 'db.js', 'pricing.js', 'seo.js', 'guide.js', 'burnout-pages.js',
+        'consulta-pages.js', 'queixas.js', 'nutricao.js', 'tourist-pages.js',
+        'pillar-pages.js', 'producers.js', 'wellness.js', 'utm.js', 'nutricao-nurture.js',
+        'info-ssr.js', 'authors.js', 'cvi.js', 'staff-booking.js', 'clinical-quizzes.js',
+        'clinical-quiz-score.js', 'analytics-network.js', 'talk-cta.js',
+        'totp.js', 'field-crypto.js',
+        'package.json', 'package-lock.json', 'procfile', 'cookies.txt',
+        'env_setup.txt', 'tailwind-src.css', 'dockerfile'
+    ]);
+    if (deniedFiles.has(base)) {
         return res.status(404).type('text').send('Not found');
     }
-    if (p === '/data/guide' || p.startsWith('/data/guide/')) {
-        return res.status(404).end();
-    }
-    if (p === '/data/queixas' || p.startsWith('/data/queixas/')) {
-        return res.status(404).type('text').send('Not found');
-    }
-    if (p === '/data/nutricao' || p.startsWith('/data/nutricao/')) {
-        return res.status(404).type('text').send('Not found');
-    }
-    if (p === '/data/cvi' || p.startsWith('/data/cvi/')) {
-        return res.status(404).type('text').send('Not found');
-    }
-    if (p === '/cvi.js' || p === '/scripts' || p.startsWith('/scripts/')) {
-        return res.status(404).type('text').send('Not found');
-    }
-    if (p === '/data/tourist' || p.startsWith('/data/tourist/')) {
+    if (/\.(md|sql|yml|yaml|env|crt|pem|key|map|gitignore)$/i.test(base) && base !== 'robots.txt') {
         return res.status(404).type('text').send('Not found');
     }
     next();
@@ -9158,7 +9465,7 @@ app.get('/api/config', (req, res) => {
 });
 
 // ─── API: Debug Stripe configuration (non-production only) ───
-if (process.env.NODE_ENV !== 'production') {
+if (debugEndpointsEnabled()) {
     app.get('/api/debug-stripe', (req, res) => {
         const hasSecret = !!process.env.STRIPE_SECRET_KEY;
         const secretValue = process.env.STRIPE_SECRET_KEY || '';
@@ -9188,7 +9495,7 @@ const CAREER_ROLE_LABELS = {
 };
 
 // ─── API: Careers form submission ───
-app.post('/api/careers', (req, res) => {
+app.post('/api/careers', rateLimitCareers, (req, res) => {
     upload.single('attachment')(req, res, async (uploadErr) => {
         if (uploadErr instanceof multer.MulterError) {
             if (uploadErr.code === 'LIMIT_FILE_SIZE') {
@@ -9198,6 +9505,11 @@ app.post('/api/careers', (req, res) => {
         }
         if (uploadErr) {
             return res.status(400).json({ error: uploadErr.message || 'Erro no ficheiro anexado.' });
+        }
+        try {
+            if (req.file) assertUploadMatches(req.file, CAREER_UPLOAD_RULES);
+        } catch (magicErr) {
+            return res.status(400).json({ error: magicErr.message });
         }
 
         const name = String(req.body?.name || '').trim();
@@ -9534,6 +9846,11 @@ app.post('/api/recrutamento/psicologia', rateLimitRecrutamentoPsicologia, (req, 
         }
         if (uploadErr) {
             return res.status(400).json({ error: uploadErr.message || 'Erro no ficheiro CV.' });
+        }
+        try {
+            if (req.file) assertUploadMatches(req.file, CV_PDF_RULES);
+        } catch (magicErr) {
+            return res.status(400).json({ error: magicErr.message });
         }
 
         let raw = {};
@@ -10419,7 +10736,7 @@ app.post('/api/contact', rateLimitContact, async (req, res) => {
 });
 
 // ─── API: Complaint form submission ───
-app.post('/api/reclamacoes', async (req, res) => {
+app.post('/api/reclamacoes', rateLimitContact, async (req, res) => {
     const name = (req.body?.name || '').trim();
     const citizenCard = (req.body?.citizenCard || '').trim();
     const phone = (req.body?.phone || '').trim();
@@ -11084,6 +11401,14 @@ app.post('/api/diretorio/candidatar', rateLimitProducerApply, (req, res) => {
         if (uploadErr) {
             return res.status(400).json({ error: uploadErr.message || 'Erro no ficheiro enviado.' });
         }
+        try {
+            const files = req.files || {};
+            for (const f of [].concat(files.photos || [], files.certImage || [])) {
+                assertUploadMatches(f, IMAGE_UPLOAD_RULES);
+            }
+        } catch (magicErr) {
+            return res.status(400).json({ error: magicErr.message });
+        }
 
         let raw = {};
         try {
@@ -11283,10 +11608,9 @@ app.patch('/api/admin/producers/:id', requireAdmin, express.json(), async (req, 
 
 // ─── API: Create Checkout Session ───
 app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => {
-    if (!isStripeConfigured) {
+        if (!isStripeConfigured) {
         console.error('❌ Stripe configuration check failed:');
         console.error('   STRIPE_SECRET_KEY exists:', !!process.env.STRIPE_SECRET_KEY);
-        console.error('   STRIPE_SECRET_KEY value:', process.env.STRIPE_SECRET_KEY ? `${process.env.STRIPE_SECRET_KEY.substring(0, 10)}...` : 'MISSING');
         console.error('   isStripeConfigured:', isStripeConfigured);
         return res.status(500).json({ error: 'Stripe is not configured. Add your STRIPE_SECRET_KEY to the .env file.' });
     }
@@ -11387,17 +11711,11 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         if (analyticsIds.visitorId) metadata.lon_vid = String(analyticsIds.visitorId).slice(0, 64);
         if (analyticsIds.sessionId) metadata.lon_sid = String(analyticsIds.sessionId).slice(0, 64);
 
-        // Store each passenger's core details in metadata (up to 4)
+        // Store names only — never send health data (medications, allergies, SNS, DOB) to Stripe.
         if (Array.isArray(passengers)) {
             passengers.slice(0, 4).forEach((p, i) => {
                 const n = i + 1;
                 metadata[`p${n}_name`] = `${p.firstName || ''} ${p.lastName || ''}`.trim().substring(0, 500);
-                metadata[`p${n}_dob`] = p.dob || '';
-                metadata[`p${n}_nhs`] = p.nhs || '';
-                metadata[`p${n}_country`] = p.country || '';
-                metadata[`p${n}_concerns`] = (p.concerns || '').substring(0, 500);
-                metadata[`p${n}_medications`] = (p.medications || '').substring(0, 500);
-                metadata[`p${n}_allergies`] = (p.allergies || '').substring(0, 500);
             });
         }
 
@@ -11590,19 +11908,7 @@ app.get('/api/session/:sessionId', rateLimitSessionRetrieve, async (req, res) =>
             currency: session.currency,
             bookingRef: (stored && stored.bookingRef) || ('LC-' + bookingRefShort),
             email: emailNorm,
-            isNewCustomer,
-            intakeToken: (stored && stored.intakeToken) || '',
-            intakeCompleted: !!(stored && stored.intakeCompletedAt),
-            intakePrefill: {
-                concerns: meta.p1_concerns || '',
-                medications: meta.p1_medications || '',
-                allergies: meta.p1_allergies || '',
-                dob: meta.p1_dob || '',
-                nhs: meta.p1_nhs || '',
-                country: meta.p1_country || '',
-                travelDest: meta.travel_destinations || '',
-                travelDates: meta.travel_dates || ''
-            }
+            isNewCustomer
         });
 
     } catch (err) {
@@ -11634,40 +11940,15 @@ function publicIntakePayload(booking) {
 }
 
 app.get('/api/intake/:token', rateLimitIntake, async (req, res) => {
-    try {
-        const booking = await getBookingByIntakeToken(req.params.token);
-        if (!booking) {
-            return res.status(404).json({ error: 'Form not found' });
-        }
-        res.json(publicIntakePayload(booking));
-    } catch (err) {
-        console.error('GET /api/intake:', err.message);
-        res.status(500).json({ error: 'Failed to load form' });
-    }
+    res.status(410).json({
+        error: 'Clinical details are collected during the consultation, not on this website.'
+    });
 });
 
 app.post('/api/intake/:token', rateLimitIntake, async (req, res) => {
-    try {
-        const booking = await getBookingByIntakeToken(req.params.token);
-        if (!booking) {
-            return res.status(404).json({ error: 'Form not found' });
-        }
-        const parsed = sanitizePatientIntakeBody(req.body, { service: booking.service });
-        if (!parsed.ok) {
-            return res.status(400).json({ error: parsed.error });
-        }
-        const saved = await persistPatientIntake(booking, parsed.intake);
-        if (!saved) {
-            return res.status(500).json({ error: 'Failed to save form' });
-        }
-        emitServerAnalytics('intake_submit', {
-            props: { service: booking.service, funnel: 'patient_booking' }
-        }).catch(() => {});
-        res.json({ ok: true, completed: true });
-    } catch (err) {
-        console.error('POST /api/intake:', err.message);
-        res.status(500).json({ error: 'Failed to save form' });
-    }
+    res.status(410).json({
+        error: 'Clinical details are collected during the consultation, not on this website.'
+    });
 });
 
 // ─── API: Patient — lookup booking by email + ref (same as portal login) ───
@@ -11686,7 +11967,7 @@ async function getPatientBooking(email, ref) {
 }
 
 // ─── API: Patient Dashboard — Fetch bookings by email + booking reference only ───
-app.get('/api/bookings', async (req, res) => {
+app.get('/api/bookings', rateLimitPatientPortal, async (req, res) => {
     const email = (req.query.email || '').toLowerCase().trim();
     const ref = (req.query.ref || '').trim();
 
@@ -11711,7 +11992,7 @@ app.get('/api/bookings', async (req, res) => {
         results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
         const bookings = await Promise.all(results.map(async (b) => {
-            const enriched = enrichBookingForPatientApi(b);
+            const enriched = publicPatientBooking(b);
             const doxyUrl = (await resolveDoxyRoomUrl(b.professional)) || null;
             return { ...enriched, doxyUrl };
         }));
@@ -11727,7 +12008,7 @@ app.get('/api/bookings', async (req, res) => {
     }
 });
 
-app.get('/api/conta/vacina/centros', async (req, res) => {
+app.get('/api/conta/vacina/centros', rateLimitPatientPortal, async (req, res) => {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
     res.setHeader('Cache-Control', 'no-store');
     const email = String(req.query.email || '').toLowerCase().trim();
@@ -11751,7 +12032,7 @@ app.get('/api/conta/vacina/centros', async (req, res) => {
 });
 
 // ─── API: Patient — Cancel booking (≥24h before start) ───
-app.post('/api/patient/booking/cancel', async (req, res) => {
+app.post('/api/patient/booking/cancel', rateLimitPatientPortal, async (req, res) => {
     const { email, ref, locale } = req.body || {};
     const patientEmail = String(email || '').toLowerCase().trim();
     const bookingRef = String(ref || '').trim();
@@ -11829,7 +12110,7 @@ app.post('/api/patient/booking/cancel', async (req, res) => {
 });
 
 // ─── API: Patient — Reschedule (max 2×, ≥48h before start) ───
-app.post('/api/patient/booking/reschedule', async (req, res) => {
+app.post('/api/patient/booking/reschedule', rateLimitPatientPortal, async (req, res) => {
     const { email, ref, dateIso, time, dateLabel, locale } = req.body || {};
     const patientEmail = String(email || '').toLowerCase().trim();
     const bookingRef = String(ref || '').trim();
@@ -11939,7 +12220,7 @@ app.post('/api/patient/booking/reschedule', async (req, res) => {
         }
         res.json({
             success: true,
-            booking: enrichBookingForPatientApi(newBooking)
+            booking: publicPatientBooking(newBooking)
         });
     } catch (err) {
         console.error('POST /api/patient/booking/reschedule:', err.message);
@@ -11948,15 +12229,12 @@ app.post('/api/patient/booking/reschedule', async (req, res) => {
 });
 
 // ─── API: Doxy.me config (for client) ───
-app.get('/api/doxy-config', (req, res) => {
-    res.json({
-        roomUrl: DEFAULT_DOXY_ROOM_URL || null,
-        configured: !!DEFAULT_DOXY_ROOM_URL
-    });
+app.get('/api/doxy-config', requireAuth, (req, res) => {
+    res.json({ configured: true });
 });
 
 // ─── API: Send test email (non-production only) ───
-if (process.env.NODE_ENV !== 'production') {
+if (debugEndpointsEnabled()) {
     app.post('/api/test-email', async (req, res) => {
         const { to, locale } = req.body;
         if (!to) return res.status(400).json({ error: 'Missing "to" email address' });
@@ -12004,21 +12282,12 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
 
     if (usernameMatch) {
         if (passwordMatch) {
-            req.session.clinicAuthenticated = true;
-            req.session.clinicUsername = CLINIC_USERNAME;
-            req.session.clinicDisplayName = CLINIC_USERNAME;
-            req.session.clinicRole = 'admin';
-            req.session.professionalId = null;
-            req.session.clinicLoginTime = new Date().toISOString();
-            setStaffDeviceCookie(res);
-
             console.log(`   🔐 Clinic portal login (admin): ${CLINIC_USERNAME}`);
-            return res.json({
-                success: true,
-                message: 'Login successful',
-                role: 'admin',
+            return beginStaffTotpChallenge(req, res, {
                 username: CLINIC_USERNAME,
-                displayName: CLINIC_USERNAME
+                displayName: CLINIC_USERNAME,
+                role: 'admin',
+                professionalId: null
             });
         }
         console.log(`   ⚠️  Failed clinic login attempt: ${identifier}`);
@@ -12043,24 +12312,15 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
                     if (patched) Object.assign(pro, patched);
                 } catch (e) { /* login still continues */ }
             }
-            req.session.clinicAuthenticated = true;
-            req.session.clinicUsername = pro.username;
-            req.session.clinicDisplayName = pro.displayName || pro.username;
-            req.session.clinicRole = 'clinician';
-            req.session.professionalId = pro.id;
-            req.session.clinicLoginTime = new Date().toISOString();
-            setStaffDeviceCookie(res);
             try { await fillStaffProfileFromBolsa(pro.username); } catch (e) { /* profile still loads later */ }
             const fresh = (await findProfessionalByUsernameInternal(pro.username)) || pro;
-            req.session.clinicDisplayName = fresh.displayName || pro.displayName || pro.username;
-
+            const displayName = fresh.displayName || pro.displayName || pro.username;
             console.log(`   🔐 Clinic portal login (clinician): ${pro.username}`);
-            return res.json({
-                success: true,
-                message: 'Login successful',
-                role: 'clinician',
+            return beginStaffTotpChallenge(req, res, {
                 username: pro.username,
-                displayName: req.session.clinicDisplayName
+                displayName,
+                role: 'clinician',
+                professionalId: pro.id
             });
         }
     } catch (err) {
@@ -12069,6 +12329,76 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
 
     console.log(`   ⚠️  Failed clinic login attempt: ${identifier}`);
     res.status(401).json({ error: 'Invalid email or password' });
+});
+
+app.post('/api/clinic/login/totp', rateLimitClinicTotp, async (req, res) => {
+    const pending = getValidTotpPending(req);
+    if (!pending) {
+        return res.status(401).json({ error: 'Inicie sessão novamente e introduza o código 2FA.' });
+    }
+    const code = totp.normalizeCode(req.body && req.body.code);
+    if (code.length !== 6) {
+        return res.status(400).json({ error: 'Introduza o código de 6 dígitos da aplicação autenticadora.' });
+    }
+    try {
+        const rec = await getStaffTotpRecord(pending.username);
+        if (!rec || !rec.secret || !totp.verifyTotp(rec.secret, code)) {
+            return res.status(401).json({ error: 'Código 2FA inválido ou expirado.' });
+        }
+        const identity = {
+            username: pending.username,
+            displayName: pending.displayName || pending.username,
+            role: pending.role,
+            professionalId: pending.professionalId || null
+        };
+        let extra = {};
+        if (pending.setup || !rec.enabled) {
+            const codes = totp.generateRecoveryCodes(8);
+            const hashes = codes.map((c) => totp.hashRecoveryCode(c, SESSION_SECRET));
+            await enableStaffTotpRecord(pending.username, hashes);
+            extra = { recoveryCodes: codes };
+        }
+        return establishStaffSession(req, res, staffSessionFromIdentity(identity), staffLoginPayload(identity, extra));
+    } catch (err) {
+        console.error('clinic totp:', err.message);
+        return res.status(500).json({ error: 'Failed to verify two-factor code' });
+    }
+});
+
+app.post('/api/clinic/login/totp/recover', rateLimitClinicTotp, async (req, res) => {
+    const pending = getValidTotpPending(req);
+    if (!pending) {
+        return res.status(401).json({ error: 'Inicie sessão novamente e use um código de recuperação.' });
+    }
+    const recoveryCode = String((req.body && req.body.code) || '');
+    if (!totp.normalizeRecovery(recoveryCode)) {
+        return res.status(400).json({ error: 'Introduza um código de recuperação.' });
+    }
+    try {
+        const rec = await getStaffTotpRecord(pending.username);
+        if (!rec || !rec.enabled) {
+            return res.status(401).json({ error: 'Código de recuperação inválido.' });
+        }
+        const hashes = rec.recoveryHashes || [];
+        const idx = hashes.findIndex((h) => totp.recoveryCodesEqual(recoveryCode, h, SESSION_SECRET));
+        if (idx < 0) {
+            return res.status(401).json({ error: 'Código de recuperação inválido.' });
+        }
+        const next = hashes.filter((_, i) => i !== idx);
+        await replaceStaffTotpRecovery(pending.username, next);
+        const identity = {
+            username: pending.username,
+            displayName: pending.displayName || pending.username,
+            role: pending.role,
+            professionalId: pending.professionalId || null
+        };
+        return establishStaffSession(req, res, staffSessionFromIdentity(identity), staffLoginPayload(identity, {
+            recoveryCodesRemaining: next.length
+        }));
+    } catch (err) {
+        console.error('clinic totp recover:', err.message);
+        return res.status(500).json({ error: 'Failed to verify recovery code' });
+    }
 });
 
 const PASSWORD_RESET_CODE_TTL_MS = 15 * 60 * 1000;
@@ -12091,11 +12421,11 @@ function passwordResetCodesEqual(code, storedHash) {
 }
 
 function generatePasswordResetCode() {
-    return String(crypto.randomInt(0, 1000000)).padStart(6, '0');
+    return crypto.randomBytes(32).toString('hex');
 }
 
 function normalizePasswordResetCode(raw) {
-    return String(raw || '').replace(/\D/g, '').slice(0, 6);
+    return String(raw || '').replace(/[^a-fA-F0-9]/g, '').toLowerCase().slice(0, 64);
 }
 
 function passwordResetRequestsRecent(email) {
@@ -12250,11 +12580,11 @@ app.post('/api/clinic/password-reset/confirm', rateLimitClinicPasswordResetConfi
     const email = normalizeStaffEmail((req.body && req.body.email) || '');
     const code = normalizePasswordResetCode((req.body && req.body.code) || '');
     const password = String((req.body && req.body.password) || '');
-    if (!isValidStaffEmail(email) || code.length !== 6) {
-        return res.status(400).json({ error: 'Introduza o email e o código de 6 dígitos.' });
+    if (!isValidStaffEmail(email) || code.length !== 64) {
+        return res.status(400).json({ error: 'Introduza o email e o código enviado por email.' });
     }
-    if (password.length < 8) {
-        return res.status(400).json({ error: 'A nova password deve ter pelo menos 8 caracteres.' });
+    if (password.length < 12) {
+        return res.status(400).json({ error: 'A nova password deve ter pelo menos 12 caracteres.' });
     }
     const invalid = { error: 'Código inválido ou expirado.' };
     try {
@@ -12687,8 +13017,8 @@ app.post('/api/clinic/password', requireAuth, rateLimitClinicPassword, express.j
         if (!currentPassword || !newPassword || !confirmPassword) {
             return res.status(400).json({ error: 'Introduza a password atual, a nova password e a confirmação.' });
         }
-        if (newPassword.length < 8 || newPassword.length > 200) {
-            return res.status(400).json({ error: 'A nova password deve ter entre 8 e 200 caracteres.' });
+        if (newPassword.length < 12 || newPassword.length > 200) {
+            return res.status(400).json({ error: 'A nova password deve ter entre 12 e 200 caracteres.' });
         }
         if (newPassword !== confirmPassword) {
             return res.status(400).json({ error: 'As passwords novas não coincidem.' });
@@ -12758,6 +13088,11 @@ app.post('/api/clinic/profile/photo', requireAuth, rateLimitStaffProfile, (req, 
             return res.status(400).json({ error: uploadErr.message || 'Could not process the photo.' });
         }
         try {
+            if (req.file) assertUploadMatches(req.file, IMAGE_UPLOAD_RULES);
+        } catch (magicErr) {
+            return res.status(400).json({ error: magicErr.message });
+        }
+        try {
             const { username } = await staffAccountForSession(req);
             if (!username) {
                 return res.status(400).json({ error: 'Esta sessão não tem uma conta de profissional.' });
@@ -12796,6 +13131,11 @@ app.post('/api/clinic/profile/documents', requireAuth, rateLimitStaffProfile, (r
             }
             if (!req.file || !req.file.buffer) {
                 return res.status(400).json({ error: 'Choose a file to upload' });
+            }
+            try {
+                assertUploadMatches(req.file, STAFF_DOC_UPLOAD_RULES);
+            } catch (magicErr) {
+                return res.status(400).json({ error: magicErr.message });
             }
             const validUntil = String(req.body.validUntil || '').trim().slice(0, 10);
             const validityOptional = STAFF_DOC_OPTIONAL_VALIDITY.has(kind);
@@ -13170,8 +13510,8 @@ app.post('/api/admin/staff-profiles', requireAdmin, express.json(), async (req, 
             if (!password) {
                 generatedPassword = generateProfessionalPassword();
                 password = generatedPassword;
-            } else if (password.length < 8) {
-                return res.status(400).json({ error: 'Password must be at least 8 characters' });
+            } else if (password.length < 12) {
+                return res.status(400).json({ error: 'Password must be at least 12 characters' });
             }
             created = await createProfessionalInternal({
                 username,
@@ -14397,8 +14737,8 @@ app.post('/api/admin/professionals', requireAdmin, express.json(), async (req, r
         if (!password) {
             generatedPassword = generateProfessionalPassword();
             password = generatedPassword;
-        } else if (password.length < 8) {
-            return res.status(400).json({ error: 'Password must be at least 8 characters' });
+        } else if (password.length < 12) {
+            return res.status(400).json({ error: 'Password must be at least 12 characters' });
         }
         const doxy = validateProfessionalDoxyUrl(body.doxyRoomUrl);
         if (doxy.error) return res.status(400).json({ error: doxy.error });
@@ -14488,8 +14828,8 @@ app.patch('/api/admin/professionals/:id', requireAdmin, express.json(), async (r
             fields.active = body.active === true || body.active === 'true' || body.active === 1;
         }
         if (body.password) {
-            if (String(body.password).length < 8) {
-                return res.status(400).json({ error: 'Password must be at least 8 characters' });
+            if (String(body.password).length < 12) {
+                return res.status(400).json({ error: 'Password must be at least 12 characters' });
             }
             fields.passwordHash = await bcrypt.hash(String(body.password), 12);
         }
@@ -14972,6 +15312,11 @@ app.post('/api/clinic/payouts/:month/invoice', requireAuth, rateLimitStaffProfil
         }
         if (uploadErr) {
             return res.status(400).json({ error: uploadErr.message || 'Could not process the file.' });
+        }
+        try {
+            if (req.file) assertUploadMatches(req.file, STAFF_DOC_UPLOAD_RULES);
+        } catch (magicErr) {
+            return res.status(400).json({ error: magicErr.message });
         }
         try {
             if (!req.file || !req.file.buffer) {
@@ -15994,7 +16339,8 @@ app.get('/api/clinic/booking/:bookingRef', requireAuth, async (req, res) => {
             ? await db.getClinicalNoteByRef(bookingRef)
             : clinicalNotesStore.find((n) => n.bookingRef === bookingRef);
 
-        const { intakeToken, ...safe } = booking;
+        logAudit(req, 'clinic_booking_read', bookingRef).catch(() => {});
+        const { intakeToken, paymentId, stripeCustomerId, ...safe } = booking;
         res.json({
             ...safe,
             clinicalNotes: notes || null,
@@ -16032,6 +16378,7 @@ app.post('/api/clinic/notes', requireAuth, express.json(), async (req, res) => {
         if (!booking || !(await staffCanAccessBooking(req, booking))) {
             return res.status(404).json({ error: 'Booking not found' });
         }
+        logAudit(req, 'clinic_notes_write', refUpper).catch(() => {});
 
         const now = new Date().toISOString();
         let priorCreated = now;
@@ -17444,6 +17791,9 @@ app.use((req, res) => {
         console.log('[bootstrap] bootstrapPersistence() finished');
         if (usePersistentDb) {
             console.log('   💾 Persistence: PostgreSQL (DATABASE_URL)');
+        } else if (process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT) {
+            console.error('❌ FATAL: DATABASE_URL is required in production. Refusing in-memory clinical storage.');
+            process.exit(1);
         } else {
             console.log('   💾 Persistence: in-memory bookings/notes; schedule file under data/');
             console.log('   ℹ️  Set DATABASE_URL (Supabase) to persist bookings and notes in production');
@@ -17470,7 +17820,7 @@ app.use((req, res) => {
             console.log('   Resend: https://resend.com — verify your domain and set RESEND_API_KEY + EMAIL_FROM');
         }
         if (DEFAULT_DOXY_ROOM_URL) {
-            console.log(`   📹 Doxy.me room: ${DEFAULT_DOXY_ROOM_URL}`);
+            console.log('   📹 Doxy.me: configured');
         } else {
             console.log(`   ⚠️  Doxy.me NOT configured — add DOXY_ROOM_URL to .env (https://doxy.me/your-room-name)`);
             console.log(`   Extra professionals and rooms can be added in Admin → Professionals`);

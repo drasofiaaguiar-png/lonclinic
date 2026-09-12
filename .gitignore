@@ -1,6 +1,8 @@
 node_modules/
 uploads/
 .env
+cookies.txt
+*.cookies
 .DS_Store
 Thumbs.db
 *.log
