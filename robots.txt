@@ -232,3 +232,4 @@ Disallow: /patient-portal
 Disallow: /api/
 
 Sitemap: https://www.lonclinic.com/sitemap.xml
+# LLM reading list: https://www.lonclinic.com/llms.txt

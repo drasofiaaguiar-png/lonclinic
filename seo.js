@@ -319,6 +319,7 @@ Allow: /
 ${starDisallow}
 
 Sitemap: ${SITE_ORIGIN}/sitemap.xml
+# LLM reading list: ${SITE_ORIGIN}/llms.txt
 `;
 }
 

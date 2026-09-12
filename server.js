@@ -59,6 +59,7 @@ const pillarPages = require('./pillar-pages');
 const producers = require('./producers');
 const wellness = require('./wellness');
 const seo = require('./seo');
+const agentSeo = require('./agent-seo');
 const { emailLink, withUtm, datedCampaign, TRACKED_REDIRECTS, safeInternalPath, trackedLinksForAdmin } = require('./utm');
 const nutricaoNurture = require('./nutricao-nurture');
 const { hydrateInfoHtml, NOINDEX_PAGES: INFO_NOINDEX_PAGES } = require('./info-ssr');
@@ -499,11 +500,26 @@ function injectPublicHtml(html, req, nonce) {
     return applyCspNonce(injectAnalyticsHtml(seo.applyHtmlSeo(out, req), req), nonce);
 }
 
+function sendPublicHtml(res, req, html, origSend) {
+    if (typeof html === 'string' && /<html[\s>]/i.test(html) && agentSeo.shouldServeMarkdown(req) && !isClinicalTrackingSurface(req)) {
+        agentSeo.setDiscoveryLinkHeaders(res, req);
+        return origSend(agentSeo.applyMarkdownResponse(res, agentSeo.htmlToMarkdown(html, req)));
+    }
+    const out = typeof html === 'string' && /<html[\s>]/i.test(html)
+        ? injectPublicHtml(html, req, res.locals.cspNonce)
+        : html;
+    if (typeof out === 'string' && /<html[\s>]/i.test(out) && !isClinicalTrackingSurface(req)) {
+        agentSeo.setDiscoveryLinkHeaders(res, req);
+        agentSeo.addVary(res, 'Accept');
+    }
+    return origSend(out);
+}
+
 app.use((req, res, next) => {
     const origSend = res.send.bind(res);
     res.send = function (body) {
         if (typeof body === 'string' && /<html[\s>]/i.test(body)) {
-            body = injectPublicHtml(body, req, res.locals.cspNonce);
+            return sendPublicHtml(res, req, body, origSend);
         }
         return origSend(body);
     };
@@ -519,8 +535,10 @@ app.use((req, res, next) => {
         }
         fs.readFile(fp, 'utf8', (err, html) => {
             if (err) return origSendFile(filePath, options, cb);
-            if (!res.getHeader('Content-Type')) res.setHeader('Content-Type', 'text/html; charset=utf-8');
-            origSend(injectPublicHtml(html, req, res.locals.cspNonce));
+            if (!res.getHeader('Content-Type') && !agentSeo.shouldServeMarkdown(req)) {
+                res.setHeader('Content-Type', 'text/html; charset=utf-8');
+            }
+            sendPublicHtml(res, req, html, origSend);
             if (typeof cb === 'function') cb();
         });
     };
@@ -9424,6 +9442,14 @@ app.get('/robots.txt', (req, res) => {
     res.send(seo.robotsTxt());
 });
 
+app.get('/llms.txt', (req, res) => {
+    agentSeo.sendPlainUtf8(res, agentSeo.buildLlmsTxt(), 'text/plain');
+});
+
+app.get('/llms-full.txt', (req, res) => {
+    agentSeo.sendPlainUtf8(res, agentSeo.buildLlmsFullTxt(), 'text/plain');
+});
+
 // Block source, data, scripts, and other non-public artifacts from static serving.
 app.use((req, res, next) => {
     const p = (req.path || '').split('?')[0].toLowerCase();
@@ -9441,7 +9467,7 @@ app.use((req, res, next) => {
         'pillar-pages.js', 'producers.js', 'wellness.js', 'utm.js', 'nutricao-nurture.js',
         'info-ssr.js', 'authors.js', 'cvi.js', 'staff-booking.js', 'clinical-quizzes.js',
         'clinical-quiz-score.js', 'analytics-network.js', 'talk-cta.js',
-        'totp.js', 'field-crypto.js',
+        'totp.js', 'field-crypto.js', 'agent-seo.js',
         'package.json', 'package-lock.json', 'procfile', 'cookies.txt',
         'env_setup.txt', 'tailwind-src.css', 'dockerfile',
         'clinic.html', 'clinic.js'

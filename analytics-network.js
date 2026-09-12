@@ -92,7 +92,10 @@ const PROBE_PREFIXES = [
     '/jenkins',
     '/website/',
     '/login',
-    '/signin'
+    '/signin',
+    '/@fs',
+    '/userfiles',
+    '/settings/_payload.json'
 ];
 
 const PROBE_FILE =
