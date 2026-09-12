@@ -40,11 +40,11 @@
     <meta name="twitter:description" content="Consultas de Medicina Geral, Saúde Mental, Nutrição e Saúde do Viajante com profissionais qualificados e acompanhamento personalizado.">
     <meta name="twitter:image" content="https://www.lonclinic.com/image/hero-run.webp">
 
-    <meta name="theme-color" content="#255235">
+    <meta name="theme-color" content="#1e4d6b">
     <meta name="format-detection" content="telephone=no">
     <link rel="preload" as="image" href="/image/hero-run.webp" fetchpriority="high">
 
-    <link rel="stylesheet" href="/landing.css?v=20260912m">
+    <link rel="stylesheet" href="/landing.css?v=20260912p">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@1,9..144,500&display=swap" rel="stylesheet">
@@ -186,8 +186,8 @@
 
     <header class="lon-nav" id="lonNav">
         <div class="lon-container lon-nav-inner">
-            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
-                <span class="lon-logo-name"><span class="lon-logo-lon">lon.</span> <span class="lon-logo-clinic">Clinic</span></span>
+            <a href="/" class="lon-logo" aria-label="Longevity Clinic homepage">
+                <span class="lon-logo-name"><span class="lon-logo-lon">Lon</span><span class="lon-logo-gevity">gevity</span> <span class="lon-logo-clinic">Clinic</span></span>
             </a>
 
             <nav class="lon-nav-links" aria-label="Navegação principal">
@@ -221,46 +221,47 @@
         <section class="dr-hero" id="inicio">
             <img class="dr-hero-bg" src="image/hero-run.webp" alt="Mulher a correr junto ao mar" loading="eager" decoding="async" fetchpriority="high" width="2171" height="3256">
             <div class="dr-hero-scrim" aria-hidden="true"></div>
-            <div class="dr-hero-content">
-                        <p class="dr-badge"><span class="dr-badge-dot" aria-hidden="true"></span>A sua clínica de saúde, online.</p>
-                        <h1><span class="dr-hero-title-line">Cuidados de saúde que acompanham <em class="serif-accent">a sua vida.</em></span></h1>
-                        <p class="dr-lead">Consultas de Medicina Geral, Saúde Mental, Nutrição e Saúde do Viajante com profissionais qualificados e acompanhamento personalizado.</p>
-                        <div class="dr-cta-row">
-                            <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark" id="lonHeroBook" data-cta="book"><span class="lon-btn-label">Marcar consulta</span> <svg class="lon-btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></a>
-                            <label class="dr-hero-service-wrap">
-                                <span class="visually-hidden">Tipo de consulta</span>
-                                <select id="lonHeroService" class="dr-hero-service" autocomplete="off">
-                                    <option value="clinica_geral" selected>Médico</option>
-                                    <option value="nutricao_programa">Nutrição</option>
-                                    <option value="psicologia">Psicólogo</option>
-                                </select>
-                            </label>
-                        </div>
-                        <p class="dr-hero-meta">Consulta online · Sem deslocações · Onde quer que esteja</p>
-                        <div class="dr-live-slots" data-next-slots data-limit="3" data-service="clinica_geral" data-book-href="/marcar/clinica-geral" data-surface="home" hidden>
-                            <p class="dr-live-slots-kicker">Consultas disponíveis</p>
-                            <div class="dr-live-slots-row" data-next-slots-row aria-live="polite"></div>
-                            <a href="/marcar/clinica-geral" class="dr-next-slot-other">Ver horários disponíveis →</a>
-                            <a href="/marcar/clinica-geral" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
-                        </div>
-                        <p class="dr-hero-help">Não sabe qual consulta escolher? <a href="#servicos">Ajude-me a escolher →</a></p>
+            <div class="dr-hero-stage">
+                <div class="dr-hero-content">
+                    <p class="dr-badge"><span class="dr-badge-dot" aria-hidden="true"></span>A sua clínica de saúde, online.</p>
+                    <h1><span class="dr-hero-title-line">Cuidados de saúde que acompanham <em class="serif-accent">a sua vida.</em></span></h1>
+                    <p class="dr-lead">Consultas de Medicina Geral, Saúde Mental, Nutrição e Saúde do Viajante com profissionais qualificados e acompanhamento personalizado.</p>
+                    <div class="dr-cta-row">
+                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark" id="lonHeroBook" data-cta="book"><span class="lon-btn-label">Marcar consulta</span> <svg class="lon-btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></a>
+                        <label class="dr-hero-service-wrap">
+                            <span class="visually-hidden">Tipo de consulta</span>
+                            <select id="lonHeroService" class="dr-hero-service" autocomplete="off">
+                                <option value="clinica_geral" selected>Médico</option>
+                                <option value="nutricao_programa">Nutrição</option>
+                                <option value="psicologia">Psicólogo</option>
+                            </select>
+                        </label>
                     </div>
-                    <aside class="dr-hero-ers" aria-label="Registo ERS">
+                    <p class="dr-hero-meta">Consulta online · Sem deslocações · Onde quer que esteja</p>
+                    <p class="dr-hero-help">Não sabe qual consulta escolher? <a href="#servicos">Ajude-me a escolher →</a></p>
+                </div>
+                <div class="dr-hero-dock">
+                    <div class="dr-hero-glass dr-live-slots" data-next-slots data-limit="3" data-service="clinica_geral" data-book-href="/marcar/clinica-geral" data-surface="home" hidden>
+                        <p class="dr-live-slots-kicker">Consultas disponíveis</p>
+                        <div class="dr-live-slots-row" data-next-slots-row aria-live="polite"></div>
+                        <a href="/marcar/clinica-geral" class="dr-next-slot-other">Ver horários disponíveis →</a>
+                        <a href="/marcar/clinica-geral" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
+                    </div>
+                    <aside class="dr-hero-glass dr-hero-ers" aria-label="Registo ERS">
                         <p class="dr-hero-ers-num">45.475</p>
                         <p>Registo na Entidade Reguladora da Saúde</p>
                     </aside>
-        </section>
-
-        <section class="lon-trust-strip" aria-label="Destaques de confiança da clínica">
-            <div class="lon-container">
-                <ul class="dr-trust-list">
-                    <li>Clínica certificada pela Entidade Reguladora da Saúde</li>
-                    <li>Médicos inscritos na Ordem dos Médicos</li>
-                    <li>Nutricionistas e Psicólogos inscritos nas respetivas Ordens</li>
-                    <li>Consultas em português, inglês e espanhol</li>
-                    <li>Receitas e pedidos de exames, quando clinicamente indicados</li>
-                    <li>Sem sala de espera. Sem deslocação.</li>
-                </ul>
+                    <section class="dr-hero-glass lon-trust-strip" aria-label="Destaques de confiança da clínica">
+                        <ul class="dr-trust-list">
+                            <li>Clínica certificada pela Entidade Reguladora da Saúde</li>
+                            <li>Médicos inscritos na Ordem dos Médicos</li>
+                            <li>Nutricionistas e Psicólogos inscritos nas respetivas Ordens</li>
+                            <li>Consultas em português, inglês e espanhol</li>
+                            <li>Receitas e pedidos de exames, quando clinicamente indicados</li>
+                            <li>Sem sala de espera. Sem deslocação.</li>
+                        </ul>
+                    </section>
+                </div>
             </div>
         </section>
 
