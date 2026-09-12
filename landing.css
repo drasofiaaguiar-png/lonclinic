@@ -3517,3 +3517,583 @@ body.lon-landing #como-funciona .lon-how-step-num {
         width: 100%;
     }
 }
+
+/* Homepage editorial layout — scoped so other landing.css pages stay intact */
+.lon-home {
+    --lon-paper: #f4f1ea;
+    --lon-forest: #1e3a28;
+    --lon-sage: #7d9a7a;
+    --lon-sage-deep: #3f6b4a;
+    --shadow-soft: 0 18px 40px rgba(28, 42, 32, 0.1);
+    --shadow-lift: 0 28px 60px rgba(20, 34, 24, 0.16);
+    background: var(--lon-paper);
+    color: #1c241e;
+}
+
+.lon-home .serif-accent {
+    font-family: Fraunces, Georgia, "Times New Roman", serif;
+    font-style: italic;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+}
+
+.lon-home .lon-nav {
+    top: 14px;
+    padding: 0 16px;
+}
+
+.lon-home .lon-nav-inner {
+    max-width: 1120px;
+    min-height: 62px;
+    border-color: rgba(40, 58, 46, 0.12);
+    background: rgba(255, 252, 247, 0.82);
+    box-shadow: var(--shadow-soft);
+}
+
+.lon-home .lon-nav.is-scrolled .lon-nav-inner {
+    background: rgba(255, 252, 247, 0.94);
+}
+
+.lon-home .lon-logo-name {
+    font-size: 1.2rem;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+}
+
+.lon-home .lon-nav-links a {
+    color: rgba(28, 36, 30, 0.62);
+    font-size: 0.9rem;
+}
+
+.lon-home .lon-nav .lon-btn-primary,
+.lon-home .lon-btn-dark,
+.lon-home .lon-btn-primary {
+    border-radius: 999px;
+    gap: 8px;
+}
+
+.lon-home .lon-nav .lon-btn-primary::after,
+.lon-home .dr-hero .lon-btn-dark::after,
+.lon-home #como-funciona .lon-btn-dark::after,
+.lon-home .lon-consult-cta .lon-btn-dark::after {
+    content: "↗";
+    font-size: 0.85em;
+    line-height: 1;
+}
+
+.lon-home .dr-hero {
+    background: transparent;
+    padding: calc(var(--lon-nav-h) + 36px) 0 48px;
+}
+
+.lon-home .dr-hero::before {
+    display: none;
+}
+
+.lon-home .dr-hero-panel {
+    position: relative;
+    overflow: hidden;
+    border-radius: 2.5rem;
+    min-height: min(78vh, 860px);
+    box-shadow: var(--shadow-lift);
+}
+
+.lon-home .dr-hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 68% 40%;
+}
+
+.lon-home .dr-hero-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(244, 241, 234, 0.96) 0%, rgba(244, 241, 234, 0.78) 42%, rgba(244, 241, 234, 0.18) 72%, transparent 100%);
+}
+
+.lon-home .dr-hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 38rem;
+    padding: clamp(28px, 5vw, 64px);
+    text-align: left;
+}
+
+.lon-home .dr-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 22px;
+    border-color: rgba(40, 58, 46, 0.14);
+    background: rgba(255, 252, 247, 0.72);
+    color: #314035;
+    backdrop-filter: blur(10px);
+}
+
+.lon-home .dr-badge-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--lon-sage);
+}
+
+.lon-home .dr-hero h1 {
+    color: #162017;
+    font-size: clamp(2.35rem, 5.6vw, 4.4rem);
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+    max-width: 14ch;
+    font-weight: 650;
+}
+
+.lon-home .dr-hero .dr-lead {
+    color: #4a584e;
+    max-width: 36ch;
+    font-size: 1.05rem;
+}
+
+.lon-home .dr-cta-row {
+    align-items: center;
+    gap: 14px 18px;
+}
+
+.lon-home .dr-hero-explore {
+    font-size: 0.92rem;
+    color: rgba(22, 32, 23, 0.72);
+    text-decoration: underline;
+    text-underline-offset: 7px;
+}
+
+.lon-home .dr-hero-explore:hover {
+    color: #162017;
+}
+
+.lon-home .dr-hero-service {
+    color: #1c241e;
+    background: rgba(255, 252, 247, 0.8);
+    border-color: rgba(40, 58, 46, 0.18);
+}
+
+.lon-home .dr-hero-service-wrap::after {
+    border-color: #1c241e;
+}
+
+.lon-home .dr-hero-meta,
+.lon-home .dr-hero-help,
+.lon-home .dr-hero-help a {
+    color: #3f4d43;
+    text-align: left;
+}
+
+.lon-home .dr-live-slots {
+    max-width: 28rem;
+    background: rgba(255, 252, 247, 0.88);
+    border-color: rgba(40, 58, 46, 0.12);
+    border-radius: 1.25rem;
+    box-shadow: var(--shadow-soft);
+}
+
+.lon-home .dr-trust-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    max-width: 34rem;
+}
+
+.lon-home .dr-hero .dr-trust-list li {
+    background: transparent;
+    border: 0;
+    color: #314035;
+    padding: 0 0 0 1.4rem;
+    backdrop-filter: none;
+}
+
+.lon-home .dr-hero .dr-trust-list li::before {
+    color: var(--lon-sage-deep);
+    background: transparent;
+}
+
+.lon-home .dr-hero-ers {
+    position: relative;
+    z-index: 1;
+    width: fit-content;
+    margin: 0 0 28px  clamp(28px, 5vw, 64px);
+    padding: 16px 22px;
+    border-radius: 1.25rem;
+    background: rgba(255, 252, 247, 0.86);
+    border: 1px solid rgba(40, 58, 46, 0.1);
+    box-shadow: var(--shadow-soft);
+}
+
+.lon-home .dr-hero-ers-num {
+    font-size: 1.85rem;
+    letter-spacing: -0.04em;
+    line-height: 1;
+}
+
+.lon-home .dr-hero-ers p:last-child {
+    margin-top: 4px;
+    font-size: 0.72rem;
+    color: #5a6b60;
+}
+
+.lon-home .lon-intro {
+    background: transparent;
+    padding: clamp(64px, 9vw, 112px) 0;
+}
+
+.lon-home .lon-intro-grid {
+    display: grid;
+    gap: 48px;
+    align-items: center;
+}
+
+@media (min-width: 960px) {
+    .lon-home .lon-intro-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 72px;
+    }
+}
+
+.lon-home .lon-intro-media {
+    position: relative;
+}
+
+.lon-home .lon-intro-media img {
+    width: 100%;
+    border-radius: 2rem;
+    object-fit: cover;
+    aspect-ratio: 1;
+    box-shadow: var(--shadow-lift);
+}
+
+.lon-home .lon-intro-float {
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 18px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    padding: 16px 18px;
+    border-radius: 1.25rem;
+    background: rgba(255, 252, 247, 0.92);
+    border: 1px solid rgba(40, 58, 46, 0.08);
+    box-shadow: var(--shadow-soft);
+}
+
+.lon-home .lon-intro-float-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: #e7eee6;
+    color: var(--lon-sage-deep);
+}
+
+.lon-home .lon-intro-float p:first-child {
+    font-size: 0.92rem;
+}
+
+.lon-home .lon-intro-float p:last-child {
+    font-size: 0.82rem;
+    color: #5a6b60;
+}
+
+.lon-home .lon-intro-inner {
+    max-width: none;
+}
+
+.lon-home .lon-intro-checks {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+    margin: 0 0 22px;
+}
+
+.lon-home .lon-intro-checks li {
+    position: relative;
+    padding-left: 1.5rem;
+    font-size: 0.92rem;
+}
+
+.lon-home .lon-intro-checks li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--lon-sage-deep);
+}
+
+.lon-home .lon-services {
+    background: transparent;
+}
+
+.lon-home .lon-need-grid {
+    gap: 18px;
+}
+
+@media (min-width: 1100px) {
+    .lon-home .lon-need-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .lon-home .lon-need-card,
+    .lon-home .lon-need-card:nth-child(4),
+    .lon-home .lon-need-card:nth-child(5) {
+        grid-column: auto;
+    }
+
+    .lon-home .lon-need-card--urgent {
+        grid-column: 2 / span 2;
+    }
+}
+
+.lon-home .lon-need-card {
+    position: relative;
+    min-height: 220px;
+    padding: 24px;
+    border-radius: 1.5rem;
+    border: 1px solid rgba(40, 58, 46, 0.1);
+    background: rgba(255, 252, 247, 0.78);
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lon-home .lon-need-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+}
+
+.lon-home .lon-need-icon {
+    display: flex;
+    color: var(--lon-sage-deep);
+    margin-bottom: 36px;
+}
+
+.lon-home .lon-need-card h3 {
+    font-size: 1.15rem;
+    letter-spacing: -0.02em;
+}
+
+.lon-home .lon-need-cta {
+    margin-top: auto;
+}
+
+.lon-home .lon-care-card {
+    border-radius: 1.5rem;
+    border-color: rgba(40, 58, 46, 0.1);
+    background: #fffcf7;
+    box-shadow: var(--shadow-soft);
+    padding: 26px 24px;
+}
+
+.lon-home .lon-diff {
+    background: rgba(231, 238, 230, 0.45);
+}
+
+.lon-home .lon-diff-grid li {
+    border-radius: 1.5rem;
+    background: #fffcf7;
+    border: 1px solid rgba(40, 58, 46, 0.08);
+    box-shadow: var(--shadow-soft);
+}
+
+.lon-home #como-funciona {
+    background: transparent;
+    padding: 24px 0 48px;
+}
+
+.lon-home #como-funciona .lon-how-shell {
+    border-radius: 2.5rem;
+    background: var(--lon-forest);
+    color: #f4f7f2;
+    padding: clamp(36px, 6vw, 72px) clamp(24px, 5vw, 56px);
+    box-shadow: var(--shadow-lift);
+}
+
+.lon-home #como-funciona .lon-kicker {
+    background: transparent;
+    color: rgba(244, 247, 242, 0.55);
+}
+
+.lon-home #como-funciona h2 {
+    color: #fff;
+}
+
+.lon-home #como-funciona .serif-accent {
+    color: #c5d6b8;
+}
+
+.lon-home #como-funciona .lon-how-steps.lon-service-grid {
+    gap: 0;
+}
+
+.lon-home #como-funciona .lon-service-card {
+    background: transparent;
+    border: 0;
+    border-top: 1px solid rgba(244, 247, 242, 0.18);
+    border-radius: 0;
+    box-shadow: none;
+    padding: 22px 8px 8px 0;
+}
+
+.lon-home #como-funciona .lon-how-step-num {
+    width: auto;
+    height: auto;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: rgba(244, 247, 242, 0.5);
+}
+
+.lon-home #como-funciona .lon-section-cta .lon-btn {
+    background: #f4f7f2;
+    color: var(--lon-forest);
+    box-shadow: none;
+}
+
+.lon-home #como-funciona .lon-section-cta .lon-btn:hover {
+    background: #fff;
+}
+
+.lon-home .lon-team-card,
+.lon-home .lon-testimonial-card {
+    border-radius: 1.5rem;
+    background: #fffcf7;
+    border: 1px solid rgba(40, 58, 46, 0.08);
+    box-shadow: var(--shadow-soft);
+}
+
+.lon-home .lon-home-faq {
+    background: rgba(231, 238, 230, 0.45);
+}
+
+@media (min-width: 960px) {
+    .lon-home .lon-home-faq .lon-container {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 64px;
+        align-items: start;
+    }
+
+    .lon-home .lon-home-faq .lon-section-head {
+        margin-bottom: 0;
+    }
+}
+
+.lon-home .lon-home-faq-list .faq-item {
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid rgba(40, 58, 46, 0.14);
+    border-radius: 0;
+    margin: 0;
+}
+
+.lon-home .lon-home-faq-list .faq-item:first-child {
+    border-top: 1px solid rgba(40, 58, 46, 0.14);
+}
+
+.lon-home .lon-home-faq-list summary {
+    padding: 22px 0;
+    font-weight: 550;
+}
+
+.lon-home .lon-consult-cta {
+    background: transparent;
+}
+
+.lon-home .lon-consult-cta-card {
+    border-radius: 2.5rem;
+    background: var(--lon-forest);
+    border: 0;
+    box-shadow: var(--shadow-lift);
+    overflow: hidden;
+}
+
+.lon-home .lon-consult-cta-copy h2,
+.lon-home .lon-consult-cta-copy p,
+.lon-home .lon-consult-cta-help,
+.lon-home .lon-consult-cta-help a {
+    color: #f4f7f2;
+}
+
+.lon-home .lon-consult-cta-copy .lon-btn {
+    background: #f4f7f2;
+    color: var(--lon-forest);
+}
+
+.lon-home .lon-newsletter {
+    background: transparent;
+}
+
+.lon-home .lon-footer {
+    background: transparent;
+    border-top: 1px solid rgba(40, 58, 46, 0.12);
+}
+
+@media (max-width: 939px) {
+    .lon-home .dr-hero {
+        padding-top: calc(var(--lon-nav-h) + 22px);
+        padding-bottom: 32px;
+    }
+
+    .lon-home .dr-hero-panel {
+        min-height: 0;
+        border-radius: 1.75rem;
+    }
+
+    .lon-home .dr-hero-scrim {
+        height: 42vh;
+        min-height: 240px;
+        bottom: auto;
+        background: linear-gradient(180deg, rgba(244, 241, 234, 0.08) 0%, rgba(244, 241, 234, 0.55) 70%, rgba(244, 241, 234, 0.98) 100%);
+    }
+
+    .lon-home .dr-hero-bg {
+        position: relative;
+        height: 42vh;
+        min-height: 240px;
+    }
+
+    .lon-home .dr-hero-content {
+        padding: 22px 20px 8px;
+        max-width: none;
+        text-align: left;
+    }
+
+    .lon-home .dr-hero h1 {
+        max-width: none;
+        font-size: clamp(2rem, 9vw, 2.8rem);
+    }
+
+    .lon-home .dr-cta-row {
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .lon-home .dr-hero-content .dr-cta-row .lon-btn,
+    .lon-home .dr-hero-content .dr-hero-service-wrap,
+    .lon-home .dr-hero-content .dr-hero-service {
+        width: auto;
+    }
+
+    .lon-home .dr-hero-ers {
+        margin: 0 20px 22px;
+    }
+
+    .lon-home .dr-hero-meta,
+    .lon-home .dr-hero-help {
+        text-align: left;
+    }
+
+    .lon-home .lon-btn {
+        width: auto;
+    }
+}

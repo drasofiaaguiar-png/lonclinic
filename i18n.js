@@ -94,14 +94,17 @@
         { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]:not([data-talk-cta])', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
 
         /* ── Hero ── */
-        { s: '.dr-badge', en: 'Your online health clinic.', pt: 'A sua clínica de saúde, online.', es: 'Su clínica de salud, online.' },
-        { s: '.dr-hero-title-line:not(.dr-hero-title-line--secondary)', en: 'Healthcare that follows your life.', pt: 'Cuidados de saúde que acompanham a sua vida.', es: 'Cuidados de salud que acompañan su vida.' },
+        { s: '.dr-badge', en: '<span class="dr-badge-dot" aria-hidden="true"></span>Your online health clinic.', pt: '<span class="dr-badge-dot" aria-hidden="true"></span>A sua clínica de saúde, online.', es: '<span class="dr-badge-dot" aria-hidden="true"></span>Su clínica de salud, online.', h: true },
+        { s: '.dr-hero-title-line:not(.dr-hero-title-line--secondary)', en: 'Healthcare that follows <em class="serif-accent">your life.</em>', pt: 'Cuidados de saúde que acompanham <em class="serif-accent">a sua vida.</em>', es: 'Cuidados de salud que acompañan <em class="serif-accent">su vida.</em>', h: true },
         { s: '.dr-lead', en: 'General medicine, mental health, nutrition and travel health consultations with qualified professionals and personalised follow-up.', pt: 'Consultas de Medicina Geral, Saúde Mental, Nutrição e Saúde do Viajante com profissionais qualificados e acompanhamento personalizado.', es: 'Consultas de Medicina General, Salud Mental, Nutrición y Salud del Viajero con profesionales cualificados y seguimiento personalizado.' },
         { s: '.dr-cta-row .lon-btn-dark', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
         { s: '.dr-hero-service-wrap .visually-hidden', en: 'Consultation type', pt: 'Tipo de consulta', es: 'Tipo de consulta' },
         { s: '#lonHeroService option[value="clinica_geral"]', en: 'Doctor', pt: 'Médico', es: 'Médico' },
         { s: '#lonHeroService option[value="nutricao_programa"]', en: 'Nutrition', pt: 'Nutrição', es: 'Nutrición' },
         { s: '#lonHeroService option[value="psicologia"]', en: 'Psychologist', pt: 'Psicólogo', es: 'Psicólogo' },
+        { s: '.dr-hero-explore', en: 'Explore services', pt: 'Explorar serviços', es: 'Explorar servicios' },
+        { s: '.dr-hero-ers-num', en: '45.475', pt: '45.475', es: '45.475' },
+        { s: '.dr-hero-ers p:last-child', en: 'Registration with the Health Regulatory Authority', pt: 'Registo na Entidade Reguladora da Saúde', es: 'Registro en la Entidad Reguladora de la Salud' },
         { s: '.dr-hero-meta', en: 'Online consultation · No travel · Wherever you are', pt: 'Consulta online · Sem deslocações · Onde quer que esteja', es: 'Consulta online · Sin desplazamientos · Esté donde esté' },
         { s: '.dr-live-slots-kicker', en: 'Available appointments', pt: 'Consultas disponíveis', es: 'Consultas disponibles' },
         { s: '.dr-next-slot-kicker', en: 'Next available', pt: 'Próximo horário', es: 'Próximo horario' },
@@ -125,6 +128,11 @@
         { s: '.lon-intro-body p:nth-child(2)', en: 'That is why we work with professionals who seek to understand the person, their context and their story — not only the reason that brought them to the consultation.', pt: 'Por isso, trabalhamos com profissionais que procuram compreender a pessoa, o seu contexto e a sua história — e não apenas o motivo que a trouxe à consulta.', es: 'Por eso trabajamos con profesionales que buscan comprender a la persona, su contexto y su historia — y no solo el motivo que la trajo a la consulta.' },
         { s: '.lon-intro-body p:nth-child(3)', en: 'You can book a consultation when you need immediate help, or continue follow-up when what you need is time and consistency.', pt: 'Pode marcar uma consulta quando precisa de ajuda imediata ou continuar o acompanhamento quando o que precisa é de tempo e consistência.', es: 'Puede reservar una consulta cuando necesita ayuda inmediata o continuar el seguimiento cuando lo que necesita es tiempo y constancia.' },
         { s: '.lon-intro .lon-text-link', en: 'Get to know Lon Clinic →', pt: 'Conhecer a Lon Clinic →', es: 'Conocer Lon Clinic →' },
+        { s: '.lon-intro-float p:first-child', en: 'Close to you, wherever you are.', pt: 'Perto de si, onde quer que esteja.', es: 'Cerca de usted, esté donde esté.' },
+        { s: '.lon-intro-float p:last-child', en: 'Your space. Our attention.', pt: 'O seu espaço. A nossa atenção.', es: 'Su espacio. Nuestra atención.' },
+        { s: '.lon-intro-checks li:nth-child(1)', en: 'Qualified professionals registered with their professional bodies', pt: 'Profissionais qualificados e inscritos nas respetivas Ordens', es: 'Profesionales cualificados e inscritos en sus respectivos Colegios' },
+        { s: '.lon-intro-checks li:nth-child(2)', en: 'Personalised, ongoing follow-up', pt: 'Acompanhamento personalizado e contínuo', es: 'Acompañamiento personalizado y continuo' },
+        { s: '.lon-intro-checks li:nth-child(3)', en: 'Consultations in Portuguese, English and Spanish', pt: 'Consultas em português, inglês e espanhol', es: 'Consultas en portugués, inglés y español' },
 
         /* ── Burnout quiz promo ── */
         { s: '.dr-burnout-promo__eyebrow', en: 'Occupational mental health', pt: 'Saúde mental ocupacional', es: 'Salud mental ocupacional' },
@@ -151,7 +159,7 @@
 
         /* ── How it works ── */
         { s: '#como-funciona .lon-kicker', en: 'Simple from the first click to the consultation', pt: 'Simples do primeiro clique à consulta', es: 'Simple desde el primer clic hasta la consulta' },
-        { s: '#como-funciona-title', en: 'Taking care of your health can be simple.', pt: 'Cuidar da sua saúde pode ser simples.', es: 'Cuidar de su salud puede ser sencillo.' },
+        { s: '#como-funciona-title', en: 'Taking care of your health can be <em class="serif-accent">simple.</em>', pt: 'Cuidar da sua saúde pode ser <em class="serif-accent">simples.</em>', es: 'Cuidar de su salud puede ser <em class="serif-accent">sencillo.</em>', h: true },
         { s: '.lon-how-steps li:nth-child(1) h3', en: 'Choose', pt: 'Escolha', es: 'Elija' },
         { s: '.lon-how-steps li:nth-child(1) p', en: 'Tell us what you need and choose the most suitable consultation. If you have doubts, we will help.', pt: 'Diga-nos o que precisa e escolha a consulta mais adequada. Se tiver dúvidas, nós ajudamos.', es: 'Díganos qué necesita y elija la consulta más adecuada. Si tiene dudas, le ayudamos.' },
         { s: '.lon-how-steps li:nth-child(2) h3', en: 'Book', pt: 'Agende', es: 'Reserve' },
@@ -276,7 +284,7 @@
 
         /* ── Team section ── */
         { s: '.lon-team-kicker', en: 'Who is on the other side of the consultation', pt: 'Quem está do outro lado da consulta', es: 'Quién está al otro lado de la consulta' },
-        { s: '#lon-team-title', en: 'Professionals who care with knowledge and attention.', pt: 'Profissionais que cuidam com conhecimento e atenção.', es: 'Profesionales que cuidan con conocimiento y atención.' },
+        { s: '#lon-team-title', en: 'Professionals who care with knowledge and <em class="serif-accent">attention.</em>', pt: 'Profissionais que cuidam com conhecimento e <em class="serif-accent">atenção.</em>', es: 'Profesionales que cuidan con conocimiento y <em class="serif-accent">atención.</em>', h: true },
         { s: '.lon-team-lead', en: 'At Lon Clinic, we select professionals with clinical experience, appropriate training and a person-centred approach.', pt: 'Na Lon Clinic, selecionamos profissionais com experiência clínica, formação adequada e uma abordagem centrada na pessoa.', es: 'En Lon Clinic, seleccionamos profesionales con experiencia clínica, formación adecuada y un enfoque centrado en la persona.' },
         { s: '.lon-team-name', en: 'Dr Rita Aguiar', pt: 'Dra. Rita Aguiar', es: 'Dra. Rita Aguiar' },
         { s: '.lon-team-role', en: 'Physician', pt: 'Médica', es: 'Médica' },
@@ -358,7 +366,7 @@
 
         /* ── FAQ ── */
         { s: '.lon-home-faq .lon-kicker', en: 'Before you book', pt: 'Antes de marcar', es: 'Antes de reservar' },
-        { s: '#lon-faq-title', en: 'Do you have a question?', pt: 'Tem alguma dúvida?', es: '¿Tiene alguna duda?' },
+        { s: '#lon-faq-title', en: 'Do you have a <em class="serif-accent">question?</em>', pt: 'Tem alguma <em class="serif-accent">dúvida?</em>', es: '¿Tiene alguna <em class="serif-accent">duda?</em>', h: true },
         { s: '.lon-home-faq-list details:nth-child(1) summary', en: 'How does an online consultation work?', pt: 'Como funciona uma consulta online?', es: '¿Cómo funciona una consulta online?' },
         { s: '.lon-home-faq-list details:nth-child(1) .faq-a', en: 'The consultation takes place by video call through your computer, tablet or smartphone.', pt: 'A consulta é realizada por videochamada através do seu computador, tablet ou smartphone.', es: 'La consulta se realiza por videollamada a través de su ordenador, tablet o smartphone.' },
         { s: '.lon-home-faq-list details:nth-child(2) summary', en: 'Do I need to install an app?', pt: 'Preciso de instalar alguma aplicação?', es: '¿Necesito instalar alguna aplicación?' },
@@ -379,7 +387,7 @@
 
         /* ── CTA card ── */
         { s: '.lon-consult-cta-copy .lon-kicker', en: 'When you need us, we are here.', pt: 'Quando precisar, estamos aqui.', es: 'Cuando lo necesite, estamos aquí.' },
-        { s: '.lon-consult-cta-copy h2', en: 'Start by taking care of what you need today.', pt: 'Comece por cuidar do que precisa hoje.', es: 'Empiece por cuidar lo que necesita hoy.' },
+        { s: '.lon-consult-cta-copy h2', en: 'Start by taking care of what you need <em class="serif-accent">today.</em>', pt: 'Comece por cuidar do que precisa <em class="serif-accent">hoje.</em>', es: 'Empiece por cuidar lo que necesita <em class="serif-accent">hoy.</em>', h: true },
         { s: '.lon-consult-cta-copy > p:not(.lon-kicker):not(.lon-consult-cta-help)', en: 'A health question, a symptom, a concern, or simply the wish to take better care of yourself. Find the right consultation and speak with a Lon Clinic professional.', pt: 'Uma dúvida de saúde, um sintoma, uma preocupação ou simplesmente a vontade de cuidar melhor de si. Encontre a consulta certa e fale com um profissional da Lon Clinic.', es: 'Una duda de salud, un síntoma, una preocupación o simplemente las ganas de cuidarse mejor. Encuentre la consulta adecuada y hable con un profesional de Lon Clinic.' },
         { s: '.lon-consult-cta-copy .lon-btn-dark', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
         { s: '.lon-consult-cta-help', en: 'Not sure where to start? <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer">Talk to our team →</a>', pt: 'Não sabe por onde começar? <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer">Falar com a nossa equipa →</a>', es: '¿No sabe por dónde empezar? <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer">Hablar con nuestro equipo →</a>', h: true },

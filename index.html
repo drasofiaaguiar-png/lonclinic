@@ -44,10 +44,10 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="preload" as="image" href="/image/image2.webp" fetchpriority="high">
 
-    <link rel="stylesheet" href="/landing.css?v=20260911d">
+    <link rel="stylesheet" href="/landing.css?v=20260912h">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@1,9..144,500&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <script type="text/javascript" src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
 
@@ -181,7 +181,7 @@
     }
     </script>
 </head>
-<body class="lon-landing">
+<body class="lon-landing lon-home">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
 
     <header class="lon-nav" id="lonNav">
@@ -219,60 +219,80 @@
 
     <main id="conteudo-principal">
         <section class="dr-hero" id="inicio">
-            <div class="lon-container dr-hero-grid">
-                <div class="dr-hero-content">
-                    <p class="dr-badge">A sua clínica de saúde, online.</p>
-                    <h1><span class="dr-hero-title-line">Cuidados de saúde que acompanham a sua vida.</span></h1>
-                    <p class="dr-lead">Consultas de Medicina Geral, Saúde Mental, Nutrição e Saúde do Viajante com profissionais qualificados e acompanhamento personalizado.</p>
-                    <div class="dr-cta-row">
-                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark" id="lonHeroBook" data-cta="book">Marcar consulta</a>
-                        <label class="dr-hero-service-wrap">
-                            <span class="visually-hidden">Tipo de consulta</span>
-                            <select id="lonHeroService" class="dr-hero-service" autocomplete="off">
-                                <option value="clinica_geral" selected>Médico</option>
-                                <option value="nutricao_programa">Nutrição</option>
-                                <option value="psicologia">Psicólogo</option>
-                            </select>
-                        </label>
+            <div class="lon-container">
+                <div class="dr-hero-panel">
+                    <img class="dr-hero-bg" src="image/image2.webp" alt="Médica em consulta de telemedicina" loading="eager" decoding="async" fetchpriority="high" width="1600" height="1200">
+                    <div class="dr-hero-scrim" aria-hidden="true"></div>
+                    <div class="dr-hero-content">
+                        <p class="dr-badge"><span class="dr-badge-dot" aria-hidden="true"></span>A sua clínica de saúde, online.</p>
+                        <h1><span class="dr-hero-title-line">Cuidados de saúde que acompanham <em class="serif-accent">a sua vida.</em></span></h1>
+                        <p class="dr-lead">Consultas de Medicina Geral, Saúde Mental, Nutrição e Saúde do Viajante com profissionais qualificados e acompanhamento personalizado.</p>
+                        <div class="dr-cta-row">
+                            <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark" id="lonHeroBook" data-cta="book">Marcar consulta</a>
+                            <label class="dr-hero-service-wrap">
+                                <span class="visually-hidden">Tipo de consulta</span>
+                                <select id="lonHeroService" class="dr-hero-service" autocomplete="off">
+                                    <option value="clinica_geral" selected>Médico</option>
+                                    <option value="nutricao_programa">Nutrição</option>
+                                    <option value="psicologia">Psicólogo</option>
+                                </select>
+                            </label>
+                            <a href="#servicos" class="dr-hero-explore">Explorar serviços</a>
+                        </div>
+                        <p class="dr-hero-meta">Consulta online · Sem deslocações · Onde quer que esteja</p>
+                        <div class="dr-live-slots" data-next-slots data-limit="3" data-service="clinica_geral" data-book-href="/marcar/clinica-geral" data-surface="home" hidden>
+                            <p class="dr-live-slots-kicker">Consultas disponíveis</p>
+                            <div class="dr-live-slots-row" data-next-slots-row aria-live="polite"></div>
+                            <a href="/marcar/clinica-geral" class="dr-next-slot-other">Ver horários disponíveis →</a>
+                            <a href="/marcar/clinica-geral" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
+                        </div>
+                        <ul class="dr-trust-list" aria-label="Destaques de confiança da clínica">
+                            <li>Clínica certificada pela Entidade Reguladora da Saúde</li>
+                            <li>Médicos inscritos na Ordem dos Médicos</li>
+                            <li>Nutricionistas e Psicólogos inscritos nas respetivas Ordens</li>
+                            <li>Consultas em português, inglês e espanhol</li>
+                            <li>Receitas e pedidos de exames, quando clinicamente indicados</li>
+                            <li>Sem sala de espera. Sem deslocação.</li>
+                        </ul>
+                        <p class="dr-hero-help">Não sabe qual consulta escolher? <a href="#servicos">Ajude-me a escolher →</a></p>
                     </div>
-                    <p class="dr-hero-meta">Consulta online · Sem deslocações · Onde quer que esteja</p>
-                    <div class="dr-live-slots" data-next-slots data-limit="3" data-service="clinica_geral" data-book-href="/marcar/clinica-geral" data-surface="home" hidden>
-                        <p class="dr-live-slots-kicker">Consultas disponíveis</p>
-                        <div class="dr-live-slots-row" data-next-slots-row aria-live="polite"></div>
-                        <a href="/marcar/clinica-geral" class="dr-next-slot-other">Ver horários disponíveis →</a>
-                        <a href="/marcar/clinica-geral" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
-                    </div>
-
-                    <ul class="dr-trust-list" aria-label="Destaques de confiança da clínica">
-                        <li>Clínica certificada pela Entidade Reguladora da Saúde</li>
-                        <li>Médicos inscritos na Ordem dos Médicos</li>
-                        <li>Nutricionistas e Psicólogos inscritos nas respetivas Ordens</li>
-                        <li>Consultas em português, inglês e espanhol</li>
-                        <li>Receitas e pedidos de exames, quando clinicamente indicados</li>
-                        <li>Sem sala de espera. Sem deslocação.</li>
-                    </ul>
-                    <p class="dr-hero-help">Não sabe qual consulta escolher? <a href="#servicos">Ajude-me a escolher →</a></p>
-                </div>
-
-                <div class="dr-hero-media">
-                    <img src="image/image2.webp" alt="Médica em consulta de telemedicina" loading="eager" decoding="async" fetchpriority="high">
-                    <div class="dr-float-card">
-                        <p><strong>A sua clínica de saúde, online.</strong></p>
-                    </div>
+                    <aside class="dr-hero-ers" aria-label="Registo ERS">
+                        <p class="dr-hero-ers-num">45.475</p>
+                        <p>Registo na Entidade Reguladora da Saúde</p>
+                    </aside>
                 </div>
             </div>
         </section>
 
         <section class="lon-intro" id="platform" aria-labelledby="lon-intro-title">
-            <div class="lon-container lon-intro-inner">
-                <p class="lon-kicker">Uma clínica, não apenas uma plataforma</p>
-                <h2 id="lon-intro-title">Saúde é mais do que resolver um problema quando ele aparece.</h2>
-                <div class="lon-intro-body">
-                    <p>Na Lon Clinic, acreditamos que bons cuidados de saúde começam por ouvir.</p>
-                    <p>Por isso, trabalhamos com profissionais que procuram compreender a pessoa, o seu contexto e a sua história — e não apenas o motivo que a trouxe à consulta.</p>
-                    <p>Pode marcar uma consulta quando precisa de ajuda imediata ou continuar o acompanhamento quando o que precisa é de tempo e consistência.</p>
+            <div class="lon-container lon-intro-grid">
+                <div class="lon-intro-media">
+                    <img src="image/image3.webp" alt="Consulta de saúde online num espaço calmo" width="1200" height="1200" loading="lazy" decoding="async">
+                    <div class="lon-intro-float">
+                        <span class="lon-intro-float-icon" aria-hidden="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                        </span>
+                        <div>
+                            <p>Perto de si, onde quer que esteja.</p>
+                            <p>O seu espaço. A nossa atenção.</p>
+                        </div>
+                    </div>
                 </div>
-                <a href="/info.html?page=sobre-nos" class="lon-text-link">Conhecer a Lon Clinic →</a>
+                <div class="lon-intro-inner">
+                    <p class="lon-kicker">Uma clínica, não apenas uma plataforma</p>
+                    <h2 id="lon-intro-title">Saúde é mais do que resolver um problema quando ele aparece.</h2>
+                    <div class="lon-intro-body">
+                        <p>Na Lon Clinic, acreditamos que bons cuidados de saúde começam por ouvir.</p>
+                        <p>Por isso, trabalhamos com profissionais que procuram compreender a pessoa, o seu contexto e a sua história — e não apenas o motivo que a trouxe à consulta.</p>
+                        <p>Pode marcar uma consulta quando precisa de ajuda imediata ou continuar o acompanhamento quando o que precisa é de tempo e consistência.</p>
+                    </div>
+                    <ul class="lon-intro-checks">
+                        <li>Profissionais qualificados e inscritos nas respetivas Ordens</li>
+                        <li>Acompanhamento personalizado e contínuo</li>
+                        <li>Consultas em português, inglês e espanhol</li>
+                    </ul>
+                    <a href="/info.html?page=sobre-nos" class="lon-text-link">Conhecer a Lon Clinic →</a>
+                </div>
             </div>
         </section>
 
@@ -285,31 +305,41 @@
                 </header>
                 <div class="lon-need-grid">
                     <a class="lon-need-card" id="lon-need-medico" href="#servicos-urgencias" data-open-tab="urgencias">
-                        <span class="lon-need-emoji" aria-hidden="true">🩺</span>
+                        <span class="lon-need-icon" aria-hidden="true">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4.8 16.4A6 6 0 0 1 6 7h.1a6 6 0 0 1 11.8 0H18a6 6 0 0 1 1.2 9.4"/><path d="M12 12v9"/><path d="M8 17h8"/></svg>
+                        </span>
                         <h3>Preciso de falar com um médico</h3>
                         <p>Sintomas, dúvidas de saúde, problemas recorrentes, medicação, exames ou acompanhamento.</p>
                         <span class="lon-need-cta">Ver consultas médicas →</span>
                     </a>
                     <a class="lon-need-card" id="lon-need-psico" href="/saudemental">
-                        <span class="lon-need-emoji" aria-hidden="true">🧠</span>
+                        <span class="lon-need-icon" aria-hidden="true">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/></svg>
+                        </span>
                         <h3>Não me estou a sentir bem</h3>
                         <p>Ansiedade, stress, burnout, dificuldades emocionais, relações ou simplesmente a necessidade de falar com alguém.</p>
                         <span class="lon-need-cta">Ver Saúde Mental →</span>
                     </a>
                     <a class="lon-need-card" id="lon-need-viagem" href="/travel-clinic">
-                        <span class="lon-need-emoji" aria-hidden="true">✈️</span>
+                        <span class="lon-need-icon" aria-hidden="true">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>
+                        </span>
                         <h3>Vou viajar</h3>
                         <p>Prepare a sua saúde antes de viajar com aconselhamento personalizado sobre prevenção, vacinação e riscos associados ao destino.</p>
                         <span class="lon-need-cta">Preparar a minha viagem →</span>
                     </a>
                     <a class="lon-need-card" id="lon-need-nutricao" href="#servicos-nutricao" data-open-tab="nutricao">
-                        <span class="lon-need-emoji" aria-hidden="true">🥗</span>
+                        <span class="lon-need-icon" aria-hidden="true">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+                        </span>
                         <h3>Quero cuidar melhor da minha saúde</h3>
                         <p>Nutrição, prevenção e acompanhamento personalizado para criar hábitos mais saudáveis e sustentáveis.</p>
                         <span class="lon-need-cta">Ver Nutrição →</span>
                     </a>
                     <a class="lon-need-card lon-need-card--urgent" id="lon-need-urgente" href="/marcar/urgente">
-                        <span class="lon-need-emoji" aria-hidden="true">⚡</span>
+                        <span class="lon-need-icon" aria-hidden="true">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </span>
                         <h3>Preciso de ser visto rapidamente</h3>
                         <p>Para situações clínicas que necessitam de avaliação médica rápida, mas que não são emergências.</p>
                         <span class="lon-need-cta">Marcar consulta urgente →</span>
@@ -590,7 +620,7 @@
             <div class="lon-container">
                 <div class="lon-team-header">
                     <p class="lon-team-kicker">Quem está do outro lado da consulta</p>
-                    <h2 id="lon-team-title">Profissionais que cuidam com conhecimento e atenção.</h2>
+                    <h2 id="lon-team-title">Profissionais que cuidam com conhecimento e <em class="serif-accent">atenção.</em></h2>
                     <p class="lon-team-lead">Na Lon Clinic, selecionamos profissionais com experiência clínica, formação adequada e uma abordagem centrada na pessoa.</p>
                 </div>
                 <article class="lon-team-card">
@@ -623,10 +653,10 @@
         </section>
 
         <section class="dr-platform" id="como-funciona" aria-labelledby="como-funciona-title">
-            <div class="lon-container">
+            <div class="lon-container lon-how-shell">
                 <header class="lon-section-head lon-section-head--center">
                     <p class="lon-kicker">Simples do primeiro clique à consulta</p>
-                    <h2 id="como-funciona-title">Cuidar da sua saúde pode ser simples.</h2>
+                    <h2 id="como-funciona-title">Cuidar da sua saúde pode ser <em class="serif-accent">simples.</em></h2>
                 </header>
                 <ol class="lon-service-grid lon-how-steps">
                     <li class="lon-service-card is-visible">
@@ -847,7 +877,7 @@
             <div class="lon-container">
                 <header class="lon-section-head">
                     <p class="lon-kicker">Antes de marcar</p>
-                    <h2 id="lon-faq-title">Tem alguma dúvida?</h2>
+                    <h2 id="lon-faq-title">Tem alguma <em class="serif-accent">dúvida?</em></h2>
                 </header>
                 <div class="lon-home-faq-list">
                     <details class="faq-item">
@@ -892,7 +922,7 @@
                 <div class="lon-consult-cta-card">
                     <div class="lon-consult-cta-copy">
                         <p class="lon-kicker lon-kicker--on-dark">Quando precisar, estamos aqui.</p>
-                        <h2 id="lon-consult-cta-title">Comece por cuidar do que precisa hoje.</h2>
+                        <h2 id="lon-consult-cta-title">Comece por cuidar do que precisa <em class="serif-accent">hoje.</em></h2>
                         <p>Uma dúvida de saúde, um sintoma, uma preocupação ou simplesmente a vontade de cuidar melhor de si. Encontre a consulta certa e fale com um profissional da Lon Clinic.</p>
                         <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark" data-cta="book">Marcar consulta</a>
                         <p class="lon-consult-cta-help">Não sabe por onde começar? <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer">Falar com a nossa equipa →</a></p>
@@ -1004,7 +1034,7 @@
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-analytics.js?v=20260906i" defer></script>
-    <script src="i18n.js?v=20260912a" defer></script>
+    <script src="i18n.js?v=20260912h" defer></script>
     <script src="reviews.js?v=20260902a" defer></script>
     <script src="landing.js?v=20260911p" defer></script>
     <script src="/lon-slots.js?v=20260912a" defer></script>
