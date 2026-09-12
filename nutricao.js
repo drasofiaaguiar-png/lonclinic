@@ -18,7 +18,7 @@ const NUTRICAO_DIR = path.join(__dirname, 'data', 'nutricao');
 const MANIFEST_PATH = path.join(NUTRICAO_DIR, 'manifest.json');
 const PAGES_DIR = path.join(NUTRICAO_DIR, 'pages');
 const CSS_V = '20260905j';
-const SLOTS_V = '20260911p';
+const SLOTS_V = '20260912a';
 const ON_URL = 'https://www.ordemdosnutricionistas.pt/';
 const NUTRICAO_PROGRAMA_HREF = '/marcar/nutricao-programa';
 const WEIGHT_LOSS_SLUGS = new Set(['glp-1', 'ozempic-wegovy']);
@@ -253,22 +253,32 @@ function bookingCardsHtml(meta, tone) {
                 href: primaryHref,
                 track: 'nutricao-card-book'
             }
-            : {
-                chip: isLongevidade ? 'Longevidade' : 'Nutrição',
-                title: isLongevidade ? 'Consulta de longevidade' : 'Orientação nutricional online',
-                price: meta.price || (isLongevidade ? '79 €' : '39 €'),
-                note: 'Videoconsulta · reeducação alimentar nesta sessão, não um PDF genérico nem receita de emagrecimento',
-                cta: isLongevidade ? 'Fale com um médico' : 'Fale com um nutricionista',
+            : isLongevidade
+            ? {
+                chip: 'Longevidade',
+                title: 'Consulta de longevidade',
+                price: meta.price || '79 €',
+                note: 'Videoconsulta médica · reeducação alimentar nesta sessão, não um PDF genérico nem receita de emagrecimento',
+                cta: 'Fale com um médico',
                 href: primaryHref,
+                track: 'nutricao-card-book'
+            }
+            : {
+                chip: 'Nutrição',
+                title: 'Consulta de nutricionista',
+                price: '45 € · 30 min',
+                note: 'Sessão avulsa com nutricionista. O programa mensal é 115 € no mês 1 e 75 €/mês. Clínica geral médica: 39 €.',
+                cta: 'Fale com um nutricionista',
+                href: `/marcar/nutricao-consulta?ref=${encodeURIComponent(`nutricao-${meta.slug || 'hub'}`)}`,
                 track: 'nutricao-card-book'
             },
         {
             chip: 'Psicologia',
             title: 'Consulta de psicologia',
-            price: '60 € ou 56 €/semana',
+            price: '60 € · 50 min ou 56 €/semana',
             note: 'Hábitos, stress e imagem corporal — se fizer sentido',
-            cta: 'Triagem',
-            href: `/triagem?ref=${encodeURIComponent(`nutricao-${meta.slug || 'hub'}`)}`,
+            cta: 'Marcar psicologia',
+            href: `/marcar/psicologia-mensal?ref=${encodeURIComponent(`nutricao-${meta.slug || 'hub'}`)}`,
             track: 'nutricao-card-psych'
         }
     ];
@@ -342,9 +352,9 @@ function formatTableHtml(meta) {
                 { name: 'Programa completo (opcional)', includes: 'Nutrição + 12 sessões de psicologia em 6 meses', price: '227 € no mês 1' }
             ]
             : [
-                { name: 'Consulta única', includes: 'Avaliação + orientações concretas nessa sessão (não um plano PDF genérico)', price: meta.price || '39 €' },
-                { name: 'Follow-up', includes: 'Nova videoconsulta, marcada só se fizer sentido — sem pacote obrigatório', price: meta.followUpPrice || meta.price || '39 €' },
-                { name: 'Psicologia (opcional)', includes: 'Stress, ansiedade, hábitos e imagem corporal', price: '60 € ou 56 €/semana' }
+                { name: 'Consulta de nutricionista', includes: 'Sessão avulsa de 30 min — avaliação e orientações concretas (não um plano PDF genérico)', price: '45 €' },
+                { name: 'Clínica geral (médico)', includes: 'Videoconsulta médica de 30 min, quando a queixa é clínica e não só alimentar', price: meta.price && meta.price !== '45 €' ? meta.price : '39 €' },
+                { name: 'Psicologia (opcional)', includes: 'Stress, ansiedade, hábitos e imagem corporal · 50 min', price: '60 € ou 56 €/semana' }
             ];
     const tr = rows.map((row) => `
                     <tr>
@@ -428,12 +438,11 @@ function layoutPage(opts) {
                 <span class="lon-logo-name">LON Clinic</span>
             </a>
             <nav class="lon-nav-links" aria-label="Navegação principal">
-                <a href="/nutricao" aria-current="page">Nutrição</a>
-                <a href="/nutricao/programa">Reeducação metabólica</a>
-                <a href="/nutricao/testes">Testes</a>
-                <a href="/consulta">Consulta médica</a>
-                <a href="/consultas">Psicologia</a>
-                <a href="/saudemental">Planos</a>
+                <a href="/#servicos">Consultas</a>
+                <a href="/consulta">Especialidades</a>
+                <a href="/burnout">Burnout</a>
+                <a href="/magazine">Magazine</a>
+                <a href="/#equipa">A Equipa</a>
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
@@ -444,11 +453,14 @@ function layoutPage(opts) {
             </div>
         </div>
         <div class="lon-mobile-menu" id="lonMobileMenu">
+            <a href="/#servicos">Consultas</a>
+            <a href="/consulta">Especialidades</a>
+            <a href="/burnout">Burnout</a>
+            <a href="/magazine">Magazine</a>
+            <a href="/#equipa">A Equipa</a>
             <a href="/nutricao">Nutrição por condição</a>
             <a href="/nutricao/programa">Programa de reeducação metabólica</a>
-            <a href="/nutricao/testes">Testes clínicos</a>
-            <a href="/consulta">Consulta médica</a>
-            <a href="/consultas">Psicologia por queixa</a>
+            <a href="/patient-portal">Login</a>
             <a href="/marcar/nutricao-programa?ref=nutricao-nav-mobile">Consulta inicial de nutrição</a>
         </div>
     </header>
@@ -493,8 +505,8 @@ function layoutPage(opts) {
     </footer>
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
     <script src="/lon-nav.js"></script>
-    <script src="/talk-cta.js?v=20260908a" defer></script>
-    <script src="/i18n.js?v=20260911p" defer></script>
+    <script src="/talk-cta.js?v=20260912a" defer></script>
+    <script src="/i18n.js?v=20260912a" defer></script>
     <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=${SLOTS_V}" defer></script>

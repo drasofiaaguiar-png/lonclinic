@@ -271,15 +271,15 @@ function renderAuthorPage(origin, slug) {
                 <span class="lon-logo-name">LON Clinic</span>
             </a>
             <nav class="lon-nav-links" aria-label="Navegação principal">
-                <a href="/#inicio">Início</a>
+                <a href="/#servicos">Consultas</a>
+                <a href="/consulta">Especialidades</a>
+                <a href="/burnout">Burnout</a>
                 <a href="/magazine">Magazine</a>
-                <a href="/blog">Guias</a>
-                <a href="/equipa/rita-aguiar" aria-current="page">Equipa</a>
-                <a href="/#contacto">Contacto</a>
+                <a href="/#equipa">A Equipa</a>
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/#servicos" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
+                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm">Marcar — 39 €</a>
             </div>
         </div>
     </header>
@@ -298,7 +298,7 @@ function renderAuthorPage(origin, slug) {
                 <p class="eeat-bio-verify">${verify}</p>
                 <p class="eeat-profile-actions">
                     <a class="lon-btn lon-btn-primary" data-cta="book" href="/marcar/clinica-geral">Marcar consulta</a>
-                    <a class="lon-btn lon-btn-soft" href="/blog">Ler os guias médicos</a>
+                    <a class="lon-btn lon-btn-soft" href="/magazine">Ler os guias médicos</a>
                 </p>
             </div>
         </article>

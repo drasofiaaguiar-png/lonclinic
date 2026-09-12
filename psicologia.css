@@ -231,7 +231,8 @@ body.lon-landing.psi-landing {
     line-height: 1;
 }
 
-.psi-nav-menu {
+.psi-nav-menu,
+.psi-landing .psi-nav .lon-nav-links {
     display: none;
     align-items: center;
     justify-content: center;
@@ -247,6 +248,7 @@ body.lon-landing.psi-landing {
 
 @media (min-width: 980px) {
     .psi-nav-menu,
+    .psi-landing .psi-nav .lon-nav-links,
     .psi-nav-actions {
         display: flex;
     }
@@ -257,6 +259,7 @@ body.lon-landing.psi-landing {
 }
 
 .psi-nav-menu a,
+.psi-landing .psi-nav .lon-nav-links a,
 .psi-nav-login {
     color: rgba(244, 241, 232, 0.82);
     text-decoration: none;
@@ -268,6 +271,7 @@ body.lon-landing.psi-landing {
 }
 
 .psi-nav-menu a:hover,
+.psi-landing .psi-nav .lon-nav-links a:hover,
 .psi-nav-login:hover {
     color: #fff;
 }

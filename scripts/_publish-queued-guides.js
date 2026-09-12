@@ -233,7 +233,7 @@ const NEW = [
     {
         slug: 'psicologia-online-para-burnout',
         title: 'Psicologia Online Para Burnout: Como Funciona e Quando Marcar',
-        description: 'Psicologia online para burnout: 45 min, 60 € / 54 €/semana, OPP. Sem 56 €. Baixa só o médico. Teste CBI, não MBI.',
+        description: 'Psicologia online para burnout: 50 min, 60 € / 56 €/semana, OPP. Baixa só o médico. Teste CBI, não MBI.',
         about: 'Burnout',
         image: '/image/guide/guide-hiker-view.jpg',
         ctaKind: 'burnout',
@@ -252,7 +252,7 @@ const NEW = [
         ],
         faq: [
             { q: 'A psicologia online funciona para burnout?', a: 'Para a maior parte dos adultos, o trabalho é conversacional e o formato online trata-se como equivalente ao presencial na evidência de psicoterapia. Não substitui crise nem avaliação médica.' },
-            { q: 'Quanto custa a psicologia para burnout na Lon Clinic?', a: '60 € a sessão avulsa ou 54 €/semana. Duração 45 minutos. Não 56 €.' },
+            { q: 'Quanto custa a psicologia para burnout na Lon Clinic?', a: '60 € a sessão avulsa ou 56 €/semana. Duração 50 minutos. ' },
             { q: 'O psicólogo da Lon Clinic passa baixa médica?', a: 'Não. A baixa é decisão médica.' },
             { q: 'Posso mudar de psicólogo?', a: 'Sim. Sem perguntas, e recomeçar do zero.' },
             { q: 'O teste da Lon Clinic é o MBI?', a: 'Não. É o CBI (Copenhagen Burnout Inventory), em /burnout/teste. O MBI é um instrumento de investigação; não é o produto Lon.' }

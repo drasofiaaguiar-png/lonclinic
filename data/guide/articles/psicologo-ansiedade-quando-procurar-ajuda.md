@@ -3,7 +3,7 @@
 <ul>
 <li>Procure um psicólogo para a ansiedade quando a preocupação, a evitação ou o alerta no corpo <strong>já ocupam o sono, o trabalho ou as relações</strong> — não só num dia mau.</li>
 <li>A <a href="/blog/tcc-para-ansiedade">terapia cognitivo-comportamental</a> tem evidência sólida para a generalidade das perturbações de ansiedade (Olatunji, Cisler &amp; Deacon, 2010).</li>
-<li>Na Lon Clinic: <strong>45 minutos</strong> semanais, <strong>60 €</strong> avulsa ou <strong>54 €/semana</strong>; podes mudar de psicólogo e recomeçar do zero, sem justificação.</li>
+<li>Na Lon Clinic: <strong>50 minutos</strong> semanais, <strong>60 €</strong> avulsa ou <strong>56 €/semana</strong>; podes mudar de psicólogo e recomeçar do zero, sem justificação.</li>
 </ul>
 </aside>
 
@@ -27,7 +27,7 @@ Se ainda funciona «por fora» e está mal por dentro, isso conta. A [TCC para a
 
 ## O que acontece numa consulta de psicologia para a ansiedade?
 
-Na primeira sessão o psicólogo mapeia gatilhos, evitação e o que já tentou. Nas seguintes, o trabalho costuma ser regular: nomear padrões de pensamento, ensaiar exposição gradual quando faz sentido, e recuperar margem no corpo (respiração, sono, limites). A sessão na Lon Clinic dura **45 minutos**, com regularidade **semanal** no acompanhamento — o ritmo que a clínica usa para um objectivo terapêutico.
+Na primeira sessão o psicólogo mapeia gatilhos, evitação e o que já tentou. Nas seguintes, o trabalho costuma ser regular: nomear padrões de pensamento, ensaiar exposição gradual quando faz sentido, e recuperar margem no corpo (respiração, sono, limites). A sessão na Lon Clinic dura **50 minutos**, com regularidade **semanal** no acompanhamento — o ritmo que a clínica usa para um objectivo terapêutico.
 
 O formato pode ser [online ou presencial](/blog/psicologia-online-vs-presencial). Na Lon Clinic é videochamada no browser (Doxy.me), sem instalar aplicações.
 
@@ -38,8 +38,8 @@ Para a maior parte dos adultos, a evidência trata a terapia online como **equiv
 ## Como funciona na Lon Clinic?
 
 - Escolhe psicólogo em [saúde mental](/saudemental) **ou** na ficha [ansiedade no trabalho](/ansiedade-no-trabalho), ou faz a [triagem](/triagem)
-- Sessão avulsa **60 €**; acompanhamento **54 €/semana** (mínimo um mês)
-- **45 minutos**, semanal no acompanhamento — incluindo a primeira
+- Sessão avulsa **60 €**; acompanhamento **56 €/semana** (mínimo um mês)
+- **50 minutos**, semanal no acompanhamento — incluindo a primeira
 - Psicólogos inscritos na OPP; recibo para ADSE/seguro
 - **Podes mudar de psicólogo sempre que quiseres, sem precisares de dar qualquer justificação, e recomeçar do zero**
 
@@ -77,4 +77,4 @@ Este artigo tem fins informativos e não substitui uma avaliação clínica ou p
 
 - Olatunji BO, Cisler JM, Deacon BJ. "Efficacy of cognitive behavioral therapy for anxiety disorders: a review of meta-analytic findings." *Psychiatric Clinics of North America.* 2010;33(3):557-577
 - Flückiger C, Del Re AC, Wampold BE, Horvath AO. "The Alliance in Adult Psychotherapy: A Meta-Analytic Synthesis." *Psychotherapy.* 2018;55(4):316-340
-- Preçário da Lon Clinic, 2026 — 45 min; 60 € / 54 €/semana
+- Preçário da Lon Clinic, 2026 — 50 min; 60 € / 56 €/semana

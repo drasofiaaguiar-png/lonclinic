@@ -2,7 +2,7 @@
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
 <li>Em Aveiro há psicologia no <strong>privado</strong>, no <strong>SNS</strong> (via médico de família) e, para estudantes inscritos, no apoio psicológico dos <strong>SAS da Universidade de Aveiro</strong> — em regra gratuito para inscritos (confirme na UA).</li>
-<li>A Lon Clinic faz a consulta <strong>online a partir de Aveiro e da região Centro</strong>: sem deslocação, sem lista de espera local, <strong>60 €</strong> ou <strong>54 €/semana</strong>, <strong>45 minutos</strong> semanais.</li>
+<li>A Lon Clinic faz a consulta <strong>online a partir de Aveiro e da região Centro</strong>: sem deslocação, sem lista de espera local, <strong>60 €</strong> ou <strong>56 €/semana</strong>, <strong>50 minutos</strong> semanais.</li>
 <li>Mapa de outras cidades: <a href="/blog/psicologia-online-portugal-por-distrito">psicologia online por distrito</a>.</li>
 </ul>
 </aside>
@@ -20,7 +20,7 @@ Três caminhos distintos — não os misture:
 | **Privado em Aveiro** | Qualquer pessoa | Consultório local; preços típicos 40 €–70 €; disponibilidade varia |
 | **SNS** | Utentes com médico de família | Referenciação; espera frequente, sem número inventado aqui |
 | **Universidade de Aveiro (SAS)** | Estudantes **inscritos** | Apoio psicológico dos SAS; **geralmente gratuito para inscritos** — confirme gabinete e regras na UA |
-| **Lon Clinic (online)** | Qualquer pessoa com internet | Videochamada a partir de Aveiro; 60 € / 54 €/semana; 45 min semanais |
+| **Lon Clinic (online)** | Qualquer pessoa com internet | Videochamada a partir de Aveiro; 60 € / 56 €/semana; 50 min semanais |
 
 Não publicamos tempos de espera da UA nem do ACES de Aveiro: mudam e não temos fonte oficial estável.
 
@@ -31,8 +31,8 @@ Não publicamos tempos de espera da UA nem do ACES de Aveiro: mudam e não temos
 A consulta é a mesma de [saúde mental](/saudemental) — feita **a partir de Aveiro**, Ílhavo, Águeda, Oliveira do Bairro ou outro ponto da região Centro.
 
 - **Sem deslocação e sem lista de espera local.** Abre o link no browser (Doxy.me); não instala aplicações.
-- **Preço fixo: 60 €** a sessão avulsa, ou **54 €/semana** em acompanhamento — contra a faixa privada de Aveiro (cerca de 40 €–70 €), sem surpresa à porta.
-- **45 minutos, semanal**, incluindo a primeira sessão: o ritmo que a clínica usa para um objectivo terapêutico.
+- **Preço fixo: 60 €** a sessão avulsa, ou **56 €/semana** em acompanhamento — contra a faixa privada de Aveiro (cerca de 40 €–70 €), sem surpresa à porta.
+- **50 minutos, semanal**, incluindo a primeira sessão: o ritmo que a clínica usa para um objectivo terapêutico.
 - **Escolhe por especialidade**, mesmo que essa oferta não exista no consultório mais perto: [ansiedade](/ansiedade-no-trabalho), [burnout](/psicologia-burnout), [terapia de casal](/terapia-de-casal), [ataques de pânico](/ataques-de-panico), [gestão de stress](/gestao-de-stress).
 - **Podes mudar de psicólogo sempre que quiseres, sem precisares de dar qualquer justificação, e recomeçar do zero.**
 - Psicólogos **inscritos na OPP**; recibo para ADSE e seguro — [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal).
@@ -64,7 +64,7 @@ No privado local, no SNS via médico de família, no apoio psicológico dos SAS 
 
 ### Quanto custa uma consulta de psicologia em Aveiro?
 
-No privado de Aveiro a faixa habitual é a nacional: cerca de 40 € a 70 €. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, sessão de 45 minutos.
+No privado de Aveiro a faixa habitual é a nacional: cerca de 40 € a 70 €. Na Lon Clinic o preço é fixo: 60 € avulsa ou 56 €/semana, sessão de 50 minutos.
 
 ### Há psicologia online em Aveiro?
 
@@ -86,4 +86,4 @@ Este artigo tem fins informativos e não substitui uma avaliação clínica ou p
 
 - [Universidade de Aveiro — Apoio psicológico (SAS)](https://www.ua.pt/pt/sas/apoio-psicologico)
 - [OPP — Directório](https://www.ordemdospsicologos.pt/pt/membros)
-- Preçário da Lon Clinic, 2026 — 45 min; 60 € / 54 €/semana
+- Preçário da Lon Clinic, 2026 — 50 min; 60 € / 56 €/semana

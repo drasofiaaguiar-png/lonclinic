@@ -2,6 +2,10 @@
     'use strict';
 
     function pageLang() {
+        if (window.CLINIC_I18N && typeof window.CLINIC_I18N.getLang === 'function') {
+            var fromI18n = window.CLINIC_I18N.getLang();
+            if (fromI18n === 'en' || fromI18n === 'es' || fromI18n === 'pt') return fromI18n;
+        }
         var lang = (document.documentElement.getAttribute('lang') || 'pt').toLowerCase();
         if (lang.indexOf('en') === 0) return 'en';
         if (lang.indexOf('es') === 0) return 'es';
@@ -287,7 +291,7 @@
             href: '/marcar/nutricao-programa',
             goal: 'Perda de peso / reeduca\u00e7\u00e3o metab\u00f3lica'
         },
-        psicologia: { service: 'psicologia_mensal', href: '/marcar/psicologia-mensal' }
+        psicologia: { service: 'psicologia', href: '/marcar/psicologia?plan=avulsa' }
     };
 
     function heroServicePack() {
@@ -597,6 +601,8 @@
             var btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'lon-live-slot';
+            btn.setAttribute('data-slot-date', slot.date || '');
+            btn.setAttribute('data-slot-time', slot.time || '');
             btn.textContent = formatSlotWhen(slot.date, slot.time);
             btn.addEventListener('click', function () {
                 goCheckout(slot, opts);
@@ -897,6 +903,19 @@
                 applyLiveSlots((cached && cached.data) || { slots: [] });
             });
     }
+
+    function relabelLiveSlots() {
+        document.querySelectorAll('.lon-live-slot[data-slot-date]').forEach(function (btn) {
+            btn.textContent = formatSlotWhen(btn.getAttribute('data-slot-date'), btn.getAttribute('data-slot-time'));
+        });
+        document.querySelectorAll('[data-next-slot-when]').forEach(function (el) {
+            var date = el.getAttribute('data-slot-date');
+            var time = el.getAttribute('data-slot-time');
+            if (date && time) el.textContent = formatSlotWhen(date, time);
+        });
+    }
+
+    window.SLOTS_LANG_CHANGED = relabelLiveSlots;
 
     var heroSelect = document.getElementById('lonHeroService');
     if (heroSelect) {

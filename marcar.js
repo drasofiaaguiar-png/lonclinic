@@ -27,7 +27,7 @@
             },
             clinica_geral: {
                 label: 'General Medicine Consultation / Check-Up (Adults)',
-                duration: '25–35 min',
+                duration: '30 min',
                 bullets: [
                     'General symptom assessment or health review.',
                     'Ideal for concerns that are not a hospital emergency.',
@@ -194,7 +194,7 @@
             },
             clinica_geral: {
                 label: 'Consulta de Medicina General / Chequeo (Adultos)',
-                duration: '25–35 min',
+                duration: '30 min',
                 bullets: [
                     'Evaluación general de síntomas o revisión de salud.',
                     'Ideal para dudas que no son una urgencia hospitalaria.',
@@ -569,7 +569,7 @@
             label: 'Consulta Clínica Geral / Check Up (Adultos)',
             price: '€39',
             cents: 3900,
-            duration: '25–35 min',
+            duration: '30 min',
             serviceKey: 'clinica_geral',
             bullets: [
                 'Avaliação de sintomas gerais ou revisão de saúde.',
@@ -867,13 +867,28 @@
         selectEl.value = selected;
     }
 
+    function setA11yHidden(el, hidden) {
+        if (!el) return;
+        el.hidden = !!hidden;
+        if (hidden) {
+            el.setAttribute('aria-hidden', 'true');
+            el.setAttribute('inert', '');
+        } else {
+            el.removeAttribute('aria-hidden');
+            el.removeAttribute('inert');
+        }
+    }
+
     function showNeedChoice() {
         var need = document.getElementById('marcarNeedChoice');
         var flow = document.getElementById('marcarBookingFlow');
         var err = document.getElementById('marcarError');
-        if (need) need.hidden = false;
-        if (flow) flow.hidden = true;
-        if (err) err.style.display = 'none';
+        if (need) setA11yHidden(need, false);
+        if (flow) setA11yHidden(flow, true);
+        if (err) {
+            err.hidden = true;
+            err.style.display = '';
+        }
         var rest = window.location.search;
         if (rest) {
             document.querySelectorAll('#marcarNeedChoice a[data-need-href]').forEach(function (a) {
@@ -893,9 +908,12 @@
             var main = document.getElementById('marcarMain');
             var flowBad = document.getElementById('marcarBookingFlow');
             var needBad = document.getElementById('marcarNeedChoice');
-            if (err) err.style.display = 'block';
-            if (flowBad) flowBad.hidden = true;
-            if (needBad) needBad.hidden = true;
+            if (err) {
+                err.hidden = false;
+                err.style.display = '';
+            }
+            if (flowBad) setA11yHidden(flowBad, true);
+            if (needBad) setA11yHidden(needBad, true);
             if (main) main.style.display = 'block';
         } else {
             showNeedChoice();
@@ -905,15 +923,20 @@
 
     var needHide = document.getElementById('marcarNeedChoice');
     var flowShow = document.getElementById('marcarBookingFlow');
-    if (needHide) needHide.hidden = true;
-    if (flowShow) flowShow.hidden = false;
+    if (needHide) setA11yHidden(needHide, true);
+    if (flowShow) setA11yHidden(flowShow, false);
 
     var errHide = document.getElementById('marcarError');
-    if (errHide) errHide.style.display = 'none';
+    if (errHide) {
+        errHide.hidden = true;
+        errHide.style.display = '';
+    }
     applyPrettyUrlIfNeeded(tipo);
 
     var typeSelect = document.getElementById('marcarTypeSelect');
     fillTypeSelect(typeSelect, tipo);
+    var specStart = document.getElementById('marcarSpecialtySection');
+    if (specStart) setA11yHidden(specStart, true);
     if (typeSelect) {
         typeSelect.addEventListener('change', function () {
             var next = typeSelect.value;
@@ -955,7 +978,12 @@
 
     function showConsultLangBanner() {
         var banner = document.getElementById('marcarLangBanner');
-        if (banner) banner.hidden = !needsConsultLangPolicy();
+        if (banner) {
+            var showBanner = needsConsultLangPolicy();
+            setA11yHidden(banner, !showBanner);
+            if (showBanner) banner.setAttribute('role', 'alert');
+            else banner.removeAttribute('role');
+        }
     }
     showConsultLangBanner();
 
@@ -1060,7 +1088,7 @@
         var nuSpecialtySection = document.getElementById('marcarSpecialtySection');
         if (nuTypeLabel) nuTypeLabel.hidden = true;
         if (nuTypePills) nuTypePills.hidden = true;
-        if (nuSpecialtySection) nuSpecialtySection.hidden = false;
+        if (nuSpecialtySection) setA11yHidden(nuSpecialtySection, false);
         applyNutricaoGoalCopy();
         var nuBack = document.getElementById('marcarBookingBack');
         if (nuBack) {
@@ -1110,7 +1138,7 @@
         var psiSpecialtySection = document.getElementById('marcarSpecialtySection');
         if (psiTypeLabel) psiTypeLabel.hidden = true;
         if (psiTypePills) psiTypePills.hidden = true;
-        if (psiSpecialtySection) psiSpecialtySection.hidden = false;
+        if (psiSpecialtySection) setA11yHidden(psiSpecialtySection, false);
     }
 
     if (isCasalFamily(tipo)) {
@@ -2317,7 +2345,7 @@
         var copy = shellCopy();
 
         document.querySelectorAll('#marcarBookingFlow .marcar-step').forEach(function (el) {
-            el.hidden = el.getAttribute('data-step') !== current;
+            setA11yHidden(el, el.getAttribute('data-step') !== current);
         });
 
         var eyebrow = document.getElementById('marcarEyebrow');

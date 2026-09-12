@@ -67,7 +67,7 @@ Fichas de condição que existem neste site (não há neste prefixo, por exemplo
 
 ### Quanto custa uma consulta de nutrição?
 
-No particular, a faixa mais citada em Portugal é 40 € a 70 € por sessão — não é uma tabela oficial. Na Lon Clinic a consulta inicial é **115 €** e o acompanhamento **75 €/mês** (duas consultas; slot de 30 minutos). Não é 45 €.
+No particular, a faixa mais citada em Portugal é 40 € a 70 € por sessão — não é uma tabela oficial. Na Lon Clinic a consulta inicial é **115 €** e o acompanhamento **75 €/mês** (duas consultas; slot de 30 minutos). A consulta avulsa de nutricionista é 45 € (30 min); o programa é 115 € no mês 1 e 75 €/mês.
 
 ### A consulta de nutrição online funciona tão bem como a presencial?
 

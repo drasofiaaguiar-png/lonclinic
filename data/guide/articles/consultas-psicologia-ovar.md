@@ -1,13 +1,13 @@
 <aside class="guide-keyfacts">
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
-<li>Em Ovar pode marcar psicologia online na Lon Clinic: <strong>60 €</strong> ou <strong>54 €/semana</strong>, <strong>45 minutos</strong>.</li>
+<li>Em Ovar pode marcar psicologia online na Lon Clinic: <strong>60 €</strong> ou <strong>56 €/semana</strong>, <strong>50 minutos</strong>.</li>
 <li>Ovar está na <strong>ULS da Região de Aveiro</strong>. Estudantes da UA usam o <a href="https://www.ua.pt/pt/sas/apoio-psicologico">apoio psicológico dos SAS</a>.</li>
 <li>Mapa: <a href="/blog/psicologia-online-portugal-por-distrito">psicologia online por distrito</a> · <a href="/blog/consultas-psicologia-aveiro">Aveiro</a> · <a href="/blog/consultas-psicologia-porto">Porto</a>.</li>
 </ul>
 </aside>
 
-Ovar está na **ULS da Região de Aveiro**. Quem está inscrito na **Universidade de Aveiro** usa o [apoio psicológico dos SAS da UA](https://www.ua.pt/pt/sas/apoio-psicologico) — em regra para inscritos, geralmente gratuito; confirme na UA. O particular de Ovar é mais curto do que o de Aveiro. A Lon Clinic é **online** em Ovar: **60 €** ou **54 €/semana**, **45 minutos**.
+Ovar está na **ULS da Região de Aveiro**. Quem está inscrito na **Universidade de Aveiro** usa o [apoio psicológico dos SAS da UA](https://www.ua.pt/pt/sas/apoio-psicologico) — em regra para inscritos, geralmente gratuito; confirme na UA. O particular de Ovar é mais curto do que o de Aveiro. A Lon Clinic é **online** em Ovar: **60 €** ou **56 €/semana**, **50 minutos**.
 
 Números nacionais: [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal). Gratuitas: [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal). Formato: [psicologia online vs presencial](/blog/psicologia-online-vs-presencial). Universidades: [apoio psicológico nas universidades](/blog/apoio-psicologico-universidades-portugal).
 
@@ -24,8 +24,8 @@ Não publicamos tempos de espera. Em crise: **SNS 24 (808 24 24 24)** ou **112**
 Ovar está na linha de Aveiro, não no campus. A videochamada evita a deslocação à UA ou ao particular de Aveiro quando o que precisa é regularidade semanal.
 
 - Sem viagem. Link no browser (Doxy.me); sem instalar aplicações.
-- **60 €** avulsa ou **54 €/semana** — o preço **não muda** com a cidade.
-- **45 minutos**, semanal, incluindo a primeira.
+- **60 €** avulsa ou **56 €/semana** — o preço **não muda** com a cidade.
+- **50 minutos**, semanal, incluindo a primeira.
 - Especialidade, não código postal: [ansiedade](/ansiedade-no-trabalho), [burnout](/psicologia-burnout), [terapia de casal](/terapia-de-casal), [ataques de pânico](/ataques-de-panico), [gestão de stress](/gestao-de-stress). Só queixas que o site publica.
 - **Podes mudar de psicólogo sempre que quiseres, sem justificação, e recomeçar do zero.**
 - Inscritos na **OPP**; recibo ADSE/seguro — [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal).
@@ -52,7 +52,7 @@ No particular de Ovar, no SNS via ULS da Região de Aveiro, no SAS da Universida
 
 ### Quanto custa uma consulta de psicologia em Ovar?
 
-No particular a faixa habitual é a nacional (cerca de 40 € a 70 €). Na Lon Clinic: 60 € ou 54 €/semana, 45 minutos.
+No particular a faixa habitual é a nacional (cerca de 40 € a 70 €). Na Lon Clinic: 60 € ou 56 €/semana, 50 minutos.
 
 ### Há psicologia online em Ovar?
 
@@ -64,7 +64,7 @@ O SAS da UA destina-se a estudantes inscritos, não aos residentes de Ovar em ge
 
 ### Como marcar consulta de psicologia em Ovar?
 
-Escolha o psicólogo na página de saúde mental da Lon Clinic (/saudemental) ou faça a triagem. Sessão de 45 minutos a partir de Ovar.
+Escolha o psicólogo na página de saúde mental da Lon Clinic (/saudemental) ou faça a triagem. sessão de 50 minutos a partir de Ovar.
 
 ### A ADSE cobre psicologia em Ovar?
 
@@ -79,4 +79,4 @@ Este artigo tem fins informativos e não substitui uma avaliação clínica ou p
 - [UA — Apoio psicológico (SAS)](https://www.ua.pt/pt/sas/apoio-psicologico)
 - ULS da Região de Aveiro
 - [OPP — Directório](https://www.ordemdospsicologos.pt/pt/membros)
-- Preçário da Lon Clinic, 2026 — 45 min; 60 € / 54 €/semana
+- Preçário da Lon Clinic, 2026 — 50 min; 60 € / 56 €/semana

@@ -31,7 +31,7 @@ Em Portugal, a **receita eletrónica** emitida por médico com cédula é o cana
 
 - Clínica geral: **39 €**, 30 min
 - Renovação de receita: **19 €**
-- Psicologia: **60 €** avulsa / **54 €/semana**, 45 min — [psicologia online vs presencial](/blog/psicologia-online-vs-presencial)
+- Psicologia: **60 €** avulsa / **56 €/semana**, 50 min — [psicologia online vs presencial](/blog/psicologia-online-vs-presencial)
 - Nutrição: **115 €** / **75 €/mês** — [consulta de nutrição](/blog/consulta-nutricao-preco-como-funciona)
 - Viajante: **39 €**, 20 min (1 pessoa)
 

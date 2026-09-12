@@ -18,7 +18,7 @@
     <link rel="canonical" href="https://www.lonclinic.com/marcar">
     <meta name="theme-color" content="#4A7C6F">
     <link rel="stylesheet" href="/landing.css">
-    <link rel="stylesheet" href="/marcar.css?v=20260911h">
+    <link rel="stylesheet" href="/marcar.css?v=20260912a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
@@ -34,10 +34,11 @@
                 <span class="lon-logo-name">LON Clinic</span>
             </a>
             <nav class="lon-nav-links" aria-label="Navegação principal">
-                <a href="/#inicio">Início</a>
-                <a href="/#platform">Plataforma</a>
-                <a href="/#servicos">Serviços</a>
-                <a href="/#contacto">Contacto</a>
+                <a href="/#servicos">Consultas</a>
+                <a href="/consulta">Especialidades</a>
+                <a href="/burnout">Burnout</a>
+                <a href="/magazine">Magazine</a>
+                <a href="/#equipa">A Equipa</a>
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
@@ -48,15 +49,16 @@
             </div>
         </div>
         <div class="lon-mobile-menu" id="lonMobileMenu">
-            <a href="/#inicio">Início</a>
-            <a href="/#platform">Plataforma</a>
-            <a href="/#servicos">Serviços</a>
-            <a href="/#contacto">Contacto</a>
+            <a href="/#servicos">Consultas</a>
+            <a href="/consulta">Especialidades</a>
+            <a href="/burnout">Burnout</a>
+            <a href="/magazine">Magazine</a>
+            <a href="/#equipa">A Equipa</a>
             <a href="/patient-portal">Login</a>
         </div>
     </header>
 
-    <div class="lon-container marcar-main" id="marcarError" style="display:none;padding-top:calc(var(--lon-nav-h) + 48px);">
+    <div class="lon-container marcar-main" id="marcarError" hidden inert style="padding-top:calc(var(--lon-nav-h) + 48px);">
         <p class="marcar-error">Tipo de consulta não encontrado. Escolha um serviço na <a href="/#servicos">página inicial</a>.</p>
     </div>
 
@@ -108,12 +110,12 @@
                 <select id="marcarTypeSelect" aria-labelledby="marcarTypeLabel"></select>
             </div>
 
-            <aside class="lon-lang-banner" id="marcarLangBanner" hidden role="alert">
+            <aside class="lon-lang-banner" id="marcarLangBanner" hidden inert>
                 <p class="lon-lang-banner-en">Consultations strictly provided in English and Portuguese</p>
             </aside>
 
             <!-- Psicologia / nutrição: o "tipo de consulta" passa a ser a área (substitui as pills genéricas) -->
-            <div class="marcar-plan-section marcar-specialty-section" id="marcarSpecialtySection" hidden>
+            <div class="marcar-plan-section marcar-specialty-section" id="marcarSpecialtySection" hidden inert>
                 <p class="marcar-plan-kicker" id="marcarSpecialtyKicker">Apoio</p>
                 <h2 class="marcar-plan-heading" id="marcarSpecialtyHeading">Que tipo de apoio procura?</h2>
                 <p class="marcar-sub" id="marcarSpecialtySub">O calendário mostra só psicólogos que tratam esta área.</p>
@@ -221,11 +223,23 @@
             var hasPathTipo = /^\/marcar\/[^/?#]+/.test(window.location.pathname);
             var need = document.getElementById('marcarNeedChoice');
             var flow = document.getElementById('marcarBookingFlow');
+            function hideForA11y(el, hidden) {
+                if (!el) return;
+                el.hidden = !!hidden;
+                if (hidden) {
+                    el.setAttribute('aria-hidden', 'true');
+                    el.setAttribute('inert', '');
+                } else {
+                    el.removeAttribute('aria-hidden');
+                    el.removeAttribute('inert');
+                }
+            }
             if (!hasQueryTipo && !hasPathTipo) {
-                if (need) need.hidden = false;
-                if (flow) flow.hidden = true;
-            } else if (need) {
-                need.hidden = true;
+                hideForA11y(need, false);
+                hideForA11y(flow, true);
+            } else {
+                hideForA11y(need, true);
+                hideForA11y(flow, false);
             }
             if (/\/marcar\/psicologia(-mensal)?(\/|$)/.test(window.location.pathname)) {
                 var wrap = document.getElementById('marcarScheduleWrap');
@@ -234,9 +248,9 @@
         })();
     </script>
     <script src="/lon-analytics.js?v=20260906e" defer></script>
-    <script src="/i18n.js?v=20260911p" defer></script>
+    <script src="/i18n.js?v=20260912a" defer></script>
     <script src="/lon-nav.js" defer></script>
-    <script src="/lon-slots.js?v=20260911p" defer></script>
-    <script src="/marcar.js?v=20260911p" defer></script>
+    <script src="/lon-slots.js?v=20260912a" defer></script>
+    <script src="/marcar.js?v=20260912a" defer></script>
 </body>
 </html>

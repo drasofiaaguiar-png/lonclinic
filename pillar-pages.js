@@ -245,7 +245,11 @@ function layoutPage(opts) {
                 <span class="lon-logo-name">LON Clinic</span>
             </a>
             <nav class="lon-nav-links" aria-label="Navegação principal">
-                ${pillarNav(canonicalPath)}
+                <a href="/#servicos">Consultas</a>
+                <a href="/consulta">Especialidades</a>
+                <a href="/burnout">Burnout</a>
+                <a href="/magazine">Magazine</a>
+                <a href="/#equipa">A Equipa</a>
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
@@ -256,10 +260,11 @@ function layoutPage(opts) {
             </div>
         </div>
         <div class="lon-mobile-menu" id="lonMobileMenu">
-            <a href="/medico-online-portugal">Médico online</a>
-            <a href="/psicologo-online-portugal">Psicólogo online</a>
-            <a href="/burnout-sintomas-causas-tratamento">Burnout</a>
-            <a href="/nutricao">Nutrição</a>
+            <a href="/#servicos">Consultas</a>
+            <a href="/consulta">Especialidades</a>
+            <a href="/burnout">Burnout</a>
+            <a href="/magazine">Magazine</a>
+            <a href="/#equipa">A Equipa</a>
             <a href="/patient-portal">Login</a>
             <a href="${book}" data-cta="book">${bookLabel}</a>
         </div>

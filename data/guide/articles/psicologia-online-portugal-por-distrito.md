@@ -3,7 +3,7 @@
 <ul>
 <li>A psicologia online da Lon Clinic está disponível em <strong>qualquer distrito de Portugal</strong> com internet: a sessão é no browser, à <strong>hora de Lisboa</strong>, em português.</li>
 <li>Guias locais: <a href="/blog/consultas-psicologia-porto">Porto</a>, <a href="/blog/consultas-psicologia-lisboa">Lisboa</a>, <a href="/blog/consultas-psicologia-aveiro">Aveiro</a>. No estrangeiro (incluindo quem pesquisa Luanda): a queixa existente é <a href="/psicologo-emigrantes">psicólogo para emigrantes</a> — não há um produto «Luanda» à parte.</li>
-<li>Preço fixo: <strong>60 €</strong> avulsa ou <strong>54 €/semana</strong>; <strong>45 minutos</strong> semanais. Podes mudar de psicólogo e recomeçar do zero, sem justificação.</li>
+<li>Preço fixo: <strong>60 €</strong> avulsa ou <strong>56 €/semana</strong>; <strong>50 minutos</strong> semanais. Podes mudar de psicólogo e recomeçar do zero, sem justificação.</li>
 </ul>
 </aside>
 
@@ -35,7 +35,7 @@ Sim. Braga, Coimbra, Setúbal, Faro, Castelo Branco ou Viana do Castelo usam o m
 ## Como marcar uma consulta de psicologia online em Portugal?
 
 1. Escolhe o psicólogo em [saúde mental](/saudemental) **por especialidade que a clínica publica** — [ansiedade](/ansiedade-no-trabalho), [burnout](/psicologia-burnout), [terapia de casal](/terapia-de-casal), [ataques de pânico](/ataques-de-panico), [gestão de stress](/gestao-de-stress), [ansiedade pós-parto](/ansiedade-pos-parto), [emigrantes](/psicologo-emigrantes) — **ou** faz a [triagem](/triagem).
-2. Marca. Sessão avulsa **60 €**; acompanhamento **54 €/semana** (mínimo um mês). **45 minutos**, semanal no acompanhamento — incluindo a primeira.
+2. Marca. Sessão avulsa **60 €**; acompanhamento **56 €/semana** (mínimo um mês). **50 minutos**, semanal no acompanhamento — incluindo a primeira.
 3. Recebe o link **Doxy.me** por email: abre no browser, **sem instalar aplicações**, de qualquer distrito com internet.
 4. Não há lista de espera por cidade. Se o encaixe falhar: **podes mudar de psicólogo sempre que quiseres, sem precisares de dar qualquer justificação, e recomeçar do zero.**
 5. Psicólogos **inscritos na OPP**; recibo para ADSE e seguro — [ADSE e seguros](/blog/adse-seguros-psicologia-portugal).
@@ -64,7 +64,7 @@ Sim. A Lon Clinic atende por videochamada em todos os distritos, na Madeira e no
 
 ### Como marcar uma consulta de psicologia online em Portugal?
 
-Escolha o psicólogo na página de saúde mental da Lon Clinic (/saudemental) ou faça a [triagem](/triagem), marque (60 € ou 54 €/semana) e receba o link Doxy.me no browser. A sessão dura 45 minutos.
+Escolha o psicólogo na página de saúde mental da Lon Clinic (/saudemental) ou faça a [triagem](/triagem), marque (60 € ou 56 €/semana) e receba o link Doxy.me no browser. A sessão dura 50 minutos.
 
 ### A psicologia online funciona no Porto, em Lisboa e em Aveiro?
 
@@ -76,7 +76,7 @@ Madeira e Açores: a mesma videochamada, hora de Lisboa. No estrangeiro — incl
 
 ### Quanto custa a psicologia online na Lon Clinic?
 
-Sessão avulsa 60 €. Acompanhamento 54 €/semana. Duração 45 minutos, semanal. Podes mudar de psicólogo e recomeçar do zero, sem justificação.
+Sessão avulsa 60 €. Acompanhamento 56 €/semana. Duração 50 minutos, semanal. Podes mudar de psicólogo e recomeçar do zero, sem justificação.
 
 ---
 
@@ -86,4 +86,4 @@ Este artigo tem fins informativos e não substitui uma avaliação clínica ou p
 
 - [OPP — Directório](https://www.ordemdospsicologos.pt/pt/membros)
 - Página de queixa [psicólogo para emigrantes](/psicologo-emigrantes) — horário de Lisboa; acompanhamento, não urgência no estrangeiro
-- Preçário da Lon Clinic, 2026 — 45 min; 60 € / 54 €/semana
+- Preçário da Lon Clinic, 2026 — 50 min; 60 € / 56 €/semana

@@ -857,6 +857,13 @@
     }
 }
 
+#marcarNeedChoice[hidden],
+#marcarError[hidden],
+#marcarBookingFlow[hidden],
+.lon-lang-banner[hidden] {
+    display: none !important;
+}
+
 .marcar-step[hidden],
 #marcarContinue[hidden] {
     display: none !important;
@@ -986,7 +993,7 @@
 }
 
 #marcarBookingFlow #marcarSpecialtySection[hidden] {
-    display: none;
+    display: none !important;
 }
 
 .marcar-pill {

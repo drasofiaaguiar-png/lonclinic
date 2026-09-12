@@ -8489,13 +8489,11 @@ app.get('/magazine/', (req, res) => {
 });
 
 app.get('/blog', (req, res) => {
-    try {
-        const html = guide.renderBlogIndex(seo.SITE_ORIGIN);
-        sendHtmlNoCacheString(res, html);
-    } catch (err) {
-        console.error('❌ Guide index error:', err.message || err);
-        res.status(500).type('html').send('Error loading Guide.');
-    }
+    res.redirect(301, '/magazine');
+});
+
+app.get('/blog/', (req, res) => {
+    res.redirect(301, '/magazine');
 });
 
 app.get('/blog/:slug', (req, res) => {
@@ -8516,11 +8514,11 @@ app.get('/blog/:slug', (req, res) => {
 });
 
 app.get('/guide', (req, res) => {
-    res.redirect(301, '/blog');
+    res.redirect(301, '/magazine');
 });
 
 app.get('/guide/', (req, res) => {
-    res.redirect(301, '/blog');
+    res.redirect(301, '/magazine');
 });
 
 app.get('/guide/:slug', (req, res) => {

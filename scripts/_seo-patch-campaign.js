@@ -74,8 +74,8 @@ Não publicamos tempos de espera. Em crise: **SNS 24 (808 24 24 24)** ou **112**
 ${c.why}
 
 - Sem viagem. Link no browser (Doxy.me); sem instalar aplicações.
-- **60 €** avulsa ou **54 €/semana** — o preço **não muda** com a cidade.
-- **45 minutos**, semanal, incluindo a primeira.
+- **60 €** avulsa ou **56 €/semana** — o preço **não muda** com a cidade.
+- **50 minutos**, semanal, incluindo a primeira.
 - Especialidade, não código postal: [ansiedade](/ansiedade-no-trabalho), [burnout](/psicologia-burnout), [terapia de casal](/terapia-de-casal), [ataques de pânico](/ataques-de-panico), [gestão de stress](/gestao-de-stress). Só queixas que o site publica.
 - **Podes mudar de psicólogo sempre que quiseres, sem justificação, e recomeçar do zero.**
 - Inscritos na **OPP**; recibo ADSE/seguro — ${N.adse}.${extraBullet}
@@ -120,7 +120,7 @@ Este artigo tem fins informativos e não substitui uma avaliação clínica ou p
 
 ${fontes}
 - [OPP — Directório](https://www.ordemdospsicologos.pt/pt/membros)
-- Preçário da Lon Clinic, 2026 — 45 min; 60 € / 54 €/semana
+- Preçário da Lon Clinic, 2026 — 50 min; 60 € / 56 €/semana
 `;
 }
 
@@ -128,21 +128,21 @@ const CITIES = [
     {
         slug: 'braga', name: 'Braga', prep: 'em',
         title: 'Consultas de Psicologia em Braga: Online, SNS e UMinho',
-        description: 'Psicologia em Braga: ULS de Braga, SASUM da UMinho (Braga e Guimarães) e online Lon a 60 € / 54 €/semana.',
-        key1: 'Em Braga pode marcar psicologia online na Lon Clinic sem consultório: videochamada a <strong>60 €</strong> (ou <strong>54 €/semana</strong>), <strong>45 minutos</strong> semanais.',
+        description: 'Psicologia em Braga: ULS de Braga, SASUM da UMinho (Braga e Guimarães) e online Lon a 60 € / 56 €/semana.',
+        key1: 'Em Braga pode marcar psicologia online na Lon Clinic sem consultório: videochamada a <strong>60 €</strong> (ou <strong>56 €/semana</strong>), <strong>50 minutos</strong> semanais.',
         key2: 'O SNS passa pela <strong>ULS de Braga</strong>. Estudantes da Universidade do Minho usam o <a href="https://www.sas.uminho.pt/saude-e-bem-estar/psicologia">SASUM — Psicologia</a> em Braga e Guimarães.',
-        lead: 'Em Braga, o particular de psicologia cai na faixa nacional (cerca de **40 € a 70 €**). O SNS passa pela **ULS de Braga**. Quem está inscrito na **Universidade do Minho** pede apoio no **SASUM — Psicologia**, com consultas em **Braga e Guimarães**. A Lon Clinic acrescenta a consulta **online** em Braga: sem deslocação ao centro, **60 €** ou **54 €/semana**, **45 minutos**.',
+        lead: 'Em Braga, o particular de psicologia cai na faixa nacional (cerca de **40 € a 70 €**). O SNS passa pela **ULS de Braga**. Quem está inscrito na **Universidade do Minho** pede apoio no **SASUM — Psicologia**, com consultas em **Braga e Guimarães**. A Lon Clinic acrescenta a consulta **online** em Braga: sem deslocação ao centro, **60 €** ou **56 €/semana**, **50 minutos**.',
         onde: 'Três caminhos: particular local; SNS via médico de família da **ULS de Braga**; e, para inscritos na UMinho, o [SASUM — Psicologia](https://www.sas.uminho.pt/saude-e-bem-estar/psicologia) (tabela no site: bolseiros vs não bolseiros). A Lon Clinic é a via online a partir de Braga.',
         why: 'Braga tem oferta privada, mas a especialidade (casal, burnout, pânico) nem sempre está no código postal. A videochamada a partir de Braga, Guimarães ou Famalicão usa a mesma agenda nacional.',
         uniH2: 'A Universidade do Minho tem apoio psicológico em Braga?',
         uniBody: 'Sim. O **SASUM — Psicologia** (Serviços de Ação Social da UMinho) presta consultas de psicologia clínica e da educação em **Braga e Guimarães**. Marcação na app ou no [portal SASUM](https://www.sas.uminho.pt/saude-e-bem-estar/psicologia). A tabela distingue bolseiros (gratuita) e não bolseiros (5 €) — confirme no site. Não inventamos tempos de espera.',
         adse: 'Sim. A ADSE comparticipa psicologia clínica em regime livre em Braga como no resto do país, com recibo. A cidade não altera o direito. Detalhe: [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal).',
         faqOnde: 'No particular de Braga, no SNS via médico de família da ULS de Braga, no SASUM da Universidade do Minho (estudantes inscritos) ou online na Lon Clinic, a partir de Braga.',
-        faqCusto: 'No particular de Braga a faixa habitual é a nacional: cerca de 40 € a 70 €. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, sessão de 45 minutos.',
+        faqCusto: 'No particular de Braga a faixa habitual é a nacional: cerca de 40 € a 70 €. Na Lon Clinic o preço é fixo: 60 € avulsa ou 56 €/semana, sessão de 50 minutos.',
         faqOnline: 'Sim. A Lon Clinic atende por videochamada a partir de Braga, no browser, sem instalar aplicações.',
         faqUniQ: 'A Universidade do Minho tem apoio psicológico em Braga?',
         faqUniA: 'Sim. O SASUM — Psicologia atende em Braga e Guimarães. Confirme preço e canal no portal SASUM. A Lon Clinic não é o gabinete da UMinho.',
-        faqMarcar: 'Escolha o psicólogo na página de saúde mental da Lon Clinic por especialidade, ou faça a triagem. Marca, recebe o link Doxy.me por email e faz a sessão de 45 minutos a partir de Braga.',
+        faqMarcar: 'Escolha o psicólogo na página de saúde mental da Lon Clinic por especialidade, ou faça a triagem. Marca, recebe o link Doxy.me por email e faz a sessão de 50 minutos a partir de Braga.',
         map: [{ slug: 'porto', label: 'Porto' }, { slug: 'guimaraes', label: 'Guimarães' }],
         near: [{ slug: 'guimaraes', label: 'Guimarães' }, { slug: 'porto', label: 'Porto' }, { slug: 'viana-do-castelo', label: 'Viana do Castelo' }],
         related: ['psicologia-online-portugal-por-distrito', 'consultas-psicologia-guimaraes', 'consultas-psicologia-porto', 'apoio-psicologico-universidades-portugal', 'consultas-psicologia-gratuitas-portugal', 'quanto-custa-consulta-psicologia-portugal', 'psicologia-online-vs-presencial', 'adse-seguros-psicologia-portugal'],
@@ -152,20 +152,20 @@ const CITIES = [
         slug: 'guimaraes', name: 'Guimarães', prep: 'em',
         title: 'Consultas de Psicologia em Guimarães: Online, SNS e UMinho',
         description: 'Psicologia em Guimarães: ULS do Alto Ave, SASUM também no campus de Guimarães, online Lon 60 €.',
-        key1: 'Em Guimarães pode marcar psicologia online na Lon Clinic: videochamada a <strong>60 €</strong> (ou <strong>54 €/semana</strong>), <strong>45 minutos</strong>.',
+        key1: 'Em Guimarães pode marcar psicologia online na Lon Clinic: videochamada a <strong>60 €</strong> (ou <strong>56 €/semana</strong>), <strong>50 minutos</strong>.',
         key2: 'O SNS está na <strong>ULS do Alto Ave</strong>. Os <a href="https://www.sas.uminho.pt/saude-e-bem-estar/psicologia">SASUM</a> da UMinho prestam psicologia também em Guimarães, não só em Braga.',
-        lead: 'Em Guimarães, o SNS de psicologia passa pela **ULS do Alto Ave**. Os **SASUM** da Universidade do Minho prestam consultas **também em Guimarães**, além de Braga. O particular local é mais curto do que no Porto. A Lon Clinic é a consulta **online** em Guimarães: **60 €** ou **54 €/semana**, **45 minutos**.',
+        lead: 'Em Guimarães, o SNS de psicologia passa pela **ULS do Alto Ave**. Os **SASUM** da Universidade do Minho prestam consultas **também em Guimarães**, além de Braga. O particular local é mais curto do que no Porto. A Lon Clinic é a consulta **online** em Guimarães: **60 €** ou **56 €/semana**, **50 minutos**.',
         onde: 'Particular de Guimarães; SNS via **ULS do Alto Ave**; estudantes da UMinho no [SASUM — Psicologia](https://www.sas.uminho.pt/saude-e-bem-estar/psicologia) (Braga e Guimarães). A Lon Clinic atende a partir de Guimarães sem deslocação a Braga.',
         why: 'Muita especialidade privada concentra-se em Braga ou no Porto. A videochamada a partir de Guimarães evita essa viagem sem inventar consultórios locais.',
         uniH2: 'A Universidade do Minho tem apoio psicológico em Guimarães?',
         uniBody: 'Sim. Os [SASUM](https://www.sas.uminho.pt/saude-e-bem-estar/psicologia) descrevem consultas em **Braga e Guimarães**. Confirme canal e tabela no portal. O guia de [Braga](/blog/consultas-psicologia-braga) detalha a mesma instituição.',
         adse: 'Sim. A ADSE comparticipa psicologia clínica em regime livre em Guimarães como no resto do país, com recibo.',
         faqOnde: 'No particular de Guimarães, no SNS via ULS do Alto Ave, no SASUM da UMinho (estudantes) ou online na Lon Clinic a partir de Guimarães.',
-        faqCusto: 'No particular a faixa habitual é a nacional (cerca de 40 € a 70 €). Na Lon Clinic: 60 € avulsa ou 54 €/semana, 45 minutos.',
+        faqCusto: 'No particular a faixa habitual é a nacional (cerca de 40 € a 70 €). Na Lon Clinic: 60 € avulsa ou 56 €/semana, 50 minutos.',
         faqOnline: 'Sim. A Lon Clinic atende por videochamada a partir de Guimarães, no browser.',
         faqUniQ: 'A Universidade do Minho tem apoio psicológico em Guimarães?',
         faqUniA: 'Sim. O SASUM presta psicologia também em Guimarães. Confirme no portal SASUM. A Lon Clinic não substitui o gabinete da UMinho.',
-        faqMarcar: 'Escolha o psicólogo na página de saúde mental da Lon Clinic ou faça a triagem. Recebe o link por email e faz a sessão de 45 minutos a partir de Guimarães.',
+        faqMarcar: 'Escolha o psicólogo na página de saúde mental da Lon Clinic ou faça a triagem. Recebe o link por email e faz a sessão de 50 minutos a partir de Guimarães.',
         map: [{ slug: 'braga', label: 'Braga' }, { slug: 'porto', label: 'Porto' }],
         near: [{ slug: 'braga', label: 'Braga' }, { slug: 'porto', label: 'Porto' }],
         related: ['psicologia-online-portugal-por-distrito', 'consultas-psicologia-braga', 'consultas-psicologia-porto', 'apoio-psicologico-universidades-portugal', 'consultas-psicologia-gratuitas-portugal', 'quanto-custa-consulta-psicologia-portugal', 'psicologia-online-vs-presencial', 'como-encontrar-um-psicologo'],
@@ -259,7 +259,7 @@ function patchManifest(man) {
     });
     set('consulta-nutricao-online-como-funciona', {
         title: 'Consulta de Nutrição Online: Como Funciona em 2026',
-        description: 'Videochamada no browser, 115 € no mês 1 e 75 €/mês, recibo ADSE. Sem app e sem 45 € inventados.'
+        description: 'Videochamada no browser. Consulta avulsa 45 € (30 min) ou programa 115 € no mês 1 e 75 €/mês, recibo ADSE. Sem app.'
     });
 
     // Psych hubs
@@ -299,7 +299,7 @@ function patchManifest(man) {
     ]);
     set('burnout-sinais-quando-procurar-ajuda', {
         title: 'Burnout: Sinais e Quando Procurar Ajuda',
-        description: 'Sinais de burnout (OMS/Maslach), teste CBI e psicologia Lon a 60 € / 54 €/semana. Liga ao centro /burnout.',
+        description: 'Sinais de burnout (OMS/Maslach), teste CBI e psicologia Lon a 60 € / 56 €/semana. Liga ao centro /burnout.',
         ctaKind: 'burnout',
         liveSlots: true,
         slotService: 'psicologia'
@@ -316,12 +316,12 @@ function patchManifest(man) {
     ]);
     set('psicologia-online-portugal-por-distrito', {
         title: 'Psicologia Online em Portugal por Distrito (2026)',
-        description: 'Psicologia online em qualquer distrito, Madeira e Açores, hora de Lisboa. 60 € / 54 €/semana. Guias Porto, Lisboa, Aveiro.'
+        description: 'Psicologia online em qualquer distrito, Madeira e Açores, hora de Lisboa. 60 € / 56 €/semana. Guias Porto, Lisboa, Aveiro.'
     });
     const distritoFaq = bySlug['psicologia-online-portugal-por-distrito'].faq;
     distritoFaq.forEach((item) => {
         if (item.q.includes('Como marcar')) {
-            item.a = 'Escolha o psicólogo na página de saúde mental da Lon Clinic (/saudemental) ou faça a triagem, marque (60 € ou 54 €/semana) e receba o link Doxy.me no browser. A sessão dura 45 minutos.';
+            item.a = 'Escolha o psicólogo na página de saúde mental da Lon Clinic (/saudemental) ou faça a triagem, marque (60 € ou 56 €/semana) e receba o link Doxy.me no browser. A sessão dura 50 minutos.';
         }
         if (item.q.includes('Madeira')) {
             item.a = 'Na Madeira e nos Açores a Lon Clinic usa a mesma videochamada, à hora de Lisboa. No estrangeiro — incluindo quem pesquisa Luanda — use a página de psicólogo para emigrantes. Não há um produto Lon Clinic em Luanda.';
@@ -346,7 +346,7 @@ function patchManifest(man) {
     ]);
     set('consultas-psicologia-aveiro', {
         title: 'Consultas de Psicologia em Aveiro: Online, SNS e UA',
-        description: 'Psicologia em Aveiro: SAS da Universidade de Aveiro, SNS e online Lon a 60 € / 54 €/semana.'
+        description: 'Psicologia em Aveiro: SAS da Universidade de Aveiro, SNS e online Lon a 60 € / 56 €/semana.'
     });
 
     // Older guides we touch
@@ -495,8 +495,8 @@ function patchHubMarkdown() {
 
     let dist = read('psicologia-online-portugal-por-distrito');
     dist = dist.replace(
-        'Escolhe psicólogo em /saudemental ou faz a triagem, marca (60 € ou 54 €/semana), recebe o link Doxy.me no browser. A sessão dura 45 minutos.',
-        'Escolha o psicólogo na página de saúde mental da Lon Clinic (/saudemental) ou faça a [triagem](/triagem), marque (60 € ou 54 €/semana) e receba o link Doxy.me no browser. A sessão dura 45 minutos.'
+        'Escolhe psicólogo em /saudemental ou faz a triagem, marca (60 € ou 56 €/semana), recebe o link Doxy.me no browser. A sessão dura 50 minutos.',
+        'Escolha o psicólogo na página de saúde mental da Lon Clinic (/saudemental) ou faça a [triagem](/triagem), marque (60 € ou 56 €/semana) e receba o link Doxy.me no browser. A sessão dura 50 minutos.'
     );
     write('psicologia-online-portugal-por-distrito', dist);
 

@@ -2,7 +2,7 @@
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
 <li>Em Lisboa o privado de psicologia costuma situar-se entre <strong>50 € e 80 €</strong>; o SNS passa pelo médico de família; estudantes da ULisboa usam os <strong>SASULisboa</strong> e gabinetes das faculdades (em regra gratuito ou a custo reduzido para inscritos).</li>
-<li>A Lon Clinic faz a consulta <strong>online a partir de Lisboa, AML e Vale do Tejo</strong>: sem trânsito, <strong>60 €</strong> ou <strong>54 €/semana</strong>, <strong>45 minutos</strong> semanais.</li>
+<li>A Lon Clinic faz a consulta <strong>online a partir de Lisboa, AML e Vale do Tejo</strong>: sem trânsito, <strong>60 €</strong> ou <strong>56 €/semana</strong>, <strong>50 minutos</strong> semanais.</li>
 <li>Outras cidades: <a href="/blog/psicologia-online-portugal-por-distrito">psicologia online por distrito</a> · <a href="/blog/consultas-psicologia-porto">Porto</a> · <a href="/blog/consultas-psicologia-aveiro">Aveiro</a>.</li>
 </ul>
 </aside>
@@ -18,7 +18,7 @@ Números nacionais: [quanto custa uma consulta de psicologia](/blog/quanto-custa
 | **Privado em Lisboa / AML** | Qualquer pessoa | 50 €–80 € é a faixa típica; horários e bairros variam |
 | **SNS** | Utentes com médico de família | Referenciação; espera frequente — sem número inventado |
 | **ULisboa (SASULisboa / faculdades)** | Estudantes **inscritos** | Apoio psicológico dos SAS e de alguns gabinetes; **geralmente gratuito ou a custo reduzido para inscritos** — confirme a sua unidade |
-| **Lon Clinic (online)** | Qualquer pessoa com internet | Videochamada a partir de Lisboa; 60 € / 54 €/semana; 45 min |
+| **Lon Clinic (online)** | Qualquer pessoa com internet | Videochamada a partir de Lisboa; 60 € / 56 €/semana; 50 min |
 
 Não publicamos tempos de espera dos ACES de Lisboa nem dos gabinetes da ULisboa.
 
@@ -29,8 +29,8 @@ Não publicamos tempos de espera dos ACES de Lisboa nem dos gabinetes da ULisboa
 O mesmo acompanhamento de [saúde mental](/saudemental), feito **a partir de Lisboa** — Alcântara, Almada, Cascais, Loures ou outro ponto da AML — **sem a viagem ao centro**.
 
 - **Sem trânsito e sem deslocação.** Link no browser (Doxy.me); sem instalar aplicações.
-- **Preço fixo: 60 €** avulsa, ou **54 €/semana** — contra os **50 €–80 €** habituais no privado de Lisboa.
-- **45 minutos, semanal**, incluindo a primeira: o ritmo terapêutico da clínica.
+- **Preço fixo: 60 €** avulsa, ou **56 €/semana** — contra os **50 €–80 €** habituais no privado de Lisboa.
+- **50 minutos, semanal**, incluindo a primeira: o ritmo terapêutico da clínica.
 - **Especialistas independentemente do bairro:** [ansiedade](/ansiedade-no-trabalho), [burnout](/psicologia-burnout), [terapia de casal](/terapia-de-casal), [ataques de pânico](/ataques-de-panico), [gestão de stress](/gestao-de-stress), [ansiedade pós-parto](/ansiedade-pos-parto).
 - **Podes mudar de psicólogo sempre que quiseres, sem precisares de dar qualquer justificação, e recomeçar do zero.**
 - Inscritos na **OPP**; recibo para ADSE e seguro — [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal).
@@ -55,7 +55,7 @@ No privado da AML, no SNS via médico de família, no apoio psicológico da ULis
 
 ### Quanto custa uma consulta de psicologia em Lisboa?
 
-No privado de Lisboa a faixa típica é 50 € a 80 €. Na Lon Clinic o preço é fixo: 60 € avulsa ou 54 €/semana, sessão de 45 minutos.
+No privado de Lisboa a faixa típica é 50 € a 80 €. Na Lon Clinic o preço é fixo: 60 € avulsa ou 56 €/semana, sessão de 50 minutos.
 
 ### Há psicologia online em Lisboa?
 
@@ -77,4 +77,4 @@ Este artigo tem fins informativos e não substitui uma avaliação clínica ou p
 
 - [SASULisboa — Universidade de Lisboa](https://www.sas.ulisboa.pt/)
 - [OPP — Directório](https://www.ordemdospsicologos.pt/pt/membros)
-- Preçário da Lon Clinic, 2026 — 45 min; 60 € / 54 €/semana
+- Preçário da Lon Clinic, 2026 — 50 min; 60 € / 56 €/semana

@@ -3,7 +3,7 @@
 <ul>
 <li>O <a href="/burnout">burnout</a> é um fenómeno ocupacional (OMS): <strong>exaustão</strong> que não recupera com descanso, <strong>cinismo</strong> ou distanciamento em relação ao trabalho, e <strong>ineficácia</strong> profissional — as três dimensões de Maslach.</li>
 <li>Procure ajuda quando estes sinais <strong>persistem</strong> e já custam sono, relações ou função — não só numa semana má. O <a href="/burnout/teste">teste CBI</a> objectiva o desgaste; não substitui uma consulta.</li>
-<li>Na Lon Clinic o acompanhamento psicológico é <strong>online</strong>, <strong>45 minutos</strong> semanais, <strong>60 €</strong> ou <strong>54 €/semana</strong>. Equipas: <a href="/clinica-anti-burnout#empresas">clínica anti-burnout para empresas</a>.</li>
+<li>Na Lon Clinic o acompanhamento psicológico é <strong>online</strong>, <strong>50 minutos</strong> semanais, <strong>60 €</strong> ou <strong>56 €/semana</strong>. Equipas: <a href="/clinica-anti-burnout#empresas">clínica anti-burnout para empresas</a>.</li>
 </ul>
 </aside>
 
@@ -33,7 +33,7 @@ Em crise ou risco imediato: **SNS 24 (808 24 24 24)** ou **112**.
 
 O psicólogo não «tira o trabalho». Ajuda a distinguir stress intenso de burnout instalado, a recuperar limites e sono, e a tratar a ansiedade ou o humor que muitas vezes vêm à mistura. A ficha [psicólogo para burnout](/psicologia-burnout) é o caminho de queixa; o [centro](/burnout) organiza o resto.
 
-Na Lon Clinic a sessão dura **45 minutos**, com regularidade **semanal**. Sessão avulsa **60 €**; acompanhamento **54 €/semana**. Podes mudar de psicólogo sempre que quiseres, sem justificação, e **recomeçar do zero**.
+Na Lon Clinic a sessão dura **50 minutos**, com regularidade **semanal**. Sessão avulsa **60 €**; acompanhamento **56 €/semana**. Podes mudar de psicólogo sempre que quiseres, sem justificação, e **recomeçar do zero**.
 
 ## E nas empresas?
 
@@ -76,4 +76,4 @@ Este artigo tem fins informativos e não substitui uma avaliação clínica ou p
 - [OMS — Burn-out an occupational phenomenon](https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon-international-classification-of-diseases)
 - Maslach, C., & Jackson, S. E. (1981), *The Measurement of Experienced Burnout*
 - [Mayo Clinic — Job burnout](https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/burnout/art-20046642)
-- Preçário da Lon Clinic, 2026 — 45 min; 60 € / 54 €/semana
+- Preçário da Lon Clinic, 2026 — 50 min; 60 € / 56 €/semana

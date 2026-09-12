@@ -117,7 +117,7 @@
         const q = refQuery(slug, o.ref);
         const withRef = (base) => (q ? `${base}${base.includes('?') ? '&' : '?'}${q}` : base);
 
-        if (role === 'psychFind') return withRef('/triagem');
+        if (role === 'psychFind') return withRef('/marcar/psicologia-mensal');
         if (role === 'psych') {
             if (/terapia-de-casal/.test(hay(o))) return withRef('/marcar/terapia-casal');
             return withRef('/marcar/psicologia-mensal');

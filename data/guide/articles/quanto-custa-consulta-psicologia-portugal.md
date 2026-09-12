@@ -2,14 +2,14 @@
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
 <li>No privado, em Portugal, a maior parte das consultas de psicologia situa-se entre <strong>40 € e 70 €</strong>; <strong>60 €</strong> é o valor mais frequente.</li>
-<li>Na Lon Clinic a consulta de psicologia online tem preço fixo: <strong>60 €</strong> por sessão avulsa, ou <strong>54 €/semana</strong> em acompanhamento (mínimo um mês).</li>
+<li>Na Lon Clinic a consulta de psicologia online tem preço fixo: <strong>60 €</strong> por sessão avulsa, ou <strong>56 €/semana</strong> em acompanhamento (mínimo um mês).</li>
 <li>Com <strong>ADSE</strong> ou alguns seguros de saúde, o custo efectivo desce por reembolso ou comparticipação — confirme sempre o seu plano.</li>
 </ul>
 </aside>
 
 Em Portugal, uma consulta de psicologia no sector privado custa, em média, **entre 40 € e 70 €**, sendo 60 € o valor mais comum. A primeira consulta é por vezes ligeiramente mais cara do que as seguintes. Quem tem ADSE ou determinados seguros de saúde pode reduzir este custo através de reembolso ou comparticipação. Há também [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal) — SNS, Cheque-Psicólogo (Cuida-te) e gabinetes universitários — com listas de espera e critérios próprios.
 
-Consultas online, como as da Lon Clinic, tendem a ter um preço fixo e mais previsível: **60 €** por sessão avulsa, o mesmo valor independentemente do psicólogo ou da especialidade. No acompanhamento semanal o preço desce para **54 €/semana**.
+Consultas online, como as da Lon Clinic, tendem a ter um preço fixo e mais previsível: **60 €** por sessão avulsa, o mesmo valor independentemente do psicólogo ou da especialidade. No acompanhamento semanal o preço desce para **56 €/semana**.
 
 ## Quanto custa em média uma consulta de psicologia?
 
@@ -46,7 +46,7 @@ Há duas formas de pagar:
 | Opção | Preço | O que inclui |
 |---|---|---|
 | Sessão avulsa | **60 €** | Uma videochamada, sem compromisso de continuidade |
-| Acompanhamento semanal | **54 €/semana** | Uma sessão de vídeo por semana + mensagens entre sessões (mínimo um mês; depois pode cancelar) |
+| Acompanhamento semanal | **56 €/semana** | Uma sessão de vídeo por semana + mensagens entre sessões (mínimo um mês; depois pode cancelar) |
 
 Pode [escolher o psicólogo pelo perfil](/saudemental) ou [preencher a triagem](/triagem) e deixar que a equipa recomende alguém. Marcar: [consulta de psicologia](/saudemental).
 
@@ -70,7 +70,7 @@ O valor mais frequentemente reportado por clínicas privadas em Portugal é de 6
 
 ### O preço é o mesmo para todas as especialidades?
 
-Não. A consulta individual custa 60 € (ou 54 €/semana em acompanhamento). A [terapia de casal](/terapia-de-casal) tem preço próprio: 75 € avulsa ou 65 €/semana cobrados mensalmente (260 €/mês).
+Não. A consulta individual custa 60 € (ou 56 €/semana em acompanhamento). A [terapia de casal](/terapia-de-casal) tem preço próprio: 75 € avulsa ou 65 €/semana cobrados mensalmente (260 €/mês).
 
 ### Quanto custa a primeira consulta?
 
@@ -82,7 +82,7 @@ Este artigo tem fins informativos e não substitui uma avaliação clínica ou p
 
 ## Fontes
 
-- Preçário da Lon Clinic (marcação de psicologia), 2026 — sessão avulsa 60 €; acompanhamento 54 €/semana
+- Preçário da Lon Clinic (marcação de psicologia), 2026 — sessão avulsa 60 €; acompanhamento 56 €/semana
 - [Ordem dos Psicólogos Portugueses — Directório](https://www.ordemdospsicologos.pt/pt/membros)
 - [ADSE](https://www.adse.pt/) — tabela de comparticipações em regime livre (consulte o valor em vigor)
 - Flückiger C, Del Re AC, Wampold BE, Horvath AO. "The Alliance in Adult Psychotherapy: A Meta-Analytic Synthesis." *Psychotherapy.* 2018;55(4):316-340. A aliança terapêutica prediz o resultado também em formato online.

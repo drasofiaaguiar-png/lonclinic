@@ -22,7 +22,7 @@ const OPP_URL = 'https://www.ordemdospsicologos.pt/';
 const CSS_V = '20260906c';
 
 const PRICE = {
-    avulsa: { amount: '60', label: 'Sessão avulsa', unit: 'sessão' },
+    avulsa: { amount: '60', label: 'Sessão avulsa', unit: '50 min' },
     weekly: { amount: '54', label: 'Acompanhamento semanal', unit: 'semana', note: 'mínimo 1 mês; depois podes cancelar' }
 };
 
@@ -268,9 +268,9 @@ function ctaBand(ref, label, opts) {
             <div class="lon-container qx-cta-inner">
                 <p class="qx-cta-kicker">Próximo passo</p>
                 <h2 class="qx-cta-title">Encontre o seu psicólogo</h2>
-                <p class="qx-cta-lead">A triagem leva poucos minutos. Depois escolhes o psicólogo ou deixas a equipa fazer o matching.</p>
+                <p class="qx-cta-lead">Marca a primeira sessão. Podes escolher o psicólogo ou deixar a equipa fazer o matching.</p>
                 <div class="qx-cta-actions">
-                    <a class="lon-btn lon-btn-primary" href="/triagem?ref=${r}" data-talk-cta="psychFind">${cta}</a>
+                    <a class="lon-btn lon-btn-primary" href="/marcar/psicologia-mensal?ref=${r}" data-talk-cta="psychFind">${cta}</a>
                     <a class="lon-btn lon-btn-soft" href="/saudemental?ref=${r}">Ver planos e preço</a>
                 </div>
             </div>
@@ -307,8 +307,8 @@ function bookingCardsHtml(ref, tone, opts) {
             title: 'Sessão de psicologia',
             price: `${price.avulsa.amount} € · ${price.avulsa.unit}`,
             note: 'Videochamada · psicólogo inscrito na Ordem dos Psicólogos Portugueses',
-            cta: 'Encontre o seu psicólogo',
-            href: `/triagem?ref=${r}`
+            cta: 'Marcar sessão avulsa',
+            href: `/marcar/psicologia?plan=avulsa&ref=${r}`
         },
         {
             chip: 'Semanal',
@@ -460,26 +460,29 @@ function layoutQueixaPage(opts) {
                 <span class="lon-logo-name">LON Clinic</span>
             </a>
             <nav class="lon-nav-links" aria-label="Navegação principal">
-                <a href="/consultas" aria-current="page">Consultas</a>
-                <a href="/saudemental">Psicologia</a>
+                <a href="/#servicos">Consultas</a>
+                <a href="/consulta">Especialidades</a>
                 <a href="/burnout">Burnout</a>
-                <a href="/triagem">Triagem</a>
+                <a href="/magazine">Magazine</a>
+                <a href="/#equipa">A Equipa</a>
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/triagem?ref=consultas-nav" class="lon-btn lon-btn-primary lon-btn-sm" data-talk-cta="psychFind">Encontre o seu psicólogo</a>
+                <a href="/marcar/psicologia-mensal?ref=consultas-nav" class="lon-btn lon-btn-primary lon-btn-sm" data-talk-cta="psychFind">Encontre o seu psicólogo</a>
                 <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
             </div>
         </div>
         <div class="lon-mobile-menu" id="lonMobileMenu">
+            <a href="/#servicos">Consultas</a>
+            <a href="/consulta">Especialidades</a>
+            <a href="/burnout">Burnout</a>
+            <a href="/magazine">Magazine</a>
+            <a href="/#equipa">A Equipa</a>
             <a href="/consultas">Consultas por queixa</a>
-            <a href="/saudemental">Psicologia online</a>
-            <a href="/burnout">Centro burnout</a>
-            <a href="/triagem">Triagem</a>
             <a href="/patient-portal">Login</a>
-            <a href="/triagem?ref=consultas-nav-mobile" data-talk-cta="psychFind">Encontre o seu psicólogo</a>
+            <a href="/marcar/psicologia-mensal?ref=consultas-nav-mobile" data-talk-cta="psychFind">Encontre o seu psicólogo</a>
         </div>
     </header>
     ${mainHtml}
@@ -524,11 +527,11 @@ function layoutQueixaPage(opts) {
     </footer>
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
     <script src="/lon-nav.js"></script>
-    <script src="/talk-cta.js?v=20260908a" defer></script>
-    <script src="/i18n.js?v=20260911p" defer></script>
+    <script src="/talk-cta.js?v=20260912a" defer></script>
+    <script src="/i18n.js?v=20260912a" defer></script>
     <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260911p" defer></script>
+    <script src="/lon-slots.js?v=20260912a" defer></script>
 </body>
 </html>`;
 }
@@ -611,7 +614,7 @@ function renderHub(origin) {
                 <p class="qx-lead">A Lon Clinic oferece consulta de psicologia online em português para queixas específicas — não uma página genérica de «psicólogo online». Cada página explica o que é, quando procurar ajuda, como funciona e quanto custa.</p>
                 <p class="qx-hero-meta">Psicólogos inscritos na Ordem dos Psicólogos Portugueses · 60 €/sessão ou 56 €/semana</p>
                 <div class="qx-hero-actions">
-                    <a class="lon-btn lon-btn-primary" href="/triagem?ref=consultas-hub">Começar a triagem</a>
+                    <a class="lon-btn lon-btn-primary" href="/marcar/psicologia-mensal?ref=consultas-hub">Começar a jornada</a>
                     <a class="lon-btn lon-btn-soft" href="/saudemental?ref=consultas-hub">Ver planos</a>
                 </div>
             </div>
@@ -634,7 +637,7 @@ function renderHub(origin) {
 
 function serviceJsonLd(o, meta, canonicalUrl, price) {
     const p = price || PRICE;
-    const bookUrl = meta.slug === 'terapia-de-casal' ? `${o}/marcar/terapia-casal` : `${o}/triagem`;
+    const bookUrl = meta.slug === 'terapia-de-casal' ? `${o}/marcar/terapia-casal` : `${o}/marcar/psicologia-mensal`;
     return {
         '@context': 'https://schema.org',
         '@type': 'Service',
@@ -757,11 +760,11 @@ function renderPage(origin, slug) {
                 <div class="qx-article-actions">
                     ${isBurnoutPsi
                         ? `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/burnout/teste?ref=${encodeURIComponent(ref)}">Fazer o teste CBI</a>
-                    <a class="lon-btn lon-btn-soft lon-btn-sm" href="/triagem?ref=${encodeURIComponent(ref)}" data-talk-cta="psychFind">Encontre o seu psicólogo</a>`
+                    <a class="lon-btn lon-btn-soft lon-btn-sm" href="/marcar/psicologia-mensal?ref=${encodeURIComponent(ref)}" data-talk-cta="psychFind">Encontre o seu psicólogo</a>`
                         : isCasal
                             ? `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/marcar/terapia-casal?ref=${encodeURIComponent(ref)}">Marcar terapia de casal</a>
                     <a class="lon-btn lon-btn-soft lon-btn-sm" href="#preco">Ver preço</a>`
-                        : `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/triagem?ref=${encodeURIComponent(ref)}" data-talk-cta="psychFind">Encontre o seu psicólogo</a>
+                        : `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/marcar/psicologia-mensal?ref=${encodeURIComponent(ref)}" data-talk-cta="psychFind">Encontre o seu psicólogo</a>
                     <a class="lon-btn lon-btn-soft lon-btn-sm" href="#preco">Ver preço</a>`}
                 </div>
             </header>

@@ -3,7 +3,7 @@
 <ul>
 <li>Para a generalidade dos casos de adultos, a evidência trata a terapia <strong>online</strong> como <strong>equivalente</strong> à presencial: o que mais prediz o resultado é a aliança terapêutica, também à distância.</li>
 <li>A presencial pode ser preferível em avaliação neuropsicológica, algumas situações com crianças, ou se o ecrã o impede de se sentir à vontade.</li>
-<li>Na Lon Clinic a consulta é por videochamada no <strong>browser</strong> (Doxy.me), <strong>45 minutos</strong>, com regularidade <strong>semanal</strong>. Sessão avulsa <strong>60 €</strong>; acompanhamento <strong>54 €/semana</strong>.</li>
+<li>Na Lon Clinic a consulta é por videochamada no <strong>browser</strong> (Doxy.me), <strong>50 minutos</strong>, com regularidade <strong>semanal</strong>. Sessão avulsa <strong>60 €</strong>; acompanhamento <strong>56 €/semana</strong>.</li>
 </ul>
 </aside>
 
@@ -24,7 +24,7 @@ Isto **não** significa que o online seja sempre igual para todos. Avaliação n
 | Onde | Casa, escritório, outro país no mesmo fuso (hora de Lisboa) | Consultório |
 | Deslocação | Nenhuma | Tempo e custo de viagem |
 | Preço em Portugal | Muitas vezes o mesmo da presencial | 40 €–70 € no privado, em média |
-| Lon Clinic | **60 €** avulsa / **54 €/semana**; **45 min** | A Lon Clinic é online |
+| Lon Clinic | **60 €** avulsa / **56 €/semana**; **50 min** | A Lon Clinic é online |
 
 [Terapia de casal](/terapia-de-casal) e acompanhamento individual usam o mesmo ecrã. Quem não pode pagar o privado tem as vias em [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal). Recibos para ADSE e seguros: [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal).
 
@@ -42,9 +42,9 @@ Se a dúvida é só «funciona no ecrã?», para a maior parte dos adultos a res
 ## Como funciona uma consulta de psicologia online na Lon Clinic?
 
 1. **Escolhe** o psicólogo pelo [perfil](/saudemental) **ou** preenche a [triagem](/triagem) e a equipa recomenda alguém.
-2. **Marca e paga** a sessão avulsa (**60 €**) ou o acompanhamento semanal (**54 €/semana**, mínimo um mês).
+2. **Marca e paga** a sessão avulsa (**60 €**) ou o acompanhamento semanal (**56 €/semana**, mínimo um mês).
 3. Recebe o **link da videochamada** por email. A sala é na plataforma **Doxy.me**, avaliada para RGPD: abre no **browser**, sem instalar aplicações.
-4. A sessão — **incluindo a primeira** — dura **45 minutos**, com regularidade **semanal** no acompanhamento. É o formato que a clínica usa para um objectivo terapêutico, não uma sessão de 50–60 minutos.
+4. A sessão — **incluindo a primeira** — dura **50 minutos**, com regularidade **semanal** no acompanhamento. É o formato que a clínica usa para um objectivo terapêutico, não uma sessão de 50–60 minutos.
 5. Continua com a mesma pessoa **ou muda**. Podes mudar de psicólogo sempre que quiseres, sem precisares de dar qualquer justificação — e **recomeçar do zero**.
 
 O passo a passo do que dizer na primeira sessão está em [primeira consulta de psicologia](/blog/primeira-consulta-psicologia-o-que-esperar).
@@ -61,11 +61,11 @@ Para a maior parte dos adultos, a evidência trata os dois formatos como equival
 
 ### Qual é a diferença entre psicologia online e presencial?
 
-O trabalho clínico é o mesmo; muda o sítio e a deslocação. Na Lon Clinic só há o formato online: 45 minutos, semanal no acompanhamento, 60 € ou 54 €/semana.
+O trabalho clínico é o mesmo; muda o sítio e a deslocação. Na Lon Clinic só há o formato online: 50 minutos, semanal no acompanhamento, 60 € ou 56 €/semana.
 
 ### Como funciona uma consulta de psicologia online?
 
-Escolhe psicólogo ou faz a triagem, marca, recebe um link Doxy.me no browser, e faz a sessão de 45 minutos. Sem instalar aplicações.
+Escolhe psicólogo ou faz a triagem, marca, recebe um link Doxy.me no browser, e faz a sessão de 50 minutos. Sem instalar aplicações.
 
 ### Posso mudar de psicólogo na Lon Clinic?
 
@@ -73,7 +73,7 @@ Sim. Podes mudar de psicólogo sempre que quiseres, sem precisares de dar qualqu
 
 ### Quanto custa a psicologia online na Lon Clinic?
 
-Sessão avulsa 60 €. Acompanhamento 54 €/semana, mínimo um mês. A sessão dura 45 minutos.
+Sessão avulsa 60 €. Acompanhamento 56 €/semana, mínimo um mês. A sessão dura 50 minutos.
 
 ---
 
@@ -83,4 +83,4 @@ Este artigo tem fins informativos e não substitui uma avaliação clínica ou p
 
 - Flückiger C, Del Re AC, Wampold BE, Horvath AO. "The Alliance in Adult Psychotherapy: A Meta-Analytic Synthesis." *Psychotherapy.* 2018;55(4):316-340
 - [OPP — Directório](https://www.ordemdospsicologos.pt/pt/membros)
-- Preçário e processo da Lon Clinic, 2026 — videochamada Doxy.me no browser; 45 min; 60 € / 54 €/semana
+- Preçário e processo da Lon Clinic, 2026 — videochamada Doxy.me no browser; 50 min; 60 € / 56 €/semana

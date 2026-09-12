@@ -14,7 +14,7 @@
         return null;
     }
     const urlLang = langFromUrl();
-    let currentLang = urlLang || localStorage.getItem(STORAGE_KEY) || 'en';
+    let currentLang = urlLang || localStorage.getItem(STORAGE_KEY) || 'pt';
     if (urlLang) {
         try { localStorage.setItem(STORAGE_KEY, urlLang); } catch (e) { /* ignore */ }
     }
@@ -47,15 +47,17 @@
 
     /* ── Shared lon-nav (travel, book, marcar, info — all use /#... links) ── */
     const LON_NAV = [
-        { s: '.lon-nav-links a[href="/#inicio"], .lon-mobile-menu a[href="/#inicio"]', en: 'Home', pt: 'Início', es: 'Inicio' },
-        { s: '.lon-nav-links a[href="/#platform"], .lon-mobile-menu a[href="/#platform"]', en: 'Platform', pt: 'Plataforma', es: 'Plataforma' },
-        { s: '.lon-nav-links a[href="/#servicos"], .lon-mobile-menu a[href="/#servicos"]', en: 'Services', pt: 'Serviços', es: 'Servicios' },
+        { s: '.lon-nav-links a[href="/#servicos"], .lon-mobile-menu a[href="/#servicos"], .lon-nav-links a[href="#servicos"], .lon-mobile-menu a[href="#servicos"]', en: 'Consultations', pt: 'Consultas', es: 'Consultas' },
+        { s: '.lon-nav-links a[href="/consulta"], .lon-mobile-menu a[href="/consulta"]', en: 'Specialties', pt: 'Especialidades', es: 'Especialidades' },
+        { s: '.lon-nav-links a[href="/burnout"], .lon-mobile-menu a[href="/burnout"]', en: 'Burnout', pt: 'Burnout', es: 'Burnout' },
         { s: '.lon-nav-links a[href="/magazine"], .lon-mobile-menu a[href="/magazine"]', en: 'Magazine', pt: 'Magazine', es: 'Magazine' },
-        { s: '.lon-nav-links a[href="/blog"], .lon-mobile-menu a[href="/blog"]', en: 'Guides', pt: 'Guias', es: 'Guías' },
-        { s: '.lon-nav-links a[href="/#contacto"], .lon-mobile-menu a[href="/#contacto"]', en: 'Contact', pt: 'Contacto', es: 'Contacto' },
+        { s: '.lon-nav-links a[href="/#equipa"], .lon-mobile-menu a[href="/#equipa"], .lon-nav-links a[href="#equipa"], .lon-mobile-menu a[href="#equipa"]', en: 'The team', pt: 'A Equipa', es: 'El equipo' },
         { s: '.lon-nav-actions > a.lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
         { s: '.lon-nav-actions > a.lon-btn-primary[href="/marcar/clinica-geral"]:not([data-talk-cta])', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
         { s: '.lon-mobile-menu a[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
+        { s: '.lon-skip', en: 'Skip to content', pt: 'Saltar para o conteúdo', es: 'Saltar al contenido' },
+        { s: '.lon-wa-float', en: '💬 Chat on WhatsApp', pt: '💬 Falar por WhatsApp', es: '💬 Hablar por WhatsApp' },
+        { s: '.lon-wa-float', a: 'aria-label', en: 'Chat on WhatsApp', pt: 'Falar por WhatsApp', es: 'Hablar por WhatsApp' },
     ];
 
     /* ── Shared footer / legal (longevity/travel pages) ── */
@@ -83,12 +85,11 @@
         { s: 'title', en: 'Your online health clinic | Lon Clinic', pt: 'A sua clínica de saúde, online | Lon Clinic', es: 'Su clínica de salud, online | Lon Clinic', special: 'title' },
 
         /* ── Nav ── */
-        { s: '.lon-nav-links a[href="#servicos"], .lon-mobile-menu a[href="#servicos"]', en: 'Consultations', pt: 'Consultas', es: 'Consultas' },
+        { s: '.lon-nav-links a[href="#servicos"], .lon-mobile-menu a[href="#servicos"], .lon-nav-links a[href="/#servicos"], .lon-mobile-menu a[href="/#servicos"]', en: 'Consultations', pt: 'Consultas', es: 'Consultas' },
         { s: '.lon-nav-links a[href="/consulta"], .lon-mobile-menu a[href="/consulta"]', en: 'Specialties', pt: 'Especialidades', es: 'Especialidades' },
         { s: '.lon-nav-links a[href="/burnout"], .lon-mobile-menu a[href="/burnout"]', en: 'Burnout', pt: 'Burnout', es: 'Burnout' },
-        { s: '.lon-nav-links a[href="#equipa"], .lon-mobile-menu a[href="#equipa"]', en: 'The team', pt: 'A Equipa', es: 'El equipo' },
-        { s: '.lon-nav-links a[href="#como-funciona"], .lon-mobile-menu a[href="#como-funciona"]', en: 'How it works', pt: 'Como funciona', es: 'Cómo funciona' },
-        { s: '.lon-nav-links a[href="#faq"], .lon-mobile-menu a[href="#faq"]', en: 'FAQ', pt: 'FAQ', es: 'FAQ' },
+        { s: '.lon-nav-links a[href="/magazine"], .lon-mobile-menu a[href="/magazine"]', en: 'Magazine', pt: 'Magazine', es: 'Magazine' },
+        { s: '.lon-nav-links a[href="#equipa"], .lon-mobile-menu a[href="#equipa"], .lon-nav-links a[href="/#equipa"], .lon-mobile-menu a[href="/#equipa"]', en: 'The team', pt: 'A Equipa', es: 'El equipo' },
         { s: '.lon-nav-actions .lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
         { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]:not([data-talk-cta])', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
 
@@ -286,7 +287,7 @@
         { s: '.lon-team-verify a:nth-child(1)', en: 'Profile and credentials', pt: 'Perfil e credenciais', es: 'Perfil y credenciales' },
         { s: '.lon-team-more', en: 'View profile and credentials →', pt: 'Ver perfil e credenciais →', es: 'Ver perfil y credenciales →' },
         { s: '.lon-team-actions .lon-btn-dark', en: 'Book consultation →', pt: 'Marcar consulta →', es: 'Reservar consulta →' },
-        { s: '.lon-team-all .lon-text-link', en: 'Meet the whole team →', pt: 'Conhecer toda a equipa →', es: 'Conocer a todo el equipo →' },
+        { s: '.lon-team-all .lon-text-link', en: 'View Dr Rita Aguiar’s profile →', pt: 'Ver perfil da Dra. Rita Aguiar →', es: 'Ver el perfil de la Dra. Rita Aguiar →' },
 
         /* ── After the consultation ── */
         { s: '.lon-after .lon-kicker', en: 'Care continues', pt: 'O cuidado continua', es: 'El cuidado continúa' },
@@ -424,7 +425,6 @@
         { s: '.lon-footer-col:nth-child(4) a[href="/info.html?page=acessibilidade"]', en: 'Accessibility', pt: 'Acessibilidade', es: 'Accesibilidad' },
         { s: '.lon-footer-col:nth-child(4) a[href="/info.html?page=reclamacoes"]', en: 'Complaints', pt: 'Reclamações', es: 'Reclamaciones' },
         { s: '.lon-footer-col:nth-child(4) a[href="/magazine"]', en: 'Magazine', pt: 'Magazine', es: 'Magazine' },
-        { s: '.lon-footer-col:nth-child(4) a[href="/blog"]', en: 'Guides', pt: 'Guias', es: 'Guías' },
         { s: '.lon-footer-legal-links a[href="/info.html?page=termos-condicoes"]', en: 'Terms and conditions', pt: 'Termos e Condições', es: 'Términos y condiciones' },
         { s: '.lon-footer-legal-links a[href="/info.html?page=politica-privacidade"]', en: 'Privacy policy', pt: 'Política de Privacidade', es: 'Política de privacidad' },
         { s: '.lon-footer-legal-links a[href="/info.html?page=cookies"]', en: 'Cookie policy', pt: 'Política de Cookies', es: 'Política de cookies' },
@@ -703,11 +703,12 @@
     const MARCAR = [
         { s: 'title', en: 'Book Appointment — Lon Clinic', pt: 'Marcar consulta — Lon Clinic', es: 'Reservar consulta — Lon Clinic', special: 'title' },
 
-        /* ── Nav (marcar uses /#... links) ── */
-        { s: '.lon-nav-links a[href="/#inicio"], .lon-mobile-menu a[href="/#inicio"]', en: 'Home', pt: 'Início', es: 'Inicio' },
-        { s: '.lon-nav-links a[href="/#platform"], .lon-mobile-menu a[href="/#platform"]', en: 'Platform', pt: 'Plataforma', es: 'Plataforma' },
-        { s: '.lon-nav-links a[href="/#servicos"], .lon-mobile-menu a[href="/#servicos"]', en: 'Services', pt: 'Serviços', es: 'Servicios' },
-        { s: '.lon-nav-links a[href="/#contacto"], .lon-mobile-menu a[href="/#contacto"]', en: 'Contact', pt: 'Contacto', es: 'Contacto' },
+        /* ── Nav ── */
+        { s: '.lon-nav-links a[href="/#servicos"], .lon-mobile-menu a[href="/#servicos"]', en: 'Consultations', pt: 'Consultas', es: 'Consultas' },
+        { s: '.lon-nav-links a[href="/consulta"], .lon-mobile-menu a[href="/consulta"]', en: 'Specialties', pt: 'Especialidades', es: 'Especialidades' },
+        { s: '.lon-nav-links a[href="/burnout"], .lon-mobile-menu a[href="/burnout"]', en: 'Burnout', pt: 'Burnout', es: 'Burnout' },
+        { s: '.lon-nav-links a[href="/magazine"], .lon-mobile-menu a[href="/magazine"]', en: 'Magazine', pt: 'Magazine', es: 'Magazine' },
+        { s: '.lon-nav-links a[href="/#equipa"], .lon-mobile-menu a[href="/#equipa"]', en: 'The team', pt: 'A Equipa', es: 'El equipo' },
         { s: '.lon-nav-actions .lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
         { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]:not([data-talk-cta])', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
 
@@ -730,6 +731,7 @@
         { s: '#marcarBookingBack', en: '\u2190 Back', pt: '\u2190 Voltar', es: '\u2190 Volver' },
         { s: '#marcarPageTitle', en: 'Let\'s book your appointment', pt: 'Vamos marcar a sua consulta', es: 'Vamos a reservar su consulta' },
         { s: '#marcarTypeLabel', en: 'Consultation type', pt: 'Tipo de consulta', es: 'Tipo de consulta' },
+        { s: '.lon-lang-banner-en', en: 'Consultations are provided in English and Portuguese', pt: 'As consultas são em inglês e português.', es: 'Las consultas se prestan en inglés y portugués.' },
 
         /* ── Service meta ── */
         { s: '.marcar-meta span:nth-child(2)', en: 'Video call', pt: 'Videochamada', es: 'Videollamada' },
@@ -765,10 +767,11 @@
     ═══════════════════════════ */
     const INFO = [
         { s: 'title', en: 'Information | Lon Clinic', pt: 'Informação | Lon Clinic', es: 'Información | Lon Clinic', special: 'title' },
-        { s: '.lon-nav-links a[href="/#inicio"], .lon-mobile-menu a[href="/#inicio"]', en: 'Home', pt: 'Início', es: 'Inicio' },
-        { s: '.lon-nav-links a[href="/#platform"], .lon-mobile-menu a[href="/#platform"]', en: 'Platform', pt: 'Plataforma', es: 'Plataforma' },
-        { s: '.lon-nav-links a[href="/#servicos"], .lon-mobile-menu a[href="/#servicos"]', en: 'Services', pt: 'Serviços', es: 'Servicios' },
-        { s: '.lon-nav-links a[href="/#contacto"], .lon-mobile-menu a[href="/#contacto"]', en: 'Contact', pt: 'Contacto', es: 'Contacto' },
+        { s: '.lon-nav-links a[href="/#servicos"], .lon-mobile-menu a[href="/#servicos"]', en: 'Consultations', pt: 'Consultas', es: 'Consultas' },
+        { s: '.lon-nav-links a[href="/consulta"], .lon-mobile-menu a[href="/consulta"]', en: 'Specialties', pt: 'Especialidades', es: 'Especialidades' },
+        { s: '.lon-nav-links a[href="/burnout"], .lon-mobile-menu a[href="/burnout"]', en: 'Burnout', pt: 'Burnout', es: 'Burnout' },
+        { s: '.lon-nav-links a[href="/magazine"], .lon-mobile-menu a[href="/magazine"]', en: 'Magazine', pt: 'Magazine', es: 'Magazine' },
+        { s: '.lon-nav-links a[href="/#equipa"], .lon-mobile-menu a[href="/#equipa"]', en: 'The team', pt: 'A Equipa', es: 'El equipo' },
         { s: '.lon-nav-actions .lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
         { s: '.lon-nav-actions .lon-btn-primary[href="/marcar/clinica-geral"]:not([data-talk-cta])', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
         { s: '.foot', en: 'If you need immediate assistance, contact <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> or +351 928 372 775.', pt: 'Se precisar de ajuda imediata, contacte <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> ou +351 928 372 775.', es: 'Si necesita asistencia inmediata, contacte <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> o +351 928 372 775.', h: true },
@@ -1113,8 +1116,8 @@
         const map = { index: INDEX, travel: TRAVEL, book: BOOK, marcar: MARCAR, info: INFO, content: CONTENT };
         const pageEntries = map[PAGE] || [];
         const commonEntries = (PAGE !== 'book') ? COMMON : [];
-        // LON_NAV only needed for longevity travel/book pages (lon-nav with /#... links)
-        const lonNav = (PAGE === 'travel' || PAGE === 'book') && document.getElementById('lonNav') ? LON_NAV : [];
+        // Shared public nav + skip/WhatsApp on every page that uses the Lon chrome.
+        const lonNav = document.querySelector('.lon-nav, .lon-skip, .lon-wa-float') ? LON_NAV : [];
         return [...lonNav, ...pageEntries, ...commonEntries];
     }
 
@@ -1249,6 +1252,10 @@
 
         if (window.REVIEWS_LANG_CHANGED) {
             window.REVIEWS_LANG_CHANGED(lang);
+        }
+
+        if (window.SLOTS_LANG_CHANGED) {
+            window.SLOTS_LANG_CHANGED(lang);
         }
 
         document.querySelectorAll('.lon-testimonial-translation-note').forEach(function (el) {

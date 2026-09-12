@@ -974,7 +974,7 @@ function expandLonSlotsTokens(html, meta) {
 
 function seriesHubStripHtml(series, lang) {
     if (!series) return '';
-    const hubHref = series.slug ? `/blog/${encodeURIComponent(series.slug)}` : '/blog';
+    const hubHref = series.slug ? `/blog/${encodeURIComponent(series.slug)}` : '/magazine';
     const packs = {
         pt: {
             kicker: 'Série',
@@ -1002,7 +1002,7 @@ function seriesNavHtml(slug, series, articles) {
     if (!series) return '';
     const pos = seriesPosition(slug, series);
     if (pos.index < 0 || !pos.total) return '';
-    const hubHref = series.slug ? `/blog/${encodeURIComponent(series.slug)}` : '/blog';
+    const hubHref = series.slug ? `/blog/${encodeURIComponent(series.slug)}` : '/magazine';
     const prev = pos.prev ? seriesPartMeta(series, pos.prev, articles) : null;
     const next = pos.next ? seriesPartMeta(series, pos.next, articles) : null;
     const prevLink = prev
@@ -1207,7 +1207,6 @@ function layoutGuidePage(opts) {
     const canonicalUrl = canonicalHref(canonicalPath);
     const safeTitle = escapeHtml(title);
     const safeDesc = escapeHtml(description);
-    const guideNavAttrs = navCurrent === 'guide' ? ' href="/blog" aria-current="page"' : ' href="/blog"';
     const graph = Array.isArray(jsonLd) ? jsonLd : (jsonLd ? [jsonLd] : []);
     if (!robots || !/^noindex/i.test(robots)) {
         graph.push(organizationJsonLd(origin));
@@ -1263,10 +1262,11 @@ function layoutGuidePage(opts) {
                 <span class="lon-logo-name">LON Clinic</span>
             </a>
             <nav class="lon-nav-links" aria-label="Navegação principal">
-                <a href="/#inicio">Início</a>
-                <a href="/magazine">Magazine</a>
-                <a${guideNavAttrs}>Guias</a>
-                <a href="/#contacto">Contacto</a>
+                <a href="/#servicos">Consultas</a>
+                <a href="/consulta">Especialidades</a>
+                <a href="/burnout">Burnout</a>
+                <a href="/magazine"${navCurrent === 'guide' ? ' aria-current="page"' : ''}>Magazine</a>
+                <a href="/#equipa">A Equipa</a>
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
@@ -1277,10 +1277,11 @@ function layoutGuidePage(opts) {
             </div>
         </div>
         <div class="lon-mobile-menu" id="lonMobileMenu">
-            <a href="/#inicio">Início</a>
-            <a href="/magazine">Magazine</a>
-            <a href="/blog">Guias</a>
-            <a href="/#contacto">Contacto</a>
+            <a href="/#servicos">Consultas</a>
+            <a href="/consulta">Especialidades</a>
+            <a href="/burnout">Burnout</a>
+            <a href="/magazine"${navCurrent === 'guide' ? ' aria-current="page"' : ''}>Magazine</a>
+            <a href="/#equipa">A Equipa</a>
             <a href="/patient-portal">Login</a>
         </div>
     </header>
@@ -1319,7 +1320,6 @@ function layoutGuidePage(opts) {
                     <a href="/faq">Perguntas frequentes</a>
                     <a href="/magazine">Magazine</a>
                     <a href="/magazine/indice">Índice</a>
-                    <a href="/blog">Guias</a>
                     <a href="/info.html?page=como-funciona">Como funciona</a>
                     <a href="/info.html?page=seguranca-dados">Segurança dos dados</a>
                     <a href="/info.html?page=acessibilidade">Acessibilidade</a>
@@ -1344,9 +1344,9 @@ function layoutGuidePage(opts) {
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-nav.js"></script>
     <script src="/talk-cta.js?v=20260908a" defer></script>
-    <script src="/i18n.js?v=20260911p" defer></script>
+    <script src="/i18n.js?v=20260912a" defer></script>
     <script src="/lon-analytics.js?v=20260906h" defer></script>
-    <script src="/lon-slots.js?v=20260911n" defer></script>
+    <script src="/lon-slots.js?v=20260912a" defer></script>
 </body>
 </html>`;
 }
@@ -1373,15 +1373,12 @@ function renderBlogIndex(origin) {
         return `
                 <article class="lon-service-card is-visible guide-card" role="listitem">
                     <div class="guide-card-inner">
-                        <a class="guide-card-media" href="${href}" aria-label="${t}" style="background-image:url('${img}')">
-                            <span class="guide-card-free">FREE</span>
-                        </a>
+                        <a class="guide-card-media" href="${href}" aria-label="${escapeHtml(listingTitle(a.title || slug))}" style="background-image:url('${img}')"></a>
                         <div class="guide-card-content">
                             <p class="guide-card-date">${date}</p>
                             ${isVerifiedArticle(a) ? `<p class="eeat-byline guide-card-byline"><a rel="author" href="${authors.authorPath(authors.getAuthor(a.author))}">Médica · ${authors.getAuthor(a.author).yearsPractice} anos de prática clínica</a></p>` : (readingTimeHtml(a, 'pt') ? `<p class="guide-card-byline">${readingTimeHtml(a, 'pt')}</p>` : '')}
-                            <h2 class="guide-card-title"><a href="${href}">${t}</a></h2>
+                            <h2 class="guide-card-title">${escapeHtml(listingTitle(a.title || slug))}</h2>
                             <p class="guide-card-desc">${d}</p>
-                            <a class="lon-btn lon-btn-soft lon-btn-sm" href="${href}">Ler artigo</a>
                         </div>
                     </div>
                 </article>`;
@@ -1711,7 +1708,7 @@ function renderNotFound(origin) {
         <div class="lon-container guide-not-found">
             <h1>Página não encontrada</h1>
             <p>O artigo que procura não existe ou foi movido.</p>
-            <p><a class="lon-btn lon-btn-primary" href="/blog">Ver o Guide</a></p>
+            <p><a class="lon-btn lon-btn-primary" href="/magazine">Ver a Magazine</a></p>
         </div>
     </main>`;
     return layoutGuidePage({
@@ -1895,13 +1892,49 @@ function magazineTopicsNavHtml(opts) {
 <a href="/magazine/indice"${indiceCur}>Índice</a></nav>`;
 }
 
+function listingTitle(raw) {
+    const keep = /^(Lon|Clinic|Portugal|Lisboa|Porto|Aveiro|Coimbra|Braga|Faro|Algarve|Madeira|Açores|Setúbal|Guimarães|Funchal|Cascais|Sintra|Gaia|Leiria|Évora|Viseu|Beja|Santarém|ADSE|SNS|CUF|OPP|ERS|PDF|FAQ|WhatsApp|Burnout|Ozempic|Wegovy|PHQ-9|GAD-7|ISI|ESS|TFEQ|YFAS|aGLP-1|GLP-1|TDAH|TOC|UA|UP)$/i;
+    const s = String(raw || '').trim();
+    if (!s) return s;
+    const parts = s.split(/(\s+)/);
+    let seenWord = false;
+    return parts.map((part) => {
+        if (!part || /^\s+$/.test(part)) return part;
+        const coreMatch = part.match(/[A-Za-zÀ-ÿ0-9][A-Za-zÀ-ÿ0-9'’.-]*/);
+        const core = coreMatch ? coreMatch[0] : '';
+        const isFirst = !seenWord;
+        if (core) seenWord = true;
+        if (!core || keep.test(core) || /^[A-Z0-9]{2,}(?:-\d+)?$/.test(core)) return part;
+        if (/[a-zà-ÿ].*[A-ZÁÀÂÃÉÊÍÓÔÕÚ]/.test(core)) return part;
+        if (isFirst) return part;
+        const lowered = core.charAt(0).toLowerCase() + core.slice(1);
+        return part.replace(core, lowered);
+    }).join('');
+}
+    const s = String(raw || '').trim();
+    if (!s) return s;
+    const parts = s.split(/(\s+)/);
+    let seenWord = false;
+    return parts.map((part) => {
+        if (!part || /^\s+$/.test(part)) return part;
+        const coreMatch = part.match(/[A-Za-zÀ-ÿ0-9][A-Za-zÀ-ÿ0-9'’.-]*/);
+        const core = coreMatch ? coreMatch[0] : '';
+        const isFirst = !seenWord;
+        if (core) seenWord = true;
+        if (!core || keep.test(core) || /^[A-Z0-9]{2,}(?:-\d+)?$/.test(core)) return part;
+        if (isFirst) return part;
+        const lowered = core.charAt(0).toLowerCase() + core.slice(1);
+        return part.replace(core, lowered);
+    }).join('');
+}
+
 function magIndexListHtml(articles) {
     const items = (Array.isArray(articles) ? articles : []).map((a) => {
         const iso = String((a.dateModified || a.datePublished) || '').slice(0, 10);
         const date = /^\d{4}-\d{2}-\d{2}$/.test(iso)
             ? `<time datetime="${escapeHtml(iso)}">${escapeHtml(magDate(iso, 'pt'))}</time>`
             : '';
-        return `<li><a href="${escapeHtml(magHref(a))}">${escapeHtml(a.title || a.slug)}</a>${date}</li>`;
+        return `<li><a href="${escapeHtml(magHref(a))}">${escapeHtml(listingTitle(a.title || a.slug))}</a>${date}</li>`;
     }).join('');
     return `<ol class="mag-index-list">${items}</ol>`;
 }
@@ -1936,7 +1969,7 @@ function magCardHtml(article, opts) {
     return `<a class="mag-card${extraClass}" href="${magHref(article)}">
                 <span class="mag-photo" style="background-image:url('${magImage(article)}')"></span>
                 ${kicker}
-                <h3${titleClass}>${escapeHtml(article.title)}</h3>
+                <h3${titleClass}>${escapeHtml(listingTitle(article.title))}</h3>
                 ${magCardBylineHtml(article)}
                 ${excerpt}
             </a>`;
@@ -1956,7 +1989,7 @@ function magFeaturedHtml(article) {
                 <span class="mag-cover-copy">
                     <span class="mag-cover-flag">Capa</span>
                     <span class="mag-cover-kicker">${escapeHtml(magThemeLabel(article))}</span>
-                    <h2>${escapeHtml(article.title)}</h2>
+                    <h2>${escapeHtml(listingTitle(article.title))}</h2>
                     ${excerpt}
                     ${magCardBylineHtml(article)}
                     <span class="mag-cover-read">Ler a reportagem</span>
@@ -2780,10 +2813,11 @@ function magLonNavHtml(opts) {
                 <span class="lon-logo-name">LON Clinic</span>
             </a>
             <nav class="lon-nav-links" aria-label="Navegação principal">
-                <a href="/#inicio">Início</a>
+                <a href="/#servicos">Consultas</a>
+                <a href="/consulta">Especialidades</a>
+                <a href="/burnout">Burnout</a>
                 <a href="/magazine"${magCurrent}>Magazine</a>
-                <a href="/blog">Guias</a>
-                <a href="/#contacto">Contacto</a>
+                <a href="/#equipa">A Equipa</a>
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
@@ -2794,10 +2828,11 @@ function magLonNavHtml(opts) {
             </div>
         </div>
         <div class="lon-mobile-menu" id="lonMobileMenu">
-            <a href="/#inicio">Início</a>
+            <a href="/#servicos">Consultas</a>
+            <a href="/consulta">Especialidades</a>
+            <a href="/burnout">Burnout</a>
             <a href="/magazine"${magCurrent}>Magazine</a>
-            <a href="/blog">Guias</a>
-            <a href="/#contacto">Contacto</a>
+            <a href="/#equipa">A Equipa</a>
             <a href="/patient-portal">Login</a>
             <a href="${talkHref}" data-talk-cta="${talkRole}">${talkLabel}</a>
         </div>
@@ -2817,7 +2852,6 @@ function magLonFootHtml() {
                     <h4>Magazine</h4>
                     <a href="/magazine">Lon Magazine</a>
                     <a href="/magazine/indice">Índice</a>
-                    <a href="/blog">Guias</a>
                     <a href="/burnout">Burnout</a>
                     <a href="/saudemental">Psicologia</a>
                 </div>
@@ -2922,10 +2956,10 @@ function layoutMagazinePage(opts) {
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-nav.js"></script>
     <script src="/talk-cta.js?v=20260908a" defer></script>
-    <script src="/i18n.js?v=20260911p" defer></script>
+    <script src="/i18n.js?v=20260912a" defer></script>
     <script src="/lon-analytics.js?v=20260906h" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
-    <script src="/lon-slots.js?v=20260911n" defer></script>
+    <script src="/lon-slots.js?v=20260912a" defer></script>
     <script src="/guide-actions.js?v=20260905a" defer></script>
 </body>
 </html>`;
@@ -3197,7 +3231,7 @@ function homeEditorialStripHtml() {
         const desc = a.description ? `<p>${escapeHtml(a.description)}</p>` : '';
         return `<a class="dr-magazine-home-card" href="${escapeHtml(href)}">
                     <span class="dr-magazine-home-kicker">${escapeHtml(kicker)}</span>
-                    <h3>${escapeHtml(a.title || a.slug)}</h3>
+                    <h3>${escapeHtml(listingTitle(a.title || a.slug))}</h3>
                     ${desc}
                 </a>`;
     }).join('');
@@ -3211,7 +3245,6 @@ function homeEditorialStripHtml() {
             <p class="dr-magazine-home__lead">Seis guias em destaque. O resto está na revista, por tema.</p>
             <p class="dr-magazine-home-actions">
                 <a class="dr-magazine-home__more" href="/magazine">Magazine</a>
-                <a class="dr-magazine-home__more" href="/blog">Todos os guias</a>
                 <a class="dr-magazine-home__more" href="/magazine/indice">Índice</a>
             </p>
             <div class="dr-magazine-home-grid">${cards}</div>

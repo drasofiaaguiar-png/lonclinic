@@ -374,6 +374,10 @@ async function initBookingFlow() {
         return String(tmpl).replace('{price}', priceText);
     }
 
+    function slotServiceLocked() {
+        return !!(state.date && state.time);
+    }
+
     function fillCheckoutTypeSelect() {
         const select = document.getElementById('checkoutServiceType');
         if (!select) return;
@@ -386,6 +390,21 @@ async function initBookingFlow() {
             return `<option value="${key}">${label}</option>`;
         }).join('');
         select.value = selected;
+        const locked = slotServiceLocked();
+        const typeName = document.getElementById('checkoutTypeName');
+        const typeLabel = document.getElementById('checkoutTypeLabel');
+        const typeRow = select.closest('.checkout-type-row');
+        select.hidden = locked;
+        select.disabled = locked;
+        if (typeLabel) typeLabel.hidden = locked;
+        if (typeRow) typeRow.classList.toggle('is-locked', locked);
+        if (typeName) {
+            const fromSelect = select.options[select.selectedIndex]
+                ? select.options[select.selectedIndex].textContent
+                : '';
+            typeName.textContent = state.serviceLabel || fromSelect || '';
+            typeName.hidden = !locked || !typeName.textContent;
+        }
     }
 
     function saveCheckoutDraft() {
@@ -452,6 +471,7 @@ async function initBookingFlow() {
         if (!select || select.dataset.bound === '1') return;
         select.dataset.bound = '1';
         select.addEventListener('change', () => {
+            if (slotServiceLocked()) return;
             const next = select.value;
             if (!next || next === dropdownValueFor(state.service)) return;
             saveCheckoutDraft();

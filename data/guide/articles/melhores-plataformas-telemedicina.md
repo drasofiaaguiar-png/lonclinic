@@ -31,7 +31,7 @@ O que o site já afirma, e só isso:
 
 - Registo **ERS n.º 45475**
 - Médicos com cédula da Ordem dos Médicos
-- Clínica geral **39 €** / 30 min; renovação de receita **19 €**; viajante **39 €** / 20 min (1 pessoa); psicologia **60 €** / **54 €/semana** / 45 min; nutrição **115 €** / **75 €/mês**
+- Clínica geral **39 €** / 30 min; renovação de receita **19 €**; viajante **39 €** / 20 min (1 pessoa); psicologia **60 €** / **56 €/semana** / 50 min; nutrição **115 €** / **75 €/mês**
 - Receita eletrónica, quando indicada, por **SMS ou email**, válida em farmácia em Portugal
 - Videochamada no **browser**, sem app
 - Após a consulta, há **registo clínico** (avaliação, plano, documentos emitidos) — pode pedi-lo a info@lonclinic.com; **não** afirmamos um «prontuário único» partilhado com o SNS

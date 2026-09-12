@@ -27,7 +27,7 @@ Se ainda está a decidir se é «grave o suficiente»: essa dúvida, por si, já
 
 **Agora**, se o padrão já dura semanas e está a custar função — ou mais cedo, se quiser perceber o que se passa antes de piorar. Não é preciso esperar por um diagnóstico, por uma baixa ou por «não aguentar mais».
 
-A consulta na Lon Clinic é **online**, **45 minutos**, com regularidade **semanal** no acompanhamento. Sessão avulsa **60 €**; acompanhamento **54 €/semana**. Podes mudar de psicólogo sempre que quiseres, sem justificação, e recomeçar do zero.
+A consulta na Lon Clinic é **online**, **50 minutos**, com regularidade **semanal** no acompanhamento. Sessão avulsa **60 €**; acompanhamento **56 €/semana**. Podes mudar de psicólogo sempre que quiseres, sem justificação, e recomeçar do zero.
 
 {{cta}}
 
@@ -84,4 +84,4 @@ Este artigo tem fins informativos e não substitui uma avaliação clínica ou p
 
 - [SNS 24](https://www.sns24.gov.pt/) — 808 24 24 24
 - [OPP — Directório](https://www.ordemdospsicologos.pt/pt/membros)
-- Preçário da Lon Clinic, 2026 — 45 min semanais; 60 € / 54 €/semana
+- Preçário da Lon Clinic, 2026 — 50 min semanais; 60 € / 56 €/semana

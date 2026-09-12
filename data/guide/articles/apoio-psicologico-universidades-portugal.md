@@ -3,7 +3,7 @@
 <ul>
 <li>A generalidade das universidades públicas em Portugal tem apoio psicológico para <strong>estudantes inscritos</strong>, gerido pelos <strong>SAS</strong> ou por um gabinete da faculdade — <strong>geralmente gratuito ou a custo reduzido</strong>. Confirme o serviço da sua instituição.</li>
 <li>Não inventamos tempos de espera: a procura sobe em época de exames. Em crise: <strong>SNS 24 (808 24 24 24)</strong> ou <strong>112</strong>.</li>
-<li>Quem já não é estudante: <a href="/blog/consultas-psicologia-gratuitas-portugal">SNS e Cheque Cuida-te</a>, <a href="/blog/adse-seguros-psicologia-portugal">ADSE</a>, ou psicologia online Lon a <strong>60 €</strong> / <strong>54 €/semana</strong> (45 min semanais).</li>
+<li>Quem já não é estudante: <a href="/blog/consultas-psicologia-gratuitas-portugal">SNS e Cheque Cuida-te</a>, <a href="/blog/adse-seguros-psicologia-portugal">ADSE</a>, ou psicologia online Lon a <strong>60 €</strong> / <strong>56 €/semana</strong> (50 min semanais).</li>
 </ul>
 </aside>
 
@@ -39,7 +39,7 @@ Quase sempre: **estar inscrito no ano lectivo** + pedido no canal do SAS ou do g
 
 Em regra **acaba com a inscrição**. O passo seguinte é o **SNS** (médico de família), o [Cheque Cuida-te — Psicologia](/blog/consultas-psicologia-gratuitas-portugal) se ainda tiver 12–35 anos, a [ADSE ou o seguro](/blog/adse-seguros-psicologia-portugal), ou o particular.
 
-Na Lon Clinic a consulta é **online**, **45 minutos**, **semanal** no acompanhamento: **60 €** avulsa ou **54 €/semana**. Psicólogos inscritos na OPP. Podes mudar de psicólogo sempre que quiseres, sem justificação, e **recomeçar do zero**. [Como encontrar um psicólogo](/blog/como-encontrar-um-psicologo).
+Na Lon Clinic a consulta é **online**, **50 minutos**, **semanal** no acompanhamento: **60 €** avulsa ou **56 €/semana**. Psicólogos inscritos na OPP. Podes mudar de psicólogo sempre que quiseres, sem justificação, e **recomeçar do zero**. [Como encontrar um psicólogo](/blog/como-encontrar-um-psicologo).
 
 ## As universidades também têm consultas de nutrição gratuitas?
 
@@ -61,7 +61,7 @@ Pelo canal oficial do SAS ou do gabinete (portal, app ou email), com inscrição
 
 ### O que acontece ao apoio psicológico quando termino o curso?
 
-Costuma terminar com a matrícula. Depois: SNS, Cheque Cuida-te se ainda couber na idade, ADSE/seguro, ou particular / Lon Clinic (60 € / 54 €/semana).
+Costuma terminar com a matrícula. Depois: SNS, Cheque Cuida-te se ainda couber na idade, ADSE/seguro, ou particular / Lon Clinic (60 € / 56 €/semana).
 
 ### As universidades também têm consultas de nutrição gratuitas?
 
@@ -75,4 +75,4 @@ Este artigo tem fins informativos e não substitui uma avaliação clínica indi
 
 - Páginas oficiais SAS / gabinetes ligadas na tabela (U.Porto, ULisboa, UA, UMinho, UC, UBI, UAlg, UÉvora, UTAD)
 - [gov.pt — Cheque Cuida-te — Psicologia](https://www.gov.pt/servicos/pedir-cheque-cuida-te-psicologia)
-- Preçário Lon Clinic — psicologia 60 € / 54 €/semana; 45 min; sem reivindicação de adesão ao Cheque-Psicólogo
+- Preçário Lon Clinic — psicologia 60 € / 56 €/semana; 50 min; sem reivindicação de adesão ao Cheque-Psicólogo

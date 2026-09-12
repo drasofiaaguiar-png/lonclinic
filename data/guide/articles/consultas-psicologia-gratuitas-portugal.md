@@ -68,7 +68,7 @@ Confirme horários no site de cada organização: algumas linhas são 24 horas, 
 
 Dada a pressão sobre o SNS, é comum haver um intervalo entre pedir ajuda e a primeira consulta gratuita. Nesse período — ou como complemento — muita gente usa consulta privada [online](/blog/telemedicina-em-casa), com preço visível e sem lista de espera pública.
 
-Na Lon Clinic a consulta de psicologia online custa **60 €** por sessão avulsa, ou **54 €/semana** em acompanhamento (mínimo um mês), com psicólogos inscritos na [OPP](https://www.ordemdospsicologos.pt/pt/membros). O detalhe está em [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal). Marcar: [consulta de psicologia](/saudemental) ou [triagem](/triagem).
+Na Lon Clinic a consulta de psicologia online custa **60 €** por sessão avulsa, ou **56 €/semana** em acompanhamento (mínimo um mês), com psicólogos inscritos na [OPP](https://www.ordemdospsicologos.pt/pt/membros). O detalhe está em [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal). Marcar: [consulta de psicologia](/saudemental) ou [triagem](/triagem).
 
 Se tem um **Cheque Cuida-te**, o caminho gratuito é um psicólogo da **lista oficial de aderentes** — confirme no gov.pt antes de agendar.
 
@@ -113,4 +113,4 @@ Este artigo tem fins informativos e não substitui uma avaliação clínica ou p
 - [Ordem dos Psicólogos Portugueses — Cheque Psicólogo](https://www.ordemdospsicologos.pt/pt/p/chequepsicologo)
 - [SNS 24](https://www.sns24.gov.pt/) — 808 24 24 24
 - [SOS Voz Amiga](https://www.sosvozamiga.org/) — 213 544 545
-- Preçário da Lon Clinic (marcação de psicologia), 2026 — sessão avulsa 60 €; acompanhamento 54 €/semana
+- Preçário da Lon Clinic (marcação de psicologia), 2026 — sessão avulsa 60 €; acompanhamento 56 €/semana

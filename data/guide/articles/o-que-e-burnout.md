@@ -3,7 +3,7 @@
 <ul>
 <li><strong>Burnout é uma síndrome de esgotamento físico, emocional e mental causada por stress crónico e prolongado, normalmente ligado ao contexto profissional.</strong> A OMS reconhece-o como «fenómeno ocupacional» — não uma doença em si — na <a href="https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon-international-classification-of-diseases">CID-11</a>.</li>
 <li>Três dimensões: <strong>exaustão</strong>, <strong>distanciamento mental / cinismo</strong> e <strong>redução da eficácia</strong>.</li>
-<li>O teste da Lon é o <a href="/burnout/teste">CBI (Copenhagen Burnout Inventory)</a>, não o MBI. Nenhum teste online substitui avaliação clínica. Psicologia: <strong>60 €</strong> / <strong>54 €/semana</strong>, <strong>45 min</strong> semanais.</li>
+<li>O teste da Lon é o <a href="/burnout/teste">CBI (Copenhagen Burnout Inventory)</a>, não o MBI. Nenhum teste online substitui avaliação clínica. Psicologia: <strong>60 €</strong> / <strong>56 €/semana</strong>, <strong>50 min</strong> semanais.</li>
 </ul>
 </aside>
 
@@ -51,7 +51,7 @@ O tratamento junta psicologia (limites, crenças de desempenho, sono), avaliaç�
 
 **Baixa médica:** possível após **avaliação médica** (não psicológica). O burnout em si, para a OMS, não é «doença»; o médico pode assentar o CIT noutros diagnósticos quando o quadro o justificar. **Não é aconselhamento jurídico.** Detalhe: [burnout e baixa médica em Portugal](/blog/burnout-e-baixa-medica-em-portugal). Teleconsulta médica: [consulta médica online](/blog/consulta-medica-online-vale-a-pena).
 
-Na Lon Clinic: **45 minutos** semanais, **60 €** ou **54 €/semana**. Queixa: [psicólogo para burnout](/psicologia-burnout). Empresas: [clínica anti-burnout](/clinica-anti-burnout#empresas).
+Na Lon Clinic: **50 minutos** semanais, **60 €** ou **56 €/semana**. Queixa: [psicólogo para burnout](/psicologia-burnout). Empresas: [clínica anti-burnout](/clinica-anti-burnout#empresas).
 
 {{cta}}
 
@@ -87,4 +87,4 @@ Este artigo tem fins informativos e não substitui uma avaliação clínica ou p
 
 - [OMS — Burn-out an occupational phenomenon](https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon-international-classification-of-diseases)
 - Freudenberger, 1970s; Farber / Montero-Marín (tipologia, não diagnóstico)
-- Preçário Lon Clinic — 60 € / 54 €/semana; 45 min
+- Preçário Lon Clinic — 60 € / 56 €/semana; 50 min

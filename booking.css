@@ -313,6 +313,17 @@ body {
     display: none;
 }
 
+.checkout-type-row.is-locked label,
+.checkout-type-row.is-locked select {
+    display: none !important;
+}
+
+.checkout-type-row.is-locked .checkout-type-name {
+    display: block;
+    margin: 0;
+    font-weight: 600;
+}
+
 .checkout-layout {
     width: 100%;
 }

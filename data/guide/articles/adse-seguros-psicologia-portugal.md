@@ -9,7 +9,7 @@
 
 Sim: a **ADSE** comparticipa consultas de psicologia clínica, tanto em **regime convencionado** (rede de prestadores) como em **regime livre** (escolhe o psicólogo, paga e pede reembolso). Desde **1 de maio de 2024** deixou de ser necessária **prescrição médica** para o reembolso dos actos de psicologia. Nos seguros de saúde privados a cobertura é **desigual**: uns planos incluem psicologia na rede ou em reembolso; outros excluem-na ou limitam-na.
 
-O preço da consulta na Lon Clinic — **60 €** a sessão avulsa, **54 €/semana** em acompanhamento — está em [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal). Vias sem custo de consulta: [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal).
+O preço da consulta na Lon Clinic — **60 €** a sessão avulsa, **56 €/semana** em acompanhamento — está em [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal). Vias sem custo de consulta: [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal).
 
 ## A ADSE comparticipa consultas de psicologia?
 
@@ -54,7 +54,7 @@ Em regra, **sim**, como **despesas de saúde**, se tiver fatura ou fatura-recibo
 
 ## E na Lon Clinic?
 
-A consulta de psicologia é **online**, **45 minutos**, com regularidade **semanal** no acompanhamento. Sessão avulsa **60 €**; acompanhamento **54 €/semana** (mínimo um mês). Podes [escolher o psicólogo](/saudemental) ou fazer a [triagem](/triagem). Podes mudar de psicólogo sempre que quiseres, sem precisares de dar qualquer justificação — e recomeçar do zero.
+A consulta de psicologia é **online**, **50 minutos**, com regularidade **semanal** no acompanhamento. Sessão avulsa **60 €**; acompanhamento **56 €/semana** (mínimo um mês). Podes [escolher o psicólogo](/saudemental) ou fazer a [triagem](/triagem). Podes mudar de psicólogo sempre que quiseres, sem precisares de dar qualquer justificação — e recomeçar do zero.
 
 É **regime livre** para a ADSE: o recibo serve para o pedido de reembolso e, em muitos planos, para o seguro — isso é do lado da apólice. [Como encontrar um psicólogo](/blog/como-encontrar-um-psicologo) cobre cédula e primeira sessão.
 
@@ -95,4 +95,4 @@ Este artigo tem fins informativos e não substitui uma avaliação clínica ou p
 - [OPP — Fim da prescrição, reembolso e número de consultas (maio 2024)](https://www.ordemdospsicologos.pt/pt/noticia/5135)
 - [OPP — Alteração nos reembolsos ADSE (dezembro 2024)](https://www.ordemdospsicologos.pt/pt/noticia/5419)
 - [Portal das Finanças](https://www.portaldasfinancas.gov.pt/)
-- Preçário da Lon Clinic, 2026 — 60 € / sessão avulsa; 54 €/semana
+- Preçário da Lon Clinic, 2026 — 60 € / sessão avulsa; 56 €/semana

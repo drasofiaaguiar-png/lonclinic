@@ -2,7 +2,7 @@
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
 <li>A psicologia online é uma opção eficaz para o tratamento do burnout, sobretudo com trabalho <strong>conversacional</strong> e abordagens <strong>cognitivo-comportamentais</strong> (limites, stress, crenças de desempenho) — em linha com a evidência de que, para a maior parte dos adultos, o formato online se trata como equivalente ao presencial (aliança terapêutica; ver também <a href="/blog/psicologia-online-vs-presencial">online vs presencial</a>).</li>
-<li>Na Lon Clinic a psicologia é <strong>100% online</strong>, <strong>45 minutos</strong> semanais — não 50. Preço <strong>60 €</strong> avulsa ou <strong>54 €/semana</strong>. Psicólogos inscritos na <a href="https://www.ordemdospsicologos.pt/pt/membros">OPP</a>. Pode <strong>mudar de psicólogo sem perguntas</strong> e recomeçar do zero.</li>
+<li>Na Lon Clinic a psicologia é <strong>100% online</strong>, <strong>50 minutos</strong> semanais. Preço <strong>60 €</strong> avulsa ou <strong>56 €/semana</strong>. Psicólogos inscritos na <a href="https://www.ordemdospsicologos.pt/pt/membros">OPP</a>. Pode <strong>mudar de psicólogo sem perguntas</strong> e recomeçar do zero.</li>
 <li>O psicólogo <strong>não passa baixa</strong> em Portugal. Baixa = médico. Teste Lon: <a href="/burnout/teste">CBI</a>, não MBI.</li>
 </ul>
 </aside>
@@ -21,9 +21,9 @@ O tratamento assenta em conversa estruturada, sessões regulares, padrões de pe
 
 ## Como funciona uma sessão na Lon Clinic?
 
-Marca, paga, recebe o link por email, abre no **browser**. **45 minutos**, em regra **semanal**. Avulsa **60 €**; acompanhamento **54 €/semana** (mínimo um mês). **Nunca 56 €. Nunca 50 minutos** neste serviço. Pode mudar de psicólogo quando quiser, sem justificação, e recomeçar do zero.
+Marca, paga, recebe o link por email, abre no **browser**. **50 minutos**, em regra **semanal**. Avulsa **60 €**; acompanhamento **56 €/semana** (mínimo um mês). Pode mudar de psicólogo quando quiser, sem justificação, e recomeçar do zero.
 
-O mercado privado em Portugal situa muitas sessões entre 45 e 60 minutos; o slot Lon é **45**.
+O mercado privado em Portugal situa muitas sessões entre 45 e 60 minutos; o slot Lon é **50**.
 
 ## Quando marcar?
 
@@ -45,7 +45,7 @@ Para a maior parte dos adultos, o trabalho é conversacional e o formato online 
 
 ### Quanto custa a psicologia para burnout na Lon Clinic?
 
-**60 €** a sessão avulsa ou **54 €/semana**. Duração **45 minutos**. Não 56 €.
+**60 €** a sessão avulsa ou **56 €/semana**. Duração **50 minutos**.
 
 ### O psicólogo da Lon Clinic passa baixa médica?
 
@@ -65,6 +65,6 @@ Este artigo tem fins informativos e não substitui uma avaliação psicológica 
 
 ## Fontes
 
-- Preçário Lon — 60 € / 54 €/semana; 45 min
+- Preçário Lon — 60 € / 56 €/semana; 50 min
 - [OPP](https://www.ordemdospsicologos.pt/pt/membros)
 - [OMS — burnout](https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon-international-classification-of-diseases)

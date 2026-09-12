@@ -2,7 +2,7 @@
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
 <li>Começar cedo a saúde preventiva, em adultos jovens, é sobretudo <strong>hábitos + conversa clínica</strong> — não um «check-up Lon» com análises incluídas. Esse produto <strong>não existe</strong>.</li>
-<li>Na Lon Clinic pode combinar o que já existe: [clínica geral](/marcar/clinica-geral) a <strong>39 €</strong>, [nutrição](/nutricao) a <strong>115 €</strong> / <strong>75 €/mês</strong>, [psicologia](/psicologia) a <strong>60 €</strong> / <strong>54 €/semana</strong>, e o [centro burnout](/burnout) se o trabalho já pesa.</li>
+<li>Na Lon Clinic pode combinar o que já existe: [clínica geral](/marcar/clinica-geral) a <strong>39 €</strong>, [nutrição](/nutricao) a <strong>115 €</strong> / <strong>75 €/mês</strong>, [psicologia](/psicologia) a <strong>60 €</strong> / <strong>56 €/semana</strong>, e o [centro burnout](/burnout) se o trabalho já pesa.</li>
 <li>As análises fazem-se num <strong>laboratório local</strong> (SNS, seguro ou particular). A interpretação pode ser em teleconsulta quando trouxer os resultados — a Lon <strong>não mede tensão no vídeo</strong>.</li>
 </ul>
 </aside>
@@ -38,7 +38,7 @@ Fichas de clínica geral que já existem, se a queixa for essa: [hipertensão](/
 
 - Clínica geral: **39 €**, 30 min
 - Nutrição: **115 €** (mês 1), depois **75 €/mês**
-- Psicologia: **60 €** ou **54 €/semana**, 45 min
+- Psicologia: **60 €** ou **56 €/semana**, 50 min
 
 {{cta}}
 

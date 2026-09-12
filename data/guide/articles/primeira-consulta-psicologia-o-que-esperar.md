@@ -2,8 +2,8 @@
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
 <li>Na primeira consulta o psicólogo quer <strong>conhecer-te e perceber o motivo da procura</strong> — não é preciso um discurso preparado nem saber explicar «correctamente» o que sentes.</li>
-<li>No mercado, a primeira sessão costuma durar <strong>45 a 60 minutos</strong>. Na Lon Clinic a sessão — <strong>incluindo a primeira</strong> — dura <strong>45 minutos</strong>, com regularidade <strong>semanal</strong>, porque é o que faz mais sentido para um objectivo terapêutico.</li>
-<li>Sessão avulsa <strong>60 €</strong>; acompanhamento <strong>54 €/semana</strong>. Se não for o encaixe: podes mudar de psicólogo sempre que quiseres, sem justificação, e <strong>recomeçar do zero</strong>.</li>
+<li>No mercado, a primeira sessão costuma durar <strong>45 a 60 minutos</strong>. Na Lon Clinic a sessão — <strong>incluindo a primeira</strong> — dura <strong>50 minutos</strong>, com regularidade <strong>semanal</strong>, porque é o que faz mais sentido para um objectivo terapêutico.</li>
+<li>Sessão avulsa <strong>60 €</strong>; acompanhamento <strong>56 €/semana</strong>. Se não for o encaixe: podes mudar de psicólogo sempre que quiseres, sem justificação, e <strong>recomeçar do zero</strong>.</li>
 </ul>
 </aside>
 
@@ -35,9 +35,9 @@ Podes levar notas. Podes dizer «não sei por onde começar». Podes perguntar a
 
 ## Quanto tempo dura a primeira consulta?
 
-Em muitas clínicas privadas portuguesas a primeira sessão dura **45 a 60 minutos** e pode ser um pouco mais longa do que as seguintes. **Na Lon Clinic a sessão — incluindo a primeira — dura 45 minutos**, com regularidade **semanal** no acompanhamento: é o formato que a clínica usa para um objectivo terapêutico, não uma sessão de 50–60 minutos.
+Em muitas clínicas privadas portuguesas a primeira sessão dura **45 a 60 minutos** e pode ser um pouco mais longa do que as seguintes. **Na Lon Clinic a sessão — incluindo a primeira — dura 50 minutos**, com regularidade **semanal** no acompanhamento: é o formato que a clínica usa para um objectivo terapêutico, não uma sessão de 50–60 minutos.
 
-O preço na Lon Clinic é o mesmo da sessão seguinte: **60 €** avulsa, ou **54 €/semana** em acompanhamento (mínimo um mês). Recibos para ADSE e seguros: [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal). Vias sem custo de consulta: [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal).
+O preço na Lon Clinic é o mesmo da sessão seguinte: **60 €** avulsa, ou **56 €/semana** em acompanhamento (mínimo um mês). Recibos para ADSE e seguros: [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal). Vias sem custo de consulta: [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal).
 
 ## E se não gostar do psicólogo?
 
@@ -61,7 +61,7 @@ O que está a doer agora, há quanto tempo, e o que gostarias que mudasse. Notas
 
 ### Quanto tempo dura a primeira consulta?
 
-No mercado, muitas primeiras sessões duram 45 a 60 minutos. Na Lon Clinic a sessão — incluindo a primeira — dura 45 minutos, com regularidade semanal no acompanhamento.
+No mercado, muitas primeiras sessões duram 45 a 60 minutos. Na Lon Clinic a sessão — incluindo a primeira — dura 50 minutos, com regularidade semanal no acompanhamento.
 
 ### O que acontece se não gostar do psicólogo?
 
@@ -69,7 +69,7 @@ Podes mudar de psicólogo sempre que quiseres, sem precisares de dar qualquer ju
 
 ### A primeira consulta é mais cara?
 
-Em algumas clínicas privadas, sim. Na Lon Clinic a primeira sessão custa o mesmo: 60 € avulsa, ou 54 €/semana em acompanhamento.
+Em algumas clínicas privadas, sim. Na Lon Clinic a primeira sessão custa o mesmo: 60 € avulsa, ou 56 €/semana em acompanhamento.
 
 ---
 
@@ -78,4 +78,4 @@ Este artigo tem fins informativos e não substitui uma avaliação clínica ou p
 ## Fontes
 
 - [OPP — O que devo ter em atenção se procurar ajuda de um psicólogo (PDF)](https://www.ordemdospsicologos.pt/ficheiros/documentos/o_que_devo_ter_em_atena_a_o_se_procurar_ajuda_de_um_psica_logo.pdf)
-- Preçário e processo da Lon Clinic, 2026 — 45 min (incluindo a primeira); 60 € / 54 €/semana
+- Preçário e processo da Lon Clinic, 2026 — 50 min (incluindo a primeira); 60 € / 56 €/semana

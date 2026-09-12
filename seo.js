@@ -386,7 +386,6 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
         ['/recrutamento/psicologia', today, 'monthly', '0.6'],
         ['/consultancy', today, 'monthly', '0.7'],
         ['/faq', today, 'monthly', '0.7'],
-        ['/blog', contentLastmod, 'weekly', '0.8'],
         ['/magazine', contentLastmod, 'weekly', '0.85'],
         ['/wellness', today, 'weekly', '0.75'],
         ['/equipa/rita-aguiar', today, 'monthly', '0.8'],
