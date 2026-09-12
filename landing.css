@@ -3520,14 +3520,22 @@ body.lon-landing #como-funciona .lon-how-step-num {
 
 /* Homepage editorial layout — scoped so other landing.css pages stay intact */
 .lon-home {
-    --lon-paper: #f4f1ea;
-    --lon-forest: #1e3a28;
-    --lon-sage: #7d9a7a;
+    --lon-paper: #f3efe6;
+    --lon-ink: #141c16;
+    --lon-muted: #5a675e;
+    --lon-forest: #163224;
+    --lon-sage: #8aa58a;
     --lon-sage-deep: #3f6b4a;
-    --shadow-soft: 0 18px 40px rgba(28, 42, 32, 0.1);
-    --shadow-lift: 0 28px 60px rgba(20, 34, 24, 0.16);
+    --lon-line: rgba(22, 50, 36, 0.12);
+    --lon-cream: #f7f3ea;
+    --shadow-soft: none;
+    --shadow-lift: none;
     background: var(--lon-paper);
-    color: #1c241e;
+    color: var(--lon-ink);
+}
+
+.lon-home ::selection {
+    background: rgba(22, 50, 36, 0.18);
 }
 
 .lon-home .serif-accent {
@@ -3537,32 +3545,96 @@ body.lon-landing #como-funciona .lon-how-step-num {
     letter-spacing: -0.03em;
 }
 
+.lon-home .lon-btn {
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    box-shadow: none;
+}
+
+.lon-home .lon-btn:hover {
+    transform: none;
+}
+
+.lon-home .lon-btn-primary,
+.lon-home .lon-btn-dark {
+    box-shadow: none;
+}
+
+.lon-home .lon-btn-arrow {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    opacity: 0.75;
+}
+
+.lon-home .lon-nav .lon-btn-primary::after,
+.lon-home .dr-hero .lon-btn-dark::after,
+.lon-home #como-funciona .lon-btn-dark::after,
+.lon-home .lon-consult-cta .lon-btn-dark::after {
+    content: none;
+}
+
 .lon-home .lon-nav {
-    top: 14px;
-    padding: 0 16px;
+    top: 0;
+    padding: 22px 28px 0;
+    background: transparent;
 }
 
 .lon-home .lon-nav-inner {
-    max-width: 1120px;
-    min-height: 62px;
-    border-color: rgba(40, 58, 46, 0.12);
-    background: rgba(255, 252, 247, 0.82);
-    box-shadow: var(--shadow-soft);
+    max-width: none;
+    width: 100%;
+    min-height: 52px;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.lon-home .lon-nav.is-scrolled {
+    padding: 12px 18px 0;
 }
 
 .lon-home .lon-nav.is-scrolled .lon-nav-inner {
-    background: rgba(255, 252, 247, 0.94);
+    max-width: 1180px;
+    margin: 0 auto;
+    background: rgba(247, 243, 234, 0.92);
+    border: 1px solid var(--lon-line);
+    box-shadow: 0 10px 40px rgba(12, 22, 16, 0.1);
+    backdrop-filter: blur(18px) saturate(1.2);
 }
 
 .lon-home .lon-logo-name {
-    font-size: 1.2rem;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.22em;
+    font-size: 1.15rem;
+    letter-spacing: -0.045em;
+    font-weight: 650;
+    color: var(--lon-ink);
+}
+
+.lon-home .lon-logo-lon {
+    font-family: Fraunces, Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
     letter-spacing: -0.04em;
-    font-weight: 700;
+}
+
+.lon-home .lon-logo-clinic {
+    font-weight: 600;
 }
 
 .lon-home .lon-nav-links a {
-    color: rgba(28, 36, 30, 0.62);
-    font-size: 0.9rem;
+    color: rgba(20, 28, 22, 0.72);
+    font-size: 0.86rem;
+    font-weight: 500;
+}
+
+.lon-home .lon-nav-links a:hover {
+    color: var(--lon-ink);
 }
 
 .lon-home .lon-nav .lon-btn-primary,
@@ -3572,30 +3644,58 @@ body.lon-landing #como-funciona .lon-how-step-num {
     gap: 8px;
 }
 
-.lon-home .lon-nav .lon-btn-primary::after,
-.lon-home .dr-hero .lon-btn-dark::after,
-.lon-home #como-funciona .lon-btn-dark::after,
-.lon-home .lon-consult-cta .lon-btn-dark::after {
-    content: "↗";
-    font-size: 0.85em;
-    line-height: 1;
+.lon-home .lon-nav .lon-btn-primary {
+    background: #fff;
+    color: var(--lon-ink);
+    border-color: #fff;
+    box-shadow: none;
 }
 
-.lon-home .dr-hero {
+.lon-home .lon-nav.is-scrolled .lon-btn-primary {
+    background: var(--lon-forest);
+    color: var(--lon-cream);
+    border-color: var(--lon-forest);
+}
+
+.lon-home .lon-nav .lon-btn-ghost {
+    color: var(--lon-ink);
+    border-color: transparent;
     background: transparent;
-    padding: calc(var(--lon-nav-h) + 36px) 0 48px;
+}
+
+.lon-home .lon-nav-toggle {
+    background: rgba(255, 255, 255, 0.72);
+    border-color: rgba(20, 28, 22, 0.12);
+}
+
+.lon-home .lon-nav-toggle span {
+    background: var(--lon-ink);
+}
+
+/* ── Hero: full-bleed photo, nav floats above ── */
+.lon-home .dr-hero {
+    background: #b7aea4;
+    padding: 0;
+    min-height: 100svh;
 }
 
 .lon-home .dr-hero::before {
     display: none;
 }
 
+.lon-home .dr-hero > .lon-container {
+    max-width: none;
+    padding: 0;
+}
+
 .lon-home .dr-hero-panel {
     position: relative;
     overflow: hidden;
-    border-radius: 2.5rem;
-    min-height: min(78vh, 860px);
-    box-shadow: var(--shadow-lift);
+    border-radius: 0;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    box-shadow: none;
 }
 
 .lon-home .dr-hero-bg {
@@ -3604,20 +3704,23 @@ body.lon-landing #como-funciona .lon-how-step-num {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 68% 40%;
+    object-position: 52% 18%;
 }
 
 .lon-home .dr-hero-scrim {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(244, 241, 234, 0.96) 0%, rgba(244, 241, 234, 0.78) 42%, rgba(244, 241, 234, 0.18) 72%, transparent 100%);
+    background:
+        linear-gradient(180deg, rgba(18, 22, 20, 0.06) 0%, rgba(18, 22, 20, 0) 26%, rgba(18, 22, 20, 0.42) 100%),
+        linear-gradient(90deg, rgba(18, 22, 20, 0.38) 0%, rgba(18, 22, 20, 0.1) 40%, rgba(18, 22, 20, 0) 66%);
 }
 
 .lon-home .dr-hero-content {
     position: relative;
     z-index: 1;
-    max-width: 38rem;
-    padding: clamp(28px, 5vw, 64px);
+    align-self: flex-end;
+    max-width: 40rem;
+    padding: 0 6vw 7vh clamp(24px, 5vw, 72px);
     text-align: left;
 }
 
@@ -3626,122 +3729,187 @@ body.lon-landing #como-funciona .lon-how-step-num {
     align-items: center;
     gap: 8px;
     margin-bottom: 22px;
-    border-color: rgba(40, 58, 46, 0.14);
-    background: rgba(255, 252, 247, 0.72);
-    color: #314035;
-    backdrop-filter: blur(10px);
+    border: 1px solid rgba(247, 243, 234, 0.22);
+    background: rgba(247, 243, 234, 0.08);
+    color: rgba(247, 243, 234, 0.82);
+    backdrop-filter: blur(12px);
 }
 
 .lon-home .dr-badge-dot {
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
     border-radius: 999px;
-    background: var(--lon-sage);
+    background: #c5d6b8;
+    box-shadow: 0 0 0 4px rgba(197, 214, 184, 0.18);
 }
 
 .lon-home .dr-hero h1 {
-    color: #162017;
-    font-size: clamp(2.35rem, 5.6vw, 4.4rem);
-    line-height: 0.98;
-    letter-spacing: -0.045em;
-    max-width: 14ch;
-    font-weight: 650;
+    color: #f7f3ea;
+    font-size: clamp(2.55rem, 6vw, 5rem);
+    line-height: 0.96;
+    letter-spacing: -0.052em;
+    max-width: 13ch;
+    font-weight: 550;
+}
+
+.lon-home .dr-hero h1 .serif-accent {
+    color: #e4d3b4;
 }
 
 .lon-home .dr-hero .dr-lead {
-    color: #4a584e;
-    max-width: 36ch;
-    font-size: 1.05rem;
+    color: rgba(247, 243, 234, 0.72);
+    max-width: 38ch;
+    font-size: 1.08rem;
+    line-height: 1.55;
+    margin-top: 18px;
 }
 
 .lon-home .dr-cta-row {
     align-items: center;
-    gap: 14px 18px;
+    gap: 12px;
+    margin-top: 28px;
+    margin-bottom: 14px;
 }
 
-.lon-home .dr-hero-explore {
-    font-size: 0.92rem;
-    color: rgba(22, 32, 23, 0.72);
-    text-decoration: underline;
-    text-underline-offset: 7px;
+.lon-home .dr-hero .lon-btn-dark {
+    background: var(--lon-cream);
+    color: var(--lon-forest);
 }
 
-.lon-home .dr-hero-explore:hover {
-    color: #162017;
+.lon-home .dr-hero .lon-btn-dark:hover {
+    background: #fff;
+    color: var(--lon-forest);
 }
 
 .lon-home .dr-hero-service {
-    color: #1c241e;
-    background: rgba(255, 252, 247, 0.8);
-    border-color: rgba(40, 58, 46, 0.18);
+    color: #f7f3ea;
+    background: rgba(247, 243, 234, 0.1);
+    border-color: rgba(247, 243, 234, 0.28);
 }
 
 .lon-home .dr-hero-service-wrap::after {
-    border-color: #1c241e;
+    border-color: #f7f3ea;
 }
 
 .lon-home .dr-hero-meta,
 .lon-home .dr-hero-help,
 .lon-home .dr-hero-help a {
-    color: #3f4d43;
+    color: rgba(247, 243, 234, 0.62);
     text-align: left;
+}
+
+.lon-home .dr-hero-help a {
+    color: #f7f3ea;
+    text-underline-offset: 4px;
 }
 
 .lon-home .dr-live-slots {
     max-width: 28rem;
-    background: rgba(255, 252, 247, 0.88);
-    border-color: rgba(40, 58, 46, 0.12);
-    border-radius: 1.25rem;
-    box-shadow: var(--shadow-soft);
+    background: rgba(247, 243, 234, 0.1);
+    border: 1px solid rgba(247, 243, 234, 0.18);
+    border-radius: 1.15rem;
+    box-shadow: none;
+    backdrop-filter: blur(16px);
 }
 
-.lon-home .dr-trust-list {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
-    max-width: 34rem;
+.lon-home .dr-live-slots-kicker,
+.lon-home .dr-next-slot-other,
+.lon-home .dr-slots-week {
+    color: rgba(247, 243, 234, 0.7);
 }
 
-.lon-home .dr-hero .dr-trust-list li {
+.lon-home .dr-next-slot-other,
+.lon-home .dr-slots-week {
+    color: #f7f3ea;
+}
+
+.lon-home .dr-live-slots .lon-live-slot {
     background: transparent;
-    border: 0;
-    color: #314035;
-    padding: 0 0 0 1.4rem;
-    backdrop-filter: none;
+    border-color: rgba(247, 243, 234, 0.35);
+    color: #f7f3ea;
 }
 
-.lon-home .dr-hero .dr-trust-list li::before {
-    color: var(--lon-sage-deep);
-    background: transparent;
+.lon-home .dr-live-slots .lon-live-slot:hover {
+    background: #f7f3ea;
+    color: var(--lon-forest);
 }
 
 .lon-home .dr-hero-ers {
-    position: relative;
+    position: absolute;
     z-index: 1;
+    right: clamp(20px, 4vw, 48px);
+    bottom: clamp(20px, 4vw, 48px);
     width: fit-content;
-    margin: 0 0 28px  clamp(28px, 5vw, 64px);
-    padding: 16px 22px;
-    border-radius: 1.25rem;
-    background: rgba(255, 252, 247, 0.86);
-    border: 1px solid rgba(40, 58, 46, 0.1);
-    box-shadow: var(--shadow-soft);
+    margin: 0;
+    padding: 16px 18px;
+    border-radius: 1rem;
+    background: rgba(247, 243, 234, 0.12);
+    border: 1px solid rgba(247, 243, 234, 0.2);
+    box-shadow: none;
+    backdrop-filter: blur(16px);
+    color: #f7f3ea;
 }
 
 .lon-home .dr-hero-ers-num {
-    font-size: 1.85rem;
-    letter-spacing: -0.04em;
+    font-size: 1.7rem;
+    letter-spacing: -0.05em;
     line-height: 1;
+    font-weight: 550;
 }
 
 .lon-home .dr-hero-ers p:last-child {
-    margin-top: 4px;
-    font-size: 0.72rem;
-    color: #5a6b60;
+    margin-top: 6px;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(247, 243, 234, 0.62);
 }
 
+/* ── Trust strip ── */
+.lon-home .lon-trust-strip {
+    padding: 36px 0 8px;
+    border-bottom: 1px solid var(--lon-line);
+}
+
+.lon-home .lon-trust-strip .dr-trust-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    max-width: none;
+}
+
+.lon-home .lon-trust-strip .dr-trust-list li {
+    position: relative;
+    background: transparent;
+    border: 0;
+    border-top: 1px solid var(--lon-line);
+    color: var(--lon-muted);
+    padding: 16px 0 16px 0;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    backdrop-filter: none;
+}
+
+.lon-home .lon-trust-strip .dr-trust-list li::before {
+    content: none;
+}
+
+@media (min-width: 800px) {
+    .lon-home .lon-trust-strip .dr-trust-list {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0 40px;
+    }
+
+    .lon-home .lon-trust-strip .dr-trust-list li:nth-child(-n+3) {
+        border-top: 0;
+        padding-top: 0;
+    }
+}
+
+/* ── Intro ── */
 .lon-home .lon-intro {
     background: transparent;
-    padding: clamp(64px, 9vw, 112px) 0;
+    padding: clamp(72px, 10vw, 128px) 0;
 }
 
 .lon-home .lon-intro-grid {
@@ -3752,8 +3920,8 @@ body.lon-landing #como-funciona .lon-how-step-num {
 
 @media (min-width: 960px) {
     .lon-home .lon-intro-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 72px;
+        grid-template-columns: 0.92fr 1.08fr;
+        gap: 88px;
     }
 }
 
@@ -3763,77 +3931,112 @@ body.lon-landing #como-funciona .lon-how-step-num {
 
 .lon-home .lon-intro-media img {
     width: 100%;
-    border-radius: 2rem;
+    border-radius: 1.5rem;
     object-fit: cover;
-    aspect-ratio: 1;
-    box-shadow: var(--shadow-lift);
+    aspect-ratio: 4 / 5;
+    box-shadow: none;
 }
 
 .lon-home .lon-intro-float {
     position: absolute;
-    left: 18px;
-    right: 18px;
-    bottom: 18px;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
     display: flex;
     gap: 14px;
     align-items: center;
-    padding: 16px 18px;
-    border-radius: 1.25rem;
-    background: rgba(255, 252, 247, 0.92);
-    border: 1px solid rgba(40, 58, 46, 0.08);
-    box-shadow: var(--shadow-soft);
+    padding: 14px 16px;
+    border-radius: 1rem;
+    background: rgba(247, 243, 234, 0.92);
+    border: 1px solid rgba(22, 50, 36, 0.08);
+    box-shadow: none;
+    backdrop-filter: blur(12px);
 }
 
 .lon-home .lon-intro-float-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     border-radius: 999px;
     background: #e7eee6;
     color: var(--lon-sage-deep);
 }
 
 .lon-home .lon-intro-float p:first-child {
-    font-size: 0.92rem;
+    font-size: 0.9rem;
+    font-weight: 600;
 }
 
 .lon-home .lon-intro-float p:last-child {
-    font-size: 0.82rem;
-    color: #5a6b60;
+    font-size: 0.8rem;
+    color: var(--lon-muted);
 }
 
 .lon-home .lon-intro-inner {
     max-width: none;
 }
 
+.lon-home .lon-intro h2,
+.lon-home .lon-need-header h2,
+.lon-home .lon-section-head h2,
+.lon-home .lon-team-header h2,
+.lon-home .lon-testimonials-header h2 {
+    letter-spacing: -0.038em;
+    font-weight: 550;
+    line-height: 1.12;
+}
+
+.lon-home .lon-kicker,
+.lon-home .lon-need-kicker,
+.lon-home .lon-team-kicker,
+.lon-home .lon-testimonials-kicker {
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--lon-sage-deep);
+}
+
 .lon-home .lon-intro-checks {
     list-style: none;
     display: grid;
-    gap: 10px;
-    margin: 0 0 22px;
+    gap: 12px;
+    margin: 8px 0 22px;
 }
 
 .lon-home .lon-intro-checks li {
     position: relative;
-    padding-left: 1.5rem;
+    padding-left: 1.15rem;
     font-size: 0.92rem;
+    color: var(--lon-muted);
 }
 
 .lon-home .lon-intro-checks li::before {
-    content: "✓";
+    content: "";
     position: absolute;
     left: 0;
-    color: var(--lon-sage-deep);
+    top: 0.55em;
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--lon-sage-deep);
 }
 
+.lon-home .lon-text-link {
+    text-underline-offset: 5px;
+    font-weight: 600;
+}
+
+/* ── Need / care ── */
 .lon-home .lon-services {
     background: transparent;
+    padding-top: 24px;
 }
 
 .lon-home .lon-need-grid {
-    gap: 18px;
+    gap: 14px;
 }
 
 @media (min-width: 1100px) {
@@ -3854,52 +4057,246 @@ body.lon-landing #como-funciona .lon-how-step-num {
 
 .lon-home .lon-need-card {
     position: relative;
-    min-height: 220px;
-    padding: 24px;
-    border-radius: 1.5rem;
-    border: 1px solid rgba(40, 58, 46, 0.1);
-    background: rgba(255, 252, 247, 0.78);
-    box-shadow: var(--shadow-soft);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-height: 0;
+    padding: 26px 24px 22px;
+    border-radius: 1.25rem;
+    border: 1px solid var(--lon-line);
+    background: rgba(255, 252, 247, 0.55);
+    box-shadow: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
 }
 
 .lon-home .lon-need-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-lift);
+    transform: none;
+    box-shadow: none;
+    border-color: rgba(22, 50, 36, 0.28);
+    background: #fffcf7;
 }
 
 .lon-home .lon-need-icon {
     display: flex;
     color: var(--lon-sage-deep);
-    margin-bottom: 36px;
+    margin-bottom: 28px;
 }
 
 .lon-home .lon-need-card h3 {
-    font-size: 1.15rem;
-    letter-spacing: -0.02em;
+    font-size: 1.18rem;
+    letter-spacing: -0.03em;
+    font-weight: 550;
 }
 
-.lon-home .lon-need-cta {
+.lon-home .lon-need-card p {
+    color: var(--lon-muted);
+}
+
+.lon-home .lon-need-cta,
+.lon-home .lon-need-card:hover .lon-need-cta {
     margin-top: auto;
+    padding: 0;
+    background: transparent;
+    color: var(--lon-forest);
+    font-weight: 600;
+}
+
+.lon-home .lon-need-card--urgent {
+    background: var(--lon-forest);
+    border-color: var(--lon-forest);
+    color: var(--lon-cream);
+}
+
+.lon-home .lon-need-card--urgent h3,
+.lon-home .lon-need-card--urgent p,
+.lon-home .lon-need-card--urgent .lon-need-cta,
+.lon-home .lon-need-card--urgent .lon-need-icon,
+.lon-home .lon-need-card--urgent:hover .lon-need-cta {
+    color: var(--lon-cream);
+    background: transparent;
+}
+
+.lon-home .lon-need-card--urgent p {
+    opacity: 0.78;
+}
+
+.lon-home .lon-need-card--urgent:hover {
+    background: #1c3d2c;
 }
 
 .lon-home .lon-care-card {
-    border-radius: 1.5rem;
-    border-color: rgba(40, 58, 46, 0.1);
-    background: #fffcf7;
-    box-shadow: var(--shadow-soft);
+    border-radius: 1.25rem;
+    border: 1px solid var(--lon-line);
+    background: rgba(255, 252, 247, 0.55);
+    box-shadow: none;
     padding: 26px 24px;
 }
 
+.lon-home .lon-need-or {
+    color: var(--lon-muted);
+    letter-spacing: 0.12em;
+}
+
+.lon-home .lon-care-card h3 {
+    letter-spacing: -0.03em;
+    font-weight: 550;
+}
+
+.lon-home .lon-tabs {
+    gap: 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--lon-line);
+    border-radius: 0;
+    padding: 0;
+    margin: 8px 0 28px;
+}
+
+.lon-home .lon-tab {
+    flex: 0 0 auto;
+    min-width: 0;
+    border-radius: 0;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    color: var(--lon-muted);
+    box-shadow: none;
+    padding: 12px 16px 14px;
+    font-size: 0.86rem;
+    font-weight: 550;
+}
+
+.lon-home .lon-tab:hover {
+    color: var(--lon-ink);
+}
+
+.lon-home .lon-tab.is-active {
+    background: transparent;
+    border-color: transparent;
+    border-bottom-color: var(--lon-forest);
+    color: var(--lon-ink);
+    box-shadow: none;
+}
+
+.lon-home .lon-services .lon-service-grid {
+    gap: 14px;
+}
+
+.lon-home .lon-services .lon-service-card,
+.lon-home .lon-services .lon-service-card .lon-service-image-wrap {
+    min-height: 0;
+    height: auto;
+}
+
+.lon-home .lon-service-image-wrap {
+    min-height: 0;
+    border-radius: 1.15rem;
+    overflow: visible;
+    border: 1px solid var(--lon-line);
+    box-shadow: none;
+    background: rgba(255, 252, 247, 0.7);
+    display: flex;
+    flex-direction: column;
+    padding: 22px 22px 20px;
+}
+
+.lon-home .lon-service-image-wrap::before,
+.lon-home .lon-service-image-wrap::after,
+.lon-home .lon-service-image-wrap img {
+    display: none;
+}
+
+.lon-home .lon-service-chip {
+    position: static;
+    align-self: flex-start;
+    margin-bottom: 14px;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    backdrop-filter: none;
+    color: var(--lon-sage-deep);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 650;
+}
+
+.lon-home .lon-service-glass {
+    position: static;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    background: transparent;
+    border: 0;
+    backdrop-filter: none;
+    border-radius: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1;
+}
+
+.lon-home .lon-service-glass h3 {
+    color: var(--lon-ink);
+    font-size: 1.12rem;
+    font-weight: 550;
+    letter-spacing: -0.03em;
+    margin: 0;
+    min-height: 2.6em;
+}
+
+.lon-home .lon-service-price {
+    color: var(--lon-muted);
+    font-size: 0.92rem;
+    font-weight: 550;
+}
+
+.lon-home .lon-service-extra,
+.lon-home .lon-service-extra a {
+    color: var(--lon-muted);
+    font-size: 0.82rem;
+}
+
+.lon-home .lon-service-glass .lon-btn-soft {
+    margin-top: 10px;
+    background: var(--lon-forest);
+    color: var(--lon-cream);
+    border: 0;
+    box-shadow: none;
+}
+
+.lon-home .lon-service-glass .lon-btn-soft:hover {
+    background: #1c3d2c;
+    color: #fff;
+}
+
 .lon-home .lon-diff {
-    background: rgba(231, 238, 230, 0.45);
+    background: #e8eee4;
 }
 
 .lon-home .lon-diff-grid li {
-    border-radius: 1.5rem;
-    background: #fffcf7;
-    border: 1px solid rgba(40, 58, 46, 0.08);
-    box-shadow: var(--shadow-soft);
+    border-radius: 1.15rem;
+    background: rgba(255, 252, 247, 0.7);
+    border: 1px solid rgba(22, 50, 36, 0.08);
+    box-shadow: none;
+}
+
+.lon-home .lon-diff-num {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--lon-sage-deep);
+}
+
+.lon-home .dr-platform::before {
+    display: none;
+}
+
+.lon-home .dr-platform a.lon-btn {
+    text-decoration: none;
+}
+
+.lon-home #como-funciona.dr-platform {
+    background: transparent;
 }
 
 .lon-home #como-funciona {
@@ -3908,16 +4305,29 @@ body.lon-landing #como-funciona .lon-how-step-num {
 }
 
 .lon-home #como-funciona .lon-how-shell {
-    border-radius: 2.5rem;
+    border-radius: 2rem;
     background: var(--lon-forest);
     color: #f4f7f2;
-    padding: clamp(36px, 6vw, 72px) clamp(24px, 5vw, 56px);
-    box-shadow: var(--shadow-lift);
+    padding: clamp(40px, 6vw, 80px) clamp(24px, 5vw, 64px);
+    box-shadow: none;
+}
+
+.lon-home .lon-how-head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px 40px;
+    margin-bottom: 12px;
+}
+
+.lon-home .lon-how-head h2 {
+    max-width: 14ch;
 }
 
 .lon-home #como-funciona .lon-kicker {
     background: transparent;
-    color: rgba(244, 247, 242, 0.55);
+    color: rgba(244, 247, 242, 0.5);
 }
 
 .lon-home #como-funciona h2 {
@@ -3935,22 +4345,25 @@ body.lon-landing #como-funciona .lon-how-step-num {
 .lon-home #como-funciona .lon-service-card {
     background: transparent;
     border: 0;
-    border-top: 1px solid rgba(244, 247, 242, 0.18);
+    border-top: 1px solid rgba(244, 247, 242, 0.16);
     border-radius: 0;
     box-shadow: none;
-    padding: 22px 8px 8px 0;
+    padding: 26px 12px 12px 0;
 }
 
-.lon-home #como-funciona .lon-how-step-num {
+body.lon-home #como-funciona .lon-how-step-num {
     width: auto;
     height: auto;
     background: none;
     border: 0;
     box-shadow: none;
+    backdrop-filter: none;
+    border-radius: 0;
+    justify-content: flex-start;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    color: rgba(244, 247, 242, 0.5);
+    letter-spacing: 0.1em;
+    color: rgba(244, 247, 242, 0.45);
 }
 
 .lon-home #como-funciona .lon-section-cta .lon-btn {
@@ -3963,46 +4376,89 @@ body.lon-landing #como-funciona .lon-how-step-num {
     background: #fff;
 }
 
+.lon-home .lon-after-grid li {
+    border: 0;
+    border-top: 1px solid var(--lon-line);
+    border-radius: 0;
+    background: transparent;
+    padding: 22px 0;
+}
+
 .lon-home .lon-team-card,
 .lon-home .lon-testimonial-card {
-    border-radius: 1.5rem;
-    background: #fffcf7;
-    border: 1px solid rgba(40, 58, 46, 0.08);
-    box-shadow: var(--shadow-soft);
+    border-radius: 1.25rem;
+    background: rgba(255, 252, 247, 0.7);
+    border: 1px solid var(--lon-line);
+    box-shadow: none;
+}
+
+.lon-home .lon-testimonial-stars {
+    letter-spacing: 0.12em;
+    color: var(--lon-sage-deep);
+    font-size: 0.72rem;
 }
 
 .lon-home .lon-home-faq {
-    background: rgba(231, 238, 230, 0.45);
+    background: #e8eee4;
 }
 
 @media (min-width: 960px) {
     .lon-home .lon-home-faq .lon-container {
         display: grid;
-        grid-template-columns: 0.9fr 1.1fr;
-        gap: 64px;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: 80px;
         align-items: start;
     }
 
     .lon-home .lon-home-faq .lon-section-head {
         margin-bottom: 0;
+        position: sticky;
+        top: calc(var(--lon-nav-h) + 24px);
+    }
+
+    .lon-home .lon-home-faq .lon-section-cta {
+        grid-column: 2;
     }
 }
 
 .lon-home .lon-home-faq-list .faq-item {
     background: transparent;
     border: 0;
-    border-bottom: 1px solid rgba(40, 58, 46, 0.14);
+    border-bottom: 1px solid rgba(22, 50, 36, 0.14);
     border-radius: 0;
     margin: 0;
 }
 
 .lon-home .lon-home-faq-list .faq-item:first-child {
-    border-top: 1px solid rgba(40, 58, 46, 0.14);
+    border-top: 1px solid rgba(22, 50, 36, 0.14);
 }
 
 .lon-home .lon-home-faq-list summary {
     padding: 22px 0;
     font-weight: 550;
+    letter-spacing: -0.02em;
+}
+
+.lon-home .dr-burnout-promo {
+    background: transparent;
+    border: 0;
+}
+
+.lon-home .dr-burnout-promo-inner {
+    border-radius: 2rem;
+    background: #efe6d6;
+    border: 1px solid rgba(22, 50, 36, 0.08);
+    padding: clamp(32px, 5vw, 56px);
+}
+
+.lon-home .lon-ers-home {
+    background: transparent;
+}
+
+.lon-home .lon-urgent-offer {
+    border-radius: 1.25rem;
+    border: 1px solid var(--lon-line);
+    background: rgba(255, 252, 247, 0.7);
 }
 
 .lon-home .lon-consult-cta {
@@ -4010,11 +4466,28 @@ body.lon-landing #como-funciona .lon-how-step-num {
 }
 
 .lon-home .lon-consult-cta-card {
-    border-radius: 2.5rem;
+    display: block;
+    border-radius: 2rem;
     background: var(--lon-forest);
     border: 0;
-    box-shadow: var(--shadow-lift);
+    box-shadow: none;
     overflow: hidden;
+    min-height: 0;
+    padding: 0;
+}
+
+.lon-home .lon-consult-cta-media {
+    display: none;
+}
+
+.lon-home .lon-consult-cta-copy {
+    max-width: 40rem;
+    padding: clamp(36px, 6vw, 72px);
+}
+
+.lon-home .lon-consult-cta-copy .lon-kicker--on-dark {
+    background: transparent;
+    color: rgba(244, 247, 242, 0.5);
 }
 
 .lon-home .lon-consult-cta-copy h2,
@@ -4027,50 +4500,93 @@ body.lon-landing #como-funciona .lon-how-step-num {
 .lon-home .lon-consult-cta-copy .lon-btn {
     background: #f4f7f2;
     color: var(--lon-forest);
+    box-shadow: none;
+}
+
+.lon-home .lon-consult-cta-copy .lon-btn:hover {
+    background: #fff;
 }
 
 .lon-home .lon-newsletter {
     background: transparent;
 }
 
+.lon-home .lon-newsletter-inner {
+    min-height: 0;
+    border-radius: 1.5rem;
+    border: 1px solid var(--lon-line);
+    background: rgba(255, 252, 247, 0.7);
+    box-shadow: none;
+    padding: clamp(24px, 4vw, 40px);
+}
+
+@media (min-width: 940px) {
+    .lon-home .lon-newsletter-inner {
+        min-height: 0;
+    }
+}
+
 .lon-home .lon-footer {
     background: transparent;
-    border-top: 1px solid rgba(40, 58, 46, 0.12);
+    border-top: 1px solid var(--lon-line);
+}
+
+.lon-home .lon-footer-legal-links a:hover {
+    color: var(--lon-forest);
+}
+
+.lon-home .lon-wa-float {
+    box-shadow: 0 8px 24px rgba(17, 93, 45, 0.22);
+    transform: none;
+}
+
+.lon-home .lon-wa-float:hover {
+    transform: none;
+    filter: brightness(1.05);
 }
 
 @media (max-width: 939px) {
-    .lon-home .dr-hero {
-        padding-top: calc(var(--lon-nav-h) + 22px);
-        padding-bottom: 32px;
+    .lon-home .lon-nav {
+        top: 0;
+        padding: 12px 12px 0;
+    }
+
+    .lon-home .lon-nav.is-scrolled {
+        padding: 8px 10px 0;
     }
 
     .lon-home .dr-hero-panel {
-        min-height: 0;
-        border-radius: 1.75rem;
-    }
-
-    .lon-home .dr-hero-scrim {
-        height: 42vh;
-        min-height: 240px;
-        bottom: auto;
-        background: linear-gradient(180deg, rgba(244, 241, 234, 0.08) 0%, rgba(244, 241, 234, 0.55) 70%, rgba(244, 241, 234, 0.98) 100%);
+        min-height: 100svh;
+        display: flex;
+        align-items: flex-end;
     }
 
     .lon-home .dr-hero-bg {
-        position: relative;
-        height: 42vh;
-        min-height: 240px;
+        position: absolute;
+        inset: 0;
+        height: 100%;
+        min-height: 0;
+        object-position: 52% 16%;
+    }
+
+    .lon-home .dr-hero-scrim {
+        position: absolute;
+        inset: 0;
+        height: auto;
+        min-height: 0;
+        background:
+            linear-gradient(180deg, rgba(18, 22, 20, 0.08) 0%, rgba(18, 22, 20, 0.12) 42%, rgba(18, 22, 20, 0.58) 100%);
     }
 
     .lon-home .dr-hero-content {
-        padding: 22px 20px 8px;
+        padding: 0 22px 28px;
         max-width: none;
-        text-align: left;
+        background: transparent;
     }
 
     .lon-home .dr-hero h1 {
-        max-width: none;
-        font-size: clamp(2rem, 9vw, 2.8rem);
+        max-width: 12ch;
+        font-size: clamp(2.2rem, 11vw, 3.15rem);
     }
 
     .lon-home .dr-cta-row {
@@ -4085,7 +4601,12 @@ body.lon-landing #como-funciona .lon-how-step-num {
     }
 
     .lon-home .dr-hero-ers {
-        margin: 0 20px 22px;
+        top: 76px;
+        right: 16px;
+        bottom: auto;
+        left: auto;
+        margin: 0;
+        transform: none;
     }
 
     .lon-home .dr-hero-meta,
@@ -4095,5 +4616,13 @@ body.lon-landing #como-funciona .lon-how-step-num {
 
     .lon-home .lon-btn {
         width: auto;
+    }
+
+    .lon-home .lon-how-head {
+        align-items: flex-start;
+    }
+
+    .lon-home .lon-service-glass h3 {
+        min-height: 0;
     }
 }

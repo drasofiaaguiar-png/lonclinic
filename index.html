@@ -31,24 +31,24 @@
     <meta property="og:url" content="https://www.lonclinic.com/">
     <meta property="og:title" content="A sua clínica de saúde, online | Lon Clinic">
     <meta property="og:description" content="Consultas de Medicina Geral, Saúde Mental, Nutrição e Saúde do Viajante com profissionais qualificados e acompanhamento personalizado.">
-    <meta property="og:image" content="https://www.lonclinic.com/image/image2.webp">
+    <meta property="og:image" content="https://www.lonclinic.com/image/hero-run.webp">
     <meta property="og:locale" content="pt_PT">
     <meta property="og:site_name" content="Lon Clinic">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="A sua clínica de saúde, online | Lon Clinic">
     <meta name="twitter:description" content="Consultas de Medicina Geral, Saúde Mental, Nutrição e Saúde do Viajante com profissionais qualificados e acompanhamento personalizado.">
-    <meta name="twitter:image" content="https://www.lonclinic.com/image/image2.webp">
+    <meta name="twitter:image" content="https://www.lonclinic.com/image/hero-run.webp">
 
     <meta name="theme-color" content="#255235">
     <meta name="format-detection" content="telephone=no">
-    <link rel="preload" as="image" href="/image/image2.webp" fetchpriority="high">
+    <link rel="preload" as="image" href="/image/hero-run.webp" fetchpriority="high">
 
-    <link rel="stylesheet" href="/landing.css?v=20260912h">
+    <link rel="stylesheet" href="/landing.css?v=20260912j">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@1,9..144,500&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23163224'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-family='Georgia,serif' font-style='italic' font-size='32' fill='%23f4f1ea'%3El.%3C/text%3E%3C/svg%3E">
     <script type="text/javascript" src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
 
     <noscript>
@@ -187,7 +187,7 @@
     <header class="lon-nav" id="lonNav">
         <div class="lon-container lon-nav-inner">
             <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
-                <span class="lon-logo-name">LON Clinic</span>
+                <span class="lon-logo-name"><span class="lon-logo-lon">lon.</span> <span class="lon-logo-clinic">Clinic</span></span>
             </a>
 
             <nav class="lon-nav-links" aria-label="Navegação principal">
@@ -221,14 +221,14 @@
         <section class="dr-hero" id="inicio">
             <div class="lon-container">
                 <div class="dr-hero-panel">
-                    <img class="dr-hero-bg" src="image/image2.webp" alt="Médica em consulta de telemedicina" loading="eager" decoding="async" fetchpriority="high" width="1600" height="1200">
+                    <img class="dr-hero-bg" src="image/hero-run.webp" alt="Mulher a correr junto ao mar" loading="eager" decoding="async" fetchpriority="high" width="2171" height="3256">
                     <div class="dr-hero-scrim" aria-hidden="true"></div>
                     <div class="dr-hero-content">
                         <p class="dr-badge"><span class="dr-badge-dot" aria-hidden="true"></span>A sua clínica de saúde, online.</p>
                         <h1><span class="dr-hero-title-line">Cuidados de saúde que acompanham <em class="serif-accent">a sua vida.</em></span></h1>
                         <p class="dr-lead">Consultas de Medicina Geral, Saúde Mental, Nutrição e Saúde do Viajante com profissionais qualificados e acompanhamento personalizado.</p>
                         <div class="dr-cta-row">
-                            <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark" id="lonHeroBook" data-cta="book">Marcar consulta</a>
+                            <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark" id="lonHeroBook" data-cta="book"><span class="lon-btn-label">Marcar consulta</span> <svg class="lon-btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></a>
                             <label class="dr-hero-service-wrap">
                                 <span class="visually-hidden">Tipo de consulta</span>
                                 <select id="lonHeroService" class="dr-hero-service" autocomplete="off">
@@ -237,7 +237,6 @@
                                     <option value="psicologia">Psicólogo</option>
                                 </select>
                             </label>
-                            <a href="#servicos" class="dr-hero-explore">Explorar serviços</a>
                         </div>
                         <p class="dr-hero-meta">Consulta online · Sem deslocações · Onde quer que esteja</p>
                         <div class="dr-live-slots" data-next-slots data-limit="3" data-service="clinica_geral" data-book-href="/marcar/clinica-geral" data-surface="home" hidden>
@@ -246,14 +245,6 @@
                             <a href="/marcar/clinica-geral" class="dr-next-slot-other">Ver horários disponíveis →</a>
                             <a href="/marcar/clinica-geral" class="dr-slots-week" data-slots-fallback hidden>Ver disponibilidade desta semana</a>
                         </div>
-                        <ul class="dr-trust-list" aria-label="Destaques de confiança da clínica">
-                            <li>Clínica certificada pela Entidade Reguladora da Saúde</li>
-                            <li>Médicos inscritos na Ordem dos Médicos</li>
-                            <li>Nutricionistas e Psicólogos inscritos nas respetivas Ordens</li>
-                            <li>Consultas em português, inglês e espanhol</li>
-                            <li>Receitas e pedidos de exames, quando clinicamente indicados</li>
-                            <li>Sem sala de espera. Sem deslocação.</li>
-                        </ul>
                         <p class="dr-hero-help">Não sabe qual consulta escolher? <a href="#servicos">Ajude-me a escolher →</a></p>
                     </div>
                     <aside class="dr-hero-ers" aria-label="Registo ERS">
@@ -261,6 +252,19 @@
                         <p>Registo na Entidade Reguladora da Saúde</p>
                     </aside>
                 </div>
+            </div>
+        </section>
+
+        <section class="lon-trust-strip" aria-label="Destaques de confiança da clínica">
+            <div class="lon-container">
+                <ul class="dr-trust-list">
+                    <li>Clínica certificada pela Entidade Reguladora da Saúde</li>
+                    <li>Médicos inscritos na Ordem dos Médicos</li>
+                    <li>Nutricionistas e Psicólogos inscritos nas respetivas Ordens</li>
+                    <li>Consultas em português, inglês e espanhol</li>
+                    <li>Receitas e pedidos de exames, quando clinicamente indicados</li>
+                    <li>Sem sala de espera. Sem deslocação.</li>
+                </ul>
             </div>
         </section>
 
@@ -400,7 +404,6 @@
                 <div class="lon-service-grid">
                     <article class="lon-service-card is-visible" data-category="urgencias">
                         <div class="lon-service-image-wrap">
-                            <img src="image/image1_files/Ostermalmstorg_Large_Desktop.jpg" alt="Consulta clínica geral por telemedicina">
                             <span class="lon-service-chip">Medicina Geral</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta de Clínica Geral</h3>
@@ -411,7 +414,6 @@
                     </article>
                     <article class="lon-service-card is-visible" data-category="urgencias">
                         <div class="lon-service-image-wrap">
-                            <img src="image/image1_files/LincolnSquare_Large_Desktop.jpg" alt="Consulta médica urgente online">
                             <span class="lon-service-chip">Urgência</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta Médica Urgente</h3>
@@ -423,7 +425,6 @@
 
                     <article class="lon-service-card" data-category="mental" id="lon-service-psicologia-avulsa">
                         <div class="lon-service-image-wrap">
-                            <img src="image/image1_files/Marylebone_Large_Desktop.jpg" alt="Sessão avulsa de psicologia por videochamada">
                             <span class="lon-service-chip">Psicologia</span>
                             <div class="lon-service-glass">
                                 <h3>Sessão Avulsa de Psicologia</h3>
@@ -435,7 +436,6 @@
 
                     <article class="lon-service-card" data-category="mental" id="lon-service-psicologia-burnout">
                         <div class="lon-service-image-wrap">
-                            <img src="image/image1_files/Marylebone_Large_Desktop.jpg" alt="Subscrição mensal de psicologia — todos os programas">
                             <span class="lon-service-chip">Psicologia</span>
                             <div class="lon-service-glass">
                                 <h3>Subscrição de Psicologia</h3>
@@ -448,7 +448,6 @@
 
                     <article class="lon-service-card" data-category="mental" id="lon-service-saude-mental">
                         <div class="lon-service-image-wrap">
-                            <img src="image/image1_files/Marylebone_Large_Desktop.jpg" alt="Consulta médica de saúde mental por videochamada">
                             <span class="lon-service-chip">Saúde Mental</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta Médica de Saúde Mental</h3>
@@ -460,7 +459,6 @@
 
                     <article class="lon-service-card" data-category="mental" id="lon-service-burnout">
                         <div class="lon-service-image-wrap">
-                            <img src="image/image1_files/Marylebone_Large_Desktop.jpg" alt="Consulta especializada em burnout por videochamada">
                             <span class="lon-service-chip">Burn Out</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta Especializada em Burnout</h3>
@@ -473,7 +471,6 @@
 
                     <article class="lon-service-card" data-category="mental" id="lon-service-burnout-sub">
                         <div class="lon-service-image-wrap">
-                            <img src="image/image1_files/Marylebone_Large_Desktop.jpg" alt="Subscrição mensal anti-burnout">
                             <span class="lon-service-chip">Subscrição</span>
                             <div class="lon-service-glass">
                                 <h3>Subscrição Anti-Burnout</h3>
@@ -486,7 +483,6 @@
 
                     <article class="lon-service-card is-visible" data-category="urgencias">
                         <div class="lon-service-image-wrap">
-                            <img src="image/image1_files/ColmoreRow_Large_Desktop.jpg" alt="Renovação de tratamento médico online">
                             <span class="lon-service-chip">Seguimento</span>
                             <div class="lon-service-glass">
                                 <h3>Renovação de Tratamento Médico</h3>
@@ -498,7 +494,6 @@
 
                     <article class="lon-service-card" data-category="especialidades">
                         <div class="lon-service-image-wrap">
-                            <img src="image/image1_files/CoventGarden_Large_Desktop.jpg" alt="Consulta do viajante com médico online">
                             <span class="lon-service-chip">Viajante</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta do Viajante</h3>
@@ -510,7 +505,6 @@
 
                     <article class="lon-service-card" data-category="especialidades">
                         <div class="lon-service-image-wrap">
-                            <img src="image/image1_files/Spitalfields_Large_Desktop.jpg" alt="Consulta do viajante para duas pessoas">
                             <span class="lon-service-chip">Viajante 2 pessoas</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta do Viajante 2 pessoas</h3>
@@ -522,7 +516,6 @@
 
                     <article class="lon-service-card" data-category="longevidade">
                         <div class="lon-service-image-wrap">
-                            <img src="image/image1_files/4a33a784e27bfb3d73c257c81ec6baa23a037e34-1024x731.jpg" alt="Consulta de longevidade e saúde preventiva">
                             <span class="lon-service-chip">Longevidade</span>
                             <div class="lon-service-glass">
                                 <h3>Consulta de Longevidade e Saúde Preventiva</h3>
@@ -534,7 +527,6 @@
 
                     <article class="lon-service-card" data-category="mental" id="lon-service-terapia-casal">
                         <div class="lon-service-image-wrap">
-                            <img src="image/image1_files/Marylebone_Large_Desktop.jpg" alt="Terapia de casal online por videochamada">
                             <span class="lon-service-chip">Psicologia</span>
                             <div class="lon-service-glass">
                                 <h3>Terapia de casal</h3>
@@ -547,7 +539,6 @@
 
                     <article class="lon-service-card" data-category="mental" id="lon-service-terapia-casal-sub">
                         <div class="lon-service-image-wrap">
-                            <img src="image/image1_files/Marylebone_Large_Desktop.jpg" alt="Subscrição de terapia de casal">
                             <span class="lon-service-chip">Subscrição</span>
                             <div class="lon-service-glass">
                                 <h3>Terapia de casal semanal</h3>
@@ -560,7 +551,6 @@
 
                     <article class="lon-service-card" data-category="nutricao" id="lon-service-nutricao-programa">
                         <div class="lon-service-image-wrap">
-                            <img src="image/image1_files/Ostermalmstorg_Large_Desktop.jpg" alt="Programa de nutrição e reeducação metabólica">
                             <span class="lon-service-chip">Nutrição</span>
                             <div class="lon-service-glass">
                                 <h3>Programa de nutrição · 6 meses</h3>
@@ -654,9 +644,14 @@
 
         <section class="dr-platform" id="como-funciona" aria-labelledby="como-funciona-title">
             <div class="lon-container lon-how-shell">
-                <header class="lon-section-head lon-section-head--center">
-                    <p class="lon-kicker">Simples do primeiro clique à consulta</p>
-                    <h2 id="como-funciona-title">Cuidar da sua saúde pode ser <em class="serif-accent">simples.</em></h2>
+                <header class="lon-how-head">
+                    <div>
+                        <p class="lon-kicker">Simples do primeiro clique à consulta</p>
+                        <h2 id="como-funciona-title">Cuidar da sua saúde pode ser <em class="serif-accent">simples.</em></h2>
+                    </div>
+                    <div class="lon-section-cta">
+                        <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark" data-cta="book"><span class="lon-btn-label">Marcar consulta</span> <svg class="lon-btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg></a>
+                    </div>
                 </header>
                 <ol class="lon-service-grid lon-how-steps">
                     <li class="lon-service-card is-visible">
@@ -685,7 +680,6 @@
                         <p>Quando necessário, pode voltar a ser acompanhado pela nossa equipa.</p>
                     </li>
                 </ol>
-                <p class="lon-section-cta"><a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark" data-cta="book">Marcar consulta</a></p>
             </div>
         </section>
 
@@ -927,9 +921,6 @@
                         <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark" data-cta="book">Marcar consulta</a>
                         <p class="lon-consult-cta-help">Não sabe por onde começar? <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer">Falar com a nossa equipa →</a></p>
                     </div>
-                    <div class="lon-consult-cta-media">
-                        <img src="image/image1_files/Ostermalmstorg_Large_Desktop.jpg" alt="Consulta de saúde online na Lon Clinic">
-                    </div>
                 </div>
             </div>
         </section>
@@ -1031,10 +1022,10 @@
         </div>
     </footer>
 
-    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
+    <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">WhatsApp</a>
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-analytics.js?v=20260906i" defer></script>
-    <script src="i18n.js?v=20260912h" defer></script>
+    <script src="i18n.js?v=20260912j" defer></script>
     <script src="reviews.js?v=20260902a" defer></script>
     <script src="landing.js?v=20260911p" defer></script>
     <script src="/lon-slots.js?v=20260912a" defer></script>

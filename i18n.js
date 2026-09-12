@@ -56,7 +56,7 @@
         { s: '.lon-nav-actions > a.lon-btn-primary[href="/marcar/clinica-geral"]:not([data-talk-cta])', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
         { s: '.lon-mobile-menu a[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
         { s: '.lon-skip', en: 'Skip to content', pt: 'Saltar para o conteúdo', es: 'Saltar al contenido' },
-        { s: '.lon-wa-float', en: '💬 Chat on WhatsApp', pt: '💬 Falar por WhatsApp', es: '💬 Hablar por WhatsApp' },
+        { s: '.lon-wa-float', en: 'WhatsApp', pt: 'WhatsApp', es: 'WhatsApp' },
         { s: '.lon-wa-float', a: 'aria-label', en: 'Chat on WhatsApp', pt: 'Falar por WhatsApp', es: 'Hablar por WhatsApp' },
     ];
 
@@ -97,12 +97,11 @@
         { s: '.dr-badge', en: '<span class="dr-badge-dot" aria-hidden="true"></span>Your online health clinic.', pt: '<span class="dr-badge-dot" aria-hidden="true"></span>A sua clínica de saúde, online.', es: '<span class="dr-badge-dot" aria-hidden="true"></span>Su clínica de salud, online.', h: true },
         { s: '.dr-hero-title-line:not(.dr-hero-title-line--secondary)', en: 'Healthcare that follows <em class="serif-accent">your life.</em>', pt: 'Cuidados de saúde que acompanham <em class="serif-accent">a sua vida.</em>', es: 'Cuidados de salud que acompañan <em class="serif-accent">su vida.</em>', h: true },
         { s: '.dr-lead', en: 'General medicine, mental health, nutrition and travel health consultations with qualified professionals and personalised follow-up.', pt: 'Consultas de Medicina Geral, Saúde Mental, Nutrição e Saúde do Viajante com profissionais qualificados e acompanhamento personalizado.', es: 'Consultas de Medicina General, Salud Mental, Nutrición y Salud del Viajero con profesionales cualificados y seguimiento personalizado.' },
-        { s: '.dr-cta-row .lon-btn-dark', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
+        { s: '#lonHeroBook .lon-btn-label', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
         { s: '.dr-hero-service-wrap .visually-hidden', en: 'Consultation type', pt: 'Tipo de consulta', es: 'Tipo de consulta' },
         { s: '#lonHeroService option[value="clinica_geral"]', en: 'Doctor', pt: 'Médico', es: 'Médico' },
         { s: '#lonHeroService option[value="nutricao_programa"]', en: 'Nutrition', pt: 'Nutrição', es: 'Nutrición' },
         { s: '#lonHeroService option[value="psicologia"]', en: 'Psychologist', pt: 'Psicólogo', es: 'Psicólogo' },
-        { s: '.dr-hero-explore', en: 'Explore services', pt: 'Explorar serviços', es: 'Explorar servicios' },
         { s: '.dr-hero-ers-num', en: '45.475', pt: '45.475', es: '45.475' },
         { s: '.dr-hero-ers p:last-child', en: 'Registration with the Health Regulatory Authority', pt: 'Registo na Entidade Reguladora da Saúde', es: 'Registro en la Entidad Reguladora de la Salud' },
         { s: '.dr-hero-meta', en: 'Online consultation · No travel · Wherever you are', pt: 'Consulta online · Sem deslocações · Onde quer que esteja', es: 'Consulta online · Sin desplazamientos · Esté donde esté' },
@@ -170,7 +169,7 @@
         { s: '.lon-how-steps li:nth-child(4) p', en: 'At the scheduled time, join the consultation from your computer, tablet or smartphone.', pt: 'À hora marcada, entre na consulta através do seu computador, tablet ou smartphone.', es: 'A la hora prevista, entre en la consulta desde su ordenador, tablet o smartphone.' },
         { s: '.lon-how-steps li:nth-child(5) h3', en: 'Continue', pt: 'Continue', es: 'Continúe' },
         { s: '.lon-how-steps li:nth-child(5) p', en: 'When needed, you can continue to be followed by our team.', pt: 'Quando necessário, pode voltar a ser acompanhado pela nossa equipa.', es: 'Cuando sea necesario, puede volver a ser atendido por nuestro equipo.' },
-        { s: '#como-funciona .lon-section-cta .lon-btn', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
+        { s: '#como-funciona .lon-section-cta .lon-btn-label', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
 
         /* ── Need chooser ── */
         { s: '.lon-need-header:not(.lon-care-header) .lon-need-kicker', en: 'Find the right care', pt: 'Encontre o cuidado certo', es: 'Encuentre el cuidado adecuado' },
