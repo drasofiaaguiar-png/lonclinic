@@ -3677,7 +3677,7 @@ body.lon-home .dr-hero {
     position: relative;
     isolation: isolate;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     width: 100%;
     max-width: none;
     margin: 0;
@@ -3700,7 +3700,7 @@ body.lon-home .dr-hero {
     max-width: none;
     max-height: none;
     object-fit: cover;
-    object-position: 52% 18%;
+    object-position: 58% 34%;
     z-index: 0;
     pointer-events: none;
 }
@@ -3717,9 +3717,9 @@ body.lon-home .dr-hero {
 .lon-home .dr-hero-content {
     position: relative;
     z-index: 2;
-    align-self: flex-end;
-    max-width: 40rem;
-    padding: 0 6vw 7vh clamp(24px, 5vw, 72px);
+    align-self: center;
+    max-width: 38rem;
+    padding: calc(var(--lon-nav-h) + 28px) 6vw 8vh clamp(28px, 6vw, 88px);
     text-align: left;
 }
 
@@ -3744,10 +3744,10 @@ body.lon-home .dr-hero {
 
 .lon-home .dr-hero h1 {
     color: #f7f3ea;
-    font-size: clamp(2.55rem, 6vw, 5rem);
-    line-height: 0.96;
-    letter-spacing: -0.052em;
-    max-width: 13ch;
+    font-size: clamp(2.4rem, 5.2vw, 4.35rem);
+    line-height: 0.98;
+    letter-spacing: -0.05em;
+    max-width: 12ch;
     font-weight: 550;
 }
 
@@ -4557,6 +4557,7 @@ body.lon-home #como-funciona .lon-how-step-num {
     .lon-home .dr-hero {
         min-height: 100svh;
         padding: 0;
+        align-items: flex-end;
     }
 
     .lon-home .dr-hero-bg {
@@ -4565,7 +4566,7 @@ body.lon-home #como-funciona .lon-how-step-num {
         width: 100%;
         height: 100%;
         max-width: none;
-        object-position: 52% 16%;
+        object-position: 55% 28%;
     }
 
     .lon-home .dr-hero-scrim {
@@ -4578,7 +4579,8 @@ body.lon-home #como-funciona .lon-how-step-num {
     }
 
     .lon-home .dr-hero-content {
-        padding: 0 22px 28px;
+        align-self: flex-end;
+        padding: 0 22px 32px;
         max-width: none;
         background: transparent;
     }
