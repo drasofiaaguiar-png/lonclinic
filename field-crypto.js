@@ -4,11 +4,23 @@ const crypto = require('crypto');
 
 const PREFIX = 'enc:v1:';
 
+function keyFromMaterial(material) {
+    const text = String(material || '').trim();
+    if (!text) return null;
+    return crypto.createHmac('sha256', 'lon-clinic-field-v1').update(text).digest();
+}
+
+function fieldKeys() {
+    const keys = [];
+    const dedicated = keyFromMaterial(process.env.CLINICAL_ENCRYPTION_KEY);
+    const fallback = keyFromMaterial(process.env.SESSION_SECRET);
+    if (dedicated) keys.push(dedicated);
+    if (fallback && (!dedicated || !fallback.equals(dedicated))) keys.push(fallback);
+    return keys;
+}
+
 function fieldKey() {
-    const dedicated = String(process.env.CLINICAL_ENCRYPTION_KEY || '').trim();
-    const material = dedicated || String(process.env.SESSION_SECRET || '').trim();
-    if (!material) return null;
-    return crypto.createHmac('sha256', 'lon-clinic-field-v1').update(material).digest();
+    return fieldKeys()[0] || null;
 }
 
 function encryptField(value) {
@@ -25,25 +37,30 @@ function encryptField(value) {
     return PREFIX + Buffer.concat([iv, tag, enc]).toString('base64url');
 }
 
+function decryptWithKey(text, key) {
+    const buf = Buffer.from(text.slice(PREFIX.length), 'base64url');
+    if (buf.length < 29) return '';
+    const iv = buf.subarray(0, 12);
+    const tag = buf.subarray(12, 28);
+    const enc = buf.subarray(28);
+    const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
+    decipher.setAuthTag(tag);
+    return Buffer.concat([decipher.update(enc), decipher.final()]).toString('utf8');
+}
+
 function decryptField(value) {
     if (value == null) return '';
     const text = String(value);
     if (!text) return '';
     if (!text.startsWith(PREFIX)) return text;
-    const key = fieldKey();
-    if (!key) return text;
-    try {
-        const buf = Buffer.from(text.slice(PREFIX.length), 'base64url');
-        if (buf.length < 29) return '';
-        const iv = buf.subarray(0, 12);
-        const tag = buf.subarray(12, 28);
-        const enc = buf.subarray(28);
-        const decipher = crypto.createDecipheriv('aes-256-gcm', key, iv);
-        decipher.setAuthTag(tag);
-        return Buffer.concat([decipher.update(enc), decipher.final()]).toString('utf8');
-    } catch {
-        return '';
+    for (const key of fieldKeys()) {
+        try {
+            return decryptWithKey(text, key);
+        } catch {
+            /* try next key (legacy SESSION_SECRET material) */
+        }
     }
+    return '';
 }
 
 function encryptJson(value) {
@@ -55,7 +72,12 @@ function encryptJson(value) {
 
 function decryptJson(value) {
     if (value == null || value === '') return null;
-    if (typeof value === 'object') return value;
+    if (typeof value === 'object') {
+        if (value && typeof value.__enc === 'string') {
+            return decryptJson(value.__enc);
+        }
+        return value;
+    }
     const text = decryptField(String(value));
     if (!text) return null;
     try {
@@ -69,5 +91,6 @@ module.exports = {
     encryptField,
     decryptField,
     encryptJson,
-    decryptJson
+    decryptJson,
+    hasDedicatedClinicalKey: () => Boolean(String(process.env.CLINICAL_ENCRYPTION_KEY || '').trim())
 };

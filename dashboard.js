@@ -20,7 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const contentSection = document.getElementById('dashContent');
     const loginForm = document.getElementById('loginForm');
     const loginEmail = document.getElementById('loginEmail');
-    const loginRef = document.getElementById('loginRef');
+    const loginOtp = document.getElementById('loginOtp');
+    const loginOtpGroup = document.getElementById('loginOtpGroup');
+    const loginSubmitBtn = document.getElementById('loginSubmitBtn');
     const loginApiError = document.getElementById('dashLoginApiError');
     const logoutBtn = document.getElementById('logoutBtn');
 
@@ -91,11 +93,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function parseUrlLoginParams() {
-        const params = new URLSearchParams(window.location.search);
-        const email = (params.get('email') || '').trim();
-        const ref = (params.get('ref') || '').trim();
-        return { email, ref };
+    function escapeHtml(s) {
+        return String(s || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
     }
 
     function displayNameFromEmail(email) {
@@ -103,39 +107,96 @@ document.addEventListener('DOMContentLoaded', () => {
         return local.charAt(0).toUpperCase() + local.slice(1);
     }
 
-    // ─── Check existing session or URL params ───
-    const urlParams = parseUrlLoginParams();
-    if (urlParams.email) {
-        loginEmail.value = urlParams.email;
-        if (urlParams.ref) loginRef.value = urlParams.ref;
-        setSession({ email: urlParams.email, ref: urlParams.ref || null });
-        showDashboard(urlParams.email, urlParams.ref || null);
-    } else {
+    let otpStep = 'request';
+
+    function setOtpStep(step) {
+        otpStep = step;
+        if (loginOtpGroup) loginOtpGroup.hidden = step !== 'verify';
+        if (loginSubmitBtn) loginSubmitBtn.textContent = step === 'verify' ? 'Verify code' : 'Send access code';
+        if (loginEmail) loginEmail.readOnly = step === 'verify';
+    }
+
+    async function restorePatientSession() {
+        try {
+            const res = await fetch('/api/patient/session', { credentials: 'same-origin' });
+            const data = await res.json().catch(() => ({}));
+            if (res.ok && data.authenticated && data.email) {
+                setSession({ email: data.email });
+                await showDashboard(data.email);
+                return;
+            }
+        } catch { /* show login */ }
         const existing = getSession();
         if (existing && existing.email) {
-            showDashboard(existing.email, existing.ref || null);
+            clearSession();
         }
     }
 
-    // ─── Login Form ───
-    loginForm.addEventListener('submit', (e) => {
+    restorePatientSession();
+
+    // ─── Login Form (OTP) ───
+    loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         hideLoginApiError();
         const email = loginEmail.value.trim();
-        const ref = loginRef.value.trim();
         if (!email) return;
-        setSession({ email, ref: ref || null });
-        showDashboard(email, ref || null);
+        loginSubmitBtn.disabled = true;
+        try {
+            if (otpStep !== 'verify') {
+                const res = await fetch('/api/patient/otp/request', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    showLoginApiError(data.error || 'Could not send the code. Try again shortly.');
+                    return;
+                }
+                setOtpStep('verify');
+                if (loginOtp) loginOtp.focus();
+                return;
+            }
+            const code = (loginOtp && loginOtp.value || '').trim();
+            if (!code) {
+                showLoginApiError('Enter the 6-digit code from your email.');
+                return;
+            }
+            const res = await fetch('/api/patient/otp/verify', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, code })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) {
+                showLoginApiError(data.error || 'Invalid or expired code.');
+                return;
+            }
+            setSession({ email: data.email || email });
+            setOtpStep('request');
+            await showDashboard(data.email || email);
+        } catch {
+            showLoginApiError('Could not connect to the server. Please try again.');
+        } finally {
+            loginSubmitBtn.disabled = false;
+        }
     });
 
     // ─── Logout ───
-    logoutBtn.addEventListener('click', () => {
+    logoutBtn.addEventListener('click', async () => {
+        try {
+            await fetch('/api/patient/logout', { method: 'POST', credentials: 'same-origin' });
+        } catch { /* still clear local */ }
         clearSession();
         hideLoginApiError();
+        setOtpStep('request');
         loginSection.style.display = '';
         contentSection.style.display = 'none';
         loginEmail.value = '';
-        loginRef.value = '';
+        loginEmail.readOnly = false;
+        if (loginOtp) loginOtp.value = '';
         if (dashStats) dashStats.style.display = 'none';
     });
 
@@ -219,9 +280,9 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const res = await fetch('/api/patient/booking/reschedule', {
                     method: 'POST',
+                    credentials: 'same-origin',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        email: sess.email,
                         ref: pendingRescheduleRef,
                         dateIso,
                         time,
@@ -239,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 closeRescheduleModal();
-                await showDashboard(sess.email, sess.ref || null);
+                await showDashboard(sess.email);
             } catch {
                 if (rescheduleError) {
                     rescheduleError.textContent = 'Network error. Please try again.';
@@ -262,9 +323,9 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 const res = await fetch('/api/patient/booking/cancel', {
                     method: 'POST',
+                    credentials: 'same-origin',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        email: sess.email,
                         ref,
                         locale: getDashboardLocale()
                     })
@@ -274,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert(data.error || 'Could not cancel.');
                     return;
                 }
-                await showDashboard(sess.email, sess.ref || null);
+                await showDashboard(sess.email);
             } catch {
                 alert('Could not connect. Please try again.');
             }
@@ -297,7 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ─── Show Dashboard ───
-    async function showDashboard(email, ref) {
+    async function showDashboard(email) {
         if (!email) {
             clearSession();
             loginSection.style.display = '';
@@ -311,12 +372,8 @@ document.addEventListener('DOMContentLoaded', () => {
         dashGreeting.textContent = `Welcome, ${displayNameFromEmail(email)}`;
         dashEmail.textContent = email;
 
-        const params = new URLSearchParams({ email });
-        const refTrim = ref ? String(ref).trim() : '';
-        if (refTrim) params.set('ref', refTrim);
-
         try {
-            const res = await fetch(`/api/bookings?${params.toString()}`);
+            const res = await fetch('/api/bookings', { credentials: 'same-origin' });
             const data = await res.json().catch(() => ({}));
 
             if (!res.ok) {
@@ -327,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            setSession({ email, ref: refTrim || null });
+            setSession({ email });
 
             if (data.bookings && data.bookings.length > 0) {
                 renderBookings(data.bookings, data.doxyUrl);
@@ -375,23 +432,25 @@ document.addEventListener('DOMContentLoaded', () => {
         bookings.forEach((b) => {
             const row = document.createElement('tr');
             const status = getStatus(b, now);
-            const serviceLabel = SERVICE_LABELS[b.service] || b.service;
-            const doxyLink = (b.doxyUrl || doxyUrl) ? (b.doxyUrl || doxyUrl) : '#';
-
+            const serviceLabel = escapeHtml(SERVICE_LABELS[b.service] || b.service || '');
+            const safeRef = escapeHtml(b.bookingRef || '');
+            const safeDoxy = /^https:\/\/doxy\.me\//i.test(String(b.doxyUrl || '')) ? escapeHtml(b.doxyUrl) : '';
             const joinHtml =
-                status === 'upcoming' && !b.cancelled
-                    ? `<a href="${doxyLink}" target="_blank" rel="noopener" class="join-link">
+                status === 'upcoming' && !b.cancelled && safeDoxy
+                    ? `<a href="${safeDoxy}" target="_blank" rel="noopener" class="join-link">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
                         Join
                        </a>`
-                    : '';
+                    : (status === 'upcoming' && !b.cancelled
+                        ? '<span style="color:var(--text-muted);font-size:0.75rem;">Sala ainda não atribuída</span>'
+                        : '');
             const cancelHtml =
                 b.canCancel
-                    ? `<button type="button" class="btn btn-outline btn-sm dash-cancel-btn" data-ref="${b.bookingRef || ''}">Cancel</button>`
+                    ? `<button type="button" class="btn btn-outline btn-sm dash-cancel-btn" data-ref="${safeRef}">Cancel</button>`
                     : '';
             const rescheduleHtml =
                 b.canReschedule
-                    ? `<button type="button" class="btn btn-outline btn-sm dash-reschedule-btn" data-ref="${b.bookingRef || ''}">Reschedule</button>`
+                    ? `<button type="button" class="btn btn-outline btn-sm dash-reschedule-btn" data-ref="${safeRef}">Reschedule</button>`
                     : '';
             const completedHtml =
                 status === 'completed'
@@ -416,11 +475,11 @@ document.addEventListener('DOMContentLoaded', () => {
             actionsHtml += '</div>';
 
             row.innerHTML = `
-                <td class="ref-cell">${b.bookingRef || '—'}</td>
+                <td class="ref-cell">${safeRef || '—'}</td>
                 <td class="service-cell">${serviceLabel}</td>
-                <td>${b.date || '—'}${b.time ? ' · ' + b.time : ''}</td>
-                <td>${b.patientName || '—'}${b.travellerCount > 1 ? ` +${b.travellerCount - 1}` : ''}</td>
-                <td><span class="dash-status ${status}">${status}</span></td>
+                <td>${escapeHtml(b.date || '—')}${b.time ? ' · ' + escapeHtml(b.time) : ''}</td>
+                <td>${escapeHtml(b.patientName || '—')}${b.travellerCount > 1 ? ` +${escapeHtml(String(b.travellerCount - 1))}` : ''}</td>
+                <td><span class="dash-status ${escapeHtml(status)}">${escapeHtml(status)}</span></td>
                 <td>${actionsHtml}</td>
             `;
             dashTableBody.appendChild(row);
@@ -438,7 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
             upcomingPatient.textContent = nextUpcoming.patientName || '—';
             upcomingRef.textContent = nextUpcoming.bookingRef || '—';
 
-            const roomUrl = nextUpcoming.doxyUrl || doxyUrl;
+            const roomUrl = nextUpcoming.doxyUrl;
             if (roomUrl) {
                 joinDoxyBtn.href = roomUrl;
                 joinDoxyBtn.style.opacity = '1';
@@ -448,7 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 joinDoxyBtn.href = '#';
                 joinDoxyBtn.style.opacity = '0.5';
                 joinDoxyBtn.style.pointerEvents = 'none';
-                joinHint.textContent = 'The video consultation link will be available once configured by the clinic.';
+                joinHint.textContent = 'A sua consulta ainda não tem sala atribuída. Contacte o suporte.';
             }
         } else {
             upcomingSection.style.display = 'none';

@@ -7,7 +7,7 @@ const util = require('util');
 const fs = require('fs');
 const path = require('path');
 const { Pool } = require('pg');
-const { encryptField, decryptField, decryptJson } = require('./field-crypto');
+const { encryptField, decryptField, encryptJson, decryptJson } = require('./field-crypto');
 
 let pool = null;
 
@@ -160,7 +160,10 @@ function rowToBooking(row) {
             : null,
         intakeReminderSent: row.intake_reminder_sent === true,
         intake: parseIntakeJson(row.intake_json),
-        hasPatientIntake: !!row.intake_completed_at
+        hasPatientIntake: !!row.intake_completed_at,
+        payoutChannel: row.payout_channel || 'direct',
+        continuityAfterProgram: row.continuity_after_program === true,
+        refunded: row.refunded === true
     };
 }
 
@@ -710,6 +713,8 @@ async function initSchema(p) {
     await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS cv_mime TEXT`);
     await p.query(`ALTER TABLE psychologist_applications ADD COLUMN IF NOT EXISTS cv_data BYTEA`);
     await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS professional_id INTEGER`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS payout_channel VARCHAR(32) NOT NULL DEFAULT 'direct'`);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS continuity_after_program BOOLEAN NOT NULL DEFAULT FALSE`);
     await p.query(`CREATE INDEX IF NOT EXISTS idx_bookings_professional_id ON bookings (professional_id)`);
     await p.query(`ALTER TABLE staff_profiles ADD COLUMN IF NOT EXISTS professional_id INTEGER`);
     await unifyHiredPersonRecords(p);
@@ -798,6 +803,58 @@ async function initSchema(p) {
             updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
         )
     `);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS booking_confirmations (
+            token TEXT PRIMARY KEY,
+            stripe_session_id TEXT NOT NULL,
+            expires_at TIMESTAMPTZ NOT NULL,
+            used_at TIMESTAMPTZ,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_booking_confirmations_expires ON booking_confirmations (expires_at)`);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_booking_confirmations_stripe ON booking_confirmations (stripe_session_id)`);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS discount_codes (
+            code TEXT PRIMARY KEY,
+            percent_off INT NOT NULL,
+            max_uses INT NOT NULL DEFAULT 1,
+            uses INT NOT NULL DEFAULT 0,
+            expires_at TIMESTAMPTZ,
+            internal_only BOOLEAN NOT NULL DEFAULT TRUE
+        )
+    `);
+    await p.query(`
+        INSERT INTO discount_codes (code, percent_off, max_uses, uses, expires_at, internal_only)
+        VALUES
+            ('ME2026', 99, 20, 0, NULL, TRUE),
+            ('VERAO082026', 10, 500, 0, TIMESTAMPTZ '2026-08-31 23:59:59+01', FALSE)
+        ON CONFLICT (code) DO NOTHING
+    `);
+    await p.query(`ALTER TABLE bookings ADD COLUMN IF NOT EXISTS refunded BOOLEAN NOT NULL DEFAULT FALSE`);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS patient_otps (
+            id UUID PRIMARY KEY,
+            email VARCHAR(320) NOT NULL,
+            code_hash VARCHAR(128) NOT NULL,
+            expires_at TIMESTAMPTZ NOT NULL,
+            used_at TIMESTAMPTZ,
+            attempts INTEGER NOT NULL DEFAULT 0,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_patient_otps_email ON patient_otps (LOWER(email), created_at DESC)`);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS deletion_requests (
+            id UUID PRIMARY KEY,
+            email VARCHAR(320) NOT NULL,
+            reason TEXT,
+            status VARCHAR(32) NOT NULL DEFAULT 'pending',
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            processed_at TIMESTAMPTZ
+        )
+    `);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_deletion_requests_status ON deletion_requests (status, created_at DESC)`);
 }
 
 function rowToAnalyticsEvent(row) {
@@ -1611,14 +1668,33 @@ async function cancelInvitation(id) {
     return r.rows[0] ? rowToInvitation(r.rows[0]) : null;
 }
 
+function encryptQuizJson(value) {
+    const enc = encryptJson(value);
+    if (enc == null || enc === '') return {};
+    if (typeof enc === 'string' && enc.startsWith('enc:v1:')) {
+        return { __enc: enc };
+    }
+    if (typeof enc === 'string') {
+        try { return JSON.parse(enc); } catch { return value || {}; }
+    }
+    return enc;
+}
+
+function decryptQuizJson(value) {
+    const out = decryptJson(value);
+    if (out && typeof out === 'object') return out;
+    if (value && typeof value === 'object' && !Array.isArray(value)) return value;
+    return out || {};
+}
+
 function rowToQuizAttempt(row) {
     return {
         id: row.id,
         claimToken: row.claim_token,
         quizId: row.quiz_id,
         email: row.email || null,
-        answers: row.answers,
-        result: row.result,
+        answers: decryptQuizJson(row.answers),
+        result: decryptQuizJson(row.result),
         score: row.score,
         createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
         claimedAt: row.claimed_at instanceof Date ? row.claimed_at.toISOString() : row.claimed_at || null
@@ -1631,7 +1707,14 @@ async function insertQuizAttempt(record) {
         `INSERT INTO quiz_attempts (id, claim_token, quiz_id, email, answers, result, score)
          VALUES ($1, $2, $3, NULL, $4, $5, $6)
          RETURNING *`,
-        [record.id, record.claimToken, record.quizId, JSON.stringify(record.answers), JSON.stringify(record.result), record.score]
+        [
+            record.id,
+            record.claimToken,
+            record.quizId,
+            JSON.stringify(encryptQuizJson(record.answers)),
+            JSON.stringify(encryptQuizJson(record.result)),
+            record.score
+        ]
     );
     return rowToQuizAttempt(r.rows[0]);
 }
@@ -1672,21 +1755,27 @@ async function findQuizAttemptsByEmail(email, limit = 50) {
 async function findDueQuizRecoveries(nowMs, limit = 20) {
     const p = getPool();
     const cap = Math.min(Math.max(parseInt(limit, 10) || 20, 1), 50);
+    const now = Number(nowMs) || Date.now();
     const r = await p.query(
         `SELECT * FROM quiz_attempts
          WHERE email IS NOT NULL
            AND quiz_id IS NOT NULL AND TRIM(quiz_id) <> ''
            AND quiz_id <> 'nutricao-avaliacao'
-           AND COALESCE(result->>'recoveredAt','') = ''
-           AND COALESCE(result->>'convertedAt','') = ''
-           AND COALESCE(result->>'recoverAt','') ~ '^[0-9]+$'
-           AND (result->>'recoverAt')::bigint <= $1
            AND claimed_at > NOW() - INTERVAL '48 hours'
          ORDER BY claimed_at ASC
-         LIMIT $2`,
-        [Number(nowMs) || Date.now(), cap]
+         LIMIT 200`
     );
-    return r.rows.map(rowToQuizAttempt);
+    const due = [];
+    for (const row of r.rows) {
+        const attempt = rowToQuizAttempt(row);
+        const result = attempt.result || {};
+        if (result.recoveredAt || result.convertedAt) continue;
+        const recoverAt = Number(result.recoverAt);
+        if (!Number.isFinite(recoverAt) || recoverAt > now) continue;
+        due.push(attempt);
+        if (due.length >= cap) break;
+    }
+    return due;
 }
 
 async function findDueNutricaoNurture(limit = 50) {
@@ -1696,52 +1785,62 @@ async function findDueNutricaoNurture(limit = 50) {
         `SELECT * FROM quiz_attempts
          WHERE quiz_id = 'nutricao-avaliacao'
            AND email IS NOT NULL
-           AND COALESCE(result->>'convertedAt','') IN ('', '0')
-           AND COALESCE(NULLIF(result->>'nurtureStep',''),'0') ~ '^[0-9]+$'
-           AND COALESCE((result->>'nurtureStep')::int, 0) < 3
            AND claimed_at > NOW() - INTERVAL '5 days'
          ORDER BY claimed_at ASC
-         LIMIT $1`,
-        [cap]
+         LIMIT 200`
     );
-    return r.rows.map(rowToQuizAttempt);
+    const due = [];
+    for (const row of r.rows) {
+        const attempt = rowToQuizAttempt(row);
+        const result = attempt.result || {};
+        const converted = String(result.convertedAt || '');
+        if (converted && converted !== '0') continue;
+        const step = Number(result.nurtureStep || 0) || 0;
+        if (step >= 3) continue;
+        due.push(attempt);
+        if (due.length >= cap) break;
+    }
+    return due;
 }
 
-async function claimNutricaoNurtureStep(id, fromStep, toStep, sentAtMs) {
+async function updateQuizAttemptResult(id, result) {
     const p = getPool();
-    const from = Number(fromStep) || 0;
-    const to = Number(toStep);
-    if (!id || to < 1 || to > 3 || to !== from + 1) return null;
-    const patch = { nurtureStep: to };
-    patch['nurture' + to + 'At'] = Number(sentAtMs) || Date.now();
     const r = await p.query(
-        `UPDATE quiz_attempts
-         SET result = COALESCE(result, '{}'::jsonb) || $2::jsonb
-         WHERE id = $1
-           AND quiz_id = 'nutricao-avaliacao'
-           AND email IS NOT NULL
-           AND COALESCE(result->>'convertedAt','') IN ('', '0')
-           AND COALESCE((NULLIF(result->>'nurtureStep',''))::int, 0) = $3
-         RETURNING *`,
-        [id, JSON.stringify(patch), from]
+        `UPDATE quiz_attempts SET result = $2 WHERE id = $1 RETURNING *`,
+        [id, JSON.stringify(encryptQuizJson(result || {}))]
     );
     return r.rows[0] ? rowToQuizAttempt(r.rows[0]) : null;
 }
 
+async function claimNutricaoNurtureStep(id, fromStep, toStep, sentAtMs) {
+    const from = Number(fromStep) || 0;
+    const to = Number(toStep);
+    if (!id || to < 1 || to > 3 || to !== from + 1) return null;
+    const existing = await findQuizAttemptById(id);
+    if (!existing || existing.quizId !== 'nutricao-avaliacao' || !existing.email) return null;
+    const result = existing.result || {};
+    const converted = String(result.convertedAt || '');
+    if (converted && converted !== '0') return null;
+    if ((Number(result.nurtureStep || 0) || 0) !== from) return null;
+    const merged = { ...result, nurtureStep: to };
+    merged['nurture' + to + 'At'] = Number(sentAtMs) || Date.now();
+    return updateQuizAttemptResult(id, merged);
+}
+
 async function mergeQuizAttemptResultByEmail(email, patch, quizId) {
-    const p = getPool();
     const e = String(email || '').toLowerCase().trim();
     if (!e || !patch || typeof patch !== 'object') return 0;
-    const qid = quizId ? String(quizId) : null;
-    const r = await p.query(
-        `UPDATE quiz_attempts
-         SET result = COALESCE(result, '{}'::jsonb) || $2::jsonb
-         WHERE LOWER(TRIM(email)) = $1
-           AND claimed_at > NOW() - INTERVAL '7 days'
-           AND ($3::text IS NULL OR quiz_id = $3)`,
-        [e, JSON.stringify(patch), qid]
-    );
-    return r.rowCount;
+    const rows = await findQuizAttemptsByEmail(e, 50);
+    const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    let count = 0;
+    for (const row of rows) {
+        if (quizId && row.quizId !== quizId) continue;
+        const claimed = row.claimedAt ? new Date(row.claimedAt).getTime() : 0;
+        if (claimed && claimed < cutoff) continue;
+        await updateQuizAttemptResult(row.id, { ...(row.result || {}), ...patch });
+        count += 1;
+    }
+    return count;
 }
 
 /** IANA name for PostgreSQL AT TIME ZONE (schedule timezone). */
@@ -2202,8 +2301,8 @@ async function insertBooking(booking) {
             date_iso, patient_locale, patient_phone,
             cancelled, reschedule_count, reminder_sent, reminder_1h_sent, followup_sent,
             professional, professional_id, marked_paid, invoice_sent, review_requested, visit_frequency, patient_type,
-            consultation_completed
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27)
+            consultation_completed, payout_channel, continuity_after_program
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29)
         ON CONFLICT (payment_id) DO NOTHING
         RETURNING *`,
         [
@@ -2235,7 +2334,9 @@ async function insertBooking(booking) {
             booking.reviewRequested === true,
             booking.visitFrequency || null,
             booking.patientType || null,
-            booking.consultationCompleted === true
+            booking.consultationCompleted === true,
+            String(booking.payoutChannel || booking.channel || 'direct').slice(0, 32),
+            booking.continuityAfterProgram === true
         ]
     );
     return r.rowCount > 0;
@@ -3985,6 +4086,241 @@ async function replaceStaffTotpRecoveryHashes(username, recoveryHashes) {
     return r.rows[0] ? rowToStaffTotp(r.rows[0]) : null;
 }
 
+function normalizeDiscountCode(raw) {
+    return String(raw || '').trim().toUpperCase().replace(/[^A-Z0-9_-]/g, '').slice(0, 32);
+}
+
+function rowToDiscountCode(row) {
+    if (!row) return null;
+    return {
+        code: row.code,
+        percentOff: Number(row.percent_off) || 0,
+        maxUses: Number(row.max_uses) || 0,
+        uses: Number(row.uses) || 0,
+        expiresAt: row.expires_at instanceof Date ? row.expires_at.toISOString() : row.expires_at,
+        internalOnly: row.internal_only !== false
+    };
+}
+
+function discountStillValid(row) {
+    if (!row) return false;
+    if (Number(row.uses) >= Number(row.max_uses)) return false;
+    if (!row.expires_at && !row.expiresAt) return true;
+    const exp = new Date(row.expires_at || row.expiresAt).getTime();
+    return !Number.isFinite(exp) || exp > Date.now();
+}
+
+async function insertBookingConfirmation({ token, stripeSessionId, expiresAt }) {
+    const p = getPool();
+    await p.query(
+        `INSERT INTO booking_confirmations (token, stripe_session_id, expires_at)
+         VALUES ($1, $2, $3)
+         ON CONFLICT (token) DO NOTHING`,
+        [String(token), String(stripeSessionId), expiresAt]
+    );
+}
+
+async function findBookingConfirmation(token) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE booking_confirmations
+            SET used_at = COALESCE(used_at, NOW())
+          WHERE token = $1 AND expires_at > NOW()
+          RETURNING stripe_session_id`,
+        [String(token || '')]
+    );
+    return r.rows[0] ? r.rows[0].stripe_session_id : null;
+}
+
+async function lookupDiscountCode(code) {
+    const p = getPool();
+    const key = normalizeDiscountCode(code);
+    if (!key) return null;
+    const r = await p.query(`SELECT * FROM discount_codes WHERE code = $1 LIMIT 1`, [key]);
+    const row = r.rows[0];
+    if (!row || !discountStillValid(row)) return null;
+    return rowToDiscountCode(row);
+}
+
+async function reserveDiscountCode(code) {
+    const p = getPool();
+    const key = normalizeDiscountCode(code);
+    if (!key) return null;
+    const r = await p.query(
+        `UPDATE discount_codes
+            SET uses = uses + 1
+          WHERE code = $1
+            AND uses < max_uses
+            AND (expires_at IS NULL OR expires_at > NOW())
+          RETURNING *`,
+        [key]
+    );
+    return r.rows[0] ? rowToDiscountCode(r.rows[0]) : null;
+}
+
+async function releaseDiscountCode(code) {
+    const p = getPool();
+    const key = normalizeDiscountCode(code);
+    if (!key) return;
+    await p.query(
+        `UPDATE discount_codes SET uses = GREATEST(uses - 1, 0) WHERE code = $1`,
+        [key]
+    );
+}
+
+function rowToPatientOtp(row) {
+    if (!row) return null;
+    return {
+        id: row.id,
+        email: row.email,
+        codeHash: row.code_hash,
+        expiresAt: row.expires_at instanceof Date ? row.expires_at.toISOString() : row.expires_at,
+        usedAt: row.used_at instanceof Date ? row.used_at.toISOString() : row.used_at || null,
+        attempts: Number(row.attempts) || 0,
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at
+    };
+}
+
+async function insertPatientOtp({ id, email, codeHash, expiresAt }) {
+    const p = getPool();
+    const r = await p.query(
+        `INSERT INTO patient_otps (id, email, code_hash, expires_at)
+         VALUES ($1, $2, $3, $4)
+         RETURNING *`,
+        [id, String(email || '').toLowerCase().trim(), codeHash, expiresAt]
+    );
+    return rowToPatientOtp(r.rows[0]);
+}
+
+async function findLatestPatientOtp(email) {
+    const p = getPool();
+    const e = String(email || '').toLowerCase().trim();
+    const r = await p.query(
+        `SELECT * FROM patient_otps
+         WHERE LOWER(email) = $1 AND used_at IS NULL AND expires_at > NOW()
+         ORDER BY created_at DESC
+         LIMIT 1`,
+        [e]
+    );
+    return rowToPatientOtp(r.rows[0]);
+}
+
+async function bumpPatientOtpAttempts(id) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE patient_otps SET attempts = attempts + 1 WHERE id = $1 RETURNING *`,
+        [id]
+    );
+    return rowToPatientOtp(r.rows[0]);
+}
+
+async function markPatientOtpUsed(id) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE patient_otps SET used_at = NOW() WHERE id = $1 AND used_at IS NULL RETURNING *`,
+        [id]
+    );
+    return rowToPatientOtp(r.rows[0]);
+}
+
+async function purgeExpiredPatientOtps() {
+    const p = getPool();
+    await p.query(`DELETE FROM patient_otps WHERE expires_at < NOW() - INTERVAL '1 day'`);
+}
+
+function rowToDeletionRequest(row) {
+    if (!row) return null;
+    return {
+        id: row.id,
+        email: row.email,
+        reason: row.reason || '',
+        status: row.status,
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
+        processedAt: row.processed_at instanceof Date ? row.processed_at.toISOString() : row.processed_at || null
+    };
+}
+
+async function insertDeletionRequest({ id, email, reason }) {
+    const p = getPool();
+    const r = await p.query(
+        `INSERT INTO deletion_requests (id, email, reason)
+         VALUES ($1, $2, $3)
+         RETURNING *`,
+        [id, String(email || '').toLowerCase().trim(), String(reason || '').slice(0, 500)]
+    );
+    return rowToDeletionRequest(r.rows[0]);
+}
+
+async function listDeletionRequests(limit = 100) {
+    const p = getPool();
+    const cap = Math.min(Math.max(parseInt(limit, 10) || 100, 1), 200);
+    const r = await p.query(
+        `SELECT * FROM deletion_requests ORDER BY created_at DESC LIMIT $1`,
+        [cap]
+    );
+    return r.rows.map(rowToDeletionRequest);
+}
+
+async function findDeletionRequestById(id) {
+    const p = getPool();
+    const r = await p.query(`SELECT * FROM deletion_requests WHERE id = $1`, [id]);
+    return rowToDeletionRequest(r.rows[0]);
+}
+
+async function anonymizePatientContact(email) {
+    const p = getPool();
+    const e = String(email || '').toLowerCase().trim();
+    if (!e) return { bookings: 0, quizzes: 0, otps: 0 };
+    const token = require('crypto').createHash('sha256').update(e).digest('hex').slice(0, 12);
+    const redacted = `erased-${token}@invalid.local`;
+    const bookings = await p.query(
+        `UPDATE bookings
+         SET email = $2, patient_name = 'Redacted', patient_phone = '', intake_json = NULL, intake_token = NULL
+         WHERE LOWER(TRIM(email)) = $1`,
+        [e, redacted]
+    );
+    const quizzes = await p.query(`DELETE FROM quiz_attempts WHERE LOWER(TRIM(email)) = $1`, [e]);
+    const otps = await p.query(`DELETE FROM patient_otps WHERE LOWER(email) = $1`, [e]);
+    return {
+        bookings: bookings.rowCount || 0,
+        quizzes: quizzes.rowCount || 0,
+        otps: otps.rowCount || 0
+    };
+}
+
+async function markDeletionRequestProcessed(id) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE deletion_requests SET status = 'processed', processed_at = NOW()
+         WHERE id = $1 AND status = 'pending'
+         RETURNING *`,
+        [id]
+    );
+    return rowToDeletionRequest(r.rows[0]);
+}
+
+async function markBookingRefunded(paymentId) {
+    const p = getPool();
+    const pid = String(paymentId || '').trim();
+    if (!pid) return null;
+    const r = await p.query(
+        `UPDATE bookings SET refunded = TRUE WHERE payment_id = $1 RETURNING *`,
+        [pid]
+    );
+    return r.rows[0] ? rowToBooking(r.rows[0]) : null;
+}
+
+async function purgeUnclaimedQuizAttempts(days = 30) {
+    const p = getPool();
+    const d = Math.min(Math.max(parseInt(days, 10) || 30, 7), 365);
+    const r = await p.query(
+        `DELETE FROM quiz_attempts
+         WHERE email IS NULL AND created_at < NOW() - ($1::text || ' days')::interval`,
+        [String(d)]
+    );
+    return r.rowCount || 0;
+}
+
 module.exports = {
     getPool,
     isDatabaseEnabled,
@@ -3993,6 +4329,24 @@ module.exports = {
     upsertStaffTotpSecret,
     enableStaffTotp,
     replaceStaffTotpRecoveryHashes,
+    insertBookingConfirmation,
+    findBookingConfirmation,
+    lookupDiscountCode,
+    reserveDiscountCode,
+    releaseDiscountCode,
+    normalizeDiscountCode,
+    insertPatientOtp,
+    findLatestPatientOtp,
+    bumpPatientOtpAttempts,
+    markPatientOtpUsed,
+    purgeExpiredPatientOtps,
+    insertDeletionRequest,
+    listDeletionRequests,
+    findDeletionRequestById,
+    anonymizePatientContact,
+    markDeletionRequestProcessed,
+    markBookingRefunded,
+    purgeUnclaimedQuizAttempts,
     initDatabase,
     bookingExistsByPaymentId,
     findBookingByPaymentId,

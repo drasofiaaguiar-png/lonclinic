@@ -627,10 +627,21 @@ async function initBookingFlow() {
         return;
     }
 
-    // Returning from Stripe Checkout — show confirmation
-    if (urlParams.get('success') === 'true' && urlParams.get('session_id')) {
-        await handleStripeReturn(urlParams.get('session_id'));
-        return; // Don't initialise rest of booking flow
+    // Returning from Stripe Checkout — show confirmation via opaque token (never Stripe session_id)
+    if (urlParams.get('success') === 'true') {
+        const confirmToken = (urlParams.get('t') || '').trim();
+        if (confirmToken) {
+            await handleStripeReturn(confirmToken);
+            return;
+        }
+        document.querySelectorAll('.booking-step').forEach(s => s.classList.remove('active'));
+        document.getElementById('step-4').classList.add('active');
+        document.getElementById('confirmEmail').textContent = '—';
+        document.getElementById('confirmService').textContent = 'Your consultation';
+        document.getElementById('confirmDateTime').textContent = 'Check your email for details';
+        document.getElementById('confirmAmount').textContent = '—';
+        document.getElementById('confirmRef').textContent = 'See confirmation email';
+        return;
     }
 
     // Returning from cancelled Stripe Checkout
@@ -2072,31 +2083,8 @@ async function initBookingFlow() {
     //  STEP 3 — Review & Pay (Stripe)
     // ═══════════════════════════════════════
     
-    // Discount codes
-    const discountCodes = {
-        'ME2026': 99,  // 99% discount
-        'VERAO082026': 10  // 10% discount — summer 2026
-    };
-
-    function validateDiscountCode(code) {
-        const noDiscount = {
-            burnout_mensal: 1,
-            psicologia_mensal: 1,
-            terapia_casal_mensal: 1,
-            burnout_programa: 1,
-            nutricao_programa: 1,
-            nutricao_completo: 1,
-            nutricao_completo_reforcado: 1
-        };
-        if (noDiscount[state.service]) return null;
-        const upperCode = code.toUpperCase().trim();
-        if (discountCodes[upperCode]) {
-            return discountCodes[upperCode];
-        }
-        return null;
-    }
-
-    function applyDiscount() {
+    // Discount codes are validated on the server — never ship the table in the browser.
+    async function applyDiscount() {
         const codeInput = document.getElementById('discountCodeStep2') || document.getElementById('discountCode');
         const messageEl = document.getElementById('discountMessageStep2') || document.getElementById('discountMessage');
         if (!codeInput || !messageEl) return;
@@ -2110,20 +2098,27 @@ async function initBookingFlow() {
             return;
         }
 
-        const discount = validateDiscountCode(code);
-        if (discount !== null) {
-            state.discountCode = code.toUpperCase();
-            state.discountPercent = discount;
-            // Calculate actual discount considering Stripe minimum
+        try {
+            const res = await fetch('/api/discount/validate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, service: state.service })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || !data.ok) {
+                throw new Error(data.error || 'invalid');
+            }
+            state.discountCode = data.code;
+            state.discountPercent = Number(data.percentOff) || 0;
             const subtotalCents = state.service === 'travel' ? state.servicePriceCents : state.servicePriceCents * state.travellerCount;
-            const maxDiscountCents = Math.round(subtotalCents * (discount / 100));
+            const maxDiscountCents = Math.round(subtotalCents * (state.discountPercent / 100));
             const finalCents = Math.max(50, subtotalCents - maxDiscountCents);
             const actualDiscountPercent = Math.round(((subtotalCents - finalCents) / subtotalCents) * 100);
             messageEl.textContent = `Discount code "${state.discountCode}" applied: ${actualDiscountPercent}% off (minimum €0.50)`;
             messageEl.className = 'discount-message discount-success';
             messageEl.style.display = 'block';
             updateReviewAndSummary();
-        } else {
+        } catch (err) {
             state.discountCode = '';
             state.discountPercent = 0;
             messageEl.textContent = 'Invalid discount code';
@@ -2484,7 +2479,7 @@ async function initBookingFlow() {
         }
     }
 
-    async function handleStripeReturn(sessionId) {
+    async function handleStripeReturn(confirmToken) {
         // Show loading state
         document.querySelectorAll('.booking-step').forEach(s => s.classList.remove('active'));
         document.getElementById('step-4').classList.add('active');
@@ -2499,7 +2494,7 @@ async function initBookingFlow() {
         document.querySelectorAll('.progress-line').forEach(l => l.classList.add('filled'));
 
         try {
-            const response = await fetch(`/api/session/${sessionId}`);
+            const response = await fetch(`/api/confirmation/${encodeURIComponent(confirmToken)}`);
             const data = await response.json();
 
             if (!response.ok) {
@@ -2517,10 +2512,8 @@ async function initBookingFlow() {
             if (timeHint && data.time) timeHint.textContent = data.time;
 
             const dashboardBtn = document.getElementById('goToDashboardBtn');
-            if (dashboardBtn && data.email) {
-                const portalParams = new URLSearchParams({ email: data.email });
-                if (data.bookingRef) portalParams.set('ref', data.bookingRef);
-                dashboardBtn.href = `/patient-portal?${portalParams.toString()}`;
+            if (dashboardBtn) {
+                dashboardBtn.href = '/patient-portal';
                 dashboardBtn.style.display = '';
             }
 
@@ -2537,21 +2530,7 @@ async function initBookingFlow() {
                 }
             }
 
-            // Google Ads — Purchase conversion; new_customer from server (prior paid bookings by email)
-            if (typeof gtag === 'function') {
-                const value =
-                    typeof data.amount === 'number' && data.amount > 0 ? data.amount / 100 : 1.0;
-                const conv = {
-                    send_to: 'AW-18103198169/bLl8COjQ6J4cENnDo7hD',
-                    value,
-                    currency: (data.currency || 'eur').toUpperCase(),
-                    transaction_id: sessionId
-                };
-                if (typeof data.isNewCustomer === 'boolean') {
-                    conv.new_customer = data.isNewCustomer;
-                }
-                gtag('event', 'conversion', conv);
-            }
+            // Clinical success page: no Google Ads / GA4 conversion pixel.
 
         } catch (err) {
             console.error('Error loading confirmation:', err);

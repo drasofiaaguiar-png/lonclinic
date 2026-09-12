@@ -962,7 +962,7 @@
                 renovacao: '15–20 min',
                 longevidade: '45–60 min',
                 nutricao_consulta: '30 minutes',
-                nutricao_programa: 'Month 1 · then €75/month · total €490',
+                nutricao_programa: 'Month 1 now · later months billed separately (not automatic)',
                 nutricao_completo: 'Month 1 · then €187/month',
                 nutricao_completo_reforcado: 'Month 1 · then €168/month',
                 infeccao_urinaria: '20–30 min'
@@ -1029,7 +1029,7 @@
                 renovacao: '15–20 min',
                 longevidade: '45–60 min',
                 nutricao_consulta: '30 minutos',
-                nutricao_programa: 'Mês 1 · depois 75 €/mês · total 490 €',
+                nutricao_programa: 'Mês 1 agora · meses seguintes cobrados à parte (não é débito automático)',
                 nutricao_completo: 'Mês 1 · depois 187 €/mês',
                 nutricao_completo_reforcado: 'Mês 1 · depois 168 €/mês',
                 infeccao_urinaria: '20–30 min'
@@ -1096,7 +1096,7 @@
                 renovacao: '15–20 min',
                 longevidade: '45–60 min',
                 nutricao_consulta: '30 minutos',
-                nutricao_programa: 'Mes 1 · luego 75 €/mes · total 490 €',
+                nutricao_programa: 'Mes 1 ahora · meses siguientes cobrados aparte (no es cargo automático)',
                 nutricao_completo: 'Mes 1 · luego 187 €/mes',
                 nutricao_completo_reforcado: 'Mes 1 · luego 168 €/mes',
                 infeccao_urinaria: '20–30 min'

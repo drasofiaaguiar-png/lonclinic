@@ -1,16 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZN8J4X12H3"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-ZN8J4X12H3');
-      gtag('config', 'GT-TXHQ9ZVX', { send_page_view: false });
-      gtag('config', 'AW-18103198169', { send_page_view: false });
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Portal — Schedule Management | LON Clinic</title>
@@ -64,7 +54,7 @@
                 </div>
                 <h1 class="dash-login-title">Admin Portal</h1>
                 <p class="dash-login-desc">Access the admin portal to manage your schedule and availability.</p>
-                <p class="dash-login-note" id="adminClinicianNote" hidden>You are signed in to the clinic portal. Admin needs the administrator account — sign in below, or <a href="/clinic-desk/dias">return to the clinic portal</a>.</p>
+                <p class="dash-login-note" id="adminClinicianNote" hidden>This account is not an administrator. Sign in with the administrator username.</p>
                 <form class="dash-login-form" id="adminLoginForm">
                     <div class="dash-form-group">
                         <label for="adminUsername">Username</label>
@@ -120,6 +110,19 @@
                     <pre class="dash-login-recovery" id="adminTotpCodesList"></pre>
                     <button type="button" class="btn btn-primary btn-lg dash-login-btn" id="adminTotpCodesContinue">Continuar para o portal</button>
                 </div>
+                <form class="dash-login-form" id="adminStaffPasswordForm" hidden>
+                    <p class="dash-form-hint">Defina a sua password com o link recebido por email.</p>
+                    <div class="dash-form-group">
+                        <label for="adminStaffPasswordEmail">Email</label>
+                        <input type="email" id="adminStaffPasswordEmail" required autocomplete="email">
+                    </div>
+                    <div class="dash-form-group">
+                        <label for="adminStaffPassword">Nova password</label>
+                        <input type="password" id="adminStaffPassword" minlength="12" required autocomplete="new-password">
+                    </div>
+                    <div id="adminStaffPasswordError" class="dash-login-error" style="display:none;"></div>
+                    <button type="submit" class="btn btn-primary btn-lg dash-login-btn">Guardar password</button>
+                </form>
                 <p class="dash-login-note">Authorized administrators only. All access is logged.</p>
             </div>
         </section>
@@ -145,7 +148,6 @@
                     <button type="button" class="admin-nav-item" data-admin-panel="psychologists">Bolsa de Profissionais</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="producers">Diretório produtores</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="profile">Profile</button>
-                    <a class="admin-nav-item admin-nav-link" href="/clinic-desk/dias">Consultations &amp; notes</a>
                 </nav>
                 <div class="admin-sidebar-foot">
                     <button type="button" class="btn btn-outline btn-sm" id="adminLogoutBtn">Sign out</button>
@@ -962,11 +964,11 @@
                     </div>
                     <div id="adminProfessionalError" class="dash-login-error" style="display:none;" role="alert"></div>
                     <div id="adminProfessionalCreds" class="admin-pro-creds" hidden>
-                        <p class="admin-pro-creds-title">Login assigned — copy it now. The password cannot be shown again.</p>
-                        <p class="admin-pro-creds-line">Portal: <a id="proCredsPortal" href="/clinic-desk/dias">/clinic-desk/dias</a></p>
+                        <p class="admin-pro-creds-title">Login assigned. The professional sets their own password via email. There is no clinician portal — administration uses /admin.</p>
+                        <p class="admin-pro-creds-line">Admin: <a id="proCredsPortal" href="/admin">/admin</a></p>
                         <p class="admin-pro-creds-line">Name: <span id="proCredsName"></span></p>
                         <p class="admin-pro-creds-line">Email: <code id="proCredsUsername"></code></p>
-                        <p class="admin-pro-creds-line">Password: <code id="proCredsPassword"></code></p>
+                        <p class="admin-pro-creds-line">Password: o profissional define a sua no link enviado por email.</p>
                         <p class="admin-pro-creds-line" id="proCredsSendStatus" hidden></p>
                         <div class="admin-pro-creds-actions">
                             <button type="button" class="btn btn-outline btn-sm" id="proCredsCopyBtn">Copy login</button>
@@ -1012,7 +1014,7 @@
                         </select>
                     </div>
                     <div id="adminPsychCreds" class="admin-pro-creds" hidden>
-                        <p class="admin-pro-creds-title">Clinic logins assigned — copy them now. Passwords cannot be shown again.</p>
+                        <p class="admin-pro-creds-title">Clinic logins assigned — a password setup email was sent. We never email a password.</p>
                         <div id="adminPsychCredsList"></div>
                         <button type="button" class="btn btn-outline btn-sm" id="psychCredsCopyBtn">Copy logins</button>
                     </div>

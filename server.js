@@ -17,8 +17,12 @@ function requireEnv(name) {
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
 const CLINIC_PORTAL_BUILD = '10set-pw';
-const CLINIC_PORTAL_PATH = '/clinic-desk/dias';
+const CLINIC_PORTAL_PATH = '/admin';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
+const fieldCrypto = require('./field-crypto');
+if ((process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT) && !fieldCrypto.hasDedicatedClinicalKey()) {
+    console.warn('   ⚠️  CLINICAL_ENCRYPTION_KEY is not set — quiz and clinical fields fall back to SESSION_SECRET. Set a dedicated key.');
+}
 
 const bcrypt = require('bcrypt');
 // Hash the plaintext password from env at startup for constant-time comparison at login.
@@ -28,7 +32,7 @@ bcrypt.hash(CLINIC_PASSWORD, 12).then(h => { clinicPasswordHash = h; });
 const db = require('./db');
 const totp = require('./totp');
 const analyticsNet = require('./analytics-network');
-const { computeCheckoutTotalCents, isStripeSubscriptionService, normalizeServiceKey } = require('./pricing');
+const { computeCheckoutTotalCents, isStripeSubscriptionService, normalizeServiceKey, discountsAllowedForService, providerPayoutCents } = require('./pricing');
 
 function bookingServiceTag(raw) {
     const key = normalizeServiceKey(raw);
@@ -315,12 +319,52 @@ const rateLimitPatientPortal = rateLimit({
 });
 
 const rateLimitCareers = rateLimit({
-    windowMs: 60 * 60 * 1000,
-    max: 8,
+    windowMs: 15 * 60 * 1000,
+    max: 5,
     standardHeaders: true,
     legacyHeaders: false,
     handler: (req, res) => {
         res.status(429).json({ error: 'Demasiadas candidaturas. Tente novamente mais tarde.' });
+    }
+});
+
+const rateLimitReclamacoes = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Too many submissions. Try again later.' });
+    }
+});
+
+const inviteRateLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).type('html').send('Too many requests. Try again in a few minutes.');
+    }
+});
+
+const rateLimitPatientOtp = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Too many codes requested. Try again in a few minutes.' });
+    }
+});
+
+const rateLimitErasure = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Too many requests. Try again later.' });
     }
 });
 
@@ -355,7 +399,9 @@ app.use(
                     'https://widget.trustpilot.com'
                 ],
                 scriptSrcAttr: ["'none'"],
-                styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+                // Many pages still use style="" attributes; dropping unsafe-inline would blank the homepage.
+                // <style> blocks receive a nonce via applyCspNonce (same as scripts).
+                styleSrc: ["'self'", "'unsafe-inline'", (req, res) => `'nonce-${res.locals.cspNonce}'`, 'https://fonts.googleapis.com'],
                 fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
                 imgSrc: ["'self'", 'data:', 'https:'],
                 connectSrc: [
@@ -392,8 +438,39 @@ app.use(
 const ANALYTICS_SNIPPET =
     '\n<script src="/lon-analytics.js?v=20260906e" defer></script>\n' +
     '<noscript><img src="/api/a.gif?n=page_view" alt="" width="1" height="1"></noscript>\n';
-function injectAnalyticsHtml(html) {
+
+function isClinicalTrackingSurface(req) {
+    if (!req) return false;
+    const p = String((req.path || req.url || '').split('?')[0]);
+    const q = req.query || {};
+    if (/^\/patient-portal(?:\/|$)/.test(p) || p === '/dashboard.html' || p === '/dashboard') return true;
+    if (/^\/clinic-desk(?:\/|$)/.test(p) || /^\/clinic-portal(?:\/|$)/.test(p) || p === '/clinic.html') return true;
+    if (p === '/admin' || p === '/admin.html' || /^\/doctors(?:\/|$)/.test(p)) return true;
+    if ((p === '/book-consultation' || p === '/book.html' || p.startsWith('/marcar')) && String(q.success) === 'true') {
+        return true;
+    }
+    return false;
+}
+
+function stripGtagBlocks(html) {
+    return String(html || '')
+        .replace(/\s*<!--\s*Google tag[\s\S]*?<\/script>\s*<script\b[\s\S]*?<\/script>/i, '\n')
+        .replace(/\s*<script\s+async\s+src="https:\/\/www\.googletagmanager\.com\/gtag\/js[^"]*"><\/script>\s*<script\b[\s\S]*?<\/script>/gi, '\n');
+}
+
+function ensureGtagConsentDenied(html) {
+    if (!html || !/function gtag\s*\(/.test(html)) return html;
+    if (/gtag\(\s*'consent'\s*,\s*'default'/.test(html)) return html;
+    return html.replace(
+        /function gtag\(\)\s*\{\s*dataLayer\.push\(arguments\);\s*\}/,
+        `function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });`
+    );
+}
+
+function injectAnalyticsHtml(html, req) {
     if (!html || typeof html !== 'string') return html;
+    if (isClinicalTrackingSurface(req)) return html;
     if (html.includes('lon-analytics.js')) return html;
     if (/data-admin-panel-content|id="clinicPortal"|id="patientDashboard"/.test(html)) return html;
     const bodyAt = html.lastIndexOf('</body>');
@@ -407,11 +484,19 @@ function applyCspNonce(html, nonce) {
     if (!html || typeof html !== 'string' || !nonce) return html;
     const n = String(nonce).replace(/[^A-Za-z0-9+/=_-]/g, '');
     if (!n) return html;
-    return html.replace(/<script\b(?![^>]*\bnonce=)/gi, `<script nonce="${n}"`);
+    return html
+        .replace(/<script\b(?![^>]*\bnonce=)/gi, `<script nonce="${n}"`)
+        .replace(/<style\b(?![^>]*\bnonce=)/gi, `<style nonce="${n}"`);
 }
 
 function injectPublicHtml(html, req, nonce) {
-    return applyCspNonce(injectAnalyticsHtml(seo.applyHtmlSeo(html, req)), nonce);
+    let out = html;
+    if (isClinicalTrackingSurface(req)) {
+        out = stripGtagBlocks(out);
+    } else {
+        out = ensureGtagConsentDenied(out);
+    }
+    return applyCspNonce(injectAnalyticsHtml(seo.applyHtmlSeo(out, req), req), nonce);
 }
 
 app.use((req, res, next) => {
@@ -464,6 +549,31 @@ app.use(session({
     }
 }));
 
+const SESSION_IDLE_MS = 30 * 60 * 1000;
+
+function sessionHasAuth(sess) {
+    if (!sess) return false;
+    return !!(sess.clinicAuthenticated || sess.patientAuthenticated || sess.patientBookingId);
+}
+
+app.use((req, res, next) => {
+    const sess = req.session;
+    if (!sess || !sessionHasAuth(sess)) return next();
+    const last = Number(sess.lastActivity) || 0;
+    if (last && Date.now() - last > SESSION_IDLE_MS) {
+        const wasPatient = !!(sess.patientAuthenticated || sess.patientBookingId);
+        const wantsJson = req.path.startsWith('/api/') || String(req.headers.accept || '').includes('application/json');
+        return sess.destroy(() => {
+            if (wantsJson) {
+                return res.status(401).json({ error: 'session_expired' });
+            }
+            return res.redirect(302, wasPatient ? '/patient-portal' : '/admin');
+        });
+    }
+    sess.lastActivity = Date.now();
+    return next();
+});
+
 app.use((req, res, next) => {
     if (String(req.path || '').startsWith('/api/')) {
         res.set({
@@ -511,12 +621,8 @@ function normalizeDoxyRoomUrl(raw) {
 }
 
 function patientDoxyRoomUrl(raw) {
-    const normalized = normalizeDoxyRoomUrl(raw || DOXY_DEFAULT_PATIENT_ROOM);
-    // Clinic lobby without a provider — confirmation emails and the dashboard
-    // send patients to Rita's room.
-    if (!normalized || normalized === 'https://doxy.me/lonclinic') {
-        return DOXY_DEFAULT_PATIENT_ROOM;
-    }
+    const normalized = normalizeDoxyRoomUrl(raw);
+    if (!normalized || normalized === 'https://doxy.me/lonclinic') return '';
     return normalized;
 }
 
@@ -810,7 +916,8 @@ function staffSessionFromIdentity(identity) {
         clinicDisplayName: identity.displayName,
         clinicRole: identity.role,
         professionalId: identity.professionalId || null,
-        clinicLoginTime: new Date().toISOString()
+        clinicLoginTime: new Date().toISOString(),
+        lastActivity: Date.now()
     };
 }
 
@@ -925,11 +1032,14 @@ async function requireAdminPage(req, res, next) {
         console.error('bindStaffSession:', err.message);
     }
     if (isAdminSession(req)) return next();
-    if (req.session && req.session.clinicAuthenticated) {
-        return res.redirect(302, CLINIC_PORTAL_PATH);
-    }
     const nextPath = safeInternalNextPath(req.originalUrl || '/diretorio') || '/diretorio';
     return res.redirect(302, `/admin?next=${encodeURIComponent(nextPath)}`);
+}
+
+function redactPhi(value) {
+    return String(value == null ? '' : value)
+        .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, '[redacted-email]')
+        .replace(/\+?\d[\d\s().-]{7,}\d/g, '[redacted-phone]');
 }
 
 function isStaffRequest(req) {
@@ -994,32 +1104,13 @@ function sendHtmlNoCacheString(res, html, statusCode) {
     res.type('html').send(html);
 }
 
-function clinicPortalAssetUrl(file) {
-    return `/api/clinic/assets/${file}?v=${CLINIC_PORTAL_BUILD}`;
+function clinicPortalAssetUrl() {
+    return '/admin';
 }
 
 async function serveClinicPortalHtml(res) {
-    try {
-        let html = await fs.promises.readFile(path.join(__dirname, 'clinic.html'), 'utf8');
-        html = html
-            .replace(/href="\/clinic-portal\/dashboard\.css\?v=[^"]+"/g, `href="${clinicPortalAssetUrl('dashboard.css')}"`)
-            .replace(/src="\/clinic-portal\/clinic\.js\?v=[^"]+"/g, `src="${clinicPortalAssetUrl('clinic.js')}"`)
-            .replace(/data-clinic-build="[^"]+"/, `data-clinic-build="${CLINIC_PORTAL_BUILD}"`)
-            .replace(
-                /Portal (?:now-7set|live-1058|registo-1|avail-1|docs-1|ficheiros-1|dias-1|dias-2|ficha-1|scope-1|scope-2|email-1|email-login-1|password-1|email-only-1|9set-email|9set-avail|10set-noperfil|perfil-2|perfil-3|perfil-4|perfil-5|perfil-6|perfil-7|perfil-8|perfil-9|perfil-10) — 7 set 2026\. Entre com o (?:username(?: ou o email)?|email) do profissional\.|Access the clinic portal to manage consultations, clinical records, and your Doxy\.me room\./g,
-                `Portal ${CLINIC_PORTAL_BUILD} — Use o email da sua ficha para entrar.`
-            )
-            .replace(
-                /Portal [A-Za-z0-9._-]+ — Use o email da sua ficha para entrar\./g,
-                `Portal ${CLINIC_PORTAL_BUILD} — Use o email da sua ficha para entrar.`
-            );
-        res.append('Set-Cookie', `lon_portal=${CLINIC_PORTAL_BUILD}; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly`);
-        res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
-        sendHtmlNoCacheString(res, html);
-    } catch (err) {
-        console.error('serveClinicPortalHtml:', err.message);
-        res.status(500).send('Error loading clinic portal');
-    }
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    return res.redirect(302, '/admin');
 }
 
 /* ========================================
@@ -1036,6 +1127,9 @@ const professionalsStore = []; // memory fallback for clinician accounts + Doxy 
 const passwordResetsStore = []; // memory fallback for clinic forgot-password codes
 let passwordResetIdSeq = 1;
 const passwordResetRequestTimes = new Map(); // email -> timestamps
+const bookingConfirmationsMemory = new Map();
+const discountCodesMemory = new Map();
+const BOOKING_CONFIRM_TTL_MS = 30 * 60 * 1000;
 const producersStore = []; // memory fallback for organic producers directory
 const staffProfilesStore = new Map();
 const staffPhotosStore = new Map();
@@ -2347,28 +2441,26 @@ async function getProducerBySlugInternal(slug) {
 
 async function resolveDoxyRoomUrl(professionalName) {
     const name = String(professionalName || '').trim();
-    if (name) {
-        try {
-            const pro = await findProfessionalByDisplayNameInternal(name);
-            if (pro) return assignedDoxyRoomUrl(pro.displayName, pro.doxyRoomUrl, pro.username);
-        } catch (err) {
-            console.error('   ⚠️  resolveDoxyRoomUrl:', err.message);
-        }
-        if (isClinicLeadDoxyName(name)) return DEFAULT_DOXY_ROOM_URL || '';
-        return '';
+    if (!name) return '';
+    try {
+        const pro = await findProfessionalByDisplayNameInternal(name);
+        if (pro) return assignedDoxyRoomUrl(pro.displayName, pro.doxyRoomUrl, pro.username);
+    } catch (err) {
+        console.error('   ⚠️  resolveDoxyRoomUrl:', err.message);
     }
-    return DEFAULT_DOXY_ROOM_URL || '';
+    if (isClinicLeadDoxyName(name)) return DEFAULT_DOXY_ROOM_URL || '';
+    return '';
 }
 
 function doxyUrlFromEmailData(data) {
     const name = String((data && data.professional) || '').trim();
     const explicit = String((data && data.doxyUrl) || '').trim();
     if (explicit) {
-        if (name) return assignedDoxyRoomUrl(name, explicit);
+        if (name) return assignedDoxyRoomUrl(name, explicit) || '';
         return patientDoxyRoomUrl(explicit);
     }
-    if (name && !isClinicLeadDoxyName(name)) return '';
-    return DEFAULT_DOXY_ROOM_URL || '';
+    if (name && isClinicLeadDoxyName(name)) return DEFAULT_DOXY_ROOM_URL || '';
+    return '';
 }
 
 function addStaffScopeName(scope, value) {
@@ -3763,12 +3855,19 @@ function buildConfirmationEmail(data) {
     } = data;
 
     const t = confirmationEmailStrings(rawLocale);
+    const safeName = escapeHtml(patientName);
+    const safeRef = escapeHtml(bookingRef);
+    const safeServiceLabel = escapeHtml(serviceLabel);
+    const safeDate = escapeHtml(date);
+    const safeTime = escapeHtml(time);
+    const safeDest = escapeHtml(travelDest);
+    const safeTravelDates = escapeHtml(travelDates);
 
     const currencySymbol = currency === 'eur' ? '€' : currency === 'gbp' ? '£' : '$';
     const formattedAmount = `${currencySymbol}${(amount / 100).toFixed(0)}`;
     const isTravel = service === 'travel';
     const isMulti = travellerCount > 1;
-    const doxyUrl = doxyUrlFromEmailData({ doxyUrl: dataDoxyUrl });
+    const doxyUrl = doxyUrlFromEmailData(data);
     const showRenewal = service !== 'renovacao' && service !== 'entrevista';
     const renewalHref = showRenewal
         ? renewalFollowupUrl({ email, patientName, bookingRef })
@@ -3779,7 +3878,7 @@ function buildConfirmationEmail(data) {
         passengerRows = passengers.map((name, i) => `
             <tr>
                 <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.travellerRow(i + 1)}</td>
-                <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${name}</td>
+                <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${escapeHtml(name)}</td>
             </tr>
         `).join('');
     }
@@ -3790,12 +3889,12 @@ function buildConfirmationEmail(data) {
             ${travelDest ? `
             <tr>
                 <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.destLabel}</td>
-                <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${travelDest}</td>
+                <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${safeDest}</td>
             </tr>` : ''}
             ${travelDates ? `
             <tr>
                 <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.travelDatesLabel}</td>
-                <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${travelDates}</td>
+                <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${safeTravelDates}</td>
             </tr>` : ''}
         `;
     }
@@ -3859,7 +3958,7 @@ function buildConfirmationEmail(data) {
 
                             <h2 style="margin: 0 0 8px; font-size: 24px; font-weight: 700; color: #0f172a; text-align: center;">${t.h2Confirmed}</h2>
                             <p style="margin: 0 0 24px; font-size: 15px; color: #64748b; text-align: center; line-height: 1.5;">
-                                ${t.thankYou(patientName)}
+                                ${t.thankYou(safeName)}
                             </p>
 
                             ${intakeUrl ? `
@@ -3871,21 +3970,21 @@ function buildConfirmationEmail(data) {
 
                             <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 20px; text-align: center; margin-bottom: 28px;">
                                 <p style="margin: 0 0 4px; font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em;">${t.refLabel}</p>
-                                <p style="margin: 0; font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: 0.05em;">${bookingRef}</p>
+                                <p style="margin: 0; font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: 0.05em;">${safeRef}</p>
                             </div>
 
                             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 28px;">
                                 <tr>
                                     <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.colService}</td>
-                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${serviceLabel}</td>
+                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${safeServiceLabel}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.colDate}</td>
-                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${date}</td>
+                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${safeDate}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.colTime}</td>
-                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${time}</td>
+                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${safeTime}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.colFormat}</td>
@@ -7647,7 +7746,7 @@ async function peopleForAvailabilityReminders() {
 }
 
 async function sendAvailabilityReminderEmail({ to, name, monthLabel, deadlineLabel, kind }) {
-    const portalUrl = `${PUBLIC_SITE_URL}${CLINIC_PORTAL_PATH}#availabilities`;
+    const portalUrl = `${PUBLIC_SITE_URL}/admin`;
     const isFinal = kind === 15;
     const subject = isFinal
         ? `Deadline: availabilities for ${monthLabel}`
@@ -7667,7 +7766,7 @@ async function sendAvailabilityReminderEmail({ to, name, monthLabel, deadlineLab
 }
 
 function professionalLoginPortalUrl() {
-    return `${PUBLIC_SITE_URL}${CLINIC_PORTAL_PATH}#profile`;
+    return `${PUBLIC_SITE_URL}/admin`;
 }
 
 function defaultProfessionalLoginNote(name) {
@@ -7707,27 +7806,31 @@ async function professionalPasswordMatches(plain, hash) {
     }
 }
 
-async function sendProfessionalLoginEmail({ to, name, username, password, note }) {
+async function sendProfessionalPasswordSetupEmail({ to, name, code }) {
     const portalUrl = professionalLoginPortalUrl();
-    const intro = sanitizeProfessionalLoginNote(note, name);
-    const subject = 'Acesso ao portal da Lon Clinic';
-    const loginId = isValidStaffEmail(to) ? normalizeStaffEmail(to) : String(username || '').trim();
+    const setupUrl = `${portalUrl}${portalUrl.includes('?') ? '&' : '?'}reset=${encodeURIComponent(code)}`;
+    const who = String(name || '').trim();
+    const greeting = who ? `Olá ${who},` : 'Olá,';
+    const subject = 'Defina a sua password — Lon Clinic';
     const text = [
-        intro,
+        greeting,
         '',
-        `Portal: ${portalUrl}`,
-        `Email: ${loginId}`,
-        `Password: ${password}`,
+        'Clique para definir a sua password no portal da Lon Clinic (válido 24 horas):',
+        setupUrl,
+        '',
+        'Nunca partilhamos a password por email. Só você a define neste link.',
+        '',
+        'Se não esperava este convite, ignore este email.',
         '',
         'Lon Clinic'
     ].join('\n');
-    const introHtml = escapeHtml(intro).replace(/\n/g, '<br>');
     const html = `<div style="font-family:system-ui,sans-serif;line-height:1.5;color:#111">
-<p style="margin:0 0 12px;">${introHtml}</p>
-<p style="margin:0 0 6px;"><a href="${escapeHtml(portalUrl)}">${escapeHtml(portalUrl)}</a></p>
-<p style="margin:0 0 4px;">Email: <strong>${escapeHtml(loginId)}</strong></p>
-<p style="margin:0 0 12px;">Password: <strong>${escapeHtml(password)}</strong></p>
-<p style="margin:0;">Lon Clinic</p>
+<p style="margin:0 0 12px;">${escapeHtml(greeting)}</p>
+<p style="margin:0 0 12px;">Clique para definir a sua password no portal da Lon Clinic (válido 24 horas):</p>
+<p style="margin:0 0 16px;"><a href="${escapeHtml(setupUrl)}">${escapeHtml(setupUrl)}</a></p>
+<p style="margin:0 0 12px;">Nunca partilhamos a password por email. Só você a define neste link.</p>
+<p style="margin:0;">Se não esperava este convite, ignore este email.</p>
+<p style="margin:12px 0 0;">Lon Clinic</p>
 </div>`;
     await deliverEmail({ from: EMAIL_FROM, to, subject, text, html });
 }
@@ -7949,7 +8052,14 @@ function startAppointmentReminderScheduler() {
     }, 20_000);
     console.log('   ⏰ Automation (reminders, follow-up, invite expiry): every 15m (first run ~15s after startup)');
     console.log('   ⏰ Quiz checkout recovery: every 60s');
-    console.log('   ⏰ Nutrition quiz nurture (1h / 24h / 48h): every 60s');
+        console.log('   ⏰ Nutrition quiz nurture (1h / 24h / 48h): every 60s');
+    setInterval(() => {
+        if (!usePersistentDb) return;
+        void db.purgeExpiredPatientOtps().catch(() => {});
+        void db.purgeUnclaimedQuizAttempts(30).then((n) => {
+            if (n) console.log(`   🧹 Purged ${n} unclaimed quiz attempt(s)`);
+        }).catch((err) => console.error('purgeUnclaimedQuizAttempts:', err.message));
+    }, 6 * 60 * 60 * 1000);
     if (isStripeConfigured) {
         setTimeout(() => {
             void reconcileRecentPaidCheckouts({ hours: 72 }).then((result) => {
@@ -7992,7 +8102,7 @@ function stripeCustomerIdFromSession(session) {
 
 /**
  * Sends patient + admin emails and persists the booking once per Stripe payment.
- * Used by the Stripe webhook and by GET /api/session/:id so confirmations still go out
+ * Used by the Stripe webhook and by GET /api/confirmation/:token so confirmations still go out
  * if the webhook is misconfigured, delayed, or unreachable.
  *
  * After Stripe has collected money, this must never refuse to save because the slot
@@ -8390,6 +8500,12 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             emitServerAnalytics('checkout_abandoned', {
                 props: { service: bookingServiceTag((expiredSession.metadata || {}).service), via: 'stripe_expired' }
             }).catch(() => {});
+            const expiredDiscount = expiredSession.metadata && expiredSession.metadata.discount_code;
+            if (expiredDiscount) {
+                await releaseCheckoutDiscount(expiredDiscount).catch((err) => {
+                    console.error('release expired discount:', err.message);
+                });
+            }
             const expiredEmail = expiredSession.customer_email || (expiredSession.metadata && expiredSession.metadata.contact_email) || '';
             if (expiredEmail) {
                 const existing = quizLeadMemory.get(quizLeadKey(expiredEmail));
@@ -8409,6 +8525,59 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                     }
                 } catch (e) { /* ignore */ }
             }
+            break;
+        }
+
+        case 'invoice.paid': {
+            const invoice = event.data.object || {};
+            const invoiceEmail = invoice.customer_email || '';
+            const subMeta = (invoice.subscription_details && invoice.subscription_details.metadata) || invoice.metadata || {};
+            console.log(
+                '✅ invoice.paid …' +
+                    String(invoice.id || '').slice(-8) +
+                    ' service ' +
+                    String(subMeta.service || '') +
+                    (invoiceEmail ? ' ' + redactPhi(invoiceEmail) : '')
+            );
+            if (invoiceEmail && usePersistentDb) {
+                try {
+                    await db.mergeQuizAttemptResultByEmail(invoiceEmail, {
+                        convertedAt: String(Date.now()),
+                        subscriptionInvoiceId: String(invoice.id || '').slice(0, 80)
+                    }, null);
+                } catch (err) {
+                    console.error('invoice.paid quiz convert:', err.message);
+                }
+            }
+            break;
+        }
+
+        case 'customer.subscription.deleted': {
+            const sub = event.data.object || {};
+            console.log('🛑 subscription deleted …' + String(sub.id || '').slice(-8));
+            break;
+        }
+
+        case 'charge.refunded': {
+            const charge = event.data.object || {};
+            let marked = null;
+            if (usePersistentDb && stripe && charge.payment_intent) {
+                try {
+                    const sessions = await stripe.checkout.sessions.list({
+                        payment_intent: String(charge.payment_intent),
+                        limit: 1
+                    });
+                    const sid = sessions && sessions.data && sessions.data[0] && sessions.data[0].id;
+                    if (sid) marked = await db.markBookingRefunded(sid);
+                } catch (err) {
+                    console.error('charge.refunded lookup:', err.message);
+                }
+            }
+            console.log(
+                '↩️  charge.refunded …' +
+                    String(charge.id || '').slice(-8) +
+                    (marked && marked.bookingRef ? ' booking ' + marked.bookingRef : '')
+            );
             break;
         }
 
@@ -8730,14 +8899,14 @@ app.get('/marcar.html', (req, res) => {
 app.get('/book-consultation', (req, res) => {
     const q = req.query || {};
     const hasBookingContext = q.slot || q.service || q.date || q.ficha
-        || q.success || q.session_id || q.cancelled || q.invitation;
+        || q.success || q.t || q.session_id || q.cancelled || q.invitation;
     if (!hasBookingContext) {
         return res.redirect(302, '/marcar');
     }
     sendHtmlNoCache(res, path.join(__dirname, 'book.html'), 'Error loading booking page');
 });
 
-app.get('/invite/:token', async (req, res) => {
+app.get('/invite/:token', inviteRateLimiter, async (req, res) => {
     const token = String(req.params.token || '').trim();
     if (!/^[a-f0-9]{32,128}$/i.test(token) || !usePersistentDb) {
         return sendHtmlNoCacheString(res, renderInviteStatusHtml({ kind: 'missing' }), 404);
@@ -8766,7 +8935,9 @@ app.get('/invite/:token', async (req, res) => {
         }
         const { session } = await getOrCreateInvitationCheckout(invitation, getBaseUrl(req));
         if (session && session.status === 'complete') {
-            return res.redirect(302, `${getBaseUrl(req)}/book-consultation?success=true&session_id=${encodeURIComponent(session.id)}`);
+            const confirmToken = newCheckoutConfirmToken();
+            try { await persistCheckoutConfirmation(confirmToken, session.id); } catch (e) { /* ignore */ }
+            return res.redirect(302, checkoutSuccessUrl(getBaseUrl(req), confirmToken));
         }
         if (!session || !session.url) {
             return sendHtmlNoCacheString(res, renderInviteStatusHtml({ kind: 'error', locale }), 500);
@@ -9052,107 +9223,19 @@ app.get('/conta/vacina', (req, res) => {
     sendHtmlNoCacheString(res, cvi.renderRecommendPage(seo.SITE_ORIGIN));
 });
 
-app.get('/api/clinic/portal', (req, res) => {
-    serveClinicPortalHtml(res);
-});
-
-app.get('/api/clinic/assets/:file', (req, res, next) => {
-    const file = path.basename(String(req.params.file || ''));
-    if (!CLINIC_PORTAL_ASSETS.has(file)) return next();
-    res.set({
-        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
-        'CDN-Cache-Control': 'no-store',
-        'Cloudflare-CDN-Cache-Control': 'no-store',
-        'X-Robots-Tag': 'noindex, nofollow, noarchive'
-    });
-    res.sendFile(path.join(__dirname, file), {
-        etag: false,
-        lastModified: false,
-        cacheControl: false
-    }, (err) => {
-        if (err) next();
-    });
-});
-
-app.get('/clinic-desk/dias', (req, res) => {
-    serveClinicPortalHtml(res);
-});
-
-app.get('/clinic-desk/ficheiros', (req, res) => {
-    serveClinicPortalHtml(res);
-});
-
-app.get('/clinic-desk/docs', (req, res) => {
-    serveClinicPortalHtml(res);
-});
-
-app.get('/clinic-desk/avail', (req, res) => {
-    serveClinicPortalHtml(res);
-});
-
-app.get('/clinic-desk/perfil', (req, res) => {
-    serveClinicPortalHtml(res);
-});
-
-app.get('/clinic-desk/registo', (req, res) => {
-    serveClinicPortalHtml(res);
-});
-
-app.get('/clinic-desk/live', (req, res) => {
-    serveClinicPortalHtml(res);
-});
-
-app.get('/clinic-desk/now', (req, res) => {
-    serveClinicPortalHtml(res);
-});
-
-app.get('/clinic-desk', (req, res) => {
+app.get(['/api/clinic/portal', '/api/clinic/assets/:file'], (req, res) => {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
-    serveClinicPortalHtml(res);
+    return res.redirect(302, '/admin');
 });
 
-app.get('/clinic-desk/', (req, res) => {
-    res.redirect(302, CLINIC_PORTAL_PATH);
+app.get(['/clinic-desk', '/clinic-desk/', '/clinic-desk/:rest'], (req, res) => {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    return res.redirect(301, '/admin');
 });
 
-app.get('/clinic-portal/app', (req, res) => {
-    serveClinicPortalHtml(res);
-});
-
-app.get('/clinic-portal/app/', (req, res) => {
-    res.redirect(302, CLINIC_PORTAL_PATH);
-});
-
-app.get('/clinic-portal', (req, res) => {
-    res.redirect(302, CLINIC_PORTAL_PATH);
-});
-
-app.get('/clinic-portal/', (req, res) => {
-    serveClinicPortalHtml(res);
-});
-
-const CLINIC_PORTAL_ASSETS = new Set([
-    'landing.css',
-    'styles.css',
-    'dashboard.css',
-    'lon-nav.js',
-    'clinic.js'
-]);
-app.get('/clinic-portal/:file', (req, res, next) => {
-    const file = path.basename(String(req.params.file || ''));
-    if (!CLINIC_PORTAL_ASSETS.has(file)) return next();
-    res.set({
-        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
-        'CDN-Cache-Control': 'no-store',
-        'Cloudflare-CDN-Cache-Control': 'no-store'
-    });
-    res.sendFile(path.join(__dirname, file), {
-        etag: false,
-        lastModified: false,
-        cacheControl: false
-    }, (err) => {
-        if (err) next();
-    });
+app.get(['/clinic-portal', '/clinic-portal/', '/clinic-portal/app', '/clinic-portal/app/', '/clinic-portal/:file'], (req, res) => {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    return res.redirect(301, '/admin');
 });
 
 app.get('/admin', (req, res) => {
@@ -9351,6 +9434,7 @@ app.use((req, res, next) => {
         return res.status(404).type('text').send('Not found');
     }
     const base = path.basename(p);
+    const ext = path.extname(base);
     const deniedFiles = new Set([
         'server.js', 'db.js', 'pricing.js', 'seo.js', 'guide.js', 'burnout-pages.js',
         'consulta-pages.js', 'queixas.js', 'nutricao.js', 'tourist-pages.js',
@@ -9359,12 +9443,23 @@ app.use((req, res, next) => {
         'clinical-quiz-score.js', 'analytics-network.js', 'talk-cta.js',
         'totp.js', 'field-crypto.js',
         'package.json', 'package-lock.json', 'procfile', 'cookies.txt',
-        'env_setup.txt', 'tailwind-src.css', 'dockerfile'
+        'env_setup.txt', 'tailwind-src.css', 'dockerfile',
+        'clinic.html', 'clinic.js'
     ]);
     if (deniedFiles.has(base)) {
         return res.status(404).type('text').send('Not found');
     }
-    if (/\.(md|sql|yml|yaml|env|crt|pem|key|map|gitignore)$/i.test(base) && base !== 'robots.txt') {
+    if (/\.(md|sql|yml|yaml|env|crt|pem|key|map|gitignore|log|bak)$/i.test(base) && base !== 'robots.txt') {
+        return res.status(404).type('text').send('Not found');
+    }
+    if (ext === '.json') {
+        return res.status(404).type('text').send('Not found');
+    }
+    const allowedExt = new Set([
+        '.html', '.css', '.js', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.webp',
+        '.woff', '.woff2', '.ico', '.xml', '.txt'
+    ]);
+    if (ext && !allowedExt.has(ext)) {
         return res.status(404).type('text').send('Not found');
     }
     next();
@@ -10148,7 +10243,7 @@ app.post('/api/recrutamento/entrevista', rateLimitRecrutamentoEntrevista, expres
         const paymentId = `comp_${crypto.randomUUID().replace(/-/g, '')}`;
         const bookingRef = `LC-${paymentId.slice(-8).toUpperCase()}`;
         const dateLabel = formatInvitationDateLabel(dateIso, 'pt');
-        const doxyUrl = await resolveDoxyRoomUrl(null);
+        const doxyUrl = DEFAULT_DOXY_ROOM_URL || '';
 
         const record = {
             bookingRef,
@@ -10736,7 +10831,7 @@ app.post('/api/contact', rateLimitContact, async (req, res) => {
 });
 
 // ─── API: Complaint form submission ───
-app.post('/api/reclamacoes', rateLimitContact, async (req, res) => {
+app.post('/api/reclamacoes', rateLimitReclamacoes, async (req, res) => {
     const name = (req.body?.name || '').trim();
     const citizenCard = (req.body?.citizenCard || '').trim();
     const phone = (req.body?.phone || '').trim();
@@ -11193,7 +11288,8 @@ app.post('/api/admin/psychologists', requireAdmin, express.json(), async (req, r
         res.status(201).json({
             application: await enrichPsychologistApplication(application),
             professional: loginResult ? publicProfessional(loginResult.professional) : undefined,
-            generatedPassword: loginResult && loginResult.generatedPassword
+            setupEmailSent: loginResult && loginResult.setupEmailSent,
+            emailedTo: loginResult && loginResult.emailedTo
         });
     } catch (err) {
         console.error('POST /api/admin/psychologists:', err.message);
@@ -11224,7 +11320,8 @@ app.post('/api/admin/psychologists/logins', requireAdmin, async (req, res) => {
                 id: app.id,
                 name: app.name,
                 professional: publicProfessional(result.professional),
-                generatedPassword: result.generatedPassword
+                setupEmailSent: result.setupEmailSent,
+                emailedTo: result.emailedTo
             });
         }
         const accountNames = new Set(
@@ -11235,17 +11332,17 @@ app.post('/api/admin/psychologists/logins', requireAdmin, async (req, res) => {
             const name = String((row && row.name) || '').trim();
             if (!name || accountNames.has(name.toLowerCase())) continue;
             const username = await allocateProfessionalUsername('', name);
-            const generatedPassword = generateProfessionalPassword();
             const professional = await createProfessionalInternal({
                 username,
-                password: generatedPassword,
                 displayName: name,
                 active: true
             });
+            const setup = await issueStaffPasswordSetup(professional);
             created.push({
                 name,
-                professional: publicProfessional(professional),
-                generatedPassword
+                professional: publicProfessional(setup.professional || professional),
+                setupEmailSent: setup.setupEmailSent,
+                emailedTo: setup.emailedTo
             });
             accountNames.add(name.toLowerCase());
         }
@@ -11282,7 +11379,8 @@ app.post('/api/admin/psychologists/:id/login', requireAdmin, express.json(), asy
                 professionalId: result.professional.id
             }),
             professional: publicProfessional(result.professional),
-            generatedPassword: result.generatedPassword,
+            setupEmailSent: result.setupEmailSent,
+            emailedTo: result.emailedTo,
             created: result.created
         });
     } catch (err) {
@@ -11295,6 +11393,7 @@ app.get('/api/admin/psychologists/:id/cv', requireAdmin, async (req, res) => {
     try {
         const application = await findPsychologistApplicationInternal(req.params.id);
         if (!application) return res.status(404).json({ error: 'Not found' });
+        logAudit(req, 'admin_cv_download', String(req.params.id || '')).catch(() => {});
         await sendBolsaCvResponse(res, application);
     } catch (err) {
         console.error('GET /api/admin/psychologists cv:', err.message);
@@ -11354,6 +11453,7 @@ app.delete('/api/admin/psychologists/:id', requireAdmin, async (req, res) => {
         const idx = psychologistApplicationsStore.findIndex((a) => a.id === id);
         if (idx >= 0) psychologistApplicationsStore.splice(idx, 1);
         psychologistCvStore.delete(id);
+        logAudit(req, 'admin_psychologist_delete', id).catch(() => {});
         res.json({ ok: true, id });
     } catch (err) {
         console.error('DELETE /api/admin/psychologists/:id:', err.message);
@@ -11606,6 +11706,139 @@ app.patch('/api/admin/producers/:id', requireAdmin, express.json(), async (req, 
     }
 });
 
+function newCheckoutConfirmToken() {
+    return crypto.randomBytes(24).toString('hex');
+}
+
+function checkoutSuccessUrl(baseUrl, token) {
+    return `${String(baseUrl || '').replace(/\/$/, '')}/book-consultation?success=true&t=${encodeURIComponent(token)}`;
+}
+
+function seedMemoryDiscountCodes() {
+    if (discountCodesMemory.size) return;
+    discountCodesMemory.set('ME2026', {
+        code: 'ME2026', percentOff: 99, maxUses: 20, uses: 0, expiresAt: null, internalOnly: true
+    });
+    discountCodesMemory.set('VERAO082026', {
+        code: 'VERAO082026', percentOff: 10, maxUses: 500, uses: 0,
+        expiresAt: '2026-08-31T22:59:59.000Z', internalOnly: false
+    });
+}
+
+function memoryDiscountValid(row) {
+    if (!row) return false;
+    if (Number(row.uses) >= Number(row.maxUses)) return false;
+    if (row.expiresAt && new Date(row.expiresAt).getTime() <= Date.now()) return false;
+    return true;
+}
+
+async function persistCheckoutConfirmation(token, stripeSessionId) {
+    const expiresAt = new Date(Date.now() + BOOKING_CONFIRM_TTL_MS);
+    if (usePersistentDb) {
+        await db.insertBookingConfirmation({ token, stripeSessionId, expiresAt });
+        return;
+    }
+    bookingConfirmationsMemory.set(String(token).toLowerCase(), {
+        stripeSessionId: String(stripeSessionId),
+        expiresAt: expiresAt.getTime(),
+        usedAt: null
+    });
+}
+
+async function resolveCheckoutConfirmation(token) {
+    const key = String(token || '').trim().toLowerCase();
+    if (!/^[a-f0-9]{48}$/.test(key)) return null;
+    if (usePersistentDb) return db.findBookingConfirmation(key);
+    const row = bookingConfirmationsMemory.get(key);
+    if (!row || row.expiresAt <= Date.now()) return null;
+    row.usedAt = row.usedAt || Date.now();
+    return row.stripeSessionId;
+}
+
+async function lookupCheckoutDiscount(code) {
+    const key = db.normalizeDiscountCode(code);
+    if (!key) return null;
+    if (usePersistentDb) return db.lookupDiscountCode(key);
+    seedMemoryDiscountCodes();
+    const row = discountCodesMemory.get(key);
+    return memoryDiscountValid(row) ? { ...row } : null;
+}
+
+async function reserveCheckoutDiscount(code) {
+    const key = db.normalizeDiscountCode(code);
+    if (!key) return null;
+    if (usePersistentDb) return db.reserveDiscountCode(key);
+    seedMemoryDiscountCodes();
+    const row = discountCodesMemory.get(key);
+    if (!memoryDiscountValid(row)) return null;
+    row.uses += 1;
+    return { ...row };
+}
+
+async function releaseCheckoutDiscount(code) {
+    const key = db.normalizeDiscountCode(code);
+    if (!key) return;
+    if (usePersistentDb) {
+        await db.releaseDiscountCode(key);
+        return;
+    }
+    seedMemoryDiscountCodes();
+    const row = discountCodesMemory.get(key);
+    if (row) row.uses = Math.max(0, Number(row.uses) - 1);
+}
+
+async function paidCheckoutPublicPayload(session) {
+    const travellerCount = parseInt(session.metadata?.traveller_count, 10) || 1;
+    const piId = paymentIntentIdFromSession(session);
+    const bookingRefShort = piId.length >= 8 ? piId.slice(-8).toUpperCase() : (piId || Date.now().toString(36)).toUpperCase();
+    const stored = await getBookingByPaymentId(piId);
+    const meta = session.metadata || {};
+    const emailNorm = (
+        session.customer_details?.email ||
+        session.customer_email ||
+        meta.contact_email ||
+        ''
+    ).toLowerCase().trim();
+    const stripeCustId = stripeCustomerIdFromSession(session);
+    let isNewCustomer = false;
+    if (piId && (emailNorm || stripeCustId)) {
+        const priorOtherBookings = await countPriorBookingsExcludingPayment(
+            piId,
+            emailNorm,
+            stripeCustId
+        );
+        isNewCustomer = priorOtherBookings === 0;
+    }
+    return {
+        service: meta.service,
+        date: meta.date,
+        time: meta.time,
+        travellerCount,
+        amount: session.amount_total,
+        currency: session.currency,
+        bookingRef: (stored && stored.bookingRef) || ('LC-' + bookingRefShort),
+        email: emailNorm,
+        isNewCustomer
+    };
+}
+
+app.post('/api/discount/validate', rateLimitCheckout, async (req, res) => {
+    try {
+        const code = db.normalizeDiscountCode(req.body && req.body.code);
+        const service = bookingServiceTag(req.body && req.body.service);
+        if (!code) return res.status(400).json({ ok: false, error: 'invalid_code' });
+        if (!discountsAllowedForService(service)) {
+            return res.status(400).json({ ok: false, error: 'not_applicable' });
+        }
+        const row = await lookupCheckoutDiscount(code);
+        if (!row) return res.status(404).json({ ok: false, error: 'invalid_or_expired' });
+        return res.json({ ok: true, code: row.code, percentOff: row.percentOff });
+    } catch (err) {
+        console.error('POST /api/discount/validate:', err.message);
+        return res.status(500).json({ ok: false, error: 'lookup_failed' });
+    }
+});
+
 // ─── API: Create Checkout Session ───
 app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => {
         if (!isStripeConfigured) {
@@ -11614,6 +11847,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         console.error('   isStripeConfigured:', isStripeConfigured);
         return res.status(500).json({ error: 'Stripe is not configured. Add your STRIPE_SECRET_KEY to the .env file.' });
     }
+    let reservedDiscount = null;
     try {
         let {
             service,
@@ -11642,13 +11876,28 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         }
         patientName = String(patientName || '').trim();
 
+        let discountPercent = 0;
+        const requestedCode = db.normalizeDiscountCode(discountCode);
+        if (requestedCode && discountsAllowedForService(service)) {
+            reservedDiscount = await reserveCheckoutDiscount(requestedCode);
+            if (!reservedDiscount) {
+                return res.status(400).json({ error: 'Invalid or expired discount code' });
+            }
+            discountPercent = reservedDiscount.percentOff;
+        } else if (requestedCode && !discountsAllowedForService(service)) {
+            return res.status(400).json({ error: 'Discount codes are not available for this service' });
+        }
+
+        // H7: never trust client hasInsurance for price (Medicare self-select).
+        hasInsurance = false;
         const pricing = computeCheckoutTotalCents({
             service,
             passengers,
-            hasInsurance: !!hasInsurance,
-            discountCode: discountCode || null
+            hasInsurance: false,
+            discountPercent
         });
         if (!pricing.ok) {
+            if (reservedDiscount) await releaseCheckoutDiscount(reservedDiscount.code).catch(() => {});
             return res.status(400).json({ error: pricing.error });
         }
         service = bookingServiceTag(service);
@@ -11683,6 +11932,10 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
             locale: normalizePatientLocale(locale),
             service_label: (serviceLabel || '').substring(0, 500)
         };
+        if (reservedDiscount) {
+            metadata.discount_code = reservedDiscount.code;
+            metadata.discount_percent = String(reservedDiscount.percentOff);
+        }
         const staffMode = staffBooking.usesStaffCalendars(service);
         const professionalId = Number(professionalIdRaw);
         const isoCheckoutEarly = (dateIso && String(dateIso).trim()) || '';
@@ -11697,6 +11950,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
             });
             if (resolved.mode === 'staff') {
                 if (!resolved.person) {
+                    if (reservedDiscount) await releaseCheckoutDiscount(reservedDiscount.code).catch(() => {});
                     const msg = resolved.error === 'choose'
                         ? 'Escolha o psicólogo para este horário.'
                         : 'Esse horário já não está disponível.';
@@ -11767,6 +12021,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
                 slotOk = allowed.includes(normTimeCheckout);
             }
             if (!slotOk) {
+                if (reservedDiscount) await releaseCheckoutDiscount(reservedDiscount.code).catch(() => {});
                 return res.status(400).json({ error: 'That time slot is not available' });
             }
         }
@@ -11808,13 +12063,14 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
             quantity: 1
         };
 
+        const confirmToken = newCheckoutConfirmToken();
         const sessionParams = {
             payment_method_types: ['card'],
             mode: isSubscription ? 'subscription' : 'payment',
             customer_email: patientEmail,
             line_items: [lineItem],
             metadata,
-            success_url: `${getBaseUrl(req)}/book-consultation?success=true&session_id={CHECKOUT_SESSION_ID}`,
+            success_url: checkoutSuccessUrl(getBaseUrl(req), confirmToken),
             cancel_url: `${getBaseUrl(req)}/book-consultation?cancelled=true`,
             expires_at: Math.floor(Date.now() / 1000) + (30 * 60)
         };
@@ -11827,6 +12083,11 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         }
 
         const session = await createStripeCheckoutSession(sessionParams);
+        try {
+            await persistCheckoutConfirmation(confirmToken, session.id);
+        } catch (err) {
+            console.error('persist checkout confirmation:', err.message);
+        }
 
         markQuizLeadCheckoutStarted(patientEmail).catch(() => {});
 
@@ -11847,9 +12108,12 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
             { props: { service: bookingServiceTag(service), funnel: 'patient_booking' }, revenueCents: priceAmount, currency: 'eur' },
             req
         ).catch(() => {});
-        res.json({ sessionId: session.id, url: session.url });
+        res.json({ url: session.url });
 
     } catch (err) {
+        if (reservedDiscount) {
+            await releaseCheckoutDiscount(reservedDiscount.code).catch(() => {});
+        }
         console.error('❌ Error creating checkout session:');
         console.error('   Error type:', err.type);
         console.error('   Error message:', err.message);
@@ -11859,61 +12123,32 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
     }
 });
 
-// ─── API: Retrieve session details (for confirmation page) ───
-app.get('/api/session/:sessionId', rateLimitSessionRetrieve, async (req, res) => {
+// Stripe Checkout session ids are not a credential — do not look them up from the public internet.
+app.get('/api/session/:sessionId', rateLimitSessionRetrieve, (req, res) => {
+    res.status(410).json({ error: 'gone', message: 'Use the confirmation token from checkout.' });
+});
+
+app.get('/api/confirmation/:token', rateLimitSessionRetrieve, async (req, res) => {
     if (!isStripeConfigured) {
         return res.status(500).json({ error: 'Stripe is not configured.' });
     }
     try {
-        const session = await stripe.checkout.sessions.retrieve(req.params.sessionId);
-
+        const stripeSessionId = await resolveCheckoutConfirmation(req.params.token);
+        if (!stripeSessionId) {
+            return res.status(404).json({ error: 'invalid_or_expired' });
+        }
+        const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
         if (session.payment_status !== 'paid') {
             return res.status(400).json({ error: 'Payment not completed' });
         }
-
-        const fin = await ingestPaidCheckoutSession(session, '[session-api] ');
+        const fin = await ingestPaidCheckoutSession(session, '[confirmation] ');
         if (!fin.ok) {
-            console.error('[session-api] failed to record paid checkout:', fin.reason, session.id);
+            console.error('[confirmation] failed to record paid checkout:', fin.reason, session.id);
         }
-
-        const travellerCount = parseInt(session.metadata?.traveller_count, 10) || 1;
-        const piId = paymentIntentIdFromSession(session);
-        const bookingRefShort = piId.length >= 8 ? piId.slice(-8).toUpperCase() : (piId || Date.now().toString(36)).toUpperCase();
-        const stored = await getBookingByPaymentId(piId);
-        const meta = session.metadata || {};
-
-        const emailNorm = (
-            session.customer_details?.email ||
-            session.customer_email ||
-            meta.contact_email ||
-            ''
-        ).toLowerCase().trim();
-        const stripeCustId = stripeCustomerIdFromSession(session);
-        let isNewCustomer = false;
-        if (piId && (emailNorm || stripeCustId)) {
-            const priorOtherBookings = await countPriorBookingsExcludingPayment(
-                piId,
-                emailNorm,
-                stripeCustId
-            );
-            isNewCustomer = priorOtherBookings === 0;
-        }
-
-        res.json({
-            service: meta.service,
-            date: meta.date,
-            time: meta.time,
-            travellerCount,
-            amount: session.amount_total,
-            currency: session.currency,
-            bookingRef: (stored && stored.bookingRef) || ('LC-' + bookingRefShort),
-            email: emailNorm,
-            isNewCustomer
-        });
-
+        return res.json(await paidCheckoutPublicPayload(session));
     } catch (err) {
-        console.error('Error retrieving session:', err.message);
-        res.status(500).json({ error: 'Failed to retrieve session' });
+        console.error('Error retrieving confirmation:', err.message);
+        return res.status(500).json({ error: 'Failed to retrieve confirmation' });
     }
 });
 
@@ -11966,27 +12201,177 @@ async function getPatientBooking(email, ref) {
     );
 }
 
-// ─── API: Patient Dashboard — Fetch bookings by email + booking reference only ───
-app.get('/api/bookings', rateLimitPatientPortal, async (req, res) => {
-    const email = (req.query.email || '').toLowerCase().trim();
-    const ref = (req.query.ref || '').trim();
+function hashPatientOtp(email, code) {
+    return crypto.createHmac('sha256', SESSION_SECRET)
+        .update(`${String(email || '').toLowerCase().trim()}:${String(code || '').replace(/\D/g, '')}`)
+        .digest('hex');
+}
 
-    if (!email) {
-        return res.status(400).json({ error: 'Email is required' });
+const patientOtpMemory = new Map();
+
+function patientSessionEmail(req) {
+    if (!req.session || !req.session.patientAuthenticated) return '';
+    return String(req.session.patientEmail || '').toLowerCase().trim();
+}
+
+app.post('/api/patient/otp/request', rateLimitPatientOtp, async (req, res) => {
+    const email = String((req.body && req.body.email) || '').toLowerCase().trim();
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({ error: 'Valid email is required' });
     }
-    if (!ref) {
-        return res.status(400).json({ error: 'Booking reference is required' });
+    try {
+        let bookings = [];
+        if (usePersistentDb) {
+            bookings = await db.findBookingsByEmail(email, 5);
+        } else {
+            bookings = bookingsStore.filter((b) => String(b.email || '').toLowerCase() === email);
+        }
+        if (bookings.length) {
+            const code = String(crypto.randomInt(0, 1000000)).padStart(6, '0');
+            const codeHash = hashPatientOtp(email, code);
+            const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+            if (usePersistentDb) {
+                await db.insertPatientOtp({
+                    id: crypto.randomUUID(),
+                    email,
+                    codeHash,
+                    expiresAt
+                });
+            } else {
+                patientOtpMemory.set(email, { codeHash, expiresAt: expiresAt.getTime(), attempts: 0 });
+            }
+            if (isEmailConfigured) {
+                await deliverEmail({
+                    from: EMAIL_FROM,
+                    to: email,
+                    subject: 'Código de acesso — Lon Clinic',
+                    text: `O seu código de acesso ao portal do paciente é ${code}. Expira em 10 minutos.\n\nLon Clinic`,
+                    html: `<p>O seu código de acesso ao portal do paciente é <strong>${escapeHtml(code)}</strong>.</p><p>Expira em 10 minutos.</p><p>Lon Clinic</p>`
+                });
+            }
+        }
+        return res.json({ ok: true });
+    } catch (err) {
+        console.error('POST /api/patient/otp/request:', err.message);
+        return res.status(500).json({ error: 'Could not send code' });
+    }
+});
+
+app.post('/api/patient/otp/verify', rateLimitPatientOtp, async (req, res) => {
+    const email = String((req.body && req.body.email) || '').toLowerCase().trim();
+    const code = String((req.body && req.body.code) || '').replace(/\D/g, '').slice(0, 6);
+    if (!email || code.length !== 6) {
+        return res.status(400).json({ error: 'Email and 6-digit code are required' });
+    }
+    try {
+        const expected = hashPatientOtp(email, code);
+        let row = null;
+        if (usePersistentDb) {
+            row = await db.findLatestPatientOtp(email);
+            if (!row) return res.status(401).json({ error: 'Invalid or expired code' });
+            if ((row.attempts || 0) >= 5) return res.status(401).json({ error: 'Too many attempts. Request a new code.' });
+            const a = Buffer.from(row.codeHash, 'hex');
+            const b = Buffer.from(expected, 'hex');
+            const ok = a.length === b.length && crypto.timingSafeEqual(a, b);
+            if (!ok) {
+                await db.bumpPatientOtpAttempts(row.id);
+                return res.status(401).json({ error: 'Invalid or expired code' });
+            }
+            await db.markPatientOtpUsed(row.id);
+        } else {
+            const mem = patientOtpMemory.get(email);
+            if (!mem || mem.expiresAt < Date.now()) return res.status(401).json({ error: 'Invalid or expired code' });
+            if ((mem.attempts || 0) >= 5) return res.status(401).json({ error: 'Too many attempts. Request a new code.' });
+            const a = Buffer.from(mem.codeHash, 'hex');
+            const b = Buffer.from(expected, 'hex');
+            if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+                mem.attempts = (mem.attempts || 0) + 1;
+                return res.status(401).json({ error: 'Invalid or expired code' });
+            }
+            patientOtpMemory.delete(email);
+        }
+        req.session.patientAuthenticated = true;
+        req.session.patientEmail = email;
+        req.session.patientBookingId = true;
+        req.session.lastActivity = Date.now();
+        req.session.cookie.maxAge = 20 * 60 * 1000;
+        return res.json({ ok: true, email });
+    } catch (err) {
+        console.error('POST /api/patient/otp/verify:', err.message);
+        return res.status(500).json({ error: 'Could not verify code' });
+    }
+});
+
+app.get('/api/patient/session', rateLimitPatientPortal, (req, res) => {
+    const email = patientSessionEmail(req);
+    if (!email) return res.status(401).json({ authenticated: false });
+    return res.json({ authenticated: true, email });
+});
+
+app.post('/api/patient/logout', (req, res) => {
+    if (!req.session) return res.json({ ok: true });
+    req.session.patientAuthenticated = false;
+    req.session.patientEmail = null;
+    req.session.patientBookingId = null;
+    req.session.destroy(() => res.json({ ok: true }));
+});
+
+app.post('/api/privacy/erasure', rateLimitErasure, async (req, res) => {
+    const email = String((req.body && req.body.email) || '').toLowerCase().trim();
+    const reason = String((req.body && req.body.reason) || '').slice(0, 500);
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({ error: 'Valid email is required' });
+    }
+    try {
+        if (usePersistentDb) {
+            await db.insertDeletionRequest({ id: crypto.randomUUID(), email, reason });
+        }
+        return res.json({ ok: true });
+    } catch (err) {
+        console.error('POST /api/privacy/erasure:', redactPhi(err.message));
+        return res.status(500).json({ error: 'Could not record request' });
+    }
+});
+
+app.get('/api/admin/deletion-requests', requireAdmin, async (req, res) => {
+    try {
+        const items = usePersistentDb ? await db.listDeletionRequests(100) : [];
+        logAudit(req, 'admin_erasure_list', String(items.length)).catch(() => {});
+        return res.json({ requests: items });
+    } catch (err) {
+        console.error('GET /api/admin/deletion-requests:', err.message);
+        return res.status(500).json({ error: 'Failed to load requests' });
+    }
+});
+
+app.post('/api/admin/deletion-requests/:id/process', requireAdmin, async (req, res) => {
+    if (!usePersistentDb) return res.status(503).json({ error: 'Database required' });
+    try {
+        const row = await db.findDeletionRequestById(req.params.id);
+        if (!row || row.status !== 'pending') return res.status(404).json({ error: 'Not found' });
+        const result = await db.anonymizePatientContact(row.email);
+        await db.markDeletionRequestProcessed(row.id);
+        logAudit(req, 'admin_erasure_process', row.id).catch(() => {});
+        return res.json({ ok: true, result });
+    } catch (err) {
+        console.error('POST /api/admin/deletion-requests/:id/process:', err.message);
+        return res.status(500).json({ error: 'Failed to process request' });
+    }
+});
+
+// ─── API: Patient Dashboard — session-authenticated bookings ───
+app.get('/api/bookings', rateLimitPatientPortal, async (req, res) => {
+    const email = patientSessionEmail(req);
+    if (!email) {
+        return res.status(401).json({ error: 'Authentication required' });
     }
 
     try {
         let results;
-        const refNorm = ref.toUpperCase();
         if (usePersistentDb) {
-            results = await db.findBookingsByEmailAndRef(email, ref);
+            results = await db.findBookingsByEmail(email, 50);
         } else {
-            results = bookingsStore.filter(
-                (b) => b.email === email && String(b.bookingRef || '').toUpperCase() === refNorm
-            );
+            results = bookingsStore.filter((b) => String(b.email || '').toLowerCase() === email);
         }
 
         results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -11994,13 +12379,13 @@ app.get('/api/bookings', rateLimitPatientPortal, async (req, res) => {
         const bookings = await Promise.all(results.map(async (b) => {
             const enriched = publicPatientBooking(b);
             const doxyUrl = (await resolveDoxyRoomUrl(b.professional)) || null;
-            return { ...enriched, doxyUrl };
+            return { ...enriched, doxyUrl: doxyUrl || null, doxyPending: !doxyUrl };
         }));
-        const nextWithRoom = bookings.find((b) => !b.cancelled && b.doxyUrl) || bookings[0];
+        const nextWithRoom = bookings.find((b) => !b.cancelled && b.doxyUrl) || null;
 
         res.json({
             bookings,
-            doxyUrl: (nextWithRoom && nextWithRoom.doxyUrl) || null
+            doxyUrl: nextWithRoom ? nextWithRoom.doxyUrl : null
         });
     } catch (err) {
         console.error('GET /api/bookings:', err.message);
@@ -12011,13 +12396,13 @@ app.get('/api/bookings', rateLimitPatientPortal, async (req, res) => {
 app.get('/api/conta/vacina/centros', rateLimitPatientPortal, async (req, res) => {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
     res.setHeader('Cache-Control', 'no-store');
-    const email = String(req.query.email || '').toLowerCase().trim();
+    const email = patientSessionEmail(req);
     const ref = String(req.query.ref || '').trim();
     const city = String(req.query.cidade || '').trim();
     const lat = req.query.lat;
     const lng = req.query.lng;
     if (!email || !ref) {
-        return res.status(400).json({ error: 'Email e referência da marcação são obrigatórios.' });
+        return res.status(401).json({ error: 'Email e referência da marcação são obrigatórios.' });
     }
     try {
         const booking = await getPatientBooking(email, ref);
@@ -12033,11 +12418,11 @@ app.get('/api/conta/vacina/centros', rateLimitPatientPortal, async (req, res) =>
 
 // ─── API: Patient — Cancel booking (≥24h before start) ───
 app.post('/api/patient/booking/cancel', rateLimitPatientPortal, async (req, res) => {
-    const { email, ref, locale } = req.body || {};
-    const patientEmail = String(email || '').toLowerCase().trim();
+    const { ref, locale } = req.body || {};
+    const patientEmail = patientSessionEmail(req);
     const bookingRef = String(ref || '').trim();
     if (!patientEmail || !bookingRef) {
-        return res.status(400).json({ error: 'Email and booking reference are required' });
+        return res.status(401).json({ error: 'Authentication required' });
     }
     try {
         const booking = await getPatientBooking(patientEmail, bookingRef);
@@ -12111,13 +12496,13 @@ app.post('/api/patient/booking/cancel', rateLimitPatientPortal, async (req, res)
 
 // ─── API: Patient — Reschedule (max 2×, ≥48h before start) ───
 app.post('/api/patient/booking/reschedule', rateLimitPatientPortal, async (req, res) => {
-    const { email, ref, dateIso, time, dateLabel, locale } = req.body || {};
-    const patientEmail = String(email || '').toLowerCase().trim();
+    const { ref, dateIso, time, dateLabel, locale } = req.body || {};
+    const patientEmail = patientSessionEmail(req);
     const bookingRef = String(ref || '').trim();
     const newTime = String(time || '').trim();
     const newIso = String(dateIso || '').trim();
     if (!patientEmail || !bookingRef || !newIso || !newTime) {
-        return res.status(400).json({ error: 'Email, reference, dateIso, and time are required' });
+        return res.status(401).json({ error: 'Authentication required' });
     }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(newIso)) {
         return res.status(400).json({ error: 'Invalid dateIso format (use YYYY-MM-DD)' });
@@ -12290,12 +12675,12 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
                 professionalId: null
             });
         }
-        console.log(`   ⚠️  Failed clinic login attempt: ${identifier}`);
+        console.log(`   ⚠️  Failed clinic login attempt: ${redactPhi(identifier)}`);
         return res.status(401).json({ error: 'Invalid username or password' });
     }
 
     if (!isValidStaffEmail(normalizeStaffEmail(identifier))) {
-        console.log(`   ⚠️  Failed clinic login attempt: ${identifier}`);
+        console.log(`   ⚠️  Failed clinic login attempt: ${redactPhi(identifier)}`);
         return res.status(401).json({ error: 'Sign in with your email and password' });
     }
 
@@ -12327,7 +12712,7 @@ app.post('/api/clinic/login', rateLimitClinicLogin, async (req, res) => {
         console.error('   ⚠️  Professional login lookup failed:', err.message);
     }
 
-    console.log(`   ⚠️  Failed clinic login attempt: ${identifier}`);
+    console.log(`   ⚠️  Failed clinic login attempt: ${redactPhi(identifier)}`);
     res.status(401).json({ error: 'Invalid email or password' });
 });
 
@@ -12402,6 +12787,7 @@ app.post('/api/clinic/login/totp/recover', rateLimitClinicTotp, async (req, res)
 });
 
 const PASSWORD_RESET_CODE_TTL_MS = 15 * 60 * 1000;
+const PASSWORD_SETUP_TTL_MS = 24 * 60 * 60 * 1000;
 const PASSWORD_RESET_MAX_ATTEMPTS = 5;
 const PASSWORD_RESET_MAX_PER_EMAIL = 3;
 const PASSWORD_RESET_ACCEPTED = {
@@ -12479,6 +12865,31 @@ async function createPasswordResetInternal(professional, email, codeHash, expire
     return created;
 }
 
+async function issueStaffPasswordSetup(professional, { invalidateExisting } = {}) {
+    const to = await resolveProfessionalNotifyEmail(professional);
+    if (!to) return { setupEmailSent: false, emailedTo: '', professional };
+    if (!isEmailConfigured) return { setupEmailSent: false, emailedTo: to, professional };
+    let current = professional;
+    if (invalidateExisting) {
+        const passwordHash = await bcrypt.hash(crypto.randomBytes(32).toString('hex'), 12);
+        if (usePersistentDb) {
+            const updated = await db.updateProfessional(current.id, { passwordHash });
+            if (updated) current = updated;
+        } else {
+            Object.assign(current, { passwordHash, updatedAt: new Date().toISOString() });
+        }
+    }
+    const code = generatePasswordResetCode();
+    const expiresAt = new Date(Date.now() + PASSWORD_SETUP_TTL_MS).toISOString();
+    await createPasswordResetInternal(current, to, hashPasswordResetCode(code), expiresAt);
+    await sendProfessionalPasswordSetupEmail({
+        to,
+        name: current.displayName || current.username,
+        code
+    });
+    return { setupEmailSent: true, emailedTo: to, professional: current };
+}
+
 async function findActivePasswordResetInternal(email) {
     const e = normalizeStaffEmail(email);
     if (usePersistentDb) return db.findActiveProfessionalPasswordReset(e);
@@ -12514,7 +12925,7 @@ async function setProfessionalPasswordHashInternal(professional, passwordHash) {
 
 /** The client always sees the same neutral answer, so the reason only goes to the logs. */
 function logPasswordResetSkipped(email, reason) {
-    console.log(`   🔕 Password reset not sent to ${email}: ${reason}`);
+    console.log(`   🔕 Password reset not sent to ${redactPhi(email)}: ${reason}`);
 }
 
 app.post('/api/clinic/password-reset/request', rateLimitClinicPasswordResetRequest, async (req, res) => {
@@ -13504,22 +13915,20 @@ app.post('/api/admin/staff-profiles', requireAdmin, express.json(), async (req, 
         const assignLogin = true;
         const username = await allocateProfessionalUsername(requestedUsername, fullName);
         let created = null;
-        let generatedPassword = null;
+        let setup = { setupEmailSent: false, emailedTo: '' };
         if (assignLogin) {
-            let password = String(body.password || '');
-            if (!password) {
-                generatedPassword = generateProfessionalPassword();
-                password = generatedPassword;
-            } else if (password.length < 12) {
+            const password = String(body.password || '');
+            if (password && password.length < 12) {
                 return res.status(400).json({ error: 'Password must be at least 12 characters' });
             }
             created = await createProfessionalInternal({
                 username,
-                password,
+                password: password || undefined,
                 displayName: fullName,
                 email,
                 active: body.active !== false
             });
+            if (!password) setup = await issueStaffPasswordSetup(created);
         }
         const bolsaApp = email ? await findPsychologistApplicationByEmailInternal(email) : null;
         if (bolsaApp) {
@@ -13538,7 +13947,8 @@ app.post('/api/admin/staff-profiles', requireAdmin, express.json(), async (req, 
         res.status(201).json({
             professional: created ? publicProfessional(created) : null,
             profile,
-            generatedPassword: generatedPassword || undefined
+            setupEmailSent: setup.setupEmailSent,
+            emailedTo: setup.emailedTo
         });
     } catch (err) {
         if (err && err.code === '23505') {
@@ -13666,10 +14076,8 @@ app.post('/api/admin/staff-profiles/:username/login', requireAdmin, express.json
                 return res.status(409).json({ error: 'That email already has a clinic login' });
             }
         }
-        const generatedPassword = generateProfessionalPassword();
         const created = await createProfessionalInternal({
             username,
-            password: generatedPassword,
             displayName,
             email,
             active: true
@@ -13680,9 +14088,11 @@ app.post('/api/admin/staff-profiles/:username/login', requireAdmin, express.json
             await copyBolsaCvToStaffDocuments(created.username, filled.app);
         }
         console.log(`   👤 Login assigned to professional file: ${created.username}`);
+        const setup = await issueStaffPasswordSetup(created);
         res.status(201).json({
-            professional: publicProfessional(created),
-            generatedPassword
+            professional: publicProfessional(setup.professional || created),
+            setupEmailSent: setup.setupEmailSent,
+            emailedTo: setup.emailedTo
         });
     } catch (err) {
         if (err && err.code === '23505') {
@@ -13778,7 +14188,9 @@ async function createProfessionalInternal({
         err.code = '23505';
         throw err;
     }
-    const passwordHash = await bcrypt.hash(password, 12);
+    const passwordHash = password
+        ? await bcrypt.hash(password, 12)
+        : await bcrypt.hash(crypto.randomBytes(32).toString('hex'), 12);
     const record = {
         username,
         passwordHash,
@@ -14113,11 +14525,13 @@ async function ensureAllStaffProfilesHaveLogins() {
                 if (!isValidStaffEmail(email) || (await findProfessionalByEmailInternal(email))) email = '';
                 const professional = await createProfessionalInternal({
                     username,
-                    password: generateProfessionalPassword(),
                     displayName,
                     email,
                     active: true
                 });
+                if (email) {
+                    try { await issueStaffPasswordSetup(professional); } catch (_) { /* optional */ }
+                }
                 if (filled && filled.app && filled.app.id && professional && professional.id) {
                     try { await setApplicationProfessionalIdInternal(filled.app.id, professional.id); } catch (_) { /* optional link */ }
                 }
@@ -14671,10 +15085,8 @@ async function assignLoginToPsychologistApplication(app, { resetPassword } = {})
         await setApplicationProfessionalIdInternal(app.id, existing.id);
         const fields = {};
         if (emailRaw && !existing.email) fields.email = emailRaw;
-        let generatedPassword;
         if (resetPassword) {
-            generatedPassword = generateProfessionalPassword();
-            fields.passwordHash = await bcrypt.hash(generatedPassword, 12);
+            fields.passwordHash = await bcrypt.hash(crypto.randomBytes(32).toString('hex'), 12);
         }
         if (Object.keys(fields).length) {
             if (usePersistentDb) {
@@ -14685,18 +15097,18 @@ async function assignLoginToPsychologistApplication(app, { resetPassword } = {})
         }
         await seedPsychologistStaffProfile(existing, app);
         await copyBolsaCvToStaffDocuments(existing.username, app);
+        const setup = await issueStaffPasswordSetup(existing, { invalidateExisting: false });
         return {
-            professional: existing,
-            generatedPassword,
+            professional: setup.professional || existing,
+            setupEmailSent: setup.setupEmailSent,
+            emailedTo: setup.emailedTo,
             created: false
         };
     }
 
     const username = await allocateProfessionalUsername('', name);
-    const generatedPassword = generateProfessionalPassword();
     const created = await createProfessionalInternal({
         username,
-        password: generatedPassword,
         displayName: name,
         email: emailRaw,
         active: true
@@ -14705,9 +15117,11 @@ async function assignLoginToPsychologistApplication(app, { resetPassword } = {})
     await seedPsychologistStaffProfile(created, app);
     await copyBolsaCvToStaffDocuments(created.username, app);
     console.log(`   👤 Professional created from board: ${created.username}`);
+    const setup = await issueStaffPasswordSetup(created);
     return {
-        professional: created,
-        generatedPassword,
+        professional: setup.professional || created,
+        setupEmailSent: setup.setupEmailSent,
+        emailedTo: setup.emailedTo,
         created: true
     };
 }
@@ -14732,12 +15146,8 @@ app.post('/api/admin/professionals', requireAdmin, express.json(), async (req, r
             return res.status(409).json({ error: 'That username is reserved for the clinic admin account' });
         }
         const username = await allocateProfessionalUsername(requestedUsername, displayName);
-        let password = String(body.password || '');
-        let generatedPassword = null;
-        if (!password) {
-            generatedPassword = generateProfessionalPassword();
-            password = generatedPassword;
-        } else if (password.length < 12) {
+        const password = String(body.password || '');
+        if (password && password.length < 12) {
             return res.status(400).json({ error: 'Password must be at least 12 characters' });
         }
         const doxy = validateProfessionalDoxyUrl(body.doxyRoomUrl);
@@ -14767,16 +15177,18 @@ app.post('/api/admin/professionals', requireAdmin, express.json(), async (req, r
 
         const created = await createProfessionalInternal({
             username,
-            password,
+            password: password || undefined,
             displayName,
             doxyRoomUrl: assignedDoxyRoomUrl(displayName, doxy.url, username),
             email: emailRaw,
             active: body.active !== false
         });
         console.log(`   👤 Professional created: ${created.username}`);
+        const setup = password ? { setupEmailSent: false, emailedTo: '' } : await issueStaffPasswordSetup(created);
         res.status(201).json({
-            professional: publicProfessional(created),
-            generatedPassword: generatedPassword || undefined
+            professional: publicProfessional(setup.professional || created),
+            setupEmailSent: setup.setupEmailSent,
+            emailedTo: setup.emailedTo
         });
     } catch (err) {
         if (err && err.code === '23505') {
@@ -14848,19 +15260,12 @@ app.post('/api/admin/professionals/:id/password', requireAdmin, async (req, res)
     try {
         const existing = await findProfessionalByIdInternal(req.params.id);
         if (!existing) return res.status(404).json({ error: 'Professional not found' });
-        const generatedPassword = generateProfessionalPassword();
-        const passwordHash = await bcrypt.hash(generatedPassword, 12);
-        let updated;
-        if (usePersistentDb) {
-            updated = await db.updateProfessional(existing.id, { passwordHash });
-        } else {
-            Object.assign(existing, { passwordHash, updatedAt: new Date().toISOString() });
-            updated = existing;
-        }
-        console.log(`   🔑 Professional password reset: ${updated.username}`);
+        const setup = await issueStaffPasswordSetup(existing, { invalidateExisting: true });
+        console.log(`   🔑 Professional password setup issued: ${existing.username}`);
         res.json({
-            professional: publicProfessional(updated),
-            generatedPassword
+            professional: publicProfessional(setup.professional || existing),
+            setupEmailSent: setup.setupEmailSent,
+            emailedTo: setup.emailedTo
         });
     } catch (err) {
         console.error('POST /api/admin/professionals/:id/password:', err.message);
@@ -14898,52 +15303,27 @@ app.post('/api/admin/professionals/:id/send-login-email', requireAdmin, express.
             const patched = await patchProfessionalInternal(existing, { email: to });
             if (patched) Object.assign(existing, patched);
         }
-        const offeredPassword = String(body.password || '');
-        const confirmReset = body.confirmReset === true;
-        let plaintext = '';
-        let generatedPassword = null;
-        const matches = await professionalPasswordMatches(offeredPassword, existing.passwordHash);
-        if (matches) {
-            plaintext = offeredPassword;
-        } else if (!confirmReset) {
-            return res.status(409).json({
-                code: 'needs_reset',
-                error: 'The current password cannot be shown again. Confirm to generate a new password and email it. The old password will stop working.'
-            });
-        } else {
-            generatedPassword = generateProfessionalPassword();
-            const passwordHash = await bcrypt.hash(generatedPassword, 12);
-            let updated;
-            if (usePersistentDb) {
-                updated = await db.updateProfessional(existing.id, { passwordHash });
-            } else {
-                Object.assign(existing, { passwordHash, updatedAt: new Date().toISOString() });
-                updated = existing;
-            }
-            Object.assign(existing, updated || {});
-            plaintext = generatedPassword;
-            console.log(`   🔑 Professional password reset for login email: ${existing.username}`);
-        }
-        const note = sanitizeProfessionalLoginNote(body.note, name);
-        await sendProfessionalLoginEmail({
-            to,
-            name,
-            username: existing.username,
-            password: plaintext,
-            note
+        const setup = await issueStaffPasswordSetup(existing, {
+            invalidateExisting: body.confirmReset === true
         });
-        const marked = await patchProfessionalInternal(existing, {
-            loginEmailSentTo: to,
+        if (!setup.setupEmailSent) {
+            return res.status(400).json({
+                code: 'missing_email',
+                error: 'Add an email on the ficha before sending login details.'
+            });
+        }
+        const marked = await patchProfessionalInternal(setup.professional || existing, {
+            loginEmailSentTo: setup.emailedTo,
             loginEmailSentAt: new Date().toISOString()
         });
         if (marked) Object.assign(existing, marked);
-        console.log(`   ✉️  Professional login email sent to ${to} (${existing.username})`);
+        console.log(`   ✉️  Professional setup email sent to ${redactPhi(setup.emailedTo)} (${existing.username})`);
+        logAudit(req, 'admin_portal_login_email', existing.username || String(req.params.id || '')).catch(() => {});
         res.json({
             ok: true,
-            emailedTo: to,
-            professional: publicProfessional(existing),
-            generatedPassword: generatedPassword || undefined,
-            resetPassword: Boolean(generatedPassword)
+            emailedTo: setup.emailedTo,
+            professional: publicProfessional(marked || existing),
+            setupEmailSent: true
         });
     } catch (err) {
         console.error('POST /api/admin/professionals/:id/send-login-email:', err.message);
@@ -15028,7 +15408,7 @@ function summarizeBillingPeriod(bookings, startIso, endIso, slotMinutes) {
         const paymentId = String(b.paymentId || '');
         const isComp = paymentId.startsWith('comp_') || amountCents === 0;
         const isPaid = isComp || b.markedPaid === true;
-        if (isPaid && !isComp) paidCents += amountCents;
+        if (isPaid && !isComp) paidCents += providerPayoutCents(b);
     }
     const hours = consultations * (Number(slotMinutes) || 30) / 60;
     return {
@@ -15364,6 +15744,7 @@ app.put('/api/clinic/availability-months/:month', requireAuth, rateLimitStaffPro
 
 app.get('/api/admin/payouts', requireAdmin, async (req, res) => {
     try {
+        logAudit(req, 'admin_payouts_read', '').catch(() => {});
         const bookings = await bookingsForPayouts();
         const invoices = await listAllStaffInvoicesInternal();
         const byUser = new Map();
@@ -15722,6 +16103,7 @@ function buildGrossBreakdown(grossCents, stripeFeeCents) {
 // ─── API: Admin — Finances (paid revenue by month / patient) ───
 app.get('/api/admin/finances', requireAdmin, async (req, res) => {
     try {
+        logAudit(req, 'admin_finances_read', String(req.query.month || '')).catch(() => {});
         let bookings;
         if (usePersistentDb) {
             bookings = await db.findAllBookings();
@@ -15959,6 +16341,7 @@ app.delete('/api/admin/patients/:bookingRef', requireAdmin, async (req, res) => 
         const bookingRef = String(req.params.bookingRef || '').toUpperCase();
         const deleted = await db.deleteBookingByRef(bookingRef);
         if (!deleted) return res.status(404).json({ error: 'Booking not found' });
+        logAudit(req, 'admin_booking_delete', bookingRef).catch(() => {});
         console.log(`   🗑️  Admin deleted booking ${bookingRef}`);
         res.json({ ok: true, deleted: deleted.bookingRef });
     } catch (err) {
@@ -16214,7 +16597,7 @@ app.post('/api/admin/patients/schedule-next', requireAdmin, express.json(), asyn
                     service,
                     passengers,
                     hasInsurance,
-                    discountCode: null
+                    discountPercent: 0
                 });
                 if (pricing.ok) amountCents = pricing.totalCents;
             } catch (e) { /* keep 0 */ }
@@ -17066,7 +17449,10 @@ function buildInvitationEmail(invitation, paymentUrl, baseUrl) {
         datedCampaign('invite_pay'),
         'portal'
     );
-    const doxyUrl = doxyUrlFromEmailData({ doxyUrl: invitation.doxyUrl });
+    const doxyUrl = doxyUrlFromEmailData({
+        doxyUrl: invitation.doxyUrl,
+        professional: invitation.professional
+    });
     const doxyHtml = doxyUrl
         ? `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 16px 0 0;"><tr><td>
              <a href="${escapeHtml(doxyUrl)}" target="_blank" rel="noopener" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;text-align:center;text-decoration:none;padding:14px 28px;border-radius:10px;">${t.joinVideoButton}</a>
@@ -17326,6 +17712,7 @@ async function createInvitationStripeSession(invitation, baseUrl) {
     for (let i = 2; i <= travellerCount; i++) {
         metadata[`p${i}_name`] = `Traveller ${i}`;
     }
+    const confirmToken = newCheckoutConfirmToken();
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         mode: 'payment',
@@ -17344,11 +17731,16 @@ async function createInvitationStripeSession(invitation, baseUrl) {
             quantity: 1
         }],
         metadata,
-        success_url: `${baseUrl}/book-consultation?success=true&session_id={CHECKOUT_SESSION_ID}`,
+        success_url: checkoutSuccessUrl(baseUrl, confirmToken),
         cancel_url: `${baseUrl}/book-consultation?cancelled=true&invitation=${invitation.id}`,
         // Stripe Checkout max lifetime is 24h; our /invite/:token link is re-minted until the consultation day.
         expires_at: invitationStripeExpiresAtUnix(invitation)
     });
+    try {
+        await persistCheckoutConfirmation(confirmToken, session.id);
+    } catch (err) {
+        console.error('persist invitation confirmation:', err.message);
+    }
     return session;
 }
 
@@ -17542,7 +17934,7 @@ app.post('/api/admin/invitations', requireAdmin, express.json(), async (req, res
                 service,
                 passengers,
                 hasInsurance: !!hasInsurance,
-                discountCode: null
+                discountPercent: 0
             });
             if (!pricing.ok) {
                 return res.status(400).json({ error: pricing.error });

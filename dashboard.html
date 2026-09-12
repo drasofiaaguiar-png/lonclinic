@@ -1,16 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZN8J4X12H3"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-ZN8J4X12H3');
-      gtag('config', 'GT-TXHQ9ZVX', { send_page_view: false });
-      gtag('config', 'AW-18103198169', { send_page_view: false });
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Dashboard — Lon Clinic</title>
@@ -70,13 +60,13 @@
                         <label for="loginEmail">Email address</label>
                         <input type="email" id="loginEmail" placeholder="you@example.com" required autocomplete="email">
                     </div>
-                    <div class="dash-form-group">
-                        <label for="loginRef">Booking reference <span class="dash-form-hint">(optional)</span></label>
-                        <input type="text" id="loginRef" placeholder="e.g. LC-A1B2C3D4" autocomplete="off">
+                    <div class="dash-form-group" id="loginOtpGroup" hidden>
+                        <label for="loginOtp">One-time code</label>
+                        <input type="text" id="loginOtp" placeholder="6-digit code" inputmode="numeric" autocomplete="one-time-code" maxlength="8">
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg dash-login-btn">Access my dashboard</button>
+                    <button type="submit" class="btn btn-primary btn-lg dash-login-btn" id="loginSubmitBtn">Send access code</button>
                 </form>
-                <p class="dash-login-note">Use the email from your booking. Add a reference to open a single appointment, or leave it blank to see all consultations on this email.</p>
+                <p class="dash-login-note">We email a one-time code to the address on your booking. The code expires in 10 minutes.</p>
             </div>
         </section>
 

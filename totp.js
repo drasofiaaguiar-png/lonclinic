@@ -87,8 +87,8 @@ function otpauthUrl(secret, account, issuer) {
 function generateRecoveryCodes(n = 8) {
     const codes = [];
     for (let i = 0; i < n; i++) {
-        const hex = crypto.randomBytes(4).toString('hex');
-        codes.push(`${hex.slice(0, 4)}-${hex.slice(4)}`);
+        const hex = crypto.randomBytes(16).toString('hex');
+        codes.push(`${hex.slice(0, 8)}-${hex.slice(8, 16)}-${hex.slice(16, 24)}-${hex.slice(24)}`);
     }
     return codes;
 }

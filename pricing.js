@@ -47,13 +47,31 @@ const TRAVEL_TIER_CENTS = {
     }
 };
 
-/** Uppercase codes → percent off (integer). Same as booking.js discountCodes. */
-const DISCOUNT_CODES = {
-    ME2026: 99,
-    VERAO082026: 10
+const STRIPE_MIN_CENTS = 50;
+
+/** Fixed amount the provider is paid per completed paid session (not a % of patient charge). */
+const PROVIDER_PAYOUT_CENTS = {
+    clinica_geral: 2000,
+    urgente: 2000,
+    travel: 2000,
+    saude_mental: 2000,
+    burnout: 2000,
+    burnout_mensal: 2000,
+    burnout_programa: 2000,
+    renovacao: 1500,
+    longevidade: 2500,
+    psicologia: 2000,
+    psicologia_mensal: 2000,
+    terapia_casal: 2500,
+    terapia_casal_mensal: 2500,
+    nutricao_consulta: 1600,
+    nutricao_programa: 1600,
+    nutricao_completo: 1600,
+    nutricao_completo_reforcado: 1600
 };
 
-const STRIPE_MIN_CENTS = 50;
+const B2B_CORPORATE_BONUS_CENTS = 20000;
+const CONTINUITY_CLINIC_TAX = 0.2;
 
 const STRIPE_SUBSCRIPTION_SERVICES = new Set(['burnout_mensal', 'psicologia_mensal', 'terapia_casal_mensal']);
 
@@ -77,11 +95,11 @@ function normalizeServiceKey(service) {
  * @param {string} opts.service
  * @param {Array} opts.passengers
  * @param {boolean} opts.hasInsurance - Medicare tier for travel only
- * @param {string|null|undefined} opts.discountCode
+ * @param {number|null|undefined} opts.discountPercent — server-resolved percent off; never trust a client table
  * @returns {{ ok: true, subtotalCents: number, discountCents: number, totalCents: number } | { ok: false, error: string }}
  */
 function computeCheckoutTotalCents(opts) {
-    const { service, passengers, hasInsurance, discountCode } = opts;
+    const { service, passengers, hasInsurance, discountPercent: discountPercentRaw } = opts;
     const key = normalizeServiceKey(service);
     if (!key) {
         return { ok: false, error: 'Invalid service' };
@@ -124,10 +142,10 @@ function computeCheckoutTotalCents(opts) {
         'nutricao_completo',
         'nutricao_completo_reforcado'
     ]);
-    if (discountCode && !noDiscountServices.has(key)) {
-        const code = String(discountCode).toUpperCase().trim();
-        if (Object.prototype.hasOwnProperty.call(DISCOUNT_CODES, code)) {
-            discountPercent = DISCOUNT_CODES[code];
+    if (!noDiscountServices.has(key)) {
+        const pct = Number(discountPercentRaw);
+        if (Number.isFinite(pct) && pct > 0) {
+            discountPercent = Math.min(99, Math.round(pct));
         }
     }
 
@@ -144,9 +162,50 @@ function computeCheckoutTotalCents(opts) {
     return { ok: true, subtotalCents, discountCents, totalCents };
 }
 
+function discountsAllowedForService(service) {
+    const key = normalizeServiceKey(service);
+    if (!key) return false;
+    return ![
+        'burnout_mensal',
+        'burnout_programa',
+        'psicologia_mensal',
+        'terapia_casal_mensal',
+        'nutricao_programa',
+        'nutricao_completo',
+        'nutricao_completo_reforcado'
+    ].includes(key);
+}
+
+/**
+ * What the clinic owes the provider for one paid booking — fixed fee, optional
+ * B2B bonus, 20% clinic tax after a public programme (Cheque-Psicólogo / Cuida-te).
+ */
+function providerPayoutCents(booking) {
+    if (!booking || booking.cancelled) return 0;
+    const paymentId = String(booking.paymentId || '');
+    const amountCents = Math.max(0, Math.round(Number(booking.amount) || 0));
+    const isComp = paymentId.startsWith('comp_') || amountCents === 0;
+    const isPaid = isComp || booking.markedPaid === true;
+    if (!isPaid || isComp) return 0;
+    if (String(booking.service || '') === 'entrevista') return 0;
+    const key = normalizeServiceKey(booking.service);
+    const fee = key && PROVIDER_PAYOUT_CENTS[key] != null ? PROVIDER_PAYOUT_CENTS[key] : 0;
+    if (fee <= 0) return 0;
+    const continuity = booking.continuityAfterProgram === true;
+    let cents = continuity ? Math.round(fee * (1 - CONTINUITY_CLINIC_TAX)) : fee;
+    const channel = String(booking.payoutChannel || booking.channel || 'direct').toLowerCase();
+    if (channel === 'b2b_corporate') cents += B2B_CORPORATE_BONUS_CENTS;
+    return cents;
+}
+
 module.exports = {
     computeCheckoutTotalCents,
     normalizeServiceKey,
     isStripeSubscriptionService,
+    discountsAllowedForService,
+    providerPayoutCents,
+    PROVIDER_PAYOUT_CENTS,
+    B2B_CORPORATE_BONUS_CENTS,
+    CONTINUITY_CLINIC_TAX,
     STRIPE_MIN_CENTS
 };

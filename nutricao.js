@@ -267,7 +267,7 @@ function bookingCardsHtml(meta, tone) {
                 chip: 'Nutrição',
                 title: 'Consulta de nutricionista',
                 price: '45 € · 30 min',
-                note: 'Sessão avulsa com nutricionista. O programa mensal é 115 € no mês 1 e 75 €/mês. Clínica geral médica: 39 €.',
+                note: 'Sessão avulsa com nutricionista. O programa mensal cobra 115 € no mês 1; os meses seguintes são cobrados à parte (não é débito automático). Clínica geral médica: 39 €.',
                 cta: 'Fale com um nutricionista',
                 href: `/marcar/nutricao-consulta?ref=${encodeURIComponent(`nutricao-${meta.slug || 'hub'}`)}`,
                 track: 'nutricao-card-book'
