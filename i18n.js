@@ -282,9 +282,7 @@
         { s: '.lon-team-all .lon-text-link', en: 'View Dr Rita Aguiar’s profile →', pt: 'Ver perfil da Dra. Rita Aguiar →', es: 'Ver el perfil de la Dra. Rita Aguiar →' },
 
         /* ── After the consultation ── */
-        { s: '.lon-after .lon-kicker', en: 'Care continues', pt: 'O cuidado continua', es: 'El cuidado continúa' },
-        { s: '#lon-after-title', en: 'The consultation is only one part of follow-up.', pt: 'A consulta é apenas uma parte do acompanhamento.', es: 'La consulta es solo una parte del seguimiento.' },
-        { s: '.lon-after .lon-section-lead', en: 'Depending on the situation and the clinical assessment, the professional may:', pt: 'Dependendo da situação e da avaliação clínica, o profissional poderá:', es: 'Según la situación y la evaluación clínica, el profesional podrá:' },
+        { s: '#lon-after-title', en: 'After the consultation, care continues...', pt: 'Depois da consulta, o cuidado continua...', es: 'Después de la consulta, el cuidado continúa...' },
         { s: '.lon-after-grid li:nth-child(1) h3', en: 'Assess', pt: 'Avaliar', es: 'Evaluar' },
         { s: '.lon-after-grid li:nth-child(1) p', en: 'Understand the symptoms, context and relevant history.', pt: 'Compreender os sintomas, contexto e historial relevante.', es: 'Comprender los síntomas, el contexto y el historial relevante.' },
         { s: '.lon-after-grid li:nth-child(2) h3', en: 'Guide', pt: 'Orientar', es: 'Orientar' },

@@ -4545,6 +4545,10 @@ body.lon-home .dr-hero {
     box-shadow: none;
 }
 
+.lon-home #como-funciona {
+    text-align: left;
+}
+
 .lon-home .lon-how-head {
     display: flex;
     flex-wrap: wrap;
@@ -4552,10 +4556,15 @@ body.lon-home .dr-hero {
     align-items: flex-end;
     gap: 24px 40px;
     margin-bottom: 28px;
+    text-align: left;
 }
 
-.lon-home .lon-how-head h2 {
+.lon-home .lon-how-head h2,
+.lon-home #como-funciona #como-funciona-title {
     max-width: 14ch;
+    margin-left: 0;
+    margin-right: 0;
+    text-align: left;
 }
 
 .lon-home #como-funciona .lon-how-head .lon-kicker,
@@ -4670,23 +4679,15 @@ body.lon-home #como-funciona .lon-how-step-num {
     border-top: 1px solid rgba(244, 247, 242, 0.16);
 }
 
-.lon-home .lon-how-care-head {
-    margin-bottom: 18px;
-}
-
-.lon-home #como-funciona .lon-how-care-head h2 {
-    font-size: clamp(1.35rem, 2.5vw, 1.85rem);
-    max-width: 28ch;
-    margin: 0;
+.lon-home #como-funciona .lon-how-care-line {
+    margin: 0 0 18px;
+    max-width: none;
+    text-align: left;
+    font-size: clamp(1.15rem, 2vw, 1.45rem);
     font-weight: 550;
     letter-spacing: -0.03em;
-    line-height: 1.2;
-}
-
-.lon-home #como-funciona .lon-how-care .lon-section-lead {
-    margin: 8px 0 0;
-    max-width: 46ch;
-    color: rgba(244, 247, 242, 0.72);
+    line-height: 1.25;
+    color: #fff;
 }
 
 .lon-home #como-funciona .lon-after-grid {
