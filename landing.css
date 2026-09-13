@@ -3806,9 +3806,9 @@ body.lon-home .dr-hero {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        object-position: 40% 34%;
-        transform: scale(1.7);
-        transform-origin: 0% 88%;
+        object-position: 50% 38%;
+        transform: scale(1.72) translateY(-4%);
+        transform-origin: 10% 75%;
     }
 }
 
