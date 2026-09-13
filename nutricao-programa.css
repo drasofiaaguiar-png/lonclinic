@@ -795,3 +795,90 @@
     background: #f4ead0;
     color: #6a5418;
 }
+
+.mp-landing .mp-tp-badge {
+    margin: 0;
+    background: #fff;
+}
+
+.mp-clinician {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 20px;
+    align-items: center;
+    background: #fff;
+    border: 1px solid rgba(37, 82, 53, 0.12);
+    border-radius: 18px;
+    padding: 20px 22px;
+}
+
+.mp-clinician-avatar {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #1a6641 0%, #2d5a4e 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.55rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+}
+
+.mp-clinician-kicker {
+    margin: 0 0 6px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #1a6641;
+}
+
+.mp-clinician h3 {
+    margin: 0 0 4px;
+    font-size: 1.2rem;
+}
+
+.mp-clinician-role {
+    margin: 0 0 8px;
+    font-weight: 650;
+    color: #1a6641;
+    font-size: 0.9rem;
+}
+
+.mp-clinician p {
+    margin: 0 0 8px;
+    color: #3d554a;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.mp-clinician p:last-child {
+    margin-bottom: 0;
+}
+
+.mp-proof-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px 20px;
+    margin-bottom: 12px;
+}
+
+.mp-proof-head .lon-tp-badge {
+    margin: 0;
+}
+
+.mp-proof-more {
+    margin: 14px 0 0;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 700px) {
+    .mp-clinician {
+        grid-template-columns: 1fr;
+    }
+}

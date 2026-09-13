@@ -575,7 +575,7 @@ function renderHub(origin) {
             <div class="lon-container nu-hero-inner">
                 <p class="cq-kicker">LON Clinic · Reeducação nutricional</p>
                 <h1>Nutrição online para mudar o hábito — não para vender uma receita</h1>
-                <p class="nu-lead">A Lon Clinic não prescreve aGLP-1 (Ozempic, Wegovy) para perda de peso. O produto de peso é um programa nutricional e comportamental: reeducação metabólica, saciedade natural e acompanhamento contínuo para evitar o efeito ioiô. Há também fichas por condição (pós-parto, bariátrica, diabetes tipo 2, Hashimoto, celíaca, FODMAP, SOP) — orientação alimentar, não consulta para medicamento de emagrecimento.</p>
+                <p class="nu-lead">O produto de peso é um programa nutricional e comportamental: reeducação metabólica, saciedade e acompanhamento contínuo para evitar o efeito ioiô — 2 consultas por mês, chat no portal e ajustes quinzenais. Há também fichas por condição (pós-parto, bariátrica, diabetes tipo 2, Hashimoto, celíaca, FODMAP, SOP). A Lon Clinic não prescreve aGLP-1 (Ozempic, Wegovy) para perda de peso.</p>
                 <p class="nu-hero-meta">Programa mensal a partir de 115 € · 2 consultas/mês + chat no portal · Psicologia quando o stress manda na comida</p>
                 <div class="nu-hero-actions">
                     <a class="lon-btn lon-btn-primary" href="/marcar/nutricao-programa?ref=nutricao-hub">Consulta inicial de nutrição metabólica — 115 €</a>
@@ -591,7 +591,7 @@ function renderHub(origin) {
                 <a class="nu-card nu-card-feature" href="/nutricao/emagrecimento">
                     <span class="nu-card-price">115 € no mês 1 · depois 75 €/mês</span>
                     <span class="nu-card-label">Programa de emagrecimento — médico e nutricionista</span>
-                    <span class="nu-card-desc">Perder peso com 2 consultas/mês, chat no portal e ajustes quinzenais. Sem Ozempic. Fidelização 3 meses. Total 490 € em 6 meses.</span>
+                    <span class="nu-card-desc">Perder peso com 2 consultas/mês, chat no portal e ajustes quinzenais. Fidelização 3 meses. Total 490 € em 6 meses.</span>
                 </a>
                 <p style="margin:12px 0 0"><a href="/nutricao/programa">Ver também a reeducação metabólica (3 a 6 meses) →</a></p>
             </div>

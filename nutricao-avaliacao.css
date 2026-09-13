@@ -234,6 +234,72 @@
     margin-bottom: 22px;
 }
 
+.mpq-mini {
+    background: #fff;
+    border: 1.5px solid var(--mpq-line);
+    border-radius: 18px;
+    padding: 18px 16px 8px;
+    margin: 0 0 22px;
+}
+
+.mpq-mini-kicker {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lon-accent);
+    margin: 0 0 14px;
+}
+
+.mpq-mini-grid {
+    display: grid;
+    gap: 12px;
+}
+
+.mpq-mini-grid article {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--mpq-line);
+}
+
+.mpq-mini-grid article:last-child {
+    border-bottom: 0;
+}
+
+.mpq-mini-label {
+    margin: 0 0 4px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mpq-muted);
+}
+
+.mpq-mini-value {
+    margin: 0 0 4px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--mpq-ink);
+}
+
+.mpq-mini-note {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: var(--mpq-muted);
+}
+
+@media (min-width: 640px) {
+    .mpq-mini-grid {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 16px;
+    }
+
+    .mpq-mini-grid article {
+        border-bottom: 0;
+        padding-bottom: 8px;
+    }
+}
+
 .mpq-plan {
     background: #fff;
     border: 1.5px solid var(--mpq-line);

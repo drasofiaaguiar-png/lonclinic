@@ -11,6 +11,7 @@ const seo = require('./seo');
 const PRIVATE_PREFIXES = [
     '/admin',
     '/doctors',
+    '/profissional',
     '/clinic-portal',
     '/clinic-desk',
     '/patient-portal',

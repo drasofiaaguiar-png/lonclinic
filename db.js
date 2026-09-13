@@ -845,6 +845,19 @@ async function initSchema(p) {
     `);
     await p.query(`CREATE INDEX IF NOT EXISTS idx_patient_otps_email ON patient_otps (LOWER(email), created_at DESC)`);
     await p.query(`
+        CREATE TABLE IF NOT EXISTS staff_otps (
+            id UUID PRIMARY KEY,
+            email VARCHAR(320) NOT NULL,
+            professional_id INTEGER,
+            code_hash VARCHAR(128) NOT NULL,
+            expires_at TIMESTAMPTZ NOT NULL,
+            used_at TIMESTAMPTZ,
+            attempts INTEGER NOT NULL DEFAULT 0,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_staff_otps_email ON staff_otps (LOWER(email), created_at DESC)`);
+    await p.query(`
         CREATE TABLE IF NOT EXISTS deletion_requests (
             id UUID PRIMARY KEY,
             email VARCHAR(320) NOT NULL,
@@ -4228,6 +4241,67 @@ async function purgeExpiredPatientOtps() {
     await p.query(`DELETE FROM patient_otps WHERE expires_at < NOW() - INTERVAL '1 day'`);
 }
 
+function rowToStaffOtp(row) {
+    if (!row) return null;
+    return {
+        id: row.id,
+        email: row.email,
+        professionalId: row.professional_id || null,
+        codeHash: row.code_hash,
+        expiresAt: row.expires_at instanceof Date ? row.expires_at.toISOString() : row.expires_at,
+        usedAt: row.used_at instanceof Date ? row.used_at.toISOString() : row.used_at || null,
+        attempts: Number(row.attempts) || 0,
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at
+    };
+}
+
+async function insertStaffOtp({ id, email, professionalId, codeHash, expiresAt }) {
+    const p = getPool();
+    const r = await p.query(
+        `INSERT INTO staff_otps (id, email, professional_id, code_hash, expires_at)
+         VALUES ($1, $2, $3, $4, $5)
+         RETURNING *`,
+        [id, String(email || '').toLowerCase().trim(), professionalId || null, codeHash, expiresAt]
+    );
+    return rowToStaffOtp(r.rows[0]);
+}
+
+async function findLatestStaffOtp(email) {
+    const p = getPool();
+    const e = String(email || '').toLowerCase().trim();
+    const r = await p.query(
+        `SELECT * FROM staff_otps
+         WHERE LOWER(email) = $1 AND used_at IS NULL AND expires_at > NOW()
+         ORDER BY created_at DESC
+         LIMIT 1`,
+        [e]
+    );
+    return rowToStaffOtp(r.rows[0]);
+}
+
+async function bumpStaffOtpAttempts(id) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE staff_otps SET attempts = attempts + 1 WHERE id = $1 RETURNING *`,
+        [id]
+    );
+    return rowToStaffOtp(r.rows[0]);
+}
+
+async function markStaffOtpUsed(id) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE staff_otps SET used_at = NOW() WHERE id = $1 AND used_at IS NULL RETURNING *`,
+        [id]
+    );
+    return rowToStaffOtp(r.rows[0]);
+}
+
+async function purgeExpiredStaffOtps() {
+    const p = getPool();
+    await p.query(`DELETE FROM staff_otps WHERE expires_at < NOW() - INTERVAL '1 day'`);
+}
+
 function rowToDeletionRequest(row) {
     if (!row) return null;
     return {
@@ -4340,6 +4414,11 @@ module.exports = {
     bumpPatientOtpAttempts,
     markPatientOtpUsed,
     purgeExpiredPatientOtps,
+    insertStaffOtp,
+    findLatestStaffOtp,
+    bumpStaffOtpAttempts,
+    markStaffOtpUsed,
+    purgeExpiredStaffOtps,
     insertDeletionRequest,
     listDeletionRequests,
     findDeletionRequestById,

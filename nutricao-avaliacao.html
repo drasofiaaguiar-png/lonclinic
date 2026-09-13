@@ -26,7 +26,7 @@
     <meta property="og:site_name" content="Lon Clinic">
     <meta name="theme-color" content="#255235">
     <link rel="stylesheet" href="/landing.css?v=20260707a">
-    <link rel="stylesheet" href="/nutricao-avaliacao.css?v=20260905b">
+    <link rel="stylesheet" href="/nutricao-avaliacao.css?v=20260913a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
@@ -212,6 +212,26 @@
             <p class="mpq-kicker" id="resultKicker">Análise clínica concluída</p>
             <h1 id="resultTitle">O seu plano recomendado</h1>
             <p class="mpq-lead" id="resultMessage"></p>
+            <div class="mpq-mini" id="resultMini">
+                <p class="mpq-mini-kicker">Mini-plano pessoal — não é prescrição nem diagnóstico</p>
+                <div class="mpq-mini-grid">
+                    <article>
+                        <p class="mpq-mini-label">Faixa de IMC</p>
+                        <p class="mpq-mini-value" id="miniImc"></p>
+                        <p class="mpq-mini-note" id="miniImcNote"></p>
+                    </article>
+                    <article>
+                        <p class="mpq-mini-label">Foco sugerido</p>
+                        <p class="mpq-mini-value" id="miniFocus"></p>
+                        <p class="mpq-mini-note" id="miniFocusNote"></p>
+                    </article>
+                    <article>
+                        <p class="mpq-mini-label">Próximo passo</p>
+                        <p class="mpq-mini-value" id="miniNext"></p>
+                        <p class="mpq-mini-note" id="miniNextNote"></p>
+                    </article>
+                </div>
+            </div>
             <p class="mpq-metrics" id="resultMetrics"></p>
             <div class="mpq-hold" id="quizHold" hidden>
                 <p class="mpq-hold-kicker">1.ª consulta</p>
@@ -233,6 +253,6 @@
 
     <script src="/lon-analytics.js?v=20260906e" defer></script>
     <script src="/lon-slots.js?v=20260911n" defer></script>
-    <script src="/nutricao-avaliacao.js?v=20260905d" defer></script>
+    <script src="/nutricao-avaliacao.js?v=20260913a" defer></script>
 </body>
 </html>

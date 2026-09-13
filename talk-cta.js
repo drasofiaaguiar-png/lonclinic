@@ -148,7 +148,7 @@
     function shouldTalk(path, bodyClass) {
         const p = String(path || '').toLowerCase();
         if (!p || p === '/') return false;
-        if (/\/marcar(\/|$)|book\.html|patient-portal|clinic-portal|\/admin/.test(p)) return false;
+        if (/\/marcar(\/|$)|book\.html|patient-portal|clinic-portal|\/profissional|\/admin/.test(p)) return false;
         if (/\/(travel-clinic|saudemental|psicologia)(\/|$)/.test(p)) return false;
         if (/\/nutricao\/programa(\/|$)/.test(p)) return false;
         if (p === '/consulta' || p === '/consulta/') return false;

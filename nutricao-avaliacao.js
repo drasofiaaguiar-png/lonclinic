@@ -66,6 +66,89 @@
         return Math.round((kg / (m * m)) * 10) / 10;
     }
 
+    function ptNum(n) {
+        return String(n).replace('.', ',');
+    }
+
+    function imcBand(imc) {
+        if (!Number.isFinite(imc)) return null;
+        if (imc < 18.5) {
+            return {
+                label: 'Baixo peso',
+                note: 'IMC aproximado ' + ptNum(imc) + ' (OMS: abaixo de 18,5). A consulta valida se há défices ou outro motivo clínico — não é um plano para emagrecer.'
+            };
+        }
+        if (imc < 25) {
+            return {
+                label: 'Peso considerado normal',
+                note: 'IMC aproximado ' + ptNum(imc) + ' (faixa 18,5–24,9). O programa pode focar energia, saciedade e hábitos, não um alvo agressivo de quilos.'
+            };
+        }
+        if (imc < 30) {
+            return {
+                label: 'Excesso de peso',
+                note: 'IMC aproximado ' + ptNum(imc) + ' (faixa 25–29,9). É um ponto de partida, não um diagnóstico nem uma meta de quilos garantida.'
+            };
+        }
+        if (imc < 35) {
+            return {
+                label: 'Obesidade (grau I)',
+                note: 'IMC aproximado ' + ptNum(imc) + '. O acompanhamento ambulatorial online faz sentido quando não há emergência nem indicação de internamento.'
+            };
+        }
+        return {
+            label: 'Obesidade (grau II ou III)',
+            note: 'IMC aproximado ' + ptNum(imc) + '. Na consulta confirma-se se o programa online é adequado ao seu caso — sem promessa de um número na balança.'
+        };
+    }
+
+    function focusFrom(data) {
+        if (data.eating === 'frequent') {
+            return {
+                label: 'Fome emocional e consistência',
+                note: 'O stress e a ansiedade aparecem como o travão principal. O Programa Completo junta nutrição a 12 sessões de psicologia.'
+            };
+        }
+        if (data.diets === 'yoyo') {
+            return {
+                label: 'Hábitos anti-ioiô',
+                note: 'Já perdeu e recuperou. O foco é adesão mensal (2 consultas + chat), não mais uma dieta de 21 dias.'
+            };
+        }
+        if (data.goal === 'energy') {
+            return {
+                label: 'Energia e rotina alimentar',
+                note: 'O objectivo que escolheu não é só o número da balança. Trabalha-se o prato, os horários e o cansaço no dia-a-dia.'
+            };
+        }
+        if (data.goal === 'markers') {
+            return {
+                label: 'Marcadores e reeducação',
+                note: 'Glicemia, colesterol ou tensão entram na conversa da 1.ª consulta — com análises que já tiver, se existirem.'
+            };
+        }
+        return {
+            label: 'Reeducação alimentar contínua',
+            note: 'O desafio que descreveu é organizar refeições e manter o plano. O programa ajusta de duas em duas semanas.'
+        };
+    }
+
+    function nextFrom(data) {
+        var labsNote = (data.labs === 'year' || data.labs === 'unknown')
+            ? 'Se tiver análises antigas, traga-as; se não tiver, fala-se disso na consulta — não estão incluídas no preço.'
+            : 'Pode trazer as análises recentes para a primeira sessão.';
+        if (data.plan === 'completo') {
+            return {
+                label: 'Marcar o Programa Completo',
+                note: 'Próximo passo pago: consulta inicial (227 € no mês 1). ' + labsNote
+            };
+        }
+        return {
+            label: 'Marcar a consulta inicial de nutrição (115 €)',
+            note: 'Já tem um retrato. O passo seguinte é a videoconsulta que confirma o plano. ' + labsNote
+        };
+    }
+
     function validateMetrics() {
         var age = num('age');
         var height = num('height');
@@ -163,7 +246,7 @@
         screen.classList.add('is-active');
 
         var isComplete = data.plan === 'completo';
-        $('resultKicker').textContent = 'Análise clínica concluída';
+        $('resultKicker').textContent = 'Mini-plano com base nas suas respostas';
         $('resultTitle').textContent = isComplete
             ? 'Recomendamos o Programa Completo'
             : 'Recomendamos o Programa Nutrição';
@@ -171,11 +254,21 @@
             ? 'Identificámos que a ansiedade e o stress desempenham um papel crítico na gestão do seu peso. Para resultados sustentáveis, o acompanhamento emocional é indispensável.'
             : 'Com base no seu perfil, o seu principal desafio é a otimização metabólica e a reeducação alimentar contínua.';
 
+        var band = imcBand(data.imc);
+        var focus = focusFrom(data);
+        var next = nextFrom(data);
+        if ($('miniImc')) $('miniImc').textContent = band ? band.label : 'IMC não calculado';
+        if ($('miniImcNote')) $('miniImcNote').textContent = band ? band.note : 'Sem altura e peso não calculamos a faixa. A consulta parte do que contar na sessão.';
+        if ($('miniFocus')) $('miniFocus').textContent = focus.label;
+        if ($('miniFocusNote')) $('miniFocusNote').textContent = focus.note;
+        if ($('miniNext')) $('miniNext').textContent = next.label;
+        if ($('miniNextNote')) $('miniNextNote').textContent = next.note;
+
         var bits = [];
         if (data.imc) bits.push('IMC aproximado ' + String(data.imc).replace('.', ','));
         if (data.weight && data.desiredWeight) {
             var delta = Math.round((data.weight - data.desiredWeight) * 10) / 10;
-            if (delta > 0) bits.push('cerca de ' + String(delta).replace('.', ',') + ' kg até ao peso desejado');
+            if (delta > 0) bits.push('cerca de ' + String(delta).replace('.', ',') + ' kg até ao peso que indicou (alvo seu, não uma garantia)');
         }
         $('resultMetrics').textContent = bits.join(' · ');
 

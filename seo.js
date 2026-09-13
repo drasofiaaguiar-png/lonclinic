@@ -11,6 +11,7 @@ const SITE_ORIGIN = 'https://www.lonclinic.com';
 const PRIVATE_DISALLOWS = [
     '/admin',
     '/doctors',
+    '/profissional',
     '/clinic-portal',
     '/clinic-desk',
     '/patient-portal',
