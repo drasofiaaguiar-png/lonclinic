@@ -4547,6 +4547,15 @@ body.lon-home #como-funciona .lon-how-step-num {
     margin-bottom: 18px;
 }
 
+.lon-home #como-funciona .lon-how-care-head h2 {
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+    max-width: 28ch;
+    margin: 0;
+    font-weight: 550;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+}
+
 .lon-home #como-funciona .lon-how-care .lon-section-lead {
     margin: 8px 0 0;
     max-width: 46ch;
@@ -4558,16 +4567,8 @@ body.lon-home #como-funciona .lon-how-step-num {
     gap: 12px;
 }
 
-.lon-home #como-funciona .lon-after-grid li {
-    border: 1px solid rgba(244, 247, 242, 0.16);
-    border-radius: 1rem;
-    background: rgba(244, 247, 242, 0.08);
-    padding: 16px 14px;
-    text-align: left;
-}
-
-.lon-home #como-funciona .lon-after-grid h3 {
-    color: #fff;
+.lon-home #como-funciona .lon-after-grid .lon-how-box {
+    padding: 16px 14px 18px;
 }
 
 .lon-home #como-funciona .lon-after-grid p,
@@ -4925,7 +4926,16 @@ body.lon-home #como-funciona .lon-how-step-num {
     }
 
     .lon-home .dr-hero-bg {
-        display: none;
+        display: block;
+        top: -12%;
+        left: -8%;
+        width: 240%;
+        height: 150%;
+        max-width: none;
+        object-fit: cover;
+        object-position: 0% 12%;
+        transform: none;
+        filter: blur(22px) saturate(1.08) brightness(0.82);
     }
 
     .lon-home .dr-hero-scrim {
@@ -4934,7 +4944,7 @@ body.lon-home #como-funciona .lon-how-step-num {
         height: auto;
         min-height: 0;
         background:
-            linear-gradient(180deg, rgba(18, 22, 20, 0.16) 0%, rgba(18, 22, 20, 0.08) 40%, rgba(18, 22, 20, 0.36) 100%);
+            linear-gradient(180deg, rgba(18, 28, 34, 0.42) 0%, rgba(18, 28, 34, 0.28) 38%, rgba(18, 28, 34, 0.55) 100%);
     }
 
     .lon-home .dr-hero-content {
