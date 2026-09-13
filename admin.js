@@ -4712,6 +4712,46 @@ document.addEventListener('DOMContentLoaded', async () => {
             <polyline fill="none" stroke="currentColor" stroke-width="2.5" points="${pts}" /></svg>`;
     }
 
+    function analyticsHtmlResponseError(status) {
+        if (status === 401 || status === 403) {
+            return 'Session expired. Sign in again to load analytics.';
+        }
+        return 'Server returned a page instead of analytics data. Refresh the admin, or sign in again.';
+    }
+
+    async function fetchAdminAnalyticsJson(url, options) {
+        const res = await fetch(url, {
+            credentials: 'same-origin',
+            cache: 'no-store',
+            ...options,
+            headers: {
+                Accept: 'application/json',
+                ...((options && options.headers) || {})
+            }
+        });
+        const contentType = String(res.headers.get('content-type') || '');
+        const raw = await res.text();
+        const looksHtml = /html/i.test(contentType) || /^\s*</.test(raw);
+        if (looksHtml) throw new Error(analyticsHtmlResponseError(res.status));
+        let data = {};
+        if (raw) {
+            try {
+                data = JSON.parse(raw);
+            } catch {
+                throw new Error('Analytics response was not valid JSON.');
+            }
+        }
+        if (res.status === 401 || res.status === 403) {
+            const err = String((data && data.error) || '');
+            if (err === 'session_expired' || err === 'Authentication required' || /auth/i.test(err)) {
+                throw new Error('Session expired. Sign in again to load analytics.');
+            }
+            throw new Error((data && data.error) || 'Admin access required to load analytics.');
+        }
+        if (!res.ok) throw new Error((data && data.error) || `HTTP ${res.status}`);
+        return data;
+    }
+
     async function loadAnalyticsPanel() {
         const kpis = document.getElementById('analyticsKpis');
         const live = document.getElementById('analyticsLive');
@@ -4724,9 +4764,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const isJobs = funnelKind === 'job_application';
         if (kpis) kpis.innerHTML = '<p class="admin-empty-list">Loading analytics…</p>';
         try {
-            const res = await fetch(`/api/admin/analytics?range=${encodeURIComponent(range)}&audience=${encodeURIComponent(audience)}&funnel=${encodeURIComponent(funnelKind)}`);
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+            const data = await fetchAdminAnalyticsJson(
+                `/api/admin/analytics?range=${encodeURIComponent(range)}&audience=${encodeURIComponent(audience)}&funnel=${encodeURIComponent(funnelKind)}`
+            );
             const k = data.kpis || {};
             if (live) {
                 const publicLive = k.publicLive || 0;
@@ -4889,9 +4929,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         analyticsMarkDeviceBtn.addEventListener('click', async () => {
             analyticsMarkDeviceBtn.disabled = true;
             try {
-                const res = await fetch('/api/admin/analytics/mark-device', { method: 'POST' });
-                const data = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+                await fetchAdminAnalyticsJson('/api/admin/analytics/mark-device', { method: 'POST' });
                 analyticsMarkDeviceBtn.textContent = 'Browser marked';
                 loadAnalyticsPanel();
             } catch (err) {

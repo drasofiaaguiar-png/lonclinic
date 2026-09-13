@@ -719,6 +719,18 @@ function overviewFromMemory(rangeKey, audience, funnelKey) {
     return buildOverview(rows, live, { count: 0, revenueCents: 0, applications: 0 }, range, audience, known, funnelKey);
 }
 
+function emptyOverview(rangeKey, audience, funnelKey) {
+    return buildOverview(
+        [],
+        [],
+        { count: 0, revenueCents: 0, applications: 0 },
+        rangeBounds(rangeKey),
+        audience,
+        [],
+        funnelKey
+    );
+}
+
 module.exports = {
     ALLOWED_NAMES,
     FUNNEL_PATIENT,
@@ -738,5 +750,6 @@ module.exports = {
     isStaffRow,
     buildOverview,
     overviewFromMemory,
+    emptyOverview,
     memoryEvents
 };

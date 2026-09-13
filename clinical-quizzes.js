@@ -10,7 +10,7 @@ const { originOf } = require('./seo');
 const { scoreQuiz, questionOptions } = require('./clinical-quiz-score');
 
 const QUIZ_DIR = path.join(__dirname, 'data', 'clinical-quizzes');
-const CSS_V = '20260905i';
+const CSS_V = '20260913q';
 const JS_V = '20260905i';
 
 const CBI = {
@@ -121,6 +121,142 @@ function listingFor(cluster) {
         if (def) out.push(catalogEntry(def));
     }
     return out;
+}
+
+const EXTRA_PUBLIC = {
+    bigfive: {
+        id: 'bigfive',
+        path: '/teste-personalidade',
+        cluster: 'personality',
+        instrument: 'Big Five',
+        minutes: 4,
+        questions: 20,
+        h1: 'Teste de personalidade',
+        lead: '20 afirmações, cerca de 4 minutos, resultado imediato nas cinco dimensões OCEAN: abertura, conscienciosidade, extroversão, amabilidade e neuroticismo.',
+        title: 'Teste de personalidade Big Five'
+    },
+    avaliacao: {
+        id: 'avaliacao',
+        path: '/nutricao/avaliacao',
+        cluster: 'nutrition',
+        instrument: 'Programa',
+        minutes: 2,
+        questions: 6,
+        h1: 'Avaliação metabólica',
+        lead: 'Seis passos para o plano certo: nutrição ou o programa completo, com psicologia se a fome emocional mandar. Sem prescrição de aGLP-1 neste questionário.',
+        title: 'Avaliação metabólica e de estilo de vida'
+    }
+};
+
+const ALL_GROUPS = [
+    {
+        id: 'mental',
+        title: 'Saúde mental e burnout',
+        lead: 'Os instrumentos que usamos na clínica anti-burnout: esgotamento, humor, ansiedade e stress.',
+        ids: ['cbi', 'phq9', 'gad7', 'pss10']
+    },
+    {
+        id: 'sleep',
+        title: 'Sono',
+        lead: 'Insónia à noite e sonolência durante o dia — muitas vezes o primeiro sinal a partir.',
+        ids: ['isi', 'ess']
+    },
+    {
+        id: 'wellbeing',
+        title: 'Bem-estar',
+        lead: 'Um retrato rápido de como a saúde está a afetar o dia-a-dia.',
+        ids: ['who5', 'sf12']
+    },
+    {
+        id: 'nutrition',
+        title: 'Nutrição e metabolismo',
+        lead: 'Peso, comportamento alimentar, compulsão e o questionário do programa de reeducação.',
+        ids: ['avaliacao', 'imc', 'tfeq', 'yfas']
+    },
+    {
+        id: 'personality',
+        title: 'Personalidade',
+        lead: 'O modelo Big Five, o mesmo que usamos em psicologia para perceber o teu perfil.',
+        ids: ['bigfive']
+    }
+];
+
+const CARD_COPY = {
+    cbi: {
+        title: 'Teste de burnout',
+        image: '/image/guide/blog/sinais-de-burnout-no-trabalho-remoto-destaque.webp'
+    },
+    phq9: {
+        title: 'Humor e depressão',
+        image: '/image/guide/guide-sunset-lake.jpg'
+    },
+    gad7: {
+        title: 'Ansiedade',
+        image: '/image/guide/guide-waterfall.jpg'
+    },
+    pss10: {
+        title: 'Stress percebido',
+        image: '/image/guide/blog/sinais-de-burnout-no-trabalho-remoto-videochamadas.webp'
+    },
+    isi: {
+        title: 'Insónia',
+        image: '/image/guide/guide-lake-boats.jpg'
+    },
+    ess: {
+        title: 'Sonolência diurna',
+        image: '/image/guide/guide-opera-coast.jpg'
+    },
+    who5: {
+        title: 'Bem-estar',
+        image: '/image/guide/guide-coastal-sun.jpg'
+    },
+    sf12: {
+        title: 'Qualidade de vida',
+        image: '/image/guide/guide-group-walk.jpg'
+    },
+    avaliacao: {
+        title: 'Avaliação metabólica',
+        image: '/image/guide/guide-country-road.jpg'
+    },
+    imc: {
+        title: 'IMC e cintura',
+        image: '/image/guide/guide-hiker-view.jpg'
+    },
+    tfeq: {
+        title: 'Comportamento alimentar',
+        image: '/image/guide/travel-cover-hq-4.webp'
+    },
+    yfas: {
+        title: 'Compulsão alimentar',
+        image: '/image/guide/travel-cover-hq-7.webp'
+    },
+    bigfive: {
+        title: 'Personalidade Big Five',
+        image: '/image/image3.webp'
+    }
+};
+
+function resolvePublicQuiz(id) {
+    if (id === 'cbi') return catalogEntry(CBI);
+    if (EXTRA_PUBLIC[id]) return catalogEntry(EXTRA_PUBLIC[id]);
+    const def = getQuiz(id);
+    return def ? catalogEntry(def) : null;
+}
+
+function listAllPublic() {
+    return ALL_GROUPS.map((group) => ({
+        ...group,
+        items: group.ids.map((id) => {
+            const entry = resolvePublicQuiz(id);
+            if (!entry) return null;
+            const copy = CARD_COPY[id] || {};
+            return {
+                ...entry,
+                cardTitle: copy.title || entry.h1,
+                image: copy.image || '/image/guide/guide-coastal-sun.jpg'
+            };
+        }).filter(Boolean)
+    })).filter((g) => g.items.length);
 }
 
 function resolveRelated(def) {
@@ -590,6 +726,7 @@ function renderHub(origin, cluster) {
             <h1>${escapeHtml(h1)}</h1>
             <p>${escapeHtml(lead)}</p>
             ${isNu ? '<p><a href="/nutricao/avaliacao">Avaliação metabólica (2 min)</a> — o questionário do programa de reeducação (3 a 6 meses), sem prescrição de aGLP-1. Ou os testes clínicos abaixo.</p>' : ''}
+            <p><a href="/quizzes">Todos os testes da clínica →</a></p>
         </div>
         <div class="bq-hub-grid">${cards}</div>
         <aside class="bq-crisis-foot">
@@ -599,6 +736,7 @@ function renderHub(origin, cluster) {
     <footer class="bq-footer">
         <nav>
             <a href="/">Início</a>
+            <a href="/quizzes">Testes</a>
             <a href="/burnout">Burnout</a>
             <a href="/nutricao">Nutrição</a>
             <a href="/faq">FAQ</a>
@@ -609,8 +747,170 @@ function renderHub(origin, cluster) {
 </html>`;
 }
 
+function renderAllHub(origin) {
+    const o = originOf(origin);
+    const groups = listAllPublic();
+    const allItems = groups.flatMap((g) => g.items);
+    const title = 'Testes de saúde gratuitos | Lon Clinic';
+    const description = 'Todos os testes da Lon Clinic em cards: burnout, humor, ansiedade, sono, nutrição, bem-estar e personalidade. Grátis, resultado imediato.';
+    const canonical = `${o}/quizzes`;
+    const chips = groups.map((g) =>
+        `<a href="#${escapeHtml(g.id)}">${escapeHtml(g.title)}</a>`
+    ).join('');
+    const sections = groups.map((g) => {
+        const cards = g.items.map((it) => `
+                <a class="qz-all-card" href="${escapeHtml(it.path)}">
+                    <span class="qz-all-card-media" style="background-image:url('${escapeHtml(it.image)}')" aria-hidden="true"></span>
+                    <span class="qz-all-card-body">
+                        <span class="qz-all-card-kicker">${escapeHtml(it.instrument)} · ${it.minutes} min · ${it.questions} perguntas</span>
+                        <span class="qz-all-card-title">${escapeHtml(it.cardTitle)}</span>
+                        <span class="qz-all-card-lead">${escapeHtml(it.lead)}</span>
+                        <span class="qz-all-card-cta">Começar o teste →</span>
+                    </span>
+                </a>`).join('');
+        return `
+        <section class="qz-all-section" id="${escapeHtml(g.id)}" aria-labelledby="qz-h-${escapeHtml(g.id)}">
+            <div class="qz-all-section-head">
+                <h2 id="qz-h-${escapeHtml(g.id)}">${escapeHtml(g.title)}</h2>
+                <p>${escapeHtml(g.lead)}</p>
+            </div>
+            <div class="qz-all-grid">${cards}</div>
+        </section>`;
+    }).join('');
+
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        name: 'Testes de saúde Lon Clinic',
+        url: canonical,
+        numberOfItems: allItems.length,
+        itemListElement: allItems.map((it, i) => ({
+            '@type': 'ListItem',
+            position: i + 1,
+            name: it.cardTitle,
+            url: `${o}${it.path}`
+        }))
+    };
+
+    return `<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZN8J4X12H3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZN8J4X12H3');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${escapeHtml(title)}</title>
+    <meta name="description" content="${escapeHtml(description)}">
+    <meta name="robots" content="index,follow">
+    <link rel="canonical" href="${escapeHtml(canonical)}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="${escapeHtml(canonical)}">
+    <meta property="og:title" content="${escapeHtml(title)}">
+    <meta property="og:description" content="${escapeHtml(description)}">
+    <meta property="og:image" content="${o}/image/guide/guide-group-walk.jpg">
+    <meta property="og:locale" content="pt_PT">
+    <meta property="og:site_name" content="Lon Clinic">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#2f453a">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+    <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+    <link rel="stylesheet" href="/landing.css?v=20260913o">
+    <link rel="stylesheet" href="/burnout-quiz.css?v=${CSS_V}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@1,9..144,500&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+</head>
+<body class="lon-landing qz-all-page">
+    <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
+    <header class="lon-nav" id="lonNav">
+        <div class="lon-container lon-nav-inner">
+            <a href="/" class="lon-logo" aria-label="Longevity Clinic homepage">
+                <span class="lon-logo-name"><span class="lon-logo-word"><span class="lon-logo-lon">Lon</span><span class="lon-logo-gevity">gevity</span></span><span class="lon-logo-clinic">Clinic</span></span>
+            </a>
+            <nav class="lon-nav-links" aria-label="Navegação principal">
+                <a href="/#servicos">Consultas</a>
+                <a href="/consulta">Especialidades</a>
+                <a href="/burnout">Burnout</a>
+                <a href="/quizzes" aria-current="page">Testes</a>
+                <a href="/magazine">Magazine</a>
+            </nav>
+            <div class="lon-nav-actions">
+                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
+                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm">Marcar — 39 €</a>
+                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Open menu" aria-expanded="false" aria-controls="lonMobileMenu">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+        <div class="lon-mobile-menu" id="lonMobileMenu">
+            <a href="/#servicos">Consultas</a>
+            <a href="/consulta">Especialidades</a>
+            <a href="/burnout">Burnout</a>
+            <a href="/quizzes" aria-current="page">Testes</a>
+            <a href="/magazine">Magazine</a>
+            <a href="/patient-portal">Login</a>
+            <a href="/marcar/clinica-geral">Marcar — 39 €</a>
+        </div>
+    </header>
+    <main id="conteudo-principal" class="qz-all">
+        <section class="qz-all-hero">
+            <div class="lon-container">
+                <p class="dr-badge"><span class="dr-badge-dot" aria-hidden="true"></span>Testes gratuitos</p>
+                <h1>Todos os testes da Lon Clinic</h1>
+                <p class="qz-all-lead">Questionários clínicos em poucos minutos. Resultado imediato — sem substituto de diagnóstico, para orientar a consulta certa.</p>
+                <nav class="qz-all-chips" aria-label="Temas">${chips}</nav>
+            </div>
+        </section>
+        ${sections}
+        <aside class="qz-all-crisis lon-container">
+            <p>Se estás em crise — <strong>não uses estes testes</strong>. Contacta o <a href="tel:112">112</a>, <a href="tel:808242424">SNS 24</a> ou <a href="tel:213544545">SOS Voz Amiga</a>.</p>
+        </aside>
+    </main>
+    <footer class="lon-footer">
+        <div class="lon-container">
+            <div class="lon-footer-grid">
+                <div class="lon-footer-brand">
+                    <h3>Lon Clinic</h3>
+                    <p>O seu médico. Online. Sempre.</p>
+                    <div class="lon-ers-badge">Nº de Registo ERS: 45475</div>
+                </div>
+                <div class="lon-footer-col">
+                    <h4>Testes</h4>
+                    <a href="/quizzes">Todos os testes</a>
+                    <a href="/burnout/teste">Teste de burnout</a>
+                    <a href="/teste-personalidade">Personalidade Big Five</a>
+                    <a href="/nutricao/avaliacao">Avaliação metabólica</a>
+                    <a href="/burnout/testes">Testes de burnout</a>
+                    <a href="/nutricao/testes">Testes de nutrição</a>
+                </div>
+                <div class="lon-footer-col">
+                    <h4>Clínica</h4>
+                    <a href="/burnout">Burnout</a>
+                    <a href="/nutricao">Nutrição</a>
+                    <a href="/saudemental">Saúde mental</a>
+                    <a href="/magazine">Magazine</a>
+                    <a href="/faq">FAQ</a>
+                </div>
+            </div>
+            <div class="lon-footer-bottom">
+                <p>© 2026 Lon Clinic · Portugal</p>
+            </div>
+        </div>
+    </footer>
+    <script src="/lon-nav.js"></script>
+    <script src="/lon-analytics.js?v=20260906h" defer></script>
+</body>
+</html>`;
+}
+
 function sitemapPaths() {
-    const paths = ['/burnout/testes', '/nutricao/testes'];
+    const paths = ['/quizzes', '/burnout/testes', '/nutricao/testes'];
     for (const def of listQuizzes()) paths.push(def.path);
     return paths;
 }
@@ -745,9 +1045,11 @@ module.exports = {
     getQuizByPath,
     listQuizzes,
     listingFor,
+    listAllPublic,
     sitemapPaths,
     renderQuizPage,
     renderHub,
+    renderAllHub,
     scoreQuiz,
     validateAnswers: require('./clinical-quiz-score').validateAnswers,
     clientConfig,

@@ -446,7 +446,7 @@ function layoutPage(opts) {
             </nav>
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/nutricao/programa" class="lon-btn lon-btn-primary lon-btn-sm">Ver o programa</a>
+                <a href="/nutricao/emagrecimento" class="lon-btn lon-btn-primary lon-btn-sm">Programa de emagrecimento</a>
                 <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
@@ -459,6 +459,7 @@ function layoutPage(opts) {
             <a href="/magazine">Magazine</a>
             <a href="/#equipa">A Equipa</a>
             <a href="/nutricao">Nutrição por condição</a>
+            <a href="/nutricao/emagrecimento">Programa de emagrecimento</a>
             <a href="/nutricao/programa">Programa de reeducação metabólica</a>
             <a href="/patient-portal">Login</a>
             <a href="/marcar/nutricao-programa?ref=nutricao-nav-mobile">Consulta inicial de nutrição</a>
@@ -476,6 +477,7 @@ function layoutPage(opts) {
                 <div class="lon-footer-col">
                     <h4>Nutrição</h4>
                     <a href="/nutricao">Todas as condições</a>
+                    <a href="/nutricao/emagrecimento">Programa de emagrecimento</a>
                     <a href="/nutricao/programa">Programa de reeducação metabólica</a>
                     <a href="/nutricao/testes">Testes clínicos</a>
                     ${footerLinks}
@@ -577,19 +579,21 @@ function renderHub(origin) {
                 <p class="nu-hero-meta">Programa mensal a partir de 115 € · 2 consultas/mês + chat no portal · Psicologia quando o stress manda na comida</p>
                 <div class="nu-hero-actions">
                     <a class="lon-btn lon-btn-primary" href="/marcar/nutricao-programa?ref=nutricao-hub">Consulta inicial de nutrição metabólica — 115 €</a>
-                    <a class="lon-btn lon-btn-soft" href="/nutricao/programa">Programa 3 a 6 meses</a>
+                    <a class="lon-btn lon-btn-soft" href="/nutricao/emagrecimento">Programa de emagrecimento</a>
+                    <a class="lon-btn lon-btn-soft" href="/nutricao/programa">Reeducação metabólica</a>
                     <a class="lon-btn lon-btn-soft" href="/nutricao/testes">Fazer um teste gratuito</a>
                 </div>
             </div>
         </section>
         <section class="nu-section" aria-labelledby="nu-g-programa">
             <div class="lon-container">
-                <h2 id="nu-g-programa">Programa de Reeducação Metabólica &amp; Perda de Peso</h2>
-                <a class="nu-card nu-card-feature" href="/nutricao/programa">
+                <h2 id="nu-g-programa">Programa de emagrecimento</h2>
+                <a class="nu-card nu-card-feature" href="/nutricao/emagrecimento">
                     <span class="nu-card-price">115 € no mês 1 · depois 75 €/mês</span>
-                    <span class="nu-card-label">3 a 6 meses — hábitos, não a caneta</span>
-                    <span class="nu-card-desc">Duas consultas/mês com nutricionista, chat no portal e ajustes quinzenais do plano. Contra o ioiô das clínicas que vendem aGLP-1 sem estrutura. Fidelização 3 meses.</span>
+                    <span class="nu-card-label">Programa de emagrecimento — médico e nutricionista</span>
+                    <span class="nu-card-desc">Perder peso com 2 consultas/mês, chat no portal e ajustes quinzenais. Sem Ozempic. Fidelização 3 meses. Total 490 € em 6 meses.</span>
                 </a>
+                <p style="margin:12px 0 0"><a href="/nutricao/programa">Ver também a reeducação metabólica (3 a 6 meses) →</a></p>
             </div>
         </section>
         <section class="nu-section" aria-labelledby="nu-g-testes">

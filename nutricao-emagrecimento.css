@@ -1,0 +1,429 @@
+/* Dedicated weight-loss program landing — /nutricao/emagrecimento */
+
+.em-page {
+    background: #f7f4ee;
+    color: #24362c;
+}
+
+.em-page .lon-nav {
+    background: rgba(247, 244, 238, 0.92);
+    backdrop-filter: blur(12px);
+}
+
+.em-page .dr-badge {
+    border: 1px solid rgba(47, 69, 58, 0.14);
+    background: #fff;
+    color: #2f453a;
+}
+
+.em-page .dr-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #4a7c6f;
+    margin-right: 8px;
+}
+
+.em-main {
+    padding-bottom: 88px;
+}
+
+.em-hero {
+    padding: calc(var(--lon-nav-h, 72px) + 28px) 0 36px;
+}
+
+.em-hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.9fr);
+    gap: 36px;
+    align-items: center;
+}
+
+.em-crumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    font-size: 0.78rem;
+    color: #5c6d64;
+    margin: 0 0 14px;
+}
+
+.em-crumb a {
+    color: inherit;
+}
+
+.em-hero h1 {
+    font-family: "Fraunces", "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(2rem, 4.6vw, 3.15rem);
+    font-weight: 560;
+    font-style: italic;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    margin: 10px 0 14px;
+    max-width: 18ch;
+    color: #1c2d24;
+}
+
+.em-answer {
+    font-size: 1.08rem;
+    line-height: 1.6;
+    color: #3d4f45;
+    max-width: 40rem;
+    margin: 0 0 18px;
+}
+
+.em-answer strong {
+    color: #1c2d24;
+}
+
+.em-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 8px 0 14px;
+}
+
+.em-meta {
+    margin: 0 0 16px;
+    color: #5c6d64;
+    font-size: 0.92rem;
+}
+
+.em-trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 8px;
+}
+
+.em-trust span {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid rgba(47, 69, 58, 0.12);
+    font-size: 0.75rem;
+    font-weight: 650;
+    color: #2f453a;
+}
+
+.em-hero-card {
+    background: #fff;
+    border-radius: 22px;
+    overflow: hidden;
+    border: 1px solid rgba(47, 69, 58, 0.1);
+    box-shadow: 0 18px 40px rgba(36, 54, 44, 0.08);
+}
+
+.em-hero-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+
+.em-hero-card-body {
+    padding: 18px 18px 20px;
+}
+
+.em-hero-card-body p {
+    margin: 0 0 8px;
+    color: #5c6d64;
+    font-size: 0.88rem;
+}
+
+.em-hero-price {
+    font-size: 1.15rem;
+    color: #1c2d24;
+    margin: 0 0 12px;
+}
+
+.em-section {
+    padding: 28px 0;
+}
+
+.em-section h2 {
+    font-family: "Fraunces", Georgia, serif;
+    font-size: clamp(1.45rem, 3vw, 1.95rem);
+    font-weight: 560;
+    font-style: italic;
+    margin: 0 0 10px;
+    color: #1c2d24;
+}
+
+.em-lead {
+    margin: 0 0 20px;
+    max-width: 42rem;
+    color: #5c6d64;
+    line-height: 1.55;
+}
+
+.em-toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.em-toc a {
+    display: inline-flex;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid rgba(47, 69, 58, 0.14);
+    color: #2f453a;
+    text-decoration: none;
+    font-size: 0.78rem;
+    font-weight: 650;
+}
+
+.em-toc a:hover {
+    border-color: #2f453a;
+}
+
+.em-grid-2,
+.em-grid-3,
+.em-include {
+    display: grid;
+    gap: 14px;
+}
+
+.em-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.em-grid-3,
+.em-include {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.em-card,
+.em-step,
+.em-plan,
+.em-faq details {
+    background: #fff;
+    border: 1px solid rgba(47, 69, 58, 0.1);
+    border-radius: 16px;
+    padding: 18px 18px 16px;
+}
+
+.em-card h3,
+.em-step h3,
+.em-plan h3 {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+    color: #1c2d24;
+}
+
+.em-card p,
+.em-step p,
+.em-plan p,
+.em-card li,
+.em-include li {
+    margin: 0;
+    color: #5c6d64;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.em-card ul,
+.em-include ul,
+.em-plan ul {
+    margin: 0;
+    padding-left: 1.1rem;
+}
+
+.em-kicker {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #4a7c6f;
+    margin-bottom: 8px;
+}
+
+.em-step {
+    counter-increment: emstep;
+}
+
+.em-steps {
+    counter-reset: emstep;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.em-step .em-kicker::before {
+    content: counter(emstep) " · ";
+}
+
+.em-compare {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    font-size: 0.9rem;
+}
+
+.em-compare th,
+.em-compare td {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(47, 69, 58, 0.08);
+    vertical-align: top;
+}
+
+.em-compare th {
+    background: #eef4ef;
+    color: #1c2d24;
+}
+
+.em-compare td:last-child,
+.em-compare th:last-child {
+    font-weight: 650;
+    color: #255235;
+}
+
+.em-plan.is-featured {
+    border-color: #2f453a;
+    box-shadow: 0 14px 32px rgba(36, 54, 44, 0.1);
+}
+
+.em-plan-price {
+    font-size: 1.7rem;
+    font-weight: 750;
+    color: #1c2d24;
+    margin: 4px 0 2px;
+}
+
+.em-plan-then {
+    color: #5c6d64;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+}
+
+.em-plan .lon-btn {
+    margin-top: 12px;
+}
+
+.em-tests {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.em-tests a {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid rgba(47, 69, 58, 0.1);
+}
+
+.em-tests a:hover {
+    border-color: #2f453a;
+}
+
+.em-tests strong {
+    color: #1c2d24;
+}
+
+.em-faq details + details {
+    margin-top: 10px;
+}
+
+.em-faq summary {
+    cursor: pointer;
+    font-weight: 650;
+    color: #1c2d24;
+}
+
+.em-faq-a {
+    margin-top: 10px;
+    color: #5c6d64;
+    line-height: 1.55;
+}
+
+.em-cta-band {
+    background: #24362c;
+    color: #f4f7f4;
+    border-radius: 22px;
+    padding: 32px 28px;
+}
+
+.em-cta-band h2 {
+    color: #fff;
+    font-style: italic;
+}
+
+.em-cta-band p {
+    color: rgba(244, 247, 244, 0.82);
+    max-width: 38rem;
+}
+
+.em-disclaimer {
+    font-size: 0.82rem;
+    color: #6b3a2e;
+    background: #f6e8e4;
+    border-radius: 12px;
+    padding: 12px 14px;
+    line-height: 1.5;
+}
+
+.em-sticky {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    display: none;
+    background: rgba(255, 255, 255, 0.96);
+    border-top: 1px solid rgba(47, 69, 58, 0.12);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    box-shadow: 0 -8px 24px rgba(36, 54, 44, 0.08);
+}
+
+.em-sticky-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.em-sticky p {
+    margin: 0;
+    font-size: 0.88rem;
+    color: #24362c;
+}
+
+@media (max-width: 900px) {
+    .em-hero-grid,
+    .em-grid-2,
+    .em-grid-3,
+    .em-include,
+    .em-steps,
+    .em-tests {
+        grid-template-columns: 1fr;
+    }
+
+    .em-sticky {
+        display: block;
+    }
+
+    .em-main {
+        padding-bottom: 108px;
+    }
+
+    .em-compare {
+        display: block;
+        overflow-x: auto;
+    }
+}

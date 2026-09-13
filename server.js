@@ -8685,6 +8685,42 @@ app.get('/r/:slug', (req, res) => {
 // ─── Middleware ───
 app.use(express.json());
 
+function isMissingAnalyticsEventsTable(err) {
+    const msg = String((err && err.message) || '');
+    if (err && err.code === '42P01') return /analytics_events/i.test(msg);
+    return /relation ["']?analytics_events["']? does not exist/i.test(msg);
+}
+
+function sendAnalyticsApiJson(res, status, body) {
+    res.set({
+        'Content-Type': 'application/json; charset=utf-8',
+        'Cache-Control': 'private, no-store, no-cache, must-revalidate, max-age=0',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Surrogate-Control': 'no-store',
+        'CDN-Cache-Control': 'no-store',
+        'Cloudflare-CDN-Cache-Control': 'no-store',
+        'X-Content-Type-Options': 'nosniff'
+    });
+    return res.status(status).json(body);
+}
+
+async function analyticsEventsOrEmpty(promise, fallback) {
+    try {
+        return await promise;
+    } catch (err) {
+        if (!isMissingAnalyticsEventsTable(err)) throw err;
+        console.warn('GET /api/admin/analytics: analytics_events missing — empty dataset');
+        return fallback;
+    }
+}
+
+function decorateAnalyticsOverview(req, overview) {
+    overview.deviceMarked = hasStaffDeviceCookie(req);
+    overview.trackedLinks = trackedLinksForAdmin(getBaseUrl(req));
+    return overview;
+}
+
 app.get('/api/admin/analytics', requireAdmin, async (req, res) => {
     const rangeKey = String(req.query.range || '7d');
     const allowed = new Set(['24h', '7d', '30d', '90d']);
@@ -8694,42 +8730,55 @@ app.get('/api/admin/analytics', requireAdmin, async (req, res) => {
     const funnel = analyticsNet.normalizeFunnelKey(req.query.funnel);
     try {
         if (!usePersistentDb) {
-            const overview = analyticsNet.overviewFromMemory(range, audience, funnel);
-            overview.deviceMarked = hasStaffDeviceCookie(req);
-            overview.trackedLinks = trackedLinksForAdmin(getBaseUrl(req));
-            return res.json(overview);
+            return sendAnalyticsApiJson(
+                res,
+                200,
+                decorateAnalyticsOverview(req, analyticsNet.overviewFromMemory(range, audience, funnel))
+            );
         }
         const bounds = analyticsNet.rangeBounds(range);
         const [rows, live, bookingStats, staffVisitorIds, applicationStats] = await Promise.all([
-            db.listAnalyticsEventsBetween(bounds.from, bounds.to, { excludeHeartbeat: true }),
-            db.listLiveAnalyticsSessions(new Date(Date.now() - 120000).toISOString()),
+            analyticsEventsOrEmpty(
+                db.listAnalyticsEventsBetween(bounds.from, bounds.to, { excludeHeartbeat: true }),
+                []
+            ),
+            analyticsEventsOrEmpty(
+                db.listLiveAnalyticsSessions(new Date(Date.now() - 120000).toISOString()),
+                []
+            ),
             db.analyticsBookingStats(bounds.from, bounds.to, { funnel }),
-            db.listStaffVisitorIds(),
+            analyticsEventsOrEmpty(db.listStaffVisitorIds(), []),
             funnel === 'job_application'
                 ? db.analyticsApplicationStats(bounds.from, bounds.to)
                 : Promise.resolve({ count: 0 })
         ]);
-        const liveRows = live.map((s) => ({
+        const liveRows = (live || []).map((s) => ({
             sessionId: s.sessionId,
             name: 'heartbeat',
             staff: !!s.staff,
             channel: s.staff ? 'internal' : undefined
         }));
         const overview = analyticsNet.buildOverview(
-            rows,
+            rows || [],
             liveRows,
             { ...bookingStats, applications: applicationStats.count || 0 },
             bounds,
             audience,
-            staffVisitorIds,
+            staffVisitorIds || [],
             funnel
         );
-        overview.deviceMarked = hasStaffDeviceCookie(req);
-        overview.trackedLinks = trackedLinksForAdmin(getBaseUrl(req));
-        res.json(overview);
+        return sendAnalyticsApiJson(res, 200, decorateAnalyticsOverview(req, overview));
     } catch (err) {
+        if (isMissingAnalyticsEventsTable(err)) {
+            console.warn('GET /api/admin/analytics: analytics_events missing — empty overview');
+            return sendAnalyticsApiJson(
+                res,
+                200,
+                decorateAnalyticsOverview(req, analyticsNet.emptyOverview(range, audience, funnel))
+            );
+        }
         console.error('GET /api/admin/analytics:', err.message);
-        res.status(500).json({ error: 'Failed to load analytics' });
+        return sendAnalyticsApiJson(res, 500, { error: 'Failed to load analytics' });
     }
 });
 
@@ -8749,7 +8798,7 @@ app.post('/api/admin/analytics/mark-device', requireAdmin, async (req, res) => {
     } catch (err) {
         console.error('POST /api/admin/analytics/mark-device:', err.message);
     }
-    res.json({ success: true, deviceMarked: true });
+    return sendAnalyticsApiJson(res, 200, { success: true, deviceMarked: true });
 });
 
 // NOTE:
@@ -9061,6 +9110,14 @@ app.get('/burnout/colecao', (req, res) => {
     sendHtmlNoCacheString(res, html);
 });
 
+app.get('/quizzes', (req, res) => {
+    sendHtmlNoCacheString(res, clinicalQuizzes.renderAllHub(seo.SITE_ORIGIN));
+});
+
+app.get('/quizzes/', (req, res) => {
+    res.redirect(301, '/quizzes');
+});
+
 app.get('/burnout/teste', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'burnout-quiz.html'), 'Error loading burnout quiz page');
 });
@@ -9150,6 +9207,22 @@ app.get('/nutricao/', (req, res) => {
 
 app.get('/nutricao/programa', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'nutricao-programa.html'), 'Error loading nutrition program landing');
+});
+
+app.get('/nutricao/emagrecimento', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'nutricao-emagrecimento.html'), 'Error loading weight-loss program landing');
+});
+
+app.get('/nutricao/emagrecimento/', (req, res) => {
+    res.redirect(301, '/nutricao/emagrecimento');
+});
+
+app.get('/nutricao/programa-emagrecimento', (req, res) => {
+    res.redirect(301, '/nutricao/emagrecimento');
+});
+
+app.get('/nutricao/programa-perda-de-peso', (req, res) => {
+    res.redirect(301, '/nutricao/emagrecimento');
 });
 
 app.get('/nutricao/avaliacao', (req, res) => {
@@ -9352,7 +9425,7 @@ app.get('/dashboard.html', (req, res) => {
 });
 
 app.get('/clinic.html', (req, res) => {
-    res.redirect(302, CLINIC_PORTAL_PATH);
+    res.redirect(302, PROFESSIONAL_PORTAL_PATH);
 });
 
 app.get('/admin.html', (req, res) => {
@@ -12340,6 +12413,123 @@ app.post('/api/patient/logout', (req, res) => {
     req.session.patientEmail = null;
     req.session.patientBookingId = null;
     req.session.destroy(() => res.json({ ok: true }));
+});
+
+function hashStaffOtp(email, code) {
+    return crypto.createHmac('sha256', SESSION_SECRET)
+        .update(`staff:${String(email || '').toLowerCase().trim()}:${String(code || '').replace(/\D/g, '')}`)
+        .digest('hex');
+}
+
+const staffOtpMemory = new Map();
+
+async function resolveActiveProfessionalForOtp(email) {
+    const e = normalizeStaffEmail(email);
+    if (!isValidStaffEmail(e)) return null;
+    const direct = await findProfessionalByEmailInternal(e);
+    const pro = direct || await findProfessionalForClinicLogin(e);
+    if (!pro || pro.active === false) return null;
+    return pro;
+}
+
+app.post('/api/clinic/otp/request', rateLimitStaffOtp, async (req, res) => {
+    const email = normalizeStaffEmail((req.body && req.body.email) || '');
+    if (!isValidStaffEmail(email)) {
+        return res.status(400).json({ error: 'Indique um email válido.' });
+    }
+    try {
+        const pro = await resolveActiveProfessionalForOtp(email);
+        if (pro) {
+            const code = String(crypto.randomInt(0, 1000000)).padStart(6, '0');
+            const codeHash = hashStaffOtp(email, code);
+            const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+            if (usePersistentDb) {
+                await db.insertStaffOtp({
+                    id: crypto.randomUUID(),
+                    email,
+                    professionalId: pro.id || null,
+                    codeHash,
+                    expiresAt
+                });
+            } else {
+                staffOtpMemory.set(email, {
+                    codeHash,
+                    professionalId: pro.id || null,
+                    username: pro.username,
+                    displayName: pro.displayName || pro.username,
+                    expiresAt: expiresAt.getTime(),
+                    attempts: 0
+                });
+            }
+            if (isEmailConfigured) {
+                await deliverEmail({
+                    from: EMAIL_FROM,
+                    to: email,
+                    subject: 'Código de acesso — Portal dos profissionais — Lon Clinic',
+                    text: `O seu código de acesso ao portal dos profissionais é ${code}. Expira em 10 minutos.\n\nLon Clinic`,
+                    html: `<p>O seu código de acesso ao portal dos profissionais é <strong>${escapeHtml(code)}</strong>.</p><p>Expira em 10 minutos.</p><p>Lon Clinic</p>`
+                });
+            }
+        }
+        return res.json({ ok: true });
+    } catch (err) {
+        console.error('POST /api/clinic/otp/request:', err.message);
+        return res.status(500).json({ error: 'Não foi possível enviar o código.' });
+    }
+});
+
+app.post('/api/clinic/otp/verify', rateLimitStaffOtp, async (req, res) => {
+    const email = normalizeStaffEmail((req.body && req.body.email) || '');
+    const code = String((req.body && req.body.code) || '').replace(/\D/g, '').slice(0, 6);
+    if (!isValidStaffEmail(email) || code.length !== 6) {
+        return res.status(400).json({ error: 'Email e código de 6 dígitos são obrigatórios.' });
+    }
+    try {
+        const expected = hashStaffOtp(email, code);
+        let professionalId = null;
+        if (usePersistentDb) {
+            const row = await db.findLatestStaffOtp(email);
+            if (!row) return res.status(401).json({ error: 'Código inválido ou expirado.' });
+            if ((row.attempts || 0) >= 5) return res.status(401).json({ error: 'Demasiadas tentativas. Peça um código novo.' });
+            const a = Buffer.from(row.codeHash, 'hex');
+            const b = Buffer.from(expected, 'hex');
+            const ok = a.length === b.length && crypto.timingSafeEqual(a, b);
+            if (!ok) {
+                await db.bumpStaffOtpAttempts(row.id);
+                return res.status(401).json({ error: 'Código inválido ou expirado.' });
+            }
+            await db.markStaffOtpUsed(row.id);
+            professionalId = row.professionalId || null;
+        } else {
+            const mem = staffOtpMemory.get(email);
+            if (!mem || mem.expiresAt < Date.now()) return res.status(401).json({ error: 'Código inválido ou expirado.' });
+            if ((mem.attempts || 0) >= 5) return res.status(401).json({ error: 'Demasiadas tentativas. Peça um código novo.' });
+            const a = Buffer.from(mem.codeHash, 'hex');
+            const b = Buffer.from(expected, 'hex');
+            if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+                mem.attempts = (mem.attempts || 0) + 1;
+                return res.status(401).json({ error: 'Código inválido ou expirado.' });
+            }
+            professionalId = mem.professionalId || null;
+            staffOtpMemory.delete(email);
+        }
+        const pro = (professionalId && await findProfessionalByIdInternal(professionalId))
+            || await resolveActiveProfessionalForOtp(email);
+        if (!pro || pro.active === false) {
+            return res.status(401).json({ error: 'Código inválido ou expirado.' });
+        }
+        const identity = {
+            username: pro.username,
+            displayName: pro.displayName || pro.username,
+            role: 'clinician',
+            professionalId: pro.id
+        };
+        console.log(`   🔐 Professional portal OTP login: ${pro.username}`);
+        return establishStaffSession(req, res, staffSessionFromIdentity(identity), staffLoginPayload(identity));
+    } catch (err) {
+        console.error('POST /api/clinic/otp/verify:', err.message);
+        return res.status(500).json({ error: 'Não foi possível verificar o código.' });
+    }
 });
 
 app.post('/api/privacy/erasure', rateLimitErasure, async (req, res) => {
