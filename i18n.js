@@ -127,10 +127,6 @@
         { s: '.dr-burnout-promo__meta span:nth-child(3)', en: 'Immediate result', pt: 'Resultado imediato', es: 'Resultado inmediato' },
         { s: '.dr-burnout-promo__cta', en: 'Take the test →', pt: 'Fazer o teste →', es: 'Hacer el test →' },
         { s: '.dr-burnout-promo-actions .lon-text-link', en: 'Explore the Burnout Centre →', pt: 'Conhecer o Centro Burnout →', es: 'Conocer el Centro Burnout →' },
-        { s: '#lon-service-psicologia-burnout .lon-service-chip', en: 'Psychology', pt: 'Psicologia', es: 'Psicología' },
-        { s: '#lon-service-psicologia-burnout h3', en: 'Weekly Psychology Consultation', pt: 'Consulta semanal de Psicologia', es: 'Consulta semanal de Psicología' },
-        { s: '#lon-service-psicologia-burnout .lon-service-price', en: '56 € /week · billed monthly', pt: '56 € /semana · cobrado mensalmente', es: '56 € /semana · cobrado mensualmente' },
-        { s: '#lon-service-psicologia-burnout .lon-service-extra a', en: 'See psychology programmes →', pt: 'Ver programas de psicologia →', es: 'Ver programas de psicología →' },
         { s: '#lon-service-saude-mental .lon-service-chip', en: 'Mental Health', pt: 'Saúde Mental', es: 'Salud Mental' },
         { s: '#lon-service-saude-mental h3', en: 'Medical Mental Health Consultation', pt: 'Consulta Médica de Saúde Mental', es: 'Consulta Médica de Salud Mental' },
 
@@ -227,7 +223,6 @@
         /* ── Book buttons ── */
         { s: '#lon-service-clinica-geral .lon-btn-soft', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
         { s: '#lon-service-urgente .lon-btn-soft', en: 'Book — 35 €', pt: 'Marcar — 35 €', es: 'Reservar — 35 €' },
-        { s: '#lon-service-psicologia-burnout .lon-btn-soft', en: 'Subscribe — 56 €/week', pt: 'Subscrever — 56 €/semana', es: 'Suscribirse — 56 €/semana' },
         { s: '#lon-service-terapia-casal-sub .lon-service-chip', en: 'Subscription', pt: 'Subscrição', es: 'Suscripción' },
         { s: '#lon-service-terapia-casal-sub h3', en: 'Weekly Couples Therapy Consultation', pt: 'Consulta semanal de Terapia de Casal', es: 'Consulta semanal de Terapia de Pareja' },
         { s: '#lon-service-terapia-casal-sub .lon-service-price', en: '65 € /week · billed monthly', pt: '65 € /semana · cobrado mensalmente', es: '65 € /semana · cobrado mensualmente' },
