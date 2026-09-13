@@ -326,11 +326,162 @@ function authorSlugs() {
     return Object.keys(AUTHORS);
 }
 
+const SARA_STAFF_USERNAME = 'maria.sara.ferreira.de.almeida.judice.gamito';
+const SARA_PUBLIC_BIO =
+    'Sou psicóloga e acompanho adultos em fases de transição, ansiedade, stress emocional, dificuldades de autoestima e processos de crescimento pessoal.';
+
+function teamPhotoUrl(who) {
+    return `/api/public/team-photo/${encodeURIComponent(who)}`;
+}
+
+function avatarHtml(initials, photoUrl, alt) {
+    const img = photoUrl
+        ? `<img src="${escapeHtml(photoUrl)}" alt="${escapeHtml(alt)}" width="132" height="132" loading="lazy" decoding="async" onerror="this.remove()">`
+        : '';
+    return `<div class="lon-team-avatar">${img}<span aria-hidden="true">${escapeHtml(initials)}</span></div>`;
+}
+
+function renderTeamPage(origin, extras) {
+    const o = originOf(origin);
+    const rita = getAuthor('rita-aguiar');
+    const saraBio = String((extras && extras.saraBio) || SARA_PUBLIC_BIO).trim();
+    const saraParas = (saraBio || SARA_PUBLIC_BIO)
+        .split(/\n{2,}/)
+        .map((p) => p.trim())
+        .filter(Boolean);
+    const ritaParas = rita.longBio.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
+    const saraParasHtml = saraParas.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
+    const title = 'A Equipa | Lon Clinic';
+    const description = 'A equipa clínica da Lon Clinic — Dra. Rita Aguiar (médica) e Dra. Sara Gamito (psicóloga).';
+    const url = canonicalHref('/equipa');
+    const jsonLd = jsonLdScript([
+        {
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: title,
+            url,
+            description,
+            inLanguage: 'pt-PT',
+            isPartOf: { '@type': 'WebSite', name: 'Lon Clinic', url: o }
+        },
+        personJsonLd(o, rita.slug),
+        organizationJsonLd(o)
+    ]);
+
+    const html = `<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZN8J4X12H3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZN8J4X12H3');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${escapeHtml(title)}</title>
+    <meta name="description" content="${escapeHtml(description)}">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="${escapeHtml(url)}">
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Lon Clinic">
+    <meta property="og:url" content="${escapeHtml(url)}">
+    <meta property="og:title" content="${escapeHtml(title)}">
+    <meta property="og:description" content="${escapeHtml(description)}">
+    <meta property="og:locale" content="pt_PT">
+    <meta name="theme-color" content="#163224">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@1,9..144,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/landing.css?v=20260913z">
+    <link rel="stylesheet" href="/author.css?v=20260913z">
+    ${jsonLd}
+</head>
+<body class="lon-landing lon-home eeat-team-page">
+    <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
+    <header class="lon-nav" id="lonNav">
+        <div class="lon-container lon-nav-inner">
+            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
+                <span class="lon-logo-name">LON Clinic</span>
+            </a>
+            <nav class="lon-nav-links" aria-label="Navegação principal">
+                <a href="/#servicos">Consultas</a>
+                <a href="/consulta">Especialidades</a>
+                <a href="/burnout">Burnout</a>
+                <a href="/magazine">Magazine</a>
+                <a href="/equipa" aria-current="page">A Equipa</a>
+            </nav>
+            <div class="lon-nav-actions">
+                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
+                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm">Marcar — 39 €</a>
+            </div>
+        </div>
+    </header>
+    <main id="conteudo-principal">
+        <section class="lon-team" aria-labelledby="lon-team-title">
+            <div class="lon-container">
+                <div class="lon-team-header">
+                    <p class="lon-team-kicker">Quem está do outro lado da consulta</p>
+                    <h1 id="lon-team-title">A equipa clínica</h1>
+                    <p class="lon-team-lead">Médicas e psicólogas da Lon Clinic — credenciais e como marcar.</p>
+                </div>
+                <div class="lon-team-grid">
+                    <article class="lon-team-card" id="equipa-rita">
+                        <div class="lon-team-card-media">${avatarHtml(rita.initials, teamPhotoUrl('rita'), rita.displayName)}</div>
+                        <div class="lon-team-card-body">
+                            <h2 class="lon-team-name">${escapeHtml(rita.displayName)}</h2>
+                            <p class="lon-team-role">${escapeHtml(rita.jobTitle)}</p>
+                            ${ritaParas}
+                            <h3>Credenciais</h3>
+                            <ul class="lon-team-credentials">${rita.credentials.map((c) => `<li>${escapeHtml(c)}</li>`).join('')}</ul>
+                            <p class="lon-team-verify">${profileLinksHtml(rita, { includeSelf: false })}</p>
+                            <div class="lon-team-actions">
+                                <a class="lon-btn lon-btn-soft" href="/equipa/rita-aguiar">Perfil e credenciais →</a>
+                                <a class="lon-btn lon-btn-dark lon-btn-sm" data-cta="book" href="/marcar/clinica-geral">Marcar consulta →</a>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="lon-team-card" id="equipa-sara">
+                        <div class="lon-team-card-media">${avatarHtml('SG', teamPhotoUrl('sara'), 'Dra. Sara Gamito')}</div>
+                        <div class="lon-team-card-body">
+                            <h2 class="lon-team-name">Dra. Sara Gamito</h2>
+                            <p class="lon-team-role">Psicóloga</p>
+                            ${saraParasHtml}
+                            <div class="lon-team-actions">
+                                <a class="lon-btn lon-btn-dark lon-btn-sm" data-cta="book" href="/marcar/psicologia-mensal">Marcar consulta →</a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="lon-footer">
+        <div class="lon-container">
+            <div class="lon-footer-brand">
+                <h3>Lon Clinic</h3>
+                <p>O seu médico. Online. Sempre.</p>
+                <div class="lon-ers-badge">Nº de Registo ERS: 45475</div>
+            </div>
+        </div>
+    </footer>
+    <script src="/lon-nav.js"></script>
+    <script src="/i18n.js?v=20260913q" defer></script>
+</body>
+</html>`;
+
+    return { html };
+}
+
 module.exports = {
     AUTHORS,
     DEFAULT_AUTHOR_SLUG,
     OM_SEARCH_URL,
     ERS_URL,
+    SARA_STAFF_USERNAME,
+    SARA_PUBLIC_BIO,
     getAuthor,
     authorPath,
     authorUrl,
@@ -342,5 +493,6 @@ module.exports = {
     authorBylineHtml,
     authorBioHtml,
     renderAuthorPage,
+    renderTeamPage,
     authorSlugs
 };

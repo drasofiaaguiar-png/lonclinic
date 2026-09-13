@@ -9003,16 +9003,48 @@ app.get('/travel-clinic', (req, res) => {
     });
 });
 
-app.get('/equipa', (req, res) => {
-    res.redirect(301, '/equipa/rita-aguiar');
+async function publicTeamMemberProfile(who) {
+    const key = String(who || '').trim().toLowerCase();
+    if (key !== 'rita' && key !== 'sara') return null;
+    const profiles = await listStaffProfilesInternal();
+    return (profiles || []).find((p) => {
+        if (!p) return false;
+        const u = String(p.username || '').toLowerCase();
+        const name = String(p.fullName || '');
+        if (key === 'sara') {
+            return u.includes('gamito') || /gamito/i.test(name);
+        }
+        return (u.includes('rita') && u.includes('aguiar'))
+            || (/rita/i.test(name) && /aguiar/i.test(name));
+    }) || null;
+}
+
+app.get('/equipa', async (req, res) => {
+    try {
+        const sara = await publicTeamMemberProfile('sara');
+        const extras = {
+            saraBio: (sara && sara.bio) || authors.SARA_PUBLIC_BIO,
+            saraPhotoUrl: sara && sara.hasPhoto && sara.username
+                ? `/api/public/staff-photo/${encodeURIComponent(sara.username)}`
+                : '/api/public/team-photo/sara'
+        };
+        const result = authors.renderTeamPage(seo.SITE_ORIGIN, extras);
+        sendHtmlNoCacheString(res, result.html);
+    } catch (err) {
+        console.error('❌ Team page error:', err.message || err);
+        res.status(500).type('html').send('Error loading team page.');
+    }
 });
 
 app.get('/equipa/:slug', (req, res) => {
     const slug = String(req.params.slug || '').toLowerCase();
+    if (slug === 'sara-gamito' || slug === 'sara') {
+        return res.redirect(302, '/equipa');
+    }
     try {
         const result = authors.renderAuthorPage(seo.SITE_ORIGIN, slug);
         if (!result) {
-            return res.redirect(302, '/equipa/rita-aguiar');
+            return res.redirect(302, '/equipa');
         }
         sendHtmlNoCacheString(res, result.html);
     } catch (err) {
@@ -17491,6 +17523,25 @@ app.get('/api/bookable-slots', async (req, res) => {
     } catch (err) {
         console.error('GET /api/bookable-slots:', err.message);
         res.status(500).json({ error: 'Failed to load slots', available: [], professionalsByTime: {} });
+    }
+});
+
+app.get('/api/public/team-photo/:who', async (req, res) => {
+    try {
+        const profile = await publicTeamMemberProfile(req.params.who);
+        if (!profile || !profile.hasPhoto || !profile.username) {
+            return res.status(404).end();
+        }
+        const photo = await getStaffPhotoInternal(profile.username);
+        if (!photo || !photo.data) return res.status(404).end();
+        res.set({
+            'Content-Type': photo.mime || 'image/jpeg',
+            'Cache-Control': 'public, max-age=3600'
+        });
+        res.send(Buffer.isBuffer(photo.data) ? photo.data : Buffer.from(photo.data));
+    } catch (err) {
+        console.error('GET /api/public/team-photo:', err.message);
+        res.status(404).end();
     }
 });
 

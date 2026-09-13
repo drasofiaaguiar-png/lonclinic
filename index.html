@@ -44,7 +44,7 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="preload" as="image" href="/image/hero-run.webp" fetchpriority="high">
 
-    <link rel="stylesheet" href="/landing.css?v=20260913y">
+    <link rel="stylesheet" href="/landing.css?v=20260913z">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@1,9..144,500&display=swap" rel="stylesheet">
@@ -614,43 +614,47 @@
                 <div class="lon-team-grid">
                 <article class="lon-team-card" id="lon-team-rita">
                     <div class="lon-team-card-media">
-                        <div class="lon-team-avatar" aria-hidden="true">RA</div>
+                        <div class="lon-team-avatar">
+                            <img src="/api/public/team-photo/rita" alt="Dra. Rita Aguiar" width="132" height="132" loading="lazy" decoding="async" onerror="this.remove()">
+                            <span aria-hidden="true">RA</span>
+                        </div>
                     </div>
                     <div class="lon-team-card-body">
                         <h3 class="lon-team-name">Dra. Rita Aguiar</h3>
                         <p class="lon-avail-badge" data-doctor-available data-doctor-name="Dr. Rita Aguiar" hidden></p>
                         <p class="lon-team-role">Médica</p>
-                        <ul class="lon-team-credentials">
-                            <li class="lon-team-years">9 anos de prática clínica</li>
-                            <li>Cédula Profissional da Ordem dos Médicos em Portugal</li>
-                            <li>Pós-graduação em Medicina do Viajante e das Populações Móveis (2021), Faculdade de Medicina da Universidade do Porto</li>
-                            <li>Consultadoria na Organização Mundial de Saúde, secção de Populações Móveis (2023)</li>
-                        </ul>
-                        <p class="lon-team-verify">
-                            <a href="/equipa/rita-aguiar">Perfil e credenciais</a>
-                            · <a href="https://www.ordemdosmedicos.pt/" target="_blank" rel="noopener noreferrer">Ordem dos Médicos</a>
-                            · <a href="https://www.ers.pt/" target="_blank" rel="noopener noreferrer">Registo ERS: 45475</a>
+                        <p class="lon-team-bio">
+                            <span>Médica inscrita na Ordem dos Médicos, com 9 anos de prática clínica.</span>
+                            <span>Na Lon Clinic faz telemedicina — viajante, clínica geral e burnout.</span>
+                            <span>Pós-graduação em Medicina do Viajante (FMUP, 2021) e consultadoria na OMS (2023).</span>
                         </p>
+                        <p class="lon-team-ellipsis" aria-hidden="true">…</p>
                         <div class="lon-team-actions">
-                            <a href="/equipa/rita-aguiar" class="lon-btn lon-btn-soft lon-team-more">Ver perfil e credenciais →</a>
                             <a href="/marcar/clinica-geral" class="lon-btn lon-btn-dark lon-btn-sm" data-cta="book">Marcar consulta →</a>
                         </div>
-                        <p class="lon-team-all"><a href="/equipa/rita-aguiar" class="lon-text-link">Ver perfil da Dra. Rita Aguiar →</a></p>
+                        <p class="lon-team-all"><a href="/equipa" class="lon-text-link">Ver a Equipa →</a></p>
                     </div>
                 </article>
                 <article class="lon-team-card" id="lon-team-sara">
                     <div class="lon-team-card-media">
-                        <div class="lon-team-avatar" aria-hidden="true">SG</div>
+                        <div class="lon-team-avatar">
+                            <img src="/api/public/team-photo/sara" alt="Dra. Sara Gamito" width="132" height="132" loading="lazy" decoding="async" onerror="this.remove()">
+                            <span aria-hidden="true">SG</span>
+                        </div>
                     </div>
                     <div class="lon-team-card-body">
                         <h3 class="lon-team-name">Dra. Sara Gamito</h3>
                         <p class="lon-team-role">Psicóloga</p>
-                        <ul class="lon-team-credentials">
-                            <li>Psicóloga na Lon Clinic</li>
-                        </ul>
+                        <p class="lon-team-bio">
+                            <span>Psicóloga na Lon Clinic.</span>
+                            <span>Acompanha adultos em fases de transição, ansiedade e stress emocional.</span>
+                            <span>Trabalha dificuldades de autoestima e processos de crescimento pessoal.</span>
+                        </p>
+                        <p class="lon-team-ellipsis" aria-hidden="true">…</p>
                         <div class="lon-team-actions">
                             <a href="/marcar/psicologia-mensal" class="lon-btn lon-btn-dark lon-btn-sm" data-cta="book">Marcar consulta →</a>
                         </div>
+                        <p class="lon-team-all"><a href="/equipa" class="lon-text-link">Ver a Equipa →</a></p>
                     </div>
                 </article>
                 </div>
@@ -974,7 +978,7 @@
                 <div class="lon-footer-col">
                     <h4>Lon Clinic</h4>
                     <a href="/info.html?page=sobre-nos">Sobre nós</a>
-                    <a href="/equipa/rita-aguiar">A Equipa</a>
+                    <a href="/equipa">A Equipa</a>
                     <a href="/info.html?page=parcerias">Parcerias</a>
                     <a href="/info.html?page=registo-medico">Registo Médico</a>
                     <a href="/info.html?page=contato">Contacto</a>
@@ -1019,7 +1023,7 @@
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">WhatsApp</a>
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-analytics.js?v=20260906i" defer></script>
-    <script src="i18n.js?v=20260913p" defer></script>
+    <script src="i18n.js?v=20260913q" defer></script>
     <script src="reviews.js?v=20260902a" defer></script>
     <script src="landing.js?v=20260911p" defer></script>
     <script src="/lon-slots.js?v=20260912a" defer></script>

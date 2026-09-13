@@ -209,3 +209,19 @@
         text-align: left;
     }
 }
+
+.eeat-team-page .lon-team {
+    padding-top: calc(var(--lon-nav-h, 72px) + 36px);
+}
+
+.eeat-team-page .lon-team-card-body > p {
+    margin: 0 0 12px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #2a3a32;
+}
+
+.eeat-team-page .lon-team-card-body h3 {
+    margin: 18px 0 8px;
+    font-size: 1.02rem;
+}

@@ -392,6 +392,7 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
         ['/faq', today, 'monthly', '0.7'],
         ['/magazine', contentLastmod, 'weekly', '0.85'],
         ['/wellness', today, 'weekly', '0.75'],
+        ['/equipa', today, 'monthly', '0.82'],
         ['/equipa/rita-aguiar', today, 'monthly', '0.8'],
         ['/info.html', today, 'monthly', '0.6']
     ];

@@ -25,6 +25,7 @@
         if (p.includes('/marcar')) return 'marcar';
         if (p.includes('book.html') || p.includes('book-consultation') || /\/book(\/|$)/.test(p)) return 'book';
         if (p.includes('info.html') || p.includes('/info')) return 'info';
+        if (p === '/equipa' || p === '/equipa/') return 'equipa';
         if (p.includes('travel') && !p.includes('/blog') && !p.includes('/consulta/')) return 'travel';
         if (/^\/(blog|magazine|consulta\/|nutricao\/|burnout\/|consultas)(\/|$)?/.test(p) || /^\/consulta\//.test(p)) {
             return 'content';
@@ -51,7 +52,7 @@
         { s: '.lon-nav-links a[href="/consulta"], .lon-mobile-menu a[href="/consulta"]', en: 'Specialties', pt: 'Especialidades', es: 'Especialidades' },
         { s: '.lon-nav-links a[href="/burnout"], .lon-mobile-menu a[href="/burnout"]', en: 'Burnout', pt: 'Burnout', es: 'Burnout' },
         { s: '.lon-nav-links a[href="/magazine"], .lon-mobile-menu a[href="/magazine"]', en: 'Magazine', pt: 'Magazine', es: 'Magazine' },
-        { s: '.lon-nav-links a[href="/#equipa"], .lon-mobile-menu a[href="/#equipa"], .lon-nav-links a[href="#equipa"], .lon-mobile-menu a[href="#equipa"]', en: 'The team', pt: 'A Equipa', es: 'El equipo' },
+        { s: '.lon-nav-links a[href="/#equipa"], .lon-mobile-menu a[href="/#equipa"], .lon-nav-links a[href="#equipa"], .lon-mobile-menu a[href="#equipa"], .lon-nav-links a[href="/equipa"], .lon-mobile-menu a[href="/equipa"]', en: 'The team', pt: 'A Equipa', es: 'El equipo' },
         { s: '.lon-nav-actions > a.lon-btn-ghost[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
         { s: '.lon-nav-actions > a.lon-btn-primary[href="/marcar/clinica-geral"]:not([data-talk-cta])', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
         { s: '.lon-mobile-menu a[href="/patient-portal"]', en: 'Login', pt: 'Login', es: 'Acceder' },
@@ -264,18 +265,17 @@
         { s: '.lon-team-lead', en: 'At Lon Clinic, we select professionals with clinical experience, appropriate training and a person-centred approach.', pt: 'Na Lon Clinic, selecionamos profissionais com experiência clínica, formação adequada e uma abordagem centrada na pessoa.', es: 'En Lon Clinic, seleccionamos profesionales con experiencia clínica, formación adecuada y un enfoque centrado en la persona.' },
         { s: '#lon-team-rita .lon-team-name', en: 'Dr Rita Aguiar', pt: 'Dra. Rita Aguiar', es: 'Dra. Rita Aguiar' },
         { s: '#lon-team-rita .lon-team-role', en: 'Physician', pt: 'Médica', es: 'Médica' },
-        { s: '#lon-team-rita .lon-team-credentials li:nth-child(1)', en: '9 years of clinical practice', pt: '9 anos de prática clínica', es: '9 años de práctica clínica' },
-        { s: '#lon-team-rita .lon-team-credentials li:nth-child(2)', en: 'Professional registration with the Portuguese Medical Association', pt: 'Cédula Profissional da Ordem dos Médicos em Portugal', es: 'Cédula profesional del Colegio de Médicos de Portugal' },
-        { s: '#lon-team-rita .lon-team-credentials li:nth-child(3)', en: 'Postgraduate degree in Travel Medicine and Mobile Populations (2021), Faculty of Medicine, University of Porto', pt: 'Pós-graduação em Medicina do Viajante e das Populações Móveis (2021), Faculdade de Medicina da Universidade do Porto', es: 'Posgrado en Medicina del Viajero y Poblaciones Móviles (2021), Facultad de Medicina de la Universidad de Oporto' },
-        { s: '#lon-team-rita .lon-team-credentials li:nth-child(4)', en: 'Consultancy with the World Health Organization, Mobile Populations section (2023)', pt: 'Consultadoria na Organização Mundial de Saúde, secção de Populações Móveis (2023)', es: 'Consultoría en la Organización Mundial de la Salud, sección de Poblaciones Móviles (2023)' },
-        { s: '#lon-team-rita .lon-team-verify a:nth-child(1)', en: 'Profile and credentials', pt: 'Perfil e credenciais', es: 'Perfil y credenciales' },
-        { s: '#lon-team-rita .lon-team-more', en: 'View profile and credentials →', pt: 'Ver perfil e credenciais →', es: 'Ver perfil y credenciales →' },
+        { s: '#lon-team-rita .lon-team-bio span:nth-child(1)', en: 'Physician registered with the Portuguese Medical Association, with 9 years of clinical practice.', pt: 'Médica inscrita na Ordem dos Médicos, com 9 anos de prática clínica.', es: 'Médica inscrita en el Colegio de Médicos, con 9 años de práctica clínica.' },
+        { s: '#lon-team-rita .lon-team-bio span:nth-child(2)', en: 'At Lon Clinic she provides telemedicine — travel medicine, general practice and burnout.', pt: 'Na Lon Clinic faz telemedicina — viajante, clínica geral e burnout.', es: 'En Lon Clinic hace telemedicina — viajero, medicina general y burnout.' },
+        { s: '#lon-team-rita .lon-team-bio span:nth-child(3)', en: 'Postgraduate degree in Travel Medicine (FMUP, 2021) and consultancy with WHO (2023).', pt: 'Pós-graduação em Medicina do Viajante (FMUP, 2021) e consultadoria na OMS (2023).', es: 'Posgrado en Medicina del Viajero (FMUP, 2021) y consultoría en la OMS (2023).' },
         { s: '#lon-team-rita .lon-team-actions .lon-btn-dark', en: 'Book consultation →', pt: 'Marcar consulta →', es: 'Reservar consulta →' },
-        { s: '#lon-team-rita .lon-team-all .lon-text-link', en: 'View Dr Rita Aguiar’s profile →', pt: 'Ver perfil da Dra. Rita Aguiar →', es: 'Ver el perfil de la Dra. Rita Aguiar →' },
         { s: '#lon-team-sara .lon-team-name', en: 'Dr Sara Gamito', pt: 'Dra. Sara Gamito', es: 'Dra. Sara Gamito' },
         { s: '#lon-team-sara .lon-team-role', en: 'Psychologist', pt: 'Psicóloga', es: 'Psicóloga' },
-        { s: '#lon-team-sara .lon-team-credentials li:nth-child(1)', en: 'Psychologist at Lon Clinic', pt: 'Psicóloga na Lon Clinic', es: 'Psicóloga en Lon Clinic' },
+        { s: '#lon-team-sara .lon-team-bio span:nth-child(1)', en: 'Psychologist at Lon Clinic.', pt: 'Psicóloga na Lon Clinic.', es: 'Psicóloga en Lon Clinic.' },
+        { s: '#lon-team-sara .lon-team-bio span:nth-child(2)', en: 'Supports adults through life transitions, anxiety and emotional stress.', pt: 'Acompanha adultos em fases de transição, ansiedade e stress emocional.', es: 'Acompaña a adultos en transiciones, ansiedad y estrés emocional.' },
+        { s: '#lon-team-sara .lon-team-bio span:nth-child(3)', en: 'Works with self-esteem difficulties and personal growth.', pt: 'Trabalha dificuldades de autoestima e processos de crescimento pessoal.', es: 'Trabaja dificultades de autoestima y procesos de crecimiento personal.' },
         { s: '#lon-team-sara .lon-team-actions .lon-btn-dark', en: 'Book consultation →', pt: 'Marcar consulta →', es: 'Reservar consulta →' },
+        { s: '.lon-team-all .lon-text-link', en: 'View the team →', pt: 'Ver a Equipa →', es: 'Ver el equipo →' },
 
         /* ── After the consultation ── */
         { s: '#lon-after-title', en: 'After the consultation, care continues...', pt: 'Depois da consulta, o cuidado continua...', es: 'Después de la consulta, el cuidado continúa...' },
@@ -386,7 +386,7 @@
         { s: '.lon-footer-col:nth-child(2) a[href="/terapia-de-casal"]', en: 'Couples therapy', pt: 'Terapia de Casal', es: 'Terapia de pareja' },
         { s: '.lon-footer-col:nth-child(2) a[href="/marcar/longevidade"]', en: 'Longevity', pt: 'Longevidade', es: 'Longevidad' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=sobre-nos"]', en: 'About us', pt: 'Sobre nós', es: 'Sobre nosotros' },
-        { s: '.lon-footer-col:nth-child(3) a[href="/equipa/rita-aguiar"]', en: 'The team', pt: 'A Equipa', es: 'El equipo' },
+        { s: '.lon-footer-col:nth-child(3) a[href="/equipa"], .lon-footer-col:nth-child(3) a[href="/equipa/rita-aguiar"]', en: 'The team', pt: 'A Equipa', es: 'El equipo' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=parcerias"]', en: 'Partnerships', pt: 'Parcerias', es: 'Asociaciones' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=registo-medico"]', en: 'Medical records', pt: 'Registo Médico', es: 'Registro médico' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=contato"]', en: 'Contact', pt: 'Contacto', es: 'Contacto' },
@@ -403,6 +403,22 @@
         { s: '.lon-footer-legal-links a[href="/info.html?page=cookies"]', en: 'Cookie policy', pt: 'Política de Cookies', es: 'Política de cookies' },
         { s: '.lon-footer-legal-links a[href="/info.html?page=acessibilidade"]', en: 'Accessibility', pt: 'Acessibilidade', es: 'Accesibilidad' },
         { s: '.lon-footer-bottom p', en: '\u00A9 Lon Clinic', pt: '\u00A9 Lon Clinic', es: '\u00A9 Lon Clinic' },
+    ];
+
+    /* ═══════════════════════════
+       TEAM LISTING  (/equipa)
+    ═══════════════════════════ */
+    const EQUIPA = [
+        { s: 'title', en: 'The team | Lon Clinic', pt: 'A Equipa | Lon Clinic', es: 'El equipo | Lon Clinic', special: 'title' },
+        { s: '.lon-team-kicker', en: 'Who is on the other side of the consultation', pt: 'Quem está do outro lado da consulta', es: 'Quién está al otro lado de la consulta' },
+        { s: '#lon-team-title', en: 'The clinical team', pt: 'A equipa clínica', es: 'El equipo clínico' },
+        { s: '.lon-team-lead', en: 'Physicians and psychologists at Lon Clinic — credentials and how to book.', pt: 'Médicas e psicólogas da Lon Clinic — credenciais e como marcar.', es: 'Médicas y psicólogas de Lon Clinic — credenciales y cómo reservar.' },
+        { s: '#equipa-rita .lon-team-name', en: 'Dr Rita Aguiar', pt: 'Dra. Rita Aguiar', es: 'Dra. Rita Aguiar' },
+        { s: '#equipa-rita .lon-team-role', en: 'Physician', pt: 'Médica', es: 'Médica' },
+        { s: '#equipa-sara .lon-team-name', en: 'Dr Sara Gamito', pt: 'Dra. Sara Gamito', es: 'Dra. Sara Gamito' },
+        { s: '#equipa-sara .lon-team-role', en: 'Psychologist', pt: 'Psicóloga', es: 'Psicóloga' },
+        { s: '#equipa-rita .lon-btn-dark, #equipa-sara .lon-btn-dark', en: 'Book consultation →', pt: 'Marcar consulta →', es: 'Reservar consulta →' },
+        { s: '#equipa-rita .lon-btn-soft', en: 'Full profile and credentials →', pt: 'Perfil e credenciais →', es: 'Perfil y credenciales →' }
     ];
 
     /* ═══════════════════════════
@@ -1086,7 +1102,7 @@
     ══════════════════════════════════════════ */
 
     function getEntries() {
-        const map = { index: INDEX, travel: TRAVEL, book: BOOK, marcar: MARCAR, info: INFO, content: CONTENT };
+        const map = { index: INDEX, equipa: EQUIPA, travel: TRAVEL, book: BOOK, marcar: MARCAR, info: INFO, content: CONTENT };
         const pageEntries = map[PAGE] || [];
         const commonEntries = (PAGE !== 'book') ? COMMON : [];
         // Shared public nav + skip/WhatsApp on every page that uses the Lon chrome.
