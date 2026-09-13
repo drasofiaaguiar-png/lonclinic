@@ -1,6 +1,9 @@
 # Como configurar o login de administração
 
-O login de staff usa variáveis de ambiente. Só existe o portal **`/admin`**. Não há portal clínico autónomo.
+Há dois portais:
+
+- **`/admin`** — administração (utilizador + password + 2FA TOTP)
+- **`/profissional`** — profissionais (Rita, psicólogos, nutricionistas): **email + código OTP**. Não há password de portal clínico.
 
 ## Variáveis necessárias
 
@@ -35,7 +38,7 @@ Use uma password longa (mínimo 12 caracteres), com letras, números e símbolos
 2. Abra `/admin`
 3. Entre com `CLINIC_USERNAME` / `CLINIC_PASSWORD` e complete o 2FA
 
-O portal do paciente (`/patient-portal`) é independente e usa um código OTP enviado por email.
+O portal do paciente (`/patient-portal`) é independente e usa um código OTP enviado por email. Os profissionais entram em `/profissional` com o mesmo tipo de código (email + OTP), não com password.
 
 ---
 

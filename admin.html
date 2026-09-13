@@ -111,7 +111,7 @@
                     <button type="button" class="btn btn-primary btn-lg dash-login-btn" id="adminTotpCodesContinue">Continuar para o portal</button>
                 </div>
                 <form class="dash-login-form" id="adminStaffPasswordForm" hidden>
-                    <p class="dash-form-hint">Defina a sua password com o link recebido por email.</p>
+                    <p class="dash-form-hint">Links antigos de password. O acesso actual é em /profissional, com email e código OTP.</p>
                     <div class="dash-form-group">
                         <label for="adminStaffPasswordEmail">Email</label>
                         <input type="email" id="adminStaffPasswordEmail" required autocomplete="email">
@@ -370,8 +370,8 @@
             <div class="dash-modal" id="sendLoginEmailModal" hidden>
                 <div class="dash-modal-backdrop" data-close-send-login-modal></div>
                 <div class="dash-modal-card admin-send-login-card" role="dialog" aria-modal="true" aria-labelledby="sendLoginEmailTitle">
-                    <h2 class="dash-modal-title" id="sendLoginEmailTitle">Send login email</h2>
-                    <p class="dash-modal-desc" id="sendLoginEmailDesc">A short message in Portuguese, plus the portal, email, and password.</p>
+                    <h2 class="dash-modal-title" id="sendLoginEmailTitle">Enviar email de acesso</h2>
+                    <p class="dash-modal-desc" id="sendLoginEmailDesc">Uma mensagem curta em português, mais o link do portal. O profissional entra com email e um código OTP — não há password.</p>
                     <form id="sendLoginEmailForm">
                         <input type="hidden" id="sendLoginProId" value="">
                         <div class="admin-form-group">
@@ -386,13 +386,13 @@
                         <div class="admin-form-group">
                             <label for="sendLoginNote">Short message</label>
                             <textarea id="sendLoginNote" class="admin-input" rows="5" maxlength="800"></textarea>
-                            <small style="display:block;margin-top:6px;opacity:.7;">The portal, email and password are added automatically.</small>
+                            <small style="display:block;margin-top:6px;opacity:.7;">O portal e as instruções de email + código OTP são acrescentados automaticamente.</small>
                         </div>
-                        <p class="admin-send-login-warn" id="sendLoginResetWarn" hidden>A new password will be generated and emailed. The current password will stop working.</p>
+                        <p class="admin-send-login-warn" id="sendLoginResetWarn" hidden>O email explica o acesso em /profissional com um código de 6 dígitos. Não enviamos password.</p>
                         <div id="sendLoginEmailError" class="dash-login-error" style="display:none;" role="alert"></div>
                         <div class="dash-modal-actions">
                             <button type="button" class="btn btn-outline" data-close-send-login-modal>Cancel</button>
-                            <button type="submit" class="btn btn-primary" id="sendLoginSubmitBtn">Send email</button>
+                            <button type="submit" class="btn btn-primary" id="sendLoginSubmitBtn">Enviar email de acesso</button>
                         </div>
                     </form>
                 </div>
@@ -964,15 +964,15 @@
                     </div>
                     <div id="adminProfessionalError" class="dash-login-error" style="display:none;" role="alert"></div>
                     <div id="adminProfessionalCreds" class="admin-pro-creds" hidden>
-                        <p class="admin-pro-creds-title">Login assigned. The professional sets their own password via email. There is no clinician portal — administration uses /admin.</p>
-                        <p class="admin-pro-creds-line">Admin: <a id="proCredsPortal" href="/admin">/admin</a></p>
+                        <p class="admin-pro-creds-title">Login atribuído. O profissional entra em /profissional com o email da ficha e um código de 6 dígitos (OTP). Não é necessária password.</p>
+                        <p class="admin-pro-creds-line">Portal: <a id="proCredsPortal" href="/profissional">/profissional</a></p>
                         <p class="admin-pro-creds-line">Name: <span id="proCredsName"></span></p>
                         <p class="admin-pro-creds-line">Email: <code id="proCredsUsername"></code></p>
-                        <p class="admin-pro-creds-line">Password: o profissional define a sua no link enviado por email.</p>
+                        <p class="admin-pro-creds-line">Acesso: email + código OTP enviado para este endereço. Não há password de portal.</p>
                         <p class="admin-pro-creds-line" id="proCredsSendStatus" hidden></p>
                         <div class="admin-pro-creds-actions">
                             <button type="button" class="btn btn-outline btn-sm" id="proCredsCopyBtn">Copy login</button>
-                            <button type="button" class="btn btn-primary btn-sm" id="proCredsSendBtn">Send login email</button>
+                            <button type="button" class="btn btn-primary btn-sm" id="proCredsSendBtn">Enviar email de acesso</button>
                         </div>
                     </div>
                     <div id="adminProfessionalsBody" class="admin-dir-row">
@@ -1014,7 +1014,7 @@
                         </select>
                     </div>
                     <div id="adminPsychCreds" class="admin-pro-creds" hidden>
-                        <p class="admin-pro-creds-title">Clinic logins assigned — a password setup email was sent. We never email a password.</p>
+                        <p class="admin-pro-creds-title">Logins atribuídos — enviámos o email de acesso ao portal (/profissional). O profissional entra com email e código OTP. Nunca enviamos uma password.</p>
                         <div id="adminPsychCredsList"></div>
                         <button type="button" class="btn btn-outline btn-sm" id="psychCredsCopyBtn">Copy logins</button>
                     </div>

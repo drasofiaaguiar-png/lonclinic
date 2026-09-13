@@ -4122,8 +4122,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <button type="button" class="btn btn-outline btn-sm" data-psych-edit="${escapeHtml(a.id)}">Editar dados</button>
                             <button type="button" class="btn btn-outline btn-sm" data-psych-delete="${escapeHtml(a.id)}">Eliminar</button>
                             ${a.professional && a.professional.username
-                                ? `<span>Clinic login: <code>${escapeHtml(a.professional.email || a.professional.username)}</code> — managed in <a href="/admin">/admin</a></span>
-                                   <button type="button" class="btn btn-outline btn-sm" data-psych-password="${escapeHtml(a.id)}">New password</button>`
+                                ? `<span>Login: <code>${escapeHtml(a.professional.email || a.professional.username)}</code> — entra em <a href="/profissional">/profissional</a> com email + OTP</span>
+                                   <button type="button" class="btn btn-outline btn-sm" data-psych-password="${escapeHtml(a.id)}">Enviar email de acesso</button>`
                                 : `<button type="button" class="btn btn-primary btn-sm" data-psych-login="${escapeHtml(a.id)}">Assign clinic login</button>`}
                         </div>
                     </div>
@@ -4178,22 +4178,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function showPsychCreds(rows) {
         if (!adminPsychCreds || !adminPsychCredsList || !rows || !rows.length) return;
-        const portal = `${window.location.origin}/admin`;
+        const portal = `${window.location.origin}/profissional`;
         adminPsychCredsList.innerHTML = `
-            <p class="admin-pro-creds-line">Admin: <a href="/admin">${escapeHtml(portal)}</a></p>
+            <p class="admin-pro-creds-line">Portal: <a href="/profissional">${escapeHtml(portal)}</a></p>
             <table class="admin-psych-creds-table">
-                <thead><tr><th>Name</th><th>Email</th><th>Setup</th></tr></thead>
+                <thead><tr><th>Name</th><th>Email</th><th>Acesso</th></tr></thead>
                 <tbody>
                     ${rows.map((row) => `<tr>
                         <td>${escapeHtml(row.name || '')}</td>
                         <td><code>${escapeHtml(row.email || '')}</code></td>
-                        <td>${escapeHtml(row.setupEmailSent === false ? 'No email on file' : 'Setup email sent')}</td>
+                        <td>${escapeHtml(row.setupEmailSent === false ? 'Sem email na ficha' : 'Email OTP enviado')}</td>
                     </tr>`).join('')}
                 </tbody>
             </table>`;
             lastPsychCredsText = [
             `Portal: ${portal}`,
-            ...rows.map((row) => `${row.name || ''}\t${row.email || ''}\tsetup email`)
+            ...rows.map((row) => `${row.name || ''}\t${row.email || ''}\temail + OTP`)
         ].join('\n');
         adminPsychCreds.hidden = false;
         adminPsychCreds.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -4203,7 +4203,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const app = psychologistsCache.find((a) => String(a.id) === String(id))
             || (typeof boardProfessionalsCache !== 'undefined' ? boardProfessionalsCache.find((a) => String(a.id) === String(id)) : null);
         const label = app && app.name ? app.name : 'this professional';
-        if (resetPassword && !window.confirm(`Assign a new password to ${label}? The current password will stop working.`)) return;
+        if (resetPassword && !window.confirm(`Reenviar o email de acesso (OTP) a ${label}?`)) return;
         try {
             const res = await fetch(`/api/admin/psychologists/${encodeURIComponent(id)}/login`, {
                 method: 'POST',
@@ -4231,7 +4231,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function assignAllPsychologistLogins() {
-        if (!window.confirm('Assign a clinic username and password to everyone on the board and every name already used on bookings who does not have a login yet? Rejected/eliminated applications are skipped. Copy the passwords when they appear — they cannot be shown again.')) return;
+        if (!window.confirm('Atribuir login a todos os da bolsa e nomes já usados em marcações que ainda não têm conta? Candidaturas rejeitadas/eliminadas são ignoradas. Cada profissional entra em /profissional com email e um código OTP — não enviamos password.')) return;
         try {
             const res = await fetch('/api/admin/psychologists/logins', { method: 'POST' });
             const data = await res.json().catch(() => ({}));
@@ -4248,7 +4248,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else {
                 hidePsychCreds();
                 alert(data.linked && data.linked.length
-                    ? 'Everyone already has a clinic login. Use New password on a person if you need to reset one.'
+                    ? 'Todos já têm login. Use «Enviar email de acesso» numa pessoa se precisar de reenviar o convite OTP.'
                     : 'No professionals to assign.');
             }
         } catch (err) {
@@ -4440,7 +4440,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 psychCredsCopyBtn.textContent = 'Copied';
                 setTimeout(() => { psychCredsCopyBtn.textContent = 'Copy logins'; }, 1600);
             } catch (err) {
-                alert('Could not copy. Select the usernames and passwords above.');
+                alert('Não foi possível copiar. Selecione os emails acima.');
             }
         });
     }
@@ -4989,7 +4989,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function defaultProfessionalLoginNote(name) {
         const who = String(name || '').trim();
         const greeting = who ? `Olá ${who},` : 'Olá,';
-        return `${greeting}\n\nSeguem os dados de acesso ao portal da Lon Clinic. Abra o link abaixo, introduza o email e a password e inicie sessão.`;
+        return `${greeting}\n\nA sua conta no portal dos profissionais da Lon Clinic está pronta. Abra o link abaixo, introduza o email desta mensagem e peça um código de 6 dígitos. Não é necessária password.`;
     }
 
     function professionalKey(p) {
@@ -5047,9 +5047,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (sendLoginNameLabel) sendLoginNameLabel.textContent = name;
         if (sendLoginEmailTo) sendLoginEmailTo.value = email;
         if (sendLoginNote) sendLoginNote.value = defaultProfessionalLoginNote(name);
-        if (sendLoginResetWarn) sendLoginResetWarn.hidden = !!fresh;
+        if (sendLoginResetWarn) sendLoginResetWarn.hidden = false;
         if (sendLoginSubmitBtn) {
-            sendLoginSubmitBtn.textContent = fresh ? 'Send email' : 'Generate password & send';
+            sendLoginSubmitBtn.textContent = 'Enviar email de acesso';
             sendLoginSubmitBtn.disabled = false;
         }
         const hint = document.getElementById('sendLoginEmailHint');
@@ -5063,11 +5063,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (sendLoginEmailTo) sendLoginEmailTo.focus();
     }
 
-    async function submitSendLoginEmail(forceReset) {
+    async function submitSendLoginEmail() {
         const id = sendLoginProId ? sendLoginProId.value : '';
         const email = sendLoginEmailTo ? sendLoginEmailTo.value.trim() : '';
         const note = sendLoginNote ? sendLoginNote.value.trim() : '';
-        const password = forceReset ? '' : (freshPasswordsById[String(id)] || '');
         if (!id) {
             setSendLoginError('Professional not found.');
             return;
@@ -5077,34 +5076,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (sendLoginEmailTo) sendLoginEmailTo.focus();
             return;
         }
-        const confirmReset = !password;
-        if (confirmReset && !forceReset) {
-            const label = sendLoginNameLabel ? sendLoginNameLabel.textContent : 'this professional';
-            if (!window.confirm(`Assign a new password to ${label} and email it? The current password will stop working.`)) return;
-        }
         if (sendLoginSubmitBtn) sendLoginSubmitBtn.disabled = true;
         setSendLoginError('');
         try {
             const res = await fetch(`/api/admin/professionals/${encodeURIComponent(id)}/send-login-email`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email,
-                    note,
-                    password: password || undefined,
-                    confirmReset
-                })
+                body: JSON.stringify({ email, note })
             });
             const data = await res.json().catch(() => ({}));
-            if (res.status === 409 && data.code === 'needs_reset' && !forceReset) {
-                if (!window.confirm('The current password cannot be shown again. Generate a new password and email it? The old password will stop working.')) {
-                    if (sendLoginSubmitBtn) sendLoginSubmitBtn.disabled = false;
-                    return;
-                }
-                return submitSendLoginEmail(true);
-            }
             if (!res.ok) {
-                setSendLoginError(data.error || 'Could not send login email.');
+                setSendLoginError(data.error || 'Não foi possível enviar o email de acesso.');
                 if (sendLoginSubmitBtn) sendLoginSubmitBtn.disabled = false;
                 return;
             }
@@ -5113,9 +5095,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             const sentPro = data.professional || professionalRecordById(id);
             if (sentPro) showProfessionalCreds(sentPro);
             const to = data.emailedTo || email;
-            setProfessionalCredsSendStatus(`Password setup email sent to ${to}.`);
+            setProfessionalCredsSendStatus(`Email de acesso (OTP) enviado para ${to}.`);
             if (!adminProfessionalCreds || adminProfessionalCreds.hidden) {
-                showProfessionalError(`Password setup email sent to ${to}.`);
+                showProfessionalError(`Email de acesso (OTP) enviado para ${to}.`);
             }
         } catch (err) {
             setSendLoginError('Network error. Please try again.');
@@ -5136,15 +5118,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function showProfessionalCreds(pro) {
         if (!adminProfessionalCreds || !pro) return;
-        const portal = `${window.location.origin}/admin`;
+        const portal = `${window.location.origin}/profissional`;
         if (proCredsPortal) {
-            proCredsPortal.href = '/admin';
+            proCredsPortal.href = '/profissional';
             proCredsPortal.textContent = portal;
         }
         if (proCredsName) proCredsName.textContent = (pro && (pro.displayName || pro.fullName)) || '';
         if (proCredsUsername) proCredsUsername.textContent = (pro && pro.email) || '';
         if (adminProfessionalCreds && pro && pro.id) adminProfessionalCreds.dataset.proId = String(pro.id);
-        setProfessionalCredsSendStatus('Password setup email sent — the professional chooses their own password.');
+        setProfessionalCredsSendStatus('Email de acesso enviado — o profissional entra com email e um código OTP.');
         adminProfessionalCreds.hidden = false;
         adminProfessionalCreds.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
@@ -5186,7 +5168,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 id: staff.id || (account && account.id) || null,
                 displayName: staff.fullName || staff.displayName || (account && account.displayName) || staff.username || '',
                 email: staff.email || (account && account.email) || '',
-                // The email the login account actually has; password recovery only looks at this one.
+                // The email the login account actually uses for OTP.
                 loginEmail: (account && account.email) || '',
                 doxyRoomUrl: staff.doxyRoomUrl || (account && account.doxyRoomUrl) || '',
                 doxyPending: staff.doxyPending != null
@@ -5350,7 +5332,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             ? 'Pending'
             : `<a href="${escapeHtml(p.doxyRoomUrl)}" target="_blank" rel="noopener">${escapeHtml(String(p.doxyRoomUrl).replace(/^https?:\/\//, ''))}</a>`;
         const sendLogin = p.hasLogin && p.id && !p.isClinicAdmin
-            ? `<button type="button" class="btn btn-primary btn-sm" data-pro-send-login="${escapeHtml(String(p.id))}">Send login email</button>`
+            ? `<button type="button" class="btn btn-primary btn-sm" data-pro-send-login="${escapeHtml(String(p.id))}">Enviar email de acesso</button>`
             : '';
         const canEdit = !!p.username && !p.isClinicAdmin;
         const editBtn = canEdit
@@ -5362,7 +5344,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const loginEmailRow = p.hasLogin && !p.isClinicAdmin
             ? `<div><dt>Email de login</dt><dd>${p.loginEmail
                 ? escapeHtml(p.loginEmail)
-                : '<span class="admin-dir-login-warn">Sem email na conta — a recuperação de password não funciona até o guardar</span>'}</dd></div>`
+                : '<span class="admin-dir-login-warn">Sem email na conta — o código OTP não pode ser enviado até o guardar</span>'}</dd></div>`
             : '';
         adminDirDetail.hidden = false;
         if (dirEditing && canEdit) {
@@ -5408,7 +5390,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             ${areaTagsHtml(p.primaryAreas) ? `<div class="admin-staff-profile-block"><h4>Áreas primárias</h4>${areaTagsHtml(p.primaryAreas)}</div>` : ''}
             ${areaTagsHtml(p.secondaryAreas) ? `<div class="admin-staff-profile-block"><h4>Áreas secundárias</h4>${areaTagsHtml(p.secondaryAreas)}</div>` : ''}
             ${docs ? `<div class="admin-staff-profile-block"><h4>Documentos</h4><ul class="admin-staff-docs">${docs}</ul></div>` : ''}
-            ${!p.hasLogin && canEdit ? '<p class="admin-dir-edit-note">Esta ficha ainda não tem conta de login, por isso a recuperação de password não funciona. Atribua um login e depois envie o email de acesso.</p>' : ''}
+            ${!p.hasLogin && canEdit ? '<p class="admin-dir-edit-note">Esta ficha ainda não tem conta de login. Atribua um login e depois envie o email de acesso (OTP).</p>' : ''}
             ${editBtn || sendLogin || assignLogin ? `<div class="admin-dir-detail-actions">${editBtn}${assignLogin}${sendLogin}</div>` : ''}
         `;
     }
@@ -5430,7 +5412,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             await loadAdminProfessionals();
             if (data.professional) showProfessionalCreds(data.professional);
-            showProfessionalError(`Login atribuído a ${(data.professional && data.professional.displayName) || username}. ${data.setupEmailSent ? 'Email de definição de password enviado.' : 'Adicione um email na ficha para enviar o convite.'}`);
+            showProfessionalError(`Login atribuído a ${(data.professional && data.professional.displayName) || username}. ${data.setupEmailSent ? 'Email de acesso (OTP) enviado.' : 'Adicione um email na ficha para enviar o convite.'}`);
         } catch (err) {
             showProfessionalError('Erro de rede. Tente novamente.');
         } finally {
@@ -5461,7 +5443,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showProfessionalError(
                     `${created.length} login(s) criado(s): ${created.map((row) => row.displayName || row.username).join(', ')}.`
                     + (missing.length ? ` Sem email ainda: ${missing.join(', ')} — preencha em "Editar ficha".` : '')
-                    + ' Cada profissional pode entrar com "Esqueci a password" ou receber o email de acesso.'
+                    + ' Cada profissional entra em /profissional com o email da ficha e um código OTP.'
                 );
             } catch (err) {
                 showProfessionalError('Erro de rede. Tente novamente.');
@@ -5499,7 +5481,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const validUntil = String(p.insuranceValidUntil || '').slice(0, 10);
         const emailValue = hasAccount ? (p.loginEmail || p.email || '') : (p.email || '');
         const emailHint = hasAccount
-            ? 'É com este email que o profissional entra no portal e recebe o código de recuperação de password.'
+            ? 'É com este email que o profissional entra no portal e recebe o código OTP.'
             : 'Esta ficha ainda não tem login; o email fica apenas na ficha.';
         return `
             <form class="admin-dir-edit-form" data-pro-edit-form="${escapeHtml(p.username)}" data-pro-id="${escapeHtml(String(p.id || ''))}">
@@ -5772,20 +5754,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (proCredsCopyBtn) {
         proCredsCopyBtn.addEventListener('click', async () => {
-            const portal = proCredsPortal ? proCredsPortal.textContent : `${window.location.origin}/admin`;
+            const portal = proCredsPortal ? proCredsPortal.textContent : `${window.location.origin}/profissional`;
             const email = proCredsUsername ? proCredsUsername.textContent : '';
+            const who = proCredsName ? proCredsName.textContent : '';
             const text = [
-                name ? `Name: ${name}` : '',
+                who ? `Nome: ${who}` : '',
                 `Portal: ${portal}`,
                 `Email: ${email}`,
-                'Password: the professional sets their own via the email link'
+                'Acesso: introduza o email no portal e peça um código OTP. Não é necessária password.'
             ].filter(Boolean).join('\n');
             try {
                 await navigator.clipboard.writeText(text);
                 proCredsCopyBtn.textContent = 'Copied';
                 setTimeout(() => { proCredsCopyBtn.textContent = 'Copy login'; }, 1600);
             } catch (err) {
-                showProfessionalError('Could not copy. Select the email and password above.');
+                showProfessionalError('Não foi possível copiar. Selecione o email acima.');
             }
         });
     }

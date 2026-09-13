@@ -16,8 +16,9 @@ function requireEnv(name) {
 
 const SESSION_SECRET = requireEnv('SESSION_SECRET');
 const CLINIC_USERNAME = requireEnv('CLINIC_USERNAME');
-const CLINIC_PORTAL_BUILD = '10set-pw';
+const CLINIC_PORTAL_BUILD = '13set-otp';
 const CLINIC_PORTAL_PATH = '/admin';
+const PROFESSIONAL_PORTAL_PATH = '/profissional';
 const CLINIC_PASSWORD = requireEnv('CLINIC_PASSWORD');
 const fieldCrypto = require('./field-crypto');
 if ((process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT) && !fieldCrypto.hasDedicatedClinicalKey()) {
@@ -359,6 +360,16 @@ const rateLimitPatientOtp = rateLimit({
     }
 });
 
+const rateLimitStaffOtp = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Demasiados códigos pedidos. Tente novamente dentro de alguns minutos.' });
+    }
+});
+
 const rateLimitErasure = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 5,
@@ -446,6 +457,7 @@ function isClinicalTrackingSurface(req) {
     const q = req.query || {};
     if (/^\/patient-portal(?:\/|$)/.test(p) || p === '/dashboard.html' || p === '/dashboard') return true;
     if (/^\/clinic-desk(?:\/|$)/.test(p) || /^\/clinic-portal(?:\/|$)/.test(p) || p === '/clinic.html') return true;
+    if (/^\/profissional(?:\/|$)/.test(p)) return true;
     if (p === '/admin' || p === '/admin.html' || /^\/doctors(?:\/|$)/.test(p)) return true;
     if ((p === '/book-consultation' || p === '/book.html' || p.startsWith('/marcar')) && String(q.success) === 'true') {
         return true;
@@ -580,12 +592,13 @@ app.use((req, res, next) => {
     const last = Number(sess.lastActivity) || 0;
     if (last && Date.now() - last > SESSION_IDLE_MS) {
         const wasPatient = !!(sess.patientAuthenticated || sess.patientBookingId);
+        const staffHome = sess.clinicRole === 'clinician' ? PROFESSIONAL_PORTAL_PATH : '/admin';
         const wantsJson = req.path.startsWith('/api/') || String(req.headers.accept || '').includes('application/json');
         return sess.destroy(() => {
             if (wantsJson) {
                 return res.status(401).json({ error: 'session_expired' });
             }
-            return res.redirect(302, wasPatient ? '/patient-portal' : '/admin');
+            return res.redirect(302, wasPatient ? '/patient-portal' : staffHome);
         });
     }
     sess.lastActivity = Date.now();
@@ -1123,12 +1136,12 @@ function sendHtmlNoCacheString(res, html, statusCode) {
 }
 
 function clinicPortalAssetUrl() {
-    return '/admin';
+    return PROFESSIONAL_PORTAL_PATH;
 }
 
 async function serveClinicPortalHtml(res) {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
-    return res.redirect(302, '/admin');
+    return sendStaffHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading professional portal');
 }
 
 /* ========================================
@@ -7764,7 +7777,7 @@ async function peopleForAvailabilityReminders() {
 }
 
 async function sendAvailabilityReminderEmail({ to, name, monthLabel, deadlineLabel, kind }) {
-    const portalUrl = `${PUBLIC_SITE_URL}/admin`;
+    const portalUrl = professionalLoginPortalUrl();
     const isFinal = kind === 15;
     const subject = isFinal
         ? `Deadline: availabilities for ${monthLabel}`
@@ -7773,24 +7786,24 @@ async function sendAvailabilityReminderEmail({ to, name, monthLabel, deadlineLab
     const body = isFinal
         ? `This is a reminder that today is the deadline to give your availabilities for ${monthLabel} (till ${deadlineLabel}).`
         : `Please give your availabilities for ${monthLabel} till ${deadlineLabel}.`;
-    const text = [greeting, '', body, '', `Open the clinic portal: ${portalUrl}`, '', 'Lon Clinic'].join('\n');
+    const text = [greeting, '', body, '', `Abra o portal dos profissionais: ${portalUrl}`, '', 'Lon Clinic'].join('\n');
     const html = `<div style="font-family:system-ui,sans-serif;line-height:1.5;color:#111">
 <p>${escapeHtml(greeting)}</p>
 <p>${escapeHtml(body)}</p>
-<p><a href="${escapeHtml(portalUrl)}">Open the clinic portal</a></p>
+<p><a href="${escapeHtml(portalUrl)}">Abrir o portal dos profissionais</a></p>
 <p>Lon Clinic</p>
 </div>`;
     await deliverEmail({ from: EMAIL_FROM, to, subject, text, html });
 }
 
 function professionalLoginPortalUrl() {
-    return `${PUBLIC_SITE_URL}/admin`;
+    return `${PUBLIC_SITE_URL}${PROFESSIONAL_PORTAL_PATH}`;
 }
 
 function defaultProfessionalLoginNote(name) {
     const who = String(name || '').trim();
     const greeting = who ? `Olá ${who},` : 'Olá,';
-    return `${greeting}\n\nSeguem os dados de acesso ao portal da Lon Clinic. Abra o link abaixo, introduza o email e a password e inicie sessão.`;
+    return `${greeting}\n\nA sua conta no portal dos profissionais da Lon Clinic está pronta. Abra o link abaixo, introduza o email desta mensagem e peça um código de 6 dígitos. Não é necessária password.`;
 }
 
 function sanitizeProfessionalLoginNote(raw, name) {
@@ -7824,29 +7837,27 @@ async function professionalPasswordMatches(plain, hash) {
     }
 }
 
-async function sendProfessionalPasswordSetupEmail({ to, name, code }) {
+async function sendProfessionalWelcomeEmail({ to, name, note }) {
     const portalUrl = professionalLoginPortalUrl();
-    const setupUrl = `${portalUrl}${portalUrl.includes('?') ? '&' : '?'}reset=${encodeURIComponent(code)}`;
-    const who = String(name || '').trim();
-    const greeting = who ? `Olá ${who},` : 'Olá,';
-    const subject = 'Defina a sua password — Lon Clinic';
+    const intro = sanitizeProfessionalLoginNote(note, name);
+    const subject = 'Acesso ao portal dos profissionais — Lon Clinic';
     const text = [
-        greeting,
+        intro,
         '',
-        'Clique para definir a sua password no portal da Lon Clinic (válido 24 horas):',
-        setupUrl,
+        'Abra o portal:',
+        portalUrl,
         '',
-        'Nunca partilhamos a password por email. Só você a define neste link.',
+        'Introduza o email desta mensagem e peça um código de 6 dígitos. Enviamos o código para este email; expira em 10 minutos. Não é necessária password.',
         '',
         'Se não esperava este convite, ignore este email.',
         '',
         'Lon Clinic'
     ].join('\n');
     const html = `<div style="font-family:system-ui,sans-serif;line-height:1.5;color:#111">
-<p style="margin:0 0 12px;">${escapeHtml(greeting)}</p>
-<p style="margin:0 0 12px;">Clique para definir a sua password no portal da Lon Clinic (válido 24 horas):</p>
-<p style="margin:0 0 16px;"><a href="${escapeHtml(setupUrl)}">${escapeHtml(setupUrl)}</a></p>
-<p style="margin:0 0 12px;">Nunca partilhamos a password por email. Só você a define neste link.</p>
+<p style="margin:0 0 12px;white-space:pre-line;">${escapeHtml(intro)}</p>
+<p style="margin:0 0 12px;">Abra o portal:</p>
+<p style="margin:0 0 16px;"><a href="${escapeHtml(portalUrl)}">${escapeHtml(portalUrl)}</a></p>
+<p style="margin:0 0 12px;">Introduza o email desta mensagem e peça um código de 6 dígitos. Enviamos o código para este email; expira em 10 minutos. Não é necessária password.</p>
 <p style="margin:0;">Se não esperava este convite, ignore este email.</p>
 <p style="margin:12px 0 0;">Lon Clinic</p>
 </div>`;
@@ -8074,6 +8085,7 @@ function startAppointmentReminderScheduler() {
     setInterval(() => {
         if (!usePersistentDb) return;
         void db.purgeExpiredPatientOtps().catch(() => {});
+        void db.purgeExpiredStaffOtps().catch(() => {});
         void db.purgeUnclaimedQuizAttempts(30).then((n) => {
             if (n) console.log(`   🧹 Purged ${n} unclaimed quiz attempt(s)`);
         }).catch((err) => console.error('purgeUnclaimedQuizAttempts:', err.message));
@@ -8811,7 +8823,7 @@ app.use((req, res, next) => {
     const rawHost = (Array.isArray(forwardedHost) ? forwardedHost[0] : forwardedHost) || req.get('host') || '';
     const host = rawHost.split(':')[0].toLowerCase();
     if (host === 'doctors.lonclinic.com' && (req.path === '/' || req.path === '/index.html')) {
-        return res.redirect(302, '/admin');
+        return res.redirect(302, PROFESSIONAL_PORTAL_PATH);
     }
     next();
 });
@@ -8839,6 +8851,7 @@ app.use((req, res, next) => {
     const noIndexPrefixes = [
         '/admin',
         '/doctors',
+        '/profissional',
         '/clinic-portal',
         '/patient-portal',
         '/conta',
@@ -9305,6 +9318,11 @@ app.get('/recrutamento-entrevista.html', (req, res) => {
     res.redirect(301, '/recrutamento/entrevista');
 });
 
+app.get(['/profissional', '/profissional/'], (req, res) => {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    sendStaffHtmlNoCache(res, path.join(__dirname, 'clinic.html'), 'Error loading professional portal');
+});
+
 app.get('/patient-portal', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'dashboard.html'), 'Error loading patient portal');
 });
@@ -9316,17 +9334,37 @@ app.get('/conta/vacina', (req, res) => {
 
 app.get(['/api/clinic/portal', '/api/clinic/assets/:file'], (req, res) => {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
-    return res.redirect(302, '/admin');
+    return res.redirect(302, PROFESSIONAL_PORTAL_PATH);
+});
+
+app.get('/clinic-portal/clinic.js', (req, res) => {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+        'CDN-Cache-Control': 'no-store',
+        'Cloudflare-CDN-Cache-Control': 'no-store'
+    });
+    res.type('application/javascript').sendFile(path.join(__dirname, 'clinic.js'));
+});
+
+app.get('/clinic-portal/dashboard.css', (req, res) => {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
+        'CDN-Cache-Control': 'no-store',
+        'Cloudflare-CDN-Cache-Control': 'no-store'
+    });
+    res.type('text/css').sendFile(path.join(__dirname, 'dashboard.css'));
 });
 
 app.get(['/clinic-desk', '/clinic-desk/', '/clinic-desk/:rest'], (req, res) => {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
-    return res.redirect(301, '/admin');
+    return res.redirect(301, PROFESSIONAL_PORTAL_PATH);
 });
 
 app.get(['/clinic-portal', '/clinic-portal/', '/clinic-portal/app', '/clinic-portal/app/', '/clinic-portal/:file'], (req, res) => {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
-    return res.redirect(301, '/admin');
+    return res.redirect(301, PROFESSIONAL_PORTAL_PATH);
 });
 
 app.get('/admin', (req, res) => {
@@ -12466,8 +12504,8 @@ app.post('/api/clinic/otp/request', rateLimitStaffOtp, async (req, res) => {
                     from: EMAIL_FROM,
                     to: email,
                     subject: 'Código de acesso — Portal dos profissionais — Lon Clinic',
-                    text: `O seu código de acesso ao portal dos profissionais é ${code}. Expira em 10 minutos.\n\nLon Clinic`,
-                    html: `<p>O seu código de acesso ao portal dos profissionais é <strong>${escapeHtml(code)}</strong>.</p><p>Expira em 10 minutos.</p><p>Lon Clinic</p>`
+                    text: `O seu código de acesso ao portal dos profissionais é ${code}. Expira em 10 minutos.\n\nAbra ${professionalLoginPortalUrl()} e introduza o código.\n\nLon Clinic`,
+                    html: `<p>O seu código de acesso ao portal dos profissionais é <strong>${escapeHtml(code)}</strong>.</p><p>Expira em 10 minutos.</p><p>Abra <a href="${escapeHtml(professionalLoginPortalUrl())}">${escapeHtml(professionalLoginPortalUrl())}</a> e introduza o código.</p><p>Lon Clinic</p>`
                 });
             }
         }
@@ -13081,7 +13119,7 @@ async function createPasswordResetInternal(professional, email, codeHash, expire
     return created;
 }
 
-async function issueStaffPasswordSetup(professional, { invalidateExisting } = {}) {
+async function issueStaffPasswordSetup(professional, { invalidateExisting, note } = {}) {
     const to = await resolveProfessionalNotifyEmail(professional);
     if (!to) return { setupEmailSent: false, emailedTo: '', professional };
     if (!isEmailConfigured) return { setupEmailSent: false, emailedTo: to, professional };
@@ -13095,13 +13133,10 @@ async function issueStaffPasswordSetup(professional, { invalidateExisting } = {}
             Object.assign(current, { passwordHash, updatedAt: new Date().toISOString() });
         }
     }
-    const code = generatePasswordResetCode();
-    const expiresAt = new Date(Date.now() + PASSWORD_SETUP_TTL_MS).toISOString();
-    await createPasswordResetInternal(current, to, hashPasswordResetCode(code), expiresAt);
-    await sendProfessionalPasswordSetupEmail({
+    await sendProfessionalWelcomeEmail({
         to,
         name: current.displayName || current.username,
-        code
+        note
     });
     return { setupEmailSent: true, emailedTo: to, professional: current };
 }
@@ -14717,7 +14752,7 @@ async function findBolsaApplicationForStaff(username, professional) {
 }
 
 /**
- * Every professional file gets a clinic login, so "Esqueci a password" can always set a password.
+ * Every professional file gets a clinic login so they can enter /profissional with email + OTP.
  * The email comes from the linked bolsa application when there is one; otherwise the admin adds it later.
  */
 async function ensureAllStaffProfilesHaveLogins() {
@@ -15477,7 +15512,7 @@ app.post('/api/admin/professionals/:id/password', requireAdmin, async (req, res)
         const existing = await findProfessionalByIdInternal(req.params.id);
         if (!existing) return res.status(404).json({ error: 'Professional not found' });
         const setup = await issueStaffPasswordSetup(existing, { invalidateExisting: true });
-        console.log(`   🔑 Professional password setup issued: ${existing.username}`);
+        console.log(`   ✉️  Professional access email (OTP) issued: ${existing.username}`);
         res.json({
             professional: publicProfessional(setup.professional || existing),
             setupEmailSent: setup.setupEmailSent,
@@ -15520,7 +15555,8 @@ app.post('/api/admin/professionals/:id/send-login-email', requireAdmin, express.
             if (patched) Object.assign(existing, patched);
         }
         const setup = await issueStaffPasswordSetup(existing, {
-            invalidateExisting: body.confirmReset === true
+            invalidateExisting: false,
+            note: body.note
         });
         if (!setup.setupEmailSent) {
             return res.status(400).json({

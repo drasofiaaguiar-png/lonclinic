@@ -514,6 +514,36 @@ body.dash-portal .clinic-notes-section {
     text-align: center;
 }
 
+body.dash-portal .dash-login-staff {
+    margin: 18px 0 0;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+body.dash-portal .dash-login-staff a {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+body.dash-portal .dash-login-staff a:hover,
+body.dash-portal .dash-login-staff a:focus-visible {
+    color: var(--text-primary);
+}
+
+body.clinic-portal-page .clinic-pw-recovery {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-subtle);
+}
+
+body.clinic-portal-page .clinic-pw-recovery[hidden] {
+    display: none;
+}
+
 /* ========================================
    DASHBOARD CONTENT
 ======================================== */

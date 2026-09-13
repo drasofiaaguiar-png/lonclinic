@@ -382,6 +382,7 @@
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=registo-medico"]', en: 'Medical records', pt: 'Registo Médico', es: 'Registro médico' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=contato"]', en: 'Contact', pt: 'Contacto', es: 'Contacto' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=trabalhe-connosco"]', en: 'Work with us', pt: 'Trabalhe Connosco', es: 'Trabaje con nosotros' },
+        { s: 'a.lon-footer-pro[href="/profissional"]', en: 'Professional area', pt: 'Área do profissional', es: 'Área del profesional' },
         { s: '.lon-footer-col:nth-child(4) a[href="/info.html?page=como-funciona"]', en: 'How it works', pt: 'Como funciona', es: 'Cómo funciona' },
         { s: '.lon-footer-col:nth-child(4) a[href="/faq"]', en: 'Frequently asked questions', pt: 'Perguntas Frequentes', es: 'Preguntas frecuentes' },
         { s: '.lon-footer-col:nth-child(4) a[href="/info.html?page=seguranca-dados"]', en: 'Data security', pt: 'Segurança dos Dados', es: 'Seguridad de datos' },
@@ -1356,6 +1357,24 @@
     /* ══════════════════════════════════════════
        INIT
     ══════════════════════════════════════════ */
+    function ensureProfessionalFooterLink() {
+        const footer = document.querySelector('footer.lon-footer');
+        if (!footer || footer.querySelector('a[href="/profissional"]')) return;
+        const cols = footer.querySelectorAll('.lon-footer-col');
+        let col = null;
+        cols.forEach((c) => {
+            const h = c.querySelector('h4');
+            if (h && /Lon Clinic/i.test(h.textContent || '')) col = c;
+        });
+        const target = col || footer.querySelector('.lon-footer-legal-links');
+        if (!target) return;
+        const a = document.createElement('a');
+        a.href = '/profissional';
+        a.className = 'lon-footer-pro';
+        a.textContent = 'Área do profissional';
+        target.appendChild(a);
+    }
+
     function init() {
         const labels = WAVE_LABELS[PAGE];
         if (labels) {
@@ -1363,6 +1382,7 @@
         }
 
         createToggle();
+        ensureProfessionalFooterLink();
         // Always apply translations so stored language is respected on every page
         applyAll(currentLang);
     }

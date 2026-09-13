@@ -31,6 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicLoginForm = document.getElementById('clinicLoginForm');
     const clinicUsername = document.getElementById('clinicUsername');
     const clinicPassword = document.getElementById('clinicPassword');
+    const clinicOtp = document.getElementById('clinicOtp');
+    const clinicOtpGroup = document.getElementById('clinicOtpGroup');
+    const clinicLoginSubmit = document.getElementById('clinicLoginSubmit');
+    const clinicOtpBack = document.getElementById('clinicOtpBack');
+    const clinicOtpBackWrap = document.getElementById('clinicOtpBackWrap');
     const loginError = document.getElementById('loginError');
     const clinicLoginTitle = document.getElementById('clinicLoginTitle');
     const clinicLoginDesc = document.getElementById('clinicLoginDesc');
@@ -135,19 +140,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const clinicProfileSaveConfirm = document.getElementById('clinicProfileSaveConfirm');
 
     const CLINIC_PANEL_META = {
-        consultations: { title: 'Consultations', subtitle: 'Clinical notes for consultations assigned to you' },
-        availabilities: { title: 'Availabilities', subtitle: 'Your hours, one line per block — saved to your account' },
-        bookings: { title: 'Bookings', subtitle: 'Upcoming appointments assigned to you' },
-        patients: { title: 'Patients', subtitle: 'Only people scheduled with you' },
-        resources: { title: 'Resources', subtitle: 'Video room and everyday clinic links' },
-        management: { title: 'Management', subtitle: 'IBAN, faturas mensais e pagamentos' },
-        profile: { title: 'Perfil', subtitle: 'Foto, nome e email desta conta' }
+        profile: { title: 'Perfil', subtitle: 'Nome, email e foto da sua ficha' },
+        availabilities: { title: 'Disponibilidades', subtitle: 'Os seus horários na clínica' },
+        bookings: { title: 'Marcações', subtitle: 'Consultas atribuídas a si' }
+    };
+    const CLINIC_PANEL_ALIASES = {
+        consultations: 'bookings',
+        patients: 'bookings',
+        resources: 'profile',
+        management: 'profile'
     };
 
     let clinicRole = 'admin';
     let staffDisplayName = '';
     let clinicDoxyPatientUrl = '';
-    let activeClinicPanel = 'consultations';
+    let activeClinicPanel = 'profile';
     let clinicBillingSummary = null;
     let clinicPayPeriod = 'week';
     const CLINIC_PAY_IRS_KEY = 'lonClinicPayIrsPct';
@@ -194,8 +201,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (clinicSidebarBackdrop) clinicSidebarBackdrop.hidden = false;
     }
 
+    function resolveClinicPanel(panelId) {
+        const raw = String(panelId || '').toLowerCase();
+        const mapped = CLINIC_PANEL_ALIASES[raw] || raw;
+        return CLINIC_PANEL_META[mapped] ? mapped : 'profile';
+    }
+
     function setClinicPanel(panelId) {
-        if (!CLINIC_PANEL_META[panelId]) panelId = 'consultations';
+        panelId = resolveClinicPanel(panelId);
         activeClinicPanel = panelId;
 
         document.querySelectorAll('[data-clinic-panel]').forEach((btn) => {
@@ -211,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (clinicGreeting) clinicGreeting.textContent = meta.title;
         if (clinicUserInfo) clinicUserInfo.textContent = meta.subtitle;
         if (refreshBtn) {
-            refreshBtn.style.display = ['consultations', 'bookings', 'patients'].includes(panelId) ? '' : 'none';
+            refreshBtn.style.display = panelId === 'bookings' ? '' : 'none';
         }
         if (clinicSaveScheduleBtn) {
             clinicSaveScheduleBtn.style.display = panelId === 'availabilities' ? '' : 'none';
@@ -221,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
             try { history.replaceState(null, '', `${location.pathname}${location.search}#${panelId}`); } catch (err) { /* ignore */ }
         }
 
-        if (panelId === 'consultations' || panelId === 'bookings' || panelId === 'patients') {
+        if (panelId === 'bookings') {
             loadBookings();
         }
         if (panelId === 'availabilities') {
@@ -231,12 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 loadScheduleView();
             }
         }
-        if (panelId === 'resources') loadDoxyRoom();
         if (panelId === 'profile') loadClinicIdentity();
-        if (panelId === 'management') {
-            loadClinicBillingSummary();
-            loadClinicPayouts();
-        }
     }
 
     // ─── Show Login ───
@@ -256,27 +264,25 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('clinic-logged-in');
         clinicRole = role || 'admin';
         staffDisplayName = username || loginUsername || '';
-        const isAdmin = clinicRole === 'admin';
 
         if (clinicSidebarUser) {
             clinicSidebarUser.textContent = staffDisplayName || 'Portal';
         }
-        if (clinicAdminLink) clinicAdminLink.hidden = !isAdmin;
+        if (clinicAdminLink) clinicAdminLink.hidden = true;
 
         setClinicPanel(initialClinicPanel());
-        loadDoxyRoom();
         loadScheduleView();
     }
 
     function initialClinicPanel() {
         const hash = String(location.hash || '').replace(/^#/, '').toLowerCase();
-        if (CLINIC_PANEL_META[hash]) return hash;
+        if (hash) return resolveClinicPanel(hash);
         try {
             if (/\/clinic-desk\/perfil\/?$/i.test(location.pathname)) return 'profile';
             const panel = new URLSearchParams(location.search).get('panel');
-            if (panel && CLINIC_PANEL_META[panel]) return panel;
+            if (panel) return resolveClinicPanel(panel);
         } catch (err) { /* ignore */ }
-        return 'consultations';
+        return 'profile';
     }
 
     async function loadDoxyRoom() {
@@ -364,12 +370,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const CLINIC_WEEKDAY_KEYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
     const CLINIC_WEEKDAY_LABELS = {
-        monday: 'Mondays', tuesday: 'Tuesdays', wednesday: 'Wednesdays', thursday: 'Thursdays',
-        friday: 'Fridays', saturday: 'Saturdays', sunday: 'Sundays'
+        monday: 'Segundas', tuesday: 'Terças', wednesday: 'Quartas', thursday: 'Quintas',
+        friday: 'Sextas', saturday: 'Sábados', sunday: 'Domingos'
     };
     const CLINIC_MONTH_NAMES = [
-        'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
     ];
 
     function clinicWeekdayKeyFromDate(dateKey) {
@@ -563,19 +569,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         clinicAvailWeeklyHint.hidden = false;
         clinicAvailWeeklyHint.textContent =
-            `Admin weekly template (${parts.join(' · ')}) is ignored while you have lines below — patients only see those blocks.`;
+            `O horário semanal da clínica (${parts.join(' · ')}) não se aplica enquanto tiver linhas abaixo — os pacientes só veem esses blocos.`;
     }
 
     function renderClinicAvailRows() {
         if (!clinicAvailRows) return;
         if (!clinicScheduleData) {
-            clinicAvailRows.innerHTML = '<p class="clinic-avail-rows-empty">Loading…</p>';
+            clinicAvailRows.innerHTML = '<p class="clinic-avail-rows-empty">A carregar…</p>';
             return;
         }
         const todayKey = clinicTodayKey();
         const rows = (clinicScheduleData.dayOverrides || []).filter((row) => row && row.enabled !== false && row.date >= todayKey);
         if (!rows.length) {
-            clinicAvailRows.innerHTML = '<p class="clinic-avail-rows-empty">No availability yet. Add your first block above — for example Mondays 10:00–12:00 in September.</p>';
+            clinicAvailRows.innerHTML = '<p class="clinic-avail-rows-empty">Ainda não tem disponibilidade. Adicione o primeiro bloco acima — por exemplo segundas 10:00–12:00 em setembro.</p>';
             return;
         }
         const byMonth = new Map();
@@ -595,13 +601,13 @@ document.addEventListener('DOMContentLoaded', () => {
             title.textContent = clinicMonthLabel(monthKey);
             const count = document.createElement('span');
             count.className = 'clinic-avail-month-count';
-            count.textContent = `${list.length} block${list.length === 1 ? '' : 's'}`;
+            count.textContent = `${list.length} ${list.length === 1 ? 'bloco' : 'blocos'}`;
             const removeMonth = document.createElement('button');
             removeMonth.type = 'button';
             removeMonth.className = 'btn btn-outline btn-sm';
-            removeMonth.textContent = 'Remove month';
+            removeMonth.textContent = 'Remover mês';
             removeMonth.addEventListener('click', () => {
-                if (!window.confirm(`Remove all ${list.length} block${list.length === 1 ? '' : 's'} in ${clinicMonthLabel(monthKey)}?`)) return;
+                if (!window.confirm(`Remover os ${list.length} ${list.length === 1 ? 'bloco' : 'blocos'} de ${clinicMonthLabel(monthKey)}?`)) return;
                 setClinicDayRows((clinicScheduleData.dayOverrides || []).filter((row) => clinicMonthKeyFromDate(row.date) !== monthKey || row.date < todayKey));
                 renderClinicAvailRows();
                 markClinicScheduleDirty();
@@ -622,8 +628,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 lastDate = row.date;
                 const key = clinicRowKey(row);
                 const d = new Date(`${row.date}T12:00:00`);
-                const weekdayLabel = d.toLocaleDateString('en-GB', { weekday: 'short' });
-                const dayLabel = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+                const weekdayLabel = d.toLocaleDateString('pt-PT', { weekday: 'short' });
+                const dayLabel = d.toLocaleDateString('pt-PT', { day: 'numeric', month: 'short' });
 
                 const tdDate = document.createElement('td');
                 tdDate.className = 'clinic-avail-cell-date';
@@ -636,7 +642,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 startInput.step = '1800';
                 startInput.className = 'admin-time-input';
                 startInput.value = row.start;
-                startInput.setAttribute('aria-label', `Start on ${dayLabel}`);
+                startInput.setAttribute('aria-label', `Início em ${dayLabel}`);
                 const sep = document.createElement('span');
                 sep.className = 'clinic-avail-row-sep';
                 sep.textContent = '–';
@@ -645,7 +651,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 endInput.step = '1800';
                 endInput.className = 'admin-time-input';
                 endInput.value = row.end;
-                endInput.setAttribute('aria-label', `End on ${dayLabel}`);
+                endInput.setAttribute('aria-label', `Fim em ${dayLabel}`);
                 const onEdit = () => {
                     const start = String(startInput.value || '').slice(0, 5);
                     const end = String(endInput.value || '').slice(0, 5);
@@ -653,7 +659,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const to = clinicTimeToMinutes(end);
                     if (from == null || to == null || to <= from) {
                         tr.classList.add('is-invalid');
-                        setClinicAvailError(`${dayLabel}: end time must be after the start time.`);
+                        setClinicAvailError(`${dayLabel}: a hora de fim tem de ser depois da de início.`);
                         return;
                     }
                     tr.classList.remove('is-invalid');
@@ -745,7 +751,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Failed to load schedule view:', err);
             if (clinicScheduleData) return;
             if (clinicAvailRows) {
-                clinicAvailRows.innerHTML = '<p class="clinic-avail-rows-empty">Could not load availability.</p>';
+                clinicAvailRows.innerHTML = '<p class="clinic-avail-rows-empty">Não foi possível carregar a disponibilidade.</p>';
             }
         }
     }
@@ -931,7 +937,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (clinicTotpCodesPanel) clinicTotpCodesPanel.hidden = mode !== 'totp-codes';
         if (clinicLoginTitle) {
             clinicLoginTitle.textContent = mode === 'signin'
-                ? 'Clinic Portal'
+                ? 'Portal dos profissionais'
                 : mode === 'forgot'
                     ? 'Recuperar password'
                     : mode === 'reset'
@@ -946,7 +952,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (clinicLoginDesc) {
             clinicLoginDesc.textContent = mode === 'signin'
-                ? `Portal ${document.body.getAttribute('data-clinic-build') || '10set-pw'} — Use o email da sua ficha para entrar.`
+                ? 'Acesso com email e código de 6 dígitos. Introduza o email da sua ficha para receber o código.'
                 : mode === 'forgot'
                     ? 'Indique o email da ficha. Enviamos um link para definir uma nova password.'
                     : mode === 'reset'
@@ -971,6 +977,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clinicForgotEmail.focus();
         }
         if (mode === 'reset' && clinicResetCode) clinicResetCode.focus();
+        if (mode === 'signin') setClinicOtpStep('request');
         if (mode === 'signin' && clinicUsername) clinicUsername.focus();
         if (mode === 'totp' && clinicTotpCode) clinicTotpCode.focus();
         if (mode === 'totp-setup' && clinicTotpSetupCode) clinicTotpSetupCode.focus();
@@ -1001,6 +1008,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const enter = () => {
             showClinicPortal(data.displayName || identifier, data.role, data.username || identifier);
             if (clinicUsername) clinicUsername.value = '';
+            if (clinicOtp) clinicOtp.value = '';
             if (clinicPassword) clinicPassword.value = '';
             if (clinicTotpCode) clinicTotpCode.value = '';
             if (clinicTotpSetupCode) clinicTotpSetupCode.value = '';
@@ -1033,41 +1041,81 @@ document.addEventListener('DOMContentLoaded', () => {
         return data;
     }
 
+    let clinicOtpStep = 'request';
+
+    function setClinicOtpStep(step) {
+        clinicOtpStep = step === 'verify' ? 'verify' : 'request';
+        if (clinicOtpGroup) clinicOtpGroup.hidden = clinicOtpStep !== 'verify';
+        if (clinicOtpBackWrap) clinicOtpBackWrap.hidden = clinicOtpStep !== 'verify';
+        if (clinicLoginSubmit) clinicLoginSubmit.textContent = clinicOtpStep === 'verify' ? 'Entrar' : 'Enviar código';
+        if (clinicUsername) clinicUsername.readOnly = clinicOtpStep === 'verify';
+        if (clinicOtpStep === 'request' && clinicOtp) clinicOtp.value = '';
+    }
+
+    if (clinicOtpBack) {
+        clinicOtpBack.addEventListener('click', () => {
+            hideAuthMessage(loginError);
+            showAuthOk('');
+            setClinicOtpStep('request');
+            if (clinicUsername) {
+                clinicUsername.readOnly = false;
+                clinicUsername.focus();
+            }
+        });
+    }
+
     clinicLoginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         hideAuthMessage(loginError);
         showAuthOk('');
-        
-        const identifier = clinicUsername.value.trim();
-        const password = clinicPassword.value;
-        
-        if (!identifier || !password) {
-            showAuthError(loginError, 'Please enter your email and password');
+
+        const email = clinicUsername ? clinicUsername.value.trim() : '';
+        if (!email) {
+            showAuthError(loginError, 'Indique o email da sua ficha.');
             return;
         }
-
+        if (clinicLoginSubmit) clinicLoginSubmit.disabled = true;
         try {
-            const res = await fetch('/api/clinic/login', {
+            if (clinicOtpStep !== 'verify') {
+                const res = await fetch('/api/clinic/otp/request', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    showAuthError(loginError, data.error || 'Não foi possível enviar o código. Tente novamente.');
+                    return;
+                }
+                setClinicOtpStep('verify');
+                showAuthOk('Se este email tiver acesso, enviámos um código. Verifique a caixa de entrada.');
+                if (clinicOtp) clinicOtp.focus();
+                return;
+            }
+            const code = (clinicOtp && clinicOtp.value || '').replace(/\D/g, '');
+            if (code.length !== 6) {
+                showAuthError(loginError, 'Introduza o código de 6 dígitos enviado por email.');
+                return;
+            }
+            const res = await fetch('/api/clinic/otp/verify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'same-origin',
-                body: JSON.stringify({ email: identifier, username: identifier, password })
+                body: JSON.stringify({ email, code })
             });
-
-            const data = await res.json();
-
-            if (res.ok && data.requiresTotpSetup) {
-                applyTotpSetup(data);
-            } else if (res.ok && data.requiresTotp) {
-                setClinicAuthView('totp');
-            } else if (res.ok && data.success) {
-                finishClinicLogin(data, identifier);
+            const data = await res.json().catch(() => ({}));
+            if (res.ok && data.success) {
+                setClinicOtpStep('request');
+                finishClinicLogin(data, email);
             } else {
-                showAuthError(loginError, data.error || 'Invalid email or password');
+                showAuthError(loginError, data.error || 'Código inválido ou expirado.');
             }
         } catch (err) {
             console.error('Login error:', err);
-            showAuthError(loginError, 'Failed to connect to server. Please try again.');
+            showAuthError(loginError, 'Não foi possível ligar ao servidor. Tente novamente.');
+        } finally {
+            if (clinicLoginSubmit) clinicLoginSubmit.disabled = false;
         }
     });
 
@@ -1584,11 +1632,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>${escapeHtml(booking.date || '—')}${booking.time ? ' · ' + escapeHtml(booking.time) : ''}</td>
                 <td>${escapeHtml(booking.patientName || '—')}${booking.travellerCount > 1 ? ` +${booking.travellerCount - 1}` : ''}</td>
                 <td>${escapeHtml(booking.email || '—')}</td>
-                <td><span class="dash-status ${status}">${status}</span></td>
+                <td><span class="dash-status ${status}">${statusLabel(status)}</span></td>
                 <td>
                     ${hasNotes 
-                        ? '<span style="color: var(--accent); font-weight: 600;">✓ Notes</span>'
-                        : '<span style="color: var(--text-muted);">No notes</span>'
+                        ? '<span style="color: var(--accent); font-weight: 600;">✓ Notas</span>'
+                        : '<span style="color: var(--text-muted);">Sem notas</span>'
                     }
                     ${booking.hasPatientIntake
                         ? '<br><span style="color: var(--accent); font-size: 0.85em;">Ficha ok</span>'
@@ -1597,7 +1645,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
                 <td>
                     <button class="btn btn-outline btn-sm view-consultation-btn" data-booking-ref="${escapeHtml(ref)}">
-                        View & Edit
+                        Abrir
                     </button>
                 </td>
             `;
@@ -1686,6 +1734,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ─── Get Status ───
+    function statusLabel(status) {
+        if (status === 'completed') return 'concluída';
+        if (status === 'cancelled') return 'cancelada';
+        return 'próxima';
+    }
+
     function getStatus(booking, now) {
         if (!booking.date) return 'upcoming';
         try {

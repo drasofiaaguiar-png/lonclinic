@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clinic Portal — Longevity Clinic</title>
+    <title>Portal dos profissionais — Lon Clinic</title>
     <link rel="stylesheet" href="/landing.css">
     <link rel="stylesheet" href="/styles.css">
-    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=10set-pw">
+    <link rel="stylesheet" href="/clinic-portal/dashboard.css?v=20260913c">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c5c72c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4'/><path d='M5 19.5C5.5 18 6 15 6 12c0-3.5 2.5-6 6-6 3.5 0 6 2.5 6 6 0 2-.5 4-1 6'/><path d='M9 12c0-1.7 1.3-3 3-3s3 1.3 3 3-1 6-1 6'/><path d='M12 12v6'/></svg>">
-    <meta name="description" content="Clinic portal — manage consultations and clinical records.">
+    <meta name="description" content="Portal fechado para profissionais da Lon Clinic.">
+    <meta name="robots" content="noindex, nofollow, noarchive">
     <meta name="theme-color" content="#eaf2fb">
 </head>
-<body class="lon-landing clinic-portal-page" data-clinic-build="10set-pw">
+<body class="lon-landing clinic-portal-page" data-clinic-build="13set-otp">
 
-    <a class="lon-skip" href="#conteudo-principal">Skip to content</a>
+    <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
     <header class="lon-nav" id="lonNav">
         <div class="lon-container lon-nav-inner">
             <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
@@ -52,24 +53,25 @@
                 <div class="dash-login-icon">
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
                 </div>
-                <h1 class="dash-login-title" id="clinicLoginTitle">Clinic Portal</h1>
-                <p class="dash-login-desc" id="clinicLoginDesc">Portal 10set-pw — Use o email da sua ficha para entrar.</p>
+                <h1 class="dash-login-title" id="clinicLoginTitle">Portal dos profissionais</h1>
+                <p class="dash-login-desc" id="clinicLoginDesc">Acesso com email e código de 6 dígitos. Introduza o email da sua ficha para receber o código.</p>
                 <div id="clinicLoginOk" class="dash-login-ok" hidden role="status"></div>
                 <form class="dash-login-form" id="clinicLoginForm">
                     <div class="dash-form-group">
                         <label for="clinicUsername">Email</label>
                         <input type="email" id="clinicUsername" placeholder="nome@email.com" required autocomplete="email" inputmode="email">
                     </div>
-                    <div class="dash-form-group">
-                        <label for="clinicPassword">Password</label>
-                        <input type="password" id="clinicPassword" placeholder="Enter password" required autocomplete="current-password">
+                    <div class="dash-form-group" id="clinicOtpGroup" hidden>
+                        <label for="clinicOtp">Código de 6 dígitos</label>
+                        <input type="text" id="clinicOtp" placeholder="000000" inputmode="numeric" autocomplete="one-time-code" maxlength="8">
                     </div>
                     <div id="loginError" class="dash-login-error" style="display:none;"></div>
-                    <button type="submit" class="btn btn-primary btn-lg dash-login-btn">Sign in</button>
-                    <p class="dash-login-forgot-wrap">
-                        <button type="button" class="dash-login-forgot" id="clinicForgotLink">Esqueci a password</button>
+                    <button type="submit" class="btn btn-primary btn-lg dash-login-btn" id="clinicLoginSubmit">Enviar código</button>
+                    <p class="dash-login-forgot-wrap" id="clinicOtpBackWrap" hidden>
+                        <button type="button" class="dash-login-forgot" id="clinicOtpBack">Usar outro email</button>
                     </p>
                 </form>
+                <p class="dash-login-note">O acesso faz-se só com o email da ficha e um código OTP enviado por email (expira em 10 minutos). Não é necessária password. Só profissionais com conta ativa na Lon Clinic conseguem entrar.</p>
                 <form class="dash-login-form" id="clinicTotpForm" hidden>
                     <div class="dash-form-group">
                         <label for="clinicTotpCode">Código 2FA</label>
@@ -117,7 +119,7 @@
                     <pre class="dash-login-recovery" id="clinicTotpCodesList"></pre>
                     <button type="button" class="btn btn-primary btn-lg dash-login-btn" id="clinicTotpCodesContinue">Continuar para o portal</button>
                 </div>
-                <form class="dash-login-form" id="clinicForgotForm" hidden>
+                <form class="dash-login-form clinic-pw-recovery" id="clinicForgotForm" hidden>
                     <div class="dash-form-group">
                         <label for="clinicForgotEmail">Email</label>
                         <input type="email" id="clinicForgotEmail" placeholder="nome@email.com" required autocomplete="email" inputmode="email">
@@ -128,7 +130,7 @@
                         <button type="button" class="dash-login-forgot" id="clinicForgotBack">Voltar ao início de sessão</button>
                     </p>
                 </form>
-                <form class="dash-login-form" id="clinicResetForm" hidden>
+                <form class="dash-login-form clinic-pw-recovery" id="clinicResetForm" hidden>
                     <div class="dash-form-group">
                         <label for="clinicResetCode">Código</label>
                         <input type="text" id="clinicResetCode" class="dash-login-code" autocomplete="one-time-code" maxlength="64" placeholder="Código do email" required spellcheck="false">
@@ -148,7 +150,6 @@
                         <button type="button" class="dash-login-forgot" id="clinicResetBack">Voltar ao início de sessão</button>
                     </p>
                 </form>
-                <p class="dash-login-note">Authorized personnel only. All access is logged.</p>
             </div>
         </section>
 
@@ -160,59 +161,55 @@
                     <span class="admin-sidebar-brand-name">LON Clinic</span>
                     <span class="admin-sidebar-brand-sub" id="clinicSidebarUser">Portal</span>
                 </div>
-                <nav class="admin-sidebar-nav">
-                    <button type="button" class="admin-nav-item is-active" data-clinic-panel="consultations">Consultations</button>
-                    <button type="button" class="admin-nav-item" data-clinic-panel="availabilities">Availabilities</button>
-                    <button type="button" class="admin-nav-item" data-clinic-panel="bookings">Bookings</button>
-                    <button type="button" class="admin-nav-item" data-clinic-panel="patients">Patients</button>
-                    <button type="button" class="admin-nav-item" data-clinic-panel="resources">Resources</button>
-                    <button type="button" class="admin-nav-item" data-clinic-panel="management">Management</button>
-                    <button type="button" class="admin-nav-item" data-clinic-panel="profile">Profile</button>
+                <nav class="admin-sidebar-nav" aria-label="Secções do portal">
+                    <button type="button" class="admin-nav-item is-active" data-clinic-panel="profile">Perfil</button>
+                    <button type="button" class="admin-nav-item" data-clinic-panel="availabilities">Disponibilidades</button>
+                    <button type="button" class="admin-nav-item" data-clinic-panel="bookings">Marcações</button>
                     <a class="admin-nav-item admin-nav-link" id="clinicAdminLink" href="/admin" hidden>Admin</a>
                 </nav>
                 <div class="admin-sidebar-foot">
-                    <button type="button" class="btn btn-outline btn-sm" id="clinicLogoutBtn">Sign out</button>
+                    <button type="button" class="btn btn-outline btn-sm" id="clinicLogoutBtn">Sair</button>
                 </div>
             </aside>
 
             <div class="admin-main">
                 <div class="dash-header">
                     <div class="dash-header-left">
-                        <button type="button" class="admin-sidebar-toggle btn btn-outline btn-sm" id="clinicSidebarToggle" aria-label="Open menu">Menu</button>
-                        <h1 class="dash-greeting" id="clinicGreeting">Consultations</h1>
-                        <p class="dash-email" id="clinicUserInfo">Consultations assigned to you</p>
+                        <button type="button" class="admin-sidebar-toggle btn btn-outline btn-sm" id="clinicSidebarToggle" aria-label="Abrir menu">Menu</button>
+                        <h1 class="dash-greeting" id="clinicGreeting">Perfil</h1>
+                        <p class="dash-email" id="clinicUserInfo">Dados base da sua ficha</p>
                     </div>
                     <div class="dash-header-right">
-                        <button class="btn btn-primary" id="clinicSaveScheduleBtn" style="display:none;">Save availability</button>
-                        <button class="btn btn-primary" id="refreshBtn">
+                        <button class="btn btn-primary" id="clinicSaveScheduleBtn" style="display:none;">Guardar disponibilidade</button>
+                        <button class="btn btn-primary" id="refreshBtn" style="display:none;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85 3.7L22 10M3.51 15a9 9 0 0114.85-3.7L22 14"/></svg>
-                            Refresh
+                            Atualizar
                         </button>
                     </div>
                 </div>
 
-                <div class="admin-panel is-active" id="clinicPanelConsultations" data-clinic-panel-content="consultations">
+                <div class="admin-panel" id="clinicPanelConsultations" data-clinic-panel-content="bookings" hidden>
                     <div class="dash-section">
                         <div class="dash-section-header">
-                            <h2 class="dash-section-title">Your consultations</h2>
-                            <p class="dash-section-subtitle">Only consultations scheduled with you. Click a row to add clinical notes</p>
+                            <h2 class="dash-section-title">As suas marcações</h2>
+                            <p class="dash-section-subtitle">Consultas atribuídas a si. Abra uma linha para ver detalhes e notas clínicas.</p>
                         </div>
                         <div class="dash-table-wrap" id="clinicTableWrap">
                             <div class="dash-empty" id="clinicEmpty">
                                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                <p>No consultations assigned to you.</p>
+                                <p>Ainda não tem marcações atribuídas.</p>
                             </div>
                             <table class="dash-table" id="clinicTable" style="display:none;">
                                 <thead>
                                     <tr>
-                                        <th>Reference</th>
-                                        <th>Service</th>
-                                        <th>Date & Time</th>
-                                        <th>Patient</th>
+                                        <th>Referência</th>
+                                        <th>Serviço</th>
+                                        <th>Data e hora</th>
+                                        <th>Paciente</th>
                                         <th>Email</th>
-                                        <th>Status</th>
-                                        <th>Clinical Notes</th>
-                                        <th>Actions</th>
+                                        <th>Estado</th>
+                                        <th>Notas</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody id="clinicTableBody">
@@ -226,44 +223,44 @@
                 <div class="admin-panel" id="clinicPanelAvailabilities" data-clinic-panel-content="availabilities" hidden>
                     <div class="dash-section">
                         <div class="dash-section-header">
-                            <h2 class="dash-section-title">Add availability</h2>
-                            <p class="dash-section-subtitle">One line per block of hours. Repeat a weekday across a whole month, or add a single date. Split days are fine — add a second line for the same day.</p>
+                            <h2 class="dash-section-title">Adicionar disponibilidade</h2>
+                            <p class="dash-section-subtitle">Uma linha por bloco de horas. Repita um dia da semana ao longo do mês, ou acrescente uma data. No mesmo dia pode haver mais do que um bloco.</p>
                         </div>
-                        <div class="clinic-avail-modes" role="group" aria-label="How to add">
-                            <button type="button" class="btn btn-outline btn-sm is-active" data-clinic-avail-mode="weekday">By weekday</button>
-                            <button type="button" class="btn btn-outline btn-sm" data-clinic-avail-mode="date">By date</button>
+                        <div class="clinic-avail-modes" role="group" aria-label="Como adicionar">
+                            <button type="button" class="btn btn-outline btn-sm is-active" data-clinic-avail-mode="weekday">Por dia da semana</button>
+                            <button type="button" class="btn btn-outline btn-sm" data-clinic-avail-mode="date">Por data</button>
                         </div>
                         <form class="clinic-avail-add" id="clinicAvailAddForm" novalidate>
                             <div class="admin-time-group clinic-avail-add-field" data-clinic-avail-field="weekday">
-                                <label for="clinicAvailWeekday">Weekday</label>
+                                <label for="clinicAvailWeekday">Dia da semana</label>
                                 <select id="clinicAvailWeekday" class="admin-select">
-                                    <option value="monday">Mondays</option>
-                                    <option value="tuesday">Tuesdays</option>
-                                    <option value="wednesday">Wednesdays</option>
-                                    <option value="thursday">Thursdays</option>
-                                    <option value="friday">Fridays</option>
-                                    <option value="saturday">Saturdays</option>
-                                    <option value="sunday">Sundays</option>
+                                    <option value="monday">Segundas</option>
+                                    <option value="tuesday">Terças</option>
+                                    <option value="wednesday">Quartas</option>
+                                    <option value="thursday">Quintas</option>
+                                    <option value="friday">Sextas</option>
+                                    <option value="saturday">Sábados</option>
+                                    <option value="sunday">Domingos</option>
                                 </select>
                             </div>
                             <div class="admin-time-group clinic-avail-add-field" data-clinic-avail-field="weekday">
-                                <label for="clinicAvailMonth">Month</label>
+                                <label for="clinicAvailMonth">Mês</label>
                                 <select id="clinicAvailMonth" class="admin-select"></select>
                             </div>
                             <div class="admin-time-group clinic-avail-add-field" data-clinic-avail-field="date" hidden>
-                                <label for="clinicAvailDate">Date</label>
+                                <label for="clinicAvailDate">Data</label>
                                 <input type="date" id="clinicAvailDate" class="admin-time-input clinic-avail-date-input">
                             </div>
                             <div class="admin-time-group clinic-avail-add-field">
-                                <label for="clinicAvailStart">Start</label>
+                                <label for="clinicAvailStart">Início</label>
                                 <input type="time" id="clinicAvailStart" class="admin-time-input" value="10:00" step="1800">
                             </div>
                             <div class="admin-time-group clinic-avail-add-field">
-                                <label for="clinicAvailEnd">End</label>
+                                <label for="clinicAvailEnd">Fim</label>
                                 <input type="time" id="clinicAvailEnd" class="admin-time-input" value="12:00" step="1800">
                             </div>
                             <div class="clinic-avail-add-submit">
-                                <button type="submit" class="btn btn-primary btn-sm" id="clinicAvailAddBtn">Add</button>
+                                <button type="submit" class="btn btn-primary btn-sm" id="clinicAvailAddBtn">Adicionar</button>
                             </div>
                         </form>
                         <p class="clinic-avail-add-preview" id="clinicAvailAddPreview"></p>
@@ -272,16 +269,16 @@
                     </div>
                     <div class="dash-section">
                         <div class="dash-section-header">
-                            <h2 class="dash-section-title">Your availability</h2>
-                            <p class="dash-section-subtitle">Upcoming blocks, one per line. Change the hours inline or remove a line — it saves automatically.</p>
+                            <h2 class="dash-section-title">A sua disponibilidade</h2>
+                            <p class="dash-section-subtitle">Blocos seguintes, um por linha. Altere as horas ou apague uma linha — grava automaticamente.</p>
                         </div>
                         <div class="clinic-avail-rows" id="clinicAvailRows">
-                            <p class="clinic-avail-rows-empty">Loading…</p>
+                            <p class="clinic-avail-rows-empty">A carregar…</p>
                         </div>
                     </div>
                 </div>
 
-                <div class="admin-panel" id="clinicPanelBookings" data-clinic-panel-content="bookings" hidden>
+                <div class="admin-panel" id="clinicPanelBookings" hidden>
                     <div class="dash-section">
                         <div class="dash-section-header">
                             <h2 class="dash-section-title">Upcoming bookings</h2>
@@ -455,11 +452,11 @@
                     </div>
                 </div>
 
-                <div class="admin-panel" id="clinicPanelProfile" data-clinic-panel-content="profile" hidden>
+                <div class="admin-panel is-active" id="clinicPanelProfile" data-clinic-panel-content="profile">
                     <div class="dash-section">
                         <div class="dash-section-header">
                             <h2 class="dash-section-title">O seu perfil</h2>
-                            <p class="dash-section-subtitle">Foto, nome e email desta conta — só visíveis para si</p>
+                            <p class="dash-section-subtitle">Nome, email e foto — só os dados base desta conta</p>
                         </div>
                         <div class="clinic-photo-row">
                             <label class="clinic-photo-frame" for="clinicProfilePhotoInput">
@@ -535,7 +532,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="/lon-nav.js"></script>
-    <script src="/clinic-portal/clinic.js?v=10set-avail"></script>
+    <script src="/clinic-portal/clinic.js?v=20260913c"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">
