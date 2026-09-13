@@ -399,6 +399,9 @@ app.use(
         contentSecurityPolicy: {
             directives: {
                 defaultSrc: ["'self'"],
+                // strict-dynamic ignores host allowlists. Cloudflare's email-decode.min.js
+                // has no nonce, so it cannot run — we opt pages out of email obfuscation
+                // in disableCloudflareEmailObfuscation instead of loosening CSP.
                 scriptSrc: [
                     "'self'",
                     (req, res) => `'nonce-${res.locals.cspNonce}'`,
@@ -502,6 +505,29 @@ function applyCspNonce(html, nonce) {
         .replace(/<style\b(?![^>]*\bnonce=)/gi, `<style nonce="${n}"`);
 }
 
+/**
+ * Cloudflare Scrape Shield Email Address Obfuscation rewrites mailto links and
+ * addresses to /cdn-cgi/l/email-protection + [email protected] / data-cfemail.
+ * Helmet CSP uses strict-dynamic + nonces, so the injected
+ * /cdn-cgi/.../email-decode.min.js never runs and the addresses stay unreadable.
+ * Official origin opt-out for that rewriter only — not Bot Fight, WAF, or HSTS.
+ * https://developers.cloudflare.com/waf/tools/scrape-shield/email-address-obfuscation/
+ */
+function disableCloudflareEmailObfuscation(html) {
+    if (!html || typeof html !== 'string') return html;
+    if (html.includes('<!--email_off-->')) return html;
+    const off = '<!--email_off-->';
+    const on = '<!--email_on-->';
+    const open = html.match(/<html\b[^>]*>/i);
+    const closeAt = html.toLowerCase().lastIndexOf('</html>');
+    if (open && closeAt !== -1 && closeAt >= open.index + open[0].length) {
+        return html.slice(0, open.index + open[0].length) + off
+            + html.slice(open.index + open[0].length, closeAt)
+            + on + html.slice(closeAt);
+    }
+    return off + html + on;
+}
+
 function injectPublicHtml(html, req, nonce) {
     let out = html;
     if (isClinicalTrackingSurface(req)) {
@@ -509,7 +535,9 @@ function injectPublicHtml(html, req, nonce) {
     } else {
         out = ensureGtagConsentDenied(out);
     }
-    return applyCspNonce(injectAnalyticsHtml(seo.applyHtmlSeo(out, req), req), nonce);
+    return disableCloudflareEmailObfuscation(
+        applyCspNonce(injectAnalyticsHtml(seo.applyHtmlSeo(out, req), req), nonce)
+    );
 }
 
 function sendPublicHtml(res, req, html, origSend) {
