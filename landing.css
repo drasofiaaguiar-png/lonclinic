@@ -3765,6 +3765,18 @@ body.lon-home .dr-hero {
     pointer-events: none;
 }
 
+@media (min-width: 940px) {
+    .lon-home .dr-hero-bg {
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 40% 28%;
+        transform: scale(1.62);
+        transform-origin: 0% 70%;
+    }
+}
+
 .lon-home .dr-hero-scrim {
     position: absolute;
     inset: 0;
