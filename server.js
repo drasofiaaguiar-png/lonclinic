@@ -2157,6 +2157,43 @@ function isValidStaffEmail(raw) {
     return email.length >= 5 && email.length <= 320 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+/** Gmail ignores dots and plus-tags in the local part; treat those as the same mailbox. */
+function canonicalizeStaffEmail(raw) {
+    const email = normalizeStaffEmail(raw);
+    const at = email.lastIndexOf('@');
+    if (at < 1) return email;
+    let local = email.slice(0, at);
+    let domain = email.slice(at + 1);
+    if (domain === 'googlemail.com') domain = 'gmail.com';
+    if (domain === 'gmail.com') {
+        local = local.split('+')[0].replace(/\./g, '');
+    }
+    return local && domain ? `${local}@${domain}` : email;
+}
+
+function staffEmailsMatch(a, b) {
+    const left = canonicalizeStaffEmail(a);
+    const right = canonicalizeStaffEmail(b);
+    return Boolean(left && right && left.includes('@') && left === right);
+}
+
+const KNOWN_PROFESSIONAL_EMAILS = [
+    {
+        email: 'ritaaguiarfonseca@gmail.com',
+        names: ['Rita Aguiar', 'Rita Aguiar Fonseca'],
+        usernames: ['rita.aguiar', 'ritaaguiar', 'rita.aguiar.fonseca', 'ritaaguiarfonseca']
+    }
+];
+
+function professionalMatchesKnownPerson(pro, known, extraLabels) {
+    if (!pro || !known) return false;
+    const u = normalizeProfessionalUsername(pro.username);
+    if ((known.usernames || []).some((name) => normalizeProfessionalUsername(name) === u)) return true;
+    if ((known.names || []).some((name) => usernameMatchesPersonName(pro.username, name))) return true;
+    const labels = [pro.displayName, ...(extraLabels || [])].filter(Boolean);
+    return labels.some((label) => (known.names || []).some((name) => personNamesMatch(label, name)));
+}
+
 function bolsaPayloadObject(app) {
     if (!app) return {};
     const raw = app.payload;
@@ -2280,6 +2317,27 @@ async function listProfessionalsInternal() {
     return [...professionalsStore];
 }
 
+async function findProfessionalByKnownEmail(email) {
+    const e = canonicalizeStaffEmail(email);
+    if (!e) return null;
+    const known = KNOWN_PROFESSIONAL_EMAILS.find((row) => canonicalizeStaffEmail(row.email) === e);
+    if (!known) return null;
+    const list = await listProfessionalsInternal();
+    let profiles = [];
+    try {
+        profiles = await listStaffProfilesInternal();
+    } catch (_) {
+        profiles = [];
+    }
+    const profileByUser = new Map(
+        (profiles || []).map((row) => [normalizeProfessionalUsername(row.username), row])
+    );
+    return (list || []).find((pro) => {
+        const profile = profileByUser.get(normalizeProfessionalUsername(pro && pro.username));
+        return professionalMatchesKnownPerson(pro, known, [profile && profile.fullName]);
+    }) || null;
+}
+
 async function findProfessionalByUsernameInternal(username) {
     const u = String(username || '').trim();
     if (!u) return null;
@@ -2289,12 +2347,26 @@ async function findProfessionalByUsernameInternal(username) {
 }
 
 async function findProfessionalByEmailInternal(email) {
-    const e = String(email || '').trim().toLowerCase();
+    const e = normalizeStaffEmail(email);
     if (!e || !e.includes('@')) return null;
-    if (usePersistentDb) return db.findProfessionalByEmail(e);
-    const direct = professionalsStore.find((p) => String(p.email || '').trim().toLowerCase() === e);
-    if (direct) return direct;
-    return professionalsStore.find((p) => String(p.loginEmailSentTo || '').trim().toLowerCase() === e) || null;
+    const variants = Array.from(new Set([e, canonicalizeStaffEmail(e)].filter(Boolean)));
+    for (const candidate of variants) {
+        if (usePersistentDb) {
+            const row = await db.findProfessionalByEmail(candidate);
+            if (row) return row;
+        } else {
+            const direct = professionalsStore.find((p) => normalizeStaffEmail(p.email) === candidate);
+            if (direct) return direct;
+            const sent = professionalsStore.find((p) => normalizeStaffEmail(p.loginEmailSentTo) === candidate);
+            if (sent) return sent;
+        }
+    }
+    const list = await listProfessionalsInternal();
+    const scanned = (list || []).find((p) => p && (
+        staffEmailsMatch(p.email, e) || staffEmailsMatch(p.loginEmailSentTo, e)
+    ));
+    if (scanned) return scanned;
+    return findProfessionalByKnownEmail(e);
 }
 
 async function findProfessionalForClinicLogin(identifier) {
@@ -3313,23 +3385,6 @@ async function fixKnownEmailTypos() {
     }
 }
 
-const KNOWN_PROFESSIONAL_EMAILS = [
-    {
-        email: 'ritaaguiarfonseca@gmail.com',
-        names: ['Rita Aguiar', 'Rita Aguiar Fonseca'],
-        usernames: ['rita.aguiar', 'ritaaguiar', 'rita.aguiar.fonseca', 'ritaaguiarfonseca']
-    }
-];
-
-function professionalMatchesKnownPerson(pro, known, extraLabels) {
-    if (!pro || !known) return false;
-    const u = normalizeProfessionalUsername(pro.username);
-    if ((known.usernames || []).some((name) => normalizeProfessionalUsername(name) === u)) return true;
-    if ((known.names || []).some((name) => usernameMatchesPersonName(pro.username, name))) return true;
-    const labels = [pro.displayName, ...(extraLabels || [])].filter(Boolean);
-    return labels.some((label) => (known.names || []).some((name) => personNamesMatch(label, name)));
-}
-
 async function assignKnownProfessionalEmails() {
     try {
         const list = await listProfessionalsInternal();
@@ -3356,7 +3411,7 @@ async function assignKnownProfessionalEmails() {
                 console.log(`   ⚠️  Known email ${email} already belongs to ${owner.username}`);
                 continue;
             }
-            if (normalizeStaffEmail(match.email) === email) continue;
+            if (staffEmailsMatch(match.email, email)) continue;
             if (isValidStaffEmail(match.email)) continue;
             const updated = await patchProfessionalInternal(match, { email });
             try { await attachPersonFacets(updated || match); } catch (_) { /* ignore */ }
@@ -12607,6 +12662,12 @@ async function resolveActiveProfessionalForOtp(email) {
     const direct = await findProfessionalByEmailInternal(e);
     const pro = direct || await findProfessionalForClinicLogin(e);
     if (!pro || pro.active === false) return null;
+    if (!isValidStaffEmail(pro.email) && isValidStaffEmail(e)) {
+        try {
+            const patched = await patchProfessionalInternal(pro, { email: e });
+            if (patched) Object.assign(pro, patched);
+        } catch (_) { /* login still continues */ }
+    }
     return pro;
 }
 
@@ -12615,40 +12676,50 @@ app.post('/api/clinic/otp/request', rateLimitStaffOtp, async (req, res) => {
     if (!isValidStaffEmail(email)) {
         return res.status(400).json({ error: 'Indique um email válido.' });
     }
+    if (!isEmailConfigured) {
+        console.error('POST /api/clinic/otp/request: email transport not configured');
+        return res.status(500).json({ error: 'Não foi possível enviar o código.' });
+    }
     try {
         const pro = await resolveActiveProfessionalForOtp(email);
-        if (pro) {
-            const code = String(crypto.randomInt(0, 1000000)).padStart(6, '0');
-            const codeHash = hashStaffOtp(email, code);
-            const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
-            if (usePersistentDb) {
-                await db.insertStaffOtp({
-                    id: crypto.randomUUID(),
-                    email,
-                    professionalId: pro.id || null,
-                    codeHash,
-                    expiresAt
-                });
-            } else {
-                staffOtpMemory.set(email, {
-                    codeHash,
-                    professionalId: pro.id || null,
-                    username: pro.username,
-                    displayName: pro.displayName || pro.username,
-                    expiresAt: expiresAt.getTime(),
-                    attempts: 0
-                });
-            }
-            if (isEmailConfigured) {
-                await deliverEmail({
-                    from: EMAIL_FROM,
-                    to: email,
-                    subject: 'Código de acesso — Portal dos profissionais — Lon Clinic',
-                    text: `O seu código de acesso ao portal dos profissionais é ${code}. Expira em 10 minutos.\n\nAbra ${professionalLoginPortalUrl()} e introduza o código.\n\nLon Clinic`,
-                    html: `<p>O seu código de acesso ao portal dos profissionais é <strong>${escapeHtml(code)}</strong>.</p><p>Expira em 10 minutos.</p><p>Abra <a href="${escapeHtml(professionalLoginPortalUrl())}">${escapeHtml(professionalLoginPortalUrl())}</a> e introduza o código.</p><p>Lon Clinic</p>`
-                });
-            }
+        if (!pro) {
+            console.log(`   🔕 Staff OTP not sent to ${redactPhi(email)}: no professional file has this email`);
+            return res.json({ ok: true });
         }
+        const code = String(crypto.randomInt(0, 1000000)).padStart(6, '0');
+        const codeHash = hashStaffOtp(email, code);
+        const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+        if (usePersistentDb) {
+            await db.insertStaffOtp({
+                id: crypto.randomUUID(),
+                email,
+                professionalId: pro.id || null,
+                codeHash,
+                expiresAt
+            });
+        } else {
+            staffOtpMemory.set(email, {
+                codeHash,
+                professionalId: pro.id || null,
+                username: pro.username,
+                displayName: pro.displayName || pro.username,
+                expiresAt: expiresAt.getTime(),
+                attempts: 0
+            });
+        }
+        try {
+            await deliverEmail({
+                from: EMAIL_FROM,
+                to: email,
+                subject: 'Código de acesso — Portal dos profissionais — Lon Clinic',
+                text: `O seu código de acesso ao portal dos profissionais é ${code}. Expira em 10 minutos.\n\nAbra ${professionalLoginPortalUrl()} e introduza o código.\n\nLon Clinic`,
+                html: `<p>O seu código de acesso ao portal dos profissionais é <strong>${escapeHtml(code)}</strong>.</p><p>Expira em 10 minutos.</p><p>Abra <a href="${escapeHtml(professionalLoginPortalUrl())}">${escapeHtml(professionalLoginPortalUrl())}</a> e introduza o código.</p><p>Lon Clinic</p>`
+            });
+        } catch (mailErr) {
+            console.error(`   ⚠️  Staff OTP email to ${redactPhi(email)} failed: ${mailErr.message}`);
+            return res.status(500).json({ error: 'Não foi possível enviar o código.' });
+        }
+        console.log(`   ✉️  Staff OTP sent to ${redactPhi(email)} (${pro.username})`);
         return res.json({ ok: true });
     } catch (err) {
         console.error('POST /api/clinic/otp/request:', err.message);
