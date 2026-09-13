@@ -3532,15 +3532,26 @@ body.lon-landing #como-funciona .lon-how-step-num {
 /* Homepage editorial layout — scoped so other landing.css pages stay intact */
 .lon-home {
     --lon-paper: #ffffff;
-    --lon-ink: #142028;
-    --lon-muted: #5a6b75;
-    --lon-forest: #1e4d6b;
-    --lon-sage: #7da4bc;
-    --lon-sage-deep: #2e6f93;
-    --lon-line: rgba(30, 77, 107, 0.12);
+    --lon-ink: #1a2420;
+    --lon-muted: #5a675e;
+    /* Authority navy — hero + header only */
+    --lon-navy: #1e4d6b;
+    --lon-navy-deep: #163a54;
+    --lon-navy-mist: #9ec0d4;
+    /* Body: restrained sage / muted teal */
+    --lon-forest: #5a7a64;
+    --lon-sage: #7d9a88;
+    --lon-sage-deep: #4a6b5c;
+    --lon-sage-panel: #3a5246;
+    --lon-teal: #4f7a72;
+    --lon-mist: #e7eee8;
+    --lon-line: rgba(90, 122, 100, 0.16);
     --lon-cream: #f3f7fa;
-    --lon-accent: #1e4d6b;
-    --lon-accent-dark: #163a54;
+    /* Secondary accent — terracotta */
+    --lon-terra: #c47a5a;
+    --lon-terra-dark: #a86246;
+    --lon-accent: #c47a5a;
+    --lon-accent-dark: #a86246;
     --shadow-soft: none;
     --shadow-lift: none;
     background: #fff;
@@ -3548,7 +3559,7 @@ body.lon-landing #como-funciona .lon-how-step-num {
 }
 
 .lon-home ::selection {
-    background: rgba(30, 77, 107, 0.18);
+    background: rgba(90, 122, 100, 0.18);
 }
 
 .lon-home .serif-accent {
@@ -3571,10 +3582,17 @@ body.lon-landing #como-funciona .lon-how-step-num {
 
 .lon-home .lon-btn-primary,
 .lon-home .lon-btn-dark {
-    background: var(--lon-forest);
-    border-color: var(--lon-forest);
+    background: var(--lon-terra);
+    border-color: var(--lon-terra);
     color: #fff;
     box-shadow: none;
+}
+
+.lon-home .lon-btn-primary:hover,
+.lon-home .lon-btn-dark:hover {
+    background: var(--lon-terra-dark);
+    border-color: var(--lon-terra-dark);
+    color: #fff;
 }
 
 .lon-home .lon-btn-arrow {
@@ -3616,7 +3634,7 @@ body.lon-home .lon-nav:not(.is-scrolled) .lon-btn-ghost {
 }
 
 body.lon-home .lon-nav:not(.is-scrolled) .lon-logo-gevity {
-    color: #9ec0d4;
+    color: var(--lon-navy-mist);
 }
 
 body.lon-home .lon-nav:not(.is-scrolled) .lon-nav-links a:hover {
@@ -3682,7 +3700,7 @@ body.lon-home .lon-nav:not(.is-scrolled) .lon-nav-toggle span {
 }
 
 .lon-home .lon-logo-gevity {
-    color: var(--lon-sage-deep);
+    color: var(--lon-navy);
 }
 
 .lon-home .lon-logo-clinic {
@@ -3720,9 +3738,15 @@ body.lon-home .lon-nav:not(.is-scrolled) .lon-nav-toggle span {
 }
 
 .lon-home .lon-nav.is-scrolled .lon-btn-primary {
-    background: var(--lon-forest);
+    background: var(--lon-navy);
     color: var(--lon-cream);
-    border-color: var(--lon-forest);
+    border-color: var(--lon-navy);
+}
+
+.lon-home .lon-nav.is-scrolled .lon-btn-primary:hover {
+    background: var(--lon-navy-deep);
+    border-color: var(--lon-navy-deep);
+    color: var(--lon-cream);
 }
 
 .lon-home .lon-nav .lon-btn-ghost {
@@ -3834,8 +3858,8 @@ body.lon-home .dr-hero {
     width: 6px;
     height: 6px;
     border-radius: 999px;
-    background: #9ec0d4;
-    box-shadow: 0 0 0 4px rgba(197, 214, 184, 0.18);
+    background: var(--lon-navy-mist);
+    box-shadow: 0 0 0 4px rgba(158, 192, 212, 0.18);
 }
 
 .lon-home .dr-hero h1 {
@@ -3868,12 +3892,12 @@ body.lon-home .dr-hero {
 
 .lon-home .dr-hero .lon-btn-dark {
     background: var(--lon-cream);
-    color: var(--lon-forest);
+    color: var(--lon-navy);
 }
 
 .lon-home .dr-hero .lon-btn-dark:hover {
     background: #fff;
-    color: var(--lon-forest);
+    color: var(--lon-navy-deep);
 }
 
 .lon-home .dr-hero-service {
@@ -3943,7 +3967,7 @@ body.lon-home .dr-hero {
 
 .lon-home .dr-live-slots .lon-live-slot:hover {
     background: #f7f3ea;
-    color: var(--lon-forest);
+    color: var(--lon-navy);
 }
 
 .lon-home .lon-trust-strip {
@@ -4026,7 +4050,7 @@ body.lon-home .dr-hero {
     padding: 14px 16px;
     border-radius: 1rem;
     background: rgba(247, 243, 234, 0.92);
-    border: 1px solid rgba(30, 77, 107, 0.08);
+    border: 1px solid rgba(90, 122, 100, 0.12);
     box-shadow: none;
     backdrop-filter: blur(12px);
 }
@@ -4038,7 +4062,7 @@ body.lon-home .dr-hero {
     width: 40px;
     height: 40px;
     border-radius: 999px;
-    background: #e8f1f6;
+    background: var(--lon-mist);
     color: var(--lon-sage-deep);
 }
 
@@ -4106,6 +4130,7 @@ body.lon-home .dr-hero {
 .lon-home .lon-text-link {
     text-underline-offset: 5px;
     font-weight: 600;
+    color: var(--lon-teal);
 }
 
 /* ── Section rhythm ── */
@@ -4243,7 +4268,7 @@ body.lon-home .dr-hero {
 }
 
 .lon-home .lon-need-offer-extra a {
-    color: var(--lon-forest);
+    color: var(--lon-teal);
     font-weight: 600;
     text-decoration: none;
 }
@@ -4260,15 +4285,15 @@ body.lon-home .dr-hero {
     padding: 18px 14px 0;
     border-radius: 0.85rem;
     background:
-        linear-gradient(118deg, rgba(14, 42, 63, 0.22) 0%, transparent 42%),
-        linear-gradient(165deg, #163a54 0%, #102838 48%, var(--lon-forest) 100%);
+        linear-gradient(118deg, rgba(58, 82, 70, 0.22) 0%, transparent 42%),
+        linear-gradient(165deg, #2d443a 0%, #24362e 48%, var(--lon-sage-panel) 100%);
     border: 0;
     color: #fff;
 }
 
 .lon-home .lon-need-block--urgent .lon-need-icon {
     margin-bottom: 10px;
-    color: #d7e8f2;
+    color: #d5e4d8;
 }
 
 .lon-home .lon-need-block--urgent .lon-need-icon svg {
@@ -4285,7 +4310,7 @@ body.lon-home .dr-hero {
 }
 
 .lon-home .lon-need-block--urgent .lon-need-desc {
-    color: rgba(223, 236, 244, 0.78);
+    color: rgba(232, 240, 232, 0.78);
     font-size: 0.94rem;
     line-height: 1.4;
 }
@@ -4298,7 +4323,7 @@ body.lon-home .dr-hero {
     aspect-ratio: auto;
     min-height: 16.5rem;
     border-radius: 0.7rem 0.7rem 0 0;
-    background: #0c2233;
+    background: #24362e;
     color: var(--lon-ink);
     border: 0;
 }
@@ -4313,7 +4338,7 @@ body.lon-home .dr-hero {
 .lon-home .lon-need-block--urgent .lon-need-offer-body {
     flex: 0 0 auto;
     padding: 12px 14px 14px;
-    background: #f4f8fb;
+    background: #f6f3ee;
 }
 
 .lon-home .lon-need-block--urgent .lon-need-offer h4 {
@@ -4323,19 +4348,19 @@ body.lon-home .dr-hero {
 }
 
 .lon-home .lon-need-block--urgent .lon-need-offer-price {
-    color: #2e6f93;
+    color: var(--lon-sage-deep);
     font-weight: 600;
 }
 
 .lon-home .lon-need-block--urgent .lon-need-offer .lon-btn-dark {
     margin-top: 6px;
-    background: var(--lon-forest);
-    border-color: var(--lon-forest);
+    background: var(--lon-terra);
+    border-color: var(--lon-terra);
 }
 
 .lon-home .lon-need-block--urgent .lon-need-offer .lon-btn-dark:hover {
-    background: var(--lon-accent-dark);
-    border-color: var(--lon-accent-dark);
+    background: var(--lon-terra-dark);
+    border-color: var(--lon-terra-dark);
 }
 
 @media (min-width: 640px) {
@@ -4435,21 +4460,21 @@ body.lon-home .dr-hero {
     border-radius: 1.35rem;
     overflow: hidden;
     border: 0;
-    box-shadow: 0 18px 40px rgba(20, 40, 56, 0.16);
-    background: #163a54;
+    box-shadow: 0 18px 40px rgba(36, 54, 46, 0.16);
+    background: #2d443a;
     padding: 0;
 }
 
 .lon-home .lon-service-image-wrap::before {
     display: block;
-    background: linear-gradient(180deg, rgba(14, 28, 40, 0.18) 0%, rgba(14, 28, 40, 0) 42%);
+    background: linear-gradient(180deg, rgba(36, 54, 46, 0.18) 0%, rgba(36, 54, 46, 0) 42%);
     mix-blend-mode: normal;
 }
 
 .lon-home .lon-service-image-wrap::after {
     display: block;
     height: 74%;
-    background: linear-gradient(0deg, rgba(12, 26, 38, 0.86) 0%, rgba(12, 26, 38, 0.32) 48%, rgba(12, 26, 38, 0) 100%);
+    background: linear-gradient(0deg, rgba(36, 54, 46, 0.86) 0%, rgba(36, 54, 46, 0.32) 48%, rgba(36, 54, 46, 0) 100%);
 }
 
 .lon-home .lon-service-image-wrap img {
@@ -4534,7 +4559,7 @@ body.lon-home .dr-hero {
 }
 
 .lon-home .lon-service-glass .lon-btn-soft:hover {
-    background: var(--lon-forest);
+    background: var(--lon-terra);
     color: #fff;
 }
 
@@ -4545,7 +4570,7 @@ body.lon-home .dr-hero {
 .lon-home .lon-diff-grid li {
     border-radius: 1.15rem;
     background: #fff;
-    border: 1px solid rgba(30, 77, 107, 0.08);
+    border: 1px solid rgba(90, 122, 100, 0.12);
     box-shadow: none;
 }
 
@@ -4575,7 +4600,7 @@ body.lon-home .dr-hero {
 
 .lon-home #como-funciona .lon-how-shell {
     border-radius: 2rem;
-    background: var(--lon-forest);
+    background: var(--lon-sage-panel);
     color: #f4f7f2;
     padding: clamp(40px, 6vw, 80px) clamp(24px, 5vw, 64px);
     box-shadow: none;
@@ -4614,7 +4639,7 @@ body.lon-home .dr-hero {
 }
 
 .lon-home #como-funciona .serif-accent {
-    color: #9ec0d4;
+    color: #c5d6c8;
 }
 
 .lon-home #como-funciona .lon-how-steps {
@@ -4674,7 +4699,7 @@ body.lon-home .dr-hero {
     transform: translate(50%, -50%);
     font-size: 1.15rem;
     line-height: 1;
-    color: #9ec0d4;
+    color: #c5d6c8;
     pointer-events: none;
 }
 
@@ -4687,20 +4712,20 @@ body.lon-home #como-funciona .lon-how-step-num {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: rgba(158, 192, 212, 0.18);
-    border: 1px solid rgba(158, 192, 212, 0.42);
+    background: rgba(197, 214, 200, 0.16);
+    border: 1px solid rgba(197, 214, 200, 0.38);
     box-shadow: none;
     backdrop-filter: none;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.08em;
-    color: #9ec0d4;
+    color: #c5d6c8;
 }
 
 .lon-home #como-funciona .lon-section-cta .lon-btn {
     background: #f4f7f2;
-    color: var(--lon-forest);
+    color: var(--lon-sage-panel);
     box-shadow: none;
 }
 
@@ -4851,13 +4876,13 @@ body.lon-home #como-funciona .lon-how-step-num {
 .lon-home .lon-home-faq-list .faq-item {
     background: transparent;
     border: 0;
-    border-bottom: 1px solid rgba(30, 77, 107, 0.14);
+    border-bottom: 1px solid rgba(90, 122, 100, 0.16);
     border-radius: 0;
     margin: 0;
 }
 
 .lon-home .lon-home-faq-list .faq-item:first-child {
-    border-top: 1px solid rgba(30, 77, 107, 0.14);
+    border-top: 1px solid rgba(90, 122, 100, 0.16);
 }
 
 .lon-home .lon-home-faq-list summary {
@@ -4881,8 +4906,8 @@ body.lon-home #como-funciona .lon-how-step-num {
     align-items: center;
     background:
         url("/image/guide/blog/sinais-de-burnout-no-trabalho-remoto-destaque.webp") 58% 28% / cover no-repeat,
-        radial-gradient(ellipse at 18% 50%, rgba(46, 111, 147, 0.55) 0%, transparent 58%),
-        linear-gradient(135deg, #163a54 0%, #1e4d6b 48%, #2e6f93 100%);
+        radial-gradient(ellipse at 18% 50%, rgba(79, 122, 114, 0.48) 0%, transparent 58%),
+        linear-gradient(135deg, #2d443a 0%, #3a5246 48%, #4f7a72 100%);
 }
 
 .lon-home .dr-burnout-promo-bg {
@@ -4902,8 +4927,8 @@ body.lon-home #como-funciona .lon-how-step-num {
     inset: 0;
     z-index: 1;
     background:
-        linear-gradient(105deg, rgba(16, 36, 52, 0.28) 0%, rgba(22, 52, 72, 0.12) 48%, rgba(16, 36, 52, 0.06) 100%),
-        linear-gradient(180deg, rgba(16, 36, 52, 0.08) 0%, rgba(16, 36, 52, 0.18) 100%);
+        linear-gradient(105deg, rgba(36, 54, 46, 0.28) 0%, rgba(58, 82, 70, 0.12) 48%, rgba(36, 54, 46, 0.06) 100%),
+        linear-gradient(180deg, rgba(36, 54, 46, 0.08) 0%, rgba(36, 54, 46, 0.18) 100%);
 }
 
 .lon-home .dr-burnout-promo-inner {
@@ -4921,13 +4946,13 @@ body.lon-home #como-funciona .lon-how-step-num {
     border: 1px solid rgba(255, 255, 255, 0.38);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.4),
-        0 22px 56px rgba(10, 24, 36, 0.28);
+        0 22px 56px rgba(36, 54, 46, 0.28);
     backdrop-filter: blur(22px) saturate(1.4);
     -webkit-backdrop-filter: blur(22px) saturate(1.4);
 }
 
 .lon-home .dr-burnout-promo__eyebrow {
-    color: #c9dce8;
+    color: #d5e4d8;
 }
 
 .lon-home .dr-burnout-promo h2,
@@ -4967,12 +4992,12 @@ body.lon-home #como-funciona .lon-how-step-num {
 .lon-home .dr-burnout-promo .lon-btn-dark {
     background: #f4f7f2;
     border-color: #f4f7f2;
-    color: var(--lon-forest);
+    color: var(--lon-sage-panel);
 }
 
 .lon-home .dr-burnout-promo .lon-btn-dark:hover {
     background: #fff;
-    color: var(--lon-forest);
+    color: var(--lon-sage-panel);
 }
 
 .lon-home .dr-burnout-promo .lon-text-link {
@@ -5009,7 +5034,7 @@ body.lon-home #como-funciona .lon-how-step-num {
     display: grid;
     grid-template-columns: 1fr;
     border-radius: 2rem;
-    background: var(--lon-forest);
+    background: var(--lon-sage-panel);
     border: 0;
     box-shadow: none;
     overflow: hidden;
@@ -5024,7 +5049,7 @@ body.lon-home #como-funciona .lon-how-step-num {
     border: 0;
     border-radius: 0;
     overflow: hidden;
-    background: #1a3344 url("/image/guide/guide-group-walk.jpg") center 40% / cover no-repeat;
+    background: #2d443a url("/image/guide/guide-group-walk.jpg") center 40% / cover no-repeat;
 }
 
 .lon-home .lon-consult-cta-media img {
@@ -5091,7 +5116,7 @@ body.lon-home #como-funciona .lon-how-step-num {
 
 .lon-home .lon-consult-cta-copy .lon-btn {
     background: #f4f7f2;
-    color: var(--lon-forest);
+    color: var(--lon-sage-panel);
     box-shadow: none;
 }
 
