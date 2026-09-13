@@ -95,7 +95,7 @@
 
         /* ── Hero ── */
         { s: '.dr-badge', en: '<span class="dr-badge-dot" aria-hidden="true"></span>Your online health clinic.', pt: '<span class="dr-badge-dot" aria-hidden="true"></span>A sua clínica de saúde, online.', es: '<span class="dr-badge-dot" aria-hidden="true"></span>Su clínica de salud, online.', h: true },
-        { s: '.dr-hero-title-line:not(.dr-hero-title-line--secondary)', en: 'Healthcare that follows <em class="serif-accent">your life.</em>', pt: 'Cuidados de saúde que acompanham <em class="serif-accent">a sua vida.</em>', es: 'Cuidados de salud que acompañan <em class="serif-accent">su vida.</em>', h: true },
+        { s: '.lon-home .dr-hero-title-line', en: 'Medical, psychology and nutrition consultations and Traveller’s Health with qualified professionals and personalised follow-up, <em class="serif-accent">online.</em>', pt: 'Consultas médicas, de psicologia e nutrição e Saúde do Viajante com profissionais qualificados e acompanhamento personalizado, <em class="serif-accent">online.</em>', es: 'Consultas médicas, de psicología y nutrición y Salud del Viajero con profesionales cualificados y seguimiento personalizado, <em class="serif-accent">online.</em>', h: true },
         { s: '.dr-lead', en: 'General medicine, mental health, nutrition and travel health consultations with qualified professionals and personalised follow-up.', pt: 'Consultas de Medicina Geral, Saúde Mental, Nutrição e Saúde do Viajante com profissionais qualificados e acompanhamento personalizado.', es: 'Consultas de Medicina General, Salud Mental, Nutrición y Salud del Viajero con profesionales cualificados y seguimiento personalizado.' },
         { s: '#lonHeroBook .lon-btn-label', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
         { s: '.dr-hero-service-wrap .visually-hidden', en: 'Consultation type', pt: 'Tipo de consulta', es: 'Tipo de consulta' },
@@ -142,7 +142,7 @@
         { s: '#lon-service-burnout-sub .lon-service-extra a', en: '4 consultations/month · €54/session →', pt: '4 consultas/mês · 54€/sessão →', es: '4 consultas/mes · 54€/sesión →' },
 
         /* ── How it works ── */
-        { s: '#como-funciona .lon-kicker', en: 'Simple from the first click to the consultation', pt: 'Simples do primeiro clique à consulta', es: 'Simple desde el primer clic hasta la consulta' },
+        { s: '#como-funciona .lon-how-head .lon-kicker', en: 'Simple from the first click to the consultation', pt: 'Simples do primeiro clique à consulta', es: 'Simple desde el primer clic hasta la consulta' },
         { s: '#como-funciona-title', en: 'Taking care of your health can be <em class="serif-accent">simple.</em>', pt: 'Cuidar da sua saúde pode ser <em class="serif-accent">simples.</em>', es: 'Cuidar de su salud puede ser <em class="serif-accent">sencillo.</em>', h: true },
         { s: '.lon-how-steps li:nth-child(1) h3', en: 'Choose', pt: 'Escolha', es: 'Elija' },
         { s: '.lon-how-steps li:nth-child(1) p', en: 'Tell us what you need and choose the most suitable consultation. If you have doubts, we will help.', pt: 'Diga-nos o que precisa e escolha a consulta mais adequada. Se tiver dúvidas, nós ajudamos.', es: 'Díganos qué necesita y elija la consulta más adecuada. Si tiene dudas, le ayudamos.' },

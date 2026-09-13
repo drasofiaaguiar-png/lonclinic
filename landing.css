@@ -3786,7 +3786,7 @@ body.lon-home .dr-hero {
 
 .lon-home .dr-hero-content {
     align-self: flex-start;
-    max-width: 34rem;
+    max-width: 44rem;
     padding: calc(var(--lon-nav-h) + 36px) 4vw 20px clamp(24px, 5vw, 72px);
     text-align: left;
 }
@@ -3812,10 +3812,10 @@ body.lon-home .dr-hero {
 
 .lon-home .dr-hero h1 {
     color: #f7f3ea;
-    font-size: clamp(2.4rem, 5.2vw, 4.35rem);
-    line-height: 0.98;
-    letter-spacing: -0.05em;
-    max-width: 12ch;
+    font-size: clamp(1.45rem, 2.8vw, 2.15rem);
+    line-height: 1.22;
+    letter-spacing: -0.03em;
+    max-width: 42ch;
     font-weight: 550;
 }
 
@@ -4256,42 +4256,66 @@ body.lon-home .dr-hero {
 }
 
 .lon-home .lon-services .lon-service-grid {
-    gap: 14px;
+    gap: 16px;
 }
 
-.lon-home .lon-services .lon-service-card,
+.lon-home .lon-services .lon-service-card {
+    height: 100%;
+}
+
 .lon-home .lon-services .lon-service-card .lon-service-image-wrap {
-    min-height: 0;
-    height: auto;
+    min-height: clamp(280px, 38vw, 420px);
+    height: 100%;
 }
 
 .lon-home .lon-service-image-wrap {
-    min-height: 0;
-    border-radius: 1.15rem;
-    overflow: visible;
-    border: 1px solid var(--lon-line);
-    box-shadow: none;
-    background: #fff;
-    display: flex;
-    flex-direction: column;
-    padding: 22px 22px 20px;
+    border-radius: 1.35rem;
+    overflow: hidden;
+    border: 0;
+    box-shadow: 0 18px 40px rgba(20, 40, 56, 0.16);
+    background: #163a54;
+    padding: 0;
 }
 
-.lon-home .lon-service-image-wrap::before,
-.lon-home .lon-service-image-wrap::after,
+.lon-home .lon-service-image-wrap::before {
+    display: block;
+    background: linear-gradient(180deg, rgba(14, 28, 40, 0.18) 0%, rgba(14, 28, 40, 0) 42%);
+    mix-blend-mode: normal;
+}
+
+.lon-home .lon-service-image-wrap::after {
+    display: block;
+    height: 74%;
+    background: linear-gradient(0deg, rgba(12, 26, 38, 0.86) 0%, rgba(12, 26, 38, 0.32) 48%, rgba(12, 26, 38, 0) 100%);
+}
+
 .lon-home .lon-service-image-wrap img {
-    display: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: clamp(280px, 38vw, 420px);
+    object-fit: cover;
+    object-position: center 28%;
+    filter: brightness(0.9) contrast(1.06) saturate(1.08);
+    transition: transform 0.55s ease;
+}
+
+.lon-home .lon-service-card:hover .lon-service-image-wrap img {
+    transform: scale(1.05);
 }
 
 .lon-home .lon-service-chip {
-    position: static;
-    align-self: flex-start;
-    margin-bottom: 14px;
-    background: transparent;
-    border: 0;
-    padding: 0;
-    backdrop-filter: none;
-    color: var(--lon-sage-deep);
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    z-index: 2;
+    margin: 0;
+    border-radius: 999px;
+    padding: 7px 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.36);
+    backdrop-filter: blur(12px);
+    color: #fff;
     font-size: 0.68rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -4299,53 +4323,55 @@ body.lon-home .dr-hero {
 }
 
 .lon-home .lon-service-glass {
-    position: static;
-    left: auto;
-    right: auto;
-    bottom: auto;
-    background: transparent;
-    border: 0;
-    backdrop-filter: none;
-    border-radius: 0;
-    padding: 0;
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(16px);
+    border-radius: 1.05rem;
+    padding: 16px 16px 14px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
-    flex: 1;
+    gap: 6px;
+    flex: 0 0 auto;
 }
 
 .lon-home .lon-service-glass h3 {
-    color: var(--lon-ink);
-    font-size: 1.12rem;
-    font-weight: 550;
+    color: #fff;
+    font-size: 1.08rem;
+    font-weight: 600;
     letter-spacing: -0.03em;
     margin: 0;
-    min-height: 2.6em;
+    min-height: 0;
+    text-shadow: 0 1px 12px rgba(8, 18, 28, 0.35);
 }
 
 .lon-home .lon-service-price {
-    color: var(--lon-muted);
-    font-size: 0.92rem;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.9rem;
     font-weight: 550;
 }
 
 .lon-home .lon-service-extra,
 .lon-home .lon-service-extra a {
-    color: var(--lon-muted);
-    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.86);
+    font-size: 0.78rem;
 }
 
 .lon-home .lon-service-glass .lon-btn-soft {
-    margin-top: 10px;
-    background: var(--lon-forest);
-    color: var(--lon-cream);
+    margin-top: 8px;
+    background: #fff;
+    color: var(--lon-ink);
     border: 0;
     box-shadow: none;
 }
 
 .lon-home .lon-service-glass .lon-btn-soft:hover {
-    background: #163a54;
+    background: var(--lon-forest);
     color: #fff;
 }
 
@@ -4398,14 +4424,15 @@ body.lon-home .dr-hero {
     justify-content: space-between;
     align-items: flex-end;
     gap: 24px 40px;
-    margin-bottom: 12px;
+    margin-bottom: 28px;
 }
 
 .lon-home .lon-how-head h2 {
     max-width: 14ch;
 }
 
-.lon-home #como-funciona .lon-kicker {
+.lon-home #como-funciona .lon-how-head .lon-kicker,
+.lon-home #como-funciona .lon-how-care .lon-kicker {
     background: transparent;
     color: rgba(244, 247, 242, 0.5);
 }
@@ -4418,32 +4445,85 @@ body.lon-home .dr-hero {
     color: #9ec0d4;
 }
 
-.lon-home #como-funciona .lon-how-steps.lon-service-grid {
-    gap: 0;
+.lon-home #como-funciona .lon-how-steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 2.25rem 1fr 2.25rem 1fr;
+    gap: 16px 0;
+    align-items: stretch;
 }
 
-.lon-home #como-funciona .lon-service-card {
-    background: transparent;
-    border: 0;
-    border-top: 1px solid rgba(244, 247, 242, 0.16);
-    border-radius: 0;
-    box-shadow: none;
-    padding: 26px 12px 12px 0;
+.lon-home #como-funciona .lon-how-steps li:nth-child(1) { grid-column: 1; grid-row: 1; }
+.lon-home #como-funciona .lon-how-steps li:nth-child(2) { grid-column: 3; grid-row: 1; }
+.lon-home #como-funciona .lon-how-steps li:nth-child(3) { grid-column: 5; grid-row: 1; }
+.lon-home #como-funciona .lon-how-steps li:nth-child(4) { grid-column: 1; grid-row: 2; }
+.lon-home #como-funciona .lon-how-steps li:nth-child(5) { grid-column: 3; grid-row: 2; }
+
+.lon-home #como-funciona .lon-how-box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    text-align: left;
+    background: rgba(244, 247, 242, 0.08);
+    border: 1px solid rgba(244, 247, 242, 0.18);
+    border-radius: 1.15rem;
+    padding: 20px 18px 22px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.lon-home #como-funciona .lon-how-box h3 {
+    margin: 0 0 8px;
+    font-size: 1.06rem;
+    font-weight: 650;
+    color: #fff;
+    line-height: 1.3;
+}
+
+.lon-home #como-funciona .lon-how-box p {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: rgba(244, 247, 242, 0.78);
+}
+
+.lon-home #como-funciona .lon-how-steps li:nth-child(1)::after,
+.lon-home #como-funciona .lon-how-steps li:nth-child(2)::after,
+.lon-home #como-funciona .lon-how-steps li:nth-child(4)::after {
+    content: "→";
+    position: absolute;
+    right: -1.15rem;
+    top: 50%;
+    transform: translate(50%, -50%);
+    font-size: 1.15rem;
+    line-height: 1;
+    color: #9ec0d4;
+    pointer-events: none;
 }
 
 body.lon-home #como-funciona .lon-how-step-num {
-    width: auto;
-    height: auto;
-    background: none;
-    border: 0;
+    flex-shrink: 0;
+    width: 2.15rem;
+    height: 2.15rem;
+    margin: 0 0 12px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(158, 192, 212, 0.18);
+    border: 1px solid rgba(158, 192, 212, 0.42);
     box-shadow: none;
     backdrop-filter: none;
-    border-radius: 0;
-    justify-content: flex-start;
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    color: rgba(244, 247, 242, 0.45);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #9ec0d4;
 }
 
 .lon-home #como-funciona .lon-section-cta .lon-btn {
@@ -4456,12 +4536,73 @@ body.lon-home #como-funciona .lon-how-step-num {
     background: #fff;
 }
 
-.lon-home .lon-after-grid li {
-    border: 0;
-    border-top: 1px solid var(--lon-line);
-    border-radius: 0;
+.lon-home #como-funciona .lon-after {
+    margin-top: 40px;
+    padding: 32px 0 0;
     background: transparent;
-    padding: 22px 0;
+    border-top: 1px solid rgba(244, 247, 242, 0.16);
+}
+
+.lon-home .lon-how-care-head {
+    margin-bottom: 18px;
+}
+
+.lon-home #como-funciona .lon-how-care .lon-section-lead {
+    margin: 8px 0 0;
+    max-width: 46ch;
+    color: rgba(244, 247, 242, 0.72);
+}
+
+.lon-home #como-funciona .lon-after-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.lon-home #como-funciona .lon-after-grid li {
+    border: 1px solid rgba(244, 247, 242, 0.16);
+    border-radius: 1rem;
+    background: rgba(244, 247, 242, 0.08);
+    padding: 16px 14px;
+    text-align: left;
+}
+
+.lon-home #como-funciona .lon-after-grid h3 {
+    color: #fff;
+}
+
+.lon-home #como-funciona .lon-after-grid p,
+.lon-home #como-funciona .lon-after-note {
+    color: rgba(244, 247, 242, 0.72);
+}
+
+.lon-home #como-funciona .lon-after-note {
+    margin-top: 16px;
+}
+
+@media (min-width: 720px) {
+    .lon-home #como-funciona .lon-after-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1100px) {
+    .lon-home #como-funciona .lon-after-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (max-width: 799px) {
+    .lon-home #como-funciona .lon-how-steps {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .lon-home #como-funciona .lon-how-steps li:nth-child(1)::after,
+    .lon-home #como-funciona .lon-how-steps li:nth-child(2)::after,
+    .lon-home #como-funciona .lon-how-steps li:nth-child(4)::after {
+        display: none;
+    }
 }
 
 .lon-home .lon-team-card,
@@ -4522,13 +4663,108 @@ body.lon-home #como-funciona .lon-how-step-num {
 .lon-home .dr-burnout-promo {
     background: transparent;
     border: 0;
+    padding: 24px 0 48px;
+}
+
+.lon-home .dr-burnout-promo-stage {
+    position: relative;
+    overflow: hidden;
+    min-height: clamp(380px, 52vw, 520px);
+    border-radius: 2rem;
+    display: flex;
+    align-items: center;
+    background:
+        radial-gradient(ellipse at 18% 50%, rgba(46, 111, 147, 0.55) 0%, transparent 58%),
+        linear-gradient(135deg, #163a54 0%, #1e4d6b 48%, #2e6f93 100%);
+}
+
+.lon-home .dr-burnout-promo-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: 62% 40%;
+    z-index: 0;
+}
+
+.lon-home .dr-burnout-promo-stage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+        linear-gradient(90deg, rgba(22, 58, 84, 0.72) 0%, rgba(30, 77, 107, 0.42) 48%, rgba(22, 58, 84, 0.18) 100%),
+        linear-gradient(180deg, rgba(22, 58, 84, 0.18) 0%, rgba(22, 58, 84, 0.38) 100%);
 }
 
 .lon-home .dr-burnout-promo-inner {
-    border-radius: 2rem;
-    background: #f3f7fa;
-    border: 1px solid rgba(30, 77, 107, 0.08);
-    padding: clamp(32px, 5vw, 56px);
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+    max-width: 34rem;
+    margin: clamp(24px, 5vw, 48px);
+    padding: clamp(24px, 4vw, 36px);
+    border-radius: 1.5rem;
+    background: rgba(247, 251, 253, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    box-shadow: 0 18px 48px rgba(12, 32, 48, 0.22);
+    backdrop-filter: blur(18px) saturate(1.25);
+    -webkit-backdrop-filter: blur(18px) saturate(1.25);
+}
+
+.lon-home .dr-burnout-promo__eyebrow {
+    color: #c9dce8;
+}
+
+.lon-home .dr-burnout-promo h2,
+.lon-home .dr-burnout-promo__lead,
+.lon-home .dr-burnout-promo__lead strong,
+.lon-home .dr-burnout-promo__meta {
+    color: #f4f7f2;
+}
+
+.lon-home .dr-burnout-promo__lead {
+    max-width: 42ch;
+}
+
+.lon-home .dr-burnout-promo-actions {
+    width: 100%;
+}
+
+.lon-home .dr-burnout-promo .lon-btn-dark {
+    background: #f4f7f2;
+    border-color: #f4f7f2;
+    color: var(--lon-forest);
+}
+
+.lon-home .dr-burnout-promo .lon-btn-dark:hover {
+    background: #fff;
+    color: var(--lon-forest);
+}
+
+.lon-home .dr-burnout-promo .lon-text-link {
+    color: #f4f7f2;
+}
+
+@media (max-width: 699px) {
+    .lon-home .dr-burnout-promo-stage {
+        min-height: 560px;
+        align-items: flex-end;
+    }
+
+    .lon-home .dr-burnout-promo-bg {
+        object-position: 70% 22%;
+    }
+
+    .lon-home .dr-burnout-promo-inner {
+        margin: 0 16px 16px;
+        max-width: none;
+    }
 }
 
 .lon-home .lon-urgent-offer {
@@ -4542,7 +4778,8 @@ body.lon-home #como-funciona .lon-how-step-num {
 }
 
 .lon-home .lon-consult-cta-card {
-    display: block;
+    display: grid;
+    grid-template-columns: 1fr;
     border-radius: 2rem;
     background: var(--lon-forest);
     border: 0;
@@ -4553,12 +4790,60 @@ body.lon-home #como-funciona .lon-how-step-num {
 }
 
 .lon-home .lon-consult-cta-media {
-    display: none;
+    position: relative;
+    display: block;
+    min-height: clamp(220px, 42vw, 340px);
+    border: 0;
+    border-radius: 0;
+    overflow: hidden;
+}
+
+.lon-home .lon-consult-cta-media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: none;
+    object-position: 50% 26%;
 }
 
 .lon-home .lon-consult-cta-copy {
-    max-width: 40rem;
-    padding: clamp(36px, 6vw, 72px);
+    max-width: none;
+    padding: clamp(28px, 5vw, 56px);
+}
+
+@media (max-width: 939px) {
+    .lon-home .lon-consult-cta-card {
+        grid-template-rows: 240px auto;
+        min-height: 0;
+    }
+
+    .lon-home .lon-consult-cta-media {
+        order: -1;
+        min-height: 240px;
+        height: 240px;
+    }
+}
+
+@media (min-width: 940px) {
+    .lon-home .lon-consult-cta-card {
+        grid-template-columns: 1.08fr 0.92fr;
+        min-height: clamp(420px, 48vh, 560px);
+    }
+
+    .lon-home .lon-consult-cta-media {
+        min-height: 100%;
+        height: auto;
+        order: 0;
+    }
+
+    .lon-home .lon-consult-cta-copy {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-start;
+    }
 }
 
 .lon-home .lon-consult-cta-copy .lon-kicker--on-dark {
@@ -4634,15 +4919,13 @@ body.lon-home #como-funciona .lon-how-step-num {
     .lon-home .dr-hero {
         min-height: 100svh;
         padding: 0;
+        background:
+            radial-gradient(ellipse at 88% 12%, rgba(158, 192, 212, 0.38) 0%, transparent 46%),
+            linear-gradient(165deg, #243f52 0%, #1e4d6b 48%, #2a4a44 100%);
     }
 
     .lon-home .dr-hero-bg {
-        top: 50%;
-        left: 8%;
-        width: 128%;
-        height: 128%;
-        object-position: 50% 26%;
-        transform: translateY(-50%);
+        display: none;
     }
 
     .lon-home .dr-hero-scrim {
@@ -4651,8 +4934,7 @@ body.lon-home #como-funciona .lon-how-step-num {
         height: auto;
         min-height: 0;
         background:
-            linear-gradient(180deg, rgba(18, 22, 20, 0.22) 0%, rgba(18, 22, 20, 0.08) 36%, rgba(18, 22, 20, 0.5) 100%),
-            linear-gradient(90deg, rgba(18, 22, 20, 0.42) 0%, rgba(18, 22, 20, 0.08) 70%, transparent 100%);
+            linear-gradient(180deg, rgba(18, 22, 20, 0.16) 0%, rgba(18, 22, 20, 0.08) 40%, rgba(18, 22, 20, 0.36) 100%);
     }
 
     .lon-home .dr-hero-content {
@@ -4669,8 +4951,8 @@ body.lon-home #como-funciona .lon-how-step-num {
     }
 
     .lon-home .dr-hero h1 {
-        max-width: 12ch;
-        font-size: clamp(2.2rem, 11vw, 3.15rem);
+        max-width: 28ch;
+        font-size: clamp(1.28rem, 5.6vw, 1.7rem);
     }
 
     .lon-home .dr-cta-row {
