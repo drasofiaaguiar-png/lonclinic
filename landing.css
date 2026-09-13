@@ -3741,7 +3741,8 @@ body.lon-home .dr-hero {
     padding: 0;
     min-height: 100vh;
     min-height: 100svh;
-    background: #b7aea4;
+    height: auto;
+    background: #6d7c84;
     border-radius: 0;
     overflow: hidden;
 }
@@ -3752,16 +3753,13 @@ body.lon-home .dr-hero {
 
 .lon-home .dr-hero-bg {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 36%;
-    right: clamp(96px, 12vw, 220px);
-    width: auto;
-    height: auto;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     max-width: none;
     max-height: none;
     object-fit: cover;
-    object-position: 70% 16%;
+    object-position: right 12% top 22%;
     transform: none;
     z-index: 0;
     pointer-events: none;
@@ -3772,8 +3770,8 @@ body.lon-home .dr-hero {
     inset: 0;
     z-index: 1;
     background:
-        linear-gradient(90deg, rgba(18, 22, 20, 0.52) 0%, rgba(18, 22, 20, 0.2) 36%, rgba(18, 22, 20, 0.02) 68%),
-        linear-gradient(180deg, rgba(18, 22, 20, 0.18) 0%, transparent 28%, rgba(18, 22, 20, 0.32) 100%);
+        linear-gradient(90deg, rgba(18, 22, 20, 0.58) 0%, rgba(18, 22, 20, 0.28) 34%, rgba(18, 22, 20, 0.08) 58%, transparent 76%),
+        linear-gradient(180deg, rgba(18, 22, 20, 0.2) 0%, transparent 26%, rgba(18, 22, 20, 0.38) 100%);
 }
 
 .lon-home .dr-hero-stage {
@@ -3783,16 +3781,18 @@ body.lon-home .dr-hero {
     flex-direction: column;
     justify-content: space-between;
     box-sizing: border-box;
+    flex: 1 1 auto;
     min-height: 100svh;
     width: 100%;
-    padding-top: calc(var(--lon-nav-h) + 28px);
-    gap: 20px;
+    padding: calc(var(--lon-nav-h) + 28px) clamp(40px, 5.5vw, 96px) clamp(20px, 3vh, 36px);
+    gap: 28px;
 }
 
 .lon-home .dr-hero-content {
     align-self: flex-start;
-    max-width: 44rem;
-    padding: 8px clamp(88px, 14vw, 200px) 16px;
+    width: min(46rem, 100%);
+    max-width: 46rem;
+    padding: 8px 0 12px;
     text-align: left;
 }
 
@@ -3820,7 +3820,7 @@ body.lon-home .dr-hero {
     font-size: clamp(1.85rem, 4.4vw, 3.15rem);
     line-height: 1.12;
     letter-spacing: -0.035em;
-    max-width: 16ch;
+    max-width: 22ch;
     font-weight: 550;
 }
 
@@ -3830,7 +3830,7 @@ body.lon-home .dr-hero {
 
 .lon-home .dr-hero .dr-lead {
     color: rgba(247, 243, 234, 0.72);
-    max-width: 38ch;
+    max-width: 48ch;
     font-size: 1.08rem;
     line-height: 1.55;
     margin-top: 18px;
@@ -3879,10 +3879,10 @@ body.lon-home .dr-hero {
     display: grid;
     grid-template-columns: 1fr;
     gap: 12px;
-    width: 100%;
-    max-width: 36rem;
+    width: min(42rem, 100%);
+    max-width: 42rem;
     margin-top: auto;
-    padding: 0 clamp(88px, 14vw, 200px) clamp(16px, 3vh, 28px);
+    padding: 0;
     align-self: flex-start;
 }
 
@@ -5103,18 +5103,24 @@ body.lon-home #como-funciona .lon-how-step-num {
 
     .lon-home .dr-hero {
         min-height: 100svh;
+        height: auto;
         padding: 0;
-        background:
-            radial-gradient(ellipse at 88% 12%, rgba(158, 192, 212, 0.38) 0%, transparent 46%),
-            linear-gradient(165deg, #243f52 0%, #1e4d6b 48%, #2a4a44 100%);
+        background: #4a5e68;
     }
 
     .lon-home .dr-hero-bg {
-        display: none;
+        display: block;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 18% 0%;
+        transform: scale(3.15);
+        transform-origin: 12% 0%;
     }
 
     .lon-home .dr-hero-stage {
-        padding-top: calc(var(--lon-nav-h) + 16px);
+        padding: calc(var(--lon-nav-h) + 16px) 20px 16px;
     }
 
     .lon-home .dr-hero-scrim {
@@ -5123,24 +5129,26 @@ body.lon-home #como-funciona .lon-how-step-num {
         height: auto;
         min-height: 0;
         background:
-            linear-gradient(180deg, rgba(18, 28, 34, 0.46) 0%, rgba(18, 28, 34, 0.32) 38%, rgba(18, 28, 34, 0.62) 100%);
+            linear-gradient(180deg, rgba(18, 28, 34, 0.42) 0%, rgba(18, 28, 34, 0.28) 36%, rgba(18, 28, 34, 0.62) 100%);
     }
 
     .lon-home .dr-hero-content {
         align-self: flex-start;
-        padding: 8px 20px 16px;
-        max-width: 34rem;
+        padding: 8px 0 16px;
+        width: 100%;
+        max-width: none;
         background: transparent;
     }
 
     .lon-home .dr-hero-dock {
         grid-template-columns: 1fr;
+        width: 100%;
         max-width: none;
-        padding: 0 16px 16px;
+        padding: 0;
     }
 
     .lon-home .dr-hero h1 {
-        max-width: 14ch;
+        max-width: 18ch;
         font-size: clamp(1.7rem, 8vw, 2.2rem);
     }
 
