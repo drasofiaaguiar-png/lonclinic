@@ -3752,16 +3752,17 @@ body.lon-home .dr-hero {
 
 .lon-home .dr-hero-bg {
     position: absolute;
-    top: 50%;
-    left: 0;
-    right: clamp(64px, 8vw, 140px);
+    top: 0;
+    bottom: 0;
+    left: 36%;
+    right: clamp(96px, 12vw, 220px);
     width: auto;
-    height: 128%;
+    height: auto;
     max-width: none;
     max-height: none;
     object-fit: cover;
-    object-position: 38% 26%;
-    transform: translateY(-50%);
+    object-position: 70% 16%;
+    transform: none;
     z-index: 0;
     pointer-events: none;
 }
@@ -3781,14 +3782,17 @@ body.lon-home .dr-hero {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    box-sizing: border-box;
     min-height: 100svh;
     width: 100%;
+    padding-top: calc(var(--lon-nav-h) + 28px);
+    gap: 20px;
 }
 
 .lon-home .dr-hero-content {
     align-self: flex-start;
     max-width: 44rem;
-    padding: calc(var(--lon-nav-h) + 36px) clamp(88px, 14vw, 200px) 20px clamp(88px, 14vw, 200px);
+    padding: 8px clamp(88px, 14vw, 200px) 16px;
     text-align: left;
 }
 
@@ -3877,6 +3881,7 @@ body.lon-home .dr-hero {
     gap: 12px;
     width: 100%;
     max-width: 36rem;
+    margin-top: auto;
     padding: 0 clamp(88px, 14vw, 200px) clamp(16px, 3vh, 28px);
     align-self: flex-start;
 }
@@ -3959,7 +3964,7 @@ body.lon-home .dr-hero {
 /* ── Intro ── */
 .lon-home .lon-intro {
     background: transparent;
-    padding: clamp(72px, 10vw, 128px) 0;
+    padding: clamp(36px, 5vw, 64px) 0;
 }
 
 .lon-home .lon-intro-grid {
@@ -4081,8 +4086,8 @@ body.lon-home .dr-hero {
 
 /* ── Section rhythm ── */
 .lon-home main > section:not(.dr-hero) {
-    padding-top: clamp(64px, 11vw, 140px);
-    padding-bottom: clamp(64px, 11vw, 140px);
+    padding-top: clamp(32px, 5.5vw, 70px);
+    padding-bottom: clamp(32px, 5.5vw, 70px);
 }
 
 /* ── Need / care ── */
@@ -4348,6 +4353,9 @@ body.lon-home .dr-hero {
 .lon-home .lon-need-or {
     color: var(--lon-muted);
     letter-spacing: 0.12em;
+    padding-top: clamp(32px, 5.5vw, 70px);
+    margin-top: 0;
+    margin-bottom: 12px;
 }
 
 .lon-home .lon-tabs {
@@ -4538,7 +4546,7 @@ body.lon-home .dr-hero {
 
 .lon-home #como-funciona {
     background: transparent;
-    padding: clamp(64px, 11vw, 140px) 0;
+    padding: clamp(32px, 5.5vw, 70px) 0;
 }
 
 .lon-home #como-funciona .lon-how-shell {
@@ -4738,12 +4746,31 @@ body.lon-home #como-funciona .lon-how-step-num {
     }
 }
 
+.lon-home .lon-team-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+@media (min-width: 900px) {
+    .lon-home .lon-team-grid {
+        grid-template-columns: 1fr 1fr;
+        align-items: stretch;
+    }
+}
+
 .lon-home .lon-team-card,
 .lon-home .lon-testimonial-card {
     border-radius: 1.25rem;
     background: #fff;
     border: 1px solid var(--lon-line);
     box-shadow: none;
+}
+
+.lon-home .lon-team-card {
+    max-width: none;
+    margin: 0;
+    height: 100%;
 }
 
 .lon-home .lon-testimonial-stars {
@@ -4796,7 +4823,7 @@ body.lon-home #como-funciona .lon-how-step-num {
 .lon-home .dr-burnout-promo {
     background: transparent;
     border: 0;
-    padding: clamp(64px, 11vw, 140px) 0;
+    padding: clamp(32px, 5.5vw, 70px) 0;
 }
 
 .lon-home .dr-burnout-promo-stage {
@@ -5083,18 +5110,11 @@ body.lon-home #como-funciona .lon-how-step-num {
     }
 
     .lon-home .dr-hero-bg {
-        display: block;
-        top: 0;
-        left: 0;
-        right: auto;
-        width: 100%;
-        height: 100%;
-        max-width: none;
-        object-fit: cover;
-        object-position: 0% 0%;
-        transform: scale(3.1);
-        transform-origin: 0% 2%;
-        filter: blur(18px) saturate(1.2) brightness(0.68);
+        display: none;
+    }
+
+    .lon-home .dr-hero-stage {
+        padding-top: calc(var(--lon-nav-h) + 16px);
     }
 
     .lon-home .dr-hero-scrim {
@@ -5108,7 +5128,7 @@ body.lon-home #como-funciona .lon-how-step-num {
 
     .lon-home .dr-hero-content {
         align-self: flex-start;
-        padding: calc(var(--lon-nav-h) + 20px) 20px 16px;
+        padding: 8px 20px 16px;
         max-width: 34rem;
         background: transparent;
     }

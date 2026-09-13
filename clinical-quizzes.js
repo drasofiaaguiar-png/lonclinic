@@ -10,7 +10,7 @@ const { originOf } = require('./seo');
 const { scoreQuiz, questionOptions } = require('./clinical-quiz-score');
 
 const QUIZ_DIR = path.join(__dirname, 'data', 'clinical-quizzes');
-const CSS_V = '20260913q';
+const CSS_V = '20260913r';
 const JS_V = '20260905i';
 
 const CBI = {
@@ -183,55 +183,56 @@ const ALL_GROUPS = [
 
 const CARD_COPY = {
     cbi: {
-        title: 'Teste de burnout',
+        title: 'Será que estou em burnout?',
         image: '/image/guide/blog/sinais-de-burnout-no-trabalho-remoto-destaque.webp'
     },
     phq9: {
-        title: 'Humor e depressão',
+        title: 'Estou só cansado ou preciso de ajuda?',
         image: '/image/guide/guide-sunset-lake.jpg'
     },
     gad7: {
-        title: 'Ansiedade',
+        title: 'Isto que sinto é ansiedade?',
         image: '/image/guide/guide-waterfall.jpg'
     },
     pss10: {
-        title: 'Stress percebido',
+        title: 'O stress já me passou da conta?',
         image: '/image/guide/blog/sinais-de-burnout-no-trabalho-remoto-videochamadas.webp'
     },
     isi: {
-        title: 'Insónia',
+        title: 'O meu sono está a falhar-me?',
         image: '/image/guide/guide-lake-boats.jpg'
     },
     ess: {
-        title: 'Sonolência diurna',
+        title: 'Porque tenho tanto sono durante o dia?',
         image: '/image/guide/guide-opera-coast.jpg'
     },
     who5: {
-        title: 'Bem-estar',
+        title: 'Como é que me tenho sentido, de verdade?',
         image: '/image/guide/guide-coastal-sun.jpg'
     },
     sf12: {
-        title: 'Qualidade de vida',
+        title: 'A saúde está a limitar o meu dia-a-dia?',
         image: '/image/guide/guide-group-walk.jpg'
     },
     avaliacao: {
-        title: 'Avaliação metabólica',
+        title: 'Por onde começo a tratar do peso?',
+        label: 'Avaliação metabólica',
         image: '/image/guide/guide-country-road.jpg'
     },
     imc: {
-        title: 'IMC e cintura',
+        title: 'Será que tenho excesso de peso?',
         image: '/image/guide/guide-hiker-view.jpg'
     },
     tfeq: {
-        title: 'Comportamento alimentar',
+        title: 'Como é que como, na verdade?',
         image: '/image/guide/travel-cover-hq-4.webp'
     },
     yfas: {
-        title: 'Compulsão alimentar',
+        title: 'A comida está a controlar-me?',
         image: '/image/guide/travel-cover-hq-7.webp'
     },
     bigfive: {
-        title: 'Personalidade Big Five',
+        title: 'Como é que eu funciono, na prática?',
         image: '/image/image3.webp'
     }
 };
@@ -253,6 +254,7 @@ function listAllPublic() {
             return {
                 ...entry,
                 cardTitle: copy.title || entry.h1,
+                cardLabel: copy.label || entry.instrument,
                 image: copy.image || '/image/guide/guide-coastal-sun.jpg'
             };
         }).filter(Boolean)
@@ -762,8 +764,8 @@ function renderAllHub(origin) {
                 <a class="qz-all-card" href="${escapeHtml(it.path)}">
                     <span class="qz-all-card-media" style="background-image:url('${escapeHtml(it.image)}')" aria-hidden="true"></span>
                     <span class="qz-all-card-body">
-                        <span class="qz-all-card-kicker">${escapeHtml(it.instrument)} · ${it.minutes} min · ${it.questions} perguntas</span>
-                        <span class="qz-all-card-title">${escapeHtml(it.cardTitle)}</span>
+                        <span class="qz-all-card-kicker">${escapeHtml(it.cardLabel)} · ${it.minutes} min · ${it.questions} perguntas</span>
+                        <h2 class="qz-all-card-title">${escapeHtml(it.cardTitle)}</h2>
                         <span class="qz-all-card-lead">${escapeHtml(it.lead)}</span>
                         <span class="qz-all-card-cta">Começar o teste →</span>
                     </span>

@@ -29,7 +29,7 @@
 }
 
 .em-hero {
-    padding: calc(var(--lon-nav-h, 72px) + 28px) 0 36px;
+    padding: calc(var(--lon-nav-h, 72px) + 48px) 0 36px;
 }
 
 .em-hero-grid {
@@ -40,16 +40,146 @@
 }
 
 .em-crumb {
+    margin: 0 0 16px;
+    position: relative;
+    z-index: 1;
+    overflow: visible;
+}
+
+.em-crumb ol {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 8px;
+    align-items: center;
+    gap: 6px 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
     font-size: 0.78rem;
     color: #5c6d64;
-    margin: 0 0 14px;
+}
+
+.em-crumb li {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.em-crumb li:not(:last-child)::after {
+    content: "/";
+    margin: 0 8px;
+    color: #8a9a92;
 }
 
 .em-crumb a {
     color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.em-crumb [aria-current="page"] {
+    color: #2f453a;
+    font-weight: 650;
+}
+
+.em-quiz-hint {
+    margin: 0 0 14px;
+    max-width: 36rem;
+    color: #5c6d64;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.em-page .em-tp-badge {
+    margin: 14px 0 0;
+}
+
+.em-clinician {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 20px;
+    align-items: center;
+    background: #fff;
+    border: 1px solid rgba(47, 69, 58, 0.1);
+    border-radius: 18px;
+    padding: 20px 22px;
+}
+
+.em-clinician-avatar {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #1a6641 0%, #2d5a4e 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.55rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+}
+
+.em-clinician h3 {
+    margin: 0 0 4px;
+    font-size: 1.2rem;
+    color: #1c2d24;
+}
+
+.em-clinician-role {
+    margin: 0 0 8px;
+    font-weight: 650;
+    color: #1a6641;
+    font-size: 0.9rem;
+}
+
+.em-clinician p {
+    margin: 0 0 8px;
+    color: #5c6d64;
+    font-size: 0.92rem;
+    line-height: 1.5;
+}
+
+.em-clinician p:last-child {
+    margin-bottom: 0;
+}
+
+.em-proof-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px 20px;
+    margin-bottom: 8px;
+}
+
+.em-proof-head .em-lead {
+    margin-bottom: 8px;
+}
+
+.em-proof-head .lon-tp-badge {
+    margin: 0;
+}
+
+.em-proof-grid {
+    margin-top: 8px;
+}
+
+.em-proof-more {
+    margin: 14px 0 0;
+    font-size: 0.9rem;
+}
+
+.em-cta-band .lon-btn-soft {
+    background: transparent;
+    color: #f4f7f4;
+    border: 1px solid rgba(244, 247, 244, 0.35);
+}
+
+@media (max-width: 900px) {
+    .em-clinician {
+        grid-template-columns: 1fr;
+        justify-items: start;
+    }
 }
 
 .em-hero h1 {
