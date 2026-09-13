@@ -687,6 +687,70 @@ function patientDoxyRoomUrl(raw) {
 
 const DEFAULT_DOXY_ROOM_URL = patientDoxyRoomUrl(DOXY_ROOM_URL);
 
+/** Code-side clinician → Doxy waiting room. Applied on boot so Railway persists doxy_room_url. */
+const KNOWN_DOXY_ROOMS = [
+    {
+        url: 'https://doxy.me/lonclinic/ritaaguiar',
+        names: ['Rita Aguiar', 'Rita Aguiar Fonseca'],
+        usernames: ['rita.aguiar', 'ritaaguiar', 'rita.aguiar.fonseca', 'ritaaguiarfonseca'],
+        emails: ['ritaaguiarfonseca@gmail.com'],
+        slugs: ['ritaaguiar']
+    },
+    {
+        url: 'https://doxy.me/lonclinic/carolinarocha',
+        names: ['Carolina Rocha'],
+        usernames: ['carolina.rocha', 'carolinarocha'],
+        slugs: ['carolinarocha']
+    },
+    {
+        url: 'https://doxy.me/lonclinic/saragamito',
+        names: ['Sara Gamito', 'Maria Sara Ferreira de Almeida Judice Gamito'],
+        usernames: [
+            'sara.gamito',
+            'saragamito',
+            'maria.sara.ferreira.de.almeida.judice.gamito'
+        ],
+        slugs: ['saragamito']
+    }
+];
+
+function compactDoxyIdentity(raw) {
+    return String(raw || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '');
+}
+
+function knownDoxyRoomUrl(displayName, username, email) {
+    const u = normalizeProfessionalUsername(username);
+    const uCompact = compactDoxyIdentity(String(u || '').replace(/\d+$/, ''));
+    const mail = normalizeStaffEmail(email);
+    for (const known of KNOWN_DOXY_ROOMS) {
+        const url = patientDoxyRoomUrl(known.url);
+        if (!url) continue;
+        if (u && (known.usernames || []).some((name) => normalizeProfessionalUsername(name) === u)) {
+            return url;
+        }
+        if (u && (known.names || []).some((name) => usernameMatchesPersonName(u, name))) {
+            return url;
+        }
+        if (u && (known.usernames || []).some((name) => usernameMatchesPersonName(u, name))) {
+            return url;
+        }
+        if (uCompact && (known.slugs || []).includes(uCompact)) {
+            return url;
+        }
+        if (mail && (known.emails || []).some((e) => normalizeStaffEmail(e) === mail)) {
+            return url;
+        }
+        if ((known.names || []).some((name) => personNamesMatch(displayName, name))) {
+            return url;
+        }
+    }
+    return '';
+}
+
 function clinicDoxyOwnerNameKey(raw) {
     return String(raw || '')
         .normalize('NFD')
@@ -720,7 +784,9 @@ function isClinicLeadAccount(displayName, username) {
     return isClinicLeadDoxyName(displayName);
 }
 
-function assignedDoxyRoomUrl(displayName, rawUrl, username) {
+function assignedDoxyRoomUrl(displayName, rawUrl, username, email) {
+    const known = knownDoxyRoomUrl(displayName, username, email);
+    if (known) return known;
     const url = normalizeDoxyRoomUrl(rawUrl);
     if (isClinicLeadAccount(displayName, username)) {
         return url || DEFAULT_DOXY_ROOM_URL || '';
@@ -737,11 +803,12 @@ function isSharedClinicDoxyRoom(raw) {
 
 function doxyRoomViewForPerson(displayName, rawUrl, opts) {
     const username = (opts && opts.username) || '';
-    const assigned = assignedDoxyRoomUrl(displayName, rawUrl, username);
+    const email = (opts && opts.email) || '';
+    const assigned = assignedDoxyRoomUrl(displayName, rawUrl, username, email);
     if ((opts && opts.clinicAdmin) || isClinicLeadAccount(displayName, username)) {
         return { url: assigned || DEFAULT_DOXY_ROOM_URL || '', pending: false };
     }
-    if (assigned && !isSharedClinicDoxyRoom(assigned)) {
+    if (assigned) {
         return { url: assigned, pending: false };
     }
     return { url: '', pending: true };
@@ -749,7 +816,10 @@ function doxyRoomViewForPerson(displayName, rawUrl, opts) {
 
 function publicProfessional(pro) {
     if (!pro) return null;
-    const doxy = doxyRoomViewForPerson(pro.displayName, pro.doxyRoomUrl, { username: pro.username });
+    const doxy = doxyRoomViewForPerson(pro.displayName, pro.doxyRoomUrl, {
+        username: pro.username,
+        email: pro.email
+    });
     return {
         id: pro.id,
         username: pro.username,
@@ -2502,11 +2572,21 @@ async function resolveDoxyRoomUrl(professionalName) {
     const name = String(professionalName || '').trim();
     if (!name) return '';
     try {
-        const pro = await findProfessionalByDisplayNameInternal(name);
-        if (pro) return assignedDoxyRoomUrl(pro.displayName, pro.doxyRoomUrl, pro.username);
+        let pro = await findProfessionalByDisplayNameInternal(name);
+        if (!pro) pro = await resolvePersonFromLabel(name);
+        if (!pro) {
+            const want = knownDoxyRoomUrl(name);
+            if (want) {
+                const list = await listProfessionalsInternal();
+                pro = (list || []).find((p) => knownDoxyRoomUrl(p.displayName, p.username, p.email) === want) || null;
+            }
+        }
+        if (pro) return assignedDoxyRoomUrl(pro.displayName, pro.doxyRoomUrl, pro.username, pro.email);
     } catch (err) {
         console.error('   ⚠️  resolveDoxyRoomUrl:', err.message);
     }
+    const known = knownDoxyRoomUrl(name);
+    if (known) return known;
     if (isClinicLeadDoxyName(name)) return DEFAULT_DOXY_ROOM_URL || '';
     return '';
 }
@@ -2518,7 +2598,7 @@ function doxyUrlFromEmailData(data) {
         if (name) return assignedDoxyRoomUrl(name, explicit) || '';
         return patientDoxyRoomUrl(explicit);
     }
-    if (name && isClinicLeadDoxyName(name)) return DEFAULT_DOXY_ROOM_URL || '';
+    if (name) return assignedDoxyRoomUrl(name, '') || '';
     return '';
 }
 
@@ -13423,7 +13503,10 @@ app.get('/api/clinic/doxy', requireAuth, async (req, res) => {
             }
             if (pro) {
                 displayName = pro.displayName || displayName;
-                const view = doxyRoomViewForPerson(pro.displayName, pro.doxyRoomUrl, { username: pro.username });
+                const view = doxyRoomViewForPerson(pro.displayName, pro.doxyRoomUrl, {
+                    username: pro.username,
+                    email: pro.email
+                });
                 patientRoomUrl = view.url;
                 pending = view.pending;
             } else {
@@ -14001,7 +14084,8 @@ function publicAdminStaffProfile(person, profile, documents, bolsa, professional
     const active = hasLogin && (professional ? professional.active !== false : person.active !== false);
     const doxy = doxyRoomViewForPerson(fullName || person.displayName || person.username, person.doxyRoomUrl, {
         clinicAdmin: isClinicAdmin,
-        username: person.username
+        username: person.username,
+        email
     });
     return {
         id: (professional && professional.id) || person.id || null,
@@ -14436,7 +14520,7 @@ async function ensureProfessionalDoxyRooms() {
     try {
         const list = await listProfessionalsInternal();
         for (const pro of list || []) {
-            const next = assignedDoxyRoomUrl(pro.displayName, pro.doxyRoomUrl, pro.username);
+            const next = assignedDoxyRoomUrl(pro.displayName, pro.doxyRoomUrl, pro.username, pro.email);
             const current = normalizeDoxyRoomUrl(pro.doxyRoomUrl);
             if (next === current) continue;
             if (usePersistentDb) {
@@ -14445,7 +14529,8 @@ async function ensureProfessionalDoxyRooms() {
                 pro.doxyRoomUrl = next;
                 pro.updatedAt = new Date().toISOString();
             }
-            console.log(`   📹 Doxy room ${next ? 'kept' : 'cleared'} for ${pro.displayName || pro.username}`);
+            const action = next ? (current ? 'updated' : 'assigned') : 'cleared';
+            console.log(`   📹 Doxy room ${action} for ${pro.displayName || pro.username}${next ? `: ${next}` : ''}`);
         }
     } catch (err) {
         console.error('   ⚠️  ensureProfessionalDoxyRooms:', err.message);
@@ -14474,7 +14559,7 @@ async function createProfessionalInternal({
         username,
         passwordHash,
         displayName,
-        doxyRoomUrl: assignedDoxyRoomUrl(displayName, doxyRoomUrl, username),
+        doxyRoomUrl: assignedDoxyRoomUrl(displayName, doxyRoomUrl, username, email),
         email: String(email || '').trim().toLowerCase().slice(0, 320),
         active: active !== false
     };
@@ -14933,9 +15018,9 @@ async function ensureKnownBolsaApplications() {
                 if (seed.email && !pro.email) fields.email = seed.email;
                 if (seed.name && !personNamesMatch(pro.displayName, seed.name)) {
                     fields.displayName = seed.name;
-                    fields.doxyRoomUrl = assignedDoxyRoomUrl(seed.name, pro.doxyRoomUrl, pro.username);
+                    fields.doxyRoomUrl = assignedDoxyRoomUrl(seed.name, pro.doxyRoomUrl, pro.username, pro.email);
                 } else if (isSharedClinicDoxyRoom(pro.doxyRoomUrl) && !isClinicLeadAccount(pro.displayName, pro.username)) {
-                    fields.doxyRoomUrl = '';
+                    fields.doxyRoomUrl = assignedDoxyRoomUrl(seed.name || pro.displayName, '', pro.username, pro.email);
                 }
                 if (Object.keys(fields).length) {
                     if (usePersistentDb) pro = (await db.updateProfessional(pro.id, fields)) || pro;
@@ -15229,7 +15314,7 @@ async function seedPsychologistStaffProfile(professional, app) {
     const fields = {};
     if (professional.id && bolsaName && isJunkStaffName(professional.displayName)) {
         fields.displayName = bolsaName;
-        fields.doxyRoomUrl = assignedDoxyRoomUrl(bolsaName, professional.doxyRoomUrl, professional.username);
+        fields.doxyRoomUrl = assignedDoxyRoomUrl(bolsaName, professional.doxyRoomUrl, professional.username, professional.email);
     }
     const seedEmail = bolsaApplicationEmails(app)[0] || '';
     if (professional.id && seedEmail && (
@@ -15240,7 +15325,7 @@ async function seedPsychologistStaffProfile(professional, app) {
         fields.email = seedEmail;
     }
     if (professional.id && isSharedClinicDoxyRoom(professional.doxyRoomUrl) && !isClinicLeadAccount(bolsaName || professional.displayName, professional.username)) {
-        fields.doxyRoomUrl = assignedDoxyRoomUrl(bolsaName || professional.displayName, '', professional.username);
+        fields.doxyRoomUrl = assignedDoxyRoomUrl(bolsaName || professional.displayName, '', professional.username, professional.email);
     }
     if (professional.id && Object.keys(fields).length) {
         try {
@@ -15458,7 +15543,7 @@ app.post('/api/admin/professionals', requireAdmin, express.json(), async (req, r
             username,
             password: password || undefined,
             displayName,
-            doxyRoomUrl: assignedDoxyRoomUrl(displayName, doxy.url, username),
+            doxyRoomUrl: assignedDoxyRoomUrl(displayName, doxy.url, username, emailRaw),
             email: emailRaw,
             active: body.active !== false
         });
@@ -15499,7 +15584,8 @@ app.patch('/api/admin/professionals/:id', requireAdmin, express.json(), async (r
             fields.doxyRoomUrl = assignedDoxyRoomUrl(
                 nextName,
                 Object.prototype.hasOwnProperty.call(fields, 'doxyRoomUrl') ? fields.doxyRoomUrl : existing.doxyRoomUrl,
-                existing.username
+                existing.username,
+                Object.prototype.hasOwnProperty.call(fields, 'email') ? fields.email : existing.email
             );
         }
         if (Object.prototype.hasOwnProperty.call(body, 'email')) {
