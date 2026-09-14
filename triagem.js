@@ -440,6 +440,44 @@
         return (parts[0].charAt(0) + (parts[1] ? parts[1].charAt(0) : '')).toUpperCase();
     }
 
+    function shortDisplayName(name) {
+        var cleaned = String(name || '').replace(/\bDra?\.?\s+/gi, '').trim();
+        var parts = cleaned.split(/\s+/).filter(Boolean);
+        if (parts.length <= 2) return cleaned;
+        return parts[0] + ' ' + parts[parts.length - 1];
+    }
+
+    function avatarHtml(pro, extraClass) {
+        var name = (pro && pro.name) || '';
+        var cls = extraClass || 'triagem-match-avatar';
+        var fallback = '<span class="triagem-match-fallback" aria-hidden="true">' + escapeHtml(initialsFromName(name)) + '</span>';
+        var img = pro && pro.photoUrl
+            ? '<img src="' + escapeHtml(pro.photoUrl) + '" alt="' + escapeHtml(name) + '" onerror="this.remove()">'
+            : '';
+        return '<span class="' + cls + '">' + img + fallback + '</span>';
+    }
+
+    function renderIntroTeam(list) {
+        var wrap = document.getElementById('triagemIntroTeam');
+        if (!wrap) return;
+        var people = Array.isArray(list) ? list : [];
+        if (!people.length) return;
+        wrap.hidden = false;
+        wrap.innerHTML = people.map(function (pro) {
+            return '<figure class="triagem-intro-person">' +
+                avatarHtml(pro, 'triagem-intro-photo') +
+                '<figcaption>' + escapeHtml(shortDisplayName(pro.name)) + '</figcaption>' +
+                '</figure>';
+        }).join('');
+    }
+
+    function loadIntroTeam() {
+        fetch('/api/public/psychologists')
+            .then(function (res) { return res.ok ? res.json() : { psychologists: [] }; })
+            .then(function (data) { renderIntroTeam(data && data.psychologists); })
+            .catch(function () { renderIntroTeam([]); });
+    }
+
     function formatSlotLabel(dateISO, time) {
         var parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateISO || ''));
         if (!parts) return (dateISO || '') + ' · ' + (time || '');
@@ -491,9 +529,7 @@
         list.forEach(function (pro) {
             var article = document.createElement('article');
             article.className = 'triagem-match-card';
-            var photo = pro.photoUrl
-                ? '<img class="triagem-match-photo" src="' + escapeHtml(pro.photoUrl) + '" alt="">'
-                : '<span class="triagem-match-fallback" aria-hidden="true">' + escapeHtml(initialsFromName(pro.name)) + '</span>';
+            var photo = avatarHtml(pro, 'triagem-match-avatar');
             var bio = pro.bio ? '<p class="triagem-match-bio">' + escapeHtml(pro.bio) + '</p>' : '';
             var hours = pro.hoursLabel
                 ? '<p class="triagem-match-hours">' + escapeHtml(pro.hoursLabel) + '</p>'
@@ -613,4 +649,5 @@
 
     buildPhq();
     bind();
+    loadIntroTeam();
 })();

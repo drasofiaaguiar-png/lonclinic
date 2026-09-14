@@ -34,6 +34,7 @@ const db = require('./db');
 const totp = require('./totp');
 const analyticsNet = require('./analytics-network');
 const metaCapi = require('./meta-capi');
+const metaLeads = require('./meta-leads');
 const { computeCheckoutTotalCents, isStripeSubscriptionService, normalizeServiceKey, discountsAllowedForService, providerPayoutCents } = require('./pricing');
 
 function bookingServiceTag(raw) {
@@ -7497,6 +7498,40 @@ async function getBookableSlotsForDateIso(dateIso, excludeBookingRef, excludeInv
     return free;
 }
 
+function teamPhotoWhoForPerson(person) {
+    const blob = [
+        person && person.username,
+        person && person.fullName,
+        person && person.displayName,
+        person && person.name
+    ].map((s) => String(s || '').toLowerCase()).join(' ');
+    if (/barreto/.test(blob)) return 'sara-barreto';
+    if (/gamito/.test(blob)) return 'sara';
+    if (/carolina/.test(blob)) return 'carolina';
+    if (/rita/.test(blob) && /aguiar/.test(blob)) return 'rita';
+    return '';
+}
+
+function publicStaffPhotoUrl(person) {
+    const username = String((person && person.username) || '').trim();
+    if (username) return `/api/public/staff-photo/${encodeURIComponent(username)}`;
+    const who = teamPhotoWhoForPerson(person || {});
+    return who ? `/api/public/team-photo/${encodeURIComponent(who)}` : '';
+}
+
+async function resolvePublicStaffPhoto(username) {
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return null;
+    let photo = await getStaffPhotoInternal(u);
+    if (photo && photo.data) return photo;
+    const who = teamPhotoWhoForPerson({ username: u, name: u, fullName: u });
+    if (!who) return null;
+    const aliased = await publicTeamMemberProfile(who);
+    const aliasUser = String((aliased && aliased.username) || '').trim().toLowerCase();
+    if (!aliasUser || aliasUser === u) return null;
+    return getStaffPhotoInternal(aliasUser);
+}
+
 function publicStaffBookingCard(person) {
     const username = String((person && person.username) || '').trim();
     const name = String((person && (person.fullName || person.displayName || username)) || '').trim();
@@ -7506,9 +7541,13 @@ function publicStaffBookingCard(person) {
         username,
         name: name || username,
         bio,
-        photoUrl: person && person.hasPhoto && username
-            ? `/api/public/staff-photo/${encodeURIComponent(username)}`
-            : ''
+        photoUrl: publicStaffPhotoUrl({
+            username,
+            fullName: person && person.fullName,
+            displayName: person && person.displayName,
+            name,
+            hasPhoto: person && person.hasPhoto
+        })
     };
 }
 
@@ -7567,6 +7606,42 @@ async function listStaffBookablePeople(service, specialtyId) {
             weekly
         });
     }
+    return out;
+}
+
+async function listPublicPsychologyTeam() {
+    const [profiles, professionals] = await Promise.all([
+        listStaffProfilesInternal(),
+        listProfessionalsInternal()
+    ]);
+    const byUsername = new Map(
+        (professionals || []).map((pro) => [normalizeProfessionalUsername(pro.username), pro])
+    );
+    const byId = new Map((professionals || []).map((pro) => [Number(pro.id), pro]));
+    const out = [];
+    for (const profile of profiles || []) {
+        if (!profile || profile.profession !== 'psicologo') continue;
+        const u = String(profile.username || '').trim().toLowerCase();
+        let pro = Number.isInteger(Number(profile.professionalId))
+            ? byId.get(Number(profile.professionalId))
+            : null;
+        if (!pro) pro = byUsername.get(normalizeProfessionalUsername(u));
+        if (!pro || !pro.id) continue;
+        const name = String(profile.fullName || pro.displayName || u).trim();
+        const photoUrl = publicStaffPhotoUrl({
+            username: u,
+            fullName: profile.fullName,
+            displayName: pro.displayName,
+            name,
+            hasPhoto: profile.hasPhoto
+        });
+        out.push({
+            id: Number(pro.id),
+            name: name || u,
+            photoUrl
+        });
+    }
+    out.sort((a, b) => String(a.name || '').localeCompare(String(b.name || ''), 'pt'));
     return out;
 }
 
@@ -8557,6 +8632,15 @@ async function followUpPaidCheckout(session, fin, logPrefix = '') {
             }
         ).catch(() => {});
         metaCapi.sendPurchase(session, { bookingRef: fin.bookingRef || null }).catch(() => {});
+        const paidEmail = session.customer_email || meta.contact_email || '';
+        const paidPhone = (session.customer_details && session.customer_details.phone) || meta.contact_phone || '';
+        metaLeads.advanceStage({
+            email: paidEmail,
+            phone: paidPhone,
+            name: meta.patient_name || meta.contact_name || '',
+            stage: 'Converted',
+            attr: { fbp: meta.fbp, fbc: meta.fbc, fbclid: meta.fbclid }
+        }).catch(() => {});
     }
     markQuizLeadConverted(session.customer_email || meta.contact_email || '').catch(() => {});
 }
@@ -8787,6 +8871,42 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     }
 
     res.json({ received: true });
+});
+
+/* ========================================
+   META LEAD ADS WEBHOOK (Conversion Leads CRM)
+======================================== */
+
+metaLeads.setOnNewLead((lead) => {
+    if (!isEmailConfigured || !lead) return;
+    const leadId = String(lead.leadId || '');
+    const name = String(lead.name || '').trim() || '—';
+    const email = String(lead.email || '').trim() || '—';
+    const phone = String(lead.phone || '').trim() || '—';
+    deliverEmail({
+        from: EMAIL_FROM,
+        to: CONTACT_EMAIL,
+        subject: `Lead Meta: ${name === '—' ? leadId : name}`,
+        text: [
+            'Novo lead de Instant Form (Facebook/Instagram).',
+            `Nome: ${name}`,
+            `Email: ${email}`,
+            `Telefone: ${phone}`,
+            `Lead ID: ${leadId}`,
+            `Formulário: ${lead.formId || '—'}`,
+            `Anúncio: ${lead.adId || '—'}`
+        ].join('\n')
+    }).catch((err) => {
+        console.warn('Meta lead notify email:', err && err.message ? err.message : err);
+    });
+});
+
+app.get('/webhook/meta', (req, res) => {
+    metaLeads.handleVerify(req, res);
+});
+
+app.post('/webhook/meta', express.raw({ type: 'application/json' }), (req, res) => {
+    metaLeads.handleWebhook(req, res);
 });
 
 function parseCollectPayload(body) {
@@ -9068,7 +9188,9 @@ app.get('/travel-clinic', (req, res) => {
 
 async function publicTeamMemberProfile(who) {
     const key = String(who || '').trim().toLowerCase();
-    if (key !== 'rita' && key !== 'sara' && key !== 'sara-barreto' && key !== 'barreto') return null;
+    if (key !== 'rita' && key !== 'sara' && key !== 'sara-barreto' && key !== 'barreto' && key !== 'carolina') {
+        return null;
+    }
     const profiles = await listStaffProfilesInternal();
     return (profiles || []).find((p) => {
         if (!p) return false;
@@ -9079,6 +9201,9 @@ async function publicTeamMemberProfile(who) {
         }
         if (key === 'sara') {
             return u.includes('gamito') || /gamito/i.test(name);
+        }
+        if (key === 'carolina') {
+            return u.includes('carolina') || (/carolina/i.test(name) && /rocha/i.test(name));
         }
         return (u.includes('rita') && u.includes('aguiar'))
             || (/rita/i.test(name) && /aguiar/i.test(name));
@@ -12632,6 +12757,13 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
                 externalId: analyticsIds.visitorId
             },
             sourceUrl: `${getBaseUrl(req)}/book-consultation`
+        }).catch(() => {});
+        metaLeads.advanceStage({
+            email: patientEmail,
+            phone: patientPhone,
+            name: patientName,
+            stage: 'Qualified',
+            attr: { fbp: metaAttr.fbp, fbc: metaAttr.fbc, fbclid: metaAttr.fbclid }
         }).catch(() => {});
         res.json({ url: session.url });
 
@@ -17793,7 +17925,7 @@ app.get('/api/bookable-slots', async (req, res) => {
 app.get('/api/public/team-photo/:who', async (req, res) => {
     try {
         const profile = await publicTeamMemberProfile(req.params.who);
-        if (!profile || !profile.hasPhoto || !profile.username) {
+        if (!profile || !profile.username) {
             return res.status(404).end();
         }
         const photo = await getStaffPhotoInternal(profile.username);
@@ -17809,21 +17941,23 @@ app.get('/api/public/team-photo/:who', async (req, res) => {
     }
 });
 
+app.get('/api/public/psychologists', async (req, res) => {
+    try {
+        const psychologists = await listPublicPsychologyTeam();
+        res.json({ psychologists });
+    } catch (err) {
+        console.error('GET /api/public/psychologists:', err.message);
+        res.status(500).json({ psychologists: [] });
+    }
+});
+
 app.get('/api/public/staff-photo/:username', async (req, res) => {
     try {
         const username = String(req.params.username || '').trim().toLowerCase();
-        if (!username || !/^[a-z0-9._-]{1,64}$/i.test(username)) {
+        if (!username || !/^[a-z0-9._-]{1,80}$/i.test(username)) {
             return res.status(404).end();
         }
-        const profiles = await listStaffProfilesInternal();
-        const profile = profiles.find((p) => String(p.username || '').toLowerCase() === username);
-        if (!profile || !profile.hasPhoto) {
-            return res.status(404).end();
-        }
-        if (profile.profession !== 'psicologo' && profile.profession !== 'nutricionista' && profile.profession !== 'medico') {
-            return res.status(404).end();
-        }
-        const photo = await getStaffPhotoInternal(username);
+        const photo = await resolvePublicStaffPhoto(username);
         if (!photo || !photo.data) return res.status(404).end();
         res.set({
             'Content-Type': photo.mime || 'image/jpeg',
@@ -18890,10 +19024,17 @@ app.use((req, res) => {
         if (metaCapi.pixelId()) {
             console.log(
                 `   Meta Pixel: ${metaCapi.pixelId()}` +
-                    (metaCapi.hasCapi() ? ' + Conversions API' : ' (set META_CAPI_ACCESS_TOKEN for purchase matching)')
+                    (metaCapi.hasCapi() ? ' + Conversions API' : ' (set META_CAPI_ACCESS_TOKEN for purchase matching)') +
+                    (metaLeads.hasLeadWebhook() ? ' + Lead Ads CRM' : '')
             );
         } else {
             console.log('   ⚠️  Meta Pixel off — set META_PIXEL_ID to enable ads events');
+        }
+        if (metaCapi.crmDatasetId()) {
+            console.log(
+                `   Meta CRM dataset: ${metaCapi.crmDatasetId()}` +
+                    (metaCapi.hasCrmCapi() ? ' (Leads qualificados)' : ' (set META_CAPI_ACCESS_TOKEN to upload CRM events)')
+            );
         }
         if (isResendConfigured) {
             console.log('   ✉️  Email: Resend API (HTTPS) — outbound SMTP not required');

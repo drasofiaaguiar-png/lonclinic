@@ -149,7 +149,62 @@
     line-height: 1.65;
     color: var(--tri-muted);
     max-width: 46ch;
+    margin: 0 auto 22px;
+}
+
+.triagem-intro-team {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px 20px;
     margin: 0 auto 28px;
+}
+
+.triagem-intro-person {
+    margin: 0;
+    width: 88px;
+    text-align: center;
+}
+
+.triagem-intro-photo,
+.triagem-match-avatar {
+    position: relative;
+    display: block;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 8px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #e8f0ec;
+}
+
+.triagem-intro-photo img,
+.triagem-match-avatar img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.triagem-intro-fallback,
+.triagem-match-avatar .triagem-match-fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--tri-signal);
+    background: #e8f0ec;
+}
+
+.triagem-intro-person figcaption {
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--tri-ink);
 }
 
 /* ── Card ── */
@@ -609,14 +664,11 @@
     font-size: 0.8rem;
 }
 
-.triagem-match-photo,
-.triagem-match-fallback {
+.triagem-match-avatar {
     flex: 0 0 64px;
     width: 64px;
     height: 64px;
-    border-radius: 50%;
-    object-fit: cover;
-    background: #e8f0ec;
+    margin: 0;
 }
 
 .triagem-match-fallback {
@@ -625,6 +677,7 @@
     justify-content: center;
     font-weight: 700;
     color: var(--tri-signal);
+    background: #e8f0ec;
 }
 
 .triagem-match-bio {

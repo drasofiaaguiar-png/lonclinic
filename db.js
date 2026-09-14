@@ -868,6 +868,24 @@ async function initSchema(p) {
         )
     `);
     await p.query(`CREATE INDEX IF NOT EXISTS idx_deletion_requests_status ON deletion_requests (status, created_at DESC)`);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS meta_leads (
+            lead_id VARCHAR(20) PRIMARY KEY,
+            email VARCHAR(320),
+            phone VARCHAR(40),
+            name TEXT,
+            form_id VARCHAR(32),
+            page_id VARCHAR(32),
+            ad_id VARCHAR(32),
+            stage VARCHAR(32) NOT NULL DEFAULT '',
+            lead_created_at TIMESTAMPTZ,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+    await p.query(
+        `CREATE INDEX IF NOT EXISTS idx_meta_leads_email_lower ON meta_leads (LOWER(email)) WHERE email IS NOT NULL`
+    );
 }
 
 function rowToAnalyticsEvent(row) {
@@ -4344,7 +4362,7 @@ async function findDeletionRequestById(id) {
 async function anonymizePatientContact(email) {
     const p = getPool();
     const e = String(email || '').toLowerCase().trim();
-    if (!e) return { bookings: 0, quizzes: 0, otps: 0 };
+    if (!e) return { bookings: 0, quizzes: 0, otps: 0, metaLeads: 0 };
     const token = require('crypto').createHash('sha256').update(e).digest('hex').slice(0, 12);
     const redacted = `erased-${token}@invalid.local`;
     const bookings = await p.query(
@@ -4355,11 +4373,102 @@ async function anonymizePatientContact(email) {
     );
     const quizzes = await p.query(`DELETE FROM quiz_attempts WHERE LOWER(TRIM(email)) = $1`, [e]);
     const otps = await p.query(`DELETE FROM patient_otps WHERE LOWER(email) = $1`, [e]);
+    let metaLeadCount = 0;
+    try {
+        const metaLeads = await p.query(
+            `UPDATE meta_leads
+             SET email = $2, phone = '', name = 'Redacted', updated_at = NOW()
+             WHERE LOWER(TRIM(email)) = $1`,
+            [e, redacted]
+        );
+        metaLeadCount = metaLeads.rowCount || 0;
+    } catch (err) {
+        if (err && err.code !== '42P01') throw err;
+    }
     return {
         bookings: bookings.rowCount || 0,
         quizzes: quizzes.rowCount || 0,
-        otps: otps.rowCount || 0
+        otps: otps.rowCount || 0,
+        metaLeads: metaLeadCount
     };
+}
+
+function rowToMetaLead(row) {
+    if (!row) return null;
+    return {
+        leadId: String(row.lead_id || ''),
+        email: row.email || '',
+        phone: row.phone || '',
+        name: row.name || '',
+        formId: row.form_id || '',
+        pageId: row.page_id || '',
+        adId: row.ad_id || '',
+        stage: row.stage || '',
+        leadCreatedAt: row.lead_created_at instanceof Date ? row.lead_created_at.toISOString() : row.lead_created_at || null,
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
+        updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : row.updated_at
+    };
+}
+
+async function upsertMetaLead(record) {
+    const p = getPool();
+    const leadId = String((record && record.leadId) || '').replace(/\D/g, '');
+    if (!/^\d{15,17}$/.test(leadId)) return null;
+    const email = String((record && record.email) || '').trim().toLowerCase().slice(0, 320) || null;
+    const phone = String((record && record.phone) || '').trim().slice(0, 40) || null;
+    const name = String((record && record.name) || '').trim().slice(0, 120) || null;
+    const formId = String((record && record.formId) || '').slice(0, 32) || null;
+    const pageId = String((record && record.pageId) || '').slice(0, 32) || null;
+    const adId = String((record && record.adId) || '').slice(0, 32) || null;
+    const stage = String((record && record.stage) || '').trim().slice(0, 32) || '';
+    let leadCreatedAt = null;
+    if (record && record.leadCreatedAt) {
+        const d = new Date(record.leadCreatedAt);
+        if (!Number.isNaN(d.getTime())) leadCreatedAt = d.toISOString();
+    }
+    const r = await p.query(
+        `INSERT INTO meta_leads (
+            lead_id, email, phone, name, form_id, page_id, ad_id, stage, lead_created_at
+         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+         ON CONFLICT (lead_id) DO UPDATE SET
+            email = COALESCE(EXCLUDED.email, meta_leads.email),
+            phone = COALESCE(EXCLUDED.phone, meta_leads.phone),
+            name = COALESCE(EXCLUDED.name, meta_leads.name),
+            form_id = COALESCE(EXCLUDED.form_id, meta_leads.form_id),
+            page_id = COALESCE(EXCLUDED.page_id, meta_leads.page_id),
+            ad_id = COALESCE(EXCLUDED.ad_id, meta_leads.ad_id),
+            stage = CASE
+                WHEN EXCLUDED.stage <> '' THEN EXCLUDED.stage
+                ELSE meta_leads.stage
+            END,
+            lead_created_at = COALESCE(EXCLUDED.lead_created_at, meta_leads.lead_created_at),
+            updated_at = NOW()
+         RETURNING *`,
+        [leadId, email, phone, name, formId, pageId, adId, stage, leadCreatedAt]
+    );
+    return rowToMetaLead(r.rows[0]);
+}
+
+async function findMetaLeadByLeadId(leadId) {
+    const p = getPool();
+    const id = String(leadId || '').replace(/\D/g, '');
+    if (!id) return null;
+    const r = await p.query(`SELECT * FROM meta_leads WHERE lead_id = $1`, [id]);
+    return rowToMetaLead(r.rows[0]);
+}
+
+async function findMetaLeadByEmail(email) {
+    const p = getPool();
+    const e = String(email || '').toLowerCase().trim();
+    if (!e) return null;
+    const r = await p.query(
+        `SELECT * FROM meta_leads
+         WHERE LOWER(TRIM(email)) = $1
+         ORDER BY updated_at DESC
+         LIMIT 1`,
+        [e]
+    );
+    return rowToMetaLead(r.rows[0]);
 }
 
 async function markDeletionRequestProcessed(id) {
@@ -4423,6 +4532,9 @@ module.exports = {
     listDeletionRequests,
     findDeletionRequestById,
     anonymizePatientContact,
+    upsertMetaLead,
+    findMetaLeadByLeadId,
+    findMetaLeadByEmail,
     markDeletionRequestProcessed,
     markBookingRefunded,
     purgeUnclaimedQuizAttempts,

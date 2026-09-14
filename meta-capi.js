@@ -6,14 +6,27 @@
 
 const crypto = require('crypto');
 
-const API_VERSION = 'v21.0';
+const API_VERSION = 'v26.0';
 const DEFAULT_PIXEL_ID = '935004576344024';
+const DEFAULT_CRM_DATASET_ID = '1664736971977824';
 
 function pixelId() {
     const raw = String(process.env.META_PIXEL_ID || DEFAULT_PIXEL_ID).trim();
     if (!raw || /^(0|off|false|none)$/i.test(raw)) return '';
     if (!/^\d{5,20}$/.test(raw)) return '';
     return raw;
+}
+
+function crmDatasetId() {
+    const raw = String(process.env.META_CRM_DATASET_ID || process.env.META_DATASET_ID || DEFAULT_CRM_DATASET_ID).trim();
+    if (!raw || /^(0|off|false|none)$/i.test(raw)) return '';
+    if (!/^\d{5,20}$/.test(raw)) return '';
+    return raw;
+}
+
+function crmLeadSource() {
+    const raw = String(process.env.META_CRM_NAME || 'LON Clinic CRM').trim();
+    return (raw || 'LON Clinic CRM').slice(0, 80);
 }
 
 function accessToken() {
@@ -26,6 +39,10 @@ function testEventCode() {
 
 function hasCapi() {
     return Boolean(pixelId() && accessToken());
+}
+
+function hasCrmCapi() {
+    return Boolean(crmDatasetId() && accessToken());
 }
 
 function sha256(value) {
@@ -44,6 +61,37 @@ function normalizePhone(phone) {
     if (d.startsWith('00')) d = d.slice(2);
     if (d.length === 9 && d.startsWith('9')) d = '351' + d;
     return d;
+}
+
+function normalizeNamePart(value) {
+    return String(value || '')
+        .trim()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z]/g, '');
+}
+
+function splitPersonName(full, firstName, lastName) {
+    let first = String(firstName || '').trim();
+    let last = String(lastName || '').trim();
+    if (!first && !last) {
+        const parts = String(full || '').trim().split(/\s+/).filter(Boolean);
+        if (parts.length === 1) first = parts[0];
+        else if (parts.length > 1) {
+            first = parts[0];
+            last = parts.slice(1).join(' ');
+        }
+    }
+    return { firstName: first, lastName: last };
+}
+
+function clickIdFromAttr(attr) {
+    const fbc = String((attr && attr.fbc) || '').slice(0, 200);
+    if (fbc) return fbc;
+    const fbclid = String((attr && attr.fbclid) || '').slice(0, 120);
+    if (fbclid && /^[\w.-]{8,120}$/.test(fbclid)) return `fb.1.${Date.now()}.${fbclid}`;
+    return '';
 }
 
 function siteOrigin() {
@@ -111,22 +159,43 @@ function applyAttribution(metadata, attr) {
     return metadata;
 }
 
-function userData({ email, phone, fbp, fbc, clientIp, clientUa, externalId }) {
+function normalizeLeadId(leadId) {
+    const digits = String(leadId || '').replace(/\D/g, '');
+    if (!/^\d{15,17}$/.test(digits)) return '';
+    return digits;
+}
+
+function leadIdForPayload(leadId) {
+    const digits = normalizeLeadId(leadId);
+    if (!digits) return null;
+    const n = Number(digits);
+    return Number.isSafeInteger(n) ? n : digits;
+}
+
+function userData({ email, phone, fbp, fbc, fbclid, clientIp, clientUa, externalId, leadId, name, firstName, lastName }) {
     const out = {};
     const em = normalizeEmail(email);
     if (em) out.em = [sha256(em)];
     const ph = normalizePhone(phone);
     if (ph) out.ph = [sha256(ph)];
+    const names = splitPersonName(name, firstName, lastName);
+    const fn = normalizeNamePart(names.firstName);
+    const ln = normalizeNamePart(names.lastName);
+    if (fn) out.fn = [sha256(fn)];
+    if (ln) out.ln = [sha256(ln)];
     if (fbp) out.fbp = String(fbp).slice(0, 128);
-    if (fbc) out.fbc = String(fbc).slice(0, 200);
+    const clickId = fbc || clickIdFromAttr({ fbc, fbclid });
+    if (clickId) out.fbc = String(clickId).slice(0, 200);
     if (clientIp) out.client_ip_address = String(clientIp).slice(0, 64);
     if (clientUa) out.client_user_agent = String(clientUa).slice(0, 512);
     if (externalId) out.external_id = [sha256(String(externalId))];
+    const payloadLeadId = leadIdForPayload(leadId);
+    if (payloadLeadId != null) out.lead_id = payloadLeadId;
     return out;
 }
 
-async function sendEvents(events) {
-    const id = pixelId();
+async function sendEvents(events, targetId) {
+    const id = String(targetId || pixelId()).trim();
     const token = accessToken();
     if (!id || !token || !events || !events.length) return { ok: false, skipped: true };
     const payload = {
@@ -230,13 +299,57 @@ async function sendPurchase(session, extra) {
     }]);
 }
 
+function buildCrmLeadEvent({ eventName, email, phone, leadId, eventTime: ts, eventId, name, firstName, lastName, attr }) {
+    const stage = String(eventName || 'Lead').trim().slice(0, 64) || 'Lead';
+    const time = Number(ts);
+    const click = attr || {};
+    return {
+        action_source: 'system_generated',
+        custom_data: {
+            event_source: 'crm',
+            lead_event_source: crmLeadSource()
+        },
+        event_name: stage,
+        event_time: Number.isFinite(time) && time > 0 ? Math.floor(time) : eventTime(),
+        event_id: String(eventId || `crm_${normalizeLeadId(leadId) || 'na'}_${stage}`).slice(0, 64),
+        user_data: userData({
+            email,
+            phone,
+            leadId,
+            name,
+            firstName,
+            lastName,
+            fbp: click.fbp,
+            fbc: click.fbc,
+            fbclid: click.fbclid
+        })
+    };
+}
+
+async function sendCrmLeadEvent(opts) {
+    if (!hasCrmCapi()) return { ok: false, skipped: true };
+    const event = buildCrmLeadEvent(opts || {});
+    const user = event.user_data || {};
+    if (!user.lead_id && !(user.em && user.em.length) && !(user.ph && user.ph.length) && !user.fbc) {
+        return { ok: false, skipped: true };
+    }
+    return sendEvents([event], crmDatasetId());
+}
+
 module.exports = {
     pixelId,
+    datasetId: crmDatasetId,
+    crmDatasetId,
     hasCapi,
+    hasCrmCapi,
+    crmLeadSource,
+    normalizeLeadId,
     browserSnippet,
     stripBrowserSnippet,
     pickAttribution,
     applyAttribution,
     sendInitiateCheckout,
-    sendPurchase
+    sendPurchase,
+    buildCrmLeadEvent,
+    sendCrmLeadEvent
 };
