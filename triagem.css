@@ -534,14 +534,138 @@
     padding: 40px 28px;
 }
 
+.triagem-card--done.has-match {
+    text-align: left;
+}
+
 .triagem-card--done h2 {
     margin-bottom: 12px;
+}
+
+.triagem-card--done.has-match h2 {
+    text-align: center;
 }
 
 .triagem-card--done p {
     color: var(--tri-muted);
     line-height: 1.6;
     margin: 0 0 24px;
+}
+
+.triagem-card--done.has-match #doneMessage {
+    text-align: center;
+}
+
+.triagem-done-crisis {
+    text-align: center;
+    font-size: 0.85rem !important;
+    margin: -8px 0 20px !important;
+}
+
+.triagem-done-crisis a {
+    color: var(--tri-ink);
+    font-weight: 600;
+}
+
+.triagem-match {
+    display: grid;
+    gap: 16px;
+    margin: 0 0 24px;
+}
+
+.triagem-match-kicker {
+    margin: 0 !important;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--tri-signal);
+    text-align: center;
+}
+
+.triagem-match-card {
+    text-align: left;
+    padding: 18px;
+    border-radius: 16px;
+    border: 1.5px solid var(--tri-line);
+    background: var(--tri-mist);
+}
+
+.triagem-match-head {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.triagem-match-head h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 650;
+}
+
+.triagem-match-role {
+    margin: 2px 0 0 !important;
+    font-size: 0.8rem;
+}
+
+.triagem-match-photo,
+.triagem-match-fallback {
+    flex: 0 0 64px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #e8f0ec;
+}
+
+.triagem-match-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--tri-signal);
+}
+
+.triagem-match-bio {
+    margin: 0 0 8px !important;
+    font-size: 0.9rem;
+}
+
+.triagem-match-hours {
+    margin: 0 0 12px !important;
+    font-size: 0.82rem;
+    color: var(--tri-ink) !important;
+}
+
+.triagem-match-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 16px;
+}
+
+.triagem-match-slot {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--tri-line);
+    background: var(--tri-surface);
+    color: var(--tri-ink);
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.triagem-match-slot:hover {
+    border-color: var(--tri-signal);
+    color: var(--tri-signal);
+}
+
+.triagem-match-card .lon-btn {
+    width: 100%;
+    justify-content: center;
 }
 
 .triagem-done-actions {

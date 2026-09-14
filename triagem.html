@@ -25,7 +25,7 @@
     <meta name="theme-color" content="#2f453a">
     <link rel="stylesheet" href="/landing.css?v=20260621b">
     <link rel="stylesheet" href="/psicologia.css?v=20260807d">
-    <link rel="stylesheet" href="/triagem.css?v=20260804a">
+    <link rel="stylesheet" href="/triagem.css?v=20260914b">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -293,9 +293,15 @@
         <section class="triagem-screen" id="screen-done" data-screen="done" hidden>
             <div class="triagem-card triagem-card--done">
                 <h2>Triagem recebida</h2>
-                <p id="doneMessage">Obrigada. A equipa clínica vai rever as tuas respostas e contactar-te em breve para o matching com a psicóloga.</p>
+                <p id="doneMessage">Com base nas tuas respostas, podes marcar com a psicóloga disponível.</p>
+                <p id="doneCrisisNote" class="triagem-done-crisis" hidden>
+                    Se precisares de ajuda imediata: <a href="tel:112">112</a> ·
+                    <a href="tel:808242424">SNS 24</a> ·
+                    <a href="tel:213544545">SOS Voz Amiga</a>.
+                </p>
+                <div id="triagemMatch" class="triagem-match" hidden></div>
                 <div class="triagem-done-actions">
-                    <a href="/saudemental" class="lon-btn lon-btn-primary">Voltar à Psicologia</a>
+                    <a href="/saudemental" class="lon-btn lon-btn-primary" id="donePrimary">Voltar à Psicologia</a>
                     <a href="https://wa.me/351928372775?text=Ol%C3%A1%2C%20acabei%20de%20enviar%20a%20triagem%20de%20Psicologia." class="lon-btn lon-btn-soft" target="_blank" rel="noopener noreferrer">WhatsApp</a>
                 </div>
             </div>
@@ -333,6 +339,6 @@
         <p>© 2026 Lon Clinic · ERS 45475</p>
     </footer>
 
-    <script src="/triagem.js?v=20260914a" defer></script>
+    <script src="/triagem.js?v=20260914c" defer></script>
 </body>
 </html>

@@ -427,6 +427,93 @@
         };
     }
 
+    function escapeHtml(s) {
+        return String(s || '').replace(/[&<>"']/g, function (ch) {
+            return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
+        });
+    }
+
+    function initialsFromName(name) {
+        var cleaned = String(name || '').replace(/\bDra?\.?\s+/gi, '').trim();
+        var parts = cleaned.split(/\s+/).filter(Boolean);
+        if (!parts.length) return 'P';
+        return (parts[0].charAt(0) + (parts[1] ? parts[1].charAt(0) : '')).toUpperCase();
+    }
+
+    function formatSlotLabel(dateISO, time) {
+        var parts = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateISO || ''));
+        if (!parts) return (dateISO || '') + ' · ' + (time || '');
+        var d = new Date(Number(parts[1]), Number(parts[2]) - 1, Number(parts[3]));
+        var label = d.toLocaleDateString('pt-PT', { weekday: 'short', day: 'numeric', month: 'short' });
+        return label + ' · ' + time;
+    }
+
+    function renderMatch(match) {
+        var wrap = document.getElementById('triagemMatch');
+        var card = document.querySelector('.triagem-card--done');
+        var primary = document.getElementById('donePrimary');
+        var doneMsg = document.getElementById('doneMessage');
+        var crisisNote = document.getElementById('doneCrisisNote');
+        if (!wrap) return;
+        var list = match && Array.isArray(match.psychologists) ? match.psychologists : [];
+        var fallbackHref = '/marcar/psicologia-mensal?ref=triagem';
+        wrap.innerHTML = '';
+        wrap.hidden = false;
+        if (card) card.classList.add('has-match');
+        if (crisisNote) crisisNote.hidden = !state.riskFlagged;
+        if (primary) {
+            primary.textContent = 'Ver a equipa';
+            primary.className = 'lon-btn lon-btn-soft';
+        }
+        if (doneMsg) {
+            doneMsg.textContent = list.length > 1
+                ? 'Com base nas tuas respostas, estes são os psicólogos disponíveis agora — escolhe um horário.'
+                : 'Com base nas tuas respostas, esta é a psicóloga disponível agora — podes marcar um horário.';
+        }
+
+        if (!list.length) {
+            wrap.innerHTML =
+                '<p class="triagem-match-kicker">Marcar consulta</p>' +
+                '<article class="triagem-match-card">' +
+                '<p class="triagem-match-bio">Ainda não há um horário publicado neste momento. Podes ver a agenda da equipa e escolher o psicólogo.</p>' +
+                '<a class="lon-btn lon-btn-primary" href="' + fallbackHref + '">Ver horários</a>' +
+                '</article>';
+            return;
+        }
+
+        var kicker = document.createElement('p');
+        kicker.className = 'triagem-match-kicker';
+        kicker.textContent = list.length === 1
+            ? 'A tua psicóloga'
+            : 'Psicólogos disponíveis';
+        wrap.appendChild(kicker);
+
+        list.forEach(function (pro) {
+            var article = document.createElement('article');
+            article.className = 'triagem-match-card';
+            var photo = pro.photoUrl
+                ? '<img class="triagem-match-photo" src="' + escapeHtml(pro.photoUrl) + '" alt="">'
+                : '<span class="triagem-match-fallback" aria-hidden="true">' + escapeHtml(initialsFromName(pro.name)) + '</span>';
+            var bio = pro.bio ? '<p class="triagem-match-bio">' + escapeHtml(pro.bio) + '</p>' : '';
+            var hours = pro.hoursLabel
+                ? '<p class="triagem-match-hours">' + escapeHtml(pro.hoursLabel) + '</p>'
+                : '';
+            var slots = (pro.slots || []).map(function (slot) {
+                return '<a class="triagem-match-slot" href="' + escapeHtml(slot.href) + '">' +
+                    escapeHtml(formatSlotLabel(slot.date, slot.time)) + '</a>';
+            }).join('');
+            var slotsBlock = slots
+                ? '<div class="triagem-match-slots" aria-label="Horários disponíveis">' + slots + '</div>'
+                : '';
+            article.innerHTML =
+                '<div class="triagem-match-head">' + photo +
+                '<div><h3>' + escapeHtml(pro.name) + '</h3><p class="triagem-match-role">Psicólogo(a)</p></div></div>' +
+                bio + hours + slotsBlock +
+                '<a class="lon-btn lon-btn-primary" href="' + escapeHtml(pro.href || fallbackHref) + '">Marcar consulta</a>';
+            wrap.appendChild(article);
+        });
+    }
+
     async function submitForm(e) {
         e.preventDefault();
         formError.hidden = true;
@@ -455,15 +542,7 @@
                 risk_flagged: payload.riskFlagged ? 1 : 0,
                 phq_total: payload.phqTotal
             });
-
-            var doneMsg = document.getElementById('doneMessage');
-            if (payload.riskFlagged) {
-                doneMsg.innerHTML =
-                    'Recebemos a tua triagem com <strong>sinalização prioritária</strong> para a equipa clínica. ' +
-                    'Se precisares de ajuda imediata: <a href="tel:112">112</a> · ' +
-                    '<a href="tel:808242424">SNS 24</a> · <a href="tel:213544545">SOS Voz Amiga</a>.';
-            }
-
+            renderMatch(data.match);
             goTo(7);
         } catch (err) {
             formError.textContent = err.message || 'Erro de rede. Tenta novamente.';

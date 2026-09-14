@@ -286,6 +286,29 @@ function publicPsychologySpecialties(lang) {
     }));
 }
 
+const TRIAGE_MOTIVO_SPECIALTIES = [
+    { test: /ansiedade/i, id: 'ansiedade' },
+    { test: /humor|tristeza|depress/i, id: 'depressao' },
+    { test: /burnout|trabalho/i, id: 'burnout' },
+    { test: /rela[cç][oõ]es|familia/i, id: 'relacionamentos' },
+    { test: /luto|trauma/i, id: 'trauma' }
+];
+
+/** Triage free-text motivos → psychology specialty ids (unique, first mention wins). */
+function specialtyIdsFromMotivos(motivos) {
+    const ids = [];
+    const seen = new Set();
+    for (const raw of Array.isArray(motivos) ? motivos : []) {
+        const text = String(raw || '').trim();
+        if (!text) continue;
+        const hit = TRIAGE_MOTIVO_SPECIALTIES.find((row) => row.test.test(text));
+        if (!hit || seen.has(hit.id)) continue;
+        seen.add(hit.id);
+        ids.push(hit.id);
+    }
+    return ids;
+}
+
 const AREA_MATCH_ALIASES = {
     'Stress / burnout': 'Burnout',
     'Luto': 'Luto (geral)',
@@ -554,6 +577,7 @@ module.exports = {
     hasBookableHours,
     psychologySpecialty,
     publicPsychologySpecialties,
+    specialtyIdsFromMotivos,
     profileClinicalAreas,
     profileMatchesSpecialty,
     timeToMinutes,

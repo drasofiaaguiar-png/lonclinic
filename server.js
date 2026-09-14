@@ -9078,12 +9078,15 @@ app.get('/travel-clinic', (req, res) => {
 
 async function publicTeamMemberProfile(who) {
     const key = String(who || '').trim().toLowerCase();
-    if (key !== 'rita' && key !== 'sara') return null;
+    if (key !== 'rita' && key !== 'sara' && key !== 'sara-barreto' && key !== 'barreto') return null;
     const profiles = await listStaffProfilesInternal();
     return (profiles || []).find((p) => {
         if (!p) return false;
         const u = String(p.username || '').toLowerCase();
         const name = String(p.fullName || '');
+        if (key === 'sara-barreto' || key === 'barreto') {
+            return u.includes('barreto') || /barreto/i.test(name);
+        }
         if (key === 'sara') {
             return u.includes('gamito') || /gamito/i.test(name);
         }
@@ -10703,6 +10706,126 @@ async function sendTriagemPriorityAlert(data) {
     }
 }
 
+const WEEKDAY_PT_SHORT = {
+    monday: 'Seg',
+    tuesday: 'Ter',
+    wednesday: 'Qua',
+    thursday: 'Qui',
+    friday: 'Sex',
+    saturday: 'Sáb',
+    sunday: 'Dom'
+};
+
+function weeklyHoursLabel(weekly) {
+    const platform = publicPlatformHours().weekly;
+    const bits = [];
+    for (const day of staffBooking.WEEKDAY_KEYS) {
+        const range = staffBooking.intersectHours(
+            weekly && weekly[day] && weekly[day].enabled ? weekly[day] : null,
+            platform[day] && platform[day].enabled ? platform[day] : null
+        );
+        if (range) bits.push(`${WEEKDAY_PT_SHORT[day]} ${range.start}–${range.end}`);
+    }
+    return bits.join(' · ');
+}
+
+function guessStaffGender(name) {
+    const s = String(name || '');
+    if (/\bdra(\.|\b)/i.test(s) || /\bpsicóloga\b/i.test(s)) return 'f';
+    if (/\bdr(\.|\b)/i.test(s) || /\bpsicólogo\b/i.test(s)) return 'm';
+    return '';
+}
+
+function preferredStaffGender(genero, prefs) {
+    const list = Array.isArray(prefs) ? prefs : [];
+    if (!list.some((p) => /mesmo g[eé]nero/i.test(String(p || '')))) return '';
+    if (/^Feminino/i.test(String(genero || ''))) return 'f';
+    if (/^Masculino/i.test(String(genero || ''))) return 'm';
+    return '';
+}
+
+function slotsInPreferredWindow(slots, horario) {
+    const list = Array.isArray(slots) ? slots : [];
+    const label = String(horario || '');
+    if (/Manh/i.test(label)) {
+        return list.filter((s) => {
+            const mins = timeToMinutes(s && s.time);
+            return mins != null && mins < 12 * 60;
+        });
+    }
+    if (/Tarde/i.test(label)) {
+        return list.filter((s) => {
+            const mins = timeToMinutes(s && s.time);
+            return mins != null && mins >= 12 * 60 && mins < 17 * 60;
+        });
+    }
+    return list;
+}
+
+function triagemBookHref({ specialty, professionalId, date, time }) {
+    const params = new URLSearchParams();
+    params.set('ref', 'triagem');
+    if (specialty) params.set('specialty', specialty);
+    if (professionalId) params.set('professionalId', String(professionalId));
+    if (date) params.set('date', date);
+    if (time) params.set('time', time);
+    return `/marcar/psicologia-mensal?${params.toString()}`;
+}
+
+async function matchPsychologistsForTriagem(payload) {
+    const service = 'psicologia_mensal';
+    const specialties = staffBooking.specialtyIdsFromMotivos(payload && payload.motivos);
+    const specialty = specialties[0] || 'outro';
+    const specialtyQuery = specialties.join(',');
+    let people = await listStaffBookablePeople(service, specialtyQuery);
+    if (!people.length && specialtyQuery) {
+        people = await listStaffBookablePeople(service, 'outro');
+    }
+    const wantGender = preferredStaffGender(payload && payload.genero, payload && payload.prefPsicologa);
+    people = people.slice().sort((a, b) => {
+        if (wantGender) {
+            const ag = guessStaffGender(a.fullName || a.displayName) === wantGender ? 0 : 1;
+            const bg = guessStaffGender(b.fullName || b.displayName) === wantGender ? 0 : 1;
+            if (ag !== bg) return ag - bg;
+        }
+        return String(a.displayName || '').localeCompare(String(b.displayName || ''), 'pt');
+    });
+
+    const psychologists = [];
+    for (const person of people) {
+        if (psychologists.length >= 3) break;
+        const rawSlots = await getNextBookableSlots(6, 14, 336, {
+            service,
+            specialty: specialtyQuery || 'outro',
+            professionalId: person.id
+        });
+        const preferred = slotsInPreferredWindow(rawSlots, payload && payload.horario);
+        const useSlots = preferred.length ? preferred : rawSlots;
+        if (!useSlots.length) continue;
+        const card = publicStaffBookingCard(person);
+        psychologists.push({
+            id: card.id,
+            name: card.name,
+            bio: card.bio,
+            photoUrl: card.photoUrl,
+            hoursLabel: weeklyHoursLabel(person.weekly),
+            href: triagemBookHref({ specialty, professionalId: person.id }),
+            slots: useSlots.slice(0, 6).map((slot) => ({
+                date: slot.date,
+                time: slot.time,
+                label: `${slot.date} · ${slot.time}`,
+                href: triagemBookHref({
+                    specialty,
+                    professionalId: person.id,
+                    date: slot.date,
+                    time: slot.time
+                })
+            }))
+        });
+    }
+    return { service, specialty, psychologists };
+}
+
 function formatTriagemEmail(data) {
     const phq = data.phq || {};
     const motivos = Array.isArray(data.motivos) ? data.motivos.join(', ') : '';
@@ -10737,6 +10860,14 @@ function formatTriagemEmail(data) {
         `Psicóloga: ${Array.isArray(data.prefPsicologa) ? data.prefPsicologa.join('; ') : data.prefPsicologa}`,
         `Horário vídeo: ${data.horario}`,
         `Encaminhamento médico/nutri: ${data.encaminhamento || '—'}`,
+        '',
+        '── Matching sugerido ──',
+        ...((data.match && Array.isArray(data.match.psychologists) && data.match.psychologists.length)
+            ? data.match.psychologists.map((pro) => {
+                const slots = (pro.slots || []).map((s) => `${s.date} ${s.time}`).join(', ');
+                return `${pro.name}${pro.hoursLabel ? ` (${pro.hoursLabel})` : ''}${slots ? ` — ${slots}` : ''}`;
+            })
+            : ['Nenhum psicólogo com horário publicado neste momento.']),
         '',
         '── Consentimentos ──',
         `Sem risco imediato (auto-declaração): ${data.consentimentos?.semRiscoImediato ? 'sim' : 'não'}`,
@@ -10868,13 +10999,21 @@ app.post('/api/triagem', rateLimitTriagem, async (req, res) => {
     // Full submission email already carries PRIORIDADE in the subject when riskFlagged.
     // Mid-form /api/triagem-alert handles immediate notification during the PHQ-9 step.
 
+    let match = { service: 'psicologia_mensal', specialty: 'outro', psychologists: [] };
+    try {
+        match = await matchPsychologistsForTriagem(payload);
+    } catch (err) {
+        console.error('triagem match:', err.message || err);
+    }
+    payload.match = match;
+
     const sent = await sendTriagemSubmission(payload);
     if (!sent) {
         return res.status(503).json({ error: 'Não foi possível enviar de momento. Tenta novamente.' });
     }
 
     emitServerAnalytics('triage_submitted', { props: { flagged: !!riskFlagged } }, req).catch(() => {});
-    return res.json({ success: true, riskFlagged });
+    return res.json({ success: true, riskFlagged, match });
 });
 
 // ─── API: Burnout quiz (CBI) — save result + email ───
