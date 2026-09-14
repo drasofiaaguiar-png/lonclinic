@@ -479,7 +479,7 @@ function articleCluster(meta) {
     if (meta && (meta.series === 'bestsellers-saude-intestinal' || about === 'livros de intestino' || about === 'saúde intestinal' || about === 'saude intestinal')) {
         return 'bestsellers-saude-intestinal';
     }
-    if (/vacina|viajante|travel|marcacao|malaria|viajar-a|viajar-ao/.test(slug)) return 'travel';
+    if (/vacina|viajante|travel|vaccination|marcacao|malaria|viajar-a|viajar-ao/.test(slug)) return 'travel';
     if (/burnout/.test(slug) || about === 'burnout') return 'burnout';
     if (/depress/.test(about) || /depressao|anedonia|antidepressivos/.test(slug)) return 'depressao';
     if (/ansiedade/.test(about) || /ansiedade|ataques-de-panico|fobias-especificas/.test(slug)) return 'ansiedade';
@@ -1172,7 +1172,7 @@ function pickRelatedArticles(current, articles) {
     rest.filter((a) => articleCluster(a) === cluster).forEach(push);
     pickCrossClusterArticles(current, all, 4).forEach(push);
     rest.forEach(push);
-    all.filter((a) => !seen.has(a.slug)).forEach(push);
+    all.filter((a) => !seen.has(a.slug) && articleLangCode(a) === lang).forEach(push);
     return picked;
 }
 
@@ -1855,7 +1855,7 @@ function magTheme(article) {
     if (/perda de peso/.test(about) || /perda-de-peso|deficit-calorico|efeito-ioio|fome-emocional|alimentacao-intuitiva|glp1|contagem-de-calorias|platos-na-perda|alcool-e-perda|proteina-e-saciedade|sono-e-peso|stress-e-perda|forca-vs-cardio|fibra-e-perda|manter-o-peso|nutricionista-plano/.test(slug)) return 'perda-de-peso';
     if (/autismo|adhd/.test(about) || /autismo|adhd/.test(slug)) return 'mental';
     if (/psicolog/.test(about) || /encontrar-um-psicologo|consulta-psicologia/.test(slug)) return 'mental';
-    if (/vacina|viajante|travel/.test(slug)) return 'travel';
+    if (/vacina|viajante|travel|vaccination/.test(slug)) return 'travel';
     return 'clinic';
 }
 
@@ -1865,7 +1865,9 @@ function magThemeLabel(article) {
 }
 
 function loadListedArticles() {
-    return sortArticles(listedGuideArticles(loadManifest().articles || []));
+    return sortArticles(
+        listedGuideArticles(loadManifest().articles || []).filter((a) => articleLangCode(a) === 'pt')
+    );
 }
 
 function newestListedArticleDate(theme) {
@@ -2608,6 +2610,7 @@ function magazineNavTree() {
                     label: 'Vacinas do viajante',
                     children: [
                         { label: 'Centros por região', href: '/blog/centros-de-vacinacao-internacional-portugal' },
+                        { label: 'International vaccination centres', href: '/blog/international-vaccination-centres-portugal' },
                         { label: 'Guia completo', href: '/blog/vacinas-viajante-guia-completo' },
                         { label: 'Lisboa', href: '/blog/vacinas-viajante-lisboa' },
                         { label: 'Porto', href: '/blog/vacinas-viajante-porto' },
@@ -2951,7 +2954,7 @@ function layoutMagazinePage(opts) {
 
 function renderMagazineIndex(origin) {
     const o = normalizeOrigin(origin);
-    const articles = sortArticles((loadManifest().articles || []).filter((a) => isValidSlug(a.slug) && isListedArticle(a)));
+    const articles = loadListedArticles();
     const mental = articles.filter((a) => magTheme(a) === 'mental');
     const burnout = articles.filter((a) => magTheme(a) === 'burnout');
     const depressao = articles.filter((a) => magTheme(a) === 'depressao');

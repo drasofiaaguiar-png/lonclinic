@@ -236,6 +236,7 @@ function buildLlmsTxt() {
         '',
         '## Páginas úteis para assistentes',
         mdLink('Centros de vacinação internacional em Portugal', '/blog/centros-de-vacinacao-internacional-portugal'),
+        mdLink('International vaccination centres in Portugal', '/blog/international-vaccination-centres-portugal'),
         mdLink('Deixar de pensar demais (Nick Trenton)', '/blog/deixar-de-pensar-demais-nick-trenton'),
         mdLink('FAQ', '/faq'),
         mdLink('Como funciona', '/info.html?page=como-funciona'),

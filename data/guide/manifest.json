@@ -2988,6 +2988,7 @@
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
+            "group": "centros-de-vacinacao-internacional-portugal",
             "about": "Medicina do viajante",
             "author": "rita-aguiar",
             "image": "/image/guide/cvi-portugal-hero.png",
@@ -3023,6 +3024,55 @@
                 {
                     "q": "Porque é que tantos centros não atendem o telefone?",
                     "a": "Na auditoria da Lon Clinic (3–7 de setembro de 2026), parte dos centros usa atendimento automático com pedido de retorno, tem linhas avariadas, ou não atendeu nas tentativas feitas. Recomenda-se o e-mail em paralelo."
+                }
+            ]
+        },
+        {
+            "slug": "international-vaccination-centres-portugal",
+            "title": "International Vaccination Centres in Portugal: complete guide by region (2026)",
+            "description": "Contacts, hours and real booking experience at every International Vaccination Centre in Portugal. Online travel consultation, €39.",
+            "datePublished": "2026-09-14",
+            "dateModified": "2026-09-14",
+            "format": "markdown",
+            "lang": "en",
+            "hreflang": "en",
+            "group": "centros-de-vacinacao-internacional-portugal",
+            "about": "Travel medicine",
+            "author": "rita-aguiar",
+            "image": "/image/guide/cvi-portugal-hero.png",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "readingMinutes": 12,
+            "related": [
+                "centros-de-vacinacao-internacional-portugal",
+                "consulta-do-viajante-urgente",
+                "vacinas-viajante-guia-completo",
+                "quando-agendar-consulta-do-viajante",
+                "onde-fazer-consulta-medicina-do-viajante-lisboa",
+                "quanto-custa-consulta-medicina-do-viajante",
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-viajante-lisboa"
+            ],
+            "faq": [
+                {
+                    "q": "Do I need to go to an International Vaccination Centre for travel vaccines?",
+                    "a": "Yellow fever and the international certificate (ICVP) are only done at an International Vaccination Centre. Other travel vaccines can, with a prescription, be given at a pharmacy. The travel consultation sets the plan; at Lon Clinic the video consultation costs €39 and the prescription is used to book the jab at a CVI."
+                },
+                {
+                    "q": "How long does it take to book an SNS travel consultation?",
+                    "a": "It ranges from about one day’s wait for a vaccine (ULS Lezíria, Santarém) to more than two or three months for a consultation (ULS Gaia/Espinho or CHP infectious diseases). At Lon Clinic the consultation is usually today or tomorrow; the wait for the vaccine is still that of the centre."
+                },
+                {
+                    "q": "Is an electronic prescription enough to get the vaccine at a CVI?",
+                    "a": "At several centres, no. They ask for the paper prescription on the day of the jab — for example at ULS de Coimbra and ULS do Arco Ribeirinho — even if an electronic prescription already exists."
+                },
+                {
+                    "q": "Do International Vaccination Centres answer in English?",
+                    "a": "Not all of them. Email is usually the more reliable route. At ULS Santa Maria (Sete Rios), booking by email usually gets a reply the same day or the next."
+                },
+                {
+                    "q": "Why do so many centres not answer the phone?",
+                    "a": "In Lon Clinic’s audit (3–7 September 2026), some centres use an automated attendant with a callback request, have broken lines, or did not answer the attempts made. Email in parallel is recommended."
                 }
             ]
         },
