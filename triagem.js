@@ -162,7 +162,7 @@
         }
         showScreen('screen-' + step);
         updateProgress(step);
-        if (step === 5) syncTemaPreference();
+        if (step === 4) syncTemaPreference();
         track('triagem_step', { step: step });
     }
 
@@ -249,24 +249,6 @@
         var firstBad = null;
 
         if (step === 1) {
-            ['nome', 'idade', 'localizacao', 'email', 'telefone'].forEach(function (id) {
-                var el = document.getElementById(id);
-                if (!el.checkValidity()) {
-                    ok = false;
-                    markInvalid(el);
-                    if (!firstBad) firstBad = el;
-                }
-            });
-            if (!selectedValue('genero')) {
-                ok = false;
-                stepEl.querySelectorAll('input[name="genero"]').forEach(function (r) {
-                    markInvalid(r);
-                });
-                if (!firstBad) firstBad = stepEl.querySelector('input[name="genero"]');
-            }
-        }
-
-        if (step === 2) {
             if (!selectedValues('motivos').length) {
                 ok = false;
                 stepEl.querySelectorAll('input[name="motivos"]').forEach(function (r) {
@@ -290,7 +272,7 @@
             }
         }
 
-        if (step === 3) {
+        if (step === 2) {
             for (var i = 1; i <= 9; i++) {
                 if (!selectedValue('phq' + i)) {
                     ok = false;
@@ -300,12 +282,11 @@
                     if (!firstBad) firstBad = stepEl.querySelector('input[name="phq' + i + '"]');
                 }
             }
-            // Re-check Q9 in case user filled all then we advance
             var q9 = Number(selectedValue('phq9') || 0);
             if (q9 >= 1) flagRiskImmediate(q9);
         }
 
-        if (step === 4) {
+        if (step === 3) {
             if (!selectedValue('terapiaAntes')) {
                 ok = false;
                 stepEl.querySelectorAll('input[name="terapiaAntes"]').forEach(markInvalid);
@@ -336,7 +317,7 @@
             }
         }
 
-        if (step === 5) {
+        if (step === 4) {
             if (!selectedValues('prefPsicologa').length) {
                 ok = false;
                 stepEl.querySelectorAll('input[name="prefPsicologa"]').forEach(markInvalid);
@@ -346,6 +327,24 @@
                 ok = false;
                 stepEl.querySelectorAll('input[name="horario"]').forEach(markInvalid);
                 if (!firstBad) firstBad = stepEl.querySelector('input[name="horario"]');
+            }
+        }
+
+        if (step === 5) {
+            ['nome', 'idade', 'localizacao', 'email', 'telefone'].forEach(function (id) {
+                var el = document.getElementById(id);
+                if (!el.checkValidity()) {
+                    ok = false;
+                    markInvalid(el);
+                    if (!firstBad) firstBad = el;
+                }
+            });
+            if (!selectedValue('genero')) {
+                ok = false;
+                stepEl.querySelectorAll('input[name="genero"]').forEach(function (r) {
+                    markInvalid(r);
+                });
+                if (!firstBad) firstBad = stepEl.querySelector('input[name="genero"]');
             }
         }
 

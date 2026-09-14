@@ -25,7 +25,7 @@
     <meta name="theme-color" content="#2f453a">
     <link rel="stylesheet" href="/landing.css?v=20260621b">
     <link rel="stylesheet" href="/psicologia.css?v=20260807d">
-    <link rel="stylesheet" href="/triagem.css?v=20260914d">
+    <link rel="stylesheet" href="/triagem.css?v=20260914e">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -71,53 +71,10 @@
 
         <!-- Form steps -->
         <form id="triagemForm" novalidate>
-            <!-- 1. Dados básicos -->
+            <!-- 1. Motivo -->
             <section class="triagem-screen" id="screen-1" data-screen="1" hidden>
                 <div class="triagem-card">
                     <p class="triagem-step-label">Passo 1 de 6</p>
-                    <h2>Dados básicos</h2>
-                    <div class="triagem-fields">
-                        <div class="triagem-field">
-                            <label for="nome">Nome</label>
-                            <input type="text" id="nome" name="nome" autocomplete="name" required maxlength="120">
-                        </div>
-                        <div class="triagem-field">
-                            <label for="idade">Idade</label>
-                            <input type="number" id="idade" name="idade" inputmode="numeric" min="16" max="120" required>
-                        </div>
-                        <fieldset class="triagem-fieldset">
-                            <legend>Género</legend>
-                            <div class="triagem-choices" role="radiogroup" aria-label="Género">
-                                <label class="triagem-choice"><input type="radio" name="genero" value="Feminino" required><span>Feminino</span></label>
-                                <label class="triagem-choice"><input type="radio" name="genero" value="Masculino"><span>Masculino</span></label>
-                                <label class="triagem-choice"><input type="radio" name="genero" value="Prefiro não dizer"><span>Prefiro não dizer</span></label>
-                                <label class="triagem-choice"><input type="radio" name="genero" value="Outro"><span>Outro</span></label>
-                            </div>
-                        </fieldset>
-                        <div class="triagem-field">
-                            <label for="localizacao">Localização <span class="triagem-hint">(distrito / país — para fuso horário)</span></label>
-                            <input type="text" id="localizacao" name="localizacao" placeholder="Ex.: Lisboa, Portugal" required maxlength="120">
-                        </div>
-                        <div class="triagem-field">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" autocomplete="email" inputmode="email" required maxlength="160">
-                        </div>
-                        <div class="triagem-field">
-                            <label for="telefone">Telefone / WhatsApp</label>
-                            <input type="tel" id="telefone" name="telefone" autocomplete="tel" inputmode="tel" required maxlength="40" placeholder="+351 …">
-                        </div>
-                    </div>
-                    <div class="triagem-actions">
-                        <button type="button" class="triagem-back" data-prev>← Voltar</button>
-                        <button type="button" class="lon-btn lon-btn-primary" data-next>Seguinte</button>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 2. Motivo -->
-            <section class="triagem-screen" id="screen-2" data-screen="2" hidden>
-                <div class="triagem-card">
-                    <p class="triagem-step-label">Passo 2 de 6</p>
                     <h2>Motivo da procura</h2>
                     <fieldset class="triagem-fieldset">
                         <legend>O que te traz à LON Clinic neste momento? <span class="triagem-hint">(seleção múltipla)</span></legend>
@@ -154,10 +111,10 @@
                 </div>
             </section>
 
-            <!-- 3. PHQ-9 -->
-            <section class="triagem-screen" id="screen-3" data-screen="3" hidden>
+            <!-- 2. PHQ-9 -->
+            <section class="triagem-screen" id="screen-2" data-screen="2" hidden>
                 <div class="triagem-card">
-                    <p class="triagem-step-label">Passo 3 de 6 · Triagem clínica</p>
+                    <p class="triagem-step-label">Passo 2 de 6 · Triagem clínica</p>
                     <h2>Nas últimas 2 semanas</h2>
                     <p class="triagem-lead">Com que frequência foste incomodada por cada uma destas situações?</p>
                     <p class="triagem-scale" aria-hidden="true">0 = Nunca · 1 = Vários dias · 2 = Mais de metade dos dias · 3 = Quase todos os dias</p>
@@ -184,10 +141,10 @@
                 </div>
             </section>
 
-            <!-- 4. Histórico -->
-            <section class="triagem-screen" id="screen-4" data-screen="4" hidden>
+            <!-- 3. Histórico -->
+            <section class="triagem-screen" id="screen-3" data-screen="3" hidden>
                 <div class="triagem-card">
-                    <p class="triagem-step-label">Passo 4 de 6</p>
+                    <p class="triagem-step-label">Passo 3 de 6</p>
                     <h2>Histórico</h2>
                     <fieldset class="triagem-fieldset">
                         <legend>Já fizeste terapia ou acompanhamento psicológico antes?</legend>
@@ -231,10 +188,10 @@
                 </div>
             </section>
 
-            <!-- 5. Preferências -->
-            <section class="triagem-screen" id="screen-5" data-screen="5" hidden>
+            <!-- 4. Preferências -->
+            <section class="triagem-screen" id="screen-4" data-screen="4" hidden>
                 <div class="triagem-card">
-                    <p class="triagem-step-label">Passo 5 de 6</p>
+                    <p class="triagem-step-label">Passo 4 de 6</p>
                     <h2>Preferências de acompanhamento</h2>
                     <fieldset class="triagem-fieldset">
                         <legend>Preferes que a tua psicóloga seja: <span class="triagem-hint">(podes escolher mais do que uma)</span></legend>
@@ -260,6 +217,49 @@
                             <label class="triagem-choice"><input type="radio" name="encaminhamento" value="Quero saber mais"><span>Quero saber mais</span></label>
                         </div>
                     </fieldset>
+                    <div class="triagem-actions">
+                        <button type="button" class="triagem-back" data-prev>← Voltar</button>
+                        <button type="button" class="lon-btn lon-btn-primary" data-next>Seguinte</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. Dados básicos -->
+            <section class="triagem-screen" id="screen-5" data-screen="5" hidden>
+                <div class="triagem-card">
+                    <p class="triagem-step-label">Passo 5 de 6</p>
+                    <h2>Os teus dados</h2>
+                    <div class="triagem-fields">
+                        <div class="triagem-field">
+                            <label for="nome">Nome</label>
+                            <input type="text" id="nome" name="nome" autocomplete="name" required maxlength="120">
+                        </div>
+                        <div class="triagem-field">
+                            <label for="idade">Idade</label>
+                            <input type="number" id="idade" name="idade" inputmode="numeric" min="16" max="120" required>
+                        </div>
+                        <fieldset class="triagem-fieldset">
+                            <legend>Género</legend>
+                            <div class="triagem-choices" role="radiogroup" aria-label="Género">
+                                <label class="triagem-choice"><input type="radio" name="genero" value="Feminino" required><span>Feminino</span></label>
+                                <label class="triagem-choice"><input type="radio" name="genero" value="Masculino"><span>Masculino</span></label>
+                                <label class="triagem-choice"><input type="radio" name="genero" value="Prefiro não dizer"><span>Prefiro não dizer</span></label>
+                                <label class="triagem-choice"><input type="radio" name="genero" value="Outro"><span>Outro</span></label>
+                            </div>
+                        </fieldset>
+                        <div class="triagem-field">
+                            <label for="localizacao">Localização <span class="triagem-hint">(distrito / país — para fuso horário)</span></label>
+                            <input type="text" id="localizacao" name="localizacao" placeholder="Ex.: Lisboa, Portugal" required maxlength="120">
+                        </div>
+                        <div class="triagem-field">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" autocomplete="email" inputmode="email" required maxlength="160">
+                        </div>
+                        <div class="triagem-field">
+                            <label for="telefone">Telefone / WhatsApp</label>
+                            <input type="tel" id="telefone" name="telefone" autocomplete="tel" inputmode="tel" required maxlength="40" placeholder="+351 …">
+                        </div>
+                    </div>
                     <div class="triagem-actions">
                         <button type="button" class="triagem-back" data-prev>← Voltar</button>
                         <button type="button" class="lon-btn lon-btn-primary" data-next>Seguinte</button>
@@ -348,6 +348,6 @@
         <p>© 2026 Lon Clinic · ERS 45475</p>
     </footer>
 
-    <script src="/triagem.js?v=20260914d" defer></script>
+    <script src="/triagem.js?v=20260914e" defer></script>
 </body>
 </html>
