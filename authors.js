@@ -8,6 +8,7 @@
 const { originOf, organizationJsonLd, jsonLdScript, canonicalHref } = require('./seo');
 
 const OM_SEARCH_URL = 'https://www.ordemdosmedicos.pt/';
+const ON_SEARCH_URL = 'https://www.ordemdosnutricionistas.pt/registoNacional.php?cod=0C0A';
 const ERS_URL = 'https://www.ers.pt/';
 
 function escapeHtml(s) {
@@ -55,8 +56,69 @@ const AUTHORS = {
             { label: 'Ordem dos Médicos (pesquisa pública)', href: OM_SEARCH_URL, external: true },
             { label: 'ERS — prestador 45475', href: ERS_URL, external: true }
         ],
+        schemaTypes: ['Person', 'Physician'],
+        memberOfUrl: OM_SEARCH_URL,
+        availabilityName: 'Dr. Rita Aguiar',
+        bookHref: '/marcar/clinica-geral',
+        guidesHref: '/magazine',
+        guidesLabel: 'Ler os guias médicos',
+        extraCredentials: [
+            {
+                '@type': 'EducationalOccupationalCredential',
+                name: 'Pós-graduação em Medicina do Viajante e das Populações Móveis',
+                dateCreated: '2021',
+                recognizedBy: {
+                    '@type': 'CollegeOrUniversity',
+                    name: 'Faculdade de Medicina da Universidade do Porto'
+                }
+            }
+        ],
         // Add LinkedIn / unique OM listing URL here when they can be verified.
         sameAs: []
+    },
+    'sara-barreto': {
+        slug: 'sara-barreto',
+        honorific: 'Dra.',
+        givenName: 'Sara',
+        familyName: 'Barreto',
+        displayName: 'Dra. Sara Barreto',
+        jobTitle: 'Nutricionista',
+        initials: 'SB',
+        worksFor: 'Lon Clinic',
+        memberOf: 'Ordem dos Nutricionistas',
+        memberOfUrl: ON_SEARCH_URL,
+        credentialNumber: '6501N',
+        alumniOf: 'Faculdade de Medicina da Universidade de Lisboa',
+        schemaTypes: ['Person', 'Dietitian'],
+        photoKey: 'sara-barreto',
+        bookHref: '/marcar/nutricao-consulta',
+        guidesHref: '/nutricao',
+        guidesLabel: 'Ver consultas de nutrição',
+        knowsAbout: [
+            'Nutrição clínica',
+            'Reeducação alimentar',
+            'Perda de peso',
+            'Nutrição desportiva',
+            'Hábitos alimentares'
+        ],
+        credentials: [
+            'Cédula profissional da Ordem dos Nutricionistas n.º 6501N',
+            'Licenciatura em Ciências da Nutrição (2021–2025), Faculdade de Medicina da Universidade de Lisboa',
+            'Provas de habilitação profissional de acesso à Ordem dos Nutricionistas (março de 2026)',
+            'Estágio observacional em nutrição clínica no Hospital de Santa Maria (doenças infecciosas, neurocríticos e consultas de fígado gordo)',
+            'Formação em nutrição desportiva (estágio curricular no Grupo Desportivo de Direito)',
+            'Monitora no Verão na ULisboa — Laboratório de Nutrição da FMUL'
+        ],
+        shortBio: 'Nutricionista inscrita na Ordem dos Nutricionistas (cédula n.º 6501N).',
+        longBio: [
+            'Sou nutricionista e acompanho quem quer melhorar a alimentação de forma realista — reeducação nutricional, perda de peso sem ioiô e hábitos que cabem na vida real.',
+            'Licenciada em Ciências da Nutrição pela Faculdade de Medicina da Universidade de Lisboa e inscrita na Ordem dos Nutricionistas (cédula n.º 6501N). O acompanhamento é individualizado: comida real em primeiro lugar, sem vender suplementos. Quando faz sentido, o plano articula-se com a equipa médica da Lon Clinic.'
+        ],
+        profiles: [
+            { label: 'Perfil na Lon Clinic', href: '/equipa/sara-barreto', external: false },
+            { label: 'Ordem dos Nutricionistas (registo nacional)', href: ON_SEARCH_URL, external: true }
+        ],
+        sameAs: ['https://www.linkedin.com/in/sara-barreto-76459528b']
     }
 };
 
@@ -82,8 +144,21 @@ function personId(origin, author) {
 function personNode(origin, slug) {
     const o = originOf(origin);
     const a = getAuthor(slug);
+    const memberUrl = a.memberOfUrl || OM_SEARCH_URL;
+    const cedula = {
+        '@type': 'EducationalOccupationalCredential',
+        credentialCategory: 'Cédula profissional',
+        recognizedBy: { '@type': 'Organization', name: a.memberOf, url: memberUrl }
+    };
+    if (a.credentialNumber) {
+        cedula.identifier = {
+            '@type': 'PropertyValue',
+            name: 'Cédula',
+            value: String(a.credentialNumber)
+        };
+    }
     const node = {
-        '@type': ['Person', 'Physician'],
+        '@type': a.schemaTypes || ['Person', 'Physician'],
         '@id': personId(o, a),
         name: `${a.givenName} ${a.familyName}`,
         honorificPrefix: a.honorific,
@@ -96,26 +171,14 @@ function personNode(origin, slug) {
         memberOf: {
             '@type': 'Organization',
             name: a.memberOf,
-            url: OM_SEARCH_URL
+            url: memberUrl
         },
         alumniOf: {
             '@type': 'CollegeOrUniversity',
             name: a.alumniOf
         },
         knowsAbout: a.knowsAbout,
-        hasCredential: [
-            {
-                '@type': 'EducationalOccupationalCredential',
-                credentialCategory: 'Cédula profissional',
-                recognizedBy: { '@type': 'Organization', name: 'Ordem dos Médicos', url: OM_SEARCH_URL }
-            },
-            {
-                '@type': 'EducationalOccupationalCredential',
-                name: 'Pós-graduação em Medicina do Viajante e das Populações Móveis',
-                dateCreated: '2021',
-                recognizedBy: { '@type': 'CollegeOrUniversity', name: a.alumniOf }
-            }
-        ]
+        hasCredential: [cedula, ...(a.extraCredentials || [])]
     };
     if (a.ersNumber) {
         node.hasCredential.push({
@@ -208,6 +271,14 @@ function renderAuthorPage(origin, slug) {
     const creds = a.credentials.map((c) => `<li>${escapeHtml(c)}</li>`).join('');
     const paras = a.longBio.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
     const verify = profileLinksHtml(a, { includeSelf: false });
+    const occupationType = (a.schemaTypes && a.schemaTypes[1]) || 'Physician';
+    const yearsBit = a.yearsPractice ? ` · ${a.yearsPractice} anos de prática clínica` : '';
+    const avail = a.availabilityName
+        ? `<p class="eeat-avail-badge" data-doctor-available data-doctor-name="${escapeHtml(a.availabilityName)}" hidden></p>`
+        : '';
+    const bookHref = a.bookHref || '/marcar/clinica-geral';
+    const guidesHref = a.guidesHref || '/magazine';
+    const guidesLabel = a.guidesLabel || 'Ler os guias médicos';
     const jsonLd = jsonLdScript([
         {
             '@context': 'https://schema.org',
@@ -282,21 +353,21 @@ function renderAuthorPage(origin, slug) {
         </div>
     </header>
     <main id="conteudo-principal" class="eeat-profile">
-        <article class="eeat-profile-card" itemscope itemtype="https://schema.org/Physician">
+        <article class="eeat-profile-card" itemscope itemtype="https://schema.org/${escapeHtml(occupationType)}">
             <div class="eeat-profile-avatar" aria-hidden="true">${escapeHtml(a.initials)}</div>
             <div class="eeat-profile-body">
                 <p class="eeat-profile-kicker">Equipa clínica · Lon Clinic</p>
                 <h1 itemprop="name">${escapeHtml(a.displayName)}</h1>
-                <p class="eeat-profile-role"><span itemprop="jobTitle">${escapeHtml(a.jobTitle)}</span> · ${a.yearsPractice} anos de prática clínica</p>
-                <p class="eeat-avail-badge" data-doctor-available data-doctor-name="Dr. Rita Aguiar" hidden></p>
+                <p class="eeat-profile-role"><span itemprop="jobTitle">${escapeHtml(a.jobTitle)}</span>${yearsBit}</p>
+                ${avail}
                 ${paras}
                 <h2>Credenciais</h2>
                 <ul class="eeat-bio-creds">${creds}</ul>
                 <h2>Perfis e verificação</h2>
                 <p class="eeat-bio-verify">${verify}</p>
                 <p class="eeat-profile-actions">
-                    <a class="lon-btn lon-btn-primary" data-cta="book" href="/marcar/clinica-geral">Marcar consulta</a>
-                    <a class="lon-btn lon-btn-soft" href="/magazine">Ler os guias médicos</a>
+                    <a class="lon-btn lon-btn-primary" data-cta="book" href="${escapeHtml(bookHref)}">Marcar consulta</a>
+                    <a class="lon-btn lon-btn-soft" href="${escapeHtml(guidesHref)}">${escapeHtml(guidesLabel)}</a>
                 </p>
             </div>
         </article>
@@ -311,7 +382,7 @@ function renderAuthorPage(origin, slug) {
         </div>
     </footer>
     <script src="/lon-nav.js"></script>
-    <script src="/i18n.js?v=20260905e" defer></script>
+    <script src="/i18n.js?v=20260914b" defer></script>
     <script src="/lon-analytics.js?v=20260914a" defer></script>
     <script src="/lon-slots.js?v=20260906d" defer></script>
 </body>
@@ -342,15 +413,21 @@ function avatarHtml(initials, photoUrl, alt) {
 function renderTeamPage(origin, extras) {
     const o = originOf(origin);
     const rita = getAuthor('rita-aguiar');
+    const barreto = getAuthor('sara-barreto');
     const saraBio = String((extras && extras.saraBio) || SARA_PUBLIC_BIO).trim();
     const saraParas = (saraBio || SARA_PUBLIC_BIO)
         .split(/\n{2,}/)
         .map((p) => p.trim())
         .filter(Boolean);
+    const barretoBio = String((extras && extras.barretoBio) || '').trim();
+    const barretoParas = (barretoBio
+        ? barretoBio.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean)
+        : barreto.longBio);
     const ritaParas = rita.longBio.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
     const saraParasHtml = saraParas.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
+    const barretoParasHtml = barretoParas.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
     const title = 'A Equipa | Lon Clinic';
-    const description = 'A equipa clínica da Lon Clinic — Dra. Rita Aguiar (médica) e Dra. Sara Gamito (psicóloga).';
+    const description = 'A equipa clínica da Lon Clinic — Dra. Rita Aguiar (médica), Dra. Sara Barreto (nutricionista) e Dra. Sara Gamito (psicóloga).';
     const url = canonicalHref('/equipa');
     const jsonLd = jsonLdScript([
         {
@@ -363,6 +440,7 @@ function renderTeamPage(origin, extras) {
             isPartOf: { '@type': 'WebSite', name: 'Lon Clinic', url: o }
         },
         personJsonLd(o, rita.slug),
+        personJsonLd(o, barreto.slug),
         organizationJsonLd(o)
     ]);
 
@@ -393,8 +471,8 @@ function renderTeamPage(origin, extras) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@1,9..144,500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/landing.css?v=20260913z">
-    <link rel="stylesheet" href="/author.css?v=20260913z">
+    <link rel="stylesheet" href="/landing.css?v=20260914g">
+    <link rel="stylesheet" href="/author.css?v=20260914g">
     ${jsonLd}
 </head>
 <body class="lon-landing lon-home eeat-team-page">
@@ -423,7 +501,7 @@ function renderTeamPage(origin, extras) {
                 <div class="lon-team-header">
                     <p class="lon-team-kicker">Quem está do outro lado da consulta</p>
                     <h1 id="lon-team-title">A equipa clínica</h1>
-                    <p class="lon-team-lead">Médicas e psicólogas da Lon Clinic — credenciais e como marcar.</p>
+                    <p class="lon-team-lead">Médicas, psicólogas e nutricionistas da Lon Clinic — credenciais e como marcar.</p>
                 </div>
                 <div class="lon-team-grid">
                     <article class="lon-team-card" id="equipa-rita">
@@ -438,6 +516,21 @@ function renderTeamPage(origin, extras) {
                             <div class="lon-team-actions">
                                 <a class="lon-btn lon-btn-soft" href="/equipa/rita-aguiar">Perfil e credenciais →</a>
                                 <a class="lon-btn lon-btn-dark lon-btn-sm" data-cta="book" href="/marcar/clinica-geral">Marcar consulta →</a>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="lon-team-card" id="equipa-sara-barreto">
+                        <div class="lon-team-card-media">${avatarHtml(barreto.initials, teamPhotoUrl(barreto.photoKey), barreto.displayName)}</div>
+                        <div class="lon-team-card-body">
+                            <h2 class="lon-team-name">${escapeHtml(barreto.displayName)}</h2>
+                            <p class="lon-team-role">${escapeHtml(barreto.jobTitle)}</p>
+                            ${barretoParasHtml}
+                            <h3>Credenciais</h3>
+                            <ul class="lon-team-credentials">${barreto.credentials.map((c) => `<li>${escapeHtml(c)}</li>`).join('')}</ul>
+                            <p class="lon-team-verify">${profileLinksHtml(barreto, { includeSelf: false })}</p>
+                            <div class="lon-team-actions">
+                                <a class="lon-btn lon-btn-soft" href="/equipa/sara-barreto">Perfil e credenciais →</a>
+                                <a class="lon-btn lon-btn-dark lon-btn-sm" data-cta="book" href="${escapeHtml(barreto.bookHref)}">Marcar consulta →</a>
                             </div>
                         </div>
                     </article>
@@ -466,7 +559,7 @@ function renderTeamPage(origin, extras) {
         </div>
     </footer>
     <script src="/lon-nav.js"></script>
-    <script src="/i18n.js?v=20260914a" defer></script>
+    <script src="/i18n.js?v=20260914b" defer></script>
 </body>
 </html>`;
 
@@ -477,6 +570,7 @@ module.exports = {
     AUTHORS,
     DEFAULT_AUTHOR_SLUG,
     OM_SEARCH_URL,
+    ON_SEARCH_URL,
     ERS_URL,
     SARA_STAFF_USERNAME,
     SARA_PUBLIC_BIO,

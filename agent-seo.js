@@ -241,6 +241,7 @@ function buildLlmsTxt() {
         mdLink('FAQ', '/faq'),
         mdLink('Como funciona', '/info.html?page=como-funciona'),
         mdLink('Equipa — Rita Aguiar', '/equipa/rita-aguiar'),
+        mdLink('Equipa — Sara Barreto (nutricionista)', '/equipa/sara-barreto'),
         mdLink('Magazine', '/magazine'),
         '',
         '## Contacto',

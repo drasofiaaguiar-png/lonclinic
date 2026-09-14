@@ -143,6 +143,10 @@
     margin-bottom: 0;
 }
 
+.em-clinician + .em-clinician {
+    margin-top: 14px;
+}
+
 .em-proof-head {
     display: flex;
     flex-wrap: wrap;

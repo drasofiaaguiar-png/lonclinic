@@ -26,6 +26,7 @@
         if (p.includes('book.html') || p.includes('book-consultation') || /\/book(\/|$)/.test(p)) return 'book';
         if (p.includes('info.html') || p.includes('/info')) return 'info';
         if (p === '/equipa' || p === '/equipa/') return 'equipa';
+        if (p.startsWith('/equipa/')) return 'content';
         if (p.includes('travel') && !p.includes('/blog') && !p.includes('/consulta/')) return 'travel';
         if (/^\/(blog|magazine|consulta\/|nutricao\/|burnout\/|consultas)(\/|$)?/.test(p) || /^\/consulta\//.test(p)) {
             return 'content';
@@ -273,6 +274,12 @@
         { s: '#lon-team-sara .lon-team-bio span:nth-child(2)', en: 'Supports adults through life transitions, anxiety and emotional stress.', pt: 'Acompanha adultos em fases de transição, ansiedade e stress emocional.', es: 'Acompaña a adultos en transiciones, ansiedad y estrés emocional.' },
         { s: '#lon-team-sara .lon-team-bio span:nth-child(3)', en: 'Works with self-esteem difficulties and personal growth.', pt: 'Trabalha dificuldades de autoestima e processos de crescimento pessoal.', es: 'Trabaja dificultades de autoestima y procesos de crecimiento personal.' },
         { s: '#lon-team-sara .lon-team-actions .lon-btn-dark', en: 'Book consultation →', pt: 'Marcar consulta →', es: 'Reservar consulta →' },
+        { s: '#lon-team-sara-barreto .lon-team-name', en: 'Dr Sara Barreto', pt: 'Dra. Sara Barreto', es: 'Dra. Sara Barreto' },
+        { s: '#lon-team-sara-barreto .lon-team-role', en: 'Nutritionist', pt: 'Nutricionista', es: 'Nutricionista' },
+        { s: '#lon-team-sara-barreto .lon-team-bio span:nth-child(1)', en: 'Nutritionist at Lon Clinic.', pt: 'Nutricionista na Lon Clinic.', es: 'Nutricionista en Lon Clinic.' },
+        { s: '#lon-team-sara-barreto .lon-team-bio span:nth-child(2)', en: 'Supports dietary re-education and weight loss without yo-yo dieting.', pt: 'Acompanha reeducação alimentar e perda de peso sem ioiô.', es: 'Acompaña la reeducación alimentaria y la pérdida de peso sin efecto yo-yo.' },
+        { s: '#lon-team-sara-barreto .lon-team-bio span:nth-child(3)', en: 'Registered with the Portuguese Order of Nutritionists (licence no. 6501N).', pt: 'Inscrita na Ordem dos Nutricionistas (cédula n.º 6501N).', es: 'Inscrita en el Colegio de Nutricionistas (cédula n.º 6501N).' },
+        { s: '#lon-team-sara-barreto .lon-team-actions .lon-btn-dark', en: 'Book consultation →', pt: 'Marcar consulta →', es: 'Reservar consulta →' },
         { s: '.lon-team-all .lon-text-link', en: 'View the team →', pt: 'Ver a Equipa →', es: 'Ver el equipo →' },
 
         /* ── After the consultation ── */
@@ -410,13 +417,15 @@
         { s: 'title', en: 'The team | Lon Clinic', pt: 'A Equipa | Lon Clinic', es: 'El equipo | Lon Clinic', special: 'title' },
         { s: '.lon-team-kicker', en: 'Who is on the other side of the consultation', pt: 'Quem está do outro lado da consulta', es: 'Quién está al otro lado de la consulta' },
         { s: '#lon-team-title', en: 'The clinical team', pt: 'A equipa clínica', es: 'El equipo clínico' },
-        { s: '.lon-team-lead', en: 'Physicians and psychologists at Lon Clinic — credentials and how to book.', pt: 'Médicas e psicólogas da Lon Clinic — credenciais e como marcar.', es: 'Médicas y psicólogas de Lon Clinic — credenciales y cómo reservar.' },
+        { s: '.lon-team-lead', en: 'Physicians, psychologists and nutritionists at Lon Clinic — credentials and how to book.', pt: 'Médicas, psicólogas e nutricionistas da Lon Clinic — credenciais e como marcar.', es: 'Médicas, psicólogas y nutricionistas de Lon Clinic — credenciales y cómo reservar.' },
         { s: '#equipa-rita .lon-team-name', en: 'Dr Rita Aguiar', pt: 'Dra. Rita Aguiar', es: 'Dra. Rita Aguiar' },
         { s: '#equipa-rita .lon-team-role', en: 'Specialist in Family Medicine', pt: 'Médica especialista em Medicina Geral e Familiar', es: 'Médica especialista en Medicina Familiar y Comunitaria' },
         { s: '#equipa-sara .lon-team-name', en: 'Dr Sara Gamito', pt: 'Dra. Sara Gamito', es: 'Dra. Sara Gamito' },
         { s: '#equipa-sara .lon-team-role', en: 'Psychologist', pt: 'Psicóloga', es: 'Psicóloga' },
-        { s: '#equipa-rita .lon-btn-dark, #equipa-sara .lon-btn-dark', en: 'Book consultation →', pt: 'Marcar consulta →', es: 'Reservar consulta →' },
-        { s: '#equipa-rita .lon-btn-soft', en: 'Full profile and credentials →', pt: 'Perfil e credenciais →', es: 'Perfil y credenciales →' }
+        { s: '#equipa-sara-barreto .lon-team-name', en: 'Dr Sara Barreto', pt: 'Dra. Sara Barreto', es: 'Dra. Sara Barreto' },
+        { s: '#equipa-sara-barreto .lon-team-role', en: 'Nutritionist', pt: 'Nutricionista', es: 'Nutricionista' },
+        { s: '#equipa-rita .lon-btn-dark, #equipa-sara .lon-btn-dark, #equipa-sara-barreto .lon-btn-dark', en: 'Book consultation →', pt: 'Marcar consulta →', es: 'Reservar consulta →' },
+        { s: '#equipa-rita .lon-btn-soft, #equipa-sara-barreto .lon-btn-soft', en: 'Full profile and credentials →', pt: 'Perfil e credenciais →', es: 'Perfil y credenciales →' }
     ];
 
     /* ═══════════════════════════

@@ -859,6 +859,10 @@
     margin-bottom: 0;
 }
 
+.mp-clinician + .mp-clinician {
+    margin-top: 14px;
+}
+
 .mp-proof-head {
     display: flex;
     flex-wrap: wrap;

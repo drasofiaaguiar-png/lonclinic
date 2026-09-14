@@ -4871,10 +4871,29 @@ body.lon-home #como-funciona .lon-how-step-num {
     gap: 16px;
 }
 
-@media (min-width: 900px) {
-    .lon-home .lon-team-grid {
-        grid-template-columns: 1fr 1fr;
+@media (min-width: 1024px) {
+    .lon-home:not(.eeat-team-page) .lon-team-grid {
+        grid-template-columns: repeat(3, 1fr);
         align-items: stretch;
+    }
+
+    .lon-home:not(.eeat-team-page) .lon-team-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 22px 18px;
+    }
+
+    .lon-home:not(.eeat-team-page) .lon-team-card-media {
+        display: flex;
+        justify-content: center;
+    }
+
+    .lon-home:not(.eeat-team-page) .lon-team-actions {
+        justify-content: center;
+    }
+
+    .lon-home:not(.eeat-team-page) .lon-team-all {
+        text-align: center;
     }
 }
 

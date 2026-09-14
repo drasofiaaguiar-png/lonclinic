@@ -44,7 +44,7 @@
     <meta name="format-detection" content="telephone=no">
     <link rel="preload" as="image" href="/image/hero-run.webp" fetchpriority="high">
 
-    <link rel="stylesheet" href="/landing.css?v=20260914f">
+    <link rel="stylesheet" href="/landing.css?v=20260914g">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@1,9..144,500&display=swap" rel="stylesheet">
@@ -84,7 +84,10 @@
         "jobTitle": "Médica",
         "url": "https://www.lonclinic.com/equipa/rita-aguiar"
       },
-      "employee": { "@id": "https://www.lonclinic.com/equipa/rita-aguiar#person" }
+      "employee": [
+        { "@id": "https://www.lonclinic.com/equipa/rita-aguiar#person" },
+        { "@id": "https://www.lonclinic.com/equipa/sara-barreto#person" }
+      ]
     }
     </script>
     <script type="application/ld+json">
@@ -99,6 +102,21 @@
       "description": "Médica especialista em Medicina Geral e Familiar.",
       "worksFor": { "@id": "https://www.lonclinic.com/#organization" },
       "memberOf": { "@type": "Organization", "name": "Ordem dos Médicos", "url": "https://www.ordemdosmedicos.pt/" }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": ["Person", "Dietitian"],
+      "@id": "https://www.lonclinic.com/equipa/sara-barreto#person",
+      "name": "Sara Barreto",
+      "honorificPrefix": "Dra.",
+      "jobTitle": "Nutricionista",
+      "url": "https://www.lonclinic.com/equipa/sara-barreto",
+      "description": "Nutricionista inscrita na Ordem dos Nutricionistas (cédula n.º 6501N).",
+      "worksFor": { "@id": "https://www.lonclinic.com/#organization" },
+      "memberOf": { "@type": "Organization", "name": "Ordem dos Nutricionistas", "url": "https://www.ordemdosnutricionistas.pt/registoNacional.php?cod=0C0A" },
+      "identifier": { "@type": "PropertyValue", "name": "Cédula", "value": "6501N" }
     }
     </script>
     <script type="application/ld+json">
@@ -633,6 +651,28 @@
                         <p class="lon-team-all"><a href="/equipa" class="lon-text-link">Ver a Equipa →</a></p>
                     </div>
                 </article>
+                <article class="lon-team-card" id="lon-team-sara-barreto">
+                    <div class="lon-team-card-media">
+                        <div class="lon-team-avatar">
+                            <img src="/api/public/team-photo/sara-barreto" alt="Dra. Sara Barreto" width="132" height="132" loading="lazy" decoding="async" onerror="this.remove()">
+                            <span aria-hidden="true">SB</span>
+                        </div>
+                    </div>
+                    <div class="lon-team-card-body">
+                        <h3 class="lon-team-name">Dra. Sara Barreto</h3>
+                        <p class="lon-team-role">Nutricionista</p>
+                        <p class="lon-team-bio">
+                            <span>Nutricionista na Lon Clinic.</span>
+                            <span>Acompanha reeducação alimentar e perda de peso sem ioiô.</span>
+                            <span>Inscrita na Ordem dos Nutricionistas (cédula n.º 6501N).</span>
+                        </p>
+                        <p class="lon-team-ellipsis" aria-hidden="true">…</p>
+                        <div class="lon-team-actions">
+                            <a href="/marcar/nutricao-consulta" class="lon-btn lon-btn-dark lon-btn-sm" data-cta="book">Marcar consulta →</a>
+                        </div>
+                        <p class="lon-team-all"><a href="/equipa" class="lon-text-link">Ver a Equipa →</a></p>
+                    </div>
+                </article>
                 <article class="lon-team-card" id="lon-team-sara">
                     <div class="lon-team-card-media">
                         <div class="lon-team-avatar">
@@ -1021,7 +1061,7 @@
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">WhatsApp</a>
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-analytics.js?v=20260914a" defer></script>
-    <script src="i18n.js?v=20260914a" defer></script>
+    <script src="i18n.js?v=20260914b" defer></script>
     <script src="reviews.js?v=20260902a" defer></script>
     <script src="landing.js?v=20260911p" defer></script>
     <script src="/lon-slots.js?v=20260912a" defer></script>

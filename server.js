@@ -9098,11 +9098,13 @@ async function publicTeamMemberProfile(who) {
 app.get('/equipa', async (req, res) => {
     try {
         const sara = await publicTeamMemberProfile('sara');
+        const barreto = await publicTeamMemberProfile('sara-barreto');
         const extras = {
             saraBio: (sara && sara.bio) || authors.SARA_PUBLIC_BIO,
             saraPhotoUrl: sara && sara.hasPhoto && sara.username
                 ? `/api/public/staff-photo/${encodeURIComponent(sara.username)}`
-                : '/api/public/team-photo/sara'
+                : '/api/public/team-photo/sara',
+            barretoBio: (barreto && barreto.bio) || ''
         };
         const result = authors.renderTeamPage(seo.SITE_ORIGIN, extras);
         sendHtmlNoCacheString(res, result.html);
@@ -17797,7 +17799,10 @@ app.get('/api/public/staff-photo/:username', async (req, res) => {
         }
         const profiles = await listStaffProfilesInternal();
         const profile = profiles.find((p) => String(p.username || '').toLowerCase() === username);
-        if (!profile || profile.profession !== 'psicologo' || !profile.hasPhoto) {
+        if (!profile || !profile.hasPhoto) {
+            return res.status(404).end();
+        }
+        if (profile.profession !== 'psicologo' && profile.profession !== 'nutricionista' && profile.profession !== 'medico') {
             return res.status(404).end();
         }
         const photo = await getStaffPhotoInternal(username);

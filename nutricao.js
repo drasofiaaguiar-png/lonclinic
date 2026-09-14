@@ -52,23 +52,38 @@ function nutritionTeamLabel() {
     return String(c.nutritionTeamLabel || '').trim() || 'Equipa de nutrição Lon Clinic';
 }
 
+function nutritionCedulaDisclaimer() {
+    const c = clinicConfig();
+    const name = String(c.nutritionistName || '').trim();
+    const cedula = String(c.nutritionistCedula || '').trim();
+    const named = name && cedula
+        ? ` — ${name}, cédula n.º ${cedula}`
+        : ' — a cédula será publicada quando o profissional estiver identificado';
+    return `Planos alimentares detalhados são da competência de nutricionista inscrito na Ordem dos Nutricionistas${named}.`;
+}
+
 function nutritionBylineHtml(dateIso) {
     const c = clinicConfig();
     const name = String(c.nutritionistName || '').trim();
     const cedula = String(c.nutritionistCedula || '').trim();
+    const slug = String(c.nutritionistSlug || '').trim();
     const team = nutritionTeamLabel();
     const iso = String(dateIso || '').slice(0, 10);
     const dateBit = iso
         ? `<time datetime="${escapeHtml(iso)}">${escapeHtml(iso)}</time><span aria-hidden="true"> · </span>`
         : '';
     const reviewer = authors.getAuthor(c.reviewer || 'rita-aguiar');
-    const href = c.nutritionistHref ? escapeHtml(c.nutritionistHref) : ON_URL;
+    const onHref = c.nutritionistHref ? escapeHtml(c.nutritionistHref) : ON_URL;
+    const nutritionist = slug && authors.AUTHORS[slug] ? authors.getAuthor(slug) : null;
     if (name && cedula) {
+        const nameHtml = nutritionist
+            ? `<a class="eeat-byline-name" rel="author" href="${escapeHtml(authors.authorPath(nutritionist))}">${escapeHtml(name)}</a>`
+            : `<strong>${escapeHtml(name)}</strong>`;
         return `
         <p class="eeat-byline nu-byline">
-            ${dateBit}<strong>${escapeHtml(name)}</strong>
+            ${dateBit}${nameHtml}
             <span> · ${escapeHtml(c.nutritionistJobTitle || 'Nutricionista')} · Cédula n.º ${escapeHtml(cedula)}</span>
-            <span class="eeat-byline-review"> · <a href="${href}" target="_blank" rel="noopener noreferrer">Ordem dos Nutricionistas</a> · Revisão médica: ${escapeHtml(reviewer.displayName)} · ERS n.º 45475</span>
+            <span class="eeat-byline-review"> · <a href="${onHref}" target="_blank" rel="noopener noreferrer">Ordem dos Nutricionistas</a> · Revisão médica: ${escapeHtml(reviewer.displayName)} · ERS n.º 45475</span>
         </p>`;
     }
     return `
@@ -85,15 +100,19 @@ function nutritionAuthorSchema(origin) {
     const c = clinicConfig();
     const name = String(c.nutritionistName || '').trim();
     const cedula = String(c.nutritionistCedula || '').trim();
+    const slug = String(c.nutritionistSlug || '').trim();
     const reviewer = authors.articleAuthorSchema(o, c.reviewer || 'rita-aguiar');
+    const nutritionist = slug && authors.AUTHORS[slug] ? authors.getAuthor(slug) : null;
     if (name && cedula) {
         return {
-            author: {
-                '@type': 'Person',
-                name,
-                jobTitle: c.nutritionistJobTitle || 'Nutricionista',
-                identifier: { '@type': 'PropertyValue', name: 'Cédula Ordem dos Nutricionistas', value: cedula }
-            },
+            author: nutritionist
+                ? { '@id': authors.personId(o, nutritionist) }
+                : {
+                    '@type': 'Person',
+                    name,
+                    jobTitle: c.nutritionistJobTitle || 'Nutricionista',
+                    identifier: { '@type': 'PropertyValue', name: 'Cédula Ordem dos Nutricionistas', value: cedula }
+                },
             reviewedBy: reviewer.reviewedBy,
             publisher: reviewer.publisher,
             copyrightHolder: reviewer.copyrightHolder
@@ -379,7 +398,7 @@ function layoutPage(opts) {
     } = opts;
     const canonicalUrl = canonicalHref(canonicalPath);
     const pages = livePages();
-    const graph = Array.isArray(jsonLdExtra) ? jsonLdExtra : jsonLdExtra ? [jsonLdExtra] : [];
+    const graph = (Array.isArray(jsonLdExtra) ? jsonLdExtra : jsonLdExtra ? [jsonLdExtra] : []).filter(Boolean);
     if (!robots || !/^noindex/i.test(robots)) graph.push(organizationJsonLd(origin));
     const ldScripts = graph
         .map((block) => `<script type="application/ld+json">\n${JSON.stringify(block, null, 2)}\n</script>`)
@@ -487,6 +506,7 @@ function layoutPage(opts) {
                     <a href="/consulta">Consulta médica</a>
                     <a href="/consultas">Psicologia</a>
                     <a href="/equipa/rita-aguiar">A médica</a>
+                    <a href="/equipa/sara-barreto">A nutricionista</a>
                     <a href="/marcar/nutricao-programa">Consulta inicial de nutrição · 115 €</a>
                     <a href="/marcar/clinica-geral">Clínica geral · 39 €</a>
                 </div>
@@ -671,6 +691,9 @@ function renderSpoke(origin, slug) {
             ...nutritionAuthorSchema(o)
         },
         authors.personJsonLd(o, clinicConfig().reviewer || 'rita-aguiar'),
+        (clinicConfig().nutritionistSlug && authors.AUTHORS[clinicConfig().nutritionistSlug]
+            ? authors.personJsonLd(o, clinicConfig().nutritionistSlug)
+            : null),
         {
             '@context': 'https://schema.org',
             '@type': 'Service',
@@ -783,7 +806,7 @@ function renderSpoke(origin, slug) {
             </section>
 
             ${authors.authorBioHtml(o, meta.author, dateMod || datePub)}
-            <p class="cq-disclaimer">Informação de carácter geral — não substitui consulta médica nem consulta de nutricionista individualizada. A Lon Clinic não prescreve aGLP-1 (Ozempic, Wegovy ou equivalentes) para perda de peso. A Lon Clinic está registada na ERS (n.º 45475). Planos alimentares detalhados são da competência de nutricionista inscrito na Ordem dos Nutricionistas — a cédula será publicada quando o profissional estiver identificado.</p>
+            <p class="cq-disclaimer">Informação de carácter geral — não substitui consulta médica nem consulta de nutricionista individualizada. A Lon Clinic não prescreve aGLP-1 (Ozempic, Wegovy ou equivalentes) para perda de peso. A Lon Clinic está registada na ERS (n.º 45475). ${escapeHtml(nutritionCedulaDisclaimer())}</p>
             ${relatedHtml(meta.related, pages, slug)}
         </article>
         <aside class="cq-cta-band" aria-label="${escapeHtml(talkLabel)}">

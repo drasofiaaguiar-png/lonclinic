@@ -270,7 +270,10 @@ function organizationNode(origin) {
             jobTitle: 'Médica',
             url: `${o}/equipa/rita-aguiar`
         },
-        employee: { '@id': `${o}/equipa/rita-aguiar#person` }
+        employee: [
+            { '@id': `${o}/equipa/rita-aguiar#person` },
+            { '@id': `${o}/equipa/sara-barreto#person` }
+        ]
     };
 }
 
@@ -394,6 +397,7 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
         ['/wellness', today, 'weekly', '0.75'],
         ['/equipa', today, 'monthly', '0.82'],
         ['/equipa/rita-aguiar', today, 'monthly', '0.8'],
+        ['/equipa/sara-barreto', today, 'monthly', '0.8'],
         ['/info.html', today, 'monthly', '0.6']
     ];
 

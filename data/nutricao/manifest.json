@@ -1,15 +1,15 @@
 {
-  "updated": "2026-09-05",
-  "notes": "Peso = programa de reeducação metabólica (nutricao_programa), NÃO prescrição de aGLP-1. /nutricao/glp-1 é página de transição/educação (alias ozempic-wegovy, sem 301). Cédula: NÃO inventar — preencher clinic.nutritionistName + nutritionistCedula numa só passagem quando o utilizador enviar.",
+  "updated": "2026-09-14",
+  "notes": "Peso = programa de reeducação metabólica (nutricao_programa), NÃO prescrição de aGLP-1. /nutricao/glp-1 é página de transição/educação (alias ozempic-wegovy, sem 301). Nutricionista: Dra. Sara Barreto, cédula 6501N.",
   "clinic": {
     "reviewer": "rita-aguiar",
     "nutritionTeamLabel": "Equipa de nutrição Lon Clinic",
-    "nutritionistName": "",
-    "nutritionistCedula": "",
+    "nutritionistName": "Dra. Sara Barreto",
+    "nutritionistCedula": "6501N",
     "nutritionistJobTitle": "Nutricionista",
-    "nutritionistHref": "https://www.ordemdosnutricionistas.pt/",
-    "clinicianLine": "Drª Rita Aguiar · Médica · Ordem dos Médicos · ERS 45475",
-    "nutritionistCedulaTodo": "TODO: colar nome + n.º de cédula da Ordem dos Nutricionistas quando o utilizador enviar. Não inventar. O template em nutricao.js (nutritionBylineHtml + nutritionAuthorSchema) lê estes campos."
+    "nutritionistSlug": "sara-barreto",
+    "nutritionistHref": "https://www.ordemdosnutricionistas.pt/registoNacional.php?cod=0C0A",
+    "clinicianLine": "Dra. Sara Barreto · Nutricionista · Ordem dos Nutricionistas 6501N · Drª Rita Aguiar · Médica · Ordem dos Médicos · ERS 45475"
   },
   "pages": [
     {
