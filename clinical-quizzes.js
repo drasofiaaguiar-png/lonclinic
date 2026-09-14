@@ -217,19 +217,19 @@ const CARD_COPY = {
     avaliacao: {
         title: 'Por onde começo a tratar do peso?',
         label: 'Avaliação metabólica',
-        image: '/image/guide/guide-country-road.jpg'
+        image: '/image/nutricao-consulta.webp'
     },
     imc: {
         title: 'Será que tenho excesso de peso?',
-        image: '/image/guide/guide-hiker-view.jpg'
+        image: '/image/nutricao-emagrecimento.webp'
     },
     tfeq: {
         title: 'Como é que como, na verdade?',
-        image: '/image/guide/travel-cover-hq-4.webp'
+        image: '/image/nutricao-alimentos.webp'
     },
     yfas: {
         title: 'A comida está a controlar-me?',
-        image: '/image/guide/travel-cover-hq-7.webp'
+        image: '/image/nutricao-alimentos.webp'
     },
     bigfive: {
         title: 'Como é que eu funciono, na prática?',

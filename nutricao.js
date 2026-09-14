@@ -388,7 +388,7 @@ function layoutPage(opts) {
         .map((p) => `<a href="/nutricao/${encodeURIComponent(p.slug)}">${escapeHtml(p.navLabel || p.h1)}</a>`)
         .join('\n                    ');
     const modIso = dateModified ? String(dateModified).slice(0, 10) : '';
-    const og = escapeHtml(ogImage || `${origin}/image/image2.webp`);
+    const og = escapeHtml(ogImage || `${origin}/image/nutricao-consulta.webp`);
 
     return `<!DOCTYPE html>
 <html lang="pt-PT">
@@ -617,6 +617,7 @@ function renderHub(origin) {
         title: 'Nutrição online por condição | Lon Clinic',
         description: 'Programa de reeducação metabólica e perda de peso (3 a 6 meses) e orientação nutricional por condição. Sem prescrição de aGLP-1. A partir de 115 €/mês.',
         canonicalPath: '/nutricao',
+        ogImage: `${o}/image/nutricao-consulta.webp`,
         jsonLdExtra: jsonLd,
         mainHtml
     });
@@ -804,6 +805,7 @@ function renderSpoke(origin, slug) {
             title: String(meta.title || `${h1} | Lon Clinic`),
             description,
             canonicalPath,
+            ogImage: `${o}/image/${weightLoss ? 'nutricao-emagrecimento' : 'nutricao-consulta'}.webp`,
             jsonLdExtra: jsonLd,
             mainHtml,
             dateModified: dateMod

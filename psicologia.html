@@ -27,7 +27,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="theme-color" content="#5f6642">
     <link rel="stylesheet" href="/landing.css?v=20260906i">
-    <link rel="stylesheet" href="/psicologia.css?v=20260912a">
+    <link rel="stylesheet" href="/psicologia.css?v=20260914b">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -110,7 +110,7 @@
                 <a href="/consulta">Especialidades</a>
                 <a href="/burnout">Burnout</a>
                 <a href="/magazine">Magazine</a>
-                <a href="/#equipa">A Equipa</a>
+                <a href="#equipa">A Equipa</a>
             </nav>
             <div class="psi-nav-actions">
                 <a href="/patient-portal" class="psi-nav-login">Login</a>
@@ -125,7 +125,7 @@
             <a href="/consulta">Especialidades</a>
             <a href="/burnout">Burnout</a>
             <a href="/magazine">Magazine</a>
-            <a href="/#equipa">A Equipa</a>
+            <a href="#equipa">A Equipa</a>
             <a href="/patient-portal">Login</a>
             <a href="/marcar/psicologia-mensal" class="js-psi-cta" data-psi-cta="nav-mobile">Começar</a>
         </div>
@@ -279,6 +279,51 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <section class="psi-section psi-team lon-team" id="equipa" aria-labelledby="lon-team-title">
+            <div class="lon-container">
+                <div class="lon-team-header psi-anim">
+                    <p class="lon-team-kicker">Quem está do outro lado da consulta</p>
+                    <h2 id="lon-team-title">A equipa clínica</h2>
+                    <p class="lon-team-lead">Médicas e psicólogas da Lon Clinic — credenciais e como marcar.</p>
+                </div>
+                <div class="lon-team-grid">
+                    <article class="lon-team-card psi-anim" id="lon-team-rita">
+                        <div class="lon-team-card-media">
+                            <div class="lon-team-avatar">
+                                <img src="/api/public/team-photo/rita" alt="Dra. Rita Aguiar" width="132" height="132" loading="lazy" decoding="async" onload="this.classList.add('is-loaded')" onerror="this.remove()">
+                                <span aria-hidden="true">RA</span>
+                            </div>
+                        </div>
+                        <div class="lon-team-card-body">
+                            <h3 class="lon-team-name">Dra. Rita Aguiar</h3>
+                            <p class="lon-team-role">Médica especialista em Medicina Geral e Familiar</p>
+                            <p class="lon-team-bio">Médica responsável da Lon Clinic. Ordem dos Médicos · 9 anos de prática clínica.</p>
+                            <div class="lon-team-actions">
+                                <a href="/equipa/rita-aguiar" class="psi-pill psi-pill-light">Perfil e credenciais →</a>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="lon-team-card psi-anim" id="lon-team-sara">
+                        <div class="lon-team-card-media">
+                            <div class="lon-team-avatar">
+                                <img src="/api/public/team-photo/sara" alt="Dra. Sara Gamito" width="132" height="132" loading="lazy" decoding="async" onload="this.classList.add('is-loaded')" onerror="this.remove()">
+                                <span aria-hidden="true">SG</span>
+                            </div>
+                        </div>
+                        <div class="lon-team-card-body">
+                            <h3 class="lon-team-name">Dra. Sara Gamito</h3>
+                            <p class="lon-team-role">Psicóloga</p>
+                            <p class="lon-team-bio">Acompanha adultos em fases de transição, ansiedade e stress emocional. Dificuldades de autoestima e crescimento pessoal.</p>
+                            <div class="lon-team-actions">
+                                <a href="/marcar/psicologia-mensal" class="psi-pill psi-pill-dark js-psi-cta" data-psi-cta="team-sara">Marcar consulta →</a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <p class="lon-team-all psi-anim"><a href="/equipa" class="lon-text-link">Ver a Equipa →</a></p>
             </div>
         </section>
 
@@ -465,6 +510,7 @@
                 <div class="lon-footer-col">
                     <h4>Clínica</h4>
                     <a href="/">Início</a>
+                    <a href="/equipa">A Equipa</a>
                     <a href="/burnout">Centro burnout</a>
                     <a href="/nutricao">Nutrição por condição</a>
                     <a href="/burnout/colecao">Coleção de artigos</a>

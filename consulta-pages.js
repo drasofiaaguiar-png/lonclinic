@@ -297,7 +297,7 @@ function layoutConsultaPage(opts) {
     const canonicalUrl = canonicalHref(canonicalPath);
     const safeTitle = escapeHtml(title);
     const safeDesc = escapeHtml(description);
-    const og = escapeHtml(ogImage || `${origin}/image/image2.webp`);
+    const og = escapeHtml(ogImage || `${origin}/image/consulta-telemedicina.webp`);
     const graph = Array.isArray(jsonLdExtra) ? jsonLdExtra : jsonLdExtra ? [jsonLdExtra] : [];
     if (!robots || !/^noindex/i.test(robots)) {
         graph.push(organizationJsonLd(origin));
@@ -622,7 +622,7 @@ function renderSpoke(origin, slug) {
             title: `${title} | Lon Clinic`,
             description,
             canonicalPath,
-            ogImage: isTravel ? `${o}/image/travel-clinic-mountain-bg-v2.png` : `${o}/image/image2.webp`,
+            ogImage: isTravel ? `${o}/image/travel-clinic-mountain-bg-v2.png` : `${o}/image/consulta-telemedicina.webp`,
             jsonLdExtra: jsonLd,
             mainHtml,
             headerBookHref: bookingHref,
@@ -647,7 +647,7 @@ function renderNotFound(origin) {
         title: 'Não encontrado | Lon Clinic',
         description: 'Página de consulta não encontrada.',
         canonicalPath: '/consulta',
-        ogImage: `${o}/image/image2.webp`,
+        ogImage: `${o}/image/consulta-telemedicina.webp`,
         jsonLdExtra: null,
         mainHtml,
         robots: 'noindex, follow'

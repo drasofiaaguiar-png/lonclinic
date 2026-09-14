@@ -4330,9 +4330,79 @@ body.lon-home .dr-hero {
 
 .lon-home .lon-need-block--urgent .lon-need-offer-img {
     flex: 1 1 auto;
-    height: auto;
+    width: 100%;
+    height: 11.5rem;
     min-height: 8.5rem;
-    object-position: center 18%;
+    object-fit: cover;
+    object-position: 72% 38%;
+}
+
+.lon-home #lon-offer-clinica-geral .lon-need-offer-img {
+    object-position: center 32%;
+}
+
+.lon-home #lon-offer-renovacao .lon-need-offer-img {
+    object-position: center 42%;
+}
+
+.lon-home #lon-offer-urgente .lon-need-offer-img {
+    object-position: 70% 40%;
+}
+
+.lon-home #lon-service-clinica-geral img {
+    object-position: center 40%;
+    filter: brightness(0.98) contrast(1.04) saturate(1.04);
+}
+
+.lon-home #lon-service-urgente img {
+    object-position: 32% 42%;
+    filter: brightness(0.98) contrast(1.04) saturate(1.04);
+}
+
+.lon-home #lon-service-renovacao img {
+    object-position: center 52%;
+    filter: brightness(0.97) contrast(1.05) saturate(1.06);
+}
+
+.lon-home #lon-service-clinica-geral .lon-service-image-wrap::after,
+.lon-home #lon-service-urgente .lon-service-image-wrap::after,
+.lon-home #lon-service-renovacao .lon-service-image-wrap::after {
+    height: 58%;
+    background: linear-gradient(0deg, rgba(36, 54, 46, 0.78) 0%, rgba(36, 54, 46, 0.22) 52%, rgba(36, 54, 46, 0) 100%);
+}
+
+.lon-home #lon-offer-nutricao .lon-need-offer-img {
+    object-position: center 68%;
+}
+
+.lon-home #lon-offer-nutricao-consulta .lon-need-offer-img {
+    object-position: center 28%;
+}
+
+.lon-home #lon-service-nutricao-programa img {
+    object-position: center 68%;
+    filter: brightness(0.96) contrast(1.04) saturate(1.06);
+}
+
+.lon-home #lon-service-nutricao-semanal img {
+    object-position: center 26%;
+    filter: brightness(0.97) contrast(1.04) saturate(1.05);
+}
+
+.lon-home #lon-service-nutricao-bimensal img {
+    object-position: center 36%;
+    filter: brightness(1.02) contrast(1.06) saturate(1.12);
+}
+
+.lon-home #lon-service-nutricao-programa .lon-service-image-wrap::after,
+.lon-home #lon-service-nutricao-semanal .lon-service-image-wrap::after,
+.lon-home #lon-service-nutricao-bimensal .lon-service-image-wrap::after {
+    height: 52%;
+    background: linear-gradient(0deg, rgba(36, 54, 46, 0.72) 0%, rgba(36, 54, 46, 0.16) 58%, rgba(36, 54, 46, 0) 100%);
+}
+
+.lon-home #lon-service-nutricao-bimensal .lon-service-image-wrap::before {
+    background: none;
 }
 
 .lon-home .lon-need-block--urgent .lon-need-offer-body {

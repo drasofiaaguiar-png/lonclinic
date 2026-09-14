@@ -1746,3 +1746,105 @@ html.lenis body {
     line-height: 1.45;
     color: var(--psi-muted);
 }
+
+/* Clinical team */
+.psi-landing .psi-team.lon-team {
+    padding: 96px 0;
+    background: var(--psi-cream);
+}
+
+.psi-landing .psi-team .lon-team-header {
+    text-align: center;
+    max-width: 40rem;
+    margin: 0 auto 40px;
+}
+
+.psi-landing .psi-team .lon-team-kicker {
+    color: var(--psi-olive);
+    letter-spacing: 0.14em;
+}
+
+.psi-landing .psi-team .lon-team-header h2 {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: clamp(2rem, 4.2vw, 3.1rem);
+    font-weight: 600;
+    color: var(--psi-ink);
+    letter-spacing: -0.02em;
+    line-height: 1.08;
+}
+
+.psi-landing .psi-team .lon-team-lead {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: var(--psi-muted);
+}
+
+.psi-landing .psi-team .lon-team-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+}
+
+@media (min-width: 900px) {
+    .psi-landing .psi-team .lon-team-grid {
+        grid-template-columns: 1fr 1fr;
+        align-items: stretch;
+    }
+}
+
+.psi-landing .psi-team .lon-team-card {
+    max-width: none;
+    margin: 0;
+    height: 100%;
+    background: #fff;
+    border: 1px solid var(--psi-line);
+    border-radius: var(--psi-radius);
+    box-shadow: none;
+}
+
+.psi-landing .psi-team .lon-team-avatar {
+    background: linear-gradient(145deg, var(--psi-olive) 0%, var(--psi-olive-deep) 100%);
+    box-shadow: 0 10px 28px rgba(42, 44, 28, 0.18);
+}
+
+.psi-landing .psi-team .lon-team-avatar img:not(.is-loaded) {
+    opacity: 0;
+}
+
+.psi-landing .psi-team .lon-team-name {
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 1.55rem;
+    color: var(--psi-ink);
+}
+
+.psi-landing .psi-team .lon-team-role {
+    color: var(--psi-olive-deep);
+}
+
+.psi-landing .psi-team .lon-team-bio {
+    margin: 0 0 20px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--psi-muted);
+}
+
+.psi-landing .psi-team .psi-pill {
+    padding: 11px 20px;
+    font-size: 0.88rem;
+}
+
+.psi-landing .psi-team .lon-team-all {
+    margin: 22px 0 0;
+    text-align: center;
+}
+
+.psi-landing .psi-team .lon-text-link {
+    color: var(--psi-olive-deep);
+    font-weight: 600;
+}
+
+@media (max-width: 520px) {
+    .psi-landing .psi-team.lon-team {
+        padding: 72px 0;
+    }
+}
