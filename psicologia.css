@@ -1807,8 +1807,9 @@ html.lenis body {
     box-shadow: 0 10px 28px rgba(42, 44, 28, 0.18);
 }
 
-.psi-landing .psi-team .lon-team-avatar img:not(.is-loaded) {
-    opacity: 0;
+.psi-landing .psi-team .lon-team-avatar img {
+    z-index: 1;
+    opacity: 1;
 }
 
 .psi-landing .psi-team .lon-team-name {
