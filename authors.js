@@ -25,7 +25,7 @@ const AUTHORS = {
         givenName: 'Rita',
         familyName: 'Aguiar',
         displayName: 'Drª Rita Aguiar',
-        jobTitle: 'Médica',
+        jobTitle: 'Médica especialista em Medicina Geral e Familiar',
         initials: 'RA',
         yearsPractice: 9,
         worksFor: 'Lon Clinic',
@@ -33,6 +33,7 @@ const AUTHORS = {
         ersNumber: '45475',
         alumniOf: 'Faculdade de Medicina da Universidade do Porto',
         knowsAbout: [
+            'Medicina Geral e Familiar',
             'Medicina do Viajante',
             'Telemedicina',
             'Burnout',
@@ -45,12 +46,9 @@ const AUTHORS = {
             'Pós-graduação em Medicina do Viajante e das Populações Móveis (2021), Faculdade de Medicina da Universidade do Porto',
             'Consultadoria na Organização Mundial de Saúde, secção de Populações Móveis (2023)'
         ],
-        shortBio:
-            'Médica com 9 anos de prática clínica. Escreve e revê os guias médicos da Lon Clinic com base na consulta real — não em conteúdo genérico.',
+        shortBio: 'Médica especialista em Medicina Geral e Familiar.',
         longBio: [
-            'A Drª Rita Aguiar é médica inscrita na Ordem dos Médicos e exerce há 9 anos. Na Lon Clinic, faz consultas de telemedicina — incluindo medicina do viajante, clínica geral e acompanhamento de burnout — e é a autora e revisora clínica dos artigos publicados neste site.',
-            'Em 2021 concluiu a pós-graduação em Medicina do Viajante e das Populações Móveis na Faculdade de Medicina da Universidade do Porto. Em 2023 prestou consultadoria à Organização Mundial de Saúde, na secção de Populações Móveis.',
-            'A Lon Clinic está registada na Entidade Reguladora da Saúde (ERS n.º 45475). A informação dos artigos é de carácter geral e não substitui uma consulta individualizada.'
+            'A Drª Rita Aguiar é Médica especialista em Medicina Geral e Familiar.'
         ],
         profiles: [
             { label: 'Perfil na Lon Clinic', href: '/equipa/rita-aguiar', external: false },
@@ -468,7 +466,7 @@ function renderTeamPage(origin, extras) {
         </div>
     </footer>
     <script src="/lon-nav.js"></script>
-    <script src="/i18n.js?v=20260913q" defer></script>
+    <script src="/i18n.js?v=20260914a" defer></script>
 </body>
 </html>`;
 
