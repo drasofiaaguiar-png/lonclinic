@@ -7,7 +7,7 @@
 const crypto = require('crypto');
 
 const API_VERSION = 'v21.0';
-const DEFAULT_PIXEL_ID = '1069973925619277';
+const DEFAULT_PIXEL_ID = '935004576344024';
 
 function pixelId() {
     const raw = String(process.env.META_PIXEL_ID || DEFAULT_PIXEL_ID).trim();
