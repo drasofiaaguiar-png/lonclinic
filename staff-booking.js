@@ -510,24 +510,31 @@ function timesFromHours(start, end, stepMinutes) {
     return out;
 }
 
-/** Start times that fit inside the given ranges (no booking/hold filtering). */
+/**
+ * Start times that fit inside the given ranges (no booking/hold filtering).
+ * Psychology uses `hourly`: one session every 60 minutes, aligned to each
+ * block's start (10:30, 11:30…) — not the clock hour. A slot only exists if
+ * start + duration stays inside that psychologist's window.
+ */
 function bookableStartsFromRanges(ranges, opts) {
     const step = Number(opts && opts.step) || 30;
     const duration = Number(opts && opts.duration) || step;
     const hourly = !!(opts && opts.hourly);
-    const gridSet = new Set();
+    const cadence = hourly ? 60 : step;
+    const seen = new Set();
+    const out = [];
     for (const range of Array.isArray(ranges) ? ranges : []) {
-        if (!range) continue;
-        for (const t of timesFromHours(range.start, range.end, step)) gridSet.add(t);
-    }
-    const grid = Array.from(gridSet).sort((a, b) => timeToMinutes(a) - timeToMinutes(b));
-    return grid.filter((start) => {
-        if (hourly) {
-            const mins = timeToMinutes(start);
-            if (mins == null || mins % 60 !== 0) return false;
+        const from = timeToMinutes(range && range.start);
+        const to = timeToMinutes(range && range.end);
+        if (from == null || to == null || to <= from) continue;
+        for (let t = from; t + duration <= to; t += cadence) {
+            const start = minutesToTime(t);
+            if (seen.has(start)) continue;
+            seen.add(start);
+            out.push(start);
         }
-        return startFitsDuration(grid, start, duration, step);
-    });
+    }
+    return out.sort((a, b) => timeToMinutes(a) - timeToMinutes(b));
 }
 
 function occupiedTimesFromStart(startHhmm, durationMinutes, stepMinutes) {
@@ -574,6 +581,7 @@ module.exports = {
     hasCrossedBookableHours,
     hasHoursOutsidePlatform,
     weeklyHasEnabled,
+    hasOpenDayRows,
     hasBookableHours,
     psychologySpecialty,
     publicPsychologySpecialties,

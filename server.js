@@ -7075,7 +7075,8 @@ function getAppointmentStartUtcMs(booking, timeZone) {
 
 function appointmentDurationMinutes(booking) {
     const s = booking && booking.service;
-    if (s === 'psicologia' || s === 'psicologia_mensal' || s === 'terapia_casal' || s === 'terapia_casal_mensal') return 60;
+    if (s === 'psicologia' || s === 'psicologia_mensal') return 50;
+    if (s === 'terapia_casal' || s === 'terapia_casal_mensal') return 60;
     if (s === 'travel') {
         const c = booking.travellerCount || 1;
         if (c === 1) return 20;
@@ -7625,12 +7626,9 @@ async function slotsForStaffPersonOnDate(person, dateIso, service, excludeHoldId
     if (!ranges.length) return [];
     const step = scheduleStore.slotDuration || 30;
     const duration = appointmentDurationMinutes({ service });
-    const gridSet = new Set();
-    for (const range of ranges) {
-        for (const t of staffBooking.timesFromHours(range.start, range.end, step)) gridSet.add(t);
-    }
-    const grid = Array.from(gridSet).sort((a, b) => timeToMinutes(a) - timeToMinutes(b));
-    if (!grid.length) return [];
+    const hourly = staffBooking.isPsychologyStaffService(service);
+    const starts = staffBooking.bookableStartsFromRanges(ranges, { step, duration, hourly });
+    if (!starts.length) return [];
     const blockedTicks = new Set(
         (scheduleStore.blockedTimeSlots || [])
             .filter((item) => item && item.date === dateIso)
@@ -7641,17 +7639,9 @@ async function slotsForStaffPersonOnDate(person, dateIso, service, excludeHoldId
     blockedTicks.forEach((t) => blocked.add(t));
     const held = await ticksHeldForProfessional(dateIso, person.id, excludeHoldId, duration, step);
     held.forEach((t) => blocked.add(t));
-    // Psychology / couple therapy sessions last 60 min and start on the hour
-    // (10:00, 11:00, ...) — the 30-min grid is kept only for blocking ticks.
-    const hourlyStarts = staffBooking.isPsychologyStaffService(service);
-    return grid.filter((start) => {
-        if (hourlyStarts) {
-            const mins = timeToMinutes(start);
-            if (mins == null || mins % 60 !== 0) return false;
-        }
-        if (!staffBooking.startFitsDuration(grid, start, duration, step)) return false;
-        return staffBooking.occupiedTimesFromStart(start, duration, step).every((t) => !blocked.has(t));
-    });
+    return starts.filter((start) =>
+        staffBooking.occupiedTimesFromStart(start, duration, step).every((t) => !blocked.has(t))
+    );
 }
 
 async function getStaffBookableSlotsForDate(dateIso, opts) {
@@ -10726,9 +10716,37 @@ function weeklyHoursLabel(weekly) {
             weekly && weekly[day] && weekly[day].enabled ? weekly[day] : null,
             platform[day] && platform[day].enabled ? platform[day] : null
         );
-        if (range) bits.push(`${WEEKDAY_PT_SHORT[day]} ${range.start}–${range.end}`);
+        if (range) bits.push(`${WEEKDAY_PT_SHORT[day]} ${String(range.start).slice(0, 5)}–${String(range.end).slice(0, 5)}`);
     }
     return bits.join(' · ');
+}
+
+function upcomingStaffHoursLabel(person, dayCount) {
+    const days = Math.min(Math.max(parseInt(dayCount, 10) || 28, 1), 42);
+    const today = lisbonNowParts().dateIso;
+    const bits = [];
+    const seen = new Set();
+    for (let i = 0; i < days; i += 1) {
+        const dateIso = addDaysIso(today, i);
+        const ranges = hoursForStaffOnDate(person, dateIso);
+        if (!ranges.length) continue;
+        const day = staffBooking.weekdayKeyFromIso(dateIso);
+        const bit = ranges
+            .map((range) => `${WEEKDAY_PT_SHORT[day]} ${String(range.start).slice(0, 5)}–${String(range.end).slice(0, 5)}`)
+            .join(' · ');
+        if (!bit || seen.has(bit)) continue;
+        seen.add(bit);
+        bits.push(bit);
+        if (bits.length >= 8) break;
+    }
+    return bits.join(' · ');
+}
+
+function staffHoursLabel(person) {
+    if (staffBooking.hasOpenDayRows(person && person.days)) {
+        return upcomingStaffHoursLabel(person, 28);
+    }
+    return weeklyHoursLabel(person && person.weekly);
 }
 
 function guessStaffGender(name) {
@@ -10810,7 +10828,7 @@ async function matchPsychologistsForTriagem(payload) {
             name: card.name,
             bio: card.bio,
             photoUrl: card.photoUrl,
-            hoursLabel: weeklyHoursLabel(person.weekly),
+            hoursLabel: staffHoursLabel(person),
             href: triagemBookHref({ specialty, professionalId: person.id }),
             slots: useSlots.slice(0, 6).map((slot) => ({
                 date: slot.date,

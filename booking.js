@@ -2449,7 +2449,7 @@ async function initBookingFlow() {
             } else if (data.service === 'saude_mental') {
                 durationMinutes = 45;
             } else if (isPsychStaffService(data.service)) {
-                durationMinutes = 60;
+                durationMinutes = (data.service === 'terapia_casal' || data.service === 'terapia_casal_mensal') ? 60 : 50;
             } else if (data.service === 'burnout' || data.service === 'burnout_mensal' || data.service === 'burnout_programa') {
                 durationMinutes = 60;
             }
