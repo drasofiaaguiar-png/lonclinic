@@ -10735,7 +10735,6 @@ function formatTriagemEmail(data) {
         '',
         '── Preferências ──',
         `Psicóloga: ${Array.isArray(data.prefPsicologa) ? data.prefPsicologa.join('; ') : data.prefPsicologa}`,
-        `Comunicação: ${data.comunicacao}`,
         `Horário vídeo: ${data.horario}`,
         `Encaminhamento médico/nutri: ${data.encaminhamento || '—'}`,
         '',
@@ -10857,7 +10856,6 @@ app.post('/api/triagem', rateLimitTriagem, async (req, res) => {
         prefPsicologa: Array.isArray(body.prefPsicologa)
             ? body.prefPsicologa.map((p) => String(p).slice(0, 200)).slice(0, 6)
             : [String(body.prefPsicologa || '').slice(0, 200)].filter(Boolean),
-        comunicacao: String(body.comunicacao || '').slice(0, 80),
         horario: String(body.horario || '').slice(0, 40),
         encaminhamento: body.encaminhamento ? String(body.encaminhamento).slice(0, 40) : null,
         consentimentos: {

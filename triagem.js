@@ -342,13 +342,11 @@
                 stepEl.querySelectorAll('input[name="prefPsicologa"]').forEach(markInvalid);
                 if (!firstBad) firstBad = stepEl.querySelector('input[name="prefPsicologa"]');
             }
-            ['comunicacao', 'horario'].forEach(function (name) {
-                if (!selectedValue(name)) {
-                    ok = false;
-                    stepEl.querySelectorAll('input[name="' + name + '"]').forEach(markInvalid);
-                    if (!firstBad) firstBad = stepEl.querySelector('input[name="' + name + '"]');
-                }
-            });
+            if (!selectedValue('horario')) {
+                ok = false;
+                stepEl.querySelectorAll('input[name="horario"]').forEach(markInvalid);
+                if (!firstBad) firstBad = stepEl.querySelector('input[name="horario"]');
+            }
         }
 
         if (step === 6) {
@@ -419,7 +417,6 @@
             diagnostico: selectedValue('diagnostico'),
             diagnosticoQual: document.getElementById('diagnosticoQual').value.trim() || null,
             prefPsicologa: selectedValues('prefPsicologa'),
-            comunicacao: selectedValue('comunicacao'),
             horario: selectedValue('horario'),
             encaminhamento: selectedValue('encaminhamento') || null,
             consentimentos: {
