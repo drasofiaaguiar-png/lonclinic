@@ -1515,6 +1515,11 @@ html.lenis body {
     vertical-align: middle;
 }
 
+.psi-plan-price .psi-plan-from {
+    margin-left: 0;
+    margin-right: 8px;
+}
+
 .psi-plan-save {
     margin: -4px 0 10px;
     font-size: 0.9rem;
