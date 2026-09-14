@@ -662,7 +662,7 @@ function renderQuizPage(origin, def) {
         <a class="bq-btn bq-btn-primary js-quiz-book" id="stickyBookBtn" data-cta="book" href="${stickyHref}">Marcar consulta</a>
     </aside>
     <script>window.CLINICAL_QUIZ = ${cfgJson};</script>
-    <script src="/lon-analytics.js?v=20260906e" defer></script>
+    <script src="/lon-analytics.js?v=20260914a" defer></script>
     <script src="/lon-slots.js?v=20260911n" defer></script>
     <script src="/clinical-quiz-score.js?v=${JS_V}" defer></script>
     <script src="/clinical-quiz.js?v=${JS_V}" defer></script>
@@ -906,7 +906,7 @@ function renderAllHub(origin) {
         </div>
     </footer>
     <script src="/lon-nav.js"></script>
-    <script src="/lon-analytics.js?v=20260906h" defer></script>
+    <script src="/lon-analytics.js?v=20260914a" defer></script>
 </body>
 </html>`;
 }

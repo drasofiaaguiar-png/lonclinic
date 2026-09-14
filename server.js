@@ -33,6 +33,7 @@ bcrypt.hash(CLINIC_PASSWORD, 12).then(h => { clinicPasswordHash = h; });
 const db = require('./db');
 const totp = require('./totp');
 const analyticsNet = require('./analytics-network');
+const metaCapi = require('./meta-capi');
 const { computeCheckoutTotalCents, isStripeSubscriptionService, normalizeServiceKey, discountsAllowedForService, providerPayoutCents } = require('./pricing');
 
 function bookingServiceTag(raw) {
@@ -411,7 +412,8 @@ app.use(
                     'https://ssl.google-analytics.com',
                     'https://js.stripe.com',
                     'https://cdnjs.cloudflare.com',
-                    'https://widget.trustpilot.com'
+                    'https://widget.trustpilot.com',
+                    'https://connect.facebook.net'
                 ],
                 scriptSrcAttr: ["'none'"],
                 // Many pages still use style="" attributes; dropping unsafe-inline would blank the homepage.
@@ -427,7 +429,10 @@ app.use(
                     'https://region1.google-analytics.com',
                     'https://www.googletagmanager.com',
                     'https://analytics.google.com',
-                    'https://stats.g.doubleclick.net'
+                    'https://stats.g.doubleclick.net',
+                    'https://www.facebook.com',
+                    'https://connect.facebook.net',
+                    'https://graph.facebook.com'
                 ],
                 frameSrc: [
                     "'self'",
@@ -451,8 +456,18 @@ app.use(
 );
 
 const ANALYTICS_SNIPPET =
-    '\n<script src="/lon-analytics.js?v=20260906e" defer></script>\n' +
+    '\n<script src="/lon-analytics.js?v=20260914a" defer></script>\n' +
     '<noscript><img src="/api/a.gif?n=page_view" alt="" width="1" height="1"></noscript>\n';
+
+function injectMetaPixel(html) {
+    if (!html || !metaCapi.pixelId()) return html;
+    if (/fbevents\.js|fbq\(\s*['"]init['"]/.test(html)) return html;
+    const snippet = metaCapi.browserSnippet();
+    if (!snippet) return html;
+    const headAt = html.lastIndexOf('</head>');
+    if (headAt !== -1) return html.slice(0, headAt) + snippet + html.slice(headAt);
+    return snippet + html;
+}
 
 function isClinicalTrackingSurface(req) {
     if (!req) return false;
@@ -532,8 +547,10 @@ function injectPublicHtml(html, req, nonce) {
     let out = html;
     if (isClinicalTrackingSurface(req)) {
         out = stripGtagBlocks(out);
+        out = metaCapi.stripBrowserSnippet(out);
     } else {
         out = ensureGtagConsentDenied(out);
+        out = injectMetaPixel(out);
     }
     return disableCloudflareEmailObfuscation(
         applyCspNonce(injectAnalyticsHtml(seo.applyHtmlSeo(out, req), req), nonce)
@@ -8549,6 +8566,7 @@ async function followUpPaidCheckout(session, fin, logPrefix = '') {
                 bookingRef: fin.bookingRef || null
             }
         ).catch(() => {});
+        metaCapi.sendPurchase(session, { bookingRef: fin.bookingRef || null }).catch(() => {});
     }
     markQuizLeadConverted(session.customer_email || meta.contact_email || '').catch(() => {});
 }
@@ -12296,6 +12314,8 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         const analyticsIds = anonymousIds(req);
         if (analyticsIds.visitorId) metadata.lon_vid = String(analyticsIds.visitorId).slice(0, 64);
         if (analyticsIds.sessionId) metadata.lon_sid = String(analyticsIds.sessionId).slice(0, 64);
+        const metaAttr = metaCapi.pickAttribution(req, req.body, readCookie);
+        metaCapi.applyAttribution(metadata, metaAttr);
 
         // Store names only — never send health data (medications, allergies, SNS, DOB) to Stripe.
         if (Array.isArray(passengers)) {
@@ -12440,6 +12460,22 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
             { props: { service: bookingServiceTag(service), funnel: 'patient_booking' }, revenueCents: priceAmount, currency: 'eur' },
             req
         ).catch(() => {});
+        metaCapi.sendInitiateCheckout({
+            email: patientEmail,
+            phone: patientPhone,
+            service,
+            valueCents: priceAmount,
+            currency: 'EUR',
+            eventId: String((req.body && req.body.metaEventId) || `ic_${String(session.id || '').slice(-24)}`).slice(0, 64),
+            attr: {
+                fbp: metaAttr.fbp,
+                fbc: metaAttr.fbc,
+                clientIp: metaAttr.clientIp,
+                clientUa: metaAttr.clientUa,
+                externalId: analyticsIds.visitorId
+            },
+            sourceUrl: `${getBaseUrl(req)}/book-consultation`
+        }).catch(() => {});
         res.json({ url: session.url });
 
     } catch (err) {
@@ -18690,6 +18726,14 @@ app.use((req, res) => {
         } else {
             console.log(`   ⚠️  Stripe NOT configured — add your keys to .env`);
             console.log(`   Get keys at: https://dashboard.stripe.com/test/apikeys`);
+        }
+        if (metaCapi.pixelId()) {
+            console.log(
+                `   Meta Pixel: ${metaCapi.pixelId()}` +
+                    (metaCapi.hasCapi() ? ' + Conversions API' : ' (set META_CAPI_ACCESS_TOKEN for purchase matching)')
+            );
+        } else {
+            console.log('   ⚠️  Meta Pixel off — set META_PIXEL_ID to enable ads events');
         }
         if (isResendConfigured) {
             console.log('   ✉️  Email: Resend API (HTTPS) — outbound SMTP not required');

@@ -239,8 +239,51 @@
         }
     }
 
+    function metaFromLon(name, props, eventId) {
+        if (typeof fbq !== 'function') return;
+        try {
+            var p = props || {};
+            var params = {};
+            if (p.service) params.content_name = String(p.service).slice(0, 80);
+            if (p.surface || p.funnel) params.content_category = String(p.surface || p.funnel).slice(0, 80);
+            if (typeof p.value === 'number' && isFinite(p.value)) params.value = p.value;
+            if (p.currency) params.currency = String(p.currency).slice(0, 8);
+            var opt = eventId ? { eventID: String(eventId) } : undefined;
+            if (name === 'page_view') {
+                var surface = pageContext().surface;
+                if (/^(home|booking|burnout|medical|nutrition|mental|tourist|travel)$/.test(surface)) {
+                    fbq('track', 'ViewContent', {
+                        content_name: String(location.pathname || '/').slice(0, 120),
+                        content_category: surface
+                    }, opt);
+                }
+                return;
+            }
+            if (name === 'checkout_start') {
+                if (!params.currency) params.currency = 'EUR';
+                fbq('track', 'InitiateCheckout', params, opt);
+                return;
+            }
+            if (name === 'quiz_complete' || name === 'job_application' || name === 'intake_submit' || name === 'contact_submitted') {
+                fbq('track', 'Lead', params, opt);
+                return;
+            }
+            if (name === 'form_submit') {
+                var form = String(p.form || '');
+                if (/contact|avaliacao|triagem|nurture|lead|booking|quiz/i.test(form)) {
+                    fbq('track', 'Lead', params, opt);
+                }
+                return;
+            }
+            if (name === 'whatsapp_click') {
+                fbq('track', 'Contact', params, opt);
+            }
+        } catch (eMeta) { /* ignore */ }
+    }
+
     function track(name, props) {
-        enqueue(envelope(name, props));
+        var ev = envelope(name, props);
+        enqueue(ev);
         if (/^(page_view|page_engaged|cta_click|date_select|slot_select|time_slot_clicked|payment_method_selected|checkout_start|form_submit|form_abandon|exit_intent|whatsapp_click|job_application|interview_booked|quiz_complete|recovery_sent|nurture_sent|intake_submit)$/.test(name)) {
             flush();
         }
@@ -251,6 +294,8 @@
                 gtag('event', name, gprops);
             } catch (e) { /* ignore */ }
         }
+        metaFromLon(name, props, ev.event_id);
+        return ev.event_id;
     }
 
     function pageContext() {

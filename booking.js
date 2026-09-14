@@ -2293,10 +2293,30 @@ async function initBookingFlow() {
         }
 
         try {
+            let checkoutEventId = '';
             if (window.LonAnalytics) {
-                window.LonAnalytics.track('checkout_start', { service: state.service, surface: 'booking', funnel: 'patient_booking', step: 'pay' });
+                checkoutEventId = window.LonAnalytics.track('checkout_start', {
+                    service: state.service,
+                    surface: 'booking',
+                    funnel: 'patient_booking',
+                    step: 'pay',
+                    value: totalCents / 100,
+                    currency: 'EUR'
+                }) || '';
                 window.LonAnalytics.flush();
             }
+            const metaIds = (function () {
+                function cookie(name) {
+                    const m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/[$()*+./?[\\\]^{|}]/g, '\\$&') + '=([^;]*)'));
+                    return m ? decodeURIComponent(m[1]) : '';
+                }
+                let fbclid = '';
+                try {
+                    const lt = JSON.parse(sessionStorage.getItem('lon_lt') || 'null');
+                    if (lt && lt.fbclid) fbclid = String(lt.fbclid);
+                } catch (eLt) { /* ignore */ }
+                return { fbp: cookie('_fbp'), fbc: cookie('_fbc'), fbclid: fbclid };
+            })();
             const response = await fetch('/api/create-checkout-session', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -2317,7 +2337,11 @@ async function initBookingFlow() {
                     locale: getBookingLocale(),
                     holdId: state.holdId || null,
                     professionalId: state.professionalId || null,
-                    specialty: state.specialty || null
+                    specialty: state.specialty || null,
+                    fbp: metaIds.fbp || '',
+                    fbc: metaIds.fbc || '',
+                    fbclid: metaIds.fbclid || '',
+                    metaEventId: checkoutEventId || ''
                 })
             });
 

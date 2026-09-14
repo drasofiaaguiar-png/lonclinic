@@ -365,7 +365,7 @@ function layoutBurnoutPage(opts) {
     <script src="/lon-nav.js"></script>
     <script src="/talk-cta.js?v=20260912a" defer></script>
     <script src="/i18n.js?v=20260912a" defer></script>
-    <script src="/lon-analytics.js?v=20260906h" defer></script>
+    <script src="/lon-analytics.js?v=20260914a" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=20260912a" defer></script>
 </body>
