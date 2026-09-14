@@ -1581,7 +1581,7 @@ function renderBlogArticle(origin, slug) {
 
     jsonLd.push(magBreadcrumbJsonLd(o, magBreadcrumbCrumbs(`/blog/${encodeURIComponent(slug)}`, title)));
 
-    const isTravelGuide = /vacina|viajante|travel/i.test(slug);
+    const isTravelGuide = /vacina|viajante|travel|vaccination/i.test(slug);
     const byline = (() => {
         const iso = String(dateMod || datePub || '').slice(0, 10);
         const lang = articleLangCode(meta);
