@@ -42,9 +42,10 @@
 
     <meta name="theme-color" content="#1e4d6b">
     <meta name="format-detection" content="telephone=no">
-    <link rel="preload" as="image" href="/image/hero-run.webp" fetchpriority="high">
+    <link rel="preload" as="image" href="/image/hero-bay.webp" media="(max-width: 939px)" fetchpriority="high">
+    <link rel="preload" as="image" href="/image/hero-run.webp" media="(min-width: 940px)" fetchpriority="high">
 
-    <link rel="stylesheet" href="/landing.css?v=20260914h">
+    <link rel="stylesheet" href="/landing.css?v=20260915a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@1,9..144,500&display=swap" rel="stylesheet">
@@ -237,7 +238,10 @@
 
     <main id="conteudo-principal">
         <section class="dr-hero" id="inicio">
-            <img class="dr-hero-bg" src="image/hero-run.webp" alt="Mulher a correr junto ao mar" loading="eager" decoding="async" fetchpriority="high" width="2171" height="3256">
+            <picture>
+                <source media="(max-width: 939px)" srcset="/image/hero-bay.webp" width="768" height="1024">
+                <img class="dr-hero-bg" src="/image/hero-run.webp" alt="Vista costeira junto ao mar" loading="eager" decoding="async" fetchpriority="high" width="2171" height="3256">
+            </picture>
             <div class="dr-hero-scrim" aria-hidden="true"></div>
             <div class="dr-hero-stage">
                 <div class="dr-hero-content">
