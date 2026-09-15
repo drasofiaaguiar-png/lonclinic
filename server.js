@@ -10163,8 +10163,14 @@ app.use(express.static(path.join(__dirname), {
 
 // ─── API: Get publishable key ───
 app.get('/api/config', (req, res) => {
+    const gcal = googleCalendar.configFlags();
     res.json({
-        publishableKey: process.env.STRIPE_PUBLISHABLE_KEY
+        publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+        googleCalendar: {
+            configured: googleCalendar.isConfigured(),
+            hasClientId: gcal.hasClientId,
+            hasClientSecret: gcal.hasClientSecret
+        }
     });
 });
 
@@ -19261,8 +19267,9 @@ app.use((req, res) => {
             console.log(`   📅 Google Calendar OAuth ready (${googleCalendar.redirectUri()})`);
         } else {
             const flags = googleCalendar.configFlags();
+            const keys = googleCalendar.visibleGoogleEnvKeys();
             console.log(
-                `   ⚠️  Google Calendar off — client_id=${flags.hasClientId ? 'yes' : 'missing'} secret=${flags.hasClientSecret ? 'yes' : 'missing'}`
+                `   ⚠️  Google Calendar off — client_id=${flags.hasClientId ? 'yes' : 'missing'} secret=${flags.hasClientSecret ? 'yes' : 'missing'} keys=${keys.join(',') || '(none)'}`
             );
         }
         if (metaCapi.pixelId()) {

@@ -24,12 +24,32 @@ function envValue(name) {
     return text;
 }
 
+function envValueLoose(names) {
+    const wanted = (Array.isArray(names) ? names : [names])
+        .map((name) => String(name || '').trim().toUpperCase())
+        .filter(Boolean);
+    for (const name of wanted) {
+        const direct = envValue(name);
+        if (direct) return direct;
+    }
+    for (const key of Object.keys(process.env)) {
+        const normalized = String(key || '').replace(/^\uFEFF/, '').trim().toUpperCase();
+        if (!wanted.includes(normalized)) continue;
+        let text = String(process.env[key] || '').trim();
+        if ((text.startsWith('"') && text.endsWith('"')) || (text.startsWith("'") && text.endsWith("'"))) {
+            text = text.slice(1, -1).trim();
+        }
+        if (text) return text;
+    }
+    return '';
+}
+
 function clientId() {
-    return envValue('GOOGLE_CALENDAR_CLIENT_ID');
+    return envValueLoose(['GOOGLE_CALENDAR_CLIENT_ID', 'GOOGLE_CLIENT_ID']);
 }
 
 function clientSecret() {
-    return envValue('GOOGLE_CALENDAR_CLIENT_SECRET');
+    return envValueLoose(['GOOGLE_CALENDAR_CLIENT_SECRET', 'GOOGLE_CLIENT_SECRET']);
 }
 
 function isConfigured() {
@@ -41,6 +61,12 @@ function configFlags() {
         hasClientId: Boolean(clientId()),
         hasClientSecret: Boolean(clientSecret())
     };
+}
+
+function visibleGoogleEnvKeys() {
+    return Object.keys(process.env)
+        .filter((key) => /google|calendar/i.test(key))
+        .sort();
 }
 
 function redirectUri() {
@@ -316,6 +342,7 @@ module.exports = {
     FREEBUSY_SCOPE,
     isConfigured,
     configFlags,
+    visibleGoogleEnvKeys,
     redirectUri,
     authUrl,
     parseState,
