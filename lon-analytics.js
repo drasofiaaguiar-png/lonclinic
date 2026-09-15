@@ -264,8 +264,14 @@
                 fbq('track', 'InitiateCheckout', params, opt);
                 return;
             }
-            if (name === 'quiz_complete' || name === 'job_application' || name === 'intake_submit' || name === 'contact_submitted') {
+            if (name === 'quiz_complete' || name === 'job_application' || name === 'intake_submit' || name === 'contact_submitted' || name === 'triagem_submit') {
                 fbq('track', 'Lead', params, opt);
+                // Fire Google Ads conversion for triage completions
+                if (name === 'triagem_submit' && typeof gtag === 'function') {
+                    gtag('event', 'conversion', {
+                        'send_to': 'AW-18103198169/TriagemLead'
+                    });
+                }
                 return;
             }
             if (name === 'form_submit') {
@@ -284,7 +290,7 @@
     function track(name, props) {
         var ev = envelope(name, props);
         enqueue(ev);
-        if (/^(page_view|page_engaged|cta_click|date_select|slot_select|time_slot_clicked|payment_method_selected|checkout_start|form_submit|form_abandon|exit_intent|whatsapp_click|job_application|interview_booked|quiz_complete|recovery_sent|nurture_sent|intake_submit)$/.test(name)) {
+        if (/^(page_view|page_engaged|cta_click|date_select|slot_select|time_slot_clicked|payment_method_selected|checkout_start|form_submit|form_abandon|exit_intent|whatsapp_click|job_application|interview_booked|quiz_complete|recovery_sent|nurture_sent|intake_submit|triagem_submit)$/.test(name)) {
             flush();
         }
         if (typeof gtag === 'function' && name !== 'page_view' && name !== 'heartbeat' && name !== 'scroll_depth') {
