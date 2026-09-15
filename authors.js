@@ -505,7 +505,7 @@ function renderTeamPage(origin, extras) {
                 </div>
                 <div class="lon-team-grid">
                     <article class="lon-team-card" id="equipa-rita">
-                        <div class="lon-team-card-media">${avatarHtml(rita.initials, teamPhotoUrl('rita'), rita.displayName)}</div>
+                        <div class="lon-team-card-media">${avatarHtml(rita.initials, '', rita.displayName)}</div>
                         <div class="lon-team-card-body">
                             <h2 class="lon-team-name">${escapeHtml(rita.displayName)}</h2>
                             <p class="lon-team-role">${escapeHtml(rita.jobTitle)}</p>

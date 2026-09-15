@@ -7643,11 +7643,29 @@ function teamPhotoWhoForPerson(person) {
     if (/barreto/.test(blob)) return 'sara-barreto';
     if (/gamito/.test(blob)) return 'sara';
     if (/carolina/.test(blob)) return 'carolina';
-    if (/rita/.test(blob) && /aguiar/.test(blob)) return 'rita';
     return '';
 }
 
+function isRitaAguiarIdentity(raw) {
+    const s = String(raw || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+    return /rita/.test(s) && /aguiar/.test(s);
+}
+
+function hidePublicRitaPhoto(person) {
+    if (!person) return false;
+    return isRitaAguiarIdentity([
+        person.username,
+        person.fullName,
+        person.displayName,
+        person.name
+    ].join(' '));
+}
+
 function publicStaffPhotoUrl(person) {
+    if (hidePublicRitaPhoto(person)) return '';
     const username = String((person && person.username) || '').trim();
     if (username) return `/api/public/staff-photo/${encodeURIComponent(username)}`;
     const who = teamPhotoWhoForPerson(person || {});
@@ -7656,7 +7674,7 @@ function publicStaffPhotoUrl(person) {
 
 async function resolvePublicStaffPhoto(username) {
     const u = String(username || '').trim().toLowerCase();
-    if (!u) return null;
+    if (!u || isRitaAguiarIdentity(u)) return null;
     let photo = await getStaffPhotoInternal(u);
     if (photo && photo.data) return photo;
     const who = teamPhotoWhoForPerson({ username: u, name: u, fullName: u });
@@ -10938,17 +10956,29 @@ app.post('/api/recrutamento/entrevista', rateLimitRecrutamentoEntrevista, expres
 
 // ─── API: Psicologia triagem (PHQ-9 + matching) ───
 async function sendTriagemPriorityAlert(data) {
-    const lines = [
-        '⚠️ PRIORIDADE CLÍNICA — PHQ-9 pergunta 9 ≥ 1',
-        '',
-        `Nome: ${data.nome || '(ainda não preenchido)'}`,
-        `Email: ${data.email || '(ainda não preenchido)'}`,
-        `Telefone: ${data.telefone || '(ainda não preenchido)'}`,
-        `PHQ-9 Q9: ${data.score}`,
-        data.partial ? 'Estado: alerta parcial (durante o questionário)' : 'Estado: triagem completa',
-        '',
-        'Protocolo: contacto prioritário da equipa clínica. Se o contacto indicar risco imediato, orientar para 112 / SNS 24 / SOS Voz Amiga.'
-    ];
+    const isDv = String(data.type || '') === 'dv';
+    const lines = isDv
+        ? [
+            '⚠️ PRIORIDADE CLÍNICA — violência doméstica na triagem de casal',
+            '',
+            `Nome: ${data.nome || '(ainda não preenchido)'}`,
+            `Email: ${data.email || '(ainda não preenchido)'}`,
+            `Telefone: ${data.telefone || '(ainda não preenchido)'}`,
+            data.partial ? 'Estado: alerta parcial (durante o questionário)' : 'Estado: triagem completa',
+            '',
+            'Protocolo: rever segurança antes de qualquer sessão conjunta. APAV 116 006 · 112.'
+        ]
+        : [
+            '⚠️ PRIORIDADE CLÍNICA — PHQ-9 pergunta 9 ≥ 1',
+            '',
+            `Nome: ${data.nome || '(ainda não preenchido)'}`,
+            `Email: ${data.email || '(ainda não preenchido)'}`,
+            `Telefone: ${data.telefone || '(ainda não preenchido)'}`,
+            `PHQ-9 Q9: ${data.score}`,
+            data.partial ? 'Estado: alerta parcial (durante o questionário)' : 'Estado: triagem completa',
+            '',
+            'Protocolo: contacto prioritário da equipa clínica. Se o contacto indicar risco imediato, orientar para 112 / SNS 24 / SOS Voz Amiga.'
+        ];
     const text = lines.join('\n');
     console.log('   🚨 Triagem priority alert:', text.replace(/\n/g, ' | '));
 
@@ -10957,7 +10987,9 @@ async function sendTriagemPriorityAlert(data) {
         await deliverEmail({
             from: EMAIL_FROM,
             to: CONTACT_EMAIL,
-            subject: `🚨 PRIORIDADE — Triagem Psicologia PHQ-9 Q9=${data.score} — ${data.nome || data.email || 'sem nome'}`,
+            subject: isDv
+                ? `🚨 PRIORIDADE — Triagem casal (violência doméstica) — ${data.nome || data.email || 'sem nome'}`
+                : `🚨 PRIORIDADE — Triagem Psicologia PHQ-9 Q9=${data.score} — ${data.nome || data.email || 'sem nome'}`,
             text,
             html: `<pre style="font-family:system-ui,sans-serif;white-space:pre-wrap">${text.replace(/</g, '&lt;')}</pre>`
         });
@@ -11052,22 +11084,29 @@ function slotsInPreferredWindow(slots, horario) {
     return list;
 }
 
-function triagemBookHref({ specialty, professionalId, date, time }) {
+function triagemBookHref({ specialty, professionalId, date, time, service }) {
     const params = new URLSearchParams();
     params.set('ref', 'triagem');
     if (specialty) params.set('specialty', specialty);
     if (professionalId) params.set('professionalId', String(professionalId));
     if (date) params.set('date', date);
     if (time) params.set('time', time);
-    return `/marcar/psicologia-mensal?${params.toString()}`;
+    const slug = service === 'terapia_casal_mensal' ? 'terapia-casal-mensal' : 'psicologia-mensal';
+    return `/marcar/${slug}?${params.toString()}`;
 }
 
 async function matchPsychologistsForTriagem(payload) {
-    const service = 'psicologia_mensal';
-    const specialties = staffBooking.specialtyIdsFromMotivos(payload && payload.motivos);
-    const specialty = specialties[0] || 'outro';
+    const isCasal = String(payload && payload.tipoTerapia || '').toLowerCase() === 'casal';
+    const service = isCasal ? 'terapia_casal_mensal' : 'psicologia_mensal';
+    const specialties = isCasal
+        ? ['casal']
+        : staffBooking.specialtyIdsFromMotivos(payload && payload.motivos);
+    const specialty = specialties[0] || (isCasal ? 'casal' : 'outro');
     const specialtyQuery = specialties.join(',');
     let people = await listStaffBookablePeople(service, specialtyQuery);
+    if (!people.length && isCasal) {
+        people = await listStaffBookablePeople(service, 'relacionamentos');
+    }
     if (!people.length && specialtyQuery) {
         people = await listStaffBookablePeople(service, 'outro');
     }
@@ -11083,7 +11122,7 @@ async function matchPsychologistsForTriagem(payload) {
 
     const psychologists = [];
     for (const person of people) {
-        if (psychologists.length >= 3) break;
+        if (psychologists.length >= (isCasal ? 1 : 3)) break;
         const rawSlots = await getNextBookableSlots(6, 14, 336, {
             service,
             specialty: specialtyQuery || 'outro',
@@ -11091,7 +11130,7 @@ async function matchPsychologistsForTriagem(payload) {
         });
         const preferred = slotsInPreferredWindow(rawSlots, payload && payload.horario);
         const useSlots = preferred.length ? preferred : rawSlots;
-        if (!useSlots.length) continue;
+        if (!useSlots.length && !isCasal) continue;
         const card = publicStaffBookingCard(person);
         psychologists.push({
             id: card.id,
@@ -11099,7 +11138,7 @@ async function matchPsychologistsForTriagem(payload) {
             bio: card.bio,
             photoUrl: card.photoUrl,
             hoursLabel: staffHoursLabel(person),
-            href: triagemBookHref({ specialty, professionalId: person.id }),
+            href: triagemBookHref({ specialty, professionalId: person.id, service }),
             slots: useSlots.slice(0, 6).map((slot) => ({
                 date: slot.date,
                 time: slot.time,
@@ -11108,72 +11147,160 @@ async function matchPsychologistsForTriagem(payload) {
                     specialty,
                     professionalId: person.id,
                     date: slot.date,
-                    time: slot.time
+                    time: slot.time,
+                    service
                 })
             }))
         });
+    }
+    if (isCasal) {
+        psychologists.splice(1);
+        if (!psychologists.length) {
+            psychologists.push({
+                id: 0,
+                name: 'Dra. Carolina Rocha',
+                bio: 'Psicóloga · terapia de casal',
+                photoUrl: '',
+                hoursLabel: '',
+                href: triagemBookHref({ specialty: 'casal', service }),
+                slots: []
+            });
+        }
     }
     return { service, specialty, psychologists };
 }
 
 function formatTriagemEmail(data) {
+    const isCasal = String(data.tipoTerapia || '') === 'casal';
     const phq = data.phq || {};
     const motivos = Array.isArray(data.motivos) ? data.motivos.join(', ') : '';
-    const risk = data.riskFlagged || Number(data.phq9) >= 1;
-    const lines = [
-        risk ? '⚠️ SINALIZAÇÃO PRIORITÁRIA — PHQ-9 pergunta 9 ≥ 1' : 'Questionário de Triagem — Psicologia',
-        '',
-        '── Dados básicos ──',
-        `Nome: ${data.nome}`,
-        `Idade: ${data.idade}`,
-        `Género: ${data.genero}`,
-        `Localização: ${data.localizacao}`,
-        `Email: ${data.email}`,
-        `Telefone: ${data.telefone}`,
-        '',
-        '── Motivo ──',
-        `Motivos: ${motivos}`,
-        `Duração: ${data.duracao}`,
-        '',
-        '── PHQ-9 ──',
-        `Q1–Q9: ${[1,2,3,4,5,6,7,8,9].map((n) => phq['q' + n]).join(', ')}`,
-        `Total: ${data.phqTotal}`,
-        `Q9 (risco): ${data.phq9}`,
-        `Flag prioridade: ${risk ? 'SIM' : 'não'}`,
-        '',
-        '── Histórico ──',
-        `Terapia antes: ${data.terapiaAntes}${data.terapiaUtil ? ` (útil: ${data.terapiaUtil})` : ''}`,
-        `Medicação: ${data.medicacao}`,
-        `Diagnóstico: ${data.diagnostico}${data.diagnosticoQual ? ` — ${data.diagnosticoQual}` : ''}`,
-        '',
-        '── Preferências ──',
-        `Psicóloga: ${Array.isArray(data.prefPsicologa) ? data.prefPsicologa.join('; ') : data.prefPsicologa}`,
-        `Horário vídeo: ${data.horario}`,
-        `Encaminhamento médico/nutri: ${data.encaminhamento || '—'}`,
-        '',
-        '── Matching sugerido ──',
-        ...((data.match && Array.isArray(data.match.psychologists) && data.match.psychologists.length)
-            ? data.match.psychologists.map((pro) => {
-                const slots = (pro.slots || []).map((s) => `${s.date} ${s.time}`).join(', ');
-                return `${pro.name}${pro.hoursLabel ? ` (${pro.hoursLabel})` : ''}${slots ? ` — ${slots}` : ''}`;
-            })
-            : ['Nenhum psicólogo com horário publicado neste momento.']),
-        '',
-        '── Consentimentos ──',
-        `Sem risco imediato (auto-declaração): ${data.consentimentos?.semRiscoImediato ? 'sim' : 'não'}`,
-        `Termos: ${data.consentimentos?.termos ? 'sim' : 'não'}`,
-        `Comunicações: ${data.consentimentos?.comunicacoes ? 'sim' : 'não'}`
-    ];
+    const expect = Array.isArray(data.expect) ? data.expect.join(', ') : '';
+    const risk = data.riskFlagged || (!isCasal && Number(data.phq9) >= 1);
+    const partner = data.parceiro || {};
+    const lines = isCasal
+        ? [
+            risk ? '⚠️ SINALIZAÇÃO PRIORITÁRIA — violência doméstica na triagem de casal' : 'Questionário de Triagem — Terapia de casal',
+            '',
+            '── Quem marcou ──',
+            `Nome: ${data.nome}`,
+            `Idade: ${data.idade}`,
+            `Género: ${data.genero || '—'}`,
+            `Orientação: ${data.orientation || '—'}`,
+            `Email: ${data.email}`,
+            data.parceiroConvite ? 'Origem: convite do par' : 'Origem: marcação inicial',
+            '',
+            '── Par ──',
+            `Nome: ${partner.nome || '—'}`,
+            `Email: ${partner.email || '—'}`,
+            `Convite questionário enviado: ${data.invitePartner ? 'sim' : 'não'}`,
+            '',
+            '── Relação ──',
+            `Estado: ${data.relStatus || '—'}`,
+            `Vivem juntos: ${data.cohabit || '—'}`,
+            `Violência doméstica: ${data.dv || '—'}`,
+            `Motivos: ${motivos}`,
+            `Expectativas do terapeuta: ${expect || '—'}`,
+            `Terapia de casal antes: ${data.terapiaAntes || '—'}`,
+            data.diagnosticoQual ? `Nota terapia anterior: ${data.diagnosticoQual}` : '',
+            '',
+            '── Matching ──',
+            ...((data.match && Array.isArray(data.match.psychologists) && data.match.psychologists.length)
+                ? data.match.psychologists.map((pro) => {
+                    const slots = (pro.slots || []).map((s) => `${s.date} ${s.time}`).join(', ');
+                    return `${pro.name}${pro.hoursLabel ? ` (${pro.hoursLabel})` : ''}${slots ? ` — ${slots}` : ''}`;
+                })
+                : ['Dra. Carolina Rocha — sem horário publicado neste momento.']),
+            '',
+            '── Consentimentos ──',
+            `Dados de saúde: ${data.consentimentos?.dadosSaude ? 'sim' : 'não'}`,
+            `Termos: ${data.consentimentos?.termos ? 'sim' : 'não'}`,
+            `Comunicações: ${data.consentimentos?.comunicacoes ? 'sim' : 'não'}`
+        ].filter((line) => line !== '')
+        : [
+            risk ? '⚠️ SINALIZAÇÃO PRIORITÁRIA — PHQ-9 pergunta 9 ≥ 1' : 'Questionário de Triagem — Psicologia',
+            '',
+            '── Dados básicos ──',
+            `Nome: ${data.nome}`,
+            `Idade: ${data.idade}`,
+            `Género: ${data.genero}`,
+            `Localização: ${data.localizacao}`,
+            `Email: ${data.email}`,
+            `Telefone: ${data.telefone}`,
+            `Tipo de terapia: Individual`,
+            '',
+            '── Motivo ──',
+            `Motivos: ${motivos}`,
+            `Duração: ${data.duracao}`,
+            '',
+            '── PHQ-9 ──',
+            `Q1–Q9: ${[1,2,3,4,5,6,7,8,9].map((n) => phq['q' + n]).join(', ')}`,
+            `Total: ${data.phqTotal}`,
+            `Q9 (risco): ${data.phq9}`,
+            `Flag prioridade: ${risk ? 'SIM' : 'não'}`,
+            '',
+            '── Histórico ──',
+            `Terapia antes: ${data.terapiaAntes}${data.terapiaUtil ? ` (útil: ${data.terapiaUtil})` : ''}`,
+            `Medicação: ${data.medicacao}`,
+            `Diagnóstico: ${data.diagnostico}${data.diagnosticoQual ? ` — ${data.diagnosticoQual}` : ''}`,
+            '',
+            '── Preferências ──',
+            `Psicóloga: ${Array.isArray(data.prefPsicologa) ? data.prefPsicologa.join('; ') : data.prefPsicologa}`,
+            `Horário vídeo: ${data.horario}`,
+            `Encaminhamento médico/nutri: ${data.encaminhamento || '—'}`,
+            '',
+            '── Matching sugerido ──',
+            ...((data.match && Array.isArray(data.match.psychologists) && data.match.psychologists.length)
+                ? data.match.psychologists.map((pro) => {
+                    const slots = (pro.slots || []).map((s) => `${s.date} ${s.time}`).join(', ');
+                    return `${pro.name}${pro.hoursLabel ? ` (${pro.hoursLabel})` : ''}${slots ? ` — ${slots}` : ''}`;
+                })
+                : ['Nenhum psicólogo com horário publicado neste momento.']),
+            '',
+            '── Consentimentos ──',
+            `Sem risco imediato (auto-declaração): ${data.consentimentos?.semRiscoImediato ? 'sim' : 'não'}`,
+            `Termos: ${data.consentimentos?.termos ? 'sim' : 'não'}`,
+            `Comunicações: ${data.consentimentos?.comunicacoes ? 'sim' : 'não'}`
+        ];
     return lines.join('\n');
+}
+
+async function sendTriagemPartnerInvite(data) {
+    const partner = data && data.parceiro;
+    const email = String((partner && partner.email) || '').trim().toLowerCase();
+    if (!email) return false;
+    const partnerName = String((partner && partner.nome) || '').trim() || 'Olá';
+    const bookerName = String(data.nome || '').trim() || 'O teu par';
+    const link = `${PUBLIC_SITE_URL}/triagem?tipo=casal&parceiro=1`;
+    const text = `Olá ${partnerName},\n\n${bookerName} está a marcar terapia de casal na LON Clinic e pediu-nos para te enviarmos a triagem.\n\nCompleta a tua parte aqui:\n${link}\n\nAs tuas respostas não são partilhadas automaticamente com o teu par.\n\nLON Clinic`;
+    const safeBooker = String(bookerName).replace(/</g, '&lt;');
+    const safePartner = String(partnerName).replace(/</g, '&lt;');
+    if (!isEmailConfigured) {
+        console.log('   ⚠️  Email not configured — partner invite logged only:', email, link);
+        return true;
+    }
+    await deliverEmail({
+        from: EMAIL_FROM,
+        to: email,
+        subject: `${bookerName} convidou-te para a triagem de casal — LON Clinic`,
+        text,
+        html: `<p>Olá ${safePartner},</p><p><strong>${safeBooker}</strong> está a marcar terapia de casal na LON Clinic e pediu-nos para te enviarmos a triagem.</p><p><a href="${link}">Completar a triagem de casal</a></p><p>As tuas respostas não são partilhadas automaticamente com o teu par.</p><p>LON Clinic</p>`
+    });
+    return true;
 }
 
 async function sendTriagemSubmission(data) {
     const text = formatTriagemEmail(data);
-    const risk = data.riskFlagged || Number(data.phq9) >= 1;
-    console.log('   📋 Triagem submission:', data.email, risk ? 'PRIORITY' : 'normal');
+    const isCasal = String(data.tipoTerapia || '') === 'casal';
+    const risk = data.riskFlagged || (!isCasal && Number(data.phq9) >= 1);
+    console.log('   📋 Triagem submission:', data.email, isCasal ? 'casal' : 'individual', risk ? 'PRIORITY' : 'normal');
 
     if (!isEmailConfigured) {
         console.log('   ⚠️  Email not configured — triagem logged only');
+        if (isCasal && data.invitePartner) {
+            await sendTriagemPartnerInvite(data).catch((err) => {
+                console.error('   ⚠️  Partner invite skipped:', err.message);
+            });
+        }
         return true; // accept submission even without SMTP so UX isn't blocked in dev
     }
 
@@ -11182,7 +11309,7 @@ async function sendTriagemSubmission(data) {
             from: EMAIL_FROM,
             to: CONTACT_EMAIL,
             replyTo: data.email,
-            subject: `${risk ? '🚨 PRIORIDADE — ' : ''}Triagem Psicologia — ${data.nome}`,
+            subject: `${risk ? '🚨 PRIORIDADE — ' : ''}${isCasal ? 'Triagem Casal' : 'Triagem Psicologia'} — ${data.nome}`,
             text,
             html: `<pre style="font-family:system-ui,sans-serif;font-size:14px;line-height:1.5;white-space:pre-wrap">${text.replace(/</g, '&lt;')}</pre>`
         });
@@ -11192,12 +11319,23 @@ async function sendTriagemSubmission(data) {
                 await deliverEmail({
                     from: EMAIL_FROM,
                     to: data.email,
-                    subject: 'Recebemos a tua triagem — LON Clinic',
-                    text: `Olá ${data.nome},\n\nRecebemos o teu questionário de triagem. A equipa clínica vai rever as respostas e contactar-te em breve.\n\nSe estiveres em risco imediato: 112 · SNS 24 808 24 24 24 · SOS Voz Amiga 213 544 545.\n\nLON Clinic`,
-                    html: `<p>Olá ${String(data.nome).replace(/</g, '&lt;')},</p><p>Recebemos o teu questionário de triagem. A equipa clínica vai rever as respostas e contactar-te em breve.</p><p>Se estiveres em risco imediato: <strong>112</strong> · SNS 24 <strong>808 24 24 24</strong> · SOS Voz Amiga <strong>213 544 545</strong>.</p><p>LON Clinic</p>`
+                    subject: isCasal ? 'Recebemos a vossa triagem de casal — LON Clinic' : 'Recebemos a tua triagem — LON Clinic',
+                    text: isCasal
+                        ? `Olá ${data.nome},\n\nRecebemos o questionário de triagem de casal. A terapia de casal é com a Dra. Carolina Rocha.\n\n${data.invitePartner ? 'Enviámos o questionário para o email do teu par.\n\n' : ''}Se estiveres em perigo imediato: 112 · APAV 116 006.\n\nLON Clinic`
+                        : `Olá ${data.nome},\n\nRecebemos o teu questionário de triagem. A equipa clínica vai rever as respostas e contactar-te em breve.\n\nSe estiveres em risco imediato: 112 · SNS 24 808 24 24 24 · SOS Voz Amiga 213 544 545.\n\nLON Clinic`,
+                    html: isCasal
+                        ? `<p>Olá ${String(data.nome).replace(/</g, '&lt;')},</p><p>Recebemos o questionário de triagem de casal. A terapia de casal é com a Dra. Carolina Rocha.</p>${data.invitePartner ? '<p>Enviámos o questionário para o email do teu par.</p>' : ''}<p>Se estiveres em perigo imediato: <strong>112</strong> · APAV <strong>116 006</strong>.</p><p>LON Clinic</p>`
+                        : `<p>Olá ${String(data.nome).replace(/</g, '&lt;')},</p><p>Recebemos o teu questionário de triagem. A equipa clínica vai rever as respostas e contactar-te em breve.</p><p>Se estiveres em risco imediato: <strong>112</strong> · SNS 24 <strong>808 24 24 24</strong> · SOS Voz Amiga <strong>213 544 545</strong>.</p><p>LON Clinic</p>`
                 });
             } catch (replyErr) {
                 console.error('   ⚠️  Triagem auto-reply failed:', replyErr.message);
+            }
+        }
+        if (isCasal && data.invitePartner) {
+            try {
+                await sendTriagemPartnerInvite(data);
+            } catch (inviteErr) {
+                console.error('   ⚠️  Partner invite failed:', inviteErr.message);
             }
         }
         return true;
@@ -11213,6 +11351,7 @@ app.post('/api/triagem-alert', rateLimitTriagemAlert, async (req, res) => {
         return res.status(400).json({ error: 'Invalid score.' });
     }
     await sendTriagemPriorityAlert({
+        type: String(req.body?.type || 'phq9_q9').slice(0, 24),
         score,
         nome: String(req.body?.nome || '').trim().slice(0, 120),
         email: String(req.body?.email || '').trim().slice(0, 160),
@@ -11228,12 +11367,16 @@ app.post('/api/triagem', rateLimitTriagem, async (req, res) => {
     const email = String(body.email || '').trim().toLowerCase().slice(0, 160);
     const telefone = String(body.telefone || '').trim().slice(0, 40);
     const idade = Number(body.idade);
+    const isCasal = String(body.tipoTerapia || '').toLowerCase() === 'casal';
     const phq = body.phq && typeof body.phq === 'object' ? body.phq : {};
     const phq9 = Number(phq.q9 ?? body.phq9);
-    const riskFlagged = Boolean(body.riskFlagged) || (Number.isFinite(phq9) && phq9 >= 1);
+    const dv = String(body.dv || '').slice(0, 20);
+    const riskFlagged = Boolean(body.riskFlagged)
+        || (!isCasal && Number.isFinite(phq9) && phq9 >= 1)
+        || (isCasal && (dv === 'Sim' || dv === 'Às vezes'));
 
-    if (!nome || !email || !telefone) {
-        return res.status(400).json({ error: 'Nome, email e telefone são obrigatórios.' });
+    if (!nome || !email) {
+        return res.status(400).json({ error: 'Nome e email são obrigatórios.' });
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
         return res.status(400).json({ error: 'Email inválido.' });
@@ -11241,19 +11384,41 @@ app.post('/api/triagem', rateLimitTriagem, async (req, res) => {
     if (!Number.isFinite(idade) || idade < 16 || idade > 120) {
         return res.status(400).json({ error: 'Idade inválida.' });
     }
-    if (!body.consentimentos?.termos || !body.consentimentos?.semRiscoImediato) {
+    if (!body.consentimentos?.termos) {
+        return res.status(400).json({ error: 'Consentimentos obrigatórios em falta.' });
+    }
+    if (isCasal && !body.consentimentos?.dadosSaude) {
+        return res.status(400).json({ error: 'Consentimentos obrigatórios em falta.' });
+    }
+    if (!isCasal && !riskFlagged && !body.consentimentos?.semRiscoImediato) {
         return res.status(400).json({ error: 'Consentimentos obrigatórios em falta.' });
     }
 
     let phqTotal = 0;
     const phqNorm = {};
-    for (let i = 1; i <= 9; i++) {
-        const v = Number(phq['q' + i]);
-        if (!Number.isFinite(v) || v < 0 || v > 3) {
-            return res.status(400).json({ error: 'PHQ-9 incompleto.' });
+    if (!isCasal) {
+        for (let i = 1; i <= 9; i++) {
+            const v = Number(phq['q' + i]);
+            if (!Number.isFinite(v) || v < 0 || v > 3) {
+                return res.status(400).json({ error: 'PHQ-9 incompleto.' });
+            }
+            phqNorm['q' + i] = v;
+            phqTotal += v;
         }
-        phqNorm['q' + i] = v;
-        phqTotal += v;
+    }
+
+    const partnerNome = String(body.parceiro?.nome || '').trim().slice(0, 120);
+    const partnerEmail = String(body.parceiro?.email || '').trim().toLowerCase().slice(0, 160);
+    if (isCasal) {
+        if (!partnerNome || !partnerEmail) {
+            return res.status(400).json({ error: 'Nome e email do par são obrigatórios.' });
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(partnerEmail)) {
+            return res.status(400).json({ error: 'Email do par inválido.' });
+        }
+        if (partnerEmail === email) {
+            return res.status(400).json({ error: 'O email do par tem de ser diferente.' });
+        }
     }
 
     const payload = {
@@ -11263,11 +11428,12 @@ app.post('/api/triagem', rateLimitTriagem, async (req, res) => {
         idade,
         genero: String(body.genero || '').slice(0, 40),
         localizacao: String(body.localizacao || '').slice(0, 120),
+        tipoTerapia: isCasal ? 'casal' : 'individual',
         motivos: Array.isArray(body.motivos) ? body.motivos.map((m) => String(m).slice(0, 200)).slice(0, 12) : [],
         duracao: String(body.duracao || '').slice(0, 40),
         phq: phqNorm,
         phqTotal,
-        phq9: phqNorm.q9,
+        phq9: isCasal ? 0 : phqNorm.q9,
         riskFlagged,
         terapiaAntes: String(body.terapiaAntes || '').slice(0, 20),
         terapiaUtil: body.terapiaUtil ? String(body.terapiaUtil).slice(0, 20) : null,
@@ -11279,8 +11445,17 @@ app.post('/api/triagem', rateLimitTriagem, async (req, res) => {
             : [String(body.prefPsicologa || '').slice(0, 200)].filter(Boolean),
         horario: String(body.horario || '').slice(0, 40),
         encaminhamento: body.encaminhamento ? String(body.encaminhamento).slice(0, 40) : null,
+        orientation: String(body.orientation || '').slice(0, 40),
+        relStatus: String(body.relStatus || '').slice(0, 40),
+        cohabit: String(body.cohabit || '').slice(0, 10),
+        dv,
+        expect: Array.isArray(body.expect) ? body.expect.map((m) => String(m).slice(0, 200)).slice(0, 12) : [],
+        parceiro: isCasal ? { nome: partnerNome, email: partnerEmail } : null,
+        invitePartner: isCasal && Boolean(body.invitePartner) && !Boolean(body.parceiroConvite),
+        parceiroConvite: Boolean(body.parceiroConvite),
         consentimentos: {
             semRiscoImediato: Boolean(body.consentimentos?.semRiscoImediato),
+            dadosSaude: Boolean(body.consentimentos?.dadosSaude),
             termos: Boolean(body.consentimentos?.termos),
             comunicacoes: Boolean(body.consentimentos?.comunicacoes)
         }
@@ -18166,7 +18341,9 @@ app.get('/api/bookable-slots', async (req, res) => {
 
 app.get('/api/public/team-photo/:who', async (req, res) => {
     try {
-        const profile = await publicTeamMemberProfile(req.params.who);
+        const who = String(req.params.who || '').trim().toLowerCase();
+        if (who === 'rita') return res.status(404).end();
+        const profile = await publicTeamMemberProfile(who);
         if (!profile || !profile.username) {
             return res.status(404).end();
         }
@@ -18199,6 +18376,7 @@ app.get('/api/public/staff-photo/:username', async (req, res) => {
         if (!username || !/^[a-z0-9._-]{1,80}$/i.test(username)) {
             return res.status(404).end();
         }
+        if (isRitaAguiarIdentity(username)) return res.status(404).end();
         const photo = await resolvePublicStaffPhoto(username);
         if (!photo || !photo.data) return res.status(404).end();
         res.set({
