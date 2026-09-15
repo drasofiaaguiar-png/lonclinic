@@ -2408,8 +2408,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!staffGoogleCalStatus) return;
         if (!configured) {
             const uri = (data && data.redirectUri) || '';
+            const hasId = !!(data && data.hasClientId);
+            const hasSecret = !!(data && data.hasClientSecret);
+            if (hasId && !hasSecret) {
+                staffGoogleCalStatus.textContent = 'Google Client ID is set, but GOOGLE_CALENDAR_CLIENT_SECRET is empty. You do not need to unseal it — edit the variable in Railway and paste the Client secret from Google Cloud (starts with GOCSPX-).';
+                return;
+            }
+            if (!hasId && hasSecret) {
+                staffGoogleCalStatus.textContent = 'Google Client secret is set, but GOOGLE_CALENDAR_CLIENT_ID is empty. Edit that variable in Railway and paste the Client ID (ends with .apps.googleusercontent.com).';
+                return;
+            }
             staffGoogleCalStatus.textContent = uri
-                ? `Not configured yet. Add the Google OAuth client ID and secret, with redirect URI ${uri}.`
+                ? `Not configured yet. Add GOOGLE_CALENDAR_CLIENT_ID and GOOGLE_CALENDAR_CLIENT_SECRET on the web service in Railway. Redirect URI: ${uri}`
                 : 'Not configured yet. Add GOOGLE_CALENDAR_CLIENT_ID and GOOGLE_CALENDAR_CLIENT_SECRET on the server.';
             return;
         }

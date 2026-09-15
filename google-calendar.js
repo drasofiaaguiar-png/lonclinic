@@ -16,16 +16,31 @@ const BUSY_HORIZON_DAYS = 90;
 const accessTokenCache = new Map();
 const busyCache = new Map();
 
+function envValue(name) {
+    let text = String(process.env[name] || '').trim();
+    if ((text.startsWith('"') && text.endsWith('"')) || (text.startsWith("'") && text.endsWith("'"))) {
+        text = text.slice(1, -1).trim();
+    }
+    return text;
+}
+
 function clientId() {
-    return String(process.env.GOOGLE_CALENDAR_CLIENT_ID || '').trim();
+    return envValue('GOOGLE_CALENDAR_CLIENT_ID');
 }
 
 function clientSecret() {
-    return String(process.env.GOOGLE_CALENDAR_CLIENT_SECRET || '').trim();
+    return envValue('GOOGLE_CALENDAR_CLIENT_SECRET');
 }
 
 function isConfigured() {
     return Boolean(clientId() && clientSecret());
+}
+
+function configFlags() {
+    return {
+        hasClientId: Boolean(clientId()),
+        hasClientSecret: Boolean(clientSecret())
+    };
 }
 
 function redirectUri() {
@@ -255,8 +270,11 @@ function decryptRefreshToken(token) {
 
 function publicConnection(row, configured) {
     const connected = !!(row && row.refreshToken);
+    const flags = configFlags();
     return {
         configured: !!configured,
+        hasClientId: flags.hasClientId,
+        hasClientSecret: flags.hasClientSecret,
         connected,
         googleEmail: connected ? String((row && row.googleEmail) || '') : '',
         calendarId: connected ? String((row && row.calendarId) || 'primary') : 'primary',
@@ -297,6 +315,7 @@ module.exports = {
     BUSY_TTL_MS,
     FREEBUSY_SCOPE,
     isConfigured,
+    configFlags,
     redirectUri,
     authUrl,
     parseState,

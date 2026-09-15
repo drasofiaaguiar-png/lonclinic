@@ -19260,7 +19260,10 @@ app.use((req, res) => {
         if (googleCalendar.isConfigured()) {
             console.log(`   📅 Google Calendar OAuth ready (${googleCalendar.redirectUri()})`);
         } else {
-            console.log('   ⚠️  Google Calendar off — set GOOGLE_CALENDAR_CLIENT_ID and GOOGLE_CALENDAR_CLIENT_SECRET to hide busy slots');
+            const flags = googleCalendar.configFlags();
+            console.log(
+                `   ⚠️  Google Calendar off — client_id=${flags.hasClientId ? 'yes' : 'missing'} secret=${flags.hasClientSecret ? 'yes' : 'missing'}`
+            );
         }
         if (metaCapi.pixelId()) {
             console.log(
