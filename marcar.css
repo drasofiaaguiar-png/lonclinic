@@ -1411,3 +1411,94 @@
         padding: 12px 20px;
     }
 }
+
+/* ── Social Proof ── */
+.marcar-proof {
+    background: #fafaf9;
+    border: 1px solid rgba(22, 33, 25, 0.08);
+    border-radius: 14px;
+    padding: 24px 20px;
+    margin: 24px 0 32px;
+}
+
+.marcar-proof-kicker {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--marcar-primary);
+    margin: 0 0 16px;
+    text-align: center;
+}
+
+.marcar-proof-grid {
+    display: grid;
+    gap: 14px;
+    margin: 0 0 18px;
+}
+
+@media (min-width: 640px) {
+    .marcar-proof-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+}
+
+.marcar-proof-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 16px;
+    margin: 0;
+}
+
+.marcar-proof-stars {
+    color: #f59e0b;
+    font-size: 0.88rem;
+    margin: 0 0 8px;
+    letter-spacing: 2px;
+}
+
+.marcar-proof-quote {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--marcar-ink);
+    margin: 0;
+}
+
+.marcar-proof-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: #ffffff;
+    border: 1px solid rgba(22, 33, 25, 0.1);
+    border-radius: 999px;
+    text-decoration: none;
+    color: var(--marcar-ink);
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: transform 0.2s ease;
+    margin: 0 auto;
+    max-width: fit-content;
+    display: flex;
+    justify-content: center;
+}
+
+.marcar-proof-badge:hover {
+    transform: translateY(-2px);
+}
+
+.marcar-proof .lon-trustpilot-star {
+    width: 18px;
+    height: 18px;
+    color: #00b67a;
+}
+
+.marcar-proof-badge-score {
+    font-weight: 700;
+}
+
+.marcar-proof-badge-name {
+    color: var(--marcar-muted);
+    font-weight: 500;
+}

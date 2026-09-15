@@ -234,6 +234,13 @@
         setChoiceMode(false);
         document.body.classList.add('is-quiz');
         showScreen('screen-quiz');
+        
+        // Show social proof after choosing therapy type
+        var proofSection = document.getElementById('triagemProof');
+        if (proofSection) {
+            proofSection.hidden = false;
+        }
+        
         renderQuiz();
         var meta = currentStepMeta();
         if (form) {

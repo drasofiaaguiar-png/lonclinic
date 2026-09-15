@@ -1408,3 +1408,116 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
         flex-direction: column;
     }
 }
+
+/* ── Social Proof ── */
+.triagem-proof {
+    background: var(--tri-surface);
+    border: 1px solid var(--tri-line);
+    border-radius: 16px;
+    padding: 28px 24px;
+    margin: 0 0 32px;
+}
+
+.triagem-proof-inner {
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+.triagem-proof-kicker {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--tri-signal);
+    margin: 0 0 18px;
+    text-align: center;
+}
+
+.triagem-proof-grid {
+    display: grid;
+    gap: 16px;
+    margin: 0 0 20px;
+}
+
+@media (min-width: 640px) {
+    .triagem-proof-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+}
+
+.triagem-proof-card {
+    background: var(--tri-paper);
+    border-radius: 12px;
+    padding: 18px;
+    margin: 0;
+}
+
+.triagem-proof-stars {
+    color: #f59e0b;
+    font-size: 0.9rem;
+    margin: 0 0 10px;
+    letter-spacing: 2px;
+}
+
+.triagem-proof-quote {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--tri-ink);
+    margin: 0 0 12px;
+}
+
+.triagem-proof-author {
+    font-size: 0.82rem;
+    color: var(--tri-muted);
+    font-weight: 500;
+}
+
+.triagem-proof-author a {
+    color: var(--tri-signal);
+    text-decoration: none;
+}
+
+.triagem-proof-author a:hover {
+    text-decoration: underline;
+}
+
+.triagem-proof-badge {
+    display: flex;
+    justify-content: center;
+    margin-top: 18px;
+}
+
+.triagem-proof .lon-tp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: var(--tri-surface);
+    border: 1px solid var(--tri-line);
+    border-radius: 999px;
+    text-decoration: none;
+    color: var(--tri-ink);
+    font-weight: 600;
+    font-size: 0.88rem;
+    transition: transform 0.2s ease;
+}
+
+.triagem-proof .lon-tp-badge:hover {
+    transform: translateY(-2px);
+}
+
+.triagem-proof .lon-trustpilot-star {
+    width: 18px;
+    height: 18px;
+    color: #00b67a;
+}
+
+.triagem-proof .lon-tp-badge-score {
+    font-weight: 700;
+}
+
+.triagem-proof .lon-tp-badge-name {
+    color: var(--tri-muted);
+    font-weight: 500;
+}
