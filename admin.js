@@ -130,6 +130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let staffAvailUsername = '';
     let staffAvailData = null;
     let staffAvailPeople = [];
+    let pendingGoogleCalNotice = null;
     let hoursBoardPlatform = { weekly: {}, dayOverrides: [], blockedDates: [] };
     let staffAvailCalYear = null;
     let staffAvailCalMonth = null;
@@ -341,6 +342,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.body.classList.add('admin-logged-in');
         adminLogin.style.display = 'none';
         adminContent.style.display = 'flex';
+        const gcalReturn = consumeGoogleCalendarReturn();
+        if (gcalReturn) {
+            if (gcalReturn.who) staffAvailUsername = gcalReturn.who;
+            pendingGoogleCalNotice = gcalReturn;
+            setAdminPanel('availability');
+            return;
+        }
         setAdminPanel('schedule');
     }
 
@@ -2355,6 +2363,131 @@ document.addEventListener('DOMContentLoaded', async () => {
     const staffAvailBulkApply = document.getElementById('staffAvailBulkApply');
     const staffAvailBulkRemove = document.getElementById('staffAvailBulkRemove');
     const staffAvailBulkClear = document.getElementById('staffAvailBulkClear');
+    const staffGoogleCalStatus = document.getElementById('staffGoogleCalStatus');
+    const staffGoogleCalConnect = document.getElementById('staffGoogleCalConnect');
+    const staffGoogleCalDisconnect = document.getElementById('staffGoogleCalDisconnect');
+    const staffGoogleCalError = document.getElementById('staffGoogleCalError');
+
+    function consumeGoogleCalendarReturn() {
+        const params = new URLSearchParams(window.location.search);
+        const gcal = params.get('gcal');
+        if (!gcal) return null;
+        const who = String(params.get('who') || '').trim().toLowerCase();
+        const reason = String(params.get('reason') || '').trim();
+        params.delete('gcal');
+        params.delete('who');
+        params.delete('reason');
+        const qs = params.toString();
+        const next = window.location.pathname + (qs ? `?${qs}` : '');
+        window.history.replaceState({}, '', next);
+        return { gcal, who, reason };
+    }
+
+    function googleCalendarErrorCopy(reason) {
+        if (reason === 'denied') return 'Google access was declined. No calendar was connected.';
+        if (reason === 'config') return 'Google Calendar is not configured on the server. Add GOOGLE_CALENDAR_CLIENT_ID and GOOGLE_CALENDAR_CLIENT_SECRET.';
+        if (reason === 'session') return 'Sign in as administrator and try connecting again.';
+        if (reason === 'refresh') return 'Google did not return a refresh token. Remove Lon Clinic from https://myaccount.google.com/permissions and connect again.';
+        if (reason === 'state' || reason === 'code' || reason === 'token') return 'Could not finish Google authorization. Try connecting again.';
+        if (reason === 'user') return 'Choose a professional first, then connect Google Calendar.';
+        return 'Could not connect Google Calendar. Try again.';
+    }
+
+    function renderGoogleCalendarStatus(data) {
+        const configured = !!(data && data.configured);
+        const connected = !!(data && data.connected);
+        if (staffGoogleCalError) {
+            staffGoogleCalError.hidden = true;
+            staffGoogleCalError.textContent = '';
+        }
+        if (staffGoogleCalConnect) {
+            staffGoogleCalConnect.hidden = true;
+            staffGoogleCalConnect.removeAttribute('href');
+        }
+        if (staffGoogleCalDisconnect) staffGoogleCalDisconnect.hidden = true;
+        if (!staffGoogleCalStatus) return;
+        if (!configured) {
+            const uri = (data && data.redirectUri) || '';
+            staffGoogleCalStatus.textContent = uri
+                ? `Not configured yet. Add the Google OAuth client ID and secret, with redirect URI ${uri}.`
+                : 'Not configured yet. Add GOOGLE_CALENDAR_CLIENT_ID and GOOGLE_CALENDAR_CLIENT_SECRET on the server.';
+            return;
+        }
+        if (connected) {
+            const email = (data && data.googleEmail) || 'Google Calendar';
+            staffGoogleCalStatus.textContent = `Connected as ${email}. Busy times on this calendar are hidden from bookable slots.`;
+            if (staffGoogleCalDisconnect) staffGoogleCalDisconnect.hidden = false;
+            if (data.lastError && staffGoogleCalError) {
+                staffGoogleCalError.hidden = false;
+                staffGoogleCalError.textContent = `Last sync warning: ${data.lastError}`;
+            }
+            return;
+        }
+        staffGoogleCalStatus.textContent = 'Not connected. Connect the personal Google Calendar so occupied times are not offered to patients.';
+        if (staffGoogleCalConnect && staffAvailUsername) {
+            staffGoogleCalConnect.hidden = false;
+            staffGoogleCalConnect.href = `/api/admin/google-calendar/${encodeURIComponent(staffAvailUsername)}/connect`;
+        }
+    }
+
+    async function loadGoogleCalendarStatus(username) {
+        if (!username) {
+            renderGoogleCalendarStatus({ configured: false });
+            if (staffGoogleCalStatus) staffGoogleCalStatus.textContent = 'Choose a professional to connect a calendar.';
+            if (pendingGoogleCalNotice && pendingGoogleCalNotice.gcal === 'error') {
+                setStaffAvailError(googleCalendarErrorCopy(pendingGoogleCalNotice.reason));
+                pendingGoogleCalNotice = null;
+            }
+            return;
+        }
+        try {
+            const res = await fetch(`/api/admin/google-calendar/${encodeURIComponent(username)}`, {
+                credentials: 'same-origin'
+            });
+            if (!res.ok) throw new Error('Failed to load');
+            const data = await res.json();
+            renderGoogleCalendarStatus(data);
+            if (pendingGoogleCalNotice && pendingGoogleCalNotice.who === username) {
+                if (pendingGoogleCalNotice.gcal === 'connected') {
+                    staffGoogleCalStatus.textContent = `Connected${data.googleEmail ? ` as ${data.googleEmail}` : ''}. Busy times on this calendar are now hidden from bookable slots.`;
+                } else if (staffGoogleCalError) {
+                    staffGoogleCalError.hidden = false;
+                    staffGoogleCalError.textContent = googleCalendarErrorCopy(pendingGoogleCalNotice.reason);
+                }
+                pendingGoogleCalNotice = null;
+            }
+        } catch (err) {
+            console.error('Load Google Calendar status:', err);
+            if (staffGoogleCalStatus) {
+                staffGoogleCalStatus.textContent = 'Could not load Google Calendar status.';
+            }
+        }
+    }
+
+    if (staffGoogleCalDisconnect) {
+        staffGoogleCalDisconnect.addEventListener('click', async () => {
+            if (!staffAvailUsername) return;
+            if (!window.confirm('Disconnect Google Calendar? Occupied times on that calendar will show as bookable again.')) return;
+            staffGoogleCalDisconnect.disabled = true;
+            try {
+                const res = await fetch(`/api/admin/google-calendar/${encodeURIComponent(staffAvailUsername)}`, {
+                    method: 'DELETE',
+                    credentials: 'same-origin'
+                });
+                if (!res.ok) throw new Error('Failed to disconnect');
+                const data = await res.json();
+                renderGoogleCalendarStatus(data);
+            } catch (err) {
+                console.error('Disconnect Google Calendar:', err);
+                if (staffGoogleCalError) {
+                    staffGoogleCalError.hidden = false;
+                    staffGoogleCalError.textContent = 'Could not disconnect. Try again.';
+                }
+            } finally {
+                staffGoogleCalDisconnect.disabled = false;
+            }
+        });
+    }
 
     function staffTimeToMinutes(hhmm) {
         const m = /^(\d{1,2}):(\d{2})$/.exec(String(hhmm || '').trim());
@@ -2795,6 +2928,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return loadSelectedStaffAvailability(staffAvailUsername);
             }
             updateSaveButtonState();
+            if (pendingGoogleCalNotice && pendingGoogleCalNotice.gcal === 'error') {
+                setStaffAvailError(googleCalendarErrorCopy(pendingGoogleCalNotice.reason));
+                pendingGoogleCalNotice = null;
+            }
         } catch (err) {
             console.error('Load staff availability list:', err);
             setStaffAvailError('Could not load professionals.');
@@ -3077,6 +3214,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderStaffAvailDaysList();
             renderStaffAvailHint(staffAvailPeople.find((p) => p.username === username) || null);
             updateSaveButtonState();
+            await loadGoogleCalendarStatus(username);
         } catch (err) {
             console.error('Load staff availability:', err);
             setStaffAvailError('Could not load this professional’s hours.');

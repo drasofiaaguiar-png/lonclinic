@@ -69,6 +69,7 @@ const { hydrateInfoHtml, NOINDEX_PAGES: INFO_NOINDEX_PAGES } = require('./info-s
 const authors = require('./authors');
 const cvi = require('./cvi');
 const staffBooking = require('./staff-booking');
+const googleCalendar = require('./google-calendar');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 const session = require('express-session');
@@ -309,6 +310,16 @@ const rateLimitClinicPassword = rateLimit({
     legacyHeaders: false,
     handler: (req, res) => {
         res.status(429).json({ error: 'Demasiadas tentativas. Tente novamente daqui a alguns minutos.' });
+    }
+});
+
+const rateLimitGoogleCalendarOAuth = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).type('text').send('Too many Google Calendar attempts. Try again in a few minutes.');
     }
 });
 
@@ -711,7 +722,7 @@ const KNOWN_DOXY_ROOMS = [
         url: 'https://doxy.me/lonclinic/ritaaguiar',
         names: ['Rita Aguiar', 'Rita Aguiar Fonseca'],
         usernames: ['rita.aguiar', 'ritaaguiar', 'rita.aguiar.fonseca', 'ritaaguiarfonseca'],
-        emails: ['ritaaguiarfonseca@gmail.com'],
+        emails: ['drasofiaaguiar@gmail.com', 'ritaaguiarfonseca@gmail.com'],
         slugs: ['ritaaguiar']
     },
     {
@@ -1284,6 +1295,7 @@ const staffDocumentsStore = [];
 const staffInvoicesStore = new Map();
 const staffMonthAvailStore = new Map();
 const staffAvailDaysStore = new Map();
+const staffGoogleCalStore = new Map();
 let professionalIdSeq = 1;
 let staffDocumentIdSeq = 1;
 
@@ -1962,6 +1974,122 @@ async function setStaffAvailabilityRecordInternal(username, days, weekly) {
     return record;
 }
 
+function decodeStaffGoogleCalendarRow(row) {
+    if (!row) return null;
+    return {
+        username: String(row.username || '').trim().toLowerCase(),
+        googleEmail: String(row.googleEmail || ''),
+        refreshToken: googleCalendar.decryptRefreshToken(row.refreshToken),
+        calendarId: String(row.calendarId || 'primary') || 'primary',
+        connectedAt: row.connectedAt || null,
+        lastSyncAt: row.lastSyncAt || null,
+        lastError: String(row.lastError || '')
+    };
+}
+
+async function getStaffGoogleCalendarInternal(username) {
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return null;
+    if (usePersistentDb) {
+        return decodeStaffGoogleCalendarRow(await db.getStaffGoogleCalendar(u));
+    }
+    return decodeStaffGoogleCalendarRow(staffGoogleCalStore.get(u) || null);
+}
+
+async function setStaffGoogleCalendarInternal(username, fields) {
+    const u = String(username || '').trim().toLowerCase();
+    const refreshToken = String((fields && fields.refreshToken) || '');
+    if (!u || !refreshToken) return null;
+    const encrypted = googleCalendar.encryptRefreshToken(refreshToken);
+    const payload = {
+        username: u,
+        googleEmail: String((fields && fields.googleEmail) || '').trim().toLowerCase(),
+        refreshToken: encrypted,
+        calendarId: String((fields && fields.calendarId) || 'primary').trim() || 'primary',
+        connectedAt: new Date().toISOString(),
+        lastSyncAt: null,
+        lastError: ''
+    };
+    if (usePersistentDb) {
+        return decodeStaffGoogleCalendarRow(await db.upsertStaffGoogleCalendar(u, {
+            googleEmail: payload.googleEmail,
+            refreshToken: encrypted,
+            calendarId: payload.calendarId
+        }));
+    }
+    staffGoogleCalStore.set(u, payload);
+    return decodeStaffGoogleCalendarRow(payload);
+}
+
+async function touchStaffGoogleCalendarInternal(username, opts) {
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return null;
+    if (usePersistentDb) {
+        return decodeStaffGoogleCalendarRow(await db.touchStaffGoogleCalendarSync(u, opts || {}));
+    }
+    const stored = staffGoogleCalStore.get(u);
+    if (!stored) return null;
+    const errText = String((opts && opts.error) || '');
+    if (errText) stored.lastError = errText.slice(0, 240);
+    else {
+        stored.lastSyncAt = new Date().toISOString();
+        stored.lastError = '';
+    }
+    staffGoogleCalStore.set(u, stored);
+    return decodeStaffGoogleCalendarRow(stored);
+}
+
+async function deleteStaffGoogleCalendarInternal(username) {
+    const u = String(username || '').trim().toLowerCase();
+    googleCalendar.clearUserCaches(u);
+    invalidateNextSlotsCache();
+    if (usePersistentDb) return db.deleteStaffGoogleCalendar(u);
+    return staffGoogleCalStore.delete(u);
+}
+
+async function googleBusyBlocksForStaff(username, dateIso, forceRefresh) {
+    const u = String((username || '')).trim().toLowerCase();
+    if (!u || !googleCalendar.isConfigured()) return [];
+    const link = await getStaffGoogleCalendarInternal(u);
+    if (!link || !link.refreshToken) return [];
+    const cached = forceRefresh ? null : googleCalendar.cachedBusy(u);
+    if (cached) return cached;
+    const tz = scheduleStore.timezone || 'Europe/Lisbon';
+    const today = lisbonNowParts().dateIso;
+    const fromMs = localWallTimeToUtcMs(today, '00:00', tz);
+    const toMs = localWallTimeToUtcMs(addDaysIso(today, googleCalendar.BUSY_HORIZON_DAYS + 1), '00:00', tz);
+    if (!Number.isFinite(fromMs) || !Number.isFinite(toMs) || toMs <= fromMs) return [];
+    try {
+        const token = await googleCalendar.accessTokenFor(u, link.refreshToken);
+        const busy = await googleCalendar.fetchBusy(token, {
+            timeMin: new Date(fromMs).toISOString(),
+            timeMax: new Date(toMs).toISOString(),
+            timeZone: tz,
+            calendarId: link.calendarId || 'primary'
+        });
+        googleCalendar.cacheBusy(u, busy);
+        void touchStaffGoogleCalendarInternal(u, {});
+        return busy;
+    } catch (err) {
+        const message = err && err.message ? err.message : 'Google Calendar sync failed';
+        console.error(`   📅 Google Calendar FreeBusy failed (${u}):`, message);
+        void touchStaffGoogleCalendarInternal(u, { error: message });
+        if (err && err.needsReconnect) {
+            googleCalendar.clearUserCaches(u);
+        }
+        return googleCalendar.staleBusy(u);
+    }
+}
+
+function slotTakenByGoogleBusy(dateIso, startHhmm, durationMinutes, busy) {
+    if (!busy || !busy.length) return false;
+    const tz = scheduleStore.timezone || 'Europe/Lisbon';
+    const startMs = localWallTimeToUtcMs(dateIso, startHhmm, tz);
+    if (!Number.isFinite(startMs)) return false;
+    const endMs = startMs + Math.max(1, Number(durationMinutes) || 30) * 60 * 1000;
+    return googleCalendar.slotOverlapsBusy(startMs, endMs, busy);
+}
+
 function widerHours(a, b) {
     const startA = timeToMinutes(a);
     const startB = timeToMinutes(b);
@@ -2197,7 +2325,8 @@ function staffEmailsMatch(a, b) {
 
 const KNOWN_PROFESSIONAL_EMAILS = [
     {
-        email: 'ritaaguiarfonseca@gmail.com',
+        email: 'drasofiaaguiar@gmail.com',
+        aliases: ['ritaaguiarfonseca@gmail.com'],
         names: ['Rita Aguiar', 'Rita Aguiar Fonseca'],
         usernames: ['rita.aguiar', 'ritaaguiar', 'rita.aguiar.fonseca', 'ritaaguiarfonseca']
     }
@@ -2338,7 +2467,10 @@ async function listProfessionalsInternal() {
 async function findProfessionalByKnownEmail(email) {
     const e = canonicalizeStaffEmail(email);
     if (!e) return null;
-    const known = KNOWN_PROFESSIONAL_EMAILS.find((row) => canonicalizeStaffEmail(row.email) === e);
+    const known = KNOWN_PROFESSIONAL_EMAILS.find((row) => {
+        const mails = [row.email, ...(row.aliases || [])];
+        return mails.some((mail) => canonicalizeStaffEmail(mail) === e);
+    });
     if (!known) return null;
     const list = await listProfessionalsInternal();
     let profiles = [];
@@ -3430,7 +3562,10 @@ async function assignKnownProfessionalEmails() {
                 continue;
             }
             if (staffEmailsMatch(match.email, email)) continue;
-            if (isValidStaffEmail(match.email)) continue;
+            if (isValidStaffEmail(match.email)) {
+                const aliases = (known.aliases || []).map((mail) => canonicalizeStaffEmail(mail));
+                if (!aliases.includes(canonicalizeStaffEmail(match.email))) continue;
+            }
             const updated = await patchProfessionalInternal(match, { email });
             try { await attachPersonFacets(updated || match); } catch (_) { /* ignore */ }
             console.log(`   ✉️  Associated clinic email for ${match.displayName || match.username}: ${email}`);
@@ -7696,7 +7831,7 @@ async function ticksHeldForProfessional(dateIso, professionalId, excludeHoldId, 
     return blocked;
 }
 
-async function slotsForStaffPersonOnDate(person, dateIso, service, excludeHoldId, excludeBookingRef) {
+async function slotsForStaffPersonOnDate(person, dateIso, service, excludeHoldId, excludeBookingRef, forceGoogleRefresh) {
     const ranges = hoursForStaffOnDate(person, dateIso);
     if (!ranges.length) return [];
     const step = scheduleStore.slotDuration || 30;
@@ -7714,9 +7849,13 @@ async function slotsForStaffPersonOnDate(person, dateIso, service, excludeHoldId
     blockedTicks.forEach((t) => blocked.add(t));
     const held = await ticksHeldForProfessional(dateIso, person.id, excludeHoldId, duration, step);
     held.forEach((t) => blocked.add(t));
-    return starts.filter((start) =>
+    const open = starts.filter((start) =>
         staffBooking.occupiedTimesFromStart(start, duration, step).every((t) => !blocked.has(t))
     );
+    if (!open.length) return open;
+    const googleBusy = await googleBusyBlocksForStaff(person.username, dateIso, forceGoogleRefresh);
+    if (!googleBusy.length) return open;
+    return open.filter((start) => !slotTakenByGoogleBusy(dateIso, start, duration, googleBusy));
 }
 
 async function getStaffBookableSlotsForDate(dateIso, opts) {
@@ -7799,7 +7938,7 @@ async function resolveBookableProfessional({ service, specialty, dateIso, time, 
     if (Number.isInteger(want) && want > 0) {
         person = people.find((p) => p.id === want) || null;
         if (person) {
-            const times = await slotsForStaffPersonOnDate(person, dateIso, service, null, null);
+            const times = await slotsForStaffPersonOnDate(person, dateIso, service, null, null, true);
             if (!times.includes(time)) person = null;
         }
     }
@@ -12640,7 +12779,8 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
                         isoCheckout,
                         service,
                         holdMatches ? checkoutHold.id : null,
-                        null
+                        null,
+                        true
                     )
                     : [];
                 slotOk = allowedStaff.includes(normTimeCheckout);
@@ -17771,6 +17911,102 @@ app.put('/api/admin/staff-availability/:username', requireAdmin, express.json(),
     }
 });
 
+function googleCalendarAdminRedirect(res, status, username, reason) {
+    const params = new URLSearchParams();
+    params.set('gcal', status);
+    if (username) params.set('who', username);
+    if (reason) params.set('reason', reason);
+    return res.redirect(302, `/admin?${params.toString()}`);
+}
+
+async function requireAdminGoogleCalendar(req, res, next) {
+    if (!req.session || !req.session.clinicAuthenticated || !isAdminSession(req)) {
+        return googleCalendarAdminRedirect(res, 'error', '', 'session');
+    }
+    return next();
+}
+
+app.get('/api/admin/google-calendar/callback', requireAdminGoogleCalendar, rateLimitGoogleCalendarOAuth, async (req, res) => {
+    const denied = String(req.query.error || '').trim();
+    const state = googleCalendar.parseState(req.query.state);
+    const username = state && state.username;
+    if (denied) {
+        return googleCalendarAdminRedirect(res, 'error', username || '', denied === 'access_denied' ? 'denied' : 'google');
+    }
+    if (!googleCalendar.isConfigured()) {
+        return googleCalendarAdminRedirect(res, 'error', username || '', 'config');
+    }
+    if (!username || !isValidProfessionalUsername(username)) {
+        return googleCalendarAdminRedirect(res, 'error', '', 'state');
+    }
+    const code = String(req.query.code || '').trim();
+    if (!code) {
+        return googleCalendarAdminRedirect(res, 'error', username, 'code');
+    }
+    try {
+        const tokens = await googleCalendar.exchangeCode(code);
+        const refreshToken = String(tokens.refresh_token || '').trim();
+        const existing = await getStaffGoogleCalendarInternal(username);
+        if (!refreshToken && !(existing && existing.refreshToken)) {
+            return googleCalendarAdminRedirect(res, 'error', username, 'refresh');
+        }
+        const accessToken = String(tokens.access_token || '').trim();
+        const email = accessToken ? await googleCalendar.fetchUserEmail(accessToken) : '';
+        await setStaffGoogleCalendarInternal(username, {
+            googleEmail: email || (existing && existing.googleEmail) || '',
+            refreshToken: refreshToken || (existing && existing.refreshToken) || '',
+            calendarId: (existing && existing.calendarId) || 'primary'
+        });
+        googleCalendar.clearUserCaches(username);
+        invalidateNextSlotsCache();
+        console.log(`   📅 Google Calendar connected for ${username}${email ? ` (${email})` : ''}`);
+        return googleCalendarAdminRedirect(res, 'connected', username);
+    } catch (err) {
+        console.error('GET /api/admin/google-calendar/callback:', err.message);
+        return googleCalendarAdminRedirect(res, 'error', username, 'token');
+    }
+});
+
+app.get('/api/admin/google-calendar/:username', requireAdmin, async (req, res) => {
+    try {
+        const username = String(req.params.username || '').trim().toLowerCase();
+        if (!username || !isValidProfessionalUsername(username)) {
+            return res.status(400).json({ error: 'Username required' });
+        }
+        const row = await getStaffGoogleCalendarInternal(username);
+        res.json(googleCalendar.publicConnection(row, googleCalendar.isConfigured()));
+    } catch (err) {
+        console.error('GET /api/admin/google-calendar/:username:', err.message);
+        res.status(500).json({ error: 'Failed to load Google Calendar status' });
+    }
+});
+
+app.get('/api/admin/google-calendar/:username/connect', requireAdminGoogleCalendar, rateLimitGoogleCalendarOAuth, (req, res) => {
+    const username = String(req.params.username || '').trim().toLowerCase();
+    if (!username || !isValidProfessionalUsername(username)) {
+        return googleCalendarAdminRedirect(res, 'error', '', 'user');
+    }
+    if (!googleCalendar.isConfigured()) {
+        return googleCalendarAdminRedirect(res, 'error', username, 'config');
+    }
+    return res.redirect(302, googleCalendar.authUrl(username));
+});
+
+app.delete('/api/admin/google-calendar/:username', requireAdmin, async (req, res) => {
+    try {
+        const username = String(req.params.username || '').trim().toLowerCase();
+        if (!username || !isValidProfessionalUsername(username)) {
+            return res.status(400).json({ error: 'Username required' });
+        }
+        await deleteStaffGoogleCalendarInternal(username);
+        console.log(`   📅 Google Calendar disconnected for ${username}`);
+        res.json(googleCalendar.publicConnection(null, googleCalendar.isConfigured()));
+    } catch (err) {
+        console.error('DELETE /api/admin/google-calendar/:username:', err.message);
+        res.status(500).json({ error: 'Failed to disconnect Google Calendar' });
+    }
+});
+
 // ─── API: Public — Get schedule structure (for calendar rendering) ───
 app.get('/api/schedule', (req, res) => {
     // Return schedule structure without sensitive data
@@ -18003,7 +18239,7 @@ app.post('/api/slot-hold', rateLimitSlotHold, async (req, res) => {
         const assignedId = staffMode ? resolved.person.id : null;
         let allowed = [];
         if (staffMode) {
-            allowed = await slotsForStaffPersonOnDate(resolved.person, dateIso, service, null, null);
+            allowed = await slotsForStaffPersonOnDate(resolved.person, dateIso, service, null, null, true);
         } else {
             allowed = await getBookableSlotsForDateIso(dateIso, null, null, false);
         }
@@ -19020,6 +19256,11 @@ app.use((req, res) => {
         } else {
             console.log(`   ⚠️  Stripe NOT configured — add your keys to .env`);
             console.log(`   Get keys at: https://dashboard.stripe.com/test/apikeys`);
+        }
+        if (googleCalendar.isConfigured()) {
+            console.log(`   📅 Google Calendar OAuth ready (${googleCalendar.redirectUri()})`);
+        } else {
+            console.log('   ⚠️  Google Calendar off — set GOOGLE_CALENDAR_CLIENT_ID and GOOGLE_CALENDAR_CLIENT_SECRET to hide busy slots');
         }
         if (metaCapi.pixelId()) {
             console.log(

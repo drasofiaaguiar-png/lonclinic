@@ -33,6 +33,19 @@ EMAIL_FROM=Longevity Clinic <your_email@gmail.com>
 # Doxy.me Video Consultation
 DOXY_ROOM_URL=https://doxy.me/lonclinic/ritaaguiar
 
+# Google Calendar (hide busy times on bookable slots)
+# 1. Google Cloud Console → APIs & Services → Enable "Google Calendar API"
+# 2. OAuth consent screen: External + Testing, add Rita's Gmail as a test user
+# 3. Create OAuth client ID (Web application)
+# 4. Authorized redirect URI (must match exactly):
+#    https://www.lonclinic.com/api/admin/google-calendar/callback
+#    Local: http://localhost:3000/api/admin/google-calendar/callback
+# 5. Then in Admin → Availability → choose Dra. Rita Aguiar → Connect Google Calendar
+GOOGLE_CALENDAR_CLIENT_ID=
+GOOGLE_CALENDAR_CLIENT_SECRET=
+# Optional override if the callback is not on https://www.lonclinic.com
+# GOOGLE_CALENDAR_REDIRECT_URI=https://www.lonclinic.com/api/admin/google-calendar/callback
+
 # Contact Email (shown on website footer)
 CONTACT_EMAIL=info@lonclinic.com
 

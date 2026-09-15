@@ -139,6 +139,9 @@ Adicione estas variáveis no Railway/Render:
 ### Outras (Opcional)
 - [ ] `DOXY_ROOM_URL` = `https://doxy.me/lonclinic/ritaaguiar`
 - [ ] `CONTACT_EMAIL` = `info@lonclinic.com`
+- [ ] `GOOGLE_CALENDAR_CLIENT_ID` = OAuth client ID (Google Cloud)
+- [ ] `GOOGLE_CALENDAR_CLIENT_SECRET` = OAuth client secret
+- [ ] `GOOGLE_CALENDAR_REDIRECT_URI` = `https://www.lonclinic.com/api/admin/google-calendar/callback`
 
 ---
 

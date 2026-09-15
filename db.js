@@ -738,6 +738,17 @@ async function initSchema(p) {
     `);
     await p.query(`ALTER TABLE staff_availability_days ADD COLUMN IF NOT EXISTS weekly JSONB NOT NULL DEFAULT '{}'::jsonb`);
     await p.query(`
+        CREATE TABLE IF NOT EXISTS staff_google_calendars (
+            username VARCHAR(64) PRIMARY KEY,
+            google_email TEXT NOT NULL DEFAULT '',
+            refresh_token TEXT NOT NULL,
+            calendar_id TEXT NOT NULL DEFAULT 'primary',
+            connected_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            last_sync_at TIMESTAMPTZ,
+            last_error TEXT NOT NULL DEFAULT ''
+        )
+    `);
+    await p.query(`
         CREATE TABLE IF NOT EXISTS staff_documents (
             id SERIAL PRIMARY KEY,
             username VARCHAR(64) NOT NULL,
@@ -3011,6 +3022,7 @@ async function deleteProfessionalFileOn(client, username, { retargetProfessional
     await client.query('DELETE FROM staff_invoices WHERE LOWER(username) = $1', [u]);
     await client.query('DELETE FROM staff_month_availability WHERE LOWER(username) = $1', [u]);
     await client.query('DELETE FROM staff_availability_days WHERE LOWER(username) = $1', [u]);
+    await client.query('DELETE FROM staff_google_calendars WHERE LOWER(username) = $1', [u]);
     await client.query('DELETE FROM staff_profiles WHERE LOWER(username) = $1', [u]);
     let professionals = 0;
     if (id) {
@@ -3730,6 +3742,84 @@ async function setStaffAvailabilityRecord(username, days, weekly) {
         [u, JSON.stringify(dayPayload), JSON.stringify(weeklyPayload)]
     );
     return rowToStaffAvailabilityDays(r.rows[0]);
+}
+
+function rowToStaffGoogleCalendar(row) {
+    if (!row) return null;
+    return {
+        username: String(row.username || '').toLowerCase(),
+        googleEmail: row.google_email || '',
+        refreshToken: row.refresh_token || '',
+        calendarId: row.calendar_id || 'primary',
+        connectedAt: row.connected_at ? new Date(row.connected_at).toISOString() : null,
+        lastSyncAt: row.last_sync_at ? new Date(row.last_sync_at).toISOString() : null,
+        lastError: row.last_error || ''
+    };
+}
+
+async function getStaffGoogleCalendar(username) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return null;
+    const r = await p.query(
+        `SELECT username, google_email, refresh_token, calendar_id, connected_at, last_sync_at, last_error
+           FROM staff_google_calendars WHERE LOWER(username) = $1 LIMIT 1`,
+        [u]
+    );
+    return r.rows[0] ? rowToStaffGoogleCalendar(r.rows[0]) : null;
+}
+
+async function upsertStaffGoogleCalendar(username, { googleEmail, refreshToken, calendarId }) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    const token = String(refreshToken || '');
+    if (!u || !token) return null;
+    const r = await p.query(
+        `INSERT INTO staff_google_calendars (username, google_email, refresh_token, calendar_id, connected_at, last_error)
+         VALUES ($1, $2, $3, $4, NOW(), '')
+         ON CONFLICT (username) DO UPDATE SET
+            google_email = EXCLUDED.google_email,
+            refresh_token = EXCLUDED.refresh_token,
+            calendar_id = EXCLUDED.calendar_id,
+            connected_at = NOW(),
+            last_error = ''
+         RETURNING username, google_email, refresh_token, calendar_id, connected_at, last_sync_at, last_error`,
+        [
+            u,
+            String(googleEmail || '').trim().toLowerCase().slice(0, 320),
+            token,
+            String(calendarId || 'primary').trim().slice(0, 320) || 'primary'
+        ]
+    );
+    return r.rows[0] ? rowToStaffGoogleCalendar(r.rows[0]) : null;
+}
+
+async function touchStaffGoogleCalendarSync(username, { error } = {}) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return null;
+    const errText = String(error || '').slice(0, 240);
+    const r = await p.query(
+        errText
+            ? `UPDATE staff_google_calendars
+                  SET last_error = $2
+                WHERE LOWER(username) = $1
+            RETURNING username, google_email, refresh_token, calendar_id, connected_at, last_sync_at, last_error`
+            : `UPDATE staff_google_calendars
+                  SET last_sync_at = NOW(), last_error = ''
+                WHERE LOWER(username) = $1
+            RETURNING username, google_email, refresh_token, calendar_id, connected_at, last_sync_at, last_error`,
+        errText ? [u, errText] : [u]
+    );
+    return r.rows[0] ? rowToStaffGoogleCalendar(r.rows[0]) : null;
+}
+
+async function deleteStaffGoogleCalendar(username) {
+    const p = getPool();
+    const u = String(username || '').trim().toLowerCase();
+    if (!u) return false;
+    const r = await p.query('DELETE FROM staff_google_calendars WHERE LOWER(username) = $1', [u]);
+    return (r.rowCount || 0) > 0;
 }
 
 async function listStaffDocuments(username) {
@@ -4627,6 +4717,10 @@ module.exports = {
     listAllStaffAvailabilityDays,
     setStaffAvailabilityDays,
     setStaffAvailabilityRecord,
+    getStaffGoogleCalendar,
+    upsertStaffGoogleCalendar,
+    touchStaffGoogleCalendarSync,
+    deleteStaffGoogleCalendar,
     listStaffDocuments,
     listAllStaffDocuments,
     upsertStaffDocument,
