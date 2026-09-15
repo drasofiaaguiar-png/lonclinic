@@ -1248,7 +1248,7 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260906i">
-    <link rel="stylesheet" href="/guide.css?v=20260910b">
+    <link rel="stylesheet" href="/guide.css?v=20260915a">
     <link rel="stylesheet" href="/author.css?v=20260820l">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -1373,7 +1373,7 @@ function renderBlogIndex(origin) {
         return `
                 <article class="lon-service-card is-visible guide-card" role="listitem">
                     <div class="guide-card-inner">
-                        <a class="guide-card-media" href="${href}" aria-label="${escapeHtml(listingTitle(a.title || slug))}" style="background-image:url('${img}')"></a>
+                        <a class="guide-card-media" href="${href}" aria-label="${escapeHtml(listingTitle(a.title || slug))}"><img src="${img}" alt="" width="1200" height="800" loading="lazy" decoding="async"></a>
                         <div class="guide-card-content">
                             <p class="guide-card-date">${date}</p>
                             ${isVerifiedArticle(a) ? `<p class="eeat-byline guide-card-byline"><a rel="author" href="${authors.authorPath(authors.getAuthor(a.author))}">Médica · ${authors.getAuthor(a.author).yearsPractice} anos de prática clínica</a></p>` : (readingTimeHtml(a, 'pt') ? `<p class="guide-card-byline">${readingTimeHtml(a, 'pt')}</p>` : '')}
@@ -1691,7 +1691,7 @@ function renderBlogArticle(origin, slug) {
         htmlLang: langMeta.htmlLang,
         ogLocale: langMeta.ogLocale,
         extraHead: articleHreflangLinks(o, meta, manifest.articles),
-        extraCssAfter: ['/guide.css?v=20260910b', '/author.css?v=20260820l'],
+        extraCssAfter: ['/guide.css?v=20260915a', '/author.css?v=20260820l'],
         mainHtml: magAppHtml(articlePath, articleInner, {
             magazineCurrent: true,
             talk: talkCta.resolve({ kind: ctaKind, slug, lang })
@@ -1953,7 +1953,7 @@ function magCardHtml(article, opts) {
         : '';
     const titleClass = extraClass.includes('guide-related-card') ? ' class="guide-related-title"' : '';
     return `<a class="mag-card${extraClass}" href="${magHref(article)}">
-                <span class="mag-photo" style="background-image:url('${magImage(article)}')"></span>
+                ${magPhotoHtml(article)}
                 ${kicker}
                 <h3${titleClass}>${escapeHtml(listingTitle(article.title))}</h3>
                 ${magCardBylineHtml(article)}
@@ -1967,7 +1967,7 @@ function magFeaturedHtml(article) {
         ? `<p class="mag-cover-dek">${escapeHtml(article.description)}</p>`
         : '';
     return `<a class="mag-cover" href="${magHref(article)}">
-                <span class="mag-cover-photo" style="background-image:url('${magImage(article)}')"></span>
+                ${magPhotoHtml(article, 'mag-cover-photo', { eager: true })}
                 <span class="mag-cover-plate">
                     <span class="mag-cover-issue">${escapeHtml(magIssueLine())}</span>
                     <span class="mag-cover-name">Lon <em>Magazine</em></span>
@@ -2304,6 +2304,15 @@ function magDate(iso, lang) {
 
 function magImage(article) {
     return escapeHtml(resolveGuideImage(article && article.image));
+}
+
+function magPhotoHtml(article, className, opts) {
+    const src = magImage(article);
+    const cls = className || 'mag-photo';
+    const eager = opts && opts.eager;
+    const loading = eager ? '' : ' loading="lazy"';
+    const prio = eager ? ' fetchpriority="high"' : '';
+    return `<span class="${cls}"><img src="${src}" alt="" width="1200" height="1500"${loading} decoding="async"${prio}></span>`;
 }
 
 function magHref(article) {
@@ -2932,7 +2941,7 @@ function layoutMagazinePage(opts) {
     <link rel="stylesheet" href="/landing.css?v=20260906i">
     ${extraCssHtml}
     ${extraCssAfterHtml}
-    <link rel="stylesheet" href="/magazine.css?v=20260910a">
+    <link rel="stylesheet" href="/magazine.css?v=20260915a">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='6' y='52' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%239c4a56'%3EL%3C/text%3E%3C/svg%3E">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     ${jsonLdScript(graph)}

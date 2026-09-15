@@ -430,7 +430,10 @@ app.use(
                 scriptSrcAttr: ["'none'"],
                 // Many pages still use style="" attributes; dropping unsafe-inline would blank the homepage.
                 // <style> blocks receive a nonce via applyCspNonce (same as scripts).
+                // A nonce in style-src makes browsers ignore 'unsafe-inline' for attributes, so
+                // keep style-src-attr separate — magazine cards and other inline backgrounds need it.
                 styleSrc: ["'self'", "'unsafe-inline'", (req, res) => `'nonce-${res.locals.cspNonce}'`, 'https://fonts.googleapis.com'],
+                styleSrcAttr: ["'unsafe-inline'"],
                 fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:'],
                 imgSrc: ["'self'", 'data:', 'https:'],
                 connectSrc: [
