@@ -7,17 +7,7 @@
     'use strict';
 
     var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-    var PHQ_ITEMS = [
-        'Pouco interesse ou prazer em fazer as coisas',
-        'Sentir-se em baixo, deprimida ou sem esperança',
-        'Dificuldade em adormecer, manter o sono, ou dormir em excesso',
-        'Sentir-se cansada ou com pouca energia',
-        'Falta de apetite ou comer em excesso',
-        'Sentir-se mal consigo mesma — ou que é um fracasso, ou que desiludiu a família',
-        'Dificuldade em concentrar-se (ex.: ler, ver televisão)',
-        'Lentidão ou agitação percetível por outros',
-        'Pensamentos de que estaria melhor morta, ou de se magoar de alguma forma'
-    ];
+    var PHQ9_ITEM = 'Pensamentos de que estaria melhor morta, ou de se magoar de alguma forma';
     var SCORE_OPTIONS = [
         { value: '0', label: 'Nunca' },
         { value: '1', label: 'Vários dias' },
@@ -89,6 +79,7 @@
         parceiroConvite: false,
         genderExpanded: false,
         orientationExpanded: false,
+        submitted: false,
         answers: {
             consentSaude: false,
             genero: '',
@@ -104,6 +95,10 @@
             terapiaAntes: '',
             priorNote: '',
             prefPsicologa: '',
+            horario: '',
+            medicacao: '',
+            diagnostico: '',
+            diagnosticoQual: '',
             phq: {},
             nome: '',
             email: '',
@@ -128,15 +123,54 @@
     var pointerArmed = false;
 
     function track(eventName, params) {
-        if (typeof gtag !== 'function') return;
-        gtag('event', eventName, Object.assign({
+        var payload = Object.assign({
             event_category: 'triagem',
-            page_path: '/triagem'
-        }, params || {}));
+            page_path: '/triagem',
+            surface: 'triage'
+        }, params || {});
+        if (window.LonAnalytics && typeof window.LonAnalytics.track === 'function') {
+            window.LonAnalytics.track(eventName, payload);
+            if (eventName === 'triagem_exit' || eventName === 'triagem_submit' || eventName === 'triagem_start' || eventName === 'triagem_step') {
+                if (typeof window.LonAnalytics.flush === 'function') window.LonAnalytics.flush();
+            }
+            return;
+        }
+        if (typeof gtag === 'function') {
+            gtag('event', eventName, payload);
+        }
+    }
+
+    function currentStepMeta() {
+        var step = currentStep() || {};
+        return {
+            step: state.quizIndex + 1,
+            step_id: step.id || '',
+            step_total: totalQuiz(),
+            tipo_terapia: state.tipoTerapia
+        };
     }
 
     function isCasal() {
         return state.tipoTerapia === 'casal';
+    }
+
+    function matchIntroCopy() {
+        if (isCasal()) {
+            if (state.parceiroConvite) {
+                return {
+                    title: 'O teu par já começou a triagem de casal.',
+                    lead: 'Completa a tua parte para a Dra. Carolina Rocha vos conhecer melhor a ambos. As respostas não são partilhadas automaticamente com o teu par.'
+                };
+            }
+            return {
+                title: 'Ajuda-nos a fazer o matching para a terapia de casal.',
+                lead: 'As perguntas seguintes ajudam a Dra. Carolina Rocha a perceber a vossa relação. No fim, podes convidar o teu par a fazer a triagem.'
+            };
+        }
+        return {
+            title: 'Ajuda-nos a fazer o matching com o psicólogo certo.',
+            lead: 'É importante teres alguém com quem consigas estabelecer uma ligação pessoal. As perguntas seguintes ajudam-nos a atribuir um psicólogo com base nas tuas necessidades e preferências.'
+        };
     }
 
     function setTipoTerapia(tipo) {
@@ -144,22 +178,6 @@
         state.tipoTerapia = next;
         var input = document.getElementById('tipoTerapia');
         if (input) input.value = next;
-        var title = document.getElementById('matchIntroTitle');
-        var lead = document.getElementById('matchIntroLead');
-        if (title) {
-            title.textContent = next === 'casal'
-                ? (state.parceiroConvite
-                    ? 'O teu par já começou a triagem de casal.'
-                    : 'Ajuda-nos a fazer o matching para a terapia de casal.')
-                : 'Ajuda-nos a fazer o matching com o psicólogo certo.';
-        }
-        if (lead) {
-            lead.textContent = next === 'casal'
-                ? (state.parceiroConvite
-                    ? 'Completa a tua parte para a Dra. Carolina Rocha vos conhecer melhor a ambos. As respostas não são partilhadas automaticamente com o teu par.'
-                    : 'As perguntas seguintes ajudam a Dra. Carolina Rocha a perceber a vossa relação. No fim, podes convidar o teu par a fazer a triagem.')
-                : 'É importante teres alguém com quem consigas estabelecer uma ligação pessoal. As perguntas seguintes ajudam-nos a atribuir um psicólogo com base nas tuas necessidades e preferências.';
-        }
     }
 
     function readTipoFromUrl() {
@@ -209,15 +227,6 @@
         showScreen('screen-intro');
     }
 
-    function goIntro() {
-        clearAuto();
-        state.phase = 'intro';
-        setChoiceMode(false);
-        document.body.classList.add('is-quiz');
-        showScreen('screen-match-intro');
-        track('triagem_step', { step: 'intro', tipo_terapia: state.tipoTerapia });
-    }
-
     function goQuiz(index) {
         clearAuto();
         state.phase = 'quiz';
@@ -226,7 +235,12 @@
         document.body.classList.add('is-quiz');
         showScreen('screen-quiz');
         renderQuiz();
-        track('triagem_step', { step: index + 1, tipo_terapia: state.tipoTerapia });
+        var meta = currentStepMeta();
+        if (form) {
+            form.setAttribute('data-lon-form-started', '1');
+            form.setAttribute('data-triagem-step', String(meta.step_id || ''));
+        }
+        track('triagem_step', meta);
     }
 
     function startCasalQuiz() {
@@ -242,13 +256,9 @@
     function quizSteps() {
         if (!isCasal()) {
             return [
-                { id: 'genero', type: 'single' },
-                { id: 'idade', type: 'number' },
-                { id: 'motivos', type: 'multi' },
-                { id: 'duracao', type: 'single' },
-                { id: 'terapiaAntes', type: 'single' },
-                { id: 'prefPsicologa', type: 'single' },
-                { id: 'phq', type: 'phq' },
+                { id: 'motivoDuracao', type: 'combo' },
+                { id: 'prefs', type: 'combo' },
+                { id: 'historico', type: 'combo' },
                 { id: 'contact', type: 'contact' }
             ];
         }
@@ -303,11 +313,21 @@
             '<span>' + escapeHtml(label) + '</span></label>';
     }
 
+    function renderRadioGroup(name, title, options, selected) {
+        var html = title ? '<p class="tri-group-title">' + escapeHtml(title) + '</p>' : '';
+        html += '<div class="tri-opts">';
+        options.forEach(function (v) {
+            html += optionBtn(name, v, v, selected === v);
+        });
+        html += '</div>';
+        return html;
+    }
+
     function renderQuiz() {
         var step = currentStep();
         var a = state.answers;
         var total = totalQuiz();
-        quizCount.textContent = (state.quizIndex + 1) + ' de ' + total;
+        quizCount.textContent = 'Passo ' + (state.quizIndex + 1) + ' de ' + total;
         quizMeter.style.width = (((state.quizIndex + 1) / total) * 100) + '%';
         formError.hidden = true;
         formError.textContent = '';
@@ -316,7 +336,42 @@
         quizNext.textContent = step.id === 'contact' ? 'Ver horários' : 'Continuar';
 
         var html = '';
-        if (step.id === 'consent') {
+        if (state.quizIndex === 0) {
+            var intro = matchIntroCopy();
+            html += '<div class="tri-match-intro">';
+            html += '<h1>' + escapeHtml(intro.title) + '</h1>';
+            html += '<p>' + escapeHtml(intro.lead) + '</p>';
+            html += '</div>';
+        }
+        if (step.id === 'motivoDuracao') {
+            html += '<h2>O que te traz à terapia?</h2>';
+            html += '<p class="tri-quiz-why">Podes escolher mais do que uma opção.</p>';
+            html += '<div class="tri-opts">';
+            MOTIVOS.forEach(function (v) {
+                html += checkBtn('motivos', v, v, a.motivos.indexOf(v) !== -1);
+            });
+            html += '</div>';
+            html += '<div class="tri-field" id="motivoOutroWrap"' + (a.motivos.indexOf('Outro') === -1 ? ' hidden' : '') + '>';
+            html += '<input type="text" id="motivoOutro" maxlength="240" placeholder="Conta-nos um pouco mais" value="' + escapeHtml(a.motivoOutro) + '">';
+            html += '</div>';
+            html += renderRadioGroup('duracao', 'Há quanto tempo sentes isto?', ['Menos de 1 mês', '1–6 meses', '6 meses – 1 ano', 'Mais de 1 ano'], a.duracao);
+        } else if (step.id === 'prefs') {
+            html += '<h2>Preferências para o matching</h2>';
+            html += '<p class="tri-quiz-why">Ainda estás a escolher — isto ajuda-nos a atribuir alguém com quem possas estabelecer uma ligação.</p>';
+            html += renderRadioGroup('prefPsicologa', 'Preferes que o teu psicólogo seja', ['Sem preferência', 'Mulher', 'Homem'], a.prefPsicologa);
+            html += renderRadioGroup('horario', 'Que horário te serve melhor para as sessões de vídeo?', ['Sem preferência', 'Manhã (antes das 12h)', 'Tarde (12h–17h)', 'Fim do dia (depois das 17h)'], a.horario);
+        } else if (step.id === 'historico') {
+            html += '<h2>Um pouco do teu histórico</h2>';
+            html += '<p class="tri-quiz-why">Respostas curtas — só o necessário para o matching clínico.</p>';
+            html += renderRadioGroup('terapiaAntes', 'Já fizeste terapia ou acompanhamento psicológico antes?', ['Sim', 'Não'], a.terapiaAntes);
+            html += renderRadioGroup('medicacao', 'Tomas medicação para a saúde mental?', ['Sim', 'Não', 'Prefiro não dizer'], a.medicacao);
+            html += renderRadioGroup('diagnostico', 'Tens um diagnóstico de saúde mental?', ['Sim', 'Não', 'Prefiro não dizer'], a.diagnostico);
+            if (a.diagnostico === 'Sim') {
+                html += '<div class="tri-field"><label for="diagnosticoQual">Qual? (opcional)</label>';
+                html += '<input type="text" id="diagnosticoQual" maxlength="200" value="' + escapeHtml(a.diagnosticoQual) + '"></div>';
+            }
+            html += renderRiskQ9(a);
+        } else if (step.id === 'consent') {
             html += eyebrow('Antes de começar');
             html += '<h2>Precisamos do vosso consentimento</h2>';
             html += '<div class="tri-consent">Para fazer o vosso encaminhamento e prestar consultas de terapia de casal, recolhemos dados sobre a vossa saúde e relação, considerados dados de categoria especial ao abrigo do RGPD. Podes consultar a <a href="/info.html?page=politica-privacidade" target="_blank" rel="noopener">Política de Privacidade</a> para saber como os tratamos e como retirar o consentimento.</div>';
@@ -440,33 +495,6 @@
                 html += optionBtn('prefPsicologa', v, v, a.prefPsicologa === v);
             });
             html += '</div>';
-        } else if (step.id === 'phq') {
-            html += '<h2>Nas últimas 2 semanas</h2>';
-            html += '<p class="tri-quiz-why">Com que frequência foste incomodada por cada uma destas situações?</p>';
-            html += '<div class="tri-phq">';
-            PHQ_ITEMS.forEach(function (text, i) {
-                var n = i + 1;
-                var sel = String(a.phq['q' + n] == null ? '' : a.phq['q' + n]);
-                html += '<div class="tri-phq-item' + (n === 9 ? ' is-risk-q' : '') + '">';
-                html += '<p class="tri-phq-q" id="phq-q-' + n + '">' + n + '. ' + escapeHtml(text) + '</p>';
-                html += '<div class="tri-phq-scores" role="radiogroup" aria-labelledby="phq-q-' + n + '">';
-                SCORE_OPTIONS.forEach(function (opt) {
-                    html += '<label class="tri-phq-opt' + (sel === opt.value ? ' is-on' : '') + '">';
-                    html += '<input type="radio" name="phq' + n + '" value="' + opt.value + '"' +
-                        (n === 9 ? ' data-phq9' : '') + (sel === opt.value ? ' checked' : '') + '>';
-                    html += '<span><strong>' + opt.value + '</strong><small>' + opt.label + '</small></span></label>';
-                });
-                html += '</div></div>';
-            });
-            html += '</div>';
-            html += '<div class="triagem-risk" id="riskPanel"' + (state.riskFlagged ? '' : ' hidden') + ' role="alert">';
-            html += '<h3>Contactos de emergência — prioridade clínica</h3>';
-            html += '<p>A tua resposta indica que podes estar a passar por um momento de risco. <strong>Não esperes pelo fim deste questionário</strong> — usa já estes contactos se precisares de ajuda imediata:</p>';
-            html += '<ul class="triagem-emergency-list">';
-            html += '<li><a href="tel:112"><strong>112</strong> — Emergência</a></li>';
-            html += '<li><a href="tel:808242424"><strong>808 24 24 24</strong> — SNS 24</a></li>';
-            html += '<li><a href="tel:213544545"><strong>213 544 545</strong> — SOS Voz Amiga</a></li>';
-            html += '</ul></div>';
         } else if (step.id === 'contact') {
             html += renderContactStep(a);
         }
@@ -504,6 +532,30 @@
         return facts.slice(0, 2);
     }
 
+    function renderRiskQ9(a) {
+        var sel = String(a.phq.q9 == null ? '' : a.phq.q9);
+        var html = '<p class="tri-group-title">Nas últimas 2 semanas</p>';
+        html += '<p class="tri-quiz-why">' + escapeHtml(PHQ9_ITEM) + '</p>';
+        html += '<div class="tri-phq"><div class="tri-phq-item is-risk-q">';
+        html += '<div class="tri-phq-scores" role="radiogroup" aria-label="' + escapeHtml(PHQ9_ITEM) + '">';
+        SCORE_OPTIONS.forEach(function (opt) {
+            html += '<label class="tri-phq-opt' + (sel === opt.value ? ' is-on' : '') + '">';
+            html += '<input type="radio" name="phq9" value="' + opt.value + '" data-phq9' +
+                (sel === opt.value ? ' checked' : '') + '>';
+            html += '<span><strong>' + opt.value + '</strong><small>' + opt.label + '</small></span></label>';
+        });
+        html += '</div></div></div>';
+        html += '<div class="triagem-risk" id="riskPanel"' + (state.riskFlagged ? '' : ' hidden') + ' role="alert">';
+        html += '<h3>Contactos de emergência — prioridade clínica</h3>';
+        html += '<p>A tua resposta indica que podes estar a passar por um momento de risco. <strong>Não esperes pelo fim deste questionário</strong> — usa já estes contactos se precisares de ajuda imediata:</p>';
+        html += '<ul class="triagem-emergency-list">';
+        html += '<li><a href="tel:112"><strong>112</strong> — Emergência</a></li>';
+        html += '<li><a href="tel:808242424"><strong>808 24 24 24</strong> — SNS 24</a></li>';
+        html += '<li><a href="tel:213544545"><strong>213 544 545</strong> — SOS Voz Amiga</a></li>';
+        html += '</ul></div>';
+        return html;
+    }
+
     function renderContactStep(a) {
         var html = '';
         html += eyebrow(isCasal() ? 'Último passo' : '');
@@ -512,10 +564,13 @@
             html += '<p class="tri-quiz-why">Indica o teu nome e email, e os do teu par, para mostrarmos os horários da Dra. Carolina Rocha.</p>';
             html += '<p class="tri-group-title">Quem está a marcar</p>';
         } else {
-            html += '<p class="tri-quiz-why">Indica o teu nome e email para te mostrarmos os horários disponíveis.</p>';
+            html += '<p class="tri-quiz-why">Indica o teu nome, idade e email para te mostrarmos os horários disponíveis.</p>';
         }
         html += '<div class="tri-field"><label for="nome">Nome</label><input type="text" id="nome" name="nome" autocomplete="name" maxlength="120" value="' + escapeHtml(a.nome) + '"></div>';
         html += '<div class="tri-field"><label for="email">Email</label><input type="email" id="email" name="email" autocomplete="email" inputmode="email" maxlength="160" value="' + escapeHtml(a.email) + '"></div>';
+        if (!isCasal()) {
+            html += '<div class="tri-field"><label for="idade">Idade</label><input type="number" id="idade" name="idade" inputmode="numeric" min="16" max="120" placeholder="Ex.: 32" value="' + escapeHtml(a.idade) + '"></div>';
+        }
         if (isCasal()) {
             html += '<p class="tri-group-title">O teu par</p>';
             html += '<div class="tri-field"><label for="partnerNome">Nome do teu par</label><input type="text" id="partnerNome" maxlength="120" value="' + escapeHtml(a.partnerNome) + '"></div>';
@@ -557,7 +612,8 @@
                         state.riskFlagged = dvRisk();
                         if (state.riskFlagged) pingDvAlert();
                     }
-                    var stay = isCasal() && (input.name === 'terapiaAntes' || input.name === 'relStatus' || input.name === 'invitePartner');
+                    var stay = (isCasal() && (input.name === 'terapiaAntes' || input.name === 'relStatus' || input.name === 'invitePartner'))
+                        || (currentStep().type === 'combo' && input.name === 'diagnostico');
                     if (stay) {
                         renderQuiz();
                         return;
@@ -600,7 +656,7 @@
                 renderQuiz();
             });
         });
-        ['idade', 'nome', 'email', 'motivoOutro', 'partnerNome', 'partnerEmail', 'priorNote'].forEach(function (id) {
+        ['idade', 'nome', 'email', 'motivoOutro', 'partnerNome', 'partnerEmail', 'priorNote', 'diagnosticoQual'].forEach(function (id) {
             var el = document.getElementById(id);
             if (!el) return;
             el.addEventListener('input', function () {
@@ -702,15 +758,30 @@
             a.expect = selectedChecks('expect');
             if (!a.expect.length) return fail('Escolhe pelo menos uma opção.');
         }
+        if (step.id === 'motivoDuracao') {
+            a.motivos = selectedChecks('motivos');
+            var outroMotivo = document.getElementById('motivoOutro');
+            if (outroMotivo) a.motivoOutro = outroMotivo.value.trim();
+            if (!a.motivos.length) return fail('Escolhe pelo menos um motivo.');
+            if (a.motivos.indexOf('Outro') !== -1 && !a.motivoOutro) return fail('Conta-nos um pouco mais.');
+            if (!a.duracao) return fail('Indica há quanto tempo sentes isto.');
+        }
+        if (step.id === 'prefs') {
+            if (!a.prefPsicologa) return fail('Escolhe a preferência de psicólogo.');
+            if (!a.horario) return fail('Escolhe o horário que te serve melhor.');
+        }
+        if (step.id === 'historico') {
+            if (!a.terapiaAntes) return fail('Diz-nos se já fizeste terapia.');
+            if (!a.medicacao) return fail('Diz-nos se tomas medicação.');
+            if (!a.diagnostico) return fail('Diz-nos se tens um diagnóstico.');
+            var diagEl = document.getElementById('diagnosticoQual');
+            if (diagEl) a.diagnosticoQual = diagEl.value.trim();
+            if (a.phq.q9 == null || a.phq.q9 === '') return fail('Responde à pergunta das últimas 2 semanas.');
+            if (Number(a.phq.q9) >= 1) flagRiskImmediate(Number(a.phq.q9));
+        }
         if (step.id === 'duracao' && !a.duracao) return fail('Escolhe uma opção para continuar.');
         if (step.id === 'terapiaAntes' && !a.terapiaAntes) return fail('Escolhe uma opção para continuar.');
         if (step.id === 'prefPsicologa' && !a.prefPsicologa) return fail('Escolhe uma opção para continuar.');
-        if (step.id === 'phq') {
-            for (var i = 1; i <= 9; i++) {
-                if (a.phq['q' + i] == null || a.phq['q' + i] === '') return fail('Responde a todas as situações das últimas 2 semanas.');
-            }
-            if (Number(a.phq.q9) >= 1) flagRiskImmediate(Number(a.phq.q9));
-        }
         if (step.id === 'contact') {
             a.nome = String((document.getElementById('nome') || {}).value || '').trim();
             a.email = String((document.getElementById('email') || {}).value || '').trim();
@@ -719,6 +790,14 @@
             a.comunicacoes = !!(document.getElementById('comunicacoes') || {}).checked;
             if (!a.nome) return fail('Indica o teu nome.');
             if (!EMAIL_RE.test(a.email)) return fail('Indica um email válido.');
+            if (!isCasal()) {
+                var idadeEl = document.getElementById('idade');
+                if (idadeEl) a.idade = idadeEl.value;
+                var idadeContacto = Number(a.idade);
+                if (!Number.isFinite(idadeContacto) || idadeContacto < 16 || idadeContacto > 120) {
+                    return fail('Indica uma idade a partir dos 16 anos.');
+                }
+            }
             if (!a.termos) return fail('Aceita os termos para continuar.');
             if (isCasal()) {
                 a.partnerNome = String((document.getElementById('partnerNome') || {}).value || '').trim();
@@ -754,9 +833,7 @@
     function backQuiz() {
         clearAuto();
         if (state.quizIndex <= 0) {
-            if (isCasal() && !state.parceiroConvite) goChoice();
-            else if (isCasal()) goChoice();
-            else goIntro();
+            goChoice();
             return;
         }
         goQuiz(state.quizIndex - 1);
@@ -773,10 +850,8 @@
         var phq = {};
         var total = 0;
         if (!isCasal()) {
-            for (var i = 1; i <= 9; i++) {
-                phq['q' + i] = Number(a.phq['q' + i] || 0);
-                total += phq['q' + i];
-            }
+            phq.q9 = Number(a.phq.q9 || 0);
+            total = phq.q9;
         }
         var payload = {
             nome: a.nome.trim(),
@@ -794,11 +869,11 @@
             riskFlagged: isCasal() ? dvRisk() : state.riskFlagged,
             terapiaAntes: a.terapiaAntes,
             terapiaUtil: null,
-            medicacao: '',
-            diagnostico: '',
-            diagnosticoQual: a.priorNote || null,
+            medicacao: isCasal() ? '' : a.medicacao,
+            diagnostico: isCasal() ? '' : a.diagnostico,
+            diagnosticoQual: isCasal() ? (a.priorNote || null) : (a.diagnosticoQual || null),
             prefPsicologa: a.prefPsicologa ? [a.prefPsicologa] : ['Sem preferência'],
-            horario: 'Sem preferência',
+            horario: a.horario || 'Sem preferência',
             encaminhamento: null,
             consentimentos: {
                 semRiscoImediato: isCasal() ? !dvRisk() : (state.riskFlagged ? true : !!a.semRisco),
@@ -1007,6 +1082,8 @@
                 phq_total: payload.phqTotal,
                 tipo_terapia: payload.tipoTerapia || 'individual'
             });
+            state.submitted = true;
+            if (form) form.setAttribute('data-lon-form-submitted', '1');
             renderMatch(data.match);
             goDone();
         } catch (err) {
@@ -1024,7 +1101,7 @@
         }
         setTipoTerapia(tipo);
         track('triagem_start', { tipo_terapia: state.tipoTerapia });
-        goIntro();
+        goQuiz(0);
     }
 
     function bind() {
@@ -1035,9 +1112,6 @@
         });
         quizMount.addEventListener('pointerdown', function (e) {
             pointerArmed = !!(e.target && e.target.closest && e.target.closest('.tri-opt'));
-        });
-        document.getElementById('matchIntroBtn').addEventListener('click', function () {
-            goQuiz(0);
         });
         quizNext.addEventListener('click', function () {
             advanceQuiz();
@@ -1063,6 +1137,10 @@
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && !emergencyModal.hidden) emergencyModal.hidden = true;
         });
+        window.addEventListener('pagehide', function () {
+            if (state.phase !== 'quiz' || state.submitted) return;
+            track('triagem_exit', currentStepMeta());
+        });
     }
 
     bind();
@@ -1074,7 +1152,7 @@
         startCasalQuiz();
     } else if (urlTipo) {
         setTipoTerapia(urlTipo);
-        goIntro();
+        goQuiz(0);
     } else {
         goChoice();
     }

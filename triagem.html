@@ -13,7 +13,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Questionário de Triagem · Psicologia | Lon Clinic</title>
-    <meta name="description" content="Triagem clínica inicial da LON Clinic. Ajuda-nos a fazer o matching com a psicóloga certa — inclui PHQ-9 adaptado e preferências de acompanhamento.">
+    <meta name="description" content="Triagem clínica inicial da LON Clinic. Ajuda-nos a fazer o matching com a psicóloga certa — inclui pergunta de segurança e preferências de acompanhamento.">
     <meta name="robots" content="index,follow">
     <link rel="canonical" href="https://www.lonclinic.com/triagem">
     <meta property="og:type" content="website">
@@ -24,8 +24,8 @@
     <meta property="og:site_name" content="Lon Clinic">
     <meta name="theme-color" content="#2f453a">
     <link rel="stylesheet" href="/landing.css?v=20260621b">
-    <link rel="stylesheet" href="/psicologia.css?v=20260915b">
-    <link rel="stylesheet" href="/triagem.css?v=20260915i">
+    <link rel="stylesheet" href="/psicologia.css?v=20260915c">
+    <link rel="stylesheet" href="/triagem.css?v=20260915l">
     <link rel="preload" as="image" href="/image/psi-choice-individual.webp" type="image/webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -54,14 +54,14 @@
                             <h2>Individual</h2>
                             <p>Para mim <span aria-hidden="true">→</span></p>
                         </div>
-                        <img src="/image/psi-choice-individual.webp" alt="" width="1152" height="864" decoding="async" fetchpriority="high">
+                        <img src="/image/psi-choice-individual.webp" alt="" width="682" height="1024" decoding="async" fetchpriority="high">
                     </button>
                     <button type="button" class="psi-choice-card psi-choice-card--casal" data-tipo="casal" id="startCasal">
                         <div class="psi-choice-copy">
                             <h2>Casal</h2>
                             <p>Para mim e o meu parceiro <span aria-hidden="true">→</span></p>
                         </div>
-                        <img src="/image/psi-choice-casal.webp" alt="" width="1152" height="864" decoding="async">
+                        <img src="/image/psi-choice-casal.webp" alt="" width="682" height="1024" decoding="async">
                     </button>
                 </div>
                 <p class="psi-choice-crisis">Se estás em crise, liga <a href="tel:112">112</a> ou SNS 24 <a href="tel:808242424">808 24 24 24</a>.</p>
@@ -78,19 +78,11 @@
         <form id="triagemForm" novalidate>
             <input type="hidden" name="tipoTerapia" id="tipoTerapia" value="">
 
-            <section class="triagem-screen" id="screen-match-intro" data-screen="match-intro" hidden>
-                <div class="tri-quiz tri-quiz--intro">
-                    <h1 id="matchIntroTitle">Ajuda-nos a fazer o matching com o psicólogo certo.</h1>
-                    <p id="matchIntroLead">É importante teres alguém com quem consigas estabelecer uma ligação pessoal. As perguntas seguintes ajudam-nos a atribuir um psicólogo com base nas tuas necessidades e preferências.</p>
-                    <button type="button" class="tri-quiz-continue" id="matchIntroBtn">Continuar</button>
-                </div>
-            </section>
-
             <section class="triagem-screen" id="screen-quiz" data-screen="quiz" hidden>
                 <div class="tri-quiz">
                     <div class="tri-quiz-bar">
                         <button type="button" class="tri-quiz-back" id="quizBack" aria-label="Voltar">←</button>
-                        <p class="tri-quiz-count" id="quizCount">1 de 8</p>
+                        <p class="tri-quiz-count" id="quizCount" aria-live="polite">Passo 1 de 4</p>
                     </div>
                     <div class="tri-quiz-meter" aria-hidden="true"><span id="quizMeter"></span></div>
                     <div id="quizMount"></div>
@@ -150,6 +142,7 @@
         <p>© 2026 Lon Clinic · ERS 45475</p>
     </footer>
 
-    <script src="/triagem.js?v=20260915i" defer></script>
+    <script src="/lon-analytics.js?v=20260914a" defer></script>
+    <script src="/triagem.js?v=20260915l" defer></script>
 </body>
 </html>

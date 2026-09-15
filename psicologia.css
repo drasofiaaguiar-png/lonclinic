@@ -424,9 +424,13 @@ button.psi-choice-card {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: 62% center;
+    object-position: center 34%;
     z-index: 0;
     pointer-events: none;
+}
+
+.psi-choice-card--casal img {
+    object-position: center 40%;
 }
 
 .psi-choice-card::after {

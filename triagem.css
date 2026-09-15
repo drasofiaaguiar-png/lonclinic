@@ -159,6 +159,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
 }
 
 .tri-quiz--intro h1,
+.tri-match-intro h1,
 .tri-quiz h2 {
     font-family: "Cormorant Garamond", Georgia, serif;
     font-weight: 600;
@@ -167,22 +168,32 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
     margin: 0 0 12px;
 }
 
-.tri-quiz--intro h1 {
+.tri-quiz--intro h1,
+.tri-match-intro h1 {
     font-size: clamp(1.85rem, 4.5vw, 2.45rem);
     line-height: 1.2;
 }
 
-.tri-quiz h2 {
-    font-size: clamp(1.55rem, 3.8vw, 2rem);
-    line-height: 1.25;
+.tri-match-intro {
+    margin: 0 0 28px;
 }
 
+.tri-match-intro p,
 .tri-quiz--intro p,
 .tri-quiz-why {
     margin: 0 0 28px;
     font-size: 0.98rem;
     line-height: 1.6;
     color: var(--tri-muted);
+}
+
+.tri-match-intro p {
+    margin-bottom: 0;
+}
+
+.tri-quiz h2 {
+    font-size: clamp(1.55rem, 3.8vw, 2rem);
+    line-height: 1.25;
 }
 
 .tri-quiz-bar {
@@ -210,10 +221,10 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
 
 .tri-quiz-count {
     margin: 0;
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    color: var(--tri-muted);
+    font-size: 0.86rem;
+    font-weight: 650;
+    letter-spacing: 0.02em;
+    color: var(--tri-ink);
 }
 
 .tri-quiz-meter {
@@ -227,7 +238,7 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
 .tri-quiz-meter span {
     display: block;
     height: 100%;
-    width: 12.5%;
+    width: 25%;
     background: var(--tri-signal);
     border-radius: 99px;
     transition: width 0.35s ease;
@@ -443,6 +454,11 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--tri-ink);
+}
+
+.tri-quiz h2 + .tri-quiz-why + .tri-opts + .tri-group-title,
+.tri-quiz h2 + .tri-quiz-why + .tri-group-title {
+    margin-top: 26px;
 }
 
 .tri-field textarea {

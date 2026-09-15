@@ -11098,7 +11098,10 @@ function guessStaffGender(name) {
 }
 
 function preferredStaffGender(genero, prefs) {
-    const list = Array.isArray(prefs) ? prefs : [];
+    const list = Array.isArray(prefs) ? prefs : [prefs];
+    const blob = list.map((p) => String(p || '')).join(' ');
+    if (/mulher/i.test(blob)) return 'f';
+    if (/\bhomem\b/i.test(blob)) return 'm';
     if (!list.some((p) => /mesmo g[eé]nero/i.test(String(p || '')))) return '';
     if (/^Feminino/i.test(String(genero || ''))) return 'f';
     if (/^Masculino/i.test(String(genero || ''))) return 'm';
@@ -11118,6 +11121,12 @@ function slotsInPreferredWindow(slots, horario) {
         return list.filter((s) => {
             const mins = timeToMinutes(s && s.time);
             return mins != null && mins >= 12 * 60 && mins < 17 * 60;
+        });
+    }
+    if (/Fim do dia|Noite|depois das 17/i.test(label)) {
+        return list.filter((s) => {
+            const mins = timeToMinutes(s && s.time);
+            return mins != null && mins >= 17 * 60;
         });
     }
     return list;
@@ -11257,7 +11266,6 @@ async function matchPsychologistsForTriagem(payload) {
 
 function formatTriagemEmail(data) {
     const isCasal = String(data.tipoTerapia || '') === 'casal';
-    const phq = data.phq || {};
     const motivos = Array.isArray(data.motivos) ? data.motivos.join(', ') : '';
     const expect = Array.isArray(data.expect) ? data.expect.join(', ') : '';
     const risk = data.riskFlagged || (!isCasal && Number(data.phq9) >= 1);
@@ -11317,10 +11325,8 @@ function formatTriagemEmail(data) {
             `Motivos: ${motivos}`,
             `Duração: ${data.duracao}`,
             '',
-            '── PHQ-9 ──',
-            `Q1–Q9: ${[1,2,3,4,5,6,7,8,9].map((n) => phq['q' + n]).join(', ')}`,
-            `Total: ${data.phqTotal}`,
-            `Q9 (risco): ${data.phq9}`,
+            '── Segurança ──',
+            `Q9 (ideação, 2 semanas): ${data.phq9}`,
             `Flag prioridade: ${risk ? 'SIM' : 'não'}`,
             '',
             '── Histórico ──',
@@ -11523,14 +11529,12 @@ app.post('/api/triagem', rateLimitTriagem, async (req, res) => {
     let phqTotal = 0;
     const phqNorm = {};
     if (!isCasal) {
-        for (let i = 1; i <= 9; i++) {
-            const v = Number(phq['q' + i]);
-            if (!Number.isFinite(v) || v < 0 || v > 3) {
-                return res.status(400).json({ error: 'PHQ-9 incompleto.' });
-            }
-            phqNorm['q' + i] = v;
-            phqTotal += v;
+        const q9 = Number(phq.q9 ?? body.phq9);
+        if (!Number.isFinite(q9) || q9 < 0 || q9 > 3) {
+            return res.status(400).json({ error: 'Pergunta de segurança incompleta.' });
         }
+        phqNorm.q9 = q9;
+        phqTotal = q9;
     }
 
     const partnerNome = String(body.parceiro?.nome || '').trim().slice(0, 120);
