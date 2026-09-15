@@ -2047,6 +2047,8 @@ async function deleteStaffGoogleCalendarInternal(username) {
     return staffGoogleCalStore.delete(u);
 }
 
+const googleBusyInflight = new Map();
+
 async function googleBusyBlocksForStaff(username, dateIso, forceRefresh) {
     const u = String((username || '')).trim().toLowerCase();
     if (!u || !googleCalendar.isConfigured()) return [];
@@ -2054,6 +2056,15 @@ async function googleBusyBlocksForStaff(username, dateIso, forceRefresh) {
     if (!link || !link.refreshToken) return [];
     const cached = forceRefresh ? null : googleCalendar.cachedBusy(u);
     if (cached) return cached;
+    if (!forceRefresh && googleBusyInflight.has(u)) return googleBusyInflight.get(u);
+    const pending = googleBusyBlocksForStaffUncached(u, link).finally(() => {
+        googleBusyInflight.delete(u);
+    });
+    googleBusyInflight.set(u, pending);
+    return pending;
+}
+
+async function googleBusyBlocksForStaffUncached(u, link) {
     const tz = scheduleStore.timezone || 'Europe/Lisbon';
     const today = lisbonNowParts().dateIso;
     const fromMs = localWallTimeToUtcMs(today, '00:00', tz);
@@ -7396,16 +7407,26 @@ function computeSmartGroupedSlotTimes(allSlots, bookingsForDate, slotDurationMin
     return [...new Set(result)].sort((a, b) => allSlots.indexOf(a) - allSlots.indexOf(b));
 }
 
+const bookingsByDateCache = new Map();
+const BOOKINGS_DATE_TTL_MS = 8 * 1000;
+
 async function fetchBookingsForDateIso(dateIso) {
+    const key = String(dateIso || '');
+    const hit = bookingsByDateCache.get(key);
+    if (hit && Date.now() - hit.ts < BOOKINGS_DATE_TTL_MS) return hit.rows;
+    let rows;
     if (usePersistentDb) {
         try {
-            return await db.listBookingsForDateIso(dateIso);
+            rows = await db.listBookingsForDateIso(dateIso);
         } catch (err) {
             console.error('fetchBookingsForDateIso:', err.message);
-            return [];
+            rows = [];
         }
+    } else {
+        rows = bookingsStore.filter((b) => !b.cancelled && inferDateIsoFromBooking(b) === dateIso);
     }
-    return bookingsStore.filter((b) => !b.cancelled && inferDateIsoFromBooking(b) === dateIso);
+    bookingsByDateCache.set(key, { ts: Date.now(), rows });
+    return rows;
 }
 
 /** Times already locked by an admin-issued invitation that is still awaiting payment. */
@@ -7445,6 +7466,7 @@ function parseSlotId(raw) {
 
 function invalidateNextSlotsCache() {
     nextSlotsCache.clear();
+    bookingsByDateCache.clear();
 }
 
 function nextSlotsCacheKeyFromReq(req) {
@@ -7880,22 +7902,27 @@ async function getStaffBookableSlotsForDate(dateIso, opts) {
     const service = bookingServiceTag((opts && opts.service) || 'psicologia');
     const specialty = String((opts && opts.specialty) || '').trim().toLowerCase();
     const wantId = Number(opts && opts.professionalId);
-    const people = await listStaffBookablePeople(service, specialty);
+    const people = Array.isArray(opts && opts.people) && opts.people.length
+        ? opts.people
+        : await listStaffBookablePeople(service, specialty);
     const chosen = Number.isInteger(wantId) && wantId > 0
         ? people.filter((p) => p.id === wantId)
         : people;
     const professionalsByTime = {};
     const availableSet = new Set();
-    for (const person of chosen) {
-        const times = await slotsForStaffPersonOnDate(
+    const perPerson = await Promise.all(chosen.map(async (person) => ({
+        person,
+        times: await slotsForStaffPersonOnDate(
             person,
             dateIso,
             service,
             opts && opts.excludeHoldId,
             opts && opts.excludeBookingRef
-        );
-        const card = publicStaffBookingCard(person);
-        for (const time of times) {
+        )
+    })));
+    for (const row of perPerson) {
+        const card = publicStaffBookingCard(row.person);
+        for (const time of row.times) {
             availableSet.add(time);
             if (!professionalsByTime[time]) professionalsByTime[time] = [];
             professionalsByTime[time].push(card);
@@ -8023,16 +8050,17 @@ async function getNextBookableSlots(limit, maxDays, withinHours, opts) {
     const service = bookingServiceTag((opts && opts.service) || '');
     const specialty = staffBooking.specialtyForService(service, (opts && opts.specialty) || '');
     const wantId = Number(opts && opts.professionalId);
-    let staffPeople = staffBooking.usesStaffCalendars(service)
-        ? await listStaffBookablePeople(service, specialty)
-        : [];
+    let staffPeople = Array.isArray(opts && opts.people) && opts.people.length
+        ? opts.people.slice()
+        : (staffBooking.usesStaffCalendars(service)
+            ? await listStaffBookablePeople(service, specialty)
+            : []);
     if (Number.isInteger(wantId) && wantId > 0) {
         staffPeople = staffPeople.filter((p) => p.id === wantId);
     }
     const staffMode = staffPeople.length > 0;
     const mustStaff = staffBooking.requiresProfessionalChoice(service);
-    const pool = [];
-    for (let i = 0; i < days; i++) {
+    const dayPacks = await Promise.all(Array.from({ length: days }, async (_, i) => {
         const dateIso = addDaysIso(now.dateIso, i);
         let available = [];
         let professionalsByTime = {};
@@ -8040,15 +8068,18 @@ async function getNextBookableSlots(limit, maxDays, withinHours, opts) {
             const packed = await getStaffBookableSlotsForDate(dateIso, {
                 service,
                 specialty,
-                professionalId: Number.isInteger(wantId) && wantId > 0 ? wantId : null
+                professionalId: Number.isInteger(wantId) && wantId > 0 ? wantId : null,
+                people: staffPeople
             });
             available = packed.available || [];
             professionalsByTime = packed.professionalsByTime || {};
         } else if (mustStaff) {
-            continue;
+            return { i, dateIso, available: [], professionalsByTime: {} };
         } else {
             const daySchedule = getEffectiveDaySchedule(dateIso);
-            if (!daySchedule || !daySchedule.enabled) continue;
+            if (!daySchedule || !daySchedule.enabled) {
+                return { i, dateIso, available: [], professionalsByTime: {} };
+            }
             available = await getBookableSlotsForDateIso(dateIso, null, null, false);
         }
         if (i === 0) {
@@ -8058,13 +8089,17 @@ async function getNextBookableSlots(limit, maxDays, withinHours, opts) {
                 return mins != null && mins > cutoff;
             });
         }
-        for (const time of available) {
-            const start = localWallTimeToUtcMs(dateIso, time, tz);
+        return { i, dateIso, available, professionalsByTime };
+    }));
+    const pool = [];
+    for (const day of dayPacks.sort((a, b) => a.i - b.i)) {
+        for (const time of day.available) {
+            const start = localWallTimeToUtcMs(day.dateIso, time, tz);
             if (Number.isFinite(start) && start > horizonMs) continue;
-            const pros = professionalsByTime[time] || [];
+            const pros = day.professionalsByTime[time] || [];
             pool.push({
-                id: slotIdFromDateTime(dateIso, time),
-                date: dateIso,
+                id: slotIdFromDateTime(day.dateIso, time),
+                date: day.dateIso,
                 time,
                 professionalId: pros.length === 1 ? pros[0].id : null,
                 professionals: pros
@@ -10054,6 +10089,7 @@ app.get('/llms-full.txt', (req, res) => {
 // Block source, data, scripts, and other non-public artifacts from static serving.
 app.use((req, res, next) => {
     const p = (req.path || '').split('?')[0].toLowerCase();
+    if (p.startsWith('/api/')) return next();
     const deniedPrefixes = [
         '/data/', '/scripts/', '/.cursor/', '/.github/', '/node_modules/', '/uploads/'
     ];
@@ -11095,6 +11131,50 @@ function triagemBookHref({ specialty, professionalId, date, time, service }) {
     return `/marcar/${slug}?${params.toString()}`;
 }
 
+async function nextTriagemSlotsByPerson(people, service, specialty, horario) {
+    const byId = new Map();
+    for (const person of people) byId.set(Number(person.id), []);
+    if (!people.length) return byId;
+    const now = lisbonNowParts();
+    const tz = scheduleStore.timezone || 'Europe/Lisbon';
+    const days = 8;
+    const horizonMs = Date.now() + 192 * 60 * 60 * 1000;
+    await Promise.all(people.map((person) => googleBusyBlocksForStaff(person.username, now.dateIso, false)));
+    const dayPacks = await Promise.all(Array.from({ length: days }, async (_, i) => {
+        const dateIso = addDaysIso(now.dateIso, i);
+        const packed = await getStaffBookableSlotsForDate(dateIso, { service, specialty, people });
+        return { i, dateIso, packed };
+    }));
+    dayPacks.sort((a, b) => a.i - b.i);
+    for (const day of dayPacks) {
+        let times = day.packed.available || [];
+        if (day.i === 0) {
+            const cutoff = now.minutes + 15;
+            times = times.filter((t) => {
+                const mins = timeToMinutes(t);
+                return mins != null && mins > cutoff;
+            });
+        }
+        const byTime = day.packed.professionalsByTime || {};
+        for (const time of times) {
+            const start = localWallTimeToUtcMs(day.dateIso, time, tz);
+            if (Number.isFinite(start) && start > horizonMs) continue;
+            for (const pro of byTime[time] || []) {
+                const id = Number(pro.id);
+                const list = byId.get(id);
+                if (!list || list.length >= 24) continue;
+                if (list.some((s) => s.date === day.dateIso && s.time === time)) continue;
+                list.push({ date: day.dateIso, time, id: slotIdFromDateTime(day.dateIso, time) });
+            }
+        }
+    }
+    for (const [id, list] of byId) {
+        const preferred = slotsInPreferredWindow(list, horario);
+        byId.set(id, preferred.length ? preferred : list);
+    }
+    return byId;
+}
+
 async function matchPsychologistsForTriagem(payload) {
     const isCasal = String(payload && payload.tipoTerapia || '').toLowerCase() === 'casal';
     const service = isCasal ? 'terapia_casal_mensal' : 'psicologia_mensal';
@@ -11120,16 +11200,17 @@ async function matchPsychologistsForTriagem(payload) {
         return String(a.displayName || '').localeCompare(String(b.displayName || ''), 'pt');
     });
 
+    const want = isCasal ? 1 : 3;
+    const candidates = people.slice(0, isCasal ? 1 : 6);
+    const slotsById = await nextTriagemSlotsByPerson(
+        candidates,
+        service,
+        specialtyQuery || 'outro',
+        payload && payload.horario
+    );
     const psychologists = [];
-    for (const person of people) {
-        if (psychologists.length >= (isCasal ? 1 : 3)) break;
-        const rawSlots = await getNextBookableSlots(6, 14, 336, {
-            service,
-            specialty: specialtyQuery || 'outro',
-            professionalId: person.id
-        });
-        const preferred = slotsInPreferredWindow(rawSlots, payload && payload.horario);
-        const useSlots = preferred.length ? preferred : rawSlots;
+    for (const person of candidates) {
+        const useSlots = slotsById.get(Number(person.id)) || [];
         if (!useSlots.length && !isCasal) continue;
         const card = publicStaffBookingCard(person);
         psychologists.push({
@@ -11152,6 +11233,7 @@ async function matchPsychologistsForTriagem(payload) {
                 })
             }))
         });
+        if (psychologists.length >= want) break;
     }
     if (isCasal) {
         psychologists.splice(1);
@@ -11160,7 +11242,7 @@ async function matchPsychologistsForTriagem(payload) {
                 id: 0,
                 name: 'Dra. Carolina Rocha',
                 bio: 'Psicóloga · terapia de casal',
-                photoUrl: '',
+                photoUrl: '/api/public/team-photo/carolina',
                 hoursLabel: '',
                 href: triagemBookHref({ specialty: 'casal', service }),
                 slots: []
@@ -11314,30 +11396,27 @@ async function sendTriagemSubmission(data) {
             html: `<pre style="font-family:system-ui,sans-serif;font-size:14px;line-height:1.5;white-space:pre-wrap">${text.replace(/</g, '&lt;')}</pre>`
         });
 
-        if (data.email) {
-            try {
-                await deliverEmail({
-                    from: EMAIL_FROM,
-                    to: data.email,
-                    subject: isCasal ? 'Recebemos a vossa triagem de casal — LON Clinic' : 'Recebemos a tua triagem — LON Clinic',
-                    text: isCasal
-                        ? `Olá ${data.nome},\n\nRecebemos o questionário de triagem de casal. A terapia de casal é com a Dra. Carolina Rocha.\n\n${data.invitePartner ? 'Enviámos o questionário para o email do teu par.\n\n' : ''}Se estiveres em perigo imediato: 112 · APAV 116 006.\n\nLON Clinic`
-                        : `Olá ${data.nome},\n\nRecebemos o teu questionário de triagem. A equipa clínica vai rever as respostas e contactar-te em breve.\n\nSe estiveres em risco imediato: 112 · SNS 24 808 24 24 24 · SOS Voz Amiga 213 544 545.\n\nLON Clinic`,
-                    html: isCasal
-                        ? `<p>Olá ${String(data.nome).replace(/</g, '&lt;')},</p><p>Recebemos o questionário de triagem de casal. A terapia de casal é com a Dra. Carolina Rocha.</p>${data.invitePartner ? '<p>Enviámos o questionário para o email do teu par.</p>' : ''}<p>Se estiveres em perigo imediato: <strong>112</strong> · APAV <strong>116 006</strong>.</p><p>LON Clinic</p>`
-                        : `<p>Olá ${String(data.nome).replace(/</g, '&lt;')},</p><p>Recebemos o teu questionário de triagem. A equipa clínica vai rever as respostas e contactar-te em breve.</p><p>Se estiveres em risco imediato: <strong>112</strong> · SNS 24 <strong>808 24 24 24</strong> · SOS Voz Amiga <strong>213 544 545</strong>.</p><p>LON Clinic</p>`
-                });
-            } catch (replyErr) {
+        const replyTask = data.email
+            ? deliverEmail({
+                from: EMAIL_FROM,
+                to: data.email,
+                subject: isCasal ? 'Recebemos a vossa triagem de casal — LON Clinic' : 'Recebemos a tua triagem — LON Clinic',
+                text: isCasal
+                    ? `Olá ${data.nome},\n\nRecebemos o questionário de triagem de casal. A terapia de casal é com a Dra. Carolina Rocha.\n\n${data.invitePartner ? 'Enviámos o questionário para o email do teu par.\n\n' : ''}Se estiveres em perigo imediato: 112 · APAV 116 006.\n\nLON Clinic`
+                    : `Olá ${data.nome},\n\nRecebemos o teu questionário de triagem. A equipa clínica vai rever as respostas e contactar-te em breve.\n\nSe estiveres em risco imediato: 112 · SNS 24 808 24 24 24 · SOS Voz Amiga 213 544 545.\n\nLON Clinic`,
+                html: isCasal
+                    ? `<p>Olá ${String(data.nome).replace(/</g, '&lt;')},</p><p>Recebemos o questionário de triagem de casal. A terapia de casal é com a Dra. Carolina Rocha.</p>${data.invitePartner ? '<p>Enviámos o questionário para o email do teu par.</p>' : ''}<p>Se estiveres em perigo imediato: <strong>112</strong> · APAV <strong>116 006</strong>.</p><p>LON Clinic</p>`
+                    : `<p>Olá ${String(data.nome).replace(/</g, '&lt;')},</p><p>Recebemos o teu questionário de triagem. A equipa clínica vai rever as respostas e contactar-te em breve.</p><p>Se estiveres em risco imediato: <strong>112</strong> · SNS 24 <strong>808 24 24 24</strong> · SOS Voz Amiga <strong>213 544 545</strong>.</p><p>LON Clinic</p>`
+            }).catch((replyErr) => {
                 console.error('   ⚠️  Triagem auto-reply failed:', replyErr.message);
-            }
-        }
-        if (isCasal && data.invitePartner) {
-            try {
-                await sendTriagemPartnerInvite(data);
-            } catch (inviteErr) {
+            })
+            : Promise.resolve();
+        const inviteTask = isCasal && data.invitePartner
+            ? sendTriagemPartnerInvite(data).catch((inviteErr) => {
                 console.error('   ⚠️  Partner invite failed:', inviteErr.message);
-            }
-        }
+            })
+            : Promise.resolve();
+        await Promise.all([replyTask, inviteTask]);
         return true;
     } catch (err) {
         console.error('   ❌ Triagem email failed:', err.message);
@@ -11359,6 +11438,50 @@ app.post('/api/triagem-alert', rateLimitTriagemAlert, async (req, res) => {
         partial: Boolean(req.body?.partial)
     });
     return res.json({ success: true });
+});
+
+async function sendTriagemNoSlotFollowup(data) {
+    const isCasal = String(data.tipoTerapia || '').toLowerCase() === 'casal';
+    const nome = String(data.nome || '').trim() || 'sem nome';
+    const email = String(data.email || '').trim() || 'sem email';
+    const text = [
+        'Triagem — nenhum horário adequado',
+        '',
+        `Nome: ${nome}`,
+        `Email: ${email}`,
+        `Tipo: ${isCasal ? 'casal' : 'individual'}`,
+        '',
+        'A pessoa pediu para ser contactada ainda hoje: nenhum dos horários sugeridos servia.'
+    ].join('\n');
+    console.log('   📋 Triagem no-slot followup:', email, isCasal ? 'casal' : 'individual');
+    if (!isEmailConfigured) return false;
+    try {
+        await deliverEmail({
+            from: EMAIL_FROM,
+            to: CONTACT_EMAIL,
+            replyTo: email.includes('@') ? email : undefined,
+            subject: `Triagem — contactar hoje (sem horário) — ${nome}`,
+            text,
+            html: `<pre style="font-family:system-ui,sans-serif;white-space:pre-wrap">${text.replace(/</g, '&lt;')}</pre>`
+        });
+        return true;
+    } catch (err) {
+        console.error('   ❌ Triagem no-slot email failed:', err.message);
+        return false;
+    }
+}
+
+app.post('/api/triagem-noslot', rateLimitTriagemAlert, async (req, res) => {
+    const nome = String(req.body?.nome || '').trim().slice(0, 120);
+    const email = String(req.body?.email || '').trim().toLowerCase().slice(0, 160);
+    const tipoTerapia = String(req.body?.tipoTerapia || '').toLowerCase() === 'casal' ? 'casal' : 'individual';
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+        return res.status(400).json({ error: 'Email inválido.' });
+    }
+    res.json({ success: true });
+    sendTriagemNoSlotFollowup({ nome, email, tipoTerapia }).catch((err) => {
+        console.error('triagem no-slot background:', err && err.message ? err.message : err);
+    });
 });
 
 app.post('/api/triagem', rateLimitTriagem, async (req, res) => {
@@ -11472,13 +11595,11 @@ app.post('/api/triagem', rateLimitTriagem, async (req, res) => {
     }
     payload.match = match;
 
-    const sent = await sendTriagemSubmission(payload);
-    if (!sent) {
-        return res.status(503).json({ error: 'Não foi possível enviar de momento. Tenta novamente.' });
-    }
-
+    res.json({ success: true, riskFlagged, match });
     emitServerAnalytics('triage_submitted', { props: { flagged: !!riskFlagged } }, req).catch(() => {});
-    return res.json({ success: true, riskFlagged, match });
+    sendTriagemSubmission(payload).catch((err) => {
+        console.error('triagem email background:', err && err.message ? err.message : err);
+    });
 });
 
 // ─── API: Burnout quiz (CBI) — save result + email ───

@@ -655,6 +655,11 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
     z-index: 1;
 }
 
+.triagem-match-avatar:has(img) .triagem-match-fallback,
+.triagem-intro-photo:has(img) .triagem-intro-fallback {
+    display: none;
+}
+
 .triagem-intro-fallback,
 .triagem-match-avatar .triagem-match-fallback {
     position: absolute;
@@ -1209,6 +1214,44 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
 
 .triagem-match-card .lon-btn-primary:hover {
     background: #24362e;
+}
+
+.triagem-noslot {
+    text-align: center;
+}
+
+.triagem-noslot-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 13px 18px;
+    border: 0;
+    border-radius: 999px;
+    background: #c46a3a;
+    color: #fffaf6;
+    font: inherit;
+    font-size: 0.92rem;
+    font-weight: 650;
+    cursor: pointer;
+}
+
+.triagem-noslot-cta:hover {
+    background: #a8562e;
+}
+
+.triagem-noslot-cta[hidden] {
+    display: none;
+}
+
+.triagem-noslot-note {
+    margin: 0;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: #eef4ef;
+    color: var(--tri-ink);
+    font-size: 0.95rem;
+    line-height: 1.5;
 }
 
 .triagem-done-actions {

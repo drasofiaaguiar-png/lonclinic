@@ -84,6 +84,7 @@
         quizIndex: 0,
         riskFlagged: false,
         riskNotified: false,
+        noSlotAsked: false,
         tipoTerapia: 'individual',
         parceiroConvite: false,
         genderExpanded: false,
@@ -945,6 +946,44 @@
                 '<a class="lon-btn lon-btn-primary" href="' + escapeHtml(pro.href || fallbackHref) + '">Marcar consulta</a>';
             wrap.appendChild(article);
         });
+
+        var noslot = document.createElement('div');
+        noslot.className = 'triagem-noslot';
+        noslot.innerHTML =
+            '<button type="button" class="triagem-noslot-cta" id="noSlotCta">Nenhum destes horários é adequado</button>' +
+            '<p class="triagem-noslot-note" id="noSlotNote" hidden tabindex="-1">' +
+            (isCasal()
+                ? 'A nossa equipa contacta-vos ainda hoje para encontrar um horário que vos sirva.'
+                : 'A nossa equipa contacta-te ainda hoje para encontrar um horário que te sirva.') +
+            '</p>';
+        wrap.appendChild(noslot);
+        var cta = document.getElementById('noSlotCta');
+        if (cta) cta.addEventListener('click', requestNoSlotFollowup);
+    }
+
+    function requestNoSlotFollowup() {
+        if (state.noSlotAsked) return;
+        state.noSlotAsked = true;
+        var cta = document.getElementById('noSlotCta');
+        var note = document.getElementById('noSlotNote');
+        if (cta) cta.hidden = true;
+        if (note) {
+            note.hidden = false;
+            if (typeof note.focus === 'function') note.focus();
+        }
+        track('triagem_no_slot', { tipo_terapia: state.tipoTerapia || 'individual' });
+        try {
+            fetch('/api/triagem-noslot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nome: String(state.answers.nome || '').slice(0, 120),
+                    email: String(state.answers.email || '').slice(0, 160),
+                    tipoTerapia: state.tipoTerapia || 'individual'
+                }),
+                keepalive: true
+            }).catch(function () { /* non-blocking */ });
+        } catch (err) { /* ignore */ }
     }
 
     async function submitQuiz() {
