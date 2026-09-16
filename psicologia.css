@@ -361,6 +361,14 @@ body.lon-landing.psi-landing {
     color: #fbf9f2;
 }
 
+.psi-choice-subtitle {
+    margin: 0 0 24px;
+    font-size: clamp(0.88rem, 1.5vw, 1.05rem);
+    font-weight: 500;
+    line-height: 1.4;
+    color: rgba(247, 244, 234, 0.75);
+}
+
 .psi-choice-q {
     margin: 0 0 28px;
     font-size: clamp(0.95rem, 1.6vw, 1.12rem);
@@ -385,7 +393,7 @@ button.psi-choice-card {
     display: block;
     isolation: isolate;
     overflow: hidden;
-    min-height: 210px;
+    min-height: 280px;
     border: 0;
     border-radius: 18px;
     text-align: left;
@@ -516,7 +524,7 @@ button.psi-choice-card {
     }
 
     .psi-choice-card {
-        min-height: 188px;
+        min-height: 250px;
     }
 
     .psi-choice-crisis {
@@ -531,7 +539,7 @@ button.psi-choice-card {
     }
 
     .psi-choice-card {
-        min-height: 236px;
+        min-height: 320px;
     }
 }
 
