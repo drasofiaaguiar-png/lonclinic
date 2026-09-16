@@ -1831,7 +1831,7 @@ function magazineSectionByTheme(theme) {
 
 function magazineSectionPath(slug) {
     const section = magazineSectionBySlug(slug);
-    return section ? `/magazine/${section.slug}` : '/magazine';
+    return section ? `/magazine#${section.slug}` : '/magazine';
 }
 
 function magTheme(article) {
