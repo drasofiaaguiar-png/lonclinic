@@ -1675,6 +1675,13 @@ textarea:focus {
     margin-bottom: 10px;
 }
 
+.lon-service-desc {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.82rem;
+    line-height: 1.4;
+    margin: 0 0 12px;
+}
+
 .lon-service-card .lon-btn {
     align-self: flex-start;
     background: rgba(255, 255, 255, 0.88);
@@ -4524,6 +4531,13 @@ body.lon-home .dr-hero {
     margin: 0;
     font-size: 0.84rem;
     color: var(--lon-muted);
+}
+
+.lon-home .lon-need-offer-desc {
+    margin: 4px 0 0;
+    font-size: 0.82rem;
+    color: var(--lon-muted);
+    opacity: 0.85;
 }
 
 .lon-home .lon-need-offer .lon-btn {
