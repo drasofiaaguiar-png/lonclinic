@@ -1713,9 +1713,16 @@ html.lenis body {
 .psi-stories-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 24px;
-    max-width: 820px;
+    gap: 28px;
+    max-width: 1100px;
     margin: 0 auto;
+}
+
+@media (min-width: 800px) {
+    .psi-stories-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+    }
 }
 
 .psi-story-card {
