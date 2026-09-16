@@ -1034,24 +1034,30 @@ html.lenis body {
 }
 
 .psi-path-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 20px 28px;
-    margin-bottom: 40px;
+    text-align: center;
+    margin-bottom: 52px;
 }
 
 .psi-path-head h2 {
-    margin: 0;
-    max-width: 12ch;
+    margin: 0 auto;
+    max-width: 18ch;
     font-size: clamp(2.4rem, 5vw, 3.8rem);
 }
 
 .psi-path-grid {
     display: grid;
-    gap: 18px;
+    gap: 24px;
     grid-template-columns: 1fr;
+    margin-bottom: 48px;
+}
+
+.psi-path-cta {
+    text-align: center;
+}
+
+.psi-path-cta .lon-btn {
+    padding: 16px 36px;
+    font-size: 1.05rem;
 }
 
 @media (min-width: 860px) {
@@ -1078,16 +1084,19 @@ html.lenis body {
     box-shadow: 0 20px 48px rgba(42, 44, 28, 0.1);
 }
 
-.psi-path-illu {
-    height: 120px;
-    margin-bottom: 18px;
+.psi-path-number {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 2.5rem;
+    font-weight: 600;
     color: var(--psi-olive-deep);
-    opacity: 0.72;
-}
-
-.psi-path-illu svg {
-    width: 100%;
-    height: 100%;
+    background: rgba(159, 176, 74, 0.12);
+    border-radius: 50%;
 }
 
 .psi-path-card h3 {
@@ -1102,6 +1111,13 @@ html.lenis body {
     color: var(--psi-muted);
     line-height: 1.6;
     font-size: 0.98rem;
+}
+
+@media (min-width: 800px) {
+    .psi-path-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+    }
 }
 
 /* Support + phone */
