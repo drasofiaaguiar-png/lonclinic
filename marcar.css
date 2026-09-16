@@ -1608,3 +1608,10 @@
     color: var(--marcar-muted);
     font-weight: 500;
 }
+
+/* Hide top Trustpilot section on mobile - it appears in the step flow instead */
+@media (max-width: 767px) {
+    .marcar-proof {
+        display: none !important;
+    }
+}

@@ -1529,3 +1529,10 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
     color: var(--tri-muted);
     font-weight: 500;
 }
+
+/* Hide top Trustpilot section on mobile - it appears in the step flow instead */
+@media (max-width: 767px) {
+    .triagem-proof {
+        display: none !important;
+    }
+}
