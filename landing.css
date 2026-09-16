@@ -1869,6 +1869,12 @@ textarea:focus {
     margin: 0;
 }
 
+.lon-testimonials-subtitle {
+    font-size: 0.9rem;
+    color: #5a6b5d;
+    margin: 8px 0 0;
+}
+
 .lon-tp-badge {
     display: inline-flex;
     align-items: center;
