@@ -119,6 +119,42 @@ const AUTHORS = {
             { label: 'Ordem dos Nutricionistas (registo nacional)', href: ON_SEARCH_URL, external: true }
         ],
         sameAs: ['https://www.linkedin.com/in/sara-barreto-76459528b']
+    },
+    'carolina-rocha': {
+        slug: 'carolina-rocha',
+        honorific: 'Dra.',
+        givenName: 'Carolina',
+        familyName: 'Rocha',
+        displayName: 'Dra. Carolina Rocha',
+        jobTitle: 'Psicóloga',
+        initials: 'CR',
+        worksFor: 'Lon Clinic',
+        memberOf: 'Ordem dos Psicólogos Portugueses',
+        memberOfUrl: 'https://www.ordemdospsicologos.pt/',
+        schemaTypes: ['Person', 'Psychologist'],
+        photoKey: 'carolina',
+        bookHref: '/triagem?tipo=casal',
+        guidesHref: '/saudemental',
+        guidesLabel: 'Ver consultas de psicologia',
+        knowsAbout: [
+            'Terapia de casal',
+            'Psicologia clínica',
+            'Relações interpessoais'
+        ],
+        credentials: [
+            'Cédula profissional da Ordem dos Psicólogos Portugueses',
+            'Especialização em terapia de casal'
+        ],
+        shortBio: 'Psicóloga inscrita na Ordem dos Psicólogos Portugueses, especializada em terapia de casal.',
+        longBio: [
+            'Sou psicóloga e acompanho casais que procuram fortalecer a sua relação, melhorar a comunicação e resolver conflitos de forma construtiva.',
+            'Inscrita na Ordem dos Psicólogos Portugueses, especializada em terapia de casal. O acompanhamento é focado em criar um espaço seguro onde ambos os parceiros podem expressar-se e trabalhar em conjunto para uma relação mais saudável.'
+        ],
+        profiles: [
+            { label: 'Perfil na Lon Clinic', href: '/equipa/carolina-rocha', external: false },
+            { label: 'Ordem dos Psicólogos Portugueses', href: 'https://www.ordemdospsicologos.pt/', external: true }
+        ],
+        sameAs: []
     }
 };
 
@@ -414,6 +450,7 @@ function renderTeamPage(origin, extras) {
     const o = originOf(origin);
     const rita = getAuthor('rita-aguiar');
     const barreto = getAuthor('sara-barreto');
+    const carolina = getAuthor('carolina-rocha');
     const saraBio = String((extras && extras.saraBio) || SARA_PUBLIC_BIO).trim();
     const saraParas = (saraBio || SARA_PUBLIC_BIO)
         .split(/\n{2,}/)
@@ -423,11 +460,13 @@ function renderTeamPage(origin, extras) {
     const barretoParas = (barretoBio
         ? barretoBio.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean)
         : barreto.longBio);
+    const carolinaParas = carolina.longBio;
     const ritaParas = rita.longBio.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
     const saraParasHtml = saraParas.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
     const barretoParasHtml = barretoParas.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
+    const carolinaParasHtml = carolinaParas.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
     const title = 'A Equipa | Lon Clinic';
-    const description = 'A equipa clínica da Lon Clinic — Dra. Rita Aguiar (médica), Dra. Sara Barreto (nutricionista) e Dra. Sara Gamito (psicóloga).';
+    const description = 'A equipa clínica da Lon Clinic — Dra. Rita Aguiar (médica), Dra. Sara Barreto (nutricionista), Dra. Sara Gamito (psicóloga) e Dra. Carolina Rocha (psicóloga, terapia de casal).';
     const url = canonicalHref('/equipa');
     const jsonLd = jsonLdScript([
         {
@@ -441,6 +480,7 @@ function renderTeamPage(origin, extras) {
         },
         personJsonLd(o, rita.slug),
         personJsonLd(o, barreto.slug),
+        personJsonLd(o, carolina.slug),
         organizationJsonLd(o)
     ]);
 
@@ -542,6 +582,21 @@ function renderTeamPage(origin, extras) {
                             ${saraParasHtml}
                             <div class="lon-team-actions">
                                 <a class="lon-btn lon-btn-dark lon-btn-sm" data-cta="book" href="/marcar/psicologia-mensal">Marcar consulta →</a>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="lon-team-card" id="equipa-carolina">
+                        <div class="lon-team-card-media">${avatarHtml(carolina.initials, teamPhotoUrl(carolina.photoKey), carolina.displayName)}</div>
+                        <div class="lon-team-card-body">
+                            <h2 class="lon-team-name">${escapeHtml(carolina.displayName)}</h2>
+                            <p class="lon-team-role">${escapeHtml(carolina.jobTitle)} · Terapia de casal</p>
+                            ${carolinaParasHtml}
+                            <h3>Credenciais</h3>
+                            <ul class="lon-team-credentials">${carolina.credentials.map((c) => `<li>${escapeHtml(c)}</li>`).join('')}</ul>
+                            <p class="lon-team-verify">${profileLinksHtml(carolina, { includeSelf: false })}</p>
+                            <div class="lon-team-actions">
+                                <a class="lon-btn lon-btn-soft" href="/equipa/carolina-rocha">Perfil e credenciais →</a>
+                                <a class="lon-btn lon-btn-dark lon-btn-sm" data-cta="book" href="${escapeHtml(carolina.bookHref)}">Marcar consulta →</a>
                             </div>
                         </div>
                     </article>
