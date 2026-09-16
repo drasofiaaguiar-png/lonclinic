@@ -102,6 +102,7 @@
             phq: {},
             nome: '',
             email: '',
+            telefone: '',
             partnerNome: '',
             partnerEmail: '',
             invitePartner: '',
@@ -568,13 +569,14 @@
         html += eyebrow(isCasal() ? 'Último passo' : '');
         html += '<h2>Quase lá.</h2>';
         if (isCasal()) {
-            html += '<p class="tri-quiz-why">Indica o teu nome e email, e os do teu par, para mostrarmos os horários da Dra. Carolina Rocha.</p>';
+            html += '<p class="tri-quiz-why">Indica o teu nome, email e telemóvel, e os dados do teu par, para mostrarmos os horários da Dra. Carolina Rocha.</p>';
             html += '<p class="tri-group-title">Quem está a marcar</p>';
         } else {
-            html += '<p class="tri-quiz-why">Indica o teu nome, idade e email para te mostrarmos os horários disponíveis.</p>';
+            html += '<p class="tri-quiz-why">Indica o teu nome, idade, email e telemóvel para te mostrarmos os horários disponíveis.</p>';
         }
         html += '<div class="tri-field"><label for="nome">Nome</label><input type="text" id="nome" name="nome" autocomplete="name" maxlength="120" value="' + escapeHtml(a.nome) + '"></div>';
         html += '<div class="tri-field"><label for="email">Email</label><input type="email" id="email" name="email" autocomplete="email" inputmode="email" maxlength="160" value="' + escapeHtml(a.email) + '"></div>';
+        html += '<div class="tri-field"><label for="telefone">Telemóvel</label><input type="tel" id="telefone" name="telefone" autocomplete="tel" inputmode="tel" placeholder="Ex.: 912345678" maxlength="20" value="' + escapeHtml(a.telefone) + '"></div>';
         if (!isCasal()) {
             html += '<div class="tri-field"><label for="idade">Idade</label><input type="number" id="idade" name="idade" inputmode="numeric" min="16" max="120" placeholder="Ex.: 32" value="' + escapeHtml(a.idade) + '"></div>';
         }
@@ -663,7 +665,7 @@
                 renderQuiz();
             });
         });
-        ['idade', 'nome', 'email', 'motivoOutro', 'partnerNome', 'partnerEmail', 'priorNote', 'diagnosticoQual'].forEach(function (id) {
+        ['idade', 'nome', 'email', 'telefone', 'motivoOutro', 'partnerNome', 'partnerEmail', 'priorNote', 'diagnosticoQual'].forEach(function (id) {
             var el = document.getElementById(id);
             if (!el) return;
             el.addEventListener('input', function () {
@@ -712,7 +714,7 @@
                     score: score,
                     nome: String(state.answers.nome || '').slice(0, 120),
                     email: String(state.answers.email || '').slice(0, 160),
-                    telefone: '',
+                    telefone: String(state.answers.telefone || '').slice(0, 20),
                     partial: true
                 }),
                 keepalive: true
@@ -733,7 +735,7 @@
                     score: 1,
                     nome: String(state.answers.nome || '').slice(0, 120),
                     email: String(state.answers.email || '').slice(0, 160),
-                    telefone: '',
+                    telefone: String(state.answers.telefone || '').slice(0, 20),
                     partial: true
                 }),
                 keepalive: true
@@ -792,11 +794,14 @@
         if (step.id === 'contact') {
             a.nome = String((document.getElementById('nome') || {}).value || '').trim();
             a.email = String((document.getElementById('email') || {}).value || '').trim();
+            a.telefone = String((document.getElementById('telefone') || {}).value || '').trim();
             a.termos = !!(document.getElementById('termos') || {}).checked;
             a.semRisco = !!(document.getElementById('semRisco') || {}).checked;
             a.comunicacoes = !!(document.getElementById('comunicacoes') || {}).checked;
             if (!a.nome) return fail('Indica o teu nome.');
             if (!EMAIL_RE.test(a.email)) return fail('Indica um email válido.');
+            if (!a.telefone) return fail('Indica o teu telemóvel.');
+            if (!/^[0-9\s\+\-()]{9,20}$/.test(a.telefone)) return fail('Indica um número de telemóvel válido.');
             if (!isCasal()) {
                 var idadeEl = document.getElementById('idade');
                 if (idadeEl) a.idade = idadeEl.value;
@@ -866,7 +871,7 @@
             genero: a.genero,
             localizacao: '',
             email: a.email.trim(),
-            telefone: '',
+            telefone: a.telefone.trim(),
             tipoTerapia: state.tipoTerapia,
             motivos: motivos,
             duracao: a.duracao,
