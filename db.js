@@ -878,6 +878,18 @@ async function initSchema(p) {
             processed_at TIMESTAMPTZ
         )
     `);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+            id SERIAL PRIMARY KEY,
+            email VARCHAR(320) NOT NULL UNIQUE,
+            source VARCHAR(64) NOT NULL DEFAULT 'website',
+            status VARCHAR(32) NOT NULL DEFAULT 'active',
+            subscribed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            unsubscribed_at TIMESTAMPTZ
+        )
+    `);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_newsletter_email_lower ON newsletter_subscribers (LOWER(email))`);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_newsletter_status ON newsletter_subscribers (status)`);
     await p.query(`CREATE INDEX IF NOT EXISTS idx_deletion_requests_status ON deletion_requests (status, created_at DESC)`);
     await p.query(`
         CREATE TABLE IF NOT EXISTS meta_leads (
@@ -4594,6 +4606,71 @@ async function purgeUnclaimedQuizAttempts(days = 30) {
     return r.rowCount || 0;
 }
 
+async function subscribeToNewsletter(email, source = 'website') {
+    const p = await getPool();
+    const lowerEmail = String(email || '').toLowerCase().trim();
+    if (!lowerEmail || !/.+@.+/.test(lowerEmail)) {
+        throw new Error('Invalid email address');
+    }
+    try {
+        const result = await p.query(
+            `INSERT INTO newsletter_subscribers (email, source, status, subscribed_at)
+             VALUES ($1, $2, 'active', NOW())
+             ON CONFLICT (email) DO UPDATE SET
+                status = 'active',
+                subscribed_at = CASE 
+                    WHEN newsletter_subscribers.status = 'unsubscribed' THEN NOW()
+                    ELSE newsletter_subscribers.subscribed_at
+                END,
+                unsubscribed_at = NULL
+             RETURNING id, email, source, status, subscribed_at`,
+            [lowerEmail, source]
+        );
+        return result.rows[0];
+    } catch (err) {
+        console.error('Newsletter subscription error:', err);
+        throw err;
+    }
+}
+
+async function unsubscribeFromNewsletter(email) {
+    const p = await getPool();
+    const lowerEmail = String(email || '').toLowerCase().trim();
+    const result = await p.query(
+        `UPDATE newsletter_subscribers 
+         SET status = 'unsubscribed', unsubscribed_at = NOW()
+         WHERE LOWER(email) = $1
+         RETURNING id, email, status`,
+        [lowerEmail]
+    );
+    return result.rows[0] || null;
+}
+
+async function getNewsletterSubscriber(email) {
+    const p = await getPool();
+    const lowerEmail = String(email || '').toLowerCase().trim();
+    const result = await p.query(
+        `SELECT id, email, source, status, subscribed_at, unsubscribed_at
+         FROM newsletter_subscribers
+         WHERE LOWER(email) = $1`,
+        [lowerEmail]
+    );
+    return result.rows[0] || null;
+}
+
+async function listNewsletterSubscribers(status = 'active', limit = 1000, offset = 0) {
+    const p = await getPool();
+    const result = await p.query(
+        `SELECT id, email, source, status, subscribed_at, unsubscribed_at
+         FROM newsletter_subscribers
+         WHERE status = $1
+         ORDER BY subscribed_at DESC
+         LIMIT $2 OFFSET $3`,
+        [status, limit, offset]
+    );
+    return result.rows;
+}
+
 module.exports = {
     getPool,
     isDatabaseEnabled,
@@ -4762,5 +4839,9 @@ module.exports = {
     deleteProfessionalFile,
     removeDuplicateMariaSaraProfessionals,
     removeExperimentalTestProfessionals,
+    subscribeToNewsletter,
+    unsubscribeFromNewsletter,
+    getNewsletterSubscriber,
+    listNewsletterSubscribers,
     closePool
 };

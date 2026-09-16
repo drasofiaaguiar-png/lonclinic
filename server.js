@@ -12076,6 +12076,44 @@ app.post('/api/reviews', rateLimitReviews, express.json(), async (req, res) => {
     }
 });
 
+// ─── API: Newsletter subscription ───
+app.post('/api/newsletter/subscribe', rateLimitReviews, express.json(), async (req, res) => {
+    try {
+        const email = String(req.body?.email || '').trim().toLowerCase();
+        const source = String(req.body?.source || 'website').trim();
+        
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return res.status(400).json({ 
+                success: false, 
+                error: 'Por favor, insira um endereço de email válido.' 
+            });
+        }
+
+        if (usePersistentDb) {
+            const subscriber = await db.subscribeToNewsletter(email, source);
+            return res.json({
+                success: true,
+                message: 'Obrigada por subscrever! Receberá as nossas novidades em breve.',
+                subscriber: {
+                    email: subscriber.email,
+                    status: subscriber.status
+                }
+            });
+        } else {
+            return res.json({
+                success: true,
+                message: 'Obrigada por subscrever! Receberá as nossas novidades em breve.'
+            });
+        }
+    } catch (err) {
+        console.error('POST /api/newsletter/subscribe:', err.message);
+        res.status(500).json({ 
+            success: false, 
+            error: 'Erro ao processar subscrição. Tente novamente.' 
+        });
+    }
+});
+
 // ─── API: Admin — list all reviews (public + private) ───
 app.get('/api/admin/reviews', requireAdmin, async (req, res) => {
     try {

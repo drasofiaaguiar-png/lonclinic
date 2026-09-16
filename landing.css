@@ -2656,6 +2656,119 @@ html[lang="pt-PT"] .lon-testimonial-translation-note {
     color: #523969;
 }
 
+/* Newsletter form */
+.lon-footer-newsletter {
+    grid-column: 1 / -1;
+    padding: 28px 0 0;
+    border-top: 1px solid #e8d9f2;
+    max-width: 520px;
+}
+
+.lon-footer-newsletter h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 8px;
+    color: #2d1739;
+}
+
+.lon-footer-newsletter p {
+    font-size: 0.92rem;
+    color: #6b5f76;
+    margin: 0 0 16px;
+    line-height: 1.5;
+}
+
+.lon-newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.lon-newsletter-input-wrap {
+    display: flex;
+    gap: 8px;
+}
+
+.lon-newsletter-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #d4c3e0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #2d1739;
+    background: #ffffff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.lon-newsletter-input:focus {
+    outline: none;
+    border-color: #8b5db3;
+    box-shadow: 0 0 0 3px rgba(139, 93, 179, 0.1);
+}
+
+.lon-newsletter-input::placeholder {
+    color: #9b8fa8;
+}
+
+.lon-newsletter-submit {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #8b5db3 0%, #6d4691 100%);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    white-space: nowrap;
+}
+
+.lon-newsletter-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 93, 179, 0.3);
+}
+
+.lon-newsletter-submit:active {
+    transform: translateY(0);
+}
+
+.lon-newsletter-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.lon-newsletter-message {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    border-radius: 6px;
+    display: none;
+}
+
+.lon-newsletter-message.is-success {
+    display: block;
+    color: #145230;
+    background: #d4f0e0;
+    border: 1px solid #9cd9b8;
+}
+
+.lon-newsletter-message.is-error {
+    display: block;
+    color: #b42318;
+    background: #fee;
+    border: 1px solid #fcc;
+}
+
+@media (max-width: 639px) {
+    .lon-newsletter-input-wrap {
+        flex-direction: column;
+    }
+    
+    .lon-newsletter-submit {
+        width: 100%;
+    }
+}
+
 /* Floating WhatsApp */
 .lon-wa-float {
     position: fixed;

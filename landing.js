@@ -156,4 +156,59 @@
         });
     }
 
+    // ─── Newsletter subscription form ───
+    var newsletterForm = document.getElementById('newsletterForm');
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            var input = newsletterForm.querySelector('input[name="email"]');
+            var button = newsletterForm.querySelector('button[type="submit"]');
+            var messageEl = newsletterForm.querySelector('.lon-newsletter-message');
+            var email = input ? input.value.trim() : '';
+
+            if (!email) return;
+
+            if (messageEl) {
+                messageEl.textContent = '';
+                messageEl.classList.remove('is-success', 'is-error');
+            }
+
+            if (button) {
+                button.disabled = true;
+                button.textContent = 'A processar...';
+            }
+
+            try {
+                var response = await fetch('/api/newsletter/subscribe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                    body: JSON.stringify({ email: email, source: 'website' })
+                });
+                
+                var result = await response.json();
+
+                if (!response.ok || !result.success) {
+                    throw new Error(result.error || 'Erro ao processar subscrição.');
+                }
+
+                newsletterForm.reset();
+                if (messageEl) {
+                    messageEl.textContent = result.message || 'Subscrição confirmada!';
+                    messageEl.classList.add('is-success');
+                }
+            } catch (err) {
+                if (messageEl) {
+                    messageEl.textContent = err.message || 'Erro ao processar subscrição. Tente novamente.';
+                    messageEl.classList.add('is-error');
+                }
+            } finally {
+                if (button) {
+                    button.disabled = false;
+                    button.textContent = 'Subscrever';
+                }
+            }
+        });
+    }
+
 })();

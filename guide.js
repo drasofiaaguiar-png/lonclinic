@@ -1326,6 +1326,26 @@ function layoutGuidePage(opts) {
                     <a href="/info.html?page=reclamacoes">Reclamações</a>
                 </div>
             </div>
+            
+            <div class="lon-footer-newsletter">
+                <h4>Receba as nossas novidades</h4>
+                <p>Inscreva-se na nossa newsletter para receber dicas de saúde e as últimas notícias da clínica.</p>
+                <form class="lon-newsletter-form" id="newsletterForm">
+                    <div class="lon-newsletter-input-wrap">
+                        <input 
+                            type="email" 
+                            name="email" 
+                            placeholder="O seu email" 
+                            required 
+                            aria-label="Email para newsletter"
+                            class="lon-newsletter-input"
+                        />
+                        <button type="submit" class="lon-newsletter-submit">Subscrever</button>
+                    </div>
+                    <div class="lon-newsletter-message" role="status" aria-live="polite"></div>
+                </form>
+            </div>
+            
             <div class="lon-footer-bottom">
                 <div class="lon-footer-legal-links">
                     <a href="/info.html?page=termos-condicoes">Termos e condições</a>
@@ -2859,11 +2879,80 @@ function magLonFootHtml() {
                     <a href="/info.html?page=contato">Contacto</a>
                 </div>
             </div>
+            
+            <div class="lon-footer-newsletter">
+                <h4>Receba as nossas novidades</h4>
+                <p>Inscreva-se na nossa newsletter para receber dicas de saúde e as últimas notícias da clínica.</p>
+                <form class="lon-newsletter-form" id="newsletterForm">
+                    <div class="lon-newsletter-input-wrap">
+                        <input 
+                            type="email" 
+                            name="email" 
+                            placeholder="O seu email" 
+                            required 
+                            aria-label="Email para newsletter"
+                            class="lon-newsletter-input"
+                        />
+                        <button type="submit" class="lon-newsletter-submit">Subscrever</button>
+                    </div>
+                    <div class="lon-newsletter-message" role="status" aria-live="polite"></div>
+                </form>
+            </div>
+            
             <div class="lon-footer-bottom">
                 <p>© 2026 Lon Clinic</p>
             </div>
         </div>
-    </footer>`;
+    </footer>
+    <script>
+    (function() {
+        var newsletterForm = document.getElementById('newsletterForm');
+        if (newsletterForm) {
+            newsletterForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                var input = newsletterForm.querySelector('input[name="email"]');
+                var button = newsletterForm.querySelector('button[type="submit"]');
+                var messageEl = newsletterForm.querySelector('.lon-newsletter-message');
+                var email = input ? input.value.trim() : '';
+                if (!email) return;
+                if (messageEl) {
+                    messageEl.textContent = '';
+                    messageEl.classList.remove('is-success', 'is-error');
+                }
+                if (button) {
+                    button.disabled = true;
+                    button.textContent = 'A processar...';
+                }
+                try {
+                    var response = await fetch('/api/newsletter/subscribe', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+                        body: JSON.stringify({ email: email, source: 'magazine' })
+                    });
+                    var result = await response.json();
+                    if (!response.ok || !result.success) {
+                        throw new Error(result.error || 'Erro ao processar subscrição.');
+                    }
+                    newsletterForm.reset();
+                    if (messageEl) {
+                        messageEl.textContent = result.message || 'Subscrição confirmada!';
+                        messageEl.classList.add('is-success');
+                    }
+                } catch (err) {
+                    if (messageEl) {
+                        messageEl.textContent = err.message || 'Erro ao processar subscrição. Tente novamente.';
+                        messageEl.classList.add('is-error');
+                    }
+                } finally {
+                    if (button) {
+                        button.disabled = false;
+                        button.textContent = 'Subscrever';
+                    }
+                }
+            });
+        }
+    })();
+    </script>`;
 }
 
 function magAppHtml(currentPath, stageInner, opts) {
