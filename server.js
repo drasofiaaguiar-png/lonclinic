@@ -9720,6 +9720,10 @@ app.get('/psicologia.html', (req, res) => {
     res.redirect(301, '/saudemental');
 });
 
+app.get('/programa-emagrecimento', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'programa-emagrecimento.html'), 'Error loading programa emagrecimento page');
+});
+
 app.get('/consultas', (req, res) => {
     try {
         sendHtmlNoCacheString(res, queixas.renderHub(seo.SITE_ORIGIN));
