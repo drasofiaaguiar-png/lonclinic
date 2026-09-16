@@ -1429,8 +1429,16 @@ body.lon-landing.psi-landing.triagem-page.is-quiz {
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--tri-signal);
+    margin: 0 0 8px;
+    text-align: center;
+}
+
+.triagem-proof-subtitle {
+    font-size: 0.8rem;
+    color: var(--tri-muted);
     margin: 0 0 18px;
     text-align: center;
+    font-weight: 500;
 }
 
 .triagem-proof-grid {

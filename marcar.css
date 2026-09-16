@@ -1427,8 +1427,16 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--marcar-primary);
+    margin: 0 0 8px;
+    text-align: center;
+}
+
+.marcar-proof-subtitle {
+    font-size: 0.8rem;
+    color: var(--marcar-muted);
     margin: 0 0 16px;
     text-align: center;
+    font-weight: 500;
 }
 
 .marcar-proof-grid {
@@ -1516,8 +1524,16 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--marcar-primary);
+    margin: 0 0 8px;
+    text-align: center;
+}
+
+.marcar-trustpilot-subtitle {
+    font-size: 0.8rem;
+    color: var(--marcar-muted);
     margin: 0 0 20px;
     text-align: center;
+    font-weight: 500;
 }
 
 .marcar-trustpilot-grid {
