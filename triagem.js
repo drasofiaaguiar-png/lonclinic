@@ -236,12 +236,6 @@
         document.body.classList.add('is-quiz');
         showScreen('screen-quiz');
         
-        // Show social proof after choosing therapy type
-        var proofSection = document.getElementById('triagemProof');
-        if (proofSection) {
-            proofSection.hidden = false;
-        }
-        
         renderQuiz();
         var meta = currentStepMeta();
         if (form) {
@@ -267,6 +261,7 @@
                 { id: 'motivoDuracao', type: 'combo' },
                 { id: 'prefs', type: 'combo' },
                 { id: 'historico', type: 'combo' },
+                { id: 'trustpilot', type: 'info' },
                 { id: 'contact', type: 'contact' }
             ];
         }
@@ -284,6 +279,7 @@
             { id: 'terapiaAntes', type: 'single' },
             { id: 'motivos', type: 'multi' },
             { id: 'expect', type: 'multi' },
+            { id: 'trustpilot', type: 'info' },
             { id: 'contact', type: 'contact' }
         );
         return steps;
@@ -450,6 +446,32 @@
             html += '<li><a href="tel:116006"><strong>116 006</strong> — APAV, apoio à vítima</a></li>';
             html += '<li><a href="tel:112"><strong>112</strong> — Emergência</a></li>';
             html += '</ul>';
+        } else if (step.id === 'trustpilot') {
+            html += '<div class="triagem-proof-inner">';
+            html += '<p class="triagem-proof-kicker">O que dizem os nossos pacientes?</p>';
+            html += '<p class="triagem-proof-subtitle">Clientes reais verificados pelo Trustpilot</p>';
+            html += '<div class="triagem-proof-grid">';
+            html += '<blockquote class="triagem-proof-card">';
+            html += '<div class="triagem-proof-stars" aria-hidden="true">★★★★★</div>';
+            html += '<p class="triagem-proof-quote">«A doutora que me atendeu era super simpática, muito clara na abordagem do tema e esclareceu-me todas as dúvidas. Sem dúvida voltarei a contactar-vos.»</p>';
+            html += '<footer class="triagem-proof-author">Paciente verificada</footer>';
+            html += '</blockquote>';
+            html += '<blockquote class="triagem-proof-card">';
+            html += '<div class="triagem-proof-stars" aria-hidden="true">★★★★★</div>';
+            html += '<p class="triagem-proof-quote">«Consegui marcar a consulta para o próprio dia e, no final, tive também a prescrição das vacinas de que precisava. A Dra. Rita foi muito simpática, atenciosa e profissional.»</p>';
+            html += '<footer class="triagem-proof-author">Miguel <a href="https://pt.trustpilot.com/review/lonclinic.com" target="_blank" rel="noopener noreferrer" data-trustpilot-profile>via Trustpilot</a></footer>';
+            html += '</blockquote>';
+            html += '</div>';
+            html += '<div class="triagem-proof-badge">';
+            html += '<a class="lon-tp-badge" href="https://pt.trustpilot.com/review/lonclinic.com" target="_blank" rel="noopener noreferrer" data-trustpilot-profile>';
+            html += '<svg class="lon-trustpilot-star" viewBox="0 0 24 24" aria-hidden="true" focusable="false">';
+            html += '<path fill="currentColor" d="M12 1.7l2.83 8.7H24l-7.42 5.39 2.83 8.71L12 19.11l-7.41 5.39 2.83-8.71L0 10.4h9.17L12 1.7z"></path>';
+            html += '</svg>';
+            html += '<span class="lon-tp-badge-score">Excelente</span>';
+            html += '<span class="lon-tp-badge-name">Trustpilot</span>';
+            html += '</a>';
+            html += '</div>';
+            html += '</div>';
         } else if (step.id === 'motivos') {
             html += eyebrow(isCasal() ? 'Passo 9' : '');
             html += '<h2>' + (isCasal() ? 'O que vos trouxe à terapia neste momento?' : 'O que te traz à terapia?') + '</h2>';
