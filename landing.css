@@ -2083,26 +2083,67 @@ html[lang="pt-PT"] .lon-testimonial-translation-note {
     margin-bottom: clamp(32px, 5vw, 48px);
 }
 
-.lon-podcast-embed {
-    max-width: 720px;
+.lon-podcast-card {
+    max-width: 540px;
     margin: 0 auto;
-    border-radius: 12px;
-    overflow: hidden;
+    background: #ffffff;
+    border-radius: 20px;
+    padding: clamp(40px, 6vw, 56px) clamp(28px, 5vw, 48px);
     box-shadow: 0 8px 32px rgba(34, 56, 47, 0.12);
+    text-align: center;
 }
 
-.lon-podcast-embed iframe {
-    display: block;
-    width: 100%;
+.lon-podcast-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.lon-podcast-icon {
+    width: 64px;
+    height: 64px;
+    color: #1DB954;
+    stroke-width: 1.5;
+}
+
+.lon-podcast-card h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: #1a1a2e;
+}
+
+.lon-podcast-card p {
+    font-size: 1rem;
+    color: #5a6b5d;
+    margin: 0;
+}
+
+.lon-podcast-card .lon-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.lon-podcast-card .lon-btn svg {
+    flex-shrink: 0;
 }
 
 @media (max-width: 639px) {
-    .lon-podcast-embed {
-        border-radius: 8px;
+    .lon-podcast-card {
+        padding: 32px 24px;
+        border-radius: 16px;
     }
     
-    .lon-podcast-embed iframe {
-        height: 400px;
+    .lon-podcast-icon {
+        width: 56px;
+        height: 56px;
+    }
+    
+    .lon-podcast-card h3 {
+        font-size: 1.3rem;
     }
 }
 
@@ -5137,7 +5178,7 @@ body.lon-home #como-funciona .lon-how-step-num {
     padding: clamp(40px, 6vw, 72px) 0;
 }
 
-.lon-home .lon-podcast-embed {
+.lon-home .lon-podcast-card {
     box-shadow: 0 12px 40px rgba(30, 77, 107, 0.15);
 }
 
