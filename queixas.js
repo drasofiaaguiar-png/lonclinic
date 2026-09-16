@@ -44,7 +44,7 @@ const DEFAULT_STEPS = [
     'Preenches a triagem online — leva poucos minutos e ajuda a perceber o que precisas.',
     'És associado a um psicólogo inscrito na Ordem dos Psicólogos Portugueses, ou escolhes o profissional.',
     'A consulta é por videochamada, 100% online, no mesmo fuso de Lisboa.',
-    'No plano semanal tens uma sessão de vídeo por semana e mensagens entre sessões. As respostas chegam em dias úteis, das 9h às 17h.'
+    'No plano semanal tens uma sessão de vídeo por semana. As respostas chegam em dias úteis, das 9h às 17h.'
 ];
 
 const CASAL_STEPS = [
@@ -197,7 +197,7 @@ function priceHtml(price) {
         : 'Uma sessão de vídeo, sem compromisso de continuidade';
     const weeklyIncludes = isCasal
         ? `4 sessões de vídeo por mês com os dois (${escapeHtml(p.weekly.note)})`
-        : `1 sessão de vídeo por semana + mensagens ilimitadas (${escapeHtml(p.weekly.note)})`;
+        : `1 sessão de vídeo por semana (${escapeHtml(p.weekly.note)})`;
     return `
         <section class="qx-block" id="preco" aria-labelledby="qx-price-title">
             <h2 id="qx-price-title">Preço</h2>
@@ -314,7 +314,7 @@ function bookingCardsHtml(ref, tone, opts) {
             chip: 'Semanal',
             title: 'Acompanhamento semanal',
             price: `${price.weekly.amount} € /${price.weekly.unit}`,
-            note: '1 sessão de vídeo por semana + mensagens entre sessões',
+            note: '1 sessão de vídeo por semana',
             cta: 'Ver planos',
             href: `/saudemental?ref=${r}`
         }

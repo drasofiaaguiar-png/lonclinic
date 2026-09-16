@@ -44,7 +44,7 @@
         },
         {
           "q": "Quanto custa a consulta de psicologia para burnout?",
-          "a": "Na Lon Clinic a sessão avulsa custa 60 €. A consulta semanal custa 56 €/semana, com compromisso mínimo de 1 mês, e inclui uma sessão de vídeo e mensagens entre sessões."
+          "a": "Na Lon Clinic a sessão avulsa custa 60 €. A consulta semanal custa 56 €/semana, com compromisso mínimo de 1 mês, e inclui uma sessão de vídeo por semana."
         },
         {
           "q": "A terapia online funciona para burnout?",
@@ -97,7 +97,7 @@
         },
         {
           "q": "Quanto custa o psicólogo para ansiedade no trabalho?",
-          "a": "Na Lon Clinic a sessão avulsa custa 60 €. O acompanhamento semanal custa 56 €/semana (mínimo 1 mês) e inclui uma sessão de vídeo e mensagens em dias úteis, das 9h às 17h."
+          "a": "Na Lon Clinic a sessão avulsa custa 60 €. O acompanhamento semanal custa 56 €/semana (mínimo 1 mês) e inclui uma sessão de vídeo por semana."
         },
         {
           "q": "Preciso de baixa médica se tenho ansiedade no trabalho?",
@@ -150,7 +150,7 @@
         },
         {
           "q": "Quanto custa a consulta para ataques de pânico?",
-          "a": "Sessão avulsa: 60 €. Acompanhamento semanal: 56 €/semana, com mínimo de 1 mês, uma videochamada por semana e mensagens entre sessões."
+          "a": "Sessão avulsa: 60 €. Acompanhamento semanal: 56 €/semana, com mínimo de 1 mês, uma videochamada por semana."
         }
       ]
     },
@@ -246,7 +246,7 @@
         },
         {
           "q": "Quanto custa o psicólogo português online?",
-          "a": "Sessão avulsa: 60 €. Acompanhamento semanal: 56 €/semana, mínimo 1 mês, com videochamada e mensagens em dias úteis (9h–17h, hora de Lisboa)."
+          "a": "Sessão avulsa: 60 €. Acompanhamento semanal: 56 €/semana, mínimo 1 mês, com videochamada semanal (9h–17h, hora de Lisboa)."
         },
         {
           "q": "Funciona se a diferença horária for grande?",
@@ -295,7 +295,7 @@
         },
         {
           "q": "Quanto custa?",
-          "a": "Sessão avulsa: 60 €. Acompanhamento semanal: 56 €/semana, mínimo 1 mês, com videochamada e mensagens em dias úteis."
+          "a": "Sessão avulsa: 60 €. Acompanhamento semanal: 56 €/semana, mínimo 1 mês, com videochamada semanal."
         },
         {
           "q": "A nutrição também ajuda?",

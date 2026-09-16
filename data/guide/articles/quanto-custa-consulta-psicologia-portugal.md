@@ -46,7 +46,7 @@ Há duas formas de pagar:
 | Opção | Preço | O que inclui |
 |---|---|---|
 | Sessão avulsa | **60 €** | Uma videochamada, sem compromisso de continuidade |
-| Acompanhamento semanal | **56 €/semana** | Uma sessão de vídeo por semana + mensagens entre sessões (mínimo um mês; depois pode cancelar) |
+| Acompanhamento semanal | **56 €/semana** | Uma sessão de vídeo por semana (mínimo um mês; depois pode cancelar) |
 
 Pode [escolher o psicólogo pelo perfil](/saudemental) ou [preencher a triagem](/triagem) e deixar que a equipa recomende alguém. Marcar: [consulta de psicologia](/saudemental).
 

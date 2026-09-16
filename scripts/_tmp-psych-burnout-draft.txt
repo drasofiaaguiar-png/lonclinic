@@ -1,0 +1,124 @@
+Psicologia Online Para Burnout: Como Funciona e Quando Marcar
+
+**Meta descrição:** A psicologia online é eficaz no tratamento do burnout. Veja como funciona uma sessão, o que esperar e quando faz sentido procurar este apoio.
+
+---
+
+**Sim, a psicologia online é uma opção eficaz para o tratamento do burnout, especialmente através de abordagens cognitivo-comportamentais focadas em gestão de stress, limites e reestruturação de crenças sobre trabalho e desempenho.** Para a maioria das situações de burnout, o formato online não compromete a qualidade do acompanhamento — o trabalho terapêutico é essencialmente conversacional.
+
+## Por Que a Psicologia Online Funciona Bem Para Burnout
+
+O tratamento do burnout assenta sobretudo em conversa estruturada, entre sessões regulares, para trabalhar padrões de pensamento, limites pessoais e estratégias de gestão de stress. Não depende de exame físico nem de equipamento especializado — por isso encaixa naturalmente no formato de videochamada.
+
+Há ainda uma vantagem adicional específica para burnout: muitas pessoas em esgotamento têm dificuldade em arranjar tempo ou energia para se deslocar a uma consulta presencial. Remover essa barreira aumenta a probabilidade de manter a regularidade das sessões — e a regularidade é um dos fatores mais determinantes para o sucesso do tratamento.
+
+## Como Funciona Uma Sessão de Psicologia Online
+
+Uma sessão típica decorre por videochamada, com duração semelhante à de uma consulta presencial (normalmente 50 minutos). Na primeira sessão, o psicólogo recolhe histórico, contexto profissional e pessoal, e começa a identificar o padrão de burnout específico (sobrecarga, subdesafio ou negligência). Nas sessões seguintes, o trabalho avança para estratégias concretas — gestão de limites, comunicação assertiva no trabalho, técnicas de regulação emocional — e para monitorizar a evolução dos sintomas ao longo do tempo.
+
+## O Que Esperar da Primeira Consulta
+
+- Uma conversa aberta sobre o que tem sentido nos últimos tempos, sem julgamento
+- Perguntas sobre a rotina de trabalho, sono, energia e relações
+- Identificação de sinais de alerta que precisem de atenção prioritária
+- Definição conjunta de objetivos realistas para o acompanhamento
+- Esclarecimento sobre se há necessidade de articulação com um médico (por exemplo, para avaliar baixa médica)
+
+## Psicologia Online ou Presencial: Quando Escolher Cada Uma
+
+O formato online é adequado para a esmagadora maioria dos casos de burnout. Vale a pena considerar o presencial apenas em situações específicas — por exemplo, quando a pessoa prefere claramente o contacto direto, ou quando há necessidade de articulação mais próxima com outros profissionais de saúde no mesmo espaço físico.
+
+## Quanto Custa Uma Sessão de Psicologia Online
+
+Os valores no mercado português variam bastante consoante a experiência do psicólogo e a plataforma. Em muitos serviços de telemedicina, o valor situa-se acima de 50€ por sessão, refletindo o tempo dedicado e a qualificação profissional envolvida.
+
+## Como Escolher Um Psicólogo Especializado em Burnout
+
+Nem todos os psicólogos têm o mesmo foco de especialidade. Ao procurar apoio para burnout, vale a pena confirmar:
+
+- Se o psicólogo tem experiência específica com stress ocupacional e burnout
+- Se está inscrito na Ordem dos Psicólogos Portugueses (OPP), com cédula profissional válida
+- Se a abordagem terapêutica é compatível com o que procura (cognitivo-comportamental é a mais estudada para burnout, mas não é a única válida)
+
+## Como Funciona Na LON Clinic
+
+Na LON Clinic, as sessões de psicologia são feitas 100% online, com psicólogos especializados em áreas como burnout, ansiedade e questões relacionadas com o contexto profissional, ao valor de 56€ por sessão. É possível manter acompanhamento regular semanal, ajustado à evolução do caso.
+
+---
+
+## Perguntas Frequentes
+
+**A psicologia online é tão eficaz como a presencial para tratar burnout?**
+Sim, para a maioria dos casos. O trabalho terapêutico do burnout é essencialmente conversacional, o que se adapta bem ao formato de videochamada.
+
+**Quantas sessões de psicologia são normalmente necessárias para burnout?**
+Varia com a gravidade do caso e com as mudanças possíveis no contexto de trabalho, mas o acompanhamento costuma ser semanal nas fases iniciais, com espaçamento gradual à medida que há melhoria.
+
+**Posso fazer psicologia online e continuar a trabalhar?**
+Sim, esse é aliás um dos objetivos comuns do acompanhamento — ajudar a gerir a carga de trabalho de forma sustentável, sem necessariamente implicar afastamento total.
+
+**O psicólogo pode passar baixa médica?**
+Não. Em Portugal, a baixa médica é emitida por um médico. O psicólogo pode, no entanto, recomendar que a pessoa procure avaliação médica se entender que é adequado.
+
+**Como sei se preciso de psicologia ou de acompanhamento médico?**
+Muitas vezes os dois se complementam: o médico avalia a necessidade de baixa e descarta outras causas físicas, enquanto o psicólogo trabalha diretamente a gestão emocional e comportamental do burnout.
+
+---
+
+*Sente sinais de burnout e quer começar a tratar? Marque uma sessão de psicologia online na LON Clinic com um psicólogo especializado.*
+
+---
+
+## Dados Estruturados (FAQPage Schema)
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "A psicologia online é tão eficaz como a presencial para tratar burnout?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sim, para a maioria dos casos. O trabalho terapêutico do burnout é essencialmente conversacional, o que se adapta bem ao formato de videochamada."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quantas sessões de psicologia são normalmente necessárias para burnout?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Varia com a gravidade do caso e com as mudanças possíveis no contexto de trabalho, mas o acompanhamento costuma ser semanal nas fases iniciais, com espaçamento gradual à medida que há melhoria."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Posso fazer psicologia online e continuar a trabalhar?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sim, esse é aliás um dos objetivos comuns do acompanhamento — ajudar a gerir a carga de trabalho de forma sustentável, sem necessariamente implicar afastamento total."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "O psicólogo pode passar baixa médica?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Não. Em Portugal, a baixa médica é emitida por um médico. O psicólogo pode, no entanto, recomendar que a pessoa procure avaliação médica se entender que é adequado."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Como sei se preciso de psicologia ou de acompanhamento médico?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Muitas vezes os dois se complementam: o médico avalia a necessidade de baixa e descarta outras causas físicas, enquanto o psicólogo trabalha diretamente a gestão emocional e comportamental do burnout."
+      }
+    }
+  ]
+}
+</script>
+```
+</user_query>
