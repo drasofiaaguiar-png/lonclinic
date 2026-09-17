@@ -25,7 +25,7 @@ featured: true
 **A resistência à insulina é frequentemente silenciosa nas fases iniciais**, mas está **intimamente ligada à dificuldade em perder peso** e ao risco de progressão para diabetes tipo 2.
 
 <figure class="guide-figure guide-figure-highlight">
-<img src="/image/consulta-medica.webp" alt="Resistência insulina sintomas silenciosa fases iniciais — cansaço fadiga fome concentração ganho peso abdominal dificuldade perder peso visão turva infecções fúngicas. Sinais pele: acantose nigricans manchas escurecidas pescoço axilas virilhas, acrocórdones skin tags múltiplos. Factores risco perímetro abdominal >88cm mulheres >102cm homens familiar diabetes hipertensão SOPCOS esteatose hepática. Diagnóstico insulina jejum HbA1c HOMA-IR avaliação clínica. Tratamento alimentação actividade física sono perda peso medicação." width="1280" height="720" loading="lazy" decoding="async">
+<img src="/image/consulta-clinica-geral.webp" alt="Resistência insulina sintomas silenciosa fases iniciais — cansaço fadiga fome concentração ganho peso abdominal dificuldade perder peso visão turva infecções fúngicas. Sinais pele: acantose nigricans manchas escurecidas pescoço axilas virilhas, acrocórdones skin tags múltiplos. Factores risco perímetro abdominal >88cm mulheres >102cm homens familiar diabetes hipertensão SOPCOS esteatose hepática. Diagnóstico insulina jejum HbA1c HOMA-IR avaliação clínica. Tratamento alimentação actividade física sono perda peso medicação." width="1280" height="720" loading="lazy" decoding="async">
 <figcaption>Resistência insulina frequentemente silenciosa anos ligada dificuldade perder peso risco diabetes tipo 2. Sintomas inespecíficos: cansaço fadiga persistente, aumento fome hidratos carbono, dificuldade concentração brain fog, ganho peso abdominal visceral, dificuldade perder peso insulina elevada inibe lipólise, visão turva transitória, infecções fúngicas recorrentes. Sinais pele: acantose nigricans manchas escurecidas aveludadas pescoço axilas (~70-80% resistência insulina), acrocórdones múltiplos. Diagnóstico: insulina jejum HbA1c HOMA-IR interpretação médico. Tratamento: alimentação actividade física sono perda peso medicação metformina GLP-1.</figcaption>
 </figure>
 
@@ -105,7 +105,7 @@ Artigos relacionados: [obesidade doença crónica tratamento](/blog/obesidade-do
 - Défice calórico 500 kcal/dia → perda peso esperada 0,5 kg/semana pessoa sensível insulina
 - Resistência insulina → perda peso **inferior** 0,2-0,3 kg/semana (insulina elevada dificulta lipólise adipócitos hormonalmente)
 
-Artigos relacionados: [perda peso homens diferenças](/blog/perda-peso-homens-diferencas) e [como calcular IMC limitações](/blog/como-calcular-imc-limitacoes).
+Artigos relacionados: [perda peso homens diferenças](/blog/perda-peso-homens-diferencas), [como calcular IMC limitações](/blog/como-calcular-imc-limitacoes), [GLP-1 perda massa muscular como reduzir](/blog/glp1-perda-massa-muscular-como-reduzir), e [efeito ioio](/blog/efeito-ioio).
 
 ### 4. Dificuldade concentração ("brain fog")
 
@@ -138,7 +138,7 @@ Artigos relacionados: [perda peso homens diferenças](/blog/perda-peso-homens-di
 - **Candidíase oral** (sapinhos boca língua)
 - **Balanite** homens (inflamação glande)
 
-Artigos relacionados: [quando ir ao psicólogo sinais](/blog/quando-ir-ao-psicologo-sinais) e [sintomas de burnout](/blog/sintomas-de-burnout).
+Artigos relacionados: [quando ir ao psicólogo sinais](/blog/quando-ir-ao-psicologo-sinais), [sintomas de burnout](/blog/sintomas-de-burnout), [psicologia online vs presencial](/blog/psicologia-online-vs-presencial), e [alimentação intuitiva](/blog/alimentacao-intuitiva).
 
 ## Sinais físicos pele (rastreio importante)
 
@@ -178,7 +178,7 @@ Artigos relacionados: [quando ir ao psicólogo sinais](/blog/quando-ir-ao-psicol
 **Associação resistência insulina:**
 - **Múltiplos acrocórdones** (≥10-20) associados resistência insulina/obesidade (insulina growth factor + citocinas inflamatórias estimulam proliferação celular benigna)
 
-Artigos relacionados: [testosterona ganho peso reposição](/blog/testosterona-ganho-peso-reposicao) e [consulta médica online vale a pena](/blog/consulta-medica-online-vale-a-pena).
+Artigos relacionados: [testosterona ganho peso reposição](/blog/testosterona-ganho-peso-reposicao), [consulta médica online vale a pena](/blog/consulta-medica-online-vale-a-pena), [telemedicina em casa como funciona](/blog/telemedicina-em-casa), e [renovar receita médica online](/blog/renovar-receita-medica-online).
 
 ## Factores de risco
 
@@ -210,7 +210,15 @@ Artigos relacionados: [testosterona ganho peso reposição](/blog/testosterona-g
 **8. Sedentarismo**
 - Actividade física <150 min/semana — músculos inactivos não recrutam GLUT4 eficientemente (transportador glucose músculo insulino-dependente)
 
-Artigos relacionados: [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento) e [saúde preventiva adultos jovens](/blog/saude-preventiva-adultos-jovens).
+Artigos relacionados: [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento), [saúde preventiva adultos jovens](/blog/saude-preventiva-adultos-jovens), [qual melhor clínica emagrecimento Portugal](/blog/qual-melhor-clinica-emagrecimento-portugal), e [melhor clínica emagrecimento Lisboa](/blog/melhor-clinica-emagrecimento-lisboa).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Pedido exames e interpretação de resultados</h3>
+<p>Consulta médica para pedido de insulina jejum, HbA1c e HOMA-IR. Análise completa dos resultados e plano de ação.</p>
+<a href="/marcar" class="guide-cta-button">Agendar consulta</a>
+</div>
+</div>
 
 ## Diagnóstico resistência insulina
 
@@ -249,7 +257,7 @@ Artigos relacionados: [obesidade doença crónica tratamento](/blog/obesidade-do
 - **Padrão resistência:** Insulina picos muito elevados (>100-150 μU/mL 30-60 min) mesmo glicemia normal
 - **Limitação:** Teste demorado 2h, desconfortável (náuseas glucose concentrada), raramente necessário prática clínica (reservado investigação/casos duvidosos)
 
-Artigos relacionados: [consultas nutrição Lisboa preços](/blog/consultas-nutricao-lisboa-precos) e [quanto custa consulta nutrição Portugal](/blog/quanto-custa-consulta-nutricao-portugal).
+Artigos relacionados: [consultas nutrição Lisboa preços](/blog/consultas-nutricao-lisboa-precos), [quanto custa consulta nutrição Portugal](/blog/quanto-custa-consulta-nutricao-portugal), [consultas nutrição Porto preços](/blog/consultas-nutricao-porto-precos), [consultas nutrição Coimbra preços](/blog/consultas-nutricao-coimbra-precos), e [consultas nutrição Faro preços](/blog/consultas-nutricao-faro-precos).
 
 ## Tratamento resistência insulina
 
@@ -266,7 +274,15 @@ Artigos relacionados: [consultas nutrição Lisboa preços](/blog/consultas-nutr
 **Gorduras saudáveis:**
 - Azeite, abacate, nozes, peixe gordo (salmão, sardinha) — ácidos gordos monoinsaturados/polinsaturados ómega-3 anti-inflamatórios melhoram sinalização insulina
 
-Artigos relacionados: [o que comer almoço para emagrecer](/blog/o-que-comer-almoco-para-emagrecer) e [menu ideal emagrecer 3 kg por semana](/blog/menu-ideal-emagrecer-3-kg-por-semana).
+Artigos relacionados: [o que comer almoço para emagrecer](/blog/o-que-comer-almoco-para-emagrecer), [menu ideal emagrecer 3 kg por semana](/blog/menu-ideal-emagrecer-3-kg-por-semana), [alcool e perda de peso](/blog/alcool-e-perda-de-peso), e [perda de peso em viagem](/blog/perda-de-peso-em-viagem).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Plano nutricional para resistência insulina</h3>
+<p>Nutricionista especializado em casos metabólicos. Plano alimentar adaptado para melhorar sensibilidade insulina e facilitar perda peso.</p>
+<a href="/marcar" class="guide-cta-button">Começar programa</a>
+</div>
+</div>
 
 ### 2. Actividade física regular
 
@@ -292,7 +308,7 @@ Artigos relacionados: [o que comer almoço para emagrecer](/blog/o-que-comer-alm
 - Sono 7-9h/noite regular
 - Técnicas gestão stress (meditação, exercício, psicoterapia quando necessário)
 
-Artigos relacionados: [sintomas de burnout](/blog/sintomas-de-burnout) e [psicologia online vs presencial](/blog/psicologia-online-vs-presencial).
+Artigos relacionados: [sintomas de burnout](/blog/sintomas-de-burnout), [psicologia online vs presencial](/blog/psicologia-online-vs-presencial), [como o burnout afeta o sono](/blog/como-o-burnout-afeta-o-sono), e [ansiedade e insónia](/blog/ansiedade-e-insonia).
 
 ### 4. Perda peso quando aplicável
 
@@ -317,7 +333,7 @@ Artigos relacionados: [sintomas de burnout](/blog/sintomas-de-burnout) e [psicol
 - **Mecanismo:** Além perda peso (↓ingestão calórica saciedade), **efeito directo** sensibilidade insulina células β pâncreas protecção (reduz apoptose), reduz glucagon (↓produção glucose hepática)
 - **Vantagem:** Trata obesidade + resistência insulina simultaneamente
 
-Artigos relacionados: [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-guia-completo) e [Mounjaro vs Wegovy vs Ozempic diferenças](/blog/mounjaro-vs-wegovy-vs-ozempic-diferencas).
+Artigos relacionados: [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-guia-completo), [Mounjaro vs Wegovy vs Ozempic diferenças](/blog/mounjaro-vs-wegovy-vs-ozempic-diferencas), [Saxenda Portugal guia completo](/blog/saxenda-portugal-guia-completo), [Wegovy Portugal disponibilidade alternativas](/blog/wegovy-portugal-disponibilidade-alternativas), [Mounjaro Portugal onde como obter passo passo](/blog/mounjaro-portugal-onde-como-obter-passo-passo), e [Mysimba Portugal eficácia riscos revisão EMA](/blog/mysimba-portugal-eficacia-riscos-revisao-ema).
 
 ## Por que dificulta perder peso: relação bidirecional
 
@@ -333,7 +349,7 @@ Artigos relacionados: [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-
 - **Perda peso** (mesmo modesta 5-10%) → **melhora resistência** → **facilita perda peso adicional** (círculo virtuoso)
 - **Tratamento resistência** (medicação metformina/GLP-1, exercício) → **facilita perda peso** → consolida melhoria metabólica
 
-Artigos relacionados: [GLP-1 peso volta depois interromper tratamento](/blog/glp1-peso-volta-depois-interromper-tratamento) e [plano emagrecimento 30 dias realista](/blog/plano-emagrecimento-30-dias-realista).
+Artigos relacionados: [GLP-1 peso volta depois interromper tratamento](/blog/glp1-peso-volta-depois-interromper-tratamento), [plano emagrecimento 30 dias realista](/blog/plano-emagrecimento-30-dias-realista), [cetonas exógenas emagrecer evidência científica](/blog/cetonas-exogenas-emagrecer-evidencia-cientifica), e [Zepbound Portugal existe alternativa](/blog/zepbound-portugal-existe-alternativa).
 
 ## Perguntas frequentes
 
