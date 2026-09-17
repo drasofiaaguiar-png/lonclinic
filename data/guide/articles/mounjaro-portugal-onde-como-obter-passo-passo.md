@@ -25,7 +25,7 @@ featured: true
 **Mounjaro (tirzepatida) disponível Portugal desde setembro 2022** — mas o acesso legal seguro exige **processo estruturado**, não apenas "comprar online".
 
 <figure class="guide-figure guide-figure-highlight">
-<img src="/image/glp1-injecao.webp" alt="Mounjaro Portugal processo legal seguro 4 passos: avaliação clínica médico MGF Endocrino Medicina Interna presencial telemedicina (IMC historial contraindicações medicação objectivos), prescrição receita eletrónica não automática decisão individualizada, levantamento farmácia qualquer Portugal não comparticipado custo €150-350 mês, acompanhamento continuado ajustar dose titulação gerir efeitos secundários monitorizar evolução. Evitar sem receita ilegal sites Zepbound Portugal mercado paralelo plataformas questionário automático." width="1280" height="720" loading="lazy" decoding="async">
+<img src="/image/consulta-telemedicina.webp" alt="Mounjaro Portugal processo legal seguro 4 passos: avaliação clínica médico MGF Endocrino Medicina Interna presencial telemedicina (IMC historial contraindicações medicação objectivos), prescrição receita eletrónica não automática decisão individualizada, levantamento farmácia qualquer Portugal não comparticipado custo €150-350 mês, acompanhamento continuado ajustar dose titulação gerir efeitos secundários monitorizar evolução. Evitar sem receita ilegal sites Zepbound Portugal mercado paralelo plataformas questionário automático." width="1280" height="720" loading="lazy" decoding="async">
 <figcaption>Mounjaro Portugal obter legal seguro 4 passos obrigatórios: (1) Avaliação clínica médico especialidades autorizadas MGF/Endocrinologia/Medicina Interna presencial/telemedicina, (2) Prescrição receita eletrónica não automática depende avaliação individualizada, (3) Levantamento farmácia qualquer Portugal não comparticipado ~€150-350/mês, (4) Acompanhamento continuado dose/efeitos secundários. Evitar ofertas ilegais: sem receita sites contraordenação grave, Zepbound nome não existe Portugal mercado paralelo, questionários automáticos sem interacção clínica real.</figcaption>
 </figure>
 
@@ -42,7 +42,7 @@ featured: true
 
 **Observação importante:** Mounjaro **não prescrição exclusiva endocrinologistas** — médicos família (MGF) autorizados prescrever quando confortáveis gestão medicação (muitos MGF experiência crescente GLP-1 últimos 3 anos diabetes tipo 2 + obesidade, formação contínua Ordem Médicos).
 
-Artigos relacionados: [quais médicos receitam Mounjaro Portugal](/blog/quais-medicos-receitam-mounjaro-portugal) e [nutricionista ou endocrinologista para emagrecer](/blog/nutricionista-ou-endocrinologista-para-emagrecer).
+Artigos relacionados: [quais médicos receitam Mounjaro Portugal](/blog/quais-medicos-receitam-mounjaro-portugal), [nutricionista ou endocrinologista para emagrecer](/blog/nutricionista-ou-endocrinologista-para-emagrecer), [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-guia-completo), [qual melhor clínica emagrecimento Portugal](/blog/qual-melhor-clinica-emagrecimento-portugal), e [melhor clínica emagrecimento Lisboa](/blog/melhor-clinica-emagrecimento-lisboa).
 
 ### O que médico avalia consulta inicial
 
@@ -76,9 +76,15 @@ Artigos relacionados: [quais médicos receitam Mounjaro Portugal](/blog/quais-me
 - **Componente comportamental:** Mounjaro **adjuvante** défice calórico estruturado + actividade física (não "pílula mágica" isolada)
 - **Manutenção longo prazo:** Estratégia consolidação pós-meta (evidência reganho peso após suspensão sem plano manutenção)
 
-Artigos relacionados: [contraindicações GLP-1 quem não deve tomar](/blog/contraindicacoes-glp1-quem-nao-deve-tomar) e [Mounjaro gravidez contracepção](/blog/mounjaro-gravidez-contracepcao).
+Artigos relacionados: [contraindicações GLP-1 quem não deve tomar](/blog/contraindicacoes-glp1-quem-nao-deve-tomar), [Mounjaro gravidez contracepção](/blog/mounjaro-gravidez-contracepcao), [Ozempic não diabéticos riscos alertas Infarmed](/blog/ozempic-nao-diabeticos-riscos-alertas-infarmed), [resistência insulina sintomas causas diagnóstico tratamento](/blog/resistencia-insulina-sintomas-causas-diagnostico-tratamento), e [medicamentos obesidade Portugal tipos custos resultados](/blog/medicamentos-obesidade-portugal-tipos-custos-resultados).
 
-{{cta}}
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Prescrição Mounjaro com acompanhamento médico e nutricional</h3>
+<p>Avaliação clínica completa por videochamada. Prescrição quando indicado + plano nutricional personalizado + seguimento integrado.</p>
+<a href="/marcar" class="guide-cta-button">Marcar consulta</a>
+</div>
+</div>
 
 ## Passo 2: Decisão clínica prescrição receita eletrónica
 
@@ -104,7 +110,7 @@ Artigos relacionados: [contraindicações GLP-1 quem não deve tomar](/blog/cont
 
 **Transparência LON:** ~10-15% consultas iniciais LON médico decide **não prescrever** Mounjaro após avaliação (encaminhamento nutrição isolada primeiro, estabilização psicológica, ou referenciação endocrinologia presencial casos complexos) — **não prescrevemos automaticamente** todos pedidos.
 
-Artigos relacionados: [Mounjaro sem receita Portugal legal genérico](/blog/mounjaro-sem-receita-portugal-legal-generico) e [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento).
+Artigos relacionados: [Mounjaro sem receita Portugal legal genérico](/blog/mounjaro-sem-receita-portugal-legal-generico), [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento), [Saxenda Portugal guia completo](/blog/saxenda-portugal-guia-completo), [Wegovy Portugal disponibilidade alternativas](/blog/wegovy-portugal-disponibilidade-alternativas), e [Mysimba Portugal eficácia riscos revisão EMA](/blog/mysimba-portugal-eficacia-riscos-revisao-ema).
 
 ### Receita eletrónica válida qualquer farmácia
 
@@ -144,7 +150,15 @@ Artigos relacionados: [Mounjaro sem receita Portugal legal genérico](/blog/moun
 - Mês 3-6 (10mg): €280-330 × 4 = €1.120-1.320
 - **Total medicação:** ~€1.470-1.740 (não inclui consultas médicas/nutrição)
 
-Artigos relacionados: [comparticipação SNS medicamentos obesidade GLP-1](/blog/comparticipacao-sns-medicamentos-obesidade-glp1) e [Mounjaro vs Wegovy vs Ozempic diferenças](/blog/mounjaro-vs-wegovy-vs-ozempic-diferencas).
+Artigos relacionados: [comparticipação SNS medicamentos obesidade GLP-1](/blog/comparticipacao-sns-medicamentos-obesidade-glp1), [Mounjaro vs Wegovy vs Ozempic diferenças](/blog/mounjaro-vs-wegovy-vs-ozempic-diferencas), [semaglutida vs tirzepatida diferença real](/blog/semaglutida-vs-tirzepatida-diferenca-real), [Ozempic Portugal diabetes vs perda peso](/blog/ozempic-portugal-diabetes-vs-perda-peso), e [Zepbound Portugal existe alternativa](/blog/zepbound-portugal-existe-alternativa).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Programa emagrecimento com Mounjaro integrado</h3>
+<p>€300/6 meses - Prescrição médica + plano nutricional + acompanhamento contínuo. Gestão de efeitos secundários incluída.</p>
+<a href="/marcar" class="guide-cta-button">Começar programa</a>
+</div>
+</div>
 
 ### Conservação e transporte
 
@@ -174,7 +188,7 @@ Artigos relacionados: [comparticipação SNS medicamentos obesidade GLP-1](/blog
 - **Perda peso rápida excessiva** (>1,5 kg/semana sustentado) → manter dose actual não aumentar (risco perda massa muscular excessiva)
 - **Perda peso estagnada** ≥4 semanas mesma dose → aumentar dose seguinte (ou avaliar aderência plano nutricional primeiro)
 
-Artigos relacionados: [efeitos secundários GLP-1 náuseas obstipação](/blog/efeitos-secundarios-glp1-nauseas-obstipacao) e [GLP-1 perda massa muscular como reduzir](/blog/glp1-perda-massa-muscular-como-reduzir).
+Artigos relacionados: [efeitos secundários GLP-1 náuseas obstipação](/blog/efeitos-secundarios-glp1-nauseas-obstipacao), [GLP-1 perda massa muscular como reduzir](/blog/glp1-perda-massa-muscular-como-reduzir), [GLP-1 peso volta depois interromper tratamento](/blog/glp1-peso-volta-depois-interromper-tratamento), [contraindicações GLP-1 quem não deve tomar](/blog/contraindicacoes-glp1-quem-nao-deve-tomar), e [perda de peso sustentável](/blog/perda-de-peso-sustentavel).
 
 ### Monitorização evolução
 
@@ -204,7 +218,15 @@ Artigos relacionados: [efeitos secundários GLP-1 náuseas obstipação](/blog/e
 - **Consultas nutrição quinzenais** primeiros 3 meses (fase adaptação crítica)
 - **Suporte WhatsApp** entre consultas (dúvidas "náuseas piores que fazer?", "restaurante jantar empresa o que escolher?")
 
-Artigos relacionados: [o que comer almoço para emagrecer](/blog/o-que-comer-almoco-para-emagrecer) e [plano emagrecimento 30 dias realista](/blog/plano-emagrecimento-30-dias-realista).
+Artigos relacionados: [o que comer almoço para emagrecer](/blog/o-que-comer-almoco-para-emagrecer), [plano emagrecimento 30 dias realista](/blog/plano-emagrecimento-30-dias-realista), [alimentação intuitiva](/blog/alimentacao-intuitiva), [alcool e perda de peso](/blog/alcool-e-perda-de-peso), e [efeito ioio](/blog/efeito-ioio).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Consulta telemedicina - obtenha Mounjaro legalmente</h3>
+<p>Avaliação médica por videochamada sem sair de casa. Prescrição legal + plano nutricional integrado. Disponibilidade 2-5 dias.</p>
+<a href="/marcar" class="guide-cta-button">Agendar consulta</a>
+</div>
+</div>
 
 ## Evitar: ofertas ilegais perigosas
 
@@ -222,7 +244,7 @@ Artigos relacionados: [o que comer almoço para emagrecer](/blog/o-que-comer-alm
 
 **Conclusão:** **Nunca comprar Mounjaro sem receita médica** — risco legal + saúde não compensa "conveniência" evitar consulta.
 
-Artigos relacionados: [Mounjaro sem receita Portugal legal genérico](/blog/mounjaro-sem-receita-portugal-legal-generico) e [Ozempic não diabéticos riscos alertas Infarmed](/blog/ozempic-nao-diabeticos-riscos-alertas-infarmed).
+Artigos relacionados: [Mounjaro sem receita Portugal legal genérico](/blog/mounjaro-sem-receita-portugal-legal-generico), [Ozempic não diabéticos riscos alertas Infarmed](/blog/ozempic-nao-diabeticos-riscos-alertas-infarmed), [cetonas exógenas emagrecer evidência científica](/blog/cetonas-exogenas-emagrecer-evidencia-cientifica), e [cirurgia metabólica vs bariátrica diferença](/blog/cirurgia-metabolica-vs-bariatrica-diferenca).
 
 ### 2. Sites "Zepbound Portugal" mercado paralelo
 
@@ -237,7 +259,7 @@ Artigos relacionados: [Mounjaro sem receita Portugal legal genérico](/blog/moun
 
 **Solução:** Procurar **Mounjaro** (não Zepbound) consulta médica Portugal — legal, seguro, económico.
 
-Artigos relacionados: [Zepbound Portugal existe alternativa](/blog/zepbound-portugal-existe-alternativa) e [Zepbound Trulicity Victoza Portugal emagrecer](/blog/zepbound-trulicity-victoza-portugal-emagrecer).
+Artigos relacionados: [Zepbound Portugal existe alternativa](/blog/zepbound-portugal-existe-alternativa), [Zepbound Trulicity Victoza Portugal emagrecer](/blog/zepbound-trulicity-victoza-portugal-emagrecer), [Mounjaro vs Wegovy vs Ozempic diferenças](/blog/mounjaro-vs-wegovy-vs-ozempic-diferencas), e [renovar receita médica online](/blog/renovar-receita-medica-online).
 
 ### 3. Plataformas "questionário automático" sem interacção clínica real
 
@@ -257,7 +279,7 @@ Artigos relacionados: [Zepbound Portugal existe alternativa](/blog/zepbound-port
 
 **LON abordagem:** Consulta médica videochamada **obrigatória** antes qualquer prescrição Mounjaro (não questionário automático) — médico Ordem Médicos nº cédula divulgado site/emails interage paciente tempo real 30-45 min inicial.
 
-Artigos relacionados: [consulta médica online vale a pena](/blog/consulta-medica-online-vale-a-pena) e [telemedicina em casa como funciona](/blog/telemedicina-em-casa).
+Artigos relacionados: [consulta médica online vale a pena](/blog/consulta-medica-online-vale-a-pena), [telemedicina em casa como funciona](/blog/telemedicina-em-casa), [obesidade Portugal números problema](/blog/obesidade-portugal-numeros-problema), e [perda peso Portugal perguntas frequentes 2026](/blog/perda-peso-portugal-perguntas-frequentes-2026).
 
 ## Perguntas frequentes
 
