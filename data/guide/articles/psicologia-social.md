@@ -7,14 +7,28 @@ author: lon-clinic
 published: 2026-09-17
 updated: 2026-09-17
 section: mental-health
-featured: false
+featured: true
 ---
 
 # Psicologia social: o que é e como o grupo influencia o comportamento
 
+<aside class="guide-keyfacts">
+<p class="guide-keyfacts-kicker">Em síntese</p>
+<ul>
+<li>A psicologia social estuda como o contexto social influencia pensamentos, emoções e comportamentos — muitas vezes sem percebermos.</li>
+<li>4 experiências clássicas (Asch, Milgram, efeito espectador, Stanford) demonstraram o poder da situação sobre o comportamento individual.</li>
+<li>Compreender estes princípios ajuda a explicar fenómenos atuais como a propagação de desinformação em redes sociais.</li>
+</ul>
+</aside>
+
 **A psicologia social é o ramo da psicologia que estuda como os pensamentos, emoções e comportamentos das pessoas são influenciados pela presença real, imaginada ou implícita de outras pessoas — ou seja, como o contexto social molda aquilo que fazemos, mesmo quando não temos consciência dessa influência.**
 
-Ao contrário do que a intuição sugere, grande parte do comportamento humano não depende apenas de traços de personalidade individuais — depende fortemente da situação social em que a pessoa se encontra. Algumas das experiências mais conhecidas de toda a história da psicologia vieram precisamente desta área, e continuam a moldar a forma como se entende hoje, por exemplo, comportamento de grupo, obediência à autoridade ou preconceito.
+Ao contrário do que a intuição sugere, grande parte do comportamento humano não depende apenas de traços de personalidade individuais — depende fortemente da situação social em que a pessoa se encontra. Algumas das experiências mais conhecidas de toda a [história da psicologia](/blog/historia-da-psicologia) vieram precisamente desta área, e continuam a moldar a forma como se entende hoje, por exemplo, comportamento de grupo, obediência à autoridade ou preconceito.
+
+<figure class="guide-figure guide-figure-highlight">
+<img src="/image/guide/guide-group-walk.jpg" alt="Grupo de pessoas caminhando juntas numa paisagem natural, representando influência social e comportamento de grupo" width="1280" height="720" loading="lazy" decoding="async">
+<figcaption>O comportamento humano é profundamente moldado pelo contexto social, mesmo quando não temos consciência disso.</figcaption>
+</figure>
 
 ## O que estuda a psicologia social
 
@@ -44,6 +58,10 @@ Conduzida por Philip Zimbardo em 1971, atribuiu aleatoriamente papéis de "guard
 ## Por que a psicologia social importa no dia a dia
 
 Compreender estes princípios ajuda a explicar fenómenos atuais como a propagação de desinformação em redes sociais (fortemente ligada a conformidade e validação social), a dinâmica de equipas de trabalho, ou até por que motivo é tão difícil, por vezes, discordar publicamente de um grupo mesmo quando se tem a certeza de que este está errado.
+
+A ansiedade social e as dificuldades em relações são frequentemente trabalhadas em terapia precisamente à luz destes princípios — como os padrões aprendidos de conformidade excessiva, medo de julgamento social, ou dificuldade em estabelecer [limites pessoais](/blog/limites-pessoais) em contextos de grupo.
+
+{{cta}}
 
 ## Perguntas frequentes sobre psicologia social
 

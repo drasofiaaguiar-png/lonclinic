@@ -7,12 +7,26 @@ author: lon-clinic
 published: 2026-09-17
 updated: 2026-09-17
 section: mental-health
-featured: false
+featured: true
 ---
 
 # Psicólogo Online Grátis: Onde Procurar e Quando Vale a Pena Pagar
 
+<aside class="guide-keyfacts">
+<p class="guide-keyfacts-kicker">Em síntese</p>
+<ul>
+<li>Existem opções gratuitas (linhas de apoio, Cheque Cuida-te, SNS) mas sem continuidade garantida com o mesmo profissional.</li>
+<li>6 linhas de apoio psicológico gratuitas disponíveis em Portugal, algumas 24h, para apoio de crise imediata.</li>
+<li>Acompanhamento estruturado pago (40-70€/sessão ou subscrição) compensa quando precisas de continuidade e trabalho de fundo.</li>
+</ul>
+</aside>
+
 "Psicólogo online grátis" é uma das pesquisas mais frequentes de quem começa a procurar ajuda psicológica — e é uma pesquisa legítima: nem toda a gente tem disponibilidade financeira imediata para consultas privadas, e é normal querer perceber primeiro o que existe sem custo antes de decidir. Este artigo explica o que está realmente disponível gratuitamente, quais são os seus limites reais, e em que momento faz mais sentido investir num acompanhamento pago.
+
+<figure class="guide-figure guide-figure-highlight">
+<img src="/image/guide/guide-country-road.jpg" alt="Caminho aberto numa paisagem natural, representando o acesso a apoio psicológico e diferentes vias disponíveis" width="1280" height="720" loading="lazy" decoding="async">
+<figcaption">Compreender todas as opções disponíveis — gratuitas e pagas — ajuda a escolher o caminho certo para cada fase.</figcaption>
+</figure>
 
 ## Existe psicólogo online gratuito em Portugal?
 
@@ -67,6 +81,10 @@ A eficácia da terapia online é hoje amplamente sustentada por evidência cient
 ## Quanto custa um psicólogo online pago, em média?
 
 Consultas online privadas praticam valores semelhantes às presenciais — entre 40€ e 70€ por sessão avulsa. Modelos de subscrição com sessão semanal fixa, como os 56€/semana praticados na nossa consulta, tornam esse custo mais previsível ao longo do tempo, eliminando a variável de marcar e pagar sessão a sessão.
+
+Artigos relacionados: [quanto custa consulta de psicologia em Portugal](/blog/quanto-custa-consulta-psicologia-portugal), [quanto custa a terapia em Portugal](/blog/quanto-custa-terapia-portugal), e [terapia semanal ou quinzenal](/blog/terapia-semanal-ou-quinzenal).
+
+{{cta}}
 
 ---
 

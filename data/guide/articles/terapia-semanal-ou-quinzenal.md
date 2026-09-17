@@ -7,12 +7,26 @@ author: lon-clinic
 published: 2026-09-17
 updated: 2026-09-17
 section: mental-health
-featured: false
+featured: true
 ---
 
 # Terapia Semanal ou Quinzenal? O Que a Regularidade Muda na Terapia
 
+<aside class="guide-keyfacts">
+<p class="guide-keyfacts-kicker">Em síntese</p>
+<ul>
+<li>Frequência semanal acelera progresso em fases ativas (ansiedade, crise, burnout) porque cada sessão constrói sobre a anterior.</li>
+<li>Intervalo quinzenal ou mensal faz sentido após estabilização, para manutenção e prevenção de recaída.</li>
+<li>Subscrição semanal (56€/semana) elimina incerteza de custo avulso (40-70€/sessão) e garante continuidade.</li>
+</ul>
+</aside>
+
 Cada vez mais pessoas chegam à primeira consulta com a mesma dúvida: "preciso mesmo de ir todas as semanas, ou posso ir só quando sentir que preciso?" É uma pergunta legítima — e a resposta tem uma base clínica clara, não é só uma questão de preferência ou de modelo de negócio de quem oferece o serviço. Neste artigo respondemos com base na evidência disponível e na prática clínica, e ajudamos a perceber qual o ritmo certo para a tua fase atual.
+
+<figure class="guide-figure guide-figure-highlight">
+<img src="/image/guide/guide-hiker-view.jpg" alt="Pessoa numa paisagem natural contemplando o horizonte, representando progresso terapêutico e continuidade" width="1280" height="720" loading="lazy" decoding="async">
+<figcaption>A consistência entre sessões é determinante para o progresso terapêutico, tal como em qualquer processo gradual de mudança.</figcaption>
+</figure>
 
 ## A terapia deve ser semanal ou mensal?
 
@@ -56,6 +70,10 @@ Alguns sinais que costumam indicar que vale a pena começar com frequência sema
 - Já tentaste consultas esporádicas antes e sentiste que o progresso não se mantinha entre sessões
 
 Se te revês em vários destes pontos, começar com uma cadência semanal — mesmo que temporária — tende a produzir resultados mais consistentes do que espaçar logo à partida.
+
+Artigos relacionados: [quanto custa a terapia em Portugal](/blog/quanto-custa-terapia-portugal), [sintomas de burnout](/blog/sintomas-de-burnout), e [ansiedade e insónia](/blog/ansiedade-e-insonia).
+
+{{cta}}
 
 ---
 

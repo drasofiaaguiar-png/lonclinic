@@ -7,14 +7,28 @@ author: lon-clinic
 published: 2026-09-17
 updated: 2026-09-17
 section: mental-health
-featured: false
+featured: true
 ---
 
 # Sintomas de burnout: como reconhecer o esgotamento a tempo
 
+<aside class="guide-keyfacts">
+<p class="guide-keyfacts-kicker">Em síntese</p>
+<ul>
+<li>Burnout manifesta-se em 3 grupos: exaustão emocional, despersonalização (cinismo) e redução da realização pessoal.</li>
+<li>Distingue-se do cansaço comum porque persiste mesmo após descanso e afeta a motivação profunda.</li>
+<li>61% dos portugueses sentem-se esgotados ou em risco, segundo dados europeus recentes.</li>
+</ul>
+</aside>
+
 **O burnout manifesta-se através de três grupos principais de sintomas — exaustão emocional intensa, despersonalização (distanciamento cínico em relação ao trabalho) e sensação de menor realização pessoal — que se instalam de forma progressiva, ao contrário do cansaço comum, que costuma melhorar com descanso.**
 
-Segundo dados europeus recentes, 61% dos portugueses sentem-se atualmente esgotados ou em risco de burnout — mas muitos só reconhecem o problema numa fase já avançada, precisamente porque os primeiros sinais são fáceis de confundir com "só estar cansado".
+Segundo dados europeus recentes, 61% dos portugueses sentem-se atualmente esgotados ou em risco de burnout — mas muitos só reconhecem o problema numa fase já avançada, precisamente porque os primeiros sinais são fáceis de confundir com "só estar cansado". Mais sobre o tema: [o que é burnout e como distinguir de cansaço](/blog/burnout-o-que-e-sinais-cansaco).
+
+<figure class="guide-figure guide-figure-highlight">
+<img src="/image/guide/blog/sinais-de-burnout-no-trabalho-remoto-destaque.webp" alt="Pessoa esgotada sentada à mesa de trabalho, demonstrando sintomas de burnout" width="1280" height="720" loading="lazy" decoding="async">
+<figcaption>O burnout instala-se progressivamente e os sintomas persistem mesmo após períodos de descanso.</figcaption>
+</figure>
 
 ## O que é, tecnicamente, o burnout
 
@@ -61,6 +75,10 @@ A Organização Mundial de Saúde reconhece o burnout como um **fenómeno ocupac
 ## Quando procurar ajuda
 
 Vale a pena procurar apoio profissional quando os sintomas persistem por várias semanas, começam a afetar visivelmente a vida fora do trabalho (relações, sono, saúde física), ou quando a pessoa sente que já não consegue geri-los apenas com estratégias próprias, como pausas ou férias. Ao contrário do que por vezes se pensa, "aguentar mais um pouco" raramente resolve o burnout — tende antes a agravá-lo.
+
+Artigos relacionados: [quanto tempo demora a recuperar de burnout](/blog/quanto-tempo-demora-a-recuperar-de-um-burnout), [como falar com o médico sobre burnout](/blog/como-falar-com-o-medico-sobre-burnout), e [burnout e baixa médica em Portugal](/blog/burnout-e-baixa-medica-em-portugal).
+
+{{cta}}
 
 ## Perguntas frequentes sobre sintomas de burnout
 

@@ -7,12 +7,26 @@ author: lon-clinic
 published: 2026-09-17
 updated: 2026-09-17
 section: mental-health
-featured: false
+featured: true
 ---
 
 # Quanto Custa a Terapia em Portugal? Guia Completo de Preços (SNS, Seguro, Privado e Subscrição)
 
+<aside class="guide-keyfacts">
+<p class="guide-keyfacts-kicker">Em síntese</p>
+<ul>
+<li>SNS: gratuito mas listas de espera de meses. Privado avulso: 40-70€/sessão, 160-280€/mês para 4 sessões.</li>
+<li>Seguros: comparticipação variável, sessões anuais limitadas, rede convencionada pode restringir escolha de profissional.</li>
+<li>Subscrição semanal (~224€/mês): custo previsível, continuidade garantida, sem negociar consulta a consulta.</li>
+</ul>
+</aside>
+
 Uma das primeiras perguntas que qualquer pessoa faz antes de procurar ajuda psicológica é: quanto vai custar? A resposta varia muito consoante a via que escolhes — sistema público, seguro de saúde, consultório privado ou modelos mais recentes de subscrição. Este guia reúne os valores reais praticados em Portugal em 2026 para te ajudar a decidir com informação, não com adivinhação.
+
+<figure class="guide-figure guide-figure-highlight">
+<img src="/image/guide/guide-sunset-lake.jpg" alt="Pôr do sol tranquilo sobre lago, representando serenidade e investimento em saúde mental" width="1280" height="720" loading="lazy" decoding="async">
+<figcaption>Compreender os custos reais ajuda a tomar uma decisão informada sobre o investimento em saúde mental.</figcaption>
+</figure>
 
 ## Qual é o preço médio de uma consulta com um psicólogo em Portugal?
 
@@ -58,6 +72,10 @@ Um modelo de subscrição semanal a preço fixo — como os **56€/semana**, o 
 ## Vale a pena pagar por terapia se existe SNS gratuito?
 
 Depende inteiramente da urgência e da tua situação. Se consegues esperar meses sem agravamento do quadro, o SNS é uma opção válida e sem custo. Se precisas de resposta mais rápida, continuidade sem interrupções, ou liberdade de escolher o profissional, uma via privada — avulsa ou por subscrição — tende a ser a alternativa mais realista.
+
+Artigos relacionados: [consultas de psicologia gratuitas em Portugal](/blog/consultas-psicologia-gratuitas-portugal), [psicólogo online grátis: onde procurar](/blog/psicologo-online-gratis), e [terapia semanal ou quinzenal](/blog/terapia-semanal-ou-quinzenal).
+
+{{cta}}
 
 ---
 

@@ -7,14 +7,28 @@ author: lon-clinic
 published: 2026-09-17
 updated: 2026-09-17
 section: mental-health
-featured: false
+featured: true
 ---
 
 # Quanto custa uma consulta de psicologia em Portugal
 
+<aside class="guide-keyfacts">
+<p class="guide-keyfacts-kicker">Em síntese</p>
+<ul>
+<li>Consulta privada avulsa: 40-70€ em média, podendo ultrapassar 80€ em Lisboa/Porto.</li>
+<li>Modelos de subscrição semanal (224€/mês) reduzem custo por sessão face a consultas avulsas (160-280€/mês).</li>
+<li>Existem opções gratuitas (SNS, Cheque-Psicólogo) mas com listas de espera ou elegibilidade limitada.</li>
+</ul>
+</aside>
+
 **Uma consulta de psicologia avulsa em Portugal custa, em média, entre 40€ e 70€ no privado, podendo ultrapassar os 80€ em grandes centros urbanos ou com profissionais com maior especialização. Consultas online tendem a ter preços semelhantes ou ligeiramente inferiores às presenciais, e modelos de subscrição recorrente reduzem, em geral, o custo por sessão face à consulta pontual.**
 
-O valor de uma consulta de psicologia varia consideravelmente consoante vários fatores — por isso vale a pena perceber o que influencia o preço, e que alternativas existem além da consulta particular avulsa.
+O valor de uma consulta de psicologia varia consideravelmente consoante vários fatores — por isso vale a pena perceber o que influencia o preço, e que alternativas existem além da consulta particular avulsa. Artigo relacionado: [quanto custa a terapia em Portugal](/blog/quanto-custa-terapia-portugal).
+
+<figure class="guide-figure guide-figure-highlight">
+<img src="/image/guide/guide-coastal-sun.jpg" alt="Paisagem tranquila representando bem-estar e cuidados de saúde mental acessíveis" width="1280" height="720" loading="lazy" decoding="async">
+<figcaption>Compreender os custos e opções disponíveis ajuda a tomar uma decisão informada sobre acompanhamento psicológico.</figcaption>
+</figure>
 
 ## O que influencia o preço de uma consulta de psicologia
 
@@ -45,6 +59,10 @@ Vale sempre a pena confirmar diretamente junto da seguradora ou do subsistema de
 ## Vale a pena escolher pelo preço mais baixo?
 
 O preço é um fator legítimo, mas não deve ser o único critério. É importante confirmar sempre se o profissional está registado na Ordem dos Psicólogos Portugueses (através do diretório público disponível no site da Ordem), e considerar também a adequação da especialização do psicólogo ao motivo específico da consulta.
+
+Artigos relacionados: [quando ir ao psicólogo](/blog/primeira-consulta-psicologia), [psicólogo online grátis: onde procurar](/blog/psicologo-online-gratis), e [terapia semanal ou quinzenal](/blog/terapia-semanal-ou-quinzenal).
+
+{{cta}}
 
 ## Perguntas frequentes sobre o custo de consultas de psicologia
 
