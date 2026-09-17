@@ -25,7 +25,7 @@ featured: true
 **Zepbound é um nome que não existe em Portugal** — mas a confusão é compreensível, porque o **mesmo medicamento está disponível**, apenas sob **outro nome comercial**.
 
 <figure class="guide-figure guide-figure-highlight">
-<img src="/image/glp1-injecao.webp" alt="Zepbound Portugal não existe — nome comercial EUA exclusivo tirzepatida. Portugal = Mounjaro mesma molécula eficácia aprovada EMA. Confusão marketing mediático americano replica pesquisas portuguesas. Mercado paralelo ilegal sites entrega Portugal. Solução legal: Mounjaro consulta médica prescrição receita farmácia Infarmed." width="1280" height="720" loading="lazy" decoding="async">
+<img src="/image/nutricao-consulta.webp" alt="Zepbound Portugal não existe — nome comercial EUA exclusivo tirzepatida. Portugal = Mounjaro mesma molécula eficácia aprovada EMA. Confusão marketing mediático americano replica pesquisas portuguesas. Mercado paralelo ilegal sites entrega Portugal. Solução legal: Mounjaro consulta médica prescrição receita farmácia Infarmed." width="1280" height="720" loading="lazy" decoding="async">
 <figcaption>Zepbound não existe Portugal/UE — nome comercial Estados Unidos exclusivo tirzepatida medicamento perda peso. Portugal = Mounjaro mesma molécula/eficácia (Eli Lilly, aprovação EMA 2022). Confusão marketing mediático EUA viralizou redes sociais replica pesquisas portuguesas. Desconfiar sites "Zepbound entrega Portugal" mercado paralelo ilegal. Solução segura: Mounjaro consulta médica presencial/telemedicina → receita eletrónica → farmácia registada.</figcaption>
 </figure>
 
@@ -48,9 +48,15 @@ featured: true
 - **Zepbound = não existe** (nome não registado Infarmed, não autorizado comercialização)
 - **Mounjaro = disponível** (nome comercial oficial tirzepatida Portugal desde setembro 2022)
 
-Artigos relacionados: [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-guia-completo) e [semaglutida vs tirzepatida diferença real](/blog/semaglutida-vs-tirzepatida-diferenca-real).
+Artigos relacionados: [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-guia-completo), [semaglutida vs tirzepatida diferença real](/blog/semaglutida-vs-tirzepatida-diferenca-real), [Ozempic Portugal diabetes vs perda peso](/blog/ozempic-portugal-diabetes-vs-perda-peso), e [Wegovy Portugal disponibilidade e alternativas](/blog/wegovy-portugal-disponibilidade-alternativas).
 
-{{cta}}
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Prescrição Mounjaro com acompanhamento</h3>
+<p>Avaliação clínica completa, esclarecimento sobre tirzepatida, plano personalizado e acompanhamento médico + nutricional integrado.</p>
+<a href="/marcar" class="guide-cta-button">Marcar consulta</a>
+</div>
+</div>
 
 ## Porque a confusão acontece
 
@@ -69,11 +75,21 @@ Artigos relacionados: [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-
 
 **Algoritmos sugestão:** YouTube/TikTok recomendam conteúdos americanos "Zepbound" utilizadores portugueses (baseado histórico pesquisas perda peso, não filtro geográfico nomenclatura) → exposição contínua nome inexistente Portugal.
 
+Saiba mais: [medicamentos obesidade Portugal tipos custos resultados](/blog/medicamentos-obesidade-portugal-tipos-custos-resultados) e [qual melhor clínica emagrecimento Portugal](/blog/qual-melhor-clinica-emagrecimento-portugal).
+
 ### 3. Marketing farmacêutico penetração global
 
 **Eli Lilly** laboratório global sede EUA — comunicação corporativa/investidores **foca mercado americano** (maior mercado mundial medicamentos ~45% vendas globais) → notícias financeiras/imprensa especializada internacional mencionam "Zepbound lançamento" (maior visibilidade comercial vs "Mounjaro extensão indicação Europa" menor impacto mediático).
 
-Artigos relacionados: [Mounjaro vs Wegovy vs Ozempic diferenças](/blog/mounjaro-vs-wegovy-vs-ozempic-diferencas) e [GLP-1 peso volta depois interromper tratamento](/blog/glp1-peso-volta-depois-interromper-tratamento).
+Artigos relacionados: [Mounjaro vs Wegovy vs Ozempic diferenças](/blog/mounjaro-vs-wegovy-vs-ozempic-diferencas), [GLP-1 peso volta depois interromper tratamento](/blog/glp1-peso-volta-depois-interromper-tratamento), [Saxenda Portugal guia completo](/blog/saxenda-portugal-guia-completo), e [resistência insulina sintomas causas diagnóstico tratamento](/blog/resistencia-insulina-sintomas-causas-diagnostico-tratamento).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Consulta de medicina e nutrição integrada</h3>
+<p>Não sabe se Mounjaro é indicado para si? Avaliação clínica completa com médico + nutricionista. Prescrição personalizada quando indicado.</p>
+<a href="/marcar" class="guide-cta-button">Agendar avaliação</a>
+</div>
+</div>
 
 ## O que fazer: procurar Mounjaro, não Zepbound
 
@@ -98,7 +114,15 @@ Artigos relacionados: [Mounjaro vs Wegovy vs Ozempic diferenças](/blog/mounjaro
 - **Gerir efeitos secundários** (náuseas, obstipação — estratégias alimentares/medicação sintomática)
 - **Monitorizar evolução** (peso, perímetro abdominal, comorbilidades, aderência plano nutricional)
 
-Artigos relacionados: [quais médicos receitam Mounjaro Portugal](/blog/quais-medicos-receitam-mounjaro-portugal) e [Mounjaro sem receita Portugal legal genérico](/blog/mounjaro-sem-receita-portugal-legal-generico).
+Artigos relacionados: [quais médicos receitam Mounjaro Portugal](/blog/quais-medicos-receitam-mounjaro-portugal), [Mounjaro sem receita Portugal legal genérico](/blog/mounjaro-sem-receita-portugal-legal-generico), [Mounjaro Portugal onde como obter passo passo](/blog/mounjaro-portugal-onde-como-obter-passo-passo), e [melhor clínica emagrecimento Lisboa](/blog/melhor-clinica-emagrecimento-lisboa).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Programa emagrecimento com Mounjaro</h3>
+<p>Prescrição médica quando indicado + plano nutricional personalizado + acompanhamento contínuo. Tudo integrado numa única consulta.</p>
+<a href="/marcar" class="guide-cta-button">Começar programa</a>
+</div>
+</div>
 
 ## Transparência LON: esclarecemos confusão imediatamente
 
@@ -122,7 +146,7 @@ Artigos relacionados: [quais médicos receitam Mounjaro Portugal](/blog/quais-me
 **4. Preço transparente comunicado início:**
 - **300€/6 meses** acompanhamento médico + nutricional integrado (não inclui custo medicamento farmácia ~900-2100€ consoante dose/duração — comunicamos claramente separação custos)
 
-Artigos relacionados: [efeitos secundários GLP-1 náuseas obstipação](/blog/efeitos-secundarios-glp1-nauseas-obstipacao) e [contraindicações GLP-1 quem não deve tomar](/blog/contraindicacoes-glp1-quem-nao-deve-tomar).
+Artigos relacionados: [efeitos secundários GLP-1 náuseas obstipação](/blog/efeitos-secundarios-glp1-nauseas-obstipacao), [contraindicações GLP-1 quem não deve tomar](/blog/contraindicacoes-glp1-quem-nao-deve-tomar), [GLP-1 perda massa muscular como reduzir](/blog/glp1-perda-massa-muscular-como-reduzir), [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento), e [perda de peso sustentável](/blog/perda-de-peso-sustentavel).
 
 ## Perguntas frequentes
 
