@@ -1,88 +1,65 @@
-<aside class="guide-keyfacts">
-<p class="guide-keyfacts-kicker">Resposta directa</p>
-<ul>
-<li>No privado, em Portugal, a maior parte das consultas de psicologia situa-se entre <strong>40 € e 70 €</strong>; <strong>60 €</strong> é o valor mais frequente.</li>
-<li>Na Lon Clinic a consulta de psicologia online tem preço fixo: <strong>60 €</strong> por sessão avulsa, ou <strong>56 €/semana</strong> em acompanhamento (mínimo um mês).</li>
-<li>Com <strong>ADSE</strong> ou alguns seguros de saúde, o custo efectivo desce por reembolso ou comparticipação — confirme sempre o seu plano.</li>
-</ul>
-</aside>
+---
+title: "Quanto custa uma consulta de psicologia em Portugal"
+meta_description: "Quanto custa, em média, uma consulta de psicologia em Portugal — presencial e online — que opções gratuitas ou comparticipadas existem, e o que considerar antes de escolher."
+slug: quanto-custa-consulta-psicologia-portugal
+keyword: quanto custa uma consulta de psicologia
+author: lon-clinic
+published: 2026-09-17
+updated: 2026-09-17
+section: mental-health
+featured: false
+---
 
-Em Portugal, uma consulta de psicologia no sector privado custa, em média, **entre 40 € e 70 €**, sendo 60 € o valor mais comum. A primeira consulta é por vezes ligeiramente mais cara do que as seguintes. Quem tem ADSE ou determinados seguros de saúde pode reduzir este custo através de reembolso ou comparticipação. Há também [consultas de psicologia gratuitas](/blog/consultas-psicologia-gratuitas-portugal) — SNS, Cheque-Psicólogo (Cuida-te) e gabinetes universitários — com listas de espera e critérios próprios.
+# Quanto custa uma consulta de psicologia em Portugal
 
-Consultas online, como as da Lon Clinic, tendem a ter um preço fixo e mais previsível: **60 €** por sessão avulsa, o mesmo valor independentemente do psicólogo ou da especialidade. No acompanhamento semanal o preço desce para **56 €/semana**.
+**Uma consulta de psicologia avulsa em Portugal custa, em média, entre 40€ e 70€ no privado, podendo ultrapassar os 80€ em grandes centros urbanos ou com profissionais com maior especialização. Consultas online tendem a ter preços semelhantes ou ligeiramente inferiores às presenciais, e modelos de subscrição recorrente reduzem, em geral, o custo por sessão face à consulta pontual.**
 
-## Quanto custa em média uma consulta de psicologia?
+O valor de uma consulta de psicologia varia consideravelmente consoante vários fatores — por isso vale a pena perceber o que influencia o preço, e que alternativas existem além da consulta particular avulsa.
 
-Os valores variam consoante a clínica, a cidade e a experiência do psicólogo, mas a faixa do mercado privado português é estável: a maioria das consultas situa-se entre 40 € e 70 €, com 60 € a ser o valor mais frequente. Em clínicas de maior estrutura, em Lisboa ou no Porto, ou com psicólogos com formação avançada (EMDR, [terapia de casal](/terapia-de-casal), neurodesenvolvimento adulto), os preços podem ultrapassar os 70 €.
+## O que influencia o preço de uma consulta de psicologia
 
-No outro extremo, é possível encontrar consultas mais acessíveis — sobretudo online ou fora dos grandes centros urbanos — e associações ou consultórios de prática supervisionada com psicólogos juniores, a partir de cerca de 35 €–40 €.
+- **Localização geográfica** — consultas em Lisboa e Porto tendem a ser mais caras do que noutras regiões do país
+- **Experiência e especialização do profissional** — psicólogos com formação avançada em áreas específicas (ex.: neurodesenvolvimento, perturbações alimentares) podem cobrar valores mais elevados
+- **Modalidade** — presencial vs. online, sendo o online geralmente mais acessível por não implicar custos de espaço físico
+- **Formato** — consulta avulsa (mais cara por sessão) vs. modelo de subscrição/pacote de sessões (geralmente com custo por sessão mais baixo)
+- **Tipo de consulta** — terapia individual, terapia de casal ou avaliação psicológica especializada (como testes de neurodesenvolvimento) têm tabelas de preço distintas
 
-Lisboa e Setúbal tendem a ter os preços mais altos; fora das áreas metropolitanas a média desce. O que quase nunca muda é a duração típica: cerca de 50 minutos.
+## Modelos de subscrição vs. consulta avulsa
 
-Se ainda está a escolher com quem falar, [como encontrar um psicólogo](/blog/como-encontrar-um-psicologo) cobre cédula da OPP, primeira sessão e quando mudar. Por cidade: [psicologia online por distrito](/blog/psicologia-online-portugal-por-distrito).
+Uma tendência crescente em Portugal é o modelo de subscrição recorrente, em que o paciente paga um valor fixo semanal ou mensal por sessões regulares, em vez de pagar por cada consulta isoladamente. Este modelo tem duas vantagens práticas: reduz habitualmente o custo por sessão face ao valor avulso, e incentiva a continuidade do acompanhamento — fator importante, já que a eficácia da terapia está associada à regularidade das sessões, e não apenas a consultas pontuais em momentos de crise.
 
-{{cta}}
+## Existem opções gratuitas ou comparticipadas?
 
-## Presencial vs online: há diferença de preço?
+Sim, através de várias vias:
 
-Na maioria das clínicas portuguesas, o preço da consulta online é igual ao da consulta presencial — o que muda é a comodidade. Isto é particularmente relevante para quem vive fora dos grandes centros, tem horários incompatíveis com deslocações, ou simplesmente prefere fazer a sessão a partir de casa.
+- **Serviço Nacional de Saúde (SNS)** — consultas de psicologia gratuitas, mas tipicamente com listas de espera longas em várias regiões do país
+- **Programas específicos para jovens** — como o Cheque-Psicólogo/Cuida-te, dirigido a jovens até determinada idade, com sessões gratuitas ou fortemente comparticipadas
+- **Apoio psicológico em contexto académico** — muitas instituições de ensino superior disponibilizam consultas gratuitas para estudantes
+- **Seguros de saúde e planos de saúde no trabalho** — cada vez mais seguradoras e empregadores incluem comparticipação de consultas de psicologia nos seus planos
+- **Modelos de preço solidário** — algumas plataformas praticam tabelas ajustadas à capacidade financeira de cada paciente
 
-A eficácia da terapia online, para a generalidade dos casos, é hoje considerada equivalente à da terapia presencial pela evidência disponível: a [aliança terapêutica](/blog/como-encontrar-um-psicologo) — o preditor mais consistente de resultado — mantém-se no formato à distância. O que muda é a logística, descrita em [telemedicina em casa](/blog/telemedicina-em-casa).
+## Consulta de psicologia com seguro de saúde ou ADSE
 
-## Privado vs comparticipado: quanto posso poupar?
+Vale sempre a pena confirmar diretamente junto da seguradora ou do subsistema de saúde (como a ADSE) se a psicologia está incluída no plano e em que condições — a comparticipação varia significativamente consoante a apólice e, nalguns casos, exige encaminhamento médico prévio.
 
-Se for beneficiário da **ADSE**, pode obter reembolso pelas consultas de psicologia em regime livre, o que reduz o custo efectivo por sessão. O valor exacto e o número de actos comparticipados por ano estão na tabela ADSE em vigor — confirme no [site da ADSE](https://www.adse.pt/) e no guia [ADSE e seguros na psicologia](/blog/adse-seguros-psicologia-portugal) antes de agendar.
+## Vale a pena escolher pelo preço mais baixo?
 
-Algumas seguradoras de saúde privadas também cobrem psicologia, embora a cobertura seja ainda desigual entre operadoras. Vale sempre a pena confirmar as condições do seu plano. O [guia de seguros de saúde em Portugal](/blog/seguros-saude-portugal-guia) explica a diferença entre rede convencionada e reembolso; [seguro de saúde: compensa?](/blog/seguro-saude-compensa) compara o prémio anual com o custo de pagar consulta a consulta.
+O preço é um fator legítimo, mas não deve ser o único critério. É importante confirmar sempre se o profissional está registado na Ordem dos Psicólogos Portugueses (através do diretório público disponível no site da Ordem), e considerar também a adequação da especialização do psicólogo ao motivo específico da consulta.
 
-Na Lon Clinic o recibo serve para o pedido de reembolso, se o seu plano o aceitar — isso é do lado da apólice, não nosso.
+## Perguntas frequentes sobre o custo de consultas de psicologia
 
-## Quanto custa uma consulta de psicologia na Lon Clinic?
+**A consulta de psicologia online é mais barata que a presencial?**
+Tende a ser semelhante ou ligeiramente mais acessível, já que reduz custos associados a espaço físico, mas a diferença de preço varia consoante a plataforma e o profissional.
 
-Na Lon Clinic, a consulta de psicologia online individual tem um **preço fixo de 60 €** na sessão avulsa, sem taxas escondidas, com psicólogos inscritos na [Ordem dos Psicólogos Portugueses](https://www.ordemdospsicologos.pt/pt/membros). O preço individual é o mesmo seja qual for a queixa — [ansiedade](/ansiedade-no-trabalho), [burnout](/psicologia-burnout), questões familiares, entre outras — e seja qual for o psicólogo escolhido dentro da equipa. A [terapia de casal](/terapia-de-casal) tem preço próprio: **75 €** avulsa ou **65 €/semana** cobrados mensalmente.
+**Quantas sessões de psicologia costumam ser necessárias?**
+Não há um número fixo — depende do motivo da consulta e da abordagem terapêutica. Alguns processos resolvem-se em poucas sessões focadas num objetivo específico; outros envolvem acompanhamento contínuo ao longo de vários meses.
 
-Há duas formas de pagar:
+**A ADSE comparticipa consultas de psicologia?**
+Sim, a ADSE comparticipa consultas de psicologia em determinadas condições, sendo recomendável confirmar diretamente os valores e requisitos atualizados junto do subsistema.
 
-| Opção | Preço | O que inclui |
-|---|---|---|
-| Sessão avulsa | **60 €** | Uma videochamada, sem compromisso de continuidade |
-| Acompanhamento semanal | **56 €/semana** | Uma sessão de vídeo por semana (mínimo um mês; depois pode cancelar) |
-
-Pode [escolher o psicólogo pelo perfil](/saudemental) ou [preencher a triagem](/triagem) e deixar que a equipa recomende alguém. Marcar: [consulta de psicologia](/saudemental).
-
-{{cta}}
-
-[lon-slots: serviço="psicologia"]
-
-## Perguntas frequentes
-
-### Qual é o preço de uma consulta de Psicologia?
-
-Em Portugal, o preço médio de uma consulta de psicologia privada situa-se entre 40 € e 70 €, sendo 60 € o valor mais comum a nível nacional. Na Lon Clinic a sessão avulsa custa 60 €.
-
-### Qual é a média para Psicologia em Portugal?
-
-A média nacional ronda os 50 €–60 € por sessão, com variações consoante a região (Lisboa e Setúbal tendem a ter os preços mais altos) e a experiência do psicólogo.
-
-### Qual é o preço médio de uma consulta com um Psicólogo?
-
-O valor mais frequentemente reportado por clínicas privadas em Portugal é de 60 € por sessão de cerca de 50 minutos.
-
-### O preço é o mesmo para todas as especialidades?
-
-Não. A consulta individual custa 60 € (ou 56 €/semana em acompanhamento). A [terapia de casal](/terapia-de-casal) tem preço próprio: 75 € avulsa ou 65 €/semana cobrados mensalmente (260 €/mês).
-
-### Quanto custa a primeira consulta?
-
-Na maioria das clínicas privadas portuguesas, a primeira consulta tem o mesmo preço das seguintes ou é ligeiramente mais cara, por incluir uma avaliação inicial mais aprofundada. Na Lon Clinic a primeira sessão custa o mesmo: 60 €.
+**Compensa mais um pacote/subscrição do que pagar por sessão?**
+Para quem antecipa acompanhamento regular e continuado, um modelo de subscrição ou pacote costuma compensar financeiramente face ao pagamento avulso por sessão, além de facilitar a consistência do acompanhamento.
 
 ---
 
-Este artigo tem fins informativos e não substitui uma avaliação clínica ou psicológica individual. Se está a atravessar uma crise ou tem pensamentos de fazer mal a si próprio, procure ajuda imediata através da linha **SNS 24 (808 24 24 24)** ou dos serviços de urgência (**112**).
-
-## Fontes
-
-- Preçário da Lon Clinic (marcação de psicologia), 2026 — sessão avulsa 60 €; acompanhamento 56 €/semana
-- [Ordem dos Psicólogos Portugueses — Directório](https://www.ordemdospsicologos.pt/pt/membros)
-- [ADSE](https://www.adse.pt/) — tabela de comparticipações em regime livre (consulte o valor em vigor)
-- Flückiger C, Del Re AC, Wampold BE, Horvath AO. "The Alliance in Adult Psychotherapy: A Meta-Analytic Synthesis." *Psychotherapy.* 2018;55(4):316-340. A aliança terapêutica prediz o resultado também em formato online.
+*A [LON Clinic](https://www.lonclinic.com/saudemental) disponibiliza consultas de psicologia online com modelo de subscrição semanal, pensado para tornar o acompanhamento regular mais acessível.*
