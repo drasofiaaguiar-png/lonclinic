@@ -58,7 +58,15 @@ featured: true
 
 **Quando escolher:** Obesidade mórbida IMC ≥40 + comorbilidades graves + orçamento elevado/seguro convencionado + preferência presencial forte.
 
-Artigos relacionados: [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento) e [cirurgia bariátrica Portugal SNS ADSE seguros preço](/blog/cirurgia-bariatrica-portugal-sns-adse-seguros-preco).
+Artigos relacionados: [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento), [cirurgia bariátrica Portugal SNS ADSE seguros preço](/blog/cirurgia-bariatrica-portugal-sns-adse-seguros-preco), [cirurgia metabólica vs bariátrica diferença](/blog/cirurgia-metabolica-vs-bariatrica-diferenca), e [melhor clínica emagrecimento Lisboa](/blog/melhor-clinica-emagrecimento-lisboa).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Avaliação personalizada de emagrecimento</h3>
+<p>Consulta médica + nutricional integrada. Identificamos a melhor estratégia para o seu caso específico: GLP-1, plano alimentar ou encaminhamento.</p>
+<a href="/marcar" class="guide-cta-button">Marcar consulta</a>
+</div>
+</div>
 
 ### 2. Clínicas emagrecimento tradicionais presenciais
 
@@ -81,7 +89,7 @@ Artigos relacionados: [obesidade doença crónica tratamento](/blog/obesidade-do
 
 **Quando escolher:** Perda peso moderada ≤10-15 kg + valoriza componente estética/presencial + orçamento médio + desconfia telemedicina.
 
-Artigos relacionados: [diferença entre dietista e nutricionista](/blog/diferenca-entre-dietista-e-nutricionista) e [quanto custa consulta nutrição Portugal](/blog/quanto-custa-consulta-nutricao-portugal).
+Artigos relacionados: [diferença entre dietista e nutricionista](/blog/diferenca-entre-dietista-e-nutricionista), [quanto custa consulta nutrição Portugal](/blog/quanto-custa-consulta-nutricao-portugal), [consultas nutrição Lisboa preços](/blog/consultas-nutricao-lisboa-precos), [consultas nutrição Porto preços](/blog/consultas-nutricao-porto-precos), e [consultas nutrição Coimbra preços](/blog/consultas-nutricao-coimbra-precos).
 
 ### 3. Telemedicina especializada GLP-1
 
@@ -106,9 +114,15 @@ Artigos relacionados: [diferença entre dietista e nutricionista](/blog/diferenc
 
 **Quando escolher:** Perda peso significativa ≥15 kg + candidato GLP-1 (IMC ≥30 ou ≥27 comorbilidades) + trabalho horários apertados + valoriza conveniência/preço.
 
-Artigos relacionados: [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-guia-completo) e [efeitos secundários GLP-1 náuseas obstipação](/blog/efeitos-secundarios-glp1-nauseas-obstipacao).
+Artigos relacionados: [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-guia-completo), [efeitos secundários GLP-1 náuseas obstipação](/blog/efeitos-secundarios-glp1-nauseas-obstipacao), [Mounjaro Portugal onde como obter passo passo](/blog/mounjaro-portugal-onde-como-obter-passo-passo), [Zepbound Portugal existe alternativa](/blog/zepbound-portugal-existe-alternativa), [Saxenda Portugal guia completo](/blog/saxenda-portugal-guia-completo), e [Mysimba Portugal eficácia riscos revisão EMA](/blog/mysimba-portugal-eficacia-riscos-revisao-ema).
 
-{{cta}}
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Programa emagrecimento com GLP-1 integrado</h3>
+<p>Prescrição Mounjaro/Saxenda quando indicado + plano nutricional personalizado + acompanhamento contínuo. Médico + nutricionista numa só consulta.</p>
+<a href="/marcar" class="guide-cta-button">Começar programa</a>
+</div>
+</div>
 
 ### 4. Telemedicina generalista
 
@@ -129,7 +143,7 @@ Artigos relacionados: [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-
 
 **Quando escolher:** Perda peso ligeira ≤10 kg + valoriza ter múltiplas especialidades mesma plataforma futuro + orçamento médio.
 
-Artigos relacionados: [telemedicina em casa como funciona](/blog/telemedicina-em-casa) e [consulta médica online vale a pena](/blog/consulta-medica-online-vale-a-pena).
+Artigos relacionados: [telemedicina em casa como funciona](/blog/telemedicina-em-casa), [consulta médica online vale a pena](/blog/consulta-medica-online-vale-a-pena), [renovar receita médica online](/blog/renovar-receita-medica-online), e [medicamentos obesidade Portugal tipos custos resultados](/blog/medicamentos-obesidade-portugal-tipos-custos-resultados).
 
 ### 5. Cirurgia bariátrica (SNS/privado)
 
@@ -150,7 +164,7 @@ Artigos relacionados: [telemedicina em casa como funciona](/blog/telemedicina-em
 
 **Quando escolher:** Obesidade mórbida IMC ≥40 ou ≥35 + comorbilidades + tratamentos conservadores (dieta + medicação) falharam ≥6-12 meses + avaliação psicológica favorável.
 
-Artigos relacionados: [cirurgia bariátrica sleeve quantos quilos se perde](/blog/cirurgia-bariatrica-sleeve-quantos-quilos-se-perde) e [desvantagens cirurgia bariátrica](/blog/desvantagens-cirurgia-bariatrica).
+Artigos relacionados: [cirurgia bariátrica sleeve quantos quilos se perde](/blog/cirurgia-bariatrica-sleeve-quantos-quilos-se-perde), [desvantagens cirurgia bariátrica](/blog/desvantagens-cirurgia-bariatrica), [recuperação cirurgia bariátrica tempo repouso cicatrização](/blog/recuperacao-cirurgia-bariatrica-tempo-repouso-cicatrizacao), e [resistência insulina sintomas causas diagnóstico tratamento](/blog/resistencia-insulina-sintomas-causas-diagnostico-tratamento).
 
 ## Critérios essenciais para avaliar qualquer clínica
 
@@ -167,7 +181,7 @@ Artigos relacionados: [cirurgia bariátrica sleeve quantos quilos se perde](/blo
 - "Técnicos nutrição" vs nutricionistas (profissão não regulada Portugal, qualidade não garantida)
 - Clínica sem registo ERS verificável (ilegalidade)
 
-Artigos relacionados: [nutricionista ou endocrinologista para emagrecer](/blog/nutricionista-ou-endocrinologista-para-emagrecer) e [quais médicos receitam Mounjaro Portugal](/blog/quais-medicos-receitam-mounjaro-portugal).
+Artigos relacionados: [nutricionista ou endocrinologista para emagrecer](/blog/nutricionista-ou-endocrinologista-para-emagrecer), [quais médicos receitam Mounjaro Portugal](/blog/quais-medicos-receitam-mounjaro-portugal), [Wegovy Portugal disponibilidade alternativas](/blog/wegovy-portugal-disponibilidade-alternativas), e [Ozempic Portugal diabetes vs perda peso](/blog/ozempic-portugal-diabetes-vs-perda-peso).
 
 ### 2. Plano manutenção pós-perda peso explícito
 
@@ -184,7 +198,7 @@ Artigos relacionados: [nutricionista ou endocrinologista para emagrecer](/blog/n
 - Marketing exclusivo "perca 15 kg 3 meses" **sem mencionar** o que acontece depois
 - Programas curtos 8-12 semanas **sem seguimento** posterior (perda peso rápida sem manutenção = reganho quase garantido)
 
-Artigos relacionados: [GLP-1 peso volta depois interromper tratamento](/blog/glp1-peso-volta-depois-interromper-tratamento) e [plano emagrecimento 30 dias realista](/blog/plano-emagrecimento-30-dias-realista).
+Artigos relacionados: [GLP-1 peso volta depois interromper tratamento](/blog/glp1-peso-volta-depois-interromper-tratamento), [plano emagrecimento 30 dias realista](/blog/plano-emagrecimento-30-dias-realista), [efeito ioio](/blog/efeito-ioio), [perda de peso sustentável](/blog/perda-de-peso-sustentavel), e [cetonas exógenas emagrecer evidência científica](/blog/cetonas-exogenas-emagrecer-evidencia-cientifica).
 
 ### 3. Integração apoio psicológico
 
@@ -204,7 +218,15 @@ Artigos relacionados: [GLP-1 peso volta depois interromper tratamento](/blog/glp
 - Clínica ignora totalmente componente psicológica (foco exclusivo "calorias/macros")
 - "Motivação" banalizada ("seja forte", "força vontade") vs reconhecimento barreiras psicológicas reais estruturadas
 
-Artigos relacionados: [quando ir ao psicólogo sinais](/blog/quando-ir-ao-psicologo-sinais) e [psicologia online vs presencial](/blog/psicologia-online-vs-presencial).
+Artigos relacionados: [quando ir ao psicólogo sinais](/blog/quando-ir-ao-psicologo-sinais), [psicologia online vs presencial](/blog/psicologia-online-vs-presencial), [alimentação intuitiva](/blog/alimentacao-intuitiva), e [GLP-1 perda massa muscular como reduzir](/blog/glp1-perda-massa-muscular-como-reduzir).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Consulta telemedicina com equipa integrada</h3>
+<p>Avaliação clínica completa sem sair de casa. Médico + nutricionista + apoio psicológico quando necessário. Horários flexíveis.</p>
+<a href="/marcar" class="guide-cta-button">Agendar online</a>
+</div>
+</div>
 
 ### 4. Transparência preço início
 
@@ -218,7 +240,7 @@ Artigos relacionados: [quando ir ao psicólogo sinais](/blog/quando-ir-ao-psicol
 - "A partir de..." preços (implica custos reais superiores não comunicados)
 - Pacotes "personalizados" sem valores referência (opacidade total)
 
-Artigos relacionados: [quanto custa consulta psicologia Portugal](/blog/quanto-custa-consulta-psicologia-portugal) e [consultas nutrição Lisboa preços](/blog/consultas-nutricao-lisboa-precos).
+Artigos relacionados: [quanto custa consulta psicologia Portugal](/blog/quanto-custa-consulta-psicologia-portugal), [consultas nutrição Lisboa preços](/blog/consultas-nutricao-lisboa-precos), [consultas nutrição Cascais Sintra preços](/blog/consultas-nutricao-cascais-sintra-precos), e [consultas nutrição Faro preços](/blog/consultas-nutricao-faro-precos).
 
 ### 5. Honestidade limitações
 
@@ -232,7 +254,7 @@ Artigos relacionados: [quanto custa consulta psicologia Portugal](/blog/quanto-c
 - "Método revolucionário 100% eficaz" (não existe — evidência científica mostra todas intervenções têm taxa falha/abandono)
 - "Sem esforço/dieta" (impossível — perda peso sempre requer défice calórico = esforço)
 
-Artigos relacionados: [obesidade Portugal números problema](/blog/obesidade-portugal-numeros-problema) e [perda peso Portugal perguntas frequentes 2026](/blog/perda-peso-portugal-perguntas-frequentes-2026).
+Artigos relacionados: [obesidade Portugal números problema](/blog/obesidade-portugal-numeros-problema), [perda peso Portugal perguntas frequentes 2026](/blog/perda-peso-portugal-perguntas-frequentes-2026), [alcool e perda de peso](/blog/alcool-e-perda-de-peso), e [perda de peso em viagem](/blog/perda-de-peso-em-viagem).
 
 ## LON posicionamento: onde nos situamos
 
@@ -273,7 +295,7 @@ Artigos relacionados: [obesidade Portugal números problema](/blog/obesidade-por
 2. **Preferência presencial forte irracional** — paciente não adapta videochamadas tecnologia, valoriza excessivamente contacto físico (mesmo evidência científica mostra eficácia similar telemedicina vs presencial)
 3. **Candidato cirurgia bariátrica claro** IMC ≥40 tratamentos conservadores falharam — encaminhamos directamente avaliação cirúrgica (não atrasamos intervenção necessária)
 
-Artigos relacionados: [consultas nutrição online Portugal distritos](/blog/consultas-nutricao-online-portugal-distritos) e [melhores plataformas telemedicina](/blog/melhores-plataformas-telemedicina).
+Artigos relacionados: [consultas nutrição online Portugal distritos](/blog/consultas-nutricao-online-portugal-distritos), [melhores plataformas telemedicina](/blog/melhores-plataformas-telemedicina), [contraindicações GLP-1 quem não deve tomar](/blog/contraindicacoes-glp1-quem-nao-deve-tomar), e [Mounjaro sem receita Portugal legal genérico](/blog/mounjaro-sem-receita-portugal-legal-generico).
 
 ## Perguntas frequentes
 
