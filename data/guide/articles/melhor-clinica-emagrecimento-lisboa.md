@@ -74,7 +74,7 @@ Artigos relacionados: [obesidade doença crónica tratamento](/blog/obesidade-do
 - Doctoralia pesquisa localização Lisboa
 - **Sempre confirmar:** Registo ERS, nº cédula profissional Ordens, transparência preço total programa
 
-Artigos relacionados: [consultas nutrição Lisboa preços](/blog/consultas-nutricao-lisboa-precos) e [diferença entre dietista e nutricionista](/blog/diferenca-entre-dietista-e-nutricionista).
+Artigos relacionados: [consultas nutrição Lisboa preços](/blog/consultas-nutricao-lisboa-precos), [diferença entre dietista e nutricionista](/blog/diferenca-entre-dietista-e-nutricionista), [consultas nutrição Cascais Sintra preços](/blog/consultas-nutricao-cascais-sintra-precos), e [qual melhor clínica emagrecimento Portugal](/blog/qual-melhor-clinica-emagrecimento-portugal).
 
 ### 3. Nutricionistas independentes (~200+ Lisboa)
 
@@ -97,9 +97,15 @@ Artigos relacionados: [consultas nutrição Lisboa preços](/blog/consultas-nutr
 - Ordem Nutricionistas pesquisa filtrar Lisboa
 - Perguntar consulta informativa gratuita/paga: "Qual sua experiência específica perda peso significativa? Inclui plano manutenção pós-meta? Tem articulação médica prescrição medicamentos quando necessário?"
 
-Artigos relacionados: [nutricionista ou endocrinologista para emagrecer](/blog/nutricionista-ou-endocrinologista-para-emagrecer) e [quanto custa consulta nutrição Portugal](/blog/quanto-custa-consulta-nutricao-portugal).
+Artigos relacionados: [nutricionista ou endocrinologista para emagrecer](/blog/nutricionista-ou-endocrinologista-para-emagrecer), [quanto custa consulta nutrição Portugal](/blog/quanto-custa-consulta-nutricao-portugal), [Mounjaro Portugal onde como obter passo passo](/blog/mounjaro-portugal-onde-como-obter-passo-passo), e [medicamentos obesidade Portugal tipos custos resultados](/blog/medicamentos-obesidade-portugal-tipos-custos-resultados).
 
-{{cta}}
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Consulta telemedicina - não precisa deslocar a Lisboa</h3>
+<p>Aceda à mesma especialização de Lisboa sem sair de casa. Médico + nutricionista integrados, prescrição GLP-1 quando indicado.</p>
+<a href="/marcar" class="guide-cta-button">Marcar consulta online</a>
+</div>
+</div>
 
 ## Telemedicina: acesso à especialização Lisboa sem deslocar
 
@@ -114,7 +120,15 @@ Artigos relacionados: [nutricionista ou endocrinologista para emagrecer](/blog/n
 - **Videochamada** elimina barreiras geográficas (0€ transporte, 0 min deslocação)
 - **Paradoxo Lisboa:** Residentes capital **não precisam mais** escolher "clínica em Lisboa" como critério prioritário — telemedicina acede **mesma/superior especialização** (nutricionistas foco exclusivo emagrecimento plataformas nacionais) sem deslocar físico Amoreiras/Liberdade (economiza estacionamento €5-15, trânsito 30-60 min, espera sala 15-30 min)
 
-Artigos relacionados: [telemedicina em casa como funciona](/blog/telemedicina-em-casa) e [consulta médica online vale a pena](/blog/consulta-medica-online-vale-a-pena).
+Artigos relacionados: [telemedicina em casa como funciona](/blog/telemedicina-em-casa), [consulta médica online vale a pena](/blog/consulta-medica-online-vale-a-pena), [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-guia-completo), [Saxenda Portugal guia completo](/blog/saxenda-portugal-guia-completo), [Zepbound Portugal existe alternativa](/blog/zepbound-portugal-existe-alternativa), e [Wegovy Portugal disponibilidade alternativas](/blog/wegovy-portugal-disponibilidade-alternativas).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Programa emagrecimento com acompanhamento integrado</h3>
+<p>€300/6 meses - Médico + nutricionista + psicologia quando necessário. Prescrição Mounjaro/Saxenda incluída no programa.</p>
+<a href="/marcar" class="guide-cta-button">Começar programa</a>
+</div>
+</div>
 
 ### LON vs opções presenciais Lisboa
 
@@ -159,7 +173,7 @@ Artigos relacionados: [consultas nutrição online Portugal distritos](/blog/con
 
 **Restantes 90-95% casos:** Telemedicina **custo-benefício superior** (especialização igual/superior, conveniência, economia, suporte contínuo).
 
-Artigos relacionados: [cirurgia bariátrica sleeve quantos quilos se perde](/blog/cirurgia-bariatrica-sleeve-quantos-quilos-se-perde) e [desvantagens cirurgia bariátrica](/blog/desvantagens-cirurgia-bariatrica).
+Artigos relacionados: [cirurgia bariátrica sleeve quantos quilos se perde](/blog/cirurgia-bariatrica-sleeve-quantos-quilos-se-perde), [desvantagens cirurgia bariátrica](/blog/desvantagens-cirurgia-bariatrica), [cirurgia metabólica vs bariátrica diferença](/blog/cirurgia-metabolica-vs-bariatrica-diferenca), [recuperação cirurgia bariátrica tempo repouso cicatrização](/blog/recuperacao-cirurgia-bariatrica-tempo-repouso-cicatrizacao), e [resistência insulina sintomas causas diagnóstico tratamento](/blog/resistencia-insulina-sintomas-causas-diagnostico-tratamento).
 
 ## Verificação antes escolher qualquer clínica Lisboa
 
@@ -188,7 +202,7 @@ Artigos relacionados: [cirurgia bariátrica sleeve quantos quilos se perde](/blo
 
 **Red flag:** Clínica menciona "equipa qualificada" **sem nomes** ou nomes **sem números cédula** → opacidade (possível profissionais não regulados).
 
-Artigos relacionados: [quais médicos receitam Mounjaro Portugal](/blog/quais-medicos-receitam-mounjaro-portugal) e [Mounjaro sem receita Portugal legal genérico](/blog/mounjaro-sem-receita-portugal-legal-generico).
+Artigos relacionados: [quais médicos receitam Mounjaro Portugal](/blog/quais-medicos-receitam-mounjaro-portugal), [Mounjaro sem receita Portugal legal genérico](/blog/mounjaro-sem-receita-portugal-legal-generico), [Mysimba Portugal eficácia riscos revisão EMA](/blog/mysimba-portugal-eficacia-riscos-revisao-ema), [efeitos secundários GLP-1 náuseas obstipação](/blog/efeitos-secundarios-glp1-nauseas-obstipacao), e [contraindicações GLP-1 quem não deve tomar](/blog/contraindicacoes-glp1-quem-nao-deve-tomar).
 
 ### 3. Plano manutenção pós-perda peso explícito
 
@@ -203,7 +217,7 @@ Artigos relacionados: [quais médicos receitam Mounjaro Portugal](/blog/quais-me
 **Red flag resposta:**
 - "Atingiu meta? Óptimo, alta clínica!" (abandono paciente momento crítico — evidência 80-95% reganham peso 1-5 anos sem manutenção)
 
-Artigos relacionados: [GLP-1 peso volta depois interromper tratamento](/blog/glp1-peso-volta-depois-interromper-tratamento) e [plano emagrecimento 30 dias realista](/blog/plano-emagrecimento-30-dias-realista).
+Artigos relacionados: [GLP-1 peso volta depois interromper tratamento](/blog/glp1-peso-volta-depois-interromper-tratamento), [plano emagrecimento 30 dias realista](/blog/plano-emagrecimento-30-dias-realista), [efeito ioio](/blog/efeito-ioio), [perda de peso sustentável](/blog/perda-de-peso-sustentavel), [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento), e [GLP-1 perda massa muscular como reduzir](/blog/glp1-perda-massa-muscular-como-reduzir).
 
 ### 4. Integração apoio psicológico
 
@@ -217,7 +231,15 @@ Artigos relacionados: [GLP-1 peso volta depois interromper tratamento](/blog/glp
 **Red flag:**
 - "Não temos psicólogo, mas se precisar encaminhamos externo." (fragmentação cuidados, custo adicional paciente)
 
-Artigos relacionados: [quando ir ao psicólogo sinais](/blog/quando-ir-ao-psicologo-sinais) e [psicologia online vs presencial](/blog/psicologia-online-vs-presencial).
+Artigos relacionados: [quando ir ao psicólogo sinais](/blog/quando-ir-ao-psicologo-sinais), [psicologia online vs presencial](/blog/psicologia-online-vs-presencial), [alimentação intuitiva](/blog/alimentacao-intuitiva), [alcool e perda de peso](/blog/alcool-e-perda-de-peso), e [cetonas exógenas emagrecer evidência científica](/blog/cetonas-exogenas-emagrecer-evidencia-cientifica).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Avaliação personalizada sem deslocar</h3>
+<p>Economize tempo e dinheiro. Consulta completa por videochamada, horários flexíveis (noites e sábados). Mesma qualidade sem trânsito.</p>
+<a href="/marcar" class="guide-cta-button">Agendar avaliação</a>
+</div>
+</div>
 
 ### 5. Transparência preço total programa
 
@@ -230,7 +252,7 @@ Artigos relacionados: [quando ir ao psicólogo sinais](/blog/quando-ir-ao-psicol
 **Red flag resposta:**
 - "Depende caso, precisa marcar consulta inicial €50 avaliarmos." (tática comercial pressão in-person, custo real escondido)
 
-Artigos relacionados: [quanto custa consulta psicologia Portugal](/blog/quanto-custa-consulta-psicologia-portugal) e [quanto custa terapia Portugal](/blog/quanto-custa-terapia-portugal).
+Artigos relacionados: [quanto custa consulta psicologia Portugal](/blog/quanto-custa-consulta-psicologia-portugal), [quanto custa terapia Portugal](/blog/quanto-custa-terapia-portugal), [consultas nutrição Porto preços](/blog/consultas-nutricao-porto-precos), [consultas nutrição Coimbra preços](/blog/consultas-nutricao-coimbra-precos), e [consultas nutrição Faro preços](/blog/consultas-nutricao-faro-precos).
 
 ## Perguntas frequentes
 
