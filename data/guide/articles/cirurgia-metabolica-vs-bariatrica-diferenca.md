@@ -25,7 +25,7 @@ featured: true
 **Os termos "cirurgia metabólica" e "cirurgia bariátrica" são frequentemente usados como sinónimos** — mas há uma **diferença conceptual importante** no enfoque, mesmo que as técnicas cirúrgicas sejam as mesmas.
 
 <figure class="guide-figure guide-figure-highlight">
-<img src="/image/cirurgia-bariatrica.webp" alt="Cirurgia metabólica vs bariátrica diferença enfoque não técnica — mesmos procedimentos sleeve bypass banda. Bariátrica tradicional foco perda peso quilos IMC, Metabólica recente enfatiza metabolismo remissão diabetes tipo 2 hipertensão dislipidemia além peso. Estudos benefício metabólico independente perda peso total. Quando muda decisão: obesidade moderada diabetes IMC 30-35 inferior critérios tradicionais 35-40. Alternativas GLP-1 Mounjaro Wegovy antes cirurgia meio caminho. LON esclarece distinção encaminhamento urgência." width="1280" height="720" loading="lazy" decoding="async">
+<img src="/image/consulta-clinica-geral.webp" alt="Cirurgia metabólica vs bariátrica diferença enfoque não técnica — mesmos procedimentos sleeve bypass banda. Bariátrica tradicional foco perda peso quilos IMC, Metabólica recente enfatiza metabolismo remissão diabetes tipo 2 hipertensão dislipidemia além peso. Estudos benefício metabólico independente perda peso total. Quando muda decisão: obesidade moderada diabetes IMC 30-35 inferior critérios tradicionais 35-40. Alternativas GLP-1 Mounjaro Wegovy antes cirurgia meio caminho. LON esclarece distinção encaminhamento urgência." width="1280" height="720" loading="lazy" decoding="async">
 <figcaption>Cirurgia metabólica vs bariátrica: termos misturados prática mesmos procedimentos cirúrgicos (sleeve gastrectomy bypass Roux-en-Y banda ajustável) enfoque diferente. Bariátrica tradicional foco perda peso objectivo principal quantos quilos, Metabólica recente enfatiza impacto metabolismo remissão diabetes tipo 2 condições metabólicas hipertensão dislipidemia além simples peso balança. Técnicas exactamente mesmas não existe técnica X vs Y. Estudos remissão diabetes independente perda peso total benefício além balança. Quando enfoque muda decisão: obesidade moderada IMC 30-35 diabetes mal controlada considerada inferior critérios tradicionais 35-40 objectivo controlo metabólico. Alternativas GLP-1 antes meio caminho receio preparação.</figcaption>
 </figure>
 
@@ -50,7 +50,7 @@ featured: true
 - **Efeito:** Restrição mecânica pura (sem componente hormonal significativo)
 - **Uso actual:** Raro (complicações superiores, eficácia inferior, deslizamento banda/erosão gástrica 10-20% casos longo prazo)
 
-Artigos relacionados: [cirurgia bariátrica Portugal SNS ADSE seguros preço](/blog/cirurgia-bariatrica-portugal-sns-adse-seguros-preco) e [cirurgia bariátrica sleeve quantos quilos se perde](/blog/cirurgia-bariatrica-sleeve-quantos-quilos-se-perde).
+Artigos relacionados: [cirurgia bariátrica Portugal SNS ADSE seguros preço](/blog/cirurgia-bariatrica-portugal-sns-adse-seguros-preco), [cirurgia bariátrica sleeve quantos quilos se perde](/blog/cirurgia-bariatrica-sleeve-quantos-quilos-se-perde), [recuperação cirurgia bariátrica tempo repouso cicatrização](/blog/recuperacao-cirurgia-bariatrica-tempo-repouso-cicatrizacao), e [desvantagens cirurgia bariátrica](/blog/desvantagens-cirurgia-bariatrica).
 
 ### Enfoque avaliação resultados diferente
 
@@ -68,9 +68,15 @@ Artigos relacionados: [cirurgia bariátrica Portugal SNS ADSE seguros preço](/b
 - **Paciente A** IMC 42 sem diabetes → sleeve perde 35% peso IMC 27 → **sucesso bariátrico** (perda peso excelente)
 - **Paciente B** IMC 36 + diabetes HbA1c 9,5% insulina 80 UI/dia → bypass perde 25% peso IMC 28 + diabetes remite HbA1c 5,8% sem insulina → **sucesso metabólico** (perda peso modesta mas benefício metabólico extraordinário)
 
-Artigos relacionados: [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento) e [resistência insulina sintomas causas diagnóstico tratamento](/blog/resistencia-insulina-sintomas-causas-diagnostico-tratamento).
+Artigos relacionados: [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento), [resistência insulina sintomas causas diagnóstico tratamento](/blog/resistencia-insulina-sintomas-causas-diagnostico-tratamento), [medicamentos obesidade Portugal tipos custos resultados](/blog/medicamentos-obesidade-portugal-tipos-custos-resultados), e [obesidade Portugal números problema](/blog/obesidade-portugal-numeros-problema).
 
-{{cta}}
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Consulta pré-bariátrica ou alternativas não cirúrgicas</h3>
+<p>Avaliação clínica completa para cirurgia bariátrica/metabólica ou exploração de alternativas GLP-1. Encaminhamento quando indicado.</p>
+<a href="/marcar" class="guide-cta-button">Marcar consulta</a>
+</div>
+</div>
 
 ## Porque o enfoque metabólico importa clinicamente
 
@@ -102,7 +108,7 @@ Artigos relacionados: [obesidade doença crónica tratamento](/blog/obesidade-do
 **Implicação:**
 - Paciente obesidade moderada IMC 34 + diabetes tipo 2 mal controlada HbA1c 10% + dislipidemia + hipertensão → **risco cardiovascular elevado** (enfarte/AVC próximos 10 anos) → cirurgia **metabólica** objectivo **reduzir risco morte** não cosmético perder quilos estética
 
-Artigos relacionados: [Mounjaro reduz risco AVC estudos](/blog/mounjaro-reduz-risco-avc-estudos) e [obesidade Portugal números problema](/blog/obesidade-portugal-numeros-problema).
+Artigos relacionados: [Mounjaro reduz risco AVC estudos](/blog/mounjaro-reduz-risco-avc-estudos), [obesidade Portugal números problema](/blog/obesidade-portugal-numeros-problema), [perda de peso sustentável](/blog/perda-de-peso-sustentavel), e [GLP-1 peso volta depois interromper tratamento](/blog/glp1-peso-volta-depois-interromper-tratamento).
 
 ## Quando o enfoque metabólico muda a decisão clínica
 
@@ -133,7 +139,7 @@ Artigos relacionados: [Mounjaro reduz risco AVC estudos](/blog/mounjaro-reduz-ri
 - **Critérios tradicionais bariátricos:** Não elegível (IMC <35, faltam 2 pontos IMC)
 - **Critérios metabólicos IDF/ASMBS:** Elegível (diabetes inadequadamente controlada, risco complicações microvasculares progressão) → encaminhamento cirurgia **justificado** objectivo controlar diabetes prevenir cegueira/insuficiência renal
 
-Artigos relacionados: [qual melhor clínica emagrecimento Portugal](/blog/qual-melhor-clinica-emagrecimento-portugal) e [melhor clínica emagrecimento Lisboa](/blog/melhor-clinica-emagrecimento-lisboa).
+Artigos relacionados: [qual melhor clínica emagrecimento Portugal](/blog/qual-melhor-clinica-emagrecimento-portugal), [melhor clínica emagrecimento Lisboa](/blog/melhor-clinica-emagrecimento-lisboa), [telemedicina em casa como funciona](/blog/telemedicina-em-casa), e [consulta médica online vale a pena](/blog/consulta-medica-online-vale-a-pena).
 
 ## Alternativas farmacológicas GLP-1: "meio caminho" antes cirurgia
 
@@ -203,7 +209,15 @@ Artigos relacionados: [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-
 **Transparência conversa:**
 - "Seu diabetes componente metabólica significativa — cirurgia metabólica opção válida critérios IDF. **Não significa** precisa operar amanhã, significa vamos **incluir** conversa opções paralelo tratamento conservador, porque se conservador falhar 6 meses cirurgia disponível rápida não perdemos mais tempo complicações progressão."
 
-Artigos relacionados: [desvantagens cirurgia bariátrica](/blog/desvantagens-cirurgia-bariatrica) e [recuperação cirurgia bariátrica tempo repouso cicatrização](/blog/recuperacao-cirurgia-bariatrica-tempo-repouso-cicatrizacao).
+Artigos relacionados: [desvantagens cirurgia bariátrica](/blog/desvantagens-cirurgia-bariatrica), [recuperação cirurgia bariátrica tempo repouso cicatrização](/blog/recuperacao-cirurgia-bariatrica-tempo-repouso-cicatrizacao), [Zepbound Portugal existe alternativa](/blog/zepbound-portugal-existe-alternativa), [Mysimba Portugal eficácia riscos revisão EMA](/blog/mysimba-portugal-eficacia-riscos-revisao-ema), e [cetonas exógenas emagrecer evidência científica](/blog/cetonas-exogenas-emagrecer-evidencia-cientifica).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Avaliação honesta: cirurgia ou não?</h3>
+<p>Discussão transparente sobre se cirurgia bariátrica/metabólica é necessária ou se alternativas são suficientes. Sem pressão.</p>
+<a href="/marcar" class="guide-cta-button">Agendar consulta</a>
+</div>
+</div>
 
 ## Perguntas frequentes
 
