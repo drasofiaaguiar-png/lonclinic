@@ -25,7 +25,7 @@ featured: true
 **Portugal tem 6 medicamentos aprovados para obesidade** — cada um com mecanismos, custos e eficácia diferentes, exigindo **escolha individualizada**.
 
 <figure class="guide-figure guide-figure-highlight">
-<img src="/image/medicamentos-obesidade.webp" alt="Medicamentos obesidade Portugal 6 aprovados: Mounjaro GLP-1 GIP duplo 15-20% €150-350 mês, Wegovy GLP-1 15-17% €280-320, Saxenda GLP-1 diário 8-10% €200-250, Mysimba naltrexona bupropiona 5-10% revisão EMA €80-120, Orlistato 5% €30-60, Ozempic diabetes não perda peso. Comum: adjuvantes dieta actividade não isolada, reganho pós-suspensão STEP 1. Como escolher: IMC comorbilidades mudanças tentadas contraindicações orçamento oral injectável. Supervisão médica alterações estruturadas longo prazo." width="1280" height="720" loading="lazy" decoding="async">
+<img src="/image/nutricao-emagrecimento.webp" alt="Medicamentos obesidade Portugal 6 aprovados: Mounjaro GLP-1 GIP duplo 15-20% €150-350 mês, Wegovy GLP-1 15-17% €280-320, Saxenda GLP-1 diário 8-10% €200-250, Mysimba naltrexona bupropiona 5-10% revisão EMA €80-120, Orlistato 5% €30-60, Ozempic diabetes não perda peso. Comum: adjuvantes dieta actividade não isolada, reganho pós-suspensão STEP 1. Como escolher: IMC comorbilidades mudanças tentadas contraindicações orçamento oral injectável. Supervisão médica alterações estruturadas longo prazo." width="1280" height="720" loading="lazy" decoding="async">
 <figcaption>Portugal 6 medicamentos aprovados obesidade mecanismos custos eficácia diferentes: Mounjaro tirzepatida GLP-1/GIP duplo injectável semanal 15-20% não comparticipado €150-350/mês, Wegovy semaglutida GLP-1 15-17% €280-320, Saxenda liraglutida diário 8-10% €200-250, Mysimba naltrexona bupropiona oral 5-10% revisão EMA €80-120, Orlistato inibidor lípase 5% €30-60, Ozempic diabetes não perda peso. Comum todos: adjuvantes dieta hipocalórica actividade física não solução isolada, reganho peso pós-suspensão sem manutenção. Como escolher: IMC comorbilidades mudanças tentadas contraindicações orçamento preferência. Nenhum medicamento estratégia inteira — supervisão médica alimentação actividade sono longo prazo.</figcaption>
 </figure>
 
@@ -40,9 +40,15 @@ featured: true
 | **Orlistato** (Xenical/Alli) | Inibidor lípase intestinal | **Oral** (cápsulas) | **~5%** (44% atingem ≥5%) | **Não** | **€30-60** |
 | **Ozempic** (semaglutida 1mg) | GLP-1 agonista | Injecção semanal | Indicado **diabetes** (não obesidade) | **Sim** (só diabetes) | €0-80 diabetes |
 
-Artigos relacionados: [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-guia-completo) e [Mounjaro vs Wegovy vs Ozempic diferenças](/blog/mounjaro-vs-wegovy-vs-ozempic-diferencas).
+Artigos relacionados: [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-guia-completo), [Mounjaro vs Wegovy vs Ozempic diferenças](/blog/mounjaro-vs-wegovy-vs-ozempic-diferencas), [Saxenda Portugal guia completo](/blog/saxenda-portugal-guia-completo), [Wegovy Portugal disponibilidade alternativas](/blog/wegovy-portugal-disponibilidade-alternativas), e [Zepbound Portugal existe alternativa](/blog/zepbound-portugal-existe-alternativa).
 
-{{cta}}
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Avaliação para medicação obesidade</h3>
+<p>Consulta médica completa para avaliar qual medicamento é mais adequado ao seu caso. Prescrição quando indicado + acompanhamento integrado.</p>
+<a href="/marcar" class="guide-cta-button">Marcar consulta</a>
+</div>
+</div>
 
 ## 1. Mounjaro (tirzepatida) — duplo agonista GLP-1/GIP
 
@@ -69,7 +75,7 @@ Artigos relacionados: [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-
 - **Preço:** €150-350/mês (consoante dose 2,5-15mg)
 - **Escassez pontual** possível (procura elevada vs produção limitada Eli Lilly)
 
-Artigos relacionados: [Mounjaro Portugal onde como obter passo passo](/blog/mounjaro-portugal-onde-como-obter-passo-passo) e [efeitos secundários GLP-1 náuseas obstipação](/blog/efeitos-secundarios-glp1-nauseas-obstipacao).
+Artigos relacionados: [Mounjaro Portugal onde como obter passo passo](/blog/mounjaro-portugal-onde-como-obter-passo-passo), [efeitos secundários GLP-1 náuseas obstipação](/blog/efeitos-secundarios-glp1-nauseas-obstipacao), [GLP-1 perda massa muscular como reduzir](/blog/glp1-perda-massa-muscular-como-reduzir), [qual melhor clínica emagrecimento Portugal](/blog/qual-melhor-clinica-emagrecimento-portugal), e [melhor clínica emagrecimento Lisboa](/blog/melhor-clinica-emagrecimento-lisboa).
 
 ## 2. Wegovy (semaglutida 2,4mg) — GLP-1 agonista
 
@@ -97,7 +103,15 @@ Artigos relacionados: [Mounjaro Portugal onde como obter passo passo](/blog/moun
 - **Preço:** €280-320/mês (dose única 2,4mg)
 - **Escassez** Portugal 2023-2024 (melhorou 2025-2026)
 
-Artigos relacionados: [Saxenda Portugal guia completo](/blog/saxenda-portugal-guia-completo) e [GLP-1 peso volta depois interromper tratamento](/blog/glp1-peso-volta-depois-interromper-tratamento).
+Artigos relacionados: [Saxenda Portugal guia completo](/blog/saxenda-portugal-guia-completo), [GLP-1 peso volta depois interromper tratamento](/blog/glp1-peso-volta-depois-interromper-tratamento), [perda de peso sustentável](/blog/perda-de-peso-sustentavel), e [efeito ioio](/blog/efeito-ioio).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Programa emagrecimento com GLP-1</h3>
+<p>Prescrição Mounjaro/Wegovy/Saxenda quando indicado + plano nutricional personalizado. Médico + nutricionista integrados.</p>
+<a href="/marcar" class="guide-cta-button">Começar programa</a>
+</div>
+</div>
 
 ## 3. Saxenda (liraglutida 3mg) — GLP-1 diário
 
@@ -120,7 +134,7 @@ Artigos relacionados: [Saxenda Portugal guia completo](/blog/saxenda-portugal-gu
 - **Preço:** €200-250/mês
 - **Disponibilidade:** Melhor vs Wegovy/Mounjaro (mercado há mais tempo 2015 vs 2022-2023)
 
-Artigos relacionados: [contraindicações GLP-1 quem não deve tomar](/blog/contraindicacoes-glp1-quem-nao-deve-tomar) e [GLP-1 cirurgia anestesia parar antes](/blog/glp1-cirurgia-anestesia-parar-antes).
+Artigos relacionados: [contraindicações GLP-1 quem não deve tomar](/blog/contraindicacoes-glp1-quem-nao-deve-tomar), [GLP-1 cirurgia anestesia parar antes](/blog/glp1-cirurgia-anestesia-parar-antes), [Mounjaro gravidez contracepção](/blog/mounjaro-gravidez-contracepcao), e [resistência insulina sintomas causas diagnóstico tratamento](/blog/resistencia-insulina-sintomas-causas-diagnostico-tratamento).
 
 ## 4. Mysimba (naltrexona + bupropiona) — oral combinação
 
@@ -146,7 +160,15 @@ Artigos relacionados: [contraindicações GLP-1 quem não deve tomar](/blog/cont
 - **Não comparticipado**
 - **Preço:** €80-120/mês (inferior GLP-1 mas eficácia proporcionalmente inferior)
 
-Artigos relacionados: [Mysimba Portugal eficácia riscos revisão EMA](/blog/mysimba-portugal-eficacia-riscos-revisao-ema) e [medicamentos evitar Prescrire](/blog/mysimba-portugal-eficacia-riscos-revisao-ema).
+Artigos relacionados: [Mysimba Portugal eficácia riscos revisão EMA](/blog/mysimba-portugal-eficacia-riscos-revisao-ema), [cetonas exógenas emagrecer evidência científica](/blog/cetonas-exogenas-emagrecer-evidencia-cientifica), e [obesidade Portugal números problema](/blog/obesidade-portugal-numeros-problema).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Consulta telemedicina para obesidade</h3>
+<p>Discussão transparente sobre todas as opções disponíveis em Portugal. Sem pressão comercial, foco em evidência científica.</p>
+<a href="/marcar" class="guide-cta-button">Agendar consulta</a>
+</div>
+</div>
 
 ## 5. Orlistato (Xenical/Alli) — inibidor lípase
 
