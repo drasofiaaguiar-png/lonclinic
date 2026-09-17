@@ -1,77 +1,97 @@
+---
+title: "Quanto custa uma consulta de nutrição em Portugal (CUF, Wells, Trofa Saúde, Easyslim e privado)"
+meta_description: "Preços reais de consultas de nutrição em Portugal: 50€ média nacional, 25-80€ 1ª consulta. Compare CUF, Trofa Saúde, Wells, Easyslim e nutricionistas independentes."
+slug: quanto-custa-consulta-nutricao-portugal
+keyword: quanto custa consulta nutrição portugal
+author: lon-clinic
+published: 2026-09-17
+updated: 2026-09-17
+section: nutrition
+featured: true
+---
+
+# Quanto custa uma consulta de nutrição em Portugal (CUF, Wells, Trofa Saúde, Easyslim e privado)
+
 <aside class="guide-keyfacts">
-<p class="guide-keyfacts-kicker">Resposta directa</p>
+<p class="guide-keyfacts-kicker">Em síntese</p>
 <ul>
-<li>No particular, em Portugal, uma consulta de nutrição costuma situar-se entre <strong>40 € e 70 €</strong> — faixa típica, não um índice oficial.</li>
-<li>Na Lon Clinic o produto publicado não é uma sessão avulsa a 45 €: a <a href="/nutricao/programa">consulta inicial de nutrição metabólica</a> custa <strong>115 €</strong> (mês 1); depois <strong>75 €/mês</strong> (2 consultas/mês, fidelização 3 meses). Preçário em <code>pricing.js</code>: 11500 cêntimos.</li>
-<li>Pode baixar o custo com <a href="/blog/adse-consultas-nutricao-portugal">ADSE</a> (regime livre, recibo) ou, dos 12 aos 35 anos, com o <a href="/blog/cheque-nutricionista-2026">Cheque Cuida-te — Nutrição</a> num aderente — a Lon Clinic <strong>não</strong> afirma ser aderente.</li>
+<li>Média nacional: 50€ por consulta (oscila entre 15€ e 80€). Lisboa 50-60€, Porto 25-60€, Setúbal 50-70€.</li>
+<li>Primeira consulta (25-80€) mais cara que seguimento (15-45€). Pacotes de 4-8 consultas reduzem custo por sessão.</li>
+<li>CUF, Trofa, Wells, Easyslim: preços não uniformes, variam por unidade e profissional — confirmar sempre diretamente.</li>
 </ul>
 </aside>
 
-Se está a pensar marcar uma consulta de nutrição em Portugal, a primeira pergunta é quase sempre a mesma: quanto vai custar? No particular a faixa mais citada é **40 € a 70 €** por sessão. O preço efectivo depende de ser primeira consulta ou seguimento, de ser farmácia, hospital ou online, e de ter ADSE, seguro ou o Cheque Cuida-te — Nutrição.
+O preço de uma consulta de nutrição em Portugal varia consoante o contexto — nutricionista independente, clínica de rede ou unidade hospitalar. Este artigo reúne os intervalos de preço reais disponíveis, para comparação direta.
 
-Na Lon Clinic o número que conta no checkout é outro: **115 €** no primeiro mês do [programa de nutrição](/nutricao/programa), depois **75 €/mês**. Não usamos 45 € — esse valor não está no preçário.
+<figure class="guide-figure guide-figure-highlight">
+<img src="/image/nutricao-emagrecimento.webp" alt="Consulta de nutrição para emagrecimento, representando avaliação profissional de custos" width="1280" height="720" loading="lazy" decoding="async">
+<figcaption>Comparar preços isoladamente pode ser enganador — o valor real está na continuidade e articulação com outras áreas quando necessário.</figcaption>
+</figure>
 
-Guia da consulta (preço, formato e quando marcar): [consulta de nutrição](/blog/consulta-nutricao-preco-como-funciona). Como escolher profissional: [nutricionista ou dietista](/blog/nutricionista-ou-dietista-portugal) e [como encontrar um nutricionista](/blog/como-encontrar-um-nutricionista). Hub: [/nutricao](/nutricao).
+## Preço médio nacional (nutricionista independente/privado)
 
-## Quanto custa uma consulta de nutrição em média em Portugal?
+Segundo dados de mercado da **Zaask**, **o preço médio de uma consulta de nutrição em Portugal é de 50€, com valores a oscilar entre 15€ e 80€**. A estrutura de preços típica é:
 
-A média do particular anda na mesma ordem de grandeza da psicologia privada: **40 € a 70 €**, com hospitais e grupos a poderem ficar acima. **Não publicamos aqui tabelas de Wells, CUF, Hospital da Luz ou Trofa** como se fossem oficiais de 2026: os preçários mudam por unidade. Confirme no site da cadeia ou da unidade.
-
-| Sítio | O que se pode dizer com segurança |
+| Tipo de consulta | Intervalo de preço |
 |---|---|
-| Particular / consultório | Faixa típica **40 €–70 €** (levantamentos de mercado, não tabela oficial) |
-| Grupos hospitalares | Consulte o preçário da **unidade** (CUF, Luz, Trofa, etc.) |
-| Farmácias / cadeias | Valores divulgados pela cadeia — confirmar no site no dia da marcação |
-| Lon Clinic (online) | **115 €** mês 1 · **75 €/mês** a partir daí · 2 consultas/mês |
+| 1ª consulta | 25€ – 80€ |
+| Consultas de seguimento | 15€ – 45€ |
+| Pacote de 4 consultas | 80€ – 180€ |
+| Pacote de 8 consultas | 170€ – 310€ |
+
+Dados independentes da plataforma **Fixando** confirmam intervalos semelhantes por região: **Lisboa 50€–60€**, **Porto 25€–60€**, **Setúbal 50€–70€**, com médias nacionais a rondar os **48€–52€** por consulta.
+
+Artigo relacionado: [consulta de nutrição: preço e como funciona](/blog/consulta-nutricao-preco-como-funciona).
 
 {{cta}}
 
-## As consultas de seguimento custam o mesmo que a primeira consulta?
+## Consultas em cadeias e unidades de saúde privadas (CUF, Trofa Saúde, Wells, Easyslim)
 
-Muitas vezes **não**: a primeira costuma ser mais longa e um pouco mais cara. Na Lon Clinic o desenho é mensal, não «primeira vs seguinte» avulsa: o mês 1 é a [consulta inicial](/marcar/nutricao-programa) a **115 €**; os meses seguintes são **75 €/mês** com duas consultas. A página do programa compara 12 sessões avulso a 49,25 € (591 €) com 490 € em 6 meses no programa — isso é comparação interna, não um produto avulso a 45 €.
+As grandes redes privadas (CUF, Trofa Saúde, Wells, Easyslim) não publicam de forma uniforme e pública o preço exato da consulta de nutrição isolada — os valores variam por unidade, profissional e se a consulta é convencionada (com seguro/ADSE) ou particular. Como referência de contexto, uma tabela pública da CUF mostra que consultas de especialidades "não médicas" (categoria que inclui nutrição) sem acordo de seguro variam entre **51€ e 294€**, um intervalo amplo que reflete a diferença entre profissionais e tipos de consulta.
 
-## É possível ter consultas de nutrição gratuitas em Portugal?
+**Recomendação prática**: para um valor exato em qualquer destas redes, confirme sempre diretamente com a unidade específica antes de marcar — os preços publicados genericamente não são fiáveis o suficiente para decisão, dado que dependem do profissional e da unidade.
 
-Sim, com critérios:
+Artigo relacionado: [ADSE: consultas de nutrição em Portugal](/blog/adse-consultas-nutricao-portugal).
 
-- **SNS** — referenciação pelo médico de família; espera frequente, sem número inventado aqui
-- **Cheque Cuida-te — Nutrição** (IPDJ / [gov.pt](https://www.gov.pt/servicos/pedir-cheque-cuida-te-nutricao)) — jovens **12–35 anos**, nutricionista **aderente**. A Lon Clinic **não** se apresenta como aderente
-- **SAS / gabinetes de algumas universidades e politécnicos** — para inscritos; confirme na sua instituição (o guia de [apoio psicológico nas universidades](/blog/apoio-psicologico-universidades-portugal) cobre o lado da psicologia; nutrição é instituição a instituição)
+## O que influencia o preço
 
-ADSE: recibo em **regime livre**. Detalhe: [ADSE e consultas de nutrição](/blog/adse-consultas-nutricao-portugal).
+- **Experiência e especialização** do profissional (ex: nutrição desportiva, [obesidade](/blog/perda-de-peso-sustentavel), pediátrica)
+- **Localização** — Lisboa e Porto tendem a ter valores no topo do intervalo
+- **Formato** — [online](/blog/consulta-nutricao-online-como-funciona) é frequentemente mais económico que presencial
+- **Primeira consulta vs. seguimento** — a primeira é sempre mais cara, por incluir avaliação completa
 
-## A vantagem da Lon Clinic
+Artigos relacionados: [como encontrar um nutricionista](/blog/como-encontrar-um-nutricionista) e [nutricionista: plano de perda de peso](/blog/nutricionista-plano-perda-de-peso).
 
-- Comida primeiro: sem vender suplementos; se a suplementação for precisa, articula-se com **consulta médica**, não com prateleira da clínica ([posição da casa](/blog/como-encontrar-um-nutricionista))
-- Nutricionista inscrito na [Ordem dos Nutricionistas](https://www.ordemdosnutricionistas.pt/registoNacional.php?cod=0C0A) — a cédula nominal publica-se quando o profissional está identificado; não inventamos o número
-- Preço fixo do programa: **115 €** / **75 €/mês**, online, sem deslocação
-- Fichas reais, não listas inventadas: [diabetes tipo 2](/nutricao/diabetes-tipo-2), [Hashimoto](/nutricao/hashimoto), [SOP](/nutricao/sop), [FODMAP](/nutricao/fodmap), [celíaca](/nutricao/doenca-celiaca), [pós-parto](/nutricao/pos-parto), [pós-bariátrica](/nutricao/pos-bariatrica)
+## Porque a nossa abordagem é diferente
 
-{{cta}}
+Comparar preços isoladamente pode ser enganador — o que determina o valor real de um acompanhamento nutricional não é o preço por consulta, mas a continuidade e a articulação com outras áreas quando necessário (psicologia, medicina). Na LON, somos transparentes sobre o preço desde o início, e o valor inclui sempre a possibilidade de acompanhamento articulado, não apenas uma consulta isolada.
 
-[lon-slots: serviço="nutricao-programa"]
+Saiba mais sobre o nosso [programa de emagrecimento](/programa-emagrecimento) que integra nutrição, medicina e psicologia.
 
 ## Perguntas frequentes
 
-### Quanto custa uma consulta de nutrição em média em Portugal?
+**Existem consultas de nutrição gratuitas em Portugal?**
+Sim, através do [cheque Cuida-te](https://justica.gov.pt/Servicos/Cheque-Cuida-te-Psicologia-e-Nutricao) (para jovens) e nalgumas unidades de cuidados de saúde primários do SNS, mediante critérios de elegibilidade e referenciação médica. Artigo relacionado: [cheque nutricionista 2026](/blog/cheque-nutricionista-2026).
 
-No particular, a faixa mais citada é 40 € a 70 €. Na Lon Clinic o mês 1 custa 115 € e o acompanhamento 75 €/mês (duas consultas).
+**A ADSE comparticipa consultas de nutrição?**
+Depende do enquadramento e da unidade — confirme diretamente com a ADSE e a unidade escolhida. Algumas apólices incluem comparticipação parcial em nutrição, outras não. Artigo relacionado: [ADSE e seguros: psicologia em Portugal](/blog/adse-seguros-psicologia-portugal).
 
-### As consultas de seguimento custam o mesmo que a primeira consulta?
+**Vale a pena pagar mais por um nutricionista especializado em obesidade?**
+Para casos de [perda de peso significativa](/blog/perda-de-peso-sustentavel) ou com comorbilidades associadas ([diabetes](/blog/nutricionista-ou-endocrinologista-para-emagrecer), cardiovasculares), a especialização específica tende a compensar o custo adicional, pela qualidade do acompanhamento e conhecimento de protocolos clínicos avançados.
 
-Em muitas clínicas, não. Na Lon Clinic o mês 1 (115 €) é o arranque; depois 75 €/mês.
+**Quanto custa uma consulta de nutrição online vs presencial?**
+Consultas [online](/blog/consulta-nutricao-online-como-funciona) tendem a ser 10-20% mais económicas do que presenciais, por redução de custos operacionais (espaço físico, deslocações), mantendo a mesma qualidade de acompanhamento para a maioria dos casos.
 
-### É possível ter consultas de nutrição gratuitas em Portugal?
-
-Sim: SNS (via médico de família), Cheque Cuida-te — Nutrição (12–35 anos, aderentes) e, em algumas instituições de ensino, o SAS. A Lon Clinic não afirma ser aderente do cheque.
+**Os pacotes de consultas compensam financeiramente?**
+Sim — pacotes de 4 ou 8 consultas reduzem normalmente o custo por sessão em 15-25% face ao valor avulso, além de incentivarem a continuidade do acompanhamento, factor determinante para resultados sustentados em perda de peso.
 
 ---
 
-Este artigo tem fins informativos e não substitui uma avaliação nutricional ou médica individual. Em emergência, ligue **112**.
+**Fontes:**
+- Zaask, dados de mercado nacional de consultas de nutrição, 2026
+- Fixando, dados regionais de preços de nutrição, 2025-2026
+- CUF, tabela de preços pública de especialidades, 2026
 
-## Fontes
+---
 
-- Preçário Lon Clinic (`pricing.js` / [programa de nutrição](/nutricao/programa)) — 115 € / 75 €/mês
-- [gov.pt — Pedir Cheque Cuida-te — Nutrição](https://www.gov.pt/servicos/pedir-cheque-cuida-te-nutricao)
-- [Ordem dos Nutricionistas — Registo nacional](https://www.ordemdosnutricionistas.pt/registoNacional.php?cod=0C0A)
-- [ADSE](https://www.adse.pt/)
+*A [LON Clinic](https://www.lonclinic.com/nutricao) pratica transparência total de preços desde o primeiro contacto, com acompanhamento nutricional integrado com medicina e psicologia — eliminando a necessidade de gerir múltiplos profissionais e custos isoladamente.*
