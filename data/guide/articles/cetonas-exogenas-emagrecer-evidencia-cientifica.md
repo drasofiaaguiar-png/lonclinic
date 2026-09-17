@@ -25,7 +25,7 @@ featured: true
 **Cetonas exógenas** são um suplemento popular vendido com promessas de "ativar a cetose sem dieta restritiva" — mas a evidência científica real é **muito mais modesta e contraditória** do que o marketing sugere.
 
 <figure class="guide-figure guide-figure-highlight">
-<img src="/image/nutricao-suplementos.webp" alt="Cetonas exógenas emagrecer evidência científica modesta contraditória — revisão sistemática 2020 Advances in Nutrition Valenzuela sem efeito desempenho físico recuperação cognição longo prazo não avaliado sintomas gastrointestinais. Paradoxo mecanístico: fornecer cetonas exógenas inibe produção endógena queima gordura corporal prejudica objectivo perda gordura. Único mecanismo preliminar Obesity 2018 reduz fome transitório não replicado." width="1280" height="720" loading="lazy" decoding="async">
+<img src="/image/nutricao-alimentos.webp" alt="Cetonas exógenas emagrecer evidência científica modesta contraditória — revisão sistemática 2020 Advances in Nutrition Valenzuela sem efeito desempenho físico recuperação cognição longo prazo não avaliado sintomas gastrointestinais. Paradoxo mecanístico: fornecer cetonas exógenas inibe produção endógena queima gordura corporal prejudica objectivo perda gordura. Único mecanismo preliminar Obesity 2018 reduz fome transitório não replicado." width="1280" height="720" loading="lazy" decoding="async">
 <figcaption>Cetonas exógenas (BHB β-hidroxibutirato pó cápsula líquido) vendidas promessas ativar cetose sem dieta cetogénica — evidência científica modesta. Revisão sistemática 2020 Advances in Nutrition: sem efeito desempenho físico/recuperação/cognição, longo prazo não avaliado, sintomas GI frequentes. Paradoxo: fornecer cetonas exógenas inibe queima gordura corporal endógena (contra objectivo perda peso). Único mecanismo preliminar: reduz fome transitório Obesity 2018 mas não replicado independentemente perda peso real longo prazo.</figcaption>
 </figure>
 
@@ -43,7 +43,7 @@ featured: true
 - **Formatos:** Sais BHB (β-hidroxibutirato sódio/magnésio/cálcio), ésteres BHB (BHB ligado álcool), pó/cápsula/líquido
 - **Objectivo marketing:** "Entrar cetose imediata sem dieta restritiva" — elevar níveis cetonas sangue artificialmente ingerindo directamente
 
-Artigos relacionados: [dieta mais rápida perder 5 kg](/blog/dieta-mais-rapida-perder-5-kg) e [menu ideal emagrecer 3 kg por semana](/blog/menu-ideal-emagrecer-3-kg-por-semana).
+Artigos relacionados: [dieta mais rápida perder 5 kg](/blog/dieta-mais-rapida-perder-5-kg), [menu ideal emagrecer 3 kg por semana](/blog/menu-ideal-emagrecer-3-kg-por-semana), [alimentação intuitiva](/blog/alimentacao-intuitiva), [perda de peso sustentável](/blog/perda-de-peso-sustentavel), e [efeito ioio](/blog/efeito-ioio).
 
 ### Promessa marketing vs realidade metabólica
 
@@ -58,7 +58,13 @@ Artigos relacionados: [dieta mais rápida perder 5 kg](/blog/dieta-mais-rapida-p
 - **Não queima gordura corporal** automaticamente (paradoxo mecanístico discutido abaixo)
 - Evidência benefícios alegados **muito limitada contraditória**
 
-{{cta}}
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Programa emagrecimento baseado em evidência científica</h3>
+<p>Sem promessas milagrosas. Acompanhamento médico + nutricional com estratégias comprovadas. Prescrição medicamentos quando indicado.</p>
+<a href="/marcar" class="guide-cta-button">Marcar consulta</a>
+</div>
+</div>
 
 ## Evidência científica: revisão sistemática 2020
 
@@ -96,7 +102,15 @@ Artigos relacionados: [dieta mais rápida perder 5 kg](/blog/dieta-mais-rapida-p
 **Conclusão revisão Valenzuela:**
 > "Não existe evidência científica suficiente para sustentar a eficácia das cetonas exógenas no desempenho físico, recuperação ou cognição. Benefícios alegados pelo marketing não são comprovados por estudos controlados de qualidade."
 
-Artigos relacionados: [o que comer almoço para emagrecer](/blog/o-que-comer-almoco-para-emagrecer) e [plano emagrecimento 30 dias realista](/blog/plano-emagrecimento-30-dias-realista).
+Artigos relacionados: [o que comer almoço para emagrecer](/blog/o-que-comer-almoco-para-emagrecer), [plano emagrecimento 30 dias realista](/blog/plano-emagrecimento-30-dias-realista), [alcool e perda de peso](/blog/alcool-e-perda-de-peso), [perda de peso em viagem](/blog/perda-de-peso-em-viagem), e [resistência insulina sintomas causas diagnóstico tratamento](/blog/resistencia-insulina-sintomas-causas-diagnostico-tratamento).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Plano nutricional personalizado e sustentável</h3>
+<p>Focado em défice calórico real, não suplementos da moda. Nutricionista + médico integrados para resultados duradouros.</p>
+<a href="/marcar" class="guide-cta-button">Começar programa</a>
+</div>
+</div>
 
 ## Paradoxo mecanístico: cetonas exógenas podem prejudicar perda gordura
 
@@ -124,7 +138,7 @@ Artigos relacionados: [o que comer almoço para emagrecer](/blog/o-que-comer-alm
 - Cetonas exógenas = adicionar gasolina tanque enquanto conduz
 - **Contraproducente** — tanque nunca esvazia (gordura corporal não reduz)
 
-Artigos relacionados: [GLP-1 perda massa muscular como reduzir](/blog/glp1-perda-massa-muscular-como-reduzir) e [perda peso homens diferenças](/blog/perda-peso-homens-diferencas).
+Artigos relacionados: [GLP-1 perda massa muscular como reduzir](/blog/glp1-perda-massa-muscular-como-reduzir), [perda peso homens diferenças](/blog/perda-peso-homens-diferencas), [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento), e [medicamentos obesidade Portugal tipos custos resultados](/blog/medicamentos-obesidade-portugal-tipos-custos-resultados).
 
 ### Evidência paradoxo: estudo 2016 *Diabetes*
 
@@ -158,7 +172,15 @@ Artigos relacionados: [GLP-1 perda massa muscular como reduzir](/blog/glp1-perda
 - **Possível** cetonas exógenas reduzam fome transitoriamente (mecanismo preliminar interessante investigação futura)
 - **Insuficiente** recomendar perda peso baseado evidência única preliminar não replicada
 
-Artigos relacionados: [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento) e [obesidade Portugal números problema](/blog/obesidade-portugal-numeros-problema).
+Artigos relacionados: [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento), [obesidade Portugal números problema](/blog/obesidade-portugal-numeros-problema), [qual melhor clínica emagrecimento Portugal](/blog/qual-melhor-clinica-emagrecimento-portugal), [melhor clínica emagrecimento Lisboa](/blog/melhor-clinica-emagrecimento-lisboa), e [Mysimba Portugal eficácia riscos revisão EMA](/blog/mysimba-portugal-eficacia-riscos-revisao-ema).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Consulta telemedicina baseada em ciência</h3>
+<p>Avaliação honesta sem marketing de suplementos. Médico + nutricionista discutem opções eficazes para o seu caso.</p>
+<a href="/marcar" class="guide-cta-button">Agendar consulta</a>
+</div>
+</div>
 
 ## LON abordagem: priorizar evidência robusta
 
@@ -184,7 +206,7 @@ Artigos relacionados: [obesidade doença crónica tratamento](/blog/obesidade-do
 - **Custo:** €150-350/mês (não comparticipado)
 - **Indicação:** IMC ≥30 ou ≥27 + comorbilidades
 
-Artigos relacionados: [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-guia-completo) e [Mounjaro vs Wegovy vs Ozempic diferenças](/blog/mounjaro-vs-wegovy-vs-ozempic-diferencas).
+Artigos relacionados: [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-guia-completo), [Mounjaro vs Wegovy vs Ozempic diferenças](/blog/mounjaro-vs-wegovy-vs-ozempic-diferencas), [Saxenda Portugal guia completo](/blog/saxenda-portugal-guia-completo), [Wegovy Portugal disponibilidade alternativas](/blog/wegovy-portugal-disponibilidade-alternativas), e [Mounjaro Portugal onde como obter passo passo](/blog/mounjaro-portugal-onde-como-obter-passo-passo).
 
 ### Porque não suplementos evidência preliminar
 
