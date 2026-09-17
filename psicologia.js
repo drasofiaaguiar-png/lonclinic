@@ -140,4 +140,25 @@
             }
         );
     }
+
+    // Story toggle functionality
+    var storyToggles = document.querySelectorAll('.psi-story-toggle');
+    storyToggles.forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            var card = btn.closest('.psi-story-card');
+            var isExpanded = card.classList.contains('is-expanded');
+            
+            card.classList.toggle('is-expanded');
+            btn.setAttribute('aria-expanded', !isExpanded);
+            
+            // Smooth scroll adjustment if collapsing
+            if (isExpanded) {
+                var cardTop = card.getBoundingClientRect().top + window.pageYOffset;
+                if (window.pageYOffset > cardTop) {
+                    window.scrollTo({ top: cardTop - 20, behavior: 'smooth' });
+                }
+            }
+        });
+    });
 })();
