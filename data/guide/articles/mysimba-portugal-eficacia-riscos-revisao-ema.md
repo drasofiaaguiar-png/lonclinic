@@ -25,7 +25,7 @@ featured: true
 **Mysimba é um medicamento oral aprovado em Portugal para obesidade**, mas a situação regulatória está **em evolução** — a Agência Europeia do Medicamento (EMA) está a reavaliá-lo formalmente.
 
 <figure class="guide-figure guide-figure-highlight">
-<img src="/image/medicamentos-obesidade.webp" alt="Mysimba Portugal naltrexona bupropiona aprovado obesidade sob revisão EMA segurança setembro 2023 procedimento formal benefício-risco crise hipertensiva. Eficácia ensaios NB-301 302 303 304 superioridade vs placebo taxa abandono 50% enviesa resultados. Prescrire lista evitar 2017. Efeitos secundários 23,8% abandonam vs 11,9% placebo náuseas obstipação cefaleias tonturas." width="1280" height="720" loading="lazy" decoding="async">
+<img src="/image/nutricao-emagrecimento.webp" alt="Mysimba Portugal naltrexona bupropiona aprovado obesidade sob revisão EMA segurança setembro 2023 procedimento formal benefício-risco crise hipertensiva. Eficácia ensaios NB-301 302 303 304 superioridade vs placebo taxa abandono 50% enviesa resultados. Prescrire lista evitar 2017. Efeitos secundários 23,8% abandonam vs 11,9% placebo náuseas obstipação cefaleias tonturas." width="1280" height="720" loading="lazy" decoding="async">
 <figcaption>Mysimba (naltrexona 8mg + bupropiona 90mg) aprovado Portugal obesidade IMC ≥30 ou ≥27 comorbilidades, sob revisão regulatória EMA desde setembro 2023 preocupações segurança crise hipertensiva. Eficácia ensaios fase 3 superioridade estatística vs placebo mas taxa abandono ~50% enviesa dimensão real efeito. Prescrire lista evitar 2017 efeitos adversos desproporcionais. Semi-vida naltrexona 5h bupropiona 21h. LON: disponível legal pode fazer sentido perfis específicos, não alternativa equivalente sem reservas GLP-1.</figcaption>
 </figure>
 
@@ -50,7 +50,7 @@ featured: true
 
 **Combinação** naltrexona + bupropiona > soma efeitos isolados (sinergia farmacológica).
 
-Artigos relacionados: [medicamentos para obesidade Portugal tipos custos resultados](/blog/medicamentos-obesidade-portugal-tipos-custos-resultados) e [Mounjaro vs Wegovy vs Ozempic diferenças](/blog/mounjaro-vs-wegovy-vs-ozempic-diferencas).
+Artigos relacionados: [medicamentos obesidade Portugal tipos custos resultados](/blog/medicamentos-obesidade-portugal-tipos-custos-resultados), [Mounjaro vs Wegovy vs Ozempic diferenças](/blog/mounjaro-vs-wegovy-vs-ozempic-diferencas), [Mounjaro Portugal guia completo](/blog/mounjaro-portugal-guia-completo), [Saxenda Portugal guia completo](/blog/saxenda-portugal-guia-completo), e [Wegovy Portugal disponibilidade alternativas](/blog/wegovy-portugal-disponibilidade-alternativas).
 
 ### Indicação aprovada EMA
 
@@ -64,7 +64,13 @@ Artigos relacionados: [medicamentos para obesidade Portugal tipos custos resulta
 
 **Nota:** **Não monoterapia** — eficácia requer mudanças estilo vida concomitantes (como todos medicamentos obesidade).
 
-{{cta}}
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Avaliação clínica para medicamentos obesidade</h3>
+<p>Consulta médica + nutricional integrada. Avaliamos qual medicamento (GLP-1, Mysimba ou outros) é mais indicado para o seu caso específico.</p>
+<a href="/marcar" class="guide-cta-button">Marcar consulta</a>
+</div>
+</div>
 
 ## Eficácia: ensaios clínicos e dimensão real do efeito
 
@@ -91,7 +97,7 @@ Artigos relacionados: [medicamentos para obesidade Portugal tipos custos resulta
 - Resultados finais 56 semanas baseados **apenas pacientes completaram** (50% toleraram medicação)
 - **População real** (incluindo intolerantesqueixaram) eficácia **inferior** ensaios reportados (análise ITT — Intention-to-Treat — mostra diferenças menores vs completaram)
 
-Artigos relacionados: [GLP-1 peso volta depois interromper tratamento](/blog/glp1-peso-volta-depois-interromper-tratamento) e [plano emagrecimento 30 dias realista](/blog/plano-emagrecimento-30-dias-realista).
+Artigos relacionados: [GLP-1 peso volta depois interromper tratamento](/blog/glp1-peso-volta-depois-interromper-tratamento), [plano emagrecimento 30 dias realista](/blog/plano-emagrecimento-30-dias-realista), [perda de peso sustentável](/blog/perda-de-peso-sustentavel), [efeito ioio](/blog/efeito-ioio), e [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento).
 
 ### Comparação bupropiona isolada (sem naltrexona)
 
@@ -113,7 +119,15 @@ Artigos relacionados: [GLP-1 peso volta depois interromper tratamento](/blog/glp
 
 **Conclusão:** Mysimba **não primeira linha** compulsão alimentar (intervenção psicológica mais eficaz, mais sustentada, sem efeitos secundários medicamentosos).
 
-Artigos relacionados: [quando ir ao psicólogo sinais](/blog/quando-ir-ao-psicologo-sinais) e [psicologia online vs presencial](/blog/psicologia-online-vs-presencial).
+Artigos relacionados: [quando ir ao psicólogo sinais](/blog/quando-ir-ao-psicologo-sinais), [psicologia online vs presencial](/blog/psicologia-online-vs-presencial), [alimentação intuitiva](/blog/alimentacao-intuitiva), e [qual melhor clínica emagrecimento Portugal](/blog/qual-melhor-clinica-emagrecimento-portugal).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Programa emagrecimento personalizado</h3>
+<p>Não sabe se Mysimba é adequado? Avaliação completa com médico + nutricionista. Prescrição apenas quando clinicamente indicado.</p>
+<a href="/marcar" class="guide-cta-button">Agendar avaliação</a>
+</div>
+</div>
 
 ## Revisão segurança EMA: o que está a acontecer
 
@@ -139,7 +153,7 @@ Artigos relacionados: [quando ir ao psicólogo sinais](/blog/quando-ir-ao-psicol
 4. **Suspensão temporária** aguardar dados adicionais
 5. **Revogação autorização** mercado europeu (cenário extremo)
 
-Artigos relacionados: [Ozempic não diabéticos riscos alertas Infarmed](/blog/ozempic-nao-diabeticos-riscos-alertas-infarmed) e [contraindicações GLP-1 quem não deve tomar](/blog/contraindicacoes-glp1-quem-nao-deve-tomar).
+Artigos relacionados: [Ozempic não diabéticos riscos alertas Infarmed](/blog/ozempic-nao-diabeticos-riscos-alertas-infarmed), [contraindicações GLP-1 quem não deve tomar](/blog/contraindicacoes-glp1-quem-nao-deve-tomar), [Zepbound Portugal existe alternativa](/blog/zepbound-portugal-existe-alternativa), e [Mounjaro Portugal onde como obter passo passo](/blog/mounjaro-portugal-onde-como-obter-passo-passo).
 
 ### Prescrire: lista "medicamentos evitar" desde 2017
 
@@ -157,7 +171,7 @@ Artigos relacionados: [Ozempic não diabéticos riscos alertas Infarmed](/blog/o
 
 **Implicação:** Mysimba **sem evidência robusta segurança cardiovascular** longo prazo população obesa risco (vs GLP-1 agonistas têm estudos cardiovasculares completos SELECT/STEP demonstraram redução MACE).
 
-Artigos relacionados: [Mounjaro reduz risco AVC estudos](/blog/mounjaro-reduz-risco-avc-estudos) e [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento).
+Artigos relacionados: [Mounjaro reduz risco AVC estudos](/blog/mounjaro-reduz-risco-avc-estudos), [obesidade doença crónica tratamento](/blog/obesidade-doenca-cronica-tratamento), [resistência insulina sintomas causas diagnóstico tratamento](/blog/resistencia-insulina-sintomas-causas-diagnostico-tratamento), e [cetonas exógenas emagrecer evidência científica](/blog/cetonas-exogenas-emagrecer-evidencia-cientifica).
 
 ## Efeitos secundários e taxa abandono
 
@@ -185,7 +199,15 @@ Artigos relacionados: [Mounjaro reduz risco AVC estudos](/blog/mounjaro-reduz-ri
 - **Irritabilidade:** 5,1% vs 2,3%
 - **Convulsões:** <0,1% (raras mas graves — contraindicação absoluta história convulsões)
 
-Artigos relacionados: [efeitos secundários GLP-1 náuseas obstipação](/blog/efeitos-secundarios-glp1-nauseas-obstipacao) e [GLP-1 perda massa muscular como reduzir](/blog/glp1-perda-massa-muscular-como-reduzir).
+Artigos relacionados: [efeitos secundários GLP-1 náuseas obstipação](/blog/efeitos-secundarios-glp1-nauseas-obstipacao), [GLP-1 perda massa muscular como reduzir](/blog/glp1-perda-massa-muscular-como-reduzir), [alcool e perda de peso](/blog/alcool-e-perda-de-peso), e [perda de peso em viagem](/blog/perda-de-peso-em-viagem).
+
+<div class="guide-cta-card">
+<div class="guide-cta-card-content">
+<h3>Consulta telemedicina para obesidade</h3>
+<p>Avaliação clínica completa sem sair de casa. Discussão transparente sobre todas as opções terapêuticas disponíveis em Portugal.</p>
+<a href="/marcar" class="guide-cta-button">Começar consulta</a>
+</div>
+</div>
 
 ### Taxa abandono elevada problema real
 
@@ -247,7 +269,7 @@ Artigos relacionados: [efeitos secundários GLP-1 náuseas obstipação](/blog/e
 - **Monitorização reforçada** tensão arterial primeiras 12 semanas (risco hipertensão/crise hipertensiva)
 - **Reavaliação 16 semanas** — se perda peso <5% → suspender (evidência resposta insuficiente, continuar não justifica riscos)
 
-Artigos relacionados: [qual melhor clínica emagrecimento Portugal](/blog/qual-melhor-clinica-emagrecimento-portugal) e [melhor clínica emagrecimento Lisboa](/blog/melhor-clinica-emagrecimento-lisboa).
+Artigos relacionados: [qual melhor clínica emagrecimento Portugal](/blog/qual-melhor-clinica-emagrecimento-portugal), [melhor clínica emagrecimento Lisboa](/blog/melhor-clinica-emagrecimento-lisboa), [consultas nutrição Lisboa preços](/blog/consultas-nutricao-lisboa-precos), [telemedicina em casa como funciona](/blog/telemedicina-em-casa), e [consulta médica online vale a pena](/blog/consulta-medica-online-vale-a-pena).
 
 ## Perguntas frequentes
 
