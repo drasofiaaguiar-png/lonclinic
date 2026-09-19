@@ -1,0 +1,317 @@
+/* ========================================
+   CTAs Visuais para Artigos - Lon Clinic
+   Cartões de marcação com imagens e design apelativo
+======================================== */
+
+/* Base CTA Card - já existe, vamos melhorar */
+.guide-cta-card {
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-radius: 16px;
+    padding: 32px;
+    margin: 40px 0;
+    border: 2px solid #0ea5e9;
+    box-shadow: 0 4px 20px rgba(14, 165, 233, 0.1);
+    transition: all 0.3s ease;
+}
+
+.guide-cta-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(14, 165, 233, 0.2);
+}
+
+.guide-cta-card-content h3 {
+    color: #0c4a6e;
+    font-size: 24px;
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.guide-cta-card-content p {
+    color: #475569;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.guide-cta-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    color: white;
+    padding: 14px 32px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+.guide-cta-button:hover {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.4);
+    color: white;
+}
+
+/* CTA Card com Imagem - NOVO */
+.guide-cta-visual {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 48px 0;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.guide-cta-visual:hover {
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+}
+
+.guide-cta-visual-image {
+    position: relative;
+    overflow: hidden;
+    min-height: 300px;
+}
+
+.guide-cta-visual-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.guide-cta-visual:hover .guide-cta-visual-image img {
+    transform: scale(1.05);
+}
+
+.guide-cta-visual-content {
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.guide-cta-visual-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+    width: fit-content;
+}
+
+.guide-cta-visual-content h3 {
+    font-size: 28px;
+    color: #0f172a;
+    margin-bottom: 16px;
+    line-height: 1.3;
+    font-weight: 700;
+}
+
+.guide-cta-visual-content p {
+    font-size: 17px;
+    color: #64748b;
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+
+.guide-cta-visual-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 28px 0;
+}
+
+.guide-cta-visual-features li {
+    padding: 10px 0;
+    color: #475569;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.guide-cta-visual-features li:before {
+    content: "✓";
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.guide-cta-visual-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    color: white;
+    padding: 16px 36px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 17px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(14, 165, 233, 0.3);
+    width: fit-content;
+}
+
+.guide-cta-visual-button:hover {
+    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(14, 165, 233, 0.4);
+    color: white;
+}
+
+.guide-cta-visual-button:after {
+    content: "→";
+    font-size: 20px;
+    transition: transform 0.3s ease;
+}
+
+.guide-cta-visual-button:hover:after {
+    transform: translateX(4px);
+}
+
+/* Layout alternativo - imagem à direita */
+.guide-cta-visual.image-right {
+    grid-template-columns: 1fr 1fr;
+}
+
+.guide-cta-visual.image-right .guide-cta-visual-image {
+    order: 2;
+}
+
+/* CTA Compacto com Ícone */
+.guide-cta-compact {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin: 32px 0;
+    border-left: 4px solid #f59e0b;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.15);
+    transition: all 0.3s ease;
+}
+
+.guide-cta-compact:hover {
+    transform: translateX(4px);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.25);
+}
+
+.guide-cta-compact-icon {
+    font-size: 48px;
+    flex-shrink: 0;
+}
+
+.guide-cta-compact-content {
+    flex: 1;
+}
+
+.guide-cta-compact-content h4 {
+    font-size: 18px;
+    color: #92400e;
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.guide-cta-compact-content p {
+    font-size: 15px;
+    color: #78350f;
+    margin: 0;
+}
+
+.guide-cta-compact-button {
+    background: white;
+    color: #f59e0b;
+    padding: 12px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.guide-cta-compact-button:hover {
+    background: #fffbeb;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    color: #f59e0b;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .guide-cta-visual {
+        grid-template-columns: 1fr;
+    }
+    
+    .guide-cta-visual.image-right .guide-cta-visual-image {
+        order: 1;
+    }
+    
+    .guide-cta-visual-image {
+        min-height: 200px;
+    }
+    
+    .guide-cta-visual-content {
+        padding: 28px 24px;
+    }
+    
+    .guide-cta-visual-content h3 {
+        font-size: 22px;
+    }
+    
+    .guide-cta-compact {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .guide-cta-compact-button {
+        width: 100%;
+    }
+}
+
+/* Badge de urgência/destaque */
+.guide-cta-urgent {
+    position: relative;
+    overflow: hidden;
+}
+
+.guide-cta-urgent:before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+    animation: shine 3s infinite;
+}
+
+@keyframes shine {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
+}

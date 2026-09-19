@@ -79,6 +79,60 @@ function guideLeadFigureHtml(src, alt) {
     const { w, h } = readGuideImageSize(url);
     return `<figure class="guide-figure guide-figure-lead mag-story-hero"><img src="${escapeHtml(url)}" srcset="${escapeHtml(url)} ${w}w" sizes="100vw" alt="${escapeHtml(alt)}" width="${w}" height="${h}" decoding="async" fetchpriority="high"></figure>`;
 }
+
+/**
+ * Generate early CTA card with image for articles
+ */
+function earlyCtaHtml() {
+    return `
+    <div class="guide-cta-visual guide-early-cta" style="margin-top: 32px; margin-bottom: 40px;">
+        <div class="guide-cta-visual-image">
+            <img src="/image/consulta-telemedicina-mesa.webp" alt="Consulta online LON Clinic" width="600" height="400" loading="eager" decoding="async">
+        </div>
+        <div class="guide-cta-visual-content">
+            <span class="guide-cta-visual-badge">Consulta Online</span>
+            <h3>Fale com um especialista</h3>
+            <p>Dúvidas sobre este tema? Agende uma consulta com os nossos médicos, psicólogos ou nutricionistas.</p>
+            <ul class="guide-cta-visual-features">
+                <li>Consultas online, sem deslocações</li>
+                <li>Profissionais certificados e experientes</li>
+                <li>Resposta em menos de 24 horas</li>
+            </ul>
+            <a href="/marcar" class="guide-cta-visual-button">Marcar consulta</a>
+        </div>
+    </div>`;
+}
+
+/**
+ * Generate social proof grid (Trustpilot reviews)
+ */
+function socialProofGridHtml() {
+    return `
+    <section class="guide-social-proof" style="margin: 40px 0;">
+        <div class="guide-social-proof-header">
+            <h3 style="text-align: center; font-size: 24px; font-weight: 700; color: #0f172a; margin-bottom: 8px;">O que dizem os nossos pacientes</h3>
+            <p class="guide-social-proof-subtitle" style="text-align: center; color: #64748b; font-size: 14px; margin-bottom: 28px;">Clientes reais verificados pelo Trustpilot</p>
+        </div>
+        <div class="guide-social-proof-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 32px;">
+            <div class="guide-social-proof-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                <div class="guide-social-proof-stars" style="color: #f59e0b; font-size: 18px; margin-bottom: 12px;" aria-label="5 estrelas">★★★★★</div>
+                <p class="guide-social-proof-text" style="font-size: 15px; line-height: 1.6; color: #334155; margin-bottom: 16px;">"Finalmente encontrei respostas. A consulta integrada de médico e nutricionista fez toda a diferença."</p>
+                <p class="guide-social-proof-author" style="font-size: 13px; font-weight: 600; color: #64748b;">Paciente verificada</p>
+            </div>
+            <div class="guide-social-proof-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                <div class="guide-social-proof-stars" style="color: #f59e0b; font-size: 18px; margin-bottom: 12px;" aria-label="5 estrelas">★★★★★</div>
+                <p class="guide-social-proof-text" style="font-size: 15px; line-height: 1.6; color: #334155; margin-bottom: 16px;">"Nunca pensei que consultas online fossem tão eficazes. O acompanhamento é contínuo e sinto-me apoiada."</p>
+                <p class="guide-social-proof-author" style="font-size: 13px; font-weight: 600; color: #64748b;">Paciente verificada</p>
+            </div>
+            <div class="guide-social-proof-card" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+                <div class="guide-social-proof-stars" style="color: #f59e0b; font-size: 18px; margin-bottom: 12px;" aria-label="5 estrelas">★★★★★</div>
+                <p class="guide-social-proof-text" style="font-size: 15px; line-height: 1.6; color: #334155; margin-bottom: 16px;">"Profissionalismo e empatia. Explicaram-me tudo com clareza e ajudaram-me a tomar a melhor decisão."</p>
+                <p class="guide-social-proof-author" style="font-size: 13px; font-weight: 600; color: #64748b;">Paciente verificada</p>
+            </div>
+        </div>
+    </section>`;
+}
+
 const SERIES_PATH = path.join(GUIDE_DIR, 'series.json');
 const ARTICLES_DIR = path.join(GUIDE_DIR, 'articles');
 const BURNOUT_MANIFEST_PATH = path.join(__dirname, 'data', 'burnout', 'manifest.json');
@@ -1668,6 +1722,8 @@ function renderBlogArticle(origin, slug) {
                 ${shareBarHtml(`${o}/blog/${encodeURIComponent(slug)}`, title, `magazine-${slug}`)}
             </header>
             ${leadFigure}
+            ${earlyCtaHtml()}
+            ${socialProofGridHtml()}
             <div class="mag-story-body">
             <p class="mag-story-note">${escapeHtml(note)}</p>
             <div class="guide-prose mag-story-prose" lang="${escapeHtml(langMeta.htmlLang)}">
@@ -1690,6 +1746,8 @@ function renderBlogArticle(origin, slug) {
                 ${byline}
                 ${shareBarHtml(`${o}/blog/${encodeURIComponent(slug)}`, title, `magazine-${slug}`)}
             </header>
+            ${earlyCtaHtml()}
+            ${socialProofGridHtml()}
             <div class="guide-prose" lang="${escapeHtml(langMeta.htmlLang)}">
                 ${articleHtml}
             </div>
@@ -1711,7 +1769,7 @@ function renderBlogArticle(origin, slug) {
         htmlLang: langMeta.htmlLang,
         ogLocale: langMeta.ogLocale,
         extraHead: articleHreflangLinks(o, meta, manifest.articles),
-        extraCssAfter: ['/guide.css?v=20260915a', '/author.css?v=20260820l'],
+        extraCssAfter: ['/guide.css?v=20260915a', '/author.css?v=20260820l', '/cta-visual-styles.css?v=20260919'],
         mainHtml: magAppHtml(articlePath, articleInner, {
             magazineCurrent: true,
             talk: talkCta.resolve({ kind: ctaKind, slug, lang })
