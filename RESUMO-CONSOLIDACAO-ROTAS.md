@@ -42,7 +42,7 @@ Deprecated (redirects 301):
 ❌ /book.html             → 301 /book-consultation (já existia)
 ❌ /triagem.html          → 301 /triagem (já existia)
 
-Resultado esperado: +40-60% conversão medida corretamente
+Resultado esperado: Conversão rastreada corretamente pela primeira vez
 ```
 
 ---
@@ -210,8 +210,7 @@ console.log('⚠️ /book-consultation direct access without context:', {
    - 🎯 0% em `/marcar.html`
 
 2. **Conversão medida**:
-   - 🎯 Aumento de 40-60% na **conversão rastreada**
-   - (Não necessariamente conversão real, mas medida corretamente)
+   - 🎯 Conversão **rastreada corretamente pela primeira vez** (vs. fragmentada em múltiplas rotas)
 
 3. **Distribuição de especialidades**:
    - 📊 Quantos escolhem cada cartão
@@ -256,7 +255,7 @@ console.log('⚠️ /book-consultation direct access without context:', {
 ## 🎉 Impacto Esperado
 
 ### Conversão:
-- **+40-60% conversão medida** (tracking correto vs. fragmentado)
+- **Conversão rastreada corretamente** pela primeira vez (tracking consolidado vs. fragmentado)
 - Possível aumento real por redução de fricção (1 escolha vs. múltiplas rotas confusas)
 
 ### SEO:

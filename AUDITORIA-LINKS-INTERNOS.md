@@ -242,7 +242,7 @@ console.log('⚠️ /book-consultation direct access without context:', {
    - ✅ 0% tráfego em `/marcar.html`
 
 2. **Conversão medida**:
-   - 🎯 Aumento de 40-60% na conversão rastreada (não necessariamente real, mas **medida corretamente**)
+   - 🎯 Conversão **rastreada corretamente pela primeira vez** (vs. fragmentada)
 
 3. **Redirects**:
    - ✅ Redução a ZERO de acessos diretos a URLs deprecated
