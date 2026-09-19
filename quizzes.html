@@ -1,49 +1,341 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-PT">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZN8J4X12H3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZN8J4X12H3');
+      gtag('config', 'GT-TXHQ9ZVX', { send_page_view: false });
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Health Quizzes — Lon Clinic</title>
-    <meta name="description" content="Free health readiness quizzes. Take an assessment now and sign in to see your personalised results on your dashboard.">
+    
+    <title>Testes de Saúde Gratuitos | Descubra o Caminho Certo | Lon Clinic</title>
+    <meta name="description" content="Testes gratuitos de saúde mental, burnout e bem-estar. Resultados em minutos com recomendações personalizadas.">
+    <meta name="keywords" content="teste burnout, teste ansiedade, teste saúde mental, quiz gratuito portugal">
+    <meta name="robots" content="index,follow">
+    
     <link rel="canonical" href="https://www.lonclinic.com/quizzes">
-    <link rel="stylesheet" href="landing.css">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="quiz.css">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.lonclinic.com/quizzes">
+    <meta property="og:title" content="Testes de Saúde Gratuitos | Lon Clinic">
+    <meta property="og:description" content="Testes gratuitos com resultados personalizados em minutos.">
+    <meta property="og:image" content="https://www.lonclinic.com/image/consulta-telemedicina-mesa.webp">
+    
+    <meta name="theme-color" content="#F09458">
+    
+    <link rel="stylesheet" href="/landing.css?v=20260915a">
+    <link rel="stylesheet" href="/nav-global.css?v=20260919">
+    <link rel="stylesheet" href="/homepage.css?v=20260919">
+    <link rel="stylesheet" href="/quiz.css?v=20260919">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="lon-landing quiz-page">
+<body class="home-v2 quiz-index">
 
-    <header class="lon-nav" id="lonNav">
-        <div class="lon-container lon-nav-inner">
-            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
-                <span class="lon-logo-name">LON Clinic</span>
+<!-- Global Nav V2 -->
+<a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
+
+<header class="lon-nav-v2" id="lonNav">
+    <div class="lon-container lon-nav-inner">
+        <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
+            <span class="lon-logo-name">lon clinic</span>
+        </a>
+        
+        <nav class="lon-nav-links" aria-label="Navegação principal">
+            <div class="lon-nav-mega-trigger">
+                <button type="button" class="lon-nav-link lon-nav-link--mega" id="especialidadesToggle" aria-expanded="false" aria-controls="especialidadesMega">
+                    Especialidades
+                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+                        <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <div class="lon-nav-mega" id="especialidadesMega" role="menu">
+                    <div class="lon-nav-mega-inner">
+                        <a href="/longevidade" class="lon-nav-mega-item" role="menuitem">
+                            <span class="lon-nav-mega-icon" aria-hidden="true">⚡</span>
+                            <div>
+                                <strong>Medicina de Longevidade</strong>
+                                <span class="lon-nav-mega-desc">Prevenção e biomarcadores</span>
+                            </div>
+                        </a>
+                        <a href="/travel-clinic" class="lon-nav-mega-item" role="menuitem">
+                            <span class="lon-nav-mega-icon" aria-hidden="true">✈️</span>
+                            <div>
+                                <strong>Medicina do Viajante</strong>
+                                <span class="lon-nav-mega-desc">Vacinas e consulta pré-viagem</span>
+                            </div>
+                        </a>
+                        <a href="/urgent-care" class="lon-nav-mega-item" role="menuitem">
+                            <span class="lon-nav-mega-icon" aria-hidden="true">🚨</span>
+                            <div>
+                                <strong>Consulta Urgente</strong>
+                                <span class="lon-nav-mega-desc">Resposta rápida, ainda hoje</span>
+                            </div>
+                        </a>
+                        <a href="/psicologia" class="lon-nav-mega-item" role="menuitem">
+                            <span class="lon-nav-mega-icon" aria-hidden="true">🧠</span>
+                            <div>
+                                <strong>Psicologia</strong>
+                                <span class="lon-nav-mega-desc">Terapia individual e de casal</span>
+                            </div>
+                        </a>
+                        <a href="/nutricao" class="lon-nav-mega-item" role="menuitem">
+                            <span class="lon-nav-mega-icon" aria-hidden="true">💚</span>
+                            <div>
+                                <strong>Nutrição</strong>
+                                <span class="lon-nav-mega-desc">Acompanhamento contínuo</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <a href="/quizzes" class="lon-nav-link">Testes</a>
+            <a href="/magazine" class="lon-nav-link">Magazine</a>
+            <a href="/#equipa" class="lon-nav-link">Equipa</a>
+        </nav>
+        
+        <div class="lon-nav-actions">
+            <a href="/patient-portal" class="lon-nav-login">Login</a>
+            <a href="/marcar" class="lon-nav-cta" id="navCtaDesktop">
+                Marcar consulta
             </a>
-            <nav class="lon-nav-links" aria-label="Main navigation">
-                <a href="/#servicos">Services</a>
-                <a href="/quizzes">Quizzes</a>
-                <a href="/#contacto">Contact</a>
-            </nav>
-            <div class="lon-nav-actions">
-                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">My dashboard</a>
-                <a href="/book-consultation" class="lon-btn lon-btn-primary lon-btn-sm">Book</a>
+        </div>
+        
+        <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
+            <span></span><span></span><span></span>
+        </button>
+    </div>
+    
+    <div class="lon-mobile-menu" id="lonMobileMenu">
+        <div class="lon-mobile-section">
+            <button type="button" class="lon-mobile-trigger" id="especialidadesMobileTrigger" aria-expanded="false">
+                Especialidades
+                <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+                    <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            <div class="lon-mobile-submenu" id="especialidadesMobileMenu">
+                <a href="/longevidade">⚡ Medicina de Longevidade</a>
+                <a href="/travel-clinic">✈️ Medicina do Viajante</a>
+                <a href="/urgent-care">🚨 Consulta Urgente</a>
+                <a href="/psicologia">🧠 Psicologia</a>
+                <a href="/nutricao">💚 Nutrição</a>
             </div>
         </div>
-    </header>
+        <a href="/quizzes">Testes</a>
+        <a href="/magazine">Magazine</a>
+        <a href="/#equipa">Equipa</a>
+        <a href="/patient-portal">Login</a>
+    </div>
+</header>
 
-    <main class="quiz-main">
-        <div class="quiz-hero">
-            <h1>Health quizzes</h1>
-            <p>Take a short self-assessment in minutes. Your personalised evaluation appears after you sign in — saved on your patient dashboard.</p>
-        </div>
-        <div id="quizListError" class="quiz-error" style="display:none;" role="alert"></div>
-        <div class="quiz-grid" id="quizList">
-            <p style="text-align:center;color:#6b7f72;">Loading quizzes…</p>
-        </div>
-    </main>
+<div class="lon-mobile-cta-fixed">
+    <a href="/marcar" id="navCtaMobile">Marcar consulta</a>
+</div>
 
-    <script src="lon-nav.js"></script>
-    <script src="quizzes.js"></script>
+<main id="conteudo-principal">
+    
+    <!-- Hero -->
+    <section class="quiz-hero">
+        <div class="home-container">
+            <h1>Testes de saúde gratuitos</h1>
+            <p>Não sabe por onde começar? Responda a algumas perguntas e descubra o caminho mais adequado para si.</p>
+        </div>
+    </section>
+
+    <!-- Quiz Grid -->
+    <section class="quiz-section">
+        <div class="home-container">
+            <div class="quiz-grid">
+                
+                <!-- Burnout Quiz -->
+                <a href="/burnout/teste" class="quiz-card">
+                    <span class="quiz-card-icon">🔥</span>
+                    <h3>Teste de Burnout</h3>
+                    <p class="quiz-card-desc">Copenhagen Burnout Inventory — 4 minutos, resultado imediato.</p>
+                    <div class="quiz-card-meta">
+                        <span class="quiz-card-time">⏱ 4 min</span>
+                        <span class="quiz-card-badge">Validado cientificamente</span>
+                    </div>
+                    <span class="quiz-card-arrow">→</span>
+                </a>
+                
+                <!-- Big Five Quiz -->
+                <a href="/personalidade/teste" class="quiz-card">
+                    <span class="quiz-card-icon">🧩</span>
+                    <h3>Teste de Personalidade</h3>
+                    <p class="quiz-card-desc">Big Five — compreenda os seus traços dominantes.</p>
+                    <div class="quiz-card-meta">
+                        <span class="quiz-card-time">⏱ 8 min</span>
+                        <span class="quiz-card-badge">Psicologia</span>
+                    </div>
+                    <span class="quiz-card-arrow">→</span>
+                </a>
+                
+                <!-- Coming Soon: Anxiety -->
+                <div class="quiz-card quiz-card--coming">
+                    <span class="quiz-card-icon">🌊</span>
+                    <h3>Teste de Ansiedade</h3>
+                    <p class="quiz-card-desc">Identifique sinais de ansiedade no dia a dia.</p>
+                    <div class="quiz-card-meta">
+                        <span class="quiz-card-badge quiz-card-badge--soon">Em breve</span>
+                    </div>
+                </div>
+                
+                <!-- Coming Soon: Nutrition -->
+                <div class="quiz-card quiz-card--coming">
+                    <span class="quiz-card-icon">🥗</span>
+                    <h3>Avaliação Nutricional</h3>
+                    <p class="quiz-card-desc">Descubra o que precisa de ajustar na sua alimentação.</p>
+                    <div class="quiz-card-meta">
+                        <span class="quiz-card-badge quiz-card-badge--soon">Em breve</span>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Take a Quiz -->
+    <section class="quiz-why">
+        <div class="home-container">
+            <h2>Porquê fazer um teste?</h2>
+            <div class="quiz-why-grid">
+                <div class="quiz-why-item">
+                    <span class="quiz-why-icon">✓</span>
+                    <h3>Resultados imediatos</h3>
+                    <p>Sem espera, sem registo obrigatório — veja o resultado assim que terminar.</p>
+                </div>
+                <div class="quiz-why-item">
+                    <span class="quiz-why-icon">🔬</span>
+                    <h3>Validação científica</h3>
+                    <p>Baseados em instrumentos validados e usados por profissionais de saúde.</p>
+                </div>
+                <div class="quiz-why-item">
+                    <span class="quiz-why-icon">🎯</span>
+                    <h3>Recomendações personalizadas</h3>
+                    <p>O resultado indica-lhe o próximo passo mais adequado ao seu caso.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="quiz-cta">
+        <div class="home-container">
+            <h2>Prefere falar diretamente com alguém?</h2>
+            <p>Não precisa de fazer um teste. Pode marcar uma consulta diretamente.</p>
+            <a href="/marcar" class="home-btn home-btn-primary">Marcar consulta</a>
+        </div>
+    </section>
+
+</main>
+
+<!-- Footer -->
+<footer class="home-footer">
+    <div class="home-container">
+        <div class="home-footer-content">
+            <p class="home-footer-contact">
+                <strong>LON Clinic</strong><br>
+                <a href="mailto:info@lonclinic.com">info@lonclinic.com</a> · 
+                <a href="tel:+351928372775">(+351) 928 372 775</a>
+            </p>
+            <p class="home-footer-legal">
+                Nº de Registo ERS: 45475<br>
+                © 2026 LON Clinic · Portugal
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script>
+// Nav functionality (same as homepage)
+(function() {
+    const trigger = document.getElementById('especialidadesToggle');
+    const mega = document.getElementById('especialidadesMega');
+    
+    if (trigger && mega) {
+        trigger.addEventListener('click', function() {
+            const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+            trigger.setAttribute('aria-expanded', !isOpen);
+            mega.classList.toggle('lon-nav-mega--open');
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!trigger.contains(e.target) && !mega.contains(e.target)) {
+                trigger.setAttribute('aria-expanded', 'false');
+                mega.classList.remove('lon-nav-mega--open');
+            }
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && mega.classList.contains('lon-nav-mega--open')) {
+                trigger.setAttribute('aria-expanded', 'false');
+                mega.classList.remove('lon-nav-mega--open');
+                trigger.focus();
+            }
+        });
+    }
+    
+    const navToggle = document.getElementById('lonNavToggle');
+    const mobileMenu = document.getElementById('lonMobileMenu');
+    
+    if (navToggle && mobileMenu) {
+        navToggle.addEventListener('click', function() {
+            const isOpen = navToggle.getAttribute('aria-expanded') === 'true';
+            navToggle.setAttribute('aria-expanded', !isOpen);
+            mobileMenu.classList.toggle('lon-mobile-menu--open');
+            document.body.classList.toggle('lon-nav-open');
+        });
+    }
+    
+    const mobileSubTrigger = document.getElementById('especialidadesMobileTrigger');
+    const mobileSubMenu = document.getElementById('especialidadesMobileMenu');
+    
+    if (mobileSubTrigger && mobileSubMenu) {
+        mobileSubTrigger.addEventListener('click', function() {
+            const isOpen = mobileSubTrigger.getAttribute('aria-expanded') === 'true';
+            mobileSubTrigger.setAttribute('aria-expanded', !isOpen);
+            mobileSubMenu.classList.toggle('lon-mobile-submenu--open');
+        });
+    }
+    
+    // Analytics
+    if (typeof gtag !== 'undefined') {
+        const ctaDesktop = document.getElementById('navCtaDesktop');
+        const ctaMobile = document.getElementById('navCtaMobile');
+        
+        if (ctaDesktop) {
+            ctaDesktop.addEventListener('click', function() {
+                gtag('event', 'cta_click', { event_category: 'navigation', event_label: 'desktop_nav_marcar', value: 1 });
+            });
+        }
+        if (ctaMobile) {
+            ctaMobile.addEventListener('click', function() {
+                gtag('event', 'cta_click', { event_category: 'navigation', event_label: 'mobile_fixed_marcar', value: 1 });
+            });
+        }
+        
+        // Track quiz card clicks
+        document.querySelectorAll('.quiz-card:not(.quiz-card--coming)').forEach(function(card) {
+            card.addEventListener('click', function() {
+                const title = card.querySelector('h3').textContent;
+                gtag('event', 'quiz_card_click', {
+                    event_category: 'quizzes',
+                    event_label: title,
+                    value: 1
+                });
+            });
+        });
+    }
+})();
+</script>
+
 </body>
 </html>
