@@ -30,8 +30,29 @@
 
 .home-hero {
     padding: calc(var(--nav-height, 72px) + 60px) 0 80px;
-    text-align: center;
     background: linear-gradient(180deg, #FDFCFB 0%, #F9F8F6 100%);
+}
+
+.home-hero-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.home-hero-text {
+    text-align: left;
+}
+
+.home-hero-image {
+    position: relative;
+}
+
+.home-hero-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
 }
 
 .home-hero-badge {
@@ -451,6 +472,20 @@
         padding: calc(var(--nav-height, 72px) + 40px) 0 60px;
     }
     
+    .home-hero-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+    }
+    
+    .home-hero-text {
+        text-align: center;
+    }
+    
+    .home-hero-image {
+        order: -1;
+    }
+    
     .home-needs,
     .home-testimonials,
     .home-why,
@@ -483,6 +518,10 @@
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
+    .home-hero-content {
+        gap: 40px;
+    }
+    
     .home-needs-grid {
         grid-template-columns: repeat(2, 1fr);
     }
