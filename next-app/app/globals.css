@@ -62,3 +62,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Mobile bottom padding for fixed CTA */
+@media (max-width: 1023px) {
+  main {
+    padding-bottom: 80px;
+  }
+}

@@ -8,7 +8,7 @@ export default function HomePage() {
   return (
     <main className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-[#FDFCFB] to-[#F9F8F6] pt-[calc(72px+60px)] pb-20 max-md:pt-[calc(72px+40px)] max-md:pb-15">
+      <section className="bg-gradient-to-b from-[#FDFCFB] to-[#F9F8F6] pt-[60px] pb-20 max-md:pt-[40px] max-md:pb-15">
         <div className="max-w-[1200px] mx-auto px-6">
           <HeroSplit
             eyebrow="Clínica certificada pela ERS · nº 45.475"
@@ -224,30 +224,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="py-12 bg-slate-900 text-slate-200">
-        <div className="max-w-[1200px] mx-auto px-6 text-center">
-          <p className="text-[15px] leading-relaxed mb-4">
-            <strong className="text-lg font-bold block mb-2 text-white">
-              LON Clinic
-            </strong>
-            <a href="mailto:info@lonclinic.com" className="text-slate-200 no-underline hover:text-[var(--primary)]">
-              info@lonclinic.com
-            </a>
-            {' · '}
-            <a href="tel:+351928372775" className="text-slate-200 no-underline hover:text-[var(--primary)]">
-              (+351) 928 372 775
-            </a>
-          </p>
-          
-          <p className="text-[13px] text-slate-400 m-0 leading-relaxed">
-            Nº de Registo ERS: 45475
-            <br />
-            © 2026 LON Clinic · Portugal
-          </p>
-        </div>
-      </footer>
     </main>
   );
 }

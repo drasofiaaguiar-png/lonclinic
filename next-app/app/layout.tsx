@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import NavGlobal from "@/components/layout/NavGlobal";
+import Footer from "@/components/layout/Footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -51,7 +53,9 @@ export default function RootLayout({
         <meta name="theme-color" content="#F09458" />
       </head>
       <body className="antialiased">
+        <NavGlobal />
         {children}
+        <Footer />
       </body>
     </html>
   );
