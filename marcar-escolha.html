@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZN8J4X12H3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZN8J4X12H3');
+      gtag('config', 'GT-TXHQ9ZVX', { send_page_view: false });
+      gtag('config', 'AW-18103198169', { send_page_view: false });
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escolha a sua especialidade — Lon Clinic</title>
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="https://www.lonclinic.com/marcar">
+    <meta name="theme-color" content="#1F3D2B">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f5f7f6 0%, #ffffff 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            color: #1F3D2B;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1F3D2B;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1F3D2B;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: #5a6f63;
+            font-weight: 400;
+        }
+
+        .cards {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border-color: #1F3D2B;
+        }
+
+        .card:active {
+            transform: translateY(0);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            flex-shrink: 0;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #f5f7f6;
+        }
+
+        .card.longevidade .card-icon { background: #F0ECE1; }
+        .card.psicologia .card-icon { background: #E8F5F3; }
+        .card.nutricao .card-icon { background: #FCF0EB; }
+        .card.viajante .card-icon { background: #EEF4F8; }
+        .card.tourist .card-icon { background: #F0F4ED; }
+
+        .card-content {
+            flex: 1;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1F3D2B;
+            margin-bottom: 0.25rem;
+        }
+
+        .card-description {
+            font-size: 0.875rem;
+            color: #5a6f63;
+            line-height: 1.4;
+        }
+
+        .help-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7e6;
+        }
+
+        .help-link a {
+            color: #5a6f63;
+            text-decoration: none;
+            font-size: 0.938rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .help-link a:hover {
+            color: #1F3D2B;
+            background: #f5f7f6;
+        }
+
+        .help-link a::before {
+            content: '→';
+            display: inline-block;
+            transition: transform 0.2s ease;
+        }
+
+        .help-link a:hover::before {
+            transform: translateX(3px);
+        }
+
+        @media (max-width: 640px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .card {
+                padding: 1.25rem;
+            }
+
+            .card-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 2rem;
+            }
+
+            .card-title {
+                font-size: 1rem;
+            }
+
+            .card-description {
+                font-size: 0.813rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">LON Clinic</div>
+            <h1>Escolha a sua especialidade</h1>
+            <p class="subtitle">Marcação direta para a área certa</p>
+        </div>
+
+        <div class="cards">
+            <a href="/marcar/medicina-longevidade" class="card longevidade">
+                <div class="card-icon">⚡</div>
+                <div class="card-content">
+                    <div class="card-title">Medicina de Longevidade</div>
+                    <div class="card-description">Saúde preventiva e otimização metabólica</div>
+                </div>
+            </a>
+
+            <a href="/marcar/psicologia-mensal" class="card psicologia">
+                <div class="card-icon">🧠</div>
+                <div class="card-content">
+                    <div class="card-title">Psicologia</div>
+                    <div class="card-description">Acompanhamento individual, burnout, ansiedade</div>
+                </div>
+            </a>
+
+            <a href="/marcar/nutricao-programa" class="card nutricao">
+                <div class="card-icon">🥗</div>
+                <div class="card-content">
+                    <div class="card-title">Nutrição</div>
+                    <div class="card-description">Emagrecimento, diabetes, acompanhamento integrado</div>
+                </div>
+            </a>
+
+            <a href="/marcar/medicina-viajante" class="card viajante">
+                <div class="card-icon">✈️</div>
+                <div class="card-content">
+                    <div class="card-title">Medicina do Viajante</div>
+                    <div class="card-description">Vacinas, prevenção e consultas pré-viagem</div>
+                </div>
+            </a>
+
+            <a href="/marcar/tourist-clinic" class="card tourist">
+                <div class="card-icon">🌍</div>
+                <div class="card-content">
+                    <div class="card-title">Tourist Clinic</div>
+                    <div class="card-description">Atendimento para visitantes internacionais</div>
+                </div>
+            </a>
+        </div>
+
+        <div class="help-link">
+            <a href="/">Não sei qual preciso — ajuda a escolher</a>
+        </div>
+    </div>
+
+    <script>
+        // Track specialty selection clicks
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                const specialty = this.className.split(' ')[1];
+                gtag('event', 'select_specialty', {
+                    specialty: specialty,
+                    page_location: window.location.href
+                });
+            });
+        });
+
+        // Track help link clicks
+        document.querySelector('.help-link a').addEventListener('click', function() {
+            gtag('event', 'click', {
+                event_category: 'Navigation',
+                event_label: 'Need Help Choosing Specialty'
+            });
+        });
+    </script>
+</body>
+</html>

@@ -9474,12 +9474,13 @@ function redirectToMarcarHtml(req, res) {
         return res.redirect(301, `/marcar/${slug}${suffix}`);
     }
 
-    const filePath = path.join(__dirname, 'marcar.html');
+    // Serve specialty selector page for generic /marcar access
+    const filePath = path.join(__dirname, 'marcar-escolha.html');
     if (!fs.existsSync(filePath)) {
-        console.error('❌ marcar.html missing at:', filePath);
-        return res.status(500).send('marcar.html not found on server');
+        console.error('❌ marcar-escolha.html missing at:', filePath);
+        return res.status(500).send('marcar-escolha.html not found on server');
     }
-    sendHtmlNoCache(res, filePath, 'Error loading marcar page');
+    sendHtmlNoCache(res, filePath, 'Error loading specialty selector');
 }
 app.get('/marcar', redirectToMarcarHtml);
 app.get('/marcar/', redirectToMarcarHtml);
@@ -9494,14 +9495,11 @@ app.get('/marcar/:tipoSlug', (req, res) => {
     sendHtmlNoCache(res, filePath, 'Error loading marcar page');
 });
 
-// Explicit handler so /marcar.html always works (do not rely on express.static alone)
+// Deprecated: /marcar.html redirects to specialty selector
 app.get('/marcar.html', (req, res) => {
-    const filePath = path.join(__dirname, 'marcar.html');
-    if (!fs.existsSync(filePath)) {
-        console.error('❌ marcar.html missing at:', filePath);
-        return res.status(500).send('marcar.html not found on server');
-    }
-    sendHtmlNoCache(res, filePath, 'Error loading marcar page');
+    const query = req.url.split('?')[1];
+    const suffix = query ? `?${query}` : '';
+    res.redirect(301, `/marcar${suffix}`);
 });
 
 app.get('/book-consultation', (req, res) => {
@@ -9509,6 +9507,12 @@ app.get('/book-consultation', (req, res) => {
     const hasBookingContext = q.slot || q.service || q.date || q.ficha
         || q.success || q.t || q.session_id || q.cancelled || q.invitation;
     if (!hasBookingContext) {
+        // Log for analytics: direct access without booking context
+        console.log('⚠️ /book-consultation direct access without context:', {
+            referrer: req.get('Referrer'),
+            utm_source: q.utm_source,
+            utm_campaign: q.utm_campaign
+        });
         return res.redirect(302, '/marcar');
     }
     sendHtmlNoCache(res, path.join(__dirname, 'book.html'), 'Error loading booking page');
