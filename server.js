@@ -9367,13 +9367,18 @@ app.get('/longevidade', (req, res) => {
     sendHtmlNoCache(res, filePath, 'Error loading longevidade page');
 });
 
-app.get('/tourist-clinic', (req, res) => {
-    try {
-        sendHtmlNoCacheString(res, touristPages.renderHub(seo.SITE_ORIGIN));
-    } catch (err) {
-        console.error('❌ Tourist clinic hub error:', err.message || err);
-        res.status(500).type('html').send('Error loading tourist clinic.');
+app.get('/urgent-care', (req, res) => {
+    const filePath = path.join(__dirname, 'urgent-care.html');
+    if (!fs.existsSync(filePath)) {
+        console.error('❌ urgent-care.html missing at:', filePath);
+        return res.status(500).send('urgent-care.html not found on server');
     }
+    sendHtmlNoCache(res, filePath, 'Error loading urgent care page');
+});
+
+app.get('/tourist-clinic', (req, res) => {
+    // Redirect tourist-clinic to urgent-care
+    res.redirect(301, '/urgent-care');
 });
 
 app.get('/travel-clinic', (req, res) => {
