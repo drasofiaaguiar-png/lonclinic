@@ -9358,6 +9358,15 @@ app.use((req, res, next) => {
 
 // ─── IMPORTANT: Routes must come BEFORE express.static ───
 // ─── Friendly URLs (without .html) - MUST come before root route ───
+app.get('/longevidade', (req, res) => {
+    const filePath = path.join(__dirname, 'longevidade.html');
+    if (!fs.existsSync(filePath)) {
+        console.error('❌ longevidade.html missing at:', filePath);
+        return res.status(500).send('longevidade.html not found on server');
+    }
+    sendHtmlNoCache(res, filePath, 'Error loading longevidade page');
+});
+
 app.get('/tourist-clinic', (req, res) => {
     try {
         sendHtmlNoCacheString(res, touristPages.renderHub(seo.SITE_ORIGIN));
