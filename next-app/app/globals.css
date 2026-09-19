@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+:root {
+  /* LON Clinic Brand Colors */
+  --primary: #F09458;
+  --primary-dark: #e07d3e;
+  --text: #1C1710;
+  --text-muted: #64748b;
+  --bg: #FFFFFF;
+  --bg-alt: #F9F8F6;
+  --border: #e2e8f0;
+  
+  /* Specialty Colors */
+  --nutricao-light: #9FBD84;
+  --nutricao-dark: #3F574C;
+  --psicologia-light: #9BB1BC;
+  --psicologia-dark: #537284;
+  --longevidade-light: #ECD281;
+  --longevidade-dark: #CBB068;
+  --urgente-light: #BD4f4F;
+  --urgente-dark: #A5584E;
+  --travel-light: #A794C9;
+  --travel-dark: #405266;
+  
+  /* Spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+  
+  /* Radius */
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-bg: var(--bg);
+  --color-bg-alt: var(--bg-alt);
+  --color-border: var(--border);
+  
+  --font-sans: 'Inter', system-ui, sans-serif;
+  
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
