@@ -437,7 +437,7 @@
         abortSlotsFetch();
         var controller = typeof AbortController === 'function' ? new AbortController() : null;
         slotsMemory.controller = controller;
-        var req = fetch('/api/next-slots?limit=8&withinHours=168&service=' + encodeURIComponent(requested), {
+        var req = fetch('/api/next-slots?limit=8&withinHours=72&service=' + encodeURIComponent(requested), {
             credentials: 'same-origin',
             signal: controller ? controller.signal : undefined
         })
