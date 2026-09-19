@@ -7,9 +7,9 @@ import Link from 'next/link';
 export default function HomePage() {
   return (
     <main className="min-h-screen">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-b from-[#FDFCFB] to-[#F9F8F6] pt-[60px] pb-20 max-md:pt-[40px] max-md:pb-15">
-        <div className="max-w-[1200px] mx-auto px-6">
+      {/* Hero Section - MODERN & SPACIOUS */}
+      <section className="bg-gradient-to-br from-[#FDFCFB] via-[#F9F8F6] to-[#FFF7F0] pt-32 pb-32">
+        <div className="max-w-[1400px] mx-auto px-6">
           <HeroSplit
             eyebrow="Clínica certificada pela ERS · nº 45.475"
             title="Clínica Médica Online"
@@ -22,19 +22,19 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Needs Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-[var(--text)] mb-3 tracking-tight">
+      {/* Needs Section - MODERN GRID */}
+      <section className="py-32 bg-white">
+        <div class="max-w-[1400px] mx-auto px-6">
+          <div className="text-center mb-20">
+            <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-[var(--text)] mb-6 tracking-[-0.03em]">
               Diga-nos o que precisa
             </h2>
-            <p className="text-lg text-[var(--text-muted)] m-0">
+            <p className="text-2xl text-[var(--text-muted)] m-0 max-w-[700px] mx-auto">
               Comece pela sua necessidade — encontramos o caminho mais simples.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <NeedCard
               imageSrc="/image/consulta-clinica-geral.webp"
               imageAlt="Consulta médica"
