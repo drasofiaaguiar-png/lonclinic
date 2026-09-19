@@ -1,29 +1,44 @@
-/* Psicologia — olive wellness layout (Lon Clinic) */
+/* Psicologia — blue calm layout (Lon Clinic) */
 .psi-landing {
-    --psi-olive: #5f6642;
-    --psi-olive-deep: #4a5134;
-    --psi-olive-mid: #6f764f;
-    --psi-olive-soft: #8b926a;
-    --psi-lime: #d4f44c;
-    --psi-lime-deep: #c6e83a;
-    --psi-cream: #f3efe3;
-    --psi-cream-2: #e8e2d2;
-    --psi-ink: #2a2c1c;
-    --psi-ink-soft: #3f4230;
-    --psi-muted: #636650;
-    --psi-line: rgba(42, 44, 28, 0.12);
-    --psi-line-strong: #cdc9b4;
-    --psi-paper: #f7f4ea;
-    --psi-mist: #faf8f1;
-    --psi-hero: var(--psi-olive);
-    --psi-hero-deep: var(--psi-olive-deep);
-    --psi-sage: var(--psi-olive-soft);
-    --psi-sage-soft: #b5b98f;
-    --psi-mint: #dfe6c4;
-    --psi-mint-hover: #d0d9b2;
-    --psi-signal: var(--psi-olive-deep);
-    --psi-signal-hover: #3a4028;
-    --psi-signal-soft: rgba(95, 102, 66, 0.14);
+    /* New color system: Psychology #9BB1BC / #537284 */
+    --psi-primary: #9BB1BC;
+    --psi-secondary: #537284;
+    --psi-primary-hover: #8aa0ac;
+    --psi-secondary-deep: #3f5663;
+    --psi-primary-soft: #b8cad4;
+    --psi-primary-subtle: rgba(155, 177, 188, 0.14);
+    
+    /* Legacy aliases (for backwards compatibility) */
+    --psi-olive: var(--psi-primary);
+    --psi-olive-deep: var(--psi-secondary);
+    --psi-olive-mid: var(--psi-primary-hover);
+    --psi-olive-soft: var(--psi-primary-soft);
+    
+    /* Neutral colors */
+    --psi-cream: #F3EDE5;
+    --psi-cream-2: #e8e2d8;
+    --psi-ink: #1C1710;
+    --psi-ink-soft: #3f3d36;
+    --psi-muted: #6b6a64;
+    --psi-line: rgba(28, 23, 16, 0.12);
+    --psi-line-strong: #d4cfc6;
+    --psi-paper: #FDFCFB;
+    --psi-mist: #F9F8F6;
+    
+    /* Accent colors */
+    --psi-hero: var(--psi-primary);
+    --psi-hero-deep: var(--psi-secondary);
+    --psi-sage: var(--psi-primary-soft);
+    --psi-sage-soft: var(--psi-primary-soft);
+    --psi-mint: #c8d9dd;
+    --psi-mint-hover: #b5c9cf;
+    --psi-signal: var(--psi-secondary);
+    --psi-signal-hover: var(--psi-secondary-deep);
+    --psi-signal-soft: var(--psi-primary-subtle);
+    
+    /* Remove old lime colors (not part of new system) */
+    --psi-lime: var(--psi-primary);
+    --psi-lime-deep: var(--psi-primary-hover);
     --psi-radius: 28px;
     --psi-radius-lg: 36px;
 
