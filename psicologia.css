@@ -345,7 +345,7 @@ body.lon-landing.psi-landing {
     color: #f7f4ea;
     overflow: visible;
     isolation: isolate;
-    background: #3a4634;
+    background: linear-gradient(135deg, #9BB1BC 0%, #537284 100%);
 }
 
 .psi-hero--choice {

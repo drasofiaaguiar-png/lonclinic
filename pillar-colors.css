@@ -1,0 +1,151 @@
+/* Pillar Pages — Visual Color Application */
+/* Aplicação das cores por valência conforme DESIGN-SYSTEM-COLORS.md */
+
+/* ===== NUTRIÇÃO (Verde) ===== */
+.nutri-landing .nutri-hero,
+.nutri-landing .qx-hero {
+    background: linear-gradient(135deg, #9FBD84 0%, #3F574C 100%) !important;
+}
+
+.nutri-landing .lon-btn-primary,
+.nutri-landing .nutri-btn-primary {
+    background: linear-gradient(135deg, #9FBD84 0%, #3F574C 100%);
+    color: white;
+}
+
+.nutri-landing .lon-btn-primary:hover,
+.nutri-landing .nutri-btn-primary:hover {
+    background: linear-gradient(135deg, #8fad74 0%, #35493c 100%);
+}
+
+.nutri-landing .nutri-badge,
+.nutri-landing .badge-primary {
+    background: rgba(159, 189, 132, 0.15);
+    border-color: #9FBD84;
+    color: #3F574C;
+}
+
+/* ===== MEDICINA DE LONGEVIDADE (Amarelo/Dourado) ===== */
+.long-landing .long-hero,
+.long-landing .qx-hero {
+    background: linear-gradient(135deg, #ECD281 0%, #CBB068 100%) !important;
+}
+
+.long-landing .lon-btn-primary,
+.long-landing .long-btn-primary {
+    background: linear-gradient(135deg, #ECD281 0%, #CBB068 100%);
+    color: #1C1710;
+}
+
+.long-landing .lon-btn-primary:hover,
+.long-landing .long-btn-primary:hover {
+    background: linear-gradient(135deg, #dcc271 0%, #bba058 100%);
+}
+
+.long-landing .long-badge,
+.long-landing .badge-primary {
+    background: rgba(236, 210, 129, 0.15);
+    border-color: #ECD281;
+    color: #CBB068;
+}
+
+/* ===== URGENT CARE (Vermelho) ===== */
+.urgent-landing .urgent-hero,
+.urgent-landing .qx-hero {
+    background: linear-gradient(135deg, #BD4F4F 0%, #A5584E 100%) !important;
+}
+
+.urgent-landing .lon-btn-primary,
+.urgent-landing .urgent-btn-primary {
+    background: linear-gradient(135deg, #BD4F4F 0%, #A5584E 100%);
+    color: white;
+}
+
+.urgent-landing .lon-btn-primary:hover,
+.urgent-landing .urgent-btn-primary:hover {
+    background: linear-gradient(135deg, #ad3f3f 0%, #95483e 100%);
+}
+
+.urgent-landing .urgent-badge,
+.urgent-landing .badge-urgent {
+    background: rgba(189, 79, 79, 0.15);
+    border-color: #BD4F4F;
+    color: #A5584E;
+}
+
+/* ===== TRAVEL MEDICINE (Roxo) ===== */
+.travel-landing .travel-hero,
+.travel-landing .qx-hero {
+    background: linear-gradient(135deg, #A794C9 0%, #405266 100%) !important;
+}
+
+.travel-landing .lon-btn-primary,
+.travel-landing .travel-btn-primary {
+    background: linear-gradient(135deg, #A794C9 0%, #405266 100%);
+    color: white;
+}
+
+.travel-landing .lon-btn-primary:hover,
+.travel-landing .travel-btn-primary:hover {
+    background: linear-gradient(135deg, #9784b9 0%, #304256 100%);
+}
+
+.travel-landing .travel-badge,
+.travel-landing .badge-primary {
+    background: rgba(167, 148, 201, 0.15);
+    border-color: #A794C9;
+    color: #405266;
+}
+
+/* ===== GLOBAL BADGE STYLES ===== */
+.badge-primary {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid;
+}
+
+/* ===== HOVER STATES ===== */
+.nutri-landing .home-need-card:hover {
+    border-color: #9FBD84;
+}
+
+.psi-landing .home-need-card:hover {
+    border-color: #9BB1BC;
+}
+
+.long-landing .home-need-card:hover {
+    border-color: #ECD281;
+}
+
+.urgent-landing .home-need-card:hover {
+    border-color: #BD4F4F;
+}
+
+.travel-landing .home-need-card:hover {
+    border-color: #A794C9;
+}
+
+/* ===== TEXT COLORS ===== */
+.nutri-text-primary { color: #9FBD84; }
+.psi-text-primary { color: #9BB1BC; }
+.long-text-primary { color: #ECD281; }
+.urgent-text-primary { color: #BD4F4F; }
+.travel-text-primary { color: #A794C9; }
+
+/* ===== BACKGROUND COLORS ===== */
+.nutri-bg-primary { background-color: #9FBD84; }
+.psi-bg-primary { background-color: #9BB1BC; }
+.long-bg-primary { background-color: #ECD281; }
+.urgent-bg-primary { background-color: #BD4F4F; }
+.travel-bg-primary { background-color: #A794C9; }
+
+/* ===== BORDER COLORS ===== */
+.nutri-border-primary { border-color: #9FBD84; }
+.psi-border-primary { border-color: #9BB1BC; }
+.long-border-primary { border-color: #ECD281; }
+.urgent-border-primary { border-color: #BD4F4F; }
+.travel-border-primary { border-color: #A794C9; }
