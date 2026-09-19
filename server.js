@@ -9742,12 +9742,12 @@ app.get('/consultas/', (req, res) => {
 });
 
 app.get('/nutricao', (req, res) => {
-    try {
-        sendHtmlNoCacheString(res, nutricao.renderHub(seo.SITE_ORIGIN));
-    } catch (err) {
-        console.error('❌ Nutricao hub error:', err.message || err);
-        res.status(500).type('html').send('Error loading nutricao.');
+    const filePath = path.join(__dirname, 'nutricao.html');
+    if (!fs.existsSync(filePath)) {
+        console.error('❌ nutricao.html missing at:', filePath);
+        return res.status(500).send('nutricao.html not found on server');
     }
+    sendHtmlNoCache(res, filePath, 'Error loading nutricao page');
 });
 
 app.get('/nutricao/', (req, res) => {
