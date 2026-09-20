@@ -1,4 +1,4 @@
-import HeroSplit from '@/components/modules/HeroSplit';
+import HeroFullscreen from '@/components/modules/HeroFullscreen';
 import NeedCard from '@/components/modules/NeedCard';
 import TestimonialVisual from '@/components/modules/TestimonialVisual';
 import FeatureBlock from '@/components/modules/FeatureBlock';
@@ -7,20 +7,16 @@ import Link from 'next/link';
 export default function HomePage() {
   return (
     <main className="min-h-screen">
-      {/* Hero Section - MODERN & SPACIOUS */}
-      <section className="bg-gradient-to-br from-[#FDFCFB] via-[#F9F8F6] to-[#FFF7F0] pt-32 pb-32">
-        <div className="max-w-[1400px] mx-auto px-6">
-          <HeroSplit
-            eyebrow="Clínica certificada pela ERS · nº 45.475"
-            title="Clínica Médica Online"
-            subtitle="Medicina, nutrição e psicologia integradas. Diga-nos o que precisa. Nós ajudamos a encontrar o cuidado certo — sem sair de casa."
-            imageSrc="/image/consulta-telemedicina-mesa.webp"
-            imageAlt="Consulta médica online"
-            primaryCTA={{ text: "Marcar consulta", href: "/marcar" }}
-            secondaryCTA={{ text: "Ajude-me a escolher", href: "/quizzes" }}
-          />
-        </div>
-      </section>
+      {/* Hero Section - FULLSCREEN */}
+      <HeroFullscreen
+        eyebrow="Clínica certificada pela ERS · nº 45.475"
+        title="Modern Healthcare,"
+        titleItalic="Built Around People"
+        description="Medicina, nutrição e psicologia integradas. Diga-nos o que precisa. Nós ajudamos a encontrar o cuidado certo — sem sair de casa."
+        backgroundImage="/image/hero-fullscreen.webp"
+        primaryCTA={{ text: "Marcar consulta", href: "/marcar" }}
+        secondaryCTA={{ text: "Ajude-me a escolher", href: "/quizzes" }}
+      />
 
       {/* Needs Section - MODERN GRID */}
       <section className="py-32 bg-white">
