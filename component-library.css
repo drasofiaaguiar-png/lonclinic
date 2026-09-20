@@ -1,0 +1,574 @@
+/* ========================================
+   COMPONENT LIBRARY - Lon Clinic
+   Componentes Reutilizáveis
+   Data: 2026-09-20
+   ======================================== */
+
+/* ----------------------------------------
+   BUTTONS - Sistema com Hierarquia Clara
+   ---------------------------------------- */
+
+/* Base button */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-8);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: var(--font-semibold);
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    border: 2px solid transparent;
+    border-radius: var(--radius-xl);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    white-space: nowrap;
+    user-select: none;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* PRIMARY - Ação principal */
+.btn-primary {
+    background: var(--brand-primary);
+    color: var(--white);
+    border-color: var(--brand-primary);
+}
+
+.btn-primary:hover {
+    background: var(--brand-primary-dark);
+    border-color: var(--brand-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* ACCENT - Ação de destaque */
+.btn-accent {
+    background: var(--brand-accent);
+    color: var(--white);
+    border-color: var(--brand-accent);
+}
+
+.btn-accent:hover {
+    background: var(--brand-accent-dark);
+    border-color: var(--brand-accent-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-accent);
+}
+
+.btn-accent:active {
+    transform: translateY(0);
+}
+
+/* SECONDARY - Ação secundária */
+.btn-secondary {
+    background: transparent;
+    color: var(--brand-primary);
+    border-color: var(--brand-primary);
+}
+
+.btn-secondary:hover {
+    background: var(--brand-primary);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+}
+
+/* GHOST - Ação terciária */
+.btn-ghost {
+    background: transparent;
+    color: var(--brand-primary);
+    border-color: transparent;
+}
+
+.btn-ghost:hover {
+    background: var(--neutral-100);
+    color: var(--brand-primary-dark);
+}
+
+.btn-ghost:active {
+    background: var(--neutral-200);
+}
+
+/* OUTLINE - Variante outline */
+.btn-outline {
+    background: var(--white);
+    color: var(--brand-primary);
+    border-color: var(--neutral-300);
+}
+
+.btn-outline:hover {
+    border-color: var(--brand-primary);
+    background: var(--neutral-50);
+}
+
+/* LIGHT - Para fundos escuros */
+.btn-light {
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--brand-primary);
+    border-color: transparent;
+}
+
+.btn-light:hover {
+    background: var(--white);
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-2px);
+}
+
+/* DARK - Variante escura */
+.btn-dark {
+    background: var(--neutral-900);
+    color: var(--white);
+    border-color: var(--neutral-900);
+}
+
+.btn-dark:hover {
+    background: var(--neutral-800);
+    border-color: var(--neutral-800);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* ----------------------------------------
+   BUTTON SIZES
+   ---------------------------------------- */
+.btn-sm {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
+    border-radius: var(--radius-lg);
+}
+
+.btn-lg {
+    padding: var(--space-5) var(--space-10);
+    font-size: var(--text-lg);
+    border-radius: var(--radius-2xl);
+}
+
+.btn-xl {
+    padding: var(--space-6) var(--space-12);
+    font-size: var(--text-xl);
+    border-radius: var(--radius-2xl);
+}
+
+/* Full width */
+.btn-block {
+    display: flex;
+    width: 100%;
+}
+
+/* Icon button */
+.btn-icon {
+    padding: var(--space-3);
+    aspect-ratio: 1;
+}
+
+/* ----------------------------------------
+   CARDS - Variantes Padronizadas
+   ---------------------------------------- */
+
+/* Base card */
+.card {
+    background: var(--white);
+    border: 1px solid var(--neutral-200);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-8);
+    transition: all var(--transition-base);
+}
+
+/* CARD ELEVATED - Com sombra */
+.card-elevated {
+    border: none;
+    box-shadow: var(--shadow-md);
+}
+
+.card-elevated:hover {
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-4px);
+}
+
+/* CARD BORDERED - Com borda destacada */
+.card-bordered {
+    border: 2px solid var(--neutral-200);
+}
+
+.card-bordered:hover {
+    border-color: var(--brand-accent);
+    box-shadow: var(--shadow-base);
+}
+
+/* CARD GRADIENT - Com gradiente de fundo */
+.card-gradient {
+    background: linear-gradient(135deg, var(--neutral-50) 0%, var(--white) 100%);
+    border: 1px solid var(--neutral-100);
+}
+
+.card-gradient:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+/* CARD IMAGE - Card com imagem de fundo */
+.card-image {
+    position: relative;
+    overflow: hidden;
+    padding: var(--space-10);
+    background-size: cover;
+    background-position: center;
+    min-height: 200px;
+}
+
+.card-image::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.9) 70%,
+        rgba(255, 255, 255, 0.95) 100%
+    );
+    z-index: 1;
+    transition: background var(--transition-base);
+}
+
+.card-image:hover::before {
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(255, 255, 255, 0.85) 70%,
+        rgba(255, 255, 255, 0.93) 100%
+    );
+}
+
+.card-image-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* CARD SPECIALTY - Cards de especialidades */
+.card-psychology {
+    background: linear-gradient(135deg, var(--color-psychology-light) 0%, var(--color-psychology) 100%);
+    border: 2px solid var(--color-psychology);
+}
+
+.card-nutrition {
+    background: linear-gradient(135deg, var(--color-nutrition-light) 0%, var(--color-nutrition) 100%);
+    border: 2px solid var(--color-nutrition);
+}
+
+.card-medicine {
+    background: linear-gradient(135deg, var(--color-medicine-light) 0%, var(--color-medicine) 100%);
+    border: 2px solid var(--color-medicine);
+}
+
+.card-longevity {
+    background: linear-gradient(135deg, var(--color-longevity-light) 0%, var(--color-longevity) 100%);
+    border: 2px solid var(--color-longevity);
+}
+
+.card-accent {
+    background: linear-gradient(135deg, #FFF8F0 0%, #F3EDE5 100%);
+    border: 2px solid var(--brand-accent);
+}
+
+.card-accent:hover {
+    box-shadow: var(--shadow-accent);
+    transform: translateY(-4px);
+}
+
+/* ----------------------------------------
+   CARD SIZES
+   ---------------------------------------- */
+.card-sm {
+    padding: var(--space-4);
+    border-radius: var(--radius-xl);
+}
+
+.card-lg {
+    padding: var(--space-12);
+    border-radius: var(--radius-3xl);
+}
+
+/* ----------------------------------------
+   BADGES
+   ---------------------------------------- */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    line-height: 1;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+}
+
+.badge-primary {
+    background: var(--brand-primary);
+    color: var(--white);
+}
+
+.badge-accent {
+    background: var(--brand-accent);
+    color: var(--white);
+}
+
+.badge-light {
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--brand-primary);
+    box-shadow: var(--shadow-sm);
+}
+
+.badge-outline {
+    background: transparent;
+    color: var(--brand-primary);
+    border: 1px solid var(--brand-primary);
+}
+
+/* Badge especialidades */
+.badge-psychology {
+    background: var(--color-psychology);
+    color: var(--white);
+}
+
+.badge-nutrition {
+    background: var(--color-nutrition);
+    color: var(--white);
+}
+
+.badge-medicine {
+    background: var(--color-medicine);
+    color: var(--neutral-900);
+}
+
+.badge-longevity {
+    background: var(--color-longevity);
+    color: var(--white);
+}
+
+/* ----------------------------------------
+   PILLS / TAGS
+   ---------------------------------------- */
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    border-radius: var(--radius-full);
+    background: var(--neutral-100);
+    color: var(--neutral-700);
+    transition: all var(--transition-fast);
+}
+
+.pill:hover {
+    background: var(--neutral-200);
+    color: var(--neutral-900);
+}
+
+.pill-primary {
+    background: rgba(30, 94, 63, 0.1);
+    color: var(--brand-primary);
+}
+
+.pill-accent {
+    background: rgba(240, 148, 88, 0.1);
+    color: var(--brand-accent-dark);
+}
+
+/* ----------------------------------------
+   INPUTS
+   ---------------------------------------- */
+.input {
+    width: 100%;
+    padding: var(--space-4);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: var(--neutral-900);
+    background: var(--white);
+    border: 2px solid var(--neutral-300);
+    border-radius: var(--radius-xl);
+    transition: all var(--transition-fast);
+}
+
+.input:hover {
+    border-color: var(--neutral-400);
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--brand-primary);
+    box-shadow: var(--focus-ring);
+}
+
+.input::placeholder {
+    color: var(--neutral-400);
+}
+
+/* ----------------------------------------
+   DIVIDERS
+   ---------------------------------------- */
+.divider {
+    height: 1px;
+    background: var(--neutral-200);
+    border: none;
+    margin: var(--space-8) 0;
+}
+
+.divider-thick {
+    height: 2px;
+    background: var(--neutral-300);
+}
+
+/* ----------------------------------------
+   CONTAINERS & LAYOUTS
+   ---------------------------------------- */
+.hero-section {
+    position: relative;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xl) var(--space-md);
+}
+
+@media (min-width: 768px) {
+    .hero-section {
+        min-height: 700px;
+        padding: var(--space-2xl) var(--space-lg);
+    }
+}
+
+/* Grid Systems */
+.grid {
+    display: grid;
+    gap: var(--space-md);
+}
+
+.grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 1024px) {
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Flex utilities */
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.gap-sm {
+    gap: var(--space-sm);
+}
+
+.gap-md {
+    gap: var(--space-md);
+}
+
+.gap-lg {
+    gap: var(--space-lg);
+}
+
+/* ----------------------------------------
+   UTILITY CLASSES
+   ---------------------------------------- */
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.font-bold {
+    font-weight: var(--font-bold);
+}
+
+.font-semibold {
+    font-weight: var(--font-semibold);
+}
+
+.text-primary {
+    color: var(--brand-primary);
+}
+
+.text-accent {
+    color: var(--brand-accent);
+}
+
+.text-muted {
+    color: var(--neutral-600);
+}
+
+/* Spacing utilities */
+.mt-0 { margin-top: 0; }
+.mt-4 { margin-top: var(--space-4); }
+.mt-8 { margin-top: var(--space-8); }
+.mt-12 { margin-top: var(--space-12); }
+
+.mb-0 { margin-bottom: 0; }
+.mb-4 { margin-bottom: var(--space-4); }
+.mb-8 { margin-bottom: var(--space-8); }
+.mb-12 { margin-bottom: var(--space-12); }
+
+.p-0 { padding: 0; }
+.p-4 { padding: var(--space-4); }
+.p-8 { padding: var(--space-8); }
+.p-12 { padding: var(--space-12); }

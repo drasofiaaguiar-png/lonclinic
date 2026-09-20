@@ -1,0 +1,311 @@
+/* ========================================
+   DESIGN TOKENS - Lon Clinic
+   Sistema de Design Consistente
+   Data: 2026-09-20
+   ======================================== */
+
+:root {
+    /* ----------------------------------------
+       CORES BRAND
+       ---------------------------------------- */
+    --brand-primary: #1e5e3f;
+    --brand-primary-light: #2a7d58;
+    --brand-primary-dark: #163d2a;
+    
+    --brand-accent: #F09458;
+    --brand-accent-light: #f5a978;
+    --brand-accent-dark: #e67d3a;
+    
+    /* ----------------------------------------
+       CORES DE ESPECIALIDADE
+       ---------------------------------------- */
+    --color-psychology: #9BB1BC;
+    --color-psychology-light: #b8cad4;
+    --color-psychology-dark: #6b8997;
+    
+    --color-nutrition: #9FBD84;
+    --color-nutrition-light: #b8d1a1;
+    --color-nutrition-dark: #7d9d66;
+    
+    --color-medicine: #ECD281;
+    --color-medicine-light: #f3dfa1;
+    --color-medicine-dark: #d9ba5e;
+    
+    --color-longevity: #C4A5C6;
+    --color-longevity-light: #d8bed9;
+    --color-longevity-dark: #a586a7;
+    
+    --color-integrated: #F09458; /* Usa accent */
+    
+    /* ----------------------------------------
+       CORES NEUTRAS
+       ---------------------------------------- */
+    --neutral-50: #F9FAFB;
+    --neutral-100: #F3EDE5;
+    --neutral-200: #E5E5E5;
+    --neutral-300: #D1D5DB;
+    --neutral-400: #9CA3AF;
+    --neutral-500: #6B7280;
+    --neutral-600: #4B5563;
+    --neutral-700: #374151;
+    --neutral-800: #2D2D2D;
+    --neutral-900: #1C1710;
+    
+    --white: #FFFFFF;
+    --black: #000000;
+    
+    /* ----------------------------------------
+       CORES SEMÂNTICAS
+       ---------------------------------------- */
+    --success: #10B981;
+    --success-light: #34D399;
+    --success-dark: #059669;
+    
+    --warning: #F59E0B;
+    --warning-light: #FBBF24;
+    --warning-dark: #D97706;
+    
+    --error: #EF4444;
+    --error-light: #F87171;
+    --error-dark: #DC2626;
+    
+    --info: #3B82F6;
+    --info-light: #60A5FA;
+    --info-dark: #2563EB;
+    
+    /* ----------------------------------------
+       TIPOGRAFIA
+       ---------------------------------------- */
+    /* Fonts */
+    --font-display: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    
+    /* Font Sizes */
+    --text-xs: 0.75rem;      /* 12px */
+    --text-sm: 0.875rem;     /* 14px */
+    --text-base: 1rem;       /* 16px */
+    --text-lg: 1.125rem;     /* 18px */
+    --text-xl: 1.25rem;      /* 20px */
+    --text-2xl: 1.5rem;      /* 24px */
+    --text-3xl: 1.875rem;    /* 30px */
+    --text-4xl: 2.25rem;     /* 36px */
+    --text-5xl: 3rem;        /* 48px */
+    --text-6xl: 4rem;        /* 64px */
+    
+    /* Responsive Headings */
+    --h1: clamp(2.5rem, 5vw, 4rem);           /* 40-64px */
+    --h2: clamp(1.875rem, 4vw, 2.5rem);       /* 30-40px */
+    --h3: clamp(1.25rem, 2.5vw, 1.75rem);     /* 20-28px */
+    --h4: clamp(1.125rem, 2vw, 1.5rem);       /* 18-24px */
+    --h5: 1.125rem;                            /* 18px */
+    --h6: 1rem;                                /* 16px */
+    
+    /* Line Heights */
+    --leading-none: 1;
+    --leading-tight: 1.2;
+    --leading-snug: 1.375;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.6;
+    --leading-loose: 1.8;
+    
+    /* Font Weights */
+    --font-normal: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+    
+    /* ----------------------------------------
+       ESPAÇAMENTO
+       ---------------------------------------- */
+    --space-0: 0;
+    --space-1: 0.25rem;      /* 4px */
+    --space-2: 0.5rem;       /* 8px */
+    --space-3: 0.75rem;      /* 12px */
+    --space-4: 1rem;         /* 16px */
+    --space-5: 1.25rem;      /* 20px */
+    --space-6: 1.5rem;       /* 24px */
+    --space-8: 2rem;         /* 32px */
+    --space-10: 2.5rem;      /* 40px */
+    --space-12: 3rem;        /* 48px */
+    --space-16: 4rem;        /* 64px */
+    --space-20: 5rem;        /* 80px */
+    --space-24: 6rem;        /* 96px */
+    --space-32: 8rem;        /* 128px */
+    
+    /* Alias semânticos */
+    --space-xs: var(--space-2);   /* 8px */
+    --space-sm: var(--space-4);   /* 16px */
+    --space-md: var(--space-6);   /* 24px */
+    --space-lg: var(--space-10);  /* 40px */
+    --space-xl: var(--space-16);  /* 64px */
+    --space-2xl: var(--space-24); /* 96px */
+    
+    /* ----------------------------------------
+       BORDER RADIUS
+       ---------------------------------------- */
+    --radius-none: 0;
+    --radius-sm: 0.375rem;   /* 6px */
+    --radius-md: 0.5rem;     /* 8px */
+    --radius-lg: 0.75rem;    /* 12px */
+    --radius-xl: 1rem;       /* 16px */
+    --radius-2xl: 1.25rem;   /* 20px */
+    --radius-3xl: 1.5rem;    /* 24px */
+    --radius-full: 9999px;
+    
+    /* ----------------------------------------
+       SHADOWS
+       ---------------------------------------- */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-base: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.12);
+    --shadow-2xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+    
+    /* Shadows coloridas */
+    --shadow-accent: 0 8px 24px rgba(240, 148, 88, 0.18);
+    --shadow-psychology: 0 8px 24px rgba(155, 177, 188, 0.18);
+    --shadow-nutrition: 0 8px 24px rgba(159, 189, 132, 0.18);
+    
+    /* ----------------------------------------
+       TRANSITIONS
+       ---------------------------------------- */
+    --transition-fast: 150ms ease;
+    --transition-base: 200ms ease;
+    --transition-slow: 300ms ease;
+    --transition-slower: 500ms ease;
+    
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* ----------------------------------------
+       Z-INDEX
+       ---------------------------------------- */
+    --z-base: 0;
+    --z-dropdown: 1000;
+    --z-sticky: 1100;
+    --z-fixed: 1200;
+    --z-modal-backdrop: 1300;
+    --z-modal: 1400;
+    --z-popover: 1500;
+    --z-tooltip: 1600;
+    
+    /* ----------------------------------------
+       BREAKPOINTS (para uso em media queries)
+       ---------------------------------------- */
+    --breakpoint-sm: 640px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 1024px;
+    --breakpoint-xl: 1280px;
+    --breakpoint-2xl: 1536px;
+    
+    /* ----------------------------------------
+       CONTAINER
+       ---------------------------------------- */
+    --container-sm: 640px;
+    --container-md: 768px;
+    --container-lg: 1024px;
+    --container-xl: 1200px;
+    --container-2xl: 1400px;
+    
+    /* ----------------------------------------
+       OUTROS
+       ---------------------------------------- */
+    --focus-ring: 0 0 0 3px rgba(30, 94, 63, 0.2);
+    --focus-ring-accent: 0 0 0 3px rgba(240, 148, 88, 0.2);
+}
+
+/* ----------------------------------------
+   APLICAÇÃO BASE DOS TOKENS
+   ---------------------------------------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: var(--leading-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    color: var(--neutral-800);
+    background-color: var(--white);
+}
+
+/* Tipografia base */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    font-weight: var(--font-bold);
+    line-height: var(--leading-tight);
+    margin: 0 0 var(--space-4) 0;
+    color: var(--neutral-900);
+}
+
+h1 { font-size: var(--h1); }
+h2 { font-size: var(--h2); }
+h3 { font-size: var(--h3); }
+h4 { font-size: var(--h4); }
+h5 { font-size: var(--h5); }
+h6 { font-size: var(--h6); }
+
+p {
+    margin: 0 0 var(--space-4) 0;
+    line-height: var(--leading-relaxed);
+}
+
+a {
+    color: var(--brand-primary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--brand-primary-light);
+}
+
+/* Focus states */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--radius-md);
+}
+
+/* Utility: Container */
+.container {
+    width: 100%;
+    max-width: var(--container-xl);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+}
+
+@media (min-width: 768px) {
+    .container {
+        padding-left: var(--space-lg);
+        padding-right: var(--space-lg);
+    }
+}
+
+/* Utility: Section Spacing */
+.section {
+    padding: var(--space-xl) 0;
+}
+
+@media (min-width: 768px) {
+    .section {
+        padding: var(--space-2xl) 0;
+    }
+}
