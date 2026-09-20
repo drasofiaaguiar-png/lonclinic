@@ -2222,3 +2222,62 @@ body.page-psychology .lon-logo-clinic {
         padding: 24px;
     }
 }
+
+/* Badges with glassmorphism stacked */
+.psi-badges {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #9BB1BC 0%, #537284 100%);
+}
+
+.psi-badges-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+    align-items: stretch;
+}
+
+.psi-badge {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 16px;
+    padding: 24px 32px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.psi-badge:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.psi-badge strong {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: white;
+}
+
+.psi-badge span {
+    display: block;
+    font-size: 1rem;
+    line-height: 1.5;
+    opacity: 0.95;
+}
+
+@media (max-width: 768px) {
+    .psi-badges-grid {
+        max-width: 100%;
+        padding: 0 20px;
+    }
+    .psi-badge {
+        padding: 20px 24px;
+    }
+}
