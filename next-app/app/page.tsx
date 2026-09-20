@@ -51,9 +51,9 @@ export default function HomePage() {
                   <span className="size-2 rounded-full bg-orange-400" /> Clínica certificada pela ERS · nº 45.475
                 </div>
                 
-                <h1 className="max-w-3xl text-white font-extrabold leading-[1.05]" style={{ fontSize: 'clamp(2.5rem, 7vw, 5rem)' }}>
+                <h1 className="max-w-3xl font-extrabold leading-[1.05]" style={{ fontSize: 'clamp(3rem, 8vw, 6.5rem)', color: '#ffffff' }}>
                   Não tratamos só o sintoma.{' '}
-                  <span className="text-orange-400">Procuramos a causa.</span>
+                  <span style={{ color: '#fb923c' }}>Procuramos a causa.</span>
                 </h1>
                 
                 <p className="mt-6 max-w-xl text-base leading-relaxed text-white md:text-xl">
