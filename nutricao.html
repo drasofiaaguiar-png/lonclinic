@@ -91,174 +91,36 @@
 </head>
 <body class="lon-landing nutri-landing page-nutrition">
 
-<!-- Global Nav V2 -->
 <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
 
-<header class="lon-nav-v2" id="lonNav">
-    <div class="lon-container lon-nav-inner">
-        <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
-            <span class="lon-logo-name">lon clinic</span>
-        </a>
-        
-        <nav class="lon-nav-links" aria-label="Navegação principal">
-            <div class="lon-nav-mega-trigger">
-                <button type="button" class="lon-nav-link lon-nav-link--mega" id="especialidadesToggle" aria-expanded="false" aria-controls="especialidadesMega">
-                    Especialidades
-                    <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
-                        <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </button>
-                <div class="lon-nav-mega" id="especialidadesMega" role="menu">
-                    <div class="lon-nav-mega-inner">
-                        <a href="/longevidade" class="lon-nav-mega-item" role="menuitem">
-                            <span class="lon-nav-mega-icon" aria-hidden="true">⚡</span>
-                            <div>
-                                <strong>Medicina de Longevidade</strong>
-                                <span class="lon-nav-mega-desc">Prevenção e biomarcadores</span>
-                            </div>
-                        </a>
-                        <a href="/travel-clinic" class="lon-nav-mega-item" role="menuitem">
-                            <span class="lon-nav-mega-icon" aria-hidden="true">✈️</span>
-                            <div>
-                                <strong>Medicina do Viajante</strong>
-                                <span class="lon-nav-mega-desc">Vacinas e consulta pré-viagem</span>
-                            </div>
-                        </a>
-                        <a href="/urgent-care" class="lon-nav-mega-item" role="menuitem">
-                            <span class="lon-nav-mega-icon" aria-hidden="true">🚨</span>
-                            <div>
-                                <strong>Consulta Urgente</strong>
-                                <span class="lon-nav-mega-desc">Resposta rápida, ainda hoje</span>
-                            </div>
-                        </a>
-                        <a href="/psicologia" class="lon-nav-mega-item" role="menuitem">
-                            <span class="lon-nav-mega-icon" aria-hidden="true">🧠</span>
-                            <div>
-                                <strong>Psicologia</strong>
-                                <span class="lon-nav-mega-desc">Terapia individual e de casal</span>
-                            </div>
-                        </a>
-                        <a href="/nutricao" class="lon-nav-mega-item" role="menuitem">
-                            <span class="lon-nav-mega-icon" aria-hidden="true">💚</span>
-                            <div>
-                                <strong>Nutrição</strong>
-                                <span class="lon-nav-mega-desc">Acompanhamento contínuo</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <a href="/magazine" class="lon-nav-link">Magazine</a>
-            <a href="/#equipa" class="lon-nav-link">Equipa</a>
-        </nav>
-        
-        <div class="lon-nav-actions">
-            <a href="/patient-portal" class="lon-nav-login">Login</a>
-            <a href="/marcar" class="lon-nav-cta" id="navCtaDesktop">
-                Marcar consulta
+    <header class="lon-nav" id="lonNav">
+        <div class="lon-container lon-nav-inner">
+            <a href="/" class="lon-logo" aria-label="Longevity Clinic homepage">
+                <span class="lon-logo-name"><span class="lon-logo-word"><span class="lon-logo-lon">Lon</span><span class="lon-logo-gevity">gevity</span></span><span class="lon-logo-clinic">Clinic</span></span>
             </a>
-        </div>
-        
-        <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
-            <span></span><span></span><span></span>
-        </button>
-    </div>
-    
-    <div class="lon-mobile-menu" id="lonMobileMenu">
-        <div class="lon-mobile-section">
-            <button type="button" class="lon-mobile-trigger" id="especialidadesMobileTrigger" aria-expanded="false">
-                Especialidades
-                <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
-                    <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </button>
-            <div class="lon-mobile-submenu" id="especialidadesMobileMenu">
-                <a href="/longevidade">⚡ Medicina de Longevidade</a>
-                <a href="/travel-clinic">✈️ Medicina do Viajante</a>
-                <a href="/urgent-care">🚨 Consulta Urgente</a>
-                <a href="/psicologia">🧠 Psicologia</a>
-                <a href="/nutricao">💚 Nutrição</a>
+
+            <nav class="lon-nav-links" aria-label="Navegação principal">
+                <a href="/consulta">Especialidades</a>
+                <a href="/magazine">Magazine</a>
+                <a href="/#equipa">Equipa</a>
+            </nav>
+
+            <div class="lon-nav-actions">
+                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
+                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm" data-cta="book-priced">Marcar consulta</a>
+                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Open menu" aria-expanded="false" aria-controls="lonMobileMenu">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
         </div>
-        <a href="/magazine">Magazine</a>
-        <a href="/#equipa">Equipa</a>
-        <a href="/patient-portal">Login</a>
-    </div>
-</header>
-
-<div class="lon-mobile-cta-fixed">
-    <a href="/marcar" id="navCtaMobile">Marcar consulta</a>
-</div>
-
-<script>
-(function() {
-    const trigger = document.getElementById('especialidadesToggle');
-    const mega = document.getElementById('especialidadesMega');
-    
-    if (trigger && mega) {
-        trigger.addEventListener('click', function() {
-            const isOpen = trigger.getAttribute('aria-expanded') === 'true';
-            trigger.setAttribute('aria-expanded', !isOpen);
-            mega.classList.toggle('lon-nav-mega--open');
-        });
-        
-        document.addEventListener('click', function(e) {
-            if (!trigger.contains(e.target) && !mega.contains(e.target)) {
-                trigger.setAttribute('aria-expanded', 'false');
-                mega.classList.remove('lon-nav-mega--open');
-            }
-        });
-        
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && mega.classList.contains('lon-nav-mega--open')) {
-                trigger.setAttribute('aria-expanded', 'false');
-                mega.classList.remove('lon-nav-mega--open');
-                trigger.focus();
-            }
-        });
-    }
-    
-    const navToggle = document.getElementById('lonNavToggle');
-    const mobileMenu = document.getElementById('lonMobileMenu');
-    
-    if (navToggle && mobileMenu) {
-        navToggle.addEventListener('click', function() {
-            const isOpen = navToggle.getAttribute('aria-expanded') === 'true';
-            navToggle.setAttribute('aria-expanded', !isOpen);
-            mobileMenu.classList.toggle('lon-mobile-menu--open');
-            document.body.classList.toggle('lon-nav-open');
-        });
-    }
-    
-    const mobileSubTrigger = document.getElementById('especialidadesMobileTrigger');
-    const mobileSubMenu = document.getElementById('especialidadesMobileMenu');
-    
-    if (mobileSubTrigger && mobileSubMenu) {
-        mobileSubTrigger.addEventListener('click', function() {
-            const isOpen = mobileSubTrigger.getAttribute('aria-expanded') === 'true';
-            mobileSubTrigger.setAttribute('aria-expanded', !isOpen);
-            mobileSubMenu.classList.toggle('lon-mobile-submenu--open');
-        });
-    }
-    
-    if (typeof gtag !== 'undefined') {
-        const ctaDesktop = document.getElementById('navCtaDesktop');
-        const ctaMobile = document.getElementById('navCtaMobile');
-        
-        if (ctaDesktop) {
-            ctaDesktop.addEventListener('click', function() {
-                gtag('event', 'cta_click', { event_category: 'navigation', event_label: 'desktop_nav_marcar', value: 1 });
-            });
-        }
-        if (ctaMobile) {
-            ctaMobile.addEventListener('click', function() {
-                gtag('event', 'cta_click', { event_category: 'navigation', event_label: 'mobile_fixed_marcar', value: 1 });
-            });
-        }
-    }
-})();
-</script>
+        <div class="lon-mobile-menu" id="lonMobileMenu">
+            <a href="/consulta">Especialidades</a>
+            <a href="/magazine">Magazine</a>
+            <a href="/#equipa">Equipa</a>
+            <a href="/patient-portal">Login</a>
+            <a href="/marcar/clinica-geral" data-cta="book-priced">Marcar consulta</a>
+        </div>
+    </header>
 
     <main id="conteudo-principal">
         <section class="nutri-hero" id="inicio" aria-labelledby="nutri-hero-title">
