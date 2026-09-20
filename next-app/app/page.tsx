@@ -1,374 +1,284 @@
-import HeroFullscreen from '@/components/modules/HeroFullscreen';
-import ServiceCard from '@/components/modules/ServiceCard';
-import TrustSection from '@/components/modules/TrustSection';
-import ConditionCard from '@/components/modules/ConditionCard';
-import ResultCard from '@/components/modules/ResultCard';
-import TransformationSection from '@/components/modules/TransformationSection';
-import TestimonialVisual from '@/components/modules/TestimonialVisual';
-import FeatureBlock from '@/components/modules/FeatureBlock';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen">
-      {/* Hero Section - FULLSCREEN */}
-      <HeroFullscreen
-        eyebrow="Clínica certificada pela ERS · nº 45.475"
-        title="Modern Healthcare,"
-        titleItalic="Built Around People"
-        description="Medicina, nutrição e psicologia integradas. Diga-nos o que precisa. Nós ajudamos a encontrar o cuidado certo — sem sair de casa."
-        backgroundImage="/image/hero-fullscreen.webp"
-        primaryCTA={{ text: "Marcar consulta", href: "/marcar" }}
-        secondaryCTA={{ text: "Ajude-me a escolher", href: "/quizzes" }}
-      />
-
-      {/* Services Section - MODERN CARDS */}
-      <section className="py-24 lg:py-32 bg-white">
-        <div className="max-w-[1400px] mx-auto px-6">
-          {/* Section Header */}
-          <div className="text-center mb-16">
-            <h2 className="text-[clamp(1.75rem,4vw,3rem)] font-semibold mb-3 tracking-[-0.02em]" style={{ color: 'var(--gray-700)' }}>
-              Os nossos serviços <span style={{ color: 'var(--primary)', fontWeight: 600 }}>mais procurados</span>
-            </h2>
-            <p className="text-[17px] leading-relaxed max-w-[650px] mx-auto font-light" style={{ color: 'var(--gray-500)' }}>
-              Cuidados de saúde integrados, online e acessíveis para o que realmente precisa.
-            </p>
-          </div>
-
-          {/* Service Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <ServiceCard
-              title="Consultas Médicas"
-              description="Medicina de longevidade e cuidados preventivos com foco na sua saúde a longo prazo."
-              imageSrc="/image/consulta-clinica-geral.webp"
-              imageAlt="Consulta médica online"
-              primaryCTA={{ text: "Marcar consulta", href: "/longevidade" }}
-              secondaryCTA={{ text: "Saber mais", href: "/longevidade" }}
-              bgColor="#F3EDE5"
+    <div className="lon-landing lon-home">
+      <main id="conteudo-principal">
+        {/* Hero Section - OLD DESIGN */}
+        <section className="dr-hero" id="inicio">
+          <picture>
+            <source media="(max-width: 939px)" srcSet="/image/hero-bay.webp" width={768} height={1024} />
+            <Image 
+              className="dr-hero-bg" 
+              src="/image/hero-run.webp" 
+              alt="Vista costeira junto ao mar" 
+              fill
+              priority
+              sizes="100vw"
+              style={{ objectFit: 'cover' }}
             />
-            
-            <ServiceCard
-              title="Psicologia"
-              description="Terapia individual e de casal para ansiedade, burnout e bem-estar emocional."
-              imageSrc="/image/psi-choice-individual.webp"
-              imageAlt="Terapia psicologia online"
-              primaryCTA={{ text: "Marcar consulta", href: "/psicologia" }}
-              secondaryCTA={{ text: "Saber mais", href: "/psicologia" }}
-              bgColor="#E8F1F5"
-            />
-            
-            <ServiceCard
-              title="Nutrição"
-              description="Acompanhamento nutricional contínuo adaptado aos seus objetivos e fase de vida."
-              imageSrc="/image/nutricao-alimentos.webp"
-              imageAlt="Nutrição e alimentação saudável"
-              primaryCTA={{ text: "Marcar consulta", href: "/nutricao" }}
-              secondaryCTA={{ text: "Saber mais", href: "/nutricao" }}
-              bgColor="#F0F8ED"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Section - BLUE */}
-      <TrustSection
-        features={[
-          {
-            title: "Profissionais em quem pode confiar",
-            description: "Qualificados e inscritos nas respetivas Ordens."
-          },
-          {
-            title: "Uma história, não apenas uma consulta",
-            description: "Conhecer o contexto permite um acompanhamento mais consistente."
-          },
-          {
-            title: "Continuidade dos cuidados",
-            description: "Quando volta, o acompanhamento continua — sem recomeçar do zero."
-          },
-          {
-            title: "Várias áreas de saúde",
-            description: "Medicina, saúde mental e nutrição no mesmo espaço."
-          },
-          {
-            title: "Sem deslocações",
-            description: "Computador, tablet ou smartphone, onde quer que esteja."
-          },
-          {
-            title: "Cuidado personalizado",
-            description: "Cada consulta parte da situação concreta de cada pessoa."
-          }
-        ]}
-      />
-
-      {/* Conditions Section - HORIZONTAL SCROLL */}
-      <section className="py-24 lg:py-32" style={{ backgroundColor: 'var(--bg-soft)' }}>
-        <div className="max-w-[1400px] mx-auto px-6">
-          {/* Section Header */}
-          <div className="mb-12">
-            <h2 className="text-[clamp(2rem,5vw,4rem)] font-bold mb-4 tracking-[-0.03em] max-w-[800px]" style={{ color: 'var(--text-primary)' }}>
-              A LON Clinic é o seu parceiro na <span style={{ color: 'var(--primary)' }}>saúde, força e vitalidade</span>
-            </h2>
-          </div>
-
-          {/* Horizontal Scroll Container */}
-          <div className="relative -mx-6 px-6">
-            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
-              <ConditionCard
-                title="Medicina Funcional"
-                imageSrc="/image/consulta-clinica-geral.webp"
-                imageAlt="Medicina funcional"
-                href="/longevidade"
-                bgColor="#E8E3DA"
-              />
-              
-              <ConditionCard
-                title="Perda de Peso"
-                imageSrc="/image/nutricao-alimentos.webp"
-                imageAlt="Perda de peso"
-                href="/nutricao"
-                bgColor="#E8F1E8"
-              />
-              
-              <ConditionCard
-                title="Saúde Intestinal"
-                imageSrc="/image/consulta-telemedicina-mesa.webp"
-                imageAlt="Saúde intestinal"
-                href="/nutricao"
-                bgColor="#F5E8DC"
-              />
-              
-              <ConditionCard
-                title="Ansiedade"
-                imageSrc="/image/psi-choice-individual.webp"
-                imageAlt="Ansiedade"
-                href="/psicologia"
-                bgColor="#D9E8F5"
-              />
-              
-              <ConditionCard
-                title="Tristeza"
-                imageSrc="/image/hero-run.webp"
-                imageAlt="Tristeza"
-                href="/psicologia"
-                bgColor="#E8D9F5"
-              />
-              
-              <ConditionCard
-                title="Inflamação"
-                imageSrc="/image/hero-bay.webp"
-                imageAlt="Inflamação"
-                href="/longevidade"
-                bgColor="#F5D9D9"
-              />
-
-              <ConditionCard
-                title="Medicina do Viajante"
-                imageSrc="/image/travel-clinic-mountain-bg-v2.png"
-                imageAlt="Medicina do viajante"
-                href="/travel-clinic"
-                bgColor="#E8F5F1"
-              />
-
-              <ConditionCard
-                title="Consulta de Urgência"
-                imageSrc="/image/consulta-urgente.webp"
-                imageAlt="Consulta urgente"
-                href="/urgent-care"
-                bgColor="#F5E8E8"
-              />
+          </picture>
+          <div className="dr-hero-scrim" aria-hidden="true"></div>
+          <div className="dr-hero-stage">
+            <div className="dr-hero-content">
+              <p className="dr-badge">
+                <span className="dr-badge-dot" aria-hidden="true"></span>
+                Clínica certificada pela ERS · nº 45.475
+              </p>
+              <h1>
+                <span className="dr-hero-title-line">Clínica Médica Online</span>
+              </h1>
+              <p className="dr-lead">
+                Medicina, nutrição e psicologia integradas.<br />
+                Diga-nos o que precisa. Nós ajudamos a encontrar o cuidado certo — sem sair de casa.
+              </p>
+              <div className="dr-cta-row">
+                <Link href="/marcar" className="lon-btn lon-btn-dark" data-cta="book">
+                  <span className="lon-btn-label">Marcar consulta</span>
+                  <svg className="lon-btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M7 17L17 7"/><path d="M8 7h9v9"/>
+                  </svg>
+                </Link>
+                <Link href="/quizzes" className="lon-btn lon-btn-ghost">
+                  Ajude-me a escolher
+                </Link>
+              </div>
+              <p className="dr-hero-meta">Consulta online · Sem deslocações · Onde quer que esteja</p>
+            </div>
+            <div className="dr-hero-dock">
+              <section className="dr-hero-glass lon-trust-strip" aria-label="Destaques de confiança da clínica">
+                <ul className="dr-trust-list">
+                  <li>Médicos inscritos na Ordem dos Médicos</li>
+                  <li>Nutricionistas e Psicólogos nas respetivas Ordens</li>
+                  <li>Consultas em português, inglês e espanhol</li>
+                  <li>Sem sala de espera, sem deslocação</li>
+                </ul>
+              </section>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Results Section - GREEN */}
-      <section className="py-24 lg:py-32 bg-green-soft">
-        <div className="max-w-[1400px] mx-auto px-6">
-          {/* Section Header */}
-          <div className="text-center mb-16">
-            <h2 className="text-[clamp(2rem,5vw,4rem)] font-bold text-white mb-4 tracking-[-0.03em]">
-              Os melhores resultados, <span style={{ color: 'var(--green-muted)', opacity: 0.9 }}>histórias reais</span>
-            </h2>
-            <p className="text-xl text-white/90 max-w-[700px] mx-auto leading-relaxed">
-              Pessoas reais que transformaram a sua saúde com a LON Clinic.
-            </p>
-          </div>
+        {/* Services Section - OLD DESIGN with NEW CONTENT */}
+        <section className="lon-services" id="servicos" aria-labelledby="lon-need-title">
+          <div className="lon-container">
+            <header className="lon-need-header">
+              <p className="lon-need-kicker">Diga-nos o que precisa</p>
+              <h2 id="lon-need-title">Comece pela sua necessidade</h2>
+              <p className="lon-need-lead">Nem sempre é fácil saber que profissional deve consultar. Encontre o caminho mais simples para cuidar da sua saúde.</p>
+            </header>
 
-          {/* Results Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <ResultCard
-              beforeWeight="95 kg"
-              afterWeight="77 kg"
-              name="Sofia, 34 anos"
-              timeframe="Em 6 meses"
-              imageSrc="/image/hero-run.webp"
-              imageAlt="Transformação Sofia"
-              productName="Programa Integrado"
-            />
-            
-            <ResultCard
-              beforeWeight="102 kg"
-              afterWeight="85 kg"
-              name="James, 41 anos"
-              timeframe="Em 4 meses"
-              imageSrc="/image/consulta-clinica-geral.webp"
-              imageAlt="Transformação James"
-              productName="Nutrição"
-            />
-            
-            <ResultCard
-              beforeWeight="88 kg"
-              afterWeight="72 kg"
-              name="Ana, 28 anos"
-              timeframe="Em 5 meses"
-              imageSrc="/image/nutricao-alimentos.webp"
-              imageAlt="Transformação Ana"
-              productName="Programa Integrado"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Transformation Section - BEIGE */}
-      <TransformationSection bgColor="#E8D5C4" />
-
-      {/* Trust Badges */}
-      <section className="py-15 bg-[var(--bg-alt)]">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              { icon: '✓', text: 'Médicos inscritos na Ordem dos Médicos' },
-              { icon: '✓', text: 'Nutricionistas e Psicólogos nas respetivas Ordens' },
-              { icon: '🌍', text: 'Consultas em português, inglês e espanhol' },
-              { icon: '💻', text: 'Sem sala de espera, sem deslocação' }
-            ].map((badge, i) => (
-              <div key={i} className="flex items-center gap-4 text-left">
-                <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center text-2xl bg-white rounded-xl border border-[var(--border)]">
-                  {badge.icon}
+            <div className="lon-need-sections">
+              {/* Consultas Médicas */}
+              <article className="lon-need-block" id="lon-need-medico">
+                <header className="lon-need-copy">
+                  <span className="lon-need-icon" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4.8 16.4A6 6 0 0 1 6 7h.1a6 6 0 0 1 11.8 0H18a6 6 0 0 1 1.2 9.4"/><path d="M12 12v9"/><path d="M8 17h8"/>
+                    </svg>
+                  </span>
+                  <h3>Preciso de falar com um médico</h3>
+                  <p className="lon-need-desc">Sintomas, dúvidas, medicação, exames ou acompanhamento.</p>
+                </header>
+                <div className="lon-need-offers">
+                  <article className="lon-need-offer">
+                    <Image className="lon-need-offer-img" src="/image/consulta-clinica-geral.webp" alt="" width={800} height={800} />
+                    <div className="lon-need-offer-body">
+                      <h4>Medicina de Longevidade</h4>
+                      <p className="lon-need-offer-price">39 € · 30 min</p>
+                      <Link href="/longevidade" className="lon-btn lon-btn-dark lon-btn-sm">Ver mais</Link>
+                    </div>
+                  </article>
+                  <article className="lon-need-offer">
+                    <Image className="lon-need-offer-img" src="/image/consulta-telemedicina.webp" alt="" width={800} height={800} />
+                    <div className="lon-need-offer-body">
+                      <h4>Consulta Médica Urgente</h4>
+                      <p className="lon-need-offer-price">39 €</p>
+                      <Link href="/urgent-care" className="lon-btn lon-btn-dark lon-btn-sm">Ver mais</Link>
+                    </div>
+                  </article>
                 </div>
-                <p className="text-[15px] font-medium text-[var(--text)] m-0 leading-snug">
-                  {badge.text}
-                </p>
-              </div>
-            ))}
+              </article>
+
+              {/* Psicologia */}
+              <article className="lon-need-block" id="lon-need-psico">
+                <header className="lon-need-copy">
+                  <span className="lon-need-icon" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/>
+                    </svg>
+                  </span>
+                  <h3>Sinto-me triste ou ansioso</h3>
+                  <p className="lon-need-desc">Ansiedade, stress, burnout ou a vontade de falar com alguém.</p>
+                </header>
+                <div className="lon-need-offers">
+                  <article className="lon-need-offer">
+                    <Image className="lon-need-offer-img" src="/image/guide/blog/sinais-de-burnout-no-trabalho-remoto-destaque.webp" alt="" width={800} height={800} />
+                    <div className="lon-need-offer-body">
+                      <h4>Consulta de Psicologia</h4>
+                      <p className="lon-need-offer-price">56 € · 45 min</p>
+                      <Link href="/psicologia" className="lon-btn lon-btn-dark lon-btn-sm">Ver mais</Link>
+                    </div>
+                  </article>
+                </div>
+              </article>
+
+              {/* Nutrição */}
+              <article className="lon-need-block" id="lon-need-nutricao">
+                <header className="lon-need-copy">
+                  <span className="lon-need-icon" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                    </svg>
+                  </span>
+                  <h3>Quero comer melhor</h3>
+                  <p className="lon-need-desc">Perder peso ou criar hábitos mais saudáveis, com acompanhamento.</p>
+                </header>
+                <div className="lon-need-offers">
+                  <article className="lon-need-offer">
+                    <Image className="lon-need-offer-img" src="/image/nutricao-consulta.webp" alt="" width={800} height={800} />
+                    <div className="lon-need-offer-body">
+                      <h4>Consulta de Nutrição</h4>
+                      <p className="lon-need-offer-price">45 € · 30 min</p>
+                      <Link href="/nutricao" className="lon-btn lon-btn-dark lon-btn-sm">Ver mais</Link>
+                    </div>
+                  </article>
+                  <article className="lon-need-offer">
+                    <Image className="lon-need-offer-img" src="/image/nutricao-emagrecimento.webp" alt="" width={800} height={800} />
+                    <div className="lon-need-offer-body">
+                      <h4>Programa Integrado</h4>
+                      <p className="lon-need-offer-price">490 € · 6 meses</p>
+                      <p className="lon-need-offer-desc">Médico + nutrição</p>
+                      <Link href="/nutricao#programa" className="lon-btn lon-btn-dark lon-btn-sm">Ver mais</Link>
+                    </div>
+                  </article>
+                </div>
+              </article>
+
+              {/* Medicina do Viajante */}
+              <article className="lon-need-block" id="lon-need-viagem">
+                <header className="lon-need-copy">
+                  <span className="lon-need-icon" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
+                    </svg>
+                  </span>
+                  <h3>Vou viajar</h3>
+                  <p className="lon-need-desc">Vacinação, prevenção e riscos associados ao destino.</p>
+                </header>
+                <div className="lon-need-offers">
+                  <article className="lon-need-offer">
+                    <Image className="lon-need-offer-img" src="/image/travel-clinic-mountain-bg.jpg" alt="" width={800} height={800} />
+                    <div className="lon-need-offer-body">
+                      <h4>Consulta do Viajante</h4>
+                      <p className="lon-need-offer-price">39 €</p>
+                      <Link href="/travel" className="lon-btn lon-btn-dark lon-btn-sm">Ver mais</Link>
+                    </div>
+                  </article>
+                </div>
+              </article>
+
+              {/* Quiz */}
+              <article className="lon-need-block" id="lon-need-quiz">
+                <header className="lon-need-copy">
+                  <span className="lon-need-icon" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>
+                    </svg>
+                  </span>
+                  <h3>Não sei o que preciso</h3>
+                  <p className="lon-need-desc">Faça um teste rápido e descubra o caminho certo.</p>
+                </header>
+                <div className="lon-need-offers">
+                  <article className="lon-need-offer">
+                    <Image className="lon-need-offer-img" src="/image/hero-bay.webp" alt="" width={800} height={800} />
+                    <div className="lon-need-offer-body">
+                      <h4>Teste de Burnout</h4>
+                      <p className="lon-need-offer-desc">5 minutos · resultado imediato</p>
+                      <Link href="/quizzes" className="lon-btn lon-btn-dark lon-btn-sm">Fazer teste</Link>
+                    </div>
+                  </article>
+                </div>
+              </article>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Testimonials */}
-      <section className="py-20 bg-white">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <h2 className="text-center text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-[var(--text)] mb-12 tracking-tight">
-            Ser ouvido faz diferença
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            <TestimonialVisual
-              avatarSrc="/image/hero-run.webp"
-              avatarAlt="Paciente"
-              stars={5}
-              text="A doutora que me atendeu era super simpática, muito clara na abordagem do tema e esclareceu-me todas as dúvidas. Sem dúvida voltarei a contactar-vos."
-              author="Paciente verificada"
-              role="Junho de 2026"
-            />
-            
-            <TestimonialVisual
-              avatarSrc="/image/hero-bay.webp"
-              avatarAlt="Miguel"
-              stars={5}
-              text="Consegui marcar a consulta para o próprio dia e, no final, tive também a prescrição das vacinas de que precisava. Muito simpática, atenciosa e profissional."
-              author="Miguel"
-              role="Via Trustpilot · Setembro de 2026"
-            />
+        {/* Testimonials - OLD DESIGN */}
+        <section className="lon-social-proof" aria-labelledby="lon-testimonials-title">
+          <div className="lon-container">
+            <header className="lon-section-header">
+              <h2 id="lon-testimonials-title">Ser ouvido faz diferença</h2>
+              <p className="lon-section-lead">Clientes reais verificados pelo Trustpilot</p>
+            </header>
+            <div className="lon-testimonials">
+              <blockquote className="lon-testimonial">
+                <p>"A doutora que me atendeu era super simpática, muito clara na abordagem do tema e esclareceu-me todas as dúvidas. Sem dúvida voltarei a contactar-vos."</p>
+                <footer>
+                  <cite>Paciente verificada · Junho de 2026</cite>
+                </footer>
+              </blockquote>
+              <blockquote className="lon-testimonial">
+                <p>"Consegui marcar a consulta para o próprio dia e, no final, tive também a prescrição das vacinas de que precisava. Muito simpática, atenciosa e profissional."</p>
+                <footer>
+                  <cite>Miguel, via Trustpilot · Setembro de 2026</cite>
+                </footer>
+              </blockquote>
+            </div>
           </div>
+        </section>
 
-          <div className="text-center">
-            <Link
-              href="https://pt.trustpilot.com/review/lonclinic.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-base font-semibold text-[var(--primary)] no-underline hover:text-[var(--primary-dark)] hover:underline transition-colors"
-            >
-              Ver todas as avaliações no Trustpilot →
-            </Link>
+        {/* Why LON - OLD DESIGN with NEW CONTENT */}
+        <section className="lon-why" aria-labelledby="lon-why-title">
+          <div className="lon-container">
+            <header className="lon-section-header">
+              <h2 id="lon-why-title">Uma clínica online, com relação humana</h2>
+            </header>
+            <div className="lon-features">
+              <article className="lon-feature">
+                <h3>Profissionais em quem pode confiar</h3>
+                <p>Qualificados e inscritos nas respetivas Ordens.</p>
+              </article>
+              <article className="lon-feature">
+                <h3>Uma história, não apenas uma consulta</h3>
+                <p>Conhecer o contexto permite um acompanhamento mais consistente.</p>
+              </article>
+              <article className="lon-feature">
+                <h3>Continuidade dos cuidados</h3>
+                <p>Quando volta, o acompanhamento continua — sem recomeçar do zero.</p>
+              </article>
+              <article className="lon-feature">
+                <h3>Várias áreas de saúde</h3>
+                <p>Medicina, saúde mental e nutrição no mesmo espaço.</p>
+              </article>
+              <article className="lon-feature">
+                <h3>Sem deslocações</h3>
+                <p>Computador, tablet ou smartphone, onde quer que esteja.</p>
+              </article>
+              <article className="lon-feature">
+                <h3>Cuidado personalizado</h3>
+                <p>Cada consulta parte da situação concreta de cada pessoa.</p>
+              </article>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Why LON Clinic */}
-      <section className="py-20 bg-[var(--bg-alt)]">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <h2 className="text-center text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-[var(--text)] mb-16 tracking-tight">
-            Uma clínica online, com relação humana
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-            <FeatureBlock
-              icon="✓"
-              title="Profissionais em quem pode confiar"
-              description="Qualificados e inscritos nas respetivas Ordens."
-            />
-            
-            <FeatureBlock
-              icon="📖"
-              title="Uma história, não apenas uma consulta"
-              description="Conhecer o contexto permite um acompanhamento mais consistente."
-            />
-            
-            <FeatureBlock
-              icon="🔄"
-              title="Continuidade dos cuidados"
-              description="Quando volta, o acompanhamento continua — sem recomeçar do zero."
-            />
-            
-            <FeatureBlock
-              icon="🏥"
-              title="Várias áreas de saúde"
-              description="Medicina, saúde mental e nutrição no mesmo espaço."
-            />
-            
-            <FeatureBlock
-              icon="💻"
-              title="Sem deslocações"
-              description="Computador, tablet ou smartphone, onde quer que esteja."
-            />
-            
-            <FeatureBlock
-              icon="👤"
-              title="Cuidado personalizado"
-              description="Cada consulta parte da situação concreta de cada pessoa."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="py-25 text-center bg-white">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <h2 className="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-[var(--text)] mb-4 tracking-tight">
-            Quando precisar, estamos aqui
-          </h2>
-          <p className="text-lg text-[var(--text-muted)] mb-10">
-            Uma dúvida de saúde, um sintoma ou simplesmente a vontade de cuidar melhor de si.
-          </p>
-          
-          <div className="flex flex-col items-center gap-5">
-            <Link
-              href="/marcar"
-              className="inline-flex items-center justify-center px-8 py-3.5 text-base font-semibold text-white bg-[var(--primary)] rounded-[10px] shadow-[0_4px_12px_rgba(240,148,88,0.3)] hover:bg-[var(--primary-dark)] hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(240,148,88,0.4)] transition-all duration-200 no-underline"
-            >
-              Marcar consulta
-            </Link>
-            
-            <p className="text-base font-medium text-[var(--primary)] m-0">
-              Não sabe por onde começar?{' '}
-              <Link href="/quizzes" className="hover:underline">
+        {/* Final CTA - OLD DESIGN */}
+        <section className="lon-cta-final" aria-labelledby="lon-cta-title">
+          <div className="lon-container">
+            <h2 id="lon-cta-title">Quando precisar, estamos aqui</h2>
+            <p className="lon-cta-lead">Uma dúvida de saúde, um sintoma ou simplesmente a vontade de cuidar melhor de si.</p>
+            <div className="lon-cta-actions">
+              <Link href="/marcar" className="lon-btn lon-btn-dark lon-btn-lg">
+                Marcar consulta
+              </Link>
+              <Link href="/patient-portal" className="lon-btn lon-btn-ghost lon-btn-lg">
                 Fale com a nossa equipa →
               </Link>
-            </p>
+            </div>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
+    </div>
   );
 }

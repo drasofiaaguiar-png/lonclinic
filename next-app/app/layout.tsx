@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import NavGlobal from "@/components/layout/NavGlobal";
 import Footer from "@/components/layout/Footer";
 import "./globals.css";
+import "./landing.css";
 
 export const metadata: Metadata = {
   title: "Clínica Médica Online | Lon Clinic",
