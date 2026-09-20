@@ -244,9 +244,6 @@ export default function NavGlobal() {
           Marcar consulta
         </Link>
       </div>
-
-      {/* Spacer for floating header */}
-      <div className="h-[92px] lg:h-[100px]" />
     </>
   );
 }

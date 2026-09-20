@@ -26,8 +26,8 @@ export default function HeroFullscreen({
   secondaryCTA
 }: HeroFullscreenProps) {
   return (
-    <section className="relative min-h-screen flex items-center">
-      {/* Background Image */}
+    <section className="relative min-h-screen flex items-center -mt-[100px] pt-[100px]">
+      {/* Background Image - extends behind navbar */}
       <div 
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${backgroundImage})` }}
