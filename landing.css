@@ -5746,3 +5746,152 @@ body.lon-home #como-funciona .lon-how-step-num {
         font-size: 1.25rem;
     }
 }
+/* Psychology Page - Blue Theme */
+.page-psychology .lon-intro-categories {
+    background: linear-gradient(135deg, #9BB1BC 0%, #537284 100%);
+}
+
+.page-psychology .lon-intro-text {
+    color: white;
+    padding-left: 80px;
+}
+
+.page-psychology .lon-intro-text strong {
+    color: #E8F0F2;
+    font-weight: 700;
+}
+
+.page-psychology .lon-category-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(83, 114, 132, 0.2);
+}
+
+.page-psychology .lon-category-card:hover {
+    border-color: #537284;
+    background: white;
+}
+
+.page-psychology .lon-category-card-primary {
+    background: linear-gradient(135deg, #537284 0%, #9BB1BC 100%);
+    border-color: #537284;
+}
+
+/* Nutrition Page - Green Theme */
+.page-nutrition .lon-intro-categories {
+    background: linear-gradient(135deg, #9FBD84 0%, #3F574C 100%);
+}
+
+.page-nutrition .lon-intro-text {
+    color: white;
+    padding-left: 80px;
+}
+
+.page-nutrition .lon-intro-text strong {
+    color: #E8F5E9;
+    font-weight: 700;
+}
+
+.page-nutrition .lon-category-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(63, 87, 76, 0.2);
+}
+
+.page-nutrition .lon-category-card:hover {
+    border-color: #3F574C;
+    background: white;
+}
+
+.page-nutrition .lon-category-card-primary {
+    background: linear-gradient(135deg, #3F574C 0%, #9FBD84 100%);
+    border-color: #3F574C;
+}
+
+/* Longevity Page - Yellow Theme */
+.page-longevity .lon-intro-categories {
+    background: linear-gradient(135deg, #ECD281 0%, #CBB068 100%);
+}
+
+.page-longevity .lon-intro-text {
+    color: #1C1710;
+    padding-left: 80px;
+}
+
+.page-longevity .lon-intro-text strong {
+    color: #8B7E3F;
+    font-weight: 700;
+}
+
+.page-longevity .lon-category-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(203, 176, 104, 0.3);
+}
+
+.page-longevity .lon-category-card:hover {
+    border-color: #CBB068;
+    background: white;
+}
+
+.page-longevity .lon-category-card-primary {
+    background: linear-gradient(135deg, #CBB068 0%, #ECD281 100%);
+    border-color: #CBB068;
+    color: #1C1710;
+}
+
+.page-longevity .lon-category-card-primary h3 {
+    color: #1C1710;
+}
+
+.page-longevity .lon-category-label {
+    background: rgba(28, 23, 16, 0.15);
+    color: #1C1710;
+}
+
+/* Urgent Care Page - Red Theme */
+.page-urgent .lon-intro-categories {
+    background: linear-gradient(135deg, #BD4f4F 0%, #A5584E 100%);
+}
+
+.page-urgent .lon-intro-text {
+    color: white;
+    padding-left: 80px;
+}
+
+.page-urgent .lon-intro-text strong {
+    color: #FFE8E8;
+    font-weight: 700;
+}
+
+.page-urgent .lon-category-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(165, 88, 78, 0.2);
+}
+
+.page-urgent .lon-category-card:hover {
+    border-color: #A5584E;
+    background: white;
+}
+
+.page-urgent .lon-category-card-primary {
+    background: linear-gradient(135deg, #A5584E 0%, #BD4f4F 100%);
+    border-color: #A5584E;
+}
+
+/* Mobile adjustments for all specialty pages */
+@media (max-width: 968px) {
+    .page-psychology .lon-intro-text,
+    .page-nutrition .lon-intro-text,
+    .page-longevity .lon-intro-text,
+    .page-urgent .lon-intro-text {
+        padding-left: 40px;
+    }
+}
+
+@media (max-width: 640px) {
+    .page-psychology .lon-intro-text,
+    .page-nutrition .lon-intro-text,
+    .page-longevity .lon-intro-text,
+    .page-urgent .lon-intro-text {
+        padding-left: 20px;
+    }
+}
+
