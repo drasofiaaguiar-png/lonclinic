@@ -2281,3 +2281,99 @@ body.page-psychology .lon-logo-clinic {
         padding: 20px 24px;
     }
 }
+
+/* Quiz cards with interesting design */
+.psi-quizzes {
+    background: linear-gradient(135deg, #F3EDE5 0%, #FFF8F0 100%);
+    padding: 80px 0;
+}
+
+.psi-quizzes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 32px;
+    margin-top: 48px;
+}
+
+.psi-quiz-card {
+    position: relative;
+    background: linear-gradient(135deg, #9BB1BC 0%, #537284 100%);
+    border-radius: 20px;
+    padding: 40px 32px;
+    color: white;
+    box-shadow: 0 8px 24px rgba(83, 114, 132, 0.25);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    overflow: hidden;
+}
+
+.psi-quiz-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+    transition: transform 0.6s ease;
+}
+
+.psi-quiz-card:hover::before {
+    transform: translate(-25%, -25%);
+}
+
+.psi-quiz-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 16px 40px rgba(83, 114, 132, 0.35);
+}
+
+.psi-quiz-card h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0 0 16px;
+    color: white;
+    position: relative;
+    z-index: 1;
+}
+
+.psi-quiz-card p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 24px;
+    opacity: 0.95;
+    position: relative;
+    z-index: 1;
+}
+
+.psi-quiz-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 30px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.psi-quiz-link:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateX(4px);
+}
+
+@media (max-width: 768px) {
+    .psi-quizzes-grid {
+        grid-template-columns: 1fr;
+    }
+    .psi-quiz-card {
+        padding: 32px 24px;
+    }
+}
