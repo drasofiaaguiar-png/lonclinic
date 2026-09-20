@@ -9,13 +9,14 @@
    SOLUÇÃO: Tamanho adequado, centralizado
    ---------------------------------------- */
 .lon-home .lon-intro-text {
-    font-family: 'DM Sans', sans-serif !important; /* Unificar com resto do site */
-    font-size: clamp(1.25rem, 2.5vw, 1.5rem) !important; /* 20-24px */
+    font-family: 'DM Sans', sans-serif !important;
+    font-size: 50px !important;
     line-height: 1.6 !important;
-    text-align: center !important;
-    max-width: 850px !important;
-    margin: 0 auto 48px !important;
-    padding: 0 24px !important; /* Remover padding-left 80px */
+    text-align: left !important;
+    max-width: 100% !important;
+    margin: 0 0 48px 0 !important;
+    padding-left: 50% !important;
+    padding-right: 24px !important;
     color: #2D2D2D;
 }
 
@@ -273,8 +274,9 @@ p {
    ---------------------------------------- */
 @media (max-width: 768px) {
     .lon-home .lon-intro-text {
-        font-size: 1.125rem !important;
-        padding: 0 16px !important;
+        font-size: 28px !important;
+        padding-left: 24px !important;
+        padding-right: 16px !important;
     }
     
     .psi-hero-with-bg {
