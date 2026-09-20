@@ -47,20 +47,20 @@ export default function HomePage() {
           <div className="relative z-10 flex min-h-screen flex-col justify-end px-5 pb-6 pt-24 md:px-8 md:pb-12">
             <div className="mx-auto w-full max-w-7xl">
               <div className="max-w-3xl text-white">
-                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-semibold backdrop-blur-md">
+                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-semibold text-white backdrop-blur-md">
                   <span className="size-2 rounded-full bg-orange-400" /> Clínica certificada pela ERS · nº 45.475
                 </div>
                 
-                <h1 className="max-w-3xl text-4xl font-extrabold leading-[1.05] md:text-6xl lg:text-7xl">
-                  Não tratamos só o sintoma.<br />
+                <h1 className="max-w-3xl text-white font-extrabold leading-[1.05]" style={{ fontSize: 'clamp(2.5rem, 7vw, 5rem)' }}>
+                  Não tratamos só o sintoma.{' '}
                   <span className="text-orange-400">Procuramos a causa.</span>
                 </h1>
                 
-                <p className="mt-6 max-w-xl text-base leading-relaxed text-white/90 md:text-xl">
+                <p className="mt-6 max-w-xl text-base leading-relaxed text-white md:text-xl">
                   Uma equipa multidisciplinar que olha para si como um todo — médicos, psicólogos e nutricionistas, online e em português.
                 </p>
                 
-                <p className="mt-4 max-w-xl text-sm font-medium italic tracking-wide text-white/90 md:text-base">
+                <p className="mt-4 max-w-xl text-sm font-medium italic tracking-wide text-white md:text-base">
                   Medicina mais integrada. Mais próxima. Mais humana.
                 </p>
                 
@@ -84,44 +84,44 @@ export default function HomePage() {
               </div>
 
               {/* Quick Access Cards */}
-              <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                <div className="flex items-center gap-4 rounded-2xl border border-white/20 bg-white/10 p-4 text-white backdrop-blur-xl">
-                  <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-blue-500/90 text-white">
+              <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+                <div className="flex aspect-square flex-col items-center justify-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 text-center text-white backdrop-blur-xl">
+                  <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-blue-500/90 text-white text-2xl">
                     💊
                   </div>
                   <div>
-                    <p className="font-bold">Consultas Médicas</p>
-                    <p className="text-sm text-white/75">Longevidade e urgentes</p>
+                    <p className="font-bold text-sm">Consultas Médicas</p>
+                    <p className="text-xs text-white/75">Longevidade e urgentes</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-4 rounded-2xl border border-white/20 bg-white/10 p-4 text-white backdrop-blur-xl">
-                  <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-orange-500/90 text-white">
+                <div className="flex aspect-square flex-col items-center justify-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 text-center text-white backdrop-blur-xl">
+                  <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-orange-500/90 text-white text-2xl">
                     ✨
                   </div>
                   <div>
-                    <p className="font-bold">Psicologia</p>
-                    <p className="text-sm text-white/75">Apoio emocional contínuo</p>
+                    <p className="font-bold text-sm">Psicologia</p>
+                    <p className="text-xs text-white/75">Apoio emocional contínuo</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-4 rounded-2xl border border-white/20 bg-white/10 p-4 text-white backdrop-blur-xl">
-                  <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-green-500/90 text-white">
+                <div className="flex aspect-square flex-col items-center justify-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 text-center text-white backdrop-blur-xl">
+                  <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-green-500/90 text-white text-2xl">
                     🥗
                   </div>
                   <div>
-                    <p className="font-bold">Nutrição</p>
-                    <p className="text-sm text-white/75">Planos personalizados</p>
+                    <p className="font-bold text-sm">Nutrição</p>
+                    <p className="text-xs text-white/75">Planos personalizados</p>
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-4 rounded-2xl border border-emerald-300/30 bg-emerald-500/90 p-4 text-white backdrop-blur-xl">
-                  <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white/20 text-white">
+                <div className="flex aspect-square flex-col items-center justify-center gap-3 rounded-2xl border border-emerald-300/30 bg-emerald-500/90 p-4 text-center text-white backdrop-blur-xl">
+                  <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-white/20 text-white text-2xl">
                     📅
                   </div>
                   <div>
-                    <p className="font-bold">Próximos horários</p>
-                    <p className="text-sm text-white/90">Disponível hoje</p>
+                    <p className="font-bold text-sm">Próximos horários</p>
+                    <p className="text-xs text-white/90">Disponível hoje</p>
                   </div>
                 </div>
               </div>
