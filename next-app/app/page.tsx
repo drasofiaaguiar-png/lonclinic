@@ -1,6 +1,8 @@
 import HeroFullscreen from '@/components/modules/HeroFullscreen';
 import ServiceCard from '@/components/modules/ServiceCard';
 import ConditionCard from '@/components/modules/ConditionCard';
+import ResultCard from '@/components/modules/ResultCard';
+import TransformationSection from '@/components/modules/TransformationSection';
 import TestimonialVisual from '@/components/modules/TestimonialVisual';
 import FeatureBlock from '@/components/modules/FeatureBlock';
 import Link from 'next/link';
@@ -147,6 +149,57 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Results Section - GREEN */}
+      <section className="py-24 lg:py-32 bg-[#3F5952]">
+        <div className="max-w-[1400px] mx-auto px-6">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-white mb-4 tracking-[-0.02em]">
+              Os melhores resultados, <span className="text-[#A8C4B5]">histórias reais</span>
+            </h2>
+            <p className="text-xl text-white/80 max-w-[700px] mx-auto leading-relaxed">
+              Pessoas reais que transformaram a sua saúde com a LON Clinic.
+            </p>
+          </div>
+
+          {/* Results Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <ResultCard
+              beforeWeight="95 kg"
+              afterWeight="77 kg"
+              name="Sofia, 34 anos"
+              timeframe="Em 6 meses"
+              imageSrc="/image/hero-run.webp"
+              imageAlt="Transformação Sofia"
+              productName="Programa Integrado"
+            />
+            
+            <ResultCard
+              beforeWeight="102 kg"
+              afterWeight="85 kg"
+              name="James, 41 anos"
+              timeframe="Em 4 meses"
+              imageSrc="/image/consulta-clinica-geral.webp"
+              imageAlt="Transformação James"
+              productName="Nutrição"
+            />
+            
+            <ResultCard
+              beforeWeight="88 kg"
+              afterWeight="72 kg"
+              name="Ana, 28 anos"
+              timeframe="Em 5 meses"
+              imageSrc="/image/nutricao-alimentos.webp"
+              imageAlt="Transformação Ana"
+              productName="Programa Integrado"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Transformation Section - BEIGE */}
+      <TransformationSection bgColor="#E8D5C4" />
 
       {/* Trust Badges */}
       <section className="py-15 bg-[var(--bg-alt)]">
