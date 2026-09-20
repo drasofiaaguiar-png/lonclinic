@@ -5891,3 +5891,67 @@ body.lon-home #como-funciona .lon-how-step-num {
     }
 }
 
+
+
+/* Homepage intro with Open Sans 36px and card backgrounds */
+.lon-home .lon-intro-text {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 36px;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+.lon-home .lon-intro-text strong {
+    font-weight: 700;
+}
+
+/* Cards with background images */
+.lon-category-card-medicina {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.9)), url('/image/consulta-clinica-geral.webp');
+    background-size: cover;
+    background-position: center;
+}
+
+.lon-category-card-psicologia {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.9)), url('/image/psi-choice-individual.webp');
+    background-size: cover;
+    background-position: center;
+}
+
+.lon-category-card-nutricao {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.9)), url('/image/nutricao-consulta.webp');
+    background-size: cover;
+    background-position: center;
+}
+
+.lon-category-card-integrado {
+    background-image: linear-gradient(rgba(240, 148, 88, 0.9), rgba(255, 140, 66, 0.9)), url('/image/hero-run.webp');
+    background-size: cover;
+    background-position: center;
+}
+
+.lon-category-card-medicina:hover,
+.lon-category-card-psicologia:hover,
+.lon-category-card-nutricao:hover {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url('/image/consulta-clinica-geral.webp');
+}
+
+.lon-category-card-psicologia:hover {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url('/image/psi-choice-individual.webp');
+}
+
+.lon-category-card-nutricao:hover {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), url('/image/nutricao-consulta.webp');
+}
+
+@media (max-width: 768px) {
+    .lon-home .lon-intro-text {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 640px) {
+    .lon-home .lon-intro-text {
+        font-size: 24px;
+    }
+}
