@@ -1,5 +1,5 @@
 import HeroFullscreen from '@/components/modules/HeroFullscreen';
-import NeedCard from '@/components/modules/NeedCard';
+import ServiceCard from '@/components/modules/ServiceCard';
 import TestimonialVisual from '@/components/modules/TestimonialVisual';
 import FeatureBlock from '@/components/modules/FeatureBlock';
 import Link from 'next/link';
@@ -18,66 +18,52 @@ export default function HomePage() {
         secondaryCTA={{ text: "Ajude-me a escolher", href: "/quizzes" }}
       />
 
-      {/* Needs Section - MODERN GRID */}
-      <section className="py-32 bg-white">
-        <div class="max-w-[1400px] mx-auto px-6">
-          <div className="text-center mb-20">
-            <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-[var(--text)] mb-6 tracking-[-0.03em]">
-              Diga-nos o que precisa
+      {/* Services Section - MODERN CARDS */}
+      <section className="py-24 lg:py-32 bg-white">
+        <div className="max-w-[1400px] mx-auto px-6">
+          {/* Section Header */}
+          <div className="text-center mb-16">
+            <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-[#1C1710] mb-4 tracking-[-0.02em]">
+              Os nossos serviços <span className="text-[var(--primary)]">mais procurados</span>
             </h2>
-            <p className="text-2xl text-[var(--text-muted)] m-0 max-w-[700px] mx-auto">
-              Comece pela sua necessidade — encontramos o caminho mais simples.
+            <p className="text-xl text-[#1C1710]/60 max-w-[700px] mx-auto leading-relaxed">
+              Cuidados de saúde integrados, online e acessíveis para o que realmente precisa.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <NeedCard
+          {/* Service Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <ServiceCard
+              title="Consultas Médicas"
+              description="Medicina de longevidade e cuidados preventivos com foco na sua saúde a longo prazo."
+              icon="⚡"
               imageSrc="/image/consulta-clinica-geral.webp"
-              imageAlt="Consulta médica"
-              title="Preciso de falar com um médico"
-              description="Sintomas, dúvidas, medicação, exames ou acompanhamento."
-              href="/longevidade"
+              imageAlt="Consulta médica online"
+              primaryCTA={{ text: "Marcar consulta", href: "/longevidade" }}
+              secondaryCTA={{ text: "Saber mais", href: "/longevidade" }}
+              bgColor="#F3EDE5"
             />
             
-            <NeedCard
+            <ServiceCard
+              title="Psicologia"
+              description="Terapia individual e de casal para ansiedade, burnout e bem-estar emocional."
+              icon="🧠"
               imageSrc="/image/psi-choice-individual.webp"
-              imageAlt="Terapia psicologia"
-              title="Sinto-me triste ou ansioso"
-              description="Ansiedade, stress, burnout ou a vontade de falar com alguém."
-              href="/psicologia"
+              imageAlt="Terapia psicologia online"
+              primaryCTA={{ text: "Marcar consulta", href: "/psicologia" }}
+              secondaryCTA={{ text: "Saber mais", href: "/psicologia" }}
+              bgColor="#E8F1F5"
             />
             
-            <NeedCard
-              imageSrc="/image/travel-clinic-mountain-bg-v2.png"
-              imageAlt="Medicina do viajante"
-              title="Vou viajar"
-              description="Vacinação, prevenção e riscos associados ao destino."
-              href="/travel-clinic"
-            />
-            
-            <NeedCard
+            <ServiceCard
+              title="Nutrição"
+              description="Acompanhamento nutricional contínuo adaptado aos seus objetivos e fase de vida."
+              icon="💚"
               imageSrc="/image/nutricao-alimentos.webp"
-              imageAlt="Nutrição e alimentação"
-              title="Quero comer melhor"
-              description="Perder peso ou criar hábitos mais saudáveis, com acompanhamento."
-              href="/nutricao"
-            />
-            
-            <NeedCard
-              imageSrc="/image/consulta-urgente.webp"
-              imageAlt="Consulta urgente"
-              title="Preciso de ser visto rapidamente"
-              description="Avaliação médica rápida, para situações que não são emergência."
-              href="/urgent-care"
-            />
-            
-            <NeedCard
-              imageSrc="/image/consulta-telemedicina-mesa.webp"
-              imageAlt="Testes e questionários"
-              title="Não sei o que preciso"
-              description="Faça um teste rápido e descubra o caminho certo."
-              href="/quizzes"
-              highlight
+              imageAlt="Nutrição e alimentação saudável"
+              primaryCTA={{ text: "Marcar consulta", href: "/nutricao" }}
+              secondaryCTA={{ text: "Saber mais", href: "/nutricao" }}
+              bgColor="#F0F8ED"
             />
           </div>
         </div>
