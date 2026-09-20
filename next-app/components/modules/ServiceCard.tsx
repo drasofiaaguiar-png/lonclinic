@@ -4,7 +4,6 @@ import Image from 'next/image';
 interface ServiceCardProps {
   title: string;
   description: string;
-  icon: string;
   imageSrc: string;
   imageAlt: string;
   primaryCTA: {
@@ -21,7 +20,6 @@ interface ServiceCardProps {
 export default function ServiceCard({
   title,
   description,
-  icon,
   imageSrc,
   imageAlt,
   primaryCTA,
@@ -30,7 +28,7 @@ export default function ServiceCard({
 }: ServiceCardProps) {
   return (
     <div 
-      className="relative rounded-[32px] overflow-hidden h-[480px] flex flex-col justify-between p-8"
+      className="group relative rounded-[32px] overflow-hidden h-[480px] flex flex-col justify-end"
       style={{ backgroundColor: bgColor }}
     >
       {/* Background Image */}
@@ -39,22 +37,19 @@ export default function ServiceCard({
           src={imageSrc}
           alt={imageAlt}
           fill
-          className="object-cover object-center"
+          className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, 33vw"
         />
+        {/* Dark gradient overlay for better text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
       </div>
 
-      {/* Icon Badge */}
-      <div className="relative z-10 w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-2xl shadow-lg">
-        {icon}
-      </div>
-
-      {/* Content */}
-      <div className="relative z-10">
-        <h3 className="text-[32px] font-bold text-[#1C1710] mb-3 leading-tight">
+      {/* Glassmorphic Content Container */}
+      <div className="relative z-10 m-6 p-6 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all duration-300 group-hover:bg-white/15 group-hover:backdrop-blur-2xl">
+        <h3 className="text-[28px] font-bold text-white mb-2 leading-tight">
           {title}
         </h3>
-        <p className="text-[#1C1710]/70 text-[15px] leading-relaxed mb-6 max-w-[280px]">
+        <p className="text-white/90 text-[15px] leading-relaxed mb-5">
           {description}
         </p>
 
@@ -62,7 +57,7 @@ export default function ServiceCard({
         <div className="flex flex-wrap gap-3">
           <Link
             href={primaryCTA.href}
-            className="inline-flex items-center justify-center px-6 py-3 text-[14px] font-semibold text-white bg-[#1C1710] rounded-full hover:bg-[#1C1710]/90 transition-all duration-200 no-underline"
+            className="inline-flex items-center justify-center px-6 py-3 text-[14px] font-semibold text-[#1C1710] bg-white rounded-full hover:bg-white/95 transition-all duration-200 shadow-md no-underline"
           >
             {primaryCTA.text}
           </Link>
@@ -70,7 +65,7 @@ export default function ServiceCard({
           {secondaryCTA && (
             <Link
               href={secondaryCTA.href}
-              className="inline-flex items-center justify-center px-6 py-3 text-[14px] font-semibold text-[#1C1710] bg-white/90 backdrop-blur-sm rounded-full hover:bg-white transition-all duration-200 no-underline"
+              className="inline-flex items-center justify-center px-6 py-3 text-[14px] font-semibold text-white bg-white/20 backdrop-blur-sm border border-white/30 rounded-full hover:bg-white/30 transition-all duration-200 no-underline"
             >
               {secondaryCTA.text}
             </Link>

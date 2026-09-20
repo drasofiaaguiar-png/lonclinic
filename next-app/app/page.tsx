@@ -1,5 +1,6 @@
 import HeroFullscreen from '@/components/modules/HeroFullscreen';
 import ServiceCard from '@/components/modules/ServiceCard';
+import ConditionCard from '@/components/modules/ConditionCard';
 import TestimonialVisual from '@/components/modules/TestimonialVisual';
 import FeatureBlock from '@/components/modules/FeatureBlock';
 import Link from 'next/link';
@@ -36,7 +37,6 @@ export default function HomePage() {
             <ServiceCard
               title="Consultas Médicas"
               description="Medicina de longevidade e cuidados preventivos com foco na sua saúde a longo prazo."
-              icon="⚡"
               imageSrc="/image/consulta-clinica-geral.webp"
               imageAlt="Consulta médica online"
               primaryCTA={{ text: "Marcar consulta", href: "/longevidade" }}
@@ -47,7 +47,6 @@ export default function HomePage() {
             <ServiceCard
               title="Psicologia"
               description="Terapia individual e de casal para ansiedade, burnout e bem-estar emocional."
-              icon="🧠"
               imageSrc="/image/psi-choice-individual.webp"
               imageAlt="Terapia psicologia online"
               primaryCTA={{ text: "Marcar consulta", href: "/psicologia" }}
@@ -58,12 +57,74 @@ export default function HomePage() {
             <ServiceCard
               title="Nutrição"
               description="Acompanhamento nutricional contínuo adaptado aos seus objetivos e fase de vida."
-              icon="💚"
               imageSrc="/image/nutricao-alimentos.webp"
               imageAlt="Nutrição e alimentação saudável"
               primaryCTA={{ text: "Marcar consulta", href: "/nutricao" }}
               secondaryCTA={{ text: "Saber mais", href: "/nutricao" }}
               bgColor="#F0F8ED"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Conditions Section - HORIZONTAL CARDS */}
+      <section className="py-24 lg:py-32 bg-[#FDFCFB]">
+        <div className="max-w-[1400px] mx-auto px-6">
+          {/* Section Header */}
+          <div className="mb-16">
+            <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-[#1C1710] mb-4 tracking-[-0.02em] max-w-[800px]">
+              A LON Clinic é o seu parceiro na <span className="text-[var(--primary)]">saúde, força e vitalidade</span>
+            </h2>
+          </div>
+
+          {/* Conditions Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <ConditionCard
+              title="Medicina Funcional"
+              imageSrc="/image/consulta-clinica-geral.webp"
+              imageAlt="Medicina funcional"
+              href="/longevidade"
+              bgColor="#E8E3DA"
+            />
+            
+            <ConditionCard
+              title="Perda de Peso"
+              imageSrc="/image/nutricao-alimentos.webp"
+              imageAlt="Perda de peso"
+              href="/nutricao"
+              bgColor="#E8F1E8"
+            />
+            
+            <ConditionCard
+              title="Saúde Intestinal"
+              imageSrc="/image/consulta-telemedicina-mesa.webp"
+              imageAlt="Saúde intestinal"
+              href="/nutricao"
+              bgColor="#F5E8DC"
+            />
+            
+            <ConditionCard
+              title="Ansiedade"
+              imageSrc="/image/psi-choice-individual.webp"
+              imageAlt="Ansiedade"
+              href="/psicologia"
+              bgColor="#D9E8F5"
+            />
+            
+            <ConditionCard
+              title="Tristeza"
+              imageSrc="/image/hero-run.webp"
+              imageAlt="Tristeza"
+              href="/psicologia"
+              bgColor="#E8D9F5"
+            />
+            
+            <ConditionCard
+              title="Inflamação"
+              imageSrc="/image/hero-bay.webp"
+              imageAlt="Inflamação"
+              href="/longevidade"
+              bgColor="#F5D9D9"
             />
           </div>
         </div>
