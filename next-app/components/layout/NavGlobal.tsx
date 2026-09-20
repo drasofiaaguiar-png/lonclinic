@@ -1,12 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function NavGlobal() {
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileSpecialtiesOpen, setMobileSpecialtiesOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const specialties = [
     {
@@ -48,9 +57,21 @@ export default function NavGlobal() {
         Saltar para o conteúdo
       </a>
 
-      {/* Desktop/Mobile Nav */}
-      <header className="fixed top-0 left-0 right-0 bg-white border-b border-[var(--border)] z-40">
-        <div className="max-w-[1400px] mx-auto px-6 h-[72px] flex items-center justify-between">
+      {/* Floating Nav Container */}
+      <div className="fixed top-0 left-0 right-0 z-50 px-4 lg:px-8 pt-4 lg:pt-6 pointer-events-none">
+        <header 
+          className={`
+            pointer-events-auto
+            max-w-[1400px] mx-auto
+            rounded-2xl
+            transition-all duration-300
+            ${scrolled 
+              ? 'bg-white/95 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.08)] border border-gray-200/50' 
+              : 'bg-white/70 backdrop-blur-md shadow-[0_4px_16px_rgba(0,0,0,0.04)] border border-white/60'
+            }
+          `}
+        >
+          <div className="px-6 lg:px-8 h-[68px] flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="text-xl font-bold text-[var(--text)] no-underline hover:text-[var(--primary)] transition-colors">
             <span className="font-bold">lon clinic</span>
@@ -138,12 +159,12 @@ export default function NavGlobal() {
             <span className={`block w-full h-0.5 bg-[var(--text)] transition-opacity ${mobileMenuOpen ? 'opacity-0' : ''}`} />
             <span className={`block w-full h-0.5 bg-[var(--text)] transition-all ${mobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
           </button>
-        </div>
+          </div>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden bg-white border-t border-[var(--border)] max-h-[calc(100vh-72px)] overflow-y-auto">
-            <div className="p-6 flex flex-col gap-4">
+          {/* Mobile Menu */}
+          {mobileMenuOpen && (
+            <div className="lg:hidden border-t border-gray-200/50 backdrop-blur-xl">
+              <div className="p-6 flex flex-col gap-4">
               {/* Especialidades Mobile */}
               <div>
                 <button
@@ -211,20 +232,21 @@ export default function NavGlobal() {
             </div>
           </div>
         )}
-      </header>
+        </header>
+      </div>
 
       {/* Mobile Fixed CTA */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-[var(--border)] p-4 z-40">
+      <div className="lg:hidden fixed bottom-4 left-4 right-4 z-50 pointer-events-none">
         <Link
           href="/marcar"
-          className="block text-center w-full px-6 py-3 text-[15px] font-semibold text-white bg-[var(--primary)] rounded-lg hover:bg-[var(--primary-dark)] transition-colors no-underline"
+          className="pointer-events-auto block text-center w-full px-6 py-4 text-base font-bold text-white bg-[var(--primary)] rounded-2xl hover:bg-[var(--primary-dark)] transition-all shadow-[0_8px_32px_rgba(240,148,88,0.4)] hover:shadow-[0_12px_48px_rgba(240,148,88,0.5)] hover:-translate-y-1 no-underline"
         >
           Marcar consulta
         </Link>
       </div>
 
-      {/* Spacer for fixed header */}
-      <div className="h-[72px]" />
+      {/* Spacer for floating header */}
+      <div className="h-[92px] lg:h-[100px]" />
     </>
   );
 }

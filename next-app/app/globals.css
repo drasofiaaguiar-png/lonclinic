@@ -120,9 +120,9 @@ h2 {
   transform: translateY(-8px);
 }
 
-/* Mobile bottom padding for fixed CTA */
+/* Mobile bottom padding for floating CTA */
 @media (max-width: 1023px) {
   main {
-    padding-bottom: 80px;
+    padding-bottom: 96px;
   }
 }
