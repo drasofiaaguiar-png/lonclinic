@@ -42,86 +42,78 @@ export default function HomePage() {
             priority
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 via-transparent to-blue-500/10" />
           
-          <div className="relative z-10 flex min-h-screen flex-col justify-end px-5 pb-6 pt-24 md:px-8 md:pb-12">
+          <div className="relative z-10 flex min-h-screen flex-col justify-center px-5 py-24 md:px-8">
             <div className="mx-auto w-full max-w-7xl">
-              <div className="max-w-3xl text-white">
-                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-semibold text-white backdrop-blur-md">
-                  <span className="size-2 rounded-full bg-orange-400" /> Clínica certificada pela ERS · nº 45.475
+              <div className="grid lg:grid-cols-2 gap-8 items-center">
+                {/* Left: Text Content */}
+                <div className="text-white">
+                  <h1 className="font-extrabold leading-[1.1]" style={{ fontFamily: "'Open Sans', sans-serif", fontSize: 'clamp(2.75rem, 7vw, 5.5rem)', color: '#ffffff' }}>
+                    Na LON Clinic, a sua saúde{' '}
+                    <span style={{ color: '#dc2626' }}>é mais do que um sintoma.</span>
+                  </h1>
+                  
+                  <p className="mt-6 text-lg md:text-xl leading-relaxed text-white font-medium" style={{ fontFamily: "'Open Sans', sans-serif" }}>
+                    Clínica médica registada na Entidade Reguladora de Saúde. 100% Online.
+                  </p>
+                  
+                  <div className="mt-8 flex flex-wrap gap-3">
+                    <Link 
+                      href="/marcar" 
+                      className="inline-flex items-center gap-2 rounded-full bg-red-600 px-8 py-4 text-base font-bold text-white shadow-xl transition-all hover:bg-red-700 hover:scale-105"
+                      style={{ fontFamily: "'Open Sans', sans-serif" }}
+                    >
+                      Marcar consulta
+                      <svg className="size-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </Link>
+                    <Link 
+                      href="#especialidades" 
+                      className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-white/20 px-8 py-4 text-base font-bold text-white backdrop-blur-md transition-all hover:bg-white/30"
+                      style={{ fontFamily: "'Open Sans', sans-serif" }}
+                    >
+                      Ver especialidades
+                    </Link>
+                  </div>
                 </div>
-                
-                <h1 className="max-w-3xl font-extrabold leading-[1.05]" style={{ fontSize: 'clamp(3rem, 8vw, 6.5rem)', color: '#ffffff' }}>
-                  Não tratamos só o sintoma.{' '}
-                  <span style={{ color: '#fb923c' }}>Procuramos a causa.</span>
-                </h1>
-                
-                <p className="mt-6 max-w-xl text-base leading-relaxed text-white md:text-xl">
-                  Uma equipa multidisciplinar que olha para si como um todo — médicos, psicólogos e nutricionistas, online e em português.
-                </p>
-                
-                <p className="mt-4 max-w-xl text-sm font-medium italic tracking-wide text-white md:text-base">
-                  Medicina mais integrada. Mais próxima. Mais humana.
-                </p>
-                
-                <div className="mt-8 flex flex-wrap gap-3">
-                  <Link 
-                    href="/marcar" 
-                    className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-gray-900 shadow-lg transition-transform hover:scale-105"
-                  >
-                    Marcar consulta
-                    <svg className="size-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </Link>
-                  <Link 
-                    href="#especialidades" 
-                    className="inline-flex items-center gap-2 rounded-full border-2 border-white/40 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20"
-                  >
-                    Ver especialidades
-                  </Link>
-                </div>
-              </div>
 
-              {/* Quick Access Cards */}
-              <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
-                <div className="flex aspect-square flex-col items-center justify-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 text-center text-white backdrop-blur-xl">
-                  <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-blue-500/90 text-white text-2xl">
-                    💊
+                {/* Right: Floating Badges */}
+                <div className="hidden lg:flex flex-col items-end gap-6 pr-8">
+                  <div 
+                    className="rounded-full bg-blue-500/90 px-8 py-4 text-white font-bold text-lg shadow-2xl backdrop-blur-sm animate-float"
+                    style={{ fontFamily: "'Open Sans', sans-serif", animation: 'float 3s ease-in-out infinite' }}
+                  >
+                    Saúde Mental
                   </div>
-                  <div>
-                    <p className="font-bold text-sm">Consultas Médicas</p>
-                    <p className="text-xs text-white/75">Longevidade e urgentes</p>
+                  
+                  <div 
+                    className="rounded-full bg-blue-500/90 px-8 py-4 text-white font-bold text-lg shadow-2xl backdrop-blur-sm mr-12 animate-float"
+                    style={{ fontFamily: "'Open Sans', sans-serif", animationDelay: '0.5s', animation: 'float 3s ease-in-out infinite 0.5s' }}
+                  >
+                    Saúde Metabólica
                   </div>
-                </div>
-                
-                <div className="flex aspect-square flex-col items-center justify-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 text-center text-white backdrop-blur-xl">
-                  <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-orange-500/90 text-white text-2xl">
-                    ✨
+                  
+                  <div 
+                    className="rounded-full bg-blue-500/90 px-8 py-4 text-white font-bold text-lg shadow-2xl backdrop-blur-sm animate-float"
+                    style={{ fontFamily: "'Open Sans', sans-serif", animationDelay: '1s', animation: 'float 3s ease-in-out infinite 1s' }}
+                  >
+                    Nutrição
                   </div>
-                  <div>
-                    <p className="font-bold text-sm">Psicologia</p>
-                    <p className="text-xs text-white/75">Apoio emocional contínuo</p>
+                  
+                  <div 
+                    className="rounded-full bg-blue-500/90 px-8 py-4 text-white font-bold text-lg shadow-2xl backdrop-blur-sm mr-24 animate-float"
+                    style={{ fontFamily: "'Open Sans', sans-serif", animationDelay: '1.5s', animation: 'float 3s ease-in-out infinite 1.5s' }}
+                  >
+                    Saúde Cardiovascular
                   </div>
-                </div>
-                
-                <div className="flex aspect-square flex-col items-center justify-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-4 text-center text-white backdrop-blur-xl">
-                  <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-green-500/90 text-white text-2xl">
-                    🥗
-                  </div>
-                  <div>
-                    <p className="font-bold text-sm">Nutrição</p>
-                    <p className="text-xs text-white/75">Planos personalizados</p>
-                  </div>
-                </div>
-                
-                <div className="flex aspect-square flex-col items-center justify-center gap-3 rounded-2xl border border-emerald-300/30 bg-emerald-500/90 p-4 text-center text-white backdrop-blur-xl">
-                  <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-white/20 text-white text-2xl">
-                    📅
-                  </div>
-                  <div>
-                    <p className="font-bold text-sm">Próximos horários</p>
-                    <p className="text-xs text-white/90">Disponível hoje</p>
+                  
+                  <div 
+                    className="rounded-full bg-blue-500/90 px-8 py-4 text-white font-bold text-lg shadow-2xl backdrop-blur-sm mr-8 animate-float"
+                    style={{ fontFamily: "'Open Sans', sans-serif", animationDelay: '2s', animation: 'float 3s ease-in-out infinite 2s' }}
+                  >
+                    Microbioma
                   </div>
                 </div>
               </div>
