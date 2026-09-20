@@ -1,278 +1,253 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+const services = [
+  {
+    title: "Medicina",
+    description: "Medicina de longevidade e consultas urgentes online com acompanhamento certificado.",
+    price: "Desde 39€",
+    href: "/longevidade",
+    icon: "💊",
+    tone: "bg-blue-100",
+  },
+  {
+    title: "Psicologia",
+    description: "Um espaço seguro para cuidar da sua saúde emocional, ao seu ritmo.",
+    price: "Desde 56€",
+    href: "/psicologia",
+    icon: "✨",
+    tone: "bg-orange-100",
+  },
+  {
+    title: "Nutrição",
+    description: "Planos alimentares realistas, personalizados para a sua vida.",
+    price: "Desde 45€",
+    href: "/nutricao",
+    icon: "🥗",
+    tone: "bg-green-100",
+  },
+];
+
 export default function HomePage() {
   return (
-    <div className="lon-landing lon-home">
+    <div className="min-h-screen overflow-hidden bg-white">
       <main id="conteudo-principal">
-        {/* Hero Section - OLD DESIGN */}
-        <section className="dr-hero" id="inicio">
-          <picture>
-            <source media="(max-width: 939px)" srcSet="/image/hero-bay.webp" width={768} height={1024} />
-            <Image 
-              className="dr-hero-bg" 
-              src="/image/hero-run.webp" 
-              alt="Vista costeira junto ao mar" 
-              fill
-              priority
-              sizes="100vw"
-              style={{ objectFit: 'cover' }}
-            />
-          </picture>
-          <div className="dr-hero-scrim" aria-hidden="true"></div>
-          <div className="dr-hero-stage">
-            <div className="dr-hero-content">
-              <p className="dr-badge">
-                <span className="dr-badge-dot" aria-hidden="true"></span>
-                Clínica certificada pela ERS · nº 45.475
-              </p>
-              <h1>
-                <span className="dr-hero-title-line">Clínica Médica Online</span>
-              </h1>
-              <p className="dr-lead">
-                Medicina, nutrição e psicologia integradas.<br />
-                Diga-nos o que precisa. Nós ajudamos a encontrar o cuidado certo — sem sair de casa.
-              </p>
-              <div className="dr-cta-row">
-                <Link href="/marcar" className="lon-btn lon-btn-dark" data-cta="book">
-                  <span className="lon-btn-label">Marcar consulta</span>
-                  <svg className="lon-btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M7 17L17 7"/><path d="M8 7h9v9"/>
-                  </svg>
-                </Link>
-                <Link href="/quizzes" className="lon-btn lon-btn-ghost">
-                  Ajude-me a escolher
-                </Link>
+        {/* Hero Section - MODERN */}
+        <section id="inicio" className="relative min-h-screen">
+          <Image 
+            className="absolute inset-0 h-full w-full object-cover object-center" 
+            src="/image/hero-run.webp" 
+            alt="Vista costeira junto ao mar" 
+            fill
+            priority
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
+          
+          <div className="relative z-10 flex min-h-screen flex-col justify-end px-5 pb-6 pt-24 md:px-8 md:pb-12">
+            <div className="mx-auto w-full max-w-7xl">
+              <div className="max-w-3xl text-white">
+                <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-2 text-xs font-semibold backdrop-blur-md">
+                  <span className="size-2 rounded-full bg-orange-400" /> Clínica certificada pela ERS · nº 45.475
+                </div>
+                
+                <h1 className="max-w-3xl text-4xl font-extrabold leading-[1.05] md:text-6xl lg:text-7xl">
+                  Não tratamos só o sintoma.<br />
+                  <span className="text-orange-400">Procuramos a causa.</span>
+                </h1>
+                
+                <p className="mt-6 max-w-xl text-base leading-relaxed text-white/90 md:text-xl">
+                  Uma equipa multidisciplinar que olha para si como um todo — médicos, psicólogos e nutricionistas, online e em português.
+                </p>
+                
+                <p className="mt-4 max-w-xl text-sm font-medium italic tracking-wide text-white/90 md:text-base">
+                  Medicina mais integrada. Mais próxima. Mais humana.
+                </p>
+                
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Link 
+                    href="/marcar" 
+                    className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-gray-900 shadow-lg transition-transform hover:scale-105"
+                  >
+                    Marcar consulta
+                    <svg className="size-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </Link>
+                  <Link 
+                    href="#especialidades" 
+                    className="inline-flex items-center gap-2 rounded-full border-2 border-white/40 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20"
+                  >
+                    Ver especialidades
+                  </Link>
+                </div>
               </div>
-              <p className="dr-hero-meta">Consulta online · Sem deslocações · Onde quer que esteja</p>
-            </div>
-            <div className="dr-hero-dock">
-              <section className="dr-hero-glass lon-trust-strip" aria-label="Destaques de confiança da clínica">
-                <ul className="dr-trust-list">
-                  <li>Médicos inscritos na Ordem dos Médicos</li>
-                  <li>Nutricionistas e Psicólogos nas respetivas Ordens</li>
-                  <li>Consultas em português, inglês e espanhol</li>
-                  <li>Sem sala de espera, sem deslocação</li>
-                </ul>
-              </section>
-            </div>
-          </div>
-        </section>
 
-        {/* Services Section - OLD DESIGN with NEW CONTENT */}
-        <section className="lon-services" id="servicos" aria-labelledby="lon-need-title">
-          <div className="lon-container">
-            <header className="lon-need-header">
-              <p className="lon-need-kicker">Diga-nos o que precisa</p>
-              <h2 id="lon-need-title">Comece pela sua necessidade</h2>
-              <p className="lon-need-lead">Nem sempre é fácil saber que profissional deve consultar. Encontre o caminho mais simples para cuidar da sua saúde.</p>
-            </header>
-
-            <div className="lon-need-sections">
-              {/* Consultas Médicas */}
-              <article className="lon-need-block" id="lon-need-medico">
-                <header className="lon-need-copy">
-                  <span className="lon-need-icon" aria-hidden="true">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M4.8 16.4A6 6 0 0 1 6 7h.1a6 6 0 0 1 11.8 0H18a6 6 0 0 1 1.2 9.4"/><path d="M12 12v9"/><path d="M8 17h8"/>
-                    </svg>
-                  </span>
-                  <h3>Preciso de falar com um médico</h3>
-                  <p className="lon-need-desc">Sintomas, dúvidas, medicação, exames ou acompanhamento.</p>
-                </header>
-                <div className="lon-need-offers">
-                  <article className="lon-need-offer">
-                    <Image className="lon-need-offer-img" src="/image/consulta-clinica-geral.webp" alt="" width={800} height={800} />
-                    <div className="lon-need-offer-body">
-                      <h4>Medicina de Longevidade</h4>
-                      <p className="lon-need-offer-price">39 € · 30 min</p>
-                      <Link href="/longevidade" className="lon-btn lon-btn-dark lon-btn-sm">Ver mais</Link>
-                    </div>
-                  </article>
-                  <article className="lon-need-offer">
-                    <Image className="lon-need-offer-img" src="/image/consulta-telemedicina.webp" alt="" width={800} height={800} />
-                    <div className="lon-need-offer-body">
-                      <h4>Consulta Médica Urgente</h4>
-                      <p className="lon-need-offer-price">39 €</p>
-                      <Link href="/urgent-care" className="lon-btn lon-btn-dark lon-btn-sm">Ver mais</Link>
-                    </div>
-                  </article>
+              {/* Quick Access Cards */}
+              <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="flex items-center gap-4 rounded-2xl border border-white/20 bg-white/10 p-4 text-white backdrop-blur-xl">
+                  <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-blue-500/90 text-white">
+                    💊
+                  </div>
+                  <div>
+                    <p className="font-bold">Consultas Médicas</p>
+                    <p className="text-sm text-white/75">Longevidade e urgentes</p>
+                  </div>
                 </div>
-              </article>
-
-              {/* Psicologia */}
-              <article className="lon-need-block" id="lon-need-psico">
-                <header className="lon-need-copy">
-                  <span className="lon-need-icon" aria-hidden="true">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/>
-                    </svg>
-                  </span>
-                  <h3>Sinto-me triste ou ansioso</h3>
-                  <p className="lon-need-desc">Ansiedade, stress, burnout ou a vontade de falar com alguém.</p>
-                </header>
-                <div className="lon-need-offers">
-                  <article className="lon-need-offer">
-                    <Image className="lon-need-offer-img" src="/image/guide/blog/sinais-de-burnout-no-trabalho-remoto-destaque.webp" alt="" width={800} height={800} />
-                    <div className="lon-need-offer-body">
-                      <h4>Consulta de Psicologia</h4>
-                      <p className="lon-need-offer-price">56 € · 45 min</p>
-                      <Link href="/psicologia" className="lon-btn lon-btn-dark lon-btn-sm">Ver mais</Link>
-                    </div>
-                  </article>
+                
+                <div className="flex items-center gap-4 rounded-2xl border border-white/20 bg-white/10 p-4 text-white backdrop-blur-xl">
+                  <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-orange-500/90 text-white">
+                    ✨
+                  </div>
+                  <div>
+                    <p className="font-bold">Psicologia</p>
+                    <p className="text-sm text-white/75">Apoio emocional contínuo</p>
+                  </div>
                 </div>
-              </article>
-
-              {/* Nutrição */}
-              <article className="lon-need-block" id="lon-need-nutricao">
-                <header className="lon-need-copy">
-                  <span className="lon-need-icon" aria-hidden="true">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
-                    </svg>
-                  </span>
-                  <h3>Quero comer melhor</h3>
-                  <p className="lon-need-desc">Perder peso ou criar hábitos mais saudáveis, com acompanhamento.</p>
-                </header>
-                <div className="lon-need-offers">
-                  <article className="lon-need-offer">
-                    <Image className="lon-need-offer-img" src="/image/nutricao-consulta.webp" alt="" width={800} height={800} />
-                    <div className="lon-need-offer-body">
-                      <h4>Consulta de Nutrição</h4>
-                      <p className="lon-need-offer-price">45 € · 30 min</p>
-                      <Link href="/nutricao" className="lon-btn lon-btn-dark lon-btn-sm">Ver mais</Link>
-                    </div>
-                  </article>
-                  <article className="lon-need-offer">
-                    <Image className="lon-need-offer-img" src="/image/nutricao-emagrecimento.webp" alt="" width={800} height={800} />
-                    <div className="lon-need-offer-body">
-                      <h4>Programa Integrado</h4>
-                      <p className="lon-need-offer-price">490 € · 6 meses</p>
-                      <p className="lon-need-offer-desc">Médico + nutrição</p>
-                      <Link href="/nutricao#programa" className="lon-btn lon-btn-dark lon-btn-sm">Ver mais</Link>
-                    </div>
-                  </article>
+                
+                <div className="flex items-center gap-4 rounded-2xl border border-white/20 bg-white/10 p-4 text-white backdrop-blur-xl">
+                  <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-green-500/90 text-white">
+                    🥗
+                  </div>
+                  <div>
+                    <p className="font-bold">Nutrição</p>
+                    <p className="text-sm text-white/75">Planos personalizados</p>
+                  </div>
                 </div>
-              </article>
-
-              {/* Medicina do Viajante */}
-              <article className="lon-need-block" id="lon-need-viagem">
-                <header className="lon-need-copy">
-                  <span className="lon-need-icon" aria-hidden="true">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
-                    </svg>
-                  </span>
-                  <h3>Vou viajar</h3>
-                  <p className="lon-need-desc">Vacinação, prevenção e riscos associados ao destino.</p>
-                </header>
-                <div className="lon-need-offers">
-                  <article className="lon-need-offer">
-                    <Image className="lon-need-offer-img" src="/image/travel-clinic-mountain-bg.jpg" alt="" width={800} height={800} />
-                    <div className="lon-need-offer-body">
-                      <h4>Consulta do Viajante</h4>
-                      <p className="lon-need-offer-price">39 €</p>
-                      <Link href="/travel" className="lon-btn lon-btn-dark lon-btn-sm">Ver mais</Link>
-                    </div>
-                  </article>
+                
+                <div className="flex items-center gap-4 rounded-2xl border border-emerald-300/30 bg-emerald-500/90 p-4 text-white backdrop-blur-xl">
+                  <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white/20 text-white">
+                    📅
+                  </div>
+                  <div>
+                    <p className="font-bold">Próximos horários</p>
+                    <p className="text-sm text-white/90">Disponível hoje</p>
+                  </div>
                 </div>
-              </article>
-
-              {/* Quiz */}
-              <article className="lon-need-block" id="lon-need-quiz">
-                <header className="lon-need-copy">
-                  <span className="lon-need-icon" aria-hidden="true">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round">
-                      <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>
-                    </svg>
-                  </span>
-                  <h3>Não sei o que preciso</h3>
-                  <p className="lon-need-desc">Faça um teste rápido e descubra o caminho certo.</p>
-                </header>
-                <div className="lon-need-offers">
-                  <article className="lon-need-offer">
-                    <Image className="lon-need-offer-img" src="/image/hero-bay.webp" alt="" width={800} height={800} />
-                    <div className="lon-need-offer-body">
-                      <h4>Teste de Burnout</h4>
-                      <p className="lon-need-offer-desc">5 minutos · resultado imediato</p>
-                      <Link href="/quizzes" className="lon-btn lon-btn-dark lon-btn-sm">Fazer teste</Link>
-                    </div>
-                  </article>
-                </div>
-              </article>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Testimonials - OLD DESIGN */}
-        <section className="lon-social-proof" aria-labelledby="lon-testimonials-title">
-          <div className="lon-container">
-            <header className="lon-section-header">
-              <h2 id="lon-testimonials-title">Ser ouvido faz diferença</h2>
-              <p className="lon-section-lead">Clientes reais verificados pelo Trustpilot</p>
-            </header>
-            <div className="lon-testimonials">
-              <blockquote className="lon-testimonial">
-                <p>"A doutora que me atendeu era super simpática, muito clara na abordagem do tema e esclareceu-me todas as dúvidas. Sem dúvida voltarei a contactar-vos."</p>
-                <footer>
-                  <cite>Paciente verificada · Junho de 2026</cite>
+        {/* Services Section - MODERN */}
+        <section id="especialidades" className="px-5 py-20 md:px-8 md:py-28 bg-gray-50">
+          <div className="mx-auto max-w-6xl">
+            <div className="grid gap-8 md:grid-cols-[1fr_1.1fr] md:items-end">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-orange-500">Especialidades</p>
+                <h2 className="mt-3 text-4xl font-extrabold leading-tight text-gray-900 md:text-6xl">
+                  Como se sente hoje?
+                </h2>
+              </div>
+              <p className="max-w-xl text-lg leading-relaxed text-gray-600">
+                Escolha a área que melhor descreve o seu momento. Nós ajudamos a encontrar o profissional certo.
+              </p>
+            </div>
+            
+            <div className="mt-12 grid gap-5 md:grid-cols-3">
+              {services.map(({ title, description, price, icon, tone, href }) => (
+                <Link 
+                  key={title}
+                  href={href}
+                  className="group flex min-h-80 flex-col justify-between rounded-3xl border border-gray-200 bg-white p-6 shadow-sm transition-all hover:shadow-xl md:p-7"
+                >
+                  <div>
+                    <div className={`flex size-14 items-center justify-center rounded-2xl text-2xl ${tone}`}>
+                      {icon}
+                    </div>
+                    <h3 className="mt-8 text-2xl font-bold text-gray-900">{title}</h3>
+                    <p className="mt-3 leading-relaxed text-gray-600">{description}</p>
+                  </div>
+                  <div className="mt-8 flex items-center justify-between border-t border-gray-200 pt-5">
+                    <span className="text-sm font-bold text-gray-900">{price}</span>
+                    <span className="flex size-10 items-center justify-center rounded-full bg-orange-500 text-white transition-transform group-hover:translate-x-1">
+                      <svg className="size-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                      </svg>
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Trust Section */}
+        <section className="px-5 py-20 md:px-8 md:py-28 bg-gray-900 text-white">
+          <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-[1.1fr_0.9fr] md:items-center">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wider text-orange-400">Cuidado sem distância</p>
+              <h2 className="mt-4 max-w-3xl text-4xl font-extrabold leading-tight md:text-6xl">
+                A excelência clínica portuguesa, onde quer que esteja.
+              </h2>
+            </div>
+            <div className="grid gap-3">
+              {["Profissionais certificados", "Consultas sem pressa", "Acompanhamento contínuo"].map((item, index) => (
+                <div className="flex items-center gap-5 border-b border-white/20 py-5" key={item}>
+                  <span className="text-sm font-bold text-orange-400">0{index + 1}</span>
+                  <p className="text-lg font-semibold">{item}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials */}
+        <section className="px-5 py-20 md:px-8 md:py-28 bg-white">
+          <div className="mx-auto max-w-6xl">
+            <div className="text-center mb-16">
+              <p className="text-xs font-bold uppercase tracking-wider text-orange-500">Testemunhos</p>
+              <h2 className="mt-4 text-4xl font-extrabold text-gray-900 md:text-5xl">
+                Ser ouvido faz diferença
+              </h2>
+              <p className="mt-4 text-gray-600">Clientes reais verificados pelo Trustpilot</p>
+            </div>
+            
+            <div className="grid gap-8 md:grid-cols-2">
+              <blockquote className="rounded-3xl border border-gray-200 bg-gray-50 p-8">
+                <p className="text-lg leading-relaxed text-gray-700">
+                  "A doutora que me atendeu era super simpática, muito clara na abordagem do tema e esclareceu-me todas as dúvidas. Sem dúvida voltarei a contactar-vos."
+                </p>
+                <footer className="mt-6 text-sm font-medium text-gray-500">
+                  Paciente verificada · Junho de 2026
                 </footer>
               </blockquote>
-              <blockquote className="lon-testimonial">
-                <p>"Consegui marcar a consulta para o próprio dia e, no final, tive também a prescrição das vacinas de que precisava. Muito simpática, atenciosa e profissional."</p>
-                <footer>
-                  <cite>Miguel, via Trustpilot · Setembro de 2026</cite>
+              
+              <blockquote className="rounded-3xl border border-gray-200 bg-gray-50 p-8">
+                <p className="text-lg leading-relaxed text-gray-700">
+                  "Consegui marcar a consulta para o próprio dia e, no final, tive também a prescrição das vacinas de que precisava. Muito simpática, atenciosa e profissional."
+                </p>
+                <footer className="mt-6 text-sm font-medium text-gray-500">
+                  Miguel, via Trustpilot · Setembro de 2026
                 </footer>
               </blockquote>
             </div>
           </div>
         </section>
 
-        {/* Why LON - OLD DESIGN with NEW CONTENT */}
-        <section className="lon-why" aria-labelledby="lon-why-title">
-          <div className="lon-container">
-            <header className="lon-section-header">
-              <h2 id="lon-why-title">Uma clínica online, com relação humana</h2>
-            </header>
-            <div className="lon-features">
-              <article className="lon-feature">
-                <h3>Profissionais em quem pode confiar</h3>
-                <p>Qualificados e inscritos nas respetivas Ordens.</p>
-              </article>
-              <article className="lon-feature">
-                <h3>Uma história, não apenas uma consulta</h3>
-                <p>Conhecer o contexto permite um acompanhamento mais consistente.</p>
-              </article>
-              <article className="lon-feature">
-                <h3>Continuidade dos cuidados</h3>
-                <p>Quando volta, o acompanhamento continua — sem recomeçar do zero.</p>
-              </article>
-              <article className="lon-feature">
-                <h3>Várias áreas de saúde</h3>
-                <p>Medicina, saúde mental e nutrição no mesmo espaço.</p>
-              </article>
-              <article className="lon-feature">
-                <h3>Sem deslocações</h3>
-                <p>Computador, tablet ou smartphone, onde quer que esteja.</p>
-              </article>
-              <article className="lon-feature">
-                <h3>Cuidado personalizado</h3>
-                <p>Cada consulta parte da situação concreta de cada pessoa.</p>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        {/* Final CTA - OLD DESIGN */}
-        <section className="lon-cta-final" aria-labelledby="lon-cta-title">
-          <div className="lon-container">
-            <h2 id="lon-cta-title">Quando precisar, estamos aqui</h2>
-            <p className="lon-cta-lead">Uma dúvida de saúde, um sintoma ou simplesmente a vontade de cuidar melhor de si.</p>
-            <div className="lon-cta-actions">
-              <Link href="/marcar" className="lon-btn lon-btn-dark lon-btn-lg">
+        {/* Final CTA */}
+        <section className="px-5 py-20 md:px-8 md:py-28 bg-orange-500 text-white text-center">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="text-4xl font-extrabold md:text-6xl">
+              Quando precisar, estamos aqui
+            </h2>
+            <p className="mt-6 text-xl leading-relaxed text-white/90">
+              Uma dúvida de saúde, um sintoma ou simplesmente a vontade de cuidar melhor de si.
+            </p>
+            <div className="mt-10 flex flex-wrap justify-center gap-4">
+              <Link 
+                href="/marcar" 
+                className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-base font-semibold text-orange-600 shadow-lg transition-transform hover:scale-105"
+              >
                 Marcar consulta
+                <svg className="size-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
               </Link>
-              <Link href="/patient-portal" className="lon-btn lon-btn-ghost lon-btn-lg">
+              <Link 
+                href="/patient-portal" 
+                className="inline-flex items-center gap-2 rounded-full border-2 border-white/40 bg-white/10 px-8 py-4 text-base font-semibold text-white backdrop-blur-sm transition-all hover:bg-white/20"
+              >
                 Fale com a nossa equipa →
               </Link>
             </div>
