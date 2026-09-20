@@ -1859,3 +1859,33 @@ html.lenis body {
         padding: 72px 0;
     }
 }
+
+/* 3-column grid support for nutrition, longevity, urgent care */
+.nutri-process-grid,
+.long-process-grid,
+.urgent-process-grid {
+    display: grid;
+    gap: 24px;
+    grid-template-columns: 1fr;
+    margin-bottom: 48px;
+}
+
+@media (min-width: 940px) {
+    .nutri-process-grid,
+    .long-process-grid,
+    .urgent-process-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+    }
+}
+
+.nutri-process-card,
+.long-process-card,
+.urgent-process-card {
+    background: var(--psi-cream);
+    border-radius: var(--psi-radius-lg);
+    padding: 32px 28px 36px;
+    box-shadow: none;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, background 0.25s ease;
+}
+

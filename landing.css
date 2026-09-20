@@ -5013,8 +5013,6 @@ body.lon-home .dr-hero {
 .lon-home #como-funciona .lon-how-steps li:nth-child(1) { grid-column: 1; grid-row: 1; }
 .lon-home #como-funciona .lon-how-steps li:nth-child(2) { grid-column: 3; grid-row: 1; }
 .lon-home #como-funciona .lon-how-steps li:nth-child(3) { grid-column: 5; grid-row: 1; }
-.lon-home #como-funciona .lon-how-steps li:nth-child(4) { grid-column: 1; grid-row: 2; }
-.lon-home #como-funciona .lon-how-steps li:nth-child(5) { grid-column: 3; grid-row: 2; }
 
 .lon-home #como-funciona .lon-how-box {
     position: relative;
@@ -5048,8 +5046,7 @@ body.lon-home .dr-hero {
 }
 
 .lon-home #como-funciona .lon-how-steps li:nth-child(1)::after,
-.lon-home #como-funciona .lon-how-steps li:nth-child(2)::after,
-.lon-home #como-funciona .lon-how-steps li:nth-child(4)::after {
+.lon-home #como-funciona .lon-how-steps li:nth-child(2)::after {
     content: "→";
     position: absolute;
     right: -1.15rem;
@@ -5147,8 +5144,7 @@ body.lon-home #como-funciona .lon-how-step-num {
     }
 
     .lon-home #como-funciona .lon-how-steps li:nth-child(1)::after,
-    .lon-home #como-funciona .lon-how-steps li:nth-child(2)::after,
-    .lon-home #como-funciona .lon-how-steps li:nth-child(4)::after {
+    .lon-home #como-funciona .lon-how-steps li:nth-child(2)::after {
         display: none;
     }
 }
