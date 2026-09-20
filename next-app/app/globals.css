@@ -1,93 +1,209 @@
 @import "tailwindcss";
 
+/* ========================================
+   LON CLINIC - MODERN DESIGN SYSTEM
+   Cohesive, Premium, Minimal
+   ======================================== */
+
 :root {
-  /* LON Clinic Brand Colors */
-  --primary: #F09458;
-  --primary-dark: #e07d3e;
-  --text: #1C1710;
-  --text-muted: #64748b;
-  --bg: #FFFFFF;
-  --bg-alt: #F9F8F6;
-  --border: #e2e8f0;
+  /* NEUTRALS - Soft & Muted */
+  --gray-50: #fafaf9;
+  --gray-100: #f5f5f4;
+  --gray-200: #e7e5e4;
+  --gray-300: #d6d3d1;
+  --gray-400: #a8a29e;
+  --gray-500: #78716c;
+  --gray-600: #57534e;
+  --gray-700: #44403c;
+  --gray-800: #292524;
+  --gray-900: #1c1917;
   
-  /* Specialty Colors */
-  --nutricao-light: #9FBD84;
-  --nutricao-dark: #3F574C;
-  --psicologia-light: #9BB1BC;
-  --psicologia-dark: #537284;
-  --longevidade-light: #ECD281;
-  --longevidade-dark: #CBB068;
-  --urgente-light: #BD4f4F;
-  --urgente-dark: #A5584E;
-  --travel-light: #A794C9;
-  --travel-dark: #405266;
+  /* BRAND - Warm & Earthy */
+  --primary: #d97757;
+  --primary-light: #e89b7d;
+  --primary-dark: #c56647;
   
-  /* Spacing */
-  --space-xs: 0.5rem;
-  --space-sm: 1rem;
-  --space-md: 1.5rem;
-  --space-lg: 2.5rem;
-  --space-xl: 4rem;
-  --space-2xl: 6rem;
+  /* SPECIALTY - Soft Tones */
+  --green-soft: #9FBD84;
+  --green-muted: #88a774;
+  --blue-soft: #8FA8B3;
+  --blue-muted: #7a93a0;
+  --beige-soft: #D4B896;
+  --beige-muted: #c5a684;
   
-  /* Radius */
-  --radius-sm: 0.5rem;
-  --radius-md: 1rem;
-  --radius-lg: 1.5rem;
-  --radius-xl: 2rem;
+  /* BACKGROUNDS - Layered */
+  --bg-base: #ffffff;
+  --bg-soft: #fafaf9;
+  --bg-muted: #f5f5f4;
+  
+  /* TEXT - Hierarchy */
+  --text-primary: #1c1917;
+  --text-secondary: #57534e;
+  --text-tertiary: #78716c;
+  --text-muted: #a8a29e;
 }
 
 @theme inline {
+  /* Tailwind Integration */
   --color-primary: var(--primary);
   --color-primary-dark: var(--primary-dark);
-  --color-text: var(--text);
-  --color-text-muted: var(--text-muted);
-  --color-bg: var(--bg);
-  --color-bg-alt: var(--bg-alt);
-  --color-border: var(--border);
-  
-  --font-sans: 'Inter', system-ui, sans-serif;
-  
-  --radius-sm: var(--radius-sm);
-  --radius-md: var(--radius-md);
-  --radius-lg: var(--radius-lg);
-  --radius-xl: var(--radius-xl);
+  --color-text: var(--text-primary);
+  --color-text-muted: var(--text-tertiary);
+  --color-bg: var(--bg-base);
+  --color-bg-alt: var(--bg-soft);
+  --color-border: var(--gray-200);
+}
+
+/* ========================================
+   BASE & TYPOGRAPHY
+   ======================================== */
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 16px;
   line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: 'cv11', 'ss01';
+  color: var(--text-primary);
+  background-color: var(--bg-base);
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   font-optical-sizing: auto;
+  font-weight: 400;
 }
 
-/* MODERN TYPOGRAPHY */
+/* Headings - Modern Hierarchy */
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  margin: 0;
 }
 
 h1 {
-  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-size: clamp(2.5rem, 6vw, 5.5rem);
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
 }
 
 h2 {
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: clamp(2rem, 5vw, 4rem);
   font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
 }
 
-/* MODERN ANIMATIONS */
+h3 {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+h4 {
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  font-weight: 600;
+}
+
+/* Body Text - Refined */
+p {
+  margin: 0 0 1.25rem 0;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.lead {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: var(--text-tertiary);
+  font-weight: 400;
+}
+
+small, .text-sm {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+}
+
+/* ========================================
+   MODERN COMPONENTS
+   ======================================== */
+
+/* Buttons - Minimal & Clean */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 0.875rem 2rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  border-radius: 624.9375rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 2px 8px rgba(217, 119, 87, 0.15);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  box-shadow: 0 4px 16px rgba(217, 119, 87, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--text-primary);
+  border: 1.5px solid var(--gray-200);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.btn-secondary:hover {
+  border-color: var(--gray-300);
+  background: var(--bg-soft);
+}
+
+/* Cards - Organic & Soft */
+.card {
+  background: white;
+  border-radius: 2rem;
+  padding: 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+/* Glassmorphism - Subtle */
+.glass {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
@@ -96,19 +212,16 @@ h2 {
 }
 
 .animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
+  animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-/* MODERN GLASSMORPHISM */
-.glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
+/* ========================================
+   UTILITIES
+   ======================================== */
 
-/* MODERN SHADOWS */
+/* Shadows - Soft & Natural */
 .shadow-premium {
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 8px 20px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 .shadow-hover {
@@ -116,31 +229,65 @@ h2 {
 }
 
 .shadow-hover:hover {
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.12), 0 10px 30px rgba(0, 0, 0, 0.08);
-  transform: translateY(-8px);
+  box-shadow: 0 20px 64px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.06);
+  transform: translateY(-4px);
 }
 
-/* Mobile bottom padding for floating CTA */
+/* Horizontal Scroll */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.snap-x {
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+}
+
+/* Container */
+.container-responsive {
+  width: 100%;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .container-responsive {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Mobile Spacing */
 @media (max-width: 1023px) {
   main {
     padding-bottom: 96px;
   }
 }
 
-/* HORIZONTAL SCROLL UTILITIES */
-.scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+/* ========================================
+   COLOR SYSTEM - Section Backgrounds
+   ======================================== */
+
+.bg-green-soft {
+  background-color: #f0f4ec;
 }
 
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+.bg-blue-soft {
+  background-color: #eef2f5;
 }
 
-.snap-x {
-  scroll-snap-type: x mandatory;
+.bg-beige-soft {
+  background-color: #f7f3ed;
 }
 
-.snap-mandatory {
-  scroll-behavior: smooth;
+.bg-warm-soft {
+  background-color: #faf8f5;
 }
