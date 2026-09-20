@@ -67,65 +67,83 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Conditions Section - HORIZONTAL CARDS */}
+      {/* Conditions Section - HORIZONTAL SCROLL */}
       <section className="py-24 lg:py-32 bg-[#FDFCFB]">
         <div className="max-w-[1400px] mx-auto px-6">
           {/* Section Header */}
-          <div className="mb-16">
+          <div className="mb-12">
             <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-[#1C1710] mb-4 tracking-[-0.02em] max-w-[800px]">
               A LON Clinic é o seu parceiro na <span className="text-[var(--primary)]">saúde, força e vitalidade</span>
             </h2>
           </div>
 
-          {/* Conditions Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            <ConditionCard
-              title="Medicina Funcional"
-              imageSrc="/image/consulta-clinica-geral.webp"
-              imageAlt="Medicina funcional"
-              href="/longevidade"
-              bgColor="#E8E3DA"
-            />
-            
-            <ConditionCard
-              title="Perda de Peso"
-              imageSrc="/image/nutricao-alimentos.webp"
-              imageAlt="Perda de peso"
-              href="/nutricao"
-              bgColor="#E8F1E8"
-            />
-            
-            <ConditionCard
-              title="Saúde Intestinal"
-              imageSrc="/image/consulta-telemedicina-mesa.webp"
-              imageAlt="Saúde intestinal"
-              href="/nutricao"
-              bgColor="#F5E8DC"
-            />
-            
-            <ConditionCard
-              title="Ansiedade"
-              imageSrc="/image/psi-choice-individual.webp"
-              imageAlt="Ansiedade"
-              href="/psicologia"
-              bgColor="#D9E8F5"
-            />
-            
-            <ConditionCard
-              title="Tristeza"
-              imageSrc="/image/hero-run.webp"
-              imageAlt="Tristeza"
-              href="/psicologia"
-              bgColor="#E8D9F5"
-            />
-            
-            <ConditionCard
-              title="Inflamação"
-              imageSrc="/image/hero-bay.webp"
-              imageAlt="Inflamação"
-              href="/longevidade"
-              bgColor="#F5D9D9"
-            />
+          {/* Horizontal Scroll Container */}
+          <div className="relative -mx-6 px-6">
+            <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
+              <ConditionCard
+                title="Medicina Funcional"
+                imageSrc="/image/consulta-clinica-geral.webp"
+                imageAlt="Medicina funcional"
+                href="/longevidade"
+                bgColor="#E8E3DA"
+              />
+              
+              <ConditionCard
+                title="Perda de Peso"
+                imageSrc="/image/nutricao-alimentos.webp"
+                imageAlt="Perda de peso"
+                href="/nutricao"
+                bgColor="#E8F1E8"
+              />
+              
+              <ConditionCard
+                title="Saúde Intestinal"
+                imageSrc="/image/consulta-telemedicina-mesa.webp"
+                imageAlt="Saúde intestinal"
+                href="/nutricao"
+                bgColor="#F5E8DC"
+              />
+              
+              <ConditionCard
+                title="Ansiedade"
+                imageSrc="/image/psi-choice-individual.webp"
+                imageAlt="Ansiedade"
+                href="/psicologia"
+                bgColor="#D9E8F5"
+              />
+              
+              <ConditionCard
+                title="Tristeza"
+                imageSrc="/image/hero-run.webp"
+                imageAlt="Tristeza"
+                href="/psicologia"
+                bgColor="#E8D9F5"
+              />
+              
+              <ConditionCard
+                title="Inflamação"
+                imageSrc="/image/hero-bay.webp"
+                imageAlt="Inflamação"
+                href="/longevidade"
+                bgColor="#F5D9D9"
+              />
+
+              <ConditionCard
+                title="Medicina do Viajante"
+                imageSrc="/image/travel-clinic-mountain-bg-v2.png"
+                imageAlt="Medicina do viajante"
+                href="/travel-clinic"
+                bgColor="#E8F5F1"
+              />
+
+              <ConditionCard
+                title="Consulta de Urgência"
+                imageSrc="/image/consulta-urgente.webp"
+                imageAlt="Consulta urgente"
+                href="/urgent-care"
+                bgColor="#F5E8E8"
+              />
+            </div>
           </div>
         </div>
       </section>

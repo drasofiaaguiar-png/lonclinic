@@ -19,7 +19,7 @@ export default function ConditionCard({
   return (
     <Link 
       href={href}
-      className="group relative block rounded-[24px] overflow-hidden h-[340px] no-underline"
+      className="group relative block rounded-[24px] overflow-hidden flex-shrink-0 w-[280px] h-[280px] no-underline"
       style={{ backgroundColor: bgColor }}
     >
       {/* Background Image */}
@@ -29,7 +29,7 @@ export default function ConditionCard({
           alt={imageAlt}
           fill
           className="object-cover object-center transition-transform duration-700 group-hover:scale-110"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          sizes="280px"
         />
         {/* Subtle overlay */}
         <div className="absolute inset-0 bg-black/5" />
