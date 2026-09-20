@@ -40,16 +40,16 @@ export default function ServiceCard({
           className="object-cover object-center transition-transform duration-700 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, 33vw"
         />
-        {/* Dark gradient overlay for better text contrast */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        {/* Gradient overlay for better text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
       </div>
 
       {/* Glassmorphic Content Container */}
-      <div className="relative z-10 m-6 p-6 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.1)] transition-all duration-300 group-hover:bg-white/15 group-hover:backdrop-blur-2xl">
-        <h3 className="text-[28px] font-bold text-white mb-2 leading-tight">
+      <div className="relative z-10 m-6 p-6 rounded-2xl bg-white/15 backdrop-blur-2xl border border-white/30 shadow-lg transition-all duration-300 group-hover:bg-white/20 group-hover:backdrop-blur-3xl">
+        <h3 className="text-[26px] font-bold text-white mb-2 leading-tight tracking-tight">
           {title}
         </h3>
-        <p className="text-white/90 text-[15px] leading-relaxed mb-5">
+        <p className="text-white/95 text-[15px] leading-relaxed mb-5 font-light">
           {description}
         </p>
 
@@ -57,7 +57,11 @@ export default function ServiceCard({
         <div className="flex flex-wrap gap-3">
           <Link
             href={primaryCTA.href}
-            className="inline-flex items-center justify-center px-6 py-3 text-[14px] font-semibold text-[#1C1710] bg-white rounded-full hover:bg-white/95 transition-all duration-200 shadow-md no-underline"
+            className="inline-flex items-center justify-center px-5 py-2.5 text-[14px] font-semibold rounded-full transition-all duration-200 shadow-md no-underline"
+            style={{ 
+              backgroundColor: 'var(--primary)',
+              color: 'white'
+            }}
           >
             {primaryCTA.text}
           </Link>
@@ -65,7 +69,7 @@ export default function ServiceCard({
           {secondaryCTA && (
             <Link
               href={secondaryCTA.href}
-              className="inline-flex items-center justify-center px-6 py-3 text-[14px] font-semibold text-white bg-white/20 backdrop-blur-sm border border-white/30 rounded-full hover:bg-white/30 transition-all duration-200 no-underline"
+              className="inline-flex items-center justify-center px-5 py-2.5 text-[14px] font-semibold text-white bg-white/20 backdrop-blur-sm border border-white/40 rounded-full hover:bg-white/30 transition-all duration-200 no-underline"
             >
               {secondaryCTA.text}
             </Link>

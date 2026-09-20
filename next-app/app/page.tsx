@@ -26,10 +26,10 @@ export default function HomePage() {
         <div className="max-w-[1400px] mx-auto px-6">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-[#1C1710] mb-4 tracking-[-0.02em]">
-              Os nossos serviços <span className="text-[var(--primary)]">mais procurados</span>
+            <h2 className="text-[clamp(2rem,5vw,4rem)] font-bold mb-4 tracking-[-0.03em]" style={{ color: 'var(--text-primary)' }}>
+              Os nossos serviços <span style={{ color: 'var(--primary)' }}>mais procurados</span>
             </h2>
-            <p className="text-xl text-[#1C1710]/60 max-w-[700px] mx-auto leading-relaxed">
+            <p className="text-xl leading-relaxed max-w-[700px] mx-auto" style={{ color: 'var(--text-tertiary)' }}>
               Cuidados de saúde integrados, online e acessíveis para o que realmente precisa.
             </p>
           </div>
@@ -70,12 +70,12 @@ export default function HomePage() {
       </section>
 
       {/* Conditions Section - HORIZONTAL SCROLL */}
-      <section className="py-24 lg:py-32 bg-[#FDFCFB]">
+      <section className="py-24 lg:py-32" style={{ backgroundColor: 'var(--bg-soft)' }}>
         <div className="max-w-[1400px] mx-auto px-6">
           {/* Section Header */}
           <div className="mb-12">
-            <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-[#1C1710] mb-4 tracking-[-0.02em] max-w-[800px]">
-              A LON Clinic é o seu parceiro na <span className="text-[var(--primary)]">saúde, força e vitalidade</span>
+            <h2 className="text-[clamp(2rem,5vw,4rem)] font-bold mb-4 tracking-[-0.03em] max-w-[800px]" style={{ color: 'var(--text-primary)' }}>
+              A LON Clinic é o seu parceiro na <span style={{ color: 'var(--primary)' }}>saúde, força e vitalidade</span>
             </h2>
           </div>
 
@@ -151,14 +151,14 @@ export default function HomePage() {
       </section>
 
       {/* Results Section - GREEN */}
-      <section className="py-24 lg:py-32 bg-[#3F5952]">
+      <section className="py-24 lg:py-32 bg-green-soft">
         <div className="max-w-[1400px] mx-auto px-6">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-extrabold text-white mb-4 tracking-[-0.02em]">
-              Os melhores resultados, <span className="text-[#A8C4B5]">histórias reais</span>
+            <h2 className="text-[clamp(2rem,5vw,4rem)] font-bold text-white mb-4 tracking-[-0.03em]">
+              Os melhores resultados, <span style={{ color: 'var(--green-muted)', opacity: 0.9 }}>histórias reais</span>
             </h2>
-            <p className="text-xl text-white/80 max-w-[700px] mx-auto leading-relaxed">
+            <p className="text-xl text-white/90 max-w-[700px] mx-auto leading-relaxed">
               Pessoas reais que transformaram a sua saúde com a LON Clinic.
             </p>
           </div>
