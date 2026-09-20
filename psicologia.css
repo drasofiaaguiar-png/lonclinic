@@ -1969,3 +1969,205 @@ html.lenis body {
     }
 }
 
+
+/* Hero with background image */
+.psi-hero-with-bg {
+    position: relative;
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.psi-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.psi-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(155, 177, 188, 0.85) 0%, rgba(83, 114, 132, 0.9) 100%);
+    z-index: 2;
+}
+
+.psi-hero-container {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.psi-hero-content-center {
+    text-align: center;
+    color: white;
+}
+
+.psi-badge-white {
+    display: inline-block;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 24px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 24px;
+    backdrop-filter: blur(10px);
+}
+
+.psi-hero-title-white {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 20px;
+    color: white;
+}
+
+.psi-hero-subtitle-white {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin: 0 0 48px;
+    opacity: 0.95;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.psi-choice-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 800px;
+    margin: 0 auto 32px;
+}
+
+.psi-choice-card {
+    position: relative;
+    aspect-ratio: 4/3;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+}
+
+.psi-choice-card img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+}
+
+.psi-choice-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+    z-index: 2;
+    transition: background 0.3s ease;
+}
+
+.psi-choice-card:hover .psi-choice-overlay {
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.5) 100%);
+}
+
+.psi-choice-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+.psi-choice-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.psi-choice-content h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+}
+
+.psi-choice-arrow {
+    opacity: 0.9;
+    transition: transform 0.3s ease;
+}
+
+.psi-choice-card:hover .psi-choice-arrow {
+    transform: translate(4px, -4px);
+}
+
+.psi-crisis-white {
+    font-size: 0.875rem;
+    opacity: 0.9;
+    color: white;
+}
+
+.psi-crisis-white a {
+    color: white;
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+/* Centered pricing */
+.psi-plans-centered {
+    justify-content: center;
+}
+
+.psi-price-notes-centered {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.psi-price-notes-centered p {
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .psi-choice-cards {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+    }
+    .psi-hero-title-white {
+        font-size: 1.875rem;
+    }
+    .psi-hero-with-bg {
+        min-height: 100vh;
+    }
+}
+
+
+/* Darker logo on psychology page */
+body.page-psychology .lon-logo-name {
+    color: #1C1710 !important;
+}
+
+body.page-psychology .lon-logo-lon,
+body.page-psychology .lon-logo-gevity,
+body.page-psychology .lon-logo-clinic {
+    color: #1C1710 !important;
+}
+

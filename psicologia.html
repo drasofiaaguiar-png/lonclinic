@@ -129,22 +129,38 @@
     </header>
 
     <main id="conteudo-principal">
-        <section class="psi-hero-clean" id="inicio">
-            <div class="lon-container">
-                <div class="psi-hero-content-centered">
-                    <p class="psi-badge-simple">Psicologia online</p>
-                    <h1 class="psi-hero-title">Conta-nos o que precisa.<br>Encontramos o psicólogo certo.</h1>
-                    <p class="psi-hero-lead">Consultas online, em português, sem lista de espera. Psicólogos inscritos na OPP.</p>
-                    <div class="psi-hero-ctas">
-                        <a href="/marcar/psicologia-mensal" class="lon-btn lon-btn-dark" data-cta="book">
-                            <span class="lon-btn-label">Apoio individual</span>
-                            <svg class="lon-btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M8 7h9v9"/></svg>
+        <section class="psi-hero-with-bg" id="inicio">
+            <picture>
+                <source media="(max-width: 939px)" srcset="/image/hero-bay.webp" width="768" height="1024">
+                <img class="psi-hero-bg" src="/image/hero-bay.webp" alt="Vista tranquila junto ao mar" loading="eager" decoding="async" fetchpriority="high" width="768" height="1024">
+            </picture>
+            <div class="psi-hero-overlay" aria-hidden="true"></div>
+            <div class="psi-hero-container">
+                <div class="psi-hero-content-center">
+                    <p class="psi-badge-white">Psicologia online</p>
+                    <h1 class="psi-hero-title-white">Conta-nos o que precisa.<br>Encontramos o psicólogo certo.</h1>
+                    <p class="psi-hero-subtitle-white">Consultas online, em português, sem lista de espera. Psicólogos inscritos na OPP.</p>
+                    
+                    <div class="psi-choice-cards">
+                        <a href="/marcar/psicologia-mensal" class="psi-choice-card" data-cta="individual">
+                            <img src="/image/psi-choice-individual.webp" alt="Apoio individual" loading="lazy">
+                            <div class="psi-choice-overlay"></div>
+                            <div class="psi-choice-content">
+                                <h3>Apoio individual</h3>
+                                <svg class="psi-choice-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
+                            </div>
                         </a>
-                        <a href="/marcar/terapia-casal" class="lon-btn lon-btn-ghost" data-cta="book">
-                            <span class="lon-btn-label">Terapia de casal</span>
+                        <a href="/marcar/terapia-casal" class="psi-choice-card" data-cta="casal">
+                            <img src="/image/psi-choice-casal.webp" alt="Terapia de casal" loading="lazy">
+                            <div class="psi-choice-overlay"></div>
+                            <div class="psi-choice-content">
+                                <h3>Terapia de casal</h3>
+                                <svg class="psi-choice-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
+                            </div>
                         </a>
                     </div>
-                    <p class="psi-crisis-note">Em crise? Ligue <a href="tel:112">112</a> ou SNS 24 · <a href="tel:808242424">808 24 24 24</a></p>
+                    
+                    <p class="psi-crisis-white">Em crise? Ligue <a href="tel:112">112</a> ou SNS 24 · <a href="tel:808242424">808 24 24 24</a></p>
                 </div>
             </div>
         </section>
@@ -177,7 +193,7 @@
         <section class="psi-section psi-plans" id="preco" aria-labelledby="psi-plans-title">
             <div class="lon-container">
                 <h2 id="psi-plans-title" class="psi-center-title psi-anim">Um plano que cresce consigo</h2>
-                <div class="psi-plans-grid psi-plans-grid--two">
+                <div class="psi-plans-grid psi-plans-grid--two psi-plans-centered">
                     <article class="psi-plan-card psi-plan-card--hot psi-anim">
                         <span class="psi-plan-tag">preferido</span>
                         <p class="psi-plan-name">Individual · semanal</p>
@@ -192,7 +208,7 @@
                         <a href="/marcar/terapia-casal" class="psi-pill psi-pill-dark js-psi-cta" data-psi-cta="plan-casal">Começar</a>
                     </article>
                 </div>
-                <div class="psi-price-notes psi-anim">
+                <div class="psi-price-notes psi-price-notes-centered psi-anim">
                     <p><strong>Prefere sem compromisso semanal?</strong> Sessão pontual também disponível — individual 60€, casal 75€.</p>
                     <p class="psi-addon"><strong>Add-on médico</strong> — avaliação inicial, exames se clinicamente indicado, estudo de componente física associada, e iniciação de medicação se indicado.</p>
                 </div>
