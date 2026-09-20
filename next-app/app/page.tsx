@@ -122,21 +122,22 @@ export default function HomePage() {
         </section>
 
         {/* Services Section - MODERN */}
-        <section id="especialidades" className="px-5 py-20 md:px-8 md:py-28 bg-gray-50">
+        <section id="especialidades" className="px-5 py-20 md:px-8 md:py-32 bg-[#F5F1E8]">
           <div className="mx-auto max-w-6xl">
-            <div className="grid gap-8 md:grid-cols-[1fr_1.1fr] md:items-end">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-orange-500">Especialidades</p>
-                <h2 className="mt-3 text-4xl font-extrabold leading-tight text-gray-900 md:text-6xl">
-                  Como se sente hoje?
-                </h2>
-              </div>
-              <p className="max-w-xl text-lg leading-relaxed text-gray-600">
-                Escolha a área que melhor descreve o seu momento. Nós ajudamos a encontrar o profissional certo.
-              </p>
+            {/* Intro Text */}
+            <div className="mb-20 text-center">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight" style={{ fontFamily: "'Open Sans', sans-serif" }}>
+                <span className="text-gray-400">Cuidamos de si de forma integral, juntando </span>
+                <span className="text-[#5a6b4a]">medicina, nutrição e psicologia</span>
+                <span className="text-gray-400"> numa abordagem </span>
+                <span className="text-[#5a6b4a]">holística e personalizada.</span>
+                <br />
+                <span className="text-[#5a6b4a]">100% online.</span>
+              </h2>
             </div>
             
-            <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {/* Service Cards */}
+            <div className="grid gap-6 md:grid-cols-3">
               {services.map(({ title, description, price, icon, tone, href }) => (
                 <Link 
                   key={title}
@@ -147,12 +148,12 @@ export default function HomePage() {
                     <div className={`flex size-14 items-center justify-center rounded-2xl text-2xl ${tone}`}>
                       {icon}
                     </div>
-                    <h3 className="mt-8 text-2xl font-bold text-gray-900">{title}</h3>
-                    <p className="mt-3 leading-relaxed text-gray-600">{description}</p>
+                    <h3 className="mt-8 text-2xl font-bold text-gray-900" style={{ fontFamily: "'Open Sans', sans-serif" }}>{title}</h3>
+                    <p className="mt-3 leading-relaxed text-gray-600" style={{ fontFamily: "'Open Sans', sans-serif" }}>{description}</p>
                   </div>
                   <div className="mt-8 flex items-center justify-between border-t border-gray-200 pt-5">
-                    <span className="text-sm font-bold text-gray-900">{price}</span>
-                    <span className="flex size-10 items-center justify-center rounded-full bg-orange-500 text-white transition-transform group-hover:translate-x-1">
+                    <span className="text-sm font-bold text-gray-900" style={{ fontFamily: "'Open Sans', sans-serif" }}>{price}</span>
+                    <span className="flex size-10 items-center justify-center rounded-full bg-red-600 text-white transition-transform group-hover:translate-x-1">
                       <svg className="size-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                       </svg>
