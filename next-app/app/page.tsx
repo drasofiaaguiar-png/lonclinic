@@ -1,5 +1,6 @@
 import HeroFullscreen from '@/components/modules/HeroFullscreen';
 import ServiceCard from '@/components/modules/ServiceCard';
+import TrustSection from '@/components/modules/TrustSection';
 import ConditionCard from '@/components/modules/ConditionCard';
 import ResultCard from '@/components/modules/ResultCard';
 import TransformationSection from '@/components/modules/TransformationSection';
@@ -26,10 +27,10 @@ export default function HomePage() {
         <div className="max-w-[1400px] mx-auto px-6">
           {/* Section Header */}
           <div className="text-center mb-16">
-            <h2 className="text-[clamp(2rem,5vw,4rem)] font-bold mb-4 tracking-[-0.03em]" style={{ color: 'var(--text-primary)' }}>
-              Os nossos serviços <span style={{ color: 'var(--primary)' }}>mais procurados</span>
+            <h2 className="text-[clamp(1.75rem,4vw,3rem)] font-semibold mb-3 tracking-[-0.02em]" style={{ color: 'var(--gray-700)' }}>
+              Os nossos serviços <span style={{ color: 'var(--primary)', fontWeight: 600 }}>mais procurados</span>
             </h2>
-            <p className="text-xl leading-relaxed max-w-[700px] mx-auto" style={{ color: 'var(--text-tertiary)' }}>
+            <p className="text-[17px] leading-relaxed max-w-[650px] mx-auto font-light" style={{ color: 'var(--gray-500)' }}>
               Cuidados de saúde integrados, online e acessíveis para o que realmente precisa.
             </p>
           </div>
@@ -68,6 +69,36 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Trust Section - BLUE */}
+      <TrustSection
+        features={[
+          {
+            title: "Profissionais em quem pode confiar",
+            description: "Qualificados e inscritos nas respetivas Ordens."
+          },
+          {
+            title: "Uma história, não apenas uma consulta",
+            description: "Conhecer o contexto permite um acompanhamento mais consistente."
+          },
+          {
+            title: "Continuidade dos cuidados",
+            description: "Quando volta, o acompanhamento continua — sem recomeçar do zero."
+          },
+          {
+            title: "Várias áreas de saúde",
+            description: "Medicina, saúde mental e nutrição no mesmo espaço."
+          },
+          {
+            title: "Sem deslocações",
+            description: "Computador, tablet ou smartphone, onde quer que esteja."
+          },
+          {
+            title: "Cuidado personalizado",
+            description: "Cada consulta parte da situação concreta de cada pessoa."
+          }
+        ]}
+      />
 
       {/* Conditions Section - HORIZONTAL SCROLL */}
       <section className="py-24 lg:py-32" style={{ backgroundColor: 'var(--bg-soft)' }}>

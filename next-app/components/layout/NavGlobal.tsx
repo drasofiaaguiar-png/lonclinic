@@ -93,30 +93,40 @@ export default function NavGlobal() {
                 </svg>
               </button>
 
-              {/* Mega Menu Dropdown */}
+              {/* Mega Menu Dropdown - FULL WIDTH */}
               {megaMenuOpen && (
                 <div
-                  className="absolute top-full left-1/2 -translate-x-1/2 mt-4 bg-white border border-[var(--border)] rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] p-6 w-[560px] grid grid-cols-2 gap-3"
+                  className="fixed left-0 right-0 top-[84px] bg-white border-t border-gray-200/50 shadow-lg z-50"
                   onMouseLeave={() => setMegaMenuOpen(false)}
                 >
-                  {specialties.map((specialty) => (
-                    <Link
-                      key={specialty.href}
-                      href={specialty.href}
-                      className="flex items-start gap-3 p-4 rounded-xl hover:bg-orange-50 transition-colors no-underline group"
-                      onClick={() => setMegaMenuOpen(false)}
-                    >
-                      <span className="text-2xl">{specialty.icon}</span>
-                      <div>
-                        <div className="font-semibold text-[var(--text)] group-hover:text-[var(--primary)] transition-colors mb-1">
-                          {specialty.title}
-                        </div>
-                        <div className="text-sm text-[var(--text-muted)]">
-                          {specialty.description}
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
+                  <div className="max-w-[1400px] mx-auto px-8 py-12">
+                    <div className="grid grid-cols-5 gap-6">
+                      {specialties.map((specialty) => (
+                        <Link
+                          key={specialty.href}
+                          href={specialty.href}
+                          className="group relative block rounded-2xl overflow-hidden h-[280px] no-underline"
+                          onClick={() => setMegaMenuOpen(false)}
+                        >
+                          {/* Background Image */}
+                          <div className="absolute inset-0">
+                            <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200" />
+                          </div>
+                          
+                          {/* Content */}
+                          <div className="relative z-10 h-full flex flex-col justify-end p-6 bg-gradient-to-t from-black/60 to-transparent">
+                            <div className="text-2xl mb-2">{specialty.icon}</div>
+                            <h4 className="font-bold text-white text-lg mb-1 leading-tight">
+                              {specialty.title}
+                            </h4>
+                            <p className="text-white/90 text-sm leading-snug">
+                              {specialty.description}
+                            </p>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               )}
             </div>

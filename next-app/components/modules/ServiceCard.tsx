@@ -46,10 +46,10 @@ export default function ServiceCard({
 
       {/* Glassmorphic Content Container */}
       <div className="relative z-10 m-6 p-6 rounded-2xl bg-white/15 backdrop-blur-2xl border border-white/30 shadow-lg transition-all duration-300 group-hover:bg-white/20 group-hover:backdrop-blur-3xl">
-        <h3 className="text-[26px] font-bold text-white mb-2 leading-tight tracking-tight">
+        <h3 className="text-white text-2xl font-bold mb-3 leading-none line-clamp-1">
           {title}
         </h3>
-        <p className="text-white/95 text-[15px] leading-relaxed mb-5 font-light">
+        <p className="text-white text-[15px] leading-snug mb-5 font-light line-clamp-2">
           {description}
         </p>
 

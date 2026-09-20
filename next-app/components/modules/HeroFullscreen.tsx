@@ -44,18 +44,18 @@ export default function HeroFullscreen({
             {eyebrow && (
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-1.5 h-1.5 rounded-full bg-white" />
-                <span className="text-white/95 text-xs font-semibold uppercase tracking-[0.15em]">
+                <span className="text-white text-xs font-semibold uppercase tracking-[0.15em]">
                   {eyebrow}
                 </span>
               </div>
             )}
             
-            <h1 className="text-white leading-none">
-              <span className="block text-[clamp(3.5rem,9vw,8rem)] font-extrabold leading-[0.9] tracking-[-0.04em] mb-2">
+            <h1 className="text-white leading-[1.05]">
+              <span className="block text-[clamp(3rem,7vw,6.5rem)] font-extrabold leading-[1.05] tracking-[-0.04em]">
                 {title}
               </span>
               {titleItalic && (
-                <span className="block text-[clamp(3.5rem,9vw,8rem)] font-light italic leading-[0.9] tracking-[-0.02em]" style={{ fontFamily: 'Georgia, serif' }}>
+                <span className="block text-[clamp(3rem,7vw,6.5rem)] font-light italic leading-[1.05] tracking-[-0.02em]" style={{ fontFamily: 'Georgia, serif' }}>
                   {titleItalic}
                 </span>
               )}
