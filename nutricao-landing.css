@@ -299,14 +299,14 @@ body.nutri-landing {
     padding: 6px 12px; border-radius: 999px;
     background: var(--nx-mint); color: var(--nx-deep); border: 1px solid var(--nx-green-soft);
 }
-.nx-plan-name { font-size: 12px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--nx-deep); margin-bottom: 14px; }
-.nx-plan-title { font-family: var(--nx-display); font-size: 30px; font-weight: 600; line-height: 1.1; color: var(--nx-ink); margin-bottom: 18px; }
-.nx-plan-price { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--nx-border); }
+.nx-plan-name { font-size: 12px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--nx-deep); margin-bottom: 18px; }
+.nx-plan-title { font-family: var(--nx-display); font-size: 30px; font-weight: 600; line-height: 1.1; color: var(--nx-ink); margin-bottom: 22px; }
+.nx-plan-price { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid var(--nx-border); }
 .nx-plan-price strong { font-family: var(--nx-display); font-size: 54px; font-weight: 600; line-height: 1; letter-spacing: -1.5px; color: var(--nx-ink); }
 .nx-plan-price span { font-size: 13.5px; color: var(--nx-ink-soft); line-height: 1.4; }
 .nx-plan-price span b { display: block; color: var(--nx-ink); font-weight: 600; }
 
-.nx-plan-list { display: grid; gap: 11px; margin-bottom: 22px; }
+.nx-plan-list { display: grid; gap: 15px; margin-bottom: 26px; }
 .nx-plan-list li { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--nx-ink-soft); line-height: 1.5; }
 .nx-plan-list li::before {
     content: '✓'; flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center;
@@ -316,13 +316,14 @@ body.nutri-landing {
 .nx-plan-note {
     display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start;
     background: #fff; border: 1px dashed var(--nx-border-mid); border-radius: var(--nx-r);
-    padding: 12px 14px; font-size: 13px; line-height: 1.5; color: var(--nx-ink-soft); margin-bottom: 24px;
+    padding: 12px 14px; font-size: 13px; line-height: 1.5; color: var(--nx-ink-soft); margin-bottom: 28px;
 }
 .nx-plan-note svg { width: 18px; height: 18px; color: var(--nx-deep); margin-top: 1px; }
 .nx-plan-note b { color: var(--nx-ink); }
 
-.nx-plan .nx-btn { margin-top: auto; }
-.nx-plan-foot { text-align: center; font-size: 12px; color: var(--nx-ghost); margin-top: 12px; }
+.nx-plan-actions { display: grid; gap: 10px; margin-top: auto; }
+.nx-plan-actions .nx-btn svg { width: 16px; height: 16px; }
+.nx-plan-foot { text-align: center; font-size: 12px; color: var(--nx-ghost); margin-top: 16px; }
 
 /* Featured (dark glass) plan */
 .nx-plan--featured {
