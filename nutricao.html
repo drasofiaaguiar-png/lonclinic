@@ -13,7 +13,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acompanhamento Nutricional — nutricionistas dedicadas | Lon Clinic</title>
-    <meta name="description" content="Acompanhamento nutricional que se adapta à sua fase. 45€ por consulta, sempre — só a frequência muda. Quinzenal no início, mensal em manutenção.">
+    <meta name="description" content="Acompanhamento nutricional que se adapta à sua fase. Subscrição quinzenal a 45€ por consulta — passa a mensal quando atingir a fase de manutenção — ou Programa Completo com médico e nutrição.">
     <meta name="robots" content="index,follow,max-image-preview:large">
     <link rel="canonical" href="https://www.lonclinic.com/nutricao">
     <meta property="og:type" content="website">
@@ -28,11 +28,9 @@
     <link rel="stylesheet" href="/design-tokens.css?v=20260920">
     <link rel="stylesheet" href="/landing.css?v=20260906i">
     <link rel="stylesheet" href="/nav-global.css?v=20260919">
-    <link rel="stylesheet" href="/component-library.css?v=20260920">
     <link rel="stylesheet" href="/pillar-colors.css?v=20260921d">
-    <link rel="stylesheet" href="/ui-fixes-critical.css?v=20260920f">
-    <link rel="stylesheet" href="/psicologia.css?v=20260915c">
-    <link rel="stylesheet" href="/modern-layout.css?v=20260921">
+    <link rel="stylesheet" href="/nutricao-landing.css?v=20260921a">
+    <link rel="preload" as="image" href="/image/nutri-hero-scale.webp" type="image/webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -88,6 +86,11 @@
           "@type": "Question",
           "name": "A LON Clinic está registada e regulamentada?",
           "acceptedAnswer": { "@type": "Answer", "text": "Sim. A Lon Clinic está registada na Entidade Reguladora da Saúde (ERS) com o número 45475. Todas as nutricionistas são inscritas na Ordem dos Nutricionistas." }
+        },
+        {
+          "@type": "Question",
+          "name": "Posso cancelar a subscrição?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Sim. A subscrição não tem fidelização — pode pausar ou cancelar a qualquer momento. Se preferir experimentar primeiro, existe a consulta avulsa a 45€." }
         }
       ]
     }
@@ -127,98 +130,141 @@
     </header>
 
     <main id="conteudo-principal">
-        <section class="modern-hero" id="inicio" aria-labelledby="nutri-hero-title">
-            <div class="modern-container">
-                <div class="modern-hero-grid">
-                    <div class="modern-hero-content">
-                        <span class="modern-badge">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
-                            </svg>
-                            Nutricionistas dedicadas · acompanhamento contínuo
-                        </span>
-                        
-                        <h1 id="nutri-hero-title" class="modern-title-xl">Acompanhamento nutricional que se adapta à sua fase</h1>
-                        
-                        <p class="modern-lead">Consultas online, sem deslocações. 45€ por consulta, sempre — só a frequência muda consoante a fase em que está.</p>
-                        
-                        <div class="modern-btn-group">
-                            <a href="/marcar/nutricao-programa" class="modern-btn modern-btn--primary js-nutri-cta" data-nutri-cta="hero">
-                                Marcar consulta
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M7 17l10-10M8 7h9v9"/>
-                                </svg>
-                            </a>
-                            <a href="#como-funciona" class="modern-link">Comece Aqui</a>
+        <section class="nx-hero" id="inicio" aria-labelledby="nutri-hero-title">
+            <div class="nx-hero-bg" aria-hidden="true"></div>
+            <div class="nx-inner">
+                <div class="nx-hero-grid">
+                    <div class="nx-hero-left">
+                        <span class="nx-hero-pill"><i aria-hidden="true"></i>Nutricionistas dedicadas · acompanhamento contínuo</span>
+                        <h1 id="nutri-hero-title">Acompanhamento nutricional que se <em>adapta à sua fase</em></h1>
+                        <p class="nx-hero-lead">Consultas online, sem deslocações. Começa quinzenal, passa a mensal quando o plano estabiliza — sempre com a mesma nutricionista.</p>
+
+                        <div class="nx-hero-price">
+                            <strong>45€</strong>
+                            <span><b>por consulta · subscrição quinzenal</b>passa a mensal na fase de manutenção</span>
                         </div>
-                        
-                        <p class="modern-text">Nutrição baseada em ciência, adaptada aos seus objetivos e ao seu ritmo de vida. 100% online.</p>
-                        
-                        <ul class="modern-services">
-                            <li class="modern-tag">Consulta Avulsa</li>
-                            <li class="modern-tag">Acompanhamento Regular</li>
-                            <li class="modern-tag">Programa de Emagrecimento</li>
-                            <li class="modern-tag">Acompanhamento Completo</li>
+
+                        <div class="nx-hero-btns">
+                            <a href="/marcar/nutricao-programa" class="nx-btn nx-btn--white js-nutri-cta" data-nutri-cta="hero">
+                                Marcar consulta
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17l10-10M8 7h9v9"/></svg>
+                            </a>
+                            <a href="#preco" class="nx-btn nx-btn--ghost">Ver planos</a>
+                        </div>
+
+                        <ul class="nx-hero-trust">
+                            <li>Ordem dos Nutricionistas</li>
+                            <li>ERS nº 45475</li>
+                            <li>100% online</li>
+                            <li>Resposta no WhatsApp em &lt; 1h</li>
                         </ul>
                     </div>
-                    
-                    <div class="modern-hero-image">
-                        <img src="/image/nutricao-emagrecimento.webp" alt="Acompanhamento nutricional personalizado" loading="eager">
+
+                    <div class="nx-hero-visual">
+                        <figure class="nx-hero-photo">
+                            <span class="nx-hero-tag">Nutrição · Lon Clinic</span>
+                            <img src="/image/nutri-hero-scale.webp" alt="Nutricionista a pesar legumes frescos numa cozinha" width="682" height="1024" loading="eager" fetchpriority="high" decoding="async">
+                        </figure>
+                        <div class="nx-glass-card">
+                            <div>
+                                <p class="lbl">Próxima consulta</p>
+                                <p class="ttl">Videochamada · 45 min</p>
+                                <p class="sub">Plano personalizado e ajustes por chat entre consultas</p>
+                            </div>
+                            <a href="/marcar/nutricao-programa" class="nx-btn nx-btn--green js-nutri-cta" data-nutri-cta="hero-card">Começar</a>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <nav class="nx-hero-row" aria-label="Opções de nutrição">
+                <a href="/marcar/nutricao-consulta">
+                    <span class="ico" aria-hidden="true">🥗</span>
+                    <span class="lbl">Sem compromisso</span>
+                    <span class="ttl">Consulta avulsa</span>
+                    <span class="dsc">Uma consulta de 45€ para começar ou tirar dúvidas.</span>
+                </a>
+                <a href="#preco">
+                    <span class="ico" aria-hidden="true">📅</span>
+                    <span class="lbl">Fase inicial</span>
+                    <span class="ttl">Subscrição quinzenal</span>
+                    <span class="dsc">45€ por consulta, duas por mês. Passa a mensal na manutenção.</span>
+                </a>
+                <a href="#preco">
+                    <span class="ico" aria-hidden="true">🩺</span>
+                    <span class="lbl">Médico + nutrição</span>
+                    <span class="ttl">Programa completo</span>
+                    <span class="dsc">6 meses com avaliação médica, plano e reavaliação.</span>
+                </a>
+                <a href="#condicoes">
+                    <span class="ico" aria-hidden="true">🎯</span>
+                    <span class="lbl">Por condição</span>
+                    <span class="ttl">Nutrição especializada</span>
+                    <span class="dsc">Emagrecimento, SIBO, diabetes, menopausa e mais.</span>
+                </a>
+            </nav>
         </section>
 
+        <div class="nx-trust" aria-label="Garantias">
+            <div class="nx-inner">
+                <ul>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><strong>Registo ERS</strong> 45475</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Nutricionistas inscritas na <strong>Ordem</strong></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg><strong>Videochamada</strong> sem instalar apps</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/></svg>Apoio por <strong>WhatsApp</strong> entre consultas</li>
+                </ul>
+            </div>
+        </div>
 
-        <section class="modern-section modern-section--muted" id="como-funciona" aria-labelledby="nutri-process-title">
-            <div class="modern-container">
-                <h2 id="nutri-process-title" class="modern-title-lg">Como funciona</h2>
-                
-                <div class="modern-grid-auto modern-mt-12">
-                    <ol class="modern-steps">
-                        <li class="modern-step">
-                            <span class="modern-step-number">1</span>
-                            <div class="modern-step-content">
-                                <h3>Escolha o seu plano</h3>
-                                <p>Consulta avulsa ou acompanhamento contínuo. Se tiver dúvidas, <a href="https://wa.me/351910156711" target="_blank" rel="noopener">fale connosco no WhatsApp</a> — respondemos em menos de 1 hora.</p>
+
+        <section class="nx-section nx-how" id="como-funciona" aria-labelledby="nutri-process-title">
+            <div class="nx-inner">
+                <div class="nx-how-grid">
+                    <div>
+                        <header class="nx-head">
+                            <p class="nx-kicker">Como funciona</p>
+                            <h2 id="nutri-process-title" class="nx-h2">Três passos. <em>Sem deslocações.</em></h2>
+                            <p class="nx-sub">Do primeiro contacto ao plano personalizado, tudo acontece online — com a mesma nutricionista do início ao fim.</p>
+                        </header>
+                        <ol class="nx-steps">
+                            <li class="nx-step">
+                                <span class="nx-step-n" aria-hidden="true">1</span>
+                                <div>
+                                    <h3>Escolha o seu plano</h3>
+                                    <p>Consulta avulsa, subscrição quinzenal ou programa completo. Com dúvidas? <a href="https://wa.me/351910156711" target="_blank" rel="noopener">Fale connosco no WhatsApp</a> — respondemos em menos de 1 hora.</p>
+                                </div>
+                            </li>
+                            <li class="nx-step">
+                                <span class="nx-step-n" aria-hidden="true">2</span>
+                                <div>
+                                    <h3>Agende a sua consulta</h3>
+                                    <p>Escolha o dia e a hora que melhor lhe convêm. Recebe o link da videochamada por email — sem instalar nada.</p>
+                                </div>
+                            </li>
+                            <li class="nx-step">
+                                <span class="nx-step-n" aria-hidden="true">3</span>
+                                <div>
+                                    <h3>Comece a sua transformação</h3>
+                                    <p>Plano nutricional personalizado, ajustes entre consultas e passagem a mensal quando atingir a fase de manutenção.</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="nx-how-visual">
+                        <figure class="nx-photo-frame">
+                            <img src="/image/nutri-kitchen.webp" alt="Mulher a preparar uma salada fresca na cozinha" width="576" height="1024" loading="lazy" decoding="async">
+                        </figure>
+                        <div class="nx-appt" aria-hidden="true">
+                            <div class="nx-appt-head">
+                                <b>Terça · 17:00</b>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Videochamada</span>
                             </div>
-                        </li>
-                        <li class="modern-step">
-                            <span class="modern-step-number">2</span>
-                            <div class="modern-step-content">
-                                <h3>Agende a sua consulta</h3>
-                                <p>Escolha o dia e a hora que melhor lhe convêm.</p>
-                            </div>
-                        </li>
-                        <li class="modern-step">
-                            <span class="modern-step-number">3</span>
-                            <div class="modern-step-content">
-                                <h3>Comece a sua transformação</h3>
-                                <p>Plano nutricional personalizado e acompanhamento com a sua nutricionista.</p>
-                            </div>
-                        </li>
-                    </ol>
-                    
-                    <div class="modern-mockup">
-                        <div class="modern-mockup-image">
-                            <img src="/image/hero-bay.webp" alt="Consulta por videochamada" loading="lazy">
-                        </div>
-                        
-                        <div class="modern-appointment-card">
-                            <div class="modern-appointment-header">
-                                <span class="time">Terça · 17:00</span>
-                                <span class="type">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-                                    </svg>
-                                    Videochamada
-                                </span>
-                            </div>
-                            <div class="modern-appointment-body">
-                                <span class="modern-avatar">N</span>
-                                <div class="modern-appointment-info">
-                                    <span class="name">Nutricionista LON</span>
-                                    <span class="message">Como correu a semana com o novo plano?</span>
+                            <div class="nx-appt-body">
+                                <span class="nx-appt-avatar">N</span>
+                                <div>
+                                    <span class="nm">Nutricionista LON</span>
+                                    <span class="msg">Como correu a semana com o novo plano?</span>
                                 </div>
                             </div>
                         </div>
@@ -227,146 +273,195 @@
             </div>
         </section>
 
+        <section class="nx-section nx-plans" id="preco" aria-labelledby="nutri-plans-title">
+            <div class="nx-inner">
+                <header class="nx-head nx-head--center">
+                    <p class="nx-kicker">Planos</p>
+                    <h2 id="nutri-plans-title" class="nx-h2">Escolha o <em>seu caminho</em></h2>
+                    <p class="nx-sub">45€ por consulta, sempre. Só a frequência muda consoante a fase em que está — ou junte um médico ao percurso com o Programa Completo.</p>
+                </header>
 
-        <section class="modern-section" id="preco" aria-labelledby="nutri-plans-title">
-            <div class="modern-container">
-                <div class="modern-info-bar">
-                    <span class="modern-info-item">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
-                        </svg>
-                        100% Online, de qualquer lugar
-                    </span>
-                    <span class="modern-info-item">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2v20m0-20a10 10 0 0110 10m-10-10a10 10 0 00-10 10m10 10a10 10 0 0010-10m-10 10a10 10 0 01-10-10"/>
-                        </svg>
-                        45€ por consulta
-                    </span>
-                </div>
-                
-                <h2 id="nutri-plans-title" class="modern-title-lg modern-mt-8">Escolha o seu caminho</h2>
-                
-                <div class="modern-pricing-grid">
-                    <article class="modern-price-card">
-                        <p class="name">Só nutrição · fase inicial</p>
-                        <p class="value">45€</p>
-                        <p class="desc">Por consulta · quinzenal (90€/mês)</p>
-                        <a href="/marcar/nutricao-programa" class="modern-btn modern-btn--primary js-nutri-cta" data-nutri-cta="plan-nutricao">Marcar consulta</a>
-                    </article>
-                    
-                    <article class="modern-price-card modern-price-card--featured">
-                        <p class="name">Programa integrado · 6 meses</p>
-                        <p class="value">490€</p>
-                        <p class="desc">Médico + nutrição</p>
-                        <ul style="margin-top: 1rem; font-size: 0.875rem; line-height: 1.6; color: var(--color-text-secondary); list-style: none; padding: 0;">
-                            <li style="padding-left: 1.5rem; position: relative; margin-top: 0.5rem;">
-                                <span style="position: absolute; left: 0;">✓</span> Avaliação médica inicial
-                            </li>
-                            <li style="padding-left: 1.5rem; position: relative; margin-top: 0.5rem;">
-                                <span style="position: absolute; left: 0;">✓</span> 6 consultas quinzenais + 3 mensais
-                            </li>
-                            <li style="padding-left: 1.5rem; position: relative; margin-top: 0.5rem;">
-                                <span style="position: absolute; left: 0;">✓</span> Reavaliação médica aos 6 meses
-                            </li>
-                            <li style="padding-left: 1.5rem; position: relative; margin-top: 0.5rem;">
-                                <span style="position: absolute; left: 0;">✓</span> Add-on de psicologia opcional
-                            </li>
+                <div class="nx-plan-grid">
+                    <article class="nx-plan">
+                        <span class="nx-plan-badge">Mais escolhido</span>
+                        <p class="nx-plan-name">Subscrição · só nutrição</p>
+                        <h3 class="nx-plan-title">Acompanhamento quinzenal</h3>
+                        <div class="nx-plan-price">
+                            <strong>45€</strong>
+                            <span><b>por consulta · quinzenal</b>2 consultas por mês (90€/mês)</span>
+                        </div>
+                        <ul class="nx-plan-list">
+                            <li>Avaliação completa de hábitos e objetivos na primeira consulta</li>
+                            <li>Plano nutricional personalizado e revisto a cada consulta</li>
+                            <li>Ajustes por chat entre consultas</li>
+                            <li>Sempre a mesma nutricionista</li>
                         </ul>
-                        <a href="/marcar/nutricao-completo" class="modern-btn modern-btn--primary js-nutri-cta" data-nutri-cta="plan-programa">Conhecer o programa</a>
+                        <div class="nx-plan-note">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+                            <p><b>Depois passa a mensal.</b> Quando atingir a fase de manutenção, a subscrição passa a 1 consulta por mês (45€/mês) — decidido em conjunto com a sua nutricionista.</p>
+                        </div>
+                        <a href="/marcar/nutricao-programa" class="nx-btn nx-btn--green nx-btn--block js-nutri-cta" data-nutri-cta="plan-nutricao">Começar subscrição</a>
+                        <p class="nx-plan-foot">Sem fidelização · cancela quando quiser</p>
+                    </article>
+
+                    <article class="nx-plan nx-plan--featured">
+                        <span class="nx-plan-badge">Médico + nutrição</span>
+                        <p class="nx-plan-name">Programa completo · 6 meses</p>
+                        <h3 class="nx-plan-title">Programa integrado</h3>
+                        <div class="nx-plan-price">
+                            <strong>490€</strong>
+                            <span><b>programa de 6 meses</b>equipa médica e nutricional em conjunto</span>
+                        </div>
+                        <ul class="nx-plan-list">
+                            <li>Avaliação médica inicial</li>
+                            <li>6 consultas de nutrição quinzenais + 3 mensais</li>
+                            <li>Reavaliação médica aos 6 meses</li>
+                            <li>Add-on de psicologia opcional</li>
+                        </ul>
+                        <div class="nx-plan-note">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <p><b>Para quem quer o percurso todo desenhado.</b> Exames se clinicamente indicado, estudo da componente física associada e iniciação de medicação se indicado.</p>
+                        </div>
+                        <a href="/marcar/nutricao-completo" class="nx-btn nx-btn--white nx-btn--block js-nutri-cta" data-nutri-cta="plan-programa">Conhecer o programa</a>
+                        <p class="nx-plan-foot">Pagamento único ou faseado</p>
                     </article>
                 </div>
-                
-                <p style="margin-top: 1.5rem; text-align: center; font-size: 0.875rem; color: var(--color-text-secondary);">45€ por consulta, sempre. A passagem para mensal é decidida em conjunto com a sua nutricionista.</p>
-            </div>
-        </section>
 
-        <section class="modern-section modern-section--muted" id="testemunhos" aria-labelledby="nutri-testimonials-title">
-            <div class="modern-container">
-                <h2 id="nutri-testimonials-title" class="modern-title-lg">O que dizem os nossos pacientes</h2>
-                <div class="modern-testimonial-grid">
-                    <article class="modern-testimonial-card">
-                        <blockquote>
-                            <p>"Melhorei a digestão em 6 semanas. Nunca tinha percebido o que me estava a fazer mal até ter alguém a acompanhar de perto."</p>
-                            <footer style="margin-top: 0.75rem; font-size: 0.875rem; color: var(--color-text-secondary);">Paciente verificada</footer>
-                        </blockquote>
-                    </article>
-                    <article class="modern-testimonial-card">
-                        <blockquote>
-                            <p>"Pela primeira vez consegui manter o peso, não só perder. A passagem para mensal fez sentido, não senti que estava a ser abandonada."</p>
-                            <footer style="margin-top: 0.75rem; font-size: 0.875rem; color: var(--color-text-secondary);">Paciente verificada</footer>
-                        </blockquote>
-                    </article>
-                    <article class="modern-testimonial-card">
-                        <blockquote>
-                            <p>"Finalmente encontrei respostas para a menopausa. A nutricionista percebeu logo o que eu não conseguia explicar ao meu médico."</p>
-                            <footer style="margin-top: 0.75rem; font-size: 0.875rem; color: var(--color-text-secondary);">Paciente verificada</footer>
-                        </blockquote>
-                    </article>
-                    <article class="modern-testimonial-card">
-                        <blockquote>
-                            <p>"Gostei do acompanhamento por chat entre consultas — nunca me senti sozinha a ajustar o plano."</p>
-                            <footer style="margin-top: 0.75rem; font-size: 0.875rem; color: var(--color-text-secondary);">Paciente verificada</footer>
-                        </blockquote>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-
-        <section class="modern-section" id="faq" aria-labelledby="nutri-faq-title">
-            <div class="modern-container" style="max-width: 800px;">
-                <h2 id="nutri-faq-title" class="modern-title-lg modern-title-center">Perguntas frequentes</h2>
-                <div class="psi-faq">
-                    <details>
-                        <summary>Preciso de exames antes da primeira consulta? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">Não é obrigatório. A nutricionista faz uma avaliação completa de hábitos e objetivos na primeira consulta. Se identificar necessidade de análises específicas, pode recomendar exames que pode fazer através do seu médico de família ou de um médico da Lon Clinic.</div>
-                    </details>
-                    <details>
-                        <summary>A passagem de quinzenal para mensal é automática? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">Não. A decisão de passar para consultas mensais é tomada em conjunto com a sua nutricionista, quando o objetivo estabiliza e o plano está consolidado. Não há uma data fixa — depende da sua evolução.</div>
-                    </details>
-                    <details>
-                        <summary>A nutricionista pode ajustar suplementação? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">A nutricionista pode recomendar suplementos alimentares dentro do âmbito da nutrição (vitaminas, minerais, probióticos). Prescrição de medicação ou ajustes hormonais são sempre da responsabilidade médica e podem ser feitos em conjunto com um médico da Lon Clinic.</div>
-                    </details>
-                    <details>
-                        <summary>É seguro fazer acompanhamento só online? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">Sim. O acompanhamento nutricional online é adequado para a maioria das pessoas e conduzido com o mesmo rigor clínico que uma consulta presencial. Em situações que exijam avaliação física presencial urgente, a nutricionista orientará adequadamente.</div>
-                    </details>
-                    <details>
-                        <summary>A LON Clinic está registada e regulamentada? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">Sim. A Lon Clinic está registada na Entidade Reguladora da Saúde (ERS) com o número 45475. Todas as nutricionistas são inscritas na Ordem dos Nutricionistas.</div>
-                    </details>
+                <div class="nx-phases" aria-label="Fases da subscrição">
+                    <div class="nx-phase">
+                        <span class="nx-phase-n" aria-hidden="true">1</span>
+                        <div>
+                            <b>Fase inicial · quinzenal</b>
+                            <span>2 consultas por mês, 45€ cada. Construção do plano e ajustes frequentes.</span>
+                        </div>
+                    </div>
+                    <div class="nx-phases-arrow" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </div>
+                    <div class="nx-phase">
+                        <span class="nx-phase-n" aria-hidden="true">2</span>
+                        <div>
+                            <b>Manutenção · mensal</b>
+                            <span>1 consulta por mês, 45€. Quando o objetivo estabiliza e o plano está consolidado.</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="modern-section" id="condicoes" aria-labelledby="nutri-conditions-title">
-            <div class="modern-container">
-                <h3 class="modern-title-md">Nutrição por condição</h3>
-                <div class="modern-grid-3 modern-mt-6">
-                    <a class="modern-card" href="/nutricao/emagrecimento" style="text-decoration: none; color: var(--color-text-primary); font-weight: 500;">Emagrecimento</a>
-                    <a class="modern-card" href="/nutricao/pos-parto" style="text-decoration: none; color: var(--color-text-primary); font-weight: 500;">Pós-parto</a>
-                    <a class="modern-card" href="/nutricao/diabetes-tipo-2" style="text-decoration: none; color: var(--color-text-primary); font-weight: 500;">Diabetes tipo 2</a>
-                    <a class="modern-card" href="/nutricao/sibo" style="text-decoration: none; color: var(--color-text-primary); font-weight: 500;">SIBO, DII e SII</a>
-                    <a class="modern-card" href="/nutricao/menopausa" style="text-decoration: none; color: var(--color-text-primary); font-weight: 500;">Menopausa</a>
-                    <a class="modern-card" href="/nutricao/desportiva" style="text-decoration: none; color: var(--color-text-primary); font-weight: 500;">Nutrição desportiva</a>
+        <section class="nx-section nx-testimonials" id="testemunhos" aria-labelledby="nutri-testimonials-title">
+            <div class="nx-inner">
+                <header class="nx-head">
+                    <p class="nx-kicker">Testemunhos</p>
+                    <h2 id="nutri-testimonials-title" class="nx-h2">O que dizem as <em>nossas pacientes</em></h2>
+                </header>
+                <div class="nx-tgrid">
+                    <article class="nx-tcard">
+                        <div class="nx-tstars" aria-label="5 estrelas">★★★★★</div>
+                        <p>Melhorei a digestão em 6 semanas. Nunca tinha percebido o que me estava a fazer mal até ter alguém a acompanhar de perto.</p>
+                        <footer><b>Paciente verificada</b><span>SIBO · acompanhamento quinzenal</span></footer>
+                    </article>
+                    <article class="nx-tcard">
+                        <div class="nx-tstars" aria-label="5 estrelas">★★★★★</div>
+                        <p>Pela primeira vez consegui manter o peso, não só perder. A passagem para mensal fez sentido, não senti que estava a ser abandonada.</p>
+                        <footer><b>Paciente verificada</b><span>Emagrecimento · fase de manutenção</span></footer>
+                    </article>
+                    <article class="nx-tcard">
+                        <div class="nx-tstars" aria-label="5 estrelas">★★★★★</div>
+                        <p>Finalmente encontrei respostas para a menopausa. A nutricionista percebeu logo o que eu não conseguia explicar ao meu médico.</p>
+                        <footer><b>Paciente verificada</b><span>Menopausa</span></footer>
+                    </article>
+                    <article class="nx-tcard">
+                        <div class="nx-tstars" aria-label="5 estrelas">★★★★★</div>
+                        <p>Gostei do acompanhamento por chat entre consultas — nunca me senti sozinha a ajustar o plano.</p>
+                        <footer><b>Paciente verificada</b><span>Programa completo</span></footer>
+                    </article>
                 </div>
             </div>
         </section>
 
+        <section class="nx-section nx-faq" id="faq" aria-labelledby="nutri-faq-title">
+            <div class="nx-inner">
+                <header class="nx-head">
+                    <p class="nx-kicker">FAQ</p>
+                    <h2 id="nutri-faq-title" class="nx-h2">Perguntas <em>frequentes</em></h2>
+                </header>
+                <div class="nx-faq-cols">
+                    <div>
+                        <details>
+                            <summary>Preciso de exames antes da primeira consulta? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Não é obrigatório. A nutricionista faz uma avaliação completa de hábitos e objetivos na primeira consulta. Se identificar necessidade de análises específicas, pode recomendar exames que pode fazer através do seu médico de família ou de um médico da Lon Clinic.</div>
+                        </details>
+                        <details>
+                            <summary>A passagem de quinzenal para mensal é automática? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Não. A decisão de passar para consultas mensais é tomada em conjunto com a sua nutricionista, quando o objetivo estabiliza e o plano está consolidado. Não há uma data fixa — depende da sua evolução.</div>
+                        </details>
+                        <details>
+                            <summary>A nutricionista pode ajustar suplementação? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">A nutricionista pode recomendar suplementos alimentares dentro do âmbito da nutrição (vitaminas, minerais, probióticos). Prescrição de medicação ou ajustes hormonais são sempre da responsabilidade médica e podem ser feitos em conjunto com um médico da Lon Clinic.</div>
+                        </details>
+                    </div>
+                    <div>
+                        <details>
+                            <summary>É seguro fazer acompanhamento só online? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Sim. O acompanhamento nutricional online é adequado para a maioria das pessoas e conduzido com o mesmo rigor clínico que uma consulta presencial. Em situações que exijam avaliação física presencial urgente, a nutricionista orientará adequadamente.</div>
+                        </details>
+                        <details>
+                            <summary>A LON Clinic está registada e regulamentada? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Sim. A Lon Clinic está registada na Entidade Reguladora da Saúde (ERS) com o número 45475. Todas as nutricionistas são inscritas na Ordem dos Nutricionistas.</div>
+                        </details>
+                        <details>
+                            <summary>Posso cancelar a subscrição? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Sim. A subscrição não tem fidelização — pode pausar ou cancelar a qualquer momento. Se preferir experimentar primeiro, existe a consulta avulsa a 45€.</div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <section class="modern-cta" id="comecar" aria-labelledby="nutri-close-title">
-            <div class="modern-container">
-                <h2 id="nutri-close-title">Pronta para começar?</h2>
-                <p>45€ por consulta, sempre, ou o Programa Integrado a 490€ com médico e nutrição em conjunto.</p>
-                <a href="/marcar/nutricao-programa" class="modern-btn js-nutri-cta" data-nutri-cta="close">
-                    Marcar consulta
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17l10-10M8 7h9v9"/>
-                    </svg>
-                </a>
+        <section class="nx-section nx-cond" id="condicoes" aria-labelledby="nutri-conditions-title">
+            <div class="nx-inner">
+                <div class="nx-cond-grid">
+                    <figure class="nx-cond-photo">
+                        <img src="/image/nutri-bowl.webp" alt="Taça de iogurte com granola, banana e frutos vermelhos" width="576" height="1024" loading="lazy" decoding="async">
+                        <figcaption class="nx-glass-note">
+                            <b>Plano feito para si</b>
+                            <span>Cada condição tem uma abordagem nutricional própria.</span>
+                        </figcaption>
+                    </figure>
+                    <div>
+                        <header class="nx-head">
+                            <p class="nx-kicker">Nutrição por condição</p>
+                            <h2 id="nutri-conditions-title" class="nx-h2">Acompanhamento <em>especializado</em></h2>
+                            <p class="nx-sub">Escolha a área que melhor descreve o que procura. Todas incluem a mesma lógica: 45€ por consulta, quinzenal no início, mensal na manutenção.</p>
+                        </header>
+                        <div class="nx-cond-cards">
+                            <a class="nx-cond-card" href="/nutricao/emagrecimento"><span class="nx-cond-ico" aria-hidden="true">⚖️</span><span class="txt"><b>Emagrecimento</b><span>Perder peso de forma sustentável</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card" href="/nutricao/pos-parto"><span class="nx-cond-ico" aria-hidden="true">🤱</span><span class="txt"><b>Pós-parto</b><span>Recuperação e amamentação</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card" href="/nutricao/diabetes-tipo-2"><span class="nx-cond-ico" aria-hidden="true">🩸</span><span class="txt"><b>Diabetes tipo 2</b><span>Controlo glicémico pela alimentação</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card" href="/nutricao/sibo"><span class="nx-cond-ico" aria-hidden="true">🌿</span><span class="txt"><b>SIBO, DII e SII</b><span>Saúde intestinal e digestão</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card" href="/nutricao/menopausa"><span class="nx-cond-ico" aria-hidden="true">🌸</span><span class="txt"><b>Menopausa</b><span>Equilíbrio hormonal e metabólico</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card" href="/nutricao/desportiva"><span class="nx-cond-ico" aria-hidden="true">🏃‍♀️</span><span class="txt"><b>Nutrição desportiva</b><span>Performance e recuperação</span></span><span class="arr" aria-hidden="true">→</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="nx-final" id="comecar" aria-labelledby="nutri-close-title">
+            <div class="nx-inner">
+                <div class="nx-final-card">
+                    <h2 id="nutri-close-title">Pronta para começar?</h2>
+                    <p>Subscrição quinzenal a 45€ por consulta — passa a mensal na fase de manutenção — ou o Programa Completo a 490€ com médico e nutrição em conjunto.</p>
+                    <div class="nx-final-btns">
+                        <a href="/marcar/nutricao-programa" class="nx-btn nx-btn--black js-nutri-cta" data-nutri-cta="close">
+                            Marcar consulta
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17l10-10M8 7h9v9"/></svg>
+                        </a>
+                        <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="nx-btn nx-btn--ghost js-nutri-cta" data-nutri-cta="close-whatsapp">Falar no WhatsApp</a>
+                    </div>
+                    <p class="nx-final-note">Sem fidelização · Ordem dos Nutricionistas · ERS 45475</p>
+                </div>
             </div>
         </section>
     </main>
