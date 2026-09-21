@@ -991,13 +991,102 @@
         });
     }
 
-    // Service pills (step 1). Same keys/labels as the legacy <select>, which stays as a hidden fallback.
+    // Step 1, level 1: the three main areas. Level 2 (pills) shows only that area's sub-types.
+    var AREA_BLOCKS = {
+        medicina: {
+            ico: '🩺', color: '#8a7440',
+            name: { pt: 'Medicina', en: 'Medicine', es: 'Medicina' },
+            desc: { pt: 'Clínica geral, urgente, funcional, viajante', en: 'GP, urgent, functional, travel', es: 'General, urgente, funcional, viajero' },
+            keys: ['clinica_geral', 'urgente', 'longevidade', 'travel', 'renovacao'],
+            defaultTipo: 'clinica_geral'
+        },
+        psicologia: {
+            ico: '🧠', color: '#537284',
+            name: { pt: 'Psicologia', en: 'Psychology', es: 'Psicología' },
+            desc: { pt: 'Individual, casal e burnout', en: 'Individual, couples and burnout', es: 'Individual, pareja y burnout' },
+            keys: ['psicologia', 'terapia_casal', 'burnout'],
+            defaultTipo: 'psicologia'
+        },
+        nutricao: {
+            ico: '🥗', color: '#3F574C',
+            name: { pt: 'Nutrição', en: 'Nutrition', es: 'Nutrición' },
+            desc: { pt: 'Subscrição, consulta avulsa e programas', en: 'Subscription, one-off and programs', es: 'Suscripción, consulta suelta y programas' },
+            keys: ['nutricao_quinzenal', 'nutricao_consulta', 'nutricao_programa', 'nutricao_completo'],
+            defaultTipo: 'nutricao_quinzenal'
+        }
+    };
+    var SUBTYPE_LABELS = {
+        pt: {
+            clinica_geral: 'Clínica geral / Check-up', urgente: 'Consulta urgente', longevidade: 'Medicina Funcional',
+            travel: 'Medicina do Viajante', renovacao: 'Renovação de receita',
+            psicologia: 'Psicologia individual', terapia_casal: 'Terapia de casal', burnout: 'Burnout',
+            nutricao_quinzenal: 'Subscrição quinzenal', nutricao_consulta: 'Consulta avulsa',
+            nutricao_programa: 'Programa 6 meses', nutricao_completo: 'Programa completo'
+        },
+        en: {
+            clinica_geral: 'GP / Check-up', urgente: 'Urgent consultation', longevidade: 'Functional Medicine',
+            travel: 'Travel Medicine', renovacao: 'Prescription renewal',
+            psicologia: 'Individual psychology', terapia_casal: 'Couples therapy', burnout: 'Burnout',
+            nutricao_quinzenal: 'Fortnightly subscription', nutricao_consulta: 'One-off consultation',
+            nutricao_programa: '6-month program', nutricao_completo: 'Complete program'
+        },
+        es: {
+            clinica_geral: 'Medicina general / Check-up', urgente: 'Consulta urgente', longevidade: 'Medicina Funcional',
+            travel: 'Medicina del viajero', renovacao: 'Renovación de receta',
+            psicologia: 'Psicología individual', terapia_casal: 'Terapia de pareja', burnout: 'Burnout',
+            nutricao_quinzenal: 'Suscripción quincenal', nutricao_consulta: 'Consulta suelta',
+            nutricao_programa: 'Programa 6 meses', nutricao_completo: 'Programa completo'
+        }
+    };
+    function currentLangKey() {
+        var l = (window.CLINIC_I18N && typeof window.CLINIC_I18N.getLang === 'function') ? window.CLINIC_I18N.getLang() : 'pt';
+        return SUBTYPE_LABELS[l] ? l : 'pt';
+    }
+    function areaFor(t) {
+        var v = dropdownValueFor(t);
+        if (NUTRICAO_FAMILY.indexOf(t) >= 0) return 'nutricao';
+        if (v === 'psicologia' || v === 'terapia_casal' || v === 'burnout') return 'psicologia';
+        return 'medicina';
+    }
+    function subtypeSelectedFor(t, keys) {
+        if (keys.indexOf(t) >= 0) return t;
+        return dropdownValueFor(t);
+    }
+
+    function renderAreaBlocks() {
+        var wrap = document.getElementById('marcarBlocks');
+        if (!wrap) return;
+        var lang = currentLangKey();
+        var active = areaFor(tipo);
+        wrap.innerHTML = '';
+        Object.keys(AREA_BLOCKS).forEach(function (id) {
+            var b = AREA_BLOCKS[id];
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'marcar-block' + (id === active ? ' is-active' : '');
+            btn.style.setProperty('--bc', b.color);
+            btn.setAttribute('aria-pressed', id === active ? 'true' : 'false');
+            btn.innerHTML =
+                '<span class="marcar-block-ico" aria-hidden="true">' + b.ico + '</span>' +
+                '<span class="marcar-block-text"><span class="marcar-block-name">' + (b.name[lang] || b.name.pt) + '</span>' +
+                '<span class="marcar-block-desc">' + (b.desc[lang] || b.desc.pt) + '</span></span>';
+            btn.addEventListener('click', function () {
+                if (id === active) return;
+                window.location.href = getPrettyMarcarUrl(b.defaultTipo, true);
+            });
+            wrap.appendChild(btn);
+        });
+    }
+    renderAreaBlocks();
+
+    // Step 1, level 2: sub-type pills for the active area. The legacy <select> stays as a hidden fallback.
     function renderTypePills() {
         var wrap = document.getElementById('marcarTypePills');
         if (!wrap) return;
-        var labels = typeOptionLabels();
-        var selected = dropdownValueFor(tipo);
-        var keys = TYPE_DROPDOWN_KEYS.slice();
+        var lang = currentLangKey();
+        var labels = Object.assign({}, SUBTYPE_LABELS.pt, SUBTYPE_LABELS[lang] || {});
+        var keys = AREA_BLOCKS[areaFor(tipo)].keys.slice();
+        var selected = subtypeSelectedFor(tipo, keys);
         if (tipo && keys.indexOf(selected) < 0) keys.unshift(tipo);
         wrap.innerHTML = '';
         keys.forEach(function (key) {
@@ -1136,11 +1225,8 @@
         if (nutricaoTrust) nutricaoTrust.hidden = tipo === 'nutricao_consulta' || tipo === 'nutricao_quinzenal';
         // Like psychology: the generic service pills give way to nutrition motives,
         // with weight loss already selected.
-        var nuTypeLabel = document.getElementById('marcarTypeLabel');
-        var nuTypePills = document.getElementById('marcarTypePills');
+        // The area blocks + sub-type pills stay visible above; the goal picker is added below them.
         var nuSpecialtySection = document.getElementById('marcarSpecialtySection');
-        if (nuTypeLabel) nuTypeLabel.hidden = true;
-        if (nuTypePills) nuTypePills.hidden = true;
         if (nuSpecialtySection) setA11yHidden(nuSpecialtySection, false);
         applyNutricaoGoalCopy();
         var nuBack = document.getElementById('marcarBookingBack');
@@ -1186,11 +1272,8 @@
         renderPlanPicker(tipo, psiCards, psiKicker, psiHeading);
         // In psychology the "consultation type" is the support area: swap the generic
         // service pills for the specialty picker, inside step 1.
-        var psiTypeLabel = document.getElementById('marcarTypeLabel');
-        var psiTypePills = document.getElementById('marcarTypePills');
+        // The area blocks + sub-type pills stay visible above; the support-area picker is added below them.
         var psiSpecialtySection = document.getElementById('marcarSpecialtySection');
-        if (psiTypeLabel) psiTypeLabel.hidden = true;
-        if (psiTypePills) psiTypePills.hidden = true;
         if (psiSpecialtySection) setA11yHidden(psiSpecialtySection, false);
     }
 

@@ -1615,3 +1615,108 @@
         display: none !important;
     }
 }
+
+
+/* ==========================================================================
+   Step 1 — area blocks (Medicina / Psicologia / Nutrição) above the sub-type pills
+   ========================================================================== */
+.marcar-blocks {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.marcar-block {
+    --bc: var(--marcar-primary);
+    appearance: none;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1.5px solid var(--marcar-border);
+    background: var(--marcar-surface);
+    color: var(--marcar-text);
+    text-align: left;
+    font: inherit;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(22, 33, 25, 0.04);
+    transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.marcar-block:hover {
+    border-color: var(--bc);
+    transform: translateY(-1px);
+}
+
+.marcar-block.is-active {
+    border-color: var(--bc);
+    background: color-mix(in srgb, var(--bc) 9%, #fff);
+    box-shadow: inset 0 0 0 1px var(--bc), 0 8px 20px rgba(22, 33, 25, 0.08);
+}
+
+.marcar-block-ico {
+    font-size: 1.4rem;
+    line-height: 1;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 12px;
+    background: var(--marcar-surface-soft);
+}
+
+.marcar-block.is-active .marcar-block-ico {
+    background: color-mix(in srgb, var(--bc) 18%, #fff);
+}
+
+.marcar-block-text {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+}
+
+.marcar-block-name {
+    font-weight: 700;
+    font-size: 0.98rem;
+    letter-spacing: -0.01em;
+}
+
+.marcar-block.is-active .marcar-block-name {
+    color: var(--bc);
+}
+
+.marcar-block-desc {
+    font-size: 0.78rem;
+    line-height: 1.35;
+    color: var(--marcar-muted);
+}
+
+.marcar-card-title--sub {
+    margin-top: 24px !important;
+    font-size: 0.95rem !important;
+    color: var(--marcar-muted);
+}
+
+/* Sub-type pills now sit above the specialty/goal picker — give it room */
+#marcarBookingFlow #marcarSpecialtySection {
+    margin-top: 24px;
+}
+
+@media (max-width: 640px) {
+    .marcar-blocks {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .marcar-block {
+        align-items: center;
+        padding: 12px 14px;
+    }
+
+    .marcar-block-desc {
+        display: none;
+    }
+}
