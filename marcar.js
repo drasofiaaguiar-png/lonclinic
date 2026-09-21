@@ -1773,9 +1773,13 @@
                 setSelectedProfessional(pro);
                 if (btnNext) btnNext.disabled = false;
                 shellRefresh();
+                if (!state.programmaticSlot && !state.programmaticPro) maybeAutoAdvance();
             });
             wrap.appendChild(card);
-            if (wantedProId && Number(pro.id) === wantedProId) card.click();
+            if (wantedProId && Number(pro.id) === wantedProId) {
+                state.programmaticPro = true;
+                try { card.click(); } finally { state.programmaticPro = false; }
+            }
         });
     }
 
@@ -2071,6 +2075,8 @@
                         window.LonAnalytics.track('slot_select', { surface: 'booking' });
                         window.LonAnalytics.track('time_slot_clicked', { surface: 'marcar' });
                     }
+                    // A real tap on a time goes straight to payment (unless a psychologist still has to be chosen).
+                    if (!state.programmaticSlot) maybeAutoAdvance();
                 });
                 row.appendChild(b);
             });
@@ -2081,10 +2087,27 @@
         state.pendingTime = null;
         if (want) {
             var target = String(want).length === 4 ? '0' + want : String(want);
-            timeslotGrid.querySelectorAll('.marcar-slot-btn').forEach(function (b) {
-                if (b.textContent === target) b.click();
-            });
+            state.programmaticSlot = true;
+            try {
+                timeslotGrid.querySelectorAll('.marcar-slot-btn').forEach(function (b) {
+                    if (b.textContent === target) b.click();
+                });
+            } finally {
+                state.programmaticSlot = false;
+            }
         }
+    }
+
+    /** After a user picks a time (and, in psychology, a professional), continue without a second click. */
+    function maybeAutoAdvance() {
+        if (state.advancing) return;
+        if (!state.date || !state.time) return;
+        if (usesPsychStaff() && !state.professionalId) return;
+        if (!btnNext || btnNext.disabled) return;
+        var steps = shellSteps();
+        if (shell && shell.booted && shell.step !== steps.length - 1) return;
+        state.advancing = true;
+        btnNext.click();
     }
 
     function renderTimeslots() {
