@@ -914,11 +914,15 @@ async function initBookingFlow() {
                 ];
             }
             if (state.service === 'nutricao_quinzenal' || state.service === 'nutricao_consulta') {
-                return [
+                // One-off consultation is not offered as a plan card any more (kept only for direct/legacy links).
+                var cards = [
                     { key: 'nutricao_quinzenal', badge: c.recommended, title: c.nutriSubTitle, price: services.nutricao_quinzenal.price, unit: '', note: c.nutriSubNote, featured: state.service === 'nutricao_quinzenal' },
-                    { key: 'nutricao_consulta', badge: c.oneOff, title: c.nutriOneTitle, price: services.nutricao_consulta.price, unit: c.perConsult, note: c.nutriOneNote, featured: state.service === 'nutricao_consulta' },
                     { key: 'nutricao_programa', badge: '', title: c.nutriProgramTitle, price: services.nutricao_programa.price, unit: month1, note: c.nutriProgramNote, featured: false }
                 ];
+                if (state.service === 'nutricao_consulta') {
+                    cards.push({ key: 'nutricao_consulta', badge: c.oneOff, title: c.nutriOneTitle, price: services.nutricao_consulta.price, unit: c.perConsult, note: c.nutriOneNote, featured: true });
+                }
+                return cards;
             }
             return [
                 { key: 'nutricao_programa', badge: c.recommended, title: c.nutriProgramTitle, price: services.nutricao_programa.price, unit: month1, note: c.nutriProgramNote, featured: true },

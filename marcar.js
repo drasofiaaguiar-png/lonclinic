@@ -1010,8 +1010,8 @@
         nutricao: {
             ico: '🥗', color: '#3F574C', img: '/image/approach-nutricao.webp',
             name: { pt: 'Nutrição', en: 'Nutrition', es: 'Nutrición' },
-            desc: { pt: 'Subscrição, consulta avulsa e programas', en: 'Subscription, one-off and programs', es: 'Suscripción, consulta suelta y programas' },
-            keys: ['nutricao_quinzenal', 'nutricao_consulta', 'nutricao_programa', 'nutricao_completo'],
+            desc: { pt: 'Subscrição quinzenal e programas', en: 'Fortnightly subscription and programs', es: 'Suscripción quincenal y programas' },
+            keys: ['nutricao_quinzenal', 'nutricao_programa', 'nutricao_completo'],
             defaultTipo: 'nutricao_quinzenal'
         }
     };
@@ -1050,6 +1050,8 @@
     }
     function subtypeSelectedFor(t, keys) {
         if (keys.indexOf(t) >= 0) return t;
+        // Nutrition sub-types map 1:1 (no family collapsing), so a legacy/direct tipo highlights itself.
+        if (NUTRICAO_FAMILY.indexOf(t) >= 0) return t;
         return dropdownValueFor(t);
     }
 
@@ -1204,17 +1206,16 @@
             nutricaoKicker = 'Programa Completo';
             nutricaoHeading = 'Escolha a entrada — o total é o mesmo (1 162 €)';
         } else if (tipo === 'nutricao_consulta' || tipo === 'nutricao_quinzenal') {
+            // One-off consultation is no longer offered as a card here: subscription or 6-month programme.
             nutricaoCards = NUTRICAO_PLAN_CARDS.filter(function (card) {
-                return card.tipo === 'nutricao_quinzenal' || card.tipo === 'nutricao_consulta' || card.tipo === 'nutricao_programa';
+                return card.tipo === 'nutricao_quinzenal' || card.tipo === 'nutricao_programa';
             }).map(function (card) {
                 if (card.tipo === 'nutricao_quinzenal') return Object.assign({}, card, { badge: 'Recomendado' });
                 if (card.tipo === 'nutricao_programa') return Object.assign({}, card, { badge: 'Programa' });
                 return card;
             });
             nutricaoKicker = 'Nutrição';
-            nutricaoHeading = tipo === 'nutricao_quinzenal'
-                ? 'Subscrição quinzenal, consulta avulsa ou programa de 6 meses — sem aGLP-1'
-                : 'Consulta avulsa, subscrição quinzenal ou programa de 6 meses — sem aGLP-1';
+            nutricaoHeading = 'Subscrição quinzenal ou programa de 6 meses — sem aGLP-1';
         } else {
             nutricaoCards = NUTRICAO_PLAN_CARDS.filter(function (card) {
                 return card.tipo === 'nutricao_programa' || card.tipo === 'nutricao_completo';
