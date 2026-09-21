@@ -46,7 +46,7 @@
     <link rel="preload" as="image" href="/image/hero-run.webp" media="(min-width: 940px)" fetchpriority="high">
 
     <link rel="stylesheet" href="/design-tokens.css?v=20260920">
-    <link rel="stylesheet" href="/landing.css?v=20260921m">
+    <link rel="stylesheet" href="/landing.css?v=20260921n">
     <link rel="stylesheet" href="/ui-fixes-critical.css?v=20260920f">
     <link rel="stylesheet" href="/component-library.css?v=20260920">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -304,26 +304,50 @@
             </div>
         </section>
 
-        <section class="lon-intro-categories">
-            <div class="lon-container">
-                <p class="lon-intro-text">Cuidamos de si de forma integral,<br>
-juntando medicina, nutrição e psicologia<br>
-numa abordagem holística e personalizada.<br>
-<strong>100% online.</strong></p>
-                
-                <div class="lon-category-grid">
-                    <a href="/longevidade" class="lon-category-card lon-category-card-medicina">
-                        <h3>Consulta<br>Médica</h3>
+        <section class="lon-approach" id="abordagem" aria-labelledby="lon-approach-title">
+            <div class="lon-container lon-approach-inner">
+                <header class="lon-approach-head">
+                    <p class="lon-approach-kicker">A nossa abordagem</p>
+                    <h2 id="lon-approach-title">Cuidamos de si de forma <em>integral</em> — medicina, nutrição e psicologia numa abordagem holística e personalizada.</h2>
+                    <p class="lon-approach-sub"><strong>100% online.</strong> Escolha por onde começar, ou deixe-nos desenhar o plano consigo.</p>
+                </header>
+
+                <div class="lon-approach-grid">
+                    <a href="/longevidade" class="lon-approach-card" style="--ac:#8a7440;--ac2:#ECD281">
+                        <img src="/image/approach-medicina.webp" alt="" width="640" height="800" loading="lazy" decoding="async">
+                        <span class="lon-approach-tag">Medicina</span>
+                        <span class="lon-approach-body">
+                            <strong>Consulta Médica</strong>
+                            <span>Medicina funcional e clínica geral · desde 39 €</span>
+                        </span>
+                        <span class="lon-approach-arrow" aria-hidden="true">→</span>
                     </a>
-                    <a href="/psicologia" class="lon-category-card lon-category-card-psicologia">
-                        <h3>Psicologia</h3>
+                    <a href="/psicologia" class="lon-approach-card" style="--ac:#3c5462;--ac2:#9BB1BC">
+                        <img src="/image/approach-psicologia.webp" alt="" width="640" height="800" loading="lazy" decoding="async">
+                        <span class="lon-approach-tag">Psicologia</span>
+                        <span class="lon-approach-body">
+                            <strong>Psicologia</strong>
+                            <span>Individual e casal · desde 56 €/sessão</span>
+                        </span>
+                        <span class="lon-approach-arrow" aria-hidden="true">→</span>
                     </a>
-                    <a href="/nutricao" class="lon-category-card lon-category-card-nutricao">
-                        <h3>Nutrição</h3>
+                    <a href="/nutricao" class="lon-approach-card" style="--ac:#2c3f36;--ac2:#9FBD84">
+                        <img src="/image/approach-nutricao.webp" alt="" width="640" height="800" loading="lazy" decoding="async">
+                        <span class="lon-approach-tag">Nutrição</span>
+                        <span class="lon-approach-body">
+                            <strong>Nutrição</strong>
+                            <span>Subscrição quinzenal · 45 €/consulta</span>
+                        </span>
+                        <span class="lon-approach-arrow" aria-hidden="true">→</span>
                     </a>
-                    <a href="/marcar" class="lon-category-card lon-category-card-primary lon-category-card-integrado">
-                        <h3>Começar plano<br>integrado</h3>
-                        <span class="lon-category-label">Recomendado</span>
+                    <a href="/marcar" class="lon-approach-card lon-approach-card--cta" data-cta="book">
+                        <img src="/image/approach-integrado.webp" alt="" width="640" height="800" loading="lazy" decoding="async">
+                        <span class="lon-approach-tag lon-approach-tag--hot">Recomendado</span>
+                        <span class="lon-approach-body">
+                            <strong>Começar plano integrado</strong>
+                            <span>Médico, nutricionista e psicólogo em equipa. Desenhamos o plano consigo.</span>
+                        </span>
+                        <span class="lon-approach-arrow lon-approach-arrow--cta" aria-hidden="true">→</span>
                     </a>
                 </div>
             </div>
