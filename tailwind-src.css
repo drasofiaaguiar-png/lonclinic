@@ -2,10 +2,7 @@
    Usage: class="tw:flex tw:gap-4 tw:bg-lon-accent tw:text-white tw:rounded-lon"
    Rebuild: npm run build:css
 */
-@layer theme, base, components, utilities;
-
-@import "tailwindcss/theme.css" layer(theme) prefix(tw);
-@import "tailwindcss/utilities.css" layer(utilities) prefix(tw);
+@import "tailwindcss" prefix(tw);
 
 @theme {
     --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
