@@ -1618,63 +1618,119 @@
 
 
 /* ==========================================================================
-   Step 1 — area blocks (Medicina / Psicologia / Nutrição) above the sub-type pills
+   Step 1 — area blocks (Medicina / Psicologia / Nutrição): photo + glass label
    ========================================================================== */
 .marcar-blocks {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 12px;
     margin-top: 12px;
 }
 
 .marcar-block {
     --bc: var(--marcar-primary);
     appearance: none;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    padding: 14px 16px;
-    border-radius: 16px;
-    border: 1.5px solid var(--marcar-border);
-    background: var(--marcar-surface);
-    color: var(--marcar-text);
+    align-items: flex-end;
+    min-height: 168px;
+    padding: 10px;
+    border-radius: 18px;
+    border: 1.5px solid transparent;
+    background: #1b2622;
+    color: #fff;
     text-align: left;
     font: inherit;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(22, 33, 25, 0.04);
-    transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+    box-shadow: 0 10px 26px rgba(22, 33, 25, 0.12);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.marcar-block-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+    display: block;
+    z-index: 0;
+    transition: transform 0.45s ease, filter 0.3s ease;
+    filter: saturate(0.9);
+}
+
+.marcar-block::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.18) 45%, color-mix(in srgb, var(--bc) 78%, #000) 100%);
+    transition: opacity 0.2s ease;
 }
 
 .marcar-block:hover {
-    border-color: var(--bc);
-    transform: translateY(-1px);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px rgba(22, 33, 25, 0.2);
+}
+
+.marcar-block:hover .marcar-block-img {
+    transform: scale(1.05);
 }
 
 .marcar-block.is-active {
     border-color: var(--bc);
-    background: color-mix(in srgb, var(--bc) 9%, #fff);
-    box-shadow: inset 0 0 0 1px var(--bc), 0 8px 20px rgba(22, 33, 25, 0.08);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--bc) 28%, transparent), 0 18px 40px rgba(22, 33, 25, 0.2);
+}
+
+.marcar-block.is-active .marcar-block-img {
+    filter: saturate(1.05);
+}
+
+.marcar-block:focus-visible {
+    outline: 3px solid var(--bc);
+    outline-offset: 2px;
+}
+
+/* glass label */
+.marcar-block-glass {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.34);
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+}
+
+.marcar-block.is-active .marcar-block-glass {
+    background: rgba(255, 255, 255, 0.24);
+    border-color: rgba(255, 255, 255, 0.55);
 }
 
 .marcar-block-ico {
-    font-size: 1.4rem;
-    line-height: 1;
     flex-shrink: 0;
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
     display: grid;
     place-items: center;
-    border-radius: 12px;
-    background: var(--marcar-surface-soft);
-}
-
-.marcar-block.is-active .marcar-block-ico {
-    background: color-mix(in srgb, var(--bc) 18%, #fff);
+    border-radius: 10px;
+    font-size: 1.15rem;
+    line-height: 1;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .marcar-block-text {
     display: grid;
-    gap: 4px;
+    gap: 3px;
     min-width: 0;
 }
 
@@ -1682,16 +1738,43 @@
     font-weight: 700;
     font-size: 0.98rem;
     letter-spacing: -0.01em;
-}
-
-.marcar-block.is-active .marcar-block-name {
-    color: var(--bc);
+    color: #fff;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
 }
 
 .marcar-block-desc {
-    font-size: 0.78rem;
+    font-size: 0.75rem;
     line-height: 1.35;
-    color: var(--marcar-muted);
+    color: rgba(255, 255, 255, 0.86);
+}
+
+/* selected check (top-right) */
+.marcar-block-check {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #fff;
+    color: var(--bc);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.marcar-block-check svg {
+    width: 14px;
+    height: 14px;
+}
+
+.marcar-block.is-active .marcar-block-check {
+    opacity: 1;
+    transform: scale(1);
 }
 
 .marcar-card-title--sub {
@@ -1708,12 +1791,11 @@
 @media (max-width: 640px) {
     .marcar-blocks {
         grid-template-columns: 1fr;
-        gap: 8px;
+        gap: 10px;
     }
 
     .marcar-block {
-        align-items: center;
-        padding: 12px 14px;
+        min-height: 96px;
     }
 
     .marcar-block-desc {

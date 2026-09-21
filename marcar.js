@@ -994,21 +994,21 @@
     // Step 1, level 1: the three main areas. Level 2 (pills) shows only that area's sub-types.
     var AREA_BLOCKS = {
         medicina: {
-            ico: '🩺', color: '#8a7440',
+            ico: '🩺', color: '#8a7440', img: '/image/approach-medicina.webp',
             name: { pt: 'Medicina', en: 'Medicine', es: 'Medicina' },
             desc: { pt: 'Clínica geral, urgente, funcional, viajante', en: 'GP, urgent, functional, travel', es: 'General, urgente, funcional, viajero' },
             keys: ['clinica_geral', 'urgente', 'longevidade', 'travel', 'renovacao'],
             defaultTipo: 'clinica_geral'
         },
         psicologia: {
-            ico: '🧠', color: '#537284',
+            ico: '🧠', color: '#537284', img: '/image/approach-psicologia.webp',
             name: { pt: 'Psicologia', en: 'Psychology', es: 'Psicología' },
             desc: { pt: 'Individual, casal e burnout', en: 'Individual, couples and burnout', es: 'Individual, pareja y burnout' },
             keys: ['psicologia', 'terapia_casal', 'burnout'],
             defaultTipo: 'psicologia'
         },
         nutricao: {
-            ico: '🥗', color: '#3F574C',
+            ico: '🥗', color: '#3F574C', img: '/image/approach-nutricao.webp',
             name: { pt: 'Nutrição', en: 'Nutrition', es: 'Nutrición' },
             desc: { pt: 'Subscrição, consulta avulsa e programas', en: 'Subscription, one-off and programs', es: 'Suscripción, consulta suelta y programas' },
             keys: ['nutricao_quinzenal', 'nutricao_consulta', 'nutricao_programa', 'nutricao_completo'],
@@ -1067,9 +1067,15 @@
             btn.style.setProperty('--bc', b.color);
             btn.setAttribute('aria-pressed', id === active ? 'true' : 'false');
             btn.innerHTML =
-                '<span class="marcar-block-ico" aria-hidden="true">' + b.ico + '</span>' +
-                '<span class="marcar-block-text"><span class="marcar-block-name">' + (b.name[lang] || b.name.pt) + '</span>' +
-                '<span class="marcar-block-desc">' + (b.desc[lang] || b.desc.pt) + '</span></span>';
+                '<img class="marcar-block-img" src="' + b.img + '" alt="" width="640" height="800" loading="lazy" decoding="async">' +
+                '<span class="marcar-block-check" aria-hidden="true">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>' +
+                '</span>' +
+                '<span class="marcar-block-glass">' +
+                    '<span class="marcar-block-ico" aria-hidden="true">' + b.ico + '</span>' +
+                    '<span class="marcar-block-text"><span class="marcar-block-name">' + (b.name[lang] || b.name.pt) + '</span>' +
+                    '<span class="marcar-block-desc">' + (b.desc[lang] || b.desc.pt) + '</span></span>' +
+                '</span>';
             btn.addEventListener('click', function () {
                 if (id === active) return;
                 window.location.href = getPrettyMarcarUrl(b.defaultTipo, true);
