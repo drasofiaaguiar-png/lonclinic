@@ -14,11 +14,11 @@
         trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
     }
 
-    // First click pins the panel open; a second click follows the link to the hub page.
+    // Clicking the trigger only toggles the panel — never navigates.
+    // The hub page stays reachable via "Ver todas as especialidades" inside the panel.
     trigger.addEventListener('click', function (e) {
-        if (wrap.classList.contains('is-open')) return;
         e.preventDefault();
-        setOpen(true);
+        setOpen(!wrap.classList.contains('is-open'));
     });
 
     document.addEventListener('click', function (e) {
