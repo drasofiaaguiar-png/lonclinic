@@ -18,7 +18,7 @@
     <link rel="canonical" href="https://www.lonclinic.com/marcar">
     <meta name="theme-color" content="#4A7C6F">
     <link rel="stylesheet" href="/landing.css">
-    <link rel="stylesheet" href="/marcar.css?v=20260921b">
+    <link rel="stylesheet" href="/marcar.css?v=20260921c">
     <script type="text/javascript" src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,11 +31,11 @@
     <a class="lon-skip" href="#marcarMain">Saltar para o conteúdo</a>
     <header class="lon-nav" id="lonNav">
         <div class="lon-container lon-nav-inner">
-            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
-                <span class="lon-logo-name">LON Clinic</span>
+            <a href="/" class="lon-logo" aria-label="Longevity Clinic homepage">
+                <span class="lon-logo-name"><span class="lon-logo-word"><span class="lon-logo-lon">Lon</span><span class="lon-logo-gevity">gevity</span></span><span class="lon-logo-clinic">Clinic</span></span>
             </a>
+
             <nav class="lon-nav-links" aria-label="Navegação principal">
-                <a href="/#servicos">Consultas</a>
                 <div class="lon-mega-wrap" id="lonMegaWrap">
                     <a href="/consulta" class="lon-mega-trigger" id="lonMegaTrigger" aria-haspopup="true" aria-expanded="false" aria-controls="lonMega">Especialidades <svg class="lon-mega-chev" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
                     <div class="lon-mega" id="lonMega" aria-label="Especialidades">
@@ -52,20 +52,19 @@
                         </div>
                     </div>
                 </div>
-                <a href="/burnout">Burnout</a>
                 <a href="/magazine">Magazine</a>
-                <a href="/#equipa">A Equipa</a>
+                <a href="/#equipa">Equipa</a>
             </nav>
+
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm">Marcar consulta</a>
-                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Menu" aria-expanded="false" aria-controls="lonMobileMenu">
+                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm" data-cta="book-priced">Marcar — 39 €</a>
+                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
                     <span></span><span></span><span></span>
                 </button>
             </div>
         </div>
         <div class="lon-mobile-menu" id="lonMobileMenu">
-            <a href="/#servicos">Consultas</a>
             <a href="/consulta">Especialidades</a>
             <div class="lon-mobile-sub">
                 <a href="/longevidade">Medicina Funcional</a>
@@ -74,10 +73,10 @@
                 <a href="/urgent-care">Consulta Urgente</a>
                 <a href="/travel-clinic">Medicina do Viajante</a>
             </div>
-            <a href="/burnout">Burnout</a>
             <a href="/magazine">Magazine</a>
-            <a href="/#equipa">A Equipa</a>
+            <a href="/#equipa">Equipa</a>
             <a href="/patient-portal">Login</a>
+            <a href="/marcar/clinica-geral" data-cta="book-priced">Marcar — 39 €</a>
         </div>
     </header>
 
@@ -238,16 +237,6 @@
 
         <p class="marcar-footnote" id="marcarFootnote">Profissionais certificados · consultas confidenciais por videochamada · cancelamento gratuito até 24h antes · pagamento seguro por cartão (Stripe).</p>
         </div>
-
-        <!-- Resumo (desktop) -->
-        <aside class="marcar-summary" id="marcarSummary" aria-label="Resumo da marcação">
-            <div class="marcar-card marcar-summary-card">
-                <p class="marcar-eyebrow">Resumo</p>
-                <p class="marcar-summary-title" id="marcarSummaryTitle">—</p>
-                <p class="marcar-summary-price" id="marcarSummaryPrice"></p>
-                <dl class="marcar-summary-list" id="marcarSummaryList"></dl>
-            </div>
-        </aside>
         </div>
 
         <!-- Legacy trigger: the action bar's "Continuar" clicks this on the last step -->
@@ -299,7 +288,7 @@
     <script src="/i18n.js?v=20260912a" defer></script>
     <script src="/lon-nav.js" defer></script>
     <script src="/lon-slots.js?v=20260912a" defer></script>
-    <script src="/marcar.js?v=20260921d" defer></script>
+    <script src="/marcar.js?v=20260921e" defer></script>
     <script src="/lon-mega.js?v=20260921b" defer></script>
 </body>
 </html>

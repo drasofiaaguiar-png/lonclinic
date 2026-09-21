@@ -1232,9 +1232,10 @@
         if (nutricaoTrust) nutricaoTrust.hidden = tipo === 'nutricao_consulta' || tipo === 'nutricao_quinzenal';
         // Like psychology: the generic service pills give way to nutrition motives,
         // with weight loss already selected.
-        // The area blocks + sub-type pills stay visible above; the goal picker is added below them.
+        // The "motivo da consulta" question is not shown any more — the default goal (perda de peso)
+        // still goes into the booking notes and the patient can adjust it in the intake form.
         var nuSpecialtySection = document.getElementById('marcarSpecialtySection');
-        if (nuSpecialtySection) setA11yHidden(nuSpecialtySection, false);
+        if (nuSpecialtySection) setA11yHidden(nuSpecialtySection, true);
         applyNutricaoGoalCopy();
         var nuBack = document.getElementById('marcarBookingBack');
         if (nuBack) {

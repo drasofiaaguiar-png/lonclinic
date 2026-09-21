@@ -831,12 +831,7 @@
     gap: 24px;
 }
 
-@media (min-width: 1024px) {
-    .marcar-grid {
-        grid-template-columns: minmax(0, 1fr) 18rem;
-        align-items: start;
-    }
-}
+/* single column — the desktop summary aside was removed */
 
 .marcar-col {
     display: grid;
