@@ -6174,6 +6174,7 @@ const SERVICE_LABELS = {
     followup: 'Follow-up Consultation',
     psicologia: 'Psicologia',
     psicologia_mensal: 'Psicologia (subscrição)',
+    nutricao_quinzenal: 'Nutrição (subscrição quinzenal)',
     terapia_casal: 'Terapia de casal',
     terapia_casal_mensal: 'Terapia de casal (subscrição)',
 };
@@ -9471,6 +9472,7 @@ const MARCAR_TIPO_TO_SLUG = {
     longevidade: 'medicina-funcional',
     medicina_funcional: 'medicina-funcional',
     nutricao_consulta: 'nutricao-consulta',
+    nutricao_quinzenal: 'nutricao-quinzenal',
     nutricao_programa: 'nutricao-programa',
     nutricao_completo: 'nutricao-completo',
     nutricao_completo_reforcado: 'nutricao-completo-reforcado',
@@ -13190,7 +13192,9 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
                 ? `${description} · Subscrição mensal · 4 sessões (65€/semana) · cobrado mensalmente · cancelável`
                 : service === 'psicologia_mensal'
                     ? `${description} · Subscrição mensal de psicologia · 56 €/semana · 4 sessões (224 €/mês) · cobrado mensalmente · cancelável`
-                    : `${description} · Subscrição mensal · 4 consultas (54€/sessão, −10%) · cancelável`)
+                    : service === 'nutricao_quinzenal'
+                        ? `${description} · Subscrição de nutrição · 2 consultas quinzenais (45 €/consulta · 90 €/mês) · passa a mensal (45 €/mês) na fase de manutenção · sem fidelização · cancelável`
+                        : `${description} · Subscrição mensal · 4 consultas (54€/sessão, −10%) · cancelável`)
             : service === 'burnout_programa'
               ? `${description} · Programa 8 sessões com relatório final e CBI antes/depois`
               : service === 'nutricao_programa'
@@ -18431,7 +18435,9 @@ async function loadNextSlotsBody(limit, withinHours, opts) {
                     ? '€260/mês'
                     : service === 'psicologia_mensal'
                         ? '€224/mês'
-                        : service === 'psicologia' ? '€60' : '€39',
+                        : service === 'nutricao_quinzenal'
+                            ? '€90/mês'
+                            : service === 'psicologia' ? '€60' : '€39',
             holdMinutes: Math.round(SLOT_HOLD_MS / 60000)
         };
         nextSlotsCache.set(cacheKey, { ts: Date.now(), body });
@@ -18970,6 +18976,7 @@ const INVITATION_SERVICE_LABEL = {
     burnout_mensal: { pt: 'Subscrição Anti-Burnout', en: 'Anti-Burnout Subscription', es: 'Suscripción Anti-Burnout' },
     burnout_programa: { pt: 'Programa Anti-Burnout (8 sessões)', en: 'Anti-Burnout Program (8 sessions)', es: 'Programa anti-burnout (8 sesiones)' },
     nutricao_consulta: { pt: 'Consulta de Nutrição', en: 'Nutrition Consultation', es: 'Consulta de nutrición' },
+    nutricao_quinzenal: { pt: 'Subscrição de Nutrição · quinzenal', en: 'Nutrition subscription · fortnightly', es: 'Suscripción de nutrición · quincenal' },
     nutricao_programa: { pt: 'Programa de Perda de Peso (6 meses)', en: 'Weight-Loss Program (6 months)', es: 'Programa de pérdida de peso (6 meses)' },
     nutricao_completo: { pt: 'Programa Completo (6 meses)', en: 'Complete Metabolic Program (6 months)', es: 'Programa completo (6 meses)' },
     nutricao_completo_reforcado: { pt: 'Programa Completo — entrada reforçada', en: 'Complete Program — higher first payment', es: 'Programa completo — entrada reforzada' },

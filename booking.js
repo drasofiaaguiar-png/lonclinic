@@ -192,6 +192,7 @@ async function initBookingFlow() {
         renovacao: { label: 'Renovação de Tratamento Médico', price: '19 €', cents: 1900 },
         longevidade: { label: 'Consulta de Medicina Funcional', price: '60 €', cents: 6000 },
         nutricao_consulta: { label: 'Consulta de nutrição', price: '45 €', cents: 4500 },
+        nutricao_quinzenal: { label: 'Subscrição de nutrição · quinzenal', price: '90 €/mês', cents: 9000 },
         nutricao_programa: { label: 'Programa de perda de peso · 6 meses (acompanhamento médico + nutrição)', price: '115 €', cents: 11500 },
         nutricao_completo: { label: 'Programa Completo (nutrição + psicologia) — mês 1', price: '227 €', cents: 22700 },
         nutricao_completo_reforcado: { label: 'Programa Completo — entrada reforçada', price: '322 €', cents: 32200 },
@@ -268,6 +269,7 @@ async function initBookingFlow() {
         burnout_programa: 'burnout-programa',
         longevidade: 'medicina-funcional',
         nutricao_consulta: 'nutricao-consulta',
+        nutricao_quinzenal: 'nutricao-quinzenal',
         nutricao_programa: 'nutricao-programa',
         nutricao_completo: 'nutricao-completo',
         nutricao_completo_reforcado: 'nutricao-completo-reforcado',
@@ -280,7 +282,7 @@ async function initBookingFlow() {
     const CHECKOUT_PLAN_FAMILIES = {
         psicologia: ['psicologia_mensal', 'psicologia'],
         terapia_casal: ['terapia_casal_mensal', 'terapia_casal'],
-        nutricao: ['nutricao_programa', 'nutricao_consulta']
+        nutricao: ['nutricao_quinzenal', 'nutricao_programa', 'nutricao_consulta']
     };
     function planFamilyFor(serviceKey) {
         const key = String(serviceKey || '');
@@ -792,6 +794,8 @@ async function initBookingFlow() {
                 nutriProgramNote: 'Acompanhamento médico + nutrição · depois 75 €/mês · total 490 €',
                 nutriOneTitle: 'Consulta de nutrição',
                 nutriOneNote: '30 min · sem compromisso',
+                nutriSubTitle: 'Subscrição quinzenal',
+                nutriSubNote: '45 €/consulta · 2 por mês · passa a mensal na manutenção · sem fidelização',
                 nutriCompletoTitle: 'Programa Completo · nutrição + psicologia',
                 nutriCompletoNote: 'Depois 187 €/mês · total 1 162 €',
                 nutriReforcadoTitle: 'Programa Completo · entrada reforçada',
@@ -828,6 +832,8 @@ async function initBookingFlow() {
                 nutriProgramNote: 'Medical follow-up + nutrition · then €75/month · total €490',
                 nutriOneTitle: 'Nutrition consultation',
                 nutriOneNote: '30 min · no commitment',
+                nutriSubTitle: 'Fortnightly subscription',
+                nutriSubNote: '€45/consultation · 2 per month · moves to monthly in maintenance · no lock-in',
                 nutriCompletoTitle: 'Complete program · nutrition + psychology',
                 nutriCompletoNote: 'Then €187/month · total €1,162',
                 nutriReforcadoTitle: 'Complete program · higher first payment',
@@ -864,6 +870,8 @@ async function initBookingFlow() {
                 nutriProgramNote: 'Seguimiento médico + nutrición · luego 75 €/mes · total 490 €',
                 nutriOneTitle: 'Consulta de nutrición',
                 nutriOneNote: '30 min · sin compromiso',
+                nutriSubTitle: 'Suscripción quincenal',
+                nutriSubNote: '45 €/consulta · 2 al mes · pasa a mensual en mantenimiento · sin permanencia',
                 nutriCompletoTitle: 'Programa completo · nutrición + psicología',
                 nutriCompletoNote: 'Luego 187 €/mes · total 1 162 €',
                 nutriReforcadoTitle: 'Programa completo · entrada reforzada',
@@ -905,10 +913,11 @@ async function initBookingFlow() {
                     { key: 'nutricao_completo_reforcado', badge: '', title: c.nutriReforcadoTitle, price: services.nutricao_completo_reforcado.price, unit: month1, note: c.nutriReforcadoNote, featured: state.service === 'nutricao_completo_reforcado' }
                 ];
             }
-            if (state.service === 'nutricao_consulta') {
+            if (state.service === 'nutricao_quinzenal' || state.service === 'nutricao_consulta') {
                 return [
-                    { key: 'nutricao_programa', badge: c.recommended, title: c.nutriProgramTitle, price: services.nutricao_programa.price, unit: month1, note: c.nutriProgramNote, featured: true },
-                    { key: 'nutricao_consulta', badge: c.oneOff, title: c.nutriOneTitle, price: services.nutricao_consulta.price, unit: c.perConsult, note: c.nutriOneNote, featured: false }
+                    { key: 'nutricao_quinzenal', badge: c.recommended, title: c.nutriSubTitle, price: services.nutricao_quinzenal.price, unit: '', note: c.nutriSubNote, featured: state.service === 'nutricao_quinzenal' },
+                    { key: 'nutricao_consulta', badge: c.oneOff, title: c.nutriOneTitle, price: services.nutricao_consulta.price, unit: c.perConsult, note: c.nutriOneNote, featured: state.service === 'nutricao_consulta' },
+                    { key: 'nutricao_programa', badge: '', title: c.nutriProgramTitle, price: services.nutricao_programa.price, unit: month1, note: c.nutriProgramNote, featured: false }
                 ];
             }
             return [
@@ -1738,6 +1747,7 @@ async function initBookingFlow() {
                 burnout_programa: 'burnout-programa',
                 longevidade: 'medicina-funcional',
                 nutricao_consulta: 'nutricao-consulta',
+                nutricao_quinzenal: 'nutricao-quinzenal',
                 nutricao_programa: 'nutricao-programa',
                 nutricao_completo: 'nutricao-completo',
                 nutricao_completo_reforcado: 'nutricao-completo-reforcado'
@@ -1871,6 +1881,9 @@ async function initBookingFlow() {
         }
         if (state.service === 'nutricao_consulta') {
             return 'Consulta de nutrição avulsa (sem programa). Sem prescrição de aGLP-1.';
+        }
+        if (state.service === 'nutricao_quinzenal') {
+            return 'Subscrição de nutrição quinzenal (2 consultas/mês, 45 €/consulta) — passa a mensal na fase de manutenção. Sem prescrição de aGLP-1.';
         }
         if (state.service === 'nutricao_programa' || state.service === 'nutricao_completo' || state.service === 'nutricao_completo_reforcado') {
             try {

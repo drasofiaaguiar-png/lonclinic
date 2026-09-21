@@ -29,6 +29,7 @@ const SERVICE_CENTS = {
     terapia_casal: 7500,
     terapia_casal_mensal: 26000,
     nutricao_consulta: 4500,
+    nutricao_quinzenal: 9000, // subscription: 2 consultas/mês × 45 € (passa a mensal na manutenção)
     nutricao_programa: 11500,
     nutricao_completo: 22700,
     nutricao_completo_reforcado: 32200
@@ -67,6 +68,7 @@ const PROVIDER_PAYOUT_CENTS = {
     terapia_casal: 2500,
     terapia_casal_mensal: 2500,
     nutricao_consulta: 1600,
+    nutricao_quinzenal: 1600,
     nutricao_programa: 1600,
     nutricao_completo: 1600,
     nutricao_completo_reforcado: 1600
@@ -75,7 +77,7 @@ const PROVIDER_PAYOUT_CENTS = {
 const B2B_CORPORATE_BONUS_CENTS = 20000;
 const CONTINUITY_CLINIC_TAX = 0.2;
 
-const STRIPE_SUBSCRIPTION_SERVICES = new Set(['burnout_mensal', 'psicologia_mensal', 'terapia_casal_mensal']);
+const STRIPE_SUBSCRIPTION_SERVICES = new Set(['burnout_mensal', 'psicologia_mensal', 'terapia_casal_mensal', 'nutricao_quinzenal']);
 
 function isStripeSubscriptionService(serviceKey) {
     return STRIPE_SUBSCRIPTION_SERVICES.has(serviceKey);
@@ -140,6 +142,7 @@ function computeCheckoutTotalCents(opts) {
         'burnout_programa',
         'psicologia_mensal',
         'terapia_casal_mensal',
+        'nutricao_quinzenal',
         'nutricao_programa',
         'nutricao_completo',
         'nutricao_completo_reforcado'
@@ -172,6 +175,7 @@ function discountsAllowedForService(service) {
         'burnout_programa',
         'psicologia_mensal',
         'terapia_casal_mensal',
+        'nutricao_quinzenal',
         'nutricao_programa',
         'nutricao_completo',
         'nutricao_completo_reforcado'

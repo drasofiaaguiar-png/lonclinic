@@ -145,6 +145,15 @@
                     'You can move to the 6-month program at any time if you want ongoing follow-up.'
                 ]
             },
+            nutricao_quinzenal: {
+                label: 'Nutrition subscription · fortnightly',
+                duration: '2 consultations/month · €45 each · billed monthly (€90)',
+                bullets: [
+                    'Fortnightly video consultations with the same nutritionist, plus chat adjustments in between.',
+                    'Moves to monthly (€45/month) once you reach the maintenance phase — decided together.',
+                    'No lock-in: pause or cancel any time. No aGLP-1 prescription.'
+                ]
+            },
             nutricao_programa: {
                 label: 'Weight-loss program · 6 months',
                 duration: 'Month 1 · then €75/month · total €490',
@@ -312,6 +321,15 @@
                     'Puede pasar al programa de 6 meses en cualquier momento si quiere seguimiento continuo.'
                 ]
             },
+            nutricao_quinzenal: {
+                label: 'Suscripción de nutrición · quincenal',
+                duration: '2 consultas/mes · 45 € cada · cobrado mensualmente (90 €)',
+                bullets: [
+                    'Consultas quincenales por videollamada con la misma nutricionista, con ajustes por chat entre consultas.',
+                    'Pasa a mensual (45 €/mes) al llegar a la fase de mantenimiento — decidido en conjunto.',
+                    'Sin permanencia: pausa o cancela cuando quieras. Sin prescripción de aGLP-1.'
+                ]
+            },
             nutricao_programa: {
                 label: 'Programa de pérdida de peso · 6 meses',
                 duration: 'Mes 1 · luego 75 €/mes · total 490 €',
@@ -353,6 +371,7 @@
         burnout_programa: 'burnout-programa',
         longevidade: 'medicina-funcional',
         nutricao_consulta: 'nutricao-consulta',
+        nutricao_quinzenal: 'nutricao-quinzenal',
         nutricao_programa: 'nutricao-programa',
         nutricao_completo: 'nutricao-completo',
         nutricao_completo_reforcado: 'nutricao-completo-reforcado',
@@ -382,6 +401,8 @@
         'medicina-longevidade': 'longevidade',
         'nutricao-consulta': 'nutricao_consulta',
         nutricao_consulta: 'nutricao_consulta',
+        'nutricao-quinzenal': 'nutricao_quinzenal',
+        nutricao_quinzenal: 'nutricao_quinzenal',
         'nutricao-programa': 'nutricao_programa',
         nutricao_programa: 'nutricao_programa',
         'nutricao-completo': 'nutricao_completo',
@@ -446,8 +467,17 @@
             featured: false
         }
     ];
-    var NUTRICAO_FAMILY = ['nutricao_consulta', 'nutricao_programa', 'nutricao_completo', 'nutricao_completo_reforcado'];
+    var NUTRICAO_FAMILY = ['nutricao_consulta', 'nutricao_quinzenal', 'nutricao_programa', 'nutricao_completo', 'nutricao_completo_reforcado'];
     var NUTRICAO_PLAN_CARDS = [
+        {
+            tipo: 'nutricao_quinzenal',
+            badge: 'Subscrição',
+            title: 'Acompanhamento quinzenal',
+            price: '45 €',
+            unit: 'por consulta · 90 €/mês',
+            note: '2 consultas/mês · passa a mensal na manutenção · sem fidelização',
+            featured: true
+        },
         {
             tipo: 'nutricao_programa',
             badge: 'Recomendado',
@@ -728,6 +758,19 @@
                 'Consulta avulsa com nutricionista, por videochamada — sem programa nem fidelização.',
                 'Avaliação alimentar e orientações concretas para começar. Sem prescrição de aGLP-1.',
                 'Se quiser acompanhamento contínuo, pode passar ao programa de 6 meses em qualquer altura.'
+            ]
+        },
+        nutricao_quinzenal: {
+            label: 'Subscrição de nutrição · quinzenal',
+            price: '90 €',
+            priceNote: '/mês · 2 consultas de 45 €',
+            cents: 9000,
+            duration: '2 consultas/mês · 45 € cada · cobrado mensalmente',
+            serviceKey: 'nutricao_quinzenal',
+            bullets: [
+                'Consultas quinzenais por videochamada com a mesma nutricionista, com ajustes por chat entre consultas.',
+                'Passa a mensal (45 €/mês) quando atingir a fase de manutenção — decidido em conjunto com a sua nutricionista.',
+                'Sem fidelização: pausa ou cancela quando quiser. Sem prescrição de aGLP-1.'
             ]
         },
         nutricao_programa: {
@@ -1065,11 +1108,18 @@
             });
             nutricaoKicker = 'Programa Completo';
             nutricaoHeading = 'Escolha a entrada — o total é o mesmo (1 162 €)';
-        } else if (tipo === 'nutricao_consulta') {
+        } else if (tipo === 'nutricao_consulta' || tipo === 'nutricao_quinzenal') {
             nutricaoCards = NUTRICAO_PLAN_CARDS.filter(function (card) {
-                return card.tipo === 'nutricao_programa' || card.tipo === 'nutricao_consulta';
+                return card.tipo === 'nutricao_quinzenal' || card.tipo === 'nutricao_consulta' || card.tipo === 'nutricao_programa';
+            }).map(function (card) {
+                if (card.tipo === 'nutricao_quinzenal') return Object.assign({}, card, { badge: 'Recomendado' });
+                if (card.tipo === 'nutricao_programa') return Object.assign({}, card, { badge: 'Programa' });
+                return card;
             });
-            nutricaoHeading = 'Consulta avulsa ou programa de 6 meses — sem aGLP-1';
+            nutricaoKicker = 'Nutrição';
+            nutricaoHeading = tipo === 'nutricao_quinzenal'
+                ? 'Subscrição quinzenal, consulta avulsa ou programa de 6 meses — sem aGLP-1'
+                : 'Consulta avulsa, subscrição quinzenal ou programa de 6 meses — sem aGLP-1';
         } else {
             nutricaoCards = NUTRICAO_PLAN_CARDS.filter(function (card) {
                 return card.tipo === 'nutricao_programa' || card.tipo === 'nutricao_completo';
@@ -1083,7 +1133,7 @@
         if (nutricaoLink) nutricaoLink.hidden = false;
         var nutricaoTrust = document.getElementById('marcarBuyTrust');
         // "Fidelização 3 meses" only applies to the programs, not to the one-off consultation.
-        if (nutricaoTrust) nutricaoTrust.hidden = tipo === 'nutricao_consulta';
+        if (nutricaoTrust) nutricaoTrust.hidden = tipo === 'nutricao_consulta' || tipo === 'nutricao_quinzenal';
         // Like psychology: the generic service pills give way to nutrition motives,
         // with weight loss already selected.
         var nuTypeLabel = document.getElementById('marcarTypeLabel');
@@ -1537,6 +1587,15 @@
                 goal: goalLabel,
                 concerns: 'Objectivo: ' + goalLabel + '. Consulta de nutrição avulsa (sem programa). Sem prescrição de aGLP-1.',
                 label: 'Consulta de nutrição'
+            };
+        }
+        if (tipo === 'nutricao_quinzenal') {
+            return {
+                category: state.nutricaoGoal === 'perda-de-peso' ? 'weight-loss' : 'nutrition',
+                product: 'nutricao_quinzenal',
+                goal: goalLabel,
+                concerns: 'Objectivo: ' + goalLabel + '. Subscrição de nutrição quinzenal (2 consultas/mês, 45 €/consulta) — passa a mensal na fase de manutenção. Sem prescrição de aGLP-1.',
+                label: 'Subscrição de nutrição · quinzenal'
             };
         }
         return {
