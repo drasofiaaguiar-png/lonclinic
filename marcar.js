@@ -128,11 +128,11 @@
                 ]
             },
             longevidade: {
-                label: 'Longevity & Preventive Health Consultation',
+                label: 'Functional Medicine Consultation',
                 duration: '45–60 min',
                 bullets: [
-                    'Focus on prevention, long-term risk, and a personalized plan.',
-                    'Lifestyle review and screening priorities.',
+                    'Functional medicine approach: we look for root causes, not just symptoms.',
+                    'Review of lifestyle, sleep, nutrition and biomarkers, with a personalised plan.',
                     'For those who want to invest in health before chronic diseases arise.'
                 ]
             },
@@ -295,11 +295,11 @@
                 ]
             },
             longevidade: {
-                label: 'Consulta de Longevidad y Salud Preventiva',
+                label: 'Consulta de Medicina Funcional',
                 duration: '45–60 min',
                 bullets: [
-                    'Enfoque en prevención, riesgo a largo plazo y plan personalizado.',
-                    'Revisión del estilo de vida y prioridades de cribado.',
+                    'Enfoque de medicina funcional: buscamos las causas, no solo los síntomas.',
+                    'Revisión del estilo de vida, sueño, nutrición y biomarcadores, con plan personalizado.',
                     'Para quienes quieren invertir en su salud antes de que aparezcan enfermedades crónicas.'
                 ]
             },
@@ -351,7 +351,7 @@
         burnout: 'burnout',
         burnout_mensal: 'burnout-mensal',
         burnout_programa: 'burnout-programa',
-        longevidade: 'longevidade',
+        longevidade: 'medicina-funcional',
         nutricao_consulta: 'nutricao-consulta',
         nutricao_programa: 'nutricao-programa',
         nutricao_completo: 'nutricao-completo',
@@ -377,6 +377,9 @@
         'burnout-programa': 'burnout_programa',
         burnout_programa: 'burnout_programa',
         longevidade: 'longevidade',
+        'medicina-funcional': 'longevidade',
+        medicina_funcional: 'longevidade',
+        'medicina-longevidade': 'longevidade',
         'nutricao-consulta': 'nutricao_consulta',
         nutricao_consulta: 'nutricao_consulta',
         'nutricao-programa': 'nutricao_programa',
@@ -704,14 +707,14 @@
             ]
         },
         longevidade: {
-            label: 'Consulta de Longevidade e Saúde Preventiva',
-            price: '€79',
-            cents: 7900,
+            label: 'Consulta de Medicina Funcional',
+            price: '60 €',
+            cents: 6000,
             duration: '45–60 min',
             serviceKey: 'longevidade',
             bullets: [
-                'Foco em prevenção, risco a longo prazo e plano personalizado.',
-                'Revisão de estilo de vida e prioridades de rastreio.',
+                'Abordagem de medicina funcional: procuramos as causas, não só os sintomas.',
+                'Revisão de estilo de vida, sono, nutrição e biomarcadores, com plano personalizado.',
                 'Para quem quer investir na saúde antes de surgirem doenças crónicas.'
             ]
         },
@@ -830,7 +833,7 @@
         nutricao_programa: 'Nutrição',
         burnout: 'Burnout',
         travel: 'Medicina do Viajante',
-        longevidade: 'Longevidade',
+        longevidade: 'Medicina Funcional',
         renovacao: 'Renovação de tratamento'
     };
 

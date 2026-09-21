@@ -190,7 +190,7 @@ async function initBookingFlow() {
         burnout_mensal: { label: 'Subscrição Anti-Burnout', price: '216 €/mês', cents: 21600 },
         burnout_programa: { label: 'Programa Anti-Burnout (8 sessões)', price: '490 €', cents: 49000 },
         renovacao: { label: 'Renovação de Tratamento Médico', price: '19 €', cents: 1900 },
-        longevidade: { label: 'Consulta de Longevidade e Saúde Preventiva', price: '79 €', cents: 7900 },
+        longevidade: { label: 'Consulta de Medicina Funcional', price: '60 €', cents: 6000 },
         nutricao_consulta: { label: 'Consulta de nutrição', price: '45 €', cents: 4500 },
         nutricao_programa: { label: 'Programa de perda de peso · 6 meses (acompanhamento médico + nutrição)', price: '115 €', cents: 11500 },
         nutricao_completo: { label: 'Programa Completo (nutrição + psicologia) — mês 1', price: '227 €', cents: 22700 },
@@ -266,7 +266,7 @@ async function initBookingFlow() {
         burnout: 'burnout',
         burnout_mensal: 'burnout-mensal',
         burnout_programa: 'burnout-programa',
-        longevidade: 'longevidade',
+        longevidade: 'medicina-funcional',
         nutricao_consulta: 'nutricao-consulta',
         nutricao_programa: 'nutricao-programa',
         nutricao_completo: 'nutricao-completo',
@@ -301,7 +301,7 @@ async function initBookingFlow() {
         nutricao_programa: 'Nutrição',
         burnout: 'Burnout',
         travel: 'Medicina do Viajante',
-        longevidade: 'Longevidade',
+        longevidade: 'Medicina Funcional',
         renovacao: 'Renovação de tratamento'
     };
 
@@ -651,6 +651,8 @@ async function initBookingFlow() {
 
     const serviceAlias = {
         longevity: 'longevidade',
+        medicina_funcional: 'longevidade',
+        'medicina-funcional': 'longevidade',
         followup: 'clinica_geral',
         itu: 'clinica_geral',
         infecao_urinaria: 'clinica_geral',
@@ -1734,7 +1736,7 @@ async function initBookingFlow() {
                 burnout: 'burnout',
                 burnout_mensal: 'burnout-mensal',
                 burnout_programa: 'burnout-programa',
-                longevidade: 'longevidade',
+                longevidade: 'medicina-funcional',
                 nutricao_consulta: 'nutricao-consulta',
                 nutricao_programa: 'nutricao-programa',
                 nutricao_completo: 'nutricao-completo',

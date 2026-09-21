@@ -5,6 +5,8 @@
 
 const SERVICE_ALIAS = {
     longevity: 'longevidade',
+    medicina_funcional: 'longevidade',
+    funcional: 'longevidade',
     followup: 'clinica_geral',
     itu: 'clinica_geral',
     infecao_urinaria: 'clinica_geral',
@@ -21,7 +23,7 @@ const SERVICE_CENTS = {
     burnout_mensal: 21600,
     burnout_programa: 49000,
     renovacao: 1900,
-    longevidade: 7900,
+    longevidade: 6000, // Consulta de Medicina Funcional (internal key kept as "longevidade")
     psicologia: 6000,
     psicologia_mensal: 22400,
     terapia_casal: 7500,

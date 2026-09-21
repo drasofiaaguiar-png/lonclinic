@@ -197,7 +197,7 @@
         { s: '.lon-tab[data-tab="urgencias"]', en: 'General Medicine', pt: 'Medicina Geral', es: 'Medicina General' },
         { s: '.lon-tab[data-tab="mental"]', en: 'Mental Health', pt: 'Saúde Mental', es: 'Salud Mental' },
         { s: '.lon-tab[data-tab="especialidades"]', en: "Traveler's Health", pt: 'Saúde do Viajante', es: 'Salud del Viajero' },
-        { s: '.lon-tab[data-tab="longevidade"]', en: 'Longevity Medicine', pt: 'Medicina da Longevidade', es: 'Medicina de la Longevidad' },
+        { s: '.lon-tab[data-tab="longevidade"]', en: 'Functional Medicine', pt: 'Medicina Funcional', es: 'Medicina Funcional' },
         { s: '.lon-tab[data-tab="nutricao"]', en: 'Nutrition', pt: 'Nutrição', es: 'Nutrición' },
 
         /* ── Service chips ── */
@@ -206,7 +206,7 @@
         { s: '#lon-service-renovacao .lon-service-chip', en: 'Follow-up', pt: 'Seguimento', es: 'Seguimiento' },
         { s: '#lon-service-travel .lon-service-chip', en: 'Traveler', pt: 'Viajante', es: 'Viajero' },
         { s: '#lon-service-travel-2 .lon-service-chip', en: 'Traveler — 2 people', pt: 'Viajante 2 pessoas', es: 'Viajero — 2 personas' },
-        { s: '#lon-service-longevidade .lon-service-chip', en: 'Longevity', pt: 'Longevidade', es: 'Longevidad' },
+        { s: '#lon-service-longevidade .lon-service-chip', en: 'Functional Medicine', pt: 'Medicina Funcional', es: 'Medicina Funcional' },
         { s: '#lon-service-nutricao-semanal .lon-service-chip', en: 'Nutrition', pt: 'Nutrição', es: 'Nutrición' },
         { s: '#lon-service-nutricao-bimensal .lon-service-chip', en: 'Nutrition', pt: 'Nutrição', es: 'Nutrición' },
 
@@ -216,7 +216,7 @@
         { s: '#lon-service-renovacao h3', en: 'Medical Treatment Renewal', pt: 'Renovação de Tratamento Médico', es: 'Renovación de Tratamiento Médico' },
         { s: '#lon-service-travel h3', en: "Traveler's Consultation", pt: 'Consulta do Viajante', es: 'Consulta del Viajero' },
         { s: '#lon-service-travel-2 h3', en: "Traveler's Consultation — 2 people", pt: 'Consulta do Viajante 2 pessoas', es: 'Consulta del Viajero — 2 personas' },
-        { s: '#lon-service-longevidade h3', en: 'Longevity & Preventive Health Consultation', pt: 'Consulta de Longevidade e Saúde Preventiva', es: 'Consulta de Longevidad y Salud Preventiva' },
+        { s: '#lon-service-longevidade h3', en: 'Functional Medicine Consultation', pt: 'Consulta de Medicina Funcional', es: 'Consulta de Medicina Funcional' },
         { s: '#lon-service-nutricao-semanal h3', en: 'Monthly nutrition consultation', pt: 'Consulta mensal de nutrição', es: 'Consulta mensual de nutrición' },
         { s: '#lon-service-nutricao-semanal .lon-service-price', en: '45 €/month', pt: '45 €/mês', es: '45 €/mes' },
         { s: '#lon-service-nutricao-bimensal h3', en: 'Bimonthly nutrition consultation', pt: 'Consulta bimensal de nutrição', es: 'Consulta bimensual de nutrición' },
@@ -239,7 +239,7 @@
         { s: '#lon-service-renovacao .lon-btn-soft', en: 'Book — 19 €', pt: 'Marcar — 19 €', es: 'Reservar — 19 €' },
         { s: '#lon-service-travel .lon-btn-soft', en: 'Book — 39 €', pt: 'Marcar — 39 €', es: 'Reservar — 39 €' },
         { s: '#lon-service-travel-2 .lon-btn-soft', en: 'Book — 69 €', pt: 'Marcar — 69 €', es: 'Reservar — 69 €' },
-        { s: '#lon-service-longevidade .lon-btn-soft', en: 'Book — 79 €', pt: 'Marcar — 79 €', es: 'Reservar — 79 €' },
+        { s: '#lon-service-longevidade .lon-btn-soft', en: 'Book — 60 €', pt: 'Marcar — 60 €', es: 'Reservar — 60 €' },
         { s: '#lon-service-nutricao-semanal .lon-btn-soft', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
         { s: '#lon-service-nutricao-bimensal .lon-btn-soft', en: 'Book consultation', pt: 'Marcar consulta', es: 'Reservar consulta' },
 
@@ -385,7 +385,7 @@
         { s: '.lon-footer-col:nth-child(2) a[href="/saudemental"]', en: 'Mental Health', pt: 'Saúde Mental', es: 'Salud Mental' },
         { s: '.lon-footer-col:nth-child(2) a[href="/nutricao"]', en: 'Nutrition', pt: 'Nutrição', es: 'Nutrición' },
         { s: '.lon-footer-col:nth-child(2) a[href="/terapia-de-casal"]', en: 'Couples therapy', pt: 'Terapia de Casal', es: 'Terapia de pareja' },
-        { s: '.lon-footer-col:nth-child(2) a[href="/marcar/longevidade"]', en: 'Longevity', pt: 'Longevidade', es: 'Longevidad' },
+        { s: '.lon-footer-col:nth-child(2) a[href="/marcar/medicina-funcional"]', en: 'Functional Medicine', pt: 'Medicina Funcional', es: 'Medicina Funcional' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=sobre-nos"]', en: 'About us', pt: 'Sobre nós', es: 'Sobre nosotros' },
         { s: '.lon-footer-col:nth-child(3) a[href="/equipa"], .lon-footer-col:nth-child(3) a[href="/equipa/rita-aguiar"]', en: 'The team', pt: 'A Equipa', es: 'El equipo' },
         { s: '.lon-footer-col:nth-child(3) a[href="/info.html?page=parcerias"]', en: 'Partnerships', pt: 'Parcerias', es: 'Asociaciones' },
@@ -918,7 +918,7 @@
                 burnout_mensal: 'Anti-Burnout Subscription',
                 burnout_programa: 'Anti-Burnout Program (8 sessions)',
                 renovacao: 'Medical Treatment Renewal',
-                longevidade: 'Longevity & Preventive Health Consultation',
+                longevidade: 'Functional Medicine Consultation',
                 nutricao_consulta: 'Nutrition consultation',
                 nutricao_programa: 'Weight-loss program · 6 months (medical follow-up + nutrition)',
                 nutricao_completo: 'Complete program (nutrition + psychology) — month 1',
@@ -936,7 +936,7 @@
                 nutricao_programa: 'Nutrition',
                 burnout: 'Burnout',
                 travel: 'Travel Medicine',
-                longevidade: 'Longevity',
+                longevidade: 'Functional Medicine',
                 renovacao: 'Treatment renewal'
             },
             durations: {
@@ -985,7 +985,7 @@
                 burnout_mensal: 'Subscrição Anti-Burnout',
                 burnout_programa: 'Programa Anti-Burnout (8 sessões)',
                 renovacao: 'Renovação de Tratamento Médico',
-                longevidade: 'Consulta de Longevidade e Saúde Preventiva',
+                longevidade: 'Consulta de Medicina Funcional',
                 nutricao_consulta: 'Consulta de nutrição',
                 nutricao_programa: 'Programa de perda de peso · 6 meses (acompanhamento médico + nutrição)',
                 nutricao_completo: 'Programa Completo (nutrição + psicologia) — mês 1',
@@ -1003,7 +1003,7 @@
                 nutricao_programa: 'Nutrição',
                 burnout: 'Burnout',
                 travel: 'Medicina do Viajante',
-                longevidade: 'Longevidade',
+                longevidade: 'Medicina Funcional',
                 renovacao: 'Renovação de tratamento'
             },
             durations: {
@@ -1052,7 +1052,7 @@
                 burnout_mensal: 'Suscripción Anti-Burnout',
                 burnout_programa: 'Programa anti-burnout (8 sesiones)',
                 renovacao: 'Renovación de tratamiento médico',
-                longevidade: 'Consulta de longevidad y salud preventiva',
+                longevidade: 'Consulta de medicina funcional',
                 nutricao_consulta: 'Consulta de nutrición',
                 nutricao_programa: 'Programa de pérdida de peso · 6 meses (seguimiento médico + nutrición)',
                 nutricao_completo: 'Programa completo (nutrición + psicología) — mes 1',
@@ -1070,7 +1070,7 @@
                 nutricao_programa: 'Nutrición',
                 burnout: 'Burnout',
                 travel: 'Medicina del viajero',
-                longevidade: 'Longevidad',
+                longevidade: 'Medicina funcional',
                 renovacao: 'Renovación de tratamiento'
             },
             durations: {

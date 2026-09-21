@@ -1328,7 +1328,7 @@ const STAFF_CLINICAL_AREAS = {
                 'Saúde mental',
                 'Burnout',
                 'Consulta do viajante',
-                'Longevidade',
+                'Medicina funcional',
                 'Saúde da mulher',
                 'Pediatria',
                 'Doença aguda / urgente',
@@ -4810,7 +4810,7 @@ const INTERVIEW_ROLE_LABELS = {
     'medicina-geral': 'Medicina geral',
     'saude-mental': 'Saúde mental (medicina)',
     'medicina-viajante': 'Medicina do viajante',
-    longevidade: 'Longevidade',
+    longevidade: 'Medicina funcional',
     nutricao: 'Nutrição',
     'operacoes-e-suporte': 'Operações e suporte',
     outros: 'Outro'
@@ -6166,7 +6166,9 @@ async function sendComplaintEmail(data) {
 ======================================== */
 
 const SERVICE_LABELS = {
-    longevity: 'Longevity Assessment',
+    longevity: 'Consulta de Medicina Funcional',
+    longevidade: 'Consulta de Medicina Funcional',
+    medicina_funcional: 'Consulta de Medicina Funcional',
     'longevity-plus': 'Longevity Plus',
     travel: 'Travel Medicine Consultation',
     followup: 'Follow-up Consultation',
@@ -9358,6 +9360,7 @@ app.use((req, res, next) => {
 
 // ─── IMPORTANT: Routes must come BEFORE express.static ───
 // ─── Friendly URLs (without .html) - MUST come before root route ───
+app.get('/medicina-funcional', (req, res) => res.redirect(302, '/longevidade'));
 app.get('/longevidade', (req, res) => {
     const filePath = path.join(__dirname, 'longevidade.html');
     if (!fs.existsSync(filePath)) {
@@ -9465,7 +9468,8 @@ const MARCAR_TIPO_TO_SLUG = {
     burnout: 'burnout',
     burnout_mensal: 'burnout-mensal',
     burnout_programa: 'burnout-programa',
-    longevidade: 'longevidade',
+    longevidade: 'medicina-funcional',
+    medicina_funcional: 'medicina-funcional',
     nutricao_consulta: 'nutricao-consulta',
     nutricao_programa: 'nutricao-programa',
     nutricao_completo: 'nutricao-completo',
@@ -10283,7 +10287,7 @@ const CAREER_ROLE_LABELS = {
     'medicina-geral': 'Medicina Geral',
     'saude-mental': 'Saúde Mental',
     'medicina-viajante': 'Medicina do Viajante',
-    longevidade: 'Medicina da Longevidade',
+    longevidade: 'Medicina Funcional',
     'operacoes-e-suporte': 'Operações e Suporte',
     outros: 'Outros'
 };
@@ -18969,7 +18973,7 @@ const INVITATION_SERVICE_LABEL = {
     nutricao_programa: { pt: 'Programa de Perda de Peso (6 meses)', en: 'Weight-Loss Program (6 months)', es: 'Programa de pérdida de peso (6 meses)' },
     nutricao_completo: { pt: 'Programa Completo (6 meses)', en: 'Complete Metabolic Program (6 months)', es: 'Programa completo (6 meses)' },
     nutricao_completo_reforcado: { pt: 'Programa Completo — entrada reforçada', en: 'Complete Program — higher first payment', es: 'Programa completo — entrada reforzada' },
-    longevidade: { pt: 'Consulta de Longevidade', en: 'Longevity Consultation', es: 'Consulta de Longevidad' },
+    longevidade: { pt: 'Consulta de Medicina Funcional', en: 'Functional Medicine Consultation', es: 'Consulta de Medicina Funcional' },
     renovacao: { pt: 'Renovação de Receita', en: 'Prescription Renewal', es: 'Renovación de Receta' },
     psicologia: { pt: 'Sessão de Psicologia', en: 'Psychology Session', es: 'Sesión de psicología' },
     psicologia_mensal: { pt: 'Subscrição de Psicologia', en: 'Psychology subscription', es: 'Suscripción de psicología' },
