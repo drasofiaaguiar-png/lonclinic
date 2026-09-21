@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="/pillar-colors.css?v=20260919">
     <link rel="stylesheet" href="/ui-fixes-critical.css?v=20260920f">
     <link rel="stylesheet" href="/psicologia.css?v=20260915c">
+    <link rel="stylesheet" href="/modern-layout.css?v=20260921">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -126,85 +127,96 @@
     </header>
 
     <main id="conteudo-principal">
-        <section class="urgent-hero" id="inicio" aria-labelledby="urgent-hero-title">
-            <div class="lon-container">
-                <div class="urgent-hero-content">
-                    <p class="urgent-kicker">Resposta rápida · consulta ainda hoje</p>
-                    <h1 id="urgent-hero-title">Sintomas agora? Fale com um médico hoje</h1>
-                    <p class="urgent-hero-subtitle">Consulta médica urgente por videochamada — para quem está doente agora, seja residente ou de visita a Portugal.</p>
-                    <div class="urgent-hero-price">
-                        <span class="urgent-price-value">39€</span>
-                        <span class="urgent-price-label">consulta avulsa</span>
+        <section class="modern-hero" id="inicio" aria-labelledby="urgent-hero-title">
+            <div class="modern-container">
+                <div class="modern-hero-grid">
+                    <div class="modern-hero-content">
+                        <span class="modern-badge">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                            </svg>
+                            Resposta rápida · consulta ainda hoje
+                        </span>
+                        
+                        <h1 id="urgent-hero-title" class="modern-title-xl">Sintomas agora? Fale com um médico hoje</h1>
+                        
+                        <p class="modern-lead">Consulta médica urgente por videochamada — para quem está doente agora, seja residente ou de visita a Portugal.</p>
+                        
+                        <div class="modern-btn-group">
+                            <a href="/marcar/urgent-care" class="modern-btn modern-btn--primary js-urgent-cta" data-urgent-cta="hero">
+                                Marcar consulta
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M7 17l10-10M8 7h9v9"/>
+                                </svg>
+                            </a>
+                            <a href="#como-funciona" class="modern-link">Como funciona</a>
+                        </div>
+                        
+                        <div style="margin-top: 2rem; padding: 1.5rem; border-radius: 1rem; background-color: rgba(189, 79, 79, 0.1); border: 1px solid rgba(189, 79, 79, 0.2);">
+                            <p style="font-size: 0.875rem; line-height: 1.6; color: var(--color-text-primary); margin: 0;"><strong>Em emergência real</strong> (dor no peito, dificuldade a respirar, perda de consciência): <a href="tel:112" style="font-weight: 600; text-decoration: underline;">ligue 112</a> de imediato. Isto não substitui uma urgência hospitalar.</p>
+                        </div>
+                        
+                        <ul class="modern-services">
+                            <li class="modern-tag">Consulta Urgente</li>
+                            <li class="modern-tag">Consulta Médica</li>
+                            <li class="modern-tag">Atestado Médico</li>
+                            <li class="modern-tag">Acompanhamento Completo</li>
+                        </ul>
                     </div>
-                    <a href="/marcar/urgent-care" class="lon-btn lon-btn-dark lon-btn-lg js-urgent-cta" data-urgent-cta="hero">Marcar consulta</a>
-                    <p class="urgent-emergency-warning"><strong>Em emergência real</strong> (dor no peito, dificuldade a respirar, perda de consciência): <a href="tel:112">ligue 112</a> de imediato. Isto não substitui uma urgência hospitalar.</p>
+                    
+                    <div class="modern-hero-image">
+                        <img src="/image/image3.webp" alt="Consulta médica urgente online" loading="eager">
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="lon-intro-categories">
-            <div class="lon-container">
-                <p class="lon-intro-text">Cuidado médico rápido e urgente,<br>
-quando precisa de ser visto rapidamente,<br>
-mas não é uma emergência.<br>
-<strong>100% online.</strong></p>
+
+        <section class="modern-section modern-section--muted" id="como-funciona" aria-labelledby="urgent-process-title">
+            <div class="modern-container">
+                <h2 id="urgent-process-title" class="modern-title-lg">Como funciona</h2>
                 
-                <div class="lon-category-grid">
-                    <a href="/marcar/urgent-care" class="lon-category-card">
-                        <h3>Consulta<br>Urgente</h3>
-                    </a>
-                    <a href="/marcar/clinica-geral" class="lon-category-card">
-                        <h3>Consulta<br>Médica</h3>
-                    </a>
-                    <a href="/marcar/atestado" class="lon-category-card">
-                        <h3>Atestado<br>Médico</h3>
-                    </a>
-                    <a href="/triagem" class="lon-category-card lon-category-card-primary">
-                        <h3>Acompanhamento<br>Completo</h3>
-                        <span class="lon-category-label">Comece Aqui</span>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <section class="urgent-section urgent-process" id="como-funciona" aria-labelledby="urgent-process-title">
-            <div class="lon-container">
-                <h2 id="urgent-process-title" class="urgent-center-title">Como funciona</h2>
-                <div class="urgent-process-grid urgent-process-grid--three">
-                    <article class="urgent-process-card">
-                        <div class="urgent-process-number" aria-hidden="true">1</div>
-                        <h3>Descreva os sintomas</h3>
-                        <p>Escolha consulta de urgência. Se tiver dúvidas, <a href="https://wa.me/351910156711" target="_blank" rel="noopener">fale connosco no WhatsApp</a> — respondemos em menos de 1 hora.</p>
-                    </article>
-                    <article class="urgent-process-card">
-                        <div class="urgent-process-number" aria-hidden="true">2</div>
-                        <h3>Agende ainda hoje</h3>
-                        <p>Escolha o horário disponível mais próximo.</p>
-                    </article>
-                    <article class="urgent-process-card">
-                        <div class="urgent-process-number" aria-hidden="true">3</div>
-                        <h3>Comece o seu tratamento</h3>
-                        <p>Consulta imediata com receita digital, se necessário, enviada logo após.</p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="urgent-section urgent-mockup" id="sessao" aria-label="Exemplo de consulta">
-            <div class="lon-container">
-                <div class="urgent-phone-wrap" aria-hidden="true">
-                    <div class="urgent-phone">
-                        <div class="urgent-phone-notch"></div>
-                        <div class="urgent-phone-screen">
-                            <div class="urgent-phone-header">
-                                <span class="urgent-phone-time">Hoje · 14:20</span>
-                                <span class="urgent-phone-type">Videochamada</span>
+                <div class="modern-grid-auto modern-mt-12">
+                    <ol class="modern-steps">
+                        <li class="modern-step">
+                            <span class="modern-step-number">1</span>
+                            <div class="modern-step-content">
+                                <h3>Descreva os sintomas</h3>
+                                <p>Escolha consulta de urgência. Se tiver dúvidas, <a href="https://wa.me/351910156711" target="_blank" rel="noopener">fale connosco no WhatsApp</a> — respondemos em menos de 1 hora.</p>
                             </div>
-                            <div class="urgent-phone-status">
-                                <span class="urgent-status-badge">Consulta em curso</span>
+                        </li>
+                        <li class="modern-step">
+                            <span class="modern-step-number">2</span>
+                            <div class="modern-step-content">
+                                <h3>Agende ainda hoje</h3>
+                                <p>Escolha o horário disponível mais próximo.</p>
                             </div>
-                            <div class="urgent-phone-messages">
-                                <div class="urgent-phone-msg urgent-phone-msg--in">Conte-me: desde quando tem estes sintomas?</div>
+                        </li>
+                        <li class="modern-step">
+                            <span class="modern-step-number">3</span>
+                            <div class="modern-step-content">
+                                <h3>Comece o seu tratamento</h3>
+                                <p>Consulta imediata com receita digital, se necessário, enviada logo após.</p>
+                            </div>
+                        </li>
+                    </ol>
+                    
+                    <div class="modern-mockup">
+                        <div class="modern-appointment-card" style="border-color: rgba(189, 79, 79, 0.3);">
+                            <div class="modern-appointment-header">
+                                <span class="time">Hoje · 14:20</span>
+                                <span class="type">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                                    </svg>
+                                    Videochamada
+                                </span>
+                            </div>
+                            <div style="padding: 0.5rem 0.75rem; background-color: rgba(189, 79, 79, 0.1); border-radius: 0.5rem; margin-bottom: 1rem;">
+                                <span style="font-size: 0.75rem; font-weight: 600; color: #BD4F4F;">Consulta em curso</span>
+                            </div>
+                            <div style="font-size: 0.875rem; color: var(--color-text-secondary);">
+                                <p style="margin: 0;">Conte-me: desde quando tem estes sintomas?</p>
                             </div>
                         </div>
                     </div>
@@ -212,44 +224,31 @@ mas não é uma emergência.<br>
             </div>
         </section>
 
-        <section class="urgent-section urgent-pricing" id="preco" aria-labelledby="urgent-pricing-title">
-            <div class="lon-container urgent-narrow">
-                <h2 id="urgent-pricing-title" class="urgent-center-title">Um preço, sem surpresas</h2>
-                <div class="urgent-pricing-card">
-                    <p class="urgent-pricing-value">39€</p>
-                    <p class="urgent-pricing-desc">Consulta avulsa, sem subscrição necessária</p>
-                    <a href="/marcar/urgent-care" class="lon-btn lon-btn-dark js-urgent-cta" data-urgent-cta="pricing">Marcar consulta</a>
+
+        <section class="modern-section" id="preco" aria-labelledby="urgent-pricing-title">
+            <div class="modern-container" style="max-width: 600px;">
+                <h2 id="urgent-pricing-title" class="modern-title-lg modern-title-center">Um preço, sem surpresas</h2>
+                <div class="modern-price-card modern-price-card--featured" style="margin-top: 2.5rem;">
+                    <p class="value">39€</p>
+                    <p class="desc">Consulta avulsa, sem subscrição necessária</p>
+                    <a href="/marcar/urgent-care" class="modern-btn modern-btn--primary js-urgent-cta" data-urgent-cta="pricing">Marcar consulta</a>
                 </div>
             </div>
         </section>
 
-        <section class="urgent-section urgent-testimonials" id="testemunhos" aria-labelledby="urgent-testimonials-title">
-            <div class="lon-container">
-                <h2 id="urgent-testimonials-title" class="urgent-center-title">O que dizem os nossos pacientes</h2>
-                <div class="urgent-testimonials-placeholder">
-                    <p class="urgent-placeholder-note">⚠️ Sem testemunhos confirmados para esta valência ainda — espaço reservado, não inventei citações.</p>
+        <section class="modern-section modern-section--muted" id="testemunhos" aria-labelledby="urgent-testimonials-title">
+            <div class="modern-container">
+                <h2 id="urgent-testimonials-title" class="modern-title-lg">O que dizem os nossos pacientes</h2>
+                <div class="modern-placeholder">
+                    <p>Estamos a recolher os primeiros testemunhos dos nossos pacientes. Em breve poderá lê-los aqui.</p>
                 </div>
             </div>
         </section>
 
-        <section class="urgent-section urgent-badges" id="badges" aria-label="Características do serviço">
-            <div class="lon-container">
-                <div class="urgent-badges-grid">
-                    <div class="urgent-badge">
-                        <strong>39€</strong>
-                        <span>Preço único, sem subscrição</span>
-                    </div>
-                    <div class="urgent-badge">
-                        <strong>100%</strong>
-                        <span>Online, de qualquer lugar</span>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <section class="urgent-section urgent-faq-section" id="faq" aria-labelledby="urgent-faq-title">
-            <div class="lon-container psi-narrow">
-                <h2 id="urgent-faq-title" class="urgent-center-title">Perguntas frequentes</h2>
+        <section class="modern-section" id="faq" aria-labelledby="urgent-faq-title">
+            <div class="modern-container" style="max-width: 800px;">
+                <h2 id="urgent-faq-title" class="modern-title-lg modern-title-center">Perguntas frequentes</h2>
                 <div class="psi-faq">
                     <details>
                         <summary>Isto substitui uma urgência hospitalar? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
@@ -275,29 +274,31 @@ mas não é uma emergência.<br>
             </div>
         </section>
 
-        <section class="urgent-section urgent-symptoms" id="sintomas" aria-labelledby="urgent-symptoms-title">
-            <div class="lon-container">
-                <h2 id="urgent-symptoms-title" class="urgent-center-title">Sintomas comuns</h2>
-                <div class="urgent-symptoms-grid">
-                    <div class="urgent-symptom-tag">Febre</div>
-                    <div class="urgent-symptom-tag">Dor de garganta</div>
-                    <div class="urgent-symptom-tag">Infeção urinária</div>
-                    <div class="urgent-symptom-tag">Gastroenterite</div>
-                    <div class="urgent-symptom-tag">Alergias</div>
-                    <div class="urgent-symptom-tag">Renovação de receita</div>
-                </div>
-                <p class="urgent-symptoms-note">⚠️ Lista por confirmar/expandir consigo</p>
+        <section class="modern-section" id="sintomas" aria-labelledby="urgent-symptoms-title">
+            <div class="modern-container">
+                <h3 class="modern-title-md">Sintomas comuns</h3>
+                <ul class="modern-areas">
+                    <li class="modern-tag modern-tag--muted">Febre</li>
+                    <li class="modern-tag modern-tag--muted">Dor de garganta</li>
+                    <li class="modern-tag modern-tag--muted">Infeção urinária</li>
+                    <li class="modern-tag modern-tag--muted">Gastroenterite</li>
+                    <li class="modern-tag modern-tag--muted">Alergias</li>
+                    <li class="modern-tag modern-tag--muted">Renovação de receita</li>
+                </ul>
             </div>
         </section>
 
-        <section class="urgent-section urgent-close" id="comecar" aria-labelledby="urgent-close-title">
-            <div class="lon-container urgent-close-inner">
-                <div class="urgent-close-copy">
-                    <h2 id="urgent-close-title">Não espere que piore</h2>
-                    <p>Fale com um médico ainda hoje, sem sair de casa.</p>
-                    <a href="/marcar/urgent-care" class="lon-btn lon-btn-dark lon-btn-lg js-urgent-cta" data-urgent-cta="close">Marcar consulta</a>
-                    <p class="urgent-emergency-footer"><strong>Em emergência real:</strong> <a href="tel:112">112</a></p>
-                </div>
+        <section class="modern-cta" id="comecar" aria-labelledby="urgent-close-title">
+            <div class="modern-container">
+                <h2 id="urgent-close-title">Não espere que piore</h2>
+                <p>Fale com um médico ainda hoje, sem sair de casa.</p>
+                <a href="/marcar/urgent-care" class="modern-btn js-urgent-cta" data-urgent-cta="close">
+                    Marcar consulta
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M7 17l10-10M8 7h9v9"/>
+                    </svg>
+                </a>
+                <p style="margin-top: 1.5rem; font-size: 0.875rem;"><strong>Em emergência real:</strong> <a href="tel:112" style="text-decoration: underline;">112</a></p>
             </div>
         </section>
     </main>
