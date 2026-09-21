@@ -3939,40 +3939,42 @@ body.lon-home .lon-nav:not(.is-scrolled) .lon-nav-toggle span {
     backdrop-filter: blur(18px) saturate(1.2);
 }
 
-.lon-home .lon-logo-name {
+/* Brand logo — same treatment on every page that uses the .lon-nav header */
+.lon-nav .lon-logo-name {
     display: inline-flex;
     align-items: baseline;
     gap: 0.35em;
     font-size: 1.15rem;
     letter-spacing: -0.045em;
     font-weight: 650;
+    text-transform: none;
     color: var(--lon-ink);
 }
 
-.lon-home .lon-logo-word {
+.lon-nav .lon-logo-word {
     display: inline;
-    font-family: Fraunces, Georgia, serif;
+    font-family: Fraunces, 'Cormorant Garamond', Georgia, serif;
     font-style: italic;
     font-weight: 500;
     letter-spacing: -0.04em;
 }
 
-.lon-home .lon-logo-lon,
-.lon-home .lon-logo-gevity {
+.lon-nav .lon-logo-lon,
+.lon-nav .lon-logo-gevity {
     font: inherit;
     letter-spacing: inherit;
 }
 
-.lon-home .lon-logo-gevity {
+.lon-nav .lon-logo-gevity {
     color: var(--lon-navy);
 }
 
-.lon-home .lon-logo-clinic {
+.lon-nav .lon-logo-clinic {
     font-weight: 600;
 }
 
 @media (max-width: 1099px) {
-    .lon-home .lon-logo-gevity {
+    .lon-nav .lon-logo-gevity {
         display: none;
     }
 }
@@ -5946,3 +5948,70 @@ body.lon-home #como-funciona .lon-how-step-num {
         font-size: 24px;
     }
 }
+
+/* ==========================================================================
+   Especialidades — mega menu (desktop) + sub-links (mobile)
+   ========================================================================== */
+.lon-mega-wrap { position: relative; display: inline-flex; }
+.lon-nav .lon-nav-links a.lon-mega-trigger { display: inline-flex; align-items: center; gap: 6px; }
+.lon-mega-chev { transition: transform 0.2s ease; flex-shrink: 0; }
+.lon-mega-wrap:hover .lon-mega-chev,
+.lon-mega-wrap.is-open .lon-mega-chev { transform: rotate(180deg); }
+
+.lon-mega {
+    position: absolute; top: calc(100% + 12px); left: 50%;
+    width: min(960px, calc(100vw - 48px));
+    background: rgba(255, 255, 255, 0.97);
+    border: 1px solid rgba(53, 80, 60, 0.14);
+    border-radius: 22px; padding: 14px;
+    box-shadow: 0 30px 70px rgba(12, 22, 16, 0.22);
+    backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2);
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transform: translate(-50%, -6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    z-index: 1200; text-align: left;
+}
+.lon-mega::before { content: ''; position: absolute; top: -14px; left: 0; right: 0; height: 14px; } /* hover bridge */
+.lon-mega-wrap:hover .lon-mega,
+.lon-mega-wrap:focus-within .lon-mega,
+.lon-mega-wrap.is-open .lon-mega { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%, 0); }
+
+/* neutralise the generic nav-link pill styles inside the panel */
+.lon-nav .lon-nav-links .lon-mega a { padding: 0; border-radius: 0; background: none; box-shadow: none; font-size: inherit; font-weight: inherit; letter-spacing: 0; }
+
+.lon-mega-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+
+.lon-nav .lon-nav-links .lon-mega a.lon-mega-card,
+.lon-nav .lon-nav-links .lon-mega a.lon-mega-card:hover {
+    position: relative; display: block; aspect-ratio: 3 / 4; overflow: hidden; isolation: isolate;
+    border-radius: 16px; background: #1b2622; color: #fff; text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.lon-nav .lon-nav-links .lon-mega a.lon-mega-card:hover { transform: translateY(-3px); box-shadow: 0 16px 34px rgba(12, 22, 16, 0.25); }
+.lon-mega-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.35s ease; }
+.lon-mega-card:hover img { transform: scale(1.05); }
+.lon-mega-card::after {
+    content: ''; position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 32%, rgba(0, 0, 0, 0.25) 60%, var(--mc2, #1b2622) 100%);
+}
+.lon-mega-card-tag {
+    position: absolute; top: 10px; left: 10px; z-index: 2;
+    font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 4px 8px; border-radius: 999px; background: var(--mc, #255235); color: var(--mc-ink, #fff);
+}
+.lon-mega-card-body { position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 2; display: grid; gap: 5px; }
+.lon-mega-card-body strong { font-size: 0.95rem; font-weight: 600; line-height: 1.15; color: #fff; text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35); }
+.lon-mega-card-body span { font-size: 0.72rem; line-height: 1.35; color: rgba(255, 255, 255, 0.84); }
+
+.lon-mega-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 6px 2px; font-size: 0.82rem; }
+.lon-nav .lon-nav-links .lon-mega .lon-mega-foot a.lon-mega-link,
+.lon-nav .lon-nav-links .lon-mega .lon-mega-foot a.lon-mega-link:hover { color: #255235; font-weight: 600; background: none; box-shadow: none; padding: 0; }
+.lon-nav .lon-nav-links .lon-mega .lon-mega-foot a.lon-mega-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.lon-nav .lon-nav-links .lon-mega .lon-mega-foot a.lon-mega-link--cta,
+.lon-nav .lon-nav-links .lon-mega .lon-mega-foot a.lon-mega-link--cta:hover { background: #141a17; color: #fff; padding: 9px 16px; border-radius: 999px; text-decoration: none; }
+
+@media (max-width: 1240px) { .lon-mega-grid { grid-template-columns: repeat(5, 1fr); gap: 8px; } .lon-mega-card-body strong { font-size: 0.86rem; } }
+
+/* Mobile: specialties list under "Especialidades" */
+.lon-mobile-sub { display: grid; gap: 2px; margin: -6px 0 10px 8px; padding: 0 0 4px 14px; border-left: 2px solid rgba(53, 80, 60, 0.16); }
+.lon-mobile-menu .lon-mobile-sub a { font-size: 0.95em; opacity: 0.85; }

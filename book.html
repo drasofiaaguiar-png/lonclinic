@@ -27,13 +27,13 @@
     <meta name="twitter:title" content="Marcar Consulta Online | Lon Clinic">
     <meta name="twitter:description" content="Marcação rápida de consulta médica online com pagamento seguro.">
     <meta name="twitter:image" content="https://www.lonclinic.com/image/consulta-telemedicina.webp">
-    <link rel="stylesheet" href="landing.css?v=20260906i">
+    <link rel="stylesheet" href="landing.css?v=20260921m">
     <link rel="stylesheet" href="styles.css?v=20260903b">
     <link rel="stylesheet" href="booking.css?v=20260912a">
     <link rel="preload" as="image" href="/image/consulta-telemedicina.webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,wght@1,500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c5c72c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4'/><path d='M5 19.5C5.5 18 6 15 6 12c0-3.5 2.5-6 6-6 3.5 0 6 2.5 6 6 0 2-.5 4-1 6'/><path d='M9 12c0-1.7 1.3-3 3-3s3 1.3 3 3-1 6-1 6'/><path d='M12 12v6'/></svg>">
     <meta name="description" content="Marcar consulta online na Lon Clinic: escolha horário e finalize com pagamento seguro em poucos passos.">
@@ -70,7 +70,22 @@
             </a>
             <nav class="lon-nav-links" aria-label="Navegação principal">
                 <a href="/#servicos">Consultas</a>
-                <a href="/consulta">Especialidades</a>
+                <div class="lon-mega-wrap" id="lonMegaWrap">
+                    <a href="/consulta" class="lon-mega-trigger" id="lonMegaTrigger" aria-haspopup="true" aria-expanded="false" aria-controls="lonMega">Especialidades <svg class="lon-mega-chev" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                    <div class="lon-mega" id="lonMega" aria-label="Especialidades">
+                        <div class="lon-mega-grid">
+                            <a class="lon-mega-card" href="/longevidade" style="--mc:#ECD281;--mc2:#6b5a2e;--mc-ink:#1C1710"><img src="/image/mega-funcional.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Medicina</span><span class="lon-mega-card-body"><strong>Medicina Funcional</strong><span>Causas, prevenção e biomarcadores · 60 €</span></span></a>
+                            <a class="lon-mega-card" href="/psicologia" style="--mc:#9BB1BC;--mc2:#2f4550"><img src="/image/mega-psicologia.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Psicologia</span><span class="lon-mega-card-body"><strong>Psicologia</strong><span>Individual e casal · desde 56 €/sessão</span></span></a>
+                            <a class="lon-mega-card" href="/nutricao" style="--mc:#9FBD84;--mc2:#2c3f36"><img src="/image/mega-nutricao.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Nutrição</span><span class="lon-mega-card-body"><strong>Nutrição</strong><span>Subscrição quinzenal · 45 €/consulta</span></span></a>
+                            <a class="lon-mega-card" href="/urgent-care" style="--mc:#BD4F4F;--mc2:#4d2321"><img src="/image/mega-urgente.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Hoje</span><span class="lon-mega-card-body"><strong>Consulta Urgente</strong><span>Fale com um médico hoje · 39 €</span></span></a>
+                            <a class="lon-mega-card" href="/travel-clinic" style="--mc:#A794C9;--mc2:#2c3a4a"><img src="/image/mega-viajante.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Viagem</span><span class="lon-mega-card-body"><strong>Medicina do Viajante</strong><span>Vacinas e consulta pré-viagem · 39 €</span></span></a>
+                        </div>
+                        <div class="lon-mega-foot">
+                            <a class="lon-mega-link" href="/consulta">Ver todas as especialidades →</a>
+                            <a class="lon-mega-link lon-mega-link--cta" href="/marcar">Marcar consulta</a>
+                        </div>
+                    </div>
+                </div>
                 <a href="/burnout">Burnout</a>
                 <a href="/magazine">Magazine</a>
                 <a href="/#equipa">A Equipa</a>
@@ -86,6 +101,13 @@
         <div class="lon-mobile-menu" id="lonMobileMenu">
             <a href="/#servicos">Consultas</a>
             <a href="/consulta">Especialidades</a>
+            <div class="lon-mobile-sub">
+                <a href="/longevidade">Medicina Funcional</a>
+                <a href="/psicologia">Psicologia</a>
+                <a href="/nutricao">Nutrição</a>
+                <a href="/urgent-care">Consulta Urgente</a>
+                <a href="/travel-clinic">Medicina do Viajante</a>
+            </div>
             <a href="/burnout">Burnout</a>
             <a href="/magazine">Magazine</a>
             <a href="/#equipa">A Equipa</a>
@@ -765,5 +787,6 @@
     </div>
 
     <script src="booking.js?v=20260912a"></script>
+    <script src="/lon-mega.js?v=20260921a" defer></script>
 </body>
 </html>
