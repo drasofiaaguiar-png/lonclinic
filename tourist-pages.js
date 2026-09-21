@@ -4,7 +4,8 @@
  * These are product landings, not magazine articles (editorial goes to /blog/:slug).
  */
 
-'use strict';
+'use strict';const __lonHeader = require('./lon-header');
+
 
 const fs = require('fs');
 const path = require('path');
@@ -854,30 +855,8 @@ function layoutPage(opts) {
 </head>
 <body class="lon-landing cq-body tourist-body">
     <a class="lon-skip" href="#conteudo-principal">${escapeHtml(ui.skip)}</a>
-    <header class="lon-nav" id="lonNav">
-        <div class="lon-container lon-nav-inner">
-            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
-                <span class="lon-logo-name">LON Clinic</span>
-            </a>
-            <nav class="lon-nav-links" aria-label="${escapeHtml(ui.navAria)}">
-                <a href="/consulta">${escapeHtml(ui.navConsulta)}</a>
-                <a href="/tourist-clinic">${escapeHtml(ui.navHub)}</a>
-            </nav>
-            <div class="lon-nav-actions">
-                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">${escapeHtml(ui.navLogin)}</a>
-                <a href="${book}" class="lon-btn lon-btn-primary lon-btn-sm" data-cta="book">${escapeHtml(ui.navBook)}</a>
-                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="${escapeHtml(ui.openMenu)}" aria-expanded="false" aria-controls="lonMobileMenu">
-                    <span></span><span></span><span></span>
-                </button>
-            </div>
-        </div>
-        <div class="lon-mobile-menu" id="lonMobileMenu">
-            <a href="/consulta">${escapeHtml(ui.navConsulta)}</a>
-            <a href="/tourist-clinic">${escapeHtml(ui.navHub)}</a>
-            <a href="/patient-portal">${escapeHtml(ui.navLogin)}</a>
-            <a href="${book}" data-cta="book">${escapeHtml(ui.navBook)}</a>
-        </div>
-    </header>
+    ${__lonHeader.renderHeader({ rawCta: true, ctaHref: `${book}`, ctaLabel: `${escapeHtml(ui.navBook)}`, ctaAttrs: ` data-cta="book"`, current: null })}
+${__lonHeader.renderHeaderScripts(false)}
     ${languageBannerHtml(ui)}
     ${mainHtml}
     <footer class="lon-footer">

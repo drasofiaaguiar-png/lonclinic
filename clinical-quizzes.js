@@ -2,7 +2,8 @@
  * Lon Clinic — clinical questionnaires (PHQ-9, GAD-7, PSS-10, ISI, WHO-5, SF-12, TFEQ, YFAS, ESS).
  * Interactive CBI quiz stays at /burnout/teste (burnout-quiz.html).
  */
-'use strict';
+'use strict';const __lonHeader = require('./lon-header');
+
 
 const fs = require('fs');
 const path = require('path');
@@ -830,36 +831,8 @@ function renderAllHub(origin) {
 </head>
 <body class="lon-landing qz-all-page">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
-    <header class="lon-nav" id="lonNav">
-        <div class="lon-container lon-nav-inner">
-            <a href="/" class="lon-logo" aria-label="Longevity Clinic homepage">
-                <span class="lon-logo-name"><span class="lon-logo-word"><span class="lon-logo-lon">Lon</span><span class="lon-logo-gevity">gevity</span></span><span class="lon-logo-clinic">Clinic</span></span>
-            </a>
-            <nav class="lon-nav-links" aria-label="Navegação principal">
-                <a href="/#servicos">Consultas</a>
-                <a href="/consulta">Especialidades</a>
-                <a href="/burnout">Burnout</a>
-                <a href="/quizzes" aria-current="page">Testes</a>
-                <a href="/magazine">Magazine</a>
-            </nav>
-            <div class="lon-nav-actions">
-                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm">Marcar — 39 €</a>
-                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Open menu" aria-expanded="false" aria-controls="lonMobileMenu">
-                    <span></span><span></span><span></span>
-                </button>
-            </div>
-        </div>
-        <div class="lon-mobile-menu" id="lonMobileMenu">
-            <a href="/#servicos">Consultas</a>
-            <a href="/consulta">Especialidades</a>
-            <a href="/burnout">Burnout</a>
-            <a href="/quizzes" aria-current="page">Testes</a>
-            <a href="/magazine">Magazine</a>
-            <a href="/patient-portal">Login</a>
-            <a href="/marcar/clinica-geral">Marcar — 39 €</a>
-        </div>
-    </header>
+    ${__lonHeader.renderHeader({ rawCta: true, ctaHref: `/marcar/clinica-geral`, ctaLabel: `Marcar — 39 €`, ctaAttrs: ``, current: null })}
+${__lonHeader.renderHeaderScripts(false)}
     <main id="conteudo-principal" class="qz-all">
         <section class="qz-all-hero">
             <div class="lon-container">

@@ -6,7 +6,8 @@
  * how online works, price, FAQ (FAQPage schema), CTA.
  */
 
-'use strict';
+'use strict';const __lonHeader = require('./lon-header');
+
 
 const fs = require('fs');
 const path = require('path');
@@ -454,37 +455,8 @@ function layoutQueixaPage(opts) {
 </head>
 <body class="lon-landing qx-body">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
-    <header class="lon-nav" id="lonNav">
-        <div class="lon-container lon-nav-inner">
-            <a href="/saudemental" class="lon-logo" aria-label="LON Clinic Psicologia">
-                <span class="lon-logo-name">LON Clinic</span>
-            </a>
-            <nav class="lon-nav-links" aria-label="Navegação principal">
-                <a href="/#servicos">Consultas</a>
-                <a href="/consulta">Especialidades</a>
-                <a href="/burnout">Burnout</a>
-                <a href="/magazine">Magazine</a>
-                <a href="/#equipa">A Equipa</a>
-            </nav>
-            <div class="lon-nav-actions">
-                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/marcar/psicologia-mensal?ref=consultas-nav" class="lon-btn lon-btn-primary lon-btn-sm" data-talk-cta="psychFind">Encontre o seu psicólogo</a>
-                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
-                    <span></span><span></span><span></span>
-                </button>
-            </div>
-        </div>
-        <div class="lon-mobile-menu" id="lonMobileMenu">
-            <a href="/#servicos">Consultas</a>
-            <a href="/consulta">Especialidades</a>
-            <a href="/burnout">Burnout</a>
-            <a href="/magazine">Magazine</a>
-            <a href="/#equipa">A Equipa</a>
-            <a href="/consultas">Consultas por queixa</a>
-            <a href="/patient-portal">Login</a>
-            <a href="/marcar/psicologia-mensal?ref=consultas-nav-mobile" data-talk-cta="psychFind">Encontre o seu psicólogo</a>
-        </div>
-    </header>
+    ${__lonHeader.renderHeader({ rawCta: true, ctaHref: `/marcar/psicologia-mensal?ref=consultas-nav`, ctaLabel: `Encontre o seu psicólogo`, ctaAttrs: ` data-talk-cta="psychFind"`, current: null })}
+${__lonHeader.renderHeaderScripts(false)}
     ${mainHtml}
     <footer class="lon-footer">
         <div class="lon-container">

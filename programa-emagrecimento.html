@@ -27,7 +27,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="theme-color" content="#2C5F8D">
     <script type="text/javascript" src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
-    <link rel="stylesheet" href="/landing.css?v=20260906i">
+    <link rel="stylesheet" href="/landing.css?v=20260921n">
     <link rel="stylesheet" href="/programa-emagrecimento.css?v=20260916a">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -155,19 +155,52 @@
 
     <header class="lon-nav" id="lonNav">
         <div class="lon-container lon-nav-inner">
-            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
-                <span class="lon-logo-name">LON Clinic</span>
+            <a href="/" class="lon-logo" aria-label="Longevity Clinic homepage">
+                <span class="lon-logo-name"><span class="lon-logo-word"><span class="lon-logo-lon">Lon</span><span class="lon-logo-gevity">gevity</span></span><span class="lon-logo-clinic">Clinic</span></span>
             </a>
+
             <nav class="lon-nav-links" aria-label="Navegação principal">
-                <a href="/#servicos">Consultas</a>
-                <a href="/nutricao">Nutrição</a>
+                <div class="lon-mega-wrap" id="lonMegaWrap">
+                    <a href="/consulta" class="lon-mega-trigger" id="lonMegaTrigger" aria-haspopup="true" aria-expanded="false" aria-controls="lonMega">Especialidades <svg class="lon-mega-chev" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                    <div class="lon-mega" id="lonMega" aria-label="Especialidades">
+                        <div class="lon-mega-grid">
+                            <a class="lon-mega-card" href="/longevidade" style="--mc:#ECD281;--mc2:#6b5a2e;--mc-ink:#1C1710"><img src="/image/mega-funcional.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Medicina</span><span class="lon-mega-card-body"><strong>Medicina Funcional</strong><span>Causas, prevenção e biomarcadores · 60 €</span></span></a>
+                            <a class="lon-mega-card" href="/psicologia" style="--mc:#9BB1BC;--mc2:#2f4550"><img src="/image/mega-psicologia.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Psicologia</span><span class="lon-mega-card-body"><strong>Psicologia</strong><span>Individual e casal · desde 56 €/sessão</span></span></a>
+                            <a class="lon-mega-card" href="/nutricao" style="--mc:#9FBD84;--mc2:#2c3f36"><img src="/image/mega-nutricao.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Nutrição</span><span class="lon-mega-card-body"><strong>Nutrição</strong><span>Subscrição quinzenal · 45 €/consulta</span></span></a>
+                            <a class="lon-mega-card" href="/urgent-care" style="--mc:#BD4F4F;--mc2:#4d2321"><img src="/image/mega-urgente.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Hoje</span><span class="lon-mega-card-body"><strong>Consulta Urgente</strong><span>Fale com um médico hoje · 39 €</span></span></a>
+                            <a class="lon-mega-card" href="/travel-clinic" style="--mc:#A794C9;--mc2:#2c3a4a"><img src="/image/mega-viajante.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Viagem</span><span class="lon-mega-card-body"><strong>Medicina do Viajante</strong><span>Vacinas e consulta pré-viagem · 39 €</span></span></a>
+                        </div>
+                        <div class="lon-mega-foot">
+                            <a class="lon-mega-link" href="/consulta">Ver todas as especialidades →</a>
+                            <a class="lon-mega-link lon-mega-link--cta" href="/marcar">Marcar consulta</a>
+                        </div>
+                    </div>
+                </div>
                 <a href="/magazine">Magazine</a>
-                <a href="/#equipa">A Equipa</a>
+                <a href="/#equipa">Equipa</a>
             </nav>
+
             <div class="lon-nav-actions">
                 <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
                 <a href="/marcar/nutricao-programa" class="lon-btn lon-btn-primary lon-btn-sm">Marcar Avaliação</a>
+                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
+                    <span></span><span></span><span></span>
+                </button>
             </div>
+        </div>
+        <div class="lon-mobile-menu" id="lonMobileMenu">
+            <a href="/consulta">Especialidades</a>
+            <div class="lon-mobile-sub">
+                <a href="/longevidade">Medicina Funcional</a>
+                <a href="/psicologia">Psicologia</a>
+                <a href="/nutricao">Nutrição</a>
+                <a href="/urgent-care">Consulta Urgente</a>
+                <a href="/travel-clinic">Medicina do Viajante</a>
+            </div>
+            <a href="/magazine">Magazine</a>
+            <a href="/#equipa">Equipa</a>
+            <a href="/patient-portal">Login</a>
+            <a href="/marcar/nutricao-programa">Marcar Avaliação</a>
         </div>
     </header>
 
@@ -517,5 +550,6 @@
     <script src="/lon-nav.js"></script>
     <script src="/i18n.js?v=20260914b" defer></script>
     <script src="/lon-analytics.js?v=20260914a" defer></script>
+    <script src="/lon-mega.js?v=20260921b" defer></script>
 </body>
 </html>

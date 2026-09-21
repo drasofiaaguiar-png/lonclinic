@@ -3,7 +3,8 @@
  * Default author for medical guides and burnout articles.
  */
 
-'use strict';
+'use strict';const __lonHeader = require('./lon-header');
+
 
 const { originOf, organizationJsonLd, jsonLdScript, canonicalHref } = require('./seo');
 
@@ -370,24 +371,8 @@ function renderAuthorPage(origin, slug) {
 </head>
 <body class="lon-landing eeat-profile-page">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
-    <header class="lon-nav" id="lonNav">
-        <div class="lon-container lon-nav-inner">
-            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
-                <span class="lon-logo-name">LON Clinic</span>
-            </a>
-            <nav class="lon-nav-links" aria-label="Navegação principal">
-                <a href="/#servicos">Consultas</a>
-                <a href="/consulta">Especialidades</a>
-                <a href="/burnout">Burnout</a>
-                <a href="/magazine">Magazine</a>
-                <a href="/#equipa">A Equipa</a>
-            </nav>
-            <div class="lon-nav-actions">
-                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm">Marcar — 39 €</a>
-            </div>
-        </div>
-    </header>
+    ${__lonHeader.renderHeader({ rawCta: true, ctaHref: `/marcar/clinica-geral`, ctaLabel: `Marcar — 39 €`, ctaAttrs: ``, current: null })}
+${__lonHeader.renderHeaderScripts(false)}
     <main id="conteudo-principal" class="eeat-profile">
         <article class="eeat-profile-card" itemscope itemtype="https://schema.org/${escapeHtml(occupationType)}">
             <div class="eeat-profile-avatar" aria-hidden="true">${escapeHtml(a.initials)}</div>
@@ -517,24 +502,8 @@ function renderTeamPage(origin, extras) {
 </head>
 <body class="lon-landing lon-home eeat-team-page">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
-    <header class="lon-nav" id="lonNav">
-        <div class="lon-container lon-nav-inner">
-            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
-                <span class="lon-logo-name">LON Clinic</span>
-            </a>
-            <nav class="lon-nav-links" aria-label="Navegação principal">
-                <a href="/#servicos">Consultas</a>
-                <a href="/consulta">Especialidades</a>
-                <a href="/burnout">Burnout</a>
-                <a href="/magazine">Magazine</a>
-                <a href="/equipa" aria-current="page">A Equipa</a>
-            </nav>
-            <div class="lon-nav-actions">
-                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/marcar/clinica-geral" class="lon-btn lon-btn-primary lon-btn-sm">Marcar — 39 €</a>
-            </div>
-        </div>
-    </header>
+    ${__lonHeader.renderHeader({ rawCta: true, ctaHref: `/marcar/clinica-geral`, ctaLabel: `Marcar — 39 €`, ctaAttrs: ``, current: null })}
+${__lonHeader.renderHeaderScripts(false)}
     <main id="conteudo-principal">
         <section class="lon-team" aria-labelledby="lon-team-title">
             <div class="lon-container">

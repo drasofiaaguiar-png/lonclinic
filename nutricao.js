@@ -5,7 +5,8 @@
  * who it's for, red flags, how it works, price, psychology bridge, FAQ, CTA.
  */
 
-'use strict';
+'use strict';const __lonHeader = require('./lon-header');
+
 
 const fs = require('fs');
 const path = require('path');
@@ -451,39 +452,8 @@ function layoutPage(opts) {
 </head>
 <body class="lon-landing cq-body nu-body">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
-    <header class="lon-nav" id="lonNav">
-        <div class="lon-container lon-nav-inner">
-            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
-                <span class="lon-logo-name">LON Clinic</span>
-            </a>
-            <nav class="lon-nav-links" aria-label="Navegação principal">
-                <a href="/#servicos">Consultas</a>
-                <a href="/consulta">Especialidades</a>
-                <a href="/burnout">Burnout</a>
-                <a href="/magazine">Magazine</a>
-                <a href="/#equipa">A Equipa</a>
-            </nav>
-            <div class="lon-nav-actions">
-                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/nutricao/emagrecimento" class="lon-btn lon-btn-primary lon-btn-sm">Programa de emagrecimento</a>
-                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
-                    <span></span><span></span><span></span>
-                </button>
-            </div>
-        </div>
-        <div class="lon-mobile-menu" id="lonMobileMenu">
-            <a href="/#servicos">Consultas</a>
-            <a href="/consulta">Especialidades</a>
-            <a href="/burnout">Burnout</a>
-            <a href="/magazine">Magazine</a>
-            <a href="/#equipa">A Equipa</a>
-            <a href="/nutricao">Nutrição por condição</a>
-            <a href="/nutricao/emagrecimento">Programa de emagrecimento</a>
-            <a href="/nutricao/programa">Programa de reeducação metabólica</a>
-            <a href="/patient-portal">Login</a>
-            <a href="/marcar/nutricao-programa?ref=nutricao-nav-mobile">Consulta inicial de nutrição</a>
-        </div>
-    </header>
+    ${__lonHeader.renderHeader({ rawCta: true, ctaHref: `/nutricao/emagrecimento`, ctaLabel: `Programa de emagrecimento`, ctaAttrs: ``, current: null })}
+${__lonHeader.renderHeaderScripts(false)}
     ${mainHtml}
     <footer class="lon-footer">
         <div class="lon-container">

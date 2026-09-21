@@ -8,6 +8,7 @@
  */
 
 'use strict';
+const __lonHeader = require('./lon-header');
 
 const fs = require('fs');
 const path = require('path');
@@ -265,38 +266,8 @@ function layoutBurnoutPage(opts) {
 </head>
 <body class="lon-landing bo-body">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
-    <header class="lon-nav" id="lonNav">
-        <div class="lon-container lon-nav-inner">
-            <a href="/" class="lon-logo" aria-label="Lon Clinic homepage">
-                <span class="lon-logo-name">LON Clinic</span>
-            </a>
-            <nav class="lon-nav-links" aria-label="Navegação principal">
-                <a href="/#servicos">Consultas</a>
-                <a href="/consulta">Especialidades</a>
-                <a href="/burnout" aria-current="page">Burnout</a>
-                <a href="/magazine">Magazine</a>
-                <a href="/#equipa">A Equipa</a>
-            </nav>
-            <div class="lon-nav-actions">
-                <a href="/patient-portal" class="lon-btn lon-btn-ghost lon-btn-sm">Login</a>
-                <a href="/burnout/teste?ref=burnout-nav" class="lon-btn lon-btn-primary lon-btn-sm">Fazer o teste</a>
-                <button type="button" class="lon-nav-toggle" id="lonNavToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="lonMobileMenu">
-                    <span></span><span></span><span></span>
-                </button>
-            </div>
-        </div>
-        <div class="lon-mobile-menu" id="lonMobileMenu">
-            <a href="/#servicos">Consultas</a>
-            <a href="/consulta">Especialidades</a>
-            <a href="/burnout">Burnout</a>
-            <a href="/magazine">Magazine</a>
-            <a href="/#equipa">A Equipa</a>
-            <a href="/burnout/teste">Teste gratuito</a>
-            <a href="/burnout/testes">PHQ-9, GAD-7 e sono</a>
-            <a href="/patient-portal">Login</a>
-            <a href="/burnout/teste?ref=burnout-nav-mobile">Fazer o teste</a>
-        </div>
-    </header>
+    ${__lonHeader.renderHeader({ rawCta: true, ctaHref: `/burnout/teste?ref=burnout-nav`, ctaLabel: `Fazer o teste`, ctaAttrs: ``, current: null })}
+${__lonHeader.renderHeaderScripts(false)}
     ${mainHtml}
     <footer class="lon-footer">
         <div class="lon-container">
