@@ -10196,7 +10196,7 @@ app.use(express.static(path.join(__dirname), {
             base === 'consulta-pages.css' ||
             base === 'queixas.css' ||
             base === 'nutricao.css' ||
-            base === 'nutricao-landing.css' ||
+            base === 'product-landing.css' ||
             base === 'tourist-pages.css' ||
             base === 'psicologia.css' ||
             base === 'psicologia.js' ||

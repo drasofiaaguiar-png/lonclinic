@@ -28,11 +28,9 @@
     <link rel="stylesheet" href="/design-tokens.css?v=20260920">
     <link rel="stylesheet" href="/landing.css?v=20260906i">
     <link rel="stylesheet" href="/nav-global.css?v=20260919">
-    <link rel="stylesheet" href="/component-library.css?v=20260920">
     <link rel="stylesheet" href="/pillar-colors.css?v=20260921d">
-    <link rel="stylesheet" href="/ui-fixes-critical.css?v=20260920f">
-    <link rel="stylesheet" href="/psicologia.css?v=20260915c">
-    <link rel="stylesheet" href="/modern-layout.css?v=20260921">
+    <link rel="stylesheet" href="/product-landing.css?v=20260921a">
+    <link rel="preload" as="image" href="/image/image3.webp" type="image/webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -88,7 +86,7 @@
     }
     </script>
 </head>
-<body class="lon-landing long-landing page-longevity">
+<body class="lon-landing nx-page long-landing page-longevity">
 
 <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
 
@@ -122,98 +120,140 @@
     </header>
 
     <main id="conteudo-principal">
-        <section class="modern-hero" id="inicio" aria-labelledby="long-hero-title">
-            <div class="modern-container">
-                <div class="modern-hero-grid">
-                    <div class="modern-hero-content">
-                        <span class="modern-badge">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                            </svg>
-                            Medicina de Longevidade · Registo na Ordem dos Médicos
-                        </span>
-                        
-                        <h1 id="long-hero-title" class="modern-title-xl">Medicina que olha para o que ainda não dói</h1>
-                        
-                        <p class="modern-lead">Consultas online focadas em prevenção, biomarcadores e no que muda com o tempo — não só em resolver sintomas quando já aparecem.</p>
-                        
-                        <div class="modern-btn-group">
-                            <a href="/marcar/medicina-longevidade" class="modern-btn modern-btn--primary js-long-cta" data-long-cta="hero">
-                                Marcar consulta
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M7 17l10-10M8 7h9v9"/>
-                                </svg>
-                            </a>
-                            <a href="#como-funciona" class="modern-link">Comece Aqui</a>
+        <section class="nx-hero" id="inicio" aria-labelledby="long-hero-title">
+            <div class="nx-hero-bg" style="background-image:url('/image/image3.webp')" aria-hidden="true"></div>
+            <div class="nx-inner">
+                <div class="nx-hero-grid">
+                    <div class="nx-hero-left">
+                        <span class="nx-hero-pill"><i aria-hidden="true"></i>Medicina de Longevidade · Ordem dos Médicos</span>
+                        <h1 id="long-hero-title">Medicina que olha para o que <em>ainda não dói</em></h1>
+                        <p class="nx-hero-lead">Consultas online focadas em prevenção, biomarcadores e no que muda com o tempo — não só em resolver sintomas quando já aparecem.</p>
+
+                        <div class="nx-hero-price">
+                            <strong>39€</strong>
+                            <span><b>consulta avulsa · sem compromisso</b>medicina preventiva e integrativa, 100% online</span>
                         </div>
-                        
-                        <p class="modern-text">Medicina preventiva e integrativa, focada na sua saúde a longo prazo, não apenas em sintomas pontuais. 100% online.</p>
-                        
-                        <ul class="modern-services">
-                            <li class="modern-tag">Consulta de Longevidade</li>
-                            <li class="modern-tag">Check-up Preventivo</li>
-                            <li class="modern-tag">Avaliação de Biomarcadores</li>
-                            <li class="modern-tag">Acompanhamento Completo</li>
+
+                        <div class="nx-hero-btns">
+                            <a href="/marcar/medicina-longevidade" class="nx-btn nx-btn--white js-long-cta" data-long-cta="hero">
+                                Marcar consulta
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17l10-10M8 7h9v9"/></svg>
+                            </a>
+                            <a href="#como-funciona" class="nx-btn nx-btn--ghost">Como funciona</a>
+                        </div>
+
+                        <ul class="nx-hero-trust">
+                            <li>Ordem dos Médicos</li>
+                            <li>ERS nº 45475</li>
+                            <li>100% online</li>
+                            <li>Resposta no WhatsApp em &lt; 1h</li>
                         </ul>
                     </div>
-                    
-                    <div class="modern-hero-image">
-                        <img src="/image/image3.webp" alt="Consulta de medicina de longevidade — ambiente calmo e natural" loading="eager">
+
+                    <div class="nx-hero-visual">
+                        <figure class="nx-hero-photo">
+                            <span class="nx-hero-tag">Longevidade · Lon Clinic</span>
+                            <img src="/image/image3.webp" alt="Consulta de medicina de longevidade — ambiente calmo e natural" loading="eager" fetchpriority="high" decoding="async">
+                        </figure>
+                        <div class="nx-glass-card">
+                            <div>
+                                <p class="lbl">Próxima consulta</p>
+                                <p class="ttl">Videochamada · 45 min</p>
+                                <p class="sub">Avaliação clínica completa e plano personalizado</p>
+                            </div>
+                            <a href="/marcar/medicina-longevidade" class="nx-btn nx-btn--accent js-long-cta" data-long-cta="hero-card">Marcar</a>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <nav class="nx-hero-row" aria-label="Áreas de longevidade">
+                <a href="/marcar/medicina-longevidade" class="js-long-cta" data-long-cta="row-consulta">
+                    <span class="ico" aria-hidden="true">🩺</span>
+                    <span class="lbl">39€</span>
+                    <span class="ttl">Consulta de Longevidade</span>
+                    <span class="dsc">Avaliação clínica e recomendações personalizadas.</span>
+                </a>
+                <a href="#areas">
+                    <span class="ico" aria-hidden="true">📋</span>
+                    <span class="lbl">Prevenção</span>
+                    <span class="ttl">Check-up preventivo</span>
+                    <span class="dsc">Avaliação anual de fatores de risco e hábitos.</span>
+                </a>
+                <a href="#areas">
+                    <span class="ico" aria-hidden="true">🧬</span>
+                    <span class="lbl">Análises</span>
+                    <span class="ttl">Avaliação de biomarcadores</span>
+                    <span class="dsc">Painel metabólico, hormonal e inflamatório personalizado.</span>
+                </a>
+                <a href="#preco">
+                    <span class="ico" aria-hidden="true">🔁</span>
+                    <span class="lbl">Em breve</span>
+                    <span class="ttl">Acompanhamento contínuo</span>
+                    <span class="dsc">Reavaliações periódicas e ajuste do plano ao longo do tempo.</span>
+                </a>
+            </nav>
         </section>
 
+        <div class="nx-trust" aria-label="Garantias">
+            <div class="nx-inner">
+                <ul>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><strong>Registo ERS</strong> 45475</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Médicos inscritos na <strong>Ordem</strong></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg><strong>Videochamada</strong> sem instalar apps</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/></svg>Apoio por <strong>WhatsApp</strong></li>
+                </ul>
+            </div>
+        </div>
 
-        <section class="modern-section modern-section--muted" id="como-funciona" aria-labelledby="long-process-title">
-            <div class="modern-container">
-                <h2 id="long-process-title" class="modern-title-lg">Como funciona</h2>
-                
-                <div class="modern-grid-auto modern-mt-12">
-                    <ol class="modern-steps">
-                        <li class="modern-step">
-                            <span class="modern-step-number">1</span>
-                            <div class="modern-step-content">
-                                <h3>Escolha a sua consulta</h3>
-                                <p>Medicina de longevidade ou consulta de medicina geral. Se tiver dúvidas, <a href="https://wa.me/351910156711" target="_blank" rel="noopener">fale connosco no WhatsApp</a> — respondemos em menos de 1 hora.</p>
+        <section class="nx-section nx-how" id="como-funciona" aria-labelledby="long-process-title">
+            <div class="nx-inner">
+                <div class="nx-how-grid">
+                    <div>
+                        <header class="nx-head">
+                            <p class="nx-kicker">Como funciona</p>
+                            <h2 id="long-process-title" class="nx-h2">Três passos. <em>Sem deslocações.</em></h2>
+                            <p class="nx-sub">Da marcação ao plano de longevidade, tudo acontece online — com tempo para olhar para o que ainda não dói.</p>
+                        </header>
+                        <ol class="nx-steps">
+                            <li class="nx-step">
+                                <span class="nx-step-n" aria-hidden="true">1</span>
+                                <div>
+                                    <h3>Escolha a sua consulta</h3>
+                                    <p>Medicina de longevidade ou consulta de medicina geral. Com dúvidas? <a href="https://wa.me/351910156711" target="_blank" rel="noopener">Fale connosco no WhatsApp</a> — respondemos em menos de 1 hora.</p>
+                                </div>
+                            </li>
+                            <li class="nx-step">
+                                <span class="nx-step-n" aria-hidden="true">2</span>
+                                <div>
+                                    <h3>Agende a sua consulta</h3>
+                                    <p>Escolha o dia e a hora que melhor lhe convêm. Recebe o link da videochamada por email — sem instalar nada.</p>
+                                </div>
+                            </li>
+                            <li class="nx-step">
+                                <span class="nx-step-n" aria-hidden="true">3</span>
+                                <div>
+                                    <h3>Comece o seu plano de longevidade</h3>
+                                    <p>Avaliação clínica completa, painel de análises personalizado e recomendações para uma vida mais longa e saudável.</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="nx-how-visual">
+                        <figure class="nx-photo-frame">
+                            <img src="/image/hero-bay.webp" alt="Consulta por videochamada num ambiente calmo" loading="lazy" decoding="async">
+                        </figure>
+                        <div class="nx-appt" aria-hidden="true">
+                            <div class="nx-appt-head">
+                                <b>Segunda · 10:00</b>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Videochamada</span>
                             </div>
-                        </li>
-                        <li class="modern-step">
-                            <span class="modern-step-number">2</span>
-                            <div class="modern-step-content">
-                                <h3>Agende a sua consulta</h3>
-                                <p>Escolha o dia e a hora que melhor lhe convêm.</p>
-                            </div>
-                        </li>
-                        <li class="modern-step">
-                            <span class="modern-step-number">3</span>
-                            <div class="modern-step-content">
-                                <h3>Comece o seu plano de longevidade</h3>
-                                <p>Avaliação clínica completa e recomendações personalizadas para uma vida mais longa e saudável.</p>
-                            </div>
-                        </li>
-                    </ol>
-                    
-                    <div class="modern-mockup">
-                        <div class="modern-mockup-image">
-                            <img src="/image/hero-bay.webp" alt="Consulta por videochamada num ambiente calmo" loading="lazy">
-                        </div>
-                        
-                        <div class="modern-appointment-card">
-                            <div class="modern-appointment-header">
-                                <span class="time">Segunda · 10:00</span>
-                                <span class="type">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-                                    </svg>
-                                    Videochamada
-                                </span>
-                            </div>
-                            <div class="modern-appointment-body">
-                                <span class="modern-avatar">RA</span>
-                                <div class="modern-appointment-info">
-                                    <span class="name">Dra. Rita Aguiar</span>
-                                    <span class="message">Vamos rever os seus resultados e ajustar o plano.</span>
+                            <div class="nx-appt-body">
+                                <span class="nx-appt-avatar">RA</span>
+                                <div>
+                                    <span class="nm">Dra. Rita Aguiar</span>
+                                    <span class="msg">Vamos rever os seus resultados e ajustar o plano.</span>
                                 </div>
                             </div>
                         </div>
@@ -222,100 +262,156 @@
             </div>
         </section>
 
+        <section class="nx-section nx-plans" id="preco" aria-labelledby="long-pricing-title">
+            <div class="nx-inner">
+                <header class="nx-head nx-head--center">
+                    <p class="nx-kicker">Preço</p>
+                    <h2 id="long-pricing-title" class="nx-h2">Um preço, <em>sem surpresas</em></h2>
+                    <p class="nx-sub">Consulta avulsa a 39€, sem subscrição. O acompanhamento contínuo está a ser preparado — fale connosco para saber mais.</p>
+                </header>
 
-        <section class="modern-section" id="preco" aria-labelledby="long-pricing-title">
-            <div class="modern-container">
-                <div class="modern-info-bar">
-                    <span class="modern-info-item">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
-                        </svg>
-                        100% Online, de qualquer lugar
-                    </span>
-                    <span class="modern-info-item">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-                        </svg>
-                        39€ Consulta avulsa
-                    </span>
-                </div>
-                
-                <h2 id="long-pricing-title" class="modern-title-lg modern-mt-8">Preço</h2>
-                
-                <div class="modern-pricing-grid">
-                    <article class="modern-price-card modern-price-card--featured">
-                        <p class="name">Consulta avulsa</p>
-                        <p class="value">39€</p>
-                        <p class="desc">Por consulta, sem compromisso</p>
-                        <a href="/marcar/medicina-longevidade" class="modern-btn modern-btn--primary js-long-cta" data-long-cta="price-avulsa">Marcar consulta</a>
+                <div class="nx-plan-grid nx-plan-grid--narrow">
+                    <article class="nx-plan nx-plan--featured">
+                        <span class="nx-plan-badge">Disponível</span>
+                        <p class="nx-plan-name">Consulta avulsa</p>
+                        <h3 class="nx-plan-title">Consulta de Longevidade</h3>
+                        <div class="nx-plan-price">
+                            <strong>39€</strong>
+                            <span><b>por consulta</b>sem compromisso</span>
+                        </div>
+                        <ul class="nx-plan-list">
+                            <li>Avaliação clínica completa, hábitos e fatores de risco</li>
+                            <li>Painel de análises personalizado, se indicado</li>
+                            <li>Recomendações e plano de prevenção</li>
+                            <li>Receita digital e requisição de exames, se clinicamente indicado</li>
+                        </ul>
+                        <div class="nx-plan-note">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <p><b>Prevenção, não só sintomas.</b> Agimos antes de surgirem problemas, em vez de reagir quando já existem.</p>
+                        </div>
+                        <div class="nx-plan-actions">
+                            <a href="/marcar/medicina-longevidade" class="nx-btn nx-btn--white nx-btn--block js-long-cta" data-long-cta="price-avulsa">Marcar consulta</a>
+                            <a href="https://wa.me/351928372775?text=Ol%C3%A1%2C%20gostava%20de%20saber%20mais%20sobre%20a%20consulta%20de%20Medicina%20de%20Longevidade." target="_blank" rel="noopener noreferrer" class="nx-btn nx-btn--ghost nx-btn--block js-long-cta" data-long-cta="price-avulsa-info">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/></svg>
+                                Pedir mais informações
+                            </a>
+                        </div>
+                        <p class="nx-plan-foot">Pagamento seguro · fatura automática</p>
                     </article>
-                    
-                    <article class="modern-price-card modern-card--dashed">
-                        <p class="name">Acompanhamento contínuo</p>
-                        <p class="value" style="color: var(--color-text-secondary);">Em breve</p>
-                        <p class="desc">Formato e preço a anunciar — fale connosco para saber mais.</p>
-                        <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="modern-btn modern-btn--secondary">Falar connosco</a>
+
+                    <article class="nx-plan nx-plan--soon">
+                        <span class="nx-plan-badge">Em breve</span>
+                        <p class="nx-plan-name">Acompanhamento contínuo</p>
+                        <h3 class="nx-plan-title">Plano de longevidade</h3>
+                        <div class="nx-plan-price">
+                            <strong>Em breve</strong>
+                            <span><b>formato e preço a anunciar</b>reavaliações periódicas ao longo do ano</span>
+                        </div>
+                        <ul class="nx-plan-list">
+                            <li>Reavaliação anual, ou mais frequente se necessário</li>
+                            <li>Monitorização de biomarcadores ao longo do tempo</li>
+                            <li>Ajuste contínuo do plano de prevenção</li>
+                        </ul>
+                        <div class="nx-plan-note">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+                            <p><b>Quer ser avisado?</b> Fale connosco e dizemos-lhe assim que o acompanhamento contínuo estiver disponível.</p>
+                        </div>
+                        <div class="nx-plan-actions">
+                            <a href="https://wa.me/351928372775?text=Ol%C3%A1%2C%20gostava%20de%20ser%20avisado%20quando%20o%20acompanhamento%20cont%C3%ADnuo%20de%20Medicina%20de%20Longevidade%20estiver%20dispon%C3%ADvel." target="_blank" rel="noopener noreferrer" class="nx-btn nx-btn--outline nx-btn--block js-long-cta" data-long-cta="price-continuo-info">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/></svg>
+                                Pedir mais informações
+                            </a>
+                        </div>
+                        <p class="nx-plan-foot">Sem compromisso</p>
                     </article>
                 </div>
             </div>
         </section>
 
-        <section class="modern-section modern-section--muted" id="testemunhos" aria-labelledby="long-testimonials-title">
-            <div class="modern-container">
-                <h2 id="long-testimonials-title" class="modern-title-lg">O que dizem os nossos pacientes</h2>
-                <div class="modern-placeholder">
-                    <p>Estamos a recolher os primeiros testemunhos dos nossos pacientes. Em breve poderá lê-los aqui.</p>
+        <section class="nx-section nx-testimonials" id="testemunhos" aria-labelledby="long-testimonials-title">
+            <div class="nx-inner">
+                <header class="nx-head nx-head--center">
+                    <p class="nx-kicker">Testemunhos</p>
+                    <h2 id="long-testimonials-title" class="nx-h2">O que dizem os <em>nossos pacientes</em></h2>
+                </header>
+                <div class="nx-tplaceholder">Estamos a recolher os primeiros testemunhos dos nossos pacientes de Medicina de Longevidade. Em breve poderá lê-los aqui.</div>
+            </div>
+        </section>
+
+        <section class="nx-section nx-faq" id="faq" aria-labelledby="long-faq-title">
+            <div class="nx-inner">
+                <header class="nx-head">
+                    <p class="nx-kicker">FAQ</p>
+                    <h2 id="long-faq-title" class="nx-h2">Perguntas <em>frequentes</em></h2>
+                </header>
+                <div class="nx-faq-cols">
+                    <div>
+                        <details>
+                            <summary>O que diferencia esta consulta de uma consulta geral normal? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">A medicina de longevidade foca-se em prevenção e otimização, não apenas em tratar sintomas. Avalia biomarcadores, fatores de risco e hábitos de vida para agir antes de surgirem problemas, em vez de reagir quando já existem.</div>
+                        </details>
+                        <details>
+                            <summary>Que exames são pedidos? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">O painel de análises é personalizado com base no seu perfil, idade e fatores de risco identificados na consulta inicial. Pode incluir análises metabólicas, hormonais, inflamatórias e outros biomarcadores relevantes para longevidade.</div>
+                        </details>
+                    </div>
+                    <div>
+                        <details>
+                            <summary>Com que frequência devo repetir a avaliação? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Depende do seu caso específico e dos objetivos definidos. Geralmente recomenda-se reavaliação anual, mas pode ser mais frequente se houver alterações significativas a monitorizar ou ajustar.</div>
+                        </details>
+                        <details>
+                            <summary>A LON Clinic está registada e regulamentada? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Sim. A Lon Clinic está registada na Entidade Reguladora da Saúde (ERS) com o número 45475. Todos os médicos são inscritos na Ordem dos Médicos.</div>
+                        </details>
+                    </div>
                 </div>
             </div>
         </section>
 
-
-        <section class="modern-section" id="faq" aria-labelledby="long-faq-title">
-            <div class="modern-container" style="max-width: 800px;">
-                <h2 id="long-faq-title" class="modern-title-lg modern-title-center">Perguntas frequentes</h2>
-                <div class="psi-faq">
-                    <details>
-                        <summary>O que diferencia esta consulta de uma consulta geral normal? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">A medicina de longevidade foca-se em prevenção e otimização, não apenas em tratar sintomas. Avalia biomarcadores, fatores de risco e hábitos de vida para agir antes de surgirem problemas, em vez de reagir quando já existem.</div>
-                    </details>
-                    <details>
-                        <summary>Que exames são pedidos? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">O painel de análises é personalizado com base no seu perfil, idade e fatores de risco identificados na consulta inicial. Pode incluir análises metabólicas, hormonais, inflamatórias e outros biomarcadores relevantes para longevidade.</div>
-                    </details>
-                    <details>
-                        <summary>Com que frequência devo repetir a avaliação? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">Depende do seu caso específico e dos objetivos definidos. Geralmente recomenda-se reavaliação anual, mas pode ser mais frequente se houver alterações significativas a monitorizar ou ajustar.</div>
-                    </details>
-                    <details>
-                        <summary>A LON Clinic está registada e regulamentada? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">Sim. A Lon Clinic está registada na Entidade Reguladora da Saúde (ERS) com o número 45475. Todos os médicos são inscritos na Ordem dos Médicos.</div>
-                    </details>
+        <section class="nx-section nx-cond" id="areas" aria-labelledby="long-areas-title">
+            <div class="nx-inner">
+                <div class="nx-cond-grid">
+                    <figure class="nx-cond-photo">
+                        <img src="/image/hero-run.webp" alt="Pessoa a correr ao ar livre" loading="lazy" decoding="async">
+                        <figcaption class="nx-glass-note">
+                            <b>Saúde a longo prazo</b>
+                            <span>Medicina preventiva e integrativa, não apenas sintomas pontuais.</span>
+                        </figcaption>
+                    </figure>
+                    <div>
+                        <header class="nx-head">
+                            <p class="nx-kicker">Áreas de foco</p>
+                            <h2 id="long-areas-title" class="nx-h2">O que <em>avaliamos</em></h2>
+                            <p class="nx-sub">Cada consulta parte de onde está hoje para decidir o que fazer a seguir.</p>
+                        </header>
+                        <div class="nx-cond-cards">
+                            <a class="nx-cond-card js-long-cta" data-long-cta="area-checkup" href="/marcar/medicina-longevidade"><span class="nx-cond-ico" aria-hidden="true">📋</span><span class="txt"><b>Check-up anual</b><span>Avaliação global de saúde</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card js-long-cta" data-long-cta="area-biomarcadores" href="/marcar/medicina-longevidade"><span class="nx-cond-ico" aria-hidden="true">🧬</span><span class="txt"><b>Biomarcadores</b><span>Metabólicos, hormonais e inflamatórios</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card js-long-cta" data-long-cta="area-prevencao" href="/marcar/medicina-longevidade"><span class="nx-cond-ico" aria-hidden="true">🛡️</span><span class="txt"><b>Prevenção</b><span>Agir antes de surgirem problemas</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card js-long-cta" data-long-cta="area-risco" href="/marcar/medicina-longevidade"><span class="nx-cond-ico" aria-hidden="true">📈</span><span class="txt"><b>Gestão de fatores de risco</b><span>Hábitos, sono, peso e stress</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card" href="/nutricao"><span class="nx-cond-ico" aria-hidden="true">🥗</span><span class="txt"><b>Nutrição</b><span>Acompanhamento nutricional integrado</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card" href="/travel-clinic"><span class="nx-cond-ico" aria-hidden="true">✈️</span><span class="txt"><b>Medicina do Viajante</b><span>Prevenção antes de viajar</span></span><span class="arr" aria-hidden="true">→</span></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="modern-section" id="areas" aria-labelledby="long-areas-title">
-            <div class="modern-container">
-                <h3 class="modern-title-md">Áreas de foco</h3>
-                <ul class="modern-areas">
-                    <li class="modern-tag modern-tag--muted">Check-up anual</li>
-                    <li class="modern-tag modern-tag--muted">Biomarcadores</li>
-                    <li class="modern-tag modern-tag--muted">Prevenção</li>
-                    <li class="modern-tag modern-tag--muted">Gestão de fatores de risco</li>
-                </ul>
-            </div>
-        </section>
-
-        <section class="modern-cta" id="comecar" aria-labelledby="long-close-title">
-            <div class="modern-container">
-                <h2 id="long-close-title">Comece com uma consulta</h2>
-                <p>Perceber onde está hoje é o primeiro passo para decidir o que fazer a seguir.</p>
-                <a href="/marcar/medicina-longevidade" class="modern-btn js-long-cta" data-long-cta="close">
-                    Marcar consulta
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17l10-10M8 7h9v9"/>
-                    </svg>
-                </a>
+        <section class="nx-final" id="comecar" aria-labelledby="long-close-title">
+            <div class="nx-inner">
+                <div class="nx-final-card">
+                    <h2 id="long-close-title">Comece com uma consulta</h2>
+                    <p>Perceber onde está hoje é o primeiro passo para decidir o que fazer a seguir. Consulta avulsa a 39€, sem compromisso.</p>
+                    <div class="nx-final-btns">
+                        <a href="/marcar/medicina-longevidade" class="nx-btn nx-btn--black js-long-cta" data-long-cta="close">
+                            Marcar consulta
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17l10-10M8 7h9v9"/></svg>
+                        </a>
+                        <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="nx-btn nx-btn--ghost js-long-cta" data-long-cta="close-whatsapp">Falar no WhatsApp</a>
+                    </div>
+                    <p class="nx-final-note">Ordem dos Médicos · ERS 45475 · 100% online</p>
+                </div>
             </div>
         </section>
     </main>

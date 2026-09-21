@@ -29,11 +29,8 @@
     <link rel="stylesheet" href="/design-tokens.css?v=20260920">
     <link rel="stylesheet" href="/landing.css?v=20260906i">
     <link rel="stylesheet" href="/nav-global.css?v=20260919">
-    <link rel="stylesheet" href="/component-library.css?v=20260920">
     <link rel="stylesheet" href="/pillar-colors.css?v=20260921d">
-    <link rel="stylesheet" href="/ui-fixes-critical.css?v=20260920f">
-    <link rel="stylesheet" href="/psicologia.css?v=20260915c">
-    <link rel="stylesheet" href="/modern-layout.css?v=20260921">
+    <link rel="stylesheet" href="/product-landing.css?v=20260921a">
     <link rel="preload" as="image" href="/image/psi-choice-individual.webp" type="image/webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -99,7 +96,7 @@
     }
     </script>
 </head>
-<body class="lon-landing psi-landing page-psychology">
+<body class="lon-landing nx-page psi-landing page-psychology">
     
 <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
 
@@ -133,212 +130,366 @@
     </header>
 
     <main id="conteudo-principal">
-        <section class="psi-hero-with-bg" id="inicio">
-            <picture>
-                <source media="(max-width: 939px)" srcset="/image/hero-bay.webp" width="768" height="1024">
-                <img class="psi-hero-bg" src="/image/hero-bay.webp" alt="Vista tranquila junto ao mar" loading="eager" decoding="async" fetchpriority="high" width="768" height="1024">
-            </picture>
-            <div class="psi-hero-overlay" aria-hidden="true"></div>
-            <div class="psi-hero-container">
-                <div class="psi-hero-content-center">
-                    <p class="psi-badge-white">Psicologia online</p>
-                    <h1 class="psi-hero-title-white">Conta-nos o que precisa.<br>Encontramos o psicólogo certo.</h1>
-                    <p class="psi-hero-subtitle-white">Consultas online, em português, sem lista de espera. Psicólogos inscritos na OPP.</p>
-                    
-                    <div class="psi-choice-cards">
-                        <a href="/marcar/psicologia-mensal" class="psi-choice-card" data-cta="individual">
-                            <img src="/image/psi-choice-individual.webp" alt="Apoio individual" loading="lazy">
-                            <div class="psi-choice-overlay"></div>
-                            <div class="psi-choice-content">
-                                <h3>Apoio individual</h3>
-                                <svg class="psi-choice-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
-                            </div>
-                        </a>
-                        <a href="/marcar/terapia-casal" class="psi-choice-card" data-cta="casal">
-                            <img src="/image/psi-choice-casal.webp" alt="Terapia de casal" loading="lazy">
-                            <div class="psi-choice-overlay"></div>
-                            <div class="psi-choice-content">
-                                <h3>Terapia de casal</h3>
-                                <svg class="psi-choice-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M8 7h9v9"/></svg>
-                            </div>
-                        </a>
+        <section class="nx-hero" id="inicio" aria-labelledby="psi-hero-title">
+            <div class="nx-hero-bg" style="background-image:url('/image/psi-choice-individual.webp')" aria-hidden="true"></div>
+            <div class="nx-inner">
+                <div class="nx-hero-grid">
+                    <div class="nx-hero-left">
+                        <span class="nx-hero-pill"><i aria-hidden="true"></i>Psicologia online · psicólogos inscritos na OPP</span>
+                        <h1 id="psi-hero-title">Conta-nos o que precisa. <em>Encontramos o psicólogo certo.</em></h1>
+                        <p class="nx-hero-lead">Consultas online, em português, sem lista de espera. Uma sessão por semana com o mesmo psicólogo — e se não resultar, muda quando quiser, sem custos extra.</p>
+
+                        <div class="nx-hero-price">
+                            <strong>56€</strong>
+                            <span><b>por sessão · acompanhamento semanal</b>cobrado mensalmente (224€/mês) · casal 65€/sessão</span>
+                        </div>
+
+                        <div class="nx-hero-btns">
+                            <a href="/marcar/psicologia-mensal" class="nx-btn nx-btn--white js-psi-cta" data-psi-cta="hero">
+                                Começar acompanhamento
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17l10-10M8 7h9v9"/></svg>
+                            </a>
+                            <a href="#preco" class="nx-btn nx-btn--ghost">Ver planos</a>
+                        </div>
+
+                        <ul class="nx-hero-trust">
+                            <li>Ordem dos Psicólogos</li>
+                            <li>ERS nº 45475</li>
+                            <li>100% online</li>
+                            <li>Muda de psicólogo quando quiser</li>
+                        </ul>
+
+                        <p class="nx-alert">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+                            <span><b>Em crise?</b> Ligue <a href="tel:112">112</a> ou SNS 24 · <a href="tel:808242424">808 24 24 24</a>. Esta consulta não substitui serviços de emergência.</span>
+                        </p>
                     </div>
-                    
-                    <p class="psi-crisis-white">Em crise? Ligue <a href="tel:112">112</a> ou SNS 24 · <a href="tel:808242424">808 24 24 24</a></p>
+
+                    <div class="nx-hero-visual">
+                        <figure class="nx-hero-photo">
+                            <span class="nx-hero-tag">Psicologia · Lon Clinic</span>
+                            <img src="/image/psi-choice-individual.webp" alt="Sessão de psicologia online num espaço tranquilo" loading="eager" fetchpriority="high" decoding="async">
+                        </figure>
+                        <div class="nx-glass-card">
+                            <div>
+                                <p class="lbl">Próxima sessão</p>
+                                <p class="ttl">Videochamada · 50 min</p>
+                                <p class="sub">Mesmo psicólogo todas as semanas · privacidade total</p>
+                            </div>
+                            <a href="/marcar/psicologia-mensal" class="nx-btn nx-btn--accent js-psi-cta" data-psi-cta="hero-card">Começar</a>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <nav class="nx-hero-row" aria-label="Opções de psicologia">
+                <a href="/marcar/psicologia-mensal" class="js-psi-cta" data-psi-cta="row-individual">
+                    <span class="ico" aria-hidden="true">🧠</span>
+                    <span class="lbl">Semanal</span>
+                    <span class="ttl">Apoio individual</span>
+                    <span class="dsc">56€ por sessão, uma por semana, com o mesmo psicólogo.</span>
+                </a>
+                <a href="/marcar/terapia-casal" class="js-psi-cta" data-psi-cta="row-casal">
+                    <span class="ico" aria-hidden="true">💞</span>
+                    <span class="lbl">Semanal</span>
+                    <span class="ttl">Terapia de casal</span>
+                    <span class="dsc">65€ por sessão para trabalhar a relação a dois.</span>
+                </a>
+                <a href="#preco">
+                    <span class="ico" aria-hidden="true">🗓️</span>
+                    <span class="lbl">Sem compromisso</span>
+                    <span class="ttl">Sessão pontual</span>
+                    <span class="dsc">Individual 60€ · casal 75€. Para experimentar primeiro.</span>
+                </a>
+                <a href="#queixas">
+                    <span class="ico" aria-hidden="true">🎯</span>
+                    <span class="lbl">Por queixa</span>
+                    <span class="ttl">Consultas específicas</span>
+                    <span class="dsc">Burnout, ansiedade, pânico, pós-parto e mais.</span>
+                </a>
+            </nav>
         </section>
 
-        <section class="modern-section modern-section--muted" id="como-funciona" aria-labelledby="psi-path-title">
-            <div class="modern-container">
-                <h2 id="psi-path-title" class="modern-title-lg">Como funciona</h2>
-                
-                <div class="modern-grid-auto modern-mt-12">
-                    <ol class="modern-steps">
-                        <li class="modern-step">
-                            <span class="modern-step-number">1</span>
-                            <div class="modern-step-content">
-                                <h3>Conte-nos o que precisa</h3>
-                                <p>Uma triagem breve para perceber o que procura. Se tiver dúvidas, <a href="https://wa.me/351910156711" target="_blank" rel="noopener">fale connosco no WhatsApp</a> — respondemos em menos de 1 hora.</p>
+        <div class="nx-trust" aria-label="Garantias">
+            <div class="nx-inner">
+                <ul>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><strong>Registo ERS</strong> 45475</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Psicólogos inscritos na <strong>OPP</strong></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg><strong>Videochamada</strong> sem instalar apps</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg><strong>Mudança de psicólogo</strong> sem custos</li>
+                </ul>
+            </div>
+        </div>
+
+        <section class="nx-section nx-how" id="como-funciona" aria-labelledby="psi-path-title">
+            <div class="nx-inner">
+                <div class="nx-how-grid">
+                    <div>
+                        <header class="nx-head">
+                            <p class="nx-kicker">Como funciona</p>
+                            <h2 id="psi-path-title" class="nx-h2">Três passos. <em>Sem lista de espera.</em></h2>
+                            <p class="nx-sub">Da triagem à primeira sessão, tudo acontece online — e o psicólogo é o mesmo do início ao fim.</p>
+                        </header>
+                        <ol class="nx-steps">
+                            <li class="nx-step">
+                                <span class="nx-step-n" aria-hidden="true">1</span>
+                                <div>
+                                    <h3>Conte-nos o que precisa</h3>
+                                    <p>Uma triagem breve para perceber o que procura. Com dúvidas? <a href="https://wa.me/351910156711" target="_blank" rel="noopener">Fale connosco no WhatsApp</a> — respondemos em menos de 1 hora.</p>
+                                </div>
+                            </li>
+                            <li class="nx-step">
+                                <span class="nx-step-n" aria-hidden="true">2</span>
+                                <div>
+                                    <h3>Agende a sua sessão</h3>
+                                    <p>Escolha o psicólogo pelo perfil, ou deixe a atribuição connosco. Depois, o dia e a hora que melhor lhe convêm.</p>
+                                </div>
+                            </li>
+                            <li class="nx-step">
+                                <span class="nx-step-n" aria-hidden="true">3</span>
+                                <div>
+                                    <h3>Comece o seu acompanhamento</h3>
+                                    <p>Videochamada semanal com o seu psicólogo, no conforto e privacidade do seu espaço.</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="nx-how-visual">
+                        <figure class="nx-photo-frame">
+                            <img src="/image/psi-choice-casal.webp" alt="Casal em sessão de terapia online" loading="lazy" decoding="async">
+                        </figure>
+                        <div class="nx-appt" aria-hidden="true">
+                            <div class="nx-appt-head">
+                                <b>Quarta · 18:30</b>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Videochamada</span>
                             </div>
-                        </li>
-                        <li class="modern-step">
-                            <span class="modern-step-number">2</span>
-                            <div class="modern-step-content">
-                                <h3>Agende a sua sessão</h3>
-                                <p>Escolha o dia e a hora que melhor lhe convêm.</p>
+                            <div class="nx-appt-body">
+                                <span class="nx-appt-avatar">P</span>
+                                <div>
+                                    <span class="nm">Psicólogo LON</span>
+                                    <span class="msg">Como foi a semana desde a nossa última sessão?</span>
+                                </div>
                             </div>
-                        </li>
-                        <li class="modern-step">
-                            <span class="modern-step-number">3</span>
-                            <div class="modern-step-content">
-                                <h3>Comece o seu acompanhamento</h3>
-                                <p>Videochamada com o seu psicólogo, no conforto e privacidade do seu espaço.</p>
-                            </div>
-                        </li>
-                    </ol>
-                    
-                    <div class="modern-mockup">
-                        <div class="modern-mockup-image">
-                            <img src="/image/psi-choice-individual.webp" alt="Sessão de psicologia online" loading="lazy">
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="modern-section" id="preco" aria-labelledby="psi-plans-title">
-            <div class="modern-container">
-                <h2 id="psi-plans-title" class="modern-title-lg modern-title-center">Um plano que cresce consigo</h2>
-                <div class="modern-pricing-grid" style="max-width: 800px; margin-left: auto; margin-right: auto;">
-                    <article class="modern-price-card modern-price-card--featured">
-                        <span style="display: inline-block; padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; background-color: var(--color-primary); color: var(--color-neutral-0); border-radius: 9999px; margin-bottom: 1rem;">preferido</span>
-                        <p class="name">Individual · semanal</p>
-                        <p class="value">56€<small style="font-size: 1rem; font-weight: 400; color: var(--color-text-secondary);">/sem</small></p>
-                        <p class="desc">224€/mês</p>
-                        <a href="/marcar/psicologia-mensal" class="modern-btn modern-btn--primary js-psi-cta" data-psi-cta="plan-individual">Começar</a>
+        <section class="nx-section nx-plans" id="preco" aria-labelledby="psi-plans-title">
+            <div class="nx-inner">
+                <header class="nx-head nx-head--center">
+                    <p class="nx-kicker">Planos</p>
+                    <h2 id="psi-plans-title" class="nx-h2">Um plano que <em>cresce consigo</em></h2>
+                    <p class="nx-sub">Acompanhamento semanal, cobrado ao mês, sem fidelização depois do primeiro mês. Prefere experimentar primeiro? Existe a sessão pontual.</p>
+                </header>
+
+                <div class="nx-plan-grid">
+                    <article class="nx-plan nx-plan--featured">
+                        <span class="nx-plan-badge">Preferido</span>
+                        <p class="nx-plan-name">Individual · semanal</p>
+                        <h3 class="nx-plan-title">Acompanhamento individual</h3>
+                        <div class="nx-plan-price">
+                            <strong>56€<small>/sem</small></strong>
+                            <span><b>por sessão · uma por semana</b>cobrado mensalmente (224€/mês)</span>
+                        </div>
+                        <ul class="nx-plan-list">
+                            <li>Sessão de 50 min todas as semanas, à mesma hora</li>
+                            <li>Sempre o mesmo psicólogo — muda quando quiser, sem custos</li>
+                            <li>Escolha pelo perfil ou atribuição pela nossa equipa</li>
+                            <li>Compromisso mínimo de 1 mês, depois cancela a qualquer momento</li>
+                        </ul>
+                        <div class="nx-plan-note">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <p><b>Add-on médico opcional.</b> Avaliação inicial, exames se clinicamente indicado, estudo da componente física associada e iniciação de medicação se indicado.</p>
+                        </div>
+                        <div class="nx-plan-actions">
+                            <a href="/marcar/psicologia-mensal" class="nx-btn nx-btn--white nx-btn--block js-psi-cta" data-psi-cta="plan-individual">Começar</a>
+                            <a href="https://wa.me/351928372775?text=Ol%C3%A1%2C%20gostava%20de%20saber%20mais%20sobre%20o%20acompanhamento%20psicol%C3%B3gico%20individual%20semanal." target="_blank" rel="noopener noreferrer" class="nx-btn nx-btn--ghost nx-btn--block js-psi-cta" data-psi-cta="plan-individual-info">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/></svg>
+                                Pedir mais informações
+                            </a>
+                        </div>
+                        <p class="nx-plan-foot">Sessão pontual sem compromisso: 60€</p>
                     </article>
-                    <article class="modern-price-card">
-                        <p class="name">Casal · semanal</p>
-                        <p class="value">65€<small style="font-size: 1rem; font-weight: 400; color: var(--color-text-secondary);">/sem</small></p>
-                        <p class="desc">260€/mês</p>
-                        <a href="/marcar/terapia-casal" class="modern-btn modern-btn--primary js-psi-cta" data-psi-cta="plan-casal">Começar</a>
+
+                    <article class="nx-plan">
+                        <span class="nx-plan-badge">A dois</span>
+                        <p class="nx-plan-name">Casal · semanal</p>
+                        <h3 class="nx-plan-title">Terapia de casal</h3>
+                        <div class="nx-plan-price">
+                            <strong>65€<small>/sem</small></strong>
+                            <span><b>por sessão · uma por semana</b>cobrado mensalmente (260€/mês)</span>
+                        </div>
+                        <ul class="nx-plan-list">
+                            <li>Sessão semanal com o casal e o mesmo psicólogo</li>
+                            <li>Espaço neutro para trabalhar comunicação e conflito</li>
+                            <li>Online — cada um pode estar onde estiver</li>
+                            <li>Compromisso mínimo de 1 mês, depois cancela a qualquer momento</li>
+                        </ul>
+                        <div class="nx-plan-note">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+                            <p><b>Não resultou com este psicólogo?</b> Pede uma mudança quando quiser — sem custos extra e sem recomeçar do zero.</p>
+                        </div>
+                        <div class="nx-plan-actions">
+                            <a href="/marcar/terapia-casal" class="nx-btn nx-btn--accent nx-btn--block js-psi-cta" data-psi-cta="plan-casal">Começar</a>
+                            <a href="https://wa.me/351928372775?text=Ol%C3%A1%2C%20gostava%20de%20saber%20mais%20sobre%20a%20terapia%20de%20casal%20semanal." target="_blank" rel="noopener noreferrer" class="nx-btn nx-btn--outline nx-btn--block js-psi-cta" data-psi-cta="plan-casal-info">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/></svg>
+                                Pedir mais informações
+                            </a>
+                        </div>
+                        <p class="nx-plan-foot">Sessão pontual sem compromisso: 75€</p>
                     </article>
                 </div>
-                <div style="margin-top: 2rem; text-align: center;">
-                    <p style="font-size: 0.875rem; line-height: 1.6; color: var(--color-text-secondary);"><strong>Prefere sem compromisso semanal?</strong> Sessão pontual também disponível — individual 60€, casal 75€.</p>
-                    <p style="margin-top: 0.75rem; font-size: 0.875rem; line-height: 1.6; color: var(--color-text-secondary);"><strong>Add-on médico</strong> — avaliação inicial, exames se clinicamente indicado, estudo de componente física associada, e iniciação de medicação se indicado.</p>
-                </div>
-            </div>
-        </section>
 
-        <section class="modern-section modern-section--muted" id="testemunhos" aria-labelledby="psi-testimonials-title">
-            <div class="modern-container">
-                <h2 id="psi-testimonials-title" class="modern-title-lg">O que dizem os nossos pacientes</h2>
-                <div class="modern-testimonial-grid">
-                    <article class="modern-testimonial-card">
-                        <blockquote>
-                            <p>"Não queria correr o risco de a encontrar na rua." Fazer terapia online resolveu o receio de se cruzar com a psicóloga no seu círculo social.</p>
-                            <footer style="margin-top: 0.75rem; font-size: 0.875rem; color: var(--color-text-secondary);">M., 29</footer>
-                        </blockquote>
-                    </article>
-                    <article class="modern-testimonial-card">
-                        <blockquote>
-                            <p>"Passei anos a evitar terapia porque não queria explicar quem sou do zero." Saber que podia mudar de psicólogo trouxe tranquilidade ao processo.</p>
-                            <footer style="margin-top: 0.75rem; font-size: 0.875rem; color: var(--color-text-secondary);">R., 41</footer>
-                        </blockquote>
-                    </article>
-                    <article class="modern-testimonial-card">
-                        <blockquote>
-                            <p>"Não queria que ninguém da minha vida soubesse — nem por acidente." Fazer tudo online foi o que finalmente permitiu avançar.</p>
-                            <footer style="margin-top: 0.75rem; font-size: 0.875rem; color: var(--color-text-secondary);">C., 52</footer>
-                        </blockquote>
-                    </article>
-                    <article class="modern-testimonial-card">
-                        <blockquote>
-                            <p>"Precisava de um espaço estável, não de mais uma lista de espera." Uma sessão por semana mudou o ritmo.</p>
-                            <footer style="margin-top: 0.75rem; font-size: 0.875rem; color: var(--color-text-secondary);">M., acompanhamento semanal</footer>
-                        </blockquote>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-
-        <section class="modern-section" id="faq" aria-labelledby="psi-faq-title">
-            <div class="modern-container" style="max-width: 800px;">
-                <h2 id="psi-faq-title" class="modern-title-lg modern-title-center">Perguntas frequentes</h2>
-                <div class="psi-faq psi-anim">
-                    <details>
-                        <summary>Quem são os psicólogos? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">Trabalhamos com psicólogos qualificados e inscritos na Ordem dos Psicólogos Portugueses. Pode escolher o seu psicólogo com base no perfil e área de especialização, ou deixar que a nossa equipa faça a atribuição, de acordo com as suas respostas à triagem. Se mais tarde sentir que outro profissional faz mais sentido, pode sempre pedir uma mudança.</div>
-                    </details>
-                    <details>
-                        <summary>Como sei se a LON Clinic é para mim? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">A LON Clinic foi pensada para quem procura acompanhamento psicológico contínuo, e não apenas uma sessão pontual. Se valoriza ter uma sessão de vídeo todas as semanas com o mesmo psicólogo, este formato pode ser uma boa opção. Se estiver em risco imediato ou numa situação de emergência, deve contactar primeiro os serviços de emergência adequados.</div>
-                    </details>
-                    <details>
-                        <summary>Quanto custa? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">Acompanhamento semanal individual: <strong>56€/semana</strong>, cobrado mensalmente (<strong>224€</strong>). Terapia de casal semanal: <strong>65€/semana</strong>, cobrado mensalmente (260€). Sessão pontual sem compromisso semanal: individual 60€, casal 75€.</div>
-                    </details>
-                    <details>
-                        <summary>Quanto tempo até me ser atribuído um psicólogo? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">Depois de completar a triagem, pode escolher diretamente o psicólogo que preferir, ou pedir à nossa equipa para fazer a atribuição mais adequada ao seu perfil. Normalmente, o processo fica concluído nos dias úteis seguintes e avisamos assim que estiver pronto.</div>
-                    </details>
-                    <details>
-                        <summary>O acompanhamento online substitui a terapia presencial? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">Para muitas pessoas, sim. O acompanhamento online é uma alternativa séria e eficaz, conduzida com o mesmo rigor clínico. No entanto, não substitui cuidados de emergência nem situações em que seja necessária uma avaliação presencial urgente.</div>
-                    </details>
-                    <details>
-                        <summary>Durante quanto tempo posso usar a LON Clinic? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">Pode manter o acompanhamento durante o tempo que fizer sentido. Existe um compromisso mínimo de 1 mês e, a partir daí, pode continuar ou cancelar a qualquer momento, sem fidelização.</div>
-                    </details>
+                <div class="nx-phases" aria-label="Como começa">
+                    <div class="nx-phase">
+                        <span class="nx-phase-n" aria-hidden="true">1</span>
+                        <div>
+                            <b>Triagem breve</b>
+                            <span>Conta-nos o que procura. Escolhe o psicólogo ou deixas a atribuição connosco.</span>
+                        </div>
+                    </div>
+                    <div class="nx-phases-arrow" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    </div>
+                    <div class="nx-phase">
+                        <span class="nx-phase-n" aria-hidden="true">2</span>
+                        <div>
+                            <b>Sessão semanal</b>
+                            <span>À mesma hora, com o mesmo psicólogo. Atribuição concluída nos dias úteis seguintes.</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="modern-section" id="queixas" aria-labelledby="psi-queixas-title">
-            <div class="modern-container">
-                <h3 class="modern-title-md">Consultas por queixa específica</h3>
-                <div class="modern-grid-3 modern-mt-6">
-                    <a class="modern-card" href="/psicologia-burnout" style="text-decoration: none; color: var(--color-text-primary); font-weight: 500;">Psicólogo para burnout</a>
-                    <a class="modern-card" href="/ansiedade-no-trabalho" style="text-decoration: none; color: var(--color-text-primary); font-weight: 500;">Ansiedade no trabalho</a>
-                    <a class="modern-card" href="/ataques-de-panico" style="text-decoration: none; color: var(--color-text-primary); font-weight: 500;">Ataques de pânico</a>
-                    <a class="modern-card" href="/terapia-de-casal" style="text-decoration: none; color: var(--color-text-primary); font-weight: 500;">Terapia de casal</a>
-                    <a class="modern-card" href="/psicologo-emigrantes" style="text-decoration: none; color: var(--color-text-primary); font-weight: 500;">Psicólogo no estrangeiro</a>
-                    <a class="modern-card" href="/ansiedade-pos-parto" style="text-decoration: none; color: var(--color-text-primary); font-weight: 500;">Ansiedade pós-parto</a>
+        <section class="nx-section nx-testimonials" id="testemunhos" aria-labelledby="psi-testimonials-title">
+            <div class="nx-inner">
+                <header class="nx-head">
+                    <p class="nx-kicker">Testemunhos</p>
+                    <h2 id="psi-testimonials-title" class="nx-h2">O que dizem os <em>nossos pacientes</em></h2>
+                </header>
+                <div class="nx-tgrid">
+                    <article class="nx-tcard">
+                        <div class="nx-tstars" aria-label="5 estrelas">★★★★★</div>
+                        <p>"Não queria correr o risco de a encontrar na rua." Fazer terapia online resolveu o receio de se cruzar com a psicóloga no seu círculo social.</p>
+                        <footer><b>M., 29</b><span>Acompanhamento individual</span></footer>
+                    </article>
+                    <article class="nx-tcard">
+                        <div class="nx-tstars" aria-label="5 estrelas">★★★★★</div>
+                        <p>"Passei anos a evitar terapia porque não queria explicar quem sou do zero." Saber que podia mudar de psicólogo trouxe tranquilidade ao processo.</p>
+                        <footer><b>R., 41</b><span>Acompanhamento individual</span></footer>
+                    </article>
+                    <article class="nx-tcard">
+                        <div class="nx-tstars" aria-label="5 estrelas">★★★★★</div>
+                        <p>"Não queria que ninguém da minha vida soubesse — nem por acidente." Fazer tudo online foi o que finalmente permitiu avançar.</p>
+                        <footer><b>C., 52</b><span>Acompanhamento individual</span></footer>
+                    </article>
+                    <article class="nx-tcard">
+                        <div class="nx-tstars" aria-label="5 estrelas">★★★★★</div>
+                        <p>"Precisava de um espaço estável, não de mais uma lista de espera." Uma sessão por semana mudou o ritmo.</p>
+                        <footer><b>M.</b><span>Acompanhamento semanal</span></footer>
+                    </article>
                 </div>
             </div>
         </section>
 
-        <section class="modern-section modern-section--muted" id="quizzes" aria-labelledby="psi-quizzes-title">
-            <div class="modern-container">
-                <h3 class="modern-title-md modern-title-center">Em dúvida sobre o que sente?</h3>
-                <div class="modern-grid-2 modern-mt-8">
-                    <article class="modern-card">
-                        <h3 style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem;">Teste de burnout</h3>
-                        <p style="font-size: 0.875rem; line-height: 1.6; color: var(--color-text-secondary); margin-bottom: 1rem;">5 minutos para perceber se o que sente é cansaço comum ou sinais de esgotamento.</p>
-                        <a href="/burnout/teste" class="modern-link js-psi-cta" data-psi-cta="quiz-burnout">Fazer o teste →</a>
-                    </article>
-                    <article class="modern-card">
-                        <h3 style="font-family: var(--font-heading); font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem;">Big Five</h3>
-                        <p style="font-size: 0.875rem; line-height: 1.6; color: var(--color-text-secondary); margin-bottom: 1rem;">Conheça o seu perfil de personalidade e como isso influencia o que procura em terapia.</p>
-                        <a href="/teste-personalidade" class="modern-link js-psi-cta" data-psi-cta="quiz-bigfive">Fazer o teste →</a>
-                    </article>
+        <section class="nx-section nx-faq" id="faq" aria-labelledby="psi-faq-title">
+            <div class="nx-inner">
+                <header class="nx-head">
+                    <p class="nx-kicker">FAQ</p>
+                    <h2 id="psi-faq-title" class="nx-h2">Perguntas <em>frequentes</em></h2>
+                </header>
+                <div class="nx-faq-cols">
+                    <div>
+                        <details>
+                            <summary>Quem são os psicólogos? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Trabalhamos com psicólogos qualificados e inscritos na Ordem dos Psicólogos Portugueses. Pode escolher o seu psicólogo com base no perfil e área de especialização, ou deixar que a nossa equipa faça a atribuição, de acordo com as suas respostas à triagem. Se mais tarde sentir que outro profissional faz mais sentido, pode sempre pedir uma mudança.</div>
+                        </details>
+                        <details>
+                            <summary>Como sei se a LON Clinic é para mim? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">A LON Clinic foi pensada para quem procura acompanhamento psicológico contínuo, e não apenas uma sessão pontual. Se valoriza ter uma sessão de vídeo todas as semanas com o mesmo psicólogo, este formato pode ser uma boa opção. Se estiver em risco imediato ou numa situação de emergência, deve contactar primeiro os serviços de emergência adequados.</div>
+                        </details>
+                        <details>
+                            <summary>Quanto custa? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Acompanhamento semanal individual: <strong>56€/semana</strong>, cobrado mensalmente (<strong>224€</strong>). Terapia de casal semanal: <strong>65€/semana</strong>, cobrado mensalmente (260€). Sessão pontual sem compromisso semanal: individual 60€, casal 75€.</div>
+                        </details>
+                    </div>
+                    <div>
+                        <details>
+                            <summary>Quanto tempo até me ser atribuído um psicólogo? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Depois de completar a triagem, pode escolher diretamente o psicólogo que preferir, ou pedir à nossa equipa para fazer a atribuição mais adequada ao seu perfil. Normalmente, o processo fica concluído nos dias úteis seguintes e avisamos assim que estiver pronto.</div>
+                        </details>
+                        <details>
+                            <summary>O acompanhamento online substitui a terapia presencial? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Para muitas pessoas, sim. O acompanhamento online é uma alternativa séria e eficaz, conduzida com o mesmo rigor clínico. No entanto, não substitui cuidados de emergência nem situações em que seja necessária uma avaliação presencial urgente.</div>
+                        </details>
+                        <details>
+                            <summary>Durante quanto tempo posso usar a LON Clinic? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Pode manter o acompanhamento durante o tempo que fizer sentido. Existe um compromisso mínimo de 1 mês e, a partir daí, pode continuar ou cancelar a qualquer momento, sem fidelização.</div>
+                        </details>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section class="modern-cta" id="comecar" aria-labelledby="psi-close-title">
-            <div class="modern-container">
-                <h2 id="psi-close-title">Comece com uma consulta</h2>
-                <p>Alguns minutos para percebermos o que precisa, e avançarmos para o acompanhamento certo.</p>
-                <a href="/marcar/psicologia-mensal" class="modern-btn js-psi-cta" data-psi-cta="close-cta">
-                    Começar agora
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17l10-10M8 7h9v9"/>
-                    </svg>
-                </a>
+        <section class="nx-section nx-cond" id="queixas" aria-labelledby="psi-queixas-title">
+            <div class="nx-inner">
+                <div class="nx-cond-grid">
+                    <figure class="nx-cond-photo">
+                        <img src="/image/hero-bay.webp" alt="Vista tranquila junto ao mar" loading="lazy" decoding="async">
+                        <figcaption class="nx-glass-note">
+                            <b>Em dúvida sobre o que sente?</b>
+                            <span>Comece por um dos nossos testes — 5 minutos, sem compromisso.</span>
+                        </figcaption>
+                    </figure>
+                    <div>
+                        <header class="nx-head">
+                            <p class="nx-kicker">Consultas por queixa</p>
+                            <h2 id="psi-queixas-title" class="nx-h2">Acompanhamento <em>específico</em></h2>
+                            <p class="nx-sub">Escolha a área que melhor descreve o que está a viver. Em todas, a lógica é a mesma: sessão semanal com o mesmo psicólogo.</p>
+                        </header>
+                        <div class="nx-cond-cards">
+                            <a class="nx-cond-card" href="/psicologia-burnout"><span class="nx-cond-ico" aria-hidden="true">🔥</span><span class="txt"><b>Psicólogo para burnout</b><span>Esgotamento e exaustão no trabalho</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card" href="/ansiedade-no-trabalho"><span class="nx-cond-ico" aria-hidden="true">💼</span><span class="txt"><b>Ansiedade no trabalho</b><span>Pressão, prazos e sobrecarga</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card" href="/ataques-de-panico"><span class="nx-cond-ico" aria-hidden="true">💓</span><span class="txt"><b>Ataques de pânico</b><span>Crises, medo e evitamento</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card" href="/terapia-de-casal"><span class="nx-cond-ico" aria-hidden="true">💞</span><span class="txt"><b>Terapia de casal</b><span>Comunicação e conflito a dois</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card" href="/psicologo-emigrantes"><span class="nx-cond-ico" aria-hidden="true">✈️</span><span class="txt"><b>Psicólogo no estrangeiro</b><span>Em português, onde estiver</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card" href="/ansiedade-pos-parto"><span class="nx-cond-ico" aria-hidden="true">🤱</span><span class="txt"><b>Ansiedade pós-parto</b><span>Apoio nos primeiros meses</span></span><span class="arr" aria-hidden="true">→</span></a>
+                        </div>
+                        <div class="nx-mini-grid" id="quizzes">
+                            <a class="nx-mini-card js-psi-cta" data-psi-cta="quiz-burnout" href="/burnout/teste">
+                                <b>Teste de burnout</b>
+                                <p>5 minutos para perceber se o que sente é cansaço comum ou sinais de esgotamento.</p>
+                                <span class="arr">Fazer o teste →</span>
+                            </a>
+                            <a class="nx-mini-card js-psi-cta" data-psi-cta="quiz-bigfive" href="/teste-personalidade">
+                                <b>Big Five</b>
+                                <p>Conheça o seu perfil de personalidade e como isso influencia o que procura em terapia.</p>
+                                <span class="arr">Fazer o teste →</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="nx-final" id="comecar" aria-labelledby="psi-close-title">
+            <div class="nx-inner">
+                <div class="nx-final-card">
+                    <h2 id="psi-close-title">Comece com uma consulta</h2>
+                    <p>Alguns minutos para percebermos o que precisa, e avançarmos para o acompanhamento certo — 56€ por sessão semanal, ou uma sessão pontual a 60€.</p>
+                    <div class="nx-final-btns">
+                        <a href="/marcar/psicologia-mensal" class="nx-btn nx-btn--black js-psi-cta" data-psi-cta="close-cta">
+                            Começar agora
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17l10-10M8 7h9v9"/></svg>
+                        </a>
+                        <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="nx-btn nx-btn--ghost js-psi-cta" data-psi-cta="close-whatsapp">Falar no WhatsApp</a>
+                    </div>
+                    <p class="nx-final-note">Em risco imediato: <a href="tel:112">112</a> · SNS 24 <a href="tel:808242424">808 24 24 24</a></p>
+                </div>
             </div>
         </section>
     </main>
@@ -400,9 +551,23 @@
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
 
     <script src="/lon-nav.js" defer></script>
-    <script src="/vendor/gsap.min.js" defer></script>
-    <script src="/vendor/ScrollTrigger.min.js" defer></script>
-    <script src="/vendor/lenis.min.js" defer></script>
-    <script src="/psicologia.js?v=20260807c" defer></script>
+    <script>
+    (function () {
+        function trackPsiCta(location) {
+            if (typeof gtag !== 'function') return;
+            gtag('event', 'psicologia_cta_click', {
+                event_category: 'psicologia',
+                event_label: location || 'cta',
+                page_location: window.location.href,
+                page_path: '/saudemental'
+            });
+        }
+        document.querySelectorAll('.js-psi-cta').forEach(function (el) {
+            el.addEventListener('click', function () {
+                trackPsiCta(el.getAttribute('data-psi-cta') || 'cta');
+            });
+        });
+    })();
+    </script>
 </body>
 </html>

@@ -28,11 +28,9 @@
     <link rel="stylesheet" href="/design-tokens.css?v=20260920">
     <link rel="stylesheet" href="/landing.css?v=20260906i">
     <link rel="stylesheet" href="/nav-global.css?v=20260919">
-    <link rel="stylesheet" href="/component-library.css?v=20260920">
     <link rel="stylesheet" href="/pillar-colors.css?v=20260921d">
-    <link rel="stylesheet" href="/ui-fixes-critical.css?v=20260920f">
-    <link rel="stylesheet" href="/psicologia.css?v=20260915c">
-    <link rel="stylesheet" href="/modern-layout.css?v=20260921">
+    <link rel="stylesheet" href="/product-landing.css?v=20260921a">
+    <link rel="preload" as="image" href="/image/consulta-urgente.webp" type="image/webp">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -93,7 +91,7 @@
     }
     </script>
 </head>
-<body class="lon-landing urgent-landing page-urgent">
+<body class="lon-landing nx-page urgent-landing page-urgent">
 
 <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
 
@@ -127,178 +125,310 @@
     </header>
 
     <main id="conteudo-principal">
-        <section class="modern-hero" id="inicio" aria-labelledby="urgent-hero-title">
-            <div class="modern-container">
-                <div class="modern-hero-grid">
-                    <div class="modern-hero-content">
-                        <span class="modern-badge">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-                            </svg>
-                            Resposta rápida · consulta ainda hoje
-                        </span>
-                        
-                        <h1 id="urgent-hero-title" class="modern-title-xl">Sintomas agora? Fale com um médico hoje</h1>
-                        
-                        <p class="modern-lead">Consulta médica urgente por videochamada — para quem está doente agora, seja residente ou de visita a Portugal.</p>
-                        
-                        <div class="modern-btn-group">
-                            <a href="/marcar/urgent-care" class="modern-btn modern-btn--primary js-urgent-cta" data-urgent-cta="hero">
+        <section class="nx-hero" id="inicio" aria-labelledby="urgent-hero-title">
+            <div class="nx-hero-bg" style="background-image:url('/image/consulta-urgente.webp')" aria-hidden="true"></div>
+            <div class="nx-inner">
+                <div class="nx-hero-grid">
+                    <div class="nx-hero-left">
+                        <span class="nx-hero-pill"><i aria-hidden="true"></i>Resposta rápida · consulta ainda hoje</span>
+                        <h1 id="urgent-hero-title">Sintomas agora? <em>Fale com um médico hoje.</em></h1>
+                        <p class="nx-hero-lead">Consulta médica urgente por videochamada — para quem está doente agora, seja residente ou de visita a Portugal. Receita digital se necessário.</p>
+
+                        <div class="nx-hero-price">
+                            <strong>39€</strong>
+                            <span><b>consulta avulsa · sem subscrição</b>objetivo: consulta no mesmo dia</span>
+                        </div>
+
+                        <div class="nx-hero-btns">
+                            <a href="/marcar/urgent-care" class="nx-btn nx-btn--white js-urgent-cta" data-urgent-cta="hero">
                                 Marcar consulta
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M7 17l10-10M8 7h9v9"/>
-                                </svg>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17l10-10M8 7h9v9"/></svg>
                             </a>
-                            <a href="#como-funciona" class="modern-link">Como funciona</a>
+                            <a href="#como-funciona" class="nx-btn nx-btn--ghost">Como funciona</a>
                         </div>
-                        
-                        <div style="margin-top: 2rem; padding: 1.5rem; border-radius: 1rem; background-color: rgba(189, 79, 79, 0.1); border: 1px solid rgba(189, 79, 79, 0.2);">
-                            <p style="font-size: 0.875rem; line-height: 1.6; color: var(--color-text-primary); margin: 0;"><strong>Em emergência real</strong> (dor no peito, dificuldade a respirar, perda de consciência): <a href="tel:112" style="font-weight: 600; text-decoration: underline;">ligue 112</a> de imediato. Isto não substitui uma urgência hospitalar.</p>
-                        </div>
-                        
-                        <ul class="modern-services">
-                            <li class="modern-tag">Consulta Urgente</li>
-                            <li class="modern-tag">Consulta Médica</li>
-                            <li class="modern-tag">Atestado Médico</li>
-                            <li class="modern-tag">Acompanhamento Completo</li>
+
+                        <ul class="nx-hero-trust">
+                            <li>Ordem dos Médicos</li>
+                            <li>ERS nº 45475</li>
+                            <li>Receita digital válida em Portugal</li>
+                            <li>Residentes e turistas</li>
                         </ul>
-                    </div>
-                    
-                    <div class="modern-hero-image">
-                        <img src="/image/image3.webp" alt="Consulta médica urgente online" loading="eager">
-                    </div>
-                </div>
-            </div>
-        </section>
 
+                        <p class="nx-alert">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+                            <span><b>Em emergência real</b> (dor no peito, dificuldade a respirar, perda de consciência): <a href="tel:112">ligue 112</a> de imediato. Isto não substitui uma urgência hospitalar.</span>
+                        </p>
+                    </div>
 
-        <section class="modern-section modern-section--muted" id="como-funciona" aria-labelledby="urgent-process-title">
-            <div class="modern-container">
-                <h2 id="urgent-process-title" class="modern-title-lg">Como funciona</h2>
-                
-                <div class="modern-grid-auto modern-mt-12">
-                    <ol class="modern-steps">
-                        <li class="modern-step">
-                            <span class="modern-step-number">1</span>
-                            <div class="modern-step-content">
-                                <h3>Descreva os sintomas</h3>
-                                <p>Escolha consulta de urgência. Se tiver dúvidas, <a href="https://wa.me/351910156711" target="_blank" rel="noopener">fale connosco no WhatsApp</a> — respondemos em menos de 1 hora.</p>
+                    <div class="nx-hero-visual">
+                        <figure class="nx-hero-photo">
+                            <span class="nx-hero-tag">Urgent Care · Lon Clinic</span>
+                            <img src="/image/consulta-urgente.webp" alt="Consulta médica urgente por videochamada" loading="eager" fetchpriority="high" decoding="async">
+                        </figure>
+                        <div class="nx-glass-card">
+                            <div>
+                                <p class="lbl">Hoje</p>
+                                <p class="ttl">Videochamada · próxima vaga</p>
+                                <p class="sub">Receita e atestado digitais, se clinicamente indicado</p>
                             </div>
-                        </li>
-                        <li class="modern-step">
-                            <span class="modern-step-number">2</span>
-                            <div class="modern-step-content">
-                                <h3>Agende ainda hoje</h3>
-                                <p>Escolha o horário disponível mais próximo.</p>
-                            </div>
-                        </li>
-                        <li class="modern-step">
-                            <span class="modern-step-number">3</span>
-                            <div class="modern-step-content">
-                                <h3>Comece o seu tratamento</h3>
-                                <p>Consulta imediata com receita digital, se necessário, enviada logo após.</p>
-                            </div>
-                        </li>
-                    </ol>
-                    
-                    <div class="modern-mockup">
-                        <div class="modern-appointment-card" style="border-color: rgba(189, 79, 79, 0.3);">
-                            <div class="modern-appointment-header">
-                                <span class="time">Hoje · 14:20</span>
-                                <span class="type">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-                                    </svg>
-                                    Videochamada
-                                </span>
-                            </div>
-                            <div style="padding: 0.5rem 0.75rem; background-color: rgba(189, 79, 79, 0.1); border-radius: 0.5rem; margin-bottom: 1rem;">
-                                <span style="font-size: 0.75rem; font-weight: 600; color: #BD4F4F;">Consulta em curso</span>
-                            </div>
-                            <div style="font-size: 0.875rem; color: var(--color-text-secondary);">
-                                <p style="margin: 0;">Conte-me: desde quando tem estes sintomas?</p>
-                            </div>
+                            <a href="/marcar/urgent-care" class="nx-btn nx-btn--accent js-urgent-cta" data-urgent-cta="hero-card">Marcar</a>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <nav class="nx-hero-row" aria-label="Opções de consulta">
+                <a href="/marcar/urgent-care" class="js-urgent-cta" data-urgent-cta="row-urgente">
+                    <span class="ico" aria-hidden="true">🚑</span>
+                    <span class="lbl">Hoje · 39€</span>
+                    <span class="ttl">Consulta urgente</span>
+                    <span class="dsc">Sintomas agudos não emergentes, no mesmo dia.</span>
+                </a>
+                <a href="/marcar/clinica-geral" class="js-urgent-cta" data-urgent-cta="row-geral">
+                    <span class="ico" aria-hidden="true">🩺</span>
+                    <span class="lbl">39€</span>
+                    <span class="ttl">Consulta médica</span>
+                    <span class="dsc">Clínica geral por videochamada, com tempo.</span>
+                </a>
+                <a href="#sintomas">
+                    <span class="ico" aria-hidden="true">📄</span>
+                    <span class="lbl">Se indicado</span>
+                    <span class="ttl">Receita e atestado</span>
+                    <span class="dsc">Documentos digitais enviados logo após a consulta.</span>
+                </a>
+                <a href="/travel-clinic">
+                    <span class="ico" aria-hidden="true">✈️</span>
+                    <span class="lbl">Prevenção</span>
+                    <span class="ttl">Medicina do Viajante</span>
+                    <span class="dsc">Vacinas e profilaxia antes de viajar.</span>
+                </a>
+            </nav>
         </section>
 
-
-        <section class="modern-section" id="preco" aria-labelledby="urgent-pricing-title">
-            <div class="modern-container" style="max-width: 600px;">
-                <h2 id="urgent-pricing-title" class="modern-title-lg modern-title-center">Um preço, sem surpresas</h2>
-                <div class="modern-price-card modern-price-card--featured" style="margin-top: 2.5rem;">
-                    <p class="value">39€</p>
-                    <p class="desc">Consulta avulsa, sem subscrição necessária</p>
-                    <a href="/marcar/urgent-care" class="modern-btn modern-btn--primary js-urgent-cta" data-urgent-cta="pricing">Marcar consulta</a>
-                </div>
-            </div>
-        </section>
-
-        <section class="modern-section modern-section--muted" id="testemunhos" aria-labelledby="urgent-testimonials-title">
-            <div class="modern-container">
-                <h2 id="urgent-testimonials-title" class="modern-title-lg">O que dizem os nossos pacientes</h2>
-                <div class="modern-placeholder">
-                    <p>Estamos a recolher os primeiros testemunhos dos nossos pacientes. Em breve poderá lê-los aqui.</p>
-                </div>
-            </div>
-        </section>
-
-
-        <section class="modern-section" id="faq" aria-labelledby="urgent-faq-title">
-            <div class="modern-container" style="max-width: 800px;">
-                <h2 id="urgent-faq-title" class="modern-title-lg modern-title-center">Perguntas frequentes</h2>
-                <div class="psi-faq">
-                    <details>
-                        <summary>Isto substitui uma urgência hospitalar? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">Não. Se tem uma emergência real (dor no peito, dificuldade a respirar, perda de consciência), deve <strong>ligar 112 de imediato</strong>. Esta consulta é para sintomas agudos não emergentes que precisam de atenção médica no mesmo dia, mas não justificam ida à urgência hospitalar.</div>
-                    </details>
-                    <details>
-                        <summary>Qual a diferença para a Medicina do Viajante? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">A Medicina do Viajante foca-se em <strong>prevenção antes de viajar</strong> (vacinas, profilaxia). O Urgent Care é para quem <strong>está doente agora</strong> e precisa de consulta urgente, seja residente ou turista em Portugal.</div>
-                    </details>
-                    <details>
-                        <summary>Quanto tempo até ser atendido? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">O objetivo é <strong>consulta no mesmo dia</strong>. A janela horária específica depende da disponibilidade médica e será confirmada no momento da marcação.</div>
-                    </details>
-                    <details>
-                        <summary>Recebo receita mesmo sendo turista? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">Sim. Se clinicamente indicado, o médico emite <strong>receita digital válida em farmácia em Portugal</strong>, independentemente de ser residente ou visitante.</div>
-                    </details>
-                    <details>
-                        <summary>A LON Clinic está registada e regulamentada? <span class="psi-faq-icon" aria-hidden="true">+</span></summary>
-                        <div class="psi-faq-a">Sim. A Lon Clinic está registada na <strong>Entidade Reguladora da Saúde (ERS)</strong> com o número 45475. Todos os médicos são inscritos na Ordem dos Médicos.</div>
-                    </details>
-                </div>
-            </div>
-        </section>
-
-        <section class="modern-section" id="sintomas" aria-labelledby="urgent-symptoms-title">
-            <div class="modern-container">
-                <h3 class="modern-title-md">Sintomas comuns</h3>
-                <ul class="modern-areas">
-                    <li class="modern-tag modern-tag--muted">Febre</li>
-                    <li class="modern-tag modern-tag--muted">Dor de garganta</li>
-                    <li class="modern-tag modern-tag--muted">Infeção urinária</li>
-                    <li class="modern-tag modern-tag--muted">Gastroenterite</li>
-                    <li class="modern-tag modern-tag--muted">Alergias</li>
-                    <li class="modern-tag modern-tag--muted">Renovação de receita</li>
+        <div class="nx-trust" aria-label="Garantias">
+            <div class="nx-inner">
+                <ul>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><strong>Registo ERS</strong> 45475</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>Médicos inscritos na <strong>Ordem</strong></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg><strong>Videochamada</strong> sem instalar apps</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg><strong>Receita digital</strong> válida em farmácia</li>
                 </ul>
             </div>
+        </div>
+
+        <section class="nx-section nx-how" id="como-funciona" aria-labelledby="urgent-process-title">
+            <div class="nx-inner">
+                <div class="nx-how-grid">
+                    <div>
+                        <header class="nx-head">
+                            <p class="nx-kicker">Como funciona</p>
+                            <h2 id="urgent-process-title" class="nx-h2">Três passos. <em>Ainda hoje.</em></h2>
+                            <p class="nx-sub">Da descrição dos sintomas à receita digital, tudo acontece online — sem sala de espera.</p>
+                        </header>
+                        <ol class="nx-steps">
+                            <li class="nx-step">
+                                <span class="nx-step-n" aria-hidden="true">1</span>
+                                <div>
+                                    <h3>Descreva os sintomas</h3>
+                                    <p>Escolha consulta de urgência. Com dúvidas? <a href="https://wa.me/351910156711" target="_blank" rel="noopener">Fale connosco no WhatsApp</a> — respondemos em menos de 1 hora.</p>
+                                </div>
+                            </li>
+                            <li class="nx-step">
+                                <span class="nx-step-n" aria-hidden="true">2</span>
+                                <div>
+                                    <h3>Agende ainda hoje</h3>
+                                    <p>Escolha o horário disponível mais próximo. Recebe o link da videochamada por email — sem instalar nada.</p>
+                                </div>
+                            </li>
+                            <li class="nx-step">
+                                <span class="nx-step-n" aria-hidden="true">3</span>
+                                <div>
+                                    <h3>Comece o seu tratamento</h3>
+                                    <p>Consulta imediata com receita digital, se necessário, enviada logo após — válida em qualquer farmácia em Portugal.</p>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="nx-how-visual">
+                        <figure class="nx-photo-frame">
+                            <img src="/image/consulta-telemedicina.webp" alt="Médico em consulta por videochamada" loading="lazy" decoding="async">
+                        </figure>
+                        <div class="nx-appt" aria-hidden="true">
+                            <div class="nx-appt-head">
+                                <b>Hoje · 14:20</b>
+                                <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Videochamada</span>
+                            </div>
+                            <span class="nx-appt-live">Consulta em curso</span>
+                            <div class="nx-appt-body">
+                                <span class="nx-appt-avatar">Dr</span>
+                                <div>
+                                    <span class="nm">Médico LON</span>
+                                    <span class="msg">Conte-me: desde quando tem estes sintomas?</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <section class="modern-cta" id="comecar" aria-labelledby="urgent-close-title">
-            <div class="modern-container">
-                <h2 id="urgent-close-title">Não espere que piore</h2>
-                <p>Fale com um médico ainda hoje, sem sair de casa.</p>
-                <a href="/marcar/urgent-care" class="modern-btn js-urgent-cta" data-urgent-cta="close">
-                    Marcar consulta
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M7 17l10-10M8 7h9v9"/>
-                    </svg>
-                </a>
-                <p style="margin-top: 1.5rem; font-size: 0.875rem;"><strong>Em emergência real:</strong> <a href="tel:112" style="text-decoration: underline;">112</a></p>
+        <section class="nx-section nx-plans" id="preco" aria-labelledby="urgent-pricing-title">
+            <div class="nx-inner">
+                <header class="nx-head nx-head--center">
+                    <p class="nx-kicker">Preço</p>
+                    <h2 id="urgent-pricing-title" class="nx-h2">Um preço, <em>sem surpresas</em></h2>
+                    <p class="nx-sub">Consulta avulsa a 39€, sem subscrição. O mesmo preço para residentes e visitantes.</p>
+                </header>
+
+                <div class="nx-plan-grid nx-plan-grid--narrow">
+                    <article class="nx-plan nx-plan--featured">
+                        <span class="nx-plan-badge">Hoje</span>
+                        <p class="nx-plan-name">Consulta avulsa</p>
+                        <h3 class="nx-plan-title">Consulta urgente</h3>
+                        <div class="nx-plan-price">
+                            <strong>39€</strong>
+                            <span><b>por consulta</b>sem subscrição necessária</span>
+                        </div>
+                        <ul class="nx-plan-list">
+                            <li>Consulta por videochamada no mesmo dia</li>
+                            <li>Receita digital válida em farmácia em Portugal, se indicado</li>
+                            <li>Atestado médico, se clinicamente indicado</li>
+                            <li>Residentes e turistas — em português, inglês, espanhol ou francês</li>
+                        </ul>
+                        <div class="nx-plan-note">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+                            <p><b>Não substitui a urgência hospitalar.</b> Para sintomas agudos não emergentes que precisam de atenção médica hoje.</p>
+                        </div>
+                        <div class="nx-plan-actions">
+                            <a href="/marcar/urgent-care" class="nx-btn nx-btn--white nx-btn--block js-urgent-cta" data-urgent-cta="pricing">Marcar consulta</a>
+                            <a href="https://wa.me/351928372775?text=Ol%C3%A1%2C%20preciso%20de%20uma%20consulta%20m%C3%A9dica%20urgente%20hoje.%20Podem%20ajudar%3F" target="_blank" rel="noopener noreferrer" class="nx-btn nx-btn--ghost nx-btn--block js-urgent-cta" data-urgent-cta="pricing-info">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/></svg>
+                                Pedir mais informações
+                            </a>
+                        </div>
+                        <p class="nx-plan-foot">Pagamento seguro · fatura automática</p>
+                    </article>
+
+                    <article class="nx-plan">
+                        <span class="nx-plan-badge">Com tempo</span>
+                        <p class="nx-plan-name">Consulta médica</p>
+                        <h3 class="nx-plan-title">Clínica geral online</h3>
+                        <div class="nx-plan-price">
+                            <strong>39€</strong>
+                            <span><b>por consulta</b>para situações não urgentes</span>
+                        </div>
+                        <ul class="nx-plan-list">
+                            <li>Renovação de receita e acompanhamento</li>
+                            <li>Resultados de análises e orientação</li>
+                            <li>Requisição de exames, se indicado</li>
+                            <li>Escolha o dia e a hora que preferir</li>
+                        </ul>
+                        <div class="nx-plan-note">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 014-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+                            <p><b>Não sabe qual escolher?</b> Se precisa de resposta hoje, escolha a urgente. Se pode esperar, a consulta médica dá-lhe mais tempo.</p>
+                        </div>
+                        <div class="nx-plan-actions">
+                            <a href="/marcar/clinica-geral" class="nx-btn nx-btn--accent nx-btn--block js-urgent-cta" data-urgent-cta="pricing-geral">Marcar consulta</a>
+                            <a href="https://wa.me/351928372775?text=Ol%C3%A1%2C%20gostava%20de%20saber%20mais%20sobre%20a%20consulta%20m%C3%A9dica%20online." target="_blank" rel="noopener noreferrer" class="nx-btn nx-btn--outline nx-btn--block js-urgent-cta" data-urgent-cta="pricing-geral-info">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.4 8.4 0 01-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.4 8.4 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/></svg>
+                                Pedir mais informações
+                            </a>
+                        </div>
+                        <p class="nx-plan-foot">Sem subscrição</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="nx-section nx-testimonials" id="testemunhos" aria-labelledby="urgent-testimonials-title">
+            <div class="nx-inner">
+                <header class="nx-head nx-head--center">
+                    <p class="nx-kicker">Testemunhos</p>
+                    <h2 id="urgent-testimonials-title" class="nx-h2">O que dizem os <em>nossos pacientes</em></h2>
+                </header>
+                <div class="nx-tplaceholder">Estamos a recolher os primeiros testemunhos dos nossos pacientes de Urgent Care. Em breve poderá lê-los aqui.</div>
+            </div>
+        </section>
+
+        <section class="nx-section nx-faq" id="faq" aria-labelledby="urgent-faq-title">
+            <div class="nx-inner">
+                <header class="nx-head">
+                    <p class="nx-kicker">FAQ</p>
+                    <h2 id="urgent-faq-title" class="nx-h2">Perguntas <em>frequentes</em></h2>
+                </header>
+                <div class="nx-faq-cols">
+                    <div>
+                        <details>
+                            <summary>Isto substitui uma urgência hospitalar? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Não. Se tem uma emergência real (dor no peito, dificuldade a respirar, perda de consciência), deve <strong>ligar 112 de imediato</strong>. Esta consulta é para sintomas agudos não emergentes que precisam de atenção médica no mesmo dia, mas não justificam ida à urgência hospitalar.</div>
+                        </details>
+                        <details>
+                            <summary>Qual a diferença para a Medicina do Viajante? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">A Medicina do Viajante foca-se em <strong>prevenção antes de viajar</strong> (vacinas, profilaxia). O Urgent Care é para quem <strong>está doente agora</strong> e precisa de consulta urgente, seja residente ou turista em Portugal.</div>
+                        </details>
+                        <details>
+                            <summary>Quanto tempo até ser atendido? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">O objetivo é <strong>consulta no mesmo dia</strong>. A janela horária específica depende da disponibilidade médica e será confirmada no momento da marcação.</div>
+                        </details>
+                    </div>
+                    <div>
+                        <details>
+                            <summary>Recebo receita mesmo sendo turista? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Sim. Se clinicamente indicado, o médico emite <strong>receita digital válida em farmácia em Portugal</strong>, independentemente de ser residente ou visitante.</div>
+                        </details>
+                        <details>
+                            <summary>A LON Clinic está registada e regulamentada? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Sim. A Lon Clinic está registada na <strong>Entidade Reguladora da Saúde (ERS)</strong> com o número 45475. Todos os médicos são inscritos na Ordem dos Médicos.</div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="nx-section nx-cond" id="sintomas" aria-labelledby="urgent-symptoms-title">
+            <div class="nx-inner">
+                <div class="nx-cond-grid">
+                    <figure class="nx-cond-photo">
+                        <img src="/image/consulta-clinica-geral.webp" alt="Consulta de clínica geral online" loading="lazy" decoding="async">
+                        <figcaption class="nx-glass-note">
+                            <b>Sintomas agudos, não emergentes</b>
+                            <span>Se é uma emergência, ligue 112.</span>
+                        </figcaption>
+                    </figure>
+                    <div>
+                        <header class="nx-head">
+                            <p class="nx-kicker">Sintomas comuns</p>
+                            <h2 id="urgent-symptoms-title" class="nx-h2">O que tratamos <em>hoje</em></h2>
+                            <p class="nx-sub">Situações frequentes que se resolvem por videochamada, com receita digital se indicado.</p>
+                        </header>
+                        <div class="nx-cond-cards">
+                            <a class="nx-cond-card js-urgent-cta" data-urgent-cta="sintoma-febre" href="/marcar/urgent-care"><span class="nx-cond-ico" aria-hidden="true">🌡️</span><span class="txt"><b>Febre</b><span>Avaliação e orientação no mesmo dia</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card js-urgent-cta" data-urgent-cta="sintoma-garganta" href="/marcar/urgent-care"><span class="nx-cond-ico" aria-hidden="true">🗣️</span><span class="txt"><b>Dor de garganta</b><span>Amigdalite, faringite e afins</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card js-urgent-cta" data-urgent-cta="sintoma-urinaria" href="/marcar/urgent-care"><span class="nx-cond-ico" aria-hidden="true">💧</span><span class="txt"><b>Infeção urinária</b><span>Sintomas e tratamento rápido</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card js-urgent-cta" data-urgent-cta="sintoma-gastro" href="/marcar/urgent-care"><span class="nx-cond-ico" aria-hidden="true">🤢</span><span class="txt"><b>Gastroenterite</b><span>Náuseas, vómitos e diarreia</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card js-urgent-cta" data-urgent-cta="sintoma-alergias" href="/marcar/urgent-care"><span class="nx-cond-ico" aria-hidden="true">🌼</span><span class="txt"><b>Alergias</b><span>Rinite, urticária e reações ligeiras</span></span><span class="arr" aria-hidden="true">→</span></a>
+                            <a class="nx-cond-card js-urgent-cta" data-urgent-cta="sintoma-receita" href="/marcar/clinica-geral"><span class="nx-cond-ico" aria-hidden="true">💊</span><span class="txt"><b>Renovação de receita</b><span>Medicação habitual, sem esperas</span></span><span class="arr" aria-hidden="true">→</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="nx-final" id="comecar" aria-labelledby="urgent-close-title">
+            <div class="nx-inner">
+                <div class="nx-final-card">
+                    <h2 id="urgent-close-title">Não espere que piore</h2>
+                    <p>Fale com um médico ainda hoje, sem sair de casa. Consulta avulsa a 39€, com receita digital se necessário.</p>
+                    <div class="nx-final-btns">
+                        <a href="/marcar/urgent-care" class="nx-btn nx-btn--black js-urgent-cta" data-urgent-cta="close">
+                            Marcar consulta
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17l10-10M8 7h9v9"/></svg>
+                        </a>
+                        <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="nx-btn nx-btn--ghost js-urgent-cta" data-urgent-cta="close-whatsapp">Falar no WhatsApp</a>
+                    </div>
+                    <p class="nx-final-note"><b>Em emergência real:</b> <a href="tel:112">112</a></p>
+                </div>
             </div>
         </section>
     </main>
