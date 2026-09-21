@@ -106,6 +106,42 @@
     background: linear-gradient(135deg, rgba(189, 79, 79, 0.1) 0%, rgba(165, 88, 78, 0.05) 100%);
 }
 
+/* ===== FINAL CTA SECTIONS ===== */
+/* Apply specialty background colors to final CTA sections */
+.psi-landing .modern-cta {
+    background: linear-gradient(135deg, #9BB1BC 0%, #537284 100%) !important;
+}
+
+.nutri-landing .modern-cta {
+    background: linear-gradient(135deg, #9FBD84 0%, #3F574C 100%) !important;
+}
+
+.long-landing .modern-cta {
+    background: linear-gradient(135deg, #ECD281 0%, #CBB068 100%) !important;
+}
+
+.urgent-landing .modern-cta {
+    background: linear-gradient(135deg, #BD4F4F 0%, #A5584E 100%) !important;
+}
+
+/* Black buttons in CTA sections */
+.psi-landing .modern-cta .modern-btn,
+.nutri-landing .modern-cta .modern-btn,
+.long-landing .modern-cta .modern-btn,
+.urgent-landing .modern-cta .modern-btn {
+    background: #1a1a1a !important;
+    color: white !important;
+    border: none !important;
+}
+
+.psi-landing .modern-cta .modern-btn:hover,
+.nutri-landing .modern-cta .modern-btn:hover,
+.long-landing .modern-cta .modern-btn:hover,
+.urgent-landing .modern-cta .modern-btn:hover {
+    background: #000000 !important;
+    transform: translateY(-2px);
+}
+
 .urgent-landing .lon-btn-primary,
 .urgent-landing .urgent-btn-primary {
     background: linear-gradient(135deg, #BD4F4F 0%, #A5584E 100%);
