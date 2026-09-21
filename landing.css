@@ -133,16 +133,7 @@ details.faq-item summary::-webkit-details-marker {
     display: none;
 }
 
-details.faq-item summary::after {
-    content: "+";
-    float: right;
-    color: var(--lon-accent);
-    font-weight: 700;
-}
-
-details.faq-item[open] summary::after {
-    content: "–";
-}
+/* FAQ icons are now handled in HTML with explicit spans - no ::after needed */
 
 details.faq-item .faq-a,
 details.faq-item p.faq-a {

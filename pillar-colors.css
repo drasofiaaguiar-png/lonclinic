@@ -1,6 +1,30 @@
 /* Pillar Pages — Visual Color Application */
 /* Aplicação das cores por valência conforme DESIGN-SYSTEM-COLORS.md */
 
+/* ===== PSICOLOGIA (Azul) ===== */
+.psi-landing .psi-hero,
+.psi-landing .qx-hero {
+    background: linear-gradient(135deg, #9BB1BC 0%, #537284 100%) !important;
+}
+
+.psi-landing .lon-btn-primary,
+.psi-landing .psi-btn-primary {
+    background: linear-gradient(135deg, #9BB1BC 0%, #537284 100%);
+    color: white;
+}
+
+.psi-landing .lon-btn-primary:hover,
+.psi-landing .psi-btn-primary:hover {
+    background: linear-gradient(135deg, #8ba1ac 0%, #436274 100%);
+}
+
+.psi-landing .psi-badge,
+.psi-landing .badge-primary {
+    background: rgba(155, 177, 188, 0.15);
+    border-color: #9BB1BC;
+    color: #537284;
+}
+
 /* ===== NUTRIÇÃO (Verde) ===== */
 .nutri-landing .nutri-hero,
 .nutri-landing .qx-hero {
@@ -149,3 +173,84 @@
 .long-border-primary { border-color: #ECD281; }
 .urgent-border-primary { border-color: #BD4F4F; }
 .travel-border-primary { border-color: #A794C9; }
+
+/* ===== PRICE CARDS CUSTOMIZATION ===== */
+/* Psicologia - Azul */
+.psi-landing .modern-price-card {
+    border: 2px solid #9BB1BC;
+}
+
+.psi-landing .modern-price-card--featured {
+    background: linear-gradient(135deg, rgba(155, 177, 188, 0.08) 0%, rgba(83, 114, 132, 0.08) 100%);
+    border-color: #537284;
+}
+
+.psi-landing .modern-price-card .modern-btn--primary {
+    background: linear-gradient(135deg, #9BB1BC 0%, #537284 100%);
+    color: white;
+    border: none;
+}
+
+.psi-landing .modern-price-card .modern-btn--primary:hover {
+    background: linear-gradient(135deg, #8ba1ac 0%, #436274 100%);
+}
+
+/* Nutrição - Verde */
+.nutri-landing .modern-price-card {
+    border: 2px solid #9FBD84;
+}
+
+.nutri-landing .modern-price-card--featured {
+    background: linear-gradient(135deg, rgba(159, 189, 132, 0.08) 0%, rgba(63, 87, 76, 0.08) 100%);
+    border-color: #3F574C;
+}
+
+.nutri-landing .modern-price-card .modern-btn--primary {
+    background: linear-gradient(135deg, #9FBD84 0%, #3F574C 100%);
+    color: white;
+    border: none;
+}
+
+.nutri-landing .modern-price-card .modern-btn--primary:hover {
+    background: linear-gradient(135deg, #8fad74 0%, #35493c 100%);
+}
+
+/* Longevidade - Amarelo/Dourado */
+.long-landing .modern-price-card {
+    border: 2px solid #ECD281;
+}
+
+.long-landing .modern-price-card--featured {
+    background: linear-gradient(135deg, rgba(236, 210, 129, 0.08) 0%, rgba(203, 176, 104, 0.08) 100%);
+    border-color: #CBB068;
+}
+
+.long-landing .modern-price-card .modern-btn--primary {
+    background: linear-gradient(135deg, #ECD281 0%, #CBB068 100%);
+    color: #1C1710;
+    border: none;
+}
+
+.long-landing .modern-price-card .modern-btn--primary:hover {
+    background: linear-gradient(135deg, #dcc271 0%, #bba058 100%);
+}
+
+/* Urgent Care - Vermelho */
+.urgent-landing .modern-price-card {
+    border: 2px solid #BD4F4F;
+}
+
+.urgent-landing .modern-price-card--featured {
+    background: linear-gradient(135deg, rgba(189, 79, 79, 0.08) 0%, rgba(165, 88, 78, 0.08) 100%);
+    border-color: #A5584E;
+}
+
+.urgent-landing .modern-price-card .modern-btn--primary {
+    background: linear-gradient(135deg, #BD4F4F 0%, #A5584E 100%);
+    color: white;
+    border: none;
+}
+
+.urgent-landing .modern-price-card .modern-btn--primary:hover {
+    background: linear-gradient(135deg, #ad3f3f 0%, #95483e 100%);
+}
