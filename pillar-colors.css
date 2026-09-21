@@ -238,6 +238,71 @@
 .urgent-border-primary { border-color: #BD4F4F; }
 .travel-border-primary { border-color: #A794C9; }
 
+/* ===== COLORFUL CONDITION/TOPIC CARDS ===== */
+/* Nutrition condition cards */
+.nutri-landing .modern-card[href*="/nutricao/"] {
+    background: linear-gradient(135deg, rgba(159, 189, 132, 0.12) 0%, rgba(63, 87, 76, 0.08) 100%);
+    border: 2px solid #9FBD84;
+    transition: all 0.3s ease;
+}
+
+.nutri-landing .modern-card[href*="/nutricao/"]:hover {
+    background: linear-gradient(135deg, rgba(159, 189, 132, 0.2) 0%, rgba(63, 87, 76, 0.15) 100%);
+    border-color: #3F574C;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(159, 189, 132, 0.2);
+}
+
+/* Psychology complaint cards */
+.psi-landing .modern-card[href*="/psicologia"],
+.psi-landing .modern-card[href*="/ansiedade"],
+.psi-landing .modern-card[href*="/ataques"],
+.psi-landing .modern-card[href*="/terapia"],
+.psi-landing .modern-card[href*="/psicologo"] {
+    background: linear-gradient(135deg, rgba(155, 177, 188, 0.12) 0%, rgba(83, 114, 132, 0.08) 100%);
+    border: 2px solid #9BB1BC;
+    transition: all 0.3s ease;
+}
+
+.psi-landing .modern-card[href*="/psicologia"]:hover,
+.psi-landing .modern-card[href*="/ansiedade"]:hover,
+.psi-landing .modern-card[href*="/ataques"]:hover,
+.psi-landing .modern-card[href*="/terapia"]:hover,
+.psi-landing .modern-card[href*="/psicologo"]:hover {
+    background: linear-gradient(135deg, rgba(155, 177, 188, 0.2) 0%, rgba(83, 114, 132, 0.15) 100%);
+    border-color: #537284;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(155, 177, 188, 0.2);
+}
+
+/* Longevity topic cards (if added in future) */
+.long-landing .modern-card {
+    background: linear-gradient(135deg, rgba(236, 210, 129, 0.12) 0%, rgba(203, 176, 104, 0.08) 100%);
+    border: 2px solid #ECD281;
+    transition: all 0.3s ease;
+}
+
+.long-landing .modern-card:hover {
+    background: linear-gradient(135deg, rgba(236, 210, 129, 0.2) 0%, rgba(203, 176, 104, 0.15) 100%);
+    border-color: #CBB068;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(236, 210, 129, 0.2);
+}
+
+/* Urgent Care topic cards (if added in future) */
+.urgent-landing .modern-card {
+    background: linear-gradient(135deg, rgba(189, 79, 79, 0.12) 0%, rgba(165, 88, 78, 0.08) 100%);
+    border: 2px solid #BD4F4F;
+    transition: all 0.3s ease;
+}
+
+.urgent-landing .modern-card:hover {
+    background: linear-gradient(135deg, rgba(189, 79, 79, 0.2) 0%, rgba(165, 88, 78, 0.15) 100%);
+    border-color: #A5584E;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(189, 79, 79, 0.2);
+}
+
 /* ===== HERO TEXT COLORS (ensure readability on gradients) ===== */
 .psi-landing .modern-hero .modern-title-xl,
 .psi-landing .modern-hero .modern-lead,
