@@ -3,8 +3,14 @@
 
 /* ===== PSICOLOGIA (Azul) ===== */
 .psi-landing .psi-hero,
-.psi-landing .qx-hero {
+.psi-landing .qx-hero,
+.psi-landing .modern-hero {
     background: linear-gradient(135deg, #9BB1BC 0%, #537284 100%) !important;
+}
+
+.psi-landing .modern-section[id*="preco"],
+.psi-landing .modern-section[aria-labelledby*="plans"] {
+    background: linear-gradient(135deg, rgba(155, 177, 188, 0.1) 0%, rgba(83, 114, 132, 0.05) 100%);
 }
 
 .psi-landing .lon-btn-primary,
@@ -19,7 +25,8 @@
 }
 
 .psi-landing .psi-badge,
-.psi-landing .badge-primary {
+.psi-landing .badge-primary,
+.psi-landing .modern-badge {
     background: rgba(155, 177, 188, 0.15);
     border-color: #9BB1BC;
     color: #537284;
@@ -27,8 +34,14 @@
 
 /* ===== NUTRIÇÃO (Verde) ===== */
 .nutri-landing .nutri-hero,
-.nutri-landing .qx-hero {
+.nutri-landing .qx-hero,
+.nutri-landing .modern-hero {
     background: linear-gradient(135deg, #9FBD84 0%, #3F574C 100%) !important;
+}
+
+.nutri-landing .modern-section[id*="preco"],
+.nutri-landing .modern-section[aria-labelledby*="plans"] {
+    background: linear-gradient(135deg, rgba(159, 189, 132, 0.1) 0%, rgba(63, 87, 76, 0.05) 100%);
 }
 
 .nutri-landing .lon-btn-primary,
@@ -43,7 +56,8 @@
 }
 
 .nutri-landing .nutri-badge,
-.nutri-landing .badge-primary {
+.nutri-landing .badge-primary,
+.nutri-landing .modern-badge {
     background: rgba(159, 189, 132, 0.15);
     border-color: #9FBD84;
     color: #3F574C;
@@ -51,8 +65,14 @@
 
 /* ===== MEDICINA DE LONGEVIDADE (Amarelo/Dourado) ===== */
 .long-landing .long-hero,
-.long-landing .qx-hero {
+.long-landing .qx-hero,
+.long-landing .modern-hero {
     background: linear-gradient(135deg, #ECD281 0%, #CBB068 100%) !important;
+}
+
+.long-landing .modern-section[id*="preco"],
+.long-landing .modern-section[aria-labelledby*="plans"] {
+    background: linear-gradient(135deg, rgba(236, 210, 129, 0.1) 0%, rgba(203, 176, 104, 0.05) 100%);
 }
 
 .long-landing .lon-btn-primary,
@@ -67,7 +87,8 @@
 }
 
 .long-landing .long-badge,
-.long-landing .badge-primary {
+.long-landing .badge-primary,
+.long-landing .modern-badge {
     background: rgba(236, 210, 129, 0.15);
     border-color: #ECD281;
     color: #CBB068;
@@ -75,8 +96,14 @@
 
 /* ===== URGENT CARE (Vermelho) ===== */
 .urgent-landing .urgent-hero,
-.urgent-landing .qx-hero {
+.urgent-landing .qx-hero,
+.urgent-landing .modern-hero {
     background: linear-gradient(135deg, #BD4F4F 0%, #A5584E 100%) !important;
+}
+
+.urgent-landing .modern-section[id*="preco"],
+.urgent-landing .modern-section[aria-labelledby*="plans"] {
+    background: linear-gradient(135deg, rgba(189, 79, 79, 0.1) 0%, rgba(165, 88, 78, 0.05) 100%);
 }
 
 .urgent-landing .lon-btn-primary,
@@ -91,7 +118,8 @@
 }
 
 .urgent-landing .urgent-badge,
-.urgent-landing .badge-urgent {
+.urgent-landing .badge-urgent,
+.urgent-landing .modern-badge {
     background: rgba(189, 79, 79, 0.15);
     border-color: #BD4F4F;
     color: #A5584E;
@@ -173,6 +201,25 @@
 .long-border-primary { border-color: #ECD281; }
 .urgent-border-primary { border-color: #BD4F4F; }
 .travel-border-primary { border-color: #A794C9; }
+
+/* ===== HERO TEXT COLORS (ensure readability on gradients) ===== */
+.psi-landing .modern-hero .modern-title-xl,
+.psi-landing .modern-hero .modern-lead,
+.nutri-landing .modern-hero .modern-title-xl,
+.nutri-landing .modern-hero .modern-lead,
+.long-landing .modern-hero .modern-title-xl,
+.long-landing .modern-hero .modern-lead,
+.urgent-landing .modern-hero .modern-title-xl,
+.urgent-landing .modern-hero .modern-lead {
+    color: white;
+}
+
+.psi-landing .modern-hero .modern-text,
+.nutri-landing .modern-hero .modern-text,
+.long-landing .modern-hero .modern-text,
+.urgent-landing .modern-hero .modern-text {
+    color: rgba(255, 255, 255, 0.9);
+}
 
 /* ===== PRICE CARDS CUSTOMIZATION ===== */
 /* Psicologia - Azul */
