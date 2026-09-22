@@ -16,11 +16,11 @@ O desenho clínico da casa está em [consultas de nutrição para perda de peso]
 
 {{cta}}
 
-## Porque a rapidez tende a falhar a longo prazo
+## Porque a rapidez tende a falhar a longo prazo?
 
 Dietas muito restritivas, de curtíssimo prazo, tendem a ser difíceis de manter, e frequentemente resultam em perda de massa muscular (não apenas de gordura), o que pode até dificultar a manutenção do peso perdido a longo prazo, já que o músculo consome mais energia em repouso do que o tecido adiposo. O [efeito iô-iô](/blog/efeito-ioio) descreve o custo de repetir este ciclo.
 
-## Nem é preciso atingir o «peso ideal» para haver benefícios reais
+## É preciso atingir o «peso ideal» para haver benefícios reais?
 
 Mesmo uma perda modesta — entre 5 e 10% do peso corporal — já está associada a melhorias mensuráveis em fatores como a tensão arterial, o colesterol e os níveis de açúcar no sangue, segundo o CDC. Encarar a perda de peso como um percurso, e não apenas como um destino final, ajuda a manter a motivação a longo prazo. Um [défice calórico](/blog/deficit-calorico) ajustado, não extremo, é a base fisiológica.
 

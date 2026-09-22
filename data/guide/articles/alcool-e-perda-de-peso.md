@@ -14,11 +14,11 @@ O álcool contém aproximadamente 7 calorias por grama — mais do que os hidrat
 
 {{cta}}
 
-## Efeitos que vão além das calorias diretas
+## O álcool tem efeitos na perda de peso além das calorias?
 
 O consumo de álcool pode também aumentar o apetite (reduzindo inibições alimentares) e prejudicar a qualidade do [sono](/blog/sono-e-peso-corporal) — o que tem um impacto direto e mensurável nas hormonas que regulam a fome, dificultando ainda mais um [défice calórico](/blog/deficit-calorico) consistente.
 
-## Não é preciso eliminar por completo para ver diferença
+## É preciso eliminar o álcool por completo para ver diferença?
 
 Reduzir a frequência ou a quantidade de consumo — em vez de necessariamente eliminar por completo — já costuma gerar diferença mensurável, tanto pela redução direta de calorias como pela melhoria indireta na qualidade do sono e no controlo do apetite.
 

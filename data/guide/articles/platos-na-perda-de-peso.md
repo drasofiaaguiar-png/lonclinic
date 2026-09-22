@@ -14,11 +14,11 @@ Um platô de peso acontece, em grande parte, porque as necessidades calóricas d
 
 {{cta}}
 
-## Porque reagir com restrição extrema costuma ser contraproducente
+## Porque reagir com restrição extrema costuma ser contraproducente?
 
 A tentação de «cortar ainda mais» drasticamente quando o platô surge tende a ser insustentável e a aumentar o risco de recaída para hábitos anteriores, ou de entrar no ciclo do [efeito iô-iô](/blog/efeito-ioio).
 
-## O que costuma ajudar de facto
+## O que costuma ajudar de facto nos pratos e na perda de peso?
 
 Pequenos ajustes — ligeiro aumento de atividade física, revisão realista do que está efetivamente a ser consumido (porções que aumentaram gradualmente sem se dar conta, por exemplo), ou simplesmente paciência adicional, dado que o corpo por vezes precisa de tempo para «reajustar» antes de retomar a perda — costumam ser mais eficazes do que reações drásticas. Quem já está na fase de [manutenção](/blog/manter-o-peso-perdido) usa a mesma lógica: ajustar, não recomeçar do zero.
 

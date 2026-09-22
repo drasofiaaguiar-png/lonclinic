@@ -14,11 +14,11 @@ Dados de estudos de longo prazo sobre pessoas que mantiveram perda de peso signi
 
 {{cta}}
 
-## A monitorização regular como ferramenta de manutenção
+## A monitorização regular ajuda a manter o peso perdido?
 
 Pesagens regulares — não obsessivas, mas consistentes — funcionam como um sistema de deteção precoce: permitem identificar pequenos aumentos de peso antes que se tornem significativos, possibilitando ajustes rápidos. Um [platô](/blog/platos-na-perda-de-peso) durante a perda é diferente de um deslize na manutenção; ambos pedem calma, não pânico.
 
-## Porque a manutenção exige uma mudança de identidade, não apenas de hábitos
+## Porque a manutenção exige uma mudança de identidade, não apenas de hábitos?
 
 Tratar a fase de manutenção como uma continuação natural do novo estilo de vida — e não como «já terminei, posso voltar ao normal» — é uma das diferenças mais consistentemente associadas ao sucesso a longo prazo. A [perda sustentável](/blog/perda-de-peso-sustentavel) desenha-se já com este fim em mente.
 

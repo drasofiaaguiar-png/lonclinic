@@ -14,11 +14,11 @@ Três eixos hormonais têm um papel particularmente relevante na regulação do 
 
 {{cta}}
 
-## Quando vale a pena investigar uma causa hormonal
+## Quando vale a pena investigar uma causa hormonal?
 
 Sinais como fadiga persistente e inexplicada, dificuldade extrema em perder peso apesar de esforços consistentes e genuínos, ou sintomas adicionais como queda de cabelo, alterações de humor significativas, ou irregularidades menstruais, podem justificar avaliação médica. Quem tem Hashimoto pode partir da [página de nutrição na tiróide](/nutricao/hashimoto); na [menopausa](/blog/perda-de-peso-na-menopausa) o quadro é outro, mas igualmente hormonal.
 
-## Porque o tratamento da causa hormonal muda a equação
+## Porque o tratamento da causa hormonal muda a equação?
 
 Quando existe uma causa hormonal real — como hipotiroidismo não tratado — nenhuma estratégia nutricional ou de exercício, por mais bem desenhada que seja, conseguirá compensar totalmente esse desequilíbrio sem tratamento médico direcionado à causa. Nestes casos, resolver a questão hormonal é o primeiro passo, não um complemento opcional.
 

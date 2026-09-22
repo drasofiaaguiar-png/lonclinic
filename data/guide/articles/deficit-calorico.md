@@ -14,11 +14,11 @@ Em termos gerais, perder peso exige um défice energético — consumir, ao long
 
 {{cta}}
 
-## Porque défices muito agressivos costumam sair pela culatra
+## Porque défices muito agressivos costumam sair pela culatra?
 
 Reduzir drasticamente a ingestão calórica pode gerar perda inicial rápida, mas tende a comprometer a massa muscular, a reduzir a energia disponível para atividade física, e a ser extremamente difícil de manter a longo prazo — aumentando o risco do [efeito iô-iô](/blog/efeito-ioio).
 
-## Porque a personalização importa mais do que fórmulas genéricas
+## Porque a personalização importa mais do que fórmulas genéricas?
 
 O tamanho do défice adequado varia significativamente consoante fatores individuais — metabolismo basal, nível de atividade física, composição corporal, e condições de saúde subjacentes, como [questões hormonais](/blog/perda-de-peso-e-saude-hormonal). Uma [avaliação nutricional](/blog/nutricionista-plano-perda-de-peso) permite calcular um défice ajustado à situação real da pessoa, em vez de aplicar uma fórmula genérica que pode ser desadequada.
 

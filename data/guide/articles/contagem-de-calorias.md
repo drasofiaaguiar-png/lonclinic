@@ -14,11 +14,11 @@ A vantagem principal da contagem de calorias é aumentar a consciência: investi
 
 {{cta}}
 
-## As limitações reais a considerar
+## Quais são as limitações reais da contagem de calorias?
 
 Para pessoas com histórico de relação difícil com a alimentação — restrição excessiva, ciclos de binge, ansiedade em torno da comida — a contagem de calorias pode reforçar padrões obsessivos, em vez de ajudar. Nestes casos, abordagens menos centradas em números, como a [alimentação intuitiva](/blog/alimentacao-intuitiva), costumam ser mais seguras.
 
-## Alternativas estruturadas sem contagem numérica
+## Há alternativas estruturadas sem contagem numérica?
 
 O método do prato — dividir visualmente o prato em secções para vegetais, proteína e hidratos de carbono — oferece estrutura prática sem exigir registo numérico constante. Uma [avaliação nutricional](/blog/nutricionista-plano-perda-de-peso) ajuda a escolher a ferramenta certa, em vez de impor a mesma a toda a gente.
 

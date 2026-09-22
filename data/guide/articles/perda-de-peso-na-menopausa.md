@@ -14,11 +14,11 @@ Segundo a [North American Menopause Society](https://menopause.org/wp-content/up
 
 {{cta}}
 
-## O momento mais eficaz para intervir
+## Qual é o momento mais eficaz para intervir na menopausa?
 
 Investigação apresentada pela NAMS sugere que intervenções de estilo de vida focadas em gerir estas mudanças metabólicas e de composição corporal são particularmente valiosas durante a perimenopausa — o período antes da menopausa se instalar completamente — em vez de esperar até depois da transição já estar concluída. [Treino de força](/blog/forca-vs-cardio-emagrecer) e [proteína](/blog/proteina-e-saciedade) ganham importância extra.
 
-## Porque não é «só força de vontade»
+## Porque não é «só força de vontade»?
 
 A redistribuição de gordura corporal (tipicamente para a zona abdominal), associada a mudanças hormonais e à diminuição natural da massa muscular com a idade, significa que estratégias que funcionaram décadas antes podem já não ser suficientes — não por falta de esforço, mas por mudanças fisiológicas reais. Ver também [saúde hormonal](/blog/perda-de-peso-e-saude-hormonal).
 

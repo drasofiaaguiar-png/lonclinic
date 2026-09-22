@@ -12,7 +12,7 @@ A Dra. Gabrielle Lyon, em *The Muscle Prescription*, trata o músculo esqueléti
 
 Hari descreve o ricochete depois da caneta. Lyon descreve o que a caneta pode levar consigo: **músculo**. Os dois livros leem-se em conjunto. Sem proteína e estímulo, a «vitória» na balança pode ser sarcopenia disfarçada de sucesso.
 
-## O que a evidência científica diz
+## O que diz a evidência científica?
 
 No ensaio *STEP 1* (*NEJM*, Wilding et al., 2021), a semaglutida produziu perda de peso substancial. Na subanálise com absorciometria de raios X de dupla energia (DXA), **cerca de 40% da massa perdida foi magra** (músculo e outros tecidos não gordos) — um padrão conhecido em perdas rápidas, com ou sem fármaco, quando não há prescrição de treino e proteína.
 
@@ -20,7 +20,7 @@ Menos massa magra baixa a taxa metabólica de repouso (RMR), reduz a capacidade 
 
 A [proteína e a saciedade](/blog/proteina-e-saciedade) e o [treino de força versus só cardio](/blog/forca-vs-cardio-emagrecer) não são detalhes de ginásio. São a diferença entre perder gordura e perder o órgão que protege o metabolismo. A [página GLP-1](/nutricao/glp-1) explica o mesmo ângulo para quem chega à clínica à procura do injectável.
 
-## A abordagem clinicamente viável
+## Qual é a abordagem clinicamente viável?
 
 No [programa de reeducação metabólica](/nutricao/programa) priorizamos aporte proteico na faixa frequentemente usada em défice com treino de resistência (cerca de **1,6 a 2,2 g/kg** de peso, ajustado à função renal e ao contexto clínico) e o acompanhamento da composição corporal — para que a perda seja, tanto quanto possível, à custa de massa gorda.
 

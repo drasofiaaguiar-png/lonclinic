@@ -14,11 +14,11 @@ Investigadores da Universidade de Chicago encontraram que a privação parcial d
 
 {{cta}}
 
-## Porque isto é particularmente relevante para quem tenta perder peso
+## Porque o sono é particularmente relevante para quem tenta perder peso?
 
 Um [défice calórico](/blog/deficit-calorico) é já, por si só, mais difícil de manter quando as hormonas da fome estão desreguladas pela falta de sono — o corpo literalmente sinaliza mais fome, tornando a adesão a um plano alimentar significativamente mais difícil. O mesmo ciclo aparece na [ansiedade e insónia](/blog/ansiedade-e-insonia) e no [burnout e sono](/blog/como-o-burnout-afeta-o-sono).
 
-## O que ajuda
+## O que ajuda a dormir melhor e controlar o peso?
 
 Priorizar sono suficiente e de qualidade — idealmente entre sete a nove horas — deveria ser tratado como uma componente central de qualquer estratégia de perda de peso, não como um «extra» opcional a considerar apenas depois de resolver a alimentação e o exercício.
 

@@ -12,7 +12,7 @@ Johann Hari, em *Magic Pill*, descreve o impacto social e neurológico da semagl
 
 A leitura é útil. O erro é tratar o livro como protocolo. A evidência já descreve o que acontece depois da última dose. A pergunta clínica não é «o fármaco funciona?». É: **o que fica quando o agonista sai de cena?**
 
-## O que a evidência científica diz
+## O que diz a evidência científica?
 
 Hari aponta para uma fisiologia já documentada. A extensão do ensaio *STEP 1* (*Diabetes, Obesity and Metabolism*, 2022) acompanhou participantes depois de descontinuarem a semaglutida 2,4 mg: ao fim de um ano **sem fármaco**, recuperaram em média cerca de **dois terços do peso perdido**, com reversão parcial das melhorias na circunferência da cintura, da HbA1c e da pressão arterial.
 
@@ -20,7 +20,7 @@ O medicamento imita o péptido GLP-1 enquanto está a ser administrado. Quando s
 
 O mesmo padrão aparece noutros capítulos desta clínica: o [efeito iô-iô](/blog/efeito-ioio) e a [manutenção do peso perdido](/blog/manter-o-peso-perdido) não se resolvem com mais restrição. Resolvem-se com acompanhamento. A [ficha GLP-1](/nutricao/glp-1) da Lon Clinic existe precisamente para quem procura o fármaco no Google e precisa de um plano nutricional — não de uma receita que esta clínica não emite.
 
-## A abordagem clinicamente viável
+## Qual é a abordagem clinicamente viável?
 
 Na Lon Clinic o aGLP-1, quando já foi prescrito noutro lado, é uma **janela temporária**. O [programa de reeducação metabólica](/nutricao/programa) trabalha durante e depois do tratamento: proteína e saciedade, composição corporal, e um plano que se aguenta sem a caneta. Sem isso, o desmame é ricochete.
 

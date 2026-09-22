@@ -14,11 +14,11 @@ Uma revisão publicada na American Journal of Clinical Nutrition analisou vário
 
 {{cta}}
 
-## Porque a preservação muscular importa tanto
+## Porque a preservação muscular importa tanto?
 
 Perder massa muscular durante um défice calórico é contraproducente a longo prazo, porque o músculo consome mais energia em repouso do que o tecido adiposo — perder músculo torna, paradoxalmente, mais difícil manter o peso perdido no futuro. O [treino de força](/blog/forca-vs-cardio-emagrecer) complementa este efeito.
 
-## Porque a proteína ajuda a controlar a fome
+## Porque a proteína ajuda a controlar a fome?
 
 A revisão descreve um efeito de saciedade modesto mas real da proteína, incluindo maior sensação de plenitude e alterações em hormonas relacionadas com a saciedade — o que ajuda, na prática, a tornar um [défice calórico](/blog/deficit-calorico) mais tolerável ao longo do dia. A [fibra](/blog/fibra-e-perda-de-peso) trabalha no mesmo sentido.
 

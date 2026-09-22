@@ -12,7 +12,7 @@ Escolher nutricionista tem um problema parecido com [escolher psicólogo](/blog/
 
 Se estás a pensar marcar a tua primeira consulta, vale a pena saber o que procurar — e o que evitar — antes de escolheres.
 
-## Os sinais de alerta que valem a pena conhecer
+## Quais sinais de alerta ao escolher nutricionista?
 
 Há um tipo de nutricionista que a maioria de nós já cruzou, mesmo sem saber explicar bem porquê. É aquele que:
 
@@ -22,7 +22,7 @@ Há um tipo de nutricionista que a maioria de nós já cruzou, mesmo sem saber e
 
 O problema comum a todos estes casos não é só serem pouco eficazes — é que, muitas vezes, a motivação por trás da recomendação tem mais a ver com margem comercial do que com o que realmente precisas. O [efeito iô-iô](/blog/efeito-ioio) costuma começar exactamente aqui.
 
-## O sinal de alerta mais difícil de identificar
+## Qual é o sinal de alerta mais difícil de identificar?
 
 Há ainda um segundo tipo de situação, mais difícil de detetar porque não tem nada de errado tecnicamente: nutricionistas que fazem tudo certo — plano equilibrado, acompanhamento sério, sem produtos a mais — mas que simplesmente **não usam as palavras que nos motivam**. Explicam o «o quê» mas nunca o «porquê» de uma forma que nos faça sentido; ou têm um tom demasiado clínico, demasiado distante, para o tipo de apoio de que precisamos para mudar hábitos que, muitas vezes, vêm de anos.
 
@@ -30,14 +30,14 @@ Isto não é incompetência — é, outra vez, uma questão de encaixe. E é exa
 
 {{cta}}
 
-## O que procurar, na prática
+## O que procurar num nutricionista, na prática?
 
 - **Abordagem alimentar em primeiro lugar.** Um bom nutricionista trata a comida real como a primeira linha de intervenção. A suplementação, quando necessária, é a excepção, não a regra — e, idealmente, articulada com um médico em vez de vendida directamente pelo próprio nutricionista.
 - **Visão holística, não só a balança.** Equilibrar o peso não é só sobre o peso — é sobre saúde no seu todo ([hormonal](/blog/perda-de-peso-e-saude-hormonal), digestiva, [relação com a comida](/blog/fome-emocional-vs-fisica)). Se a conversa é só sobre número na balança, falta qualquer coisa.
 - **Confirma a cédula profissional.** Em Portugal, qualquer nutricionista a exercer legalmente deve estar inscrito na **Ordem dos Nutricionistas**, com número de cédula válido. Confirma no [registo nacional](https://www.ordemdosnutricionistas.pt/registoNacional.php?cod=0C0A), pelo nome ou pelo número, antes de marcar.
 - **Pergunta sobre a equipa à volta.** Questões de peso e alimentação raramente existem isoladas de tudo o resto — [stress](/blog/stress-e-perda-de-peso), [ansiedade](/blog/ansiedade-normal-ou-perturbacao), sono, hormonas. Uma equipa que trabalha em articulação com médico e psicólogo tende a resolver a causa, não só o sintoma. Um [plano personalizado](/blog/nutricionista-plano-perda-de-peso) sem este contexto costuma parar no papel.
 
-## Onde procurar em Portugal
+## Onde procurar um nutricionista em Portugal?
 
 **Começa pela [Lon Clinic](/nutricao).** A equipa de nutrição segue uma abordagem holística e equilibrada, baseada na alimentação — sem impingir suplementos com intenção comercial e sem prescrever aGLP-1 (Ozempic, Wegovy) para perda de peso. A única intenção é melhorar a saúde da pessoa e equilibrar o peso, porque equilibrar o peso nunca é só sobre o peso, é também sobre saúde. É uma equipa multidisciplinar: sempre que faz sentido, a nutrição articula com médico e com [psicólogo](/saudemental), em vez de tratar a alimentação como um problema isolado do resto.
 
@@ -52,7 +52,7 @@ Contudo, há também quem prefira o acompanhamento presencial. Para essas situa�
 - **[Ordem dos Nutricionistas](https://www.ordemdosnutricionistas.pt/registoNacional.php?cod=0C0A)** — para confirmar credenciais e encontrar profissionais por especialidade (perda de peso, nutrição desportiva, doenças digestivas, entre outras).
 - **Recomendações do teu médico de família** — que muitas vezes conhece bem quem trabalha na área e pode adequar a recomendação ao teu historial clínico.
 
-## A conclusão pouco glamorosa
+## Qual é a conclusão pouco glamorosa?
 
 Um bom nutricionista não te vende nada — ensina-te a comer melhor, de uma forma que faça sentido para a tua vida real, e trata o peso como parte da saúde, não como o objectivo único. Se sentires que estás a ser vendida um produto em vez de acompanhada, é sinal de mudar. E se sentires que está tudo tecnicamente certo mas que a motivação simplesmente não chega até ti, também é sinal de mudar. Nos dois casos, o problema não é teu — é só um encaixe que ainda não aconteceu.
 

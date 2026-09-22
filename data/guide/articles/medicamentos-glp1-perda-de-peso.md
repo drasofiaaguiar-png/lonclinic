@@ -14,15 +14,15 @@ Segundo a [Mayo Clinic](https://diet.mayoclinic.org/us/blog/2024/how-does-semagl
 
 {{cta}}
 
-## Não é um substituto para a mudança de estilo de vida
+## O GLP-1 substitui a mudança de estilo de vida?
 
 A Mayo Clinic é clara: estes medicamentos são mais eficazes quando combinados com mudanças de estilo de vida, como alimentação equilibrada e exercício regular — não como substituto dessas mudanças. A [proteína](/blog/proteina-e-saciedade) e a preservação muscular tornam-se especialmente relevantes quando o apetite baixa.
 
-## Em Portugal, a prescrição é restrita
+## A prescrição de GLP-1 é restrita em Portugal?
 
 Desde agosto de 2025, em Portugal, a prescrição destes injectáveis para diabetes ou perda de peso está limitada a especialidades médicas definidas. A Lon Clinic **não prescreve** Ozempic, Wegovy ou equivalentes; o que existe é o [programa de reeducação e a página de transição aGLP-1](/nutricao/glp-1) — para quem já tem o fármaco prescrito noutro lado, ou está a desmamar. A Lon Clinic não passa a receita.
 
-## Outros mecanismos além do apetite
+## Que outros mecanismos têm os GLP-1 além do apetite?
 
 Para além da regulação do apetite, a semaglutida também tem efeitos na supressão do glucagon (útil para o controlo do açúcar no sangue), no gasto energético e no metabolismo lipídico. Quem tem [diabetes tipo 2](/nutricao/diabetes-tipo-2) no mesmo quadro precisa de um plano que não ignore essa condição.
 

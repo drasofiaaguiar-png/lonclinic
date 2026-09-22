@@ -16,11 +16,11 @@ Fatores como metabolismo basal, condições de saúde subjacentes (tiroide, resi
 
 {{cta}}
 
-## O que uma avaliação nutricional profissional costuma incluir
+## O que uma avaliação nutricional profissional costuma incluir?
 
 Para além de calcular necessidades calóricas e de macronutrientes ajustadas à pessoa, uma avaliação completa considera o historial de saúde, medicação atual (que pode influenciar o metabolismo ou o apetite), e o contexto de vida real — não apenas um objetivo numérico isolado. [Saúde hormonal](/blog/perda-de-peso-e-saude-hormonal) entra nesta conversa quando o peso «não sai».
 
-## Porque o acompanhamento contínuo importa
+## Porque o acompanhamento contínuo importa?
 
 O corpo e as circunstâncias mudam ao longo de um processo de perda de peso — o que funcionava no primeiro mês pode deixar de ser adequado no terceiro. Um [platô](/blog/platos-na-perda-de-peso) pede ajuste, não um novo plano copiado da internet.
 

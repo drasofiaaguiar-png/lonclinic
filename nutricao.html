@@ -59,8 +59,73 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
+      "@type": "Service",
+      "name": "Acompanhamento nutricional Lon Clinic",
+      "serviceType": "Consulta de nutrição por videoconsulta",
+      "url": "https://www.lonclinic.com/nutricao",
+      "provider": { "@id": "https://www.lonclinic.com/#organization" },
+      "areaServed": { "@type": "Country", "name": "Portugal" },
+      "availableChannel": { "@type": "ServiceChannel", "serviceUrl": "https://www.lonclinic.com/marcar/nutricao", "serviceType": "Videoconsulta" },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Planos de nutrição",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "name": "Consulta de nutrição avulsa",
+            "price": "45.00",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "url": "https://www.lonclinic.com/marcar/nutricao",
+            "description": "Uma consulta de 45 minutos por videochamada. 45 €."
+          },
+          {
+            "@type": "Offer",
+            "name": "Acompanhamento nutricional quinzenal",
+            "price": "45.00",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "url": "https://www.lonclinic.com/marcar/nutricao",
+            "description": "45 € a cada 15 dias no início. Passa a mensal na manutenção. Sem fidelização."
+          },
+          {
+            "@type": "Offer",
+            "name": "Programa de emagrecimento (médico e nutricionista)",
+            "price": "115.00",
+            "priceCurrency": "EUR",
+            "availability": "https://schema.org/InStock",
+            "url": "https://www.lonclinic.com/marcar/nutricao-programa",
+            "description": "Mês 1: 115 €. Meses seguintes: 75 €/mês. Fidelização mínima de 3 meses."
+          }
+        ]
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Quanto custa uma consulta de nutrição online em Portugal?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Na Lon Clinic a consulta avulsa é 45 €. O acompanhamento é 45 € a cada 15 dias (o primeiro pagamento é 45 €), e passa a mensal na manutenção. O programa com médico e nutricionista custa 115 € no mês 1 e 75 €/mês a seguir." }
+        },
+        {
+          "@type": "Question",
+          "name": "Como funciona a consulta de nutrição online?",
+          "acceptedAnswer": { "@type": "Answer", "text": "É videochamada no browser, cerca de 45 minutos, com a mesma nutricionista. No início as consultas são quinzenais; quando o plano estabiliza, passam a mensais. Não precisa de instalar uma aplicação." }
+        },
+        {
+          "@type": "Question",
+          "name": "A ADSE cobre consultas de nutrição?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A Lon Clinic emite recibo com NIF. O reembolso na ADSE Direta e nos seguros depende do acto (incluindo video nutrição) e da apólice. Não garantimos o reembolso da videochamada." }
+        },
+        {
+          "@type": "Question",
+          "name": "Qual a diferença entre nutricionista e dietista em Portugal?",
+          "acceptedAnswer": { "@type": "Answer", "text": "O nutricionista está inscrito na Ordem dos Nutricionistas e pode elaborar o plano alimentar clínico. Na Lon Clinic o acompanhamento é com nutricionista — Dra. Sara Barreto, cédula n.º 6501N." }
+        },
         {
           "@type": "Question",
           "name": "Como é cobrada a subscrição quinzenal?",
@@ -73,23 +138,8 @@
         },
         {
           "@type": "Question",
-          "name": "A passagem de quinzenal para mensal é automática?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Não. A decisão de passar para consultas mensais é tomada em conjunto com a sua nutricionista, quando o objetivo estabiliza e o plano está consolidado. Não há uma data fixa — depende da sua evolução." }
-        },
-        {
-          "@type": "Question",
-          "name": "A nutricionista pode ajustar suplementação?",
-          "acceptedAnswer": { "@type": "Answer", "text": "A nutricionista pode recomendar suplementos alimentares dentro do âmbito da nutrição (vitaminas, minerais, probióticos). Prescrição de medicação ou ajustes hormonais são sempre da responsabilidade médica e podem ser feitos em conjunto com um médico da Lon Clinic." }
-        },
-        {
-          "@type": "Question",
           "name": "É seguro fazer acompanhamento só online?",
           "acceptedAnswer": { "@type": "Answer", "text": "Sim. O acompanhamento nutricional online é adequado para a maioria das pessoas e conduzido com o mesmo rigor clínico que uma consulta presencial. Em situações que exijam avaliação física presencial urgente, a nutricionista orientará adequadamente." }
-        },
-        {
-          "@type": "Question",
-          "name": "A LON Clinic está registada e regulamentada?",
-          "acceptedAnswer": { "@type": "Answer", "text": "Sim. A Lon Clinic está registada na Entidade Reguladora da Saúde (ERS) com o número 45475. Todas as nutricionistas são inscritas na Ordem dos Nutricionistas." }
         },
         {
           "@type": "Question",
@@ -249,7 +299,7 @@
                     <div>
                         <header class="nx-head">
                             <p class="nx-kicker">Como funciona</p>
-                            <h2 id="nutri-process-title" class="nx-h2">Três passos. <em>Sem deslocações.</em></h2>
+                            <h2 id="nutri-process-title" class="nx-h2">Como funciona a consulta de nutrição <em>online</em>?</h2>
                             <p class="nx-sub">Do primeiro contacto ao plano personalizado, tudo acontece online — com a mesma nutricionista do início ao fim.</p>
                         </header>
                         <ol class="nx-steps">
@@ -303,7 +353,7 @@
             <div class="nx-inner">
                 <header class="nx-head nx-head--center">
                     <p class="nx-kicker">Planos</p>
-                    <h2 id="nutri-plans-title" class="nx-h2">Escolha o <em>seu caminho</em></h2>
+                    <h2 id="nutri-plans-title" class="nx-h2">Quanto custa o <em>acompanhamento</em>?</h2>
                     <p class="nx-sub">45€ por consulta, sempre. Só a frequência muda consoante a fase em que está — ou junte um médico ao percurso com o Programa Completo.</p>
                 </header>
 
@@ -427,6 +477,24 @@
                 <div class="nx-faq-cols">
                     <div>
                         <details>
+                            <summary>Quanto custa uma consulta de nutrição online em Portugal? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">Na Lon Clinic a consulta avulsa é <strong>45 €</strong>. O acompanhamento é 45 € a cada 15 dias (o primeiro pagamento é 45 €), e passa a mensal na manutenção. O programa com médico e nutricionista custa 115 € no mês 1 e 75 €/mês a seguir.</div>
+                        </details>
+                        <details>
+                            <summary>Como funciona a consulta de nutrição online? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">É videochamada no browser, cerca de 45 minutos, com a mesma nutricionista. No início as consultas são quinzenais; quando o plano estabiliza, passam a mensais. Não precisa de instalar uma aplicação.</div>
+                        </details>
+                        <details>
+                            <summary>A ADSE cobre consultas de nutrição? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">A Lon Clinic emite recibo com NIF. O reembolso na ADSE Direta e nos seguros depende do acto (incluindo video nutrição) e da apólice. Não garantimos o reembolso da videochamada.</div>
+                        </details>
+                        <details>
+                            <summary>Qual a diferença entre nutricionista e dietista em Portugal? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
+                            <div class="nx-faq-a">O nutricionista está inscrito na Ordem dos Nutricionistas e pode elaborar o plano alimentar clínico. Na Lon Clinic o acompanhamento é com nutricionista — Dra. Sara Barreto, cédula n.º 6501N.</div>
+                        </details>
+                    </div>
+                    <div>
+                        <details>
                             <summary>Como é cobrada a subscrição quinzenal? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
                             <div class="nx-faq-a">São <strong>45 €</strong> a cada 15 dias — não é uma mensalidade. O primeiro pagamento é 45 €. Depois o cartão é debitado de 15 em 15 dias enquanto a subscrição estiver activa.</div>
                         </details>
@@ -435,22 +503,8 @@
                             <div class="nx-faq-a">Não é obrigatório. A nutricionista faz uma avaliação completa de hábitos e objetivos na primeira consulta. Se identificar necessidade de análises específicas, pode recomendar exames que pode fazer através do seu médico de família ou de um médico da Lon Clinic.</div>
                         </details>
                         <details>
-                            <summary>A passagem de quinzenal para mensal é automática? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
-                            <div class="nx-faq-a">Não. A decisão de passar para consultas mensais é tomada em conjunto com a sua nutricionista, quando o objetivo estabiliza e o plano está consolidado. Não há uma data fixa — depende da sua evolução.</div>
-                        </details>
-                        <details>
-                            <summary>A nutricionista pode ajustar suplementação? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
-                            <div class="nx-faq-a">A nutricionista pode recomendar suplementos alimentares dentro do âmbito da nutrição (vitaminas, minerais, probióticos). Prescrição de medicação ou ajustes hormonais são sempre da responsabilidade médica e podem ser feitos em conjunto com um médico da Lon Clinic.</div>
-                        </details>
-                    </div>
-                    <div>
-                        <details>
                             <summary>É seguro fazer acompanhamento só online? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
                             <div class="nx-faq-a">Sim. O acompanhamento nutricional online é adequado para a maioria das pessoas e conduzido com o mesmo rigor clínico que uma consulta presencial. Em situações que exijam avaliação física presencial urgente, a nutricionista orientará adequadamente.</div>
-                        </details>
-                        <details>
-                            <summary>A LON Clinic está registada e regulamentada? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
-                            <div class="nx-faq-a">Sim. A Lon Clinic está registada na Entidade Reguladora da Saúde (ERS) com o número 45475. Todas as nutricionistas são inscritas na Ordem dos Nutricionistas.</div>
                         </details>
                         <details>
                             <summary>Posso cancelar a subscrição? <span class="nx-faq-ico" aria-hidden="true">+</span></summary>
@@ -474,7 +528,7 @@
                     <div>
                         <header class="nx-head">
                             <p class="nx-kicker">Nutrição por condição</p>
-                            <h2 id="nutri-conditions-title" class="nx-h2">Acompanhamento <em>especializado</em></h2>
+                            <h2 id="nutri-conditions-title" class="nx-h2">Que condições a nutrição <em>acompanha</em>?</h2>
                             <p class="nx-sub">Escolha a área que melhor descreve o que procura. Todas incluem a mesma lógica: 45€ por consulta, quinzenal no início, mensal na manutenção.</p>
                         </header>
                         <div class="nx-cond-cards">

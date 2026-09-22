@@ -236,12 +236,13 @@ function personJsonLd(origin, slug) {
     };
 }
 
-function articleAuthorSchema(origin, slug) {
+function articleAuthorSchema(origin, slug, reviewerSlug) {
     const o = originOf(origin);
     const a = getAuthor(slug);
+    const reviewer = reviewerSlug ? getAuthor(reviewerSlug) : a;
     return {
         author: { '@id': personId(o, a) },
-        reviewedBy: { '@id': personId(o, a) },
+        reviewedBy: { '@id': personId(o, reviewer) },
         publisher: { '@id': `${o}/#organization` },
         copyrightHolder: { '@id': `${o}/#organization` }
     };

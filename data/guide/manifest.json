@@ -337,13 +337,13 @@
             "title": "Consulta de Nutrição: Preço, Como Funciona e Quando Marcar",
             "description": "Hub: consulta avulsa 45 € (30 min) ou programa 115 € / 75 €/mês, 100% online. ADSE, Cheque Cuida-te (12–35) e quando marcar.",
             "datePublished": "2026-09-09",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "about": "Perda de peso",
             "image": "/image/nutricao-consulta.webp",
-            "verified": false,
+            "verified": true,
             "ctaKind": "nutricao-programa",
             "liveSlots": true,
             "slotService": "nutricao-programa",
@@ -378,20 +378,22 @@
                     "q": "Quantas consultas de nutrição são normalmente necessárias?",
                     "a": "Uma sessão isolada raramente chega. Na Lon Clinic o acompanhamento é duas consultas por mês, com um percurso típico de 3 a 6 meses. O número exacto depende do objectivo."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "consulta-nutricao-online-como-funciona",
             "title": "Consulta de Nutrição Online: Como Funciona em 2026",
             "description": "Videochamada no browser. Consulta avulsa 45 € (30 min) ou programa 115 € no mês 1 e 75 €/mês, recibo ADSE. Sem app.",
             "datePublished": "2026-09-09",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "about": "Perda de peso",
             "image": "/image/nutricao-consulta.webp",
-            "verified": false,
+            "verified": true,
             "ctaKind": "nutricao-programa",
             "liveSlots": true,
             "slotService": "nutricao-programa",
@@ -419,20 +421,22 @@
                     "q": "Posso pedir reembolso ao meu seguro ou à ADSE por uma consulta de nutrição online?",
                     "a": "Guarde o recibo com NIF. Confirme o acto de video nutrição na ADSE Direta e, no seguro, a apólice. Não garantimos o reembolso da videochamada."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "consultas-nutricao-perda-de-peso",
             "title": "Como Funcionam as Consultas de Nutrição para Perda de Peso",
             "description": "O programa Lon de reeducação metabólica (3 a 6 meses, 115 € / 75 €/mês) sem aGLP-1. Uma consulta isolada não chega.",
             "datePublished": "2026-09-09",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "about": "Perda de peso",
             "image": "/image/nutricao-emagrecimento.webp",
-            "verified": false,
+            "verified": true,
             "ctaKind": "nutricao-programa",
             "liveSlots": true,
             "slotService": "nutricao-programa",
@@ -460,7 +464,9 @@
                     "q": "Quanto tempo demora a ver resultados?",
                     "a": "Varia. O desenho da clínica é 3 a 6 meses de regularidade, sem garantia de quilos num prazo fixo."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "apoio-psicologico-universidades-portugal",
@@ -512,13 +518,13 @@
             "title": "Nutricionista ou Dietista: Qual a Diferença em Portugal?",
             "description": "Ambos são regulados pela Ordem dos Nutricionistas (2011). Sem hierarquia legal. Como confirmar a cédula.",
             "datePublished": "2026-09-09",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "about": "Perda de peso",
             "image": "/image/nutricao-consulta.webp",
-            "verified": false,
+            "verified": true,
             "ctaKind": "nutricao-programa",
             "liveSlots": true,
             "slotService": "nutricao-programa",
@@ -545,20 +551,22 @@
                     "q": "A consulta com um dietista custa mais barato do que com um nutricionista?",
                     "a": "Não por regra. Na Lon Clinic o programa é 115 € no mês 1 e 75 €/mês depois, independentemente do título."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "cheque-nutricionista-2026",
             "title": "Cheque-Nutricionista 2026: Gratuitas dos 12 aos 35 Anos",
             "description": "Cheque Cuida-te — Nutrição (IPDJ): 12–35 anos, 2+2 consultas no gov.pt. A Lon Clinic não se apresenta como aderente.",
             "datePublished": "2026-09-09",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "about": "Perda de peso",
             "image": "/image/nutricao-consulta.webp",
-            "verified": false,
+            "verified": true,
             "ctaKind": "nutricao-programa",
             "liveSlots": true,
             "slotService": "nutricao-programa",
@@ -590,20 +598,22 @@
                     "q": "A Lon Clinic aceita o Cheque-Nutricionista?",
                     "a": "Não o afirmamos. O cheque usa-se com a lista oficial; o programa Lon é pago (115 € / 75 €/mês)."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "adse-consultas-nutricao-portugal",
             "title": "ADSE e Consultas de Nutrição: Como Funciona a Comparticipação em 2026",
             "description": "A ADSE inclui nutrição em convencionado e livre. Confirme tetos na ADSE Direta. Lon é regime livre (115 € / 75 €/mês).",
             "datePublished": "2026-09-09",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "about": "Perda de peso",
             "image": "/image/nutricao-consulta.webp",
-            "verified": false,
+            "verified": true,
             "ctaKind": "nutricao-programa",
             "liveSlots": true,
             "slotService": "nutricao-programa",
@@ -631,20 +641,22 @@
                     "q": "Preciso de uma consulta médica prévia para a ADSE comparticipar a consulta de nutrição?",
                     "a": "Confirme na ADSE Direta e na nomenclatura do acto. Não publicamos uma exigência de receita como garantia para 2026."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "quanto-custa-consulta-nutricao-portugal",
             "title": "Quanto Custa uma Consulta de Nutrição em Portugal? (Preços 2026)",
             "description": "Faixa particular 40–70 €. Na Lon Clinic: consulta avulsa 45 € (30 min) ou programa 115 € no mês 1 e 75 €/mês. ADSE e Cheque Cuida-te.",
             "datePublished": "2026-09-09",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "about": "Perda de peso",
             "image": "/image/nutricao-consulta.webp",
-            "verified": false,
+            "verified": true,
             "ctaKind": "nutricao-programa",
             "liveSlots": true,
             "slotService": "nutricao-programa",
@@ -672,7 +684,9 @@
                     "q": "É possível ter consultas de nutrição gratuitas em Portugal?",
                     "a": "Sim: SNS, Cheque Cuida-te — Nutrição (12–35 anos, aderentes) e alguns SAS. A Lon Clinic não afirma ser aderente do cheque."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "psicologia-online-portugal-por-distrito",
@@ -2894,13 +2908,13 @@
             "title": "Como encontrar um nutricionista de que gostes (mesmo) em Portugal",
             "description": "Sinais de alerta (suplementos, dietas milagrosas) e o que procurar: cédula da Ordem, comida real e um encaixe que te motive — não só um plano certo no papel.",
             "datePublished": "2026-09-08",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-consulta.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "ctaKind": "nutricao-programa",
             "liveSlots": true,
             "slotService": "nutricao-programa",
@@ -2932,7 +2946,9 @@
                     "q": "A Lon Clinic vende suplementos ou receituário de Ozempic?",
                     "a": "Não. A abordagem é alimentação e hábitos. A clínica não prescreve aGLP-1 para perda de peso; suplementação, quando entra, é excepção clínica, não venda."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "como-encontrar-um-psicologo",
@@ -3641,7 +3657,7 @@
         },
         {
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
@@ -3669,11 +3685,14 @@
                     "q": "A Lon Clinic prescreve semaglutida ou tirzepatida?",
                     "a": "Não. Acompanamos nutrição e estilo de vida — inclusive no desmame. A prescrição de aGLP-1, em Portugal, cabe a especialidades definidas; esta clínica não a substitui."
                 }
-            ]
+            ],
+            "verified": true,
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
@@ -3701,7 +3720,10 @@
                     "q": "Preciso de um injectável para proteger o músculo?",
                     "a": "Não. Proteína adequada, treino de força e um plano que se consiga manter são a base — com ou sem fármaco prescrito noutro lado. A Lon Clinic não prescreve aGLP-1."
                 }
-            ]
+            ],
+            "verified": true,
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "datePublished": "2026-09-05",
@@ -4135,13 +4157,13 @@
             "title": "Perda de peso sustentável: porque as dietas rápidas falham",
             "description": "A perda de peso rápida raramente é sustentável. Saiba, segundo o CDC, porque a abordagem gradual tem mais sucesso a longo prazo.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-emagrecimento.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 4,
             "related": [
                 "consultas-nutricao-perda-de-peso",
@@ -4161,20 +4183,22 @@
                     "a": "Não — mesmo uma perda modesta de 5 a 10% do peso corporal já traz benefícios mensuráveis, segundo o CDC."
                 }
             ],
-            "liveSlots": true
+            "liveSlots": true,
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "deficit-calorico",
             "title": "Défice calórico explicado de forma simples",
             "description": "O défice calórico é a base fisiológica da perda de peso, mas raramente é tão simples como parece. Entenda o conceito sem cair em extremos.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-consulta.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 3,
             "related": [
                 "perda-de-peso-sustentavel",
@@ -4190,20 +4214,22 @@
                     "q": "É seguro calcular o próprio défice calórico sozinho?",
                     "a": "Pode ser um ponto de partida razoável para muitas pessoas, mas uma avaliação nutricional personalizada tem em conta fatores individuais que fórmulas genéricas não conseguem captar."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "stress-e-perda-de-peso",
             "title": "Como o stress crónico dificulta a perda de peso",
             "description": "O cortisol elevado pelo stress crónico aumenta o apetite e favorece o armazenamento de gordura. Saiba como isso complica a perda de peso.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-emagrecimento.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 3,
             "related": [
                 "fome-emocional-vs-fisica",
@@ -4219,20 +4245,22 @@
                     "q": "Como sei se tenho fome física ou emocional?",
                     "a": "A fome física desenvolve-se gradualmente e aceita vários tipos de alimentos; a fome emocional surge de repente e foca-se em alimentos específicos de conforto."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "sono-e-peso-corporal",
             "title": "O papel do sono na regulação do peso corporal",
             "description": "Uma única noite de sono insuficiente já altera as hormonas do apetite. Saiba, segundo investigação da Universidade de Chicago, como o sono afeta o peso.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-consulta.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 3,
             "related": [
                 "stress-e-perda-de-peso",
@@ -4248,20 +4276,22 @@
                     "q": "Quantas horas de sono são recomendadas para apoiar a perda de peso?",
                     "a": "Geralmente entre sete a nove horas por noite para adultos, embora as necessidades variem individualmente."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "proteina-e-saciedade",
             "title": "Proteína e saciedade: porque comer mais proteína ajuda a emagrecer",
             "description": "Uma revisão científica na American Journal of Clinical Nutrition confirma: dietas com mais proteína aumentam a saciedade e preservam massa muscular.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-consulta.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 3,
             "related": [
                 "deficit-calorico",
@@ -4277,20 +4307,22 @@
                     "q": "Quanta proteína devo comer para perder peso?",
                     "a": "A quantidade ideal varia consoante fatores individuais — uma avaliação nutricional personalizada é a forma mais fiável de determinar a quantidade adequada à sua situação específica."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "efeito-ioio",
             "title": "Efeito iô-iô: como quebrar o ciclo de perder e recuperar peso",
             "description": "O efeito iô-iô está associado a maior risco cardiovascular, segundo estudo publicado no New England Journal of Medicine. Saiba como o evitar.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-consulta.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 4,
             "related": [
                 "perda-de-peso-sustentavel",
@@ -4306,20 +4338,22 @@
                     "q": "Como evitar cair no ciclo do efeito iô-iô?",
                     "a": "Optando por mudanças sustentáveis desde o início, mesmo que a perda de peso seja mais lenta, em vez de dietas drásticas de curto prazo repetidas."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "perda-de-peso-na-menopausa",
             "title": "Perda de peso na menopausa: o que muda no metabolismo",
             "description": "A menopausa traz mudanças metabólicas reais que dificultam a perda de peso. Saiba o que a North American Menopause Society diz sobre o tema.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-emagrecimento.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 4,
             "related": [
                 "perda-de-peso-e-saude-hormonal",
@@ -4335,20 +4369,22 @@
                     "q": "Quando é melhor começar a gerir o peso relacionado com a menopausa?",
                     "a": "Investigação sugere que intervenções durante a perimenopausa — antes da transição estar completa — tendem a ser particularmente eficazes."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "fome-emocional-vs-fisica",
             "title": "Fome emocional vs. fome física: como distinguir",
             "description": "Distinguir fome emocional de fome física é uma das ferramentas mais úteis para gerir a alimentação. Saiba os sinais que as diferenciam.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-consulta.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 3,
             "related": [
                 "consultas-nutricao-perda-de-peso",
@@ -4367,20 +4403,22 @@
                     "q": "É errado comer por razões emocionais ocasionalmente?",
                     "a": "Não necessariamente — o problema surge quando se torna o padrão predominante e não consciente de lidar com emoções difíceis, e não uma escolha ocasional e consciente."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "fibra-e-perda-de-peso",
             "title": "O papel da fibra na perda de peso e saúde intestinal",
             "description": "A fibra contribui para a saciedade e para a saúde do microbioma intestinal. Saiba porque é uma componente central de uma alimentação equilibrada para perda de peso.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-emagrecimento.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 3,
             "related": [
                 "proteina-e-saciedade",
@@ -4396,20 +4434,22 @@
                     "q": "A fibra tem outros benefícios além da perda de peso?",
                     "a": "Sim — tem um papel importante na saúde do microbioma intestinal, cada vez mais associado a múltiplos aspetos da saúde metabólica."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "forca-vs-cardio-emagrecer",
             "title": "Exercício de força vs. cardio: o que é mais eficaz para emagrecer",
             "description": "Cardio e treino de força têm papéis diferentes e complementares na perda de peso. Saiba como combiná-los eficazmente.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-consulta.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 3,
             "related": [
                 "proteina-e-saciedade",
@@ -4425,20 +4465,22 @@
                     "q": "O treino de força faz perder peso mais devagar?",
                     "a": "Não necessariamente — ajuda a preservar massa muscular, o que apoia a manutenção do peso perdido a longo prazo, mesmo que o efeito imediato na balança seja menos dramático do que o cardio isolado."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "medicamentos-glp1-perda-de-peso",
             "title": "Medicamentos para perda de peso (agonistas GLP-1): o que saber",
             "description": "Os agonistas do GLP-1, como a semaglutida, representam uma mudança real no tratamento da obesidade. Saiba como funcionam, segundo a Mayo Clinic.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-emagrecimento.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 4,
             "related": [
                 "magic-pill-johann-hari",
@@ -4455,20 +4497,22 @@
                     "a": "Imita a hormona natural GLP-1, ativando recetores cerebrais que regulam a fome e a saciedade, o que reduz a ingestão calórica."
                 }
             ],
-            "liveSlots": true
+            "liveSlots": true,
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "manter-o-peso-perdido",
             "title": "Como manter o peso perdido a longo prazo",
             "description": "Perder peso é apenas metade do desafio — mantê-lo é a parte mais difícil. Saiba as estratégias associadas a sucesso a longo prazo.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-consulta.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 3,
             "related": [
                 "efeito-ioio",
@@ -4484,20 +4528,22 @@
                     "q": "Pesar-me regularmente ajuda a manter o peso?",
                     "a": "Sim, a monitorização regular está associada a maior sucesso na manutenção, ao permitir deteção e ajuste precoce de pequenas variações."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "perda-de-peso-pos-parto",
             "title": "Perda de peso pós-parto: expectativas realistas",
             "description": "O corpo pós-parto tem necessidades específicas de recuperação. Saiba como abordar a perda de peso com expectativas realistas e seguras.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-emagrecimento.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 3,
             "related": [
                 "depressao-pos-parto",
@@ -4513,20 +4559,22 @@
                     "q": "A amamentação ajuda a perder peso mais depressa?",
                     "a": "Pode contribuir para algum gasto calórico adicional, mas tem também necessidades energéticas próprias que devem ser respeitadas, em vez de se tentar restringir calorias de forma agressiva durante a amamentação."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "alcool-e-perda-de-peso",
             "title": "O impacto do álcool na perda de peso",
             "description": "O álcool tem calorias frequentemente esquecidas e efeitos que dificultam a perda de peso além das calorias em si. Saiba porquê.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-emagrecimento.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 3,
             "related": [
                 "sono-e-peso-corporal",
@@ -4542,20 +4590,22 @@
                     "q": "É preciso parar de beber álcool por completo para perder peso?",
                     "a": "Não necessariamente — reduzir a frequência ou a quantidade já costuma gerar diferença mensurável, tanto pelas calorias diretas como pelos efeitos indiretos no apetite e no sono."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "contagem-de-calorias",
             "title": "Contagem de calorias: vantagens, limitações e alternativas",
             "description": "Contar calorias funciona para muitas pessoas, mas tem limitações reais. Conheça as vantagens, os riscos e alternativas eficazes.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-consulta.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 3,
             "related": [
                 "alimentacao-intuitiva",
@@ -4571,20 +4621,22 @@
                     "q": "A contagem de calorias pode ser prejudicial?",
                     "a": "Sim, para pessoas com histórico de relação difícil com a alimentação, pode reforçar padrões obsessivos — nestes casos, uma abordagem diferente, idealmente com apoio profissional, costuma ser mais segura."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "nutricionista-plano-perda-de-peso",
             "title": "Como a nutricionista ajuda a personalizar um plano de perda de peso",
             "description": "Um plano genérico raramente encaixa na realidade de cada pessoa. Saiba como uma avaliação nutricional profissional personaliza a estratégia.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-emagrecimento.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 3,
             "related": [
                 "consultas-nutricao-perda-de-peso",
@@ -4603,20 +4655,22 @@
                     "a": "Varia consoante a situação, mas revisões periódicas ao longo do processo permitem ajustar a estratégia à medida que o corpo e as circunstâncias mudam."
                 }
             ],
-            "liveSlots": true
+            "liveSlots": true,
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "perda-de-peso-e-saude-hormonal",
             "title": "Perda de peso e saúde hormonal: tiroide, cortisol e insulina",
             "description": "Desequilíbrios hormonais podem explicar dificuldades persistentes em perder peso. Saiba o papel da tiroide, do cortisol e da insulina.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-emagrecimento.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 4,
             "related": [
                 "stress-e-perda-de-peso",
@@ -4632,20 +4686,22 @@
                     "q": "Tratar um problema de tiroide resolve automaticamente a dificuldade em perder peso?",
                     "a": "Ajuda significativamente ao corrigir a causa subjacente, mas geralmente continua a ser necessário combinar com hábitos alimentares e de exercício adequados."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "alimentacao-intuitiva",
             "title": "Alimentação intuitiva: uma abordagem sem restrição",
             "description": "A alimentação intuitiva propõe confiar nos sinais internos do corpo em vez de regras externas rígidas. Saiba os princípios desta abordagem.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-consulta.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 4,
             "related": [
                 "fome-emocional-vs-fisica",
@@ -4661,20 +4717,22 @@
                     "q": "A alimentação intuitiva é adequada para toda a gente?",
                     "a": "Pode ser particularmente útil para quem tem histórico de dietas restritivas repetidas, mas a adequação varia por pessoa — uma conversa com um profissional de nutrição ajuda a avaliar se é a abordagem certa numa situação específica."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "platos-na-perda-de-peso",
             "title": "Como lidar com platôs na perda de peso",
             "description": "Um platô na perda de peso é normal e explicável fisiologicamente. Saiba porque acontece e como o ultrapassar sem recorrer a restrição extrema.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-emagrecimento.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 3,
             "related": [
                 "deficit-calorico",
@@ -4690,20 +4748,22 @@
                     "q": "Devo cortar ainda mais calorias quando chego a um platô?",
                     "a": "Geralmente não é a melhor resposta — pequenos ajustes graduais tendem a ser mais sustentáveis e eficazes do que restrição adicional drástica."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "perda-de-peso-em-viagem",
             "title": "Perda de peso saudável para quem viaja com frequência",
             "description": "Viajar com frequência traz desafios específicos à gestão do peso. Saiba estratégias práticas para quem viaja regularmente, por trabalho ou lazer.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/nutricao-emagrecimento.webp",
             "about": "Perda de peso",
-            "verified": false,
+            "verified": true,
             "readingMinutes": 3,
             "related": [
                 "sono-e-peso-corporal",
@@ -4719,7 +4779,9 @@
                     "q": "Devo desistir da perda de peso durante períodos de viagem intensa?",
                     "a": "Não necessariamente — pode ser realista ajustar o objetivo para manutenção em vez de perda ativa durante esses períodos, retomando o foco de perda quando a rotina se estabilizar."
                 }
-            ]
+            ],
+            "author": "sara-barreto",
+            "reviewer": "rita-aguiar"
         },
         {
             "slug": "o-que-e-autoconhecimento",

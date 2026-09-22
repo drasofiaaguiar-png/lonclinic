@@ -14,11 +14,11 @@ A fibra alimentar, presente em vegetais, frutas, leguminosas e cereais integrais
 
 {{cta}}
 
-## A ligação com a saúde intestinal
+## Qual é a ligação entre fibra e saúde intestinal?
 
 Para além do efeito direto na saciedade, a fibra alimenta as bactérias benéficas do microbioma intestinal, cuja composição tem sido cada vez mais associada, na investigação científica recente, à regulação do peso, do metabolismo e até do apetite. A [ligação intestino-cérebro](/blog/ansiedade-e-problemas-digestivos) mostra que este eixo não é só «digestão».
 
-## Como incorporar mais fibra sem grandes mudanças drásticas
+## Como incorporar mais fibra sem mudanças drásticas?
 
 Preferir versões integrais de cereais e pão, incluir leguminosas regularmente nas refeições, e manter vegetais e frutas como componente central — em vez de acessório — dos pratos são ajustes graduais que aumentam a ingestão de fibra sem exigir uma reformulação completa da alimentação.
 

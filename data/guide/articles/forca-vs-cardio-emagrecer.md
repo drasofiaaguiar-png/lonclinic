@@ -14,11 +14,11 @@ O exercício cardiovascular (correr, nadar, andar de bicicleta) tende a queimar 
 
 {{cta}}
 
-## Porque preservar massa muscular é particularmente importante
+## Porque preservar massa muscular é particularmente importante?
 
 Durante um défice calórico sem treino de força, uma parte significativa do peso perdido pode vir de massa muscular, e não apenas de gordura. Como o músculo consome mais energia em repouso do que o tecido adiposo, perder massa muscular torna, paradoxalmente, mais difícil [manter a perda](/blog/manter-o-peso-perdido) a longo prazo. A [proteína](/blog/proteina-e-saciedade) apoia este objetivo.
 
-## A combinação tende a superar qualquer opção isolada
+## A combinação de força e cardio supera qualquer opção isolada?
 
 Programas que combinam exercício cardiovascular com treino de força regular tendem a produzir melhores resultados de composição corporal a longo prazo do que focar exclusivamente numa das duas modalidades — a distribuição ideal é individual. O [exercício e a depressão](/blog/exercicio-fisico-e-depressao) mostram ainda benefícios de humor que ajudam a aderência.
 

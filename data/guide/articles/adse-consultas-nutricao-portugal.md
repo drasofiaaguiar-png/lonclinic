@@ -27,7 +27,7 @@ Na Lon Clinic paga **115 €** no mês 1 (ou **75 €/mês** no acompanhamento).
 
 A ADSE anunciou a nutrição nas tabelas de 2025 sem, nesse comunicado, exigir prescrição médica como condição do acto. **Não transformamos isso numa regra eterna.** Se a nomenclatura ou a ADSE Direta pedirem documento extra no seu caso, prevalece o que lá estiver. Em psicologia, o fim da prescrição no livre está datado (maio de 2024); em nutrição, confirme o requisito actual em [adse.pt](https://www.adse.pt/).
 
-## Regime convencionado vs livre (nutrição)
+## Qual a diferença entre regime convencionado e livre na nutrição?
 
 | | Convencionado | Livre (Lon Clinic) |
 |---|---|---|

@@ -14,11 +14,11 @@ A alimentação intuitiva, desenvolvida pelas nutricionistas Evelyn Tribole e El
 
 {{cta}}
 
-## Porque não é apenas «comer o que quiser sem limites»
+## A alimentação intuitiva é «comer o que quiser sem limites»?
 
 Um mal-entendido comum é assumir que alimentação intuitiva significa ausência total de estrutura. Na prática, envolve um processo ativo de reaprender a distinguir [fome física de fome emocional](/blog/fome-emocional-vs-fisica), prestar atenção genuína à saciedade, e fazer escolhas alimentares que respeitem tanto o prazer como a saúde — não é passividade, é uma forma diferente e mais internalizada de atenção.
 
-## Para quem pode ser particularmente relevante
+## Para quem a alimentação intuitiva pode ser particularmente relevante?
 
 Pessoas com histórico de múltiplas dietas restritivas falhadas, ou com uma relação ansiosa e conflituosa com a comida, frequentemente beneficiam desta abordagem precisamente porque rejeita o ciclo de restrição-descontrolo que o [efeito iô-iô](/blog/efeito-ioio) e a [contagem obsessiva de calorias](/blog/contagem-de-calorias) acabam por reforçar.
 

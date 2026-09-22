@@ -45,7 +45,7 @@ Em Portugal **ambos** são regulados pela mesma [Ordem dos Nutricionistas](https
 
 A linha da casa é **comida primeiro**. O nutricionista da Lon Clinic **não vende suplementos** na consulta. Quando a suplementação for uma questão clínica (défice documentado, condição, gravidez), o passo seguinte é **consulta médica** — não a prateleira da clínica. Prescrição de medicamentos, incluindo injectáveis para peso (aGLP-1), é acto **médico**; o [programa de nutrição](/nutricao/programa) **não** prescreve aGLP-1.
 
-## ADSE, Cheque Cuida-te e o que isto não é
+## A ADSE e o Cheque Cuida-te cobrem nutrição?
 
 **ADSE:** nutrição entrou nas tabelas anunciadas para 2025, em convencionado e livre. A Lon é **regime livre** (paga, recibo com NIF, pede reembolso). **Não inventamos um euro de teto** neste hub — a fonte é [adse.pt](https://www.adse.pt/) e o simulador da ADSE Direta. Detalhe: [ADSE e consultas de nutrição](/blog/adse-consultas-nutricao-portugal).
 

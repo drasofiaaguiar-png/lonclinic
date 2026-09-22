@@ -14,11 +14,11 @@ Um estudo publicado no New England Journal of Medicine, liderado por investigado
 
 {{cta}}
 
-## Porque o ciclo é tão difícil de quebrar
+## Porque o efeito ioiô é tão difícil de quebrar?
 
 Dietas muito restritivas geram perda rápida inicial, mas raramente são sustentáveis a longo prazo — quando a pessoa retoma hábitos anteriores, o peso tende a regressar, muitas vezes trazendo consigo desmotivação que leva a nova tentativa drástica. Um [défice](/blog/deficit-calorico) agressivo alimenta exactamente este padrão.
 
-## Como quebrar o padrão
+## Como quebrar o padrão do efeito ioiô?
 
 Optar por [mudanças sustentáveis desde o início](/blog/perda-de-peso-sustentavel) — ajustes que a pessoa consiga realisticamente manter a longo prazo, mesmo que a perda inicial seja mais lenta — é a estratégia mais eficaz para evitar entrar no ciclo. [Manter o peso perdido](/blog/manter-o-peso-perdido) começa no desenho do plano, não no dia em que a balança chega ao número.
 

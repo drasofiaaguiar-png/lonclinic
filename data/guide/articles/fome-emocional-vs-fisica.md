@@ -16,11 +16,11 @@ Quando a fome emocional manda no peso, o [programa de reeducação](/nutricao/pr
 
 {{cta}}
 
-## Outros sinais que ajudam a diferenciar
+## Que outros sinais ajudam a diferenciar fome emocional e física?
 
 A fome física respeita, em geral, os sinais internos de saciedade — a pessoa para quando está satisfeita. A fome emocional tende a ignorar esses sinais, levando a comer além do ponto de saciedade, precisamente porque o objetivo não é nutricional, mas emocional (alívio, distração, conforto). [Gatilhos emocionais](/blog/gatilhos-emocionais) ajudam a ler o que está por baixo.
 
-## Um exercício prático simples
+## Que exercício prático ajuda a distinguir os dois tipos de fome?
 
 Antes de comer por impulso, pausar por alguns minutos e perguntar: «há quanto tempo comi da última vez?» e «estaria satisfeito com qualquer alimento neste momento, ou só quero especificamente aquele em particular?» — respostas que apontam para fome emocional não significam que a pessoa não deva comer, mas ajudam a decidir com mais consciência. A [alimentação intuitiva](/blog/alimentacao-intuitiva) treina exactamente esta atenção.
 

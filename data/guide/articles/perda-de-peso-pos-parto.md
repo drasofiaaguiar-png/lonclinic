@@ -14,15 +14,15 @@ O corpo passa por mudanças significativas durante a gravidez, e a recuperação
 
 {{cta}}
 
-## A amamentação tem necessidades calóricas próprias
+## A amamentação tem necessidades calóricas próprias?
 
 Para mulheres que amamentam, restringir calorias de forma agressiva pode comprometer a produção de leite e a energia disponível para cuidar de um recém-nascido — uma prioridade que deve ser respeitada antes de qualquer foco intenso em perda de peso.
 
-## Porque a comparação social raramente ajuda
+## Porque a comparação social raramente ajuda no pós-parto?
 
 Comparar o próprio percurso de recuperação com o de outras mulheres — especialmente celebridades com recursos e circunstâncias muito diferentes — tende a gerar pressão desnecessária, numa fase já emocionalmente exigente. Se o humor está baixo, ver [depressão pós-parto](/blog/depressao-pos-parto).
 
-## O que uma abordagem realista costuma incluir
+## O que uma abordagem realista no pós-parto costuma incluir?
 
 Priorizar descanso (na medida do possível), alimentação equilibrada e suficiente (não restritiva), e retomar atividade física gradualmente, com aprovação médica — geralmente após a consulta de revisão pós-parto — em vez de pressa para «voltar ao normal» rapidamente.
 

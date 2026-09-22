@@ -727,7 +727,7 @@ function isVerifiedArticle(meta) {
 
 function articleAuthorBlock(origin, meta) {
     if (isVerifiedArticle(meta)) {
-        return authors.articleAuthorSchema(origin, meta && meta.author);
+        return authors.articleAuthorSchema(origin, meta && meta.author, meta && meta.reviewer);
     }
     const o = normalizeOrigin(origin);
     return {
@@ -1671,7 +1671,14 @@ function renderBlogIndex(origin) {
                         <a class="guide-card-media" href="${href}" aria-label="${escapeHtml(listingTitle(a.title || slug))}"><img src="${img}" alt="" width="1200" height="800" loading="lazy" decoding="async"></a>
                         <div class="guide-card-content">
                             <p class="guide-card-date">${date}</p>
-                            ${isVerifiedArticle(a) ? `<p class="eeat-byline guide-card-byline"><a rel="author" href="${authors.authorPath(authors.getAuthor(a.author))}">Médica · ${authors.getAuthor(a.author).yearsPractice} anos de prática clínica</a></p>` : (readingTimeHtml(a, 'pt') ? `<p class="guide-card-byline">${readingTimeHtml(a, 'pt')}</p>` : '')}
+                            ${(() => {
+                                if (!isVerifiedArticle(a)) {
+                                    return readingTimeHtml(a, 'pt') ? `<p class="guide-card-byline">${readingTimeHtml(a, 'pt')}</p>` : '';
+                                }
+                                const au = authors.getAuthor(a.author);
+                                const years = au.yearsPractice ? ` · ${au.yearsPractice} anos de prática clínica` : '';
+                                return `<p class="eeat-byline guide-card-byline"><a rel="author" href="${authors.authorPath(au)}">${escapeHtml(au.jobTitle)}${escapeHtml(years)}</a></p>`;
+                            })()}
                             <h2 class="guide-card-title">${escapeHtml(listingTitle(a.title || slug))}</h2>
                             <p class="guide-card-desc">${d}</p>
                         </div>
@@ -1813,10 +1820,17 @@ function renderBlogArticle(origin, slug) {
                     name: 'Centro burnout',
                     url: `${o}/burnout`
                 }
+            } : articleCluster(meta) === 'perda-de-peso' ? {
+                isPartOf: {
+                    '@type': 'CollectionPage',
+                    '@id': `${o}/nutricao`,
+                    name: 'Nutrição',
+                    url: `${o}/nutricao`
+                }
             } : {}),
             ...(() => {
                 const seriesDef = findSeriesForSlug(slug);
-                if (!seriesDef || articleCluster(meta) === 'burnout') return {};
+                if (!seriesDef || articleCluster(meta) === 'burnout' || articleCluster(meta) === 'perda-de-peso') return {};
                 const hubUrl = `${o}/blog/${encodeURIComponent(seriesDef.slug || slug)}`;
                 return {
                     isPartOf: {
@@ -1835,7 +1849,10 @@ function renderBlogArticle(origin, slug) {
         }
     ];
     if (isVerifiedArticle(meta)) {
-        jsonLd.push(authors.personJsonLd(o));
+        jsonLd.push(authors.personJsonLd(o, meta.author));
+        if (meta.reviewer && meta.reviewer !== meta.author) {
+            jsonLd.push(authors.personJsonLd(o, meta.reviewer));
+        }
     }
     if (Array.isArray(meta.faq) && meta.faq.length) {
         jsonLd.push({
@@ -1894,7 +1911,13 @@ function renderBlogArticle(origin, slug) {
         const a = authors.getAuthor(meta.author);
         const href = authors.authorPath(a);
         const sep = time || read ? '<span aria-hidden="true"> · </span>' : '';
-        return `<p class="eeat-byline mag-story-by">${time}${extras.join('')}${sep}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">${escapeHtml(a.displayName)}</a><span class="eeat-byline-review">${escapeHtml(chrome.review)}</span></p>`;
+        const reviewer = meta.reviewer && meta.reviewer !== meta.author
+            ? authors.getAuthor(meta.reviewer)
+            : null;
+        const reviewBit = reviewer
+            ? `<span class="eeat-byline-review"> · Revisão médica: ${escapeHtml(reviewer.displayName)}</span>`
+            : `<span class="eeat-byline-review">${escapeHtml(chrome.review)}</span>`;
+        return `<p class="eeat-byline mag-story-by">${time}${extras.join('')}${sep}<a class="eeat-byline-name" rel="author" href="${escapeHtml(href)}">${escapeHtml(a.displayName)}</a>${reviewBit}</p>`;
     })();
     const bio = isVerifiedArticle(meta) ? authors.authorBioHtml(o, meta.author, dateMod || datePub) : '';
     const leadFigure = meta.image
@@ -1907,7 +1930,6 @@ function renderBlogArticle(origin, slug) {
     const chrome = ARTICLE_CHROME[lang] || ARTICLE_CHROME.pt;
     const note = isTravelGuide ? chrome.travelNote : chrome.generalNote;
     const closeCtaKind = defaultCtaKind(meta) === 'general' ? 'clinic' : defaultCtaKind(meta);
-    const consultAd = consultAdHtml(closeCtaKind, slug);
     const closeCta = consultAdHtml(closeCtaKind, slug, 'lon-consult-ad--close');
     let crumbItems = magBreadcrumbCrumbs(articlePath, title);
     if (articleCluster(meta) === 'burnout') {
@@ -1953,8 +1975,6 @@ function renderBlogArticle(origin, slug) {
                 ${shareBarHtml(`${o}/blog/${encodeURIComponent(slug)}`, title, `magazine-${slug}`)}
             </header>
             ${leadFigure}
-            ${consultAd}
-            ${socialProofGridHtml()}
             <div class="mag-story-body">
             <p class="mag-story-note">${escapeHtml(note)}</p>
             <div class="guide-prose mag-story-prose" lang="${escapeHtml(langMeta.htmlLang)}">
@@ -1962,8 +1982,9 @@ function renderBlogArticle(origin, slug) {
             </div>
             ${seriesNav}
             </div>
-            ${relatedHtml}
+            ${socialProofGridHtml()}
             ${closeCta}
+            ${relatedHtml}
             ${bio ? `<div class="mag-story-body mag-story-body--foot">${bio}</div>` : ''}
         </article>
     </main>`
@@ -1977,14 +1998,13 @@ function renderBlogArticle(origin, slug) {
                 ${byline}
                 ${shareBarHtml(`${o}/blog/${encodeURIComponent(slug)}`, title, `magazine-${slug}`)}
             </header>
-            ${consultAd}
-            ${socialProofGridHtml()}
             <div class="guide-prose" lang="${escapeHtml(langMeta.htmlLang)}">
                 ${articleHtml}
             </div>
             ${seriesNav}
-            ${relatedHtml}
+            ${socialProofGridHtml()}
             ${closeCta}
+            ${relatedHtml}
             ${bio}
         </article>
     </main>`;

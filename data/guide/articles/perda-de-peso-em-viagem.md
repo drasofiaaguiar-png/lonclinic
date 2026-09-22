@@ -14,15 +14,15 @@ Viagens frequentes trazem desafios próprios: menos controlo sobre a preparaçã
 
 {{cta}}
 
-## Estratégias práticas para refeições fora de casa
+## Que estratégias práticas funcionam em refeições fora de casa?
 
 Priorizar [proteína](/blog/proteina-e-saciedade) e vegetais como base das escolhas, mesmo em restaurantes ou eventos com opções limitadas, ajuda a manter alguma estrutura nutricional sem exigir controlo total sobre a preparação. Reservar hidratação suficiente também é frequentemente negligenciado durante viagens, especialmente em voos.
 
-## Manter alguma atividade física, mesmo adaptada
+## Como manter alguma atividade física em viagem?
 
 Não é preciso um ginásio completo para manter alguma consistência — caminhar mais do que o habitual em cidades novas, usar escadas em vez de elevador, ou fazer exercícios simples de peso corporal no quarto do hotel ajudam a manter algum nível de atividade mesmo sem acesso a equipamento habitual.
 
-## Gerir expectativas durante períodos de viagem intensa
+## Como gerir expectativas de peso durante viagens intensas?
 
 Aceitar que, durante períodos de viagem particularmente intensos, o objetivo realista pode ser [manutenção](/blog/manter-o-peso-perdido) em vez de perda ativa de peso — evitando que a frustração com resultados menos dramáticos leve ao abandono completo dos hábitos saudáveis mantidos possíveis. Uma [consulta do viajante](/marcar/travel) trata vacinas e medicação de bordo; a alimentação em trânsito fica para o plano nutricional.
 

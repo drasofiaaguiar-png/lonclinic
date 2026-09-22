@@ -28,7 +28,7 @@ O preço de uma consulta de nutrição em Portugal varia consoante o contexto �
 <figcaption>Comparar preços isoladamente pode ser enganador — o valor real está na continuidade e articulação com outras áreas quando necessário.</figcaption>
 </figure>
 
-## Preço médio nacional (nutricionista independente/privado)
+## Qual é o preço médio de um nutricionista privado em Portugal?
 
 Segundo dados de mercado da **Zaask**, **o preço médio de uma consulta de nutrição em Portugal é de 50€, com valores a oscilar entre 15€ e 80€**. A estrutura de preços típica é:
 
@@ -45,7 +45,7 @@ Artigo relacionado: [consulta de nutrição: preço e como funciona](/blog/consu
 
 {{cta}}
 
-## Consultas em cadeias e unidades de saúde privadas (CUF, Trofa Saúde, Wells, Easyslim)
+## Quanto custam consultas de nutrição em cadeias privadas?
 
 As grandes redes privadas (CUF, Trofa Saúde, Wells, Easyslim) não publicam de forma uniforme e pública o preço exato da consulta de nutrição isolada — os valores variam por unidade, profissional e se a consulta é convencionada (com seguro/ADSE) ou particular. Como referência de contexto, uma tabela pública da CUF mostra que consultas de especialidades "não médicas" (categoria que inclui nutrição) sem acordo de seguro variam entre **51€ e 294€**, um intervalo amplo que reflete a diferença entre profissionais e tipos de consulta.
 
@@ -53,7 +53,7 @@ As grandes redes privadas (CUF, Trofa Saúde, Wells, Easyslim) não publicam de 
 
 Artigo relacionado: [ADSE: consultas de nutrição em Portugal](/blog/adse-consultas-nutricao-portugal).
 
-## O que influencia o preço
+## O que influencia o preço da consulta de nutrição?
 
 - **Experiência e especialização** do profissional (ex: nutrição desportiva, [obesidade](/blog/perda-de-peso-sustentavel), pediátrica)
 - **Localização** — Lisboa e Porto tendem a ter valores no topo do intervalo
@@ -62,7 +62,7 @@ Artigo relacionado: [ADSE: consultas de nutrição em Portugal](/blog/adse-consu
 
 Artigos relacionados: [como encontrar um nutricionista](/blog/como-encontrar-um-nutricionista) e [nutricionista: plano de perda de peso](/blog/nutricionista-plano-perda-de-peso).
 
-## Porque a nossa abordagem é diferente
+## Porque a abordagem da Lon Clinic é diferente?
 
 Comparar preços isoladamente pode ser enganador — o que determina o valor real de um acompanhamento nutricional não é o preço por consulta, mas a continuidade e a articulação com outras áreas quando necessário (psicologia, medicina). Na LON, somos transparentes sobre o preço desde o início, e o valor inclui sempre a possibilidade de acompanhamento articulado, não apenas uma consulta isolada.
 

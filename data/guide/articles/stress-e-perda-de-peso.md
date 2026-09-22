@@ -14,15 +14,15 @@ Segundo a [Harvard Health Publishing](https://www.health.harvard.edu/mind-and-mo
 
 {{cta}}
 
-## Porque o ciclo se reforça a si próprio
+## Porque o ciclo stress-peso se reforça a si próprio?
 
 Alimentos ricos em gordura e açúcar parecem ter um efeito de «conforto» real, amortecendo temporariamente as respostas emocionais associadas ao stress — o que ajuda a explicar porque são chamados, com razão, de «comfort foods», e porque o padrão de recorrer a eles tende a repetir-se sob stress.
 
-## Como distinguir fome física de fome emocional no momento
+## Como distinguir fome física de fome emocional no momento?
 
 Segundo a Harvard Health, um sinal útil é a rapidez do início: a fome física desenvolve-se gradualmente e pode ser satisfeita com vários tipos de alimentos, enquanto a fome emocional surge repentinamente e costuma direcionar-se especificamente para alimentos «de conforto». O artigo [fome emocional vs. física](/blog/fome-emocional-vs-fisica) detalha estes sinais.
 
-## O que ajuda de facto
+## O que ajuda de facto a perder peso com stress?
 
 Gerir o stress diretamente — através de exercício, meditação, ou apoio social — tende a ser mais eficaz a longo prazo do que confiar apenas em força de vontade para resistir a alimentos durante picos de stress. O [sono](/blog/sono-e-peso-corporal) também regula as mesmas hormonas do apetite.
 
