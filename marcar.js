@@ -147,10 +147,9 @@
             },
             nutricao_quinzenal: {
                 label: 'Nutrition subscription · fortnightly',
-                duration: '€45 every 15 days · first payment €45',
+                duration: '€45 every 15 days',
                 bullets: [
-                    'Fortnightly video consultations with the same nutritionist, billed every 15 days — not monthly. First payment is €45.',
-                    'Moves to monthly (€45/month) once you reach the maintenance phase — decided together.',
+                    'Video visits every 15 days with the same nutritionist. You pay €45 every 15 days — first payment is €45, not a monthly fee.',
                     'No lock-in: pause or cancel any time. No aGLP-1 prescription.'
                 ]
             },
@@ -323,10 +322,9 @@
             },
             nutricao_quinzenal: {
                 label: 'Suscripción de nutrición · quincenal',
-                duration: '45 € cada 15 días · primer pago 45 €',
+                duration: '45 € cada 15 días',
                 bullets: [
-                    'Consultas quincenales por videollamada con la misma nutricionista, cobrado cada 15 días — no mensualmente. El primer pago es 45 €.',
-                    'Pasa a mensual (45 €/mes) al llegar a la fase de mantenimiento — decidido en conjunto.',
+                    'Consultas cada 15 días por videollamada con la misma nutricionista. Paga 45 € cada 15 días — el primer pago es 45 €, no una mensualidad.',
                     'Sin permanencia: pausa o cancela cuando quieras. Sin prescripción de aGLP-1.'
                 ]
             },
@@ -399,6 +397,7 @@
         'medicina-funcional': 'longevidade',
         medicina_funcional: 'longevidade',
         'medicina-longevidade': 'longevidade',
+        nutricao: 'nutricao_quinzenal',
         'nutricao-consulta': 'nutricao_consulta',
         nutricao_consulta: 'nutricao_consulta',
         'nutricao-quinzenal': 'nutricao_quinzenal',
@@ -765,13 +764,12 @@
         nutricao_quinzenal: {
             label: 'Subscrição de nutrição · quinzenal',
             price: '45 €',
-            priceNote: ' a cada 15 dias · primeiro pagamento 45 €',
+            priceNote: ' a cada 15 dias',
             cents: 4500,
-            duration: '45 € a cada 15 dias · não é mensalidade',
+            duration: 'a cada 15 dias',
             serviceKey: 'nutricao_quinzenal',
             bullets: [
-                'Consultas quinzenais por videochamada com a mesma nutricionista. Paga 45 € de 15 em 15 dias — o primeiro valor é 45 €, não 90 €.',
-                'Passa a mensal (45 €/mês) quando atingir a fase de manutenção — decidido em conjunto com a sua nutricionista.',
+                'Consultas de 15 em 15 dias, por videochamada, com a mesma nutricionista. Paga 45 € a cada 15 dias — o primeiro valor é 45 €, não uma mensalidade.',
                 'Sem fidelização: pausa ou cancela quando quiser. Sem prescrição de aGLP-1.'
             ]
         },
@@ -859,7 +857,7 @@
         'urgente',
         'psicologia',
         'terapia_casal',
-        'nutricao_programa',
+        'nutricao_quinzenal',
         'burnout',
         'travel',
         'longevidade',
@@ -871,7 +869,7 @@
         urgente: 'Consulta Médica Urgente',
         psicologia: 'Saúde Mental / Psicologia',
         terapia_casal: 'Terapia de casal',
-        nutricao_programa: 'Nutrição',
+        nutricao_quinzenal: 'Nutrição',
         burnout: 'Burnout',
         travel: 'Medicina do Viajante',
         longevidade: 'Medicina Funcional',
@@ -882,7 +880,7 @@
         if (BURNOUT_FAMILY.indexOf(t) >= 0) return 'burnout';
         if (PSICOLOGIA_FAMILY.indexOf(t) >= 0) return 'psicologia';
         if (CASAL_FAMILY.indexOf(t) >= 0) return 'terapia_casal';
-        if (NUTRICAO_FAMILY.indexOf(t) >= 0) return 'nutricao_programa';
+        if (NUTRICAO_FAMILY.indexOf(t) >= 0) return 'nutricao_quinzenal';
         return t;
     }
 
@@ -1008,8 +1006,8 @@
         nutricao: {
             ico: '🥗', color: '#3F574C', img: '/image/approach-nutricao.webp',
             name: { pt: 'Nutrição', en: 'Nutrition', es: 'Nutrición' },
-            desc: { pt: 'Subscrição quinzenal e programas', en: 'Fortnightly subscription and programs', es: 'Suscripción quincenal y programas' },
-            keys: ['nutricao_quinzenal', 'nutricao_programa', 'nutricao_completo'],
+            desc: { pt: 'Subscrição quinzenal · 45 € / 15 dias', en: 'Fortnightly subscription · €45 / 15 days', es: 'Suscripción quincenal · 45 € / 15 días' },
+            keys: ['nutricao_quinzenal'],
             defaultTipo: 'nutricao_quinzenal'
         }
     };
@@ -1088,10 +1086,21 @@
     // Step 1, level 2: sub-type pills for the active area. The legacy <select> stays as a hidden fallback.
     function renderTypePills() {
         var wrap = document.getElementById('marcarTypePills');
+        var typeLabel = document.getElementById('marcarTypeLabel');
         if (!wrap) return;
         var lang = currentLangKey();
         var labels = Object.assign({}, SUBTYPE_LABELS.pt, SUBTYPE_LABELS[lang] || {});
-        var keys = AREA_BLOCKS[areaFor(tipo)].keys.slice();
+        var areaId = areaFor(tipo);
+        // Nutrition: área already is the product (quinzenal). No second "tipo" row.
+        if (areaId === 'nutricao') {
+            wrap.innerHTML = '';
+            wrap.hidden = true;
+            if (typeLabel) typeLabel.hidden = true;
+            return;
+        }
+        wrap.hidden = false;
+        if (typeLabel) typeLabel.hidden = false;
+        var keys = AREA_BLOCKS[areaId].keys.slice();
         var selected = subtypeSelectedFor(tipo, keys);
         if (tipo && keys.indexOf(selected) < 0) keys.unshift(tipo);
         wrap.innerHTML = '';
@@ -1190,50 +1199,14 @@
     }
 
     if (isNutricaoFamily(tipo)) {
-        // Keep the user inside the program they already picked. Completo shows only the two
-        // payment modalities; the 6-month program shows Nutrição vs Completo — never the 45 €
-        // one-off, which is a different product and made the funnel feel like a new form.
-        var nutricaoCards;
-        var nutricaoKicker = 'Nutrição';
-        var nutricaoHeading = 'Programa Nutrição ou Completo com psicologia';
-        if (tipo === 'nutricao_completo' || tipo === 'nutricao_completo_reforcado') {
-            nutricaoCards = NUTRICAO_PLAN_CARDS.filter(function (card) {
-                return card.tipo === 'nutricao_completo' || card.tipo === 'nutricao_completo_reforcado';
-            });
-            nutricaoKicker = 'Programa Completo';
-            nutricaoHeading = 'Escolha a entrada — o total é o mesmo (1 162 €)';
-        } else if (tipo === 'nutricao_consulta' || tipo === 'nutricao_quinzenal') {
-            // One-off consultation is no longer offered as a card here: subscription or 6-month programme.
-            nutricaoCards = NUTRICAO_PLAN_CARDS.filter(function (card) {
-                return card.tipo === 'nutricao_quinzenal' || card.tipo === 'nutricao_programa';
-            }).map(function (card) {
-                if (card.tipo === 'nutricao_quinzenal') return Object.assign({}, card, { badge: 'Recomendado' });
-                if (card.tipo === 'nutricao_programa') return Object.assign({}, card, { badge: 'Programa' });
-                return card;
-            });
-            nutricaoKicker = 'Nutrição';
-            nutricaoHeading = 'Subscrição quinzenal ou programa de 6 meses — sem aGLP-1';
-        } else {
-            nutricaoCards = NUTRICAO_PLAN_CARDS.filter(function (card) {
-                return card.tipo === 'nutricao_programa' || card.tipo === 'nutricao_completo';
-            });
-        }
-        nutricaoCards = nutricaoCards.map(function (card) {
-            return Object.assign({}, card, { featured: card.tipo === tipo });
-        });
-        renderPlanPicker(tipo, nutricaoCards, nutricaoKicker, nutricaoHeading);
+        var planSection = document.getElementById('marcarPlanSection');
+        if (planSection) planSection.hidden = true;
         var nutricaoLink = document.getElementById('marcarNutricaoLink');
-        if (nutricaoLink) nutricaoLink.hidden = false;
+        if (nutricaoLink) nutricaoLink.hidden = true;
         var nutricaoTrust = document.getElementById('marcarBuyTrust');
-        // "Fidelização 3 meses" only applies to the programs, not to the one-off consultation.
         if (nutricaoTrust) nutricaoTrust.hidden = tipo === 'nutricao_consulta' || tipo === 'nutricao_quinzenal';
-        // Like psychology: the generic service pills give way to nutrition motives,
-        // with weight loss already selected.
-        // The "motivo da consulta" question is not shown any more — the default goal (perda de peso)
-        // still goes into the booking notes and the patient can adjust it in the intake form.
         var nuSpecialtySection = document.getElementById('marcarSpecialtySection');
         if (nuSpecialtySection) setA11yHidden(nuSpecialtySection, true);
-        applyNutricaoGoalCopy();
         var nuBack = document.getElementById('marcarBookingBack');
         if (nuBack) {
             var nuRef = new URLSearchParams(window.location.search).get('ref') || '';
@@ -1241,8 +1214,8 @@
                 nuBack.href = '/nutricao/avaliacao';
                 nuBack.textContent = '← Voltar à avaliação';
             } else {
-                nuBack.href = '/nutricao/programa';
-                nuBack.textContent = '← Voltar ao programa';
+                nuBack.href = '/nutricao';
+                nuBack.textContent = '← Voltar';
             }
         }
     }
@@ -1687,7 +1660,7 @@
                 category: state.nutricaoGoal === 'perda-de-peso' ? 'weight-loss' : 'nutrition',
                 product: 'nutricao_quinzenal',
                 goal: goalLabel,
-                concerns: 'Objectivo: ' + goalLabel + '. Subscrição de nutrição quinzenal (45 € a cada 15 dias, primeiro pagamento 45 €) — passa a mensal na fase de manutenção. Sem prescrição de aGLP-1.',
+                concerns: 'Subscrição de nutrição quinzenal (45 € a cada 15 dias, primeiro pagamento 45 €). Sem prescrição de aGLP-1.',
                 label: 'Subscrição de nutrição · quinzenal'
             };
         }
@@ -1702,9 +1675,8 @@
 
     function initNutricaoGoals() {
         state.nutricaoGoal = resolveNutricaoGoalFromUrl();
-        applyNutricaoGoalCopy();
-        renderNutricaoGoalButtons();
-        syncNutricaoGoalUrl();
+        var nuSpecialtySection = document.getElementById('marcarSpecialtySection');
+        if (nuSpecialtySection) setA11yHidden(nuSpecialtySection, true);
         shellRefresh();
     }
 
@@ -2283,8 +2255,8 @@
                 })
                 .catch(function () { renderSpecialtyButtons(); });
         } else if (isNutricaoFamily(tipo)) {
-            applyNutricaoGoalCopy();
-            renderNutricaoGoalButtons();
+            var nuSpecialtySection = document.getElementById('marcarSpecialtySection');
+            if (nuSpecialtySection) setA11yHidden(nuSpecialtySection, true);
         }
         renderCalendar();
         // Re-render timeslots heading if date not selected
@@ -2328,7 +2300,7 @@
        Shell: 2 passos (Serviço e formato → Data e hora), resumo lateral e
        barra de ação fixa. Em psicologia o passo 1 inclui a área de apoio
        (o "tipo de consulta" dentro da psicologia) e o formato. Em nutrição o
-       passo 1 mostra os motivos (perda de peso pré-seleccionada) e o formato.
+       passo 1 é só a área (a subscrição quinzenal).
        visibilidade e copy; a lógica de horários/profissionais continua a
        ser a do motor acima.
     ────────────────────────────────────────────────────────────────────── */
@@ -2337,8 +2309,8 @@
             eyebrow: 'Marcação',
             lead: 'Poucos passos, cerca de dois minutos. Só paga no fim e pode cancelar até 24 horas antes da consulta.',
             steps: { format: 'Serviço e formato', schedule: 'Data e hora', pay: 'Pagamento' },
-            nutriSteps: { format: 'Plano e objectivo', schedule: 'Data e hora', pay: 'Pagamento' },
-            nutriLead: 'Três passos no mesmo fluxo: plano, horário e pagamento. Só paga no fim e pode cancelar até 24 horas antes.',
+            nutriSteps: { format: 'Área', schedule: 'Data e hora', pay: 'Pagamento' },
+            nutriLead: 'Escolha a área e o horário. Só paga no fim e pode cancelar até 24 horas antes da consulta.',
             back: 'Voltar',
             next: 'Continuar',
             toPayment: 'Continuar para pagamento',
@@ -2360,8 +2332,8 @@
             eyebrow: 'Booking',
             lead: 'A few steps, about two minutes. You only pay at the end and can cancel up to 24 hours before the appointment.',
             steps: { format: 'Service and format', schedule: 'Date and time', pay: 'Payment' },
-            nutriSteps: { format: 'Plan and goal', schedule: 'Date and time', pay: 'Payment' },
-            nutriLead: 'Three steps in the same flow: plan, time and payment. You only pay at the end and can cancel up to 24 hours before.',
+            nutriSteps: { format: 'Area', schedule: 'Date and time', pay: 'Payment' },
+            nutriLead: 'Pick the area, then a time. You only pay at the end and can cancel up to 24 hours before.',
             back: 'Back',
             next: 'Continue',
             toPayment: 'Continue to payment',
@@ -2383,8 +2355,8 @@
             eyebrow: 'Reserva',
             lead: 'Pocos pasos, unos dos minutos. Solo paga al final y puede cancelar hasta 24 horas antes de la consulta.',
             steps: { format: 'Servicio y formato', schedule: 'Fecha y hora', pay: 'Pago' },
-            nutriSteps: { format: 'Plan y objetivo', schedule: 'Fecha y hora', pay: 'Pago' },
-            nutriLead: 'Tres pasos en el mismo flujo: plan, horario y pago. Solo paga al final y puede cancelar hasta 24 horas antes.',
+            nutriSteps: { format: 'Área', schedule: 'Fecha y hora', pay: 'Pago' },
+            nutriLead: 'Elija el área y el horario. Solo paga al final y puede cancelar hasta 24 horas antes de la consulta.',
             back: 'Volver',
             next: 'Continuar',
             toPayment: 'Continuar al pago',
@@ -2495,7 +2467,6 @@
         if (!list) return;
         var rows = [];
         if (isPsychology()) rows.push([copy.rows.area, specialtyLabel()]);
-        if (isNutricaoFamily(tipo)) rows.push([copy.rows.objetivo, nutricaoGoalLabel(state.nutricaoGoal)]);
         if (usesPsychStaff()) rows.push([copy.rows.pro, state.professionalName || '']);
         rows.push([copy.rows.when, state.date && state.time ? state.dateLabel + ' · ' + state.time : (state.date ? state.dateLabel : '')]);
         rows.push([copy.rows.format, copy.video + ' · ' + localizedConsultaDuration()]);

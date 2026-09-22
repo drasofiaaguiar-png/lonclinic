@@ -188,6 +188,7 @@ textarea:focus {
     z-index: 1000;
     padding: 10px 0 0;
     background: transparent;
+    overflow: visible;
     transition: transform 0.25s ease, padding 0.25s ease;
 }
 
@@ -197,6 +198,7 @@ textarea:focus {
 }
 
 .lon-nav-inner {
+    position: relative;
     min-height: var(--lon-nav-h);
     display: flex;
     align-items: center;
@@ -5952,29 +5954,29 @@ body.lon-home #como-funciona .lon-how-step-num {
 /* ==========================================================================
    Especialidades — mega menu (desktop) + sub-links (mobile)
    ========================================================================== */
-.lon-mega-wrap { position: relative; display: inline-flex; }
+.lon-mega-wrap { position: static; display: inline-flex; }
 .lon-nav .lon-nav-links a.lon-mega-trigger { display: inline-flex; align-items: center; gap: 6px; }
 .lon-mega-chev { transition: transform 0.2s ease; flex-shrink: 0; }
 .lon-mega-wrap:hover .lon-mega-chev,
 .lon-mega-wrap.is-open .lon-mega-chev { transform: rotate(180deg); }
 
 .lon-mega {
-    position: absolute; top: calc(100% + 12px); left: 50%;
-    width: min(960px, calc(100vw - 48px));
+    position: absolute; top: calc(100% + 10px); left: 0; right: 0;
+    width: auto; box-sizing: border-box;
     background: rgba(255, 255, 255, 0.97);
     border: 1px solid rgba(53, 80, 60, 0.14);
     border-radius: 22px; padding: 14px;
     box-shadow: 0 30px 70px rgba(12, 22, 16, 0.22);
     backdrop-filter: blur(18px) saturate(1.2); -webkit-backdrop-filter: blur(18px) saturate(1.2);
     opacity: 0; visibility: hidden; pointer-events: none;
-    transform: translate(-50%, -6px);
+    transform: translateY(-6px);
     transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
     z-index: 1200; text-align: left;
 }
 .lon-mega::before { content: ''; position: absolute; top: -14px; left: 0; right: 0; height: 14px; } /* hover bridge */
 .lon-mega-wrap:hover .lon-mega,
 .lon-mega-wrap:focus-within .lon-mega,
-.lon-mega-wrap.is-open .lon-mega { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%, 0); }
+.lon-mega-wrap.is-open .lon-mega { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
 
 /* neutralise the generic nav-link pill styles inside the panel */
 .lon-nav .lon-nav-links .lon-mega a { padding: 0; border-radius: 0; background: none; box-shadow: none; font-size: inherit; font-weight: inherit; letter-spacing: 0; }
