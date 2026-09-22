@@ -14,7 +14,7 @@ const MEGA_VERSION = '20260921b';
 const SPECIALTIES = [
     { href: '/longevidade', img: 'mega-funcional.webp', tag: 'Medicina', title: 'Medicina Funcional', desc: 'Causas, prevenção e biomarcadores · 60 €', mc: '#ECD281', mc2: '#6b5a2e', ink: '#1C1710' },
     { href: '/psicologia', img: 'mega-psicologia.webp', tag: 'Psicologia', title: 'Psicologia', desc: 'Individual e casal · desde 56 €/sessão', mc: '#9BB1BC', mc2: '#2f4550' },
-    { href: '/nutricao', img: 'mega-nutricao.webp', tag: 'Nutrição', title: 'Nutrição', desc: 'Subscrição quinzenal · 45 €/consulta', mc: '#9FBD84', mc2: '#2c3f36' },
+    { href: '/nutricao', img: 'mega-nutricao.webp', tag: 'Nutrição', title: 'Nutrição', desc: 'Subscrição quinzenal · 45 € / 15 dias', mc: '#9FBD84', mc2: '#2c3f36' },
     { href: '/urgent-care', img: 'mega-urgente.webp', tag: 'Hoje', title: 'Consulta Urgente', desc: 'Fale com um médico hoje · 39 €', mc: '#BD4F4F', mc2: '#4d2321' },
     { href: '/travel-clinic', img: 'mega-viajante.webp', tag: 'Viagem', title: 'Medicina do Viajante', desc: 'Vacinas e consulta pré-viagem · 39 €', mc: '#A794C9', mc2: '#2c3a4a' }
 ];
@@ -58,7 +58,7 @@ function renderHeader(opts) {
 
             <nav class="lon-nav-links" aria-label="Navegação principal">
                 <div class="lon-mega-wrap" id="lonMegaWrap">
-                    <a href="/consulta" class="lon-mega-trigger" id="lonMegaTrigger" aria-haspopup="true" aria-expanded="false" aria-controls="lonMega">Especialidades <svg class="lon-mega-chev" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                    <a href="/consulta" class="lon-mega-trigger" id="lonMegaTrigger" aria-haspopup="true" aria-expanded="false" aria-controls="lonMega"><span class="lon-mega-trigger-label">Especialidades</span> <svg class="lon-mega-chev" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
                     <div class="lon-mega" id="lonMega" aria-label="Especialidades">
                         <div class="lon-mega-grid">
                             ${SPECIALTIES.map(megaCard).join('\n                            ')}

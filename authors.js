@@ -403,7 +403,7 @@ ${__lonHeader.renderHeaderScripts(false)}
         </div>
     </footer>
     <script src="/lon-nav.js"></script>
-    <script src="/i18n.js?v=20260914b" defer></script>
+    <script src="/i18n.js?v=20260921a" defer></script>
     <script src="/lon-analytics.js?v=20260914a" defer></script>
     <script src="/lon-slots.js?v=20260906d" defer></script>
 </body>
@@ -550,7 +550,7 @@ ${__lonHeader.renderHeaderScripts(false)}
                             <p class="lon-team-role">Psicóloga</p>
                             ${saraParasHtml}
                             <div class="lon-team-actions">
-                                <a class="lon-btn lon-btn-dark lon-btn-sm" data-cta="book" href="/marcar/psicologia-mensal">Marcar consulta →</a>
+                                <a class="lon-btn lon-btn-dark lon-btn-sm" data-cta="book" href="/marcar/psicologia">Marcar sessão — 60 € →</a>
                             </div>
                         </div>
                     </article>
@@ -583,7 +583,7 @@ ${__lonHeader.renderHeaderScripts(false)}
         </div>
     </footer>
     <script src="/lon-nav.js"></script>
-    <script src="/i18n.js?v=20260914b" defer></script>
+    <script src="/i18n.js?v=20260921a" defer></script>
 </body>
 </html>`;
 

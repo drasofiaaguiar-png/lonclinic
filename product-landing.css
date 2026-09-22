@@ -371,7 +371,12 @@ body.nx-page.urgent-landing {
 
 .nx-plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; align-items: stretch; }
 .nx-plan-grid--narrow { max-width: 880px; margin: 0 auto; }
-@media (max-width: 860px) { .nx-plan-grid { grid-template-columns: 1fr; } }
+.nx-plan-grid--3 { grid-template-columns: 1.1fr 1fr 1fr; }
+.nx-plan-grid--3 .nx-plan { padding: 30px 26px 28px; }
+.nx-plan-grid--3 .nx-plan-badge { position: static; display: inline-block; align-self: flex-start; margin-bottom: 14px; }
+.nx-plan-grid--3 .nx-plan-title { font-size: 27px; }
+@media (max-width: 1080px) { .nx-plan-grid--3 { grid-template-columns: 1fr 1fr; } .nx-plan-grid--3 .nx-plan--featured { grid-column: 1 / -1; } }
+@media (max-width: 860px) { .nx-plan-grid, .nx-plan-grid--3 { grid-template-columns: 1fr; } .nx-plan-grid--3 .nx-plan--featured { grid-column: auto; } }
 
 .nx-plan {
     position: relative; display: flex; flex-direction: column;

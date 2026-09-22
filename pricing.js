@@ -29,7 +29,7 @@ const SERVICE_CENTS = {
     terapia_casal: 7500,
     terapia_casal_mensal: 26000,
     nutricao_consulta: 4500,
-    nutricao_quinzenal: 9000, // subscription: 2 consultas/mês × 45 € (passa a mensal na manutenção)
+    nutricao_quinzenal: 4500, // subscription: 45 € a cada 15 dias (primeiro pagamento 45 €)
     nutricao_programa: 11500,
     nutricao_completo: 22700,
     nutricao_completo_reforcado: 32200
@@ -81,6 +81,15 @@ const STRIPE_SUBSCRIPTION_SERVICES = new Set(['burnout_mensal', 'psicologia_mens
 
 function isStripeSubscriptionService(serviceKey) {
     return STRIPE_SUBSCRIPTION_SERVICES.has(serviceKey);
+}
+
+/** Stripe recurring price_data for checkout. Nutrition bills every 15 days, not monthly. */
+function stripeRecurringForService(serviceKey) {
+    if (!isStripeSubscriptionService(serviceKey)) return null;
+    if (serviceKey === 'nutricao_quinzenal') {
+        return { interval: 'day', interval_count: 15 };
+    }
+    return { interval: 'month' };
 }
 
 function normalizeServiceKey(service) {
@@ -208,6 +217,7 @@ module.exports = {
     computeCheckoutTotalCents,
     normalizeServiceKey,
     isStripeSubscriptionService,
+    stripeRecurringForService,
     discountsAllowedForService,
     providerPayoutCents,
     PROVIDER_PAYOUT_CENTS,

@@ -291,7 +291,7 @@
             href: '/marcar/nutricao-programa',
             goal: 'Perda de peso / reeduca\u00e7\u00e3o metab\u00f3lica'
         },
-        psicologia: { service: 'psicologia', href: '/marcar/psicologia?plan=avulsa' }
+        psicologia: { service: 'psicologia', href: '/marcar/psicologia' }
     };
 
     function heroServicePack() {
@@ -577,7 +577,7 @@
         }
         if ((opts.service === 'psicologia' || opts.service === 'psicologia_mensal') && !/\/marcar\/psicologia/.test(marcarFallback)) {
             marcarFallback = opts.service === 'psicologia'
-                ? '/marcar/psicologia?plan=avulsa'
+                ? '/marcar/psicologia'
                 : '/marcar/psicologia-mensal';
         }
         track('time_slot_clicked', {
@@ -655,13 +655,11 @@
             return { service: 'psicologia_mensal', href: '/marcar/psicologia-mensal', cta: book };
         }
         if (/\/marcar\/psicologia/.test(p)) {
-            if (typeof window !== 'undefined' && /(?:^|[?&])plan=avulsa(?:&|$)/.test(window.location.search || '')) {
-                return { service: 'psicologia', href: '/marcar/psicologia?plan=avulsa', cta: book };
-            }
-            return { service: 'psicologia_mensal', href: '/marcar/psicologia-mensal', cta: book };
+            // /marcar/psicologia = one-off first session (entry point); -mensal has its own branch above.
+            return { service: 'psicologia', href: '/marcar/psicologia', cta: book };
         }
         if (/\/(saudemental|psicologia)(\/|$)/.test(p)) {
-            return { service: 'psicologia_mensal', href: '/marcar/psicologia-mensal', cta: book };
+            return { service: 'psicologia', href: '/marcar/psicologia', cta: book };
         }
         if (/\/consultas(\/|$)/.test(p)) {
             return { service: 'saude_mental', href: '/triagem', cta: talkCta, bookMode: 'link' };

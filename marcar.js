@@ -147,9 +147,9 @@
             },
             nutricao_quinzenal: {
                 label: 'Nutrition subscription · fortnightly',
-                duration: '2 consultations/month · €45 each · billed monthly (€90)',
+                duration: '€45 every 15 days · first payment €45',
                 bullets: [
-                    'Fortnightly video consultations with the same nutritionist, plus chat adjustments in between.',
+                    'Fortnightly video consultations with the same nutritionist, billed every 15 days — not monthly. First payment is €45.',
                     'Moves to monthly (€45/month) once you reach the maintenance phase — decided together.',
                     'No lock-in: pause or cancel any time. No aGLP-1 prescription.'
                 ]
@@ -323,9 +323,9 @@
             },
             nutricao_quinzenal: {
                 label: 'Suscripción de nutrición · quincenal',
-                duration: '2 consultas/mes · 45 € cada · cobrado mensualmente (90 €)',
+                duration: '45 € cada 15 días · primer pago 45 €',
                 bullets: [
-                    'Consultas quincenales por videollamada con la misma nutricionista, con ajustes por chat entre consultas.',
+                    'Consultas quincenales por videollamada con la misma nutricionista, cobrado cada 15 días — no mensualmente. El primer pago es 45 €.',
                     'Pasa a mensual (45 €/mes) al llegar a la fase de mantenimiento — decidido en conjunto.',
                     'Sin permanencia: pausa o cancela cuando quieras. Sin prescripción de aGLP-1.'
                 ]
@@ -474,8 +474,8 @@
             badge: 'Subscrição',
             title: 'Acompanhamento quinzenal',
             price: '45 €',
-            unit: 'por consulta · 90 €/mês',
-            note: '2 consultas/mês · passa a mensal na manutenção · sem fidelização',
+            unit: 'a cada 15 dias',
+            note: 'Paga de 15 em 15 dias · primeiro pagamento 45 € · passa a mensal na manutenção · sem fidelização',
             featured: true
         },
         {
@@ -530,23 +530,25 @@
     ];
 
     var PSICOLOGIA_FAMILY = ['psicologia', 'psicologia_mensal'];
+    // Funnel order: the one-off session is the entry point; the weekly subscription is the
+    // natural next step after the first session, not the default door.
     var PSICOLOGIA_PLAN_CARDS = [
         {
-            tipo: 'psicologia_mensal',
-            badge: 'Recomendado',
-            title: 'Subscrição de Psicologia',
-            price: '€56',
-            unit: '/semana',
-            note: 'Cobrado mensalmente · 224 €/mês',
-            featured: true
-        },
-        {
             tipo: 'psicologia',
-            badge: 'Avulsa',
-            title: 'Sessão única',
+            badge: 'Começa aqui',
+            title: 'Primeira sessão',
             price: '€60',
             unit: 'por sessão',
             note: '50 min · sem compromisso',
+            featured: true
+        },
+        {
+            tipo: 'psicologia_mensal',
+            badge: 'Depois da 1.ª sessão',
+            title: 'Acompanhamento semanal',
+            price: '€56',
+            unit: '/semana',
+            note: 'Se quiser continuar · cobrado mensalmente (224 €/mês)',
             featured: false
         }
     ];
@@ -762,13 +764,13 @@
         },
         nutricao_quinzenal: {
             label: 'Subscrição de nutrição · quinzenal',
-            price: '90 €',
-            priceNote: '/mês · 2 consultas de 45 €',
-            cents: 9000,
-            duration: '2 consultas/mês · 45 € cada · cobrado mensalmente',
+            price: '45 €',
+            priceNote: ' a cada 15 dias · primeiro pagamento 45 €',
+            cents: 4500,
+            duration: '45 € a cada 15 dias · não é mensalidade',
             serviceKey: 'nutricao_quinzenal',
             bullets: [
-                'Consultas quinzenais por videochamada com a mesma nutricionista, com ajustes por chat entre consultas.',
+                'Consultas quinzenais por videochamada com a mesma nutricionista. Paga 45 € de 15 em 15 dias — o primeiro valor é 45 €, não 90 €.',
                 'Passa a mensal (45 €/mês) quando atingir a fase de manutenção — decidido em conjunto com a sua nutricionista.',
                 'Sem fidelização: pausa ou cancela quando quiser. Sem prescrição de aGLP-1.'
             ]
@@ -817,15 +819,12 @@
     function resolveTipoFromUrl() {
         var params = new URLSearchParams(window.location.search);
         var queryTipo = params.get('tipo');
-        var wantAvulsa = params.get('plan') === 'avulsa';
-        if (queryTipo) {
-            if (queryTipo === 'psicologia' && !wantAvulsa) return 'psicologia_mensal';
-            return queryTipo;
-        }
+        // /marcar/psicologia is the one-off session (entry point). The subscription has its own
+        // URL, /marcar/psicologia-mensal. Legacy ?plan=avulsa links keep working (no-op).
+        if (queryTipo) return queryTipo;
         var m = window.location.pathname.match(/^\/marcar\/([^/?#]+)/);
         if (!m || !m[1]) return null;
         var slug = decodeURIComponent(m[1]).toLowerCase();
-        if (slug === 'psicologia' && !wantAvulsa) return 'psicologia_mensal';
         return SLUG_TO_TYPE[slug] || null;
     }
 
@@ -833,8 +832,7 @@
         var slug = TYPE_TO_SLUG[tipoKey] || tipoKey;
         var params = new URLSearchParams(window.location.search);
         params.delete('tipo');
-        if (tipoKey === 'psicologia') params.set('plan', 'avulsa');
-        else if (tipoKey === 'psicologia_mensal') params.delete('plan');
+        if (PSICOLOGIA_FAMILY.indexOf(tipoKey) >= 0) params.delete('plan');
         if (resetSlot) {
             params.delete('date');
             params.delete('time');
@@ -1160,8 +1158,7 @@
                 ev.preventDefault();
                 var params = new URLSearchParams(window.location.search);
                 params.delete('tipo');
-                if (card.tipo === 'psicologia') params.set('plan', 'avulsa');
-                else if (card.tipo === 'psicologia_mensal') params.delete('plan');
+                if (PSICOLOGIA_FAMILY.indexOf(card.tipo) >= 0) params.delete('plan');
                 // Keep the slot already picked on this page when switching format.
                 if (state && state.date && state.time) {
                     params.set('date', formatDateLocal(state.date));
@@ -1261,22 +1258,27 @@
         var psiLang = getLang();
         var psiCards = PSICOLOGIA_PLAN_CARDS;
         var psiKicker = 'Psicologia';
-        var psiHeading = 'Escolhe o formato';
+        var psiHeading = 'Começa com uma sessão. Continua se fizer sentido.';
         if (psiLang === 'en') {
             psiKicker = 'Psychology';
-            psiHeading = 'Choose the format';
+            psiHeading = 'Start with one session. Continue if it fits.';
             psiCards = localizePlanCards(PSICOLOGIA_PLAN_CARDS, {
-                psicologia_mensal: { badge: 'Recommended', title: 'Psychology subscription', unit: '/week', note: 'Billed monthly · €224/month' },
-                psicologia: { badge: 'One-off', title: 'Single session', unit: 'per session', note: '50 min · no commitment' }
+                psicologia: { badge: 'Start here', title: 'First session', unit: 'per session', note: '50 min · no commitment' },
+                psicologia_mensal: { badge: 'After your first session', title: 'Weekly follow-up', unit: '/week', note: 'If you want to continue · billed monthly (€224/month)' }
             });
         } else if (psiLang === 'es') {
             psiKicker = 'Psicología';
-            psiHeading = 'Elige el formato';
+            psiHeading = 'Empieza con una sesión. Continúa si tiene sentido.';
             psiCards = localizePlanCards(PSICOLOGIA_PLAN_CARDS, {
-                psicologia_mensal: { badge: 'Recomendado', title: 'Suscripción de psicología', unit: '/semana', note: 'Cobrado mensualmente · 224 €/mes' },
-                psicologia: { badge: 'Suelta', title: 'Sesión única', unit: 'por sesión', note: '50 min · sin compromiso' }
+                psicologia: { badge: 'Empieza aquí', title: 'Primera sesión', unit: 'por sesión', note: '50 min · sin compromiso' },
+                psicologia_mensal: { badge: 'Tras la 1.ª sesión', title: 'Seguimiento semanal', unit: '/semana', note: 'Si quieres continuar · cobrado mensualmente (224 €/mes)' }
             });
         }
+        // Highlight the format the visitor is actually on (subscribers arriving at
+        // /marcar/psicologia-mensal keep their card featured).
+        psiCards = psiCards.map(function (card) {
+            return Object.assign({}, card, { featured: card.tipo === tipo });
+        });
         renderPlanPicker(tipo, psiCards, psiKicker, psiHeading);
         // In psychology the "consultation type" is the support area: swap the generic
         // service pills for the specialty picker, inside step 1.
@@ -1685,7 +1687,7 @@
                 category: state.nutricaoGoal === 'perda-de-peso' ? 'weight-loss' : 'nutrition',
                 product: 'nutricao_quinzenal',
                 goal: goalLabel,
-                concerns: 'Objectivo: ' + goalLabel + '. Subscrição de nutrição quinzenal (2 consultas/mês, 45 €/consulta) — passa a mensal na fase de manutenção. Sem prescrição de aGLP-1.',
+                concerns: 'Objectivo: ' + goalLabel + '. Subscrição de nutrição quinzenal (45 € a cada 15 dias, primeiro pagamento 45 €) — passa a mensal na fase de manutenção. Sem prescrição de aGLP-1.',
                 label: 'Subscrição de nutrição · quinzenal'
             };
         }

@@ -6,7 +6,8 @@
  * how online works, price, FAQ (FAQPage schema), CTA.
  */
 
-'use strict';const __lonHeader = require('./lon-header');
+'use strict';
+const __lonHeader = require('./lon-header');
 
 
 const fs = require('fs');
@@ -269,9 +270,9 @@ function ctaBand(ref, label, opts) {
             <div class="lon-container qx-cta-inner">
                 <p class="qx-cta-kicker">Próximo passo</p>
                 <h2 class="qx-cta-title">Encontre o seu psicólogo</h2>
-                <p class="qx-cta-lead">Marca a primeira sessão. Podes escolher o psicólogo ou deixar a equipa fazer o matching.</p>
+                <p class="qx-cta-lead">Marca a primeira sessão — 60 €, 50 min, sem compromisso. Podes escolher o psicólogo ou deixar a equipa fazer o matching. Se fizer sentido continuar, o acompanhamento semanal fica a 56 €/sessão.</p>
                 <div class="qx-cta-actions">
-                    <a class="lon-btn lon-btn-primary" href="/marcar/psicologia-mensal?ref=${r}" data-talk-cta="psychFind">${cta}</a>
+                    <a class="lon-btn lon-btn-primary" href="/marcar/psicologia?ref=${r}" data-talk-cta="psychFind">${cta}</a>
                     <a class="lon-btn lon-btn-soft" href="/saudemental?ref=${r}">Ver planos e preço</a>
                 </div>
             </div>
@@ -455,7 +456,7 @@ function layoutQueixaPage(opts) {
 </head>
 <body class="lon-landing qx-body">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
-    ${__lonHeader.renderHeader({ rawCta: true, ctaHref: `/marcar/psicologia-mensal?ref=consultas-nav`, ctaLabel: `Encontre o seu psicólogo`, ctaAttrs: ` data-talk-cta="psychFind"`, current: null })}
+    ${__lonHeader.renderHeader({ rawCta: true, ctaHref: `/marcar/psicologia?ref=consultas-nav`, ctaLabel: `Encontre o seu psicólogo`, ctaAttrs: ` data-talk-cta="psychFind"`, current: null })}
 ${__lonHeader.renderHeaderScripts(false)}
     ${mainHtml}
     <footer class="lon-footer">
@@ -500,7 +501,7 @@ ${__lonHeader.renderHeaderScripts(false)}
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="Falar por WhatsApp">💬 Falar por WhatsApp</a>
     <script src="/lon-nav.js"></script>
     <script src="/talk-cta.js?v=20260912a" defer></script>
-    <script src="/i18n.js?v=20260912a" defer></script>
+    <script src="/i18n.js?v=20260921a" defer></script>
     <script src="/lon-analytics.js?v=20260914a" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=20260912a" defer></script>
@@ -584,9 +585,9 @@ function renderHub(origin) {
                 <p class="qx-eyebrow">LON Clinic · Psicologia online</p>
                 <h1 id="qx-hub-title">Consulta de psicologia online, por queixa</h1>
                 <p class="qx-lead">A Lon Clinic oferece consulta de psicologia online em português para queixas específicas — não uma página genérica de «psicólogo online». Cada página explica o que é, quando procurar ajuda, como funciona e quanto custa.</p>
-                <p class="qx-hero-meta">Psicólogos inscritos na Ordem dos Psicólogos Portugueses · 60 €/sessão ou 56 €/semana</p>
+                <p class="qx-hero-meta">Psicólogos inscritos na Ordem dos Psicólogos Portugueses · primeira sessão 60 € · depois 56 €/sessão semanal, se quiser continuar</p>
                 <div class="qx-hero-actions">
-                    <a class="lon-btn lon-btn-primary" href="/marcar/psicologia-mensal?ref=consultas-hub">Começar a jornada</a>
+                    <a class="lon-btn lon-btn-primary" href="/marcar/psicologia?ref=consultas-hub">Marcar primeira sessão</a>
                     <a class="lon-btn lon-btn-soft" href="/saudemental?ref=consultas-hub">Ver planos</a>
                 </div>
             </div>
@@ -609,7 +610,7 @@ function renderHub(origin) {
 
 function serviceJsonLd(o, meta, canonicalUrl, price) {
     const p = price || PRICE;
-    const bookUrl = meta.slug === 'terapia-de-casal' ? `${o}/marcar/terapia-casal` : `${o}/marcar/psicologia-mensal`;
+    const bookUrl = meta.slug === 'terapia-de-casal' ? `${o}/marcar/terapia-casal` : `${o}/marcar/psicologia`;
     return {
         '@context': 'https://schema.org',
         '@type': 'Service',
@@ -732,11 +733,11 @@ function renderPage(origin, slug) {
                 <div class="qx-article-actions">
                     ${isBurnoutPsi
                         ? `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/burnout/teste?ref=${encodeURIComponent(ref)}">Fazer o teste CBI</a>
-                    <a class="lon-btn lon-btn-soft lon-btn-sm" href="/marcar/psicologia-mensal?ref=${encodeURIComponent(ref)}" data-talk-cta="psychFind">Encontre o seu psicólogo</a>`
+                    <a class="lon-btn lon-btn-soft lon-btn-sm" href="/marcar/psicologia?ref=${encodeURIComponent(ref)}" data-talk-cta="psychFind">Encontre o seu psicólogo</a>`
                         : isCasal
                             ? `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/marcar/terapia-casal?ref=${encodeURIComponent(ref)}">Marcar terapia de casal</a>
                     <a class="lon-btn lon-btn-soft lon-btn-sm" href="#preco">Ver preço</a>`
-                        : `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/marcar/psicologia-mensal?ref=${encodeURIComponent(ref)}" data-talk-cta="psychFind">Encontre o seu psicólogo</a>
+                            : `<a class="lon-btn lon-btn-primary lon-btn-sm" href="/marcar/psicologia?ref=${encodeURIComponent(ref)}" data-talk-cta="psychFind">Encontre o seu psicólogo</a>
                     <a class="lon-btn lon-btn-soft lon-btn-sm" href="#preco">Ver preço</a>`}
                 </div>
             </header>

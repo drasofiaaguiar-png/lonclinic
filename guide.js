@@ -1392,7 +1392,7 @@ ${__lonHeader.renderHeaderScripts(false)}
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-nav.js"></script>
     <script src="/talk-cta.js?v=20260908a" defer></script>
-    <script src="/i18n.js?v=20260912a" defer></script>
+    <script src="/i18n.js?v=20260921a" defer></script>
     <script src="/lon-analytics.js?v=20260914a" defer></script>
     <script src="/lon-slots.js?v=20260912a" defer></script>
 </body>
@@ -2574,7 +2574,7 @@ function magazineNavTree() {
                     ]
                 },
                 { label: 'Consulta de saúde mental', href: '/marcar/saude-mental' },
-                { label: 'Psicologia (subscrição)', href: '/saudemental' }
+                { label: 'Sessão de psicologia (60 €)', href: '/marcar/psicologia' }
             ]
         },
         {
@@ -3045,7 +3045,7 @@ function layoutMagazinePage(opts) {
     <style>.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}</style>
     <script src="/lon-nav.js"></script>
     <script src="/talk-cta.js?v=20260908a" defer></script>
-    <script src="/i18n.js?v=20260912a" defer></script>
+    <script src="/i18n.js?v=20260921a" defer></script>
     <script src="/lon-analytics.js?v=20260914a" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=20260912a" defer></script>

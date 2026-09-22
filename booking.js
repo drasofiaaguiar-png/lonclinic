@@ -192,7 +192,7 @@ async function initBookingFlow() {
         renovacao: { label: 'Renovação de Tratamento Médico', price: '19 €', cents: 1900 },
         longevidade: { label: 'Consulta de Medicina Funcional', price: '60 €', cents: 6000 },
         nutricao_consulta: { label: 'Consulta de nutrição', price: '45 €', cents: 4500 },
-        nutricao_quinzenal: { label: 'Subscrição de nutrição · quinzenal', price: '90 €/mês', cents: 9000 },
+        nutricao_quinzenal: { label: 'Subscrição de nutrição · quinzenal', price: '45 € / 15 dias', cents: 4500 },
         nutricao_programa: { label: 'Programa de perda de peso · 6 meses (acompanhamento médico + nutrição)', price: '115 €', cents: 11500 },
         nutricao_completo: { label: 'Programa Completo (nutrição + psicologia) — mês 1', price: '227 €', cents: 22700 },
         nutricao_completo_reforcado: { label: 'Programa Completo — entrada reforçada', price: '322 €', cents: 32200 },
@@ -777,12 +777,14 @@ async function initBookingFlow() {
                 yourPsychologist: 'O seu psicólogo',
                 recommended: 'Recomendado',
                 oneOff: 'Avulsa',
+                startHere: 'Começa aqui',
+                afterFirst: 'Depois da 1.ª sessão',
                 perMonth: '/mês',
                 perWeek: '/semana',
                 perSession: 'por sessão',
-                subTitle: 'Subscrição de Psicologia',
-                subNote: 'Cobrado mensalmente · 224 €/mês',
-                oneTitle: 'Sessão única',
+                subTitle: 'Acompanhamento semanal',
+                subNote: 'Se quiser continuar · cobrado mensalmente (224 €/mês)',
+                oneTitle: 'Primeira sessão',
                 oneNote: '50 min · sem compromisso',
                 casalSubTitle: 'Subscrição de casal',
                 casalSubNote: '65 €/semana · cobrado mensalmente',
@@ -795,7 +797,7 @@ async function initBookingFlow() {
                 nutriOneTitle: 'Consulta de nutrição',
                 nutriOneNote: '30 min · sem compromisso',
                 nutriSubTitle: 'Subscrição quinzenal',
-                nutriSubNote: '45 €/consulta · 2 por mês · passa a mensal na manutenção · sem fidelização',
+                nutriSubNote: '45 € a cada 15 dias · primeiro pagamento 45 € · passa a mensal na manutenção · sem fidelização',
                 nutriCompletoTitle: 'Programa Completo · nutrição + psicologia',
                 nutriCompletoNote: 'Depois 187 €/mês · total 1 162 €',
                 nutriReforcadoTitle: 'Programa Completo · entrada reforçada',
@@ -833,7 +835,7 @@ async function initBookingFlow() {
                 nutriOneTitle: 'Nutrition consultation',
                 nutriOneNote: '30 min · no commitment',
                 nutriSubTitle: 'Fortnightly subscription',
-                nutriSubNote: '€45/consultation · 2 per month · moves to monthly in maintenance · no lock-in',
+                nutriSubNote: '€45 every 15 days · first payment €45 · moves to monthly in maintenance · no lock-in',
                 nutriCompletoTitle: 'Complete program · nutrition + psychology',
                 nutriCompletoNote: 'Then €187/month · total €1,162',
                 nutriReforcadoTitle: 'Complete program · higher first payment',
@@ -871,7 +873,7 @@ async function initBookingFlow() {
                 nutriOneTitle: 'Consulta de nutrición',
                 nutriOneNote: '30 min · sin compromiso',
                 nutriSubTitle: 'Suscripción quincenal',
-                nutriSubNote: '45 €/consulta · 2 al mes · pasa a mensual en mantenimiento · sin permanencia',
+                nutriSubNote: '45 € cada 15 días · primer pago 45 € · pasa a mensual en mantenimiento · sin permanencia',
                 nutriCompletoTitle: 'Programa completo · nutrición + psicología',
                 nutriCompletoNote: 'Luego 187 €/mes · total 1 162 €',
                 nutriReforcadoTitle: 'Programa completo · entrada reforzada',
@@ -935,9 +937,10 @@ async function initBookingFlow() {
                 { key: 'terapia_casal', badge: c.oneOff, title: c.casalOneTitle, price: '75 €', unit: c.perSession, note: c.casalOneNote, featured: false }
             ];
         }
+        // Entry point first: one-off session; subscription framed as the step after it.
         return [
-            { key: 'psicologia_mensal', badge: c.recommended, title: c.subTitle, price: '56 €', unit: c.perWeek, note: c.subNote, featured: true },
-            { key: 'psicologia', badge: c.oneOff, title: c.oneTitle, price: '60 €', unit: c.perSession, note: c.oneNote, featured: false }
+            { key: 'psicologia', badge: c.startHere, title: c.oneTitle, price: '60 €', unit: c.perSession, note: c.oneNote, featured: state.service !== 'psicologia_mensal' },
+            { key: 'psicologia_mensal', badge: c.afterFirst, title: c.subTitle, price: '56 €', unit: c.perWeek, note: c.subNote, featured: state.service === 'psicologia_mensal' }
         ];
     }
 
@@ -1887,7 +1890,7 @@ async function initBookingFlow() {
             return 'Consulta de nutrição avulsa (sem programa). Sem prescrição de aGLP-1.';
         }
         if (state.service === 'nutricao_quinzenal') {
-            return 'Subscrição de nutrição quinzenal (2 consultas/mês, 45 €/consulta) — passa a mensal na fase de manutenção. Sem prescrição de aGLP-1.';
+            return 'Subscrição de nutrição quinzenal (45 € a cada 15 dias, primeiro pagamento 45 €) — passa a mensal na fase de manutenção. Sem prescrição de aGLP-1.';
         }
         if (state.service === 'nutricao_programa' || state.service === 'nutricao_completo' || state.service === 'nutricao_completo_reforcado') {
             try {

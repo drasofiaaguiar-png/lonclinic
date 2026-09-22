@@ -35,7 +35,7 @@ const totp = require('./totp');
 const analyticsNet = require('./analytics-network');
 const metaCapi = require('./meta-capi');
 const metaLeads = require('./meta-leads');
-const { computeCheckoutTotalCents, isStripeSubscriptionService, normalizeServiceKey, discountsAllowedForService, providerPayoutCents } = require('./pricing');
+const { computeCheckoutTotalCents, isStripeSubscriptionService, stripeRecurringForService, normalizeServiceKey, discountsAllowedForService, providerPayoutCents } = require('./pricing');
 
 function bookingServiceTag(raw) {
     const key = normalizeServiceKey(raw);
@@ -13193,7 +13193,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
                 : service === 'psicologia_mensal'
                     ? `${description} · Subscrição mensal de psicologia · 56 €/semana · 4 sessões (224 €/mês) · cobrado mensalmente · cancelável`
                     : service === 'nutricao_quinzenal'
-                        ? `${description} · Subscrição de nutrição · 2 consultas quinzenais (45 €/consulta · 90 €/mês) · passa a mensal (45 €/mês) na fase de manutenção · sem fidelização · cancelável`
+                        ? `${description} · Subscrição de nutrição · 45 € a cada 15 dias (primeiro pagamento 45 €) · passa a mensal (45 €/mês) na fase de manutenção · sem fidelização · cancelável`
                         : `${description} · Subscrição mensal · 4 consultas (54€/sessão, −10%) · cancelável`)
             : service === 'burnout_programa'
               ? `${description} · Programa 8 sessões com relatório final e CBI antes/depois`
@@ -13214,7 +13214,7 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
                     images: []
                 },
                 unit_amount: priceAmount,
-                ...(isSubscription ? { recurring: { interval: 'month' } } : {})
+                ...(isSubscription ? { recurring: stripeRecurringForService(service) || { interval: 'month' } } : {})
             },
             quantity: 1
         };
@@ -18436,7 +18436,7 @@ async function loadNextSlotsBody(limit, withinHours, opts) {
                     : service === 'psicologia_mensal'
                         ? '€224/mês'
                         : service === 'nutricao_quinzenal'
-                            ? '€90/mês'
+                            ? '€45 / 15 dias'
                             : service === 'psicologia' ? '€60' : '€39',
             holdMinutes: Math.round(SLOT_HOLD_MS / 60000)
         };
