@@ -22,6 +22,7 @@ html:has(body.mag-body) {
     font-family: var(--mag-sans);
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
 }
 
 .mag-stage a {

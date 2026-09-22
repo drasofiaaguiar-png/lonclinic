@@ -47,7 +47,7 @@
 
 .nu-card-grid {
     display: grid;
-    gap: 12px;
+    gap: 18px;
 }
 
 @media (min-width: 720px) {
@@ -146,6 +146,16 @@
     line-height: 1.55;
 }
 
+.nu-guides-lead {
+    margin: 0 0 16px;
+    line-height: 1.55;
+    max-width: 42rem;
+}
+
+.nu-guides-more {
+    margin: 16px 0 0;
+}
+
 .nu-related {
     margin-top: 2rem;
 }
@@ -160,7 +170,7 @@
     padding: 0;
     margin: 0;
     display: grid;
-    gap: 8px;
+    gap: 16px;
 }
 
 @media (min-width: 640px) {

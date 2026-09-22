@@ -83,6 +83,7 @@
       "related": [
         "sop",
         "pos-bariatrica",
+        { "href": "/blog/perda-de-peso-pos-parto", "label": "Perda de peso pós-parto" },
         { "href": "/ansiedade-pos-parto", "label": "Ansiedade pós-parto" },
         { "href": "/saudemental", "label": "Psicologia online" }
       ],
@@ -176,6 +177,7 @@
       "related": [
         "pos-parto",
         "intolerancias-alimentares",
+        { "href": "/blog/manter-o-peso-perdido", "label": "Manter o peso perdido" },
         { "href": "/gestao-de-stress", "label": "Gestão de stress" },
         { "href": "/marcar/longevidade", "label": "Consulta de longevidade" }
       ],
@@ -269,6 +271,7 @@
         "doenca-celiaca",
         "sop",
         "pos-parto",
+        { "href": "/blog/perda-de-peso-e-saude-hormonal", "label": "Perda de peso e saúde hormonal" },
         { "href": "/gestao-de-stress", "label": "Gestão de stress" }
       ],
       "faq": [
@@ -359,6 +362,7 @@
       "related": [
         "hashimoto",
         "intolerancias-alimentares",
+        { "href": "/blog/dieta-low-fodmap-sue-shepherd", "label": "Dieta Low-FODMAP" },
         { "href": "/gestao-de-stress", "label": "Gestão de stress" },
         { "href": "/consulta", "label": "Consulta médica" }
       ],
@@ -451,6 +455,7 @@
         "doenca-celiaca",
         "hashimoto",
         "sop",
+        { "href": "/blog/dieta-low-fodmap-sue-shepherd", "label": "Dieta Low-FODMAP" },
         { "href": "/gestao-de-stress", "label": "Gestão de stress" }
       ],
       "faq": [
@@ -542,6 +547,7 @@
         "pos-parto",
         "hashimoto",
         "diabetes-tipo-2",
+        { "href": "/blog/perda-de-peso-e-saude-hormonal", "label": "Perda de peso e saúde hormonal" },
         { "href": "/saudemental", "label": "Psicologia online" }
       ],
       "faq": [
@@ -633,6 +639,7 @@
         "sop",
         "glp-1",
         "pos-bariatrica",
+        { "href": "/blog/medicamentos-glp1-perda-de-peso", "label": "Medicamentos GLP-1" },
         { "href": "/gestao-de-stress", "label": "Gestão de stress" }
       ],
       "faq": [
@@ -721,6 +728,7 @@
       "related": [
         "intolerancias-alimentares",
         "doenca-celiaca",
+        { "href": "/blog/dieta-low-fodmap-sue-shepherd", "label": "Dieta Low-FODMAP" },
         { "href": "/consulta/refluxo", "label": "Consulta médica de refluxo" },
         { "href": "/gestao-de-stress", "label": "Gestão de stress" }
       ],
@@ -818,7 +826,11 @@
         "diabetes-tipo-2",
         "pos-bariatrica",
         "sop",
+        { "href": "/nutricao/emagrecimento", "label": "Programa de emagrecimento" },
         { "href": "/nutricao/programa", "label": "Programa de reeducação metabólica" },
+        { "href": "/blog/medicamentos-glp1-perda-de-peso", "label": "Medicamentos GLP-1 para perda de peso" },
+        { "href": "/blog/perda-de-peso-sustentavel", "label": "Perda de peso sustentável" },
+        { "href": "/blog/efeito-ioio", "label": "Efeito iô-iô" },
         { "href": "/gestao-de-stress", "label": "Gestão de stress" }
       ],
       "faq": [

@@ -1148,6 +1148,9 @@
         return NUTRICAO_FAMILY.indexOf(t) >= 0;
     }
 
+    var proofEl = document.getElementById('marcarProof');
+    if (proofEl) setA11yHidden(proofEl, isNutricaoFamily(tipo));
+
     function renderPlanPicker(activeTipo, cards, kicker, heading) {
         var section = document.getElementById('marcarPlanSection');
         var grid = document.getElementById('marcarPlans');

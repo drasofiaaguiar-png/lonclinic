@@ -5,7 +5,8 @@
  * who it's for, red flags, how it works, price, psychology bridge, FAQ, CTA.
  */
 
-'use strict';const __lonHeader = require('./lon-header');
+'use strict';
+const __lonHeader = require('./lon-header');
 
 
 const fs = require('fs');
@@ -18,11 +19,22 @@ const talkCta = require('./talk-cta');
 const NUTRICAO_DIR = path.join(__dirname, 'data', 'nutricao');
 const MANIFEST_PATH = path.join(NUTRICAO_DIR, 'manifest.json');
 const PAGES_DIR = path.join(NUTRICAO_DIR, 'pages');
-const CSS_V = '20260905j';
+const CSS_V = '20260922b';
 const SLOTS_V = '20260912a';
 const ON_URL = 'https://www.ordemdosnutricionistas.pt/';
 const NUTRICAO_PROGRAMA_HREF = '/marcar/nutricao-programa';
 const WEIGHT_LOSS_SLUGS = new Set(['glp-1', 'ozempic-wegovy']);
+
+const HUB_WEIGHT_LOSS_GUIDES = [
+    { href: '/blog/consultas-nutricao-perda-de-peso', label: 'Consultas de nutrição para perda de peso', desc: 'Como funciona o programa de 3 a 6 meses — sem aGLP-1.' },
+    { href: '/blog/consulta-nutricao-preco-como-funciona', label: 'Consulta de nutrição: preço e como funciona', desc: 'O que esperar na primeira sessão e quando marcar.' },
+    { href: '/blog/quanto-custa-consulta-nutricao-portugal', label: 'Quanto custa uma consulta de nutrição', desc: 'Preços 2026, ADSE e o que está incluído.' },
+    { href: '/blog/perda-de-peso-sustentavel', label: 'Perda de peso sustentável', desc: 'Porque as dietas rápidas falham — e o que a evidência diz.' },
+    { href: '/blog/efeito-ioio', label: 'Efeito iô-iô', desc: 'Como quebrar o ciclo de perder e recuperar peso.' },
+    { href: '/blog/fome-emocional-vs-fisica', label: 'Fome emocional vs. fome física', desc: 'Como distinguir e o que fazer quando o stress manda.' },
+    { href: '/blog/medicamentos-glp1-perda-de-peso', label: 'Medicamentos GLP-1 para perda de peso', desc: 'O que saber — a Lon Clinic não prescreve a caneta.' },
+    { href: '/blog/como-encontrar-um-nutricionista', label: 'Como encontrar um nutricionista', desc: 'Sinais de alerta e o que verificar na cédula.' }
+];
 
 const DEFAULT_BRING = [
     'Últimas análises que tiveres (não precisas de as repetir só para marcar)',
@@ -321,6 +333,23 @@ function bookingCardsHtml(meta, tone) {
         </aside>`;
 }
 
+function hubGuidesHtml() {
+    const cards = HUB_WEIGHT_LOSS_GUIDES.map((g) => `
+            <a class="nu-card" href="${escapeHtml(g.href)}">
+                <span class="nu-card-label">${escapeHtml(g.label)}</span>
+                <span class="nu-card-desc">${escapeHtml(g.desc)}</span>
+            </a>`).join('');
+    return `
+        <section class="nu-section" aria-labelledby="nu-g-guias">
+            <div class="lon-container">
+                <h2 id="nu-g-guias">Guias de perda de peso</h2>
+                <p class="nu-guides-lead">Artigos do magazine para quem chega pela nutrição: preço, hábitos, iô-iô e GLP-1.</p>
+                <div class="nu-card-grid">${cards}</div>
+                <p class="nu-guides-more"><a href="/magazine#perda-de-peso">Ver todos os guias de perda de peso →</a></p>
+            </div>
+        </section>`;
+}
+
 function relatedHtml(related, pages, currentSlug) {
     const bySlug = new Map(pages.map((p) => [p.slug, p]));
     let items = Array.isArray(related) ? related.slice() : [];
@@ -469,6 +498,7 @@ ${__lonHeader.renderHeaderScripts(false)}
                     <a href="/nutricao/emagrecimento">Programa de emagrecimento</a>
                     <a href="/nutricao/programa">Programa de reeducação metabólica</a>
                     <a href="/nutricao/testes">Testes clínicos</a>
+                    <a href="/magazine#perda-de-peso">Guias de perda de peso</a>
                     ${footerLinks}
                 </div>
                 <div class="lon-footer-col">
@@ -543,11 +573,18 @@ function renderHub(origin) {
             url: `${o}/nutricao`,
             inLanguage: 'pt-PT',
             isPartOf: { '@type': 'WebSite', name: 'Lon Clinic', url: o },
-            hasPart: pages.map((p) => ({
-                '@type': 'MedicalWebPage',
-                name: p.h1,
-                url: `${o}/nutricao/${encodeURIComponent(p.slug)}`
-            }))
+            hasPart: [
+                ...pages.map((p) => ({
+                    '@type': 'MedicalWebPage',
+                    name: p.h1,
+                    url: `${o}/nutricao/${encodeURIComponent(p.slug)}`
+                })),
+                ...HUB_WEIGHT_LOSS_GUIDES.map((g) => ({
+                    '@type': 'MedicalWebPage',
+                    name: g.label,
+                    url: `${o}${g.href}`
+                }))
+            ]
         },
         {
             '@context': 'https://schema.org',
@@ -599,6 +636,7 @@ function renderHub(origin) {
                 </div>
             </div>
         </section>
+        ${hubGuidesHtml()}
         ${sections}
     </main>`;
 

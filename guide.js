@@ -84,24 +84,169 @@ function guideLeadFigureHtml(src, alt) {
 /**
  * Generate early CTA card with image for articles
  */
-function earlyCtaHtml() {
+/**
+ * Full-width consultation ad: glass card (homepage) + colour column with landing H1/H2.
+ */
+function consultAdKind(kind) {
+    const k = String(kind || '');
+    if (k === 'nutrition' || k === 'nutricao-programa' || k === 'nutricao_programa') return 'nutrition';
+    if (k === 'mental' || k === 'psicologia' || k === 'neurodiversidade') return 'mental';
+    if (k === 'burnout') return 'burnout';
+    if (k === 'travel') return 'travel';
+    if (k === 'longevity') return 'longevity';
+    return 'clinic';
+}
+
+function consultAdSpec(kind) {
+    const ads = {
+        nutrition: {
+            theme: 'nutrition',
+            image: '/image/nutri-hero-scale.webp',
+            imageAlt: 'Nutricionista a pesar legumes frescos numa cozinha',
+            tag: 'Nutrição · Lon Clinic',
+            glassLbl: 'Próxima consulta',
+            glassTtl: 'Videochamada · 45 min',
+            glassSub: 'Plano personalizado e ajustes por chat entre consultas',
+            glassCta: 'Começar',
+            glassHref: '/marcar/nutricao-quinzenal',
+            pageHref: '/nutricao',
+            pageCta: 'Ver a consulta de nutrição',
+            kicker: 'Nutrição',
+            h1: 'Acompanhamento nutricional que se <em>adapta à sua fase</em>',
+            h2: 'Consultas online, sem deslocações. Começa quinzenal, passa a mensal quando o plano estabiliza — sempre com a mesma nutricionista.'
+        },
+        mental: {
+            theme: 'mental',
+            image: '/image/psi-choice-individual.webp',
+            imageAlt: 'Sessão de psicologia online num espaço tranquilo',
+            tag: 'Psicologia · Lon Clinic',
+            glassLbl: 'Psicologia',
+            glassTtl: 'Desde 56€ / sessão',
+            glassSub: 'Avulsa 60€ · subscrição 56€',
+            glassCta: 'Marcar',
+            glassHref: '/marcar/psicologia',
+            pageHref: '/psicologia',
+            pageCta: 'Ver a consulta de psicologia',
+            kicker: 'Psicologia',
+            h1: 'Conta-nos o que precisa. <em>Encontramos o psicólogo certo.</em>',
+            h2: 'Consultas online, em português, sem lista de espera. Escolha sessão avulsa a 60€, ou subscrição semanal a 56€ por sessão — cobrada ao mês.'
+        },
+        burnout: {
+            theme: 'burnout',
+            image: '/image/guide/blog/sinais-de-burnout-no-trabalho-remoto-destaque.webp',
+            imageAlt: 'Recuperação de burnout',
+            tag: 'Centro burnout · Lon Clinic',
+            glassLbl: 'Teste CBI',
+            glassTtl: '4 minutos · resultado imediato',
+            glassSub: 'O ponto de partida para objectivar o esgotamento',
+            glassCta: 'Fazer o teste',
+            glassHref: '/burnout/teste',
+            pageHref: '/burnout',
+            pageCta: 'Ir ao centro burnout',
+            kicker: 'Burnout',
+            h1: 'Burnout',
+            h2: 'Não é só cansaço. O centro burnout reúne sintomas, recuperação e o teste CBI para objectivar o quadro. O passo seguinte é o plano de acompanhamento.'
+        },
+        clinic: {
+            theme: 'clinic',
+            image: '/image/consulta-urgente.webp',
+            imageAlt: 'Consulta médica urgente por videochamada',
+            tag: 'Urgent Care · Lon Clinic',
+            glassLbl: 'Hoje',
+            glassTtl: 'Videochamada · próxima vaga',
+            glassSub: 'Receita e atestado digitais, se clinicamente indicado',
+            glassCta: 'Marcar',
+            glassHref: '/marcar/urgent-care',
+            pageHref: '/urgent-care',
+            pageCta: 'Ver a consulta urgente',
+            kicker: 'Consulta',
+            h1: 'Sintomas agora? <em>Fale com um médico hoje.</em>',
+            h2: 'Consulta médica urgente por videochamada — para quem está doente agora, seja residente ou de visita a Portugal. Receita digital se necessário.'
+        },
+        longevity: {
+            theme: 'longevity',
+            image: '/image/funcional-hero-janela.webp',
+            imageAlt: 'Mulher à janela, à luz do dia',
+            tag: 'Medicina Funcional · Lon Clinic',
+            glassLbl: 'Próxima consulta',
+            glassTtl: 'Videochamada · 45 min',
+            glassSub: 'Avaliação clínica completa e plano personalizado',
+            glassCta: 'Marcar',
+            glassHref: '/marcar/medicina-funcional',
+            pageHref: '/longevidade',
+            pageCta: 'Ver medicina funcional',
+            kicker: 'Longevidade',
+            h1: 'Medicina que olha para o que <em>ainda não dói</em>',
+            h2: 'Medicina funcional online: procuramos as causas, não só os sintomas. Consultas focadas em prevenção, biomarcadores e no que muda com o tempo.'
+        },
+        travel: {
+            theme: 'travel',
+            image: '/image/travel-clinic-mountain-bg.jpg',
+            imageAlt: 'Consulta de medicina do viajante',
+            tag: 'Medicina do viajante · Lon Clinic',
+            glassLbl: 'Hoje ou amanhã',
+            glassTtl: '39 € · consulta do viajante',
+            glassSub: 'Agendamento directo — a vacina toma-se depois num CVI',
+            glassCta: 'Marcar',
+            glassHref: '/marcar/travel',
+            pageHref: '/travel-clinic',
+            pageCta: 'Ver a clínica do viajante',
+            kicker: 'Viagem',
+            h1: 'Consulta de medicina do viajante em <em>Portugal.</em>',
+            h2: 'Enquanto a maioria dos serviços pede 4 a 8 semanas de antecedência, a Lon Clinic marca a consulta para hoje ou amanhã. 39 €. A vacina toma-se depois num CVI.'
+        }
+    };
+    if (kind === 'nutricao-programa' || kind === 'nutricao_programa') {
+        return {
+            ...ads.nutrition,
+            glassLbl: 'Consulta inicial',
+            glassTtl: '115 € no mês 1',
+            glassSub: '2 consultas/mês, chat no portal e ajustes quinzenais',
+            glassCta: 'Marcar',
+            glassHref: '/marcar/nutricao-programa',
+            pageHref: '/nutricao/emagrecimento',
+            pageCta: 'Ver o programa de emagrecimento',
+            kicker: 'Emagrecimento',
+            h1: 'Programa de emagrecimento com <em>médico e nutricionista.</em>',
+            h2: 'Acompanhamento por videoconsulta: 2 consultas por mês, chat no portal e ajustes quinzenais do plano. 115 € no primeiro mês e 75 €/mês a seguir.'
+        };
+    }
+    return ads[consultAdKind(kind)] || ads.clinic;
+}
+
+function consultAdHtml(kind, slug, extraClass) {
+    const spec = consultAdSpec(kind);
+    const theme = spec.theme || consultAdKind(kind);
+    const href = String(spec.glassHref || '');
+    const ref = slug ? `${href}${href.includes('?') ? '&' : '?'}ref=blog-${encodeURIComponent(slug)}` : href;
+    const klass = extraClass ? ` ${extraClass}` : '';
     return `
-    <div class="guide-cta-visual guide-early-cta" style="margin-top: 32px; margin-bottom: 40px;">
-        <div class="guide-cta-visual-image">
-            <img src="/image/consulta-telemedicina-mesa.webp" alt="Consulta online LON Clinic" width="600" height="400" loading="eager" decoding="async">
+<section class="lon-consult-ad lon-consult-ad--${escapeHtml(theme)}${klass}" aria-label="${escapeHtml(spec.kicker)}">
+    <div class="lon-consult-ad-visual">
+        <figure class="lon-consult-ad-photo">
+            <img src="${escapeHtml(spec.image)}" alt="${escapeHtml(spec.imageAlt)}" width="800" height="1000" loading="lazy" decoding="async">
+        </figure>
+        <span class="lon-consult-ad-tag">${escapeHtml(spec.tag)}</span>
+        <div class="lon-consult-ad-glass">
+            <div>
+                <p class="lbl">${escapeHtml(spec.glassLbl)}</p>
+                <p class="ttl">${escapeHtml(spec.glassTtl)}</p>
+                <p class="sub">${escapeHtml(spec.glassSub)}</p>
+            </div>
+            <a class="lon-consult-ad-glass-btn" href="${escapeHtml(ref)}">${escapeHtml(spec.glassCta)}</a>
         </div>
-        <div class="guide-cta-visual-content">
-            <span class="guide-cta-visual-badge">Consulta Online</span>
-            <h3>Fale com um especialista</h3>
-            <p>Dúvidas sobre este tema? Agende uma consulta com os nossos médicos, psicólogos ou nutricionistas.</p>
-            <ul class="guide-cta-visual-features">
-                <li>Consultas online, sem deslocações</li>
-                <li>Profissionais certificados e experientes</li>
-                <li>Resposta em menos de 24 horas</li>
-            </ul>
-            <a href="/marcar" class="guide-cta-visual-button">Marcar consulta</a>
-        </div>
-    </div>`;
+    </div>
+    <div class="lon-consult-ad-copy">
+        <p class="lon-consult-ad-kicker">${escapeHtml(spec.kicker)}</p>
+        <h2 class="lon-consult-ad-h1">${spec.h1}</h2>
+        <p class="lon-consult-ad-h2">${escapeHtml(spec.h2)}</p>
+        <a class="lon-consult-ad-page" href="${escapeHtml(spec.pageHref)}">${escapeHtml(spec.pageCta)}</a>
+    </div>
+</section>`;
+}
+
+function earlyCtaHtml(kind, slug) {
+    return consultAdHtml(kind, slug);
 }
 
 /**
@@ -374,6 +519,52 @@ function burnoutHubCard() {
     };
 }
 
+function nutricaoHubCard() {
+    return {
+        slug: 'nutricao-hub',
+        href: '/nutricao',
+        title: 'Nutrição online por condição',
+        description: 'Programa de emagrecimento, fichas por condição e testes — o hub Lon Clinic.',
+        about: 'Perda de peso',
+        listed: true
+    };
+}
+
+function nutricaoRelatedCard(href) {
+    const path = String(href || '');
+    if (path === '/nutricao/emagrecimento') {
+        return {
+            slug: 'nutricao-emagrecimento',
+            href: '/nutricao/emagrecimento',
+            title: 'Programa de emagrecimento',
+            description: '2 consultas/mês, chat no portal e ajustes quinzenais. 115 € no mês 1, depois 75 €/mês.',
+            about: 'Perda de peso',
+            listed: true
+        };
+    }
+    if (path === '/nutricao/programa') {
+        return {
+            slug: 'nutricao-programa',
+            href: '/nutricao/programa',
+            title: 'Programa de reeducação metabólica',
+            description: 'O mesmo produto clínico, explicado como reeducação de 3 a 6 meses.',
+            about: 'Perda de peso',
+            listed: true
+        };
+    }
+    if (path === '/nutricao/glp-1' || path === '/nutricao/ozempic-wegovy') {
+        return {
+            slug: 'nutricao-glp-1',
+            href: '/nutricao/glp-1',
+            title: 'aGLP-1, Ozempic e Wegovy',
+            description: 'Página de transição: a Lon Clinic não prescreve a caneta. O hábito é o que fica.',
+            about: 'Perda de peso',
+            listed: true
+        };
+    }
+    return nutricaoHubCard();
+}
+
 function blogCanonicalPath(meta) {
     const slug = String((meta && meta.slug) || '');
     return `/blog/${encodeURIComponent(slug)}`;
@@ -425,6 +616,52 @@ function burnoutHubStripHtml(lang) {
 </aside>`;
 }
 
+function nutricaoHubStripHtml(lang) {
+    const packs = {
+        pt: {
+            kicker: 'Nutrição',
+            title: 'Este artigo liga ao hub de nutrição e ao programa de emagrecimento.',
+            hub: 'Ir à nutrição',
+            program: 'Programa de emagrecimento'
+        },
+        en: {
+            kicker: 'Nutrition',
+            title: 'This article belongs to the nutrition hub and weight-loss programme.',
+            hub: 'Go to nutrition',
+            program: 'Weight-loss programme'
+        },
+        es: {
+            kicker: 'Nutrición',
+            title: 'Este artículo forma parte del hub de nutrición y del programa de adelgazamiento.',
+            hub: 'Ir a nutrición',
+            program: 'Programa de adelgazamiento'
+        },
+        fr: {
+            kicker: 'Nutrition',
+            title: 'Cet article fait partie du hub nutrition et du programme de perte de poids.',
+            hub: 'Aller à la nutrition',
+            program: 'Programme de perte de poids'
+        },
+        de: {
+            kicker: 'Ernährung',
+            title: 'Dieser Artikel gehört zum Ernährungs-Hub und zum Abnehmprogramm.',
+            hub: 'Zur Ernährung',
+            program: 'Abnehmprogramm'
+        }
+    };
+    const copy = packs[lang] || packs.pt;
+    return `
+<aside class="guide-hub-strip" aria-label="${escapeHtml(copy.kicker)}">
+    <p class="guide-hub-strip-kicker">${escapeHtml(copy.kicker)}</p>
+    <p class="guide-hub-strip-title">${escapeHtml(copy.title)}</p>
+    <p class="guide-hub-strip-actions">
+        <a href="/nutricao">${escapeHtml(copy.hub)}</a>
+        <span aria-hidden="true"> · </span>
+        <a href="/nutricao/emagrecimento">${escapeHtml(copy.program)}</a>
+    </p>
+</aside>`;
+}
+
 function burnoutAsCard(page) {
     if (!page || !page.slug) return null;
     const slug = String(page.slug);
@@ -445,6 +682,9 @@ function resolveRelatedRef(ref, guideBySlug, burnoutBySlug) {
     if (key.startsWith('/burnout')) {
         const rest = key.replace(/^\/burnout\/?/, '');
         return burnoutAsCard(burnoutBySlug.get(rest || 'hub'));
+    }
+    if (key === '/nutricao' || key.startsWith('/nutricao/')) {
+        return nutricaoRelatedCard(key);
     }
     return guideBySlug.get(key) || null;
 }
@@ -562,6 +802,9 @@ function relatedKicker(article) {
     if (/marcacao/.test(slug)) return 'Marcação';
     if (/burnout/.test(slug) || (article && article.href && String(article.href).startsWith('/burnout'))) {
         return 'Burnout';
+    }
+    if (article && article.href && String(article.href).startsWith('/nutricao')) {
+        return 'Nutrição';
     }
     return 'Guide';
 }
@@ -1212,6 +1455,10 @@ function pickRelatedArticles(current, articles) {
     if (articleCluster(current) === 'burnout') {
         push(burnoutHubCard());
     }
+    if (articleCluster(current) === 'perda-de-peso') {
+        push(nutricaoHubCard());
+        push(nutricaoRelatedCard('/nutricao/emagrecimento'));
+    }
     (Array.isArray(current.related) ? current.related : []).forEach((ref) => {
         push(resolveRelatedRef(ref, bySlug, burnoutBySlug));
     });
@@ -1660,12 +1907,19 @@ function renderBlogArticle(origin, slug) {
     const chrome = ARTICLE_CHROME[lang] || ARTICLE_CHROME.pt;
     const note = isTravelGuide ? chrome.travelNote : chrome.generalNote;
     const closeCtaKind = defaultCtaKind(meta) === 'general' ? 'clinic' : defaultCtaKind(meta);
-    const closeCta = `<section class="mag-section mag-wrap mag-article-cta">${magCtaHtml(closeCtaKind, lang, slug)}</section>`;
+    const consultAd = consultAdHtml(closeCtaKind, slug);
+    const closeCta = consultAdHtml(closeCtaKind, slug, 'lon-consult-ad--close');
     let crumbItems = magBreadcrumbCrumbs(articlePath, title);
     if (articleCluster(meta) === 'burnout') {
         crumbItems = [
             { name: 'Magazine', href: '/magazine' },
             { name: 'Burnout', href: '/burnout' },
+            { name: title, href: articlePath, current: true }
+        ];
+    } else if (articleCluster(meta) === 'perda-de-peso') {
+        crumbItems = [
+            { name: 'Magazine', href: '/magazine' },
+            { name: 'Nutrição', href: '/nutricao' },
             { name: title, href: articlePath, current: true }
         ];
     } else if (seriesDef && !isSeriesHub(meta, seriesDef)) {
@@ -1676,9 +1930,12 @@ function renderBlogArticle(origin, slug) {
         ];
     }
     const crumbsHtml = magBreadcrumbHtml(crumbItems);
-    const hubStrip = articleCluster(meta) === 'burnout'
+    const cluster = articleCluster(meta);
+    const hubStrip = cluster === 'burnout'
         ? burnoutHubStripHtml(lang)
-        : (seriesDef && !isSeriesHub(meta, seriesDef) ? seriesHubStripHtml(seriesDef, lang) : '');
+        : cluster === 'perda-de-peso'
+            ? nutricaoHubStripHtml(lang)
+            : (seriesDef && !isSeriesHub(meta, seriesDef) ? seriesHubStripHtml(seriesDef, lang) : '');
     const seriesNav = seriesDef && !isSeriesHub(meta, seriesDef)
         ? seriesNavHtml(slug, seriesDef, manifest.articles)
         : '';
@@ -1696,7 +1953,7 @@ function renderBlogArticle(origin, slug) {
                 ${shareBarHtml(`${o}/blog/${encodeURIComponent(slug)}`, title, `magazine-${slug}`)}
             </header>
             ${leadFigure}
-            ${earlyCtaHtml()}
+            ${consultAd}
             ${socialProofGridHtml()}
             <div class="mag-story-body">
             <p class="mag-story-note">${escapeHtml(note)}</p>
@@ -1720,7 +1977,7 @@ function renderBlogArticle(origin, slug) {
                 ${byline}
                 ${shareBarHtml(`${o}/blog/${encodeURIComponent(slug)}`, title, `magazine-${slug}`)}
             </header>
-            ${earlyCtaHtml()}
+            ${consultAd}
             ${socialProofGridHtml()}
             <div class="guide-prose" lang="${escapeHtml(langMeta.htmlLang)}">
                 ${articleHtml}
@@ -1743,7 +2000,7 @@ function renderBlogArticle(origin, slug) {
         htmlLang: langMeta.htmlLang,
         ogLocale: langMeta.ogLocale,
         extraHead: articleHreflangLinks(o, meta, manifest.articles),
-        extraCssAfter: ['/guide.css?v=20260915a', '/author.css?v=20260820l', '/cta-visual-styles.css?v=20260919'],
+        extraCssAfter: ['/guide.css?v=20260915a', '/author.css?v=20260820l', '/cta-visual-styles.css?v=20260919', '/consult-ad.css?v=20260922a'],
         mainHtml: magAppHtml(articlePath, articleInner, {
             magazineCurrent: true,
             talk: talkCta.resolve({ kind: ctaKind, slug, lang })
@@ -2088,8 +2345,8 @@ function magCtaHtml(kind, lang, slug) {
                 kicker: 'Nutrição',
                 title: 'Um plano que cabe na sua vida.',
                 actions: [
-                    { href: '/nutricao', label: 'Nutrição por condição' },
-                    { href: '/marcar/clinica-geral?ref=magazine-perda-de-peso', label: 'Fale com um nutricionista' }
+                    { href: '/nutricao/emagrecimento', label: 'Programa de emagrecimento' },
+                    { href: '/nutricao', label: 'Nutrição por condição' }
                 ]
             },
             'nutricao-programa': {
@@ -2581,6 +2838,7 @@ function magazineNavTree() {
             label: 'Perda de peso',
             children: [
                 { label: 'Nutrição por condição', href: '/nutricao' },
+                { label: 'Programa de emagrecimento', href: '/nutricao/emagrecimento' },
                 { label: 'Consulta de nutrição', href: '/blog/consulta-nutricao-preco-como-funciona' },
                 { label: 'Quanto custa nutrição', href: '/blog/quanto-custa-consulta-nutricao-portugal' },
                 { label: 'ADSE e nutrição', href: '/blog/adse-consultas-nutricao-portugal' },
@@ -3034,7 +3292,8 @@ function layoutMagazinePage(opts) {
     <link rel="stylesheet" href="/landing.css?v=20260906i">
     ${extraCssHtml}
     ${extraCssAfterHtml}
-    <link rel="stylesheet" href="/magazine.css?v=20260915a">
+    <link rel="stylesheet" href="/magazine.css?v=20260922a">
+    <link rel="stylesheet" href="/consult-ad.css?v=20260922a">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='6' y='52' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%239c4a56'%3EL%3C/text%3E%3C/svg%3E">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
     ${jsonLdScript(graph)}

@@ -274,7 +274,8 @@ body.nx-page.urgent-landing {
 
 /* Hero bottom row: glass category cards */
 .nx-hero-row {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    padding: 14px;
     border-top: 1px solid rgba(255, 255, 255, 0.20);
     background: rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
@@ -285,6 +286,7 @@ body.nx-page.urgent-landing {
 .nx-hero-row a {
     display: block; padding: 22px 24px; text-decoration: none;
     background: rgba(var(--nx-night-rgb), 0.42);
+    border-radius: var(--nx-r);
     transition: background 0.15s ease;
 }
 .nx-hero-row a:hover { background: rgba(var(--nx-night-rgb), 0.62); }
@@ -528,7 +530,7 @@ body.nx-page.urgent-landing {
 .nx-glass-note b { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
 .nx-glass-note span { font-size: 12px; color: rgba(255, 255, 255, 0.75); }
 
-.nx-cond-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.nx-cond-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
 @media (max-width: 520px) { .nx-cond-cards { grid-template-columns: 1fr; } }
 .nx-cond-card {
     display: flex; align-items: center; gap: 14px; text-decoration: none;
@@ -546,7 +548,7 @@ body.nx-page.urgent-landing {
 .nx-cond-card .arr { margin-left: auto; color: var(--nx-text-accent); font-size: 16px; }
 
 /* Secondary topic cards (quizzes etc.) */
-.nx-mini-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 18px; }
+.nx-mini-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 18px; }
 @media (max-width: 640px) { .nx-mini-grid { grid-template-columns: 1fr; } }
 .nx-mini-card {
     display: flex; flex-direction: column; gap: 12px; text-decoration: none;
