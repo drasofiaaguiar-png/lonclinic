@@ -529,25 +529,23 @@
     ];
 
     var PSICOLOGIA_FAMILY = ['psicologia', 'psicologia_mensal'];
-    // Funnel order: the one-off session is the entry point; the weekly subscription is the
-    // natural next step after the first session, not the default door.
     var PSICOLOGIA_PLAN_CARDS = [
         {
-            tipo: 'psicologia',
-            badge: 'Começa aqui',
-            title: 'Primeira sessão',
-            price: '€60',
-            unit: 'por sessão',
-            note: '50 min · sem compromisso',
-            featured: true
-        },
-        {
             tipo: 'psicologia_mensal',
-            badge: 'Depois da 1.ª sessão',
+            badge: 'Recomendado',
             title: 'Acompanhamento semanal',
             price: '€56',
             unit: '/semana',
-            note: 'Se quiser continuar · cobrado mensalmente (224 €/mês)',
+            note: '4 sessões/mês · cobrado mensalmente (224 €/mês)',
+            featured: true
+        },
+        {
+            tipo: 'psicologia',
+            badge: 'Avulsa',
+            title: 'Sessão pontual',
+            price: '€60',
+            unit: 'por sessão',
+            note: '50 min · sem compromisso',
             featured: false
         }
     ];
@@ -817,12 +815,15 @@
     function resolveTipoFromUrl() {
         var params = new URLSearchParams(window.location.search);
         var queryTipo = params.get('tipo');
-        // /marcar/psicologia is the one-off session (entry point). The subscription has its own
-        // URL, /marcar/psicologia-mensal. Legacy ?plan=avulsa links keep working (no-op).
+        // /marcar/psicologia defaults to the weekly subscription. Avulsa is ?plan=avulsa
+        // or a direct card click; /marcar/psicologia-mensal stays explicit.
         if (queryTipo) return queryTipo;
         var m = window.location.pathname.match(/^\/marcar\/([^/?#]+)/);
         if (!m || !m[1]) return null;
         var slug = decodeURIComponent(m[1]).toLowerCase();
+        if (slug === 'psicologia') {
+            return params.get('plan') === 'avulsa' ? 'psicologia' : 'psicologia_mensal';
+        }
         return SLUG_TO_TYPE[slug] || null;
     }
 
@@ -830,7 +831,8 @@
         var slug = TYPE_TO_SLUG[tipoKey] || tipoKey;
         var params = new URLSearchParams(window.location.search);
         params.delete('tipo');
-        if (PSICOLOGIA_FAMILY.indexOf(tipoKey) >= 0) params.delete('plan');
+        if (tipoKey === 'psicologia') params.set('plan', 'avulsa');
+        else if (PSICOLOGIA_FAMILY.indexOf(tipoKey) >= 0) params.delete('plan');
         if (resetSlot) {
             params.delete('date');
             params.delete('time');
@@ -1001,7 +1003,7 @@
             name: { pt: 'Psicologia', en: 'Psychology', es: 'Psicología' },
             desc: { pt: 'Individual, casal e burnout', en: 'Individual, couples and burnout', es: 'Individual, pareja y burnout' },
             keys: ['psicologia', 'terapia_casal', 'burnout'],
-            defaultTipo: 'psicologia'
+            defaultTipo: 'psicologia_mensal'
         },
         nutricao: {
             ico: '🥗', color: '#3F574C', img: '/image/approach-nutricao.webp',
@@ -1112,7 +1114,8 @@
             btn.textContent = labels[key] || (CONSULTATION_TYPES[key] && CONSULTATION_TYPES[key].label) || key;
             btn.addEventListener('click', function () {
                 if (key === selected) return;
-                window.location.href = getPrettyMarcarUrl(key, true);
+                var dest = key === 'psicologia' ? 'psicologia_mensal' : key;
+                window.location.href = getPrettyMarcarUrl(dest, true);
             });
             wrap.appendChild(btn);
         });
@@ -1231,20 +1234,20 @@
         var psiLang = getLang();
         var psiCards = PSICOLOGIA_PLAN_CARDS;
         var psiKicker = 'Psicologia';
-        var psiHeading = 'Começa com uma sessão. Continua se fizer sentido.';
+        var psiHeading = 'Subscrição semanal, ou sessão avulsa.';
         if (psiLang === 'en') {
             psiKicker = 'Psychology';
-            psiHeading = 'Start with one session. Continue if it fits.';
+            psiHeading = 'Weekly subscription, or a one-off session.';
             psiCards = localizePlanCards(PSICOLOGIA_PLAN_CARDS, {
-                psicologia: { badge: 'Start here', title: 'First session', unit: 'per session', note: '50 min · no commitment' },
-                psicologia_mensal: { badge: 'After your first session', title: 'Weekly follow-up', unit: '/week', note: 'If you want to continue · billed monthly (€224/month)' }
+                psicologia_mensal: { badge: 'Recommended', title: 'Weekly follow-up', unit: '/week', note: '4 sessions/month · billed monthly (€224/month)' },
+                psicologia: { badge: 'One-off', title: 'Single session', unit: 'per session', note: '50 min · no commitment' }
             });
         } else if (psiLang === 'es') {
             psiKicker = 'Psicología';
-            psiHeading = 'Empieza con una sesión. Continúa si tiene sentido.';
+            psiHeading = 'Suscripción semanal, o sesión suelta.';
             psiCards = localizePlanCards(PSICOLOGIA_PLAN_CARDS, {
-                psicologia: { badge: 'Empieza aquí', title: 'Primera sesión', unit: 'por sesión', note: '50 min · sin compromiso' },
-                psicologia_mensal: { badge: 'Tras la 1.ª sesión', title: 'Seguimiento semanal', unit: '/semana', note: 'Si quieres continuar · cobrado mensualmente (224 €/mes)' }
+                psicologia_mensal: { badge: 'Recomendado', title: 'Seguimiento semanal', unit: '/semana', note: '4 sesiones/mes · cobrado mensualmente (224 €/mes)' },
+                psicologia: { badge: 'Suelta', title: 'Sesión puntual', unit: 'por sesión', note: '50 min · sin compromiso' }
             });
         }
         // Highlight the format the visitor is actually on (subscribers arriving at
@@ -2233,6 +2236,7 @@
             '&service=' + encodeURIComponent(consulta.serviceKey) +
             '&date=' + encodeURIComponent(payload.dateISO) +
             '&time=' + encodeURIComponent(state.time);
+        if (consulta.serviceKey === 'psicologia') dest += '&plan=avulsa';
         if (payload.consultLangPolicy) dest += '&langpolicy=en-es-pt';
         if (state.professionalId) dest += '&professionalId=' + encodeURIComponent(state.professionalId);
         if (state.specialty) dest += '&specialty=' + encodeURIComponent(state.specialty);

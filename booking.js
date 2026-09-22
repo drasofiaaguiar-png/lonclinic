@@ -661,6 +661,15 @@ async function initBookingFlow() {
         infeccao_urinaria: 'clinica_geral'
     };
 
+    function resolveIncomingService(key) {
+        const resolved = services[key] ? key : serviceAlias[key];
+        if (!resolved) return resolved;
+        if (resolved === 'psicologia' && urlParams.get('plan') !== 'avulsa') {
+            return 'psicologia_mensal';
+        }
+        return resolved;
+    }
+
     function applyServiceKey(key) {
         const resolved = services[key] ? key : serviceAlias[key];
         if (!resolved || !services[resolved]) return;
@@ -683,7 +692,7 @@ async function initBookingFlow() {
             showBookingNotFound(preselect);
             return;
         }
-        applyServiceKey(preselect);
+        applyServiceKey(resolveIncomingService(preselect));
     }
     if (!state.service) {
         applyServiceKey('clinica_geral');
@@ -783,8 +792,8 @@ async function initBookingFlow() {
                 perWeek: '/semana',
                 perSession: 'por sessão',
                 subTitle: 'Acompanhamento semanal',
-                subNote: 'Se quiser continuar · cobrado mensalmente (224 €/mês)',
-                oneTitle: 'Primeira sessão',
+                subNote: '4 sessões/mês · cobrado mensalmente (224 €/mês)',
+                oneTitle: 'Sessão pontual',
                 oneNote: '50 min · sem compromisso',
                 casalSubTitle: 'Subscrição de casal',
                 casalSubNote: '65 €/semana · cobrado mensalmente',
@@ -821,7 +830,7 @@ async function initBookingFlow() {
                 perWeek: '/week',
                 perSession: 'per session',
                 subTitle: 'Psychology subscription',
-                subNote: 'Billed monthly · €224/month',
+                subNote: '4 sessions/month · billed monthly (€224/month)',
                 oneTitle: 'Single session',
                 oneNote: '50 min · no commitment',
                 casalSubTitle: 'Couples subscription',
@@ -859,7 +868,7 @@ async function initBookingFlow() {
                 perWeek: '/semana',
                 perSession: 'por sesión',
                 subTitle: 'Suscripción de psicología',
-                subNote: 'Cobrado mensualmente · 224 €/mes',
+                subNote: '4 sesiones/mes · cobrado mensualmente (224 €/mes)',
                 oneTitle: 'Sesión única',
                 oneNote: '50 min · sin compromiso',
                 casalSubTitle: 'Suscripción de pareja',
@@ -937,10 +946,10 @@ async function initBookingFlow() {
                 { key: 'terapia_casal', badge: c.oneOff, title: c.casalOneTitle, price: '75 €', unit: c.perSession, note: c.casalOneNote, featured: false }
             ];
         }
-        // Entry point first: one-off session; subscription framed as the step after it.
+        // Entry: weekly subscription pre-selected; one-off remains available.
         return [
-            { key: 'psicologia', badge: c.startHere, title: c.oneTitle, price: '60 €', unit: c.perSession, note: c.oneNote, featured: state.service !== 'psicologia_mensal' },
-            { key: 'psicologia_mensal', badge: c.afterFirst, title: c.subTitle, price: '56 €', unit: c.perWeek, note: c.subNote, featured: state.service === 'psicologia_mensal' }
+            { key: 'psicologia_mensal', badge: c.recommended, title: c.subTitle, price: '56 €', unit: c.perWeek, note: c.subNote, featured: state.service !== 'psicologia' },
+            { key: 'psicologia', badge: c.oneOff, title: c.oneTitle, price: '60 €', unit: c.perSession, note: c.oneNote, featured: state.service === 'psicologia' }
         ];
     }
 
@@ -2689,7 +2698,7 @@ async function initBookingFlow() {
         const holdQ = urlParams.get('hold');
         const proQ = urlParams.get('professionalId');
         const specQ = urlParams.get('specialty');
-        if (serviceQ) applyServiceKey(serviceQ);
+        if (serviceQ) applyServiceKey(resolveIncomingService(serviceQ));
         if (renewQ) state.renewToken = renewQ;
         if (holdQ) state.holdId = holdQ;
         if (proQ) state.professionalId = Number(proQ) || state.professionalId;
