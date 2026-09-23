@@ -105,15 +105,15 @@ function consultAdSpec(kind) {
             imageAlt: 'Nutricionista a pesar legumes frescos numa cozinha',
             tag: 'Nutrição · Lon Clinic',
             glassLbl: 'Próxima consulta',
-            glassTtl: 'Videochamada · 45 min',
-            glassSub: 'Plano personalizado e ajustes por chat entre consultas',
+            glassTtl: '45 € · nutricionista online',
+            glassSub: 'Avulsa 45 € · recibo ADSE em regime livre',
             glassCta: 'Começar',
             glassHref: '/marcar/nutricao-quinzenal',
             pageHref: '/nutricao',
-            pageCta: 'Ver a consulta de nutrição',
+            pageCta: 'Ver nutricionista online',
             kicker: 'Nutrição',
-            h1: 'Acompanhamento nutricional que se <em>adapta à sua fase</em>',
-            h2: 'Consultas online, sem deslocações. Começa quinzenal, passa a mensal quando o plano estabiliza — sempre com a mesma nutricionista.'
+            h1: 'Nutricionista <em>online</em>',
+            h2: 'Desde 45 €. Recibo ADSE em regime livre. Quinzenal 45 € a cada 15 dias.'
         },
         mental: {
             theme: 'mental',
@@ -121,15 +121,15 @@ function consultAdSpec(kind) {
             imageAlt: 'Sessão de psicologia online num espaço tranquilo',
             tag: 'Psicologia · Lon Clinic',
             glassLbl: 'Psicologia',
-            glassTtl: 'Desde 56€ / sessão',
-            glassSub: 'Avulsa 60€ · subscrição 56€',
+            glassTtl: '56 €/semana · psicologia online',
+            glassSub: 'Avulsa 60 € · subscrição 224 €/mês',
             glassCta: 'Marcar',
             glassHref: '/marcar/psicologia',
-            pageHref: '/psicologia',
+            pageHref: '/saudemental',
             pageCta: 'Ver a consulta de psicologia',
             kicker: 'Psicologia',
-            h1: 'Conta-nos o que precisa. <em>Encontramos o psicólogo certo.</em>',
-            h2: 'Consultas online, em português, sem lista de espera. Escolha sessão avulsa a 60€, ou subscrição semanal a 56€ por sessão — cobrada ao mês.'
+            h1: 'Consulta de psicologia <em>online</em>',
+            h2: 'Desde 56 €/semana. Histórico articulável com médico e nutricionista da mesma clínica. Avulsa 60 €.'
         },
         burnout: {
             theme: 'burnout',
@@ -182,17 +182,17 @@ function consultAdSpec(kind) {
         travel: {
             theme: 'travel',
             image: '/image/travel-clinic-mountain-bg.jpg',
-            imageAlt: 'Consulta de medicina do viajante',
-            tag: 'Medicina do viajante · Lon Clinic',
+            imageAlt: 'Consulta do viajante',
+            tag: 'Consulta do viajante · Lon Clinic',
             glassLbl: 'Hoje ou amanhã',
-            glassTtl: '39 € · consulta do viajante',
+            glassTtl: '39 € · consulta do viajante online',
             glassSub: 'Agendamento directo — a vacina toma-se depois num CVI',
             glassCta: 'Marcar',
             glassHref: '/marcar/travel',
             pageHref: '/travel-clinic',
             pageCta: 'Ver a clínica do viajante',
             kicker: 'Viagem',
-            h1: 'Consulta de medicina do viajante em <em>Portugal.</em>',
+            h1: 'Consulta do viajante <em>online</em> em Portugal.',
             h2: 'Enquanto a maioria dos serviços pede 4 a 8 semanas de antecedência, a Lon Clinic marca a consulta para hoje ou amanhã. 39 €. A vacina toma-se depois num CVI.'
         }
     };
@@ -780,6 +780,7 @@ function articleCluster(meta) {
     if (/ansiedade/.test(about) || /ansiedade|ataques-de-panico|fobias-especificas/.test(slug)) return 'ansiedade';
     if (/autoconhecimento/.test(about) || /inteligencia-emocional|padroes-de-apego|autossabotagem|eneagrama|perfeccionismo|autocompaixao|sindrome-do-impostor|journaling|gatilhos-emocionais|crencas-limitantes|limites-pessoais|introspecao|autoestima/.test(slug)) return 'autoconhecimento';
     if (/perda de peso/.test(about) || /perda-de-peso|deficit-calorico|efeito-ioio|fome-emocional|alimentacao-intuitiva|glp1|contagem-de-calorias|platos-na-perda|alcool-e-perda|proteina-e-saciedade|sono-e-peso|stress-e-perda|forca-vs-cardio|fibra-e-perda|manter-o-peso|nutricionista-plano/.test(slug)) return 'perda-de-peso';
+    if (/^(figado-gordo|analises-figado|esteatose-hepatica|masld|dieta-figado-gordo|figado-gordo-peso-normal|tensao-alta|pre-diabetes|colesterol-alto|analises-alteradas|precisa-de-suplementos|magnesio|vitamina-d|creatina|proteina-por-dia|cortisol-alto|intestino-irritavel)$/.test(slug)) return 'metabolico';
     if (/autismo|adhd/.test(slug) || /autismo|adhd/.test(about)) return 'mental';
     return 'general';
 }
@@ -815,6 +816,301 @@ function withLangHref(href, lang) {
     return `${href}${sep}lang=${encodeURIComponent(lang)}`;
 }
 
+const TRAVEL_GROUPS = [
+    [
+        'vacina-febre-amarela-guia-completo',
+        'vacina-febre-amarela-lisboa',
+        'vacina-febre-amarela-porto',
+        'vacina-febre-amarela-coimbra',
+        'vacina-febre-amarela-braga',
+        'vacina-febre-amarela-algarve',
+        'vacina-febre-amarela-cuf'
+    ],
+    [
+        'vacinas-viajante-guia-completo',
+        'vacinas-viajante-lisboa',
+        'vacinas-viajante-porto',
+        'vacinas-viajante-coimbra',
+        'vacinas-viajante-braga',
+        'vacinas-viajante-algarve',
+        'vacinas-viajante-cuf'
+    ],
+    [
+        'consulta-do-viajante-online',
+        'como-marcar-consulta-do-viajante',
+        'consulta-do-viajante-sns',
+        'consulta-do-viajante-urgente',
+        'quando-agendar-consulta-do-viajante',
+        'quanto-custa-consulta-medicina-do-viajante',
+        'onde-fazer-consulta-medicina-do-viajante-lisboa',
+        'onde-marcar-consulta-do-viajante-porto',
+        'consulta-medica-viajantes-vacinas',
+        'vou-viajar-esta-semana-sem-vacinas',
+        'centros-de-vacinacao-internacional-portugal',
+        'malaria-hepatite-a-b-viajante',
+        'vacina-tetano-difteria'
+    ],
+    [
+        'vacinas-para-viajar-por-pais',
+        'vacinas-para-viajar-ao-brasil',
+        'vacinas-para-viajar-a-tailandia',
+        'vacinas-para-viajar-a-india',
+        'vacinas-para-viajar-ao-quenia',
+        'vacinas-para-viajar-a-angola',
+        'vacinas-para-viajar-a-mocambique'
+    ]
+];
+
+function travelPillarCard() {
+    return {
+        slug: 'travel-clinic',
+        href: '/travel-clinic',
+        title: 'Consulta do viajante online',
+        description: 'Videoconsulta hoje ou amanhã, 39 €. Prescrição no próprio dia; a vacina toma-se no Centro de Vacinação Internacional.',
+        about: 'Medicina do viajante',
+        listed: true
+    };
+}
+
+function travelPeerArticles(current, articles) {
+    const slug = current && current.slug;
+    const group = TRAVEL_GROUPS.find((slugs) => slugs.includes(slug));
+    if (!group) return [];
+    const bySlug = new Map((Array.isArray(articles) ? articles : []).map((a) => [a.slug, a]));
+    return group
+        .map((peer) => bySlug.get(peer))
+        .filter((a) => a && a.slug !== slug && isListedArticle(a));
+}
+
+const TRAVEL_PILLAR_LINK = { href: '/travel-clinic', text: 'marcar consulta do viajante' };
+const TRAVEL_YF_GUIA_LINK = { href: '/blog/vacina-febre-amarela-guia-completo', text: 'guia completo sobre a vacina da febre amarela' };
+const TRAVEL_VAC_GUIA_LINK = { href: '/blog/vacinas-viajante-guia-completo', text: 'Vacinas do viajante em Portugal: guia completo 2026' };
+const TRAVEL_MALARIA_LINK = { href: '/blog/malaria-hepatite-a-b-viajante', text: 'malária e hepatite A/B no viajante' };
+const TRAVEL_CVI_LINK = { href: '/blog/centros-de-vacinacao-internacional-portugal', text: 'centros de vacinação internacional em Portugal' };
+const TRAVEL_URGENTE_LINK = { href: '/blog/consulta-do-viajante-urgente', text: 'consulta do viajante urgente' };
+
+const TRAVEL_YF_CITIES = [
+    'vacina-febre-amarela-lisboa',
+    'vacina-febre-amarela-porto',
+    'vacina-febre-amarela-coimbra',
+    'vacina-febre-amarela-braga',
+    'vacina-febre-amarela-algarve',
+    'vacina-febre-amarela-cuf'
+];
+const TRAVEL_VAC_CITIES = [
+    'vacinas-viajante-lisboa',
+    'vacinas-viajante-porto',
+    'vacinas-viajante-coimbra',
+    'vacinas-viajante-braga',
+    'vacinas-viajante-algarve',
+    'vacinas-viajante-cuf'
+];
+
+function travelMapLinks(slug) {
+    if (TRAVEL_YF_CITIES.includes(slug)) {
+        return [TRAVEL_YF_GUIA_LINK, TRAVEL_PILLAR_LINK];
+    }
+    if (TRAVEL_VAC_CITIES.includes(slug)) {
+        return [TRAVEL_VAC_GUIA_LINK, TRAVEL_PILLAR_LINK];
+    }
+    const countries = {
+        'vacinas-para-viajar-ao-brasil': [TRAVEL_YF_GUIA_LINK, TRAVEL_PILLAR_LINK],
+        'vacinas-para-viajar-a-angola': [TRAVEL_YF_GUIA_LINK, TRAVEL_MALARIA_LINK, TRAVEL_PILLAR_LINK],
+        'vacinas-para-viajar-ao-quenia': [TRAVEL_YF_GUIA_LINK, TRAVEL_MALARIA_LINK, TRAVEL_PILLAR_LINK],
+        'vacinas-para-viajar-a-india': [TRAVEL_MALARIA_LINK, TRAVEL_VAC_GUIA_LINK, TRAVEL_PILLAR_LINK],
+        'vacinas-para-viajar-a-tailandia': [TRAVEL_MALARIA_LINK, TRAVEL_VAC_GUIA_LINK, TRAVEL_PILLAR_LINK],
+        'vacinas-para-viajar-a-mocambique': [TRAVEL_MALARIA_LINK, TRAVEL_VAC_GUIA_LINK, TRAVEL_PILLAR_LINK]
+    };
+    if (countries[slug]) return countries[slug];
+    const rest = {
+        'vacinas-viajante-guia-completo': [TRAVEL_PILLAR_LINK, TRAVEL_YF_GUIA_LINK, TRAVEL_CVI_LINK],
+        'vacina-febre-amarela-guia-completo': [TRAVEL_PILLAR_LINK, TRAVEL_VAC_GUIA_LINK, TRAVEL_CVI_LINK],
+        'malaria-hepatite-a-b-viajante': [TRAVEL_PILLAR_LINK, TRAVEL_VAC_GUIA_LINK, TRAVEL_YF_GUIA_LINK],
+        'centros-de-vacinacao-internacional-portugal': [TRAVEL_PILLAR_LINK, TRAVEL_VAC_GUIA_LINK],
+        'consulta-do-viajante-urgente': [
+            { href: '/travel-clinic', text: 'marque a sua consulta do viajante online' },
+            TRAVEL_VAC_GUIA_LINK
+        ],
+        'quando-agendar-consulta-do-viajante': [TRAVEL_PILLAR_LINK, TRAVEL_VAC_GUIA_LINK],
+        'quanto-custa-consulta-medicina-do-viajante': [
+            TRAVEL_PILLAR_LINK,
+            { href: '/travel-clinic', text: 'consulta do viajante online, 39 €' }
+        ],
+        'como-marcar-consulta-do-viajante': [TRAVEL_PILLAR_LINK, TRAVEL_URGENTE_LINK],
+        'vou-viajar-esta-semana-sem-vacinas': [TRAVEL_URGENTE_LINK, TRAVEL_PILLAR_LINK],
+        'onde-fazer-consulta-medicina-do-viajante-lisboa': [
+            TRAVEL_PILLAR_LINK,
+            { href: '/blog/vacinas-viajante-lisboa', text: 'vacinas do viajante em Lisboa' },
+            { href: '/blog/vacina-febre-amarela-lisboa', text: 'vacina da febre amarela em Lisboa' }
+        ],
+        'onde-marcar-consulta-do-viajante-porto': [
+            TRAVEL_PILLAR_LINK,
+            { href: '/blog/vacinas-viajante-porto', text: 'vacinas do viajante no Porto' }
+        ],
+        'consulta-do-viajante-online': [TRAVEL_PILLAR_LINK, TRAVEL_VAC_GUIA_LINK, TRAVEL_URGENTE_LINK],
+        'consulta-do-viajante-sns': [TRAVEL_PILLAR_LINK, TRAVEL_CVI_LINK],
+        'consulta-medica-viajantes-vacinas': [TRAVEL_PILLAR_LINK, TRAVEL_VAC_GUIA_LINK, TRAVEL_YF_GUIA_LINK],
+        'vacinas-para-viajar-por-pais': [TRAVEL_PILLAR_LINK, TRAVEL_VAC_GUIA_LINK, TRAVEL_YF_GUIA_LINK]
+    };
+    return rest[slug] || null;
+}
+
+function travelMapRelatedHtml(slug) {
+    const links = travelMapLinks(slug);
+    if (!links || !links.length) return '';
+    const items = links.map((l) => `<li><a href="${escapeHtml(l.href)}">${escapeHtml(l.text)}</a></li>`).join('');
+    return `
+<nav class="guide-backlinks guide-cluster-map guide-travel-map" id="artigos-relacionados" aria-label="Artigos relacionados">
+    <p class="guide-backlinks-kicker">Artigos relacionados</p>
+    <ul class="guide-backlinks-list">${items}</ul>
+</nav>`;
+}
+
+const BURNOUT_HEAD_SLUG = 'burnout-o-que-e-sinais-cansaco';
+const BURNOUT_HEAD_HREF = `/blog/${BURNOUT_HEAD_SLUG}`;
+const BURNOUT_NINE_HREF = '/blog/9-sinais-de-burnout-no-trabalho';
+const BURNOUT_PSY_HREF = '/blog/psicologia-online-para-burnout';
+const BURNOUT_B2B_HREF = '/clinica-anti-burnout#empresas';
+const BURNOUT_MEDICO_HREF = '/blog/como-falar-com-o-medico-sobre-burnout';
+
+const BURNOUT_SPOKE_LINKS = [
+    { slug: 'o-que-e-burnout', text: 'tipos de burnout, teste CBI e recuperação' },
+    { slug: 'psicologia-online-para-burnout', text: 'psicologia online para burnout' },
+    { slug: 'burnout-sinais-quando-procurar-ajuda', text: 'quando procurar ajuda para burnout' },
+    { slug: '9-sinais-de-burnout-no-trabalho', text: '9 sinais de burnout no trabalho' },
+    { slug: 'sinais-de-burnout-no-trabalho-remoto', text: 'sinais de burnout no trabalho remoto' },
+    { slug: 'sintomas-fisicos-do-burnout', text: 'sintomas físicos do burnout' },
+    { slug: 'burnout-ou-depressao', text: 'burnout ou depressão' },
+    { slug: 'burnout-parental-investigacao', text: 'burnout parental' },
+    { slug: 'burnout-materno', text: 'burnout materno' },
+    { slug: 'burnout-academico', text: 'burnout académico' },
+    { slug: 'burnout-digital-videochamadas', text: 'burnout digital e videochamadas' },
+    { slug: 'burnout-em-profissoes-de-saude', text: 'burnout em profissões de saúde' },
+    { slug: 'burnout-em-cuidadores-informais', text: 'burnout em cuidadores informais' },
+    { slug: 'so-um-founder-entende-o-burnout-de-um-founder', text: 'burnout de founder' },
+    { slug: 'burnout-financeiro', text: 'burnout financeiro' },
+    { slug: 'como-o-burnout-afeta-o-sono', text: 'burnout e sono' },
+    { slug: 'quanto-tempo-demora-a-recuperar-de-um-burnout', text: 'quanto tempo demora a recuperar' },
+    { slug: 'reconstruir-a-motivacao-depois-de-um-burnout', text: 'reconstruir a motivação' },
+    { slug: 'regressar-ao-trabalho-depois-de-um-burnout', text: 'regressar ao trabalho' },
+    { slug: 'quando-o-burnout-se-transforma-em-algo-mais-serio', text: 'quando o burnout se agrava' },
+    { slug: 'como-falar-com-o-medico-sobre-burnout', text: 'como falar com o médico' },
+    { slug: 'burnout-e-baixa-medica-em-portugal', text: 'burnout e baixa médica em Portugal' },
+    { slug: 'como-as-empresas-podem-prevenir-o-burnout', text: 'como as empresas podem prevenir o burnout' },
+    { slug: 'como-saber-se-a-equipa-esta-motivada', text: 'como saber se a equipa está motivada' }
+];
+
+const BURNOUT_SINAIS_CTA_SLUGS = new Set([
+    '9-sinais-de-burnout-no-trabalho',
+    'burnout-sinais-quando-procurar-ajuda',
+    'sinais-de-burnout-no-trabalho-remoto',
+    'sintomas-fisicos-do-burnout',
+    'burnout-ou-depressao'
+]);
+const BURNOUT_B2B_SLUGS = new Set([
+    'como-as-empresas-podem-prevenir-o-burnout',
+    'como-saber-se-a-equipa-esta-motivada'
+]);
+
+function burnoutMapLinks(slug) {
+    const pillar = (text) => ({ href: BURNOUT_HEAD_HREF, text });
+    const nine = { href: BURNOUT_NINE_HREF, text: 'reconheça os sinais' };
+    const psy = { href: BURNOUT_PSY_HREF, text: 'psicologia online para burnout' };
+    const b2b = { href: BURNOUT_B2B_HREF, text: 'pedido de proposta para empresas' };
+    const medico = { href: BURNOUT_MEDICO_HREF, text: 'como falar com o médico sobre burnout' };
+    const consultMed = { href: '/blog/consulta-medica-online-vale-a-pena', text: 'consulta médica online' };
+    const digital = { href: '/blog/burnout-digital-videochamadas', text: 'burnout digital e videochamadas' };
+    const remoto = { href: '/blog/sinais-de-burnout-no-trabalho-remoto', text: 'sinais de burnout no trabalho remoto' };
+    const empresas = { href: '/blog/como-as-empresas-podem-prevenir-o-burnout', text: 'como as empresas podem prevenir o burnout' };
+
+    if (slug === BURNOUT_HEAD_SLUG) {
+        return [
+            psy,
+            b2b,
+            { href: '/burnout', text: 'centro burnout' },
+            ...BURNOUT_SPOKE_LINKS.filter((l) => l.slug !== slug).map((l) => ({
+                href: `/blog/${l.slug}`,
+                text: l.text
+            }))
+        ];
+    }
+
+    const bySlug = {
+        '9-sinais-de-burnout-no-trabalho': [pillar('saiba o que é o burnout'), psy],
+        'burnout-ou-depressao': [pillar('perceba os sinais de burnout'), psy],
+        'burnout-sinais-quando-procurar-ajuda': [pillar('o que é o burnout'), psy],
+        'quanto-tempo-demora-a-recuperar-de-um-burnout': [pillar('sinais de burnout'), psy],
+        'burnout-academico': [pillar('o que é o burnout'), nine],
+        'burnout-parental-investigacao': [pillar('o que é o burnout'), nine],
+        'burnout-materno': [pillar('o que é o burnout'), nine],
+        'burnout-em-cuidadores-informais': [pillar('o que é o burnout'), nine],
+        'burnout-financeiro': [pillar('o que é o burnout'), nine],
+        'burnout-digital-videochamadas': [pillar('o que é o burnout'), remoto, nine],
+        'so-um-founder-entende-o-burnout-de-um-founder': [pillar('o que é o burnout'), nine],
+        'como-o-burnout-afeta-o-sono': [pillar('o que é o burnout'), nine],
+        'sintomas-fisicos-do-burnout': [pillar('o que é o burnout'), nine, psy],
+        'sinais-de-burnout-no-trabalho-remoto': [pillar('o que é o burnout'), digital],
+        'burnout-em-profissoes-de-saude': [pillar('o que é o burnout'), medico],
+        'burnout-e-baixa-medica-em-portugal': [pillar('o que é o burnout'), medico],
+        'como-falar-com-o-medico-sobre-burnout': [consultMed, psy, pillar('o que é o burnout')],
+        'psicologia-online-para-burnout': [pillar('o que é o burnout'), { href: '/marcar/psicologia', text: 'marcar psicologia online' }],
+        'reconstruir-a-motivacao-depois-de-um-burnout': [psy, pillar('o que é o burnout')],
+        'regressar-ao-trabalho-depois-de-um-burnout': [psy, pillar('o que é o burnout')],
+        'quando-o-burnout-se-transforma-em-algo-mais-serio': [pillar('o que é o burnout'), { href: '/blog/burnout-sinais-quando-procurar-ajuda', text: 'quando procurar ajuda para burnout' }],
+        'o-que-e-burnout': [pillar('o que é o burnout'), psy],
+        'como-as-empresas-podem-prevenir-o-burnout': [
+            b2b,
+            { href: '/blog/como-saber-se-a-equipa-esta-motivada', text: 'como saber se a equipa está motivada' },
+            pillar('o que é o burnout')
+        ],
+        'como-saber-se-a-equipa-esta-motivada': [b2b, empresas, pillar('o que é o burnout')]
+    };
+    return bySlug[slug] || null;
+}
+
+function burnoutLayerCtaHtml(slug) {
+    if (BURNOUT_B2B_SLUGS.has(slug)) {
+        return `
+<aside class="guide-burnout-layer-cta" id="proposta-empresas">
+    <p class="guide-backlinks-kicker">Para empresas</p>
+    <p>Este artigo é para lideranças e RH — não para marcação individual. Pedido de proposta: programas para equipas na Lon Clinic.</p>
+    <p><a class="lon-btn lon-btn-dark" href="/clinica-anti-burnout#empresas">Programa anti-burnout para empresas</a></p>
+</aside>`;
+    }
+    if (BURNOUT_SINAIS_CTA_SLUGS.has(slug) || slug === BURNOUT_HEAD_SLUG) {
+        return `
+<aside class="guide-burnout-layer-cta" id="psicologia-online-burnout">
+    <p class="guide-backlinks-kicker">Próximo passo</p>
+    <p>Se os sinais já duram semanas, o acompanhamento é psicológico — online, 50 min, 60 € / 56 €/semana.</p>
+    <p><a class="lon-btn lon-btn-dark" href="/blog/psicologia-online-para-burnout">Psicologia online para burnout</a></p>
+</aside>`;
+    }
+    if (slug === 'reconstruir-a-motivacao-depois-de-um-burnout' || slug === 'regressar-ao-trabalho-depois-de-um-burnout') {
+        return `
+<aside class="guide-burnout-layer-cta" id="psicologia-online-burnout">
+    <p class="guide-backlinks-kicker">Recuperação</p>
+    <p><a class="lon-btn lon-btn-dark" href="/blog/psicologia-online-para-burnout">Psicologia online para burnout</a></p>
+</aside>`;
+    }
+    return '';
+}
+
+function burnoutMapRelatedHtml(slug) {
+    const links = burnoutMapLinks(slug);
+    if (!links || !links.length) return '';
+    const items = links.map((l) => `<li><a href="${escapeHtml(l.href)}">${escapeHtml(l.text)}</a></li>`).join('');
+    const kicker = slug === BURNOUT_HEAD_SLUG ? 'No cluster burnout' : 'Artigos relacionados';
+    return `
+<nav class="guide-backlinks guide-cluster-map guide-burnout-map" id="artigos-relacionados" aria-label="${escapeHtml(kicker)}">
+    <p class="guide-backlinks-kicker">${escapeHtml(kicker)}</p>
+    <ul class="guide-backlinks-list">${items}</ul>
+</nav>`;
+}
+
+function clusterMapRelatedHtml(slug) {
+    return travelMapRelatedHtml(slug) || burnoutMapRelatedHtml(slug);
+}
+
 const CLUSTER_CROSS = {
     depressao: ['ansiedade', 'burnout', 'mental'],
     ansiedade: ['depressao', 'autoconhecimento', 'burnout'],
@@ -825,8 +1121,9 @@ const CLUSTER_CROSS = {
     'bestsellers-psicologia': ['burnout', 'ansiedade', 'depressao'],
     'bestsellers-saude-intestinal': ['perda-de-peso', 'livros-saude', 'ansiedade'],
     mental: ['depressao', 'ansiedade', 'burnout'],
-    travel: ['general', 'mental'],
-    general: ['travel', 'mental', 'perda-de-peso']
+    travel: ['general', 'mental', 'metabolico'],
+    metabolico: ['perda-de-peso', 'general', 'burnout'],
+    general: ['travel', 'mental', 'perda-de-peso', 'metabolico']
 };
 
 function actionCopy(lang) {
@@ -1023,8 +1320,18 @@ function consultSpec(kind, lang) {
     return copy.general;
 }
 
-function quizSpec(kind, lang) {
+function quizSpec(kind, lang, slug) {
     const copy = actionCopy(lang);
+    if (String(slug || '') === 'imc') {
+        return {
+            chip: 'IMC',
+            title: 'Calculadora de IMC',
+            price: 'Grátis · 1 min',
+            href: '/nutricao/teste-imc',
+            cta: 'Calcular o IMC',
+            note: 'Resultado imediato · classificação OMS'
+        };
+    }
     if (kind === 'burnout' || kind === 'neurodiversidade') return copy.quizBurnout;
     if (kind === 'nutrition' || kind === 'nutricao-programa' || kind === 'nutricao_programa') {
         return copy.quizNutrition || copy.quizPersonality;
@@ -1054,13 +1361,19 @@ function applyTalkCta(consult, kind, lang, slug) {
     if (talk.role === 'psych' || talk.role === 'psychFind' || talk.role === 'nutritionFind') {
         next.href = talk.href;
     }
+    if (String(slug || '') === 'imc') {
+        next.href = '/nutricao';
+        next.price = 'desde 45 €';
+        next.note = 'Videochamada · avulsa ou 45 € a cada 15 dias';
+        next.cta = 'Ver nutricionista online';
+    }
     return next;
 }
 
 function actionCardsHtml(kind, tone, lang, slug) {
     const copy = actionCopy(lang);
     const consult = applyTalkCta(consultSpec(kind, lang), kind, lang, slug);
-    const quiz = quizSpec(kind, lang);
+    const quiz = quizSpec(kind, lang, slug);
     const t = Math.abs(Number(tone) || 0);
     const hydrate = consult.service === 'clinica_geral';
     const consultHref = withLangHref(consult.href, lang);
@@ -1373,17 +1686,23 @@ function pickCrossClusterArticles(current, articles, limit) {
 function seriesBacklinksHtml(current, articles) {
     const copy = actionCopy(articleLangCode(current));
     const seriesDef = findSeriesForSlug(current.slug);
+    const peers = travelPeerArticles(current, articles);
     const series = seriesDef
         ? seriesPartSlugs(seriesDef)
             .map((slug) => (Array.isArray(articles) ? articles : []).find((a) => a && a.slug === slug && a.slug !== current.slug && isListedArticle(a)))
             .filter(Boolean)
-        : pickClusterArticles(current, articles, articleCluster(current), 8);
+        : peers.length
+            ? peers
+            : pickClusterArticles(current, articles, articleCluster(current), 8);
     const cross = pickCrossClusterArticles(current, articles, 4)
         .filter((a) => !series.some((s) => s.slug === a.slug));
-    if (!series.length && !cross.length) return '';
+    const pillarLi = articleCluster(current) === 'travel'
+        ? '<li><a href="/travel-clinic">Consulta do viajante online</a></li>'
+        : '';
+    if (!series.length && !cross.length && !pillarLi) return '';
     const list = (items) => items.map((a) => `<li><a href="${escapeHtml(magHref(a))}">${escapeHtml(a.title)}</a></li>`).join('');
-    const seriesBlock = series.length
-        ? `<p class="guide-backlinks-kicker">${escapeHtml(copy.series)}</p><ul class="guide-backlinks-list">${list(series)}</ul>`
+    const seriesBlock = (series.length || pillarLi)
+        ? `<p class="guide-backlinks-kicker">${escapeHtml(copy.series)}</p><ul class="guide-backlinks-list">${pillarLi}${list(series)}</ul>`
         : '';
     const crossBlock = cross.length && !seriesDef
         ? `<p class="guide-backlinks-kicker">${escapeHtml(copy.also)}</p><ul class="guide-backlinks-list">${list(cross)}</ul>`
@@ -1404,6 +1723,10 @@ function injectArticleChrome(html, meta, articles, format) {
     out = expandLonSlotsTokens(out, meta);
     const seriesDef = findSeriesForSlug(meta && meta.slug);
     const isHub = seriesDef && isSeriesHub(meta, seriesDef);
+    const designedClusterNav = String(html || '').includes('alg-related-grid');
+    const clusterMap = clusterMapRelatedHtml(meta && meta.slug);
+    const layerCta = burnoutLayerCtaHtml(meta && meta.slug);
+    const skipBookCards = BURNOUT_B2B_SLUGS.has(meta && meta.slug);
     if (isHub && !out.includes('guide-series-index')) {
         const index = seriesListHtml(seriesDef, articles);
         if (index) {
@@ -1412,8 +1735,8 @@ function injectArticleChrome(html, meta, articles, format) {
                 : insertAfterFirstParagraph(out, index);
         }
     }
-    const backlinks = isHub ? '' : seriesBacklinksHtml(meta, articles);
-    const slots = articleWantsLiveSlots(meta) && !out.includes('data-next-slots')
+    const backlinks = isHub || designedClusterNav || clusterMap ? '' : seriesBacklinksHtml(meta, articles);
+    const slots = !skipBookCards && articleWantsLiveSlots(meta) && !out.includes('data-next-slots')
         ? articleLiveSlotsHtml(meta)
         : '';
     const mentionsBurnout = /\/burnout|burnout|s[ií]ndrome de exaust|stress laboral/i.test(out);
@@ -1423,19 +1746,29 @@ function injectArticleChrome(html, meta, articles, format) {
     if (format === 'html') {
         if (slots) out = insertAfterFirstParagraph(out, slots);
         if (note) out = insertAfterFirstParagraph(out, note);
-        if (!out.includes('guide-actions')) out += actionCardsHtml(kind, 0, lang, meta && meta.slug);
+        if (!skipBookCards && !out.includes('guide-actions')) out += actionCardsHtml(kind, 0, lang, meta && meta.slug);
+        if (layerCta && !out.includes('guide-burnout-layer-cta')) out += layerCta;
         if (backlinks && !out.includes('guide-backlinks')) out += backlinks;
+        if (clusterMap && !out.includes('guide-cluster-map')) out += clusterMap;
         return out;
     }
-    out = expandCtaTokens(out, kind, lang, meta && meta.slug);
+    if (skipBookCards) {
+        out = String(out).replace(/<p>\s*\{\{cta(?::[a-z-]+)?\}\}\s*<\/p>|\{\{cta(?::[a-z-]+)?\}\}/gi, '');
+    } else {
+        out = expandCtaTokens(out, kind, lang, meta && meta.slug);
+    }
     if (slots) out = insertAfterFirstParagraph(out, slots);
     if (note) out = insertAfterFirstParagraph(out, note);
+    if (layerCta && !out.includes('guide-burnout-layer-cta')) {
+        out = insertAfterFirstH2(out, layerCta);
+    }
     if (backlinks && !out.includes('guide-backlinks')) {
         out = insertAfterFirstH2(out, backlinks);
     }
-    if (!out.includes('guide-actions')) {
+    if (!skipBookCards && !out.includes('guide-actions')) {
         out = insertBeforeFaqOrEnd(out, actionCardsHtml(kind, 0, lang, meta && meta.slug));
     }
+    if (clusterMap && !out.includes('guide-cluster-map')) out += clusterMap;
     return out;
 }
 
@@ -1446,8 +1779,20 @@ function pickRelatedArticles(current, articles) {
     const picked = [];
     const seen = new Set([current.slug]);
     const lang = articleLangCode(current);
+    const travelGroup = TRAVEL_GROUPS.find((slugs) => slugs.includes(current.slug));
+    const burnoutSpoke = current.slug === BURNOUT_HEAD_SLUG
+        || BURNOUT_SPOKE_LINKS.some((l) => l.slug === current.slug);
+    const cap = travelGroup
+        ? Math.max(12, travelGroup.length + 1)
+        : (burnoutSpoke ? Math.max(12, BURNOUT_SPOKE_LINKS.length + 2) : 6);
     const push = (article) => {
-        if (!article || seen.has(article.slug) || picked.length >= 6) return;
+        if (!article || seen.has(article.slug) || picked.length >= cap) return;
+        if (article.listed === false) return;
+        seen.add(article.slug);
+        picked.push(article);
+    };
+    const pushPeer = (article) => {
+        if (!article || seen.has(article.slug)) return;
         if (article.listed === false) return;
         seen.add(article.slug);
         picked.push(article);
@@ -1458,6 +1803,10 @@ function pickRelatedArticles(current, articles) {
     if (articleCluster(current) === 'perda-de-peso') {
         push(nutricaoHubCard());
         push(nutricaoRelatedCard('/nutricao/emagrecimento'));
+    }
+    if (articleCluster(current) === 'travel' || travelGroup) {
+        pushPeer(travelPillarCard());
+        travelPeerArticles(current, all).forEach(pushPeer);
     }
     (Array.isArray(current.related) ? current.related : []).forEach((ref) => {
         push(resolveRelatedRef(ref, bySlug, burnoutBySlug));
@@ -1518,12 +1867,13 @@ function layoutGuidePage(opts) {
     return `<!DOCTYPE html>
 <html lang="pt-PT">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZN8J4X12H3"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QX80MLXLEW"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-ZN8J4X12H3');
+      gtag('config', 'G-QX80MLXLEW');
       gtag('config', 'GT-TXHQ9ZVX', { send_page_view: false });
       gtag('config', 'AW-18103198169', { send_page_view: false });
     </script>
@@ -1550,7 +1900,7 @@ function layoutGuidePage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260906i">
-    <link rel="stylesheet" href="/guide.css?v=20260915a">
+    <link rel="stylesheet" href="/guide.css?v=20260922s">
     <link rel="stylesheet" href="/author.css?v=20260820l">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -1575,11 +1925,12 @@ ${__lonHeader.renderHeaderScripts(false)}
                 </div>
                 <div class="lon-footer-col">
                     <h4>Serviços</h4>
-                    <a href="/marcar/urgente">Consulta de Urgência</a>
-                    <a href="/marcar/clinica-geral">Clínica Geral</a>
-                    <a href="/marcar/travel">Consulta do Viajante</a>
-                    <a href="/marcar/saude-mental">Saúde Mental</a>
-                    <a href="/marcar/longevidade">Longevidade</a>
+                    <a href="/travel-clinic">Consulta do viajante</a>
+                    <a href="/saudemental">Psicologia</a>
+                    <a href="/nutricao">Nutrição</a>
+                    <a href="/urgent-care">Consulta urgente</a>
+                    <a href="/consulta">Clínica geral</a>
+                    <a href="/longevidade">Medicina funcional</a>
                 </div>
                 <div class="lon-footer-col">
                     <h4>Clínica</h4>
@@ -1772,7 +2123,7 @@ function renderBlogArticle(origin, slug) {
     const pageUrl = `${o}${canonicalPath}`;
     let articleHtml = bodyToHtml(raw, format === 'html' ? 'html' : 'markdown');
     let cviParts = [];
-    if (format === 'html' && cvi.isCviPublicArticle(slug)) {
+    if (cvi.isCviPublicArticle(slug)) {
         const dataDate = cvi.storeUpdatedAt();
         articleHtml = cvi.annotatePublicArticle(articleHtml, slug, {
             articleDate: datePub,
@@ -2020,7 +2371,7 @@ function renderBlogArticle(origin, slug) {
         htmlLang: langMeta.htmlLang,
         ogLocale: langMeta.ogLocale,
         extraHead: articleHreflangLinks(o, meta, manifest.articles),
-        extraCssAfter: ['/guide.css?v=20260915a', '/author.css?v=20260820l', '/cta-visual-styles.css?v=20260919', '/consult-ad.css?v=20260922a'],
+        extraCssAfter: ['/guide.css?v=20260922u', '/author.css?v=20260820l', '/cta-visual-styles.css?v=20260919', '/consult-ad.css?v=20260922a'],
         mainHtml: magAppHtml(articlePath, articleInner, {
             magazineCurrent: true,
             talk: talkCta.resolve({ kind: ctaKind, slug, lang })
@@ -2060,42 +2411,57 @@ const MAGAZINE_SECTIONS = [
         theme: 'mental',
         title: 'Mente',
         description: 'Psicologia, autismo, ADHD e consultas em Portugal: guias da Lon Magazine.',
-        ctaKind: 'mental'
+        ctaKind: 'mental',
+        hubs: [
+            { href: '/saudemental', label: 'Psicologia online' },
+            { href: '/consultas', label: 'Encontrar psicólogo' }
+        ]
     },
     {
         slug: 'burnout',
         theme: 'burnout',
         title: 'Burnout',
         description: 'Sinais de burnout, recuperação, trabalho e quando procurar ajuda.',
-        ctaKind: 'burnout'
+        ctaKind: 'burnout',
+        hubs: [
+            { href: '/burnout', label: 'Centro burnout' },
+            { href: '/burnout/teste', label: 'Teste CBI' }
+        ]
     },
     {
         slug: 'depressao',
         theme: 'depressao',
         title: 'Depressão',
         description: 'Depressão: primeiros sinais, tratamento e quando pedir ajuda.',
-        ctaKind: 'mental'
+        ctaKind: 'mental',
+        hubs: [{ href: '/saudemental', label: 'Psicologia online' }]
     },
     {
         slug: 'ansiedade',
         theme: 'ansiedade',
         title: 'Ansiedade',
         description: 'Ansiedade, pânico e insónia: guias clínicos da Lon Magazine.',
-        ctaKind: 'mental'
+        ctaKind: 'mental',
+        hubs: [{ href: '/saudemental', label: 'Psicologia online' }]
     },
     {
         slug: 'autoconhecimento',
         theme: 'autoconhecimento',
         title: 'Autoconhecimento',
         description: 'Valores, limites, perfeccionismo e terapia.',
-        ctaKind: 'mental'
+        ctaKind: 'mental',
+        hubs: [{ href: '/saudemental', label: 'Psicologia online' }]
     },
     {
         slug: 'perda-de-peso',
         theme: 'perda-de-peso',
         title: 'Perda de peso',
         description: 'Nutrição, défice calórico e perda de peso sustentável.',
-        ctaKind: 'nutrition'
+        ctaKind: 'nutrition',
+        hubs: [
+            { href: '/nutricao', label: 'Nutricionista online' },
+            { href: '/nutricao/teste-imc', label: 'Calculadora de IMC' }
+        ]
     },
     {
         slug: 'livros-saude',
@@ -2121,16 +2487,38 @@ const MAGAZINE_SECTIONS = [
     {
         slug: 'saude-do-viajante',
         theme: 'travel',
-        title: 'Viagem',
-        description: 'Vacinas, consulta do viajante e febre amarela em Portugal.',
-        ctaKind: 'travel'
+        title: 'Viajante',
+        indexTitle: 'Consulta do viajante',
+        description: 'Vacinas, CVI, SNS vs. online e o que fazer antes de viajar — todos os guias neste tema.',
+        ctaKind: 'travel',
+        hubs: [
+            { href: '/travel-clinic', label: 'Clínica do viajante' },
+            { href: '/marcar/travel', label: 'Marcar consulta · 39 €' },
+            { href: '/blog/centros-de-vacinacao-internacional-portugal', label: 'Centros de vacinação internacional' }
+        ]
+    },
+    {
+        slug: 'metabolismo',
+        theme: 'metabolico',
+        title: 'Metabolismo',
+        description: 'Fígado gordo, tensão, colesterol, pré-diabetes, análises e suplementos — e quando marcar consulta médica.',
+        ctaKind: 'clinica_geral',
+        hubs: [
+            { href: '/consulta', label: 'Consulta médica online' },
+            { href: '/marcar/clinica-geral', label: 'Marcar consulta · 39 €' },
+            { href: '/blog/figado-gordo', label: 'Fígado gordo' }
+        ]
     },
     {
         slug: 'clinica',
         theme: 'clinic',
         title: 'Clínica',
         description: 'Telemedicina, SNS vs privado e como marcar consulta.',
-        ctaKind: 'clinic'
+        ctaKind: 'clinic',
+        hubs: [
+            { href: '/consulta', label: 'Consulta médica online' },
+            { href: '/urgent-care', label: 'Consulta urgente' }
+        ]
     }
 ];
 
@@ -2138,7 +2526,9 @@ const MAGAZINE_SECTION_ALIASES = {
     'livros-de-saude': 'livros-saude',
     'livros-de-psicologia': 'livros-psicologia',
     mente: 'saude-mental',
-    viagem: 'saude-do-viajante'
+    viagem: 'saude-do-viajante',
+    'consulta-do-viajante': 'saude-do-viajante',
+    'medicina-do-viajante': 'saude-do-viajante'
 };
 
 const MAG_ROW_PREVIEW = 4;
@@ -2160,7 +2550,12 @@ function magazineSectionByTheme(theme) {
 
 function magazineSectionPath(slug) {
     const section = magazineSectionBySlug(slug);
-    return section ? `/magazine#${section.slug}` : '/magazine';
+    return section ? `/magazine/${section.slug}` : '/magazine';
+}
+
+function magazineCanonicalSectionSlug(slug) {
+    const section = magazineSectionBySlug(slug);
+    return section ? section.slug : null;
 }
 
 function magTheme(article) {
@@ -2182,9 +2577,10 @@ function magTheme(article) {
     if (/ansiedade/.test(about) || /ansiedade|ataques-de-panico|fobias-especificas/.test(slug)) return 'ansiedade';
     if (/autoconhecimento/.test(about) || /inteligencia-emocional|padroes-de-apego|autossabotagem|eneagrama|perfeccionismo|autocompaixao|sindrome-do-impostor|journaling|gatilhos-emocionais|crencas-limitantes|limites-pessoais|introspecao|autoestima/.test(slug)) return 'autoconhecimento';
     if (/perda de peso/.test(about) || /perda-de-peso|deficit-calorico|efeito-ioio|fome-emocional|alimentacao-intuitiva|glp1|contagem-de-calorias|platos-na-perda|alcool-e-perda|proteina-e-saciedade|sono-e-peso|stress-e-perda|forca-vs-cardio|fibra-e-perda|manter-o-peso|nutricionista-plano/.test(slug)) return 'perda-de-peso';
+    if (/^(figado-gordo|analises-figado|esteatose-hepatica|masld|dieta-figado-gordo|figado-gordo-peso-normal|tensao-alta|pre-diabetes|colesterol-alto|analises-alteradas|precisa-de-suplementos|magnesio|vitamina-d|creatina|proteina-por-dia|cortisol-alto|intestino-irritavel)$/.test(slug)) return 'metabolico';
     if (/autismo|adhd/.test(about) || /autismo|adhd/.test(slug)) return 'mental';
     if (/psicolog/.test(about) || /encontrar-um-psicologo|consulta-psicologia/.test(slug)) return 'mental';
-    if (/vacina|viajante|travel|vaccination/.test(slug)) return 'travel';
+    if (/viagem|viajante|vacina/.test(about) || /vacina|viajante|travel|vaccination|malaria|febre-amarela/.test(slug)) return 'travel';
     return 'clinic';
 }
 
@@ -2243,15 +2639,32 @@ function listingTitle(raw) {
     }).join('');
 }
 
-function magIndexListHtml(articles) {
+function magIndexListHtml(articles, opts) {
+    const withDek = opts && opts.withDek;
     const items = (Array.isArray(articles) ? articles : []).map((a) => {
         const iso = String((a.dateModified || a.datePublished) || '').slice(0, 10);
         const date = /^\d{4}-\d{2}-\d{2}$/.test(iso)
             ? `<time datetime="${escapeHtml(iso)}">${escapeHtml(magDate(iso, 'pt'))}</time>`
             : '';
-        return `<li><a href="${escapeHtml(magHref(a))}">${escapeHtml(listingTitle(a.title || a.slug))}</a>${date}</li>`;
+        const dek = withDek && a.description
+            ? `<span class="mag-index-blurb">${escapeHtml(a.description)}</span>`
+            : '';
+        return `<li><a href="${escapeHtml(magHref(a))}">${escapeHtml(listingTitle(a.title || a.slug))}</a>${date}${dek}</li>`;
     }).join('');
     return `<ol class="mag-index-list">${items}</ol>`;
+}
+
+function sortIndexArticles(articles) {
+    return (Array.isArray(articles) ? articles.slice() : []).sort((a, b) =>
+        listingTitle(a.title || a.slug).localeCompare(listingTitle(b.title || b.slug), 'pt')
+    );
+}
+
+function magIndexHubsHtml(section) {
+    const hubs = Array.isArray(section && section.hubs) ? section.hubs : [];
+    if (!hubs.length) return '';
+    const links = hubs.map((h) => `<a href="${escapeHtml(h.href)}">${escapeHtml(h.label)}</a>`).join('');
+    return `<p class="mag-index-hubs">${links}</p>`;
 }
 
 function magIssueLine() {
@@ -2753,10 +3166,10 @@ function magazineNavTree() {
                         {
                             label: 'Artigos',
                             children: [
-                                { label: 'O que é burnout', href: '/blog/o-que-e-burnout' },
+                                { label: 'O que é burnout', href: '/blog/burnout-o-que-e-sinais-cansaco' },
+                                { label: 'Tipos, teste CBI e recuperação', href: '/blog/o-que-e-burnout' },
                                 { label: 'Psicologia online para burnout', href: '/blog/psicologia-online-para-burnout' },
-                                { label: 'Sinais e quando procurar ajuda', href: '/blog/burnout-sinais-quando-procurar-ajuda' },
-                                { label: 'O que é e diferença do cansaço', href: '/blog/burnout-o-que-e-sinais-cansaco' },
+                                { label: 'Quando procurar ajuda', href: '/blog/burnout-sinais-quando-procurar-ajuda' },
                                 { label: '9 sinais no trabalho', href: '/blog/9-sinais-de-burnout-no-trabalho' },
                                 { label: 'Burnout parental', href: '/blog/burnout-parental-investigacao' },
                                 { label: 'Burnout académico', href: '/blog/burnout-academico' },
@@ -2784,6 +3197,7 @@ function magazineNavTree() {
                 },
                 { label: 'Como encontrar um psicólogo', href: '/blog/como-encontrar-um-psicologo' },
                 { label: 'Quanto custa uma consulta', href: '/blog/quanto-custa-consulta-psicologia-portugal' },
+                { label: 'Psicólogo online: como funciona', href: '/blog/psicologo-online-como-funciona' },
                 { label: 'Consultas gratuitas', href: '/blog/consultas-psicologia-gratuitas-portugal' },
                 { label: 'Apoio nas universidades', href: '/blog/apoio-psicologico-universidades-portugal' },
                 { label: 'ADSE e seguros', href: '/blog/adse-seguros-psicologia-portugal' },
@@ -2858,6 +3272,8 @@ function magazineNavTree() {
             label: 'Perda de peso',
             children: [
                 { label: 'Nutrição por condição', href: '/nutricao' },
+                { label: 'Calculadora de IMC', href: '/nutricao/teste-imc' },
+                { label: 'O que é o IMC', href: '/blog/imc' },
                 { label: 'Programa de emagrecimento', href: '/nutricao/emagrecimento' },
                 { label: 'Consulta de nutrição', href: '/blog/consulta-nutricao-preco-como-funciona' },
                 { label: 'Quanto custa nutrição', href: '/blog/quanto-custa-consulta-nutricao-portugal' },
@@ -2972,6 +3388,8 @@ function magazineNavTree() {
                     ]
                 },
                 { label: 'Consulta médica para viajantes', href: '/blog/consulta-medica-viajantes-vacinas' },
+                { label: 'Consulta do viajante online', href: '/blog/consulta-do-viajante-online' },
+                { label: 'Malária e hepatite A/B', href: '/blog/malaria-hepatite-a-b-viajante' },
                 { label: 'Consulta do viajante', href: '/marcar/travel' }
             ]
         },
@@ -2983,6 +3401,7 @@ function magazineNavTree() {
                 { label: 'Seguro de saúde: compensa?', href: '/blog/seguro-saude-compensa' },
                 { label: 'Telemedicina em casa', href: '/blog/telemedicina-em-casa' },
                 { label: 'Consulta médica online vale a pena?', href: '/blog/consulta-medica-online-vale-a-pena' },
+                { label: 'Infeção urinária: sintomas', href: '/blog/infecao-urinaria-sintomas' },
                 { label: 'Renovar receita online', href: '/blog/renovar-receita-medica-online' },
                 { label: 'Como escolher telemedicina', href: '/blog/melhores-plataformas-telemedicina' },
                 { label: 'Saúde preventiva (adultos jovens)', href: '/blog/saude-preventiva-adultos-jovens' },
@@ -3150,14 +3569,16 @@ function magLonFootHtml() {
                     <h4>Magazine</h4>
                     <a href="/magazine">Lon Magazine</a>
                     <a href="/magazine/indice">Índice</a>
-                    <a href="/burnout">Burnout</a>
-                    <a href="/saudemental">Psicologia</a>
+                    <a href="/magazine/saude-do-viajante">Guias do viajante</a>
+                    <a href="/magazine/perda-de-peso">Guias de nutrição</a>
+                    <a href="/magazine/saude-mental">Guias de psicologia</a>
                 </div>
                 <div class="lon-footer-col">
                     <h4>Clínica</h4>
-                    <a href="/marcar/clinica-geral">Clínica geral</a>
-                    <a href="/marcar/travel">Consulta do viajante</a>
-                    <a href="/marcar/saude-mental">Saúde mental</a>
+                    <a href="/travel-clinic">Consulta do viajante</a>
+                    <a href="/saudemental">Psicologia</a>
+                    <a href="/nutricao">Nutrição</a>
+                    <a href="/consulta">Clínica geral</a>
                     <a href="/info.html?page=contato">Contacto</a>
                 </div>
             </div>
@@ -3279,12 +3700,13 @@ function layoutMagazinePage(opts) {
     return `<!DOCTYPE html>
 <html lang="${escapeHtml(langAttr)}">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZN8J4X12H3"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QX80MLXLEW"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-ZN8J4X12H3');
+      gtag('config', 'G-QX80MLXLEW');
       gtag('config', 'GT-TXHQ9ZVX', { send_page_view: false });
       gtag('config', 'AW-18103198169', { send_page_view: false });
     </script>
@@ -3312,7 +3734,7 @@ function layoutMagazinePage(opts) {
     <link rel="stylesheet" href="/landing.css?v=20260906i">
     ${extraCssHtml}
     ${extraCssAfterHtml}
-    <link rel="stylesheet" href="/magazine.css?v=20260922a">
+    <link rel="stylesheet" href="/magazine.css?v=20260922b">
     <link rel="stylesheet" href="/consult-ad.css?v=20260922a">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='6' y='52' font-family='Georgia,serif' font-style='italic' font-size='54' fill='%239c4a56'%3EL%3C/text%3E%3C/svg%3E">
     <link rel="sitemap" type="application/xml" href="/sitemap.xml">
@@ -3395,7 +3817,7 @@ function renderMagazineIndex(origin) {
         magThemeRowHtml('livros-psicologia', 'Livros de psicologia', livrosPsicologiaRest, 'mental'),
         magThemeRowHtml('saude-intestinal', 'Saúde intestinal', saudeIntestinalRest, 'nutrition'),
         magClusterHtml(),
-        magThemeRowHtml('saude-do-viajante', 'Viagem', travelRest, 'travel'),
+        magThemeRowHtml('saude-do-viajante', 'Consulta do viajante', travelRest, 'travel'),
         magThemeRowHtml('clinica', 'Clínica', clinicRest, 'clinic')
     ].join('');
 
@@ -3504,17 +3926,19 @@ function renderMagazineSection(origin, slug) {
     const section = magazineSectionBySlug(slug);
     if (!section) return null;
     const o = normalizeOrigin(origin);
-    const articles = loadListedArticles().filter((a) => magTheme(a) === section.theme);
+    const articles = sortIndexArticles(loadListedArticles().filter((a) => magTheme(a) === section.theme));
+    const heading = section.indexTitle || section.title;
     const cover = articles[0];
     const og = `${o}${resolveGuideImage(cover && cover.image)}`;
     const path = `/magazine/${section.slug}`;
+    const countLabel = articles.length === 1 ? '1 guia' : `${articles.length} guias`;
     const crumbs = [
         { name: 'Magazine', href: '/magazine' },
-        { name: section.title, href: path, current: true }
+        { name: heading, href: path, current: true }
     ];
     const jsonLd = [
         collectionJsonLd(o, {
-            name: `${section.title} | LON Magazine`,
+            name: `${heading} | LON Magazine`,
             description: section.description,
             path,
             articles
@@ -3528,21 +3952,22 @@ function renderMagazineSection(origin, slug) {
             <main id="conteudo-principal" class="mag-content mag-index-page">
                 <header class="mag-index-head mag-wrap">
                     ${magBreadcrumbHtml(crumbs)}
-                    <p class="mag-section-kicker">LON Magazine</p>
-                    <h1>${escapeHtml(section.title)}</h1>
+                    <p class="mag-section-kicker">LON Magazine · ${escapeHtml(countLabel)}</p>
+                    <h1>${escapeHtml(heading)}</h1>
                     <p class="mag-index-dek">${escapeHtml(section.description)}</p>
+                    ${magIndexHubsHtml(section)}
                     ${magazineTopicsNavHtml({ current: section.slug })}
                 </header>
-                <section class="mag-wrap" aria-label="Artigos de ${escapeHtml(section.title)}">
-                    ${magIndexListHtml(articles)}
+                <section class="mag-wrap" aria-label="Artigos de ${escapeHtml(heading)}">
+                    ${magIndexListHtml(articles, { withDek: true })}
                     ${empty}
                     ${section.ctaKind ? magCtaHtml(section.ctaKind) : ''}
                 </section>
             </main>`, { magazineCurrent: true });
     return layoutMagazinePage({
         origin: o,
-        title: `${section.title} | LON Magazine`,
-        description: section.description,
+        title: `${heading} | LON Magazine`,
+        description: `${countLabel}. ${section.description}`,
         canonicalPath: path,
         ogImage: og,
         jsonLd,
@@ -3560,11 +3985,12 @@ function renderMagazineIndice(origin) {
         { name: 'Índice', href: '/magazine/indice', current: true }
     ];
     const groups = MAGAZINE_SECTIONS.map((s) => {
-        const group = articles.filter((a) => magTheme(a) === s.theme);
+        const group = sortIndexArticles(articles.filter((a) => magTheme(a) === s.theme));
         if (!group.length) return '';
+        const heading = s.indexTitle || s.title;
         return `<section class="mag-index-group mag-wrap" id="${escapeHtml(s.slug)}" aria-labelledby="indice-${escapeHtml(s.slug)}">
-                    <h2 id="indice-${escapeHtml(s.slug)}"><a href="${escapeHtml(magazineSectionPath(s.slug))}">${escapeHtml(s.title)}</a></h2>
-                    ${magIndexListHtml(group)}
+                    <h2 id="indice-${escapeHtml(s.slug)}"><a href="${escapeHtml(magazineSectionPath(s.slug))}">${escapeHtml(heading)}</a> <span class="mag-index-count">${group.length}</span></h2>
+                    ${magIndexListHtml(group, { withDek: true })}
                 </section>`;
     }).join('');
     const jsonLd = [
@@ -3677,6 +4103,7 @@ module.exports = {
     renderMagazineIndice,
     injectHomeEditorialHtml,
     magazineSections,
+    magazineCanonicalSectionSlug,
     newestListedArticleDate,
     loadManifest,
     sortArticles,

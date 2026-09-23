@@ -1,6 +1,916 @@
 {
     "articles": [
         {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 8,
+            "slug": "figado-gordo",
+            "title": "Fígado gordo: o que é, causas e como reverter",
+            "description": "Fígado gordo (esteatose, MASLD) é comum e, na maioria dos casos, reversível. Causas, exames e consulta médica online na Lon Clinic, 39 €.",
+            "about": "Fígado gordo",
+            "image": "/image/funcional-hero-janela.webp",
+            "group": "figado",
+            "related": [
+                "masld",
+                "esteatose-hepatica",
+                "analises-figado",
+                "dieta-figado-gordo",
+                "figado-gordo-peso-normal",
+                "pre-diabetes"
+            ],
+            "faq": [
+                {
+                    "q": "Fígado gordo tem cura?",
+                    "a": "Na maioria dos casos é reversível com perda de peso gradual, alimentação equilibrada, redução do álcool e exercício regular."
+                },
+                {
+                    "q": "Fígado gordo dá sintomas?",
+                    "a": "Normalmente não. É muitas vezes descoberto por acaso numa ecografia ou em análises com transaminases alteradas."
+                },
+                {
+                    "q": "O fígado gordo é grave?",
+                    "a": "Em muitas pessoas mantém-se estável, mas pode evoluir para inflamação e fibrose. Por isso deve ser avaliado e acompanhado."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "analises-figado",
+            "title": "Análises ao fígado: o que significam TGO, TGP e GGT",
+            "description": "TGO, TGP ou GGT altas: o que indicam, causas comuns (fígado gordo, álcool, medicamentos) e quando marcar consulta para rever as análises.",
+            "about": "Análises ao fígado",
+            "image": "/image/consulta-clinica-geral.webp",
+            "group": "figado",
+            "related": [
+                "figado-gordo",
+                "esteatose-hepatica",
+                "analises-alteradas",
+                "masld",
+                "pre-diabetes"
+            ],
+            "faq": [
+                {
+                    "q": "O que significa ter as transaminases altas?",
+                    "a": "Indica irritação ou lesão das células do fígado. As causas mais comuns são fígado gordo, álcool, medicamentos e hepatites."
+                },
+                {
+                    "q": "A GGT alta é sempre do álcool?",
+                    "a": "Não. Também sobe com fígado gordo, alguns medicamentos e problemas das vias biliares."
+                },
+                {
+                    "q": "O exercício pode alterar as análises do fígado?",
+                    "a": "Sim. Exercício intenso nos dias anteriores pode subir a TGO, porque esta enzima também existe nos músculos."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "esteatose-hepatica",
+            "title": "Esteatose hepática na ecografia: graus e o que fazer",
+            "description": "Esteatose grau 1, 2 ou 3 na ecografia: o que cada grau mostra, o que não mede (fibrose) e quando marcar consulta médica.",
+            "about": "Esteatose hepática",
+            "image": "/image/funcional-hero-janela.webp",
+            "group": "figado",
+            "related": [
+                "figado-gordo",
+                "masld",
+                "analises-figado",
+                "dieta-figado-gordo",
+                "figado-gordo-peso-normal"
+            ],
+            "faq": [
+                {
+                    "q": "Esteatose hepática grau 1 é grave?",
+                    "a": "Normalmente é uma fase inicial e reversível, mas deve ser avaliada para perceber a causa e o risco de fibrose."
+                },
+                {
+                    "q": "O grau da esteatose indica se o fígado está danificado?",
+                    "a": "Não. A ecografia mostra a quantidade de gordura, mas não a inflamação nem a fibrose."
+                },
+                {
+                    "q": "A esteatose pode desaparecer?",
+                    "a": "Sim. Com perda de peso, alimentação equilibrada, menos álcool e exercício, a gordura no fígado pode reduzir ou desaparecer."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "masld",
+            "title": "MASLD: o novo nome do fígado gordo, explicado",
+            "description": "MASLD é o nome de 2023 para o fígado gordo não alcoólico. Diferença para MASH e DHGNA, critérios e quando consultar.",
+            "about": "MASLD",
+            "image": "/image/funcional-hero-janela.webp",
+            "group": "figado",
+            "related": [
+                "figado-gordo",
+                "esteatose-hepatica",
+                "dieta-figado-gordo",
+                "pre-diabetes",
+                "colesterol-alto",
+                "tensao-alta"
+            ],
+            "faq": [
+                {
+                    "q": "O que é MASLD?",
+                    "a": "É o nome adoptado em 2023 para o fígado gordo não alcoólico: gordura no fígado associada a pelo menos um factor de risco cardiometabólico."
+                },
+                {
+                    "q": "Qual a diferença entre MASLD e MASH?",
+                    "a": "MASH é a forma de MASLD com inflamação e lesão das células do fígado, com maior risco de fibrose."
+                },
+                {
+                    "q": "MASLD é o mesmo que DHGNA?",
+                    "a": "Praticamente sim. A grande maioria das pessoas com DHGNA ou NAFLD cumpre os critérios de MASLD."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 8,
+            "slug": "dieta-figado-gordo",
+            "title": "Dieta para fígado gordo: o que comer e evitar",
+            "description": "O que comer com fígado gordo: padrão mediterrânico, o que reduzir e um exemplo de 7 dias. Ajuste na consulta médica, 39 €.",
+            "about": "Alimentação no fígado gordo",
+            "image": "/image/nutricao-alimentos.webp",
+            "group": "figado",
+            "related": [
+                "figado-gordo",
+                "masld",
+                "figado-gordo-peso-normal",
+                "pre-diabetes",
+                "proteina-por-dia"
+            ],
+            "faq": [
+                {
+                    "q": "O que comer quando se tem fígado gordo?",
+                    "a": "Um padrão mediterrânico: legumes, fruta inteira, leguminosas, cereais integrais, peixe, azeite e frutos secos."
+                },
+                {
+                    "q": "Posso beber café com fígado gordo?",
+                    "a": "Sim. O café sem açúcar está associado a menor risco de progressão da doença hepática."
+                },
+                {
+                    "q": "Quanto tempo demora a melhorar o fígado gordo?",
+                    "a": "Com mudanças consistentes, é comum ver melhorias nas análises e na ecografia ao fim de alguns meses."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "figado-gordo-peso-normal",
+            "title": "Fígado gordo sem excesso de peso: é possível?",
+            "description": "Pode ter fígado gordo com peso normal. Causas (gordura abdominal, insulina, álcool) e quando a consulta médica faz sentido.",
+            "about": "Fígado gordo",
+            "image": "/image/funcional-hero-janela.webp",
+            "group": "figado",
+            "related": [
+                "figado-gordo",
+                "masld",
+                "dieta-figado-gordo",
+                "analises-figado",
+                "imc"
+            ],
+            "faq": [
+                {
+                    "q": "É possível ter fígado gordo sem excesso de peso?",
+                    "a": "Sim. Uma parte das pessoas com fígado gordo tem peso normal, em geral por gordura abdominal, resistência à insulina, genética ou álcool."
+                },
+                {
+                    "q": "Se sou magro, preciso de perder peso?",
+                    "a": "Nem sempre. O foco passa a ser a composição corporal, a alimentação, o exercício e o álcool."
+                },
+                {
+                    "q": "O fígado gordo em pessoas magras é menos grave?",
+                    "a": "Não necessariamente. Deve ser avaliado da mesma forma."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "tensao-alta",
+            "title": "Tensão alta: valores, causas e como baixar",
+            "description": "Hipertensão: 140/90 mmHg no consultório e 135/85 em casa. Como medir, o que baixa a tensão e quando marcar consulta. A vídeo não mede tensão.",
+            "about": "Hipertensão arterial",
+            "image": "/image/consulta-clinica-geral.webp",
+            "group": "cardiometabolico",
+            "related": [
+                "colesterol-alto",
+                "pre-diabetes",
+                "figado-gordo",
+                "analises-alteradas",
+                "saude-preventiva-adultos-jovens"
+            ],
+            "faq": [
+                {
+                    "q": "A partir de que valor a tensão é considerada alta?",
+                    "a": "Em consultório, a partir de 140/90 mmHg, confirmada em várias medições. Em casa, a partir de 135/85 mmHg."
+                },
+                {
+                    "q": "Como medir a tensão em casa correctamente?",
+                    "a": "Sentado, após 5 minutos de repouso, braço apoiado ao nível do coração, duas medições de manhã e à noite durante vários dias."
+                },
+                {
+                    "q": "É possível baixar a tensão sem medicação?",
+                    "a": "Em muitos casos de valores ligeiramente elevados, sim: menos sal, perda de peso, exercício e menos álcool baixam a tensão."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "pre-diabetes",
+            "title": "Pré-diabetes: valores, sinais e como reverter",
+            "description": "Pré-diabetes: HbA1c 5,7–6,4% (ADA) e o limiar da DGS em jejum (110 mg/dL). Como reverter e quando marcar consulta médica, 39 €.",
+            "about": "Pré-diabetes",
+            "image": "/image/funcional-hero-janela.webp",
+            "group": "cardiometabolico",
+            "related": [
+                "figado-gordo",
+                "colesterol-alto",
+                "tensao-alta",
+                "dieta-figado-gordo",
+                "analises-alteradas"
+            ],
+            "faq": [
+                {
+                    "q": "O que é a pré-diabetes?",
+                    "a": "É uma glicemia acima do normal mas abaixo do limiar da diabetes. Aumenta o risco de diabetes tipo 2 e de doença cardiovascular."
+                },
+                {
+                    "q": "A pré-diabetes tem reversão?",
+                    "a": "Muitas vezes sim. Perda de peso, actividade física e melhor alimentação reduzem de forma importante o risco de evoluir para diabetes."
+                },
+                {
+                    "q": "Quais são os sintomas da diabetes tipo 2?",
+                    "a": "Muita sede, urinar muito, cansaço, visão turva e perda de peso sem explicação. Muitas pessoas não têm sintomas."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "colesterol-alto",
+            "title": "Colesterol alto nas análises: o que fazer a seguir",
+            "description": "Colesterol LDL: o alvo depende do risco (menos de 116 a menos de 55 mg/dL). O que a alimentação muda e quando a consulta decide medicação.",
+            "about": "Colesterol",
+            "image": "/image/consulta-clinica-geral.webp",
+            "group": "cardiometabolico",
+            "related": [
+                "tensao-alta",
+                "pre-diabetes",
+                "analises-alteradas",
+                "figado-gordo",
+                "saude-preventiva-adultos-jovens"
+            ],
+            "faq": [
+                {
+                    "q": "Qual é o valor ideal de colesterol LDL?",
+                    "a": "Depende do risco cardiovascular. As recomendações europeias vão de menos de 116 mg/dL em risco baixo a menos de 55 mg/dL em risco muito alto."
+                },
+                {
+                    "q": "O colesterol total é o valor mais importante?",
+                    "a": "Não. O mais importante é o LDL, interpretado com o risco cardiovascular global."
+                },
+                {
+                    "q": "É possível baixar o colesterol com alimentação?",
+                    "a": "Sim, até certo ponto. Em pessoas com risco alto ou colesterol genético, costuma ser necessária medicação."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "analises-alteradas",
+            "title": "Análises alteradas: como interpretar e quando preocupar",
+            "description": "Um asterisco nas análises não é sempre doença. O que o intervalo de referência significa e como rever o relatório em consulta online, 39 €.",
+            "about": "Análises clínicas",
+            "image": "/image/consulta-clinica-geral.webp",
+            "group": "cardiometabolico",
+            "related": [
+                "analises-figado",
+                "colesterol-alto",
+                "pre-diabetes",
+                "vitamina-d",
+                "consulta-medica-online-vale-a-pena"
+            ],
+            "faq": [
+                {
+                    "q": "Um valor fora do intervalo de referência é sempre grave?",
+                    "a": "Não. Cerca de 5% das pessoas saudáveis têm valores fora do intervalo em cada análise."
+                },
+                {
+                    "q": "Porque é que as minhas análises vêm com asteriscos?",
+                    "a": "O laboratório assinala automaticamente qualquer valor fora do intervalo, mesmo que a diferença seja mínima."
+                },
+                {
+                    "q": "Posso rever as minhas análises online?",
+                    "a": "Sim. Na Lon Clinic, um médico revê as análises numa consulta online de clínica geral, 39 €."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "precisa-de-suplementos",
+            "title": "Precisa mesmo de suplementos? O que dizem as análises",
+            "description": "A maioria não precisa de suplementos. Excepções (B12, ferro, vitamina D, ácido fólico) e por que confirmar na consulta médica antes de comprar.",
+            "about": "Suplementos alimentares",
+            "image": "/image/nutricao-alimentos.webp",
+            "group": "suplementos",
+            "related": [
+                "vitamina-d",
+                "magnesio",
+                "creatina",
+                "proteina-por-dia",
+                "analises-alteradas"
+            ],
+            "faq": [
+                {
+                    "q": "Devo tomar suplementos alimentares?",
+                    "a": "A maioria das pessoas com alimentação variada não precisa. As excepções devem ser confirmadas por análises ou indicação médica."
+                },
+                {
+                    "q": "Os suplementos são testados como os medicamentos?",
+                    "a": "Não. São géneros alimentícios e não precisam de demonstrar eficácia antes de serem vendidos."
+                },
+                {
+                    "q": "Os suplementos podem interferir com medicamentos?",
+                    "a": "Sim. Alguns, como o hipericão ou a vitamina K, interagem com medicamentos comuns."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "magnesio",
+            "title": "Magnésio: para que serve e quem precisa de suplementar",
+            "description": "Magnésio: para que serve, alimentos ricos e quando o suplemento faz sentido. Doses altas causam diarreia. Confirme na consulta médica.",
+            "about": "Magnésio",
+            "image": "/image/nutricao-alimentos.webp",
+            "group": "suplementos",
+            "related": [
+                "precisa-de-suplementos",
+                "vitamina-d",
+                "cortisol-alto",
+                "proteina-por-dia"
+            ],
+            "faq": [
+                {
+                    "q": "Quem deve tomar magnésio?",
+                    "a": "Pessoas com défice confirmado, com alguns medicamentos ou situações clínicas específicas. A maioria obtém o suficiente da alimentação."
+                },
+                {
+                    "q": "O magnésio ajuda a dormir?",
+                    "a": "A evidência é limitada. Pode ajudar em quem tem défice, mas não é um tratamento comprovado para insónia."
+                },
+                {
+                    "q": "O magnésio tem efeitos secundários?",
+                    "a": "Em doses altas causa sobretudo diarreia. Em doença renal pode acumular-se e deve ser evitado sem indicação médica."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "vitamina-d",
+            "title": "Vitamina D baixa: sintomas, análises e quando suplementar",
+            "description": "Vitamina D baixa é frequente em Portugal. Quem está em risco, quando pedir análises e por que a dose se define em consulta, não na prateleira.",
+            "about": "Vitamina D",
+            "image": "/image/nutricao-alimentos.webp",
+            "group": "suplementos",
+            "related": [
+                "precisa-de-suplementos",
+                "magnesio",
+                "analises-alteradas",
+                "pre-diabetes"
+            ],
+            "faq": [
+                {
+                    "q": "Devo tomar vitamina D?",
+                    "a": "Depende do seu risco. Idosos, pessoas com pouca exposição solar e pele mais escura têm mais probabilidade de precisar."
+                },
+                {
+                    "q": "Devo pedir análises à vitamina D?",
+                    "a": "Não por rotina em toda a gente. Faz sentido em pessoas com risco ou sintomas, por indicação médica."
+                },
+                {
+                    "q": "A vitamina D em excesso faz mal?",
+                    "a": "Sim. Doses altas prolongadas podem subir o cálcio no sangue e causar problemas renais."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "creatina",
+            "title": "Creatina: benefícios, riscos e quem deve tomar",
+            "description": "Creatina monohidratada em adultos saudáveis: evidência, efeito na creatinina das análises e quem deve falar com um médico antes.",
+            "about": "Creatina",
+            "image": "/image/nutri-hero-scale.webp",
+            "group": "suplementos",
+            "related": [
+                "proteina-por-dia",
+                "precisa-de-suplementos",
+                "analises-alteradas",
+                "magnesio"
+            ],
+            "faq": [
+                {
+                    "q": "A creatina é segura?",
+                    "a": "Em adultos saudáveis, nas doses habituais, a creatina monohidratada é considerada segura e é muito estudada."
+                },
+                {
+                    "q": "A creatina faz mal aos rins?",
+                    "a": "Em pessoas com rins saudáveis, não há evidência de lesão. Pode subir a creatinina nas análises sem haver dano real."
+                },
+                {
+                    "q": "A creatina engorda?",
+                    "a": "Pode aumentar o peso 1 a 2 kg por retenção de água nos músculos, não por gordura."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "proteina-por-dia",
+            "title": "Quanta proteína precisa por dia?",
+            "description": "Proteína por dia: 0,8 g/kg no adulto sedentário; 1,2 a 1,6 g/kg no treino, em muitos idosos e na perda de peso. Quando marcar consulta.",
+            "about": "Proteína",
+            "image": "/image/nutricao-alimentos.webp",
+            "group": "suplementos",
+            "related": [
+                "creatina",
+                "precisa-de-suplementos",
+                "dieta-figado-gordo",
+                "proteina-e-saciedade"
+            ],
+            "faq": [
+                {
+                    "q": "Quanta proteína preciso por dia?",
+                    "a": "Cerca de 0,8 g por kg de peso para adultos sedentários; 1,2 a 1,6 g/kg para quem treina força, para muitos idosos ou para quem perde peso."
+                },
+                {
+                    "q": "Preciso de proteína em pó?",
+                    "a": "Na maioria dos casos não. É uma opção prática, mas a comida chega para a maioria das pessoas."
+                },
+                {
+                    "q": "Proteína a mais faz mal?",
+                    "a": "Em pessoas saudáveis, dentro de valores razoáveis, não. Em doença renal, a quantidade deve ser definida com o médico."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "cortisol-alto",
+            "title": "Cortisol alto: sintomas reais vs mitos das redes",
+            "description": "Cortisol alto: o que é mito (cara de cortisol, fadiga adrenal) e quando é doença. Teste de burnout e consulta médica se a suspeita for hormonal.",
+            "about": "Cortisol",
+            "image": "/image/approach-psicologia.webp",
+            "group": "suplementos",
+            "related": [
+                "o-que-e-burnout",
+                "stress-e-perda-de-peso",
+                "precisa-de-suplementos",
+                "psicologia-online-para-burnout",
+                "magnesio"
+            ],
+            "faq": [
+                {
+                    "q": "Como sei se tenho o cortisol alto?",
+                    "a": "Só com testes específicos pedidos pelo médico. Um valor isolado ou um teste de saliva comprado online dizem pouco."
+                },
+                {
+                    "q": "A fadiga adrenal existe?",
+                    "a": "Não é um diagnóstico reconhecido. Os sintomas atribuídos a ela têm em geral outras causas, como stress crónico, sono ou burnout."
+                },
+                {
+                    "q": "Como baixar o cortisol naturalmente?",
+                    "a": "Dormir bem, fazer exercício regular, gerir o stress e procurar apoio psicológico quando o stress se torna crónico."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 8,
+            "slug": "intestino-irritavel",
+            "title": "Intestino irritável: sintomas, causas e o que comer",
+            "description": "Síndrome do intestino irritável: dor, inchaço e trânsito irregular. Sinais de alarme, low FODMAP em fases e consulta médica online, 39 €.",
+            "about": "Síndrome do intestino irritável",
+            "image": "/image/nutricao-alimentos.webp",
+            "group": "digestivo",
+            "related": [
+                "gastroenterite",
+                "norovirus",
+                "dieta-figado-gordo",
+                "cortisol-alto"
+            ],
+            "faq": [
+                {
+                    "q": "Como saber se tenho síndrome do intestino irritável?",
+                    "a": "Dor abdominal recorrente ligada a alterações do trânsito intestinal, sem sinais de alarme. O diagnóstico é feito por um médico."
+                },
+                {
+                    "q": "Qual a diferença entre SII e SIBO?",
+                    "a": "A SII é um diagnóstico clínico de sintomas. O SIBO é um excesso de bactérias no intestino delgado, com critérios e testes próprios."
+                },
+                {
+                    "q": "A dieta low FODMAP é para sempre?",
+                    "a": "Não. É uma estratégia temporária, em fases, para identificar os alimentos que causam sintomas."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "gastroenterite",
+            "title": "Gastroenterite: quanto dura e quando ir às urgências",
+            "description": "Gastroenterite: dura em geral 1 a 3 dias. Como hidratar, o que comer e os sinais para ir à urgência ou marcar consulta médica online.",
+            "about": "Gastroenterite",
+            "image": "/image/consulta-urgente.webp",
+            "group": "digestivo",
+            "related": [
+                "norovirus",
+                "intestino-irritavel",
+                "consulta-medica-online-vale-a-pena",
+                "infecao-urinaria-sintomas"
+            ],
+            "faq": [
+                {
+                    "q": "Quanto tempo dura uma gastroenterite?",
+                    "a": "Na maioria dos casos, 1 a 3 dias. A diarreia pode prolongar-se alguns dias mais."
+                },
+                {
+                    "q": "O que comer com gastroenterite?",
+                    "a": "O que tolerar, em pequenas quantidades: arroz, massa, pão, banana, sopa, iogurte. O mais importante é a hidratação."
+                },
+                {
+                    "q": "Quando ir às urgências por gastroenterite?",
+                    "a": "Com sinais de desidratação, sangue nas fezes, febre alta persistente, dor intensa ou vómitos que impedem beber."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "norovirus",
+            "title": "Norovírus: sintomas, contágio e quanto tempo dura",
+            "description": "Norovírus: vómitos e diarreia em 12 a 48 horas, dura 1 a 3 dias. O álcool gel não chega. Quando a consulta online chega e quando ir à urgência.",
+            "about": "Norovírus",
+            "image": "/image/consulta-urgente.webp",
+            "group": "digestivo",
+            "related": [
+                "gastroenterite",
+                "intestino-irritavel",
+                "consulta-medica-online-vale-a-pena"
+            ],
+            "faq": [
+                {
+                    "q": "Quanto tempo dura o norovírus?",
+                    "a": "Os sintomas surgem 12 a 48 horas após o contágio e duram habitualmente 1 a 3 dias."
+                },
+                {
+                    "q": "Durante quanto tempo sou contagioso?",
+                    "a": "Sobretudo enquanto tem sintomas e nos 2 dias seguintes, mas o vírus pode continuar nas fezes durante semanas."
+                },
+                {
+                    "q": "O álcool gel mata o norovírus?",
+                    "a": "Não de forma fiável. Lavar as mãos com água e sabão é mais eficaz."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "comichao-pele",
+            "title": "Comichão na pele: causas comuns e quando consultar",
+            "description": "Comichão no corpo, com ou sem borbulhas: pele seca, eczema, sarna e quando pode ser fígado ou outra causa. Quando marcar consulta.",
+            "about": "Prurido",
+            "image": "/image/consulta-clinica-geral.webp",
+            "group": "agudos",
+            "related": [
+                "mordida",
+                "analises-figado",
+                "consulta-medica-online-vale-a-pena",
+                "gastroenterite"
+            ],
+            "faq": [
+                {
+                    "q": "O que pode causar comichão no corpo todo?",
+                    "a": "Pele seca, alergias, eczema, urticária e picadas são as causas mais comuns. Comichão persistente sem lesões pode ter causa interna."
+                },
+                {
+                    "q": "Comichão sem borbulhas é preocupante?",
+                    "a": "Se for persistente, justifica consulta e análises para excluir causas como fígado, rins, tiroide ou ferro baixo."
+                },
+                {
+                    "q": "Comichão à noite pode ser sarna?",
+                    "a": "Pode. Comichão intensa à noite, sobretudo se outras pessoas da casa também a têm, deve ser avaliada."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "mordida",
+            "title": "Mordida de cão, gato ou insecto: o que fazer",
+            "description": "Mordida de cão ou gato: lavar a ferida, quando avaliar antibiótico e tétano, e quando a raiva em viagem é urgência. Consulta médica, 39 €.",
+            "about": "Mordeduras",
+            "image": "/image/consulta-urgente.webp",
+            "group": "agudos",
+            "related": [
+                "vacina-tetano-difteria",
+                "comichao-pele",
+                "consulta-medica-viajantes-vacinas",
+                "gastroenterite"
+            ],
+            "faq": [
+                {
+                    "q": "O que fazer depois de uma mordida de cão?",
+                    "a": "Lavar a ferida com água e sabão durante vários minutos, desinfectar e procurar avaliação médica sobre antibiótico e tétano."
+                },
+                {
+                    "q": "A mordida de gato é mais perigosa?",
+                    "a": "Tem maior risco de infeção, porque os dentes são finos e penetram fundo. Deve ser sempre avaliada."
+                },
+                {
+                    "q": "Há raiva em Portugal?",
+                    "a": "Portugal não tem raiva em cães e gatos, mas em muitos países de viagem existe. Aí, qualquer mordida ou arranhão de mamífero exige avaliação urgente."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "ardor-ao-urinar",
+            "title": "Ardor ao urinar: é infeção urinária?",
+            "description": "Ardor ao urinar nem sempre é cistite. Causas, quando a videoconsulta trata (39 €) e sinais de alarme. Receita só depois do vídeo.",
+            "about": "Disúria",
+            "image": "/image/consulta-telemedicina.webp",
+            "group": "agudos",
+            "related": [
+                "infecao-urinaria-sintomas",
+                "consulta-medica-online-vale-a-pena",
+                "gastroenterite",
+                "renovar-receita-medica-online"
+            ],
+            "faq": [
+                {
+                    "q": "Ardor ao urinar é sempre infeção urinária?",
+                    "a": "É a causa mais frequente, mas também pode ser uma infeção sexualmente transmissível, irritação ou cálculos."
+                },
+                {
+                    "q": "A infeção urinária pode ser tratada por teleconsulta?",
+                    "a": "Uma cistite simples em mulheres não grávidas, sem sinais de alarme, pode muitas vezes ser avaliada e tratada online. Na Lon Clinic é sempre por vídeo."
+                },
+                {
+                    "q": "O sumo de arando previne infeções urinárias?",
+                    "a": "A evidência é modesta. Pode ajudar algumas mulheres com infeções repetidas, mas não trata uma infeção."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "slotService": "travel",
+            "readingMinutes": 7,
+            "slug": "vacina-tetano-difteria",
+            "title": "Vacina do tétano e difteria: quando fazer o reforço",
+            "description": "Reforço da vacina Td em Portugal: 10, 25, 45 e 65 anos, e de 10 em 10 anos. Feridas e viagem: quando antecipar. Consulta do viajante, 39 €.",
+            "about": "Vacina tétano-difteria",
+            "image": "/image/travel-clinic-mountain-bg.jpg",
+            "group": "viajante",
+            "related": [
+                "mordida",
+                "consulta-medica-viajantes-vacinas",
+                "centros-de-vacinacao-internacional-portugal",
+                "quando-agendar-consulta-do-viajante"
+            ],
+            "faq": [
+                {
+                    "q": "De quanto em quanto tempo se faz o reforço do tétano e difteria?",
+                    "a": "Em Portugal, aos 10, 25, 45 e 65 anos, e depois de 10 em 10 anos, segundo o Programa Nacional de Vacinação."
+                },
+                {
+                    "q": "Preciso de reforço depois de uma ferida?",
+                    "a": "Depende do tipo de ferida e da data da última dose. Em feridas de risco, se a última dose foi há mais de 5 anos, pode ser necessário."
+                },
+                {
+                    "q": "Onde posso ver as minhas vacinas?",
+                    "a": "No boletim de vacinas ou na área pessoal do SNS 24."
+                }
+            ]
+        },
+        {
             "slug": "psicologia-online-para-burnout",
             "title": "Psicologia Online Para Burnout: Como Funciona e Quando Marcar",
             "description": "Psicologia online para burnout: 50 min, 60 € / 56 €/semana, OPP. Baixa só o médico. Teste CBI, não MBI.",
@@ -51,10 +961,10 @@
         },
         {
             "slug": "o-que-e-burnout",
-            "title": "O Que É Burnout: Sintomas, Tipos, Teste e Como Sair",
-            "description": "Burnout é fenómeno ocupacional (OMS/CID-11): exaustão, cinismo, ineficácia. Teste CBI Lon, tipos Farber, baixa só com médico.",
+            "title": "Tipos de burnout, teste CBI e recuperação em Portugal",
+            "description": "Tipos de burnout (sobrecarga, subdesafio, negligência), teste CBI na Lon, baixa médica e como sair. A definição curta está em Burnout: o que é.",
             "datePublished": "2026-09-09",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
@@ -115,6 +1025,7 @@
             "slotService": "clinica_geral",
             "readingMinutes": 6,
             "related": [
+                "infecao-urinaria-sintomas",
                 "consulta-medica-online-vale-a-pena",
                 "melhores-plataformas-telemedicina",
                 "telemedicina-em-casa",
@@ -168,7 +1079,8 @@
                 "telemedicina-em-casa",
                 "psicologia-online-vs-presencial",
                 "consulta-nutricao-online-como-funciona",
-                "o-que-e-burnout"
+                "o-que-e-burnout",
+                "infecao-urinaria-sintomas"
             ],
             "faq": [
                 {
@@ -190,6 +1102,50 @@
                 {
                     "q": "Quanto custa a consulta de clínica geral online na Lon Clinic?",
                     "a": "39 €, slot de 30 minutos. A renovação de receita crónica estável é 19 €, outro acto."
+                }
+            ]
+        },
+        {
+            "slug": "infecao-urinaria-sintomas",
+            "title": "Infeção urinária: sintomas e quando procurar ajuda",
+            "description": "Sintomas de infeção urinária (cistite): ardor, urgência, quando ir à urgência e quando a consulta online (39 €) chega. Receita só após vídeo, não por questionário.",
+            "datePublished": "2026-09-22",
+            "dateModified": "2026-09-22",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Clínica geral",
+            "author": "rita-aguiar",
+            "image": "/image/consulta-telemedicina.webp",
+            "verified": true,
+            "ctaKind": "clinica_geral",
+            "liveSlots": true,
+            "slotService": "clinica_geral",
+            "readingMinutes": 6,
+            "related": [
+                "ardor-ao-urinar",
+                "consulta-medica-online-vale-a-pena",
+                "renovar-receita-medica-online",
+                "telemedicina-em-casa",
+                "melhores-plataformas-telemedicina",
+                "saude-preventiva-adultos-jovens"
+            ],
+            "faq": [
+                {
+                    "q": "Quais são os sintomas de infeção urinária?",
+                    "a": "Na cistite: ardor a urinar, vontade frequente, desconforto no baixo-ventre, urina turva ou com cheiro mais forte. Febre e dor lombar apontam para algo mais sério."
+                },
+                {
+                    "q": "Posso tratar uma infeção urinária só com um questionário?",
+                    "a": "Na Lon Clinic, não. Os antibióticos exigem avaliação médica por videoconsulta."
+                },
+                {
+                    "q": "Quanto custa a consulta de infeção urinária na Lon Clinic?",
+                    "a": "39 € pela videoconsulta de clínica geral (30 min). A receita, se indicada, não tem taxa extra."
+                },
+                {
+                    "q": "Homens e grávidas podem tratar cistite online nesta via?",
+                    "a": "Não. Homem, gravidez, criança ou sinais de envolvimento do rim pedem outro circuito — urgência, obstetra ou consulta presencial."
                 }
             ]
         },
@@ -285,10 +1241,10 @@
         },
         {
             "slug": "consulta-medica-viajantes-vacinas",
-            "title": "Consulta Médica Para Viajantes: Vacinas e Cuidados Antes de Viajar",
-            "description": "Quando marcar medicina do viajante (4–6 semanas), vacinas por destino e consulta Lon a 39 €. Vacina no CVI, não no ecrã.",
+            "title": "Consulta do viajante: vacinas e cuidados antes de viajar",
+            "description": "Quando marcar a consulta do viajante (4–6 semanas), vacinas por destino e consulta Lon a 39 €. Vacina no CVI, não no ecrã.",
             "datePublished": "2026-09-09",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
@@ -300,22 +1256,27 @@
             "slotService": "travel",
             "readingMinutes": 8,
             "related": [
-                "consulta-medica-online-vale-a-pena",
-                "melhores-plataformas-telemedicina",
-                "saude-preventiva-adultos-jovens",
-                "quanto-custa-consulta-medicina-do-viajante",
-                "vacinas-viajante-guia-completo",
-                "centros-de-vacinacao-internacional-portugal",
+                "consulta-do-viajante-online",
+                "como-marcar-consulta-do-viajante",
+                "consulta-do-viajante-sns",
                 "consulta-do-viajante-urgente",
-                "telemedicina-em-casa"
+                "quando-agendar-consulta-do-viajante",
+                "quanto-custa-consulta-medicina-do-viajante",
+                "onde-fazer-consulta-medicina-do-viajante-lisboa",
+                "onde-marcar-consulta-do-viajante-porto",
+                "vou-viajar-esta-semana-sem-vacinas",
+                "centros-de-vacinacao-internacional-portugal",
+                "malaria-hepatite-a-b-viajante",
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-viajante-guia-completo"
             ],
             "faq": [
                 {
-                    "q": "Quando devo marcar a consulta de medicina do viajante?",
+                    "q": "Quando devo marcar a consulta do viajante?",
                     "a": "Idealmente 4 a 6 semanas antes da viagem, para dar tempo a que as vacinas façam efeito e, se forem necessárias várias doses, para as espaçar adequadamente. É orientação frequente, não uma garantia."
                 },
                 {
-                    "q": "A consulta de medicina do viajante pode ser feita online?",
+                    "q": "A consulta do viajante pode ser feita online?",
                     "a": "Sim, a avaliação e o aconselhamento podem ser feitos por teleconsulta. A administração da vacina em si exige presença física num centro de vacinação."
                 },
                 {
@@ -327,15 +1288,66 @@
                     "a": "Ainda vale a pena. Mesmo sem tempo para todas as vacinas fazerem efeito completo, há sempre aconselhamento e cuidados práticos que reduzem o risco durante a viagem."
                 },
                 {
-                    "q": "Quanto tempo demora uma consulta de medicina do viajante?",
+                    "q": "Quanto tempo demora uma consulta do viajante?",
                     "a": "Na Lon Clinic, 20 minutos para 1 pessoa; 30 minutos a duas; 40 minutos a três ou quatro. Não é o slot de 30 minutos da clínica geral."
+                }
+            ]
+        },
+        {
+            "slug": "malaria-hepatite-a-b-viajante",
+            "title": "Malária e hepatite A/B: o que precisa de saber antes de viajar",
+            "description": "Profilaxia de malária (receita, sem vacina de rotina) e vacinas de hepatite A e B antes de viajar. Consulta do viajante online, 39 €; toma no CVI.",
+            "datePublished": "2026-09-22",
+            "dateModified": "2026-09-22",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Viagem",
+            "author": "rita-aguiar",
+            "image": "/image/travel-clinic-mountain-bg.jpg",
+            "verified": true,
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "slotService": "travel",
+            "readingMinutes": 7,
+            "related": [
+                "consulta-do-viajante-online",
+                "como-marcar-consulta-do-viajante",
+                "consulta-do-viajante-sns",
+                "consulta-do-viajante-urgente",
+                "quando-agendar-consulta-do-viajante",
+                "quanto-custa-consulta-medicina-do-viajante",
+                "onde-fazer-consulta-medicina-do-viajante-lisboa",
+                "onde-marcar-consulta-do-viajante-porto",
+                "consulta-medica-viajantes-vacinas",
+                "vou-viajar-esta-semana-sem-vacinas",
+                "centros-de-vacinacao-internacional-portugal",
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-viajante-guia-completo"
+            ],
+            "faq": [
+                {
+                    "q": "A malária tem vacina em Portugal para viajantes?",
+                    "a": "Não de rotina. A prevenção é profilaxia com receita médica e protecção contra picadas."
+                },
+                {
+                    "q": "A primeira dose de hepatite A chega se viajo daqui a duas semanas?",
+                    "a": "Confere protecção significativa a partir de cerca de duas semanas; o esquema completo são duas doses. Ainda vale marcar a consulta do viajante."
+                },
+                {
+                    "q": "A hepatite B já está no boletim de criança. Preciso de reforço?",
+                    "a": "Muitas vezes o esquema está completo. O médico confirma no boletim; não assuma nem recuse o reforço só por um artigo."
+                },
+                {
+                    "q": "A consulta online inclui as vacinas?",
+                    "a": "Não. Inclui a avaliação e a prescrição. A toma é num Centro de Vacinação Internacional. Na Lon Clinic a consulta custa 39 € (1 pessoa)."
                 }
             ]
         },
         {
             "slug": "consulta-nutricao-preco-como-funciona",
             "title": "Consulta de Nutrição: Preço, Como Funciona e Quando Marcar",
-            "description": "Hub: consulta avulsa 45 € (30 min) ou programa 115 € / 75 €/mês, 100% online. ADSE, Cheque Cuida-te (12–35) e quando marcar.",
+            "description": "Nutricionista online desde 45 € (avulsa ou quinzenal). Programa com médico 115 € / 75 €/mês. ADSE em regime livre e Cheque Cuida-te (12–35).",
             "datePublished": "2026-09-09",
             "dateModified": "2026-09-22",
             "format": "markdown",
@@ -360,7 +1372,7 @@
             "faq": [
                 {
                     "q": "Quanto custa uma consulta de nutrição?",
-                    "a": "No particular, a faixa mais citada em Portugal é 40 € a 70 € por sessão — não é uma tabela oficial. Na Lon Clinic a consulta inicial é 115 € e o acompanhamento 75 €/mês (duas consultas; slot de 30 minutos). A consulta avulsa de nutricionista é 45 € (30 min); o programa é 115 € no mês 1 e 75 €/mês."
+                    "a": "No particular, a faixa mais citada em Portugal é 40 € a 70 € por sessão — não é uma tabela oficial. Na Lon Clinic o nutricionista online é 45 € (avulsa ou 45 € a cada 15 dias). O programa com médico é 115 € no mês 1 e 75 €/mês."
                 },
                 {
                     "q": "A consulta de nutrição online funciona tão bem como a presencial?",
@@ -384,8 +1396,8 @@
         },
         {
             "slug": "consulta-nutricao-online-como-funciona",
-            "title": "Consulta de Nutrição Online: Como Funciona em 2026",
-            "description": "Videochamada no browser. Consulta avulsa 45 € (30 min) ou programa 115 € no mês 1 e 75 €/mês, recibo ADSE. Sem app.",
+            "title": "Nutricionista online: como funciona a consulta em Portugal",
+            "description": "Nutricionista online por videochamada no browser. Desde 45 €. Recibo ADSE em regime livre. Sem app.",
             "datePublished": "2026-09-09",
             "dateModified": "2026-09-22",
             "format": "markdown",
@@ -424,6 +1436,49 @@
             ],
             "author": "sara-barreto",
             "reviewer": "rita-aguiar"
+        },
+        {
+            "slug": "imc",
+            "title": "IMC: o que é, como se calcula e calculadora",
+            "description": "O IMC (Índice de Massa Corporal) é peso (kg) ÷ altura² (m). Classificação OMS e calculadora grátis. Se quiser ir além do número: nutricionista online desde 45 €.",
+            "datePublished": "2026-09-22",
+            "dateModified": "2026-09-22",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Perda de peso",
+            "author": "sara-barreto",
+            "image": "/image/nutricao-consulta.webp",
+            "verified": true,
+            "ctaKind": "nutrition",
+            "liveSlots": false,
+            "readingMinutes": 4,
+            "related": [
+                "consulta-nutricao-online-como-funciona",
+                "consulta-nutricao-preco-como-funciona",
+                "quanto-custa-consulta-nutricao-portugal",
+                "consultas-nutricao-perda-de-peso",
+                "efeito-ioio",
+                "como-encontrar-um-nutricionista"
+            ],
+            "faq": [
+                {
+                    "q": "O que é o IMC?",
+                    "a": "O IMC (Índice de Massa Corporal) é o peso em quilogramas dividido pela altura em metros ao quadrado. Classifica baixo peso, peso normal, excesso de peso e obesidade em adultos, segundo a OMS."
+                },
+                {
+                    "q": "Como se calcula o IMC?",
+                    "a": "IMC = peso (kg) ÷ altura (m)². Exemplo: 70 kg e 1,70 m → 70 ÷ 2,89 = 24,2. A calculadora da Lon Clinic faz o cálculo em /nutricao/teste-imc."
+                },
+                {
+                    "q": "Qual é o IMC considerado normal?",
+                    "a": "Em adultos, a OMS considera normal 18,5 a 24,9."
+                },
+                {
+                    "q": "Preciso de consulta depois de calcular o IMC?",
+                    "a": "Não, se só queria o número. Se o resultado o preocupa, um nutricionista online (desde 45 €) ajuda a interpretar — na Lon Clinic em /nutricao."
+                }
+            ]
         },
         {
             "slug": "consultas-nutricao-perda-de-peso",
@@ -604,8 +1659,8 @@
         },
         {
             "slug": "adse-consultas-nutricao-portugal",
-            "title": "ADSE e Consultas de Nutrição: Como Funciona a Comparticipação em 2026",
-            "description": "A ADSE inclui nutrição em convencionado e livre. Confirme tetos na ADSE Direta. Lon é regime livre (115 € / 75 €/mês).",
+            "title": "ADSE e nutricionista online: como funciona a comparticipação",
+            "description": "ADSE inclui nutrição em convencionado e livre. Nutricionista online Lon: recibo em regime livre (45 €, ou 115 € / 75 €/mês no programa). Tetos na ADSE Direta.",
             "datePublished": "2026-09-09",
             "dateModified": "2026-09-22",
             "format": "markdown",
@@ -631,7 +1686,7 @@
             "faq": [
                 {
                     "q": "A ADSE comparticipa consultas de nutrição online?",
-                    "a": "A ADSE anunciou teleconsultas e nutrição nas tabelas de 2025. Se a sua videochamada entra no acto, confirme na ADSE Direta."
+                    "a": "A ADSE anunciou teleconsultas e nutrição nas tabelas de 2025. O nutricionista online da Lon emite recibo em regime livre; se a sua videochamada entra no acto, confirme na ADSE Direta."
                 },
                 {
                     "q": "Quanto recebo de volta se pagar uma consulta de nutrição em regime livre?",
@@ -647,8 +1702,8 @@
         },
         {
             "slug": "quanto-custa-consulta-nutricao-portugal",
-            "title": "Quanto Custa uma Consulta de Nutrição em Portugal? (Preços 2026)",
-            "description": "Faixa particular 40–70 €. Na Lon Clinic: consulta avulsa 45 € (30 min) ou programa 115 € no mês 1 e 75 €/mês. ADSE e Cheque Cuida-te.",
+            "title": "Nutricionista online preço em Portugal (2026)",
+            "description": "Nutricionista online preço: avulsa 45 €, quinzenal 45 € / 15 dias. Programa com médico 115 € / 75 €/mês. Recibo ADSE em regime livre.",
             "datePublished": "2026-09-09",
             "dateModified": "2026-09-22",
             "format": "markdown",
@@ -673,16 +1728,16 @@
             ],
             "faq": [
                 {
+                    "q": "Quanto custa um nutricionista online?",
+                    "a": "Na Lon Clinic: 45 € avulsa ou 45 € a cada 15 dias. Programa com médico: 115 € no mês 1 e 75 €/mês. Recibo ADSE em regime livre."
+                },
+                {
                     "q": "Quanto custa uma consulta de nutrição em média em Portugal?",
-                    "a": "No particular, 40 € a 70 € é a faixa mais citada. Na Lon Clinic o mês 1 custa 115 € e o acompanhamento 75 €/mês."
+                    "a": "No particular, 40 € a 70 € é a faixa mais citada. Nutricionista online na Lon Clinic: 45 € avulsa ou 45 € a cada 15 dias."
                 },
                 {
-                    "q": "As consultas de seguimento custam o mesmo que a primeira consulta?",
-                    "a": "Em muitas clínicas, não. Na Lon Clinic o mês 1 é 115 €; depois 75 €/mês."
-                },
-                {
-                    "q": "É possível ter consultas de nutrição gratuitas em Portugal?",
-                    "a": "Sim: SNS, Cheque Cuida-te — Nutrição (12–35 anos, aderentes) e alguns SAS. A Lon Clinic não afirma ser aderente do cheque."
+                    "q": "A ADSE comparticipa o nutricionista online?",
+                    "a": "A Lon emite recibo em regime livre. Confirme o acto na ADSE Direta. A Lon não garante o teto."
                 }
             ],
             "author": "sara-barreto",
@@ -862,10 +1917,10 @@
         },
         {
             "slug": "burnout-sinais-quando-procurar-ajuda",
-            "title": "Burnout: Sinais e Quando Procurar Ajuda",
-            "description": "Sinais de burnout (OMS/Maslach), teste CBI e psicologia Lon a 60 € / 56 €/semana. Liga ao centro /burnout.",
+            "title": "Quando procurar ajuda para burnout",
+            "description": "Quando o descanso já não chega: persistência, sono, relações e o passo seguinte — psicologia online. A definição está em Burnout: o que é.",
             "datePublished": "2026-09-09",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
@@ -975,6 +2030,7 @@
             "slotService": "psicologia",
             "readingMinutes": 6,
             "related": [
+                "psicologo-online-como-funciona",
                 "primeira-consulta-psicologia-o-que-esperar",
                 "como-encontrar-um-psicologo",
                 "psicologo-ansiedade-quando-procurar-ajuda",
@@ -1024,6 +2080,7 @@
             "slotService": "psicologia",
             "readingMinutes": 6,
             "related": [
+                "psicologo-online-como-funciona",
                 "como-encontrar-um-psicologo",
                 "psicologia-online-vs-presencial",
                 "quando-ir-ao-psicologo-sinais",
@@ -1080,7 +2137,7 @@
                 "consultas-psicologia-gratuitas-portugal",
                 "adse-seguros-psicologia-portugal",
                 "telemedicina-em-casa",
-                "consultas-psicologia-lisboa"
+                "psicologo-online-como-funciona"
             ],
             "faq": [
                 {
@@ -1102,6 +2159,52 @@
                 {
                     "q": "Quanto custa a psicologia online na Lon Clinic?",
                     "a": "60 € avulsa ou 56 €/semana. 50 minutos."
+                }
+            ]
+        },
+        {
+            "slug": "psicologo-online-como-funciona",
+            "title": "Psicólogo online: como funciona a consulta (preço e clínica integrada)",
+            "description": "Como funciona o psicólogo online: videochamada 50 min, 60 € ou 56 €/semana. Eficácia, sigilo e histórico com médico e nutricionista só com consentimento.",
+            "datePublished": "2026-09-22",
+            "dateModified": "2026-09-22",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Psicologia",
+            "author": "carolina-rocha",
+            "image": "/image/image1_files/Marylebone_Large_Desktop.jpg",
+            "verified": true,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 6,
+            "related": [
+                "psicologia-online-vs-presencial",
+                "quanto-custa-consulta-psicologia-portugal",
+                "primeira-consulta-psicologia-o-que-esperar",
+                "como-encontrar-um-psicologo",
+                "quando-ir-ao-psicologo-sinais",
+                "adse-seguros-psicologia-portugal",
+                "consultas-psicologia-gratuitas-portugal",
+                "psicologia-online-portugal-por-distrito"
+            ],
+            "faq": [
+                {
+                    "q": "Como funciona um psicólogo online?",
+                    "a": "Videochamada de 50 minutos no browser, com psicólogo inscrito na OPP. Na Lon Clinic: avulsa 60 € ou subscrição 56 €/sessão. Recebe o link por email, sem instalar app."
+                },
+                {
+                    "q": "A terapia online funciona tão bem como a presencial?",
+                    "a": "Para a maior parte dos adultos, a evidência trata os formatos como equivalentes. O preditor é a aliança terapêutica e a regularidade. Crianças, avaliação neuropsicológica e intolerância ao ecrã são excepções frequentes."
+                },
+                {
+                    "q": "Quanto custa um psicólogo online na Lon Clinic?",
+                    "a": "Avulsa 60 €. Subscrição semanal 56 € por sessão (224 €/mês). Quatro avulsas no mesmo mês seriam 240 €."
+                },
+                {
+                    "q": "O histórico vai automaticamente para o médico ou a nutricionista?",
+                    "a": "Não. A partilha é só com o seu consentimento."
                 }
             ]
         },
@@ -2719,21 +3822,23 @@
         },
         {
             "slug": "quanto-custa-consulta-psicologia-portugal",
-            "title": "Quanto Custa uma Consulta de Psicologia em Portugal em 2026?",
-            "description": "Preços médios de consultas de psicologia em Portugal em 2026, presencial vs online, privado vs ADSE/seguros. Compare e marque consulta a 60 €.",
+            "title": "Quanto custa psicologia online em Portugal? Preço da psicoterapia e da subscrição",
+            "description": "Quanto custa psicologia online: avulsa 60 €, subscrição 56 €/semana (224 €/mês). Quatro avulsas seriam 240 €. Histórico articulável com médico e nutricionista.",
             "datePublished": "2026-09-09",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "about": "Psicologia",
             "image": "/image/image1_files/Marylebone_Large_Desktop.jpg",
-            "verified": false,
+            "verified": true,
+            "author": "carolina-rocha",
             "ctaKind": "mental",
             "liveSlots": true,
             "slotService": "psicologia",
             "readingMinutes": 6,
             "related": [
+                "psicologo-online-como-funciona",
                 "consultas-psicologia-gratuitas-portugal",
                 "como-encontrar-um-psicologo",
                 "adse-seguros-psicologia-portugal",
@@ -2745,24 +3850,24 @@
             ],
             "faq": [
                 {
-                    "q": "Qual é o preço de uma consulta de Psicologia?",
-                    "a": "Em Portugal, o preço médio de uma consulta de psicologia privada situa-se entre 40 € e 70 €, sendo 60 € o valor mais comum a nível nacional. Na Lon Clinic a sessão avulsa custa 60 €."
+                    "q": "Quanto custa psicologia online em Portugal?",
+                    "a": "Na Lon Clinic a sessão avulsa custa 60 €. A subscrição semanal custa 56 € por sessão, cobrada ao mês (224 € por 4 sessões). Quatro avulsas no mesmo mês seriam 240 €."
                 },
                 {
-                    "q": "Qual é a média para Psicologia em Portugal?",
-                    "a": "A média nacional ronda os 50 €–60 € por sessão, com variações consoante a região (Lisboa e Setúbal tendem a ter os preços mais altos) e a experiência do psicólogo."
+                    "q": "Quanto custa psicoterapia se for irregular?",
+                    "a": "Cada avulsa são 60 €. Uma ou duas sessões no mês parecem mais baratas, mas não são um mês de terapia. A médio prazo, quem interrompe e recomeça costuma pagar mais sessões para o mesmo resultado. A subscrição semanal (224 €/mês) é 16 € abaixo de quatro avulsas."
                 },
                 {
-                    "q": "Qual é o preço médio de uma consulta com um Psicólogo?",
-                    "a": "O valor mais frequentemente reportado por clínicas privadas em Portugal é de 60 € por sessão de cerca de 50 minutos."
+                    "q": "Qual é o preço médio de uma consulta de psicologia em Portugal?",
+                    "a": "No particular, 40 € a 70 € é a faixa habitual; em Lisboa e Porto pode passar os 80 €. Na Lon Clinic o preço não muda com a cidade: 60 € ou 56 €/semana, 50 minutos."
                 },
                 {
-                    "q": "O preço é o mesmo para todas as especialidades?",
-                    "a": "Não. A consulta individual custa 60 € (ou 56 €/semana em acompanhamento). A terapia de casal tem preço próprio: 75 € avulsa ou 65 €/semana cobrados mensalmente."
+                    "q": "O preço é o mesmo para terapia de casal?",
+                    "a": "Não. Casal: 75 € avulsa ou 65 €/semana (260 €/mês)."
                 },
                 {
-                    "q": "Quanto custa a primeira consulta?",
-                    "a": "Na maioria das clínicas privadas portuguesas, a primeira consulta tem o mesmo preço das seguintes ou é ligeiramente mais cara, por incluir uma avaliação inicial mais aprofundada. Na Lon Clinic a primeira sessão custa o mesmo: 60 €."
+                    "q": "A Lon Clinic partilha o histórico com médico ou nutricionista?",
+                    "a": "Só com o seu consentimento. Psicólogo, médico e nutricionista estão na mesma clínica; a partilha não é automática."
                 }
             ]
         },
@@ -2862,10 +3967,10 @@
         },
         {
             "slug": "consulta-do-viajante-urgente",
-            "title": "Preciso de uma consulta do viajante o quanto antes em Portugal — como encontrar?",
-            "description": "Consulta do viajante urgente em Portugal: videoconsulta hoje ou amanhã, 39 €. Prescrição no próprio dia; vacinas no CVI. O certificado da febre amarela só vale a partir do 10.º dia.",
+            "title": "Consulta do viajante urgente em Portugal — hoje ou amanhã",
+            "description": "Consulta do viajante urgente: videoconsulta hoje ou amanhã, 39 €. Prescrição no próprio dia; vacinas no CVI. O certificado da febre amarela só vale a partir do 10.º dia.",
             "datePublished": "2026-09-08",
-            "dateModified": "2026-09-08",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
@@ -2877,12 +3982,20 @@
             "slotService": "travel",
             "readingMinutes": 5,
             "related": [
+                "consulta-do-viajante-online",
+                "como-marcar-consulta-do-viajante",
+                "consulta-do-viajante-sns",
                 "quando-agendar-consulta-do-viajante",
+                "quanto-custa-consulta-medicina-do-viajante",
+                "onde-fazer-consulta-medicina-do-viajante-lisboa",
+                "onde-marcar-consulta-do-viajante-porto",
+                "consulta-medica-viajantes-vacinas",
                 "vou-viajar-esta-semana-sem-vacinas",
                 "centros-de-vacinacao-internacional-portugal",
-                "quanto-custa-consulta-medicina-do-viajante",
+                "malaria-hepatite-a-b-viajante",
                 "vacina-febre-amarela-guia-completo",
-                "onde-fazer-consulta-medicina-do-viajante-lisboa"
+                "vacinas-viajante-guia-completo",
+                "vacinas-viajante-lisboa"
             ],
             "faq": [
                 {
@@ -2900,6 +4013,195 @@
                 {
                     "q": "Quanto custa uma consulta do viajante urgente?",
                     "a": "Na Lon Clinic: 39 € por uma pessoa, 69 € a duas. Vacinas no CVI e comprimidos da malária pagam-se à parte."
+                }
+            ]
+        },
+        {
+            "slug": "como-marcar-consulta-do-viajante",
+            "title": "Como marcar consulta do viajante em Portugal",
+            "description": "Como marcar consulta do viajante: online hoje ou amanhã (39 €) ou no SNS por telefone, com espera de semanas. Vacinas no CVI depois da prescrição.",
+            "datePublished": "2026-09-22",
+            "dateModified": "2026-09-22",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Consulta do viajante",
+            "author": "rita-aguiar",
+            "image": "/image/guide/travel-cover-hq-2.webp",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "slotService": "travel",
+            "readingMinutes": 5,
+            "related": [
+                "consulta-do-viajante-online",
+                "consulta-do-viajante-sns",
+                "consulta-do-viajante-urgente",
+                "quando-agendar-consulta-do-viajante",
+                "quanto-custa-consulta-medicina-do-viajante",
+                "onde-fazer-consulta-medicina-do-viajante-lisboa",
+                "onde-marcar-consulta-do-viajante-porto",
+                "consulta-medica-viajantes-vacinas",
+                "vou-viajar-esta-semana-sem-vacinas",
+                "centros-de-vacinacao-internacional-portugal",
+                "malaria-hepatite-a-b-viajante",
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-viajante-guia-completo"
+            ],
+            "faq": [
+                {
+                    "q": "Como marcar consulta do viajante?",
+                    "a": "Na Lon Clinic: no site ou por WhatsApp, videoconsulta hoje ou amanhã, 39 €. No SNS: telefone ou email no CVI ou hospital da área, com espera frequente de 4 a 8 semanas. A vacina toma-se depois num Centro de Vacinação Internacional."
+                },
+                {
+                    "q": "Onde marcar consulta do viajante?",
+                    "a": "Online de qualquer distrito, no SNS (CVI e consultas de doenças infecciosas) ou em hospitais privados. Lisboa e Porto têm guias próprios. A toma da vacina é no CVI, não no ecrã."
+                },
+                {
+                    "q": "Preciso de ir a um hospital para marcar?",
+                    "a": "Não, se escolher a consulta online. No SNS, sim: a marcação é no CVI ou no hospital, por telefone ou email, com horário prévio."
+                }
+            ]
+        },
+        {
+            "slug": "consulta-do-viajante-online",
+            "title": "Consulta do viajante online: como funciona, preço e vacinas",
+            "description": "Consulta do viajante online em Portugal: videoconsulta hoje ou amanhã, 39 €. Vacinas no CVI; certificado de febre amarela só no 10.º dia. SNS vs. privado.",
+            "datePublished": "2026-09-22",
+            "dateModified": "2026-09-22",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Consulta do viajante",
+            "author": "rita-aguiar",
+            "image": "/image/travel-clinic-mountain-bg.jpg",
+            "verified": true,
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "slotService": "travel",
+            "readingMinutes": 6,
+            "related": [
+                "como-marcar-consulta-do-viajante",
+                "consulta-do-viajante-sns",
+                "consulta-do-viajante-urgente",
+                "quando-agendar-consulta-do-viajante",
+                "quanto-custa-consulta-medicina-do-viajante",
+                "onde-fazer-consulta-medicina-do-viajante-lisboa",
+                "onde-marcar-consulta-do-viajante-porto",
+                "consulta-medica-viajantes-vacinas",
+                "vou-viajar-esta-semana-sem-vacinas",
+                "centros-de-vacinacao-internacional-portugal",
+                "malaria-hepatite-a-b-viajante",
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-viajante-guia-completo"
+            ],
+            "faq": [
+                {
+                    "q": "O que é uma consulta do viajante online?",
+                    "a": "Videoconsulta que avalia o risco do itinerário e, quando indicado, emite prescrição para vacinas e receita de profilaxia. Na Lon Clinic custa 39 € (1 pessoa). A vacina toma-se no CVI."
+                },
+                {
+                    "q": "A consulta online inclui a vacina da febre amarela?",
+                    "a": "Não. Inclui a avaliação e a prescrição. A dose e o certificado (CIVP) são no CVI; o certificado só vale no 10.º dia."
+                },
+                {
+                    "q": "Quanto tempo antes da viagem devo marcar?",
+                    "a": "Idealmente 4 a 6 semanas. Na Lon Clinic a consulta é hoje ou amanhã; o gargalo passa a ser a vaga no CVI."
+                },
+                {
+                    "q": "Consulta do viajante online ou SNS?",
+                    "a": "Se tem semanas de folga, o SNS (taxa moderadora) pode chegar. Se o voo está perto, a online é o circuito rápido. As vacinas do circuito internacional são no CVI nos dois casos."
+                }
+            ]
+        },
+        {
+            "slug": "consulta-do-viajante-sns",
+            "title": "Consulta do viajante no SNS: como marcar e quando a online chega primeiro",
+            "description": "Marcar consulta do viajante no SNS: taxa moderadora, espera de 4 a 8 semanas, telefone ou email. A consulta online (39 €) não substitui o CVI — substitui a fila.",
+            "datePublished": "2026-09-22",
+            "dateModified": "2026-09-22",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Consulta do viajante",
+            "author": "rita-aguiar",
+            "image": "/image/guide/travel-cover-hq-6.webp",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "slotService": "travel",
+            "readingMinutes": 6,
+            "related": [
+                "consulta-do-viajante-online",
+                "como-marcar-consulta-do-viajante",
+                "consulta-do-viajante-urgente",
+                "quando-agendar-consulta-do-viajante",
+                "quanto-custa-consulta-medicina-do-viajante",
+                "onde-fazer-consulta-medicina-do-viajante-lisboa",
+                "onde-marcar-consulta-do-viajante-porto",
+                "consulta-medica-viajantes-vacinas",
+                "vou-viajar-esta-semana-sem-vacinas",
+                "centros-de-vacinacao-internacional-portugal",
+                "malaria-hepatite-a-b-viajante",
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-viajante-guia-completo"
+            ],
+            "faq": [
+                {
+                    "q": "Posso marcar consulta do viajante no SNS?",
+                    "a": "Sim. Faz-se nos Centros de Vacinação Internacional e em alguns hospitais, com taxa moderadora. A marcação é por telefone ou email; a espera é muitas vezes de 4 a 8 semanas."
+                },
+                {
+                    "q": "A consulta do viajante no SNS é gratuita?",
+                    "a": "Paga taxa moderadora na consulta, não os 39 € da videoconsulta privada. As vacinas pagam-se à parte no CVI, nos dois circuitos."
+                },
+                {
+                    "q": "Quando vale a pena pagar a consulta online em vez do SNS?",
+                    "a": "Quando o voo não espera pela fila pública — esta semana, fim de semana, ou se precisa da consulta sem deslocação. A vacina continua a tomar-se no CVI público."
+                }
+            ]
+        },
+        {
+            "slug": "onde-marcar-consulta-do-viajante-porto",
+            "title": "Onde marcar consulta do viajante no Porto",
+            "description": "Onde marcar consulta do viajante no Porto: SNS (ULS Santo António, espera até ~2 meses) ou videoconsulta online 39 €. Vacinas no CVI da cidade.",
+            "datePublished": "2026-09-22",
+            "dateModified": "2026-09-22",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "about": "Consulta do viajante",
+            "author": "rita-aguiar",
+            "image": "/image/guide/travel-cover-hq-3.webp",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "slotService": "travel",
+            "readingMinutes": 5,
+            "related": [
+                "consulta-do-viajante-online",
+                "como-marcar-consulta-do-viajante",
+                "consulta-do-viajante-sns",
+                "consulta-do-viajante-urgente",
+                "quando-agendar-consulta-do-viajante",
+                "quanto-custa-consulta-medicina-do-viajante",
+                "onde-fazer-consulta-medicina-do-viajante-lisboa",
+                "consulta-medica-viajantes-vacinas",
+                "vou-viajar-esta-semana-sem-vacinas",
+                "centros-de-vacinacao-internacional-portugal",
+                "malaria-hepatite-a-b-viajante",
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-viajante-guia-completo"
+            ],
+            "faq": [
+                {
+                    "q": "Onde marcar consulta do viajante no Porto?",
+                    "a": "No SNS (ULS Santo António e outros CVI, com marcação prévia) ou online na Lon Clinic (39 €, hoje ou amanhã). A vacina do circuito internacional toma-se num CVI do Porto."
+                },
+                {
+                    "q": "Quanto tempo se espera no SNS no Porto?",
+                    "a": "Depende do centro. Na consulta de viajante das Doenças Infecciosas da ULS Santo António a espera conjunta consulta + vacina foi de cerca de dois meses na auditoria de 2026. Confirme a data ao marcar."
+                },
+                {
+                    "q": "Posso fazer a consulta online e vacinar-me no Porto?",
+                    "a": "Sim. A videoconsulta emite a prescrição; a toma é no CVI da Área Metropolitana do Porto. A mesma receita vale em qualquer CVI de Portugal."
                 }
             ]
         },
@@ -2998,9 +4300,9 @@
         {
             "slug": "centros-de-vacinacao-internacional-portugal",
             "title": "Centros de Vacinação Internacional em Portugal: guia completo por região (2026)",
-            "description": "Contactos, horários e experiência real de marcação em todos os Centros de Vacinação Internacional em Portugal. Consulta do viajante online, 39 €.",
+            "description": "Contactos e horários dos CVI em Portugal, incluindo Lisboa (Sete Rios). Vacinação sem agendamento: só nalguns centros, com receita, por ordem de chegada. Consulta online 39 €.",
             "datePublished": "2026-09-07",
-            "dateModified": "2026-09-09",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
@@ -3012,15 +4314,33 @@
             "liveSlots": true,
             "readingMinutes": 12,
             "related": [
+                "consulta-do-viajante-online",
+                "como-marcar-consulta-do-viajante",
+                "consulta-do-viajante-sns",
                 "consulta-do-viajante-urgente",
-                "vacinas-viajante-guia-completo",
                 "quando-agendar-consulta-do-viajante",
-                "onde-fazer-consulta-medicina-do-viajante-lisboa",
                 "quanto-custa-consulta-medicina-do-viajante",
+                "onde-fazer-consulta-medicina-do-viajante-lisboa",
+                "onde-marcar-consulta-do-viajante-porto",
+                "consulta-medica-viajantes-vacinas",
+                "vou-viajar-esta-semana-sem-vacinas",
+                "malaria-hepatite-a-b-viajante",
                 "vacina-febre-amarela-guia-completo",
-                "vacinas-viajante-lisboa"
+                "vacinas-viajante-guia-completo"
             ],
             "faq": [
+                {
+                    "q": "O que significa o semáforo dos centros de vacinação?",
+                    "a": "Verde: atenderam com facilidade na auditoria Lon Clinic. Amarelo: pode ser preciso insistir. Vermelho: contacto difícil. Cinzento: ainda sem chamada nossa. Não classifica a qualidade clínica — só se o telefone atende."
+                },
+                {
+                    "q": "Há vacinação sem agendamento nos Centros de Vacinação Internacional?",
+                    "a": "A consulta do viajante, no SNS, pede quase sempre marcação. A toma da vacina, com prescrição, é por ordem de chegada em alguns CVI — o caso mais citado em Lisboa é Sete Rios, em dias úteis. Confirme no centro no dia. A Lon Clinic não administra vacinas: a consulta é por vídeo (39 €) e a picada é no CVI."
+                },
+                {
+                    "q": "Onde fica um centro de vacinação em Lisboa?",
+                    "a": "Sete Rios (USP Francisco George), Curry Cabral, Santa Maria e Dona Estefânia (crianças), mais CVI na AML. Guia com moradas: vacinas do viajante em Lisboa."
+                },
                 {
                     "q": "Preciso de ir a um Centro de Vacinação Internacional para tomar vacinas de viagem?",
                     "a": "A febre amarela e o certificado internacional (CIVP) só se fazem num Centro de Vacinação Internacional. Outras vacinas de viagem podem, com receita, ser administradas em farmácia. A consulta do viajante define o plano; na Lon Clinic a videoconsulta custa 39 € e a prescrição serve para marcar a toma no CVI."
@@ -6529,17 +7849,20 @@
         },
         {
             "slug": "burnout-o-que-e-sinais-cansaco",
-            "title": "Burnout: o que é, sinais e diferença para o simples cansaço",
-            "description": "Descubra o que é o burnout, os sinais que o distinguem do cansaço comum e quando procurar ajuda médica. Guia completo com fontes científicas.",
+            "title": "Burnout: o que é",
+            "description": "Burnout: o que é, segundo a OMS (CID-11). Diferença para o cansaço, o que fazer em 2026, teste CBI, psicologia e programa para empresas.",
             "datePublished": "2026-09-05",
-            "dateModified": "2026-09-05",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
             "image": "/image/guide/guide-group-walk.jpg",
             "about": "Burnout",
             "verified": false,
-            "readingMinutes": 4,
+            "ctaKind": "burnout",
+            "liveSlots": true,
+            "slotService": "burnout",
+            "readingMinutes": 8,
             "related": [
                 "9-sinais-de-burnout-no-trabalho",
                 "burnout-ou-depressao",
@@ -7779,7 +9102,19 @@
             "datePublished": "2026-04-20",
             "dateModified": "2026-09-03",
             "format": "html",
-            "image": "/image/guide/travel-cover-hq-6.webp"
+            "image": "/image/guide/travel-cover-hq-6.webp",
+            "related": [
+                "vacina-febre-amarela-guia-completo",
+                "vacina-febre-amarela-lisboa",
+                "vacina-febre-amarela-porto",
+                "vacina-febre-amarela-coimbra",
+                "vacina-febre-amarela-braga",
+                "vacina-febre-amarela-cuf",
+                "vacinas-viajante-guia-completo",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
         },
         {
             "slug": "vacina-febre-amarela-cuf",
@@ -7788,7 +9123,19 @@
             "datePublished": "2026-04-20",
             "dateModified": "2026-09-03",
             "format": "html",
-            "image": "/image/guide/guide-country-road.jpg"
+            "image": "/image/guide/guide-country-road.jpg",
+            "related": [
+                "vacina-febre-amarela-guia-completo",
+                "vacina-febre-amarela-lisboa",
+                "vacina-febre-amarela-porto",
+                "vacina-febre-amarela-coimbra",
+                "vacina-febre-amarela-braga",
+                "vacina-febre-amarela-algarve",
+                "vacinas-viajante-guia-completo",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
         },
         {
             "slug": "vacina-febre-amarela-braga",
@@ -7797,7 +9144,19 @@
             "datePublished": "2026-04-20",
             "dateModified": "2026-09-03",
             "format": "html",
-            "image": "/image/guide/travel-cover-hq-5.webp"
+            "image": "/image/guide/travel-cover-hq-5.webp",
+            "related": [
+                "vacina-febre-amarela-guia-completo",
+                "vacina-febre-amarela-lisboa",
+                "vacina-febre-amarela-porto",
+                "vacina-febre-amarela-coimbra",
+                "vacina-febre-amarela-algarve",
+                "vacina-febre-amarela-cuf",
+                "vacinas-viajante-guia-completo",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
         },
         {
             "slug": "vacina-febre-amarela-coimbra",
@@ -7806,7 +9165,19 @@
             "datePublished": "2026-04-20",
             "dateModified": "2026-09-03",
             "format": "html",
-            "image": "/image/guide/guide-hiker-view.jpg"
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "related": [
+                "vacina-febre-amarela-guia-completo",
+                "vacina-febre-amarela-lisboa",
+                "vacina-febre-amarela-porto",
+                "vacina-febre-amarela-braga",
+                "vacina-febre-amarela-algarve",
+                "vacina-febre-amarela-cuf",
+                "vacinas-viajante-guia-completo",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
         },
         {
             "slug": "vacina-febre-amarela-porto",
@@ -7815,7 +9186,19 @@
             "datePublished": "2026-04-20",
             "dateModified": "2026-09-03",
             "format": "html",
-            "image": "/image/guide/travel-cover-hq-8.webp"
+            "image": "/image/guide/travel-cover-hq-8.webp",
+            "related": [
+                "vacina-febre-amarela-guia-completo",
+                "vacina-febre-amarela-lisboa",
+                "vacina-febre-amarela-coimbra",
+                "vacina-febre-amarela-braga",
+                "vacina-febre-amarela-algarve",
+                "vacina-febre-amarela-cuf",
+                "vacinas-viajante-guia-completo",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
         },
         {
             "slug": "vacina-febre-amarela-lisboa",
@@ -7824,7 +9207,19 @@
             "datePublished": "2026-04-20",
             "dateModified": "2026-09-03",
             "format": "html",
-            "image": "/image/guide/travel-cover-hq-8.webp"
+            "image": "/image/guide/travel-cover-hq-8.webp",
+            "related": [
+                "vacina-febre-amarela-guia-completo",
+                "vacina-febre-amarela-porto",
+                "vacina-febre-amarela-coimbra",
+                "vacina-febre-amarela-braga",
+                "vacina-febre-amarela-algarve",
+                "vacina-febre-amarela-cuf",
+                "vacinas-viajante-guia-completo",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
         },
         {
             "slug": "vacina-febre-amarela-guia-completo",
@@ -7833,7 +9228,19 @@
             "datePublished": "2026-04-20",
             "dateModified": "2026-09-03",
             "format": "html",
-            "image": "/image/guide/travel-cover-hq-4.webp"
+            "image": "/image/guide/travel-cover-hq-4.webp",
+            "related": [
+                "vacina-febre-amarela-lisboa",
+                "vacina-febre-amarela-porto",
+                "vacina-febre-amarela-coimbra",
+                "vacina-febre-amarela-braga",
+                "vacina-febre-amarela-algarve",
+                "vacina-febre-amarela-cuf",
+                "vacinas-viajante-guia-completo",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
         },
         {
             "slug": "vacinas-viajante-algarve",
@@ -7842,7 +9249,19 @@
             "datePublished": "2026-09-03",
             "dateModified": "2026-09-03",
             "format": "html",
-            "image": "/image/travel-clinic-mountain-bg.jpg"
+            "image": "/image/travel-clinic-mountain-bg.jpg",
+            "related": [
+                "vacinas-viajante-guia-completo",
+                "vacinas-viajante-lisboa",
+                "vacinas-viajante-porto",
+                "vacinas-viajante-coimbra",
+                "vacinas-viajante-braga",
+                "vacinas-viajante-cuf",
+                "vacina-febre-amarela-guia-completo",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
         },
         {
             "slug": "vacinas-viajante-cuf",
@@ -7851,7 +9270,19 @@
             "datePublished": "2026-09-03",
             "dateModified": "2026-09-03",
             "format": "html",
-            "image": "/image/guide/guide-country-road.jpg"
+            "image": "/image/guide/guide-country-road.jpg",
+            "related": [
+                "vacinas-viajante-guia-completo",
+                "vacinas-viajante-lisboa",
+                "vacinas-viajante-porto",
+                "vacinas-viajante-coimbra",
+                "vacinas-viajante-braga",
+                "vacinas-viajante-algarve",
+                "vacina-febre-amarela-guia-completo",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
         },
         {
             "slug": "vacinas-viajante-braga",
@@ -7860,7 +9291,19 @@
             "datePublished": "2026-09-03",
             "dateModified": "2026-09-03",
             "format": "html",
-            "image": "/image/guide/travel-cover-hq-8.webp"
+            "image": "/image/guide/travel-cover-hq-8.webp",
+            "related": [
+                "vacinas-viajante-guia-completo",
+                "vacinas-viajante-lisboa",
+                "vacinas-viajante-porto",
+                "vacinas-viajante-coimbra",
+                "vacinas-viajante-algarve",
+                "vacinas-viajante-cuf",
+                "vacina-febre-amarela-guia-completo",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
         },
         {
             "slug": "vacinas-viajante-coimbra",
@@ -7869,7 +9312,19 @@
             "datePublished": "2026-09-03",
             "dateModified": "2026-09-03",
             "format": "html",
-            "image": "/image/guide/guide-hiker-view.jpg"
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "related": [
+                "vacinas-viajante-guia-completo",
+                "vacinas-viajante-lisboa",
+                "vacinas-viajante-porto",
+                "vacinas-viajante-braga",
+                "vacinas-viajante-algarve",
+                "vacinas-viajante-cuf",
+                "vacina-febre-amarela-guia-completo",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
         },
         {
             "slug": "vacinas-viajante-porto",
@@ -7878,35 +9333,84 @@
             "datePublished": "2026-09-03",
             "dateModified": "2026-09-03",
             "format": "html",
-            "image": "/image/guide/travel-cover-hq-3.webp"
+            "image": "/image/guide/travel-cover-hq-3.webp",
+            "related": [
+                "vacinas-viajante-guia-completo",
+                "vacinas-viajante-lisboa",
+                "vacinas-viajante-coimbra",
+                "vacinas-viajante-braga",
+                "vacinas-viajante-algarve",
+                "vacinas-viajante-cuf",
+                "vacina-febre-amarela-guia-completo",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
         },
         {
             "slug": "vacinas-viajante-lisboa",
-            "title": "Vacinas do viajante em Lisboa — Marque consulta online",
-            "description": "Vacinas do viajante em Lisboa: consulta online rápida, vacinação nos Centros de Vacinação Internacional da ARSLVT e orientação médica completa.",
+            "title": "Vacinas do viajante em Lisboa: CVI Sete Rios, Curry Cabral e Santa Maria",
+            "description": "Onde tomar vacinas de viagem em Lisboa: CVI Sete Rios (USP Francisco George), Curry Cabral e Santa Maria. Toma com receita; consulta online 39 €.",
             "datePublished": "2026-09-03",
-            "dateModified": "2026-09-03",
+            "dateModified": "2026-09-22",
             "format": "html",
-            "image": "/image/guide/travel-cover-hq-5.webp"
+            "image": "/image/guide/travel-cover-hq-5.webp",
+            "about": "Medicina do viajante",
+            "author": "rita-aguiar",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-viajante-guia-completo",
+                "vacinas-viajante-porto",
+                "vacinas-viajante-coimbra",
+                "vacinas-viajante-braga",
+                "vacinas-viajante-algarve",
+                "vacinas-viajante-cuf",
+                "vacina-febre-amarela-guia-completo",
+                "consulta-do-viajante-online"
+            ],
+            "faq": [
+                {
+                    "q": "Onde fica um centro de vacinação internacional em Lisboa?",
+                    "a": "O CVI de referência na cidade é o de Sete Rios (USP Francisco George, Largo Prof. Arnaldo Sampaio). Há ainda Curry Cabral, Santa Maria, Dona Estefânia (crianças) e CVI na AML (Almada, Amadora, Cascais, Oeiras)."
+                },
+                {
+                    "q": "Há vacinação sem agendamento em Lisboa?",
+                    "a": "A consulta do viajante pede marcação. Em Sete Rios a toma das vacinas internacionais, com prescrição, tem sido anunciada por ordem de chegada em dias úteis (9h–15h30). Confirme no dia: os CVI mudam regras. A consulta Lon é online, 39 €, e não substitui a picada."
+                },
+                {
+                    "q": "Onde fazer consulta do viajante em Lisboa?",
+                    "a": "No SNS (CVI e hospitais), no IHMT NOVA, em privado presencial ou online. Na Lon Clinic a videoconsulta custa 39 €; as vacinas do circuito internacional tomam-se num Centro de Vacinação Internacional."
+                }
+            ]
         },
         {
             "slug": "vacinas-viajante-guia-completo",
             "title": "Vacinas do viajante em Portugal: guia completo 2026",
-            "description": "Onde tomar vacinas do viajante em Portugal: hepatite A, febre tifóide, febre amarela e outras nos mesmos Centros de Vacinação Internacional, com consulta e prescrição.",
+            "description": "Vacina do viajante em Portugal: hepatite A, febre tifóide, febre amarela e outras nos Centros de Vacinação Internacional, com consulta e prescrição.",
             "datePublished": "2026-09-03",
-            "dateModified": "2026-09-03",
+            "dateModified": "2026-09-22",
             "format": "html",
             "image": "/image/guide/travel-cover-hq-7.webp",
             "related": [
-                "consulta-medica-viajantes-vacinas"
-            ]
+                "vacinas-viajante-lisboa",
+                "vacinas-viajante-porto",
+                "vacinas-viajante-coimbra",
+                "vacinas-viajante-braga",
+                "vacinas-viajante-algarve",
+                "vacinas-viajante-cuf",
+                "vacina-febre-amarela-guia-completo",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
         },
         {
             "slug": "quanto-custa-consulta-medicina-do-viajante",
-            "title": "Quanto custa uma consulta de medicina do viajante em Portugal?",
-            "description": "A consulta de medicina do viajante na Lon Clinic custa 39 € (1 pessoa), 69 € a duas. As vacinas no CVI e a profilaxia da malária pagam-se à parte.",
+            "title": "Quanto custa uma consulta do viajante em Portugal?",
+            "description": "A consulta do viajante na Lon Clinic custa 39 € (1 pessoa), 69 € a duas. As vacinas no CVI e a profilaxia da malária pagam-se à parte.",
             "datePublished": "2026-09-06",
-            "dateModified": "2026-09-06",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "image": "/image/guide/travel-cover-hq-7.webp",
             "about": "Medicina do viajante",
@@ -7914,18 +9418,23 @@
             "ctaKind": "travel",
             "liveSlots": true,
             "related": [
+                "consulta-do-viajante-online",
+                "como-marcar-consulta-do-viajante",
+                "consulta-do-viajante-sns",
                 "consulta-do-viajante-urgente",
                 "quando-agendar-consulta-do-viajante",
                 "onde-fazer-consulta-medicina-do-viajante-lisboa",
+                "onde-marcar-consulta-do-viajante-porto",
+                "consulta-medica-viajantes-vacinas",
+                "vou-viajar-esta-semana-sem-vacinas",
                 "centros-de-vacinacao-internacional-portugal",
-                "vacinas-para-viajar-por-pais",
-                "vacinas-viajante-guia-completo",
+                "malaria-hepatite-a-b-viajante",
                 "vacina-febre-amarela-guia-completo",
-                "consulta-medica-viajantes-vacinas"
+                "vacinas-viajante-guia-completo"
             ],
             "faq": [
                 {
-                    "q": "Quanto custa uma consulta de medicina do viajante em Portugal?",
+                    "q": "Quanto custa uma consulta do viajante em Portugal?",
                     "a": "Na Lon Clinic a videoconsulta custa 39 € por uma pessoa, 69 € por duas, 107 € por três e 136 € por quatro. As vacinas no Centro de Vacinação Internacional e os comprimidos da malária pagam-se à parte."
                 },
                 {
@@ -7940,10 +9449,10 @@
         },
         {
             "slug": "onde-fazer-consulta-medicina-do-viajante-lisboa",
-            "title": "Onde fazer consulta de medicina do viajante em Lisboa",
-            "description": "Consulta de medicina do viajante em Lisboa: SNS (Sete Rios, Curry Cabral, Santa Maria, Dona Estefânia, IHMT), privado e online. Lon Clinic 39 €; vacinas no CVI.",
+            "title": "Onde marcar consulta do viajante em Lisboa",
+            "description": "Onde marcar consulta do viajante em Lisboa: SNS (Sete Rios, Curry Cabral, Santa Maria, Dona Estefânia, IHMT), privado e online. Lon Clinic 39 €; vacinas no CVI.",
             "datePublished": "2026-09-06",
-            "dateModified": "2026-09-06",
+            "dateModified": "2026-09-22",
             "format": "markdown",
             "image": "/image/guide/travel-cover-hq-6.webp",
             "about": "Medicina do viajante",
@@ -7951,20 +9460,27 @@
             "ctaKind": "travel",
             "liveSlots": true,
             "related": [
+                "consulta-do-viajante-online",
+                "como-marcar-consulta-do-viajante",
+                "consulta-do-viajante-sns",
+                "consulta-do-viajante-urgente",
                 "quando-agendar-consulta-do-viajante",
-                "vacinas-viajante-lisboa",
-                "centros-de-vacinacao-internacional-portugal",
                 "quanto-custa-consulta-medicina-do-viajante",
-                "vacina-febre-amarela-lisboa",
-                "vacinas-viajante-cuf"
+                "onde-marcar-consulta-do-viajante-porto",
+                "consulta-medica-viajantes-vacinas",
+                "vou-viajar-esta-semana-sem-vacinas",
+                "centros-de-vacinacao-internacional-portugal",
+                "malaria-hepatite-a-b-viajante",
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-viajante-guia-completo"
             ],
             "faq": [
                 {
-                    "q": "Onde fazer consulta de medicina do viajante em Lisboa?",
+                    "q": "Onde fazer consulta do viajante em Lisboa?",
                     "a": "No SNS (Centros de Vacinação Internacional e hospitais como Sete Rios, Curry Cabral, Santa Maria e Dona Estefânia), no IHMT NOVA, em hospitais privados, ou online. Na Lon Clinic a videoconsulta custa 39 €; as vacinas do circuito internacional tomam-se depois num CVI."
                 },
                 {
-                    "q": "Posso fazer a consulta de medicina do viajante online?",
+                    "q": "Posso fazer a consulta do viajante online?",
                     "a": "Sim. A avaliação, a prescrição de vacinas e a receita da profilaxia da malária fazem-se por videoconsulta. A administração da vacina e o certificado internacional de febre amarela exigem presença num Centro de Vacinação Internacional."
                 },
                 {
@@ -7982,7 +9498,7 @@
             "title": "Quando e como agendar consulta do viajante em Portugal",
             "description": "Enquanto a maioria pede 4 a 8 semanas, a Lon Clinic marca a consulta para hoje ou amanhã — no site ou WhatsApp. 39 €. Vacinas, receitas e certificado internacional.",
             "datePublished": "2026-09-06",
-            "dateModified": "2026-09-06",
+            "dateModified": "2026-09-22",
             "format": "html",
             "image": "/image/guide/travel-cover-hq-6.webp",
             "about": "Medicina do viajante",
@@ -7990,13 +9506,19 @@
             "ctaKind": "travel",
             "liveSlots": true,
             "related": [
+                "consulta-do-viajante-online",
+                "como-marcar-consulta-do-viajante",
+                "consulta-do-viajante-sns",
                 "consulta-do-viajante-urgente",
-                "vou-viajar-esta-semana-sem-vacinas",
-                "onde-fazer-consulta-medicina-do-viajante-lisboa",
                 "quanto-custa-consulta-medicina-do-viajante",
+                "onde-fazer-consulta-medicina-do-viajante-lisboa",
+                "onde-marcar-consulta-do-viajante-porto",
+                "consulta-medica-viajantes-vacinas",
+                "vou-viajar-esta-semana-sem-vacinas",
                 "centros-de-vacinacao-internacional-portugal",
-                "vacinas-viajante-guia-completo",
-                "vacina-febre-amarela-guia-completo"
+                "malaria-hepatite-a-b-viajante",
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-viajante-guia-completo"
             ],
             "faq": [
                 {
@@ -8016,7 +9538,7 @@
                     "a": "Hepatite A, hepatite B, febre tifóide, tétano/difteria, encefalite japonesa, profilaxia da malária (não é vacina) e febre amarela. A Lon Clinic pode prescrever todas; a febre amarela só se administra e certifica no CVI."
                 },
                 {
-                    "q": "Quanto custa uma consulta de medicina do viajante?",
+                    "q": "Quanto custa uma consulta do viajante?",
                     "a": "Na Lon Clinic: 39 € (1 pessoa), 69 € (2), 107 € (3), 136 € (4). Cobre consulta e prescrição. Vacinas no CVI e comprimidos da malária pagam-se à parte."
                 }
             ]
@@ -8034,11 +9556,19 @@
             "ctaKind": "travel",
             "liveSlots": true,
             "related": [
+                "consulta-do-viajante-online",
+                "como-marcar-consulta-do-viajante",
+                "consulta-do-viajante-sns",
                 "consulta-do-viajante-urgente",
                 "quando-agendar-consulta-do-viajante",
-                "vacina-febre-amarela-guia-completo",
+                "quanto-custa-consulta-medicina-do-viajante",
                 "onde-fazer-consulta-medicina-do-viajante-lisboa",
-                "quanto-custa-consulta-medicina-do-viajante"
+                "onde-marcar-consulta-do-viajante-porto",
+                "consulta-medica-viajantes-vacinas",
+                "centros-de-vacinacao-internacional-portugal",
+                "malaria-hepatite-a-b-viajante",
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-viajante-guia-completo"
             ],
             "faq": [
                 {
@@ -8077,12 +9607,15 @@
             "ctaKind": "travel",
             "liveSlots": true,
             "related": [
-                "quando-agendar-consulta-do-viajante",
-                "onde-fazer-consulta-medicina-do-viajante-lisboa",
-                "quanto-custa-consulta-medicina-do-viajante",
-                "centros-de-vacinacao-internacional-portugal",
+                "vacinas-para-viajar-ao-brasil",
+                "vacinas-para-viajar-a-tailandia",
+                "vacinas-para-viajar-a-india",
+                "vacinas-para-viajar-ao-quenia",
+                "vacinas-para-viajar-a-angola",
+                "vacinas-para-viajar-a-mocambique",
+                "vacina-febre-amarela-guia-completo",
                 "vacinas-viajante-guia-completo",
-                "vacina-febre-amarela-guia-completo"
+                "consulta-do-viajante-online"
             ],
             "faq": [
                 {
@@ -8109,8 +9642,14 @@
             "liveSlots": true,
             "related": [
                 "vacinas-para-viajar-por-pais",
+                "vacinas-para-viajar-a-tailandia",
+                "vacinas-para-viajar-a-india",
+                "vacinas-para-viajar-ao-quenia",
+                "vacinas-para-viajar-a-angola",
+                "vacinas-para-viajar-a-mocambique",
                 "vacina-febre-amarela-guia-completo",
-                "vacina-febre-amarela-lisboa"
+                "vacinas-viajante-guia-completo",
+                "consulta-do-viajante-online"
             ],
             "faq": [
                 {
@@ -8137,8 +9676,14 @@
             "liveSlots": true,
             "related": [
                 "vacinas-para-viajar-por-pais",
+                "vacinas-para-viajar-ao-brasil",
                 "vacinas-para-viajar-a-india",
-                "vacinas-viajante-guia-completo"
+                "vacinas-para-viajar-ao-quenia",
+                "vacinas-para-viajar-a-angola",
+                "vacinas-para-viajar-a-mocambique",
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-viajante-guia-completo",
+                "consulta-do-viajante-online"
             ],
             "faq": [
                 {
@@ -8165,8 +9710,14 @@
             "liveSlots": true,
             "related": [
                 "vacinas-para-viajar-por-pais",
+                "vacinas-para-viajar-ao-brasil",
                 "vacinas-para-viajar-a-tailandia",
-                "vacinas-viajante-guia-completo"
+                "vacinas-para-viajar-ao-quenia",
+                "vacinas-para-viajar-a-angola",
+                "vacinas-para-viajar-a-mocambique",
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-viajante-guia-completo",
+                "consulta-do-viajante-online"
             ],
             "faq": [
                 {
@@ -8193,8 +9744,14 @@
             "liveSlots": true,
             "related": [
                 "vacinas-para-viajar-por-pais",
+                "vacinas-para-viajar-ao-brasil",
+                "vacinas-para-viajar-a-tailandia",
+                "vacinas-para-viajar-a-india",
+                "vacinas-para-viajar-a-angola",
                 "vacinas-para-viajar-a-mocambique",
-                "vacina-febre-amarela-guia-completo"
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-viajante-guia-completo",
+                "consulta-do-viajante-online"
             ],
             "faq": [
                 {
@@ -8221,8 +9778,14 @@
             "liveSlots": true,
             "related": [
                 "vacinas-para-viajar-por-pais",
+                "vacinas-para-viajar-ao-brasil",
+                "vacinas-para-viajar-a-tailandia",
+                "vacinas-para-viajar-a-india",
+                "vacinas-para-viajar-ao-quenia",
+                "vacinas-para-viajar-a-mocambique",
                 "vacina-febre-amarela-guia-completo",
-                "vacinas-para-viajar-a-mocambique"
+                "vacinas-viajante-guia-completo",
+                "consulta-do-viajante-online"
             ],
             "faq": [
                 {
@@ -8249,8 +9812,14 @@
             "liveSlots": true,
             "related": [
                 "vacinas-para-viajar-por-pais",
+                "vacinas-para-viajar-ao-brasil",
+                "vacinas-para-viajar-a-tailandia",
+                "vacinas-para-viajar-a-india",
                 "vacinas-para-viajar-ao-quenia",
-                "vacinas-para-viajar-a-angola"
+                "vacinas-para-viajar-a-angola",
+                "vacina-febre-amarela-guia-completo",
+                "vacinas-viajante-guia-completo",
+                "consulta-do-viajante-online"
             ],
             "faq": [
                 {
@@ -8272,6 +9841,9 @@
             "format": "markdown",
             "image": "/image/consulta-telemedicina-mesa.webp",
             "related": [
+                "infecao-urinaria-sintomas",
+                "consulta-do-viajante-online",
+                "psicologo-online-como-funciona",
                 "adhd-em-adultos-sintomas",
                 "autismo-em-mulheres-diagnostico-tardio",
                 "como-encontrar-um-psicologo",

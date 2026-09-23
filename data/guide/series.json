@@ -71,6 +71,19 @@
       ]
     },
     {
+      "id": "figado-gordo",
+      "slug": "figado-gordo",
+      "title": "Fígado gordo",
+      "description": "Esteatose, MASLD, análises, ecografia e alimentação: o que muda e quando marcar consulta médica.",
+      "parts": [
+        { "slug": "masld", "navLabel": "MASLD" },
+        { "slug": "esteatose-hepatica", "navLabel": "Esteatose na ecografia" },
+        { "slug": "analises-figado", "navLabel": "Análises ao fígado" },
+        { "slug": "dieta-figado-gordo", "navLabel": "O que comer" },
+        { "slug": "figado-gordo-peso-normal", "navLabel": "Peso normal" }
+      ]
+    },
+    {
       "id": "bestsellers-saude-intestinal",
       "slug": "os-10-bestsellers-saude-intestinal",
       "title": "Os 10 Bestsellers de Saúde Intestinal: Analisados por uma Médica",
