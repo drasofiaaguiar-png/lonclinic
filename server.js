@@ -4010,210 +4010,39 @@ function normalizePatientLocale(raw) {
 const CONFIRMATION_EMAIL_I18N = {
     en: {
         htmlLang: 'en',
-        emailTitle: 'Booking Confirmation',
-        h2Confirmed: 'Booking Confirmed',
-        thankYou: (name) => `Thank you, ${name}. Your consultation has been booked and payment received.`,
-        fillFormLead: 'To help your doctor prepare, please complete your clinical details (less than 2 minutes).',
-        fillFormButton: 'Fill in clinical form',
-        refLabel: 'Booking Reference',
-        colService: 'Service',
-        colDate: 'Date',
-        colTime: 'Time',
-        colFormat: 'Format',
-        formatVideo: 'Secure video call',
-        travellers: 'Travellers',
-        travellerRow: (n) => `Traveller ${n}`,
-        destLabel: 'Destination(s)',
-        travelDatesLabel: 'Travel Dates',
-        totalPaid: 'Total Paid',
-        whatsNext: 'What happens next?',
-        step1Title: 'Complete your clinical form',
-        step1Body: 'This takes less than 2 minutes and helps your doctor prepare. Use the button above, or the same link in this email.',
-        step1BodyWithLink: (url) =>
-            `This takes less than 2 minutes and helps your doctor prepare: ${url}`,
-        step2Title: 'Video call link',
-        step2NoDoxy: "We'll send you a secure video call link 24 hours before your appointment.",
-        doxyBefore: 'Join your consultation via our secure video room:',
-        doxyAfter: 'Open this link at your scheduled time — no download required.',
-        joinVideoButton: 'Join Video Consultation',
-        step3Title: 'Your consultation',
-        step3Travel: 'Meet your physician for an unhurried, comprehensive travel health consultation.',
-        step3Longevity: 'Meet your physician for an unhurried, comprehensive longevity consultation.',
-        step4ReportTitle: 'Personalised report',
-        step4ReportBody: "Within 48 hours, you'll receive a detailed report with actionable insights and a personalised health plan.",
-        step4TravelTitle: 'Prescriptions & vaccines',
-        step4TravelBody: 'Any required prescriptions or vaccine recommendations will be provided during or shortly after your consultation.',
-        renewalTitle: 'Need a prescription renewal later?',
-        renewalBody: 'If your treatment is already stable, renew it online for €19 — no new full consultation.',
-        renewalCta: 'Renew treatment — €19',
-        rescheduleStrong: 'Need to reschedule?',
-        rescheduleRest: 'Free rescheduling is available up to 24 hours before your appointment. Simply reply to this email or contact us.',
-        footerContact: 'If you have any questions, contact us at',
-        footerOrCall: 'or call',
-        footerCopy: '© 2026 Longevity Clinic. All rights reserved.',
-        footerAuto: 'This is an automated confirmation email. Please do not reply directly to this address.',
-        subject: (service, date, ref, time) =>
-            `Action needed: Complete your clinical form for the ${time || ''} consultation | ${ref}`,
-        textHead: 'BOOKING CONFIRMED',
-        textThanks: (name) => `Thank you, ${name}. Your consultation has been booked and payment received.`,
-        textDetails: 'BOOKING DETAILS',
-        textService: 'Service',
-        textDate: 'Date',
-        textTime: 'Time',
-        textFormat: 'Format',
-        textTravellers: 'Travellers',
-        textDest: 'Destination',
-        textTravelDates: 'Travel dates',
-        textTotalPaid: 'Total Paid',
-        textWhatsNext: 'WHAT HAPPENS NEXT',
-        textStep1: 'Complete your clinical form — use the link in this email (less than 2 minutes).',
-        textStep1WithLink: (url) => `Complete your clinical form (less than 2 minutes):\n   ${url}`,
-        textStep2Doxy: (url) => `Video call link — join your secure video room at your scheduled time (no download required):\n   ${url}`,
-        textStep2NoDoxy: 'Video call link — we will send a secure link 24 hours before your appointment.',
-        textStep3: 'Your consultation — meet your physician online.',
-        textStep4Report: 'Personalised report — within 48 hours.',
-        textStep4Travel: 'Prescriptions & vaccines — provided during or after consultation.',
-        textReschedule: 'Need to reschedule? Free rescheduling up to 24 hours before. Reply to this email or contact us.',
-        textRenewal: 'Need a prescription renewal later? Book online for €19:',
-        textFooterCopy: '© 2026 Longevity Clinic'
+        subject: 'Your teleconsultation link – LON Clinic',
+        greeting: 'Dear Patient,',
+        linkLead: 'Here is the link for your teleconsultation:',
+        linkLabel: 'Open teleconsultation',
+        instructions: 'At the time of your appointment, just open the link in your browser (preferably Chrome or Safari) and allow access to your camera and microphone. No installation is needed.',
+        questions: 'Please let me know if you have any questions.',
+        regards: 'Kind regards,',
+        signName: 'Dr. Rita Aguiar',
+        signClinic: 'LON Clinic'
     },
     pt: {
         htmlLang: 'pt',
-        emailTitle: 'Confirmação de marcação',
-        h2Confirmed: 'Marcação confirmada',
-        thankYou: (name) => `Obrigado, ${name}. A sua consulta foi marcada e o pagamento foi recebido.`,
-        fillFormLead: 'Para o médico preparar a sua consulta, preencha os seus dados clínicos (demora menos de 2 minutos).',
-        fillFormButton: 'Preencher ficha clínica',
-        refLabel: 'Referência da marcação',
-        colService: 'Serviço',
-        colDate: 'Data',
-        colTime: 'Hora',
-        colFormat: 'Formato',
-        formatVideo: 'Videochamada segura',
-        travellers: 'Viajantes',
-        travellerRow: (n) => `Viajante ${n}`,
-        destLabel: 'Destino(s)',
-        travelDatesLabel: 'Datas da viagem',
-        totalPaid: 'Total pago',
-        whatsNext: 'Próximos passos',
-        step1Title: 'Preencha a ficha clínica',
-        step1Body: 'Demora menos de 2 minutos e ajuda o médico a preparar a consulta. Use o botão acima, ou o mesmo link neste email.',
-        step1BodyWithLink: (url) =>
-            `Demora menos de 2 minutos e ajuda o médico a preparar a consulta: ${url}`,
-        step2Title: 'Ligação por vídeo',
-        step2NoDoxy: 'Enviaremos uma ligação segura por vídeo 24 horas antes da sua consulta.',
-        doxyBefore: 'Aceda à consulta através da nossa sala de vídeo segura:',
-        doxyAfter: 'Abra esta ligação à hora marcada — não é necessária qualquer instalação.',
-        joinVideoButton: 'Entrar na consulta por vídeo',
-        step3Title: 'A sua consulta',
-        step3Travel: 'Reúna-se com o seu médico numa consulta de medicina de viagem completa e sem pressa.',
-        step3Longevity: 'Reúna-se com o seu médico numa consulta de longevidade completa e sem pressa.',
-        step4ReportTitle: 'Relatório personalizado',
-        step4ReportBody: 'No prazo de 48 horas, receberá um relatório detalhado com recomendações práticas e um plano de saúde personalizado.',
-        step4TravelTitle: 'Receitas e vacinas',
-        step4TravelBody: 'Quaisquer receitas ou recomendações de vacinas necessárias serão fornecidas durante ou pouco depois da consulta.',
-        renewalTitle: 'Precisa de renovar a receita mais tarde?',
-        renewalBody: 'Se o tratamento já está estável, renove online por €19 — sem uma consulta completa nova.',
-        renewalCta: 'Renovar tratamento — €19',
-        rescheduleStrong: 'Precisa de reagendar?',
-        rescheduleRest: 'O reagendamento é gratuito até 24 horas antes da consulta. Responda a este email ou contacte-nos.',
-        footerContact: 'Em caso de dúvidas, contacte-nos em',
-        footerOrCall: 'ou ligue para',
-        footerCopy: '© 2026 Longevity Clinic. Todos os direitos reservados.',
-        footerAuto: 'Este é um email de confirmação automático. Por favor não responda diretamente a este endereço.',
-        subject: (service, date, ref, time) =>
-            `Ação necessária: Preencha a sua ficha clínica para a consulta das ${time || ''} | ${ref}`,
-        textHead: 'MARCAÇÃO CONFIRMADA',
-        textThanks: (name) => `Obrigado, ${name}. A sua consulta foi marcada e o pagamento foi recebido.`,
-        textDetails: 'DETALHES DA MARCAÇÃO',
-        textService: 'Serviço',
-        textDate: 'Data',
-        textTime: 'Hora',
-        textFormat: 'Formato',
-        textTravellers: 'Viajantes',
-        textDest: 'Destino',
-        textTravelDates: 'Datas da viagem',
-        textTotalPaid: 'Total pago',
-        textWhatsNext: 'PRÓXIMOS PASSOS',
-        textStep1: 'Preencha a ficha clínica — use o link neste email (menos de 2 minutos).',
-        textStep1WithLink: (url) => `Preencha a ficha clínica (menos de 2 minutos):\n   ${url}`,
-        textStep2Doxy: (url) => `Ligação por vídeo — aceda à sala segura à hora marcada (sem instalação):\n   ${url}`,
-        textStep2NoDoxy: 'Ligação por vídeo — enviaremos uma ligação segura 24 horas antes da consulta.',
-        textStep3: 'A sua consulta — encontre-se com o seu médico online.',
-        textStep4Report: 'Relatório personalizado — no prazo de 48 horas.',
-        textStep4Travel: 'Receitas e vacinas — fornecidas durante ou após a consulta.',
-        textReschedule: 'Precisa de reagendar? Reagendamento gratuito até 24 horas antes. Responda a este email ou contacte-nos.',
-        textRenewal: 'Precisa de renovar a receita mais tarde? Marque online por €19:',
-        textFooterCopy: '© 2026 Longevity Clinic'
+        subject: 'O link da sua teleconsulta – LON Clinic',
+        greeting: 'Caro(a) paciente,',
+        linkLead: 'Aqui está o link para a sua teleconsulta:',
+        linkLabel: 'Abrir a teleconsulta',
+        instructions: 'À hora da consulta, basta abrir o link no browser (de preferência Chrome ou Safari) e permitir o acesso à câmara e ao microfone. Não é necessária qualquer instalação.',
+        questions: 'Se tiver alguma questão, diga-me.',
+        regards: 'Com os melhores cumprimentos,',
+        signName: 'Dr.ª Rita Aguiar',
+        signClinic: 'LON Clinic'
     },
     es: {
         htmlLang: 'es',
-        emailTitle: 'Confirmación de cita',
-        h2Confirmed: 'Cita confirmada',
-        thankYou: (name) => `Gracias, ${name}. Su consulta ha sido reservada y hemos recibido el pago.`,
-        fillFormLead: 'Para que el médico prepare su consulta, complete sus datos clínicos (menos de 2 minutos).',
-        fillFormButton: 'Completar ficha clínica',
-        refLabel: 'Referencia de la reserva',
-        colService: 'Servicio',
-        colDate: 'Fecha',
-        colTime: 'Hora',
-        colFormat: 'Formato',
-        formatVideo: 'Videollamada segura',
-        travellers: 'Viajeros',
-        travellerRow: (n) => `Viajero/a ${n}`,
-        destLabel: 'Destino(s)',
-        travelDatesLabel: 'Fechas del viaje',
-        totalPaid: 'Total pagado',
-        whatsNext: 'Próximos pasos',
-        step1Title: 'Complete su ficha clínica',
-        step1Body: 'Tarda menos de 2 minutos y ayuda al médico a preparar la consulta. Use el botón de arriba, o el mismo enlace en este correo.',
-        step1BodyWithLink: (url) =>
-            `Tarda menos de 2 minutos y ayuda al médico a preparar la consulta: ${url}`,
-        step2Title: 'Enlace de videollamada',
-        step2NoDoxy: 'Le enviaremos un enlace seguro para la videollamada 24 horas antes de su cita.',
-        doxyBefore: 'Acceda a la consulta a través de nuestra sala de vídeo segura:',
-        doxyAfter: 'Abra este enlace a la hora acordada; no necesita instalar ningún programa.',
-        joinVideoButton: 'Unirse a la videoconsulta',
-        step3Title: 'Su consulta',
-        step3Travel: 'Conéctese con su médico para una consulta de medicina de viaje completa y sin prisas.',
-        step3Longevity: 'Conéctese con su médico para una consulta de longevidad completa y sin prisas.',
-        step4ReportTitle: 'Informe personalizado',
-        step4ReportBody: 'En un plazo de 48 horas recibirá un informe detallado con recomendaciones prácticas y un plan de salud personalizado.',
-        step4TravelTitle: 'Recetas y vacunas',
-        step4TravelBody: 'Las recetas necesarias o recomendaciones de vacunas se facilitarán durante o poco después de la consulta.',
-        renewalTitle: '¿Necesita renovar la receta más adelante?',
-        renewalBody: 'Si el tratamiento ya es estable, renuévelo online por 19 € — sin una consulta completa nueva.',
-        renewalCta: 'Renovar tratamiento — 19 €',
-        rescheduleStrong: '¿Necesita cambiar la fecha?',
-        rescheduleRest: 'Puede reprogramar sin coste hasta 24 horas antes de la cita. Responda a este correo o contáctenos.',
-        footerContact: 'Si tiene alguna pregunta, escríbanos a',
-        footerOrCall: 'o llame al',
-        footerCopy: '© 2026 Longevity Clinic. Todos los derechos reservados.',
-        footerAuto: 'Este es un correo de confirmación automático. No responda directamente a esta dirección.',
-        subject: (service, date, ref, time) =>
-            `Acción necesaria: Complete su ficha clínica para la consulta de las ${time || ''} | ${ref}`,
-        textHead: 'CITA CONFIRMADA',
-        textThanks: (name) => `Gracias, ${name}. Su consulta ha sido reservada y hemos recibido el pago.`,
-        textDetails: 'DETALLES DE LA RESERVA',
-        textService: 'Servicio',
-        textDate: 'Fecha',
-        textTime: 'Hora',
-        textFormat: 'Formato',
-        textTravellers: 'Viajeros',
-        textDest: 'Destino',
-        textTravelDates: 'Fechas del viaje',
-        textTotalPaid: 'Total pagado',
-        textWhatsNext: 'PRÓXIMOS PASOS',
-        textStep1: 'Complete su ficha clínica — use el enlace de este correo (menos de 2 minutos).',
-        textStep1WithLink: (url) => `Complete su ficha clínica (menos de 2 minutos):\n   ${url}`,
-        textStep2Doxy: (url) => `Enlace de videollamada — acceda a la sala segura a la hora acordada (sin descargas):\n   ${url}`,
-        textStep2NoDoxy: 'Enlace de videollamada — le enviaremos un enlace seguro 24 horas antes de la cita.',
-        textStep3: 'Su consulta — conéctese con su médico en línea.',
-        textStep4Report: 'Informe personalizado — en un plazo de 48 horas.',
-        textStep4Travel: 'Recetas y vacunas — facilitadas durante o después de la consulta.',
-        textReschedule: '¿Necesita cambiar la fecha? Reprogramación gratuita hasta 24 horas antes. Responda a este correo o contáctenos.',
-        textRenewal: '¿Necesita renovar la receta más adelante? Reserve online por 19 €:',
-        textFooterCopy: '© 2026 Longevity Clinic'
+        subject: 'El enlace de su teleconsulta – LON Clinic',
+        greeting: 'Estimado/a paciente,',
+        linkLead: 'Aquí tiene el enlace de su teleconsulta:',
+        linkLabel: 'Abrir la teleconsulta',
+        instructions: 'A la hora de su cita, abra el enlace en el navegador (preferiblemente Chrome o Safari) y permita el acceso a la cámara y al micrófono. No es necesario instalar nada.',
+        questions: 'Si tiene alguna pregunta, hágamelo saber.',
+        regards: 'Un cordial saludo,',
+        signName: 'Dr.ª Rita Aguiar',
+        signClinic: 'LON Clinic'
     }
 };
 
@@ -4223,258 +4052,38 @@ function confirmationEmailStrings(locale) {
 }
 
 function buildConfirmationEmail(data) {
-    const {
-        bookingRef,
-        patientName,
-        email,
-        service,
-        serviceLabel,
-        date,
-        time,
-        amount,
-        currency,
-        travellerCount,
-        passengers,
-        travelDest,
-        travelDates,
-        locale: rawLocale,
-        doxyUrl: dataDoxyUrl,
-        intakeUrl: dataIntakeUrl
-    } = data;
+    const t = confirmationEmailStrings(data && data.locale);
+    const room = patientDoxyRoomUrl(doxyUrlFromEmailData(data)) || DEFAULT_DOXY_ROOM_URL || DOXY_DEFAULT_PATIENT_ROOM;
+    const href = escapeHtml(room);
 
-    const t = confirmationEmailStrings(rawLocale);
-    const safeName = escapeHtml(patientName);
-    const safeRef = escapeHtml(bookingRef);
-    const safeServiceLabel = escapeHtml(serviceLabel);
-    const safeDate = escapeHtml(date);
-    const safeTime = escapeHtml(time);
-    const safeDest = escapeHtml(travelDest);
-    const safeTravelDates = escapeHtml(travelDates);
-
-    const currencySymbol = currency === 'eur' ? '€' : currency === 'gbp' ? '£' : '$';
-    const formattedAmount = `${currencySymbol}${(amount / 100).toFixed(0)}`;
-    const isTravel = service === 'travel';
-    const isMulti = travellerCount > 1;
-    const doxyUrl = doxyUrlFromEmailData(data);
-    const showRenewal = service !== 'renovacao' && service !== 'entrevista';
-    const renewalHref = showRenewal
-        ? renewalFollowupUrl({ email, patientName, bookingRef })
-        : '';
-
-    let passengerRows = '';
-    if (isMulti && passengers && passengers.length > 0) {
-        passengerRows = passengers.map((name, i) => `
-            <tr>
-                <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.travellerRow(i + 1)}</td>
-                <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${escapeHtml(name)}</td>
-            </tr>
-        `).join('');
-    }
-
-    let travelRows = '';
-    if (isTravel && (travelDest || travelDates)) {
-        travelRows = `
-            ${travelDest ? `
-            <tr>
-                <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.destLabel}</td>
-                <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${safeDest}</td>
-            </tr>` : ''}
-            ${travelDates ? `
-            <tr>
-                <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.travelDatesLabel}</td>
-                <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${safeTravelDates}</td>
-            </tr>` : ''}
-        `;
-    }
-
-    const intakeUrl = (dataIntakeUrl && String(dataIntakeUrl).trim()) || '';
-    const intakeCtaButton = intakeUrl
-        ? `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:12px 0 0;">
-    <tr>
-        <td align="center" style="padding:0;">
-            <a href="${escapeHtml(intakeUrl)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;padding:14px 32px;border-radius:10px;">${t.fillFormButton}</a>
-        </td>
-    </tr>
-</table>`
-        : '';
-
-    const doxyCtaButton = doxyUrl
-        ? `<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin:16px 0 20px;">
-    <tr>
-        <td align="center" style="padding:0;">
-            <a href="${escapeHtml(doxyUrl)}" target="_blank" rel="noopener noreferrer" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:15px;font-weight:600;line-height:1.2;text-align:center;text-decoration:none;padding:14px 32px;border-radius:10px;">${t.joinVideoButton}</a>
-        </td>
-    </tr>
-</table>`
-        : '';
-
-    const step2Html = doxyUrl
-        ? `${t.doxyBefore}<br><br>${doxyCtaButton}<p style="margin:8px 0 0; font-size:14px; color:#475569; line-height:1.5;">${t.doxyAfter}</p>`
-        : t.step2NoDoxy;
-
-    const step3Body = isTravel ? t.step3Travel : t.step3Longevity;
-
-    const html = `
-<!DOCTYPE html>
+    const html = `<!DOCTYPE html>
 <html lang="${t.htmlLang}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${t.emailTitle}</title>
+    <title>${t.subject}</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #f0f4fa; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f0f4fa; padding: 40px 20px;">
+<body style="margin:0;padding:0;background-color:#f0f4fa;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color:#f0f4fa;padding:40px 20px;">
         <tr>
             <td align="center">
-                <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width: 600px; width: 100%;">
-
+                <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;width:100%;">
                     <tr>
-                        <td style="text-align: center; padding: 0 0 32px;">
-                            <h1 style="margin: 0; font-size: 22px; font-weight: 700; color: #0f172a; letter-spacing: -0.02em;">longevity</h1>
-                            <p style="margin: 4px 0 0; font-size: 11px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.15em;">clinic</p>
+                        <td style="background:#ffffff;border-radius:16px;padding:40px;box-shadow:0 4px 24px rgba(0,0,0,0.06);">
+                            <p style="margin:0 0 16px;font-size:15px;color:#0f172a;line-height:1.6;">${t.greeting}</p>
+                            <p style="margin:0 0 16px;font-size:15px;color:#0f172a;line-height:1.6;">${t.linkLead}</p>
+                            <p style="margin:0 0 20px;">
+                                <a href="${href}" target="_blank" rel="noopener noreferrer" style="color:#255235;font-size:15px;font-weight:600;text-decoration:underline;">${t.linkLabel}</a>
+                            </p>
+                            <p style="margin:0 0 16px;font-size:15px;color:#0f172a;line-height:1.6;">${t.instructions}</p>
+                            <p style="margin:0 0 24px;font-size:15px;color:#0f172a;line-height:1.6;">${t.questions}</p>
+                            <p style="margin:0;font-size:15px;color:#0f172a;line-height:1.6;">
+                                ${t.regards}<br><br>
+                                ${t.signName}<br>
+                                ${t.signClinic}
+                            </p>
                         </td>
                     </tr>
-
-                    <tr>
-                        <td style="background: #ffffff; border-radius: 16px; padding: 40px; box-shadow: 0 4px 24px rgba(0,0,0,0.06);">
-
-                            <div style="text-align: center; margin-bottom: 24px;">
-                                <div style="display: inline-block; width: 56px; height: 56px; background: #e8f5e9; border-radius: 50%; line-height: 56px; text-align: center;">
-                                    <span style="font-size: 28px;">&#10003;</span>
-                                </div>
-                            </div>
-
-                            <h2 style="margin: 0 0 8px; font-size: 24px; font-weight: 700; color: #0f172a; text-align: center;">${t.h2Confirmed}</h2>
-                            <p style="margin: 0 0 24px; font-size: 15px; color: #64748b; text-align: center; line-height: 1.5;">
-                                ${t.thankYou(safeName)}
-                            </p>
-
-                            ${intakeUrl ? `
-                            <div style="background:#f1f5f2;border:1px solid #c9d4cc;border-radius:10px;padding:18px 20px;margin:0 0 28px;text-align:center;">
-                                <p style="margin:0 0 4px;font-size:15px;font-weight:700;color:#0f172a;">${t.step1Title}</p>
-                                <p style="margin:0 0 8px;font-size:14px;color:#475569;line-height:1.5;">${t.fillFormLead}</p>
-                                ${intakeCtaButton}
-                            </div>` : ''}
-
-                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 20px; text-align: center; margin-bottom: 28px;">
-                                <p style="margin: 0 0 4px; font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.1em;">${t.refLabel}</p>
-                                <p style="margin: 0; font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: 0.05em;">${safeRef}</p>
-                            </div>
-
-                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 28px;">
-                                <tr>
-                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.colService}</td>
-                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${safeServiceLabel}</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.colDate}</td>
-                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${safeDate}</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.colTime}</td>
-                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${safeTime}</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.colFormat}</td>
-                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${t.formatVideo}</td>
-                                </tr>
-                                ${isMulti ? `
-                                <tr>
-                                    <td style="padding: 8px 0; color: #64748b; font-size: 14px; border-bottom: 1px solid #f1f5f9;">${t.travellers}</td>
-                                    <td style="padding: 8px 0; color: #0f172a; font-size: 14px; font-weight: 500; text-align: right; border-bottom: 1px solid #f1f5f9;">${travellerCount}</td>
-                                </tr>` : ''}
-                                ${passengerRows}
-                                ${travelRows}
-                                <tr>
-                                    <td style="padding: 12px 0 8px; color: #64748b; font-size: 14px; font-weight: 600;">${t.totalPaid}</td>
-                                    <td style="padding: 12px 0 8px; color: #0f172a; font-size: 18px; font-weight: 700; text-align: right;">${formattedAmount}</td>
-                                </tr>
-                            </table>
-
-                            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 0 0 28px;">
-
-                            <h3 style="margin: 0 0 16px; font-size: 16px; font-weight: 600; color: #0f172a;">${t.whatsNext}</h3>
-
-                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                                <tr>
-                                    <td style="padding: 8px 0; vertical-align: top; width: 32px;">
-                                        <div style="width: 24px; height: 24px; background: #eef4fb; border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; font-weight: 700; color: #3b82f6;">1</div>
-                                    </td>
-                                    <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #475569; line-height: 1.5;">
-                                        <strong style="color: #0f172a;">${t.step1Title}</strong><br>
-                                        ${t.step1Body}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px 0; vertical-align: top; width: 32px;">
-                                        <div style="width: 24px; height: 24px; background: #eef4fb; border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; font-weight: 700; color: #3b82f6;">2</div>
-                                    </td>
-                                    <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #475569; line-height: 1.5;">
-                                        <strong style="color: #0f172a;">${t.step2Title}</strong><br>
-                                        ${step2Html}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 8px 0; vertical-align: top; width: 32px;">
-                                        <div style="width: 24px; height: 24px; background: #eef4fb; border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; font-weight: 700; color: #3b82f6;">3</div>
-                                    </td>
-                                    <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #475569; line-height: 1.5;">
-                                        <strong style="color: #0f172a;">${t.step3Title}</strong><br>
-                                        ${step3Body}
-                                    </td>
-                                </tr>
-                                ${!isTravel ? `
-                                <tr>
-                                    <td style="padding: 8px 0; vertical-align: top; width: 32px;">
-                                        <div style="width: 24px; height: 24px; background: #eef4fb; border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; font-weight: 700; color: #3b82f6;">4</div>
-                                    </td>
-                                    <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #475569; line-height: 1.5;">
-                                        <strong style="color: #0f172a;">${t.step4ReportTitle}</strong><br>
-                                        ${t.step4ReportBody}
-                                    </td>
-                                </tr>` : `
-                                <tr>
-                                    <td style="padding: 8px 0; vertical-align: top; width: 32px;">
-                                        <div style="width: 24px; height: 24px; background: #eef4fb; border-radius: 50%; text-align: center; line-height: 24px; font-size: 12px; font-weight: 700; color: #3b82f6;">4</div>
-                                    </td>
-                                    <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #475569; line-height: 1.5;">
-                                        <strong style="color: #0f172a;">${t.step4TravelTitle}</strong><br>
-                                        ${t.step4TravelBody}
-                                    </td>
-                                </tr>`}
-                            </table>
-
-                            <div style="background: #fefce8; border: 1px solid #fde68a; border-radius: 10px; padding: 14px 18px; margin-top: 28px;">
-                                <p style="margin: 0; font-size: 13px; color: #92400e; line-height: 1.5;">
-                                    <strong>${t.rescheduleStrong}</strong> ${t.rescheduleRest}
-                                </p>
-                            </div>
-
-                            ${showRenewal ? `
-                            <div style="background:#f1f5f2;border:1px solid #c9d4cc;border-radius:10px;padding:18px 20px;margin-top:20px;text-align:center;">
-                                <p style="margin:0 0 6px;font-size:15px;font-weight:700;color:#0f172a;">${t.renewalTitle}</p>
-                                <p style="margin:0 0 14px;font-size:13px;color:#475569;line-height:1.5;">${t.renewalBody}</p>
-                                <a href="${escapeHtml(renewalHref)}" style="display:inline-block;background-color:#255235;border:1px solid #1a3d22;color:#ffffff !important;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:15px;font-weight:600;text-decoration:none;padding:12px 24px;border-radius:10px;">${t.renewalCta}</a>
-                            </div>` : ''}
-
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td style="padding: 32px 20px; text-align: center;">
-                            <p style="margin: 0 0 8px; font-size: 13px; color: #94a3b8;">
-                                ${t.footerContact}
-                                <a href="mailto:info@lonclinic.com" style="color: #3b82f6; text-decoration: none;">info@lonclinic.com</a>
-                            </p>
-                            <p style="margin: 0 0 16px; font-size: 13px; color: #94a3b8;">
-                                ${t.footerOrCall} <a href="tel:+351928372775" style="color: #3b82f6; text-decoration: none;">+351 928 372 775</a>
-                            </p>
-                            <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 16px 0;">
-                            <p style="margin: 0; font-size: 11px; color: #cbd5e1;">${t.footerCopy}</p>
-                            <p style="margin: 4px 0 0; font-size: 11px; color: #cbd5e1;">${t.footerAuto}</p>
-                        </td>
-                    </tr>
-
                 </table>
             </td>
         </tr>
@@ -4482,36 +4091,24 @@ function buildConfirmationEmail(data) {
 </body>
 </html>`;
 
-    const textStep2 = doxyUrl ? t.textStep2Doxy(doxyUrl) : t.textStep2NoDoxy;
-    const textStep4 = isTravel ? t.textStep4Travel : t.textStep4Report;
+    const text = [
+        t.greeting,
+        '',
+        t.linkLead,
+        t.linkLabel,
+        room,
+        '',
+        t.instructions,
+        '',
+        t.questions,
+        '',
+        t.regards,
+        '',
+        t.signName,
+        t.signClinic
+    ].join('\n');
 
-    const text = `
-${t.textHead} — ${bookingRef}
-
-${t.textThanks(patientName)}
-
-${t.textDetails}
-───────────────
-${t.textService}:     ${serviceLabel}
-${t.textDate}:        ${date}
-${t.textTime}:        ${time}
-${t.textFormat}:      ${t.formatVideo}
-${isMulti ? `${t.textTravellers}:  ${travellerCount}\n` : ''}${isTravel && travelDest ? `${t.textDest}: ${travelDest}\n` : ''}${isTravel && travelDates ? `${t.textTravelDates}: ${travelDates}\n` : ''}${t.textTotalPaid}:  ${formattedAmount}
-
-${t.textWhatsNext}
-─────────────────
-1. ${intakeUrl ? t.textStep1WithLink(intakeUrl) : t.textStep1}
-2. ${textStep2}
-3. ${t.textStep3}
-4. ${textStep4}
-
-${t.textReschedule}
-${showRenewal ? `\n${t.textRenewal}\n${renewalHref}\n` : ''}
-info@lonclinic.com | +351 928 372 775
-${t.textFooterCopy}
-`;
-
-    return { html, text, subject: t.subject(serviceLabel, date, bookingRef, time) };
+    return { html, text, subject: t.subject };
 }
 
 /* ========================================
