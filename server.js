@@ -504,6 +504,33 @@ function stripGtagBlocks(html) {
         .replace(/\s*<script\s+async\s+src="https:\/\/www\.googletagmanager\.com\/gtag\/js[^"]*"><\/script>\s*<script\b[\s\S]*?<\/script>/gi, '\n');
 }
 
+
+const GA4_MEASUREMENT_ID = 'G-QX80MLXLEW';
+
+const GA4_TAG_SNIPPET =
+    '\n<!-- Google tag (gtag.js) -->\n' +
+    `<script async src="https://www.googletagmanager.com/gtag/js?id=${GA4_MEASUREMENT_ID}"></script>\n` +
+    '<script>\n' +
+    '  window.dataLayer = window.dataLayer || [];\n' +
+    '  function gtag(){dataLayer.push(arguments);}\n' +
+    "  gtag('js', new Date());\n" +
+    `  gtag('config', '${GA4_MEASUREMENT_ID}');\n` +
+    '</script>\n';
+
+function ensureGoogleTag(html) {
+    if (!html || typeof html !== 'string') return html;
+    if (html.includes(GA4_MEASUREMENT_ID)) return html;
+    if (/function gtag\s*\(/.test(html)) {
+        return html.replace(
+            /gtag\(\s*'js'\s*,\s*new Date\(\)\s*\)\s*;/,
+            `gtag('js', new Date());\n      gtag('config', '${GA4_MEASUREMENT_ID}');`
+        );
+    }
+    const headAt = html.lastIndexOf('</head>');
+    if (headAt === -1) return html;
+    return html.slice(0, headAt) + GA4_TAG_SNIPPET + html.slice(headAt);
+}
+
 function ensureGtagConsentDenied(html) {
     if (!html || !/function gtag\s*\(/.test(html)) return html;
     if (/gtag\(\s*'consent'\s*,\s*'default'/.test(html)) return html;
@@ -564,6 +591,7 @@ function injectPublicHtml(html, req, nonce) {
         out = stripGtagBlocks(out);
         out = metaCapi.stripBrowserSnippet(out);
     } else {
+        out = ensureGoogleTag(out);
         out = ensureGtagConsentDenied(out);
         out = injectMetaPixel(out);
     }

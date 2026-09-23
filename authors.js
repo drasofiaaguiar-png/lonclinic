@@ -334,12 +334,13 @@ function renderAuthorPage(origin, slug) {
     const html = `<!DOCTYPE html>
 <html lang="pt-PT">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZN8J4X12H3"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QX80MLXLEW"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-ZN8J4X12H3');
+      gtag('config', 'G-QX80MLXLEW');
       gtag('config', 'GT-TXHQ9ZVX', { send_page_view: false });
       gtag('config', 'AW-18103198169', { send_page_view: false });
     </script>
@@ -473,12 +474,13 @@ function renderTeamPage(origin, extras) {
     const html = `<!DOCTYPE html>
 <html lang="pt-PT">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZN8J4X12H3"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QX80MLXLEW"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-ZN8J4X12H3');
+      gtag('config', 'G-QX80MLXLEW');
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
