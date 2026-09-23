@@ -9,7 +9,7 @@
 
 Ilhas, templos e street food não pedem o mesmo plano que um mês no Norte rural ou trabalho em campo. A lista de vacinas para viajar à Tailândia sai do **itinerário**, não do visto.
 
-[Consulta do viajante](/travel-clinic), 39 €, com prescrição para o [CVI](/blog/vacinas-viajante-guia-completo) quando houver vacinas do circuito internacional.
+[Consulta do viajante online](/travel-clinic), 39 €, com prescrição para o [CVI](/blog/vacinas-viajante-guia-completo) quando houver vacinas do circuito internacional.
 
 {{cta}}
 

@@ -9,7 +9,7 @@
 
 Burnout é uma síndrome de esgotamento físico, emocional e mental causada por stress crónico e prolongado, normalmente ligado ao contexto profissional. A [Organização Mundial da Saúde](https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon-international-classification-of-diseases) reconhece-o oficialmente como um «fenómeno ocupacional» — não uma doença em si, mas um conjunto de sintomas resultante de stress no trabalho que não foi gerido com sucesso.
 
-Este artigo é o **pilar de definição, tipos e recuperação**. [Quando procurar ajuda](/blog/burnout-sinais-quando-procurar-ajuda) fica no artigo de sinais. O hub clínico: [/burnout](/burnout). O teste: [/burnout/teste](/burnout/teste). Psicologia online para este tema: [psicologia online para burnout](/blog/psicologia-online-para-burnout). Sinais gerais de ir ao psicólogo: [quando ir ao psicólogo](/blog/quando-ir-ao-psicologo-sinais). Médico primeiro vs psicólogo: [consulta médica online](/blog/consulta-medica-online-vale-a-pena).
+Este artigo é o **pilar de tipos, teste CBI e recuperação**. A definição curta — **o que é burnout**, OMS/CID-11, diferença para o cansaço — está em [Burnout: o que é](/blog/burnout-o-que-e-sinais-cansaco). [Quando procurar ajuda](/blog/burnout-sinais-quando-procurar-ajuda). Hub e teste: [/burnout](/burnout), [/burnout/teste](/burnout/teste). Psicologia: [psicologia online para burnout](/blog/psicologia-online-para-burnout). Empresas: [programa anti-burnout](/clinica-anti-burnout#empresas).
 
 ## O que é burnout, exactamente?
 

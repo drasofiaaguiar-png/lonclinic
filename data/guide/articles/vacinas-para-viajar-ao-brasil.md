@@ -9,7 +9,7 @@
 
 Rio, São Paulo ou o Nordeste urbano não são o mesmo que Manaus, o Pantanal ou um circuito de capitais do interior. Por isso a lista de vacinas para viajar ao Brasil **não cabe num cartaz de aeroporto**.
 
-A [consulta do viajante](/travel-clinic) (39 €) cruza o seu itinerário com o boletim. A [febre amarela](/blog/vacina-febre-amarela-guia-completo) toma-se num CVI em [Lisboa](/blog/vacina-febre-amarela-lisboa) ou no [Porto](/blog/vacina-febre-amarela-porto), com prescrição — [não na CUF](/blog/vacina-febre-amarela-cuf).
+A [consulta do viajante online](/travel-clinic) (39 €) cruza o seu itinerário com o boletim. A [febre amarela](/blog/vacina-febre-amarela-guia-completo) toma-se num CVI em [Lisboa](/blog/vacina-febre-amarela-lisboa) ou no [Porto](/blog/vacina-febre-amarela-porto), com prescrição — [não na CUF](/blog/vacina-febre-amarela-cuf).
 
 {{cta}}
 

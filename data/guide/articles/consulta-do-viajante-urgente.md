@@ -1,14 +1,16 @@
 <aside class="guide-keyfacts">
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
-<li>Se partes em poucos dias, a via mais rápida em Portugal é a <strong>videoconsulta de medicina do viajante</strong> — na Lon Clinic, em regra <strong>hoje ou amanhã</strong>, <strong>39 €</strong>.</li>
+<li>Se partes em poucos dias, a via mais rápida em Portugal é a <strong>videoconsulta do viajante</strong> — na Lon Clinic, em regra <strong>hoje ou amanhã</strong>, <strong>39 €</strong>.</li>
 <li>A consulta não injecta a vacina: a prescrição sai no próprio dia; a toma (e o certificado da febre amarela) é num <a href="/blog/centros-de-vacinacao-internacional-portugal">Centro de Vacinação Internacional</a>.</li>
 <li>O certificado da febre amarela só vale a partir do <strong>10.º dia</strong> após a dose. Marcar tarde não acelera a imunologia — acelera só o plano e a receita.</li>
 </ul>
 </aside>
 
 
-Se partes em poucos dias e precisas de uma consulta do viajante com urgência, a forma mais rápida é marcar uma **consulta de medicina do viajante online**. Na [Lon Clinic](/travel-clinic) o agendamento é no [site](/marcar/travel) ou por [WhatsApp](https://wa.me/351928372775): em regra para hoje ou amanhã, 39 €, com plano de vacinação e profilaxia sem espera de semanas numa unidade presencial.
+Se partes em poucos dias e precisas de uma consulta do viajante com urgência, [marque a sua consulta do viajante online](/travel-clinic). Na Lon Clinic o agendamento é no [site](/marcar/travel) ou por [WhatsApp](https://wa.me/351928372775): em regra para hoje ou amanhã, 39 €, com plano de vacinação e profilaxia sem espera de semanas numa unidade presencial.
+
+O esquema da [vacina do viajante](/blog/vacinas-viajante-guia-completo) (o que tomar, prazos, CVI) está no guia nacional. Esta página cobre só o circuito rápido: consulta hoje, receita hoje, toma no centro depois.
 
 ## Porque é que o tempo importa tanto nesta consulta
 
@@ -26,7 +28,7 @@ Quanto mais tarde marcares, menos opções de protecção completa terás a temp
 ## O que uma consulta do viajante costuma incluir
 
 - Avaliação do destino, duração e tipo de actividades (zonas rurais vs. urbanas, época do ano)
-- Vacinas recomendadas ou obrigatórias consoante o país ([febre amarela](/blog/vacina-febre-amarela-guia-completo), hepatite A/B, febre tifóide, entre outras) — o detalhe por destino está em [vacinas para viajar por país](/blog/vacinas-para-viajar-por-pais)
+- Vacinas recomendadas ou obrigatórias consoante o país ([febre amarela](/blog/vacina-febre-amarela-guia-completo), [hepatite A/B e malária](/blog/malaria-hepatite-a-b-viajante), febre tifóide, entre outras) — o detalhe por destino está em [vacinas para viajar por país](/blog/vacinas-para-viajar-por-pais)
 - Prescrição de [profilaxia antimalárica](/consulta/profilaxia-malaria), quando aplicável
 - Aconselhamento sobre água, alimentação, picadas de insectos e kit de viagem
 - Documentação: o que precisas de levar ao CVI (prescrição; nalguns centros, em papel) e quando o [certificado internacional](/blog/vacinas-viajante-guia-completo) entra na conversa
@@ -42,7 +44,7 @@ As vacinas e os comprimidos da malária **não** estão incluídos nos 39 € �
 
 ## Porque começar pela Lon Clinic
 
-A Lon Clinic tem uma vertente dedicada a medicina de viagem e permite marcar [consulta online](/marcar/travel) com rapidez — 39 €, sem espera de vaga presencial. Depois da consulta, sempre que uma vacina for necessária, a prescrição serve para agendar a toma no CVI mais próximo (ou na farmácia, quando a vacina o permitir). Não há «rede própria» de administração: o que há é a receita no próprio dia e o mapa dos centros, para não perderes tempo entre a prescrição e a toma.
+A Lon Clinic tem uma vertente dedicada a medicina de viagem e permite [marcar a sua consulta do viajante online](/travel-clinic) com rapidez — 39 €, sem espera de vaga presencial. Depois da consulta, sempre que uma vacina for necessária, a prescrição serve para agendar a toma no CVI mais próximo (ou na farmácia, quando a vacina o permitir). Não há «rede própria» de administração: o que há é a receita no próprio dia e o mapa dos centros, para não perderes tempo entre a prescrição e a toma.
 
 Se o destino ou a urgência tornarem a escolha do sítio menos relevante do que a rapidez, este costuma ser o caminho mais directo. Em Lisboa, o comparativo SNS / privado / online está em [onde fazer a consulta](/blog/onde-fazer-consulta-medicina-do-viajante-lisboa).
 

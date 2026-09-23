@@ -7,7 +7,7 @@
 </ul>
 </aside>
 
-O trabalho remoto prometeu mais flexibilidade — e trouxe, para muitos, mais horas de trabalho e menos limites claros entre a vida pessoal e profissional.
+O trabalho remoto prometeu mais flexibilidade — e trouxe, para muitos, mais horas de trabalho e menos limites claros entre a vida pessoal e profissional. Definição: [o que é o burnout](/blog/burnout-o-que-e-sinais-cansaco). O cansaço específico das reuniões no ecrã: [burnout digital e videochamadas](/blog/burnout-digital-videochamadas).
 
 A ausência de fronteira física entre casa e escritório dificulta o «desligar» mental. Muitas pessoas em regime remoto trabalham mais horas do que trabalhariam presencialmente, sem sequer se aperceberem, precisamente porque não existe o sinal claro de «sair do escritório». O mesmo dilema aparece no [trabalho híbrido](/burnout/trabalho-hibrido).
 

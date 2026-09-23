@@ -9,7 +9,7 @@
 
 «Que vacinas preciso para viajar para [país]?» é a pergunta certa — e a resposta honesta começa sempre pelo **itinerário**, não pelo passaporte. Dez dias em Banguecoque não são um mês em trekking no Norte da Tailândia. Brasília não é Manaus.
 
-A [consulta do viajante](/travel-clinic) da Lon Clinic (39 €) cruza destino, duração, actividades, idade, gravidez e boletim. Abaixo: orientação típica para destinos frequentes de viajantes a partir de Portugal. **Não é prescrição.**
+A [consulta do viajante online](/travel-clinic) da Lon Clinic (39 €) cruza destino, duração, actividades, idade, gravidez e boletim. Abaixo: orientação típica para destinos frequentes de viajantes a partir de Portugal. **Não é prescrição.**
 
 {{cta}}
 

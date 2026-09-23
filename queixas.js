@@ -483,6 +483,9 @@ ${__lonHeader.renderHeaderScripts(false)}
                 </div>
                 <div class="lon-footer-col">
                     <h4>Clínica</h4>
+                    <a href="/travel-clinic">Consulta do viajante</a>
+                    <a href="/saudemental">Psicologia</a>
+                    <a href="/nutricao">Nutrição</a>
                     <a href="/equipa/rita-aguiar">A médica</a>
                     <a href="/faq">FAQ</a>
                     <a href="/info.html?page=contato">Contacto</a>

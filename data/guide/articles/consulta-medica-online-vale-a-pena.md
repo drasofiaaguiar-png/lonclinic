@@ -19,7 +19,7 @@ Na Lon Clinic a [clínica geral](/marcar/clinica-geral) custa **39 €**. A reno
 
 ## Em que situações vale a pena a teleconsulta?
 
-Vale quando a história e o que se vê no ecrã chegam para decidir com segurança: sintomas urinários recorrentes já conhecidos ([infeção urinária](/consulta/infecao-urinaria)), refluxo, obstipação, cessação tabágica, seguimento de tensão ou colesterol, [renovação de receita](/consulta/renovacao-receita), atestado quando o acto existir. Não vale para dor torácica nova, falta de ar grave, défice neurológico, hemorragia ou qualquer quadro que peça **112**.
+Vale quando a história e o que se vê no ecrã chegam para decidir com segurança: sintomas urinários ([infeção urinária — sintomas](/blog/infecao-urinaria-sintomas); marcar: [consulta de infeção urinária](/consulta/infecao-urinaria)), refluxo, obstipação, cessação tabágica, seguimento de tensão ou colesterol, [renovação de receita](/consulta/renovacao-receita), atestado quando o acto existir. Não vale para dor torácica nova, falta de ar grave, défice neurológico, hemorragia ou qualquer quadro que peça **112**.
 
 A [saúde preventiva em adultos jovens](/blog/saude-preventiva-adultos-jovens) usa a mesma clínica geral — sem inventar um «check-up Lon» com análises incluídas.
 

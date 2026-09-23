@@ -8,7 +8,7 @@
 </aside>
 
 
-O regresso ao trabalho após uma baixa por burnout é, muitas vezes, tão determinante para a recuperação como o próprio período de descanso — e é também o momento em que mais recaídas acontecem. Sobre o tempo de recuperação, veja [quanto tempo demora a recuperar](/blog/quanto-tempo-demora-a-recuperar-de-um-burnout) e [recuperação](/burnout/recuperacao).
+O regresso ao trabalho após uma baixa por burnout é, muitas vezes, tão determinante para a recuperação como o próprio período de descanso — e é também o momento em que mais recaídas acontecem. Acompanhamento: [psicologia online para burnout](/blog/psicologia-online-para-burnout). Sobre o tempo de recuperação, veja [quanto tempo demora a recuperar](/blog/quanto-tempo-demora-a-recuperar-de-um-burnout) e [recuperação](/burnout/recuperacao).
 
 ## Prepare o terreno antes de regressar
 

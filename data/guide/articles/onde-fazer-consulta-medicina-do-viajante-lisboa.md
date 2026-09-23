@@ -1,13 +1,13 @@
 <aside class="guide-keyfacts">
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
-<li>Em Lisboa a consulta de medicina do viajante faz-se no <strong>SNS</strong> (CVI e hospitais), em <strong>privado presencial</strong> (ex. CUF) ou <strong>online</strong>.</li>
+<li>Em Lisboa a consulta do viajante faz-se no <strong>SNS</strong> (CVI e hospitais), em <strong>privado presencial</strong> (ex. CUF) ou <strong>online</strong>.</li>
 <li>Na <a href="/travel-clinic">Lon Clinic</a> a consulta é por videoconsulta, <strong>39 €</strong> — hoje ou amanhã, no site ou WhatsApp. A vacina toma-se depois num Centro de Vacinação Internacional.</li>
 <li>Febre amarela e o certificado internacional (CIVP) <em>não</em> se fazem no ecrã nem na CUF: exigem CVI físico.</li>
 </ul>
 </aside>
 
-«Onde fazer consulta de medicina do viajante em Lisboa» mistura dois sítios: **onde fala com o médico** e **onde toma a vacina**. Não são necessariamente o mesmo. Idealmente marca 4 a 6 semanas antes da viagem (não 4 a 8 por magia: o que conta é a espera no CVI e as doses em série). [Quando e como agendar](/blog/quando-agendar-consulta-do-viajante) (online vs. tradicional).
+«Onde fazer consulta do viajante em Lisboa» mistura dois sítios: **onde fala com o médico** e **onde toma a vacina**. Não são necessariamente o mesmo. Idealmente marca 4 a 6 semanas antes da viagem (não 4 a 8 por magia: o que conta é a espera no CVI e as doses em série). [Quando e como agendar](/blog/quando-agendar-consulta-do-viajante) (online vs. tradicional).
 
 {{cta}}
 
@@ -35,9 +35,9 @@ A Lon Clinic é clínica de telemedicina registada na ERS (n.º 45475), com méd
 
 ## Setor público em Lisboa
 
-Marcação prévia em todos. Não apareça sem horário.
+Marcação prévia para a **consulta** em todos os sítios abaixo. A **toma** das vacinas internacionais, com prescrição, pode ser por ordem de chegada em Sete Rios (dias úteis) — não apareça a um hospital de infecciologia sem horário.
 
-**Centro de Saúde de Sete Rios (USP Francisco George)** — Largo Prof. Arnaldo Sampaio, 1549-010 Lisboa. Um dos CVI da cidade. Marcação por email (`consulta.viajante.lxnorte@ulssm.min-saude.pt`) ou telefone 217 211 862. Confirme na data: contactos mudam.
+**Centro de Saúde de Sete Rios (USP Francisco George)** — o centro de vacinação internacional de referência em Lisboa. Largo Prof. Arnaldo Sampaio, 1549-010. Consulta: email (`consulta.viajante.lxnorte@ulssm.min-saude.pt`) ou telefone 217 211 862. Vacinação: com receita, historicamente por ordem de chegada em dias úteis, 9h–15h30. Confirme na data. Detalhe e AML: [centro de vacinação em Lisboa](/blog/vacinas-viajante-lisboa).
 
 **Hospital Curry Cabral** — Rua da Beneficência, 8. Consulta do viajante no serviço de Doenças Infecciosas; vocacionado também para adultos com história médica mais complexa. Tel. 217 924 322.
 

@@ -354,6 +354,82 @@
     color: #6b5c3e;
 }
 
+.alg-semaforo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 6px 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #3a4a3f;
+    line-height: 1.3;
+}
+
+.alg-semaforo-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex: 0 0 auto;
+    box-shadow: 0 0 0 3px rgba(15, 26, 20, 0.06);
+}
+
+.alg-semaforo[data-priority="high"] .alg-semaforo-dot,
+.alg-semaforo-legend li[data-p="high"] .alg-semaforo-dot { background: #22a35a; }
+
+.alg-semaforo[data-priority="medium"] .alg-semaforo-dot,
+.alg-semaforo-legend li[data-p="medium"] .alg-semaforo-dot { background: #e3b341; }
+
+.alg-semaforo[data-priority="low"] .alg-semaforo-dot,
+.alg-semaforo-legend li[data-p="low"] .alg-semaforo-dot { background: #c94a4a; }
+
+.alg-semaforo[data-priority="unknown"] .alg-semaforo-dot,
+.alg-semaforo-legend li[data-p="unknown"] .alg-semaforo-dot { background: #9aa59e; }
+
+.alg-semaforo-legend {
+    margin: 16px 0 22px;
+    padding: 16px 18px;
+    border: 0.5px solid rgba(15, 26, 20, 0.12);
+    border-radius: 12px;
+    background: #f7faf7;
+}
+
+.alg-semaforo-legend-kicker {
+    margin: 0 0 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #1a6641;
+}
+
+.alg-semaforo-legend p {
+    margin: 0 0 10px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #3a4a3f;
+}
+
+.alg-semaforo-legend ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 6px;
+}
+
+.alg-semaforo-legend li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #0f1a14;
+}
+
+.guide-prose table .alg-semaforo {
+    margin: 0 0 6px;
+}
+
 .alg-prazo-section {
     background: #fff;
     border-top: 0.5px solid rgba(15, 26, 20, 0.10);
@@ -605,6 +681,10 @@
     font-size: 1.02rem;
 }
 
+.guide-tool-cta {
+    margin: 1.1rem 0 1.5rem;
+}
+
 .guide-prose ul,
 .guide-prose ol {
     margin: 0 0 1rem 1.2rem;
@@ -670,6 +750,25 @@
 
 .guide-backlinks-list a {
     font-weight: 500;
+}
+
+.guide-burnout-layer-cta {
+    margin: 1.6rem 0 2rem;
+    padding: 1.1rem 1.2rem 1.2rem;
+    border: 1px solid #e6ddd8;
+    background: #faf7f4;
+}
+.guide-burnout-layer-cta p {
+    margin: 0 0 0.7rem;
+}
+.guide-burnout-layer-cta p:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+    .guide-burnout-map .guide-backlinks-list {
+        grid-template-columns: 1fr;
+    }
 }
 
 .guide-slot-card .guide-book-price {

@@ -53,7 +53,7 @@
     function isWeightLossPath(pathname) {
         var p = String(pathname || '').toLowerCase();
         return /^\/nutricao\/?$/.test(p)
-            || /\/nutricao\/(programa|glp-1|ozempic-wegovy|avaliacao|testes|teste-imc|teste-tfeq|teste-yfas|teste-ess)(\/|$)/.test(p)
+            || /\/nutricao\/(programa|glp-1|ozempic-wegovy|avaliacao|testes|imc|teste-imc|teste-tfeq|teste-yfas|teste-ess)(\/|$)/.test(p)
             || /\/marcar\/nutricao-/.test(p);
     }
 

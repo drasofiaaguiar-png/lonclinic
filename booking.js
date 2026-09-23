@@ -302,7 +302,7 @@ async function initBookingFlow() {
         terapia_casal: 'Terapia de casal',
         nutricao_programa: 'Nutrição',
         burnout: 'Burnout',
-        travel: 'Medicina do Viajante',
+        travel: 'Consulta do Viajante',
         longevidade: 'Medicina Funcional',
         renovacao: 'Renovação de tratamento'
     };

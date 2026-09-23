@@ -10,7 +10,7 @@
 
 É meia-noite e o portátil continua aberto. Não porque falte trabalho a fazer — mas porque, mesmo exausto, parece impossível parar. No dia seguinte, a mesma exaustão. E a sensação incómoda de que, por muito que se esforce, nunca é o suficiente. É este o retrato silencioso do burnout académico.
 
-O burnout académico partilha a mesma estrutura descrita pela [Organização Mundial da Saúde](https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon-international-classification-of-diseases) para o [burnout profissional](/blog/burnout-o-que-e-sinais-cansaco): exaustão de energia, distanciamento mental — neste caso, dos estudos — e uma quebra na perceção da própria eficácia. A diferença é o contexto: em vez do trabalho, a fonte de stress crónico é a exigência escolar ou universitária.
+O burnout académico partilha a mesma estrutura da OMS. A definição está em [o que é o burnout](/blog/burnout-o-que-e-sinais-cansaco): exaustão de energia, distanciamento mental — neste caso, dos estudos — e uma quebra na perceção da própria eficácia. A diferença é o contexto: em vez do trabalho, a fonte de stress crónico é a exigência escolar ou universitária. No emprego, [reconheça os sinais](/blog/9-sinais-de-burnout-no-trabalho).
 
 ## Como reconhecer os sinais no seu filho ou em si próprio
 

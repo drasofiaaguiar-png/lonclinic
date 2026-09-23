@@ -14,7 +14,7 @@ A definição científica mais utilizada, desenvolvida por Isabelle Roskam, Mari
 
 ## As três dimensões do burnout parental
 
-Segundo esta investigação, o burnout parental caracteriza-se por uma exaustão avassaladora ligada ao papel parental, um distanciamento emocional face aos filhos, e um sentimento de ineficácia enquanto pai ou mãe. Diferente do [burnout profissional](/blog/burnout-o-que-e-sinais-cansaco), este não tem «hora de saída» — a responsabilidade é contínua, o que torna a recuperação mais complexa.
+Segundo esta investigação, o burnout parental caracteriza-se por uma exaustão avassaladora ligada ao papel parental, um distanciamento emocional face aos filhos, e um sentimento de ineficácia enquanto pai ou mãe. Diferente do burnout no trabalho — [o que é o burnout](/blog/burnout-o-que-e-sinais-cansaco) —, este não tem «hora de saída» — a responsabilidade é contínua. No emprego, [reconheça os sinais](/blog/9-sinais-de-burnout-no-trabalho).
 
 {{cta}}
 

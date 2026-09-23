@@ -16,7 +16,7 @@ Quando uma avaliação presencial, exames complementares ou cuidados urgentes fo
 Uma consulta médica online pode ser adequada para diferentes situações, incluindo:
 
 - esclarecimento de dúvidas de saúde;
-- avaliação inicial de determinados sintomas;
+- avaliação inicial de determinados sintomas (por exemplo [infeção urinária](/blog/infecao-urinaria-sintomas));
 - acompanhamento de problemas de saúde já conhecidos;
 - acompanhamento de algumas situações clínicas;
 - [questões relacionadas com viagens](/travel-clinic);

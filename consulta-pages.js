@@ -7,7 +7,8 @@
  * sintomas, quando NÃO tratar online, como funciona, preço, FAQ, CTA.
  */
 
-'use strict';const __lonHeader = require('./lon-header');
+'use strict';
+const __lonHeader = require('./lon-header');
 
 
 const fs = require('fs');
@@ -371,10 +372,11 @@ ${__lonHeader.renderHeaderScripts(false)}
                 </div>
                 <div class="lon-footer-col">
                     <h4>Clínica</h4>
+                    <a href="/travel-clinic">Consulta do viajante</a>
+                    <a href="/saudemental">Psicologia</a>
+                    <a href="/nutricao">Nutrição</a>
                     <a href="/consulta">Consulta médica</a>
                     <a href="/consultas">Psicologia por queixa</a>
-                    <a href="/travel-clinic">Medicina do viajante</a>
-                    <a href="/saudemental">Psicologia</a>
                     <a href="/equipa/rita-aguiar">A médica</a>
                 </div>
                 <div class="lon-footer-col">
@@ -480,7 +482,7 @@ function renderSpoke(origin, slug) {
             itemListElement: isTravel
                 ? [
                     { '@type': 'ListItem', position: 1, name: 'Lon Clinic', item: o },
-                    { '@type': 'ListItem', position: 2, name: 'Medicina do viajante', item: `${o}/travel-clinic` },
+                    { '@type': 'ListItem', position: 2, name: 'Consulta do viajante', item: `${o}/travel-clinic` },
                     { '@type': 'ListItem', position: 3, name: meta.navLabel || title, item: `${o}${canonicalPath}` }
                 ]
                 : [
@@ -661,7 +663,7 @@ function renderHubClusterHtml() {
         {
             href: '/travel-clinic',
             price: '39 €',
-            label: 'Medicina do viajante',
+            label: 'Consulta do viajante',
             desc: 'Hub: vacinas, malária e aconselhamento pré-viagem — consulta online.'
         }
     ]

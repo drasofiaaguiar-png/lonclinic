@@ -1,17 +1,19 @@
 {
   "id": "imc",
   "path": "/nutricao/teste-imc",
+  "aliases": ["/nutricao/imc"],
   "cluster": "nutrition",
   "instrument": "IMC",
   "minutes": 1,
-  "title": "Calculadora de IMC e perímetro abdominal grátis | Lon Clinic",
-  "h1": "Qual é o teu IMC — e quantos quilos faltam até um peso normal?",
-  "lead": "O Índice de Massa Corporal (peso ÷ altura²) diz se estás em excesso de peso ou obesidade. O perímetro abdominal acrescenta o risco cardiovascular da gordura visceral. Em 1 minuto: a tua faixa, o peso-alvo e os quilos a perder.",
-  "description": "Calculadora de IMC grátis: peso, altura e cintura. Resultado imediato com quilos a perder até ao peso normal e risco do perímetro abdominal.",
+  "title": "IMC: calculadora grátis (Índice de Massa Corporal) | Lon Clinic",
+  "h1": "Calculadora de IMC",
+  "lead": "O IMC (Índice de Massa Corporal) é peso (kg) ÷ altura² (m). Calcule já o seu número e veja a classificação da OMS. Opcional: perímetro abdominal. Grátis, 1 minuto, sem criar conta.",
+  "description": "Calculadora de IMC grátis: peso e altura, resultado imediato e classificação OMS (baixo peso, normal, excesso de peso, obesidade). Sem email. Se quiser interpretar o número, nutricionista online em /nutricao.",
   "stem": "",
   "homeHref": "/nutricao",
   "homeLabel": "LON Clinic — Nutrição",
   "scoring": "imc",
+  "skipGate": true,
   "gaugeMax": 40,
   "gaugeLabel": "IMC · kg/m²",
   "displayMultiplier": 1,
@@ -59,48 +61,70 @@
       "id": "waist",
       "scale": "waist",
       "input": "number",
-      "text": "Qual é o teu perímetro abdominal?",
-      "hint": "Fita métrica logo acima do osso da anca, sem contrair a barriga, no fim de uma expiração normal. O IMC não vê gordura visceral — a cintura vê.",
+      "text": "Qual é o teu perímetro abdominal? (opcional)",
+      "hint": "Fita métrica logo acima do osso da anca, sem contrair a barriga, no fim de uma expiração. Podes saltar — o IMC já chega para o número.",
       "placeholder": "88",
       "unit": "cm",
       "min": 40,
       "max": 200,
       "step": 0.5,
       "optional": true,
-      "skipLabel": "Não sei / saltar"
+      "skipLabel": "Saltar — só quero o IMC"
     }
   ],
   "bands": [
-    { "max": 18.49, "pill": "BAIXO PESO", "concern": "light", "title": "Abaixo do peso considerado normal", "bookLabel": "Marcar consulta", "bookNote": "Videoconsulta · avaliar se o baixo peso tem causa clínica" },
-    { "max": 24.9, "pill": "NORMAL", "concern": "low", "title": "IMC na faixa considerada normal", "bookLabel": "Marcar consulta", "bookNote": "Opcional · se a cintura ou a composição corporal te preocuparem" },
-    { "max": 29.9, "pill": "EXCESSO DE PESO", "concern": "mid", "title": "Excesso de peso", "bookLabel": "Marcar consulta", "bookNote": "Programa de reeducação · 2 consultas/mês · sem aGLP-1" },
-    { "max": 34.9, "pill": "OBESIDADE I", "concern": "high", "title": "Obesidade grau I", "bookLabel": "Marcar consulta", "bookNote": "Reeducação metabólica e adesão — não uma receita" },
-    { "max": 39.9, "pill": "OBESIDADE II", "concern": "high", "title": "Obesidade grau II", "bookLabel": "Marcar consulta", "bookNote": "Programa mensal · hábitos contra o ioiô" },
-    { "max": 999, "pill": "OBESIDADE III", "concern": "high", "title": "Obesidade grau III", "bookLabel": "Marcar consulta", "bookNote": "Acompanhamento nutricional contínuo · sem prescrição de aGLP-1" }
+    { "max": 18.49, "pill": "BAIXO PESO", "concern": "light", "title": "Abaixo do peso considerado normal", "bookLabel": "Falar com um nutricionista", "bookNote": "O IMC é só um número. Se o baixo peso o preocupa, a consulta de nutrição ajuda a perceber o contexto." },
+    { "max": 24.9, "pill": "NORMAL", "concern": "low", "title": "IMC na faixa considerada normal", "bookLabel": "Ver nutricionista online", "bookNote": "Não é obrigatório marcar. Se a cintura ou a composição corporal o preocuparem, a consulta existe." },
+    { "max": 29.9, "pill": "EXCESSO DE PESO", "concern": "mid", "title": "Excesso de peso", "bookLabel": "Ver nutricionista online", "bookNote": "O IMC classifica; não trata. Um nutricionista online (desde 45 €) interpreta o hábito, não só o número." },
+    { "max": 34.9, "pill": "OBESIDADE I", "concern": "high", "title": "Obesidade grau I", "bookLabel": "Ver nutricionista online", "bookNote": "O IMC ≥ 30 pede avaliação. Na Lon Clinic a nutrição é videochamada — sem prescrever aGLP-1 nesta via." },
+    { "max": 39.9, "pill": "OBESIDADE II", "concern": "high", "title": "Obesidade grau II", "bookLabel": "Ver nutricionista online", "bookNote": "Vale a pena falar com um nutricionista. O número sozinho não define o plano." },
+    { "max": 999, "pill": "OBESIDADE III", "concern": "high", "title": "Obesidade grau III", "bookLabel": "Ver nutricionista online", "bookNote": "Procure avaliação clínica. A consulta de nutrição é um dos passos — não o único." }
   ],
   "insights": {
     "imc": { "title": "Quilos até ao peso normal", "text": "O peso-alvo usa o limite superior da faixa normal (IMC 24,9). Não é um objectivo estético — é o limiar clínico da OMS para deixar de classificar excesso de peso." },
     "waist": { "title": "A cintura conta tanto quanto o IMC", "text": "O IMC não distingue músculo de gordura. Uma cintura acima do limiar aumenta o risco metabólico mesmo com IMC «só» em excesso de peso — e às vezes com IMC ainda normal." }
   },
   "booking": {
-    "consultHref": "/marcar/nutricao-programa",
-    "consultName": "Consulta inicial de nutrição metabólica",
-    "consultPrice": "115",
-    "consultMeta": "Mês 1 · depois 75 €/mês · sem aGLP-1",
-    "subHref": "/marcar/nutricao-completo",
-    "subName": "Programa completo (com psicologia)",
-    "subPrice": "227",
-    "subMeta": "Nutrição + 12 sessões · mês 1",
-    "stickyLabel": "Consulta inicial de nutrição",
-    "hideSubOn": ["NORMAL", "BAIXO PESO"]
+    "consultHref": "/nutricao",
+    "consultName": "Nutricionista online",
+    "consultPrice": "45",
+    "consultMeta": "Avulsa ou 45 € a cada 15 dias · videochamada",
+    "subHref": "/nutricao",
+    "subName": "Como funciona a consulta",
+    "subPrice": "45",
+    "subMeta": "Sem fidelização na linha só nutrição",
+    "stickyLabel": "Nutricionista online · desde 45 €",
+    "hideSubOn": ["NORMAL", "BAIXO PESO"],
+    "hideSlots": true
   },
   "related": ["tfeq", "yfas", "ess", "who5"],
   "introLinks": [
-    { "href": "/nutricao/programa", "label": "Programa de reeducação" },
-    { "href": "/nutricao/teste-tfeq", "label": "TFEQ · o que trava o peso" },
-    { "href": "/nutricao/teste-ess", "label": "Sonolência / apneia (ESS)" },
-    { "href": "/nutricao/glp-1", "label": "aGLP-1 / desmame" }
+    { "href": "/blog/imc", "label": "O que é o IMC" },
+    { "href": "/nutricao", "label": "Nutricionista online" },
+    { "href": "/nutricao/teste-tfeq", "label": "TFEQ · o que trava o peso" }
   ],
-  "disclaimer": "O IMC (OMS) classifica baixo peso (<18,5), peso normal (18,5–24,9), excesso de peso (25–29,9) e obesidade (≥30). O peso-alvo usa IMC 24,9 (limite superior da faixa normal). Os limiares de cintura seguem os critérios europeus: mulheres ≥80 / ≥88 cm; homens ≥94 / ≥102 cm. O IMC não distingue massa magra de gordura nem se aplica da mesma forma a grávidas, desportistas de alta massa muscular ou algumas etnias. Não é um diagnóstico. IMC >25 ou cintura de risco pede avaliação médica e nutricional da composição corporal.",
+  "faq": [
+    {
+      "q": "O que é o IMC?",
+      "a": "O IMC (Índice de Massa Corporal) é o peso em quilogramas dividido pela altura em metros ao quadrado. Classifica baixo peso, peso normal, excesso de peso e obesidade em adultos, segundo a OMS."
+    },
+    {
+      "q": "Como se calcula o IMC?",
+      "a": "IMC = peso (kg) ÷ altura (m)². Exemplo: 70 kg e 1,70 m → 70 ÷ 2,89 = 24,2. Esta página faz o cálculo por si."
+    },
+    {
+      "q": "Qual é o IMC considerado normal?",
+      "a": "Em adultos, a OMS considera normal 18,5 a 24,9. Abaixo de 18,5 é baixo peso; 25 a 29,9 excesso de peso; 30 ou mais obesidade."
+    },
+    {
+      "q": "O IMC é fiável?",
+      "a": "É útil para triagem, mas não distingue músculo de gordura nem a gordura abdominal. Atletas e pessoas com pouca massa muscular podem ser mal classificados. O perímetro da cintura complementa o número."
+    },
+    {
+      "q": "Preciso de consulta depois de calcular o IMC?",
+      "a": "Não, se só queria o número. Se o resultado o preocupa ou se o peso já oscilou várias vezes, um nutricionista online (desde 45 €) ajuda a interpretar — na Lon Clinic em /nutricao."
+    }
+  ],
+  "disclaimer": "O IMC (OMS) classifica baixo peso (<18,5), peso normal (18,5–24,9), excesso de peso (25–29,9) e obesidade (≥30). O peso-alvo usa IMC 24,9 (limite superior da faixa normal). Os limiares de cintura seguem os critérios europeus: mulheres ≥80 / ≥88 cm; homens ≥94 / ≥102 cm. O IMC não distingue massa magra de gordura nem se aplica da mesma forma a grávidas, crianças, desportistas de alta massa muscular ou algumas etnias. Não é um diagnóstico.",
   "utmCampaign": "imc-teste"
 }

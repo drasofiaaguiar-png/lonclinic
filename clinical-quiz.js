@@ -36,6 +36,7 @@
     var answers = new Array(QUESTIONS.length).fill(null);
     var holdTimer = null;
     var isNutrition = cfg.cluster === 'nutrition' || cfg.scoring === 'imc';
+    var skipGate = !!cfg.skipGate;
 
     var $ = function (id) { return document.getElementById(id); };
     var screens = { intro: $('intro'), quiz: $('quiz'), gate: $('gate'), processing: $('processing'), results: $('results') };
@@ -128,9 +129,7 @@
                         current++;
                         renderQuestion();
                     } else {
-                        show('gate');
-                        if ($('leadName')) $('leadName').focus();
-                        else $('email').focus();
+                        finishQuiz();
                     }
                 }, 220);
             });
@@ -144,14 +143,22 @@
         return Number(t);
     }
 
+    function finishQuiz() {
+        if (skipGate) {
+            renderResults();
+            return;
+        }
+        show('gate');
+        if ($('leadName')) $('leadName').focus();
+        else if ($('email')) $('email').focus();
+    }
+
     function goNext() {
         if (current < QUESTIONS.length - 1) {
             current++;
             renderQuestion();
         } else {
-            show('gate');
-            if ($('leadName')) $('leadName').focus();
-            else $('email').focus();
+            finishQuiz();
         }
     }
 
@@ -285,7 +292,7 @@
         }
         if (cfg.scoring === 'imc' && band.pill && /NORMAL|BAIXO PESO/.test(band.pill)) {
             ['bookBtnPrimary', 'bookBtn', 'stickyBookBtn'].forEach(function (id) {
-                if ($(id)) $(id).setAttribute('href', '/marcar/clinica-geral?ref=imc-quiz');
+                if ($(id)) $(id).setAttribute('href', '/nutricao?ref=imc-quiz');
             });
         }
 
@@ -374,11 +381,16 @@
         }
 
         storeQuizForBooking(scored);
-        if (isNutrition && $('quizTrust')) {
+        if (skipGate) {
+            if ($('quizTrust')) {
+                $('quizTrust').innerHTML = 'O IMC não é um diagnóstico.<br>A consulta de nutrição é opcional — desde 45 €, videochamada.';
+            }
+            if ($('quizHold')) $('quizHold').hidden = true;
+        } else if (isNutrition && $('quizTrust')) {
             $('quizTrust').innerHTML = '🔒 Fidelização 3 meses no programa · sem cláusulas abusivas<br>🩺 1.ª consulta médica agendada logo após o pagamento';
         }
         show('results');
-        startHoldTimer();
+        if (!skipGate) startHoldTimer();
         var sticky = $('stickyBook');
         if (sticky) {
             sticky.hidden = false;

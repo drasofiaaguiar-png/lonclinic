@@ -2,7 +2,8 @@
  * Lon Clinic — clinical questionnaires (PHQ-9, GAD-7, PSS-10, ISI, WHO-5, SF-12, TFEQ, YFAS, ESS).
  * Interactive CBI quiz stays at /burnout/teste (burnout-quiz.html).
  */
-'use strict';const __lonHeader = require('./lon-header');
+'use strict';
+const __lonHeader = require('./lon-header');
 
 
 const fs = require('fs');
@@ -11,8 +12,8 @@ const { originOf } = require('./seo');
 const { scoreQuiz, questionOptions } = require('./clinical-quiz-score');
 
 const QUIZ_DIR = path.join(__dirname, 'data', 'clinical-quizzes');
-const CSS_V = '20260913r';
-const JS_V = '20260905i';
+const CSS_V = '20260922imc';
+const JS_V = '20260922imc';
 
 const CBI = {
     id: 'cbi',
@@ -81,9 +82,11 @@ function getQuiz(id) {
 }
 
 function getQuizByPath(urlPath) {
-    const p = String(urlPath || '').split('?')[0];
+    const p = String(urlPath || '').split('?')[0].replace(/\/$/, '') || '/';
     for (const def of loadAll().values()) {
         if (def.path === p) return def;
+        const aliases = Array.isArray(def.aliases) ? def.aliases : [];
+        if (aliases.includes(p)) return def;
     }
     return null;
 }
@@ -221,7 +224,7 @@ const CARD_COPY = {
         image: '/image/nutricao-consulta.webp'
     },
     imc: {
-        title: 'Será que tenho excesso de peso?',
+        title: 'Calcular o IMC',
         image: '/image/nutricao-emagrecimento.webp'
     },
     tfeq: {
@@ -332,6 +335,7 @@ function clientConfig(def) {
         related: resolveRelated(def),
         disclaimer: def.disclaimer,
         utmCampaign: def.utmCampaign,
+        skipGate: !!def.skipGate,
         crisisItem: def.questions.some((q) => q.crisis)
     };
 }
@@ -366,6 +370,7 @@ function quizSlotMeta(def) {
 }
 
 function quizSlotsHtml(def) {
+    if (def.booking && def.booking.hideSlots) return '';
     const pack = quizSlotMeta(def);
     return `
                         <div class="dr-live-slots" data-next-slots data-limit="3" data-service="${escapeHtml(pack.service)}" data-book-href="${escapeHtml(pack.href)}" data-surface="quiz-${escapeHtml(def.id)}" hidden>
@@ -381,6 +386,48 @@ function bookHref(def, which, content) {
     if (!base) return '#';
     const join = base.includes('?') ? '&' : '?';
     return `${base}${join}${utmPair(def, content)}`;
+}
+
+function faqJsonLd(def, canonical) {
+    const items = Array.isArray(def.faq) ? def.faq : [];
+    if (!items.length) return null;
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: items.map((item) => ({
+            '@type': 'Question',
+            name: item.q,
+            acceptedAnswer: { '@type': 'Answer', text: item.a }
+        }))
+    };
+}
+
+function howToImcJsonLd(canonical) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'HowTo',
+        name: 'Como calcular o IMC',
+        description: 'Calcular o Índice de Massa Corporal: peso em kg dividido pela altura em metros ao quadrado.',
+        url: canonical,
+        inLanguage: 'pt-PT',
+        totalTime: 'PT1M',
+        step: [
+            { '@type': 'HowToStep', position: 1, name: 'Pesar', text: 'Anote o peso em quilogramas.' },
+            { '@type': 'HowToStep', position: 2, name: 'Medir a altura', text: 'Anote a altura em metros (170 cm = 1,70 m).' },
+            { '@type': 'HowToStep', position: 3, name: 'Calcular', text: 'IMC = peso ÷ (altura × altura). Exemplo: 70 kg e 1,70 m → 24,2.' }
+        ]
+    };
+}
+
+function faqHtml(def) {
+    const items = Array.isArray(def.faq) ? def.faq : [];
+    if (!items.length) return '';
+    const body = items.map((item) => `
+        <details class="bq-geo-faq-item">
+            <summary>${escapeHtml(item.q)}</summary>
+            <p>${escapeHtml(item.a)}</p>
+        </details>`).join('');
+    return `<section class="bq-geo-faq" aria-label="Perguntas frequentes sobre IMC">${body}</section>`;
 }
 
 function renderQuizPage(origin, def) {
@@ -410,13 +457,13 @@ function renderQuizPage(origin, def) {
     const hubHref = def.cluster === 'nutrition' ? '/nutricao/testes' : '/burnout/testes';
     const brandHref = escapeHtml(def.homeHref || '/');
     const brandLabel = escapeHtml(def.homeLabel || 'LON Clinic');
-    const startLabel = n <= 6 ? `Começar · ${def.minutes} min` : 'Começar o teste';
+    const startLabel = def.scoring === 'imc' ? 'Calcular o meu IMC' : (n <= 6 ? `Começar · ${def.minutes} min` : 'Começar o teste');
 
     const jsonLd = [
         {
             '@context': 'https://schema.org',
             '@type': 'WebApplication',
-            name: `Teste ${def.instrument} Lon Clinic`,
+            name: def.scoring === 'imc' ? 'Calculadora de IMC Lon Clinic' : `Teste ${def.instrument} Lon Clinic`,
             url: canonical,
             applicationCategory: 'HealthApplication',
             offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
@@ -427,11 +474,16 @@ function renderQuizPage(origin, def) {
             '@context': 'https://schema.org',
             '@type': 'MedicalWebPage',
             name: def.title,
+            description: def.description,
             url: canonical,
             inLanguage: 'pt-PT',
             publisher: { '@id': `${o}/#organization` }
         }
     ];
+    const faqLd = faqJsonLd(def, canonical);
+    if (faqLd) jsonLd.push(faqLd);
+    if (def.scoring === 'imc') jsonLd.push(howToImcJsonLd(canonical));
+    const jsonLdScripts = jsonLd.map((block) => `<script type="application/ld+json">${JSON.stringify(block)}</script>`).join('\n    ');
 
     return `<!DOCTYPE html>
 <html lang="pt-PT">
@@ -460,8 +512,7 @@ function renderQuizPage(origin, def) {
     <meta property="og:site_name" content="Lon Clinic">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="theme-color" content="#2f453a">
-    <script type="application/ld+json">${JSON.stringify(jsonLd[0])}</script>
-    <script type="application/ld+json">${JSON.stringify(jsonLd[1])}</script>
+    ${jsonLdScripts}
     <link rel="stylesheet" href="/landing.css?v=20260621b">
     <link rel="stylesheet" href="/burnout-quiz.css?v=${CSS_V}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -489,10 +540,11 @@ function renderQuizPage(origin, def) {
         <div class="bq-stage" id="stage">
             <section class="bq-screen is-active" id="intro">
                 <div class="bq-intro">
-                    <p class="bq-kicker">${instrument} · menos de ${def.minutes} min · ${n} perguntas</p>
+                    <p class="bq-kicker">${def.scoring === 'imc' ? 'IMC · calculadora grátis · 1 min' : `${instrument} · menos de ${def.minutes} min · ${n} perguntas`}</p>
                     <h1>${h1}</h1>
                     <p>${lead}</p>
-                    ${def.scoring === 'imc' ? `<div class="bq-imc-legend" aria-label="Escala de IMC e perímetro abdominal">
+                    ${def.scoring === 'imc' ? `<p class="bq-formula"><strong>Fórmula:</strong> IMC = peso (kg) ÷ altura² (m). Ex.: 70 kg e 1,70 m → 70 ÷ 2,89 = <strong>24,2</strong>.</p>
+                    <div class="bq-imc-legend" aria-label="Escala de IMC e perímetro abdominal">
                         <table>
                             <caption>Escala de IMC (OMS, adultos)</caption>
                             <thead><tr><th>IMC</th><th>Classificação</th></tr></thead>
@@ -516,6 +568,7 @@ function renderQuizPage(origin, def) {
                     </div>` : ''}
                     <button type="button" class="bq-btn bq-btn-primary bq-btn-lg" id="startBtn">${startLabel}</button>
                     <p class="bq-intro-more">${introLinks}${introLinks ? '<span aria-hidden="true"> · </span>' : ''}<a href="${hubHref}">Todos os testes →</a></p>
+                    ${faqHtml(def)}
                 </div>
             </section>
             <section class="bq-screen" id="quiz" hidden>
@@ -612,7 +665,7 @@ function renderQuizPage(origin, def) {
                     <div class="bq-scales" id="scales"></div>
                     <div class="bq-insights" id="insights"></div>
                     <div class="bq-cta">
-                        <h3>O próximo passo</h3>
+                        <h3>${def.scoring === 'imc' ? 'Se quiser ir além do número' : 'O próximo passo'}</h3>
                         <p id="ctaText"></p>
                         <div class="bq-plan-grid">
                             <a class="bq-plan-card js-quiz-book" href="${consultCard}" id="bookBtn">
@@ -661,11 +714,11 @@ function renderQuizPage(origin, def) {
     </footer>
     <aside class="bq-sticky-book" id="stickyBook" hidden>
         <p>${escapeHtml(b.stickyLabel || b.consultName || 'Marcar consulta')}</p>
-        <a class="bq-btn bq-btn-primary js-quiz-book" id="stickyBookBtn" data-cta="book" href="${stickyHref}">Marcar consulta</a>
+        <a class="bq-btn bq-btn-primary js-quiz-book" id="stickyBookBtn" data-cta="book" href="${stickyHref}">${def.scoring === 'imc' ? 'Ver nutrição' : 'Marcar consulta'}</a>
     </aside>
     <script>window.CLINICAL_QUIZ = ${cfgJson};</script>
     <script src="/lon-analytics.js?v=20260914a" defer></script>
-    <script src="/lon-slots.js?v=20260911n" defer></script>
+    <script src="/lon-slots.js?v=20260922imc" defer></script>
     <script src="/clinical-quiz-score.js?v=${JS_V}" defer></script>
     <script src="/clinical-quiz.js?v=${JS_V}" defer></script>
 </body>
@@ -869,9 +922,10 @@ ${__lonHeader.renderHeaderScripts(false)}
                 </div>
                 <div class="lon-footer-col">
                     <h4>Clínica</h4>
-                    <a href="/burnout">Burnout</a>
+                    <a href="/travel-clinic">Consulta do viajante</a>
+                    <a href="/saudemental">Psicologia</a>
                     <a href="/nutricao">Nutrição</a>
-                    <a href="/saudemental">Saúde mental</a>
+                    <a href="/burnout">Burnout</a>
                     <a href="/magazine">Magazine</a>
                     <a href="/faq">FAQ</a>
                 </div>

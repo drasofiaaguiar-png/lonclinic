@@ -220,10 +220,10 @@ function travelProcedureNode(origin) {
     return {
         '@type': 'MedicalProcedure',
         '@id': `${o}/travel-clinic#consulta-viajante`,
-        name: 'Consulta de medicina do viajante',
+        name: 'Consulta do viajante online',
         alternateName: ['Consulta do viajante', 'Travel clinic'],
         description:
-            'Videoconsulta de medicina do viajante em Portugal: avaliação por destino, prescrição de vacinas, profilaxia da malária e orientação para certificado internacional. Administração das vacinas num Centro de Vacinação Internacional.',
+            'Consulta do viajante online em Portugal: videoconsulta 39 €, avaliação por destino, prescrição de vacinas e profilaxia da malária. Administração das vacinas num Centro de Vacinação Internacional.',
         procedureType: 'https://schema.org/TherapeuticProcedure',
         url: `${o}/travel-clinic`,
         howPerformed: 'Videoconsulta com médica inscrita na Ordem dos Médicos. Prescrição electrónica no próprio dia, quando indicada.',

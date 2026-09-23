@@ -22,7 +22,7 @@ Tentar retomar imediatamente o mesmo ritmo e nível de exigência anteriores ten
 
 Reencontrar atividades que não estejam ligadas a produtividade ou desempenho — passear, criar, socializar sem agenda — ajuda a restaurar a capacidade de sentir prazer sem pressão associada. A [Mayo Clinic](https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-depth/burnout/art-20046642) recomenda que quem apresenta sinais como perda de satisfação com conquistas ou dificuldade em concentrar-se considere apoio profissional, precisamente porque estes sintomas raramente se resolvem sozinhos.
 
-Quando chegar a altura de voltar ao emprego, leia [regressar ao trabalho depois de um burnout](/blog/regressar-ao-trabalho-depois-de-um-burnout).
+Quando chegar a altura de voltar ao emprego, leia [regressar ao trabalho depois de um burnout](/blog/regressar-ao-trabalho-depois-de-um-burnout). O acompanhamento: [psicologia online para burnout](/blog/psicologia-online-para-burnout).
 
 ## Perguntas frequentes
 

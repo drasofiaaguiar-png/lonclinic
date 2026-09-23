@@ -8,7 +8,7 @@
 </aside>
 
 
-É provavelmente a pergunta mais frequente de quem atravessa um burnout: «quando é que isto passa?» A resposta honesta é: depende — mas há fatores concretos que influenciam esse tempo, e vale a pena conhecê-los para gerir melhor as próprias expectativas.
+É provavelmente a pergunta mais frequente de quem atravessa um burnout: «quando é que isto passa?» A resposta honesta é: depende — mas há fatores concretos que influenciam esse tempo. Se ainda não nomeou o quadro, comece pelos [sinais de burnout](/blog/burnout-o-que-e-sinais-cansaco).
 
 A gravidade do quadro, o tempo de exposição ao stress crónico, o suporte disponível, e as mudanças reais feitas no estilo de vida ou no contexto profissional determinam se a recuperação demora semanas ou vários meses. A página [recuperação de burnout](/burnout/recuperacao) descreve este processo por fases.
 

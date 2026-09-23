@@ -10,7 +10,7 @@
 
 Há um paradoxo silencioso em quem escolhe cuidar dos outros como profissão: são frequentemente os últimos a cuidar de si próprios — e os primeiros a esgotar-se.
 
-Profissionais de saúde apresentam taxas de burnout significativamente mais elevadas do que a população geral, um paradoxo particularmente preocupante numa profissão dedicada a cuidar dos outros. A exposição constante ao sofrimento alheio, decisões de alto risco, turnos irregulares, e a dificuldade cultural em admitir vulnerabilidade dentro da própria profissão contribuem para este cenário. Ver também [profissionais de saúde](/burnout/profissionais-de-saude) e [burnout em médicos](/burnout/medicos).
+Profissionais de saúde apresentam taxas de burnout significativamente mais elevadas do que a população geral, um paradoxo particularmente preocupante numa profissão dedicada a cuidar dos outros. A exposição constante ao sofrimento alheio, decisões de alto risco, turnos irregulares, e a dificuldade cultural em admitir vulnerabilidade dentro da própria profissão contribuem para este cenário. [O que é o burnout](/blog/burnout-o-que-e-sinais-cansaco) (definição). Como levar isto à consulta: [como falar com o médico sobre burnout](/blog/como-falar-com-o-medico-sobre-burnout). Ver também [profissionais de saúde](/burnout/profissionais-de-saude) e [burnout em médicos](/burnout/medicos).
 
 ## O que é a «fadiga de compaixão»
 

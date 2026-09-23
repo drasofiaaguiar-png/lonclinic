@@ -2,7 +2,7 @@
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
 <li>A <strong>febre amarela</strong> e o certificado internacional (CIVP, o «livro amarelo») só se fazem num Centro de Vacinação Internacional — não em farmácia nem na consulta online.</li>
-<li>Hepatite A/B, encefalite japonesa, cólera e meningocócica podem, com receita, ir para farmácia; o certificado internacional, quando exigido, continua a ser emitido só no CVI.</li>
+<li>Em Lisboa, o CVI de referência é <a href="/blog/vacinas-viajante-lisboa">Sete Rios</a>. Vacinação sem agendamento, quando existe, é a <strong>toma com receita</strong> por ordem de chegada — não a consulta.</li>
 <li>Na <a href="/travel-clinic">Lon Clinic</a> a consulta do viajante é por vídeo, <strong>39 €</strong> — hoje ou amanhã. A prescrição serve depois para marcar a vacina num dos centros abaixo.</li>
 </ul>
 </aside>
@@ -87,7 +87,9 @@ Guias com morada e circuito local: [Lisboa](/blog/vacinas-viajante-lisboa), [Por
 
 <h3 id="lisboa-e-vale-do-tejo">Lisboa e Vale do Tejo</h3>
 
-Consulta em Lisboa (SNS, privado e online): [onde fazer consulta de medicina do viajante](/blog/onde-fazer-consulta-medicina-do-viajante-lisboa). Vacinação: [CVI de Lisboa](/blog/vacinas-viajante-lisboa).
+Consulta em Lisboa (SNS, privado e online): [onde fazer consulta de medicina do viajante](/blog/onde-fazer-consulta-medicina-do-viajante-lisboa). Centro de vacinação na cidade: [CVI de Lisboa / Sete Rios](/blog/vacinas-viajante-lisboa).
+
+**Vacinação sem agendamento:** a consulta SNS pede quase sempre horário. A toma, com prescrição, é por ordem de chegada em alguns CVI. Em Lisboa, o caso mais citado é Sete Rios (dias úteis, 9h–15h30) — confirme no dia. No Porto, a consulta de viajante das Doenças Infecciosas do CHP descreve-se sem marcação prévia formal, mas com espera de cerca de dois meses para consulta e vacina juntas. A Lon Clinic não tem sala de vacinas: a consulta é vídeo; a picada é no CVI.
 
 | Centro | Contacto | Horário de consulta | Experiência de contacto |
 |---|---|---|---|
@@ -157,6 +159,15 @@ Circuitos locais: [vacinas do viajante no Algarve](/blog/vacinas-viajante-algarv
 Preço da consulta online: [quanto custa a consulta de medicina do viajante](/blog/quanto-custa-consulta-medicina-do-viajante). Se o voo é esta semana: [ainda sem vacinas](/blog/vou-viajar-esta-semana-sem-vacinas).
 
 ## Perguntas frequentes
+
+**O que significa o semáforo dos centros de vacinação?**
+Verde: atenderam com facilidade na auditoria Lon Clinic. Amarelo: pode ser preciso insistir. Vermelho: contacto difícil. Cinzento: ainda sem chamada nossa. Não classifica a qualidade clínica — só se o telefone atende.
+
+**Há vacinação sem agendamento nos Centros de Vacinação Internacional?**
+A consulta do viajante, no SNS, pede quase sempre marcação. A toma da vacina, com prescrição, é por ordem de chegada em alguns CVI — em Lisboa, Sete Rios. Confirme no centro no dia. A Lon Clinic não administra vacinas.
+
+**Onde fica um centro de vacinação em Lisboa?**
+Sete Rios (USP Francisco George), Curry Cabral, Santa Maria e Dona Estefânia (crianças), mais CVI na AML. Moradas: [centro de vacinação em Lisboa](/blog/vacinas-viajante-lisboa).
 
 **Preciso mesmo de ir a um Centro de Vacinação Internacional, ou posso ser vacinado noutro sítio?**
 A febre amarela e o CIVP só no CVI reconhecido. Outras vacinas de viagem (hepatite A/B, tifóide oral, encefalite japonesa, entre outras) podem, com receita, ser administradas em farmácia — a consulta é que decide. A [Lon Clinic](/travel-clinic) faz a avaliação e a prescrição por videoconsulta; a picada do circuito internacional continua no CVI quando for esse o caso. A [CUF não administra o circuito da febre amarela](/blog/vacinas-viajante-cuf).

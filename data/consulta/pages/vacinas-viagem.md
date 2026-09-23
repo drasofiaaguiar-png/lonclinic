@@ -26,7 +26,7 @@ Há páginas específicas para as perguntas que as pessoas realmente fazem:
 - [Brasil](/blog/vacinas-para-viajar-ao-brasil), [Tailândia](/blog/vacinas-para-viajar-a-tailandia), [Índia](/blog/vacinas-para-viajar-a-india)
 - [Quénia](/blog/vacinas-para-viajar-ao-quenia), [Angola](/blog/vacinas-para-viajar-a-angola), [Moçambique](/blog/vacinas-para-viajar-a-mocambique)
 
-Malária não é vacina de rotina neste circuito: é [profilaxia com receita](/consulta/profilaxia-malaria), quando indicada.
+Malária não é vacina de rotina neste circuito: é [profilaxia com receita](/consulta/profilaxia-malaria), quando indicada. Artigo: [malária e hepatite A/B antes de viajar](/blog/malaria-hepatite-a-b-viajante).
 
 ## Preço
 

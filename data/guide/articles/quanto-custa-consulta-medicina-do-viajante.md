@@ -1,13 +1,13 @@
 <aside class="guide-keyfacts">
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
-<li>A consulta de medicina do viajante na Lon Clinic custa <strong>39 €</strong> por uma pessoa, preço visível antes de marcar.</li>
+<li>A consulta do viajante na Lon Clinic custa <strong>39 €</strong> por uma pessoa, preço visível antes de marcar.</li>
 <li>Duas pessoas: <strong>69 €</strong>. Três: <strong>107 €</strong>. Quatro: <strong>136 €</strong>.</li>
 <li>As vacinas e os comprimidos da malária <em>não</em> estão incluídos nesse valor — pagam-se no CVI e na farmácia.</li>
 </ul>
 </aside>
 
-A pergunta «quanto custa uma consulta de medicina do viajante em Portugal» mistura três contas: a **consulta**, as **vacinas** no Centro de Vacinação Internacional, e a **profilaxia da malária** na farmácia. Só a primeira tem preço fixo na Lon Clinic.
+A pergunta «quanto custa uma consulta do viajante em Portugal» mistura três contas: a **consulta**, as **vacinas** no Centro de Vacinação Internacional, e a **profilaxia da malária** na farmácia. Só a primeira tem preço fixo na Lon Clinic.
 
 ## O que paga na Lon Clinic
 
@@ -15,7 +15,7 @@ Videoconsulta com médica inscrita na Ordem dos Médicos, avaliação por destin
 
 Quem tem o circuito Medicare da clínica paga um escalão mais baixo na marcação de viajante; o preço standard é o da tabela acima. O recibo serve para o seguro, se o plano o aceitar — isso é do lado da apólice, não nosso.
 
-Marcar: [consulta do viajante](/marcar/travel). Se o tempo é o critério, [consulta do viajante urgente](/blog/consulta-do-viajante-urgente) (hoje ou amanhã). Páginas de conversão: [vacinas de viagem](/consulta/vacinas-viagem) e [profilaxia da malária](/consulta/profilaxia-malaria). [Quando agendar](/blog/quando-agendar-consulta-do-viajante). Em Lisboa: [onde fazer a consulta](/blog/onde-fazer-consulta-medicina-do-viajante-lisboa) (SNS, privado e online).
+A página da consulta: [hub](/travel-clinic). Como funciona o formato (vídeo, CVI, SNS): [consulta do viajante online](/blog/consulta-do-viajante-online). Malária e hepatites: [guia](/blog/malaria-hepatite-a-b-viajante). Marcar o horário: [site](/marcar/travel). Se o tempo é o critério, [consulta do viajante urgente](/blog/consulta-do-viajante-urgente) (hoje ou amanhã). Páginas de conversão: [vacinas de viagem](/consulta/vacinas-viagem) e [profilaxia da malária](/consulta/profilaxia-malaria). [Quando agendar](/blog/quando-agendar-consulta-do-viajante). Em Lisboa: [onde fazer a consulta](/blog/onde-fazer-consulta-medicina-do-viajante-lisboa) (SNS, privado e online).
 
 {{cta}}
 

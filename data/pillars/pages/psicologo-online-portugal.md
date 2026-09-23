@@ -23,6 +23,8 @@ Se sente que alguma coisa mudou, mesmo sem conseguir explicar exatamente o quê,
 
 ## Como funciona uma consulta de psicologia online?
 
+O detalhe (marcação, 50 minutos, 60 € / 56 € por semana, sigilo e clínica integrada) está em [psicólogo online: como funciona](/blog/psicologo-online-como-funciona).
+
 A consulta é realizada por videoconsulta, permitindo falar com o psicólogo à distância, num espaço privado e confortável.
 
 O acompanhamento é adaptado a cada pessoa e às suas necessidades.

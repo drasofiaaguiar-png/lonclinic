@@ -70,6 +70,7 @@
         "cistite-recorrente",
         "renovacao-receita",
         { "href": "/uti-portugal-what-to-do", "label": "UTI in Portugal (tourists)" },
+        { "href": "/blog/infecao-urinaria-sintomas", "label": "Sintomas de infeção urinária" },
         { "href": "/consulta", "label": "Consulta médica online" },
         { "href": "/equipa/rita-aguiar", "label": "A médica" }
       ],
@@ -167,6 +168,7 @@
         "infecao-urinaria",
         "renovacao-receita",
         { "href": "/consulta", "label": "Consulta médica online" },
+        { "href": "/blog/infecao-urinaria-sintomas", "label": "Sintomas de infeção urinária" },
         { "href": "/equipa/rita-aguiar", "label": "A médica" }
       ],
       "faq": [
@@ -652,7 +654,7 @@
       "priority": 1,
       "navLabel": "Vacinas de viagem",
       "h1": "Vacinas de viagem: consulta e prescrição online",
-      "description": "Que vacinas precisa para viajar? Consulta de medicina do viajante em Portugal, 39 €. Prescrição no próprio dia; administração num Centro de Vacinação Internacional.",
+      "description": "Que vacinas precisa para viajar? Consulta do viajante em Portugal, 39 €. Prescrição no próprio dia; administração num Centro de Vacinação Internacional.",
       "hubBlurb": "Prescrição de vacinas de viagem — avaliação por destino, 39 €.",
       "condition": "Vacinação do viajante",
       "consultMode": "video",
@@ -660,7 +662,7 @@
       "bookingLabel": "Marcar consulta do viajante",
       "price": "39 €",
       "priceAmount": "39.00",
-      "priceNote": "Videoconsulta de medicina do viajante, 1 pessoa. Casal 69 €; 3 pessoas 107 €; 4 pessoas 136 €. As vacinas pagam-se à parte no CVI.",
+      "priceNote": "Videoconsulta do viajante, 1 pessoa. Casal 69 €; 3 pessoas 107 €; 4 pessoas 136 €. As vacinas pagam-se à parte no CVI.",
       "ctaTitle": "Obter a prescrição das vacinas de viagem",
       "datePublished": "2026-09-06",
       "dateModified": "2026-09-06",
@@ -713,6 +715,8 @@
         "profilaxia-malaria",
         "diarreia-do-viajante",
         { "href": "/travel-clinic", "label": "Consulta do viajante (hub)" },
+        { "href": "/blog/consulta-do-viajante-online", "label": "Consulta do viajante online" },
+        { "href": "/blog/malaria-hepatite-a-b-viajante", "label": "Malária e hepatite A/B" },
         { "href": "/blog/vacinas-para-viajar-por-pais", "label": "Vacinas por país" },
         { "href": "/blog/vou-viajar-esta-semana-sem-vacinas", "label": "Viagem esta semana sem vacinas" },
         { "href": "/blog/quando-agendar-consulta-do-viajante", "label": "Quando agendar a consulta" },
@@ -754,7 +758,7 @@
       "bookingLabel": "Marcar consulta do viajante",
       "price": "39 €",
       "priceAmount": "39.00",
-      "priceNote": "Videoconsulta de medicina do viajante. O fármaco, quando prescrito, paga-se na farmácia. Atovaquona-proguanil, doxiciclina ou mefloquina não são automedicação.",
+      "priceNote": "Videoconsulta do viajante. O fármaco, quando prescrito, paga-se na farmácia. Atovaquona-proguanil, doxiciclina ou mefloquina não são automedicação.",
       "ctaTitle": "Pedir avaliação para profilaxia da malária",
       "datePublished": "2026-09-06",
       "dateModified": "2026-09-06",
@@ -803,6 +807,8 @@
         "vacinas-viagem",
         "diarreia-do-viajante",
         { "href": "/travel-clinic", "label": "Consulta do viajante (hub)" },
+        { "href": "/blog/consulta-do-viajante-online", "label": "Consulta do viajante online" },
+        { "href": "/blog/malaria-hepatite-a-b-viajante", "label": "Malária e hepatite A/B" },
         { "href": "/blog/vacinas-para-viajar-ao-quenia", "label": "Vacinas e malária no Quénia" },
         { "href": "/blog/quanto-custa-consulta-medicina-do-viajante", "label": "Quanto custa a consulta" }
       ],
@@ -889,6 +895,8 @@
         "profilaxia-malaria",
         "obstipacao",
         { "href": "/travel-clinic", "label": "Consulta do viajante (hub)" },
+        { "href": "/blog/consulta-do-viajante-online", "label": "Consulta do viajante online" },
+        { "href": "/blog/malaria-hepatite-a-b-viajante", "label": "Malária e hepatite A/B" },
         { "href": "/consulta/infecao-urinaria", "label": "Infeção urinária" }
       ],
       "faq": [

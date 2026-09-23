@@ -9,7 +9,7 @@
 
 Na primeira consulta de psicologia, o psicólogo procura sobretudo conhecer a pessoa e perceber o motivo da procura — não é preciso chegar com um discurso preparado nem saber explicar «correctamente» o que sente. Serve para recolher história pessoal e clínica, esclarecer expectativas e decidir, em conjunto, se faz sentido continuar.
 
-Como escolher com quem marcar está em [como encontrar um psicólogo](/blog/como-encontrar-um-psicologo). O formato online, em [psicologia online vs presencial](/blog/psicologia-online-vs-presencial). O preço, em [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal).
+Como escolher com quem marcar está em [como encontrar um psicólogo](/blog/como-encontrar-um-psicologo). O formato (marcação, ecrã, preço, clínica integrada): [psicólogo online: como funciona](/blog/psicologo-online-como-funciona). Online vs sala: [psicologia online vs presencial](/blog/psicologia-online-vs-presencial). O preço, em [quanto custa uma consulta de psicologia](/blog/quanto-custa-consulta-psicologia-portugal).
 
 ## Como é a primeira consulta de psicologia?
 

@@ -8,7 +8,7 @@
 </aside>
 
 
-Sente-se mais exausto depois de um dia de videochamadas do que depois de um dia inteiro de reuniões presenciais? Não está a imaginar coisas — e agora há ciência que explica porquê.
+Sente-se mais exausto depois de um dia de videochamadas do que depois de um dia inteiro de reuniões presenciais? Não está a imaginar coisas — e agora há ciência que explica porquê. A definição: [o que é o burnout](/blog/burnout-o-que-e-sinais-cansaco). No dia a dia em casa: [sinais de burnout no trabalho remoto](/blog/sinais-de-burnout-no-trabalho-remoto).
 
 Jeremy Bailenson, diretor do Stanford Virtual Human Interaction Lab, identificou o fenómeno como «sobrecarga não-verbal»: o excesso de contacto visual próximo e prolongado, a carga cognitiva de processar sinais não-verbais através de um ecrã, o autoconsciente constante de se ver a si próprio em vídeo, e as limitações à mobilidade física durante chamadas são fatores que tornam as videochamadas particularmente cansativas.
 

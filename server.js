@@ -504,7 +504,6 @@ function stripGtagBlocks(html) {
         .replace(/\s*<script\s+async\s+src="https:\/\/www\.googletagmanager\.com\/gtag\/js[^"]*"><\/script>\s*<script\b[\s\S]*?<\/script>/gi, '\n');
 }
 
-
 const GA4_MEASUREMENT_ID = 'G-QX80MLXLEW';
 
 const GA4_TAG_SNIPPET =
@@ -9627,6 +9626,40 @@ app.get('/magazine/', (req, res) => {
     res.redirect(301, '/magazine');
 });
 
+app.get('/magazine/indice', (req, res) => {
+    try {
+        sendHtmlNoCacheString(res, guide.renderMagazineIndice(seo.SITE_ORIGIN));
+    } catch (err) {
+        console.error('❌ Magazine indice error:', err.message || err);
+        res.status(500).type('html').send('Error loading Magazine index.');
+    }
+});
+
+app.get('/magazine/indice/', (req, res) => {
+    res.redirect(301, '/magazine/indice');
+});
+
+app.get('/magazine/:slug', (req, res) => {
+    const slug = String(req.params.slug || '').toLowerCase();
+    const canonical = guide.magazineCanonicalSectionSlug(slug);
+    if (!canonical) {
+        return sendHtmlNoCacheString(res, guide.renderNotFound(seo.SITE_ORIGIN), 404);
+    }
+    if (canonical !== slug) {
+        return res.redirect(301, `/magazine/${encodeURIComponent(canonical)}`);
+    }
+    try {
+        const html = guide.renderMagazineSection(seo.SITE_ORIGIN, canonical);
+        if (!html) {
+            return sendHtmlNoCacheString(res, guide.renderNotFound(seo.SITE_ORIGIN), 404);
+        }
+        sendHtmlNoCacheString(res, html);
+    } catch (err) {
+        console.error('❌ Magazine section error:', err.message || err);
+        res.status(500).type('html').send('Error loading Magazine section.');
+    }
+});
+
 app.get('/blog', (req, res) => {
     res.redirect(301, '/magazine');
 });
@@ -9828,6 +9861,12 @@ app.get('/nutricao/avaliacao', (req, res) => {
 
 app.get('/nutricao/testes', (req, res) => {
     sendHtmlNoCacheString(res, clinicalQuizzes.renderHub(seo.SITE_ORIGIN, 'nutrition'));
+});
+
+app.get('/nutricao/imc', (req, res) => {
+    const def = clinicalQuizzes.getQuizByPath('/nutricao/imc');
+    if (!def) return res.status(404).send('Not found');
+    sendHtmlNoCacheString(res, clinicalQuizzes.renderQuizPage(seo.SITE_ORIGIN, def));
 });
 
 app.get('/nutricao/teste-:quizId', (req, res) => {

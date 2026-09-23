@@ -57,14 +57,7 @@ A fórmula é **simples**:
 
 **Como usar tabela:** Encontre sua altura (linha) e peso (coluna) → número interseção = seu IMC aproximado.
 
-### Calculadora online/app
-
-**Ferramentas úteis:**
-- **Website OMS**: [www.who.int](https://www.who.int) (calculadora IMC oficial)
-- **Apps saúde**: Apple Health, Google Fit, MyFitnessPal (calculam IMC automaticamente se inserir peso/altura)
-- **Calculadoras online**: Pesquisar "calculadora IMC Portugal" (várias disponíveis gratuitas)
-
-**Vantagem calculadoras:** Evitam erros cálculo manual, mostram classificação automaticamente.
+**Ferramenta nesta clínica:** [calculadora de IMC da Lon Clinic](/nutricao/teste-imc) (grátis, resultado imediato, classificação OMS). Explicação curta da fórmula: [o que é o IMC](/blog/imc).
 
 Artigos relacionados: [obesidade como doença crónica](/blog/obesidade-doenca-cronica-tratamento) e [nutricionista ou endocrinologista para emagrecer](/blog/nutricionista-ou-endocrinologista-para-emagrecer).
 

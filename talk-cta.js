@@ -129,6 +129,7 @@
             if (kind === 'nutricao-programa' || kind === 'nutricao_programa') {
                 return withRef('/marcar/nutricao-programa');
             }
+            if (/^imc$|teste-imc|calculadora-imc/.test(hay(o))) return withRef('/nutricao');
             return withRef('/marcar/clinica-geral');
         }
         if (kind === 'travel' || /vacina|viajante|travel/.test(slug)) return withRef('/marcar/travel');

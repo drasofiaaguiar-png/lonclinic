@@ -13,10 +13,10 @@ const MEGA_VERSION = '20260921b';
 
 const SPECIALTIES = [
     { href: '/longevidade', img: 'mega-funcional.webp', tag: 'Medicina', title: 'Medicina Funcional', desc: 'Causas, prevenção e biomarcadores · 60 €', mc: '#ECD281', mc2: '#6b5a2e', ink: '#1C1710' },
-    { href: '/psicologia', img: 'mega-psicologia.webp', tag: 'Psicologia', title: 'Psicologia', desc: 'Individual e casal · desde 56 €/sessão', mc: '#9BB1BC', mc2: '#2f4550' },
+    { href: '/saudemental', img: 'mega-psicologia.webp', tag: 'Psicologia', title: 'Psicologia', desc: 'Individual e casal · desde 56 €/sessão', mc: '#9BB1BC', mc2: '#2f4550' },
     { href: '/nutricao', img: 'mega-nutricao.webp', tag: 'Nutrição', title: 'Nutrição', desc: 'Subscrição quinzenal · 45 € / 15 dias', mc: '#9FBD84', mc2: '#2c3f36' },
     { href: '/urgent-care', img: 'mega-urgente.webp', tag: 'Hoje', title: 'Consulta Urgente', desc: 'Fale com um médico hoje · 39 €', mc: '#BD4F4F', mc2: '#4d2321' },
-    { href: '/travel-clinic', img: 'mega-viajante.webp', tag: 'Viagem', title: 'Medicina do Viajante', desc: 'Vacinas e consulta pré-viagem · 39 €', mc: '#A794C9', mc2: '#2c3a4a' }
+    { href: '/travel-clinic', img: 'mega-viajante.webp', tag: 'Viagem', title: 'Consulta do Viajante', desc: 'Vacinas e consulta pré-viagem · 39 €', mc: '#A794C9', mc2: '#2c3a4a' }
 ];
 
 function escapeAttr(value) {
@@ -69,8 +69,11 @@ function renderHeader(opts) {
                         </div>
                     </div>
                 </div>
+                <a href="/travel-clinic">Viajante</a>
+                <a href="/saudemental">Psicologia</a>
+                <a href="/nutricao">Nutrição</a>
                 <a href="/magazine"${cur('magazine')}>Magazine</a>
-                <a href="/#equipa"${cur('equipa')}>Equipa</a>
+                <a href="/equipa"${cur('equipa')}>Equipa</a>
             </nav>
 
             <div class="lon-nav-actions">
@@ -86,8 +89,11 @@ function renderHeader(opts) {
             <div class="lon-mobile-sub">
                 ${SPECIALTIES.map((s) => `<a href="${s.href}">${s.title}</a>`).join('\n                ')}
             </div>
+            <a href="/travel-clinic">Viajante</a>
+            <a href="/saudemental">Psicologia</a>
+            <a href="/nutricao">Nutrição</a>
             <a href="/magazine">Magazine</a>
-            <a href="/#equipa">Equipa</a>
+            <a href="/equipa">Equipa</a>
             <a href="/patient-portal">Login</a>
             <a href="${hrefOut}"${attrsOut}>${labelOut}</a>
         </div>

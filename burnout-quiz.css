@@ -314,6 +314,39 @@
     text-decoration: underline;
 }
 
+.bq-formula {
+    max-width: 440px;
+    margin: 0 auto 20px;
+    text-align: left;
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    color: var(--bq-ink);
+}
+
+.bq-geo-faq {
+    max-width: 440px;
+    margin: 28px auto 0;
+    text-align: left;
+}
+
+.bq-geo-faq-item {
+    border-bottom: 1px solid rgba(16, 24, 32, 0.08);
+    padding: 10px 0;
+}
+
+.bq-geo-faq-item summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.bq-geo-faq-item p {
+    margin: 8px 0 4px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--bq-muted);
+}
+
 .bq-imc-legend {
     display: grid;
     gap: 14px;

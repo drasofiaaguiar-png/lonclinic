@@ -47,7 +47,7 @@ Se a dúvida é só «funciona no ecrã?», para a maior parte dos adultos a res
 4. A sessão — **incluindo a primeira** — dura **50 minutos**, com regularidade **semanal** no acompanhamento. É o formato que a clínica usa para um objectivo terapêutico, não uma sessão de 50–60 minutos.
 5. Continua com a mesma pessoa **ou muda**. Podes mudar de psicólogo sempre que quiseres, sem precisares de dar qualquer justificação — e **recomeçar do zero**.
 
-O passo a passo do que dizer na primeira sessão está em [primeira consulta de psicologia](/blog/primeira-consulta-psicologia-o-que-esperar).
+O passo a passo do que dizer na primeira sessão está em [primeira consulta de psicologia](/blog/primeira-consulta-psicologia-o-que-esperar). Como funciona o formato (marcação, ecrã, preço, clínica integrada): [psicólogo online](/blog/psicologo-online-como-funciona).
 
 {{cta}}
 

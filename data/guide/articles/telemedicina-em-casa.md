@@ -28,6 +28,6 @@ O médico vai fazer-lhe perguntas sobre os seus sintomas, histórico e medicamen
 
 ## Próximo passo
 
-Quando estiver pronto, [veja os nossos serviços na página inicial](/#servicos) ou [marque uma consulta](/marcar/clinica-geral) em minutos. Se preferir um guia passo a passo, veja o [guia rápido de marcação](/blog/marcacao-guia-rapido).
+Quando estiver pronto, [veja os nossos serviços na página inicial](/#servicos) ou [marque uma consulta](/marcar/clinica-geral) em minutos. Casos frequentes por vídeo: [infeção urinária — sintomas](/blog/infecao-urinaria-sintomas), [consulta do viajante online](/blog/consulta-do-viajante-online), [psicólogo online](/blog/psicologo-online-como-funciona). Se preferir um guia passo a passo, veja o [guia rápido de marcação](/blog/marcacao-guia-rapido).
 
 {{cta}}

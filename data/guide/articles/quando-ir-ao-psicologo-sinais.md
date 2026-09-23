@@ -9,7 +9,7 @@
 
 Não é preciso estar numa crise para ir ao psicólogo. Vale a pena procurar ajuda sempre que algo — ansiedade persistente, tristeza que não passa, dificuldades numa relação, esgotamento com o trabalho — começa a interferir de forma consistente no seu bem-estar ou no seu dia a dia, mesmo que ainda não saiba explicar exactamente o que é.
 
-O que esperar na [primeira consulta](/blog/primeira-consulta-psicologia-o-que-esperar). Como escolher: [como encontrar um psicólogo](/blog/como-encontrar-um-psicologo). Marcar: [saúde mental](/saudemental).
+O que esperar na [primeira consulta](/blog/primeira-consulta-psicologia-o-que-esperar). Como é a sessão no ecrã: [psicólogo online: como funciona](/blog/psicologo-online-como-funciona). Como escolher: [como encontrar um psicólogo](/blog/como-encontrar-um-psicologo). Marcar: [saúde mental](/saudemental).
 
 ## Quando se deve ir ao psicólogo?
 

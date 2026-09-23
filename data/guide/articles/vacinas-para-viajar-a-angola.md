@@ -9,7 +9,7 @@
 
 Luanda de trabalho e o interior não mudam o essencial: Angola é destino de **certificado** e de **paludismo**. Tratar isto como «uma hepatite A e já está» é o erro clássico de quem marca tarde.
 
-[Consulta do viajante](/travel-clinic), 39 €. [Onde tomar a febre amarela em Lisboa](/blog/vacina-febre-amarela-lisboa) ou no [Porto](/blog/vacina-febre-amarela-porto).
+[Consulta do viajante online](/travel-clinic), 39 €. [Onde tomar a febre amarela em Lisboa](/blog/vacina-febre-amarela-lisboa) ou no [Porto](/blog/vacina-febre-amarela-porto).
 
 {{cta}}
 

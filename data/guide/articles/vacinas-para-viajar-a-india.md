@@ -9,7 +9,7 @@
 
 Nova Deli numa semana de trabalho não é o mesmo que Rajasthan de mochila, Kerala de houseboat ou o Nordeste. A pergunta «que vacinas para a Índia» precisa das **cidades e do tipo de viagem**.
 
-[Consulta do viajante](/travel-clinic): 39 €, prescrição para [CVI](/blog/vacinas-viajante-lisboa) no próprio dia quando indicada.
+[Consulta do viajante online](/travel-clinic): 39 €, prescrição para [CVI](/blog/vacinas-viajante-lisboa) no próprio dia quando indicada.
 
 {{cta}}
 

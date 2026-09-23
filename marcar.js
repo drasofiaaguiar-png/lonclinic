@@ -873,7 +873,7 @@
         terapia_casal: 'Terapia de casal',
         nutricao_quinzenal: 'Nutrição',
         burnout: 'Burnout',
-        travel: 'Medicina do Viajante',
+        travel: 'Consulta do Viajante',
         longevidade: 'Medicina Funcional',
         renovacao: 'Renovação de tratamento'
     };
@@ -1016,7 +1016,7 @@
     var SUBTYPE_LABELS = {
         pt: {
             clinica_geral: 'Clínica geral / Check-up', urgente: 'Consulta urgente', longevidade: 'Medicina Funcional',
-            travel: 'Medicina do Viajante', renovacao: 'Renovação de receita',
+            travel: 'Consulta do Viajante', renovacao: 'Renovação de receita',
             psicologia: 'Psicologia individual', terapia_casal: 'Terapia de casal', burnout: 'Burnout',
             nutricao_quinzenal: 'Subscrição quinzenal', nutricao_consulta: 'Consulta avulsa',
             nutricao_programa: 'Programa 6 meses', nutricao_completo: 'Programa completo'

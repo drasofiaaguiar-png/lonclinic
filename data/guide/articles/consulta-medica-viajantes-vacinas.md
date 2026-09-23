@@ -1,17 +1,17 @@
 <aside class="guide-keyfacts">
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
-<li>Uma consulta de medicina do viajante marca-se <strong>idealmente 4 a 6 semanas</strong> antes da viagem — orientação frequente, não uma garantia de que todas as vacinas fiquem prontas a tempo.</li>
+<li>Uma consulta do viajante marca-se <strong>idealmente 4 a 6 semanas</strong> antes da viagem — orientação frequente, não uma garantia de que todas as vacinas fiquem prontas a tempo.</li>
 <li>Na Lon Clinic a avaliação é <strong>videoconsulta</strong>: <strong>39 €</strong> (1 pessoa, <strong>20 min</strong>); 2 pessoas 69 € / 30 min; 3 pessoas 107 € / 40 min; 4 pessoas 136 € / 40 min. <strong>Não injectamos vacinas</strong> — a toma e o certificado internacional fazem-se num <a href="/blog/centros-de-vacinacao-internacional-portugal">Centro de Vacinação Internacional (CVI)</a>.</li>
 <li>A lista de vacinas e a profilaxia da malária dependem do <strong>destino, da zona e do seu histórico</strong>. Confirme exigências de entrada no CVI e nas fontes oficiais — não neste artigo.</li>
 </ul>
 </aside>
 
-Uma consulta de medicina do viajante deve ser marcada idealmente **4 a 6 semanas** antes da viagem, para avaliar as vacinas e a profilaxia necessárias consoante o destino, o tipo de viagem e o histórico de saúde da pessoa. Para muitos destinos fora da Europa — sobretudo África, Ásia e América Latina — este cuidado prévio reduz o risco de doenças evitáveis. Mesmo com menos antecedência, a avaliação ainda vale: parte do aconselhamento continua a fazer diferença.
+Uma consulta do viajante deve ser marcada idealmente **4 a 6 semanas** antes da viagem, para avaliar as vacinas e a profilaxia necessárias consoante o destino, o tipo de viagem e o histórico de saúde da pessoa. Para muitos destinos fora da Europa — sobretudo África, Ásia e América Latina — este cuidado prévio reduz o risco de doenças evitáveis. Mesmo com menos antecedência, a avaliação ainda vale: parte do aconselhamento continua a fazer diferença.
 
-Isto não é um produto novo. A ficha de conversão já existe: [vacinas de viagem](/consulta/vacinas-viagem). A [profilaxia da malária](/consulta/profilaxia-malaria) e o [hub da clínica do viajante](/travel-clinic) completam o circuito. Preço e o que está (e não está) incluído: [quanto custa a consulta de medicina do viajante](/blog/quanto-custa-consulta-medicina-do-viajante). O enquadramento de teleconsulta em geral: [consulta médica online vale a pena](/blog/consulta-medica-online-vale-a-pena). Critérios para escolher plataforma: [melhores plataformas de telemedicina](/blog/melhores-plataformas-telemedicina). O calendário vacinal de rotina, fora de viagem, encaixa em [saúde preventiva para adultos jovens](/blog/saude-preventiva-adultos-jovens).
+Isto não é um produto novo. A ficha de conversão já existe: [vacinas de viagem](/consulta/vacinas-viagem). A [profilaxia da malária](/consulta/profilaxia-malaria) e o [hub da clínica do viajante](/travel-clinic) completam o circuito. Como funciona o formato vídeo (preço, CVI, SNS): [consulta do viajante online](/blog/consulta-do-viajante-online). Malária e hepatites A/B, em detalhe: [antes de viajar](/blog/malaria-hepatite-a-b-viajante). Preço e o que está (e não está) incluído: [quanto custa a consulta do viajante](/blog/quanto-custa-consulta-medicina-do-viajante). O enquadramento de teleconsulta em geral: [consulta médica online vale a pena](/blog/consulta-medica-online-vale-a-pena). Critérios para escolher plataforma: [melhores plataformas de telemedicina](/blog/melhores-plataformas-telemedicina). O calendário vacinal de rotina, fora de viagem, encaixa em [saúde preventiva para adultos jovens](/blog/saude-preventiva-adultos-jovens).
 
-## O que é a medicina do viajante?
+## O que é a consulta do viajante?
 
 Medicina do viajante avalia e reduz riscos de saúde **específicos da viagem**: vacinação, profilaxia de doenças transmitidas por mosquitos (como a malária), água e alimentos, e o que fazer se adoecer no destino. Não é «tomar uma vacina». É uma avaliação individualizada — destino exacto, duração, tipo de viagem (turismo, trabalho, voluntariado) e condições de saúde.
 
@@ -34,7 +34,7 @@ Com menos antecedência, [ainda vale marcar](/blog/consulta-do-viajante-urgente)
 A lista abaixo são **exemplos** frequentemente revistos — **não** um pacote nem uma exigência por país:
 
 - **Febre amarela** — alguns destinos pedem comprovativo de vacinação para *entrada*; a exigência concreta confirma-se no [CVI](/blog/centros-de-vacinacao-internacional-portugal), na [DGS](https://www.dgs.pt/) e nas [recomendações da OMS](https://www.who.int/news-room/fact-sheets/detail/yellow-fever), não neste artigo
-- **Hepatite A** e, quando o histórico o justificar, **hepatite B**
+- **Hepatite A** e, quando o histórico o justificar, **hepatite B** — [malária e hepatite A/B](/blog/malaria-hepatite-a-b-viajante)
 - **Febre tifóide**
 - **Encefalite japonesa** — sobretudo itinerários rurais em certas zonas da Ásia
 - **Raiva** — maior exposição a animais ou zonas rurais
@@ -44,7 +44,7 @@ A decisão é clínica e depende da zona (urbana ou rural), da estação e do qu
 
 ## E a malária?
 
-Para destinos com risco de malária, o médico avalia se faz sentido profilaxia, **qual o esquema** e quando começar — em regra antes da partida, durante a estadia e após o regresso. **Não publicamos nomes de fármacos nem doses** aqui: isso é prescrição individual. A receita, quando indicada, é **eletrónica** e serve em farmácia em Portugal. Ficha: [profilaxia da malária](/consulta/profilaxia-malaria).
+Para destinos com risco de malária, o médico avalia se faz sentido profilaxia, **qual o esquema** e quando começar — em regra antes da partida, durante a estadia e após o regresso. **Não publicamos nomes de fármacos nem doses** aqui: isso é prescrição individual. A receita, quando indicada, é **eletrónica** e serve em farmácia em Portugal. Ficha: [profilaxia da malária](/consulta/profilaxia-malaria). Artigo: [malária e hepatite A/B antes de viajar](/blog/malaria-hepatite-a-b-viajante).
 
 Cuidados práticos, sem kit de controlados: repelente, roupa que cubra, rede se o alojamento o pedir, água e alimentos seguros, e o que já toma habitualmente (com receita válida). Se precisa de renovar uma medicação crónica *antes* de partir, isso é [renovação de receita](/consulta/renovacao-receita) — outro acto, outro preço (**19 €**), não a consulta do viajante.
 
@@ -71,11 +71,11 @@ Critérios para não escolher uma plataforma só pelo preço: [como escolher tel
 
 ## Perguntas frequentes
 
-### Quando devo marcar a consulta de medicina do viajante?
+### Quando devo marcar a consulta do viajante?
 
 Idealmente 4 a 6 semanas antes da viagem, para dar tempo a que as vacinas façam efeito e, se forem necessárias várias doses, para as espaçar adequadamente. É orientação frequente, não uma garantia.
 
-### A consulta de medicina do viajante pode ser feita online?
+### A consulta do viajante pode ser feita online?
 
 Sim, a avaliação e o aconselhamento podem ser feitos por teleconsulta. A administração da vacina em si exige presença física num centro de vacinação.
 
@@ -87,7 +87,7 @@ Não necessariamente — depende do destino específico, da zona (urbana ou rura
 
 Ainda vale a pena. Mesmo sem tempo para todas as vacinas fazerem efeito completo, há sempre aconselhamento e cuidados práticos que reduzem o risco durante a viagem.
 
-### Quanto tempo demora uma consulta de medicina do viajante?
+### Quanto tempo demora uma consulta do viajante?
 
 Na Lon Clinic, **20 minutos** para 1 pessoa; **30 minutos** a duas; **40 minutos** a três ou quatro. Não é o slot de 30 minutos da clínica geral.
 

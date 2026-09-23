@@ -870,6 +870,9 @@ ${__lonHeader.renderHeaderScripts(false)}
                 </div>
                 <div class="lon-footer-col">
                     <h4>${escapeHtml(ui.footerClinic)}</h4>
+                    <a href="/travel-clinic">Consulta do viajante</a>
+                    <a href="/saudemental">Psicologia</a>
+                    <a href="/nutricao">Nutrição</a>
                     <a href="/consulta">${escapeHtml(ui.navConsulta)}</a>
                     <a href="/tourist-clinic">${escapeHtml(ui.navHub)}</a>
                     <a href="/equipa/rita-aguiar">${escapeHtml(ui.footerDoctors)}</a>

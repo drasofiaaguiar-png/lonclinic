@@ -1598,13 +1598,47 @@ html:has(body.mag-body) {
     font-weight: 500;
 }
 
+.mag-index-blurb {
+    display: block;
+    padding: 0 0 12px;
+    font-size: 0.92rem;
+    line-height: 1.45;
+    color: var(--mag-ink-soft);
+}
+
+.mag-index-hubs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin: 0 0 16px;
+}
+
+.mag-index-hubs a {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--mag-rose);
+}
+
+.mag-index-hubs a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.mag-index-count {
+    font-family: inherit;
+    font-style: normal;
+    font-size: 0.85rem;
+    color: var(--mag-ink-soft);
+}
+
 .mag-index-list a:hover {
     color: var(--mag-rose);
 }
 
 .mag-index-list time {
     display: block;
-    padding-bottom: 12px;
+    padding: 0 0 4px;
     font-size: 0.75rem;
     letter-spacing: 0.04em;
     color: var(--mag-ink-soft);

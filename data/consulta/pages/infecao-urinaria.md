@@ -2,7 +2,7 @@
 
 Uma infeção urinária baixa (cistite) é a inflamação da bexiga, quase sempre por bactérias da flora intestinal. Em mulheres não grávidas, sem febre e sem dor lombar, o diagnóstico é clínico: a história conta mais do que um sumário de urina feito à pressa.
 
-Isto não é o mesmo que uma pielonefrite (infeção do rim), nem o mesmo que uma uretrite por IST. Por isso esta página não promete antibiótico a quem preencher um formulário. A [consulta](/consulta) serve para o médico fazer essa distinção.
+Isto não é o mesmo que uma pielonefrite (infeção do rim), nem o mesmo que uma uretrite por IST. Por isso esta página não promete antibiótico a quem preencher um formulário. A [consulta](/consulta) serve para o médico fazer essa distinção. Sintomas e sinais de alarme, em artigo: [infeção urinária — sintomas](/blog/infecao-urinaria-sintomas).
 
 ## Como se trata — e o que não fazemos
 

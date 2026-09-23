@@ -9,7 +9,7 @@
 
 Sim, a psicologia online é uma opção eficaz para o tratamento do burnout, especialmente através de abordagens cognitivo-comportamentais focadas em gestão de stress, limites e reestruturação de crenças sobre trabalho e desempenho. Para a maioria das situações de burnout, o formato online não compromete a qualidade do acompanhamento — o trabalho terapêutico é essencialmente conversacional.
 
-Definição e tipos: [o que é burnout](/blog/o-que-e-burnout). Quando procurar ajuda: [sinais de burnout](/blog/burnout-sinais-quando-procurar-ajuda). Hub e teste: [/burnout](/burnout), [/burnout/teste](/burnout/teste). Primeira sessão: [o que esperar](/blog/primeira-consulta-psicologia-o-que-esperar). Sinais gerais: [quando ir ao psicólogo](/blog/quando-ir-ao-psicologo-sinais). Baixa e médico: [consulta médica online](/blog/consulta-medica-online-vale-a-pena).
+Definição e tipos: [o que é o burnout](/blog/burnout-o-que-e-sinais-cansaco). Quando procurar ajuda: [quando procurar ajuda para burnout](/blog/burnout-sinais-quando-procurar-ajuda). Hub e teste: [/burnout](/burnout), [/burnout/teste](/burnout/teste). Primeira sessão: [o que esperar](/blog/primeira-consulta-psicologia-o-que-esperar). Sinais gerais: [quando ir ao psicólogo](/blog/quando-ir-ao-psicologo-sinais). Baixa e médico: [consulta médica online](/blog/consulta-medica-online-vale-a-pena).
 
 Não afirmamos que todos os psicólogos da casa sejam «especialistas em burnout». O que existe é a queixa [psicólogo para burnout](/psicologia-burnout), o [centro](/burnout) e psicólogos inscritos na Ordem.
 

@@ -9,7 +9,7 @@
 
 Safari no Masai Mara, costa de Mombasa ou só a capital: três planos diferentes. A pergunta «que vacinas para o Quénia» quase sempre vem acompanhada de «que comprimido para a malária» — e essa segunda metade não se resolve no Google.
 
-[Consulta do viajante](/travel-clinic), 39 €. Vacinas no [CVI](/blog/vacinas-viajante-guia-completo). Tanzânia e Zanzibar partilham lógica parecida (malária + certificado se o voo o exigir).
+[Consulta do viajante online](/travel-clinic), 39 €. Vacinas no [CVI](/blog/vacinas-viajante-guia-completo). Tanzânia e Zanzibar partilham lógica parecida (malária + certificado se o voo o exigir).
 
 {{cta}}
 

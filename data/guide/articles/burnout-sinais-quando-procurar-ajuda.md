@@ -9,9 +9,9 @@
 
 Burnout é um estado de esgotamento associado ao contexto de trabalho, caracterizado por exaustão que não melhora com descanso, distanciamento ou cinismo em relação ao trabalho, e sensação de ineficácia ou falta de realização profissional. Quando estes três sinais persistem ao longo do tempo, vale a pena procurar apoio psicológico especializado.
 
-Este artigo não substitui o [centro burnout](/burnout): ali está a definição clínica, os raios e o [teste CBI](/burnout/teste). Aqui está **quando procurar ajuda**, **como a psicologia entra**, e **o que as empresas já podem pedir** na Lon Clinic. O pilar de definição, tipos e recuperação: [o que é burnout](/blog/o-que-e-burnout). A diferença para o cansaço: [burnout: o que é e sinais](/blog/burnout-o-que-e-sinais-cansaco). Formato online: [psicologia online para burnout](/blog/psicologia-online-para-burnout). O panorama geral de ir ao psicólogo: [quando ir ao psicólogo](/blog/quando-ir-ao-psicologo-sinais). Ansiedade no trabalho: [psicólogo para ansiedade](/blog/psicologo-ansiedade-quando-procurar-ajuda).
+Este artigo não substitui o [centro burnout](/burnout): ali está o teste CBI e o mapa clínico. **Não é a definição de burnout** — isso está em [o que é o burnout](/blog/burnout-o-que-e-sinais-cansaco). Aqui está só **quando procurar ajuda** e o que a psicologia (ou a empresa) já pode fazer. Formato: [psicologia online para burnout](/blog/psicologia-online-para-burnout). Lista no trabalho: [9 sinais de burnout no trabalho](/blog/9-sinais-de-burnout-no-trabalho).
 
-## Quais são os sinais de burnout?
+## O que já tem de estar presente (não a lista completa)
 
 A [OMS](https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon-international-classification-of-diseases) descreve três dimensões — as mesmas que Christina Maslach e Susan Jackson mediram em 1981 no Maslach Burnout Inventory:
 

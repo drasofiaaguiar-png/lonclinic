@@ -26,6 +26,8 @@ const NUTRICAO_PROGRAMA_HREF = '/marcar/nutricao-programa';
 const WEIGHT_LOSS_SLUGS = new Set(['glp-1', 'ozempic-wegovy']);
 
 const HUB_WEIGHT_LOSS_GUIDES = [
+    { href: '/nutricao/teste-imc', label: 'Calculadora de IMC', desc: 'Peso, altura e classificação OMS — grátis, 1 minuto.' },
+    { href: '/blog/imc', label: 'O que é o IMC', desc: 'Fórmula, faixas da OMS e quando o número não chega.' },
     { href: '/blog/consultas-nutricao-perda-de-peso', label: 'Consultas de nutrição para perda de peso', desc: 'Como funciona o programa de 3 a 6 meses — sem aGLP-1.' },
     { href: '/blog/consulta-nutricao-preco-como-funciona', label: 'Consulta de nutrição: preço e como funciona', desc: 'O que esperar na primeira sessão e quando marcar.' },
     { href: '/blog/quanto-custa-consulta-nutricao-portugal', label: 'Quanto custa uma consulta de nutrição', desc: 'Preços 2026, ADSE e o que está incluído.' },
@@ -345,7 +347,7 @@ function hubGuidesHtml() {
                 <h2 id="nu-g-guias">Guias de perda de peso</h2>
                 <p class="nu-guides-lead">Artigos do magazine para quem chega pela nutrição: preço, hábitos, iô-iô e GLP-1.</p>
                 <div class="nu-card-grid">${cards}</div>
-                <p class="nu-guides-more"><a href="/magazine#perda-de-peso">Ver todos os guias de perda de peso →</a></p>
+                <p class="nu-guides-more"><a href="/magazine/perda-de-peso">Ver todos os guias de perda de peso →</a></p>
             </div>
         </section>`;
 }
@@ -499,13 +501,15 @@ ${__lonHeader.renderHeaderScripts(false)}
                     <a href="/nutricao/emagrecimento">Programa de emagrecimento</a>
                     <a href="/nutricao/programa">Programa de reeducação metabólica</a>
                     <a href="/nutricao/testes">Testes clínicos</a>
-                    <a href="/magazine#perda-de-peso">Guias de perda de peso</a>
+                    <a href="/magazine/perda-de-peso">Guias de perda de peso</a>
                     ${footerLinks}
                 </div>
                 <div class="lon-footer-col">
                     <h4>Clínica</h4>
+                    <a href="/travel-clinic">Consulta do viajante</a>
+                    <a href="/saudemental">Psicologia</a>
+                    <a href="/nutricao">Nutrição</a>
                     <a href="/consulta">Consulta médica</a>
-                    <a href="/consultas">Psicologia</a>
                     <a href="/equipa/rita-aguiar">A médica</a>
                     <a href="/equipa/sara-barreto">A nutricionista</a>
                     <a href="/marcar/nutricao-programa">Consulta inicial de nutrição · 115 €</a>
@@ -629,7 +633,7 @@ function renderHub(origin) {
                 <h2 id="nu-g-testes">Testes de alimentação e metabolismo</h2>
                 <div class="nu-card-grid">
                     <a class="nu-card" href="/nutricao/avaliacao"><span class="nu-card-price">2 min</span><span class="nu-card-label">Avaliação do programa</span><span class="nu-card-desc">6 passos: objetivo, dietas, fome emocional e métricas — e o plano recomendado.</span></a>
-                    <a class="nu-card" href="/nutricao/teste-imc"><span class="nu-card-price">1 min</span><span class="nu-card-label">IMC e cintura</span><span class="nu-card-desc">Excesso de peso ou obesidade — e quantos kg até ao peso normal.</span></a>
+                    <a class="nu-card" href="/nutricao/teste-imc"><span class="nu-card-price">1 min</span><span class="nu-card-label">Calculadora de IMC</span><span class="nu-card-desc">Peso ÷ altura² — classificação OMS e, se quiser, perímetro abdominal.</span></a>
                     <a class="nu-card" href="/nutricao/teste-tfeq"><span class="nu-card-price">4 min</span><span class="nu-card-label">TFEQ-R18</span><span class="nu-card-desc">Restrição, descontrolo e fome emocional — o que trava o peso.</span></a>
                     <a class="nu-card" href="/nutricao/teste-yfas"><span class="nu-card-price">4 min</span><span class="nu-card-label">YFAS 2.0</span><span class="nu-card-desc">Sinais de compulsão por alimentos hipercalóricos.</span></a>
                     <a class="nu-card" href="/nutricao/teste-ess"><span class="nu-card-price">2 min</span><span class="nu-card-label">ESS · sonolência</span><span class="nu-card-desc">Alerta de apneia do sono — sobretudo com excesso de peso.</span></a>

@@ -1,17 +1,17 @@
 <aside class="guide-keyfacts">
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
-<li>A consulta de nutrição online da Lon Clinic é videochamada: marca, paga, recebe o <strong>link por email</strong>, abre no <strong>browser</strong> — <strong>sem instalar aplicações</strong> (mesmo fluxo da videoconsulta da casa).</li>
-<li>O preço não é 45 €: consulta inicial de nutrição metabólica <strong>115 €</strong> (mês 1), depois <strong>75 €/mês</strong> (2 consultas). O calendário de marcação usa um slot de <strong>30 minutos</strong> para este serviço — <strong>não</strong> publicamos seguimentos de 20 minutos.</li>
-<li>Recibo para ADSE/seguro em regime livre: <strong>confirme na ADSE Direta / na apólice</strong> se a videochamada de nutrição é o acto reembolsável. Nutricionista inscrito na <a href="https://www.ordemdosnutricionistas.pt/registoNacional.php?cod=0C0A">Ordem dos Nutricionistas</a>.</li>
+<li>O <strong>nutricionista online</strong> da Lon Clinic é videochamada: marca, paga, recebe o <strong>link por email</strong>, abre no <strong>browser</strong> — <strong>sem instalar aplicações</strong>.</li>
+<li>Preço da linha online: avulsa <strong>45 €</strong>; acompanhamento <strong>45 € a cada 15 dias</strong>. Programa com médico: <strong>115 €</strong> no mês 1 e <strong>75 €/mês</strong>.</li>
+<li>Recibo para ADSE/seguro em regime livre: <strong>confirme na ADSE Direta / na apólice</strong> se a videochamada de nutrição é o acto reembolsável. Nutricionista inscrita na <a href="https://www.ordemdosnutricionistas.pt/registoNacional.php?cod=0C0A">Ordem dos Nutricionistas</a>.</li>
 </ul>
 </aside>
 
-A consulta de nutrição online é a mesma consulta clínica — anamnese, plano, ajustes — sem deslocação. Na Lon Clinic marca o [programa de nutrição](/nutricao/programa), paga, e recebe **confirmação por email com o link da videochamada**. A videoconsulta da casa **abre no browser**, sem instalar aplicações. A sala de videochamada da clínica é a mesma plataforma usada nas outras especialidades (Doxy.me, sem conta obrigatória para o utente).
+O nutricionista online faz a mesma consulta clínica — anamnese, plano, ajustes — sem deslocação. Na Lon Clinic marca em [nutricionista online](/nutricao), paga, e recebe **confirmação por email com o link da videochamada**. A videoconsulta **abre no browser**, sem instalar aplicações (Doxy.me, sem conta obrigatória para o utente).
 
-Não é uma sessão avulsa a 45 €. O checkout é **115 €** no mês 1 e **75 €/mês** a seguir. O slot no `booking.js` para serviços que não são viagem, urgência ou saúde mental tem **30 minutos** — incluindo nutrição. **Não afirmamos seguimentos de 20 minutos.**
+A linha só nutrição custa **45 €** (avulsa ou quinzenal). O programa com médico é **115 €** no mês 1 e **75 €/mês** a seguir. Preço completo: [nutricionista online preço](/blog/quanto-custa-consulta-nutricao-portugal). Recibo: [ADSE e nutrição](/blog/adse-consultas-nutricao-portugal).
 
-Hub: [consulta de nutrição — preço, como funciona e quando marcar](/blog/consulta-nutricao-preco-como-funciona). O análogo de formato em psicologia (sem misturar clínica) está em [psicologia online vs presencial](/blog/psicologia-online-vs-presencial). Preços: [quanto custa uma consulta de nutrição](/blog/quanto-custa-consulta-nutricao-portugal). Perda de peso: [consultas de nutrição para perda de peso](/blog/consultas-nutricao-perda-de-peso). Hub: [/nutricao](/nutricao).
+Hub: [consulta de nutrição — preço, como funciona e quando marcar](/blog/consulta-nutricao-preco-como-funciona). O análogo de formato em psicologia (sem misturar clínica) está em [psicologia online vs presencial](/blog/psicologia-online-vs-presencial). Perda de peso: [consultas de nutrição para perda de peso](/blog/consultas-nutricao-perda-de-peso).
 
 ## Uma consulta de nutrição online é tão eficaz como uma presencial?
 
@@ -55,7 +55,7 @@ Este artigo tem fins informativos e não substitui uma avaliação nutricional i
 
 ## Fontes
 
-- Preçário e slots Lon Clinic — `pricing.js` 11500 cêntimos; duração por omissão 30 min em `booking.js` (nutrição não tem duração própria)
+- Preçário Lon Clinic — 45 € avulsa / quinzenal; programa 115 € / 75 €/mês
 - [info.html](/info) — videoconsulta no browser, sem instalação
 - [Ordem dos Nutricionistas — Registo](https://www.ordemdosnutricionistas.pt/registoNacional.php?cod=0C0A)
 - [ADSE](https://www.adse.pt/) / [ADSE Direta](https://adsedireta.adse.pt/SimReemb/)

@@ -9,7 +9,7 @@
 
 Sim: renovar a receita médica online em Portugal faz-se numa teleconsulta com um médico, sem viagem, em regra para medicação de um problema **já diagnosticado** e estável. Não é a primeira receita de um quadro novo. Não é um clique sem clínica.
 
-Na Lon Clinic o acto é [renovação de receita](/consulta/renovacao-receita), **19 €**. A clínica geral completa é **39 €** / 30 min — [vale a pena?](/blog/consulta-medica-online-vale-a-pena). Critérios de plataforma: [como escolher telemedicina](/blog/melhores-plataformas-telemedicina). Formato: [telemedicina em casa](/blog/telemedicina-em-casa).
+Na Lon Clinic o acto é [renovação de receita](/consulta/renovacao-receita), **19 €**. A clínica geral completa é **39 €** / 30 min — [vale a pena?](/blog/consulta-medica-online-vale-a-pena). Sintomas novos (não é renovação): por exemplo [infeção urinária](/blog/infecao-urinaria-sintomas) → [consulta](/consulta/infecao-urinaria). Critérios de plataforma: [como escolher telemedicina](/blog/melhores-plataformas-telemedicina). Formato: [telemedicina em casa](/blog/telemedicina-em-casa).
 
 ## Como se renova a receita na Lon Clinic?
 

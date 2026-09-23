@@ -1,7 +1,7 @@
 <aside class="guide-keyfacts">
 <p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
-<li>Na Lon Clinic a consulta de nutrição é <strong>115 €</strong> (inicial) e o acompanhamento <strong>75 €/mês</strong> — <strong>não</strong> 45 €. O slot é <strong>30 minutos</strong>. A linha é <strong>100% online</strong> (videochamada no browser, sem app).</li>
+<li>Na Lon Clinic o <strong>nutricionista online</strong> custa <strong>45 €</strong> avulsa ou <strong>45 € a cada 15 dias</strong> no acompanhamento. O programa com médico é <strong>115 €</strong> (mês 1) e <strong>75 €/mês</strong> a seguir. A linha é <strong>100% online</strong> (videochamada no browser, sem app).</li>
 <li>No particular em Portugal, a faixa mais citada anda entre <strong>40 € e 70 €</strong> por sessão. Hospitais e grupos: confirme o preçário da unidade — não copiamos tabelas de 2026 que não verificámos.</li>
 <li>Nutricionista e dietista são ambos regulados pela <a href="https://www.ordemdosnutricionistas.pt/">Ordem dos Nutricionistas</a>. Comida primeiro: o nutricionista <strong>não vende suplementos</strong>; se a suplementação for clínica, articula-se com consulta médica.</li>
 </ul>
@@ -9,19 +9,19 @@
 
 Uma consulta de nutrição serve para perceber o que come, o que o corpo pede e o que é realista na sua semana — não para receber um PDF genérico nem um frasco. Este artigo é o hub: preço, formato, quando marcar, títulos profissionais e o que a ADSE ou o Cheque Cuida-te cobrem. Os detalhes longos estão nos guias irmãos, não repetidos aqui.
 
-- Preços e faixas: [quanto custa uma consulta de nutrição](/blog/quanto-custa-consulta-nutricao-portugal)
+- Preços e faixas: [nutricionista online preço](/blog/quanto-custa-consulta-nutricao-portugal)
 - Videochamada, browser, recibo: [consulta de nutrição online](/blog/consulta-nutricao-online-como-funciona)
 - Títulos e cédula: [nutricionista ou dietista](/blog/nutricionista-ou-dietista-portugal)
 - Reembolso: [ADSE e nutrição](/blog/adse-consultas-nutricao-portugal)
 - Jovens 12–35: [Cheque-Nutricionista 2026](/blog/cheque-nutricionista-2026) (IPDJ / Cuida-te — **não** é um «cheque do SNS»)
 - Emagrecer com acompanhamento: [consultas de nutrição para perda de peso](/blog/consultas-nutricao-perda-de-peso)
-- Produto Lon: [programa de reeducação metabólica](/nutricao/programa) · hub [/nutricao](/nutricao)
+- Produto Lon: [nutricionista online](/nutricao) · [programa de reeducação metabólica](/nutricao/programa)
 
 ## Quanto custa uma consulta de nutrição?
 
 No particular, a ordem de grandeza mais citada em Portugal é **40 € a 70 €** por sessão. Não é um índice oficial. Primeira consulta e seguimento muitas vezes têm preços diferentes; farmácias e cadeias publicam os seus. **Hospitais e grupos privados** (CUF, Luz, Trofa e equivalentes): os valores mudam por unidade — confirme no site da clínica no dia da marcação. Não tratamos aqui uma tabela hospitalar como se fosse de 2026.
 
-Na Lon Clinic o checkout publicado é **115 €** a consulta inicial e **75 €/mês** no acompanhamento (duas consultas por mês). **Não há produto a 45 €.** O slot é **30 minutos**. Comparação de faixas, ADSE e grátis: [quanto custa uma consulta de nutrição em Portugal](/blog/quanto-custa-consulta-nutricao-portugal).
+Na Lon Clinic o checkout da linha **nutricionista online** é **45 €** (avulsa ou 45 € a cada 15 dias). O programa com médico é **115 €** no mês 1 e **75 €/mês** no acompanhamento. Comparação de faixas, ADSE e grátis: [nutricionista online preço](/blog/quanto-custa-consulta-nutricao-portugal).
 
 {{cta}}
 
@@ -39,7 +39,7 @@ No **SNS**, a via habitual é o médico de família — espera frequente, sem n�
 
 ## Nutricionista ou dietista?
 
-Em Portugal **ambos** são regulados pela mesma [Ordem dos Nutricionistas](https://www.ordemdosnutricionistas.pt/) (2011). A diferença habitual é a **via de licenciatura** (Ciências da Nutrição vs Dietética / Dietética e Nutrição), não uma hierarquia legal. **O dietista não é uma profissão «não regulada».** Peça a cédula e confirme no [registo nacional](https://www.ordemdosnutricionistas.pt/registoNacional.php?cod=0C0A). O preço Lon não muda com o título: **115 €** / **75 €/mês**. Desenvolvimento: [nutricionista ou dietista em Portugal](/blog/nutricionista-ou-dietista-portugal). Como escolher (e o que evitar): [como encontrar um nutricionista](/blog/como-encontrar-um-nutricionista).
+Em Portugal **ambos** são regulados pela mesma [Ordem dos Nutricionistas](https://www.ordemdosnutricionistas.pt/) (2011). A diferença habitual é a **via de licenciatura** (Ciências da Nutrição vs Dietética / Dietética e Nutrição), não uma hierarquia legal. **O dietista não é uma profissão «não regulada».** Peça a cédula e confirme no [registo nacional](https://www.ordemdosnutricionistas.pt/registoNacional.php?cod=0C0A). O preço Lon da linha online não muda com o título: **45 €**. O programa com médico continua **115 €** / **75 €/mês**. Desenvolvimento: [nutricionista ou dietista em Portugal](/blog/nutricionista-ou-dietista-portugal). Como escolher (e o que evitar): [como encontrar um nutricionista](/blog/como-encontrar-um-nutricionista).
 
 ## Nutricionista pode prescrever suplementos?
 
@@ -67,7 +67,7 @@ Fichas de condição que existem neste site (não há neste prefixo, por exemplo
 
 ### Quanto custa uma consulta de nutrição?
 
-No particular, a faixa mais citada em Portugal é 40 € a 70 € por sessão — não é uma tabela oficial. Na Lon Clinic a consulta inicial é **115 €** e o acompanhamento **75 €/mês** (duas consultas; slot de 30 minutos). A consulta avulsa de nutricionista é 45 € (30 min); o programa é 115 € no mês 1 e 75 €/mês.
+No particular, a faixa mais citada em Portugal é 40 € a 70 € por sessão — não é uma tabela oficial. Na Lon Clinic o nutricionista online é **45 €** (avulsa ou quinzenal). O programa com médico é **115 €** no mês 1 e **75 €/mês**.
 
 ### A consulta de nutrição online funciona tão bem como a presencial?
 

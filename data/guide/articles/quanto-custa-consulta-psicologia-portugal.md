@@ -1,83 +1,65 @@
----
-title: "Quanto custa uma consulta de psicologia em Portugal"
-meta_description: "Quanto custa, em média, uma consulta de psicologia em Portugal — presencial e online — que opções gratuitas ou comparticipadas existem, e o que considerar antes de escolher."
-slug: quanto-custa-consulta-psicologia-portugal
-keyword: quanto custa uma consulta de psicologia
-author: lon-clinic
-published: 2026-09-17
-updated: 2026-09-17
-section: mental-health
-featured: true
----
-
-# Quanto custa uma consulta de psicologia em Portugal
-
 <aside class="guide-keyfacts">
-<p class="guide-keyfacts-kicker">Em síntese</p>
+<p class="guide-keyfacts-kicker">Resposta directa</p>
 <ul>
-<li>Consulta privada avulsa: 40-70€ em média, podendo ultrapassar 80€ em Lisboa/Porto.</li>
-<li>Modelos de subscrição semanal (224€/mês) reduzem custo por sessão face a consultas avulsas (160-280€/mês).</li>
-<li>Existem opções gratuitas (SNS, Cheque-Psicólogo) mas com listas de espera ou elegibilidade limitada.</li>
+<li>Psicoterapia privada em Portugal: em média <strong>40 €–70 €</strong> por sessão; em Lisboa/Porto pode passar os <strong>80 €</strong>.</li>
+<li>Na Lon Clinic a <strong>consulta de psicologia online</strong> custa <strong>60 €</strong> avulsa, ou <strong>56 €/semana</strong> na subscrição (224 €/mês por 4 sessões).</li>
+<li>Quatro avulsas no mesmo mês = <strong>240 €</strong>. A subscrição = <strong>224 €</strong>. A irregularidade parece mais barata; a médio prazo paga-se o recomeço.</li>
 </ul>
 </aside>
 
-**Uma consulta de psicologia avulsa em Portugal custa, em média, entre 40€ e 70€ no privado, podendo ultrapassar os 80€ em grandes centros urbanos ou com profissionais com maior especialização. Consultas online tendem a ter preços semelhantes ou ligeiramente inferiores às presenciais, e modelos de subscrição recorrente reduzem, em geral, o custo por sessão face à consulta pontual.**
+«Quanto custa psicologia online» e «psicoterapia preço» são a mesma objecção: o receio de um custo que não se segura. O número da sessão avulsa (60 €) não é o custo real da terapia. O custo real é o que paga **ao longo dos meses em que precisa de ritmo**.
 
-O valor de uma consulta de psicologia varia consideravelmente consoante vários fatores — por isso vale a pena perceber o que influencia o preço, e que alternativas existem além da consulta particular avulsa. Artigo relacionado: [quanto custa a terapia em Portugal](/blog/quanto-custa-terapia-portugal).
+## Quanto custa uma consulta de psicologia online na Lon Clinic?
 
-<figure class="guide-figure guide-figure-highlight">
-<img src="/image/guide/guide-coastal-sun.jpg" alt="Paisagem tranquila representando bem-estar e cuidados de saúde mental acessíveis" width="1280" height="720" loading="lazy" decoding="async">
-<figcaption>Compreender os custos e opções disponíveis ajuda a tomar uma decisão informada sobre acompanhamento psicológico.</figcaption>
-</figure>
+| | Por sessão | No mês, a ritmo semanal |
+|---|---|---|
+| Avulsa | 60 € | 240 € (4 × 60 €) |
+| Subscrição semanal | 56 € | 224 € (cobrado ao mês) |
+| Terapia de casal avulsa | 75 € | — |
+| Terapia de casal semanal | 65 € | 260 € |
 
-## O que influencia o preço de uma consulta de psicologia
+Primeira sessão: o mesmo preço — 60 €, 50 minutos, psicólogo inscrito na [OPP](https://www.ordemdospsicologos.pt/pt/membros). Sem lista de espera. Marcar: [consulta de psicologia online](/saudemental). Passo a passo do formato: [psicólogo online: como funciona](/blog/psicologo-online-como-funciona).
 
-- **Localização geográfica** — consultas em Lisboa e Porto tendem a ser mais caras do que noutras regiões do país
-- **Experiência e especialização do profissional** — psicólogos com formação avançada em áreas específicas (ex.: neurodesenvolvimento, perturbações alimentares) podem cobrar valores mais elevados
-- **Modalidade** — presencial vs. online, sendo o online geralmente mais acessível por não implicar custos de espaço físico
-- **Formato** — consulta avulsa (mais cara por sessão) vs. modelo de subscrição/pacote de sessões (geralmente com custo por sessão mais baixo)
-- **Tipo de consulta** — terapia individual, terapia de casal ou avaliação psicológica especializada (como testes de neurodesenvolvimento) têm tabelas de preço distintas
-
-## Modelos de subscrição vs. consulta avulsa
-
-Uma tendência crescente em Portugal é o modelo de subscrição recorrente, em que o paciente paga um valor fixo semanal ou mensal por sessões regulares, em vez de pagar por cada consulta isoladamente. Este modelo tem duas vantagens práticas: reduz habitualmente o custo por sessão face ao valor avulso, e incentiva a continuidade do acompanhamento — fator importante, já que a eficácia da terapia está associada à regularidade das sessões, e não apenas a consultas pontuais em momentos de crise.
-
-## Existem opções gratuitas ou comparticipadas?
-
-Sim, através de várias vias:
-
-- **Serviço Nacional de Saúde (SNS)** — consultas de psicologia gratuitas, mas tipicamente com listas de espera longas em várias regiões do país
-- **Programas específicos para jovens** — como o Cheque-Psicólogo/Cuida-te, dirigido a jovens até determinada idade, com sessões gratuitas ou fortemente comparticipadas
-- **Apoio psicológico em contexto académico** — muitas instituições de ensino superior disponibilizam consultas gratuitas para estudantes
-- **Seguros de saúde e planos de saúde no trabalho** — cada vez mais seguradoras e empregadores incluem comparticipação de consultas de psicologia nos seus planos
-- **Modelos de preço solidário** — algumas plataformas praticam tabelas ajustadas à capacidade financeira de cada paciente
-
-## Consulta de psicologia com seguro de saúde ou ADSE
-
-Vale sempre a pena confirmar diretamente junto da seguradora ou do subsistema de saúde (como a ADSE) se a psicologia está incluída no plano e em que condições — a comparticipação varia significativamente consoante a apólice e, nalguns casos, exige encaminhamento médico prévio.
-
-## Vale a pena escolher pelo preço mais baixo?
-
-O preço é um fator legítimo, mas não deve ser o único critério. É importante confirmar sempre se o profissional está registado na Ordem dos Psicólogos Portugueses (através do diretório público disponível no site da Ordem), e considerar também a adequação da especialização do psicólogo ao motivo específico da consulta.
-
-Artigos relacionados: [quando ir ao psicólogo](/blog/primeira-consulta-psicologia), [psicólogo online grátis: onde procurar](/blog/psicologo-online-gratis), e [terapia semanal ou quinzenal](/blog/terapia-semanal-ou-quinzenal).
+No particular presencial a média nacional continua na casa dos **40 €–70 €**. Online na Lon não é um desconto de «plataforma»: é o mesmo trabalho clínico, sem deslocação, com a opção de o histórico articular-se — com o seu consentimento — com [médico](/consulta) e [nutricionista](/nutricao) da mesma clínica.
 
 {{cta}}
 
-## Perguntas frequentes sobre o custo de consultas de psicologia
+## Porque a subscrição fica mais barata a médio prazo
 
-**A consulta de psicologia online é mais barata que a presencial?**
-Tende a ser semelhante ou ligeiramente mais acessível, já que reduz custos associados a espaço físico, mas a diferença de preço varia consoante a plataforma e o profissional.
+A objecção típica: «só vou quando estiver mal, assim gasto menos.»
 
-**Quantas sessões de psicologia costumam ser necessárias?**
-Não há um número fixo — depende do motivo da consulta e da abordagem terapêutica. Alguns processos resolvem-se em poucas sessões focadas num objetivo específico; outros envolvem acompanhamento contínuo ao longo de vários meses.
+Isso compara **produtos diferentes**. Uma ou duas avulsas no mês (60 €–120 €) não são um mês de psicoterapia. São interrupções. A evidência de psicoterapia associa resultado à **regularidade**, não a picos de crise.
 
-**A ADSE comparticipa consultas de psicologia?**
-Sim, a ADSE comparticipa consultas de psicologia em determinadas condições, sendo recomendável confirmar diretamente os valores e requisitos atualizados junto do subsistema.
+Contas, a ritmo semanal — o ritmo que a terapia pede:
 
-**Compensa mais um pacote/subscrição do que pagar por sessão?**
-Para quem antecipa acompanhamento regular e continuado, um modelo de subscrição ou pacote costuma compensar financeiramente face ao pagamento avulso por sessão, além de facilitar a consistência do acompanhamento.
+- 4 avulsas / mês = **240 €**
+- Subscrição = **224 €** (16 € a menos)
+- 3 meses semanais avulsos = **720 €** vs. **672 €** na subscrição
+- 6 meses = **1 440 €** vs. **1 344 €**
 
----
+Quem marca às vezes e desiste, volta. Cada recomeço é outra avulsa a 60 € a explicar o mesmo. A médio prazo esse padrão **não** é mais barato: alonga o processo. A subscrição tem compromisso mínimo de um mês; depois cancela-se. Não é fidelização anual.
 
-*A [LON Clinic](https://www.lonclinic.com/saudemental) disponibiliza consultas de psicologia online com modelo de subscrição semanal, pensado para tornar o acompanhamento regular mais acessível.*
+Detalhe de comparticipação: [ADSE e seguros](/blog/adse-seguros-psicologia-portugal). Vias sem custo de consulta: [psicologia gratuita](/blog/consultas-psicologia-gratuitas-portugal) (SNS, Cheque-Psicólogo, universidades) — com filas e elegibilidade.
+
+## O que influencia o preço da psicoterapia em Portugal
+
+- Cidade (Lisboa e Porto no topo)
+- Especialização
+- Presencial vs. online
+- Avulsa vs. regularidade
+- Individual vs. casal
+
+A Lon Clinic não muda o preço com o código postal. A sessão é 50 minutos em todo o país.
+
+## Vale a pena escolher só pelo preço mais baixo?
+
+O preço é a barreira principal — por isso está nesta página. Confirme sempre a cédula na OPP. E pergunte se a clínica é **só sessões** ou se, quando o sono, o apetite ou a medicação entram na conversa, há médico e nutricionista no mesmo sítio. No SERP das plataformas de psicologia online isso quase não existe. Aqui existe, e não é automático: é com o seu sim.
+
+[Online vs. presencial](/blog/psicologia-online-vs-presencial). [Como encontrar um psicólogo](/blog/como-encontrar-um-psicologo).
+
+## Fontes
+
+- Preçário Lon Clinic, 2026 — 50 min; 60 € avulsa / 56 € por sessão na subscrição semanal (224 €/mês)
+- [ERS](https://www.ers.pt/) — prestador n.º 45475
+- [Ordem dos Psicólogos Portugueses](https://www.ordemdospsicologos.pt/pt/membros)
+- Revisão: [Dra. Carolina Rocha](/equipa/carolina-rocha)

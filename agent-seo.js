@@ -218,7 +218,7 @@ function buildLlmsTxt() {
     const lines = [
         '# Lon Clinic',
         '',
-        '> Clínica online em Portugal: medicina geral, saúde mental, nutrição e medicina do viajante. Videoconsulta com profissionais licenciados.',
+        '> Clínica online em Portugal: medicina geral, saúde mental, nutrição e consulta do viajante. Videoconsulta com profissionais licenciados.',
         '',
         'Lon Clinic is an online clinic in Portugal. Licensed doctors and psychologists see patients by video. Typical general consultation is 39 €. Electronic prescriptions are issued in Portugal when indicated.',
         '',
@@ -227,7 +227,7 @@ function buildLlmsTxt() {
         '## Serviços',
         mdLink('Início', '/'),
         mdLink('Consulta médica online', '/consulta'),
-        mdLink('Medicina do viajante / travel clinic', '/travel-clinic'),
+        mdLink('Consulta do viajante / travel clinic', '/travel-clinic'),
         mdLink('Tourist clinic (visitors already in Portugal)', '/tourist-clinic'),
         mdLink('Saúde mental / psicologia', '/saudemental'),
         mdLink('Burnout', '/burnout'),

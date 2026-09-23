@@ -37,8 +37,13 @@ function isYellowFeverPublicArticle(slug) {
     return /vacina-febre-amarela/.test(String(slug || ''));
 }
 
+function isCviDirectoryArticle(slug) {
+    return String(slug || '') === 'centros-de-vacinacao-internacional-portugal';
+}
+
 function isCviPublicArticle(slug) {
-    return isYellowFeverPublicArticle(slug) || /vacinas-viajante/.test(String(slug || ''));
+    const s = String(slug || '');
+    return isYellowFeverPublicArticle(s) || /vacinas-viajante/.test(s) || isCviDirectoryArticle(s);
 }
 
 const MONTHS_PT = [
@@ -346,6 +351,15 @@ function deriveExperience(raw) {
     };
 }
 
+function publicPriority(row) {
+    const experience = phoneLooksBroken(row.phone)
+        ? `${cleanExperience(row.experience)}\nNúmero incorreto`.trim()
+        : cleanExperience(row.experience);
+    const derived = deriveExperience(experience);
+    if (derived.excluded) return 'low';
+    return derived.priority || 'unknown';
+}
+
 function publicView(row) {
     const hours = combinedHours(row);
     const broken = phoneLooksBroken(row.phone);
@@ -369,7 +383,8 @@ function publicView(row) {
         verified: isVerified(row),
         verifiedAt: isVerified(row) ? (row.verifiedAt || null) : null,
         featured: Boolean(row.featured),
-        privateClinic: Boolean(row.privateClinic)
+        privateClinic: Boolean(row.privateClinic),
+        priority: publicPriority(row)
     };
 }
 
@@ -686,6 +701,24 @@ function formatHoursHtml(hours) {
     return escapeHtml(text).replace(/\n+/g, '<br>');
 }
 
+function semaforoHtml(priority) {
+    const p = ['high', 'medium', 'low'].includes(priority) ? priority : 'unknown';
+    return `<p class="alg-semaforo" data-priority="${p}"><span class="alg-semaforo-dot" aria-hidden="true"></span><span class="alg-semaforo-lbl">${escapeHtml(priorityLabel(p))}</span></p>`;
+}
+
+function semaforoLegendHtml() {
+    return `<aside class="alg-semaforo-legend" aria-label="Legenda do semáforo de contacto">
+    <p class="alg-semaforo-legend-kicker">Semáforo de contacto</p>
+    <p>Auditoria Lon Clinic (3–7 setembro 2026): ligámos e escrevemos aos CVI. O semáforo diz se o <strong>telefone atende</strong> — não a qualidade clínica. As listas oficiais e os guias de viagem copiam horários; este sinal não.</p>
+    <ul>
+      <li data-p="high"><span class="alg-semaforo-dot" aria-hidden="true"></span> Verde — Atendem com facilidade</li>
+      <li data-p="medium"><span class="alg-semaforo-dot" aria-hidden="true"></span> Amarelo — Pode ser preciso insistir</li>
+      <li data-p="low"><span class="alg-semaforo-dot" aria-hidden="true"></span> Vermelho — Contacto difícil</li>
+      <li data-p="unknown"><span class="alg-semaforo-dot" aria-hidden="true"></span> Cinzento — Sem histórico de chamada</li>
+    </ul>
+  </aside>`;
+}
+
 function verifyBadgeHtml(row) {
     if (row.verified && row.verifiedAt) {
         const label = formatDatePt(row.verifiedAt);
@@ -725,6 +758,7 @@ function locCardHtml(row, opts) {
           <div class="alg-loc-name">${escapeHtml(row.name)}</div>
           <div class="alg-loc-badges">${badges.join('')}</div>
         </div>
+        ${semaforoHtml(row.priority)}
         ${verifyBadgeHtml(row)}
         ${address}
         ${hours}
@@ -815,6 +849,22 @@ function stripInjectedVerify(block) {
     return block.replace(/\s*<p class="alg-loc-verify">[\s\S]*?<\/p>/g, '');
 }
 
+function stripInjectedSemaforo(block) {
+    return block.replace(/\s*<p class="alg-semaforo"[^>]*>[\s\S]*?<\/p>/g, '');
+}
+
+function injectContactChrome(block, pub) {
+    let next = stripInjectedSemaforo(stripInjectedVerify(block));
+    const chrome = `${semaforoHtml(pub.priority)}\n        ${verifyBadgeHtml(pub)}`;
+    if (/class="alg-loc-name"/.test(next)) {
+        return next.replace(
+            /(<div class="alg-loc-name">[\s\S]*?<\/div>)/,
+            `$1\n        ${chrome}`
+        );
+    }
+    return `${next}\n        ${chrome}`;
+}
+
 function injectVerifyAfterName(block, badge) {
     if (/class="alg-loc-verify"/.test(block)) return block;
     return block.replace(
@@ -852,28 +902,55 @@ function annotateLocCards(html, rows, byPhone) {
             }
             next = locCardHtml(pub, { featured: /\bfeatured\b/.test(card.html) });
         } else {
-            next = stripInjectedVerify(card.html);
-            next = injectVerifyAfterName(next, verifyBadgeHtml(pub));
+            next = injectContactChrome(card.html, pub);
         }
         out = out.slice(0, card.start) + next + out.slice(card.end);
     }
     return { html: out, usedPhones };
 }
 
-function annotateTableRows(html, byPhone) {
+function matchRowFromTableInner(inner, byPhone, rows) {
+    const tel = inner.match(/href="tel:([^"]+)"/i);
+    if (tel) {
+        const hit = byPhone.get(normalizePhone(tel[1]));
+        if (hit) return hit;
+    }
+    const mail = inner.match(/href="mailto:([^"?]+)/i);
+    if (mail) {
+        const email = fold(decodeURIComponent(mail[1]));
+        const hit = (rows || []).find((row) => fold(row.email) === email);
+        if (hit) return hit;
+    }
+    const first = inner.match(/<td[^>]*>([\s\S]*?)<\/td>/i);
+    const nameFold = fold(String(first ? first[1] : '').replace(/<[^>]+>/g, ' '));
+    if (!nameFold) return null;
+    return (rows || []).find((row) => {
+        const n = fold(row.name);
+        return n && (nameFold.includes(n) || n.includes(nameFold));
+    }) || null;
+}
+
+function annotateTableRows(html, byPhone, rows) {
     return html.replace(/<tr>([\s\S]*?)<\/tr>/gi, (full, inner) => {
-        if (!/href="tel:/i.test(inner)) return full;
-        if (/alg-badge-ok|alg-badge-pending/.test(inner)) return full;
-        const tel = inner.match(/href="tel:([^"]+)"/i);
-        const row = tel ? byPhone.get(normalizePhone(tel[1])) : null;
-        const pub = row ? publicView(row) : { verified: false, verifiedAt: null };
-        const badge = pub.verified
-            ? `<br><span class="alg-badge-ok">${pub.verifiedAt ? `Confirmado em ${escapeHtml(formatDatePt(pub.verifiedAt))}` : 'Confirmado'}</span>`
-            : '<br><span class="alg-badge-pending">Sujeito a confirmação</span>';
-        if (/<\/td>\s*$/i.test(inner.trim())) {
-            return `<tr>${inner.replace(/(<\/td>\s*)$/i, `${badge}$1`)}</tr>`;
+        if (/<th\b/i.test(inner) && !/<td\b/i.test(inner)) return full;
+        if (!/<td\b/i.test(inner)) return full;
+        if (/alg-semaforo/.test(inner)) return full;
+        const row = matchRowFromTableInner(inner, byPhone, rows);
+        if (!row && !/href="tel:/i.test(inner) && !/href="mailto:/i.test(inner)) return full;
+        const pub = row ? publicView(row) : { verified: false, verifiedAt: null, priority: 'unknown' };
+        const light = semaforoHtml(pub.priority);
+        let next = inner.replace(/<td([^>]*)>/i, `<td$1>${light}`);
+        if (!/alg-badge-ok|alg-badge-pending/.test(next)) {
+            const badge = pub.verified
+                ? `<br><span class="alg-badge-ok">${pub.verifiedAt ? `Confirmado em ${escapeHtml(formatDatePt(pub.verifiedAt))}` : 'Confirmado'}</span>`
+                : '<br><span class="alg-badge-pending">Sujeito a confirmação</span>';
+            if (/<\/td>\s*$/i.test(next.trim())) {
+                next = next.replace(/(<\/td>\s*)$/i, `${badge}$1`);
+            } else {
+                next += badge;
+            }
         }
-        return `<tr>${inner}${badge}</tr>`;
+        return `<tr>${next}</tr>`;
     });
 }
 
@@ -902,18 +979,26 @@ function appendExtraVerified(html, slug, rows, usedPhones) {
 
 const PRAZO_FAQ_YF_Q = 'Qual é o prazo real até tomar a vacina da febre amarela?';
 const PRAZO_FAQ_YF_A = 'O prazo real não é o da consulta: marca a consulta no site, por telefone ou WhatsApp; a consulta é geralmente no próprio dia ou no dia seguinte; com a prescrição marca a vacina num Centro de Vacinação Internacional; o tempo de agendamento da vacina depende do centro. O certificado internacional só é válido 10 dias após a vacinação.';
-const PRAZO_FAQ_TRAVEL_Q = 'Qual é o prazo real até tomar as vacinas do viajante?';
+const PRAZO_FAQ_TRAVEL_Q = 'Qual é o prazo real até tomar as vacinas de viagem?';
 const PRAZO_FAQ_TRAVEL_A = 'O prazo real não é o da consulta: marca a consulta no site, por telefone ou WhatsApp; a consulta é geralmente no próprio dia ou no dia seguinte; com a prescrição marca a vacina num Centro de Vacinação Internacional; o tempo de agendamento depende do centro. Algumas vacinas pedem mais do que uma dose. Se precisar de febre amarela, o certificado só é válido 10 dias após a vacinação.';
 
 function prazoFaqForSlug(slug) {
     if (isYellowFeverPublicArticle(slug)) {
         return { q: PRAZO_FAQ_YF_Q, a: PRAZO_FAQ_YF_A };
     }
-    return { q: PRAZO_FAQ_TRAVEL_Q, a: PRAZO_FAQ_TRAVEL_A };
+    if (slug === 'vacinas-viajante-lisboa') {
+        return {
+            q: 'Qual é o prazo real até tomar as vacinas de viagem em Lisboa?',
+            a: PRAZO_FAQ_TRAVEL_A
+        };
+    }
+    return { q: 'Qual é o prazo real até tomar as vacinas de viagem?', a: PRAZO_FAQ_TRAVEL_A };
 }
 
 function isPrazoFaqQuestion(name) {
-    return name === PRAZO_FAQ_YF_Q || name === PRAZO_FAQ_TRAVEL_Q;
+    return name === PRAZO_FAQ_YF_Q
+        || name === PRAZO_FAQ_TRAVEL_Q
+        || name === 'Qual é o prazo real até tomar as vacinas de viagem em Lisboa?';
 }
 
 function prazoStep04Text(slug) {
@@ -1123,6 +1208,35 @@ function jsonLdForArticle(slug, html, opts) {
     return list ? [list] : [];
 }
 
+function injectSemaforoLegend(html) {
+    if (/alg-semaforo-legend/.test(html)) return html;
+    const block = semaforoLegendHtml();
+    if (/alg-alert-marcacao/.test(html)) {
+        return html.replace(/(<div class="alg-alert-marcacao"[\s\S]*?<\/div>)/, `$1\n    ${block}`);
+    }
+    if (/<table[\s>]/i.test(html)) {
+        return html.replace(/<table[\s>]/i, `${block}\n$&`);
+    }
+    return html;
+}
+
+function injectSemaforoFaq(html) {
+    const q = 'O que significa o semáforo dos centros de vacinação?';
+    if (html.includes(q)) return html;
+    const a = 'Verde: atenderam com facilidade na auditoria Lon Clinic. Amarelo: pode ser preciso insistir. Vermelho: contacto difícil. Cinzento: ainda sem chamada nossa. Não classifica a qualidade clínica — só se o telefone atende.';
+    const item = `<div class="alg-faq-item"><div class="alg-faq-q">${escapeHtml(q)}</div><div class="alg-faq-a">${escapeHtml(a)}</div></div>`;
+    if (/<div class="alg-faq-list">/.test(html)) {
+        return html.replace('<div class="alg-faq-list">', `<div class="alg-faq-list">\n      ${item}`);
+    }
+    if (/<h2[^>]*>Perguntas frequentes<\/h2>/i.test(html)) {
+        return html.replace(
+            /(<h2[^>]*>Perguntas frequentes<\/h2>)/i,
+            `$1\n<p><strong>${escapeHtml(q)}</strong><br>${escapeHtml(a)}</p>`
+        );
+    }
+    return html;
+}
+
 function annotatePublicArticle(html, slug, opts) {
     if (!html || !isCviPublicArticle(slug)) return html;
     const articleDate = isoDay(opts && opts.articleDate);
@@ -1130,10 +1244,14 @@ function annotatePublicArticle(html, slug, opts) {
     const rows = allCenters();
     const byPhone = indexByPhone(rows);
     const loc = annotateLocCards(html, rows, byPhone);
-    let out = annotateTableRows(loc.html, byPhone);
+    let out = annotateTableRows(loc.html, byPhone, rows);
     out = appendExtraVerified(out, slug, rows, loc.usedPhones);
-    out = injectPrazoSection(out, slug);
-    out = injectPrazoFaq(out, dataDate, slug);
+    out = injectSemaforoLegend(out);
+    if (!isCviDirectoryArticle(slug)) {
+        out = injectPrazoSection(out, slug);
+        out = injectPrazoFaq(out, dataDate, slug);
+    }
+    out = injectSemaforoFaq(out);
     out = stampEmbeddedJsonLd(out, articleDate, dataDate);
     return out;
 }

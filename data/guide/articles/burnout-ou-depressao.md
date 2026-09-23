@@ -14,7 +14,7 @@ A [Mayo Clinic](https://www.mayoclinic.org/healthy-lifestyle/adult-health/in-dep
 
 ## As diferenças-chave
 
-O burnout está tipicamente ligado a um contexto específico — mais frequentemente o trabalho. A pessoa sente-se esgotada e cínica nessa área da vida, mas pode continuar a encontrar prazer noutros contextos, como tempo em família ou hobbies. Ver [o que é burnout](/blog/burnout-o-que-e-sinais-cansaco).
+O burnout está tipicamente ligado a um contexto específico — mais frequentemente o trabalho. A pessoa sente-se esgotada e cínica nessa área da vida, mas pode continuar a encontrar prazer noutros contextos, como tempo em família ou hobbies. Para [perceber os sinais de burnout](/blog/burnout-o-que-e-sinais-cansaco) no sentido da definição (OMS), abra o artigo-pilar.
 
 A depressão tende a ser mais generalizada, afetando a capacidade de sentir prazer (anedonia) em praticamente todas as áreas da vida — não apenas numa esfera específica — e está associada a sentimentos de desesperança mais persistentes.
 

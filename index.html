@@ -76,9 +76,9 @@
       "medicalSpecialty": ["Telemedicina", "Medicina Geral", "Medicina de Família", "Psicologia", "Nutrição", "Medicina do viajante"],
       "availableService": [
         { "@type": "MedicalProcedure", "name": "Consulta de clínica geral", "url": "https://www.lonclinic.com/marcar/clinica-geral" },
-        { "@type": "MedicalProcedure", "name": "Consulta de psicologia", "url": "https://www.lonclinic.com/saudemental" },
-        { "@type": "MedicalProcedure", "name": "Consulta de nutrição", "url": "https://www.lonclinic.com/nutricao" },
-        { "@type": "MedicalProcedure", "name": "Consulta de medicina do viajante", "url": "https://www.lonclinic.com/travel-clinic" }
+        { "@type": "MedicalProcedure", "name": "Consulta de psicologia online", "url": "https://www.lonclinic.com/saudemental" },
+        { "@type": "MedicalProcedure", "name": "Nutricionista online", "url": "https://www.lonclinic.com/nutricao" },
+        { "@type": "MedicalProcedure", "name": "Consulta do viajante online", "url": "https://www.lonclinic.com/travel-clinic" }
       ],
       "areaServed": { "@type": "Place", "name": "Europa" },
       "sameAs": ["https://www.trustpilot.com/review/lonclinic.com"],
@@ -219,10 +219,10 @@
                     <div class="lon-mega" id="lonMega" aria-label="Especialidades">
                         <div class="lon-mega-grid">
                             <a class="lon-mega-card" href="/longevidade" style="--mc:#ECD281;--mc2:#6b5a2e;--mc-ink:#1C1710"><img src="/image/mega-funcional.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Medicina</span><span class="lon-mega-card-body"><strong>Medicina Funcional</strong><span>Causas, prevenção e biomarcadores · 60 €</span></span></a>
-                            <a class="lon-mega-card" href="/psicologia" style="--mc:#9BB1BC;--mc2:#2f4550"><img src="/image/mega-psicologia.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Psicologia</span><span class="lon-mega-card-body"><strong>Psicologia</strong><span>Individual e casal · desde 56 €/sessão</span></span></a>
+                            <a class="lon-mega-card" href="/saudemental" style="--mc:#9BB1BC;--mc2:#2f4550"><img src="/image/mega-psicologia.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Psicologia</span><span class="lon-mega-card-body"><strong>Psicologia</strong><span>Individual e casal · desde 56 €/sessão</span></span></a>
                             <a class="lon-mega-card" href="/nutricao" style="--mc:#9FBD84;--mc2:#2c3f36"><img src="/image/mega-nutricao.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Nutrição</span><span class="lon-mega-card-body"><strong>Nutrição</strong><span>Subscrição quinzenal · 45 € / 15 dias</span></span></a>
                             <a class="lon-mega-card" href="/urgent-care" style="--mc:#BD4F4F;--mc2:#4d2321"><img src="/image/mega-urgente.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Hoje</span><span class="lon-mega-card-body"><strong>Consulta Urgente</strong><span>Fale com um médico hoje · 39 €</span></span></a>
-                            <a class="lon-mega-card" href="/travel-clinic" style="--mc:#A794C9;--mc2:#2c3a4a"><img src="/image/mega-viajante.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Viagem</span><span class="lon-mega-card-body"><strong>Medicina do Viajante</strong><span>Vacinas e consulta pré-viagem · 39 €</span></span></a>
+                            <a class="lon-mega-card" href="/travel-clinic" style="--mc:#A794C9;--mc2:#2c3a4a"><img src="/image/mega-viajante.webp" alt="" width="360" height="480" loading="lazy" decoding="async"><span class="lon-mega-card-tag">Viagem</span><span class="lon-mega-card-body"><strong>Consulta do Viajante</strong><span>Vacinas e consulta pré-viagem · 39 €</span></span></a>
                         </div>
                         <div class="lon-mega-foot">
                             <a class="lon-mega-link" href="/consulta">Ver todas as especialidades →</a>
@@ -230,8 +230,11 @@
                         </div>
                     </div>
                 </div>
+                <a href="/travel-clinic">Viajante</a>
+                <a href="/saudemental">Psicologia</a>
+                <a href="/nutricao">Nutrição</a>
                 <a href="/magazine">Magazine</a>
-                <a href="/#equipa">Equipa</a>
+                <a href="/equipa">Equipa</a>
             </nav>
 
             <div class="lon-nav-actions">
@@ -246,13 +249,16 @@
             <a href="/consulta">Especialidades</a>
             <div class="lon-mobile-sub">
                 <a href="/longevidade">Medicina Funcional</a>
-                <a href="/psicologia">Psicologia</a>
+                <a href="/saudemental">Psicologia</a>
                 <a href="/nutricao">Nutrição</a>
                 <a href="/urgent-care">Consulta Urgente</a>
-                <a href="/travel-clinic">Medicina do Viajante</a>
+                <a href="/travel-clinic">Consulta do Viajante</a>
             </div>
+            <a href="/travel-clinic">Viajante</a>
+            <a href="/saudemental">Psicologia</a>
+            <a href="/nutricao">Nutrição</a>
             <a href="/magazine">Magazine</a>
-            <a href="/#equipa">Equipa</a>
+            <a href="/equipa">Equipa</a>
             <a href="/patient-portal">Login</a>
             <a href="/marcar/clinica-geral" data-cta="book-priced">Marcar — 39 €</a>
         </div>
@@ -1094,15 +1100,15 @@
 
                 <div class="lon-footer-col">
                     <h4>Consultas</h4>
-                    <a href="/marcar/clinica-geral">Medicina Geral</a>
-                    <a href="/marcar/urgente">Consulta Médica Urgente</a>
-                    <a href="/consulta#por-queixa">Consultas por Queixa</a>
-                    <a href="/marcar/travel">Saúde do Viajante</a>
-                    <a href="/saudemental">Saúde Mental</a>
+                    <a href="/travel-clinic">Consulta do viajante</a>
+                    <a href="/saudemental">Psicologia</a>
                     <a href="/nutricao">Nutrição</a>
-                    <a href="/terapia-de-casal">Terapia de Casal</a>
+                    <a href="/urgent-care">Consulta urgente</a>
+                    <a href="/consulta">Clínica geral</a>
+                    <a href="/consulta#por-queixa">Consultas por queixa</a>
+                    <a href="/terapia-de-casal">Terapia de casal</a>
                     <a href="/burnout">Burnout</a>
-                    <a href="/marcar/medicina-funcional">Medicina Funcional</a>
+                    <a href="/longevidade">Medicina funcional</a>
                 </div>
 
                 <div class="lon-footer-col">

@@ -8,7 +8,7 @@
 </aside>
 
 
-Se o burnout chegou a um ponto em que já não consegue trabalhar, saber como funciona a baixa médica em Portugal pode ser tão importante como o próprio tratamento.
+Se o burnout chegou a um ponto em que já não consegue trabalhar, saber como funciona a baixa médica em Portugal pode ser tão importante como o próprio tratamento. Definição: [o que é o burnout](/blog/burnout-o-que-e-sinais-cansaco).
 
 Em Portugal, a baixa médica é formalizada através de um Certificado de Incapacidade Temporária (CIT), emitido por um médico, que atesta a incapacidade temporária para o exercício das funções profissionais devido a razões de saúde devidamente fundamentadas. Embora o burnout em si não seja classificado como doença pela [Organização Mundial da Saúde](https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon-international-classification-of-diseases), é frequente que a baixa seja emitida associada a diagnósticos relacionados — como perturbações de ansiedade ou episódios depressivos — quando estes se desenvolvem a partir do quadro de exaustão.
 

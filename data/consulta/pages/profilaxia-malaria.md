@@ -11,7 +11,7 @@ A receita sai da [consulta do viajante](/travel-clinic), não de um formulário.
 - gravidez, psiquiatria, epilepsia, outros medicamentos (mefloquina e doxiciclina têm contraindicações típicas)
 - se já teve malária ou intolerância a um destes fármacos
 
-Vacinas ([febre amarela](/blog/vacina-febre-amarela-guia-completo), hepatite A, tifóide) resolvem-se à parte, na mesma consulta se fizer sentido: [vacinas de viagem](/consulta/vacinas-viagem).
+Vacinas ([febre amarela](/blog/vacina-febre-amarela-guia-completo), hepatite A, tifóide) resolvem-se à parte, na mesma consulta se fizer sentido: [vacinas de viagem](/consulta/vacinas-viagem). Guia: [malária e hepatite A/B](/blog/malaria-hepatite-a-b-viajante).
 
 ## O que a pílula não faz
 

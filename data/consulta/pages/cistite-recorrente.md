@@ -1,6 +1,6 @@
 ## Não é a mesma página que um episódio único
 
-A [infeção urinária aguda](/consulta/infecao-urinaria) trata o episódio: ardor, urgência, sem febre. A cistite recorrente é o padrão — dois ou mais episódios em seis meses, ou três num ano — e o plano deixa de ser «mais um antibiótico curto».
+A [infeção urinária aguda](/consulta/infecao-urinaria) trata o episódio: ardor, urgência, sem febre. Sinais e quando ir à urgência: [artigo sobre sintomas](/blog/infecao-urinaria-sintomas). A cistite recorrente é o padrão — dois ou mais episódios em seis meses, ou três num ano — e o plano deixa de ser «mais um antibiótico curto».
 
 Repetir o mesmo fármaco sem urocultura, sem perceber o gatilho e sem red flags é o atalho que transforma uma cistite simples numa resistência e num diagnóstico em atraso (pedra, residual, IST, atrofia).
 

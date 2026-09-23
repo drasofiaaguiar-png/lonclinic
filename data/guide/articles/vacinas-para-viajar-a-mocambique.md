@@ -9,7 +9,7 @@
 
 Família, trabalho ou férias na costa: o risco de paludismo não desaparece porque o hotel é bom. A lista de vacinas para viajar a Moçambique é curta comparada com a conversa da **malária**.
 
-[Consulta do viajante](/travel-clinic), 39 €. Prescrição de vacinas para o [CVI](/blog/vacinas-viajante-guia-completo) no próprio dia, quando indicada.
+[Consulta do viajante online](/travel-clinic), 39 €. Prescrição de vacinas para o [CVI](/blog/vacinas-viajante-guia-completo) no próprio dia, quando indicada.
 
 {{cta}}
 
