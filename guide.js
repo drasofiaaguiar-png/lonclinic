@@ -2558,6 +2558,14 @@ const MAGAZINE_SECTIONS = [
         ]
     },
     {
+        slug: 'movimento',
+        theme: 'movimento',
+        title: 'Movimento',
+        description: 'Pilates, yoga, padel, massagem e pausas no trabalho.',
+        ctaKind: 'general',
+        hubs: [{ href: '/wellness/club', label: 'LON Wellness Club' }]
+    },
+    {
         slug: 'clinica',
         theme: 'clinic',
         title: 'Clínica',
@@ -2629,6 +2637,7 @@ function magTheme(article) {
     if (/autismo|adhd/.test(about) || /autismo|adhd/.test(slug)) return 'mental';
     if (/psicolog/.test(about) || /encontrar-um-psicologo|consulta-psicologia/.test(slug)) return 'mental';
     if (/viagem|viajante|vacina/.test(about) || /vacina|viajante|travel|vaccination|malaria|febre-amarela/.test(slug)) return 'travel';
+    if (/pilates|yoga|padel|massagem/.test(about) || /pilates|yoga|padel|massagem|pausas-ativas/.test(slug)) return 'movimento';
     return 'clinic';
 }
 
@@ -3847,6 +3856,7 @@ function renderMagazineIndex(origin) {
     const livrosPsicologia = articles.filter((a) => magTheme(a) === 'bestsellers-psicologia');
     const saudeIntestinal = articles.filter((a) => magTheme(a) === 'bestsellers-saude-intestinal');
     const travel = articles.filter((a) => magTheme(a) === 'travel');
+    const movimento = articles.filter((a) => magTheme(a) === 'movimento');
     const clinic = articles.filter((a) => magTheme(a) === 'clinic');
     const cover = mental[0] || articles[0];
     const og = `${o}${resolveGuideImage(cover && cover.image)}`;
@@ -3882,6 +3892,9 @@ function renderMagazineIndex(origin) {
     const travelRest = featured && magTheme(featured) === 'travel'
         ? travel.filter((a) => magHref(a) !== featuredHref)
         : travel;
+    const movimentoRest = featured && magTheme(featured) === 'movimento'
+        ? movimento.filter((a) => magHref(a) !== featuredHref)
+        : movimento;
     const clinicRest = featured && magTheme(featured) === 'clinic'
         ? clinic.filter((a) => magHref(a) !== featuredHref)
         : clinic;
@@ -3897,6 +3910,7 @@ function renderMagazineIndex(origin) {
         magThemeRowHtml('saude-intestinal', 'Saúde intestinal', saudeIntestinalRest, 'nutrition'),
         magClusterHtml(),
         magThemeRowHtml('saude-do-viajante', 'Consulta do viajante', travelRest, 'travel'),
+        magThemeRowHtml('movimento', 'Movimento', movimentoRest, 'general'),
         magThemeRowHtml('clinica', 'Clínica', clinicRest, 'clinic')
     ].join('');
 
