@@ -197,6 +197,16 @@ const rateLimitReviews = rateLimit({
     }
 });
 
+const rateLimitWellnessClubCodes = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    handler: (req, res) => {
+        res.status(429).json({ error: 'Demasiados pedidos. Tente novamente dentro de alguns minutos.' });
+    }
+});
+
 const rateLimitAnalytics = rateLimit({
     windowMs: 60 * 1000,
     max: 120,
@@ -3574,6 +3584,7 @@ async function persistScheduleStore() {
 let scheduleStore = cloneDefaultSchedule();
 
 let wellnessClubMemory = wellnessClub.SEED.map((row) => ({ ...row }));
+const wellnessClubLeadMemory = [];
 
 async function loadWellnessClubRows() {
     if (usePersistentDb && db.getPool()) return db.listWellnessClubPartners();
@@ -12476,13 +12487,23 @@ app.get('/api/wellness/:slug', (req, res) => {
     res.json({ experience: item, related: wellness.relatedFor(item.slug, 3) });
 });
 
-app.post('/api/wellness-club/:slug/codes', async (req, res) => {
+app.post('/api/wellness-club/:slug/codes', rateLimitWellnessClubCodes, async (req, res) => {
     try {
         const slug = String(req.params.slug || '').toLowerCase();
+        const email = String(req.body && req.body.email || '').trim().toLowerCase().slice(0, 320);
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return res.status(400).json({ error: 'Introduza um email válido.' });
+        }
         const rows = await loadWellnessClubRows();
         const row = rows.find((item) => item.slug === slug && item.published !== false);
         const codes = row && Array.isArray(row.codes) ? row.codes : [];
         if (!row || !codes.length) return res.status(404).json({ error: 'Not found' });
+        const lead = { id: crypto.randomUUID(), email, partnerSlug: row.slug };
+        if (usePersistentDb && db.getPool()) {
+            await db.insertWellnessClubLead(lead);
+        } else if (!wellnessClubLeadMemory.some((item) => item.email === email && item.partnerSlug === row.slug)) {
+            wellnessClubLeadMemory.unshift({ ...lead, createdAt: new Date().toISOString() });
+        }
         emitServerAnalytics('cta_click', {
             pagePath: '/wellness/club',
             props: { cta: 'wellness_club_code', partner: row.slug }
@@ -12509,6 +12530,18 @@ app.get('/api/wellness-club', async (req, res) => {
     } catch (err) {
         console.error('GET /api/wellness-club:', err.message);
         res.status(500).json({ error: 'Failed to load partners' });
+    }
+});
+
+app.get('/api/admin/wellness-club/leads', requireAdmin, async (req, res) => {
+    try {
+        const leads = (usePersistentDb && db.getPool())
+            ? await db.listWellnessClubLeads()
+            : wellnessClubLeadMemory.slice(0, 500);
+        res.json({ leads });
+    } catch (err) {
+        console.error('GET /api/admin/wellness-club/leads:', err.message);
+        res.status(500).json({ error: 'Failed to load leads' });
     }
 });
 

@@ -928,6 +928,16 @@ async function initSchema(p) {
     await p.query(`ALTER TABLE wellness_club_partners ADD COLUMN IF NOT EXISTS subtitle TEXT NOT NULL DEFAULT ''`);
     await p.query(`ALTER TABLE wellness_club_partners ADD COLUMN IF NOT EXISTS price_label TEXT NOT NULL DEFAULT ''`);
     await p.query(`ALTER TABLE wellness_club_partners ADD COLUMN IF NOT EXISTS codes JSONB NOT NULL DEFAULT '[]'::jsonb`);
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS wellness_club_leads (
+            id UUID PRIMARY KEY,
+            email VARCHAR(320) NOT NULL,
+            partner_slug VARCHAR(160) NOT NULL,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            UNIQUE (email, partner_slug)
+        )
+    `);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_wellness_club_leads_created ON wellness_club_leads (created_at DESC)`);
 }
 
 function rowToAnalyticsEvent(row) {
@@ -4791,6 +4801,34 @@ async function deleteWellnessClubPartner(id) {
     return r.rowCount > 0;
 }
 
+async function insertWellnessClubLead(record) {
+    const p = getPool();
+    await p.query(
+        `INSERT INTO wellness_club_leads (id, email, partner_slug)
+         VALUES ($1, $2, $3)
+         ON CONFLICT (email, partner_slug) DO NOTHING`,
+        [record.id, record.email, record.partnerSlug]
+    );
+}
+
+async function listWellnessClubLeads(limit = 500) {
+    const p = getPool();
+    if (!p) return [];
+    const n = Math.min(Math.max(parseInt(limit, 10) || 500, 1), 1000);
+    const r = await p.query(
+        `SELECT email, partner_slug, created_at
+         FROM wellness_club_leads
+         ORDER BY created_at DESC
+         LIMIT $1`,
+        [n]
+    );
+    return r.rows.map((row) => ({
+        email: row.email,
+        partnerSlug: row.partner_slug,
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at
+    }));
+}
+
 async function wellnessClubSlugTaken(slug, excludeId) {
     const p = getPool();
     const r = await p.query(
@@ -4938,6 +4976,8 @@ module.exports = {
     insertWellnessClubPartner,
     updateWellnessClubPartner,
     deleteWellnessClubPartner,
+    insertWellnessClubLead,
+    listWellnessClubLeads,
     wellnessClubSlugTaken,
     listProducers,
     findProducerById,

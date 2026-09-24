@@ -6503,6 +6503,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (err) {
             list.innerHTML = '<p class="admin-empty-list">' + escapeHtml(err.message || 'Erro') + '</p>';
         }
+        const leadsEl = document.getElementById('adminWellnessClubLeads');
+        if (!leadsEl) return;
+        try {
+            const res = await fetch('/api/admin/wellness-club/leads');
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.error || 'Failed to load');
+            const leads = data.leads || [];
+            leadsEl.innerHTML = leads.length
+                ? leads.map((lead) => (
+                    '<article class="admin-psych-card">' +
+                    '<h3>' + escapeHtml(lead.email) + '</h3>' +
+                    '<p>' + escapeHtml(lead.partnerSlug || '') + (lead.createdAt ? ' · ' + escapeHtml(new Date(lead.createdAt).toLocaleString('pt-PT')) : '') + '</p>' +
+                    '</article>'
+                )).join('')
+                : '<p class="admin-empty-list">Ainda sem emails.</p>';
+        } catch (err) {
+            leadsEl.innerHTML = '<p class="admin-empty-list">' + escapeHtml(err.message || 'Erro') + '</p>';
+        }
     }
 
     function fillWellnessClubForm(partner) {

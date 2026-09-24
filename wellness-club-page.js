@@ -36,8 +36,18 @@
         const photo = partner.image
             ? '<img class="wx-card-photo" src="' + escapeHtml(partner.image) + '" alt="" loading="lazy" decoding="async">'
             : '<div class="wx-card-photo is-empty">Sem imagem</div>';
+        const label = partner.revealLabel || 'Ver códigos';
+        const ask = /condi/i.test(label)
+            ? 'Introduza o seu email para ver as condições.'
+            : 'Introduza o seu email para ver os códigos.';
         const reveal = partner.hasCodes
-            ? '<button type="button" class="wclub-reveal" data-slug="' + escapeHtml(partner.slug) + '">' + escapeHtml(partner.revealLabel || 'Ver códigos') + '</button>' +
+            ? '<button type="button" class="wclub-reveal" data-slug="' + escapeHtml(partner.slug) + '" data-label="' + escapeHtml(label) + '">' + escapeHtml(label) + '</button>' +
+              '<form class="wclub-email" hidden>' +
+              '<p>' + ask + '</p>' +
+              '<input type="email" name="email" required maxlength="320" autocomplete="email" placeholder="O seu email" aria-label="' + ask + '">' +
+              '<button type="submit" class="wclub-email-submit">' + escapeHtml(label) + '</button>' +
+              '<p class="wclub-email-error" hidden></p>' +
+              '</form>' +
               '<div class="wclub-codes" hidden></div>'
             : '';
         return '<article class="wx-card wclub-card" data-website="' + escapeHtml(partner.website || '') + '">' +
@@ -63,31 +73,77 @@
 
     if (!grid.dataset.codesBound) {
         grid.dataset.codesBound = '1';
-        grid.addEventListener('click', async (event) => {
-            const btn = event.target.closest('.wclub-reveal');
-            if (!btn || btn.disabled) return;
-            const slug = btn.getAttribute('data-slug');
-            const box = btn.parentElement && btn.parentElement.querySelector('.wclub-codes');
-            btn.disabled = true;
-            btn.textContent = 'A abrir…';
+        async function revealCodes(card, email) {
+            const btn = card.querySelector('.wclub-reveal');
+            const form = card.querySelector('.wclub-email');
+            const box = card.querySelector('.wclub-codes');
+            const slug = btn ? btn.getAttribute('data-slug') : '';
+            const submit = form && form.querySelector('.wclub-email-submit');
+            const errorEl = form && form.querySelector('.wclub-email-error');
+            if (submit) {
+                submit.disabled = true;
+                submit.textContent = 'A abrir…';
+            }
+            if (errorEl) errorEl.hidden = true;
             try {
-                const res = await fetch('/api/wellness-club/' + encodeURIComponent(slug) + '/codes', { method: 'POST' });
+                const res = await fetch('/api/wellness-club/' + encodeURIComponent(slug) + '/codes', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email })
+                });
                 const data = await res.json().catch(() => ({}));
                 if (!res.ok) throw new Error(data.error || 'Não foi possível mostrar os códigos.');
+                try { sessionStorage.setItem('lon-wclub-email', email); } catch (e) { /* ignore */ }
                 if (window.LonAnalytics && typeof window.LonAnalytics.track === 'function') {
                     window.LonAnalytics.track('cta_click', { cta: 'wellness_club_code', partner: slug });
                 }
                 if (box) {
-                    const card = btn.closest('.wclub-card');
-                    const site = card ? card.getAttribute('data-website') : '';
-                    box.innerHTML = codesHtml(data.codes, site);
+                    box.innerHTML = codesHtml(data.codes, card.getAttribute('data-website') || '');
                     box.hidden = false;
                 }
-                btn.hidden = true;
+                if (btn) btn.hidden = true;
+                if (form) form.hidden = true;
             } catch (err) {
-                btn.disabled = false;
-                btn.textContent = 'Ver códigos';
+                if (submit) {
+                    submit.disabled = false;
+                    submit.textContent = (btn && btn.getAttribute('data-label')) || 'Ver códigos';
+                }
+                if (errorEl) {
+                    errorEl.textContent = err.message || 'Não foi possível mostrar os códigos.';
+                    errorEl.hidden = false;
+                }
+                if (btn) btn.hidden = true;
+                if (form) form.hidden = false;
             }
+        }
+
+        grid.addEventListener('click', (event) => {
+            const btn = event.target.closest('.wclub-reveal');
+            if (!btn || btn.disabled) return;
+            const card = btn.closest('.wclub-card');
+            const form = card && card.querySelector('.wclub-email');
+            if (!card || !form) return;
+            let saved = '';
+            try { saved = sessionStorage.getItem('lon-wclub-email') || ''; } catch (e) { saved = ''; }
+            if (saved) {
+                btn.hidden = true;
+                revealCodes(card, saved);
+                return;
+            }
+            const input = form.querySelector('input[name="email"]');
+            btn.hidden = true;
+            form.hidden = false;
+            if (input) input.focus();
+        });
+        grid.addEventListener('submit', (event) => {
+            const form = event.target.closest('.wclub-email');
+            if (!form) return;
+            event.preventDefault();
+            const card = form.closest('.wclub-card');
+            const input = form.querySelector('input[name="email"]');
+            const email = input ? input.value.trim() : '';
+            if (!card || !email) return;
+            revealCodes(card, email);
         });
     }
 
