@@ -647,7 +647,7 @@ app.use((req, res, next) => {
 /* ========================================
    SESSION CONFIGURATION
 ======================================== */
-app.use(session({
+const sessionMiddleware = session({
     secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
@@ -664,7 +664,15 @@ app.use(session({
         httpOnly: true,
         maxAge: 8 * 60 * 60 * 1000 // 8 hours
     }
-}));
+});
+
+app.use((req, res, next) => {
+    const pathOnly = String(req.path || '');
+    // Stripe and Meta retry until they get a fast 2xx. A session-store lookup
+    // must not sit on that path.
+    if (pathOnly === '/webhook' || pathOnly === '/webhook/meta') return next();
+    return sessionMiddleware(req, res, next);
+});
 
 const SESSION_IDLE_MS = 30 * 60 * 1000;
 
@@ -3326,6 +3334,21 @@ function timeToMinutes(hhmm) {
     return Number(m[1]) * 60 + Number(m[2]);
 }
 
+/** Full grid an admin may book by hand: 07:00–21:00 on a 30-minute step. */
+function adminManualSlotTimes() {
+    const out = [];
+    for (let mins = 7 * 60; mins <= 21 * 60; mins += 30) {
+        const h = Math.floor(mins / 60);
+        const m = mins % 60;
+        out.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
+    }
+    return out;
+}
+
+function isAdminManualSlot(normTime) {
+    return adminManualSlotTimes().includes(String(normTime || ''));
+}
+
 /** Invitation-only times outside weekly hours: 07:00–08:30 and 21:00 (30-min grid). */
 function isInvitationExtendedTime(normTime) {
     const mins = timeToMinutes(normTime);
@@ -4131,8 +4154,7 @@ async function sendConfirmationEmail(data) {
     try {
         const payload = {
             ...data,
-            doxyUrl: data.doxyUrl || (await resolveDoxyRoomUrl(data.professional)),
-            intakeUrl: ''
+            doxyUrl: data.doxyUrl || (await resolveDoxyRoomUrl(data.professional))
         };
         const { html, text, subject } = buildConfirmationEmail(payload);
 
@@ -8544,7 +8566,7 @@ async function reconcileRecentPaidCheckouts({ hours = 72, limit = 100 } = {}) {
    STRIPE WEBHOOK (raw body needed BEFORE json parser)
 ======================================== */
 
-app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+app.post('/webhook', express.raw({ type: 'application/json', limit: '1mb' }), (req, res) => {
     const sig = req.headers['stripe-signature'];
     const webhookSecretRaw = process.env.STRIPE_WEBHOOK_SECRET;
     const webhookSecret = webhookSecretRaw ? String(webhookSecretRaw).trim() : '';
@@ -8570,7 +8592,23 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
         return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
-    // Handle events
+    // Stripe counts timeouts and non-2xx responses as failed deliveries and
+    // disables the endpoint. Acknowledge first. Booking writes, email, and
+    // follow-up calls run after the response. Paid checkouts are also
+    // reconciled every 15 minutes if that work fails.
+    res.json({ received: true });
+    setImmediate(() => {
+        handleStripeWebhookEvent(event).catch((err) => {
+            console.error(
+                'Stripe webhook processing failed:',
+                event && event.type,
+                err && err.message ? err.message : err
+            );
+        });
+    });
+});
+
+async function handleStripeWebhookEvent(event) {
     switch (event.type) {
         case 'checkout.session.completed':
         case 'checkout.session.async_payment_succeeded': {
@@ -8594,7 +8632,6 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             const fin = await ingestPaidCheckoutSession(session, '   ');
             if (!fin.ok && fin.reason !== 'not_paid') {
                 console.error('   ❌ Failed to record paid checkout:', fin.reason, session.id);
-                return res.status(500).send(`Finalize failed: ${fin.reason}`);
             }
             break;
         }
@@ -8691,9 +8728,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
         default:
             console.log(`Unhandled event type: ${event.type}`);
     }
-
-    res.json({ received: true });
-});
+}
 
 /* ========================================
    META LEAD ADS WEBHOOK (Conversion Leads CRM)
@@ -9489,6 +9524,27 @@ app.get('/nutricao/:slug', (req, res) => {
         console.error('❌ Nutricao page error:', err.message || err);
         return res.status(500).type('html').send('Error loading page.');
     }
+});
+
+app.get('/en/online-therapy-ireland', (req, res) => {
+    const irelandTherapy = require('./ireland-therapy');
+    sendHtmlNoCacheString(res, irelandTherapy.renderPage(seo.SITE_ORIGIN));
+});
+
+app.get('/en/online-therapy-ireland/', (req, res) => {
+    const qs = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+    res.redirect(301, `/en/online-therapy-ireland${qs}`);
+});
+
+app.get('/teste-emigracao', (req, res) => {
+    const def = clinicalQuizzes.getQuizByPath('/teste-emigracao');
+    if (!def) return res.status(404).type('html').send('Teste não encontrado.');
+    sendHtmlNoCacheString(res, clinicalQuizzes.renderQuizPage(seo.SITE_ORIGIN, def));
+});
+
+app.get('/teste-emigracao/', (req, res) => {
+    const qs = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
+    res.redirect(301, `/teste-emigracao${qs}`);
 });
 
 app.get('/teste-personalidade', (req, res) => {
@@ -11388,19 +11444,40 @@ app.post('/api/clinical-quiz', rateLimitBurnoutQuiz, async (req, res) => {
         return res.status(400).json({ error: invalid });
     }
 
+    const YEARS_ABROAD = {
+        lt1: 'menos de 1 ano',
+        y1_3: '1–3 anos',
+        y3_10: '3–10 anos',
+        gt10: 'mais de 10 anos'
+    };
+    let country = '';
+    let yearsAbroad = '';
+    if (def.gate === 'diaspora') {
+        country = String(req.body?.country || '').trim().slice(0, 80);
+        yearsAbroad = String(req.body?.yearsAbroad || '').trim();
+        if (!country) return res.status(400).json({ error: 'Indique o país onde vive.' });
+        if (!YEARS_ABROAD[yearsAbroad]) return res.status(400).json({ error: 'Indique há quanto tempo vive fora.' });
+        if (!req.body?.consent) return res.status(400).json({ error: 'É preciso aceitar para ver o resultado.' });
+    }
+
     const scored = clinicalQuizzes.scoreQuiz(def, answers);
     if (!scored) {
         return res.status(400).json({ error: 'Não foi possível calcular o resultado.' });
     }
 
-    const bookUrl = def.booking && def.booking.consultHref
-        ? `${def.booking.consultHref}?ref=${encodeURIComponent(def.id + '-quiz')}`
+    const baseBook = def.booking && def.booking.consultHref
+        ? def.booking.consultHref
         : '/marcar/clinica-geral';
+    const bookJoin = baseBook.includes('?') ? '&' : '?';
+    const bookUrl = `${baseBook}${bookJoin}ref=${encodeURIComponent(def.id + '-quiz')}`;
     const recoverAt = Date.now() + QUIZ_RECOVERY_MS;
     const payload = {
         email,
         firstName,
         phone,
+        country,
+        yearsAbroad,
+        yearsAbroadLabel: YEARS_ABROAD[yearsAbroad] || '',
         answers,
         scored,
         band: scored.band ? scored.band.pill : '',
@@ -11436,6 +11513,8 @@ app.post('/api/clinical-quiz', rateLimitBurnoutQuiz, async (req, res) => {
                     extra: scored.extra,
                     leadName: firstName,
                     leadPhone: phone,
+                    country: country || undefined,
+                    yearsAbroad: yearsAbroad || undefined,
                     bookUrl,
                     recoverAt
                 },
@@ -11450,7 +11529,7 @@ app.post('/api/clinical-quiz', rateLimitBurnoutQuiz, async (req, res) => {
     const emailed = await sendClinicalQuizEmails(def, payload);
     emitServerAnalytics(
         'quiz_complete',
-        { props: { quiz: def.id, band: payload.band || 'unknown', crisis: !!scored.crisis, lead: true } },
+        { props: { quiz: def.id, band: payload.band || 'unknown', crisis: !!scored.crisis, lead: true, country: country || undefined, yearsAbroad: yearsAbroad || undefined } },
         req
     ).catch(() => {});
     return res.json({
@@ -17541,9 +17620,8 @@ app.post('/api/admin/patients/schedule-next', requireAdmin, express.json(), asyn
             return res.status(400).json({ error: 'Invalid date' });
         }
 
-        const available = await getBookableSlotsForDateIso(dateIso, null, null, true);
-        if (!available.includes(time)) {
-            return res.status(409).json({ error: 'That time slot is no longer available.' });
+        if (!isAdminManualSlot(time)) {
+            return res.status(400).json({ error: 'Choose a time between 07:00 and 21:00.' });
         }
 
         const travellerCount = (() => {
@@ -18401,7 +18479,8 @@ app.get('/api/admin/available-slots', async (req, res) => {
     const dateStr = date;
     const daySchedule = getEffectiveDaySchedule(dateStr);
 
-    if (!daySchedule.enabled) {
+    const allSlotsRequested = req.query.allSlots === '1' || req.query.allSlots === 'true';
+    if (!daySchedule.enabled && !allSlotsRequested) {
         const reason =
             daySchedule.source === 'blocked'
                 ? 'Date blocked'
@@ -18415,7 +18494,7 @@ app.get('/api/admin/available-slots', async (req, res) => {
         const excludeInvitationId = req.query.excludeInvitation
             ? String(req.query.excludeInvitation)
             : null;
-        const allSlots = req.query.allSlots === '1' || req.query.allSlots === 'true';
+        const allSlots = allSlotsRequested;
         const holderToken = readCookieValue(req, 'lon_hold');
         let excludeHoldId = null;
         if (holderToken) {
@@ -18426,7 +18505,9 @@ app.get('/api/admin/available-slots', async (req, res) => {
                 if (mine && mine.dateIso === dateStr) excludeHoldId = mine.id;
             } catch (e) { /* ignore */ }
         }
-        const available = await getBookableSlotsForDateIso(dateStr, null, excludeInvitationId, allSlots, excludeHoldId);
+        const available = allSlots
+            ? adminManualSlotTimes()
+            : await getBookableSlotsForDateIso(dateStr, null, excludeInvitationId, allSlots, excludeHoldId);
         const referer = req.get('referer') || '';
         let bookingPath = '';
         try {
@@ -19054,12 +19135,10 @@ app.post('/api/admin/invitations', requireAdmin, express.json(), async (req, res
             return res.status(503).json({ error: 'Stripe is not configured.' });
         }
 
-        // Admin can book any free slot regardless of smart grouping.
-        // 07:00–08:30 and 21:00 are always offerable on an open day so
-        // morning/evening invites work even if weekly hours end at 17:00.
-        const allowed = await isInvitationSlotAllowed(dateIso, normTime, null);
-        if (!allowed) {
-            return res.status(409).json({ error: 'That time slot is no longer available.' });
+        // Manual admin booking ignores public availability (grouping, holds,
+        // pending invites, and existing appointments).
+        if (!isAdminManualSlot(normTime)) {
+            return res.status(400).json({ error: 'Choose a time between 07:00 and 21:00.' });
         }
 
         const id = crypto.randomUUID();

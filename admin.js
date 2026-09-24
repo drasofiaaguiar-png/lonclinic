@@ -3614,7 +3614,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!date) {
             fillTimeDatalist('inviteTimeSlots', [], ['21:00']);
             inviteTime.value = '';
-            if (hint) hint.textContent = '07:00, 08:00 and 21:00 are available on open weekdays.';
+            if (hint) hint.textContent = 'Every slot from 07:00 to 21:00 can be booked manually.';
             return;
         }
         try {
@@ -3626,9 +3626,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 inviteTime.value = slots.includes('07:00') ? '07:00' : (slots[0] || '07:00');
             }
             if (hint) {
-                hint.textContent = data.reason
-                    ? data.reason
-                    : '07:00, 08:00 and 21:00 are available on open weekdays.';
+                hint.textContent = 'Every slot from 07:00 to 21:00 can be booked manually.';
             }
         } catch (err) {
             console.error('Load invite times error:', err);
