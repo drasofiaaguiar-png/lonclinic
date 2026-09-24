@@ -365,6 +365,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         professionals: { title: 'Professionals', subtitle: 'Directory of clinic professionals' },
         psychologists: { title: 'Bolsa de Profissionais', subtitle: 'Candidaturas e pipeline de profissionais' },
         producers: { title: 'Diretório produtores', subtitle: 'Moderar candidaturas de produtores biológicos' },
+        'wellness-club': { title: 'LON Wellness Club', subtitle: 'Parceiros do marketplace' },
         profile: { title: 'Perfil', subtitle: 'Identificação, dados profissionais, documentos e candidatura' }
     };
     let activeAdminPanel = 'schedule';
@@ -456,6 +457,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (panelId === 'professionals') loadAdminProfessionals();
         if (panelId === 'psychologists') loadAdminPsychologists();
         if (panelId === 'producers') loadAdminProducers();
+        if (panelId === 'wellness-club' && typeof loadAdminWellnessClub === 'function') loadAdminWellnessClub();
         if (panelId === 'profile') loadAdminProfile();
     }
 
@@ -4823,6 +4825,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         email: 'Email',
         sms: 'SMS / WhatsApp',
         organic_social: 'Organic social',
+        ai_assistant: 'AI assistant',
         owned: 'Owned',
         invite: 'Clinic invite',
         internal: 'Admin / staff',
@@ -6465,6 +6468,125 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
+
+    async function loadAdminWellnessClub() {
+        const list = document.getElementById('adminWellnessClubList');
+        if (!list) return;
+        list.innerHTML = '<p class="admin-empty-list">Loading…</p>';
+        try {
+            const res = await fetch('/api/admin/wellness-club');
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok) throw new Error(data.error || 'Failed to load');
+            const partners = data.partners || [];
+            if (!partners.length) {
+                list.innerHTML = '<p class="admin-empty-list">Sem parceiros.</p>';
+                return;
+            }
+            list.innerHTML = partners.map((p) => (
+                '<article class="admin-psych-card" data-id="' + escapeHtml(p.id) + '">' +
+                '<h3>' + escapeHtml(p.name) + (p.published ? '' : ' <span>(oculto)</span>') + '</h3>' +
+                '<p>' + escapeHtml(p.city) + ' · ' + escapeHtml(p.category) + '</p>' +
+                '<p>' + escapeHtml(p.description) + '</p>' +
+                '<p><button type="button" class="btn btn-outline btn-sm" data-wclub-edit="' + escapeHtml(p.id) + '">Editar</button> ' +
+                '<button type="button" class="btn btn-outline btn-sm" data-wclub-delete="' + escapeHtml(p.id) + '">Apagar</button></p>' +
+                '</article>'
+            )).join('');
+            list.querySelectorAll('[data-wclub-edit]').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    const partner = partners.find((row) => row.id === btn.getAttribute('data-wclub-edit'));
+                    if (partner) fillWellnessClubForm(partner);
+                });
+            });
+            list.querySelectorAll('[data-wclub-delete]').forEach((btn) => {
+                btn.addEventListener('click', () => deleteWellnessClubPartner(btn.getAttribute('data-wclub-delete')));
+            });
+        } catch (err) {
+            list.innerHTML = '<p class="admin-empty-list">' + escapeHtml(err.message || 'Erro') + '</p>';
+        }
+    }
+
+    function fillWellnessClubForm(partner) {
+        document.getElementById('wclubEditId').value = partner.id || '';
+        document.getElementById('wclubName').value = partner.name || '';
+        document.getElementById('wclubCity').value = partner.city || '';
+        document.getElementById('wclubCategory').value = partner.category || 'pilates';
+        document.getElementById('wclubWebsite').value = partner.website || '';
+        document.getElementById('wclubImage').value = partner.image || '';
+        document.getElementById('wclubDescription').value = partner.description || '';
+        document.getElementById('wclubPublished').checked = partner.published !== false;
+        document.getElementById('wclubCancelBtn').hidden = false;
+        document.getElementById('wclubSaveBtn').textContent = 'Actualizar';
+    }
+
+    function resetWellnessClubForm() {
+        const form = document.getElementById('wclubAdminForm');
+        if (form) form.reset();
+        document.getElementById('wclubEditId').value = '';
+        document.getElementById('wclubPublished').checked = true;
+        document.getElementById('wclubCancelBtn').hidden = true;
+        document.getElementById('wclubSaveBtn').textContent = 'Guardar';
+    }
+
+    async function deleteWellnessClubPartner(id) {
+        if (!id || !window.confirm('Apagar este parceiro?')) return;
+        const res = await fetch('/api/admin/wellness-club/' + encodeURIComponent(id), { method: 'DELETE' });
+        const data = await res.json().catch(() => ({}));
+        const msg = document.getElementById('wclubAdminMsg');
+        if (!res.ok) {
+            if (msg) msg.textContent = data.error || 'Não foi possível apagar.';
+            return;
+        }
+        if (msg) msg.textContent = 'Parceiro apagado.';
+        if (document.getElementById('wclubEditId').value === id) resetWellnessClubForm();
+        loadAdminWellnessClub();
+    }
+
+    const wclubAdminForm = document.getElementById('wclubAdminForm');
+    if (wclubAdminForm) {
+        wclubAdminForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const msg = document.getElementById('wclubAdminMsg');
+            const file = document.getElementById('wclubImageFile').files[0];
+            let image = document.getElementById('wclubImage').value.trim();
+            try {
+                if (file) {
+                    const body = new FormData();
+                    body.append('image', file);
+                    const upload = await fetch('/api/admin/wellness-club/image', { method: 'POST', body });
+                    const uploaded = await upload.json().catch(() => ({}));
+                    if (!upload.ok) throw new Error(uploaded.error || 'Falha no upload');
+                    image = uploaded.image || image;
+                    document.getElementById('wclubImage').value = image;
+                }
+                const payload = {
+                    name: document.getElementById('wclubName').value,
+                    city: document.getElementById('wclubCity').value,
+                    category: document.getElementById('wclubCategory').value,
+                    website: document.getElementById('wclubWebsite').value,
+                    image: image,
+                    description: document.getElementById('wclubDescription').value,
+                    published: document.getElementById('wclubPublished').checked
+                };
+                const id = document.getElementById('wclubEditId').value;
+                const res = await fetch(id ? '/api/admin/wellness-club/' + encodeURIComponent(id) : '/api/admin/wellness-club', {
+                    method: id ? 'PATCH' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || 'Não foi possível guardar.');
+                if (msg) msg.textContent = id ? 'Parceiro actualizado.' : 'Parceiro criado.';
+                resetWellnessClubForm();
+                loadAdminWellnessClub();
+            } catch (err) {
+                if (msg) msg.textContent = err.message || 'Erro';
+            }
+        });
+    }
+    const wclubCancelBtn = document.getElementById('wclubCancelBtn');
+    if (wclubCancelBtn) wclubCancelBtn.addEventListener('click', resetWellnessClubForm);
+    const wclubRefreshBtn = document.getElementById('wclubRefreshBtn');
+    if (wclubRefreshBtn) wclubRefreshBtn.addEventListener('click', () => loadAdminWellnessClub());
 
     // ─── Initialize ───
     await checkAuth();

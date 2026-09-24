@@ -61,6 +61,7 @@ const touristPages = require('./tourist-pages');
 const pillarPages = require('./pillar-pages');
 const producers = require('./producers');
 const wellness = require('./wellness');
+const wellnessClub = require('./wellness-club');
 const seo = require('./seo');
 const agentSeo = require('./agent-seo');
 const { emailLink, withUtm, datedCampaign, TRACKED_REDIRECTS, safeInternalPath, trackedLinksForAdmin } = require('./utm');
@@ -3550,6 +3551,34 @@ async function persistScheduleStore() {
 
 let scheduleStore = cloneDefaultSchedule();
 
+let wellnessClubMemory = wellnessClub.SEED.map((row) => ({ ...row }));
+
+async function loadWellnessClubRows() {
+    if (usePersistentDb && db.getPool()) return db.listWellnessClubPartners();
+    return wellnessClubMemory.map((row) => ({ ...row }));
+}
+
+async function ensureWellnessClubSeed() {
+    if (!usePersistentDb || !db.getPool()) return;
+    const n = await db.countWellnessClubPartners();
+    if (n > 0) return;
+    for (const row of wellnessClub.SEED) {
+        await db.insertWellnessClubPartner(row);
+    }
+}
+
+async function uniqueWellnessClubSlug(base, excludeId) {
+    let slug = base;
+    for (let i = 2; i < 40; i += 1) {
+        const taken = usePersistentDb && db.getPool()
+            ? await db.wellnessClubSlugTaken(slug, excludeId)
+            : wellnessClubMemory.some((row) => row.slug === slug && row.id !== excludeId);
+        if (!taken) return slug;
+        slug = `${base}-${i}`;
+    }
+    return `${base}-${crypto.randomUUID().slice(0, 8)}`;
+}
+
 async function bootstrapPersistence() {
     if (usePersistentDb) {
         const init = await db.initDatabase();
@@ -3564,6 +3593,7 @@ async function bootstrapPersistence() {
             scheduleStore = loadScheduleStore();
         }
         await persistScheduleStore();
+        await ensureWellnessClubSeed();
         await ensureProfessionalDoxyRooms();
         await ensureKnownBolsaApplications();
         await ensureAllBolsaStaffProfiles();
@@ -9655,6 +9685,10 @@ app.get('/wellness', (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'wellness.html'), 'Error loading wellness directory');
 });
 
+app.get('/wellness/club', (req, res) => {
+    sendHtmlNoCache(res, path.join(__dirname, 'wellness-club.html'), 'Error loading wellness club');
+});
+
 app.get('/wellness/:slug', (req, res) => {
     const slug = String(req.params.slug || '').toLowerCase();
     if (!slug) return res.redirect(302, '/wellness');
@@ -9764,6 +9798,10 @@ app.get('/diretorio-ficha.html', (req, res) => {
 
 app.get('/wellness.html', (req, res) => {
     res.redirect(301, '/wellness');
+});
+
+app.get('/wellness-club.html', (req, res) => {
+    res.redirect(301, '/wellness/club');
 });
 
 app.get('/wellness-ficha.html', (req, res) => {
@@ -12371,6 +12409,117 @@ app.get('/api/wellness/:slug', (req, res) => {
     const item = wellness.getBySlug(req.params.slug);
     if (!item) return res.status(404).json({ error: 'Not found' });
     res.json({ experience: item, related: wellness.relatedFor(item.slug, 3) });
+});
+
+app.get('/api/wellness-club', async (req, res) => {
+    try {
+        const rows = await loadWellnessClubRows();
+        res.json({
+            partners: wellnessClub.filterPartners(rows, req.query),
+            meta: wellnessClub.metaFrom(rows)
+        });
+    } catch (err) {
+        console.error('GET /api/wellness-club:', err.message);
+        res.status(500).json({ error: 'Failed to load partners' });
+    }
+});
+
+app.get('/api/admin/wellness-club', requireAdmin, async (req, res) => {
+    try {
+        const partners = await loadWellnessClubRows();
+        res.json({ partners, categories: wellnessClub.CATEGORIES });
+    } catch (err) {
+        console.error('GET /api/admin/wellness-club:', err.message);
+        res.status(500).json({ error: 'Failed to load partners' });
+    }
+});
+
+app.post('/api/admin/wellness-club/image', requireAdmin, (req, res) => {
+    uploadStaffPhoto.single('image')(req, res, (uploadErr) => {
+        if (uploadErr) return res.status(400).json({ error: uploadErr.message || 'Upload failed' });
+        if (!req.file) return res.status(400).json({ error: 'Falta a imagem.' });
+        try {
+            const ext = path.extname(req.file.originalname || '').toLowerCase() || '.jpg';
+            const dir = path.join(__dirname, 'image', 'wellness-club');
+            fs.mkdirSync(dir, { recursive: true });
+            const filename = `${crypto.randomUUID()}${ext}`;
+            fs.writeFileSync(path.join(dir, filename), req.file.buffer);
+            res.json({ image: `/image/wellness-club/${filename}` });
+        } catch (err) {
+            console.error('POST /api/admin/wellness-club/image:', err.message);
+            res.status(500).json({ error: 'Failed to save image' });
+        }
+    });
+});
+
+app.post('/api/admin/wellness-club', requireAdmin, async (req, res) => {
+    try {
+        const parsed = wellnessClub.normalizeInput(req.body);
+        if (parsed.error) return res.status(400).json({ error: parsed.error });
+        const slug = await uniqueWellnessClubSlug(parsed.value.slug);
+        const record = {
+            id: crypto.randomUUID(),
+            ...parsed.value,
+            slug
+        };
+        let partner;
+        if (usePersistentDb && db.getPool()) {
+            partner = await db.insertWellnessClubPartner(record);
+        } else {
+            wellnessClubMemory.push(record);
+            partner = record;
+        }
+        res.status(201).json({ partner });
+    } catch (err) {
+        console.error('POST /api/admin/wellness-club:', err.message);
+        res.status(500).json({ error: 'Failed to save partner' });
+    }
+});
+
+app.patch('/api/admin/wellness-club/:id', requireAdmin, async (req, res) => {
+    try {
+        const id = String(req.params.id || '');
+        const rows = await loadWellnessClubRows();
+        const existing = rows.find((row) => row.id === id);
+        if (!existing) return res.status(404).json({ error: 'Not found' });
+        const parsed = wellnessClub.normalizeInput(req.body, { existingSlug: existing.slug });
+        if (parsed.error) return res.status(400).json({ error: parsed.error });
+        const nextSlug = parsed.value.name !== existing.name
+            ? await uniqueWellnessClubSlug(wellnessClub.slugify(parsed.value.name), id)
+            : existing.slug;
+        const record = { ...parsed.value, slug: nextSlug };
+        let partner;
+        if (usePersistentDb && db.getPool()) {
+            partner = await db.updateWellnessClubPartner(id, record);
+        } else {
+            const idx = wellnessClubMemory.findIndex((row) => row.id === id);
+            wellnessClubMemory[idx] = { ...wellnessClubMemory[idx], ...record, id };
+            partner = wellnessClubMemory[idx];
+        }
+        if (!partner) return res.status(404).json({ error: 'Not found' });
+        res.json({ partner });
+    } catch (err) {
+        console.error('PATCH /api/admin/wellness-club/:id:', err.message);
+        res.status(500).json({ error: 'Failed to update partner' });
+    }
+});
+
+app.delete('/api/admin/wellness-club/:id', requireAdmin, async (req, res) => {
+    try {
+        const id = String(req.params.id || '');
+        if (usePersistentDb && db.getPool()) {
+            const ok = await db.deleteWellnessClubPartner(id);
+            if (!ok) return res.status(404).json({ error: 'Not found' });
+        } else {
+            const idx = wellnessClubMemory.findIndex((row) => row.id === id);
+            if (idx < 0) return res.status(404).json({ error: 'Not found' });
+            wellnessClubMemory.splice(idx, 1);
+        }
+        res.json({ ok: true, id });
+    } catch (err) {
+        console.error('DELETE /api/admin/wellness-club/:id:', err.message);
+        res.status(500).json({ error: 'Failed to delete partner' });
+    }
 });
 
 app.get('/api/diretorio/meta', (req, res) => {

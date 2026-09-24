@@ -1,0 +1,24 @@
+.wclub-filters {
+    grid-template-columns: minmax(180px, 1.6fr) repeat(2, minmax(140px, 1fr));
+}
+
+@media (max-width: 720px) {
+    .wclub-filters {
+        grid-template-columns: 1fr;
+    }
+}
+
+.wclub-card {
+    cursor: default;
+}
+
+a.wclub-card {
+    cursor: pointer;
+}
+
+.wclub-card-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

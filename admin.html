@@ -147,6 +147,7 @@
                     <button type="button" class="admin-nav-item" data-admin-panel="professionals">Professionals</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="psychologists">Bolsa de Profissionais</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="producers">Diretório produtores</button>
+                    <button type="button" class="admin-nav-item" data-admin-panel="wellness-club">Wellness Club</button>
                     <button type="button" class="admin-nav-item" data-admin-panel="profile">Profile</button>
                 </nav>
                 <div class="admin-sidebar-foot">
@@ -1062,6 +1063,47 @@
                         </select>
                     </div>
                     <div id="adminProducersList" class="admin-psych-list">
+                        <p class="admin-empty-list">Loading…</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-panel" id="adminPanelWellnessClub" data-admin-panel-content="wellness-club" hidden>
+                <div class="dash-section">
+                    <div class="dash-section-header admin-schedule-toolbar">
+                        <div>
+                            <h2 class="dash-section-title">LON Wellness Club</h2>
+                            <p class="dash-section-subtitle">Parceiros do marketplace em <code>/wellness/club</code></p>
+                        </div>
+                        <div class="admin-schedule-filters">
+                            <a class="btn btn-outline btn-sm" href="/wellness/club" target="_blank" rel="noopener">Abrir página</a>
+                            <button type="button" class="btn btn-outline btn-sm" id="wclubRefreshBtn">Refresh</button>
+                        </div>
+                    </div>
+                    <form id="wclubAdminForm" class="admin-psych-filters" style="align-items:end;">
+                        <input type="hidden" id="wclubEditId" value="">
+                        <input type="text" id="wclubName" class="admin-input" placeholder="Nome" required maxlength="120">
+                        <input type="text" id="wclubCity" class="admin-input" placeholder="Cidade" required maxlength="80">
+                        <select id="wclubCategory" class="admin-select" required>
+                            <option value="pilates">Pilates</option>
+                            <option value="yoga">Yoga</option>
+                            <option value="treino">Treino</option>
+                            <option value="massagem">Massagem</option>
+                            <option value="meditacao">Meditação</option>
+                            <option value="movimento">Movimento</option>
+                        </select>
+                        <input type="url" id="wclubWebsite" class="admin-input" placeholder="Site https://…">
+                        <input type="text" id="wclubImage" class="admin-input" placeholder="Imagem /image/… ou https://">
+                        <input type="file" id="wclubImageFile" accept="image/jpeg,image/png,image/webp">
+                        <textarea id="wclubDescription" class="admin-input" placeholder="Descrição" required maxlength="600" rows="3" style="min-width:240px;"></textarea>
+                        <label style="display:flex;gap:8px;align-items:center;font-size:14px;">
+                            <input type="checkbox" id="wclubPublished" checked> Publicado
+                        </label>
+                        <button type="submit" class="btn btn-sm" id="wclubSaveBtn">Guardar</button>
+                        <button type="button" class="btn btn-outline btn-sm" id="wclubCancelBtn" hidden>Cancelar</button>
+                    </form>
+                    <p id="wclubAdminMsg" class="dash-section-subtitle"></p>
+                    <div id="adminWellnessClubList" class="admin-psych-list">
                         <p class="admin-empty-list">Loading…</p>
                     </div>
                 </div>

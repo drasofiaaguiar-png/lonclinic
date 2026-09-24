@@ -909,6 +909,22 @@ async function initSchema(p) {
     await p.query(
         `CREATE INDEX IF NOT EXISTS idx_meta_leads_email_lower ON meta_leads (LOWER(email)) WHERE email IS NOT NULL`
     );
+    await p.query(`
+        CREATE TABLE IF NOT EXISTS wellness_club_partners (
+            id UUID PRIMARY KEY,
+            slug VARCHAR(160) UNIQUE NOT NULL,
+            name TEXT NOT NULL,
+            description TEXT NOT NULL DEFAULT '',
+            category VARCHAR(32) NOT NULL,
+            city TEXT NOT NULL DEFAULT '',
+            image TEXT NOT NULL DEFAULT '',
+            website TEXT NOT NULL DEFAULT '',
+            published BOOLEAN NOT NULL DEFAULT TRUE,
+            created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+            updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        )
+    `);
+    await p.query(`CREATE INDEX IF NOT EXISTS idx_wellness_club_published ON wellness_club_partners (published, category)`);
 }
 
 function rowToAnalyticsEvent(row) {
@@ -4671,6 +4687,104 @@ async function listNewsletterSubscribers(status = 'active', limit = 1000, offset
     return result.rows;
 }
 
+function rowToWellnessClub(row) {
+    if (!row) return null;
+    return {
+        id: row.id,
+        slug: row.slug || '',
+        name: row.name || '',
+        description: row.description || '',
+        category: row.category || '',
+        city: row.city || '',
+        image: row.image || '',
+        website: row.website || '',
+        published: row.published !== false,
+        createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : row.created_at,
+        updatedAt: row.updated_at instanceof Date ? row.updated_at.toISOString() : row.updated_at
+    };
+}
+
+async function listWellnessClubPartners() {
+    const p = getPool();
+    if (!p) return [];
+    const r = await p.query(`SELECT * FROM wellness_club_partners ORDER BY name ASC`);
+    return r.rows.map(rowToWellnessClub);
+}
+
+async function countWellnessClubPartners() {
+    const p = getPool();
+    if (!p) return 0;
+    const r = await p.query(`SELECT COUNT(*)::int AS n FROM wellness_club_partners`);
+    return r.rows[0] ? r.rows[0].n : 0;
+}
+
+async function insertWellnessClubPartner(record) {
+    const p = getPool();
+    const r = await p.query(
+        `INSERT INTO wellness_club_partners (
+            id, slug, name, description, category, city, image, website, published
+        ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+        RETURNING *`,
+        [
+            record.id,
+            record.slug,
+            record.name,
+            record.description || '',
+            record.category,
+            record.city || '',
+            record.image || '',
+            record.website || '',
+            record.published !== false
+        ]
+    );
+    return rowToWellnessClub(r.rows[0]);
+}
+
+async function updateWellnessClubPartner(id, record) {
+    const p = getPool();
+    const r = await p.query(
+        `UPDATE wellness_club_partners SET
+            slug = $2,
+            name = $3,
+            description = $4,
+            category = $5,
+            city = $6,
+            image = $7,
+            website = $8,
+            published = $9,
+            updated_at = NOW()
+         WHERE id = $1
+         RETURNING *`,
+        [
+            id,
+            record.slug,
+            record.name,
+            record.description || '',
+            record.category,
+            record.city || '',
+            record.image || '',
+            record.website || '',
+            record.published !== false
+        ]
+    );
+    return rowToWellnessClub(r.rows[0]);
+}
+
+async function deleteWellnessClubPartner(id) {
+    const p = getPool();
+    const r = await p.query(`DELETE FROM wellness_club_partners WHERE id = $1 RETURNING id`, [id]);
+    return r.rowCount > 0;
+}
+
+async function wellnessClubSlugTaken(slug, excludeId) {
+    const p = getPool();
+    const r = await p.query(
+        `SELECT 1 FROM wellness_club_partners WHERE slug = $1 AND ($2::uuid IS NULL OR id <> $2) LIMIT 1`,
+        [slug, excludeId || null]
+    );
+    return r.rowCount > 0;
+}
+
 module.exports = {
     getPool,
     isDatabaseEnabled,
@@ -4804,6 +4918,12 @@ module.exports = {
     getStaffDocument,
     deleteStaffDocument,
     insertProducer,
+    listWellnessClubPartners,
+    countWellnessClubPartners,
+    insertWellnessClubPartner,
+    updateWellnessClubPartner,
+    deleteWellnessClubPartner,
+    wellnessClubSlugTaken,
     listProducers,
     findProducerById,
     findProducerBySlug,

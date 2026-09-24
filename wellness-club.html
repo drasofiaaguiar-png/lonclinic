@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experiências de wellness | Lon Clinic</title>
-    <meta name="description" content="Diretório de experiências de wellness — termas, yoga, natureza e longevidade. Filtre por país, cidade e categoria.">
+    <title>LON Wellness Club | Lon Clinic</title>
+    <meta name="description" content="Marketplace de parceiros de wellness — pilates, yoga, treino, massagem e movimento. Filtre por categoria e cidade.">
     <meta name="robots" content="index,follow,max-image-preview:large">
-    <link rel="canonical" href="https://www.lonclinic.com/wellness">
+    <link rel="canonical" href="https://www.lonclinic.com/wellness/club">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.lonclinic.com/wellness">
-    <meta property="og:title" content="Experiências de wellness | Lon Clinic">
-    <meta property="og:description" content="Termas, retiros e programas de recuperação — filtrados por país, cidade e categoria.">
+    <meta property="og:url" content="https://www.lonclinic.com/wellness/club">
+    <meta property="og:title" content="LON Wellness Club | Lon Clinic">
+    <meta property="og:description" content="Parceiros de pilates, yoga, treino e movimento, com imagem e descrição.">
     <meta property="og:locale" content="pt_PT">
     <meta property="og:site_name" content="Lon Clinic">
     <meta name="theme-color" content="#5f6642">
     <link rel="stylesheet" href="/landing.css?v=20260921n">
     <link rel="stylesheet" href="/wellness.css?v=wellness-1">
+    <link rel="stylesheet" href="/wellness-club.css?v=club-1">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:ital,wght@1,500&display=swap" rel="stylesheet">
@@ -24,14 +25,14 @@
     {
       "@context": "https://schema.org",
       "@type": "CollectionPage",
-      "name": "Experiências de wellness",
-      "url": "https://www.lonclinic.com/wellness",
+      "name": "LON Wellness Club",
+      "url": "https://www.lonclinic.com/wellness/club",
       "isPartOf": { "@type": "WebSite", "name": "Lon Clinic", "url": "https://www.lonclinic.com" },
       "inLanguage": "pt-PT"
     }
     </script>
 </head>
-<body class="lon-landing wx-page" data-wx-page="list">
+<body class="lon-landing wx-page" data-wx-page="club">
     <a class="lon-skip" href="#conteudo-principal">Saltar para o conteúdo</a>
     <header class="lon-nav" id="lonNav">
         <div class="lon-container lon-nav-inner">
@@ -60,6 +61,7 @@
                 <a href="/saudemental">Psicologia</a>
                 <a href="/nutricao">Nutrição</a>
                 <a href="/magazine">Magazine</a>
+                <a href="/wellness/club" aria-current="page">Wellness Club</a>
                 <a href="/equipa">Equipa</a>
             </nav>
 
@@ -84,6 +86,7 @@
             <a href="/saudemental">Psicologia</a>
             <a href="/nutricao">Nutrição</a>
             <a href="/magazine">Magazine</a>
+            <a href="/wellness/club">Wellness Club</a>
             <a href="/equipa">Equipa</a>
             <a href="/patient-portal">Login</a>
             <a href="/#servicos">Marcar consulta</a>
@@ -92,40 +95,31 @@
 
     <main class="wx-main" id="conteudo-principal">
         <div class="wx-hero">
-            <p class="wx-kicker">Diretório</p>
-            <h1>Experiências de wellness</h1>
-            <p>Termas, retiros e programas de recuperação — curados, não operados pela Lon Clinic. Filtre por país, cidade e categoria. Parceiros de pilates, yoga e movimento estão no <a href="/wellness/club">LON Wellness Club</a>.</p>
+            <p class="wx-kicker">Marketplace</p>
+            <h1>LON Wellness Club</h1>
+            <p>Parceiros de pilates, yoga, treino e movimento. Cada cartão traz imagem e descrição. A marcação é feita com o espaço.</p>
         </div>
 
-        <form class="wx-filters" id="wxFilters" role="search" aria-label="Filtrar experiências">
-            <input type="search" id="wxQ" name="q" placeholder="Pesquisar…" autocomplete="off">
-            <select id="wxCountry" name="country" aria-label="País">
-                <option value="">Todos os países</option>
-            </select>
-            <select id="wxCity" name="city" aria-label="Cidade">
-                <option value="">Todas as cidades</option>
-            </select>
-            <select id="wxCategory" name="category" aria-label="Categoria">
+        <form class="wx-filters wclub-filters" id="wclubFilters" role="search" aria-label="Filtrar parceiros">
+            <input type="search" id="wclubQ" name="q" placeholder="Pesquisar parceiro…" autocomplete="off">
+            <select id="wclubCategory" name="category" aria-label="Categoria">
                 <option value="">Todas as categorias</option>
             </select>
-            <select id="wxDuration" name="duration" aria-label="Duração">
-                <option value="">Qualquer duração</option>
-            </select>
-            <select id="wxSetting" name="setting" aria-label="Ambiente">
-                <option value="">Qualquer ambiente</option>
+            <select id="wclubCity" name="city" aria-label="Cidade">
+                <option value="">Todas as cidades</option>
             </select>
         </form>
 
         <div class="wx-toolbar">
-            <p class="wx-count" id="wxCount" aria-live="polite">A carregar…</p>
-            <button type="button" class="wx-clear" id="wxClear" hidden>Limpar filtros</button>
+            <p class="wx-count" id="wclubCount" aria-live="polite">A carregar…</p>
+            <button type="button" class="wx-clear" id="wclubClear" hidden>Limpar filtros</button>
         </div>
 
-        <div id="wxGrid" class="wx-grid">
+        <div id="wclubGrid" class="wx-grid">
             <p class="wx-empty">A carregar…</p>
         </div>
 
-        <p class="wx-note">Estas experiências são independentes da Lon Clinic e não substituem uma consulta médica. A marcação é feita com cada espaço. Em situação de emergência, ligue 112.</p>
+        <p class="wx-note">Estes parceiros são independentes da Lon Clinic e não substituem uma consulta médica. Em situação de emergência, ligue 112.</p>
     </main>
 
     <footer class="lon-footer">
@@ -144,18 +138,18 @@
                     <a href="/#servicos">Serviços</a>
                     <a href="/wellness">Wellness</a>
                     <a href="/wellness/club">Wellness Club</a>
-                    <a href="/info.html?page=sobre-nos">Sobre nós</a>
+                    <a href="/info/sobre-nos">Sobre nós</a>
                 </div>
                 <div class="lon-footer-col">
                     <h4>Apoio</h4>
                     <a href="/faq">Perguntas frequentes</a>
-                    <a href="/info.html?page=contato">Contacto</a>
+                    <a href="/info/contato">Contacto</a>
                 </div>
             </div>
             <div class="lon-footer-bottom">
                 <div class="lon-footer-legal-links">
-                    <a href="/info.html?page=termos-condicoes">Termos e condições</a>
-                    <a href="/info.html?page=politica-privacidade">Política de privacidade</a>
+                    <a href="/info/termos-condicoes">Termos e condições</a>
+                    <a href="/info/politica-privacidade">Política de privacidade</a>
                 </div>
                 <p>© 2026 Lon Clinic · Portugal</p>
             </div>
@@ -163,7 +157,7 @@
     </footer>
 
     <script src="/lon-nav.js"></script>
-    <script src="/wellness-page.js?v=wellness-1"></script>
+    <script src="/wellness-club-page.js?v=club-1"></script>
     <script src="/lon-mega.js?v=20260921b" defer></script>
 </body>
 </html>
