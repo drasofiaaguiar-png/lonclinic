@@ -1050,7 +1050,8 @@ const BURNOUT_SINAIS_CTA_SLUGS = new Set([
 ]);
 const BURNOUT_B2B_SLUGS = new Set([
     'como-as-empresas-podem-prevenir-o-burnout',
-    'como-saber-se-a-equipa-esta-motivada'
+    'como-saber-se-a-equipa-esta-motivada',
+    'beneficios-bem-estar-colaboradores'
 ]);
 
 function burnoutMapLinks(slug) {
@@ -1101,7 +1102,13 @@ function burnoutMapLinks(slug) {
         'o-que-e-burnout': [pillar('o que é o burnout'), psy],
         'como-as-empresas-podem-prevenir-o-burnout': [
             b2b,
+            { href: '/blog/beneficios-bem-estar-colaboradores', text: 'bem-estar para colaboradores' },
             { href: '/blog/como-saber-se-a-equipa-esta-motivada', text: 'como saber se a equipa está motivada' },
+            pillar('o que é o burnout')
+        ],
+        'beneficios-bem-estar-colaboradores': [
+            b2b,
+            empresas,
             pillar('o que é o burnout')
         ],
         'como-saber-se-a-equipa-esta-motivada': [b2b, empresas, pillar('o que é o burnout')]

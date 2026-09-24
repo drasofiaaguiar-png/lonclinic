@@ -1,6 +1,392 @@
 {
     "articles": [
         {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "liveSlots": true,
+            "ctaKind": "clinica_geral",
+            "readingMinutes": 7,
+            "slug": "massagem-lisboa",
+            "title": "Massagem em Lisboa: tipos, benefícios e como escolher",
+            "description": "Relaxamento, desportiva, tecidos profundos ou drenagem? Os tipos de massagem, o que diz a evidência sobre stress e dor, e como escolher em Lisboa.",
+            "about": "Massagem",
+            "image": "/image/funcional-hero-janela.webp",
+            "related": [
+                "pausas-ativas-no-trabalho",
+                "yoga-lisboa",
+                "/wellness/club",
+                "/medico-online-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Qual a melhor massagem para o stress?",
+                    "a": "A massagem de relaxamento é a mais indicada para aliviar o stress, por ser suave e contínua. O mais importante é sentir-se confortável com a pressão."
+                },
+                {
+                    "q": "De quanto em quanto tempo devo fazer massagem?",
+                    "a": "Depende do objetivo e do orçamento. Para relaxamento, uma vez por mês é comum. Para recuperação do treino, pode ser mais frequente."
+                },
+                {
+                    "q": "Massagem ou fisioterapia para a dor nas costas?",
+                    "a": "Para dor que dura ou que resulta de uma lesão, a fisioterapia é mais indicada, porque inclui avaliação e exercícios. A massagem pode aliviar a curto prazo."
+                },
+                {
+                    "q": "A massagem pode fazer mal?",
+                    "a": "Em geral é segura, mas deve ser evitada em algumas situações, como febre, trombose, feridas ou lesões recentes."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "liveSlots": true,
+            "ctaKind": "mental",
+            "readingMinutes": 7,
+            "slug": "yoga-lisboa",
+            "title": "Yoga em Lisboa: estilos, benefícios e como escolher",
+            "description": "Hatha, vinyasa, yin ou restaurativo? Os estilos de yoga, o que diz a evidência sobre stress e dor, e como escolher aulas de yoga em Lisboa.",
+            "about": "Yoga",
+            "image": "/image/funcional-yoga.webp",
+            "related": [
+                "beneficios-do-pilates",
+                "pilates-lisboa-como-escolher-estudio",
+                "massagem-lisboa",
+                "/wellness/club"
+            ],
+            "faq": [
+                {
+                    "q": "Qual o melhor estilo de yoga para iniciantes?",
+                    "a": "Hatha e restaurativo são os mais acessíveis, por terem um ritmo calmo e posturas mais simples."
+                },
+                {
+                    "q": "O yoga ajuda na ansiedade?",
+                    "a": "Sim, os estudos mostram uma redução moderada dos sintomas de ansiedade e stress. Não substitui tratamento quando a ansiedade é intensa ou persistente."
+                },
+                {
+                    "q": "Yoga ou pilates?",
+                    "a": "O yoga trabalha mais a flexibilidade e inclui muitas vezes meditação; o pilates foca-se mais na força do tronco e no controlo do movimento. Ambos ajudam a gerir o stress."
+                },
+                {
+                    "q": "Preciso de ser flexível para fazer yoga?",
+                    "a": "Não. A flexibilidade é um resultado da prática, não um requisito para começar."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "liveSlots": true,
+            "ctaKind": "general",
+            "readingMinutes": 6,
+            "slug": "onde-jogar-padel-lisboa",
+            "title": "Onde jogar padel em Lisboa: como escolher um clube",
+            "description": "Campos cobertos ou exteriores, preços, reservas, aulas e jogos por nível. Um guia para escolher onde jogar padel em Lisboa.",
+            "about": "Padel",
+            "image": "/image/hero-run.webp",
+            "related": [
+                "beneficios-do-padel",
+                "/wellness/club"
+            ],
+            "faq": [
+                {
+                    "q": "Onde posso jogar padel em Lisboa?",
+                    "a": "Há clubes de padel em várias zonas da cidade e arredores. Escolha pela localização, pelo tipo de campos e pelas condições de reserva."
+                },
+                {
+                    "q": "Preciso de levar raquete?",
+                    "a": "Não necessariamente. Muitos clubes alugam raquetes, o que é útil para experimentar antes de comprar."
+                },
+                {
+                    "q": "Posso jogar padel sozinho?",
+                    "a": "O padel joga-se a quatro, mas muitos clubes e aplicações permitem juntar-se a jogos abertos com outros jogadores do seu nível."
+                },
+                {
+                    "q": "Padel coberto ou ao ar livre?",
+                    "a": "Coberto dá mais regularidade ao longo do ano; ao ar livre é mais agradável com bom tempo."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "author": "rita-aguiar",
+            "verified": true,
+            "liveSlots": true,
+            "ctaKind": "burnout",
+            "readingMinutes": 8,
+            "slug": "beneficios-bem-estar-colaboradores",
+            "title": "Bem-estar para colaboradores: alternativas ao Wellhub",
+            "description": "Ginásios, seguros, apoio psicológico ou programas de burnout? Compare as opções de benefícios de bem-estar para colaboradores em Portugal.",
+            "about": "Burnout",
+            "image": "/image/guide/guide-country-road.jpg",
+            "related": [
+                "como-as-empresas-podem-prevenir-o-burnout",
+                "/clinica-anti-burnout",
+                "/wellness/club"
+            ],
+            "faq": [
+                {
+                    "q": "O que é o Wellhub?",
+                    "a": "É uma plataforma, antes chamada Gympass, que dá aos colaboradores acesso a ginásios, estúdios e apps de bem-estar. A empresa paga o benefício; o colaborador escolhe um plano e pode pagar uma mensalidade."
+                },
+                {
+                    "q": "Qual a diferença entre um benefício de ginásio e um programa de burnout?",
+                    "a": "O benefício de ginásio incentiva a atividade física. Um programa de burnout identifica os riscos de saúde mental nas equipas e dá apoio a quem precisa."
+                },
+                {
+                    "q": "Os resultados do rastreio são confidenciais?",
+                    "a": "Num programa bem desenhado, sim. A empresa recebe apenas resultados agregados e anónimos."
+                },
+                {
+                    "q": "As empresas são obrigadas a prevenir o burnout?",
+                    "a": "A lei portuguesa obriga as empresas a avaliar e prevenir os riscos no trabalho, incluindo os psicossociais, como o stress crónico."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "verified": true,
+            "liveSlots": true,
+            "author": "rita-aguiar",
+            "ctaKind": "burnout",
+            "readingMinutes": 6,
+            "slug": "como-recuperar-de-um-burnout",
+            "title": "Como recuperar de um burnout: o papel do exercício",
+            "description": "Burnout: o que fazer primeiro, como recuperar e como o exercício físico ajuda na saúde mental. Um guia prático, revisto por uma médica.",
+            "about": "Burnout",
+            "image": "/image/guide/guide-country-road.jpg",
+            "related": [
+                "quanto-tempo-demora-a-recuperar-de-um-burnout",
+                "exercicio-fisico-e-depressao",
+                "o-que-e-burnout",
+                "/burnout/recuperacao",
+                "/clinica-anti-burnout"
+            ],
+            "faq": [
+                {
+                    "q": "Quanto tempo demora a recuperar de um burnout?",
+                    "a": "Varia muito. Pode levar semanas nos casos mais ligeiros e vários meses nos mais graves. Depende da intensidade dos sintomas, do apoio e de conseguir mudar as condições que levaram ao burnout."
+                },
+                {
+                    "q": "O exercício trata o burnout?",
+                    "a": "Não sozinho. Ajuda a reduzir o stress e a exaustão e está associado a melhor saúde mental, dentro de um plano que inclui descanso, sono, limites e apoio."
+                },
+                {
+                    "q": "Por onde começar a recuperar?",
+                    "a": "Reconhecer os sinais, falar com um médico, rever a carga, proteger o sono e procurar apoio psicológico. O movimento volta de forma gradual."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "verified": false,
+            "liveSlots": true,
+            "ctaKind": "mental",
+            "readingMinutes": 6,
+            "slug": "beneficios-do-pilates",
+            "title": "Benefícios do pilates: o que diz a evidência",
+            "description": "Força, postura, dor lombar, stress e ansiedade: os benefícios do pilates segundo a evidência, os seus limites e para quem é indicado.",
+            "about": "Pilates",
+            "image": "/image/funcional-yoga.webp",
+            "related": [
+                "pilates-lisboa-como-escolher-estudio",
+                "pilates-clinico",
+                "pausas-ativas-no-trabalho",
+                "/wellness/club"
+            ],
+            "faq": [
+                {
+                    "q": "Quais são os principais benefícios do pilates?",
+                    "a": "Mais força no tronco, melhor postura, mais flexibilidade e equilíbrio, e alívio da dor lombar crónica. O efeito no stress e na ansiedade tem evidência ainda limitada."
+                },
+                {
+                    "q": "Pilates ou yoga?",
+                    "a": "O pilates foca-se mais na força do tronco e no controlo do movimento. O yoga inclui mais flexibilidade, equilíbrio e, em muitos estilos, meditação."
+                },
+                {
+                    "q": "Quantas vezes por semana fazer pilates?",
+                    "a": "Nas primeiras semanas, duas aulas por semana é um ponto de partida razoável. A frequência seguinte depende do objetivo e de como o corpo responde."
+                },
+                {
+                    "q": "O pilates trata a ansiedade?",
+                    "a": "Pode ajudar a reduzir o stress e a ansiedade, mas os estudos são ainda pequenos e não substitui tratamento quando o stress é um problema de saúde."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "verified": false,
+            "liveSlots": true,
+            "ctaKind": "general",
+            "readingMinutes": 6,
+            "slug": "pilates-lisboa-como-escolher-estudio",
+            "title": "Pilates em Lisboa: como escolher um estúdio",
+            "description": "Solo ou reformer, clássico ou clínico, aulas de grupo ou individuais? Como escolher um estúdio de pilates em Lisboa, sobretudo se é iniciante.",
+            "about": "Pilates",
+            "image": "/image/funcional-yoga.webp",
+            "related": [
+                "beneficios-do-pilates",
+                "pilates-clinico",
+                "/wellness/club"
+            ],
+            "faq": [
+                {
+                    "q": "Como escolher aulas de pilates em Lisboa?",
+                    "a": "Veja a formação dos instrutores, o tamanho das turmas, se é solo, reformer, clássico ou clínico, se há avaliação inicial, a localização, os horários e se pode experimentar antes."
+                },
+                {
+                    "q": "O que é o pilates reformer?",
+                    "a": "É a máquina mais usada no pilates: uma plataforma que desliza sobre carris, com molas que dão resistência ou apoio. As aulas são em turmas pequenas e custam mais do que o solo."
+                },
+                {
+                    "q": "Como começar pilates se sou iniciante?",
+                    "a": "Comece com uma aula experimental, em turma pequena ou individual, diga ao instrutor se tem dor ou lesões, e aponte para duas aulas por semana nas primeiras semanas."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "verified": false,
+            "liveSlots": true,
+            "ctaKind": "mental",
+            "readingMinutes": 6,
+            "slug": "beneficios-do-padel",
+            "title": "Benefícios do padel: corpo, cabeça e como começar",
+            "description": "O padel é bom exercício e faz bem à saúde mental. Conheça os benefícios, como começar se é iniciante e como evitar as lesões mais comuns.",
+            "about": "Padel",
+            "image": "/image/hero-run.webp",
+            "related": [
+                "onde-jogar-padel-lisboa",
+                "pausas-ativas-no-trabalho",
+                "como-recuperar-de-um-burnout",
+                "/wellness/club"
+            ],
+            "faq": [
+                {
+                    "q": "O padel é bom exercício?",
+                    "a": "Sim. Trabalha o coração, a agilidade, a coordenação e a força. Convém complementá-lo com treino de força durante a semana."
+                },
+                {
+                    "q": "Como começar padel se sou iniciante?",
+                    "a": "Com algumas aulas, jogos ao seu nível, raquete leve e calçado próprio. Uma ou duas vezes por semana chega nas primeiras semanas."
+                },
+                {
+                    "q": "O padel faz bem à saúde mental?",
+                    "a": "Está associado a melhor saúde mental porque junta exercício, jogo e convívio. Não trata problemas de saúde mental por si só."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "verified": false,
+            "liveSlots": true,
+            "ctaKind": "clinica_geral",
+            "readingMinutes": 5,
+            "slug": "pausas-ativas-no-trabalho",
+            "title": "Pausas ativas no trabalho: guia para quem trabalha sentado",
+            "description": "Os riscos do sedentarismo, como fazer pausas ativas, exercícios à secretária e ergonomia do posto de trabalho. Um guia prático para o escritório.",
+            "about": "Trabalho sentado",
+            "image": "/image/funcional-hero-janela.webp",
+            "related": [
+                "beneficios-do-pilates",
+                "como-recuperar-de-um-burnout",
+                "/medico-online-portugal"
+            ],
+            "faq": [
+                {
+                    "q": "Porque é que tenho dor nas costas quando trabalho ao computador?",
+                    "a": "Normalmente resulta de muitas horas na mesma posição, de um posto de trabalho mal ajustado e de falta de movimento. Pausas regulares, um ecrã à altura dos olhos e exercício de força ajudam. Se a dor dura semanas, piora ou vem com formigueiros ou perda de força, procure um médico."
+                },
+                {
+                    "q": "De quanto em quanto tempo devo fazer uma pausa?",
+                    "a": "De 2 a 3 minutos a cada 30 a 60 minutos, para se levantar e mexer."
+                },
+                {
+                    "q": "As pausas ativas substituem o exercício?",
+                    "a": "Não. Reduzem o tempo seguido sentado. A atividade física ao longo da semana continua a fazer falta."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "verified": true,
+            "liveSlots": true,
+            "author": "rita-aguiar",
+            "ctaKind": "clinica_geral",
+            "readingMinutes": 8,
+            "slug": "pilates-clinico",
+            "title": "Pilates clínico: o que é, para quem é e quando é indicado",
+            "description": "O pilates clínico adapta o método a dor, lesões e condições de saúde. Saiba como funciona, para quem é indicado e como escolher em Lisboa.",
+            "about": "Pilates clínico",
+            "image": "/image/funcional-yoga.webp",
+            "related": [
+                "beneficios-do-pilates",
+                "pilates-lisboa-como-escolher-estudio",
+                "/medico-online-portugal",
+                "/wellness/club"
+            ],
+            "faq": [
+                {
+                    "q": "O pilates clínico é feito por fisioterapeutas?",
+                    "a": "Geralmente sim. É orientado por profissionais de saúde, na maioria dos casos fisioterapeutas com formação em pilates."
+                },
+                {
+                    "q": "Pilates clínico ou pilates normal?",
+                    "a": "Se tem dor, uma lesão ou uma condição de saúde, o pilates clínico é mais seguro. Se não tem limitações e procura condição física geral, o pilates tradicional é suficiente."
+                },
+                {
+                    "q": "O pilates clínico ajuda na dor lombar?",
+                    "a": "Sim. A evidência mostra benefícios na dor lombar crónica, semelhantes aos de outros tipos de exercício."
+                },
+                {
+                    "q": "Posso fazer pilates clínico durante a gravidez?",
+                    "a": "Pode, com autorização do seu médico ou obstetra e com um profissional com experiência em gravidez."
+                }
+            ]
+        },
+        {
             "datePublished": "2026-09-23",
             "dateModified": "2026-09-23",
             "format": "markdown",
@@ -8078,8 +8464,7 @@
                     "q": "Quando devo procurar um médico?",
                     "a": "Se os sintomas persistem há mais de duas semanas, afetam o sono, a concentração ou as relações pessoais, ou se sente que o descanso já não é suficiente para recuperar energia."
                 }
-            ],
-            "liveSlots": true
+            ]
         },
         {
             "slug": "9-sinais-de-burnout-no-trabalho",
@@ -8244,6 +8629,7 @@
             "verified": false,
             "readingMinutes": 3,
             "related": [
+                "como-recuperar-de-um-burnout",
                 "reconstruir-a-motivacao-depois-de-um-burnout",
                 "regressar-ao-trabalho-depois-de-um-burnout",
                 "/burnout/recuperacao"
@@ -8421,6 +8807,7 @@
             "verified": false,
             "readingMinutes": 4,
             "related": [
+                "beneficios-bem-estar-colaboradores",
                 "como-saber-se-a-equipa-esta-motivada",
                 "9-sinais-de-burnout-no-trabalho",
                 "/burnout/ambiente-de-trabalho-saudavel",

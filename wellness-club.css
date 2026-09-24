@@ -141,6 +141,28 @@ a.wclub-card {
     padding-top: 22px;
 }
 
+.wclub-guides {
+    margin-top: 28px;
+}
+
+.wclub-guides h2 {
+    margin: 0 0 10px;
+    font-size: 1.15rem;
+}
+
+.wclub-guides ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 6px;
+}
+
+.wclub-guides a {
+    color: var(--wx-olive-deep, #4a5134);
+    font-weight: 600;
+}
+
 .wclub-site {
     display: inline-block;
     margin-top: 4px;
