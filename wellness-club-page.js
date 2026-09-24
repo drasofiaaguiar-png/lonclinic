@@ -37,7 +37,7 @@
             ? '<img class="wx-card-photo" src="' + escapeHtml(partner.image) + '" alt="" loading="lazy" decoding="async">'
             : '<div class="wx-card-photo is-empty">Sem imagem</div>';
         const reveal = partner.hasCodes
-            ? '<button type="button" class="wclub-reveal" data-slug="' + escapeHtml(partner.slug) + '">Ver códigos</button>' +
+            ? '<button type="button" class="wclub-reveal" data-slug="' + escapeHtml(partner.slug) + '">' + escapeHtml(partner.revealLabel || 'Ver códigos') + '</button>' +
               '<div class="wclub-codes" hidden></div>'
             : '';
         return '<article class="wx-card wclub-card" data-website="' + escapeHtml(partner.website || '') + '">' +

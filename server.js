@@ -3596,7 +3596,7 @@ async function ensureWellnessClubSeed() {
             await db.insertWellnessClubPartner(row);
             continue;
         }
-        const refresh = row.slug === 'soul-circle';
+        const refresh = row.slug === 'soul-circle' || row.slug === 'clube-de-padel';
         if (existing.published !== row.published || refresh) {
             await db.updateWellnessClubPartner(existing.id, {
                 slug: existing.slug,

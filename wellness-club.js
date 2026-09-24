@@ -8,7 +8,8 @@ const CATEGORIES = [
     { id: 'treino', label: 'Treino' },
     { id: 'massagem', label: 'Massagem' },
     { id: 'meditacao', label: 'Meditação' },
-    { id: 'movimento', label: 'Movimento' }
+    { id: 'movimento', label: 'Movimento' },
+    { id: 'padel', label: 'Padel' }
 ];
 
 const CATEGORY_IDS = new Set(CATEGORIES.map((c) => c.id));
@@ -96,6 +97,24 @@ const SEED = [
         image: '/image/funcional-yoga.webp',
         website: 'https://soulcirclepilates.com',
         published: true
+    },
+    {
+        id: '11111111-1111-4111-8111-111111111108',
+        slug: 'clube-de-padel',
+        name: 'Clube de Padel',
+        subtitle: 'Doca de Santo Amaro, Lisboa',
+        priceLabel: '5%',
+        revealLabel: 'Ver condições',
+        description: 'Reservas de campos e eventos na Doca de Santo Amaro.',
+        codes: [
+            { code: 'Protocolo', detail: '5% de desconto nas reservas de campos para clientes LON Clinic.' },
+            { code: 'Eventos', detail: 'Torneios em breve, incluindo o Torneio Carlsberg.' }
+        ],
+        category: 'padel',
+        city: 'Lisboa',
+        image: '/image/hero-run.webp',
+        website: 'https://www.clubedepadel.pt/',
+        published: true
     }
 ];
 
@@ -160,6 +179,7 @@ function toPublic(row) {
         description: row.description,
         category: row.category,
         hasCodes: Array.isArray(row.codes) && row.codes.length > 0,
+        revealLabel: row.revealLabel || '',
         categoryLabel: categoryLabel(row.category),
         city: row.city,
         image: row.image || '',
