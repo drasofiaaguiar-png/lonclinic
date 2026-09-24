@@ -92,10 +92,11 @@
     }
 
     function ctaHtml() {
-        return '<a class="wx-card wclub-cta" href="mailto:info@lonclinic.com?subject=Parceria%20LON%20Wellness%20Club">' +
-            '<div class="wclub-cta-panel">' +
-            '<h2>Quer ser parceiro?</h2>' +
-            '<p>Estúdios e espaços de movimento. Escreva-nos e o cartão entra nesta página.</p>' +
+        return '<a class="wx-card wclub-cta" href="https://wa.me/351928372775?text=Ol%C3%A1%2C%20quero%20ser%20parceiro%20do%20LON%20Wellness%20Club." target="_blank" rel="noopener noreferrer">' +
+            '<div class="wclub-cta-panel" aria-hidden="true"></div>' +
+            '<div class="wx-card-body">' +
+            '<h2 class="wx-card-title">Quer ser parceiro?</h2>' +
+            '<p class="wclub-sub">Estúdios e espaços de movimento. Escreva-nos e o cartão entra nesta página.</p>' +
             '<span class="wclub-reveal">Falar connosco</span>' +
             '</div></a>';
     }
