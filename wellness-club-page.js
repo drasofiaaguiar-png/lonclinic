@@ -93,25 +93,11 @@
 
     function ctaHtml() {
         return '<a class="wx-card wclub-cta" href="mailto:info@lonclinic.com?subject=Parceria%20LON%20Wellness%20Club">' +
-            '<div class="wx-card-photo-wrap wclub-cta-panel"><p>Quer ser parceiro?</p></div>' +
-            '<div class="wx-card-body">' +
-            '<p class="wclub-sub">Estúdios e espaços de movimento. Escreva-nos e o cartão entra nesta página.</p>' +
+            '<h2>Quer ser parceiro?</h2>' +
+            '<p>Estúdios e espaços de movimento. Escreva-nos e o cartão entra nesta página.</p>' +
             '<span class="wclub-reveal">Falar connosco</span>' +
-            '</div></a>';
+            '</a>';
     }
-
-    function placeCta() {
-        const cta = grid.querySelector('.wclub-cta');
-        if (!cta) return;
-        const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length || 1;
-        const partners = grid.querySelectorAll('.wclub-card:not(.wclub-cta)').length;
-        const remainder = partners % cols;
-        const span = remainder === 0 ? cols : cols - remainder;
-        cta.style.gridColumn = 'span ' + span;
-        cta.classList.toggle('is-wide', span > 1);
-    }
-
-    window.addEventListener('resize', placeCta);
 
     function filtersActive() {
         return Boolean(
@@ -149,7 +135,6 @@
             }
             const empty = n ? '' : '<p class="wx-empty">Nenhum parceiro com estes filtros.</p>';
             grid.innerHTML = empty + partners.map(cardHtml).join('') + ctaHtml();
-            placeCta();
         } catch (err) {
             if (id !== requestId) return;
             grid.innerHTML = '<p class="wx-error">Não foi possível carregar os parceiros.</p>';

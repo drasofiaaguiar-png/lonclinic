@@ -79,41 +79,32 @@ a.wclub-card {
 }
 
 .wclub-cta {
-    background: #fff;
-    color: inherit;
+    grid-column: span 1;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 22px 20px 20px;
+    background: #3a4028;
+    color: #f7f4ea;
 }
 
-.wclub-cta-panel {
-    display: flex;
-    align-items: center;
-    padding: 18px;
-    background:
-        radial-gradient(ellipse 80% 80% at 100% 0%, rgba(255, 255, 255, 0.18), transparent 55%),
-        #5f6642;
-}
-
-.wclub-cta-panel p {
+.wclub-cta h2 {
     margin: 0;
-    font-family: "Cormorant Garamond", Georgia, serif;
-    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-size: clamp(1.8rem, 2.5vw, 2.35rem);
     font-weight: 600;
     line-height: 1.05;
     color: #f7f4ea;
 }
 
-.wclub-cta.is-wide {
-    flex-direction: row;
-    align-items: stretch;
+.wclub-cta p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    color: rgba(247, 244, 234, 0.9);
 }
 
-.wclub-cta.is-wide .wclub-cta-panel {
-    width: min(340px, 42%);
-    aspect-ratio: auto;
-    flex: none;
-}
-
-.wclub-cta.is-wide .wx-card-body {
-    justify-content: center;
+.wclub-cta .wclub-reveal {
+    background: #f3efe3;
+    color: #3a4028;
 }
 
 .wclub-site {
