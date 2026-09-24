@@ -93,11 +93,21 @@
 
     function ctaHtml() {
         return '<a class="wx-card wclub-cta" href="mailto:info@lonclinic.com?subject=Parceria%20LON%20Wellness%20Club">' +
+            '<div class="wclub-cta-panel">' +
             '<h2>Quer ser parceiro?</h2>' +
             '<p>Estúdios e espaços de movimento. Escreva-nos e o cartão entra nesta página.</p>' +
             '<span class="wclub-reveal">Falar connosco</span>' +
-            '</a>';
+            '</div></a>';
     }
+
+    function matchCtaPanel() {
+        const photo = grid.querySelector('.wx-card-photo-wrap');
+        const panel = grid.querySelector('.wclub-cta-panel');
+        if (!photo || !panel) return;
+        panel.style.height = Math.round(photo.getBoundingClientRect().height) + 'px';
+    }
+
+    window.addEventListener('resize', matchCtaPanel);
 
     function filtersActive() {
         return Boolean(
@@ -135,6 +145,10 @@
             }
             const empty = n ? '' : '<p class="wx-empty">Nenhum parceiro com estes filtros.</p>';
             grid.innerHTML = empty + partners.map(cardHtml).join('') + ctaHtml();
+            grid.querySelectorAll('.wx-card-photo').forEach((img) => {
+                if (!img.complete) img.addEventListener('load', matchCtaPanel, { once: true });
+            });
+            matchCtaPanel();
         } catch (err) {
             if (id !== requestId) return;
             grid.innerHTML = '<p class="wx-error">Não foi possível carregar os parceiros.</p>';

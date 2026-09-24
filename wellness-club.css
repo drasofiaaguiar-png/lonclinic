@@ -80,16 +80,28 @@ a.wclub-card {
 
 .wclub-cta {
     grid-column: span 1;
-    justify-content: flex-start;
-    gap: 12px;
-    padding: 22px 20px 20px;
+    align-self: start;
+    padding: 0;
+    background: #fff;
+}
+
+.wclub-cta-panel {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 100%;
+    min-height: 0;
+    aspect-ratio: auto;
+    padding: 18px;
     background: #3a4028;
     color: #f7f4ea;
 }
 
 .wclub-cta h2 {
     margin: 0;
-    font-size: clamp(1.8rem, 2.5vw, 2.35rem);
+    font-size: 1.55rem;
     font-weight: 600;
     line-height: 1.05;
     color: #f7f4ea;
@@ -97,8 +109,8 @@ a.wclub-card {
 
 .wclub-cta p {
     margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.45;
+    font-size: 0.84rem;
+    line-height: 1.35;
     color: rgba(247, 244, 234, 0.9);
 }
 
