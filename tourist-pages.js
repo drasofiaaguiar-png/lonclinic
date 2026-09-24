@@ -4,7 +4,8 @@
  * These are product landings, not magazine articles (editorial goes to /blog/:slug).
  */
 
-'use strict';const __lonHeader = require('./lon-header');
+'use strict';
+const __lonHeader = require('./lon-header');
 
 
 const fs = require('fs');
@@ -794,7 +795,8 @@ function layoutPage(opts) {
         ui,
         hreflang,
         ogAlts,
-        bookingHref
+        bookingHref,
+        authorName
     } = opts;
 
     const canonicalUrl = canonicalHref(canonicalPath);
@@ -827,7 +829,7 @@ function layoutPage(opts) {
     <title>${safeTitle}</title>
     <meta name="description" content="${safeDesc}">
     <meta name="robots" content="index,follow,max-image-preview:large">
-    <meta name="author" content="${escapeHtml(authors.getAuthor().displayName)}">
+    <meta name="author" content="${escapeHtml(authorName || authors.getAuthor().displayName)}">
     <link rel="canonical" href="${escapeHtml(canonicalUrl)}">
     ${hreflang}
     <meta property="og:type" content="${ogType}">
@@ -880,14 +882,14 @@ ${__lonHeader.renderHeaderScripts(false)}
                 <div class="lon-footer-col">
                     <h4>${escapeHtml(ui.footerSupport)}</h4>
                     <a href="/faq">FAQ</a>
-                    <a href="/info.html?page=contato">${escapeHtml(ui.contact)}</a>
+                    <a href="/info/contato">${escapeHtml(ui.contact)}</a>
                     <a href="${book}" data-cta="book">${escapeHtml(ui.navBook)}</a>
                 </div>
                 <div class="lon-footer-col">
                     <h4>Legal</h4>
-                    <a href="/info.html?page=termos-condicoes">${escapeHtml(ui.terms)}</a>
-                    <a href="/info.html?page=politica-privacidade">${escapeHtml(ui.privacy)}</a>
-                    <a href="/info.html?page=cookies">${escapeHtml(ui.cookies)}</a>
+                    <a href="/info/termos-condicoes">${escapeHtml(ui.terms)}</a>
+                    <a href="/info/politica-privacidade">${escapeHtml(ui.privacy)}</a>
+                    <a href="/info/cookies">${escapeHtml(ui.cookies)}</a>
                 </div>
             </div>
             <div class="lon-footer-bottom">
@@ -898,7 +900,7 @@ ${__lonHeader.renderHeaderScripts(false)}
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="lon-wa-float" aria-label="${escapeHtml(ui.whatsappTalk)}">💬 ${escapeHtml(ui.whatsappTalk)}</a>
     <script src="/lon-nav.js"></script>
     <script src="/i18n.js?v=20260921a" defer></script>
-    <script src="/lon-analytics.js?v=20260914a" defer></script>
+    <script src="/lon-analytics.js?v=20260924a" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=20260906d" defer></script>
 </body>
@@ -919,7 +921,16 @@ function renderPage(origin, slug) {
     const canonicalPath = `/${encodeURIComponent(slug)}`;
     const bookingHref = applyConsultLangPolicy(meta.bookingHref || '/marcar/clinica-geral', ui.htmlLang);
     const siblings = groupPages(meta.group);
-    const author = authors.getAuthor(meta.author);
+    const showName = meta.showClinicianName !== false;
+    const author = showName ? authors.getAuthor(meta.author) : null;
+    const authorSchema = author
+        ? authors.articleAuthorSchema(o, meta.author)
+        : {
+              author: { '@id': `${o}/#organization` },
+              reviewedBy: { '@id': `${o}/#organization` },
+              publisher: { '@id': `${o}/#organization` },
+              copyrightHolder: { '@id': `${o}/#organization` }
+          };
 
     const faqLd =
         Array.isArray(meta.faq) && meta.faq.length
@@ -950,10 +961,11 @@ function renderPage(origin, slug) {
                 '@type': 'Thing',
                 name: 'Healthcare for tourists in Portugal'
             },
-            ...authors.articleAuthorSchema(o)
-        },
-        authors.personJsonLd(o),
-        {
+            ...authorSchema
+        }
+    ];
+    if (author) jsonLd.push(authors.personJsonLd(o, meta.author));
+    jsonLd.push({
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
             itemListElement: [
@@ -961,8 +973,7 @@ function renderPage(origin, slug) {
                 { '@type': 'ListItem', position: 2, name: ui.breadcrumbHub, item: `${o}/tourist-clinic` },
                 { '@type': 'ListItem', position: 3, name: meta.navLabel || meta.h1, item: `${o}${canonicalPath}` }
             ]
-        }
-    ];
+        });
     if (faqLd) jsonLd.push(faqLd);
 
     const leadParas = (Array.isArray(meta.lead) ? meta.lead : [meta.lead])
@@ -989,10 +1000,11 @@ function renderPage(origin, slug) {
                 <p class="cq-kicker">${escapeHtml(ui.kicker)}</p>
                 <h1>${escapeHtml(meta.h1)}</h1>
                 <div class="cq-lead">${leadParas}</div>
-                <p class="cq-clinician">
-                    <a href="${escapeHtml(authors.authorPath(author))}">${escapeHtml(author.displayName)}</a>
-                    <span aria-hidden="true"> · </span>${escapeHtml(ui.clinician)}
-                </p>
+                <p class="cq-clinician">${
+                    author
+                        ? `<a href="${escapeHtml(authors.authorPath(author))}">${escapeHtml(author.displayName)}</a><span aria-hidden="true"> · </span>`
+                        : ''
+                }${escapeHtml(ui.clinician)}</p>
                 <p class="tq-langs-line${needsConsultLangPolicy(ui.htmlLang) ? ' tq-langs-line--strict' : ''}">${escapeHtml(ui.languagesLine)}</p>
                 <div class="cq-header-actions">
                     <a class="lon-btn lon-btn-dark js-consulta-cta" data-consulta-cta="tourist-hero" data-cta="book" href="${escapeHtml(bookingHref)}">${escapeHtml(meta.bookingLabel || ui.navBook)}</a>
@@ -1065,7 +1077,8 @@ function renderPage(origin, slug) {
             ui,
             hreflang: hreflangLinks(o, meta, siblings),
             ogAlts: ogLocaleAlts(meta, siblings),
-            bookingHref
+            bookingHref,
+            authorName: author ? author.displayName : 'Lon Clinic'
         })
     };
 }
@@ -1076,6 +1089,22 @@ function hubGuideCards() {
         'see-doctor-tourist': {
             h2: 'How to see a doctor',
             p: 'Public vs private vs online — for visitors without SNS or a family doctor.'
+        },
+        'see-doctor-lisbon': {
+            h2: 'See a doctor in Lisbon',
+            p: 'Pharmacies, public hospitals, 112, and a video consultation from your hotel.'
+        },
+        'see-doctor-algarve': {
+            h2: 'See a doctor in the Algarve',
+            p: 'Pharmacies, Faro and Portimão hospitals, 112, and a video consultation from your hotel.'
+        },
+        'see-doctor-porto': {
+            h2: 'Arzt in Porto',
+            p: 'Apotheken, São João und Santo António, 112, und eine Videosprechstunde aus dem Hotel.'
+        },
+        'see-doctor-madeira': {
+            h2: 'See a doctor in Madeira',
+            p: 'Pharmacies, Hospital Dr. Nélio Mendonça in Funchal, 112, and a video consultation from your hotel.'
         },
         'uti-tourist': {
             h2: 'UTI while you are here',

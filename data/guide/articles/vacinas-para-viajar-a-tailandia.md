@@ -9,9 +9,14 @@
 
 Ilhas, templos e street food não pedem o mesmo plano que um mês no Norte rural ou trabalho em campo. A lista de vacinas para viajar à Tailândia sai do **itinerário**, não do visto.
 
-[Consulta do viajante online](/travel-clinic), 39 €, com prescrição para o [CVI](/blog/vacinas-viajante-guia-completo) quando houver vacinas do circuito internacional.
+[Consulta do viajante online](/marcar/travel), 39 €. Guia de 2026: [vacinas para a Tailândia](/blog/vacinas-viajante-tailandia). Prescrição para o [CVI](/blog/vacinas-viajante-guia-completo) quando houver vacinas do circuito internacional.
 
 {{cta}}
+<figure class="guide-figure">
+<img src="/image/guide/travel-cover-hq-2.webp" alt="Vacinas para viajar à Tailândia a partir de Portugal" width="1200" height="800" loading="lazy" decoding="async">
+<figcaption>Vacinas para viajar à Tailândia a partir de Portugal</figcaption>
+</figure>
+
 
 ## Vacinas habitualmente consideradas
 
@@ -28,6 +33,16 @@ A [profilaxia da malária](/consulta/profilaxia-malaria) não é automática par
 ## Diarreia do viajante
 
 É o problema prático número um. Vacinas não a resolvem. Há uma ficha de [diarreia do viajante](/consulta/diarreia-do-viajante) para o kit e os sinais de alarme.
+
+{{cta}}
+
+## Neste guia
+
+- [Guia de 2026](/blog/vacinas-viajante-tailandia) e [em inglês](/blog/travel-vaccines-thailand)
+- [Índia](/blog/vacinas-viajante-india) · [todos os destinos](/blog/vacinas-para-viajar-por-pais)
+- [Centros de vacinação internacional](/blog/centros-de-vacinacao-internacional-portugal)
+
+{{cta}}
 
 ## Fontes
 

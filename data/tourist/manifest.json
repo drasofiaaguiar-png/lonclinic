@@ -161,6 +161,21 @@
       ],
       "related": [
         { "href": "/tourist-clinic", "label": "Tourist clinic" },
+        { "href": "/see-a-doctor-lisbon", "label": "See a doctor in Lisbon" },
+        { "href": "/see-a-doctor-algarve", "label": "See a doctor in the Algarve" },
+        { "href": "/see-a-doctor-madeira", "label": "See a doctor in Madeira" },
+        { "href": "/arzt-lissabon", "label": "Arzt in Lissabon" },
+        { "href": "/arzt-algarve", "label": "Arzt an der Algarve" },
+        { "href": "/arzt-porto", "label": "Arzt in Porto" },
+        { "href": "/arzt-madeira", "label": "Arzt auf Madeira" },
+        { "href": "/medecin-lisbonne", "label": "Médecin à Lisbonne" },
+        { "href": "/medecin-algarve", "label": "Médecin en Algarve" },
+        { "href": "/medecin-porto", "label": "Médecin à Porto" },
+        { "href": "/medecin-madere", "label": "Médecin à Madère" },
+        { "href": "/medico-lisboa", "label": "Médico en Lisboa" },
+        { "href": "/medico-algarve", "label": "Médico en el Algarve" },
+        { "href": "/medico-oporto", "label": "Médico en Oporto" },
+        { "href": "/medico-madeira", "label": "Médico en Madeira" },
         { "href": "/english-speaking-doctor-lisbon", "label": "English-speaking doctor Lisbon" },
         { "href": "/english-speaking-doctor-porto", "label": "English-speaking doctor Porto" },
         { "href": "/english-speaking-doctor-coimbra", "label": "English-speaking doctor Coimbra" },
@@ -169,6 +184,1977 @@
         { "href": "/renew-prescription-holiday-portugal", "label": "Renew a prescription" },
         { "href": "/consulta", "label": "Medical consultations by complaint" },
         { "href": "/equipa/rita-aguiar", "label": "The doctor" }
+      ]
+    },
+    {
+      "slug": "see-a-doctor-lisbon",
+      "group": "see-doctor-lisbon",
+      "lang": "en",
+      "hreflang": "en",
+      "status": "live",
+      "showClinicianName": false,
+      "navLabel": "See a doctor in Lisbon",
+      "titleTag": "See a Doctor in Lisbon: Tourist Guide (2026)",
+      "description": "Feeling unwell in Lisbon? When to call 112, how pharmacies work, where the hospitals are, and how to see a doctor online today.",
+      "h1": "How to see a doctor in Lisbon as a tourist",
+      "bookingHref": "/marcar/clinica-geral?ref=see-a-doctor-lisbon&lang=en",
+      "bookingLabel": "See a doctor online now",
+      "price": "39 €",
+      "priceNote": "Video consultation with a licensed doctor, about 30 minutes. A Portuguese electronic prescription, if indicated, works at any pharmacy in Portugal. No extra prescribing fee at checkout.",
+      "ctaTitle": "Need a doctor in Lisbon today?",
+      "ctaLead": "Book a video consultation in English, Spanish or Portuguese from your hotel. No clinic hunt, and no emergency-room wait for a minor problem.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "lead": [
+        "Getting sick on holiday is stressful, especially when you don't know how the local system works. Here's how healthcare works for visitors in Lisbon, from pharmacies to hospitals, and how to see a doctor online today without spending hours in an emergency room."
+      ],
+      "notice": "Emergency? Call 112 (free, 24/7, English spoken) for chest pain, difficulty breathing, signs of a stroke, severe bleeding, a serious injury, loss of consciousness or a severe allergic reaction. Don't wait for an online consultation in these situations.",
+      "onlineTitle": "Problems we can often assess online",
+      "urgentTitle": "Call 112 instead",
+      "safeOnline": [
+        "Urinary tract infections",
+        "Stomach upsets and traveller's diarrhoea",
+        "Sore throats and ear infections, including swimmer's ear",
+        "Mild sunburn, heat exhaustion, skin rashes and insect bites",
+        "Allergies and eye infections",
+        "Replacing regular medication you have lost or forgotten"
+      ],
+      "goToUrgent": [
+        "Chest pain, difficulty breathing, signs of a stroke",
+        "Severe bleeding, a serious injury, loss of consciousness",
+        "A severe allergic reaction",
+        "Anything the doctor says needs an in-person examination"
+      ],
+      "howTitle": "How the online consultation works",
+      "howItWorks": [
+        {
+          "title": "Book from your hotel",
+          "text": "Same-day video slots are often available, seven days a week. The price is 39 €, shown before you pay."
+        },
+        {
+          "title": "English, Spanish or Portuguese",
+          "text": "Consultations are in English, Spanish or Portuguese. French and German are not offered; most visitors use English."
+        },
+        {
+          "title": "Prescription at a Lisbon pharmacy",
+          "text": "If medication is clinically appropriate, you receive a Portuguese electronic prescription. It works at any pharmacy in Portugal, usually with a code by SMS or email. You do not need a Portuguese health number."
+        },
+        {
+          "title": "Invoice for your insurer",
+          "text": "You receive an invoice and a medical report. Online consultations are paid directly. Keep both documents if you claim reimbursement, and check your policy first."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Your options, from quickest to most serious",
+          "items": [
+            {
+              "title": "1. See a doctor online today",
+              "text": "Lon Clinic is a Portuguese online medical clinic, registered with the health regulator (ERS). You can have a video consultation from your hotel or apartment in English, Spanish or Portuguese. If you need medication, the doctor can issue a Portuguese electronic prescription for any pharmacy in the country. You also receive an invoice and a medical report for your travel insurer."
+            },
+            {
+              "title": "2. Pharmacies (farmácias)",
+              "text": "Look for the green cross. Portuguese pharmacists are well trained and can help with minor problems, but many medicines, including antibiotics, require a prescription. Outside normal hours, a rota of on-duty pharmacies (farmácias de serviço) is posted on the door of every pharmacy."
+            },
+            {
+              "title": "3. SNS 24 health line: 808 24 24 24",
+              "text": "Portugal's public health line gives 24-hour phone triage and can tell you where to go. It's a good option if you're unsure how urgent your problem is."
+            },
+            {
+              "title": "4. Hospital emergency departments",
+              "text": "Public emergency departments use colour-coded triage, so people with less urgent problems can wait many hours. Use them for emergencies, not for a sore throat."
+            }
+          ]
+        },
+        {
+          "h2": "Main public hospitals in Lisbon",
+          "items": [
+            {
+              "title": "Hospital de Santa Maria",
+              "text": "Public hospital with a 24-hour emergency department."
+            },
+            {
+              "title": "Hospital de São José",
+              "text": "Public hospital with a 24-hour emergency department."
+            },
+            {
+              "title": "Hospital Dona Estefânia",
+              "text": "Public children's hospital."
+            }
+          ]
+        },
+        {
+          "h2": "Tips for your stay in Lisbon",
+          "paragraphs": [
+            "Lisbon's steep hills and polished limestone pavements (calçada) cause a surprising number of sprained ankles and falls, especially when wet. Wear shoes with grip.",
+            "In summer, heat and long walking days lead to dehydration and heat exhaustion, and stomach upsets are among the most common reasons visitors look for a doctor."
+          ]
+        },
+        {
+          "h2": "Insurance and costs",
+          "paragraphs": [
+            "Visitors from the EU, EEA and Switzerland can use the public health system with a European Health Insurance Card (EHIC). UK visitors can use a GHIC. That covers necessary public care. It does not pay for a private online consultation.",
+            "Everyone else should rely on travel insurance. Online consultations are paid directly. Keep the invoice and medical report to claim reimbursement, and check your policy's conditions first."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Can a doctor in Portugal see me online and prescribe medication?",
+          "a": "Yes. After a video consultation, the doctor can prescribe what you need if it is clinically appropriate. The prescription is electronic and works at Portuguese pharmacies."
+        },
+        {
+          "q": "Do I need a Portuguese health number?",
+          "a": "No. You can book with your passport or ID."
+        },
+        {
+          "q": "When should I go to the hospital instead?",
+          "a": "For chest pain, trouble breathing, stroke signs, severe bleeding, a serious injury, loss of consciousness or a severe allergic reaction, call 112. Also go in person if the doctor tells you that you need an examination."
+        }
+      ],
+      "related": [
+        { "href": "/see-doctor-portugal-tourist", "label": "How to see a doctor in Portugal as a tourist" },
+        { "href": "/see-a-doctor-algarve", "label": "See a doctor in the Algarve" },
+        { "href": "/see-a-doctor-madeira", "label": "See a doctor in Madeira" },
+        { "href": "/english-speaking-doctor-lisbon", "label": "English-speaking doctor in Lisbon" },
+        { "href": "/arzt-lissabon", "label": "Arzt in Lissabon (Deutsch)" },
+        { "href": "/uti-portugal-what-to-do", "label": "UTI in Portugal: what to do" },
+        { "href": "/renew-prescription-holiday-portugal", "label": "Replace a lost prescription" },
+        { "href": "/tourist-clinic", "label": "Tourist clinic" }
+      ]
+    },
+    {
+      "slug": "arzt-lissabon",
+      "group": "see-doctor-lisbon",
+      "lang": "de",
+      "hreflang": "de",
+      "status": "live",
+      "showClinicianName": false,
+      "navLabel": "Arzt in Lissabon",
+      "titleTag": "Arzt in Lissabon: Ratgeber für Urlauber (2026)",
+      "description": "Krank in Lissabon? Wann Sie 112 anrufen, wie Apotheken funktionieren, wo die Krankenhäuser sind und wie Sie heute online einen Arzt sprechen.",
+      "h1": "Einen Arzt finden in Lissabon: so geht's im Urlaub",
+      "bookingHref": "/marcar/clinica-geral?ref=arzt-lissabon&lang=en",
+      "bookingLabel": "Jetzt online einen Arzt sprechen",
+      "price": "39 €",
+      "priceNote": "Videosprechstunde mit approbierter Ärztin, ca. 30 Minuten. Ein portugiesisches E-Rezept, falls indiziert, gilt in jeder Apotheke in Portugal. Keine extra Gebühr an der Kasse.",
+      "ctaTitle": "Heute noch einen Arzt in Lissabon sprechen?",
+      "ctaLead": "Videosprechstunde auf Englisch, Spanisch oder Portugiesisch, aus dem Hotel. Keine Kliniksuche und keine stundenlange Wartezeit in der Notaufnahme bei einem kleinen Anliegen.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "notice": "Sprechstunden ausschließlich auf Englisch, Spanisch oder Portugiesisch. Keine Beratung auf Deutsch.",
+      "lead": [
+        "Im Urlaub krank zu werden ist belastend, besonders wenn man das Gesundheitssystem vor Ort nicht kennt. Hier erfahren Sie, wie die medizinische Versorgung in Lissabon für Urlauber funktioniert, von der Apotheke bis zum Krankenhaus, und wie Sie noch heute online einen Arzt sprechen, ohne stundenlang in der Notaufnahme zu warten."
+      ],
+      "onlineTitle": "Beschwerden, die wir oft online einschätzen",
+      "urgentTitle": "Stattdessen 112 anrufen",
+      "safeOnline": [
+        "Harnwegsinfekte",
+        "Magen-Darm-Beschwerden und Reisedurchfall",
+        "Halsschmerzen und Ohrenentzündungen, auch nach dem Baden",
+        "Leichter Sonnenbrand, Hitzeerschöpfung, Hautausschläge und Insektenstiche",
+        "Allergien und Augenentzündungen",
+        "Ersatz für vergessene oder verlorene Dauermedikamente"
+      ],
+      "goToUrgent": [
+        "Brustschmerzen, Atemnot, Anzeichen eines Schlaganfalls",
+        "Starke Blutungen, schwere Verletzungen, Bewusstlosigkeit",
+        "Eine schwere allergische Reaktion",
+        "Alles, wofür der Arzt eine persönliche Untersuchung für nötig hält"
+      ],
+      "howTitle": "So läuft die Online-Sprechstunde",
+      "howItWorks": [
+        {
+          "title": "Aus dem Hotel buchen",
+          "text": "Termine am selben Tag sind oft verfügbar, sieben Tage die Woche. Der Preis beträgt 39 € und steht vor der Zahlung."
+        },
+        {
+          "title": "Englisch, Spanisch oder Portugiesisch",
+          "text": "Die Sprechstunde ist auf Englisch, Spanisch oder Portugiesisch. Auf Deutsch wird nicht beraten."
+        },
+        {
+          "title": "Rezept in einer Lissabonner Apotheke",
+          "text": "Wenn ein Medikament medizinisch sinnvoll ist, erhalten Sie ein portugiesisches E-Rezept. Es gilt in jeder Apotheke in Portugal, in der Regel mit einem Code per SMS oder E-Mail. Eine portugiesische Versichertennummer brauchen Sie nicht."
+        },
+        {
+          "title": "Rechnung für die Versicherung",
+          "text": "Sie erhalten eine Rechnung und einen ärztlichen Bericht. Die Sprechstunde wird direkt bezahlt. Beides aufbewahren, wenn Sie die Kosten einreichen, und vorher die Versicherungsbedingungen prüfen."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Ihre Möglichkeiten, vom schnellsten bis zum ernstesten Fall",
+          "items": [
+            {
+              "title": "1. Heute noch online einen Arzt sprechen",
+              "text": "Die Lon Clinic ist eine portugiesische Online-Arztpraxis, registriert bei der Gesundheitsbehörde ERS. Die Videosprechstunde findet aus dem Hotel oder Ferienapartment statt, auf Englisch, Spanisch oder Portugiesisch. Falls ein Medikament sinnvoll ist, stellt die Ärztin ein portugiesisches E-Rezept aus, das in jeder Apotheke im Land gilt. Sie erhalten außerdem eine Rechnung und einen ärztlichen Bericht für die Reiseversicherung."
+            },
+            {
+              "title": "2. Apotheken (farmácias)",
+              "text": "Achten Sie auf das grüne Kreuz. Portugiesische Apotheker sind gut ausgebildet und helfen bei kleineren Beschwerden, aber viele Medikamente, auch Antibiotika, sind verschreibungspflichtig. Außerhalb der Öffnungszeiten hängt an jeder Apotheke ein Plan der Notdienstapotheken (farmácias de serviço) aus."
+            },
+            {
+              "title": "3. Gesundheitstelefon SNS 24: 808 24 24 24",
+              "text": "Die öffentliche Gesundheitshotline Portugals bietet rund um die Uhr eine telefonische Ersteinschätzung und sagt Ihnen, wohin Sie gehen sollten. Gut geeignet, wenn Sie unsicher sind, wie dringend Ihr Problem ist."
+            },
+            {
+              "title": "4. Notaufnahmen der Krankenhäuser",
+              "text": "Portugiesische Notaufnahmen arbeiten mit einer farbcodierten Ersteinschätzung. Bei weniger dringenden Beschwerden kann die Wartezeit viele Stunden betragen."
+            }
+          ]
+        },
+        {
+          "h2": "Die wichtigsten öffentlichen Krankenhäuser in Lissabon",
+          "items": [
+            {
+              "title": "Hospital de Santa Maria",
+              "text": "Öffentliches Krankenhaus mit 24-Stunden-Notaufnahme."
+            },
+            {
+              "title": "Hospital de São José",
+              "text": "Öffentliches Krankenhaus mit 24-Stunden-Notaufnahme."
+            },
+            {
+              "title": "Hospital Dona Estefânia",
+              "text": "Öffentliches Kinderkrankenhaus."
+            }
+          ]
+        },
+        {
+          "h2": "Tipps für Ihren Aufenthalt in Lissabon",
+          "paragraphs": [
+            "Lissabons steile Hügel und das glatte Kalksteinpflaster (Calçada) führen erstaunlich oft zu verstauchten Knöcheln und Stürzen, besonders bei Nässe. Tragen Sie Schuhe mit gutem Profil.",
+            "Im Sommer sorgen Hitze und lange Fußwege für Dehydrierung und Hitzeerschöpfung, und Magen-Darm-Beschwerden gehören zu den häufigsten Gründen, warum Urlauber einen Arzt suchen."
+          ]
+        },
+        {
+          "h2": "Versicherung und Kosten",
+          "paragraphs": [
+            "Urlauber aus der EU, dem EWR und der Schweiz können mit der Europäischen Krankenversicherungskarte (EHIC) das öffentliche Gesundheitssystem nutzen. Das gilt für notwendige öffentliche Versorgung, nicht für eine private Online-Sprechstunde.",
+            "Alle anderen sollten sich auf ihre Reisekrankenversicherung stützen. Online-Sprechstunden werden direkt bezahlt. Bewahren Sie Rechnung und ärztlichen Bericht auf, um die Kosten einzureichen, und prüfen Sie vorher Ihre Versicherungsbedingungen."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Kann mich ein Arzt in Portugal online behandeln und mir etwas verschreiben?",
+          "a": "Ja. Nach der Videosprechstunde wird verschrieben, was medizinisch sinnvoll ist. Das Rezept ist elektronisch und gilt in portugiesischen Apotheken. Die Sprechstunde selbst ist auf Englisch, Spanisch oder Portugiesisch."
+        },
+        {
+          "q": "Brauche ich eine portugiesische Versichertennummer?",
+          "a": "Nein. Sie können mit Reisepass oder Personalausweis buchen."
+        },
+        {
+          "q": "Wann sollte ich stattdessen ins Krankenhaus?",
+          "a": "Bei Brustschmerzen, Atemnot, Schlaganfallzeichen, starken Blutungen, schweren Verletzungen, Bewusstlosigkeit oder einer schweren allergischen Reaktion wählen Sie die 112. Auch dann, wenn der Arzt eine persönliche Untersuchung für nötig hält."
+        }
+      ],
+      "related": [
+        { "href": "/see-a-doctor-lisbon", "label": "See a doctor in Lisbon (English)" },
+        { "href": "/medecin-lisbonne", "label": "Consulter un médecin à Lisbonne (français)" },
+        { "href": "/blog/krankenversicherung-portugal-leitfaden", "label": "Krankenversicherung in Portugal" },
+        { "href": "/arzt-portugal-tourist-finden", "label": "Arzt in Portugal als Tourist" },
+        { "href": "/tourist-clinic", "label": "Tourist clinic" }
+      ]
+    },
+    {
+      "slug": "medecin-lisbonne",
+      "group": "see-doctor-lisbon",
+      "lang": "fr",
+      "hreflang": "fr",
+      "status": "live",
+      "showClinicianName": false,
+      "navLabel": "Médecin à Lisbonne",
+      "titleTag": "Consulter un médecin à Lisbonne : guide pour touristes (2026)",
+      "description": "Malade à Lisbonne ? Quand appeler le 112, comment fonctionnent les pharmacies, où sont les hôpitaux et comment consulter un médecin en ligne dès aujourd'hui.",
+      "h1": "Consulter un médecin à Lisbonne pendant vos vacances",
+      "bookingHref": "/marcar/clinica-geral?ref=medecin-lisbonne&lang=en",
+      "bookingLabel": "Consulter un médecin en ligne maintenant",
+      "price": "39 €",
+      "priceNote": "Téléconsultation avec un médecin inscrit à l'Ordre, environ 30 minutes. Une ordonnance électronique portugaise, si elle est indiquée, est valable dans toutes les pharmacies du Portugal. Pas de frais de prescription en plus.",
+      "ctaTitle": "Besoin d'un médecin à Lisbonne aujourd'hui ?",
+      "ctaLead": "Téléconsultation en anglais, en espagnol ou en portugais, depuis l'hôtel. Pas de recherche de clinique, et pas des heures d'attente aux urgences pour un problème mineur.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "notice": "Les consultations se déroulent exclusivement en anglais, en espagnol ou en portugais. Pas de consultation en français.",
+      "lead": [
+        "Tomber malade en vacances est stressant, surtout quand on ne connaît pas le système de santé local. Voici comment fonctionne la prise en charge des visiteurs à Lisbonne, de la pharmacie à l'hôpital, et comment consulter un médecin en ligne dès aujourd'hui sans passer des heures aux urgences."
+      ],
+      "onlineTitle": "Problèmes que nous évaluons souvent en ligne",
+      "urgentTitle": "Appelez plutôt le 112",
+      "safeOnline": [
+        "Infections urinaires",
+        "Troubles digestifs et diarrhée du voyageur",
+        "Maux de gorge et otites, y compris après la baignade",
+        "Coups de soleil et coups de chaleur légers, éruptions cutanées et piqûres d'insectes",
+        "Allergies et infections des yeux",
+        "Remplacement d'un traitement habituel oublié ou perdu"
+      ],
+      "goToUrgent": [
+        "Douleur thoracique, difficulté à respirer, signes d'AVC",
+        "Saignement important, blessure grave, perte de connaissance",
+        "Réaction allergique sévère",
+        "Tout ce pour quoi le médecin juge un examen en personne nécessaire"
+      ],
+      "howTitle": "Comment se passe la téléconsultation",
+      "howItWorks": [
+        {
+          "title": "Réserver depuis l'hôtel",
+          "text": "Des créneaux le jour même sont souvent disponibles, sept jours sur sept. Le prix est de 39 €, affiché avant le paiement."
+        },
+        {
+          "title": "Anglais, espagnol ou portugais",
+          "text": "La consultation se fait en anglais, en espagnol ou en portugais. Il n'y a pas de consultation en français."
+        },
+        {
+          "title": "Ordonnance dans une pharmacie de Lisbonne",
+          "text": "Si un médicament est justifié, vous recevez une ordonnance électronique portugaise. Elle est valable dans toutes les pharmacies du Portugal, en général avec un code par SMS ou e-mail. Vous n'avez pas besoin d'un numéro de santé portugais."
+        },
+        {
+          "title": "Facture pour l'assurance",
+          "text": "Vous recevez une facture et un compte rendu médical. La téléconsultation est payée directement. Conservez les deux documents pour une demande de remboursement, et vérifiez d'abord votre contrat."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Vos options, de la plus rapide à la plus sérieuse",
+          "items": [
+            {
+              "title": "1. Consulter un médecin en ligne aujourd'hui",
+              "text": "Lon Clinic est une clinique médicale portugaise en ligne, enregistrée auprès de l'autorité de santé (ERS). La téléconsultation se fait depuis l'hôtel ou la location, en anglais, en espagnol ou en portugais. Si un médicament est justifié, le médecin émet une ordonnance électronique portugaise valable dans toutes les pharmacies du pays. Vous recevez aussi une facture et un compte rendu médical pour votre assurance voyage."
+            },
+            {
+              "title": "2. Les pharmacies (farmácias)",
+              "text": "Repérez la croix verte. Les pharmaciens portugais sont bien formés et peuvent aider pour les petits problèmes, mais beaucoup de médicaments, dont les antibiotiques, nécessitent une ordonnance. En dehors des heures d'ouverture, la liste des pharmacies de garde (farmácias de serviço) est affichée sur la porte de chaque pharmacie."
+            },
+            {
+              "title": "3. Ligne santé SNS 24 : 808 24 24 24",
+              "text": "La ligne de santé publique portugaise assure un triage téléphonique 24 h/24 et vous indique où aller. Utile si vous ne savez pas à quel point votre problème est urgent."
+            },
+            {
+              "title": "4. Les urgences hospitalières",
+              "text": "Les urgences portugaises fonctionnent avec un triage par couleur. Pour un problème peu urgent, l'attente peut durer de nombreuses heures."
+            }
+          ]
+        },
+        {
+          "h2": "Les principaux hôpitaux publics à Lisbonne",
+          "items": [
+            {
+              "title": "Hospital de Santa Maria",
+              "text": "Hôpital public avec urgences 24 h/24."
+            },
+            {
+              "title": "Hospital de São José",
+              "text": "Hôpital public avec urgences 24 h/24."
+            },
+            {
+              "title": "Hospital Dona Estefânia",
+              "text": "Hôpital public pédiatrique."
+            }
+          ]
+        },
+        {
+          "h2": "Conseils pour votre séjour à Lisbonne",
+          "paragraphs": [
+            "Les collines de Lisbonne et ses pavés calcaires glissants (calçada) provoquent beaucoup d'entorses et de chutes, surtout par temps humide. Prévoyez des chaussures qui accrochent.",
+            "En été, la chaleur et les longues journées de marche entraînent déshydratation et coups de chaleur, et les troubles digestifs sont parmi les motifs de consultation les plus fréquents chez les visiteurs."
+          ]
+        },
+        {
+          "h2": "Assurance et coûts",
+          "paragraphs": [
+            "Les visiteurs de l'UE, de l'EEE et de Suisse peuvent utiliser le système de santé public avec leur Carte européenne d'assurance maladie (CEAM). Cela couvre les soins publics nécessaires, pas une téléconsultation privée.",
+            "Les autres doivent compter sur leur assurance voyage. Les téléconsultations sont payées directement. Conservez la facture et le compte rendu médical pour demander un remboursement, et vérifiez d'abord les conditions de votre contrat."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Un médecin au Portugal peut-il me consulter en ligne et me prescrire un traitement ?",
+          "a": "Oui. Après la téléconsultation, le médecin prescrit ce qui est médicalement justifié. L'ordonnance est électronique et valable dans les pharmacies portugaises. La consultation elle-même se fait en anglais, en espagnol ou en portugais."
+        },
+        {
+          "q": "Ai-je besoin d'un numéro de santé portugais ?",
+          "a": "Non. Vous pouvez réserver avec votre passeport ou votre carte d'identité."
+        },
+        {
+          "q": "Quand faut-il plutôt aller à l'hôpital ?",
+          "a": "En cas de douleur thoracique, de difficulté à respirer, de signes d'AVC, de saignement important, de blessure grave, de perte de connaissance ou de réaction allergique sévère, appelez le 112. Allez aussi sur place si le médecin estime qu'un examen en personne est nécessaire."
+        }
+      ],
+      "related": [
+        { "href": "/see-a-doctor-lisbon", "label": "See a doctor in Lisbon (English)" },
+        { "href": "/arzt-lissabon", "label": "Arzt in Lissabon (Deutsch)" },
+        { "href": "/medico-lisboa", "label": "Ir al médico en Lisboa (español)" },
+        { "href": "/consulter-medecin-portugal-touriste", "label": "Consulter un médecin au Portugal" },
+        { "href": "/tourist-clinic", "label": "Clinique touriste" }
+      ]
+    },
+    {
+      "slug": "medico-lisboa",
+      "group": "see-doctor-lisbon",
+      "lang": "es",
+      "hreflang": "es",
+      "status": "live",
+      "showClinicianName": false,
+      "navLabel": "Médico en Lisboa",
+      "titleTag": "Ir al médico en Lisboa: guía para turistas (2026)",
+      "description": "¿Se encuentra mal en Lisboa? Cuándo llamar al 112, cómo funcionan las farmacias, dónde están los hospitales y cómo ver a un médico online hoy mismo.",
+      "h1": "Cómo ver a un médico en Lisboa si está de vacaciones",
+      "bookingHref": "/marcar/clinica-geral?ref=medico-lisboa&lang=es",
+      "bookingLabel": "Ver a un médico online ahora",
+      "price": "39 €",
+      "priceNote": "Videoconsulta con médica colegiada, unos 30 minutos. Una receta electrónica portuguesa, si está indicada, vale en cualquier farmacia de Portugal. Sin tasas extra al pagar.",
+      "ctaTitle": "¿Necesita un médico en Lisboa hoy?",
+      "ctaLead": "Videoconsulta en inglés, español o portugués, desde el hotel. Sin buscar clínica y sin horas de espera en urgencias por un problema menor.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "lead": [
+        "Ponerse enfermo de vacaciones es estresante, sobre todo si no conoce el sistema sanitario local. Aquí le explicamos cómo funciona la atención médica para visitantes en Lisboa, de la farmacia al hospital, y cómo ver a un médico online hoy mismo sin pasar horas en urgencias."
+      ],
+      "notice": "Emergencia: llame al 112 (gratuito, 24 h, se habla inglés) si tiene dolor en el pecho, dificultad para respirar, signos de ictus, una hemorragia importante, una lesión grave, pérdida de consciencia o una reacción alérgica grave. En estos casos no espere a una consulta online.",
+      "onlineTitle": "Problemas que a menudo valoramos online",
+      "urgentTitle": "Llame al 112",
+      "safeOnline": [
+        "Infecciones de orina",
+        "Problemas de estómago y diarrea del viajero",
+        "Dolor de garganta y otitis, también después del baño",
+        "Quemaduras solares y golpes de calor leves, erupciones y picaduras",
+        "Alergias e infecciones oculares",
+        "Reposición de medicación habitual olvidada o perdida"
+      ],
+      "goToUrgent": [
+        "Dolor en el pecho, dificultad para respirar, signos de ictus",
+        "Hemorragia importante, lesión grave, pérdida de consciencia",
+        "Reacción alérgica grave",
+        "Cualquier caso en el que el médico considere necesaria una exploración en persona"
+      ],
+      "howTitle": "Cómo es la videoconsulta",
+      "howItWorks": [
+        {
+          "title": "Reserve desde el hotel",
+          "text": "A menudo hay huecos el mismo día, los siete días de la semana. El precio es 39 € y se ve antes de pagar."
+        },
+        {
+          "title": "Inglés, español o portugués",
+          "text": "La consulta es en inglés, español o portugués."
+        },
+        {
+          "title": "Receta en una farmacia de Lisboa",
+          "text": "Si un medicamento está indicado, recibe una receta electrónica portuguesa. Vale en cualquier farmacia de Portugal, normalmente con un código por SMS o correo. No necesita un número de salud portugués."
+        },
+        {
+          "title": "Factura para el seguro",
+          "text": "Recibe una factura y un informe médico. La consulta se paga directamente. Guarde ambos documentos si pide el reembolso, y revise antes las condiciones de la póliza."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Sus opciones, de la más rápida a la más seria",
+          "items": [
+            {
+              "title": "1. Ver a un médico online hoy",
+              "text": "Lon Clinic es una clínica médica online portuguesa, registrada en la autoridad sanitaria (ERS). La videoconsulta se hace desde el hotel o el apartamento, en inglés, español o portugués. Si necesita medicación y está indicada, el médico emite una receta electrónica portuguesa válida en cualquier farmacia del país. También recibe una factura y un informe médico para su seguro de viaje."
+            },
+            {
+              "title": "2. Farmacias (farmácias)",
+              "text": "Busque la cruz verde. Los farmacéuticos portugueses están bien formados y pueden ayudarle con problemas leves, pero muchos medicamentos, incluidos los antibióticos, necesitan receta. Fuera del horario habitual, la lista de farmacias de guardia (farmácias de serviço) está en la puerta de cada farmacia."
+            },
+            {
+              "title": "3. Línea de salud SNS 24: 808 24 24 24",
+              "text": "La línea de salud pública de Portugal ofrece triaje telefónico las 24 horas y le indica adónde ir. Es útil si no sabe si su problema es urgente."
+            },
+            {
+              "title": "4. Urgencias hospitalarias",
+              "text": "Las urgencias en Portugal usan un triaje por colores, así que con un problema poco urgente la espera puede ser de muchas horas."
+            }
+          ]
+        },
+        {
+          "h2": "Los principales hospitales públicos en Lisboa",
+          "items": [
+            {
+              "title": "Hospital de Santa Maria",
+              "text": "Hospital público con urgencias 24 horas."
+            },
+            {
+              "title": "Hospital de São José",
+              "text": "Hospital público con urgencias 24 horas."
+            },
+            {
+              "title": "Hospital Dona Estefânia",
+              "text": "Hospital público infantil."
+            }
+          ]
+        },
+        {
+          "h2": "Consejos para su estancia en Lisboa",
+          "paragraphs": [
+            "Las cuestas de Lisboa y su empedrado de piedra caliza (calçada), muy resbaladizo, provocan muchos esguinces y caídas, sobre todo cuando está mojado. Lleve calzado con buen agarre.",
+            "En verano, el calor y las largas caminatas causan deshidratación y golpes de calor, y los problemas estomacales están entre los motivos más frecuentes por los que los visitantes buscan un médico."
+          ]
+        },
+        {
+          "h2": "Seguro y costes",
+          "paragraphs": [
+            "Los visitantes de la UE, el EEE y Suiza pueden usar el sistema público con su Tarjeta Sanitaria Europea (TSE). Cubre la atención pública necesaria, no una consulta online privada.",
+            "El resto debe contar con su seguro de viaje. Las consultas online se pagan directamente. Guarde la factura y el informe médico para pedir el reembolso, y revise antes las condiciones de su póliza."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "¿Puede un médico en Portugal atenderme online y recetarme medicación?",
+          "a": "Sí. Tras la videoconsulta, el médico receta lo que esté clínicamente indicado. La receta es electrónica y vale en las farmacias portuguesas. La consulta puede ser en español."
+        },
+        {
+          "q": "¿Necesito un número de salud portugués?",
+          "a": "No. Puede reservar con su pasaporte o DNI."
+        },
+        {
+          "q": "¿Cuándo debo ir al hospital?",
+          "a": "Si tiene dolor en el pecho, dificultad para respirar, signos de ictus, una hemorragia importante, una lesión grave, pérdida de consciencia o una reacción alérgica grave, llame al 112. También si el médico considera que necesita una exploración en persona."
+        }
+      ],
+      "related": [
+        { "href": "/see-a-doctor-lisbon", "label": "See a doctor in Lisbon (English)" },
+        { "href": "/arzt-lissabon", "label": "Arzt in Lissabon (Deutsch)" },
+        { "href": "/medecin-lisbonne", "label": "Consulter un médecin à Lisbonne (français)" },
+        { "href": "/ver-medico-portugal-turista", "label": "Ver a un médico en Portugal siendo turista" },
+        { "href": "/tourist-clinic", "label": "Clínica turista" }
+      ]
+    },
+    {
+      "slug": "see-a-doctor-algarve",
+      "group": "see-doctor-algarve",
+      "lang": "en",
+      "hreflang": "en",
+      "status": "live",
+      "showClinicianName": false,
+      "navLabel": "See a doctor in the Algarve",
+      "titleTag": "See a Doctor in the Algarve: Tourist Guide (2026)",
+      "description": "Feeling unwell in the Algarve? When to call 112, how pharmacies work, where the hospitals are, and how to see a doctor online today.",
+      "h1": "How to see a doctor in the Algarve as a tourist",
+      "bookingHref": "/marcar/clinica-geral?ref=see-a-doctor-algarve&lang=en",
+      "bookingLabel": "See a doctor online now",
+      "price": "39 €",
+      "priceNote": "Video consultation with a licensed doctor, about 30 minutes. A Portuguese electronic prescription, if indicated, works at any pharmacy in Portugal. No extra prescribing fee at checkout.",
+      "ctaTitle": "Need a doctor in the Algarve today?",
+      "ctaLead": "Book a video consultation in English, Spanish or Portuguese from your hotel. No clinic hunt, and no emergency-room wait for a minor problem.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "lead": [
+        "Getting sick on holiday is stressful, especially when you don't know how the local system works. Here's how healthcare works for visitors in the Algarve, from pharmacies to hospitals, and how to see a doctor online today without spending hours in an emergency room."
+      ],
+      "notice": "Emergency? Call 112 (free, 24/7, English spoken) for chest pain, difficulty breathing, signs of a stroke, severe bleeding, a serious injury, loss of consciousness or a severe allergic reaction. Don't wait for an online consultation in these situations.",
+      "onlineTitle": "Problems we can often assess online",
+      "urgentTitle": "Call 112 instead",
+      "safeOnline": [
+        "Urinary tract infections",
+        "Stomach upsets and traveller's diarrhoea",
+        "Sore throats and ear infections, including swimmer's ear",
+        "Mild sunburn, heat exhaustion, skin rashes and insect bites",
+        "Allergies, eye infections, and the occasional jellyfish sting",
+        "Replacing regular medication you have lost or forgotten"
+      ],
+      "goToUrgent": [
+        "Chest pain, difficulty breathing, signs of a stroke",
+        "Severe bleeding, a serious injury, loss of consciousness",
+        "A severe allergic reaction",
+        "Anything the doctor says needs an in-person examination"
+      ],
+      "howTitle": "How the online consultation works",
+      "howItWorks": [
+        {
+          "title": "Book from your hotel",
+          "text": "Same-day video slots are often available, seven days a week. The price is 39 €, shown before you pay."
+        },
+        {
+          "title": "English, Spanish or Portuguese",
+          "text": "Consultations are in English, Spanish or Portuguese. French and German are not offered; most visitors use English."
+        },
+        {
+          "title": "Prescription at an Algarve pharmacy",
+          "text": "If medication is clinically appropriate, you receive a Portuguese electronic prescription. It works at any pharmacy in Portugal, usually with a code by SMS or email. You do not need a Portuguese health number."
+        },
+        {
+          "title": "Invoice for your insurer",
+          "text": "You receive an invoice and a medical report. Online consultations are paid directly. Keep both documents if you claim reimbursement, and check your policy first."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Your options, from quickest to most serious",
+          "items": [
+            {
+              "title": "1. See a doctor online today",
+              "text": "Lon Clinic is a Portuguese online medical clinic, registered with the health regulator (ERS). You can have a video consultation from your hotel or apartment in English, Spanish or Portuguese. If you need medication, the doctor can issue a Portuguese electronic prescription for any pharmacy in the country. You also receive an invoice and a medical report for your travel insurer."
+            },
+            {
+              "title": "2. Pharmacies (farmácias)",
+              "text": "Look for the green cross. Portuguese pharmacists are well trained and can help with minor problems, but many medicines, including antibiotics, require a prescription. Outside normal hours, a rota of on-duty pharmacies (farmácias de serviço) is posted on the door of every pharmacy."
+            },
+            {
+              "title": "3. SNS 24 health line: 808 24 24 24",
+              "text": "Portugal's public health line gives 24-hour phone triage and can tell you where to go. It's a good option if you're unsure how urgent your problem is."
+            },
+            {
+              "title": "4. Hospital emergency departments",
+              "text": "Public emergency departments use colour-coded triage, so people with less urgent problems can wait many hours. From a beach town, the trip to Faro or Portimão can take a while. Use the hospital for emergencies, not for a sore throat."
+            }
+          ]
+        },
+        {
+          "h2": "Main public hospitals in the Algarve",
+          "items": [
+            {
+              "title": "Hospital de Faro",
+              "text": "Public hospital with a 24-hour emergency department."
+            },
+            {
+              "title": "Hospital de Portimão",
+              "text": "Public hospital with a 24-hour emergency department."
+            }
+          ]
+        },
+        {
+          "h2": "Tips for your stay in the Algarve",
+          "paragraphs": [
+            "Most health problems in the Algarve come from the sun and the sea: sunburn, heat exhaustion, dehydration, ear infections after swimming, and the occasional jellyfish sting.",
+            "The main public hospitals are in Faro and Portimão, so a hospital visit from a beach town can take a while. For non-urgent problems, an online doctor or the local pharmacy is usually much faster."
+          ]
+        },
+        {
+          "h2": "Insurance and costs",
+          "paragraphs": [
+            "Visitors from the EU, EEA and Switzerland can use the public health system with a European Health Insurance Card (EHIC). UK visitors can use a GHIC. That covers necessary public care. It does not pay for a private online consultation.",
+            "Everyone else should rely on travel insurance. Online consultations are paid directly. Keep the invoice and medical report to claim reimbursement, and check your policy's conditions first."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Can a doctor in Portugal see me online and prescribe medication?",
+          "a": "Yes. After a video consultation, the doctor can prescribe what you need if it is clinically appropriate. The prescription is electronic and works at Portuguese pharmacies."
+        },
+        {
+          "q": "Do I need a Portuguese health number?",
+          "a": "No. You can book with your passport or ID."
+        },
+        {
+          "q": "When should I go to the hospital instead?",
+          "a": "For chest pain, trouble breathing, stroke signs, severe bleeding, a serious injury, loss of consciousness or a severe allergic reaction, call 112. Also go in person if the doctor tells you that you need an examination."
+        }
+      ],
+      "related": [
+        { "href": "/see-doctor-portugal-tourist", "label": "How to see a doctor in Portugal as a tourist" },
+        { "href": "/see-a-doctor-lisbon", "label": "See a doctor in Lisbon" },
+        { "href": "/see-a-doctor-madeira", "label": "See a doctor in Madeira" },
+        { "href": "/arzt-algarve", "label": "Arzt an der Algarve (Deutsch)" },
+        { "href": "/uti-portugal-what-to-do", "label": "UTI in Portugal: what to do" },
+        { "href": "/renew-prescription-holiday-portugal", "label": "Replace a lost prescription" },
+        { "href": "/tourist-clinic", "label": "Tourist clinic" }
+      ]
+    },
+    {
+      "slug": "arzt-algarve",
+      "group": "see-doctor-algarve",
+      "lang": "de",
+      "hreflang": "de",
+      "status": "live",
+      "showClinicianName": false,
+      "navLabel": "Arzt an der Algarve",
+      "titleTag": "Arzt an der Algarve: Ratgeber für Urlauber (2026)",
+      "description": "Krank an der Algarve? Wann Sie 112 anrufen, wie Apotheken funktionieren, wo die Krankenhäuser sind und wie Sie heute online einen Arzt sprechen.",
+      "h1": "Einen Arzt finden an der Algarve: so geht's im Urlaub",
+      "bookingHref": "/marcar/clinica-geral?ref=arzt-algarve&lang=en",
+      "bookingLabel": "Jetzt online einen Arzt sprechen",
+      "price": "39 €",
+      "priceNote": "Videosprechstunde mit approbierter Ärztin, ca. 30 Minuten. Ein portugiesisches E-Rezept, falls indiziert, gilt in jeder Apotheke in Portugal. Keine extra Gebühr an der Kasse.",
+      "ctaTitle": "Heute noch einen Arzt an der Algarve sprechen?",
+      "ctaLead": "Videosprechstunde auf Englisch, Spanisch oder Portugiesisch, aus dem Hotel. Keine Kliniksuche und keine stundenlange Wartezeit in der Notaufnahme bei einem kleinen Anliegen.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "notice": "Sprechstunden ausschließlich auf Englisch, Spanisch oder Portugiesisch. Keine Beratung auf Deutsch.",
+      "lead": [
+        "Im Urlaub krank zu werden ist belastend, besonders wenn man das Gesundheitssystem vor Ort nicht kennt. Hier erfahren Sie, wie die medizinische Versorgung an der Algarve für Urlauber funktioniert, von der Apotheke bis zum Krankenhaus, und wie Sie noch heute online einen Arzt sprechen, ohne stundenlang in der Notaufnahme zu warten."
+      ],
+      "onlineTitle": "Beschwerden, die wir oft online einschätzen",
+      "urgentTitle": "Stattdessen 112 anrufen",
+      "safeOnline": [
+        "Harnwegsinfekte",
+        "Magen-Darm-Beschwerden und Reisedurchfall",
+        "Halsschmerzen und Ohrenentzündungen, auch nach dem Baden",
+        "Leichter Sonnenbrand, Hitzeerschöpfung, Hautausschläge und Insektenstiche",
+        "Allergien, Augenentzündungen und gelegentlich Quallenstiche",
+        "Ersatz für vergessene oder verlorene Dauermedikamente"
+      ],
+      "goToUrgent": [
+        "Brustschmerzen, Atemnot, Anzeichen eines Schlaganfalls",
+        "Starke Blutungen, schwere Verletzungen, Bewusstlosigkeit",
+        "Eine schwere allergische Reaktion",
+        "Alles, wofür der Arzt eine persönliche Untersuchung für nötig hält"
+      ],
+      "howTitle": "So läuft die Online-Sprechstunde",
+      "howItWorks": [
+        {
+          "title": "Aus dem Hotel buchen",
+          "text": "Termine am selben Tag sind oft verfügbar, sieben Tage die Woche. Der Preis beträgt 39 € und steht vor der Zahlung."
+        },
+        {
+          "title": "Englisch, Spanisch oder Portugiesisch",
+          "text": "Die Sprechstunde ist auf Englisch, Spanisch oder Portugiesisch. Auf Deutsch wird nicht beraten."
+        },
+        {
+          "title": "Rezept in einer Apotheke an der Algarve",
+          "text": "Wenn ein Medikament medizinisch sinnvoll ist, erhalten Sie ein portugiesisches E-Rezept. Es gilt in jeder Apotheke in Portugal, in der Regel mit einem Code per SMS oder E-Mail. Eine portugiesische Versichertennummer brauchen Sie nicht."
+        },
+        {
+          "title": "Rechnung für die Versicherung",
+          "text": "Sie erhalten eine Rechnung und einen ärztlichen Bericht. Die Sprechstunde wird direkt bezahlt. Beides aufbewahren, wenn Sie die Kosten einreichen, und vorher die Versicherungsbedingungen prüfen."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Ihre Möglichkeiten, vom schnellsten bis zum ernstesten Fall",
+          "items": [
+            {
+              "title": "1. Heute noch online einen Arzt sprechen",
+              "text": "Die Lon Clinic ist eine portugiesische Online-Arztpraxis, registriert bei der Gesundheitsbehörde ERS. Die Videosprechstunde findet aus dem Hotel oder Ferienapartment statt, auf Englisch, Spanisch oder Portugiesisch. Falls ein Medikament sinnvoll ist, stellt die Ärztin ein portugiesisches E-Rezept aus, das in jeder Apotheke im Land gilt. Sie erhalten außerdem eine Rechnung und einen ärztlichen Bericht für die Reiseversicherung."
+            },
+            {
+              "title": "2. Apotheken (farmácias)",
+              "text": "Achten Sie auf das grüne Kreuz. Portugiesische Apotheker sind gut ausgebildet und helfen bei kleineren Beschwerden, aber viele Medikamente, auch Antibiotika, sind verschreibungspflichtig. Außerhalb der Öffnungszeiten hängt an jeder Apotheke ein Plan der Notdienstapotheken (farmácias de serviço) aus."
+            },
+            {
+              "title": "3. Gesundheitstelefon SNS 24: 808 24 24 24",
+              "text": "Die öffentliche Gesundheitshotline Portugals bietet rund um die Uhr eine telefonische Ersteinschätzung und sagt Ihnen, wohin Sie gehen sollten. Gut geeignet, wenn Sie unsicher sind, wie dringend Ihr Problem ist."
+            },
+            {
+              "title": "4. Notaufnahmen der Krankenhäuser",
+              "text": "Die großen öffentlichen Krankenhäuser liegen in Faro und Portimão. Notaufnahmen arbeiten mit einer farbcodierten Ersteinschätzung. Bei weniger dringenden Beschwerden kann die Wartezeit viele Stunden betragen, und der Weg aus einem Badeort dauert."
+            }
+          ]
+        },
+        {
+          "h2": "Die wichtigsten öffentlichen Krankenhäuser an der Algarve",
+          "items": [
+            {
+              "title": "Hospital de Faro",
+              "text": "Öffentliches Krankenhaus mit 24-Stunden-Notaufnahme."
+            },
+            {
+              "title": "Hospital de Portimão",
+              "text": "Öffentliches Krankenhaus mit 24-Stunden-Notaufnahme."
+            }
+          ]
+        },
+        {
+          "h2": "Tipps für Ihren Aufenthalt an der Algarve",
+          "paragraphs": [
+            "Die meisten Gesundheitsprobleme an der Algarve haben mit Sonne und Meer zu tun: Sonnenbrand, Hitzeerschöpfung, Dehydrierung, Ohrenentzündungen nach dem Baden und gelegentlich Quallenstiche.",
+            "Die großen öffentlichen Krankenhäuser liegen in Faro und Portimão. Der Weg dorthin kann aus manchen Badeorten dauern. Bei nicht dringenden Beschwerden sind ein Online-Arzt oder die Apotheke vor Ort meist deutlich schneller."
+          ]
+        },
+        {
+          "h2": "Versicherung und Kosten",
+          "paragraphs": [
+            "Urlauber aus der EU, dem EWR und der Schweiz können mit der Europäischen Krankenversicherungskarte (EHIC) das öffentliche Gesundheitssystem nutzen. Das gilt für notwendige öffentliche Versorgung, nicht für eine private Online-Sprechstunde.",
+            "Alle anderen sollten sich auf ihre Reisekrankenversicherung stützen. Online-Sprechstunden werden direkt bezahlt. Bewahren Sie Rechnung und ärztlichen Bericht auf, um die Kosten einzureichen, und prüfen Sie vorher Ihre Versicherungsbedingungen."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Kann mich ein Arzt in Portugal online behandeln und mir etwas verschreiben?",
+          "a": "Ja. Nach der Videosprechstunde wird verschrieben, was medizinisch sinnvoll ist. Das Rezept ist elektronisch und gilt in portugiesischen Apotheken. Die Sprechstunde selbst ist auf Englisch, Spanisch oder Portugiesisch."
+        },
+        {
+          "q": "Brauche ich eine portugiesische Versichertennummer?",
+          "a": "Nein. Sie können mit Reisepass oder Personalausweis buchen."
+        },
+        {
+          "q": "Wann sollte ich stattdessen ins Krankenhaus?",
+          "a": "Bei Brustschmerzen, Atemnot, Schlaganfallzeichen, starken Blutungen, schweren Verletzungen, Bewusstlosigkeit oder einer schweren allergischen Reaktion wählen Sie die 112. Auch dann, wenn der Arzt eine persönliche Untersuchung für nötig hält."
+        }
+      ],
+      "related": [
+        { "href": "/see-a-doctor-algarve", "label": "See a doctor in the Algarve (English)" },
+        { "href": "/medecin-algarve", "label": "Consulter un médecin en Algarve (français)" },
+        { "href": "/arzt-lissabon", "label": "Arzt in Lissabon" },
+        { "href": "/arzt-porto", "label": "Arzt in Porto" },
+        { "href": "/blog/krankenversicherung-portugal-leitfaden", "label": "Krankenversicherung in Portugal" },
+        { "href": "/arzt-portugal-tourist-finden", "label": "Arzt in Portugal als Tourist" },
+        { "href": "/tourist-clinic", "label": "Tourist clinic" }
+      ]
+    },
+    {
+      "slug": "medecin-algarve",
+      "group": "see-doctor-algarve",
+      "lang": "fr",
+      "hreflang": "fr",
+      "status": "live",
+      "showClinicianName": false,
+      "navLabel": "Médecin en Algarve",
+      "titleTag": "Consulter un médecin en Algarve : guide pour touristes (2026)",
+      "description": "Malade en Algarve ? Quand appeler le 112, comment fonctionnent les pharmacies, où sont les hôpitaux et comment consulter un médecin en ligne dès aujourd'hui.",
+      "h1": "Consulter un médecin en Algarve pendant vos vacances",
+      "bookingHref": "/marcar/clinica-geral?ref=medecin-algarve&lang=en",
+      "bookingLabel": "Consulter un médecin en ligne maintenant",
+      "price": "39 €",
+      "priceNote": "Téléconsultation avec un médecin inscrit à l'Ordre, environ 30 minutes. Une ordonnance électronique portugaise, si elle est indiquée, est valable dans toutes les pharmacies du Portugal. Pas de frais de prescription en plus.",
+      "ctaTitle": "Besoin d'un médecin en Algarve aujourd'hui ?",
+      "ctaLead": "Téléconsultation en anglais, en espagnol ou en portugais, depuis l'hôtel. Pas de recherche de clinique, et pas des heures d'attente aux urgences pour un problème mineur.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "notice": "Les consultations se déroulent exclusivement en anglais, en espagnol ou en portugais. Pas de consultation en français.",
+      "lead": [
+        "Tomber malade en vacances est stressant, surtout quand on ne connaît pas le système de santé local. Voici comment fonctionne la prise en charge des visiteurs en Algarve, de la pharmacie à l'hôpital, et comment consulter un médecin en ligne dès aujourd'hui sans passer des heures aux urgences."
+      ],
+      "onlineTitle": "Problèmes que nous évaluons souvent en ligne",
+      "urgentTitle": "Appelez plutôt le 112",
+      "safeOnline": [
+        "Infections urinaires",
+        "Troubles digestifs et diarrhée du voyageur",
+        "Maux de gorge et otites, y compris après la baignade",
+        "Coups de soleil et coups de chaleur légers, éruptions cutanées et piqûres d'insectes",
+        "Allergies, infections des yeux et parfois piqûres de méduse",
+        "Remplacement d'un traitement habituel oublié ou perdu"
+      ],
+      "goToUrgent": [
+        "Douleur thoracique, difficulté à respirer, signes d'AVC",
+        "Saignement important, blessure grave, perte de connaissance",
+        "Réaction allergique sévère",
+        "Tout ce pour quoi le médecin juge un examen en personne nécessaire"
+      ],
+      "howTitle": "Comment se passe la téléconsultation",
+      "howItWorks": [
+        {
+          "title": "Réserver depuis l'hôtel",
+          "text": "Des créneaux le jour même sont souvent disponibles, sept jours sur sept. Le prix est de 39 €, affiché avant le paiement."
+        },
+        {
+          "title": "Anglais, espagnol ou portugais",
+          "text": "La consultation se fait en anglais, en espagnol ou en portugais. Il n'y a pas de consultation en français."
+        },
+        {
+          "title": "Ordonnance dans une pharmacie de l'Algarve",
+          "text": "Si un médicament est justifié, vous recevez une ordonnance électronique portugaise. Elle est valable dans toutes les pharmacies du Portugal, en général avec un code par SMS ou e-mail. Vous n'avez pas besoin d'un numéro de santé portugais."
+        },
+        {
+          "title": "Facture pour l'assurance",
+          "text": "Vous recevez une facture et un compte rendu médical. La téléconsultation est payée directement. Conservez les deux documents pour une demande de remboursement, et vérifiez d'abord votre contrat."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Vos options, de la plus rapide à la plus sérieuse",
+          "items": [
+            {
+              "title": "1. Consulter un médecin en ligne aujourd'hui",
+              "text": "Lon Clinic est une clinique médicale portugaise en ligne, enregistrée auprès de l'autorité de santé (ERS). La téléconsultation se fait depuis l'hôtel ou la location, en anglais, en espagnol ou en portugais. Si un médicament est justifié, le médecin émet une ordonnance électronique portugaise valable dans toutes les pharmacies du pays. Vous recevez aussi une facture et un compte rendu médical pour votre assurance voyage."
+            },
+            {
+              "title": "2. Les pharmacies (farmácias)",
+              "text": "Repérez la croix verte. Les pharmaciens portugais sont bien formés et peuvent aider pour les petits problèmes, mais beaucoup de médicaments, dont les antibiotiques, nécessitent une ordonnance. En dehors des heures d'ouverture, la liste des pharmacies de garde (farmácias de serviço) est affichée sur la porte de chaque pharmacie."
+            },
+            {
+              "title": "3. Ligne santé SNS 24 : 808 24 24 24",
+              "text": "La ligne de santé publique portugaise assure un triage téléphonique 24 h/24 et vous indique où aller. Utile si vous ne savez pas à quel point votre problème est urgent."
+            },
+            {
+              "title": "4. Les urgences hospitalières",
+              "text": "Les principaux hôpitaux publics sont à Faro et Portimão. Les urgences fonctionnent avec un triage par couleur. Pour un problème peu urgent, l'attente peut durer de nombreuses heures, et le trajet depuis une station balnéaire peut être long."
+            }
+          ]
+        },
+        {
+          "h2": "Les principaux hôpitaux publics en Algarve",
+          "items": [
+            {
+              "title": "Hospital de Faro",
+              "text": "Hôpital public avec urgences 24 h/24."
+            },
+            {
+              "title": "Hospital de Portimão",
+              "text": "Hôpital public avec urgences 24 h/24."
+            }
+          ]
+        },
+        {
+          "h2": "Conseils pour votre séjour en Algarve",
+          "paragraphs": [
+            "En Algarve, la plupart des problèmes de santé viennent du soleil et de la mer : coups de soleil, coups de chaleur, déshydratation, otites après la baignade et parfois piqûres de méduse.",
+            "Les principaux hôpitaux publics sont à Faro et Portimão, et le trajet depuis certaines stations balnéaires peut être long. Pour un problème non urgent, un médecin en ligne ou la pharmacie locale sont généralement bien plus rapides."
+          ]
+        },
+        {
+          "h2": "Assurance et coûts",
+          "paragraphs": [
+            "Les visiteurs de l'UE, de l'EEE et de Suisse peuvent utiliser le système de santé public avec leur Carte européenne d'assurance maladie (CEAM). Cela couvre les soins publics nécessaires, pas une téléconsultation privée.",
+            "Les autres doivent compter sur leur assurance voyage. Les téléconsultations sont payées directement. Conservez la facture et le compte rendu médical pour demander un remboursement, et vérifiez d'abord les conditions de votre contrat."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Un médecin au Portugal peut-il me consulter en ligne et me prescrire un traitement ?",
+          "a": "Oui. Après la téléconsultation, le médecin prescrit ce qui est médicalement justifié. L'ordonnance est électronique et valable dans les pharmacies portugaises. La consultation elle-même se fait en anglais, en espagnol ou en portugais."
+        },
+        {
+          "q": "Ai-je besoin d'un numéro de santé portugais ?",
+          "a": "Non. Vous pouvez réserver avec votre passeport ou votre carte d'identité."
+        },
+        {
+          "q": "Quand faut-il plutôt aller à l'hôpital ?",
+          "a": "En cas de douleur thoracique, de difficulté à respirer, de signes d'AVC, de saignement important, de blessure grave, de perte de connaissance ou de réaction allergique sévère, appelez le 112. Allez aussi sur place si le médecin estime qu'un examen en personne est nécessaire."
+        }
+      ],
+      "related": [
+        { "href": "/see-a-doctor-algarve", "label": "See a doctor in the Algarve (English)" },
+        { "href": "/arzt-algarve", "label": "Arzt an der Algarve (Deutsch)" },
+        { "href": "/medico-algarve", "label": "Ir al médico en el Algarve (español)" },
+        { "href": "/medecin-lisbonne", "label": "Consulter un médecin à Lisbonne" },
+        { "href": "/consulter-medecin-portugal-touriste", "label": "Consulter un médecin au Portugal" },
+        { "href": "/tourist-clinic", "label": "Clinique touriste" }
+      ]
+    },
+    {
+      "slug": "medico-algarve",
+      "group": "see-doctor-algarve",
+      "lang": "es",
+      "hreflang": "es",
+      "status": "live",
+      "showClinicianName": false,
+      "navLabel": "Médico en el Algarve",
+      "titleTag": "Ir al médico en el Algarve: guía para turistas (2026)",
+      "description": "¿Se encuentra mal en el Algarve? Cuándo llamar al 112, cómo funcionan las farmacias, dónde están los hospitales y cómo ver a un médico online hoy mismo.",
+      "h1": "Cómo ver a un médico en el Algarve si está de vacaciones",
+      "bookingHref": "/marcar/clinica-geral?ref=medico-algarve&lang=es",
+      "bookingLabel": "Ver a un médico online ahora",
+      "price": "39 €",
+      "priceNote": "Videoconsulta con médica colegiada, unos 30 minutos. Una receta electrónica portuguesa, si está indicada, vale en cualquier farmacia de Portugal. Sin tasas extra al pagar.",
+      "ctaTitle": "¿Necesita un médico en el Algarve hoy?",
+      "ctaLead": "Videoconsulta en inglés, español o portugués, desde el hotel. Sin buscar clínica y sin horas de espera en urgencias por un problema menor.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "lead": [
+        "Ponerse enfermo de vacaciones es estresante, sobre todo si no conoce el sistema sanitario local. Aquí le explicamos cómo funciona la atención médica para visitantes en el Algarve, de la farmacia al hospital, y cómo ver a un médico online hoy mismo sin pasar horas en urgencias."
+      ],
+      "notice": "Emergencia: llame al 112 (gratuito, 24 h, se habla inglés) si tiene dolor en el pecho, dificultad para respirar, signos de ictus, una hemorragia importante, una lesión grave, pérdida de consciencia o una reacción alérgica grave. En estos casos no espere a una consulta online.",
+      "onlineTitle": "Problemas que a menudo valoramos online",
+      "urgentTitle": "Llame al 112",
+      "safeOnline": [
+        "Infecciones de orina",
+        "Problemas de estómago y diarrea del viajero",
+        "Dolor de garganta y otitis, también después del baño",
+        "Quemaduras solares y golpes de calor leves, erupciones y picaduras",
+        "Alergias, infecciones oculares y, de vez en cuando, picaduras de medusa",
+        "Reposición de medicación habitual olvidada o perdida"
+      ],
+      "goToUrgent": [
+        "Dolor en el pecho, dificultad para respirar, signos de ictus",
+        "Hemorragia importante, lesión grave, pérdida de consciencia",
+        "Reacción alérgica grave",
+        "Cualquier caso en el que el médico considere necesaria una exploración en persona"
+      ],
+      "howTitle": "Cómo es la videoconsulta",
+      "howItWorks": [
+        {
+          "title": "Reserve desde el hotel",
+          "text": "A menudo hay huecos el mismo día, los siete días de la semana. El precio es 39 € y se ve antes de pagar."
+        },
+        {
+          "title": "Inglés, español o portugués",
+          "text": "La consulta es en inglés, español o portugués."
+        },
+        {
+          "title": "Receta en una farmacia del Algarve",
+          "text": "Si un medicamento está indicado, recibe una receta electrónica portuguesa. Vale en cualquier farmacia de Portugal, normalmente con un código por SMS o correo. No necesita un número de salud portugués."
+        },
+        {
+          "title": "Factura para el seguro",
+          "text": "Recibe una factura y un informe médico. La consulta se paga directamente. Guarde ambos documentos si pide el reembolso, y revise antes las condiciones de la póliza."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Sus opciones, de la más rápida a la más seria",
+          "items": [
+            {
+              "title": "1. Ver a un médico online hoy",
+              "text": "Lon Clinic es una clínica médica online portuguesa, registrada en la autoridad sanitaria (ERS). La videoconsulta se hace desde el hotel o el apartamento, en inglés, español o portugués. Si necesita medicación y está indicada, el médico emite una receta electrónica portuguesa válida en cualquier farmacia del país. También recibe una factura y un informe médico para su seguro de viaje."
+            },
+            {
+              "title": "2. Farmacias (farmácias)",
+              "text": "Busque la cruz verde. Los farmacéuticos portugueses están bien formados y pueden ayudarle con problemas leves, pero muchos medicamentos, incluidos los antibióticos, necesitan receta. Fuera del horario habitual, la lista de farmacias de guardia (farmácias de serviço) está en la puerta de cada farmacia."
+            },
+            {
+              "title": "3. Línea de salud SNS 24: 808 24 24 24",
+              "text": "La línea de salud pública de Portugal ofrece triaje telefónico las 24 horas y le indica adónde ir. Es útil si no sabe si su problema es urgente."
+            },
+            {
+              "title": "4. Urgencias hospitalarias",
+              "text": "Los principales hospitales públicos están en Faro y Portimão. Las urgencias usan un triaje por colores, así que con un problema poco urgente la espera puede ser de muchas horas, y desde algunas zonas de playa el trayecto es largo."
+            }
+          ]
+        },
+        {
+          "h2": "Los principales hospitales públicos en el Algarve",
+          "items": [
+            {
+              "title": "Hospital de Faro",
+              "text": "Hospital público con urgencias 24 horas."
+            },
+            {
+              "title": "Hospital de Portimão",
+              "text": "Hospital público con urgencias 24 horas."
+            }
+          ]
+        },
+        {
+          "h2": "Consejos para su estancia en el Algarve",
+          "paragraphs": [
+            "La mayoría de los problemas de salud en el Algarve vienen del sol y del mar: quemaduras solares, golpes de calor, deshidratación, otitis después del baño y, de vez en cuando, picaduras de medusa.",
+            "Los principales hospitales públicos están en Faro y Portimão, y desde algunas zonas de playa el trayecto puede ser largo. Para problemas no urgentes, un médico online o la farmacia local suelen ser mucho más rápidos."
+          ]
+        },
+        {
+          "h2": "Seguro y costes",
+          "paragraphs": [
+            "Los visitantes de la UE, el EEE y Suiza pueden usar el sistema público con su Tarjeta Sanitaria Europea (TSE). Cubre la atención pública necesaria, no una consulta online privada.",
+            "El resto debe contar con su seguro de viaje. Las consultas online se pagan directamente. Guarde la factura y el informe médico para pedir el reembolso, y revise antes las condiciones de su póliza."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "¿Puede un médico en Portugal atenderme online y recetarme medicación?",
+          "a": "Sí. Tras la videoconsulta, el médico receta lo que esté clínicamente indicado. La receta es electrónica y vale en las farmacias portuguesas. La consulta puede ser en español."
+        },
+        {
+          "q": "¿Necesito un número de salud portugués?",
+          "a": "No. Puede reservar con su pasaporte o DNI."
+        },
+        {
+          "q": "¿Cuándo debo ir al hospital?",
+          "a": "Si tiene dolor en el pecho, dificultad para respirar, signos de ictus, una hemorragia importante, una lesión grave, pérdida de consciencia o una reacción alérgica grave, llame al 112. También si el médico considera que necesita una exploración en persona."
+        }
+      ],
+      "related": [
+        { "href": "/see-a-doctor-algarve", "label": "See a doctor in the Algarve (English)" },
+        { "href": "/arzt-algarve", "label": "Arzt an der Algarve (Deutsch)" },
+        { "href": "/medecin-algarve", "label": "Consulter un médecin en Algarve (français)" },
+        { "href": "/medico-lisboa", "label": "Ir al médico en Lisboa" },
+        { "href": "/ver-medico-portugal-turista", "label": "Ver a un médico en Portugal siendo turista" },
+        { "href": "/tourist-clinic", "label": "Clínica turista" }
+      ]
+    },
+    {
+      "slug": "arzt-porto",
+      "group": "see-doctor-porto",
+      "lang": "de",
+      "hreflang": "de",
+      "status": "live",
+      "showClinicianName": false,
+      "navLabel": "Arzt in Porto",
+      "titleTag": "Arzt in Porto: Ratgeber für Urlauber (2026)",
+      "description": "Krank in Porto? Wann Sie 112 anrufen, wie Apotheken funktionieren, wo die Krankenhäuser sind und wie Sie heute online einen Arzt sprechen.",
+      "h1": "Einen Arzt finden in Porto: so geht's im Urlaub",
+      "bookingHref": "/marcar/clinica-geral?ref=arzt-porto&lang=en",
+      "bookingLabel": "Jetzt online einen Arzt sprechen",
+      "price": "39 €",
+      "priceNote": "Videosprechstunde mit approbierter Ärztin, ca. 30 Minuten. Ein portugiesisches E-Rezept, falls indiziert, gilt in jeder Apotheke in Portugal. Keine extra Gebühr an der Kasse.",
+      "ctaTitle": "Heute noch einen Arzt in Porto sprechen?",
+      "ctaLead": "Videosprechstunde auf Englisch, Spanisch oder Portugiesisch, aus dem Hotel. Keine Kliniksuche und keine stundenlange Wartezeit in der Notaufnahme bei einem kleinen Anliegen.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "notice": "Sprechstunden ausschließlich auf Englisch, Spanisch oder Portugiesisch. Keine Beratung auf Deutsch.",
+      "lead": [
+        "Im Urlaub krank zu werden ist belastend, besonders wenn man das Gesundheitssystem vor Ort nicht kennt. Hier erfahren Sie, wie die medizinische Versorgung in Porto für Urlauber funktioniert, von der Apotheke bis zum Krankenhaus, und wie Sie noch heute online einen Arzt sprechen, ohne stundenlang in der Notaufnahme zu warten."
+      ],
+      "onlineTitle": "Beschwerden, die wir oft online einschätzen",
+      "urgentTitle": "Stattdessen 112 anrufen",
+      "safeOnline": [
+        "Harnwegsinfekte",
+        "Magen-Darm-Beschwerden und Reisedurchfall",
+        "Halsschmerzen und Ohrenentzündungen, auch nach dem Baden",
+        "Leichter Sonnenbrand, Hitzeerschöpfung, Hautausschläge und Insektenstiche",
+        "Allergien und Augenentzündungen",
+        "Ersatz für vergessene oder verlorene Dauermedikamente"
+      ],
+      "goToUrgent": [
+        "Brustschmerzen, Atemnot, Anzeichen eines Schlaganfalls",
+        "Starke Blutungen, schwere Verletzungen, Bewusstlosigkeit",
+        "Eine schwere allergische Reaktion",
+        "Alles, wofür der Arzt eine persönliche Untersuchung für nötig hält"
+      ],
+      "howTitle": "So läuft die Online-Sprechstunde",
+      "howItWorks": [
+        {
+          "title": "Aus dem Hotel buchen",
+          "text": "Termine am selben Tag sind oft verfügbar, sieben Tage die Woche. Der Preis beträgt 39 € und steht vor der Zahlung."
+        },
+        {
+          "title": "Englisch, Spanisch oder Portugiesisch",
+          "text": "Die Sprechstunde ist auf Englisch, Spanisch oder Portugiesisch. Auf Deutsch wird nicht beraten."
+        },
+        {
+          "title": "Rezept in einer Apotheke in Porto",
+          "text": "Wenn ein Medikament medizinisch sinnvoll ist, erhalten Sie ein portugiesisches E-Rezept. Es gilt in jeder Apotheke in Portugal, in der Regel mit einem Code per SMS oder E-Mail. Eine portugiesische Versichertennummer brauchen Sie nicht."
+        },
+        {
+          "title": "Rechnung für die Versicherung",
+          "text": "Sie erhalten eine Rechnung und einen ärztlichen Bericht. Die Sprechstunde wird direkt bezahlt. Beides aufbewahren, wenn Sie die Kosten einreichen, und vorher die Versicherungsbedingungen prüfen."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Ihre Möglichkeiten, vom schnellsten bis zum ernstesten Fall",
+          "items": [
+            {
+              "title": "1. Heute noch online einen Arzt sprechen",
+              "text": "Die Lon Clinic ist eine portugiesische Online-Arztpraxis, registriert bei der Gesundheitsbehörde ERS. Die Videosprechstunde findet aus dem Hotel oder Ferienapartment statt, auf Englisch, Spanisch oder Portugiesisch. Falls ein Medikament sinnvoll ist, stellt die Ärztin ein portugiesisches E-Rezept aus, das in jeder Apotheke im Land gilt. Sie erhalten außerdem eine Rechnung und einen ärztlichen Bericht für die Reiseversicherung."
+            },
+            {
+              "title": "2. Apotheken (farmácias)",
+              "text": "Achten Sie auf das grüne Kreuz. Portugiesische Apotheker sind gut ausgebildet und helfen bei kleineren Beschwerden, aber viele Medikamente, auch Antibiotika, sind verschreibungspflichtig. Außerhalb der Öffnungszeiten hängt an jeder Apotheke ein Plan der Notdienstapotheken (farmácias de serviço) aus."
+            },
+            {
+              "title": "3. Gesundheitstelefon SNS 24: 808 24 24 24",
+              "text": "Die öffentliche Gesundheitshotline Portugals bietet rund um die Uhr eine telefonische Ersteinschätzung und sagt Ihnen, wohin Sie gehen sollten. Gut geeignet, wenn Sie unsicher sind, wie dringend Ihr Problem ist."
+            },
+            {
+              "title": "4. Notaufnahmen der Krankenhäuser",
+              "text": "Portugiesische Notaufnahmen arbeiten mit einer farbcodierten Ersteinschätzung. Bei weniger dringenden Beschwerden kann die Wartezeit viele Stunden betragen."
+            }
+          ]
+        },
+        {
+          "h2": "Die wichtigsten öffentlichen Krankenhäuser in Porto",
+          "items": [
+            {
+              "title": "Hospital de São João",
+              "text": "Öffentliches Krankenhaus mit 24-Stunden-Notaufnahme."
+            },
+            {
+              "title": "Hospital de Santo António",
+              "text": "Öffentliches Krankenhaus mit 24-Stunden-Notaufnahme."
+            }
+          ]
+        },
+        {
+          "h2": "Tipps für Ihren Aufenthalt in Porto",
+          "paragraphs": [
+            "Porto ist steil und außerhalb des Sommers oft regnerisch. Ausrutscher und Stürze sind häufig, ebenso Erkältungen, Halsschmerzen und Atemwegsinfekte in den kühleren Monaten.",
+            "Bei Weintouren ins Douro-Tal: viel Wasser trinken und im Sommer an die Hitze denken."
+          ]
+        },
+        {
+          "h2": "Versicherung und Kosten",
+          "paragraphs": [
+            "Urlauber aus der EU, dem EWR und der Schweiz können mit der Europäischen Krankenversicherungskarte (EHIC) das öffentliche Gesundheitssystem nutzen. Das gilt für notwendige öffentliche Versorgung, nicht für eine private Online-Sprechstunde.",
+            "Alle anderen sollten sich auf ihre Reisekrankenversicherung stützen. Online-Sprechstunden werden direkt bezahlt. Bewahren Sie Rechnung und ärztlichen Bericht auf, um die Kosten einzureichen, und prüfen Sie vorher Ihre Versicherungsbedingungen."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Kann mich ein Arzt in Portugal online behandeln und mir etwas verschreiben?",
+          "a": "Ja. Nach der Videosprechstunde wird verschrieben, was medizinisch sinnvoll ist. Das Rezept ist elektronisch und gilt in portugiesischen Apotheken. Die Sprechstunde selbst ist auf Englisch, Spanisch oder Portugiesisch."
+        },
+        {
+          "q": "Brauche ich eine portugiesische Versichertennummer?",
+          "a": "Nein. Sie können mit Reisepass oder Personalausweis buchen."
+        },
+        {
+          "q": "Wann sollte ich stattdessen ins Krankenhaus?",
+          "a": "Bei Brustschmerzen, Atemnot, Schlaganfallzeichen, starken Blutungen, schweren Verletzungen, Bewusstlosigkeit oder einer schweren allergischen Reaktion wählen Sie die 112. Auch dann, wenn der Arzt eine persönliche Untersuchung für nötig hält."
+        }
+      ],
+      "related": [
+        { "href": "/english-speaking-doctor-porto", "label": "English-speaking doctor in Porto" },
+        { "href": "/medecin-porto", "label": "Consulter un médecin à Porto (français)" },
+        { "href": "/arzt-lissabon", "label": "Arzt in Lissabon" },
+        { "href": "/arzt-algarve", "label": "Arzt an der Algarve" },
+        { "href": "/blog/krankenversicherung-portugal-leitfaden", "label": "Krankenversicherung in Portugal" },
+        { "href": "/arzt-portugal-tourist-finden", "label": "Arzt in Portugal als Tourist" },
+        { "href": "/tourist-clinic", "label": "Tourist clinic" }
+      ]
+    },
+    {
+      "slug": "medecin-porto",
+      "group": "see-doctor-porto",
+      "lang": "fr",
+      "hreflang": "fr",
+      "status": "live",
+      "showClinicianName": false,
+      "navLabel": "Médecin à Porto",
+      "titleTag": "Consulter un médecin à Porto : guide pour touristes (2026)",
+      "description": "Malade à Porto ? Quand appeler le 112, comment fonctionnent les pharmacies, où sont les hôpitaux et comment consulter un médecin en ligne dès aujourd'hui.",
+      "h1": "Consulter un médecin à Porto pendant vos vacances",
+      "bookingHref": "/marcar/clinica-geral?ref=medecin-porto&lang=en",
+      "bookingLabel": "Consulter un médecin en ligne maintenant",
+      "price": "39 €",
+      "priceNote": "Téléconsultation avec un médecin inscrit à l'Ordre, environ 30 minutes. Une ordonnance électronique portugaise, si elle est indiquée, est valable dans toutes les pharmacies du Portugal. Pas de frais de prescription en plus.",
+      "ctaTitle": "Besoin d'un médecin à Porto aujourd'hui ?",
+      "ctaLead": "Téléconsultation en anglais, en espagnol ou en portugais, depuis l'hôtel. Pas de recherche de clinique, et pas des heures d'attente aux urgences pour un problème mineur.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "notice": "Les consultations se déroulent exclusivement en anglais, en espagnol ou en portugais. Pas de consultation en français.",
+      "lead": [
+        "Tomber malade en vacances est stressant, surtout quand on ne connaît pas le système de santé local. Voici comment fonctionne la prise en charge des visiteurs à Porto, de la pharmacie à l'hôpital, et comment consulter un médecin en ligne dès aujourd'hui sans passer des heures aux urgences."
+      ],
+      "onlineTitle": "Problèmes que nous évaluons souvent en ligne",
+      "urgentTitle": "Appelez plutôt le 112",
+      "safeOnline": [
+        "Infections urinaires",
+        "Troubles digestifs et diarrhée du voyageur",
+        "Maux de gorge et otites, y compris après la baignade",
+        "Coups de soleil et coups de chaleur légers, éruptions cutanées et piqûres d'insectes",
+        "Allergies et infections des yeux",
+        "Remplacement d'un traitement habituel oublié ou perdu"
+      ],
+      "goToUrgent": [
+        "Douleur thoracique, difficulté à respirer, signes d'AVC",
+        "Saignement important, blessure grave, perte de connaissance",
+        "Réaction allergique sévère",
+        "Tout ce pour quoi le médecin juge un examen en personne nécessaire"
+      ],
+      "howTitle": "Comment se passe la téléconsultation",
+      "howItWorks": [
+        {
+          "title": "Réserver depuis l'hôtel",
+          "text": "Des créneaux le jour même sont souvent disponibles, sept jours sur sept. Le prix est de 39 €, affiché avant le paiement."
+        },
+        {
+          "title": "Anglais, espagnol ou portugais",
+          "text": "La consultation se fait en anglais, en espagnol ou en portugais. Il n'y a pas de consultation en français."
+        },
+        {
+          "title": "Ordonnance dans une pharmacie de Porto",
+          "text": "Si un médicament est justifié, vous recevez une ordonnance électronique portugaise. Elle est valable dans toutes les pharmacies du Portugal, en général avec un code par SMS ou e-mail. Vous n'avez pas besoin d'un numéro de santé portugais."
+        },
+        {
+          "title": "Facture pour l'assurance",
+          "text": "Vous recevez une facture et un compte rendu médical. La téléconsultation est payée directement. Conservez les deux documents pour une demande de remboursement, et vérifiez d'abord votre contrat."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Vos options, de la plus rapide à la plus sérieuse",
+          "items": [
+            {
+              "title": "1. Consulter un médecin en ligne aujourd'hui",
+              "text": "Lon Clinic est une clinique médicale portugaise en ligne, enregistrée auprès de l'autorité de santé (ERS). La téléconsultation se fait depuis l'hôtel ou la location, en anglais, en espagnol ou en portugais. Si un médicament est justifié, le médecin émet une ordonnance électronique portugaise valable dans toutes les pharmacies du pays. Vous recevez aussi une facture et un compte rendu médical pour votre assurance voyage."
+            },
+            {
+              "title": "2. Les pharmacies (farmácias)",
+              "text": "Repérez la croix verte. Les pharmaciens portugais sont bien formés et peuvent aider pour les petits problèmes, mais beaucoup de médicaments, dont les antibiotiques, nécessitent une ordonnance. En dehors des heures d'ouverture, la liste des pharmacies de garde (farmácias de serviço) est affichée sur la porte de chaque pharmacie."
+            },
+            {
+              "title": "3. Ligne santé SNS 24 : 808 24 24 24",
+              "text": "La ligne de santé publique portugaise assure un triage téléphonique 24 h/24 et vous indique où aller. Utile si vous ne savez pas à quel point votre problème est urgent."
+            },
+            {
+              "title": "4. Les urgences hospitalières",
+              "text": "Les urgences portugaises fonctionnent avec un triage par couleur. Pour un problème peu urgent, l'attente peut durer de nombreuses heures."
+            }
+          ]
+        },
+        {
+          "h2": "Les principaux hôpitaux publics à Porto",
+          "items": [
+            {
+              "title": "Hospital de São João",
+              "text": "Hôpital public avec urgences 24 h/24."
+            },
+            {
+              "title": "Hospital de Santo António",
+              "text": "Hôpital public avec urgences 24 h/24."
+            }
+          ]
+        },
+        {
+          "h2": "Conseils pour votre séjour à Porto",
+          "paragraphs": [
+            "Porto est une ville pentue et souvent pluvieuse hors été. Glissades et chutes sont fréquentes, tout comme rhumes, maux de gorge et infections respiratoires pendant les mois plus frais.",
+            "Pour les excursions œnologiques dans la vallée du Douro, buvez beaucoup d'eau et anticipez la chaleur en été."
+          ]
+        },
+        {
+          "h2": "Assurance et coûts",
+          "paragraphs": [
+            "Les visiteurs de l'UE, de l'EEE et de Suisse peuvent utiliser le système de santé public avec leur Carte européenne d'assurance maladie (CEAM). Cela couvre les soins publics nécessaires, pas une téléconsultation privée.",
+            "Les autres doivent compter sur leur assurance voyage. Les téléconsultations sont payées directement. Conservez la facture et le compte rendu médical pour demander un remboursement, et vérifiez d'abord les conditions de votre contrat."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Un médecin au Portugal peut-il me consulter en ligne et me prescrire un traitement ?",
+          "a": "Oui. Après la téléconsultation, le médecin prescrit ce qui est médicalement justifié. L'ordonnance est électronique et valable dans les pharmacies portugaises. La consultation elle-même se fait en anglais, en espagnol ou en portugais."
+        },
+        {
+          "q": "Ai-je besoin d'un numéro de santé portugais ?",
+          "a": "Non. Vous pouvez réserver avec votre passeport ou votre carte d'identité."
+        },
+        {
+          "q": "Quand faut-il plutôt aller à l'hôpital ?",
+          "a": "En cas de douleur thoracique, de difficulté à respirer, de signes d'AVC, de saignement important, de blessure grave, de perte de connaissance ou de réaction allergique sévère, appelez le 112. Allez aussi sur place si le médecin estime qu'un examen en personne est nécessaire."
+        }
+      ],
+      "related": [
+        { "href": "/arzt-porto", "label": "Arzt in Porto (Deutsch)" },
+        { "href": "/medico-oporto", "label": "Ir al médico en Oporto (español)" },
+        { "href": "/english-speaking-doctor-porto", "label": "English-speaking doctor in Porto" },
+        { "href": "/medecin-lisbonne", "label": "Consulter un médecin à Lisbonne" },
+        { "href": "/medecin-algarve", "label": "Consulter un médecin en Algarve" },
+        { "href": "/consulter-medecin-portugal-touriste", "label": "Consulter un médecin au Portugal" },
+        { "href": "/tourist-clinic", "label": "Clinique touriste" }
+      ]
+    },
+    {
+      "slug": "medico-oporto",
+      "group": "see-doctor-porto",
+      "lang": "es",
+      "hreflang": "es",
+      "status": "live",
+      "showClinicianName": false,
+      "navLabel": "Médico en Oporto",
+      "titleTag": "Ir al médico en Oporto: guía para turistas (2026)",
+      "description": "¿Se encuentra mal en Oporto? Cuándo llamar al 112, cómo funcionan las farmacias, dónde están los hospitales y cómo ver a un médico online hoy mismo.",
+      "h1": "Cómo ver a un médico en Oporto si está de vacaciones",
+      "bookingHref": "/marcar/clinica-geral?ref=medico-oporto&lang=es",
+      "bookingLabel": "Ver a un médico online ahora",
+      "price": "39 €",
+      "priceNote": "Videoconsulta con médica colegiada, unos 30 minutos. Una receta electrónica portuguesa, si está indicada, vale en cualquier farmacia de Portugal. Sin tasas extra al pagar.",
+      "ctaTitle": "¿Necesita un médico en Oporto hoy?",
+      "ctaLead": "Videoconsulta en inglés, español o portugués, desde el hotel. Sin buscar clínica y sin horas de espera en urgencias por un problema menor.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "lead": [
+        "Ponerse enfermo de vacaciones es estresante, sobre todo si no conoce el sistema sanitario local. Aquí le explicamos cómo funciona la atención médica para visitantes en Oporto, de la farmacia al hospital, y cómo ver a un médico online hoy mismo sin pasar horas en urgencias."
+      ],
+      "notice": "Emergencia: llame al 112 (gratuito, 24 h, se habla inglés) si tiene dolor en el pecho, dificultad para respirar, signos de ictus, una hemorragia importante, una lesión grave, pérdida de consciencia o una reacción alérgica grave. En estos casos no espere a una consulta online.",
+      "onlineTitle": "Problemas que a menudo valoramos online",
+      "urgentTitle": "Llame al 112",
+      "safeOnline": [
+        "Infecciones de orina",
+        "Problemas de estómago y diarrea del viajero",
+        "Dolor de garganta y otitis, también después del baño",
+        "Quemaduras solares y golpes de calor leves, erupciones y picaduras",
+        "Alergias e infecciones oculares",
+        "Reposición de medicación habitual olvidada o perdida"
+      ],
+      "goToUrgent": [
+        "Dolor en el pecho, dificultad para respirar, signos de ictus",
+        "Hemorragia importante, lesión grave, pérdida de consciencia",
+        "Reacción alérgica grave",
+        "Cualquier caso en el que el médico considere necesaria una exploración en persona"
+      ],
+      "howTitle": "Cómo es la videoconsulta",
+      "howItWorks": [
+        {
+          "title": "Reserve desde el hotel",
+          "text": "A menudo hay huecos el mismo día, los siete días de la semana. El precio es 39 € y se ve antes de pagar."
+        },
+        {
+          "title": "Inglés, español o portugués",
+          "text": "La consulta es en inglés, español o portugués."
+        },
+        {
+          "title": "Receta en una farmacia de Oporto",
+          "text": "Si un medicamento está indicado, recibe una receta electrónica portuguesa. Vale en cualquier farmacia de Portugal, normalmente con un código por SMS o correo. No necesita un número de salud portugués."
+        },
+        {
+          "title": "Factura para el seguro",
+          "text": "Recibe una factura y un informe médico. La consulta se paga directamente. Guarde ambos documentos si pide el reembolso, y revise antes las condiciones de la póliza."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Sus opciones, de la más rápida a la más seria",
+          "items": [
+            {
+              "title": "1. Ver a un médico online hoy",
+              "text": "Lon Clinic es una clínica médica online portuguesa, registrada en la autoridad sanitaria (ERS). La videoconsulta se hace desde el hotel o el apartamento, en inglés, español o portugués. Si necesita medicación y está indicada, el médico emite una receta electrónica portuguesa válida en cualquier farmacia del país. También recibe una factura y un informe médico para su seguro de viaje."
+            },
+            {
+              "title": "2. Farmacias (farmácias)",
+              "text": "Busque la cruz verde. Los farmacéuticos portugueses están bien formados y pueden ayudarle con problemas leves, pero muchos medicamentos, incluidos los antibióticos, necesitan receta. Fuera del horario habitual, la lista de farmacias de guardia (farmácias de serviço) está en la puerta de cada farmacia."
+            },
+            {
+              "title": "3. Línea de salud SNS 24: 808 24 24 24",
+              "text": "La línea de salud pública de Portugal ofrece triaje telefónico las 24 horas y le indica adónde ir. Es útil si no sabe si su problema es urgente."
+            },
+            {
+              "title": "4. Urgencias hospitalarias",
+              "text": "Las urgencias en Portugal usan un triaje por colores, así que con un problema poco urgente la espera puede ser de muchas horas."
+            }
+          ]
+        },
+        {
+          "h2": "Los principales hospitales públicos en Oporto",
+          "items": [
+            {
+              "title": "Hospital de São João",
+              "text": "Hospital público con urgencias 24 horas."
+            },
+            {
+              "title": "Hospital de Santo António",
+              "text": "Hospital público con urgencias 24 horas."
+            }
+          ]
+        },
+        {
+          "h2": "Consejos para su estancia en Oporto",
+          "paragraphs": [
+            "Oporto es una ciudad empinada y a menudo lluviosa fuera del verano. Resbalones y caídas son frecuentes, igual que resfriados, dolor de garganta e infecciones respiratorias en los meses más frescos.",
+            "Si hace rutas de vino por el valle del Duero, beba mucha agua y tenga en cuenta el calor en verano."
+          ]
+        },
+        {
+          "h2": "Seguro y costes",
+          "paragraphs": [
+            "Los visitantes de la UE, el EEE y Suiza pueden usar el sistema público con su Tarjeta Sanitaria Europea (TSE). Cubre la atención pública necesaria, no una consulta online privada.",
+            "El resto debe contar con su seguro de viaje. Las consultas online se pagan directamente. Guarde la factura y el informe médico para pedir el reembolso, y revise antes las condiciones de su póliza."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "¿Puede un médico en Portugal atenderme online y recetarme medicación?",
+          "a": "Sí. Tras la videoconsulta, el médico receta lo que esté clínicamente indicado. La receta es electrónica y vale en las farmacias portuguesas. La consulta puede ser en español."
+        },
+        {
+          "q": "¿Necesito un número de salud portugués?",
+          "a": "No. Puede reservar con su pasaporte o DNI."
+        },
+        {
+          "q": "¿Cuándo debo ir al hospital?",
+          "a": "Si tiene dolor en el pecho, dificultad para respirar, signos de ictus, una hemorragia importante, una lesión grave, pérdida de consciencia o una reacción alérgica grave, llame al 112. También si el médico considera que necesita una exploración en persona."
+        }
+      ],
+      "related": [
+        { "href": "/arzt-porto", "label": "Arzt in Porto (Deutsch)" },
+        { "href": "/medecin-porto", "label": "Consulter un médecin à Porto (français)" },
+        { "href": "/english-speaking-doctor-porto", "label": "English-speaking doctor in Porto" },
+        { "href": "/medico-lisboa", "label": "Ir al médico en Lisboa" },
+        { "href": "/medico-algarve", "label": "Ir al médico en el Algarve" },
+        { "href": "/ver-medico-portugal-turista", "label": "Ver a un médico en Portugal siendo turista" }
+      ]
+    },
+    {
+      "slug": "see-a-doctor-madeira",
+      "group": "see-doctor-madeira",
+      "lang": "en",
+      "hreflang": "en",
+      "status": "live",
+      "showClinicianName": false,
+      "navLabel": "See a doctor in Madeira",
+      "titleTag": "See a Doctor in Madeira: Tourist Guide (2026)",
+      "description": "Feeling unwell in Madeira? When to call 112, how pharmacies work, where the hospitals are, and how to see a doctor online today.",
+      "h1": "How to see a doctor in Madeira as a tourist",
+      "bookingHref": "/marcar/clinica-geral?ref=see-a-doctor-madeira&lang=en",
+      "bookingLabel": "See a doctor online now",
+      "price": "39 €",
+      "priceNote": "Video consultation with a licensed doctor, about 30 minutes. A Portuguese electronic prescription, if indicated, works at any pharmacy in Portugal, including Madeira. No extra prescribing fee at checkout.",
+      "ctaTitle": "Need a doctor in Madeira today?",
+      "ctaLead": "Book a video consultation in English, Spanish or Portuguese from your hotel. No clinic hunt, and no emergency-room wait for a minor problem.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "lead": [
+        "Getting sick on holiday is stressful, especially when you don't know how the local system works. Here's how healthcare works for visitors in Madeira, from pharmacies to hospitals, and how to see a doctor online today without spending hours in an emergency room."
+      ],
+      "notice": "Emergency? Call 112 (free, 24/7, English spoken) for chest pain, difficulty breathing, signs of a stroke, severe bleeding, a serious injury, loss of consciousness or a severe allergic reaction. Don't wait for an online consultation in these situations.",
+      "onlineTitle": "Problems we can often assess online",
+      "urgentTitle": "Call 112 instead",
+      "safeOnline": [
+        "Urinary tract infections",
+        "Stomach upsets and traveller's diarrhoea",
+        "Sore throats and ear infections, including swimmer's ear",
+        "Mild sunburn, heat exhaustion, skin rashes and insect bites",
+        "Allergies and eye infections",
+        "Replacing regular medication you have lost or forgotten"
+      ],
+      "goToUrgent": [
+        "Chest pain, difficulty breathing, signs of a stroke",
+        "Severe bleeding, a serious injury, loss of consciousness",
+        "A severe allergic reaction, including after a fall on a levada",
+        "Anything the doctor says needs an in-person examination"
+      ],
+      "howTitle": "How the online consultation works",
+      "howItWorks": [
+        {
+          "title": "Book from your hotel",
+          "text": "Same-day video slots are often available, seven days a week. The price is 39 €, shown before you pay."
+        },
+        {
+          "title": "English, Spanish or Portuguese",
+          "text": "Consultations are in English, Spanish or Portuguese. French and German are not offered; most visitors use English."
+        },
+        {
+          "title": "Prescription at a Madeira pharmacy",
+          "text": "If medication is clinically appropriate, you receive a Portuguese electronic prescription. It works at any pharmacy in Portugal, including Funchal, usually with a code by SMS or email. You do not need a Portuguese health number."
+        },
+        {
+          "title": "Invoice for your insurer",
+          "text": "You receive an invoice and a medical report. Online consultations are paid directly. Keep both documents if you claim reimbursement, and check your policy first."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Your options, from quickest to most serious",
+          "items": [
+            {
+              "title": "1. See a doctor online today",
+              "text": "Lon Clinic is a Portuguese online medical clinic, registered with the health regulator (ERS). You can have a video consultation from your hotel or apartment in English, Spanish or Portuguese. If you need medication, the doctor can issue a Portuguese electronic prescription for any pharmacy in the country. You also receive an invoice and a medical report for your travel insurer."
+            },
+            {
+              "title": "2. Pharmacies (farmácias)",
+              "text": "Look for the green cross. Portuguese pharmacists are well trained and can help with minor problems, but many medicines, including antibiotics, require a prescription. Outside normal hours, a rota of on-duty pharmacies (farmácias de serviço) is posted on the door of every pharmacy."
+            },
+            {
+              "title": "3. Health services in Madeira",
+              "text": "Madeira has its own regional health service (SESARAM), separate from mainland Portugal. For non-urgent problems, a pharmacy or an online doctor is usually the quickest route. For emergencies, call 112."
+            },
+            {
+              "title": "4. Hospital emergency departments",
+              "text": "The main public hospital is in Funchal. Emergency departments use colour-coded triage, so people with less urgent problems can wait many hours."
+            }
+          ]
+        },
+        {
+          "h2": "Main public hospital in Madeira",
+          "items": [
+            {
+              "title": "Hospital Dr. Nélio Mendonça (Funchal)",
+              "text": "Public hospital with a 24-hour emergency department."
+            }
+          ]
+        },
+        {
+          "h2": "Tips for your stay in Madeira",
+          "paragraphs": [
+            "The levada walks are the highlight of many trips, but slips, falls and twisted ankles are common, and mountain weather changes quickly. Carry water, wear proper footwear and tell someone your route.",
+            "Madeira has its own regional health service (SESARAM), and the main hospital is in Funchal."
+          ]
+        },
+        {
+          "h2": "Insurance and costs",
+          "paragraphs": [
+            "Visitors from the EU, EEA and Switzerland can use the public health system with a European Health Insurance Card (EHIC). UK visitors can use a GHIC. That covers necessary public care. It does not pay for a private online consultation.",
+            "Everyone else should rely on travel insurance. Online consultations are paid directly. Keep the invoice and medical report to claim reimbursement, and check your policy's conditions first."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Can a doctor in Portugal see me online and prescribe medication?",
+          "a": "Yes. After a video consultation, the doctor can prescribe what you need if it is clinically appropriate. The prescription is electronic and works at Portuguese pharmacies, including in Madeira."
+        },
+        {
+          "q": "Do I need a Portuguese health number?",
+          "a": "No. You can book with your passport or ID."
+        },
+        {
+          "q": "When should I go to the hospital instead?",
+          "a": "For chest pain, trouble breathing, stroke signs, severe bleeding, a serious injury, loss of consciousness or a severe allergic reaction, call 112. Also go in person if the doctor tells you that you need an examination."
+        }
+      ],
+      "related": [
+        { "href": "/see-doctor-portugal-tourist", "label": "How to see a doctor in Portugal as a tourist" },
+        { "href": "/see-a-doctor-lisbon", "label": "See a doctor in Lisbon" },
+        { "href": "/see-a-doctor-algarve", "label": "See a doctor in the Algarve" },
+        { "href": "/arzt-madeira", "label": "Arzt auf Madeira (Deutsch)" },
+        { "href": "/uti-portugal-what-to-do", "label": "UTI in Portugal: what to do" },
+        { "href": "/renew-prescription-holiday-portugal", "label": "Replace a lost prescription" },
+        { "href": "/tourist-clinic", "label": "Tourist clinic" }
+      ]
+    },
+    {
+      "slug": "arzt-madeira",
+      "group": "see-doctor-madeira",
+      "lang": "de",
+      "hreflang": "de",
+      "status": "live",
+      "showClinicianName": false,
+      "navLabel": "Arzt auf Madeira",
+      "titleTag": "Arzt auf Madeira: Ratgeber für Urlauber (2026)",
+      "description": "Krank auf Madeira? Wann Sie 112 anrufen, wie Apotheken funktionieren, wo die Krankenhäuser sind und wie Sie heute online einen Arzt sprechen.",
+      "h1": "Einen Arzt finden auf Madeira: so geht's im Urlaub",
+      "bookingHref": "/marcar/clinica-geral?ref=arzt-madeira&lang=en",
+      "bookingLabel": "Jetzt online einen Arzt sprechen",
+      "price": "39 €",
+      "priceNote": "Videosprechstunde mit approbierter Ärztin, ca. 30 Minuten. Ein portugiesisches E-Rezept, falls indiziert, gilt in jeder Apotheke in Portugal, auch auf Madeira. Keine extra Gebühr an der Kasse.",
+      "ctaTitle": "Heute noch einen Arzt auf Madeira sprechen?",
+      "ctaLead": "Videosprechstunde auf Englisch, Spanisch oder Portugiesisch, aus dem Hotel. Keine Kliniksuche und keine stundenlange Wartezeit in der Notaufnahme bei einem kleinen Anliegen.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "notice": "Sprechstunden ausschließlich auf Englisch, Spanisch oder Portugiesisch. Keine Beratung auf Deutsch.",
+      "lead": [
+        "Im Urlaub krank zu werden ist belastend, besonders wenn man das Gesundheitssystem vor Ort nicht kennt. Hier erfahren Sie, wie die medizinische Versorgung auf Madeira für Urlauber funktioniert, von der Apotheke bis zum Krankenhaus, und wie Sie noch heute online einen Arzt sprechen, ohne stundenlang in der Notaufnahme zu warten."
+      ],
+      "onlineTitle": "Beschwerden, die wir oft online einschätzen",
+      "urgentTitle": "Stattdessen 112 anrufen",
+      "safeOnline": [
+        "Harnwegsinfekte",
+        "Magen-Darm-Beschwerden und Reisedurchfall",
+        "Halsschmerzen und Ohrenentzündungen, auch nach dem Baden",
+        "Leichter Sonnenbrand, Hitzeerschöpfung, Hautausschläge und Insektenstiche",
+        "Allergien und Augenentzündungen",
+        "Ersatz für vergessene oder verlorene Dauermedikamente"
+      ],
+      "goToUrgent": [
+        "Brustschmerzen, Atemnot, Anzeichen eines Schlaganfalls",
+        "Starke Blutungen, schwere Verletzungen, Bewusstlosigkeit",
+        "Eine schwere allergische Reaktion",
+        "Alles, wofür der Arzt eine persönliche Untersuchung für nötig hält"
+      ],
+      "howTitle": "So läuft die Online-Sprechstunde",
+      "howItWorks": [
+        {
+          "title": "Aus dem Hotel buchen",
+          "text": "Termine am selben Tag sind oft verfügbar, sieben Tage die Woche. Der Preis beträgt 39 € und steht vor der Zahlung."
+        },
+        {
+          "title": "Englisch, Spanisch oder Portugiesisch",
+          "text": "Die Sprechstunde ist auf Englisch, Spanisch oder Portugiesisch. Auf Deutsch wird nicht beraten."
+        },
+        {
+          "title": "Rezept in einer Apotheke auf Madeira",
+          "text": "Wenn ein Medikament medizinisch sinnvoll ist, erhalten Sie ein portugiesisches E-Rezept. Es gilt in jeder Apotheke in Portugal, auch in Funchal, in der Regel mit einem Code per SMS oder E-Mail. Eine portugiesische Versichertennummer brauchen Sie nicht."
+        },
+        {
+          "title": "Rechnung für die Versicherung",
+          "text": "Sie erhalten eine Rechnung und einen ärztlichen Bericht. Die Sprechstunde wird direkt bezahlt. Beides aufbewahren, wenn Sie die Kosten einreichen, und vorher die Versicherungsbedingungen prüfen."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Ihre Möglichkeiten, vom schnellsten bis zum ernstesten Fall",
+          "items": [
+            {
+              "title": "1. Heute noch online einen Arzt sprechen",
+              "text": "Die Lon Clinic ist eine portugiesische Online-Arztpraxis, registriert bei der Gesundheitsbehörde ERS. Die Videosprechstunde findet aus dem Hotel oder Ferienapartment statt, auf Englisch, Spanisch oder Portugiesisch. Falls ein Medikament sinnvoll ist, stellt die Ärztin ein portugiesisches E-Rezept aus, das in jeder Apotheke im Land gilt. Sie erhalten außerdem eine Rechnung und einen ärztlichen Bericht für die Reiseversicherung."
+            },
+            {
+              "title": "2. Apotheken (farmácias)",
+              "text": "Achten Sie auf das grüne Kreuz. Portugiesische Apotheker sind gut ausgebildet und helfen bei kleineren Beschwerden, aber viele Medikamente, auch Antibiotika, sind verschreibungspflichtig. Außerhalb der Öffnungszeiten hängt an jeder Apotheke ein Plan der Notdienstapotheken (farmácias de serviço) aus."
+            },
+            {
+              "title": "3. Gesundheitsversorgung auf Madeira",
+              "text": "Madeira hat einen eigenen regionalen Gesundheitsdienst (SESARAM), getrennt vom portugiesischen Festland. Bei nicht dringenden Beschwerden sind Apotheke oder Online-Arzt meist der schnellste Weg. Im Notfall wählen Sie die 112."
+            },
+            {
+              "title": "4. Notaufnahmen der Krankenhäuser",
+              "text": "Das Hauptkrankenhaus liegt in Funchal. Notaufnahmen arbeiten mit einer farbcodierten Ersteinschätzung. Bei weniger dringenden Beschwerden kann die Wartezeit viele Stunden betragen."
+            }
+          ]
+        },
+        {
+          "h2": "Das wichtigste öffentliche Krankenhaus auf Madeira",
+          "items": [
+            {
+              "title": "Hospital Dr. Nélio Mendonça (Funchal)",
+              "text": "Öffentliches Krankenhaus mit 24-Stunden-Notaufnahme."
+            }
+          ]
+        },
+        {
+          "h2": "Tipps für Ihren Aufenthalt auf Madeira",
+          "paragraphs": [
+            "Die Levada-Wanderungen sind für viele der Höhepunkt der Reise, aber Ausrutscher, Stürze und umgeknickte Knöchel sind häufig, und das Wetter in den Bergen schlägt schnell um. Nehmen Sie Wasser mit, tragen Sie gutes Schuhwerk und sagen Sie jemandem, welche Route Sie gehen.",
+            "Madeira hat einen eigenen regionalen Gesundheitsdienst (SESARAM). Das Hauptkrankenhaus liegt in Funchal."
+          ]
+        },
+        {
+          "h2": "Versicherung und Kosten",
+          "paragraphs": [
+            "Urlauber aus der EU, dem EWR und der Schweiz können mit der Europäischen Krankenversicherungskarte (EHIC) das öffentliche Gesundheitssystem nutzen. Das gilt für notwendige öffentliche Versorgung, nicht für eine private Online-Sprechstunde.",
+            "Alle anderen sollten sich auf ihre Reisekrankenversicherung stützen. Online-Sprechstunden werden direkt bezahlt. Bewahren Sie Rechnung und ärztlichen Bericht auf, um die Kosten einzureichen, und prüfen Sie vorher Ihre Versicherungsbedingungen."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Kann mich ein Arzt in Portugal online behandeln und mir etwas verschreiben?",
+          "a": "Ja. Nach der Videosprechstunde wird verschrieben, was medizinisch sinnvoll ist. Das Rezept ist elektronisch und gilt in portugiesischen Apotheken, auch auf Madeira. Die Sprechstunde selbst ist auf Englisch, Spanisch oder Portugiesisch."
+        },
+        {
+          "q": "Brauche ich eine portugiesische Versichertennummer?",
+          "a": "Nein. Sie können mit Reisepass oder Personalausweis buchen."
+        },
+        {
+          "q": "Wann sollte ich stattdessen ins Krankenhaus?",
+          "a": "Bei Brustschmerzen, Atemnot, Schlaganfallzeichen, starken Blutungen, schweren Verletzungen, Bewusstlosigkeit oder einer schweren allergischen Reaktion wählen Sie die 112. Auch dann, wenn der Arzt eine persönliche Untersuchung für nötig hält."
+        }
+      ],
+      "related": [
+        { "href": "/see-a-doctor-madeira", "label": "See a doctor in Madeira (English)" },
+        { "href": "/medecin-madere", "label": "Consulter un médecin à Madère (français)" },
+        { "href": "/arzt-lissabon", "label": "Arzt in Lissabon" },
+        { "href": "/arzt-porto", "label": "Arzt in Porto" },
+        { "href": "/arzt-algarve", "label": "Arzt an der Algarve" },
+        { "href": "/blog/krankenversicherung-portugal-leitfaden", "label": "Krankenversicherung in Portugal" },
+        { "href": "/tourist-clinic", "label": "Tourist clinic" }
+      ]
+    },
+    {
+      "slug": "medecin-madere",
+      "group": "see-doctor-madeira",
+      "lang": "fr",
+      "hreflang": "fr",
+      "status": "live",
+      "showClinicianName": false,
+      "navLabel": "Médecin à Madère",
+      "titleTag": "Consulter un médecin à Madère : guide pour touristes (2026)",
+      "description": "Malade à Madère ? Quand appeler le 112, comment fonctionnent les pharmacies, où sont les hôpitaux et comment consulter un médecin en ligne dès aujourd'hui.",
+      "h1": "Consulter un médecin à Madère pendant vos vacances",
+      "bookingHref": "/marcar/clinica-geral?ref=medecin-madere&lang=en",
+      "bookingLabel": "Consulter un médecin en ligne maintenant",
+      "price": "39 €",
+      "priceNote": "Téléconsultation avec un médecin inscrit à l'Ordre, environ 30 minutes. Une ordonnance électronique portugaise, si elle est indiquée, est valable dans toutes les pharmacies du Portugal, y compris à Madère. Pas de frais de prescription en plus.",
+      "ctaTitle": "Besoin d'un médecin à Madère aujourd'hui ?",
+      "ctaLead": "Téléconsultation en anglais, en espagnol ou en portugais, depuis l'hôtel. Pas de recherche de clinique, et pas des heures d'attente aux urgences pour un problème mineur.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "notice": "Les consultations se déroulent exclusivement en anglais, en espagnol ou en portugais. Pas de consultation en français.",
+      "lead": [
+        "Tomber malade en vacances est stressant, surtout quand on ne connaît pas le système de santé local. Voici comment fonctionne la prise en charge des visiteurs à Madère, de la pharmacie à l'hôpital, et comment consulter un médecin en ligne dès aujourd'hui sans passer des heures aux urgences."
+      ],
+      "onlineTitle": "Problèmes que nous évaluons souvent en ligne",
+      "urgentTitle": "Appelez plutôt le 112",
+      "safeOnline": [
+        "Infections urinaires",
+        "Troubles digestifs et diarrhée du voyageur",
+        "Maux de gorge et otites, y compris après la baignade",
+        "Coups de soleil et coups de chaleur légers, éruptions cutanées et piqûres d'insectes",
+        "Allergies et infections des yeux",
+        "Remplacement d'un traitement habituel oublié ou perdu"
+      ],
+      "goToUrgent": [
+        "Douleur thoracique, difficulté à respirer, signes d'AVC",
+        "Saignement important, blessure grave, perte de connaissance",
+        "Réaction allergique sévère",
+        "Tout ce pour quoi le médecin juge un examen en personne nécessaire"
+      ],
+      "howTitle": "Comment se passe la téléconsultation",
+      "howItWorks": [
+        {
+          "title": "Réserver depuis l'hôtel",
+          "text": "Des créneaux le jour même sont souvent disponibles, sept jours sur sept. Le prix est de 39 €, affiché avant le paiement."
+        },
+        {
+          "title": "Anglais, espagnol ou portugais",
+          "text": "La consultation se fait en anglais, en espagnol ou en portugais. Il n'y a pas de consultation en français."
+        },
+        {
+          "title": "Ordonnance dans une pharmacie de Madère",
+          "text": "Si un médicament est justifié, vous recevez une ordonnance électronique portugaise. Elle est valable dans toutes les pharmacies du Portugal, y compris à Funchal, en général avec un code par SMS ou e-mail. Vous n'avez pas besoin d'un numéro de santé portugais."
+        },
+        {
+          "title": "Facture pour l'assurance",
+          "text": "Vous recevez une facture et un compte rendu médical. La téléconsultation est payée directement. Conservez les deux documents pour une demande de remboursement, et vérifiez d'abord votre contrat."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Vos options, de la plus rapide à la plus sérieuse",
+          "items": [
+            {
+              "title": "1. Consulter un médecin en ligne aujourd'hui",
+              "text": "Lon Clinic est une clinique médicale portugaise en ligne, enregistrée auprès de l'autorité de santé (ERS). La téléconsultation se fait depuis l'hôtel ou la location, en anglais, en espagnol ou en portugais. Si un médicament est justifié, le médecin émet une ordonnance électronique portugaise valable dans toutes les pharmacies du pays. Vous recevez aussi une facture et un compte rendu médical pour votre assurance voyage."
+            },
+            {
+              "title": "2. Les pharmacies (farmácias)",
+              "text": "Repérez la croix verte. Les pharmaciens portugais sont bien formés et peuvent aider pour les petits problèmes, mais beaucoup de médicaments, dont les antibiotiques, nécessitent une ordonnance. En dehors des heures d'ouverture, la liste des pharmacies de garde (farmácias de serviço) est affichée sur la porte de chaque pharmacie."
+            },
+            {
+              "title": "3. Les services de santé à Madère",
+              "text": "Madère dispose de son propre service régional de santé (SESARAM), distinct du continent. Pour un problème non urgent, la pharmacie ou un médecin en ligne sont généralement le plus rapide. En cas d'urgence, appelez le 112."
+            },
+            {
+              "title": "4. Les urgences hospitalières",
+              "text": "L'hôpital principal se trouve à Funchal. Les urgences fonctionnent avec un triage par couleur. Pour un problème peu urgent, l'attente peut durer de nombreuses heures."
+            }
+          ]
+        },
+        {
+          "h2": "Le principal hôpital public à Madère",
+          "items": [
+            {
+              "title": "Hospital Dr. Nélio Mendonça (Funchal)",
+              "text": "Hôpital public avec urgences 24 h/24."
+            }
+          ]
+        },
+        {
+          "h2": "Conseils pour votre séjour à Madère",
+          "paragraphs": [
+            "Les randonnées le long des levadas sont souvent le temps fort du voyage, mais glissades, chutes et entorses y sont courantes, et la météo en montagne change vite. Emportez de l'eau, portez de bonnes chaussures et prévenez quelqu'un de votre itinéraire.",
+            "Madère dispose de son propre service régional de santé (SESARAM). L'hôpital principal se trouve à Funchal."
+          ]
+        },
+        {
+          "h2": "Assurance et coûts",
+          "paragraphs": [
+            "Les visiteurs de l'UE, de l'EEE et de Suisse peuvent utiliser le système de santé public avec leur Carte européenne d'assurance maladie (CEAM). Cela couvre les soins publics nécessaires, pas une téléconsultation privée.",
+            "Les autres doivent compter sur leur assurance voyage. Les téléconsultations sont payées directement. Conservez la facture et le compte rendu médical pour demander un remboursement, et vérifiez d'abord les conditions de votre contrat."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "Un médecin au Portugal peut-il me consulter en ligne et me prescrire un traitement ?",
+          "a": "Oui. Après la téléconsultation, le médecin prescrit ce qui est médicalement justifié. L'ordonnance est électronique et valable dans les pharmacies portugaises, y compris à Madère. La consultation elle-même se fait en anglais, en espagnol ou en portugais."
+        },
+        {
+          "q": "Ai-je besoin d'un numéro de santé portugais ?",
+          "a": "Non. Vous pouvez réserver avec votre passeport ou votre carte d'identité."
+        },
+        {
+          "q": "Quand faut-il plutôt aller à l'hôpital ?",
+          "a": "En cas de douleur thoracique, de difficulté à respirer, de signes d'AVC, de saignement important, de blessure grave, de perte de connaissance ou de réaction allergique sévère, appelez le 112. Allez aussi sur place si le médecin estime qu'un examen en personne est nécessaire."
+        }
+      ],
+      "related": [
+        { "href": "/see-a-doctor-madeira", "label": "See a doctor in Madeira (English)" },
+        { "href": "/arzt-madeira", "label": "Arzt auf Madeira (Deutsch)" },
+        { "href": "/medico-madeira", "label": "Ir al médico en Madeira (español)" },
+        { "href": "/medecin-lisbonne", "label": "Consulter un médecin à Lisbonne" },
+        { "href": "/medecin-porto", "label": "Consulter un médecin à Porto" },
+        { "href": "/medecin-algarve", "label": "Consulter un médecin en Algarve" },
+        { "href": "/tourist-clinic", "label": "Clinique touriste" }
+      ]
+    },
+    {
+      "slug": "medico-madeira",
+      "group": "see-doctor-madeira",
+      "lang": "es",
+      "hreflang": "es",
+      "status": "live",
+      "showClinicianName": false,
+      "navLabel": "Médico en Madeira",
+      "titleTag": "Ir al médico en Madeira: guía para turistas (2026)",
+      "description": "¿Se encuentra mal en Madeira? Cuándo llamar al 112, cómo funcionan las farmacias, dónde están los hospitales y cómo ver a un médico online hoy mismo.",
+      "h1": "Cómo ver a un médico en Madeira si está de vacaciones",
+      "bookingHref": "/marcar/clinica-geral?ref=medico-madeira&lang=es",
+      "bookingLabel": "Ver a un médico online ahora",
+      "price": "39 €",
+      "priceNote": "Videoconsulta con médica colegiada, unos 30 minutos. Una receta electrónica portuguesa, si está indicada, vale en cualquier farmacia de Portugal, también en Madeira. Sin tasas extra al pagar.",
+      "ctaTitle": "¿Necesita un médico en Madeira hoy?",
+      "ctaLead": "Videoconsulta en inglés, español o portugués, desde el hotel. Sin buscar clínica y sin horas de espera en urgencias por un problema menor.",
+      "datePublished": "2026-09-24",
+      "dateModified": "2026-09-24",
+      "lead": [
+        "Ponerse enfermo de vacaciones es estresante, sobre todo si no conoce el sistema sanitario local. Aquí le explicamos cómo funciona la atención médica para visitantes en Madeira, de la farmacia al hospital, y cómo ver a un médico online hoy mismo sin pasar horas en urgencias."
+      ],
+      "notice": "Emergencia: llame al 112 (gratuito, 24 h, se habla inglés) si tiene dolor en el pecho, dificultad para respirar, signos de ictus, una hemorragia importante, una lesión grave, pérdida de consciencia o una reacción alérgica grave. En estos casos no espere a una consulta online.",
+      "onlineTitle": "Problemas que a menudo valoramos online",
+      "urgentTitle": "Llame al 112",
+      "safeOnline": [
+        "Infecciones de orina",
+        "Problemas de estómago y diarrea del viajero",
+        "Dolor de garganta y otitis, también después del baño",
+        "Quemaduras solares y golpes de calor leves, erupciones y picaduras",
+        "Alergias e infecciones oculares",
+        "Reposición de medicación habitual olvidada o perdida"
+      ],
+      "goToUrgent": [
+        "Dolor en el pecho, dificultad para respirar, signos de ictus",
+        "Hemorragia importante, lesión grave, pérdida de consciencia",
+        "Reacción alérgica grave",
+        "Cualquier caso en el que el médico considere necesaria una exploración en persona"
+      ],
+      "howTitle": "Cómo es la videoconsulta",
+      "howItWorks": [
+        {
+          "title": "Reserve desde el hotel",
+          "text": "A menudo hay huecos el mismo día, los siete días de la semana. El precio es 39 € y se ve antes de pagar."
+        },
+        {
+          "title": "Inglés, español o portugués",
+          "text": "La consulta es en inglés, español o portugués."
+        },
+        {
+          "title": "Receta en una farmacia de Madeira",
+          "text": "Si un medicamento está indicado, recibe una receta electrónica portuguesa. Vale en cualquier farmacia de Portugal, también en Funchal, normalmente con un código por SMS o correo. No necesita un número de salud portugués."
+        },
+        {
+          "title": "Factura para el seguro",
+          "text": "Recibe una factura y un informe médico. La consulta se paga directamente. Guarde ambos documentos si pide el reembolso, y revise antes las condiciones de la póliza."
+        }
+      ],
+      "sections": [
+        {
+          "h2": "Sus opciones, de la más rápida a la más seria",
+          "items": [
+            {
+              "title": "1. Ver a un médico online hoy",
+              "text": "Lon Clinic es una clínica médica online portuguesa, registrada en la autoridad sanitaria (ERS). La videoconsulta se hace desde el hotel o el apartamento, en inglés, español o portugués. Si necesita medicación y está indicada, el médico emite una receta electrónica portuguesa válida en cualquier farmacia del país. También recibe una factura y un informe médico para su seguro de viaje."
+            },
+            {
+              "title": "2. Farmacias (farmácias)",
+              "text": "Busque la cruz verde. Los farmacéuticos portugueses están bien formados y pueden ayudarle con problemas leves, pero muchos medicamentos, incluidos los antibióticos, necesitan receta. Fuera del horario habitual, la lista de farmacias de guardia (farmácias de serviço) está en la puerta de cada farmacia."
+            },
+            {
+              "title": "3. Servicios de salud en Madeira",
+              "text": "Madeira tiene su propio servicio regional de salud (SESARAM), distinto del de Portugal continental. Para problemas no urgentes, una farmacia o un médico online suelen ser lo más rápido. En caso de emergencia, llame al 112."
+            },
+            {
+              "title": "4. Urgencias hospitalarias",
+              "text": "El hospital principal está en Funchal. Las urgencias usan un triaje por colores, así que con un problema poco urgente la espera puede ser de muchas horas."
+            }
+          ]
+        },
+        {
+          "h2": "El principal hospital público en Madeira",
+          "items": [
+            {
+              "title": "Hospital Dr. Nélio Mendonça (Funchal)",
+              "text": "Hospital público con urgencias 24 horas."
+            }
+          ]
+        },
+        {
+          "h2": "Consejos para su estancia en Madeira",
+          "paragraphs": [
+            "Las rutas por las levadas son lo mejor del viaje para muchos, pero los resbalones, caídas y torceduras son habituales, y el tiempo en la montaña cambia rápido. Lleve agua, calzado adecuado y avise a alguien de su ruta.",
+            "Madeira tiene su propio servicio regional de salud (SESARAM) y el hospital principal está en Funchal."
+          ]
+        },
+        {
+          "h2": "Seguro y costes",
+          "paragraphs": [
+            "Los visitantes de la UE, el EEE y Suiza pueden usar el sistema público con su Tarjeta Sanitaria Europea (TSE). Cubre la atención pública necesaria, no una consulta online privada.",
+            "El resto debe contar con su seguro de viaje. Las consultas online se pagan directamente. Guarde la factura y el informe médico para pedir el reembolso, y revise antes las condiciones de su póliza."
+          ]
+        }
+      ],
+      "faq": [
+        {
+          "q": "¿Puede un médico en Portugal atenderme online y recetarme medicación?",
+          "a": "Sí. Tras la videoconsulta, el médico receta lo que esté clínicamente indicado. La receta es electrónica y vale en las farmacias portuguesas, también en Madeira. La consulta puede ser en español."
+        },
+        {
+          "q": "¿Necesito un número de salud portugués?",
+          "a": "No. Puede reservar con su pasaporte o DNI."
+        },
+        {
+          "q": "¿Cuándo debo ir al hospital?",
+          "a": "Si tiene dolor en el pecho, dificultad para respirar, signos de ictus, una hemorragia importante, una lesión grave, pérdida de consciencia o una reacción alérgica grave, llame al 112. También si el médico considera que necesita una exploración en persona."
+        }
+      ],
+      "related": [
+        { "href": "/see-a-doctor-madeira", "label": "See a doctor in Madeira (English)" },
+        { "href": "/arzt-madeira", "label": "Arzt auf Madeira (Deutsch)" },
+        { "href": "/medecin-madere", "label": "Consulter un médecin à Madère (français)" },
+        { "href": "/medico-lisboa", "label": "Ir al médico en Lisboa" },
+        { "href": "/medico-oporto", "label": "Ir al médico en Oporto" },
+        { "href": "/medico-algarve", "label": "Ir al médico en el Algarve" }
       ]
     },
     {

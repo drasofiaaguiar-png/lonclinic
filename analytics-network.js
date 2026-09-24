@@ -242,6 +242,7 @@ function channelOf(row) {
     }
     if (med === 'email' || src === 'email' || src === 'newsletter') return 'email';
     if (med === 'sms' || src === 'sms' || /whatsapp/.test(src) || med === 'chat') return 'sms';
+    if (src === 'chatgpt.com') return 'ai_assistant';
     if (src === 'invite' || med === 'invite') return 'invite';
     if (src === 'internal' || med === 'internal') return 'internal';
     if (med === 'owned' || med === 'quiz' || src === 'quiz') return 'owned';
@@ -411,22 +412,32 @@ function convertingSessionIds(rows) {
     return sids;
 }
 
+function campaignLabel(row) {
+    if (!row) return '';
+    if (row.utmCampaign) return row.utmCampaign;
+    if (row.gclid) return 'Google Ads';
+    return '';
+}
+
 function rankCampaigns(used, views, limit) {
     const convertingSids = convertingSessionIds(used);
     const convertingKeys = new Set();
-    for (const r of used || []) {
+    const labelled = (rows) => (rows || []).map((r) => (r && campaignLabel(r) ? { ...r, utmCampaign: campaignLabel(r) } : r));
+    const usedLabelled = labelled(used);
+    const viewsLabelled = labelled(views);
+    for (const r of usedLabelled) {
         if (!r || !r.utmCampaign || !r.sessionId) continue;
         if (convertingSids.has(String(r.sessionId))) convertingKeys.add(r.utmCampaign);
     }
     const ranked = groupCount(
-        (used || []).filter((r) => r.utmCampaign),
+        usedLabelled.filter((r) => r.utmCampaign),
         'utmCampaign',
         24
     );
     const converting = ranked.filter((c) => convertingKeys.has(c.key));
     const rest = ranked.filter((c) => !convertingKeys.has(c.key));
     const fromViews = groupCount(
-        (views || []).filter((r) => r.utmCampaign),
+        (viewsLabelled || []).filter((r) => r.utmCampaign),
         'utmCampaign',
         8
     );
@@ -467,11 +478,45 @@ function recomputeFunnelConversions(funnel) {
     });
 }
 
-function countFunnelStep(rows, names) {
+function isQuizCta(text, href) {
+    const t = String(text || '').toLowerCase();
+    const h = String(href || '').toLowerCase();
+    if (/start the test|see my result|take the cbi|começar o teste|ver o (meu )?resultado|fazer o teste|teste cbi/.test(t)) {
+        return true;
+    }
+    if (/\/burnout\/teste|bigfive|\/teste-personalidade/.test(h) && !/\/marcar|book-consultation/.test(h)) return true;
+    return false;
+}
+
+function isBookingIntentRow(row) {
+    if (!row || row.name !== 'cta_click') return false;
+    const props = row.props && typeof row.props === 'object' ? row.props : {};
+    const text = String(props.text || props.id || '').toLowerCase();
+    const href = String(props.href || '').toLowerCase();
+    if (isQuizCta(text, href)) return false;
+    if (text === 'book' || text === 'book-priced' || /(^|-)book(-priced)?$/.test(text)) return true;
+    if (/\/(marcar|book-consultation)(\/|\?|$)/.test(href) || /[?&]book=/.test(href)) return true;
+    if (/continuar para dados|continue to details|reservar consulta|marcar consulta|book a consultation|book now/.test(text)) {
+        return true;
+    }
+    return false;
+}
+
+function bookingCtaLabel(row) {
+    const props = row && row.props && typeof row.props === 'object' ? row.props : {};
+    const text = String(props.text || '').trim();
+    const place = String(props.place || '').trim();
+    if (text && text !== 'cta') return text;
+    if (place) return `${place}-book`;
+    return 'book';
+}
+
+function countFunnelStep(rows, names, match) {
     const sessions = new Set();
     let orphans = 0;
     for (const r of rows) {
         if (!names.includes(r.name)) continue;
+        if (typeof match === 'function' && !match(r)) continue;
         if (r.sessionId) sessions.add(r.sessionId);
         else orphans += 1;
     }
@@ -491,7 +536,7 @@ function funnelStepsFor(funnel) {
     return [
         { id: 'visit', names: ['page_view'] },
         { id: 'engage', names: ['page_engaged'] },
-        { id: 'intent', names: ['cta_click', 'whatsapp_click'] },
+        { id: 'intent', names: ['cta_click'], match: isBookingIntentRow },
         { id: 'schedule', names: ['date_select', 'slot_select'] },
         { id: 'checkout', names: ['checkout_start', 'checkout_created'] },
         { id: 'purchase', names: ['payment_succeeded', 'booking_confirmed', 'invite_paid'] }
@@ -502,7 +547,7 @@ function funnelFrom(rows, funnel) {
     const steps = funnelStepsFor(funnel);
     let prev = Math.max(1, countFunnelStep(rows, ['page_view']));
     return steps.map((step, i) => {
-        const count = countFunnelStep(rows, step.names);
+        const count = countFunnelStep(rows, step.names, step.match);
         const conv = i === 0 ? 100 : Math.round((count / prev) * 1000) / 10;
         if (count > 0) prev = count;
         return { id: step.id, label: step.id, sessions: count, stepConversion: conv };
@@ -684,7 +729,7 @@ function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaff
         countries: groupCount(views.filter((r) => r.country), 'country', 8),
         campaigns: rankCampaigns(used, views),
         ctas: groupCount(
-            cta.map((r) => ({ key: (r.props && (r.props.text || r.props.id)) || 'cta' })),
+            cta.filter(isBookingIntentRow).map((r) => ({ key: bookingCtaLabel(r) })),
             'key',
             10
         ),

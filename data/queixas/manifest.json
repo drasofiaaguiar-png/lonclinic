@@ -230,6 +230,7 @@
         "Já tinhas acompanhamento em Portugal e queres continuidade depois de emigrar"
       ],
       "related": [
+        { "href": "/teste-emigracao", "label": "Teste: como está a correr a emigração" },
         { "href": "/ansiedade-no-trabalho", "label": "Ansiedade no trabalho" },
         { "href": "/psicologia-burnout", "label": "Psicólogo para burnout" },
         { "href": "/terapia-de-casal", "label": "Terapia de casal" },

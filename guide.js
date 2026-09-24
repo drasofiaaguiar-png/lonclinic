@@ -732,6 +732,7 @@ function articleAuthorBlock(origin, meta) {
     const o = normalizeOrigin(origin);
     return {
         author: { '@id': `${o}/#organization` },
+        reviewedBy: { '@id': `${o}/#organization` },
         publisher: { '@id': `${o}/#organization` },
         copyrightHolder: { '@id': `${o}/#organization` }
     };
@@ -824,7 +825,10 @@ const TRAVEL_GROUPS = [
         'vacina-febre-amarela-coimbra',
         'vacina-febre-amarela-braga',
         'vacina-febre-amarela-algarve',
-        'vacina-febre-amarela-cuf'
+        'vacina-febre-amarela-cuf',
+        'vacina-febre-amarela-luz',
+        'vacina-febre-amarela-lusiadas',
+        'vacina-febre-amarela-centros'
     ],
     [
         'vacinas-viajante-guia-completo',
@@ -832,6 +836,11 @@ const TRAVEL_GROUPS = [
         'vacinas-viajante-porto',
         'vacinas-viajante-coimbra',
         'vacinas-viajante-braga',
+        'vacinas-viajante-faro',
+        'vacinas-viajante-aveiro',
+        'vacinas-viajante-leiria',
+        'vacinas-viajante-funchal',
+        'vacinas-viajante-ponta-delgada',
         'vacinas-viajante-algarve',
         'vacinas-viajante-cuf'
     ],
@@ -853,11 +862,28 @@ const TRAVEL_GROUPS = [
     [
         'vacinas-para-viajar-por-pais',
         'vacinas-para-viajar-ao-brasil',
+        'vacinas-viajante-brasil',
         'vacinas-para-viajar-a-tailandia',
+        'vacinas-viajante-tailandia',
         'vacinas-para-viajar-a-india',
+        'vacinas-viajante-india',
         'vacinas-para-viajar-ao-quenia',
+        'vacinas-viajante-quenia-tanzania',
         'vacinas-para-viajar-a-angola',
-        'vacinas-para-viajar-a-mocambique'
+        'vacinas-viajante-angola',
+        'vacinas-para-viajar-a-mocambique',
+        'vacinas-viajante-mocambique',
+        'vacinas-viajante-cabo-verde'
+    ],
+    [
+        'travel-vaccines-by-country',
+        'travel-vaccines-brazil',
+        'travel-vaccines-angola',
+        'travel-vaccines-mozambique',
+        'travel-vaccines-cape-verde',
+        'travel-vaccines-kenya-tanzania',
+        'travel-vaccines-thailand',
+        'travel-vaccines-india'
     ]
 ];
 
@@ -895,13 +921,21 @@ const TRAVEL_YF_CITIES = [
     'vacina-febre-amarela-coimbra',
     'vacina-febre-amarela-braga',
     'vacina-febre-amarela-algarve',
-    'vacina-febre-amarela-cuf'
+    'vacina-febre-amarela-cuf',
+    'vacina-febre-amarela-luz',
+    'vacina-febre-amarela-lusiadas',
+    'vacina-febre-amarela-centros'
 ];
 const TRAVEL_VAC_CITIES = [
     'vacinas-viajante-lisboa',
     'vacinas-viajante-porto',
     'vacinas-viajante-coimbra',
     'vacinas-viajante-braga',
+    'vacinas-viajante-faro',
+    'vacinas-viajante-aveiro',
+    'vacinas-viajante-leiria',
+    'vacinas-viajante-funchal',
+    'vacinas-viajante-ponta-delgada',
     'vacinas-viajante-algarve',
     'vacinas-viajante-cuf'
 ];
@@ -915,11 +949,18 @@ function travelMapLinks(slug) {
     }
     const countries = {
         'vacinas-para-viajar-ao-brasil': [TRAVEL_YF_GUIA_LINK, TRAVEL_PILLAR_LINK],
+        'vacinas-viajante-brasil': [TRAVEL_YF_GUIA_LINK, TRAVEL_MALARIA_LINK, TRAVEL_CVI_LINK, { href: '/marcar/travel', text: 'marcar consulta do viajante' }],
         'vacinas-para-viajar-a-angola': [TRAVEL_YF_GUIA_LINK, TRAVEL_MALARIA_LINK, TRAVEL_PILLAR_LINK],
+        'vacinas-viajante-angola': [TRAVEL_YF_GUIA_LINK, TRAVEL_MALARIA_LINK, TRAVEL_CVI_LINK, { href: '/marcar/travel', text: 'marcar consulta do viajante' }],
         'vacinas-para-viajar-ao-quenia': [TRAVEL_YF_GUIA_LINK, TRAVEL_MALARIA_LINK, TRAVEL_PILLAR_LINK],
+        'vacinas-viajante-quenia-tanzania': [TRAVEL_YF_GUIA_LINK, TRAVEL_MALARIA_LINK, TRAVEL_CVI_LINK, { href: '/marcar/travel', text: 'marcar consulta do viajante' }],
         'vacinas-para-viajar-a-india': [TRAVEL_MALARIA_LINK, TRAVEL_VAC_GUIA_LINK, TRAVEL_PILLAR_LINK],
+        'vacinas-viajante-india': [TRAVEL_MALARIA_LINK, TRAVEL_YF_GUIA_LINK, TRAVEL_CVI_LINK, { href: '/marcar/travel', text: 'marcar consulta do viajante' }],
         'vacinas-para-viajar-a-tailandia': [TRAVEL_MALARIA_LINK, TRAVEL_VAC_GUIA_LINK, TRAVEL_PILLAR_LINK],
-        'vacinas-para-viajar-a-mocambique': [TRAVEL_MALARIA_LINK, TRAVEL_VAC_GUIA_LINK, TRAVEL_PILLAR_LINK]
+        'vacinas-viajante-tailandia': [TRAVEL_MALARIA_LINK, TRAVEL_VAC_GUIA_LINK, TRAVEL_CVI_LINK, { href: '/marcar/travel', text: 'marcar consulta do viajante' }],
+        'vacinas-para-viajar-a-mocambique': [TRAVEL_MALARIA_LINK, TRAVEL_VAC_GUIA_LINK, TRAVEL_PILLAR_LINK],
+        'vacinas-viajante-mocambique': [TRAVEL_MALARIA_LINK, TRAVEL_YF_GUIA_LINK, TRAVEL_CVI_LINK, { href: '/marcar/travel', text: 'marcar consulta do viajante' }],
+        'vacinas-viajante-cabo-verde': [TRAVEL_YF_GUIA_LINK, TRAVEL_CVI_LINK, { href: '/marcar/travel', text: 'marcar consulta do viajante' }]
     };
     if (countries[slug]) return countries[slug];
     const rest = {
@@ -1697,7 +1738,7 @@ function seriesBacklinksHtml(current, articles) {
     const cross = pickCrossClusterArticles(current, articles, 4)
         .filter((a) => !series.some((s) => s.slug === a.slug));
     const pillarLi = articleCluster(current) === 'travel'
-        ? '<li><a href="/travel-clinic">Consulta do viajante online</a></li>'
+        ? `<li><a href="/travel-clinic">${articleLangCode(current) === 'en' ? 'Online travel clinic' : 'Consulta do viajante online'}</a></li>`
         : '';
     if (!series.length && !cross.length && !pillarLi) return '';
     const list = (items) => items.map((a) => `<li><a href="${escapeHtml(magHref(a))}">${escapeHtml(a.title)}</a></li>`).join('');
@@ -1934,22 +1975,22 @@ ${__lonHeader.renderHeaderScripts(false)}
                 </div>
                 <div class="lon-footer-col">
                     <h4>Clínica</h4>
-                    <a href="/info.html?page=sobre-nos">Sobre nós</a>
+                    <a href="/info/sobre-nos">Sobre nós</a>
                     <a href="/equipa/rita-aguiar">A equipa</a>
-                    <a href="/info.html?page=parcerias">Parcerias</a>
-                    <a href="/info.html?page=registo-medico">Registo médico</a>
-                    <a href="/info.html?page=contato">Contacto</a>
-                    <a href="/info.html?page=trabalhe-connosco">Trabalhe connosco</a>
+                    <a href="/info/parcerias">Parcerias</a>
+                    <a href="/info/registo-medico">Registo médico</a>
+                    <a href="/info/contato">Contacto</a>
+                    <a href="/info/trabalhe-connosco">Trabalhe connosco</a>
                 </div>
                 <div class="lon-footer-col">
                     <h4>Apoio</h4>
                     <a href="/faq">Perguntas frequentes</a>
                     <a href="/magazine">Magazine</a>
                     <a href="/magazine/indice">Índice</a>
-                    <a href="/info.html?page=como-funciona">Como funciona</a>
-                    <a href="/info.html?page=seguranca-dados">Segurança dos dados</a>
-                    <a href="/info.html?page=acessibilidade">Acessibilidade</a>
-                    <a href="/info.html?page=reclamacoes">Reclamações</a>
+                    <a href="/info/como-funciona">Como funciona</a>
+                    <a href="/info/seguranca-dados">Segurança dos dados</a>
+                    <a href="/info/acessibilidade">Acessibilidade</a>
+                    <a href="/info/reclamacoes">Reclamações</a>
                 </div>
             </div>
             
@@ -1974,11 +2015,11 @@ ${__lonHeader.renderHeaderScripts(false)}
             
             <div class="lon-footer-bottom">
                 <div class="lon-footer-legal-links">
-                    <a href="/info.html?page=termos-condicoes">Termos e condições</a>
-                    <a href="/info.html?page=politica-privacidade">Política de privacidade</a>
-                    <a href="/info.html?page=cookies">Cookies</a>
-                    <a href="/info.html?page=politica-nao-discriminacao">Política de não discriminação</a>
-                    <a href="/info.html?page=livro-reclamacoes">Livro de reclamações</a>
+                    <a href="/info/termos-condicoes">Termos e condições</a>
+                    <a href="/info/politica-privacidade">Política de privacidade</a>
+                    <a href="/info/cookies">Cookies</a>
+                    <a href="/info/politica-nao-discriminacao">Política de não discriminação</a>
+                    <a href="/info/livro-reclamacoes">Livro de reclamações</a>
                 </div>
                 <div>
                     <p>© 2026 Lon Clinic · Portugal</p>
@@ -1991,7 +2032,7 @@ ${__lonHeader.renderHeaderScripts(false)}
     <script src="/lon-nav.js"></script>
     <script src="/talk-cta.js?v=20260908a" defer></script>
     <script src="/i18n.js?v=20260921a" defer></script>
-    <script src="/lon-analytics.js?v=20260914a" defer></script>
+    <script src="/lon-analytics.js?v=20260924a" defer></script>
     <script src="/lon-slots.js?v=20260912a" defer></script>
 </body>
 </html>`;
@@ -3352,6 +3393,21 @@ function magazineNavTree() {
             children: [
                 { label: 'Tourist clinic', href: '/tourist-clinic' },
                 { label: 'See a doctor as a tourist', href: '/see-doctor-portugal-tourist' },
+                { label: 'See a doctor in Lisbon', href: '/see-a-doctor-lisbon' },
+                { label: 'Arzt in Lissabon', href: '/arzt-lissabon' },
+                { label: 'Médecin à Lisbonne', href: '/medecin-lisbonne' },
+                { label: 'Médico en Lisboa', href: '/medico-lisboa' },
+                { label: 'Médico en el Algarve', href: '/medico-algarve' },
+                { label: 'Médico en Oporto', href: '/medico-oporto' },
+                { label: 'Médico en Madeira', href: '/medico-madeira' },
+                { label: 'Médecin en Algarve', href: '/medecin-algarve' },
+                { label: 'Médecin à Porto', href: '/medecin-porto' },
+                { label: 'Médecin à Madère', href: '/medecin-madere' },
+                { label: 'See a doctor in the Algarve', href: '/see-a-doctor-algarve' },
+                { label: 'Arzt an der Algarve', href: '/arzt-algarve' },
+                { label: 'Arzt in Porto', href: '/arzt-porto' },
+                { label: 'Arzt auf Madeira', href: '/arzt-madeira' },
+                { label: 'See a doctor in Madeira', href: '/see-a-doctor-madeira' },
                 { label: 'UTI in Portugal', href: '/uti-portugal-what-to-do' },
                 { label: 'Renew a prescription', href: '/renew-prescription-holiday-portugal' },
                 { label: 'Médico siendo turista', href: '/ver-medico-portugal-turista' }
@@ -3367,10 +3423,23 @@ function magazineNavTree() {
                         { label: 'Centros por região', href: '/blog/centros-de-vacinacao-internacional-portugal' },
                         { label: 'International vaccination centres', href: '/blog/international-vaccination-centres-portugal' },
                         { label: 'Guia completo', href: '/blog/vacinas-viajante-guia-completo' },
+                        { label: 'Vaccines by country (English)', href: '/blog/travel-vaccines-by-country' },
+                        { label: 'Brazil', href: '/blog/travel-vaccines-brazil' },
+                        { label: 'Angola', href: '/blog/travel-vaccines-angola' },
+                        { label: 'Mozambique', href: '/blog/travel-vaccines-mozambique' },
+                        { label: 'Cape Verde', href: '/blog/travel-vaccines-cape-verde' },
+                        { label: 'Kenya and Tanzania', href: '/blog/travel-vaccines-kenya-tanzania' },
+                        { label: 'Thailand', href: '/blog/travel-vaccines-thailand' },
+                        { label: 'India', href: '/blog/travel-vaccines-india' },
                         { label: 'Lisboa', href: '/blog/vacinas-viajante-lisboa' },
                         { label: 'Porto', href: '/blog/vacinas-viajante-porto' },
                         { label: 'Coimbra', href: '/blog/vacinas-viajante-coimbra' },
                         { label: 'Braga', href: '/blog/vacinas-viajante-braga' },
+                        { label: 'Faro', href: '/blog/vacinas-viajante-faro' },
+                        { label: 'Aveiro', href: '/blog/vacinas-viajante-aveiro' },
+                        { label: 'Leiria', href: '/blog/vacinas-viajante-leiria' },
+                        { label: 'Funchal', href: '/blog/vacinas-viajante-funchal' },
+                        { label: 'Ponta Delgada', href: '/blog/vacinas-viajante-ponta-delgada' },
                         { label: 'Faro e Algarve', href: '/blog/vacinas-viajante-algarve' },
                         { label: 'CUF', href: '/blog/vacinas-viajante-cuf' }
                     ]
@@ -3384,7 +3453,10 @@ function magazineNavTree() {
                         { label: 'Coimbra', href: '/blog/vacina-febre-amarela-coimbra' },
                         { label: 'Braga', href: '/blog/vacina-febre-amarela-braga' },
                         { label: 'Faro e Algarve', href: '/blog/vacina-febre-amarela-algarve' },
-                        { label: 'CUF', href: '/blog/vacina-febre-amarela-cuf' }
+                        { label: 'CUF', href: '/blog/vacina-febre-amarela-cuf' },
+                        { label: 'Hospital da Luz', href: '/blog/vacina-febre-amarela-luz' },
+                        { label: 'Lusíadas', href: '/blog/vacina-febre-amarela-lusiadas' },
+                        { label: 'Centros de vacinação', href: '/blog/vacina-febre-amarela-centros' }
                     ]
                 },
                 { label: 'Consulta médica para viajantes', href: '/blog/consulta-medica-viajantes-vacinas' },
@@ -3579,7 +3651,7 @@ function magLonFootHtml() {
                     <a href="/saudemental">Psicologia</a>
                     <a href="/nutricao">Nutrição</a>
                     <a href="/consulta">Clínica geral</a>
-                    <a href="/info.html?page=contato">Contacto</a>
+                    <a href="/info/contato">Contacto</a>
                 </div>
             </div>
             
@@ -3747,7 +3819,7 @@ function layoutMagazinePage(opts) {
     <script src="/lon-nav.js"></script>
     <script src="/talk-cta.js?v=20260908a" defer></script>
     <script src="/i18n.js?v=20260921a" defer></script>
-    <script src="/lon-analytics.js?v=20260914a" defer></script>
+    <script src="/lon-analytics.js?v=20260924a" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=20260912a" defer></script>
     <script src="/guide-actions.js?v=20260905a" defer></script>

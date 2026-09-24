@@ -406,7 +406,7 @@ ${__lonHeader.renderHeaderScripts(false)}
     </footer>
     <script src="/lon-nav.js"></script>
     <script src="/i18n.js?v=20260921a" defer></script>
-    <script src="/lon-analytics.js?v=20260914a" defer></script>
+    <script src="/lon-analytics.js?v=20260924a" defer></script>
     <script src="/lon-slots.js?v=20260906d" defer></script>
 </body>
 </html>`;

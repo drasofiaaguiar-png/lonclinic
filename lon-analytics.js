@@ -77,6 +77,23 @@
         return id;
     }
 
+    function writeAttrCookie(cur) {
+        if (!cur || !(cur.gclid || cur.utm_source || cur.utm_campaign || cur.fbclid)) return;
+        try {
+            var payload = encodeURIComponent(JSON.stringify({
+                utm_source: cur.utm_source || '',
+                utm_medium: cur.utm_medium || '',
+                utm_campaign: cur.utm_campaign || '',
+                utm_content: cur.utm_content || '',
+                utm_term: cur.utm_term || '',
+                gclid: cur.gclid || '',
+                fbclid: cur.fbclid || ''
+            }));
+            var secure = location.protocol === 'https:' ? '; Secure' : '';
+            document.cookie = 'lon_attr=' + payload + '; Path=/; Max-Age=' + (90 * 86400) + '; SameSite=Lax' + secure;
+        } catch (eCookie) { /* ignore */ }
+    }
+
     function params() {
         try { return new URLSearchParams(location.search); } catch (e) { return { get: function () { return ''; } }; }
     }
@@ -97,9 +114,13 @@
         var stored = null;
         try { stored = JSON.parse(sessionStorage.getItem('lon_lt') || 'null'); } catch (e1) { stored = null; }
         if (!explicit && stored && (stored.utm_source || stored.gclid)) {
+            writeAttrCookie(stored);
             return finishPick(stored, stored);
         }
-        if (!cur.utm_source && cur.igshid) {
+        if (cur.gclid && !cur.utm_source) {
+            cur.utm_source = 'google';
+            cur.utm_medium = cur.utm_medium || 'cpc';
+        } else if (!cur.utm_source && cur.igshid) {
             cur.utm_source = 'instagram';
             cur.utm_medium = cur.utm_medium || 'social';
         } else if (!cur.utm_source && cur.fbclid && !cur.gclid) {
@@ -107,6 +128,7 @@
             cur.utm_medium = cur.utm_medium || 'social';
         }
         try { sessionStorage.setItem('lon_lt', JSON.stringify(cur)); } catch (e2) { /* ignore */ }
+        writeAttrCookie(cur);
         return finishPick(cur, stored);
 
         function finishPick(last, firstHint) {
@@ -118,6 +140,10 @@
                     utm_source: first.utm_source,
                     utm_medium: first.utm_medium,
                     utm_campaign: first.utm_campaign,
+                    utm_content: first.utm_content,
+                    utm_term: first.utm_term,
+                    gclid: first.gclid,
+                    fbclid: first.fbclid,
                     landing: location.pathname,
                     referrer: (document.referrer || '').slice(0, 300)
                 };
@@ -157,11 +183,24 @@
     var vid = visitorId();
     var sid = sessionId();
 
+    function trackedPath() {
+        var path = location.pathname || '/';
+        try {
+            var page = new URLSearchParams(location.search).get('page');
+            if (page) {
+                page = String(page).trim().toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 80);
+                if (page) path += '?page=' + page;
+            }
+        } catch (ePage) { /* ignore */ }
+        if (location.hash) path += location.hash;
+        return path.slice(0, 240);
+    }
+
     function sessionLanding(sessionKey) {
         var key = 'lon_sl';
         var stored = null;
         try { stored = JSON.parse(sessionStorage.getItem(key) || 'null'); } catch (eSl) { stored = null; }
-        var path = (location.pathname || '/').slice(0, 240);
+        var path = trackedPath();
         if (!stored || stored.sid !== sessionKey || !stored.path) {
             stored = { sid: sessionKey, path: path };
             try { sessionStorage.setItem(key, JSON.stringify(stored)); } catch (eSl2) { /* ignore */ }
@@ -182,7 +221,7 @@
             ts: Date.now(),
             visitor_id: vid,
             session_id: sid,
-            page_path: (location.pathname + (location.hash || '')).slice(0, 240),
+            page_path: trackedPath(),
             page_title: String(document.title || '').slice(0, 160),
             referrer: String(document.referrer || '').slice(0, 300),
             landing_path: landingNow || (attr.first && attr.first.landing) || location.pathname,
@@ -199,6 +238,7 @@
             ft_source: (attr.first && attr.first.utm_source) || '',
             ft_medium: (attr.first && attr.first.utm_medium) || '',
             ft_campaign: (attr.first && attr.first.utm_campaign) || '',
+            ft_gclid: (attr.first && attr.first.gclid) || '',
             props: Object.assign({ funnel: pageContext().funnel }, cleanProps(props))
         };
     }
@@ -221,22 +261,20 @@
         var batch = queue.splice(0, MAX_QUEUE);
         var body = JSON.stringify({ events: batch });
         try {
+            if (navigator.sendBeacon) {
+                var blob = new Blob([body], { type: 'application/json' });
+                if (navigator.sendBeacon(ENDPOINT, blob)) return;
+            }
+        } catch (eBeacon) { /* fall through to fetch */ }
+        try {
             fetch(ENDPOINT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: body,
                 keepalive: true,
                 credentials: 'same-origin'
-            }).catch(function () {
-                try {
-                    if (navigator.sendBeacon) navigator.sendBeacon(ENDPOINT, body);
-                } catch (e) { /* ignore */ }
-            });
-        } catch (e2) {
-            try {
-                if (navigator.sendBeacon) navigator.sendBeacon(ENDPOINT, body);
-            } catch (e3) { /* ignore */ }
-        }
+            }).catch(function () { /* ignore */ });
+        } catch (e2) { /* ignore */ }
     }
 
     function metaFromLon(name, props, eventId) {
@@ -297,7 +335,8 @@
             try {
                 var gprops = cleanProps(props);
                 if (!gprops.event_category) gprops.event_category = gprops.funnel || pageContext().funnel;
-                gtag('event', name, gprops);
+                var gname = name === 'checkout_start' ? 'begin_checkout' : name;
+                gtag('event', gname, gprops);
             } catch (e) { /* ignore */ }
         }
         metaFromLon(name, props, ev.event_id);
@@ -308,6 +347,7 @@
         var p = location.pathname.toLowerCase();
         var funnel = p.indexOf('/recrutamento') === 0 ? 'job_application' : 'patient_booking';
         if (p === '/' || p === '/index.html') return { surface: 'home', funnel: funnel };
+        if (p.indexOf('/en/online-therapy-ireland') === 0) return { surface: 'ie-therapy', funnel: 'patient_booking' };
         if (p.indexOf('/marcar') === 0 || p === '/book.html' || p === '/book-consultation') {
             return { surface: 'booking', funnel: 'patient_booking' };
         }
@@ -351,8 +391,9 @@
             var key = 'lon_pv';
             var now = Date.now();
             var prev = JSON.parse(sessionStorage.getItem(key) || 'null');
-            if (prev && prev.path === location.pathname && now - prev.ts < 4000) return false;
-            sessionStorage.setItem(key, JSON.stringify({ path: location.pathname, ts: now }));
+            var here = trackedPath();
+            if (prev && prev.path === here && now - prev.ts < 4000) return false;
+            sessionStorage.setItem(key, JSON.stringify({ path: here, ts: now }));
         } catch (e) { /* ignore */ }
         return true;
     }
@@ -389,12 +430,37 @@
             /\/nutricao\/programa/i.test(href);
     }
 
+    function ctaPlace(el) {
+        if (!el || !el.closest) return 'page';
+        if (el.closest('header, .lon-nav, .site-nav, .nav')) return 'nav';
+        if (el.closest('footer, .lon-footer')) return 'footer';
+        if (el.closest('.sticky, .lon-sticky, .bq-sticky, [data-sticky]')) return 'sticky';
+        if (el.closest('.hero, .lon-hero, .alg-hero, [data-hero]')) return 'hero';
+        if (el.closest('article, .guide-prose, .mag-story, .guide-actions')) return 'article';
+        return 'page';
+    }
+
+    function isQuizControl(el, href, text) {
+        if (el && el.closest && el.closest('.bq-quiz, .bq-sticky, #burnoutQuiz, [data-quiz]')) {
+            if (!isBookingHref(href)) return true;
+        }
+        return /start the test|see my result|take the cbi|começar o teste|ver o resultado|fazer o teste/i.test(text)
+            && !isBookingHref(href);
+    }
+
     function canonicalCtaText(el, href, text) {
         var d = String((el && el.getAttribute('data-cta')) || '').trim().toLowerCase();
         if (d === 'book' || d === 'book-priced') return d;
         if (!isBookingHref(href)) return text;
         if (/\d/.test(text) && /€|eur|\/m[eê]s/i.test(text)) return 'book-priced';
         return 'book';
+    }
+
+    function bookingClickLabel(el, href, text) {
+        var place = ctaPlace(el);
+        if (!text || text === 'cta' || text === 'book') return place + '-book';
+        if (text === 'book-priced') return place + '-book-priced';
+        return text;
     }
 
     document.addEventListener('click', function (e) {
@@ -407,8 +473,24 @@
             .slice(0, 80);
         var text = canonicalCtaText(t, href, rawText);
         var id = (t.id || t.getAttribute('data-analytics-id') || '').slice(0, 64);
-        if (t.matches && t.matches('[data-analytics], .lon-btn, .btn-primary, .cn-btn-primary, a[href*="marcar"], a[href*="book"], .bq-btn-primary, .bq-sticky-book a')) {
-            track('cta_click', { text: text, href: href, id: id, surface: pageContext().surface, funnel: pageContext().funnel });
+        var bookingClick = isBookingHref(href)
+            || text === 'book'
+            || text === 'book-priced'
+            || /continuar para dados|continue to details/i.test(rawText);
+        if (
+            bookingClick
+            && !isQuizControl(t, href, rawText)
+            && t.matches
+            && t.matches('[data-analytics], .lon-btn, .btn-primary, .cn-btn-primary, a[href*="marcar"], a[href*="book"], #marcarContinue, .js-consulta-cta')
+        ) {
+            track('cta_click', {
+                text: bookingClickLabel(t, href, text),
+                href: href,
+                id: id,
+                place: ctaPlace(t),
+                surface: pageContext().surface,
+                funnel: 'patient_booking'
+            });
         }
         if (t.classList && t.classList.contains('lon-share-copy')) {
             var copyUrl = t.getAttribute('data-copy') || '';
@@ -492,6 +574,18 @@
         track: track,
         flush: flush,
         visitorId: function () { return vid; },
-        sessionId: function () { return sid; }
+        sessionId: function () { return sid; },
+        attribution: function () {
+            var last = (attr && attr.last) || {};
+            return {
+                utm_source: last.utm_source || '',
+                utm_medium: last.utm_medium || '',
+                utm_campaign: last.utm_campaign || '',
+                utm_content: last.utm_content || '',
+                utm_term: last.utm_term || '',
+                gclid: last.gclid || '',
+                fbclid: last.fbclid || ''
+            };
+        }
     };
 })();

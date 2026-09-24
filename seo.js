@@ -82,9 +82,15 @@ function keepInfoPageQuery(pathname, search, req) {
         const rawPage = req.query.page;
         page = Array.isArray(rawPage) ? rawPage[0] : rawPage;
     }
-    if (page && /^\/info(\.html)?$/i.test(pathname)) {
-        const infoPath = pathname === '/info' ? '/info.html' : pathname;
-        return `${infoPath}?page=${encodeURIComponent(String(page))}`;
+    const clean = String(pathname || '/').split('?')[0].replace(/\/+$/, '') || '/';
+    const own = clean.match(/^\/info\/([a-z0-9-]+)$/i);
+    if (own) return `/info/${own[1].toLowerCase()}`;
+    if (clean === '/info' || clean === '/info.html') {
+        const slug = String(page || '').trim().toLowerCase();
+        if (slug === 'perguntas-frequentes') return '/faq';
+        if (slug === 'equipa') return '/equipa/rita-aguiar';
+        if (/^[a-z0-9-]+$/.test(slug)) return `/info/${encodeURIComponent(slug)}`;
+        return '/info';
     }
     return pathname || '/';
 }
@@ -386,6 +392,7 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
         ['/nutricao/emagrecimento', today, 'weekly', '0.94'],
         ['/nutricao/avaliacao', today, 'monthly', '0.86'],
         ['/saudemental', today, 'weekly', '0.9'],
+        ['/en/online-therapy-ireland', today, 'weekly', '0.86'],
         ['/consultas', today, 'weekly', '0.92'],
         ['/nutricao', today, 'weekly', '0.9'],
         ['/teste-personalidade', today, 'monthly', '0.8'],
@@ -399,7 +406,7 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
         ['/equipa', today, 'monthly', '0.82'],
         ['/equipa/rita-aguiar', today, 'monthly', '0.8'],
         ['/equipa/sara-barreto', today, 'monthly', '0.8'],
-        ['/info.html', today, 'monthly', '0.6']
+        ['/info', today, 'monthly', '0.6']
     ];
 
     for (const [path, lastmod, freq, pri] of staticPages) {
@@ -417,7 +424,8 @@ function buildSitemapXml(/* origin ignored: sitemap always uses the www host */)
     }
 
     for (const page of INDEXABLE_INFO_PAGES) {
-        entries.push(urlEntry(`${o}/info.html?page=${encodeURIComponent(page)}`, today, 'monthly', '0.55'));
+        if (page === 'perguntas-frequentes') continue;
+        entries.push(urlEntry(`${o}/info/${encodeURIComponent(page)}`, today, 'monthly', '0.55'));
     }
 
     try {

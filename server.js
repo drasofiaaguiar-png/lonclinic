@@ -472,7 +472,7 @@ app.use(
 );
 
 const ANALYTICS_SNIPPET =
-    '\n<script src="/lon-analytics.js?v=20260914a" defer></script>\n' +
+    '\n<script src="/lon-analytics.js?v=20260924a" defer></script>\n' +
     '<noscript><img src="/api/a.gif?n=page_view" alt="" width="1" height="1"></noscript>\n';
 
 function injectMetaPixel(html) {
@@ -3157,6 +3157,28 @@ function ensureAnalyticsCookies(req, res) {
         setAnalyticsCookie(res, 'lon_sid_at', String(sidAt), 86400);
     }
     return { visitorId, sessionId };
+}
+
+function adsAttributionFromRequest(req) {
+    const body = req && req.body && typeof req.body === 'object' ? req.body : {};
+    let cookie = {};
+    try {
+        const raw = readCookie(req, 'lon_attr');
+        cookie = raw ? JSON.parse(decodeURIComponent(raw)) : {};
+    } catch {
+        cookie = {};
+    }
+    if (!cookie || typeof cookie !== 'object') cookie = {};
+    const pick = (key, max) => String(body[key] || cookie[key] || '').replace(/[\r\n]/g, '').slice(0, max);
+    return {
+        gclid: pick('gclid', 120),
+        utmSource: pick('utm_source', 80),
+        utmMedium: pick('utm_medium', 80),
+        utmCampaign: pick('utm_campaign', 120),
+        utmContent: pick('utm_content', 80),
+        utmTerm: pick('utm_term', 80),
+        fbclid: pick('fbclid', 120)
+    };
 }
 
 async function emitServerAnalytics(name, extra, req) {
@@ -8521,6 +8543,11 @@ async function followUpPaidCheckout(session, fin, logPrefix = '') {
             {
                 visitorId: meta.lon_vid || null,
                 sessionId: meta.lon_sid || null,
+                utmSource: meta.utm_source || '',
+                utmMedium: meta.utm_medium || '',
+                utmCampaign: meta.utm_campaign || '',
+                gclid: meta.gclid || '',
+                fbclid: meta.fbclid || '',
                 props: {
                     service: bookingServiceTag(meta.service),
                     via: meta.invitation_id ? 'invite' : 'checkout',
@@ -9739,15 +9766,11 @@ app.get('/diretorio/:slug', requireAdminPage, (req, res) => {
     sendHtmlNoCache(res, path.join(__dirname, 'diretorio-ficha.html'), 'Error loading producer page');
 });
 
-app.get('/info.html', (req, res) => {
-    const page = String(req.query.page || '').toLowerCase();
-    if (page === 'perguntas-frequentes') {
-        return res.redirect(301, '/faq');
-    }
-    if (page === 'equipa') {
-        return res.redirect(301, '/equipa/rita-aguiar');
-    }
-    if (INFO_NOINDEX_PAGES.has(page)) {
+function sendInfoPage(req, res, page) {
+    const key = String(page || '').toLowerCase();
+    if (key === 'perguntas-frequentes') return res.redirect(301, '/faq');
+    if (key === 'equipa') return res.redirect(301, '/equipa/rita-aguiar');
+    if (INFO_NOINDEX_PAGES.has(key)) {
         res.setHeader('X-Robots-Tag', 'noindex, follow, noarchive');
     }
     const filePath = path.join(__dirname, 'info.html');
@@ -9756,8 +9779,24 @@ app.get('/info.html', (req, res) => {
             console.error('❌ Error reading info.html:', err.message);
             return res.status(500).send('Error loading info page');
         }
-        sendHtmlNoCacheString(res, hydrateInfoHtml(html, page, seo.SITE_ORIGIN));
+        sendHtmlNoCacheString(res, hydrateInfoHtml(html, key, seo.SITE_ORIGIN));
     });
+}
+
+app.get('/info.html', (req, res) => {
+    const page = String(req.query.page || '').toLowerCase();
+    if (!page) return res.redirect(301, '/info');
+    if (page === 'perguntas-frequentes') return res.redirect(301, '/faq');
+    if (page === 'equipa') return res.redirect(301, '/equipa/rita-aguiar');
+    return res.redirect(301, `/info/${encodeURIComponent(page)}`);
+});
+
+app.get('/info', (req, res) => sendInfoPage(req, res, ''));
+
+app.get('/info/:slug', (req, res) => {
+    const slug = String(req.params.slug || '').toLowerCase();
+    if (!/^[a-z0-9-]+$/.test(slug)) return res.redirect(302, '/info');
+    return sendInfoPage(req, res, slug);
 });
 
 // ─── Doctors portal aliases ───
@@ -13064,6 +13103,14 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         if (analyticsIds.sessionId) metadata.lon_sid = String(analyticsIds.sessionId).slice(0, 64);
         const metaAttr = metaCapi.pickAttribution(req, req.body, readCookie);
         metaCapi.applyAttribution(metadata, metaAttr);
+        const adsAttr = adsAttributionFromRequest(req);
+        if (adsAttr.gclid) metadata.gclid = adsAttr.gclid;
+        if (adsAttr.utmSource) metadata.utm_source = adsAttr.utmSource;
+        if (adsAttr.utmMedium) metadata.utm_medium = adsAttr.utmMedium;
+        if (adsAttr.utmCampaign) metadata.utm_campaign = adsAttr.utmCampaign;
+        if (adsAttr.utmContent) metadata.utm_content = adsAttr.utmContent;
+        if (adsAttr.utmTerm) metadata.utm_term = adsAttr.utmTerm;
+        if (adsAttr.fbclid && !metadata.fbclid) metadata.fbclid = adsAttr.fbclid;
 
         // Store names only — never send health data (medications, allergies, SNS, DOB) to Stripe.
         if (Array.isArray(passengers)) {
@@ -13208,7 +13255,12 @@ app.post('/api/create-checkout-session', rateLimitCheckout, async (req, res) => 
         console.log('✅ Checkout session created:', session.id);
         emitServerAnalytics(
             'checkout_created',
-            { props: { service: bookingServiceTag(service), funnel: 'patient_booking' }, revenueCents: priceAmount, currency: 'eur' },
+            {
+                pagePath: '/book-consultation',
+                props: { service: bookingServiceTag(service), funnel: 'patient_booking' },
+                revenueCents: priceAmount,
+                currency: 'eur'
+            },
             req
         ).catch(() => {});
         metaCapi.sendInitiateCheckout({

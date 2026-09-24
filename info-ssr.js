@@ -1,5 +1,5 @@
 /**
- * Server-render /info.html?page=… so crawlers see Portuguese content without JS.
+ * Server-render /info and /info/:slug so crawlers see Portuguese content without JS.
  */
 
 'use strict';
@@ -25,7 +25,7 @@ function escapeHtml(s) {
 
 function extractPtContent(html) {
     const startMarker = 'const content = {';
-    const endMarker = 'const page = String(new URLSearchParams';
+    const endMarker = 'const page = (function () {';
     const start = html.indexOf(startMarker);
     const end = html.indexOf(endMarker);
     if (start < 0 || end <= start) return null;
@@ -50,14 +50,24 @@ function actionsHtml(actions) {
         .join('');
 }
 
+function oneAction(actions) {
+    const list = Array.isArray(actions) ? actions.filter(Boolean) : [];
+    const chosen = list.find((action) => action && action.primary) || list[0] || {
+        label: 'Marcar consulta',
+        href: '/marcar/clinica-geral',
+        primary: true
+    };
+    return actionsHtml([Object.assign({}, chosen, { primary: true })]);
+}
+
 function directoryHtml(content) {
-    const keys = INDEXABLE_INFO_PAGES.filter((k) => content[k]);
+    const keys = INDEXABLE_INFO_PAGES.filter((k) => k !== 'perguntas-frequentes' && content[k]);
     const items = keys
         .map((k) => {
             const item = content[k];
             const title = escapeHtml(item.title || k);
             const sub = escapeHtml(item.subtitle || '');
-            return `<li><a href="/info.html?page=${encodeURIComponent(k)}"><strong>${title}</strong> — ${sub}</a></li>`;
+            return `<li><a href="/info/${encodeURIComponent(k)}"><strong>${title}</strong> — ${sub}</a></li>`;
         })
         .join('');
     return {
@@ -65,7 +75,7 @@ function directoryHtml(content) {
         title: 'Informação',
         subtitle: 'Páginas institucionais da Lon Clinic',
         bodyHtml: `<p>Conteúdo institucional, clínico e de apoio — disponível sem JavaScript.</p><ul class="bullet-list">${items}</ul>`,
-        actions: [{ label: 'Ir para o início', href: '/', primary: true }]
+        actions: [{ label: 'Marcar consulta', href: '/marcar/clinica-geral', primary: true }]
     };
 }
 
@@ -94,8 +104,8 @@ function hydrateInfoHtml(html, page, origin) {
         ? 'noindex,follow'
         : 'index,follow,max-image-preview:large';
     const canonical = isDirectory
-        ? canonicalHref('/info.html')
-        : (isKnown ? canonicalHref(`/info.html?page=${encodeURIComponent(key)}`) : canonicalHref('/info.html'));
+        ? canonicalHref('/info')
+        : (isKnown ? canonicalHref(`/info/${encodeURIComponent(key)}`) : canonicalHref('/info'));
     const title = `${data.title} | Lon Clinic`;
     const rawDesc = String(data.subtitle || data.body || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
     const description = (rawDesc || 'Informações institucionais da Lon Clinic.').slice(0, 160);
@@ -177,7 +187,7 @@ function hydrateInfoHtml(html, page, origin) {
     out = replaceOnce(
         out,
         /<div class="body" id="body">[\s\S]*?<\/div>\s*<div class="actions" id="actions"><\/div>/,
-        `<div class="body" id="body">${bodyInner}</div>\n            <div class="actions" id="actions">${actionsHtml(data.actions)}</div>`
+        `<div class="body" id="body">${bodyInner}</div>\n            <div class="actions" id="actions">${oneAction(data.actions)}</div>`
     );
     return out;
 }

@@ -2332,7 +2332,10 @@ async function initBookingFlow() {
                     funnel: 'patient_booking',
                     step: 'pay',
                     value: totalCents / 100,
-                    currency: 'EUR'
+                    currency: 'EUR',
+                    booking_source: (function () {
+                        try { return sessionStorage.getItem('booking_source') || ''; } catch (e) { return ''; }
+                    })()
                 }) || '';
                 window.LonAnalytics.flush();
             }
@@ -2372,7 +2375,13 @@ async function initBookingFlow() {
                     fbp: metaIds.fbp || '',
                     fbc: metaIds.fbc || '',
                     fbclid: metaIds.fbclid || '',
-                    metaEventId: checkoutEventId || ''
+                    metaEventId: checkoutEventId || '',
+                    gclid: (window.LonAnalytics && window.LonAnalytics.attribution().gclid) || '',
+                    utm_source: (window.LonAnalytics && window.LonAnalytics.attribution().utm_source) || '',
+                    utm_medium: (window.LonAnalytics && window.LonAnalytics.attribution().utm_medium) || '',
+                    utm_campaign: (window.LonAnalytics && window.LonAnalytics.attribution().utm_campaign) || '',
+                    utm_content: (window.LonAnalytics && window.LonAnalytics.attribution().utm_content) || '',
+                    utm_term: (window.LonAnalytics && window.LonAnalytics.attribution().utm_term) || ''
                 })
             });
 
@@ -2534,6 +2543,24 @@ async function initBookingFlow() {
         }
     }
 
+    function reportPaidConversion(data) {
+        const ref = String((data && data.bookingRef) || '').slice(0, 64);
+        if (!ref) return;
+        try {
+            if (sessionStorage.getItem('lon_paid_' + ref) === '1') return;
+            sessionStorage.setItem('lon_paid_' + ref, '1');
+        } catch (ePaid) { /* still send once this load */ }
+        const cents = Number(data.amount);
+        const value = Number.isFinite(cents) && cents > 0 ? cents / 100 : undefined;
+        if (typeof gtag !== 'function') return;
+        gtag('event', 'purchase', {
+            transaction_id: ref,
+            value: value,
+            currency: 'EUR',
+            items: data.service ? [{ item_name: String(data.service).slice(0, 80) }] : undefined
+        });
+    }
+
     async function handleStripeReturn(confirmToken) {
         // Show loading state
         document.querySelectorAll('.booking-step').forEach(s => s.classList.remove('active'));
@@ -2562,6 +2589,8 @@ async function initBookingFlow() {
             document.getElementById('confirmDateTime').textContent = `${data.date} at ${data.time}`;
             document.getElementById('confirmAmount').textContent = `€${(data.amount / 100).toFixed(0)}`;
             document.getElementById('confirmRef').textContent = data.bookingRef || '—';
+
+            reportPaidConversion(data);
 
             const timeHint = document.getElementById('intakeTimeHint');
             if (timeHint && data.time) timeHint.textContent = data.time;
@@ -2738,6 +2767,10 @@ async function initBookingFlow() {
         }
 
         const refQ = urlParams.get('ref') || '';
+        const bookingSourceQ = String(urlParams.get('booking_source') || '').slice(0, 40);
+        if (bookingSourceQ) {
+            try { sessionStorage.setItem('booking_source', bookingSourceQ); } catch (e) { /* ignore */ }
+        }
         if (urlParams.get('langpolicy') === 'en-es-pt' || /-(fr|de)$/i.test(refQ)) {
             state.consultLangPolicy = true;
         }

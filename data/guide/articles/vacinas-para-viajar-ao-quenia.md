@@ -9,9 +9,14 @@
 
 Safari no Masai Mara, costa de Mombasa ou só a capital: três planos diferentes. A pergunta «que vacinas para o Quénia» quase sempre vem acompanhada de «que comprimido para a malária» — e essa segunda metade não se resolve no Google.
 
-[Consulta do viajante online](/travel-clinic), 39 €. Vacinas no [CVI](/blog/vacinas-viajante-guia-completo). Tanzânia e Zanzibar partilham lógica parecida (malária + certificado se o voo o exigir).
+[Consulta do viajante online](/marcar/travel), 39 €. Guia de 2026 (Quénia, Tanzânia e Zanzibar): [vacinas para safari](/blog/vacinas-viajante-quenia-tanzania). Vacinas no [CVI](/blog/vacinas-viajante-guia-completo).
 
 {{cta}}
+<figure class="guide-figure">
+<img src="/image/guide/travel-cover-hq-8.webp" alt="Vacinas para viajar ao Quénia a partir de Portugal" width="1200" height="800" loading="lazy" decoding="async">
+<figcaption>Vacinas para viajar ao Quénia a partir de Portugal</figcaption>
+</figure>
+
 
 ## Vacinas habitualmente consideradas
 
@@ -24,6 +29,16 @@ Safari no Masai Mara, costa de Mombasa ou só a capital: três planos diferentes
 Quase todo o país abaixo de certa altitude tem transmissão. Safari = entardecer ao ar livre = picadas. A [receita de profilaxia](/consulta/profilaxia-malaria) escolhe o fármaco (duração, gravidez, psiquiatria, outras drogas). Repelente e manga comprada ao fim do dia não são opcionais «porque já tomo o comprimido».
 
 Febre no Quénia ou ao regressar: urgência, com a palavra **malária** dita à entrada do serviço.
+
+{{cta}}
+
+## Neste guia
+
+- [Safari no Quénia e na Tanzânia (2026)](/blog/vacinas-viajante-quenia-tanzania) e [em inglês](/blog/travel-vaccines-kenya-tanzania)
+- [Todos os destinos](/blog/vacinas-para-viajar-por-pais)
+- [Centros de vacinação internacional](/blog/centros-de-vacinacao-internacional-portugal)
+
+{{cta}}
 
 ## Fontes
 

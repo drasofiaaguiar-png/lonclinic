@@ -9,9 +9,14 @@
 
 Nova Deli numa semana de trabalho não é o mesmo que Rajasthan de mochila, Kerala de houseboat ou o Nordeste. A pergunta «que vacinas para a Índia» precisa das **cidades e do tipo de viagem**.
 
-[Consulta do viajante online](/travel-clinic): 39 €, prescrição para [CVI](/blog/vacinas-viajante-lisboa) no próprio dia quando indicada.
+[Consulta do viajante online](/marcar/travel), 39 €. Guia de 2026: [vacinas para a Índia](/blog/vacinas-viajante-india). Prescrição para o [CVI](/blog/vacinas-viajante-guia-completo) no próprio dia quando indicada.
 
 {{cta}}
+<figure class="guide-figure">
+<img src="/image/guide/travel-cover-hq-7.webp" alt="Vacinas para viajar à Índia a partir de Portugal" width="1200" height="800" loading="lazy" decoding="async">
+<figcaption>Vacinas para viajar à Índia a partir de Portugal</figcaption>
+</figure>
+
 
 ## Vacinas habitualmente consideradas
 
@@ -26,6 +31,16 @@ Nova Deli numa semana de trabalho não é o mesmo que Rajasthan de mochila, Kera
 Malária: presente em partes do país, variável com a monção e o distrito. Cidades grandes de turismo clássico muitas vezes não justificam o mesmo esquema que uma zona rural no Centro-Leste. A médica usa mapas actualizados, não esta frase.
 
 A [diarreia do viajante](/consulta/diarreia-do-viajante) é o episódio mais frequente. Água e alimentos pesam mais do que qualquer vacina deste artigo.
+
+{{cta}}
+
+## Neste guia
+
+- [Guia de 2026](/blog/vacinas-viajante-india) e [em inglês](/blog/travel-vaccines-india)
+- [Tailândia](/blog/vacinas-viajante-tailandia) · [todos os destinos](/blog/vacinas-para-viajar-por-pais)
+- [Centros de vacinação internacional](/blog/centros-de-vacinacao-internacional-portugal)
+
+{{cta}}
 
 ## Fontes
 

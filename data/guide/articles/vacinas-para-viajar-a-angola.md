@@ -9,9 +9,14 @@
 
 Luanda de trabalho e o interior não mudam o essencial: Angola é destino de **certificado** e de **paludismo**. Tratar isto como «uma hepatite A e já está» é o erro clássico de quem marca tarde.
 
-[Consulta do viajante online](/travel-clinic), 39 €. [Onde tomar a febre amarela em Lisboa](/blog/vacina-febre-amarela-lisboa) ou no [Porto](/blog/vacina-febre-amarela-porto).
+[Consulta do viajante online](/marcar/travel), 39 €. Guia de 2026: [vacinas para Angola](/blog/vacinas-viajante-angola). [Onde tomar a febre amarela em Lisboa](/blog/vacina-febre-amarela-lisboa) ou no [Porto](/blog/vacina-febre-amarela-porto).
 
 {{cta}}
+<figure class="guide-figure">
+<img src="/image/guide/travel-cover-hq-4.webp" alt="Vacinas para viajar a Angola a partir de Portugal" width="1200" height="800" loading="lazy" decoding="async">
+<figcaption>Vacinas para viajar a Angola a partir de Portugal</figcaption>
+</figure>
+
 
 ## Vacinas habitualmente consideradas
 
@@ -26,6 +31,16 @@ Transmissão intensa na maior parte do território. A receita sai da consulta; o
 ## Quando marcar
 
 O certificado de febre amarela **não** fica válido no dia da picada. Se o voo é daqui a uma semana, faça as contas aos 10 dias antes de pagar a consulta a pensar que resolve o imigração.
+
+{{cta}}
+
+## Neste guia
+
+- [Guia de 2026](/blog/vacinas-viajante-angola) e [em inglês](/blog/travel-vaccines-angola)
+- [Moçambique](/blog/vacinas-viajante-mocambique) · [todos os destinos](/blog/vacinas-para-viajar-por-pais)
+- [Centros de vacinação internacional](/blog/centros-de-vacinacao-internacional-portugal)
+
+{{cta}}
 
 ## Fontes
 

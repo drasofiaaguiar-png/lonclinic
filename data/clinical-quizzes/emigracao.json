@@ -1,0 +1,144 @@
+{
+  "id": "emigracao",
+  "path": "/teste-emigracao",
+  "cluster": "diaspora",
+  "gate": "diaspora",
+  "notDiagnostic": true,
+  "instrument": "Emigração",
+  "minutes": 2,
+  "title": "Teste: como está a correr a sua emigração? | Lon Clinic",
+  "h1": "Teste: como está a correr a sua emigração?",
+  "lead": "Viver fora de Portugal é uma aventura, mas também um esforço que nem sempre se vê. Este teste de 2 minutos ajuda-o a perceber como está a sua adaptação, as suas relações e o seu bem-estar. No fim, recebe o seu resultado e sugestões práticas.",
+  "introNote": "Não é um diagnóstico. É um ponto de partida para refletir.",
+  "description": "Vive fora de Portugal? Faça o teste gratuito de 2 minutos e perceba como está a sua adaptação, as suas relações e o seu bem-estar no estrangeiro.",
+  "stem": "Nas últimas duas semanas…",
+  "homeHref": "/",
+  "homeLabel": "Lon Clinic",
+  "schemaWebPage": true,
+  "scaleDisplay": "sum",
+  "insightMinRaw": 6,
+  "gaugeMax": 36,
+  "gaugeLabel": "0–36 · últimas duas semanas",
+  "options": [
+    { "label": "Nunca", "v": 0 },
+    { "label": "Às vezes", "v": 1 },
+    { "label": "Muitas vezes", "v": 2 },
+    { "label": "Quase sempre", "v": 3 }
+  ],
+  "scales": [
+    { "id": "relacoes", "title": "Relações e pertença", "note": "Solidão e a sensação de não pertencer, aqui ou em Portugal." },
+    { "id": "humor", "title": "Humor e energia", "note": "Tristeza, energia e sono nas últimas duas semanas." },
+    { "id": "adaptacao", "title": "Adaptação ao dia a dia", "note": "O esforço de funcionar noutra língua, cultura e vida prática." },
+    { "id": "familia", "title": "Ligação a Portugal e à família", "note": "Culpa, saudade e ansiedade em relação a quem ficou." }
+  ],
+  "questions": [
+    { "scale": "relacoes", "text": "Sinto-me sozinho(a), mesmo quando estou com outras pessoas." },
+    { "scale": "relacoes", "text": "Tenho pelo menos uma pessoa no país onde vivo a quem posso ligar se precisar.", "reversed": true },
+    { "scale": "relacoes", "text": "Sinto que não pertenço nem aqui nem em Portugal." },
+    { "scale": "humor", "text": "Sinto-me em baixo, triste ou sem esperança." },
+    { "scale": "humor", "text": "Tenho energia e vontade para fazer as coisas de que gosto.", "reversed": true },
+    { "scale": "humor", "text": "Durmo mal ou acordo cansado(a)." },
+    { "scale": "adaptacao", "text": "Sinto-me esgotado(a) por ter de funcionar noutra língua ou cultura." },
+    { "scale": "adaptacao", "text": "Consigo tratar da minha vida prática aqui (trabalho, casa, burocracia) sem grande sofrimento.", "reversed": true },
+    { "scale": "adaptacao", "text": "Penso que emigrar foi um erro." },
+    { "scale": "familia", "text": "Sinto culpa por estar longe da minha família." },
+    { "scale": "familia", "text": "A saudade impede-me de aproveitar a vida onde estou." },
+    { "scale": "familia", "text": "Fico ansioso(a) quando recebo chamadas ou notícias de Portugal." }
+  ],
+  "bands": [
+    {
+      "max": 11,
+      "pill": "A CORRER BEM",
+      "concern": "low",
+      "hideCommerce": true,
+      "title": "A emigração está a correr bem",
+      "text": "A sua adaptação parece estar a correr bem. Tem apoio, energia e equilíbrio entre a vida de cá e a de lá. Isso não significa que não haja dias difíceis, e é normal que a saudade apareça de vez em quando.",
+      "cta": "Para continuar assim: mantenha as relações que construiu, a rotina que o sustenta e o contacto equilibrado com Portugal. Se a vida mudar (novo emprego, separação, doença na família), volte a fazer o teste.",
+      "article": "choque-cultural-emigrar",
+      "bookLabel": "Ler «Choque cultural: como é o primeiro ano depois de emigrar»",
+      "fallbackHref": "/psicologo-emigrantes",
+      "fallbackLabel": "Falar com um psicólogo para emigrantes",
+      "bookNote": "Se a vida mudar, o teste pode voltar a ser útil."
+    },
+    {
+      "max": 22,
+      "pill": "ESFORÇO GRANDE",
+      "concern": "mid",
+      "title": "Está a fazer um esforço grande",
+      "text": "Há áreas da sua vida no estrangeiro que estão a pesar. É muito comum, sobretudo nos primeiros anos ou em fases de mudança, e não é sinal de que falhou. O cansaço de se adaptar, a solidão ou a culpa acumulam-se sem darmos conta.",
+      "cta": "Veja a dimensão com pontuação mais alta e comece por aí. Falar com alguém na sua língua, que perceba o que é viver entre dois países, pode aliviar muito.",
+      "bookLabel": "Marcar consulta de psicologia online",
+      "bookNote": "Online, em português de Portugal."
+    },
+    {
+      "max": 36,
+      "pill": "FASE DIFÍCIL",
+      "concern": "high",
+      "title": "Está a passar por uma fase difícil",
+      "text": "As suas respostas mostram que está a sofrer bastante neste momento. A emigração pode trazer solidão, tristeza e esgotamento intensos, e não tem de passar por isso sozinho(a).",
+      "cta": "Recomendamos que fale com um profissional. Na Lon Clinic, pode ter uma consulta de psicologia online, em português de Portugal, com horários pensados para quem vive noutro fuso.",
+      "bookLabel": "Marcar consulta de psicologia online",
+      "bookNote": "Online, em português de Portugal."
+    }
+  ],
+  "insights": {
+    "relacoes": {
+      "title": "Relações e pertença",
+      "text": "A solidão é um dos maiores desafios de quem emigra.",
+      "article": "saudade-solidao-emigrar",
+      "linkLabel": "Ler «Saudade e solidão depois de emigrar»"
+    },
+    "humor": {
+      "title": "Humor e energia",
+      "text": "Tristeza, cansaço e sono difícil durante semanas merecem atenção. Em países com pouca luz, fale também com um médico.",
+      "article": "saudade-solidao-emigrar",
+      "linkLabel": "Ler «Saudade e solidão depois de emigrar»"
+    },
+    "adaptacao": {
+      "title": "Adaptação ao dia a dia",
+      "text": "O esforço de funcionar noutra cultura é real e tem fases.",
+      "article": "choque-cultural-emigrar",
+      "linkLabel": "Ler «Choque cultural: como é o primeiro ano depois de emigrar»"
+    },
+    "familia": {
+      "title": "Ligação a Portugal e à família",
+      "text": "A culpa e a ansiedade em relação a quem ficou são muito comuns.",
+      "article": "culpa-deixar-pais-portugal",
+      "linkLabel": "Ler «Culpa por deixar os pais em Portugal»"
+    }
+  },
+  "booking": {
+    "consultHref": "/marcar/psicologia?plan=avulsa",
+    "consultName": "Consulta de psicologia",
+    "consultPrice": "60",
+    "consultMeta": "Avulsa · 50 minutos",
+    "subHref": "/marcar/psicologia",
+    "subName": "Acompanhamento semanal",
+    "subPrice": "56",
+    "subMeta": "56 €/semana · continuidade",
+    "stickyLabel": "Consulta de psicologia online"
+  },
+  "related": [],
+  "introLinks": [
+    { "href": "/psicologo-emigrantes", "label": "Psicólogo para emigrantes" },
+    { "href": "/blog/luto-a-distancia", "label": "Luto à distância" }
+  ],
+  "faq": [
+    {
+      "q": "Este teste faz um diagnóstico?",
+      "a": "Não. É um exercício de reflexão sobre a sua adaptação e bem-estar. Não substitui uma avaliação por um psicólogo."
+    },
+    {
+      "q": "Quanto tempo demora?",
+      "a": "Cerca de 2 minutos. São 12 perguntas sobre as últimas duas semanas."
+    },
+    {
+      "q": "O que acontece aos meus dados?",
+      "a": "O email é usado apenas para enviar o resultado e conteúdos da Lon Clinic. Pode cancelar a qualquer momento."
+    }
+  ],
+  "disclaimer": "Este teste não é um diagnóstico. Se sentir que não aguenta ou pensar em fazer mal a si próprio, ligue de imediato para o número de emergência do país onde está (112 na União Europeia e no Reino Unido).",
+  "safetyFoot": "Se sentir que não aguenta ou pensar em fazer mal a si próprio, ligue de imediato para o número de emergência do país onde está (112 na União Europeia e no Reino Unido).",
+  "trustHtml": "Consulta online, em português de Portugal.<br>Avulsa 60 € · acompanhamento 56 €/semana.",
+  "utmCampaign": "teste-emigracao"
+}

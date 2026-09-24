@@ -9,9 +9,14 @@
 
 Rio, São Paulo ou o Nordeste urbano não são o mesmo que Manaus, o Pantanal ou um circuito de capitais do interior. Por isso a lista de vacinas para viajar ao Brasil **não cabe num cartaz de aeroporto**.
 
-A [consulta do viajante online](/travel-clinic) (39 €) cruza o seu itinerário com o boletim. A [febre amarela](/blog/vacina-febre-amarela-guia-completo) toma-se num CVI em [Lisboa](/blog/vacina-febre-amarela-lisboa) ou no [Porto](/blog/vacina-febre-amarela-porto), com prescrição — [não na CUF](/blog/vacina-febre-amarela-cuf).
+A [consulta do viajante online](/marcar/travel) (39 €) cruza o seu itinerário com o boletim. Guia de 2026, com o mapa do CDC: [vacinas para o Brasil](/blog/vacinas-viajante-brasil). A [febre amarela](/blog/vacina-febre-amarela-guia-completo) toma-se num CVI em [Lisboa](/blog/vacina-febre-amarela-lisboa) ou no [Porto](/blog/vacina-febre-amarela-porto), com prescrição — [não na CUF](/blog/vacina-febre-amarela-cuf).
 
 {{cta}}
+<figure class="guide-figure">
+<img src="/image/guide/travel-cover-hq-3.webp" alt="Vacinas para viajar ao Brasil a partir de Portugal" width="1200" height="800" loading="lazy" decoding="async">
+<figcaption>Vacinas para viajar ao Brasil a partir de Portugal</figcaption>
+</figure>
+
 
 ## Vacinas habitualmente consideradas
 
@@ -29,6 +34,17 @@ Não é o problema de Ipanema. É o problema de muita da Amazónia e de alguns m
 ## Quando marcar
 
 Quatro a seis semanas antes. Se precisa de certificado de febre amarela para um voo curto, conte os 10 dias — a consulta online é rápida; a biologia da vacina não é.
+
+{{cta}}
+
+## Neste guia
+
+- [Guia de 2026](/blog/vacinas-viajante-brasil) e [em inglês](/blog/travel-vaccines-brazil)
+- [Todos os destinos](/blog/vacinas-para-viajar-por-pais)
+- [Centros de vacinação internacional](/blog/centros-de-vacinacao-internacional-portugal)
+- [Febre amarela](/blog/vacina-febre-amarela-guia-completo) · [malária e hepatite A/B](/blog/malaria-hepatite-a-b-viajante)
+
+{{cta}}
 
 ## Fontes
 

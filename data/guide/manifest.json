@@ -6,6 +6,201 @@
             "format": "markdown",
             "lang": "pt",
             "hreflang": "pt-PT",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 5,
+            "slug": "luto-a-distancia",
+            "title": "Luto à distância: perder um pai ou uma mãe estando fora",
+            "description": "Perder um pai ou uma mãe enquanto vive no estrangeiro é um luto diferente. Porque dói de outra forma, o que ajuda e quando procurar apoio psicológico.",
+            "about": "Psicologia",
+            "image": "/image/psi-choice-individual.webp",
+            "related": [
+                "culpa-deixar-pais-portugal",
+                "saudade-solidao-emigrar",
+                "choque-cultural-emigrar",
+                "voltar-a-portugal-choque-inverso",
+                "tristeza-luto-ou-depressao",
+                "psicologo-online-como-funciona"
+            ],
+            "faq": [
+                {
+                    "q": "Como lidar com a morte de um pai ou mãe estando a viver no estrangeiro?",
+                    "a": "Dando espaço a um luto que tem camadas próprias: a distância, a culpa e, muitas vezes, a ausência no funeral. Rituais pessoais, contacto com a família e apoio psicológico ajudam."
+                },
+                {
+                    "q": "É normal sentir culpa por não ter estado presente?",
+                    "a": "Sim. É das reações mais comuns no luto à distância. A culpa não mede o amor nem a responsabilidade real pelo que aconteceu."
+                },
+                {
+                    "q": "Quando devo procurar ajuda psicológica no luto?",
+                    "a": "Se, meses depois, a dor continuar a impedir o dia a dia, se não conseguir falar da pessoa ou se sentir que perdeu o sentido da vida."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 5,
+            "slug": "saudade-solidao-emigrar",
+            "title": "Saudade e solidão depois de emigrar: o que é normal",
+            "description": "Saudade de casa e solidão são comuns depois de emigrar. Saiba o que é normal, quando pode ser mais do que isso e o que ajuda a sentir-se em casa.",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-country-road.jpg",
+            "related": [
+                "luto-a-distancia",
+                "choque-cultural-emigrar",
+                "culpa-deixar-pais-portugal",
+                "voltar-a-portugal-choque-inverso",
+                "tristeza-luto-ou-depressao",
+                "psicologo-online-como-funciona"
+            ],
+            "faq": [
+                {
+                    "q": "É normal sentir muita saudade depois de emigrar?",
+                    "a": "Sim. A saudade é uma resposta natural à perda da família, da língua, da comida e dos hábitos. Costuma ser mais intensa nos primeiros meses e em datas especiais."
+                },
+                {
+                    "q": "Como combater a solidão no estrangeiro?",
+                    "a": "Criando rotina, investindo em poucas relações próximas, procurando comunidades (portuguesas e locais) e mantendo contacto regular, mas não exclusivo, com quem ficou."
+                },
+                {
+                    "q": "Quando é que a saudade pode ser depressão?",
+                    "a": "Quando a tristeza é constante durante semanas, perde interesse por tudo, dorme e come muito mal ou deixa de conseguir funcionar no trabalho."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 5,
+            "slug": "culpa-deixar-pais-portugal",
+            "title": "Culpa por deixar os pais em Portugal: como lidar",
+            "description": "Sente culpa por ter emigrado e deixado os pais em Portugal? Perceba de onde vem, como cuidar deles à distância e como aliviar um peso que não é só seu.",
+            "about": "Psicologia",
+            "image": "/image/image1_files/Ostermalmstorg_Large_Desktop.jpg",
+            "related": [
+                "luto-a-distancia",
+                "voltar-a-portugal-choque-inverso",
+                "saudade-solidao-emigrar",
+                "choque-cultural-emigrar",
+                "psicologo-online-como-funciona",
+                "quando-ir-ao-psicologo-sinais"
+            ],
+            "faq": [
+                {
+                    "q": "É normal sentir culpa por ter emigrado?",
+                    "a": "Sim. É muito comum, sobretudo quando os pais envelhecem ou adoecem. Nasce do amor e do sentido de dever, não de uma falha."
+                },
+                {
+                    "q": "Como cuidar dos pais idosos à distância?",
+                    "a": "Organizando uma rede local (irmãos, vizinhos, apoio domiciliário), tendo informação médica e contactos à mão, e combinando visitas e chamadas regulares."
+                },
+                {
+                    "q": "Devo voltar para Portugal para cuidar dos meus pais?",
+                    "a": "É uma decisão pessoal que vale a pena pensar com calma, avaliando necessidades reais, alternativas de apoio e o impacto na sua vida."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 5,
+            "slug": "choque-cultural-emigrar",
+            "title": "Choque cultural: como é o primeiro ano depois de emigrar",
+            "description": "O primeiro ano no estrangeiro tem fases previsíveis: entusiasmo, frustração e adaptação. Saiba o que é o choque cultural e como atravessá-lo melhor.",
+            "about": "Psicologia",
+            "image": "/image/image1_files/Marylebone_Large_Desktop.jpg",
+            "related": [
+                "saudade-solidao-emigrar",
+                "voltar-a-portugal-choque-inverso",
+                "culpa-deixar-pais-portugal",
+                "luto-a-distancia",
+                "psicologo-online-como-funciona",
+                "vitamina-d"
+            ],
+            "faq": [
+                {
+                    "q": "O que é o choque cultural?",
+                    "a": "É o desconforto de viver numa cultura diferente, com regras, hábitos e formas de comunicar que ainda não domina. É normal e temporário."
+                },
+                {
+                    "q": "Quanto tempo dura a adaptação a outro país?",
+                    "a": "Varia muito. Muitas pessoas sentem que o primeiro ano é o mais difícil e que a adaptação se consolida ao fim de um a dois anos."
+                },
+                {
+                    "q": "Como me adaptar mais depressa a outro país?",
+                    "a": "Aprendendo a língua, criando rotina, construindo relações locais sem perder as raízes e aceitando que a frustração faz parte do processo."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
+            "verified": false,
+            "ctaKind": "mental",
+            "liveSlots": true,
+            "slotService": "psicologia",
+            "readingMinutes": 5,
+            "slug": "voltar-a-portugal-choque-inverso",
+            "title": "Voltar a Portugal: o choque inverso de quem regressa",
+            "description": "Regressar a Portugal pode ser mais difícil do que emigrar. Saiba o que é o choque cultural inverso, porque acontece e como preparar o regresso.",
+            "about": "Psicologia",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "related": [
+                "choque-cultural-emigrar",
+                "culpa-deixar-pais-portugal",
+                "saudade-solidao-emigrar",
+                "luto-a-distancia",
+                "psicologo-online-como-funciona",
+                "quando-ir-ao-psicologo-sinais"
+            ],
+            "faq": [
+                {
+                    "q": "O que é o choque cultural inverso?",
+                    "a": "É o desconforto de regressar ao país de origem e sentir que já não se encaixa totalmente, porque a pessoa e o país mudaram."
+                },
+                {
+                    "q": "É normal sentir-se estrangeiro no próprio país?",
+                    "a": "Sim. Muitos emigrantes regressados sentem isso nos primeiros meses. Costuma diminuir com tempo e rotina."
+                },
+                {
+                    "q": "Como preparar o regresso a Portugal?",
+                    "a": "Com expectativas realistas, planeamento prático (trabalho, casa, escola, apoios ao regresso) e espaço para o lado emocional do regresso."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-23",
+            "dateModified": "2026-09-23",
+            "format": "markdown",
+            "lang": "pt",
+            "hreflang": "pt-PT",
             "author": "rita-aguiar",
             "verified": true,
             "ctaKind": "clinica_geral",
@@ -7424,6 +7619,7 @@
             "verified": false,
             "readingMinutes": 4,
             "related": [
+                "luto-a-distancia",
                 "depressao-mitos-e-factos",
                 "primeiros-sinais-de-depressao",
                 "quando-procurar-ajuda-para-a-depressao"
@@ -9117,6 +9313,61 @@
             "ctaKind": "travel"
         },
         {
+            "slug": "vacina-febre-amarela-luz",
+            "title": "Vacina febre amarela no Hospital da Luz — dá para vacinar?",
+            "description": "O guia do Hospital da Luz diz que a vacina da febre amarela só está nos Centros de Vacinação Internacional. Veja a via mais curta: prescrição no próprio dia e toma no CVI.",
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "html",
+            "image": "/image/guide/guide-country-road.jpg",
+            "related": [
+                "vacina-febre-amarela-guia-completo",
+                "vacina-febre-amarela-cuf",
+                "vacina-febre-amarela-lusiadas",
+                "vacina-febre-amarela-centros",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
+        },
+        {
+            "slug": "vacina-febre-amarela-lusiadas",
+            "title": "Vacina febre amarela na Lusíadas — dá para vacinar?",
+            "description": "A Lusíadas Porto descreve a vacina da febre amarela na consulta do viajante. Se não houver vaga, a via mais curta é a prescrição no próprio dia e a toma num Centro de Vacinação Internacional.",
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "html",
+            "image": "/image/guide/guide-country-road.jpg",
+            "related": [
+                "vacina-febre-amarela-guia-completo",
+                "vacina-febre-amarela-cuf",
+                "vacina-febre-amarela-luz",
+                "vacina-febre-amarela-centros",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
+        },
+        {
+            "slug": "vacina-febre-amarela-centros",
+            "title": "Vacina febre amarela nos Centros de Vacinação Internacional",
+            "description": "Sim: a febre amarela toma-se num Centro de Vacinação Internacional, com prescrição. A via mais curta é a receita no próprio dia e a marcação só da vacina, sem esperar pela consulta do SNS.",
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "html",
+            "image": "/image/guide/guide-country-road.jpg",
+            "related": [
+                "vacina-febre-amarela-guia-completo",
+                "vacina-febre-amarela-cuf",
+                "vacina-febre-amarela-luz",
+                "vacina-febre-amarela-lusiadas",
+                "centros-de-vacinacao-internacional-portugal",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
+        },
+        {
             "slug": "vacina-febre-amarela-cuf",
             "title": "Vacina Febre Amarela na CUF em 2026 — O que Precisa de Saber",
             "description": "A CUF não administra vacina febre amarela. Veja alternativas em Portugal, Centros de Vacinação Internacional autorizados e como obter prescrição médica no próprio dia.",
@@ -9321,6 +9572,96 @@
                 "vacinas-viajante-algarve",
                 "vacinas-viajante-cuf",
                 "vacina-febre-amarela-guia-completo",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
+        },
+        {
+            "slug": "vacinas-viajante-faro",
+            "title": "Vacinas do viajante em Faro — Onde tomar e horários",
+            "description": "Vacinas do viajante em Faro: Centro de Vacinação Internacional do Centro de Saúde de Faro, horários e consulta online com prescrição.",
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "html",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "related": [
+                "vacinas-viajante-guia-completo",
+                "vacinas-viajante-coimbra",
+                "vacinas-viajante-algarve",
+                "vacinas-viajante-porto",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
+        },
+        {
+            "slug": "vacinas-viajante-aveiro",
+            "title": "Vacinas do viajante em Aveiro — Onde tomar e horários",
+            "description": "Vacinas do viajante em Aveiro: Centro de Vacinação Internacional do Centro de Saúde de Aveiro, horários e consulta online com prescrição.",
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "html",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "related": [
+                "vacinas-viajante-guia-completo",
+                "vacinas-viajante-coimbra",
+                "vacinas-viajante-leiria",
+                "vacinas-viajante-porto",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
+        },
+        {
+            "slug": "vacinas-viajante-leiria",
+            "title": "Vacinas do viajante em Leiria — Onde tomar e horários",
+            "description": "Vacinas do viajante em Leiria: Centro de Vacinação Internacional do Centro de Saúde Dr. Arnaldo Sampaio, horários e consulta online com prescrição.",
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "html",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "related": [
+                "vacinas-viajante-guia-completo",
+                "vacinas-viajante-coimbra",
+                "vacinas-viajante-aveiro",
+                "vacinas-viajante-porto",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
+        },
+        {
+            "slug": "vacinas-viajante-funchal",
+            "title": "Vacinas do viajante no Funchal — Onde tomar e horários",
+            "description": "Vacinas do viajante no Funchal: Centro de Vacinação Internacional do Centro de Saúde do Bom Jesus, horários e consulta online com prescrição.",
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "html",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "related": [
+                "vacinas-viajante-guia-completo",
+                "vacinas-viajante-coimbra",
+                "vacinas-viajante-ponta-delgada",
+                "vacinas-viajante-lisboa",
+                "consulta-do-viajante-online"
+            ],
+            "about": "Consulta do viajante",
+            "ctaKind": "travel"
+        },
+        {
+            "slug": "vacinas-viajante-ponta-delgada",
+            "title": "Vacinas do viajante em Ponta Delgada — Onde tomar e horários",
+            "description": "Vacinas do viajante em Ponta Delgada: Centro de Vacinação Internacional de São Miguel, horários e consulta online com prescrição.",
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "html",
+            "image": "/image/guide/guide-hiker-view.jpg",
+            "related": [
+                "vacinas-viajante-guia-completo",
+                "vacinas-viajante-coimbra",
+                "vacinas-viajante-funchal",
+                "vacinas-viajante-lisboa",
                 "consulta-do-viajante-online"
             ],
             "about": "Consulta do viajante",
@@ -9595,6 +9936,7 @@
         },
         {
             "slug": "vacinas-para-viajar-por-pais",
+            "group": "vacinas-para-viajar-por-pais",
             "title": "Que vacinas preciso para viajar? Guia por país (2026)",
             "description": "Lista orientativa de vacinas por destino a partir de Portugal: Brasil, Tailândia, Índia, Quénia, Angola, Moçambique. A lista exacta sai da consulta do viajante, 39 €.",
             "datePublished": "2026-09-06",
@@ -9659,6 +10001,51 @@
                 {
                     "q": "Onde tirar a vacina da febre amarela em Lisboa?",
                     "a": "Num Centro de Vacinação Internacional da ARSLVT, com prescrição. Não na CUF. A Lon Clinic emite a prescrição por videoconsulta; a administração é no CVI."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-viajante-brasil",
+            "group": "vacinas-viajante-brasil",
+            "title": "Vacinas para o Brasil: o que é obrigatório e o que é recomendado (2026)",
+            "description": "Vai ao Brasil? Febre amarela, malária na Amazónia, dengue e as vacinas recomendadas pelo CDC — e com quanta antecedência marcar a consulta do viajante.",
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-3.webp",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-viajante-angola",
+                "vacinas-viajante-mocambique",
+                "vacinas-viajante-cabo-verde",
+                "vacinas-viajante-tailandia",
+                "vacinas-viajante-india",
+                "vacinas-viajante-quenia-tanzania",
+                "vacinas-para-viajar-por-pais",
+                "vacina-febre-amarela-guia-completo",
+                "malaria-hepatite-a-b-viajante",
+                "consulta-do-viajante-online"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de certificado de febre amarela para entrar no Brasil?",
+                    "a": "Não, se viajar directamente de Portugal. Pode precisar se seguir depois para outros países da região."
+                },
+                {
+                    "q": "Vou só ao Rio de Janeiro. Preciso da vacina da febre amarela?",
+                    "a": "O CDC recomenda-a também para o Rio de Janeiro e para São Paulo, incluindo as cidades."
+                },
+                {
+                    "q": "Vou só a Fortaleza ou Recife. Preciso da vacina da febre amarela?",
+                    "a": "Não é recomendada pelo CDC para essas cidades nem para a maior parte do litoral nordestino. Hepatite A e a prevenção de picadas mantêm-se."
+                },
+                {
+                    "q": "Preciso de comprimidos para a malária?",
+                    "a": "Só se for à região amazónica. Para as grandes cidades e zonas costeiras turísticas, não."
                 }
             ]
         },
@@ -9765,6 +10152,51 @@
             ]
         },
         {
+            "slug": "vacinas-viajante-angola",
+            "group": "vacinas-viajante-angola",
+            "title": "Vacinas para Angola: febre amarela obrigatória e malária (2026)",
+            "description": "Vai a Angola? A vacina da febre amarela é obrigatória para entrar e há malária em todo o país. Saiba o que precisa e com quanta antecedência marcar.",
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-4.webp",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-viajante-brasil",
+                "vacinas-viajante-mocambique",
+                "vacinas-viajante-cabo-verde",
+                "vacinas-viajante-tailandia",
+                "vacinas-viajante-india",
+                "vacinas-viajante-quenia-tanzania",
+                "vacinas-para-viajar-por-pais",
+                "vacina-febre-amarela-guia-completo",
+                "malaria-hepatite-a-b-viajante",
+                "consulta-do-viajante-online"
+            ],
+            "faq": [
+                {
+                    "q": "A vacina da febre amarela é mesmo obrigatória para Angola?",
+                    "a": "Sim, para todos os viajantes com 9 meses ou mais."
+                },
+                {
+                    "q": "Fui vacinado há mais de 10 anos. Preciso de reforço?",
+                    "a": "Na maioria dos casos, não: desde 2016 o certificado é válido para toda a vida. Há excepções que se avaliam na consulta."
+                },
+                {
+                    "q": "Vou só a Luanda. Preciso de comprimidos para a malária?",
+                    "a": "Sim, o risco existe em todo o país, incluindo Luanda."
+                },
+                {
+                    "q": "Sou angolano ou angolana e vou visitar a família. Também preciso?",
+                    "a": "Sim. Quem vive fora há algum tempo perde parte da protecção natural contra a malária, e as regras de entrada aplicam-se na mesma."
+                }
+            ]
+        },
+        {
             "slug": "vacinas-para-viajar-a-angola",
             "title": "Que vacinas preciso para viajar para Angola?",
             "description": "Febre amarela muitas vezes obrigatória à entrada, malária em quase todo o país, hepatite A e tifóide. Consulta do viajante em Portugal, 39 €.",
@@ -9799,6 +10231,47 @@
             ]
         },
         {
+            "slug": "vacinas-viajante-mocambique",
+            "group": "vacinas-viajante-mocambique",
+            "title": "Vacinas para Moçambique: malária, febre amarela e o que precisa (2026)",
+            "description": "Vai a Moçambique? Há malária em todo o país e a febre amarela pode ser exigida conforme a escala. Saiba o que precisa e quando marcar a consulta.",
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-5.webp",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-viajante-brasil",
+                "vacinas-viajante-angola",
+                "vacinas-viajante-cabo-verde",
+                "vacinas-viajante-tailandia",
+                "vacinas-viajante-india",
+                "vacinas-viajante-quenia-tanzania",
+                "vacinas-para-viajar-por-pais",
+                "vacina-febre-amarela-guia-completo",
+                "malaria-hepatite-a-b-viajante",
+                "consulta-do-viajante-online"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso da vacina da febre amarela para Moçambique?",
+                    "a": "Só se chegar de um país com risco de febre amarela ou fizer lá uma escala de mais de 12 horas. Num voo directo de Portugal, não."
+                },
+                {
+                    "q": "Vou só a Maputo e às praias. Preciso de comprimidos para a malária?",
+                    "a": "Sim. O risco existe em todo o país, incluindo cidades e zonas de praia."
+                },
+                {
+                    "q": "Sou moçambicano ou moçambicana e vou visitar a família. Também preciso?",
+                    "a": "Sim. Quem vive fora perde parte da protecção natural contra a malária, e as regras de entrada aplicam-se na mesma."
+                }
+            ]
+        },
+        {
             "slug": "vacinas-para-viajar-a-mocambique",
             "title": "Que vacinas preciso para viajar para Moçambique?",
             "description": "Malária em quase todo o país, hepatite A e muitas vezes tifóide. Febre amarela se o voo o exigir. Consulta do viajante em Portugal, 39 €.",
@@ -9829,6 +10302,515 @@
                 {
                     "q": "Maputo de hotel ainda precisa de profilaxia da malária?",
                     "a": "O risco existe em todo o país. A decisão é clínica, na consulta, com o seu itinerário — não um sim/não desta página."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-viajante-cabo-verde",
+            "group": "vacinas-viajante-cabo-verde",
+            "title": "Vacinas para Cabo Verde: é preciso alguma? (2026)",
+            "description": "Vai a Cabo Verde? Não há malária e a febre amarela só é exigida em casos específicos. Saiba que vacinas fazem sentido e quando marcar a consulta.",
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-6.webp",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-viajante-brasil",
+                "vacinas-viajante-angola",
+                "vacinas-viajante-mocambique",
+                "vacinas-viajante-tailandia",
+                "vacinas-viajante-india",
+                "vacinas-viajante-quenia-tanzania",
+                "vacinas-para-viajar-por-pais",
+                "vacina-febre-amarela-guia-completo",
+                "malaria-hepatite-a-b-viajante",
+                "consulta-do-viajante-online"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de alguma vacina obrigatória para Cabo Verde?",
+                    "a": "Não, se viajar directamente de Portugal."
+                },
+                {
+                    "q": "Há malária no Sal ou na Boa Vista?",
+                    "a": "Não. Não há transmissão de malária em Cabo Verde. A OMS certificou o país como livre de malária em 2024."
+                },
+                {
+                    "q": "Vou a Cabo Verde depois da Guiné-Bissau. O que muda?",
+                    "a": "Precisa do certificado de febre amarela para entrar em Cabo Verde, e da vacina e da medicação para a malária para a Guiné-Bissau."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-viajante-tailandia",
+            "group": "vacinas-viajante-tailandia",
+            "title": "Vacinas para a Tailândia: o que precisa mesmo (2026)",
+            "description": "Vai à Tailândia? Malária só em zonas de fronteira, encefalite japonesa em alguns casos e hepatite A para quase todos. Saiba o que precisa e quando marcar.",
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-2.webp",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-viajante-brasil",
+                "vacinas-viajante-angola",
+                "vacinas-viajante-mocambique",
+                "vacinas-viajante-cabo-verde",
+                "vacinas-viajante-india",
+                "vacinas-viajante-quenia-tanzania",
+                "vacinas-para-viajar-por-pais",
+                "vacina-febre-amarela-guia-completo",
+                "malaria-hepatite-a-b-viajante",
+                "consulta-do-viajante-online"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de comprimidos para a malária para ir a Phuket ou Koh Samui?",
+                    "a": "Normalmente não. O CDC recomenda apenas prevenção de picadas nestas ilhas."
+                },
+                {
+                    "q": "Preciso da vacina da encefalite japonesa para duas semanas de férias?",
+                    "a": "Na maioria dos casos, não. Depende do que vai fazer. Se passar muito tempo em zonas rurais ou fizer trekking, avalie na consulta."
+                },
+                {
+                    "q": "Preciso de alguma vacina obrigatória para a Tailândia?",
+                    "a": "Não, se viajar de Portugal. Só se chegar vindo de um país com risco de febre amarela."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-viajante-india",
+            "group": "vacinas-viajante-india",
+            "title": "Vacinas para a Índia: febre tifoide, malária e o que precisa (2026)",
+            "description": "Vai à Índia? Febre tifoide e hepatite A mesmo em viagens curtas, malária em grande parte do país e regras de febre amarela a ter em conta. Saiba quando marcar.",
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-7.webp",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-viajante-brasil",
+                "vacinas-viajante-angola",
+                "vacinas-viajante-mocambique",
+                "vacinas-viajante-cabo-verde",
+                "vacinas-viajante-tailandia",
+                "vacinas-viajante-quenia-tanzania",
+                "vacinas-para-viajar-por-pais",
+                "vacina-febre-amarela-guia-completo",
+                "malaria-hepatite-a-b-viajante",
+                "consulta-do-viajante-online"
+            ],
+            "faq": [
+                {
+                    "q": "Preciso de alguma vacina obrigatória para a Índia?",
+                    "a": "Não, se viajar directamente de Portugal. Sim, se tiver estado recentemente num país com risco de febre amarela."
+                },
+                {
+                    "q": "Vou só ao Triângulo Dourado (Deli, Agra, Jaipur). Preciso de comprimidos para a malária?",
+                    "a": "O CDC recomenda para as zonas de transmissão, que incluem estas cidades. Outras orientações são mais selectivas. Decida com o médico, conforme a época e o tipo de viagem."
+                },
+                {
+                    "q": "Vou fazer um tratamento médico ou dentário na Índia. Muda alguma coisa?",
+                    "a": "Sim. A hepatite B passa a ser especialmente importante."
+                }
+            ]
+        },
+        {
+            "slug": "vacinas-viajante-quenia-tanzania",
+            "group": "vacinas-viajante-quenia-tanzania",
+            "title": "Vacinas para safari no Quénia e na Tanzânia (e Zanzibar) — 2026",
+            "description": "Safari no Quénia, Tanzânia ou Zanzibar? Febre amarela, malária e a armadilha da combinação dos dois países. Saiba o que precisa e quando marcar.",
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "image": "/image/guide/travel-cover-hq-8.webp",
+            "about": "Medicina do viajante",
+            "verified": false,
+            "series": "vacinas-por-destino",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "related": [
+                "vacinas-viajante-brasil",
+                "vacinas-viajante-angola",
+                "vacinas-viajante-mocambique",
+                "vacinas-viajante-cabo-verde",
+                "vacinas-viajante-tailandia",
+                "vacinas-viajante-india",
+                "vacinas-para-viajar-por-pais",
+                "vacina-febre-amarela-guia-completo",
+                "malaria-hepatite-a-b-viajante",
+                "consulta-do-viajante-online"
+            ],
+            "faq": [
+                {
+                    "q": "Vou só a Zanzibar. Preciso da vacina da febre amarela?",
+                    "a": "Não, se não chegar de um país com risco nem fizer escala longa num. Atenção às ligações por Nairobi ou Adis Abeba."
+                },
+                {
+                    "q": "Preciso de comprimidos para a malária em Zanzibar?",
+                    "a": "O CDC indica que ainda há transmissão no arquipélago e sugere considerar a prevenção para todos os viajantes à Tanzânia. Decida com o médico."
+                },
+                {
+                    "q": "Vou fazer safari no Quénia e depois praia na Tanzânia. O que preciso?",
+                    "a": "Vacina da febre amarela (recomendada para o Quénia e exigida à entrada na Tanzânia) e medicação para a malária para os dois países."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "en",
+            "hreflang": "en",
+            "about": "Travel medicine",
+            "verified": false,
+            "series": "travel-vaccines-by-country",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "slug": "travel-vaccines-by-country",
+            "group": "vacinas-para-viajar-por-pais",
+            "seriesHub": true,
+            "title": "Travel vaccines by country, leaving from Portugal (2026)",
+            "description": "English guides for expats and foreign residents flying out of Portugal: Brazil, Angola, Mozambique, Cape Verde, Kenya, Tanzania, Thailand and India. Video consultation, €39.",
+            "image": "/image/guide/travel-cover-hq-2.webp",
+            "related": [
+                "travel-vaccines-brazil",
+                "travel-vaccines-angola",
+                "travel-vaccines-mozambique",
+                "travel-vaccines-cape-verde",
+                "travel-vaccines-kenya-tanzania",
+                "travel-vaccines-thailand",
+                "travel-vaccines-india",
+                "international-vaccination-centres-portugal",
+                "malaria-hepatite-a-b-viajante"
+            ],
+            "faq": [
+                {
+                    "q": "Which vaccines do I need to travel from Portugal?",
+                    "a": "It depends on the itinerary, not only the country, and not on whether you are Portuguese. There are vaccines required for entry (often yellow fever), vaccines recommended because of risk (hepatitis A, typhoid), and routine vaccines. The travel consultation sets the plan and issues the prescription for the vaccination centre."
+                },
+                {
+                    "q": "Where do I get the vaccines in Portugal?",
+                    "a": "At International Vaccination Centres, with a prescription. Lisbon, Porto, Coimbra, Braga and the Algarve each have a guide. CUF does not give the yellow fever circuit."
+                },
+                {
+                    "q": "I live in Portugal but I am not Portuguese. Is this the same?",
+                    "a": "Yes. These pages assume you are leaving from Portugal. The consultation is in English. The prescription is a Portuguese electronic prescription, sent by SMS or email."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "en",
+            "hreflang": "en",
+            "about": "Travel medicine",
+            "verified": false,
+            "series": "travel-vaccines-by-country",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "slug": "travel-vaccines-brazil",
+            "group": "vacinas-viajante-brasil",
+            "title": "Vaccines for Brazil: what is required and what is recommended (2026)",
+            "description": "Flying to Brazil from Portugal? No vaccine is required on a direct flight. Yellow fever covers most of the country, including Rio and São Paulo. Malaria is the Amazon.",
+            "image": "/image/guide/travel-cover-hq-3.webp",
+            "related": [
+                "travel-vaccines-angola",
+                "travel-vaccines-mozambique",
+                "travel-vaccines-cape-verde",
+                "travel-vaccines-kenya-tanzania",
+                "travel-vaccines-thailand",
+                "travel-vaccines-india",
+                "travel-vaccines-by-country",
+                "international-vaccination-centres-portugal",
+                "malaria-hepatite-a-b-viajante"
+            ],
+            "faq": [
+                {
+                    "q": "Do I need a yellow fever certificate to enter Brazil?",
+                    "a": "No, if you fly directly from Portugal. You may need one if you continue to other countries in the region."
+                },
+                {
+                    "q": "I am only going to Rio de Janeiro. Do I need yellow fever vaccine?",
+                    "a": "The CDC recommends it for Rio de Janeiro and São Paulo, including the cities."
+                },
+                {
+                    "q": "I am only going to Fortaleza or Recife.",
+                    "a": "The CDC does not recommend yellow fever vaccine for those cities or for most of the north-east coast. Hepatitis A and bite prevention still apply."
+                },
+                {
+                    "q": "Do I need malaria tablets?",
+                    "a": "Only if you go to the Amazon. Not for the big cities or tourist coastal areas."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "en",
+            "hreflang": "en",
+            "about": "Travel medicine",
+            "verified": false,
+            "series": "travel-vaccines-by-country",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "slug": "travel-vaccines-angola",
+            "group": "vacinas-viajante-angola",
+            "title": "Vaccines for Angola: yellow fever is required, and so is malaria cover (2026)",
+            "description": "Leaving Portugal for Angola? Yellow fever vaccine is required to enter, from 9 months of age, and malaria risk includes Luanda. Book 4 to 8 weeks ahead.",
+            "image": "/image/guide/travel-cover-hq-4.webp",
+            "related": [
+                "travel-vaccines-brazil",
+                "travel-vaccines-mozambique",
+                "travel-vaccines-cape-verde",
+                "travel-vaccines-kenya-tanzania",
+                "travel-vaccines-thailand",
+                "travel-vaccines-india",
+                "travel-vaccines-by-country",
+                "international-vaccination-centres-portugal",
+                "malaria-hepatite-a-b-viajante"
+            ],
+            "faq": [
+                {
+                    "q": "Is yellow fever vaccine really required for Angola?",
+                    "a": "Yes, for every traveller aged 9 months or older."
+                },
+                {
+                    "q": "I was vaccinated more than 10 years ago. Do I need a booster?",
+                    "a": "In most cases, no: since 2016 the certificate is valid for life. There are exceptions, assessed in the consultation."
+                },
+                {
+                    "q": "I am only going to Luanda. Do I need malaria tablets?",
+                    "a": "Yes. The risk exists across the whole country, including Luanda."
+                },
+                {
+                    "q": "I am Angolan and I live in Portugal. I am visiting family. Do I still need this?",
+                    "a": "Yes. Time living outside a malaria area reduces the partial protection people sometimes assume they still have, and the entry rules apply the same way."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "en",
+            "hreflang": "en",
+            "about": "Travel medicine",
+            "verified": false,
+            "series": "travel-vaccines-by-country",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "slug": "travel-vaccines-mozambique",
+            "group": "vacinas-viajante-mocambique",
+            "title": "Vaccines for Mozambique: malaria, yellow fever and what you need (2026)",
+            "description": "Flying from Portugal to Mozambique? Malaria risk includes Maputo and the beaches. Yellow fever depends on stopovers longer than 12 hours in a risk country.",
+            "image": "/image/guide/travel-cover-hq-5.webp",
+            "related": [
+                "travel-vaccines-brazil",
+                "travel-vaccines-angola",
+                "travel-vaccines-cape-verde",
+                "travel-vaccines-kenya-tanzania",
+                "travel-vaccines-thailand",
+                "travel-vaccines-india",
+                "travel-vaccines-by-country",
+                "international-vaccination-centres-portugal",
+                "malaria-hepatite-a-b-viajante"
+            ],
+            "faq": [
+                {
+                    "q": "Do I need yellow fever vaccine for Mozambique?",
+                    "a": "Only if you arrive from a yellow fever risk country, or you stop over there for more than 12 hours."
+                },
+                {
+                    "q": "I am only going to Maputo and the beaches. Do I need malaria tablets?",
+                    "a": "Yes. The risk exists across the whole country, including cities and beach areas."
+                },
+                {
+                    "q": "I am Mozambican and I live in Portugal. I am visiting family. Do I still need this?",
+                    "a": "Yes. Time living outside a malaria area reduces the partial protection people sometimes assume they still have, and the entry rules apply the same way."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "en",
+            "hreflang": "en",
+            "about": "Travel medicine",
+            "verified": false,
+            "series": "travel-vaccines-by-country",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "slug": "travel-vaccines-cape-verde",
+            "group": "vacinas-viajante-cabo-verde",
+            "title": "Vaccines for Cape Verde: do you need any? (2026)",
+            "description": "Flying from Portugal to Cape Verde? No malaria, and no required vaccine on a direct flight. Yellow fever only if you arrive from a risk country.",
+            "image": "/image/guide/travel-cover-hq-6.webp",
+            "related": [
+                "travel-vaccines-brazil",
+                "travel-vaccines-angola",
+                "travel-vaccines-mozambique",
+                "travel-vaccines-kenya-tanzania",
+                "travel-vaccines-thailand",
+                "travel-vaccines-india",
+                "travel-vaccines-by-country",
+                "international-vaccination-centres-portugal",
+                "malaria-hepatite-a-b-viajante"
+            ],
+            "faq": [
+                {
+                    "q": "Do I need a required vaccine for Cape Verde?",
+                    "a": "No, if you fly directly from Portugal."
+                },
+                {
+                    "q": "Is there malaria on Sal or Boa Vista?",
+                    "a": "No. There is no malaria transmission in Cape Verde."
+                },
+                {
+                    "q": "I am going to Cape Verde after Guinea-Bissau. What changes?",
+                    "a": "You need a yellow fever certificate to enter Cape Verde — and the vaccine plus malaria tablets for Guinea-Bissau."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "en",
+            "hreflang": "en",
+            "about": "Travel medicine",
+            "verified": false,
+            "series": "travel-vaccines-by-country",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "slug": "travel-vaccines-thailand",
+            "group": "vacinas-viajante-tailandia",
+            "title": "Vaccines for Thailand: what you actually need (2026)",
+            "description": "Flying from Portugal to Thailand? No required vaccine on entry. Malaria is the border provinces, not Phuket or Koh Samui. Japanese encephalitis is two doses.",
+            "image": "/image/guide/travel-cover-hq-2.webp",
+            "related": [
+                "travel-vaccines-brazil",
+                "travel-vaccines-angola",
+                "travel-vaccines-mozambique",
+                "travel-vaccines-cape-verde",
+                "travel-vaccines-kenya-tanzania",
+                "travel-vaccines-india",
+                "travel-vaccines-by-country",
+                "international-vaccination-centres-portugal",
+                "malaria-hepatite-a-b-viajante"
+            ],
+            "faq": [
+                {
+                    "q": "Do I need malaria tablets for Phuket or Koh Samui?",
+                    "a": "Usually no. The CDC recommends bite prevention only on these islands."
+                },
+                {
+                    "q": "Do I need Japanese encephalitis vaccine for a two-week holiday?",
+                    "a": "In most cases, no — it depends on what you will do. If you spend a lot of time in rural areas or go trekking, decide in the consultation."
+                },
+                {
+                    "q": "Do I need any required vaccine?",
+                    "a": "No, if you travel from Portugal. Only if you arrive from a yellow fever risk country."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "en",
+            "hreflang": "en",
+            "about": "Travel medicine",
+            "verified": false,
+            "series": "travel-vaccines-by-country",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "slug": "travel-vaccines-india",
+            "group": "vacinas-viajante-india",
+            "title": "Vaccines for India: typhoid, malaria and what you need (2026)",
+            "description": "Flying from Portugal to India? No required vaccine on a direct flight. Typhoid and hepatitis A even on short trips. Malaria includes Delhi and Mumbai. Yellow fever rules are strict if you come from a risk country.",
+            "image": "/image/guide/travel-cover-hq-7.webp",
+            "related": [
+                "travel-vaccines-brazil",
+                "travel-vaccines-angola",
+                "travel-vaccines-mozambique",
+                "travel-vaccines-cape-verde",
+                "travel-vaccines-kenya-tanzania",
+                "travel-vaccines-thailand",
+                "travel-vaccines-by-country",
+                "international-vaccination-centres-portugal",
+                "malaria-hepatite-a-b-viajante"
+            ],
+            "faq": [
+                {
+                    "q": "Do I need a required vaccine for India?",
+                    "a": "No, if you fly directly from Portugal. Yes, if you have recently been in a yellow fever risk country."
+                },
+                {
+                    "q": "I am only doing the Golden Triangle (Delhi, Agra, Jaipur). Do I need malaria tablets?",
+                    "a": "The CDC recommends them for transmission areas, which include these cities. Other guidance is more selective. Decide with the doctor, according to the season and the type of trip."
+                },
+                {
+                    "q": "I am having medical or dental treatment in India. Does that change anything?",
+                    "a": "Yes — hepatitis B becomes especially important."
+                }
+            ]
+        },
+        {
+            "datePublished": "2026-09-24",
+            "dateModified": "2026-09-24",
+            "format": "markdown",
+            "lang": "en",
+            "hreflang": "en",
+            "about": "Travel medicine",
+            "verified": false,
+            "series": "travel-vaccines-by-country",
+            "ctaKind": "travel",
+            "liveSlots": true,
+            "slug": "travel-vaccines-kenya-tanzania",
+            "group": "vacinas-viajante-quenia-tanzania",
+            "title": "Vaccines for a safari in Kenya and Tanzania (and Zanzibar) — 2026",
+            "description": "Flying from Portugal to Kenya, Tanzania or Zanzibar? Yellow fever depends on the order of the countries and on stopovers. Malaria includes the parks and Zanzibar.",
+            "image": "/image/guide/travel-cover-hq-8.webp",
+            "related": [
+                "travel-vaccines-brazil",
+                "travel-vaccines-angola",
+                "travel-vaccines-mozambique",
+                "travel-vaccines-cape-verde",
+                "travel-vaccines-thailand",
+                "travel-vaccines-india",
+                "travel-vaccines-by-country",
+                "international-vaccination-centres-portugal",
+                "malaria-hepatite-a-b-viajante"
+            ],
+            "faq": [
+                {
+                    "q": "I am only going to Zanzibar. Do I need yellow fever vaccine?",
+                    "a": "No, if you do not arrive from a risk country and you do not make a long stopover in one. Watch connections through Nairobi or Addis Ababa."
+                },
+                {
+                    "q": "Do I need malaria tablets in Zanzibar?",
+                    "a": "The CDC states there is still transmission in the archipelago and suggests considering prevention for all travellers to Tanzania. Decide with the doctor."
+                },
+                {
+                    "q": "I am doing a safari in Kenya and then a beach in Tanzania. What do I need?",
+                    "a": "Yellow fever vaccine (recommended for Kenya and required on entry to Tanzania) and malaria tablets for both countries."
                 }
             ]
         },

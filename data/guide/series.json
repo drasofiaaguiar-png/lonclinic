@@ -4,14 +4,36 @@
       "id": "vacinas-por-destino",
       "slug": "vacinas-para-viajar-por-pais",
       "title": "Vacinas para viajar por país",
-      "description": "Respostas directas a «que vacinas preciso para viajar para [país]?»: Brasil, Tailândia, Índia, Quénia, Angola e Moçambique — orientação clínica, não um checklist genérico.",
+      "description": "Respostas directas a «que vacinas preciso para viajar para [país]?»: Brasil, Tailândia, Índia, Quénia, Angola, Moçambique e Cabo Verde — orientação clínica, não um checklist genérico.",
       "parts": [
         { "slug": "vacinas-para-viajar-ao-brasil", "navLabel": "Brasil" },
+        { "slug": "vacinas-viajante-brasil", "navLabel": "Brasil (guia 2026)" },
         { "slug": "vacinas-para-viajar-a-tailandia", "navLabel": "Tailândia" },
+        { "slug": "vacinas-viajante-tailandia", "navLabel": "Tailândia (guia 2026)" },
         { "slug": "vacinas-para-viajar-a-india", "navLabel": "Índia" },
+        { "slug": "vacinas-viajante-india", "navLabel": "Índia (guia 2026)" },
         { "slug": "vacinas-para-viajar-ao-quenia", "navLabel": "Quénia" },
+        { "slug": "vacinas-viajante-quenia-tanzania", "navLabel": "Quénia e Tanzânia (guia 2026)" },
         { "slug": "vacinas-para-viajar-a-angola", "navLabel": "Angola" },
-        { "slug": "vacinas-para-viajar-a-mocambique", "navLabel": "Moçambique" }
+        { "slug": "vacinas-viajante-angola", "navLabel": "Angola (guia 2026)" },
+        { "slug": "vacinas-para-viajar-a-mocambique", "navLabel": "Moçambique" },
+        { "slug": "vacinas-viajante-mocambique", "navLabel": "Moçambique (guia 2026)" },
+        { "slug": "vacinas-viajante-cabo-verde", "navLabel": "Cabo Verde (guia 2026)" }
+      ]
+    },
+    {
+      "id": "travel-vaccines-by-country",
+      "slug": "travel-vaccines-by-country",
+      "title": "Travel vaccines by country, leaving from Portugal",
+      "description": "English guides for people who live in Portugal and fly out from here: Brazil, Thailand, India, Kenya and Tanzania, Angola, Mozambique and Cape Verde.",
+      "parts": [
+        { "slug": "travel-vaccines-brazil", "navLabel": "Brazil" },
+        { "slug": "travel-vaccines-thailand", "navLabel": "Thailand" },
+        { "slug": "travel-vaccines-india", "navLabel": "India" },
+        { "slug": "travel-vaccines-kenya-tanzania", "navLabel": "Kenya and Tanzania" },
+        { "slug": "travel-vaccines-angola", "navLabel": "Angola" },
+        { "slug": "travel-vaccines-mozambique", "navLabel": "Mozambique" },
+        { "slug": "travel-vaccines-cape-verde", "navLabel": "Cape Verde" }
       ]
     },
     {

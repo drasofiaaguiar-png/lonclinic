@@ -9,9 +9,14 @@
 
 Família, trabalho ou férias na costa: o risco de paludismo não desaparece porque o hotel é bom. A lista de vacinas para viajar a Moçambique é curta comparada com a conversa da **malária**.
 
-[Consulta do viajante online](/travel-clinic), 39 €. Prescrição de vacinas para o [CVI](/blog/vacinas-viajante-guia-completo) no próprio dia, quando indicada.
+[Consulta do viajante online](/marcar/travel), 39 €. Guia de 2026: [vacinas para Moçambique](/blog/vacinas-viajante-mocambique). Prescrição de vacinas para o [CVI](/blog/vacinas-viajante-guia-completo) no próprio dia, quando indicada.
 
 {{cta}}
+<figure class="guide-figure">
+<img src="/image/guide/travel-cover-hq-5.webp" alt="Vacinas e malária para viajar a Moçambique a partir de Portugal" width="1200" height="800" loading="lazy" decoding="async">
+<figcaption>Vacinas e malária para viajar a Moçambique a partir de Portugal</figcaption>
+</figure>
+
 
 ## Vacinas habitualmente consideradas
 
@@ -24,6 +29,16 @@ Família, trabalho ou férias na costa: o risco de paludismo não desaparece por
 Transmissão em todo o país, o ano todo na prática clínica do viajante. Esquema, início antes da partida, e o que fazer se houver febre. Crianças e grávidas: isto não se resolve com o resto da embalagem do primo.
 
 Dengue também existe — outro mosquito, outra conversa, mesma disciplina de picadas.
+
+{{cta}}
+
+## Neste guia
+
+- [Guia de 2026](/blog/vacinas-viajante-mocambique) e [em inglês](/blog/travel-vaccines-mozambique)
+- [Angola](/blog/vacinas-viajante-angola) · [todos os destinos](/blog/vacinas-para-viajar-por-pais)
+- [Centros de vacinação internacional](/blog/centros-de-vacinacao-internacional-portugal)
+
+{{cta}}
 
 ## Fontes
 

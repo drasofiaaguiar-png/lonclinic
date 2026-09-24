@@ -12,8 +12,8 @@ const { originOf } = require('./seo');
 const { scoreQuiz, questionOptions } = require('./clinical-quiz-score');
 
 const QUIZ_DIR = path.join(__dirname, 'data', 'clinical-quizzes');
-const CSS_V = '20260922imc';
-const JS_V = '20260922imc';
+const CSS_V = '20260923a';
+const JS_V = '20260923a';
 
 const CBI = {
     id: 'cbi',
@@ -57,6 +57,42 @@ function escapeHtml(s) {
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
+}
+
+function publishedBlogHref(slug) {
+    const key = String(slug || '').trim();
+    if (!key) return '';
+    try {
+        const articles = require('./guide').loadManifest().articles || [];
+        if (articles.some((a) => a && a.slug === key)) return `/blog/${encodeURIComponent(key)}`;
+    } catch (err) {
+        return '';
+    }
+    return '';
+}
+
+function resolveBand(band) {
+    if (!band) return band;
+    const href = band.articleHref || publishedBlogHref(band.article);
+    const next = Object.assign({}, band);
+    if (href) {
+        next.articleHref = href;
+    } else if (band.fallbackHref) {
+        next.articleHref = band.fallbackHref;
+        next.bookLabel = band.fallbackLabel || band.bookLabel;
+    }
+    return next;
+}
+
+function resolveInsight(ins) {
+    if (!ins) return ins;
+    const href = ins.href || publishedBlogHref(ins.article);
+    return {
+        title: ins.title,
+        text: ins.text,
+        href: href || '',
+        linkLabel: href ? (ins.linkLabel || 'Ler') : ''
+    };
 }
 
 function loadAll() {
@@ -182,6 +218,12 @@ const ALL_GROUPS = [
         title: 'Personalidade',
         lead: 'O modelo Big Five, o mesmo que usamos em psicologia para perceber o teu perfil.',
         ids: ['bigfive']
+    },
+    {
+        id: 'diaspora',
+        title: 'Diáspora',
+        lead: 'Um retrato de 2 minutos da adaptação, das relações e do bem-estar de quem vive fora de Portugal.',
+        ids: ['emigracao']
     }
 ];
 
@@ -238,6 +280,11 @@ const CARD_COPY = {
     bigfive: {
         title: 'Como é que eu funciono, na prática?',
         image: '/image/image3.webp'
+    },
+    emigracao: {
+        title: 'Como está a correr a sua emigração?',
+        label: 'Teste de emigração',
+        image: '/image/psi-choice-individual.webp'
     }
 };
 
@@ -326,11 +373,16 @@ function clientConfig(def) {
         displayMultiplier: def.displayMultiplier || 1,
         higherIsBetter: !!def.higherIsBetter,
         bandOn: def.bandOn || 'raw',
+        scaleDisplay: def.scaleDisplay || '',
+        insightMinRaw: def.insightMinRaw != null ? Number(def.insightMinRaw) : null,
+        gate: def.gate || '',
+        notDiagnostic: !!def.notDiagnostic,
+        trustHtml: def.trustHtml || '',
         options: def.options || [],
         questions: questions,
         scales: scales,
-        bands: def.bands,
-        insights: def.insights || {},
+        bands: (def.bands || []).map(resolveBand),
+        insights: Object.fromEntries(Object.entries(def.insights || {}).map(([id, ins]) => [id, resolveInsight(ins)])),
         booking: def.booking,
         related: resolveRelated(def),
         disclaimer: def.disclaimer,
@@ -360,6 +412,13 @@ function quizSlotMeta(def) {
             service: 'burnout_mensal',
             href: `/marcar/burnout-mensal?ref=${encodeURIComponent(def.id + '-quiz')}`,
             kicker: 'Primeira sessão do plano · 216 €/mês'
+        };
+    }
+    if (/\/marcar\/psicologia/.test(href) || def.cluster === 'diaspora') {
+        return {
+            service: 'psicologia',
+            href: `/marcar/psicologia?plan=avulsa&ref=${encodeURIComponent(def.id + '-quiz')}`,
+            kicker: 'Próximos horários · consulta de psicologia'
         };
     }
     return {
@@ -419,6 +478,88 @@ function howToImcJsonLd(canonical) {
     };
 }
 
+function diasporaGateHtml() {
+    const countries = [
+        'Reino Unido', 'Irlanda', 'França', 'Suíça', 'Alemanha', 'Luxemburgo', 'Bélgica',
+        'Países Baixos', 'Espanha', 'Itália', 'Estados Unidos', 'Canadá', 'Brasil',
+        'Angola', 'Moçambique', 'Cabo Verde', 'Austrália', 'Emirados Árabes Unidos', 'Outro'
+    ];
+    const years = [
+        ['lt1', 'Menos de 1 ano'],
+        ['y1_3', '1–3 anos'],
+        ['y3_10', '3–10 anos'],
+        ['gt10', 'Mais de 10 anos']
+    ];
+    const countryOpts = countries.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+    const yearOpts = years.map(([v, label]) => `<option value="${escapeHtml(v)}">${escapeHtml(label)}</option>`).join('');
+    return `
+            <section class="bq-screen" id="gate" hidden>
+                <div class="bq-card">
+                    <p class="bq-step-label">O seu resultado está pronto</p>
+                    <h2>Deixe o seu email para o ver</h2>
+                    <p class="bq-lead">Recebe o resultado e sugestões práticas para a sua situação. O país e o tempo fora servem para perceber o contexto — não são um diagnóstico.</p>
+                    <div class="bq-field">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" inputmode="email" autocomplete="email" placeholder="nome@email.com" required>
+                        <p class="bq-error" id="emailError" hidden>Escreva um email válido para continuar.</p>
+                    </div>
+                    <div class="bq-field">
+                        <label for="leadCountry">País onde vive</label>
+                        <select id="leadCountry" required>
+                            <option value="">Escolha o país</option>
+                            ${countryOpts}
+                        </select>
+                        <p class="bq-error" id="countryError" hidden>Indique o país onde vive.</p>
+                    </div>
+                    <div class="bq-field">
+                        <label for="leadYears">Há quanto tempo vive fora?</label>
+                        <select id="leadYears" required>
+                            <option value="">Escolha</option>
+                            ${yearOpts}
+                        </select>
+                        <p class="bq-error" id="yearsError" hidden>Indique há quanto tempo vive fora.</p>
+                    </div>
+                    <label class="bq-check" for="leadConsent">
+                        <input type="checkbox" id="leadConsent">
+                        <span>Aceito receber o resultado e conteúdos da Lon Clinic. Posso cancelar a qualquer momento. <a href="/info/politica-privacidade">Política de privacidade</a></span>
+                    </label>
+                    <p class="bq-error" id="consentError" hidden>É preciso aceitar para ver o resultado.</p>
+                    <div class="bq-actions bq-actions--end">
+                        <button type="button" class="bq-btn bq-btn-primary" id="revealBtn">Ver o meu resultado</button>
+                    </div>
+                </div>
+            </section>`;
+}
+
+function defaultGateHtml() {
+    return `
+            <section class="bq-screen" id="gate" hidden>
+                <div class="bq-card">
+                    <p class="bq-step-label">Último passo · os seus contactos</p>
+                    <h2>O resultado está pronto — onde o enviamos?</h2>
+                    <p class="bq-lead">Não pedimos email no início. Agora precisamos do contacto para lhe enviar a análise e, se não concluir a marcação, a coordenação clínica pode esclarecer dúvidas por WhatsApp.</p>
+                    <div class="bq-field">
+                        <label for="leadName">Primeiro nome</label>
+                        <input type="text" id="leadName" autocomplete="given-name" maxlength="80" placeholder="Ana">
+                    </div>
+                    <div class="bq-field">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" inputmode="email" autocomplete="email" placeholder="nome@email.com">
+                        <p class="bq-error" id="emailError" hidden>Escreve um email válido para continuar.</p>
+                    </div>
+                    <div class="bq-field">
+                        <label for="leadPhone">WhatsApp</label>
+                        <input type="tel" id="leadPhone" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="9XX XXX XXX">
+                        <p class="bq-error" id="phoneError" hidden>Indica um telemóvel português válido.</p>
+                    </div>
+                    <p class="bq-privacy">Usamos o email e o WhatsApp para enviar o resultado e acompanhar a marcação. Sem spam.</p>
+                    <div class="bq-actions bq-actions--end">
+                        <button type="button" class="bq-btn bq-btn-primary" id="revealBtn">Ver o meu resultado</button>
+                    </div>
+                </div>
+            </section>`;
+}
+
 function faqHtml(def) {
     const items = Array.isArray(def.faq) ? def.faq : [];
     if (!items.length) return '';
@@ -427,7 +568,7 @@ function faqHtml(def) {
             <summary>${escapeHtml(item.q)}</summary>
             <p>${escapeHtml(item.a)}</p>
         </details>`).join('');
-    return `<section class="bq-geo-faq" aria-label="Perguntas frequentes sobre IMC">${body}</section>`;
+    return `<section class="bq-geo-faq" aria-label="Perguntas frequentes">${body}</section>`;
 }
 
 function renderQuizPage(origin, def) {
@@ -454,7 +595,9 @@ function renderQuizPage(origin, def) {
     const b = def.booking || {};
     const waText = encodeURIComponent(`Teste ${def.instrument} gratuito https://www.lonclinic.com${def.path}?utm_source=whatsapp&utm_medium=social&utm_campaign=${def.utmCampaign || def.id}&utm_content=share&ref=${def.id}-share`);
     const copyUrl = escapeHtml(`https://www.lonclinic.com${def.path}?utm_source=share&utm_medium=social&utm_campaign=${def.utmCampaign || def.id}&utm_content=copy&ref=${def.id}-share`);
-    const hubHref = def.cluster === 'nutrition' ? '/nutricao/testes' : '/burnout/testes';
+    const hubHref = def.cluster === 'nutrition'
+        ? '/nutricao/testes'
+        : (def.cluster === 'diaspora' ? '/quizzes' : '/burnout/testes');
     const brandHref = escapeHtml(def.homeHref || '/');
     const brandLabel = escapeHtml(def.homeLabel || 'LON Clinic');
     const startLabel = def.scoring === 'imc' ? 'Calcular o meu IMC' : (n <= 6 ? `Começar · ${def.minutes} min` : 'Começar o teste');
@@ -472,7 +615,7 @@ function renderQuizPage(origin, def) {
         },
         {
             '@context': 'https://schema.org',
-            '@type': 'MedicalWebPage',
+            '@type': def.schemaWebPage ? 'WebPage' : 'MedicalWebPage',
             name: def.title,
             description: def.description,
             url: canonical,
@@ -543,6 +686,7 @@ function renderQuizPage(origin, def) {
                     <p class="bq-kicker">${def.scoring === 'imc' ? 'IMC · calculadora grátis · 1 min' : `${instrument} · menos de ${def.minutes} min · ${n} perguntas`}</p>
                     <h1>${h1}</h1>
                     <p>${lead}</p>
+                    ${def.introNote ? `<p class="bq-intro-note">${escapeHtml(def.introNote)}</p>` : ''}
                     ${def.scoring === 'imc' ? `<p class="bq-formula"><strong>Fórmula:</strong> IMC = peso (kg) ÷ altura² (m). Ex.: 70 kg e 1,70 m → 70 ÷ 2,89 = <strong>24,2</strong>.</p>
                     <div class="bq-imc-legend" aria-label="Escala de IMC e perímetro abdominal">
                         <table>
@@ -585,37 +729,13 @@ function renderQuizPage(origin, def) {
                     </div>
                 </div>
             </section>
-            <section class="bq-screen" id="gate" hidden>
-                <div class="bq-card">
-                    <p class="bq-step-label">Último passo · os seus contactos</p>
-                    <h2>O resultado está pronto — onde o enviamos?</h2>
-                    <p class="bq-lead">Não pedimos email no início. Agora precisamos do contacto para lhe enviar a análise e, se não concluir a marcação, a coordenação clínica pode esclarecer dúvidas por WhatsApp.</p>
-                    <div class="bq-field">
-                        <label for="leadName">Primeiro nome</label>
-                        <input type="text" id="leadName" autocomplete="given-name" maxlength="80" placeholder="Ana">
-                    </div>
-                    <div class="bq-field">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" inputmode="email" autocomplete="email" placeholder="nome@email.com">
-                        <p class="bq-error" id="emailError" hidden>Escreve um email válido para continuar.</p>
-                    </div>
-                    <div class="bq-field">
-                        <label for="leadPhone">WhatsApp</label>
-                        <input type="tel" id="leadPhone" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="9XX XXX XXX">
-                        <p class="bq-error" id="phoneError" hidden>Indica um telemóvel português válido.</p>
-                    </div>
-                    <p class="bq-privacy">Usamos o email e o WhatsApp para enviar o resultado e acompanhar a marcação. Sem spam.</p>
-                    <div class="bq-actions bq-actions--end">
-                        <button type="button" class="bq-btn bq-btn-primary" id="revealBtn">Ver o meu resultado</button>
-                    </div>
-                </div>
-            </section>
+            ${def.gate === 'diaspora' ? diasporaGateHtml() : defaultGateHtml()}
             <section class="bq-screen" id="processing" hidden>
                 <div class="bq-card bq-processing">
                     <div class="bq-processing-spin" aria-hidden="true"></div>
-                    <p class="bq-step-label">Análise clínica</p>
-                    <h2 id="processingTitle">A analisar o seu perfil…</h2>
-                    <p class="bq-lead" id="processingText">A cruzar as respostas com os parâmetros do questionário.</p>
+                    <p class="bq-step-label">${def.notDiagnostic ? 'Resultado' : 'Análise clínica'}</p>
+                    <h2 id="processingTitle">${def.notDiagnostic ? 'A preparar o seu resultado…' : 'A analisar o seu perfil…'}</h2>
+                    <p class="bq-lead" id="processingText">${def.notDiagnostic ? 'A organizar as respostas das últimas duas semanas.' : 'A cruzar as respostas com os parâmetros do questionário.'}</p>
                     <ol class="bq-processing-steps" aria-hidden="true">
                         <li>Respostas</li>
                         <li>Marcadores</li>
@@ -694,7 +814,9 @@ function renderQuizPage(origin, def) {
             </section>
         </div>
         <aside class="bq-crisis-foot" aria-label="Aviso de crise">
-            <p>Se estás em crise ou outra pessoa possa estar em perigo — <strong>não uses este site</strong>. Contacta o <a href="tel:112">112</a>, <a href="tel:808242424">SNS 24</a> ou <a href="tel:213544545">SOS Voz Amiga</a>.</p>
+            <p>${def.safetyFoot
+                ? escapeHtml(def.safetyFoot).replace('112', '<a href="tel:112">112</a>')
+                : 'Se estás em crise ou outra pessoa possa estar em perigo — <strong>não uses este site</strong>. Contacta o <a href="tel:112">112</a>, <a href="tel:808242424">SNS 24</a> ou <a href="tel:213544545">SOS Voz Amiga</a>.'}</p>
             <p class="bq-ssl" aria-hidden="true">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 Ligação segura
@@ -708,7 +830,7 @@ function renderQuizPage(origin, def) {
             <a href="/nutricao">Nutrição</a>
             <a href="${hubHref}">Testes</a>
             <a href="/faq">FAQ</a>
-            <a href="/info.html?page=politica-privacidade">Privacidade</a>
+            <a href="/info/politica-privacidade">Privacidade</a>
         </nav>
         <p>© 2026 Lon Clinic · ERS 45475</p>
     </footer>
@@ -717,7 +839,7 @@ function renderQuizPage(origin, def) {
         <a class="bq-btn bq-btn-primary js-quiz-book" id="stickyBookBtn" data-cta="book" href="${stickyHref}">${def.scoring === 'imc' ? 'Ver nutrição' : 'Marcar consulta'}</a>
     </aside>
     <script>window.CLINICAL_QUIZ = ${cfgJson};</script>
-    <script src="/lon-analytics.js?v=20260914a" defer></script>
+    <script src="/lon-analytics.js?v=20260924a" defer></script>
     <script src="/lon-slots.js?v=20260922imc" defer></script>
     <script src="/clinical-quiz-score.js?v=${JS_V}" defer></script>
     <script src="/clinical-quiz.js?v=${JS_V}" defer></script>
@@ -936,7 +1058,7 @@ ${__lonHeader.renderHeaderScripts(false)}
         </div>
     </footer>
     <script src="/lon-nav.js"></script>
-    <script src="/lon-analytics.js?v=20260914a" defer></script>
+    <script src="/lon-analytics.js?v=20260924a" defer></script>
 </body>
 </html>`;
 }
@@ -983,7 +1105,8 @@ function buildEmails(def, data, helpers) {
     const pill = band.pill || '';
     const scaleLines = (def.scales || []).map((s) => {
         const v = scored.scales[s.id];
-        return `${s.title}: ${v ? v.value : '—'}%`;
+        if (!v) return `${s.title}: —`;
+        return v.label ? `${s.title}: ${v.label}` : `${s.title}: ${v.value}%`;
     });
     const crisisLine = scored.crisis
         ? '⚠️ PRIORIDADE — item de risco (PHQ-9 Q9) ≥ 1'
@@ -997,6 +1120,8 @@ function buildEmails(def, data, helpers) {
         `Email: ${data.email}`,
         data.firstName ? `Nome: ${data.firstName}` : '',
         data.phone ? `WhatsApp: ${data.phone}` : '',
+        data.country ? `País: ${data.country}` : '',
+        data.yearsAbroadLabel ? `Tempo fora: ${data.yearsAbroadLabel}` : '',
         `Resultado: ${display} (${pill})`,
         extraLines.join('\n'),
         scaleLines.filter((l) => !extra.bmi).join(' · '),
@@ -1013,14 +1138,56 @@ ${scored.crisis ? '<p style="background:#f6e8e4;padding:10px 12px;border-radius:
 <p><strong>Email:</strong> ${escape(data.email)}</p>
 ${data.firstName ? `<p><strong>Nome:</strong> ${escape(data.firstName)}</p>` : ''}
 ${data.phone ? `<p><strong>WhatsApp:</strong> ${escape(data.phone)}</p>` : ''}
+${data.country ? `<p><strong>País:</strong> ${escape(data.country)}</p>` : ''}
+${data.yearsAbroadLabel ? `<p><strong>Tempo fora:</strong> ${escape(data.yearsAbroadLabel)}</p>` : ''}
 <p><strong>Resultado:</strong> ${escape(String(display))} · ${escape(pill)}</p>
 <p style="font-size:14px;color:#3d4a44">${escape(band.title || '')}</p>
 ${extraLines.length ? `<p style="font-size:14px;color:#3d4a44">${extraLines.map((l) => escape(l)).join('<br>')}</p>` : ''}
 <p style="margin:20px 0 0"><a href="${escape(bookUrl)}" style="color:#255235">Marcar consulta</a></p>
 </td></tr></table></body></html>`;
 
-    const userSubject = `O teu resultado ${def.instrument}: ${pill}`;
-    const userText = [
+    let topScale = null;
+    for (const s of (def.scales || [])) {
+        const row = scored.scales && scored.scales[s.id];
+        const raw = row ? Number(row.raw) || 0 : 0;
+        if (!topScale || raw > topScale.raw) {
+            const insight = (def.insights || {})[s.id] || {};
+            topScale = {
+                title: s.title,
+                raw,
+                label: row && row.label ? row.label : String(raw),
+                text: insight.text || ''
+            };
+        }
+    }
+    const topLine = topScale
+        ? `Dimensão mais alta: ${topScale.title} (${topScale.label}). ${topScale.text}`.trim()
+        : '';
+
+    const userSubject = def.gate === 'diaspora'
+        ? 'O seu resultado: como está a correr a sua emigração'
+        : `O teu resultado ${def.instrument}: ${pill}`;
+    const userText = def.gate === 'diaspora'
+        ? [
+            'Olá,',
+            '',
+            `Obrigado por ter feito o teste. O seu resultado foi: ${band.title || pill}.`,
+            '',
+            band.text || '',
+            '',
+            topLine,
+            '',
+            band.cta || '',
+            '',
+            'Se quiser falar com alguém já, pode marcar uma consulta online, em português:',
+            bookUrl,
+            '',
+            def.disclaimer,
+            '',
+            'Equipa Lon Clinic',
+            'www.lonclinic.com'
+        ].filter((x) => x !== '').join('\n')
+        : [
         'Olá,',
         '',
         `Obrigada por completares o ${def.instrument} da Lon Clinic.`,
@@ -1052,13 +1219,16 @@ ${extraLines.length ? `<p style="font-size:14px;color:#3d4a44">${extraLines.map(
 </td></tr>
 <tr><td style="background:#fff;border-radius:18px;padding:36px 32px;box-shadow:0 8px 28px rgba(28,42,36,0.06)">
 <p>Olá,</p>
-<p>Obrigada por completares o <strong>${escape(def.instrument)}</strong> da Lon Clinic.</p>
+<p>${def.gate === 'diaspora'
+        ? `Obrigado por ter feito o teste. O seu resultado foi: <strong>${escape(band.title || pill)}</strong>.`
+        : `Obrigada por completares o <strong>${escape(def.instrument)}</strong> da Lon Clinic.`}</p>
 <p style="font-size:42px;font-weight:700;letter-spacing:-0.04em;margin:12px 0 4px">${escape(displayNum)}${scored.displayMax ? `<span style="font-size:16px;color:#5c6d64"> / ${escape(String(scored.displayMax))}</span>` : (extra.bmi ? '<span style="font-size:16px;color:#5c6d64"> kg/m²</span>' : '')}</p>
 <p style="font-weight:700;letter-spacing:0.06em;text-transform:uppercase;font-size:12px;color:#255235">${escape(pill)}</p>
 <p>${escape(band.title || '')}</p>
 <p style="color:#3d4a44">${escape(band.text || '')}</p>
+${def.gate === 'diaspora' && topLine ? `<p style="color:#3d4a44">${escape(topLine)}</p>` : ''}
 <p>${escape(band.cta || '')}</p>
-<p><a href="${escape(bookUrl)}" style="display:inline-block;background:#2f6342;color:#fff;text-decoration:none;padding:12px 18px;border-radius:10px">Marcar consulta</a></p>
+<p><a href="${escape(bookUrl)}" style="display:inline-block;background:#2f6342;color:#fff;text-decoration:none;padding:12px 18px;border-radius:10px">${def.gate === 'diaspora' ? 'Marcar consulta' : 'Marcar consulta'}</a></p>
 ${scored.crisis ? '<p style="background:#f6e8e4;padding:12px;border-radius:8px;color:#6b3a2e">Se estás em crise: <strong>112</strong> · SNS 24 <strong>808 24 24 24</strong> · SOS Voz Amiga <strong>213 544 545</strong>.</p>' : ''}
 <p style="font-size:12px;color:#5c6d64">${escape(def.disclaimer)}</p>
 </td></tr>

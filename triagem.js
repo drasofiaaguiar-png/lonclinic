@@ -378,7 +378,7 @@
         } else if (step.id === 'consent') {
             html += eyebrow('Antes de começar');
             html += '<h2>Precisamos do vosso consentimento</h2>';
-            html += '<div class="tri-consent">Para fazer o vosso encaminhamento e prestar consultas de terapia de casal, recolhemos dados sobre a vossa saúde e relação, considerados dados de categoria especial ao abrigo do RGPD. Podes consultar a <a href="/info.html?page=politica-privacidade" target="_blank" rel="noopener">Política de Privacidade</a> para saber como os tratamos e como retirar o consentimento.</div>';
+            html += '<div class="tri-consent">Para fazer o vosso encaminhamento e prestar consultas de terapia de casal, recolhemos dados sobre a vossa saúde e relação, considerados dados de categoria especial ao abrigo do RGPD. Podes consultar a <a href="/info/politica-privacidade" target="_blank" rel="noopener">Política de Privacidade</a> para saber como os tratamos e como retirar o consentimento.</div>';
             html += '<label class="tri-check"><input type="checkbox" id="consentSaude"' + (a.consentSaude ? ' checked' : '') + '><span>Autorizo a recolha e o tratamento dos meus dados de saúde para esta triagem e para as consultas de casal.</span></label>';
         } else if (step.id === 'genero') {
             html += eyebrow(isCasal() ? 'Passo 3 · opcional' : '');
@@ -615,7 +615,7 @@
                 html += '</div>';
             }
         }
-        html += '<label class="tri-check"><input type="checkbox" id="termos"' + (a.termos ? ' checked' : '') + '><span>Li e aceito os <a href="/info.html?page=termos-condicoes" target="_blank" rel="noopener">Termos</a> e a <a href="/info.html?page=politica-privacidade" target="_blank" rel="noopener">Privacidade</a>.</span></label>';
+        html += '<label class="tri-check"><input type="checkbox" id="termos"' + (a.termos ? ' checked' : '') + '><span>Li e aceito os <a href="/info/termos-condicoes" target="_blank" rel="noopener">Termos</a> e a <a href="/info/politica-privacidade" target="_blank" rel="noopener">Privacidade</a>.</span></label>';
         if (!isCasal() && !state.riskFlagged) {
             html += '<label class="tri-check"><input type="checkbox" id="semRisco"' + (a.semRisco ? ' checked' : '') + '><span>Confirmo que não estou em risco imediato neste momento.</span></label>';
         } else if (!isCasal() && state.riskFlagged) {

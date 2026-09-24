@@ -25,10 +25,18 @@ const PAGE_REGION = {
     'vacina-febre-amarela-braga': 'minho',
     'vacina-febre-amarela-algarve': 'algarve',
     'vacina-febre-amarela-cuf': null,
+    'vacina-febre-amarela-luz': null,
+    'vacina-febre-amarela-lusiadas': null,
+    'vacina-febre-amarela-centros': null,
     'vacinas-viajante-lisboa': 'lvt',
     'vacinas-viajante-porto': 'porto',
     'vacinas-viajante-coimbra': 'centro',
     'vacinas-viajante-braga': 'minho',
+    'vacinas-viajante-faro': 'algarve',
+    'vacinas-viajante-aveiro': 'centro',
+    'vacinas-viajante-leiria': 'centro',
+    'vacinas-viajante-funchal': 'madeira',
+    'vacinas-viajante-ponta-delgada': 'acores',
     'vacinas-viajante-algarve': 'algarve',
     'vacinas-viajante-cuf': null
 };

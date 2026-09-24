@@ -290,7 +290,11 @@
         if (subBtn && cfg.booking && Array.isArray(cfg.booking.hideSubOn)) {
             subBtn.hidden = cfg.booking.hideSubOn.indexOf(band.pill) !== -1;
         }
-        if (cfg.scoring === 'imc' && band.pill && /NORMAL|BAIXO PESO/.test(band.pill)) {
+        if (band.articleHref) {
+            ['bookBtnPrimary', 'bookBtn', 'stickyBookBtn'].forEach(function (id) {
+                if ($(id)) $(id).setAttribute('href', band.articleHref);
+            });
+        } else if (cfg.scoring === 'imc' && band.pill && /NORMAL|BAIXO PESO/.test(band.pill)) {
             ['bookBtnPrimary', 'bookBtn', 'stickyBookBtn'].forEach(function (id) {
                 if ($(id)) $(id).setAttribute('href', '/nutricao?ref=imc-quiz');
             });
@@ -315,12 +319,14 @@
         var box = $('insights');
         box.innerHTML = '';
         var ranked = (cfg.scales || []).map(function (s) {
-            return [s.id, scored.scales[s.id] ? scored.scales[s.id].value : 0];
+            return [s.id, scored.scales[s.id] ? scored.scales[s.id].value : 0, scored.scales[s.id] ? scored.scales[s.id].raw : 0];
         }).filter(function (pair) {
+            if (cfg.insightMinRaw != null) return pair[2] >= cfg.insightMinRaw;
             return cfg.higherIsBetter ? pair[1] <= 55 : pair[1] >= 50;
         }).sort(function (a, b) {
-            return cfg.higherIsBetter ? a[1] - b[1] : b[1] - a[1];
-        }).slice(0, 2);
+            return cfg.higherIsBetter ? a[1] - b[1] : b[2] - a[2];
+        });
+        if (cfg.insightMinRaw == null) ranked = ranked.slice(0, 2);
         if (cfg.scoring === 'imc') {
             ranked = [['imc', 100], ['waist', 100]];
         }
@@ -363,6 +369,13 @@
                 }
             }
             div.querySelector('p').textContent = body;
+            if (ins.href) {
+                var link = document.createElement('a');
+                link.href = ins.href;
+                link.textContent = ins.linkLabel || 'Ler';
+                div.querySelector('p').appendChild(document.createTextNode(' '));
+                div.querySelector('p').appendChild(link);
+            }
             box.appendChild(div);
         });
 
@@ -390,7 +403,18 @@
             $('quizTrust').innerHTML = '🔒 Fidelização 3 meses no programa · sem cláusulas abusivas<br>🩺 1.ª consulta médica agendada logo após o pagamento';
         }
         show('results');
-        if (!skipGate) startHoldTimer();
+        if (band.hideCommerce) {
+            if ($('quizHold')) $('quizHold').hidden = true;
+            var slots = document.querySelector('[data-next-slots]');
+            if (slots) slots.hidden = true;
+            var plan = document.querySelector('.bq-plan-grid');
+            if (plan) plan.hidden = true;
+        } else if (!skipGate) {
+            startHoldTimer();
+        }
+        if (cfg.trustHtml && $('quizTrust') && !band.hideCommerce) {
+            $('quizTrust').innerHTML = cfg.trustHtml;
+        }
         var sticky = $('stickyBook');
         if (sticky) {
             sticky.hidden = false;
@@ -438,7 +462,9 @@
                 quizId: cfg.id,
                 email: email,
                 name: extras && extras.name || '',
-                phone: extras && extras.phone || '',
+                country: extras && extras.country || '',
+                yearsAbroad: extras && extras.yearsAbroad || '',
+                consent: !!(extras && extras.consent),
                 answers: answers
             })
         }).catch(function () { return null; });
@@ -495,14 +521,18 @@
         var title = $('processingTitle');
         var text = $('processingText');
         if (title) {
-            title.textContent = isNutrition
-                ? 'A analisar o seu perfil com base nos parâmetros metabólicos…'
-                : 'A analisar o seu perfil com base nas suas respostas…';
+            title.textContent = cfg.notDiagnostic
+                ? 'A preparar o seu resultado…'
+                : (isNutrition
+                    ? 'A analisar o seu perfil com base nos parâmetros metabólicos…'
+                    : 'A analisar o seu perfil com base nas suas respostas…');
         }
         if (text) {
-            text.textContent = isNutrition
-                ? 'IMC, cintura e faixa clínica — a preparar o próximo passo médico.'
-                : 'A cruzar as respostas com os intervalos clínicos deste questionário.';
+            text.textContent = cfg.notDiagnostic
+                ? 'A organizar as respostas das últimas duas semanas.'
+                : (isNutrition
+                    ? 'IMC, cintura e faixa clínica — a preparar o próximo passo médico.'
+                    : 'A cruzar as respostas com os intervalos clínicos deste questionário.');
         }
         show('processing');
         var wait = 3800;
@@ -535,6 +565,40 @@
         if ($('phoneError')) $('phoneError').hidden = true;
         if (!valid) {
             $('email').focus();
+            return;
+        }
+        if (cfg.gate === 'diaspora') {
+            var countryEl = $('leadCountry');
+            var yearsEl = $('leadYears');
+            var consentEl = $('leadConsent');
+            var country = countryEl ? countryEl.value : '';
+            var years = yearsEl ? yearsEl.value : '';
+            var consent = !!(consentEl && consentEl.checked);
+            if ($('countryError')) $('countryError').hidden = !!country;
+            if ($('yearsError')) $('yearsError').hidden = !!years;
+            if ($('consentError')) $('consentError').hidden = consent;
+            if (!country) {
+                if (countryEl) countryEl.focus();
+                return;
+            }
+            if (!years) {
+                if (yearsEl) yearsEl.focus();
+                return;
+            }
+            if (!consent) {
+                if (consentEl) consentEl.focus();
+                return;
+            }
+            lastEmail = email;
+            var diasporaBtn = $('revealBtn');
+            var diasporaPrev = diasporaBtn.textContent;
+            diasporaBtn.disabled = true;
+            diasporaBtn.textContent = 'A preparar…';
+            submitQuiz(email, { country: country, yearsAbroad: years, consent: true }).finally(function () {
+                diasporaBtn.disabled = false;
+                diasporaBtn.textContent = diasporaPrev;
+                runProcessingThen(renderResults);
+            });
             return;
         }
         if (isNutrition && !phone) {

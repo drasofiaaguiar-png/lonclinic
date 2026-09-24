@@ -543,7 +543,8 @@
     margin-bottom: 8px;
 }
 
-.bq-field input {
+.bq-field input,
+.bq-field select {
     width: 100%;
     font-family: inherit;
     font-size: 1rem;
@@ -555,11 +556,26 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.bq-field input:focus {
+.bq-field input:focus,
+.bq-field select:focus {
     outline: none;
     border-color: var(--bq-accent);
     background: #fff;
     box-shadow: 0 0 0 3px var(--bq-accent-soft);
+}
+
+.bq-check {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin: 8px 0 16px;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.bq-check input {
+    margin-top: 4px;
+    flex: 0 0 auto;
 }
 
 .bq-error {

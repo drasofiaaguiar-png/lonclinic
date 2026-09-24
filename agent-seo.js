@@ -239,7 +239,7 @@ function buildLlmsTxt() {
         mdLink('International vaccination centres in Portugal', '/blog/international-vaccination-centres-portugal'),
         mdLink('Deixar de pensar demais (Nick Trenton)', '/blog/deixar-de-pensar-demais-nick-trenton'),
         mdLink('FAQ', '/faq'),
-        mdLink('Como funciona', '/info.html?page=como-funciona'),
+        mdLink('Como funciona', '/info/como-funciona'),
         mdLink('Equipa — Rita Aguiar', '/equipa/rita-aguiar'),
         mdLink('Equipa — Sara Barreto (nutricionista)', '/equipa/sara-barreto'),
         mdLink('Magazine', '/magazine'),

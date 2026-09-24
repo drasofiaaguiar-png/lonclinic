@@ -321,15 +321,15 @@ ${__lonHeader.renderHeaderScripts(false)}
                     <a href="/nutricao">Nutrição</a>
                     <a href="/equipa/rita-aguiar">A médica</a>
                     <a href="/faq">FAQ</a>
-                    <a href="/info.html?page=contato">Contacto</a>
+                    <a href="/info/contato">Contacto</a>
                     <a href="/psicologia-burnout">Psicólogo para burnout</a>
                 </div>
             </div>
             <div class="lon-footer-bottom">
                 <div class="lon-footer-legal-links">
-                    <a href="/info.html?page=termos-condicoes">Termos</a>
-                    <a href="/info.html?page=politica-privacidade">Privacidade</a>
-                    <a href="/info.html?page=cookies">Cookies</a>
+                    <a href="/info/termos-condicoes">Termos</a>
+                    <a href="/info/politica-privacidade">Privacidade</a>
+                    <a href="/info/cookies">Cookies</a>
                 </div>
                 <div><p>© 2026 Lon Clinic · Portugal</p></div>
             </div>
@@ -339,7 +339,7 @@ ${__lonHeader.renderHeaderScripts(false)}
     <script src="/lon-nav.js"></script>
     <script src="/talk-cta.js?v=20260912a" defer></script>
     <script src="/i18n.js?v=20260921a" defer></script>
-    <script src="/lon-analytics.js?v=20260914a" defer></script>
+    <script src="/lon-analytics.js?v=20260924a" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=20260912a" defer></script>
 </body>

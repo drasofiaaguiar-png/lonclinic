@@ -65,10 +65,15 @@
         Object.keys(buckets).forEach(function (id) {
             var b = buckets[id];
             var avg = mean(b.values);
+            var rawSum = Math.round(sum(b.values) * 10) / 10;
+            var maxSum = b.values.length * (b.max || 0);
             out[id] = {
-                raw: Math.round(sum(b.values) * 10) / 10,
+                raw: rawSum,
                 value: b.max ? Math.round((avg / b.max) * 100) : 0
             };
+            if (def.scaleDisplay === 'sum' && maxSum) {
+                out[id].label = Math.round(rawSum) + '/' + maxSum;
+            }
         });
         return out;
     }
