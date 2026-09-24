@@ -925,6 +925,9 @@ async function initSchema(p) {
         )
     `);
     await p.query(`CREATE INDEX IF NOT EXISTS idx_wellness_club_published ON wellness_club_partners (published, category)`);
+    await p.query(`ALTER TABLE wellness_club_partners ADD COLUMN IF NOT EXISTS subtitle TEXT NOT NULL DEFAULT ''`);
+    await p.query(`ALTER TABLE wellness_club_partners ADD COLUMN IF NOT EXISTS price_label TEXT NOT NULL DEFAULT ''`);
+    await p.query(`ALTER TABLE wellness_club_partners ADD COLUMN IF NOT EXISTS codes JSONB NOT NULL DEFAULT '[]'::jsonb`);
 }
 
 function rowToAnalyticsEvent(row) {
@@ -4693,6 +4696,9 @@ function rowToWellnessClub(row) {
         id: row.id,
         slug: row.slug || '',
         name: row.name || '',
+        subtitle: row.subtitle || '',
+        priceLabel: row.price_label || '',
+        codes: Array.isArray(row.codes) ? row.codes : [],
         description: row.description || '',
         category: row.category || '',
         city: row.city || '',
@@ -4722,19 +4728,22 @@ async function insertWellnessClubPartner(record) {
     const p = getPool();
     const r = await p.query(
         `INSERT INTO wellness_club_partners (
-            id, slug, name, description, category, city, image, website, published
-        ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+            id, slug, name, subtitle, price_label, description, category, city, image, website, published, codes
+        ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12::jsonb)
         RETURNING *`,
         [
             record.id,
             record.slug,
             record.name,
+            record.subtitle || '',
+            record.priceLabel || '',
             record.description || '',
             record.category,
             record.city || '',
             record.image || '',
             record.website || '',
-            record.published !== false
+            record.published !== false,
+            JSON.stringify(record.codes || [])
         ]
     );
     return rowToWellnessClub(r.rows[0]);
@@ -4746,12 +4755,15 @@ async function updateWellnessClubPartner(id, record) {
         `UPDATE wellness_club_partners SET
             slug = $2,
             name = $3,
-            description = $4,
-            category = $5,
-            city = $6,
-            image = $7,
-            website = $8,
-            published = $9,
+            subtitle = $4,
+            price_label = $5,
+            description = $6,
+            category = $7,
+            city = $8,
+            image = $9,
+            website = $10,
+            published = $11,
+            codes = $12::jsonb,
             updated_at = NOW()
          WHERE id = $1
          RETURNING *`,
@@ -4759,12 +4771,15 @@ async function updateWellnessClubPartner(id, record) {
             id,
             record.slug,
             record.name,
+            record.subtitle || '',
+            record.priceLabel || '',
             record.description || '',
             record.category,
             record.city || '',
             record.image || '',
             record.website || '',
-            record.published !== false
+            record.published !== false,
+            JSON.stringify(record.codes || [])
         ]
     );
     return rowToWellnessClub(r.rows[0]);

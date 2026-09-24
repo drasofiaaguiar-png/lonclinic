@@ -16,9 +16,56 @@ a.wclub-card {
     cursor: pointer;
 }
 
-.wclub-card-desc {
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+.wclub-sub {
+    margin: 0;
+    color: var(--wx-muted);
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+.wclub-price {
+    margin: 4px 0 0;
+    font-family: "Cormorant Garamond", Georgia, serif;
+    font-size: 1.7rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+.wclub-reveal {
+    appearance: none;
+    margin-top: 12px;
+    align-self: flex-start;
+    border: 0;
+    border-radius: 999px;
+    padding: 10px 14px;
+    background: var(--wx-olive, #5f6642);
+    color: #fff;
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.wclub-reveal:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.wclub-codes {
+    margin-top: 12px;
+}
+
+.wclub-code {
+    margin: 0 0 8px;
+    font-size: 0.86rem;
+    line-height: 1.4;
+    color: var(--wx-ink, #2a2c1c);
+}
+
+.wclub-site {
+    display: inline-block;
+    margin-top: 4px;
+    color: var(--wx-olive-deep, #4a5134);
+    font-size: 0.85rem;
+    font-weight: 600;
 }

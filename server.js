@@ -3561,9 +3561,35 @@ async function loadWellnessClubRows() {
 async function ensureWellnessClubSeed() {
     if (!usePersistentDb || !db.getPool()) return;
     const n = await db.countWellnessClubPartners();
-    if (n > 0) return;
+    if (n === 0) {
+        for (const row of wellnessClub.SEED) {
+            await db.insertWellnessClubPartner(row);
+        }
+        return;
+    }
+    const rows = await db.listWellnessClubPartners();
     for (const row of wellnessClub.SEED) {
-        await db.insertWellnessClubPartner(row);
+        const existing = rows.find((item) => item.slug === row.slug);
+        if (!existing) {
+            await db.insertWellnessClubPartner(row);
+            continue;
+        }
+        const refresh = row.slug === 'soul-circle';
+        if (existing.published !== row.published || refresh) {
+            await db.updateWellnessClubPartner(existing.id, {
+                slug: existing.slug,
+                name: refresh ? row.name : existing.name,
+                subtitle: refresh ? (row.subtitle || '') : (existing.subtitle || ''),
+                priceLabel: refresh ? (row.priceLabel || '') : (existing.priceLabel || ''),
+                codes: refresh ? (row.codes || []) : (existing.codes || []),
+                description: refresh ? row.description : existing.description,
+                category: refresh ? row.category : existing.category,
+                city: refresh ? row.city : existing.city,
+                image: refresh ? row.image : existing.image,
+                website: refresh ? row.website : existing.website,
+                published: row.published
+            });
+        }
     }
 }
 
@@ -12411,6 +12437,29 @@ app.get('/api/wellness/:slug', (req, res) => {
     res.json({ experience: item, related: wellness.relatedFor(item.slug, 3) });
 });
 
+app.post('/api/wellness-club/:slug/codes', async (req, res) => {
+    try {
+        const slug = String(req.params.slug || '').toLowerCase();
+        const rows = await loadWellnessClubRows();
+        const row = rows.find((item) => item.slug === slug && item.published !== false);
+        const codes = row && Array.isArray(row.codes) ? row.codes : [];
+        if (!row || !codes.length) return res.status(404).json({ error: 'Not found' });
+        emitServerAnalytics('cta_click', {
+            pagePath: '/wellness/club',
+            props: { cta: 'wellness_club_code', partner: row.slug }
+        }, req).catch(() => {});
+        res.json({
+            codes: codes.map((item) => ({
+                code: String(item.code || '').slice(0, 40),
+                detail: String(item.detail || '').slice(0, 240)
+            })).filter((item) => item.code)
+        });
+    } catch (err) {
+        console.error('POST /api/wellness-club/:slug/codes:', err.message);
+        res.status(500).json({ error: 'Failed to load codes' });
+    }
+});
+
 app.get('/api/wellness-club', async (req, res) => {
     try {
         const rows = await loadWellnessClubRows();
@@ -12487,7 +12536,13 @@ app.patch('/api/admin/wellness-club/:id', requireAdmin, async (req, res) => {
         const nextSlug = parsed.value.name !== existing.name
             ? await uniqueWellnessClubSlug(wellnessClub.slugify(parsed.value.name), id)
             : existing.slug;
-        const record = { ...parsed.value, slug: nextSlug };
+        const record = {
+            ...parsed.value,
+            slug: nextSlug,
+            subtitle: existing.subtitle || '',
+            priceLabel: existing.priceLabel || '',
+            codes: Array.isArray(existing.codes) ? existing.codes : []
+        };
         let partner;
         if (usePersistentDb && db.getPool()) {
             partner = await db.updateWellnessClubPartner(id, record);

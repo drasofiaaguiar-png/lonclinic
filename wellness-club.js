@@ -23,7 +23,7 @@ const SEED = [
         city: 'Lisboa',
         image: '/image/funcional-hero-janela.webp',
         website: '',
-        published: true
+        published: false
     },
     {
         id: '11111111-1111-4111-8111-111111111102',
@@ -34,7 +34,7 @@ const SEED = [
         city: 'Porto',
         image: '/image/funcional-yoga.webp',
         website: '',
-        published: true
+        published: false
     },
     {
         id: '11111111-1111-4111-8111-111111111103',
@@ -45,7 +45,7 @@ const SEED = [
         city: 'Lisboa',
         image: '/image/hero-run.webp',
         website: '',
-        published: true
+        published: false
     },
     {
         id: '11111111-1111-4111-8111-111111111104',
@@ -56,7 +56,7 @@ const SEED = [
         city: 'Coimbra',
         image: '/image/guide/guide-coastal-sun.jpg',
         website: '',
-        published: true
+        published: false
     },
     {
         id: '11111111-1111-4111-8111-111111111105',
@@ -67,7 +67,7 @@ const SEED = [
         city: 'Online',
         image: '/image/guide/guide-sunset-lake.jpg',
         website: '',
-        published: true
+        published: false
     },
     {
         id: '11111111-1111-4111-8111-111111111106',
@@ -78,6 +78,23 @@ const SEED = [
         city: 'Porto',
         image: '/image/guide/guide-group-walk.jpg',
         website: '',
+        published: false
+    },
+    {
+        id: '11111111-1111-4111-8111-111111111107',
+        slug: 'soul-circle',
+        name: 'Soul Circle',
+        subtitle: 'Pilates clássico em Lisboa',
+        priceLabel: '79€',
+        description: 'Estúdio de pilates clássico em Lisboa, em grupos pequenos.',
+        codes: [
+            { code: 'LONINTRO', detail: '3 sessões por 79€ em vez de 89€, na primeira inscrição. Válido 21 dias.' },
+            { code: 'LONCLINIC', detail: '10% de desconto no membership, enquanto estiver ativo.' }
+        ],
+        category: 'pilates',
+        city: 'Lisboa',
+        image: '/image/funcional-yoga.webp',
+        website: 'https://soulcirclepilates.com',
         published: true
     }
 ];
@@ -114,7 +131,7 @@ function cleanUrl(raw, { allowPath }) {
 function normalizeInput(body, { existingSlug } = {}) {
     const src = body && typeof body === 'object' ? body : {};
     const name = String(src.name || '').trim().slice(0, 120);
-    const description = String(src.description || '').trim().slice(0, 600);
+    const description = String(src.description || '').trim().slice(0, 900);
     const category = String(src.category || '').trim();
     const city = String(src.city || '').trim().slice(0, 80);
     if (name.length < 2) return { error: 'Indique o nome do parceiro.' };
@@ -138,8 +155,11 @@ function toPublic(row) {
         id: row.id,
         slug: row.slug,
         name: row.name,
+        subtitle: row.subtitle || '',
+        priceLabel: row.priceLabel || '',
         description: row.description,
         category: row.category,
+        hasCodes: Array.isArray(row.codes) && row.codes.length > 0,
         categoryLabel: categoryLabel(row.category),
         city: row.city,
         image: row.image || '',
@@ -158,7 +178,7 @@ function filterPartners(rows, query) {
             if (category && row.category !== category) return false;
             if (city && String(row.city || '').toLowerCase() !== city) return false;
             if (!q) return true;
-            const hay = `${row.name} ${row.description} ${row.city} ${row.categoryLabel}`.toLowerCase();
+            const hay = `${row.name} ${row.subtitle} ${row.priceLabel} ${row.description} ${row.city} ${row.categoryLabel}`.toLowerCase();
             return hay.includes(q);
         });
 }

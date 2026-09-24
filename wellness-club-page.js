@@ -36,19 +36,59 @@
         const photo = partner.image
             ? '<img class="wx-card-photo" src="' + escapeHtml(partner.image) + '" alt="" loading="lazy" decoding="async">'
             : '<div class="wx-card-photo is-empty">Sem imagem</div>';
-        const inner =
+        const reveal = partner.hasCodes
+            ? '<button type="button" class="wclub-reveal" data-slug="' + escapeHtml(partner.slug) + '">Ver códigos</button>' +
+              '<div class="wclub-codes" hidden></div>'
+            : '';
+        return '<article class="wx-card wclub-card" data-website="' + escapeHtml(partner.website || '') + '">' +
             '<div class="wx-card-photo-wrap">' + photo +
             '<span class="wx-chip">' + escapeHtml(partner.categoryLabel || '') + '</span></div>' +
             '<div class="wx-card-body">' +
-            '<p class="wx-card-loc">' + escapeHtml(partner.city || '') + '</p>' +
             '<h2 class="wx-card-title">' + escapeHtml(partner.name || '') + '</h2>' +
-            '<p class="wclub-card-desc">' + escapeHtml(partner.description || '') + '</p>' +
-            '</div>';
-        if (partner.website) {
-            return '<a class="wx-card wclub-card" href="' + escapeHtml(partner.website) + '" target="_blank" rel="noopener noreferrer">' +
-                inner + '</a>';
-        }
-        return '<article class="wx-card wclub-card">' + inner + '</article>';
+            '<p class="wclub-sub">' + escapeHtml(partner.subtitle || partner.description || '') + '</p>' +
+            (partner.priceLabel ? '<p class="wclub-price">' + escapeHtml(partner.priceLabel) + '</p>' : '') +
+            reveal +
+            '</div></article>';
+    }
+
+    function codesHtml(codes, website) {
+        const lines = (codes || []).map((item) =>
+            '<p class="wclub-code"><strong>' + escapeHtml(item.code) + '</strong> ' + escapeHtml(item.detail || '') + '</p>'
+        ).join('');
+        const link = website
+            ? '<a class="wclub-site" href="' + escapeHtml(website) + '" target="_blank" rel="noopener noreferrer">Abrir o site</a>'
+            : '';
+        return lines + link;
+    }
+
+    if (!grid.dataset.codesBound) {
+        grid.dataset.codesBound = '1';
+        grid.addEventListener('click', async (event) => {
+            const btn = event.target.closest('.wclub-reveal');
+            if (!btn || btn.disabled) return;
+            const slug = btn.getAttribute('data-slug');
+            const box = btn.parentElement && btn.parentElement.querySelector('.wclub-codes');
+            btn.disabled = true;
+            btn.textContent = 'A abrir…';
+            try {
+                const res = await fetch('/api/wellness-club/' + encodeURIComponent(slug) + '/codes', { method: 'POST' });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || 'Não foi possível mostrar os códigos.');
+                if (window.LonAnalytics && typeof window.LonAnalytics.track === 'function') {
+                    window.LonAnalytics.track('cta_click', { cta: 'wellness_club_code', partner: slug });
+                }
+                if (box) {
+                    const card = btn.closest('.wclub-card');
+                    const site = card ? card.getAttribute('data-website') : '';
+                    box.innerHTML = codesHtml(data.codes, site);
+                    box.hidden = false;
+                }
+                btn.hidden = true;
+            } catch (err) {
+                btn.disabled = false;
+                btn.textContent = 'Ver códigos';
+            }
+        });
     }
 
     function filtersActive() {
