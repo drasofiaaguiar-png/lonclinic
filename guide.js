@@ -11,7 +11,7 @@ const path = require('path');
 const { marked } = require('marked');
 const { organizationJsonLd, jsonLdScript, originOf, canonicalHref } = require('./seo');
 const authors = require('./authors');
-const { socialLink } = require('./utm');
+const { trackedShareUrl } = require('./utm');
 const cvi = require('./cvi');
 const talkCta = require('./talk-cta');
 
@@ -309,9 +309,9 @@ function escapeHtml(s) {
         .replace(/"/g, '&quot;');
 }
 
-function shareBarHtml(canonicalUrl, title, campaign) {
-    const copyUrl = socialLink(canonicalUrl, 'share', campaign);
-    const waUrl = socialLink(canonicalUrl, 'whatsapp', campaign);
+function shareBarHtml(canonicalUrl, title) {
+    const copyUrl = trackedShareUrl(canonicalUrl, 'ig-post');
+    const waUrl = trackedShareUrl(canonicalUrl, 'wa-chat');
     const waHref = `https://wa.me/?text=${encodeURIComponent(`${title} ${waUrl}`)}`;
     return `
         <div class="lon-share" role="group" aria-label="Partilhar este artigo">
@@ -1763,6 +1763,86 @@ function seriesBacklinksHtml(current, articles) {
 </nav>`;
 }
 
+function isTravelVaccineArticle(meta) {
+    if (!meta || articleCluster(meta) !== 'travel') return false;
+    return /vacina|viajante|vaccination|travel-vaccine|centros-de-vacinacao/.test(String(meta.slug || ''));
+}
+
+function travelBookLabel(lang) {
+    if (lang === 'en') return 'Book ÔÇö Ôé¼39';
+    if (lang === 'es') return 'Reservar ÔÇö 39 Ôé¼';
+    if (lang === 'fr') return 'R├®server ÔÇö 39 Ôé¼';
+    if (lang === 'de') return 'Buchen ÔÇö 39 Ôé¼';
+    return 'Marcar ÔÇö 39 Ôé¼';
+}
+
+function travelPricedBookHtml(slug, lang, place) {
+    const href = `/marcar/travel?ref=blog-${encodeURIComponent(slug)}`;
+    return `<aside class="guide-travel-book" data-travel-book="${escapeHtml(place)}"><a class="lon-btn lon-btn-primary" data-cta="book-priced" href="${escapeHtml(href)}">${escapeHtml(travelBookLabel(lang))}</a></aside>`;
+}
+
+function endOfAside(html, openIndex) {
+    const re = /<aside\b|<\/aside>/gi;
+    re.lastIndex = openIndex;
+    let depth = 0;
+    let m;
+    while ((m = re.exec(html))) {
+        if (m[0].charAt(1) === '/') {
+            depth -= 1;
+            if (depth === 0) return m.index + m[0].length;
+        } else {
+            depth += 1;
+        }
+    }
+    return -1;
+}
+
+function insertNearArticleTop(html, block) {
+    const open = /<aside\b[^>]*class="[^"]*guide-keyfacts[^"]*"[^>]*>/i.exec(html);
+    if (open) {
+        const end = endOfAside(html, open.index);
+        if (end > 0) return `${html.slice(0, end)}${block}${html.slice(end)}`;
+    }
+    return insertAfterFirstParagraph(html, block);
+}
+
+const TRAVEL_WHERE_H2 = /onde vacinar|onde tomar|where to (?:be |get )?vaccinat|vaccination centres by region|international vaccination centres by region|centros de vacina(?:├º|c)[a├ú]o internacional por regi/i;
+
+function insertAfterWhereSection(html, block) {
+    const loc = /<section\b[^>]*\balg-locations-section\b[^>]*>[\s\S]*?<\/section>/i.exec(html);
+    if (loc) {
+        const end = loc.index + loc[0].length;
+        return `${html.slice(0, end)}${block}${html.slice(end)}`;
+    }
+    const matches = [...String(html).matchAll(/<h2\b[^>]*>[\s\S]*?<\/h2>/gi)];
+    const idx = matches.findIndex((m) => TRAVEL_WHERE_H2.test(m[0].replace(/<[^>]+>/g, ' ')));
+    if (idx < 0) return html;
+    const insertAt = matches[idx + 1] ? matches[idx + 1].index : html.length;
+    return `${html.slice(0, insertAt)}${block}${html.slice(insertAt)}`;
+}
+
+function upgradeTravelHeroBook(html, lang) {
+    return String(html).replace(/<a\b([^>]*\blon-btn\b[^>]*)>([\s\S]*?)<\/a>/gi, (full, attrs, inner) => {
+        if (!/href=["']\/marcar\/travel/.test(attrs)) return full;
+        const text = inner.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+        if (!/^(marcar|book|reservar|r├®server|buchen)$/i.test(text)) return full;
+        let next = attrs;
+        if (/data-cta=/.test(next)) next = next.replace(/data-cta=["'][^"']*["']/, 'data-cta="book-priced"');
+        else next += ' data-cta="book-priced"';
+        return `<a${next}>${travelBookLabel(lang)}</a>`;
+    });
+}
+
+function injectTravelPricedBooks(html, meta, lang) {
+    if (!isTravelVaccineArticle(meta) || String(html).includes('data-travel-book=')) return html;
+    const slug = meta.slug;
+    const upgraded = upgradeTravelHeroBook(html, lang);
+    let out = upgraded;
+    const heroPriced = upgraded !== String(html);
+    if (!heroPriced) out = insertNearArticleTop(out, travelPricedBookHtml(slug, lang, 'top'));
+    return insertAfterWhereSection(out, travelPricedBookHtml(slug, lang, 'after-where'));
+}
+
 function injectArticleChrome(html, meta, articles, format) {
     const kind = defaultCtaKind(meta);
     const lang = articleLangCode(meta);
@@ -1798,7 +1878,7 @@ function injectArticleChrome(html, meta, articles, format) {
         if (layerCta && !out.includes('guide-burnout-layer-cta')) out += layerCta;
         if (backlinks && !out.includes('guide-backlinks')) out += backlinks;
         if (clusterMap && !out.includes('guide-cluster-map')) out += clusterMap;
-        return out;
+        return injectTravelPricedBooks(out, meta, lang);
     }
     if (skipBookCards) {
         out = String(out).replace(/<p>\s*\{\{cta(?::[a-z-]+)?\}\}\s*<\/p>|\{\{cta(?::[a-z-]+)?\}\}/gi, '');
@@ -1817,7 +1897,7 @@ function injectArticleChrome(html, meta, articles, format) {
         out = insertBeforeFaqOrEnd(out, actionCardsHtml(kind, 0, lang, meta && meta.slug));
     }
     if (clusterMap && !out.includes('guide-cluster-map')) out += clusterMap;
-    return out;
+    return injectTravelPricedBooks(out, meta, lang);
 }
 
 function pickRelatedArticles(current, articles) {
@@ -2419,7 +2499,7 @@ function renderBlogArticle(origin, slug) {
         htmlLang: langMeta.htmlLang,
         ogLocale: langMeta.ogLocale,
         extraHead: articleHreflangLinks(o, meta, manifest.articles),
-        extraCssAfter: ['/guide.css?v=20260922u', '/author.css?v=20260820l', '/cta-visual-styles.css?v=20260919', '/consult-ad.css?v=20260922a'],
+        extraCssAfter: ['/guide.css?v=20260925a', '/author.css?v=20260820l', '/cta-visual-styles.css?v=20260919', '/consult-ad.css?v=20260922a'],
         mainHtml: magAppHtml(articlePath, articleInner, {
             magazineCurrent: true,
             talk: talkCta.resolve({ kind: ctaKind, slug, lang })

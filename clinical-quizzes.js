@@ -9,6 +9,7 @@ const __lonHeader = require('./lon-header');
 const fs = require('fs');
 const path = require('path');
 const { originOf } = require('./seo');
+const { trackedShareUrl } = require('./utm');
 const { scoreQuiz, questionOptions } = require('./clinical-quiz-score');
 
 const QUIZ_DIR = path.join(__dirname, 'data', 'clinical-quizzes');
@@ -593,8 +594,8 @@ function renderQuizPage(origin, def) {
     const subHref = escapeHtml(bookHref(def, 'sub', 'results-sub'));
     const stickyHref = escapeHtml(bookHref(def, 'consult', 'results-sticky'));
     const b = def.booking || {};
-    const waText = encodeURIComponent(`Teste ${def.instrument} gratuito https://www.lonclinic.com${def.path}?utm_source=whatsapp&utm_medium=social&utm_campaign=${def.utmCampaign || def.id}&utm_content=share&ref=${def.id}-share`);
-    const copyUrl = escapeHtml(`https://www.lonclinic.com${def.path}?utm_source=share&utm_medium=social&utm_campaign=${def.utmCampaign || def.id}&utm_content=copy&ref=${def.id}-share`);
+    const waText = encodeURIComponent(`Teste ${def.instrument} gratuito ${trackedShareUrl(`https://www.lonclinic.com${def.path}`, 'wa-chat')}`);
+    const copyUrl = escapeHtml(trackedShareUrl(`https://www.lonclinic.com${def.path}`, 'ig-post'));
     const hubHref = def.cluster === 'nutrition'
         ? '/nutricao/testes'
         : (def.cluster === 'diaspora' ? '/quizzes' : '/burnout/testes');

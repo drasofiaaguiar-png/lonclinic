@@ -849,6 +849,23 @@
     opacity: 0.72;
 }
 
+.guide-travel-book {
+    margin: 28px 0 32px;
+}
+
+.alg-article > .guide-travel-book {
+    width: min(100%, var(--alg-max, 1240px));
+    margin: 20px auto 28px;
+    padding: 0 var(--alg-gutter, 22px);
+    box-sizing: border-box;
+}
+
+.guide-prose .guide-travel-book a.lon-btn,
+.guide-prose .guide-travel-book a.lon-btn:hover {
+    color: #ffffff;
+    text-decoration: none;
+}
+
 .guide-book-card .lon-btn,
 .guide-prose .guide-book-card a.lon-btn,
 .guide-prose .guide-book-card a.lon-btn-primary,

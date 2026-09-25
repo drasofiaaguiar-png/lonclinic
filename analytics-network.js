@@ -396,6 +396,41 @@ function groupCount(rows, key, limit) {
         .map(([key, count]) => ({ key, count }));
 }
 
+function visitorKey(row) {
+    if (!row) return '';
+    return String(row.visitorId || row.sessionId || '');
+}
+
+function firstTouchViews(views) {
+    const sorted = [...(views || [])].sort(
+        (a, b) => new Date(a.occurredAt).getTime() - new Date(b.occurredAt).getTime()
+    );
+    const seen = new Set();
+    const out = [];
+    for (const r of sorted) {
+        const id = visitorKey(r);
+        if (!id || seen.has(id)) continue;
+        seen.add(id);
+        out.push(r);
+    }
+    return out;
+}
+
+function groupUniqueVisitors(rows, key, limit) {
+    const map = new Map();
+    for (const r of rows || []) {
+        const id = visitorKey(r);
+        if (!id) continue;
+        const k = r[key] || '(none)';
+        if (!map.has(k)) map.set(k, new Set());
+        map.get(k).add(id);
+    }
+    return [...map.entries()]
+        .sort((a, b) => b[1].size - a[1].size)
+        .slice(0, limit || 12)
+        .map(([key, set]) => ({ key, count: set.size }));
+}
+
 function convertingSessionIds(rows) {
     const sids = new Set();
     for (const r of rows || []) {
@@ -422,34 +457,21 @@ function campaignLabel(row) {
 function rankCampaigns(used, views, limit) {
     const convertingSids = convertingSessionIds(used);
     const convertingKeys = new Set();
-    const labelled = (rows) => (rows || []).map((r) => (r && campaignLabel(r) ? { ...r, utmCampaign: campaignLabel(r) } : r));
-    const usedLabelled = labelled(used);
-    const viewsLabelled = labelled(views);
-    for (const r of usedLabelled) {
+    const labelRow = (r) => (r && campaignLabel(r) ? { ...r, utmCampaign: campaignLabel(r) } : r);
+    for (const r of (used || []).map(labelRow)) {
         if (!r || !r.utmCampaign || !r.sessionId) continue;
         if (convertingSids.has(String(r.sessionId))) convertingKeys.add(r.utmCampaign);
     }
-    const ranked = groupCount(
-        usedLabelled.filter((r) => r.utmCampaign),
+    // Unique visitors, same unit as the channel chart. Pageviews made a
+    // multi-page Direct visit look larger, and every event made Google Ads larger.
+    const ranked = groupUniqueVisitors(
+        (views || []).map(labelRow).filter((r) => r.utmCampaign),
         'utmCampaign',
         24
     );
     const converting = ranked.filter((c) => convertingKeys.has(c.key));
     const rest = ranked.filter((c) => !convertingKeys.has(c.key));
-    const fromViews = groupCount(
-        (viewsLabelled || []).filter((r) => r.utmCampaign),
-        'utmCampaign',
-        8
-    );
-    const seen = new Set();
-    const out = [];
-    for (const item of [...converting, ...rest, ...fromViews]) {
-        if (!item || !item.key || seen.has(item.key)) continue;
-        seen.add(item.key);
-        out.push(item);
-        if (out.length >= (limit || 8)) break;
-    }
-    return out;
+    return [...converting, ...rest].slice(0, limit || 8);
 }
 
 function sessionLandings(views, limit) {
@@ -721,7 +743,7 @@ function buildOverview(rows, liveRows, bookingStats, range, audience, knownStaff
             scannerSessions: uniqueCount(probeRows, 'sessionId')
         },
         funnel,
-        channels: groupCount(views, 'channel', 10),
+        channels: groupCount(firstTouchViews(views), 'channel', 10),
         pages: groupCount(views, 'pagePath', 12),
         landings: sessionLandings(views, 8),
         devices: groupCount(views, 'device', 5),

@@ -99,6 +99,21 @@ function safeInternalPath(raw) {
     return s.slice(0, 240);
 }
 
+function trackedShareUrl(url, slug) {
+    const key = String(slug || '').toLowerCase();
+    if (!TRACKED_REDIRECTS[key]) return String(url || '');
+    let u;
+    try {
+        u = new URL(String(url || ''), SITE_ORIGIN);
+    } catch (e) {
+        return String(url || '');
+    }
+    const dest = safeInternalPath(`${u.pathname}${u.search}`);
+    const origin = originOf(u.origin).replace(/\/$/, '');
+    if (!dest || dest === '/') return `${origin}/r/${key}`;
+    return `${origin}/r/${key}?to=${encodeURIComponent(dest)}`;
+}
+
 function trackedLinksForAdmin(origin) {
     const o = originOf(origin).replace(/\/$/, '');
     const seen = new Set();
@@ -116,4 +131,4 @@ function trackedLinksForAdmin(origin) {
         }));
 }
 
-module.exports = { withUtm, emailLink, socialLink, TRACKED_REDIRECTS, safeInternalPath, trackedLinksForAdmin, datedCampaign, slugCampaign };
+module.exports = { withUtm, emailLink, socialLink, trackedShareUrl, TRACKED_REDIRECTS, safeInternalPath, trackedLinksForAdmin, datedCampaign, slugCampaign };
