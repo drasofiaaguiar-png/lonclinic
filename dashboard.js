@@ -25,6 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginSubmitBtn = document.getElementById('loginSubmitBtn');
     const loginApiError = document.getElementById('dashLoginApiError');
     const logoutBtn = document.getElementById('logoutBtn');
+    const patientShell = document.getElementById('patientShell');
+    const patientNavLogin = document.getElementById('patientNavLogin');
+    const patientNavConsults = document.getElementById('patientNavConsults');
+    const patientNavBook = document.getElementById('patientNavBook');
+    const patientSidebarBackdrop = document.getElementById('patientSidebarBackdrop');
 
     const dashStats = document.getElementById('dashStats');
     const statUpcoming = document.getElementById('statUpcoming');
@@ -109,6 +114,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let otpStep = 'request';
 
+    function closePatientSidebar() {
+        if (!patientShell) return;
+        patientShell.classList.remove('sidebar-open');
+        if (patientSidebarBackdrop) patientSidebarBackdrop.hidden = true;
+    }
+
+    function openPatientSidebar() {
+        if (!patientShell) return;
+        patientShell.classList.add('sidebar-open');
+        if (patientSidebarBackdrop) patientSidebarBackdrop.hidden = false;
+    }
+
+    function setPortalMode(loggedIn) {
+        document.body.classList.toggle('patient-logged-in', !!loggedIn);
+        if (patientNavLogin) patientNavLogin.hidden = !!loggedIn;
+        if (patientNavConsults) {
+            patientNavConsults.hidden = !loggedIn;
+            patientNavConsults.classList.toggle('is-active', !!loggedIn);
+        }
+        if (patientNavBook) patientNavBook.hidden = !loggedIn;
+        if (logoutBtn) logoutBtn.hidden = !loggedIn;
+        closePatientSidebar();
+    }
+
     function setOtpStep(step) {
         otpStep = step;
         if (loginOtpGroup) loginOtpGroup.hidden = step !== 'verify';
@@ -192,6 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearSession();
         hideLoginApiError();
         setOtpStep('request');
+        setPortalMode(false);
         loginSection.style.display = '';
         contentSection.style.display = 'none';
         loginEmail.value = '';
@@ -199,6 +229,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (loginOtp) loginOtp.value = '';
         if (dashStats) dashStats.style.display = 'none';
     });
+
+    ['patientSidebarToggle', 'patientSidebarToggleLogged'].forEach((id) => {
+        const btn = document.getElementById(id);
+        if (!btn || !patientShell) return;
+        btn.addEventListener('click', () => {
+            if (patientShell.classList.contains('sidebar-open')) closePatientSidebar();
+            else openPatientSidebar();
+        });
+    });
+    if (patientSidebarBackdrop) {
+        patientSidebarBackdrop.addEventListener('click', closePatientSidebar);
+    }
+    if (patientNavConsults) {
+        patientNavConsults.addEventListener('click', closePatientSidebar);
+    }
 
     function closeRescheduleModal() {
         pendingRescheduleRef = null;
@@ -361,11 +406,13 @@ document.addEventListener('DOMContentLoaded', () => {
     async function showDashboard(email) {
         if (!email) {
             clearSession();
+            setPortalMode(false);
             loginSection.style.display = '';
             contentSection.style.display = 'none';
             return;
         }
 
+        setPortalMode(true);
         loginSection.style.display = 'none';
         contentSection.style.display = 'block';
 
@@ -378,6 +425,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!res.ok) {
                 clearSession();
+                setPortalMode(false);
                 loginSection.style.display = '';
                 contentSection.style.display = 'none';
                 showLoginApiError(data.error || 'Could not load your bookings. Please try again.');
@@ -397,6 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.error('Failed to load bookings:', err);
             clearSession();
+            setPortalMode(false);
             loginSection.style.display = '';
             contentSection.style.display = 'none';
             showLoginApiError('Could not connect to the server. Please try again.');

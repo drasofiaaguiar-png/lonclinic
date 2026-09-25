@@ -6,15 +6,15 @@
     <title>My Dashboard — Lon Clinic</title>
     <link rel="stylesheet" href="landing.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="dashboard.css?v=20260913c">
+    <link rel="stylesheet" href="dashboard.css?v=20260925b">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c5c72c' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'><path d='M2 12C2 6.5 6.5 2 12 2a10 10 0 0 1 8 4'/><path d='M5 19.5C5.5 18 6 15 6 12c0-3.5 2.5-6 6-6 3.5 0 6 2.5 6 6 0 2-.5 4-1 6'/><path d='M9 12c0-1.7 1.3-3 3-3s3 1.3 3 3-1 6-1 6'/><path d='M12 12v6'/></svg>">
     <meta name="description" content="Your patient dashboard — manage appointments, join consultations, and view your health history.">
-    <meta name="theme-color" content="#142018">
+    <meta name="theme-color" content="#f8f8f6">
 </head>
-<body class="dash-portal">
+<body class="lon-landing patient-portal-page">
 
     <a class="lon-skip" href="#conteudo-principal">Skip to content</a>
     <header class="lon-nav" id="lonNav">
@@ -46,13 +46,35 @@
     </header>
 
     <main class="dash-page" id="conteudo-principal">
-        <!-- Login Gate (shown when not logged in) -->
-        <section class="dash-login" id="dashLogin">
-            <div class="dash-login-card">
-                <div class="dash-login-icon">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <section class="dash-content admin-shell" id="patientShell">
+            <div class="admin-sidebar-backdrop" id="patientSidebarBackdrop" hidden></div>
+            <aside class="admin-sidebar" id="patientSidebar" aria-label="Patient navigation">
+                <div class="admin-sidebar-brand">
+                    <span class="admin-sidebar-brand-name">LON Clinic</span>
+                    <span class="admin-sidebar-brand-sub">Patient area</span>
                 </div>
-                <h1 class="dash-login-title">My Dashboard</h1>
+                <nav class="admin-sidebar-nav" aria-label="Patient sections">
+                    <button type="button" class="admin-nav-item is-active" id="patientNavLogin" data-patient-panel="login">Sign in</button>
+                    <button type="button" class="admin-nav-item" id="patientNavConsults" data-patient-panel="consults" hidden>Consultations</button>
+                    <a class="admin-nav-item admin-nav-link" id="patientNavBook" href="/book-consultation" hidden>New booking</a>
+                </nav>
+                <div class="admin-sidebar-foot">
+                    <button type="button" class="btn btn-outline btn-sm" id="logoutBtn" hidden>Sign out</button>
+                    <p class="dash-login-staff" id="patientStaffLink">Health professional?<br><a href="/profissional">Staff area</a></p>
+                </div>
+            </aside>
+
+            <div class="admin-main">
+        <section class="dash-login" id="dashLogin">
+            <div class="dash-header">
+                <div class="dash-header-left">
+                    <button type="button" class="admin-sidebar-toggle btn btn-outline btn-sm" id="patientSidebarToggle" aria-label="Open menu">Menu</button>
+                    <h1 class="dash-greeting">Sign in</h1>
+                    <p class="dash-email">Use the email on your booking</p>
+                </div>
+            </div>
+            <div class="dash-login-card">
+                <h2 class="dash-login-title">My dashboard</h2>
                 <p class="dash-login-desc">View your appointments, join video consultations, and manage your bookings in one place.</p>
                 <form class="dash-login-form" id="loginForm">
                     <div id="dashLoginApiError" class="dash-login-error" style="display:none" role="alert"></div>
@@ -67,22 +89,21 @@
                     <button type="submit" class="btn btn-primary btn-lg dash-login-btn" id="loginSubmitBtn">Send access code</button>
                 </form>
                 <p class="dash-login-note">We email a one-time code to the address on your booking. The code expires in 10 minutes.</p>
-                <p class="dash-login-staff">É profissional de saúde? <a href="/profissional">Área do profissional</a></p>
             </div>
         </section>
 
         <!-- Dashboard Content (shown after login) -->
-        <section class="dash-content" id="dashContent" style="display:none;">
+        <section id="dashContent" style="display:none;">
 
             <!-- Header -->
             <div class="dash-header">
                 <div class="dash-header-left">
+                    <button type="button" class="admin-sidebar-toggle btn btn-outline btn-sm" id="patientSidebarToggleLogged" aria-label="Open menu">Menu</button>
                     <h1 class="dash-greeting" id="dashGreeting">Welcome back</h1>
                     <p class="dash-email" id="dashEmail">patient@example.com</p>
                 </div>
                 <div class="dash-header-right">
                     <a href="/book-consultation" class="btn btn-primary">New booking</a>
-                    <button class="btn btn-outline dash-logout-btn" id="logoutBtn">Sign out</button>
                 </div>
             </div>
 
@@ -230,6 +251,8 @@
             </div>
 
         </section>
+            </div>
+        </section>
 
         <!-- Reschedule modal -->
         <div class="dash-modal" id="rescheduleModal" style="display:none;" aria-hidden="true">
@@ -277,7 +300,7 @@
     </footer>
 
     <script src="lon-nav.js"></script>
-    <script src="dashboard.js?v=doxy-1"></script>
+    <script src="dashboard.js?v=20260925a"></script>
     
     <!-- WhatsApp Floating Button -->
     <a href="https://wa.me/351928372775" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Contact us on WhatsApp">

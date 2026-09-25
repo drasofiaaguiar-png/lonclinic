@@ -4425,6 +4425,10 @@ a.admin-nav-link {
 }
 
 /* Clinic portal: hide public top nav after login, full-height sidebar shell */
+body.patient-portal-page .lon-nav,
+body.patient-portal-page .lon-skip,
+body.patient-portal-page .footer,
+body.patient-portal-page .whatsapp-float,
 body.clinic-portal-page .lon-nav,
 body.clinic-portal-page .lon-skip,
 body.clinic-portal-page .footer,
@@ -4444,9 +4448,56 @@ body.admin-logged-in .whatsapp-float {
     display: none !important;
 }
 
+body.patient-portal-page .dash-page,
 body.clinic-portal-page .dash-page,
 body.admin-page .dash-page {
     min-height: 100vh;
+}
+
+body.patient-portal-page .dash-page {
+    padding: 16px;
+    max-width: none;
+}
+
+body.patient-portal-page .dash-content.admin-shell {
+    min-height: calc(100vh - 32px);
+}
+
+body.patient-portal-page .dash-login {
+    display: block;
+    min-height: 0;
+    align-items: stretch;
+    justify-content: flex-start;
+}
+
+body.patient-portal-page .dash-login-card {
+    max-width: 480px;
+    margin: 0;
+    text-align: left;
+    padding: 28px 28px 24px;
+}
+
+body.patient-portal-page .dash-login-note,
+body.patient-portal-page .admin-sidebar .dash-login-staff {
+    text-align: left;
+}
+
+body.patient-portal-page .admin-sidebar .dash-login-staff {
+    margin: 12px 0 0;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: var(--text-muted);
+    white-space: normal;
+}
+
+body.patient-portal-page #logoutBtn[hidden],
+body.patient-portal-page .admin-nav-item[hidden] {
+    display: none !important;
+}
+
+body.patient-portal-page .admin-sidebar .dash-login-staff a {
+    color: var(--accent);
+    font-weight: 600;
 }
 
 body.clinic-logged-in .dash-page,
