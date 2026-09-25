@@ -563,18 +563,39 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function parseBookingDate(booking) {
+        const isoSource = String((booking && (booking.dateIso || booking.date)) || '').trim();
+        const isoMatch = /^(\d{4})-(\d{2})-(\d{2})/.exec(isoSource);
+        if (isoMatch && String(booking.dateIso || booking.date || '').trim().slice(0, 10) === isoMatch[0]) {
+            return new Date(Number(isoMatch[1]), Number(isoMatch[2]) - 1, Number(isoMatch[3]), 12, 0, 0, 0);
+        }
+        const text = String((booking && booking.date) || '').trim();
+        const months = {
+            janeiro: 0, fevereiro: 1, março: 2, marco: 2, abril: 3, maio: 4, junho: 5,
+            julho: 6, agosto: 7, setembro: 8, outubro: 9, novembro: 10, dezembro: 11,
+            january: 0, february: 1, march: 2, april: 3, may: 4, june: 5,
+            july: 6, august: 7, september: 8, october: 9, november: 10, december: 11,
+            enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
+            julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11
+        };
+        const written = /(\d{1,2})\s+de\s+([a-záéíóúãõç]+)\s+de\s+(\d{4})/i.exec(text);
+        if (written) {
+            const month = months[written[2].toLowerCase()];
+            if (month !== undefined) {
+                return new Date(Number(written[3]), month, Number(written[1]), 12, 0, 0, 0);
+            }
+        }
+        const parsed = new Date(text);
+        return isNaN(parsed.getTime()) ? null : parsed;
+    }
+
     function getStatus(booking, now) {
         if (booking.cancelled) return 'cancelled';
-        if (!booking.date) return 'upcoming';
-        try {
-            const parsed = new Date(booking.date);
-            if (isNaN(parsed.getTime())) return 'upcoming';
-            const endOfDay = new Date(parsed);
-            endOfDay.setHours(23, 59, 59, 999);
-            if (endOfDay < now) return 'completed';
-            return 'upcoming';
-        } catch {
-            return 'upcoming';
-        }
+        const parsed = parseBookingDate(booking);
+        if (!parsed) return 'upcoming';
+        const endOfDay = new Date(parsed);
+        endOfDay.setHours(23, 59, 59, 999);
+        if (endOfDay < now) return 'completed';
+        return 'upcoming';
     }
 });
