@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function checkAuth() {
         try {
-            const res = await fetch('/api/clinic/auth-status');
+            const res = await fetch('/api/clinic/auth-status?fresh=1', { cache: 'no-store', credentials: 'same-origin' });
             const data = await res.json();
             
             if (data.authenticated) {
@@ -591,8 +591,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function loadUpcomingConsultations() {
         if (!adminScheduleList) return;
         try {
-            const res = await fetch('/api/admin/upcoming-consultations');
-            if (res.status === 401) return;
+            const res = await fetch('/api/admin/upcoming-consultations', { cache: 'no-store', credentials: 'same-origin' });
+            if (res.status === 401) {
+                showLogin();
+                return;
+            }
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
             upcomingCache = {
@@ -1218,8 +1221,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function loadPatientsTable() {
         if (!adminPatientsBody) return;
         try {
-            const res = await fetch('/api/admin/patients');
-            if (res.status === 401) return;
+            const res = await fetch('/api/admin/patients', { credentials: 'same-origin' });
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const data = await res.json();
             patientsCache = data.patients || [];
@@ -1227,7 +1229,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             loadAdminProfessionals();
         } catch (err) {
             console.error('Load patients:', err);
-            adminPatientsBody.innerHTML = '<tr><td colspan="12" class="admin-empty-list">Could not load patients.</td></tr>';
+            adminPatientsBody.innerHTML = '<tr><td colspan="13" class="admin-empty-list">Could not load patients.</td></tr>';
         }
     }
 

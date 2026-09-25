@@ -2874,6 +2874,9 @@ async function resolveDoxyRoomUrl(professionalName) {
 }
 
 function doxyUrlFromEmailData(data) {
+    if (bookingServiceTag(data && data.service) === 'travel') {
+        return DOXY_DEFAULT_PATIENT_ROOM;
+    }
     const name = String((data && data.professional) || '').trim();
     const explicit = String((data && data.doxyUrl) || '').trim();
     if (explicit) {
@@ -8161,6 +8164,7 @@ async function runAutomationJobs() {
             const sent = await sendReminderEmail({
                 email: b.email,
                 patientName: b.patientName,
+                service: b.service,
                 serviceLabel: serviceLabelFromCode(b.service),
                 date: b.date,
                 time: b.time,
@@ -8190,6 +8194,7 @@ async function runAutomationJobs() {
             const sent = await sendReminderEmail({
                 email: b.email,
                 patientName: b.patientName,
+                service: b.service,
                 serviceLabel: serviceLabelFromCode(b.service),
                 date: b.date,
                 time: b.time,
@@ -13722,7 +13727,9 @@ app.get('/api/bookings', rateLimitPatientPortal, async (req, res) => {
 
         const bookings = await Promise.all(results.map(async (b) => {
             const enriched = publicPatientBooking(b);
-            const doxyUrl = (await resolveDoxyRoomUrl(b.professional)) || null;
+            const doxyUrl = bookingServiceTag(b.service) === 'travel'
+                ? DOXY_DEFAULT_PATIENT_ROOM
+                : ((await resolveDoxyRoomUrl(b.professional)) || null);
             return { ...enriched, doxyUrl: doxyUrl || null, doxyPending: !doxyUrl };
         }));
         const nextWithRoom = bookings.find((b) => !b.cancelled && b.doxyUrl) || null;
@@ -13916,6 +13923,7 @@ app.post('/api/patient/booking/reschedule', rateLimitPatientPortal, async (req, 
             try {
                 const { html, text, subject } = buildReschedulePatientEmail({
                     patientName: booking.patientName,
+                    service: booking.service,
                     serviceLabel: serviceLabelFromCode(booking.service),
                     date: newDateDisplay,
                     time: normTime,
@@ -14458,6 +14466,9 @@ app.post('/api/clinic/logout', (req, res) => {
 
 // ─── API: Clinic — Check authentication status ───
 app.get('/api/clinic/auth-status', async (req, res) => {
+    // A Set-Cookie keeps this off Cloudflare's anonymous 4h cache. A cached
+    // "authenticated: true" body was opening the admin shell for everyone.
+    res.append('Set-Cookie', 'lon_auth=1; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly');
     if (req.session && req.session.clinicAuthenticated) {
         try {
             await bindStaffSession(req);
@@ -17181,6 +17192,35 @@ app.patch('/api/admin/payouts/:username/:month', requireAdmin, express.json(), a
     }
 });
 
+function patientListRow(b) {
+    return {
+        bookingRef: b.bookingRef,
+        email: b.email,
+        service: b.service,
+        date: b.date,
+        time: b.time,
+        dateIso: b.dateIso || null,
+        patientName: b.patientName,
+        patientPhone: b.patientPhone || '',
+        cancelled: !!b.cancelled,
+        professional: b.professional || '',
+        professionalId: b.professionalId || null,
+        markedPaid: !!b.markedPaid,
+        invoiceSent: !!b.invoiceSent,
+        reviewRequested: !!b.reviewRequested,
+        consultationCompleted: !!b.consultationCompleted,
+        visitFrequency: b.visitFrequency || '',
+        patientType: b.patientType || '',
+        source: b.source || '',
+        complimentary: !!b.complimentary,
+        withoutInvoice: !!b.withoutInvoice,
+        consultationCount: b.consultationCount,
+        hasReviewed: !!b.hasReviewed,
+        reviewRating: b.reviewRating || null,
+        createdAt: b.createdAt || null
+    };
+}
+
 function bookingSortKey(b) {
     const iso = (b.dateIso && String(b.dateIso).trim()) || '';
     const datePart = /^\d{4}-\d{2}-\d{2}$/.test(iso) ? iso : String(b.date || '');
@@ -17586,7 +17626,7 @@ app.get('/api/admin/patients', requireAdmin, async (req, res) => {
     try {
         let bookings;
         if (usePersistentDb) {
-            bookings = await db.findAllBookingsWithClinicalNotes();
+            bookings = await db.findAllBookings();
         } else {
             bookings = bookingsStore.map((booking) => {
                 const notes = clinicalNotesStore.find((n) => n.bookingRef === booking.bookingRef);
@@ -17626,9 +17666,9 @@ app.get('/api/admin/patients', requireAdmin, async (req, res) => {
             }
         }
 
-        const patients = enrichPatientsWithReviews(enriched, reviews).sort((a, b) =>
-            bookingSortKey(b).localeCompare(bookingSortKey(a))
-        );
+        const patients = enrichPatientsWithReviews(enriched, reviews)
+            .map(patientListRow)
+            .sort((a, b) => bookingSortKey(b).localeCompare(bookingSortKey(a)));
 
         res.json({ patients, count: patients.length });
     } catch (err) {
@@ -18925,6 +18965,7 @@ function buildInvitationEmail(invitation, paymentUrl, baseUrl) {
         'portal'
     );
     const doxyUrl = doxyUrlFromEmailData({
+        service: invitation.service,
         doxyUrl: invitation.doxyUrl,
         professional: invitation.professional
     });

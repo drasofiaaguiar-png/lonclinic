@@ -42,7 +42,7 @@
 
     async function requireAdminOrRedirect() {
         try {
-            const res = await fetch('/api/clinic/auth-status');
+            const res = await fetch('/api/clinic/auth-status?fresh=1', { cache: 'no-store', credentials: 'same-origin' });
             const data = await res.json();
             if (data.authenticated && data.role === 'admin') return true;
             if (data.authenticated) {
