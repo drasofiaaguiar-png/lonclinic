@@ -566,7 +566,7 @@ function nutricaoRelatedCard(href) {
 }
 
 function blogCanonicalPath(meta) {
-    const slug = String((meta && meta.slug) || '');
+    const slug = String((meta && (meta.canonicalSlug || meta.slug)) || '');
     return `/blog/${encodeURIComponent(slug)}`;
 }
 
@@ -1423,7 +1423,16 @@ function actionCardsHtml(kind, tone, lang, slug) {
     const consult = applyTalkCta(consultSpec(kind, lang), kind, lang, slug);
     const quiz = quizSpec(kind, lang, slug);
     const t = Math.abs(Number(tone) || 0);
-    const hydrate = consult.service === 'clinica_geral';
+    const isTravel = consult.service === 'travel';
+    const hydrate = consult.service === 'clinica_geral' || isTravel;
+    const slotWhen = isTravel
+        ? (lang === 'pt' ? 'Hoje ou amanhã' : 'Today or tomorrow')
+        : copy.slotWhen;
+    const slotNote = isTravel
+        ? (lang === 'pt'
+            ? 'Videoconsulta, 39 €. Escolhe o horário ao marcar. A vacina toma-se depois num CVI.'
+            : 'Video consultation, €39. Choose a time when you book. The vaccine is given later at a vaccination centre.')
+        : copy.slotNote;
     const consultHref = withLangHref(consult.href, lang);
     const quizHref = withLangHref(quiz.href, lang);
     const consultCard = bookCardHtml({
@@ -1444,8 +1453,8 @@ function actionCardsHtml(kind, tone, lang, slug) {
     const slotCard = bookCardHtml({
         chip: copy.slotChip,
         title: copy.slotTitle,
-        price: copy.slotWhen,
-        note: copy.slotNote,
+        price: slotWhen,
+        note: slotNote,
         href: consultHref,
         cta: consult.cta || copy.slotCta,
         talkRole: consult.talkRole,
@@ -1769,11 +1778,11 @@ function isTravelVaccineArticle(meta) {
 }
 
 function travelBookLabel(lang) {
-    if (lang === 'en') return 'Book ÔÇö Ôé¼39';
-    if (lang === 'es') return 'Reservar ÔÇö 39 Ôé¼';
-    if (lang === 'fr') return 'R├®server ÔÇö 39 Ôé¼';
-    if (lang === 'de') return 'Buchen ÔÇö 39 Ôé¼';
-    return 'Marcar ÔÇö 39 Ôé¼';
+    if (lang === 'en') return 'Book — €39';
+    if (lang === 'es') return 'Reservar — 39 €';
+    if (lang === 'fr') return 'Réserver — 39 €';
+    if (lang === 'de') return 'Buchen — 39 €';
+    return 'Marcar — 39 €';
 }
 
 function travelPricedBookHtml(slug, lang, place) {
@@ -1806,7 +1815,7 @@ function insertNearArticleTop(html, block) {
     return insertAfterFirstParagraph(html, block);
 }
 
-const TRAVEL_WHERE_H2 = /onde vacinar|onde tomar|where to (?:be |get )?vaccinat|vaccination centres by region|international vaccination centres by region|centros de vacina(?:├º|c)[a├ú]o internacional por regi/i;
+const TRAVEL_WHERE_H2 = /onde vacinar|onde tomar|where to (?:be |get )?vaccinat|vaccination centres by region|international vaccination centres by region|centros de vacina(?:ç|c)[aã]o internacional por regi/i;
 
 function insertAfterWhereSection(html, block) {
     const loc = /<section\b[^>]*\balg-locations-section\b[^>]*>[\s\S]*?<\/section>/i.exec(html);
@@ -1825,7 +1834,7 @@ function upgradeTravelHeroBook(html, lang) {
     return String(html).replace(/<a\b([^>]*\blon-btn\b[^>]*)>([\s\S]*?)<\/a>/gi, (full, attrs, inner) => {
         if (!/href=["']\/marcar\/travel/.test(attrs)) return full;
         const text = inner.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-        if (!/^(marcar|book|reservar|r├®server|buchen)$/i.test(text)) return full;
+        if (!/^(marcar|book|reservar|réserver|buchen)$/i.test(text)) return full;
         let next = attrs;
         if (/data-cta=/.test(next)) next = next.replace(/data-cta=["'][^"']*["']/, 'data-cta="book-priced"');
         else next += ' data-cta="book-priced"';
@@ -3918,7 +3927,7 @@ function layoutMagazinePage(opts) {
     <script src="/lon-analytics.js?v=20260924a" defer></script>
     <script src="/reviews.js?v=20260905e" defer></script>
     <script src="/lon-slots.js?v=20260912a" defer></script>
-    <script src="/guide-actions.js?v=20260905a" defer></script>
+    <script src="/guide-actions.js?v=20260925a" defer></script>
 </body>
 </html>`;
 }

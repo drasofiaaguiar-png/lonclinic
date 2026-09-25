@@ -82,10 +82,26 @@
         if (cta) cta.textContent = readyLabel[lang] || readyLabel.pt;
     }
 
+    function goServiceSlot(slot, fallbackHref) {
+        var dest = fallbackHref || '/marcar/travel';
+        try {
+            var u = new URL(dest, window.location.origin);
+            if (slot && slot.date) u.searchParams.set('date', slot.date);
+            if (slot && slot.time) u.searchParams.set('time', slot.time);
+            dest = u.pathname + u.search;
+        } catch (e) { /* keep fallback */ }
+        if (window.LonAnalytics) {
+            window.LonAnalytics.track('cta_click', { surface: 'blog', service: 'travel', step: 'next_slot' });
+            window.LonAnalytics.flush();
+        }
+        window.location.href = dest;
+    }
+
     function hydrateCard(card) {
         if (!card || card.getAttribute('data-hydrate') !== '1') return;
+        var service = card.getAttribute('data-service') || 'clinica_geral';
         var fallback = card.getAttribute('data-book-href') || '/marcar/clinica-geral';
-        fetch('/api/next-slots?limit=1')
+        fetch('/api/next-slots?limit=1&withinHours=48&service=' + encodeURIComponent(service))
             .then(function (r) { return r.ok ? r.json() : null; })
             .then(function (data) {
                 var slot = data && data.slots && data.slots[0];
@@ -95,10 +111,11 @@
                 if (!cta) return;
                 cta.addEventListener('click', function (e) {
                     e.preventDefault();
-                    goClinicaGeralCheckout(slot, fallback);
+                    if (service === 'clinica_geral') goClinicaGeralCheckout(slot, fallback);
+                    else goServiceSlot(slot, fallback);
                 });
             })
-            .catch(function () { /* keep placeholder until slots are defined */ });
+            .catch(function () { /* keep the booking promise until a slot loads */ });
     }
 
     document.querySelectorAll('[data-next-slot]').forEach(hydrateCard);
