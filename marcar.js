@@ -1122,6 +1122,11 @@
         });
     }
     renderAreaBlocks();
+    if (document.body.classList.contains('marcar-has-service')) {
+        var consultLabel = document.getElementById('marcarBlocksLabel');
+        var consultNames = { pt: 'Consulta', en: 'Consultation', es: 'Consulta' };
+        if (consultLabel) consultLabel.textContent = consultNames[currentLangKey()] || consultNames.pt;
+    }
 
     // Step 1, level 2: sub-type pills for the active area. The legacy <select> stays as a hidden fallback.
     function renderTypePills() {
@@ -1349,8 +1354,11 @@
 
     var state = {
         scheduleData: null,
-        calMonth: new Date().getMonth(),
-        calYear: new Date().getFullYear(),
+        calWeekStart: (function () {
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return today;
+        })(),
         date: null,
         dateLabel: '',
         time: null,
@@ -1400,7 +1408,7 @@
             return {
                 kicker: 'Support',
                 heading: 'What kind of support are you looking for?',
-                sub: 'The calendar only shows psychologists who treat this area.',
+                sub: 'Not sure which area to choose? Keep “Other / not sure yet” to see all available times.',
                 choosePro: 'More than one psychologist is free at this time. Choose who you prefer.',
                 yourPsychologist: 'Your psychologist',
                 emptyDays: 'No published times in this area right now. Try another area or contact us.'
@@ -1410,7 +1418,7 @@
             return {
                 kicker: 'Apoyo',
                 heading: '¿Qué tipo de apoyo busca?',
-                sub: 'El calendario solo muestra psicólogos que tratan esta área.',
+                sub: 'Si no sabe qué área elegir, mantenga «Otro / aún no sé» para ver todos los horarios disponibles.',
                 choosePro: 'Hay más de un psicólogo libre a esta hora. Elija a quién prefiere.',
                 yourPsychologist: 'Su psicólogo',
                 emptyDays: 'No hay horarios publicados en esta área ahora. Pruebe otra área o contáctenos.'
@@ -1419,7 +1427,7 @@
         return {
             kicker: 'Apoio',
             heading: 'Que tipo de apoio procura?',
-            sub: 'O calendário mostra só psicólogos que tratam esta área.',
+            sub: 'Se não sabe qual escolher, mantenha «Outro / ainda não sei» para ver todos os horários disponíveis.',
             choosePro: 'Há mais do que um psicólogo livre nesta hora. Escolha quem prefere.',
             yourPsychologist: 'O seu psicólogo',
             emptyDays: 'Não há horários publicados nesta área neste momento. Experimente outra área ou contacte-nos.'
@@ -1574,12 +1582,17 @@
             .then(function (data) {
                 state.specialties = (data && data.specialties) || [];
                 renderSpecialtyButtons();
-                if (fromUrl && state.specialties.some(function (s) { return s.id === fromUrl; })) {
-                    return selectSpecialty(fromUrl);
-                }
+                var chosen = fromUrl && state.specialties.some(function (s) { return s.id === fromUrl; }) ? fromUrl : 'outro';
+                return selectSpecialty(chosen);
             })
             .catch(function () {
                 state.specialties = [];
+                state.specialty = 'outro';
+                return loadBookableDays().then(function () {
+                    applySpecialtyCopy();
+                    renderCalendar();
+                    return loadQuickSlots();
+                }).then(shellRefresh);
             });
     }
 
@@ -1799,7 +1812,6 @@
                 setSelectedProfessional(pro);
                 if (btnNext) btnNext.disabled = false;
                 shellRefresh();
-                if (!state.programmaticSlot && !state.programmaticPro) maybeAutoAdvance();
             });
             wrap.appendChild(card);
             if (wantedProId && Number(pro.id) === wantedProId) {
@@ -1903,49 +1915,57 @@
     }
 
     function renderCalendar() {
-        var year = state.calYear;
-        var month = state.calMonth;
-        calMonthEl.textContent = getMonths()[month] + ' ' + year;
-
-        var firstDay = new Date(year, month, 1).getDay();
-        var daysInMonth = new Date(year, month + 1, 0).getDate();
         var today = new Date();
         today.setHours(0, 0, 0, 0);
-        var startDay = (firstDay + 6) % 7;
-
+        var start = new Date(state.calWeekStart || today);
+        start.setHours(0, 0, 0, 0);
+        var end = new Date(start);
+        end.setDate(end.getDate() + 6);
+        var locale = getLang() === 'en' ? 'en-GB' : (getLang() === 'es' ? 'es-ES' : 'pt-PT');
+        var navNames = getLang() === 'en'
+            ? ['Previous week', 'Next week']
+            : (getLang() === 'es' ? ['Semana anterior', 'Semana siguiente'] : ['Semana anterior', 'Semana seguinte']);
+        var prevWeek = new Date(start);
+        prevWeek.setDate(prevWeek.getDate() - 7);
+        document.getElementById('marcarCalPrev').disabled = prevWeek < today;
+        document.getElementById('marcarCalPrev').setAttribute('aria-label', navNames[0]);
+        document.getElementById('marcarCalNext').setAttribute('aria-label', navNames[1]);
+        var startLabel = start.toLocaleDateString(locale, { day: 'numeric', month: 'short' });
+        var endOptions = { day: 'numeric', month: 'short' };
+        if (start.getFullYear() !== end.getFullYear()) endOptions.year = 'numeric';
+        calMonthEl.textContent = startLabel + ' – ' + end.toLocaleDateString(locale, endOptions);
         calGrid.innerHTML = '';
 
-        for (var i = 0; i < startDay; i++) {
-            var empty = document.createElement('div');
-            empty.className = 'marcar-cal-day marcar-cal-empty';
-            calGrid.appendChild(empty);
-        }
-
-        for (var d = 1; d <= daysInMonth; d++) {
-            (function (day) {
+        for (var i = 0; i < 7; i++) {
+            (function (offset) {
+                var dateObj = new Date(start);
+                dateObj.setDate(start.getDate() + offset);
                 var btn = document.createElement('button');
                 btn.type = 'button';
                 btn.className = 'marcar-cal-day';
-                btn.textContent = day;
+                btn.dataset.date = formatDateLocal(dateObj);
+                var weekday = document.createElement('span');
+                weekday.className = 'marcar-cal-weekday';
+                weekday.textContent = dateObj.toLocaleDateString(locale, { weekday: 'short' });
+                var number = document.createElement('strong');
+                number.textContent = String(dateObj.getDate());
+                btn.appendChild(weekday);
+                btn.appendChild(number);
 
-                var dateObj = new Date(year, month, day);
-                dateObj.setHours(0, 0, 0, 0);
-
-                if (!isDateAvailable(dateObj)) {
+                if (dateObj < today || !isDateAvailable(dateObj)) {
                     btn.classList.add('marcar-cal-disabled');
+                    btn.disabled = true;
                 } else {
                     btn.addEventListener('click', function () {
-                        selectDate(year, month, day, btn);
+                        selectDate(dateObj.getFullYear(), dateObj.getMonth(), dateObj.getDate(), btn);
                     });
                 }
-
                 if (dateObj.getTime() === today.getTime()) btn.classList.add('marcar-cal-today');
                 if (state.date && state.date.getTime() === dateObj.getTime()) {
                     btn.classList.add('marcar-cal-selected');
                 }
-
                 calGrid.appendChild(btn);
-            })(d);
+            })(i);
         }
     }
 
@@ -1998,34 +2018,29 @@
     }
 
     function findMarcarDayButton(dateObj) {
-        var day = String(dateObj.getDate());
+        var day = formatDateLocal(dateObj);
         var found = null;
         calGrid.querySelectorAll('.marcar-cal-day').forEach(function (el) {
-            if (el.textContent === day && !el.classList.contains('marcar-cal-empty') && !el.classList.contains('marcar-cal-disabled')) {
+            if (el.dataset.date === day && !el.classList.contains('marcar-cal-disabled')) {
                 found = el;
             }
         });
         return found;
     }
 
-    function applyQuickSlot(slot, opts) {
+    function applyQuickSlot(slot) {
         var bits = String(slot.date || '').split('-').map(Number);
         if (bits.length < 3) return Promise.resolve();
         var dateObj = new Date(bits[0], bits[1] - 1, bits[2]);
-        state.calMonth = dateObj.getMonth();
-        state.calYear = dateObj.getFullYear();
+        state.calWeekStart = new Date(dateObj);
         renderCalendar();
         var dayBtn = findMarcarDayButton(dateObj);
         if (!dayBtn) return Promise.resolve();
-        if (!(opts && opts.selectTime === false) && slot.time) {
+        if (slot.time) {
             var pending = String(slot.time);
             state.pendingTime = pending.length === 4 ? '0' + pending : pending;
         }
-        return Promise.resolve(selectDate(bits[0], bits[1] - 1, bits[2], dayBtn)).then(function () {
-            if (!(opts && opts.stayOnStep) && state.date && state.time && btnNext && !btnNext.disabled) {
-                btnNext.click();
-            }
-        });
+        return selectDate(bits[0], bits[1] - 1, bits[2], dayBtn);
     }
 
     function loadQuickSlots() {
@@ -2052,9 +2067,6 @@
                         });
                         wrap.hidden = false;
                     }
-                }
-                if (!state.date && slots[0]) {
-                    return applyQuickSlot(slots[0], { stayOnStep: true });
                 }
             })
             .catch(function () { /* calendar still works */ });
@@ -2104,8 +2116,6 @@
                         window.LonAnalytics.track('slot_select', { surface: 'booking' });
                         window.LonAnalytics.track('time_slot_clicked', { surface: 'marcar' });
                     }
-                    // A real tap on a time goes straight to payment (unless a psychologist still has to be chosen).
-                    if (!state.programmaticSlot) maybeAutoAdvance();
                 });
                 row.appendChild(b);
             });
@@ -2125,18 +2135,6 @@
                 state.programmaticSlot = false;
             }
         }
-    }
-
-    /** After a user picks a time (and, in psychology, a professional), continue without a second click. */
-    function maybeAutoAdvance() {
-        if (state.advancing) return;
-        if (!state.date || !state.time) return;
-        if (usesPsychStaff() && !state.professionalId) return;
-        if (!btnNext || btnNext.disabled) return;
-        var steps = shellSteps();
-        if (shell && shell.booted && shell.step !== steps.length - 1) return;
-        state.advancing = true;
-        btnNext.click();
     }
 
     function renderTimeslots() {
@@ -2208,21 +2206,34 @@
     }
 
     document.getElementById('marcarCalPrev').addEventListener('click', function () {
-        state.calMonth--;
-        if (state.calMonth < 0) {
-            state.calMonth = 11;
-            state.calYear--;
-        }
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var previous = new Date(state.calWeekStart);
+        previous.setDate(previous.getDate() - 7);
+        if (previous < today) return;
+        state.calWeekStart.setDate(state.calWeekStart.getDate() - 7);
+        state.date = null;
+        state.dateLabel = '';
+        state.time = null;
+        setSelectedProfessional(null);
+        hideProfessionals();
+        if (btnNext) btnNext.disabled = true;
         renderCalendar();
+        renderTimeslots();
+        shellRefresh();
     });
 
     document.getElementById('marcarCalNext').addEventListener('click', function () {
-        state.calMonth++;
-        if (state.calMonth > 11) {
-            state.calMonth = 0;
-            state.calYear++;
-        }
+        state.calWeekStart.setDate(state.calWeekStart.getDate() + 7);
+        state.date = null;
+        state.dateLabel = '';
+        state.time = null;
+        setSelectedProfessional(null);
+        hideProfessionals();
+        if (btnNext) btnNext.disabled = true;
         renderCalendar();
+        renderTimeslots();
+        shellRefresh();
     });
 
     btnNext.addEventListener('click', function () {
@@ -2328,12 +2339,11 @@
         } else if (!(isDateAvailable(dateObj) || formatDateLocal(dateObj) === dateQ)) {
             return;
         }
-        state.calMonth = dateObj.getMonth();
-        state.calYear = dateObj.getFullYear();
+        state.calWeekStart = new Date(dateObj);
         renderCalendar();
         var dayBtn = null;
         calGrid.querySelectorAll('.marcar-cal-day').forEach(function (el) {
-            if (el.textContent === String(bits[2]) && !el.classList.contains('marcar-cal-empty')) {
+            if (el.dataset.date === dateQ) {
                 dayBtn = el;
             }
         });
@@ -2356,17 +2366,17 @@
         pt: {
             eyebrow: 'Marcação',
             lead: 'Poucos passos, cerca de dois minutos. Só paga no fim e pode cancelar até 24 horas antes da consulta.',
-            steps: { format: 'Serviço e formato', schedule: 'Data e hora', pay: 'Pagamento' },
-            nutriSteps: { format: 'Área', schedule: 'Data e hora', pay: 'Pagamento' },
+            steps: { format: 'Consulta', schedule: 'Horário', pay: 'Dados e pagamento' },
+            nutriSteps: { format: 'Consulta', schedule: 'Horário', pay: 'Dados e pagamento' },
             nutriLead: 'Escolha a área e o horário. Só paga no fim e pode cancelar até 24 horas antes da consulta.',
             back: 'Voltar',
-            next: 'Continuar',
-            toPayment: 'Continuar para pagamento',
-            needSpecialty: 'Escolha uma área de apoio para continuar.',
+            next: 'Escolher horário',
+            toPayment: 'Continuar para dados e pagamento',
+            needSpecialty: 'Pode manter «Outro / ainda não sei» para ver todos os horários.',
             needDate: 'Escolha um dia com vagas no calendário.',
             needTime: 'Escolha um horário para continuar.',
             needPro: 'Escolha o profissional para continuar.',
-            readyPay: 'Os dados pessoais e o pagamento são no passo seguinte.',
+            readyPay: 'Próximo passo: dados pessoais e pagamento.',
             morning: 'Manhã',
             afternoon: 'Tarde',
             evening: 'Noite',
@@ -2383,17 +2393,17 @@
         en: {
             eyebrow: 'Booking',
             lead: 'A few steps, about two minutes. You only pay at the end and can cancel up to 24 hours before the appointment.',
-            steps: { format: 'Service and format', schedule: 'Date and time', pay: 'Payment' },
-            nutriSteps: { format: 'Area', schedule: 'Date and time', pay: 'Payment' },
+            steps: { format: 'Consultation', schedule: 'Time', pay: 'Details and payment' },
+            nutriSteps: { format: 'Consultation', schedule: 'Time', pay: 'Details and payment' },
             nutriLead: 'Pick the area, then a time. You only pay at the end and can cancel up to 24 hours before.',
             back: 'Back',
-            next: 'Continue',
-            toPayment: 'Continue to payment',
-            needSpecialty: 'Choose a support area to continue.',
+            next: 'Choose a time',
+            toPayment: 'Continue to details and payment',
+            needSpecialty: 'Keep “Other / not sure yet” to see all available times.',
             needDate: 'Pick a day with free slots on the calendar.',
             needTime: 'Pick a time to continue.',
             needPro: 'Choose the professional to continue.',
-            readyPay: 'Personal details and payment come in the next step.',
+            readyPay: 'Next: personal details and payment.',
             morning: 'Morning',
             afternoon: 'Afternoon',
             evening: 'Evening',
@@ -2410,17 +2420,17 @@
         es: {
             eyebrow: 'Reserva',
             lead: 'Pocos pasos, unos dos minutos. Solo paga al final y puede cancelar hasta 24 horas antes de la consulta.',
-            steps: { format: 'Servicio y formato', schedule: 'Fecha y hora', pay: 'Pago' },
-            nutriSteps: { format: 'Área', schedule: 'Fecha y hora', pay: 'Pago' },
+            steps: { format: 'Consulta', schedule: 'Horario', pay: 'Datos y pago' },
+            nutriSteps: { format: 'Consulta', schedule: 'Horario', pay: 'Datos y pago' },
             nutriLead: 'Elija el área y el horario. Solo paga al final y puede cancelar hasta 24 horas antes de la consulta.',
             back: 'Volver',
-            next: 'Continuar',
-            toPayment: 'Continuar al pago',
-            needSpecialty: 'Elija un área de apoyo para continuar.',
+            next: 'Elegir horario',
+            toPayment: 'Continuar a datos y pago',
+            needSpecialty: 'Puede mantener «Otro / aún no sé» para ver todos los horarios.',
             needDate: 'Elija un día con huecos en el calendario.',
             needTime: 'Elija un horario para continuar.',
             needPro: 'Elija el profesional para continuar.',
-            readyPay: 'Los datos personales y el pago vienen en el siguiente paso.',
+            readyPay: 'Siguiente paso: datos personales y pago.',
             morning: 'Mañana',
             afternoon: 'Tarde',
             evening: 'Noche',
@@ -2445,9 +2455,7 @@
     }
 
     function shellProgressSteps() {
-        var steps = shellSteps().slice();
-        if (isNutricaoFamily(tipo)) steps.push('pay');
-        return steps;
+        return ['format', 'schedule', 'pay'];
     }
 
     function shellStepLabel(copy, name) {

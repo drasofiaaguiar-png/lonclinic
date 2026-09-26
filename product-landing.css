@@ -299,6 +299,54 @@ body.nx-page.urgent-landing {
 .nx-hero-row .ttl { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 7px; }
 .nx-hero-row .dsc { font-size: 12px; color: rgba(255, 255, 255, 0.62); line-height: 1.55; }
 
+/* Psychology landing: give the longer offer and floating nav enough room. */
+.page-psychology .nx-hero { padding-top: 156px; }
+.page-psychology .nx-hero-grid {
+    grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
+    gap: clamp(52px, 6vw, 88px);
+    align-items: center;
+    padding-bottom: 104px;
+}
+.page-psychology .nx-hero-left { max-width: 620px; }
+.page-psychology .nx-hero h1 { max-width: 610px; margin-bottom: 22px; }
+.page-psychology .nx-hero-lead { max-width: 560px; line-height: 1.72; margin-bottom: 26px; }
+.page-psychology .nx-hero-price { margin-bottom: 26px; }
+.page-psychology .nx-hero-btns { margin-bottom: 30px; }
+.page-psychology .nx-hero-trust { column-gap: 24px; row-gap: 14px; max-width: 590px; }
+.page-psychology .nx-alert { margin-top: 22px; }
+.page-psychology .nx-hero-visual { max-width: 460px; width: 100%; }
+.page-psychology .nx-glass-card { left: -18px; right: -18px; bottom: -28px; }
+.page-psychology .nx-hero-row { gap: 16px; padding: 18px clamp(18px, 3vw, 48px) 28px; }
+.page-psychology .nx-hero-row a { padding: 24px 26px; }
+
+@media (max-width: 900px) {
+    .page-psychology .nx-hero { padding-top: 120px; }
+    .page-psychology .nx-hero-grid {
+        grid-template-columns: 1fr;
+        gap: 42px;
+        padding-bottom: 72px;
+    }
+    .page-psychology .nx-hero-left { max-width: 680px; }
+    .page-psychology .nx-hero-visual { max-width: 420px; }
+    .page-psychology .nx-hero-row { padding: 16px 20px 22px; }
+}
+@media (max-width: 600px) {
+    .page-psychology .nx-hero { padding-top: 104px; }
+    .page-psychology .nx-hero-grid { gap: 34px; padding-bottom: 58px; }
+    .page-psychology .nx-hero-pill { margin-bottom: 18px; }
+    .page-psychology .nx-hero h1 { font-size: clamp(36px, 10vw, 48px); line-height: 1.04; margin-bottom: 16px; }
+    .page-psychology .nx-hero-lead { font-size: 15.5px; line-height: 1.62; margin-bottom: 22px; }
+    .page-psychology .nx-hero-price { gap: 10px; margin-bottom: 22px; }
+    .page-psychology .nx-hero-price strong { font-size: 42px; }
+    .page-psychology .nx-hero-btns { gap: 10px; margin-bottom: 24px; }
+    .page-psychology .nx-hero-trust { display: grid; grid-template-columns: 1fr; gap: 11px; }
+    .page-psychology .nx-alert { margin-top: 20px; }
+    .page-psychology .nx-glass-card { left: 10px; right: 10px; bottom: -22px; padding: 14px 16px; }
+    .page-psychology .nx-hero-row { grid-template-columns: 1fr; gap: 10px; padding: 14px 16px 20px; }
+    .page-psychology .nx-hero-row a { padding: 18px 20px; }
+    .page-psychology .nx-hero-row .ico { margin-bottom: 7px; }
+}
+
 /* ==========================================================================
    TRUST BAR
    ========================================================================== */
