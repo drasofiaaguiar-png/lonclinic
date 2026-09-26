@@ -1800,9 +1800,14 @@
 
 /* Direct booking: lighter three-step flow, with a week strip like the class calendar. */
 body.marcar-has-service {
-    background: #f8f2eb;
-    --marcar-surface-soft: #f2e9df;
-    --marcar-border: #e5dcd2;
+    background: #f7efe7;
+    --marcar-primary: #315746;
+    --marcar-brand-soft: #e8eee9;
+    --marcar-surface-soft: #f4eee8;
+    --marcar-border: #e6dbd1;
+    --marcar-muted: #6c716b;
+    --marcar-shadow-card: 0 8px 24px rgba(57, 48, 38, 0.055);
+    --marcar-shadow-float: 0 5px 14px rgba(49, 87, 70, 0.16);
 }
 body.marcar-has-service .marcar-main { max-width: 76rem; padding-top: calc(var(--lon-nav-h) + 24px); }
 body.marcar-has-service .marcar-back { margin-bottom: 12px; }
@@ -1822,7 +1827,14 @@ body.marcar-has-service .marcar-proof-grid { display: none; }
 body.marcar-has-service .marcar-proof-badge { margin: 0; }
 body.marcar-has-service #marcarBlocks { display: none; }
 body.marcar-has-service #marcarBlocksLabel { margin-bottom: 16px; }
-body.marcar-has-service .marcar-card { border-radius: 18px; }
+body.marcar-has-service .marcar-card {
+    border-color: #e8dfd7;
+    border-radius: 18px;
+    box-shadow: 0 8px 28px rgba(57, 48, 38, 0.055);
+}
+@media (min-width: 640px) {
+    body.marcar-has-service .marcar-card { padding: 30px 32px; }
+}
 body.marcar-has-service #marcarBookingFlow #marcarSpecialtySection { margin-top: 22px; }
 body.marcar-has-service #marcarBookingFlow .marcar-specialties { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 body.marcar-has-service #marcarBookingFlow .marcar-schedule-layout { grid-template-columns: minmax(0, 1fr); margin-top: 18px; }
@@ -1834,7 +1846,9 @@ body.marcar-has-service #marcarBookingFlow .marcar-cal-day {
     flex-direction: column;
     gap: 5px;
     border: 1px solid var(--marcar-border);
+    border-radius: 14px;
     background: #fff;
+    transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease, transform 160ms ease;
 }
 body.marcar-has-service #marcarBookingFlow .marcar-cal-weekday {
     font-size: 0.68rem;
@@ -1848,11 +1862,44 @@ body.marcar-has-service #marcarBookingFlow .marcar-cal-day.marcar-cal-selected {
     border-color: var(--marcar-primary);
     color: #fff;
 }
-body.marcar-has-service .marcar-quick-slots { padding: 16px; background: #fff; }
+body.marcar-has-service .marcar-quick-slots {
+    padding: 18px;
+    border-color: #e8dfd7;
+    border-radius: 16px;
+    background: #fff;
+}
 body.marcar-has-service .marcar-quick-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-body.marcar-has-service .marcar-quick-slot { border-radius: 12px; padding: 12px 14px; text-align: left; }
+body.marcar-has-service .marcar-quick-slot {
+    border-color: #587362;
+    border-radius: 13px;
+    padding: 13px 15px;
+    background: #fff;
+    color: #315746;
+    text-align: left;
+    transition: border-color 160ms ease, background-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+body.marcar-has-service .marcar-quick-slot:hover {
+    border-color: #315746;
+    background: #f1f5f1;
+    color: #294a3b;
+    transform: translateY(-1px);
+}
+body.marcar-has-service #marcarBookingFlow .marcar-cal-day:hover:not(.marcar-cal-disabled):not(.marcar-cal-empty) {
+    border-color: #91a397;
+    transform: translateY(-1px);
+}
+body.marcar-has-service #marcarBookingFlow .marcar-cal-day.marcar-cal-selected:hover { border-color: #315746; }
 body.marcar-has-service .marcar-times-row { grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); }
 body.marcar-has-service .marcar-actionbar-inner { max-width: 76rem; }
+body.marcar-has-service .marcar-actionbar {
+    background: rgba(250, 247, 243, 0.94);
+    box-shadow: 0 -8px 24px rgba(57, 48, 38, 0.055);
+}
+body.marcar-has-service .marcar-actionbar-next:not(:disabled):hover { background: #294a3b; }
+body.marcar-has-service :is(button, a, input, select, textarea):focus-visible {
+    outline: 3px solid rgba(49, 87, 70, 0.45);
+    outline-offset: 3px;
+}
 
 @media (max-width: 700px) {
     body.marcar-has-service .marcar-main { padding-top: calc(var(--lon-nav-h) + 16px); }
@@ -1868,4 +1915,14 @@ body.marcar-has-service .marcar-actionbar-inner { max-width: 76rem; }
     }
     body.marcar-has-service #marcarBookingFlow .marcar-cal-day { flex: 0 0 64px; scroll-snap-align: start; }
     body.marcar-has-service .marcar-quick-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.marcar-has-service *,
+    body.marcar-has-service *::before,
+    body.marcar-has-service *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
 }
