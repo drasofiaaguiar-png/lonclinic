@@ -10193,7 +10193,9 @@ app.use(express.static(path.join(__dirname), {
             base === 'diretorio.js' ||
             base === 'diretorio-candidatar.js' ||
             base === 'wellness.css' ||
-            base === 'wellness-page.js'
+            base === 'wellness-page.js' ||
+            base === 'burnout-quiz.css' ||
+            base === 'burnout-quiz.js'
         ) {
             res.setHeader('Cache-Control', 'no-store');
             return;
