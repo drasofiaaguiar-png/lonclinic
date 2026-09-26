@@ -72,6 +72,62 @@
     margin-bottom: 0;
 }
 
+.cq-renew-warn {
+    margin: 18px 0 8px;
+    padding: 18px 18px 16px;
+    border-radius: 16px;
+    background: #fff6f3;
+    border: 1px solid #f0d0c6;
+}
+
+.cq-renew-warn-lead {
+    margin: 0 0 10px;
+    font-size: 0.98rem;
+    line-height: 1.55;
+    color: #3d3148;
+}
+
+.cq-renew-warn ul {
+    margin: 0;
+    padding-left: 1.15rem;
+}
+
+.cq-renew-warn li {
+    margin-bottom: 0.35rem;
+    line-height: 1.45;
+    color: #3d3148;
+}
+
+.cq-renew-warn-follow {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid #f0d0c6;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.cq-renew-warn-follow p {
+    margin: 0;
+    flex: 1 1 16rem;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    color: #3d3148;
+}
+
+.cq-renew-wa {
+    background: #25D366;
+    color: #fff;
+    border: 0;
+    text-decoration: none;
+}
+
+.cq-renew-wa:hover {
+    background: #1ebe5d;
+    color: #fff;
+}
+
 .cq-clinician {
     margin: 0 0 8px;
     font-size: 0.9rem;

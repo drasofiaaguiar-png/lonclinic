@@ -249,6 +249,26 @@ function spokeTalk(page) {
     });
 }
 
+function renewalScopeWarningHtml() {
+    const waText = encodeURIComponent('Olá, tenho uma dúvida sobre a renovação de receita.');
+    const wa = `https://wa.me/351928372775?text=${waText}`;
+    return `
+        <aside class="cq-renew-warn" aria-label="Medicamentos que não renovamos">
+            <p class="cq-renew-warn-lead">Este serviço destina-se exclusivamente à renovação de medicação habitual de uso continuado. Não efetuamos a prescrição nem renovação de:</p>
+            <ul>
+                <li>Psicostimulantes (ex.: metilfenidato, lisdexanfetamina);</li>
+                <li>Gabapentinóides (ex.: gabapentina, pregabalina);</li>
+                <li>Ansiolíticos, sedativos ou indutores do sono (benzodiazepinas e fármacos Z);</li>
+                <li>Analgésicos opioides (ex.: tramadol, codeína, morfina);</li>
+                <li>Qualquer substância sujeita a receita de controlo especial ou com potencial de habituação.</li>
+            </ul>
+            <div class="cq-renew-warn-follow">
+                <p>Na dúvida, contacte-nos por WhatsApp (respondemos em minutos).</p>
+                <a class="lon-btn cq-renew-wa" href="${wa}" target="_blank" rel="noopener noreferrer">Falar no WhatsApp</a>
+            </div>
+        </aside>`;
+}
+
 function socialProofHtml() {
     return `
         <aside class="lon-social-proof" aria-label="Opiniões de pacientes">
@@ -348,7 +368,7 @@ function layoutConsultaPage(opts) {
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/landing.css?v=20260906i">
-    <link rel="stylesheet" href="/consulta-pages.css?v=20260905f">
+    <link rel="stylesheet" href="/consulta-pages.css?v=20260926a">
     <link rel="stylesheet" href="/author.css?v=20260820e">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🩺</text></svg>">
     ${ldScripts}
@@ -521,6 +541,7 @@ function renderSpoke(origin, slug) {
                 <p class="cq-kicker">${escapeHtml(modeLabel)} · ERS 45475</p>
                 <h1>${escapeHtml(title)}</h1>
                 <div class="cq-lead">${leadParas}</div>
+                ${meta.slug === 'renovacao-receita' ? renewalScopeWarningHtml() : ''}
                 ${clinicianStripHtml()}
                 ${authors.authorBylineHtml(o, meta.author, datePub)}
                 <div class="cq-header-actions">
