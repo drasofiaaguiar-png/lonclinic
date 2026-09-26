@@ -9616,7 +9616,7 @@ app.get('/quizzes/', (req, res) => {
 });
 
 app.get('/burnout/teste', (req, res) => {
-    sendHtmlNoCache(res, path.join(__dirname, 'burnout-quiz.html'), 'Error loading burnout quiz page');
+    sendStaffHtmlNoCache(res, path.join(__dirname, 'burnout-quiz.html'), 'Error loading burnout quiz page');
 });
 
 app.get('/burnout/testes', (req, res) => {
@@ -10193,11 +10193,16 @@ app.use(express.static(path.join(__dirname), {
             base === 'diretorio.js' ||
             base === 'diretorio-candidatar.js' ||
             base === 'wellness.css' ||
-            base === 'wellness-page.js' ||
-            base === 'burnout-quiz.css' ||
-            base === 'burnout-quiz.js'
+            base === 'wellness-page.js'
         ) {
             res.setHeader('Cache-Control', 'no-store');
+            return;
+        }
+        if (base === 'burnout-quiz.css' || base === 'burnout-quiz.js') {
+            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0');
+            res.setHeader('CDN-Cache-Control', 'no-store');
+            res.setHeader('Cloudflare-CDN-Cache-Control', 'no-store');
+            res.append('Set-Cookie', 'lon_nocache=1; Path=/; Max-Age=60; SameSite=Lax; Secure; HttpOnly');
             return;
         }
         // Admin / dashboard assets change often and are tiny — never cache them
